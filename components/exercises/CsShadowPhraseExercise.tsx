@@ -14,6 +14,7 @@ import { PillButton } from '@/components/ui/PillButton'
 import { ListenButton } from '@/components/ui/ListenButton'
 import PronunciationFeedback from '@/components/lesson/PronunciationFeedback'
 import { useSpeechRecognition } from '@/hooks/useSpeechRecognition'
+import { BROWSER_BLOCKS_SCORING_SHADOW_EN } from '@/lib/speech/browser-support-message'
 import { scorePronunciation, getFeedbackMessage, calculateXP } from '@/lib/pronunciation/scoring'
 import { speak } from '@/lib/phoneme-practice/tts'
 import { cn } from '@/lib/cn'
@@ -125,7 +126,9 @@ export function CsShadowPhraseExercise({ exercise, onResult, onSkip }: Props) {
           <p className="m-0 max-w-xs text-center text-xs text-fg-muted">
             {!isSupported
               ? "Your browser doesn't support voice scoring. Listen to the model and repeat it out loud, then continue — this attempt won't be scored."
-              : "Voice scoring isn't available right now. Listen to the model and repeat it out loud, then continue — this attempt won't be scored."}
+              : isNetworkShadowing
+                ? BROWSER_BLOCKS_SCORING_SHADOW_EN
+                : "Voice scoring isn't available right now. Listen to the model and repeat it out loud, then continue — this attempt won't be scored."}
           </p>
           <ListenButton onPlay={() => speak(exercise.phrase)} label="Listen" />
           <PillButton variant="primary" size="sm" onClick={handleShadowingDone}>

@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { buildReadinessPayload } from "@/app/api/health/checks";
 
 export const runtime = "nodejs";
 export const revalidate = 0;
@@ -20,6 +19,9 @@ export async function GET(request: Request): Promise<NextResponse> {
     return NextResponse.json({ status: "ok", version }, { status: 200 });
   }
 
+  // Keep liveness independent from readiness dependencies. In particular,
+  // do not load the Supabase client when the process-only probe is requested.
+  const { buildReadinessPayload } = await import("@/app/api/health/checks");
   const { payload, status } = await buildReadinessPayload();
   return NextResponse.json(payload, { status });
 }

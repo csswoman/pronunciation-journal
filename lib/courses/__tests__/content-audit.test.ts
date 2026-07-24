@@ -3,6 +3,9 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { auditDeck } from "../content-audit";
 import { GrammarStudyDeckSchema } from "../grammar-deck/schema";
+import { targetId } from "@/lib/pronunciation/targets/registry";
+import { getContentMapIssues } from "@/lib/pronunciation/targets/content-map";
+import { getDecksForTarget } from "@/lib/courses/grammar-deck/decks";
 
 describe("grammar deck content audit", () => {
   it("finds no structural content issues in authored decks", () => {
@@ -18,10 +21,20 @@ describe("grammar deck content audit", () => {
         return auditDeck({
           ...parsed,
           meta: parsed.meta ?? { eyebrow: "", title: "" },
+          pronunciationTargetIds: parsed.pronunciationTargetIds?.map(targetId),
           cards: parsed.cards.map((card, index) => ({ ...card, index: index + 1 })),
         }).map((issue) => `${file}: ${issue.code} ${issue.detail}`);
       });
 
     expect(issues).toEqual([]);
   }, 15_000);
+
+  it("finds no dangling pronunciation-target content references", () => {
+    expect(getContentMapIssues()).toEqual([]);
+  });
+
+  it("indexes decks through canonical pronunciation targets", () => {
+    expect(getDecksForTarget("connected.linking").map((deck) => deck.slug)).toContain("cs-linking");
+    expect(getDecksForTarget("not-a-target")).toEqual([]);
+  });
 });

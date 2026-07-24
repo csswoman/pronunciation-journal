@@ -2,13 +2,8 @@
 
 import Link from 'next/link'
 import { cn } from '@/lib/cn'
-import type { JournalEntryRecord, JournalStatus } from '@/lib/journal/types'
-
-const STATUS_COPY: Record<JournalStatus, string> = {
-  draft: 'Borrador',
-  submitted: 'Enviada',
-  corrected: 'Corregida',
-}
+import type { JournalEntryRecord } from '@/lib/journal/types'
+import { JOURNAL_STATUS_COPY } from '@/lib/journal/status-copy'
 
 interface JournalHistoryTimelineProps {
   entries: JournalEntryRecord[]
@@ -20,8 +15,8 @@ export function JournalHistoryTimeline({ entries, selectedDate }: JournalHistory
   if (entries.length === 0) return null
 
   return (
-    <nav aria-label="Historial de entradas" className="flex min-w-0 flex-col gap-2">
-      <p className="font-kicker text-fg-muted">ENTRADAS RECIENTES</p>
+    <nav aria-label="Historial de páginas" className="flex min-w-0 flex-col gap-2">
+      <p className="font-body-sm text-fg-muted">Otras páginas</p>
       <div className="-mx-1 flex min-w-0 gap-2 overflow-x-auto px-1 pb-2">
         {entries.map((entry) => {
           const selected = entry.entryDate === selectedDate
@@ -49,7 +44,7 @@ export function JournalHistoryTimeline({ entries, selectedDate }: JournalHistory
                   )}
                   aria-hidden
                 />
-                {STATUS_COPY[entry.status]}
+                {JOURNAL_STATUS_COPY[entry.status]}
               </span>
             </Link>
           )

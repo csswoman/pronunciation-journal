@@ -73,7 +73,7 @@ export async function getReviewQueueSummary(
   }
   const [dueWords, dueWordCount, soundsDue] = await Promise.all([
     getWordsDueForReview(userId, PREVIEW_LIMIT),
-    countWordsDueForReview(),
+    countWordsDueForReview(userId),
     getSoundsDueForHome(userId),
   ]);
   return buildServerSummary({

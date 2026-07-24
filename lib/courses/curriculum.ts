@@ -1,5 +1,9 @@
 import { buildLevel } from "./buildCurriculum";
 import type { CefrLevelId, CoursePathCurriculum } from "./types";
+import {
+  phonemeTargetId,
+  targetId,
+} from "@/lib/pronunciation/targets/registry";
 
 export const COURSE_PATH_CURRICULUM: CoursePathCurriculum = {
   levels: [
@@ -24,7 +28,7 @@ export const COURSE_PATH_CURRICULUM: CoursePathCurriculum = {
           { t: "Can y can't: capacidad y permiso", p: 1, g: "a1-can-capacidad-permiso" },
           { t: "Preposiciones básicas de lugar y tiempo", p: 1, g: "a1-preposiciones-lugar-tiempo" },
           { t: "Plurales regulares e irregulares", p: 1, g: "a1-plurales" },
-          { t: "Primeros sonidos", p: 1, s: true, g: "a1-pronunciacion-basica" },
+          { t: "Primeros sonidos", p: 1, s: true, g: "a1-pronunciacion-basica", pt: [phonemeTargetId("/ə/")] },
           { t: "La erre americana /ɹ/", p: 1, s: true, g: "a1-sonido-r-americano" },
           { t: "Vocales /æ/ y /ʌ/", p: 1, s: true, g: "a1-vocales-ae-ua" },
           { t: "me, te, lo… (objeto)", p: 1, g: "a1-pronombres-objeto" },
@@ -524,10 +528,10 @@ export const COURSE_PATH_CURRICULUM: CoursePathCurriculum = {
       "Hacia Sound Lab",
       "4 h",
       [
-        { t: "Reducciones: gonna, wanna, 'll", p: 2, s: true, g: "cs-reductions" },
-        { t: "Enlazar sonidos", p: 2, s: true, g: "cs-linking" },
-        { t: "Elisión: sonidos que caen", p: 1, s: true, g: "cs-elision" },
-        { t: "Asimilación: doncha, didja", p: 1, s: true, g: "cs-assimilation" },
+        { t: "Reducciones: gonna, wanna, 'll", p: 2, s: true, g: "cs-reductions", pt: [targetId("connected.reduction.gonna")] },
+        { t: "Enlazar sonidos", p: 2, s: true, g: "cs-linking", pt: [targetId("connected.linking")] },
+        { t: "Elisión: sonidos que caen", p: 1, s: true, g: "cs-elision", pt: [targetId("connected.elision")] },
+        { t: "Asimilación: doncha, didja", p: 1, s: true, g: "cs-assimilation", pt: [targetId("connected.assimilation")] },
       ],
       { isElective: true, spineIcon: "mic" }
     ),

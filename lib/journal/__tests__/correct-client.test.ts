@@ -1,10 +1,12 @@
 // @vitest-environment jsdom
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { AI_UNAVAILABLE_MESSAGE } from '@/lib/degradation/messages'
 import {
   correctJournalEntry,
   JournalCorrectionError,
 } from '@/lib/journal/correct-client'
+
+const JOURNAL_AI_UNAVAILABLE_MESSAGE =
+  'No pudimos revisar tu página en este momento. Tu texto sigue guardado — puedes intentarlo de nuevo en unos minutos.'
 
 const input = { entryId: '11111111-1111-4111-8111-111111111111', content: 'Yesterday I go to work.' }
 
@@ -31,7 +33,7 @@ describe('correctJournalEntry', () => {
 
     await expect(correctJournalEntry(input)).rejects.toMatchObject({
       code: 'network',
-      message: AI_UNAVAILABLE_MESSAGE,
+      message: JOURNAL_AI_UNAVAILABLE_MESSAGE,
     })
   })
 
@@ -48,7 +50,7 @@ describe('correctJournalEntry', () => {
 
     await expect(correctJournalEntry(input)).rejects.toMatchObject({
       code: 'server',
-      message: AI_UNAVAILABLE_MESSAGE,
+      message: JOURNAL_AI_UNAVAILABLE_MESSAGE,
     })
   })
 

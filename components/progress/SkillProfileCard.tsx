@@ -16,7 +16,7 @@ interface Props {
 }
 
 const STATUS_CONFIG: {
-  key: keyof SkillProfileData['wordsByStatus']
+  key: 'new' | 'learning' | 'review' | 'mastered'
   label: string
   color: string
 }[] = [
@@ -68,10 +68,17 @@ function LexiconPanel({
   core1000Practiced: number
   lessonsCompleted: number
 }) {
-  const total = Object.values(wordsByStatus).reduce((a, b) => a + b, 0)
+  const total = wordsByStatus.new + wordsByStatus.learning + wordsByStatus.review
+    + wordsByStatus.mastered + (wordsByStatus.legacyMastered ?? 0)
   const mastered = wordsByStatus.mastered
   const retention = total > 0 ? Math.round((mastered / total) * 100) : 0
   const toReview = wordsByStatus.review + wordsByStatus.learning
+  const signalSummary = [
+    { label: 'saved', count: wordsByStatus.saved ?? 0 },
+    { label: 'familiar', count: wordsByStatus.familiar ?? 0 },
+    { label: 'verified', count: wordsByStatus.verified ?? 0 },
+    { label: 'needs verification', count: wordsByStatus.legacyMastered ?? 0 },
+  ].filter((signal) => signal.count > 0)
 
   if (total === 0 && core1000Practiced === 0 && lessonsCompleted === 0) {
     return (
@@ -105,6 +112,11 @@ function LexiconPanel({
             const pct = total > 0 ? Math.round((count / total) * 100) : 0
             return <ProgressStatBar key={key} label={label} value={pct} barColor={color} />
           })}
+          {signalSummary.length > 0 && (
+            <p className="mt-3 text-xs text-fg-muted">
+              {signalSummary.map(({ label, count }) => `${count} ${label}`).join(' · ')}
+            </p>
+          )}
         </>
       )}
       {(core1000Practiced > 0 || lessonsCompleted > 0) && (

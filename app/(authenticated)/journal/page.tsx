@@ -19,9 +19,9 @@ export default async function JournalPage() {
   return (
     <PageLayout className="mx-auto max-w-3xl">
       <PageHeader
-        kicker="PRÁCTICA"
-        title="Journal"
-        subtitle="Escribe en inglés y recibe una corrección útil cuando estés listo."
+        kicker="HOY"
+        title="Diario"
+        subtitle="Escribe en inglés. Cuando quieras, te ayudamos a pulirlo."
       />
       <JournalWorkspace
         entry={{

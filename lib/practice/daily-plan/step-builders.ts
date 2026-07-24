@@ -52,6 +52,7 @@ export function buildWordIntroStep(words: WordBankEntry[]): DailyStep | null {
 export function buildWordReviewStep(
   words: WordBankEntry[],
   context: PracticeContext = 'daily',
+  savedOrFamiliarIds?: ReadonlySet<string>,
 ): DailyStep | null {
   if (words.length === 0) return null
 
@@ -80,11 +81,19 @@ export function buildWordReviewStep(
 
   if (exercises.length === 0) return null
 
+  const savedCount = savedOrFamiliarIds
+    ? words.filter((word) => savedOrFamiliarIds.has(word.id)).length
+    : 0
+  const baseSubtitle = `Afianza ${words.length} ${words.length === 1 ? 'palabra' : 'palabras'} de tu léxico`
+  const subtitle = savedCount > 0
+    ? `${baseSubtitle} · Guardaste ${savedCount === 1 ? 'esta palabra' : 'estas palabras'}`
+    : baseSubtitle
+
   return {
     kind: 'word_review',
     id: 'word_review',
     title: 'Repaso de palabras',
-    subtitle: `Afianza ${words.length} ${words.length === 1 ? 'palabra' : 'palabras'} de tu léxico`,
+    subtitle,
     icon: 'BookMarked',
     exercises,
     featuredWords: words.map((w) => w.text),

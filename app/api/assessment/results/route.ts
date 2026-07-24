@@ -5,8 +5,6 @@ import { AssessmentResultSchema } from "@/lib/courses/assessment-schema";
 import { logServerError } from "@/lib/api/logging";
 import type { AssessmentResult } from "@/lib/courses/assessment";
 
-export { AssessmentResultSchema } from "@/lib/courses/assessment-schema";
-
 export const runtime = "nodejs";
 
 export async function POST(req: NextRequest): Promise<NextResponse> {

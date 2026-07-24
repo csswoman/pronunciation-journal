@@ -1,7 +1,7 @@
 // Pure per-CEFR-level tally for the Core 1000 dataset. No I/O: the caller
 // provides the word list and the set of learned wordIds (from Dexie).
 
-import { CEFR_LEVELS, core1000WordId, type CefrLevel, type CoreWord } from "./types";
+import { CEFR_LEVELS, core1000WordId, type CefrLevel } from "./types";
 
 export interface LevelProgress {
   level: CefrLevel;
@@ -9,9 +9,19 @@ export interface LevelProgress {
   total: number;
 }
 
+/**
+ * The only fields tallying reads. Declaring it structurally lets callers pass
+ * either a full `CoreWord[]` or the slim projection from `level-index-client`,
+ * which is why the home card can fetch ~45KB instead of ~932KB.
+ */
+export interface LevelTallyWord {
+  word: string;
+  cefr_level: CefrLevel;
+}
+
 /** Counts total and learned words per CEFR level, ordered A1 → C1. */
 export function tallyLevelProgress(
-  words: CoreWord[],
+  words: readonly LevelTallyWord[],
   learnedIds: Set<string>,
 ): LevelProgress[] {
   const totals = new Map<CefrLevel, number>();

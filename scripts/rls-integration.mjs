@@ -113,6 +113,7 @@ async function cleanup(users) {
     await admin.from("sentence_transcription_cache").delete().eq("user_id", user.id);
     await admin.from("text_fragments").delete().eq("user_id", user.id);
     await admin.from("tracked_items").delete().eq("user_id", user.id);
+    await admin.from("pronunciation_assessments").delete().eq("user_id", user.id);
     await admin.from("user_profiles").delete().eq("id", user.id);
     await admin.auth.admin.deleteUser(user.id);
   }
@@ -249,6 +250,55 @@ async function run() {
       ref: `rls-cross-${randomUUID()}`,
     });
     assertHasError(bWritesTrackedItemForA, "user B can write tracked item for user A");
+
+    // pronunciation_assessments (plan 067 step 6): own-row CRUD + cross-user
+    // read/write denial. No update policy exists (append-only by design —
+    // see the migration comment), so only select/insert/delete are checked.
+    const pronunciationAssessmentA = await insertSingle(
+      userA.client,
+      "pronunciation_assessments",
+      {
+        user_id: userA.id,
+        schema_version: 1,
+        result: { note: "rls-integration-fixture" },
+        completed_at: new Date().toISOString(),
+      },
+      "user A creates own pronunciation assessment"
+    );
+
+    const aReadsOwnAssessment = await userA.client
+      .from("pronunciation_assessments")
+      .select("id")
+      .eq("id", pronunciationAssessmentA.id);
+    assertNoError(aReadsOwnAssessment, "user A reads own pronunciation assessment query");
+    assert(aReadsOwnAssessment.data.length === 1, "user A cannot read own pronunciation_assessments row");
+
+    const bReadsAssessmentA = await userB.client
+      .from("pronunciation_assessments")
+      .select("id")
+      .eq("id", pronunciationAssessmentA.id);
+    assertNoError(bReadsAssessmentA, "user B reads user A pronunciation assessment query");
+    assert(bReadsAssessmentA.data.length === 0, "user B can read user A pronunciation_assessments row");
+
+    const bWritesAssessmentForA = await userB.client.from("pronunciation_assessments").insert({
+      user_id: userA.id,
+      schema_version: 1,
+      result: { note: "cross-user-write-attempt" },
+      completed_at: new Date().toISOString(),
+    });
+    assertHasError(bWritesAssessmentForA, "user B can write pronunciation assessment for user A");
+
+    const aDeletesOwnAssessment = await userA.client
+      .from("pronunciation_assessments")
+      .delete()
+      .eq("id", pronunciationAssessmentA.id);
+    assertNoError(aDeletesOwnAssessment, "user A deletes own pronunciation assessment");
+    const aReadsAfterDelete = await userA.client
+      .from("pronunciation_assessments")
+      .select("id")
+      .eq("id", pronunciationAssessmentA.id);
+    assertNoError(aReadsAfterDelete, "user A reads own pronunciation assessment after delete");
+    assert(aReadsAfterDelete.data.length === 0, "user A's pronunciation_assessments row survived its own delete");
 
     console.log("RLS integration checks passed.");
   } finally {

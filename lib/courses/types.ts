@@ -1,3 +1,5 @@
+import type { PronunciationTargetId } from "@/lib/pronunciation/targets/types";
+
 export type CefrLevelId = "a1" | "a2" | "b1" | "b2" | "c1";
 
 export type ElectiveTrackId = "purposes" | "business" | "connected-speech";
@@ -43,8 +45,10 @@ export interface CoursePathLesson {
   priority: LessonPriority;
   /** Part of the broad curriculum (p === 0), shown after priority block */
   isOptional: boolean;
-  /** Connects to Sound Lab (pronunciation / audio) */
+  /** Connects to Sound Lab (pronunciation / audio). @deprecated kept for compatibility — prefer `pronunciationTargetIds`. */
   soundLab?: boolean;
+  /** Authored pronunciation targets this lesson teaches. Never inferred at runtime. */
+  pronunciationTargetIds?: PronunciationTargetId[];
 }
 
 export interface CoursePathUnit {

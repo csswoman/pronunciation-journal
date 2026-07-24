@@ -57,11 +57,24 @@ export type EvidenceTarget =
   | { namespace: 'words'; id: WordsSoundId }
   | { namespace: 'contrast'; id: ContrastId }
 
+/**
+ * The kind of objective evidence produced by an exercise. This is metadata
+ * for provenance/reporting; it does not claim acoustic phoneme accuracy.
+ */
+export type EvidenceModality =
+  | 'meaning_recall'
+  | 'contextual_use'
+  | 'written_production'
+  | 'spoken_production'
+  | 'perception'
+  | 'stt_intelligibility'
+
 export type TargetOutcome = {
   target: EvidenceTarget
   correct: boolean
   /** 0–100 when the evaluator produced a graded score for this target. */
   score?: number
+  modality?: EvidenceModality
 }
 
 export type NonSrsReason =

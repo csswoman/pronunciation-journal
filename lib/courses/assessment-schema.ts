@@ -17,6 +17,8 @@ const ConceptSignalSchema = z.object({
 
 export const AssessmentPayloadSchema = z.object({
   assignedLevel: z.enum(["A1", "A2", "B1", "B2", "C1"]),
+  evaluatedLevels: z.array(z.enum(["a1", "a2", "b1", "b2", "c1"] satisfies [CefrLevelId, ...CefrLevelId[]])).max(5).optional(),
+  confidence: z.enum(["low", "medium", "high"]).optional(),
   passed: z.boolean(),
   passedLevels: z.array(z.enum(["a1", "a2", "b1", "b2", "c1"] satisfies [CefrLevelId, ...CefrLevelId[]])).max(5),
   score: z.number().int().min(0),

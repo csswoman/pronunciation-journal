@@ -48,7 +48,20 @@ function normalizeToken(token: string): string {
   return token.toLowerCase().replace(/[^a-z0-9']/g, "");
 }
 
-/** Load CMU dictionary (Node / scripts). */
+/**
+ * Load the full CMU dictionary synchronously. Node-only — build scripts and
+ * Vitest (`validate-core.ts`).
+ *
+ * NEVER import this, or `lookupIpaFromCmu`, from a client component or from any
+ * module a client component reaches. The `require` below is a static dependency,
+ * so doing so pulls ~3.7MB (~940KB gzip) of CMUdict eagerly into that route's
+ * bundle. `arpabetStringToIpa` above is pure and safe to import anywhere.
+ *
+ * Client-side phoneme lookups go through `lib/pronunciation/phonemes.ts`, which
+ * loads the same dictionary via `await import()` so it stays a lazy chunk.
+ * `scripts/analyze-bundle.mjs` reports that chunk separately from the budget and
+ * will fail CI if it ever lands in the eager bundle.
+ */
 export function getCmuDictSync(): CmuDict {
   if (dictCache) return dictCache;
   // eslint-disable-next-line @typescript-eslint/no-require-imports

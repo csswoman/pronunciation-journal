@@ -33,16 +33,48 @@ function sumMetrics(files) {
   );
 }
 
+/**
+ * Chunks that exist only behind an `await import(...)` and are never part of a
+ * first load. They are reported separately so `allChunksGzipKB` tracks the
+ * payload users actually download rather than total build output.
+ *
+ * Detected by content, not filename: Turbopack chunk names are content-hashed
+ * and change every build. Each probe must be a string that only the intended
+ * vendor payload can contain.
+ */
+const DEFERRED_CHUNK_PROBES = [
+  // cmu-pronouncing-dictionary (~940KB gzip): full CMUdict, lazy-loaded by
+  // lib/pronunciation/phonemes.ts for phoneme scoring. The ARPAbet entry for
+  // "aaberg" appears in no other bundled module.
+  { label: "cmu-pronouncing-dictionary", probe: 'aaberg:"AA1 B ER0 G"' },
+];
+
+function classifyChunk(fullPath) {
+  const source = fs.readFileSync(fullPath, "utf8");
+  const match = DEFERRED_CHUNK_PROBES.find((p) => source.includes(p.probe));
+  return match ? match.label : null;
+}
+
 function listChunkFiles() {
   const chunksDir = path.join(NEXT_DIR, "static", "chunks");
   if (!fs.existsSync(chunksDir)) {
     throw new Error("Missing .next/static/chunks — run `pnpm build` first.");
   }
 
-  return fs
-    .readdirSync(chunksDir)
-    .filter((file) => file.endsWith(".js"))
-    .map((file) => path.join("static", "chunks", file));
+  const eager = [];
+  const deferred = [];
+
+  for (const file of fs.readdirSync(chunksDir).filter((f) => f.endsWith(".js"))) {
+    const relative = path.join("static", "chunks", file);
+    const label = classifyChunk(path.join(chunksDir, file));
+    if (label) {
+      deferred.push({ file: relative, label });
+    } else {
+      eager.push(relative);
+    }
+  }
+
+  return { eager, deferred };
 }
 
 function toKb(bytes) {
@@ -95,8 +127,9 @@ function main() {
     ...(manifest.polyfillFiles ?? []),
   ];
   const rootMain = sumMetrics(rootFiles);
-  const chunkFiles = listChunkFiles();
-  const allChunks = sumMetrics(chunkFiles);
+  const { eager, deferred } = listChunkFiles();
+  const allChunks = sumMetrics(eager);
+  const deferredChunks = sumMetrics(deferred.map((d) => d.file));
 
   const summary = {
     generatedAt: new Date().toISOString(),
@@ -108,14 +141,31 @@ function main() {
       rootMainRawKB: toKb(rootMain.raw),
       allChunksGzipKB: toKb(allChunks.gzip),
       allChunksRawKB: toKb(allChunks.raw),
-      chunkCount: chunkFiles.length,
+      chunkCount: eager.length,
+      deferredChunksGzipKB: toKb(deferredChunks.gzip),
+      deferredChunkCount: deferred.length,
     },
     rootMainFiles: rootFiles,
+    deferredChunks: deferred.map((d) => d.label),
   };
 
   fs.writeFileSync(OUTPUT_PATH, `${JSON.stringify(summary, null, 2)}\n`);
   console.log("Bundle summary written to bundle-summary.json");
   console.log(JSON.stringify(summary.metrics, null, 2));
+
+  // A probe that matches nothing means the vendor payload changed shape and is
+  // now being counted against the budget. Fail loudly rather than let CI report
+  // a confusing size regression.
+  const unmatched = DEFERRED_CHUNK_PROBES.filter(
+    (p) => !deferred.some((d) => d.label === p.label),
+  );
+  if (unmatched.length > 0) {
+    console.error("Deferred-chunk probe matched no chunk:");
+    for (const p of unmatched) {
+      console.error(`- ${p.label}: update the probe in scripts/analyze-bundle.mjs`);
+    }
+    process.exit(1);
+  }
 
   if (checkMode) {
     const budget = loadBudget();

@@ -5,8 +5,9 @@ import type { AssessmentConcept } from "@/lib/courses/concept-profile";
 import { buildAssessment } from "@/lib/courses/curriculum";
 import { getDeckBySlug } from "@/lib/courses/grammar-deck/decks";
 import type { GrammarQuizQuestion } from "@/lib/courses/grammar-deck/types";
-import { parseCefrLevelId } from "@/lib/courses/curriculumIndex";
+import { getLessonBySlug, parseCefrLevelId } from "@/lib/courses/curriculumIndex";
 import { getSupabaseServerUser } from "@/lib/supabase/session";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 import "@/app/styles/assessment.css";
 
 interface AssessmentPageProps {
@@ -28,16 +29,34 @@ export default async function AssessmentPage({ searchParams }: AssessmentPagePro
   const concepts: AssessmentConcept[] = mode === "placement"
     ? sections.flatMap((section) => section.items.slice(0, 6).map((item) => {
         const meta = getDeckBySlug(item.lessonSlug)?.meta;
+        const lesson = getLessonBySlug(item.lessonSlug);
         return {
           lessonSlug: item.lessonSlug,
           level: section.level,
-          title: meta?.title ?? item.lessonSlug.replace(/^[a-z]\d-/, "").replaceAll("-", " "),
+          title: lesson?.title
+            ?? meta?.title
+            ?? item.lessonSlug.replace(/^[a-z]\d-/, "").replaceAll("-", " "),
           goal: meta?.goal,
         };
       }))
     : [];
 
   if (questions.length === 0) notFound();
+
+  let profileLevel = null;
+  if (mode === "placement" && user) {
+    try {
+      const supabase = await createSupabaseServerClient();
+      const { data } = await supabase
+        .from("user_profiles")
+        .select("cefr_level")
+        .eq("id", user.id)
+        .maybeSingle();
+      profileLevel = parseCefrLevelId(data?.cefr_level?.toLowerCase());
+    } catch {
+      // The assessment remains available when profile preferences cannot load.
+    }
+  }
 
   return (
     <AssessmentClient
@@ -46,6 +65,7 @@ export default async function AssessmentPage({ searchParams }: AssessmentPagePro
       concepts={concepts}
       checkpointLabel={checkpointLevel?.toUpperCase()}
       userId={user?.id}
+      initialLevel={profileLevel}
     />
   );
 }

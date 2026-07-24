@@ -52,6 +52,13 @@ export function makeWordBankEntry(overrides: Partial<WordBankEntry> = {}): WordB
     review_count: 0,
     source: null,
     source_ref: null,
+    is_favorite: false,
+    familiarity_confidence: 0,
+    familiarity_status: 'unknown',
+    mastery_provenance: 'none',
+    mastery_version: 1,
+    objective_evidence_count: 0,
+    verification_due_at: null,
     ...overrides,
   }
 }

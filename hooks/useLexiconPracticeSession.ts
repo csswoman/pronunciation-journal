@@ -160,7 +160,10 @@ export function useLexiconPracticeSession(categoryId: string, userId: string | u
           context: null, created_at: '', updated_at: '', ease_factor: 2.5, interval_days: 0,
           repetitions: 0, review_count: 0, last_reviewed_at: null, next_review_at: null,
           error_reason: null, has_audio: null, audio_fetch_attempts: 0, image_prompt: null,
-          synonyms: null, translation: null,
+          synonyms: null, translation: null, is_favorite: false,
+          familiarity_confidence: 0, familiarity_status: 'unknown',
+          mastery_provenance: 'none', mastery_version: 1,
+          objective_evidence_count: 0, verification_due_at: null,
         } satisfies WordBankEntry
       })
       allMapped.sort((a, b) => {

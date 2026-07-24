@@ -161,15 +161,29 @@ export async function savePracticeAnswer(
 
     // Plan 062: explicit non-SRS attribution blocks entity updates.
     const allowSrs = attribution?.srsEligible !== false
+    const wordBankOutcome = attribution?.srsEligible === true
+      ? attribution.outcomes.find(
+          (outcome) => outcome.target.namespace === 'word_bank'
+            && outcome.target.id === answer.sourceRef?.id,
+        )
+      : undefined
+    const sourceTargetIsExplicitlyDifferent = attribution !== undefined
+      && attribution.srsEligible === true
+      && !wordBankOutcome
 
     // Enqueue SRS update for word_bank entries via the sync outbox (retried on reconnection).
     // Guard: only real UUIDs — catalog/lexicon ids must never hit word_bank PK.
     if (
       allowSrs
+      && !sourceTargetIsExplicitlyDifferent
       && answer.sourceRef?.source === 'word_bank'
       && isUuid(answer.sourceRef.id)
     ) {
-      await enqueueWordBankSRSUpdate(userId, answer.sourceRef.id, grade)
+      await enqueueWordBankSRSUpdate(userId, answer.sourceRef.id, grade, {
+        signal: 'objective_evidence',
+        modality: wordBankOutcome?.modality ?? 'meaning_recall',
+        attributionVersion: attributionVersion ?? ATTRIBUTION_VERSION,
+      })
     } else if (allowSrs && answer.sourceRef?.source === 'text_fragments') {
       // System sentences carry no per-user Supabase row; their review state is
       // local (Dexie srsData), so this write is direct rather than via the outbox.

@@ -1,6 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
-const generateContent = vi.fn()
+const { generateContent, getUserInterests } = vi.hoisted(() => ({
+  generateContent: vi.fn(),
+  getUserInterests: vi.fn(),
+}))
 vi.mock('@google/genai', () => ({
   GoogleGenAI: class {
     models = { generateContent }
@@ -15,7 +18,7 @@ vi.mock('@/lib/api/guards', () => ({
   }),
 }))
 vi.mock('@/lib/users/server-queries', () => ({
-  getUserInterests: async () => [],
+  getUserInterests,
 }))
 
 import { POST } from '../route'
@@ -26,6 +29,8 @@ function reqWith(): Request {
 
 beforeEach(() => {
   generateContent.mockReset()
+  getUserInterests.mockReset()
+  getUserInterests.mockResolvedValue([])
   process.env.GEMINI_API_KEY = 'test'
 })
 
@@ -55,6 +60,35 @@ describe('generate-reader route', () => {
         questions: [{ prompt: 'q', options: ['a', 'b', 'c', 'd'], correctIndex: 0 }],
       }) })
     const res = await POST(reqWith() as never)
+    expect(res.status).toBe(200)
+    expect(generateContent).toHaveBeenCalledTimes(2)
+  })
+
+  it('continues without profile interests when the profile lookup fails', async () => {
+    getUserInterests.mockRejectedValueOnce(new Error('profile unavailable'))
+    generateContent.mockResolvedValueOnce({
+      text: JSON.stringify({
+        passage: 'The cat went to find a dog in the park.',
+        topic: 'animals',
+        questions: [{ prompt: 'Who did the cat find?', options: ['dog', 'fish', 'bird', 'cow'], correctIndex: 0 }],
+      }),
+    })
+
+    const res = await POST(reqWith() as never)
+
+    expect(res.status).toBe(200)
+  })
+
+  it('retries the next model when Gemini returns malformed JSON', async () => {
+    generateContent
+      .mockResolvedValueOnce({ text: '{"passage":' })
+      .mockResolvedValueOnce({ text: JSON.stringify({
+        passage: 'The cat went with the dog.', topic: 'animals',
+        questions: [{ prompt: 'q', options: ['a', 'b', 'c', 'd'], correctIndex: 0 }],
+      }) })
+
+    const res = await POST(reqWith() as never)
+
     expect(res.status).toBe(200)
     expect(generateContent).toHaveBeenCalledTimes(2)
   })

@@ -6,6 +6,7 @@
     "goal": "Ya puedes entender por qué 'don't you' suena 'doncha' y producir estas fusiones con naturalidad."
   },
   "sounds": ["tʃ", "dʒ", "ŋ", "ə"],
+  "pronunciationTargetIds": ["connected.assimilation"],
   "related": [
     { "slug": "cs-elision", "label": "CS · Elisión" },
     { "slug": "c1-pronunciacion-avanzada", "label": "C1 · Pronunciación avanzada" },

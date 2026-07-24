@@ -30,6 +30,18 @@ const questions: AssessmentQuestion[] = [
   },
 ];
 
+const checkpointQuestions: AssessmentQuestion[] = [
+  ...questions,
+  {
+    id: "a1:topic-two",
+    level: "a1",
+    lessonSlug: "a1-topic-two",
+    prompt: "Choose two",
+    options: ["Wrong again", "Right again"],
+    answer: 1,
+  },
+];
+
 const placementQuestions: AssessmentQuestion[] = [
   ...questions,
   {
@@ -68,7 +80,7 @@ describe("AssessmentClient", () => {
   });
 
   it("requires every concept rating before starting placement questions", () => {
-    render(<AssessmentClient mode="placement" questions={placementQuestions} concepts={concepts} />);
+    render(<AssessmentClient mode="placement" questions={placementQuestions} concepts={concepts} initialLevel="a1" />);
 
     const continueButton = screen.getByRole("button", { name: "Comprobar con preguntas" });
     expect(screen.getByRole("heading", { name: "¿Qué temas ya conoces?" })).toBeInTheDocument();
@@ -81,17 +93,61 @@ describe("AssessmentClient", () => {
     expect(screen.getByRole("progressbar")).toHaveAttribute("aria-label", "Temas valorados");
   });
 
+  it("builds a starter plan without questions when every current concept is new", () => {
+    render(<AssessmentClient mode="placement" questions={placementQuestions} concepts={concepts} initialLevel="a1" />);
+
+    fireEvent.click(screen.getByRole("radio", { name: "Todavía no" }));
+    fireEvent.click(screen.getByRole("button", { name: "Comprobar con preguntas" }));
+
+    expect(screen.getByRole("heading", { name: "Empezamos por aquí" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Para empezar" })).toBeInTheDocument();
+    expect(screen.getByText("Present simple")).toBeInTheDocument();
+    expect(screen.queryByText("Choose one")).not.toBeInTheDocument();
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(persistAssessmentConceptProfileMock).not.toHaveBeenCalled();
+  });
+
+  it("shows one question at a time and allows going back", () => {
+    render(<AssessmentClient mode="checkpoint" checkpointLabel="A1" questions={checkpointQuestions} />);
+
+    expect(screen.getByRole("heading", { name: "Choose one" })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Choose two" })).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByText("Right"));
+    fireEvent.click(screen.getByRole("button", { name: "Siguiente pregunta" }));
+
+    expect(screen.getByRole("heading", { name: "Choose two" })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Choose one" })).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Anterior" }));
+    expect(screen.getByRole("heading", { name: "Choose one" })).toBeInTheDocument();
+    expect(screen.getByRole("radio", { name: "Right" })).toBeChecked();
+  });
+
   it("returns to the concept inventory when placement advances a level", () => {
-    render(<AssessmentClient mode="placement" questions={placementQuestions} concepts={concepts} />);
+    render(<AssessmentClient mode="placement" questions={placementQuestions} concepts={concepts} initialLevel="a1" />);
 
     fireEvent.click(screen.getByRole("radio", { name: "Lo uso" }));
     fireEvent.click(screen.getByRole("button", { name: "Comprobar con preguntas" }));
     fireEvent.click(screen.getByText("Right"));
-    fireEvent.click(screen.getByRole("button", { name: "Continuar" }));
+    fireEvent.click(screen.getByRole("button", { name: "Seguir con A2" }));
 
     expect(screen.getByText("Past simple")).toBeInTheDocument();
     expect(screen.queryByText("Choose two")).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Comprobar con preguntas" })).toBeDisabled();
+  });
+
+  it("asks for a level before placement when settings have no level", () => {
+    render(<AssessmentClient mode="placement" questions={placementQuestions} concepts={concepts} />);
+
+    expect(screen.getByRole("heading", { name: "¿Qué nivel crees tener?" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Empezar prueba" })).toBeDisabled();
+
+    fireEvent.click(screen.getByRole("radio", { name: /A2Básico/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Empezar prueba" }));
+
+    expect(screen.getByText("Present simple")).toBeInTheDocument();
+    expect(screen.queryByText("Past simple")).not.toBeInTheDocument();
   });
 
   it("keeps submission disabled until every question is answered", () => {
@@ -122,6 +178,17 @@ describe("AssessmentClient", () => {
     );
     expect(persistAssessmentConceptProfileMock).toHaveBeenCalledWith("user-1", [], "A2");
     expect(window.localStorage.getItem("assessment:user-1:checkpoint:A1")).toContain('"assignedLevel":"A2"');
+  });
+
+  it("uses an error state for a failed checkpoint result", () => {
+    render(<AssessmentClient mode="checkpoint" checkpointLabel="A1" questions={questions} />);
+
+    fireEvent.click(screen.getByText("Wrong"));
+    fireEvent.click(screen.getByRole("button", { name: "Ver resultado" }));
+
+    expect(screen.getByRole("heading", { name: "Tu nivel actual es A1" })).toBeInTheDocument();
+    expect(screen.getByRole("main").querySelector(".assessment-result-icon--error")).toBeInTheDocument();
+    expect(screen.getByRole("main").querySelector(".assessment-result-icon--success")).not.toBeInTheDocument();
   });
 
   it("offers retry when saving the result fails", async () => {

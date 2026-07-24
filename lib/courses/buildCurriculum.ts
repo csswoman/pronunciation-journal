@@ -5,6 +5,7 @@ import type {
   ElectiveSpineIcon,
   LessonPriority,
 } from "./types";
+import type { PronunciationTargetId } from "@/lib/pronunciation/targets/types";
 
 export interface CourseInput {
   t: string;
@@ -12,6 +13,8 @@ export interface CourseInput {
   s?: boolean;
   /** Stable grammar-deck slug → `public/grammar-decks/<g>.json`. Independent of `number`. */
   g?: string;
+  /** Authored pronunciation targets this lesson teaches. Never inferred from `t`/`s`. */
+  pt?: PronunciationTargetId[];
 }
 
 function toLesson(
@@ -28,6 +31,7 @@ function toLesson(
     priority: course.p,
     isOptional: course.p === 0,
     soundLab: course.s,
+    pronunciationTargetIds: course.pt,
   };
 }
 

@@ -9,6 +9,10 @@ import { getDailyStreak } from "@/lib/daily/streak";
 import { getTodayPracticeGoal, getWeakestPhonemeForHome } from "@/lib/home/queries";
 import { getReviewQueueSummary } from "@/lib/home/review-queue";
 import { getHomePlacementState, type HomePlacementState } from "@/lib/home/placement-state";
+import {
+  getHomePronunciationDiagnosticState,
+  type HomePronunciationDiagnosticState,
+} from "@/lib/home/pronunciation-diagnostic-state";
 import type { MiniLesson } from "@/lib/content/schemas";
 import type { DailyStreakResult } from "@/lib/daily/streak-core";
 import type { DailyGoalProgress, WeakestPhonemeHome, ReviewQueueSummary } from "@/lib/home/constants";
@@ -19,7 +23,10 @@ async function settled<T>(promise: Promise<T>, fallback: T, label: string): Prom
   try {
     return await promise;
   } catch (error) {
-    console.error(`Error loading home ${label}:`, error);
+    const details = error instanceof Error
+      ? { name: error.name, message: error.message, cause: error.cause }
+      : error;
+    console.error(`Error loading home ${label}:`, details);
     return fallback;
   }
 }
@@ -36,8 +43,20 @@ export default async function HomePage() {
     hasPlacement: true,
     hasMeaningfulProgress: true,
   };
+  const hiddenPronunciationPrompt: HomePronunciationDiagnosticState = {
+    hasPronunciationDiagnostic: true,
+  };
 
-  const [queue, homeLessons, streak, vocabulary, goal, weakSound, placementState] = await Promise.all([
+  const [
+    queue,
+    homeLessons,
+    streak,
+    vocabulary,
+    goal,
+    weakSound,
+    placementState,
+    pronunciationDiagnosticState,
+  ] = await Promise.all([
     settled(getReviewQueueSummary(userId), emptyQueue, "review queue"),
     settled(getHomeMiniLessons(), emptyLessons, "mini lessons"),
     settled(
@@ -60,6 +79,13 @@ export default async function HomePage() {
       userId ? getHomePlacementState(userId) : Promise.resolve(hiddenPlacementPrompt),
       hiddenPlacementPrompt,
       "placement state",
+    ),
+    settled(
+      userId
+        ? getHomePronunciationDiagnosticState(userId)
+        : Promise.resolve(hiddenPronunciationPrompt),
+      hiddenPronunciationPrompt,
+      "pronunciation diagnostic state",
     ),
   ]);
 
@@ -84,6 +110,7 @@ export default async function HomePage() {
         todaysLesson={homeLessons.primary}
         secondaryLesson={homeLessons.secondary}
         placementState={placementState}
+        pronunciationDiagnosticState={pronunciationDiagnosticState}
       />
     </PageLayout>
   );

@@ -10,9 +10,9 @@
 import { useEffect, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '@/lib/db'
-import { CORE1000_PREFIX, type CoreWord } from '@/lib/core-1000/types'
-import { fetchCoreWords } from '@/lib/core-1000/client'
-import { tallyLevelProgress } from '@/lib/core-1000/level-progress'
+import { CORE1000_PREFIX } from '@/lib/core-1000/types'
+import { fetchLevelIndex } from '@/lib/core-1000/level-index-client'
+import { tallyLevelProgress, type LevelTallyWord } from '@/lib/core-1000/level-progress'
 import { useAuth } from '@/components/auth/AuthProvider'
 
 interface Props {
@@ -22,7 +22,7 @@ interface Props {
 
 export function LevelProgressBreakdown({ fallbackRatio }: Props) {
   const { user } = useAuth()
-  const [words, setWords] = useState<CoreWord[] | null>(null)
+  const [words, setWords] = useState<LevelTallyWord[] | null>(null)
 
   const learnedIds = useLiveQuery(
     () => user?.id ? db.srsData.filter((entry) => entry.userId === user.id && entry.wordId.startsWith(CORE1000_PREFIX)).primaryKeys() : [],
@@ -31,7 +31,7 @@ export function LevelProgressBreakdown({ fallbackRatio }: Props) {
 
   useEffect(() => {
     let cancelled = false
-    fetchCoreWords()
+    fetchLevelIndex()
       .then((w) => { if (!cancelled) setWords(w) })
       .catch(() => { /* keep aggregate fallback bar */ })
     return () => { cancelled = true }

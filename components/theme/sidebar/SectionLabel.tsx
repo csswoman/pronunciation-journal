@@ -12,7 +12,7 @@ export function SectionLabel({ label }: SectionLabelProps) {
   }
 
   return (
-    <p className="px-3 pt-4 pb-1 uppercase mb-0 text-[10px] font-medium leading-tight tracking-[0.08em] opacity-70 text-fg-subtle">
+    <p className="px-3 pt-4 pb-1 mb-0 font-kicker text-fg-muted">
       {label}
     </p>
   );

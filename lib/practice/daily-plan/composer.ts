@@ -22,8 +22,8 @@ import {
   fetchAllPracticedSounds,
   fetchDueReviewWords,
   fetchDueSounds,
-  fetchDueWords,
   fetchNewWords,
+  fetchSavedOrFamiliarWords,
   fetchWeakWords,
   fetchWeakestSoundProgress,
 } from './fetchers'
@@ -31,6 +31,7 @@ import { isBrowserOnline } from './online'
 import { fetchReaderTargetRows } from './reader-targets'
 import { dayOfYear, pickSeedSound } from './selectors'
 import { biasWordsBySound } from './sound-word-bridge'
+import { selectDailyReviewWords } from './saved-priority'
 import {
   buildContextPracticeStep,
   buildListeningStep,
@@ -104,12 +105,18 @@ export async function buildReviewPlan(userId: string): Promise<ReviewPlan> {
 export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
   const allSounds = await getAllSounds()
 
-  let reviewWords = await fetchNewWords(userId, WORD_REVIEW_WORD_COUNT)
-  if (reviewWords.length < WORD_REVIEW_WORD_COUNT) {
-    const newIds = new Set(reviewWords.map((w) => w.id))
-    const due = (await fetchDueWords(userId, WORD_REVIEW_WORD_COUNT)).filter((w) => !newIds.has(w.id))
-    reviewWords = [...reviewWords, ...due].slice(0, WORD_REVIEW_WORD_COUNT)
-  }
+  const [newWords, dueWords, savedOrFamiliarWords] = await Promise.all([
+    fetchNewWords(userId, WORD_REVIEW_WORD_COUNT),
+    fetchDueReviewWords(userId, WORD_REVIEW_WORD_COUNT),
+    fetchSavedOrFamiliarWords(userId, WORD_REVIEW_WORD_COUNT),
+  ])
+  const dailyWordSelection = selectDailyReviewWords({
+    newWords,
+    dueWords,
+    savedOrFamiliarWords,
+    limit: WORD_REVIEW_WORD_COUNT,
+  })
+  let reviewWords = dailyWordSelection.words
   const hasWordBank = reviewWords.length > 0
 
   if (reviewWords.length === 0) {
@@ -204,7 +211,7 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
   const wordIntro = buildWordIntroStep(reviewWords)
   if (wordIntro) reviewSteps.push(wordIntro)
 
-  const wordReview = buildWordReviewStep(reviewWords)
+  const wordReview = buildWordReviewStep(reviewWords, 'daily', dailyWordSelection.savedOrFamiliarIds)
   if (wordReview) reviewSteps.push(wordReview)
 
   const contextPractice = buildContextPracticeStep(reviewWords)
@@ -229,7 +236,7 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
 
   // When SRS items are due, prepend top review-hub steps so the daily plan surfaces them first.
   const hasDueSrs =
-    (await fetchDueReviewWords(userId, 1)).length > 0 ||
+    dueWords.length > 0 ||
     (await fetchDueSounds(userId)).length > 0
 
   if (hasDueSrs) {

@@ -100,8 +100,10 @@ const GrammarQuizQuestionSchema = z.object({
 /** A grammar deck file. `meta` is optional; the loader fills a default. */
 export const GrammarStudyDeckSchema = z.object({
   meta: GrammarDeckMetaSchema.optional(),
-  /** Target IPA sounds for the Sound Lab handoff (e.g. ["θ","ð","ə"]). */
+  /** Target IPA sounds for the Sound Lab handoff (e.g. ["θ","ð","ə"]). @deprecated prefer `pronunciationTargetIds`. */
   sounds: z.array(z.string()).optional(),
+  /** Authored pronunciation target ids (see lib/pronunciation/targets/registry.ts). Never inferred. */
+  pronunciationTargetIds: z.array(z.string()).optional(),
   /** Cross-links to sibling decks shown on completion. */
   related: z.array(GrammarRelatedSchema).optional(),
   /** Optional 1–5 question self-check shown before the done screen. */

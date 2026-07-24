@@ -49,3 +49,13 @@ export function getLessonByNumber(
 export function studyLessonPath(trackId: CoursePathTrackId, lessonNumber: number): string {
   return `/courses/study/${lessonNumber}?level=${trackId}`;
 }
+
+export function getLessonBySlug(slug: string): CoursePathLesson | undefined {
+  for (const level of ALL_LEVELS) {
+    for (const unit of level.units) {
+      const lesson = unit.lessons.find((l) => l.slug === slug);
+      if (lesson) return lesson;
+    }
+  }
+  return undefined;
+}

@@ -20,10 +20,12 @@ import Core1000ProgressCard from "@/components/home/Core1000ProgressCard";
 import WeakSoundCard from "@/components/home/WeakSoundCard";
 import HomeWordOfDayCard from "@/components/home/HomeWordOfDayCard";
 import HomePlacementPrompt from "@/components/home/HomePlacementPrompt";
+import HomePronunciationPrompt from "@/components/home/HomePronunciationPrompt";
 import type { ConceptLesson } from "@/hooks/useDailyPlan";
 import type { WeakestPhonemeHome } from "@/lib/home/constants";
 import type { MiniLesson } from "@/lib/content/schemas";
 import type { HomePlacementState } from "@/lib/home/placement-state";
+import type { HomePronunciationDiagnosticState } from "@/lib/home/pronunciation-diagnostic-state";
 
 interface HomeCommandGridProps {
   conceptLesson: ConceptLesson | null;
@@ -33,6 +35,7 @@ interface HomeCommandGridProps {
   wordsDueCount?: number;
   soundsDueCount?: number;
   placementState: HomePlacementState;
+  pronunciationDiagnosticState: HomePronunciationDiagnosticState;
 }
 
 export default function HomeCommandGrid({
@@ -43,6 +46,7 @@ export default function HomeCommandGrid({
   wordsDueCount = 0,
   soundsDueCount = 0,
   placementState,
+  pronunciationDiagnosticState,
 }: HomeCommandGridProps) {
   const [planEmpty, setPlanEmpty] = useState(false);
   const onPlanEmptyChange = useCallback((empty: boolean) => {
@@ -52,6 +56,10 @@ export default function HomeCommandGrid({
   const reviewDue = wordsDueCount + soundsDueCount > 0;
   const showPlacementSetup = !placementState.hasPlacement && !placementState.hasMeaningfulProgress;
   const showPlacementReminder = !placementState.hasPlacement && placementState.hasMeaningfulProgress;
+  const showPronunciationSetup =
+    !pronunciationDiagnosticState.hasPronunciationDiagnostic && !placementState.hasMeaningfulProgress;
+  const showPronunciationReminder =
+    !pronunciationDiagnosticState.hasPronunciationDiagnostic && placementState.hasMeaningfulProgress;
 
   return (
     <div className="home-command-grid">
@@ -67,6 +75,12 @@ export default function HomeCommandGrid({
       {showPlacementSetup ? (
         <div className="home-command-review">
           <HomePlacementPrompt />
+        </div>
+      ) : null}
+
+      {showPronunciationSetup ? (
+        <div className="home-command-review">
+          <HomePronunciationPrompt />
         </div>
       ) : null}
 
@@ -90,6 +104,7 @@ export default function HomeCommandGrid({
           </>
         ) : null}
         {showPlacementReminder ? <HomePlacementPrompt compact /> : null}
+        {showPronunciationReminder ? <HomePronunciationPrompt compact /> : null}
       </aside>
     </div>
   );

@@ -1,3 +1,5 @@
+import type { WordProgressSignal } from '@/lib/word-bank/progress-state';
+
 export type TrackedKind = "word" | "phrase" | "lesson";
 export type PersistedTrackedKind = Exclude<TrackedKind, "word">;
 
@@ -18,4 +20,6 @@ export interface TrackingItem {
   title: string;
   description?: string | null;
   href?: string;
+  progressState?: WordProgressSignal;
+  progressLabel?: string;
 }

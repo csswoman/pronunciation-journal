@@ -35,6 +35,13 @@ export function createOptimisticWord(input: {
     review_count: 0,
     source: null,
     source_ref: null,
+    is_favorite: false,
+    familiarity_confidence: 0,
+    familiarity_status: "unknown",
+    mastery_provenance: "none",
+    mastery_version: 1,
+    objective_evidence_count: 0,
+    verification_due_at: null,
     created_at: timestamp,
     updated_at: timestamp,
   };

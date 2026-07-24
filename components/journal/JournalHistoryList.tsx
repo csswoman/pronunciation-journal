@@ -3,34 +3,30 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import Link from 'next/link'
 import { listLocalJournalEntries } from '@/lib/journal/queries'
-import type { JournalStatus } from '@/lib/journal/types'
+import { JOURNAL_STATUS_CLASS, JOURNAL_STATUS_COPY } from '@/lib/journal/status-copy'
 import { cn } from '@/lib/cn'
 
-const STATUS_COPY: Record<JournalStatus, string> = {
-  draft: 'Borrador',
-  submitted: 'Enviado',
-  corrected: 'Corregido',
-}
-
-const STATUS_CLASS: Record<JournalStatus, string> = {
-  draft: 'bg-surface-sunken text-fg-muted',
-  submitted: 'bg-warning-soft text-warning',
-  corrected: 'bg-success-soft text-success',
-}
-
 /** Reactive local history so past entries survive reload and appear offline. */
-export function JournalHistoryList({ userId }: { userId: string }) {
+export function JournalHistoryList({
+  userId,
+  excludeDate,
+}: {
+  userId: string
+  /** Today's entry lives in the editor — keep it out of "past" lists. */
+  excludeDate?: string
+}) {
   const entries = useLiveQuery(() => listLocalJournalEntries(userId), [userId])
+  const past = (entries ?? []).filter((entry) => entry.entryDate !== excludeDate)
 
-  if (!entries || entries.length === 0) return null
+  if (past.length === 0) return null
 
   return (
     <section aria-labelledby="journal-history" className="flex flex-col gap-2">
       <h2 id="journal-history" className="font-h4 font-semibold text-fg">
-        Entradas anteriores
+        Tu historial
       </h2>
       <ul className="flex flex-col gap-2">
-        {entries.map((entry) => (
+        {past.map((entry) => (
           <li
             key={entry.id}
             className="rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised transition-colors hover:bg-surface-sunken"
@@ -46,10 +42,10 @@ export function JournalHistoryList({ userId }: { userId: string }) {
               <span
                 className={cn(
                   'shrink-0 rounded-full px-2.5 py-0.5 font-body-xs font-medium',
-                  STATUS_CLASS[entry.status],
+                  JOURNAL_STATUS_CLASS[entry.status],
                 )}
               >
-                {STATUS_COPY[entry.status]}
+                {JOURNAL_STATUS_COPY[entry.status]}
               </span>
             </Link>
           </li>

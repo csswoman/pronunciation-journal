@@ -2,6 +2,7 @@ export {
   getDueWordsForDaily as fetchDueWords,
   getNewWordsForDaily as fetchNewWords,
   getDueReviewWordsForDaily as fetchDueReviewWords,
+  getSavedOrFamiliarWordsForDaily as fetchSavedOrFamiliarWords,
   getWeakWordsForReview as fetchWeakWords,
 } from '@/lib/word-bank/queries'
 

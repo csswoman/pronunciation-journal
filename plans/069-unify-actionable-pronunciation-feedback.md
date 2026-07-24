@@ -24,7 +24,8 @@ La app presenta feedback distinto según la superficie: un porcentaje/XP, una ta
 - `components/lesson/PhonemeFeedbackTable.tsx` muestra articulación por fonema y click de audio, pero no selecciona prioridad ni conduce a una frase de transferencia.
 - `components/ai-coach/PronunciationView.tsx:29,228` usa `firstBadPhoneme`, pero `:151` alinea palabras por índice en lugar del DP compartido de `scoring.ts`.
 - `components/interview/InterviewResults.tsx:170` etiqueta el promedio como “Overall pronunciation accuracy”, aunque `lib/pronunciation/scoring.ts:15` documenta comparación de transcript/target.
-- Plan 064 puede añadir un evaluator acústico, pero este feedback debe funcionar también si la decisión es no-ship.
+- El plan-071 benchmark puede añadir un evaluator acústico, pero este feedback debe funcionar también si la decisión es no-ship (el plan 064 validó la dirección; no habilitó evaluador de producción).
+- **Señal consumida**: hoy el feedback consume `stt_intelligibility` (reconocimiento de palabras vía STT) y `transcript_phoneme_inference` (proyección de fonemas desde el diccionario sobre el transcript — NO medición acústica). Ninguna dimensión acústica de stress/ritmo/intonation está disponible hasta la decisión del plan-071 benchmark; el resumen "qué se entendió" nunca debe presentarse como score de precisión fonémica.
 
 ## Feedback contract
 
@@ -51,7 +52,7 @@ Crear `PronunciationFeedbackModel` versionado con:
 ## Suggested executor toolkit
 
 - Use `better-ui` and `web-design-guidelines`; read the four mandatory design documents before UI edits.
-- If plan 064 shipped an evaluator, consume it through the provider-neutral interface; do not import a vendor directly into components.
+- If the plan-071 benchmark ships an evaluator, consume it through the provider-neutral interface (the `AcousticEvaluator` contract landed unwired by plan 064); do not import a vendor directly into components.
 
 ## Scope
 
@@ -109,15 +110,15 @@ Replace hover-only playback with real buttons of at least 44px targets, focus-vi
 
 ### Step 6: Adapt every current surface
 
-Create thin adapters for `PronunciationFeedback`, `PhonemeFeedbackTable`, PronunciationView and InterviewResults. Replace “Overall pronunciation accuracy” with signal-honest copy. Surface-specific shells may differ, but prioritization/remediation logic must not.
+Create thin adapters for `PronunciationFeedback`, `PhonemeFeedbackTable`, PronunciationView and InterviewResults. Replace “Overall pronunciation accuracy” with signal-honest copy. **Gate the new signal-honest copy behind a feature flag** so the label change can be reverted without a data migration if the plan-071 decision changes what may be claimed; the underlying `signalKind`/evaluator-version fields stay unflagged. Surface-specific shells may differ, but prioritization/remediation logic must not.
 
-**Verify**: snapshot/behavior tests assert the same attempt produces the same priority target and label across all adapters.
+**Verify**: `pnpm exec vitest run components/lesson components/ai-coach components/interview components/exercises` — snapshot/behavior tests assert the same attempt produces the same priority target and label across all adapters, and that with the copy flag off no surface renders a phoneme-accuracy or acoustic-dimension claim.
 
 ### Step 7: Persist remediation evidence and review handoff
 
-Attach priority target, attempt pair and transfer outcome to canonical evidence without raw audio. If improved/needs-review, enqueue the target through the existing scheduler/review contract; do not create a feedback-specific SRS.
+Attach priority target, attempt pair and transfer outcome to canonical evidence without raw audio. This evidence inherits the per-user isolation from plan 060 (user-leading key, account-switch invalidation); do not write a device-global feedback row. If improved/needs-review, enqueue the target through the existing scheduler/review contract; do not create a feedback-specific SRS.
 
-**Verify**: persistence tests show one logical attempt pair, no duplicate session, exact target id and correct `unscored` exclusion.
+**Verify**: `pnpm exec vitest run lib/pronunciation/feedback` — persistence tests show one logical attempt pair, no duplicate session, exact target id, correct `unscored` exclusion, and a two-account assertion that feedback evidence never crosses accounts.
 
 ### Step 8: Document evaluator honesty and correction policy
 
@@ -151,6 +152,7 @@ Update architecture/pedagogy docs with signal labels, one-correction policy, abs
 - Retry comparison crosses incompatible evaluator versions; show both attempts without an improvement claim.
 - Raw-audio persistence becomes necessary; stop for consent/retention design.
 - Shared feedback would require changing unrelated shell navigation/layout; keep a thin adapter instead.
+- Any surface would present `stt_intelligibility` or `transcript_phoneme_inference` as phoneme-level accuracy or an acoustic stress/rhythm/intonation score before the plan-071 benchmark decision; label the actual signal and abstain instead.
 
 ## Maintenance notes
 

@@ -1,4 +1,5 @@
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
+import type { Database } from '@/lib/supabase/types'
 import { computeSM2, type SM2Progress } from '@/lib/srs/compute'
 import { MIN_EASE } from '@/lib/srs/schedule'
 import { enqueue } from '@/lib/sync/sync-manager'
@@ -27,7 +28,7 @@ export async function applyFlashcardRating(
 
   const { data: existing, error: selectError } = await db
     .from('word_bank')
-    .select('id, user_id, text, context, meaning, translation, ipa, example, synonyms, image_prompt, audio_url, status, difficulty, error_reason, audio_fetch_attempts, has_audio, ease_factor, interval_days, repetitions, srs_status, next_review_at, last_reviewed_at, review_count, source, source_ref, created_at, updated_at')
+    .select('id, user_id, text, context, meaning, translation, ipa, example, synonyms, image_prompt, audio_url, status, difficulty, error_reason, audio_fetch_attempts, has_audio, ease_factor, interval_days, repetitions, srs_status, next_review_at, last_reviewed_at, review_count, familiarity_status, familiarity_confidence, verification_due_at, mastery_provenance, mastery_version, objective_evidence_count, source, source_ref, created_at, updated_at')
     .eq('user_id', userId)
     .eq('source_ref', input.sourceRef)
     .maybeSingle()
@@ -51,7 +52,7 @@ export async function applyFlashcardRating(
         source: 'lexicon',
         source_ref: input.sourceRef,
       })
-      .select('id, user_id, text, context, meaning, translation, ipa, example, synonyms, image_prompt, audio_url, status, difficulty, error_reason, audio_fetch_attempts, has_audio, ease_factor, interval_days, repetitions, srs_status, next_review_at, last_reviewed_at, review_count, source, source_ref, created_at, updated_at')
+      .select('id, user_id, text, context, meaning, translation, ipa, example, synonyms, image_prompt, audio_url, status, difficulty, error_reason, audio_fetch_attempts, has_audio, ease_factor, interval_days, repetitions, srs_status, next_review_at, last_reviewed_at, review_count, familiarity_status, familiarity_confidence, verification_due_at, mastery_provenance, mastery_version, objective_evidence_count, source, source_ref, created_at, updated_at')
       .single()
 
     if (insertError) throw insertError
@@ -60,27 +61,15 @@ export async function applyFlashcardRating(
 
   const now = new Date()
 
-  let srsUpdate: {
-    ease_factor: number
-    interval_days: number
-    repetitions: number
-    srs_status: string
-    next_review_at: string
-    last_reviewed_at: string
-    review_count: number
-  }
+  let srsUpdate: Database['public']['Tables']['word_bank']['Update']
 
   if (rating === 'known') {
-    const next30 = new Date(now)
-    next30.setDate(next30.getDate() + 30)
+    const verificationDue = new Date(now)
+    verificationDue.setDate(verificationDue.getDate() + 1)
     srsUpdate = {
-      ease_factor: entry.ease_factor ?? 2.5,
-      interval_days: 30,
-      repetitions: 1,
-      srs_status: 'mastered',
-      next_review_at: next30.toISOString(),
-      last_reviewed_at: now.toISOString(),
-      review_count: (entry.review_count ?? 0) + 1,
+      familiarity_status: 'familiar',
+      familiarity_confidence: 100,
+      verification_due_at: verificationDue.toISOString(),
     }
   } else if (rating === 'forgot') {
     const tomorrow = new Date(now)
@@ -94,27 +83,17 @@ export async function applyFlashcardRating(
       next_review_at: tomorrow.toISOString(),
       last_reviewed_at: now.toISOString(),
       review_count: (entry.review_count ?? 0) + 1,
+      familiarity_status: 'unknown',
+      familiarity_confidence: 0,
+      verification_due_at: tomorrow.toISOString(),
     }
   } else {
-    const current = entry.next_review_at || entry.srs_status !== 'new'
-      ? {
-          ease_factor: entry.ease_factor ?? 2.5,
-          interval_days: entry.interval_days ?? 1,
-          repetitions: entry.repetitions ?? 0,
-          next_review_at: entry.next_review_at,
-          status: entry.srs_status as 'new' | 'learning' | 'review' | 'mastered', // srs_status is a constrained enum column — values are always from this set
-          last_reviewed_at: entry.last_reviewed_at,
-        }
-      : null
-    const next = computeSM2(current, 3)
+    const verificationDue = new Date(now)
+    verificationDue.setDate(verificationDue.getDate() + 2)
     srsUpdate = {
-      ease_factor: next.ease_factor,
-      interval_days: next.interval_days,
-      repetitions: next.repetitions,
-      srs_status: next.status,
-      next_review_at: next.next_review_at!,
-      last_reviewed_at: next.last_reviewed_at!,
-      review_count: (entry.review_count ?? 0) + 1,
+      familiarity_status: 'familiar',
+      familiarity_confidence: 60,
+      verification_due_at: verificationDue.toISOString(),
     }
   }
 
@@ -123,7 +102,7 @@ export async function applyFlashcardRating(
     .update(srsUpdate)
     .eq('id', entry.id)
     .eq('user_id', userId)
-    .select('id, user_id, text, context, meaning, translation, ipa, example, synonyms, image_prompt, audio_url, status, difficulty, error_reason, audio_fetch_attempts, has_audio, ease_factor, interval_days, repetitions, srs_status, next_review_at, last_reviewed_at, review_count, source, source_ref, created_at, updated_at')
+    .select('id, user_id, text, context, meaning, translation, ipa, example, synonyms, image_prompt, audio_url, status, difficulty, error_reason, audio_fetch_attempts, has_audio, ease_factor, interval_days, repetitions, srs_status, next_review_at, last_reviewed_at, review_count, familiarity_status, familiarity_confidence, verification_due_at, mastery_provenance, mastery_version, objective_evidence_count, source, source_ref, created_at, updated_at')
     .single()
 
   if (updateError) throw updateError
@@ -149,6 +128,9 @@ export async function applyPhase2Penalty(
       ease_factor: Math.max(MIN_EASE, currentEaseFactor - 0.15),
       next_review_at: tomorrow.toISOString(),
       last_reviewed_at: now.toISOString(),
+      familiarity_status: 'unknown',
+      familiarity_confidence: 0,
+      verification_due_at: tomorrow.toISOString(),
     })
     .eq('id', wordBankId)
     .eq('user_id', userId)
@@ -235,6 +217,7 @@ export function buildWordBankRatingEvent(
   wordId: string,
   grade: number,
   occurredAt: string = new Date().toISOString(),
+  evaluatorMetadata?: Record<string, unknown>,
 ): { event: SRSRatingEventRecord; rpcArgs: Record<string, unknown> } {
   const idempotencyKey = crypto.randomUUID()
   const event: SRSRatingEventRecord = {
@@ -246,6 +229,7 @@ export function buildWordBankRatingEvent(
     occurredAt,
     status: 'pending',
     createdAt: occurredAt,
+    ...(evaluatorMetadata ? { evaluatorMetadata } : {}),
   }
   const rpcArgs = {
     p_idempotency_key: idempotencyKey,
@@ -253,6 +237,7 @@ export function buildWordBankRatingEvent(
     p_word_id: wordId,
     p_grade: grade,
     p_occurred_at: occurredAt,
+    p_evaluator_metadata: evaluatorMetadata ?? {},
   }
   return { event, rpcArgs }
 }
@@ -268,8 +253,9 @@ export async function enqueueWordBankSRSUpdate(
   userId: string,
   wordId: string,
   grade: number,
+  evaluatorMetadata?: Record<string, unknown>,
 ): Promise<void> {
-  const { event, rpcArgs } = buildWordBankRatingEvent(userId, wordId, grade)
+  const { event, rpcArgs } = buildWordBankRatingEvent(userId, wordId, grade, new Date().toISOString(), evaluatorMetadata)
   await db.srsRatingEvents.add(event)
   await enqueue(userId, 'word_bank', 'rpc', rpcArgs, undefined, undefined, 'apply_word_bank_rating_event')
 }

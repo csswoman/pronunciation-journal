@@ -22,21 +22,38 @@ Verification baseline:
 - Tests: 151 files, 925 tests, all passing
 - Bundle analysis: `pnpm analyze:bundle` → `bundle-summary.json` (CI enforces `pnpm analyze:bundle:check`)
 
-### Client JavaScript (Turbopack build, 2026-07-03)
+### Client JavaScript (Turbopack build, re-baselined 2026-07-23)
 
 Metrics from `scripts/analyze-bundle.mjs` (gzip via Node zlib, same machine as build):
 
 | Metric | Raw | Gzip |
 |---|---:|---:|
 | Root main entry (`build-manifest.json` root + polyfills) | 556 KB | 168 KB |
-| All `static/chunks/*.js` (64 files) | 6,960 KB | 1,868 KB |
+| Eager `static/chunks/*.js` (82 files) | 4,231 KB | 1,275 KB |
+| Deferred chunks (excluded from budget) | 3,832 KB | 939 KB |
+
+`allChunksGzipKB` counts **eagerly-loaded chunks only**. Chunks that exist solely
+behind an `await import(...)` are reported separately as `deferredChunksGzipKB`
+and excluded, so the budget tracks what users actually download on first load
+rather than total build output.
+
+Currently one chunk is deferred: `cmu-pronouncing-dictionary` (~939 KB gzip), the
+full CMUdict, lazy-loaded by `lib/pronunciation/phonemes.ts` for phoneme scoring.
+It is detected by content probe (Turbopack chunk names are content-hashed). If the
+probe stops matching, `analyze-bundle.mjs` fails CI rather than silently counting
+the dictionary against the budget — update the probe in that case.
+
+> The previous `allChunksGzipKB` budget of 1,868 KB was measured against a total
+> that *included* the lazy dictionary, so it was ~940 KB looser than it looked.
+> The 1,275 KB baseline is not a reduction in shipped code — it is the same app
+> measured correctly.
 
 CI budgets (`scripts/bundle-budget.json`, +10% tolerance):
 
 | Metric | Budget gzip |
 |---|---:|
 | `rootMainGzipKB` | 168 KB |
-| `allChunksGzipKB` | 1,868 KB |
+| `allChunksGzipKB` | 1,275 KB |
 
 Historical route-level gzip totals (pre-Turbopack baseline, 2026-06-21) remain
 below for trend comparison only — re-measure per-route after adding route-level
