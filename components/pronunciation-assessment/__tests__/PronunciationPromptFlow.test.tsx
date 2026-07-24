@@ -5,36 +5,68 @@ import userEvent from '@testing-library/user-event'
 
 import { PronunciationPromptFlow } from '../PronunciationPromptFlow'
 import type { DiagnosticPromptSelection } from '@/lib/pronunciation/assessment/prompt-selection'
-import { targetId } from '@/lib/pronunciation/targets/registry'
+import type { CapabilitySnapshot } from '@/lib/pronunciation/assessment/types'
+import { contrastTargetId, phonemeTargetId, targetId } from '@/lib/pronunciation/targets/registry'
 
 afterEach(() => {
   cleanup()
   delete (window as { SpeechRecognition?: unknown }).SpeechRecognition
 })
 
+const fullCapability: CapabilitySnapshot = {
+  micPermission: 'granted',
+  sttAvailable: true,
+  browserSupport: 'full',
+  capturedAt: new Date().toISOString(),
+}
+
+const deniedCapability: CapabilitySnapshot = {
+  micPermission: 'denied',
+  sttAvailable: false,
+  browserSupport: 'degraded',
+  capturedAt: new Date().toISOString(),
+}
+
 const selections: DiagnosticPromptSelection[] = [
-  { targetId: targetId('segmental.contrast.θ|ð'), stage: 'perception' },
-  { targetId: targetId('segmental.phoneme./ə/'), stage: 'perception' },
+  { targetId: contrastTargetId('/θ/', '/ð/'), stage: 'perception' },
+  { targetId: phonemeTargetId('/ə/'), stage: 'perception' },
 ]
+
+function renderFlow(
+  props: Partial<{
+    selections: DiagnosticPromptSelection[]
+    capabilitySnapshot: CapabilitySnapshot
+    onComplete: ReturnType<typeof vi.fn>
+  }> = {}
+) {
+  const onComplete = props.onComplete ?? vi.fn()
+  render(
+    <PronunciationPromptFlow
+      userId="user-1"
+      selections={props.selections ?? selections}
+      capabilitySnapshot={props.capabilitySnapshot ?? fullCapability}
+      onComplete={onComplete}
+    />
+  )
+  return onComplete
+}
 
 describe('PronunciationPromptFlow', () => {
   it('announces progress via an aria-live region and advances it after an answer', async () => {
-    const onComplete = vi.fn()
-    render(<PronunciationPromptFlow userId="user-1" selections={selections} onComplete={onComplete} />)
+    renderFlow()
 
-    const progressCopy = screen.getByText('de 2').closest('[aria-live="polite"]') as HTMLElement
-    expect(progressCopy).toHaveTextContent('0')
+    const progressCopy = document.querySelector('[aria-live="polite"]') as HTMLElement
+    expect(progressCopy).toHaveTextContent('Pregunta 1 de 2')
 
     await userEvent.click(screen.getByRole('button', { name: /sí, lo distingo/i }))
 
     await waitFor(() => {
-      expect(screen.getByText('de 2').closest('[aria-live="polite"]')).toHaveTextContent('1')
+      expect(document.querySelector('[aria-live="polite"]')).toHaveTextContent('Pregunta 2 de 2')
     })
   })
 
   it('moves focus to the next prompt heading on transition', async () => {
-    const onComplete = vi.fn()
-    render(<PronunciationPromptFlow userId="user-1" selections={selections} onComplete={onComplete} />)
+    renderFlow()
 
     const firstHeading = screen.getByRole('heading', { level: 2 })
     expect(firstHeading).toHaveFocus()
@@ -48,19 +80,19 @@ describe('PronunciationPromptFlow', () => {
   })
 
   it('is keyboard operable (tab reaches the answer buttons)', async () => {
-    const onComplete = vi.fn()
-    render(<PronunciationPromptFlow userId="user-1" selections={selections} onComplete={onComplete} />)
+    renderFlow()
 
     await userEvent.tab()
     expect(screen.getByRole('button', { name: /sí, lo distingo/i })).toHaveFocus()
   })
 
   it('calls onComplete with accumulated target results after the last prompt', async () => {
-    const onComplete = vi.fn()
-    render(<PronunciationPromptFlow userId="user-1" selections={selections} onComplete={onComplete} />)
+    const onComplete = renderFlow()
 
     await userEvent.click(screen.getByRole('button', { name: /sí, lo distingo/i }))
-    await waitFor(() => screen.getByText('de 2'))
+    await waitFor(() => {
+      expect(document.querySelector('[aria-live="polite"]')).toHaveTextContent('Pregunta 2 de 2')
+    })
     await userEvent.click(screen.getByRole('button', { name: /sí, lo distingo/i }))
 
     await waitFor(() => {
@@ -71,8 +103,7 @@ describe('PronunciationPromptFlow', () => {
   })
 
   it('supports skipping a prompt without answering it', async () => {
-    const onComplete = vi.fn()
-    render(<PronunciationPromptFlow userId="user-1" selections={[selections[0]]} onComplete={onComplete} />)
+    const onComplete = renderFlow({ selections: [selections[0]] })
 
     await userEvent.click(screen.getByRole('button', { name: /saltar/i }))
 
@@ -80,5 +111,28 @@ describe('PronunciationPromptFlow', () => {
       expect(onComplete).toHaveBeenCalledTimes(1)
     })
     expect(onComplete.mock.calls[0][0][0].measurement.kind).toBe('not_measured')
+  })
+
+  it('hides production prompts when mic/STT cannot evaluate and auto-skips them', async () => {
+    const mixed: DiagnosticPromptSelection[] = [
+      { targetId: contrastTargetId('/θ/', '/ð/'), stage: 'perception' },
+      { targetId: targetId('prosody.rhythm'), stage: 'controlled_production' },
+    ]
+    const onComplete = renderFlow({
+      selections: mixed,
+      capabilitySnapshot: deniedCapability,
+    })
+
+    expect(document.querySelector('[aria-live="polite"]')).toHaveTextContent('Pregunta 1 de 1')
+    expect(screen.queryByRole('button', { name: /grabar/i })).not.toBeInTheDocument()
+
+    await userEvent.click(screen.getByRole('button', { name: /sí, lo distingo/i }))
+
+    await waitFor(() => {
+      expect(onComplete).toHaveBeenCalledTimes(1)
+    })
+    const results = onComplete.mock.calls[0][0]
+    expect(results).toHaveLength(2)
+    expect(results[1].measurement.kind).toBe('not_measured')
   })
 })

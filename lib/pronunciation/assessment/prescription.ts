@@ -31,21 +31,34 @@
  */
 
 import { getTarget, listTargets } from '@/lib/pronunciation/targets/registry'
+import { getLearnerTargetCopy } from './learner-copy'
 import type { PrescriptionSession, PrescriptionSessionStyle } from './schema'
 import type { TargetResult, TargetResultStatus } from './types'
 
-const SESSION_STYLES: readonly PrescriptionSessionStyle[] = ['perception', 'perception', 'drill', 'drill', 'transfer']
+const SESSION_STYLES: readonly PrescriptionSessionStyle[] = [
+  'perception',
+  'perception',
+  'drill',
+  'drill',
+  'transfer',
+]
 
+/** Spanish stage reasons — UI chrome; learning content stays in speak cues elsewhere. */
 const SESSION_REASON_BY_INDEX: readonly string[] = [
-  'Listen closely to a model example before trying it yourself.',
-  'Practice telling this sound apart from similar ones.',
-  'Say it in a short, controlled drill to build the motor pattern.',
-  'Try it across a few different phrases so it isn’t just one memorized word.',
-  'Use it in a real mission task so it transfers to actual conversation.',
+  'Escucha un modelo con atención antes de intentarlo tú.',
+  'Practica distinguir este sonido de otros parecidos.',
+  'Repítelo en un ejercicio corto y controlado.',
+  'Úsalo en varias frases distintas, no solo en una palabra memorizada.',
+  'Llévalo a una tarea real para que pase a tu conversación.',
 ]
 
 /** Preference order used to fill session slots when there are fewer than 5 usable candidates. */
-const FALLBACK_STATUS_ORDER: readonly TargetResultStatus[] = ['priority', 'observed', 'needs_evidence', 'strength']
+const FALLBACK_STATUS_ORDER: readonly TargetResultStatus[] = [
+  'priority',
+  'observed',
+  'needs_evidence',
+  'strength',
+]
 
 /**
  * Builds the ordered candidate target-id list sessions draw from: priority
@@ -68,17 +81,16 @@ function buildCandidateTargetIds(results: readonly TargetResult[]): string[] {
 }
 
 function reasonFor(sessionIndex: number, targetId: string, status: TargetResultStatus | null): string {
-  const stageReason = SESSION_REASON_BY_INDEX[sessionIndex]
-  const label = getTarget(targetId)
-  const targetLabel = label.ok ? label.target.label : targetId
+  const stageReason = SESSION_REASON_BY_INDEX[sessionIndex] ?? SESSION_REASON_BY_INDEX[0]!
+  const { title } = getLearnerTargetCopy(targetId)
   const statusNote =
     status === 'priority'
-      ? ' This is one of your top focus areas right now.'
+      ? ' Es uno de tus focos principales ahora.'
       : status === 'needs_evidence'
-        ? ' We need a bit more evidence on this one first.'
+        ? ' Primero necesitamos más evidencia de cómo lo manejas.'
         : ''
   // 300-char cap enforced by PrescriptionSessionSchema — keep this comfortably short.
-  return `${targetLabel}: ${stageReason}${statusNote}`.slice(0, 300)
+  return `${title}: ${stageReason}${statusNote}`.slice(0, 300)
 }
 
 /**

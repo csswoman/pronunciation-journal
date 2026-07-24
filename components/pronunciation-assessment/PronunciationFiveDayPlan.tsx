@@ -1,4 +1,4 @@
-import { getTarget } from '@/lib/pronunciation/targets/registry'
+import { getLearnerTargetCopy } from '@/lib/pronunciation/assessment/learner-copy'
 import type { PrescriptionSession } from '@/lib/pronunciation/assessment/schema'
 
 interface PronunciationFiveDayPlanProps {
@@ -12,28 +12,33 @@ const STYLE_LABEL: Record<PrescriptionSession['style'], string> = {
 }
 
 /**
- * Renders the exactly-five-session prescription as a simple ordered plan.
- * Sits after "qué trabajar primero" and before the evidence detail
- * (progressive disclosure — plan 067, step 7).
+ * Five-session plan as a flat divided list — not five identical cards
+ * (quieter; avoids nested-card noise under results).
  */
 export function PronunciationFiveDayPlan({ sessions }: PronunciationFiveDayPlanProps) {
   return (
-    <ol className="flex flex-col gap-3">
+    <ol className="flex min-w-0 flex-col divide-y divide-border-subtle border-y border-border-subtle">
       {sessions.map((session, index) => {
-        const lookup = getTarget(session.targetId)
-        const label = lookup.ok ? lookup.target.label : session.targetId
+        const { title, ipaHint } = getLearnerTargetCopy(session.targetId)
         return (
-          <li
-            key={`${session.targetId}-${index}`}
-            className="flex flex-col gap-1 rounded-md border border-[var(--border-default)] bg-[var(--surface-raised)] p-3"
-          >
-            <div className="flex items-center justify-between gap-2">
-              <span className="text-[13px] font-semibold text-[var(--text-primary)]">
-                Día {index + 1} · {label}
+          <li key={`${session.targetId}-${index}`} className="flex min-w-0 flex-col gap-1 py-3">
+            <div className="flex min-w-0 flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-3">
+              <span className="min-w-0 text-pretty break-words font-label text-fg">
+                Día {index + 1} · {title}
+                {ipaHint ? (
+                  <>
+                    {' '}
+                    <span className="font-ipa font-normal text-fg-muted">({ipaHint})</span>
+                  </>
+                ) : null}
               </span>
-              <span className="text-[12px] text-[var(--text-secondary)]">{STYLE_LABEL[session.style]}</span>
+              <span className="shrink-0 font-caption text-fg-subtle">
+                {STYLE_LABEL[session.style]}
+              </span>
             </div>
-            <p className="text-[13px] text-[var(--text-secondary)]">{session.reason}</p>
+            <p className="max-w-prose text-pretty break-words font-body-sm text-fg-muted">
+              {session.reason}
+            </p>
           </li>
         )
       })}

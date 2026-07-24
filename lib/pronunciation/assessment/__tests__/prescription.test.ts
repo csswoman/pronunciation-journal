@@ -40,6 +40,10 @@ describe('generatePrescriptionSessions', () => {
       expect(session.reason.length).toBeGreaterThan(0)
       expect(session.reason.length).toBeLessThanOrEqual(300)
       expect(getTarget(session.targetId).ok).toBe(true)
+      // Learner-facing Spanish chrome — not authoring English jargon.
+      expect(session.reason).toMatch(
+        /escucha|practica|repítelo|úsalo|llévalo|evidencia|focos/i
+      )
     }
   })
 

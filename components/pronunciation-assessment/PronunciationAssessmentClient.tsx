@@ -120,9 +120,14 @@ export function PronunciationAssessmentClient({ userId }: PronunciationAssessmen
     )
   }
 
-  if (stage === 'prompts') {
+  if (stage === 'prompts' && snapshot) {
     return (
-      <PronunciationPromptFlow userId={userId ?? 'guest'} selections={selections} onComplete={handlePromptsComplete} />
+      <PronunciationPromptFlow
+        userId={userId ?? 'guest'}
+        selections={selections}
+        capabilitySnapshot={snapshot}
+        onComplete={handlePromptsComplete}
+      />
     )
   }
 

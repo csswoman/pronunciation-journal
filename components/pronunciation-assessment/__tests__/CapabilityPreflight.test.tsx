@@ -61,10 +61,10 @@ describe('CapabilityPreflight', () => {
     ).toBeInTheDocument()
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /continuar/i })).toBeEnabled()
+      expect(screen.getByRole('button', { name: /empezar las preguntas/i })).toBeEnabled()
     })
 
-    await userEvent.click(screen.getByRole('button', { name: /continuar/i }))
+    await userEvent.click(screen.getByRole('button', { name: /empezar las preguntas/i }))
     expect(onContinue).toHaveBeenCalledTimes(1)
     const snapshot = onContinue.mock.calls[0][0]
     expect(snapshot.browserSupport).toBe('full')
@@ -81,7 +81,7 @@ describe('CapabilityPreflight', () => {
       expect(screen.getByText(/no pudimos evaluar tu pronunciaci[oó]n/i)).toBeInTheDocument()
     })
 
-    const continueButton = screen.getByRole('button', { name: /continuar/i })
+    const continueButton = screen.getByRole('button', { name: /empezar las preguntas/i })
     expect(continueButton).toBeEnabled()
     await userEvent.click(continueButton)
     expect(onContinue).toHaveBeenCalledTimes(1)
@@ -98,7 +98,7 @@ describe('CapabilityPreflight', () => {
       expect(screen.getByText(/no pudimos evaluar tu pronunciaci[oó]n/i)).toBeInTheDocument()
     })
 
-    const continueButton = screen.getByRole('button', { name: /continuar/i })
+    const continueButton = screen.getByRole('button', { name: /empezar las preguntas/i })
     expect(continueButton).toBeEnabled()
     await userEvent.click(continueButton)
     expect(onContinue.mock.calls[0][0].browserSupport).toBe('unsupported')
@@ -114,7 +114,7 @@ describe('CapabilityPreflight', () => {
       expect(screen.getByText(/no pudimos evaluar tu pronunciaci[oó]n/i)).toBeInTheDocument()
     })
 
-    const continueButton = screen.getByRole('button', { name: /continuar/i })
+    const continueButton = screen.getByRole('button', { name: /empezar las preguntas/i })
     expect(continueButton).toBeEnabled()
     await userEvent.click(continueButton)
     expect(onContinue.mock.calls[0][0].sttAvailable).toBe(false)
@@ -127,10 +127,10 @@ describe('CapabilityPreflight', () => {
     render(<CapabilityPreflight onContinue={onContinue} />)
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /continuar/i })).toBeEnabled()
+      expect(screen.getByRole('button', { name: /empezar las preguntas/i })).toBeEnabled()
     })
 
-    await userEvent.click(screen.getByRole('button', { name: /continuar/i }))
+    await userEvent.click(screen.getByRole('button', { name: /empezar las preguntas/i }))
     expect(onContinue.mock.calls[0][0].micPermission).toBe('unknown')
   })
 })

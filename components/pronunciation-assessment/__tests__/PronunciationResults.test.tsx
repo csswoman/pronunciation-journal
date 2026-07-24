@@ -25,7 +25,7 @@ function buildResult(overrides: Partial<PronunciationDiagnosticResult> = {}): Pr
         status: 'priority',
         signalType: 'stt_intelligibility',
         confidence: 0.8,
-        evaluatorKind: 'stt_intelligibility',
+        evaluatorKind: 'perception_forced_choice',
         evaluatorVersion: 'v1',
         measurement: { kind: 'scored', score: 40 },
       },
@@ -52,18 +52,46 @@ function buildResult(overrides: Partial<PronunciationDiagnosticResult> = {}): Pr
 }
 
 describe('PronunciationResults', () => {
+  it('uses honest copy when nothing was measured', () => {
+    render(
+      <PronunciationResults
+        result={buildResult({
+          targetResults: [
+            {
+              targetId: 'segmental.phoneme./ə/',
+              status: 'needs_evidence',
+              signalType: 'stt_intelligibility',
+              confidence: 0,
+              evaluatorKind: null,
+              evaluatorVersion: null,
+              measurement: { kind: 'not_measured', abstentionReason: 'skipped_by_user' },
+            },
+          ],
+        })}
+        saving={false}
+        saveError={false}
+        onRetrySave={vi.fn()}
+      />
+    )
+
+    expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent(/no pudimos medir/i)
+    expect(screen.queryByText(/buen trabajo/i)).not.toBeInTheDocument()
+  })
+
   it('leads with the priority section, not an aggregate score', async () => {
     render(
       <PronunciationResults result={buildResult()} saving={false} saveError={false} onRetrySave={vi.fn()} />
     )
 
-    const heading = screen.getByRole('heading', { level: 1 })
+    const heading = screen.getByRole('heading', { level: 2 })
     expect(heading).toHaveTextContent(/trabajar primero/i)
     expect(heading).not.toHaveTextContent(/\d+\s*\/\s*100/)
     expect(screen.queryByText(/score/i)).not.toBeInTheDocument()
     // The collapsed evidence-detail <details> may legitimately contain raw
     // scores — but the priority card itself (the "lead" content) must not.
-    const priorityCard = screen.getByRole('heading', { level: 3, name: /schwa/i }).closest('li') as HTMLElement
+    const priorityCard = screen
+      .getByRole('heading', { level: 3, name: /vocal relajada/i })
+      .closest('li') as HTMLElement
     expect(priorityCard).not.toHaveTextContent(/\d+\s*\/\s*100/)
   })
 
@@ -71,7 +99,7 @@ describe('PronunciationResults', () => {
     render(
       <PronunciationResults result={buildResult()} saving={false} saveError={false} onRetrySave={vi.fn()} />
     )
-    const heading = screen.getByRole('heading', { level: 1 })
+    const heading = screen.getByRole('heading', { level: 2 })
     expect(heading).toHaveFocus()
   })
 
@@ -98,6 +126,22 @@ describe('PronunciationResults', () => {
     expect(details).not.toHaveAttribute('open')
   })
 
+  it('withdraws target assessment copy when the flag is off', () => {
+    render(
+      <PronunciationResults
+        result={buildResult()}
+        saving={false}
+        saveError={false}
+        onRetrySave={vi.fn()}
+        copyEnabled={false}
+      />
+    )
+
+    expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent(/siguiente práctica/i)
+    expect(screen.queryByRole('heading', { level: 3, name: /vocal relajada/i })).not.toBeInTheDocument()
+    expect(screen.queryByText(/puntaje|confianza|prioridad|fortaleza|observado/i)).not.toBeInTheDocument()
+  })
+
   it('shows a retry button on save error and calls onRetrySave when clicked', async () => {
     const onRetrySave = vi.fn()
     render(
@@ -116,7 +160,7 @@ describe('PronunciationResults', () => {
       <PronunciationResults result={buildResult()} saving={false} saveError={false} onRetrySave={vi.fn()} />
     )
     await userEvent.tab()
-    // Heading itself is tabIndex={-1} (programmatic focus only, not in tab order)
-    expect(screen.getByRole('heading', { level: 1 })).not.toHaveFocus()
+    // Results heading is tabIndex={-1} (programmatic focus only, not in tab order)
+    expect(screen.getByRole('heading', { level: 2 })).not.toHaveFocus()
   })
 })

@@ -5,7 +5,7 @@ import { Mic, MicOff } from '@/components/icons'
 import Button from '@/components/ui/Button'
 import { micErrorMessage } from '@/components/practice/essential-words/mic-error-message'
 import { useSpeechRecognition } from '@/hooks/useSpeechRecognition'
-import { getTarget } from '@/lib/pronunciation/targets/registry'
+import { getLearnerTargetCopy } from '@/lib/pronunciation/assessment/learner-copy'
 import type { SpokenAttempt } from '@/lib/pronunciation/spoken-attempt'
 import type { DiagnosticPromptSelection } from '@/lib/pronunciation/assessment/prompt-selection'
 
@@ -15,29 +15,17 @@ interface PronunciationProductionPromptProps {
   onAttempt: (attempt: SpokenAttempt) => void
 }
 
-/**
- * Minimal production prompt: reuses `useSpeechRecognition` (already the
- * established mic + Web Speech API hook — see `SpeakScoredExercise.tsx`)
- * to capture a spoken attempt and turns the transcript into a `SpokenAttempt`
- * for `scoreProductionPrompt` (step 4) to grade. No audio is persisted here.
- *
- * Kept intentionally minimal: one target word (the target's label) said
- * once, recognized, and submitted — the plan's emphasis is the results
- * experience, not prompt-taking polish.
- */
 export function PronunciationProductionPrompt({ userId, selection, onAttempt }: PronunciationProductionPromptProps) {
   const headingRef = useRef<HTMLHeadingElement>(null)
   const { status, result, errorCode, isSupported, start, stop, reset } = useSpeechRecognition()
-  const lookup = getTarget(selection.targetId)
-  const label = lookup.ok ? lookup.target.label : selection.targetId
+  const { title, ipaHint, speakCue } = getLearnerTargetCopy(selection.targetId)
+  const targetText = speakCue ?? title
   const submittedRef = useRef(false)
 
   useEffect(() => {
     headingRef.current?.focus()
     submittedRef.current = false
     reset()
-    // `reset` (from useSpeechRecognition) has a stable identity, so it's
-    // safe to omit from deps without disabling the lint rule.
   }, [selection.targetId, reset])
 
   useEffect(() => {
@@ -45,7 +33,7 @@ export function PronunciationProductionPrompt({ userId, selection, onAttempt }: 
     submittedRef.current = true
     const attempt: SpokenAttempt = {
       userId,
-      targetText: label,
+      targetText,
       transcript: result.transcript,
       evaluatorVersion: 'diagnostic-stt-v1',
       scoreKind: 'stt_intelligibility',
@@ -55,14 +43,14 @@ export function PronunciationProductionPrompt({ userId, selection, onAttempt }: 
       outcome: result.transcript.trim().length > 0 ? 'scored' : 'failed',
     }
     onAttempt(attempt)
-  }, [status, result, userId, label, selection.targetId, onAttempt])
+  }, [status, result, userId, targetText, selection.targetId, onAttempt])
 
   function skip() {
     if (submittedRef.current) return
     submittedRef.current = true
     onAttempt({
       userId,
-      targetText: label,
+      targetText,
       transcript: '',
       evaluatorVersion: 'diagnostic-stt-v1',
       scoreKind: 'stt_intelligibility',
@@ -77,15 +65,33 @@ export function PronunciationProductionPrompt({ userId, selection, onAttempt }: 
   const isError = status === 'error'
 
   return (
-    <fieldset className="flex flex-col items-center gap-4 rounded-md border border-[var(--border-default)] bg-[var(--surface-raised)] p-4">
+    <fieldset className="flex min-w-0 flex-col items-stretch gap-5 sm:items-center">
       <legend className="sr-only">Pregunta de producción oral</legend>
-      <h2 ref={headingRef} tabIndex={-1} className="text-[15px] font-semibold text-[var(--text-primary)] outline-none">
-        Di en voz alta: {label}
-      </h2>
+      <div className="flex min-w-0 flex-col items-center gap-2 text-center">
+        <h2
+          ref={headingRef}
+          tabIndex={-1}
+          className="font-kicker text-fg-muted outline-none"
+        >
+          Di en voz alta
+        </h2>
+        <p className="min-w-0 text-pretty break-words text-h4 text-fg">{targetText}</p>
+        <p className="text-pretty font-body-sm text-fg-muted">
+          Enfoque: {title}
+          {ipaHint ? (
+            <>
+              {' '}
+              <span className="font-ipa">({ipaHint})</span>
+            </>
+          ) : null}
+        </p>
+      </div>
 
       {isSupported ? (
         <Button
           type="button"
+          fullWidth
+          className="min-h-11 sm:max-w-xs"
           variant={isListening ? 'error' : 'primary'}
           icon={isListening ? <MicOff size={18} aria-hidden /> : <Mic size={18} aria-hidden />}
           onClick={isListening ? stop : start}
@@ -94,18 +100,18 @@ export function PronunciationProductionPrompt({ userId, selection, onAttempt }: 
           {isListening ? 'Detener' : 'Grabar'}
         </Button>
       ) : (
-        <p className="text-[13px] text-[var(--text-secondary)]">
+        <p className="text-pretty text-center font-body-sm text-fg-muted">
           Tu navegador no soporta reconocimiento de voz. Puedes saltar esta pregunta.
         </p>
       )}
 
       {isError && (
-        <p role="alert" className="text-[13px] text-[var(--error)]">
+        <p role="alert" className="text-pretty text-center font-body-sm text-error">
           {micErrorMessage(errorCode)}
         </p>
       )}
 
-      <Button type="button" variant="ghost" size="sm" onClick={skip}>
+      <Button type="button" variant="ghost" className="min-h-11" onClick={skip}>
         Saltar
       </Button>
     </fieldset>

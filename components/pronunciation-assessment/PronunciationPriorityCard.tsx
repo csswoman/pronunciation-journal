@@ -1,5 +1,5 @@
 import Anchor from '@/components/ui/Anchor'
-import { getTarget } from '@/lib/pronunciation/targets/registry'
+import { getLearnerTargetCopy } from '@/lib/pronunciation/assessment/learner-copy'
 import { targetIdToPracticeRoute } from '@/lib/pronunciation/target-route'
 import type { TargetResult } from '@/lib/pronunciation/assessment/types'
 
@@ -9,29 +9,42 @@ interface PronunciationPriorityCardProps {
 }
 
 /**
- * One "qué trabajar primero" card — a single priority target with a direct
- * CTA to practice it. Leads the results screen (plan 067, step 7); never
- * shows a raw numeric score, only the target label and a short reason.
+ * One priority target with a direct practice CTA. Interactive unit = card
+ * is allowed; rank uses soft primary so it doesn't compete with the CTA.
  */
 export function PronunciationPriorityCard({ result, rank }: PronunciationPriorityCardProps) {
-  const lookup = getTarget(result.targetId)
-  const label = lookup.ok ? lookup.target.label : result.targetId
+  const { title, ipaHint } = getLearnerTargetCopy(result.targetId)
   const route = targetIdToPracticeRoute(result.targetId)
 
   return (
-    <li className="flex flex-col gap-2 rounded-md border border-[var(--border-default)] bg-[var(--surface-raised)] p-4">
-      <div className="flex items-center gap-2">
-        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--cta-bg)] text-[13px] font-semibold text-[var(--cta-fg)]">
+    <li className="flex min-w-0 flex-col gap-3 rounded-md border border-border-default bg-surface-raised p-4">
+      <div className="flex min-w-0 items-start gap-3">
+        <span
+          aria-hidden
+          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary-soft font-caption font-semibold tabular-nums text-primary"
+        >
           {rank}
         </span>
-        <h3 className="text-[15px] font-semibold text-[var(--text-primary)]">{label}</h3>
+        <h3 className="min-w-0 text-pretty break-words font-label text-fg">
+          {title}
+          {ipaHint ? (
+            <>
+              {' '}
+              <span className="font-ipa font-normal text-fg-muted">({ipaHint})</span>
+            </>
+          ) : null}
+        </h3>
       </div>
       {route ? (
-        <Anchor href={route} color="primary">
+        <Anchor
+          href={route}
+          color="unstyled"
+          className="inline-flex min-h-11 w-full items-center justify-center rounded-md bg-cta-bg px-5 font-label text-cta-fg no-underline transition-colors duration-150 ease-out-quart hover:bg-[var(--cta-bg-hover)] hover:no-underline"
+        >
           Practicar ahora
         </Anchor>
       ) : (
-        <p className="text-[13px] text-[var(--text-secondary)]">
+        <p className="text-pretty font-body-sm text-fg-muted">
           Este objetivo se trabaja en tu plan de cinco días más abajo.
         </p>
       )}

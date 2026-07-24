@@ -1,8 +1,9 @@
-import { getTarget } from '@/lib/pronunciation/targets/registry'
+import { getLearnerTargetCopy } from '@/lib/pronunciation/assessment/learner-copy'
 import type { TargetResult } from '@/lib/pronunciation/assessment/types'
 
 interface PronunciationEvidenceDetailProps {
   targetResults: readonly TargetResult[]
+  copyEnabled?: boolean
 }
 
 const STATUS_LABEL: Record<TargetResult['status'], string> = {
@@ -20,32 +21,38 @@ function measurementSummary(result: TargetResult): string {
 }
 
 /**
- * Full per-target evidence breakdown — the last, most detailed layer of
- * progressive disclosure on the results screen. Wrapped in a native
- * `<details>` so it stays collapsed by default (plan 067, step 7: "evidence
- * detail" comes after the priority list and five-day plan, not before).
+ * Collapsed-by-default evidence layer. Flat details — no raised card chrome
+ * competing with priority CTAs above.
  */
-export function PronunciationEvidenceDetail({ targetResults }: PronunciationEvidenceDetailProps) {
+export function PronunciationEvidenceDetail({ targetResults, copyEnabled = true }: PronunciationEvidenceDetailProps) {
   return (
-    <details className="rounded-md border border-[var(--border-default)] bg-[var(--surface-raised)] p-4">
-      <summary className="cursor-pointer text-[14px] font-semibold text-[var(--text-primary)]">
-        Ver todo lo que medimos
+    <details className="min-w-0 border-t border-border-subtle pt-4">
+      <summary className="cursor-pointer font-label text-fg">
+        {copyEnabled ? 'Ver todo lo que medimos' : 'Registro del diagnóstico'}
       </summary>
-      <ul className="mt-3 flex flex-col gap-2">
+      <ul className="mt-3 flex min-w-0 flex-col gap-3">
         {targetResults.map((result) => {
-          const lookup = getTarget(result.targetId)
-          const label = lookup.ok ? lookup.target.label : result.targetId
+          const { title, ipaHint } = getLearnerTargetCopy(result.targetId)
           return (
-            <li
-              key={result.targetId}
-              className="flex flex-col gap-0.5 border-t border-[var(--border-default)] pt-2 first:border-t-0 first:pt-0"
-            >
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-[13px] font-medium text-[var(--text-primary)]">{label}</span>
-                <span className="text-[12px] text-[var(--text-secondary)]">{STATUS_LABEL[result.status]}</span>
+            <li key={result.targetId} className="flex min-w-0 flex-col gap-0.5">
+              <div className="flex min-w-0 flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-2">
+                <span className="min-w-0 text-pretty break-words font-body-sm font-medium text-fg">
+                  {title}
+                  {ipaHint ? (
+                    <>
+                      {' '}
+                      <span className="font-ipa font-normal text-fg-muted">({ipaHint})</span>
+                    </>
+                  ) : null}
+                </span>
+                {copyEnabled && (
+                  <span className="shrink-0 font-caption text-fg-subtle">
+                    {STATUS_LABEL[result.status]}
+                  </span>
+                )}
               </div>
-              <p className="text-[12px] text-[var(--text-secondary)]">
-                {measurementSummary(result)} · confianza {Math.round(result.confidence * 100)}%
+              <p className="text-pretty break-words font-caption text-fg-muted">
+                {copyEnabled ? measurementSummary(result) : 'Evidencia guardada para una próxima práctica.'}
               </p>
             </li>
           )

@@ -3,7 +3,7 @@
 // Planned structure:
 // <CapabilityPreflight>
 //   <PreflightPrivacyNotice />
-//   <PreflightDegradedNotice />   (only when production can't be evaluated)
+//   <PreflightDegradedNotice />
 //   <PreflightContinueButton />
 // </CapabilityPreflight>
 
@@ -16,16 +16,11 @@ import { PreflightDegradedNotice } from './PreflightDegradedNotice'
 import { PreflightPrivacyNotice } from './PreflightPrivacyNotice'
 
 interface CapabilityPreflightProps {
-  /** Called with the captured snapshot when the learner chooses to continue. */
   onContinue: (snapshot: CapabilitySnapshot) => void
 }
 
 /**
- * Pre-recording checkpoint for the pronunciation diagnostic (plan 067,
- * step 2). Explains what is sent/retained before any mic access, detects
- * mic permission / STT / browser support, and always leaves the learner a
- * way forward — production evaluation degrades to perception/self-report
- * rather than dead-ending the flow.
+ * Pre-recording checkpoint: privacy, capability detection, always a way forward.
  */
 export function CapabilityPreflight({ onContinue }: CapabilityPreflightProps) {
   const [snapshot, setSnapshot] = useState<CapabilitySnapshot | null>(null)
@@ -48,13 +43,19 @@ export function CapabilityPreflight({ onContinue }: CapabilityPreflightProps) {
   }
 
   return (
-    <div className="flex flex-col gap-4 rounded-md border border-[var(--border-default)] bg-[var(--surface-raised)] p-4">
+    <div className="flex min-w-0 flex-col gap-5">
       <PreflightPrivacyNotice />
 
       {!isChecking && !canEvaluate && <PreflightDegradedNotice snapshot={snapshot} />}
 
-      <Button onClick={handleContinue} disabled={isChecking} isLoading={isChecking}>
-        Continuar
+      <Button
+        onClick={handleContinue}
+        disabled={isChecking}
+        isLoading={isChecking}
+        fullWidth
+        className="min-h-11"
+      >
+        Empezar las preguntas
       </Button>
     </div>
   )

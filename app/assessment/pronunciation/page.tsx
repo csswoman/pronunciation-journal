@@ -1,5 +1,8 @@
-import { getSupabaseServerUser } from "@/lib/supabase/session";
+import PageHeader from "@/components/layout/PageHeader";
+import PageLayout from "@/components/layout/PageLayout";
 import { PronunciationAssessmentClient } from "@/components/pronunciation-assessment/PronunciationAssessmentClient";
+import { isSupabaseConfigured } from "@/lib/supabase/env";
+import { getSupabaseServerUser } from "@/lib/supabase/session";
 
 /**
  * Server shell for the pronunciation diagnostic (plan 067, step 7). Mirrors
@@ -7,11 +10,19 @@ import { PronunciationAssessmentClient } from "@/components/pronunciation-assess
  * may still take the diagnostic, so `userId` is allowed to be undefined.
  */
 export default async function PronunciationAssessmentPage() {
-  const user = await getSupabaseServerUser();
+  const user = isSupabaseConfigured() ? await getSupabaseServerUser() : null;
 
   return (
-    <main className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 py-8">
-      <PronunciationAssessmentClient userId={user?.id} />
-    </main>
+    <PageLayout>
+      <div className="mx-auto flex w-full min-w-0 max-w-2xl flex-col gap-6 pb-[max(0px,env(safe-area-inset-bottom))]">
+        <PageHeader
+          variant="compact"
+          kicker="Diagnóstico"
+          title="Pronunciación"
+          subtitle="Unas preguntas cortas para ubicar qué practicar primero."
+        />
+        <PronunciationAssessmentClient userId={user?.id} />
+      </div>
+    </PageLayout>
   );
 }
