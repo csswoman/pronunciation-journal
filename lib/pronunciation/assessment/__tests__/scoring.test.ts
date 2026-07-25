@@ -74,7 +74,7 @@ describe('scoreProductionPrompt — segmental/connected-speech targets', () => {
     expect(result.measurement).toEqual({ kind: 'scored', score: 88 })
     expect(result.evaluatorKind).toBe('stt_intelligibility')
     expect(result.evaluatorVersion).toBe('stt-v2')
-    expect(result.status).toBe('strength')
+    expect(result.status).toBe('observed')
     expect(result.confidence).toBe(0.8)
     expect(TargetResultSchema.safeParse(result).success).toBe(true)
   })
@@ -173,29 +173,48 @@ describe('scorePerceptionPrompt', () => {
     expect(TargetResultSchema.safeParse(result).success).toBe(true)
   })
 
-  it('prosody-only perception never emits a numeric score (schema honesty gate)', () => {
+  it('word-stress listening perception is objective evidence, not a production claim', () => {
     const result = scorePerceptionPrompt(
       { targetId: targetId('prosody.word-stress'), stage: 'perception' },
       { correct: true }
     )
 
-    expect(result.measurement.kind).toBe('not_measured')
-    if (result.measurement.kind === 'not_measured') {
-      expect(result.measurement.abstentionReason).toBe('no_evaluator_available')
-    }
-    expect(result.signalType).toBe('self_report')
-    expect(result.status).toBe('needs_evidence')
-    expect(result.confidence).toBe(0.15)
+    expect(result.measurement).toEqual({ kind: 'scored', score: 100 })
+    expect(result.signalType).toBe('perception')
+    expect(result.evaluatorKind).toBe('perception_forced_choice')
+    expect(result.status).toBe('strength')
+    expect(result.confidence).toBe(0.6)
     expect(TargetResultSchema.safeParse(result).success).toBe(true)
   })
 
-  it('prosody self-report struggle encodes higher confidence than comfort', () => {
-    const struggle = scorePerceptionPrompt(
+  it('preserves the score from a multi-item word-stress listening test', () => {
+    const result = scorePerceptionPrompt(
       { targetId: targetId('prosody.word-stress'), stage: 'perception' },
+      { correct: false, score: 60 }
+    )
+
+    expect(result.measurement).toEqual({ kind: 'scored', score: 60 })
+    expect(result.evaluatorVersion).toBe('word-stress-listening-v1')
+  })
+
+  it('carries perceptionItemCount from the answer onto the word-stress result', () => {
+    const result = scorePerceptionPrompt(
+      { targetId: targetId('prosody.word-stress'), stage: 'perception' },
+      { correct: false, score: 60, perceptionItemCount: 5 }
+    )
+
+    expect(result.perceptionItemCount).toBe(5)
+    expect(result.measurement).toEqual({ kind: 'scored', score: 60 })
+    expect(TargetResultSchema.safeParse(result).success).toBe(true)
+  })
+
+  it('other prosody targets remain self-report until they get an audio item', () => {
+    const struggle = scorePerceptionPrompt(
+      { targetId: targetId('prosody.rhythm'), stage: 'perception' },
       { correct: false }
     )
     const comfort = scorePerceptionPrompt(
-      { targetId: targetId('prosody.word-stress'), stage: 'perception' },
+      { targetId: targetId('prosody.rhythm'), stage: 'perception' },
       { correct: true }
     )
 

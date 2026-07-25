@@ -11,7 +11,7 @@ import { z } from 'zod'
 import type { EvidenceCapability } from '@/lib/pronunciation/targets/types'
 import { UNAVAILABLE_EVIDENCE_CAPABILITIES } from '@/lib/pronunciation/targets/types'
 
-/** Prosody categories that may never receive a numeric/acoustic score in this schema version. */
+/** Prosody categories that may never receive a numeric production/acoustic score in this schema version. */
 const PROSODY_ONLY_TARGET_PREFIXES = [
   'prosody.word-stress',
   'prosody.sentence-stress',
@@ -178,6 +178,13 @@ export const TargetResultSchema = z
     evaluatorKind: EvaluatorKindSchema.nullable(),
     evaluatorVersion: z.string().min(1).nullable(),
     measurement: MeasurementSchema,
+    /**
+     * How many perception items were actually presented in this run, when the
+     * target uses a sampled multi-item perception test (word-stress). Lets the
+     * evidence UI say "X de N" without depending on the full bank size. Absent
+     * for single-item or production targets.
+     */
+    perceptionItemCount: z.number().int().positive().optional(),
   })
   .strict()
   .superRefine((result, ctx) => {
@@ -211,11 +218,11 @@ export const TargetResultSchema = z
           message: `cannot claim a numeric score for unavailable capability "${result.signalType}" (see UNAVAILABLE_EVIDENCE_CAPABILITIES)`,
         })
       }
-      if (isProsodyOnlyTargetId(result.targetId)) {
+      if (isProsodyOnlyTargetId(result.targetId) && result.signalType !== 'perception') {
         ctx.addIssue({
           code: 'custom',
           path: ['measurement', 'score'],
-          message: `target "${result.targetId}" is a prosody-only category (stress/rhythm/intonation) and may never carry a numeric score in this schema version — use not_measured with a self-report instead`,
+          message: `target "${result.targetId}" is a prosody-only category (stress/rhythm/intonation) and may only carry a numeric score from an objective perception item, never from production or acoustic inference`,
         })
       }
     }
