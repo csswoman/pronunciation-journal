@@ -15,6 +15,9 @@ export interface CorpusItem {
   /** Expert-labeled pronunciation score from speechocean762, 0-100 scale (dataset uses 0-10; caller-side loader multiplies by 10 — see run-benchmark.ts). */
   humanScore: number
   speakerId: string
+  /** Proportional-estimate analysis window (Task 6b), ms from clip start. Absent means "use the whole clip" (e.g. synthetic/legacy fixtures or single-word utterances). */
+  windowStartMs?: number
+  windowEndMs?: number
 }
 
 const CorpusItemSchema = z.object({
@@ -22,6 +25,8 @@ const CorpusItemSchema = z.object({
   targetVowel: z.string().min(1),
   humanScore: z.number(),
   speakerId: z.string().min(1),
+  windowStartMs: z.number().optional(),
+  windowEndMs: z.number().optional(),
 })
 
 const CorpusLabelsSchema = z.array(CorpusItemSchema)

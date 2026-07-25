@@ -24,4 +24,13 @@ describe('parseCorpusLabels', () => {
 
     expect(() => parseCorpusLabels(raw)).toThrow()
   })
+
+  it('accepts optional windowStartMs/windowEndMs on a CorpusItem', () => {
+    const raw = JSON.stringify([
+      { clipFile: 'utt001.wav', targetVowel: 'iː', humanScore: 92, speakerId: 'spk01', windowStartMs: 600, windowEndMs: 800 },
+    ])
+    const items = parseCorpusLabels(raw)
+    expect(items[0].windowStartMs).toBe(600)
+    expect(items[0].windowEndMs).toBe(800)
+  })
 })
