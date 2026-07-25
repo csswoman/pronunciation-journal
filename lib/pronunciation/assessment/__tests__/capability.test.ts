@@ -5,8 +5,11 @@ import {
   canEvaluateProduction,
   deriveBrowserSupport,
   deriveSttAvailable,
+  detectMicrophoneCaptureSupport,
   detectSpeechRecognitionSupport,
   queryMicPermission,
+  requestMicPermission,
+  subscribeToMicPermissionChanges,
 } from '../capability'
 import { CapabilitySnapshotSchema } from '../types'
 
@@ -52,6 +55,62 @@ describe('queryMicPermission', () => {
   })
 })
 
+describe('subscribeToMicPermissionChanges', () => {
+  it('notifies and removes the permission listener', async () => {
+    const listeners = new Set<() => void>()
+    const status = {
+      state: 'denied' as PermissionState,
+      addEventListener: vi.fn((_event: string, listener: () => void) => listeners.add(listener)),
+      removeEventListener: vi.fn((_event: string, listener: () => void) => listeners.delete(listener)),
+    }
+    vi.stubGlobal('navigator', {
+      permissions: { query: vi.fn().mockResolvedValue(status) },
+    })
+    const onChange = vi.fn()
+
+    const unsubscribe = await subscribeToMicPermissionChanges(onChange)
+    status.state = 'granted'
+    listeners.forEach((listener) => listener())
+
+    expect(onChange).toHaveBeenCalledWith('granted')
+    unsubscribe()
+    expect(listeners.size).toBe(0)
+  })
+})
+
+describe('detectMicrophoneCaptureSupport', () => {
+  it('requires getUserMedia in a secure context', () => {
+    vi.stubGlobal('window', { isSecureContext: true })
+    vi.stubGlobal('navigator', { mediaDevices: { getUserMedia: vi.fn() } })
+    expect(detectMicrophoneCaptureSupport()).toBe(true)
+  })
+
+  it('rejects an insecure LAN context even if a browser exposes mediaDevices', () => {
+    vi.stubGlobal('window', { isSecureContext: false })
+    vi.stubGlobal('navigator', { mediaDevices: { getUserMedia: vi.fn() } })
+    expect(detectMicrophoneCaptureSupport()).toBe(false)
+  })
+})
+
+describe('requestMicPermission', () => {
+  it('requests the microphone and releases the probe stream', async () => {
+    const stop = vi.fn()
+    const getUserMedia = vi.fn().mockResolvedValue({ getTracks: () => [{ stop }] })
+    vi.stubGlobal('navigator', { mediaDevices: { getUserMedia } })
+
+    await expect(requestMicPermission()).resolves.toBe('granted')
+    expect(getUserMedia).toHaveBeenCalledWith({ audio: true })
+    expect(stop).toHaveBeenCalledTimes(1)
+  })
+
+  it('maps an explicit browser denial to denied', async () => {
+    const error = new DOMException('blocked', 'NotAllowedError')
+    vi.stubGlobal('navigator', { mediaDevices: { getUserMedia: vi.fn().mockRejectedValue(error) } })
+
+    await expect(requestMicPermission()).resolves.toBe('denied')
+  })
+})
+
 describe('deriveBrowserSupport', () => {
   it('is unsupported when there is no SpeechRecognition API', () => {
     expect(deriveBrowserSupport(false, 'unknown')).toBe('unsupported')
@@ -59,6 +118,10 @@ describe('deriveBrowserSupport', () => {
 
   it('is partial when the API exists but mic permission is denied', () => {
     expect(deriveBrowserSupport(true, 'denied')).toBe('partial')
+  })
+
+  it('is partial when microphone capture is unavailable', () => {
+    expect(deriveBrowserSupport(true, 'unknown', false)).toBe('partial')
   })
 
   it('is full when the API exists and mic is not denied', () => {
@@ -74,6 +137,10 @@ describe('deriveSttAvailable', () => {
 
   it('is false when mic permission denied', () => {
     expect(deriveSttAvailable(true, 'denied', true)).toBe(false)
+  })
+
+  it('is false when microphone capture is unavailable', () => {
+    expect(deriveSttAvailable(true, 'unknown', true, false)).toBe(false)
   })
 
   it('is false when offline (conservative: Web Speech API needs network)', () => {
@@ -92,6 +159,7 @@ describe('buildCapabilitySnapshot', () => {
     vi.stubGlobal('navigator', {
       onLine: true,
       permissions: { query: vi.fn().mockResolvedValue({ state: 'granted' }) },
+      mediaDevices: { getUserMedia: vi.fn() },
     })
 
     const snapshot = await buildCapabilitySnapshot()
@@ -109,6 +177,7 @@ describe('buildCapabilitySnapshot', () => {
     vi.stubGlobal('navigator', {
       onLine: true,
       permissions: { query: vi.fn().mockResolvedValue({ state: 'denied' }) },
+      mediaDevices: { getUserMedia: vi.fn() },
     })
 
     const snapshot = await buildCapabilitySnapshot()
@@ -124,7 +193,10 @@ describe('buildCapabilitySnapshot', () => {
 
   it('produces a snapshot for unsupported-browser path', async () => {
     vi.stubGlobal('window', {})
-    vi.stubGlobal('navigator', { onLine: true })
+    vi.stubGlobal('navigator', {
+      onLine: true,
+      mediaDevices: { getUserMedia: vi.fn() },
+    })
 
     const snapshot = await buildCapabilitySnapshot()
 
@@ -141,6 +213,7 @@ describe('buildCapabilitySnapshot', () => {
     vi.stubGlobal('navigator', {
       onLine: false,
       permissions: { query: vi.fn().mockResolvedValue({ state: 'granted' }) },
+      mediaDevices: { getUserMedia: vi.fn() },
     })
 
     const snapshot = await buildCapabilitySnapshot()
@@ -155,6 +228,7 @@ describe('buildCapabilitySnapshot', () => {
     vi.stubGlobal('navigator', {
       onLine: true,
       permissions: undefined,
+      mediaDevices: { getUserMedia: vi.fn() },
     })
 
     const snapshot = await buildCapabilitySnapshot()
@@ -163,6 +237,27 @@ describe('buildCapabilitySnapshot', () => {
     expect(snapshot.micPermission).toBe('unknown')
     expect(snapshot.sttAvailable).toBe(true)
     expect(snapshot.browserSupport).toBe('full')
+  })
+
+  it('marks speech recognition unavailable on an insecure mobile URL', async () => {
+    vi.stubGlobal('window', {
+      webkitSpeechRecognition: function () {},
+      isSecureContext: false,
+    })
+    vi.stubGlobal('navigator', {
+      onLine: true,
+      permissions: undefined,
+      mediaDevices: undefined,
+    })
+
+    const snapshot = await buildCapabilitySnapshot()
+
+    expect(snapshot).toMatchObject({
+      micPermission: 'unknown',
+      sttAvailable: false,
+      browserSupport: 'partial',
+    })
+    expect(canEvaluateProduction(snapshot)).toBe(false)
   })
 })
 

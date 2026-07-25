@@ -1,27 +1,44 @@
+/* Assessment layout — product register: focused session rhythm, token spacing */
+
 .assessment-page {
-  min-height: 100dvh;
-  padding: clamp(1.5rem, 5vw, 4rem) clamp(1.25rem, 4vw, 2.5rem) 6rem;
-  background: var(--surface-base);
+  width: 100%;
+  padding: var(--space-6) var(--space-4) var(--space-12);
+  container-type: inline-size;
+  container-name: assessment;
 }
 
 .assessment-shell {
-  width: min(80rem, 100%);
-  margin: 0 auto;
+  width: 100%;
+  margin-inline: 0;
+}
+
+/* Prompt inherits immersive column width from AppShell (max-w-screen-md) */
+.assessment-page--prompt .assessment-shell {
+  width: 100%;
+  max-width: 40rem;
+}
+
+.assessment-page--result {
+  padding-block: var(--space-8) var(--space-12);
 }
 
 .assessment-header {
-  margin-bottom: 1.5rem;
-  padding: 0.25rem 0 1.25rem;
+  margin-bottom: var(--space-8);
+  padding: 0 0 var(--space-5);
   border-bottom: 1px solid var(--border-subtle);
+}
+
+.assessment-page--prompt .assessment-header {
+  margin-bottom: var(--space-6);
 }
 
 .assessment-back {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  margin-bottom: 1.25rem;
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
   color: var(--text-tertiary);
-  font-size: 0.82rem;
+  font-size: 0.875rem;
   font-weight: 600;
   text-decoration: none;
 }
@@ -43,16 +60,17 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: end;
-  gap: clamp(1.5rem, 5vw, 4rem);
+  gap: var(--space-6) var(--space-10);
 }
 
 .assessment-kicker {
-  margin: 0 0 0.5rem;
-  color: var(--primary);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  margin: 0 0 var(--space-2);
+  color: var(--text-tertiary);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  line-height: 1.4;
 }
 
 .assessment-header h1,
@@ -60,25 +78,26 @@
   margin: 0;
   color: var(--text-primary);
   font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: 2rem;
-  font-weight: 560;
-  letter-spacing: -0.025em;
-  line-height: 1.16;
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  text-wrap: balance;
 }
 
 .assessment-heading-row p:last-child,
 .assessment-result > p {
   max-width: 60ch;
-  margin: 0.65rem 0 0;
+  margin: var(--space-3) 0 0;
   color: var(--text-secondary);
-  font-size: 0.92rem;
+  font-size: 0.9375rem;
   line-height: 1.55;
 }
 
 .assessment-progress-status {
   display: grid;
   justify-items: end;
-  gap: 0.5rem;
+  gap: var(--space-2);
   min-width: 11rem;
 }
 
@@ -89,13 +108,14 @@
 .assessment-progress-copy strong {
   display: block;
   color: var(--text-primary);
-  font-size: 1.35rem;
+  font-size: 1.25rem;
+  font-variant-numeric: tabular-nums;
   line-height: 1;
 }
 
 .assessment-progress-copy span {
   color: var(--text-tertiary);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
 }
 
 .assessment-progress {
@@ -119,19 +139,26 @@
 
 .assessment-questions {
   display: grid;
-  gap: 1rem;
+  gap: var(--space-4);
 }
 
 .assessment-concepts {
   display: grid;
-  gap: 0.5rem;
+  gap: var(--space-3);
 }
 
 .assessment-stage {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(15rem, 19rem);
+  grid-template-columns: minmax(0, 1fr);
   align-items: start;
-  gap: 1.5rem;
+  gap: var(--space-6);
+}
+
+@container assessment (min-width: 36rem) {
+  .assessment-stage:not(.assessment-stage--single) {
+    grid-template-columns: minmax(0, 1fr) minmax(12rem, 15rem);
+    gap: var(--space-5);
+  }
 }
 
 .assessment-stage--single {
@@ -139,34 +166,40 @@
 }
 
 .assessment-main {
+  display: grid;
+  gap: var(--space-6);
   min-width: 0;
+}
+
+.assessment-page--prompt .assessment-main {
+  gap: var(--space-5);
 }
 
 .assessment-coverage {
   position: sticky;
-  top: 1rem;
-  padding: 1rem;
+  top: var(--space-4);
+  padding: var(--space-4);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   background: var(--surface-raised);
 }
 
 .assessment-coverage-kicker {
-  margin: 0 0 1rem;
+  margin: 0 0 var(--space-4);
   color: var(--text-primary);
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   font-weight: 700;
 }
 
 .assessment-coverage-list {
   display: grid;
-  gap: 0.8rem;
+  gap: var(--space-3);
 }
 
 .assessment-coverage-item {
   display: grid;
   grid-template-columns: 1.35rem minmax(0, 1fr);
-  gap: 0.65rem;
+  gap: var(--space-3);
   align-items: start;
   color: var(--text-tertiary);
 }
@@ -217,28 +250,35 @@
 }
 
 .assessment-coverage-note {
-  margin: 1.25rem 0 0;
-  padding-top: 1rem;
+  margin: var(--space-5) 0 0;
+  padding-top: var(--space-4);
   border-top: 1px solid var(--border-subtle);
   color: var(--text-tertiary);
   font-size: 0.78rem;
   line-height: 1.5;
 }
 
+/* Level cards: 2-up by default, 3-up when the prompt column has room */
 .assessment-level-options {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.75rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+@media (min-width: 36rem) {
+  .assessment-level-options {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 .assessment-level-option {
   display: grid;
-  min-height: 6.5rem;
+  min-height: 5.75rem;
   align-content: center;
-  gap: 0.35rem;
-  padding: 1rem;
+  gap: var(--space-1);
+  padding: var(--space-4);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   background: var(--surface-raised);
   color: var(--text-secondary);
   cursor: pointer;
@@ -251,7 +291,7 @@
 }
 
 .assessment-level-option:active {
-  transform: scale(0.96);
+  transform: scale(0.98);
 }
 
 .assessment-level-option--selected {
@@ -261,17 +301,22 @@
 }
 
 .assessment-level-option--wide {
-  grid-column: span 3;
+  grid-column: 1 / -1;
+  min-height: 3.5rem;
+  grid-auto-flow: column;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: var(--space-3);
 }
 
 .assessment-level-option strong {
   color: var(--primary);
   font-family: var(--font-mono), monospace;
-  font-size: 1.15rem;
+  font-size: 1.125rem;
 }
 
 .assessment-level-option span {
-  font-size: 0.86rem;
+  font-size: 0.875rem;
 }
 
 .assessment-level-option input {
@@ -292,9 +337,9 @@
 .assessment-concept {
   min-width: 0;
   margin: 0;
-  padding: 1rem 1.25rem;
+  padding: var(--space-4) var(--space-5);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   background: var(--surface-raised);
 }
 
@@ -302,7 +347,7 @@
   display: grid;
   grid-template-columns: 2rem minmax(0, 1fr);
   align-items: start;
-  gap: 0.75rem;
+  gap: var(--space-3);
   color: var(--text-primary);
   font-size: 1rem;
   font-weight: 650;
@@ -319,26 +364,26 @@
 
 .assessment-concept > p {
   max-width: 65ch;
-  margin: 0.35rem 0 0 2.75rem;
+  margin: var(--space-1) 0 0 2.75rem;
   color: var(--text-secondary);
-  font-size: 0.88rem;
+  font-size: 0.875rem;
   line-height: 1.55;
 }
 
 .assessment-concept-options {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.5rem;
-  margin: 0.75rem 0 0 2.75rem;
+  gap: var(--space-2);
+  margin: var(--space-3) 0 0 2.75rem;
 }
 
 .assessment-concept-option {
   display: grid;
   grid-template-columns: 1.25rem minmax(0, 1fr);
   align-items: center;
-  gap: 0.55rem;
+  gap: var(--space-2);
   min-height: 2.75rem;
-  padding: 0.6rem 0.75rem;
+  padding: var(--space-2) var(--space-3);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
   color: var(--text-secondary);
@@ -358,7 +403,7 @@
 }
 
 .assessment-concept-option:active {
-  transform: scale(0.96);
+  transform: scale(0.98);
 }
 
 .assessment-concept-option--selected {
@@ -399,7 +444,7 @@
 .assessment-question {
   min-width: 0;
   margin: 0;
-  padding: 1.4rem;
+  padding: var(--space-5);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   background: var(--surface-raised);
@@ -409,7 +454,7 @@
   display: grid;
   grid-template-columns: 2rem minmax(0, 1fr);
   align-items: start;
-  gap: 0.75rem;
+  gap: var(--space-3);
 }
 
 .assessment-question-heading > span {
@@ -429,20 +474,20 @@
 }
 
 .assessment-passage {
-  margin: 0 0 0.8rem;
-  padding: 0.85rem 1rem;
+  margin: 0 0 var(--space-3);
+  padding: var(--space-3) var(--space-4);
   color: var(--text-secondary);
   background: var(--surface-sunken);
   border-radius: var(--radius-sm);
-  font-size: 0.88rem;
+  font-size: 0.875rem;
   font-style: italic;
   line-height: 1.6;
 }
 
 .assessment-options {
   display: grid;
-  gap: 0.5rem;
-  margin-top: 1rem;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
   padding-left: 2.75rem;
 }
 
@@ -450,9 +495,9 @@
   display: grid;
   grid-template-columns: 1.4rem minmax(0, 1fr);
   align-items: center;
-  gap: 0.75rem;
+  gap: var(--space-3);
   min-height: 3rem;
-  padding: 0.7rem 0.85rem;
+  padding: var(--space-3);
   border: 1px solid transparent;
   border-radius: var(--radius-md);
   color: var(--text-secondary);
@@ -504,25 +549,32 @@
   border-color: var(--primary);
 }
 
+/* Action row: tight to content, clear primary */
 .assessment-footer {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  margin-top: 1.5rem;
-  padding: 1rem 0;
+  gap: var(--space-3) var(--space-4);
+  margin: 0;
+  padding: var(--space-4) 0 0;
+  border-top: 1px solid var(--border-subtle);
 }
 
 .assessment-footer p {
   margin: 0;
+  flex: 1 1 12rem;
   color: var(--text-tertiary);
-  font-size: 0.82rem;
+  font-size: 0.875rem;
 }
 
 .assessment-footer-actions {
   display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  flex: 1 1 auto;
+  min-width: min(100%, 11rem);
 }
 
 .assessment-footer button,
@@ -567,8 +619,8 @@
 
 .assessment-result {
   width: min(100%, 80rem);
-  margin: clamp(1.5rem, 6vh, 3.5rem) auto 0;
-  padding: clamp(1.5rem, 4vw, 3rem);
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-8);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-xl);
   background: var(--surface-raised);
@@ -577,8 +629,8 @@
 @media (min-width: 769px) {
   .assessment-result {
     display: grid;
-    grid-template-columns: minmax(0, 1.15fr) minmax(18rem, 0.85fr);
-    column-gap: clamp(2rem, 6vw, 6rem);
+    grid-template-columns: minmax(0, 1.1fr) minmax(14rem, 0.9fr);
+    column-gap: var(--space-8);
     align-content: start;
   }
 
@@ -594,7 +646,7 @@
   .assessment-result > .assessment-result-sections {
     grid-column: 2;
     grid-row: 1 / span 6;
-    align-self: stretch;
+    align-self: start;
     margin-top: 0;
   }
 
@@ -610,7 +662,7 @@
 
 .assessment-result-icon {
   display: block;
-  margin-bottom: 1.25rem;
+  margin-bottom: var(--space-5);
 }
 
 .assessment-result-icon--success {
@@ -622,25 +674,25 @@
 }
 
 .assessment-result .assessment-kicker {
-  margin-bottom: 0.35rem;
+  margin-bottom: var(--space-1);
 }
 
 .assessment-result h1 {
   max-width: 18ch;
-  font-size: clamp(2rem, 5vw, 3rem);
-  line-height: 1.08;
+  font-size: 2rem;
+  line-height: 1.1;
 }
 
 .assessment-result > p {
-  margin-top: 0.75rem;
+  margin-top: var(--space-3);
   font-size: 1rem;
 }
 
 .assessment-result-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem 1rem;
-  margin-top: 1rem;
+  gap: var(--space-2) var(--space-4);
+  margin-top: var(--space-4);
   color: var(--text-secondary);
   font-size: 0.84rem;
   font-weight: 600;
@@ -654,15 +706,15 @@
 }
 
 .assessment-topic-list {
-  margin-top: 1.5rem;
+  margin-top: var(--space-6);
   border-top: 1px solid var(--border-subtle);
 }
 
 .assessment-topic-list > div {
   display: flex;
   justify-content: space-between;
-  gap: 1rem;
-  padding: 0.75rem 0;
+  gap: var(--space-4);
+  padding: var(--space-3) 0;
   border-bottom: 1px solid var(--border-subtle);
   color: var(--text-secondary);
   text-transform: capitalize;
@@ -670,14 +722,14 @@
 
 .assessment-result-sections {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(15rem, 0.8fr);
-  gap: 0.75rem;
-  margin-top: 2rem;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-1);
+  margin-top: var(--space-8);
 }
 
 .assessment-result-sections section {
   min-width: 0;
-  padding: 1.25rem 0;
+  padding: var(--space-5) 0;
   border-top: 1px solid var(--border-subtle);
 }
 
@@ -687,9 +739,9 @@
 }
 
 .assessment-result-sections h2 {
-  margin: 0 0 0.65rem;
+  margin: 0 0 var(--space-3);
   color: var(--text-primary);
-  font-size: 0.78rem;
+  font-size: 0.8125rem;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -697,25 +749,25 @@
 
 .assessment-result-sections ul {
   margin: 0;
-  padding-left: 1.25rem;
+  padding-left: var(--space-5);
   color: var(--text-secondary);
-  font-size: 0.92rem;
+  font-size: 0.9375rem;
   line-height: 1.6;
   text-transform: capitalize;
 }
 
 .assessment-result > a {
   width: fit-content;
-  margin-top: 1.5rem;
+  margin-top: var(--space-6);
 }
 
 .assessment-save-error {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  margin-top: 1rem;
-  padding: 0.75rem;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+  padding: var(--space-3);
   color: var(--error);
   background: var(--error-soft);
   border: 1px solid color-mix(in oklch, var(--error) 35%, var(--border-subtle));
@@ -726,7 +778,7 @@
 .assessment-save-error button {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: var(--space-1);
   border: 0;
   color: inherit;
   background: transparent;
@@ -736,30 +788,35 @@
 
 .assessment-result small {
   display: block;
-  margin-top: 0.75rem;
+  margin-top: var(--space-3);
   color: var(--text-tertiary);
 }
 
 @media (max-width: 768px) {
   .assessment-page {
-    padding: 0.75rem 0.9rem 5rem;
+    padding: var(--space-4) var(--space-4) var(--space-16);
+  }
+
+  .assessment-page--prompt .assessment-shell {
+    width: 100%;
   }
 
   .assessment-header {
+    margin-bottom: var(--space-6);
     padding-top: 0;
   }
 
   .assessment-back {
-    margin-bottom: 1.25rem;
+    margin-bottom: var(--space-4);
   }
 
   .assessment-heading-row {
     grid-template-columns: 1fr;
-    gap: 0.75rem;
+    gap: var(--space-3);
   }
 
   .assessment-header h1 {
-    font-size: 1.65rem;
+    font-size: 1.5rem;
   }
 
   .assessment-progress-status {
@@ -771,13 +828,26 @@
     text-align: left;
   }
 
+  .assessment-stage {
+    gap: var(--space-4);
+  }
+
+  .assessment-coverage {
+    position: static;
+    order: -1;
+  }
+
+  .assessment-main {
+    gap: var(--space-5);
+  }
+
   .assessment-question {
-    padding: 1.1rem 0.9rem;
+    padding: var(--space-4);
   }
 
   .assessment-question-heading {
     grid-template-columns: 1.55rem minmax(0, 1fr);
-    gap: 0.45rem;
+    gap: var(--space-2);
   }
 
   .assessment-options {
@@ -791,12 +861,12 @@
 
   .assessment-option {
     min-height: 3.25rem;
-    padding: 0.8rem;
   }
 
   .assessment-footer {
     align-items: stretch;
     flex-direction: column;
+    gap: var(--space-3);
   }
 
   .assessment-footer button {
@@ -806,30 +876,26 @@
   .assessment-footer-actions {
     display: grid;
     width: 100%;
-    gap: 0.5rem;
+    gap: var(--space-2);
   }
 
   .assessment-result-sections {
     grid-template-columns: 1fr;
+    margin-top: var(--space-6);
   }
 
   .assessment-result {
-    margin-top: 2rem;
-    padding: 1.5rem 1.25rem;
+    padding: var(--space-5) var(--space-4);
     border-radius: var(--radius-lg);
   }
 
   .assessment-result h1 {
     max-width: none;
-    font-size: 2rem;
-  }
-
-  .assessment-result-sections {
-    margin-top: 1.5rem;
+    font-size: 1.75rem;
   }
 
   .assessment-result-sections section {
-    padding: 1rem 0;
+    padding: var(--space-4) 0;
   }
 
   .assessment-result > a {
@@ -842,21 +908,8 @@
     grid-template-columns: 1fr;
   }
 
-  .assessment-stage {
-    grid-template-columns: 1fr;
-  }
-
-  .assessment-coverage {
-    position: static;
-    order: -1;
-  }
-
-  .assessment-level-options {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .assessment-level-option--wide {
-    grid-column: span 2;
+  .assessment-level-option {
+    min-height: 5.25rem;
   }
 
   .assessment-concept-option {
