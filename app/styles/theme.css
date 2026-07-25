@@ -57,6 +57,11 @@
   --color-overlay-strong: var(--overlay-strong);
   --color-overlay-darker: var(--overlay-darker);
 
+  /* ── CTA — always-contrast actions (bg-cta-bg, text-cta-fg, …) ─────────── */
+  --color-cta-bg:       var(--cta-bg);
+  --color-cta-fg:       var(--cta-fg);
+  --color-cta-bg-hover: var(--cta-bg-hover);
+
   /* ── Semantic ──────────────────────────────────────────────────────────── */
   --color-success:         var(--success);
   --color-success-soft:    var(--success-soft);

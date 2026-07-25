@@ -99,9 +99,47 @@ describe("curriculum assessments", () => {
     const conceptualResult = scoreAssessment(questions, answers, "checkpoint", "a1", concepts, {
       "a1-verbo-to-be": "familiar",
     });
+    const humbleButCorrect = scoreAssessment(questions, answers, "checkpoint", "a1", concepts, {
+      "a1-verbo-to-be": "unknown",
+    });
 
     expect(legacyResult.conceptSignals).toEqual([]);
     expect(conceptualResult.conceptSignals[0].status).toBe("mastered");
+    expect(humbleButCorrect.conceptSignals[0].status).toBe("mastered");
+    expect(humbleButCorrect.needsReview.some((topic) => topic.lessonSlug === "a1-verbo-to-be")).toBe(false);
+  });
+
+  it("does not put untested inventory ratings into needsReview after a scored quiz", () => {
+    const questions = buildAssessmentQuestions("checkpoint", quizzes, "a1");
+    const answers = Object.fromEntries(questions.map((question) => [question.id, question.answer]));
+    const result = scoreAssessment(questions, answers, "placement", undefined, concepts, {
+      "a1-verbo-to-be": "confident",
+      "a1-presente-simple": "familiar",
+      "a1-sin-preguntas": "unknown",
+    });
+
+    expect(result.total).toBeGreaterThan(0);
+    expect(result.needsReview.map((topic) => topic.lessonSlug)).not.toContain("a1-sin-preguntas");
+    expect(result.needsReview.every((topic) => result.topicScores.some(
+      (score) => score.lessonSlug === topic.lessonSlug && score.correct < score.total,
+    ))).toBe(true);
+    expect(result.conceptSignals.find((signal) => signal.lessonSlug === "a1-sin-preguntas")?.status).toBe("learn");
+  });
+
+  it("uses inventory learn signals for needsReview only when no questions were answered", () => {
+    const ratedConcepts = concepts.filter((concept) =>
+      concept.lessonSlug === "a1-verbo-to-be" || concept.lessonSlug === "a1-sin-preguntas",
+    );
+    const result = scoreAssessment([], {}, "placement", undefined, ratedConcepts, {
+      "a1-verbo-to-be": "unknown",
+      "a1-sin-preguntas": "unknown",
+    });
+
+    expect(result.total).toBe(0);
+    expect(result.needsReview.map((topic) => topic.lessonSlug).sort()).toEqual([
+      "a1-sin-preguntas",
+      "a1-verbo-to-be",
+    ]);
   });
 
   it("groups placement questions by level for adaptive progression", () => {

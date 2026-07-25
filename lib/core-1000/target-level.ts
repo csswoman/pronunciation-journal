@@ -3,7 +3,7 @@
 // in `db.learningState`. Used to seed the Essential Words level filter so a
 // placed learner starts at their level instead of grinding rank #1 upward.
 
-import { db } from "@/lib/db";
+import { db, ensureDbReady } from "@/lib/db";
 import { CEFR_LEVELS, type CefrLevel } from "./types";
 
 const KNOWN = new Set<string>(CEFR_LEVELS);
@@ -14,6 +14,7 @@ const KNOWN = new Set<string>(CEFR_LEVELS);
  */
 export async function readStoredCefrLevel(userId: string): Promise<CefrLevel | null> {
   try {
+    await ensureDbReady();
     const row = await db.learningState.get(userId);
     const level = row?.state?.level?.cefrEstimate;
     if (!level) return null;

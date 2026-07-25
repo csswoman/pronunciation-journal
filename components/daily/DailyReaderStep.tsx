@@ -6,7 +6,7 @@ import { ReaderExercise } from '@/components/practice/reader/ReaderExercise'
 import { completeReader } from '@/lib/practice/reader/complete-reader'
 import type { ReaderPassage } from '@/lib/practice/reader/types'
 import type { StepThreadHint } from '@/lib/practice/daily-plan/step-thread'
-import { StepThreadHints } from './StepThreadHints'
+import { DailyThreadStrip } from './DailyThreadStrip'
 
 interface DailyReaderStepProps {
   passage: ReaderPassage
@@ -23,13 +23,8 @@ export function DailyReaderStep({ passage, threadHints, onComplete }: DailyReade
   }, [])
 
   return (
-    <div className="mx-auto max-w-prose p-6">
-      {threadHints.length > 0 && (
-        <StepThreadHints
-          hints={threadHints}
-          className="mb-4 rounded-[var(--radius-md)] border border-border-subtle bg-surface-sunken p-3"
-        />
-      )}
+    <div className="mx-auto flex max-w-prose flex-col gap-4 p-6 pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] lg:pb-6">
+      {threadHints.length > 0 ? <DailyThreadStrip hints={threadHints} /> : null}
       <ReaderExercise
         passage={passage}
         online={online}

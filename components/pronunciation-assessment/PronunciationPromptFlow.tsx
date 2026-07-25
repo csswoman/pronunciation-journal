@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
+import Button from '@/components/ui/Button'
 import { canEvaluateProduction } from '@/lib/pronunciation/assessment/capability'
 import { getLearnerTargetCopy } from '@/lib/pronunciation/assessment/learner-copy'
 import { scorePerceptionPrompt, scoreProductionPrompt } from '@/lib/pronunciation/assessment/scoring'
@@ -61,7 +62,7 @@ export function PronunciationPromptFlow({
   const current = activeSelections[index]
   const total = activeSelections.length
   const questionNumber = index + 1
-  const completedCount = index
+  const progressRatio = total ? questionNumber / total : 0
 
   const isPerception = useMemo(() => current?.stage === 'perception', [current])
 
@@ -93,6 +94,12 @@ export function PronunciationPromptFlow({
     setIndex((i) => i + 1)
   }
 
+  function goBack() {
+    if (index <= 0) return
+    setResults((prev) => prev.slice(0, -1))
+    setIndex((i) => i - 1)
+  }
+
   function handlePerceptionAnswer(answer: PerceptionAnswer | null) {
     if (!current) return
     advance(scorePerceptionPrompt(current, answer))
@@ -112,24 +119,37 @@ export function PronunciationPromptFlow({
   if (!current) return null
 
   return (
-    <div className="flex min-w-0 flex-col gap-4">
-      <div className="flex min-w-0 flex-col gap-1.5">
-        <p className="font-body-sm text-fg-muted" aria-live="polite">
-          Pregunta{' '}
-          <strong className="tabular-nums font-semibold text-fg">{questionNumber}</strong> de{' '}
-          {total}
-        </p>
+    <div className="flex min-w-0 flex-col gap-5">
+      <div className="flex min-w-0 flex-col gap-2">
+        <div className="flex min-w-0 items-center justify-between gap-3">
+          <p className="font-body-sm text-fg-muted" aria-live="polite">
+            Pregunta{' '}
+            <strong className="tabular-nums font-semibold text-fg">{questionNumber}</strong> de{' '}
+            {total}
+          </p>
+          {index > 0 ? (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="min-h-11 shrink-0 text-fg-subtle"
+              onClick={goBack}
+            >
+              Anterior
+            </Button>
+          ) : null}
+        </div>
         <div
           role="progressbar"
           aria-valuemin={0}
           aria-valuemax={total}
-          aria-valuenow={completedCount}
-          aria-label="Preguntas del diagnóstico completadas"
+          aria-valuenow={questionNumber}
+          aria-label={`Pregunta ${questionNumber} de ${total}`}
           className="h-1.5 w-full overflow-hidden rounded-full bg-surface-sunken"
         >
           <span
             className="block h-full origin-left rounded-full bg-cta-bg transition-transform duration-200 ease-out-quart motion-reduce:transition-none"
-            style={{ transform: `scaleX(${total ? completedCount / total : 0})` }}
+            style={{ transform: `scaleX(${progressRatio})` }}
           />
         </div>
       </div>

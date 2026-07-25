@@ -35,11 +35,24 @@ export function useUserPreferences() {
     try {
       setLoading(true);
       const prefs = await getUserPreferences(user.id, user.user_metadata);
-      await cacheUserInterests(user.id, prefs.interests);
       setPreferences(prefs);
+      // Dexie cache is best-effort — never discard remote prefs if local DB is down.
+      try {
+        const { ensureDbReady } = await import("@/lib/db");
+        await ensureDbReady();
+        await cacheUserInterests(user.id, prefs.interests);
+      } catch {
+        /* local cache unavailable */
+      }
     } catch {
-      const cached = await getCachedUserInterests(user.id);
-      if (cached) setPreferences((prev) => ({ ...prev, interests: cached as Interest[] }));
+      try {
+        const { ensureDbReady } = await import("@/lib/db");
+        await ensureDbReady();
+        const cached = await getCachedUserInterests(user.id);
+        if (cached) setPreferences((prev) => ({ ...prev, interests: cached as Interest[] }));
+      } catch {
+        /* local cache unavailable */
+      }
       setError(publicDataErrorMessage());
     } finally {
       setLoading(false);

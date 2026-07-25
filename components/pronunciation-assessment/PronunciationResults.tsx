@@ -6,6 +6,9 @@ import Anchor from '@/components/ui/Anchor'
 import Button from '@/components/ui/Button'
 import type { PronunciationDiagnosticResult } from '@/lib/pronunciation/assessment/schema'
 import { isPronunciationDiagnosticCopyEnabled } from '@/lib/pronunciation/assessment/copy-flag'
+import { getLearnerTargetCopy } from '@/lib/pronunciation/assessment/learner-copy'
+import { pickSelfReportStruggle } from '@/lib/pronunciation/assessment/self-report-signal'
+import { targetIdToPracticeRoute } from '@/lib/pronunciation/target-route'
 import { PronunciationEvidenceDetail } from './PronunciationEvidenceDetail'
 import { PronunciationFiveDayPlan } from './PronunciationFiveDayPlan'
 import { PronunciationPriorityCard } from './PronunciationPriorityCard'
@@ -15,18 +18,23 @@ interface PronunciationResultsProps {
   saving: boolean
   saveError: boolean
   onRetrySave: () => void
+  onRestart?: () => void
   copyEnabled?: boolean
 }
+
+const PRACTICE_FALLBACK = '/practice/sounds'
 
 function resultsHeading(
   priorities: number,
   hasMeasuredEvidence: boolean,
+  struggleTitle: string | null,
   copyEnabled: boolean
 ): string {
   if (!copyEnabled) return 'Tu siguiente práctica está lista'
   if (priorities > 0) return 'Esto es lo que conviene trabajar primero'
+  if (struggleTitle) return 'Empecemos por lo que nos dijiste'
   if (!hasMeasuredEvidence) {
-    return 'Aún no pudimos medir lo suficiente'
+    return 'Empecemos por reunir evidencia'
   }
   return 'No hay prioridades urgentes ahora'
 }
@@ -34,22 +42,33 @@ function resultsHeading(
 function resultsSupport(
   priorities: number,
   hasMeasuredEvidence: boolean,
+  struggleTitle: string | null,
   copyEnabled: boolean
 ): string | null {
   if (!copyEnabled) return null
   if (priorities > 0) return null
-  if (!hasMeasuredEvidence) {
-    return 'Estos son focos para seguir practicando y reunir evidencia — no un veredicto final.'
+  if (struggleTitle) {
+    return `Nos dijiste que te cuesta: ${struggleTitle}. No es un veredicto — es un buen punto de partida.`
   }
-  return 'Tu plan de cinco días te da un camino claro para seguir.'
+  if (!hasMeasuredEvidence) {
+    return 'Aún no medimos lo suficiente para un veredicto. Aquí va una invitación concreta para empezar — no una lista de deberes.'
+  }
+  return 'Tu plan de la semana te da un camino claro para seguir.'
 }
 
 /**
  * Results screen for the pronunciation diagnostic (plan 067, step 7).
  * Progressive disclosure, Spanish chrome, no leading aggregate score.
- * Uses h2 because PageHeader already owns the page h1.
+ * Owns the page h1 when the stage chrome uses a quieter header.
  */
-export function PronunciationResults({ result, saving, saveError, onRetrySave, copyEnabled }: PronunciationResultsProps) {
+export function PronunciationResults({
+  result,
+  saving,
+  saveError,
+  onRetrySave,
+  onRestart,
+  copyEnabled,
+}: PronunciationResultsProps) {
   const headingRef = useRef<HTMLHeadingElement>(null)
 
   useEffect(() => {
@@ -60,8 +79,22 @@ export function PronunciationResults({ result, saving, saveError, onRetrySave, c
   const hasMeasuredEvidence = result.targetResults.some(
     (r) => r.measurement.kind === 'scored' || r.status === 'observed' || r.status === 'strength'
   )
+  const struggle = pickSelfReportStruggle(result.targetResults)
+  const struggleTitle = struggle ? getLearnerTargetCopy(struggle.targetId).title : null
   const shouldShowDiagnosticCopy = copyEnabled ?? isPronunciationDiagnosticCopyEnabled()
-  const support = resultsSupport(priorities.length, hasMeasuredEvidence, shouldShowDiagnosticCopy)
+  const support = resultsSupport(
+    priorities.length,
+    hasMeasuredEvidence,
+    struggleTitle,
+    shouldShowDiagnosticCopy
+  )
+  const evidenceLight = shouldShowDiagnosticCopy && !hasMeasuredEvidence && priorities.length === 0
+  const planTitle = evidenceLight ? 'Por dónde empezar' : 'Tu plan de la semana'
+  const primaryCtaLabel = evidenceLight ? 'Empezar a practicar' : 'Ir a mi práctica'
+  const dayOneTargetId = result.prescription.sessions[0]?.targetId
+  const primaryHref = dayOneTargetId
+    ? (targetIdToPracticeRoute(dayOneTargetId) ?? PRACTICE_FALLBACK)
+    : PRACTICE_FALLBACK
 
   return (
     <section
@@ -69,13 +102,18 @@ export function PronunciationResults({ result, saving, saveError, onRetrySave, c
       className="flex min-w-0 flex-col gap-8"
     >
       <header className="flex min-w-0 flex-col gap-2">
-        <h2
+        <h1
           ref={headingRef}
           tabIndex={-1}
           className="text-balance text-pretty break-words text-h3 text-fg outline-none"
         >
-          {resultsHeading(priorities.length, hasMeasuredEvidence, shouldShowDiagnosticCopy)}
-        </h2>
+          {resultsHeading(
+            priorities.length,
+            hasMeasuredEvidence,
+            struggleTitle,
+            shouldShowDiagnosticCopy
+          )}
+        </h1>
         {support ? (
           <p className="max-w-prose text-pretty font-body-sm text-fg-muted">{support}</p>
         ) : null}
@@ -93,9 +131,12 @@ export function PronunciationResults({ result, saving, saveError, onRetrySave, c
         </ul>
       )}
 
-      <section aria-label="Plan de cinco días" className="flex min-w-0 flex-col gap-3">
-        <h3 className="text-pretty font-h4 text-fg">Tu plan de cinco días</h3>
-        <PronunciationFiveDayPlan sessions={result.prescription.sessions} />
+      <section aria-label={planTitle} className="flex min-w-0 flex-col gap-3">
+        <h2 className="text-pretty font-h4 text-fg">{planTitle}</h2>
+        <PronunciationFiveDayPlan
+          sessions={result.prescription.sessions}
+          evidenceLight={evidenceLight}
+        />
       </section>
 
       <PronunciationEvidenceDetail
@@ -126,13 +167,25 @@ export function PronunciationResults({ result, saving, saveError, onRetrySave, c
         </div>
       )}
 
-      <Anchor
-        href="/practice/sounds"
-        color="unstyled"
-        className="inline-flex min-h-11 w-full items-center justify-center rounded-md bg-cta-bg px-5 font-label text-cta-fg no-underline transition-colors duration-150 ease-out-quart hover:bg-[var(--cta-bg-hover)] hover:no-underline"
-      >
-        Ir a mi práctica
-      </Anchor>
+      <div className="flex min-w-0 flex-col gap-2">
+        <Anchor
+          href={primaryHref}
+          color="unstyled"
+          className="inline-flex min-h-11 w-full items-center justify-center rounded-md bg-cta-bg px-5 font-label text-cta-fg no-underline transition-colors duration-150 ease-out-quart hover:bg-cta-bg-hover hover:text-cta-fg hover:no-underline"
+        >
+          {primaryCtaLabel}
+        </Anchor>
+        {onRestart ? (
+          <Button
+            type="button"
+            variant="ghost"
+            className="min-h-11 text-fg-subtle"
+            onClick={onRestart}
+          >
+            Repetir el diagnóstico
+          </Button>
+        ) : null}
+      </div>
     </section>
   )
 }

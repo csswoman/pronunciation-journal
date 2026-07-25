@@ -29,7 +29,7 @@ describe('PronunciationPriorityCard', () => {
   it('falls back to a message instead of a broken link for targets with no route', () => {
     render(<PronunciationPriorityCard result={buildResult('prosody.rhythm')} rank={1} />)
     expect(screen.queryByRole('link')).not.toBeInTheDocument()
-    expect(screen.getByText(/plan de cinco días/i)).toBeInTheDocument()
+    expect(screen.getByText(/plan de la semana/i)).toBeInTheDocument()
   })
 
   it('never renders a raw numeric score', () => {

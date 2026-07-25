@@ -32,6 +32,7 @@
 
 import { getTarget, listTargets } from '@/lib/pronunciation/targets/registry'
 import { getLearnerTargetCopy } from './learner-copy'
+import { isSelfReportStruggle } from './self-report-signal'
 import type { PrescriptionSession, PrescriptionSessionStyle } from './schema'
 import type { TargetResult, TargetResultStatus } from './types'
 
@@ -60,35 +61,58 @@ const FALLBACK_STATUS_ORDER: readonly TargetResultStatus[] = [
   'strength',
 ]
 
+/** Lower = more urgent among needs_evidence (self-report struggle seeds Day 1). */
+function needsEvidenceUrgency(result: TargetResult): number {
+  if (isSelfReportStruggle(result)) return 0
+  if (result.signalType === 'self_report') return 1
+  if (
+    result.measurement.kind === 'not_measured' &&
+    result.measurement.abstentionReason === 'skipped_by_user'
+  ) {
+    return 3
+  }
+  return 2
+}
+
 /**
  * Builds the ordered candidate target-id list sessions draw from: priority
  * targets first, then progressively less-urgent statuses, so we always have
  * *something* to cycle through even in a near-empty diagnostic run.
  */
 function buildCandidateTargetIds(results: readonly TargetResult[]): string[] {
-  const byStatus = new Map<TargetResultStatus, string[]>()
+  const byStatus = new Map<TargetResultStatus, TargetResult[]>()
   for (const result of results) {
     const list = byStatus.get(result.status) ?? []
-    list.push(result.targetId)
+    list.push(result)
     byStatus.set(result.status, list)
   }
 
   const ordered: string[] = []
   for (const status of FALLBACK_STATUS_ORDER) {
-    ordered.push(...(byStatus.get(status) ?? []))
+    const group = byStatus.get(status) ?? []
+    const sorted =
+      status === 'needs_evidence'
+        ? [...group].sort((a, b) => needsEvidenceUrgency(a) - needsEvidenceUrgency(b))
+        : group
+    ordered.push(...sorted.map((r) => r.targetId))
   }
   return ordered.filter((targetId) => getTarget(targetId).ok)
 }
 
-function reasonFor(sessionIndex: number, targetId: string, status: TargetResultStatus | null): string {
+function reasonFor(sessionIndex: number, targetId: string, result: TargetResult | null): string {
   const stageReason = SESSION_REASON_BY_INDEX[sessionIndex] ?? SESSION_REASON_BY_INDEX[0]!
   const { title } = getLearnerTargetCopy(targetId)
-  const statusNote =
-    status === 'priority'
-      ? ' Es uno de tus focos principales ahora.'
-      : status === 'needs_evidence'
-        ? ' Primero necesitamos más evidencia de cómo lo manejas.'
-        : ''
+  const status = result?.status ?? null
+  // Evidence apology lives once in results chrome — not repeated on every day.
+  let statusNote = ''
+  if (status === 'priority') {
+    statusNote = ' Es uno de tus focos principales ahora.'
+  } else if (status === 'needs_evidence' && sessionIndex === 0) {
+    statusNote =
+      result && isSelfReportStruggle(result)
+        ? ' Nos dijiste que te cuesta — por eso empezamos aquí.'
+        : ' Empezamos por escucharlo para reunir evidencia.'
+  }
   // 300-char cap enforced by PrescriptionSessionSchema — keep this comfortably short.
   return `${title}: ${stageReason}${statusNote}`.slice(0, 300)
 }
@@ -106,7 +130,7 @@ function reasonFor(sessionIndex: number, targetId: string, status: TargetResultS
  * sessions are always produced.
  */
 export function generatePrescriptionSessions(results: readonly TargetResult[]): PrescriptionSession[] {
-  const statusByTargetId = new Map(results.map((r) => [r.targetId, r.status] as const))
+  const resultByTargetId = new Map(results.map((r) => [r.targetId, r] as const))
   let candidates = buildCandidateTargetIds(results)
 
   if (candidates.length === 0) {
@@ -124,7 +148,7 @@ export function generatePrescriptionSessions(results: readonly TargetResult[]): 
     const targetId = candidates[i % candidates.length] as string
     sessions.push({
       targetId,
-      reason: reasonFor(i, targetId, statusByTargetId.get(targetId) ?? null),
+      reason: reasonFor(i, targetId, resultByTargetId.get(targetId) ?? null),
       style: SESSION_STYLES[i] as PrescriptionSessionStyle,
     })
   }

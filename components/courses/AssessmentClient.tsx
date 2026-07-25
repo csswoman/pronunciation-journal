@@ -24,6 +24,15 @@ import {
 } from "./AssessmentViews";
 import { useAssessmentFlow } from "./useAssessmentFlow";
 
+function isConcreteCefrLevel(value: CefrLevelId | "unsure" | "full" | null): value is CefrLevelId {
+  return value !== null && value !== "unsure" && value !== "full";
+}
+
+function reportedLevelIsAbove(sectionLevel: CefrLevelId, reported: CefrLevelId | "unsure" | "full" | null): boolean {
+  if (!isConcreteCefrLevel(reported)) return false;
+  return ASSESSMENT_LEVEL_ORDER.indexOf(reported) > ASSESSMENT_LEVEL_ORDER.indexOf(sectionLevel);
+}
+
 interface AssessmentClientProps {
   mode: "placement" | "checkpoint";
   questions: AssessmentQuestion[];
@@ -148,7 +157,9 @@ export default function AssessmentClient({ mode, questions, concepts = [], check
     if (showingInventory) {
       const allCurrentConceptsUnknown = sectionConcepts.length > 0
         && sectionConcepts.every((concept) => selfRatings[concept.lessonSlug] === "unknown");
-      if (allCurrentConceptsUnknown) {
+      // Claimed a higher level than this anchor section: verify with questions
+      // instead of ending as a beginner plan-only result.
+      if (allCurrentConceptsUnknown && !reportedLevelIsAbove(section.level, selfReportedLevel)) {
         completeAssessment(sections.slice(placementStartIndex, sectionIndex).flatMap((item) => item.questions));
         window.scrollTo({ top: 0, behavior: "smooth" });
         return;
@@ -189,7 +200,7 @@ export default function AssessmentClient({ mode, questions, concepts = [], check
   }
 
   return (
-    <main className="assessment-page">
+    <div className={showingLevelPrompt ? "assessment-page assessment-page--prompt" : "assessment-page"}>
       <div className="assessment-shell">
         <AssessmentHeader
           mode={mode}
@@ -236,6 +247,6 @@ export default function AssessmentClient({ mode, questions, concepts = [], check
           )}
         </div>
       </div>
-    </main>
+    </div>
   );
 }

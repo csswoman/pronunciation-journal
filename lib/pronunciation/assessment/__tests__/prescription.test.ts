@@ -42,7 +42,7 @@ describe('generatePrescriptionSessions', () => {
       expect(getTarget(session.targetId).ok).toBe(true)
       // Learner-facing Spanish chrome — not authoring English jargon.
       expect(session.reason).toMatch(
-        /escucha|practica|repítelo|úsalo|llévalo|evidencia|focos/i
+        /escucha|practica|repítelo|úsalo|llévalo|evidencia|focos|reunir|dijiste|cuesta|empezamos/i
       )
     }
   })
@@ -104,5 +104,32 @@ describe('generatePrescriptionSessions', () => {
     const sessions = generatePrescriptionSessions(results)
     expect(sessions).toHaveLength(5)
     expect(new Set(sessions.map((s) => s.targetId)).size).toBeGreaterThanOrEqual(1)
+  })
+
+  it('seeds Day 1 with a struggle self-report ahead of skipped needs_evidence', () => {
+    const wordStress = targetId('prosody.word-stress')
+    const results: TargetResult[] = [
+      {
+        targetId: TH_CONTRAST,
+        status: 'needs_evidence',
+        signalType: 'stt_intelligibility',
+        confidence: 0,
+        evaluatorKind: null,
+        evaluatorVersion: null,
+        measurement: { kind: 'not_measured', abstentionReason: 'skipped_by_user' },
+      },
+      {
+        targetId: wordStress,
+        status: 'needs_evidence',
+        signalType: 'self_report',
+        confidence: 0.4,
+        evaluatorKind: null,
+        evaluatorVersion: null,
+        measurement: { kind: 'not_measured', abstentionReason: 'no_evaluator_available' },
+      },
+    ]
+    const sessions = generatePrescriptionSessions(results)
+    expect(sessions[0]?.targetId).toBe(wordStress)
+    expect(sessions[0]?.reason).toMatch(/dijiste que te cuesta/i)
   })
 })

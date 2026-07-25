@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import { contrastTargetId, targetId } from '@/lib/pronunciation/targets/registry'
 import type { SpokenAttempt } from '@/lib/pronunciation/spoken-attempt'
+import { generatePrescriptionSessions } from '../prescription'
+import { applyPriorityStatus } from '../prioritization'
+import { validateDiagnosticResult } from '../schema'
 import { scorePerceptionPrompt, scoreProductionPrompt } from '../scoring'
 import { TargetResultSchema } from '../types'
 
@@ -36,6 +39,15 @@ describe('scoreProductionPrompt — prosody/acoustic honesty gate', () => {
     expect(result.status).not.toBe('strength')
     expect(result.status).not.toBe('priority')
     expect(TargetResultSchema.safeParse(result).success).toBe(true)
+  })
+
+  it('explicit skip on prosody-only production is skipped_by_user, not no_evaluator', () => {
+    const result = scoreProductionPrompt(
+      { targetId: targetId('prosody.word-stress'), stage: 'controlled_production' },
+      baseAttempt({ outcome: 'skipped' })
+    )
+
+    expect(result.measurement).toEqual({ kind: 'not_measured', abstentionReason: 'skipped_by_user' })
   })
 
   it('a transcript-perfect sentence-stress attempt also abstains', () => {
@@ -159,5 +171,63 @@ describe('scorePerceptionPrompt', () => {
     expect(result.measurement).toEqual({ kind: 'not_measured', abstentionReason: 'skipped_by_user' })
     expect(result.signalType).toBe('perception')
     expect(TargetResultSchema.safeParse(result).success).toBe(true)
+  })
+
+  it('prosody-only perception never emits a numeric score (schema honesty gate)', () => {
+    const result = scorePerceptionPrompt(
+      { targetId: targetId('prosody.word-stress'), stage: 'perception' },
+      { correct: true }
+    )
+
+    expect(result.measurement.kind).toBe('not_measured')
+    if (result.measurement.kind === 'not_measured') {
+      expect(result.measurement.abstentionReason).toBe('no_evaluator_available')
+    }
+    expect(result.signalType).toBe('self_report')
+    expect(result.status).toBe('needs_evidence')
+    expect(result.confidence).toBe(0.15)
+    expect(TargetResultSchema.safeParse(result).success).toBe(true)
+  })
+
+  it('prosody self-report struggle encodes higher confidence than comfort', () => {
+    const struggle = scorePerceptionPrompt(
+      { targetId: targetId('prosody.word-stress'), stage: 'perception' },
+      { correct: false }
+    )
+    const comfort = scorePerceptionPrompt(
+      { targetId: targetId('prosody.word-stress'), stage: 'perception' },
+      { correct: true }
+    )
+
+    expect(struggle.signalType).toBe('self_report')
+    expect(struggle.confidence).toBe(0.4)
+    expect(comfort.confidence).toBe(0.15)
+    expect(struggle.confidence).toBeGreaterThan(comfort.confidence)
+  })
+
+  it('a finished diagnostic that answered prosody perception still validates end-to-end', () => {
+    const targetResults = applyPriorityStatus([
+      scorePerceptionPrompt(
+        { targetId: targetId('prosody.word-stress'), stage: 'perception' },
+        { correct: true }
+      ),
+      scorePerceptionPrompt({ targetId: TH_CONTRAST, stage: 'perception' }, { correct: false }),
+    ])
+    const sessions = generatePrescriptionSessions(targetResults)
+    const validation = validateDiagnosticResult({
+      userId: 'user-1',
+      completedAt: new Date().toISOString(),
+      capabilitySnapshot: {
+        micPermission: 'granted',
+        sttAvailable: true,
+        browserSupport: 'full',
+        capturedAt: new Date().toISOString(),
+      },
+      selfReport: { overallConfidence: 'somewhat_confident' },
+      targetResults,
+      prescription: { generatedAt: new Date().toISOString(), sessions },
+    })
+
+    expect(validation.ok).toBe(true)
   })
 })

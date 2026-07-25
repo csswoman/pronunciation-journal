@@ -1,5 +1,10 @@
 import { getLearnerTargetCopy } from '@/lib/pronunciation/assessment/learner-copy'
-import type { TargetResult } from '@/lib/pronunciation/assessment/types'
+import { isSelfReportStruggle } from '@/lib/pronunciation/assessment/self-report-signal'
+import type {
+  AbstentionReason,
+  FailureReason,
+  TargetResult,
+} from '@/lib/pronunciation/assessment/types'
 
 interface PronunciationEvidenceDetailProps {
   targetResults: readonly TargetResult[]
@@ -13,11 +18,41 @@ const STATUS_LABEL: Record<TargetResult['status'], string> = {
   strength: 'Fortaleza',
 }
 
+const ABSTENTION_LABEL: Record<AbstentionReason, string> = {
+  skipped_by_user: 'La saltaste',
+  no_evaluator_available: 'No había evaluador disponible',
+  mic_permission_denied: 'El micrófono no tenía permiso',
+  stt_unavailable: 'El reconocimiento de voz no estaba disponible',
+  browser_unsupported: 'Este navegador no soporta la medición',
+}
+
+const FAILURE_LABEL: Record<FailureReason, string> = {
+  stt_error: 'Falló el reconocimiento de voz',
+  empty_transcript: 'No capturamos palabras claras',
+  mic_error: 'Hubo un problema con el micrófono',
+  timeout: 'Se agotó el tiempo de espera',
+  unknown_error: 'No se pudo medir esta vez',
+}
+
 function measurementSummary(result: TargetResult): string {
   const { measurement } = result
-  if (measurement.kind === 'scored') return `Puntaje interno: ${measurement.score}/100`
-  if (measurement.kind === 'failed') return `No se pudo medir (${measurement.failureReason})`
-  return `Sin medir (${measurement.abstentionReason})`
+  if (measurement.kind === 'scored') {
+    if (measurement.score < 50) return 'Señal débil en esta prueba'
+    if (measurement.score < 75) return 'Señal mixta: conviene seguir practicando'
+    return 'Señal clara en esta prueba'
+  }
+  if (measurement.kind === 'failed') {
+    return FAILURE_LABEL[measurement.failureReason] ?? 'No se pudo medir esta vez'
+  }
+  if (measurement.abstentionReason === 'skipped_by_user') {
+    return ABSTENTION_LABEL.skipped_by_user
+  }
+  if (result.signalType === 'self_report') {
+    return isSelfReportStruggle(result)
+      ? 'Nos dijiste que te cuesta'
+      : 'Nos dijiste que te desenvuelves bien'
+  }
+  return ABSTENTION_LABEL[measurement.abstentionReason] ?? 'Aún no hay evidencia suficiente'
 }
 
 /**
@@ -41,7 +76,9 @@ export function PronunciationEvidenceDetail({ targetResults, copyEnabled = true 
                   {ipaHint ? (
                     <>
                       {' '}
-                      <span className="font-ipa font-normal text-fg-muted">({ipaHint})</span>
+                      <span className="font-ipa font-normal text-fg-muted" aria-label={title}>
+                        ({ipaHint})
+                      </span>
                     </>
                   ) : null}
                 </span>

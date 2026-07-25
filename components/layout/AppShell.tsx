@@ -46,6 +46,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     pathname.startsWith("/practice/sounds/sound/") ||
     pathname === "/daily" ||
     pathname === "/practice/review" ||
+    pathname === "/assessment" ||
     pathname === "/assessment/pronunciation";
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
@@ -109,10 +110,16 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <Sidebar className="hidden lg:flex w-64 flex-col" />
       <main
         id="main-content"
-        className="main-scrollbar flex flex-1 flex-col overflow-y-auto overflow-x-hidden pb-20 lg:pb-0"
+        className="main-scrollbar flex min-h-0 flex-1 flex-col overflow-y-auto overflow-x-hidden pb-20 lg:pb-0"
         style={{ marginRight: mainMarginRight }}
       >
-        <div className={isImmersivePractice ? "mx-auto flex w-full max-w-screen-md flex-1 flex-col" : "w-full max-w-screen-xl mx-auto"}>
+        <div
+          className={
+            isImmersivePractice
+              ? "mx-auto flex min-h-0 w-full max-w-screen-md flex-1 flex-col"
+              : "mx-auto w-full max-w-screen-xl"
+          }
+        >
           {children}
         </div>
       </main>

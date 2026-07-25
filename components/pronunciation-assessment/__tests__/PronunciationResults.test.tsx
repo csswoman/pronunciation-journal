@@ -74,8 +74,74 @@ describe('PronunciationResults', () => {
       />
     )
 
-    expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent(/no pudimos medir/i)
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(/reunir evidencia/i)
+    expect(screen.getByText(/por dónde empezar/i)).toBeInTheDocument()
     expect(screen.queryByText(/buen trabajo/i)).not.toBeInTheDocument()
+  })
+
+  it('echoes a struggle self-report in the peak-end heading', () => {
+    render(
+      <PronunciationResults
+        result={buildResult({
+          targetResults: [
+            {
+              targetId: 'prosody.word-stress',
+              status: 'needs_evidence',
+              signalType: 'self_report',
+              confidence: 0.4,
+              evaluatorKind: null,
+              evaluatorVersion: null,
+              measurement: { kind: 'not_measured', abstentionReason: 'no_evaluator_available' },
+            },
+          ],
+          prescription: {
+            generatedAt: new Date().toISOString(),
+            sessions: Array.from({ length: 5 }, (_, i) => ({
+              targetId: 'prosody.word-stress',
+              reason: `Session ${i + 1}`,
+              style: i === 4 ? ('transfer' as const) : ('drill' as const),
+            })),
+          },
+        })}
+        saving={false}
+        saveError={false}
+        onRetrySave={vi.fn()}
+      />
+    )
+
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(/lo que nos dijiste/i)
+    expect(screen.getByText(/nos dijiste que te cuesta:/i)).toBeInTheDocument()
+  })
+
+  it('offers restart and deep-links the primary CTA to day-one practice', () => {
+    const onRestart = vi.fn()
+    render(
+      <PronunciationResults
+        result={buildResult({
+          targetResults: [
+            {
+              targetId: 'segmental.phoneme./ə/',
+              status: 'needs_evidence',
+              signalType: 'stt_intelligibility',
+              confidence: 0,
+              evaluatorKind: null,
+              evaluatorVersion: null,
+              measurement: { kind: 'not_measured', abstentionReason: 'skipped_by_user' },
+            },
+          ],
+        })}
+        saving={false}
+        saveError={false}
+        onRetrySave={vi.fn()}
+        onRestart={onRestart}
+      />
+    )
+
+    expect(screen.getByRole('link', { name: /empezar a practicar/i })).toHaveAttribute(
+      'href',
+      '/practice/sounds'
+    )
+    expect(screen.getByRole('button', { name: /repetir el diagnóstico/i })).toBeInTheDocument()
   })
 
   it('leads with the priority section, not an aggregate score', async () => {
@@ -83,7 +149,7 @@ describe('PronunciationResults', () => {
       <PronunciationResults result={buildResult()} saving={false} saveError={false} onRetrySave={vi.fn()} />
     )
 
-    const heading = screen.getByRole('heading', { level: 2 })
+    const heading = screen.getByRole('heading', { level: 1 })
     expect(heading).toHaveTextContent(/trabajar primero/i)
     expect(heading).not.toHaveTextContent(/\d+\s*\/\s*100/)
     expect(screen.queryByText(/score/i)).not.toBeInTheDocument()
@@ -99,7 +165,7 @@ describe('PronunciationResults', () => {
     render(
       <PronunciationResults result={buildResult()} saving={false} saveError={false} onRetrySave={vi.fn()} />
     )
-    const heading = screen.getByRole('heading', { level: 2 })
+    const heading = screen.getByRole('heading', { level: 1 })
     expect(heading).toHaveFocus()
   })
 
@@ -137,7 +203,7 @@ describe('PronunciationResults', () => {
       />
     )
 
-    expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent(/siguiente práctica/i)
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(/siguiente práctica/i)
     expect(screen.queryByRole('heading', { level: 3, name: /vocal relajada/i })).not.toBeInTheDocument()
     expect(screen.queryByText(/puntaje|confianza|prioridad|fortaleza|observado/i)).not.toBeInTheDocument()
   })

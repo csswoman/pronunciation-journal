@@ -60,7 +60,7 @@ describe('PronunciationPromptFlow', () => {
     const progressCopy = document.querySelector('[aria-live="polite"]') as HTMLElement
     expect(progressCopy).toHaveTextContent('Pregunta 1 de 2')
 
-    await userEvent.click(screen.getByRole('button', { name: /sí, lo distingo/i }))
+    await userEvent.click(screen.getByRole('button', { name: /me desenvuelvo bien/i }))
 
     await waitFor(() => {
       expect(document.querySelector('[aria-live="polite"]')).toHaveTextContent('Pregunta 2 de 2')
@@ -73,7 +73,7 @@ describe('PronunciationPromptFlow', () => {
     const firstHeading = screen.getByRole('heading', { level: 2 })
     expect(firstHeading).toHaveFocus()
 
-    await userEvent.click(screen.getByRole('button', { name: /sí, lo distingo/i }))
+    await userEvent.click(screen.getByRole('button', { name: /me desenvuelvo bien/i }))
 
     await waitFor(() => {
       const nextHeading = screen.getByRole('heading', { level: 2 })
@@ -85,17 +85,17 @@ describe('PronunciationPromptFlow', () => {
     renderFlow()
 
     await userEvent.tab()
-    expect(screen.getByRole('button', { name: /sí, lo distingo/i })).toHaveFocus()
+    expect(screen.getByRole('button', { name: /me desenvuelvo bien/i })).toHaveFocus()
   })
 
   it('calls onComplete with accumulated target results after the last prompt', async () => {
     const onComplete = renderFlow()
 
-    await userEvent.click(screen.getByRole('button', { name: /sí, lo distingo/i }))
+    await userEvent.click(screen.getByRole('button', { name: /me desenvuelvo bien/i }))
     await waitFor(() => {
       expect(document.querySelector('[aria-live="polite"]')).toHaveTextContent('Pregunta 2 de 2')
     })
-    await userEvent.click(screen.getByRole('button', { name: /sí, lo distingo/i }))
+    await userEvent.click(screen.getByRole('button', { name: /me desenvuelvo bien/i }))
 
     await waitFor(() => {
       expect(onComplete).toHaveBeenCalledTimes(1)
@@ -115,6 +115,33 @@ describe('PronunciationPromptFlow', () => {
     expect(onComplete.mock.calls[0][0][0].measurement.kind).toBe('not_measured')
   })
 
+  it('lets the learner go back and replace the previous answer', async () => {
+    const onComplete = renderFlow()
+
+    expect(screen.queryByRole('button', { name: /anterior/i })).not.toBeInTheDocument()
+
+    await userEvent.click(screen.getByRole('button', { name: /me desenvuelvo bien/i }))
+    await waitFor(() => {
+      expect(document.querySelector('[aria-live="polite"]')).toHaveTextContent('Pregunta 2 de 2')
+    })
+
+    await userEvent.click(screen.getByRole('button', { name: /anterior/i }))
+    await waitFor(() => {
+      expect(document.querySelector('[aria-live="polite"]')).toHaveTextContent('Pregunta 1 de 2')
+    })
+
+    await userEvent.click(screen.getByRole('button', { name: /me cuesta/i }))
+    await waitFor(() => {
+      expect(document.querySelector('[aria-live="polite"]')).toHaveTextContent('Pregunta 2 de 2')
+    })
+    await userEvent.click(screen.getByRole('button', { name: /saltar/i }))
+
+    await waitFor(() => {
+      expect(onComplete).toHaveBeenCalledTimes(1)
+    })
+    expect(onComplete.mock.calls[0][0][0].measurement).toEqual({ kind: 'scored', score: 0 })
+  })
+
   it('hides production prompts when mic/STT cannot evaluate and auto-skips them', async () => {
     const mixed: DiagnosticPromptSelection[] = [
       { targetId: contrastTargetId('/θ/', '/ð/'), stage: 'perception' },
@@ -128,7 +155,7 @@ describe('PronunciationPromptFlow', () => {
     expect(document.querySelector('[aria-live="polite"]')).toHaveTextContent('Pregunta 1 de 1')
     expect(screen.queryByRole('button', { name: /grabar/i })).not.toBeInTheDocument()
 
-    await userEvent.click(screen.getByRole('button', { name: /sí, lo distingo/i }))
+    await userEvent.click(screen.getByRole('button', { name: /me desenvuelvo bien/i }))
 
     await waitFor(() => {
       expect(onComplete).toHaveBeenCalledTimes(1)

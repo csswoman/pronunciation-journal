@@ -13,7 +13,7 @@ interface PronunciationPerceptionPromptProps {
 
 export function PronunciationPerceptionPrompt({ selection, onAnswer }: PronunciationPerceptionPromptProps) {
   const headingRef = useRef<HTMLHeadingElement>(null)
-  const { title, ipaHint } = getLearnerTargetCopy(selection.targetId)
+  const { title, ipaHint, plainHint } = getLearnerTargetCopy(selection.targetId)
 
   useEffect(() => {
     headingRef.current?.focus()
@@ -21,24 +21,28 @@ export function PronunciationPerceptionPrompt({ selection, onAnswer }: Pronuncia
 
   return (
     <fieldset className="flex min-w-0 flex-col gap-5">
-      <legend className="sr-only">Pregunta de discriminación auditiva</legend>
+      <legend className="sr-only">Autoinforme sobre este contraste</legend>
       <div className="flex min-w-0 flex-col gap-2">
         <h2
           ref={headingRef}
           tabIndex={-1}
           className="min-w-0 text-pretty break-words text-h4 text-fg outline-none"
         >
-          ¿Crees que distingues: {title}?
+          ¿Qué tan cómodo te sientes con: {title}?
           {ipaHint ? (
             <>
               {' '}
-              <span className="font-ipa font-normal text-fg-muted">({ipaHint})</span>
+              <span className="font-ipa font-normal text-fg-muted" aria-label={title}>
+                ({ipaHint})
+              </span>
             </>
           ) : null}
         </h2>
+        {plainHint ? (
+          <p className="max-w-prose text-pretty font-body-sm text-fg">{plainHint}</p>
+        ) : null}
         <p className="max-w-prose text-pretty font-body-sm text-fg-muted">
-          Sin audio aún: responde según tu experiencia con este contraste. Si no estás seguro, dilo —
-          eso también cuenta.
+          Aún no hay audio de ejemplo. Responde según tu experiencia — no es un examen.
         </p>
       </div>
       <div className="flex w-full flex-col gap-2 sm:flex-row">
@@ -49,19 +53,24 @@ export function PronunciationPerceptionPrompt({ selection, onAnswer }: Pronuncia
           className="min-h-11"
           onClick={() => onAnswer({ correct: true })}
         >
-          Sí, lo distingo
+          Me desenvuelvo bien
         </Button>
         <Button
           type="button"
-          variant="ghost"
+          variant="outline"
           fullWidth
           className="min-h-11"
           onClick={() => onAnswer({ correct: false })}
         >
-          No estoy seguro
+          Me cuesta
         </Button>
       </div>
-      <Button type="button" variant="ghost" className="min-h-11" onClick={() => onAnswer(null)}>
+      <Button
+        type="button"
+        variant="ghost"
+        className="min-h-11 text-fg-subtle"
+        onClick={() => onAnswer(null)}
+      >
         Saltar
       </Button>
     </fieldset>

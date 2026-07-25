@@ -63,7 +63,9 @@ export default function HomePageHeader({
   const { preferences } = useUserPreferences();
 
   const isLoggedIn = user && !(user as { is_anonymous?: boolean }).is_anonymous;
-  const fullName = preferences?.full_name || user?.email?.split("@")[0] || null;
+  const metadataName =
+    typeof user?.user_metadata?.full_name === "string" ? user.user_metadata.full_name : "";
+  const fullName = preferences?.full_name || metadataName || user?.email?.split("@")[0] || null;
   const userName = isLoggedIn && fullName ? fullName.split(" ")[0] : null;
 
   const current = streak?.currentStreak ?? 0;

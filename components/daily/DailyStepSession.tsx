@@ -4,9 +4,9 @@
 // <DailyStepSession>
 //   <WordIntroStep />       — si word_intro: presentación de palabras nuevas
 //   <DailyReaderStep />     — si reader: lectura con comprehensible input
-//   <StepThreadHints />     — palabras que reaparecen de pasos anteriores
+//   <DailyThreadStrip />    — hilo solo fuera de la práctica activa
 //   <PhonemeLessonIntro />  — si phoneme_focus + ipa conocido + no iniciado
-//   <PracticeSession />     — ejercicios del paso
+//   <PracticeSession />     — ejercicios del paso (sesión sagrada: sin hints ni chrome extra)
 // </DailyStepSession>
 
 import { useState } from 'react'
@@ -14,7 +14,7 @@ import PracticeSession from '@/components/practice/PracticeSession'
 import { PhonemeLessonIntro } from '@/components/phoneme-practice/PhonemeLessonIntro'
 import { WordIntroStep } from '@/components/daily/WordIntroStep'
 import { DailyReaderStep } from '@/components/daily/DailyReaderStep'
-import { StepThreadHints } from '@/components/daily/StepThreadHints'
+import { DailyThreadStrip } from '@/components/daily/DailyThreadStrip'
 import { getThreadHintsForStep } from '@/lib/practice/daily-plan/step-thread'
 import { IPA_EXTRA } from '@/lib/pronunciation/ipa-data'
 import type { DailyStep } from '@/lib/practice/types'
@@ -49,13 +49,8 @@ export default function DailyStepSession({
 
   if (step.kind === 'word_intro') {
     return (
-      <div className="mx-auto max-w-prose p-6">
-        {threadHints.length > 0 && (
-          <StepThreadHints
-            hints={threadHints}
-            className="mb-4 rounded-[var(--radius-md)] border border-border-subtle bg-surface-sunken p-3"
-          />
-        )}
+      <div className="mx-auto flex max-w-prose flex-col gap-4 p-6 pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] lg:pb-6">
+        {threadHints.length > 0 ? <DailyThreadStrip hints={threadHints} /> : null}
         <WordIntroStep cards={step.studyCards ?? []} onComplete={onComplete} />
       </div>
     )
@@ -88,30 +83,22 @@ export default function DailyStepSession({
     )
   }
 
+  // No outer .phoneme-focus and no thread chips here: PracticeSession owns the
+  // focus shell. Sibling hints were flex-laid beside the phone and covered the task.
   return (
-    <div className="phoneme-focus">
-      {threadHints.length > 0 && (
-        <div className="mx-auto max-w-prose px-6 pt-4">
-          <StepThreadHints
-            hints={threadHints}
-            className="rounded-[var(--radius-md)] border border-border-subtle bg-surface-sunken p-3"
-          />
-        </div>
-      )}
-      <PracticeSession
-        key={sessionKey}
-        context="daily"
-        exercises={step.exercises}
-        sessionLength={step.exercises.length}
-        sessionLabel={step.title}
-        soundIpa={step.ipa}
-        initialIndex={initialExerciseIndex ?? 0}
-        onSessionComplete={() => undefined}
-        onExit={(result) => {
-          if (result.results.length >= step.exercises.length) onComplete()
-          else onExit()
-        }}
-      />
-    </div>
+    <PracticeSession
+      key={sessionKey}
+      context="daily"
+      exercises={step.exercises}
+      sessionLength={step.exercises.length}
+      sessionLabel={step.title}
+      soundIpa={step.ipa}
+      initialIndex={initialExerciseIndex ?? 0}
+      onSessionComplete={() => undefined}
+      onExit={(result) => {
+        if (result.results.length >= step.exercises.length) onComplete()
+        else onExit()
+      }}
+    />
   )
 }

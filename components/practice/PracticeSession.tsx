@@ -136,7 +136,11 @@ export default function PracticeSession(config: PracticeConfig) {
         </PhonemeFocusShell>
       )
     }
-    return <div className="w-full max-w-md mx-auto p-6">{summary}</div>
+    return (
+      <div className="mx-auto w-full max-w-md p-6 pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] lg:pb-6">
+        {summary}
+      </div>
+    )
   }
 
   return (

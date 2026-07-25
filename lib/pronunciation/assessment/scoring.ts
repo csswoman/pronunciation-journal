@@ -18,7 +18,13 @@ import { getTarget } from '@/lib/pronunciation/targets/registry'
 import { accuracyFromAttempt, isScorableAttempt, type SpokenAttempt } from '@/lib/pronunciation/spoken-attempt'
 import type { DiagnosticPromptSelection } from './prompt-selection'
 import { mustAbstainFromProductionScore } from './scoring-guards'
-import type { EvaluatorKind, Measurement, TargetResult, TargetResultStatus } from './types'
+import {
+  isProsodyOnlyTargetId,
+  type EvaluatorKind,
+  type Measurement,
+  type TargetResult,
+  type TargetResultStatus,
+} from './types'
 
 /** A learner's answer to a perception (forced-choice discrimination) prompt. */
 export interface PerceptionAnswer {
@@ -96,6 +102,24 @@ export function scorePerceptionPrompt(
     })
   }
 
+  // Prosody-only targets cannot carry a numeric score in this schema version
+  // (see TargetResultSchema). Without audio discrimination we only keep a
+  // self-report abstention — never a fake forced-choice score.
+  // Confidence encodes direction so prescription can seed Day 1:
+  // struggle ("Me cuesta") > comfort ("Me desenvuelvo bien") > skip (0).
+  if (isProsodyOnlyTargetId(selection.targetId)) {
+    return {
+      ...buildResult({
+        targetId: selection.targetId,
+        signalType: 'self_report',
+        measurement: { kind: 'not_measured', abstentionReason: 'no_evaluator_available' },
+        evaluatorKind: null,
+        evaluatorVersion: null,
+      }),
+      confidence: answer.correct ? 0.15 : 0.4,
+    }
+  }
+
   return buildResult({
     targetId: selection.targetId,
     signalType: 'perception',
@@ -118,6 +142,18 @@ export function scoreProductionPrompt(
 ): TargetResult {
   const lookup = getTarget(selection.targetId)
   const signalType = 'stt_intelligibility' as const
+
+  // Explicit skip always wins over structural abstention — same user action
+  // should read as "La saltaste" in evidence, even on prosody-only targets.
+  if (attempt.outcome === 'skipped') {
+    return buildResult({
+      targetId: selection.targetId,
+      signalType,
+      measurement: { kind: 'not_measured', abstentionReason: 'skipped_by_user' },
+      evaluatorKind: null,
+      evaluatorVersion: null,
+    })
+  }
 
   if (!lookup.ok || mustAbstainFromProductionScore(lookup.target)) {
     return buildResult({
@@ -172,13 +208,6 @@ export function scoreProductionPrompt(
         evaluatorKind: null,
         evaluatorVersion: null,
       })
-    case 'skipped':
-      return buildResult({
-        targetId: selection.targetId,
-        signalType,
-        measurement: { kind: 'not_measured', abstentionReason: 'skipped_by_user' },
-        evaluatorKind: null,
-        evaluatorVersion: null,
-      })
+    // 'skipped' is handled above so it wins over structural abstention.
   }
 }

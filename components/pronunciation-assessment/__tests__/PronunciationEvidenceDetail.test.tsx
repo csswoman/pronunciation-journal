@@ -39,9 +39,29 @@ describe('PronunciationEvidenceDetail', () => {
     expect(details.open).toBe(true)
   })
 
-  it('lists status and measurement detail for every target result', () => {
+  it('lists status and learner-facing measurement detail for every target result', () => {
     render(<PronunciationEvidenceDetail targetResults={targetResults} />)
-    expect(screen.getByText(/puntaje interno: 55\/100/i)).toBeInTheDocument()
-    expect(screen.getByText(/sin medir \(skipped_by_user\)/i)).toBeInTheDocument()
+    expect(screen.getByText(/señal mixta/i)).toBeInTheDocument()
+    expect(screen.getByText(/la saltaste/i)).toBeInTheDocument()
+  })
+
+  it('names self-report struggle instead of the structural evaluator abstention', () => {
+    render(
+      <PronunciationEvidenceDetail
+        targetResults={[
+          {
+            targetId: 'prosody.word-stress',
+            status: 'needs_evidence',
+            signalType: 'self_report',
+            confidence: 0.4,
+            evaluatorKind: null,
+            evaluatorVersion: null,
+            measurement: { kind: 'not_measured', abstentionReason: 'no_evaluator_available' },
+          },
+        ]}
+      />
+    )
+    expect(screen.getByText(/nos dijiste que te cuesta/i)).toBeInTheDocument()
+    expect(screen.queryByText(/no había evaluador/i)).not.toBeInTheDocument()
   })
 })

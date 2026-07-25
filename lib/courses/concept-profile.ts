@@ -29,9 +29,11 @@ export function deriveConceptSignal(
   assessedAt: string,
 ): ConceptSignal {
   const hasPerfectEvidence = evidence.total > 0 && evidence.correct === evidence.total;
-  const status: ConceptStatus = hasPerfectEvidence && selfRating !== "unknown"
+  // Quiz evidence wins over a humble self-rating: perfect answers → mastered
+  // even if the learner marked the topic as unknown before the questions.
+  const status: ConceptStatus = hasPerfectEvidence
     ? "mastered"
-    : selfRating === "unknown" && (!hasPerfectEvidence || evidence.total === 0)
+    : selfRating === "unknown"
       ? "learn"
       : "review";
 
