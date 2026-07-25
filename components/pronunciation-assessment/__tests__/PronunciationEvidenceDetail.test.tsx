@@ -41,7 +41,8 @@ describe('PronunciationEvidenceDetail', () => {
 
   it('lists status and learner-facing measurement detail for every target result', () => {
     render(<PronunciationEvidenceDetail targetResults={targetResults} />)
-    expect(screen.getByText(/señal mixta/i)).toBeInTheDocument()
+    expect(screen.getByText('Se entendió')).toBeInTheDocument()
+    expect(screen.getByText(/no confirma la precisión/i)).toBeInTheDocument()
     expect(screen.getByText(/la saltaste/i)).toBeInTheDocument()
   })
 
@@ -63,5 +64,44 @@ describe('PronunciationEvidenceDetail', () => {
     )
     expect(screen.getByText(/nos dijiste que te cuesta/i)).toBeInTheDocument()
     expect(screen.queryByText(/no había evaluador/i)).not.toBeInTheDocument()
+  })
+
+  it('summarizes word-stress against the number of items presented this run', () => {
+    render(
+      <PronunciationEvidenceDetail
+        targetResults={[
+          {
+            targetId: 'prosody.word-stress',
+            status: 'strength',
+            signalType: 'perception',
+            confidence: 0.6,
+            evaluatorKind: 'perception_forced_choice',
+            evaluatorVersion: 'word-stress-listening-v1',
+            measurement: { kind: 'scored', score: 60 },
+            perceptionItemCount: 5,
+          },
+        ]}
+      />
+    )
+    expect(screen.getByText(/3 de 5 palabras/i)).toBeInTheDocument()
+  })
+
+  it('hides dimensions that the diagnostic cannot evaluate', () => {
+    render(
+      <PronunciationEvidenceDetail
+        targetResults={[{
+          targetId: 'prosody.word-stress',
+          status: 'needs_evidence',
+          signalType: 'perception',
+          confidence: 0,
+          evaluatorKind: null,
+          evaluatorVersion: null,
+          measurement: { kind: 'not_measured', abstentionReason: 'no_evaluator_available' },
+        }]}
+      />
+    )
+
+    expect(screen.queryByText(/sílaba tónica/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/aún no medido/i)).not.toBeInTheDocument()
   })
 })
