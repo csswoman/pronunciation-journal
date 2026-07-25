@@ -35,16 +35,40 @@ describe('parseWavScp', () => {
   })
 })
 
+/** Builds a minimal valid 16-bit PCM mono WAV buffer of a given duration (silence is fine — extraction only needs duration/sampleRate, not spectral content). */
+function buildSilentWav(sampleRate: number, durationMs: number): Buffer {
+  const numSamples = Math.round((durationMs / 1000) * sampleRate)
+  const dataSize = numSamples * 2
+  const buffer = Buffer.alloc(44 + dataSize)
+  buffer.write('RIFF', 0)
+  buffer.writeUInt32LE(36 + dataSize, 4)
+  buffer.write('WAVE', 8)
+  buffer.write('fmt ', 12)
+  buffer.writeUInt32LE(16, 16)
+  buffer.writeUInt16LE(1, 20)
+  buffer.writeUInt16LE(1, 22)
+  buffer.writeUInt32LE(sampleRate, 24)
+  buffer.writeUInt32LE(sampleRate * 2, 28)
+  buffer.writeUInt16LE(2, 32)
+  buffer.writeUInt16LE(16, 34)
+  buffer.write('data', 36)
+  buffer.writeUInt32LE(dataSize, 40)
+  return buffer
+}
+
 describe('extractSpeechoceanVowels', () => {
   let corpusRoot: string
+  const sampleRate = 16000
 
   beforeAll(() => {
     corpusRoot = mkdtempSync(join(tmpdir(), 'speechocean-fixture-'))
     mkdirSync(join(corpusRoot, 'resource'), { recursive: true })
     mkdirSync(join(corpusRoot, 'train'), { recursive: true })
+    mkdirSync(join(corpusRoot, 'WAVE', 'SPEAKER0001'), { recursive: true })
+    mkdirSync(join(corpusRoot, 'WAVE', 'SPEAKER0002'), { recursive: true })
 
-    // Single-word utterance (IT -> IH0 T -> ɪ) should be kept.
-    // Multi-word utterance (WE CALL IT BEAR) should be skipped (words.length !== 1).
+    // Multi-word utterance: WE(iː) CALL(AO, skip) IT(ɪ) BEAR(EH, skip) — 4-word sentence.
+    // Single-word utterances: IT(ɪ), WE(iː).
     writeFileSync(
       join(corpusRoot, 'resource', 'scores-detail.json'),
       JSON.stringify({
@@ -80,19 +104,34 @@ describe('extractSpeechoceanVowels', () => {
       join(corpusRoot, 'train', 'utt2spk'),
       ['000010011\tSPEAKER0001', '000020001\tSPEAKER0002', '000020002\tSPEAKER0002'].join('\n')
     )
+
+    writeFileSync(join(corpusRoot, 'WAVE', 'SPEAKER0001', '000010011.WAV'), buildSilentWav(sampleRate, 1400))
+    writeFileSync(join(corpusRoot, 'WAVE', 'SPEAKER0002', '000020001.WAV'), buildSilentWav(sampleRate, 500))
+    writeFileSync(join(corpusRoot, 'WAVE', 'SPEAKER0002', '000020002.WAV'), buildSilentWav(sampleRate, 400))
   })
 
   afterAll(() => {
     rmSync(corpusRoot, { recursive: true, force: true })
   })
 
-  it('keeps only single-word utterances whose vowel nucleus is in the v1 contrast set', () => {
+  it('extracts a windowed item for every monosyllabic target-vowel word, including inside multi-word utterances', () => {
     const items = extractSpeechoceanVowels({ corpusRoot, splits: ['train'] })
 
-    expect(items).toHaveLength(2)
-    expect(items.map((i) => i.clipFile).sort()).toEqual(
-      ['WAVE/SPEAKER0002/000020001.WAV', 'WAVE/SPEAKER0002/000020002.WAV'].sort()
-    )
+    // From the 4-word utterance: WE->iː and IT->ɪ are kept (CALL/BEAR are out of the v1 set).
+    // Plus the 2 single-word utterances (IT->ɪ, WE->iː). Total >= 4.
+    expect(items.length).toBeGreaterThanOrEqual(4)
+
+    const fromSentence = items.find((i) => i.clipFile.endsWith('000010011.WAV') && i.targetVowel === 'ɪ')
+    expect(fromSentence).toBeDefined()
+    expect(fromSentence?.windowStartMs).toBeGreaterThanOrEqual(0)
+    expect(fromSentence?.windowEndMs).toBeGreaterThan(fromSentence?.windowStartMs ?? 0)
+  })
+
+  it('does not compute a window for single-word utterances — the whole clip already is the word', () => {
+    const items = extractSpeechoceanVowels({ corpusRoot, splits: ['train'] })
+    const singleWordItem = items.find((i) => i.clipFile.endsWith('000020001.WAV'))
+    expect(singleWordItem?.windowStartMs).toBeUndefined()
+    expect(singleWordItem?.windowEndMs).toBeUndefined()
   })
 
   it('maps ARPAbet vowel phones to plan 071 IPA targets and averages rater scores to 0-100', () => {

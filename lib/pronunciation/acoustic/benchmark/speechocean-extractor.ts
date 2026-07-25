@@ -3,16 +3,20 @@
  * (OpenSLR SLR101) into the `CorpusItem[]` shape `corpus-loader.ts` expects.
  *
  * speechocean762 has no per-word or per-phoneme timestamps — only whole-
- * utterance WAVs plus word-level ARPAbet phone strings and human scores. To
- * approximate an isolated vowel segment without a forced aligner (explicitly
- * out of scope, see ADR-064), this extractor only keeps utterances whose
- * `text` is a SINGLE monosyllabic word whose vowel nucleus matches one of
- * the plan 071 v1 contrasts (IY/IH/AE/AH -> iː/ɪ/æ/ʌ). For those, the whole
- * utterance WAV *is* the word's audio, so no alignment is needed.
+ * utterance WAVs plus word-level ARPAbet phone strings and human scores.
+ * Only 6 of 5000 utterances are single-word (confirmed against the real
+ * corpus) — nowhere near enough for a benchmark on their own. For every
+ * OTHER monosyllabic target-vowel word found inside a multi-word utterance,
+ * this extractor estimates its time span via `proportionalWordWindow`
+ * (Task 6b) — a phoneme-count proportional heuristic, NOT a forced aligner
+ * (explicitly out of scope, see ADR-064). Single-word utterances need no
+ * window (the whole clip already is the word).
  */
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import type { CorpusItem } from './corpus-loader'
+import { decodeWavPcm16 } from './wav-decoder'
+import { proportionalWordWindow, centerThird } from './word-window'
 
 /** ARPAbet vowel phone (stress digit stripped) -> plan 071 IPA vowel target. */
 const ARPABET_TO_IPA_VOWEL: Record<string, string> = {
@@ -116,17 +120,31 @@ export function extractSpeechoceanVowels({
 
     for (const { uttId, relativeWavPath } of wavEntries) {
       const scored = scoresDetail[uttId]
-      if (!scored || scored.words.length !== 1) continue // only single-word utterances
+      if (!scored) continue
 
-      const word = scored.words[0]
-      const targetVowel = monosyllabicTargetVowel(word['ref-phones'])
-      if (!targetVowel) continue
+      const isMultiWord = scored.words.length > 1
+      let wordWindows: ReturnType<typeof proportionalWordWindow> | null = null
+      if (isMultiWord) {
+        const phoneCounts = scored.words.map((w) => w['ref-phones'].trim().split(/\s+/).length)
+        const wavBuffer = readFileSync(join(corpusRoot, relativeWavPath))
+        const { sampleRate, samples } = decodeWavPcm16(wavBuffer)
+        const totalDurationMs = (samples.length / sampleRate) * 1000
+        wordWindows = proportionalWordWindow(phoneCounts, totalDurationMs)
+      }
 
-      items.push({
-        clipFile: relativeWavPath,
-        targetVowel,
-        humanScore: averageWordScore(word),
-        speakerId: utt2spk.get(uttId) ?? 'unknown',
+      scored.words.forEach((word, wordIndex) => {
+        const targetVowel = monosyllabicTargetVowel(word['ref-phones'])
+        if (!targetVowel) return
+
+        const window = wordWindows ? centerThird(wordWindows[wordIndex]) : null
+
+        items.push({
+          clipFile: relativeWavPath,
+          targetVowel,
+          humanScore: averageWordScore(word),
+          speakerId: utt2spk.get(uttId) ?? 'unknown',
+          ...(window ? { windowStartMs: window.startMs, windowEndMs: window.endMs } : {}),
+        })
       })
     }
   }
