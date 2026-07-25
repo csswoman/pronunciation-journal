@@ -90,7 +90,7 @@ your row when done.
 | 069 | Unify actionable pronunciation feedback | P1 pedagogy/product | L | 063, 066 | TODO |
 | 070 | Build goal-based oral missions | P1 product/pedagogy | L | 063, 066, 068, 069 | TODO |
 | 071 | Benchmark a free Web-Audio vowel acoustic evaluator | P1 product/pedagogy | L | 064, 067 | IN PROGRESS (2026-07-25: spec written `docs/superpowers/specs/2026-07-25-plan-071-vowel-acoustic-benchmark-design.md`; formant F1/F2 evaluator validated against speechocean762, ship/partial/no-ship gate for 067 vowel scoring) |
-| 072 | Vary and expand the diagnostic item bank | P2 product/pedagogy | M | 067 | IN PROGRESS (2026-07-25: spec written `docs/superpowers/specs/2026-07-25-plan-072-diagnostic-item-variety-design.md`; per-session seed + sampled/expanded word-stress bank so the diagnostic stops repeating the same 5 items) |
+| 072 | Vary and expand the diagnostic item bank | P2 product/pedagogy | M | 067 | DONE (2026-07-25: per-session seed + 18-item word-stress bank sampled 5/run via seeded PRNG; scoring/evidence now run-size-relative (`perceptionItemCount`), not bank-size-relative; focused tests, typecheck and token lint pass. Pre-existing unrelated failure in `PronunciationAssessmentClient.test.tsx` — "surfaces a finish error" expects `not_measured` UI copy but validation currently routes to the save-error path — confirmed present before this plan's changes; out of scope here, needs its own fix) |
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJECTED (with one-line rationale)
 
