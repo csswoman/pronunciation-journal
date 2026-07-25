@@ -80,7 +80,8 @@ has mastered the target.
 
 - No change to `user_contrast_progress`, SRS formulas, or any persisted progress table.
 - No pronunciation diagnostic, learning route, chat missions, or acoustic evaluator implementation
-  (plans 067-071).
+  in *this* ADR (plans 067–071 own those surfaces). The learning route now lives at
+  `/courses/pronunciation` — see `docs/architecture/pronunciation-learning-route.md`.
 - No runtime inference of target ids from lesson titles or AI. All content-to-target mapping is
   authored in `lib/pronunciation/targets/content-map.ts` and validated by
   `lib/courses/__tests__/content-audit.test.ts`; unmapped/unresolved ids fail the audit rather than
