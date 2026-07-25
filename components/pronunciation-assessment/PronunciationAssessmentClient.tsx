@@ -9,7 +9,7 @@
 //   <PronunciationResults />
 // </PronunciationAssessmentClient>
 
-import { useCallback, useMemo, useState, type ReactNode } from 'react'
+import { useCallback, useMemo, useRef, useState, type ReactNode } from 'react'
 import Button from '@/components/ui/Button'
 import {
   PronunciationAssessmentChrome,
@@ -21,6 +21,7 @@ import { PronunciationResults } from './PronunciationResults'
 import { applyPriorityStatus, derivePriorityTargetIds } from '@/lib/pronunciation/assessment/prioritization'
 import { generatePrescriptionSessions } from '@/lib/pronunciation/assessment/prescription'
 import { selectDiagnosticPrompts } from '@/lib/pronunciation/assessment/prompt-selection'
+import { sampleWordStressItems } from '@/lib/pronunciation/assessment/word-stress-perception'
 import { persistPronunciationAssessmentLocal } from '@/lib/pronunciation/assessment/persistence'
 import { saveGuestPronunciationDiagnostic } from '@/lib/pronunciation/assessment/guest-transfer'
 import { validateDiagnosticResult } from '@/lib/pronunciation/assessment/schema'
@@ -53,10 +54,18 @@ export function PronunciationAssessmentClient({ userId }: PronunciationAssessmen
   const [pendingResults, setPendingResults] = useState<TargetResult[] | null>(null)
   const [snapshot, setSnapshot] = useState<CapabilitySnapshot | null>(null)
 
+  // A per-session seed so each diagnostic run varies its selection and items,
+  // while staying stable within a single run (so useMemo doesn't re-sample on
+  // every render). userId keeps it reproducible-per-user within the session.
+  const sessionSeedRef = useRef<string>(`${userId ?? 'guest'}:${Date.now()}:${Math.random()}`)
+  const sessionSeed = sessionSeedRef.current
+
   const selections = useMemo(
-    () => selectDiagnosticPrompts({ seed: userId ?? 'guest', cefrLevel: DEFAULT_CEFR }),
-    [userId]
+    () => selectDiagnosticPrompts({ seed: sessionSeed, cefrLevel: DEFAULT_CEFR }),
+    [sessionSeed]
   )
+
+  const wordStressItems = useMemo(() => sampleWordStressItems(sessionSeed), [sessionSeed])
 
   const buildAndSave = useCallback(
     async (targetResults: TargetResult[], capabilitySnapshot: CapabilitySnapshot) => {
@@ -186,6 +195,7 @@ export function PronunciationAssessmentClient({ userId }: PronunciationAssessmen
         selections={selections}
         capabilitySnapshot={snapshot}
         onComplete={handlePromptsComplete}
+        wordStressItems={wordStressItems}
       />
     )
   } else if (result) {
