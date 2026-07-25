@@ -9,6 +9,7 @@ import type { PerceptionAnswer } from '@/lib/pronunciation/assessment/scoring'
 import type { DiagnosticPromptSelection } from '@/lib/pronunciation/assessment/prompt-selection'
 import type { SpokenAttempt } from '@/lib/pronunciation/spoken-attempt'
 import type { CapabilitySnapshot, TargetResult } from '@/lib/pronunciation/assessment/types'
+import type { WordStressPerceptionItem } from '@/lib/pronunciation/assessment/word-stress-perception'
 import { PronunciationPerceptionPrompt } from './PronunciationPerceptionPrompt'
 import { PronunciationProductionPrompt } from './PronunciationProductionPrompt'
 
@@ -17,6 +18,8 @@ interface PronunciationPromptFlowProps {
   selections: DiagnosticPromptSelection[]
   capabilitySnapshot: CapabilitySnapshot
   onComplete: (targetResults: TargetResult[]) => void
+  /** Word-stress items sampled for this run; forwarded to the perception prompt. */
+  wordStressItems?: readonly WordStressPerceptionItem[]
 }
 
 function skippedProductionAttempt(
@@ -48,6 +51,7 @@ export function PronunciationPromptFlow({
   selections,
   capabilitySnapshot,
   onComplete,
+  wordStressItems,
 }: PronunciationPromptFlowProps) {
   const canProduce = canEvaluateProduction(capabilitySnapshot)
   const activeSelections = useMemo(
@@ -159,6 +163,7 @@ export function PronunciationPromptFlow({
           key={current.targetId}
           selection={current}
           onAnswer={handlePerceptionAnswer}
+          wordStressItems={wordStressItems}
         />
       ) : (
         <PronunciationProductionPrompt
