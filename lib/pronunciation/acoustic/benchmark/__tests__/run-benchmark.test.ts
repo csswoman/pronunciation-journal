@@ -32,4 +32,33 @@ describe('runBenchmarkOnItems', () => {
     expect(report.verdictsByVowel['iː']).toBeDefined()
     expect(report.verdictsByVowel['ɪ']).toBeDefined()
   })
+
+  it('analyzes only the windowed region when windowStartMs/windowEndMs are set (Task 6b)', async () => {
+    const sampleRate = 16000
+    // Full clip: 100ms of silence (would abstain: low_snr), then 200ms of a
+    // clean /iː/-like signal, then 100ms of silence again. Only a caller
+    // that actually applies the window will see the vowel and score it.
+    const silence = new Float32Array(Math.round(sampleRate * 0.1))
+    const vowel = synthesizeVowelSignal(sampleRate, 200, 270, 2290)
+    const fullClip = new Float32Array(silence.length + vowel.length + silence.length)
+    fullClip.set(silence, 0)
+    fullClip.set(vowel, silence.length)
+    fullClip.set(silence, silence.length + vowel.length)
+
+    const items: CorpusItem[] = [
+      {
+        clipFile: 'windowed.wav',
+        targetVowel: 'iː',
+        humanScore: 90,
+        speakerId: 's1',
+        windowStartMs: 100,
+        windowEndMs: 300,
+      },
+    ]
+
+    const report = await runBenchmarkOnItems(items, () => ({ sampleRate, samples: fullClip }))
+
+    expect(report.metrics.abstentionRate).toBe(0)
+    expect(report.metrics.perVowelAgreement['iː']).toBe(1)
+  })
 })

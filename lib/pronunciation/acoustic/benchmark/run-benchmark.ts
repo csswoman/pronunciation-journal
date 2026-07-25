@@ -21,6 +21,14 @@ export interface BenchmarkReport {
 
 type AudioLoader = (clipFile: string) => { sampleRate: number; samples: Float32Array } | undefined
 
+/** Slices `samples` to `[startMs, endMs)` if both are provided (Task 6b analysis window); returns the full clip unchanged otherwise. */
+function sliceToWindow(samples: Float32Array, sampleRate: number, startMs?: number, endMs?: number): Float32Array {
+  if (startMs === undefined || endMs === undefined) return samples
+  const startSample = Math.max(0, Math.round((startMs / 1000) * sampleRate))
+  const endSample = Math.min(samples.length, Math.round((endMs / 1000) * sampleRate))
+  return samples.slice(startSample, endSample)
+}
+
 export async function runBenchmarkOnItems(items: CorpusItem[], loadAudio: AudioLoader): Promise<BenchmarkReport> {
   const trials: BenchmarkTrial[] = []
 
@@ -31,7 +39,8 @@ export async function runBenchmarkOnItems(items: CorpusItem[], loadAudio: AudioL
       continue
     }
 
-    const formants = extractFormants(audio.samples, audio.sampleRate)
+    const windowedSamples = sliceToWindow(audio.samples, audio.sampleRate, item.windowStartMs, item.windowEndMs)
+    const formants = extractFormants(windowedSamples, audio.sampleRate)
     if (formants.abstained) {
       trials.push({ targetVowel: item.targetVowel, predictedVowel: null, abstained: true, humanScore: item.humanScore })
       continue
