@@ -91,7 +91,22 @@ export function PronunciationResults({
   const evidenceLight = shouldShowDiagnosticCopy && !hasMeasuredEvidence && priorities.length === 0
   const planTitle = evidenceLight ? 'Por dónde empezar' : 'Tu plan de la semana'
   const primaryCtaLabel = evidenceLight ? 'Empezar a practicar' : 'Ir a mi práctica'
-  const dayOneTargetId = result.prescription.sessions[0]?.targetId
+  // Older saved results can still contain a session generated for a target
+  // whose evaluator abstained. Do not render that capability gap as a task.
+  const unavailableTargetIds = new Set(
+    result.targetResults
+      .filter(
+        (targetResult) =>
+          targetResult.measurement.kind === 'not_measured' &&
+          targetResult.measurement.abstentionReason === 'no_evaluator_available' &&
+          targetResult.signalType !== 'self_report'
+      )
+      .map((targetResult) => targetResult.targetId)
+  )
+  const displaySessions = result.prescription.sessions.filter(
+    (session) => !unavailableTargetIds.has(session.targetId)
+  )
+  const dayOneTargetId = displaySessions[0]?.targetId
   const primaryHref = dayOneTargetId
     ? (targetIdToPracticeRoute(dayOneTargetId) ?? PRACTICE_FALLBACK)
     : PRACTICE_FALLBACK
@@ -134,7 +149,7 @@ export function PronunciationResults({
       <section aria-label={planTitle} className="flex min-w-0 flex-col gap-3">
         <h2 className="text-pretty font-h4 text-fg">{planTitle}</h2>
         <PronunciationFiveDayPlan
-          sessions={result.prescription.sessions}
+          sessions={displaySessions}
           evidenceLight={evidenceLight}
         />
       </section>

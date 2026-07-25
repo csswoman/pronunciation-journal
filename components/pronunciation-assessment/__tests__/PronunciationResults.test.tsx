@@ -184,6 +184,71 @@ describe('PronunciationResults', () => {
     expect(screen.getAllByText(/^Día \d/)).toHaveLength(5)
   })
 
+  it('hides legacy prescription sessions for targets that had no evaluator', () => {
+    render(
+      <PronunciationResults
+        result={buildResult({
+          targetResults: [
+            {
+              targetId: 'segmental.phoneme./ə/',
+              status: 'priority',
+              signalType: 'stt_intelligibility',
+              confidence: 0.8,
+              evaluatorKind: 'stt_intelligibility',
+              evaluatorVersion: 'stt-v1',
+              measurement: { kind: 'scored', score: 40 },
+            },
+            {
+              targetId: 'prosody.intonation.rising-question',
+              status: 'needs_evidence',
+              signalType: 'stt_intelligibility',
+              confidence: 0,
+              evaluatorKind: null,
+              evaluatorVersion: null,
+              measurement: { kind: 'not_measured', abstentionReason: 'no_evaluator_available' },
+            },
+          ],
+          prescription: {
+            generatedAt: new Date().toISOString(),
+            sessions: [
+              {
+                targetId: 'segmental.phoneme./ə/',
+                reason: 'Day 1 schwa',
+                style: 'perception',
+              },
+              {
+                targetId: 'prosody.intonation.rising-question',
+                reason: 'Legacy unavailable day',
+                style: 'drill',
+              },
+              {
+                targetId: 'segmental.phoneme./ə/',
+                reason: 'Day 3 schwa',
+                style: 'drill',
+              },
+              {
+                targetId: 'segmental.phoneme./ə/',
+                reason: 'Day 4 schwa',
+                style: 'drill',
+              },
+              {
+                targetId: 'segmental.phoneme./ə/',
+                reason: 'Day 5 schwa',
+                style: 'transfer',
+              },
+            ],
+          },
+        })}
+        saving={false}
+        saveError={false}
+        onRetrySave={vi.fn()}
+      />
+    )
+
+    expect(screen.getAllByText(/^Día \d/)).toHaveLength(4)
+    expect(screen.queryByText(/entonación|rising-question|Legacy unavailable/i)).not.toBeInTheDocument()
+  })
+
   it('evidence detail is collapsed by default (progressive disclosure)', () => {
     render(
       <PronunciationResults result={buildResult()} saving={false} saveError={false} onRetrySave={vi.fn()} />

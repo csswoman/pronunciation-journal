@@ -132,4 +132,22 @@ describe('generatePrescriptionSessions', () => {
     expect(sessions[0]?.targetId).toBe(wordStress)
     expect(sessions[0]?.reason).toMatch(/dijiste que te cuesta/i)
   })
+
+  it('does not prescribe a target that lacks an evaluator', () => {
+    const intonation = targetId('prosody.intonation.rising-question')
+    const sessions = generatePrescriptionSessions([
+      result({ targetId: TH_CONTRAST, status: 'priority' }),
+      {
+        targetId: intonation,
+        status: 'needs_evidence',
+        signalType: 'stt_intelligibility',
+        confidence: 0,
+        evaluatorKind: null,
+        evaluatorVersion: null,
+        measurement: { kind: 'not_measured', abstentionReason: 'no_evaluator_available' },
+      },
+    ])
+
+    expect(sessions.map((session) => session.targetId)).not.toContain(intonation)
+  })
 })

@@ -78,7 +78,12 @@ function candidateScore(result: TargetResult): number {
  * `applyPriorityStatus`) or use it directly for prescription generation.
  */
 export function derivePriorityTargetIds(results: readonly TargetResult[]): string[] {
-  const eligible = results.filter((r) => r.status === 'observed' && r.measurement.kind === 'scored')
+  const eligible = results.filter(
+    (r) =>
+      r.status === 'observed' &&
+      r.measurement.kind === 'scored' &&
+      candidateScore(r) > 0
+  )
 
   const ranked = [...eligible].sort((a, b) => {
     const scoreDiff = candidateScore(b) - candidateScore(a)

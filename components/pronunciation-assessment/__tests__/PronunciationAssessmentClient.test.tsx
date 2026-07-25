@@ -43,11 +43,12 @@ vi.mock('../PronunciationPromptFlow', () => ({
           {
             targetId: 'prosody.word-stress',
             status: 'observed',
-            signalType: 'perception',
+            // Invalid under schema: prosody-only target cannot take a numeric
+            // production/STT score (perception scores are allowed; this is not).
+            signalType: 'stt_intelligibility',
             confidence: 0.6,
-            evaluatorKind: 'perception_forced_choice',
-            evaluatorVersion: 'perception-forced-choice-v1',
-            // Invalid under schema: prosody-only + numeric score
+            evaluatorKind: 'stt_intelligibility',
+            evaluatorVersion: 'stt-v1',
             measurement: { kind: 'scored', score: 100 },
           },
         ])

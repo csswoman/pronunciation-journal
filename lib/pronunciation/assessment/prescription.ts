@@ -82,6 +82,15 @@ function needsEvidenceUrgency(result: TargetResult): number {
 function buildCandidateTargetIds(results: readonly TargetResult[]): string[] {
   const byStatus = new Map<TargetResultStatus, TargetResult[]>()
   for (const result of results) {
+    // A missing evaluator is product capability, not learner evidence. It
+    // must not take a day in the first-week plan.
+    if (
+      result.measurement.kind === 'not_measured' &&
+      result.measurement.abstentionReason === 'no_evaluator_available' &&
+      result.signalType !== 'self_report'
+    ) {
+      continue
+    }
     const list = byStatus.get(result.status) ?? []
     list.push(result)
     byStatus.set(result.status, list)
