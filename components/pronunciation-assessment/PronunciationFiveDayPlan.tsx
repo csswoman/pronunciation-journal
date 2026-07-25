@@ -1,6 +1,6 @@
 import Anchor from '@/components/ui/Anchor'
 import { getLearnerTargetCopy } from '@/lib/pronunciation/assessment/learner-copy'
-import { targetIdToPracticeRoute } from '@/lib/pronunciation/target-route'
+import { targetIdToPronunciationPathRoute } from '@/lib/pronunciation/path/routes'
 import type { PrescriptionSession } from '@/lib/pronunciation/assessment/schema'
 
 interface PronunciationFiveDayPlanProps {
@@ -15,8 +15,6 @@ const STYLE_LABEL: Record<PrescriptionSession['style'], string> = {
   transfer: 'Uso en contexto',
 }
 
-const PRACTICE_FALLBACK = '/practice/sounds'
-
 function SessionRow({
   session,
   index,
@@ -27,7 +25,7 @@ function SessionRow({
   featured?: boolean
 }) {
   const { title, ipaHint } = getLearnerTargetCopy(session.targetId)
-  const route = targetIdToPracticeRoute(session.targetId) ?? PRACTICE_FALLBACK
+  const route = targetIdToPronunciationPathRoute(session.targetId)
   const titleNode = (
     <>
       Día {index + 1} · {title}

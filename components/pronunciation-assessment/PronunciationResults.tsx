@@ -8,7 +8,7 @@ import type { PronunciationDiagnosticResult } from '@/lib/pronunciation/assessme
 import { isPronunciationDiagnosticCopyEnabled } from '@/lib/pronunciation/assessment/copy-flag'
 import { getLearnerTargetCopy } from '@/lib/pronunciation/assessment/learner-copy'
 import { pickSelfReportStruggle } from '@/lib/pronunciation/assessment/self-report-signal'
-import { targetIdToPracticeRoute } from '@/lib/pronunciation/target-route'
+import { targetIdToPronunciationPathRoute } from '@/lib/pronunciation/path/routes'
 import { PronunciationEvidenceDetail } from './PronunciationEvidenceDetail'
 import { PronunciationFiveDayPlan } from './PronunciationFiveDayPlan'
 import { PronunciationPriorityCard } from './PronunciationPriorityCard'
@@ -22,7 +22,7 @@ interface PronunciationResultsProps {
   copyEnabled?: boolean
 }
 
-const PRACTICE_FALLBACK = '/practice/sounds'
+const PATH_FALLBACK = '/courses/pronunciation'
 
 function resultsHeading(
   priorities: number,
@@ -108,8 +108,8 @@ export function PronunciationResults({
   )
   const dayOneTargetId = displaySessions[0]?.targetId
   const primaryHref = dayOneTargetId
-    ? (targetIdToPracticeRoute(dayOneTargetId) ?? PRACTICE_FALLBACK)
-    : PRACTICE_FALLBACK
+    ? targetIdToPronunciationPathRoute(dayOneTargetId)
+    : PATH_FALLBACK
 
   return (
     <section

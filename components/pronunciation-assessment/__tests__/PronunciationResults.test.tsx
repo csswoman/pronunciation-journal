@@ -139,7 +139,7 @@ describe('PronunciationResults', () => {
 
     expect(screen.getByRole('link', { name: /empezar a practicar/i })).toHaveAttribute(
       'href',
-      '/practice/sounds'
+      `/courses/pronunciation?target=${encodeURIComponent('segmental.phoneme./ə/')}`
     )
     expect(screen.getByRole('button', { name: /repetir el diagnóstico/i })).toBeInTheDocument()
   })
@@ -174,7 +174,10 @@ describe('PronunciationResults', () => {
       <PronunciationResults result={buildResult()} saving={false} saveError={false} onRetrySave={vi.fn()} />
     )
     const cta = screen.getByRole('link', { name: /practicar ahora/i })
-    expect(cta).toHaveAttribute('href', '/practice/sounds')
+    expect(cta).toHaveAttribute(
+      'href',
+      `/courses/pronunciation?target=${encodeURIComponent('segmental.phoneme./ə/')}`
+    )
   })
 
   it('renders the five-day plan with exactly five sessions', () => {

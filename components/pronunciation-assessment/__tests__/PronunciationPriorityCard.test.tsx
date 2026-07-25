@@ -20,16 +20,22 @@ function buildResult(targetId: string): TargetResult {
 }
 
 describe('PronunciationPriorityCard', () => {
-  it('renders a direct CTA link for a target with a known practice route', () => {
+  it('renders a CTA into the pronunciation path for a segmental target', () => {
     render(<PronunciationPriorityCard result={buildResult('segmental.phoneme./ə/')} rank={1} />)
     const link = screen.getByRole('link', { name: /practicar ahora/i })
-    expect(link).toHaveAttribute('href', '/practice/sounds')
+    expect(link).toHaveAttribute(
+      'href',
+      `/courses/pronunciation?target=${encodeURIComponent('segmental.phoneme./ə/')}`
+    )
   })
 
-  it('falls back to a message instead of a broken link for targets with no route', () => {
+  it('also deep-links prosody targets into the pronunciation path', () => {
     render(<PronunciationPriorityCard result={buildResult('prosody.rhythm')} rank={1} />)
-    expect(screen.queryByRole('link')).not.toBeInTheDocument()
-    expect(screen.getByText(/plan de la semana/i)).toBeInTheDocument()
+    const link = screen.getByRole('link', { name: /practicar ahora/i })
+    expect(link).toHaveAttribute(
+      'href',
+      `/courses/pronunciation?target=${encodeURIComponent('prosody.rhythm')}`
+    )
   })
 
   it('never renders a raw numeric score', () => {

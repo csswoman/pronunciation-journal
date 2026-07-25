@@ -1,6 +1,6 @@
 import Anchor from '@/components/ui/Anchor'
 import { getLearnerTargetCopy } from '@/lib/pronunciation/assessment/learner-copy'
-import { targetIdToPracticeRoute } from '@/lib/pronunciation/target-route'
+import { targetIdToPronunciationPathRoute } from '@/lib/pronunciation/path/routes'
 import type { TargetResult } from '@/lib/pronunciation/assessment/types'
 
 interface PronunciationPriorityCardProps {
@@ -14,7 +14,7 @@ interface PronunciationPriorityCardProps {
  */
 export function PronunciationPriorityCard({ result, rank }: PronunciationPriorityCardProps) {
   const { title, ipaHint } = getLearnerTargetCopy(result.targetId)
-  const route = targetIdToPracticeRoute(result.targetId)
+  const route = targetIdToPronunciationPathRoute(result.targetId)
 
   return (
     <li className="flex min-w-0 flex-col gap-3 rounded-md border border-border-default bg-surface-raised p-4">

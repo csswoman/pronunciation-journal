@@ -137,11 +137,15 @@ export default function CoursePathPage({ levelParam }: CoursePathPageProps) {
                   <div>
                     <p className="course-path__aside-kicker">Pronunciación</p>
                     <p className="course-path__aside-copy">
-                      Trabaja los sonidos del mismo nivel mientras avanzas por la ruta.
+                      Sigue una ruta de sonidos a frases, o entrena contrastes en Sound Lab.
                     </p>
                   </div>
-                  <Link href="/practice/sounds" className="course-path__aside-link">
+                  <Link href="/courses/pronunciation" className="course-path__aside-link">
                     <MicVocal size={16} aria-hidden />
+                    Abrir ruta de pronunciación
+                    <ArrowRight size={14} aria-hidden />
+                  </Link>
+                  <Link href="/practice/sounds" className="course-path__aside-link">
                     Abrir Sound Lab
                     <ArrowRight size={14} aria-hidden />
                   </Link>
