@@ -40,7 +40,12 @@ const nextConfig = {
           { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
           { key: "Cross-Origin-Resource-Policy", value: "same-origin" },
           { key: "Origin-Agent-Cluster", value: "?1" },
-          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+          {
+            key: "Permissions-Policy",
+            // Pronunciation and spoken-production flows require same-origin
+            // microphone capture. Keep camera and geolocation disabled.
+            value: "camera=(), microphone=(self), geolocation=()",
+          },
         ],
       },
     ];

@@ -1,7 +1,10 @@
 import { defineConfig, devices } from "@playwright/test";
 
 const PORT = Number(process.env.PLAYWRIGHT_PORT ?? 3000);
-const baseURL = `http://127.0.0.1:${PORT}`;
+// Prefer localhost over 127.0.0.1 so local `pnpm dev` (and Next's
+// allowedDevOrigins defaults) can be reused without a blank CSR bailout.
+const HOST = process.env.PLAYWRIGHT_HOST ?? "localhost";
+const baseURL = `http://${HOST}:${PORT}`;
 
 export default defineConfig({
   testDir: "./tests/a11y",
@@ -17,7 +20,7 @@ export default defineConfig({
     trace: "retain-on-failure",
   },
   webServer: {
-    command: `cross-env NODE_OPTIONS=--max-old-space-size=4096 pnpm exec next dev --webpack --hostname 127.0.0.1 --port ${PORT}`,
+    command: `cross-env NODE_OPTIONS=--max-old-space-size=4096 pnpm exec next dev --webpack --hostname ${HOST} --port ${PORT}`,
     url: baseURL,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

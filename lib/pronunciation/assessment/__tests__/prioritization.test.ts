@@ -35,6 +35,18 @@ describe('derivePriorityTargetIds', () => {
     expect(derivePriorityTargetIds(results)).not.toContain(TH_CONTRAST)
   })
 
+  it('does not promote an observed result at/above the strength threshold (zero severity)', () => {
+    const results: TargetResult[] = [
+      observedResult({
+        targetId: SCHWA,
+        status: 'observed',
+        confidence: 0.9,
+        measurement: { kind: 'scored', score: 80 },
+      }),
+    ]
+    expect(derivePriorityTargetIds(results)).not.toContain(SCHWA)
+  })
+
   it('does not promote a low-confidence / not_measured result — it should keep requesting more evidence', () => {
     const results: TargetResult[] = [
       {

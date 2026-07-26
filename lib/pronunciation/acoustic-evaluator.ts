@@ -55,7 +55,7 @@ export interface DimensionScore {
 
 export interface AcousticEvaluationResult {
   /** Discriminated union member — mirrors `SpokenAttempt.scoreKind`'s pattern so new evaluator families can be added without breaking switches on this field. */
-  evaluatorKind: 'forced_alignment' | 'vendor_api'
+  evaluatorKind: 'forced_alignment' | 'vendor_api' | 'formant_dsp'
   evaluatorVersion: string
   dimensionScores: DimensionScore[]
   /** Overall outcome classification, reusing the same vocabulary as SpokenAttempt. */

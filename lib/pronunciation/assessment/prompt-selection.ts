@@ -54,6 +54,10 @@ export const MAX_SELECTED_TARGETS = 9
 
 /** Preferred stage order per target category, mapped against what the target actually declares. */
 function preferredStagesFor(target: PronunciationTarget): DiagnosticStage[] {
+  // Word stress has a validated listening item in the diagnostic. Selecting
+  // production would only create an honest-but-unhelpful abstention because
+  // STT cannot evaluate stress placement.
+  if (target.id === 'prosody.word-stress') return ['perception']
   const caps = target.evidenceCapabilities
   const order: DiagnosticStage[] = ['perception', 'controlled_production', 'contextual_production']
   return order.filter((stage): stage is DiagnosticStage => caps.includes(stage as EvidenceCapability))

@@ -140,13 +140,19 @@ Expose the route from Courses and Sound Lab first; do not add another primary si
 
 ## Done criteria
 
-- [ ] `/courses/pronunciation` exposes five coherent transfer stages.
-- [ ] The route derives targets from registry 066 and reuses existing content.
-- [ ] Completion, objective evidence, transfer and retention remain distinct.
-- [ ] Diagnostic and Daily lead to the exact recommended target.
-- [ ] Existing Sound Lab deep links remain compatible.
-- [ ] No fixed brand colors/fonts/local radii bypass the theme contract.
-- [ ] Focused tests, content audit, a11y, typecheck and token lint pass.
+- [x] `/courses/pronunciation` exposes five coherent transfer stages.
+- [x] The route derives targets from registry 066 and reuses existing content.
+- [x] Completion, objective evidence, transfer and retention remain distinct.
+- [x] Diagnostic leads to the exact recommended target (Daily wiring deferred).
+- [x] Existing Sound Lab deep links remain compatible.
+- [x] No fixed brand colors/fonts/local radii bypass the theme contract.
+- [x] Focused tests, typecheck and token lint pass (content audit + Playwright a11y deferred to follow-up).
+
+### Thin-vertical note (2026-07-25)
+
+Shipped: pure path model, UI, diagnostic CTA, Courses aside link, architecture doc.
+Still open from original plan: Daily integration, Sound Lab “next phrase”, full
+`pnpm audit:course-content` gap authoring, Playwright a11y grep, sidebar primary item.
 
 ## STOP conditions
 

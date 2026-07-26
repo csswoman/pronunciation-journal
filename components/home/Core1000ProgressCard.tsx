@@ -8,7 +8,7 @@
 
 import Link from 'next/link'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { db } from '@/lib/db'
+import { db, ensureDbReady } from '@/lib/db'
 import { CORE1000_PREFIX } from '@/lib/core-1000/types'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { LevelProgressBreakdown } from './LevelProgressBreakdown'
@@ -26,10 +26,17 @@ function milestoneLabel(learned: number): string {
 export default function Core1000ProgressCard() {
   const { user } = useAuth()
   const learned = useLiveQuery(
-    () =>
-      db.srsData
-        .filter((e) => e.userId === user?.id && e.wordId.startsWith(CORE1000_PREFIX))
-        .count(),
+    async () => {
+      try {
+        await ensureDbReady()
+        if (!user?.id) return 0
+        return db.srsData
+          .filter((e) => e.userId === user.id && e.wordId.startsWith(CORE1000_PREFIX))
+          .count()
+      } catch {
+        return 0
+      }
+    },
     [user?.id],
   )
 

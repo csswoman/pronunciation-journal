@@ -107,6 +107,21 @@ describe("AssessmentClient", () => {
     expect(persistAssessmentConceptProfileMock).not.toHaveBeenCalled();
   });
 
+  it("does not treat A1 as a finished beginner plan when the learner claimed A2", () => {
+    render(<AssessmentClient mode="placement" questions={placementQuestions} concepts={concepts} />);
+
+    fireEvent.click(screen.getByRole("radio", { name: /A2Básico/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Empezar prueba" }));
+
+    expect(screen.getByText("Present simple")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("radio", { name: "Todavía no" }));
+    fireEvent.click(screen.getByRole("button", { name: "Comprobar con preguntas" }));
+
+    expect(screen.queryByRole("heading", { name: "Empezamos por aquí" })).not.toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Choose one" })).toBeInTheDocument();
+  });
+
   it("shows one question at a time and allows going back", () => {
     render(<AssessmentClient mode="checkpoint" checkpointLabel="A1" questions={checkpointQuestions} />);
 
@@ -187,8 +202,8 @@ describe("AssessmentClient", () => {
     fireEvent.click(screen.getByRole("button", { name: "Ver resultado" }));
 
     expect(screen.getByRole("heading", { name: "Tu nivel actual es A1" })).toBeInTheDocument();
-    expect(screen.getByRole("main").querySelector(".assessment-result-icon--error")).toBeInTheDocument();
-    expect(screen.getByRole("main").querySelector(".assessment-result-icon--success")).not.toBeInTheDocument();
+    expect(document.querySelector(".assessment-result-icon--error")).toBeInTheDocument();
+    expect(document.querySelector(".assessment-result-icon--success")).not.toBeInTheDocument();
   });
 
   it("offers retry when saving the result fails", async () => {

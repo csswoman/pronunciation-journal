@@ -1,0 +1,28 @@
+diff --git a/minimatch.js b/minimatch.js
+index 2e4a058a130dceebf83a7bd435f5d22b765ac836..b45370d2d7495af19f10c1bd53416c0bece96686 100644
+--- a/minimatch.js
++++ b/minimatch.js
+@@ -7,7 +7,9 @@ var path = (function () { try { return require('path') } catch (e) {}}()) || {
+ minimatch.sep = path.sep
+ 
+ var GLOBSTAR = minimatch.GLOBSTAR = Minimatch.GLOBSTAR = {}
+-var expand = require('brace-expansion')
++// brace-expansion >=5 exports { expand }; 1.x exported the function itself.
++var braceExpansion = require('brace-expansion')
++var expand = typeof braceExpansion === 'function' ? braceExpansion : braceExpansion.expand
+ 
+ var plTypes = {
+   '!': { open: '(?:(?!(?:', close: '))[^/]*?)'},
+diff --git a/package.json b/package.json
+index 563d2184370b69bad91039364f9543c88a64a158..489dc4b82771bd4806f17d4d6a3696b0b777da25 100644
+--- a/package.json
++++ b/package.json
+@@ -21,7 +21,7 @@
+     "node": "*"
+   },
+   "dependencies": {
+-    "brace-expansion": "^1.1.7"
++    "brace-expansion": "^5.0.8"
+   },
+   "devDependencies": {
+     "tap": "^15.1.6"

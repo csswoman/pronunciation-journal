@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import { contrastTargetId, targetId } from '@/lib/pronunciation/targets/registry'
 import type { SpokenAttempt } from '@/lib/pronunciation/spoken-attempt'
+import { generatePrescriptionSessions } from '../prescription'
+import { applyPriorityStatus } from '../prioritization'
+import { validateDiagnosticResult } from '../schema'
 import { scorePerceptionPrompt, scoreProductionPrompt } from '../scoring'
 import { TargetResultSchema } from '../types'
 
@@ -38,6 +41,15 @@ describe('scoreProductionPrompt — prosody/acoustic honesty gate', () => {
     expect(TargetResultSchema.safeParse(result).success).toBe(true)
   })
 
+  it('explicit skip on prosody-only production is skipped_by_user, not no_evaluator', () => {
+    const result = scoreProductionPrompt(
+      { targetId: targetId('prosody.word-stress'), stage: 'controlled_production' },
+      baseAttempt({ outcome: 'skipped' })
+    )
+
+    expect(result.measurement).toEqual({ kind: 'not_measured', abstentionReason: 'skipped_by_user' })
+  })
+
   it('a transcript-perfect sentence-stress attempt also abstains', () => {
     const attempt = baseAttempt({ outcome: 'scored', overallScore: 100 })
     const result = scoreProductionPrompt(
@@ -62,7 +74,7 @@ describe('scoreProductionPrompt — segmental/connected-speech targets', () => {
     expect(result.measurement).toEqual({ kind: 'scored', score: 88 })
     expect(result.evaluatorKind).toBe('stt_intelligibility')
     expect(result.evaluatorVersion).toBe('stt-v2')
-    expect(result.status).toBe('strength')
+    expect(result.status).toBe('observed')
     expect(result.confidence).toBe(0.8)
     expect(TargetResultSchema.safeParse(result).success).toBe(true)
   })
@@ -159,5 +171,82 @@ describe('scorePerceptionPrompt', () => {
     expect(result.measurement).toEqual({ kind: 'not_measured', abstentionReason: 'skipped_by_user' })
     expect(result.signalType).toBe('perception')
     expect(TargetResultSchema.safeParse(result).success).toBe(true)
+  })
+
+  it('word-stress listening perception is objective evidence, not a production claim', () => {
+    const result = scorePerceptionPrompt(
+      { targetId: targetId('prosody.word-stress'), stage: 'perception' },
+      { correct: true }
+    )
+
+    expect(result.measurement).toEqual({ kind: 'scored', score: 100 })
+    expect(result.signalType).toBe('perception')
+    expect(result.evaluatorKind).toBe('perception_forced_choice')
+    expect(result.status).toBe('strength')
+    expect(result.confidence).toBe(0.6)
+    expect(TargetResultSchema.safeParse(result).success).toBe(true)
+  })
+
+  it('preserves the score from a multi-item word-stress listening test', () => {
+    const result = scorePerceptionPrompt(
+      { targetId: targetId('prosody.word-stress'), stage: 'perception' },
+      { correct: false, score: 60 }
+    )
+
+    expect(result.measurement).toEqual({ kind: 'scored', score: 60 })
+    expect(result.evaluatorVersion).toBe('word-stress-listening-v1')
+  })
+
+  it('carries perceptionItemCount from the answer onto the word-stress result', () => {
+    const result = scorePerceptionPrompt(
+      { targetId: targetId('prosody.word-stress'), stage: 'perception' },
+      { correct: false, score: 60, perceptionItemCount: 5 }
+    )
+
+    expect(result.perceptionItemCount).toBe(5)
+    expect(result.measurement).toEqual({ kind: 'scored', score: 60 })
+    expect(TargetResultSchema.safeParse(result).success).toBe(true)
+  })
+
+  it('other prosody targets remain self-report until they get an audio item', () => {
+    const struggle = scorePerceptionPrompt(
+      { targetId: targetId('prosody.rhythm'), stage: 'perception' },
+      { correct: false }
+    )
+    const comfort = scorePerceptionPrompt(
+      { targetId: targetId('prosody.rhythm'), stage: 'perception' },
+      { correct: true }
+    )
+
+    expect(struggle.signalType).toBe('self_report')
+    expect(struggle.confidence).toBe(0.4)
+    expect(comfort.confidence).toBe(0.15)
+    expect(struggle.confidence).toBeGreaterThan(comfort.confidence)
+  })
+
+  it('a finished diagnostic that answered prosody perception still validates end-to-end', () => {
+    const targetResults = applyPriorityStatus([
+      scorePerceptionPrompt(
+        { targetId: targetId('prosody.word-stress'), stage: 'perception' },
+        { correct: true }
+      ),
+      scorePerceptionPrompt({ targetId: TH_CONTRAST, stage: 'perception' }, { correct: false }),
+    ])
+    const sessions = generatePrescriptionSessions(targetResults)
+    const validation = validateDiagnosticResult({
+      userId: 'user-1',
+      completedAt: new Date().toISOString(),
+      capabilitySnapshot: {
+        micPermission: 'granted',
+        sttAvailable: true,
+        browserSupport: 'full',
+        capturedAt: new Date().toISOString(),
+      },
+      selfReport: { overallConfidence: 'somewhat_confident' },
+      targetResults,
+      prescription: { generatedAt: new Date().toISOString(), sessions },
+    })
+
+    expect(validation.ok).toBe(true)
   })
 })

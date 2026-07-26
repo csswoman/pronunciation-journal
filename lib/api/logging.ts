@@ -33,12 +33,22 @@ function redactForLog(error: unknown): { type: string; message: string; status?:
   return { type: "Error", message: String(error) };
 }
 
+function shouldEmitLogs(): boolean {
+  // Opt-in escape hatch when debugging API failure paths locally.
+  if (process.env.DEBUG_API_LOGS === "1") return true;
+  // Route tests intentionally hit Zod/provider failures; keep suite output clean.
+  if (process.env.VITEST === "true") return false;
+  return true;
+}
+
 export function logServerError(
   message: string,
   error: unknown,
   context: LogContext,
   level: LogLevel = "error"
 ): void {
+  if (!shouldEmitLogs()) return;
+
   const payload = {
     endpoint: context.endpoint,
     operation: context.operation,

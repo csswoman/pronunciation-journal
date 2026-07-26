@@ -13,11 +13,11 @@ interface Props {
 
 export function ProductionTaskHeader({ exercise, title }: Props) {
   return (
-    <div className="flex w-full flex-col gap-3">
+    <div className="flex w-full flex-col gap-2">
       <p className="m-0 text-2xl font-bold leading-tight text-balance text-fg">
         {title}
       </p>
-      <p className="m-0 max-w-[70ch] text-base leading-relaxed text-pretty text-fg">
+      <p className="m-0 max-w-[70ch] text-base leading-snug text-pretty text-fg">
         {exercise.taskPrompt}
       </p>
       <div className="flex min-w-0 items-center gap-2 rounded-[var(--radius-md)] bg-surface-raised px-3 py-2 text-[13px]">

@@ -17,7 +17,8 @@ interface StepThreadHintsProps {
 
 /**
  * Compact chip list for thread words.
- * Prefer `DailyThreadStrip` on home/daily checklist — this stays for other callers.
+ * Prefer `DailyThreadStrip` in daily surfaces (checklist, intro, reader).
+ * Kept for tests / ad-hoc callers — do not mount beside PhonemeFocusShell.
  */
 export function StepThreadHints({ hints, className }: StepThreadHintsProps) {
   if (hints.length === 0) return null

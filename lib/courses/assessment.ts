@@ -216,9 +216,17 @@ export function scoreAssessment(
       .map(({ lessonSlug, title }) => [lessonSlug, { lessonSlug, title }]),
   );
 
-  for (const signal of conceptSignals) {
-    if (signal.status !== "mastered") {
-      needsReviewByLesson.set(signal.lessonSlug, { lessonSlug: signal.lessonSlug, title: signal.title });
+  // Starter plan (no questions answered): inventory "learn" topics become the plan.
+  // After a scored quiz, "Para reforzar" must reflect missed answers only — not
+  // humble self-ratings on topics the quiz never asked about.
+  if (questions.length === 0) {
+    for (const signal of conceptSignals) {
+      if (signal.status === "learn") {
+        needsReviewByLesson.set(signal.lessonSlug, {
+          lessonSlug: signal.lessonSlug,
+          title: signal.title,
+        });
+      }
     }
   }
 

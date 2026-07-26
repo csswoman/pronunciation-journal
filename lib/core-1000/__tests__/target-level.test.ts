@@ -8,6 +8,7 @@ vi.mock("@/lib/db", () => ({
       get: vi.fn(),
     },
   },
+  ensureDbReady: vi.fn().mockResolvedValue(undefined),
 }));
 
 const getMock = vi.mocked(db.learningState.get);

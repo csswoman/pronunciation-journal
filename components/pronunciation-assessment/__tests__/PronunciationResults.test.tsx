@@ -74,8 +74,74 @@ describe('PronunciationResults', () => {
       />
     )
 
-    expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent(/no pudimos medir/i)
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(/reunir evidencia/i)
+    expect(screen.getByText(/por dónde empezar/i)).toBeInTheDocument()
     expect(screen.queryByText(/buen trabajo/i)).not.toBeInTheDocument()
+  })
+
+  it('echoes a struggle self-report in the peak-end heading', () => {
+    render(
+      <PronunciationResults
+        result={buildResult({
+          targetResults: [
+            {
+              targetId: 'prosody.word-stress',
+              status: 'needs_evidence',
+              signalType: 'self_report',
+              confidence: 0.4,
+              evaluatorKind: null,
+              evaluatorVersion: null,
+              measurement: { kind: 'not_measured', abstentionReason: 'no_evaluator_available' },
+            },
+          ],
+          prescription: {
+            generatedAt: new Date().toISOString(),
+            sessions: Array.from({ length: 5 }, (_, i) => ({
+              targetId: 'prosody.word-stress',
+              reason: `Session ${i + 1}`,
+              style: i === 4 ? ('transfer' as const) : ('drill' as const),
+            })),
+          },
+        })}
+        saving={false}
+        saveError={false}
+        onRetrySave={vi.fn()}
+      />
+    )
+
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(/lo que nos dijiste/i)
+    expect(screen.getByText(/nos dijiste que te cuesta:/i)).toBeInTheDocument()
+  })
+
+  it('offers restart and deep-links the primary CTA to day-one practice', () => {
+    const onRestart = vi.fn()
+    render(
+      <PronunciationResults
+        result={buildResult({
+          targetResults: [
+            {
+              targetId: 'segmental.phoneme./ə/',
+              status: 'needs_evidence',
+              signalType: 'stt_intelligibility',
+              confidence: 0,
+              evaluatorKind: null,
+              evaluatorVersion: null,
+              measurement: { kind: 'not_measured', abstentionReason: 'skipped_by_user' },
+            },
+          ],
+        })}
+        saving={false}
+        saveError={false}
+        onRetrySave={vi.fn()}
+        onRestart={onRestart}
+      />
+    )
+
+    expect(screen.getByRole('link', { name: /empezar a practicar/i })).toHaveAttribute(
+      'href',
+      `/courses/pronunciation?target=${encodeURIComponent('segmental.phoneme./ə/')}`
+    )
+    expect(screen.getByRole('button', { name: /repetir el diagnóstico/i })).toBeInTheDocument()
   })
 
   it('leads with the priority section, not an aggregate score', async () => {
@@ -83,7 +149,7 @@ describe('PronunciationResults', () => {
       <PronunciationResults result={buildResult()} saving={false} saveError={false} onRetrySave={vi.fn()} />
     )
 
-    const heading = screen.getByRole('heading', { level: 2 })
+    const heading = screen.getByRole('heading', { level: 1 })
     expect(heading).toHaveTextContent(/trabajar primero/i)
     expect(heading).not.toHaveTextContent(/\d+\s*\/\s*100/)
     expect(screen.queryByText(/score/i)).not.toBeInTheDocument()
@@ -99,7 +165,7 @@ describe('PronunciationResults', () => {
     render(
       <PronunciationResults result={buildResult()} saving={false} saveError={false} onRetrySave={vi.fn()} />
     )
-    const heading = screen.getByRole('heading', { level: 2 })
+    const heading = screen.getByRole('heading', { level: 1 })
     expect(heading).toHaveFocus()
   })
 
@@ -108,7 +174,10 @@ describe('PronunciationResults', () => {
       <PronunciationResults result={buildResult()} saving={false} saveError={false} onRetrySave={vi.fn()} />
     )
     const cta = screen.getByRole('link', { name: /practicar ahora/i })
-    expect(cta).toHaveAttribute('href', '/practice/sounds')
+    expect(cta).toHaveAttribute(
+      'href',
+      `/courses/pronunciation?target=${encodeURIComponent('segmental.phoneme./ə/')}`
+    )
   })
 
   it('renders the five-day plan with exactly five sessions', () => {
@@ -116,6 +185,71 @@ describe('PronunciationResults', () => {
       <PronunciationResults result={buildResult()} saving={false} saveError={false} onRetrySave={vi.fn()} />
     )
     expect(screen.getAllByText(/^Día \d/)).toHaveLength(5)
+  })
+
+  it('hides legacy prescription sessions for targets that had no evaluator', () => {
+    render(
+      <PronunciationResults
+        result={buildResult({
+          targetResults: [
+            {
+              targetId: 'segmental.phoneme./ə/',
+              status: 'priority',
+              signalType: 'stt_intelligibility',
+              confidence: 0.8,
+              evaluatorKind: 'stt_intelligibility',
+              evaluatorVersion: 'stt-v1',
+              measurement: { kind: 'scored', score: 40 },
+            },
+            {
+              targetId: 'prosody.intonation.rising-question',
+              status: 'needs_evidence',
+              signalType: 'stt_intelligibility',
+              confidence: 0,
+              evaluatorKind: null,
+              evaluatorVersion: null,
+              measurement: { kind: 'not_measured', abstentionReason: 'no_evaluator_available' },
+            },
+          ],
+          prescription: {
+            generatedAt: new Date().toISOString(),
+            sessions: [
+              {
+                targetId: 'segmental.phoneme./ə/',
+                reason: 'Day 1 schwa',
+                style: 'perception',
+              },
+              {
+                targetId: 'prosody.intonation.rising-question',
+                reason: 'Legacy unavailable day',
+                style: 'drill',
+              },
+              {
+                targetId: 'segmental.phoneme./ə/',
+                reason: 'Day 3 schwa',
+                style: 'drill',
+              },
+              {
+                targetId: 'segmental.phoneme./ə/',
+                reason: 'Day 4 schwa',
+                style: 'drill',
+              },
+              {
+                targetId: 'segmental.phoneme./ə/',
+                reason: 'Day 5 schwa',
+                style: 'transfer',
+              },
+            ],
+          },
+        })}
+        saving={false}
+        saveError={false}
+        onRetrySave={vi.fn()}
+      />
+    )
+
+    expect(screen.getAllByText(/^Día \d/)).toHaveLength(4)
+    expect(screen.queryByText(/entonación|rising-question|Legacy unavailable/i)).not.toBeInTheDocument()
   })
 
   it('evidence detail is collapsed by default (progressive disclosure)', () => {
@@ -137,7 +271,7 @@ describe('PronunciationResults', () => {
       />
     )
 
-    expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent(/siguiente práctica/i)
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(/siguiente práctica/i)
     expect(screen.queryByRole('heading', { level: 3, name: /vocal relajada/i })).not.toBeInTheDocument()
     expect(screen.queryByText(/puntaje|confianza|prioridad|fortaleza|observado/i)).not.toBeInTheDocument()
   })

@@ -19,6 +19,11 @@ export interface LearnerTargetCopy {
   ipaHint?: string
   /** English word/phrase to speak in production prompts (STT target text). */
   speakCue?: string
+  /**
+   * Plain-language gloss + concrete example for first-timers
+   * (esp. prosody labels that don't name a sound).
+   */
+  plainHint?: string
 }
 
 const LEARNER_COPY_BY_ID: Readonly<Record<string, LearnerTargetCopy>> = Object.freeze({
@@ -38,20 +43,29 @@ const LEARNER_COPY_BY_ID: Readonly<Record<string, LearnerTargetCopy>> = Object.f
     speakCue: 'a banana',
   },
   [targetId('prosody.word-stress')]: {
-    title: 'El acento en la palabra',
+    // Avoid "acento" alone — in Spanish it often means regional accent (UK/US).
+    title: 'La sílaba tónica',
     speakCue: 'photograph',
+    plainHint:
+      'No es el acento británico o americano: es qué sílaba suena más fuerte dentro de una palabra. Ejemplo: photograph → ¿PHO-to-graph o pho-TO-graph?',
   },
   [targetId('prosody.sentence-stress')]: {
-    title: 'El acento en la frase',
+    title: 'Las palabras fuertes de la frase',
     speakCue: 'I want a cup of coffee',
+    plainHint:
+      'No es un acento regional: es qué palabras suenan más fuertes en la frase (las importantes). Ejemplo: I want a CUP of COFfee.',
   },
   [targetId('prosody.rhythm')]: {
     title: 'El ritmo de la frase',
     speakCue: 'I want to go to the store',
+    plainHint:
+      'El vaivén entre sílabas fuertes y débiles al hablar en inglés, sin marcar cada sílaba igual.',
   },
   [targetId('prosody.intonation.rising-question')]: {
     title: 'Entonación de preguntas sí/no',
     speakCue: 'Are you ready?',
+    plainHint:
+      'Si la voz sube al final en preguntas de sí/no. Ejemplo: Are you ready?↗',
   },
   [targetId('connected.reduction.gonna')]: {
     title: 'going to → gonna',

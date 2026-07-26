@@ -1,11 +1,16 @@
 import { expect, test } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
+/** Settled preflight CTAs — excludes the transient "Comprobando micrófono" label. */
+const PREFLIGHT_CTA =
+  /activar micrófono|empezar las preguntas|continuar sin micrófono/i;
+
 test.describe("pronunciation assessment accessibility", () => {
   test("has no critical or serious axe violations on the preflight stage", async ({ page }) => {
     await page.goto("/assessment/pronunciation");
-    // The first visit compiles this route in the dev server used by CI.
-    await expect(page.getByRole("button", { name: /empezar las preguntas/i })).toBeVisible({
+    // First visit compiles this route in the CI dev server. Button copy depends on
+    // mic permission (prompt → Activar; granted → Empezar; denied → Continuar sin).
+    await expect(page.getByRole("button", { name: PREFLIGHT_CTA })).toBeVisible({
       timeout: 15_000,
     });
 

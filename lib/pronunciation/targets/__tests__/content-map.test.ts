@@ -3,9 +3,9 @@ import {
   CONTENT_MAP,
   UNMAPPED_AUDIT,
   getContentForTarget,
-  getContentMapIssues,
   getCoverageSummary,
 } from '../content-map'
+import { getContentMapIssues } from '../content-map-audit'
 import { contrastTargetId, targetId } from '../registry'
 
 describe('content map', () => {

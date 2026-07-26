@@ -45,6 +45,9 @@ export async function fetchRemoteLearningState(userId: string): Promise<UserLear
  * Otherwise keeps the local state unchanged.
  */
 export async function hydrateFromRemote(userId: string): Promise<void> {
+  const { ensureDbReady } = await import('@/lib/db')
+  await ensureDbReady()
+
   const [remote, local] = await Promise.all([
     fetchRemoteLearningState(userId),
     db.learningState.get(userId),

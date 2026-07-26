@@ -34,7 +34,7 @@ export function AssessmentResultView({
   }`;
 
   return (
-    <main className="assessment-page">
+    <div className="assessment-page assessment-page--result">
       <section className="assessment-result">
         {result.passed
           ? <CheckCircle2 className="assessment-result-icon assessment-result-icon--success" size={28} aria-hidden />
@@ -81,7 +81,7 @@ export function AssessmentResultView({
           </div>
         )}
       </section>
-    </main>
+    </div>
   );
 }
 
@@ -288,7 +288,7 @@ export function AssessmentFooter({
 
 export function AssessmentErrorState() {
   return (
-    <main className="assessment-page">
+    <div className="assessment-page assessment-page--result">
       <section className="assessment-result" role="alert">
         <AlertCircle size={28} aria-hidden />
         <p className="assessment-kicker">No se pudo abrir la evaluación</p>
@@ -296,6 +296,6 @@ export function AssessmentErrorState() {
         <p>La evaluación cambió antes de terminar. Vuelve a intentarlo para cargar el bloque correcto.</p>
         <button type="button" onClick={() => window.location.reload()}>Recargar evaluación</button>
       </section>
-    </main>
+    </div>
   );
 }

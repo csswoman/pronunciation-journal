@@ -99,8 +99,12 @@ export function SessionSummary({
   const ipaLabel = practiceIpa ? formatIpaDisplay(practiceIpa) : null
 
   return (
-    <div role="region" aria-label="Resultados de la sesión" className="flex w-full flex-col gap-6">
-      <div className="flex flex-col items-center gap-1.5">
+    <div
+      role="region"
+      aria-label="Resultados de la sesión"
+      className="flex min-h-0 w-full flex-1 flex-col gap-4"
+    >
+      <div className="flex shrink-0 flex-col items-center gap-1.5">
         {ipaLabel && (
           <p className="font-ipa m-0 text-3xl font-bold leading-none text-primary">{ipaLabel}</p>
         )}
@@ -140,7 +144,7 @@ export function SessionSummary({
         )}
       </div>
 
-      <ul className="flex max-h-64 flex-col gap-1.5 overflow-y-auto">
+      <ul className="flex min-h-0 flex-1 flex-col gap-1.5 overflow-y-auto overscroll-contain">
         {result.results.map((r, i) => (
           <ResultRow
             key={`${r.exerciseId}-${i}`}
@@ -151,7 +155,7 @@ export function SessionSummary({
         ))}
       </ul>
 
-      <div className="flex items-center gap-3">
+      <div className="flex shrink-0 items-center gap-3 pt-1">
         <button
           type="button"
           onClick={onPracticeAgain}

@@ -135,14 +135,20 @@ Home/Courses should show CEFR placement and oral diagnostic as distinct optional
 
 ## Done criteria
 
-- [ ] Oral diagnostic is separate from CEFR placement.
-- [ ] Every measured result names target, signal, confidence and evaluator version.
-- [ ] Unsupported dimensions are `not_measured`, never fake scores.
-- [ ] Result produces at most three priorities and five actionable sessions.
-- [ ] Guest/auth/offline persistence is user-scoped and idempotent.
-- [ ] No raw audio is persisted by default.
-- [ ] Focused tests, RLS, typecheck and token lint pass.
-- [ ] `plans/README.md` row is updated.
+- [x] Oral diagnostic is separate from CEFR placement.
+- [x] Every measured result names target, signal, confidence and evaluator version.
+- [x] Unsupported dimensions are `not_measured`, never fake scores.
+- [x] Result produces at most three priorities and five actionable sessions.
+- [x] Guest/auth/offline persistence is user-scoped and idempotent.
+- [x] No raw audio is persisted by default.
+- [x] Focused tests, RLS, typecheck and token lint pass.
+- [x] `plans/README.md` row is updated.
+
+## Status note (2026-07-25 close-out)
+
+- Plan 071 NO-SHIP: vowel acoustic scoring stays `not_measured` permanently for this evaluator design.
+- Prescription honesty: targets with `no_evaluator_available` are excluded from the first-week plan (and filtered from legacy results UI); word-stress selection prefers perception only; zero-severity observed scores are not promoted to priority.
+- Manual UI check: preflight + first prompt verified in light/dark and custom hue (`--hue: 30`); unsupported-STT browser path surfaces skip, not a fake score.
 
 ## STOP conditions
 

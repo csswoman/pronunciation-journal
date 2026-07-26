@@ -142,7 +142,7 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
 
   return (
     <div
-      className="flex w-full flex-col items-center gap-5"
+      className="flex w-full flex-col items-stretch justify-start gap-3"
       aria-busy={grading || undefined}
     >
       <ProductionTaskHeader exercise={exercise} title="Di tu oración" />
@@ -159,7 +159,7 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
       {!grade && (
         <>
           {!isMicError && (
-            <div className="flex flex-col items-center gap-3">
+            <div className="flex flex-col items-center gap-2 py-2">
               <button
                 type="button"
                 onClick={isListening ? stop : start}
@@ -220,7 +220,7 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
               onClick={onSkip}
               disabled={grading || isListening}
               aria-label="Omitir este ejercicio"
-              className="min-h-11 cursor-pointer border-none bg-transparent px-4 text-sm font-medium text-fg-subtle transition-colors hover:text-fg-muted focus-ring disabled:cursor-not-allowed disabled:opacity-40"
+              className="min-h-11 cursor-pointer self-center border-none bg-transparent px-4 text-sm font-medium text-fg-subtle transition-colors hover:text-fg-muted focus-ring disabled:cursor-not-allowed disabled:opacity-40"
             >
               Omitir este
             </button>

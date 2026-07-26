@@ -362,8 +362,11 @@ class PronunciationDB extends Dexie {
       lessonOffsets: 'lessonId, userId, [userId+lessonId]',
       syncOutbox: '++id, userId, status, createdAt, [status+createdAt], [userId+status+createdAt]',
       ipaExplorations: 'key, userId, [userId+date]',
-      pronunciationMastery: '[userId+phrase], userId, phrase, masteredAt',
-      pronunciationCoachState: '[userId+key], userId, key, updatedAt',
+      // IndexedDB cannot change an existing object store's primary key during
+      // an upgrade. Keep the legacy primary keys here; v25 creates replacement
+      // stores with account-scoped compound keys below.
+      pronunciationMastery: 'phrase, userId, masteredAt',
+      pronunciationCoachState: 'key, userId, updatedAt',
       localDataQuarantine: '++id, store, quarantinedAt',
     }).upgrade(async (tx) => {
       const ambiguousStores = [
@@ -425,10 +428,72 @@ class PronunciationDB extends Dexie {
     this.version(24).stores({
       pronunciationAssessments: 'id, userId, [userId+createdAt], syncedAt',
     });
+
+    // v25: replacement stores for the two v21 stores whose primary keys were
+    // incorrectly changed in-place. The old stores remain as quarantined
+    // migration sources; the live table handles below point at these stores.
+    this.version(25).stores({
+      pronunciationMasteryV2: '[userId+phrase], userId, phrase, masteredAt',
+      pronunciationCoachStateV2: '[userId+key], userId, key, updatedAt',
+    });
+
+    // v26: formal version bump after editing v21's mastery/coach declarations
+    // (Dexie 4 SchemaDiff warning). Also finish account-scoping analyticsEvents.
+    this.version(26).stores({
+      pronunciationMastery: 'phrase, userId, masteredAt',
+      pronunciationCoachState: 'key, userId, updatedAt',
+      pronunciationMasteryV2: '[userId+phrase], userId, phrase, masteredAt',
+      pronunciationCoachStateV2: '[userId+key], userId, key, updatedAt',
+      analyticsEvents: '++id, userId, name, timestamp, synced, [userId+timestamp]',
+    });
+
+    this.pronunciationMastery = this.table("pronunciationMasteryV2") as Table<PronunciationMasteryRecord, string>;
+    this.pronunciationCoachState = this.table("pronunciationCoachStateV2") as Table<PronunciationCoachStateRecord, string>;
   }
 }
 
 export const db = new PronunciationDB();
+
+function isFatalIndexedDbSchemaError(error: unknown): boolean {
+  if (!error || typeof error !== "object") return false;
+  const name = "name" in error ? String(error.name) : "";
+  const message = "message" in error ? String(error.message) : "";
+  return name === "UpgradeError" || /changing primary key/i.test(message);
+}
+
+let dbReadyPromise: Promise<void> | null = null;
+
+/**
+ * Open IndexedDB, recreating it when a prior schema upgrade left the
+ * connection closed (e.g. Dexie UpgradeError on primary-key changes).
+ * Safe to call repeatedly; concurrent callers share one in-flight promise.
+ */
+export function ensureDbReady(): Promise<void> {
+  if (typeof indexedDB === "undefined") return Promise.resolve();
+  if (db.isOpen()) return Promise.resolve();
+  if (!dbReadyPromise) {
+    dbReadyPromise = (async () => {
+      try {
+        await db.open();
+      } catch (firstError) {
+        try {
+          // A failed upgrade closes the instance; retry once with current schema.
+          await db.open();
+        } catch (retryError) {
+          if (!isFatalIndexedDbSchemaError(firstError) && !isFatalIndexedDbSchemaError(retryError)) {
+            throw retryError;
+          }
+          console.warn("[db] Recreating pronunciation-journal after fatal IndexedDB error", retryError);
+          await db.delete();
+          await db.open();
+        }
+      }
+    })().finally(() => {
+      dbReadyPromise = null;
+    });
+  }
+  return dbReadyPromise;
+}
 
 // ── Attempt Helpers ──
 

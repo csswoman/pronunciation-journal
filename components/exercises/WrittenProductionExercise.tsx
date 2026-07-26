@@ -118,7 +118,7 @@ export function WrittenProductionExercise({ exercise, onResult, onSkip }: Props)
   }, [])
 
   return (
-    <div className="flex w-full flex-col gap-5" aria-busy={grading || undefined}>
+    <div className="flex w-full flex-col justify-start gap-3" aria-busy={grading || undefined}>
       <ProductionTaskHeader exercise={exercise} title="Escribe tu oración" />
 
       {!online && !grade && (

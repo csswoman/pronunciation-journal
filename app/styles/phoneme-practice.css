@@ -37,26 +37,45 @@
   flex-direction: column;
 }
 
+/*
+ * Mobile: sit above the fixed BottomNav (tabs + protruding FAB) instead of
+ * nesting another 100dvh that paints under the chrome. Stage owns scrolling.
+ */
 @media (max-width: 540px) {
-  .phoneme-focus {
-    align-items: flex-start;
+  .phoneme-focus:not(.fixed) {
+    --phoneme-focus-nav-clearance: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+    align-items: stretch;
+    justify-content: flex-start;
+    width: 100%;
+    min-height: calc(100dvh - var(--phoneme-focus-nav-clearance));
+    height: calc(100dvh - var(--phoneme-focus-nav-clearance));
+    max-height: calc(100dvh - var(--phoneme-focus-nav-clearance));
     padding: 0;
     background: var(--surface-raised);
   }
 
-  .phoneme-focus__phone {
+  .phoneme-focus:not(.fixed) .phoneme-focus__wrap {
+    flex: 1 1 auto;
+    min-height: 0;
+    height: 100%;
+    align-items: stretch;
+  }
+
+  .phoneme-focus:not(.fixed) .phoneme-focus__phone {
     width: 100%;
-    min-height: 100dvh;
+    min-height: 0;
+    height: 100%;
+    flex: 1 1 auto;
     border-radius: 0;
     border: none;
     box-shadow: none;
-    /* deja espacio para el BottomNav fijo (~56px) + safe area */
-    padding-bottom: calc(3.5rem + env(safe-area-inset-bottom, 0px));
+    padding-bottom: 0;
   }
 
-  .phoneme-focus__footer {
+  .phoneme-focus:not(.fixed) .phoneme-focus__footer {
     position: sticky;
-    bottom: calc(3.5rem + env(safe-area-inset-bottom, 0px));
+    bottom: 0;
+    z-index: 2;
   }
 }
 
@@ -102,14 +121,29 @@
   padding: var(--space-4) var(--space-5) var(--space-6);
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
   gap: var(--space-4);
-  flex: 1;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* When stage hosts a full-bleed intro (PhonemeLessonIntro), remove padding */
 .phoneme-focus__stage--flush {
   padding: 0;
   gap: 0;
+}
+
+/* Session complete: fill stage so the result list scrolls and CTAs stay pinned */
+.phoneme-focus__summary {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
 }
 
 .phoneme-intro__wash {
@@ -552,6 +586,7 @@
 .phoneme-focus__session {
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
   gap: var(--space-3);
   width: 100%;
 }

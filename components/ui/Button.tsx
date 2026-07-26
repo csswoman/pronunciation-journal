@@ -30,8 +30,8 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 const variantStyles: Record<ButtonVariant, string> = {
   // CTA button: dark ink on parchment (primary interactive affordance)
   primary: cn(
-    "bg-[var(--cta-bg)] text-[var(--cta-fg)]",
-    "hover:bg-[var(--cta-bg-hover)] shadow-none",
+    "bg-cta-bg text-cta-fg",
+    "hover:bg-cta-bg-hover hover:text-cta-fg shadow-none",
     "active:translate-y-[-1px] active:shadow-md"
   ),
 

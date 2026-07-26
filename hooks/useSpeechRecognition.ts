@@ -55,14 +55,24 @@ export function useSpeechRecognition() {
       return
     }
 
-    // Pre-warm mic permission — ignore failures, SpeechRecognition handles its own permission
+    if (!navigator.mediaDevices?.getUserMedia) {
+      setErrorCode('not-allowed')
+      setStatus('error')
+      return
+    }
+
     try {
-      if (navigator.mediaDevices?.getUserMedia) {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-        stream.getTracks().forEach((t) => t.stop())
-      }
-    } catch {
-      // continue — let SpeechRecognition surface the error if mic is truly unavailable
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      stream.getTracks().forEach((t) => t.stop())
+    } catch (error) {
+      const name = error instanceof DOMException ? error.name : ''
+      setErrorCode(
+        name === 'NotAllowedError' || name === 'PermissionDeniedError'
+          ? 'not-allowed'
+          : 'unknown'
+      )
+      setStatus('error')
+      return
     }
 
     const w = window as Window & {

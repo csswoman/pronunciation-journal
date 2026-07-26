@@ -18,12 +18,23 @@ import { getTarget } from '@/lib/pronunciation/targets/registry'
 import { accuracyFromAttempt, isScorableAttempt, type SpokenAttempt } from '@/lib/pronunciation/spoken-attempt'
 import type { DiagnosticPromptSelection } from './prompt-selection'
 import { mustAbstainFromProductionScore } from './scoring-guards'
-import type { EvaluatorKind, Measurement, TargetResult, TargetResultStatus } from './types'
+import { WORD_STRESS_PERCEPTION_EVALUATOR_VERSION } from './word-stress-perception'
+import {
+  isProsodyOnlyTargetId,
+  type EvaluatorKind,
+  type Measurement,
+  type TargetResult,
+  type TargetResultStatus,
+} from './types'
 
 /** A learner's answer to a perception (forced-choice discrimination) prompt. */
 export interface PerceptionAnswer {
   /** Whether the learner picked the correct option. Objective — not self-report. */
   correct: boolean
+  /** Aggregate score for a fixed multi-item perception test. */
+  score?: number
+  /** For sampled multi-item perception (word-stress): how many items were presented this run. */
+  perceptionItemCount?: number
 }
 
 /** Score threshold above which a scored production attempt counts as a 'strength'. Step 5 owns real thresholding — this is a conservative default. */
@@ -36,8 +47,11 @@ const STRENGTH_SCORE_THRESHOLD = 80
  * - scored at/above threshold → 'strength'
  * - never 'priority' — that requires cross-target ranking this module doesn't do
  */
-function statusFor(measurement: Measurement): TargetResultStatus {
+function statusFor(measurement: Measurement, signalType: TargetResult['signalType']): TargetResultStatus {
   if (measurement.kind !== 'scored') return 'needs_evidence'
+  // A perfect transcript only says the recognizer understood the words. It
+  // cannot prove a contrast (such as ship/sheep) was produced accurately.
+  if (signalType === 'stt_intelligibility') return 'observed'
   return measurement.score >= STRENGTH_SCORE_THRESHOLD ? 'strength' : 'observed'
 }
 
@@ -64,7 +78,7 @@ function buildResult(params: {
   const { targetId, signalType, measurement, evaluatorKind, evaluatorVersion } = params
   return {
     targetId,
-    status: statusFor(measurement),
+    status: statusFor(measurement, signalType),
     signalType,
     confidence: confidenceFor(measurement, signalType),
     evaluatorKind,
@@ -96,13 +110,37 @@ export function scorePerceptionPrompt(
     })
   }
 
-  return buildResult({
-    targetId: selection.targetId,
-    signalType: 'perception',
-    measurement: { kind: 'scored', score: answer.correct ? 100 : 0 },
-    evaluatorKind: 'perception_forced_choice',
-    evaluatorVersion: 'perception-forced-choice-v1',
-  })
+  // Until an audio discrimination item is authored, prosody perception stays
+  // a self-report. Word stress now has a real listen-and-choose item, so it
+  // is objective perception evidence — never a claim about spoken accuracy.
+  if (isProsodyOnlyTargetId(selection.targetId) && selection.targetId !== 'prosody.word-stress') {
+    return {
+      ...buildResult({
+        targetId: selection.targetId,
+        signalType: 'self_report',
+        measurement: { kind: 'not_measured', abstentionReason: 'no_evaluator_available' },
+        evaluatorKind: null,
+        evaluatorVersion: null,
+      }),
+      confidence: answer.correct ? 0.15 : 0.4,
+    }
+  }
+
+  return {
+    ...buildResult({
+      targetId: selection.targetId,
+      signalType: 'perception',
+      measurement: { kind: 'scored', score: answer.score ?? (answer.correct ? 100 : 0) },
+      evaluatorKind: 'perception_forced_choice',
+      evaluatorVersion:
+        selection.targetId === 'prosody.word-stress'
+          ? WORD_STRESS_PERCEPTION_EVALUATOR_VERSION
+          : 'perception-forced-choice-v1',
+    }),
+    ...(answer.perceptionItemCount !== undefined
+      ? { perceptionItemCount: answer.perceptionItemCount }
+      : {}),
+  }
 }
 
 /**
@@ -118,6 +156,18 @@ export function scoreProductionPrompt(
 ): TargetResult {
   const lookup = getTarget(selection.targetId)
   const signalType = 'stt_intelligibility' as const
+
+  // Explicit skip always wins over structural abstention — same user action
+  // should read as "La saltaste" in evidence, even on prosody-only targets.
+  if (attempt.outcome === 'skipped') {
+    return buildResult({
+      targetId: selection.targetId,
+      signalType,
+      measurement: { kind: 'not_measured', abstentionReason: 'skipped_by_user' },
+      evaluatorKind: null,
+      evaluatorVersion: null,
+    })
+  }
 
   if (!lookup.ok || mustAbstainFromProductionScore(lookup.target)) {
     return buildResult({
@@ -172,13 +222,6 @@ export function scoreProductionPrompt(
         evaluatorKind: null,
         evaluatorVersion: null,
       })
-    case 'skipped':
-      return buildResult({
-        targetId: selection.targetId,
-        signalType,
-        measurement: { kind: 'not_measured', abstentionReason: 'skipped_by_user' },
-        evaluatorKind: null,
-        evaluatorVersion: null,
-      })
+    // 'skipped' is handled above so it wins over structural abstention.
   }
 }
