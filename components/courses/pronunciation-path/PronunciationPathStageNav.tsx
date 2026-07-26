@@ -40,7 +40,7 @@ export function PronunciationPathStageNav({
         className={cn(
           'relative min-w-0',
           'sm:after:pointer-events-none sm:after:absolute sm:after:inset-y-0 sm:after:right-0 sm:after:w-8',
-          'sm:after:bg-gradient-to-l sm:after:from-surface-base sm:after:to-transparent'
+          'sm:after:bg-linear-to-l sm:after:from-surface-base sm:after:to-transparent'
         )}
       >
         <ul
@@ -48,7 +48,7 @@ export function PronunciationPathStageNav({
             'flex min-w-0 flex-wrap gap-2',
             'sm:-mx-1 sm:flex-nowrap sm:overflow-x-auto sm:px-1 sm:pb-1',
             'sm:snap-x sm:snap-mandatory sm:scroll-px-1',
-            'sm:[scrollbar-width:thin] sm:[scrollbar-color:var(--border-subtle)_transparent]'
+            'sm:scrollbar-thin sm:[scrollbar-color:var(--border-subtle)_transparent]'
           )}
         >
           {stages.map((stage, index) => {
