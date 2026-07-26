@@ -6,6 +6,7 @@ import { useSharedMicStream } from "@/hooks/useSharedMicStream";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { ARPABET_TO_IPA } from "@/lib/pronunciation/phonemes";
 import { scorePronunciation } from "@/lib/pronunciation/scoring";
+import { feedbackFromScoringResult } from '@/lib/pronunciation/feedback/from-scoring';
 import { saveAIWord } from "@/lib/db/ai";
 import { savePracticeAnswer } from "@/lib/practice/queries";
 import { recordActivitySession } from "@/lib/progress/activity-hub";
@@ -30,17 +31,28 @@ import PhraseCard from "./pronunciation/PhraseCard";
 import RecordingControls from "./pronunciation/RecordingControls";
 import CoachPanel from "./pronunciation/CoachPanel";
 import type { WordIPA, SoundProgress } from "./pronunciation/types";
+import type { ScoringResult } from '@/lib/types';
 import SessionComplete from "./pronunciation/SessionComplete";
 
-function firstBadPhoneme(wordIPAs: WordIPA[]) {
-  for (const entry of wordIPAs) {
-    if (!entry.alignment) continue;
-    for (const alignment of entry.alignment) {
-      if (alignment.status !== "correct" && alignment.phoneme) {
+function canonicalFocusFromScoring(scoring: ScoringResult | null) {
+  if (!scoring) return null;
+  const feedback = feedbackFromScoringResult({
+    accuracy: scoring.accuracy,
+    transcript: scoring.transcript,
+    wordResults: scoring.wordResults,
+    evaluatorVersion: 'coach-stt-v1',
+  });
+  const expected = feedback.priority?.expected?.replace(/^\/+|\/+$/g, '');
+  if (!expected) return null;
+
+  for (const word of scoring.wordResults) {
+    for (const alignment of word.phonemes?.alignment ?? []) {
+      const alignedIpa = alignment.ipa ?? ARPABET_TO_IPA[alignment.phoneme];
+      if (alignment.status !== 'correct' && alignedIpa === expected) {
         return {
-          word: entry.word,
+          word: word.expected,
           phoneme: alignment.phoneme,
-          ipa: alignment.ipa ?? ARPABET_TO_IPA[alignment.phoneme] ?? alignment.phoneme,
+          ipa: alignedIpa ?? alignment.phoneme,
         };
       }
     }
@@ -61,6 +73,7 @@ export default function PronunciationView() {
   const [analyzing, setAnalyzing] = useState(false);
   const [soundProgress, setSoundProgress] = useState<SoundProgress>({});
   const [savedWords, setSavedWords] = useState<Set<string>>(new Set());
+  const [latestScoring, setLatestScoring] = useState<ScoringResult | null>(null);
 
   const { getStream } = useSharedMicStream();
   const { state, result, start, stop, reset } = useSpeechInput({ prefer: "gemini", getStream });
@@ -101,6 +114,7 @@ export default function PronunciationView() {
     setBatchCount(fallback.length);
     reset();
     setWordIPAs([]);
+    setLatestScoring(null);
   }, [reset, userId]);
 
   const fetchMoreWithAI = useCallback(async (currentSeen: Set<string>) => {
@@ -159,6 +173,7 @@ export default function PronunciationView() {
       // index-zipping phrase words against transcript words — an omitted
       // word no longer shifts every later word's feedback.
       const scoring = await scorePronunciation(transcript, activePhrase);
+      setLatestScoring(scoring);
 
       // Map results back onto the original phrase's words by matching
       // expected text (skip "extra" entries — they have no expected word).
@@ -248,6 +263,7 @@ export default function PronunciationView() {
 
     reset();
     setWordIPAs((prev) => prev.map((entry) => ({ ...entry, alignment: null })));
+    setLatestScoring(null);
     void start();
   };
 
@@ -266,7 +282,7 @@ export default function PronunciationView() {
 
   const hasAnalysis = wordIPAs.some((word) => word.alignment !== null);
   const hasMistakes = wordIPAs.some((word) => word.alignment?.some((alignment) => alignment.status !== "correct"));
-  const focus = hasAnalysis && hasMistakes ? firstBadPhoneme(wordIPAs) : null;
+  const focus = hasAnalysis && hasMistakes ? canonicalFocusFromScoring(latestScoring) : null;
   const focusTip = focus ? PHONEME_TIPS[focus.phoneme] ?? null : null;
   const focusProgress = focus ? soundProgress[focus.phoneme] ?? null : null;
   const doneInBatch = batchCount - queue.length;
