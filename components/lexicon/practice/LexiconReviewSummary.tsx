@@ -26,16 +26,16 @@ export function LexiconReviewSummary({ ratings, onStartExercises, onFinish }: Le
 
       <div className="grid grid-cols-3 gap-3">
         <div className="flex flex-col items-center gap-1 rounded-xl border border-error/30 bg-error-soft/40 p-3">
-          <span className="text-2xl font-bold text-error tabular-nums">{forgot}</span>
-          <span className="text-[10px] text-fg-subtle text-center leading-tight">I don't know it</span>
+          <span className="text-h3 font-bold text-error tabular-nums">{forgot}</span>
+          <span className="text-xxs text-fg-subtle text-center leading-tight">I don't know it</span>
         </div>
         <div className="flex flex-col items-center gap-1 rounded-xl border border-border-subtle bg-surface-raised p-3">
-          <span className="text-2xl font-bold text-fg tabular-nums">{normal}</span>
-          <span className="text-[10px] text-fg-subtle text-center leading-tight">Normal</span>
+          <span className="text-h3 font-bold text-fg tabular-nums">{normal}</span>
+          <span className="text-xxs text-fg-subtle text-center leading-tight">Normal</span>
         </div>
         <div className="flex flex-col items-center gap-1 rounded-xl border border-primary/30 bg-primary-soft/40 p-3">
-          <span className="text-2xl font-bold text-primary tabular-nums">{known}</span>
-          <span className="text-[10px] text-fg-subtle text-center leading-tight">I already know it</span>
+          <span className="text-h3 font-bold text-primary tabular-nums">{known}</span>
+          <span className="text-xxs text-fg-subtle text-center leading-tight">I already know it</span>
         </div>
       </div>
 

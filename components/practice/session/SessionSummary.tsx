@@ -30,7 +30,7 @@ function AccuracyDisplay({ accuracy }: { accuracy: number }) {
       aria-live="polite"
       aria-label={`Precisión ${accuracy} por ciento`}
       className={cn(
-        'text-3xl font-semibold tabular-nums',
+        'text-h2 font-semibold tabular-nums',
         isExcellent
           ? 'text-success animate-accuracy-pop'
           : isAcceptable
@@ -106,12 +106,12 @@ export function SessionSummary({
     >
       <div className="flex shrink-0 flex-col items-center gap-1.5">
         {ipaLabel && (
-          <p className="font-ipa m-0 text-3xl font-bold leading-none text-primary">{ipaLabel}</p>
+          <p className="font-ipa m-0 text-display-ipa font-bold text-primary">{ipaLabel}</p>
         )}
-        <p className="text-sm font-semibold text-fg-secondary">Sesión completa</p>
+        <p className="text-caption font-semibold text-fg-secondary">Sesión completa</p>
         <AccuracyDisplay accuracy={result.accuracy} />
         <AccuracyLabel accuracy={result.accuracy} />
-        <p className="mt-1 text-sm text-fg-secondary">
+        <p className="mt-1 text-caption text-fg-secondary">
           {correctCount} de {result.results.length} correctas · {formatDuration(result.totalTimeMs)}
         </p>
         {showProgressStatus && (

@@ -51,8 +51,8 @@ export function GuestBanner() {
           >
             <div className="h-9 w-9 rounded-xl bg-border-subtle" />
             <div className="space-y-1">
-              <p className="text-tiny font-semibold uppercase tracking-[0.2em] text-fg-muted">{label}</p>
-              <p className="text-2xl font-black text-fg">—</p>
+              <p className="font-kicker text-fg-muted">{label}</p>
+              <p className="text-h3 font-black text-fg">—</p>
             </div>
           </div>
         ))}

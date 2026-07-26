@@ -32,10 +32,10 @@ export function VocabularyHero({
     >
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0 flex-1">
-          <p className="text-[10px] uppercase tracking-[0.3em] text-[var(--primary)] opacity-60 mb-0.5">
+          <p className="font-kicker mb-0.5 text-primary">
             Vocabulary
           </p>
-          <h1 className="text-2xl font-bold leading-[1.15] text-fg mb-4">
+          <h1 className="mb-4 text-h2 text-balance text-fg">
             {activeTab === "words" ? "Word Bank" : "Decks"}
           </h1>
 

@@ -27,11 +27,11 @@ export function HeroCompactHeader({
       <div className="flex items-start justify-between gap-[var(--space-6)]">
         <div className="flex flex-col gap-[var(--space-1)]">
           {badge && (
-            <span className="text-[var(--font-tiny)] text-[var(--text-tertiary)] uppercase tracking-[0.1em]">
+            <span className="font-kicker text-fg-subtle">
               {badge}
             </span>
           )}
-          <h1 className="m-0 text-[var(--font-h2)] text-[var(--text-primary)] leading-[1.25]">
+          <h1 className="m-0 text-h2 text-balance text-fg">
             {title}
             {subtitle && (
               <>
@@ -60,19 +60,19 @@ export function HeroCompactHeader({
         <div className="flex items-center bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-lg)] px-[var(--space-5)] py-[var(--space-4)] gap-[var(--space-4)] overflow-hidden">
           {phonemeLabel && (
             <div className="shrink-0 flex items-center justify-center bg-[var(--primary-soft)] border border-[var(--border-subtle)] rounded-[var(--radius-md)] px-[var(--space-3)] py-[var(--space-2)] min-w-16">
-              <span className="text-[var(--font-h4)] font-light text-[var(--primary)]">{phonemeLabel}</span>
+              <span className="text-h4 font-light text-primary">{phonemeLabel}</span>
             </div>
           )}
 
           <div className="flex-1 min-w-0 flex flex-col gap-[var(--space-1)]">
-            <span className="text-[var(--font-tiny)] text-[var(--text-tertiary)] uppercase tracking-[0.1em]">
+            <span className="font-kicker text-fg-subtle">
               Continuing
             </span>
             <div className="flex items-center justify-between gap-[var(--space-3)]">
-              <span className="truncate text-[var(--font-body-sm)] font-medium text-[var(--text-primary)]">
+              <span className="truncate font-body-sm font-medium text-fg">
                 {lessonTitle}
               </span>
-              <span className="shrink-0 tabular-nums text-[var(--font-body-sm)] font-semibold text-[var(--primary)]">
+              <span className="shrink-0 tabular-nums font-body-sm font-semibold text-primary">
                 {safeProgress}%
               </span>
             </div>

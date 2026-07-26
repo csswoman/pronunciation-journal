@@ -57,7 +57,7 @@ export function LexiconFlashcard({
         aria-label={revealed ? undefined : `Tap to reveal definition of ${word}`}
       >
         <div>
-          <p className="text-2xl font-bold text-fg">{word}</p>
+          <p className="text-display-word font-bold text-fg">{word}</p>
           {partOfSpeech && !revealed && (
             <p className="text-xs italic text-fg-subtle mt-0.5">{partOfSpeech}</p>
           )}

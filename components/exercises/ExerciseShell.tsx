@@ -108,15 +108,15 @@ function ShellHeader({
     <div className="flex items-start justify-between gap-3">
       <div className="flex flex-col gap-1">
         {eyebrow && (
-          <span className="text-[11px] font-semibold uppercase tracking-widest text-accent">
+          <span className="font-kicker text-accent">
             {eyebrow}
           </span>
         )}
-        <p className="text-2xl font-bold leading-tight text-fg">
+        <p className="text-h3 text-balance text-fg">
           {title}
         </p>
         {description && (
-          <p className="text-[13px] text-fg-muted leading-snug">
+          <p className="text-caption text-fg-muted leading-snug text-pretty">
             {description}
           </p>
         )}

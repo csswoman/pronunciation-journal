@@ -66,6 +66,7 @@ La personalidad tipográfica proviene de tres voces con tareas separadas:
 - Los kickers solo clasifican. Deben ser breves y no reemplazan un título comprensible.
 - No introducir una cuarta fuente para "dar personalidad". Si se necesita un momento expresivo, usa el contenido real, por ejemplo `/ʃ/`, una pareja mínima o una palabra, y la escala tipográfica existente.
 - Mantén cuerpo de lectura entre 65 y 75ch. En listas, controles y datos se prioriza la densidad funcional.
+- Escala tipográfica: solo tokens en `app/styles/tokens.css` (`--text-size-*`). Mobile-first en `rem`; bump en `768px`. Usa `text-h2` / `text-h3` / `text-caption` / `.font-kicker` — no `text-2xl` ni `clamp()` en chrome de producto.
 
 ## Textura, profundidad y movimiento
 

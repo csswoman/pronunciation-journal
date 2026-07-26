@@ -4,7 +4,6 @@ import { Bookmark, SkipForward, Volume2 } from "@/components/icons";
 import { cn } from "@/lib/cn";
 import Button from "@/components/ui/Button";
 import { blankOutWord, speakWord } from "./study-utils";
-import { H2 } from "@/components/ui/Typography";
 
 interface Meaning {
   partOfSpeech?: string;
@@ -52,10 +51,9 @@ export function StudyCard({
 
   const wordDisplay = (
     <>
-      <H2 className="text-5xl font-bold italic leading-none"
-        style={{ fontFamily: "var(--font-serif, serif)", color: "var(--text-primary)" }}>
+      <p className="m-0 text-display-word font-bold italic text-balance text-fg">
         {word}
-      </H2>
+      </p>
       {ipa && (
         <div className="flex items-center gap-2 justify-center">
           <span className="text-base text-fg-muted">/{ipa}/</span>

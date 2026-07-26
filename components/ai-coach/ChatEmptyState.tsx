@@ -98,10 +98,10 @@ export default function ChatEmptyState({ onSendMessage }: ChatEmptyStateProps) {
           <span className="absolute inset-0 rounded-2xl shadow-[inset_0_1px_0_0_rgb(255_255_255_/_0.25)]" />
         </div>
         <div className="space-y-1.5">
-          <h2 className="text-2xl font-semibold tracking-tight text-[var(--text-primary)] m-0">
+          <h2 className="m-0 text-h3 text-balance text-fg">
             Let's practice together.
           </h2>
-          <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
+          <p className="text-caption text-fg-muted leading-relaxed text-pretty">
             Pick a mode or shortcut below to start.
           </p>
         </div>

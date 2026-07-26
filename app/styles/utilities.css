@@ -162,10 +162,10 @@
 .font-display  { font-family: var(--font-sans), system-ui, sans-serif; }
 .font-editorial { font-family: var(--font-sans), system-ui, sans-serif; }
 .font-phoneme  { font-family: var(--font-mono-var), "Fira Code", monospace; }
-.font-h1       { font: var(--font-h1); }
-.font-h2       { font: var(--font-h2); }
-.font-h3       { font: var(--font-h3); }
-.font-h4       { font: var(--font-h4); }
+.font-h1       { font: var(--font-h1); letter-spacing: var(--text-tracking-h1); }
+.font-h2       { font: var(--font-h2); letter-spacing: var(--text-tracking-h2); }
+.font-h3       { font: var(--font-h3); letter-spacing: var(--text-tracking-h3); }
+.font-h4       { font: var(--font-h4); letter-spacing: var(--text-tracking-h4); }
 .font-body     { font: var(--font-body); }
 .font-body-md  { font: var(--font-body-md); }
 .font-body-sm  { font: var(--font-body-sm); }
@@ -178,7 +178,7 @@
   color: var(--text-secondary);
 }
 .font-tiny     { font: var(--font-tiny); }
-.font-heading  { font-family: var(--font-heading), serif; }
+.font-heading  { font-family: var(--font-heading), system-ui, sans-serif; }
 
 /** Prefer .font-kicker over .type-overline for new UI */
 .type-overline {

@@ -143,15 +143,15 @@ export default function PronunciationFeedback({
       </section>
       {/* Score */}
       <div className="text-center">
-        <div className="text-5xl font-bold mb-1">
+        <div className="mb-1 text-h1 font-bold tabular-nums">
           <span className={feedback.color}>{accuracy}%</span>
         </div>
-        <p className={`text-lg font-medium ${feedback.color}`}>
+        <p className={`text-h4 font-medium ${feedback.color}`}>
           {feedback.emoji ? `${feedback.emoji} ` : ""}
           {feedback.message}
         </p>
         {xpEarned > 0 && (
-          <p className="text-sm mt-1 text-fg-muted">
+          <p className="mt-1 text-caption text-fg-muted">
             +{xpEarned} XP
           </p>
         )}

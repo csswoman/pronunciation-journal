@@ -37,16 +37,16 @@ export function SessionSummary({ soundIpa, scoreableCorrect, originalTotal, next
       <div className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-2xl)] pt-10 px-8 pb-8 flex flex-col items-center gap-3 text-center">
 
         {/* IPA */}
-        <div className="font-mono text-h1 font-bold text-[var(--primary)] tracking-[-1px] leading-none">
+        <div className="font-ipa text-display-ipa font-bold text-primary">
           {soundIpa}
         </div>
 
         {/* Emoji + title + subtitle */}
-        <div className="text-5xl leading-none mt-1">{emoji}</div>
-        <div className="[font-family:var(--font-heading),serif] text-2xl font-bold text-[var(--text-primary)] tracking-[-0.5px]">
+        <div className="mt-1 text-h1 leading-none">{emoji}</div>
+        <div className="text-h3 text-balance text-fg">
           {title}
         </div>
-        <p className="text-sm text-[var(--text-secondary)] m-0">
+        <p className="m-0 text-caption text-fg-muted">
           {subtitle}
         </p>
 
@@ -54,7 +54,7 @@ export function SessionSummary({ soundIpa, scoreableCorrect, originalTotal, next
         <div className="w-full h-px bg-[var(--border-subtle)] my-2" />
 
         {/* Accuracy % */}
-        <div className={`[font-family:var(--font-heading),serif] text-6xl font-bold leading-none tracking-[-2px] ${accuracyClass}`}>
+        <div className={`text-h1 font-bold tabular-nums ${accuracyClass}`}>
           {accuracy}%
         </div>
         <p className="text-sm text-[var(--text-tertiary)] m-0">
