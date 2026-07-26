@@ -13,6 +13,11 @@ import type { InterviewTurn } from "./InterviewSession";
 import { AccuracyRing } from "./AccuracyRing";
 import { getThreshold } from "./interview-utils";
 import type { ExerciseDifficulty, Level } from "./CandidateRecorder";
+import { candidatesFromWordResults } from '@/lib/pronunciation/feedback/from-scoring'
+import { buildPronunciationFeedback } from '@/lib/pronunciation/feedback/model'
+import { getLearnerTargetCopy } from '@/lib/pronunciation/assessment/learner-copy'
+import { isActionablePronunciationFeedbackCopyEnabled } from '@/lib/pronunciation/feedback/copy-flag'
+import { persistPronunciationFeedbackEvidence } from '@/lib/pronunciation/feedback/persistence'
 
 interface TurnResult {
   score: ScoringResult;
@@ -31,6 +36,7 @@ interface Props {
 export function InterviewResults({ title, turns, results, difficulty, level, onReset }: Props) {
   const fired = useRef(false);
   const progressSaved = useRef(false);
+  const feedbackEvidenceSaved = useRef(false);
   const { user } = useAuth();
   const threshold = getThreshold(level, difficulty);
 
@@ -60,6 +66,29 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
   const uniqueWords = Array.from(
     new Map(wordsToImprove.map((w) => [w.word.toLowerCase(), w])).values()
   ).slice(0, 12);
+
+  const feedbackCandidates = scores.flatMap((score) => candidatesFromWordResults(score.wordResults));
+  const recurrenceByTarget = new Map<string, number>();
+  for (const candidate of feedbackCandidates) {
+    recurrenceByTarget.set(candidate.targetId, (recurrenceByTarget.get(candidate.targetId) ?? 0) + 1);
+  }
+  const interviewFeedback = buildPronunciationFeedback({
+    signal: {
+      kind: 'stt_intelligibility',
+      evaluatorVersion: 'interview-stt-v1',
+      confidence: scores.length > 0 ? 0.8 : 0,
+      transcript: scores.map((score) => score.transcript).join(' '),
+      recognizedPercent: totalAccuracy,
+    },
+    candidates: feedbackCandidates.map((candidate) => ({
+      ...candidate,
+      recurrence: recurrenceByTarget.get(candidate.targetId) ?? 0,
+    })),
+  });
+  const priorityCopy = interviewFeedback.priority
+    ? getLearnerTargetCopy(interviewFeedback.priority.targetId)
+    : null;
+  const feedbackCopyEnabled = isActionablePronunciationFeedbackCopyEnabled()
 
   useEffect(() => {
     if (fired.current || totalAccuracy < 50) return;
@@ -134,6 +163,12 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
     })();
   }, [user?.id, candidateTurns, results, threshold]);
 
+  useEffect(() => {
+    if (feedbackEvidenceSaved.current || !user?.id || !interviewFeedback.priority) return
+    feedbackEvidenceSaved.current = true
+    void persistPronunciationFeedbackEvidence(user.id, interviewFeedback).catch(() => undefined)
+  }, [user?.id, interviewFeedback]);
+
   const grade =
     totalAccuracy >= 90 ? "Excellent!" :
     totalAccuracy >= 75 ? "Great job!" :
@@ -167,7 +202,7 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
           <div>
             <p className="text-xl font-bold" style={{ color: gradeColor }}>{grade}</p>
             <p className="text-sm mt-0.5 text-[var(--muted-text)]">
-              Overall word recognition accuracy
+              {feedbackCopyEnabled ? 'Reconocimiento de palabras por voz' : 'Resultado de la práctica'}
             </p>
           </div>
 
@@ -192,6 +227,15 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
             </div>
           </div>
         </div>
+
+        {feedbackCopyEnabled && priorityCopy && (
+          <section aria-live="polite" className="rounded-md border border-border-subtle bg-surface-raised px-4 py-3">
+            <p className="m-0 font-kicker text-fg-subtle">UN FOCO PARA LA PRÓXIMA PRÁCTICA</p>
+            <p className="mb-0 mt-1 text-sm leading-relaxed text-fg">
+              Practica {priorityCopy.title}. Esta sugerencia viene del texto reconocido, no de una medición acústica.
+            </p>
+          </section>
+        )}
 
         {/* Per-turn breakdown */}
         {candidateTurns.length > 0 && (

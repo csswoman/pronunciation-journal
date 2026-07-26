@@ -2,7 +2,7 @@
 // Shared types for the offline-first sync queue between Dexie and Supabase.
 
 /** Tables that can be queued for sync */
-export type SyncTable = 'user_contrast_progress' | 'answer_history' | 'activity_sessions' | 'user_learning_state' | 'word_bank' | 'topic_srs' | 'journal_entries' | 'tracked_items' | 'lesson_completions' | 'pronunciation_assessments'
+export type SyncTable = 'user_contrast_progress' | 'answer_history' | 'activity_sessions' | 'user_learning_state' | 'word_bank' | 'topic_srs' | 'journal_entries' | 'tracked_items' | 'lesson_completions' | 'pronunciation_assessments' | 'pronunciation_feedback_evidence'
 
 /** RPC functions that can be queued for sync via an 'rpc' operation entry. */
 export type SyncRpc = 'apply_word_bank_rating_event' | 'apply_topic_srs_rating_event'

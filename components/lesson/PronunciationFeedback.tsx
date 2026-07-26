@@ -3,12 +3,17 @@
 import type { WordResult, PhonemeAlignment } from "@/lib/types";
 import { playIpaSound } from "@/lib/pronunciation/ipa-audio";
 import ProgressBar from "@/components/ui/ProgressBar";
+import { feedbackFromScoringResult } from '@/lib/pronunciation/feedback/from-scoring'
+import { getLearnerTargetCopy } from '@/lib/pronunciation/assessment/learner-copy'
+import { isActionablePronunciationFeedbackCopyEnabled } from '@/lib/pronunciation/feedback/copy-flag'
 
 interface PronunciationFeedbackProps {
   wordResults: WordResult[];
   accuracy: number;
   feedback: { message: string; emoji: string; color: string };
   xpEarned: number;
+  /** Transcript from the STT evaluator; used only for signal-honest feedback. */
+  transcript?: string;
   /**
    * When false, hides the per-word phoneme breakdown and the "sounds to
    * practice" chips, leaving only the score summary. Use when a richer
@@ -18,7 +23,7 @@ interface PronunciationFeedbackProps {
   showPhonemeDetail?: boolean;
 }
 
-// ── Phoneme chip — plays sound on hover ──────────────────────────────────────
+// ── Phoneme chip — explicit audio control for touch and keyboard ────────────
 
 function PhonemeChip({ p }: { p: PhonemeAlignment }) {
   const display = p.ipa ?? p.phoneme.toLowerCase();
@@ -38,24 +43,25 @@ function PhonemeChip({ p }: { p: PhonemeAlignment }) {
     color = "var(--admonitions-color-caution)";
   }
 
-  const tooltip =
+  const label =
     p.status === "incorrect"
-      ? `escuchado /${p.gotIpa ?? p.got}/ — pasa el cursor para oír /${display}/`
+      ? `Escuchar el modelo /${display}/; el texto reconocido fue /${p.gotIpa ?? p.got}/`
       : p.status === "missing"
-      ? `falta /${display}/ — pasa el cursor para oírlo`
-      : `/${display}/ — correcto`;
+      ? `Escuchar el modelo /${display}/; no apareció en el texto reconocido`
+      : `Escuchar el modelo /${display}/`;
 
   return (
-    <span
-      title={tooltip}
-      onMouseEnter={() => p.ipa && playIpaSound(p.ipa)}
-      className="inline-flex items-center font-mono text-xs px-1.5 py-0.5 rounded border select-none transition-opacity"
+    <button
+      type="button"
+      onClick={() => p.ipa && playIpaSound(p.ipa)}
+      aria-label={label}
+      className="inline-flex min-h-11 min-w-11 items-center justify-center gap-0.5 rounded-sm border px-2 py-1 font-ipa text-sm transition-colors focus-ring"
       style={{
         backgroundColor: bg,
         borderColor: border,
         color,
         textDecoration: p.status === "missing" ? "line-through" : "none",
-        cursor: isProblematic ? "help" : "default",
+        cursor: "pointer",
       }}
     >
       /{display}/
@@ -64,7 +70,7 @@ function PhonemeChip({ p }: { p: PhonemeAlignment }) {
           <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
         </svg>
       )}
-    </span>
+    </button>
   );
 }
 
@@ -104,6 +110,7 @@ export default function PronunciationFeedback({
   accuracy,
   feedback,
   xpEarned,
+  transcript = '',
   showPhonemeDetail = true,
 }: PronunciationFeedbackProps) {
   const problemWords = wordResults.filter(
@@ -111,9 +118,29 @@ export default function PronunciationFeedback({
       r.status !== "extra" &&
       r.phonemes?.alignment?.some((p) => p.status === "incorrect" || p.status === "missing")
   );
+  const actionableFeedback = feedbackFromScoringResult({
+    accuracy,
+    transcript,
+    wordResults,
+  });
+  const priorityCopy = actionableFeedback.priority
+    ? getLearnerTargetCopy(actionableFeedback.priority.targetId)
+    : null;
+  const feedbackCopyEnabled = isActionablePronunciationFeedbackCopyEnabled();
 
   return (
     <div className="w-full animate-fadeIn space-y-5">
+      <section aria-live="polite" className="rounded-md border border-border-subtle bg-surface-raised px-4 py-3">
+        {feedbackCopyEnabled ? (
+          <>
+            <p className="m-0 font-kicker text-fg-subtle">LO QUE ENTENDIMOS</p>
+            <p className="mt-1 text-sm leading-relaxed text-fg-muted">{actionableFeedback.summaryEs}</p>
+            <p className="mb-0 mt-2 text-sm font-semibold text-fg">
+              {priorityCopy ? `Siguiente foco: ${priorityCopy.title}` : 'Repite una vez para reunir más evidencia.'}
+            </p>
+          </>
+        ) : <p className="m-0 text-sm font-semibold text-fg">Siguiente práctica</p>}
+      </section>
       {/* Score */}
       <div className="text-center">
         <div className="text-5xl font-bold mb-1">
@@ -212,7 +239,7 @@ export default function PronunciationFeedback({
           }}
         >
           <p className="font-semibold text-xs uppercase tracking-wide text-primary">
-            Pasa el cursor para oír el sonido correcto
+            Escucha el modelo antes de repetir
           </p>
           {problemWords.map((r, i) => {
             const failed = r.phonemes!.alignment.filter(

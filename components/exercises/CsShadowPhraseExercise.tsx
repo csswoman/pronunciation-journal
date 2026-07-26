@@ -18,6 +18,9 @@ import { BROWSER_BLOCKS_SCORING_SHADOW_EN } from '@/lib/speech/browser-support-m
 import { scorePronunciation, getFeedbackMessage, calculateXP } from '@/lib/pronunciation/scoring'
 import { speak } from '@/lib/phoneme-practice/tts'
 import { cn } from '@/lib/cn'
+import { useAuth } from '@/components/auth/AuthProvider'
+import { feedbackFromScoringResult } from '@/lib/pronunciation/feedback/from-scoring'
+import { persistPronunciationFeedbackEvidence } from '@/lib/pronunciation/feedback/persistence'
 import type { ScoringResult } from '@/lib/types'
 import type { CsShadowPhraseExercise as CsShadowPhraseExerciseType } from '@/lib/exercises/types'
 import type { GenericRenderExtras } from '@/lib/practice/exercise-renderer/generic-registry'
@@ -34,6 +37,7 @@ interface Props {
 }
 
 export function CsShadowPhraseExercise({ exercise, onResult, onSkip }: Props) {
+  const { user } = useAuth()
   const { status, result: speechResult, errorCode, isSupported, start, stop, reset } =
     useSpeechRecognition()
   const [scoring, setScoring] = useState<ScoringResult | null>(null)
@@ -47,7 +51,16 @@ export function CsShadowPhraseExercise({ exercise, onResult, onSkip }: Props) {
 
     setIsScoring(true)
     scorePronunciation(speechResult.transcript, exercise.phrase)
-      .then((result) => setScoring(result))
+      .then((result) => {
+        setScoring(result)
+        if (user?.id) {
+          const feedback = feedbackFromScoringResult({
+            accuracy: result.accuracy, transcript: result.transcript, wordResults: result.wordResults,
+            evaluatorVersion: 'shadow-stt-v1',
+          })
+          void persistPronunciationFeedbackEvidence(user.id, feedback).catch(() => undefined)
+        }
+      })
       .catch(() => {
         // Evaluation errored — honest 'failed' outcome, not a silent 0%.
         // Fall through to the unscored shadowing UI, same pattern as
@@ -55,7 +68,7 @@ export function CsShadowPhraseExercise({ exercise, onResult, onSkip }: Props) {
         setEvalFailed(true)
       })
       .finally(() => setIsScoring(false))
-  }, [status, speechResult, isScoring, scoring, evalFailed, exercise.phrase])
+  }, [status, speechResult, isScoring, scoring, evalFailed, exercise.phrase, user?.id])
 
   const handleContinue = useCallback(() => {
     if (!scoring || submitted.current) return
@@ -173,6 +186,7 @@ export function CsShadowPhraseExercise({ exercise, onResult, onSkip }: Props) {
             accuracy={scoring.accuracy}
             feedback={getFeedbackMessage(scoring.accuracy)}
             xpEarned={calculateXP(scoring.accuracy)}
+            transcript={scoring.transcript}
           />
           <div className="flex gap-2">
             <PillButton variant="outline" size="sm" onClick={handleRetry}>

@@ -4,6 +4,7 @@ import {
   PATH_STAGE_ORDER,
   buildPronunciationPathCurriculum,
   listPathUnitsInOrder,
+  pickUnitForStage,
 } from '../curriculum'
 
 describe('buildPronunciationPathCurriculum', () => {
@@ -33,5 +34,11 @@ describe('buildPronunciationPathCurriculum', () => {
   it('attaches content-map refs when authored', () => {
     const schwa = listPathUnitsInOrder().find((u) => u.targetId.includes('./ə/'))
     expect(schwa?.contentRefs.length).toBeGreaterThan(0)
+  })
+
+  it('picks the first open unit for a stage', () => {
+    const unit = pickUnitForStage('intonation-transfer', new Map())
+    expect(unit?.stageId).toBe('intonation-transfer')
+    expect(unit?.targetId).toContain('intonation')
   })
 })

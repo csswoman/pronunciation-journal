@@ -163,3 +163,32 @@ export async function getLocalPronunciationAssessments(
   const rows = await db.pronunciationAssessments.where('userId').equals(userId).toArray()
   return rows.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
 }
+
+/**
+ * Writes a Dexie mirror for an assessment already known to exist remotely
+ * (guest claim, hydrate-from-Supabase). Does not enqueue outbox — a second
+ * insert would race the row that already landed.
+ */
+export async function mirrorSyncedPronunciationAssessment(
+  userId: string,
+  result: PronunciationDiagnosticResult,
+  id: string,
+  schemaVersion: number = PRONUNCIATION_DIAGNOSTIC_SCHEMA_VERSION
+): Promise<PersistAssessmentLocalResult> {
+  const validated = validateDiagnosticResult(result)
+  if (!validated.ok) return { ok: false, error: 'invalid_result' }
+
+  const now = new Date().toISOString()
+  const record: PronunciationAssessmentRecord = {
+    id,
+    userId,
+    schemaVersion,
+    result: validated.result as unknown as Record<string, unknown>,
+    completedAt: validated.result.completedAt,
+    createdAt: now,
+    syncedAt: now,
+  }
+
+  await db.pronunciationAssessments.put(record)
+  return { ok: true, id }
+}

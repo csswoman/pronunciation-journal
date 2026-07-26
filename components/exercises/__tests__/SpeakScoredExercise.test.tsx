@@ -16,6 +16,9 @@ vi.mock('@/lib/exercises/evaluation/word-results', () => ({
   getEvaluationWordResults: vi.fn(() => []),
 }))
 vi.mock('@/hooks/useSpeechRecognition', () => speechMocks)
+vi.mock('@/components/auth/AuthProvider', () => ({
+  useAuth: () => ({ user: null }),
+}))
 vi.mock('@/lib/phoneme-practice/tts', () => ({
   speak: vi.fn(),
 }))

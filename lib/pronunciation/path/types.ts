@@ -28,6 +28,8 @@ export interface PathUnit {
 export interface PathStage {
   id: PathStageId
   titleEs: string
+  /** Compact label for narrow viewports — same meaning, fewer characters. */
+  titleShortEs: string
   units: readonly PathUnit[]
 }
 

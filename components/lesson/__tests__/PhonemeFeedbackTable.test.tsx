@@ -49,11 +49,10 @@ describe('PhonemeFeedbackTable', () => {
     expect(container).toBeEmptyDOMElement()
   })
 
-  it('reproduce el sonido IPA correcto al pasar el mouse por la columna SONIDO', () => {
+  it('reproduce el sonido IPA correcto al activar el control accesible', () => {
     playIpaSound.mockClear()
     render(<PhonemeFeedbackTable wordResults={wordResults} />)
-    // El botón del fonema /æ/ esperado reproduce su sonido al hover
-    fireEvent.mouseEnter(screen.getByRole('button', { name: /escuchar el sonido \/æ\//i }))
+    fireEvent.click(screen.getByRole('button', { name: /escuchar el sonido \/æ\//i }))
     expect(playIpaSound).toHaveBeenCalledWith('æ')
   })
 })

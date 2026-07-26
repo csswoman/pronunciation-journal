@@ -18,7 +18,7 @@ export const runtime = "nodejs";
  * know it, but the offline/outbox path may pin the version it captured the
  * result under.
  */
-export const PronunciationAssessmentRequestSchema = z
+const PronunciationAssessmentRequestSchema = z
   .object({
     id: z.string().uuid(),
     schemaVersion: z.number().int().positive().optional(),
