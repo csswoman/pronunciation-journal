@@ -1,6 +1,7 @@
 import { getSupabaseAdminClient } from "@/lib/supabase/admin";
 import { enrichWithGemini } from "./gemini";
 import { getWordAudio } from "./audio";
+import { getOrCreateWordDefinition } from "./definition-cache";
 
 const ENRICH_TIMEOUT_MS = 45_000;
 
@@ -34,7 +35,7 @@ export async function enrichWord(wordId: string): Promise<void> {
 
   const { data: row, error: fetchErr } = await supabase
     .from("word_bank")
-    .select("id, text, context, status")
+    .select("id, text, context, status, audio_url, meaning, translation")
     .eq("id", wordId)
     .maybeSingle();
 
@@ -43,10 +44,26 @@ export async function enrichWord(wordId: string): Promise<void> {
     return;
   }
 
+  if (row.status === "ready" && row.meaning && row.translation) {
+    if (!row.audio_url) {
+      const audioResult = await getWordAudio(row.text);
+      await supabase
+        .from("word_bank")
+        .update({ audio_url: audioResult.url })
+        .eq("id", wordId)
+        .eq("status", "ready");
+    }
+    return;
+  }
+
   if (row.status !== "processing") return;
 
   try {
-    const enriched = await withTimeout(enrichWithGemini(row.text, row.context), ENRICH_TIMEOUT_MS);
+    const definition = await withTimeout(
+      getOrCreateWordDefinition(row.text, () => enrichWithGemini(row.text, row.context)),
+      ENRICH_TIMEOUT_MS,
+    );
+    const enriched = definition.enrichment;
 
     const audioResult = await getWordAudio(row.text);
 
