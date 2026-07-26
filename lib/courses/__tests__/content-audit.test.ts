@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { auditDeck } from "../content-audit";
 import { GrammarStudyDeckSchema } from "../grammar-deck/schema";
 import { targetId } from "@/lib/pronunciation/targets/registry";
-import { getContentMapIssues } from "@/lib/pronunciation/targets/content-map";
+import { getContentMapIssues } from "@/lib/pronunciation/targets/content-map-audit";
 import { getDecksForTarget } from "@/lib/courses/grammar-deck/decks";
 
 describe("grammar deck content audit", () => {
