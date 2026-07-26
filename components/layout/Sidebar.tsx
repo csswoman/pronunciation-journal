@@ -5,6 +5,7 @@ import { PanelLeftClose, PanelLeftOpen } from "@/components/icons";
 import SidebarFooter from "./SidebarFooter";
 import { NavSection, NavLink, coreNav, practiceNav, learnNav, referenceNav, trackingNav } from "../theme/sidebar/index";
 import { SidebarContext } from "../theme/sidebar/SidebarContext";
+import { isNavActive } from "@/lib/navigation/is-nav-active";
 
 interface SidebarProps {
   className?: string;
@@ -26,8 +27,7 @@ export default function Sidebar({ className = "" }: SidebarProps) {
     });
   };
 
-  const isActive = (href: string) =>
-    href === "/" ? pathname === "/" : pathname.startsWith(href);
+  const isActive = (href: string) => isNavActive(pathname, href);
 
   return (
     <SidebarContext.Provider value={{ collapsed }}>

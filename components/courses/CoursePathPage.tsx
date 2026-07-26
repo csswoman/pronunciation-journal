@@ -50,6 +50,10 @@ export default function CoursePathPage({ levelParam }: CoursePathPageProps) {
             <div className="course-path__assessment-links">
               <span className="course-path__assessment-prompt">¿No sabes tu nivel?</span>
               <Link href="/assessment">Haz la prueba</Link>
+              <span aria-hidden className="course-path__assessment-sep">
+                ·
+              </span>
+              <Link href="/courses/pronunciation">Ruta de pronunciación</Link>
             </div>
           </div>
 

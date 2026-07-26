@@ -2,6 +2,7 @@ import {
   Home,
   MicVocal,
   BookOpen,
+  Ear,
   Radio,
   TrendingUp,
   LibraryBig,
@@ -34,6 +35,7 @@ export const learnNav: NavSectionType = {
   label: "Learn",
   items: [
     { name: "Ruta", href: "/courses", icon: BookOpen },
+    { name: "Pronunciación", href: "/courses/pronunciation", icon: Ear },
     { name: "Decks", href: "/practice/decks", icon: Layers },
     { name: "Mini Lessons", href: "/mini-lessons", icon: BookMarked },
   ],

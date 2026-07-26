@@ -807,6 +807,11 @@
   color: var(--text-secondary);
 }
 
+.course-path__assessment-sep {
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+}
+
 .course-path__assessment-links a {
   font-size: 0.875rem;
   font-weight: 600;

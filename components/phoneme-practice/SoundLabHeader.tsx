@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Play } from "@/components/icons";
 import PageHeader from "@/components/layout/PageHeader";
 import type { Lesson } from "@/lib/types";
@@ -8,6 +9,7 @@ import { ipaFromLessonTitle } from "@/lib/sound-lab/display";
 // Planned structure:
 // <SoundLabHeader>
 //   <PageHeader />
+//   <path link />
 // </SoundLabHeader>
 
 interface Props {
@@ -43,19 +45,30 @@ export function SoundLabHeader({
   const statsLine = headerStatsLine(inProgressCount, totalCount);
 
   return (
-    <PageHeader
-      kicker="Práctica"
-      title="Laboratorio de sonidos"
-      subtitle={statsLine}
-      primaryCta={
-        showResume
-          ? {
-              label: continueCtaLabel(heroLesson),
-              icon: <Play className="h-3.5 w-3.5 fill-current" aria-hidden />,
-              onClick: onResume!,
-            }
-          : undefined
-      }
-    />
+    <div className="flex min-w-0 flex-col gap-3">
+      <PageHeader
+        kicker="Práctica"
+        title="Laboratorio de sonidos"
+        subtitle={statsLine}
+        primaryCta={
+          showResume
+            ? {
+                label: continueCtaLabel(heroLesson),
+                icon: <Play className="h-3.5 w-3.5 fill-current" aria-hidden />,
+                onClick: onResume!,
+              }
+            : undefined
+        }
+      />
+      <p className="font-body-sm text-fg-muted">
+        ¿Vienes del diagnóstico?{" "}
+        <Link
+          href="/courses/pronunciation"
+          className="font-label text-fg underline-offset-2 hover:underline"
+        >
+          Abre tu ruta de pronunciación
+        </Link>
+      </p>
+    </div>
   );
 }

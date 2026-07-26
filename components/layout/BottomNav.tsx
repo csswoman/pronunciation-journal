@@ -6,6 +6,7 @@ import { useCallback, useState } from "react";
 import AICoachTrigger from "@/components/ai-coach/AICoachTrigger";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { cn } from "@/lib/cn";
+import { isNavActive } from "@/lib/navigation/is-nav-active";
 import BottomNavMenu from "./BottomNavMenu";
 import BottomNavTab from "./BottomNavTab";
 
@@ -25,7 +26,7 @@ export default function BottomNav({ className = "" }: BottomNavProps) {
   const [showMenu, setShowMenu] = useState(false);
 
   const isActive = useCallback(
-    (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href)),
+    (href: string) => isNavActive(pathname, href),
     [pathname],
   );
 
