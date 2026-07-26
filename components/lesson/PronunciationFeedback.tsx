@@ -18,7 +18,7 @@ interface PronunciationFeedbackProps {
   showPhonemeDetail?: boolean;
 }
 
-// ── Phoneme chip — plays sound on hover ──────────────────────────────────────
+// ── Phoneme chip — explicit audio control for touch and keyboard ────────────
 
 function PhonemeChip({ p }: { p: PhonemeAlignment }) {
   const display = p.ipa ?? p.phoneme.toLowerCase();
@@ -38,24 +38,25 @@ function PhonemeChip({ p }: { p: PhonemeAlignment }) {
     color = "var(--admonitions-color-caution)";
   }
 
-  const tooltip =
+  const label =
     p.status === "incorrect"
-      ? `escuchado /${p.gotIpa ?? p.got}/ — pasa el cursor para oír /${display}/`
+      ? `Escuchar el modelo /${display}/; el texto reconocido fue /${p.gotIpa ?? p.got}/`
       : p.status === "missing"
-      ? `falta /${display}/ — pasa el cursor para oírlo`
-      : `/${display}/ — correcto`;
+      ? `Escuchar el modelo /${display}/; no apareció en el texto reconocido`
+      : `Escuchar el modelo /${display}/`;
 
   return (
-    <span
-      title={tooltip}
-      onMouseEnter={() => p.ipa && playIpaSound(p.ipa)}
-      className="inline-flex items-center font-mono text-xs px-1.5 py-0.5 rounded border select-none transition-opacity"
+    <button
+      type="button"
+      onClick={() => p.ipa && playIpaSound(p.ipa)}
+      aria-label={label}
+      className="inline-flex min-h-11 min-w-11 items-center justify-center gap-0.5 rounded-sm border px-2 py-1 font-ipa text-sm transition-colors focus-ring"
       style={{
         backgroundColor: bg,
         borderColor: border,
         color,
         textDecoration: p.status === "missing" ? "line-through" : "none",
-        cursor: isProblematic ? "help" : "default",
+        cursor: "pointer",
       }}
     >
       /{display}/
@@ -64,7 +65,7 @@ function PhonemeChip({ p }: { p: PhonemeAlignment }) {
           <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
         </svg>
       )}
-    </span>
+    </button>
   );
 }
 
@@ -212,7 +213,7 @@ export default function PronunciationFeedback({
           }}
         >
           <p className="font-semibold text-xs uppercase tracking-wide text-primary">
-            Pasa el cursor para oír el sonido correcto
+            Escucha el modelo antes de repetir
           </p>
           {problemWords.map((r, i) => {
             const failed = r.phonemes!.alignment.filter(

@@ -37,7 +37,7 @@ export async function scorePronunciation(
   const transcriptWords = normalizedTranscript.split(/\s+/).filter(Boolean);
   const targetWords = normalizedTarget.split(/\s+/).filter(Boolean);
 
-  const wordResults = diffWords(targetWords, transcriptWords, strictWordMatch);
+  const wordResults = alignPronunciationWords(targetWords, transcriptWords, strictWordMatch);
 
   // Enrich all words (except "extra") with phoneme data in parallel
   await Promise.all(
@@ -107,7 +107,12 @@ function normalize(text: string): string {
  * Diff two word arrays using Levenshtein-style alignment.
  * Returns per-word results with status.
  */
-function diffWords(expected: string[], got: string[], strict = false): WordResult[] {
+/**
+ * Dynamic-programming word alignment shared by every pronunciation surface.
+ * Keeping this public prevents callers from index-zipping phrases after an
+ * omitted or extra word.
+ */
+export function alignPronunciationWords(expected: string[], got: string[], strict = false): WordResult[] {
   const m = expected.length;
   const n = got.length;
 

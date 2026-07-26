@@ -31,10 +31,9 @@ function PhonemeRow({ p }: { p: FlatPhoneme }) {
       <div role="cell">
         <button
           type="button"
-          onMouseEnter={() => playIpaSound(ipa)}
           onClick={() => playIpaSound(ipa)}
           aria-label={`Escuchar el sonido ${expectedIpa}`}
-          className="group flex cursor-pointer items-center gap-1 border-none bg-transparent p-0 text-left text-lg font-semibold text-fg font-ipa"
+          className="group flex min-h-11 min-w-11 cursor-pointer items-center gap-1 rounded-sm border-none bg-transparent px-2 py-1 text-left text-lg font-semibold text-fg font-ipa transition-colors focus-ring"
         >
           {expectedIpa}
           <Volume2 size={12} aria-hidden className="opacity-40 transition-opacity group-hover:opacity-80" />
