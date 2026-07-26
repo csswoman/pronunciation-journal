@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import Badge from '@/components/ui/Badge'
+import { cn } from '@/lib/cn'
 import { getLearnerTargetCopy } from '@/lib/pronunciation/assessment/learner-copy'
 import { contentHrefForRefs } from '@/lib/pronunciation/path/content-href'
 import {
@@ -7,17 +8,18 @@ import {
   unitStateLabelEs,
 } from '@/lib/pronunciation/path/unit-labels'
 import type { PathUnit, UnitLearningState } from '@/lib/pronunciation/path/types'
-import { pathCtaSecondaryClass } from './path-action-styles'
+import { pathCtaSecondaryClass, pathPanelQuietClass } from './path-action-styles'
 
 interface PronunciationPathActiveUnitProps {
   unit: PathUnit
   state: UnitLearningState
   needsEvidence: boolean
   copyEnabled: boolean
-  /** When false, recommendation already owns the primary practice CTA. */
-  showPracticeCta: boolean
   /** Deep-link back to the recommended next practice when this unit has no drill yet. */
   fallbackPracticeHref?: string | null
+  /** When exploring away from the recommendation. */
+  recommendedTitle?: string | null
+  recommendedHref?: string | null
 }
 
 export function PronunciationPathActiveUnit({
@@ -25,26 +27,40 @@ export function PronunciationPathActiveUnit({
   state,
   needsEvidence,
   copyEnabled,
-  showPracticeCta,
   fallbackPracticeHref = null,
+  recommendedTitle = null,
+  recommendedHref = null,
 }: PronunciationPathActiveUnitProps) {
   const { title, ipaHint, plainHint } = getLearnerTargetCopy(unit.targetId)
   const contentHref = contentHrefForRefs(unit.contentRefs)
   const practiceHref = unit.practiceHref
   const stateLabel = copyEnabled ? unitStateLabelEs(state) : 'Unidad'
   const awaitingTransferMission = unit.stageId === 'intonation-transfer' && !practiceHref
+  const isExploring = Boolean(recommendedHref && recommendedTitle)
 
   return (
-    <section aria-label={`Unidad activa: ${title}`} className="flex min-w-0 flex-col gap-4">
+    <section
+      aria-label={`Unidad activa: ${title}`}
+      className={cn('flex min-w-0 flex-col gap-4 p-4 sm:p-5', pathPanelQuietClass)}
+    >
       <header className="flex min-w-0 flex-col gap-2">
-        <p className="font-mono text-caption text-fg-subtle">
-          {showPracticeCta ? 'Unidad seleccionada' : 'Detalle de la unidad'}
-        </p>
+        {isExploring ? (
+          <p className="max-w-prose text-pretty font-body-sm text-fg-muted">
+            <Link
+              href={recommendedHref!}
+              className="font-label text-primary underline-offset-2 hover:underline"
+            >
+              Volver a {recommendedTitle}
+            </Link>
+          </p>
+        ) : (
+          <p className="font-mono text-caption text-fg-subtle">Unidad seleccionada</p>
+        )}
         <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1.5">
           <h2 className="min-w-0 text-pretty text-balance font-h4 text-fg">
             {title}
             {ipaHint ? (
-              <span className="ml-2 font-ipa font-normal text-fg-muted" aria-label={title}>
+              <span className="ml-2 font-ipa font-normal text-fg-muted" lang="en-fonipa">
                 ({ipaHint})
               </span>
             ) : null}
@@ -53,7 +69,7 @@ export function PronunciationPathActiveUnit({
         </div>
         {needsEvidence ? (
           <p className="max-w-prose text-pretty font-body-sm text-fg-muted">
-            Necesitamos más evidencia en este sonido. La práctica ayuda a reunirla.
+            Aún no hay suficiente práctica grabada de este sonido. Practica un poco para medirlo.
           </p>
         ) : null}
         {copyEnabled && plainHint ? (
@@ -61,14 +77,14 @@ export function PronunciationPathActiveUnit({
         ) : null}
         {awaitingTransferMission ? (
           <p className="max-w-prose text-pretty font-body-sm text-fg-muted">
-            La misión contextual aún no está lista. Mientras tanto, estudia la lección o vuelve a tu
-            siguiente práctica.
+            La práctica con frases reales aún no está disponible. Mientras tanto, abre la lección o
+            vuelve a tu siguiente práctica.
           </p>
         ) : null}
       </header>
 
       <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:flex-wrap">
-        {showPracticeCta && practiceHref ? (
+        {practiceHref ? (
           <Link href={practiceHref} className={pathCtaSecondaryClass}>
             Practicar en Sound Lab
           </Link>

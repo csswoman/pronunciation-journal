@@ -21,7 +21,7 @@ export function recommendNextPathAction(
       targetId: unit.targetId,
       stageId: unit.stageId,
       reasonKind: 'diagnostic_priority',
-      reasonEs: `Tu diagnóstico señaló ${title} como foco. Sigamos ahí.`,
+      reasonEs: `Según tu diagnóstico, conviene practicar ${title} ahora.`,
     }
   }
 
@@ -33,7 +33,7 @@ export function recommendNextPathAction(
       targetId: unit.targetId,
       stageId: unit.stageId,
       reasonKind: 'canonical_next',
-      reasonEs: `Empezamos por ${title}, el siguiente paso de la ruta.`,
+      reasonEs: `Siguiente paso: ${title}.`,
     }
   }
 
@@ -41,6 +41,6 @@ export function recommendNextPathAction(
     targetId: null,
     stageId: null,
     reasonKind: 'all_retained',
-    reasonEs: 'Ya cubriste esta ruta. Puedes explorar de nuevo o repetir el diagnóstico.',
+    reasonEs: 'Ya completaste esta ruta. Puedes revisar una unidad o repetir el diagnóstico.',
   }
 }

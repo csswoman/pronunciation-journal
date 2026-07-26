@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { ChevronDown } from '@/components/icons'
 import { cn } from '@/lib/cn'
 import Badge from '@/components/ui/Badge'
 import { getLearnerTargetCopy } from '@/lib/pronunciation/assessment/learner-copy'
@@ -21,9 +22,14 @@ export function PronunciationPathExplore({
   activeTargetId,
 }: PronunciationPathExploreProps) {
   return (
-    <details className="min-w-0">
-      <summary className="min-h-11 cursor-pointer list-none py-2 font-label text-fg-muted marker:content-none hover:text-fg [&::-webkit-details-marker]:hidden">
-        Explorar todas las unidades
+    <details className="group min-w-0">
+      <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2 py-2 font-label text-fg-muted marker:content-none hover:text-fg [&::-webkit-details-marker]:hidden">
+        <ChevronDown
+          size={16}
+          className="shrink-0 text-fg-subtle transition-transform duration-150 motion-reduce:transition-none group-open:rotate-180"
+          aria-hidden
+        />
+        Ver todas las unidades
       </summary>
       <div className="flex min-w-0 flex-col gap-5 pb-2">
         {stages.map((stage) => (

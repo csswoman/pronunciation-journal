@@ -59,7 +59,6 @@ export function feedbackFromScoringResult(input: {
           evaluatorVersion: input.evaluatorVersion ?? 'legacy-stt-v1',
           confidence: 0.8,
           transcript: input.transcript,
-          recognizedPercent: input.accuracy,
           inferredContrast: candidates[0]?.expected
             ? { expected: candidates[0].expected, observed: candidates[0].observed }
             : undefined,

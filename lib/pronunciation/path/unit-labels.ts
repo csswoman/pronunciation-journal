@@ -4,8 +4,8 @@ import type { UnitLearningState } from './types'
 export const UNIT_STATE_LABEL_ES: Record<UnitLearningState, string> = {
   not_started: 'Sin empezar',
   learning: 'En progreso',
-  ready_for_transfer: 'Lista para transferir',
-  retained: 'Retenida',
+  ready_for_transfer: 'Lista para frases',
+  retained: 'Afianzada',
 }
 
 /** Matches `Badge` semantic variants without importing UI into lib. */

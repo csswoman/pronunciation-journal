@@ -24,7 +24,7 @@ function isComparable(
 }
 
 function scoreOf(signal: PronunciationFeedbackSignal): number | null {
-  return signal.kind === 'unscored' ? null : signal.recognizedPercent
+  return signal.kind === 'stt_intelligibility' ? signal.recognizedPercent : null
 }
 
 function summaryFor(signal: PronunciationFeedbackSignal, hasPriority: boolean): string {

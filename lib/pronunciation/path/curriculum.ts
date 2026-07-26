@@ -24,6 +24,15 @@ const STAGE_TITLES: Record<PathStageId, string> = {
   'intonation-transfer': 'Entonación',
 }
 
+/** Mobile-first chips — avoids truncation / horizontal scroll on narrow screens. */
+const STAGE_TITLES_SHORT: Record<PathStageId, string> = {
+  sounds: 'Sonidos',
+  'word-stress': 'Acento',
+  'sentence-prosody': 'Ritmo',
+  connected: 'Conectada',
+  'intonation-transfer': 'Entonación',
+}
+
 /** Canonical target order per stage — single source for grouping. */
 const STAGE_TARGET_IDS: Record<PathStageId, readonly PronunciationTargetId[]> = {
   sounds: [
@@ -59,6 +68,7 @@ export function buildPronunciationPathCurriculum(): PronunciationPathCurriculum 
   const stages: PathStage[] = PATH_STAGE_ORDER.map((id) => ({
     id,
     titleEs: STAGE_TITLES[id],
+    titleShortEs: STAGE_TITLES_SHORT[id],
     units: STAGE_TARGET_IDS[id].map((tid) => buildUnit(tid, id)),
   }))
   return { stages }
