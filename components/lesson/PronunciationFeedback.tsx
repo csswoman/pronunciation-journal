@@ -5,6 +5,7 @@ import { playIpaSound } from "@/lib/pronunciation/ipa-audio";
 import ProgressBar from "@/components/ui/ProgressBar";
 import { feedbackFromScoringResult } from '@/lib/pronunciation/feedback/from-scoring'
 import { getLearnerTargetCopy } from '@/lib/pronunciation/assessment/learner-copy'
+import { isActionablePronunciationFeedbackCopyEnabled } from '@/lib/pronunciation/feedback/copy-flag'
 
 interface PronunciationFeedbackProps {
   wordResults: WordResult[];
@@ -125,21 +126,20 @@ export default function PronunciationFeedback({
   const priorityCopy = actionableFeedback.priority
     ? getLearnerTargetCopy(actionableFeedback.priority.targetId)
     : null;
+  const feedbackCopyEnabled = isActionablePronunciationFeedbackCopyEnabled();
 
   return (
     <div className="w-full animate-fadeIn space-y-5">
       <section aria-live="polite" className="rounded-md border border-border-subtle bg-surface-raised px-4 py-3">
-        <p className="m-0 font-kicker text-fg-subtle">LO QUE ENTENDIMOS</p>
-        <p className="mt-1 text-sm leading-relaxed text-fg-muted">{actionableFeedback.summaryEs}</p>
-        {priorityCopy ? (
-          <p className="mb-0 mt-2 text-sm font-semibold text-fg">
-            Siguiente foco: {priorityCopy.title}
-          </p>
-        ) : (
-          <p className="mb-0 mt-2 text-sm font-semibold text-fg">
-            Repite una vez para reunir más evidencia.
-          </p>
-        )}
+        {feedbackCopyEnabled ? (
+          <>
+            <p className="m-0 font-kicker text-fg-subtle">LO QUE ENTENDIMOS</p>
+            <p className="mt-1 text-sm leading-relaxed text-fg-muted">{actionableFeedback.summaryEs}</p>
+            <p className="mb-0 mt-2 text-sm font-semibold text-fg">
+              {priorityCopy ? `Siguiente foco: ${priorityCopy.title}` : 'Repite una vez para reunir más evidencia.'}
+            </p>
+          </>
+        ) : <p className="m-0 text-sm font-semibold text-fg">Siguiente práctica</p>}
       </section>
       {/* Score */}
       <div className="text-center">

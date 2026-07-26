@@ -16,6 +16,7 @@ import type { ExerciseDifficulty, Level } from "./CandidateRecorder";
 import { candidatesFromWordResults } from '@/lib/pronunciation/feedback/from-scoring'
 import { buildPronunciationFeedback } from '@/lib/pronunciation/feedback/model'
 import { getLearnerTargetCopy } from '@/lib/pronunciation/assessment/learner-copy'
+import { isActionablePronunciationFeedbackCopyEnabled } from '@/lib/pronunciation/feedback/copy-flag'
 
 interface TurnResult {
   score: ScoringResult;
@@ -85,6 +86,7 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
   const priorityCopy = interviewFeedback.priority
     ? getLearnerTargetCopy(interviewFeedback.priority.targetId)
     : null;
+  const feedbackCopyEnabled = isActionablePronunciationFeedbackCopyEnabled()
 
   useEffect(() => {
     if (fired.current || totalAccuracy < 50) return;
@@ -192,7 +194,7 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
           <div>
             <p className="text-xl font-bold" style={{ color: gradeColor }}>{grade}</p>
             <p className="text-sm mt-0.5 text-[var(--muted-text)]">
-              Reconocimiento de palabras por voz
+              {feedbackCopyEnabled ? 'Reconocimiento de palabras por voz' : 'Resultado de la práctica'}
             </p>
           </div>
 
@@ -218,7 +220,7 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
           </div>
         </div>
 
-        {priorityCopy && (
+        {feedbackCopyEnabled && priorityCopy && (
           <section aria-live="polite" className="rounded-md border border-border-subtle bg-surface-raised px-4 py-3">
             <p className="m-0 font-kicker text-fg-subtle">UN FOCO PARA LA PRÓXIMA PRÁCTICA</p>
             <p className="mb-0 mt-1 text-sm leading-relaxed text-fg">
