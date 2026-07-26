@@ -13,6 +13,14 @@ const WordsRequestSchema = z
     id: z.string().min(1).optional(),
     deckId: z.string().trim().min(1).optional(),
     source: z.enum(["manual", "reader"]).default("manual"),
+    enrichment: z.object({
+      meaning: z.string().trim().min(1).max(500),
+      translation: z.string().trim().min(1).max(500),
+      ipa: z.string().trim().max(200),
+      example: z.string().trim().max(1000),
+      synonyms: z.array(z.string().trim().min(1).max(100)).max(3),
+      image_prompt: z.string().trim().max(1000),
+    }).optional(),
   })
   .strict();
 
@@ -45,6 +53,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const id = body.id ?? null;
   const deckId = body.deckId ?? null;
   const source = body.source;
+  const enrichment = body.enrichment;
 
   // User-scoped client so RLS applies and user_id is enforced.
   const userClient = createUserScopedClient(accessToken);
@@ -82,7 +91,15 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       text,
       context,
       source,
-      status: "processing",
+      status: enrichment ? "ready" : "processing",
+      ...(enrichment ? {
+        meaning: enrichment.meaning,
+        translation: enrichment.translation,
+        ipa: enrichment.ipa || null,
+        example: enrichment.example || null,
+        synonyms: enrichment.synonyms.length ? enrichment.synonyms : null,
+        image_prompt: enrichment.image_prompt || null,
+      } : {}),
     })
     .select()
     .single();

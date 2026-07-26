@@ -25,6 +25,7 @@ export function ReaderExercise({ passage, online, onComplete }: ReaderExercisePr
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
   const [saving, setSaving] = useState(false)
   const [saveError, setSaveError] = useState(false)
+  const [openToken, setOpenToken] = useState<number | null>(null)
   const question = passage.questions[0]
   const tokens = useMemo(() => tokenizePassage(passage.passage), [passage.passage])
 
@@ -56,12 +57,28 @@ export function ReaderExercise({ passage, online, onComplete }: ReaderExercisePr
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className={cn('flex flex-col gap-6', openToken === null ? '' : 'pb-64')}>
       <div className="flex flex-col gap-3">
+        <p className="text-sm text-fg-muted">Toca cualquier palabra para ver su significado.</p>
         <div className="text-lg leading-relaxed text-fg">
-          {tokens.map((token, index) => token.kind === 'word' ? (
-            <WordSavePopover key={`${token.value}-${index}`} word={token.value} lookup={token.lookup} context={token.context} online={online} />
-          ) : <span key={index}>{token.value}</span>)}
+          {tokens.map((token, index) => {
+            if (token.kind !== 'word') return <span key={index}>{token.value}</span>
+
+            const popover = (
+              <WordSavePopover
+                word={token.value}
+                lookup={token.lookup}
+                context={token.context}
+                online={online}
+                open={openToken === index}
+                onOpenChange={(open) => setOpenToken(open ? index : null)}
+              />
+            )
+
+            return token.emphasized
+              ? <strong key={`${token.value}-${index}`}>{popover}</strong>
+              : <span key={`${token.value}-${index}`}>{popover}</span>
+          })}
         </div>
         <Button
           variant="ghost"

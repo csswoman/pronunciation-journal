@@ -3,13 +3,25 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { ReaderExercise } from '../ReaderExercise'
 import type { ReaderPassage } from '@/lib/practice/reader/types'
+import { previewWord } from '@/lib/word-bank/queries'
 
 vi.mock('@/lib/practice/reader/exposure', () => ({
   recordReaderExposure: vi.fn(async () => {}),
 }))
 
 vi.mock('@/lib/word-bank/queries', () => ({
-  isWordInBank: vi.fn(async () => false),
+  previewWord: vi.fn(async () => ({
+    enrichment: {
+      meaning: 'a group of things held together',
+      translation: 'conjunto',
+      ipa: '/ˈbʌndəl/',
+      example: 'She carried a bundle of books.',
+      synonyms: ['group'],
+      image_prompt: 'books tied together',
+    },
+    source: 'dictionary',
+    alreadySaved: false,
+  })),
   quickAddWord: vi.fn(async () => ({})),
 }))
 
@@ -24,13 +36,34 @@ beforeEach(() => {
   // jsdom has no speechSynthesis; stub it so speak() never throws.
   vi.stubGlobal('speechSynthesis', { speak: vi.fn() })
   vi.stubGlobal('SpeechSynthesisUtterance', class { lang = '' })
+  vi.mocked(previewWord).mockResolvedValue({
+    enrichment: {
+      meaning: 'a group of things held together',
+      translation: 'conjunto',
+      ipa: '/ˈbʌndəl/',
+      example: 'She carried a bundle of books.',
+      synonyms: ['group'],
+      image_prompt: 'books tied together',
+    },
+    source: 'dictionary',
+    alreadySaved: false,
+  })
 })
 
 describe('ReaderExercise', () => {
   it('renders the passage text and the question', () => {
     const { container } = render(<ReaderExercise passage={passage} online onComplete={vi.fn()} />)
     expect(container.querySelector('.text-lg')?.textContent).toBe('The cat went home.')
+    expect(screen.getByText('Toca cualquier palabra para ver su significado.')).toBeInTheDocument()
     expect(screen.getByText('Where did the cat go?')).toBeInTheDocument()
+  })
+
+  it('keeps inactive words visually quiet and highlights only the open word', () => {
+    render(<ReaderExercise passage={passage} online onComplete={vi.fn()} />)
+    const cat = screen.getByRole('button', { name: 'Opciones para cat' })
+    expect(cat).not.toHaveClass('underline')
+    fireEvent.click(cat)
+    expect(cat).toHaveClass('bg-primary-soft')
   })
 
   it('calls onComplete with correctness when an option is chosen', async () => {
@@ -64,15 +97,54 @@ describe('ReaderExercise', () => {
     const { quickAddWord } = await import('@/lib/word-bank/queries')
     render(<ReaderExercise passage={passage} online onComplete={vi.fn()} />)
     fireEvent.click(screen.getByRole('button', { name: 'Opciones para cat' }))
+    await waitFor(() => expect(screen.getByText('a group of things held together')).toBeInTheDocument())
     fireEvent.click(screen.getByRole('button', { name: 'Guardar' }))
     await waitFor(() => expect(quickAddWord).toHaveBeenCalledWith({
-      text: 'cat', context: 'The cat went home.', source: 'reader',
+      text: 'cat', context: 'The cat went home.', source: 'reader', enrichment: expect.objectContaining({ translation: 'conjunto' }),
     }))
+    expect(screen.getByRole('button', { name: 'Ya guardada' })).toBeDisabled()
+  })
+
+  it('shows an English definition and Spanish translation before saving', async () => {
+    render(<ReaderExercise passage={passage} online onComplete={vi.fn()} />)
+    fireEvent.click(screen.getByRole('button', { name: 'Opciones para cat' }))
+    expect(await screen.findByText('a group of things held together')).toBeInTheDocument()
+    expect(screen.getByText('conjunto')).toBeInTheDocument()
+  })
+
+  it('does not offer a second save for a word already in My Words', async () => {
+    const { previewWord } = await import('@/lib/word-bank/queries')
+    vi.mocked(previewWord).mockResolvedValueOnce({
+      enrichment: { meaning: 'a pet animal', translation: 'gato', ipa: '', example: '', synonyms: [], image_prompt: '' },
+      source: 'my_words',
+      alreadySaved: true,
+    })
+    render(<ReaderExercise passage={passage} online onComplete={vi.fn()} />)
+    fireEvent.click(screen.getByRole('button', { name: 'Opciones para cat' }))
+    expect(await screen.findByText('En Mis palabras')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Ya guardada' })).toBeDisabled()
+  })
+
+  it('closes the active word card before opening another one', () => {
+    render(<ReaderExercise passage={passage} online onComplete={vi.fn()} />)
+    fireEvent.click(screen.getByRole('button', { name: 'Opciones para cat' }))
+    expect(screen.getByRole('dialog', { name: 'Guardar cat' })).toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Opciones para went' }))
+    expect(screen.queryByRole('dialog', { name: 'Guardar cat' })).not.toBeInTheDocument()
+    expect(screen.getByRole('dialog', { name: 'Guardar went' })).toBeInTheDocument()
+  })
+
+  it('renders Markdown bold markers as emphasis instead of visible asterisks', () => {
+    const emphasizedPassage = { ...passage, passage: 'A **bundle** is many bricks together.' }
+    const { container } = render(<ReaderExercise passage={emphasizedPassage} online onComplete={vi.fn()} />)
+    expect(container.querySelector('.text-lg')?.textContent).toBe('A bundle is many bricks together.')
+    expect(screen.getByRole('button', { name: 'Opciones para bundle' }).closest('strong')).not.toBeNull()
   })
 
   it('explains that saving needs a connection', () => {
     render(<ReaderExercise passage={passage} online={false} onComplete={vi.fn()} />)
     fireEvent.click(screen.getByRole('button', { name: 'Opciones para cat' }))
-    expect(screen.getByRole('status')).toHaveTextContent(/requiere conexión/i)
+    expect(screen.getByText(/requiere conexión/i)).toBeInTheDocument()
   })
 })

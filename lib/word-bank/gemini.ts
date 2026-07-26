@@ -29,6 +29,17 @@ Rules:
 - Return ONLY valid JSON
 - No extra text, no markdown, no code fences`;
 
+const LOOKUP_SYSTEM_PROMPT = `You are an English learning assistant for Spanish speakers.
+
+Given one English word, return JSON with only:
+- meaning: one simple A2-B1 English definition
+- translation: the most useful Spanish translation
+
+Rules:
+- Do not use the learner's sentence or invent an example
+- Keep both values short
+- Return ONLY valid JSON, no markdown or code fences`;
+
 function getErrorStatus(err: unknown): number | undefined {
   if (!err || typeof err !== "object") return undefined;
   const maybe = err as { status?: unknown; statusCode?: unknown };
@@ -103,7 +114,8 @@ function parseEnrichment(raw: string): WordEnrichment {
 
 async function callGeminiOnce(
   ai: GoogleGenAI,
-  prompt: string
+  prompt: string,
+  systemInstruction = SYSTEM_PROMPT,
 ): Promise<string> {
   let lastError: unknown;
   for (const modelName of FALLBACK_MODELS) {
@@ -112,7 +124,7 @@ async function callGeminiOnce(
         model: modelName,
         contents: prompt,
         config: {
-          systemInstruction: SYSTEM_PROMPT,
+          systemInstruction,
           responseMimeType: "application/json",
         },
       });
@@ -150,6 +162,25 @@ export async function enrichWithGemini(
     if (!isParseError(err) && !isRetryableApiError(err)) throw err;
     console.warn("[word-bank] enrich attempt 1 failed, retrying:", err);
     const raw = await callGeminiOnce(ai, prompt);
+    return parseEnrichment(raw);
+  }
+}
+
+/** Low-cost Reader lookup. Extra WordEnrichment fields intentionally stay empty. */
+export async function lookupWordWithGemini(text: string): Promise<WordEnrichment> {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) throw new Error("GEMINI_API_KEY not configured");
+
+  const ai = new GoogleGenAI({ apiKey });
+  const prompt = `Word: "${text}"`;
+
+  try {
+    const raw = await callGeminiOnce(ai, prompt, LOOKUP_SYSTEM_PROMPT);
+    return parseEnrichment(raw);
+  } catch (err) {
+    if (!isParseError(err) && !isRetryableApiError(err)) throw err;
+    console.warn("[word-bank] lookup attempt 1 failed, retrying:", err);
+    const raw = await callGeminiOnce(ai, prompt, LOOKUP_SYSTEM_PROMPT);
     return parseEnrichment(raw);
   }
 }

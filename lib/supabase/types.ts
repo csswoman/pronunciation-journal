@@ -911,6 +911,54 @@ export type Database = {
         }
         Relationships: []
       }
+      word_definitions: {
+        Row: {
+          created_at: string
+          definition_version: number
+          example: string
+          id: string
+          image_prompt: string
+          ipa: string
+          meaning: string
+          normalized_text: string
+          source: string
+          synonyms: string[]
+          text: string
+          translation: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          definition_version?: number
+          example?: string
+          id?: string
+          image_prompt?: string
+          ipa?: string
+          meaning: string
+          normalized_text: string
+          source?: string
+          synonyms?: string[]
+          text: string
+          translation: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          definition_version?: number
+          example?: string
+          id?: string
+          image_prompt?: string
+          ipa?: string
+          meaning?: string
+          normalized_text?: string
+          source?: string
+          synonyms?: string[]
+          text?: string
+          translation?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       word_bank: {
         Row: {
           audio_fetch_attempts: number

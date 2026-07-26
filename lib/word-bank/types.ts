@@ -28,6 +28,14 @@ export interface WordEnrichment {
   image_prompt: string;
 }
 
+export type WordPreviewSource = "my_words" | "dictionary" | "gemini";
+
+export interface WordPreview {
+  enrichment: WordEnrichment;
+  source: WordPreviewSource;
+  alreadySaved: boolean;
+}
+
 // ── Strength ─────────────────────────────────────────────────────────────────
 
 export type WordStrength = "weak" | "medium" | "strong";

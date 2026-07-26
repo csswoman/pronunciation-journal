@@ -1,6 +1,6 @@
 import { getAccessToken } from "@/lib/auth/session";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
-import type { WordBankEntry } from "@/lib/word-bank/types";
+import type { WordBankEntry, WordEnrichment, WordPreview } from "@/lib/word-bank/types";
 
 const TABLE = "word_bank";
 
@@ -22,6 +22,7 @@ export async function quickAddWord(input: {
   context?: string | null;
   deckId?: string | null;
   source?: "manual" | "reader";
+  enrichment?: WordEnrichment;
 }): Promise<WordBankEntry> {
   const accessToken = await getAccessToken();
 
@@ -36,6 +37,7 @@ export async function quickAddWord(input: {
       context: input.context ?? null,
       deckId: input.deckId ?? null,
       source: input.source ?? "manual",
+      enrichment: input.enrichment,
     }),
   });
 
@@ -46,6 +48,26 @@ export async function quickAddWord(input: {
 
   const { word } = (await res.json()) as { word: WordBankEntry };
   return word;
+}
+
+/** Fetches the same lexical data Reader will persist if the learner saves it. */
+export async function previewWord(text: string): Promise<WordPreview> {
+  const accessToken = await getAccessToken();
+  const res = await fetch("/api/words/preview", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify({ text }),
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: "Request failed" }));
+    throw new Error(err.error ?? `HTTP ${res.status}`);
+  }
+
+  return await res.json() as WordPreview;
 }
 
 /** Case-insensitive check whether the current user already has this word. */
