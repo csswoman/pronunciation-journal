@@ -1,5 +1,11 @@
 import { defineConfig } from "vitest/config";
+import os from "os";
 import path from "path";
+
+// Coverage instruments every module; combined with jsdom suites this makes
+// worker boot much heavier. Unbounded parallelism hits Vitest's hard-coded
+// 90s worker-start timeout ("Failed to start forks worker").
+const isCoverage = process.argv.includes("--coverage");
 
 export default defineConfig({
   test: {
@@ -9,6 +15,12 @@ export default defineConfig({
     include: ["**/__tests__/**/*.test.{ts,tsx}"],
     exclude: [".claude/**", "node_modules/**", "**/*.integration.test.{ts,tsx}"],
     setupFiles: ["./vitest.setup.ts"],
+    // Cap forks under coverage so workers finish booting before the 90s timeout.
+    ...(isCoverage ? { maxWorkers: 4 } : {}),
+    // Node 22+ warns when localStorage is touched without a persistence file.
+    execArgv: [
+      `--localstorage-file=${path.join(os.tmpdir(), "vitest-localstorage")}`,
+    ],
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html", "json-summary"],
