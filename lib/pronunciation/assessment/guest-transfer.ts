@@ -20,7 +20,11 @@
  * this file does not need to persist the id anywhere itself.
  */
 
-import { validateDiagnosticResult } from './schema'
+import { mirrorSyncedPronunciationAssessment } from './persistence'
+import {
+  validateDiagnosticResult,
+  type PronunciationDiagnosticResult,
+} from './schema'
 
 const GUEST_DIAGNOSTIC_KEY = 'pronunciation-assessment:guest:diagnostic'
 const claims = new Map<string, Promise<boolean>>()
@@ -29,6 +33,20 @@ function generateId(): string {
   return globalThis.crypto?.randomUUID
     ? globalThis.crypto.randomUUID()
     : `${Date.now()}-${Math.random().toString(16).slice(2)}`
+}
+
+/** Reads a guest diagnostic snapshot without claiming or mutating it. */
+export function readGuestPronunciationDiagnostic(): PronunciationDiagnosticResult | null {
+  if (typeof window === 'undefined') return null
+  const raw = window.localStorage.getItem(GUEST_DIAGNOSTIC_KEY)
+  if (!raw) return null
+  try {
+    const parsed: unknown = JSON.parse(raw)
+    const validated = validateDiagnosticResult(parsed)
+    return validated.ok ? validated.result : null
+  } catch {
+    return null
+  }
 }
 
 async function claim(userId: string): Promise<boolean> {
@@ -47,12 +65,17 @@ async function claim(userId: string): Promise<boolean> {
     const validated = validateDiagnosticResult(candidate)
     if (!validated.ok) return false
 
+    const id = generateId()
     const response = await fetch('/api/pronunciation-assessment', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: generateId(), result: validated.result }),
+      body: JSON.stringify({ id, result: validated.result }),
     })
     if (!response.ok) return false
+
+    // Mirror into Dexie so /courses/pronunciation can recommend without a
+    // query string — claiming only the server left the path blind.
+    await mirrorSyncedPronunciationAssessment(userId, validated.result, id)
 
     window.localStorage.removeItem(GUEST_DIAGNOSTIC_KEY)
     return true

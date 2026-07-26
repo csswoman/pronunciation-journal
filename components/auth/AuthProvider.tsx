@@ -73,7 +73,11 @@ export default function AuthProvider({
     const hydrateCEFR = async (userId: string) => {
       try {
         const { claimGuestPlacement } = await import("@/lib/courses/guest-assessment");
+        const { claimGuestPronunciationDiagnostic } = await import(
+          "@/lib/pronunciation/assessment/guest-transfer"
+        );
         await claimGuestPlacement(userId);
+        await claimGuestPronunciationDiagnostic(userId);
 
         const { data } = await supabase
           .from("user_profiles" as never)

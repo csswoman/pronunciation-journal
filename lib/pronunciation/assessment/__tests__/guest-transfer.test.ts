@@ -1,8 +1,11 @@
 // @vitest-environment jsdom
+import 'fake-indexeddb/auto'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { db } from '@/lib/db'
 import { buildValidDiagnosticResult } from './fixtures'
 import {
   claimGuestPronunciationDiagnostic,
+  readGuestPronunciationDiagnostic,
   saveGuestPronunciationDiagnostic,
   GUEST_DIAGNOSTIC_KEY,
 } from '../guest-transfer'
@@ -21,9 +24,12 @@ function stubLocalStorage() {
 }
 
 describe('claimGuestPronunciationDiagnostic', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.restoreAllMocks()
     stubLocalStorage()
+    db.close()
+    await db.delete()
+    await db.open()
   })
 
   it('returns false immediately when nothing is stored', async () => {
@@ -45,7 +51,7 @@ describe('claimGuestPronunciationDiagnostic', () => {
     expect(window.localStorage.getItem(GUEST_DIAGNOSTIC_KEY)).not.toBeNull()
   })
 
-  it('validates, POSTs, and clears the guest snapshot only after success', async () => {
+  it('validates, POSTs, mirrors Dexie, and clears the guest snapshot only after success', async () => {
     const guestResult = buildValidDiagnosticResult('guest-placeholder')
     saveGuestPronunciationDiagnostic(guestResult)
     const fetchMock = vi.fn().mockResolvedValue({ ok: true })
@@ -61,6 +67,10 @@ describe('claimGuestPronunciationDiagnostic', () => {
     expect(sentBody.result.userId).toBe('user-1')
     expect(typeof sentBody.id).toBe('string')
     expect(window.localStorage.getItem(GUEST_DIAGNOSTIC_KEY)).toBeNull()
+
+    const mirrored = await db.pronunciationAssessments.get(sentBody.id)
+    expect(mirrored?.userId).toBe('user-1')
+    expect(mirrored?.syncedAt).toBeTruthy()
   })
 
   it('never deletes the guest snapshot on a non-ok response', async () => {
@@ -97,5 +107,21 @@ describe('claimGuestPronunciationDiagnostic', () => {
     expect(a).toBe(true)
     expect(b).toBe(true)
     expect(fetchMock).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('readGuestPronunciationDiagnostic', () => {
+  beforeEach(() => {
+    stubLocalStorage()
+  })
+
+  it('returns a validated guest result', () => {
+    const guestResult = buildValidDiagnosticResult('guest-placeholder')
+    saveGuestPronunciationDiagnostic(guestResult)
+    expect(readGuestPronunciationDiagnostic()?.prescription.sessions[0]?.targetId).toBeTruthy()
+  })
+
+  it('returns null when empty', () => {
+    expect(readGuestPronunciationDiagnostic()).toBeNull()
   })
 })

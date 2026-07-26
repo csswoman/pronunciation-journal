@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it } from 'vitest'
-import { cleanup, render, screen } from '@testing-library/react'
+import { cleanup, render, screen, within } from '@testing-library/react'
 import { contrastTargetId, phonemeTargetId } from '@/lib/pronunciation/targets/registry'
 import type { PathEvidenceBundle } from '@/lib/pronunciation/path/load-evidence'
 import { PronunciationPathPage } from '../PronunciationPathPage'
@@ -28,6 +28,7 @@ describe('PronunciationPathPage', () => {
     const next = screen.getByRole('region', { name: /qué practicar ahora/i })
     expect(next).toHaveTextContent(/los dos sonidos th/i)
     expect(next).toHaveTextContent(/siguiente paso de la ruta/i)
+    expect(within(next).getByRole('link', { name: /practicar en sound lab/i })).toBeInTheDocument()
   })
 
   it('prefers a diagnostic priority target', () => {
@@ -60,5 +61,39 @@ describe('PronunciationPathPage', () => {
     )
     const unitRegion = screen.getByRole('region', { name: /unidad activa/i })
     expect(unitRegion).toHaveTextContent(/los dos sonidos th/i)
+  })
+
+  it('aligns the active unit to ?stage= when no target is set', () => {
+    render(
+      <PronunciationPathPage
+        evidenceOverride={emptyEvidence()}
+        initialStage="intonation-transfer"
+        copyEnabled
+      />
+    )
+    const unitRegion = screen.getByRole('region', { name: /unidad activa/i })
+    expect(unitRegion).toHaveTextContent(/pregunta|entonación|rising|sube/i)
+    expect(screen.getByRole('link', { name: /^5\.\s*entonación$/i })).toHaveAttribute(
+      'aria-current',
+      'page'
+    )
+  })
+
+  it('keeps a single primary practice CTA when recommendation matches the active unit', () => {
+    render(
+      <PronunciationPathPage evidenceOverride={emptyEvidence()} copyEnabled />
+    )
+    expect(screen.getAllByRole('link', { name: /practicar en sound lab/i })).toHaveLength(1)
+  })
+
+  it('localizes explore unit states in Spanish', () => {
+    render(
+      <PronunciationPathPage evidenceOverride={emptyEvidence()} copyEnabled />
+    )
+    const explore = screen.getByText(/explorar todas las unidades/i).closest('details')
+    expect(explore).toBeTruthy()
+    explore!.setAttribute('open', '')
+    expect(within(explore as HTMLElement).getAllByText(/sin empezar/i).length).toBeGreaterThan(0)
+    expect(within(explore as HTMLElement).queryByText('not_started')).not.toBeInTheDocument()
   })
 })

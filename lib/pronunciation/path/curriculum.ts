@@ -13,14 +13,15 @@ import {
   type PathStageId,
   type PathUnit,
   type PronunciationPathCurriculum,
+  type UnitLearningState,
 } from './types'
 
 const STAGE_TITLES: Record<PathStageId, string> = {
-  sounds: 'Sonidos y contrastes',
-  'word-stress': 'Sílabas y word stress',
-  'sentence-prosody': 'Sentence stress, ritmo y weak forms',
-  connected: 'Linking, reductions, elision y assimilation',
-  'intonation-transfer': 'Intonation y transferencia',
+  sounds: 'Sonidos',
+  'word-stress': 'Acento de palabra',
+  'sentence-prosody': 'Ritmo y énfasis',
+  connected: 'Habla conectada',
+  'intonation-transfer': 'Entonación',
 }
 
 /** Canonical target order per stage — single source for grouping. */
@@ -69,6 +70,17 @@ export function listPathUnitsInOrder(): PathUnit[] {
 
 export function getPathUnit(targetIdValue: string): PathUnit | null {
   return listPathUnitsInOrder().find((u) => u.targetId === targetIdValue) ?? null
+}
+
+/** Prefer the first non-retained unit in a stage; otherwise the first unit. */
+export function pickUnitForStage(
+  stageId: PathStageId,
+  unitStates: ReadonlyMap<string, UnitLearningState>
+): PathUnit | null {
+  const stage = buildPronunciationPathCurriculum().stages.find((s) => s.id === stageId)
+  if (!stage || stage.units.length === 0) return null
+  const open = stage.units.find((unit) => unitStates.get(unit.targetId) !== 'retained')
+  return open ?? stage.units[0]!
 }
 
 export { PATH_STAGE_ORDER }
