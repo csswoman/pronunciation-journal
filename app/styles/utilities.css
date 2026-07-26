@@ -323,6 +323,57 @@
   border-color: var(--primary);
 }
 
+/* ── Page shell density (tokens: --layout-*) ──────────────────────────── */
+.page-shell {
+  width: 100%;
+  padding-inline: var(--layout-page-inline);
+  padding-block: var(--layout-page-block) var(--layout-page-block-end);
+}
+
+.page-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--layout-header-gap);
+  padding-bottom: var(--layout-header-pb);
+}
+
+.page-header--compact {
+  gap: var(--layout-stack-tight);
+  padding-bottom: var(--layout-header-pb-compact);
+}
+
+.layout-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--layout-stack);
+}
+
+.layout-stack-tight {
+  display: flex;
+  flex-direction: column;
+  gap: var(--layout-stack-tight);
+}
+
+.layout-stack-loose {
+  display: flex;
+  flex-direction: column;
+  gap: var(--layout-stack-loose);
+}
+
+.layout-section-gap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--layout-section-gap);
+}
+
+.layout-card-pad {
+  padding: var(--layout-card-pad);
+}
+
+.layout-card-pad-compact {
+  padding: var(--layout-card-pad-compact);
+}
+
 /* ── Home Notebook Command Center ─────────────────────────────────────── */
 .home-layout-shell {
   position: relative;
@@ -335,13 +386,13 @@
 .home-layout-sections {
   display: flex;
   flex-direction: column;
-  gap: var(--space-5);
+  gap: var(--layout-section-gap);
 }
 
 .home-command-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: var(--space-5);
+  gap: var(--layout-section-gap);
 }
 
 @media (min-width: 768px) {
@@ -349,8 +400,8 @@
     /* Balanced columns — plan+learn left, compact aside right */
     grid-template-columns: minmax(0, 1fr) minmax(17rem, 22rem);
     align-items: start;
-    column-gap: var(--space-5);
-    row-gap: var(--space-5);
+    column-gap: var(--layout-section-gap);
+    row-gap: var(--layout-section-gap);
   }
 
   .home-command-review {
@@ -359,25 +410,25 @@
 
   .home-command-aside {
     position: sticky;
-    top: var(--space-4);
+    top: var(--layout-stack-loose);
   }
 }
 
 .home-command-main {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--layout-stack-loose);
 }
 
 .home-command-aside {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--layout-stack);
 }
 
 .home-sidebar-card {
   border-radius: var(--radius-xl);
   border: 1px solid var(--border-subtle);
   background-color: var(--surface-raised);
-  padding: var(--space-5);
+  padding: var(--layout-card-pad);
 }

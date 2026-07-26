@@ -75,7 +75,7 @@ export function ExerciseShell({
   }, [done, hasDetailedFeedback, onContinue, result?.isCorrect])
 
   return (
-    <div className="flex w-full flex-col gap-5">
+    <div className="layout-stack-loose w-full">
       <ShellHeader title={title} eyebrow={eyebrow} description={description} hintSlot={hintSlot} />
       {hint && <HintChip word={hint.word} meaning={hint.meaning} />}
       {children}

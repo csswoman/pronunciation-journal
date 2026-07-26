@@ -67,6 +67,7 @@ La personalidad tipográfica proviene de tres voces con tareas separadas:
 - No introducir una cuarta fuente para "dar personalidad". Si se necesita un momento expresivo, usa el contenido real, por ejemplo `/ʃ/`, una pareja mínima o una palabra, y la escala tipográfica existente.
 - Mantén cuerpo de lectura entre 65 y 75ch. En listas, controles y datos se prioriza la densidad funcional.
 - Escala tipográfica: solo tokens en `app/styles/tokens.css` (`--text-size-*`). Mobile-first en `rem`; bump en `768px`. Usa `text-h2` / `text-h3` / `text-caption` / `.font-kicker` — no `text-2xl` ni `clamp()` en chrome de producto.
+- Densidad de layout: tokens `--layout-*` en el mismo archivo. Shell canónico vía `.page-shell` / `.page-header` / `.layout-stack*`. Mobile más compacto; desktop abre en `768px`.
 
 ## Textura, profundidad y movimiento
 

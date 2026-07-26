@@ -245,6 +245,24 @@ The palette is neutral-first with a dynamic primary scale. Every surface carries
 
 **The Scale Contract Rule.** Adjacent hierarchy steps must differ by at least 1.25× in font size or 100 in weight. Flat scales look like accidents.
 
+### Layout density
+
+**Source of truth:** `app/styles/tokens.css` (`--layout-*`). Utilities in `utilities.css`: `.page-shell`, `.page-header`, `.layout-stack*`, `.layout-card-pad*`.
+
+Mobile-first denser chrome; desktop opens at `768px` / `1024px`:
+
+| Role | Mobile | md+ | Use |
+|---|---|---|---|
+| `--layout-page-inline` | 16px | 24 → 40 (lg) | `PageLayout` gutters |
+| `--layout-page-block` | 16px | 24px | page top padding |
+| `--layout-page-block-end` | 40px | 48px | page bottom |
+| `--layout-header-pb` | 16px | 20px | `PageHeader` bottom |
+| `--layout-section-gap` | 16px | 20px | Home zones, major sections |
+| `--layout-stack-tight/stack/loose` | 8 / 12 / 16 | 8 / 12 / 20 | related → within-section |
+| `--layout-card-pad` | 16px | 20px | interactive cards |
+
+Prefer these over ad-hoc `py-6` / `gap-6` / `p-8` on authenticated shell surfaces. Tight grouping for related chrome; section gap only between distinct zones.
+
 ## 4. Elevation
 
 The system uses tonal layering for structure and shadow for state. Surfaces are flat at rest. Shadow appears only when something is hovered, focused, or physically elevated by user action (a draggable card, a dropdown, a modal). This keeps the resting state quiet and lets the learner focus on content, not chrome.

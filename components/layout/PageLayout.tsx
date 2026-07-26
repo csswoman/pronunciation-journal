@@ -26,12 +26,7 @@ export default function PageLayout({
   }
 
   return (
-    <div
-      className={cn(
-        "w-full px-4 py-6 pb-12 sm:px-6 sm:py-8 sm:pb-16 lg:px-10",
-        className,
-      )}
-    >
+    <div className={cn("page-shell", className)}>
       {hero}
       {children}
     </div>

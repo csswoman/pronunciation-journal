@@ -144,7 +144,7 @@
   --scrim-medium:    oklch(0 0 0 / 0.35);
   --scrim-strong:    oklch(0 0 0 / 0.60);
 
-  /* ── 9. Spacing scale (8pt) ──────────────────────────────────────────── */
+  /* ── 9. Spacing scale (4pt base) ─────────────────────────────────────── */
   --space-1:  0.25rem;  /*  4px */
   --space-2:  0.5rem;   /*  8px */
   --space-3:  0.75rem;  /* 12px */
@@ -156,6 +156,22 @@
   --space-12: 3rem;     /* 48px */
   --space-16: 4rem;     /* 64px */
   --space-20: 5rem;     /* 80px */
+
+  /* Layout density — semantic roles for page chrome (mobile-first).
+     Prefer these over ad-hoc gap-6 / p-8 / py-6 in shell surfaces.
+     Desktop bump at 768px / 1024px below. */
+  --layout-page-inline: var(--space-4);       /* page gutters */
+  --layout-page-block: var(--space-4);        /* page top padding */
+  --layout-page-block-end: var(--space-10);   /* page bottom (above nav) */
+  --layout-header-gap: var(--space-2);        /* PageHeader stack */
+  --layout-header-pb: var(--space-4);         /* PageHeader bottom */
+  --layout-header-pb-compact: var(--space-3);
+  --layout-section-gap: var(--space-4);       /* major zones */
+  --layout-stack-tight: var(--space-2);       /* related siblings */
+  --layout-stack: var(--space-3);             /* default stack */
+  --layout-stack-loose: var(--space-4);       /* within-section air */
+  --layout-card-pad: var(--space-4);          /* interactive cards */
+  --layout-card-pad-compact: var(--space-3);
 
   /* ── 10. Border radius scale ─────────────────────────────────────────── */
   --radius-sm:   8px;
@@ -319,7 +335,7 @@
   --hue-bar:     var(--primary);
 }
 
-/* Desktop type bump — same roles, one step larger. Matches Tailwind `md`. */
+/* Desktop type + layout bump. Matches Tailwind `md` / `lg`. */
 @media (min-width: 768px) {
   :root {
     --text-size-h1: 1.875rem;         /* 30px */
@@ -336,6 +352,22 @@
     --text-size-display-word: 1.75rem;
     --text-size-display-ipa: 2.25rem;
     --text-size-ipa-hero: 4rem;
+
+    --layout-page-inline: var(--space-6);
+    --layout-page-block: var(--space-6);
+    --layout-page-block-end: var(--space-12);
+    --layout-header-gap: var(--space-3);
+    --layout-header-pb: var(--space-5);
+    --layout-header-pb-compact: var(--space-4);
+    --layout-section-gap: var(--space-5);
+    --layout-stack-loose: var(--space-5);
+    --layout-card-pad: var(--space-5);
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --layout-page-inline: var(--space-10);
   }
 }
 
