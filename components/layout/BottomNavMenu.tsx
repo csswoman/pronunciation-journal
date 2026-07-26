@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { BookOpen, FileText, Layers, Moon, Radio, RotateCcw, Sun, User } from "@/components/icons";
+import { BookOpen, Ear, FileText, Layers, Moon, Radio, RotateCcw, Sun, User } from "@/components/icons";
 import { useEffect } from "react";
 import { cn } from "@/lib/cn";
 import { useOKLCHTheme } from "@/hooks/useOKLCHTheme";
@@ -12,6 +12,7 @@ const navItems = [
   { name: "Decks", href: "/practice/decks", icon: Layers },
   { name: "IPA Chart", href: "/ipa", icon: Radio },
   { name: "Ruta", href: "/courses", icon: BookOpen },
+  { name: "Pronunciación", href: "/courses/pronunciation", icon: Ear },
   { name: "Profile", href: "/profile", icon: User },
 ] as const;
 

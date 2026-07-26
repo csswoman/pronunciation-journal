@@ -1,13 +1,32 @@
 import { describe, expect, it } from 'vitest'
-import { targetIdToPracticeRoute } from '../target-route'
+import { soundLabFocusHref, targetIdToPracticeRoute } from '../target-route'
 
-describe('targetIdToPracticeRoute', () => {
-  it('routes segmental.phoneme targets to the sound lab', () => {
-    expect(targetIdToPracticeRoute('segmental.phoneme./ə/')).toBe('/practice/sounds')
+describe('soundLabFocusHref', () => {
+  it('builds a focus query from IPA tokens', () => {
+    expect(soundLabFocusHref(['/iː/', '/ɪ/'])).toBe(
+      `/practice/sounds?focus=${encodeURIComponent('iː,ɪ')}`
+    )
   })
 
-  it('routes segmental.contrast targets to the sound lab', () => {
-    expect(targetIdToPracticeRoute('segmental.contrast.θ|ð')).toBe('/practice/sounds')
+  it('falls back to the lab index when tokens are empty', () => {
+    expect(soundLabFocusHref([])).toBe('/practice/sounds')
+  })
+})
+
+describe('targetIdToPracticeRoute', () => {
+  it('routes segmental.phoneme targets to a focused sound lab view', () => {
+    expect(targetIdToPracticeRoute('segmental.phoneme./ə/')).toBe(
+      `/practice/sounds?focus=${encodeURIComponent('ə')}`
+    )
+  })
+
+  it('routes segmental.contrast targets to a focused sound lab view', () => {
+    expect(targetIdToPracticeRoute('segmental.contrast.θ|ð')).toBe(
+      `/practice/sounds?focus=${encodeURIComponent('θ,ð')}`
+    )
+    expect(targetIdToPracticeRoute('segmental.contrast./iː/|/ɪ/')).toBe(
+      `/practice/sounds?focus=${encodeURIComponent('iː,ɪ')}`
+    )
   })
 
   it('returns null for prosody targets (no dedicated route)', () => {

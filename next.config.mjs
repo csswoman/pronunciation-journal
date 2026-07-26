@@ -52,6 +52,8 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      // Legacy PWA start_url; home lives at `/` (route group, not `/home`).
+      { source: "/home", destination: "/", permanent: true },
       { source: "/words", destination: "/dictionary", permanent: true },
       { source: "/lexicon", destination: "/dictionary", permanent: true },
       { source: "/lexicon/:id", destination: "/dictionary/:id", permanent: true },

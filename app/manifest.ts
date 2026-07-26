@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Pronunciation Journal",
     short_name: "PronJournal",
     description: "Track and improve your pronunciation",
-    start_url: "/home",
+    start_url: "/",
     scope: "/",
     display: "standalone",
     orientation: "portrait",
