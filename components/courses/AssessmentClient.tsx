@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useHideMobileNavDuringSession } from "@/hooks/useHideMobileNavDuringSession";
 import {
   ASSESSMENT_LEVEL_ORDER,
   groupQuestionsByLevel,
@@ -43,6 +44,7 @@ interface AssessmentClientProps {
 }
 
 export default function AssessmentClient({ mode, questions, concepts = [], checkpointLabel, userId, initialLevel }: AssessmentClientProps) {
+  useHideMobileNavDuringSession();
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [selfRatings, setSelfRatings] = useState<Record<string, ConceptSelfRating>>({});
   const [result, setResult] = useState<AssessmentResult | null>(null);

@@ -288,7 +288,7 @@ The standard `<Button>` (`components/ui/Button.tsx`) covers form, dialog, and to
 
 ### Navigation
 
-- **App shell:** Fixed sidebar (256px desktop), bottom navigation bar (mobile). Tab bar is flat, no elevation. Always present on authenticated routes, including practice sessions — immersion narrows content, it does not hide chrome.
+- **App shell:** Fixed sidebar (256px desktop), bottom navigation bar (mobile). Tab bar is flat, no elevation. On mobile, the bottom nav hides during active practice/assessment sessions so exercises reclaim the viewport; the session header keeps exit. Desktop sidebar stays. Immersion also narrows content max-width.
 - **Nav items:** Ghost-style at rest (transparent bg, text-secondary text). Active state: primary-soft background, primary text, 8px radius.
 - **Hover:** Surface-raised fill, text-primary text, 150ms transition.
 - **Typography:** Label scale (DM Sans 600, 0.9375rem / 15px).

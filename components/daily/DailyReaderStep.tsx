@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/components/auth/AuthProvider'
+import { useHideMobileNavDuringSession } from '@/hooks/useHideMobileNavDuringSession'
 import { ReaderExercise } from '@/components/practice/reader/ReaderExercise'
 import { completeReader } from '@/lib/practice/reader/complete-reader'
 import type { ReaderPassage } from '@/lib/practice/reader/types'
@@ -15,6 +16,7 @@ interface DailyReaderStepProps {
 }
 
 export function DailyReaderStep({ passage, threadHints, onComplete }: DailyReaderStepProps) {
+  useHideMobileNavDuringSession()
   const { user } = useAuth()
   const [online, setOnline] = useState(true)
 
@@ -23,7 +25,7 @@ export function DailyReaderStep({ passage, threadHints, onComplete }: DailyReade
   }, [])
 
   return (
-    <div className="mx-auto flex max-w-prose flex-col gap-4 p-6 pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] lg:pb-6">
+    <div className="mx-auto flex max-w-prose flex-col gap-4 p-6 pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] lg:pb-6">
       {threadHints.length > 0 ? <DailyThreadStrip hints={threadHints} /> : null}
       <ReaderExercise
         passage={passage}

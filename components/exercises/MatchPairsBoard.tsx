@@ -33,7 +33,7 @@ interface MatchPairsBoardProps {
 }
 
 const CARD_BASE =
-  'relative z-10 flex min-h-12 cursor-pointer items-center gap-2.5 rounded-xl border px-3 py-3 text-left transition-all duration-200'
+  'relative z-10 flex h-full min-h-11 cursor-pointer items-center gap-2 rounded-md border px-3 py-2.5 text-left transition-colors transition-transform duration-200 active:scale-[0.96] sm:min-h-12 sm:gap-2.5 sm:py-3'
 
 export function MatchPairsBoard({
   pairs,
@@ -54,9 +54,11 @@ export function MatchPairsBoard({
   return (
     <div
       ref={boardRef}
-      className="relative grid w-full grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] gap-x-4 gap-y-2 sm:gap-x-6"
+      role="group"
+      aria-label="Emparejar términos y definiciones"
+      className="relative grid w-full grid-cols-1 gap-5 sm:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] sm:gap-x-6"
     >
-      <svg aria-hidden className="pointer-events-none absolute inset-0 h-full w-full">
+      <svg aria-hidden className="pointer-events-none absolute inset-0 hidden h-full w-full sm:block">
         {connections.map((connection) => {
           const midX = (connection.from.x + connection.to.x) / 2
           const path = `M ${connection.from.x},${connection.from.y} C ${midX},${connection.from.y} ${midX},${connection.to.y} ${connection.to.x},${connection.to.y}`
@@ -78,39 +80,51 @@ export function MatchPairsBoard({
         })}
       </svg>
 
-      <div role="list" aria-label="Términos" className="flex flex-col gap-2">
-        {pairs.map((pair) => (
-          <button
-            key={pair.id}
-            ref={(element) => updateElementMap(leftElements, pair.id, element)}
-            type="button"
-            role="listitem"
-            aria-pressed={selectedLeft === pair.id || !!matches[pair.id]}
-            aria-disabled={submitted || !!results[pair.id]}
-            onClick={() => onLeftClick(pair)}
-            disabled={submitted || !!results[pair.id]}
-            className={leftCardClass({ pairId: pair.id, selectedLeft, matches, results })}
-          >
-            <ColorDot color={dotColorForLeft(pair.id, matches, results, submitted, pairColor)} />
-            <span className="text-sm font-semibold">{pair.left}</span>
-          </button>
-        ))}
-      </div>
-
-      <div role="list" aria-label="Definiciones" className="flex flex-col gap-2">
-        {rightItems.map((item) => {
-          const matchedLeftId = Object.keys(matches).find((leftId) => matches[leftId] === item.id)
-          return (
+      <section className="relative z-10 flex min-w-0 flex-col gap-2" aria-label="Términos">
+        <p className="font-mono text-xs uppercase tracking-widest text-fg-subtle">Términos</p>
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-1">
+          {pairs.map((pair) => (
             <button
-              key={item.id}
-              ref={(element) => updateElementMap(rightElements, item.id, element)}
+              key={pair.id}
+              ref={(element) => updateElementMap(leftElements, pair.id, element)}
               type="button"
-              role="listitem"
-              aria-pressed={armedRight === item.id || !!matchedLeftId}
+              aria-label={`Término: ${pair.left}`}
+              aria-pressed={selectedLeft === pair.id || !!matches[pair.id]}
+              aria-disabled={submitted || !!results[pair.id]}
+              onClick={() => onLeftClick(pair)}
+              disabled={submitted || !!results[pair.id]}
+              className={leftCardClass({ pairId: pair.id, selectedLeft, matches, results })}
+            >
+              <ColorDot color={dotColorForLeft(pair.id, matches, results, submitted, pairColor)} />
+              <span className="text-sm font-semibold leading-snug wrap-break-word sm:text-sm">
+                {pair.left}
+              </span>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <section className="relative z-10 flex min-w-0 flex-col gap-2" aria-label="Definiciones mezcladas">
+        <p className="font-mono text-xs uppercase tracking-widest text-fg-subtle">Definiciones mezcladas</p>
+        <div className="flex min-w-0 flex-col gap-2">
+          {rightItems.map((rightItem) => {
+            const matchedLeftId = Object.keys(matches).find(
+              (leftId) => matches[leftId] === rightItem.id,
+            )
+            const expandDefinition = submitted || armedRight === rightItem.id || !!matchedLeftId
+
+            return (
+            <button
+              key={rightItem.id}
+              ref={(element) => updateElementMap(rightElements, rightItem.id, element)}
+              type="button"
+              aria-label={`Definición: ${rightItem.label}`}
+              aria-pressed={armedRight === rightItem.id || !!matchedLeftId}
               aria-disabled={submitted}
-              onClick={() => onRightClick(item.id)}
+              title={rightItem.label}
+              onClick={() => onRightClick(rightItem.id)}
               disabled={submitted}
-              className={rightCardClass({ rightId: item.id, armedRight, matches, results })}
+              className={rightCardClass({ rightId: rightItem.id, armedRight, matches, results })}
             >
               {matchedLeftId ? (
                 <ColorDot
@@ -119,11 +133,19 @@ export function MatchPairsBoard({
               ) : (
                 <span className="size-2.5 shrink-0 rounded-full bg-border-default" aria-hidden />
               )}
-              <span className="text-[13px] leading-snug text-fg-secondary">{item.label}</span>
+              <span
+                className={cn(
+                  'min-w-0 text-sm leading-snug text-pretty text-fg-secondary',
+                  expandDefinition ? 'line-clamp-none' : 'line-clamp-3',
+                )}
+              >
+                {rightItem.label}
+              </span>
             </button>
-          )
-        })}
-      </div>
+            )
+          })}
+        </div>
+      </section>
     </div>
   )
 }
@@ -209,6 +231,7 @@ function rightCardClass({
   const isArmed = armedRight === rightId
   return cn(
     CARD_BASE,
+    'items-start sm:items-center',
     result === 'correct' &&
       'cursor-default border-success-border bg-success-soft pf-reveal-ok',
     result === 'wrong' &&

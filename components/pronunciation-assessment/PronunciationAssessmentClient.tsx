@@ -11,6 +11,7 @@
 
 import { useCallback, useMemo, useRef, useState, type ReactNode } from 'react'
 import Button from '@/components/ui/Button'
+import { useHideMobileNavDuringSession } from '@/hooks/useHideMobileNavDuringSession'
 import {
   PronunciationAssessmentChrome,
   type AssessmentChromeStage,
@@ -46,6 +47,7 @@ function chromeStage(stage: Stage, finishError: boolean): AssessmentChromeStage 
  * 7): preflight -> prompt-taking -> scoring/persistence -> results.
  */
 export function PronunciationAssessmentClient({ userId }: PronunciationAssessmentClientProps) {
+  useHideMobileNavDuringSession()
   const [stage, setStage] = useState<Stage>('preflight')
   const [result, setResult] = useState<PronunciationDiagnosticResult | null>(null)
   const [saving, setSaving] = useState(false)
