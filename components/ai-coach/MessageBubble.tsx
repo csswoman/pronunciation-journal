@@ -132,7 +132,7 @@ export default function MessageBubble({
     return (
       <div className="flex justify-end group/msg max-w-[88%] ml-auto">
         <div className="flex flex-col items-end gap-1.5">
-          <div className="rounded-lg rounded-tr-sm border border-[color-mix(in_srgb,var(--primary)_18%,transparent)] bg-[color-mix(in_srgb,var(--primary)_12%,var(--surface-raised))] px-3.5 py-2.5 text-[15px] leading-relaxed whitespace-pre-wrap break-words text-[var(--text-primary)]">
+          <div className="rounded-lg rounded-tr-sm border border-[color-mix(in_srgb,var(--primary)_18%,transparent)] bg-[color-mix(in_srgb,var(--primary)_12%,var(--surface-raised))] px-3.5 py-2.5 text-body-sm leading-relaxed whitespace-pre-wrap break-words text-[var(--text-primary)]">
             {message.content}
           </div>
           <div className="flex items-center gap-1 pr-1 opacity-0 group-hover/msg:opacity-100 transition-opacity">

@@ -54,7 +54,7 @@ export function LevelProgressBreakdown({ fallbackRatio }: Props) {
     <div className="mt-auto flex flex-col gap-1.5">
       {rows.map((row) => (
         <div key={row.level} className="flex items-center gap-2">
-          <span className="w-6 text-tiny font-semibold uppercase tracking-[0.08em] text-fg-subtle">
+          <span className="w-6 font-kicker text-fg-subtle">
             {row.level}
           </span>
           <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-surface-sunken">

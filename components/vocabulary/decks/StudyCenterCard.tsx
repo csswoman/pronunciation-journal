@@ -40,7 +40,7 @@ export function StudyCenterCard({
         />
       )}
       {!flipped && (
-        <p className="mt-3 text-xs text-fg-subtle">
+        <p className="mt-3 text-caption text-fg-subtle">
           Hint: Press{" "}
           <kbd
             className="px-1.5 py-0.5 rounded border text-tiny font-mono"

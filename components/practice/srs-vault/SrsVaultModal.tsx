@@ -70,7 +70,7 @@ export function SrsVaultModal({ open, onClose, entries }: SrsVaultModalProps) {
     >
       <div className="flex flex-col gap-4">
         <div className="flex items-start justify-between gap-3">
-          <h2 className="m-0 text-lg font-semibold text-fg">Baúl</h2>
+          <h2 className="m-0 text-body-lg font-semibold text-fg">Baúl</h2>
           <button
             type="button"
             onClick={() => dialogRef.current?.close()}
@@ -88,7 +88,7 @@ export function SrsVaultModal({ open, onClose, entries }: SrsVaultModalProps) {
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Buscar palabra…"
-            className="rounded-lg border border-border-default bg-surface-sunken px-3 py-2 text-sm text-fg focus-ring"
+            className="rounded-lg border border-border-default bg-surface-sunken px-3 py-2 text-body-sm text-fg focus-ring"
           />
         </label>
 
@@ -101,7 +101,7 @@ export function SrsVaultModal({ open, onClose, entries }: SrsVaultModalProps) {
             ))}
           </div>
         ) : (
-          <p className="m-0 text-sm text-fg-muted">{message}</p>
+          <p className="m-0 text-body-sm text-fg-muted">{message}</p>
         )}
       </div>
     </dialog>

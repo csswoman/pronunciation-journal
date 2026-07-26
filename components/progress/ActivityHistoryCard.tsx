@@ -27,7 +27,7 @@ export function ActivityHistoryCard({ sessions }: Props) {
       <ProgressCardHeader icon={<History size={16} />} title="Recent practice" />
 
       {sessions.length === 0 ? (
-        <p className="py-3 text-center text-sm text-fg-muted">
+        <p className="py-3 text-center text-body-sm text-fg-muted">
           Complete a session to see your activity history here.
         </p>
       ) : (
@@ -38,7 +38,7 @@ export function ActivityHistoryCard({ sessions }: Props) {
               className="flex items-center justify-between gap-3 rounded-[var(--radius-md)] border border-border-subtle bg-surface-sunken px-4 py-3"
             >
               <div className="min-w-0">
-                <p className="truncate text-sm font-semibold text-fg">{session.sourceLabel}</p>
+                <p className="truncate text-body-sm font-semibold text-fg">{session.sourceLabel}</p>
                 <p className="text-caption text-fg-muted">
                   {session.exercisesTotal} exercises · {session.accuracyPct}% · +{session.xpEarned} XP
                 </p>

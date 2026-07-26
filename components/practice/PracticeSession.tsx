@@ -101,7 +101,7 @@ export default function PracticeSession(config: PracticeConfig) {
 
   if (exercises.length === 0) {
     return (
-      <div className="w-full max-w-md mx-auto p-8 text-center text-fg-secondary text-sm">
+      <div className="w-full max-w-md mx-auto layout-card-pad text-center text-fg-secondary text-body-sm">
         No exercises available.
       </div>
     )
@@ -139,7 +139,7 @@ export default function PracticeSession(config: PracticeConfig) {
       )
     }
     return (
-      <div className="mx-auto w-full max-w-md p-6 pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] lg:pb-6">
+      <div className="mx-auto w-full max-w-md layout-card-pad pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] lg:pb-[var(--layout-section-gap)]">
         {summary}
       </div>
     )

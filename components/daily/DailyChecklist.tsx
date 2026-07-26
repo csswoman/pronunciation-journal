@@ -130,7 +130,7 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
 
   if (status === 'error') {
     return (
-      <div className="phoneme-focus fixed inset-0 z-40 flex items-center justify-center p-6">
+      <div className="phoneme-focus fixed inset-0 z-40 flex items-center justify-center p-[var(--layout-card-pad)]">
         <div className="space-y-3 text-center">
           <p className="text-error">Couldn't prepare your plan. Please try again.</p>
           <Button type="button" variant="primary" size="sm" onClick={load}>
@@ -190,7 +190,7 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
       />
 
       <div className="mt-8 flex flex-col items-center gap-2 text-center">
-        <Link href="/practice/sounds" className="inline-flex items-center gap-1.5 text-[13px] text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]">
+        <Link href="/practice/sounds" className="inline-flex items-center gap-1.5 text-caption text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]">
           <Sparkles size={14} />
           Want free practice? Choose what to work on.
         </Link>

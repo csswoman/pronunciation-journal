@@ -73,12 +73,12 @@ export function ReaderEntry() {
   }, [load])
 
   if (state.kind === 'loading') {
-    return <p className="p-6 text-fg">Cargando lectura…</p>
+    return <p className="layout-card-pad text-fg">Cargando lectura…</p>
   }
 
   if (state.kind === 'empty') {
     return (
-      <p className="p-6 text-fg">
+      <p className="layout-card-pad text-fg">
         Sigue practicando para desbloquear lecturas con tus palabras recientes.
       </p>
     )
@@ -86,14 +86,14 @@ export function ReaderEntry() {
 
   if (state.kind === 'error') {
     return (
-      <div className="flex flex-col items-start gap-3 p-6">
-        <p role="alert" className="text-sm text-error">
+      <div className="flex flex-col items-start gap-3 layout-card-pad">
+        <p role="alert" className="text-body-sm text-error">
           No se pudo preparar la lectura. Comprueba tu conexión e inténtalo de nuevo.
         </p>
         <button
           type="button"
           onClick={() => void load()}
-          className="rounded-md bg-cta-bg px-4 py-2 text-sm font-semibold text-cta-fg"
+          className="rounded-md bg-cta-bg px-4 py-2 text-body-sm font-semibold text-cta-fg"
         >
           Reintentar
         </button>
@@ -102,7 +102,7 @@ export function ReaderEntry() {
   }
 
   return (
-    <div className="mx-auto max-w-prose p-6">
+    <div className="mx-auto max-w-prose layout-card-pad">
       <ReaderExercise
         passage={state.passage}
         online={online}

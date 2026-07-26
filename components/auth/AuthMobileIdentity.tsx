@@ -25,10 +25,7 @@ export function AuthMobileIdentity({ index }: AuthMobileIdentityProps) {
           src={src}
           alt=""
           fill
-          className={cn(
-            "object-cover object-center",
-            i === active ? "auth-image-fade" : "auth-image-fade--out"
-          )}
+          className={cn( "object-cover object-center", i === active ? "auth-image-fade" : "auth-image-fade--out" )}
           style={{ opacity: i === active ? 1 : 0 }}
           quality={70}
           priority={i === 0}
@@ -42,13 +39,13 @@ export function AuthMobileIdentity({ index }: AuthMobileIdentityProps) {
       <div className="auth-mobile-gradient absolute inset-0 pointer-events-none" />
 
       {/* Wordmark — always white against the dark overlay */}
-      <div className="absolute inset-x-0 bottom-0 px-6 pb-7 z-10">
+      <div className="absolute inset-x-0 bottom-0 px-[var(--layout-page-inline)] pb-7 z-10">
         <h1
-          className="font-bold leading-tight text-white text-[clamp(1.75rem,5vw,2.5rem)] tracking-[-0.02em]"
+          className="font-bold leading-tight text-white text-h2 tracking-[-0.02em]"
         >
           English Journal
         </h1>
-        <p className="mt-1 text-white/70 text-sm italic">
+        <p className="mt-1 text-white/70 text-body-sm italic">
           Practice with intention. Listen closely.
         </p>
       </div>

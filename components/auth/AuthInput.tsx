@@ -73,7 +73,7 @@ export function AuthInput({
 
   return (
     <div>
-      <label htmlFor={inputId} className="block mb-1.5 text-sm font-medium text-fg-muted">
+      <label htmlFor={inputId} className="block mb-1.5 text-body-sm font-medium text-fg-muted">
         {label}
       </label>
       <div className="relative">
@@ -111,7 +111,7 @@ export function AuthInput({
         )}
       </div>
       {error && (
-        <p id={`${inputId}-error`} className="mt-2 text-sm text-error flex items-center gap-1">
+        <p id={`${inputId}-error`} className="mt-2 text-body-sm text-error flex items-center gap-1">
           <AlertCircle className="w-4 h-4 shrink-0" />
           {error}
         </p>

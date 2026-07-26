@@ -54,9 +54,7 @@ export function LessonCard({
     <button
       type="button"
       onClick={() => onClick?.(id)}
-      className={cn(
-        "words-lexicon__category-card flex w-full flex-col gap-3 rounded-lg border border-border-subtle bg-surface-raised p-4 text-left"
-      )}
+      className={cn( "words-lexicon__category-card flex w-full flex-col gap-3 rounded-lg border border-border-subtle bg-surface-raised p-4 text-left" )}
     >
       {/* Icon + title row */}
       <div className="flex items-center gap-3">
@@ -72,7 +70,7 @@ export function LessonCard({
             {wordsCompleted} / {totalWords} palabras
           </p>
         </div>
-        <span className="ml-auto text-xs font-semibold tabular-nums shrink-0 text-fg-muted">
+        <span className="ml-auto text-caption font-semibold tabular-nums shrink-0 text-fg-muted">
           {progress}%
         </span>
       </div>

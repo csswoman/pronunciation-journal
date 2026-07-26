@@ -85,11 +85,7 @@ export default function QuizStep({ questions, onDone }: QuizStepProps) {
               type="button"
               onClick={() => choose(i)}
               disabled={answered}
-              className={cn(
-                "gd-quiz__option",
-                answered && isCorrect && "gd-quiz__option--correct",
-                answered && isPicked && !isCorrect && "gd-quiz__option--wrong"
-              )}
+              className={cn( "gd-quiz__option", answered && isCorrect && "gd-quiz__option--correct", answered && isPicked && !isCorrect && "gd-quiz__option--wrong" )}
             >
               <span className="gd-quiz__option-text">{opt}</span>
               {answered && isCorrect && <Check size={16} strokeWidth={2.5} aria-hidden />}

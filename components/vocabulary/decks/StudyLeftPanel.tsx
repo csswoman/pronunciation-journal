@@ -30,7 +30,7 @@ export function StudyLeftPanel({
 
       {/* Reference image */}
       <div>
-        <p className="text-tiny font-semibold tracking-widest uppercase mb-2 text-fg-subtle">Reference</p>
+        <p className="font-kicker font-semibold mb-2 text-fg-subtle">Reference</p>
         <input
           ref={fileInputRef}
           type="file"
@@ -70,12 +70,12 @@ export function StudyLeftPanel({
 
       {/* Details */}
       <div>
-        <p className="text-tiny font-semibold tracking-widest uppercase mb-3 text-fg-subtle">Details</p>
+        <p className="font-kicker font-semibold mb-3 text-fg-subtle">Details</p>
         <div className="space-y-3">
           {levelLabel && (
             <div>
               <p className="text-tiny mb-1 text-fg-subtle">Level</p>
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-warning bg-warning-soft text-warning text-xs font-semibold">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-warning bg-warning-soft text-warning text-caption font-semibold">
                 {levelLabel} · {LEVEL_NAMES[levelLabel] ?? ""}
               </span>
             </div>
@@ -83,13 +83,13 @@ export function StudyLeftPanel({
           {tags && tags.length > 0 && (
             <div>
               <p className="text-tiny mb-1 text-fg-subtle">Category</p>
-              <p className="text-sm font-semibold text-fg">{tags[0]}</p>
+              <p className="text-body-sm font-semibold text-fg">{tags[0]}</p>
             </div>
           )}
           {partOfSpeech && (
             <div>
               <p className="text-tiny mb-1 text-fg-subtle">Part of speech</p>
-              <p className="text-sm font-semibold capitalize text-fg">{partOfSpeech}</p>
+              <p className="text-body-sm font-semibold capitalize text-fg">{partOfSpeech}</p>
             </div>
           )}
         </div>
@@ -102,11 +102,11 @@ export function StudyLeftPanel({
             onClick={onToggleTip}
             className="w-full flex items-center justify-between px-3 py-2.5 text-left transition-colors hover:bg-surface-sunken"
           >
-            <span className="text-xs font-semibold text-fg">Tip</span>
+            <span className="text-caption font-semibold text-fg">Tip</span>
             <ChevronDown size={14} className="text-fg-subtle" />
           </button>
           <div className="px-3 pb-3">
-            <p className="text-xs leading-relaxed text-fg-muted">{STUDY_TIPS[tipIndex]}</p>
+            <p className="text-caption leading-relaxed text-fg-muted">{STUDY_TIPS[tipIndex]}</p>
           </div>
         </div>
       )}

@@ -37,7 +37,7 @@ export default function QuotaExhaustedCard({ messages, onNewSession }: QuotaExha
         >
           <Zap size={14} className="text-[var(--primary)]" />
         </span>
-        <p className="text-sm font-semibold text-fg">
+        <p className="text-body-sm font-semibold text-fg">
           {hasConversation ? "Session ended" : "AI unavailable right now"}
         </p>
       </div>
@@ -47,10 +47,10 @@ export default function QuotaExhaustedCard({ messages, onNewSession }: QuotaExha
           className="flex items-center justify-between rounded-xl border border-[var(--line-divider)] bg-[var(--card-bg)] p-3"
         >
           <div>
-            <p className="text-xs font-medium text-fg-muted">
+            <p className="text-caption font-medium text-fg-muted">
               Exercises completed
             </p>
-            <p className="text-lg font-bold mt-0.5 text-fg">
+            <p className="text-body-lg font-bold mt-0.5 text-fg">
               {correct} / {total}
             </p>
           </div>
@@ -59,7 +59,7 @@ export default function QuotaExhaustedCard({ messages, onNewSession }: QuotaExha
             style={{ background: `conic-gradient(var(--primary) ${pct * 3.6}deg, var(--btn-regular-bg) 0deg)` }}
           >
             <span
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--card-bg)] text-sm font-bold text-[var(--primary)]"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--card-bg)] text-body-sm font-bold text-[var(--primary)]"
             >
               {pct}%
             </span>
@@ -73,7 +73,7 @@ export default function QuotaExhaustedCard({ messages, onNewSession }: QuotaExha
 
       <button
         onClick={onNewSession}
-        className="w-full rounded-xl bg-[color-mix(in_oklch,var(--primary)_14%,transparent)] py-2 text-xs font-semibold text-[var(--primary)] transition-opacity hover:opacity-80"
+        className="w-full rounded-xl bg-[color-mix(in_oklch,var(--primary)_14%,transparent)] py-2 text-caption font-semibold text-[var(--primary)] transition-opacity hover:opacity-80"
       >
         Start new session
       </button>

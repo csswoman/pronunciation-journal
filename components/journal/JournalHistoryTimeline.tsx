@@ -36,12 +36,7 @@ export function JournalHistoryTimeline({ entries, selectedDate }: JournalHistory
               <span className="font-body-sm font-semibold">{formatShortDate(entry.entryDate)}</span>
               <span className="mt-0.5 flex items-center gap-1.5 font-body-xs text-fg-muted">
                 <span
-                  className={cn(
-                    'inline-block h-1.5 w-1.5 rounded-full',
-                    entry.status === 'corrected' && 'bg-success',
-                    entry.status === 'submitted' && 'bg-warning',
-                    entry.status === 'draft' && 'bg-fg-subtle',
-                  )}
+                  className={cn( 'inline-block h-1.5 w-1.5 rounded-full', entry.status === 'corrected' && 'bg-success', entry.status === 'submitted' && 'bg-warning', entry.status === 'draft' && 'bg-fg-subtle', )}
                   aria-hidden
                 />
                 {JOURNAL_STATUS_COPY[entry.status]}

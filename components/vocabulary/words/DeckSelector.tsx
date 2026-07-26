@@ -30,13 +30,7 @@ export function DeckSelector({ decks, selectedId, onChange }: DeckSelectorProps)
       <button
         type="button"
         onClick={() => decks.length > 0 && setOpen(v => !v)}
-        className={cn(
-          "inline-flex items-center gap-1.5 rounded-[--radius-sm]",
-          "border border-[--border] bg-[--surface-raised]",
-          "px-2.5 py-1.5 text-xs font-medium text-[--text-primary]",
-          "transition-colors duration-150 max-w-44 truncate",
-          decks.length > 0 ? "cursor-pointer hover:bg-[--surface-sunken]" : "cursor-default opacity-60",
-        )}
+        className={cn( "inline-flex items-center gap-1.5 rounded-[--radius-sm]", "border border-[--border] bg-[--surface-raised]", "px-2.5 py-1.5 text-caption font-medium text-[--text-primary]", "transition-colors duration-150 max-w-44 truncate", decks.length > 0 ? "cursor-pointer hover:bg-[--surface-sunken]" : "cursor-default opacity-60", )}
         aria-haspopup="listbox"
         aria-expanded={open}
       >
@@ -47,10 +41,7 @@ export function DeckSelector({ decks, selectedId, onChange }: DeckSelectorProps)
         {decks.length > 0 && (
           <ChevronDown
             size={11}
-            className={cn(
-              "shrink-0 text-[--text-tertiary] transition-transform duration-150",
-              open && "rotate-180",
-            )}
+            className={cn( "shrink-0 text-[--text-tertiary] transition-transform duration-150", open && "rotate-180", )}
           />
         )}
       </button>
@@ -71,12 +62,7 @@ export function DeckSelector({ decks, selectedId, onChange }: DeckSelectorProps)
               aria-selected={selectedId === null}
               type="button"
               onClick={() => { onChange(null); setOpen(false); }}
-              className={cn(
-                "w-full text-left px-3 py-2 text-xs transition-colors duration-100",
-                selectedId === null
-                  ? "bg-[--primary-50] text-[--primary] font-medium"
-                  : "text-[--text-secondary] hover:bg-[--surface-sunken]",
-              )}
+              className={cn( "w-full text-left px-3 py-2 text-caption transition-colors duration-100", selectedId === null ? "bg-[--primary-50] text-[--primary] font-medium" : "text-[--text-secondary] hover:bg-[--surface-sunken]", )}
             >
               No deck
             </button>
@@ -88,12 +74,7 @@ export function DeckSelector({ decks, selectedId, onChange }: DeckSelectorProps)
                 aria-selected={selectedId === deck.id}
                 type="button"
                 onClick={() => { onChange(deck.id); setOpen(false); }}
-                className={cn(
-                  "w-full text-left px-3 py-2 text-xs transition-colors duration-100",
-                  selectedId === deck.id
-                    ? "bg-[--primary-50] text-[--primary] font-medium"
-                    : "text-[--fg] hover:bg-[--surface-sunken]",
-                )}
+                className={cn( "w-full text-left px-3 py-2 text-caption transition-colors duration-100", selectedId === deck.id ? "bg-[--primary-50] text-[--primary] font-medium" : "text-[--fg] hover:bg-[--surface-sunken]", )}
               >
                 {deck.name}
               </button>

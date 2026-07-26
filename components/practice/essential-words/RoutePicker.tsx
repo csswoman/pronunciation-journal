@@ -28,11 +28,7 @@ export function RoutePicker({ value, onChange, disabled }: Props) {
           value={value ?? ''}
           disabled={disabled}
           onChange={(e) => onChange(e.target.value || null)}
-          className={cn(
-            'theme-select min-h-11 rounded-full border border-border-subtle bg-transparent px-3 py-1',
-            'text-sm text-fg focus-ring',
-            'disabled:opacity-40 disabled:cursor-not-allowed',
-          )}
+          className={cn( 'theme-select min-h-11 rounded-full border border-border-subtle bg-transparent px-3 py-1', 'text-body-sm text-fg focus-ring', 'disabled:opacity-40 disabled:cursor-not-allowed', )}
         >
           <option value="">Mi nivel</option>
           {VOCAB_ROUTES.map((route) => (

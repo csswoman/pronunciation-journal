@@ -28,7 +28,7 @@ function getProgress(lesson: Lesson, map: Map<string, number>): number | undefin
 
 function LoadingSkeleton() {
   return (
-    <div className="space-y-8">
+    <div className="space-y-[var(--layout-section-gap)]">
       {[1, 2].map((s) => (
         <div key={s} className="sound-lab__group">
           <div className="mb-3.5 h-5 w-36 animate-pulse rounded bg-surface-sunken" />
@@ -60,7 +60,7 @@ export function SoundLabLessonGrid({
   if (totalLessons === 0) {
     return (
       <div className="flex flex-col items-center gap-4 py-20 text-center">
-        <p className="text-sm text-[color:var(--text-secondary)]">
+        <p className="text-body-sm text-[color:var(--text-secondary)]">
           Ningún sonido coincide con este filtro.
         </p>
         {onClearFilters && (
@@ -92,7 +92,7 @@ export function SoundLabLessonGrid({
             <div className="flex items-baseline gap-3">
               <h2 className="sound-lab__group-title m-0">{section.title}</h2>
               {section.count !== undefined && (
-                <span className="text-[12px] text-[color:var(--text-secondary)]">
+                <span className="text-tiny text-[color:var(--text-secondary)]">
                   {section.count} {section.count === 1 ? "sonido" : "sonidos"}
                 </span>
               )}

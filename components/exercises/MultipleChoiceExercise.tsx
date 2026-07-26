@@ -47,7 +47,7 @@ export function MultipleChoiceExercise({ exercise, onResult, hintCount = 0 }: Pr
 
   return (
     <div className="flex flex-col gap-5 w-full">
-      <p className="text-lg font-medium text-[var(--text-primary)] leading-snug">
+      <p className="text-body-lg font-medium text-[var(--text-primary)] leading-snug">
         {exercise.question}
       </p>
 
@@ -64,7 +64,7 @@ export function MultipleChoiceExercise({ exercise, onResult, hintCount = 0 }: Pr
               onClick={() => handleSelect(idx)}
               disabled={revealed}
               className={cn(
-                'w-full text-left px-4 py-3 rounded-[var(--radius-md)] border text-sm font-medium transition-all',
+                'w-full text-left px-4 py-3 rounded-[var(--radius-md)] border text-body-sm font-medium transition-all',
                 !revealed && 'border-[var(--border-subtle)] bg-[var(--surface-raised)] text-[var(--text-primary)] hover:border-[var(--primary)] cursor-pointer',
                 revealed && isCorrectOption && 'border-[var(--success)] bg-[color-mix(in_oklch,var(--success)_12%,transparent)] text-[var(--success)]',
                 revealed && isSelected && !isCorrectOption && 'border-[var(--error)] bg-[color-mix(in_oklch,var(--error)_12%,transparent)] text-[var(--error)]',
@@ -78,7 +78,7 @@ export function MultipleChoiceExercise({ exercise, onResult, hintCount = 0 }: Pr
       </div>
 
       {(state === 'wrong' || (state === 'idle' && hintCount > 0)) && exercise.explanation && (
-        <p className="text-sm px-4 py-3 rounded-md bg-[color-mix(in_oklch,var(--primary)_8%,transparent)] text-fg-muted">
+        <p className="text-body-sm px-4 py-3 rounded-md bg-[color-mix(in_oklch,var(--primary)_8%,transparent)] text-fg-muted">
           {exercise.explanation}
         </p>
       )}

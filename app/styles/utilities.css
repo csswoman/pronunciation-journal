@@ -214,7 +214,7 @@
 /** Sentence / multi-token IPA transcription */
 .ipa {
   font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
-  font-size: 1.1875rem;
+  font-size: var(--text-size-body-lg);
   font-weight: 400;
   font-optical-sizing: auto;
   letter-spacing: 0.05em;

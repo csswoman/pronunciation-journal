@@ -130,7 +130,7 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
 
   if (!isSupported) {
     return (
-      <p className="text-center text-sm text-fg-muted">
+      <p className="text-center text-body-sm text-fg-muted">
         Tu navegador no admite reconocimiento de voz. Prueba Chrome o Edge.
       </p>
     )
@@ -150,7 +150,7 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
       {!online && !grade && (
         <p
           role="status"
-          className="m-0 w-full rounded-[var(--radius-md)] border border-warning-border bg-warning-soft px-3 py-2 text-sm text-warning"
+          className="m-0 w-full rounded-[var(--radius-md)] border border-warning-border bg-warning-soft px-3 py-2 text-body-sm text-warning"
         >
           Sin conexión. Conéctate para grabar y corregir tu respuesta.
         </p>
@@ -174,7 +174,7 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
               >
                 {isListening ? <MicOff size={28} /> : <Mic size={28} />}
               </button>
-              <p className="m-0 text-sm text-fg-subtle">
+              <p className="m-0 text-body-sm text-fg-subtle">
                 {isListening
                   ? 'Escuchando… toca para parar'
                   : grading
@@ -185,7 +185,7 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
           )}
 
           {isMicError && (
-            <p className="m-0 text-center text-sm text-fg-muted" role="alert">
+            <p className="m-0 text-center text-body-sm text-fg-muted" role="alert">
               {errorCode === 'not-allowed'
                 ? 'Se denegó el acceso al micrófono.'
                 : errorCode === 'no-speech'
@@ -196,7 +196,7 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
               <button
                 type="button"
                 onClick={handleRetry}
-                className="min-h-11 cursor-pointer border-none bg-transparent px-1 text-sm text-fg-muted underline focus-ring"
+                className="min-h-11 cursor-pointer border-none bg-transparent px-1 text-body-sm text-fg-muted underline focus-ring"
               >
                 Reintentar
               </button>
@@ -209,7 +209,7 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
           />
 
           {error && (
-            <p id={errorId} role="alert" className="m-0 text-sm text-error">
+            <p id={errorId} role="alert" className="m-0 text-body-sm text-error">
               {error}
             </p>
           )}
@@ -220,7 +220,7 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
               onClick={onSkip}
               disabled={grading || isListening}
               aria-label="Omitir este ejercicio"
-              className="min-h-11 cursor-pointer self-center border-none bg-transparent px-4 text-sm font-medium text-fg-subtle transition-colors hover:text-fg-muted focus-ring disabled:cursor-not-allowed disabled:opacity-40"
+              className="min-h-11 cursor-pointer self-center border-none bg-transparent px-4 text-body-sm font-medium text-fg-subtle transition-colors hover:text-fg-muted focus-ring disabled:cursor-not-allowed disabled:opacity-40"
             >
               Omitir este
             </button>

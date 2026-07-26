@@ -97,7 +97,7 @@ export function MinimalPairExercise({ exercise, onSubmit, focusUi = false, voice
           role="status"
           aria-live="polite"
           className={[
-            'w-full rounded-xl border px-4 py-3 text-sm',
+            'w-full rounded-xl border px-4 py-3 text-body-sm',
             selectedIsCorrect
               ? 'border-success/30 bg-success-soft text-success'
               : 'border-error/30 bg-error-soft text-error',
@@ -119,7 +119,7 @@ export function MinimalPairExercise({ exercise, onSubmit, focusUi = false, voice
       )}
 
       {submitted && correctOption && focusUi && !selectedIsCorrect && (
-        <p className="m-0 max-w-[40ch] text-center text-sm text-fg-secondary" role="status">
+        <p className="m-0 max-w-[40ch] text-center text-body-sm text-fg-secondary" role="status">
           <strong>{correctOption.label}</strong> lleva {exercise.ipa}.
           {selectedOption ? ` “${selectedOption.label}” suena distinto.` : ''}
         </p>

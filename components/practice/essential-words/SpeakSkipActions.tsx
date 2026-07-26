@@ -27,7 +27,7 @@ export function SpeakSkipActions({
   if (confirm === 'archive') {
     return (
       <div className="flex flex-col items-center gap-2 text-center">
-        <p className="m-0 text-sm text-fg-muted">¿Pausar esta palabra 90 días?</p>
+        <p className="m-0 text-body-sm text-fg-muted">¿Pausar esta palabra 90 días?</p>
         <div className="flex flex-wrap items-center justify-center gap-2">
           <PillButton variant="quiet" size="sm" onClick={onArchive}>
             Sí, pausar
@@ -43,7 +43,7 @@ export function SpeakSkipActions({
   if (confirm === 'master') {
     return (
       <div className="flex flex-col items-center gap-2 text-center">
-        <p className="m-0 text-sm text-fg-muted">¿No volver a mostrarla?</p>
+        <p className="m-0 text-body-sm text-fg-muted">¿No volver a mostrarla?</p>
         <div className="flex flex-wrap items-center justify-center gap-2">
           <PillButton variant="quiet" size="sm" onClick={onMaster}>
             Sí, dominada

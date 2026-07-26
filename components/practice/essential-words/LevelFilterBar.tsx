@@ -79,7 +79,7 @@ function LevelChip({
       disabled={disabled}
       onClick={onClick}
       className={cn(
-        'min-h-11 rounded-full border px-3 py-1 text-tiny font-semibold uppercase tracking-[0.12em]',
+        'min-h-11 rounded-full border px-3 py-1 text-caption font-semibold',
         'transition-colors duration-150 focus-ring',
         'disabled:opacity-40 disabled:cursor-not-allowed',
         active

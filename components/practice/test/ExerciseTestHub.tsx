@@ -141,7 +141,7 @@ export function ExerciseTestHub() {
         {!overlayOpen ? (
           <div className="flex h-full flex-col justify-center px-6 py-12 lg:px-10">
             <header className="flex max-w-lg flex-col gap-2">
-              <span className="font-caption font-semibold uppercase tracking-[0.18em] text-fg-subtle">
+              <span className="font-kicker text-fg-subtle">
                 Dev only
               </span>
               <h1 className="text-h2 font-normal tracking-[-0.02em] text-fg">

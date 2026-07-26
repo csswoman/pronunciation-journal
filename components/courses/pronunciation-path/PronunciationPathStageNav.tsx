@@ -37,11 +37,7 @@ export function PronunciationPathStageNav({
         sm+: single row with scroll + edge fade when titles are longer.
       */}
       <div
-        className={cn(
-          'relative min-w-0',
-          'sm:after:pointer-events-none sm:after:absolute sm:after:inset-y-0 sm:after:right-0 sm:after:w-8',
-          'sm:after:bg-linear-to-l sm:after:from-surface-base sm:after:to-transparent'
-        )}
+        className={cn( 'relative min-w-0', 'sm:after:pointer-events-none sm:after:absolute sm:after:inset-y-0 sm:after:right-0 sm:after:w-8', 'sm:after:bg-linear-to-l sm:after:from-surface-base sm:after:to-transparent' )}
       >
         <ul
           className={cn(
@@ -64,20 +60,10 @@ export function PronunciationPathStageNav({
                   href={stageIdToPronunciationPathRoute(stage.id)}
                   aria-current={isActive ? 'page' : undefined}
                   aria-label={stageLabel}
-                  className={cn(
-                    'inline-flex min-h-11 items-center rounded-sm px-3 font-label',
-                    isActive
-                      ? 'bg-primary-soft text-primary'
-                      : isRecommended
-                        ? 'bg-surface-sunken text-fg ring-1 ring-inset ring-badge-primary-border'
-                        : 'bg-surface-sunken text-fg-muted hover:bg-surface-raised hover:text-fg'
-                  )}
+                  className={cn( 'inline-flex min-h-11 items-center rounded-sm px-3 font-label', isActive ? 'bg-primary-soft text-primary' : isRecommended ? 'bg-surface-sunken text-fg ring-1 ring-inset ring-badge-primary-border' : 'bg-surface-sunken text-fg-muted hover:bg-surface-raised hover:text-fg' )}
                 >
                   <span
-                    className={cn(
-                      'font-mono text-caption',
-                      isActive ? 'text-primary' : 'text-fg-subtle'
-                    )}
+                    className={cn( 'font-mono text-caption', isActive ? 'text-primary' : 'text-fg-subtle' )}
                     aria-hidden
                   >
                     {index + 1}.

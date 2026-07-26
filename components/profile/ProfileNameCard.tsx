@@ -39,7 +39,7 @@ export default function ProfileNameCard({ currentName, onSave }: Props) {
   return (
     <div>
       <div className="flex items-center justify-between mb-1">
-        <span className="text-xs font-semibold uppercase tracking-widest text-fg-subtle">
+      <span className="font-kicker text-fg-subtle">
           Display name
         </span>
         {!isEditing && (
@@ -50,7 +50,7 @@ export default function ProfileNameCard({ currentName, onSave }: Props) {
       </div>
 
       {!isEditing ? (
-        <p className="text-sm font-medium py-1 text-fg">
+        <p className="text-body-sm font-medium py-1 text-fg">
           {currentName || <span className="text-fg-subtle">Not set</span>}
         </p>
       ) : (
@@ -61,9 +61,9 @@ export default function ProfileNameCard({ currentName, onSave }: Props) {
             onChange={(e) => setValue(e.target.value)}
             placeholder="Your full name"
             autoFocus
-            className="w-full px-3 py-2 text-sm rounded-xl focus:outline-none focus:ring-2 focus:ring-primary transition-all bg-surface-sunken border border-border-default text-fg"
+            className="w-full px-3 py-2 text-body-sm rounded-xl focus:outline-none focus:ring-2 focus:ring-primary transition-all bg-surface-sunken border border-border-default text-fg"
           />
-          {error && <p className="text-xs text-error">{error}</p>}
+          {error && <p className="text-caption text-error">{error}</p>}
           <div className="flex gap-2">
             <Button type="submit" variant="primary" size="sm" disabled={isSaving}>
               {isSaving ? "Saving…" : "Save"}

@@ -45,7 +45,7 @@ function PronRow({
         <span className="font-kicker w-16 text-fg-subtle">
           {label}
         </span>
-        <span className="font-ipa text-lg text-fg">{ipa}</span>
+        <span className="font-ipa text-body-lg text-fg">{ipa}</span>
       </div>
       <ListenButton onPlay={onPlay} aria-label={`Escuchar forma ${label.toLowerCase()}`} />
     </div>
@@ -84,7 +84,7 @@ function SentenceBlock({
 
 export function StudyCard({ model, onContinue, onListen, onArchive }: Props) {
   return (
-    <div className="flex w-full max-w-md flex-col items-center gap-4 rounded-lg border border-border-subtle bg-surface-raised px-5 py-5 sm:gap-5 sm:px-6 sm:py-7">
+    <div className="flex w-full max-w-md flex-col items-center gap-4 rounded-lg border border-border-subtle bg-surface-raised layout-card-pad sm:gap-5">
       <div className="flex flex-col items-center gap-2">
         {model.srsBadge && (
           <span className="font-kicker text-accent">
@@ -112,7 +112,7 @@ export function StudyCard({ model, onContinue, onListen, onArchive }: Props) {
         <div className="flex flex-col items-center gap-0.5 text-center">
           {model.meaning && <p className="m-0 text-body-md leading-relaxed text-fg">{model.meaning}</p>}
           {model.translation && (
-            <p className="text-sm text-fg-subtle m-0">{model.translation}</p>
+            <p className="text-body-sm text-fg-subtle m-0">{model.translation}</p>
           )}
         </div>
       )}
@@ -153,7 +153,7 @@ function StudyArchiveAction({ onArchive }: { onArchive: () => void }) {
   if (confirming) {
     return (
       <div className="flex flex-col items-center gap-2 text-center">
-        <p className="m-0 text-sm text-fg-muted">¿Pausar esta palabra 90 días?</p>
+        <p className="m-0 text-body-sm text-fg-muted">¿Pausar esta palabra 90 días?</p>
         <div className="flex flex-wrap items-center justify-center gap-2">
           <PillButton variant="quiet" size="sm" onClick={onArchive}>
             Sí, pausar

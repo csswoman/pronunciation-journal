@@ -27,7 +27,7 @@ export default function ChatTabs({ active, onChange }: ChatTabsProps) {
             onClick={() => onChange(id)}
             className={cn(
               "flex flex-1 flex-col items-center justify-center gap-0.5 py-3 px-0",
-              "text-[13px] font-normal whitespace-nowrap cursor-pointer",
+              "text-caption font-normal whitespace-nowrap cursor-pointer",
               "bg-transparent border-none border-b-2 -mb-px",
               "transition-colors duration-[var(--transition-fast)]",
               isActive
@@ -42,7 +42,7 @@ export default function ChatTabs({ active, onChange }: ChatTabsProps) {
             {isActive && (
               <span
                 className={cn(
-                  "text-[11px] text-[var(--text-tertiary)] transition-opacity",
+                  "text-xxs text-[var(--text-tertiary)] transition-opacity",
                   isActive && "opacity-100"
                 )}
               >

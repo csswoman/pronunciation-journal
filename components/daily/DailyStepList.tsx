@@ -146,10 +146,7 @@ export default function DailyStepList({
                   />
                 </div>
                 <p
-                  className={cn(
-                    'mt-0.5 truncate font-body-sm',
-                    done ? 'text-fg-muted/70' : 'text-fg-muted',
-                  )}
+                  className={cn( 'mt-0.5 truncate font-body-sm', done ? 'text-fg-muted/70' : 'text-fg-muted', )}
                 >
                   {[localizeDailyStepSubtitle(step.subtitle), stepMeta(step)]
                     .filter(Boolean)

@@ -252,7 +252,7 @@
   margin-bottom: 12px;
   color: var(--text-tertiary);
   font-family: var(--font-mono), monospace;
-  font-size: 0.68rem;
+  font-size: var(--text-size-xxs);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -279,7 +279,7 @@
   padding: 7px 8px;
   border-radius: var(--radius-sm, 8px);
   color: var(--text-secondary);
-  font-size: 0.84rem;
+  font-size: var(--text-size-caption);
   line-height: 1.35;
   text-decoration: none;
   transition: background-color 150ms ease-out, color 150ms ease-out;
@@ -289,7 +289,7 @@
   content: counter(lesson-content, decimal-leading-zero);
   color: var(--text-tertiary);
   font-family: var(--font-mono), monospace;
-  font-size: 0.7rem;
+  font-size: var(--text-size-xxs);
   padding-top: 1px;
 }
 
@@ -323,7 +323,7 @@
   border-radius: var(--ml-radius-sm);
   background: var(--ml-accent-soft);
   color: var(--text-secondary);
-  font-size: 0.76rem;
+  font-size: var(--text-size-tiny);
   text-decoration: none;
 }
 
@@ -334,7 +334,7 @@
 .mini-lessons__lesson-link strong {
   grid-column: 1 / -1;
   color: var(--text-primary);
-  font-size: 0.9rem;
+  font-size: var(--text-size-body-sm);
   line-height: 1.35;
 }
 
@@ -393,7 +393,7 @@
 }
 
 .mini-lessons--article .mini-lessons__section:first-of-type .mini-lessons__section-title {
-  font-size: 1.6rem;
+  font-size: var(--text-size-display-word);
 }
 
 .mini-lessons__section--examples {
@@ -463,7 +463,7 @@
 }
 
 .mini-lessons__eyebrow {
-  font-size: 11px;
+  font-size: var(--text-size-xxs);
   font-weight: 600;
   letter-spacing: 0.16em;
   color: var(--text-tertiary);
@@ -471,7 +471,7 @@
 
 .mini-lessons__title {
   font-family: var(--font-sans), sans-serif;
-  font-size: clamp(1.9rem, 4.5vw, 2.45rem);
+  font-size: var(--text-size-ipa-hero);
   font-weight: 420;
   letter-spacing: -0.02em;
   color: var(--text-primary);
@@ -484,12 +484,12 @@
 }
 
 .mini-lessons__lead {
-  font-size: 0.95rem;
+  font-size: var(--text-size-label);
   color: var(--text-secondary);
 }
 
 .mini-lessons__back {
-  font-size: 0.85rem;
+  font-size: var(--text-size-caption);
   font-weight: 600;
   color: var(--text-tertiary);
   text-decoration: none;
@@ -524,7 +524,7 @@
   border-radius: 999px;
   border: none;
   background: transparent;
-  font-size: 12px;
+  font-size: var(--text-size-tiny);
   font-weight: 600;
   color: var(--text-secondary);
   cursor: pointer;
@@ -554,7 +554,7 @@
 }
 
 .mini-lessons__chip-count {
-  font-size: 10px;
+  font-size: var(--text-size-xxs);
   font-weight: 700;
   color: var(--text-tertiary);
   background: color-mix(in oklch, var(--border-subtle) 50%, transparent);
@@ -569,7 +569,7 @@
 }
 
 .mini-lessons__count {
-  font-size: 11px;
+  font-size: var(--text-size-xxs);
   font-weight: 600;
   color: var(--text-tertiary);
   font-variant-numeric: tabular-nums;
@@ -577,7 +577,7 @@
 }
 
 .mini-lessons__toolbar-reset {
-  font-size: 11px;
+  font-size: var(--text-size-xxs);
   font-weight: 600;
   color: var(--primary);
   background: none;
@@ -654,7 +654,7 @@
 .mini-lessons__card--collocations  { --ml-card-accent: var(--ml-cat-collocations);  --ml-card-accent-soft: var(--ml-cat-collocations-soft); }
 
 .mini-lessons__pill {
-  font-size: 10px;
+  font-size: var(--text-size-xxs);
   font-weight: 700;
   letter-spacing: 0.06em;
   background: var(--surface-sunken);
@@ -686,14 +686,14 @@
 }
 
 .mini-lessons__card-duration {
-  font-size: 11px;
+  font-size: var(--text-size-xxs);
   font-weight: 600;
   color: var(--text-tertiary);
 }
 
 .mini-lessons__card-title {
   font-family: var(--font-sans), sans-serif;
-  font-size: 1.15rem;
+  font-size: var(--text-size-body-lg);
   font-weight: 480;
   color: var(--text-primary);
   transition: color 0.2s cubic-bezier(0.25, 1, 0.5, 1);
@@ -704,7 +704,7 @@
 }
 
 .mini-lessons__card-body {
-  font-size: 0.88rem;
+  font-size: var(--text-size-body-sm);
   color: var(--text-secondary);
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -714,7 +714,7 @@
 
 .mini-lessons__card-foot {
   border-top: 1px solid var(--border-subtle);
-  font-size: 11px;
+  font-size: var(--text-size-xxs);
   font-weight: 600;
   letter-spacing: 0.06em;
   color: var(--text-tertiary);
@@ -740,27 +740,27 @@
 
 .mini-lessons__article-title {
   font-family: var(--font-sans), sans-serif;
-  font-size: clamp(1.75rem, 4vw, 2.2rem);
+  font-size: var(--text-size-ipa-hero);
   font-weight: 480;
   letter-spacing: -0.02em;
   color: var(--text-primary);
 }
 
 .mini-lessons__article-subtitle {
-  font-size: 1.05rem;
+  font-size: var(--text-size-body-lg);
   color: var(--text-secondary);
   max-width: 65ch;
 }
 
 .mini-lessons__section-title {
   font-family: var(--font-sans), sans-serif;
-  font-size: 1.35rem;
+  font-size: var(--text-size-h3);
   font-weight: 480;
   color: var(--text-primary);
 }
 
 .mini-lessons__section-body {
-  font-size: 0.95rem;
+  font-size: var(--text-size-label);
   color: var(--text-secondary);
   white-space: pre-wrap;
   max-width: 65ch;
@@ -775,14 +775,14 @@
 
 .mini-lessons__example-en {
   font-family: var(--font-sans), sans-serif;
-  font-size: 1.05rem;
+  font-size: var(--text-size-body-lg);
   color: var(--text-primary);
   font-optical-sizing: auto;
 }
 
 .mini-lessons__example-ipa {
   font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
-  font-size: 1.1875rem;
+  font-size: var(--text-size-body-lg);
   font-weight: 400;
   color: var(--text-secondary);
   letter-spacing: 0.05em;
@@ -795,11 +795,11 @@
 
 .mini-lessons__ipa-slash {
   color: var(--text-tertiary);
-  font-size: 0.85em;
+  font-size: var(--text-size-caption);
 }
 
 .mini-lessons__example-note {
-  font-size: 0.82rem;
+  font-size: var(--text-size-caption);
   color: var(--text-tertiary);
   font-style: italic;
 }
@@ -809,7 +809,7 @@
   border-radius: var(--ml-radius-sm);
   border: 1px solid color-mix(in oklch, var(--warning) 35%, transparent);
   background: var(--warning-soft);
-  font-size: 0.9rem;
+  font-size: var(--text-size-body-sm);
   color: var(--text-primary);
   display: flex;
   gap: 12px;
@@ -827,7 +827,7 @@
 
 .mini-lessons__tip-label {
   display: block;
-  font-size: 10px;
+  font-size: var(--text-size-xxs);
   font-weight: 700;
   letter-spacing: 0.08em;
   color: var(--warning-value);
@@ -836,7 +836,7 @@
 
 .mini-lessons__tip-body {
   margin: 0;
-  font-size: 0.9rem;
+  font-size: var(--text-size-body-sm);
   color: var(--text-primary);
 }
 
@@ -848,13 +848,13 @@
 }
 
 .mini-lessons__block-label {
-  font-size: 0.9rem;
+  font-size: var(--text-size-body-sm);
   font-weight: 600;
   color: var(--text-primary);
 }
 
 .mini-lessons__list {
-  font-size: 0.9rem;
+  font-size: var(--text-size-body-sm);
   color: var(--text-secondary);
 }
 
@@ -878,7 +878,7 @@
   border-radius: var(--ml-radius-sm);
   border: 1px solid var(--border-default);
   background: var(--surface-raised);
-  font-size: 0.9rem;
+  font-size: var(--text-size-body-sm);
   color: var(--text-primary);
   text-align: left;
   cursor: pointer;
@@ -925,7 +925,7 @@
   padding: 14px 16px;
   border-radius: var(--ml-radius-sm);
   border: 1px solid var(--border-subtle);
-  font-size: 0.95rem;
+  font-size: var(--text-size-label);
   font-weight: 600;
   animation: ml-score-in 250ms ease-out 200ms both;
 }
@@ -964,7 +964,7 @@
   background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
   border-radius: var(--ml-radius-sm);
-  font-size: 0.9rem;
+  font-size: var(--text-size-body-sm);
   color: var(--text-secondary);
   text-align: left;
   cursor: pointer;
@@ -1010,7 +1010,7 @@
   border-radius: 6px;
   border: 1px solid var(--border-subtle);
   background: var(--surface-sunken);
-  font-size: 11px;
+  font-size: var(--text-size-xxs);
   font-weight: 700;
   color: var(--text-tertiary);
   position: relative;
@@ -1087,7 +1087,7 @@
   border-radius: 6px;
   border: 1px solid var(--border-subtle);
   background: var(--surface-sunken);
-  font-size: 11px;
+  font-size: var(--text-size-xxs);
   font-weight: 700;
   color: var(--text-tertiary);
   width: 22px;
@@ -1099,7 +1099,7 @@
 }
 
 .mini-lessons__quiz-reveal {
-  font-size: 0.8rem;
+  font-size: var(--text-size-tiny);
   font-weight: 600;
   color: var(--primary);
   background: var(--ml-accent-soft);
@@ -1127,7 +1127,7 @@
 }
 
 .mini-lessons__quiz-reveal-icon {
-  font-size: 1rem;
+  font-size: var(--text-size-body);
   line-height: 1;
   /* content changes between + and − in JS; no rotation needed */
 }
@@ -1140,7 +1140,7 @@
 .mini-lessons__quiz-answer {
   animation: ml-fade-up 0.22s cubic-bezier(0.22, 1, 0.36, 1) both;
   border-top: 1px solid var(--border-subtle);
-  font-size: 0.85rem;
+  font-size: var(--text-size-caption);
   color: var(--text-secondary);
   background: var(--success-soft);
   border-radius: 0 0 var(--ml-radius-sm) var(--ml-radius-sm);
@@ -1167,7 +1167,7 @@
   border: 1px solid transparent;
   background: var(--primary);
   color: var(--on-primary);
-  font-size: 0.88rem;
+  font-size: var(--text-size-body-sm);
   font-weight: 600;
   text-decoration: none;
   padding: 10px 18px;

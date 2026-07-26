@@ -40,7 +40,7 @@ export function PhonemeIntroStage({
         : 'Toca el símbolo para oírlo'
 
   return (
-    <div className="phoneme-intro__stage relative flex flex-col items-center overflow-hidden px-6 pb-8 pt-8">
+    <div className="phoneme-intro__stage relative flex flex-col items-center overflow-hidden px-[var(--layout-card-pad)] py-[var(--layout-section-gap)]">
       <div className="phoneme-intro__wash pointer-events-none absolute inset-0" aria-hidden />
 
       <span className="phoneme-intro__kicker relative">{label}</span>
@@ -64,10 +64,7 @@ export function PhonemeIntroStage({
         <button
           type="button"
           onClick={() => speak(hero)}
-          className={cn(
-            'phoneme-intro__hero relative mt-4 text-lg font-medium text-fg',
-            speaking === hero && 'phoneme-intro__hero--speaking',
-          )}
+          className={cn( 'phoneme-intro__hero relative mt-4 text-body-lg font-medium text-fg', speaking === hero && 'phoneme-intro__hero--speaking', )}
           aria-label={`Pronunciar ${hero}`}
         >
           como en <em>{hero}</em>
@@ -81,10 +78,7 @@ export function PhonemeIntroStage({
               key={word}
               type="button"
               onClick={() => speak(word)}
-              className={cn(
-                'phoneme-intro__pill',
-                speaking === word && 'phoneme-intro__pill--speaking',
-              )}
+              className={cn( 'phoneme-intro__pill', speaking === word && 'phoneme-intro__pill--speaking', )}
               aria-label={`Pronunciar ${word}`}
             >
               <Play size={8} className="fill-current" aria-hidden />
@@ -95,10 +89,7 @@ export function PhonemeIntroStage({
       )}
 
       <span
-        className={cn(
-          'phoneme-intro__status relative mt-5',
-          audioState === 'error' && 'phoneme-intro__status--error',
-        )}
+        className={cn( 'phoneme-intro__status relative mt-5', audioState === 'error' && 'phoneme-intro__status--error', )}
         aria-live="polite"
       >
         {statusLabel}

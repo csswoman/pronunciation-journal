@@ -40,8 +40,8 @@ export function SentenceTransformationExercise({ exercise, onResult, onSkip }: {
     <p className="rounded border border-border-default bg-surface-sunken p-3 text-fg">{exercise.sourceSentence}</p>
     <p className="font-medium text-fg">{exercise.instruction}</p>
     <textarea value={answer} onChange={(event) => setAnswer(event.target.value)} rows={3} disabled={grading} placeholder="Escribe la nueva oración…" className="w-full rounded border border-border-default bg-surface-raised p-3 text-fg" />
-    {error ? <p role="alert" className="text-sm text-error">{error}</p> : null}
+    {error ? <p role="alert" className="text-body-sm text-error">{error}</p> : null}
     <PillButton variant="primary" size="md" onClick={() => void submit()} disabled={!answer.trim() || grading}>{grading ? 'Corrigiendo…' : 'Corregir'}</PillButton>
-    {onSkip ? <button type="button" onClick={onSkip} className="self-center text-sm text-fg-muted focus-ring">Omitir este</button> : null}
+    {onSkip ? <button type="button" onClick={onSkip} className="self-center text-body-sm text-fg-muted focus-ring">Omitir este</button> : null}
   </div>
 }

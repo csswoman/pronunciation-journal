@@ -77,12 +77,7 @@ export function PhonemePlayButton({
       onClick={handlePlay}
       aria-label={ariaLabel}
       aria-pressed={playing}
-      className={cn(
-        'phoneme-play-btn',
-        size === 'lg' && 'phoneme-play-btn--lg',
-        playing && 'phoneme-play-btn--playing',
-        className,
-      )}
+      className={cn( 'phoneme-play-btn', size === 'lg' && 'phoneme-play-btn--lg', playing && 'phoneme-play-btn--playing', className, )}
     >
       <Volume2
         size={size === 'lg' ? 24 : 20}

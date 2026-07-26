@@ -27,12 +27,12 @@ export function StudyCard({
   const partOfSpeech = firstMeaning?.partOfSpeech;
 
   const headerBadge = partOfSpeech ? (
-    <span className="px-2.5 py-0.5 rounded-full border text-xs font-bold uppercase tracking-wide"
+    <span className="px-2.5 py-0.5 rounded-full border text-caption font-bold uppercase tracking-wide"
       style={{ borderColor: "var(--warning)", backgroundColor: "var(--warning-soft)", color: "var(--warning)" }}>
       {partOfSpeech}
     </span>
   ) : levelLabel ? (
-    <span className="px-2.5 py-0.5 rounded-full border text-xs font-bold"
+    <span className="px-2.5 py-0.5 rounded-full border text-caption font-bold"
       style={{ borderColor: "var(--warning)", backgroundColor: "var(--warning-soft)", color: "var(--warning)" }}>
       {levelLabel}
     </span>
@@ -84,14 +84,14 @@ export function StudyCard({
     >
       <div className="flex items-center justify-between px-4 pt-4 pb-0">
         {isBack && partOfSpeech ? (
-          <span className="px-2.5 py-0.5 rounded-full border text-xs font-bold uppercase tracking-wide"
+          <span className="px-2.5 py-0.5 rounded-full border text-caption font-bold uppercase tracking-wide"
             style={{ borderColor: "var(--warning)", backgroundColor: "var(--warning-soft)", color: "var(--warning)" }}>
             {partOfSpeech}
           </span>
         ) : !isBack ? headerBadge : <span />}
         {headerActions}
       </div>
-      <div className="flex-1 flex flex-col items-center justify-center px-6 py-8 text-center space-y-3">
+      <div className="flex-1 flex flex-col items-center justify-center px-[var(--layout-card-pad)] py-[var(--layout-section-gap)] text-center space-y-3">
         {content}
       </div>
     </div>
@@ -114,13 +114,13 @@ export function StudyCard({
             {firstDef?.example ? (
               <div className="rounded-xl border border-dashed p-3 w-full text-left"
                 style={{ borderColor: "var(--line-divider)" }}>
-                <p className="text-tiny font-semibold uppercase tracking-widest mb-1 text-fg-subtle">Fill in the blank</p>
-                <p className="text-xs italic leading-relaxed text-fg-muted">
+                <p className="font-kicker font-semibold mb-1 text-fg-subtle">Fill in the blank</p>
+                <p className="text-caption italic leading-relaxed text-fg-muted">
                   "{blankOutWord(firstDef.example, word)}"
                 </p>
               </div>
             ) : (
-              <p className="text-sm italic text-fg-subtle">
+              <p className="text-body-sm italic text-fg-subtle">
                 Think of the meaning before flipping
               </p>
             )}
@@ -133,14 +133,14 @@ export function StudyCard({
             {wordDisplay}
             <div className="w-full space-y-3 text-left">
               {firstDef?.definition && (
-                <p className="text-sm leading-snug text-fg">
+                <p className="text-body-sm leading-snug text-fg">
                   {firstDef.definition}
                 </p>
               )}
               {firstDef?.example && (
                 <div className="rounded-xl border border-dashed p-3" style={{ borderColor: "var(--line-divider)" }}>
-                  <p className="text-tiny font-semibold uppercase tracking-widest mb-1 text-fg-subtle">Example</p>
-                  <p className="text-xs italic leading-relaxed text-fg-muted">
+                  <p className="font-kicker font-semibold mb-1 text-fg-subtle">Example</p>
+                  <p className="text-caption italic leading-relaxed text-fg-muted">
                     "{firstDef.example}"
                   </p>
                 </div>

@@ -97,10 +97,7 @@ function LevelDots({ level }: { level: HintLevel }) {
       {([0, 1, 2] as HintLevel[]).map((l) => (
         <span
           key={l}
-          className={cn(
-            'phoneme-hints__dot',
-            l <= level && 'phoneme-hints__dot--on',
-          )}
+          className={cn( 'phoneme-hints__dot', l <= level && 'phoneme-hints__dot--on', )}
         />
       ))}
     </div>

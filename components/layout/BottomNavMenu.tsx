@@ -77,7 +77,7 @@ export default function BottomNavMenu({ open, onClose, isActive }: BottomNavMenu
                   href={item.href}
                   onClick={onClose}
                   className={cn(
-                    "flex min-h-11 items-center gap-2.5 rounded-md px-3 py-2.5 text-sm font-medium",
+                    "flex min-h-11 items-center gap-2.5 rounded-md px-3 py-2.5 text-body-sm font-medium",
                     "transition-colors duration-(--transition-fast)",
                     "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
                     active
@@ -113,16 +113,10 @@ export default function BottomNavMenu({ open, onClose, isActive }: BottomNavMenu
                   onClick={() => setHue(preset.hue)}
                   aria-label={preset.label}
                   aria-pressed={isSelected}
-                  className={cn(
-                    "flex flex-1 items-center justify-center h-10",
-                    "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
-                  )}
+                  className={cn( "flex flex-1 items-center justify-center h-10", "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary", )}
                 >
                   <span
-                    className={cn(
-                      "block rounded-full transition-[transform,outline-color] duration-150",
-                      isSelected ? "h-5 w-5 scale-125 outline-2 outline-offset-2" : "h-4 w-4 hover:scale-110",
-                    )}
+                    className={cn( "block rounded-full transition-[transform,outline-color] duration-150", isSelected ? "h-5 w-5 scale-125 outline-2 outline-offset-2" : "h-4 w-4 hover:scale-110", )}
                     style={{
                       backgroundColor: `oklch(0.65 0.15 ${preset.hue})`,
                       outlineColor: isSelected ? `oklch(0.65 0.15 ${preset.hue})` : undefined,

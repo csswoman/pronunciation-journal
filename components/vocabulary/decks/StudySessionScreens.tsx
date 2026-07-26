@@ -39,10 +39,10 @@ interface StudyEmptyScreenProps {
 export function StudyEmptyScreen({ label, onClose }: StudyEmptyScreenProps) {
   return (
     <CenteredOverlay>
-      <div className="max-w-sm w-full rounded-2xl border border-[var(--line-divider)] bg-[var(--card-bg)] p-8 text-center space-y-5">
-        <div className="text-5xl">🎉</div>
+      <div className="max-w-sm w-full rounded-2xl border border-[var(--line-divider)] bg-[var(--card-bg)] layout-card-pad text-center space-y-5">
+        <div className="text-h1">🎉</div>
         <H2 className="text-h4">All caught up!</H2>
-        <p className="text-sm text-fg-muted">
+        <p className="text-body-sm text-fg-muted">
           No cards due in <strong>{label}</strong>.
         </p>
         <Button variant="primary" fullWidth onClick={onClose}>Done</Button>
@@ -71,16 +71,16 @@ interface StudyDoneScreenProps {
 export function StudyDoneScreen({ stats, label, onClose, onStudyAgain }: StudyDoneScreenProps) {
   return (
     <CenteredOverlay>
-      <div className="max-w-sm w-full rounded-2xl border border-[var(--line-divider)] bg-[var(--card-bg)] p-8 text-center space-y-5">
-        <div className="text-5xl">🎉</div>
+      <div className="max-w-sm w-full rounded-2xl border border-[var(--line-divider)] bg-[var(--card-bg)] layout-card-pad text-center space-y-5">
+        <div className="text-h1">🎉</div>
         <div>
           <H2 className="text-h2">Session complete!</H2>
-          <p className="text-sm mt-1 text-fg-muted">
+          <p className="text-body-sm mt-1 text-fg-muted">
             You reviewed <strong>{stats.seen}</strong> card{stats.seen !== 1 ? "s" : ""} from{" "}
             <strong>{label}</strong>
           </p>
         </div>
-        <div className="grid grid-cols-3 gap-3 text-sm">
+        <div className="grid grid-cols-3 gap-3 text-body-sm">
           {STAT_KEYS.map(key => {
             const cfg = RATING_CONFIG[key];
             const val = stats[key];
@@ -91,14 +91,14 @@ export function StudyDoneScreen({ stats, label, onClose, onStudyAgain }: StudyDo
                 className="rounded-xl p-3"
                 style={{ backgroundColor: cfg.bg, border: `1px solid ${cfg.border}` }}
               >
-                <div className="text-lg font-bold" style={{ color: ratingColor }}>{val}</div>
-                <div className="text-xs" style={{ color: ratingColor }}>{STAT_LABELS[key]}</div>
+                <div className="text-body-lg font-bold" style={{ color: ratingColor }}>{val}</div>
+                <div className="text-caption" style={{ color: ratingColor }}>{STAT_LABELS[key]}</div>
               </div>
             );
           })}
         </div>
         {stats.newlyMastered > 0 && (
-          <p className="text-sm text-fg-muted">
+          <p className="text-body-sm text-fg-muted">
             ⭐ {stats.newlyMastered} card{stats.newlyMastered !== 1 ? "s" : ""} mastered
           </p>
         )}

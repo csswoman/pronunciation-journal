@@ -41,13 +41,13 @@ export function VocabularyHero({
 
           {activeTab === "words" && !wordsLoading && (
             <div className="mt-2 flex items-center gap-1.5 flex-wrap">
-              <span className="text-[12px] text-fg-subtle">
+              <span className="text-tiny text-fg-subtle">
                 <span className="font-semibold text-fg">{wordStats.total}</span>{" "}
                 {wordStats.total === 1 ? "word" : "words"}
               </span>
               {wordStats.total > 0 && (
                 <>
-                  <span className="text-fg-subtle opacity-40 text-[12px]">·</span>
+                  <span className="text-fg-subtle opacity-40 text-tiny">·</span>
                   {(
                     [
                       { label: "Weak",   count: wordStats.strength.weak,   bg: "color-mix(in oklch, var(--error) 14%, transparent)",   color: "var(--error)" },
@@ -57,7 +57,7 @@ export function VocabularyHero({
                   ).map(({ label, count, bg, color }) => (
                     <span
                       key={label}
-                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold tabular-nums"
+                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xxs font-semibold tabular-nums"
                       style={{ background: bg, color }}
                     >
                       <span>{count}</span>
@@ -70,7 +70,7 @@ export function VocabularyHero({
           )}
 
           {activeTab === "decks" && (
-            <p className="mt-1.5 text-[12px] text-fg-subtle">
+            <p className="mt-1.5 text-tiny text-fg-subtle">
               {deckCount} {deckCount === 1 ? "deck" : "decks"}
             </p>
           )}

@@ -52,9 +52,9 @@ export function CreateDeckModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-      <div className="w-full max-w-md mx-4 bg-[var(--card-bg)] rounded-2xl border border-[var(--line-divider)] shadow-xl p-6 space-y-4">
+      <div className="w-full max-w-md mx-4 bg-[var(--card-bg)] rounded-2xl border border-[var(--line-divider)] shadow-xl layout-card-pad space-y-4">
         <div className="flex items-center justify-between">
-          <H2 className="font-heading font-bold text-lg">New Deck</H2>
+          <H2 className="font-heading font-bold text-body-lg">New Deck</H2>
           <Button variant="ghost" size="icon" onClick={onClose} aria-label="Close">
             <X size={20} />
           </Button>
@@ -63,54 +63,50 @@ export function CreateDeckModal({
         {/* Preview */}
         <div className="flex items-center gap-3 p-3 rounded-xl bg-[var(--btn-regular-bg)]">
           <div
-            className="w-11 h-11 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
+            className="w-11 h-11 rounded-xl flex items-center justify-center text-h4 flex-shrink-0"
             style={{ background: color }}
           >
             {icon}
           </div>
           <div className="min-w-0">
-            <p className="font-semibold text-sm text-fg truncate">{name || "Deck name"}</p>
-            <p className="text-xs text-fg-subtle truncate">{description || "Description"}</p>
+            <p className="font-semibold text-body-sm text-fg truncate">{name || "Deck name"}</p>
+            <p className="text-caption text-fg-subtle truncate">{description || "Description"}</p>
           </div>
         </div>
 
         <div className="space-y-3">
           <div>
-            <label className="text-xs font-medium text-fg-muted uppercase tracking-wide">Name</label>
+            <label className="text-caption font-medium text-fg-muted uppercase tracking-wide">Name</label>
             <input
               autoFocus
               value={name}
               onChange={e => setName(e.target.value)}
               onKeyDown={e => e.key === "Enter" && handleCreate()}
               placeholder="e.g. Travel Vocabulary"
-              className="mt-1 w-full px-3 py-2 rounded-xl bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-sm text-fg placeholder:text-fg-subtle focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/40"
+              className="mt-1 w-full px-3 py-2 rounded-xl bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-body-sm text-fg placeholder:text-fg-subtle focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/40"
             />
           </div>
 
           <div>
-            <label className="text-xs font-medium text-fg-muted uppercase tracking-wide">Description (optional)</label>
+            <label className="text-caption font-medium text-fg-muted uppercase tracking-wide">Description (optional)</label>
             <textarea
               value={description}
               onChange={e => setDescription(e.target.value)}
               rows={2}
               placeholder="What is this deck about?"
-              className="mt-1 w-full px-3 py-2 rounded-xl bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-sm text-fg placeholder:text-fg-subtle focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/40 resize-none"
+              className="mt-1 w-full px-3 py-2 rounded-xl bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-body-sm text-fg placeholder:text-fg-subtle focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/40 resize-none"
             />
           </div>
 
           <div>
-            <label className="text-xs font-medium text-fg-muted uppercase tracking-wide mb-2 block">Icon</label>
+            <label className="text-caption font-medium text-fg-muted uppercase tracking-wide mb-2 block">Icon</label>
             <div className="flex gap-1.5 flex-wrap">
               {ICONS.map(i => (
                 <button
                   key={i}
                   type="button"
                   onClick={() => setIcon(i)}
-                  className={`w-9 h-9 rounded-lg text-lg flex items-center justify-center transition-all ${
-                    icon === i
-                      ? "ring-2 ring-[var(--primary)] bg-[var(--primary)]/10 scale-110"
-                      : "bg-[var(--btn-regular-bg)] hover:scale-105"
-                  }`}
+                  className={`w-9 h-9 rounded-lg text-body-lg flex items-center justify-center transition-all ${ icon === i ? "ring-2 ring-[var(--primary)] bg-[var(--primary)]/10 scale-110" : "bg-[var(--btn-regular-bg)] hover:scale-105" }`}
                 >
                   {i}
                 </button>
@@ -119,7 +115,7 @@ export function CreateDeckModal({
           </div>
 
           <div>
-            <label className="text-xs font-medium text-fg-muted uppercase tracking-wide mb-2 block">Color</label>
+            <label className="text-caption font-medium text-fg-muted uppercase tracking-wide mb-2 block">Color</label>
             <div className="flex gap-2 flex-wrap">
               {COLORS.map(c => (
                 <button
@@ -134,7 +130,7 @@ export function CreateDeckModal({
           </div>
         </div>
 
-        {error && <p className="text-xs text-error">{error}</p>}
+        {error && <p className="text-caption text-error">{error}</p>}
 
         <div className="flex gap-2 pt-1">
           <Button variant="secondary" size="sm" fullWidth onClick={onClose}>

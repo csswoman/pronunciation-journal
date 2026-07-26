@@ -55,7 +55,7 @@ export default function SessionRecapCard({ arc, stepCount, dueTomorrow, streak }
         </h1>
 
         {topicParts.length > 0 && (
-          <p className="max-w-sm text-[15px] text-[var(--text-secondary)]">
+          <p className="max-w-sm text-body-sm text-[var(--text-secondary)]">
             Hoy reforzaste{' '}
             <span className="font-semibold text-[var(--text-primary)]">
               {topicParts.join(' · ')}
@@ -66,7 +66,7 @@ export default function SessionRecapCard({ arc, stepCount, dueTomorrow, streak }
 
         {words.length > 0 && (
           <div className="w-full max-w-sm rounded-[var(--radius-lg)] border border-border-subtle bg-surface-raised p-4 text-left">
-            <p className="font-caption uppercase tracking-widest text-[var(--text-tertiary)]">
+            <p className="font-kicker text-[var(--text-tertiary)]">
               Palabras de hoy
             </p>
             <p className="mt-1 font-body-sm text-[var(--text-secondary)]">

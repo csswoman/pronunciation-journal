@@ -55,7 +55,7 @@ function PhonemeChip({ p }: { p: PhonemeAlignment }) {
       type="button"
       onClick={() => p.ipa && playIpaSound(p.ipa)}
       aria-label={label}
-      className="inline-flex min-h-11 min-w-11 items-center justify-center gap-0.5 rounded-sm border px-2 py-1 font-ipa text-sm transition-colors focus-ring"
+      className="inline-flex min-h-11 min-w-11 items-center justify-center gap-0.5 rounded-sm border px-2 py-1 font-ipa text-body-sm transition-colors focus-ring"
       style={{
         backgroundColor: bg,
         borderColor: border,
@@ -134,12 +134,12 @@ export default function PronunciationFeedback({
         {feedbackCopyEnabled ? (
           <>
             <p className="m-0 font-kicker text-fg-subtle">LO QUE ENTENDIMOS</p>
-            <p className="mt-1 text-sm leading-relaxed text-fg-muted">{actionableFeedback.summaryEs}</p>
-            <p className="mb-0 mt-2 text-sm font-semibold text-fg">
+            <p className="mt-1 text-body-sm leading-relaxed text-fg-muted">{actionableFeedback.summaryEs}</p>
+            <p className="mb-0 mt-2 text-body-sm font-semibold text-fg">
               {priorityCopy ? `Siguiente foco: ${priorityCopy.title}` : 'Repite una vez para reunir más evidencia.'}
             </p>
           </>
-        ) : <p className="m-0 text-sm font-semibold text-fg">Siguiente práctica</p>}
+        ) : <p className="m-0 text-body-sm font-semibold text-fg">Siguiente práctica</p>}
       </section>
       {/* Score */}
       <div className="text-center">
@@ -180,7 +180,7 @@ export default function PronunciationFeedback({
           return (
             <div
               key={idx}
-              className="rounded-xl px-3 py-2.5 border text-sm"
+              className="rounded-xl px-3 py-2.5 border text-body-sm"
               style={{
                 backgroundColor:
                   result.status === "correct"
@@ -208,7 +208,7 @@ export default function PronunciationFeedback({
                   <span>{result.expected || result.got}</span>
                 </div>
                 {result.status === "incorrect" && result.got && (
-                  <span className="text-xs text-fg-subtle">
+                  <span className="text-caption text-fg-subtle">
                     escuchado: &ldquo;{result.got}&rdquo;
                   </span>
                 )}
@@ -219,7 +219,7 @@ export default function PronunciationFeedback({
 
               {/* Tip */}
               {tip && (
-                <p className="text-xs mt-2 leading-relaxed text-fg-muted">
+                <p className="text-caption mt-2 leading-relaxed text-fg-muted">
                   💡 {tip}
                 </p>
               )}
@@ -232,13 +232,13 @@ export default function PronunciationFeedback({
       {/* Sounds to practice */}
       {showPhonemeDetail && problemWords.length > 0 && (
         <div
-          className="rounded-xl px-4 py-3 border text-sm space-y-2"
+          className="rounded-xl px-4 py-3 border text-body-sm space-y-2"
           style={{
             backgroundColor: "color-mix(in srgb, var(--primary) 6%, transparent)",
             borderColor: "color-mix(in srgb, var(--primary) 20%, transparent)",
           }}
         >
-          <p className="font-semibold text-xs uppercase tracking-wide text-primary">
+          <p className="font-semibold text-caption uppercase tracking-wide text-primary">
             Escucha el modelo antes de repetir
           </p>
           {problemWords.map((r, i) => {
@@ -247,7 +247,7 @@ export default function PronunciationFeedback({
             );
             return (
               <div key={i} className="flex flex-wrap items-center gap-1.5">
-                <span className="text-xs text-fg-muted">
+                <span className="text-caption text-fg-muted">
                   {r.expected}:
                 </span>
                 {failed.map((p, j) => <PhonemeChip key={j} p={p} />)}

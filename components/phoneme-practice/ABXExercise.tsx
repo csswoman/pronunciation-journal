@@ -68,7 +68,7 @@ export function ABXExercise({ exercise, onSubmit, voice }: Props) {
               key={label}
               className="flex flex-col items-center gap-3 rounded-xl border border-border-default bg-surface-raised px-4 py-5"
             >
-              <span className="text-sm font-semibold text-fg-subtle">{label}</span>
+              <span className="text-body-sm font-semibold text-fg-subtle">{label}</span>
               <button
                 type="button"
                 onClick={() => handlePlay(i)}
@@ -78,7 +78,7 @@ export function ABXExercise({ exercise, onSubmit, voice }: Props) {
                 <Play size={16} fill="currentColor" />
               </button>
               {stim.ipa && (
-                <span className="font-mono text-sm text-fg-secondary">{stim.ipa}</span>
+                <span className="font-mono text-body-sm text-fg-secondary">{stim.ipa}</span>
               )}
             </div>
           ) : null
@@ -87,7 +87,7 @@ export function ABXExercise({ exercise, onSubmit, voice }: Props) {
 
       {stimX && (
         <div className="flex w-full flex-col items-center gap-3 rounded-xl border-2 border-primary bg-primary/5 px-4 py-5">
-          <span className="text-sm font-semibold text-primary">3 — ¿cuál es?</span>
+          <span className="text-body-sm font-semibold text-primary">3 — ¿cuál es?</span>
           <button
             type="button"
             onClick={() => handlePlay(2)}
@@ -96,7 +96,7 @@ export function ABXExercise({ exercise, onSubmit, voice }: Props) {
           >
             <Play size={18} fill="currentColor" />
           </button>
-          <span className="font-mono text-sm text-primary/70">?</span>
+          <span className="font-mono text-body-sm text-primary/70">?</span>
         </div>
       )}
 
@@ -117,19 +117,7 @@ export function ABXExercise({ exercise, onSubmit, voice }: Props) {
               aria-checked={isSelected}
               aria-disabled={submitted}
               onClick={() => handleSelect(opt.id)}
-              className={cn(
-                'cursor-pointer rounded-xl border-2 py-3 text-sm font-semibold transition-all duration-150',
-                !submitted &&
-                  !isSelected &&
-                  'border-border-default bg-surface-raised text-fg-secondary hover:border-primary hover:text-primary',
-                !submitted && isSelected && 'border-primary bg-primary/8 text-primary',
-                submitted && isCorrect && 'border-success bg-success/10 text-success pf-reveal-ok',
-                submitted && isSelected && !isCorrect && 'border-error bg-error/10 text-error pf-reveal-bad',
-                submitted &&
-                  !isSelected &&
-                  !isCorrect &&
-                  'border-border-subtle text-fg-disabled opacity-50',
-              )}
+              className={cn( 'cursor-pointer rounded-xl border-2 py-3 text-body-sm font-semibold transition-all duration-150', !submitted && !isSelected && 'border-border-default bg-surface-raised text-fg-secondary hover:border-primary hover:text-primary', !submitted && isSelected && 'border-primary bg-primary/8 text-primary', submitted && isCorrect && 'border-success bg-success/10 text-success pf-reveal-ok', submitted && isSelected && !isCorrect && 'border-error bg-error/10 text-error pf-reveal-bad', submitted && !isSelected && !isCorrect && 'border-border-subtle text-fg-disabled opacity-50', )}
             >
               {opt.label}
             </button>

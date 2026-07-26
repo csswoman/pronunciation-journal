@@ -17,7 +17,7 @@ export function StudyRatingBar({ flipped, progress, onRate }: StudyRatingBarProp
   return (
     <div className="border-t border-border-subtle px-4 py-3">
       {!flipped && (
-        <p className="text-center text-xs mb-3 text-fg-subtle">
+        <p className="text-center text-caption mb-3 text-fg-subtle">
           Rate after seeing the answer
         </p>
       )}
@@ -44,14 +44,14 @@ export function StudyRatingBar({ flipped, progress, onRate }: StudyRatingBarProp
               }}
             >
               {flipped ? (
-                <span className="text-sm font-bold" style={{ color: ratingColor }}>{cfg.label}</span>
+                <span className="text-body-sm font-bold" style={{ color: ratingColor }}>{cfg.label}</span>
               ) : (
                 <Lock size={15} className="text-fg-subtle mb-0.5" />
               )}
-              <span className="text-xs" style={{ color: flipped ? cfg.color : "var(--text-tertiary)" }}>
+              <span className="text-caption" style={{ color: flipped ? cfg.color : "var(--text-tertiary)" }}>
                 {cfg.sublabel}
               </span>
-              <span className="text-xs font-semibold" style={{ color: flipped ? cfg.color : "var(--text-tertiary)" }}>
+              <span className="text-caption font-semibold" style={{ color: flipped ? cfg.color : "var(--text-tertiary)" }}>
                 {flipped ? timeLabel : "—"}
               </span>
             </button>

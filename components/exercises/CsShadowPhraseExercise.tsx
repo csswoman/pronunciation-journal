@@ -21,6 +21,7 @@ import { cn } from '@/lib/cn'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { feedbackFromScoringResult } from '@/lib/pronunciation/feedback/from-scoring'
 import { persistPronunciationFeedbackEvidence } from '@/lib/pronunciation/feedback/persistence'
+import { RemediationSequence } from '@/components/pronunciation-feedback/RemediationSequence'
 import type { ScoringResult } from '@/lib/types'
 import type { CsShadowPhraseExercise as CsShadowPhraseExerciseType } from '@/lib/exercises/types'
 import type { GenericRenderExtras } from '@/lib/practice/exercise-renderer/generic-registry'
@@ -100,13 +101,13 @@ export function CsShadowPhraseExercise({ exercise, onResult, onSkip }: Props) {
   const isShadowing = !isSupported || isNetworkShadowing || evalFailed
 
   return (
-    <div className="flex w-full flex-col items-center gap-6">
-      <h2 className="m-0 text-center text-xl font-semibold leading-snug text-fg">
+    <div className="layout-stack-loose w-full items-center">
+      <h2 className="m-0 text-center text-h4 text-balance text-fg">
         Shadow the phrase
       </h2>
 
       <div className="flex flex-col items-center gap-2">
-        <p className="m-0 max-w-xs text-center text-lg font-medium text-fg">
+        <p className="m-0 max-w-xs text-center text-body-lg font-medium text-fg">
           {exercise.phrase}
         </p>
         <ListenButton onPlay={() => speak(exercise.phrase)} label="Listen" />
@@ -128,7 +129,7 @@ export function CsShadowPhraseExercise({ exercise, onResult, onSkip }: Props) {
           >
             {isListening ? <MicOff size={28} /> : <Mic size={28} />}
           </button>
-          <p className="m-0 text-xs tracking-wider text-fg-subtle">
+          <p className="m-0 text-caption tracking-wider text-fg-subtle">
             {isListening ? 'Listening… tap to stop' : isScoring ? 'Analyzing…' : 'Tap to speak'}
           </p>
         </div>
@@ -136,7 +137,7 @@ export function CsShadowPhraseExercise({ exercise, onResult, onSkip }: Props) {
 
       {isShadowing && !scoring && (
         <div className="flex flex-col items-center gap-4">
-          <p className="m-0 max-w-xs text-center text-xs text-fg-muted">
+          <p className="m-0 max-w-xs text-center text-caption text-fg-muted">
             {!isSupported
               ? "Your browser doesn't support voice scoring. Listen to the model and repeat it out loud, then continue — this attempt won't be scored."
               : isNetworkShadowing
@@ -151,7 +152,7 @@ export function CsShadowPhraseExercise({ exercise, onResult, onSkip }: Props) {
       )}
 
       {isError && !isShadowing && !scoring && (
-        <p className="m-0 text-center text-xs text-fg-muted">
+        <p className="m-0 text-center text-caption text-fg-muted">
           {errorCode === 'not-allowed'
             ? 'Microphone access was denied. Allow microphone access in your browser settings.'
             : errorCode === 'no-speech'
@@ -160,7 +161,7 @@ export function CsShadowPhraseExercise({ exercise, onResult, onSkip }: Props) {
           <button
             type="button"
             onClick={handleRetry}
-            className="cursor-pointer border-none bg-transparent font-[inherit] text-xs text-fg-muted underline focus-ring"
+            className="cursor-pointer border-none bg-transparent font-[inherit] text-caption text-fg-muted underline focus-ring"
           >
             Retry
           </button>
@@ -173,7 +174,7 @@ export function CsShadowPhraseExercise({ exercise, onResult, onSkip }: Props) {
           onClick={onSkip}
           disabled={isScoring || isListening}
           aria-label="Omitir este ejercicio"
-          className="min-h-11 cursor-pointer border-none bg-transparent px-4 text-sm font-medium text-fg-subtle transition-colors hover:text-fg-muted focus-ring disabled:cursor-not-allowed disabled:opacity-40"
+          className="min-h-11 cursor-pointer border-none bg-transparent px-4 text-body-sm font-medium text-fg-subtle transition-colors hover:text-fg-muted focus-ring disabled:cursor-not-allowed disabled:opacity-40"
         >
           Omitir este
         </button>
@@ -187,6 +188,15 @@ export function CsShadowPhraseExercise({ exercise, onResult, onSkip }: Props) {
             feedback={getFeedbackMessage(scoring.accuracy)}
             xpEarned={calculateXP(scoring.accuracy)}
             transcript={scoring.transcript}
+          />
+          <RemediationSequence
+            onListen={() => speak(exercise.phrase)}
+            onSlow={() => {
+              const utterance = new SpeechSynthesisUtterance(exercise.phrase)
+              utterance.rate = 0.6
+              window.speechSynthesis.speak(utterance)
+            }}
+            onRetry={handleRetry}
           />
           <div className="flex gap-2">
             <PillButton variant="outline" size="sm" onClick={handleRetry}>

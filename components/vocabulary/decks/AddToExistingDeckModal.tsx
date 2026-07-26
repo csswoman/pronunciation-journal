@@ -35,11 +35,11 @@ export function AddToExistingDeckModal({ wordIds, decks, onClose, onAdded }: Add
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-      <div className="w-full max-w-sm mx-4 bg-[var(--card-bg)] rounded-2xl border border-[var(--line-divider)] shadow-xl p-6 space-y-4">
+      <div className="w-full max-w-sm mx-4 bg-[var(--card-bg)] rounded-2xl border border-[var(--line-divider)] shadow-xl layout-card-pad space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <H2 className="font-heading font-bold text-lg">Add to deck</H2>
-            <p className="text-xs text-fg-subtle mt-0.5">{wordIds.length} word{wordIds.length !== 1 ? "s" : ""} selected</p>
+            <H2 className="font-heading font-bold text-body-lg">Add to deck</H2>
+            <p className="text-caption text-fg-subtle mt-0.5">{wordIds.length} word{wordIds.length !== 1 ? "s" : ""} selected</p>
           </div>
           <Button variant="ghost" size="icon" onClick={onClose}>
             <X size={20} />
@@ -47,7 +47,7 @@ export function AddToExistingDeckModal({ wordIds, decks, onClose, onAdded }: Add
         </div>
 
         {decks.length === 0 ? (
-          <p className="text-sm text-fg-subtle text-center py-4">No decks yet. Create one first.</p>
+          <p className="text-body-sm text-fg-subtle text-center py-4">No decks yet. Create one first.</p>
         ) : (
           <div className="space-y-2 max-h-60 overflow-y-auto">
             {decks.map(deck => (
@@ -62,12 +62,12 @@ export function AddToExistingDeckModal({ wordIds, decks, onClose, onAdded }: Add
                 }}
               >
                 <div
-                  className="w-9 h-9 rounded-lg flex items-center justify-center text-lg flex-shrink-0"
+                  className="w-9 h-9 rounded-lg flex items-center justify-center text-body-lg flex-shrink-0"
                   style={{ background: deck.color ?? "#6366f1" }}
                 >
                   {deck.icon ?? "📚"}
                 </div>
-                <span className="text-sm font-medium text-fg flex-1 truncate">{deck.name}</span>
+                <span className="text-body-sm font-medium text-fg flex-1 truncate">{deck.name}</span>
                 {selectedDeckId === deck.id && (
                   <Check size={16} className="text-primary shrink-0" />
                 )}
@@ -76,7 +76,7 @@ export function AddToExistingDeckModal({ wordIds, decks, onClose, onAdded }: Add
           </div>
         )}
 
-        {error && <p className="text-xs text-error">{error}</p>}
+        {error && <p className="text-caption text-error">{error}</p>}
 
         <div className="flex gap-2 pt-1">
           <Button variant="secondary" size="sm" fullWidth onClick={onClose}>

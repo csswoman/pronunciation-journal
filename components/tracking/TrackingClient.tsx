@@ -28,7 +28,7 @@ const registry: Record<TrackedKind, { label: string; icon: typeof Bookmark }> = 
 function TrackingCard({ item }: { item: TrackingItem }) {
   const entry = registry[item.kind];
   const Icon = entry.icon;
-  const content = <><span className="text-fg-subtle"><Icon size={16} aria-hidden /></span><span className="min-w-0"><span className="block text-sm font-semibold text-fg">{item.title}</span>{item.description && <span className="block truncate text-sm text-fg-muted">{item.description}</span>}</span><span className="ml-auto flex shrink-0 flex-col items-end gap-0.5 text-xs text-fg-subtle"><span>{entry.label}</span>{item.progressLabel && <span>{item.progressLabel}</span>}</span></>;
+  const content = <><span className="text-fg-subtle"><Icon size={16} aria-hidden /></span><span className="min-w-0"><span className="block text-body-sm font-semibold text-fg">{item.title}</span>{item.description && <span className="block truncate text-body-sm text-fg-muted">{item.description}</span>}</span><span className="ml-auto flex shrink-0 flex-col items-end gap-0.5 text-caption text-fg-subtle"><span>{entry.label}</span>{item.progressLabel && <span>{item.progressLabel}</span>}</span></>;
   return item.href ? <Link href={item.href} className="flex items-center gap-3 rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised px-4 py-3 transition-colors hover:bg-surface-sunken">{content}</Link> : <div className="flex items-center gap-3 rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised px-4 py-3">{content}</div>;
 }
 
@@ -76,9 +76,9 @@ export default function TrackingClient() {
 
   return <PageLayout><PageHeader kicker="Tracking" title="Contenido guardado" subtitle="Palabras, frases y lecciones que quieres volver a practicar." primaryCta={{ label: startingReview ? "Preparando…" : "Repasar", icon: <Play size={15} aria-hidden />, onClick: () => void startReview() }} />
     <div className="mb-6 flex flex-wrap gap-2"><Button onClick={() => setShowWordModal(true)}>Agregar palabra</Button><Button variant="secondary" onClick={() => setShowPhraseModal(true)}>Agregar frase</Button></div>
-    {reviewError ? <p role="alert" className="mb-5 text-sm text-fg-muted">{reviewError}</p> : null}
-    <div className="mb-6 flex flex-wrap gap-2" aria-label="Filtrar contenido guardado">{FILTERS.map(({ id, label }) => <button key={id} type="button" onClick={() => setFilter(id)} aria-pressed={filter === id} className={filter === id ? "rounded-full bg-primary px-3 py-1.5 text-sm font-medium text-on-primary" : "rounded-full border border-border-subtle px-3 py-1.5 text-sm font-medium text-fg-muted hover:text-fg"}>{label}</button>)}</div>
-    {loading ? <p className="text-sm text-fg-muted">Cargando contenido guardado…</p> : visible.length ? <div className="space-y-3">{visible.map((item) => <TrackingCard key={`${item.kind}:${item.id}`} item={item} />)}</div> : <TrackingEmptyState filter={filter} onAddWord={() => setShowWordModal(true)} onAddPhrase={() => setShowPhraseModal(true)} />}
+    {reviewError ? <p role="alert" className="mb-5 text-body-sm text-fg-muted">{reviewError}</p> : null}
+    <div className="mb-6 flex flex-wrap gap-2" aria-label="Filtrar contenido guardado">{FILTERS.map(({ id, label }) => <button key={id} type="button" onClick={() => setFilter(id)} aria-pressed={filter === id} className={filter === id ? "rounded-full bg-primary px-3 py-1.5 text-body-sm font-medium text-on-primary" : "rounded-full border border-border-subtle px-3 py-1.5 text-body-sm font-medium text-fg-muted hover:text-fg"}>{label}</button>)}</div>
+    {loading ? <p className="text-body-sm text-fg-muted">Cargando contenido guardado…</p> : visible.length ? <div className="space-y-3">{visible.map((item) => <TrackingCard key={`${item.kind}:${item.id}`} item={item} />)}</div> : <TrackingEmptyState filter={filter} onAddWord={() => setShowWordModal(true)} onAddPhrase={() => setShowPhraseModal(true)} />}
     <QuickAddModal open={showWordModal} onClose={() => setShowWordModal(false)} onSubmit={addWord} />
     <PhraseCaptureModal open={showPhraseModal} value={phrase} onChange={setPhrase} onClose={() => setShowPhraseModal(false)} onSubmit={() => void addPhrase()} />
   </PageLayout>;

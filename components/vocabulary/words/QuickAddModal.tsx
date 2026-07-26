@@ -97,7 +97,7 @@ export function QuickAddModal({ open, onClose, onSubmit, initialText = "" }: Qui
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-[var(--layout-card-pad)]"
       style={{ background: "var(--overlay-medium)" }}
       onClick={onClose}
     >
@@ -119,14 +119,14 @@ export function QuickAddModal({ open, onClose, onSubmit, initialText = "" }: Qui
           <QuickAddSuccessState word={text.trim()} />
         ) : (
           <>
-            <div className="border-b border-border-subtle px-5 py-5 sm:px-6">
+            <div className="border-b border-border-subtle layout-card-pad">
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="font-kicker text-fg-subtle">VOCABULARIO</p>
-                  <h2 id={titleId} className="mt-1 text-lg font-semibold leading-snug text-fg">Guardar palabra</h2>
+                  <h2 id={titleId} className="mt-1 text-body-lg font-semibold leading-snug text-fg">Guardar palabra</h2>
                   <div className="mt-2 flex items-center gap-1.5">
                     <Sparkles size={13} className="shrink-0 text-primary" />
-                    <span className="text-sm leading-none text-fg-muted">
+                    <span className="text-body-sm leading-none text-fg-muted">
                       Añadiremos significado, IPA y ejemplo.
                     </span>
                   </div>
@@ -142,9 +142,9 @@ export function QuickAddModal({ open, onClose, onSubmit, initialText = "" }: Qui
               </div>
             </div>
 
-            <div className="space-y-5 px-5 py-5 sm:px-6">
+            <div className="space-y-5 layout-card-pad">
               <div className="space-y-1.5">
-                <label className="block text-sm font-semibold text-fg">
+                <label className="block text-body-sm font-semibold text-fg">
                   Palabra
                 </label>
                 <input
@@ -166,7 +166,7 @@ export function QuickAddModal({ open, onClose, onSubmit, initialText = "" }: Qui
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-sm font-semibold text-fg">
+                <label className="block text-body-sm font-semibold text-fg">
                   Contexto{" "}
                   <span className="font-normal normal-case text-fg-subtle">(opcional)</span>
                 </label>
@@ -181,16 +181,16 @@ export function QuickAddModal({ open, onClose, onSubmit, initialText = "" }: Qui
                   className={cn(
                     "w-full resize-none rounded-[var(--radius-sm)] border border-border-default",
                     "bg-surface-sunken px-3 py-2.5",
-                    "text-sm text-fg placeholder:text-fg-subtle",
+                    "text-body-sm text-fg placeholder:text-fg-subtle",
                     "outline-none transition-[border-color,box-shadow] duration-150",
                     "focus:border-[var(--border-focus)] focus:shadow-[0_0_0_3px_var(--focus-color)]",
                   )}
                 />
               </div>
-              <p className="-mt-2 text-xs text-fg-subtle">Pulsa Enter para guardar rápido.</p>
+              <p className="-mt-2 text-caption text-fg-subtle">Pulsa Enter para guardar rápido.</p>
             </div>
 
-            <div className="flex flex-col-reverse gap-3 border-t border-border-subtle bg-surface-base px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+            <div className="flex flex-col-reverse gap-3 border-t border-border-subtle bg-surface-base px-[var(--layout-card-pad)] py-4 sm:flex-row sm:items-center sm:justify-between">
               <DeckSelector decks={decks} selectedId={selectedDeckId} onChange={setSelectedDeckId} />
               <Button
                 onClick={() => void handleSubmit()}

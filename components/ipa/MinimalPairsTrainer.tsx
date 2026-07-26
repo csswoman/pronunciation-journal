@@ -202,12 +202,12 @@ export default function MinimalPairsTrainer() {
 
         {accuracy !== null && (
           <div className="shrink-0 rounded-xl px-3 py-1.5 text-right animate-chip-appear bg-surface-sunken border border-border-subtle">
-            <p className="text-tiny font-bold uppercase tracking-widest mb-0.5 text-fg-subtle">
+            <p className="font-kicker font-bold mb-0.5 text-fg-subtle">
               Precisión
             </p>
-            <p className="text-lg font-semibold tabular-nums text-fg">
+            <p className="text-body-lg font-semibold tabular-nums text-fg">
               {accuracy}%
-              <span className="ml-1.5 text-xs font-normal text-fg-subtle">
+              <span className="ml-1.5 text-caption font-normal text-fg-subtle">
                 ({score.correct}/{total})
               </span>
             </p>
@@ -229,8 +229,8 @@ export default function MinimalPairsTrainer() {
       {!isDone && (
         <>
           <div className="mb-3 flex items-center justify-between gap-3">
-            <p className="text-sm leading-snug text-fg-muted">{contrast.hint}</p>
-            <span className="shrink-0 text-tiny font-bold uppercase tracking-widest tabular-nums text-fg-subtle">
+            <p className="text-body-sm leading-snug text-fg-muted">{contrast.hint}</p>
+            <span className="shrink-0 font-kicker font-bold tabular-nums text-fg-subtle">
               Par <span className="text-fg">{pairIdx + 1}</span> /{" "}
               {contrast.pairs.length}
             </span>

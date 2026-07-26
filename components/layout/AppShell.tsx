@@ -115,10 +115,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <Sidebar className="hidden lg:flex w-64 flex-col" />
       <main
         id="main-content"
-        className={cn(
-          "main-scrollbar flex min-h-0 flex-1 flex-col overflow-y-auto overflow-x-hidden lg:pb-0",
-          hideMobileNav ? "pb-0" : "pb-20",
-        )}
+        className={cn( "main-scrollbar flex min-h-0 flex-1 flex-col overflow-y-auto overflow-x-hidden lg:pb-0", hideMobileNav ? "pb-0" : "pb-20", )}
         style={{ marginRight: mainMarginRight }}
       >
         <div

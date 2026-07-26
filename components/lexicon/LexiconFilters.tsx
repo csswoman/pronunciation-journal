@@ -23,8 +23,8 @@ export function LexiconFilters({ active, onChange }: LexiconFiltersProps) {
           onClick={() => onChange(filter.id)}
           className={
             active === filter.id
-              ? "px-4 py-1.5 rounded-full text-sm font-medium bg-primary text-on-primary transition-colors"
-              : "px-4 py-1.5 rounded-full text-sm font-medium border border-border-subtle text-fg-muted bg-transparent hover:text-fg hover:border-border-default transition-colors"
+              ? "px-4 py-1.5 rounded-full text-body-sm font-medium bg-primary text-on-primary transition-colors"
+              : "px-4 py-1.5 rounded-full text-body-sm font-medium border border-border-subtle text-fg-muted bg-transparent hover:text-fg hover:border-border-default transition-colors"
           }
         >
           {filter.label}

@@ -87,9 +87,7 @@ export default function AICoachPanel() {
 
   return <>
     <div
-      className={`fixed z-50 flex flex-col bg-surface-raised shadow-lg
-        max-md:inset-0 max-md:border-0
-        md:top-0 md:right-0 md:bottom-0 md:border-l md:border-border-subtle`}
+      className={`fixed z-50 flex flex-col bg-surface-raised shadow-lg max-md:inset-0 max-md:border-0 md:top-0 md:right-0 md:bottom-0 md:border-l md:border-border-subtle`}
       style={panelStyle}
       aria-hidden={!isOpen}
     >
@@ -114,7 +112,7 @@ export default function AICoachPanel() {
                     {quotaExhausted && <QuotaExhaustedCard messages={messages} onNewSession={resetSession} />}
                     {!quotaExhausted && messages.length >= QUOTA_WARN_THRESHOLD && (
                       <div className="flex justify-center mb-2">
-                        <span className="text-[11px] text-[var(--warning)] bg-[var(--warning-soft)] rounded-full px-2.5 py-1">
+                        <span className="text-xxs text-[var(--warning)] bg-[var(--warning-soft)] rounded-full px-2.5 py-1">
                           You're approaching your session limit
                         </span>
                       </div>

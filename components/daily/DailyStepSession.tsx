@@ -51,7 +51,7 @@ export default function DailyStepSession({
 
   if (step.kind === 'word_intro') {
     return (
-      <div className="mx-auto flex max-w-prose flex-col gap-4 p-6 pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] lg:pb-6">
+      <div className="mx-auto flex max-w-prose flex-col gap-4 layout-card-pad pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] lg:pb-[var(--layout-section-gap)]">
         {threadHints.length > 0 ? <DailyThreadStrip hints={threadHints} /> : null}
         <WordIntroStep cards={step.studyCards ?? []} onComplete={onComplete} />
       </div>

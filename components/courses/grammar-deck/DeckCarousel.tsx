@@ -43,10 +43,7 @@ export function DeckCarousel({
       <div className="grammar-deck__viewport">
         <div
           key={card.id}
-          className={cn(
-            "grammar-deck__slide",
-            direction === "next" ? "grammar-deck__slide--next" : "grammar-deck__slide--prev"
-          )}
+          className={cn( "grammar-deck__slide", direction === "next" ? "grammar-deck__slide--next" : "grammar-deck__slide--prev" )}
         >
           <GrammarStudyCard
             card={card}

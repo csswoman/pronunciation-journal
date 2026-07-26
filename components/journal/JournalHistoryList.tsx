@@ -40,10 +40,7 @@ export function JournalHistoryList({
                 <p className="truncate font-body-sm text-fg-muted">{entry.prompt}</p>
               </div>
               <span
-                className={cn(
-                  'shrink-0 rounded-full px-2.5 py-0.5 font-body-xs font-medium',
-                  JOURNAL_STATUS_CLASS[entry.status],
-                )}
+                className={cn( 'shrink-0 rounded-full px-2.5 py-0.5 font-body-xs font-medium', JOURNAL_STATUS_CLASS[entry.status], )}
               >
                 {JOURNAL_STATUS_COPY[entry.status]}
               </span>

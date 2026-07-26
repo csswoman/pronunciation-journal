@@ -83,7 +83,7 @@ export function IdentifyExercise({ exercise, onSubmit, voice }: Props) {
             aria-disabled={submitted}
             onClick={() => handleSelect(opt.id)}
             className={cn(
-              'cursor-pointer rounded-xl border px-3 py-4 text-sm font-semibold transition-all duration-150',
+              'cursor-pointer rounded-xl border px-3 py-4 text-body-sm font-semibold transition-all duration-150',
               optStyles[optClass(opt.id)],
               submitted &&
                 exercise.correctIds.includes(opt.id) &&

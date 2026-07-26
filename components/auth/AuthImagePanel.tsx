@@ -31,10 +31,7 @@ export function AuthImagePanel({ index }: AuthImagePanelProps) {
           src={src}
           alt=""
           fill
-          className={cn(
-            "object-cover object-left",
-            i === active ? "auth-image-fade" : "auth-image-fade--out"
-          )}
+          className={cn( "object-cover object-left", i === active ? "auth-image-fade" : "auth-image-fade--out" )}
           style={{ opacity: i === active ? 1 : 0 }}
           quality={80}
           priority={i === 0}

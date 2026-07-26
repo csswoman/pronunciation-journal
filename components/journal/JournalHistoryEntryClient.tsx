@@ -14,7 +14,7 @@ import { JournalFeedbackView } from './JournalFeedbackView'
 import { JournalHistoryTimeline } from './JournalHistoryTimeline'
 
 const PILL_LINK =
-  'focus-ring inline-flex min-h-11 items-center justify-center rounded-full bg-primary px-5 py-2 text-xs font-medium text-on-primary transition-colors duration-150 hover:bg-primary-hover'
+  'focus-ring inline-flex min-h-11 items-center justify-center rounded-full bg-primary px-5 py-2 text-caption font-medium text-on-primary transition-colors duration-150 hover:bg-primary-hover'
 
 interface JournalHistoryEntryClientProps {
   userId: string
@@ -37,7 +37,7 @@ export function JournalHistoryEntryClient({ userId, entryDate }: JournalHistoryE
   const entries = useLiveQuery(() => listLocalJournalEntries(userId), [userId]) ?? []
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col layout-section-gap">
       <Link
         href="/journal"
         className="focus-ring inline-flex min-h-11 w-fit items-center gap-2 font-body-sm font-medium text-fg-muted hover:text-fg"
@@ -73,7 +73,7 @@ function JournalHistoryEntry({ entry }: { entry: JournalEntryRecord }) {
   const feedback = journal.feedback
 
   return (
-    <article className="flex flex-col gap-6">
+    <article className="flex flex-col layout-section-gap">
       <section aria-labelledby="history-prompt" className="flex flex-col gap-2">
         <StatusBadge status={journal.status} />
         <h2 id="history-prompt" className="text-wrap font-h4 font-semibold text-fg text-balance">
@@ -153,10 +153,7 @@ function JournalHistoryEntry({ entry }: { entry: JournalEntryRecord }) {
 function StatusBadge({ status }: { status: JournalEntryRecord['status'] }) {
   return (
     <span
-      className={cn(
-        'w-fit rounded-full px-2.5 py-1 font-body-xs font-medium',
-        JOURNAL_STATUS_CLASS[status],
-      )}
+      className={cn( 'w-fit rounded-full px-2.5 py-1 font-body-xs font-medium', JOURNAL_STATUS_CLASS[status], )}
     >
       {JOURNAL_STATUS_COPY[status]}
     </span>
@@ -174,7 +171,7 @@ function HistoryLoadingState() {
 
 function HistoryNotFoundState() {
   return (
-    <section className="flex flex-col gap-3 rounded-[var(--radius-lg)] bg-surface-sunken p-6">
+    <section className="flex flex-col gap-3 rounded-[var(--radius-lg)] bg-surface-sunken layout-card-pad">
       <h2 className="font-h4 font-semibold text-fg">No encontramos esa página</h2>
       <p className="font-body-sm text-fg-muted">
         Puede que todavía no se haya guardado en este dispositivo.

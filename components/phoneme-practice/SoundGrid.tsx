@@ -26,14 +26,14 @@ export function SoundGrid({ sounds, accuracyByIpa }: Props) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-tiny font-bold uppercase tracking-[0.24em] text-fg-subtle">
+          <p className="font-kicker text-fg-subtle">
             SOUNDS
           </p>
-          <p className="text-sm font-semibold mt-0.5 text-fg">
+          <p className="text-body-sm font-semibold mt-0.5 text-fg">
             {mastered} mastered · {inProgress} within reach
           </p>
         </div>
-        <span className="text-xs text-fg-subtle">
+        <span className="text-caption text-fg-subtle">
           {sounds.length} total phonemes
         </span>
       </div>
@@ -97,7 +97,7 @@ export function SoundGrid({ sounds, accuracyByIpa }: Props) {
             >
               <div className="absolute inset-0 rounded-xl bg-black opacity-0 transition-opacity group-hover:opacity-5 pointer-events-none" />
               <span
-                className="font-mono font-bold text-sm leading-none"
+                className="font-mono font-bold text-body-sm leading-none"
                 style={{ color: ipaColor, letterSpacing: '-0.01em' }}
               >
                 {s.ipa}

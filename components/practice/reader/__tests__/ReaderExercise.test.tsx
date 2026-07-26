@@ -53,7 +53,7 @@ beforeEach(() => {
 describe('ReaderExercise', () => {
   it('renders the passage text and the question', () => {
     const { container } = render(<ReaderExercise passage={passage} online onComplete={vi.fn()} />)
-    expect(container.querySelector('.text-lg')?.textContent).toBe('The cat went home.')
+    expect(container.querySelector('.text-body-lg')?.textContent).toBe('The cat went home.')
     expect(screen.getByText('Toca cualquier palabra para ver su significado.')).toBeInTheDocument()
     expect(screen.getByText('Where did the cat go?')).toBeInTheDocument()
   })
@@ -138,7 +138,7 @@ describe('ReaderExercise', () => {
   it('renders Markdown bold markers as emphasis instead of visible asterisks', () => {
     const emphasizedPassage = { ...passage, passage: 'A **bundle** is many bricks together.' }
     const { container } = render(<ReaderExercise passage={emphasizedPassage} online onComplete={vi.fn()} />)
-    expect(container.querySelector('.text-lg')?.textContent).toBe('A bundle is many bricks together.')
+    expect(container.querySelector('.text-body-lg')?.textContent).toBe('A bundle is many bricks together.')
     expect(screen.getByRole('button', { name: 'Opciones para bundle' }).closest('strong')).not.toBeNull()
   })
 

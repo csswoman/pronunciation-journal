@@ -72,39 +72,35 @@ export function SessionDone({
       : 'bg-success text-white'
 
   return (
-    <div className="flex flex-col items-center gap-6 py-10 text-center animate-message-in">
+    <div className="flex flex-col items-center layout-stack-loose py-[var(--layout-page-block)] text-center animate-message-in">
       <div className="flex flex-col items-center gap-3">
         <span
-          className={cn(
-            'inline-flex h-12 w-12 items-center justify-center rounded-full',
-            iconTone,
-            !loadFailed && 'animate-step-done',
-          )}
+          className={cn( 'inline-flex h-12 w-12 items-center justify-center rounded-full', iconTone, !loadFailed && 'animate-step-done', )}
           aria-hidden
         >
           <Icon size={24} />
         </span>
         <h2 className="m-0 text-h3 text-fg">{headline}</h2>
         {!wasEmpty && !loadFailed && practiced > 0 ? (
-          <p className="m-0 text-sm text-fg-muted">
+          <p className="m-0 text-body-sm text-fg-muted">
             {practiced} {practiced === 1 ? 'palabra practicada' : 'palabras practicadas'}
             {accuracy !== null ? ` · ${accuracy}% precisión` : ''}
           </p>
         ) : null}
-        <p className="m-0 text-sm text-fg-muted">
+        <p className="m-0 text-body-sm text-fg-muted">
           {stats.learned} de {stats.totalWords} palabras en tu deck, {stats.newToday}/
           {stats.newQuota} nuevas hoy
         </p>
         {loadFailed ? (
-          <p className="m-0 max-w-[36ch] text-xs text-fg-subtle">
+          <p className="m-0 max-w-[36ch] text-caption text-fg-subtle">
             Revisa tu conexión o vuelve a intentar la carga.
           </p>
         ) : wasEmpty ? (
-          <p className="m-0 max-w-[36ch] text-xs text-fg-subtle">
+          <p className="m-0 max-w-[36ch] text-caption text-fg-subtle">
             Estás al día. Vuelve mañana, el repaso espaciado hace el resto.
           </p>
         ) : (
-          <p className="m-0 max-w-[36ch] text-xs text-fg-subtle">
+          <p className="m-0 max-w-[36ch] text-caption text-fg-subtle">
             Tu práctica ya cuenta en tu progreso.
           </p>
         )}

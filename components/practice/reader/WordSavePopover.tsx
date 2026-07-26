@@ -55,10 +55,7 @@ export function WordSavePopover({ word, lookup, context, online, open, onOpenCha
       <button
         ref={triggerRef}
         type="button"
-        className={cn(
-          'rounded px-0.5 text-inherit focus-ring',
-          open ? 'bg-primary-soft' : 'hover:bg-primary-soft',
-        )}
+        className={cn( 'rounded px-0.5 text-inherit focus-ring', open ? 'bg-primary-soft' : 'hover:bg-primary-soft', )}
         aria-label={`Opciones para ${word}`}
         aria-expanded={open}
         onClick={() => onOpenChange(!open)}
@@ -66,14 +63,14 @@ export function WordSavePopover({ word, lookup, context, online, open, onOpenCha
         {word}
       </button>
       {open ? (
-        <span role="dialog" aria-label={`Guardar ${word}`} className="fixed inset-x-3 bottom-20 z-20 flex max-h-[calc(100dvh-6rem)] flex-col gap-3 overflow-y-auto rounded-lg border border-border-default bg-surface-raised p-4 text-sm text-fg shadow-lg sm:absolute sm:left-0 sm:top-full sm:bottom-auto sm:mt-2 sm:w-72 sm:max-h-none">
+        <span role="dialog" aria-label={`Guardar ${word}`} className="fixed inset-x-3 bottom-20 z-20 flex max-h-[calc(100dvh-6rem)] flex-col gap-3 overflow-y-auto rounded-lg border border-border-default bg-surface-raised p-4 text-body-sm text-fg shadow-lg sm:absolute sm:left-0 sm:top-full sm:bottom-auto sm:mt-2 sm:w-72 sm:max-h-none">
           <span className="flex items-start justify-between gap-3">
             <strong>{word}</strong>
             <button type="button" className="-mr-2 -mt-2 flex size-11 items-center justify-center rounded-md text-fg-muted hover:bg-surface-sunken hover:text-fg" onClick={close} aria-label="Cerrar"><X className="size-4" /></button>
           </span>
           {previewStatus === 'loading' ? <span role="status" className="text-fg-muted">Buscando significado…</span> : null}
           {previewStatus === 'error' ? <span role="alert" className="text-error">No se pudo cargar el significado. Inténtalo de nuevo.</span> : null}
-          {preview ? <span className="flex flex-col gap-1"><span className="text-base font-semibold leading-6 text-fg">{preview.enrichment.translation}</span><span className="leading-6 text-fg-muted">{preview.enrichment.meaning}</span>{preview.alreadySaved ? <span className="pt-1 text-xs font-medium text-fg-subtle">En Mis palabras</span> : null}</span> : null}
+          {preview ? <span className="flex flex-col gap-1"><span className="text-base font-semibold leading-6 text-fg">{preview.enrichment.translation}</span><span className="leading-6 text-fg-muted">{preview.enrichment.meaning}</span>{preview.alreadySaved ? <span className="pt-1 text-caption font-medium text-fg-subtle">En Mis palabras</span> : null}</span> : null}
           <span className="flex flex-wrap gap-2">
             <button type="button" className="min-h-11 rounded-md bg-cta-bg px-3 py-1.5 font-semibold text-cta-fg disabled:cursor-not-allowed disabled:opacity-50" disabled={!online || !preview || preview.alreadySaved || status === 'saving' || status === 'saved'} onClick={() => void save()}>
               {status === 'saving' ? 'Guardando…' : status === 'saved' || preview?.alreadySaved ? 'Ya guardada' : 'Guardar'}

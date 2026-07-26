@@ -106,8 +106,8 @@ const variantStyles: Record<ButtonVariant, string> = {
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
-  sm: "px-3 py-1.5 text-xs font-semibold rounded-sm gap-1.5 h-8 touch:h-11",
-  md: "px-5 py-2.5 text-sm font-semibold rounded-md gap-2 h-10",
+  sm: "px-3 py-1.5 text-caption font-semibold rounded-sm gap-1.5 h-8 touch:h-11",
+  md: "px-5 py-2.5 text-body-sm font-semibold rounded-md gap-2 h-10",
   lg: "px-6 py-3 text-base font-semibold rounded-md gap-2.5 h-12",
   // Icon sizes (deprecated, for backwards compatibility)
   icon: "p-2.5 rounded-full min-h-11 min-w-11",

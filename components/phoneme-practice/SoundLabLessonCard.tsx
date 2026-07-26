@@ -68,13 +68,7 @@ export function SoundLabLessonCard({
 
   return (
     <article
-      className={cn(
-        "sound-lab__card relative flex flex-col overflow-hidden rounded-xl border border-border-subtle bg-surface-raised",
-        isWeak && "sound-lab__card--weak",
-        isNearComplete && !isWeak && "sound-lab__card--near-complete",
-        isDone && "sound-lab__card--done",
-        isContinuing && "sound-lab__card--continuing",
-      )}
+      className={cn( "sound-lab__card relative flex flex-col overflow-hidden rounded-xl border border-border-subtle bg-surface-raised", isWeak && "sound-lab__card--weak", isNearComplete && !isWeak && "sound-lab__card--near-complete", isDone && "sound-lab__card--done", isContinuing && "sound-lab__card--continuing", )}
       style={{ animationDelay: `${delayMs}ms` }}
     >
       <Link
@@ -122,10 +116,7 @@ export function SoundLabLessonCard({
             aria-label={isInProgress ? `${progressPct}% completado` : undefined}
           >
             <span
-              className={cn(
-                "sound-lab__divider-fill",
-                isDone && "sound-lab__divider-fill--done",
-              )}
+              className={cn( "sound-lab__divider-fill", isDone && "sound-lab__divider-fill--done", )}
               style={{
                 width: isDone
                   ? "100%"
@@ -150,10 +141,7 @@ export function SoundLabLessonCard({
               key={`${word}-${i}`}
               type="button"
               onClick={() => speak(word)}
-              className={cn(
-                "sound-lab__example-pill cursor-pointer",
-                speaking === word && "sound-lab__example-pill--speaking",
-              )}
+              className={cn( "sound-lab__example-pill cursor-pointer", speaking === word && "sound-lab__example-pill--speaking", )}
               aria-label={`Pronunciar ${word}`}
             >
               <Play size={8} className="fill-current" aria-hidden />

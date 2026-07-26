@@ -5,7 +5,7 @@ interface AuthGoogleButtonProps {
   pending: boolean;
 }
 
-const SOCIAL_BTN = "w-full flex items-center justify-center gap-3 h-11 px-4 rounded-lg border border-border-default bg-surface-raised text-sm font-medium text-fg-muted transition-all hover:bg-surface-sunken hover:border-border-strong hover:text-fg disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2";
+const SOCIAL_BTN = "w-full flex items-center justify-center gap-3 h-11 px-4 rounded-lg border border-border-default bg-surface-raised text-body-sm font-medium text-fg-muted transition-all hover:bg-surface-sunken hover:border-border-strong hover:text-fg disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2";
 
 export { SOCIAL_BTN };
 

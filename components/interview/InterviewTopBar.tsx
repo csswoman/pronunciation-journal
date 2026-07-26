@@ -21,7 +21,7 @@ export function InterviewTopBar({
   return (
     <div className="flex-shrink-0 px-4 pt-3.5 pb-3 flex items-center justify-between gap-3 border-b border-border-subtle bg-surface-raised">
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-semibold truncate text-fg">{title}</p>
+        <p className="text-body-sm font-semibold truncate text-fg">{title}</p>
         <div className="flex items-center gap-2 mt-1.5">
           <div className="flex-1 h-1.5 rounded-full bg-[var(--border-subtle)]">
             <div
@@ -29,7 +29,7 @@ export function InterviewTopBar({
               style={{ width: `${progress}%` }}
             />
           </div>
-          <span className="text-xs flex-shrink-0 tabular-nums text-[var(--muted-text)]">
+          <span className="text-caption flex-shrink-0 tabular-nums text-[var(--muted-text)]">
             {Math.ceil(visibleCount / 2)}/{Math.ceil(totalTurns / 2)}
           </span>
         </div>

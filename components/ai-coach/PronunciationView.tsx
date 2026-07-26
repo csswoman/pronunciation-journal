@@ -79,7 +79,9 @@ export default function PronunciationView() {
                 focusProgress={focusProgress}
                 savedWords={savedWords}
                 onListen={(word) => speakPhrase(word, 0.75)}
+                onSlow={(word) => speakPhrase(word, 0.55)}
                 onSave={handleSavePractice}
+                onRetry={handleMicClick}
               />
             </div>
           )}

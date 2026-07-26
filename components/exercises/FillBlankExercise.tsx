@@ -113,7 +113,7 @@ function SentencePrompt({
   const charCount = Math.max(3, answer.length)
 
   return (
-    <p className="text-lg leading-relaxed text-fg">
+    <p className="text-body-lg leading-relaxed text-fg">
       {parts[0].trimEnd()}&nbsp;
       <span
         className="relative inline-flex items-center justify-center mx-1 align-baseline"
@@ -121,22 +121,14 @@ function SentencePrompt({
       >
         {/* dashes — hidden once answered */}
         <span
-          className={cn(
-            'absolute inset-x-0 -bottom-3.25 flex items-end justify-center font-mono text-border-strong tracking-widest transition-opacity duration-200',
-            done ? 'opacity-0' : 'opacity-100',
-          )}
+          className={cn( 'absolute inset-x-0 -bottom-3.25 flex items-end justify-center font-mono text-border-strong tracking-widest transition-opacity duration-200', done ? 'opacity-0' : 'opacity-100', )}
           aria-hidden
         >
           {'—'.repeat(charCount)}
         </span>
         {/* selected word — fades in when answered */}
         <span
-          className={cn(
-            'absolute inset-x-0 -bottom-1 px-1 flex justify-center font-semibold transition-all duration-300',
-            !done && 'opacity-0 translate-y-1',
-            done && isCorrect && 'opacity-100 translate-y-0 text-success',
-            done && !isCorrect && 'opacity-100 translate-y-0 text-error',
-          )}
+          className={cn( 'absolute inset-x-0 -bottom-1 px-1 flex justify-center font-semibold transition-all duration-300', !done && 'opacity-0 translate-y-1', done && isCorrect && 'opacity-100 translate-y-0 text-success', done && !isCorrect && 'opacity-100 translate-y-0 text-error', )}
           aria-live="polite"
         >
           {selected}
@@ -190,7 +182,7 @@ function OptionButton({ option, isAnswer, isSelected, answerState, onPick }: Opt
       disabled={done}
       aria-pressed={isSelected}
       className={cn(
-        'w-full flex items-center justify-between rounded-(--radius-lg) border px-4 py-3.5 text-[15px] font-medium transition-all duration-150 text-left min-h-13',
+        'w-full flex items-center justify-between rounded-(--radius-lg) border px-4 py-3.5 text-body-sm font-medium transition-all duration-150 text-left min-h-13',
         !done && 'border-border-default bg-surface-raised text-fg hover:border-border-strong cursor-pointer',
         done && isAnswer && 'border-success-border bg-success-soft text-success cursor-default',
         done && isSelected && !isAnswer && 'border-error-border bg-error-soft text-error cursor-default',
@@ -209,7 +201,7 @@ function HintPanel({ hint }: { hint: string }) {
   return (
     <div className="flex items-start gap-2.5 rounded-md bg-surface-sunken px-4 py-3">
       <Lightbulb size={14} className="mt-0.5 shrink-0 text-fg-subtle" aria-hidden />
-      <p className="text-[13px] text-fg-muted italic">{hint}</p>
+      <p className="text-caption text-fg-muted italic">{hint}</p>
     </div>
   )
 }

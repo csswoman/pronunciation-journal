@@ -82,7 +82,7 @@ export default function ChatEmptyState({ onSendMessage }: ChatEmptyStateProps) {
   } as const;
 
   return (
-    <div className="flex-1 min-h-full flex flex-col items-center px-5 pt-10 pb-6 chat-bg">
+    <div className="flex-1 min-h-full flex flex-col items-center px-5 pt-[var(--layout-page-block)] pb-[var(--layout-section-gap)] chat-bg">
       <div className="blob blob-1" />
       <div className="blob blob-2" />
       <div className="blob blob-3" />
@@ -94,7 +94,7 @@ export default function ChatEmptyState({ onSendMessage }: ChatEmptyStateProps) {
           className="relative size-14 rounded-2xl flex items-center justify-center shrink-0"
           style={accentHeroStyle}
         >
-          <span className="text-white text-xl leading-none">✦</span>
+          <span className="text-white text-h4 leading-none">✦</span>
           <span className="absolute inset-0 rounded-2xl shadow-[inset_0_1px_0_0_rgb(255_255_255_/_0.25)]" />
         </div>
         <div className="space-y-1.5">
@@ -131,8 +131,8 @@ export default function ChatEmptyState({ onSendMessage }: ChatEmptyStateProps) {
             >
               <Icon size={19} strokeWidth={2} style={{ color: colorVar }} />
             </span>
-            <span className="font-semibold text-[var(--text-primary)] leading-[1.3] text-[15px]">{title}</span>
-            <span className="text-[13px] text-[var(--text-tertiary)] mt-1.5 leading-snug">{desc}</span>
+            <span className="font-semibold text-[var(--text-primary)] leading-[1.3] text-body-sm">{title}</span>
+            <span className="text-caption text-[var(--text-tertiary)] mt-1.5 leading-snug">{desc}</span>
           </button>
         ))}
       </div>
@@ -140,7 +140,7 @@ export default function ChatEmptyState({ onSendMessage }: ChatEmptyStateProps) {
       {/* Suggestion chips */}
       <div className="w-full flex items-center gap-2.5 mb-3">
         <span className="h-px flex-1 bg-[var(--border-subtle)]" />
-        <p className="text-[10px] font-semibold tracking-[0.14em] text-[var(--text-tertiary)] uppercase">
+        <p className="font-kicker font-semibold text-[var(--text-tertiary)]">
           Popular Shortcuts
         </p>
         <span className="h-px flex-1 bg-[var(--border-subtle)]" />

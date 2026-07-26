@@ -179,7 +179,7 @@ export default function InterviewSession({ title, turns, difficulty, level, onRe
       </div>
 
       {!speechSupported && (
-        <div className="flex-shrink-0 px-4 py-2 text-center text-xs text-fg-muted bg-surface-raised border-t border-border-subtle">
+        <div className="flex-shrink-0 px-4 py-2 text-center text-caption text-fg-muted bg-surface-raised border-t border-border-subtle">
           Speech synthesis not supported — audio playback is disabled.
         </div>
       )}

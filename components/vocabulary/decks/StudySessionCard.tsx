@@ -32,15 +32,15 @@ export function StudySessionCard({ card, flipped, onFlip, onSkip }: StudySession
           <WordDisplay word={card.front} ipa={card.ipa ?? null} />
           {card.example ? (
             <div className="rounded-xl border border-dashed border-border-subtle p-3 w-full text-left">
-              <p className="text-tiny font-semibold uppercase tracking-widest mb-1 text-fg-subtle">
+              <p className="font-kicker font-semibold mb-1 text-fg-subtle">
                 Fill in the blank
               </p>
-              <p className="text-xs italic leading-relaxed text-fg-muted">
+              <p className="text-caption italic leading-relaxed text-fg-muted">
                 &ldquo;{blankOutWord(card.example, card.front)}&rdquo;
               </p>
             </div>
           ) : (
-            <p className="text-sm italic text-fg-subtle">Think of the meaning before flipping</p>
+            <p className="text-body-sm italic text-fg-subtle">Think of the meaning before flipping</p>
           )}
         </CardFace>
 
@@ -48,14 +48,14 @@ export function StudySessionCard({ card, flipped, onFlip, onSkip }: StudySession
           <WordDisplay word={card.front} ipa={card.ipa ?? null} />
           <div className="w-full space-y-3 text-left">
             {card.definition && (
-              <p className="text-sm leading-snug text-fg">{card.definition}</p>
+              <p className="text-body-sm leading-snug text-fg">{card.definition}</p>
             )}
             {card.example && (
               <div className="rounded-xl border border-dashed border-border-subtle p-3">
-                <p className="text-tiny font-semibold uppercase tracking-widest mb-1 text-fg-subtle">
+                <p className="font-kicker font-semibold mb-1 text-fg-subtle">
                   Example
                 </p>
-                <p className="text-xs italic leading-relaxed text-fg-muted">
+                <p className="text-caption italic leading-relaxed text-fg-muted">
                   &ldquo;{card.example}&rdquo;
                 </p>
               </div>
@@ -91,12 +91,12 @@ function CardFace({
           type="button"
           onClick={e => { e.stopPropagation(); onSkip(); }}
           title="Skip"
-          className="border border-border-subtle rounded-lg px-2 py-1 text-xs text-fg-subtle bg-transparent hover:bg-[var(--btn-regular-bg-hover)] transition-colors cursor-pointer"
+          className="border border-border-subtle rounded-lg px-2 py-1 text-caption text-fg-subtle bg-transparent hover:bg-[var(--btn-regular-bg-hover)] transition-colors cursor-pointer"
         >
           Skip →
         </button>
       </div>
-      <div className="flex-1 flex flex-col items-center justify-center px-6 py-8 text-center space-y-4">
+      <div className="flex-1 flex flex-col items-center justify-center px-[var(--layout-card-pad)] py-[var(--layout-section-gap)] text-center space-y-4">
         {children}
       </div>
     </div>
@@ -115,7 +115,7 @@ function WordDisplay({ word, ipa }: { word: string; ipa: string | null }) {
           <button
             type="button"
             onClick={e => { e.stopPropagation(); speakWord(word); }}
-            className="border border-border-subtle rounded-lg px-2 py-1 text-xs bg-transparent hover:bg-[var(--btn-regular-bg-hover)] transition-colors cursor-pointer"
+            className="border border-border-subtle rounded-lg px-2 py-1 text-caption bg-transparent hover:bg-[var(--btn-regular-bg-hover)] transition-colors cursor-pointer"
           >
             🔊
           </button>

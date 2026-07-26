@@ -134,11 +134,7 @@ function DimensionList({ scores }: { scores: FluencyScores }) {
               <div className="text-tiny text-fg-subtle">{s.source}</div>
             </div>
             <div
-              className={cn(
-                'text-body-lg text-primary',
-                isBest && 'text-success',
-                isWorst && 'text-warning',
-              )}
+              className={cn( 'text-body-lg text-primary', isBest && 'text-success', isWorst && 'text-warning', )}
             >
               {val}
             </div>
@@ -228,8 +224,8 @@ export function FluencyRadarCard({ scores, comparisonLabel }: Props) {
         <div className="flex flex-col items-center gap-4 py-2 text-center">
           <EmptyRadar />
           <div className="flex max-w-[280px] flex-col gap-1">
-            <p className="text-sm font-semibold text-fg">No fluency data yet</p>
-            <p className="text-xs text-fg-muted">
+            <p className="text-body-sm font-semibold text-fg">No fluency data yet</p>
+            <p className="text-caption text-fg-muted">
               Complete exercises across pronunciation, grammar, vocabulary, listening,
               speaking, and reading to unlock your profile.
             </p>

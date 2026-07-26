@@ -37,10 +37,7 @@ export default function ExerciseBlock({ instruction, items }: ExerciseBlockProps
             <button
               key={idx}
               type="button"
-              className={cn(
-                "mini-lessons__exercise-item",
-                isChecked && "mini-lessons__exercise-item--checked"
-              )}
+              className={cn( "mini-lessons__exercise-item", isChecked && "mini-lessons__exercise-item--checked" )}
               onClick={() => toggle(idx)}
               aria-pressed={isChecked}
             >

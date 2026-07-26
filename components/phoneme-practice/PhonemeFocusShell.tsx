@@ -60,10 +60,7 @@ export function PhonemeFocusShell({
           {sessionName && (
             <div className="phoneme-focus__session-title">
               <span className="phoneme-focus__session-label">Practicando</span>
-              <span className={cn(
-                'phoneme-focus__session-name',
-                badge && 'phoneme-focus__session-name--ipa',
-              )}>
+              <span className={cn( 'phoneme-focus__session-name', badge && 'phoneme-focus__session-name--ipa', )}>
                 {sessionName}
               </span>
             </div>
@@ -73,10 +70,7 @@ export function PhonemeFocusShell({
 
           {feedback && (
             <div
-              className={cn(
-                'phoneme-focus__footer',
-                feedback.isCorrect ? 'phoneme-focus__footer--ok' : 'phoneme-focus__footer--bad',
-              )}
+              className={cn( 'phoneme-focus__footer', feedback.isCorrect ? 'phoneme-focus__footer--ok' : 'phoneme-focus__footer--bad', )}
               role="status"
               aria-live="polite"
             >
@@ -92,10 +86,7 @@ export function PhonemeFocusShell({
               {feedback.onContinue && (
                 <button
                   type="button"
-                  className={cn(
-                    'phoneme-focus__footer-cta',
-                    feedback.isCorrect ? 'phoneme-focus__footer-cta--ok' : 'phoneme-focus__footer-cta--bad',
-                  )}
+                  className={cn( 'phoneme-focus__footer-cta', feedback.isCorrect ? 'phoneme-focus__footer-cta--ok' : 'phoneme-focus__footer-cta--bad', )}
                   onClick={feedback.onContinue}
                 >
                   Continuar

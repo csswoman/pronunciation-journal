@@ -208,14 +208,14 @@ export function MatchPairsExercise({ exercise, onResult }: Props) {
   return (
     <div className="mx-auto flex w-full max-w-xl flex-col items-center gap-3 sm:gap-4">
       {!submitted && (
-        <p className="m-0 w-full text-pretty text-center text-sm leading-snug text-fg-muted sm:text-sm">
+        <p className="m-0 w-full text-pretty text-center text-body-sm leading-snug text-fg-muted sm:text-body-sm">
           Relaciona cada término con su definición. Las definiciones están mezcladas.
         </p>
       )}
 
       {!submitted && (matchedCount > 0 || selectedTerm || armedDefinition) && (
         <p
-          className="m-0 animate-state-in text-center text-xs font-medium tabular-nums text-fg-subtle"
+          className="m-0 animate-state-in text-center text-caption font-medium tabular-nums text-fg-subtle"
           aria-live="polite"
         >
           {selectedTerm
@@ -251,7 +251,7 @@ export function MatchPairsExercise({ exercise, onResult }: Props) {
           data-cuelume-press="press"
           data-cuelume-release="release"
           className={cn(
-            'w-full max-w-xl rounded-full py-3.5 text-[15px] font-semibold transition-all duration-150',
+            'w-full max-w-xl rounded-full py-3.5 text-body-sm font-semibold transition-all duration-150',
             allMatched
               ? 'cursor-pointer bg-(--cta-bg) text-(--cta-fg) hover:opacity-90 active:scale-[0.99]'
               : 'cursor-not-allowed bg-surface-raised text-fg-subtle opacity-50',

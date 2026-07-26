@@ -213,7 +213,7 @@ export function PronunciationAssessmentClient({ userId }: PronunciationAssessmen
   }
 
   return (
-    <div className="mx-auto flex w-full min-w-0 max-w-2xl flex-col gap-6 pb-[max(0px,env(safe-area-inset-bottom))]">
+    <div className="mx-auto flex w-full min-w-0 max-w-2xl flex-col layout-section-gap pb-[max(0px,env(safe-area-inset-bottom))]">
       <PronunciationAssessmentChrome stage={chromeStage(stage, finishError)} />
       {body}
     </div>

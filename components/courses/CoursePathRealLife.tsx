@@ -68,10 +68,7 @@ export default function CoursePathRealLife({ scenarios }: CoursePathRealLifeProp
                   key={scenario.id}
                   type="button"
                   role="tab"
-                  className={cn(
-                    "course-path__irl-dot",
-                    index === activeIndex && "course-path__irl-dot--active",
-                  )}
+                  className={cn( "course-path__irl-dot", index === activeIndex && "course-path__irl-dot--active", )}
                   aria-selected={index === activeIndex}
                   aria-label={`${scenario.title} (${index + 1} de ${scenarios.length})`}
                   onClick={() => goTo(index)}

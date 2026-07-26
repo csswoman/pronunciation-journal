@@ -81,7 +81,7 @@ export function MatchPairsBoard({
       </svg>
 
       <section className="relative z-10 flex min-w-0 flex-col gap-2" aria-label="Términos">
-        <p className="font-mono text-xs uppercase tracking-widest text-fg-subtle">Términos</p>
+        <p className="font-mono text-caption uppercase tracking-widest text-fg-subtle">Términos</p>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-1">
           {pairs.map((pair) => (
             <button
@@ -96,7 +96,7 @@ export function MatchPairsBoard({
               className={leftCardClass({ pairId: pair.id, selectedLeft, matches, results })}
             >
               <ColorDot color={dotColorForLeft(pair.id, matches, results, submitted, pairColor)} />
-              <span className="text-sm font-semibold leading-snug wrap-break-word sm:text-sm">
+              <span className="text-body-sm font-semibold leading-snug wrap-break-word sm:text-body-sm">
                 {pair.left}
               </span>
             </button>
@@ -105,7 +105,7 @@ export function MatchPairsBoard({
       </section>
 
       <section className="relative z-10 flex min-w-0 flex-col gap-2" aria-label="Definiciones mezcladas">
-        <p className="font-mono text-xs uppercase tracking-widest text-fg-subtle">Definiciones mezcladas</p>
+        <p className="font-mono text-caption uppercase tracking-widest text-fg-subtle">Definiciones mezcladas</p>
         <div className="flex min-w-0 flex-col gap-2">
           {rightItems.map((rightItem) => {
             const matchedLeftId = Object.keys(matches).find(
@@ -134,10 +134,7 @@ export function MatchPairsBoard({
                 <span className="size-2.5 shrink-0 rounded-full bg-border-default" aria-hidden />
               )}
               <span
-                className={cn(
-                  'min-w-0 text-sm leading-snug text-pretty text-fg-secondary',
-                  expandDefinition ? 'line-clamp-none' : 'line-clamp-3',
-                )}
+                className={cn( 'min-w-0 text-body-sm leading-snug text-pretty text-fg-secondary', expandDefinition ? 'line-clamp-none' : 'line-clamp-3', )}
               >
                 {rightItem.label}
               </span>

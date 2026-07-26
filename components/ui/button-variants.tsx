@@ -57,11 +57,11 @@
  * ## Tamaños disponibles:
  *
  * ### sm (Small)
- * - px-3 py-1.5, text-xs, h-8
+ * - px-3 py-1.5, text-caption, h-8
  * - Uso: inline actions, tags, secondary buttons en toolbars
  *
  * ### md (Medium, default)
- * - px-5 py-2.5, text-sm, h-10
+ * - px-5 py-2.5, text-body-sm, h-10
  * - Uso: form submissions, modal actions, standard CTAs
  *
  * ### lg (Large)

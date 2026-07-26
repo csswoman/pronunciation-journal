@@ -44,13 +44,7 @@ export function ListenButton({
         onClick={onPlay}
         disabled={isDisabled}
         aria-label={ariaLabel ?? label}
-        className={cn(
-          'inline-flex shrink-0 items-center justify-center w-8 h-8 rounded-full',
-          'border border-border-subtle bg-transparent text-fg-muted cursor-pointer',
-          'transition-colors duration-150 ease-out-quart focus-ring',
-          'hover:bg-surface-sunken disabled:opacity-40 disabled:cursor-not-allowed',
-          className,
-        )}
+        className={cn( 'inline-flex shrink-0 items-center justify-center w-8 h-8 rounded-full', 'border border-border-subtle bg-transparent text-fg-muted cursor-pointer', 'transition-colors duration-150 ease-out-quart focus-ring', 'hover:bg-surface-sunken disabled:opacity-40 disabled:cursor-not-allowed', className, )}
       >
         <Volume2 size={14} aria-hidden />
       </button>

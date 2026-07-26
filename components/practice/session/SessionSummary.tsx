@@ -29,14 +29,7 @@ function AccuracyDisplay({ accuracy }: { accuracy: number }) {
       role="status"
       aria-live="polite"
       aria-label={`Precisión ${accuracy} por ciento`}
-      className={cn(
-        'text-h2 font-semibold tabular-nums',
-        isExcellent
-          ? 'text-success animate-accuracy-pop'
-          : isAcceptable
-            ? 'text-warning'
-            : 'text-error',
-      )}
+      className={cn( 'text-h2 font-semibold tabular-nums', isExcellent ? 'text-success animate-accuracy-pop' : isAcceptable ? 'text-warning' : 'text-error', )}
     >
       {accuracy}%
     </div>
@@ -44,9 +37,9 @@ function AccuracyDisplay({ accuracy }: { accuracy: number }) {
 }
 
 function AccuracyLabel({ accuracy }: { accuracy: number }) {
-  if (accuracy >= 85) return <span className="text-sm font-medium text-success">Excelente</span>
-  if (accuracy >= 60) return <span className="text-sm font-medium text-warning">Sigue practicando</span>
-  return <span className="text-sm font-medium text-error">Hay que reforzar</span>
+  if (accuracy >= 85) return <span className="text-body-sm font-medium text-success">Excelente</span>
+  if (accuracy >= 60) return <span className="text-body-sm font-medium text-warning">Sigue practicando</span>
+  return <span className="text-body-sm font-medium text-error">Hay que reforzar</span>
 }
 
 export function formatExerciseLabel(slug: string, exercisePayload: unknown): string {
@@ -69,14 +62,11 @@ function ResultRow({
 }) {
   return (
     <li className="flex items-center justify-between rounded-lg border border-border-subtle bg-surface-raised px-3 py-2">
-      <span className="text-sm text-fg-primary">
+      <span className="text-body-sm text-fg-primary">
         {formatExerciseLabel(slug, exercisePayload)}
       </span>
       <span
-        className={cn(
-          'inline-flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold',
-          isCorrect ? 'bg-success-soft text-success' : 'bg-error-soft text-error',
-        )}
+        className={cn( 'inline-flex h-6 w-6 items-center justify-center rounded-full text-caption font-semibold', isCorrect ? 'bg-success-soft text-success' : 'bg-error-soft text-error', )}
         aria-label={isCorrect ? 'Correcto' : 'Incorrecto'}
       >
         {isCorrect ? '✓' : '✗'}
@@ -117,12 +107,7 @@ export function SessionSummary({
         {showProgressStatus && (
           <p
             role={progressSaveStatus === 'error' ? 'alert' : 'status'}
-            className={cn(
-              'mt-2 rounded-md px-3 py-2 text-sm',
-              progressSaveStatus === 'error'
-                ? 'bg-warning-soft text-warning'
-                : 'bg-surface-sunken text-fg-secondary',
-            )}
+            className={cn( 'mt-2 rounded-md px-3 py-2 text-body-sm', progressSaveStatus === 'error' ? 'bg-warning-soft text-warning' : 'bg-surface-sunken text-fg-secondary', )}
           >
             {progressSaveStatus === 'saving'
               ? 'Guardando progreso…'
@@ -159,14 +144,14 @@ export function SessionSummary({
         <button
           type="button"
           onClick={onPracticeAgain}
-          className="flex-1 rounded-xl border border-border-default bg-surface-raised px-4 py-3 text-sm font-semibold text-fg-primary transition-colors hover:border-border-strong hover:bg-surface-sunken"
+          className="flex-1 rounded-xl border border-border-default bg-surface-raised px-4 py-3 text-body-sm font-semibold text-fg-primary transition-colors hover:border-border-strong hover:bg-surface-sunken"
         >
           Practicar de nuevo
         </button>
         <button
           type="button"
           onClick={onFinish}
-          className="flex-1 rounded-xl bg-cta-bg px-4 py-3 text-sm font-semibold text-cta-fg transition-all hover:-translate-y-px hover:opacity-90"
+          className="flex-1 rounded-xl bg-cta-bg px-4 py-3 text-body-sm font-semibold text-cta-fg transition-all hover:-translate-y-px hover:opacity-90"
         >
           Terminar
         </button>

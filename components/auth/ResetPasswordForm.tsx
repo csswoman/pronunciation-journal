@@ -25,7 +25,7 @@ export function ResetPasswordForm({
     <>
       <div className="mb-6">
         <h1 className="text-fg font-semibold text-base">Create a new password</h1>
-        <p className="text-fg-muted text-sm mt-1">
+        <p className="text-fg-muted text-body-sm mt-1">
           Pick a new password to finish recovering your account.
         </p>
       </div>
@@ -50,7 +50,7 @@ export function ResetPasswordForm({
           autoComplete="new-password"
           minLength={MIN_PASSWORD_LENGTH}
         />
-        <p className="text-xs text-fg-muted">{PASSWORD_POLICY_MESSAGE}</p>
+        <p className="text-caption text-fg-muted">{PASSWORD_POLICY_MESSAGE}</p>
         <AuthButton label="Update password" pending={pending} />
       </form>
     </>

@@ -25,10 +25,10 @@ export default function PhraseCard({
   onSlow,
 }: Props) {
   return (
-    <div className="flex flex-col items-center justify-center text-center px-6 py-8 flex-1">
+    <div className="flex flex-col items-center justify-center text-center px-[var(--layout-card-pad)] py-[var(--layout-section-gap)] flex-1">
 
       <h1
-        className="mb-5 font-[Georgia,'Times_New_Roman',serif] text-[clamp(22px,6vw,34px)] font-medium leading-snug tracking-[-0.02em] text-[var(--fg)]"
+        className="mb-5 text-display-word font-medium leading-snug tracking-[-0.02em] text-[var(--fg)]"
       >
         {phrase}
       </h1>
@@ -38,7 +38,7 @@ export default function PhraseCard({
           <Loader2 size={13} className="animate-spin text-[var(--text-tertiary)]" />
         </div>
       ) : wordIPAs.length > 0 ? (
-        <div className="flex flex-wrap justify-center gap-x-3 gap-y-1.5 mb-5 font-mono text-sm">
+        <div className="flex flex-wrap justify-center gap-x-3 gap-y-1.5 mb-5 font-mono text-body-sm">
           {wordIPAs.map((entry, i) => {
             const hasError   = entry.alignment?.some(a => a.status !== "correct");
             const allCorrect = hasAnalysis && entry.alignment?.every(a => a.status === "correct");
@@ -69,14 +69,14 @@ export default function PhraseCard({
       {analyzing && (
         <div className="mb-3 flex items-center justify-center gap-1.5 text-[var(--text-tertiary)]">
           <Loader2 size={12} className="animate-spin" />
-          <span className="text-xs">Analyzing…</span>
+          <span className="text-caption">Analyzing…</span>
         </div>
       )}
 
       {hasAnalysis && !hasMistakes && !analyzing && (
         <div className="flex items-center gap-1.5 mb-3">
           <PartyPopper size={14} className="text-[var(--score-excellent)]" />
-          <p className="text-sm font-semibold text-[var(--score-excellent)]">Perfect!</p>
+          <p className="text-body-sm font-semibold text-[var(--score-excellent)]">Perfect!</p>
         </div>
       )}
 
@@ -86,14 +86,14 @@ export default function PhraseCard({
       >
         <button
           onClick={onListen}
-          className="inline-flex cursor-pointer items-center gap-2 rounded-full border-none bg-[var(--primary)] px-4 py-1.5 text-sm font-medium text-[var(--primary-foreground)] transition-colors"
+          className="inline-flex cursor-pointer items-center gap-2 rounded-full border-none bg-[var(--primary)] px-4 py-1.5 text-body-sm font-medium text-[var(--primary-foreground)] transition-colors"
         >
           <Play size={11} fill="currentColor" />
           Listen
         </button>
         <button
           onClick={onSlow}
-          className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-medium transition-colors cursor-pointer border-none text-[color:var(--text-secondary)] hover:bg-[var(--btn-regular-bg)] hover:text-[color:var(--fg)] focus-visible:outline-none focus-visible:ring-2"
+          className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-body-sm font-medium transition-colors cursor-pointer border-none text-[color:var(--text-secondary)] hover:bg-[var(--btn-regular-bg)] hover:text-[color:var(--fg)] focus-visible:outline-none focus-visible:ring-2"
         >
           0.5×
         </button>

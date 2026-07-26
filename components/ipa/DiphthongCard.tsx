@@ -25,11 +25,7 @@ export default function DiphthongCard({
     <button
       type="button"
       onClick={onSelect}
-      className={cn(
-        "ipa-chart__ph ipa-chart__ph--diph",
-        isSelected && "ipa-chart__ph--sel",
-        isExplored && !isSelected && "ipa-chart__ph--explored"
-      )}
+      className={cn( "ipa-chart__ph ipa-chart__ph--diph", isSelected && "ipa-chart__ph--sel", isExplored && !isSelected && "ipa-chart__ph--explored" )}
       aria-pressed={isSelected}
       aria-label={`${phoneme.symbol}, ejemplo ${keyword}`}
     >

@@ -83,7 +83,7 @@ export function DictationExercise({ exercise, onSubmit, voice }: Props) {
       />
 
       {submitted && !isCorrect && (
-        <p className="m-0 text-center text-sm text-(--fg-secondary)">
+        <p className="m-0 text-center text-body-sm text-(--fg-secondary)">
           Respuesta: <strong className="text-(--fg-primary)">{exercise.targetWord}</strong>
         </p>
       )}

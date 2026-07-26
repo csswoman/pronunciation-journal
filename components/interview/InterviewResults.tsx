@@ -186,44 +186,44 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
       <div
         className="flex-shrink-0 px-4 pt-4 pb-3 flex items-center justify-between gap-3 border-b border-[var(--line-divider)] bg-[var(--card-bg)]"
       >
-        <p className="text-sm font-semibold truncate text-fg">{title}</p>
+        <p className="text-body-sm font-semibold truncate text-fg">{title}</p>
         <Button variant="outline" size="sm" icon={<RotateCcw size={11} />} onClick={onReset}>New</Button>
       </div>
 
       {/* Body */}
       <div
-        className="flex-1 overflow-y-auto px-4 py-6 flex flex-col gap-6 bg-[var(--muted-bg)]"
+        className="flex-1 overflow-y-auto px-4 py-[var(--layout-section-gap)] flex flex-col layout-section-gap bg-[var(--muted-bg)]"
       >
         {/* Score hero */}
         <div
-          className="rounded-2xl px-6 py-6 flex flex-col items-center gap-3 text-center bg-[var(--card-bg)] border border-[var(--line-divider)]"
+          className="rounded-2xl layout-card-pad flex flex-col items-center gap-3 text-center bg-[var(--card-bg)] border border-[var(--line-divider)]"
         >
           <AccuracyRing accuracy={totalAccuracy} size={80} />
           <div>
-            <p className="text-xl font-bold" style={{ color: gradeColor }}>{grade}</p>
-            <p className="text-sm mt-0.5 text-[var(--muted-text)]">
+            <p className="text-h4 font-bold" style={{ color: gradeColor }}>{grade}</p>
+            <p className="text-body-sm mt-0.5 text-[var(--muted-text)]">
               {feedbackCopyEnabled ? 'Reconocimiento de palabras por voz' : 'Resultado de la práctica'}
             </p>
           </div>
 
           {/* Stats row */}
-          <div className="flex gap-6 mt-1">
+          <div className="flex gap-[var(--layout-stack-loose)] mt-1">
             <div className="flex flex-col items-center gap-0.5">
               <CheckCircle2 size={16} className="text-[var(--score-excellent)]" />
-              <span className="text-lg font-bold text-fg">{passed}</span>
-              <span className="text-xs text-[var(--muted-text)]">Passed</span>
+              <span className="text-body-lg font-bold text-fg">{passed}</span>
+              <span className="text-caption text-[var(--muted-text)]">Passed</span>
             </div>
             <div className="w-px bg-[var(--line-divider)]" />
             <div className="flex flex-col items-center gap-0.5">
               <AlertCircle size={16} className="text-[var(--score-poor)]" />
-              <span className="text-lg font-bold text-fg">{failed}</span>
-              <span className="text-xs text-[var(--muted-text)]">To improve</span>
+              <span className="text-body-lg font-bold text-fg">{failed}</span>
+              <span className="text-caption text-[var(--muted-text)]">To improve</span>
             </div>
             <div className="w-px bg-[var(--line-divider)]" />
             <div className="flex flex-col items-center gap-0.5">
               <TrendingUp size={16} className="text-[var(--color-accent)]" />
-              <span className="text-lg font-bold text-fg">{scores.length}</span>
-              <span className="text-xs text-[var(--muted-text)]">Turns</span>
+              <span className="text-body-lg font-bold text-fg">{scores.length}</span>
+              <span className="text-caption text-[var(--muted-text)]">Turns</span>
             </div>
           </div>
         </div>
@@ -231,7 +231,7 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
         {feedbackCopyEnabled && priorityCopy && (
           <section aria-live="polite" className="rounded-md border border-border-subtle bg-surface-raised px-4 py-3">
             <p className="m-0 font-kicker text-fg-subtle">UN FOCO PARA LA PRÓXIMA PRÁCTICA</p>
-            <p className="mb-0 mt-1 text-sm leading-relaxed text-fg">
+            <p className="mb-0 mt-1 text-body-sm leading-relaxed text-fg">
               Practica {priorityCopy.title}. Esta sugerencia viene del texto reconocido, no de una medición acústica.
             </p>
           </section>
@@ -240,7 +240,7 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
         {/* Per-turn breakdown */}
         {candidateTurns.length > 0 && (
           <div className="flex flex-col gap-2">
-            <p className="text-xs font-semibold uppercase tracking-wide px-1 text-[var(--muted-text)]">
+            <p className="font-kicker text-fg-subtle px-1">
               Turn breakdown
             </p>
             {candidateTurns.map(({ idx, turn }, i) => {
@@ -252,15 +252,15 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
                   key={idx}
                   className="rounded-xl px-4 py-3 flex items-center gap-3 bg-[var(--card-bg)] border border-[var(--line-divider)]"
                 >
-                  <span className="text-xs font-bold w-5 text-center flex-shrink-0 text-[var(--muted-text)]">
+                  <span className="text-caption font-bold w-5 text-center flex-shrink-0 text-[var(--muted-text)]">
                     {i + 1}
                   </span>
-                  <p className="flex-1 text-xs leading-relaxed min-w-0 truncate text-[var(--body-text)]">
+                  <p className="flex-1 text-caption leading-relaxed min-w-0 truncate text-[var(--body-text)]">
                     {turn.text}
                   </p>
                   {acc !== null ? (
                     <span
-                      className="flex-shrink-0 text-xs font-bold px-2 py-0.5 rounded-lg"
+                      className="flex-shrink-0 text-caption font-bold px-2 py-0.5 rounded-lg"
                       style={{
                         background: ok ? "color-mix(in oklch, var(--score-excellent) 15%, transparent)" : "color-mix(in oklch, var(--score-poor) 15%, transparent)",
                         color: ok ? "var(--score-excellent)" : "var(--score-poor)",
@@ -269,7 +269,7 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
                       {acc}%
                     </span>
                   ) : (
-                    <span className="flex-shrink-0 text-xs text-[var(--muted-text)]">skipped</span>
+                    <span className="flex-shrink-0 text-caption text-[var(--muted-text)]">skipped</span>
                   )}
                 </div>
               );
@@ -280,7 +280,7 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
         {/* Words to improve */}
         {uniqueWords.length > 0 && (
           <div className="flex flex-col gap-2">
-            <p className="text-xs font-semibold uppercase tracking-wide px-1 text-[var(--muted-text)]">
+            <p className="font-kicker text-fg-subtle px-1">
               Words to practice
             </p>
             <div
@@ -289,7 +289,7 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
               {uniqueWords.map(({ word, tip }, i) => (
                 <span
                   key={i}
-                  className="relative group px-3 py-1 rounded-full text-xs font-medium"
+                  className="relative group px-3 py-1 rounded-full text-caption font-medium"
                   style={{
                     background: "color-mix(in oklch, var(--score-poor) 12%, transparent)",
                     color: "var(--score-poor)",
@@ -300,7 +300,7 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
                   {word}
                   {tip && (
                     <span
-                      className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 rounded-lg text-xs whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-20 shadow-lg bg-[var(--card-bg)] border border-[var(--line-divider)] text-[var(--body-text)]"
+                      className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 rounded-lg text-caption whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-20 shadow-lg bg-[var(--card-bg)] border border-[var(--line-divider)] text-[var(--body-text)]"
                     >
                       {tip}
                     </span>

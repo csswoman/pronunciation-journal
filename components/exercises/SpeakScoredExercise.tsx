@@ -24,6 +24,7 @@ import { cn } from '@/lib/cn'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { feedbackFromScoringResult } from '@/lib/pronunciation/feedback/from-scoring'
 import { persistPronunciationFeedbackEvidence } from '@/lib/pronunciation/feedback/persistence'
+import { RemediationSequence } from '@/components/pronunciation-feedback/RemediationSequence'
 import type { Exercise } from '@/lib/phoneme-practice/types'
 import type { WordResult } from '@/lib/types'
 import type { PracticeSubmitHandler } from '@/lib/practice/types'
@@ -54,9 +55,7 @@ function WordDisplay({ word, ipa, onListen }: { word?: string; ipa: string; onLi
   return (
     <div className="flex flex-col items-center gap-1">
       <div className="flex items-center gap-3">
-        <div
-          className="text-5xl font-bold text-fg tracking-tight leading-none"
-        >
+        <div className="text-display-word font-bold text-fg tracking-tight">
           {word ?? '—'}
         </div>
         <ListenButton iconOnly onPlay={onListen} aria-label="Listen" />
@@ -83,7 +82,7 @@ function ShadowingFallback({
 }) {
   return (
     <div className="flex flex-col items-center gap-4">
-      <p className="text-xs text-fg-muted text-center max-w-xs m-0">
+      <p className="text-caption text-fg-muted text-center max-w-xs m-0">
         {reason === 'unsupported'
           ? "Your browser doesn't support voice scoring. Listen to the model and repeat it out loud, then continue — this attempt won't be scored."
           : reason === 'browser'
@@ -180,9 +179,9 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
       : 'unavailable'
 
   return (
-    <div className="flex flex-col items-center gap-6 w-full">
+    <div className="layout-stack-loose items-center w-full">
       <h2
-        className="text-xl font-semibold text-fg text-center leading-snug m-0"
+        className="m-0 text-center text-h4 text-fg"
       >
         Say the word
       </h2>
@@ -210,7 +209,7 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
           >
             {isListening ? <MicOff size={28} /> : <Mic size={28} />}
           </button>
-          <p className="text-xs text-fg-subtle tracking-wider m-0">
+          <p className="text-caption text-fg-subtle tracking-wider m-0">
             {isListening ? 'Listening… tap to stop' : isScoring ? 'Analyzing…' : 'Tap to speak'}
           </p>
         </div>
@@ -223,13 +222,13 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
 
       {/* Error state (recoverable errors) */}
       {isError && !isShadowing && !scored && (
-        <p className="text-xs text-fg-muted text-center m-0">
+        <p className="text-caption text-fg-muted text-center m-0">
           {errorCode === 'not-allowed'
             ? 'Microphone access was denied. Allow microphone access in your browser settings.'
             : errorCode === 'no-speech'
               ? 'No speech detected. Tap the mic and speak clearly.'
               : 'Speech recognition failed.'}{' '}
-          <button type="button" onClick={handleRetry} className="underline cursor-pointer bg-transparent border-none font-[inherit] text-xs text-fg-muted focus-ring">
+          <button type="button" onClick={handleRetry} className="underline cursor-pointer bg-transparent border-none font-[inherit] text-caption text-fg-muted focus-ring">
             Retry
           </button>
         </p>
@@ -244,6 +243,16 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
             feedback={getFeedbackMessage(scored.score, 70)}
             xpEarned={calculateXP(scored.score)}
             transcript={scored.transcript}
+          />
+          <RemediationSequence
+            onListen={() => exercise.targetWord && speak(exercise.targetWord)}
+            onSlow={() => {
+              if (!exercise.targetWord) return
+              const utterance = new SpeechSynthesisUtterance(exercise.targetWord)
+              utterance.rate = 0.6
+              window.speechSynthesis.speak(utterance)
+            }}
+            onRetry={handleRetry}
           />
           <div className="flex gap-2">
             <PillButton variant="outline" size="sm" onClick={handleRetry}>

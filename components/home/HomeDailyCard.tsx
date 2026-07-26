@@ -82,7 +82,7 @@ export default function HomeDailyCard({
 
   return (
     <section>
-      <div className="flex flex-col rounded-xl border border-border-default bg-daily-card px-6 pb-6 pt-5 shadow-sm">
+      <div className="flex flex-col rounded-xl border border-border-default bg-daily-card px-[var(--layout-card-pad)] pb-[var(--layout-card-pad)] pt-5 shadow-sm">
         <div aria-live="polite" aria-atomic="true" className="sr-only">
           {status === 'ready' && !allDone && `Plan de hoy listo, ${steps.length} pasos`}
           {status === 'ready' && allDone && 'Plan diario completo'}
@@ -106,7 +106,7 @@ export default function HomeDailyCard({
         )}
 
         {status === 'error' && (
-          <div className="animate-state-in flex flex-col items-center gap-3 py-8 text-center">
+          <div className="animate-state-in flex flex-col items-center gap-3 py-[var(--layout-section-gap)] text-center">
             <p className="font-body-sm text-error">No se pudo preparar tu plan.</p>
             <Button type="button" variant="primary" size="md" onClick={() => void load()}>
               Reintentar
@@ -115,7 +115,7 @@ export default function HomeDailyCard({
         )}
 
         {status === 'ready' && !allDone && steps.length === 0 && (
-          <div className="animate-state-in flex flex-col items-center gap-4 py-8 text-center">
+          <div className="animate-state-in flex flex-col items-center gap-4 py-[var(--layout-section-gap)] text-center">
             <div className="flex flex-col gap-1.5">
               <p className="font-label font-semibold text-fg">
                 {reviewDue ? 'Después del repaso, arma tu plan.' : 'Tu plan está vacío hoy.'}
@@ -139,7 +139,7 @@ export default function HomeDailyCard({
 
         {status === 'ready' &&
           (allDone ? (
-            <div className="animate-state-in flex flex-col items-center gap-3 py-6 text-center">
+            <div className="animate-state-in flex flex-col items-center gap-3 py-[var(--layout-section-gap)] text-center">
               <div className="animate-step-done grid h-12 w-12 place-items-center rounded-full bg-success-soft text-success">
                 <Flame size={24} />
               </div>

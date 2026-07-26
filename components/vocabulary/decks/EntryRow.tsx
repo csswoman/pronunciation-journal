@@ -56,12 +56,12 @@ export function EntryRow({ entry, selected, onToggleSelect, onRemove, onSaveEntr
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-sm font-semibold text-fg">{entry.word}</span>
+            <span className="text-body-sm font-semibold text-fg">{entry.word}</span>
             {pos && <span className="text-tiny px-1.5 py-0.5 rounded-full border border-[var(--line-divider)] text-fg-subtle font-medium">{pos}</span>}
           </div>
-          {entry.ipa && <p className="text-xs text-fg-subtle mt-0.5">/{entry.ipa}/</p>}
-          {!expanded && currentDefinition && <p className="text-xs text-fg-muted truncate mt-0.5">{currentDefinition}</p>}
-          {!expanded && entry.phrases && entry.phrases.length > 0 && <p className="text-xs text-fg-muted truncate mt-0.5 italic">"{entry.phrases[0]}"{entry.phrases.length > 1 ? ` +${entry.phrases.length - 1}` : ""}</p>}
+          {entry.ipa && <p className="text-caption text-fg-subtle mt-0.5">/{entry.ipa}/</p>}
+          {!expanded && currentDefinition && <p className="text-caption text-fg-muted truncate mt-0.5">{currentDefinition}</p>}
+          {!expanded && entry.phrases && entry.phrases.length > 0 && <p className="text-caption text-fg-muted truncate mt-0.5 italic">"{entry.phrases[0]}"{entry.phrases.length > 1 ? ` +${entry.phrases.length - 1}` : ""}</p>}
         </div>
 
         <div className="flex items-center gap-0.5 shrink-0">
@@ -80,12 +80,12 @@ export function EntryRow({ entry, selected, onToggleSelect, onRemove, onSaveEntr
       {expanded && (
         <div className="px-3 pb-3 space-y-3 border-t border-[var(--line-divider)] pt-3 mx-1">
           <div>
-            <p className="text-tiny font-semibold uppercase tracking-widest text-fg-subtle mb-1.5">Meaning / definition</p>
-            <textarea autoFocus value={editingMeaning} onChange={(e) => setEditingMeaning(e.target.value)} rows={2} className="w-full px-3 py-2 rounded-lg bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-sm text-fg placeholder:text-fg-subtle focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/30 resize-none" />
+            <p className="font-kicker font-semibold text-fg-subtle mb-1.5">Meaning / definition</p>
+            <textarea autoFocus value={editingMeaning} onChange={(e) => setEditingMeaning(e.target.value)} rows={2} className="w-full px-3 py-2 rounded-lg bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-body-sm text-fg placeholder:text-fg-subtle focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/30 resize-none" />
           </div>
           <div>
-            <p className="text-tiny font-semibold uppercase tracking-widest text-fg-subtle mb-1.5">Phrases / examples</p>
-            <textarea value={editingPhrases} onChange={(e) => setEditingPhrases(e.target.value)} rows={2} className="w-full px-3 py-2 rounded-lg bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-sm text-fg placeholder:text-fg-subtle focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/30 resize-none" />
+            <p className="font-kicker font-semibold text-fg-subtle mb-1.5">Phrases / examples</p>
+            <textarea value={editingPhrases} onChange={(e) => setEditingPhrases(e.target.value)} rows={2} className="w-full px-3 py-2 rounded-lg bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-body-sm text-fg placeholder:text-fg-subtle focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/30 resize-none" />
           </div>
           <div className="flex gap-2 justify-end">
             <Button variant="ghost" size="sm" onClick={() => setExpanded(false)}>Cancel</Button>

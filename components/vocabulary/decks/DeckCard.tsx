@@ -39,14 +39,14 @@ export function DeckCard({
         {/* Header */}
         <div className="flex items-start gap-3">
           <div
-            className={`w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 font-bold ${deck.icon ? "text-xl" : "text-base text-on-primary"}`}
+            className={`w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 font-bold ${deck.icon ? "text-h4" : "text-base text-on-primary"}`}
             style={{ background: deck.color ?? "var(--primary)" }}
           >
             {deck.icon ?? deck.name[0].toUpperCase()}
           </div>
           <div className="flex-1 min-w-0">
             <p className="font-semibold text-base text-fg truncate leading-tight">{deck.name}</p>
-            <p className="text-xs text-fg-subtle mt-0.5">{deck.description || "Vocabulary set"}</p>
+            <p className="text-caption text-fg-subtle mt-0.5">{deck.description || "Vocabulary set"}</p>
           </div>
           <div className="flex items-center gap-1 flex-shrink-0">
             <Button variant="ghost" size="icon" onClick={onManage} title="Manage words" onMouseEnter={onManageHover} onFocus={onManageHover}>
@@ -60,7 +60,7 @@ export function DeckCard({
 
         {/* Progress */}
         <div className="space-y-1.5">
-          <div className="flex items-center justify-between text-xs font-medium">
+          <div className="flex items-center justify-between text-caption font-medium">
             <span className="text-fg-muted">Progress</span>
             <span className="text-fg-subtle">{progressPercent}%</span>
           </div>
@@ -69,7 +69,7 @@ export function DeckCard({
 
         {/* Footer */}
         <div className="flex items-center justify-between">
-        <span className="text-[13px] text-fg-subtle">
+        <span className="text-caption text-fg-subtle">
           {entryCount} word{entryCount !== 1 ? "s" : ""}
         </span>
         <Button
@@ -80,7 +80,7 @@ export function DeckCard({
           disabled={!canStudy}
           title={!canStudy ? "Add words to study" : ""}
           icon={<Play size={15} className="fill-current" />}
-          className="ml-auto px-3 py-1.5 !text-[13px] !rounded-[var(--radius-sm)]"
+          className="ml-auto px-3 py-1.5 !text-caption !rounded-[var(--radius-sm)]"
         >
           Study
         </Button>

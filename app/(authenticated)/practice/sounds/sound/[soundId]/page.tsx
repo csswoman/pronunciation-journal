@@ -156,7 +156,7 @@ export default function SoundPracticePage() {
       <button
         type="button"
         onClick={() => setLessonOpen(true)}
-        className="flex w-full items-center justify-center gap-1.5 text-xs font-medium text-fg-subtle transition-colors hover:text-fg-secondary"
+        className="flex w-full items-center justify-center gap-1.5 text-caption font-medium text-fg-subtle transition-colors hover:text-fg-secondary"
       >
         <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
           <path d="M2 4h12M2 8h8M2 12h10" />
@@ -197,7 +197,7 @@ export default function SoundPracticePage() {
       )}
 
       {nextReview && (
-        <p className="pb-6 text-center text-xs text-fg-subtle">
+        <p className="pb-6 text-center text-caption text-fg-subtle">
           Próxima revisión: {nextReview.toLocaleDateString()}
         </p>
       )}

@@ -13,7 +13,7 @@ export function PracticeButton({ categoryId }: PracticeButtonProps) {
     <button
       type="button"
       onClick={() => router.push(`/dictionary/${categoryId}/practice`)}
-      className="inline-flex items-center gap-2 px-4 py-2.5 rounded-[var(--radius-sm)] text-sm font-semibold bg-[var(--primary)] text-[var(--on-primary)] border-none cursor-pointer transition-[filter] duration-150 hover:brightness-[1.06]"
+      className="inline-flex items-center gap-2 px-4 py-2.5 rounded-[var(--radius-sm)] text-body-sm font-semibold bg-[var(--primary)] text-[var(--on-primary)] border-none cursor-pointer transition-[filter] duration-150 hover:brightness-[1.06]"
     >
       <Dumbbell className="w-4 h-4" aria-hidden />
       Practice lesson

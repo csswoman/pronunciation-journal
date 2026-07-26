@@ -29,7 +29,7 @@ export default function HomePlacementPrompt({ compact = false }: HomePlacementPr
 
   return (
     <section
-      className="flex flex-col gap-4 rounded-xl border border-border-subtle bg-surface-raised px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:px-6"
+      className="flex flex-col gap-[var(--layout-stack-loose)] layout-card-pad rounded-xl border border-border-subtle bg-surface-raised sm:flex-row sm:items-center sm:justify-between"
       aria-labelledby="placement-prompt-title"
     >
       <div className="min-w-0 flex flex-col gap-1">

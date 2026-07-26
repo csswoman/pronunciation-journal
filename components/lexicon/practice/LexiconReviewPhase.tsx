@@ -61,10 +61,10 @@ export function LexiconReviewPhase({ entries, posMap, userId, onComplete }: Lexi
   if (!current) return null
 
   return (
-    <main className="flex w-full items-center justify-center px-10 py-10">
+    <main className="flex w-full items-center justify-center px-[var(--layout-page-inline)] py-[var(--layout-page-block)]">
       <div className="flex w-full max-w-md flex-col gap-3">
         {saveError && (
-          <p role="alert" className="rounded-lg border border-error bg-error-soft px-3 py-2 text-sm text-error">
+          <p role="alert" className="rounded-lg border border-error bg-error-soft px-3 py-2 text-body-sm text-error">
             {saveError}
           </p>
         )}

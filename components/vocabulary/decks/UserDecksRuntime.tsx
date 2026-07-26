@@ -94,7 +94,7 @@ export function UserDecksRuntime() {
       {editDeck && <EditDeckModal deck={editDeck} onClose={() => setEditDeckId(null)} onUpdated={(deck) => { updateDeck(deck); setEditDeckId(null); }} onDelete={() => setDeletingDeckId(editDeck.id)} />}
       {manageDeck && <ManageDrawer deck={manageDeck} onClose={() => setManageDeckId(null)} onWordCountChange={(count) => setWordCount(manageDeck.id, count)} />}
       {deletingDeckId && (
-        <div className="fixed bottom-20 left-1/2 z-50 flex -translate-x-1/2 items-center gap-3 rounded-xl border border-border-default bg-surface-raised px-4 py-3 text-sm shadow-lg">
+        <div className="fixed bottom-20 left-1/2 z-50 flex -translate-x-1/2 items-center gap-3 rounded-xl border border-border-default bg-surface-raised px-4 py-3 text-body-sm shadow-lg">
           <span className="text-fg-secondary">Delete &ldquo;{decks.find((deck) => deck.id === deletingDeckId)?.name}&rdquo;?</span>
           <button type="button" className="font-semibold text-error" onClick={confirmDeleteDeck}>Delete</button>
           <button type="button" className="text-fg-muted" onClick={() => setDeletingDeckId(null)}>Cancel</button>

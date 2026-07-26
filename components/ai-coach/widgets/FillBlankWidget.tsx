@@ -82,7 +82,7 @@ export default function FillBlankWidget({ args, status, onAnswer, onNext, onRetr
   return (
     <div className="space-y-4 py-2">
       {hintText && (
-        <p className="text-xs text-[var(--text-tertiary)] text-center">{hintText}</p>
+        <p className="text-caption text-[var(--text-tertiary)] text-center">{hintText}</p>
       )}
 
       <div className="px-2 py-4 rounded-xl bg-[var(--surface-raised)] border border-[var(--border-subtle)] flex flex-wrap items-center justify-center gap-1 text-base text-[var(--text-primary)] leading-relaxed">
@@ -109,7 +109,7 @@ export default function FillBlankWidget({ args, status, onAnswer, onNext, onRetr
         <button
           type="button"
           onClick={() => setShowOptions(true)}
-          className="w-full py-2 rounded-full text-xs font-medium text-[var(--text-secondary)] bg-[var(--surface-raised)] border border-[var(--border-subtle)] hover:bg-[var(--surface-hover)] transition-colors"
+          className="w-full py-2 rounded-full text-caption font-medium text-[var(--text-secondary)] bg-[var(--surface-raised)] border border-[var(--border-subtle)] hover:bg-[var(--surface-hover)] transition-colors"
         >
           Show options
         </button>
@@ -126,11 +126,7 @@ export default function FillBlankWidget({ args, status, onAnswer, onNext, onRetr
                 next[0] = opt;
                 setValues(next);
               }}
-              className={`py-2 px-3 rounded-lg text-sm font-medium border transition-colors ${
-                values[0] === opt
-                  ? "bg-[var(--primary)] text-[var(--on-primary)] border-[var(--primary)]"
-                  : "bg-[var(--surface-raised)] text-[var(--text-primary)] border-[var(--border-subtle)] hover:bg-[var(--surface-hover)]"
-              }`}
+              className={`py-2 px-3 rounded-lg text-body-sm font-medium border transition-colors ${ values[0] === opt ? "bg-[var(--primary)] text-[var(--on-primary)] border-[var(--primary)]" : "bg-[var(--surface-raised)] text-[var(--text-primary)] border-[var(--border-subtle)] hover:bg-[var(--surface-hover)]" }`}
             >
               {opt}
             </button>
@@ -141,7 +137,7 @@ export default function FillBlankWidget({ args, status, onAnswer, onNext, onRetr
       {!answered && combined && !evaluation && (
         <button
           onClick={handleSubmit}
-          className="w-full py-3 rounded-full text-sm font-semibold bg-[var(--primary)] text-[var(--on-primary)] transition-opacity hover:opacity-90"
+          className="w-full py-3 rounded-full text-body-sm font-semibold bg-[var(--primary)] text-[var(--on-primary)] transition-opacity hover:opacity-90"
         >
           Check
         </button>

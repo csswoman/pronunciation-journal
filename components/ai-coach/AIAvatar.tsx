@@ -9,7 +9,7 @@ export default function AIAvatar({ state = "idle" }: AIAvatarProps) {
       aria-hidden
     >
       <span
-        className={`text-white text-sm leading-none ${state === "thinking" ? "animate-pulse" : ""}`}
+        className={`text-white text-body-sm leading-none ${state === "thinking" ? "animate-pulse" : ""}`}
       >
         ✦
       </span>

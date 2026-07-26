@@ -13,7 +13,7 @@ export function ResetForm({ email, setEmail, pending, onSubmit, onBack }: ResetF
     <>
       <div className="mb-6">
         <h2 className="text-fg font-semibold text-base">Reset your password</h2>
-        <p className="text-fg-muted text-sm mt-1">Enter your email and we&apos;ll send you a link.</p>
+        <p className="text-fg-muted text-body-sm mt-1">Enter your email and we&apos;ll send you a link.</p>
       </div>
       <form onSubmit={onSubmit} className="flex flex-col gap-space-4">
         <AuthInput type="email" label="Email address" placeholder="you@example.com" value={email} onChange={setEmail} required autoComplete="email" />

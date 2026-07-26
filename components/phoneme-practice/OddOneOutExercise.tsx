@@ -63,24 +63,7 @@ export function OddOneOutExercise({ exercise, onSubmit, voice }: Props) {
               aria-checked={isSelected}
               aria-disabled={submitted}
               onClick={() => handleSelect(opt.id, opt.label)}
-              className={cn(
-                'flex w-full items-center justify-between rounded-xl border px-4 py-3.5 text-left text-sm font-medium transition-all duration-150',
-                !submitted &&
-                  !isSelected &&
-                  'cursor-pointer border-border-default bg-surface-raised text-fg hover:border-primary/50',
-                !submitted &&
-                  isSelected &&
-                  'cursor-pointer border-primary bg-primary-soft text-primary',
-                submitted && isCorrect && 'border-success bg-success/10 text-success pf-reveal-ok',
-                submitted &&
-                  !isCorrect &&
-                  isSelected &&
-                  'border-error bg-error/10 text-error pf-reveal-bad',
-                submitted &&
-                  !isCorrect &&
-                  !isSelected &&
-                  'border-border-subtle bg-surface-raised text-fg-disabled opacity-50',
-              )}
+              className={cn( 'flex w-full items-center justify-between rounded-xl border px-4 py-3.5 text-left text-body-sm font-medium transition-all duration-150', !submitted && !isSelected && 'cursor-pointer border-border-default bg-surface-raised text-fg hover:border-primary/50', !submitted && isSelected && 'cursor-pointer border-primary bg-primary-soft text-primary', submitted && isCorrect && 'border-success bg-success/10 text-success pf-reveal-ok', submitted && !isCorrect && isSelected && 'border-error bg-error/10 text-error pf-reveal-bad', submitted && !isCorrect && !isSelected && 'border-border-subtle bg-surface-raised text-fg-disabled opacity-50', )}
             >
               <span>{opt.label}</span>
               {submitted && isSelected && (

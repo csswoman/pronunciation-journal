@@ -34,7 +34,7 @@ export function SessionSummary({ soundIpa, scoreableCorrect, originalTotal, next
     <div className="w-full max-w-[480px] mx-auto flex flex-col gap-3">
 
       {/* Main card */}
-      <div className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-2xl)] pt-10 px-8 pb-8 flex flex-col items-center gap-3 text-center">
+      <div className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-2xl)] layout-card-pad pt-[var(--layout-section-gap)] flex flex-col items-center gap-3 text-center">
 
         {/* IPA */}
         <div className="font-ipa text-display-ipa font-bold text-primary">
@@ -57,13 +57,13 @@ export function SessionSummary({ soundIpa, scoreableCorrect, originalTotal, next
         <div className={`text-h1 font-bold tabular-nums ${accuracyClass}`}>
           {accuracy}%
         </div>
-        <p className="text-sm text-[var(--text-tertiary)] m-0">
+        <p className="text-body-sm text-[var(--text-tertiary)] m-0">
           {scoreableCorrect} of {originalTotal} correct
         </p>
 
         {/* Next review chip */}
         {nextReviewLabel && (
-          <div className="mt-1 py-3 px-5 rounded-[var(--radius-lg)] border border-[var(--border-subtle)] bg-[var(--surface-sunken)] text-[13px] text-[var(--text-secondary)]">
+          <div className="mt-1 py-3 px-5 rounded-[var(--radius-lg)] border border-[var(--border-subtle)] bg-[var(--surface-sunken)] text-caption text-[var(--text-secondary)]">
             Next review: <strong className="text-[var(--text-primary)]">{nextReviewLabel}</strong>
           </div>
         )}

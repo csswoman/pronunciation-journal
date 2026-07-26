@@ -53,7 +53,7 @@ export function StudyModalWordBank({ source, onClose }: StudyModalWordBankProps)
           />
         )}
         {!flipped && (
-          <p className="mt-3 text-xs text-fg-subtle">
+          <p className="mt-3 text-caption text-fg-subtle">
             Hint: Press{" "}
             <kbd className="px-1.5 py-0.5 rounded border border-border-subtle bg-[var(--btn-regular-bg)] text-tiny font-mono">
               SPACE

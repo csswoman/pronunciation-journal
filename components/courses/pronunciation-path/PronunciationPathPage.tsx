@@ -171,7 +171,7 @@ export function PronunciationPathPage({
     : null
 
   return (
-    <div className="mx-auto flex w-full min-w-0 max-w-3xl flex-col gap-6 pb-[max(5.5rem,env(safe-area-inset-bottom))] sm:gap-8 lg:pb-4">
+    <div className="mx-auto flex w-full min-w-0 max-w-3xl flex-col layout-section-gap pb-[max(5.5rem,env(safe-area-inset-bottom))] lg:pb-4">
       <PageHeader
         variant="compact"
         kicker="Pronunciación"

@@ -70,13 +70,13 @@ function WordChip({ word, status, tip }: { word: string; status: "correct" | "in
       onMouseLeave={() => setShowTip(false)}
     >
       <span
-        className={`inline-block px-2 py-0.5 rounded text-sm font-medium select-none ${bg[status]} ${tip ? "cursor-help underline decoration-dotted underline-offset-2" : ""}`}
+        className={`inline-block px-2 py-0.5 rounded text-body-sm font-medium select-none ${bg[status]} ${tip ? "cursor-help underline decoration-dotted underline-offset-2" : ""}`}
       >
         {word}
       </span>
       {showTip && tip && (
         <span
-          className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2.5 py-1.5 rounded-lg text-xs whitespace-nowrap z-20 shadow-lg pointer-events-none"
+          className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2.5 py-1.5 rounded-lg text-caption whitespace-nowrap z-20 shadow-lg pointer-events-none"
           style={{
             background: "var(--card-bg)",
             border: "1px solid var(--line-divider)",
@@ -163,16 +163,14 @@ export default function CandidateRecorder({ targetText, difficulty, level, onDon
   if (phase === "idle" || phase === "recording") {
     return (
       <div className="flex flex-col items-center gap-4 py-4">
-        {(error || speechError) && <p className="text-xs text-error">{error ?? speechError}</p>}
+        {(error || speechError) && <p className="text-caption text-error">{error ?? speechError}</p>}
         <button
           onClick={handleToggleRecording}
-          className={`w-16 h-16 rounded-full flex items-center justify-center transition-all shadow-lg text-white ${
-            isRecording ? "bg-warning scale-110 animate-pulse" : "bg-[var(--accent)] hover:scale-105"
-          }`}
+          className={`w-16 h-16 rounded-full flex items-center justify-center transition-all shadow-lg text-white ${ isRecording ? "bg-warning scale-110 animate-pulse" : "bg-[var(--accent)] hover:scale-105" }`}
         >
           {isRecording ? <MicOff size={24} color="white" /> : <Mic size={24} color="white" />}
         </button>
-        <p className="text-xs text-[var(--muted-text)]">
+        <p className="text-caption text-[var(--muted-text)]">
           {isRecording ? "Recording… tap to stop" : "Tap to record yourself"}
         </p>
       </div>
@@ -181,9 +179,9 @@ export default function CandidateRecorder({ targetText, difficulty, level, onDon
 
   if (phase === "transcribing") {
     return (
-      <div className="flex flex-col items-center gap-3 py-6">
+      <div className="flex flex-col items-center gap-3 py-[var(--layout-section-gap)]">
         <Loader2 size={28} className="animate-spin text-[var(--accent)]" />
-        <p className="text-sm text-[var(--muted-text)]">Analyzing your pronunciation…</p>
+        <p className="text-body-sm text-[var(--muted-text)]">Analyzing your pronunciation…</p>
       </div>
     );
   }
@@ -203,9 +201,9 @@ export default function CandidateRecorder({ targetText, difficulty, level, onDon
       <div className="flex items-center gap-5">
         <AccuracyRing accuracy={result.accuracy} />
         <div>
-          <p className="text-sm font-medium" style={{ color: feedbackColor }}>{feedbackMsg}</p>
+          <p className="text-body-sm font-medium" style={{ color: feedbackColor }}>{feedbackMsg}</p>
           {transcript && (
-            <p className="text-xs mt-1 text-[var(--muted-text)]">
+            <p className="text-caption mt-1 text-[var(--muted-text)]">
               You said: &ldquo;{transcript}&rdquo;
             </p>
           )}
@@ -226,7 +224,7 @@ export default function CandidateRecorder({ targetText, difficulty, level, onDon
       )}
 
       {result.wordResults?.some((w) => w.phonemes?.tip) && (
-        <p className="text-xs text-[var(--muted-text)]">
+        <p className="text-caption text-[var(--muted-text)]">
           Hover the underlined words for pronunciation tips.
         </p>
       )}

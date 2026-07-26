@@ -143,11 +143,7 @@ export default function CoursePathProgressClient({ level, compactHead }: CourseP
           return (
             <details
               key={unit.unit.id}
-              className={cn(
-                "course-path__unit",
-                unit.status === "done" && "course-path__unit--done",
-                unit.unit.isOptionalSection && "course-path__unit--optional-block",
-              )}
+              className={cn( "course-path__unit", unit.status === "done" && "course-path__unit--done", unit.unit.isOptionalSection && "course-path__unit--optional-block", )}
               open={unit.defaultOpen}
             >
               <summary className="course-path__urow">

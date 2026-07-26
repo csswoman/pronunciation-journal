@@ -15,7 +15,7 @@ interface WordSelectionBarProps {
 export function WordSelectionBar({ count, onClear, onCreateDeck, onAddToExistingDeck, onCreateDeckHover, onAddToExistingDeckHover }: WordSelectionBarProps) {
   return (
     <div className="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 whitespace-nowrap rounded-[var(--radius-lg)] border border-[var(--line-divider)] bg-[var(--card-bg)] px-4 py-3 shadow-[0_8px_32px_rgba(0,0,0,0.16),0_2px_8px_rgba(0,0,0,0.08)]">
-      <span className="min-w-[60px] text-[13px] font-semibold text-[var(--fg)]">
+      <span className="min-w-[60px] text-caption font-semibold text-[var(--fg)]">
         {count} selected
       </span>
       <div className="h-5 w-px bg-[var(--line-divider)]" />
@@ -26,7 +26,7 @@ export function WordSelectionBar({ count, onClear, onCreateDeck, onAddToExisting
         onClick={onAddToExistingDeck}
         onMouseEnter={onAddToExistingDeckHover}
         onFocus={onAddToExistingDeckHover}
-        className="text-[13px]"
+        className="text-caption"
       >
         Add to deck
       </Button>
@@ -37,7 +37,7 @@ export function WordSelectionBar({ count, onClear, onCreateDeck, onAddToExisting
         onClick={onCreateDeck}
         onMouseEnter={onCreateDeckHover}
         onFocus={onCreateDeckHover}
-        className="text-[13px]"
+        className="text-caption"
       >
         New deck
       </Button>

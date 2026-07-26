@@ -57,7 +57,7 @@ export default function DifficultyPill({
 
   return (
     <span
-      className={`inline-block w-fit rounded-full border px-2 py-0.5 text-[11px] font-medium leading-[1.4] ${pillClass[difficulty]} ${className}`}
+      className={`inline-block w-fit rounded-full border px-2 py-0.5 text-xxs font-medium leading-[1.4] ${pillClass[difficulty]} ${className}`}
     >
       {text}
     </span>

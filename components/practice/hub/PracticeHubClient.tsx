@@ -51,7 +51,7 @@ export default function PracticeHubClient({ fromDaily }: Props) {
   }, [fromDaily, user])
 
   return (
-    <PageLayout className="mx-auto flex max-w-[640px] flex-col gap-6">
+    <PageLayout className="mx-auto flex max-w-[640px] flex-col layout-section-gap">
       <PracticeHubHeader fromDaily={fromDaily} />
       {recommendation && (
         <>

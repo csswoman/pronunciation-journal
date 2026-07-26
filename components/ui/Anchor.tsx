@@ -32,7 +32,7 @@ export default function Anchor({
   const base = cn(
     // Base styles
     "inline-flex items-center gap-1.5",
-    "text-sm font-medium",
+    "text-body-sm font-medium",
     "transition-colors duration-150 ease-out-quart",
     "focus-ring",
     "cursor-pointer",

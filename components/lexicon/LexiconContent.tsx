@@ -40,7 +40,7 @@ export function LexiconContent({ lessons }: LexiconContentProps) {
   }, [lessons, activeFilter, searchQuery]);
 
   return (
-    <div className="space-y-6">
+    <div className="layout-section-gap">
       <LexiconFilters active={activeFilter} onChange={setActiveFilter} />
       <LexiconSearchBar value={searchQuery} onChange={setSearchQuery} />
       <LessonGrid

@@ -77,10 +77,10 @@ export default function TemplateCard({ template, onSelect }: TemplateCardProps) 
         <Icon size={19} strokeWidth={2} style={{ color: color }} />
       </div>
 
-      <p className="text-[15px] font-semibold leading-[1.3] text-[var(--text-primary)]">
+      <p className="text-body-sm font-semibold leading-[1.3] text-[var(--text-primary)]">
         {template.title}
       </p>
-      <p className="text-[13px] leading-snug text-[var(--text-tertiary)] mt-1">
+      <p className="text-caption leading-snug text-[var(--text-tertiary)] mt-1">
         {template.description}
       </p>
     </button>

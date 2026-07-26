@@ -53,7 +53,7 @@ function StreakValue({ value, label, accent }: { value: number; label: string; a
       >
         {value}
       </div>
-      <div className="mt-1.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">
+      <div className="mt-1.5 font-kicker font-semibold text-fg-subtle">
         {label}
       </div>
     </div>

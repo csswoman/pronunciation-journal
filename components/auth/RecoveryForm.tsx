@@ -27,7 +27,7 @@ export function RecoveryForm({
     <>
       <div className="mb-6">
         <h2 className="text-fg font-semibold text-base">Create a new password</h2>
-        <p className="text-fg-muted text-sm mt-1">
+        <p className="text-fg-muted text-body-sm mt-1">
           Use the link from your email to set a new password.
         </p>
       </div>
@@ -52,7 +52,7 @@ export function RecoveryForm({
           autoComplete="new-password"
           minLength={MIN_PASSWORD_LENGTH}
         />
-        <p className="text-xs text-fg-muted">{PASSWORD_POLICY_MESSAGE}</p>
+        <p className="text-caption text-fg-muted">{PASSWORD_POLICY_MESSAGE}</p>
         <AuthButton label="Update password" pending={pending} />
         <AuthButton label="Back to sign in" pending={pending} type="button" variant="secondary" onClick={onBack} />
       </form>
