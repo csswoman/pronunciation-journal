@@ -7,6 +7,7 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { ARPABET_TO_IPA } from "@/lib/pronunciation/phonemes";
 import { scorePronunciation } from "@/lib/pronunciation/scoring";
 import { feedbackFromScoringResult } from '@/lib/pronunciation/feedback/from-scoring';
+import { persistPronunciationFeedbackEvidence } from '@/lib/pronunciation/feedback/persistence';
 import { saveAIWord } from "@/lib/db/ai";
 import { savePracticeAnswer } from "@/lib/practice/queries";
 import { recordActivitySession } from "@/lib/progress/activity-hub";
@@ -174,6 +175,13 @@ export default function PronunciationView() {
       // word no longer shifts every later word's feedback.
       const scoring = await scorePronunciation(transcript, activePhrase);
       setLatestScoring(scoring);
+      if (userId) {
+        const feedback = feedbackFromScoringResult({
+          accuracy: scoring.accuracy, transcript: scoring.transcript, wordResults: scoring.wordResults,
+          evaluatorVersion: 'coach-stt-v1',
+        });
+        void persistPronunciationFeedbackEvidence(userId, feedback).catch(() => undefined);
+      }
 
       // Map results back onto the original phrase's words by matching
       // expected text (skip "extra" entries — they have no expected word).

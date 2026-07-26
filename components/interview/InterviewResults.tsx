@@ -17,6 +17,7 @@ import { candidatesFromWordResults } from '@/lib/pronunciation/feedback/from-sco
 import { buildPronunciationFeedback } from '@/lib/pronunciation/feedback/model'
 import { getLearnerTargetCopy } from '@/lib/pronunciation/assessment/learner-copy'
 import { isActionablePronunciationFeedbackCopyEnabled } from '@/lib/pronunciation/feedback/copy-flag'
+import { persistPronunciationFeedbackEvidence } from '@/lib/pronunciation/feedback/persistence'
 
 interface TurnResult {
   score: ScoringResult;
@@ -35,6 +36,7 @@ interface Props {
 export function InterviewResults({ title, turns, results, difficulty, level, onReset }: Props) {
   const fired = useRef(false);
   const progressSaved = useRef(false);
+  const feedbackEvidenceSaved = useRef(false);
   const { user } = useAuth();
   const threshold = getThreshold(level, difficulty);
 
@@ -160,6 +162,12 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
       }
     })();
   }, [user?.id, candidateTurns, results, threshold]);
+
+  useEffect(() => {
+    if (feedbackEvidenceSaved.current || !user?.id || !interviewFeedback.priority) return
+    feedbackEvidenceSaved.current = true
+    void persistPronunciationFeedbackEvidence(user.id, interviewFeedback).catch(() => undefined)
+  }, [user?.id, interviewFeedback]);
 
   const grade =
     totalAccuracy >= 90 ? "Excellent!" :

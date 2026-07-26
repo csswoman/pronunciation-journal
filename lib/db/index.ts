@@ -165,6 +165,12 @@ export interface PronunciationAssessmentRecord {
   syncedAt?: string; // ISO — set once the outbox entry for this id has synced
 }
 
+export interface PronunciationFeedbackEvidenceRecord {
+  id: string; userId: string; targetId: string; evaluatorKind: 'stt_intelligibility' | 'transcript_phoneme_inference';
+  evaluatorVersion: string; outcome: 'improved' | 'same' | 'needs_more_evidence' | 'unscored';
+  attemptPairId?: string; occurredAt: string; createdAt: string;
+}
+
 /**
  * Local mirror of a word_bank/topic_srs SM-2 materialized row (plan 061 step 2).
  *
@@ -248,6 +254,7 @@ class PronunciationDB extends Dexie {
   srsEntityState!: Table<SRSEntityStateRecord, string>;
   srsRatingEvents!: Table<SRSRatingEventRecord, string>;
   pronunciationAssessments!: Table<PronunciationAssessmentRecord, string>;
+  pronunciationFeedbackEvidence!: Table<PronunciationFeedbackEvidenceRecord, string>;
 
   constructor() {
     super("pronunciation-journal");
@@ -445,6 +452,9 @@ class PronunciationDB extends Dexie {
       pronunciationMasteryV2: '[userId+phrase], userId, phrase, masteredAt',
       pronunciationCoachStateV2: '[userId+key], userId, key, updatedAt',
       analyticsEvents: '++id, userId, name, timestamp, synced, [userId+timestamp]',
+    });
+    this.version(27).stores({
+      pronunciationFeedbackEvidence: 'id, userId, targetId, occurredAt, [userId+targetId], [userId+occurredAt]',
     });
 
     this.pronunciationMastery = this.table("pronunciationMasteryV2") as Table<PronunciationMasteryRecord, string>;

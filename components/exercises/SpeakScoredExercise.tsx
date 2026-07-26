@@ -21,6 +21,9 @@ import PronunciationFeedback from '@/components/lesson/PronunciationFeedback'
 import { PillButton } from '@/components/ui/PillButton'
 import { ListenButton } from '@/components/ui/ListenButton'
 import { cn } from '@/lib/cn'
+import { useAuth } from '@/components/auth/AuthProvider'
+import { feedbackFromScoringResult } from '@/lib/pronunciation/feedback/from-scoring'
+import { persistPronunciationFeedbackEvidence } from '@/lib/pronunciation/feedback/persistence'
 import type { Exercise } from '@/lib/phoneme-practice/types'
 import type { WordResult } from '@/lib/types'
 import type { PracticeSubmitHandler } from '@/lib/practice/types'
@@ -98,6 +101,7 @@ function ShadowingFallback({
 // ── Main component ───────────────────────────────────────────────────────────
 
 export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
+  const { user } = useAuth()
   const { status, result: speechResult, errorCode, isSupported, start, stop, reset } = useSpeechRecognition()
   const [scored, setScored] = useState<ScoredResult | null>(null)
   const [isScoring, setIsScoring] = useState(false)
@@ -119,12 +123,20 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
         actual: { kind: 'speech', transcript: speechResult.transcript },
       })
       .then((evalResult) => {
+        const wordResults = getEvaluationWordResults(evalResult)
         setScored({
           correct: evalResult.correct,
           score: evalResult.score ?? 0,
-          wordResults: getEvaluationWordResults(evalResult),
+          wordResults,
           transcript: speechResult.transcript,
         })
+        if (user?.id) {
+          const feedback = feedbackFromScoringResult({
+            accuracy: evalResult.score ?? 0, transcript: speechResult.transcript, wordResults,
+            evaluatorVersion: 'lesson-stt-v1',
+          })
+          void persistPronunciationFeedbackEvidence(user.id, feedback).catch(() => undefined)
+        }
       })
       .catch(() => {
         // Evaluation errored (e.g. evaluator threw) — this is an honest
@@ -133,7 +145,7 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
         setEvalFailed(true)
       })
       .finally(() => setIsScoring(false))
-  }, [isSupported, status, speechResult, isScoring, scored, evalFailed, exercise.targetWord])
+  }, [isSupported, status, speechResult, isScoring, scored, evalFailed, exercise.targetWord, user?.id])
 
   const handleContinue = useCallback(() => {
     if (!scored || submitted.current) return

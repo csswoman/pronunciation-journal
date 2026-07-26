@@ -44,7 +44,7 @@ function focusIdsFromDiagnostic(result: PronunciationDiagnosticResult): string[]
 
 function bundleFromDiagnostic(
   result: PronunciationDiagnosticResult | null,
-  completedContentKeys: Set<string>
+  completedContentKeys: Set<string>, spokenAttempts: PathSpokenEvidence[] = []
 ): PathEvidenceBundle {
   const diagnosticByTargetId = new Map<string, TargetResult>()
   let diagnosticPriorityIds: string[] = []
@@ -58,7 +58,7 @@ function bundleFromDiagnostic(
 
   return {
     completedContentKeys,
-    spokenAttempts: [],
+    spokenAttempts,
     diagnosticPriorityIds,
     diagnosticByTargetId,
   }
@@ -98,22 +98,24 @@ export async function loadPathEvidence(userId?: string | null): Promise<PathEvid
       // Offline or missing table — Dexie/guest still usable.
     }
 
-    const [completedContentKeys, assessments] = await Promise.all([
+    const [completedContentKeys, assessments, feedbackEvidence] = await Promise.all([
       completedKeysForUser(userId),
       getLocalPronunciationAssessments(userId),
+      db.pronunciationFeedbackEvidence.where('userId').equals(userId).toArray(),
     ])
+    const spokenAttempts = feedbackEvidence.filter((row) => row.outcome !== 'unscored').map((row) => ({ targetId: row.targetId, outcome: 'scored' as const, attemptedAt: row.occurredAt }))
 
     const latest = assessments[0]
     if (latest) {
       const validated = validateDiagnosticResult(latest.result)
       if (validated.ok) {
-        return bundleFromDiagnostic(validated.result, completedContentKeys)
+        return bundleFromDiagnostic(validated.result, completedContentKeys, spokenAttempts)
       }
     }
 
     // Dexie empty/invalid — fall through to guest snapshot still on device.
     const guest = readGuestPronunciationDiagnostic()
-    return bundleFromDiagnostic(guest, completedContentKeys)
+    return bundleFromDiagnostic(guest, completedContentKeys, spokenAttempts)
   }
 
   const guest = readGuestPronunciationDiagnostic()
