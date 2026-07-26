@@ -3,12 +3,16 @@
 import type { WordResult, PhonemeAlignment } from "@/lib/types";
 import { playIpaSound } from "@/lib/pronunciation/ipa-audio";
 import ProgressBar from "@/components/ui/ProgressBar";
+import { feedbackFromScoringResult } from '@/lib/pronunciation/feedback/from-scoring'
+import { getLearnerTargetCopy } from '@/lib/pronunciation/assessment/learner-copy'
 
 interface PronunciationFeedbackProps {
   wordResults: WordResult[];
   accuracy: number;
   feedback: { message: string; emoji: string; color: string };
   xpEarned: number;
+  /** Transcript from the STT evaluator; used only for signal-honest feedback. */
+  transcript?: string;
   /**
    * When false, hides the per-word phoneme breakdown and the "sounds to
    * practice" chips, leaving only the score summary. Use when a richer
@@ -105,6 +109,7 @@ export default function PronunciationFeedback({
   accuracy,
   feedback,
   xpEarned,
+  transcript = '',
   showPhonemeDetail = true,
 }: PronunciationFeedbackProps) {
   const problemWords = wordResults.filter(
@@ -112,9 +117,30 @@ export default function PronunciationFeedback({
       r.status !== "extra" &&
       r.phonemes?.alignment?.some((p) => p.status === "incorrect" || p.status === "missing")
   );
+  const actionableFeedback = feedbackFromScoringResult({
+    accuracy,
+    transcript,
+    wordResults,
+  });
+  const priorityCopy = actionableFeedback.priority
+    ? getLearnerTargetCopy(actionableFeedback.priority.targetId)
+    : null;
 
   return (
     <div className="w-full animate-fadeIn space-y-5">
+      <section aria-live="polite" className="rounded-md border border-border-subtle bg-surface-raised px-4 py-3">
+        <p className="m-0 font-kicker text-fg-subtle">LO QUE ENTENDIMOS</p>
+        <p className="mt-1 text-sm leading-relaxed text-fg-muted">{actionableFeedback.summaryEs}</p>
+        {priorityCopy ? (
+          <p className="mb-0 mt-2 text-sm font-semibold text-fg">
+            Siguiente foco: {priorityCopy.title}
+          </p>
+        ) : (
+          <p className="mb-0 mt-2 text-sm font-semibold text-fg">
+            Repite una vez para reunir más evidencia.
+          </p>
+        )}
+      </section>
       {/* Score */}
       <div className="text-center">
         <div className="text-5xl font-bold mb-1">

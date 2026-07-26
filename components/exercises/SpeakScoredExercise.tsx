@@ -231,6 +231,7 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
             accuracy={scored.score}
             feedback={getFeedbackMessage(scored.score, 70)}
             xpEarned={calculateXP(scored.score)}
+            transcript={scored.transcript}
           />
           <div className="flex gap-2">
             <PillButton variant="outline" size="sm" onClick={handleRetry}>

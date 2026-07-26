@@ -173,6 +173,7 @@ export function CsShadowPhraseExercise({ exercise, onResult, onSkip }: Props) {
             accuracy={scoring.accuracy}
             feedback={getFeedbackMessage(scoring.accuracy)}
             xpEarned={calculateXP(scoring.accuracy)}
+            transcript={scoring.transcript}
           />
           <div className="flex gap-2">
             <PillButton variant="outline" size="sm" onClick={handleRetry}>
