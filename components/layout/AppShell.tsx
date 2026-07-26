@@ -6,7 +6,12 @@ import { usePathname } from "next/navigation";
 import { quickAddWord } from "@/lib/word-bank/queries";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useAICoachStore } from "@/lib/stores/aiCoachStore";
+import {
+  selectHideMobileNav,
+  useSessionChromeStore,
+} from "@/lib/stores/sessionChromeStore";
 import { isPublicAuthPath } from "@/lib/auth/public-paths";
+import { cn } from "@/lib/cn";
 
 const Sidebar = dynamic(() => import("./Sidebar"), {
   loading: () => <div className="hidden lg:block w-64 flex-shrink-0" aria-hidden />,
@@ -40,14 +45,14 @@ const AICoachPanel = dynamic(importAICoachPanel, {
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isAuthPage = isPublicAuthPath(pathname);
-  // Page layout pattern: chrome (sidebar + bottom nav) always stays visible;
-  // immersion only narrows the content max-width — never hides AppShell.
+  // Immersion narrows content max-width; active sessions also hide mobile BottomNav.
   const isImmersivePractice =
     pathname.startsWith("/practice/sounds/sound/") ||
     pathname === "/daily" ||
     pathname === "/practice/review" ||
     pathname === "/assessment" ||
     pathname === "/assessment/pronunciation";
+  const hideMobileNav = useSessionChromeStore(selectHideMobileNav);
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const openModal = useCallback(() => setOpen(true), []);
@@ -110,20 +115,23 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <Sidebar className="hidden lg:flex w-64 flex-col" />
       <main
         id="main-content"
-        className="main-scrollbar flex min-h-0 flex-1 flex-col overflow-y-auto overflow-x-hidden pb-20 lg:pb-0"
+        className={cn(
+          "main-scrollbar flex min-h-0 flex-1 flex-col overflow-y-auto overflow-x-hidden lg:pb-0",
+          hideMobileNav ? "pb-0" : "pb-20",
+        )}
         style={{ marginRight: mainMarginRight }}
       >
         <div
           className={
             isImmersivePractice
-              ? "mx-auto flex min-h-0 w-full max-w-screen-md flex-1 flex-col"
-              : "mx-auto w-full max-w-screen-xl"
+              ? "mx-auto flex min-h-0 w-full max-w-3xl flex-1 flex-col"
+              : "mx-auto w-full max-w-3xl"
           }
         >
           {children}
         </div>
       </main>
-      <BottomNav className="lg:hidden" />
+      {!hideMobileNav && <BottomNav className="lg:hidden" />}
       {user && open && (
         <QuickAddModal
           open={open}

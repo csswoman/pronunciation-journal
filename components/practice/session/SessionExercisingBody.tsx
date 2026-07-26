@@ -159,7 +159,7 @@ export function SessionExercisingBody({ state, handlers, lessonFooter }: Session
   }
 
   return (
-    <div className="relative mx-auto flex w-full max-w-md flex-col justify-start gap-4 px-4 pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] pt-4 lg:pb-6">
+    <div className="relative mx-auto flex w-full max-w-md flex-col justify-start gap-4 px-4 pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] pt-4 lg:pb-6">
       {sessionBody}
       <ExitConfirmSheet
         open={showExitConfirm}

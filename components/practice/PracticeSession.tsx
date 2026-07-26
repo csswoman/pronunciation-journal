@@ -10,6 +10,7 @@
 import { useEffect, useMemo, useRef } from 'react'
 import type { PracticeConfig, PracticeExercise } from '@/lib/practice/types'
 import { PhonemeFocusShell } from '@/components/phoneme-practice/PhonemeFocusShell'
+import { useHideMobileNavDuringSession } from '@/hooks/useHideMobileNavDuringSession'
 import { SessionLoadingShell } from './session/SessionLoadingShell'
 import { SessionExercisingBody } from './session/SessionExercisingBody'
 import { SessionSummary } from './session/SessionSummary'
@@ -40,6 +41,7 @@ function playSessionCompleteCue(accuracy: number): void {
 
 export default function PracticeSession(config: PracticeConfig) {
   const { soundIpa, sessionLabel, context, onExit, footer } = config
+  useHideMobileNavDuringSession()
   const focusBadge = soundIpa ?? sessionLabel
   const focusUi =
     Boolean(focusBadge) &&
@@ -137,7 +139,7 @@ export default function PracticeSession(config: PracticeConfig) {
       )
     }
     return (
-      <div className="mx-auto w-full max-w-md p-6 pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] lg:pb-6">
+      <div className="mx-auto w-full max-w-md p-6 pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] lg:pb-6">
         {summary}
       </div>
     )

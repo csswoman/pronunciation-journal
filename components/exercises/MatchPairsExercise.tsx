@@ -200,21 +200,29 @@ export function MatchPairsExercise({ exercise, onResult }: Props) {
   }, [recomputeConnections])
 
   const allMatched = exercise.pairs.every((p) => matches[p.id])
+  const selectedTerm = selectedLeft
+    ? exercise.pairs.find((pair) => pair.id === selectedLeft)?.left
+    : null
+  const armedDefinition = armedRight ? rightItems.find((item) => item.id === armedRight)?.label : null
 
   return (
-    <div className="mx-auto flex w-full max-w-xl flex-col items-center gap-4">
+    <div className="mx-auto flex w-full max-w-xl flex-col items-center gap-3 sm:gap-4">
       {!submitted && (
-        <p className="m-0 w-full text-center text-sm text-fg-muted">
-          Toca un término y luego su definición — o al revés.
+        <p className="m-0 w-full text-pretty text-center text-sm leading-snug text-fg-muted sm:text-sm">
+          Relaciona cada término con su definición. Las definiciones están mezcladas.
         </p>
       )}
 
-      {!submitted && matchedCount > 0 && (
+      {!submitted && (matchedCount > 0 || selectedTerm || armedDefinition) && (
         <p
           className="m-0 animate-state-in text-center text-xs font-medium tabular-nums text-fg-subtle"
           aria-live="polite"
         >
-          {matchedCount} de {totalCount} emparejados
+          {selectedTerm
+            ? `Ahora elige la definición de “${selectedTerm}”`
+            : armedDefinition
+              ? 'Ahora elige el término que coincide'
+              : `${matchedCount} de ${totalCount} emparejados`}
         </p>
       )}
 

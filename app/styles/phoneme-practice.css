@@ -38,12 +38,13 @@
 }
 
 /*
- * Mobile: sit above the fixed BottomNav (tabs + protruding FAB) instead of
- * nesting another 100dvh that paints under the chrome. Stage owns scrolling.
+ * Mobile: fill the viewport. BottomNav is hidden during active sessions
+ * (sessionChromeStore), so we only reserve the device safe-area inset.
+ * Stage owns scrolling.
  */
 @media (max-width: 540px) {
   .phoneme-focus:not(.fixed) {
-    --phoneme-focus-nav-clearance: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+    --phoneme-focus-nav-clearance: env(safe-area-inset-bottom, 0px);
     align-items: stretch;
     justify-content: flex-start;
     width: 100%;

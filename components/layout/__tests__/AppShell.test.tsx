@@ -7,7 +7,7 @@ const quickAddMount = vi.fn();
 const aiCoachPanelMount = vi.fn();
 const aiCoachTriggerMount = vi.fn();
 
-const { mockStore, resetStore } = vi.hoisted(() => {
+const { mockStore, resetStore, mockSessionChrome, resetSessionChrome } = vi.hoisted(() => {
   const state = {
     isOpen: false,
     isFullscreen: false,
@@ -31,8 +31,24 @@ const { mockStore, resetStore } = vi.hoisted(() => {
     setPanelWidth: vi.fn(),
   };
 
+  const sessionChrome = {
+    depth: 0,
+    enterSession: vi.fn(() => {
+      sessionChrome.depth += 1;
+    }),
+    exitSession: vi.fn(() => {
+      sessionChrome.depth = Math.max(0, sessionChrome.depth - 1);
+    }),
+  };
+
   return {
     mockStore: state,
+    mockSessionChrome: sessionChrome,
+    resetSessionChrome: () => {
+      sessionChrome.depth = 0;
+      sessionChrome.enterSession.mockClear();
+      sessionChrome.exitSession.mockClear();
+    },
     resetStore: () => {
       state.isOpen = false;
       state.isFullscreen = false;
@@ -64,6 +80,12 @@ let mockUser: { id: string } | null = { id: "user-1" };
 
 vi.mock("@/lib/stores/aiCoachStore", () => ({
   useAICoachStore: () => mockStore,
+}));
+
+vi.mock("@/lib/stores/sessionChromeStore", () => ({
+  useSessionChromeStore: (selector?: (s: typeof mockSessionChrome) => unknown) =>
+    typeof selector === "function" ? selector(mockSessionChrome) : mockSessionChrome,
+  selectHideMobileNav: (s: { depth: number }) => s.depth > 0,
 }));
 
 vi.mock("@/lib/word-bank/queries", () => ({
@@ -126,6 +148,7 @@ import AppShell from "../AppShell";
 describe("AppShell mount behavior", () => {
   beforeEach(() => {
     resetStore();
+    resetSessionChrome();
     mockPathname = "/";
     mockUser = { id: "user-1" };
   });
@@ -243,5 +266,20 @@ describe("AppShell mount behavior", () => {
       expect(screen.getByTestId("sidebar")).toBeInTheDocument();
       expect(screen.getByTestId("bottom-nav")).toBeInTheDocument();
     });
+  });
+
+  it("hides mobile bottom nav while a practice session is active", async () => {
+    mockSessionChrome.depth = 1;
+
+    render(
+      <AppShell>
+        <div>session</div>
+      </AppShell>,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId("sidebar")).toBeInTheDocument();
+    });
+    expect(screen.queryByTestId("bottom-nav")).not.toBeInTheDocument();
   });
 });
