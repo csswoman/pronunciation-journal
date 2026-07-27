@@ -1,6 +1,8 @@
 'use client'
 
 import { db, type MissionSessionRecord } from '@/lib/db'
+import { buildPronunciationFeedback } from '@/lib/pronunciation/feedback/model'
+import { persistPronunciationFeedbackEvidence } from '@/lib/pronunciation/feedback/persistence'
 import type { MissionOutcome } from './outcome'
 import type { MissionState } from './state-machine'
 import type { OralMission } from './types'
@@ -30,4 +32,24 @@ export async function persistMissionSession(
   }
 
   await db.missionSessions.put(record)
+
+  for (const evidence of outcome.targetEvidence) {
+    if (evidence.outcome === 'unscored') continue
+
+    const feedback = buildPronunciationFeedback({
+      signal: {
+        kind: 'stt_intelligibility',
+        evaluatorVersion: 'mission-v1',
+        confidence: 0.8,
+        transcript: '',
+        recognizedPercent: 0,
+      },
+      candidates: [{ targetId: evidence.targetId, confidence: 0.8 }],
+    })
+    await persistPronunciationFeedbackEvidence(userId, {
+      ...feedback,
+      outcome: evidence.outcome,
+      priority: { targetId: evidence.targetId },
+    }).catch(() => undefined)
+  }
 }

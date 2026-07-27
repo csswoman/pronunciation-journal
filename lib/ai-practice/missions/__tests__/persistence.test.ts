@@ -1,13 +1,18 @@
 // @vitest-environment jsdom
 import 'fake-indexeddb/auto'
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { db } from '@/lib/db'
+import { persistPronunciationFeedbackEvidence } from '@/lib/pronunciation/feedback/persistence'
 import { persistMissionSession } from '../persistence'
 import { createMissionState, missionReducer } from '../state-machine'
 import { deriveMissionOutcome } from '../outcome'
 import { getMission } from '../registry'
 
 const mission = getMission('roleplay.cafe')!
+
+vi.mock('@/lib/pronunciation/feedback/persistence', () => ({
+  persistPronunciationFeedbackEvidence: vi.fn(async () => true),
+}))
 
 describe('persistMissionSession', () => {
   beforeEach(async () => {
@@ -36,5 +41,21 @@ describe('persistMissionSession', () => {
 
     const bRows = await db.missionSessions.where('userId').equals('user-b').toArray()
     expect(bRows).toHaveLength(0)
+  })
+
+  it('routes target evidence through the existing pronunciation-feedback handoff', async () => {
+    const state = createMissionState(mission.id)
+    const outcome = {
+      missionId: mission.id,
+      goalAchieved: true,
+      intelligibilityEvidence: { attempts: [], scoredCount: 1 },
+      targetEvidence: [{ targetId: mission.targets[0].targetId, outcome: 'needs_more_evidence' as const }],
+      repairUsed: false,
+      unscoredReasons: [],
+    }
+
+    await persistMissionSession('user-1', mission, state, outcome)
+
+    expect(persistPronunciationFeedbackEvidence).toHaveBeenCalled()
   })
 })
