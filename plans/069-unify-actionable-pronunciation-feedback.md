@@ -136,14 +136,26 @@ Update architecture/pedagogy docs with signal labels, one-correction policy, abs
 
 ## Done criteria
 
-- [ ] Every pronunciation surface consumes one shared feedback model.
-- [ ] Feedback labels the actual signal and evaluator version.
-- [ ] One primary target leads to listen, explanation, retry and varied phrase.
-- [ ] Omitted/extra words do not shift later alignment.
-- [ ] Hover is not required for audio or explanations.
-- [ ] Unscored attempts never count as improvement/mastery.
-- [ ] Review handoff uses canonical target/SRS contracts.
-- [ ] Focused tests, a11y, typecheck and token lint pass.
+- [x] Every pronunciation surface consumes one shared feedback model.
+- [x] Feedback labels the actual signal and evaluator version.
+- [x] One primary target leads to listen, explanation, retry and varied phrase.
+- [x] Omitted/extra words do not shift later alignment.
+- [x] Hover is not required for audio or explanations.
+- [x] Unscored attempts never count as improvement/mastery.
+- [x] Review handoff uses canonical target/SRS contracts.
+- [x] Focused tests, a11y, typecheck and token lint pass.
+
+## Verification (2026-07-26)
+
+Behavior-level audit of the shipped implementation against this plan's contract:
+
+- Lesson (`PronunciationFeedback.tsx`): "Lo que entendimos" summary, single canonical focus via `prioritizeFeedbackTarget` (confidence ≥ 0.6 + registry-resolvable), abstains to "repite una vez" when evidence is insufficient, 44px keyboard/click-operable phoneme chips.
+- Coach (`PronunciationView` / `canonical-focus.ts` / `CoachPanel`): no `firstBadPhoneme`; canonical focus resolves through the shared prioritizer and only renders when resolvable; "Más lento" is a real rate change (0.55 vs 0.75); Retry reopens the mic (`handleMicClick`).
+- Interview (`InterviewResults.tsx`): copy reads "Reconocimiento de palabras por voz", one recurring focus per result, explicitly disclaims acoustic measurement.
+- `/courses/pronunciation` (`unit-state.ts`): `learning → ready_for_transfer` requires `outcome === 'scored'` evidence; unscored/fail/skip attempts are filtered out before state derivation, and `persistPronunciationFeedbackEvidence` also refuses to persist `unscored` outcomes.
+- Review dedup (`lib/tracking/queries.ts`): `saveTrackedItem` upserts on `[userId+kind+ref]`, so repeated renders of the same target do not duplicate the tracked item.
+- Copy flag (`NEXT_PUBLIC_PRONUNCIATION_ACTIONABLE_FEEDBACK_COPY=false`): originally wired into lesson and interview only. **Gap found and fixed**: `CoachPanel.tsx` did not gate its word→IPA claim, tip, or "in focus" badge. Added `isActionablePronunciationFeedbackCopyEnabled()` gating in `CoachPanel.tsx` (word→IPA display, tip, IPA badge, `RemediationSequence` cue) with controls unaffected, plus a flag-off regression test in `CoachPanel.test.tsx`.
+- Full suite: 292/292 tests pass across `components/lesson`, `components/ai-coach`, `components/interview`, `components/exercises`, `components/pronunciation-feedback`, `lib/pronunciation`; `tsc --noEmit` clean; `lint:design-tokens` clean.
 
 ## STOP conditions
 
