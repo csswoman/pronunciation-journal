@@ -171,6 +171,18 @@ export interface PronunciationFeedbackEvidenceRecord {
   attemptPairId?: string; occurredAt: string; createdAt: string;
 }
 
+export interface MissionSessionRecord {
+  id: string;
+  userId: string;
+  missionId: string;
+  targetIds: string[];
+  outcome: Record<string, unknown>;
+  turnCount: number;
+  status: 'in_progress' | 'completed' | 'cancelled' | 'provider_error';
+  startedAt: string;
+  completedAt: string | null;
+}
+
 /**
  * Local mirror of a word_bank/topic_srs SM-2 materialized row (plan 061 step 2).
  *
@@ -255,6 +267,7 @@ class PronunciationDB extends Dexie {
   srsRatingEvents!: Table<SRSRatingEventRecord, string>;
   pronunciationAssessments!: Table<PronunciationAssessmentRecord, string>;
   pronunciationFeedbackEvidence!: Table<PronunciationFeedbackEvidenceRecord, string>;
+  missionSessions!: Table<MissionSessionRecord, string>;
 
   constructor() {
     super("pronunciation-journal");
@@ -455,6 +468,9 @@ class PronunciationDB extends Dexie {
     });
     this.version(27).stores({
       pronunciationFeedbackEvidence: 'id, userId, targetId, occurredAt, [userId+targetId], [userId+occurredAt]',
+    });
+    this.version(28).stores({
+      missionSessions: 'id, userId, missionId, [userId+missionId], [userId+startedAt]',
     });
 
     this.pronunciationMastery = this.table("pronunciationMasteryV2") as Table<PronunciationMasteryRecord, string>;
