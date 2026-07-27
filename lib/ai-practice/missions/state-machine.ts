@@ -61,13 +61,17 @@ function advanceTurn(state: MissionState, mission: OralMission): MissionState {
   return next.turnCount >= mission.maxTurns ? completeAtResult(next) : next
 }
 
+function canonicalTargetForAttempt(attempt: SpokenAttempt): string | null {
+  return [
+    attempt.targetId,
+    attempt.contrastId ? contrastIdToTargetId(attempt.contrastId) : undefined,
+  ].find((candidate) => candidate && getTarget(candidate).ok) ?? null
+}
+
 function priorityForAttempt(attempt: SpokenAttempt, mission: OralMission): FeedbackPriority | null {
   if (attempt.outcome !== 'scored') return null
 
-  const canonicalAttemptTarget = [
-    attempt.targetId,
-    attempt.contrastId ? contrastIdToTargetId(attempt.contrastId) : undefined,
-  ].find((candidate) => candidate && getTarget(candidate).ok)
+  const canonicalAttemptTarget = canonicalTargetForAttempt(attempt)
   const missionTarget = mission.targets.find((target) => target.targetId === canonicalAttemptTarget)
   if (!missionTarget) return null
 
@@ -129,6 +133,14 @@ export function missionReducer(
       if (state.phase === 'briefing') next.phase = 'active'
       if (
         state.phase === 'active'
+        && state.correctionRetried
+        && state.pendingCorrection?.targetId === canonicalTargetForAttempt(event.attempt)
+      ) {
+        next.phase = 'transfer'
+        return next
+      }
+      if (
+        state.phase === 'active'
         && event.attempt.outcome === 'scored'
         && !state.pendingCorrection
         && !state.correctionRetried
@@ -144,7 +156,7 @@ export function missionReducer(
 
     case 'retry_correction':
       if (state.phase !== 'correction' || state.correctionRetried) return state
-      return { ...cloneState(state), phase: 'transfer', correctionRetried: true }
+      return { ...cloneState(state), phase: 'active', correctionRetried: true }
 
     case 'transfer_attempted': {
       const next = advanceTurn(cloneState(state), mission)

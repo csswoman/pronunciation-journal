@@ -72,23 +72,39 @@ describe('oral mission state machine', () => {
     expect(state.spokenAttempts).toHaveLength(1)
   })
 
-  it('allows exactly one correction retry and then a transfer', () => {
-    const corrected = missionReducer(
+  it('requires a spoken retry before moving to transfer', () => {
+    const correction = missionReducer(
       missionReducer(activeState(), { type: 'turn_spoken', attempt: attempt() }, mission),
       { type: 'retry_correction' },
       mission,
     )
-    const transfer = missionReducer(corrected, {
+    const unrelatedAttempt = missionReducer(correction, {
+      type: 'turn_spoken',
+      attempt: attempt({ targetId: mission.targets[1].targetId }),
+    }, mission)
+    const retried = missionReducer(correction, {
+      type: 'turn_spoken',
+      attempt: attempt({ targetText: 'A medium latte, please.' }),
+    }, mission)
+    const transfer = missionReducer(retried, {
       type: 'transfer_attempted',
       attempt: attempt({ targetText: 'Can I get that to go?', targetId: mission.targets[1].targetId }),
     }, mission)
 
-    expect(corrected.phase).toBe('transfer')
-    expect(corrected.correctionRetried).toBe(true)
+    expect(correction.phase).toBe('active')
+    expect(correction.correctionRetried).toBe(true)
+    expect(correction.spokenAttempts).toHaveLength(1)
+    expect(unrelatedAttempt.phase).toBe('active')
+    expect(retried.phase).toBe('transfer')
+    expect(retried.spokenAttempts).toHaveLength(2)
+    expect(retried.spokenAttempts[1]).toMatchObject({
+      targetId: correction.pendingCorrection?.targetId,
+      targetText: 'A medium latte, please.',
+    })
     expect(transfer.phase).toBe('result')
     expect(transfer.transferAttempted).toBe(true)
     expect(transfer.status).toBe('completed')
-    expect(transfer.spokenAttempts).toHaveLength(2)
+    expect(transfer.spokenAttempts).toHaveLength(3)
   })
 
   it('forces a result at the mission turn quota', () => {
