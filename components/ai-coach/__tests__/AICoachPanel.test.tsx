@@ -51,6 +51,7 @@ vi.mock("@/hooks/useAIPractice", () => ({
     error: null,
     quotaExhausted: false,
     wordToSave: null,
+    activeMissionId: null,
     conversationId: null,
     sendMessage: vi.fn(),
     answerToolCall: vi.fn(),
@@ -61,6 +62,8 @@ vi.mock("@/hooks/useAIPractice", () => ({
     finalizeSession: vi.fn(),
     loadConversation: vi.fn(),
     removeConversation: vi.fn(),
+    changeMode: vi.fn(),
+    setMissionIntentHandler: vi.fn(),
   }),
 }));
 

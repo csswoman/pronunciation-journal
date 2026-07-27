@@ -23,11 +23,11 @@ describe('SpeakWithCoachCard', () => {
     })
   })
 
-  it('opens interview with the same prefill', () => {
+  it('opens missions with the same prefill', () => {
     render(<SpeakWithCoachCard arc={arc} />)
-    fireEvent.click(screen.getByRole('button', { name: /entrevista/i }))
+    fireEvent.click(screen.getByRole('button', { name: /misión oral/i }))
     expect(openCoach).toHaveBeenCalledWith({
-      tab: 'interview',
+      tab: 'missions',
       prefill: expect.stringContaining('order, menu'),
     })
   })

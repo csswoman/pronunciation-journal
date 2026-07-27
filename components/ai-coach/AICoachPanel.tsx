@@ -19,6 +19,7 @@ import type { AIConversation } from "@/lib/types";
 import { getPageContext } from "./page-context";
 import { usePanelResize } from "./usePanelResize";
 import { AICoachHeader, ConversationHistoryPanel } from "./AICoachPanelParts";
+import { MissionWorkspace } from "./missions/MissionWorkspace";
 
 export const PANEL_WIDTH = 380;
 
@@ -33,7 +34,7 @@ export default function AICoachPanel() {
   const ctx = getPageContext(pathname);
   const { onDragStart } = usePanelResize({ panelWidth, setPanelWidth });
 
-  const { messages, isStreaming, error, quotaExhausted, wordToSave, conversationId, sendMessage, answerToolCall, openSaveWordModal, closeSaveWordModal, confirmSaveWord, resetSession, finalizeSession, loadConversation, removeConversation, changeMode } = useAIPractice();
+  const { messages, isStreaming, error, quotaExhausted, wordToSave, conversationId, activeMissionId, sendMessage, answerToolCall, openSaveWordModal, closeSaveWordModal, confirmSaveWord, resetSession, finalizeSession, loadConversation, removeConversation, changeMode, setMissionIntentHandler } = useAIPractice();
 
   const [activeTab, setActiveTab] = useState<TabId>("chat");
   const [inputPrefill, setInputPrefill] = useState<string | undefined>(undefined);
@@ -132,7 +133,9 @@ export default function AICoachPanel() {
 
           {/* Missions tab — kept mounted */}
           <div className={`flex flex-1 flex-col min-h-0 overflow-hidden${activeTab !== "missions" ? " hidden" : ""}`}>
-            <AICoachHome activeTab="missions" onSendMessage={sendMessage} onSelectMission={(missionId) => { void changeMode(`mission:${missionId}`); }} isStreaming={isStreaming} prefill={inputPrefill} onPrefillConsumed={() => setInputPrefill(undefined)} />
+            {activeMissionId
+              ? <MissionWorkspace missionId={activeMissionId} setMissionIntentHandler={setMissionIntentHandler} />
+              : <AICoachHome activeTab="missions" onSendMessage={sendMessage} onSelectMission={(missionId) => { void changeMode(`mission:${missionId}`); }} isStreaming={isStreaming} prefill={inputPrefill} onPrefillConsumed={() => setInputPrefill(undefined)} />}
           </div>
 
           {/* Pronunciation tab — kept mounted */}

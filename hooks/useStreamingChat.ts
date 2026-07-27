@@ -102,6 +102,7 @@ export function useStreamingChat({
         body: JSON.stringify({
           messages: messagesToWire(nextMessages),
           stream: true,
+          missionId: mode.startsWith("mission:") ? mode.slice("mission:".length) : undefined,
         }),
         signal: controller.signal,
       });

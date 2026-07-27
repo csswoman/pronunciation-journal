@@ -37,11 +37,11 @@ export default function SpeakWithCoachCard({ arc }: Props) {
         </button>
         <button
           type="button"
-          onClick={() => openCoach({ tab: 'interview', prefill })}
+          onClick={() => openCoach({ tab: 'missions', prefill })}
           className="flex flex-1 items-center justify-center gap-2 rounded-[var(--radius-lg)] border border-border-subtle bg-surface-sunken px-4 py-2.5 font-body-sm font-medium text-[var(--text-primary)] transition-colors hover:bg-[var(--hue-icon-bg)] focus-ring"
         >
           <Mic size={15} aria-hidden />
-          Entrevista por voz
+          Misión oral
         </button>
       </div>
     </div>

@@ -11,6 +11,7 @@ const { persistLearningStateMock, hydrateFromRemoteMock } = vi.hoisted(() => ({
 
 // Captured so tests can trigger `learningState` updates the same way useStreamingChat would.
 let capturedSetLearningState: ((state: UserLearningState) => void) | null = null
+let capturedMissionIntentObserved: ((intentId: string) => void) | null = null
 
 vi.mock('@/lib/ai-practice/queries', () => ({
   persistLearningState: persistLearningStateMock,
@@ -41,8 +42,12 @@ vi.mock('../useSavedWords', () => ({
   }),
 }))
 vi.mock('../useStreamingChat', () => ({
-  useStreamingChat: (opts: { setLearningState: (state: UserLearningState) => void }) => {
+  useStreamingChat: (opts: {
+    setLearningState: (state: UserLearningState) => void
+    onMissionIntentObserved: (intentId: string) => void
+  }) => {
     capturedSetLearningState = opts.setLearningState
+    capturedMissionIntentObserved = opts.onMissionIntentObserved
     return {
       messages: [],
       isStreaming: false,
@@ -62,6 +67,7 @@ describe('useAIPractice adaptive-state flush', () => {
     vi.useFakeTimers()
     persistLearningStateMock.mockClear()
     capturedSetLearningState = null
+    capturedMissionIntentObserved = null
   })
 
   afterEach(() => {
@@ -127,5 +133,17 @@ describe('useAIPractice adaptive-state flush', () => {
       'user-1',
       expect.objectContaining({ weakTopics: ['schwa'] }),
     )
+  })
+
+  it('forwards observed mission intents to the registered MissionRunner owner', async () => {
+    const { result } = await mountAndSettle()
+    const onMissionIntent = vi.fn()
+
+    act(() => {
+      result.current.setMissionIntentHandler(onMissionIntent)
+      capturedMissionIntentObserved?.('placed_order')
+    })
+
+    expect(onMissionIntent).toHaveBeenCalledWith('placed_order')
   })
 })

@@ -14,6 +14,8 @@ import { deleteConversation } from "@/lib/db/ai";
 
 export type { SaveWordData };
 
+type MissionIntentHandler = (intentId: string) => void;
+
 interface UseAIPracticeReturn {
   messages: ReturnType<typeof useStreamingChat>["messages"];
   isStreaming: boolean;
@@ -31,6 +33,7 @@ interface UseAIPracticeReturn {
   confirmSaveWord: (data: SaveWordData) => Promise<void>;
   deleteSavedWord: (id: number) => Promise<void>;
   loadSavedWords: () => Promise<void>;
+  setMissionIntentHandler: (handler: MissionIntentHandler | null) => void;
   resetSession: () => void;
   finalizeSession: () => void;
   changeMode: (next: AIConversationMode) => Promise<void>;
@@ -42,11 +45,20 @@ export function useAIPractice(): UseAIPracticeReturn {
   const { user } = useAuth();
   const [learningState, setLearningState] = useState<UserLearningState | null>(null);
   const persistTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const missionIntentHandlerRef = useRef<MissionIntentHandler | null>(null);
   const [activeMissionId, setActiveMissionId] = useState<string | null>(null);
   const [mode, setMode] = useState<AIConversationMode>("chat");
   const [conversationId, setConversationId] = useState<number | null>(null);
 
   const words = useSavedWords(user?.id ?? null, conversationId);
+
+  const setMissionIntentHandler = useCallback((handler: MissionIntentHandler | null) => {
+    missionIntentHandlerRef.current = handler;
+  }, []);
+
+  const handleMissionIntentObserved = useCallback((intentId: string) => {
+    missionIntentHandlerRef.current?.(intentId);
+  }, []);
 
   const chat = useStreamingChat({
     mode,
@@ -56,9 +68,7 @@ export function useAIPractice(): UseAIPracticeReturn {
     setLearningState,
     onSaveWord: words.openSaveWordModal,
     onStartMission: setActiveMissionId,
-    // TODO(missions): Wire this to MissionRunner's missionReducer dispatch in the UI phase.
-    // useAIPractice deliberately owns only activeMissionId, never mission progress.
-    onMissionIntentObserved: () => {},
+    onMissionIntentObserved: handleMissionIntentObserved,
     userId: user?.id ?? null,
   });
 
@@ -185,6 +195,7 @@ export function useAIPractice(): UseAIPracticeReturn {
     confirmSaveWord: words.confirmSaveWord,
     deleteSavedWord: words.deleteSavedWord,
     loadSavedWords: words.loadSavedWords,
+    setMissionIntentHandler,
     resetSession,
     finalizeSession: chat.finalizeSession,
     changeMode,

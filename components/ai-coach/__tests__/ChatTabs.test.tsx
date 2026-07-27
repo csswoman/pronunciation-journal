@@ -5,8 +5,9 @@ import ChatTabs, { TABS } from '../ChatTabs'
 
 describe('ChatTabs', () => {
   it('has a missions tab, not an ambiguous Interview tab', () => {
-    expect(TABS.some((tab) => tab.id === 'interview')).toBe(false)
-    expect(TABS.some((tab) => tab.id === 'missions')).toBe(true)
+    const tabIds = TABS.map((tab) => tab.id as string)
+    expect(tabIds).not.toContain('interview')
+    expect(tabIds).toContain('missions')
   })
 
   it('renders the missions tab label and description', () => {
