@@ -203,7 +203,7 @@ export function MissionWorkspace({
         />}
       </div>
       {!outcome && (
-        <div className="flex-shrink-0 border-t border-border-subtle bg-surface-base px-3 pb-3 pt-1">
+        <div className="shrink-0 border-t border-border-subtle bg-surface-base px-3 pb-3 pt-1">
           <CustomPromptPanel
             onSubmit={handleMissionSubmit}
             isDisabled={isStreaming || isDisabled}

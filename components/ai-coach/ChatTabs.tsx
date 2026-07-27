@@ -31,7 +31,7 @@ export default function ChatTabs({ active, onChange }: ChatTabsProps) {
               "flex min-h-11 flex-1 flex-col items-center justify-center gap-0.5 px-0 py-2",
               "text-caption font-normal whitespace-nowrap cursor-pointer",
               "bg-transparent border-none border-b-2 -mb-px",
-              "transition-colors duration-[var(--transition-fast)]",
+              "transition-colors duration-(--transition-fast)",
               isActive
                 ? "text-fg font-medium border-b-primary"
                 : "text-fg-subtle border-b-transparent hover:text-fg-muted"

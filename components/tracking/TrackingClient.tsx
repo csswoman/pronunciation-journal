@@ -29,7 +29,7 @@ function TrackingCard({ item }: { item: TrackingItem }) {
   const entry = registry[item.kind];
   const Icon = entry.icon;
   const content = <><span className="text-fg-subtle"><Icon size={16} aria-hidden /></span><span className="min-w-0"><span className="block text-body-sm font-semibold text-fg">{item.title}</span>{item.description && <span className="block truncate text-body-sm text-fg-muted">{item.description}</span>}</span><span className="ml-auto flex shrink-0 flex-col items-end gap-0.5 text-caption text-fg-subtle"><span>{entry.label}</span>{item.progressLabel && <span>{item.progressLabel}</span>}</span></>;
-  return item.href ? <Link href={item.href} className="flex items-center gap-3 rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised px-4 py-3 transition-colors hover:bg-surface-sunken">{content}</Link> : <div className="flex items-center gap-3 rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised px-4 py-3">{content}</div>;
+  return item.href ? <Link href={item.href} className="flex items-center gap-3 rounded-md border border-border-subtle bg-surface-raised px-4 py-3 transition-colors hover:bg-surface-sunken">{content}</Link> : <div className="flex items-center gap-3 rounded-md border border-border-subtle bg-surface-raised px-4 py-3">{content}</div>;
 }
 
 export default function TrackingClient() {

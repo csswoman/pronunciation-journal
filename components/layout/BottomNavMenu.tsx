@@ -48,7 +48,7 @@ export default function BottomNavMenu({ open, onClose, isActive }: BottomNavMenu
   return (
     <>
       <div
-        className="fixed inset-0 z-40 bg-[var(--bg-body)]/40 backdrop-blur-sm motion-reduce:backdrop-blur-none"
+        className="fixed inset-0 z-40 bg-(--bg-body)/40 backdrop-blur-sm motion-reduce:backdrop-blur-none"
         role="presentation"
         aria-hidden="true"
         onClick={onClose}
@@ -60,7 +60,7 @@ export default function BottomNavMenu({ open, onClose, isActive }: BottomNavMenu
         aria-label="More navigation"
         className={cn(
           "fixed left-4 right-4 z-50 overflow-hidden",
-          "rounded-[var(--radius-xl)] border border-[var(--line-divider)] bg-[var(--surface-translucent)] shadow-xl backdrop-blur-md",
+          "rounded-xl border border-(--line-divider) bg-(--surface-translucent) shadow-xl backdrop-blur-md",
           "motion-reduce:backdrop-blur-none motion-reduce:animate-none animate-grid-in",
           "bottom-[calc(4.75rem+env(safe-area-inset-bottom))]",
         )}

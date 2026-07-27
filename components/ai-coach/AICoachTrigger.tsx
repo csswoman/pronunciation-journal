@@ -44,7 +44,7 @@ export default function AICoachTrigger({ variant = "fab", className }: AICoachTr
         title="Asistente de práctica"
         className={cn(
           "flex shrink-0 items-center justify-center w-14 h-14 -mt-5 rounded-full text-on-primary transition-all duration-200 active:scale-95",
-          "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary)] motion-reduce:transition-none",
+          "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary motion-reduce:transition-none",
           className,
         )}
         style={{ backgroundColor: "var(--primary)", boxShadow: navShadow }}
