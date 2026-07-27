@@ -86,7 +86,7 @@ describe("intentToToolConfig", () => {
     const config = intentToToolConfig({ type: "conversation" });
     expect(config.toolChoice).toBe("auto");
     expect(config.allowedTools).toContain("save_word");
-    expect(config.allowedTools).toContain("start_roleplay");
+    expect(config.allowedTools).toContain("start_mission");
     expect(config.allowedTools).not.toContain("render_multiple_choice");
   });
 });

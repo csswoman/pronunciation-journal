@@ -34,15 +34,16 @@ describe("isExerciseTool", () => {
 });
 
 describe("TOOL_DECLARATIONS", () => {
-  it("has a declaration for each of the 6 tools", () => {
+  it("has a declaration for each public tool", () => {
     const names = TOOL_DECLARATIONS.map(t => t.name);
     expect(names).toContain("render_multiple_choice");
     expect(names).toContain("render_fill_blank");
     expect(names).toContain("render_speaking");
     expect(names).toContain("render_word_card");
     expect(names).toContain("save_word");
-    expect(names).toContain("start_roleplay");
-    expect(names).toHaveLength(6);
+    expect(names).toContain("start_mission");
+    expect(names).toContain("mission_intent_observed");
+    expect(names).toHaveLength(7);
   });
 });
 
