@@ -34,7 +34,8 @@ describe('useStreamingChat session finalization', () => {
         learningState: null,
         setLearningState: vi.fn(),
         onSaveWord: vi.fn(),
-        onStartRoleplay: vi.fn(),
+        onStartMission: vi.fn(),
+        onMissionIntentObserved: vi.fn(),
         userId: 'user-1',
       }),
     )
@@ -59,7 +60,8 @@ describe('useStreamingChat session finalization', () => {
         learningState: null,
         setLearningState: vi.fn(),
         onSaveWord: vi.fn(),
-        onStartRoleplay: vi.fn(),
+        onStartMission: vi.fn(),
+        onMissionIntentObserved: vi.fn(),
         userId: 'user-1',
       }),
     )

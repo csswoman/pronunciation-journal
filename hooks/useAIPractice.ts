@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import type { ExerciseResult, VoiceMetadata } from "@/lib/ai-practice/types";
-import type { StartRoleplayArgs } from "@/lib/ai-practice/tools/registry";
 import { getUserLearningState } from "@/lib/ai-practice/load-state";
 import { hydrateFromRemote, persistLearningState } from "@/lib/ai-practice/queries";
 import type { UserLearningState } from "@/lib/ai-practice/learning-state";
@@ -22,7 +21,7 @@ interface UseAIPracticeReturn {
   quotaExhausted: boolean;
   savedWords: AISavedWord[];
   wordToSave: { word: string; context: string } | null;
-  activeRoleplay: StartRoleplayArgs["scenario"] | null;
+  activeMissionId: string | null;
   mode: AIConversationMode;
   conversationId: number | null;
   sendMessage: (text: string, options?: { hidden?: boolean; voice?: VoiceMetadata }) => Promise<void>;
@@ -43,7 +42,7 @@ export function useAIPractice(): UseAIPracticeReturn {
   const { user } = useAuth();
   const [learningState, setLearningState] = useState<UserLearningState | null>(null);
   const persistTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [activeRoleplay, setActiveRoleplay] = useState<StartRoleplayArgs["scenario"] | null>(null);
+  const [activeMissionId, setActiveMissionId] = useState<string | null>(null);
   const [mode, setMode] = useState<AIConversationMode>("chat");
   const [conversationId, setConversationId] = useState<number | null>(null);
 
@@ -56,7 +55,8 @@ export function useAIPractice(): UseAIPracticeReturn {
     learningState,
     setLearningState,
     onSaveWord: words.openSaveWordModal,
-    onStartRoleplay: setActiveRoleplay,
+    onStartMission: setActiveMissionId,
+    onMissionIntentObserved: () => {},
     userId: user?.id ?? null,
   });
 
@@ -121,7 +121,7 @@ export function useAIPractice(): UseAIPracticeReturn {
   const changeMode = useCallback(async (next: AIConversationMode) => {
     if (!user?.id) return;
     chat.resetChat();
-    setActiveRoleplay(null);
+    setActiveMissionId(null);
     words.setWordToSave(null);
     setMode(next);
     const { conversationId: id, conversation } = await switchMode(user.id, next);
@@ -132,16 +132,16 @@ export function useAIPractice(): UseAIPracticeReturn {
       chat.loadMessages(conversation.messages as never);
     }
 
-    // Track active roleplay scenario from mode string
-    if (next.startsWith("roleplay:")) {
-      setActiveRoleplay(next.slice("roleplay:".length) as StartRoleplayArgs["scenario"]);
+    // Track the active mission id from the mode string.
+    if (next.startsWith("mission:")) {
+      setActiveMissionId(next.slice("mission:".length));
     }
   }, [chat, words, user?.id]);
 
   const resetSession = useCallback(() => {
     chat.resetChat();
     setConversationId(null);
-    setActiveRoleplay(null);
+    setActiveMissionId(null);
     words.setWordToSave(null);
   }, [chat, words]);
 
@@ -150,10 +150,10 @@ export function useAIPractice(): UseAIPracticeReturn {
     words.setWordToSave(null);
     setMode(conv.mode ?? "chat");
     setConversationId(conv.id ?? null);
-    if (conv.mode?.startsWith("roleplay:")) {
-      setActiveRoleplay(conv.mode.slice("roleplay:".length) as StartRoleplayArgs["scenario"]);
+    if (conv.mode?.startsWith("mission:")) {
+      setActiveMissionId(conv.mode.slice("mission:".length));
     } else {
-      setActiveRoleplay(null);
+      setActiveMissionId(null);
     }
     if (conv.messages.length > 0) {
       chat.loadMessages(conv.messages as never);
@@ -173,7 +173,7 @@ export function useAIPractice(): UseAIPracticeReturn {
     quotaExhausted: chat.quotaExhausted,
     savedWords: words.savedWords,
     wordToSave: words.wordToSave,
-    activeRoleplay,
+    activeMissionId,
     mode,
     conversationId,
     sendMessage: chat.sendMessage,

@@ -177,14 +177,7 @@ export interface AIMessage {
 
 export type AIConversationMode =
   | "chat"
-  | "roleplay:interview"
-  | "roleplay:cafe"
-  | "roleplay:airport"
-  | "roleplay:doctor"
-  | "roleplay:store"
-  | "roleplay:code_review"
-  | "roleplay:standup"
-  | "roleplay:tech_design"
+  | `mission:${string}`
   | "pronunciation"
   | "lesson";
 
