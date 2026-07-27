@@ -82,6 +82,10 @@ describe('oral mission state machine', () => {
       type: 'turn_spoken',
       attempt: attempt({ targetId: mission.targets[1].targetId }),
     }, mission)
+    const unscoredRetry = missionReducer(correction, {
+      type: 'turn_spoken',
+      attempt: attempt({ outcome: 'unscored', transcript: '' }),
+    }, mission)
     const retried = missionReducer(correction, {
       type: 'turn_spoken',
       attempt: attempt({ targetText: 'A medium latte, please.' }),
@@ -95,6 +99,8 @@ describe('oral mission state machine', () => {
     expect(correction.correctionRetried).toBe(true)
     expect(correction.spokenAttempts).toHaveLength(1)
     expect(unrelatedAttempt.phase).toBe('active')
+    expect(unscoredRetry.phase).toBe('active')
+    expect(unscoredRetry.spokenAttempts).toHaveLength(2)
     expect(retried.phase).toBe('transfer')
     expect(retried.spokenAttempts).toHaveLength(2)
     expect(retried.spokenAttempts[1]).toMatchObject({

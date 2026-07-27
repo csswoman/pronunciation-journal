@@ -134,6 +134,7 @@ export function missionReducer(
       if (
         state.phase === 'active'
         && state.correctionRetried
+        && event.attempt.outcome === 'scored'
         && state.pendingCorrection?.targetId === canonicalTargetForAttempt(event.attempt)
       ) {
         next.phase = 'transfer'
