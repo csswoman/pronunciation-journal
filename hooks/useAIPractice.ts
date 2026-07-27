@@ -56,6 +56,8 @@ export function useAIPractice(): UseAIPracticeReturn {
     setLearningState,
     onSaveWord: words.openSaveWordModal,
     onStartMission: setActiveMissionId,
+    // TODO(missions): Wire this to MissionRunner's missionReducer dispatch in the UI phase.
+    // useAIPractice deliberately owns only activeMissionId, never mission progress.
     onMissionIntentObserved: () => {},
     userId: user?.id ?? null,
   });
