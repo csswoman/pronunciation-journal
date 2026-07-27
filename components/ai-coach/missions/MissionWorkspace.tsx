@@ -1,30 +1,53 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { speakPhrase } from '@/lib/ai-coach/pronunciation'
 import { useSharedMicStream } from '@/hooks/useSharedMicStream'
 import { useSpeechInput } from '@/hooks/useSpeechInput'
+import { scorePronunciation } from '@/lib/pronunciation/scoring'
+import type { AIMessage, ExerciseResult, VoiceMetadata } from '@/lib/ai-practice/types'
 import { getMission } from '@/lib/ai-practice/missions/registry'
+import { deriveMissionOutcome } from '@/lib/ai-practice/missions/outcome'
+import { persistMissionSession } from '@/lib/ai-practice/missions/persistence'
 import {
   createMissionState,
   missionReducer,
   type MissionState,
 } from '@/lib/ai-practice/missions/state-machine'
 import MissionRunner from './MissionRunner'
+import MissionResult from './MissionResult'
+import ChatView from '../ChatView'
+import CustomPromptPanel from '../CustomPromptPanel'
 
 interface MissionWorkspaceProps {
   missionId: string
   setMissionIntentHandler: (handler: ((intentId: string) => void) | null) => void
+  messages: AIMessage[]
+  isStreaming: boolean
+  isDisabled: boolean
+  onSendMessage: (text: string, options?: { voice?: VoiceMetadata }) => Promise<void>
+  onSaveWord: (word: string, context: string) => void
+  onToolAnswer: (callId: string, result: ExerciseResult) => void
 }
 
 /** Owns mission reducer state so the streaming transport remains state-free. */
-export function MissionWorkspace({ missionId, setMissionIntentHandler }: MissionWorkspaceProps) {
+export function MissionWorkspace({
+  missionId,
+  setMissionIntentHandler,
+  messages,
+  isStreaming,
+  isDisabled,
+  onSendMessage,
+  onSaveWord,
+  onToolAnswer,
+}: MissionWorkspaceProps) {
   const { user } = useAuth()
   const mission = getMission(missionId)
   const [state, setState] = useState<MissionState | null>(() => (
     mission ? createMissionState(mission.id) : null
   ))
+  const persistedSessionRef = useRef<string | null>(null)
   const { getStream, release } = useSharedMicStream()
   const submitTransferAttempt = useCallback((transcript: string) => {
     if (!mission || !user?.id) return
@@ -50,6 +73,50 @@ export function MissionWorkspace({ missionId, setMissionIntentHandler }: Mission
     onResult: (result) => submitTransferAttempt(result.transcript),
   })
 
+  const correctionPhrase = mission?.targets.find((target) => (
+    target.targetId === state?.pendingCorrection?.targetId
+  ))?.phrase ?? mission?.targets[0]?.phrase ?? ''
+  const dispatchSpokenTurn = useCallback(async (transcript: string) => {
+    if (!mission || !user?.id || !correctionPhrase) return
+
+    try {
+      const scoring = await scorePronunciation(transcript, correctionPhrase)
+      setState((current) => current
+        ? missionReducer(current, {
+          type: 'turn_spoken',
+          attempt: {
+            userId: user.id,
+            targetText: correctionPhrase,
+            transcript,
+            evaluatorVersion: 'mission-stt-v1',
+            scoreKind: 'stt_intelligibility',
+            overallScore: scoring.accuracy,
+            targetId: mission.targets.find((target) => target.phrase === correctionPhrase)?.targetId,
+            durationMs: 0,
+            outcome: 'scored',
+          },
+        }, mission)
+        : current)
+    } catch {
+      setState((current) => current
+        ? missionReducer(current, {
+          type: 'turn_spoken',
+          attempt: {
+            userId: user.id,
+            targetText: correctionPhrase,
+            transcript,
+            evaluatorVersion: 'mission-stt-v1',
+            scoreKind: 'stt_intelligibility',
+            overallScore: 0,
+            targetId: mission.targets.find((target) => target.phrase === correctionPhrase)?.targetId,
+            durationMs: 0,
+            outcome: 'failed',
+          },
+        }, mission)
+        : current)
+    }
+  }, [correctionPhrase, mission, user?.id])
+
   useEffect(() => {
     if (!mission) {
       setState(null)
@@ -70,11 +137,21 @@ export function MissionWorkspace({ missionId, setMissionIntentHandler }: Mission
     }
   }, [mission, release, setMissionIntentHandler])
 
+  const outcome = useMemo(() => {
+    if (!mission || !state || state.phase !== 'result') return null
+    return deriveMissionOutcome(state, mission)
+  }, [mission, state])
+
+  useEffect(() => {
+    if (!mission || !state || !outcome || !user?.id) return
+    const sessionKey = `${mission.id}:${state.turnCount}:${state.status}`
+    if (persistedSessionRef.current === sessionKey) return
+    persistedSessionRef.current = sessionKey
+    void persistMissionSession(user.id, mission, state, outcome).catch(() => undefined)
+  }, [mission, outcome, state, user?.id])
+
   if (!mission || !state) return null
 
-  const correctionPhrase = mission.targets.find((target) => (
-    target.targetId === state.pendingCorrection?.targetId
-  ))?.phrase ?? mission.targets[0].phrase
   const isTransferRecording = speechState === 'listening'
   const handleTransfer = () => {
     if (isTransferRecording) {
@@ -84,16 +161,51 @@ export function MissionWorkspace({ missionId, setMissionIntentHandler }: Mission
     reset()
     void start()
   }
+  const handleMissionSubmit = (text: string, options?: { voice?: VoiceMetadata }) => {
+    if (options?.voice?.transcript) {
+      void dispatchSpokenTurn(text)
+    } else {
+      setState((current) => current
+        ? missionReducer(current, { type: 'turn_text' }, mission)
+        : current)
+    }
+    void onSendMessage(text, options)
+  }
 
   return (
-    <MissionRunner
-      mission={mission}
-      state={state}
-      onListen={() => speakPhrase(correctionPhrase)}
-      onSlow={() => speakPhrase(correctionPhrase, 0.55)}
-      onRetry={() => setState((current) => current ? missionReducer(current, { type: 'retry_correction' }, mission) : current)}
-      onTransfer={handleTransfer}
-      isTransferRecording={isTransferRecording}
-    />
+    <div className="flex h-full min-h-0 flex-col">
+      <div className="flex-1 min-h-0 overflow-y-auto">
+        <div className="p-3">
+          {outcome
+            ? <MissionResult outcome={outcome} onReviewCta={() => window.location.assign('/tracking/review')} />
+            : <MissionRunner
+                mission={mission}
+                state={state}
+                onListen={() => speakPhrase(correctionPhrase)}
+                onSlow={() => speakPhrase(correctionPhrase, 0.55)}
+                onRetry={() => setState((current) => current ? missionReducer(current, { type: 'retry_correction' }, mission) : current)}
+                onTransfer={handleTransfer}
+                isTransferRecording={isTransferRecording}
+              />}
+        </div>
+        {!outcome && <ChatView
+          messages={messages}
+          isStreaming={isStreaming}
+          onSaveWord={onSaveWord}
+          onSuggestionClick={(text) => handleMissionSubmit(text)}
+          onToolAnswer={onToolAnswer}
+          onNext={() => handleMissionSubmit('next')}
+        />}
+      </div>
+      {!outcome && (
+        <div className="flex-shrink-0 border-t border-border-subtle bg-surface-base px-3 pb-3 pt-1">
+          <CustomPromptPanel
+            onSubmit={handleMissionSubmit}
+            isDisabled={isStreaming || isDisabled}
+            placeholder="Responde a la misión…"
+          />
+        </div>
+      )}
+    </div>
   )
 }

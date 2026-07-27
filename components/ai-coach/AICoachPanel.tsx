@@ -134,7 +134,16 @@ export default function AICoachPanel() {
           {/* Missions tab — kept mounted */}
           <div className={`flex flex-1 flex-col min-h-0 overflow-hidden${activeTab !== "missions" ? " hidden" : ""}`}>
             {activeMissionId
-              ? <MissionWorkspace missionId={activeMissionId} setMissionIntentHandler={setMissionIntentHandler} />
+              ? <MissionWorkspace
+                  missionId={activeMissionId}
+                  setMissionIntentHandler={setMissionIntentHandler}
+                  messages={messages}
+                  isStreaming={isStreaming}
+                  isDisabled={quotaExhausted}
+                  onSendMessage={sendMessage}
+                  onSaveWord={openSaveWordModal}
+                  onToolAnswer={answerToolCall}
+                />
               : <AICoachHome activeTab="missions" onSendMessage={sendMessage} onSelectMission={(missionId) => { void changeMode(`mission:${missionId}`); }} isStreaming={isStreaming} prefill={inputPrefill} onPrefillConsumed={() => setInputPrefill(undefined)} />}
           </div>
 

@@ -1,16 +1,20 @@
 // @vitest-environment jsdom
-import { act, fireEvent, render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 
-const { speakPhrase } = vi.hoisted(() => ({ speakPhrase: vi.fn() }))
+const { speakPhrase, scorePronunciation } = vi.hoisted(() => ({
+  speakPhrase: vi.fn(),
+  scorePronunciation: vi.fn(async () => ({ accuracy: 75 })),
+}))
 
 vi.mock('../MissionRunner', () => ({
   default: ({ state, onListen, onSlow }: {
-    state: { intentsObserved: Set<string> }
+    state: { intentsObserved: Set<string>; phase: string }
     onListen: () => void
     onSlow: () => void
   }) => (
     <>
+      <output data-testid="mission-phase">{state.phase}</output>
       <output>{state.intentsObserved.size}</output>
       <button type="button" onClick={onListen}>Escuchar</button>
       <button type="button" onClick={onSlow}>Más lento</button>
@@ -23,8 +27,27 @@ vi.mock('@/components/auth/AuthProvider', () => ({
 }))
 
 vi.mock('@/lib/ai-coach/pronunciation', () => ({ speakPhrase }))
+vi.mock('@/lib/pronunciation/scoring', () => ({ scorePronunciation }))
+vi.mock('../../ChatView', () => ({ default: () => null }))
+vi.mock('../../CustomPromptPanel', () => ({
+  default: ({ onSubmit }: { onSubmit: (text: string, options?: { voice?: { transcript: true; scored: boolean } }) => void }) => (
+    <>
+      <button type="button" onClick={() => onSubmit('A typed response')}>Enviar texto</button>
+      <button type="button" onClick={() => onSubmit('A spoken response', { voice: { transcript: true, scored: true } })}>Enviar voz</button>
+    </>
+  ),
+}))
 
 import { MissionWorkspace } from '../MissionWorkspace'
+
+const props = {
+  messages: [],
+  isStreaming: false,
+  isDisabled: false,
+  onSendMessage: vi.fn(async () => undefined),
+  onSaveWord: vi.fn(),
+  onToolAnswer: vi.fn(),
+}
 
 describe('MissionWorkspace', () => {
   it('routes observed model intents into its mission reducer state', () => {
@@ -33,7 +56,7 @@ describe('MissionWorkspace', () => {
       observedIntent = handler
     })
 
-    render(<MissionWorkspace missionId="roleplay.cafe" setMissionIntentHandler={setMissionIntentHandler} />)
+    render(<MissionWorkspace missionId="roleplay.cafe" setMissionIntentHandler={setMissionIntentHandler} {...props} />)
 
     act(() => observedIntent?.('placed_order'))
 
@@ -41,12 +64,33 @@ describe('MissionWorkspace', () => {
   })
 
   it('plays the correction phrase at normal and slow rates', () => {
-    render(<MissionWorkspace missionId="roleplay.cafe" setMissionIntentHandler={vi.fn()} />)
+    render(<MissionWorkspace missionId="roleplay.cafe" setMissionIntentHandler={vi.fn()} {...props} />)
 
     fireEvent.click(screen.getByRole('button', { name: 'Escuchar' }))
     fireEvent.click(screen.getByRole('button', { name: 'Más lento' }))
 
     expect(speakPhrase).toHaveBeenNthCalledWith(1, "I'd like a medium latte, please.")
     expect(speakPhrase).toHaveBeenNthCalledWith(2, "I'd like a medium latte, please.", 0.55)
+  })
+
+  it('keeps a typed mission response distinct from spoken evidence', () => {
+    render(<MissionWorkspace missionId="roleplay.cafe" setMissionIntentHandler={vi.fn()} {...props} />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Enviar texto' }))
+
+    expect(screen.getByTestId('mission-phase')).toHaveTextContent('active')
+    expect(props.onSendMessage).toHaveBeenCalledWith('A typed response', undefined)
+  })
+
+  it('scores spoken mission responses before they can open a correction', async () => {
+    render(<MissionWorkspace missionId="roleplay.cafe" setMissionIntentHandler={vi.fn()} {...props} />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Enviar voz' }))
+    await waitFor(() => expect(screen.getByTestId('mission-phase')).toHaveTextContent('active'))
+
+    fireEvent.click(screen.getByRole('button', { name: 'Enviar voz' }))
+    await waitFor(() => expect(screen.getByTestId('mission-phase')).toHaveTextContent('correction'))
+
+    expect(scorePronunciation).toHaveBeenCalledTimes(2)
   })
 })
