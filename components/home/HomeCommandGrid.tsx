@@ -2,14 +2,12 @@
 
 // Planned structure:
 // <HomeCommandGrid>
-//   <HomeCommandReview />     — full-width strip
+//   <HomeCommandReview />     — review | first-visit activation
 //   <HomeCommandMain>
 //     <HomeDailyCard />
-//     <HomeLearnRow />        — under plan (fills left)
+//     <HomeLearnRow />
 //   </HomeCommandMain>
-//   <HomeCommandAside>
-//     Pronunciación → Core → WOTD
-//   </HomeCommandAside>
+//   <HomeCommandAside />
 // </HomeCommandGrid>
 
 import { useCallback, useState } from "react";
@@ -21,6 +19,7 @@ import WeakSoundCard from "@/components/home/WeakSoundCard";
 import HomeWordOfDayCard from "@/components/home/HomeWordOfDayCard";
 import HomePlacementPrompt from "@/components/home/HomePlacementPrompt";
 import HomePronunciationPrompt from "@/components/home/HomePronunciationPrompt";
+import HomeActivationStrip from "@/components/home/HomeActivationStrip";
 import type { ConceptLesson } from "@/hooks/useDailyPlan";
 import type { WeakestPhonemeHome } from "@/lib/home/constants";
 import type { MiniLesson } from "@/lib/content/schemas";
@@ -49,17 +48,28 @@ export default function HomeCommandGrid({
   pronunciationDiagnosticState,
 }: HomeCommandGridProps) {
   const [planEmpty, setPlanEmpty] = useState(false);
-  const onPlanEmptyChange = useCallback((empty: boolean) => {
-    setPlanEmpty(empty);
+  const [planSettled, setPlanSettled] = useState(false);
+  const onPlanStatusChange = useCallback((next: { empty: boolean; settled: boolean }) => {
+    setPlanEmpty(next.empty);
+    setPlanSettled(next.settled);
   }, []);
 
   const reviewDue = wordsDueCount + soundsDueCount > 0;
-  const showPlacementSetup = !placementState.hasPlacement && !placementState.hasMeaningfulProgress;
-  const showPlacementReminder = !placementState.hasPlacement && placementState.hasMeaningfulProgress;
-  const showPronunciationSetup =
-    !pronunciationDiagnosticState.hasPronunciationDiagnostic && !placementState.hasMeaningfulProgress;
-  const showPronunciationReminder =
-    !pronunciationDiagnosticState.hasPronunciationDiagnostic && placementState.hasMeaningfulProgress;
+  const isNewLearner = !placementState.hasMeaningfulProgress;
+  const needsPlacement = !placementState.hasPlacement;
+  const needsPronunciation = !pronunciationDiagnosticState.hasPronunciationDiagnostic;
+  // Empty plan + no review + no practice yet → one activation path to value.
+  const showActivation = planSettled && !reviewDue && planEmpty && isNewLearner;
+  // Full-width assessment banners only if somehow empty without activation path.
+  const setupOwnsFold = planSettled && !reviewDue && planEmpty && !showActivation;
+  const showPlacementBanner = needsPlacement && setupOwnsFold;
+  const showPronunciationBanner = needsPronunciation && setupOwnsFold;
+  // Aside reminders when plan/review owns the fold (or after activation is done).
+  const showPlacementAside =
+    planSettled && needsPlacement && !showPlacementBanner && !showActivation;
+  const showPronunciationAside =
+    planSettled && needsPronunciation && !showPronunciationBanner && !showActivation;
+  const showPlanExtras = planSettled && !planEmpty;
 
   return (
     <div className="home-command-grid">
@@ -72,15 +82,24 @@ export default function HomeCommandGrid({
         </div>
       ) : null}
 
-      {showPlacementSetup ? (
+      {showActivation ? (
+        <div className="home-command-review">
+          <HomeActivationStrip
+            showPlacementLink={needsPlacement}
+            showPronunciationLink={needsPronunciation}
+          />
+        </div>
+      ) : null}
+
+      {showPlacementBanner ? (
         <div className="home-command-review">
           <HomePlacementPrompt />
         </div>
       ) : null}
 
-      {showPronunciationSetup ? (
+      {showPronunciationBanner ? (
         <div className="home-command-review">
-          <HomePronunciationPrompt />
+          <HomePronunciationPrompt demoteCta={showPlacementBanner} />
         </div>
       ) : null}
 
@@ -88,23 +107,25 @@ export default function HomeCommandGrid({
         <HomeDailyCard
           conceptLesson={conceptLesson}
           reviewDue={reviewDue}
-          onPlanEmptyChange={onPlanEmptyChange}
+          isNewLearner={isNewLearner}
+          showFirstSessionHint={showPlanExtras && isNewLearner && !reviewDue}
+          onPlanStatusChange={onPlanStatusChange}
         />
-        {!planEmpty ? (
+        {showPlanExtras ? (
           <HomeLearnRow primary={todaysLesson} secondary={secondaryLesson} />
         ) : null}
       </div>
 
       <aside className="home-command-aside" aria-label="Práctica sugerida">
         <WeakSoundCard weakestPhoneme={weakestPhoneme} />
-        {!planEmpty ? (
+        {showPlanExtras ? (
           <>
             <Core1000ProgressCard />
             <HomeWordOfDayCard />
           </>
         ) : null}
-        {showPlacementReminder ? <HomePlacementPrompt compact /> : null}
-        {showPronunciationReminder ? <HomePronunciationPrompt compact /> : null}
+        {showPlacementAside ? <HomePlacementPrompt compact /> : null}
+        {showPronunciationAside ? <HomePronunciationPrompt compact /> : null}
       </aside>
     </div>
   );

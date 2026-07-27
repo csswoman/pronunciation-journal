@@ -38,17 +38,17 @@ function LearnChip({
   return (
     <Link
       href={`/mini-lessons/${lesson.slug}`}
-      className="home-card-lift focus-ring flex h-full flex-col gap-2 rounded-xl border border-border-subtle bg-surface-raised p-4 transition-transform active:scale-[0.96]"
+      className="focus-ring group flex h-full flex-col gap-1.5 rounded-xl border border-border-subtle bg-transparent px-4 py-3 transition-colors hover:bg-surface-raised"
     >
-      <span className="font-kicker text-fg-muted">{kicker}</span>
-      <span className="text-h4 text-balance text-fg">{lesson.title}</span>
+      <span className="font-kicker text-fg-subtle">{kicker}</span>
+      <span className="font-label text-balance text-fg">{lesson.title}</span>
       {lesson.subtitle || lesson.body ? (
         <span className="font-body-sm text-pretty text-fg-muted line-clamp-2">
           {lesson.subtitle || lesson.body}
         </span>
       ) : null}
-      <span className="mt-auto inline-flex min-h-10 items-center gap-1.5 font-body-sm text-fg-muted">
-        Abrir <ArrowRight size={16} aria-hidden />
+      <span className="mt-auto inline-flex min-h-10 items-center gap-1.5 font-body-sm text-fg-muted group-hover:text-fg group-hover:underline">
+        Abrir lección <ArrowRight size={16} aria-hidden />
       </span>
     </Link>
   );
@@ -63,15 +63,15 @@ export default function HomeLearnRow({
     return (
       <Link
         href="/mini-lessons"
-        className="home-card-lift focus-ring flex h-full flex-col gap-2 rounded-xl border border-border-subtle bg-surface-raised p-4 transition-transform active:scale-[0.96]"
+        className="focus-ring group flex h-full flex-col gap-1.5 rounded-xl border border-border-subtle bg-transparent px-4 py-3 transition-colors hover:bg-surface-raised"
       >
-        <span className="font-kicker text-fg-muted">Mini lecciones</span>
-        <span className="text-h4 text-fg">Explorar lecciones</span>
+        <span className="font-kicker text-fg-subtle">Mini lecciones</span>
+        <span className="font-label text-fg">Explorar lecciones</span>
         <span className="font-body-sm text-fg-muted">
           Gramática, pronunciación y vocabulario del día.
         </span>
-        <span className="mt-auto inline-flex min-h-10 items-center gap-1.5 font-body-sm text-fg-muted">
-          Abrir <ArrowRight size={16} aria-hidden />
+        <span className="mt-auto inline-flex min-h-10 items-center gap-1.5 font-body-sm text-fg-muted group-hover:text-fg group-hover:underline">
+          Explorar lecciones <ArrowRight size={16} aria-hidden />
         </span>
       </Link>
     );

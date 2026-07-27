@@ -7,7 +7,7 @@ describe("HomePlacementPrompt", () => {
   it("presents placement as the setup action for a new learner", () => {
     render(<HomePlacementPrompt />);
 
-    expect(screen.getByRole("heading", { name: "Haz que el plan empiece desde tu nivel" }))
+    expect(screen.getByRole("heading", { name: "Empieza el plan desde tu nivel" }))
       .toBeInTheDocument();
     expect(screen.getByRole("link", { name: /hacer prueba de nivel/i }))
       .toHaveAttribute("href", "/assessment");

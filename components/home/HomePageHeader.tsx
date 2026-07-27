@@ -2,7 +2,7 @@
 
 // Planned structure:
 // <HomePageHeader>
-//   <PageHeader title={greeting} subtitle={retention?} />
+//   <PageHeader title={greeting} subtitle={retention | orientation} />
 // </HomePageHeader>
 
 import PageHeader from "@/components/layout/PageHeader";
@@ -16,6 +16,8 @@ interface HomePageHeaderProps {
   wordsMastered?: number;
   weekMinutes?: number;
   dailyGoal?: DailyGoalProgress | null;
+  /** True until the learner has real practice history. */
+  isNewLearner?: boolean;
 }
 
 function getGreeting(): "Buenos días" | "Buenas tardes" | "Buenas noches" {
@@ -52,12 +54,13 @@ function buildRetentionSubtitle(
   return parts.length > 0 ? parts.join(" · ") : undefined;
 }
 
-/** Canonical PageHeader for home — greeting + quiet non-zero retention. */
+/** Canonical PageHeader for home — greeting + retention or first-visit orientation. */
 export default function HomePageHeader({
   streak,
   wordsMastered = 0,
   weekMinutes,
   dailyGoal = null,
+  isNewLearner = false,
 }: HomePageHeaderProps) {
   const { user } = useAuth();
   const { preferences } = useUserPreferences();
@@ -73,7 +76,12 @@ export default function HomePageHeader({
   const greeting = getGreeting();
 
   const title = userName ? `${greeting}, ${userName}` : greeting;
-  const subtitle = buildRetentionSubtitle(current, wordsMastered, week);
+  const retention = buildRetentionSubtitle(current, wordsMastered, week);
+  const subtitle =
+    retention ??
+    (isNewLearner
+      ? "Tu plan de hoy es el camino más corto — empieza cuando quieras."
+      : undefined);
 
   return <PageHeader title={title} subtitle={subtitle} />;
 }

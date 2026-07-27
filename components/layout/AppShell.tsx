@@ -122,7 +122,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           className={
             isImmersivePractice
               ? "mx-auto flex min-h-0 w-full max-w-3xl flex-1 flex-col"
-              : "mx-auto w-full max-w-3xl"
+              : "w-full"
           }
         >
           {children}

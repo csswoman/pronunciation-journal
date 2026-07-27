@@ -53,11 +53,11 @@
     border-color 150ms var(--ease-out-expo, ease-out);
 }
 .home-card-lift:hover {
-  transform: translateY(-2px);
-  border-color: var(--accent-border);
+  transform: translateY(-1px);
+  border-color: var(--border-default);
 }
 .home-card-lift:active {
-  transform: scale(0.96);
+  transform: scale(0.99);
 }
 @media (prefers-reduced-motion: reduce) {
   .home-card-lift:hover,

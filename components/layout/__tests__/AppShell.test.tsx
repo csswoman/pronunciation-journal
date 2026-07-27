@@ -268,6 +268,29 @@ describe("AppShell mount behavior", () => {
     });
   });
 
+  it("uses a narrow column only for immersive practice routes", async () => {
+    mockPathname = "/practice/sounds/sound/ae";
+
+    const { container, rerender } = render(
+      <AppShell>
+        <div>session</div>
+      </AppShell>,
+    );
+
+    await waitFor(() => {
+      expect(container.querySelector(".max-w-3xl")).toBeTruthy();
+    });
+
+    mockPathname = "/";
+    rerender(
+      <AppShell>
+        <div>home</div>
+      </AppShell>,
+    );
+
+    expect(container.querySelector(".max-w-3xl")).toBeNull();
+  });
+
   it("hides mobile bottom nav while a practice session is active", async () => {
     mockSessionChrome.depth = 1;
 

@@ -52,18 +52,17 @@ export default function HomeReviewBanner({
       : null;
 
   return (
-    <div className="flex flex-col gap-3 rounded-xl border border-border-subtle bg-surface-raised px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-5">
+    <div className="flex flex-col gap-3 rounded-xl border border-border-subtle bg-primary-soft/40 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-5">
       <div className="min-w-0 flex flex-col gap-0.5">
         <p className="font-label font-semibold text-fg">Pendiente de repasar</p>
         <p className="font-body-sm tabular-nums text-fg-muted">
-          {total} {total === 1 ? "pendiente" : "pendientes"}
-          {parts.length > 0 ? ` · ${parts.join(" · ")}` : ""}
+          {parts.length > 0 ? parts.join(" · ") : `${total} pendientes`}
         </p>
       </div>
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <Link
           href={href}
-          className="focus-ring inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-md bg-primary px-4 font-label text-on-primary"
+          className="focus-ring inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-md bg-primary px-4 font-label text-on-primary transition-colors hover:bg-primary-hover"
         >
           {label}
           <ArrowRight size={16} aria-hidden />

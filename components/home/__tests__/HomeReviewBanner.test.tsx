@@ -11,10 +11,9 @@ describe("HomeReviewBanner", () => {
     expect(container).toBeEmptyDOMElement();
   });
 
-  it("shows total due and prefers words when both exist", () => {
+  it("shows due parts and prefers words when both exist", () => {
     render(<HomeReviewBanner wordsDueCount={8} soundsDueCount={4} />);
-    expect(screen.getByText(/12 pendientes/i)).toBeInTheDocument();
-    expect(screen.getByText(/8 palabras/i)).toBeInTheDocument();
+    expect(screen.getByText(/8 palabras · 4 sonidos/i)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /repasar palabras/i })).toHaveAttribute(
       "href",
       "/practice/review",
@@ -27,7 +26,7 @@ describe("HomeReviewBanner", () => {
 
   it("links to review when only words are due", () => {
     render(<HomeReviewBanner wordsDueCount={5} soundsDueCount={0} />);
-    expect(screen.getByText(/5 pendientes/i)).toBeInTheDocument();
+    expect(screen.getByText(/5 palabras/i)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /repasar palabras/i })).toHaveAttribute(
       "href",
       "/practice/review",
@@ -36,7 +35,7 @@ describe("HomeReviewBanner", () => {
 
   it("links to sounds when only sounds are due", () => {
     render(<HomeReviewBanner wordsDueCount={0} soundsDueCount={3} />);
-    expect(screen.getByText(/3 pendientes/i)).toBeInTheDocument();
+    expect(screen.getByText(/3 sonidos/i)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /repasar sonidos/i })).toHaveAttribute(
       "href",
       "/practice/sounds",

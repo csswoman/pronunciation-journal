@@ -41,6 +41,8 @@ export default function HomeLayout({
   placementState,
   pronunciationDiagnosticState,
 }: HomeLayoutProps) {
+  const isNewLearner = !placementState.hasMeaningfulProgress;
+
   return (
     <div className="home-layout home-layout-shell">
       <div className="home-layout-sections flex flex-col">
@@ -49,6 +51,7 @@ export default function HomeLayout({
           wordsMastered={vocabularyProgress?.wordBankMastered ?? 0}
           weekMinutes={dailyGoal?.weekMinutes ?? 0}
           dailyGoal={dailyGoal}
+          isNewLearner={isNewLearner}
         />
         <HomeCommandGrid
           conceptLesson={conceptLesson}

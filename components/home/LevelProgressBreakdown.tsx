@@ -39,9 +39,9 @@ export function LevelProgressBreakdown({ fallbackRatio }: Props) {
 
   if (!words || !learnedIds) {
     return (
-      <div className="mt-auto h-1.5 w-full overflow-hidden rounded-full bg-surface-sunken">
+      <div className="mt-auto h-1.5 w-full overflow-hidden rounded-full bg-primary-soft">
         <div
-          className="h-full w-full origin-left rounded-full bg-accent transition-transform duration-500"
+          className="progress-fill h-full w-full rounded-full bg-primary"
           style={{ transform: `scaleX(${fallbackRatio})` }}
         />
       </div>
@@ -57,13 +57,13 @@ export function LevelProgressBreakdown({ fallbackRatio }: Props) {
           <span className="w-6 font-kicker text-fg-subtle">
             {row.level}
           </span>
-          <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-surface-sunken">
+          <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-primary-soft">
             <div
-              className="h-full w-full origin-left rounded-full bg-accent transition-transform duration-500"
+              className="progress-fill h-full w-full rounded-full bg-primary"
               style={{ transform: `scaleX(${row.total > 0 ? row.learned / row.total : 0})` }}
             />
           </div>
-          <span className="w-12 text-right text-tiny tabular-nums text-fg-subtle">
+          <span className="w-12 text-right font-caption tabular-nums text-fg-subtle">
             {row.learned}/{row.total}
           </span>
         </div>
