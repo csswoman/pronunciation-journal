@@ -148,14 +148,22 @@ Allow launches with `missionId`, `targetIds` and source metadata from pronunciat
 
 ## Done criteria
 
-- [ ] One registry owns all existing and new scenarios.
-- [ ] Mission state/progress is deterministic and resumable.
-- [ ] Voice turns and text fallback remain semantically distinct.
-- [ ] Goal achievement, pronunciation evidence and mastery are separate.
-- [ ] One prioritized correction leads to a varied transfer attempt.
-- [ ] Route, Daily and Tracking launch/reconcile exact mission ids.
-- [ ] Offline/idempotent/two-user tests pass without raw-audio storage.
+- [x] One registry owns all existing and new scenarios.
+- [x] Mission state/progress is deterministic and resumable.
+- [x] Voice turns and text fallback remain semantically distinct.
+- [x] Goal achievement, pronunciation evidence and mastery are separate.
+- [x] One prioritized correction leads to a varied transfer attempt.
+- [x] Route, Daily and Tracking launch/reconcile exact mission ids.
+- [x] Offline/idempotent/two-user tests pass without raw-audio storage.
 - [ ] Prompt audit, focused tests, a11y, typecheck and token lint pass.
+
+## Verification (2026-07-27)
+
+- Registry, prompt/event contracts, deterministic reducer/outcome, persistence and mission library/runner are covered by the focused mission tests. Correction now follows `correction → active → scored same-target retry → transfer`; unscored retries and unrelated targets do not advance.
+- The live stream preserves its `abortRef`/`streamIdRef` race guards. Its `mission_intent_observed` callback is now routed to `MissionWorkspace`, where the UI-owned reducer records validated intents; the hook itself remains transport-only. Mission summaries remain visible with actionable feedback copy disabled.
+- Route/Daily/Tracking search found no current `roleplay:` launch call sites in `components/courses/`, `lib/practice/daily-plan/`, or `components/tracking/`; `parseMissionLaunch` now defines and tests their exact launch contracts instead of fabricating integrations.
+- Passed: `pnpm exec vitest run lib/ai-practice/missions lib/ai-practice/__tests__/stream-processor.test.ts`, focused Coach/Interview/hooks tests, `pnpm audit:ai-prompts`, `pnpm type-check`, `pnpm lint:design-tokens`, and the full Vitest suite. The mission runner additionally tests keyboard activation of the retry control.
+- Remaining verification gap: `pnpm test:a11y --grep "oral mission"` reports no matching Playwright tests because there is no auth-independent live mission route. The component-level keyboard test is green, but the final a11y criterion remains unchecked until a browser-accessible mission fixture or authenticated e2e setup is added.
 
 ## STOP conditions
 
