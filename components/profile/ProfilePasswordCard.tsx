@@ -41,7 +41,7 @@ export default function ProfilePasswordCard({ onSave }: Props) {
     setError("");
   };
 
-  const inputClass = "w-full px-3 py-2 text-sm rounded-xl focus:outline-none focus:ring-2 transition-all";
+  const inputClass = "w-full px-3 py-2 text-body-sm rounded-xl focus:outline-none focus:ring-2 transition-all";
   const inputStyle = {
     background: "var(--bg-tertiary)",
     border: "1px solid var(--border)",
@@ -52,7 +52,7 @@ export default function ProfilePasswordCard({ onSave }: Props) {
   return (
     <div>
       <div className="flex items-center justify-between mb-1">
-        <span className="text-xs font-semibold uppercase tracking-widest text-fg-subtle">
+        <span className="font-kicker text-fg-subtle">
           Password
         </span>
         {!isEditing && (
@@ -63,7 +63,7 @@ export default function ProfilePasswordCard({ onSave }: Props) {
       </div>
 
       {!isEditing ? (
-        <p className="text-sm tracking-[0.2em] py-1 text-fg-subtle">••••••••</p>
+        <p className="text-body-sm tracking-[0.2em] py-1 text-fg-subtle">••••••••</p>
       ) : (
         <form onSubmit={handleSave} className="mt-2 space-y-2">
           <input
@@ -83,7 +83,7 @@ export default function ProfilePasswordCard({ onSave }: Props) {
             className={inputClass}
             style={inputStyle}
           />
-          {error && <p className="text-xs text-error">{error}</p>}
+          {error && <p className="text-caption text-error">{error}</p>}
           <div className="flex gap-2">
             <Button type="submit" variant="primary" size="sm" disabled={isSaving}>
               {isSaving ? "Saving…" : "Update password"}

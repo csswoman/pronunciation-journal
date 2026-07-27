@@ -48,7 +48,7 @@ export default function BottomNavMenu({ open, onClose, isActive }: BottomNavMenu
   return (
     <>
       <div
-        className="fixed inset-0 z-40 bg-[var(--bg-body)]/40 backdrop-blur-sm motion-reduce:backdrop-blur-none"
+        className="fixed inset-0 z-40 bg-(--bg-body)/40 backdrop-blur-sm motion-reduce:backdrop-blur-none"
         role="presentation"
         aria-hidden="true"
         onClick={onClose}
@@ -60,7 +60,7 @@ export default function BottomNavMenu({ open, onClose, isActive }: BottomNavMenu
         aria-label="More navigation"
         className={cn(
           "fixed left-4 right-4 z-50 overflow-hidden",
-          "rounded-[var(--radius-xl)] border border-[var(--line-divider)] bg-[var(--surface-translucent)] shadow-xl backdrop-blur-md",
+          "rounded-xl border border-(--line-divider) bg-(--surface-translucent) shadow-xl backdrop-blur-md",
           "motion-reduce:backdrop-blur-none motion-reduce:animate-none animate-grid-in",
           "bottom-[calc(4.75rem+env(safe-area-inset-bottom))]",
         )}
@@ -77,7 +77,7 @@ export default function BottomNavMenu({ open, onClose, isActive }: BottomNavMenu
                   href={item.href}
                   onClick={onClose}
                   className={cn(
-                    "flex min-h-11 items-center gap-2.5 rounded-md px-3 py-2.5 text-sm font-medium",
+                    "flex min-h-11 items-center gap-2.5 rounded-md px-3 py-2.5 text-body-sm font-medium",
                     "transition-colors duration-(--transition-fast)",
                     "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
                     active
@@ -113,16 +113,10 @@ export default function BottomNavMenu({ open, onClose, isActive }: BottomNavMenu
                   onClick={() => setHue(preset.hue)}
                   aria-label={preset.label}
                   aria-pressed={isSelected}
-                  className={cn(
-                    "flex flex-1 items-center justify-center h-10",
-                    "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
-                  )}
+                  className={cn( "flex flex-1 items-center justify-center h-10", "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary", )}
                 >
                   <span
-                    className={cn(
-                      "block rounded-full transition-[transform,outline-color] duration-150",
-                      isSelected ? "h-5 w-5 scale-125 outline-2 outline-offset-2" : "h-4 w-4 hover:scale-110",
-                    )}
+                    className={cn( "block rounded-full transition-[transform,outline-color] duration-150", isSelected ? "h-5 w-5 scale-125 outline-2 outline-offset-2" : "h-4 w-4 hover:scale-110", )}
                     style={{
                       backgroundColor: `oklch(0.65 0.15 ${preset.hue})`,
                       outlineColor: isSelected ? `oklch(0.65 0.15 ${preset.hue})` : undefined,

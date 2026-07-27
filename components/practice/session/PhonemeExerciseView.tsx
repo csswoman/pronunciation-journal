@@ -48,7 +48,7 @@ export function PhonemeExerciseView({
           type="button"
           onClick={handleSkip}
           aria-label="Omitir este ejercicio"
-          className="self-center py-1.5 text-sm font-medium text-fg-subtle transition-colors hover:text-fg-secondary"
+          className="self-center py-1.5 text-body-sm font-medium text-fg-subtle transition-colors hover:text-fg-secondary"
         >
           Omitir este
         </button>

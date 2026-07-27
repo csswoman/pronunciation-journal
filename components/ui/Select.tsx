@@ -29,7 +29,7 @@ export default function Select({
 
   return (
     <div className="flex flex-col gap-1">
-      <label htmlFor={selectId} className="text-xs font-medium text-fg-muted">
+      <label htmlFor={selectId} className="text-caption font-medium text-fg-muted">
         {label}
         {required && <span className="text-error ml-0.5">*</span>}
       </label>
@@ -40,7 +40,7 @@ export default function Select({
           onChange={(e) => onChange(e.target.value)}
           aria-invalid={!!error}
           aria-describedby={error ? `${selectId}-error` : undefined}
-          className={`w-full px-3 py-2 rounded-lg text-sm border bg-surface-sunken text-fg focus:outline-none focus:ring-2 transition-all ${borderClass} ${error ? "pr-10" : ""}`}
+          className={`w-full px-3 py-2 rounded-lg text-body-sm border bg-surface-sunken text-fg focus:outline-none focus:ring-2 transition-all ${borderClass} ${error ? "pr-10" : ""}`}
         >
           {options.map((o) => (
             <option key={o.value} value={o.value}>
@@ -53,7 +53,7 @@ export default function Select({
         )}
       </div>
       {error && (
-        <p id={`${selectId}-error`} className="mt-1 text-sm text-error flex items-center gap-1">
+        <p id={`${selectId}-error`} className="mt-1 text-body-sm text-error flex items-center gap-1">
           <AlertCircle className="w-3 h-3 shrink-0" />
           {error}
         </p>

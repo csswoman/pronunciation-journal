@@ -32,12 +32,12 @@ export function ProgressCardHeader({
 }) {
   return (
     <div className="flex items-center gap-2.5">
-      <div className="grid h-8 w-8 shrink-0 place-items-center rounded-sm bg-[var(--hue-icon-bg)] text-[15px] text-primary">
+      <div className="grid h-8 w-8 shrink-0 place-items-center rounded-sm bg-[var(--hue-icon-bg)] text-body-sm text-primary">
         {icon}
       </div>
       <div className="min-w-0 flex flex-col">
         {eyebrow ? (
-          <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-fg-subtle">
+          <span className="font-kicker font-semibold text-fg-subtle">
             {eyebrow}
           </span>
         ) : null}
@@ -61,10 +61,7 @@ export function ProgressStatBar({
   return (
     <div className="mt-2.5 flex items-center gap-3 first:mt-0">
       <span
-        className={cn(
-          'w-[90px] shrink-0 text-sm font-semibold text-fg',
-          labelClassName,
-        )}
+        className={cn( 'w-[90px] shrink-0 text-body-sm font-semibold text-fg', labelClassName, )}
       >
         {label}
       </span>
@@ -93,10 +90,7 @@ export function ProgressBigNumber({
   return (
     <div>
       <div
-        className={cn(
-          'text-h2 leading-none',
-          tone === 'warning' ? 'text-warning' : 'text-primary',
-        )}
+        className={cn( 'text-h2 leading-none', tone === 'warning' ? 'text-warning' : 'text-primary', )}
       >
         {value}
       </div>

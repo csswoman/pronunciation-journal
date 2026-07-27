@@ -39,7 +39,7 @@ export function CandidateBubble({
   return (
     <div className="flex items-start gap-2.5 max-w-[88%] self-end flex-row-reverse">
       <div
-        className="w-7 h-7 rounded-md flex-shrink-0 flex items-center justify-center text-[11px] font-bold bg-[color-mix(in_srgb,var(--primary)_12%,transparent)] text-[var(--primary)] border border-[color-mix(in_srgb,var(--primary)_18%,transparent)]"
+        className="w-7 h-7 rounded-md flex-shrink-0 flex items-center justify-center text-xxs font-bold bg-[color-mix(in_srgb,var(--primary)_12%,transparent)] text-[var(--primary)] border border-[color-mix(in_srgb,var(--primary)_18%,transparent)]"
         aria-hidden
       >
         Y
@@ -49,18 +49,14 @@ export function CandidateBubble({
           <span className="relative group mr-0.5">
             <Button variant="outline" size="sm" onClick={onNext}>Skip</Button>
             <span
-              className="absolute bottom-full right-0 mb-1.5 px-2 py-1 rounded-lg text-xs whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-20 bg-[var(--surface-raised)] border border-[var(--border-subtle)] text-[var(--text-secondary)]"
+              className="absolute bottom-full right-0 mb-1.5 px-2 py-1 rounded-lg text-caption whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-20 bg-[var(--surface-raised)] border border-[var(--border-subtle)] text-[var(--text-secondary)]"
             >
               Skip this line
             </span>
           </span>
         )}
 
-        <div className={`w-full rounded-lg rounded-tr-sm px-3.5 py-2.5 text-[15px] text-[var(--text-primary)] border ${
-          isActive && !turnResult
-            ? "bg-[color-mix(in_srgb,var(--primary)_14%,var(--surface-raised))] border-[color-mix(in_srgb,var(--primary)_40%,transparent)]"
-            : "bg-[color-mix(in_srgb,var(--primary)_12%,var(--surface-raised))] border-[color-mix(in_srgb,var(--primary)_18%,transparent)]"
-        }`}>
+        <div className={`w-full rounded-lg rounded-tr-sm px-3.5 py-2.5 text-body-sm text-[var(--text-primary)] border ${ isActive && !turnResult ? "bg-[color-mix(in_srgb,var(--primary)_14%,var(--surface-raised))] border-[color-mix(in_srgb,var(--primary)_40%,transparent)]" : "bg-[color-mix(in_srgb,var(--primary)_12%,var(--surface-raised))] border-[color-mix(in_srgb,var(--primary)_18%,transparent)]" }`}>
           <p className="leading-[1.65] font-medium">{text}</p>
 
           {turnResult && (
@@ -68,7 +64,7 @@ export function CandidateBubble({
               <div className="flex items-center gap-3">
                 <AccuracyRing accuracy={turnResult.score.accuracy} />
                 <div className="min-w-0">
-                  <p className="text-xs font-semibold" style={{
+                  <p className="text-caption font-semibold" style={{
                     color: turnResult.score.accuracy >= threshold ? "var(--score-excellent)"
                       : turnResult.score.accuracy >= threshold * 0.75 ? "var(--score-acceptable)" : "var(--score-poor)",
                   }}>
@@ -89,7 +85,7 @@ export function CandidateBubble({
                 </div>
               )}
               {turnResult.score.wordResults?.some((w) => w.phonemes?.tip) && (
-                <p className="text-xs text-[var(--muted-text)]">Hover underlined words for tips.</p>
+                <p className="text-caption text-[var(--muted-text)]">Hover underlined words for tips.</p>
               )}
               <div className="flex gap-2">
                 <Button variant="outline" size="sm" icon={<RotateCcw size={11} />} onClick={onRetry}>Retry</Button>

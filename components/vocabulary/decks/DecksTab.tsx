@@ -52,12 +52,12 @@ export function DecksTab({
     return (
       <Card className="p-12 text-center">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl bg-surface-sunken">
+          <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-h2 bg-surface-sunken">
             📚
           </div>
           <div>
-            <p className="text-sm font-semibold text-fg">No decks yet</p>
-            <p className="text-xs mt-1 text-fg-subtle">Group words by theme, lesson, or level and study them as a set.</p>
+            <p className="text-body-sm font-semibold text-fg">No decks yet</p>
+            <p className="text-caption mt-1 text-fg-subtle">Group words by theme, lesson, or level and study them as a set.</p>
           </div>
           <Button variant="primary" icon={<Plus size={16} />} onClick={onCreateNew} className="mt-2">
             Create a deck

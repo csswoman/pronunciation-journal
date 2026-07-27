@@ -22,7 +22,7 @@ export function LessonGrid({ lessons, loading = false, onLessonClick, compact = 
   if (lessons.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-fg-muted text-sm">Todavía no hay categorías aquí.</p>
+        <p className="text-fg-muted text-body-sm">Todavía no hay categorías aquí.</p>
       </div>
     );
   }

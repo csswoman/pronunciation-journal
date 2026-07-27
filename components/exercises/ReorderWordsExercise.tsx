@@ -122,10 +122,7 @@ export function ReorderWordsExercise({ exercise, onResult, focusUi = false }: Pr
   return (
     <div className="flex w-full flex-col gap-3">
       <div
-        className={cn(
-          'min-h-13 flex flex-wrap gap-2 rounded-xl border-[1.5px] border-dashed p-3 transition-colors',
-          answer.length === 0 ? 'border-border-subtle' : 'border-primary',
-        )}
+        className={cn( 'min-h-13 flex flex-wrap gap-2 rounded-xl border-[1.5px] border-dashed p-3 transition-colors', answer.length === 0 ? 'border-border-subtle' : 'border-primary', )}
         aria-label="Your answer"
       >
         {answer.map((chip) => (
@@ -143,7 +140,7 @@ export function ReorderWordsExercise({ exercise, onResult, focusUi = false }: Pr
           onClick={handleCheck}
           disabled={!canCheck}
           className={cn(
-            'w-full rounded-full py-3.5 text-[15px] font-semibold transition-all duration-150 mt-3',
+            'w-full rounded-full py-3.5 text-body-sm font-semibold transition-all duration-150 mt-3',
             canCheck
               ? 'bg-(--cta-bg) text-(--cta-fg) cursor-pointer hover:opacity-90 active:scale-[0.99]'
               : 'bg-surface-raised text-fg-subtle cursor-not-allowed opacity-50',
@@ -169,15 +166,7 @@ function WordChip({ chip, variant, done, onClick }: ChipProps) {
       type="button"
       onClick={() => onClick(chip)}
       disabled={done}
-      className={cn(
-        'rounded-full border px-3 py-1.5 text-[14px] font-medium transition-all duration-150',
-        !done && variant === 'bank' &&
-          'bg-surface-raised border-border-default text-fg hover:border-primary hover:bg-primary-soft cursor-pointer',
-        !done && variant === 'placed' &&
-          'bg-primary-soft border-primary text-primary hover:border-error hover:bg-error-soft hover:text-error cursor-pointer',
-        done &&
-          'cursor-default opacity-80 border-border-subtle bg-surface-raised text-fg-muted',
-      )}
+      className={cn( 'rounded-full border px-3 py-1.5 text-body-sm font-medium transition-all duration-150', !done && variant === 'bank' && 'bg-surface-raised border-border-default text-fg hover:border-primary hover:bg-primary-soft cursor-pointer', !done && variant === 'placed' && 'bg-primary-soft border-primary text-primary hover:border-error hover:bg-error-soft hover:text-error cursor-pointer', done && 'cursor-default opacity-80 border-border-subtle bg-surface-raised text-fg-muted', )}
     >
       {chip.word}
     </button>

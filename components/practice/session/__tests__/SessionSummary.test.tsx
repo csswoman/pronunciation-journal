@@ -7,7 +7,9 @@ import type { SessionResult } from '@/lib/practice/types'
 const result: SessionResult = {
   accuracy: 100,
   totalTimeMs: 1000,
-  bySlug: {} as SessionResult['bySlug'],
+  bySlug: {
+    fill_blank: { correct: 1, total: 1 },
+  } as SessionResult['bySlug'],
   results: [{
     exerciseId: 'e1',
     slug: 'fill_blank',
@@ -20,13 +22,120 @@ const result: SessionResult = {
   }],
 }
 
+const mixedResult: SessionResult = {
+  accuracy: 50,
+  totalTimeMs: 87_000,
+  bySlug: {
+    pick_word: { correct: 2, total: 2 },
+    odd_one_out: { correct: 0, total: 2 },
+    dictation: { correct: 0, total: 1 },
+    ax_same_different: { correct: 0, total: 1 },
+  } as SessionResult['bySlug'],
+  results: [
+    {
+      exerciseId: 'e1',
+      slug: 'pick_word',
+      exerciseTypeId: 1,
+      isCorrect: true,
+      timeMs: 1000,
+      contentId: 'c1',
+      context: 'practice',
+      completedAt: new Date('2026-01-01T00:00:00Z'),
+      exercisePayload: { targetWord: 'miss' },
+    },
+    {
+      exerciseId: 'e2',
+      slug: 'pick_word',
+      exerciseTypeId: 1,
+      isCorrect: true,
+      timeMs: 1000,
+      contentId: 'c2',
+      context: 'practice',
+      completedAt: new Date('2026-01-01T00:00:00Z'),
+      exercisePayload: { targetWord: 'quick' },
+    },
+    {
+      exerciseId: 'e3',
+      slug: 'odd_one_out',
+      exerciseTypeId: 13,
+      isCorrect: false,
+      timeMs: 1000,
+      contentId: 'c3',
+      context: 'practice',
+      completedAt: new Date('2026-01-01T00:00:00Z'),
+      exercisePayload: { targetWord: 'bit' },
+    },
+    {
+      exerciseId: 'e4',
+      slug: 'odd_one_out',
+      exerciseTypeId: 13,
+      isCorrect: false,
+      timeMs: 1000,
+      contentId: 'c4',
+      context: 'practice',
+      completedAt: new Date('2026-01-01T00:00:00Z'),
+      exercisePayload: { targetWord: 'sit' },
+    },
+    {
+      exerciseId: 'e5',
+      slug: 'dictation',
+      exerciseTypeId: 4,
+      isCorrect: false,
+      timeMs: 1000,
+      contentId: 'c5',
+      context: 'practice',
+      completedAt: new Date('2026-01-01T00:00:00Z'),
+      exercisePayload: { targetWord: 'drink' },
+    },
+    {
+      exerciseId: 'e6',
+      slug: 'ax_same_different',
+      exerciseTypeId: 12,
+      isCorrect: false,
+      timeMs: 1000,
+      contentId: 'c6',
+      context: 'practice',
+      completedAt: new Date('2026-01-01T00:00:00Z'),
+    },
+  ],
+}
+
 describe('formatExerciseLabel', () => {
   it('uses targetWord when present', () => {
     expect(formatExerciseLabel('dictation', { targetWord: 'house' })).toBe('house')
   })
 
-  it('falls back to a readable slug label', () => {
-    expect(formatExerciseLabel('sentence_dictation', null)).toBe('Sentence Dictation')
+  it('falls back to a facet label', () => {
+    expect(formatExerciseLabel('sentence_dictation', null)).toBe('Escribir')
+  })
+})
+
+describe('SessionSummary summary content', () => {
+  it('shows compact skill facets instead of exercise types', () => {
+    render(
+      <SessionSummary
+        result={mixedResult}
+        practiceIpa="/ɪ/"
+        onPracticeAgain={() => {}}
+        onFinish={() => {}}
+      />,
+    )
+
+    expect(screen.getByText('Hoy conviene reforzar bit, sit y drink.')).toBeInTheDocument()
+    expect(screen.getByText('Escuchar')).toBeInTheDocument()
+    expect(screen.getByText('Elegir')).toBeInTheDocument()
+    expect(screen.getByText('Escribir')).toBeInTheDocument()
+    expect(screen.getAllByText('A reforzar').length).toBeGreaterThanOrEqual(1)
+    expect(screen.getByText('Bien')).toBeInTheDocument()
+    expect(screen.queryByText('Oído')).not.toBeInTheDocument()
+    expect(screen.queryByText('El diferente')).not.toBeInTheDocument()
+    expect(screen.queryByText('Rendimiento')).not.toBeInTheDocument()
+    expect(screen.queryByText('✗')).not.toBeInTheDocument()
+  })
+
+  it('shows a positive insight when nothing needs reinforce', () => {
+    render(<SessionSummary result={result} onPracticeAgain={() => {}} onFinish={() => {}} />)
+    expect(screen.getByText('Buen ritmo en esta tanda.')).toBeInTheDocument()
   })
 })
 

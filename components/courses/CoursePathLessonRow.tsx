@@ -18,12 +18,7 @@ export default function CoursePathLessonRow({ lesson, levelId }: CoursePathLesso
   return (
     <div
       id={lesson.slug ? `lesson-${lesson.slug}` : undefined}
-      className={cn(
-        "course-path__lesson",
-        lesson.isOptional && "course-path__lesson--optional",
-        lesson.state === "done" && "course-path__lesson--done",
-        lesson.state === "current" && "course-path__lesson--current"
-      )}
+      className={cn( "course-path__lesson", lesson.isOptional && "course-path__lesson--optional", lesson.state === "done" && "course-path__lesson--done", lesson.state === "current" && "course-path__lesson--current" )}
     >
       <div
         className="course-path__st"

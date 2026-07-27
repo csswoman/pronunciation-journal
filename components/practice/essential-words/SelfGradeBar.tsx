@@ -32,16 +32,7 @@ export function SelfGradeBar({ onGrade, disabled }: Props) {
             playUiCue(cue)
             onGrade(quality)
           }}
-          className={cn(
-            'min-h-11 max-w-28 flex-1 cursor-pointer rounded-full border px-3 py-2 font-[inherit] text-xs font-medium',
-            'transition-all duration-150 ease-out-quart focus-ring disabled:opacity-40',
-            'active:scale-[0.97]',
-            quality === 1
-              ? 'border-error bg-transparent text-error hover:bg-error-soft'
-              : quality === 5
-                ? 'border-success/40 bg-transparent text-success hover:bg-success-soft'
-                : 'border-border-subtle bg-transparent text-fg-muted hover:bg-surface-sunken',
-          )}
+          className={cn( 'min-h-11 max-w-28 flex-1 cursor-pointer rounded-full border px-3 py-2 font-[inherit] text-caption font-medium', 'transition-all duration-150 ease-out-quart focus-ring disabled:opacity-40', 'active:scale-[0.97]', quality === 1 ? 'border-error bg-transparent text-error hover:bg-error-soft' : quality === 5 ? 'border-success/40 bg-transparent text-success hover:bg-success-soft' : 'border-border-subtle bg-transparent text-fg-muted hover:bg-surface-sunken', )}
         >
           {label}
         </button>

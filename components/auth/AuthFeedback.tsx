@@ -10,14 +10,14 @@ export function AuthFeedback({ error, message, compact = false }: AuthFeedbackPr
   if (!error && !message) return null;
 
   const messageClassName = compact
-    ? "rounded-xl px-3 py-2.5 text-sm mt-4 bg-[var(--success-soft)] border border-[var(--success-border)] text-[var(--success)]"
-    : "rounded-xl px-3 py-2.5 text-sm mb-4 bg-[var(--success-soft)] border border-[var(--success-border)] text-[var(--success)]";
+    ? "rounded-xl px-3 py-2.5 text-body-sm mt-4 bg-[var(--success-soft)] border border-[var(--success-border)] text-[var(--success)]"
+    : "rounded-xl px-3 py-2.5 text-body-sm mb-4 bg-[var(--success-soft)] border border-[var(--success-border)] text-[var(--success)]";
 
   return (
     <>
       {error && (
         <div
-          className="rounded-xl px-3 py-2.5 text-sm mb-4 bg-[var(--error-soft)] border border-[var(--error-border)] text-[var(--error)]"
+          className="rounded-xl px-3 py-2.5 text-body-sm mb-4 bg-[var(--error-soft)] border border-[var(--error-border)] text-[var(--error)]"
           role="alert"
         >
           {error}

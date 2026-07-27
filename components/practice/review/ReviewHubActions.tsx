@@ -108,7 +108,7 @@ export function ReviewHubActions({
         href="/daily"
         className={cn(
           'inline-flex w-full items-center justify-center gap-2 rounded-md px-5 py-3',
-          'text-sm font-semibold transition-all duration-150 ease-out-quart focus-ring',
+          'text-body-sm font-semibold transition-all duration-150 ease-out-quart focus-ring',
           'bg-[var(--cta-bg)] text-[var(--cta-fg)] hover:bg-[var(--cta-bg-hover)]',
         )}
         data-cuelume-hover="tick"

@@ -45,12 +45,7 @@ export function PronunciationPathExplore({
                     <Link
                       href={targetIdToPronunciationPathRoute(unit.targetId)}
                       aria-current={isActive ? 'page' : undefined}
-                      className={cn(
-                        'flex min-h-11 min-w-0 items-center justify-between gap-2 rounded-sm px-2 font-body-sm',
-                        isActive
-                          ? 'bg-primary-soft text-primary'
-                          : 'text-fg hover:bg-surface-raised'
-                      )}
+                      className={cn( 'flex min-h-11 min-w-0 items-center justify-between gap-2 rounded-sm px-2 font-body-sm', isActive ? 'bg-primary-soft text-primary' : 'text-fg hover:bg-surface-raised' )}
                     >
                       <span className="min-w-0 truncate">{title}</span>
                       <Badge

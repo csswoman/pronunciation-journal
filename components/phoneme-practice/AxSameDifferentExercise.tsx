@@ -84,7 +84,7 @@ export function AxSameDifferentExercise({ exercise, onSubmit, voice }: Props) {
             aria-label={`Escuchar ${label}`}
             className="flex flex-1 cursor-pointer flex-col items-center gap-2 rounded-xl border border-border-default bg-surface-raised py-5 transition-all duration-150 hover:-translate-y-px hover:border-primary/50 hover:shadow-sm"
           >
-            <span className="text-lg font-bold text-primary">{label}</span>
+            <span className="text-body-lg font-bold text-primary">{label}</span>
             <div className="flex h-10 w-10 items-center justify-center rounded-full border border-primary/20 bg-primary-soft">
               <Play size={16} className="fill-current text-primary" aria-hidden />
             </div>
@@ -96,7 +96,7 @@ export function AxSameDifferentExercise({ exercise, onSubmit, voice }: Props) {
         type="button"
         onClick={handlePlayBoth}
         aria-label="Escuchar A y luego X"
-        className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-border-default bg-surface-raised px-4 py-2 text-xs text-(--fg-secondary) transition-all duration-150 hover:border-primary/50"
+        className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-border-default bg-surface-raised px-4 py-2 text-caption text-(--fg-secondary) transition-all duration-150 hover:border-primary/50"
       >
         <Play size={12} aria-hidden />
         Escuchar ambos
@@ -116,7 +116,7 @@ export function AxSameDifferentExercise({ exercise, onSubmit, voice }: Props) {
             aria-disabled={submitted}
             onClick={() => handleSelect(opt.id)}
             className={cn(
-              'cursor-pointer rounded-xl border px-3 py-4 text-sm font-semibold transition-all duration-150',
+              'cursor-pointer rounded-xl border px-3 py-4 text-body-sm font-semibold transition-all duration-150',
               optStyle(opt.id),
               submitted &&
                 exercise.correctIds.includes(opt.id) &&

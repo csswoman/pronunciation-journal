@@ -54,7 +54,7 @@ export function WordsClient({
   const activeMode: WordsMode = searchParams.get("mode") === "learn" ? "learn" : "dictionary";
 
   return (
-    <PageLayout>
+    <PageLayout archetype="catalog">
       <div className="words-lexicon">
         <div className="words-lexicon__page-head">
           <PageHeader

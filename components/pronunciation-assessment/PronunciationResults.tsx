@@ -114,7 +114,7 @@ export function PronunciationResults({
   return (
     <section
       aria-label="Resultado del diagnóstico de pronunciación"
-      className="flex min-w-0 flex-col gap-8"
+      className="flex min-w-0 flex-col gap-[var(--layout-section-gap)]"
     >
       <header className="flex min-w-0 flex-col gap-2">
         <h1

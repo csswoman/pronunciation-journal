@@ -182,7 +182,7 @@ export function SpeakReviewCard({
           : 'Escucha el modelo y graba tu voz cuando estés listo.'
 
   return (
-    <div className="flex w-full max-w-md flex-col items-center gap-5 rounded-lg border border-border-subtle bg-surface-raised px-5 py-5 sm:gap-6 sm:px-6 sm:py-7">
+    <div className="flex w-full max-w-md flex-col items-center gap-5 rounded-lg border border-border-subtle bg-surface-raised layout-card-pad sm:gap-[var(--layout-stack-loose)]">
       <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">
         {statusMessage}
       </p>
@@ -200,11 +200,11 @@ export function SpeakReviewCard({
 
       {useFallback ? (
         <div className="flex w-full flex-col items-center gap-2">
-          <p className="m-0 text-xs text-fg-subtle">
+          <p className="m-0 text-caption text-fg-subtle">
             Micrófono no disponible en este navegador — practica en voz alta y califícate:
           </p>
           <SelfGradeBar onGrade={handleSelfGrade} />
-          {submitError && <p className="m-0 text-center text-xs text-error">{submitError}</p>}
+          {submitError && <p className="m-0 text-center text-caption text-error">{submitError}</p>}
         </div>
       ) : !scored ? (
         <div className="flex flex-col items-center gap-2">
@@ -213,10 +213,7 @@ export function SpeakReviewCard({
             onClick={() => void handleMicToggle()}
             disabled={isProcessing}
             aria-label={isListening ? 'Detener grabación' : 'Grabar mi voz'}
-            className={cn(
-              'flex h-16 w-16 items-center justify-center rounded-full border-none text-on-primary transition-colors focus-ring disabled:opacity-40',
-              isListening ? 'bg-error' : 'bg-primary',
-            )}
+            className={cn( 'flex h-16 w-16 items-center justify-center rounded-full border-none text-on-primary transition-colors focus-ring disabled:opacity-40', isListening ? 'bg-error' : 'bg-primary', )}
           >
             {isListening ? <MicOff size={24} /> : <Mic size={24} />}
           </button>
@@ -228,12 +225,12 @@ export function SpeakReviewCard({
                 : 'Toca para hablar'}
           </p>
           {isError && (
-            <p className="m-0 max-w-xs text-center text-xs text-error">
+            <p className="m-0 max-w-xs text-center text-caption text-error">
               {micErrorMessage(errorDetail)}{' '}
               <button
                 type="button"
                 onClick={handleRetry}
-                className="cursor-pointer border-none bg-transparent font-[inherit] text-xs text-error underline focus-ring"
+                className="cursor-pointer border-none bg-transparent font-[inherit] text-caption text-error underline focus-ring"
               >
                 Reintentar
               </button>
@@ -266,7 +263,7 @@ export function SpeakReviewCard({
               {showSoundDetail && <PhonemeFeedbackTable wordResults={scored.wordResults} />}
             </div>
           )}
-          {submitError && <p className="m-0 text-center text-xs text-error">{submitError}</p>}
+          {submitError && <p className="m-0 text-center text-caption text-error">{submitError}</p>}
         </div>
       )}
 

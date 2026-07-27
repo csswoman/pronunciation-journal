@@ -14,7 +14,7 @@ export default function RecordingControls({ isRecording, onMicClick, onSkip }: P
   const hint = isRecording ? "Recording… tap to stop" : "Tap to record";
 
   return (
-    <div className="shrink-0 flex flex-col items-center gap-3 pt-4 pb-6 relative">
+    <div className="shrink-0 flex flex-col items-center gap-3 pt-4 pb-[var(--layout-section-gap)] relative">
       <style>{`
         @keyframes waveBarPulse {
           0%, 100% { transform: scaleY(0.4); opacity: 0.25; }
@@ -69,13 +69,13 @@ export default function RecordingControls({ isRecording, onMicClick, onSkip }: P
           >
             <ChevronRight size={16} />
           </button>
-          <div className="pointer-events-none absolute bottom-full right-0 mb-1.5 px-2 py-1 rounded-md text-[11px] font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity bg-[var(--tooltip-bg)] text-white/80">
+          <div className="pointer-events-none absolute bottom-full right-0 mb-1.5 px-2 py-1 rounded-md text-xxs font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity bg-[var(--tooltip-bg)] text-white/80">
             Skip
           </div>
         </div>
       </div>
 
-      <p className="text-[13px] font-medium tracking-wide text-fg-subtle">
+      <p className="text-caption font-medium tracking-wide text-fg-subtle">
         {hint}
       </p>
     </div>

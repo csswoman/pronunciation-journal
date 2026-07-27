@@ -71,9 +71,9 @@ export function SrsVaultRow({ entry }: SrsVaultRowProps) {
           <span className="text-base font-semibold text-fg">{entry.word}</span>
           <span className="font-caption text-fg-muted">{sourceLabel}</span>
         </div>
-        <p className="m-0 text-sm text-fg-muted">{statusLabel}</p>
+        <p className="m-0 text-body-sm text-fg-muted">{statusLabel}</p>
         {errorMessage ? (
-          <p className="m-0 text-sm text-error" role="alert">
+          <p className="m-0 text-body-sm text-error" role="alert">
             {errorMessage}
           </p>
         ) : null}
@@ -91,7 +91,7 @@ export function SrsVaultRow({ entry }: SrsVaultRowProps) {
                 setSnoozeDays(days)
                 void runAction('snooze', () => snoozeEssentialWord(entry.word, days, user?.id))
               }}
-              className="rounded-lg border border-border-default bg-surface-sunken px-3 py-2 text-sm text-fg focus-ring disabled:opacity-50"
+              className="rounded-lg border border-border-default bg-surface-sunken px-3 py-2 text-body-sm text-fg focus-ring disabled:opacity-50"
             >
               {SNOOZE_DAYS.map((days) => (
                 <option key={days} value={days}>
@@ -117,7 +117,7 @@ export function SrsVaultRow({ entry }: SrsVaultRowProps) {
 
             {confirmMaster ? (
               <div className="flex flex-wrap items-center gap-2">
-                <span className="text-sm text-fg-muted">¿Marcar como dominada?</span>
+                <span className="text-body-sm text-fg-muted">¿Marcar como dominada?</span>
                 <Button
                   type="button"
                   variant="ghost"

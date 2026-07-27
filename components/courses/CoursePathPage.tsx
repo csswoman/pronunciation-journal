@@ -38,7 +38,7 @@ export default function CoursePathPage({ levelParam }: CoursePathPageProps) {
           lessonIds: level.units.flatMap((unit) => unit.lessons.map((lesson) => lesson.id)),
         }))}
       />
-      <PageLayout>
+      <PageLayout archetype="catalog">
         <div className="course-path__wrap course-path__wrap--shell">
           <div className="course-path__orientation">
             <PageHeader

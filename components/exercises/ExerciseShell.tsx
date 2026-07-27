@@ -75,7 +75,7 @@ export function ExerciseShell({
   }, [done, hasDetailedFeedback, onContinue, result?.isCorrect])
 
   return (
-    <div className="flex w-full flex-col gap-5">
+    <div className="layout-stack-loose w-full">
       <ShellHeader title={title} eyebrow={eyebrow} description={description} hintSlot={hintSlot} />
       {hint && <HintChip word={hint.word} meaning={hint.meaning} />}
       {children}
@@ -108,15 +108,15 @@ function ShellHeader({
     <div className="flex items-start justify-between gap-3">
       <div className="flex flex-col gap-1">
         {eyebrow && (
-          <span className="text-[11px] font-semibold uppercase tracking-widest text-accent">
+          <span className="font-kicker text-accent">
             {eyebrow}
           </span>
         )}
-        <p className="text-2xl font-bold leading-tight text-fg">
+        <p className="text-h3 text-balance text-fg">
           {title}
         </p>
         {description && (
-          <p className="text-[13px] text-fg-muted leading-snug">
+          <p className="text-caption text-fg-muted leading-snug text-pretty">
             {description}
           </p>
         )}
@@ -135,7 +135,7 @@ function SkipButton({ onSkip }: { onSkip: () => void }) {
     <button
       type="button"
       onClick={onSkip}
-      className="w-full text-center text-[12px] uppercase tracking-widest font-semibold text-fg-subtle transition-opacity hover:opacity-70 cursor-pointer py-1"
+      className="w-full text-center font-kicker font-semibold text-fg-subtle transition-opacity hover:opacity-70 cursor-pointer py-1"
     >
       Skip this one
     </button>
@@ -144,7 +144,7 @@ function SkipButton({ onSkip }: { onSkip: () => void }) {
 
 function HintChip({ word, meaning }: { word: string; meaning?: string }) {
   return (
-    <div className="flex items-center gap-2 rounded-[var(--radius-md)] bg-surface-raised px-3 py-2 text-[13px]">
+    <div className="flex items-center gap-2 rounded-[var(--radius-md)] bg-surface-raised px-3 py-2 text-caption">
       <span className="font-semibold text-fg">{word}</span>
       {meaning && (
         <>
@@ -161,12 +161,7 @@ function FeedbackBanner({ result }: { result: ExerciseResult }) {
   const status = feedback?.immediate ?? (isCorrect ? 'Well done!' : 'Not quite. Keep going.')
   const expected = feedback?.correction ?? feedback?.expectedAnswer
   return (
-    <div className={cn(
-      'flex flex-col gap-2 rounded-md border px-4 py-3.5 text-[13px]',
-      isCorrect
-        ? 'bg-success-soft border-success-border text-success'
-        : 'bg-error-soft border-error-border text-error',
-    )}>
+    <div className={cn( 'flex flex-col gap-2 rounded-md border px-4 py-3.5 text-caption', isCorrect ? 'bg-success-soft border-success-border text-success' : 'bg-error-soft border-error-border text-error', )}>
       <p className="flex items-center gap-2.5 font-semibold">
         <span aria-hidden>{isCorrect ? '✓' : '✗'}</span>
         <span>{status}</span>
@@ -202,7 +197,7 @@ function RetryButton({ onRetry }: { onRetry: () => void }) {
       type="button"
       onClick={onRetry}
       className={cn(
-        'w-full rounded-[var(--radius-full)] border border-border-default py-3.5 text-[15px] font-semibold',
+        'w-full rounded-[var(--radius-full)] border border-border-default py-3.5 text-body-sm font-semibold',
         'bg-surface-raised text-fg transition-all hover:bg-surface-sunken cursor-pointer',
       )}
     >
@@ -217,7 +212,7 @@ function ContinueButton({ onContinue }: { onContinue: () => void }) {
       type="button"
       onClick={onContinue}
       className={cn(
-        'w-full rounded-[var(--radius-full)] py-3.5 text-[15px] font-semibold',
+        'w-full rounded-[var(--radius-full)] py-3.5 text-body-sm font-semibold',
         'bg-(--cta-bg) text-(--cta-fg) shadow-sm transition-all hover:opacity-90 cursor-pointer',
       )}
     >

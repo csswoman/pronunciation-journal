@@ -2,13 +2,13 @@
 
 // Planned structure:
 // <HomeWordOfDayCard>
-//   label + word + IPA + full definition
-//   single link → /words
+//   kicker + word + IPA + definition
+//   single link → /dictionary
 // </HomeWordOfDayCard>
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Loader2 } from "@/components/icons";
+import { ArrowRight } from "@/components/icons";
 import Button from "@/components/ui/Button";
 import { SyllableWord } from "@/components/ui/SyllableWord";
 import { useAuth } from "@/components/auth/AuthProvider";
@@ -37,13 +37,17 @@ export default function HomeWordOfDayCard() {
   const { word, loading, error, refresh } = useWordOfDay(level);
 
   return (
-    <div className="home-sidebar-card flex flex-col gap-2">
-      <span className="font-label text-fg">Palabra del día</span>
+    <div
+      className="home-sidebar-card flex flex-col gap-2"
+      aria-busy={loading || undefined}
+    >
+      <span className="font-kicker text-fg-subtle">Palabra del día</span>
 
       {loading && (
-        <div className="font-caption flex items-center gap-2 py-2 text-fg-muted">
-          <Loader2 size={15} className="animate-spin" />
-          Cargando…
+        <div className="flex flex-col gap-2 py-1" aria-hidden>
+          <div className="h-7 w-28 animate-pulse rounded bg-surface-sunken" />
+          <div className="h-4 w-20 animate-pulse rounded bg-surface-sunken" />
+          <div className="h-4 w-full animate-pulse rounded bg-surface-sunken" />
         </div>
       )}
 
@@ -58,7 +62,7 @@ export default function HomeWordOfDayCard() {
 
       {word && !loading && (
         <div className="animate-state-in flex flex-col gap-2" key={word.word}>
-          <p className="font-mono text-display-word font-semibold leading-tight text-fg">
+          <p className="text-display-word font-semibold leading-tight text-fg">
             <SyllableWord word={word.word} />
           </p>
           {word.ipa ? (

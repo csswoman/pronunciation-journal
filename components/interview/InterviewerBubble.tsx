@@ -21,7 +21,7 @@ export function InterviewerBubble({ text, isActive, isPlaying, hasNextCandidate,
         <div
           className="rounded-lg rounded-tl-sm border px-3.5 py-2.5 bg-[var(--surface-raised)] border-[var(--border-subtle)] text-[var(--text-primary)]"
         >
-          <p className="text-[15px] leading-[1.65]">{text}</p>
+          <p className="text-body-sm leading-[1.65]">{text}</p>
           <div className="mt-3 flex items-center gap-2 border-t border-[var(--border-subtle)] pt-3">
             <Button
               variant={isPlaying ? "primary" : "ghost"}

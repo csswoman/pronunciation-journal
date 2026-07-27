@@ -25,16 +25,16 @@ export function ExerciseCard({ children, feedback, onNext, finishLabel }: Props)
           ].join(' ')}
         >
           <div className="flex items-center gap-2">
-            <span className="text-lg" aria-hidden>
+            <span className="text-body-lg" aria-hidden>
               {feedback.isCorrect ? '✓' : '✗'}
             </span>
             <span
-              className={`text-sm font-semibold ${feedback.isCorrect ? 'text-[var(--success)]' : 'text-[var(--error)]'}`}
+              className={`text-body-sm font-semibold ${feedback.isCorrect ? 'text-[var(--success)]' : 'text-[var(--error)]'}`}
             >
               {feedback.isCorrect ? '¡Correcto!' : 'Incorrecto'}
             </span>
             {feedback.message && (
-              <span className="ml-1 text-xs text-[var(--text-secondary)]">
+              <span className="ml-1 text-caption text-[var(--text-secondary)]">
                 {feedback.message}
               </span>
             )}
@@ -43,7 +43,7 @@ export function ExerciseCard({ children, feedback, onNext, finishLabel }: Props)
             <button
               type="button"
               onClick={onNext}
-              className="cursor-pointer rounded-[var(--radius-full)] border-none bg-[var(--gradient-primary)] px-5 py-2 text-[13px] font-semibold text-white font-inherit"
+              className="cursor-pointer rounded-[var(--radius-full)] border-none bg-[var(--gradient-primary)] px-5 py-2 text-caption font-semibold text-white font-inherit"
             >
               {finishLabel ? 'Terminar ✓' : 'Siguiente →'}
             </button>

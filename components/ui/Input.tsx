@@ -26,7 +26,7 @@ export default function Input({
 
   return (
     <div className="flex flex-col gap-1">
-      <label htmlFor={id} className="text-xs font-medium text-fg-muted">
+      <label htmlFor={id} className="text-caption font-medium text-fg-muted">
         {label}
         {required && <span className="text-error ml-0.5">*</span>}
       </label>
@@ -38,10 +38,10 @@ export default function Input({
         placeholder={placeholder}
         aria-describedby={errorId}
         aria-invalid={error ? true : undefined}
-        className="px-3 py-2 rounded-lg text-sm border border-border-default bg-surface-sunken text-fg focus-ring"
+        className="px-3 py-2 rounded-lg text-body-sm border border-border-default bg-surface-sunken text-fg focus-ring"
       />
       {error && (
-        <div id={errorId} className="flex items-center gap-1.5 text-xs text-error">
+        <div id={errorId} className="flex items-center gap-1.5 text-caption text-error">
           <span>⚠</span>
           <span>{error}</span>
         </div>

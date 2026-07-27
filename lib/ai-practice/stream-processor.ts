@@ -1,5 +1,12 @@
 import type { ToolCall, ContentPart, StreamChunk } from "./types";
-import { isValidToolName, parseToolArgs, isExerciseTool, type StartRoleplayArgs } from "./tools/registry";
+import {
+  isValidToolName,
+  parseToolArgs,
+  isExerciseTool,
+  type StartMissionArgs,
+  type StartRoleplayArgs,
+  type MissionIntentObservedArgs,
+} from "./tools/registry";
 import type { SaveWordArgs } from "./tools/registry";
 
 export interface StreamState {
@@ -10,7 +17,10 @@ export interface StreamState {
 
 export interface ActionHandlers {
   onSaveWord: (word: string, context: string) => void;
-  onStartRoleplay: (scenario: StartRoleplayArgs["scenario"]) => void;
+  /** Compatibility callback for old persisted start_roleplay calls. */
+  onStartRoleplay?: (scenario: StartRoleplayArgs["scenario"]) => void;
+  onStartMission?: (missionId: StartMissionArgs["missionId"]) => void;
+  onMissionIntentObserved?: (intentId: MissionIntentObservedArgs["intentId"]) => void;
   onActionToolResult: (toolCallId: string, name: string) => void;
   onError: (id: string, tool: string, message: string) => void;
 }
@@ -57,8 +67,12 @@ export function processChunk(
             if (tc.name === "save_word") {
               const { word, meaning } = args as SaveWordArgs;
               handlers.onSaveWord(word, meaning);
+            } else if (tc.name === "start_mission") {
+              handlers.onStartMission?.((args as StartMissionArgs).missionId);
+            } else if (tc.name === "mission_intent_observed") {
+              handlers.onMissionIntentObserved?.((args as MissionIntentObservedArgs).intentId);
             } else if (tc.name === "start_roleplay") {
-              handlers.onStartRoleplay((args as StartRoleplayArgs).scenario);
+              handlers.onStartRoleplay?.((args as StartRoleplayArgs).scenario);
             }
             handlers.onActionToolResult(chunk.id, tc.name);
           }

@@ -68,6 +68,19 @@ describe("buildSystemPrompt voice instruction", () => {
     const prompt = buildSystemPrompt(null, undefined, false);
     expect(prompt).not.toContain(VOICE_TURN_INSTRUCTION);
   });
+
+  it("renders the authored mission contract when a mission id is supplied", () => {
+    const prompt = buildSystemPrompt(null, undefined, false, "roleplay.cafe");
+
+    expect(prompt).toContain("ORAL MISSION: ROLEPLAY.CAFE");
+    expect(prompt).toContain("mission_intent_observed");
+    expect(prompt).toContain("placed_order");
+    expect(prompt).not.toContain("undefined");
+  });
+
+  it("does not fall back to a different mission for an unknown id", () => {
+    expect(buildSystemPrompt(null, undefined, false, "roleplay.unknown")).toBe(BASE_TUTOR_PROMPT);
+  });
 });
 
 // ─── wire-shape helpers used by the route ───────────────────────────────────

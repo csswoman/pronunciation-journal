@@ -20,11 +20,7 @@ export function PhonemeExercisePrompt({
 }: Props) {
   return (
     <header
-      className={cn(
-        'phoneme-focus__prompt',
-        centered && 'phoneme-focus__prompt--center',
-        spacious && 'phoneme-focus__prompt--spacious',
-      )}
+      className={cn( 'phoneme-focus__prompt', centered && 'phoneme-focus__prompt--center', spacious && 'phoneme-focus__prompt--spacious', )}
     >
       {kicker && <p className="phoneme-focus__kicker">{kicker}</p>}
       {title && <h2 className="phoneme-focus__title">{title}</h2>}

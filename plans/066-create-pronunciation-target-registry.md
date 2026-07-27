@@ -120,13 +120,19 @@ Add adapters so existing `focus=<ipa>` and `sounds[]` deep links resolve through
 
 ## Done criteria
 
-- [ ] One canonical registry covers segmental, prosody and connected-speech targets.
-- [ ] Existing contrast ids retain a deterministic adapter.
-- [ ] Course and grammar content reference target ids explicitly.
-- [ ] Every target declares valid evidence capabilities and prerequisites.
-- [ ] Content audit has no dangling references.
-- [ ] Focused tests, typecheck and hard-rule audits pass.
-- [ ] No files outside scope are staged; `plans/README.md` is updated.
+- [x] One canonical registry covers segmental, prosody and connected-speech targets. (`PRONUNCIATION_TARGETS` in `lib/pronunciation/targets/registry.ts`.)
+- [x] Existing contrast ids retain a deterministic adapter. (`contrastIdToTargetId`/`targetIdToContrastId`, `registry.ts:207-254`.)
+- [x] Course and grammar content reference target ids explicitly. (`pronunciationTargetIds?: PronunciationTargetId[]` on `lib/courses/types.ts:51` and `lib/courses/grammar-deck/types.ts:94`, legacy `soundLab`/`sounds` kept as deprecated compatibility fields per Step 3/6.)
+- [x] Every target declares valid evidence capabilities and prerequisites. (`validateTarget`/`validateRegistry`, `registry.ts:255-333`.)
+- [x] Content audit has no dangling references. (`content-map-audit.ts` walks curriculum + content map; `pnpm audit:course-content` passes.)
+- [x] Focused tests, typecheck and hard-rule audits pass.
+- [x] No files outside scope are staged; `plans/README.md` is updated. (Row 066 already read DONE; this pass only closed this file's own checklist to match.)
+
+## Verification (2026-07-27)
+
+- This file's own Done criteria were never checked off even though `plans/README.md` row 066 already recorded it DONE (2026-07-21) with real detail — pure documentation drift, not missing work.
+- Re-ran the plan's own verification commands: `pnpm exec vitest run lib/pronunciation lib/courses/__tests__/curriculum.test.ts lib/courses/__tests__/content-audit.test.ts` (257 passed), `pnpm audit:course-content` (155 passed), `pnpm audit:hard-rules` (all 4 sub-audits pass; RLS audit's non-blocking coverage warning is pre-existing and unrelated to this plan), `pnpm type-check` (clean).
+- Spot-checked Step 2/4/6 claims directly in code: `validateTarget`/`validateRegistry` reject unshipped `acoustic` claims and cyclic prerequisites; `content-map-audit.ts` flags `unknown_target`/`missing_file`/`unknown_authored_target`; legacy `contrast_id`/`focus=` links resolve via `lib/pronunciation/targets/legacy-links.ts`.
 
 ## STOP conditions
 

@@ -23,7 +23,7 @@ interface BadgeProps {
 
 export default function Badge({ label, variant = "default", color, size = "sm", dot = false, className }: BadgeProps) {
   const sizeClasses = size === "md"
-    ? "text-sm px-3 py-2 rounded-lg"
+    ? "text-body-sm px-3 py-2 rounded-lg"
     : "text-tiny px-2 py-0.5 rounded-full";
 
   // Tonal color mode — uses Tailwind classes with dark: variants

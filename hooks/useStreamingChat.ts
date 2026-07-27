@@ -8,7 +8,10 @@ import { saveConversation, updateConversation } from "@/lib/db/ai";
 import { messagesToWire } from "@/lib/ai-practice/wire";
 import { logEvent } from "@/lib/ai-practice/events";
 import { makeStreamState, processChunk } from "@/lib/ai-practice/stream-processor";
-import type { StartRoleplayArgs } from "@/lib/ai-practice/tools/registry";
+import type {
+  MissionIntentObservedArgs,
+  StartMissionArgs,
+} from "@/lib/ai-practice/tools/registry";
 import {
   persistCoachExerciseResult,
   recordCoachSession,
@@ -31,7 +34,8 @@ interface UseStreamingChatOptions {
   learningState: UserLearningState | null;
   setLearningState: (s: UserLearningState) => void;
   onSaveWord: (word: string, context: string) => void;
-  onStartRoleplay: (scenario: StartRoleplayArgs["scenario"]) => void;
+  onStartMission: (missionId: StartMissionArgs["missionId"]) => void;
+  onMissionIntentObserved: (intentId: MissionIntentObservedArgs["intentId"]) => void;
   userId: string | null;
 }
 
@@ -42,7 +46,8 @@ export function useStreamingChat({
   learningState,
   setLearningState,
   onSaveWord,
-  onStartRoleplay,
+  onStartMission,
+  onMissionIntentObserved,
   userId,
 }: UseStreamingChatOptions) {
   const [messages, setMessages] = useState<AIMessage[]>([]);
@@ -97,6 +102,7 @@ export function useStreamingChat({
         body: JSON.stringify({
           messages: messagesToWire(nextMessages),
           stream: true,
+          missionId: mode.startsWith("mission:") ? mode.slice("mission:".length) : undefined,
         }),
         signal: controller.signal,
       });
@@ -147,7 +153,8 @@ export function useStreamingChat({
 
           const result = processChunk(chunk, state, {
             onSaveWord,
-            onStartRoleplay,
+            onStartMission,
+            onMissionIntentObserved,
             onActionToolResult: (toolCallId, name) => {
               setMessages(prev => [...prev, {
                 role: "tool" as const,
@@ -222,7 +229,7 @@ export function useStreamingChat({
     } finally {
       if (streamIdRef.current === thisId) setIsStreaming(false);
     }
-  }, [isStreaming, mode, learningState, onSaveWord, onStartRoleplay, onConversationCreated, userId]);
+  }, [isStreaming, mode, learningState, onSaveWord, onStartMission, onMissionIntentObserved, onConversationCreated, userId]);
 
   const answerToolCall = useCallback((callId: string, result: ExerciseResult) => {
     let toolName = "exercise_result";

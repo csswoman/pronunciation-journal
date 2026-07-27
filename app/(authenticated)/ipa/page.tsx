@@ -4,7 +4,7 @@ import PageLayout from "@/components/layout/PageLayout";
 export default function IPAPage() {
   return (
     <div className="ipa-chart">
-      <PageLayout>
+      <PageLayout archetype="catalog">
         <IPAChart />
       </PageLayout>
     </div>

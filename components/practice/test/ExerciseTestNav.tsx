@@ -63,7 +63,7 @@ export function ExerciseTestNav({
           type="button"
           onClick={() => onViewModeChange('single')}
           className={cn(
-            'flex flex-1 items-center justify-center gap-1 rounded-[var(--radius-sm)] py-1.5 text-xs font-medium transition-colors',
+            'flex flex-1 items-center justify-center gap-1 rounded-[var(--radius-sm)] py-1.5 text-caption font-medium transition-colors',
             viewMode === 'single' ? 'bg-surface-raised text-fg shadow-sm' : 'text-fg-muted',
           )}
         >
@@ -75,7 +75,7 @@ export function ExerciseTestNav({
           onClick={() => onViewModeChange('split')}
           disabled={!canSplit}
           className={cn(
-            'flex flex-1 items-center justify-center gap-1 rounded-[var(--radius-sm)] py-1.5 text-xs font-medium transition-colors',
+            'flex flex-1 items-center justify-center gap-1 rounded-[var(--radius-sm)] py-1.5 text-caption font-medium transition-colors',
             viewMode === 'split' ? 'bg-surface-raised text-fg shadow-sm' : 'text-fg-muted',
             !canSplit && 'cursor-not-allowed opacity-50',
           )}
@@ -105,8 +105,8 @@ export function ExerciseTestNav({
                         : 'text-fg-secondary hover:bg-surface-sunken hover:text-fg',
                     )}
                   >
-                    <span className="truncate text-sm font-medium">{entry.label}</span>
-                    <span className="truncate font-mono text-[10px] text-fg-muted">{entry.slug}</span>
+                    <span className="truncate text-body-sm font-medium">{entry.label}</span>
+                    <span className="truncate font-mono text-xxs text-fg-muted">{entry.slug}</span>
                   </button>
                 </li>
               )

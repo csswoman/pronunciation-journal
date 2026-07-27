@@ -116,12 +116,12 @@ export default function ProfileAvatarCard({
       {cropModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
           <div
-            className="rounded-2xl p-6 max-w-sm w-full mx-4 shadow-2xl bg-surface-raised border border-border-default"
+            className="rounded-2xl layout-card-pad max-w-sm w-full mx-4 shadow-2xl bg-surface-raised border border-border-default"
           >
             <H3 className="text-base font-semibold mb-1">
               Adjust profile photo
             </H3>
-            <p className="text-sm mb-5 text-fg-muted">
+            <p className="text-body-sm mb-5 text-fg-muted">
               Drag to position your photo
             </p>
             <div className="flex justify-center mb-6">
@@ -171,7 +171,7 @@ export default function ProfileAvatarCard({
             {avatarUrl ? (
               <Image src={avatarUrl} alt="Avatar" fill className="object-cover" />
             ) : (
-              <span className="absolute inset-0 flex items-center justify-center text-xl font-bold text-fg">
+              <span className="absolute inset-0 flex items-center justify-center text-h4 font-bold text-fg">
                 {initials}
               </span>
             )}
@@ -192,10 +192,10 @@ export default function ProfileAvatarCard({
 
         <div className="min-w-0 flex-1">
           <p className="font-semibold truncate text-fg">{displayName}</p>
-          <p className="text-sm truncate text-fg-muted">{email}</p>
+          <p className="text-body-sm truncate text-fg-muted">{email}</p>
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="mt-1 text-xs font-medium transition-colors text-primary"
+            className="mt-1 text-caption font-medium transition-colors text-primary"
             type="button"
           >
             Change photo

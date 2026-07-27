@@ -88,12 +88,7 @@ function AudioButton({ isPlaying, onPlay }: { isPlaying: boolean; onPlay: () => 
         onClick={onPlay}
         disabled={isPlaying}
         aria-label={isPlaying ? 'Playing sentence' : 'Play sentence'}
-        className={cn(
-          'flex h-14 w-14 items-center justify-center rounded-full border transition-all duration-200',
-          isPlaying
-            ? 'cursor-wait border-border-default bg-surface-raised text-fg-subtle'
-            : 'cursor-pointer border-border-default bg-surface-raised text-fg hover:border-border-strong hover:scale-105 active:scale-95',
-        )}
+        className={cn( 'flex h-14 w-14 items-center justify-center rounded-full border transition-all duration-200', isPlaying ? 'cursor-wait border-border-default bg-surface-raised text-fg-subtle' : 'cursor-pointer border-border-default bg-surface-raised text-fg hover:border-border-strong hover:scale-105 active:scale-95', )}
       >
         {isPlaying ? <SoundWaveIcon /> : <SpeakerIcon />}
       </button>
@@ -143,7 +138,7 @@ function SentencePrompt({ sentence }: { sentence: string }) {
   const wordCount = 4
 
   return (
-    <p className="text-center text-lg leading-relaxed text-fg">
+    <p className="text-center text-body-lg leading-relaxed text-fg">
       {parts[0]}
       <span className="inline-flex items-end gap-0.75 mx-1.5 pb-0.5 align-baseline">
         {Array.from({ length: wordCount }).map((_, i) => (
@@ -178,7 +173,7 @@ function OptionGrid({ options, answer, selected, done, onSelect }: OptionGridPro
             disabled={done}
             aria-pressed={isSelected}
             className={cn(
-              'w-full flex items-center justify-between rounded-(--radius-lg) border px-4 py-3.5 text-[15px] font-medium text-left min-h-13 transition-all duration-150',
+              'w-full flex items-center justify-between rounded-(--radius-lg) border px-4 py-3.5 text-body-sm font-medium text-left min-h-13 transition-all duration-150',
               !done && !isSelected && 'border-border-default bg-surface-raised text-fg hover:border-border-strong cursor-pointer',
               !done && isSelected && 'border-primary bg-primary-soft text-primary cursor-pointer',
               done && isCorrectOption && 'border-success-border bg-success-soft text-success cursor-default',
@@ -204,7 +199,7 @@ function ConfirmBar({ disabled, onConfirm }: { disabled: boolean; onConfirm: () 
       onClick={onConfirm}
       disabled={disabled}
       className={cn(
-        'w-full rounded-full py-3.5 text-[15px] font-semibold transition-all duration-150',
+        'w-full rounded-full py-3.5 text-body-sm font-semibold transition-all duration-150',
         disabled
           ? 'bg-surface-raised text-fg-subtle cursor-not-allowed'
           : 'bg-(--cta-bg) text-(--cta-fg) cursor-pointer hover:opacity-90 active:scale-[0.99]',

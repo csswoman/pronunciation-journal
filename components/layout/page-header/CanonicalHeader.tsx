@@ -33,17 +33,13 @@ export function CanonicalHeader({
   return (
     <header
       role="banner"
-      className={cn(
-        "flex flex-col",
-        isCompact ? "gap-2 pb-4" : "gap-3 pb-6",
-        className,
-      )}
+      className={cn("page-header", isCompact && "page-header--compact", className)}
     >
       {chromeKicker ? (
         <span className="font-kicker text-fg-muted">{chromeKicker}</span>
       ) : null}
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
-        <div className="min-w-0 flex flex-col gap-1">
+      <div className="flex flex-col gap-[var(--layout-stack-tight)] sm:flex-row sm:items-start sm:justify-between sm:gap-[var(--layout-stack-loose)]">
+        <div className="layout-stack-tight min-w-0">
           <h1 className={cn("text-balance text-fg", isCompact ? "text-h3" : "text-h2")}>
             {title}
           </h1>
@@ -54,14 +50,14 @@ export function CanonicalHeader({
           ) : null}
         </div>
         {!hasProgress && (primaryCta || secondaryCta) ? (
-          <div className="flex shrink-0 flex-wrap gap-2">
+          <div className="flex shrink-0 flex-wrap gap-[var(--layout-stack-tight)]">
             <CtaButtons primaryCta={primaryCta} secondaryCta={secondaryCta} rounded="md" />
           </div>
         ) : null}
       </div>
       {hasProgress ? (
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-2">
+        <div className="layout-stack-tight">
+          <div className="flex items-center gap-[var(--layout-stack-tight)]">
             {phonemeLabel ? (
               <span className="rounded-full bg-surface-sunken px-2 py-0.5 font-caption text-fg">
                 {phonemeLabel}

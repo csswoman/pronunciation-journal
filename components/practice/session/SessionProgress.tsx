@@ -13,10 +13,10 @@ export function SessionProgress({ current, total }: Props) {
   return (
     <div className="w-full flex flex-col gap-2">
       <div className="flex items-center justify-between">
-        <span className="text-[10px] font-semibold tracking-widest uppercase text-fg-tertiary">
+        <span className="font-kicker font-semibold text-fg-tertiary">
           Exercise {displayIndex} of {total}
         </span>
-        <span className="text-[10px] font-semibold tabular-nums text-fg-tertiary">
+        <span className="text-xxs font-semibold tabular-nums text-fg-tertiary">
           {pct}%
         </span>
       </div>

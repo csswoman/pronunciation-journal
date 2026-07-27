@@ -128,7 +128,7 @@ export function WrittenProductionExercise({ exercise, onResult, onSkip }: Props)
       {!grade && (
         <>
           <div className="flex flex-col gap-2">
-            <label htmlFor={fieldId} className="text-sm font-medium text-fg-muted">
+            <label htmlFor={fieldId} className="text-body-sm font-medium text-fg-muted">
               Tu oración
             </label>
             <textarea
@@ -154,7 +154,7 @@ export function WrittenProductionExercise({ exercise, onResult, onSkip }: Props)
           />
 
           {error && (
-            <p id={errorId} role="alert" className="m-0 text-sm text-error">
+            <p id={errorId} role="alert" className="m-0 text-body-sm text-error">
               {error}
             </p>
           )}
@@ -175,7 +175,7 @@ export function WrittenProductionExercise({ exercise, onResult, onSkip }: Props)
                 onClick={onSkip}
                 disabled={grading}
                 aria-label="Omitir este ejercicio"
-                className="min-h-11 cursor-pointer self-center border-none bg-transparent px-4 text-sm font-medium text-fg-subtle transition-colors hover:text-fg-muted focus-ring disabled:cursor-not-allowed disabled:opacity-40"
+                className="min-h-11 cursor-pointer self-center border-none bg-transparent px-4 text-body-sm font-medium text-fg-subtle transition-colors hover:text-fg-muted focus-ring disabled:cursor-not-allowed disabled:opacity-40"
               >
                 Omitir este
               </button>
@@ -215,7 +215,7 @@ function OfflineBanner({ message }: { message: string }) {
   return (
     <p
       role="status"
-      className="m-0 rounded-[var(--radius-md)] border border-warning-border bg-warning-soft px-3 py-2 text-sm text-warning"
+      className="m-0 rounded-[var(--radius-md)] border border-warning-border bg-warning-soft px-3 py-2 text-body-sm text-warning"
     >
       {message}
     </p>

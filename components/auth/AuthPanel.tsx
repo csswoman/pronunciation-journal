@@ -32,7 +32,7 @@ export default function AuthPanel() {
       >
         <AuthMobileIdentity index={auth.imageIndex} />
 
-        <div className="flex-1 px-6 flex flex-col items-center justify-center py-10 lg:py-16">
+        <div className="flex-1 px-[var(--layout-page-inline)] flex flex-col items-center justify-center py-[var(--layout-page-block)] lg:py-[var(--layout-page-block-end)]">
           <div className="w-full max-w-sm">
 
             {/* Desktop wordmark */}
@@ -41,7 +41,7 @@ export default function AuthPanel() {
                 <p className="text-h3 text-fg font-bold leading-none tracking-tight">
                   English Journal
                 </p>
-                <p className="mt-1.5 text-sm text-fg-muted italic">
+                <p className="mt-1.5 text-body-sm text-fg-muted italic">
                   Practice with intention.
                 </p>
               </div>
@@ -52,7 +52,7 @@ export default function AuthPanel() {
               <div className="mb-6">
                 <AuthFeedback error={auth.error} message={auth.message} compact={auth.mode === "login"} />
                 {auth.error && auth.mode === "login" && (
-                  <p className="mt-2 text-sm text-fg-muted text-center">
+                  <p className="mt-2 text-body-sm text-fg-muted text-center">
                     Don&apos;t have an account?{" "}
                     <button
                       type="button"
@@ -114,7 +114,7 @@ export default function AuthPanel() {
               </>
             )}
 
-            <p className="mt-8 text-center text-xs text-fg-muted">
+            <p className="mt-8 text-center text-caption text-fg-muted">
               <Link href="/privacy" className="transition-colors hover:text-fg">
                 Privacy Policy
               </Link>

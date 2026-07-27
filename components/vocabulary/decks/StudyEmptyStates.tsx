@@ -33,15 +33,15 @@ export function StudyEmptyStates({
   if (phase === "done" || queueLength === 0) {
     return centeredOverlay(
       <div
-        className="max-w-sm w-full rounded-2xl border p-8 text-center space-y-5"
+        className="max-w-sm w-full rounded-2xl border layout-card-pad text-center space-y-5"
         style={{
           backgroundColor: "var(--card-bg)",
           borderColor: "var(--line-divider)",
         }}
       >
-        <div className="text-5xl">🎉</div>
+        <div className="text-h1">🎉</div>
         <H2 className="text-h4">All caught up!</H2>
-        <p className="text-sm text-fg-muted">
+        <p className="text-body-sm text-fg-muted">
           No cards due in <strong>{deckName}</strong>.
         </p>
         <Button variant="primary" fullWidth onClick={onClose}>

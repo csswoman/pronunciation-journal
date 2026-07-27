@@ -27,7 +27,7 @@ export function StudyRightPanel({ stats, upcomingCards }: StudyRightPanelProps) 
 
       {/* Today's progress */}
       <div>
-        <p className="text-tiny font-semibold tracking-widest uppercase mb-2 text-fg-subtle">Today's progress</p>
+        <p className="font-kicker font-semibold mb-2 text-fg-subtle">Today's progress</p>
         <div className="grid grid-cols-2 gap-2">
           {[
             { val: stats.easy,  label: "easy",       className: "text-[var(--success)]" },
@@ -36,7 +36,7 @@ export function StudyRightPanel({ stats, upcomingCards }: StudyRightPanelProps) 
             { val: stats.seen,  label: "total seen",  className: "text-fg" },
           ].map(({ val, label, className }) => (
             <div key={label} className="rounded-xl border border-border-subtle bg-surface-raised p-3 text-center">
-              <p className={`text-xl font-bold ${className}`}>{val}</p>
+              <p className={`text-h4 font-bold ${className}`}>{val}</p>
               <p className="text-tiny mt-0.5 text-fg-subtle">{label}</p>
             </div>
           ))}
@@ -46,7 +46,7 @@ export function StudyRightPanel({ stats, upcomingCards }: StudyRightPanelProps) 
       {/* Upcoming cards */}
       {upcomingCards.length > 0 && (
         <div>
-          <p className="text-tiny font-semibold tracking-widest uppercase mb-2 text-fg-subtle">Upcoming cards</p>
+          <p className="font-kicker font-semibold mb-2 text-fg-subtle">Upcoming cards</p>
           <div className="space-y-1.5">
             {upcomingCards.map((card, i) => {
               const cardLevel = card.difficulty
@@ -58,7 +58,7 @@ export function StudyRightPanel({ stats, upcomingCards }: StudyRightPanelProps) 
                   <div className="w-2 h-2 rounded-full shrink-0"
                     style={{ backgroundColor: dotColor }} />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold truncate text-fg">
+                    <p className="text-body-sm font-semibold truncate text-fg">
                       {card.word}
                     </p>
                     {cardLevel && (

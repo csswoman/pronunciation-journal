@@ -1,6 +1,7 @@
 "use client";
 
 import { db } from "@/lib/db";
+import { getMission } from "@/lib/ai-practice/missions/registry";
 import type { AIConversation, AIConversationMode } from "@/lib/types";
 
 function getOrCreateDeviceId(): string {
@@ -58,9 +59,10 @@ export function modeLabel(mode: AIConversationMode): string {
   if (mode === "chat") return "Chat";
   if (mode === "pronunciation") return "Pronunciation";
   if (mode === "lesson") return "Lesson";
-  if (mode.startsWith("roleplay:")) {
-    const scenario = mode.slice("roleplay:".length);
-    return `Roleplay · ${scenario.charAt(0).toUpperCase() + scenario.slice(1)}`;
+  if (mode.startsWith("mission:")) {
+    const missionId = mode.slice("mission:".length);
+    const mission = getMission(missionId);
+    return mission ? `Mission · ${mission.communicativeGoal}` : "Mission";
   }
   return mode;
 }

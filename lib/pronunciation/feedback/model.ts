@@ -63,6 +63,6 @@ export function buildPronunciationFeedback(
     outcome,
     priority,
     summaryEs: summaryFor(input.signal, !!priority),
-    reviewRecommended: outcome === 'same' || outcome === 'needs_more_evidence',
+    reviewRecommended: outcome === 'improved' || outcome === 'same' || outcome === 'needs_more_evidence',
   }
 }

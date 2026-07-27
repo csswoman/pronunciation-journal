@@ -37,7 +37,7 @@
   max-width: 42rem;
   margin: 0.5rem 0 0;
   color: var(--text-secondary);
-  font-size: 1rem;
+  font-size: var(--text-size-body);
   line-height: 1.55;
 }
 
@@ -60,7 +60,7 @@
 }
 
 .words-lexicon__practice-aside .words-lexicon__today h2 {
-  font-size: 1.25rem;
+  font-size: var(--text-size-h3);
   line-height: 1.3;
 }
 
@@ -72,7 +72,7 @@
 .words-lexicon__practice-aside-hint {
   margin: 0.75rem 0 0;
   color: var(--text-tertiary);
-  font-size: 0.8rem;
+  font-size: var(--text-size-tiny);
 }
 
 .words-lexicon__practice-aside-hint strong {
@@ -95,13 +95,13 @@
 
 .words-lexicon__data-alert strong {
   display: block;
-  font-size: 0.875rem;
+  font-size: var(--text-size-body-sm);
 }
 
 .words-lexicon__data-alert p {
   margin: 0.2rem 0 0;
   color: var(--text-secondary);
-  font-size: 0.8rem;
+  font-size: var(--text-size-tiny);
 }
 
 .words-lexicon__data-alert-action {
@@ -112,7 +112,7 @@
   background: var(--surface-raised);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-md);
-  font-size: 0.8rem;
+  font-size: var(--text-size-tiny);
   font-weight: 600;
 }
 
@@ -123,7 +123,7 @@
 .words-lexicon__title {
   font-family: var(--font-sans), system-ui, sans-serif;
   font-weight: 600;
-  font-size: 1.75rem;
+  font-size: var(--text-size-display-ipa);
   letter-spacing: -0.02em;
   color: var(--text-primary);
   line-height: 1.1;
@@ -155,7 +155,7 @@
   margin: 0 0 0.5rem;
   color: var(--text-tertiary);
   font-family: var(--font-mono), monospace;
-  font-size: 0.8125rem;
+  font-size: var(--text-size-caption);
   font-weight: 500;
   letter-spacing: 0.06em;
 }
@@ -164,7 +164,7 @@
 .words-lexicon__sechead h2 {
   margin: 0;
   color: var(--text-primary);
-  font-size: 1.5rem;
+  font-size: var(--text-size-h1);
   font-weight: 600;
   letter-spacing: -0.015em;
   line-height: 1.3;
@@ -173,7 +173,7 @@
 .words-lexicon__today-copy > p:last-child {
   margin: 0.5rem 0 0;
   color: var(--text-secondary);
-  font-size: 1rem;
+  font-size: var(--text-size-body);
   line-height: 1.55;
 }
 
@@ -181,7 +181,7 @@
   display: inline-block;
   margin-top: 0.625rem;
   color: var(--primary);
-  font-size: 0.8rem;
+  font-size: var(--text-size-tiny);
   font-weight: 600;
 }
 
@@ -195,7 +195,7 @@
   color: var(--cta-fg);
   background: var(--cta-bg);
   border-radius: var(--radius-md);
-  font-size: 0.9rem;
+  font-size: var(--text-size-body-sm);
   font-weight: 600;
   text-decoration: none;
   transition: background var(--transition-fast), transform var(--transition-fast);
@@ -249,7 +249,7 @@
 .words-lexicon__learn-next h2 {
   margin: 0;
   color: var(--text-primary);
-  font-size: 1rem;
+  font-size: var(--text-size-body);
   font-weight: 600;
 }
 
@@ -257,7 +257,7 @@
   max-width: 45rem;
   margin: 0.25rem 0 0;
   color: var(--text-secondary);
-  font-size: 0.875rem;
+  font-size: var(--text-size-body-sm);
 }
 
 .words-lexicon__secondary-cta {
@@ -270,7 +270,7 @@
   color: var(--primary);
   background: var(--primary-soft);
   border-radius: var(--radius-md);
-  font-size: 0.875rem;
+  font-size: var(--text-size-body-sm);
   font-weight: 600;
   text-decoration: none;
 }
@@ -309,13 +309,13 @@
 .words-lexicon__route-picker .words-lexicon__sechead p:last-child {
   margin: 0.25rem 0 0;
   color: var(--text-secondary);
-  font-size: 0.875rem;
+  font-size: var(--text-size-body-sm);
 }
 
 .words-lexicon__text-link {
   flex: 0 0 auto;
   color: var(--primary-600);
-  font-size: 0.875rem;
+  font-size: var(--text-size-body-sm);
   font-weight: 600;
   text-decoration: none;
 }
@@ -378,7 +378,7 @@
 
 .words-lexicon__lesson-row-title {
   overflow: hidden;
-  font-size: 0.9rem;
+  font-size: var(--text-size-body-sm);
   font-weight: 600;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -386,17 +386,17 @@
 
 .words-lexicon__lesson-row-meta {
   color: var(--text-tertiary);
-  font-size: 0.75rem;
+  font-size: var(--text-size-tiny);
 }
 
 .words-lexicon__lesson-row-arrow {
   margin-left: auto;
   color: var(--text-tertiary);
-  font-size: 1rem;
+  font-size: var(--text-size-body);
 }
 
 .words-lexicon__eyebrow {
-  font-size: 10px;
+  font-size: var(--text-size-xxs);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -415,7 +415,7 @@
   gap: 5px;
   min-height: 2.75rem;
   padding: 0.625rem 0.875rem;
-  font-size: 13px;
+  font-size: var(--text-size-caption);
   font-weight: 600;
   color: var(--text-secondary);
   border-radius: var(--radius-full);
@@ -436,7 +436,7 @@
 }
 
 .words-lexicon__seg-count {
-  font-size: 11px;
+  font-size: var(--text-size-xxs);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   opacity: 0.7;
@@ -445,7 +445,7 @@
 .words-lexicon__hero-title {
   font-family: var(--font-sans), system-ui, sans-serif;
   font-weight: 400;
-  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+  font-size: var(--text-size-ipa-hero);
   letter-spacing: -0.03em;
   color: var(--text-primary);
   padding-top: 0;
@@ -459,7 +459,7 @@
 
 .words-lexicon__hero-lede {
   color: var(--text-secondary);
-  font-size: 0.95rem;
+  font-size: var(--text-size-label);
   margin-top: 0.625rem;
 }
 
@@ -513,7 +513,7 @@
   border: none;
   color: var(--text-primary);
   font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: 1rem;
+  font-size: var(--text-size-body);
   outline: none;
 }
 
@@ -525,7 +525,7 @@
   flex-shrink: 0;
   padding: 0.25rem 0.5rem;
   font-family: var(--font-mono), monospace;
-  font-size: 0.75rem;
+  font-size: var(--text-size-tiny);
   color: var(--text-tertiary);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
@@ -541,7 +541,7 @@
 }
 
 .words-lexicon__quick-lbl {
-  font-size: 0.8rem;
+  font-size: var(--text-size-tiny);
   font-weight: 600;
   color: var(--text-tertiary);
   letter-spacing: 0.04em;
@@ -551,7 +551,7 @@
 .words-lexicon__qchip {
   padding: 0.25rem 0.75rem;
   font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: 0.9rem;
+  font-size: var(--text-size-body-sm);
   color: var(--text-secondary);
   background: var(--surface-sunken);
   border: 1px solid var(--border-subtle);
@@ -621,17 +621,17 @@
 
 .words-lexicon__res-word {
   font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: 1.05rem;
+  font-size: var(--text-size-body-lg);
   color: var(--text-primary);
 }
 
 .words-lexicon__res-pos {
-  font-size: 0.82rem;
+  font-size: var(--text-size-caption);
   color: var(--text-tertiary);
 }
 
 .words-lexicon__res-cat {
-  font-size: 11px;
+  font-size: var(--text-size-xxs);
   color: var(--text-tertiary);
   background: var(--surface-sunken);
   border: 1px solid var(--border-subtle);
@@ -640,14 +640,14 @@
 }
 
 .words-lexicon__res-def {
-  font-size: 0.82rem;
+  font-size: var(--text-size-caption);
   color: var(--text-tertiary);
 }
 
 .words-lexicon__nores {
   padding: 0.875rem 1rem;
   color: var(--text-tertiary);
-  font-size: 0.9rem;
+  font-size: var(--text-size-body-sm);
 }
 
 .words-lexicon__worddetail {
@@ -684,22 +684,22 @@
 
 .words-lexicon__wd-w {
   font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: 1.8rem;
+  font-size: var(--text-size-display-ipa);
   color: var(--text-primary);
 }
 
 .words-lexicon__wd-pos {
-  font-size: 0.9rem;
+  font-size: var(--text-size-body-sm);
   color: var(--primary-600);
 }
 
 .words-lexicon__wd-cat {
-  font-size: 11px;
+  font-size: var(--text-size-xxs);
   color: var(--text-tertiary);
 }
 
 .words-lexicon__wd-translation {
-  font-size: 0.875rem;
+  font-size: var(--text-size-body-sm);
   font-weight: 500;
   color: var(--text-primary);
   margin-top: 0.5rem;
@@ -707,12 +707,12 @@
 
 .words-lexicon__wd-def {
   color: var(--text-secondary);
-  font-size: 0.95rem;
+  font-size: var(--text-size-label);
   margin-top: 0.625rem;
 }
 
 .words-lexicon__strip {
-  font-size: 0.82rem;
+  font-size: var(--text-size-caption);
   background: transparent;
   border: none;
   padding: 0;
@@ -720,7 +720,7 @@
 
 .words-lexicon__strip-pct {
   font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: 0.8rem;
+  font-size: var(--text-size-tiny);
   font-weight: 700;
   color: var(--text-tertiary);
   tabular-nums: normal;
@@ -755,7 +755,7 @@
 }
 
 .words-lexicon__strip-summary {
-  font-size: 0.82rem;
+  font-size: var(--text-size-caption);
   color: var(--text-secondary);
 }
 
@@ -765,7 +765,7 @@
 }
 
 .words-lexicon__strip-pill {
-  font-size: 0.8rem;
+  font-size: var(--text-size-tiny);
   font-weight: 600;
   color: var(--warning-value);
   background: var(--badge-warning-bg);
@@ -789,13 +789,13 @@
 .words-lexicon__sechead h3 {
   font-family: var(--font-sans), system-ui, sans-serif;
   font-weight: 600;
-  font-size: 1.125rem;
+  font-size: var(--text-size-h4);
   color: var(--text-primary);
   letter-spacing: -0.005em;
 }
 
 .words-lexicon__sechead-all {
-  font-size: 12.5px;
+  font-size: var(--text-size-tiny);
   color: var(--primary-600);
   background: none;
   border: none;
@@ -830,7 +830,7 @@
 
 .words-lexicon__domain-chevron {
   margin-left: auto;
-  font-size: 1.1rem;
+  font-size: var(--text-size-body-lg);
   color: var(--text-tertiary);
   line-height: 1;
   display: inline-flex;
@@ -841,14 +841,14 @@
 .words-lexicon__domain-name {
   font-family: var(--font-sans), system-ui, sans-serif;
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: var(--text-size-label);
   color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
 
 .words-lexicon__domain-count {
-  font-size: 0.8rem;
+  font-size: var(--text-size-tiny);
   color: var(--text-tertiary);
 }
 
@@ -903,7 +903,7 @@
 
 .words-lexicon__cont-title {
   font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: 1rem;
+  font-size: var(--text-size-body);
   color: var(--text-primary);
 }
 
@@ -922,7 +922,7 @@
 }
 
 .words-lexicon__cont-meta {
-  font-size: 0.78rem;
+  font-size: var(--text-size-tiny);
   color: var(--text-tertiary);
 }
 
@@ -966,7 +966,7 @@
   top: -0.75rem;
   right: 8px;
   font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: 6rem;
+  font-size: var(--text-size-ipa-hero);
   color: color-mix(in oklch, var(--text-primary) 4%, transparent);
   pointer-events: none;
 }
@@ -974,12 +974,12 @@
 .words-lexicon__tile h4 {
   font-family: var(--font-sans), system-ui, sans-serif;
   font-weight: 500;
-  font-size: 1.2rem;
+  font-size: var(--text-size-h3);
   color: var(--text-primary);
 }
 
 .words-lexicon__tile-tags span {
-  font-size: 11.5px;
+  font-size: var(--text-size-xxs);
   color: var(--text-secondary);
   background: var(--surface-sunken);
   border: 1px solid var(--border-subtle);
@@ -987,7 +987,7 @@
 }
 
 .words-lexicon__tile-foot {
-  font-size: 0.82rem;
+  font-size: var(--text-size-caption);
   color: var(--text-tertiary);
 }
 
@@ -1008,7 +1008,7 @@
 }
 
 .words-lexicon__contextbar-stat {
-  font-size: 0.9rem;
+  font-size: var(--text-size-body-sm);
   color: var(--text-secondary);
 }
 
@@ -1025,7 +1025,7 @@
 
 .words-lexicon__empty {
   color: var(--text-tertiary);
-  font-size: 0.9rem;
+  font-size: var(--text-size-body-sm);
 }
 
 .shimmer {
@@ -1094,7 +1094,7 @@
   align-items: center;
   justify-content: center;
   font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: 1.1rem;
+  font-size: var(--text-size-body-lg);
   font-weight: 600;
   flex-shrink: 0;
   line-height: 1;

@@ -19,7 +19,7 @@ export function StudyDifficultyButtons({ onDifficulty, visible = true }: StudyDi
   if (!visible) {
     return (
       <div className="px-4 pb-24 lg:pb-4">
-        <p className="text-center text-sm text-fg-subtle py-3">
+        <p className="text-center text-body-sm text-fg-subtle py-3">
           Tap the card to reveal the answer
         </p>
       </div>
@@ -34,8 +34,8 @@ export function StudyDifficultyButtons({ onDifficulty, visible = true }: StudyDi
           onClick={() => onDifficulty(key)}
           className={`py-3 rounded-2xl border font-bold transition-opacity hover:opacity-90 active:scale-95 ${cfg.bg} ${cfg.text} ${cfg.border}`}
         >
-          <div className="text-xl mb-0.5">{cfg.emoji}</div>
-          <div className="text-sm">{cfg.label}</div>
+          <div className="text-h4 mb-0.5">{cfg.emoji}</div>
+          <div className="text-body-sm">{cfg.label}</div>
           <div className="text-tiny opacity-60 font-normal">press {cfg.key}</div>
         </button>
       ))}

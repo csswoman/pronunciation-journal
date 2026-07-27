@@ -77,12 +77,7 @@ export function SessionHelpPopover() {
       <button
         ref={triggerRef}
         type="button"
-        className={cn(
-          'flex size-11 items-center justify-center rounded-full text-fg-subtle',
-          'transition-colors duration-150 ease-out-quart focus-ring',
-          'hover:bg-surface-raised hover:text-fg-muted',
-          open && 'bg-surface-raised text-fg-muted',
-        )}
+        className={cn( 'flex size-11 items-center justify-center rounded-full text-fg-subtle', 'transition-colors duration-150 ease-out-quart focus-ring', 'hover:bg-surface-raised hover:text-fg-muted', open && 'bg-surface-raised text-fg-muted', )}
         aria-label="Cómo funciona esta práctica"
         aria-expanded={open}
         aria-haspopup="dialog"
@@ -98,10 +93,7 @@ export function SessionHelpPopover() {
           id={panelId}
           role="dialog"
           aria-label="Cómo funciona esta práctica"
-          className={cn(
-            'absolute right-0 top-full z-30 mt-2 w-72 origin-top-right',
-            'animate-state-in rounded-md border border-border-default bg-surface-raised p-4 shadow-lg',
-          )}
+          className={cn( 'absolute right-0 top-full z-30 mt-2 w-72 origin-top-right', 'animate-state-in rounded-md border border-border-default bg-surface-raised p-4 shadow-lg', )}
         >
           <div className="mb-3 flex items-center justify-between">
             <h2 className="m-0 text-label font-semibold text-fg">Cómo funciona</h2>

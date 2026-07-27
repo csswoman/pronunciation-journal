@@ -2,6 +2,8 @@ import type { AIMessage, VoiceMetadata } from "./types";
 import { BASE_TUTOR_PROMPT, VOICE_TURN_INSTRUCTION } from "./prompts";
 import { compactState, selectNextExerciseTopic, type UserLearningState } from "./learning-state";
 import { isExerciseTool } from "./tools/registry";
+import { buildMissionPrompt } from "./missions/prompts";
+import { getMission } from "./missions/registry";
 
 /** Returns the topic of the most recently answered exercise in the message list. */
 export function extractLastTopic(messages: AIMessage[]): string | undefined {
@@ -20,8 +22,18 @@ export function buildSystemPrompt(
   learningState: UserLearningState | null,
   lastTopic?: string,
   voiceScored?: boolean,
+  missionId?: string,
 ): string {
   const voiceSuffix = voiceScored ? `\n\n${VOICE_TURN_INSTRUCTION}` : "";
+
+  const mission = missionId ? getMission(missionId) : null;
+  if (mission) {
+    const missionPrompt = buildMissionPrompt(
+      mission,
+      learningState ? compactState(learningState) : undefined,
+    );
+    return `${missionPrompt}${voiceSuffix}`;
+  }
 
   if (!learningState) return `${BASE_TUTOR_PROMPT}${voiceSuffix}`;
 

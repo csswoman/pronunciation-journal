@@ -43,7 +43,7 @@ export function LexiconFlashcard({
 
   return (
     <div className="flex w-full max-w-md flex-col gap-4">
-      <div className="flex items-center justify-between text-xs text-fg-subtle">
+      <div className="flex items-center justify-between text-caption text-fg-subtle">
         <span>Review words</span>
         <span className="font-bold tabular-nums px-2.5 py-1 rounded-full bg-[var(--primary)] text-[var(--on-primary)]">
           {cardNumber} / {totalCards}
@@ -52,22 +52,22 @@ export function LexiconFlashcard({
 
       <button
         type="button"
-        className="min-h-52 w-full cursor-pointer rounded-2xl border border-border-subtle bg-surface-raised p-6 transition-shadow hover:shadow-md flex flex-col gap-3 text-left"
+        className="min-h-52 w-full cursor-pointer rounded-2xl border border-border-subtle bg-surface-raised layout-card-pad transition-shadow hover:shadow-md flex flex-col gap-3 text-left"
         onClick={() => !revealed && setRevealed(true)}
         aria-label={revealed ? undefined : `Tap to reveal definition of ${word}`}
       >
         <div>
-          <p className="text-2xl font-bold text-fg">{word}</p>
+          <p className="text-display-word font-bold text-fg">{word}</p>
           {partOfSpeech && !revealed && (
-            <p className="text-xs italic text-fg-subtle mt-0.5">{partOfSpeech}</p>
+            <p className="text-caption italic text-fg-subtle mt-0.5">{partOfSpeech}</p>
           )}
         </div>
 
         {!revealed ? (
-          <p className="text-sm text-fg-muted mt-auto">Tap to reveal →</p>
+          <p className="text-body-sm text-fg-muted mt-auto">Tap to reveal →</p>
         ) : (
           <>
-            <p className="text-sm text-fg-muted leading-snug">
+            <p className="text-body-sm text-fg-muted leading-snug">
               {partOfSpeech && (
                 <span className="text-fg-subtle italic mr-1">({partOfSpeech})</span>
               )}
@@ -81,12 +81,12 @@ export function LexiconFlashcard({
             {translation && (
               <div onClick={(e) => e.stopPropagation()}>
                 {showTranslation ? (
-                  <p className="text-xs text-fg-subtle">{translation}</p>
+                  <p className="text-caption text-fg-subtle">{translation}</p>
                 ) : (
                   <button
                     type="button"
                     onClick={() => setShowTranslation(true)}
-                    className="text-xs text-fg-subtle underline underline-offset-2 hover:text-fg transition-colors"
+                    className="text-caption text-fg-subtle underline underline-offset-2 hover:text-fg transition-colors"
                   >
                     Show translation
                   </button>
@@ -113,21 +113,21 @@ export function LexiconFlashcard({
           <button
             type="button"
             onClick={() => handleRate('forgot')}
-            className="rounded-xl border border-error/40 bg-error-soft px-3 py-3 text-xs font-semibold text-error transition-colors hover:bg-error/20"
+            className="rounded-xl border border-error/40 bg-error-soft px-3 py-3 text-caption font-semibold text-error transition-colors hover:bg-error/20"
           >
             I don't know it
           </button>
           <button
             type="button"
             onClick={() => handleRate('normal')}
-            className="rounded-xl border border-border-subtle bg-surface-raised px-3 py-3 text-xs font-semibold text-fg transition-colors hover:border-border-strong"
+            className="rounded-xl border border-border-subtle bg-surface-raised px-3 py-3 text-caption font-semibold text-fg transition-colors hover:border-border-strong"
           >
             Normal
           </button>
           <button
             type="button"
             onClick={() => handleRate('known')}
-            className="rounded-xl border border-primary/40 bg-primary-soft px-3 py-3 text-xs font-semibold text-primary transition-colors hover:bg-primary/20"
+            className="rounded-xl border border-primary/40 bg-primary-soft px-3 py-3 text-caption font-semibold text-primary transition-colors hover:bg-primary/20"
           >
             I already know it
           </button>

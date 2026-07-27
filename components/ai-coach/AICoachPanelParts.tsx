@@ -6,7 +6,7 @@ import { cn } from "@/lib/cn";
 
 export function AICoachHeader({ pageLabel, showHistory, onNewChat, onToggleHistory, onClose }: { pageLabel: string; showHistory: boolean; onNewChat: () => void; onToggleHistory: () => void; onClose: () => void; }) {
   return <div className="flex items-center justify-between px-3 py-2.5 flex-shrink-0 border-b border-[var(--line-divider)]">
-    <div className="flex items-center gap-2"><span className="w-6 h-6 rounded-lg flex items-center justify-center text-sm font-bold flex-shrink-0 bg-[color-mix(in_oklch,var(--primary)_15%,transparent)] text-[var(--primary)]">✦</span><span className="text-sm font-semibold text-fg">AI Coach</span><span className="text-tiny px-2 py-0.5 rounded-full font-medium hidden sm:inline bg-[var(--btn-regular-bg)] text-[var(--text-tertiary)]">{pageLabel}</span></div>
+    <div className="flex items-center gap-2"><span className="w-6 h-6 rounded-lg flex items-center justify-center text-body-sm font-bold flex-shrink-0 bg-[color-mix(in_oklch,var(--primary)_15%,transparent)] text-[var(--primary)]">✦</span><span className="text-body-sm font-semibold text-fg">AI Coach</span><span className="text-tiny px-2 py-0.5 rounded-full font-medium hidden sm:inline bg-[var(--btn-regular-bg)] text-[var(--text-tertiary)]">{pageLabel}</span></div>
     <div className="flex items-center gap-0.5">
       <PanelIconButton onClick={onNewChat} title="New chat"><Plus size={14} /></PanelIconButton>
       <PanelIconButton onClick={onToggleHistory} title="Conversation history" active={showHistory}><History size={14} /></PanelIconButton>
@@ -65,15 +65,15 @@ export function ConversationHistoryPanel({ conversations, activeId, onSelect, on
 
   return <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
     <div className="flex items-center gap-2 px-3 py-2.5 border-b border-[var(--line-divider)] flex-shrink-0">
-      <button onClick={onClose} className="flex items-center gap-1 text-xs text-fg-subtle hover:text-fg transition-colors"><ChevronLeft size={13} />Back</button>
-      <span className="text-xs font-medium text-fg ml-1">History</span>
+      <button onClick={onClose} className="flex items-center gap-1 text-caption text-fg-subtle hover:text-fg transition-colors"><ChevronLeft size={13} />Back</button>
+      <span className="text-caption font-medium text-fg ml-1">History</span>
     </div>
     <div className="flex-1 overflow-y-auto py-2">
-      {isEmpty ? <p className="text-xs text-fg-subtle text-center py-8">No conversations yet</p> : order.map((label) => {
+      {isEmpty ? <p className="text-caption text-fg-subtle text-center py-[var(--layout-section-gap)]">No conversations yet</p> : order.map((label) => {
         const items = grouped[label];
         if (!items?.length) return null;
         return <div key={label} className="mb-3">
-          <p className="text-tiny font-semibold uppercase tracking-widest px-3 py-1 text-[var(--text-tertiary)]">{label}</p>
+          <p className="font-kicker font-semibold px-3 py-1 text-[var(--text-tertiary)]">{label}</p>
           {items.map((conv) => {
             const isActive = conv.id === activeId;
             const isPending = conv.id === pendingDelete;
@@ -87,7 +87,7 @@ export function ConversationHistoryPanel({ conversations, activeId, onSelect, on
               onClick={() => !isPending && onSelect(conv)}
             >
               <span className={cn(
-                "text-xs truncate flex-1",
+                "text-caption truncate flex-1",
                 isActive ? "text-[var(--primary)]" : "text-[var(--text-secondary)]",
                 isPending && "opacity-50",
               )}>
@@ -98,7 +98,7 @@ export function ConversationHistoryPanel({ conversations, activeId, onSelect, on
               {isPending ? (
                 <button
                   onClick={(e) => { e.stopPropagation(); handleUndo(); }}
-                  className="text-[11px] font-medium text-[var(--primary)] hover:underline px-1"
+                  className="text-xxs font-medium text-[var(--primary)] hover:underline px-1"
                 >Undo</button>
               ) : (
                 <button

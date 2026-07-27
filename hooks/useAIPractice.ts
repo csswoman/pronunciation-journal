@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import type { ExerciseResult, VoiceMetadata } from "@/lib/ai-practice/types";
-import type { StartRoleplayArgs } from "@/lib/ai-practice/tools/registry";
 import { getUserLearningState } from "@/lib/ai-practice/load-state";
 import { hydrateFromRemote, persistLearningState } from "@/lib/ai-practice/queries";
 import type { UserLearningState } from "@/lib/ai-practice/learning-state";
@@ -11,9 +10,11 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { useStreamingChat } from "./useStreamingChat";
 import { useSavedWords, type SaveWordData } from "./useSavedWords";
 import { switchMode } from "@/lib/ai-practice/conversation-mode";
-import { deleteConversation } from "@/lib/db/ai";
+import { deleteConversation, updateConversation } from "@/lib/db/ai";
 
 export type { SaveWordData };
+
+type MissionIntentHandler = (intentId: string) => void;
 
 interface UseAIPracticeReturn {
   messages: ReturnType<typeof useStreamingChat>["messages"];
@@ -22,7 +23,7 @@ interface UseAIPracticeReturn {
   quotaExhausted: boolean;
   savedWords: AISavedWord[];
   wordToSave: { word: string; context: string } | null;
-  activeRoleplay: StartRoleplayArgs["scenario"] | null;
+  activeMissionId: string | null;
   mode: AIConversationMode;
   conversationId: number | null;
   sendMessage: (text: string, options?: { hidden?: boolean; voice?: VoiceMetadata }) => Promise<void>;
@@ -32,6 +33,7 @@ interface UseAIPracticeReturn {
   confirmSaveWord: (data: SaveWordData) => Promise<void>;
   deleteSavedWord: (id: number) => Promise<void>;
   loadSavedWords: () => Promise<void>;
+  setMissionIntentHandler: (handler: MissionIntentHandler | null) => void;
   resetSession: () => void;
   finalizeSession: () => void;
   changeMode: (next: AIConversationMode) => Promise<void>;
@@ -43,11 +45,20 @@ export function useAIPractice(): UseAIPracticeReturn {
   const { user } = useAuth();
   const [learningState, setLearningState] = useState<UserLearningState | null>(null);
   const persistTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [activeRoleplay, setActiveRoleplay] = useState<StartRoleplayArgs["scenario"] | null>(null);
+  const missionIntentHandlerRef = useRef<MissionIntentHandler | null>(null);
+  const [activeMissionId, setActiveMissionId] = useState<string | null>(null);
   const [mode, setMode] = useState<AIConversationMode>("chat");
   const [conversationId, setConversationId] = useState<number | null>(null);
 
   const words = useSavedWords(user?.id ?? null, conversationId);
+
+  const setMissionIntentHandler = useCallback((handler: MissionIntentHandler | null) => {
+    missionIntentHandlerRef.current = handler;
+  }, []);
+
+  const handleMissionIntentObserved = useCallback((intentId: string) => {
+    missionIntentHandlerRef.current?.(intentId);
+  }, []);
 
   const chat = useStreamingChat({
     mode,
@@ -56,7 +67,11 @@ export function useAIPractice(): UseAIPracticeReturn {
     learningState,
     setLearningState,
     onSaveWord: words.openSaveWordModal,
-    onStartRoleplay: setActiveRoleplay,
+    onStartMission: (missionId) => {
+      setActiveMissionId(missionId)
+      setMode(`mission:${missionId}`)
+    },
+    onMissionIntentObserved: handleMissionIntentObserved,
     userId: user?.id ?? null,
   });
 
@@ -118,10 +133,20 @@ export function useAIPractice(): UseAIPracticeReturn {
     switchMode(user.id, "chat").then(({ conversationId: id }) => setConversationId(id)).catch(() => {});
   }, [user?.id]);
 
+  // A model can start a mission from an existing chat stream. Preserve that
+  // stream and its messages, then relabel its owned conversation once its id
+  // is available so history resumes with the authored mission prompt.
+  useEffect(() => {
+    if (!user?.id || !conversationId || !activeMissionId) return
+    void updateConversation(user.id, conversationId, {
+      mode: `mission:${activeMissionId}`,
+    })
+  }, [activeMissionId, conversationId, user?.id])
+
   const changeMode = useCallback(async (next: AIConversationMode) => {
     if (!user?.id) return;
     chat.resetChat();
-    setActiveRoleplay(null);
+    setActiveMissionId(null);
     words.setWordToSave(null);
     setMode(next);
     const { conversationId: id, conversation } = await switchMode(user.id, next);
@@ -132,16 +157,16 @@ export function useAIPractice(): UseAIPracticeReturn {
       chat.loadMessages(conversation.messages as never);
     }
 
-    // Track active roleplay scenario from mode string
-    if (next.startsWith("roleplay:")) {
-      setActiveRoleplay(next.slice("roleplay:".length) as StartRoleplayArgs["scenario"]);
+    // Track the active mission id from the mode string.
+    if (next.startsWith("mission:")) {
+      setActiveMissionId(next.slice("mission:".length));
     }
   }, [chat, words, user?.id]);
 
   const resetSession = useCallback(() => {
     chat.resetChat();
     setConversationId(null);
-    setActiveRoleplay(null);
+    setActiveMissionId(null);
     words.setWordToSave(null);
   }, [chat, words]);
 
@@ -150,10 +175,10 @@ export function useAIPractice(): UseAIPracticeReturn {
     words.setWordToSave(null);
     setMode(conv.mode ?? "chat");
     setConversationId(conv.id ?? null);
-    if (conv.mode?.startsWith("roleplay:")) {
-      setActiveRoleplay(conv.mode.slice("roleplay:".length) as StartRoleplayArgs["scenario"]);
+    if (conv.mode?.startsWith("mission:")) {
+      setActiveMissionId(conv.mode.slice("mission:".length));
     } else {
-      setActiveRoleplay(null);
+      setActiveMissionId(null);
     }
     if (conv.messages.length > 0) {
       chat.loadMessages(conv.messages as never);
@@ -173,7 +198,7 @@ export function useAIPractice(): UseAIPracticeReturn {
     quotaExhausted: chat.quotaExhausted,
     savedWords: words.savedWords,
     wordToSave: words.wordToSave,
-    activeRoleplay,
+    activeMissionId,
     mode,
     conversationId,
     sendMessage: chat.sendMessage,
@@ -183,6 +208,7 @@ export function useAIPractice(): UseAIPracticeReturn {
     confirmSaveWord: words.confirmSaveWord,
     deleteSavedWord: words.deleteSavedWord,
     loadSavedWords: words.loadSavedWords,
+    setMissionIntentHandler,
     resetSession,
     finalizeSession: chat.finalizeSession,
     changeMode,

@@ -49,7 +49,7 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ i
   const lexiconCatColor = category.color;
 
   return (
-    <PageLayout>
+    <PageLayout archetype="catalog">
       <div
         className="lexicon-area"
         style={{ "--lexicon-cat": lexiconCatColor } as CSSProperties}

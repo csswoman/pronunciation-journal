@@ -11,11 +11,11 @@ export default function PronunciationProgress({ current, total, mastered, pct }:
   return (
     <div className="shrink-0 px-5 pt-3 pb-2">
       <div className="flex items-center justify-between mb-1.5">
-        <span className="text-[11px] font-medium tabular-nums text-fg-subtle">
+        <span className="text-xxs font-medium tabular-nums text-fg-subtle">
           Phrase {current} / {total}
         </span>
         {mastered > 0 && (
-          <span className="text-[11px] font-medium text-success">
+          <span className="text-xxs font-medium text-success">
             {mastered} mastered
           </span>
         )}

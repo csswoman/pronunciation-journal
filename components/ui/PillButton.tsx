@@ -42,8 +42,8 @@ const variantStyles: Record<PillVariant, string> = {
 }
 
 const sizeStyles: Record<PillSize, string> = {
-  sm: 'text-xs py-1.5 px-3 gap-1.5',
-  md: 'text-xs py-2 px-5 gap-1.5',
+  sm: 'text-caption py-1.5 px-3 gap-1.5',
+  md: 'text-caption py-2 px-5 gap-1.5',
 }
 
 export function PillButton({
@@ -68,14 +68,7 @@ export function PillButton({
     <button
       type={type}
       disabled={isDisabled}
-      className={cn(
-        'inline-flex items-center justify-center rounded-full cursor-pointer font-[inherit]',
-        'transition-colors duration-150 ease-out-quart focus-ring',
-        'disabled:opacity-40 disabled:cursor-not-allowed',
-        variantStyles[variant],
-        sizeStyles[size],
-        className,
-      )}
+      className={cn( 'inline-flex items-center justify-center rounded-full cursor-pointer font-[inherit]', 'transition-colors duration-150 ease-out-quart focus-ring', 'disabled:opacity-40 disabled:cursor-not-allowed', variantStyles[variant], sizeStyles[size], className, )}
       {...props}
     >
       {iconPosition === 'left' && iconNode}

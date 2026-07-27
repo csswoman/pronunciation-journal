@@ -45,10 +45,10 @@ export default function SaveWordModal({ word, context, onConfirm, onClose }: Sav
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="w-full max-w-md bg-surface-raised rounded-2xl shadow-xl p-6 space-y-4"
+        className="w-full max-w-md bg-surface-raised rounded-2xl shadow-xl layout-card-pad space-y-4"
       >
         <div className="flex items-center justify-between">
-          <H3 id={titleId} className="text-lg font-bold">
+          <H3 id={titleId} className="text-body-lg font-bold">
             Save Vocabulary
           </H3>
           <Button
@@ -67,7 +67,7 @@ export default function SaveWordModal({ word, context, onConfirm, onClose }: Sav
         </div>
 
         <div className="px-3 py-2 bg-primary-soft rounded-lg">
-          <p className="text-lg font-semibold text-primary">{word}</p>
+          <p className="text-body-lg font-semibold text-primary">{word}</p>
           {context !== word && (
             <p className="text-body-sm text-fg-subtle mt-0.5 italic">&ldquo;{context}&rdquo;</p>
           )}
@@ -75,7 +75,7 @@ export default function SaveWordModal({ word, context, onConfirm, onClose }: Sav
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-fg-muted mb-1">
+            <label className="block text-body-sm font-medium text-fg-muted mb-1">
               Meaning <span className="text-fg-subtle font-normal">(optional)</span>
             </label>
             <input
@@ -83,12 +83,12 @@ export default function SaveWordModal({ word, context, onConfirm, onClose }: Sav
               value={meaning}
               onChange={(e) => setMeaning(e.target.value)}
               placeholder="Add a definition or translation..."
-              className="w-full px-3 py-2 rounded-lg border border-border-subtle bg-surface-sunken text-fg placeholder:text-fg-placeholder text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full px-3 py-2 rounded-lg border border-border-subtle bg-surface-sunken text-fg placeholder:text-fg-placeholder text-body-sm focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-fg-muted mb-2">
+            <label className="block text-body-sm font-medium text-fg-muted mb-2">
               Difficulty
             </label>
             <div className="flex gap-2">
@@ -99,11 +99,7 @@ export default function SaveWordModal({ word, context, onConfirm, onClose }: Sav
                   onClick={() => setDifficulty(d.value)}
                   variant={difficulty === d.value ? "primary" : "secondary"}
                   size="sm"
-                  className={`flex-1 ${
-                    difficulty === d.value
-                      ? d.color + " ring-2 ring-offset-1 ring-current"
-                      : "text-fg-subtle"
-                  }`}
+                  className={`flex-1 ${ difficulty === d.value ? d.color + " ring-2 ring-offset-1 ring-current" : "text-fg-subtle" }`}
                 >
                   {d.label}
                 </Button>

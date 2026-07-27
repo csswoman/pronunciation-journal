@@ -17,7 +17,7 @@ export default async function JournalPage() {
   const now = new Date().toISOString()
 
   return (
-    <PageLayout className="mx-auto max-w-3xl">
+    <PageLayout archetype="session">
       <PageHeader
         kicker="HOY"
         title="Diario"

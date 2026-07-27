@@ -15,7 +15,7 @@ export default function ButtonShowcase() {
     <div className="space-y-12 p-8 bg-[var(--surface-base)]">
       {/* PRIMARY VARIANTS */}
       <section>
-        <h2 className="text-xl font-bold mb-4 text-[var(--fg-primary)]">Primary (CTA)</h2>
+        <h2 className="text-h4 font-bold mb-4 text-[var(--fg-primary)]">Primary (CTA)</h2>
         <div className="flex flex-wrap gap-4">
           <Button variant="primary" size="sm">
             Small
@@ -40,7 +40,7 @@ export default function ButtonShowcase() {
 
       {/* SECONDARY VARIANTS */}
       <section>
-        <h2 className="text-xl font-bold mb-4 text-[var(--fg-primary)]">Secondary</h2>
+        <h2 className="text-h4 font-bold mb-4 text-[var(--fg-primary)]">Secondary</h2>
         <div className="flex flex-wrap gap-4">
           <Button variant="secondary" size="sm">
             Small
@@ -59,7 +59,7 @@ export default function ButtonShowcase() {
 
       {/* SOFT VARIANTS */}
       <section>
-        <h2 className="text-xl font-bold mb-4 text-[var(--fg-primary)]">Soft</h2>
+        <h2 className="text-h4 font-bold mb-4 text-[var(--fg-primary)]">Soft</h2>
         <div className="flex flex-wrap gap-4">
           <Button variant="soft" size="sm">
             Small
@@ -75,7 +75,7 @@ export default function ButtonShowcase() {
 
       {/* GHOST VARIANTS */}
       <section>
-        <h2 className="text-xl font-bold mb-4 text-[var(--fg-primary)]">Ghost</h2>
+        <h2 className="text-h4 font-bold mb-4 text-[var(--fg-primary)]">Ghost</h2>
         <div className="flex flex-wrap gap-4">
           <Button variant="ghost" size="sm">
             Small
@@ -91,7 +91,7 @@ export default function ButtonShowcase() {
 
       {/* SEMANTIC COLORS */}
       <section>
-        <h2 className="text-xl font-bold mb-4 text-[var(--fg-primary)]">Semantic Colors</h2>
+        <h2 className="text-h4 font-bold mb-4 text-[var(--fg-primary)]">Semantic Colors</h2>
         <div className="flex flex-wrap gap-4">
           <Button variant="success" size="md" icon={<Check size={16} />}>
             Success / Approve
@@ -110,7 +110,7 @@ export default function ButtonShowcase() {
 
       {/* ICON POSITIONS */}
       <section>
-        <h2 className="text-xl font-bold mb-4 text-[var(--fg-primary)]">Icon Positions</h2>
+        <h2 className="text-h4 font-bold mb-4 text-[var(--fg-primary)]">Icon Positions</h2>
         <div className="flex flex-wrap gap-4">
           <Button variant="primary" size="md" icon={<Play size={16} />} iconPosition="left">
             Icon Left (default)
@@ -126,7 +126,7 @@ export default function ButtonShowcase() {
 
       {/* FULL WIDTH */}
       <section>
-        <h2 className="text-xl font-bold mb-4 text-[var(--fg-primary)]">Full Width</h2>
+        <h2 className="text-h4 font-bold mb-4 text-[var(--fg-primary)]">Full Width</h2>
         <div className="space-y-3 max-w-sm">
           <Button variant="primary" size="md" fullWidth>
             Full width primary

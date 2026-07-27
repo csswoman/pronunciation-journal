@@ -93,16 +93,16 @@ export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry
 
   return (
     <div className="space-y-4 py-2">
-      <p className="text-sm text-[var(--text-secondary)] text-center">{args.prompt}</p>
+      <p className="text-body-sm text-[var(--text-secondary)] text-center">{args.prompt}</p>
 
       <div className="flex flex-col items-center gap-2 px-4 py-5 rounded-xl bg-[var(--surface-raised)] border border-[var(--border-subtle)]">
         <TargetPhrase target={args.target} wordResults={scoring?.wordResults ?? null} />
         {args.ipa && (
-          <span className="text-sm font-mono text-[var(--text-tertiary)]">/{args.ipa}/</span>
+          <span className="text-body-sm font-mono text-[var(--text-tertiary)]">/{args.ipa}/</span>
         )}
         <button
           onClick={speakTarget}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border border-[var(--border-default)] text-[var(--text-secondary)] transition-opacity hover:opacity-70"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-caption font-medium border border-[var(--border-default)] text-[var(--text-secondary)] transition-opacity hover:opacity-70"
         >
           <Volume2 className="w-3.5 h-3.5" />
           Listen
@@ -118,7 +118,7 @@ export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry
       )}
 
       {analyzing && !hasResult && (
-        <p className="text-xs text-center text-[var(--text-tertiary)] animate-pulse">Analyzing…</p>
+        <p className="text-caption text-center text-[var(--text-tertiary)] animate-pulse">Analyzing…</p>
       )}
 
       {scoring && (
@@ -134,11 +134,11 @@ export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry
 
 function TargetPhrase({ target, wordResults }: { target: string; wordResults: WordResult[] | null }) {
   if (!wordResults) {
-    return <p className="text-xl font-semibold text-[var(--text-primary)] text-center">{target}</p>;
+    return <p className="text-h4 font-semibold text-[var(--text-primary)] text-center">{target}</p>;
   }
   const expectedWords = wordResults.filter(w => w.status !== "extra");
   return (
-    <p className="text-xl font-semibold text-center leading-relaxed flex flex-wrap justify-center gap-x-2 gap-y-1">
+    <p className="text-h4 font-semibold text-center leading-relaxed flex flex-wrap justify-center gap-x-2 gap-y-1">
       {expectedWords.map((w, i) => {
         const color =
           w.status === "correct" ? "var(--success)" :

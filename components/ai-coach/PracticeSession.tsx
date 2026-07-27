@@ -34,8 +34,8 @@ function exerciseLabel(name: string) {
 function SessionHeader({ title, current, total }: { title: string; current: number; total: number }) {
   return (
     <div className="relative flex items-center justify-center px-4 py-3 bg-[oklch(0.18_0.008_var(--hue))]">
-      <span className="text-sm font-semibold text-[oklch(0.96_0.008_var(--hue))]">{title}</span>
-      <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[11px] font-bold px-2.5 py-1 rounded-full bg-[var(--primary)] text-[var(--on-primary)] tabular-nums">
+      <span className="text-body-sm font-semibold text-[oklch(0.96_0.008_var(--hue))]">{title}</span>
+      <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xxs font-bold px-2.5 py-1 rounded-full bg-[var(--primary)] text-[var(--on-primary)] tabular-nums">
         EXERCISE {current} OF {total}
       </span>
     </div>
@@ -47,10 +47,10 @@ function SessionProgress({ current, total, dotCount, hasNextPending }: {
 }) {
   const pct = total > 1 ? Math.round((current / (total - 1)) * 100) : 0;
   return (
-    <div className="px-6 pt-4 pb-2 space-y-3">
+    <div className="px-[var(--layout-card-pad)] pt-4 pb-2 space-y-3">
       <div className="flex items-center justify-between">
-        <span className="text-[10px] font-semibold tracking-widest text-[var(--text-tertiary)] uppercase">Progress</span>
-        <span className="text-[10px] font-semibold tabular-nums text-[var(--text-tertiary)]">{pct}%</span>
+        <span className="font-kicker font-semibold text-[var(--text-tertiary)]">Progress</span>
+        <span className="text-xxs font-semibold tabular-nums text-[var(--text-tertiary)]">{pct}%</span>
       </div>
       <div className="h-1 rounded-full bg-[var(--border-subtle)] overflow-hidden">
         <div className="h-full rounded-full bg-[var(--primary)] transition-all duration-500" style={{ width: `${pct}%` }} />
@@ -173,7 +173,7 @@ export default function PracticeSession({ initialExercises, onAnswer }: Props) {
         />
         <div
           key={`${ex.id}-${slideKey}`}
-          className="px-6 py-4"
+          className="px-[var(--layout-card-pad)] py-4"
           style={{ animation: `practiceSlideIn${slideDir} 300ms ease-in-out` }}
         >
           <ToolWidget

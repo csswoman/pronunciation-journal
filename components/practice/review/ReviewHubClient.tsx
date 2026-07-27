@@ -48,37 +48,41 @@ export function ReviewHubClient({ summary }: Props) {
         onExit={exitSession}
       />
 
-      <div className="flex flex-col gap-4">
-        {showMomentum ? (
-          <div
-            className={cn(
-              'animate-message-in rounded-[var(--radius-lg)] border border-primary/20',
-              'bg-primary-soft px-4 py-3',
-            )}
-          >
-            <p className="m-0 font-body-sm text-fg">
-              <span className="font-semibold tabular-nums text-primary">{counts.reviewable}</span>
-              {' '}
-              {counts.reviewable === 1 ? 'pendiente listo' : 'pendientes listos'} para repasar hoy
-            </p>
+      <div className="page-dashboard">
+        {showMomentum || showAllClear ? (
+          <div className="page-dashboard__banner">
+            {showMomentum ? (
+              <div
+                className={cn(
+                  'animate-message-in rounded-[var(--radius-lg)] border border-primary/20',
+                  'bg-primary-soft px-4 py-3',
+                )}
+              >
+                <p className="m-0 font-body-sm text-fg">
+                  <span className="font-semibold tabular-nums text-primary">{counts.reviewable}</span>
+                  {' '}
+                  {counts.reviewable === 1 ? 'pendiente listo' : 'pendientes listos'} para repasar hoy
+                </p>
+              </div>
+            ) : null}
+            {showAllClear ? (
+              <div
+                className={cn(
+                  'animate-fadeIn flex flex-col items-center gap-2 rounded-[var(--radius-lg)]',
+                  'border border-border-subtle bg-surface-sunken px-4 py-5 text-center',
+                )}
+              >
+                <Sparkles size={20} className="text-primary" aria-hidden />
+                <p className="m-0 font-body-sm font-medium text-fg">Estás al día</p>
+                <p className="m-0 max-w-[36ch] font-caption text-fg-muted">
+                  Nada pendiente en el hub — sigue con tu plan diario o explora sonidos nuevos.
+                </p>
+              </div>
+            ) : null}
           </div>
         ) : null}
 
-        {showAllClear ? (
-          <div
-            className={cn(
-              'animate-fadeIn flex flex-col items-center gap-2 rounded-[var(--radius-lg)]',
-              'border border-border-subtle bg-surface-sunken px-4 py-5 text-center',
-            )}
-          >
-            <Sparkles size={20} className="text-primary" aria-hidden />
-            <p className="m-0 font-body-sm font-medium text-fg">Estás al día</p>
-            <p className="m-0 max-w-[36ch] font-caption text-fg-muted">
-              Nada pendiente en el hub — sigue con tu plan diario o explora sonidos nuevos.
-            </p>
-          </div>
-        ) : null}
-
+        <div className="page-dashboard__main">
         <ReviewSectionCard
           title="Oraciones fallidas"
           count={counts.failedSentences}
@@ -218,8 +222,6 @@ export function ReviewHubClient({ summary }: Props) {
           </ul>
         </ReviewSectionCard>
 
-        <SrsHistoryPanel groups={summary.srsHistory} />
-
         <ReviewHubActions
           phase={state.phase}
           canStart={canStart}
@@ -229,12 +231,6 @@ export function ReviewHubClient({ summary }: Props) {
           onRetry={startReview}
         />
 
-        {state.phase === 'idle' ? (
-          <div className="flex justify-center pt-2">
-            <SrsVault />
-          </div>
-        ) : null}
-
         {!summary.canStartReview && state.phase === 'idle' && !summary.nothingDue ? (
           <p className="font-body-sm text-center text-fg-muted animate-fadeIn">
             {counts.failedSentences > 0 && counts.reviewable === 0
@@ -242,6 +238,12 @@ export function ReviewHubClient({ summary }: Props) {
               : 'Nada listo para un repaso completo ahora. Practica en el plan diario para generar nuevos ítems.'}
           </p>
         ) : null}
+        </div>
+
+        <aside className="page-dashboard__rail" aria-label="Historial SRS">
+          <SrsHistoryPanel groups={summary.srsHistory} />
+          {state.phase === 'idle' ? <SrsVault /> : null}
+        </aside>
       </div>
     </>
   )

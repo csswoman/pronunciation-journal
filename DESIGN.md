@@ -30,55 +30,72 @@ colors:
   cta-bg: "var(--cta-bg)"
   cta-fg: "var(--cta-fg)"
 typography:
-  display:
+  # Mobile-first fixed rem. Desktop bump at 768px lives in app/styles/tokens.css.
+  # Prefer text-h* / font-* utilities — do not invent ad-hoc text-2xl / text-5xl.
+  h1:
     fontFamily: "DM Sans, system-ui, sans-serif"
-    fontSize: "clamp(1.875rem, 4vw, 2.625rem)"
+    fontSize: "1.5rem → 1.875rem (md+)"
     fontWeight: 700
     lineHeight: 1.2
     letterSpacing: "-0.02em"
-  headline:
+  h2:
     fontFamily: "DM Sans, system-ui, sans-serif"
-    fontSize: "clamp(1.5rem, 3vw, 2rem)"
+    fontSize: "1.375rem → 1.625rem (md+)"
     fontWeight: 700
+    lineHeight: 1.25
+    letterSpacing: "-0.015em"
+  h3:
+    fontFamily: "DM Sans, system-ui, sans-serif"
+    fontSize: "1.25rem → 1.375rem (md+)"
+    fontWeight: 600
     lineHeight: 1.3
     letterSpacing: "-0.01em"
-  title:
+  h4:
     fontFamily: "DM Sans, system-ui, sans-serif"
-    fontSize: "clamp(1.25rem, 2.5vw, 1.5rem)"
+    fontSize: "1.125rem → 1.25rem (md+)"
     fontWeight: 600
-    lineHeight: 1.4
-    letterSpacing: "-0.005em"
+    lineHeight: 1.35
   body:
     fontFamily: "DM Sans, system-ui, sans-serif"
     fontSize: "1rem"
     fontWeight: 400
-    lineHeight: 1.6
-  body-md:
-    fontFamily: "DM Sans, system-ui, sans-serif"
-    fontSize: "1rem"
-    fontWeight: 400
     lineHeight: 1.55
+  body-sm:
+    fontFamily: "DM Sans, system-ui, sans-serif"
+    fontSize: "0.875rem → 0.9375rem (md+)"
+    fontWeight: 400
+    lineHeight: 1.45
   label:
     fontFamily: "DM Sans, system-ui, sans-serif"
-    fontSize: "0.9375rem"
+    fontSize: "0.875rem → 0.9375rem (md+)"
     fontWeight: 600
     lineHeight: 1.4
   caption:
     fontFamily: "DM Sans, system-ui, sans-serif"
-    fontSize: "0.875rem"
+    fontSize: "0.8125rem → 0.875rem (md+)"
     fontWeight: 400
-    lineHeight: 1.45
+    lineHeight: 1.4
   kicker:
     fontFamily: "DM Mono, Fira Code, monospace"
-    fontSize: "0.8125rem"
+    fontSize: "0.75rem → 0.8125rem (md+)"
     fontWeight: 500
-    lineHeight: 1.4
-    letterSpacing: "0.08em"
+    lineHeight: 1.35
+    letterSpacing: "0.06em"
   mono:
     fontFamily: "DM Mono, Fira Code, monospace"
-    fontSize: "0.875rem"
+    fontSize: "0.8125rem → 0.875rem (md+)"
     fontWeight: 400
-    lineHeight: 1.6
+    lineHeight: 1.55
+  display-word:
+    fontFamily: "DM Sans, system-ui, sans-serif"
+    fontSize: "1.5rem → 1.75rem (md+)"
+    fontWeight: 700
+    lineHeight: 1.05
+  display-ipa:
+    fontFamily: "Andika, DM Sans, sans-serif"
+    fontSize: "1.75rem → 2.25rem (md+)"
+    fontWeight: 700
+    lineHeight: 1.05
 rounded:
   xs: "4px"
   sm: "8px"
@@ -204,25 +221,47 @@ The palette is neutral-first with a dynamic primary scale. Every surface carries
 
 **Character:** DM Sans carries headings, buttons, labels, body, and card titles. DM Mono carries kickers and code. Andika carries IPA glyphs and phonetic transcriptions so those symbols remain legible without turning into decoration. There is no decorative serif in the product.
 
-**UI floor:** 13px minimum (`--font-kicker`, `--font-tiny`). Captions are 14px; labels and compact body copy are 15–16px.
+**Source of truth:** `app/styles/tokens.css` (`--text-size-*`). Tailwind maps in `app/styles/theme.css` (`text-h1`…`text-ipa-hero`). Composite helpers: `.font-h1`…`.font-kicker` in `utilities.css`. Do not hardcode `text-2xl` / `text-5xl` / `clamp()` for UI chrome.
+
+**Strategy:** Mobile-first fixed `rem` scale (product UI). At `min-width: 768px` headings and secondary sizes step up one notch. No fluid type for app chrome.
+
+**UI floor:** 12px mobile / 13px desktop (`--text-size-kicker`, `--text-size-tiny`). Body stays 16px at both breakpoints.
 
 ### Hierarchy
-- **Display** (DM Sans, 700, `clamp(1.875rem, 4vw, 2.625rem)`, lh 1.2, ls -0.02em): Rare large moments (phoneme heroes). Same family as UI — presence via size/weight, not a serif switch.
-- **Headline** (DM Sans, 700, `clamp(1.5rem, 3vw, 2rem)`, lh 1.3, ls -0.01em): Page titles, section headings.
-- **Title** (DM Sans, 600, `clamp(1.25rem, 2.5vw, 1.5rem)`, lh 1.4, ls -0.005em): Card headings, widget titles, dialog headers.
-- **Body** (DM Sans, 400, 1rem, lh 1.6): All reading content. Max line length 65–75ch.
-- **Body Medium** (DM Sans, 400, 1rem/16px, lh 1.55): Secondary card copy, metadata rows, compact descriptions.
-- **Body Small** (DM Sans, 400, 0.9375rem, lh 1.5): Secondary descriptions, helper text, list items.
-- **Label** (DM Sans, 600, 0.9375rem/15px, lh 1.4): UI labels, button text, input labels.
-- **Caption** (DM Sans, 400, 0.875rem/14px, lh 1.5): Timestamps, metadata, footnotes.
-- **Kicker** (DM Mono, 500, 0.8125rem/13px, lh 1.4, ls 0.06em): Section overlines, card eyebrows, status metadata.
-- **Tiny** (DM Sans, 500, 0.8125rem/13px, lh 1.4): Legacy badges and status chips. Absolute UI minimum; prefer caption or kicker for new work.
+- **h1** (`text-h1`): 1.5 → 1.875rem — rare display, score heroes.
+- **h2** (`text-h2`): 1.375 → 1.625rem — page titles (`PageHeader` default).
+- **h3** (`text-h3`): 1.25 → 1.375rem — compact titles, section heads, exercise prompts.
+- **h4** (`text-h4`): 1.125 → 1.25rem — card titles, phrase prompts.
+- **Body** (`text-body-md` / `.font-body`): 1rem — reading content. Max 65–75ch.
+- **Body small** (`text-body-sm`): 0.875 → 0.9375rem — subtitles, helper text.
+- **Label** (`text-label`): 0.875 → 0.9375rem / 600 — UI labels, nav, buttons.
+- **Caption** (`text-caption`): 0.8125 → 0.875rem — metadata, footnotes.
+- **Kicker** (`.font-kicker`): 0.75 → 0.8125rem DM Mono — section overlines only.
+- **display-word / display-ipa / ipa-hero**: practice content heroes (word face, IPA). Not for page chrome.
 - **Mono** (DM Mono, 400–700, sizes as needed): Kickers and code snippets.
 - **Phoneme** (Andika, sizes as needed): IPA glyphs and phonetic transcriptions.
 
 **The IPA Parity Rule.** IPA symbols render with `font-ipa`/Andika, never in a decorative serif or system fallback. Use DM Mono only for code or an explicitly monospaced notation context.
 
 **The Scale Contract Rule.** Adjacent hierarchy steps must differ by at least 1.25× in font size or 100 in weight. Flat scales look like accidents.
+
+### Layout density
+
+**Source of truth:** `app/styles/tokens.css` (`--layout-*`). Utilities in `utilities.css`: `.page-shell`, `.page-header`, `.layout-stack*`, `.layout-card-pad*`.
+
+Mobile-first denser chrome; desktop opens at `768px` / `1024px`:
+
+| Role | Mobile | md+ | Use |
+|---|---|---|---|
+| `--layout-page-inline` | 16px | 24 → 40 (lg) | `PageLayout` gutters |
+| `--layout-page-block` | 16px | 24px | page top padding |
+| `--layout-page-block-end` | 40px | 48px | page bottom |
+| `--layout-header-pb` | 16px | 20px | `PageHeader` bottom |
+| `--layout-section-gap` | 16px | 20px | Home zones, major sections |
+| `--layout-stack-tight/stack/loose` | 8 / 12 / 16 | 8 / 12 / 20 | related → within-section |
+| `--layout-card-pad` | 16px | 20px | interactive cards |
+
+Prefer these over ad-hoc `py-6` / `gap-6` / `p-8` on authenticated shell surfaces. Tight grouping for related chrome; section gap only between distinct zones.
 
 ## 4. Elevation
 
@@ -324,8 +363,11 @@ AppShell → PageLayout → PageHeader → Content
 
 - Open canvas: no full-page card wrapper around the route.
 - Outer gutters and vertical rhythm from layout utilities / spacing tokens only.
-- Sessions may use a tighter inner max-width; outer shell unchanged.
-- Prefer `cardWrapper={false}` (or equivalent canonical mode). Do not invent per-page outer shells.
+- Every authenticated route declares a **page archetype** via `PageLayout archetype`:
+  - `dashboard` — full canvas (`--layout-canvas-max`, 80rem); optional `banner` + `rail` (17–22rem sticky). Home, Progress, Review.
+  - `catalog` — full canvas for grids/lists. Sound Lab, Decks, Mini Lessons, Léxico, Ruta, Pronunciación, IPA, Saved.
+  - `session` — centered column (`--layout-session-max`, 720px). Diario, Essential Words, exercises.
+- Do not invent per-page outer shells or ad-hoc `max-w-*` on the page root.
 
 **PageHeader**
 

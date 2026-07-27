@@ -107,20 +107,20 @@
   --color-word-extra:          var(--word-extra);
   --color-word-extra-bg:       var(--word-extra-bg);
 
-  /* ── Spacing — p-space-4, gap-space-6, m-space-2, w-space-8, etc. ──────── */
-  --spacing-space-1:  0.25rem;
-  --spacing-space-2:  0.5rem;
-  --spacing-space-3:  0.75rem;
-  --spacing-space-4:  1rem;
-  --spacing-space-5:  1.25rem;
-  --spacing-space-6:  1.5rem;
-  --spacing-space-8:  2rem;
-  --spacing-space-10: 2.5rem;
-  --spacing-space-12: 3rem;
-  --spacing-space-16: 4rem;
-  --spacing-space-20: 5rem;
+  /* ── Spacing — mirrors tokens.css (--space-*). Do not hardcode here. ───── */
+  --spacing-space-1:  var(--space-1);
+  --spacing-space-2:  var(--space-2);
+  --spacing-space-3:  var(--space-3);
+  --spacing-space-4:  var(--space-4);
+  --spacing-space-5:  var(--space-5);
+  --spacing-space-6:  var(--space-6);
+  --spacing-space-8:  var(--space-8);
+  --spacing-space-10: var(--space-10);
+  --spacing-space-12: var(--space-12);
+  --spacing-space-16: var(--space-16);
+  --spacing-space-20: var(--space-20);
 
-  /* ── Border radius — rounded-xs…rounded-full ───────────────────────────── */
+  /* ── Border radius — keep literals (same names as tokens.css; no var loop) */
   --radius-xs:   4px;
   --radius-sm:   8px;
   --radius-md:   12px;
@@ -130,59 +130,58 @@
   --radius-3xl:  32px;
   --radius-full: 9999px;
 
-  /* ── Typography — text-h1…text-tiny ────────────────────────────────────── */
-  --text-h1: 2.625rem;
-  --text-h1--line-height: 1.2;
-  --text-h1--font-weight: 700;
-  --text-h1--letter-spacing: -0.02em;
+  /* ── Typography — mirrors tokens.css size ramp (mobile + md bump) ─────── */
+  --text-h1: var(--text-size-h1);
+  --text-h1--line-height: var(--text-leading-h1);
+  --text-h1--font-weight: var(--text-weight-h1);
+  --text-h1--letter-spacing: var(--text-tracking-h1);
 
-  --text-h2: 2rem;
-  --text-h2--line-height: 1.3;
-  --text-h2--font-weight: 700;
-  --text-h2--letter-spacing: -0.01em;
+  --text-h2: var(--text-size-h2);
+  --text-h2--line-height: var(--text-leading-h2);
+  --text-h2--font-weight: var(--text-weight-h2);
+  --text-h2--letter-spacing: var(--text-tracking-h2);
 
-  --text-h3: 1.5rem;
-  --text-h3--line-height: 1.4;
-  --text-h3--font-weight: 600;
-  --text-h3--letter-spacing: -0.005em;
+  --text-h3: var(--text-size-h3);
+  --text-h3--line-height: var(--text-leading-h3);
+  --text-h3--font-weight: var(--text-weight-h3);
+  --text-h3--letter-spacing: var(--text-tracking-h3);
 
-  --text-h4: 1.25rem;
-  --text-h4--line-height: 1.35;
-  --text-h4--font-weight: 600;
+  --text-h4: var(--text-size-h4);
+  --text-h4--line-height: var(--text-leading-h4);
+  --text-h4--font-weight: var(--text-weight-h4);
 
-  --text-body-lg: 1.125rem;
-  --text-body-lg--line-height: 1.6;
+  --text-body-lg: var(--text-size-body-lg);
+  --text-body-lg--line-height: var(--text-leading-body-lg);
 
-  --text-body-md: 1rem;
-  --text-body-md--line-height: 1.55;
+  --text-body-md: var(--text-size-body);
+  --text-body-md--line-height: var(--text-leading-body);
 
-  --text-body-sm: 0.9375rem;
-  --text-body-sm--line-height: 1.5;
+  --text-body-sm: var(--text-size-body-sm);
+  --text-body-sm--line-height: var(--text-leading-body-sm);
 
-  --text-label: 0.9375rem;
-  --text-label--line-height: 1.4;
-  --text-label--font-weight: 600;
+  --text-label: var(--text-size-label);
+  --text-label--line-height: var(--text-leading-label);
+  --text-label--font-weight: var(--text-weight-label);
 
-  --text-caption: 0.875rem;
-  --text-caption--line-height: 1.5;
+  --text-caption: var(--text-size-caption);
+  --text-caption--line-height: var(--text-leading-caption);
 
-  --text-kicker: 0.8125rem;
-  --text-kicker--line-height: 1.4;
-  --text-kicker--font-weight: 500;
-  --text-kicker--letter-spacing: 0.06em;
+  --text-kicker: var(--text-size-kicker);
+  --text-kicker--line-height: var(--text-leading-kicker);
+  --text-kicker--font-weight: var(--text-weight-kicker);
+  --text-kicker--letter-spacing: var(--text-tracking-kicker);
 
-  /* Keep xxs/tiny for legacy CSS outside home; do not use in new home UI */
-  --text-xxs: 0.75rem;
-  --text-tiny: 0.8125rem;
+  --text-xxs: var(--text-size-xxs);
+  --text-tiny: var(--text-size-tiny);
 
-  --text-display-word: 2rem;
-  --text-display-word--line-height: 1;
+  --text-display-word: var(--text-size-display-word);
+  --text-display-word--line-height: var(--text-leading-display);
 
-  --text-display-ipa: 2.5rem;
-  --text-display-ipa--line-height: 1;
+  --text-display-ipa: var(--text-size-display-ipa);
+  --text-display-ipa--line-height: var(--text-leading-display);
 
-  --text-ipa-hero: 5.5rem;
-  --text-ipa-hero--line-height: 1;
+  --text-ipa-hero: var(--text-size-ipa-hero);
+  --text-ipa-hero--line-height: var(--text-leading-display);
 
   /* ── Shadows — shadow-sm…shadow-xl ─────────────────────────────────────── */
   --shadow-sm: 0 1px 2px   oklch(0 0 0 / 0.05);

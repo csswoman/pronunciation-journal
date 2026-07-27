@@ -32,13 +32,13 @@ export function InstallBanner() {
     <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary-soft border border-primary/20 whitespace-nowrap">
       <button
         onClick={handleInstall}
-        className="text-xs font-semibold text-primary hover:text-primary-hover transition-colors"
+        className="text-caption font-semibold text-primary hover:text-primary-hover transition-colors"
       >
         Install the app
       </button>
       <button
         onClick={() => setDismissed(true)}
-        className="text-fg-subtle hover:text-fg transition-colors text-sm leading-none"
+        className="text-fg-subtle hover:text-fg transition-colors text-body-sm leading-none"
         aria-label="Dismiss"
       >
         ×

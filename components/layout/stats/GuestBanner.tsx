@@ -12,7 +12,7 @@ export function GuestBanner() {
     <div className="space-y-4">
       {/* Hero empty state */}
       <div
-        className="rounded-3xl p-8 flex flex-col items-center text-center gap-4"
+        className="rounded-3xl layout-card-pad flex flex-col items-center text-center layout-stack-loose"
         style={{
           background: "linear-gradient(145deg, color-mix(in oklch, var(--primary) 10%, var(--card-bg)), var(--card-bg))",
           border: "1px solid color-mix(in oklch, var(--primary) 16%, var(--line-divider))",
@@ -28,7 +28,7 @@ export function GuestBanner() {
           <H2 className="text-h4">
             Track your English journey
           </H2>
-          <p className="mt-2 text-sm max-w-sm mx-auto text-fg-muted">
+          <p className="mt-2 text-body-sm max-w-sm mx-auto text-fg-muted">
             Sign in to see your streaks, XP, weekly charts, word recognition accuracy, and personalized insights.
           </p>
         </div>
@@ -51,15 +51,15 @@ export function GuestBanner() {
           >
             <div className="h-9 w-9 rounded-xl bg-border-subtle" />
             <div className="space-y-1">
-              <p className="text-tiny font-semibold uppercase tracking-[0.2em] text-fg-muted">{label}</p>
-              <p className="text-2xl font-black text-fg">—</p>
+              <p className="font-kicker text-fg-muted">{label}</p>
+              <p className="text-h3 font-black text-fg">—</p>
             </div>
           </div>
         ))}
       </div>
 
       <div
-        className="rounded-3xl p-8 flex flex-col items-center text-center gap-2 opacity-40 pointer-events-none select-none blur-[2px] bg-surface-raised border border-border-subtle h-[200px]"
+        className="rounded-3xl layout-card-pad layout-stack-tight flex flex-col items-center text-center opacity-40 pointer-events-none select-none blur-[2px] bg-surface-raised border border-border-subtle h-[200px]"
       >
         <p className="text-base font-bold text-fg">Weekly progress chart</p>
       </div>

@@ -131,7 +131,7 @@ export function TrainerControls({
                     <X size={14} strokeWidth={3} />
                   )}
                 </span>
-                <p className="text-sm font-medium text-fg">
+                <p className="text-body-sm font-medium text-fg">
                   {verdict === "correct"
                     ? "¡Correcto!"
                     : `Era «${correctWord}».`}
@@ -147,7 +147,7 @@ export function TrainerControls({
               </button>
             </>
           ) : (
-            <p className="text-sm text-fg-muted">
+            <p className="text-body-sm text-fg-muted">
               ¿Cuál escuchaste? Toca una tarjeta o pulsa{" "}
               <kbd className="ipa-chart__kbd">A</kbd> / <kbd className="ipa-chart__kbd">B</kbd>
             </p>

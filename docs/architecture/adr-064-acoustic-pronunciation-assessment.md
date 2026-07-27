@@ -1,6 +1,6 @@
 # ADR 064: Acoustic pronunciation assessment — validate before shipping
 
-- **Status**: Steps 1-3 executed; Step 4 executed as vendor research only (no live benchmark); Steps 5-6 deferred.
+- **Status**: Steps 1-3 executed; Step 4 vendor research done, then re-run as a real formant-based benchmark against speechocean762 — **NO-SHIP for all 4 vowel contrasts** (see Decision); Steps 5-6 not applicable.
 - **Plan**: `plans/064-validate-acoustic-pronunciation-assessment.md`
 - **Depends on**: plan 063 (`docs/architecture/exercises.md` row "3 — Future acoustic analysis")
 
@@ -196,27 +196,42 @@ Not designed — contingent on a positive Step 5 decision, which did not happen.
 
 ## Decision
 
-**Ship parcial, direction only** (interim): keep `stt_intelligibility` as the sole production
-signal, now honestly labeled everywhere in the UI. The provider-neutral evaluator interface and
-contract tests from Step 3 are merged as groundwork, but are not wired into any production path
-and score nothing today. No acoustic dimension (segmental/stress/rhythm/intonation) is shipped or
-promised. No vendor is engaged. No production score changes as a result of this ADR.
+**Interim decision (2026-07-21): "Ship parcial, direction only."** Keep `stt_intelligibility` as
+the sole production signal, now honestly labeled everywhere in the UI. The provider-neutral
+evaluator interface and contract tests from Step 3 are merged as groundwork, but are not wired
+into any production path and score nothing today. No vendor is engaged.
 
-**To reach a final ship/partial/no-ship decision** (Steps 4-6), a follow-up plan must supply:
-1. A consented, licensed, de-identified, diverse audio corpus meeting the Step 2 rubric's
-   diversity requirements, labeled per the inter-rater protocol.
-2. Explicit owner approval to evaluate (not yet commit to) one vendor API against that corpus,
-   including a data processing agreement covering audio sent to that vendor.
-3. A budget/scope for building or hosting a forced-alignment pipeline (Candidate 1) if that path
-   is preferred over a vendor.
+**Final decision (2026-07-25), superseding the above for vowels: NO-SHIP.** Step 4 was re-run as
+a real, open-source, formant-based benchmark (Candidate 1 — LPC/root-finding formant extraction,
+no vendor) against the speechocean762 corpus (14,374 non-abstained trials across `iː`, `ɪ`, `æ`,
+`ʌ`). Overall agreement with labeled targets was **0.309**, far below the pre-registered 0.85
+ship threshold; every contrast individually failed the gate (`iː` closest at 0.619, `ɪ` worst at
+0.116). Full results, corpus/segmentation caveats, and confusion matrix are in
+`lib/pronunciation/acoustic/benchmark/decision.md`.
 
-Until that follow-up plan executes Step 4 for real, this app must not claim acoustic pronunciation
-assessment anywhere in product copy.
+Per the STOP condition in `plans/067-build-pronunciation-diagnostic.md` and the no-ship-is-a-valid-
+outcome framing in the (informally numbered) vowel-benchmark work: **no change to production.**
+`lib/pronunciation/acoustic-evaluator.ts` and the formant/vowel-space modules under
+`lib/pronunciation/acoustic/` remain merged as groundwork — zero production imports
+(`app/`/`components/`) reference them. Vowel scoring in the plan-067 diagnostic stays
+`not_measured` for every target. No production score or vendor was enabled by this work.
+
+This closes plan 064's Step 4-6 gate for the vowel-contrast case via the negative branch (no
+positive result to design a rollout for). Re-opening acoustic assessment for vowels — or
+extending the benchmark to stress/rhythm/intonation, which were never run — requires a new plan:
+either fixing the segmentation approach (the corpus has no per-word timestamps; this run used a
+proportional phoneme-count window estimate, not forced alignment, so evaluator accuracy and
+window-placement error are conflated in these numbers) or sourcing a corpus with true alignment.
+
+Until such a follow-up plan ships a passing benchmark, this app must not claim acoustic
+pronunciation assessment anywhere in product copy.
 
 ## Links
 
 - Plan: `plans/064-validate-acoustic-pronunciation-assessment.md`
 - Prior deferral: `docs/architecture/exercises.md` (row "3 — Future acoustic analysis")
 - Honest-signal contract: `lib/pronunciation/spoken-attempt.ts`
-- New evaluator contract: `lib/pronunciation/acoustic-evaluator.ts`
+- Evaluator contract: `lib/pronunciation/acoustic-evaluator.ts`
 - Contract tests: `lib/pronunciation/__tests__/acoustic-evaluator.test.ts`
+- **Final vowel-benchmark verdict and full results**: `lib/pronunciation/acoustic/benchmark/decision.md`
+- STOP condition honored: `plans/067-build-pronunciation-diagnostic.md`

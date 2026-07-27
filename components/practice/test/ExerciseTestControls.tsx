@@ -41,7 +41,7 @@ export function ExerciseTestControls({
               type="button"
               onClick={() => onContextChange(value)}
               className={cn(
-                'rounded-[var(--radius-full)] px-2.5 py-1 text-xs font-medium transition-colors',
+                'rounded-[var(--radius-full)] px-2.5 py-1 text-caption font-medium transition-colors',
                 context === value
                   ? 'bg-primary text-white'
                   : 'bg-surface-sunken text-fg-secondary hover:text-fg',
@@ -64,7 +64,7 @@ export function ExerciseTestControls({
               type="button"
               onClick={() => onCompareContextChange(value)}
               className={cn(
-                'rounded-[var(--radius-full)] px-2.5 py-1 text-xs font-medium transition-colors',
+                'rounded-[var(--radius-full)] px-2.5 py-1 text-caption font-medium transition-colors',
                 compareContext === value
                   ? 'bg-primary text-white'
                   : 'bg-surface-sunken text-fg-secondary hover:text-fg',

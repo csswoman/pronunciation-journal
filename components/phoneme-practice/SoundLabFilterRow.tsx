@@ -47,10 +47,7 @@ export function SoundLabFilterRow({
                 key={chip.id}
                 type="button"
                 onClick={() => onChipChange(chip.id)}
-                className={cn(
-                  "sound-lab__chip sound-lab__chip--compact",
-                  isOn && "sound-lab__chip--on",
-                )}
+                className={cn( "sound-lab__chip sound-lab__chip--compact", isOn && "sound-lab__chip--on", )}
                 aria-pressed={isOn}
               >
                 <span className="sm:hidden">{chip.shortLabel}</span>

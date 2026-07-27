@@ -25,13 +25,13 @@ export function PhonemeLessonDetail({ extra, articulationOnly = false }: Props) 
     <div className="flex flex-col gap-4">
       {extra.articulationEs.length > 0 && (
         <div className="flex flex-col gap-2">
-          <p className="text-sm font-semibold text-fg-secondary">
+          <p className="text-body-sm font-semibold text-fg-secondary">
             Cómo se produce
           </p>
           <ol className="flex flex-col gap-2">
             {extra.articulationEs.map((step, i) => (
-              <li key={step} className="flex gap-2.5 text-sm text-fg-secondary">
-                <span className="mt-0.5 flex h-4.5 w-4.5 shrink-0 items-center justify-center rounded-full bg-surface-base text-[10px] font-bold text-fg-subtle">
+              <li key={step} className="flex gap-2.5 text-body-sm text-fg-secondary">
+                <span className="mt-0.5 flex h-4.5 w-4.5 shrink-0 items-center justify-center rounded-full bg-surface-base text-xxs font-bold text-fg-subtle">
                   {i + 1}
                 </span>
                 {step}
@@ -43,14 +43,14 @@ export function PhonemeLessonDetail({ extra, articulationOnly = false }: Props) 
 
       {showPairs && (
         <div className="flex flex-col gap-2">
-          <p className="text-sm font-semibold text-fg-secondary">
+          <p className="text-body-sm font-semibold text-fg-secondary">
             Pares mínimos
           </p>
           <div className="flex flex-wrap gap-1.5">
             {extra.minimalPairs.map(({ wordA, wordB }) => (
               <span key={`${wordA}-${wordB}`} className="inline-flex items-center gap-1">
                 <PairWordButton speaking={speaking === wordA} word={wordA} onSpeak={speak} />
-                <span className="text-xs text-fg-subtle" aria-hidden>/</span>
+                <span className="text-caption text-fg-subtle" aria-hidden>/</span>
                 <PairWordButton speaking={speaking === wordB} word={wordB} onSpeak={speak} />
               </span>
             ))}
@@ -75,7 +75,7 @@ function PairWordButton({
       type="button"
       onClick={() => onSpeak(word)}
       className={cn(
-        'inline-flex items-center gap-1 rounded-[var(--radius-sm)] bg-surface-base px-2.5 py-1 text-xs font-medium text-fg-secondary transition-colors hover:text-fg',
+        'inline-flex items-center gap-1 rounded-[var(--radius-sm)] bg-surface-base px-2.5 py-1 text-caption font-medium text-fg-secondary transition-colors hover:text-fg',
         speaking && 'bg-primary/10 text-primary',
       )}
       aria-label={`Pronunciar ${word}`}

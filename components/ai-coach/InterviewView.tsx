@@ -105,13 +105,13 @@ export default function InterviewView() {
             <Briefcase size={22} strokeWidth={2} className="text-white" />
           </div>
           <div className="space-y-1.5 max-w-[280px]">
-            <h2 className="text-xl font-semibold tracking-tight text-[var(--text-primary)] m-0 leading-snug">
+            <h2 className="text-h4 font-semibold tracking-tight text-[var(--text-primary)] m-0 leading-snug">
               Mock interview
             </h2>
-            <p className="text-sm text-[var(--text-secondary)] m-0 leading-relaxed">
+            <p className="text-body-sm text-[var(--text-secondary)] m-0 leading-relaxed">
               Pick a scenario and level — I&apos;ll play the interviewer.
             </p>
-            <p className="text-xs text-[var(--text-tertiary)] m-0 pt-0.5">
+            <p className="text-caption text-[var(--text-tertiary)] m-0 pt-0.5">
               {modeHint}
             </p>
           </div>
@@ -130,13 +130,7 @@ export default function InterviewView() {
                 type="button"
                 onClick={() => !disabled && setMode(id)}
                 disabled={disabled}
-                className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-sm font-semibold transition-[background,color] duration-150 ${
-                  active
-                    ? "bg-[var(--surface-raised)] text-[var(--text-primary)] shadow-sm"
-                    : disabled
-                      ? "text-[var(--text-disabled)] cursor-not-allowed"
-                      : "text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]"
-                }`}
+                className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-body-sm font-semibold transition-[background,color] duration-150 ${ active ? "bg-[var(--surface-raised)] text-[var(--text-primary)] shadow-sm" : disabled ? "text-[var(--text-disabled)] cursor-not-allowed" : "text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]" }`}
               >
                 <Icon size={15} strokeWidth={2} />
                 {label}
@@ -163,7 +157,7 @@ export default function InterviewView() {
       {/* Fixed footer */}
       <footer className="shrink-0 px-5 py-4 border-t border-border-subtle bg-surface-base">
         {phase === "error" && errorMsg && (
-          <p className="text-sm text-center mb-2 text-error">{errorMsg}</p>
+          <p className="text-body-sm text-center mb-2 text-error">{errorMsg}</p>
         )}
         <button
           type="button"

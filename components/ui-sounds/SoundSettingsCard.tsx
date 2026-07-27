@@ -23,8 +23,8 @@ function SoundEnableToggle() {
   return (
     <div className="flex items-center justify-between gap-4">
       <div>
-        <p className="text-sm font-medium text-fg">Sonidos de la app</p>
-        <p className="text-xs text-fg-muted">Feedback de aciertos, errores y toques.</p>
+        <p className="text-body-sm font-medium text-fg">Sonidos de la app</p>
+        <p className="text-caption text-fg-muted">Feedback de aciertos, errores y toques.</p>
       </div>
       <button
         type="button"
@@ -58,10 +58,10 @@ function SoundVolumeSlider() {
   return (
     <div className={cn("space-y-2", !soundEnabled && "opacity-50")}>
       <div className="flex items-center justify-between">
-        <label htmlFor="sound-volume" className="text-sm font-medium text-fg">
+        <label htmlFor="sound-volume" className="text-body-sm font-medium text-fg">
           Volumen
         </label>
-        <span className="text-xs font-semibold tabular-nums text-fg-muted">{percent}%</span>
+        <span className="text-caption font-semibold tabular-nums text-fg-muted">{percent}%</span>
       </div>
       <input
         id="sound-volume"
@@ -93,7 +93,7 @@ export default function SoundSettingsCard() {
             d="M15.536 8.464a5 5 0 010 7.072M19.07 4.93a10 10 0 010 14.14M6.343 9H4a1 1 0 00-1 1v4a1 1 0 001 1h2.343l4.243 4.243A1 1 0 0012 18.586V5.414a1 1 0 00-1.414-.707L6.343 9z"
           />
         </svg>
-        <span className="text-xs font-semibold uppercase tracking-widest text-fg-subtle">Sonido</span>
+        <span className="text-caption font-semibold uppercase tracking-widest text-fg-subtle">Sonido</span>
       </div>
       <SoundEnableToggle />
       <div className="border-t border-[var(--border)] pt-4">

@@ -21,23 +21,25 @@ export function HeroCompactHeader({
 
   return (
     <div
-      className={["flex flex-col px-3 sm:px-6 lg:px-10", className].join(" ")}
-      style={{ paddingTop: "var(--space-6)", paddingBottom: "var(--space-5)" }}
+      className={[
+        "page-header flex flex-col px-[var(--layout-page-inline)]",
+        className,
+      ].join(" ")}
     >
-      <div className="flex items-start justify-between gap-[var(--space-6)]">
-        <div className="flex flex-col gap-[var(--space-1)]">
+      <div className="flex items-start justify-between gap-[var(--layout-stack-loose)]">
+        <div className="layout-stack-tight">
           {badge && (
-            <span className="text-[var(--font-tiny)] text-[var(--text-tertiary)] uppercase tracking-[0.1em]">
+            <span className="font-kicker text-fg-subtle">
               {badge}
             </span>
           )}
-          <h1 className="m-0 text-[var(--font-h2)] text-[var(--text-primary)] leading-[1.25]">
+          <h1 className="m-0 text-h2 text-balance text-fg">
             {title}
             {subtitle && (
               <>
                 {", "}
-                <span className="text-[var(--primary)]">{accent}</span>
-                {tail && <span className="text-[var(--text-primary)]"> {tail}</span>}
+                <span className="text-primary">{accent}</span>
+                {tail && <span className="text-fg"> {tail}</span>}
               </>
             )}
           </h1>
@@ -50,34 +52,37 @@ export function HeroCompactHeader({
         )}
 
         {!hasProgress && (primaryCta || secondaryCta) && (
-          <div className="flex gap-3 shrink-0">
+          <div className="flex shrink-0 gap-[var(--layout-stack)]">
             <CtaButtons primaryCta={primaryCta} secondaryCta={secondaryCta} rounded="full" />
           </div>
         )}
       </div>
 
       {hasProgress && (
-        <div className="flex items-center bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-lg)] px-[var(--space-5)] py-[var(--space-4)] gap-[var(--space-4)] overflow-hidden">
+        <div className="flex items-center gap-[var(--layout-stack-loose)] overflow-hidden rounded-[var(--radius-lg)] border border-border-subtle bg-surface-raised px-[var(--layout-card-pad)] py-[var(--layout-stack-loose)]">
           {phonemeLabel && (
-            <div className="shrink-0 flex items-center justify-center bg-[var(--primary-soft)] border border-[var(--border-subtle)] rounded-[var(--radius-md)] px-[var(--space-3)] py-[var(--space-2)] min-w-16">
-              <span className="text-[var(--font-h4)] font-light text-[var(--primary)]">{phonemeLabel}</span>
+            <div className="flex min-w-16 shrink-0 items-center justify-center rounded-[var(--radius-md)] border border-border-subtle bg-primary-soft px-[var(--layout-stack)] py-[var(--layout-stack-tight)]">
+              <span className="text-h4 font-light text-primary">{phonemeLabel}</span>
             </div>
           )}
 
-          <div className="flex-1 min-w-0 flex flex-col gap-[var(--space-1)]">
-            <span className="text-[var(--font-tiny)] text-[var(--text-tertiary)] uppercase tracking-[0.1em]">
+          <div className="layout-stack-tight min-w-0 flex-1">
+            <span className="font-kicker text-fg-subtle">
               Continuing
             </span>
-            <div className="flex items-center justify-between gap-[var(--space-3)]">
-              <span className="truncate text-[var(--font-body-sm)] font-medium text-[var(--text-primary)]">
+            <div className="flex items-center justify-between gap-[var(--layout-stack)]">
+              <span className="truncate font-body-sm font-medium text-fg">
                 {lessonTitle}
               </span>
-              <span className="shrink-0 tabular-nums text-[var(--font-body-sm)] font-semibold text-[var(--primary)]">
+              <span className="shrink-0 tabular-nums font-body-sm font-semibold text-primary">
                 {safeProgress}%
               </span>
             </div>
-            <div className="mt-[var(--space-1)] h-1 rounded-full bg-[var(--surface-sunken)] overflow-hidden">
-              <div className="h-full rounded-full bg-[var(--primary)] transition-all duration-500" style={{ width: `${safeProgress}%` }} />
+            <div className="mt-[var(--layout-stack-tight)] h-1 overflow-hidden rounded-full bg-surface-sunken">
+              <div
+                className="h-full rounded-full bg-primary transition-all duration-500"
+                style={{ width: `${safeProgress}%` }}
+              />
             </div>
           </div>
         </div>

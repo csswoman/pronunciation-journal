@@ -44,7 +44,7 @@ export function WordCarousel({ words }: WordCarouselProps) {
   if (!current) return null
 
   return (
-    <div className="flex flex-col items-center gap-4 py-12 px-8 w-full max-w-xs mx-auto">
+    <div className="flex flex-col items-center gap-4 py-[var(--layout-section-gap)] px-[var(--layout-page-inline)] w-full max-w-xs mx-auto">
       {/* Word + IPA slot */}
       <div
         className={cn(
@@ -55,11 +55,11 @@ export function WordCarousel({ words }: WordCarouselProps) {
           visible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-1.5',
         )}
       >
-        <span className="font-mono text-xl font-medium text-primary tracking-wide">
+        <span className="font-mono text-h4 font-medium text-primary tracking-wide">
           {current.text}
         </span>
         {current.ipa && (
-          <span className="font-mono text-sm text-fg-muted">
+          <span className="font-mono text-body-sm text-fg-muted">
             {current.ipa}
           </span>
         )}
@@ -76,7 +76,7 @@ export function WordCarousel({ words }: WordCarouselProps) {
       </div>
 
       {/* Label */}
-      <span className="text-xs font-medium uppercase tracking-widest text-fg-subtle">
+      <span className="font-kicker text-fg-subtle">
         Preparando tu sesión
       </span>
     </div>

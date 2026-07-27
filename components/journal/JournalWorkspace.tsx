@@ -29,7 +29,7 @@ export function JournalWorkspace({ entry }: JournalWorkspaceProps) {
   const showEmptyHints = journal.status === 'draft' && !journal.canSubmit && !journal.correcting
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col layout-section-gap">
       <section aria-labelledby="journal-prompt" className="flex flex-col gap-2">
         <p className="font-body-sm text-fg-muted">Pregunta de hoy</p>
         <h2

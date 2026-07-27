@@ -98,7 +98,7 @@ export function WordsTab({
                   }
                 }
               }}
-              className="w-full pl-8 pr-3 py-2 rounded-full text-sm text-fg placeholder-[var(--text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[color-mix(in_oklch,var(--primary)_20%,transparent)] border border-border-subtle bg-surface-sunken"
+              className="w-full pl-8 pr-3 py-2 rounded-full text-body-sm text-fg placeholder-[var(--text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[color-mix(in_oklch,var(--primary)_20%,transparent)] border border-border-subtle bg-surface-sunken"
             />
           </div>
 
@@ -119,14 +119,14 @@ export function WordsTab({
                   key={f}
                   onClick={() => setFilterType(f)}
                   className={[
-                    "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] font-medium border transition-colors",
+                    "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-caption font-medium border transition-colors",
                     isActive
                       ? "bg-primary border-primary text-on-primary"
                       : "bg-transparent border-border-default text-fg-secondary hover:border-border-strong hover:text-fg",
                   ].join(" ")}
                 >
                   {label}
-                  <span className={["text-[12px] font-semibold tabular-nums", isActive ? "opacity-85" : ""].join(" ")}>
+                  <span className={["text-tiny font-semibold tabular-nums", isActive ? "opacity-85" : ""].join(" ")}>
                     {count}
                   </span>
                 </button>
@@ -135,7 +135,7 @@ export function WordsTab({
             <button
               onClick={() => setFilterType("favorites")}
               className={[
-                "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] font-medium border transition-colors",
+                "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-caption font-medium border transition-colors",
                 filterType === "favorites"
                   ? "bg-primary border-primary text-on-primary"
                   : "bg-transparent border-border-default text-fg-secondary hover:border-border-strong hover:text-fg",
@@ -148,7 +148,7 @@ export function WordsTab({
 
           <button
             onClick={onToggleSelectMode}
-            className="text-[13px] text-fg-muted shrink-0 px-1 hover:text-fg transition-colors"
+            className="text-caption text-fg-muted shrink-0 px-1 hover:text-fg transition-colors"
           >
             {selectMode ? "Cancel" : "Select"}
           </button>
@@ -158,7 +158,7 @@ export function WordsTab({
       {(error || actionError) && (
         <Card className="!p-3 border-[var(--error)]/40 bg-[color-mix(in_oklch,var(--error)_8%,var(--card-bg))]">
           <div className="flex items-center justify-between gap-2">
-            <p className="text-sm text-[var(--error)]">{error ?? actionError}</p>
+            <p className="text-body-sm text-[var(--error)]">{error ?? actionError}</p>
             {actionError && onClearActionError && (
               <button
                 type="button"
@@ -184,8 +184,8 @@ export function WordsTab({
       ) : words.length === 0 ? (
         <WordsEmptyState onAdd={() => onOpenAddWord()} />
       ) : filteredWords.length === 0 ? (
-        <Card className="p-8 text-center">
-          <p className="text-sm text-fg-muted">No words match that search. Try clearing the filter.</p>
+        <Card className="layout-card-pad text-center">
+          <p className="text-body-sm text-fg-muted">No words match that search. Try clearing the filter.</p>
         </Card>
       ) : (
         <>
@@ -205,7 +205,7 @@ export function WordsTab({
           </div>
           {totalPages > 1 && (
             <div className="flex items-center justify-between mt-6">
-              <p className="text-sm text-fg-muted">
+              <p className="text-body-sm text-fg-muted">
                 Page <span className="font-semibold">{currentPage}</span> of{" "}
                 <span className="font-semibold">{totalPages}</span>
               </p>

@@ -15,7 +15,7 @@ export default function ExerciseFeedback({ result, onNext, onRetry }: ExerciseFe
 
   return (
     <div
-      className="rounded-xl border px-4 py-3 space-y-1.5 text-sm"
+      className="rounded-xl border px-4 py-3 space-y-1.5 text-body-sm"
       style={{ backgroundColor: bgColor, borderColor: accentColor }}
     >
       <p className="font-semibold leading-snug" style={{ color: accentColor }}>
@@ -39,7 +39,7 @@ export default function ExerciseFeedback({ result, onNext, onRetry }: ExerciseFe
       {!correct && onRetry && (
         <button
           onClick={onRetry}
-          className="mt-1 text-xs px-3 py-1.5 rounded-full font-semibold border border-[var(--border-default)] bg-[var(--surface-raised)] text-[var(--text-secondary)] transition-opacity hover:opacity-70"
+          className="mt-1 text-caption px-3 py-1.5 rounded-full font-semibold border border-[var(--border-default)] bg-[var(--surface-raised)] text-[var(--text-secondary)] transition-opacity hover:opacity-70"
         >
           Try again
         </button>
@@ -47,7 +47,7 @@ export default function ExerciseFeedback({ result, onNext, onRetry }: ExerciseFe
       {correct && onNext && (
         <button
           onClick={onNext}
-          className="mt-1 text-xs px-3 py-1.5 rounded-full font-semibold bg-[var(--primary)] text-[var(--on-primary)] transition-opacity hover:opacity-90"
+          className="mt-1 text-caption px-3 py-1.5 rounded-full font-semibold bg-[var(--primary)] text-[var(--on-primary)] transition-opacity hover:opacity-90"
         >
           Next →
         </button>

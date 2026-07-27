@@ -21,11 +21,7 @@ export function DailyThreadStrip({ hints, embedded = false }: DailyThreadStripPr
 
   return (
     <div
-      className={cn(
-        embedded
-          ? 'border-t border-border-subtle pt-2'
-          : 'rounded-lg border border-border-subtle bg-surface-sunken/60 px-3 py-2.5',
-      )}
+      className={cn( embedded ? 'border-t border-border-subtle pt-2' : 'rounded-lg border border-border-subtle bg-surface-sunken/60 px-3 py-2.5', )}
     >
       <p className="font-kicker mb-1.5 text-fg-muted">Reaparecen hoy</p>
       <ul className="flex flex-wrap gap-1.5" aria-label="Palabras de pasos anteriores">

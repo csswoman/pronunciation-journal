@@ -31,7 +31,7 @@ function SoundLabPanel({ phonemes }: { phonemes: SkillProfileData['weakestPhonem
     return (
       <ProgressCard>
         <ProgressCardHeader icon={<Volume2 size={16} />} eyebrow="Sound Lab" title="Lowest mastery" />
-        <p className="text-xs text-fg-muted">
+        <p className="text-caption text-fg-muted">
           Practice phoneme exercises to see your weakest sounds.
         </p>
       </ProgressCard>
@@ -84,7 +84,7 @@ function LexiconPanel({
     return (
       <ProgressCard>
         <ProgressCardHeader icon={<BookOpen size={16} />} eyebrow="Dictionary" title="Vocabulary" />
-        <p className="text-xs text-fg-muted">No words in your bank yet.</p>
+        <p className="text-caption text-fg-muted">No words in your bank yet.</p>
       </ProgressCard>
     )
   }
@@ -96,7 +96,7 @@ function LexiconPanel({
       <ProgressCardHeader icon={<BookOpen size={16} />} eyebrow="Dictionary" title="Vocabulary" />
       {total > 0 && (
         <>
-          <div className="mt-1 flex gap-6">
+          <div className="mt-1 flex gap-[var(--layout-stack-loose)]">
             <ProgressBigNumber value={`${retention}%`} sub={`retention · ${mastered}/${total}`} />
             <ProgressBigNumber value={toReview} sub="to review" tone={toReview > 0 ? 'warning' : 'primary'} />
           </div>
@@ -113,14 +113,14 @@ function LexiconPanel({
             return <ProgressStatBar key={key} label={label} value={pct} barColor={color} />
           })}
           {signalSummary.length > 0 && (
-            <p className="mt-3 text-xs text-fg-muted">
+            <p className="mt-3 text-caption text-fg-muted">
               {signalSummary.map(({ label, count }) => `${count} ${label}`).join(' · ')}
             </p>
           )}
         </>
       )}
       {(core1000Practiced > 0 || lessonsCompleted > 0) && (
-        <div className="mt-3 flex gap-6 border-t border-[var(--line-divider)] pt-3">
+        <div className="mt-3 flex gap-[var(--layout-stack-loose)] border-t border-[var(--line-divider)] pt-3">
           {core1000Practiced > 0 && (
             <ProgressBigNumber value={core1000Practiced} sub="core words" />
           )}
@@ -143,7 +143,7 @@ function CoachInsightsPanel({ coach }: { coach: CoachInsights }) {
     return (
       <ProgressCard>
         <ProgressCardHeader icon={<BrainCircuit size={16} />} eyebrow="AI Coach" title="Grammar insights" />
-        <p className="text-xs text-fg-muted">
+        <p className="text-caption text-fg-muted">
           Chat with the AI Coach to build your grammar profile.
         </p>
       </ProgressCard>
@@ -165,7 +165,7 @@ function CoachInsightsPanel({ coach }: { coach: CoachInsights }) {
       )}
       {coach.weakTopics.length > 0 && (
         <div className="flex flex-col gap-1.5">
-          <p className="text-[11px] font-medium uppercase tracking-wide text-fg-muted">Weak topics</p>
+          <p className="font-kicker font-medium text-fg-muted">Weak topics</p>
           {coach.weakTopics.map((t) => (
             <ProgressStatBar
               key={t.topic}
@@ -197,7 +197,7 @@ export function SkillProfileCard({ data, coach }: Props) {
     return (
       <ProgressCard>
         <p className="text-base font-medium text-fg">Skill profile</p>
-        <p className="text-sm text-fg-muted">
+        <p className="text-body-sm text-fg-muted">
           Add words and practice phonemes to build your profile.
         </p>
       </ProgressCard>

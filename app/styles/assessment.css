@@ -38,7 +38,7 @@
   gap: var(--space-2);
   margin-bottom: var(--space-5);
   color: var(--text-tertiary);
-  font-size: 0.875rem;
+  font-size: var(--text-size-body-sm);
   font-weight: 600;
   text-decoration: none;
 }
@@ -67,7 +67,7 @@
   margin: 0 0 var(--space-2);
   color: var(--text-tertiary);
   font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.8125rem;
+  font-size: var(--text-size-caption);
   font-weight: 500;
   letter-spacing: 0.08em;
   line-height: 1.4;
@@ -78,7 +78,7 @@
   margin: 0;
   color: var(--text-primary);
   font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: 1.75rem;
+  font-size: var(--text-size-display-ipa);
   font-weight: 600;
   letter-spacing: -0.02em;
   line-height: 1.2;
@@ -90,7 +90,7 @@
   max-width: 60ch;
   margin: var(--space-3) 0 0;
   color: var(--text-secondary);
-  font-size: 0.9375rem;
+  font-size: var(--text-size-label);
   line-height: 1.55;
 }
 
@@ -108,14 +108,14 @@
 .assessment-progress-copy strong {
   display: block;
   color: var(--text-primary);
-  font-size: 1.25rem;
+  font-size: var(--text-size-h3);
   font-variant-numeric: tabular-nums;
   line-height: 1;
 }
 
 .assessment-progress-copy span {
   color: var(--text-tertiary);
-  font-size: 0.75rem;
+  font-size: var(--text-size-tiny);
 }
 
 .assessment-progress {
@@ -187,7 +187,7 @@
 .assessment-coverage-kicker {
   margin: 0 0 var(--space-4);
   color: var(--text-primary);
-  font-size: 0.875rem;
+  font-size: var(--text-size-body-sm);
   font-weight: 700;
 }
 
@@ -211,7 +211,7 @@
   place-items: center;
   border: 1px solid var(--border-default);
   border-radius: 50%;
-  font-size: 0.75rem;
+  font-size: var(--text-size-tiny);
 }
 
 .assessment-coverage-item strong,
@@ -221,12 +221,12 @@
 
 .assessment-coverage-item strong {
   color: var(--text-secondary);
-  font-size: 0.84rem;
+  font-size: var(--text-size-caption);
 }
 
 .assessment-coverage-item small {
   margin-top: 0.15rem;
-  font-size: 0.75rem;
+  font-size: var(--text-size-tiny);
 }
 
 .assessment-coverage-item--complete > span {
@@ -254,7 +254,7 @@
   padding-top: var(--space-4);
   border-top: 1px solid var(--border-subtle);
   color: var(--text-tertiary);
-  font-size: 0.78rem;
+  font-size: var(--text-size-tiny);
   line-height: 1.5;
 }
 
@@ -312,11 +312,11 @@
 .assessment-level-option strong {
   color: var(--primary);
   font-family: var(--font-mono), monospace;
-  font-size: 1.125rem;
+  font-size: var(--text-size-h4);
 }
 
 .assessment-level-option span {
-  font-size: 0.875rem;
+  font-size: var(--text-size-body-sm);
 }
 
 .assessment-level-option input {
@@ -349,7 +349,7 @@
   align-items: start;
   gap: var(--space-3);
   color: var(--text-primary);
-  font-size: 1rem;
+  font-size: var(--text-size-body);
   font-weight: 650;
   line-height: 1.45;
 }
@@ -358,7 +358,7 @@
   padding-top: 0.18rem;
   color: var(--text-tertiary);
   font-family: var(--font-mono), monospace;
-  font-size: 0.72rem;
+  font-size: var(--text-size-xxs);
   font-weight: 500;
 }
 
@@ -366,7 +366,7 @@
   max-width: 65ch;
   margin: var(--space-1) 0 0 2.75rem;
   color: var(--text-secondary);
-  font-size: 0.875rem;
+  font-size: var(--text-size-body-sm);
   line-height: 1.55;
 }
 
@@ -388,7 +388,7 @@
   border-radius: var(--radius-md);
   color: var(--text-secondary);
   cursor: pointer;
-  font-size: 0.86rem;
+  font-size: var(--text-size-caption);
   font-weight: 600;
   transition:
     background-color 150ms ease,
@@ -461,14 +461,14 @@
   padding-top: 0.18rem;
   color: var(--text-tertiary);
   font-family: var(--font-mono), monospace;
-  font-size: 0.72rem;
+  font-size: var(--text-size-xxs);
   font-weight: 500;
 }
 
 .assessment-question h2 {
   margin: 0;
   color: var(--text-primary);
-  font-size: 1rem;
+  font-size: var(--text-size-body);
   font-weight: 650;
   line-height: 1.45;
 }
@@ -479,7 +479,7 @@
   color: var(--text-secondary);
   background: var(--surface-sunken);
   border-radius: var(--radius-sm);
-  font-size: 0.875rem;
+  font-size: var(--text-size-body-sm);
   font-style: italic;
   line-height: 1.6;
 }
@@ -565,7 +565,7 @@
   margin: 0;
   flex: 1 1 12rem;
   color: var(--text-tertiary);
-  font-size: 0.875rem;
+  font-size: var(--text-size-body-sm);
 }
 
 .assessment-footer-actions {
@@ -679,13 +679,13 @@
 
 .assessment-result h1 {
   max-width: 18ch;
-  font-size: 2rem;
+  font-size: var(--text-size-display-ipa);
   line-height: 1.1;
 }
 
 .assessment-result > p {
   margin-top: var(--space-3);
-  font-size: 1rem;
+  font-size: var(--text-size-body);
 }
 
 .assessment-result-meta {
@@ -694,14 +694,14 @@
   gap: var(--space-2) var(--space-4);
   margin-top: var(--space-4);
   color: var(--text-secondary);
-  font-size: 0.84rem;
+  font-size: var(--text-size-caption);
   font-weight: 600;
 }
 
 .assessment-result-meta small {
   flex-basis: 100%;
   color: var(--text-tertiary);
-  font-size: 0.78rem;
+  font-size: var(--text-size-tiny);
   font-weight: 400;
 }
 
@@ -741,7 +741,7 @@
 .assessment-result-sections h2 {
   margin: 0 0 var(--space-3);
   color: var(--text-primary);
-  font-size: 0.8125rem;
+  font-size: var(--text-size-caption);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -751,7 +751,7 @@
   margin: 0;
   padding-left: var(--space-5);
   color: var(--text-secondary);
-  font-size: 0.9375rem;
+  font-size: var(--text-size-label);
   line-height: 1.6;
   text-transform: capitalize;
 }
@@ -772,7 +772,7 @@
   background: var(--error-soft);
   border: 1px solid color-mix(in oklch, var(--error) 35%, var(--border-subtle));
   border-radius: var(--radius-md);
-  font-size: 0.82rem;
+  font-size: var(--text-size-caption);
 }
 
 .assessment-save-error button {
@@ -816,7 +816,7 @@
   }
 
   .assessment-header h1 {
-    font-size: 1.5rem;
+    font-size: var(--text-size-h1);
   }
 
   .assessment-progress-status {
@@ -891,7 +891,7 @@
 
   .assessment-result h1 {
     max-width: none;
-    font-size: 1.75rem;
+    font-size: var(--text-size-display-ipa);
   }
 
   .assessment-result-sections section {

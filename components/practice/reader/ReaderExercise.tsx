@@ -57,10 +57,10 @@ export function ReaderExercise({ passage, online, onComplete }: ReaderExercisePr
   }
 
   return (
-    <div className={cn('flex flex-col gap-6', openToken === null ? '' : 'pb-64')}>
+    <div className={cn('flex flex-col layout-stack-loose', openToken === null ? '' : 'pb-64')}>
       <div className="flex flex-col gap-3">
-        <p className="text-sm text-fg-muted">Toca cualquier palabra para ver su significado.</p>
-        <div className="text-lg leading-relaxed text-fg">
+        <p className="text-body-sm text-fg-muted">Toca cualquier palabra para ver su significado.</p>
+        <div className="text-body-lg leading-relaxed text-fg">
           {tokens.map((token, index) => {
             if (token.kind !== 'word') return <span key={index}>{token.value}</span>
 
@@ -101,23 +101,14 @@ export function ReaderExercise({ passage, online, onComplete }: ReaderExercisePr
               type="button"
               onClick={() => void choose(i)}
               disabled={answered || saving}
-              className={cn(
-                'rounded-md border border-border-default px-4 py-3 text-left',
-                answered &&
-                  i === question.correctIndex &&
-                  'border-success bg-success-soft',
-                answered &&
-                  i === selectedIndex &&
-                  i !== question.correctIndex &&
-                  'border-error bg-error-soft',
-              )}
+              className={cn( 'rounded-md border border-border-default px-4 py-3 text-left', answered && i === question.correctIndex && 'border-success bg-success-soft', answered && i === selectedIndex && i !== question.correctIndex && 'border-error bg-error-soft', )}
             >
               {opt}
             </button>
           ))}
         </div>
         {answered && (
-          <p role="status" className={cn('text-sm font-medium', selectedIndex === question.correctIndex ? 'text-success' : 'text-error')}>
+          <p role="status" className={cn('text-body-sm font-medium', selectedIndex === question.correctIndex ? 'text-success' : 'text-error')}>
             {saving
               ? 'Saving progress…'
               : selectedIndex === question.correctIndex
@@ -126,7 +117,7 @@ export function ReaderExercise({ passage, online, onComplete }: ReaderExercisePr
           </p>
         )}
         {saveError && (
-          <p role="alert" className="text-sm text-warning">
+          <p role="alert" className="text-body-sm text-warning">
             Your answer is shown here, but progress could not be saved. Try again when the connection recovers.
           </p>
         )}

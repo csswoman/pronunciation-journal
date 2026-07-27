@@ -39,9 +39,9 @@ export default function Sidebar({ className = "" }: SidebarProps) {
           {!collapsed && (
             <div className="flex items-center gap-2.5">
               <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 bg-primary">
-                <span className="font-bold text-xs text-on-primary">EJ</span>
+                <span className="font-bold text-caption text-on-primary">EJ</span>
               </div>
-              <span className="font-heading font-semibold text-sm text-fg">
+              <span className="font-heading font-semibold text-body-sm text-fg">
                 English Journal
               </span>
             </div>

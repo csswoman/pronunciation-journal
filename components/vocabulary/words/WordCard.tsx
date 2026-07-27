@@ -78,19 +78,19 @@ export function WordCard({ word, onRetry, onDelete, selected, onSelect, isFavori
           </div>
 
           {word.translation && (
-            <p className="mt-0.5 text-[15px] leading-[1.3] font-medium text-fg-secondary">
+            <p className="mt-0.5 text-body-sm leading-[1.3] font-medium text-fg-secondary">
               {word.translation}
             </p>
           )}
 
           {word.example && (
-            <p className="mt-2 text-[14px] leading-[1.4] italic text-fg-muted line-clamp-1">
+            <p className="mt-2 text-body-sm leading-[1.4] italic text-fg-muted line-clamp-1">
               “{word.example}”
             </p>
           )}
 
           {word.meaning && (
-            <p className="mt-1 text-[13px] leading-[1.4] text-fg-subtle line-clamp-2">
+            <p className="mt-1 text-caption leading-[1.4] text-fg-subtle line-clamp-2">
               {word.meaning}
             </p>
           )}
@@ -101,11 +101,7 @@ export function WordCard({ word, onRetry, onDelete, selected, onSelect, isFavori
             <button
               onClick={e => { e.stopPropagation(); onToggleFavorite(); }}
               aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
-              className={`p-1.5 rounded-full transition-colors ${
-                isFavorite
-                  ? "text-error hover:text-error/70"
-                  : "text-fg-muted hover:text-fg"
-              }`}
+              className={`p-1.5 rounded-full transition-colors ${ isFavorite ? "text-error hover:text-error/70" : "text-fg-muted hover:text-fg" }`}
             >
               <Heart size={14} fill={isFavorite ? "currentColor" : "none"} />
             </button>

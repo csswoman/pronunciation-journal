@@ -19,6 +19,7 @@ import type { AIConversation } from "@/lib/types";
 import { getPageContext } from "./page-context";
 import { usePanelResize } from "./usePanelResize";
 import { AICoachHeader, ConversationHistoryPanel } from "./AICoachPanelParts";
+import { MissionWorkspace } from "./missions/MissionWorkspace";
 
 export const PANEL_WIDTH = 380;
 
@@ -33,7 +34,7 @@ export default function AICoachPanel() {
   const ctx = getPageContext(pathname);
   const { onDragStart } = usePanelResize({ panelWidth, setPanelWidth });
 
-  const { messages, isStreaming, error, quotaExhausted, wordToSave, conversationId, sendMessage, answerToolCall, openSaveWordModal, closeSaveWordModal, confirmSaveWord, resetSession, finalizeSession, loadConversation, removeConversation } = useAIPractice();
+  const { messages, isStreaming, error, quotaExhausted, wordToSave, conversationId, activeMissionId, sendMessage, answerToolCall, openSaveWordModal, closeSaveWordModal, confirmSaveWord, resetSession, finalizeSession, loadConversation, removeConversation, changeMode, setMissionIntentHandler } = useAIPractice();
 
   const [activeTab, setActiveTab] = useState<TabId>("chat");
   const [inputPrefill, setInputPrefill] = useState<string | undefined>(undefined);
@@ -62,6 +63,10 @@ export default function AICoachPanel() {
   }, [isOpen, launch, consumeLaunch]);
 
   useEffect(() => {
+    if (activeMissionId) setActiveTab("missions");
+  }, [activeMissionId]);
+
+  useEffect(() => {
     if (!isOpen) return;
     if (!user?.id) { setConversations([]); return; }
     getRecentConversations(user.id, 30).then(setConversations);
@@ -87,9 +92,7 @@ export default function AICoachPanel() {
 
   return <>
     <div
-      className={`fixed z-50 flex flex-col bg-surface-raised shadow-lg
-        max-md:inset-0 max-md:border-0
-        md:top-0 md:right-0 md:bottom-0 md:border-l md:border-border-subtle`}
+      className={`fixed z-50 flex flex-col bg-surface-raised shadow-lg max-md:inset-0 max-md:border-0 md:top-0 md:right-0 md:bottom-0 md:border-l md:border-border-subtle`}
       style={panelStyle}
       aria-hidden={!isOpen}
     >
@@ -104,7 +107,7 @@ export default function AICoachPanel() {
           {/* Chat tab — kept mounted to preserve PracticeSession state */}
           <div className={`flex-1 flex flex-col min-h-0 overflow-hidden${activeTab !== "chat" ? " hidden" : ""}`}>
             {!hasMessages
-              ? <AICoachHome activeTab="chat" onSendMessage={sendMessage} isStreaming={isStreaming} prefill={inputPrefill} onPrefillConsumed={() => setInputPrefill(undefined)} />
+              ? <AICoachHome activeTab="chat" onSendMessage={sendMessage} onSelectMission={(missionId) => { void changeMode(`mission:${missionId}`); }} isStreaming={isStreaming} prefill={inputPrefill} onPrefillConsumed={() => setInputPrefill(undefined)} />
               : <>
                   <div className="flex-1 overflow-y-auto" aria-live="polite" aria-label="Chat messages">
                     {error && <ErrorBanner message={error} />}
@@ -114,7 +117,7 @@ export default function AICoachPanel() {
                     {quotaExhausted && <QuotaExhaustedCard messages={messages} onNewSession={resetSession} />}
                     {!quotaExhausted && messages.length >= QUOTA_WARN_THRESHOLD && (
                       <div className="flex justify-center mb-2">
-                        <span className="text-[11px] text-[var(--warning)] bg-[var(--warning-soft)] rounded-full px-2.5 py-1">
+                        <span className="text-xxs text-[var(--warning)] bg-[var(--warning-soft)] rounded-full px-2.5 py-1">
                           You're approaching your session limit
                         </span>
                       </div>
@@ -132,9 +135,20 @@ export default function AICoachPanel() {
             }
           </div>
 
-          {/* Interview tab — kept mounted */}
-          <div className={`flex flex-1 flex-col min-h-0 overflow-hidden${activeTab !== "interview" ? " hidden" : ""}`}>
-            <AICoachHome activeTab="interview" onSendMessage={sendMessage} isStreaming={isStreaming} prefill={inputPrefill} onPrefillConsumed={() => setInputPrefill(undefined)} />
+          {/* Missions tab — kept mounted */}
+          <div className={`flex flex-1 flex-col min-h-0 overflow-hidden${activeTab !== "missions" ? " hidden" : ""}`}>
+            {activeMissionId
+              ? <MissionWorkspace
+                  missionId={activeMissionId}
+                  setMissionIntentHandler={setMissionIntentHandler}
+                  messages={messages}
+                  isStreaming={isStreaming}
+                  isDisabled={quotaExhausted}
+                  onSendMessage={sendMessage}
+                  onSaveWord={openSaveWordModal}
+                  onToolAnswer={answerToolCall}
+                />
+              : <AICoachHome activeTab="missions" onSendMessage={sendMessage} onSelectMission={(missionId) => { void changeMode(`mission:${missionId}`); }} isStreaming={isStreaming} prefill={inputPrefill} onPrefillConsumed={() => setInputPrefill(undefined)} />}
           </div>
 
           {/* Pronunciation tab — kept mounted */}

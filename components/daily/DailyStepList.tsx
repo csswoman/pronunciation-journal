@@ -126,12 +126,12 @@ export default function DailyStepList({
             'home-card-lift focus-ring group flex w-full flex-col gap-2 rounded-[var(--radius-lg)] border bg-surface-raised px-4 py-3.5 text-left',
             visual === 'entry' &&
               (demoteEntryHighlight
-                ? 'border-border-subtle hover:border-[var(--accent-border)]'
+                ? 'border-border-subtle hover:border-border-default'
                 : 'border-primary bg-primary-soft hover:border-primary'),
             visual === 'current' &&
               'border-primary bg-primary-soft hover:border-primary',
             visual === 'pending' &&
-              'border-border-subtle hover:border-[var(--accent-border)]',
+              'border-border-subtle hover:border-border-default',
             visual === 'done' && 'border-border-subtle opacity-80',
           )
 
@@ -146,10 +146,7 @@ export default function DailyStepList({
                   />
                 </div>
                 <p
-                  className={cn(
-                    'mt-0.5 truncate font-body-sm',
-                    done ? 'text-fg-muted/70' : 'text-fg-muted',
-                  )}
+                  className={cn( 'mt-0.5 truncate font-body-sm', done ? 'text-fg-muted/70' : 'text-fg-muted', )}
                 >
                   {[localizeDailyStepSubtitle(step.subtitle), stepMeta(step)]
                     .filter(Boolean)
@@ -162,7 +159,12 @@ export default function DailyStepList({
                   Hecho
                 </span>
               ) : visual === 'entry' ? (
-                <span className="shrink-0 font-body-sm font-medium text-primary">
+                <span
+                  className={cn(
+                    'shrink-0 font-body-sm font-medium',
+                    demoteEntryHighlight ? 'text-fg-muted' : 'text-primary',
+                  )}
+                >
                   Empieza aquí
                 </span>
               ) : visual === 'current' ? (

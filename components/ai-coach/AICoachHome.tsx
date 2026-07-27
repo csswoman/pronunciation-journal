@@ -1,14 +1,16 @@
 "use client";
 
 import type { TabId } from "@/components/ai-coach/ChatTabs";
+import { listMissions } from "@/lib/ai-practice/missions/registry";
 import ChatEmptyState from "./ChatEmptyState";
-import InterviewView from "./InterviewView";
+import MissionLibrary from "./missions/MissionLibrary";
 
 // ── Props ─────────────────────────────────────────────────────────────────────
 
 interface AICoachHomeProps {
   activeTab: TabId;
   onSendMessage: (text: string, options?: { hidden?: boolean }) => void;
+  onSelectMission: (missionId: string) => void;
   isStreaming: boolean;
   prefill?: string;
   onPrefillConsumed?: () => void;
@@ -19,11 +21,14 @@ interface AICoachHomeProps {
 export default function AICoachHome({
   activeTab,
   onSendMessage,
+  onSelectMission,
 }: AICoachHomeProps) {
-  if (activeTab === "interview") {
+  if (activeTab === "missions") {
     return (
       <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
-        <InterviewView />
+        <div className="flex-1 overflow-y-auto p-3">
+          <MissionLibrary missions={listMissions()} onSelect={onSelectMission} />
+        </div>
       </div>
     );
   }

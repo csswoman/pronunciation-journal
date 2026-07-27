@@ -1,6 +1,12 @@
 // Tool registry — one tool per exercise format, no generics.
 // Validation is done manually (no Zod dependency).
 
+import {
+  getMission,
+  LEGACY_ROLEPLAY_SCENARIOS,
+} from '@/lib/ai-practice/missions/registry'
+import type { LegacyRoleplayScenario } from '@/lib/ai-practice/missions/types'
+
 // Shared pedagogical fields (see lib/exercise/design.ts).
 // Optional so legacy tool calls keep working; when present they flow into
 // the evaluator for richer feedback.
@@ -51,9 +57,11 @@ export type SaveWordArgs = {
   ipa?: string;
 };
 
-export type StartRoleplayArgs = {
-  scenario: "interview" | "cafe" | "airport" | "doctor" | "store" | "code_review" | "standup" | "tech_design";
-};
+export type StartMissionArgs = { missionId: string };
+export type MissionIntentObservedArgs = { intentId: string };
+
+/** @deprecated Kept only to parse old persisted tool calls. */
+export type StartRoleplayArgs = { scenario: LegacyRoleplayScenario };
 
 export type ToolArgs =
   | { name: "render_multiple_choice"; args: MultipleChoiceArgs }
@@ -61,11 +69,13 @@ export type ToolArgs =
   | { name: "render_speaking"; args: SpeakingArgs }
   | { name: "render_word_card"; args: WordCardArgs }
   | { name: "save_word"; args: SaveWordArgs }
+  | { name: "start_mission"; args: StartMissionArgs }
+  | { name: "mission_intent_observed"; args: MissionIntentObservedArgs }
   | { name: "start_roleplay"; args: StartRoleplayArgs };
 
 export type ToolName = ToolArgs["name"];
 export type ExerciseToolName = "render_multiple_choice" | "render_fill_blank" | "render_speaking" | "render_word_card";
-export type ActionToolName = "save_word" | "start_roleplay";
+export type ActionToolName = "save_word" | "start_mission" | "mission_intent_observed";
 
 export const EXERCISE_TOOL_NAMES: ExerciseToolName[] = [
   "render_multiple_choice",
@@ -74,7 +84,7 @@ export const EXERCISE_TOOL_NAMES: ExerciseToolName[] = [
   "render_word_card",
 ];
 
-export const ACTION_TOOL_NAMES: ActionToolName[] = ["save_word", "start_roleplay"];
+export const ACTION_TOOL_NAMES: ActionToolName[] = ["save_word", "start_mission", "mission_intent_observed"];
 
 // Gemini-compatible tool declarations
 export const TOOL_DECLARATIONS = [
@@ -184,19 +194,34 @@ export const TOOL_DECLARATIONS = [
     },
   },
   {
-    name: "start_roleplay",
-    description: "Switch to roleplay mode with a specific scenario.",
+    name: "start_mission",
+    description: "Start one authored oral mission from the mission registry.",
     parameters: {
       type: "object",
       properties: {
-        scenario: { type: "string", enum: ["interview", "cafe", "airport", "doctor", "store", "code_review", "standup", "tech_design"] },
+        missionId: { type: "string" },
       },
-      required: ["scenario"],
+      required: ["missionId"],
+    },
+  },
+  {
+    name: "mission_intent_observed",
+    description: "Report one communicative intent the learner clearly expressed in the current oral mission.",
+    parameters: {
+      type: "object",
+      properties: {
+        intentId: { type: "string" },
+      },
+      required: ["intentId"],
     },
   },
 ];
 
-const VALID_TOOL_NAMES = new Set<string>([...EXERCISE_TOOL_NAMES, ...ACTION_TOOL_NAMES]);
+const VALID_TOOL_NAMES = new Set<string>([
+  ...EXERCISE_TOOL_NAMES,
+  ...ACTION_TOOL_NAMES,
+  "start_roleplay", // compatibility for old persisted conversations
+]);
 
 export function isValidToolName(name: string): name is ToolName {
   return VALID_TOOL_NAMES.has(name);
@@ -313,8 +338,15 @@ export function parseToolArgs(name: ToolName, raw: unknown): ToolArgs["args"] {
         meaning: assertString(obj.meaning, "meaning"),
         ipa: typeof obj.ipa === "string" ? obj.ipa : undefined,
       } satisfies SaveWordArgs;
+    case "start_mission": {
+      const missionId = assertString(obj.missionId, "missionId");
+      if (!getMission(missionId)) throw new Error(`missionId must refer to a known oral mission`);
+      return { missionId } satisfies StartMissionArgs;
+    }
+    case "mission_intent_observed":
+      return { intentId: assertString(obj.intentId, "intentId") } satisfies MissionIntentObservedArgs;
     case "start_roleplay": {
-      const valid = ["interview", "cafe", "airport", "doctor", "store", "code_review", "standup", "tech_design"] as const;
+      const valid = LEGACY_ROLEPLAY_SCENARIOS;
       if (!valid.includes(obj.scenario as typeof valid[number]))
         throw new Error(`scenario must be one of: ${valid.join(", ")}`);
       return { scenario: obj.scenario as StartRoleplayArgs["scenario"] } satisfies StartRoleplayArgs;

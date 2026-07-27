@@ -32,7 +32,7 @@ const SCORING: { id: Difficulty; label: string; badge: string }[] = [
 ];
 
 const sectionLabel =
-  "text-xs font-bold uppercase tracking-[0.14em] text-[var(--text-tertiary)] text-center";
+  "font-kicker text-center text-fg-subtle";
 
 // ── Props ─────────────────────────────────────────────────────────────────────
 
@@ -56,7 +56,7 @@ export default function InterviewConfig({
   onDifficultyChange,
 }: InterviewConfigProps) {
   return (
-    <div className="flex flex-col gap-5 px-5 pt-4 pb-6">
+    <div className="flex flex-col gap-5 px-[var(--layout-card-pad)] pt-4 pb-[var(--layout-section-gap)]">
 
       <div className="flex flex-col gap-4">
         <div>
@@ -67,11 +67,7 @@ export default function InterviewConfig({
                 key={id}
                 type="button"
                 onClick={() => onLevelChange(id)}
-                className={`text-sm font-semibold px-3.5 py-1.5 rounded-full border cursor-pointer transition-[background,color,border-color] duration-150 ${
-                  level === id
-                    ? "bg-[var(--primary)] text-[var(--on-primary)] border-transparent"
-                    : "bg-[var(--surface-raised)] text-[var(--text-secondary)] border-[var(--border-subtle)] hover:border-[var(--accent-border)]"
-                }`}
+                className={`text-body-sm font-semibold px-3.5 py-1.5 rounded-full border cursor-pointer transition-[background,color,border-color] duration-150 ${ level === id ? "bg-[var(--primary)] text-[var(--on-primary)] border-transparent" : "bg-[var(--surface-raised)] text-[var(--text-secondary)] border-[var(--border-subtle)] hover:border-[var(--accent-border)]" }`}
               >
                 {label}
               </button>
@@ -89,21 +85,13 @@ export default function InterviewConfig({
                   key={id}
                   type="button"
                   onClick={() => onDifficultyChange(id)}
-                  className={`flex items-center justify-between gap-2 rounded-2xl border px-3 py-2.5 text-left cursor-pointer transition-[border-color,background] duration-150 ${
-                    active
-                      ? "bg-[var(--accent-dim)] border-[var(--accent-border)]"
-                      : "bg-[var(--surface-raised)] border-[var(--border-subtle)] hover:border-[var(--accent-border)]"
-                  }`}
+                  className={`flex items-center justify-between gap-2 rounded-2xl border px-3 py-2.5 text-left cursor-pointer transition-[border-color,background] duration-150 ${ active ? "bg-[var(--accent-dim)] border-[var(--accent-border)]" : "bg-[var(--surface-raised)] border-[var(--border-subtle)] hover:border-[var(--accent-border)]" }`}
                 >
                   <span className="text-base font-semibold text-[var(--text-primary)] leading-none">
                     {label}
                   </span>
                   <span
-                    className={`text-xs font-bold px-2 py-0.5 rounded-full shrink-0 ${
-                      id === "guided"
-                        ? "bg-[color-mix(in_oklch,var(--success)_15%,transparent)] text-[var(--success)]"
-                        : "bg-[color-mix(in_oklch,var(--warning)_15%,transparent)] text-[var(--warning)]"
-                    }`}
+                    className={`text-caption font-bold px-2 py-0.5 rounded-full shrink-0 ${ id === "guided" ? "bg-[color-mix(in_oklch,var(--success)_15%,transparent)] text-[var(--success)]" : "bg-[color-mix(in_oklch,var(--warning)_15%,transparent)] text-[var(--warning)]" }`}
                   >
                     {badge}
                   </span>
@@ -126,11 +114,7 @@ export default function InterviewConfig({
                 role="option"
                 aria-selected={selected}
                 onClick={() => onScenarioChange(id)}
-                className={`flex items-center gap-3 w-full min-h-0 py-3 px-3 rounded-2xl border text-left cursor-pointer transition-[border-color,background] duration-150 ${
-                  selected
-                    ? "bg-[var(--accent-dim)] border-[var(--accent-border)]"
-                    : "bg-[var(--surface-raised)] border-[var(--border-subtle)] hover:border-[var(--accent-border)]"
-                }`}
+                className={`flex items-center gap-3 w-full min-h-0 py-3 px-3 rounded-2xl border text-left cursor-pointer transition-[border-color,background] duration-150 ${ selected ? "bg-[var(--accent-dim)] border-[var(--accent-border)]" : "bg-[var(--surface-raised)] border-[var(--border-subtle)] hover:border-[var(--accent-border)]" }`}
               >
                 <span
                   className="w-10 h-10 flex-shrink-0 rounded-md flex items-center justify-center"
@@ -147,10 +131,10 @@ export default function InterviewConfig({
                   />
                 </span>
                 <span className="flex-1 min-w-0">
-                  <span className="block text-[15px] font-semibold text-[var(--text-primary)] leading-snug">
+                  <span className="block text-body-sm font-semibold text-[var(--text-primary)] leading-snug">
                     {label}
                   </span>
-                  <span className="block text-sm text-[var(--text-tertiary)] mt-0.5 leading-snug">
+                  <span className="block text-body-sm text-[var(--text-tertiary)] mt-0.5 leading-snug">
                     {sub}
                   </span>
                 </span>

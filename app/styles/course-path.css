@@ -12,7 +12,7 @@
 .course-path__wrap {
   max-width: 72rem;
   margin-inline: auto;
-  padding: var(--space-8) var(--space-6) var(--space-16);
+  padding: var(--layout-page-block) var(--layout-page-inline) var(--layout-page-block-end);
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -62,7 +62,7 @@
 .course-path__aside-level {
   color: var(--text-tertiary);
   font-family: var(--font-mono-var), "Fira Code", monospace;
-  font-size: 0.75rem;
+  font-size: var(--text-size-tiny);
   font-weight: 600;
   letter-spacing: 0.06em;
 }
@@ -71,7 +71,7 @@
   margin: 0;
   color: var(--text-tertiary);
   font-family: var(--font-mono-var), "Fira Code", monospace;
-  font-size: 0.75rem;
+  font-size: var(--text-size-tiny);
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -80,20 +80,20 @@
 .course-path__aside-title {
   margin: 0;
   color: var(--text-primary);
-  font-size: 1.15rem;
+  font-size: var(--text-size-body-lg);
   font-weight: 600;
   line-height: 1.3;
 }
 
 .course-path__aside-title--small {
-  font-size: 1rem;
+  font-size: var(--text-size-body);
 }
 
 .course-path__aside-copy {
   max-width: 30ch;
   margin: 0;
   color: var(--text-secondary);
-  font-size: 0.875rem;
+  font-size: var(--text-size-body-sm);
   line-height: 1.5;
 }
 
@@ -113,13 +113,13 @@
 .course-path__aside-facts dt,
 .course-path__aside-meta {
   color: var(--text-tertiary);
-  font-size: 0.75rem;
+  font-size: var(--text-size-tiny);
 }
 
 .course-path__aside-facts dd {
   margin: 0;
   color: var(--text-primary);
-  font-size: 0.9375rem;
+  font-size: var(--text-size-label);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
@@ -140,7 +140,7 @@
   gap: var(--space-2);
   margin-top: var(--space-2);
   color: var(--primary);
-  font-size: 0.875rem;
+  font-size: var(--text-size-body-sm);
   font-weight: 600;
   text-decoration: none;
 }
@@ -188,7 +188,7 @@
 .course-path__title {
   font-family: var(--font-sans), system-ui, sans-serif;
   font-weight: 420;
-  font-size: 2.1rem;
+  font-size: var(--text-size-ipa-hero);
   letter-spacing: -0.015em;
   color: var(--text-primary);
 }
@@ -224,7 +224,7 @@
 .course-path__level-picker-kicker {
   margin: 0 0 var(--space-1);
   font-family: var(--font-mono-var), "Fira Code", monospace;
-  font-size: 0.75rem;
+  font-size: var(--text-size-tiny);
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -233,7 +233,7 @@
 
 .course-path__level-picker-title {
   margin: 0;
-  font-size: 1rem;
+  font-size: var(--text-size-body);
   font-weight: 600;
   letter-spacing: 0;
   color: var(--text-primary);
@@ -241,7 +241,7 @@
 
 .course-path__checkpoint-link {
   flex-shrink: 0;
-  font-size: 0.875rem;
+  font-size: var(--text-size-body-sm);
   font-weight: 600;
   color: var(--primary);
   text-decoration: none;
@@ -267,7 +267,7 @@
   gap: var(--space-2) var(--space-6);
   padding-top: var(--space-4);
   border-top: 1px solid var(--border-subtle);
-  font-size: 0.8rem;
+  font-size: var(--text-size-tiny);
   color: var(--text-tertiary);
 }
 
@@ -281,7 +281,7 @@
   padding-block: var(--space-3);
   color: var(--text-secondary);
   cursor: pointer;
-  font-size: 0.875rem;
+  font-size: var(--text-size-body-sm);
   font-weight: 600;
   list-style-position: inside;
 }
@@ -353,14 +353,14 @@
 
 .course-path__level-lv {
   font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: 1.1rem;
+  font-size: var(--text-size-body-lg);
   font-weight: 500;
   line-height: 1;
   color: var(--text-primary);
 }
 
 .course-path__level-ln {
-  font-size: 10px;
+  font-size: var(--text-size-xxs);
   font-weight: 400;
   color: var(--text-tertiary);
   letter-spacing: 0.03em;
@@ -402,7 +402,7 @@
 .course-path__head h2 {
   font-family: var(--font-sans), system-ui, sans-serif;
   font-weight: 480;
-  font-size: 1.5rem;
+  font-size: var(--text-size-h1);
   color: var(--text-primary);
 }
 
@@ -414,7 +414,7 @@
 
 .course-path__prog-pct {
   font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: 1.35rem;
+  font-size: var(--text-size-h3);
   font-weight: 600;
   line-height: 1;
   color: var(--primary);
@@ -425,7 +425,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  font-size: 0.78rem;
+  font-size: var(--text-size-tiny);
   color: var(--text-tertiary);
   line-height: 1;
 }
@@ -538,7 +538,7 @@
   border-radius: 50%;
   background: var(--surface-raised);
   color: var(--text-primary);
-  font-size: 10px;
+  font-size: var(--text-size-xxs);
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -563,7 +563,7 @@
 }
 
 .course-path__un {
-  font-size: 11px;
+  font-size: var(--text-size-xxs);
   font-weight: 600;
   color: var(--text-tertiary);
   letter-spacing: 0.08em;
@@ -572,7 +572,7 @@
 
 .course-path__ut {
   font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: 1.12rem;
+  font-size: var(--text-size-body-lg);
   font-weight: 460;
   color: var(--text-primary);
   letter-spacing: -0.01em;
@@ -582,7 +582,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  font-size: 0.8rem;
+  font-size: var(--text-size-tiny);
   color: var(--text-tertiary);
 }
 
@@ -625,7 +625,7 @@
 
 .course-path__locked-label {
   flex-shrink: 0;
-  font-size: 0.7rem;
+  font-size: var(--text-size-xxs);
   font-weight: 500;
   color: var(--text-tertiary);
   letter-spacing: 0.04em;
@@ -644,7 +644,7 @@
   border-radius: 50%;
   border: 1.5px solid var(--border-default);
   color: var(--text-tertiary);
-  font-size: 11px;
+  font-size: var(--text-size-xxs);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -670,7 +670,7 @@
 .course-path__lt--link {
   flex: 1;
   min-width: 0;
-  font-size: 0.9375rem;
+  font-size: var(--text-size-label);
   color: var(--text-primary);
   background: transparent;
   overflow: hidden;
@@ -704,7 +704,7 @@
   flex-shrink: 0;
   margin-left: auto;
   padding: 4px 10px 4px 12px;
-  font-size: 0.78rem;
+  font-size: var(--text-size-tiny);
   font-weight: 600;
   color: var(--primary);
   background: var(--primary-soft);
@@ -740,7 +740,7 @@
   cursor: pointer;
   font-family: var(--font-sans), system-ui, sans-serif;
   font-weight: 480;
-  font-size: 1rem;
+  font-size: var(--text-size-body);
   color: var(--text-secondary);
   transition: color 0.15s;
   user-select: none;
@@ -778,7 +778,7 @@
 }
 
 .course-path__why-body p {
-  font-size: 0.875rem;
+  font-size: var(--text-size-body-sm);
   color: var(--text-secondary);
   line-height: 1.6;
 }
@@ -790,7 +790,7 @@
 
 .course-path__intro {
   color: var(--text-secondary);
-  font-size: 0.95rem;
+  font-size: var(--text-size-label);
   line-height: 1.6;
 }
 
@@ -803,17 +803,17 @@
 }
 
 .course-path__assessment-prompt {
-  font-size: 0.875rem;
+  font-size: var(--text-size-body-sm);
   color: var(--text-secondary);
 }
 
 .course-path__assessment-sep {
-  font-size: 0.875rem;
+  font-size: var(--text-size-body-sm);
   color: var(--text-tertiary);
 }
 
 .course-path__assessment-links a {
-  font-size: 0.875rem;
+  font-size: var(--text-size-body-sm);
   font-weight: 600;
   color: var(--primary);
   text-decoration: none;
@@ -878,7 +878,7 @@
 }
 
 .course-path__snd-label {
-  font-size: 0.7rem;
+  font-size: var(--text-size-xxs);
   font-weight: 600;
   letter-spacing: 0.02em;
 }
@@ -898,7 +898,7 @@
 }
 
 .course-path__optional-tag {
-  font-size: 0.68rem;
+  font-size: var(--text-size-xxs);
   font-weight: 500;
   letter-spacing: 0.06em;
   color: var(--text-tertiary);
@@ -962,7 +962,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  font-size: 0.8rem;
+  font-size: var(--text-size-tiny);
   color: var(--text-tertiary);
 }
 
@@ -993,7 +993,7 @@
   align-items: center;
   justify-content: center;
   font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: 1rem;
+  font-size: var(--text-size-body);
   border-radius: 12px;
   background: var(--surface-sunken);
   border: 1px solid var(--border-subtle);
@@ -1002,7 +1002,7 @@
 
 .course-path__rt {
   font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: 1.12rem;
+  font-size: var(--text-size-body-lg);
   color: var(--text-primary);
 }
 
@@ -1023,7 +1023,7 @@
 }
 
 .course-path__head--compact h2 {
-  font-size: 1.15rem;
+  font-size: var(--text-size-body-lg);
 }
 
 /* Start-here card (zero state) */
@@ -1057,7 +1057,7 @@
 }
 
 .course-path__start-label {
-  font-size: 0.75rem;
+  font-size: var(--text-size-tiny);
   font-weight: 700;
   letter-spacing: 0.1em;
   color: var(--cta-fg);
@@ -1067,7 +1067,7 @@
 
 .course-path__start-title {
   flex: 1;
-  font-size: 0.92rem;
+  font-size: var(--text-size-body-sm);
   font-weight: 500;
   color: var(--cta-fg);
   white-space: nowrap;
@@ -1118,7 +1118,7 @@
 }
 
 .course-path__resume-label {
-  font-size: 0.68rem;
+  font-size: var(--text-size-xxs);
   font-weight: 600;
   letter-spacing: 0.08em;
   color: color-mix(in oklch, var(--cta-fg) 68%, transparent);
@@ -1127,7 +1127,7 @@
 }
 
 .course-path__resume-title {
-  font-size: 1rem;
+  font-size: var(--text-size-body);
   color: var(--cta-fg);
   font-weight: 600;
   white-space: nowrap;
@@ -1136,7 +1136,7 @@
 }
 
 .course-path__resume-action {
-  font-size: 0.82rem;
+  font-size: var(--text-size-caption);
   color: var(--cta-fg);
   font-weight: 600;
 }
@@ -1188,7 +1188,7 @@
   background: var(--error-soft);
   border: 1px solid color-mix(in oklch, var(--error) 25%, var(--border-subtle));
   border-radius: var(--radius-md);
-  font-size: 0.875rem;
+  font-size: var(--text-size-body-sm);
   color: var(--text-secondary);
 }
 
@@ -1203,7 +1203,7 @@
   min-height: 4rem;
   margin-bottom: var(--space-4);
   color: var(--text-secondary);
-  font-size: 0.875rem;
+  font-size: var(--text-size-body-sm);
 }
 
 .course-path__progress-loading .course-path__skeleton-bar {
@@ -1212,7 +1212,7 @@
 
 .course-path__load-retry {
   margin-left: auto;
-  font-size: 0.8125rem;
+  font-size: var(--text-size-caption);
   font-weight: 600;
   color: var(--error);
   background: transparent;
@@ -1276,7 +1276,7 @@
 .course-path__irl-kicker {
   margin: 0 0 var(--space-1);
   font-family: var(--font-mono-var), "Fira Code", monospace;
-  font-size: 0.68rem;
+  font-size: var(--text-size-xxs);
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1286,13 +1286,13 @@
 .course-path__irl-title {
   margin: 0;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: var(--text-size-body-sm);
   color: var(--text-primary);
 }
 
 .course-path__irl-sub {
   margin: 0;
-  font-size: 0.78rem;
+  font-size: var(--text-size-tiny);
   line-height: 1.4;
   color: var(--text-tertiary);
   max-width: 30ch;
@@ -1324,7 +1324,7 @@
 }
 
 .course-path__irl-counter {
-  font-size: 0.72rem;
+  font-size: var(--text-size-xxs);
   font-weight: 600;
   letter-spacing: 0.04em;
   color: var(--text-tertiary);
@@ -1412,7 +1412,7 @@
   width: 2.5rem;
   height: 2.5rem;
   flex-shrink: 0;
-  font-size: 1.35rem;
+  font-size: var(--text-size-h3);
   border-radius: var(--radius-md);
   background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
@@ -1427,7 +1427,7 @@
 
 .course-path__irl-card-kicker {
   margin: 0;
-  font-size: 0.68rem;
+  font-size: var(--text-size-xxs);
   font-weight: 600;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -1437,7 +1437,7 @@
 .course-path__irl-card-title {
   margin: 0;
   font-weight: 600;
-  font-size: 1.05rem;
+  font-size: var(--text-size-body-lg);
   line-height: 1.25;
   color: var(--text-primary);
 }
@@ -1450,7 +1450,7 @@
 
 .course-path__irl-card-label {
   margin: 0;
-  font-size: 0.68rem;
+  font-size: var(--text-size-xxs);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -1483,12 +1483,12 @@
   border-radius: var(--radius-full);
   background: color-mix(in oklch, var(--primary) 14%, var(--surface-sunken));
   color: var(--primary);
-  font-size: 0.65rem;
+  font-size: var(--text-size-xxs);
   font-weight: 700;
 }
 
 .course-path__irl-phrase-text {
-  font-size: 0.88rem;
+  font-size: var(--text-size-body-sm);
   line-height: 1.45;
   color: var(--text-primary);
 }
@@ -1508,13 +1508,13 @@
 }
 
 .course-path__irl-vocab-item dt {
-  font-size: 0.8rem;
+  font-size: var(--text-size-tiny);
   font-weight: 600;
   color: var(--primary);
 }
 
 .course-path__irl-vocab-item dd {
-  font-size: 0.74rem;
+  font-size: var(--text-size-xxs);
   line-height: 1.35;
   color: var(--text-secondary);
   margin: 0;
@@ -1540,12 +1540,12 @@
 .course-path__c1-electives-title {
   font-family: var(--font-sans), system-ui, sans-serif;
   font-weight: 480;
-  font-size: 1.2rem;
+  font-size: var(--text-size-h3);
   color: var(--text-primary);
 }
 
 .course-path__c1-electives-sub {
-  font-size: 0.88rem;
+  font-size: var(--text-size-body-sm);
   color: var(--text-secondary);
 }
 
@@ -1566,7 +1566,7 @@
   }
 
   .course-path__title {
-    font-size: 1.5rem;
+    font-size: var(--text-size-h1);
     letter-spacing: -0.01em;
   }
 
@@ -1577,7 +1577,7 @@
   }
 
   .course-path__level-picker-title {
-    font-size: 1.1rem;
+    font-size: var(--text-size-body-lg);
   }
 
   .course-path__checkpoint-link {
@@ -1593,7 +1593,7 @@
   }
 
   .course-path__level-lv {
-    font-size: 0.95rem;
+    font-size: var(--text-size-label);
   }
 
   /* Level panel head: column on mobile, % inline with meta */
@@ -1603,7 +1603,7 @@
   }
 
   .course-path__head h2 {
-    font-size: 1.2rem;
+    font-size: var(--text-size-h3);
   }
 
   .course-path__prog {
@@ -1613,11 +1613,11 @@
   }
 
   .course-path__prog-pct {
-    font-size: 0.9rem;
+    font-size: var(--text-size-body-sm);
   }
 
   .course-path__prog-meta {
-    font-size: 0.72rem;
+    font-size: var(--text-size-xxs);
     gap: var(--space-2);
   }
 
@@ -1628,15 +1628,15 @@
   }
 
   .course-path__ut {
-    font-size: 0.975rem;
+    font-size: var(--text-size-label);
   }
 
   .course-path__un {
-    font-size: 10px;
+    font-size: var(--text-size-xxs);
   }
 
   .course-path__um {
-    font-size: 0.75rem;
+    font-size: var(--text-size-tiny);
   }
 
   .course-path__ring {
@@ -1647,7 +1647,7 @@
   .course-path__ring-inner {
     width: 28px;
     height: 28px;
-    font-size: 9px;
+    font-size: var(--text-size-xxs);
   }
 
   /* Lesson rows: allow title to wrap on mobile */
@@ -1664,7 +1664,7 @@
 
   .course-path__lt,
   .course-path__lt--link {
-    font-size: 0.875rem;
+    font-size: var(--text-size-body-sm);
     white-space: normal;
     overflow: visible;
     text-overflow: unset;
@@ -1690,7 +1690,7 @@
     white-space: normal;
     overflow: visible;
     text-overflow: unset;
-    font-size: 0.875rem;
+    font-size: var(--text-size-body-sm);
   }
 
   .course-path__start-here,
@@ -1721,12 +1721,12 @@
 
   /* IRL card */
   .course-path__irl-card-title {
-    font-size: 0.95rem;
+    font-size: var(--text-size-label);
   }
 
   /* Practice suggestions */
   .course-path__practice-current-title {
-    font-size: 0.85rem;
+    font-size: var(--text-size-caption);
     white-space: normal;
     overflow: visible;
     text-overflow: unset;
@@ -1861,7 +1861,7 @@
 }
 
 .course-path__practice-suggestions-heading {
-  font-size: 0.75rem;
+  font-size: var(--text-size-tiny);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -1877,7 +1877,7 @@
 .course-path__practice-heading p {
   margin: 0;
   max-width: 30ch;
-  font-size: 0.78rem;
+  font-size: var(--text-size-tiny);
   line-height: 1.45;
   color: var(--text-tertiary);
 }
@@ -1904,7 +1904,7 @@
   background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
-  font-size: 0.875rem;
+  font-size: var(--text-size-body-sm);
   color: var(--text-secondary);
   text-decoration: none;
   transition: border-color 0.15s, color 0.15s, transform 0.15s;
@@ -1929,7 +1929,7 @@
 .grammar-deck__unavailable {
   max-width: 620px;
   margin: var(--space-12) auto 0;
-  padding: var(--space-8);
+  padding: var(--layout-card-pad);
   text-align: center;
   background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
@@ -1950,7 +1950,7 @@
 .grammar-deck__unavailable-eyebrow {
   margin: 0 0 var(--space-2);
   color: var(--text-tertiary);
-  font-size: 0.75rem;
+  font-size: var(--text-size-tiny);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1960,7 +1960,7 @@
   margin: 0;
   color: var(--text-primary);
   font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: 1.75rem;
+  font-size: var(--text-size-display-ipa);
 }
 
 .grammar-deck__unavailable > p:not(.grammar-deck__unavailable-eyebrow) {

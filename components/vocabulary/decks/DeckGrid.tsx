@@ -48,7 +48,7 @@ export function DeckGrid({ decks, counts, onStudy, onManage, onEdit, onDelete, o
           <Plus size={16} className="text-fg-subtle" />
         </div>
         <div>
-          <p className="font-semibold text-[14px] text-fg">New deck</p>
+          <p className="font-semibold text-body-sm text-fg">New deck</p>
         </div>
       </button>
     </div>

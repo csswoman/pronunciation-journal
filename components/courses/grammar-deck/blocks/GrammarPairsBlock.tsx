@@ -8,10 +8,7 @@ export default function GrammarPairsBlock({ lines }: { lines: GrammarPairLine[] 
       {lines.map((line, i) => (
         <div
           key={i}
-          className={cn(
-            "grammar-pair",
-            line.variant === "bad" ? "grammar-pair--bad" : "grammar-pair--good"
-          )}
+          className={cn( "grammar-pair", line.variant === "bad" ? "grammar-pair--bad" : "grammar-pair--good" )}
         >
           <span className="grammar-pair__mk" aria-hidden>
             {line.variant === "bad" ? (

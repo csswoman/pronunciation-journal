@@ -12,7 +12,7 @@ export default function SectionHeader({ title, viewAll, viewAllHref }: SectionHe
 
   return (
     <div className="flex items-center justify-between mb-4">
-      <h2 className="text-xl font-semibold tracking-tight text-[var(--text-primary)]">
+      <h2 className="text-h4 font-semibold tracking-tight text-[var(--text-primary)]">
         {title}
       </h2>
       {viewAllHref ? (

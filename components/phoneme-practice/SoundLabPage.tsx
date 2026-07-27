@@ -137,7 +137,7 @@ export default function SoundLabPage() {
   }
 
   return (
-    <PageLayout className="sound-lab min-h-screen">
+    <PageLayout archetype="catalog" className="sound-lab min-h-screen">
       <header className="sound-lab__page-header">
         <SoundLabHeader
           totalCount={allLessons.length}
@@ -161,7 +161,7 @@ export default function SoundLabPage() {
             role="status"
           >
             <Headphones size={14} className="sound-lab__focus-banner-icon shrink-0" aria-hidden />
-            <span className="min-w-0 flex-1 text-sm text-[color:var(--text-secondary)]">
+            <span className="min-w-0 flex-1 text-body-sm text-[color:var(--text-secondary)]">
               Enfoque:{" "}
               <span className="sound-lab__focus-tokens font-ipa">{focusTokens.join(" · ")}</span>
               {!focusSection && (
@@ -173,14 +173,14 @@ export default function SoundLabPage() {
             {focusSection?.lessons[0]?.href ? (
               <Link
                 href={focusSection.lessons[0].href}
-                className="inline-flex min-h-9 shrink-0 items-center rounded-md bg-[var(--cta-bg)] px-3 text-xs font-semibold text-[var(--cta-fg)]"
+                className="inline-flex min-h-9 shrink-0 items-center rounded-md bg-[var(--cta-bg)] px-3 text-caption font-semibold text-[var(--cta-fg)]"
               >
                 Abrir este sonido
               </Link>
             ) : null}
             <Link
               href="/practice/sounds"
-              className="sound-lab__focus-banner-link shrink-0 text-xs hover:underline"
+              className="sound-lab__focus-banner-link shrink-0 text-caption hover:underline"
             >
               Ver todos
             </Link>

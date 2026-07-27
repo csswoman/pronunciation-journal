@@ -22,7 +22,7 @@ export function WordCardProcessing({ text, wordId, onRetry, onDelete }: WordCard
             <H4 as="h3" className="truncate">
               {text}
             </H4>
-            <span className="text-tiny uppercase tracking-widest text-primary">
+            <span className="font-kicker text-primary">
               Enriching…
             </span>
           </div>
@@ -77,11 +77,11 @@ export function WordCardFailed({
             <H4 as="h3" className="truncate">
               {word.text}
             </H4>
-            <span className="text-tiny uppercase tracking-widest text-error">Enrichment failed</span>
+            <span className="font-kicker text-error">Enrichment failed</span>
           </div>
-          <p className="mt-1 text-xs text-fg-subtle">We couldn't fetch the AI details. Try again.</p>
+          <p className="mt-1 text-caption text-fg-subtle">We couldn't fetch the AI details. Try again.</p>
           {word.error_reason && (
-            <p className="mt-1 text-tiny uppercase tracking-widest text-fg-subtle">
+            <p className="mt-1 font-kicker text-fg-subtle">
               {word.error_reason.replace("_", " ")}
             </p>
           )}

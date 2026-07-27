@@ -16,7 +16,7 @@
   margin: 0 auto;
   color: var(--md-fg-body);
   font-family: var(--font-ui), "Noto Sans", system-ui, sans-serif;
-  font-size: 1.125rem;        /* 18px */
+  font-size: var(--text-size-body-lg);
   line-height: 1.7;
   font-feature-settings: "kern", "liga", "calt", "ss01";
   text-rendering: optimizeLegibility;
@@ -41,7 +41,7 @@
 .md-h1 {
   font-variation-settings: "opsz" 96;
   font-weight: 500;
-  font-size: clamp(2rem, 4.4vw, 2.75rem);
+  font-size: var(--text-size-h1);
   line-height: 1.1;
   letter-spacing: -0.02em;
   margin: 0 0 1.2rem;
@@ -50,7 +50,7 @@
 .md-h2 {
   font-variation-settings: "opsz" 36;
   font-weight: 500;
-  font-size: 2rem;            /* 32px */
+  font-size: var(--text-size-h2);
   line-height: 1.15;
   letter-spacing: -0.02em;
   margin: 4rem 0 1rem;        /* mt-16 mb-4 */
@@ -58,7 +58,7 @@
 
 .md-h3 {
   font-family: var(--font-ui), "Noto Sans", system-ui, sans-serif;
-  font-size: 0.875rem;        /* 14px */
+  font-size: var(--text-size-body-sm);
   font-weight: 600;
   line-height: 1.4;
   letter-spacing: 0.12em;
@@ -70,7 +70,7 @@
 
 .md-h4 {
   font-family: var(--font-ui), "Noto Sans", system-ui, sans-serif;
-  font-size: 0.8125rem;
+  font-size: var(--text-size-caption);
   font-weight: 600;
   line-height: 1.4;
   letter-spacing: 0.08em;
@@ -94,7 +94,7 @@
 .md-p,
 .md-paragraph {
   margin: 0;
-  font-size: 1.125rem;
+  font-size: var(--text-size-body-lg);
   line-height: 1.7;
   color: var(--md-fg-body);
   text-wrap: pretty;
@@ -184,7 +184,7 @@
   padding-left: 1.6rem;
   color: var(--md-fg-body);
   line-height: 1.7;
-  font-size: 1.125rem;
+  font-size: var(--text-size-body-lg);
 }
 
 .md-list-ul > .md-li::before {
@@ -224,7 +224,7 @@
   background: var(--md-code-bg);
   border: 1px solid var(--md-rule);
   overflow-x: auto;
-  font-size: 0.875rem;
+  font-size: var(--text-size-body-sm);
   line-height: 1.6;
   color: var(--md-fg);
 }
@@ -255,7 +255,7 @@
 .md-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 1rem;
+  font-size: var(--text-size-body);
 }
 
 .md-table-head {
@@ -269,7 +269,7 @@
   color: var(--md-fg-soft);
   padding: 0.75rem 0.9rem;
   border-bottom: 1px solid var(--md-rule);
-  font-size: 0.6875rem;
+  font-size: var(--text-size-xxs);
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
@@ -279,7 +279,7 @@
   color: var(--md-fg);
   border-bottom: 1px solid var(--md-rule);
   vertical-align: top;
-  font-size: 1rem;
+  font-size: var(--text-size-body);
   line-height: 1.55;
 }
 .md-table-row:last-child .md-table-td { border-bottom: 0; }
@@ -305,7 +305,7 @@
 
 .md-figcaption {
   text-align: center;
-  font-size: 0.8125rem;
+  font-size: var(--text-size-caption);
   color: var(--md-fg-soft);
   font-style: italic;
   margin: 0.4rem 0 0;
@@ -324,7 +324,7 @@
   font-variation-settings: "opsz" 36;
   font-style: italic;
   font-weight: 400;
-  font-size: 1.75rem;        /* 28px */
+  font-size: var(--text-size-display-word);
   line-height: 1.35;
   color: var(--md-fg);
   text-align: center;
@@ -375,7 +375,7 @@
   align-items: center;
   gap: 0.5rem;
   font-family: var(--font-ui), "Noto Sans", sans-serif;
-  font-size: 0.6875rem;
+  font-size: var(--text-size-xxs);
   font-weight: 600;
   color: var(--md-accent);
   letter-spacing: 0.14em;
@@ -385,7 +385,7 @@
 .md-callout-badge { display: none; }
 
 .md-callout-body {
-  font-size: 1rem;
+  font-size: var(--text-size-body);
   line-height: 1.65;
   color: var(--md-fg);
 }
@@ -424,7 +424,7 @@
 
 .md-vs-label {
   font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.6875rem;
+  font-size: var(--text-size-xxs);
   font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -449,7 +449,7 @@
 
 .md-vs-body {
   font-family: var(--font-ui), "Noto Sans", sans-serif;
-  font-size: 1rem;
+  font-size: var(--text-size-body);
   line-height: 1.6;
   color: var(--md-fg);
 }
@@ -466,11 +466,11 @@
 
 /* ── Notion legacy compatibility (kept) ────────────────────────────────────── */
 .md-heading      { color: var(--md-fg); font-family: var(--font-sans), system-ui, sans-serif; font-weight: 500; }
-.md-heading-1    { font-size: clamp(2rem, 4.4vw, 2.75rem); line-height: 1.1;  margin: 0 0 1.2rem; }
-.md-heading-2    { font-size: 2rem;     line-height: 1.15; margin: 4rem 0 1rem; letter-spacing: -0.02em; }
+.md-heading-1    { font-size: var(--text-size-h1); line-height: 1.1;  margin: 0 0 1.2rem; }
+.md-heading-2    { font-size: var(--text-size-h2);     line-height: 1.15; margin: 4rem 0 1rem; letter-spacing: -0.02em; }
 .md-heading-3    {
   font-family: var(--font-ui), "Noto Sans", sans-serif;
-  font-size: 0.875rem; line-height: 1.4; margin: 2.5rem 0 0.5rem;
+  font-size: var(--text-size-body-sm); line-height: 1.4; margin: 2.5rem 0 0.5rem;
   letter-spacing: 0.12em; text-transform: uppercase; color: var(--md-fg-soft); font-weight: 600;
 }
 
@@ -478,13 +478,13 @@
   display: flex; align-items: center; gap: 0.5rem; width: 100%;
   text-align: left; color: var(--md-fg); background: transparent;
   border: 0; padding: 0.25rem 0; cursor: pointer;
-  transition: color var(--transition-fast); font-size: 1rem;
+  transition: color var(--transition-fast); font-size: var(--text-size-body);
 }
 .md-toggle-button:hover { color: var(--md-accent); }
 .md-toggle-button-compact { font-weight: 500; }
-.md-toggle-caret { display: inline-block; font-size: 0.75rem; line-height: 1; transition: transform 0.2s ease; color: var(--md-fg-soft); }
+.md-toggle-caret { display: inline-block; font-size: var(--text-size-tiny); line-height: 1; transition: transform 0.2s ease; color: var(--md-fg-soft); }
 .md-toggle-caret-open  { transform: rotate(90deg); }
-.md-toggle-caret-small { font-size: 0.7rem; }
+.md-toggle-caret-small { font-size: var(--text-size-xxs); }
 .md-toggle-children {
   display: flex; flex-direction: column; gap: 0.5rem; padding-left: 1.25rem;
   border-left: 1px dashed var(--md-rule); margin-left: 0.25rem;
@@ -534,8 +534,8 @@
   background: transparent; overflow: hidden;
 }
 .callout::before { content: none; }
-.callout-icon { flex-shrink: 0; font-size: 1rem; line-height: 1.6; }
-.callout-content { flex: 1; min-width: 0; font-size: 1rem; line-height: 1.65; color: var(--md-fg); }
+.callout-icon { flex-shrink: 0; font-size: var(--text-size-body); line-height: 1.6; }
+.callout-content { flex: 1; min-width: 0; font-size: var(--text-size-body); line-height: 1.65; color: var(--md-fg); }
 .callout-content p { margin: 0; }
 .callout-content p + p { margin-top: 0.5em; }
 .callout.tip, .callout.success { border-color: var(--admonitions-color-tip); }

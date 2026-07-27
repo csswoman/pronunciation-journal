@@ -19,10 +19,10 @@
 .grammar-deck__wrap {
   max-width: 44rem;
   margin-inline: auto;
-  padding: var(--space-8) var(--space-5) var(--space-16);
+  padding: var(--layout-page-block) var(--layout-page-inline) var(--layout-page-block-end);
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
+  gap: var(--layout-section-gap);
 }
 
 /* ── Deck header ─────────────────────────────────────────── */
@@ -63,7 +63,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-1);
-  font-size: 0.85rem;
+  font-size: var(--text-size-caption);
   color: var(--text-secondary);
 }
 
@@ -203,7 +203,7 @@
 
 .grammar-card__tag {
   padding: 3px 10px;
-  font-size: 11px;
+  font-size: var(--text-size-xxs);
   font-weight: 600;
   letter-spacing: 0.1em;
   color: var(--primary);
@@ -227,7 +227,7 @@
   background: var(--badge-primary-bg);
   border: 1px solid var(--badge-primary-border);
   border-radius: var(--radius-md);
-  font-size: 0.86rem;
+  font-size: var(--text-size-caption);
   color: var(--text-primary);
   padding: var(--space-3) var(--space-4);
 }
@@ -243,7 +243,7 @@
   gap: var(--space-2);
   padding: var(--space-2) var(--space-4);
   cursor: pointer;
-  font-size: 0.88rem;
+  font-size: var(--text-size-body-sm);
   font-weight: 600;
   color: var(--text-secondary);
   background: transparent;
@@ -294,11 +294,11 @@
 
 .grammar-deck__done {
   position: relative;
-  padding: var(--space-8) var(--space-6);
+  padding: var(--layout-card-pad);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-4);
+  gap: var(--layout-stack-loose);
   text-align: center;
   background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
@@ -350,7 +350,7 @@
   border: none;
   background: var(--cta-bg, oklch(0.18 0.008 250));
   color: var(--cta-fg, oklch(0.93 0.012 250));
-  font-size: 0.88rem;
+  font-size: var(--text-size-body-sm);
   font-weight: 500;
   font-family: inherit;
   cursor: pointer;
@@ -415,13 +415,13 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-  font-size: 0.875rem;
+  font-size: var(--text-size-body-sm);
   font-weight: 600;
 }
 
 .grammar-deck__done-soundlab em {
   font-style: normal;
-  font-size: 0.78rem;
+  font-size: var(--text-size-tiny);
   font-weight: 400;
   color: var(--primary);
 }
@@ -437,7 +437,7 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-  font-size: 0.88rem;
+  font-size: var(--text-size-body-sm);
 }
 
 .grammar-deck__related {
@@ -466,7 +466,7 @@
   background: var(--surface-raised);
   color: var(--text-primary);
   text-decoration: none;
-  font-size: 0.88rem;
+  font-size: var(--text-size-body-sm);
   transition: border-color var(--transition-fast);
 }
 
@@ -493,7 +493,7 @@
   gap: var(--space-2);
   padding: var(--space-2) var(--space-5);
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: var(--text-size-body-sm);
   font-weight: 600;
   font-family: inherit;
   border-radius: var(--radius-md);
@@ -568,7 +568,7 @@
   border: 1px solid var(--border-default);
   background: var(--surface-raised);
   color: var(--text-primary);
-  font-size: 0.92rem;
+  font-size: var(--text-size-body-sm);
   transition:
     border-color var(--transition-fast),
     background var(--transition-fast),
@@ -597,7 +597,7 @@
   border-radius: var(--radius-md);
   background: var(--surface-sunken);
   border: 1px solid var(--border-subtle);
-  font-size: 0.85rem;
+  font-size: var(--text-size-caption);
   color: var(--text-secondary);
 }
 
@@ -614,7 +614,7 @@
   background: var(--primary);
   color: var(--primary-foreground, #fff);
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: var(--text-size-body-sm);
   transition: transform var(--transition-fast);
 }
 
@@ -636,7 +636,7 @@
 }
 
 .grammar-deck__eyebrow {
-  font-size: 11px;
+  font-size: var(--text-size-xxs);
   font-weight: 600;
   letter-spacing: 0.18em;
   color: var(--text-tertiary);
@@ -646,7 +646,7 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
-  font-size: 11px;
+  font-size: var(--text-size-xxs);
   font-weight: 600;
   letter-spacing: 0.12em;
   color: var(--text-tertiary);
@@ -661,7 +661,7 @@
 .grammar-deck__title {
   font-family: var(--font-sans), system-ui, sans-serif;
   font-weight: 480;
-  font-size: 2.1rem;
+  font-size: var(--text-size-ipa-hero);
   letter-spacing: -0.015em;
   color: var(--text-primary);
   background: transparent;
@@ -684,7 +684,7 @@
 }
 
 .grammar-deck__count {
-  font-size: 12.5px;
+  font-size: var(--text-size-tiny);
   color: var(--text-secondary);
   font-variant-numeric: tabular-nums;
 }
@@ -727,7 +727,7 @@
   border: none;
   background: var(--cta-bg, oklch(0.18 0.008 250));
   color: var(--cta-fg, oklch(0.93 0.012 250));
-  font-size: 0.875rem;
+  font-size: var(--text-size-body-sm);
   font-weight: 600;
   font-family: inherit;
   cursor: pointer;
@@ -748,7 +748,7 @@
 }
 
 .grammar-deck__pos {
-  font-size: 11.5px;
+  font-size: var(--text-size-xxs);
   letter-spacing: 0.08em;
   color: var(--text-tertiary);
   font-variant-numeric: tabular-nums;
@@ -769,31 +769,31 @@
 .grammar-deck__done-title {
   font-family: var(--font-sans), system-ui, sans-serif;
   font-weight: 480;
-  font-size: 1.7rem;
+  font-size: var(--text-size-display-word);
   color: var(--text-primary);
 }
 
 .grammar-deck__done-sub {
   color: var(--text-secondary);
-  font-size: 0.95rem;
+  font-size: var(--text-size-label);
 }
 
 .grammar-deck__done-stats b {
   font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: 1.5rem;
+  font-size: var(--text-size-h1);
   font-weight: 480;
   color: var(--primary);
 }
 
 .grammar-deck__done-stats span {
-  font-size: 11px;
+  font-size: var(--text-size-xxs);
   letter-spacing: 0.1em;
   color: var(--text-tertiary);
 }
 
 .grammar-card__idx {
   font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: 1.1rem;
+  font-size: var(--text-size-body-lg);
   color: var(--text-tertiary);
   font-variant-numeric: tabular-nums;
 }
@@ -801,7 +801,7 @@
 .grammar-card__title {
   font-family: var(--font-sans), system-ui, sans-serif;
   font-weight: 480;
-  font-size: 1.55rem;
+  font-size: var(--text-size-display-ipa);
   letter-spacing: -0.01em;
   color: var(--text-primary);
   background: transparent;
@@ -815,7 +815,7 @@
 
 .grammar-card__lede {
   color: var(--text-secondary);
-  font-size: 0.95rem;
+  font-size: var(--text-size-label);
 }
 
 .grammar-conj {
@@ -849,17 +849,17 @@
 .grammar-conj__hint {
   font-family: var(--font-sans), system-ui, sans-serif;
   color: var(--text-tertiary);
-  font-size: 0.8rem;
+  font-size: var(--text-size-tiny);
 }
 
 .grammar-vtable {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.92rem;
+  font-size: var(--text-size-body-sm);
 }
 
 .grammar-vtable th {
-  font-size: 10.5px;
+  font-size: var(--text-size-xxs);
   letter-spacing: 0.08em;
   color: var(--text-tertiary);
   font-weight: 600;
@@ -881,7 +881,7 @@
 
 .grammar-vtable td.grammar-vtable__es {
   font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: 0.82rem;
+  font-size: var(--text-size-caption);
   color: var(--text-tertiary);
 }
 
@@ -909,18 +909,18 @@
 
 .grammar-contrast__big {
   font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: 1.6rem;
+  font-size: var(--text-size-display-word);
   color: var(--primary);
 }
 
 .grammar-contrast__rule {
-  font-size: 0.82rem;
+  font-size: var(--text-size-caption);
   color: var(--text-secondary);
 }
 
 .grammar-contrast__ex {
   font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: 0.95rem;
+  font-size: var(--text-size-label);
   color: var(--text-primary);
 }
 
@@ -935,7 +935,7 @@
   align-items: baseline;
   gap: var(--space-2);
   font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: 1rem;
+  font-size: var(--text-size-body);
 }
 
 .grammar-pair__mk {
@@ -946,7 +946,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  font-size: 10px;
+  font-size: var(--text-size-xxs);
 }
 
 .grammar-pair--bad .grammar-pair__mk {
@@ -969,7 +969,7 @@
 
 .grammar-pair__note {
   font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: 0.8rem;
+  font-size: var(--text-size-tiny);
   color: var(--text-tertiary);
   text-decoration: none;
 }
@@ -989,12 +989,12 @@
 .grammar-rules__key {
   font-family: var(--font-sans), system-ui, sans-serif;
   color: var(--primary);
-  font-size: 1.05rem;
+  font-size: var(--text-size-body-lg);
   flex-shrink: 0;
 }
 
 .grammar-rules__val {
-  font-size: 0.92rem;
+  font-size: var(--text-size-body-sm);
   color: var(--text-secondary);
 }
 
@@ -1006,7 +1006,7 @@
 
 .grammar-rules__hint {
   color: var(--text-tertiary);
-  font-size: 0.85em;
+  font-size: var(--text-size-caption);
 }
 
 
@@ -1092,7 +1092,7 @@
   align-items: center;
   gap: var(--space-1);
   font-weight: 600;
-  font-size: 0.8rem;
+  font-size: var(--text-size-tiny);
   color: var(--primary);
 }
 
@@ -1100,7 +1100,7 @@
   display: inline-flex;
   align-items: center;
   gap: 3px;
-  font-size: 0.78rem;
+  font-size: var(--text-size-tiny);
   font-weight: 600;
   color: var(--primary);
   text-decoration: none;
@@ -1116,7 +1116,7 @@
 
 .grammar-pron__ipa {
   font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
-  font-size: 1rem;
+  font-size: var(--text-size-body);
   font-weight: 400;
   letter-spacing: 0.05em;
   word-spacing: 0.14em;
@@ -1125,47 +1125,47 @@
 }
 
 .grammar-pron__es {
-  font-size: 0.8rem;
+  font-size: var(--text-size-tiny);
   color: var(--text-secondary);
 }
 
 .grammar-pron__note {
-  font-size: 0.82rem;
+  font-size: var(--text-size-caption);
   color: var(--text-secondary);
 }
 
 .gd-quiz__kicker {
-  font-size: 0.72rem;
+  font-size: var(--text-size-xxs);
   letter-spacing: 0.06em;
   color: var(--text-tertiary);
 }
 
 .gd-quiz__pos {
-  font-size: 0.8rem;
+  font-size: var(--text-size-tiny);
   color: var(--text-tertiary);
   font-variant-numeric: tabular-nums;
 }
 
 .gd-quiz__q {
   font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: 1.25rem;
+  font-size: var(--text-size-h3);
   font-weight: 480;
   color: var(--text-primary);
 }
 
 .grammar-deck__done-goal {
-  font-size: 0.9rem;
+  font-size: var(--text-size-body-sm);
   color: var(--text-secondary);
 }
 
 .grammar-deck__done-practice-error {
-  font-size: 0.8rem;
+  font-size: var(--text-size-tiny);
   color: var(--text-secondary);
   text-align: center;
 }
 
 .grammar-deck__related-label {
-  font-size: 0.72rem;
+  font-size: var(--text-size-xxs);
   letter-spacing: 0.06em;
   color: var(--text-tertiary);
 }

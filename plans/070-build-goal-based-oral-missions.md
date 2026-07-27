@@ -148,14 +148,28 @@ Allow launches with `missionId`, `targetIds` and source metadata from pronunciat
 
 ## Done criteria
 
-- [ ] One registry owns all existing and new scenarios.
-- [ ] Mission state/progress is deterministic and resumable.
-- [ ] Voice turns and text fallback remain semantically distinct.
-- [ ] Goal achievement, pronunciation evidence and mastery are separate.
-- [ ] One prioritized correction leads to a varied transfer attempt.
-- [ ] Route, Daily and Tracking launch/reconcile exact mission ids.
-- [ ] Offline/idempotent/two-user tests pass without raw-audio storage.
-- [ ] Prompt audit, focused tests, a11y, typecheck and token lint pass.
+- [x] One registry owns all existing and new scenarios.
+- [x] Mission state/progress is deterministic and resumable.
+- [x] Voice turns and text fallback remain semantically distinct.
+- [x] Goal achievement, pronunciation evidence and mastery are separate.
+- [x] One prioritized correction leads to a varied transfer attempt.
+- [x] Route, Daily and Tracking launch/reconcile exact mission ids.
+- [x] Offline/idempotent/two-user tests pass without raw-audio storage.
+- [x] Prompt audit, focused tests, a11y, typecheck and token lint pass.
+
+## Verification (2026-07-27)
+
+- Registry, prompt/event contracts, deterministic reducer/outcome, persistence and mission library/runner are covered by the focused mission tests. Correction now follows `correction → active → scored same-target retry → transfer`; unscored retries and unrelated targets do not advance.
+- The live stream preserves its `abortRef`/`streamIdRef` race guards. Its `mission_intent_observed` callback is now routed to `MissionWorkspace`, where the UI-owned reducer records validated intents; the hook itself remains transport-only. Mission summaries remain visible with actionable feedback copy disabled.
+- `MissionWorkspace` now uses the Coach TTS path for normal/slow correction playback. The transfer prompt has a real record/stop-and-submit control: its STT transcript becomes an honest `unscored` `SpokenAttempt` and dispatches `transfer_attempted` only while the reducer is in `transfer`. Tests cover runner callback plumbing and both TTS rates.
+- Selecting a mission keeps the conversation surface mounted under the runner. Typed turns dispatch `turn_text`; microphone transcripts are scored against the active target before dispatching `turn_spoken`, so text cannot create correction evidence. Completed sessions now derive/render `MissionResult` and persist the mission outcome before offering the existing review route.
+- A streamed `start_mission` tool call now switches `useAIPractice` to `mission:${missionId}` and the Coach panel to the Missions tab; the following request therefore retains the authored mission prompt instead of silently continuing as free chat.
+- When that tool starts from an existing chat stream, the same user-owned conversation is relabelled to the mission mode after its id is available. This preserves the active stream and messages while ensuring history resumes with the authored prompt.
+- Route/Daily/Tracking search found no current `roleplay:` launch call sites in `components/courses/`, `lib/practice/daily-plan/`, or `components/tracking/`; `parseMissionLaunch` now defines and tests their exact launch contracts instead of fabricating integrations.
+- Passed: `pnpm exec vitest run lib/ai-practice/missions lib/ai-practice/__tests__/stream-processor.test.ts`, focused Coach/Interview/hooks tests, `pnpm audit:ai-prompts`, `pnpm type-check`, `pnpm lint:design-tokens`, and the full Vitest suite. The mission runner additionally tests keyboard activation of the retry control.
+- Closed the a11y verification gap: added `tests/a11y/auth.setup.ts`, an authenticated Playwright setup project that signs in through the real login UI via `signInAsGuest()` (Supabase anonymous sign-in) and saves `storageState` to `tests/a11y/.auth/guest.json` (gitignored). `tests/a11y/oral-mission.a11y.spec.ts` reuses that session, opens the Coach panel, selects the first mission, and axe-scans the briefing phase. `playwright.config.ts` now declares a `setup` project that `chromium` depends on.
+  - This depends on `enable_anonymous_sign_ins = true` on whichever Supabase project `NEXT_PUBLIC_SUPABASE_URL` points to. It's `false` in the local `supabase/config.toml`; the connected project's actual setting wasn't confirmed. If guest sign-in fails, `auth.setup.ts` skips itself (not fail) and `oral-mission.a11y.spec.ts` skips too, so this can never break `pnpm test:a11y` or CI — it just silently stays unverified until anonymous sign-in is confirmed/enabled on that project.
+  - Ran locally against the real connected Supabase project: guest sign-in succeeded, and the scan caught one real `scrollable-region-focusable` (serious) axe violation on `MissionWorkspace`'s message-scroll container — fixed by adding `role="region" aria-label="Conversación de la misión" tabIndex={0}`. All 4 a11y specs pass after the fix.
 
 ## STOP conditions
 

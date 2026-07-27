@@ -53,7 +53,7 @@ export default function LexiconPracticePage() {
         <button
           type="button"
           onClick={() => { clear(); router.push(`/dictionary/${categoryId}`) }}
-          className="border-none bg-transparent p-1 text-xl leading-none text-fg-subtle"
+          className="border-none bg-transparent p-1 text-h4 leading-none text-fg-subtle"
         >
           ←
         </button>
@@ -67,7 +67,7 @@ export default function LexiconPracticePage() {
     return (
       <PageLayout variant="lesson" hero={header}>
         <div className="flex flex-col items-center gap-4 py-20 text-center px-6">
-          <p className="text-error text-sm">{error}</p>
+          <p className="text-error text-body-sm">{error}</p>
           <Button type="button" onClick={reload} variant="primary" size="sm">Retry</Button>
         </div>
       </PageLayout>

@@ -34,7 +34,7 @@ export function PhonemeIntroTray({
   const hasArticulation = (extra?.articulationEs.length ?? 0) > 0
 
   return (
-    <div className="phoneme-intro__tray flex flex-col gap-5 px-5 pb-6 pt-1">
+    <div className="phoneme-intro__tray flex flex-col gap-5 px-[var(--layout-card-pad)] pb-[var(--layout-section-gap)] pt-1">
       {extra?.spanishTip && (
         <aside className="phoneme-intro__tip">
           <p className="phoneme-intro__tip-label">El truco</p>
@@ -96,10 +96,7 @@ function ContrastWord({
     <button
       type="button"
       onClick={() => onSpeak(word)}
-      className={cn(
-        'phoneme-intro__contrast-word',
-        speaking && 'phoneme-intro__contrast-word--speaking',
-      )}
+      className={cn( 'phoneme-intro__contrast-word', speaking && 'phoneme-intro__contrast-word--speaking', )}
       aria-label={`Pronunciar ${word}`}
     >
       <Play size={10} className="fill-current" aria-hidden />

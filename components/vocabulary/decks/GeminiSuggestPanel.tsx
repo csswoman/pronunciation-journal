@@ -79,7 +79,7 @@ export function GeminiSuggestPanel({
     <div className="space-y-4">
       {/* Difficulty selector */}
       <div>
-        <p className="text-tiny font-semibold uppercase tracking-widest text-fg-subtle mb-2">
+        <p className="font-kicker font-semibold text-fg-subtle mb-2">
           Difficulty level
         </p>
         <div className="grid grid-cols-3 gap-1.5 p-1 bg-[var(--btn-regular-bg)] rounded-xl border border-[var(--line-divider)]">
@@ -87,13 +87,9 @@ export function GeminiSuggestPanel({
             <button
               key={lvl.value}
               onClick={() => setDifficulty(lvl.value)}
-              className={`py-2 px-1 rounded-lg text-center transition-all ${
-                difficulty === lvl.value
-                  ? "bg-[var(--card-bg)] shadow-sm border border-[var(--line-divider)] text-fg"
-                  : "text-fg-muted hover:text-fg"
-              }`}
+              className={`py-2 px-1 rounded-lg text-center transition-all ${ difficulty === lvl.value ? "bg-[var(--card-bg)] shadow-sm border border-[var(--line-divider)] text-fg" : "text-fg-muted hover:text-fg" }`}
             >
-              <p className="text-xs font-semibold">{lvl.label}</p>
+              <p className="text-caption font-semibold">{lvl.label}</p>
               <p className="text-tiny opacity-70">{lvl.desc}</p>
             </button>
           ))}
@@ -125,7 +121,7 @@ export function GeminiSuggestPanel({
       </div>
 
       {error && (
-        <p className="text-xs text-error bg-error-soft rounded-lg px-3 py-2">{error}</p>
+        <p className="text-caption text-error bg-error-soft rounded-lg px-3 py-2">{error}</p>
       )}
 
       {/* Suggestions list */}
@@ -133,7 +129,7 @@ export function GeminiSuggestPanel({
         <div className="space-y-2">
           {/* Save all bar */}
           <div className="flex items-center justify-between">
-            <p className="text-tiny font-semibold uppercase tracking-widest text-fg-subtle">
+            <p className="font-kicker font-semibold text-fg-subtle">
               {suggestions.length} suggestions
             </p>
             {!allAdded && (
@@ -143,13 +139,13 @@ export function GeminiSuggestPanel({
                 disabled={savingAll}
                 onClick={handleSaveAll}
                 icon={savingAll ? <RefreshCw size={11} className="animate-spin" /> : <ChevronRight size={11} />}
-                className="text-xs text-[var(--primary)]"
+                className="text-caption text-[var(--primary)]"
               >
                 Add all
               </Button>
             )}
             {allAdded && (
-              <span className="flex items-center gap-1 text-xs font-semibold text-success">
+              <span className="flex items-center gap-1 text-caption font-semibold text-success">
                 <Check size={11} /> All added
               </span>
             )}
@@ -162,17 +158,13 @@ export function GeminiSuggestPanel({
               style={{ animationDelay: `${i * 40}ms` }}
             >
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-fg">{s.word}</p>
-                <p className="text-xs text-fg-muted leading-relaxed line-clamp-2">{s.meaning}</p>
+                <p className="text-body-sm font-semibold text-fg">{s.word}</p>
+                <p className="text-caption text-fg-muted leading-relaxed line-clamp-2">{s.meaning}</p>
               </div>
               <button
                 onClick={() => handleAdd(s.word, s.meaning)}
                 disabled={added.has(s.word)}
-                className={`flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg transition-all ${
-                  added.has(s.word)
-                    ? "bg-success-soft text-success"
-                    : "bg-[var(--primary)] text-on-primary hover:opacity-80"
-                }`}
+                className={`flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg transition-all ${ added.has(s.word) ? "bg-success-soft text-success" : "bg-[var(--primary)] text-on-primary hover:opacity-80" }`}
               >
                 {added.has(s.word) ? <Check size={14} /> : <Plus size={14} />}
               </button>
@@ -182,9 +174,9 @@ export function GeminiSuggestPanel({
       )}
 
       {!loading && suggestions.length === 0 && (
-        <div className="text-center py-8 space-y-1">
-          <p className="text-sm text-fg-muted">No suggestions yet</p>
-          <p className="text-xs text-fg-subtle">Pick a level and click "Suggest words"</p>
+        <div className="text-center py-[var(--layout-section-gap)] space-y-1">
+          <p className="text-body-sm text-fg-muted">No suggestions yet</p>
+          <p className="text-caption text-fg-subtle">Pick a level and click "Suggest words"</p>
         </div>
       )}
     </div>

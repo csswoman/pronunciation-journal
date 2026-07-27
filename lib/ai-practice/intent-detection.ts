@@ -69,7 +69,7 @@ const EXERCISE_TOOLS: ExerciseToolName[] = [
   "render_word_card",
 ];
 
-const ACTION_TOOLS: ActionToolName[] = ["save_word", "start_roleplay"];
+const ACTION_TOOLS: ActionToolName[] = ["save_word", "start_mission"];
 
 export function intentToToolConfig(intent: Intent): ToolConfig {
   switch (intent.type) {

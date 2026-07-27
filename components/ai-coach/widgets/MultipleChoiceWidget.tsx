@@ -78,7 +78,7 @@ export default function MultipleChoiceWidget({ args, status, onAnswer, onNext, o
               key={idx}
               disabled={answered || evaluation !== null}
               onClick={() => handleSelect(idx)}
-              className={`w-full text-left px-4 py-3 rounded-xl text-sm text-[var(--text-primary)] transition-all border flex items-center gap-3 hover:border-[var(--border-hover)] active:scale-[0.99] disabled:cursor-default ${optionClass}`}
+              className={`w-full text-left px-4 py-3 rounded-xl text-body-sm text-[var(--text-primary)] transition-all border flex items-center gap-3 hover:border-[var(--border-hover)] active:scale-[0.99] disabled:cursor-default ${optionClass}`}
             >
               <span
                 className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${isCorrect ? "bg-[var(--success)]" : isWrong ? "bg-[var(--error)]" : "bg-[var(--primary)]"}`}

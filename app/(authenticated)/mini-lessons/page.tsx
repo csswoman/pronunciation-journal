@@ -6,7 +6,7 @@ export default async function MiniLessonsPage() {
   const lessons = await getAllMiniLessons();
   return (
     <div className="mini-lessons">
-      <PageLayout>
+      <PageLayout archetype="catalog">
         <MiniLessonsBrowser lessons={lessons} />
       </PageLayout>
     </div>

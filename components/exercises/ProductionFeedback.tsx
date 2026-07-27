@@ -21,11 +21,11 @@ export function ProductionFeedback({ grade, transcript }: Props) {
       <StatusBanner correct={grade.correct} score={grade.score} />
       <CriteriaChips usedTarget={grade.usedTarget} grammaticallyCorrect={grade.grammaticallyCorrect} />
       {transcript && (
-        <p className="m-0 text-sm text-fg-muted italic">
+        <p className="m-0 text-body-sm text-fg-muted italic">
           Dijiste: &ldquo;{transcript}&rdquo;
         </p>
       )}
-      <p className="m-0 max-w-[70ch] text-sm leading-relaxed text-pretty text-fg">
+      <p className="m-0 max-w-[70ch] text-body-sm leading-relaxed text-pretty text-fg">
         {grade.feedback}
       </p>
       {grade.corrections && (
@@ -33,7 +33,7 @@ export function ProductionFeedback({ grade, transcript }: Props) {
           <p className="m-0 text-caption text-fg-muted">
             Versión sugerida
           </p>
-          <p className="m-0 mt-1 text-sm text-fg text-pretty">{grade.corrections}</p>
+          <p className="m-0 mt-1 text-body-sm text-fg text-pretty">{grade.corrections}</p>
         </div>
       )}
     </div>
@@ -50,11 +50,11 @@ function StatusBanner({ correct, score }: { correct: boolean; score: number }) {
           : 'border-warning-border bg-warning-soft text-warning',
       )}
     >
-      <p className="m-0 flex items-center gap-2.5 text-sm font-semibold">
+      <p className="m-0 flex items-center gap-2.5 text-body-sm font-semibold">
         <span aria-hidden>{correct ? '✓' : '○'}</span>
         <span>{correct ? '¡Buen trabajo!' : 'Sigue practicando — revisa el feedback.'}</span>
       </p>
-      <p className="m-0 pl-6 text-xs font-medium opacity-70">
+      <p className="m-0 pl-6 text-caption font-medium opacity-70">
         Puntuación {score} de 100
       </p>
     </div>
@@ -79,10 +79,7 @@ function CriteriaChips({
 function CriterionChip({ label, ok }: { label: string; ok: boolean }) {
   return (
     <span
-      className={cn(
-        'inline-flex min-h-8 items-center rounded-full px-2.5 py-1 text-xs font-medium',
-        ok ? 'bg-success-soft text-success' : 'bg-error-soft text-error',
-      )}
+      className={cn( 'inline-flex min-h-8 items-center rounded-full px-2.5 py-1 text-caption font-medium', ok ? 'bg-success-soft text-success' : 'bg-error-soft text-error', )}
     >
       <span aria-hidden>{ok ? '✓' : '✗'}</span>
       <span className="ml-1">{label}</span>

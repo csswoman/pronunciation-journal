@@ -187,15 +187,15 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
     <button type="button" className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm cursor-default" onClick={onClose} aria-label="Close drawer" tabIndex={-1} />
     <div className="fixed right-0 top-0 bottom-0 z-50 w-full max-w-md flex flex-col bg-[var(--card-bg)] border-l border-[var(--line-divider)] shadow-2xl">
       <div className="flex items-start justify-between px-5 pt-5 pb-4 border-b border-[var(--line-divider)]">
-        <div><H2 className="font-bold text-lg leading-tight">{deck.name}</H2>{deck.description && <p className="text-xs text-fg-muted mt-0.5 line-clamp-1">{deck.description}</p>}<p className="text-xs text-fg-subtle mt-1">{loading ? "..." : `${entries.length} word${entries.length !== 1 ? "s" : ""}`}</p></div>
+        <div><H2 className="font-bold text-body-lg leading-tight">{deck.name}</H2>{deck.description && <p className="text-caption text-fg-muted mt-0.5 line-clamp-1">{deck.description}</p>}<p className="text-caption text-fg-subtle mt-1">{loading ? "..." : `${entries.length} word${entries.length !== 1 ? "s" : ""}`}</p></div>
         <Button variant="ghost" size="icon" onClick={onClose} className="mt-0.5"><X size={18} /></Button>
       </div>
 
-      <div className="flex px-4 pt-3 gap-1 border-b border-[var(--line-divider)] pb-0">{TABS.map((item) => <button key={item.id} onClick={() => setTab(item.id)} className={`flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-t-lg border-b-2 transition-colors -mb-px ${tab === item.id ? "border-[var(--primary)] text-[var(--primary)]" : "border-transparent text-fg-muted hover:text-fg"}`}>{item.icon}{item.label}</button>)}</div>
+      <div className="flex px-4 pt-3 gap-1 border-b border-[var(--line-divider)] pb-0">{TABS.map((item) => <button key={item.id} onClick={() => setTab(item.id)} className={`flex items-center gap-1.5 px-3 py-2 text-caption font-semibold rounded-t-lg border-b-2 transition-colors -mb-px ${tab === item.id ? "border-[var(--primary)] text-[var(--primary)]" : "border-transparent text-fg-muted hover:text-fg"}`}>{item.icon}{item.label}</button>)}</div>
 
       <div className="flex-1 overflow-y-auto">
         {actionError && (
-          <div role="alert" className="mx-4 mt-3 flex items-center justify-between gap-3 rounded-xl border border-error bg-error-soft px-3 py-2 text-sm text-error">
+          <div role="alert" className="mx-4 mt-3 flex items-center justify-between gap-3 rounded-xl border border-error bg-error-soft px-3 py-2 text-body-sm text-error">
             <span>{actionError}</span>
             <button type="button" onClick={() => setActionError(null)} aria-label="Dismiss error">
               ×

@@ -57,7 +57,7 @@ export function PronunciationPathActiveUnit({
           <p className="font-mono text-caption text-fg-subtle">Unidad seleccionada</p>
         )}
         <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1.5">
-          <h2 className="min-w-0 text-pretty text-balance font-h4 text-fg">
+          <h2 className="min-w-0 text-balance font-h4 text-fg">
             {title}
             {ipaHint ? (
               <span className="ml-2 font-ipa font-normal text-fg-muted" lang="en-fonipa">

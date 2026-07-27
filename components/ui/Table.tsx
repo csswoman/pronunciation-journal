@@ -8,11 +8,11 @@ interface TableProps {
 export default function Table({ headers, rows }: TableProps) {
   return (
     <div className="overflow-x-auto rounded-lg border border-border-default">
-      <table className="w-full text-sm">
+      <table className="w-full text-body-sm">
         <thead>
           <tr className="bg-surface-raised border-b border-border-default">
             {headers.map((h) => (
-              <th key={h} className="px-3 py-2 text-left text-xs font-semibold text-fg-muted">
+              <th key={h} className="px-3 py-2 text-left text-caption font-semibold text-fg-muted">
                 {h}
               </th>
             ))}
@@ -33,7 +33,7 @@ export default function Table({ headers, rows }: TableProps) {
           ))}
           {rows.length === 0 && (
             <tr>
-              <td colSpan={headers.length} className="px-3 py-4 text-center text-sm text-fg-subtle">
+              <td colSpan={headers.length} className="px-3 py-4 text-center text-body-sm text-fg-subtle">
                 No records yet
               </td>
             </tr>

@@ -49,12 +49,12 @@ export default function TrackingReviewClient({ sessionId }: { sessionId: string 
   }
 
   if (loading) {
-    return <PageLayout><PageHeader kicker="Tracking" title="Repaso guardado" subtitle="Recuperando tu selección…" /></PageLayout>
+    return <PageLayout archetype="session"><PageHeader kicker="Tracking" title="Repaso guardado" subtitle="Recuperando tu selección…" /></PageLayout>
   }
 
   if (!user || !sessionId || !session || error) {
     return (
-      <PageLayout>
+      <PageLayout archetype="session">
         <PageHeader kicker="Tracking" title="Repaso no disponible" subtitle={error ?? 'Inicia sesión para recuperar esta selección.'} />
         <Button variant="secondary" icon={<ArrowLeft size={16} aria-hidden />} onClick={() => router.push('/tracking')}>
           Volver a Tracking
@@ -66,7 +66,7 @@ export default function TrackingReviewClient({ sessionId }: { sessionId: string 
   const lessonItems = session.queue.items.filter((item) => item.kind === 'lesson' && item.href)
 
   return (
-    <PageLayout>
+    <PageLayout archetype="session">
       <PageHeader
         kicker="Tracking"
         title="Repaso guardado"
@@ -75,17 +75,17 @@ export default function TrackingReviewClient({ sessionId }: { sessionId: string 
       />
 
       {session.queue.skipped.length > 0 ? (
-        <div role="status" className="mb-5 rounded-[var(--radius-md)] border border-border-subtle bg-surface-sunken p-4 text-sm text-fg-muted">
+        <div role="status" className="mb-5 rounded-[var(--radius-md)] border border-border-subtle bg-surface-sunken p-4 text-body-sm text-fg-muted">
           Omitimos {session.queue.skipped.length} elemento{session.queue.skipped.length === 1 ? '' : 's'} que ya no tiene{session.queue.skipped.length === 1 ? '' : 'n'} un destino practicable.
         </div>
       ) : null}
 
       {lessonItems.length > 0 ? (
         <section className="mb-6" aria-labelledby="tracking-review-lessons">
-          <h2 id="tracking-review-lessons" className="mb-3 text-sm font-semibold text-fg">Lecciones guardadas</h2>
+          <h2 id="tracking-review-lessons" className="mb-3 text-body-sm font-semibold text-fg">Lecciones guardadas</h2>
           <div className="space-y-2">
             {lessonItems.map((item) => (
-              <Link key={item.id} href={item.href!} className="flex min-h-11 items-center gap-3 rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised px-4 py-3 text-sm text-fg hover:bg-surface-sunken">
+              <Link key={item.id} href={item.href!} className="flex min-h-11 items-center gap-3 rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised px-4 py-3 text-body-sm text-fg hover:bg-surface-sunken">
                 <BookOpen size={16} aria-hidden className="text-fg-subtle" />
                 <span className="min-w-0 truncate">{item.title}</span>
               </Link>
@@ -104,9 +104,9 @@ export default function TrackingReviewClient({ sessionId }: { sessionId: string 
           onExit={() => void exitReview()}
         />
       ) : (
-        <div className="rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised p-6 text-center">
+        <div className="rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised layout-card-pad text-center">
           <Check size={22} aria-hidden className="mx-auto mb-3 text-fg-muted" />
-          <p className="text-sm text-fg">No hay ejercicios pendientes en esta selección.</p>
+          <p className="text-body-sm text-fg">No hay ejercicios pendientes en esta selección.</p>
           <Button className="mt-4" variant="secondary" onClick={() => void exitReview()}>Volver a Tracking</Button>
         </div>
       )}

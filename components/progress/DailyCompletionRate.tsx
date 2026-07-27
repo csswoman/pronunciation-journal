@@ -48,8 +48,8 @@ export function DailyCompletionRate({ stats }: Props) {
         </>
       ) : (
         <div className="flex flex-col items-center gap-2 py-4 text-center">
-          <p className="text-sm font-medium text-fg-muted">No daily sessions yet</p>
-          <p className="text-xs text-fg-muted">
+          <p className="text-body-sm font-medium text-fg-muted">No daily sessions yet</p>
+          <p className="text-caption text-fg-muted">
             Complete a daily practice to see your consistency.
           </p>
         </div>

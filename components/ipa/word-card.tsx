@@ -34,11 +34,7 @@ export function WordCard({
     <button
       type="button"
       onClick={selectable ? onPick : onPlay}
-      className={cn(
-        "ipa-chart__mpcard",
-        isCorrect && "ipa-chart__mpcard--correct",
-        isWrong && "ipa-chart__mpcard--wrong"
-      )}
+      className={cn( "ipa-chart__mpcard", isCorrect && "ipa-chart__mpcard--correct", isWrong && "ipa-chart__mpcard--wrong" )}
     >
       <span className="ipa-chart__mpcard-lab">{side}</span>
 

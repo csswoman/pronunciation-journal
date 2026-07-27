@@ -23,29 +23,29 @@ export default function Section({
   description,
 }: SectionProps) {
   const spacingMap = {
-    sm: "space-y-3",   // 12px → 8px + 4px
-    md: "space-y-4",   // 16px
-    lg: "space-y-6",   // 24px
-    xl: "space-y-8",   // 32px
+    sm: "layout-stack-tight",
+    md: "layout-stack",
+    lg: "layout-stack-loose",
+    xl: "layout-section-gap",
   };
 
   return (
-    <section className={`${className}`}>
-      {/* Optional header */}
+    <section className={className}>
       {title && (
-        <div className="mb-6">
-          <H2 className={`${titleSize === "h4" ? "text-h4 tracking-[-0.01em]" : titleSize === "h3" ? "text-h3" : "text-h2"} mb-2`}>
+        <div className="mb-[var(--layout-stack-loose)]">
+          <H2
+            className={`${titleSize === "h4" ? "text-h4" : titleSize === "h3" ? "text-h3" : "text-h2"} mb-[var(--layout-stack-tight)]`}
+          >
             {title}
           </H2>
           {description && (
-            <p className="text-base text-fg-muted">
+            <p className="text-body-md text-pretty text-fg-muted">
               {description}
             </p>
           )}
         </div>
       )}
 
-      {/* Content with spacing */}
       <div className={spacingMap[spacing]}>
         {children}
       </div>

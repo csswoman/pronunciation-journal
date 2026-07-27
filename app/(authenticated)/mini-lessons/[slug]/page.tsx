@@ -40,7 +40,7 @@ export default async function MiniLessonDetailPage({ params }: MiniLessonPagePro
 
   return (
     <article className="mini-lessons mini-lessons--article">
-      <PageLayout>
+      <PageLayout archetype="session">
         <div className="mini-lessons__wrap mini-lessons__wrap--shell">
           <Link href="/mini-lessons" className="mini-lessons__back">
             ← Mini lecciones

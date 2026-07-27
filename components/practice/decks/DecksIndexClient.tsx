@@ -55,7 +55,7 @@ export function DecksIndexClient({ decks }: Props) {
   }, [decks, activeLevel, query])
 
   return (
-    <div className="flex flex-col gap-4 sm:gap-6">
+    <div className="flex flex-col gap-4 sm:gap-[var(--layout-section-gap)]">
       <LevelFilterBar
         levels={availableLevels}
         active={activeLevel}
@@ -63,7 +63,7 @@ export function DecksIndexClient({ decks }: Props) {
       />
       <SearchInput value={query} onChange={setQuery} />
       {filtered.length === 0 ? (
-        <p className="py-12 text-center text-sm text-[var(--text-tertiary)]">
+        <p className="py-12 text-center text-body-sm text-[var(--text-tertiary)]">
           No decks match your filter.
         </p>
       ) : (
@@ -110,12 +110,7 @@ function FilterChip({
     <button
       type="button"
       onClick={onClick}
-      className={cn(
-        'rounded-full border px-3.5 py-2 text-label font-medium transition-colors focus-ring sm:py-1.5 sm:text-xs',
-        active
-          ? 'border-primary bg-primary-soft text-primary'
-          : 'border-border-subtle bg-surface-raised text-fg-muted hover:border-border-hover',
-      )}
+      className={cn( 'rounded-full border px-3.5 py-2 text-label font-medium transition-colors focus-ring sm:py-1.5 sm:text-caption', active ? 'border-primary bg-primary-soft text-primary' : 'border-border-subtle bg-surface-raised text-fg-muted hover:border-border-hover', )}
     >
       {label}
     </button>
@@ -135,7 +130,7 @@ function SearchInput({ value, onChange }: { value: string; onChange: (v: string)
         placeholder="Search decks…"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full rounded-lg border border-border-subtle bg-surface-raised py-2.5 pl-8 pr-3 text-sm text-fg placeholder:text-fg-subtle focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-0 sm:py-2"
+        className="w-full rounded-lg border border-border-subtle bg-surface-raised py-2.5 pl-8 pr-3 text-body-sm text-fg placeholder:text-fg-subtle focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-0 sm:py-2"
       />
     </div>
   )
@@ -158,17 +153,17 @@ function DeckCard({ deck }: { deck: DeckSummary }) {
       className="group flex flex-col gap-3 rounded-xl border border-border-subtle bg-surface-raised p-4 sm:p-4 transition-colors hover:border-border-hover hover:bg-surface-sunken focus-ring"
     >
       <div className="flex items-start justify-between gap-2">
-        <span className="rounded-full border border-border-subtle bg-surface-base px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-fg-subtle">
+        <span className="rounded-full border border-border-subtle bg-surface-base px-2.5 py-0.5 font-kicker font-semibold text-fg-subtle">
           {LEVEL_LABELS[deck.level] ?? deck.level.toUpperCase()}
         </span>
         <div className="flex items-center gap-1.5">
           {deck.hasSounds && (
-            <span className="rounded-full bg-surface-base border border-border-subtle px-2 py-0.5 text-[10px] font-medium text-fg-subtle">
+            <span className="rounded-full bg-surface-base border border-border-subtle px-2 py-0.5 text-xxs font-medium text-fg-subtle">
               Sound
             </span>
           )}
           {deck.hasQuiz && (
-            <span className="rounded-full bg-surface-base border border-border-subtle px-2 py-0.5 text-[10px] font-medium text-fg-subtle">
+            <span className="rounded-full bg-surface-base border border-border-subtle px-2 py-0.5 text-xxs font-medium text-fg-subtle">
               Quiz
             </span>
           )}
@@ -176,15 +171,15 @@ function DeckCard({ deck }: { deck: DeckSummary }) {
       </div>
 
       <div className="flex flex-col gap-1">
-        <p className="text-xs text-fg-subtle">{deck.eyebrow}</p>
-        <p className="font-medium text-sm leading-snug text-fg group-hover:text-primary transition-colors">
+        <p className="text-caption text-fg-subtle">{deck.eyebrow}</p>
+        <p className="font-medium text-body-sm leading-snug text-fg group-hover:text-primary transition-colors">
           {deck.title}
         </p>
       </div>
 
       <div className="flex items-center gap-1.5 text-fg-subtle">
         <BookOpen size={13} aria-hidden />
-        <span className="text-xs">{deck.cardCount} cards</span>
+        <span className="text-caption">{deck.cardCount} cards</span>
       </div>
     </Link>
   )

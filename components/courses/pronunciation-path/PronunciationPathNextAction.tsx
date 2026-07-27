@@ -57,19 +57,13 @@ export function PronunciationPathNextAction({
     >
       <div className="flex min-w-0 flex-col gap-1.5">
         <p
-          className={cn(
-            'font-mono text-caption',
-            isCompact ? 'text-fg-subtle' : 'text-primary'
-          )}
+          className={cn( 'font-mono text-caption', isCompact ? 'text-fg-subtle' : 'text-primary' )}
         >
           {title}
         </p>
         {targetTitle ? (
           <h2
-            className={cn(
-              'text-pretty text-balance text-fg',
-              isCompact ? 'font-label' : 'font-h4'
-            )}
+            className={cn( 'text-pretty text-balance text-fg', isCompact ? 'font-label' : 'font-h4' )}
           >
             {targetTitle}
             {!isCompact && ipaHint ? (
@@ -80,10 +74,7 @@ export function PronunciationPathNextAction({
           </h2>
         ) : (
           <h2
-            className={cn(
-              'text-pretty text-balance text-fg',
-              isCompact ? 'font-label' : 'font-h4'
-            )}
+            className={cn( 'text-pretty text-balance text-fg', isCompact ? 'font-label' : 'font-h4' )}
           >
             Explorar la ruta
           </h2>

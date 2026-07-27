@@ -22,9 +22,9 @@ export function AudioButtons({
       </button>
       <div className="flex flex-col items-center gap-1">
         <button type="button" onClick={onPlaySlow} disabled={isPlayingSlow} aria-label={isPlayingSlow ? 'Reproduciendo lento…' : 'Escuchar despacio'} className={cn('flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-200', isPlayingSlow ? 'cursor-wait border-border-default bg-surface-raised text-fg-subtle' : 'cursor-pointer border-border-subtle bg-surface-base text-fg-muted hover:border-border-default hover:text-fg hover:scale-105 active:scale-95')}>
-          <span className="text-[11px] font-bold leading-none" aria-hidden>0.5×</span>
+          <span className="text-xxs font-bold leading-none" aria-hidden>0.5×</span>
         </button>
-        <span className="text-[10px] font-medium uppercase tracking-widest text-fg-subtle">Lento</span>
+        <span className="font-kicker font-medium text-fg-subtle">Lento</span>
       </div>
     </div>
   )
@@ -35,21 +35,21 @@ export function WordCountDashes({ count }: { count: number }) {
 }
 
 export function AnswerInput({ inputRef, value, disabled, onChange, onKeyDown }: { inputRef: RefObject<HTMLTextAreaElement | null>; value: string; disabled: boolean; onChange: (value: string) => void; onKeyDown: (event: KeyboardEvent<HTMLTextAreaElement>) => void }) {
-  return <textarea ref={inputRef} value={value} disabled={disabled} onChange={(event) => onChange(event.target.value)} onKeyDown={onKeyDown} rows={3} placeholder="Type what you hear…" className={cn('w-full resize-none rounded-lg border bg-surface-raised px-4 py-3.5 text-[15px] text-fg outline-none transition-all duration-150 placeholder:text-fg-subtle', disabled ? 'cursor-default border-border-subtle text-fg-subtle' : 'border-border-default focus:border-primary')} />
+  return <textarea ref={inputRef} value={value} disabled={disabled} onChange={(event) => onChange(event.target.value)} onKeyDown={onKeyDown} rows={3} placeholder="Type what you hear…" className={cn('w-full resize-none rounded-lg border bg-surface-raised px-4 py-3.5 text-body-sm text-fg outline-none transition-all duration-150 placeholder:text-fg-subtle', disabled ? 'cursor-default border-border-subtle text-fg-subtle' : 'border-border-default focus:border-primary')} />
 }
 
 export function CheckButton({ disabled, onSubmit }: { disabled: boolean; onSubmit: () => void }) {
-  return <button type="button" onClick={onSubmit} disabled={disabled} className={cn('w-full rounded-full py-3.5 text-[15px] font-semibold transition-all duration-150', disabled ? 'cursor-not-allowed bg-surface-raised text-fg-subtle' : 'cursor-pointer bg-(--cta-bg) text-(--cta-fg) hover:opacity-90 active:scale-[0.99]')}>Check</button>
+  return <button type="button" onClick={onSubmit} disabled={disabled} className={cn('w-full rounded-full py-3.5 text-body-sm font-semibold transition-all duration-150', disabled ? 'cursor-not-allowed bg-surface-raised text-fg-subtle' : 'cursor-pointer bg-(--cta-bg) text-(--cta-fg) hover:opacity-90 active:scale-[0.99]')}>Check</button>
 }
 
 export function HintPanel({ hint }: { hint: string }) {
-  return <div className="flex items-start gap-2.5 rounded-md bg-surface-sunken px-4 py-3"><Lightbulb size={14} className="mt-0.5 shrink-0 text-fg-subtle" aria-hidden /><p className="text-[13px] italic text-fg-muted">{hint}</p></div>
+  return <div className="flex items-start gap-2.5 rounded-md bg-surface-sunken px-4 py-3"><Lightbulb size={14} className="mt-0.5 shrink-0 text-fg-subtle" aria-hidden /><p className="text-caption italic text-fg-muted">{hint}</p></div>
 }
 
 export function FeedbackBar({ state, userAnswer, correctSentence }: { state: DictationAnswerState; userAnswer: string; correctSentence: string }) {
   const isCorrect = state === 'correct'
   const diff = isCorrect ? null : diffWords(userAnswer, correctSentence)
-  return <div className={cn('flex flex-col gap-2 rounded-md border px-4 py-3.5', isCorrect ? 'border-success-border bg-success-soft' : 'border-border-default bg-surface-raised')}><p className={cn('text-[13px] font-semibold', isCorrect ? 'text-success' : 'text-fg')}>{isCorrect ? '¡Well done!' : "Almost there — here's the correct sentence:"}</p>{diff && <p className="flex flex-wrap gap-x-1 text-[14px] leading-relaxed">{diff.map((token, index) => <span key={index} className={cn('font-medium', token.match ? 'text-success' : token.missing ? 'text-fg-subtle' : 'text-error')}>{token.word}</span>)}</p>}</div>
+  return <div className={cn('flex flex-col gap-2 rounded-md border px-4 py-3.5', isCorrect ? 'border-success-border bg-success-soft' : 'border-border-default bg-surface-raised')}><p className={cn('text-caption font-semibold', isCorrect ? 'text-success' : 'text-fg')}>{isCorrect ? '¡Well done!' : "Almost there — here's the correct sentence:"}</p>{diff && <p className="flex flex-wrap gap-x-1 text-body-sm leading-relaxed">{diff.map((token, index) => <span key={index} className={cn('font-medium', token.match ? 'text-success' : token.missing ? 'text-fg-subtle' : 'text-error')}>{token.word}</span>)}</p>}</div>
 }
 
 function SpeakerIcon() {

@@ -14,14 +14,14 @@ export function WordsEmptyState({ onAdd }: { onAdd: () => void }) {
           <Plus size={28} />
         </div>
         <div>
-          <p className="text-sm font-semibold text-fg">No words saved yet</p>
-          <p className="text-xs mt-1 max-w-sm text-fg-subtle">
+          <p className="text-body-sm font-semibold text-fg">No words saved yet</p>
+          <p className="text-caption mt-1 max-w-sm text-fg-subtle">
             Add any word and get its definition, IPA pronunciation, and an example sentence automatically.
           </p>
         </div>
         <Button onClick={onAdd} icon={<Plus size={16} />}>Add your first word</Button>
-        <p className="text-xs text-fg-muted">
-          Tip: press <kbd className="px-1.5 py-0.5 rounded bg-surface-sunken border border-border-subtle font-mono text-xs text-fg-secondary">N</kbd> anywhere to add a word
+        <p className="text-caption text-fg-muted">
+          Tip: press <kbd className="px-1.5 py-0.5 rounded bg-surface-sunken border border-border-subtle font-mono text-caption text-fg-secondary">N</kbd> anywhere to add a word
         </p>
       </div>
     </Card>

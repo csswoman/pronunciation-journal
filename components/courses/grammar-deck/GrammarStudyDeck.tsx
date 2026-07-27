@@ -213,7 +213,7 @@ export default function GrammarStudyDeck({
         ) : finished ? (
           <>
             {completionError && (
-              <div role="alert" className="mb-4 flex items-center justify-between gap-3 rounded-xl border border-error bg-error-soft px-4 py-3 text-sm text-error">
+              <div role="alert" className="mb-4 flex items-center justify-between gap-3 rounded-xl border border-error bg-error-soft px-4 py-3 text-body-sm text-error">
                 <span>No se pudo guardar la finalización de la lección.</span>
                 <button
                   type="button"

@@ -65,13 +65,13 @@ export function ExerciseTestSidebar(props: Props) {
       <div className="flex items-center justify-between border-b border-border-subtle px-4 py-3">
         <div>
           <p className="font-caption font-semibold uppercase tracking-wide text-fg-subtle">Test UI</p>
-          <p className="text-sm font-medium text-fg">Navegación</p>
+          <p className="text-body-sm font-medium text-fg">Navegación</p>
         </div>
         {overlayOpen ? (
           <button
             type="button"
             onClick={onExitOverlay}
-            className="flex items-center gap-1 rounded-[var(--radius-md)] px-2 py-1.5 text-xs font-medium text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg"
+            className="flex items-center gap-1 rounded-[var(--radius-md)] px-2 py-1.5 text-caption font-medium text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg"
           >
             <X size={14} aria-hidden />
             Cerrar

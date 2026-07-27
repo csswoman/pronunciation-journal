@@ -26,9 +26,9 @@ export default function InterestsEditor({ interests, onSave }: {
     finally { setSaving(false) }
   }
   return <section aria-labelledby="interests-title" className="rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5 space-y-3">
-    <div><h2 id="interests-title" className="text-sm font-semibold text-fg m-0">Intereses</h2><p className="text-xs text-fg-muted m-0">Personalizan futuras lecturas y práctica. Máximo 10.</p></div>
-    <div className="flex flex-wrap gap-2">{INTEREST_OPTIONS.map((interest) => <button key={interest} type="button" aria-pressed={selected.includes(interest)} onClick={() => toggle(interest)} className={selected.includes(interest) ? 'rounded-full bg-primary px-3 py-1 text-xs font-medium text-on-primary' : 'rounded-full border border-border-default px-3 py-1 text-xs text-fg'}>{labels[interest]}</button>)}</div>
-    {error && <p className="text-xs text-error">{error}</p>}
+    <div><h2 id="interests-title" className="text-body-sm font-semibold text-fg m-0">Intereses</h2><p className="text-caption text-fg-muted m-0">Personalizan futuras lecturas y práctica. Máximo 10.</p></div>
+    <div className="flex flex-wrap gap-2">{INTEREST_OPTIONS.map((interest) => <button key={interest} type="button" aria-pressed={selected.includes(interest)} onClick={() => toggle(interest)} className={selected.includes(interest) ? 'rounded-full bg-primary px-3 py-1 text-caption font-medium text-on-primary' : 'rounded-full border border-border-default px-3 py-1 text-caption text-fg'}>{labels[interest]}</button>)}</div>
+    {error && <p className="text-caption text-error">{error}</p>}
     <Button type="button" variant="primary" size="sm" disabled={saving} onClick={save}>{saving ? 'Guardando…' : 'Guardar intereses'}</Button>
   </section>
 }

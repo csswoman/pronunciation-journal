@@ -20,14 +20,7 @@ function StatColumn({
   return (
     <div className="flex flex-1 flex-col items-center gap-0.5">
       <span
-        className={cn(
-          'type-stat text-xl tracking-tight transition-colors duration-200',
-          accent && value > 0
-            ? 'text-primary'
-            : zero && value === 0
-              ? 'text-fg-subtle'
-              : 'text-fg-muted',
-        )}
+        className={cn( 'type-stat text-h4 tracking-tight transition-colors duration-200', accent && value > 0 ? 'text-primary' : zero && value === 0 ? 'text-fg-subtle' : 'text-fg-muted', )}
       >
         {value}
       </span>

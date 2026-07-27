@@ -28,18 +28,18 @@ export function StudySessionComplete({
   return (
     <div className="flex flex-col min-h-[calc(100vh-10rem)] items-center justify-center p-4">
       <div
-        className="max-w-sm w-full rounded-2xl border p-8 text-center space-y-5"
+        className="max-w-sm w-full rounded-2xl border layout-card-pad text-center space-y-5"
         style={{ backgroundColor: "var(--card-bg)", borderColor: "var(--line-divider)" }}
       >
-        <div className="text-5xl">🎉</div>
+        <div className="text-h1">🎉</div>
         <div>
           <H2 className="text-h2">Session complete!</H2>
-          <p className="text-sm mt-1 text-fg-muted">
+          <p className="text-body-sm mt-1 text-fg-muted">
             You reviewed <strong>{stats.seen}</strong> card{stats.seen !== 1 ? "s" : ""} from{" "}
             <strong>{deckName}</strong>
           </p>
         </div>
-        <div className="grid grid-cols-3 gap-3 text-sm">
+        <div className="grid grid-cols-3 gap-3 text-body-sm">
           {[
             { val: stats.again, label: "hard", cfg: RATING_CONFIG.again },
             { val: stats.hard, label: "medium", cfg: RATING_CONFIG.hard },
@@ -52,10 +52,10 @@ export function StudySessionComplete({
               className="rounded-xl p-3"
               style={{ backgroundColor: cfg.bg, border: `1px solid ${cfg.border}` }}
             >
-              <div className="text-lg font-bold" style={{ color: ratingColor }}>
+              <div className="text-body-lg font-bold" style={{ color: ratingColor }}>
                 {val}
               </div>
-              <div className="text-xs" style={{ color: ratingColor }}>
+              <div className="text-caption" style={{ color: ratingColor }}>
                 {label}
               </div>
             </div>
@@ -63,7 +63,7 @@ export function StudySessionComplete({
           })}
         </div>
         {stats.newlyMastered > 0 && (
-          <p className="text-sm text-fg-muted">
+          <p className="text-body-sm text-fg-muted">
             ⭐ {stats.newlyMastered} card{stats.newlyMastered !== 1 ? "s" : ""} mastered
           </p>
         )}

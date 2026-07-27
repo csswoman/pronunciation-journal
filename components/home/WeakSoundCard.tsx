@@ -1,6 +1,6 @@
 // Planned structure:
 // <WeakSoundCard>
-//   title + body + CTA → /practice/sounds
+//   kicker + title/body + CTA → /practice/sounds
 //   OR focused phoneme when data exists
 // </WeakSoundCard>
 
@@ -30,14 +30,14 @@ export default function WeakSoundCard({ weakestPhoneme = null }: WeakSoundCardPr
     return (
       <Link
         href="/practice/sounds"
-        className="home-sidebar-card focus-ring flex flex-col gap-2 transition-colors hover:bg-surface-sunken"
+        className="home-sidebar-card focus-ring group flex flex-col gap-2 transition-colors hover:bg-surface-sunken"
       >
-        <span className="font-kicker text-fg-muted">Pronunciación</span>
+        <span className="font-kicker text-fg-subtle">Pronunciación</span>
         <span className="text-h4 text-balance text-fg">Laboratorio de sonidos</span>
         <span className="font-body-sm text-pretty text-fg-muted">
           Contrastes, pares mínimos y práctica guiada para afinar el oído.
         </span>
-        <span className="mt-auto inline-flex min-h-10 items-center gap-1.5 font-body-sm text-fg-muted">
+        <span className="mt-auto inline-flex min-h-10 items-center gap-1.5 font-body-sm text-fg-muted group-hover:text-fg group-hover:underline">
           Abrir laboratorio <ArrowRight size={16} aria-hidden />
         </span>
       </Link>
@@ -49,9 +49,9 @@ export default function WeakSoundCard({ weakestPhoneme = null }: WeakSoundCardPr
       href="/practice/sounds"
       className="home-sidebar-card focus-ring group flex flex-col gap-3 transition-colors hover:bg-surface-sunken"
     >
-      <span className="font-kicker text-fg-muted">Pronunciación</span>
+      <span className="font-kicker text-fg-subtle">Pronunciación</span>
       <div className="flex items-start gap-3">
-        <span className="font-mono shrink-0 text-display-ipa font-bold leading-none text-warning">
+        <span className="font-ipa shrink-0 text-display-ipa font-bold leading-none text-warning">
           {formatIpaDisplay(weakestPhoneme!.ipa)}
         </span>
         <div className="min-w-0 flex-1">

@@ -26,7 +26,7 @@ export function ThisWeekCard({ stats }: Props) {
           />
         </div>
       ) : (
-        <p className="py-3 text-center text-sm text-fg-muted">
+        <p className="py-3 text-center text-body-sm text-fg-muted">
           Practice this week to see your activity summary.
         </p>
       )}
@@ -53,7 +53,7 @@ function WeekStat({
         .join(' ')}
     >
       <b className="block text-h3 leading-none text-primary">{value}</b>
-      <span className="mt-1.5 block text-caption uppercase tracking-[0.06em] text-fg-subtle">
+      <span className="mt-1.5 block font-kicker text-fg-subtle">
         {label}
       </span>
     </div>
