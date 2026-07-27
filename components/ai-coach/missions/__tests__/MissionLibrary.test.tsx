@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import MissionLibrary from '../MissionLibrary'
 import { listMissions } from '@/lib/ai-practice/missions/registry'
@@ -17,5 +17,19 @@ describe('MissionLibrary', () => {
     render(<MissionLibrary missions={[]} onSelect={vi.fn()} />)
 
     expect(screen.getByText(/no hay misiones/i)).toBeInTheDocument()
+  })
+})
+
+describe('MissionLibrary category filter', () => {
+  it('filters missions by category when a filter chip is clicked', () => {
+    const missions = listMissions()
+    const interview = missions.find((mission) => mission.category === 'interview')!
+    const cafe = missions.find((mission) => mission.id === 'roleplay.cafe')!
+    render(<MissionLibrary missions={missions} onSelect={vi.fn()} />)
+
+    fireEvent.click(screen.getByRole('button', { name: /servicios/i }))
+
+    expect(screen.queryByText(interview.communicativeGoal)).not.toBeInTheDocument()
+    expect(screen.getByText(cafe.communicativeGoal)).toBeInTheDocument()
   })
 })
