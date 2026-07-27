@@ -1,8 +1,24 @@
 'use client'
 
+// Planned structure:
+// <SessionSummary>
+//   <SummaryHeader />
+//   <SessionInsight />
+//   <SessionProgressMeta />
+//   <FacetList />
+//   <SummaryActions />
+
 import { cn } from '@/lib/cn'
 import { formatIpaDisplay } from '@/lib/practice/resolve-session-ipa'
+import {
+  buildPerformanceRows,
+  buildSessionInsight,
+  formatExerciseLabel,
+  type PerformanceRow,
+} from '@/lib/practice/session-summary-view'
 import type { SessionResult } from '@/lib/practice/types'
+
+export { formatExerciseLabel }
 
 interface Props {
   result: SessionResult
@@ -29,7 +45,10 @@ function AccuracyDisplay({ accuracy }: { accuracy: number }) {
       role="status"
       aria-live="polite"
       aria-label={`Precisión ${accuracy} por ciento`}
-      className={cn( 'text-h2 font-semibold tabular-nums', isExcellent ? 'text-success animate-accuracy-pop' : isAcceptable ? 'text-warning' : 'text-error', )}
+      className={cn(
+        'text-h2 font-semibold tabular-nums',
+        isExcellent ? 'text-success animate-accuracy-pop' : isAcceptable ? 'text-warning' : 'text-error',
+      )}
     >
       {accuracy}%
     </div>
@@ -42,34 +61,17 @@ function AccuracyLabel({ accuracy }: { accuracy: number }) {
   return <span className="text-body-sm font-medium text-error">Hay que reforzar</span>
 }
 
-export function formatExerciseLabel(slug: string, exercisePayload: unknown): string {
-  if (exercisePayload && typeof exercisePayload === 'object') {
-    const targetWord = (exercisePayload as { targetWord?: unknown }).targetWord
-    if (typeof targetWord === 'string' && targetWord.trim().length > 0) return targetWord.trim()
-  }
-
-  return slug.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
-}
-
-function ResultRow({
-  slug,
-  isCorrect,
-  exercisePayload,
-}: {
-  slug: string
-  isCorrect: boolean
-  exercisePayload: unknown
-}) {
+function FacetRow({ row }: { row: PerformanceRow }) {
   return (
-    <li className="flex items-center justify-between rounded-lg border border-border-subtle bg-surface-raised px-3 py-2">
-      <span className="text-body-sm text-fg-primary">
-        {formatExerciseLabel(slug, exercisePayload)}
-      </span>
+    <li className="flex items-baseline justify-between gap-4 py-1.5">
+      <span className="text-body-sm text-fg-primary">{row.label}</span>
       <span
-        className={cn( 'inline-flex h-6 w-6 items-center justify-center rounded-full text-caption font-semibold', isCorrect ? 'bg-success-soft text-success' : 'bg-error-soft text-error', )}
-        aria-label={isCorrect ? 'Correcto' : 'Incorrecto'}
+        className={cn(
+          'shrink-0 text-caption',
+          row.needsReinforce ? 'font-medium text-warning' : 'text-fg-secondary',
+        )}
       >
-        {isCorrect ? '✓' : '✗'}
+        {row.needsReinforce ? 'A reforzar' : 'Bien'}
       </span>
     </li>
   )
@@ -87,27 +89,38 @@ export function SessionSummary({
   const showProgressStatus = progressSaveStatus !== 'idle'
   const showRetry = Boolean(onRetrySync) && (progressSaveStatus === 'error' || progressSaveStatus === 'saved_local')
   const ipaLabel = practiceIpa ? formatIpaDisplay(practiceIpa) : null
+  const soundMode = Boolean(practiceIpa)
+  const insight = buildSessionInsight(result, { soundMode })
+  const performanceRows = buildPerformanceRows(result.bySlug, { soundMode })
 
   return (
     <div
       role="region"
       aria-label="Resultados de la sesión"
-      className="flex min-h-0 w-full flex-1 flex-col gap-4"
+      className="flex min-h-0 w-full flex-1 flex-col gap-5"
     >
-      <div className="flex shrink-0 flex-col items-center gap-1.5">
+      <div className="flex shrink-0 flex-col items-center gap-1">
         {ipaLabel && (
           <p className="font-ipa m-0 text-display-ipa font-bold text-primary">{ipaLabel}</p>
         )}
         <p className="text-caption font-semibold text-fg-secondary">Sesión completa</p>
         <AccuracyDisplay accuracy={result.accuracy} />
         <AccuracyLabel accuracy={result.accuracy} />
-        <p className="mt-1 text-caption text-fg-secondary">
-          {correctCount} de {result.results.length} correctas · {formatDuration(result.totalTimeMs)}
+        <p className="mt-2 max-w-prose text-balance text-center text-body-sm text-fg-primary">
+          {insight}
+        </p>
+        <p className="text-caption text-fg-secondary">
+          {correctCount} de {result.results.length} · {formatDuration(result.totalTimeMs)}
         </p>
         {showProgressStatus && (
           <p
             role={progressSaveStatus === 'error' ? 'alert' : 'status'}
-            className={cn( 'mt-2 rounded-md px-3 py-2 text-body-sm', progressSaveStatus === 'error' ? 'bg-warning-soft text-warning' : 'bg-surface-sunken text-fg-secondary', )}
+            className={cn(
+              'mt-2 rounded-md px-3 py-1.5 text-caption',
+              progressSaveStatus === 'error'
+                ? 'bg-warning-soft text-warning'
+                : 'text-fg-tertiary',
+            )}
           >
             {progressSaveStatus === 'saving'
               ? 'Guardando progreso…'
@@ -129,18 +142,18 @@ export function SessionSummary({
         )}
       </div>
 
-      <ul className="flex min-h-0 flex-1 flex-col gap-1.5 overflow-y-auto overscroll-contain">
-        {result.results.map((r, i) => (
-          <ResultRow
-            key={`${r.exerciseId}-${i}`}
-            slug={r.slug}
-            isCorrect={r.isCorrect}
-            exercisePayload={r.exercisePayload}
-          />
-        ))}
-      </ul>
+      {performanceRows.length > 0 && (
+        <ul
+          className="m-0 w-full max-w-sm list-none divide-y divide-border-subtle self-center p-0"
+          aria-label="Rendimiento por habilidad"
+        >
+          {performanceRows.map((row) => (
+            <FacetRow key={row.facet} row={row} />
+          ))}
+        </ul>
+      )}
 
-      <div className="flex shrink-0 items-center gap-3 pt-1">
+      <div className="mt-auto flex shrink-0 items-center gap-3 pt-2">
         <button
           type="button"
           onClick={onPracticeAgain}
