@@ -13,6 +13,7 @@ bundle-summary.json
 /test-results
 /playwright-report
 .playwright-mcp/
+/tests/a11y/.auth/
 
 # screenshots from local UI debugging — keep intentional assets in public/
 /*.png

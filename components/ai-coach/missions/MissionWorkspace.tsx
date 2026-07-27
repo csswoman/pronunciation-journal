@@ -174,7 +174,12 @@ export function MissionWorkspace({
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <div className="flex-1 min-h-0 overflow-y-auto">
+      <div
+        role="region"
+        aria-label="Conversación de la misión"
+        tabIndex={0}
+        className="flex-1 min-h-0 overflow-y-auto"
+      >
         <div className="p-3">
           {outcome
             ? <MissionResult outcome={outcome} onReviewCta={() => window.location.assign('/tracking/review')} />

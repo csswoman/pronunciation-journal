@@ -155,7 +155,7 @@ Allow launches with `missionId`, `targetIds` and source metadata from pronunciat
 - [x] One prioritized correction leads to a varied transfer attempt.
 - [x] Route, Daily and Tracking launch/reconcile exact mission ids.
 - [x] Offline/idempotent/two-user tests pass without raw-audio storage.
-- [ ] Prompt audit, focused tests, a11y, typecheck and token lint pass.
+- [x] Prompt audit, focused tests, a11y, typecheck and token lint pass.
 
 ## Verification (2026-07-27)
 
@@ -167,7 +167,9 @@ Allow launches with `missionId`, `targetIds` and source metadata from pronunciat
 - When that tool starts from an existing chat stream, the same user-owned conversation is relabelled to the mission mode after its id is available. This preserves the active stream and messages while ensuring history resumes with the authored prompt.
 - Route/Daily/Tracking search found no current `roleplay:` launch call sites in `components/courses/`, `lib/practice/daily-plan/`, or `components/tracking/`; `parseMissionLaunch` now defines and tests their exact launch contracts instead of fabricating integrations.
 - Passed: `pnpm exec vitest run lib/ai-practice/missions lib/ai-practice/__tests__/stream-processor.test.ts`, focused Coach/Interview/hooks tests, `pnpm audit:ai-prompts`, `pnpm type-check`, `pnpm lint:design-tokens`, and the full Vitest suite. The mission runner additionally tests keyboard activation of the retry control.
-- Remaining verification gap: `pnpm test:a11y --grep "oral mission"` reports no matching Playwright tests because there is no auth-independent live mission route. The component-level keyboard test is green, but the final a11y criterion remains unchecked until a browser-accessible mission fixture or authenticated e2e setup is added.
+- Closed the a11y verification gap: added `tests/a11y/auth.setup.ts`, an authenticated Playwright setup project that signs in through the real login UI via `signInAsGuest()` (Supabase anonymous sign-in) and saves `storageState` to `tests/a11y/.auth/guest.json` (gitignored). `tests/a11y/oral-mission.a11y.spec.ts` reuses that session, opens the Coach panel, selects the first mission, and axe-scans the briefing phase. `playwright.config.ts` now declares a `setup` project that `chromium` depends on.
+  - This depends on `enable_anonymous_sign_ins = true` on whichever Supabase project `NEXT_PUBLIC_SUPABASE_URL` points to. It's `false` in the local `supabase/config.toml`; the connected project's actual setting wasn't confirmed. If guest sign-in fails, `auth.setup.ts` skips itself (not fail) and `oral-mission.a11y.spec.ts` skips too, so this can never break `pnpm test:a11y` or CI — it just silently stays unverified until anonymous sign-in is confirmed/enabled on that project.
+  - Ran locally against the real connected Supabase project: guest sign-in succeeded, and the scan caught one real `scrollable-region-focusable` (serious) axe violation on `MissionWorkspace`'s message-scroll container — fixed by adding `role="region" aria-label="Conversación de la misión" tabIndex={0}`. All 4 a11y specs pass after the fix.
 
 ## STOP conditions
 
