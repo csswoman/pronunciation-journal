@@ -111,13 +111,21 @@ On authenticated startup, merge remote completions into the current user's mirro
 
 ## Done criteria
 
-- [ ] No production path creates a fake correct answer for lesson completion.
-- [ ] Completion, quiz pass and mastery have separate types and stores.
-- [ ] Course progress is stable across reload/device and isolated by user.
-- [ ] `lessonsCompleted` counts canonical completions, not answer rows.
-- [ ] Daily marks only the exact concept/study-deck assignment complete.
-- [ ] Local migration, RLS, focused tests and typecheck pass.
-- [ ] No files outside scope are staged; `plans/README.md` is updated.
+- [x] No production path creates a fake correct answer for lesson completion. (`recordLessonComplete` upserts `lesson_completions` only; no synthetic `answer_history` row.)
+- [x] Completion, quiz pass and mastery have separate types and stores.
+- [x] Course progress is stable across reload/device and isolated by user. (`lesson_completions` keyed by `(user_id, course_slug, lesson_slug)`, RLS scoped to `auth.uid()`.)
+- [x] `lessonsCompleted` counts canonical completions, not answer rows.
+- [x] Daily marks only the exact concept/study-deck assignment complete.
+- [x] Local migration, RLS, focused tests and typecheck pass.
+- [x] No files outside scope are staged; `plans/README.md` is updated.
+
+## Verification (2026-07-27)
+
+- The only remaining blocker (Docker Desktop unavailable for local Supabase) was environmental, not a code gap — implementation had already been complete since 2026-07-20. Docker Desktop was resumed and the local stack (which had exited ~27h earlier) restarted cleanly.
+- Ran `pnpm exec supabase db reset`: all migrations (including `20260720060020_create_lesson_completions.sql`) applied cleanly on a fresh local database.
+- Ran `pnpm test:rls:integration`: passed — cross-user access correctly denied on `lesson_completions` and related tables.
+- Ran `pnpm exec vitest run lib/practice lib/progress components/mini-lessons components/courses`: 293/293 passed.
+- `pnpm type-check`: clean.
 
 ## STOP conditions
 
