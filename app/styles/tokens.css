@@ -172,6 +172,11 @@
   --layout-stack-loose: var(--space-4);       /* within-section air */
   --layout-card-pad: var(--space-4);          /* interactive cards */
   --layout-card-pad-compact: var(--space-3);
+  /* Page archetypes — canvas (dashboard/catalog) vs focused session column */
+  --layout-canvas-max: 80rem;                 /* ~1280px open hubs */
+  --layout-session-max: 45rem;                /* 720px focused practice/writing */
+  --layout-rail-min: 17rem;
+  --layout-rail-max: 22rem;
 
   /* ── 10. Border radius scale ─────────────────────────────────────────── */
   --radius-sm:   8px;

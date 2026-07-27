@@ -49,12 +49,12 @@ export default function TrackingReviewClient({ sessionId }: { sessionId: string 
   }
 
   if (loading) {
-    return <PageLayout><PageHeader kicker="Tracking" title="Repaso guardado" subtitle="Recuperando tu selección…" /></PageLayout>
+    return <PageLayout archetype="session"><PageHeader kicker="Tracking" title="Repaso guardado" subtitle="Recuperando tu selección…" /></PageLayout>
   }
 
   if (!user || !sessionId || !session || error) {
     return (
-      <PageLayout>
+      <PageLayout archetype="session">
         <PageHeader kicker="Tracking" title="Repaso no disponible" subtitle={error ?? 'Inicia sesión para recuperar esta selección.'} />
         <Button variant="secondary" icon={<ArrowLeft size={16} aria-hidden />} onClick={() => router.push('/tracking')}>
           Volver a Tracking
@@ -66,7 +66,7 @@ export default function TrackingReviewClient({ sessionId }: { sessionId: string 
   const lessonItems = session.queue.items.filter((item) => item.kind === 'lesson' && item.href)
 
   return (
-    <PageLayout>
+    <PageLayout archetype="session">
       <PageHeader
         kicker="Tracking"
         title="Repaso guardado"

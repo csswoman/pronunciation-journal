@@ -137,7 +137,7 @@ export default function SoundLabPage() {
   }
 
   return (
-    <PageLayout className="sound-lab min-h-screen">
+    <PageLayout archetype="catalog" className="sound-lab min-h-screen">
       <header className="sound-lab__page-header">
         <SoundLabHeader
           totalCount={allLessons.length}

@@ -98,7 +98,7 @@ export default async function HomePage() {
     : null;
 
   return (
-    <PageLayout>
+    <PageLayout archetype="dashboard">
       <HomeLayout
         streak={streak}
         wordsDueCount={queue.sources.find((s) => s.id === "vocabulary")?.count ?? 0}

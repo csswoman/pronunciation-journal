@@ -14,20 +14,18 @@ export default async function PracticeReviewPage() {
   const summary = user ? await getReviewHubSummary(user.id) : null
 
   return (
-    <PageLayout>
-      <div className="w-full">
-        <PageHeader
-          kicker="Seguimiento"
-          title="Review"
-          subtitle="Oraciones fallidas, palabras débiles, SRS de vocabulario y sonidos pendientes — en un solo lugar."
-        />
+    <PageLayout archetype="dashboard">
+      <PageHeader
+        kicker="Seguimiento"
+        title="Review"
+        subtitle="Oraciones fallidas, palabras débiles, SRS de vocabulario y sonidos pendientes — en un solo lugar."
+      />
 
-        {!user || !summary ? (
-          <GuestBanner />
-        ) : (
-          <ReviewHubClient summary={summary} />
-        )}
-      </div>
+      {!user || !summary ? (
+        <GuestBanner />
+      ) : (
+        <ReviewHubClient summary={summary} />
+      )}
     </PageLayout>
   )
 }

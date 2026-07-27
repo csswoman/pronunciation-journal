@@ -45,7 +45,7 @@ export default function SessionRecapCard({ arc, stepCount, dueTomorrow, streak }
   const words = arc?.sessionWords ?? []
 
   return (
-    <PageLayout className="mx-auto max-w-[640px]">
+    <PageLayout archetype="session">
       <div className="mt-16 flex flex-col items-center gap-4 text-center">
         <div className="grid h-16 w-16 place-items-center rounded-full bg-[var(--hue-icon-bg)] text-[var(--primary)]">
           <Flame size={30} />

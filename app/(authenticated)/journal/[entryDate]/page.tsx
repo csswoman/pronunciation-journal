@@ -21,7 +21,7 @@ export default async function JournalHistoryPage({
   if (!userId) notFound()
 
   return (
-    <PageLayout className="mx-auto max-w-4xl">
+    <PageLayout archetype="session">
       <JournalHistoryEntryClient userId={userId} entryDate={entryDate} />
     </PageLayout>
   )

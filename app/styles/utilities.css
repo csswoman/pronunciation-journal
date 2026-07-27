@@ -330,6 +330,52 @@
   padding-block: var(--layout-page-block) var(--layout-page-block-end);
 }
 
+/* Page archetypes — each authenticated route declares one via PageLayout */
+.page-shell--dashboard,
+.page-shell--catalog {
+  max-width: var(--layout-canvas-max);
+  margin-inline: auto;
+}
+
+.page-shell--session {
+  max-width: var(--layout-session-max);
+  margin-inline: auto;
+}
+
+.page-dashboard {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--layout-section-gap);
+}
+
+.page-dashboard__main,
+.page-dashboard__rail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--layout-stack-loose);
+  min-width: 0;
+}
+
+.page-dashboard__rail {
+  gap: var(--layout-stack);
+}
+
+@media (min-width: 768px) {
+  .page-dashboard:has(> .page-dashboard__rail) {
+    grid-template-columns: minmax(0, 1fr) minmax(var(--layout-rail-min), var(--layout-rail-max));
+    align-items: start;
+  }
+
+  .page-dashboard__banner {
+    grid-column: 1 / -1;
+  }
+
+  .page-dashboard__rail {
+    position: sticky;
+    top: var(--layout-stack-loose);
+  }
+}
+
 .page-header {
   display: flex;
   flex-direction: column;
@@ -378,8 +424,6 @@
 .home-layout-shell {
   position: relative;
   width: 100%;
-  max-width: 80rem;
-  margin-inline: auto;
   isolation: isolate;
 }
 

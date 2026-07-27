@@ -45,11 +45,11 @@ const AICoachPanel = dynamic(importAICoachPanel, {
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isAuthPage = isPublicAuthPath(pathname);
-  // Immersion narrows content max-width; active sessions also hide mobile BottomNav.
+  // Session column for in-flow practice (hubs use PageLayout archetypes instead).
+  // Active sessions also hide mobile BottomNav via sessionChromeStore.
   const isImmersivePractice =
     pathname.startsWith("/practice/sounds/sound/") ||
     pathname === "/daily" ||
-    pathname === "/practice/review" ||
     pathname === "/assessment" ||
     pathname === "/assessment/pronunciation";
   const hideMobileNav = useSessionChromeStore(selectHideMobileNav);
@@ -121,7 +121,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         <div
           className={
             isImmersivePractice
-              ? "mx-auto flex min-h-0 w-full max-w-3xl flex-1 flex-col"
+              ? "page-shell--session mx-auto flex min-h-0 w-full flex-1 flex-col"
               : "w-full"
           }
         >

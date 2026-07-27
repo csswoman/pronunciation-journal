@@ -9,7 +9,7 @@ export default function DecksIndexPage() {
   const decks = listAllDecks()
 
   return (
-    <PageLayout>
+    <PageLayout archetype="catalog">
       <div className="w-full">
         <PageHeader
           kicker="Learn"

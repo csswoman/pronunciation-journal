@@ -172,7 +172,7 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
 
   // ── Render: checklist ──────────────────────────────────────────────────────
   return (
-    <PageLayout className="mx-auto max-w-[680px]">
+    <PageLayout archetype="session">
       <PageHeader
         variant="compact"
         kicker="Hoy"

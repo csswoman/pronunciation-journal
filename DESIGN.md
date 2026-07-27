@@ -363,8 +363,11 @@ AppShell → PageLayout → PageHeader → Content
 
 - Open canvas: no full-page card wrapper around the route.
 - Outer gutters and vertical rhythm from layout utilities / spacing tokens only.
-- Sessions may use a tighter inner max-width; outer shell unchanged.
-- Prefer `cardWrapper={false}` (or equivalent canonical mode). Do not invent per-page outer shells.
+- Every authenticated route declares a **page archetype** via `PageLayout archetype`:
+  - `dashboard` — full canvas (`--layout-canvas-max`, 80rem); optional `banner` + `rail` (17–22rem sticky). Home, Progress, Review.
+  - `catalog` — full canvas for grids/lists. Sound Lab, Decks, Mini Lessons, Léxico, Ruta, Pronunciación, IPA, Saved.
+  - `session` — centered column (`--layout-session-max`, 720px). Diario, Essential Words, exercises.
+- Do not invent per-page outer shells or ad-hoc `max-w-*` on the page root.
 
 **PageHeader**
 

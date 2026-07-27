@@ -74,7 +74,7 @@ export default function TrackingClient() {
     setShowPhraseModal(false);
   }
 
-  return <PageLayout><PageHeader kicker="Tracking" title="Contenido guardado" subtitle="Palabras, frases y lecciones que quieres volver a practicar." primaryCta={{ label: startingReview ? "Preparando…" : "Repasar", icon: <Play size={15} aria-hidden />, onClick: () => void startReview() }} />
+  return <PageLayout archetype="catalog"><PageHeader kicker="Tracking" title="Contenido guardado" subtitle="Palabras, frases y lecciones que quieres volver a practicar." primaryCta={{ label: startingReview ? "Preparando…" : "Repasar", icon: <Play size={15} aria-hidden />, onClick: () => void startReview() }} />
     <div className="mb-6 flex flex-wrap gap-2"><Button onClick={() => setShowWordModal(true)}>Agregar palabra</Button><Button variant="secondary" onClick={() => setShowPhraseModal(true)}>Agregar frase</Button></div>
     {reviewError ? <p role="alert" className="mb-5 text-body-sm text-fg-muted">{reviewError}</p> : null}
     <div className="mb-6 flex flex-wrap gap-2" aria-label="Filtrar contenido guardado">{FILTERS.map(({ id, label }) => <button key={id} type="button" onClick={() => setFilter(id)} aria-pressed={filter === id} className={filter === id ? "rounded-full bg-primary px-3 py-1.5 text-body-sm font-medium text-on-primary" : "rounded-full border border-border-subtle px-3 py-1.5 text-body-sm font-medium text-fg-muted hover:text-fg"}>{label}</button>)}</div>

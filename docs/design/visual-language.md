@@ -68,6 +68,7 @@ La personalidad tipográfica proviene de tres voces con tareas separadas:
 - Mantén cuerpo de lectura entre 65 y 75ch. En listas, controles y datos se prioriza la densidad funcional.
 - Escala tipográfica: solo tokens en `app/styles/tokens.css` (`--text-size-*`). Mobile-first en `rem`; bump en `768px`. Usa `text-h2` / `text-h3` / `text-caption` / `.font-kicker` — no `text-2xl` ni `clamp()` en chrome de producto.
 - Densidad de layout: tokens `--layout-*` en el mismo archivo. Shell canónico vía `.page-shell` / `.page-header` / `.layout-stack*`. Mobile más compacto; desktop abre en `768px`.
+- Arquetipos de página (`PageLayout archetype`): `dashboard` y `catalog` usan `--layout-canvas-max` (80rem); `session` usa `--layout-session-max` (720px). Dashboard puede declarar `banner` + `rail`.
 - En CSS de dominio usa `var(--text-size-*)` / `var(--layout-*)` / `var(--space-*)`. En TSX usa `text-h*`, `text-caption`, `font-kicker`, `layout-card-pad`, `layout-stack*` — no `text-2xl`, `text-[13px]`, ni `gap-8`/`p-8` en chrome.
 
 ## Textura, profundidad y movimiento

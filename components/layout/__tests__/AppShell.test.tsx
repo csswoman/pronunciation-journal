@@ -268,7 +268,7 @@ describe("AppShell mount behavior", () => {
     });
   });
 
-  it("uses a narrow column only for immersive practice routes", async () => {
+  it("uses a session column only for immersive practice routes", async () => {
     mockPathname = "/practice/sounds/sound/ae";
 
     const { container, rerender } = render(
@@ -278,7 +278,7 @@ describe("AppShell mount behavior", () => {
     );
 
     await waitFor(() => {
-      expect(container.querySelector(".max-w-3xl")).toBeTruthy();
+      expect(container.querySelector(".page-shell--session")).toBeTruthy();
     });
 
     mockPathname = "/";
@@ -288,7 +288,7 @@ describe("AppShell mount behavior", () => {
       </AppShell>,
     );
 
-    expect(container.querySelector(".max-w-3xl")).toBeNull();
+    expect(container.querySelector(".page-shell--session")).toBeNull();
   });
 
   it("hides mobile bottom nav while a practice session is active", async () => {

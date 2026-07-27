@@ -13,7 +13,7 @@ export default async function PronunciationAssessmentPage() {
   const user = isSupabaseConfigured() ? await getSupabaseServerUser() : null;
 
   return (
-    <PageLayout>
+    <PageLayout archetype="session">
       <PronunciationAssessmentClient userId={user?.id} />
     </PageLayout>
   );

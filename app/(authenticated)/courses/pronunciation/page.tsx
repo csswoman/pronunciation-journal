@@ -12,7 +12,7 @@ export default async function PronunciationLearningRoutePage({
   const user = isSupabaseConfigured() ? await getSupabaseServerUser() : null
 
   return (
-    <PageLayout>
+    <PageLayout archetype="catalog">
       <PronunciationPathPage
         userId={user?.id}
         initialTargetId={params.target}

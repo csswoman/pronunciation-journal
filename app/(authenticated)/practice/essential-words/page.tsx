@@ -7,7 +7,7 @@ export const metadata = { title: 'Palabras esenciales' }
 
 export default function EssentialWordsPage() {
   return (
-    <PageLayout className="!pt-4 !pb-8 sm:!pt-8 sm:!pb-16">
+    <PageLayout archetype="session" className="!pt-4 !pb-8 sm:!pt-8 sm:!pb-16">
       <div className="w-full">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <PageHeader
