@@ -4,9 +4,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { useAIPractice } from '../useAIPractice'
 import type { UserLearningState } from '@/lib/ai-practice/learning-state'
 
-const { persistLearningStateMock, hydrateFromRemoteMock } = vi.hoisted(() => ({
+const { persistLearningStateMock, hydrateFromRemoteMock, updateConversationMock } = vi.hoisted(() => ({
   persistLearningStateMock: vi.fn(async () => undefined),
   hydrateFromRemoteMock: vi.fn(async () => undefined),
+  updateConversationMock: vi.fn(async () => undefined),
 }))
 
 // Captured so tests can trigger `learningState` updates the same way useStreamingChat would.
@@ -22,10 +23,11 @@ vi.mock('@/lib/ai-practice/load-state', () => ({
   getUserLearningState: vi.fn(async () => null),
 }))
 vi.mock('@/lib/ai-practice/conversation-mode', () => ({
-  switchMode: vi.fn(async () => ({ conversationId: null, conversation: { messages: [] } })),
+  switchMode: vi.fn(async () => ({ conversationId: 41, conversation: { messages: [] } })),
 }))
 vi.mock('@/lib/db/ai', () => ({
   deleteConversation: vi.fn(async () => undefined),
+  updateConversation: updateConversationMock,
 }))
 vi.mock('@/components/auth/AuthProvider', () => ({
   useAuth: () => ({ user: { id: 'user-1' } }),
@@ -69,6 +71,7 @@ describe('useAIPractice adaptive-state flush', () => {
   beforeEach(() => {
     vi.useFakeTimers()
     persistLearningStateMock.mockClear()
+    updateConversationMock.mockClear()
     capturedSetLearningState = null
     capturedMissionIntentObserved = null
     capturedStartMission = null
@@ -154,9 +157,15 @@ describe('useAIPractice adaptive-state flush', () => {
   it('activates the mission mode when the stream starts an authored mission', async () => {
     const { result } = await mountAndSettle()
 
-    act(() => capturedStartMission?.('roleplay.cafe'))
+    await act(async () => {
+      capturedStartMission?.('roleplay.cafe')
+      await Promise.resolve()
+    })
 
     expect(result.current.activeMissionId).toBe('roleplay.cafe')
     expect(result.current.mode).toBe('mission:roleplay.cafe')
+    expect(updateConversationMock).toHaveBeenCalledWith('user-1', 41, {
+      mode: 'mission:roleplay.cafe',
+    })
   })
 })

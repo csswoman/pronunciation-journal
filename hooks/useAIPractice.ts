@@ -10,7 +10,7 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { useStreamingChat } from "./useStreamingChat";
 import { useSavedWords, type SaveWordData } from "./useSavedWords";
 import { switchMode } from "@/lib/ai-practice/conversation-mode";
-import { deleteConversation } from "@/lib/db/ai";
+import { deleteConversation, updateConversation } from "@/lib/db/ai";
 
 export type { SaveWordData };
 
@@ -132,6 +132,16 @@ export function useAIPractice(): UseAIPracticeReturn {
     if (!user?.id) { setConversationId(null); return; }
     switchMode(user.id, "chat").then(({ conversationId: id }) => setConversationId(id)).catch(() => {});
   }, [user?.id]);
+
+  // A model can start a mission from an existing chat stream. Preserve that
+  // stream and its messages, then relabel its owned conversation once its id
+  // is available so history resumes with the authored mission prompt.
+  useEffect(() => {
+    if (!user?.id || !conversationId || !activeMissionId) return
+    void updateConversation(user.id, conversationId, {
+      mode: `mission:${activeMissionId}`,
+    })
+  }, [activeMissionId, conversationId, user?.id])
 
   const changeMode = useCallback(async (next: AIConversationMode) => {
     if (!user?.id) return;
