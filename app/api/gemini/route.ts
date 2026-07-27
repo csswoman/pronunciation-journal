@@ -5,6 +5,7 @@ import { requireSameOrigin, requireUser, rateLimit, validateBody, SECURE_HEADERS
 import { type PromptKey } from "@/lib/api/prompts";
 import { detectIntent, intentToToolConfig } from "@/lib/ai-practice/intent-detection";
 import { buildSystemPrompt, extractLastTopicFromWire, lastUserVoiceMetadataFromWire } from "@/lib/ai-practice/wire";
+import { getMission } from "@/lib/ai-practice/missions/registry";
 import { fetchServerLearningState } from "@/lib/ai-practice/server-state";
 import { getErrorStatus } from "@/lib/gemini/fallback";
 import {
@@ -55,6 +56,7 @@ export const GeminiRequestSchema = z.object({
    * The client cannot supply raw prompt text.
    */
   promptKey: z.enum(["default"] satisfies [PromptKey, ...PromptKey[]]).optional().default("default"),
+  missionId: z.string().min(1).max(120).optional(),
   stream: z.boolean().optional().default(false),
 }).strict();
 
@@ -80,6 +82,10 @@ export async function POST(request: NextRequest): Promise<Response> {
   const { data: body, error: validationError } = await validateBody(request, GeminiRequestSchema);
   if (validationError) return validationError;
 
+  if (body.missionId && !getMission(body.missionId)) {
+    return Response.json({ error: "Invalid mission request" }, { status: 400, headers: SECURE_HEADERS });
+  }
+
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     return Response.json({ error: "AI service unavailable" }, { status: 503, headers: SECURE_HEADERS });
@@ -100,13 +106,17 @@ export async function POST(request: NextRequest): Promise<Response> {
   const learningState = await fetchServerLearningState(user.id, accessToken);
   const lastTopic = extractLastTopicFromWire(body.messages);
   const voice = lastUserVoiceMetadataFromWire(body.messages);
-  const systemPrompt = buildSystemPrompt(learningState, lastTopic, voice?.scored === true);
+  const systemPrompt = buildSystemPrompt(learningState, lastTopic, voice?.scored === true, body.missionId);
 
   // Cap input fed to intent detection — detectIntent has its own guard but we
   // also avoid building a huge string from the full content field.
   const lastUserText = (lastMsg.content ?? "").slice(0, 2_000);
   const intent = detectIntent(lastUserText);
-  const { toolChoice, allowedTools } = intentToToolConfig(intent);
+  const selection = body.missionId
+    ? intent.type === "explanation_request"
+      ? { toolChoice: "none" as const, allowedTools: [] as string[] }
+      : { toolChoice: "auto" as const, allowedTools: ["save_word", "mission_intent_observed"] }
+    : intentToToolConfig(intent);
 
   const history = buildHistory(body.messages.slice(0, -1));
   const ai = new GoogleGenAI({ apiKey });
@@ -123,7 +133,7 @@ export async function POST(request: NextRequest): Promise<Response> {
             systemPrompt,
             history,
             lastUserText,
-            { toolChoice, allowedTools },
+            selection,
             controller,
             timeoutController.signal
           )
@@ -153,7 +163,7 @@ export async function POST(request: NextRequest): Promise<Response> {
       systemPrompt,
       history,
       lastUserText,
-      { toolChoice, allowedTools }
+      selection
     );
     return Response.json({ content: responseText }, { headers: SECURE_HEADERS });
   } catch (err: unknown) {

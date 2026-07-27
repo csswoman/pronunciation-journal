@@ -34,6 +34,8 @@ describe('oral mission registry', () => {
   it.each(LEGACY_ROLEPLAY_SCENARIOS)('round-trips legacy mode roleplay:%s', (scenario) => {
     const missionId = missionIdFromLegacyMode(`roleplay:${scenario}`)
 
+    expect(missionId).not.toBeNull()
+    if (!missionId) throw new Error('legacy scenario did not resolve')
     expect(missionId).toBe(`roleplay.${scenario}`)
     expect(getMission(missionId)?.id).toBe(missionId)
     expect(legacyModeForMission(missionId)).toBe(`roleplay:${scenario}`)

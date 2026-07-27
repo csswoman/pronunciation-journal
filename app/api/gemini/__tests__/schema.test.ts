@@ -15,11 +15,12 @@ vi.mock("@/lib/api/guards", () => ({
 
 import { GeminiRequestSchema } from "../route";
 
-function baseRequest(voice?: unknown) {
+function baseRequest(voice?: unknown, missionId?: string) {
   return {
     messages: [
       { role: "user", content: "hello", ...(voice !== undefined ? { voice } : {}) },
     ],
+    ...(missionId !== undefined ? { missionId } : {}),
   };
 }
 
@@ -59,5 +60,15 @@ describe("GeminiRequestSchema — voice field", () => {
   it("rejects a voice object missing scored", () => {
     const result = GeminiRequestSchema.safeParse(baseRequest({ transcript: true }));
     expect(result.success).toBe(false);
+  });
+});
+
+describe("GeminiRequestSchema — mission field", () => {
+  it("accepts a bounded mission id alongside the conversation", () => {
+    expect(GeminiRequestSchema.safeParse(baseRequest(undefined, "roleplay.cafe")).success).toBe(true);
+  });
+
+  it("rejects an empty mission id", () => {
+    expect(GeminiRequestSchema.safeParse(baseRequest(undefined, "")).success).toBe(false);
   });
 });
