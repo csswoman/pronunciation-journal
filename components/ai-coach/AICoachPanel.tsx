@@ -33,7 +33,7 @@ export default function AICoachPanel() {
   const ctx = getPageContext(pathname);
   const { onDragStart } = usePanelResize({ panelWidth, setPanelWidth });
 
-  const { messages, isStreaming, error, quotaExhausted, wordToSave, conversationId, sendMessage, answerToolCall, openSaveWordModal, closeSaveWordModal, confirmSaveWord, resetSession, finalizeSession, loadConversation, removeConversation } = useAIPractice();
+  const { messages, isStreaming, error, quotaExhausted, wordToSave, conversationId, sendMessage, answerToolCall, openSaveWordModal, closeSaveWordModal, confirmSaveWord, resetSession, finalizeSession, loadConversation, removeConversation, changeMode } = useAIPractice();
 
   const [activeTab, setActiveTab] = useState<TabId>("chat");
   const [inputPrefill, setInputPrefill] = useState<string | undefined>(undefined);
@@ -102,7 +102,7 @@ export default function AICoachPanel() {
           {/* Chat tab — kept mounted to preserve PracticeSession state */}
           <div className={`flex-1 flex flex-col min-h-0 overflow-hidden${activeTab !== "chat" ? " hidden" : ""}`}>
             {!hasMessages
-              ? <AICoachHome activeTab="chat" onSendMessage={sendMessage} isStreaming={isStreaming} prefill={inputPrefill} onPrefillConsumed={() => setInputPrefill(undefined)} />
+              ? <AICoachHome activeTab="chat" onSendMessage={sendMessage} onSelectMission={(missionId) => { void changeMode(`mission:${missionId}`); }} isStreaming={isStreaming} prefill={inputPrefill} onPrefillConsumed={() => setInputPrefill(undefined)} />
               : <>
                   <div className="flex-1 overflow-y-auto" aria-live="polite" aria-label="Chat messages">
                     {error && <ErrorBanner message={error} />}
@@ -130,9 +130,9 @@ export default function AICoachPanel() {
             }
           </div>
 
-          {/* Interview tab — kept mounted */}
-          <div className={`flex flex-1 flex-col min-h-0 overflow-hidden${activeTab !== "interview" ? " hidden" : ""}`}>
-            <AICoachHome activeTab="interview" onSendMessage={sendMessage} isStreaming={isStreaming} prefill={inputPrefill} onPrefillConsumed={() => setInputPrefill(undefined)} />
+          {/* Missions tab — kept mounted */}
+          <div className={`flex flex-1 flex-col min-h-0 overflow-hidden${activeTab !== "missions" ? " hidden" : ""}`}>
+            <AICoachHome activeTab="missions" onSendMessage={sendMessage} onSelectMission={(missionId) => { void changeMode(`mission:${missionId}`); }} isStreaming={isStreaming} prefill={inputPrefill} onPrefillConsumed={() => setInputPrefill(undefined)} />
           </div>
 
           {/* Pronunciation tab — kept mounted */}

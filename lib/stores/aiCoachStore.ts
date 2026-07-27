@@ -2,7 +2,7 @@ import { create } from "zustand";
 
 const PANEL_DEFAULT_WIDTH = 380;
 
-export type AICoachTab = "chat" | "interview" | "pronunciation";
+export type AICoachTab = "chat" | "missions" | "pronunciation";
 
 export interface OpenCoachOptions {
   tab?: AICoachTab;
