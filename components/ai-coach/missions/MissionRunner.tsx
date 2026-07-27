@@ -19,9 +19,10 @@ interface MissionRunnerProps {
   onSlow: () => void
   onRetry: () => void
   onTransfer: () => void
+  isTransferRecording?: boolean
 }
 
-export default function MissionRunner({ mission, state, onListen, onSlow, onRetry }: MissionRunnerProps) {
+export default function MissionRunner({ mission, state, onListen, onSlow, onRetry, onTransfer, isTransferRecording = false }: MissionRunnerProps) {
   return (
     <div className="space-y-3">
       {state.phase === 'briefing' && <MissionBriefing mission={mission} />}
@@ -33,7 +34,13 @@ export default function MissionRunner({ mission, state, onListen, onSlow, onRetr
           onRetry={onRetry}
         />
       )}
-      {state.phase === 'transfer' && <MissionTransferPrompt mission={mission} />}
+      {state.phase === 'transfer' && (
+        <MissionTransferPrompt
+          mission={mission}
+          isRecording={isTransferRecording}
+          onTransfer={onTransfer}
+        />
+      )}
     </div>
   )
 }

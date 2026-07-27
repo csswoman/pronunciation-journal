@@ -34,6 +34,18 @@ describe('MissionRunner', () => {
     expect(screen.getByText(mission.transferVariant.opening)).toBeInTheDocument()
   })
 
+  it('submits a spoken transfer attempt through the runner', async () => {
+    const onTransfer = vi.fn()
+    const state = { ...createMissionState(mission.id), phase: 'transfer' as const }
+    const user = userEvent.setup()
+
+    render(<MissionRunner mission={mission} state={state} onRetry={vi.fn()} onListen={vi.fn()} onSlow={vi.fn()} onTransfer={onTransfer} />)
+
+    await user.click(screen.getByRole('button', { name: /grabar respuesta/i }))
+
+    expect(onTransfer).toHaveBeenCalledOnce()
+  })
+
   it('keeps oral mission correction retry keyboard-operable', async () => {
     const onRetry = vi.fn()
     const state = {
