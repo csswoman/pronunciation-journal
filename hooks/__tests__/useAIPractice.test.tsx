@@ -12,6 +12,7 @@ const { persistLearningStateMock, hydrateFromRemoteMock } = vi.hoisted(() => ({
 // Captured so tests can trigger `learningState` updates the same way useStreamingChat would.
 let capturedSetLearningState: ((state: UserLearningState) => void) | null = null
 let capturedMissionIntentObserved: ((intentId: string) => void) | null = null
+let capturedStartMission: ((missionId: string) => void) | null = null
 
 vi.mock('@/lib/ai-practice/queries', () => ({
   persistLearningState: persistLearningStateMock,
@@ -45,9 +46,11 @@ vi.mock('../useStreamingChat', () => ({
   useStreamingChat: (opts: {
     setLearningState: (state: UserLearningState) => void
     onMissionIntentObserved: (intentId: string) => void
+    onStartMission: (missionId: string) => void
   }) => {
     capturedSetLearningState = opts.setLearningState
     capturedMissionIntentObserved = opts.onMissionIntentObserved
+    capturedStartMission = opts.onStartMission
     return {
       messages: [],
       isStreaming: false,
@@ -68,6 +71,7 @@ describe('useAIPractice adaptive-state flush', () => {
     persistLearningStateMock.mockClear()
     capturedSetLearningState = null
     capturedMissionIntentObserved = null
+    capturedStartMission = null
   })
 
   afterEach(() => {
@@ -145,5 +149,14 @@ describe('useAIPractice adaptive-state flush', () => {
     })
 
     expect(onMissionIntent).toHaveBeenCalledWith('placed_order')
+  })
+
+  it('activates the mission mode when the stream starts an authored mission', async () => {
+    const { result } = await mountAndSettle()
+
+    act(() => capturedStartMission?.('roleplay.cafe'))
+
+    expect(result.current.activeMissionId).toBe('roleplay.cafe')
+    expect(result.current.mode).toBe('mission:roleplay.cafe')
   })
 })

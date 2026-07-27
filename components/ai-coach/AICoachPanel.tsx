@@ -63,6 +63,10 @@ export default function AICoachPanel() {
   }, [isOpen, launch, consumeLaunch]);
 
   useEffect(() => {
+    if (activeMissionId) setActiveTab("missions");
+  }, [activeMissionId]);
+
+  useEffect(() => {
     if (!isOpen) return;
     if (!user?.id) { setConversations([]); return; }
     getRecentConversations(user.id, 30).then(setConversations);

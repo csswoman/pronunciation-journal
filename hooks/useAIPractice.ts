@@ -67,7 +67,10 @@ export function useAIPractice(): UseAIPracticeReturn {
     learningState,
     setLearningState,
     onSaveWord: words.openSaveWordModal,
-    onStartMission: setActiveMissionId,
+    onStartMission: (missionId) => {
+      setActiveMissionId(missionId)
+      setMode(`mission:${missionId}`)
+    },
     onMissionIntentObserved: handleMissionIntentObserved,
     userId: user?.id ?? null,
   });
