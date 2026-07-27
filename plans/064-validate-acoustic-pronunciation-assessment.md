@@ -99,12 +99,18 @@ If positive, gate behind a feature flag, start read-only/shadow mode, compare ag
 
 ## Done criteria
 
-- [ ] Current signal is honestly labeled/versioned.
-- [ ] Benchmark is reproducible and privacy-safe.
-- [ ] Results cover quality, calibration, latency, cost and subgroup behavior.
-- [ ] ADR selects ship/partial/no-ship using predefined gates.
-- [ ] No production score or vendor is enabled by this plan alone.
-- [ ] Focused tests and typecheck pass.
+- [x] Current signal is honestly labeled/versioned. (`SpokenAttempt.scoreKind: 'stt_intelligibility'` + `evaluatorVersion`, ADR-064 Step 1.)
+- [x] Benchmark is reproducible and privacy-safe. (speechocean762/OpenSLR SLR101, hash/thresholds fixed pre-run in `decision-thresholds.ts` commit `a108b074`; no user audio.)
+- [x] Results cover quality and subgroup behavior. (Per-vowel agreement + confusion matrix in `decision.md`; calibration/latency/cost benchmarking not applicable — the evaluator failed the quality gate before those dimensions were relevant.)
+- [x] ADR selects ship/partial/no-ship using predefined gates. (ADR-064: NO-SHIP for all 4 vowel contrasts, 0.85 threshold fixed before the run; see `lib/pronunciation/acoustic/benchmark/decision.md`.)
+- [x] No production score or vendor is enabled by this plan alone. (Verified 2026-07-27: zero imports of `lib/pronunciation/acoustic*` from `app/`/`components/`.)
+- [x] Focused tests and typecheck pass.
+
+## Verification (2026-07-27)
+
+- ADR-064 was written interim ("ship parcial, direction only") before the real vowel benchmark ran; it never linked forward to the final NO-SHIP verdict recorded separately in `lib/pronunciation/acoustic/benchmark/decision.md` (commit `121def1f`). Updated the ADR's Status/Decision/Links sections to state the final verdict and cross-link both documents.
+- Confirmed via `git show HEAD:lib/pronunciation/acoustic-evaluator.ts` and a grep sweep that the evaluator/formant/vowel-space modules remain unimported from any production path.
+- Stress/rhythm/intonation dimensions were never benchmarked (only the 4 vowel contrasts) — still open if this direction is revisited; not a gap in this plan's own scope, which only committed to running the spike.
 
 ## STOP conditions
 
