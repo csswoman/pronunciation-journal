@@ -193,6 +193,7 @@ export default function HomeDailyCard({
                 onStartStep={handleStartStep}
                 inProgressStepId={inProgressStepId}
                 demoteEntryHighlight={reviewDue}
+                collapseFutureSteps
               />
             </div>
           ) : null)}
