@@ -59,3 +59,110 @@ describe('DailyStepList (default, collapseFutureSteps unset)', () => {
     expect(screen.getByText('Empieza aquí')).toBeInTheDocument()
   })
 })
+
+describe('DailyStepList (collapseFutureSteps=true)', () => {
+  it('renders the current step expanded and up to 2 pending steps compact, with a toggle for the rest', () => {
+    const steps = [
+      makeStep({ id: 's1', title: 'Repaso de palabras', subtitle: 'Afianza 6 palabras' }),
+      makeStep({ id: 's2', title: 'Lectura', subtitle: 'Tus palabras recientes', estMinutes: 3 }),
+      makeStep({ id: 's3', title: 'Práctica de sonido', subtitle: '4 ejercicios', estMinutes: 8 }),
+      makeStep({ id: 's4', title: 'Estudia teoría', subtitle: 'Cómo estudiar', estMinutes: 5 }),
+      makeStep({ id: 's5', title: 'Irregular past tense', subtitle: 'Grammar of the day', estMinutes: 2 }),
+    ]
+    render(
+      <DailyStepList
+        steps={steps}
+        getStepStatus={statusMap({})}
+        onStartStep={vi.fn()}
+        collapseFutureSteps
+      />,
+    )
+
+    // Current step: expanded (subtitle visible)
+    expect(screen.getByText('Repaso de palabras')).toBeInTheDocument()
+    expect(screen.getByText('Afianza 6 palabras')).toBeInTheDocument()
+    expect(screen.getByText('Empieza aquí')).toBeInTheDocument()
+
+    // Next 2 pending steps: compact (title + time visible, subtitle not)
+    expect(screen.getByText('Lectura')).toBeInTheDocument()
+    expect(screen.getByText(/≈3 min/)).toBeInTheDocument()
+    expect(screen.queryByText('Tus palabras recientes')).not.toBeInTheDocument()
+
+    expect(screen.getByText('Práctica de sonido')).toBeInTheDocument()
+    expect(screen.getByText(/≈8 min/)).toBeInTheDocument()
+    expect(screen.queryByText('4 ejercicios')).not.toBeInTheDocument()
+
+    // Remaining 2 steps hidden behind the toggle
+    expect(screen.queryByText('Estudia teoría')).not.toBeInTheDocument()
+    expect(screen.queryByText('Irregular past tense')).not.toBeInTheDocument()
+    expect(screen.getByText('Ver 2 más')).toBeInTheDocument()
+  })
+
+  it('reveals the remaining compact steps when the toggle is clicked', async () => {
+    const { default: userEvent } = await import('@testing-library/user-event')
+    const steps = [
+      makeStep({ id: 's1', title: 'Repaso de palabras' }),
+      makeStep({ id: 's2', title: 'Lectura', estMinutes: 3 }),
+      makeStep({ id: 's3', title: 'Práctica de sonido', estMinutes: 8 }),
+      makeStep({ id: 's4', title: 'Estudia teoría', estMinutes: 5 }),
+    ]
+    render(
+      <DailyStepList
+        steps={steps}
+        getStepStatus={statusMap({})}
+        onStartStep={vi.fn()}
+        collapseFutureSteps
+      />,
+    )
+
+    expect(screen.queryByText('Estudia teoría')).not.toBeInTheDocument()
+    await userEvent.click(screen.getByText('Ver 1 más'))
+    expect(screen.getByText('Estudia teoría')).toBeInTheDocument()
+    expect(screen.queryByText(/Ver \d+ más/)).not.toBeInTheDocument()
+  })
+
+  it('does not show the toggle when there are 2 or fewer pending steps beyond the current one', () => {
+    const steps = [
+      makeStep({ id: 's1', title: 'Repaso de palabras' }),
+      makeStep({ id: 's2', title: 'Lectura' }),
+      makeStep({ id: 's3', title: 'Práctica de sonido' }),
+    ]
+    render(
+      <DailyStepList
+        steps={steps}
+        getStepStatus={statusMap({})}
+        onStartStep={vi.fn()}
+        collapseFutureSteps
+      />,
+    )
+    expect(screen.queryByText(/Ver \d+ más/)).not.toBeInTheDocument()
+  })
+
+  it('renders done steps compact with a check, never hidden behind the toggle', () => {
+    const steps = [
+      makeStep({ id: 's1', title: 'Repaso de palabras', subtitle: 'Ya completado' }),
+      makeStep({ id: 's2', title: 'Lectura' }),
+      makeStep({ id: 's3', title: 'Práctica de sonido' }),
+      makeStep({ id: 's4', title: 'Estudia teoría' }),
+    ]
+    render(
+      <DailyStepList
+        steps={steps}
+        getStepStatus={statusMap({ s1: 'done' })}
+        onStartStep={vi.fn()}
+        collapseFutureSteps
+      />,
+    )
+
+    // Done step: compact (title + "Hecho", no subtitle)
+    expect(screen.getByText('Repaso de palabras')).toBeInTheDocument()
+    expect(screen.getByText('Hecho')).toBeInTheDocument()
+    expect(screen.queryByText('Ya completado')).not.toBeInTheDocument()
+
+    // Entry point moves to s2, s3 shown compact, s4 behind toggle
+    expect(screen.getByText('Lectura')).toBeInTheDocument()
+    expect(screen.getByText('Práctica de sonido')).toBeInTheDocument()
+    expect(screen.queryByText('Estudia teoría')).not.toBeInTheDocument()
+    expect(screen.getByText('Ver 1 más')).toBeInTheDocument()
+  })
+})
