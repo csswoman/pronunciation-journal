@@ -1,8 +1,8 @@
 // Planned structure:
 // <SessionStatsCard>
-//   <SessionHelpPopover />  — "?" cómo funciona (esquina superior derecha)
+//   <SessionHelpPopover />  — "?" cómo funciona
 //   <StatColumn × 3 />   — Nuevas · Aprendiendo · Repaso (contadores de sesión)
-//   <DeckLine />          — Aprendidas x/2800 · Vencidas hoy · Nuevas hoy x/10
+//   <DeckLine />          — Palabras x/2800 · Vencidas · Nuevas x/10
 // </SessionStatsCard>
 
 import { cn } from '@/lib/cn'
@@ -32,25 +32,30 @@ function StatColumn({
 }
 
 export function SessionStatsCard({ stats, counts }: Props) {
+  const totalWords = new Intl.NumberFormat('es-ES', { useGrouping: 'always' }).format(stats.totalWords)
+
   return (
-    <div className="relative flex w-full flex-col gap-2 rounded-xl border border-border-subtle bg-transparent px-3 py-2.5 sm:gap-3 sm:px-4 sm:py-3">
-      <div className="absolute right-1.5 top-1.5">
+    <section aria-label="Estado de la sesión" className="relative flex w-full flex-col gap-2">
+      <div className="flex items-start gap-3">
+        <div className="grid min-w-0 flex-1 grid-cols-3 gap-3 sm:gap-5">
+          <StatColumn label="Nuevas" value={counts.newRemaining} zero />
+          <StatColumn label="Aprendiendo" value={counts.learningRemaining} accent zero />
+          <StatColumn label="Repaso" value={counts.reviewRemaining} zero />
+        </div>
         <SessionHelpPopover />
       </div>
 
-      <div className="flex items-start divide-x divide-border-subtle">
-        <StatColumn label="Nuevas" value={counts.newRemaining} zero />
-        <StatColumn label="Aprendiendo" value={counts.learningRemaining} accent zero />
-        <StatColumn label="Repaso" value={counts.reviewRemaining} zero />
-      </div>
-
-      <p className="m-0 text-center text-caption text-fg-subtle">
-        <span className="font-medium text-fg-muted">{stats.learned}</span>/{stats.totalWords} aprendidas
-        {' · '}
-        <span className="font-medium text-fg-muted">{stats.dueCount}</span> vencidas hoy
-        {' · '}
-        <span className="font-medium text-fg-muted">{stats.newToday}</span>/{stats.newQuota} nuevas hoy
-      </p>
-    </div>
+      <ul aria-label="Resumen de palabras" className="m-0 flex list-none flex-wrap items-center justify-center gap-x-3 gap-y-1 p-0 text-caption text-fg-muted">
+        <li>
+          Palabras <span className="font-medium text-fg">{stats.learned}/{totalWords}</span>
+        </li>
+        <li>
+          Vencidas <span className="font-medium text-fg">{stats.dueCount}</span>
+        </li>
+        <li>
+          Nuevas <span className="font-medium text-fg">{stats.newToday}/{stats.newQuota}</span>
+        </li>
+      </ul>
+    </section>
   )
 }

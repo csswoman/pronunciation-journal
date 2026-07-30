@@ -20,7 +20,7 @@ export default function IPACategoryTabs({
   counts: Record<MatrixCategory, number>;
 }) {
   return (
-    <div className="ipa-chart__tabs">
+    <div className="ipa-chart__tabs" role="tablist" aria-label="Categorías de sonidos">
       {TABS.map((tab) => {
         const isActive = active === tab.id;
         return (
@@ -29,6 +29,9 @@ export default function IPACategoryTabs({
             type="button"
             onClick={() => onChange(tab.id)}
             className={cn("ipa-chart__tab", isActive && "ipa-chart__tab--on")}
+            role="tab"
+            aria-selected={isActive}
+            tabIndex={isActive ? 0 : -1}
           >
             {tab.label}
             <span className="ipa-chart__tab-count">{counts[tab.id]}</span>
@@ -36,11 +39,6 @@ export default function IPACategoryTabs({
         );
       })}
 
-      <span className="ipa-chart__kbd-hint">
-        <kbd className="ipa-chart__kbd">←</kbd>
-        <kbd className="ipa-chart__kbd">→</kbd>
-        navegar · <kbd className="ipa-chart__kbd">Space</kbd> reproducir
-      </span>
     </div>
   );
 }

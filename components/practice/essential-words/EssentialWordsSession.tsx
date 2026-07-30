@@ -1,6 +1,6 @@
 'use client'
 
-import type { ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { cn } from '@/lib/cn'
 import { useEssentialWordsSession } from '@/hooks/useEssentialWordsSession'
 import { useLoadingWords } from '@/hooks/useLoadingWords'
@@ -8,19 +8,29 @@ import { SessionStatsCard } from './SessionStatsCard'
 import { WordStudyCard } from './WordStudyCard'
 import { SpeakReviewCard } from './SpeakReviewCard'
 import { SessionDone } from './SessionDone'
-import { LevelFilterBar } from './LevelFilterBar'
 import { RoutePicker } from './RoutePicker'
 import { WordCarousel } from '@/components/practice/session/WordCarousel'
 import { getRoute } from '@/lib/core-1000/routes'
+import Button from '@/components/ui/Button'
 
 export function EssentialWordsSession() {
   const {
     phase, current, stats, counts, sessionSummary,
-    reloadLoading, levels, setLevels, activeRouteId, setRoute,
+    reloadLoading, levels, activeRouteId, setRoute,
     startSpeak, submitGrade, reload, learnMore, archiveWord,
     keepSnooze, masterWord,
   } = useEssentialWordsSession()
   const loadingWords = useLoadingWords()
+  const [loadingSlow, setLoadingSlow] = useState(false)
+
+  useEffect(() => {
+    if (phase !== 'loading') {
+      setLoadingSlow(false)
+      return
+    }
+    const timeout = window.setTimeout(() => setLoadingSlow(true), 8000)
+    return () => window.clearTimeout(timeout)
+  }, [phase])
 
   // A guided route drives level + part of speech. Otherwise, the learner can
   // optionally refine their recommended CEFR level.
@@ -33,20 +43,18 @@ export function EssentialWordsSession() {
       : 'Cargando palabras para practicar'
 
   const filters = (
-    <div className="flex flex-col items-center gap-3">
+    <div className="flex flex-col items-center gap-2">
       <RoutePicker
         value={activeRouteId}
         onChange={(id) => void setRoute(id)}
         disabled={isLoading}
       />
-      {!activeRouteId && (
-        <LevelFilterBar
-          value={levels}
-          onChange={(l) => void setLevels(l)}
-          disabled={isLoading}
-        />
+      {!activeRouteId && levels?.length === 1 && (
+        <p className="m-0 text-center text-caption text-fg-subtle">
+          Nivel de estudio: {levels[0]}. Puedes cambiarlo desde Ajustes rápidos.
+        </p>
       )}
-      {isLoading && <p className="m-0 text-caption text-fg-subtle">{selectionLabel}</p>}
+        {isLoading && <p className="m-0 text-caption text-fg-subtle">{selectionLabel}</p>}
     </div>
   )
 
@@ -55,11 +63,21 @@ export function EssentialWordsSession() {
   if (phase === 'loading') {
     return (
       <Frame className="min-h-[calc(100vh-10rem)] justify-center">
-        <div className="mb-4">{filters}</div>
+        <div className="mb-3">{filters}</div>
         <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">
           {selectionLabel}
         </p>
         <WordCarousel words={loadingWords} />
+        {loadingSlow && (
+          <div className="flex max-w-[36ch] flex-col items-center gap-2 text-center">
+            <p className="m-0 text-caption text-fg-muted">
+              La carga está tardando más de lo normal.
+            </p>
+            <Button type="button" variant="ghost" size="sm" onClick={() => void reload()}>
+              Reintentar carga
+            </Button>
+          </div>
+        )}
       </Frame>
     )
   }
@@ -67,7 +85,7 @@ export function EssentialWordsSession() {
   if (phase === 'empty' || phase === 'done' || phase === 'error') {
     return (
       <Frame>
-        <div className="mb-4">{filters}</div>
+        <div className="mb-3">{filters}</div>
         <SessionDone
           stats={stats}
           sessionSummary={sessionSummary}
@@ -83,8 +101,10 @@ export function EssentialWordsSession() {
 
   return (
     <Frame>
-      <div className="mb-3">{filters}</div>
-      <SessionStatsCard stats={stats} counts={counts} />
+      <div className="mb-3 flex w-full flex-col gap-2">
+        <div className="flex justify-center sm:justify-start">{filters}</div>
+        <SessionStatsCard stats={stats} counts={counts} />
+      </div>
 
       <div className="mt-4 flex flex-col items-center">
         {phase === 'study' && current && (
@@ -110,9 +130,5 @@ export function EssentialWordsSession() {
 }
 
 function Frame({ children, className }: { children: ReactNode; className?: string }) {
-  return (
-    <div className={cn('mx-auto flex w-full max-w-md flex-col', className)}>
-      {children}
-    </div>
-  )
+  return <div className={cn('mx-auto flex w-full max-w-[var(--layout-session-max)] flex-col', className)}>{children}</div>
 }

@@ -1,3 +1,5 @@
+import { canonicalizeSoundIpa } from '@/lib/sounds/inventory'
+
 /**
  * Phonetic similarity map for English phonemes (General American).
  * Used to pick smart distractors: a learner confusing /ɪ/ should be tested
@@ -80,7 +82,18 @@ export const PHONEME_CONFUSION: Record<string, readonly string[]> = {
  * re-implement the ordering elsewhere.
  */
 export function contrastKey(ipaA: string, ipaB: string): string {
-  return ipaA <= ipaB ? `${ipaA}|${ipaB}` : `${ipaB}|${ipaA}`
+  const canonicalA = canonicalizeSoundIpa(ipaA)
+  const canonicalB = canonicalizeSoundIpa(ipaB)
+  return canonicalA <= canonicalB
+    ? `${canonicalA}|${canonicalB}`
+    : `${canonicalB}|${canonicalA}`
+}
+
+/** Canonicalize a persisted SRS contrast id at the read/write boundary. */
+export function canonicalizeContrastId(contrastId: string): string {
+  const [ipaA, ipaB] = contrastId.split('|')
+  if (!ipaA || !ipaB) return contrastId
+  return contrastKey(ipaA, ipaB)
 }
 
 /**

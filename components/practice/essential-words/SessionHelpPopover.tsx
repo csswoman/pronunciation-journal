@@ -29,8 +29,8 @@ const ROWS: HelpRow[] = [
     desc: 'Repaso espaciado: reaparecen justo antes de que las olvidarías.',
   },
   {
-    term: 'Weak forms',
-    desc: 'La forma relajada de una palabra en el habla natural (p. ej. «to» → /tə/).',
+    term: 'Forma natural al hablar',
+    desc: 'La forma relajada de una palabra en el habla natural (por ejemplo, «to» → /tə/).',
   },
 ]
 

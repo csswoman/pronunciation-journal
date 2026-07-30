@@ -41,7 +41,7 @@ export function PhonemeLessonIntro({ ipa, onStart, startLabel = 'Practicar ahora
   const phoneme = resolvePhoneme(displayIpa, bare)
   const extra = IPA_EXTRA[displayIpa] ?? IPA_EXTRA[ipa]
   const label = phoneme
-    ? `${TYPE_LABEL[phoneme.type]} · ${phoneme.name}`
+    ? `${TYPE_LABEL[phoneme.type]} · ${phoneme.examples[0] ?? 'sonido'}`
     : 'Sonido'
   const examples = phoneme?.examples.slice(0, 3) ?? []
 

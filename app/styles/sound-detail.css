@@ -1,0 +1,640 @@
+.sound-detail__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.sound-detail__header-labels,
+.sound-detail__actions,
+.sound-detail__meta,
+.sound-detail__section-head,
+.sound-detail__hero-row {
+  display: flex;
+  align-items: center;
+}
+
+.sound-detail__header-labels {
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.sound-detail__actions {
+  flex-shrink: 0;
+  gap: var(--space-1);
+}
+
+.sound-detail__actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunken);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: border-color 150ms ease, color 150ms ease, background-color 150ms ease;
+}
+
+.sound-detail__actions button:hover {
+  border-color: var(--border-default);
+  color: var(--text-primary);
+}
+
+.sound-detail__actions button:focus-visible,
+.sound-detail__pair button:focus-visible,
+.sound-detail__collapse:focus-visible,
+.sound-detail__audio-button:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.sound-detail__difficulty {
+  color: var(--text-secondary);
+  font-size: var(--text-size-xxs);
+  font-weight: 600;
+}
+
+.sound-detail__badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--radius-full);
+  padding: 2px 8px;
+  font-size: var(--text-size-xxs);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.sound-detail__badge--primary {
+  border: 1px solid color-mix(in oklch, var(--primary) 28%, transparent);
+  background: color-mix(in oklch, var(--primary) 12%, transparent);
+  color: var(--primary);
+}
+
+.sound-detail__badge--warning {
+  border: 1px solid color-mix(in oklch, var(--warning) 35%, transparent);
+  background: var(--warning-soft);
+  color: var(--warning-value);
+}
+
+.sound-detail__badge--difficulty {
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-sunken);
+  color: var(--text-secondary);
+}
+
+.sound-detail__hero-row {
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
+
+.sound-detail__example-word {
+  margin: 2px 0 0;
+  color: var(--text-primary);
+  font-size: var(--text-size-label);
+  font-weight: 600;
+}
+
+.sound-detail__meta {
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  margin-top: var(--space-3);
+  color: var(--text-secondary);
+  font-size: var(--text-size-caption);
+}
+
+.sound-detail__meta b {
+  margin-right: 4px;
+  color: var(--text-tertiary);
+  font-weight: 500;
+}
+
+.sound-detail__audio-error {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--layout-card-pad);
+  border-block: 1px solid color-mix(in oklch, var(--error) 32%, var(--border-subtle));
+  background: var(--error-soft);
+  color: var(--text-primary);
+  font-size: var(--text-size-caption);
+}
+
+.sound-detail__audio-error button {
+  min-height: 44px;
+  flex-shrink: 0;
+  padding: 0 var(--space-2);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--error);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+}
+
+.sound-detail__audio-error button:hover {
+  background: color-mix(in oklch, var(--error) 10%, transparent);
+}
+
+.sound-detail__audio-error button:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.sound-detail__body {
+  gap: var(--space-3);
+}
+
+.ipa-chart__panel-body.sound-detail__body {
+  gap: var(--space-5);
+}
+
+.sound-detail__progress-section {
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.sound-detail__section-content {
+  margin-top: var(--space-3);
+}
+
+.sound-detail__section-head {
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.sound-detail__section-head .ipa-chart__panel-sec {
+  margin-bottom: 0;
+}
+
+.sound-detail__collapse {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  text-align: left;
+}
+
+.sound-detail__section-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.sound-detail__section-toggle .sound-detail__collapse {
+  width: auto;
+  min-width: 0;
+}
+
+.sound-detail__collapse:hover .sound-detail__collapse-label {
+  color: var(--text-primary);
+}
+
+.sound-detail__collapse .ipa-chart__panel-sec {
+  margin-bottom: 0;
+}
+
+.sound-detail__collapse-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-1);
+  color: var(--text-tertiary);
+  font-size: var(--text-size-caption);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.sound-detail__articulation .ipa-chart__howto {
+  margin-top: var(--space-2);
+}
+
+.sound-detail__progress-value {
+  color: var(--primary);
+  font-size: var(--text-size-caption);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.sound-detail__progress-empty {
+  color: var(--text-secondary);
+  font-size: var(--text-size-caption);
+  font-weight: 600;
+}
+
+.sound-detail__progress-track {
+  height: 5px;
+  margin-top: var(--space-2);
+  overflow: hidden;
+  border-radius: var(--radius-full);
+  background: var(--surface-sunken);
+}
+
+.sound-detail__progress-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--primary);
+  transition: width 200ms ease-out;
+}
+
+.sound-detail__pairs {
+  display: grid;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.sound-detail__pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-tertiary);
+  font-size: var(--text-size-caption);
+}
+
+.sound-detail__pair-separator {
+  color: var(--text-tertiary);
+  font-size: var(--text-size-body-sm);
+  font-weight: 600;
+}
+
+.sound-detail__audio-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  min-height: 44px;
+  padding: 4px 10px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunken);
+  color: var(--text-primary);
+  cursor: pointer;
+  font: inherit;
+  font-size: inherit;
+  transition: border-color 150ms ease, color 150ms ease, background-color 150ms ease;
+}
+
+.sound-detail__audio-button:hover {
+  border-color: var(--border-default);
+}
+
+.sound-detail__audio-button--speaking {
+  border-color: var(--primary);
+  background: var(--selection-bg);
+  color: var(--primary);
+}
+
+.sound-detail__pair .sound-detail__audio-button {
+  width: 100%;
+}
+
+.sound-detail__pairs-toggle {
+  align-items: center;
+  width: auto;
+  min-width: 0;
+}
+
+.sound-detail__pairs-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.sound-detail__pairs-header-copy {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.sound-detail__pairs-header-copy h3 {
+  margin-bottom: 0;
+}
+
+.sound-detail__pairs-summary {
+  margin: 0;
+  color: var(--text-tertiary);
+  font-size: var(--text-size-caption);
+}
+
+.sound-detail__pairs-intro {
+  margin: 0 0 var(--space-3);
+  color: var(--text-secondary);
+  font-size: var(--text-size-body-sm);
+  line-height: 1.45;
+}
+
+.sound-detail__pairs-content {
+  margin-top: var(--space-3);
+}
+
+.sound-detail__pairs-start,
+.sound-detail__pairs-back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  min-height: 44px;
+  border: 0;
+  background: transparent;
+  color: var(--primary);
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--text-size-caption);
+  font-weight: 600;
+}
+
+.sound-detail__pairs-start {
+  margin-top: var(--space-2);
+}
+
+.sound-detail__pairs-start:hover,
+.sound-detail__pairs-back:hover {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.sound-detail__pairs-start:focus-visible,
+.sound-detail__pairs-back:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.sound-detail__pairs-practice {
+  margin-top: var(--space-3);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.sound-detail__quiz-actions {
+  scroll-margin-block: var(--space-4);
+}
+
+.sound-detail__mpcards {
+  gap: var(--space-2);
+}
+
+.sound-detail__mpcard {
+  min-height: 8rem;
+  gap: var(--space-1);
+  padding: var(--space-2);
+}
+
+.sound-detail__mpcard .ipa-chart__mpcard-lab {
+  top: var(--space-2);
+  left: var(--space-2);
+}
+
+.sound-detail__mpcard .ipa-chart__mpcard-sym {
+  font-size: var(--text-size-h3);
+}
+
+.sound-detail__mpcard .ipa-chart__mpcard-word {
+  font-size: var(--text-size-body);
+  font-weight: 600;
+}
+
+.sound-detail__mpcard .ipa-chart__mpcard-play {
+  width: 36px;
+  height: 36px;
+}
+
+.sound-detail__pairs-practice-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.sound-detail__pairs-practice-nav > div {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+@media (max-width: 37.5rem) {
+  .sound-detail__pairs-header {
+    align-items: flex-start;
+  }
+
+  .sound-detail__pairs-toggle .sound-detail__collapse-label {
+    white-space: normal;
+    text-align: right;
+  }
+}
+
+.sound-detail__pairs-practice .ipa-chart__mpcards {
+  gap: var(--space-2);
+}
+
+.sound-detail__pairs-practice .ipa-chart__mpcard {
+  min-height: 8rem;
+  gap: var(--space-1);
+  padding: var(--space-2);
+}
+
+.sound-detail__pairs-practice .ipa-chart__mpcard-lab {
+  top: var(--space-2);
+  left: var(--space-2);
+}
+
+.sound-detail__pairs-practice .ipa-chart__mpcard-sym {
+  font-size: var(--text-size-h3);
+}
+
+.sound-detail__pairs-practice .ipa-chart__mpcard-word {
+  font-size: var(--text-size-body);
+  font-weight: 600;
+}
+
+.sound-detail__pairs-practice .ipa-chart__mpcard-play {
+  width: 36px;
+  height: 36px;
+}
+
+.sound-detail__pairs-practice .ipa-chart__mpfoot {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+.sound-detail__pairs-practice .ipa-chart__mpfoot .ipa-chart__btn {
+  justify-content: center;
+}
+
+.sound-detail__pairs-practice .sound-detail__pairs-action {
+  min-height: 44px;
+  font-weight: 600;
+}
+
+.sound-detail__pairs-practice .sound-detail__pairs-action--listen {
+  background: var(--surface-sunken);
+  border-color: var(--border-subtle);
+  color: var(--text-primary);
+}
+
+.sound-detail__pairs-practice .sound-detail__pairs-action--listen:hover {
+  border-color: var(--border-default);
+  background: var(--surface-raised);
+}
+
+.sound-detail__pairs-practice .sound-detail__pairs-action--next,
+.sound-detail__pairs-practice .sound-detail__pairs-action--replay {
+  border-color: transparent;
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.sound-detail__pairs-practice .sound-detail__pairs-action--next:hover,
+.sound-detail__pairs-practice .sound-detail__pairs-action--replay:hover {
+  border-color: var(--border-subtle);
+  background: var(--surface-sunken);
+  color: var(--text-primary);
+}
+
+.sound-detail__pairs-practice .sound-detail__pairs-action--quiz {
+  min-height: 48px;
+  letter-spacing: 0.01em;
+}
+
+.sound-detail__pairs-practice .ipa-chart__mpfoot-quiz {
+  grid-column: 1 / -1;
+  margin-left: 0;
+}
+
+@media (max-width: 37.5rem) {
+  .sound-detail__pairs-practice .ipa-chart__mpcards {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  }
+
+  .sound-detail__pairs-practice .ipa-chart__mpvs {
+    display: flex;
+  }
+}
+
+.sound-detail__tip-body {
+  margin: 0;
+}
+
+.sound-detail__footer {
+  padding: var(--space-3) var(--layout-card-pad) var(--layout-card-pad);
+}
+
+.sound-detail__footer .sound-detail__practice {
+  margin-top: var(--space-2);
+}
+
+.sound-detail__practice {
+  position: sticky;
+  bottom: var(--space-3);
+  z-index: 1;
+}
+
+.sound-detail .sound-detail__practice {
+  border: 1px solid var(--primary);
+  background: transparent;
+  color: var(--primary);
+}
+
+.sound-detail .sound-detail__practice:hover {
+  background: var(--selection-bg);
+  color: var(--text-primary);
+}
+
+.ipa-chart__main > .sound-detail .sound-detail__footer {
+  padding-bottom: var(--space-1);
+}
+
+.ipa-chart__main > .sound-detail .sound-detail__body {
+  padding-bottom: 0;
+}
+
+.sound-lab__detail-dialog {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sound-lab__detail-dialog > .sound-detail {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+}
+
+.sound-lab__detail-dialog .sound-detail__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+.sound-lab__detail-dialog .sound-detail__footer {
+  flex-shrink: 0;
+  background: var(--surface-base);
+}
+
+@media (max-width: 640px) {
+  .sound-lab__detail-dialog .sound-detail__body {
+    padding-bottom: var(--space-3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sound-detail__progress-track span {
+    transition-duration: 0.01ms;
+  }
+}
+
+@media (max-width: 880px) {
+  .ipa-chart__panel-hero.sound-detail__hero {
+    display: block;
+    padding: 14px 16px 16px;
+  }
+
+  .ipa-chart__panel-hero.sound-detail__hero .sound-detail__header {
+    display: flex;
+  }
+
+  .ipa-chart__panel-hero.sound-detail__hero > .sound-detail__hero-row {
+    display: flex;
+    grid-column: auto;
+  }
+
+  .ipa-chart__panel-hero.sound-detail__hero > .ipa-chart__panel-name {
+    display: block;
+    flex: none;
+    margin: var(--space-3) 0 0;
+  }
+
+  .ipa-chart__panel-hero.sound-detail__hero > .sound-detail__meta {
+    display: flex;
+    margin-top: var(--space-3);
+  }
+
+  .sound-detail__hero-row > div:first-child {
+    min-width: 0;
+  }
+}

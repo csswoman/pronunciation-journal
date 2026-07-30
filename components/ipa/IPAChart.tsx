@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useLiveQuery } from "dexie-react-hooks";
 import { useAuth } from "@/components/auth/AuthProvider";
 
@@ -10,29 +9,32 @@ import { cancelSpeech, speakText } from "@/lib/speech/synthesis";
 import {
   getExploredSymbolsToday,
   markPhonemeExplored,
-  resetTodaysExplorations,
 } from "@/lib/db";
 import { PHONEMES, PHONEME_MATRIX, type PhonemeData } from "./data";
-import IPAPageHeader from "./IPAPageHeader";
-import IPAProgressBar from "./IPAProgressBar";
 import IPACategoryTabs from "./IPACategoryTabs";
 import IPAMatrix from "./IPAMatrix";
 import DiphthongGrid from "./DiphthongGrid";
-import PhonemeDetailPanel from "./PhonemeDetailPanel";
 import SpanishSpeakersGrid from "./SpanishSpeakersGrid";
-import MinimalPairsTrainer from "./MinimalPairsTrainer";
 import PracticeWithAICTA from "./PracticeWithAICTA";
+import { SoundDetail } from "@/components/sounds/SoundDetail";
+import { practiceHrefForIpa } from "@/lib/sound-lab/lesson-lookup";
+import type { Lesson } from "@/lib/types";
 
 type MatrixCategory = "vowel" | "consonant" | "diphthong";
 
-export default function IPAChart() {
+interface IPAChartProps {
+  /** Lessons to resolve practice links from; omit to fall back to /practice/sounds. */
+  lessons?: Lesson[];
+}
+
+export default function IPAChart({ lessons = [] }: IPAChartProps) {
   const { user } = useAuth();
-  const router = useRouter();
   const [activeCategory, setActiveCategory] = useState<MatrixCategory>("vowel");
   const [selectedPhoneme, setSelectedPhoneme] = useState<PhonemeData>(
     () => PHONEMES.find((p) => p.type === "vowel") ?? PHONEMES[0]
   );
   const [playingSymbol, setPlayingSymbol] = useState<string | null>(null);
+  const [audioError, setAudioError] = useState<string | null>(null);
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
 
   const exploredArray = useLiveQuery(() => getExploredSymbolsToday(user?.id), [user?.id], [] as string[]);
@@ -44,7 +46,7 @@ export default function IPAChart() {
   useEffect(() => {
     return () => {
       currentAudioRef.current?.pause();
-      if (undoTimeoutRef.current) clearTimeout(undoTimeoutRef.current);
+      cancelSpeech();
     };
   }, []);
 
@@ -68,36 +70,74 @@ export default function IPAChart() {
     [phonemesByCategory]
   );
 
-  const speakExample = useCallback((word: string) => {
-    speakText(word);
+  const stopSound = useCallback(() => {
+    currentAudioRef.current?.pause();
+    currentAudioRef.current = null;
+    cancelSpeech();
+    setPlayingSymbol(null);
+    setAudioError(null);
   }, []);
 
   const playSound = useCallback((rawSymbol: string, example?: string) => {
     const fileName = IPA_AUDIO_MAP[rawSymbol] ?? IPA_AUDIO_MAP[rawSymbol[0]];
-    if (!fileName) return;
+    stopSound();
+    setAudioError(null);
 
-    currentAudioRef.current?.pause();
-    cancelSpeech();
+    if (!fileName) {
+      if (!example) {
+        setAudioError("No se pudo reproducir este sonido.");
+        return;
+      }
+      setPlayingSymbol(rawSymbol);
+      speakText(example, {
+        onEnd: () => setPlayingSymbol(null),
+        onError: () => setAudioError("No se pudo reproducir este sonido."),
+      });
+      return;
+    }
 
     try {
       setPlayingSymbol(rawSymbol);
       const audio = new Audio(`${SOUNDS_BASE_URL}/${fileName}`);
       currentAudioRef.current = audio;
       audio.onended = () => {
-        setPlayingSymbol(null);
-        if (example) speakExample(example);
+        if (example) {
+          speakText(example, { onEnd: () => setPlayingSymbol(null) });
+        } else {
+          setPlayingSymbol(null);
+        }
       };
-      audio.onerror = () => setPlayingSymbol(null);
+      audio.onerror = () => {
+        setPlayingSymbol(null);
+        setAudioError("No se pudo reproducir este sonido.");
+      };
       audio.play().catch((err) => {
         if (err.name !== "AbortError" && err.name !== "NotAllowedError") {
           console.error(`Playback failed for ${rawSymbol}:`, err);
         }
         setPlayingSymbol(null);
+        setAudioError("No se pudo reproducir este sonido.");
       });
     } catch {
       setPlayingSymbol(null);
+      setAudioError("No se pudo reproducir este sonido.");
     }
-  }, [speakExample]);
+  }, [stopSound]);
+
+  const toggleSound = useCallback(
+    (rawSymbol: string, example?: string) => {
+      if (playingSymbol === rawSymbol) {
+        stopSound();
+        return;
+      }
+      playSound(rawSymbol, example);
+    },
+    [playSound, playingSymbol, stopSound],
+  );
+
+  useEffect(() => {
+    setAudioError(null);
+  }, [selectedPhoneme.rawSymbol]);
 
   const spokenWordFor = useCallback(
     (phoneme: PhonemeData) =>
@@ -158,46 +198,15 @@ export default function IPAChart() {
         navigate(-1);
       } else if (event.code === "Space") {
         event.preventDefault();
-        playSound(selectedPhoneme.rawSymbol, spokenWordFor(selectedPhoneme));
+        toggleSound(selectedPhoneme.rawSymbol, spokenWordFor(selectedPhoneme));
       }
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [navigate, playSound, selectedPhoneme, spokenWordFor]);
-
-  const [undoSnapshot, setUndoSnapshot] = useState<string[] | null>(null);
-  const undoTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const handleReset = useCallback(() => {
-    const snapshot = [...(exploredArray ?? [])];
-    if (snapshot.length === 0) return;
-    setUndoSnapshot(snapshot);
-    void resetTodaysExplorations(user?.id);
-    if (undoTimeoutRef.current) clearTimeout(undoTimeoutRef.current);
-    undoTimeoutRef.current = setTimeout(() => setUndoSnapshot(null), 5000);
-  }, [exploredArray, user?.id]);
-
-  const handleUndoReset = useCallback(async () => {
-    if (!undoSnapshot) return;
-    await Promise.all(undoSnapshot.map((symbol) => markPhonemeExplored(symbol, user?.id)));
-    setUndoSnapshot(null);
-    if (undoTimeoutRef.current) clearTimeout(undoTimeoutRef.current);
-  }, [undoSnapshot, user?.id]);
+  }, [navigate, selectedPhoneme, spokenWordFor, toggleSound]);
 
   return (
-    <div className="animate-fadeIn">
-      <IPAPageHeader
-        onStartPractice={() => router.push("/practice/sounds")}
-      />
-
-      <IPAProgressBar
-        explored={exploredSymbols.size}
-        total={PHONEMES.length}
-        onReset={handleReset}
-        undoAvailable={undoSnapshot !== null}
-        onUndo={handleUndoReset}
-      />
-
+    <div className="ipa-chart animate-fadeIn">
       <IPACategoryTabs
         active={activeCategory}
         onChange={handleCategoryChange}
@@ -226,21 +235,29 @@ export default function IPAChart() {
           )}
         </div>
 
-        <PhonemeDetailPanel
+        <SoundDetail
           phoneme={selectedPhoneme}
+          progressPct={0}
           isPlaying={playingSymbol === selectedPhoneme.rawSymbol}
-          onPlay={() => playSound(selectedPhoneme.rawSymbol, spokenWordFor(selectedPhoneme))}
-          onSpeakExample={speakExample}
-          onPrev={() => navigate(-1)}
-          onNext={() => navigate(1)}
+          playbackError={audioError}
+          onPlay={() => toggleSound(selectedPhoneme.rawSymbol, spokenWordFor(selectedPhoneme))}
+          practiceHref={practiceHrefForIpa(lessons, selectedPhoneme.symbol) ?? undefined}
         />
       </div>
 
-      <div className="ipa-chart__sections">
-        <SpanishSpeakersGrid onSelect={handleSelectFromAnywhere} />
-        <MinimalPairsTrainer />
-        <PracticeWithAICTA focusedSymbol={selectedPhoneme.symbol} />
-      </div>
+      <SpanishSpeakersGrid onSelect={handleSelectFromAnywhere} />
+
+      <details className="ipa-chart__secondary-disclosure">
+        <summary>
+          <span>Más apoyo para practicar</span>
+          <span className="ipa-chart__secondary-disclosure-meta">
+            para <span className="font-ipa">{selectedPhoneme.symbol}</span>
+          </span>
+        </summary>
+        <div className="ipa-chart__secondary-content">
+          <PracticeWithAICTA focusedSymbol={selectedPhoneme.symbol} />
+        </div>
+      </details>
     </div>
   );
 }

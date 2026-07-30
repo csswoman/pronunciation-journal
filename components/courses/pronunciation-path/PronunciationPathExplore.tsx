@@ -22,7 +22,7 @@ export function PronunciationPathExplore({
   activeTargetId,
 }: PronunciationPathExploreProps) {
   return (
-    <details className="group min-w-0">
+    <details open className="group min-w-0">
       <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2 py-2 font-label text-fg-muted marker:content-none hover:text-fg [&::-webkit-details-marker]:hidden">
         <ChevronDown
           size={16}
@@ -37,7 +37,7 @@ export function PronunciationPathExplore({
             <h3 className="font-label text-fg">{stage.titleEs}</h3>
             <ul className="flex min-w-0 flex-col">
               {stage.units.map((unit) => {
-                const { title } = getLearnerTargetCopy(unit.targetId)
+                const { title, ipaHint } = getLearnerTargetCopy(unit.targetId)
                 const isActive = unit.targetId === activeTargetId
                 const state = unitStates.get(unit.targetId)
                 return (
@@ -45,9 +45,17 @@ export function PronunciationPathExplore({
                     <Link
                       href={targetIdToPronunciationPathRoute(unit.targetId)}
                       aria-current={isActive ? 'page' : undefined}
-                      className={cn( 'flex min-h-11 min-w-0 items-center justify-between gap-2 rounded-sm px-2 font-body-sm', isActive ? 'bg-primary-soft text-primary' : 'text-fg hover:bg-surface-raised' )}
+                      className={cn( 'flex min-h-11 min-w-0 items-center gap-2 rounded-sm px-2 font-body-sm', isActive ? 'bg-primary-soft text-primary' : 'text-fg hover:bg-surface-raised' )}
                     >
-                      <span className="min-w-0 truncate">{title}</span>
+                      <span className="min-w-0 flex-1 truncate">{title}</span>
+                      {ipaHint ? (
+                        <span
+                          className={cn( 'shrink-0 font-ipa text-caption', isActive ? 'text-primary' : 'text-fg-subtle' )}
+                          lang="en-fonipa"
+                        >
+                          {ipaHint}
+                        </span>
+                      ) : null}
                       <Badge
                         label={unitStateLabelEs(state)}
                         variant={unitStateBadgeVariant(state)}

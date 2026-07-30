@@ -23,13 +23,15 @@ export default function SpanishSpeakersGrid({
   ).filter((p): p is PhonemeData => Boolean(p));
 
   return (
-    <section className="ipa-chart__section">
+    <section className="ipa-chart__section ipa-chart__spanish-focus" aria-labelledby="spanish-focus-title">
       <header className="ipa-chart__section-head">
         <div>
-          <h2 className="ipa-chart__section-title">
+          <h2 id="spanish-focus-title" className="ipa-chart__section-title ipa-chart__section-title--compact">
             Sonidos difíciles para hispanohablantes
           </h2>
-          <p className="ipa-chart__lead mt-1">{items.length} fonemas para enfocarte</p>
+          <p className="ipa-chart__lead mt-1">
+            {items.length} sonidos para enfocar tu siguiente práctica
+          </p>
         </div>
       </header>
 

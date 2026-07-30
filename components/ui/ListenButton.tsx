@@ -24,6 +24,7 @@ interface ListenButtonProps {
   iconOnly?: boolean
   disabled?: boolean
   'aria-label'?: string
+  'aria-pressed'?: boolean
   className?: string
 }
 
@@ -33,6 +34,7 @@ export function ListenButton({
   iconOnly = false,
   disabled,
   'aria-label': ariaLabel,
+  'aria-pressed': ariaPressed,
   className,
 }: ListenButtonProps) {
   const isDisabled = disabled ?? !ttsAvailable
@@ -44,6 +46,7 @@ export function ListenButton({
         onClick={onPlay}
         disabled={isDisabled}
         aria-label={ariaLabel ?? label}
+        aria-pressed={ariaPressed}
         className={cn( 'inline-flex shrink-0 items-center justify-center w-8 h-8 rounded-full', 'border border-border-subtle bg-transparent text-fg-muted cursor-pointer', 'transition-colors duration-150 ease-out-quart focus-ring', 'hover:bg-surface-sunken disabled:opacity-40 disabled:cursor-not-allowed', className, )}
       >
         <Volume2 size={14} aria-hidden />
@@ -59,6 +62,7 @@ export function ListenButton({
       onClick={onPlay}
       disabled={isDisabled}
       aria-label={ariaLabel}
+      aria-pressed={ariaPressed}
       className={className}
     >
       {label}

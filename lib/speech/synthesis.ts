@@ -5,6 +5,7 @@ interface SpeakTextOptions {
   rate?: number;
   onStart?: () => void;
   onEnd?: () => void;
+  onError?: () => void;
 }
 
 export function cancelSpeech(): void {
@@ -24,6 +25,9 @@ export function speakText(text: string, options: SpeakTextOptions = {}): void {
   utterance.rate = options.rate ?? 0.85;
   utterance.onstart = () => options.onStart?.();
   utterance.onend = () => options.onEnd?.();
-  utterance.onerror = () => options.onEnd?.();
+  utterance.onerror = () => {
+    options.onError?.();
+    options.onEnd?.();
+  };
   window.speechSynthesis.speak(utterance);
 }

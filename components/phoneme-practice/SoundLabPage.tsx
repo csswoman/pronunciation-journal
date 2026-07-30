@@ -1,10 +1,14 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Headphones } from "@/components/icons";
 import PageLayout from "@/components/layout/PageLayout";
+import { SoundDetail } from "@/components/sounds/SoundDetail";
+import IPAChart from "@/components/ipa/IPAChart";
+import MinimalPairsWorkspace from "./MinimalPairsWorkspace";
+import { PronunciationPathPage } from "@/components/courses/pronunciation-path/PronunciationPathPage";
 import { SoundLabHeader } from "./SoundLabHeader";
 import { SoundLabFilterRow } from "./SoundLabFilterRow";
 import { SoundLabLessonGrid } from "./SoundLabLessonGrid";
@@ -12,20 +16,23 @@ import type { LessonSection } from "./SoundLabLessonGrid";
 import { useSoundLabData } from "@/hooks/useSoundLabData";
 import type { SoundLabChip } from "./SoundLabFilterRow";
 import type { Lesson } from "@/lib/types";
-
-const IPA_VOWEL_RE = /[aeiouæɑɒɔɛɜɪɐəʌʊ]/;
+import { ipaFromLessonTitle } from "@/lib/sound-lab/display";
+import { useDialogFocus } from "@/hooks/useDialogFocus";
+import { SoundsWorkspaceTabs } from "./SoundsWorkspaceTabs";
+import type { SoundsWorkspaceTab } from "./SoundsWorkspaceTabs";
+import {
+  CANONICAL_SOUND_COUNT,
+  getCanonicalSound,
+} from "@/lib/sounds/inventory";
 
 const ALL_GROUP_SECTIONS = [
-  { id: "vowels", title: "Vocales" },
-  { id: "diphthongs", title: "Diptongos" },
-  { id: "consonants", title: "Consonantes" },
+  { id: "vowel", title: "Vocales" },
+  { id: "diphthong", title: "Diptongos" },
+  { id: "consonant", title: "Consonantes" },
 ] as const;
 
 function getLessonSectionId(lesson: Lesson): string {
-  const ipaMatch = lesson.title.match(/^\/+([^/]+)\/+/);
-  const title = lesson.title.toLowerCase();
-  if (title.includes("diphthong")) return "diphthongs";
-  return ipaMatch && IPA_VOWEL_RE.test(ipaMatch[1]) ? "vowels" : "consonants";
+  return getCanonicalSound(ipaFromLessonTitle(lesson.title) ?? "")?.type ?? "consonant";
 }
 
 function matchesDifficultyChip(lesson: Lesson, chip: SoundLabChip): boolean {
@@ -48,12 +55,28 @@ function matchesFocus(lesson: Lesson, tokens: string[]): boolean {
   });
 }
 
-export default function SoundLabPage() {
+interface SoundLabPageProps {
+  userId?: string;
+}
+
+export default function SoundLabPage({ userId }: SoundLabPageProps) {
   const router = useRouter();
   const { allLessons, soundProgressMap, inProgressCount, heroLesson, isLoading } =
     useSoundLabData();
 
   const searchParams = useSearchParams();
+  const activeTab: SoundsWorkspaceTab =
+      searchParams.get("tab") === "ipa"
+      ? "ipa"
+      : searchParams.get("tab") === "minimal-pairs"
+        ? "minimal-pairs"
+        : searchParams.get("tab") === "path"
+          ? "path"
+        : "sounds";
+  const isSoundsView = activeTab === "sounds";
+  const isIPAView = activeTab === "ipa";
+  const isMinimalPairsView = activeTab === "minimal-pairs";
+  const isPathView = activeTab === "path";
   const focusTokens = useMemo(() => {
     const raw = searchParams.get("focus");
     return raw ? raw.split(",").map((s) => s.trim()).filter(Boolean) : [];
@@ -61,6 +84,17 @@ export default function SoundLabPage() {
 
   const [activeChip, setActiveChip] = useState<SoundLabChip>("all");
   const [search, setSearch] = useState("");
+  const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
+  const closeDetail = useCallback(() => setSelectedLesson(null), []);
+  const { dialogRef: detailDialogRef, captureTrigger } = useDialogFocus<HTMLDivElement>(
+    selectedLesson !== null,
+    closeDetail,
+  );
+
+  const handleSelectLesson = useCallback((lesson: Lesson) => {
+    captureTrigger();
+    setSelectedLesson(lesson);
+  }, [captureTrigger]);
 
   const focusSection = useMemo<LessonSection | null>(() => {
     if (focusTokens.length === 0) return null;
@@ -113,7 +147,7 @@ export default function SoundLabPage() {
 
     for (const lesson of filtered) {
       const groupId = resolveGroupId(lesson);
-      const list = buckets.get(groupId) ?? buckets.get("consonants")!;
+      const list = buckets.get(groupId) ?? buckets.get("consonant")!;
       list.push(lesson);
       buckets.set(groupId, list);
     }
@@ -136,26 +170,37 @@ export default function SoundLabPage() {
     setSearch("");
   }
 
+  const selectedPhoneme = selectedLesson
+    ? getCanonicalSound(ipaFromLessonTitle(selectedLesson.title) ?? "")
+    : undefined;
+  const selectedProgress = selectedPhoneme
+    ? soundProgressMap.get(selectedPhoneme.symbol)
+    : undefined;
+
   return (
     <PageLayout archetype="catalog" className="sound-lab min-h-screen">
       <header className="sound-lab__page-header">
         <SoundLabHeader
-          totalCount={allLessons.length}
+          totalCount={CANONICAL_SOUND_COUNT}
           inProgressCount={inProgressCount}
           heroLesson={heroLesson.lesson}
-          onResume={handleResume}
+          onResume={isSoundsView ? handleResume : undefined}
         />
 
-        <SoundLabFilterRow
-          activeChip={activeChip}
-          search={search}
-          resultCount={filtered.length}
-          onChipChange={setActiveChip}
-          onSearchChange={setSearch}
-          onClearFilters={handleClearFilters}
-        />
+        <SoundsWorkspaceTabs activeTab={activeTab} />
 
-        {focusTokens.length > 0 && (
+        {isSoundsView ? (
+          <SoundLabFilterRow
+            activeChip={activeChip}
+            search={search}
+            resultCount={filtered.length}
+            onChipChange={setActiveChip}
+            onSearchChange={setSearch}
+            onClearFilters={handleClearFilters}
+          />
+        ) : null}
+
+        {isSoundsView && focusTokens.length > 0 && (
           <div
             className="sound-lab__focus-banner flex flex-wrap items-center gap-2 rounded-xl border px-4 py-3"
             role="status"
@@ -188,13 +233,59 @@ export default function SoundLabPage() {
         )}
       </header>
 
-      <SoundLabLessonGrid
-        sections={focusSection ? [focusSection, ...sections] : sections}
-        heroLessonId={heroLesson.lesson?.id}
-        soundProgressMap={soundProgressMap}
-        isLoading={isLoading}
-        onClearFilters={handleClearFilters}
-      />
+      {isIPAView ? (
+        <IPAChart lessons={allLessons} />
+      ) : isMinimalPairsView ? (
+        <MinimalPairsWorkspace />
+      ) : isPathView ? (
+        <PronunciationPathPage
+          userId={userId}
+          initialTargetId={searchParams.get("target") ?? undefined}
+          initialStage={searchParams.get("stage") ?? undefined}
+        />
+      ) : (
+        <SoundLabLessonGrid
+          sections={focusSection ? [focusSection, ...sections] : sections}
+          heroLessonId={heroLesson.lesson?.id}
+          soundProgressMap={soundProgressMap}
+          isLoading={isLoading}
+          onClearFilters={handleClearFilters}
+          onSelect={handleSelectLesson}
+        />
+      )}
+
+      {isSoundsView && selectedLesson && selectedPhoneme ? (
+        <div
+          className="sound-lab__detail-backdrop"
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setSelectedLesson(null);
+          }}
+        >
+          <div
+            ref={detailDialogRef}
+            className="sound-lab__detail-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="sound-detail-dialog-title"
+            tabIndex={-1}
+          >
+            <SoundDetail
+              phoneme={selectedPhoneme}
+              titleId="sound-detail-dialog-title"
+              lesson={selectedLesson}
+              progressPct={selectedProgress ?? 0}
+              isWeak={selectedProgress !== undefined && selectedProgress < 60}
+              isContinuing={selectedLesson.id === heroLesson.lesson?.id}
+              practiceHref={selectedLesson.href ?? "/practice/sounds"}
+              onPractice={() => router.push(selectedLesson.href ?? "/practice/sounds")}
+              onClose={closeDetail}
+              descriptionId="sound-detail-dialog-description"
+              className="sound-lab__detail-sheet"
+            />
+          </div>
+        </div>
+      ) : null}
     </PageLayout>
   );
 }
