@@ -15,13 +15,23 @@ Reduce the vertical footprint of the daily plan card on mobile without losing at
 - **Done/resolved steps** also render compact: title + green check icon, same reduced height. They are never hidden entirely — the day's full step count stays visible so progress feels complete (per DESIGN.md "Progress is felt, not just counted").
 - If pending steps remain beyond the 2 compact ones shown, a text toggle **"Ver N más"** appears at the end of the list. Clicking it reveals the remaining steps in their compact form (not full expansion — compact stays compact when revealed).
 - The toggle does **not persist** across Home reloads/navigations; every fresh render of `DailyStepList` starts collapsed.
-- Applies at **all breakpoints** (mobile and desktop) — same component, same behavior, no `md:` variant. Simpler than branching behavior per viewport, and the user confirmed a uniform behavior is acceptable.
+- Applies at **all breakpoints** (mobile and desktop) when active — same component, same behavior, no `md:` variant.
+
+## Opt-in scope (confirmed caller audit)
+
+`DailyStepList` has two callers:
+- `components/home/HomeDailyCard.tsx` → Home's "Plan de hoy" card. **This is the only caller that should collapse.**
+- `components/daily/DailyChecklist.tsx` → the dedicated `/daily` page (`PageLayout archetype="session"`), where seeing the full plan expanded is the point of the page.
+
+The collapse behavior is gated behind a new prop, **`collapseFutureSteps`** (`boolean`, default `false`), added to `DailyStepListProps`:
+- `HomeDailyCard` passes `collapseFutureSteps` (renders `<DailyStepList collapseFutureSteps ... />`).
+- `DailyChecklist` does not pass it, so `/daily` keeps rendering every step fully expanded, unchanged from today.
 
 ## Not in scope
 
 - No change to `HomeDailyCard`'s empty/loading/error/all-done states.
 - No change to `useDailyPlan` or any data/query layer — steps already arrive fully loaded; this is purely a rendering change over the existing `steps` array.
-- No change to `/daily` page's own step list rendering, only the Home instance — confirm `DailyStepList` isn't also used unmodified elsewhere in a context where full expansion is required (check callers before implementing).
+- No change to `/daily` / `DailyChecklist` rendering — confirmed via caller audit that it must keep full expansion (see above).
 
 ## Implementation notes
 
