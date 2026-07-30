@@ -135,9 +135,11 @@ describe('DailyStepList (collapseFutureSteps=true)', () => {
       />,
     )
 
-    // Current step: expanded (subtitle visible)
+    // Current step: expanded (subtitle visible). Regex, not exact string —
+    // the expanded row joins subtitle + stepMeta() into one text node
+    // (e.g. "Afianza 6 palabras · 1 ejercicio · ≈5 min"), same as Task 1's tests.
     expect(screen.getByText('Repaso de palabras')).toBeInTheDocument()
-    expect(screen.getByText('Afianza 6 palabras')).toBeInTheDocument()
+    expect(screen.getByText(/Afianza 6 palabras/)).toBeInTheDocument()
     expect(screen.getByText('Empieza aquí')).toBeInTheDocument()
 
     // Next 2 pending steps: compact (title + time visible, subtitle not)
@@ -195,12 +197,13 @@ describe('DailyStepList (collapseFutureSteps=true)', () => {
     expect(screen.queryByText(/Ver \d+ más/)).not.toBeInTheDocument()
   })
 
-  it('renders done steps compact with a check, never hidden behind the toggle', () => {
+  it('renders done steps compact with a check, never hidden, and does not count them against the pending budget', () => {
     const steps = [
       makeStep({ id: 's1', title: 'Repaso de palabras', subtitle: 'Ya completado' }),
       makeStep({ id: 's2', title: 'Lectura' }),
       makeStep({ id: 's3', title: 'Práctica de sonido' }),
       makeStep({ id: 's4', title: 'Estudia teoría' }),
+      makeStep({ id: 's5', title: 'Irregular past tense' }),
     ]
     render(
       <DailyStepList
@@ -211,15 +214,19 @@ describe('DailyStepList (collapseFutureSteps=true)', () => {
       />,
     )
 
-    // Done step: compact (title + "Hecho", no subtitle)
+    // Done step: compact (title + "Hecho", no subtitle), always visible —
+    // does not consume any of the 2-pending-visible budget.
     expect(screen.getByText('Repaso de palabras')).toBeInTheDocument()
     expect(screen.getByText('Hecho')).toBeInTheDocument()
     expect(screen.queryByText('Ya completado')).not.toBeInTheDocument()
 
-    // Entry point moves to s2, s3 shown compact, s4 behind toggle
+    // Entry point moves to s2. s3 and s4 are the 2 pending steps shown
+    // compact (full budget, unaffected by the done step). s5 is the only
+    // one hidden behind the toggle.
     expect(screen.getByText('Lectura')).toBeInTheDocument()
     expect(screen.getByText('Práctica de sonido')).toBeInTheDocument()
-    expect(screen.queryByText('Estudia teoría')).not.toBeInTheDocument()
+    expect(screen.getByText('Estudia teoría')).toBeInTheDocument()
+    expect(screen.queryByText('Irregular past tense')).not.toBeInTheDocument()
     expect(screen.getByText('Ver 1 más')).toBeInTheDocument()
   })
 })

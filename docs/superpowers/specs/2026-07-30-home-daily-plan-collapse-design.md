@@ -12,8 +12,8 @@ Reduce the vertical footprint of the daily plan card on mobile without losing at
 
 - The **current step** (`entry` or `current` visual state, per existing `rowVisual()` logic) renders expanded exactly as today: title, subtitle, meta line, CTA label ("Empieza aquí" / "En curso").
 - The next **2 pending steps** render as **compact rows**: title + estimated time only (`≈N min`), no subtitle, no exercise/word count, reduced row height (~36px vs ~72px for the expanded row).
-- **Done/resolved steps** also render compact: title + green check icon, same reduced height. They are never hidden entirely — the day's full step count stays visible so progress feels complete (per DESIGN.md "Progress is felt, not just counted").
-- If pending steps remain beyond the 2 compact ones shown, a text toggle **"Ver N más"** appears at the end of the list. Clicking it reveals the remaining steps in their compact form (not full expansion — compact stays compact when revealed).
+- **Done/resolved steps** also render compact: title + green check icon, same reduced height. They are never hidden entirely — the day's full step count stays visible so progress feels complete (per DESIGN.md "Progress is felt, not just counted"). **Done steps do not count against the 2-pending-visible budget** — the budget applies only to pending steps, so a day with several completed steps still shows 2 compact *pending* rows before the toggle, not fewer.
+- If pending steps remain beyond the 2 compact ones shown, a text toggle **"Ver N más"** appears at the end of the list, where N counts only the hidden *pending* steps. Clicking it reveals the remaining steps in their compact form (not full expansion — compact stays compact when revealed).
 - The toggle does **not persist** across Home reloads/navigations; every fresh render of `DailyStepList` starts collapsed.
 - Applies at **all breakpoints** (mobile and desktop) when active — same component, same behavior, no `md:` variant.
 
