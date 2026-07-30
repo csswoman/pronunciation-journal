@@ -119,12 +119,12 @@ export default function DailyStepList({
   const MAX_VISIBLE_COMPACT_PENDING = 2
   let visiblePendingCompactBudget = MAX_VISIBLE_COMPACT_PENDING
   let hiddenCount = 0
-  const isCompactRow = (index: number, status: DailyStepStatus, isEntryOrCurrent: boolean): boolean => {
+  const isCompactRow = (isEntryOrCurrent: boolean): boolean => {
     if (!collapseFutureSteps) return false
     if (isEntryOrCurrent) return false
     return true
   }
-  const isHiddenRow = (index: number, status: DailyStepStatus, isEntryOrCurrent: boolean): boolean => {
+  const isHiddenRow = (status: DailyStepStatus, isEntryOrCurrent: boolean): boolean => {
     if (!collapseFutureSteps || showAllCompact) return false
     if (isEntryOrCurrent) return false
     if (status === 'done' || status === 'resolved') return false
@@ -149,8 +149,8 @@ export default function DailyStepList({
           const visual = rowVisual(status, isInProgress, isEntry)
           const done = visual === 'done'
           const isEntryOrCurrent = visual === 'entry' || visual === 'current'
-          const compact = isCompactRow(i, status, isEntryOrCurrent)
-          const hidden = isHiddenRow(i, status, isEntryOrCurrent)
+          const compact = isCompactRow(isEntryOrCurrent)
+          const hidden = isHiddenRow(status, isEntryOrCurrent)
           const isReadingStep = step.kind === 'concept' || step.kind === 'study_deck'
           const cardCount = step.studyCards?.length ?? 0
           const hasReader = !!step.readerPassage
