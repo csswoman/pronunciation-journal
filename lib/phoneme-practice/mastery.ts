@@ -1,5 +1,10 @@
 import type { UserContrastProgress } from './types'
-import { PHONEME_CONFUSION, contrastKey } from './phoneme-similarity'
+import {
+  canonicalizeContrastId,
+  PHONEME_CONFUSION,
+  contrastKey,
+} from './phoneme-similarity'
+import { canonicalizeSoundIpa } from '@/lib/sounds/inventory'
 import { MASTERY_DISPLAY_THRESHOLD } from './mastery-pct'
 
 // Thresholds for a single contrast to be considered mastered.
@@ -26,13 +31,16 @@ export function isSoundMastered(
   ipa: string,
   allProgress: UserContrastProgress[]
 ): boolean {
-  const contrastIpas = PHONEME_CONFUSION[ipa]
+  const canonicalIpa = canonicalizeSoundIpa(ipa)
+  const contrastIpas = PHONEME_CONFUSION[canonicalIpa]
   if (!contrastIpas || contrastIpas.length === 0) return false
 
-  const progressMap = new Map(allProgress.map(p => [p.contrast_id, p]))
+  const progressMap = new Map(
+    allProgress.map((p) => [canonicalizeContrastId(p.contrast_id), p]),
+  )
 
   return contrastIpas.every(other => {
-    const key = contrastKey(ipa, other)
+    const key = contrastKey(canonicalIpa, other)
     const p = progressMap.get(key)
     return p != null && isContrastMastered(p)
   })

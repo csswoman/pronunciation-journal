@@ -16,7 +16,7 @@ interface BottomNavProps {
 
 const primaryTabs = [
   { name: "Home", href: "/", icon: Home },
-  { name: "Practice", href: "/daily", icon: Target },
+  { name: "Practice", href: "/practice", icon: Target },
   { name: "Ruta", href: "/courses", icon: BookOpen },
 ] as const;
 

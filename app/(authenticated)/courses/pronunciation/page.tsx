@@ -1,7 +1,4 @@
-import PageLayout from '@/components/layout/PageLayout'
-import { PronunciationPathPage } from '@/components/courses/pronunciation-path/PronunciationPathPage'
-import { isSupabaseConfigured } from '@/lib/supabase/env'
-import { getSupabaseServerUser } from '@/lib/supabase/session'
+import { redirect } from 'next/navigation'
 
 export default async function PronunciationLearningRoutePage({
   searchParams,
@@ -9,15 +6,8 @@ export default async function PronunciationLearningRoutePage({
   searchParams: Promise<{ target?: string; stage?: string }>
 }) {
   const params = await searchParams
-  const user = isSupabaseConfigured() ? await getSupabaseServerUser() : null
-
-  return (
-    <PageLayout archetype="catalog">
-      <PronunciationPathPage
-        userId={user?.id}
-        initialTargetId={params.target}
-        initialStage={params.stage}
-      />
-    </PageLayout>
-  )
+  const query = new URLSearchParams({ tab: 'path' })
+  if (params.target) query.set('target', params.target)
+  if (params.stage) query.set('stage', params.stage)
+  redirect(`/practice/sounds?${query.toString()}`)
 }

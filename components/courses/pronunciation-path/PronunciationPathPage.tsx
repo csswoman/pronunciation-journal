@@ -10,7 +10,6 @@
 // </PronunciationPathPage>
 
 import { useEffect, useMemo, useState } from 'react'
-import PageHeader from '@/components/layout/PageHeader'
 import { getLearnerTargetCopy } from '@/lib/pronunciation/assessment/learner-copy'
 import { contentHrefForRefs } from '@/lib/pronunciation/path/content-href'
 import { isPronunciationPathCopyEnabled } from '@/lib/pronunciation/path/copy-flag'
@@ -171,55 +170,61 @@ export function PronunciationPathPage({
     : null
 
   return (
-    <div className="mx-auto flex w-full min-w-0 max-w-3xl flex-col layout-section-gap pb-[max(5.5rem,env(safe-area-inset-bottom))] lg:pb-4">
-      <PageHeader
-        variant="compact"
-        kicker="Pronunciación"
-        title="Tu ruta"
-        subtitle="De sonidos a frases reales. Un paso claro a la vez."
-      />
+    <div className="mx-auto flex w-full min-w-0 max-w-6xl flex-col layout-section-gap pb-[max(5.5rem,env(safe-area-inset-bottom))] lg:pb-4">
+      <p className="max-w-prose text-pretty font-body-sm text-fg-muted">
+        De sonidos a frases reales. Un paso claro a la vez.
+      </p>
 
       {evidenceReady ? (
-        <PronunciationPathNextAction
-          recommendation={recommendation}
-          copyEnabled={copyEnabled}
-          href={nextHref}
-          ctaLabel={nextCtaLabel}
-          mode={recommendationOwnsPrimary ? 'primary' : 'compact'}
-          lessonHref={recommendationOwnsPrimary ? recommendedLessonHref : null}
-          needsEvidence={recommendationOwnsPrimary ? recommendedNeedsEvidence : false}
-        />
+        <div className="grid min-w-0 gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,24rem)] lg:items-start">
+          <main className="flex min-w-0 flex-col gap-8">
+            <PronunciationPathStageNav
+              stages={curriculum.stages}
+              activeStageId={activeStageId}
+              unitStates={unitStates}
+              recommendedStageId={evidenceReady ? recommendation.stageId : null}
+            />
+
+            <div className="flex min-w-0 flex-col gap-4">
+              <PronunciationPathNextAction
+                recommendation={recommendation}
+                copyEnabled={copyEnabled}
+                href={nextHref}
+                ctaLabel={nextCtaLabel}
+                mode={recommendationOwnsPrimary ? 'primary' : 'compact'}
+                lessonHref={recommendationOwnsPrimary ? recommendedLessonHref : null}
+                needsEvidence={recommendationOwnsPrimary ? recommendedNeedsEvidence : false}
+              />
+
+              {evidenceReady && !recommendationOwnsPrimary ? (
+                <PronunciationPathActiveUnit
+                  unit={activeUnit}
+                  state={activeState}
+                  needsEvidence={needsEvidence}
+                  copyEnabled={copyEnabled}
+                  fallbackPracticeHref={
+                    recommendedUnit && recommendedUnit.targetId !== activeUnit.targetId
+                      ? hrefForUnit(recommendedUnit)
+                      : null
+                  }
+                  recommendedTitle={recommendedTitle}
+                  recommendedHref={recommendedPathHref}
+                />
+              ) : null}
+            </div>
+          </main>
+
+          <aside className="min-w-0 rounded-lg bg-surface-sunken px-4 py-3 lg:sticky lg:top-4">
+            <PronunciationPathExplore
+              stages={curriculum.stages}
+              unitStates={unitStates}
+              activeTargetId={activeUnit.targetId}
+            />
+          </aside>
+        </div>
       ) : (
         <PronunciationPathLoadingCard />
       )}
-
-      <PronunciationPathStageNav
-        stages={curriculum.stages}
-        activeStageId={activeStageId}
-        recommendedStageId={evidenceReady ? recommendation.stageId : null}
-      />
-
-      {evidenceReady && !recommendationOwnsPrimary ? (
-        <PronunciationPathActiveUnit
-          unit={activeUnit}
-          state={activeState}
-          needsEvidence={needsEvidence}
-          copyEnabled={copyEnabled}
-          fallbackPracticeHref={
-            recommendedUnit && recommendedUnit.targetId !== activeUnit.targetId
-              ? hrefForUnit(recommendedUnit)
-              : null
-          }
-          recommendedTitle={recommendedTitle}
-          recommendedHref={recommendedPathHref}
-        />
-      ) : null}
-
-      <PronunciationPathExplore
-        stages={curriculum.stages}
-        unitStates={unitStates}
-        activeTargetId={activeUnit.targetId}
-      />
     </div>
   )
 }

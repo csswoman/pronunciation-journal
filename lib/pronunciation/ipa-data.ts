@@ -114,19 +114,19 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
     articulation: [
       "Mouth fully open, jaw dropped low",
       "Tongue low and pulled back",
-      "Lips unrounded — even when the spelling is 'o' (hot, stop)",
+      "Lips unrounded — even when the spelling is 'o' in hot",
     ],
     articulationEs: [
       "Boca completamente abierta, mandíbula caída",
       "Lengua baja y hacia atrás",
-      "Labios sin redondear — aunque se escriba con 'o' (hot, stop)",
+      "Labios sin redondear — aunque hot se escriba con 'o'",
     ],
     minimalPairs: [
       { wordA: "hot", wordB: "hut", phonemeA: "/ɑ/", phonemeB: "/ʌ/" },
       { wordA: "cop", wordB: "cap", phonemeA: "/ɑ/", phonemeB: "/æ/" },
       { wordA: "stock", wordB: "stack", phonemeA: "/ɑ/", phonemeB: "/æ/" },
     ],
-    spanishTip: "Es la 'a' del médico: boca muy abierta y lengua atrás. Clave del americano: la 'o' escrita de 'hot', 'stop', 'box' se pronuncia /ɑ/ — 'hot' suena como 'jat', nunca como 'jot'.",
+    spanishTip: "Es la 'a' del médico: boca muy abierta y lengua atrás. En hot, la 'o' escrita se pronuncia /ɑ/: suena como 'jat', nunca como 'jot'.",
   },
   "/ɔ/": {
     difficulty: "medium",

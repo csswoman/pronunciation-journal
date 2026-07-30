@@ -1,5 +1,16 @@
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
 import { enqueue } from '@/lib/sync/sync-manager'
+import { canonicalizeContrastId } from './phoneme-similarity'
+import {
+  canonicalizeSoundRow,
+  canonicalizeProgressRows,
+  canonicalizeSoundRows,
+  canonicalizeSoundWord,
+} from '@/lib/sounds/normalization'
+import {
+  canonicalizeSoundIpa,
+  getSoundIpaCandidates,
+} from '@/lib/sounds/inventory'
 import {
   buildWordsBySoundId,
   getSessionCandidateIpas,
@@ -38,7 +49,7 @@ export async function getAllSounds(): Promise<Sound[]> {
     .select('id, ipa, example, category, type, difficulty')
     .order('id')
   if (error) throw error
-  return data as Sound[]
+  return canonicalizeSoundRows(data as Sound[])
 }
 
 export async function getSoundById(soundId: number): Promise<Sound> {
@@ -48,7 +59,7 @@ export async function getSoundById(soundId: number): Promise<Sound> {
     .eq('id', soundId)
     .single()
   if (error) throw error
-  return data as Sound
+  return canonicalizeSoundRows([data as Sound])[0] ?? (data as Sound)
 }
 
 export async function getWordsBySound(soundId: number): Promise<SoundWord[]> {
@@ -57,7 +68,7 @@ export async function getWordsBySound(soundId: number): Promise<SoundWord[]> {
     .select('id, sound_id, word, ipa, audio_url, difficulty, phonemes, sound_focus')
     .eq('sound_id', soundId)
   if (error) throw error
-  return data as SoundWord[]
+  return (data as SoundWord[]).map(canonicalizeSoundWord)
 }
 
 export async function getAllWords(): Promise<SoundWord[]> {
@@ -65,7 +76,7 @@ export async function getAllWords(): Promise<SoundWord[]> {
     .from('words')
     .select('id, sound_id, word, ipa, audio_url, difficulty, phonemes, sound_focus')
   if (error) throw error
-  return data as SoundWord[]
+  return (data as SoundWord[]).map(canonicalizeSoundWord)
 }
 
 export async function getMinimalPairs(soundId: number): Promise<MinimalPair[]> {
@@ -92,12 +103,21 @@ export async function getMinimalPairsForSoundIds(
 
   const grouped = new Map<number, MinimalPair[]>()
   for (const pair of data as MinimalPair[]) {
+    const normalizedPair = {
+      ...pair,
+      contrast_ipa_a: pair.contrast_ipa_a
+        ? canonicalizeSoundIpa(pair.contrast_ipa_a)
+        : pair.contrast_ipa_a,
+      contrast_ipa_b: pair.contrast_ipa_b
+        ? canonicalizeSoundIpa(pair.contrast_ipa_b)
+        : pair.contrast_ipa_b,
+    }
     const relatedIds = [pair.contrast_sound_a_id, pair.contrast_sound_b_id].filter(
       (id): id is number => typeof id === 'number' && uniqueSoundIds.includes(id),
     )
     for (const relatedId of relatedIds) {
       const bucket = grouped.get(relatedId) ?? []
-      bucket.push(pair)
+      bucket.push(normalizedPair)
       grouped.set(relatedId, bucket)
     }
   }
@@ -126,8 +146,14 @@ export async function getSessionDatasets(
 
   if (targetSoundsError) throw targetSoundsError
 
-  const targetSounds = targetSoundsData as Sound[]
-  const candidateIpas = [...new Set(targetSounds.flatMap((sound) => getSessionCandidateIpas(sound.ipa)))]
+  const targetSounds = canonicalizeSoundRows(targetSoundsData as Sound[])
+  const candidateIpas = [
+    ...new Set(
+      targetSounds.flatMap((sound) =>
+        getSessionCandidateIpas(sound.ipa).flatMap(getSoundIpaCandidates),
+      ),
+    ),
+  ]
 
   const [{ data: soundsData, error: soundsError }, minimalPairsBySoundId] = await Promise.all([
     supabase()
@@ -140,9 +166,10 @@ export async function getSessionDatasets(
 
   if (soundsError) throw soundsError
 
-  const sounds = soundsData as Sound[]
+  const rawCandidateSounds = soundsData as Sound[]
+  const sounds = canonicalizeSoundRows(rawCandidateSounds)
   const soundsByIpa = new Map(sounds.map((sound) => [sound.ipa, sound]))
-  const candidateSoundIds = sounds.map((sound) => sound.id)
+  const candidateSoundIds = rawCandidateSounds.map((sound) => sound.id)
 
   const { data: wordsData, error: wordsError } = await supabase()
     .from('words')
@@ -152,12 +179,23 @@ export async function getSessionDatasets(
 
   if (wordsError) throw wordsError
 
-  const limitedWordsBySoundId = limitWordsBySoundId(buildWordsBySoundId(wordsData as SoundWord[]))
+  const limitedWordsBySoundId = limitWordsBySoundId(
+    buildWordsBySoundId((wordsData as SoundWord[]).map(canonicalizeSoundWord)),
+  )
   const datasets = new Map<number, PhonemeSessionDataset>()
 
   for (const targetSound of targetSounds) {
+    const targetRow = rawCandidateSounds
+      .filter((sound) => sound.id === targetSound.id)
+      .map(canonicalizeSoundRow)
+      .find((sound): sound is Sound => Boolean(sound)) ?? targetSound
     const sessionSounds = getSessionCandidateIpas(targetSound.ipa)
-      .map((ipa) => soundsByIpa.get(ipa))
+      .map((ipa) => {
+        const canonicalIpa = canonicalizeSoundIpa(ipa)
+        return canonicalIpa === targetSound.ipa
+          ? targetRow
+          : soundsByIpa.get(canonicalIpa)
+      })
       .filter((sound): sound is Sound => Boolean(sound))
 
     const sessionWordsBySoundId = new Map<number, SoundWord[]>()
@@ -166,7 +204,7 @@ export async function getSessionDatasets(
     }
 
     datasets.set(targetSound.id, {
-      targetSound,
+      targetSound: targetRow,
       sounds: sessionSounds,
       wordsBySoundId: sessionWordsBySoundId,
       minimalPairs: minimalPairsBySoundId.get(targetSound.id) ?? [],
@@ -220,21 +258,24 @@ export async function getAllContrastProgress(
     .select('id, user_id, contrast_id, ease_factor, interval_days, next_review, last_seen, total_attempts, correct_answers, streak, mastery_pct')
     .eq('user_id', userId)
   if (error) throw error
-  return data as UserContrastProgress[]
+  return canonicalizeProgressRows(data as UserContrastProgress[])
 }
 
 export async function getContrastProgress(
   userId: string,
   contrastId: string
 ): Promise<UserContrastProgress | null> {
+  const canonicalContrastId = canonicalizeContrastId(contrastId)
   const { data, error } = await supabase()
     .from('user_contrast_progress')
     .select('id, user_id, contrast_id, ease_factor, interval_days, next_review, last_seen, total_attempts, correct_answers, streak, mastery_pct')
     .eq('user_id', userId)
-    .eq('contrast_id', contrastId)
+    .eq('contrast_id', canonicalContrastId)
     .maybeSingle()
   if (error) throw error
-  return data as UserContrastProgress | null
+  return data
+    ? canonicalizeProgressRows([data as UserContrastProgress])[0] ?? null
+    : null
 }
 
 /** Upserts the contrast row after a session. */
@@ -246,7 +287,8 @@ export async function updateContrastProgress(
   sr: SRResult,
   masteryPct: number,
 ): Promise<void> {
-  const current = await getContrastProgress(userId, contrastId)
+  const canonicalContrastId = canonicalizeContrastId(contrastId)
+  const current = await getContrastProgress(userId, canonicalContrastId)
 
   const newTotal   = (current?.total_attempts  ?? 0) + sessionTotal
   const newCorrect = (current?.correct_answers ?? 0) + sessionCorrect
@@ -257,7 +299,7 @@ export async function updateContrastProgress(
     'upsert',
     {
       user_id:         userId,
-      contrast_id:     contrastId,
+      contrast_id:     canonicalContrastId,
       total_attempts:  newTotal,
       correct_answers: newCorrect,
       streak:          sr.streak,
@@ -267,7 +309,7 @@ export async function updateContrastProgress(
       last_seen:       new Date().toISOString(),
       next_review:     sr.next_review.toISOString(),
     },
-    { user_id: userId, contrast_id: contrastId },
+    { user_id: userId, contrast_id: canonicalContrastId },
     'user_id,contrast_id',
   )
 }
@@ -288,6 +330,6 @@ export async function getContrastsForToday(
     .order('next_review', { ascending: true })
     .limit(10)
   if (error) throw error
-  return data as UserContrastProgress[]
+  return canonicalizeProgressRows(data as UserContrastProgress[])
 }
 

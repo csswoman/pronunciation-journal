@@ -1,12 +1,5 @@
-import IPAChart from "@/components/ipa/IPAChart";
-import PageLayout from "@/components/layout/PageLayout";
+import { redirect } from "next/navigation";
 
 export default function IPAPage() {
-  return (
-    <div className="ipa-chart">
-      <PageLayout archetype="catalog">
-        <IPAChart />
-      </PageLayout>
-    </div>
-  );
+  redirect("/practice/sounds?tab=ipa");
 }

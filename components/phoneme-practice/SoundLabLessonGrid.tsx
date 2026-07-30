@@ -17,6 +17,7 @@ interface Props {
   soundProgressMap: Map<string, number>;
   isLoading: boolean;
   onClearFilters?: () => void;
+  onSelect?: (lesson: Lesson) => void;
 }
 
 function getProgress(lesson: Lesson, map: Map<string, number>): number | undefined {
@@ -52,6 +53,7 @@ export function SoundLabLessonGrid({
   soundProgressMap,
   isLoading,
   onClearFilters,
+  onSelect,
 }: Props) {
   if (isLoading) return <LoadingSkeleton />;
 
@@ -112,6 +114,7 @@ export function SoundLabLessonGrid({
                   isWeak={isWeak}
                   isContinuing={heroLessonId !== undefined && lesson.id === heroLessonId}
                   staggerIndex={index}
+                  onSelect={onSelect ? () => onSelect(lesson) : undefined}
                 />
               );
             })}

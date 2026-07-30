@@ -4,7 +4,9 @@ import {
   type DbSound,
   type DbWord,
 } from '@/lib/db/lessons'
+import { IPA_EXTRA } from '@/lib/pronunciation/ipa-data'
 import { formatIpaDisplay } from '@/lib/lexicon/format-ipa'
+import { canonicalizeSoundIpa } from '@/lib/sounds/inventory'
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -18,7 +20,7 @@ function difficultyFromNumber(n: number | null): Difficulty {
 // ── Sound lessons ─────────────────────────────────────────────────────────────
 
 function soundToLesson(sound: DbSound, words: DbWord[]): Lesson {
-  const ipaDisplay = formatIpaDisplay(sound.ipa)
+  const ipaDisplay = canonicalizeSoundIpa(sound.ipa)
   const example = sound.example?.trim() || null
 
   const lessonWords: LessonWord[] = words.map((w) => ({
@@ -33,7 +35,8 @@ function soundToLesson(sound: DbSound, words: DbWord[]): Lesson {
     title: example ? `${ipaDisplay} — ${example}` : ipaDisplay,
     description: sound.category ?? sound.type,
     category: 'sounds',
-    difficulty: difficultyFromNumber(sound.difficulty),
+    difficulty:
+      IPA_EXTRA[ipaDisplay]?.difficulty ?? difficultyFromNumber(sound.difficulty),
     words: lessonWords,
     href: `/practice/sounds/sound/${sound.id}`,
   }

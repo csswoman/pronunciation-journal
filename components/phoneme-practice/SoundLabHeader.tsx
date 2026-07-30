@@ -1,16 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { Play } from "@/components/icons";
-import PageHeader from "@/components/layout/PageHeader";
 import type { Lesson } from "@/lib/types";
 import { ipaFromLessonTitle } from "@/lib/sound-lab/display";
-
-// Planned structure:
-// <SoundLabHeader>
-//   <PageHeader />
-//   <path link />
-// </SoundLabHeader>
 
 interface Props {
   totalCount: number;
@@ -45,30 +37,18 @@ export function SoundLabHeader({
   const statsLine = headerStatsLine(inProgressCount, totalCount);
 
   return (
-    <div className="flex min-w-0 flex-col gap-3">
-      <PageHeader
-        kicker="Práctica"
-        title="Laboratorio de sonidos"
-        subtitle={statsLine}
-        primaryCta={
-          showResume
-            ? {
-                label: continueCtaLabel(heroLesson),
-                icon: <Play className="h-3.5 w-3.5 fill-current" aria-hidden />,
-                onClick: onResume!,
-              }
-            : undefined
-        }
-      />
-      <p className="font-body-sm text-fg-muted">
-        ¿Vienes del diagnóstico?{" "}
-        <Link
-          href="/courses/pronunciation"
-          className="font-label text-fg underline-offset-2 hover:underline"
-        >
-          Abre tu ruta de pronunciación
-        </Link>
-      </p>
+    <div className="sound-lab__utility-bar">
+      <div className="flex min-w-0 flex-col gap-1">
+        <span className="font-kicker text-fg-subtle">Práctica</span>
+        <h1 className="truncate font-h3 text-fg">Laboratorio de sonidos</h1>
+        <span className="truncate font-body-sm text-fg-muted">{statsLine}</span>
+      </div>
+      {showResume ? (
+        <button type="button" className="sound-lab__resume-button" onClick={onResume}>
+          <Play className="h-3.5 w-3.5 fill-current" aria-hidden />
+          {continueCtaLabel(heroLesson)}
+        </button>
+      ) : null}
     </div>
   );
 }

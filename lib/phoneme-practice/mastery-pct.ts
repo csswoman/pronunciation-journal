@@ -1,4 +1,9 @@
-import { PHONEME_CONFUSION, contrastKey } from './phoneme-similarity'
+import {
+  PHONEME_CONFUSION,
+  contrastKey,
+} from './phoneme-similarity'
+import { canonicalizeSoundIpa } from '@/lib/sounds/inventory'
+import { canonicalizeProgressRows } from '@/lib/sounds/normalization'
 import type { UserContrastProgress } from './types'
 
 /** Days until mastery decays to ~50% without practice. */
@@ -69,13 +74,15 @@ export function normalizeIpaKey(ipa: string): string {
  * (weakest link blocks the displayed score).
  */
 export function soundMasteryPct(ipa: string, allProgress: UserContrastProgress[]): number {
-  const confusables = PHONEME_CONFUSION[ipa]
-  const progressMap = new Map(allProgress.map((p) => [p.contrast_id, p]))
+  const canonicalIpa = canonicalizeSoundIpa(ipa)
+  const progress = canonicalizeProgressRows(allProgress)
+  const confusables = PHONEME_CONFUSION[canonicalIpa]
+  const progressMap = new Map(progress.map((p) => [p.contrast_id, p]))
 
   if (confusables?.length) {
     const values: number[] = []
     for (const other of confusables) {
-      const key = contrastKey(ipa, other)
+      const key = contrastKey(canonicalIpa, other)
       const row = progressMap.get(key)
       if (row && row.total_attempts > 0) {
         values.push(row.mastery_pct ?? 0)
@@ -84,7 +91,7 @@ export function soundMasteryPct(ipa: string, allProgress: UserContrastProgress[]
     if (values.length > 0) return Math.round(Math.min(...values))
   }
 
-  const related = allProgress.filter((p) => p.contrast_id.split('|').includes(ipa))
+  const related = progress.filter((p) => p.contrast_id.split('|').includes(canonicalIpa))
   if (related.length === 0) return 0
   return Math.round(Math.min(...related.map((p) => p.mastery_pct ?? 0)))
 }
@@ -100,20 +107,21 @@ export function rankWeakestSounds(
   progress: UserContrastProgress[],
   options?: { minAttempts?: number; limit?: number },
 ): SoundMasteryRow[] {
+  const canonicalProgress = canonicalizeProgressRows(progress)
   const minAttempts = options?.minAttempts ?? 5
   const limit = options?.limit ?? 5
   const ipas = new Set<string>()
-  for (const p of progress) {
+  for (const p of canonicalProgress) {
     for (const ipa of p.contrast_id.split('|')) ipas.add(ipa)
   }
 
   return [...ipas]
     .map((ipa) => {
-      const related = progress.filter((row) => row.contrast_id.split('|').includes(ipa))
+      const related = canonicalProgress.filter((row) => row.contrast_id.split('|').includes(ipa))
       const totalAttempts = Math.max(0, ...related.map((r) => r.total_attempts))
       return {
         ipa: normalizeIpaKey(ipa),
-        mastery: soundMasteryPct(ipa, progress),
+        mastery: soundMasteryPct(ipa, canonicalProgress),
         totalAttempts,
       }
     })
@@ -124,13 +132,14 @@ export function rankWeakestSounds(
 
 /** Map IPA (with slashes, e.g. "/iː/") → mastery 0–100 for Sound Lab cards. */
 export function buildSoundMasteryMap(progress: UserContrastProgress[]): Map<string, number> {
+  const canonicalProgress = canonicalizeProgressRows(progress)
   const map = new Map<string, number>()
   const ipas = new Set<string>()
-  for (const p of progress) {
+  for (const p of canonicalProgress) {
     for (const ipa of p.contrast_id.split('|')) ipas.add(ipa)
   }
   for (const ipa of ipas) {
-    const mastery = soundMasteryPct(ipa, progress)
+    const mastery = soundMasteryPct(ipa, canonicalProgress)
     if (mastery > 0) map.set(ipa, mastery)
   }
   return map

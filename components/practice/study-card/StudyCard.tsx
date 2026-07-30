@@ -42,12 +42,12 @@ function PronRow({
   return (
     <div className="flex items-center justify-between gap-3 py-2 border-b border-border-subtle last:border-b-0">
       <div className="flex items-baseline gap-3">
-        <span className="font-kicker w-16 text-fg-subtle">
+        <span className="font-kicker w-20 text-fg-subtle">
           {label}
         </span>
         <span className="font-ipa text-body-lg text-fg">{ipa}</span>
       </div>
-      <ListenButton onPlay={onPlay} aria-label={`Escuchar forma ${label.toLowerCase()}`} />
+      <ListenButton onPlay={onPlay} aria-label={`Escuchar ${label.toLowerCase()}`} />
     </div>
   )
 }
@@ -117,13 +117,19 @@ export function StudyCard({ model, onContinue, onListen, onArchive }: Props) {
         </div>
       )}
 
+      <div className="-mb-1 flex w-full justify-center">
+        <PillButton variant="primary" size="md" onClick={onContinue}>
+          Practicar
+        </PillButton>
+      </div>
+
       {(model.ipa || model.weakForm) && (
         <div className="w-full">
           {model.ipa && (
-            <PronRow label="Fuerte" ipa={model.ipa} onPlay={() => onListen('word')} />
+            <PronRow label="Cuidada" ipa={model.ipa} onPlay={() => onListen('word')} />
           )}
           {model.weakForm && (
-            <PronRow label="Débil" ipa={model.weakForm.ipa} onPlay={() => onListen('weak')} />
+            <PronRow label="Natural" ipa={model.weakForm.ipa} onPlay={() => onListen('weak')} />
           )}
         </div>
       )}
@@ -138,9 +144,6 @@ export function StudyCard({ model, onContinue, onListen, onArchive }: Props) {
       )}
 
       <div className={cn('mt-1 flex w-full flex-col items-center gap-4')}>
-        <PillButton variant="primary" size="md" onClick={onContinue}>
-          Practicar
-        </PillButton>
         {onArchive && <StudyArchiveAction onArchive={onArchive} />}
       </div>
     </div>

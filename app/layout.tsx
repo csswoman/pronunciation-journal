@@ -32,13 +32,11 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="es"
       suppressHydrationWarning
       className={`${dmSans.variable} ${dmMono.variable} ${andika.variable}`}
     >
       <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Pronunciation Journal</title>
         <meta name="description" content="Track and improve your pronunciation" />
         <link rel="icon" href="/icon.svg" />

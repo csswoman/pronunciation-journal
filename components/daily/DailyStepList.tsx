@@ -29,6 +29,12 @@ interface DailyStepListProps {
    * so only one zone shouts.
    */
   demoteEntryHighlight?: boolean
+  /**
+   * Collapse done/pending rows beyond the current step into compact one-line
+   * rows, with a "Ver N más" toggle for anything past the first 2 pending
+   * rows. Off by default so /daily (DailyChecklist) keeps full expansion.
+   */
+  collapseFutureSteps?: boolean
 }
 
 function collectPlanHints(steps: DailyStep[]): StepThreadHint[] {
@@ -92,9 +98,11 @@ export default function DailyStepList({
   onStartStep,
   inProgressStepId = null,
   demoteEntryHighlight = false,
+  collapseFutureSteps = false,
 }: DailyStepListProps) {
   const threadHints = collectPlanHints(steps)
   const [activeId, setActiveId] = useState<string | null>(inProgressStepId)
+  const [showAllCompact, setShowAllCompact] = useState(false)
 
   useEffect(() => {
     setActiveId(inProgressStepId ?? readInProgressStepId())
@@ -104,6 +112,29 @@ export default function DailyStepList({
     const st = getStepStatus(s.id)
     return st !== 'done' && st !== 'resolved'
   })
+
+  // When collapsing: the entry/current step stays expanded; done steps and
+  // the first 2 pending steps beyond entry render compact; anything past
+  // that is hidden behind the "Ver N más" toggle until showAllCompact.
+  const MAX_VISIBLE_COMPACT_PENDING = 2
+  let visiblePendingCompactBudget = MAX_VISIBLE_COMPACT_PENDING
+  let hiddenCount = 0
+  const isCompactRow = (isEntryOrCurrent: boolean): boolean => {
+    if (!collapseFutureSteps) return false
+    if (isEntryOrCurrent) return false
+    return true
+  }
+  const isHiddenRow = (status: DailyStepStatus, isEntryOrCurrent: boolean): boolean => {
+    if (!collapseFutureSteps || showAllCompact) return false
+    if (isEntryOrCurrent) return false
+    if (status === 'done' || status === 'resolved') return false
+    if (visiblePendingCompactBudget > 0) {
+      visiblePendingCompactBudget -= 1
+      return false
+    }
+    hiddenCount += 1
+    return true
+  }
 
   return (
     <div className="flex w-full flex-col gap-3">
@@ -117,13 +148,19 @@ export default function DailyStepList({
             !activeId && i === entryIndex && status !== 'done' && status !== 'resolved'
           const visual = rowVisual(status, isInProgress, isEntry)
           const done = visual === 'done'
+          const isEntryOrCurrent = visual === 'entry' || visual === 'current'
+          const compact = isCompactRow(isEntryOrCurrent)
+          const hidden = isHiddenRow(status, isEntryOrCurrent)
           const isReadingStep = step.kind === 'concept' || step.kind === 'study_deck'
           const cardCount = step.studyCards?.length ?? 0
           const hasReader = !!step.readerPassage
           const isStartable = step.exercises.length > 0 || cardCount > 0 || hasReader
 
+          if (hidden) return null
+
           const cardClass = cn(
-            'home-card-lift focus-ring group flex w-full flex-col gap-2 rounded-[var(--radius-lg)] border bg-surface-raised px-4 py-3.5 text-left',
+            'home-card-lift focus-ring group flex w-full flex-col gap-2 rounded-[var(--radius-lg)] border bg-surface-raised text-left',
+            compact ? 'px-4 py-2' : 'px-4 py-3.5',
             visual === 'entry' &&
               (demoteEntryHighlight
                 ? 'border-border-subtle hover:border-border-default'
@@ -135,7 +172,23 @@ export default function DailyStepList({
             visual === 'done' && 'border-border-subtle opacity-80',
           )
 
-          const inner = (
+          const inner = compact ? (
+            <div className="flex w-full items-center justify-between gap-3">
+              <span className={cn('truncate font-body-sm font-medium', done ? 'text-fg-muted/70' : 'text-fg')}>
+                {localizeDailyStepTitle(step.title)}
+              </span>
+              {done ? (
+                <span className="inline-flex shrink-0 items-center gap-1 font-body-sm font-medium text-success">
+                  <Check size={14} aria-hidden />
+                  Hecho
+                </span>
+              ) : (
+                <span className="shrink-0 font-caption tabular-nums text-fg-muted">
+                  ≈{step.estMinutes} min
+                </span>
+              )}
+            </div>
+          ) : (
             <div className="flex w-full items-center gap-3">
               <div className="min-w-0 flex-1">
                 <div className={cn(done && 'opacity-60')}>
@@ -204,6 +257,15 @@ export default function DailyStepList({
           )
         })}
       </ol>
+      {collapseFutureSteps && !showAllCompact && hiddenCount > 0 ? (
+        <button
+          type="button"
+          className="focus-ring self-start font-body-sm font-medium text-fg-muted hover:text-fg"
+          onClick={() => setShowAllCompact(true)}
+        >
+          Ver {hiddenCount} más
+        </button>
+      ) : null}
       {threadHints.length > 0 ? <DailyThreadStrip hints={threadHints} /> : null}
     </div>
   )

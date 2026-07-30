@@ -65,7 +65,9 @@ export function PronunciationPathActiveUnit({
               </span>
             ) : null}
           </h2>
-          <Badge label={stateLabel} variant={unitStateBadgeVariant(state)} size="sm" />
+          {isExploring ? null : (
+            <Badge label={stateLabel} variant={unitStateBadgeVariant(state)} size="sm" />
+          )}
         </div>
         {needsEvidence ? (
           <p className="max-w-prose text-pretty font-body-sm text-fg-muted">

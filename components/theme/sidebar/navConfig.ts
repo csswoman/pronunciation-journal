@@ -3,7 +3,6 @@ import {
   MicVocal,
   BookOpen,
   Ear,
-  Radio,
   TrendingUp,
   LibraryBig,
   BookMarked,
@@ -24,15 +23,15 @@ export const coreNav: NavSectionType = {
 };
 
 export const practiceNav: NavSectionType = {
-  label: "Practice",
+  label: "Práctica",
   items: [
-    { name: "Sound Lab", href: "/practice/sounds", icon: MicVocal },
-    { name: "Essential Words", href: "/practice/essential-words", icon: ListOrdered },
+    { name: "Laboratorio de sonidos", href: "/practice/sounds", icon: MicVocal },
+    { name: "Palabras esenciales", href: "/practice/essential-words", icon: ListOrdered },
   ],
 };
 
 export const learnNav: NavSectionType = {
-  label: "Learn",
+  label: "Aprendizaje",
   items: [
     { name: "Ruta", href: "/courses", icon: BookOpen },
     { name: "Pronunciación", href: "/courses/pronunciation", icon: Ear },
@@ -42,15 +41,14 @@ export const learnNav: NavSectionType = {
 };
 
 export const referenceNav: NavSectionType = {
-  label: "Reference",
+  label: "Referencia",
   items: [
-    { name: "IPA Chart", href: "/ipa", icon: Radio },
     { name: "Dictionary", href: "/dictionary", icon: LibraryBig },
   ],
 };
 
 export const trackingNav: NavSectionType = {
-  label: "Tracking",
+  label: "Seguimiento",
   items: [
     { name: "Saved", href: "/tracking", icon: Bookmark },
     { name: "Review", href: "/practice/review", icon: RotateCcw },
