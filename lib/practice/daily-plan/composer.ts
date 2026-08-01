@@ -15,7 +15,8 @@ import { dominantTopicLabel } from '@/lib/practice/topic-labels'
 import type { DailyPlan, DailyStep, SessionArc } from '@/lib/practice/types'
 import type { Sound } from '@/lib/phoneme-practice/types'
 import { buildJournalDailyStep, shouldOfferJournalStep } from '@/lib/journal/daily-step'
-import { buildConnectedSpeechStep, buildReaderStep, buildSentenceBuilderStep } from './async-step-builders'
+import { normalizeFalseFriendsLevel } from '@/lib/false-friends/data'
+import { buildConnectedSpeechStep, buildFalseFriendsStep, buildReaderStep, buildSentenceBuilderStep } from './async-step-builders'
 import { buildStudyDeckStep } from './study-deck'
 import { DAILY_PLAN_STEP_COUNT, WORD_REVIEW_WORD_COUNT } from './constants'
 import {
@@ -185,6 +186,12 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     if (listening) newSteps.push(listening)
   }
 
+  // False friends are gated by level so a beginner never meets a C1 pair.
+  // Defaults to B1 when the learner has no estimate yet — the bank's densest band.
+  const falseFriendsLevel = normalizeFalseFriendsLevel(
+    localLearningState?.state.level.cefrEstimate,
+  )
+
   const weakTopics = aiState?.grammar.weakTopics ?? []
   const weakDeckSlug = deckSlugForWeakTopics(weakTopics)
   const weakTopic = weakTopics.find((t) => t.errorRate > 0.4 && t.sampleCount >= 3)?.topic
@@ -193,9 +200,12 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
   const allSteps = [...newSteps]
 
   if (allSteps.length < DAILY_PLAN_STEP_COUNT) {
+    // Even days: connected speech. Odd days: false friends. Both fall back to
+    // the sentence builder so the slot is never lost.
     const connectedStep = await buildConnectedSpeechStep()
-    if (connectedStep) {
-      allSteps.push(connectedStep)
+    const alternateStep = connectedStep ?? await buildFalseFriendsStep(falseFriendsLevel)
+    if (alternateStep) {
+      allSteps.push(alternateStep)
     } else {
       const sentenceStep = await buildSentenceBuilderStep(sentenceSource, weakTopic)
       if (sentenceStep) allSteps.push(sentenceStep)

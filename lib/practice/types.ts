@@ -168,6 +168,7 @@ export type DailyStepKind =
   | 'minimal_pairs'    // discriminación de pares mínimos
   | 'listening'        // dictation desde words del seed
   | 'sentence_builder' // reorder_words desde text_fragments (lecciones y grammar decks)
+  | 'false_friends'    // elección en contexto entre un falso amigo y la palabra correcta
   | 'concept'          // mini-lección / language concept del día (lectura ligera)
   | 'study_deck'       // lección de la ruta, elegida desde el progreso del usuario
   | 'reader'           // comprehensible-input: párrafo i+1 que recicla vocab reciente
