@@ -331,8 +331,8 @@ hasEnoughContext(blanked)   // ≥2 content words tras el blank
 | `match_pairs` | `text` + `meaning` | `generators/match-pairs.ts` |
 | `sentence_context` | mismas reglas que fill_blank (sin chequeo de pool global) | `lib/lexicon/exercises.ts` |
 
-Validación de contenido Core 1000: `pnpm validate:core1000` (schema + IPA).  
-Gate de generabilidad: `pnpm validate:core1000-generators` (umbrales documentados en `plans/017-exercise-eligibility-contract.md`).
+Validación de contenido Essential Words: `pnpm validate:essential-words` (schema + IPA).  
+Gate de generabilidad: `pnpm validate:essential-words-generators` (umbrales documentados en `plans/017-exercise-eligibility-contract.md`).
 
 ---
 
@@ -424,7 +424,7 @@ Los `text_fragments` son system sentences (`user_id = null`), así que su estado
 
 ### Features conectadas vía `savePracticeAnswer`
 
-Además de Phoneme Practice, Generic Exercises, Lexicon, Courses, Reader, Daily y Core 1000, estas UIs escriben al flujo unificado de progreso:
+Además de Phoneme Practice, Generic Exercises, Lexicon, Courses, Reader, Daily y Essential Words, estas UIs escriben al flujo unificado de progreso:
 
 | Feature | Call site | `context` | Qué persiste |
 |---|---|---|---|
@@ -444,8 +444,8 @@ errores y no a logging de contenido libre.
 
 El daily-plan antepone un paso `word_intro` (`DailyStepKind`) que **presenta** las palabras nuevas (forma + significado + audio) antes de que el alumno las recupere en `word_review`. Es un paso **no evaluado** (no escribe `answer_history`): lleva `studyCards: StudyCardModel[]` en vez de `exercises`.
 
-- Modelo + adaptadores: `lib/practice/study-card/model.ts` (`StudyCardModel`, `coreWordToStudyCard`, `wordBankEntryToStudyCard`).
-- Componente agnóstico de fuente: `components/practice/study-card/StudyCard.tsx`, reutilizado por Core 1000 (`WordStudyCard`) y por el daily-plan (`WordIntroStep`).
+- Modelo + adaptadores: `lib/practice/study-card/model.ts` (`StudyCardModel`, `essentialWordToStudyCard`, `wordBankEntryToStudyCard`).
+- Componente agnóstico de fuente: `components/practice/study-card/StudyCard.tsx`, reutilizado por Essential Words (`WordStudyCard`) y por el daily-plan (`WordIntroStep`).
 - Builder: `buildWordIntroStep` (`step-builders.ts`), tope `WORD_INTRO_MAX_CARDS`; "nueva" = `srs_status === 'new'`.
 
 ---

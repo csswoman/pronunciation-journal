@@ -96,8 +96,8 @@ pnpm build
 pnpm check:migrations
 pnpm audit:rls
 pnpm test:integration
-pnpm validate:core1000
-pnpm validate:core1000-generators
+pnpm validate:essential-words
+pnpm validate:essential-words-generators
 pnpm lexicon:enrich
 ```
 

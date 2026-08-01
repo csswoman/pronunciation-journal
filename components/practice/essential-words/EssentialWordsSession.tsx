@@ -10,7 +10,7 @@ import { SpeakReviewCard } from './SpeakReviewCard'
 import { SessionDone } from './SessionDone'
 import { RoutePicker } from './RoutePicker'
 import { WordCarousel } from '@/components/practice/session/WordCarousel'
-import { getRoute } from '@/lib/core-1000/routes'
+import { getRoute } from '@/lib/essential-words/routes'
 import Button from '@/components/ui/Button'
 
 export function EssentialWordsSession() {

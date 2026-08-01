@@ -18,8 +18,8 @@ vi.mock('@/lib/progress/activity-hub', () => ({
   recordActivitySession: vi.fn().mockResolvedValue(undefined),
 }))
 
-vi.mock('@/lib/core-1000/grade', () => ({
-  gradeCore1000Word: vi.fn().mockResolvedValue(undefined),
+vi.mock('@/lib/essential-words/grade', () => ({
+  gradeEssentialWord: vi.fn().mockResolvedValue(undefined),
 }))
 
 const flushOutbox = vi.fn()

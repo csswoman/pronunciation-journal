@@ -10,9 +10,9 @@
 import { useEffect, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '@/lib/db'
-import { CORE1000_PREFIX } from '@/lib/core-1000/types'
-import { fetchLevelIndex } from '@/lib/core-1000/level-index-client'
-import { tallyLevelProgress, type LevelTallyWord } from '@/lib/core-1000/level-progress'
+import { ESSENTIAL_WORD_PREFIX } from '@/lib/essential-words/types'
+import { fetchLevelIndex } from '@/lib/essential-words/level-index-client'
+import { tallyLevelProgress, type LevelTallyWord } from '@/lib/essential-words/level-progress'
 import { useAuth } from '@/components/auth/AuthProvider'
 
 interface Props {
@@ -25,7 +25,7 @@ export function LevelProgressBreakdown({ fallbackRatio }: Props) {
   const [words, setWords] = useState<LevelTallyWord[] | null>(null)
 
   const learnedIds = useLiveQuery(
-    () => user?.id ? db.srsData.filter((entry) => entry.userId === user.id && entry.wordId.startsWith(CORE1000_PREFIX)).primaryKeys() : [],
+    () => user?.id ? db.srsData.filter((entry) => entry.userId === user.id && entry.wordId.startsWith(ESSENTIAL_WORD_PREFIX)).primaryKeys() : [],
     [user?.id],
   )
 

@@ -59,14 +59,14 @@ function skillsForAnswer(answer: FluencyRawAnswer): SkillKey[] {
 
   if (context === 'courses') skills.add('reading')
   if (context === 'ai_coach') skills.add('speaking')
-  if (context === 'core-1000') {
+  if (context === 'essential-words') {
     skills.add('vocabulary')
     if (typeId === 10) skills.add('speaking')
   }
   if (context === 'sound_lab' || PHONEME_TYPES.has(typeId)) skills.add('pronunciation')
   if (LISTENING_TYPES.has(typeId)) skills.add('listening')
   if (SPEAKING_TYPES.has(typeId)) skills.add('speaking')
-  if (GRAMMAR_TYPES.has(typeId) && context !== 'core-1000') skills.add('grammar')
+  if (GRAMMAR_TYPES.has(typeId) && context !== 'essential-words') skills.add('grammar')
   if (typeId === 7 || typeId === 5) skills.add('vocabulary')
 
   return [...skills]

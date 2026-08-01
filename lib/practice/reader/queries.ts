@@ -1,5 +1,5 @@
 import { normalizeCEFR, type CEFRLevel } from '@/lib/exercises/cefr'
-import { readStoredCefrLevel } from '@/lib/core-1000/target-level'
+import { readStoredCefrLevel } from '@/lib/essential-words/target-level'
 import { targetHash } from './target-hash'
 import type { ReaderTarget } from './select-targets'
 import type { ReaderPassage, ReaderQuestion } from './types'

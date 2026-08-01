@@ -15,12 +15,12 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import PageLayout from '@/components/layout/PageLayout'
 import Button from '@/components/ui/Button'
 import { db } from '@/lib/db'
-import { CORE1000_PREFIX } from '@/lib/core-1000/types'
+import { ESSENTIAL_WORD_PREFIX } from '@/lib/essential-words/types'
 import { useAuth } from '@/components/auth/AuthProvider'
 import type { SessionArc } from '@/lib/practice/types'
 import SpeakWithCoachCard from '@/components/ai-coach/SpeakWithCoachCard'
 
-const CORE_1000_TARGET = 1000
+const ESSENTIAL_WORD_TARGET = 1000
 
 interface Props {
   arc: SessionArc | undefined
@@ -34,7 +34,7 @@ interface Props {
 export default function SessionRecapCard({ arc, stepCount, dueTomorrow, streak }: Props) {
   const { user } = useAuth()
   const learned = useLiveQuery(
-    () => user?.id ? db.srsData.filter((e) => e.userId === user.id && e.wordId.startsWith(CORE1000_PREFIX)).count() : 0,
+    () => user?.id ? db.srsData.filter((e) => e.userId === user.id && e.wordId.startsWith(ESSENTIAL_WORD_PREFIX)).count() : 0,
     [user?.id],
     0,
   )
@@ -85,7 +85,7 @@ export default function SessionRecapCard({ arc, stepCount, dueTomorrow, streak }
 
         <p className="font-body-sm text-[var(--text-tertiary)]">
           {(learned ?? 0) > 0
-            ? `${learned} / ${CORE_1000_TARGET} palabras esenciales`
+            ? `${learned} / ${ESSENTIAL_WORD_TARGET} palabras esenciales`
             : `Completaste ${stepCount} pasos`}
           {streak != null && streak > 0
             ? ` · ${streak} ${streak === 1 ? 'día' : 'días'} de racha`

@@ -240,7 +240,7 @@ async function getSkillProfileData(userId: string): Promise<SkillProfileData> {
       .from('answer_history')
       .select('content_id', { count: 'exact', head: false })
       .eq('user_id', userId)
-      .eq('context', 'core-1000')
+      .eq('context', 'essential-words')
       .eq('is_correct', true),
 
     supabase

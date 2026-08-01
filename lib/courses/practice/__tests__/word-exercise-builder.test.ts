@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest'
 import { buildWordExercises } from '../word-exercise-builder'
-import type { CoreWord } from '@/lib/core-1000/types'
+import type { EssentialWord } from '@/lib/essential-words/types'
 
-const word: CoreWord = {
+const word: EssentialWord = {
   rank: 1,
   word: 'house',
   pos: 'noun',
@@ -11,7 +11,7 @@ const word: CoreWord = {
   cefr_level: 'A1',
 }
 
-const fourWords: CoreWord[] = [
+const fourWords: EssentialWord[] = [
   word,
   { ...word, rank: 2, word: 'water', example_sentence: 'Drink water every day.' },
   { ...word, rank: 3, word: 'eat', example_sentence: 'I eat breakfast at 8.' },

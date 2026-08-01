@@ -3,7 +3,7 @@ import GrammarStudyDeck from "@/components/courses/grammar-deck/GrammarStudyDeck
 import DeckUnavailable from "@/components/courses/grammar-deck/DeckUnavailable";
 import { getDeckForLesson, getDerivedRelated } from "@/lib/courses/grammar-deck/decks";
 import { getLessonByNumber, parseCoursePathTrackId } from "@/lib/courses/curriculumIndex";
-import type { CefrLevel } from "@/lib/core-1000/types";
+import type { CefrLevel } from "@/lib/essential-words/types";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 interface PageProps {

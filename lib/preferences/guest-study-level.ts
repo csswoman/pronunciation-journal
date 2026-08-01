@@ -1,4 +1,4 @@
-import { CEFR_LEVELS, type CefrLevel } from "@/lib/core-1000/types";
+import { CEFR_LEVELS, type CefrLevel } from "@/lib/essential-words/types";
 
 const STORAGE_KEY = "guest-study-level";
 

@@ -4,7 +4,7 @@ import { getUserLearningState } from "@/lib/ai-practice/load-state";
 import { persistLearningState } from "@/lib/ai-practice/queries";
 import type { UserLearningState } from "@/lib/ai-practice/learning-state";
 import type { ConceptSignal } from "@/lib/courses/concept-profile";
-import type { CefrLevel } from "@/lib/core-1000/types";
+import type { CefrLevel } from "@/lib/essential-words/types";
 import { db } from "@/lib/db";
 
 export function mergeConceptSignals(

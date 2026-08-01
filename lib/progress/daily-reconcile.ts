@@ -53,7 +53,7 @@ export function reconcileDailySteps(
   const contentIds = sessionContentIds(result)
   const soundIds = sessionSoundIds(result)
 
-  if (practiceContext === 'core-1000' && result.results.length >= MIN_ESSENTIAL_WORDS) {
+  if (practiceContext === 'essential-words' && result.results.length >= MIN_ESSENTIAL_WORDS) {
     if (steps.some((s) => s.id === 'word_review')) resolved.add('word_review')
   }
 

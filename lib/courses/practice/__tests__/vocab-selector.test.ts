@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest'
 import { selectNewWordsForLevel } from '@/lib/courses/practice/vocab-selector'
-import type { CoreWord } from '@/lib/core-1000/types'
+import type { EssentialWord } from '@/lib/essential-words/types'
 
-const makeWord = (rank: number, word: string, cefr_level: CoreWord['cefr_level']): CoreWord => ({
+const makeWord = (rank: number, word: string, cefr_level: EssentialWord['cefr_level']): EssentialWord => ({
   rank,
   word,
   pos: 'noun',
@@ -12,7 +12,7 @@ const makeWord = (rank: number, word: string, cefr_level: CoreWord['cefr_level']
 })
 
 describe('selectNewWordsForLevel', () => {
-  const words: CoreWord[] = [
+  const words: EssentialWord[] = [
     makeWord(1, 'house', 'A1'),
     makeWord(2, 'water', 'A1'),
     makeWord(3, 'eat', 'A1'),

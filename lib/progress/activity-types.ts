@@ -32,7 +32,7 @@ export const ACTIVITY_SOURCE_LABELS: Record<ActivitySource, string> = {
 
 export function practiceContextToSource(context: PracticeContext): ActivitySource {
   switch (context) {
-    case 'core-1000':
+    case 'essential-words':
       return 'essential_words'
     case 'sound_lab':
       return 'sound_lab'

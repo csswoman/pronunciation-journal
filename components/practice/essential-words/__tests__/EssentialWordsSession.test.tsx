@@ -2,10 +2,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import type { CoreWord } from '@/lib/core-1000/types'
+import type { EssentialWord } from '@/lib/essential-words/types'
 import type { SRSData } from '@/lib/types'
 
-const WORDS: CoreWord[] = [
+const WORDS: EssentialWord[] = [
   {
     rank: 1, word: 'the', pos: 'article', ipa_strong: '/ðʌ/', ipa_weak: '/ðə/',
     example_sentence: 'Give me the book please.', sentence_ipa: '/ɡɪv mi ðə bʊk pliz/', cefr_level: 'A1',
@@ -17,17 +17,17 @@ const WORDS: CoreWord[] = [
 ]
 
 const coreWordClientMocks = vi.hoisted(() => ({
-  fetchCoreWords: vi.fn(async () => WORDS),
+  fetchEssentialWords: vi.fn(async () => WORDS),
 }))
 
-vi.mock('@/lib/core-1000/client', () => ({
-  fetchCoreWords: coreWordClientMocks.fetchCoreWords,
+vi.mock('@/lib/essential-words/client', () => ({
+  fetchEssentialWords: coreWordClientMocks.fetchEssentialWords,
 }))
 
 const dbMocks = vi.hoisted(() => ({
-  getCore1000SrsEntries: vi.fn(async (): Promise<SRSData[]> => []),
-  getCore1000IntroducedToday: vi.fn(async (): Promise<string[]> => []),
-  recordCore1000Introduction: vi.fn(async () => undefined),
+  getEssentialWordsSrsEntries: vi.fn(async (): Promise<SRSData[]> => []),
+  getEssentialWordsIntroducedToday: vi.fn(async (): Promise<string[]> => []),
+  recordEssentialWordIntroduction: vi.fn(async () => undefined),
   snoozeEssentialWord: vi.fn(async () => undefined),
   masterEssentialWord: vi.fn(async () => undefined),
   getSRSData: vi.fn(async () => undefined),
@@ -105,9 +105,9 @@ beforeEach(() => {
   })
   window.sessionStorage.clear()
   authMocks.user = { id: 'user-1' }
-  coreWordClientMocks.fetchCoreWords.mockResolvedValue(WORDS)
-  dbMocks.getCore1000SrsEntries.mockResolvedValue([])
-  dbMocks.getCore1000IntroducedToday.mockResolvedValue([])
+  coreWordClientMocks.fetchEssentialWords.mockResolvedValue(WORDS)
+  dbMocks.getEssentialWordsSrsEntries.mockResolvedValue([])
+  dbMocks.getEssentialWordsIntroducedToday.mockResolvedValue([])
   dbMocks.saveSRSData.mockResolvedValue(undefined)
 })
 
@@ -126,12 +126,12 @@ describe('EssentialWordsSession', () => {
     await user.click(screen.getByRole('button', { name: 'Bien' }))
 
     await waitFor(() => expect(dbMocks.saveSRSData).toHaveBeenCalledOnce())
-    expect(dbMocks.recordCore1000Introduction).toHaveBeenCalledWith('the', 'user-1')
+    expect(dbMocks.recordEssentialWordIntroduction).toHaveBeenCalledWith('the', 'user-1')
     await screen.findByRole('heading', { name: 'be' })
   })
 
   it('shows the empty state when there is nothing due and no quota left', async () => {
-    dbMocks.getCore1000IntroducedToday.mockResolvedValue(
+    dbMocks.getEssentialWordsIntroducedToday.mockResolvedValue(
       Array.from({ length: 10 }, (_, i) => `w${i}`)
     )
     render(<EssentialWordsSession />)
@@ -142,7 +142,7 @@ describe('EssentialWordsSession', () => {
 
   it('resumes on the first appended card when learning more after finishing', async () => {
     const user = userEvent.setup()
-    dbMocks.getCore1000IntroducedToday.mockResolvedValue(
+    dbMocks.getEssentialWordsIntroducedToday.mockResolvedValue(
       Array.from({ length: 9 }, (_, i) => `w${i}`)
     )
     render(<EssentialWordsSession />)
@@ -159,7 +159,7 @@ describe('EssentialWordsSession', () => {
   })
 
   it('shows a reload state instead of empty when the dataset load fails', async () => {
-    coreWordClientMocks.fetchCoreWords.mockRejectedValueOnce(new Error('offline'))
+    coreWordClientMocks.fetchEssentialWords.mockRejectedValueOnce(new Error('offline'))
 
     render(<EssentialWordsSession />)
 
@@ -194,7 +194,7 @@ describe('EssentialWordsSession', () => {
 
   it('records the finished session only once when the last card is archived', async () => {
     const user = userEvent.setup()
-    dbMocks.getCore1000IntroducedToday.mockResolvedValue(Array.from({ length: 9 }, (_, i) => `w${i}`))
+    dbMocks.getEssentialWordsIntroducedToday.mockResolvedValue(Array.from({ length: 9 }, (_, i) => `w${i}`))
 
     render(<EssentialWordsSession />)
 
@@ -205,13 +205,13 @@ describe('EssentialWordsSession', () => {
     await screen.findByText(/Sesión completa/)
     await waitFor(() => expect(activityMocks.recordActivitySession).toHaveBeenCalledTimes(1))
     expect(activityMocks.recordActivitySession).toHaveBeenCalledWith('user-1', expect.objectContaining({
-      practiceContext: 'core-1000',
+      practiceContext: 'essential-words',
     }))
   })
 
   it('offers keep/master actions for words reactivated from snooze', async () => {
     const user = userEvent.setup()
-    dbMocks.getCore1000SrsEntries.mockResolvedValue([
+    dbMocks.getEssentialWordsSrsEntries.mockResolvedValue([
       {
         wordId: 'c1k:the',
         word: 'the',
@@ -238,7 +238,7 @@ describe('EssentialWordsSession', () => {
 
   it('masters a reactivated snooze word and advances', async () => {
     const user = userEvent.setup()
-    dbMocks.getCore1000SrsEntries.mockResolvedValue([
+    dbMocks.getEssentialWordsSrsEntries.mockResolvedValue([
       {
         wordId: 'c1k:the',
         word: 'the',

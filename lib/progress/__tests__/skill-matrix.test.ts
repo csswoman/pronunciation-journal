@@ -47,6 +47,6 @@ describe('deriveSkillTags', () => {
     // sound_lab context previously forced pronunciation+listening even for empty results;
     // with only dictation, listening is expected — pronunciation comes from phoneme slugs.
     expect(deriveSkillTags('sound_lab', buildSessionResult(results))).toEqual(['listening'])
-    expect(deriveSkillTags('core-1000', buildSessionResult(results))).toEqual(['listening'])
+    expect(deriveSkillTags('essential-words', buildSessionResult(results))).toEqual(['listening'])
   })
 })

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { loadCoreWords } from '@/lib/core-1000/data'
-import { coreWordToWordBankEntry } from '@/lib/core-1000/client-fetch'
+import { loadEssentialWords } from '@/lib/essential-words/data'
+import { coreWordToWordBankEntry } from '@/lib/essential-words/client-fetch'
 import { assessWordBankEntry } from '@/lib/exercises/eligibility'
 import { generateFillBlankFromWordBank } from '@/lib/exercises/generators/fill-blank'
 import { buildWordReviewStep } from '@/lib/practice/daily-plan/step-builders'
@@ -14,7 +14,7 @@ const MIN_FILL_BLANK_GENERATABILITY = 0.85
 
 describe('buildWordReviewStep integration', () => {
   function sampleCoreEntries() {
-    return loadCoreWords()
+    return loadEssentialWords()
       .filter(
         (w) =>
           w.rank >= CORE_SAMPLE_MIN_RANK &&

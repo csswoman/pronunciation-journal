@@ -1,4 +1,4 @@
-import { fetchCoreWordsForDay } from '@/lib/core-1000/client-fetch'
+import { fetchEssentialWordsForDay } from '@/lib/essential-words/client-fetch'
 import { db } from '@/lib/db'
 import {
   getAllSounds,
@@ -121,7 +121,7 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
   const hasWordBank = reviewWords.length > 0
 
   if (reviewWords.length === 0) {
-    reviewWords = await fetchCoreWordsForDay(dayOfYear(), WORD_REVIEW_WORD_COUNT)
+    reviewWords = await fetchEssentialWordsForDay(dayOfYear(), WORD_REVIEW_WORD_COUNT)
   }
 
   const readCompletedLessons = async () => {

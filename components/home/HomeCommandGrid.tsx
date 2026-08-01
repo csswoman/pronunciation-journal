@@ -14,7 +14,7 @@ import { useCallback, useState } from "react";
 import HomeDailyCard from "@/components/home/HomeDailyCard";
 import HomeReviewBanner from "@/components/home/HomeReviewBanner";
 import HomeLearnRow from "@/components/home/HomeLearnRow";
-import Core1000ProgressCard from "@/components/home/Core1000ProgressCard";
+import EssentialWordsProgressCard from "@/components/home/EssentialWordsProgressCard";
 import WeakSoundCard from "@/components/home/WeakSoundCard";
 import HomeWordOfDayCard from "@/components/home/HomeWordOfDayCard";
 import HomePlacementPrompt from "@/components/home/HomePlacementPrompt";
@@ -120,7 +120,7 @@ export default function HomeCommandGrid({
         <WeakSoundCard weakestPhoneme={weakestPhoneme} />
         {showPlanExtras ? (
           <>
-            <Core1000ProgressCard />
+            <EssentialWordsProgressCard />
             <HomeWordOfDayCard />
           </>
         ) : null}

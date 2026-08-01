@@ -80,7 +80,7 @@ describe("useLexiconPracticeSession", () => {
 
   it("restaura una sesión guardada sin refetch", async () => {
     const saved = {
-      categoryId: "core-1000",
+      categoryId: "essential-words",
       lessonName: "Core 1000",
       allEntries: [makeWordBankEntry("alpha")],
       sessionWordEntries: [makeWordEntry("alpha")],
@@ -90,9 +90,9 @@ describe("useLexiconPracticeSession", () => {
       practiceExercises: [],
       sessionKey: 2,
     };
-    sessionStorage.setItem("lexicon-practice:core-1000", JSON.stringify(saved));
+    sessionStorage.setItem("lexicon-practice:essential-words", JSON.stringify(saved));
 
-    const { result } = renderHook(() => useLexiconPracticeSession("core-1000", "user-1"));
+    const { result } = renderHook(() => useLexiconPracticeSession("essential-words", "user-1"));
 
     await waitFor(() => {
       expect(result.current.loadState).toBe("ready");
@@ -117,7 +117,7 @@ describe("useLexiconPracticeSession", () => {
     generateSentenceContextExercises.mockReturnValue([{ id: "s1" }]);
     fromGenericExercise.mockImplementation((ex) => ({ id: ex.id, source: "practice" }));
 
-    const { result } = renderHook(() => useLexiconPracticeSession("core-1000", "user-1"));
+    const { result } = renderHook(() => useLexiconPracticeSession("essential-words", "user-1"));
 
     await waitFor(() => {
       expect(result.current.loadState).toBe("ready");
