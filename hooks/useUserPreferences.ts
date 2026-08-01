@@ -14,7 +14,7 @@ import {
 } from "@/lib/users/queries";
 import type { Interest } from "@/lib/users/interests";
 import { cacheUserInterests, getCachedUserInterests } from "@/lib/db";
-import type { CefrLevel } from "@/lib/core-1000/types";
+import type { CefrLevel } from "@/lib/essential-words/types";
 
 export interface UserPreferencesData {
   full_name?: string;

@@ -64,7 +64,7 @@ Cuatro sistemas de repetición espaciada conviven en la app. Cada uno tiene un d
 
 **Ruta canónica:** `/practice/essential-words` (hub + sesión + Baúl). `/practice/core-1000` redirige ahí por compatibilidad con bookmarks antiguos; no usarla en enlaces nuevos.
 
-**Tabla:** `srsData` (Dexie, IndexedDB) — offline-first, sin sincronización a Supabase. Las entradas se distinguen por el prefijo `c1k:` en `wordId` (ej. `c1k:work`). No renombrar el prefijo ni los `wordId` almacenados: orfanaría el progreso del usuario. La capa de datos sigue en `lib/core-1000/`.
+**Tabla:** `srsData` (Dexie, IndexedDB) — offline-first, sin sincronización a Supabase. Las entradas se distinguen por el prefijo `c1k:` en `wordId` (ej. `c1k:work`). No renombrar el valor del prefijo ni los `wordId` almacenados: orfanaría el progreso del usuario (la constante en código es `ESSENTIAL_WORD_PREFIX`, el valor sigue siendo `"c1k:"`). La capa de datos vive en `lib/essential-words/`.
 
 **Algoritmo:** SM-2 cliente (`lib/srs/computeSM2.ts`), igual que `word_bank`.
 
@@ -78,7 +78,7 @@ Cuatro sistemas de repetición espaciada conviven en la app. Cada uno tiene un d
 
 **«Ya la sé» → snooze:** en sesión, el botón llama `snoozeEssentialWord` (`lib/db/index.ts`) con **90 días** por defecto y saca la palabra de la cola al momento. No muestra aún las opciones de dominio permanente.
 
-**Snooze vencido → reactivación automática:** antes de construir la cola, `prepareCore1000SrsEntries` (`lib/core-1000/prepare-srs.ts`) aplica `activateExpiredSnoozes` (`lib/srs/status.ts`). Si `nextReview` ya pasó, la fila vuelve a `active`, entra en la cola y sale del Baúl. Esas cartas llevan `fromSnooze` en la cola.
+**Snooze vencido → reactivación automática:** antes de construir la cola, `prepareEssentialWordsSrsEntries` (`lib/essential-words/prepare-srs.ts`) aplica `activateExpiredSnoozes` (`lib/srs/status.ts`). Si `nextReview` ya pasó, la fila vuelve a `active`, entra en la cola y sale del Baúl. Esas cartas llevan `fromSnooze` en la cola.
 
 **Al volver del snooze (`fromSnooze`):** en la tarjeta de speak, además del flujo normal, aparecen dos acciones secundarias (sin bloquear el micrófono):
 - «Seguir en 90 días» → otro snooze (`snoozeEssentialWord`)
@@ -88,7 +88,7 @@ Cuatro sistemas de repetición espaciada conviven en la app. Cada uno tiene un d
 
 **Migración legacy:** filas antiguas con `archived: true` se convierten una sola vez a `status: snoozed` vía `migrateArchivedSrsRows` (`lib/db/index.ts`), usando `migrateArchivedRow` (`lib/srs/migrate-archived.ts`). Idempotente; se ejecuta al abrir el Baúl y al leer entradas.
 
-**Cola de sesión (estilo Anki):** lógica pura en `lib/core-1000/queue.ts`, testeable sin React:
+**Cola de sesión (estilo Anki):** lógica pura en `lib/essential-words/queue.ts`, testeable sin React:
 
 | Función | Rol |
 |---|---|
@@ -101,9 +101,9 @@ Cada ítem lleva `kind: 'new' | 'learning' | 'review'` (antes era un booleano `i
 
 **Orquestación:** `hooks/useEssentialWordsSession.ts`. Las palabras falladas difieren su escritura SM-2 (`pendingLapsesRef`) hasta `finishSession`, para no programarlas a mañana a mitad de sesión.
 
-**Contenido — `sentence_ipa`:** cada palabra con `example_sentence` incluye transcripción IPA de la frase completa (CMU + acento léxico + weak forms cuando aplica). Obligatorio si hay `ipa_weak` (`lib/core-1000/schema.ts`).
+**Contenido — `sentence_ipa`:** cada palabra con `example_sentence` incluye transcripción IPA de la frase completa (CMU + acento léxico + weak forms cuando aplica). Obligatorio si hay `ipa_weak` (`lib/essential-words/schema.ts`).
 
-**Validación de contenido:** `scripts/validate-core-1000.mjs` verifica que cada palabra aparezca en su `example_sentence` (entendiendo conjugaciones, plurales, posesivos e irregulares). Sale con código 1 si hay desajustes.
+**Validación de contenido:** `scripts/validate-essential-words.mjs` verifica que cada palabra aparezca en su `example_sentence` (entendiendo conjugaciones, plurales, posesivos e irregulares). Sale con código 1 si hay desajustes.
 
 ---
 

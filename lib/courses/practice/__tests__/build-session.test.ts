@@ -7,8 +7,8 @@ vi.mock('@/lib/exercises/generators/reorder-from-fragments', () => ({
 vi.mock('@/lib/exercises/generators/mixed-from-fragments', () => ({
   generateMixedFromFragments: vi.fn().mockReturnValue([]),
 }))
-vi.mock('@/lib/core-1000/client', () => ({
-  fetchCoreWords: vi.fn().mockResolvedValue([]),
+vi.mock('@/lib/essential-words/client', () => ({
+  fetchEssentialWords: vi.fn().mockResolvedValue([]),
 }))
 vi.mock('@/lib/db', () => ({
   db: {
@@ -40,14 +40,14 @@ vi.mock('@/lib/practice/adapters', () => ({
 import { buildCoursePracticeSession } from '../build-session'
 import { fetchFragmentsForDeck } from '@/lib/exercises/generators/reorder-from-fragments'
 import { generateMixedFromFragments } from '@/lib/exercises/generators/mixed-from-fragments'
-import { fetchCoreWords } from '@/lib/core-1000/client'
+import { fetchEssentialWords } from '@/lib/essential-words/client'
 import { selectNewWordsForLevel } from '../vocab-selector'
 import { buildWordExercises } from '../word-exercise-builder'
-import type { CoreWord } from '@/lib/core-1000/types'
+import type { EssentialWord } from '@/lib/essential-words/types'
 
 const mockFetchFragments = vi.mocked(fetchFragmentsForDeck)
 const mockGenerateMixed = vi.mocked(generateMixedFromFragments)
-const mockFetchCore = vi.mocked(fetchCoreWords)
+const mockFetchCore = vi.mocked(fetchEssentialWords)
 const mockSelectNew = vi.mocked(selectNewWordsForLevel)
 const mockBuildWord = vi.mocked(buildWordExercises)
 
@@ -74,7 +74,7 @@ describe('buildCoursePracticeSession', () => {
   })
 
   it('includes vocab exercises when selectNewWordsForLevel returns words', async () => {
-    const fakeWord: CoreWord = { rank: 1, word: 'run', pos: 'verb', ipa_strong: '/rʌn/', example_sentence: 'I run every day.', cefr_level: 'A1' }
+    const fakeWord: EssentialWord = { rank: 1, word: 'run', pos: 'verb', ipa_strong: '/rʌn/', example_sentence: 'I run every day.', cefr_level: 'A1' }
     const fakeEx = { id: 'ex2', type: 'fill_blank', sourceRef: { source: 'core1k', id: 'c1k:run' }, sentence: 'I ___ every day.', answer: 'run', options: ['run', 'a', 'b', 'c'] }
     mockFetchCore.mockResolvedValue([fakeWord])
     mockSelectNew.mockReturnValue([fakeWord])
@@ -84,7 +84,7 @@ describe('buildCoursePracticeSession', () => {
   })
 
   it('skips vocab exercises when userId is missing', async () => {
-    const fakeWord: CoreWord = { rank: 1, word: 'run', pos: 'verb', ipa_strong: '/rʌn/', example_sentence: 'I run every day.', cefr_level: 'A1' }
+    const fakeWord: EssentialWord = { rank: 1, word: 'run', pos: 'verb', ipa_strong: '/rʌn/', example_sentence: 'I run every day.', cefr_level: 'A1' }
     const fakeEx = { id: 'ex2', type: 'fill_blank', sourceRef: { source: 'core1k', id: 'c1k:run' }, sentence: 'I ___ every day.', answer: 'run', options: ['run', 'a', 'b', 'c'] }
     mockFetchCore.mockResolvedValue([fakeWord])
     mockSelectNew.mockReturnValue([fakeWord])

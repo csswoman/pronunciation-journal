@@ -2,10 +2,10 @@
 import { describe, expect, it, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import type { CoreWord } from '@/lib/core-1000/types'
+import type { EssentialWord } from '@/lib/essential-words/types'
 import { SpeakReviewCard } from '../SpeakReviewCard'
 
-const ENTRY: CoreWord = {
+const ENTRY: EssentialWord = {
   rank: 1,
   word: 'test',
   pos: 'noun',

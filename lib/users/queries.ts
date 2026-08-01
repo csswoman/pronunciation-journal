@@ -1,5 +1,5 @@
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
-import type { CefrLevel } from "@/lib/core-1000/types";
+import type { CefrLevel } from "@/lib/essential-words/types";
 import { normalizeInterests, type Interest } from "@/lib/users/interests";
 
 export interface UserPreferences {

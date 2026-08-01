@@ -14,7 +14,7 @@ import { recordLessonComplete, recordLessonQuizAttempt } from "@/lib/practice/qu
 import { getCurrentUser } from "@/lib/auth/session";
 import PracticeSession from "@/components/practice/PracticeSession";
 import type { PracticeExercise } from "@/lib/practice/types";
-import type { CefrLevel } from "@/lib/core-1000/types";
+import type { CefrLevel } from "@/lib/essential-words/types";
 import { buildCoursePracticeSession } from "@/lib/courses/practice/build-session";
 import type { GrammarRelatedLink, GrammarStudyDeckData } from "@/lib/courses/grammar-deck/types";
 import type { CoursePathTrackId } from "@/lib/courses/types";

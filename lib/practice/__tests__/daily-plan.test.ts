@@ -80,8 +80,8 @@ vi.mock('@/lib/exercises/generators/reorder-ai', () => ({
   generateReorderAI: vi.fn().mockResolvedValue([]),
 }))
 
-vi.mock('@/lib/core-1000/client-fetch', () => ({
-  fetchCoreWordsForDay: vi.fn().mockResolvedValue([]),
+vi.mock('@/lib/essential-words/client-fetch', () => ({
+  fetchEssentialWordsForDay: vi.fn().mockResolvedValue([]),
 }))
 
 vi.mock('@/lib/practice/daily-plan/reader-targets', () => ({

@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { fetchCoreWords } from "@/lib/core-1000/client";
-import { buildSessionQueue } from "@/lib/core-1000/queue";
-import { getCore1000IntroducedToday } from "@/lib/db";
-import { prepareCore1000SrsEntries } from "@/lib/core-1000/prepare-srs";
-import { deriveEssentialSource, type EssentialSourceData } from "@/lib/core-1000/essential-due";
+import { fetchEssentialWords } from "@/lib/essential-words/client";
+import { buildSessionQueue } from "@/lib/essential-words/queue";
+import { getEssentialWordsIntroducedToday } from "@/lib/db";
+import { prepareEssentialWordsSrsEntries } from "@/lib/essential-words/prepare-srs";
+import { deriveEssentialSource, type EssentialSourceData } from "@/lib/essential-words/essential-due";
 import {
   reviewToneForCount,
   REVIEW_SOURCE_HREF,
@@ -52,9 +52,9 @@ export function useMergedReviewQueue(server: ReviewQueueSummary): ReviewQueueSum
       try {
         const now = new Date();
         const [words, introducedToday, prepared] = await Promise.all([
-          fetchCoreWords(),
-          getCore1000IntroducedToday(),
-          prepareCore1000SrsEntries(now),
+          fetchEssentialWords(),
+          getEssentialWordsIntroducedToday(),
+          prepareEssentialWordsSrsEntries(now),
         ]);
         const queue = buildSessionQueue({ words, srsEntries: prepared.entries, introducedToday, now });
         if (cancelled) return;

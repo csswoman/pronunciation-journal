@@ -1,4 +1,4 @@
-// Loader for the false-friends bank. Mirrors lib/core-1000/client-fetch.ts:
+// Loader for the false-friends bank. Mirrors lib/essential-words/client-fetch.ts:
 // chunked JSON under public/, fetched lazily, tolerant of missing chunks.
 
 import type { FalseFriendIntro } from "@/lib/practice/study-card/model";

@@ -1,4 +1,4 @@
-import type { CefrLevel } from "@/lib/core-1000/types";
+import type { CefrLevel } from "@/lib/essential-words/types";
 import type { CefrLevelId } from "@/lib/courses/types";
 import type { GrammarQuizQuestion } from "@/lib/courses/grammar-deck/types";
 import { LEVEL_ASSESSMENT_CONTRACTS, buildAssessment } from "@/lib/courses/curriculum";

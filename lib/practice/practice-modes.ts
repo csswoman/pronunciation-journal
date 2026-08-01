@@ -20,7 +20,7 @@ export const PRACTICE_MODES: readonly PracticeMode[] = [
     icon: 'MicVocal',
   },
   {
-    id: 'core-1000',
+    id: 'essential-words',
     label: 'Essential Words',
     description: 'High-frequency words with spaced repetition',
     href: '/practice/essential-words',
@@ -56,7 +56,7 @@ export const PRACTICE_MODES: readonly PracticeMode[] = [
   },
 ] as const
 
-const FALLBACK_MODE_ID = 'core-1000'
+const FALLBACK_MODE_ID = 'essential-words'
 
 export type RecommendationReason =
   | 'daily-sound'

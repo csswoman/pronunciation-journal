@@ -13,7 +13,7 @@ import Button from "@/components/ui/Button";
 import { SyllableWord } from "@/components/ui/SyllableWord";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useWordOfDay } from "@/hooks/useWordOfDay";
-import { readStoredCefrLevel } from "@/lib/core-1000/target-level";
+import { readStoredCefrLevel } from "@/lib/essential-words/target-level";
 import { readGuestStudyLevel } from "@/lib/preferences/guest-study-level";
 import { formatIpaDisplay } from "@/lib/lexicon/format-ipa";
 

@@ -8,7 +8,7 @@ export const CONTEXT_LABELS: Record<PracticeContext, string> = {
   sound_lab: 'Sound Lab',
   courses: 'Ruta',
   ai_coach: 'AI Coach',
-  'core-1000': 'Palabras esenciales',
+  'essential-words': 'Palabras esenciales',
 }
 
 export const DOMAIN_LABELS: Record<TestGalleryDomain, string> = {
