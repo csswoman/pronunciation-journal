@@ -2,7 +2,7 @@ import { generateConnectedSpeechExercises } from '@/lib/exercises/generators/con
 import { generateFalseFriendExercises } from '@/lib/exercises/generators/false-friends'
 import { fetchTextFragments, generateReorderFromFragments } from '@/lib/exercises/generators/reorder-from-fragments'
 import { generateReorderAI } from '@/lib/exercises/generators/reorder-ai'
-import { fetchFalseFriendsForDay } from '@/lib/false-friends/data'
+import { fetchFalseFriendsForDay, toFalseFriendIntro } from '@/lib/false-friends/data'
 import type { CefrLevel } from '@/lib/false-friends/types'
 import { fromGenericExercise } from '@/lib/practice/adapters'
 import { orderFragmentsByDue } from '@/lib/practice/fragment-priority'
@@ -66,6 +66,8 @@ export async function buildFalseFriendsStep(
     icon: 'AlertCircle',
     exercises,
     featuredWords: entries.map((e) => e.word),
+    // Presented before the exercises: the pair itself is the lesson.
+    falseFriends: entries.map(toFalseFriendIntro),
     estMinutes: Math.max(2, Math.round(exercises.length * 1.1)),
   }
 }

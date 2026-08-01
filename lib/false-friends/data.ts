@@ -1,6 +1,7 @@
 // Loader for the false-friends bank. Mirrors lib/core-1000/client-fetch.ts:
 // chunked JSON under public/, fetched lazily, tolerant of missing chunks.
 
+import type { FalseFriendIntro } from "@/lib/practice/study-card/model";
 import { FalseFriendChunkSchema } from "./schema";
 import type { CefrLevel, FalseFriend } from "./types";
 import { CEFR_LEVELS } from "./types";
@@ -62,6 +63,18 @@ export function rotateByDay(entries: FalseFriend[], day: number, count: number):
     picked.push(entries[(start + i) % entries.length]);
   }
   return picked;
+}
+
+/** Maps an authored pair onto the presentation view model used by the UI. */
+export function toFalseFriendIntro(entry: FalseFriend): FalseFriendIntro {
+  return {
+    word: entry.word,
+    looksLike: entry.looksLike,
+    actualMeaning: entry.actualMeaning,
+    correctWord: entry.correctWord,
+    levelBadge: entry.cefr_level,
+    note: entry.note,
+  };
 }
 
 /**

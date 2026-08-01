@@ -9,7 +9,7 @@ import type {
   AttributionVersion,
   EvidenceAttribution,
 } from '@/lib/practice/attribution'
-import type { StudyCardModel } from '@/lib/practice/study-card/model'
+import type { FalseFriendIntro, StudyCardModel } from '@/lib/practice/study-card/model'
 import type { ReaderPassage } from '@/lib/practice/reader/types'
 import type { ExerciseErrorCode } from '@/lib/exercises/error-taxonomy'
 
@@ -194,6 +194,8 @@ export type DailyStep = {
   readerPassage?: ReaderPassage
   /** Palabras ancla del paso (vocab/reader) para el hilo entre pasos. */
   featuredWords?: string[]
+  /** Solo para 'false_friends': pares que se presentan antes de practicarlos. */
+  falseFriends?: FalseFriendIntro[]
 }
 
 /** Narrative framing metadata for a daily session (opening banner + closing recap). */
