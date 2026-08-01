@@ -11,11 +11,11 @@
 
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '@/lib/db'
-import { CORE1000_PREFIX } from '@/lib/core-1000/types'
+import { ESSENTIAL_WORD_PREFIX } from '@/lib/essential-words/types'
 import { useAuth } from '@/components/auth/AuthProvider'
 import type { SessionArc } from '@/lib/practice/types'
 
-const CORE_1000_TARGET = 1000
+const ESSENTIAL_WORD_TARGET = 1000
 
 interface Props {
   arc: SessionArc | undefined
@@ -24,7 +24,7 @@ interface Props {
 export default function SessionOpeningBanner({ arc }: Props) {
   const { user } = useAuth()
   const learned = useLiveQuery(
-    () => user?.id ? db.srsData.filter((e) => e.userId === user.id && e.wordId.startsWith(CORE1000_PREFIX)).count() : 0,
+    () => user?.id ? db.srsData.filter((e) => e.userId === user.id && e.wordId.startsWith(ESSENTIAL_WORD_PREFIX)).count() : 0,
     [user?.id],
     0,
   )
@@ -33,7 +33,7 @@ export default function SessionOpeningBanner({ arc }: Props) {
   if (!hasFraming) return null
 
   const learnedCount = learned ?? 0
-  const progressPct = Math.min(100, (learnedCount / CORE_1000_TARGET) * 100)
+  const progressPct = Math.min(100, (learnedCount / ESSENTIAL_WORD_TARGET) * 100)
 
   return (
     <div className="mb-5 rounded-xl border border-(--accent-border) bg-primary-50 px-4 py-3.5">
@@ -58,7 +58,7 @@ export default function SessionOpeningBanner({ arc }: Props) {
             <p className="font-caption text-fg-subtle">Palabras esenciales</p>
             <p className="font-caption text-fg-subtle">
               <span className="tabular-nums font-medium text-fg-muted">{learnedCount}</span>
-              <span> / {CORE_1000_TARGET}</span>
+              <span> / {ESSENTIAL_WORD_TARGET}</span>
             </p>
           </div>
           <div className="h-1.5 w-full overflow-hidden rounded-full bg-primary-100">

@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
-  coreWordToStudyCard,
+  essentialWordToStudyCard,
   wordBankEntryToStudyCard,
 } from "../model";
-import type { CoreWord } from "@/lib/core-1000/types";
+import type { EssentialWord } from "@/lib/essential-words/types";
 import type { WordBankEntry } from "@/lib/word-bank/types";
 
-const coreFunctionWord: CoreWord = {
+const coreFunctionWord: EssentialWord = {
   rank: 3,
   word: "to",
   pos: "preposition",
@@ -17,7 +17,7 @@ const coreFunctionWord: CoreWord = {
   cefr_level: "A1",
 };
 
-const coreContentWord: CoreWord = {
+const coreContentWord: EssentialWord = {
   rank: 120,
   word: "house",
   pos: "noun",
@@ -59,9 +59,9 @@ function wordBank(overrides: Partial<WordBankEntry>): WordBankEntry {
   } as WordBankEntry;
 }
 
-describe("coreWordToStudyCard", () => {
+describe("essentialWordToStudyCard", () => {
   it("maps the common fields and includes the weak form when present", () => {
-    const model = coreWordToStudyCard(coreFunctionWord);
+    const model = essentialWordToStudyCard(coreFunctionWord);
     expect(model.word).toBe("to");
     expect(model.ipa).toBe("/tuː/");
     expect(model.sentence).toBe("I want to go home.");
@@ -72,7 +72,7 @@ describe("coreWordToStudyCard", () => {
   });
 
   it("omits weakForm and sentenceIpa for content words", () => {
-    const model = coreWordToStudyCard(coreContentWord);
+    const model = essentialWordToStudyCard(coreContentWord);
     expect(model.weakForm).toBeUndefined();
     expect(model.sentenceIpa).toBeUndefined();
     expect(model.ipa).toBe("/haʊs/");

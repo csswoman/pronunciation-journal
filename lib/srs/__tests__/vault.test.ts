@@ -46,7 +46,7 @@ function mastered(
 }
 
 describe("sourceLabelFromWordId", () => {
-  it("labels core-1000 word ids", () => {
+  it("labels essential-words word ids", () => {
     expect(sourceLabelFromWordId("c1k:hello")).toBe("Palabras esenciales");
   });
 

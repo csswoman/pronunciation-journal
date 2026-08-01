@@ -1,23 +1,23 @@
-import type { CoreWord } from '@/lib/core-1000/types'
-import { core1000WordId } from '@/lib/core-1000/types'
+import type { EssentialWord } from '@/lib/essential-words/types'
+import { essentialWordId } from '@/lib/essential-words/types'
 import type { FillBlankExercise, SentenceDictationExercise, GenericExercise } from '@/lib/exercises/types'
 import { blankWord, exerciseId, pick, shuffle } from '@/lib/exercises/utils'
 
 const FILL_BLANK_OPTIONS = 4
 
 /**
- * Converts CoreWord[] into GenericExercise[].
+ * Converts EssentialWord[] into GenericExercise[].
  * Each word becomes a fill_blank using its example_sentence.
- * sourceRef.source = 'core1k' so the progress dispatcher can route to gradeCore1000Word.
+ * sourceRef.source = 'core1k' so the progress dispatcher can route to gradeEssentialWord.
  */
-export function buildWordExercises(words: CoreWord[]): GenericExercise[] {
+export function buildWordExercises(words: EssentialWord[]): GenericExercise[] {
   if (words.length === 0) return []
 
   // Pool of distractor words — all target words except self
   const allTargets = words.map((w) => w.word)
 
   return words.flatMap((word): GenericExercise[] => {
-    const wordId = core1000WordId(word.word)
+    const wordId = essentialWordId(word.word)
     const blanked = blankWord(word.example_sentence, word.word)
 
     if (blanked) {
@@ -51,7 +51,7 @@ export function buildWordExercises(words: CoreWord[]): GenericExercise[] {
   })
 }
 
-function buildDictation(word: CoreWord, wordId: string): SentenceDictationExercise {
+function buildDictation(word: EssentialWord, wordId: string): SentenceDictationExercise {
   return {
     id: exerciseId('sentence_dictation', wordId, word.example_sentence),
     type: 'sentence_dictation',

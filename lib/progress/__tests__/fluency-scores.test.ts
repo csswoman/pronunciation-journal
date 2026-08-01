@@ -42,9 +42,9 @@ describe('computeFluencyScores', () => {
     expect(scores.listening).toBeGreaterThan(0)
   })
 
-  it('scores vocabulary from core-1000 context', () => {
+  it('scores vocabulary from essential-words context', () => {
     const answers = Array.from({ length: 8 }, () =>
-      answer({ exerciseTypeId: 10, context: 'core-1000', isCorrect: true }),
+      answer({ exerciseTypeId: 10, context: 'essential-words', isCorrect: true }),
     )
     const scores = computeFluencyScores({
       ...baseInput,

@@ -73,7 +73,7 @@ export type PracticeContext =
   | 'ai_coach'
   | 'practice'
   | 'daily'
-  | 'core-1000'
+  | 'essential-words'
   | 'review'
 
 export type PhonemePayload = {

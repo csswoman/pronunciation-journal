@@ -11,8 +11,8 @@ That workflow runs:
 - `pnpm type-check`
 - `pnpm test`
 - `pnpm lint:design-tokens`
-- `pnpm validate:core1000`
-- `pnpm validate:core1000-generators`
+- `pnpm validate:essential-words`
+- `pnpm validate:essential-words-generators`
 - `pnpm audit --audit-level=moderate`
 - `pnpm scan:secrets`
 - `pnpm build`

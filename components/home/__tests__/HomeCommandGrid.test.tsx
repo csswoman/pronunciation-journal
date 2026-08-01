@@ -23,7 +23,7 @@ vi.mock("@/components/home/HomeDailyCard", () => ({
 }));
 vi.mock("@/components/home/HomeReviewBanner", () => ({ default: () => null }));
 vi.mock("@/components/home/HomeLearnRow", () => ({ default: () => null }));
-vi.mock("@/components/home/Core1000ProgressCard", () => ({ default: () => null }));
+vi.mock("@/components/home/EssentialWordsProgressCard", () => ({ default: () => null }));
 vi.mock("@/components/home/WeakSoundCard", () => ({ default: () => null }));
 vi.mock("@/components/home/HomeWordOfDayCard", () => ({
   default: () => <div>Palabra del día</div>,

@@ -58,11 +58,11 @@ jobs:
       - name: Audit Dexie/Zustand state duplication
         run: pnpm audit:state-duplication
 
-      - name: Validate Core 1000 dataset
-        run: pnpm validate:core1000
+      - name: Validate Essential Words dataset
+        run: pnpm validate:essential-words
 
-      - name: Validate Core 1000 generators
-        run: pnpm validate:core1000-generators
+      - name: Validate Essential Words generators
+        run: pnpm validate:essential-words-generators
 
   security-audit:
     runs-on: ubuntu-latest

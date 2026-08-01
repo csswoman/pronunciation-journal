@@ -7,7 +7,7 @@
 // A themed route is a curated CEFR-level + part-of-speech slice (e.g. "Verbos B1").
 
 import { cn } from '@/lib/cn'
-import { VOCAB_ROUTES, getRoute } from '@/lib/core-1000/routes'
+import { VOCAB_ROUTES, getRoute } from '@/lib/essential-words/routes'
 
 interface Props {
   value: string | null

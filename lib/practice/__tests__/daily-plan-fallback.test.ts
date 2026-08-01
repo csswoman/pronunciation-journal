@@ -48,8 +48,8 @@ vi.mock('@/lib/exercises/generators/reorder-ai', () => ({
   generateReorderAI: async () => [],
 }))
 
-vi.mock('@/lib/core-1000/client-fetch', () => ({
-  fetchCoreWordsForDay: async (_day: number, count: number) =>
+vi.mock('@/lib/essential-words/client-fetch', () => ({
+  fetchEssentialWordsForDay: async (_day: number, count: number) =>
     Array.from({ length: count }, (_, i) => ({
       id: `core1k:word${i}`,
       user_id: '',

@@ -1,9 +1,9 @@
 import { fetchFragmentsForDeck } from '@/lib/exercises/generators/reorder-from-fragments'
 import { generateMixedFromFragments } from '@/lib/exercises/generators/mixed-from-fragments'
-import { fetchCoreWords } from '@/lib/core-1000/client'
+import { fetchEssentialWords } from '@/lib/essential-words/client'
 import { fromGenericExercise } from '@/lib/practice/adapters'
 import type { PracticeExercise } from '@/lib/practice/types'
-import type { CefrLevel } from '@/lib/core-1000/types'
+import type { CefrLevel } from '@/lib/essential-words/types'
 import { selectNewWordsForLevel } from './vocab-selector'
 import { buildWordExercises } from './word-exercise-builder'
 import { db } from '@/lib/db'
@@ -46,7 +46,7 @@ export async function buildCoursePracticeSession({
     try {
       if (!userId) return []
       const [allWords, seenEntries] = await Promise.all([
-        fetchCoreWords(),
+        fetchEssentialWords(),
         db.srsData.filter((entry) => entry.userId === userId && entry.wordId.startsWith('c1k:')).toArray(),
       ])
       const seenIds = new Set(seenEntries.map((e) => e.wordId))

@@ -4,28 +4,28 @@ import {
   reinsertLearning,
   deriveCounts,
   appendNewBatch,
-  type Core1000QueueItem,
-} from "@/lib/core-1000/queue";
-import { gradeCore1000Word, type GradeExtras } from "@/lib/core-1000/grade";
-import { core1000WordId, NEW_CARDS_PER_DAY, type CefrLevel, type CorePos, type CoreWord } from "@/lib/core-1000/types";
-import { getRoute } from "@/lib/core-1000/routes";
-import { loadPendingLapses, savePendingLapses } from "@/lib/core-1000/pending-lapses";
+  type EssentialWordQueueItem,
+} from "@/lib/essential-words/queue";
+import { gradeEssentialWord, type GradeExtras } from "@/lib/essential-words/grade";
+import { essentialWordId, NEW_CARDS_PER_DAY, type CefrLevel, type EssentialWordPos, type EssentialWord } from "@/lib/essential-words/types";
+import { getRoute } from "@/lib/essential-words/routes";
+import { loadPendingLapses, savePendingLapses } from "@/lib/essential-words/pending-lapses";
 import {
   loadEssentialWordsQueue,
   type EssentialWordsStats,
-} from "@/lib/core-1000/session-loader";
+} from "@/lib/essential-words/session-loader";
 import {
   advanceSummary,
-  buildCore1000ExerciseResult,
-  phaseForCore1000Item,
+  buildEssentialWordExerciseResult,
+  phaseForEssentialWordItem,
   type EssentialWordsPhase,
   type EssentialWordsSessionSummary,
-} from "@/lib/core-1000/session-model";
-import { readStoredCefrLevel } from "@/lib/core-1000/target-level";
+} from "@/lib/essential-words/session-model";
+import { readStoredCefrLevel } from "@/lib/essential-words/target-level";
 import { readGuestStudyLevel } from "@/lib/preferences/guest-study-level";
 import {
   masterEssentialWord,
-  recordCore1000Introduction,
+  recordEssentialWordIntroduction,
   snoozeEssentialWord,
 } from "@/lib/db";
 import { useAuth } from "@/components/auth/AuthProvider";
@@ -33,8 +33,8 @@ import { recordActivitySession } from "@/lib/progress/activity-hub";
 import { buildSessionResult } from "@/lib/practice/session-result";
 import type { ExerciseResult } from "@/lib/practice/types";
 
-export type { EssentialWordsPhase, EssentialWordsSessionSummary } from "@/lib/core-1000/session-model";
-export type { EssentialWordsStats } from "@/lib/core-1000/session-loader";
+export type { EssentialWordsPhase, EssentialWordsSessionSummary } from "@/lib/essential-words/session-model";
+export type { EssentialWordsStats } from "@/lib/essential-words/session-loader";
 
 export interface EssentialWordsCounts {
   newRemaining: number;
@@ -52,7 +52,7 @@ const EMPTY_COUNTS: EssentialWordsCounts = {
 export function useEssentialWordsSession() {
   const { user } = useAuth();
   const [phase, setPhase] = useState<EssentialWordsPhase>("loading");
-  const [queue, setQueue] = useState<Core1000QueueItem[]>([]);
+  const [queue, setQueue] = useState<EssentialWordQueueItem[]>([]);
   const [index, setIndex] = useState(0);
   const [stats, setStats] = useState<EssentialWordsStats>(EMPTY_STATS);
   const [counts, setCounts] = useState<EssentialWordsCounts>(EMPTY_COUNTS);
@@ -64,21 +64,21 @@ export function useEssentialWordsSession() {
   // Pending lapses: wordId → quality — flushed to Dexie on session end
   const pendingLapsesRef = useRef<Map<string, number>>(new Map());
   const lapseFlushRef = useRef<Promise<void> | null>(null);
-  const allWordsRef = useRef<CoreWord[]>([]);
+  const allWordsRef = useRef<EssentialWord[]>([]);
   const seenIdsRef = useRef<Set<string>>(new Set());
   // Active filter (null = all). Ephemeral, session-scoped. `routeId` is the
   // themed-route preset that drove the current level+pos, when any.
   const [levels, setLevelsState] = useState<CefrLevel[] | null>(null);
   const levelsRef = useRef<CefrLevel[] | null>(null);
-  const [pos, setPosState] = useState<CorePos[] | null>(null);
-  const posRef = useRef<CorePos[] | null>(null);
+  const [pos, setPosState] = useState<EssentialWordPos[] | null>(null);
+  const posRef = useRef<EssentialWordPos[] | null>(null);
   const [activeRouteId, setActiveRouteId] = useState<string | null>(null);
 
   const persistPendingLapses = useCallback(() => {
     savePendingLapses(pendingLapsesRef.current);
   }, []);
 
-  const syncCounts = useCallback((q: Core1000QueueItem[], i: number) => {
+  const syncCounts = useCallback((q: EssentialWordQueueItem[], i: number) => {
     setCounts(deriveCounts(q, i));
   }, []);
 
@@ -90,7 +90,7 @@ export function useEssentialWordsSession() {
       for (const [wordId, quality] of pending) {
         const word = wordId.replace("c1k:", "");
         try {
-          await gradeCore1000Word(word, quality, {}, user?.id);
+          await gradeEssentialWord(word, quality, {}, user?.id);
           if (pendingLapsesRef.current.get(wordId) === quality) {
             pendingLapsesRef.current.delete(wordId);
             persistPendingLapses();
@@ -138,7 +138,7 @@ export function useEssentialWordsSession() {
     }
     const sessionResult = buildSessionResult(sessionResultsRef.current);
     try {
-      await recordActivitySession(user.id, { practiceContext: "core-1000", sessionResult });
+      await recordActivitySession(user.id, { practiceContext: "essential-words", sessionResult });
       const { flushOutbox } = await import("@/lib/sync/sync-manager");
       await flushOutbox();
     } catch (err) {
@@ -148,7 +148,7 @@ export function useEssentialWordsSession() {
     }
   }, [user?.id, flushLapses]);
 
-  const advance = useCallback((q: Core1000QueueItem[], i: number) => {
+  const advance = useCallback((q: EssentialWordQueueItem[], i: number) => {
     const next = i + 1;
     if (next >= q.length) {
       void finishSession();
@@ -156,7 +156,7 @@ export function useEssentialWordsSession() {
     }
     setIndex(next);
     syncCounts(q, next);
-    setPhase(phaseForCore1000Item(q[next]));
+    setPhase(phaseForEssentialWordItem(q[next]));
   }, [finishSession, syncCounts]);
 
   const bootstrap = useCallback(async () => {
@@ -213,17 +213,17 @@ export function useEssentialWordsSession() {
     async (quality: number, extras?: GradeExtras) => {
       const item = queue[index];
       if (!item) return;
-      const wordId = core1000WordId(item.entry.word.toLowerCase());
+      const wordId = essentialWordId(item.entry.word.toLowerCase());
 
-      const result = buildCore1000ExerciseResult(item, quality, extras);
+      const result = buildEssentialWordExerciseResult(item, quality, extras);
 
       if (quality >= 3) {
-        await gradeCore1000Word(item.entry.word, quality, extras, user?.id);
+        await gradeEssentialWord(item.entry.word, quality, extras, user?.id);
         seenIdsRef.current.add(wordId);
         pendingLapsesRef.current.delete(wordId);
         persistPendingLapses();
         if (item.kind === "new") {
-          await recordCore1000Introduction(item.entry.word.toLowerCase(), user?.id);
+          await recordEssentialWordIntroduction(item.entry.word.toLowerCase(), user?.id);
           setStats((s) => ({ ...s, newToday: s.newToday + 1, learned: s.learned + 1 }));
         }
         sessionResultsRef.current.push(result);
@@ -255,11 +255,11 @@ export function useEssentialWordsSession() {
     }
     setIndex(nextIndex);
     syncCounts(newQueue, nextIndex);
-    setPhase(phaseForCore1000Item(newQueue[nextIndex]));
+    setPhase(phaseForEssentialWordItem(newQueue[nextIndex]));
   }, [phase, queue, index, syncCounts]);
 
   const removeCurrentAndAdvance = useCallback((word: string) => {
-    seenIdsRef.current.add(core1000WordId(word.toLowerCase()));
+    seenIdsRef.current.add(essentialWordId(word.toLowerCase()));
     const newQueue = queue.filter((_, i) => i !== index);
     setQueue(newQueue);
     if (newQueue.length === 0 || index >= newQueue.length) {
@@ -267,7 +267,7 @@ export function useEssentialWordsSession() {
       return;
     }
     syncCounts(newQueue, index);
-    setPhase(phaseForCore1000Item(newQueue[index]));
+    setPhase(phaseForEssentialWordItem(newQueue[index]));
   }, [queue, index, finishSession, syncCounts]);
 
   const archiveWord = useCallback(async (word: string) => {

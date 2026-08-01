@@ -1,4 +1,4 @@
-import { CHUNK_SIZE, MAX_CHUNKS } from "@/lib/core-1000/types";
+import { CHUNK_SIZE, MAX_CHUNKS } from "@/lib/essential-words/types";
 import { listAllDecks } from "@/lib/courses/grammar-deck/decks";
 
 const ESSENTIAL_WORDS_TOTAL = MAX_CHUNKS * CHUNK_SIZE;

@@ -19,7 +19,7 @@ describe('resolveRecommendedMode', () => {
       arc: { soundIpa: null, topicLabel: 'Food', sessionWords: [] },
       lastModeId: null,
     })
-    expect(r.mode.id).toBe('core-1000')
+    expect(r.mode.id).toBe('essential-words')
     expect(r.reason).toBe('daily-words')
   })
 
@@ -39,7 +39,7 @@ describe('resolveRecommendedMode', () => {
       arc: undefined,
       lastModeId: 'nonsense',
     })
-    expect(r.mode.id).toBe('core-1000')
+    expect(r.mode.id).toBe('essential-words')
     expect(r.reason).toBe('fallback')
   })
 
@@ -49,7 +49,7 @@ describe('resolveRecommendedMode', () => {
       arc: undefined,
       lastModeId: null,
     })
-    expect(r.mode.id).toBe('core-1000')
+    expect(r.mode.id).toBe('essential-words')
     expect(r.reason).toBe('fallback')
   })
 

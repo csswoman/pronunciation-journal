@@ -9,7 +9,7 @@ import { buildSession } from '@/lib/practice/engine'
 import { savePracticeAnswer } from '@/lib/practice/queries'
 import { buildSessionResult } from '@/lib/practice/session-result'
 import { recordActivitySession } from '@/lib/progress/activity-hub'
-import { gradeCore1000Word } from '@/lib/core-1000/grade'
+import { gradeEssentialWord } from '@/lib/essential-words/grade'
 import { flushOutbox } from '@/lib/sync/sync-manager'
 import { ATTRIBUTION_VERSION } from '@/lib/practice/attribution'
 import { resolveAnswerAttribution } from '@/lib/practice/resolve-attribution'
@@ -215,8 +215,8 @@ export function useSessionState(config: PracticeConfig) {
         const word = result.sourceRef.id.replace(/^c1k:/, '')
         const quality = result.isCorrect ? 4 : 2
         // answer_history is already written above; userId scopes only the local SRS mirror.
-        void gradeCore1000Word(word, quality, {}, user?.id).catch((err) => {
-          console.error('[PracticeSession] gradeCore1000Word failed', err)
+        void gradeEssentialWord(word, quality, {}, user?.id).catch((err) => {
+          console.error('[PracticeSession] gradeEssentialWord failed', err)
         })
       }
       const nextResults = [...results, result]

@@ -65,11 +65,11 @@ describe('reconcileDailySteps', () => {
     const session = {
       ...emptySession(),
       results: Array.from({ length: 3 }, (_, i) =>
-        result({ contentId: `c1k:w${i}`, context: 'core-1000', slug: 'speak_word' }),
+        result({ contentId: `c1k:w${i}`, context: 'essential-words', slug: 'speak_word' }),
       ),
       accuracy: 90,
     }
-    expect(reconcileDailySteps([wordReviewStep], session, 'core-1000')).toContain('word_review')
+    expect(reconcileDailySteps([wordReviewStep], session, 'essential-words')).toContain('word_review')
   })
 
   it('resolves phoneme_focus when enough answers share soundId', () => {

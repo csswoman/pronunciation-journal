@@ -1,9 +1,9 @@
-import { hasReduction, type CoreWord } from "@/lib/core-1000/types";
+import { hasReduction, type EssentialWord } from "@/lib/essential-words/types";
 import type { WordBankEntry } from "@/lib/word-bank/types";
 
 /**
  * Source-agnostic view model for a word/concept presentation card. Both Core
- * 1000 (`CoreWord`) and the general word bank (`WordBankEntry`) map onto this
+ * 1000 (`EssentialWord`) and the general word bank (`WordBankEntry`) map onto this
  * shape; the card renders each section only when its field is present, so the
  * Core-1000-specific extras (weak form, sentence IPA, chips) are all optional.
  */
@@ -77,7 +77,7 @@ function present(value: string | null | undefined): string | undefined {
   return trimmed ? trimmed : undefined;
 }
 
-export function coreWordToStudyCard(entry: CoreWord): StudyCardModel {
+export function essentialWordToStudyCard(entry: EssentialWord): StudyCardModel {
   return {
     word: entry.word,
     ipa: present(entry.ipa_strong),

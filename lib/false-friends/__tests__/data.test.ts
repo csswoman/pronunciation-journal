@@ -127,7 +127,7 @@ describe("falseFriendId", () => {
     expect(falseFriendId("Actually")).toBe("ff:actually");
   });
 
-  it("does not collide with the core-1000 namespace", () => {
+  it("does not collide with the essential-words namespace", () => {
     expect(falseFriendId("the").startsWith("c1k:")).toBe(false);
   });
 });

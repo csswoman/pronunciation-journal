@@ -26,11 +26,11 @@ import { SpeakSkipActions } from './SpeakSkipActions'
 import { micErrorMessage } from './mic-error-message'
 import { playUiCue } from '@/lib/ui-sounds/cues'
 import { cn } from '@/lib/cn'
-import type { CoreWord } from '@/lib/core-1000/types'
+import type { EssentialWord } from '@/lib/essential-words/types'
 import type { WordResult } from '@/lib/types'
 
 interface Props {
-  entry: CoreWord
+  entry: EssentialWord
   onGraded: (quality: number, extras?: { accuracy: number; transcript: string }) => Promise<void>
   onArchive: () => void
   fromSnooze?: boolean
