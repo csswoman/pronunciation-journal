@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
+import fs from "fs";
+import path from "path";
 import { filterByLevel, normalizeFalseFriendsLevel, rotateByDay } from "../data";
-import { falseFriendId } from "../types";
-import type { FalseFriend } from "../types";
+import { CEFR_LEVELS, falseFriendId } from "../types";
+import type { CefrLevel, FalseFriend } from "../types";
 
 function entry(id: string, cefr_level: FalseFriend["cefr_level"]): FalseFriend {
   return {
@@ -81,6 +83,42 @@ describe("normalizeFalseFriendsLevel", () => {
 
   it("defaults to B1 on an unrecognized value", () => {
     expect(normalizeFalseFriendsLevel("fluent")).toBe("B1");
+  });
+});
+
+// The suites above run on synthetic entries, so they prove the functions work
+// but say nothing about whether the authored bank is actually usable. These do.
+describe("the authored bank", () => {
+  const dir = path.join(process.cwd(), "public", "false-friends");
+  const entries: FalseFriend[] = fs
+    .readdirSync(dir)
+    .filter((f) => f.endsWith(".json"))
+    .flatMap((f) => JSON.parse(fs.readFileSync(path.join(dir, f), "utf-8")).entries);
+
+  it("is contiguously numbered, so the loader reaches every chunk", () => {
+    // loadAllFalseFriends stops at the first gap: pairs-001, 003 would silently
+    // drop 003 and everything after it.
+    const numbers = fs
+      .readdirSync(dir)
+      .filter((f) => f.endsWith(".json"))
+      .map((f) => Number(f.match(/pairs-(\d+)\.json/)?.[1]))
+      .sort((a, b) => a - b);
+    expect(numbers).toEqual(numbers.map((_, i) => i + 1));
+  });
+
+  it.each(CEFR_LEVELS)("has enough entries at %s to fill a daily step", (level) => {
+    // A step asks for 4 pairs; a learner capped at A1 must still get a full one.
+    expect(filterByLevel(entries, level as CefrLevel).length).toBeGreaterThanOrEqual(4);
+  });
+
+  it("drills both directions, so the trap word is not always wrong", () => {
+    // Every pair with two prompts should have one where the trap word is the
+    // answer — otherwise "never pick the familiar-looking word" wins every time.
+    const twoPrompt = entries.filter((e) => e.prompts.length > 1);
+    const bidirectional = twoPrompt.filter((e) =>
+      e.prompts.some((p) => p.options[p.answer].toLowerCase().includes(e.word.toLowerCase())),
+    );
+    expect(bidirectional).toHaveLength(twoPrompt.length);
   });
 });
 

@@ -1,0 +1,576 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "id": "parents",
+      "word": "parents",
+      "looksLike": "parientes",
+      "actualMeaning": "padres (madre y padre)",
+      "correctWord": "relatives",
+      "kind": "meaning-shift",
+      "cefr_level": "A1",
+      "prompts": [
+        {
+          "sentence": "About forty ___ came to the wedding, including cousins and uncles.",
+          "options": ["relatives", "parents"],
+          "answer": 0,
+          "explain": "Parientes en general es relatives. Parents son solo el padre y la madre."
+        },
+        {
+          "sentence": "My ___ met at university and married in 1990.",
+          "options": ["parents", "relatives"],
+          "answer": 0,
+          "explain": "Aquí sí es parents: se habla de la madre y el padre."
+        }
+      ]
+    },
+    {
+      "id": "sensitive-topic",
+      "word": "sensitive",
+      "looksLike": "sensitivo",
+      "actualMeaning": "delicado / que se ofende fácil",
+      "correctWord": "sensory",
+      "kind": "meaning-shift",
+      "cefr_level": "B2",
+      "prompts": [
+        {
+          "sentence": "The brain processes ___ information from the eyes and ears.",
+          "options": ["sensory", "sensitive"],
+          "answer": 0,
+          "explain": "Sensitivo (de los sentidos) es sensory. Sensitive es delicado o susceptible."
+        },
+        {
+          "sentence": "Salary is a ___ topic in this office.",
+          "options": ["sensitive", "sensory"],
+          "answer": 0,
+          "explain": "Aquí sí es sensitive: un tema delicado."
+        }
+      ]
+    },
+    {
+      "id": "assistance",
+      "word": "assistance",
+      "looksLike": "asistencia (público)",
+      "actualMeaning": "ayuda",
+      "correctWord": "attendance",
+      "kind": "meaning-shift",
+      "cefr_level": "B2",
+      "prompts": [
+        {
+          "sentence": "___ at the lecture was low — only twelve people.",
+          "options": ["Attendance", "Assistance"],
+          "answer": 0,
+          "explain": "La asistencia (cuánta gente va) es attendance. Assistance es ayuda."
+        },
+        {
+          "sentence": "Thank you for your ___ with the paperwork.",
+          "options": ["assistance", "attendance"],
+          "answer": 0,
+          "explain": "Aquí sí es assistance: te ayudaron."
+        }
+      ]
+    },
+    {
+      "id": "conductor",
+      "word": "conductor",
+      "looksLike": "conductor (de coche)",
+      "actualMeaning": "director de orquesta / revisor",
+      "correctWord": "driver",
+      "kind": "meaning-shift",
+      "cefr_level": "B1",
+      "prompts": [
+        {
+          "sentence": "The bus ___ stopped at every corner.",
+          "options": ["driver", "conductor"],
+          "answer": 0,
+          "explain": "El conductor de un vehículo es the driver. Conductor es el director de orquesta."
+        },
+        {
+          "sentence": "The orchestra applauded their new ___.",
+          "options": ["conductor", "driver"],
+          "answer": 0,
+          "explain": "Aquí sí es conductor: dirige la orquesta."
+        }
+      ]
+    },
+    {
+      "id": "fabric",
+      "word": "fabric",
+      "looksLike": "fábrica",
+      "actualMeaning": "tela",
+      "correctWord": "factory",
+      "kind": "unrelated",
+      "cefr_level": "A2",
+      "prompts": [
+        {
+          "sentence": "He works at a car ___ outside the city.",
+          "options": ["factory", "fabric"],
+          "answer": 0,
+          "explain": "Fábrica es factory. Fabric es tela."
+        },
+        {
+          "sentence": "This ___ feels soft — is it cotton?",
+          "options": ["fabric", "factory"],
+          "answer": 0,
+          "explain": "Aquí sí es fabric: el material de la ropa."
+        }
+      ]
+    },
+    {
+      "id": "grocery",
+      "word": "grocery",
+      "looksLike": "grosería",
+      "actualMeaning": "comestibles / supermercado",
+      "correctWord": "rude remark",
+      "kind": "unrelated",
+      "cefr_level": "A2",
+      "prompts": [
+        {
+          "sentence": "He apologized for the ___ he made at dinner.",
+          "options": ["rude remark", "grocery"],
+          "answer": 0,
+          "explain": "Grosería es a rude remark. Grocery es la compra de comida."
+        },
+        {
+          "sentence": "I stopped at the ___ store for milk.",
+          "options": ["grocery", "rude remark"],
+          "answer": 0,
+          "explain": "Aquí sí es grocery: la tienda de alimentación."
+        }
+      ]
+    },
+    {
+      "id": "casualty",
+      "word": "casualty",
+      "looksLike": "casualidad",
+      "actualMeaning": "víctima / baja",
+      "correctWord": "coincidence",
+      "kind": "unrelated",
+      "cefr_level": "B2",
+      "prompts": [
+        {
+          "sentence": "What a ___ — we booked the same flight!",
+          "options": ["coincidence", "casualty"],
+          "answer": 0,
+          "explain": "Casualidad es coincidence. Casualty es una víctima."
+        },
+        {
+          "sentence": "The storm damaged three houses, but there was not a single ___.",
+          "options": ["casualty", "coincidence"],
+          "answer": 0,
+          "explain": "Aquí sí es casualty: una persona herida o muerta."
+        }
+      ]
+    },
+    {
+      "id": "deception",
+      "word": "deception",
+      "looksLike": "decepción",
+      "actualMeaning": "engaño",
+      "correctWord": "disappointment",
+      "kind": "unrelated",
+      "cefr_level": "B2",
+      "prompts": [
+        {
+          "sentence": "Losing the final was a huge ___ for the fans.",
+          "options": ["disappointment", "deception"],
+          "answer": 0,
+          "explain": "Decepción es disappointment. Deception es engaño deliberado."
+        },
+        {
+          "sentence": "The scandal involved years of ___ by the company.",
+          "options": ["deception", "disappointment"],
+          "answer": 0,
+          "explain": "Aquí sí es deception: engañaron a la gente."
+        }
+      ]
+    },
+    {
+      "id": "estate",
+      "word": "estate",
+      "looksLike": "estado",
+      "actualMeaning": "propiedad / finca",
+      "correctWord": "state",
+      "kind": "unrelated",
+      "cefr_level": "B2",
+      "prompts": [
+        {
+          "sentence": "Texas is the second largest ___ in the country.",
+          "options": ["state", "estate"],
+          "answer": 0,
+          "explain": "Estado (país o región) es state. Estate es una propiedad."
+        },
+        {
+          "sentence": "She inherited the family ___ in the countryside.",
+          "options": ["estate", "state"],
+          "answer": 0,
+          "explain": "Aquí sí es estate: terrenos y casa."
+        }
+      ]
+    },
+    {
+      "id": "idiom",
+      "word": "idiom",
+      "looksLike": "idioma",
+      "actualMeaning": "expresión hecha / modismo",
+      "correctWord": "language",
+      "kind": "unrelated",
+      "cefr_level": "B1",
+      "prompts": [
+        {
+          "sentence": "How many ___ do you speak?",
+          "options": ["languages", "idioms"],
+          "answer": 0,
+          "explain": "Idioma es language. Idiom es un modismo."
+        },
+        {
+          "sentence": "\"Break the ice\" is a common English ___.",
+          "options": ["idiom", "language"],
+          "answer": 0,
+          "explain": "Aquí sí es idiom: una expresión fija."
+        }
+      ]
+    },
+    {
+      "id": "lecture",
+      "word": "lecture",
+      "looksLike": "lectura",
+      "actualMeaning": "conferencia / clase magistral",
+      "correctWord": "reading",
+      "kind": "unrelated",
+      "cefr_level": "B1",
+      "prompts": [
+        {
+          "sentence": "The ___ for this week is chapter four.",
+          "options": ["reading", "lecture"],
+          "answer": 0,
+          "explain": "Lectura es reading. Lecture es una conferencia."
+        },
+        {
+          "sentence": "Professor Diaz gave a ___ on climate policy.",
+          "options": ["lecture", "reading"],
+          "answer": 0,
+          "explain": "Aquí sí es lecture: habló ante una audiencia."
+        }
+      ]
+    },
+    {
+      "id": "notice",
+      "word": "notice",
+      "looksLike": "noticia",
+      "actualMeaning": "aviso / darse cuenta",
+      "correctWord": "news",
+      "kind": "meaning-shift",
+      "cefr_level": "A2",
+      "prompts": [
+        {
+          "sentence": "Did you hear the ___ about the election?",
+          "options": ["news", "notice"],
+          "answer": 0,
+          "explain": "Noticia es news. Notice es un aviso o darse cuenta."
+        },
+        {
+          "sentence": "There's a ___ on the door about the closure.",
+          "options": ["notice", "news"],
+          "answer": 0,
+          "explain": "Aquí sí es notice: un cartel informativo."
+        }
+      ]
+    },
+    {
+      "id": "policy",
+      "word": "policy",
+      "looksLike": "policía",
+      "actualMeaning": "política / normativa",
+      "correctWord": "police",
+      "kind": "unrelated",
+      "cefr_level": "B1",
+      "prompts": [
+        {
+          "sentence": "Someone called the ___ after the accident.",
+          "options": ["police", "policy"],
+          "answer": 0,
+          "explain": "La policía es the police. Policy es una normativa."
+        },
+        {
+          "sentence": "The company changed its refund ___ last month.",
+          "options": ["policy", "police"],
+          "answer": 0,
+          "explain": "Aquí sí es policy: las reglas internas."
+        }
+      ]
+    },
+    {
+      "id": "quiet",
+      "word": "quiet",
+      "looksLike": "quieto",
+      "actualMeaning": "silencioso",
+      "correctWord": "still",
+      "kind": "partial-overlap",
+      "cefr_level": "A2",
+      "prompts": [
+        {
+          "sentence": "Stand ___ while I take the photo.",
+          "options": ["still", "quiet"],
+          "answer": 0,
+          "explain": "Quieto (sin moverse) es still. Quiet es sin hacer ruido."
+        },
+        {
+          "sentence": "The library is very ___ in the morning.",
+          "options": ["quiet", "still"],
+          "answer": 0,
+          "explain": "Aquí sí es quiet: no hay ruido."
+        }
+      ]
+    },
+    {
+      "id": "recollect",
+      "word": "recollect",
+      "looksLike": "recolectar",
+      "actualMeaning": "recordar",
+      "correctWord": "collect",
+      "kind": "meaning-shift",
+      "cefr_level": "B2",
+      "prompts": [
+        {
+          "sentence": "Volunteers will ___ donations at the entrance.",
+          "options": ["collect", "recollect"],
+          "answer": 0,
+          "explain": "Recolectar es collect o gather. Recollect es recordar."
+        },
+        {
+          "sentence": "I can't ___ the name of the hotel.",
+          "options": ["recollect", "collect"],
+          "answer": 0,
+          "explain": "Aquí sí es recollect: traer algo a la memoria."
+        }
+      ]
+    },
+    {
+      "id": "terrific",
+      "word": "terrific",
+      "looksLike": "terrorífico",
+      "actualMeaning": "estupendo",
+      "correctWord": "terrifying",
+      "kind": "meaning-shift",
+      "cefr_level": "B1",
+      "prompts": [
+        {
+          "sentence": "The horror film was absolutely ___ — I couldn't sleep.",
+          "options": ["terrifying", "terrific"],
+          "answer": 0,
+          "explain": "Terrorífico es terrifying. Terrific significa estupendo."
+        },
+        {
+          "sentence": "You did a ___ job on the presentation!",
+          "options": ["terrific", "terrifying"],
+          "answer": 0,
+          "explain": "Aquí sí es terrific: un elogio."
+        }
+      ]
+    },
+    {
+      "id": "topic",
+      "word": "topic",
+      "looksLike": "tópico (cliché)",
+      "actualMeaning": "tema",
+      "correctWord": "cliché",
+      "kind": "meaning-shift",
+      "cefr_level": "B1",
+      "prompts": [
+        {
+          "sentence": "\"Love conquers all\" is a tired old ___.",
+          "options": ["cliché", "topic"],
+          "answer": 0,
+          "explain": "Tópico (idea gastada) es cliché. Topic es el tema."
+        },
+        {
+          "sentence": "Today's ___ is renewable energy.",
+          "options": ["topic", "cliché"],
+          "answer": 0,
+          "explain": "Aquí sí es topic: el asunto que se trata."
+        }
+      ]
+    },
+    {
+      "id": "vase",
+      "word": "vase",
+      "looksLike": "vaso",
+      "actualMeaning": "jarrón",
+      "correctWord": "glass",
+      "kind": "unrelated",
+      "cefr_level": "A1",
+      "prompts": [
+        {
+          "sentence": "Can I have a ___ of water, please?",
+          "options": ["glass", "vase"],
+          "answer": 0,
+          "explain": "Vaso es glass. Vase es un jarrón para flores."
+        },
+        {
+          "sentence": "She put the roses in a blue ___.",
+          "options": ["vase", "glass"],
+          "answer": 0,
+          "explain": "Aquí sí es vase: el recipiente de las flores."
+        }
+      ]
+    },
+    {
+      "id": "soap",
+      "word": "soap",
+      "looksLike": "sopa",
+      "actualMeaning": "jabón",
+      "correctWord": "soup",
+      "kind": "unrelated",
+      "cefr_level": "A1",
+      "prompts": [
+        {
+          "sentence": "I made chicken ___ for dinner.",
+          "options": ["soup", "soap"],
+          "answer": 0,
+          "explain": "Sopa es soup. Soap es jabón."
+        },
+        {
+          "sentence": "There's no ___ left in the bathroom.",
+          "options": ["soap", "soup"],
+          "answer": 0,
+          "explain": "Aquí sí es soap: para lavarse."
+        }
+      ]
+    },
+    {
+      "id": "billion",
+      "word": "billion",
+      "looksLike": "billón",
+      "actualMeaning": "mil millones",
+      "correctWord": "trillion",
+      "kind": "meaning-shift",
+      "cefr_level": "B2",
+      "prompts": [
+        {
+          "sentence": "Un billón español (un millón de millones) se dice ___ en inglés.",
+          "options": ["a trillion", "a billion"],
+          "answer": 0,
+          "explain": "El billón español equivale a a trillion. A billion son mil millones."
+        },
+        {
+          "sentence": "The company is worth two ___ dollars — that's 2,000 million.",
+          "options": ["billion", "trillion"],
+          "answer": 0,
+          "explain": "Aquí sí es billion: mil millones."
+        }
+      ],
+      "note": "Trampa numérica, no solo léxica: confundirlas cambia la cifra por mil."
+    },
+    {
+      "id": "excited",
+      "word": "excited",
+      "looksLike": "excitado (sexual)",
+      "actualMeaning": "ilusionado / entusiasmado",
+      "correctWord": "aroused",
+      "kind": "meaning-shift",
+      "cefr_level": "A2",
+      "prompts": [
+        {
+          "sentence": "I'm so ___ about the trip next week!",
+          "options": ["excited", "aroused"],
+          "answer": 0,
+          "explain": "Excited es ilusionado. Es la palabra normal y segura para entusiasmo."
+        }
+      ],
+      "note": "Al revés que otros: excited es inofensivo en inglés. El error es evitarlo por miedo al parecido."
+    },
+    {
+      "id": "introduce",
+      "word": "introduce",
+      "looksLike": "introducir (meter)",
+      "actualMeaning": "presentar a alguien",
+      "correctWord": "insert",
+      "kind": "partial-overlap",
+      "cefr_level": "B1",
+      "prompts": [
+        {
+          "sentence": "___ the card into the slot to pay.",
+          "options": ["Insert", "Introduce"],
+          "answer": 0,
+          "explain": "Introducir un objeto es insert o put in. Introduce es presentar personas."
+        },
+        {
+          "sentence": "Let me ___ you to my colleague Ana.",
+          "options": ["introduce", "insert"],
+          "answer": 0,
+          "explain": "Aquí sí es introduce: presentar a alguien."
+        }
+      ]
+    },
+    {
+      "id": "advise",
+      "word": "advise",
+      "looksLike": "avisar",
+      "actualMeaning": "aconsejar",
+      "correctWord": "warn",
+      "kind": "meaning-shift",
+      "cefr_level": "B1",
+      "prompts": [
+        {
+          "sentence": "Please ___ me if the train is delayed.",
+          "options": ["warn", "advise"],
+          "answer": 0,
+          "explain": "Avisar es warn, let me know o tell. Advise es aconsejar."
+        },
+        {
+          "sentence": "The doctor ___ me to rest for a week.",
+          "options": ["advised", "warned"],
+          "answer": 0,
+          "explain": "Aquí sí es advise: dar un consejo."
+        }
+      ]
+    },
+    {
+      "id": "envy",
+      "word": "envy",
+      "looksLike": "enviar",
+      "actualMeaning": "envidia",
+      "correctWord": "send",
+      "kind": "unrelated",
+      "cefr_level": "A2",
+      "prompts": [
+        {
+          "sentence": "Can you ___ me the file by email?",
+          "options": ["send", "envy"],
+          "answer": 0,
+          "explain": "Enviar es send. Envy es envidiar."
+        },
+        {
+          "sentence": "I ___ people who can wake up early.",
+          "options": ["envy", "send"],
+          "answer": 0,
+          "explain": "Aquí sí es envy: sentir envidia."
+        }
+      ]
+    },
+    {
+      "id": "college",
+      "word": "college",
+      "looksLike": "colegio",
+      "actualMeaning": "universidad / instituto superior",
+      "correctWord": "school",
+      "kind": "meaning-shift",
+      "cefr_level": "A2",
+      "prompts": [
+        {
+          "sentence": "My daughter is seven and starts primary ___ in September.",
+          "options": ["school", "college"],
+          "answer": 0,
+          "explain": "El colegio de niños es school. College es estudios superiores."
+        },
+        {
+          "sentence": "He studied engineering at a ___ in Boston.",
+          "options": ["college", "school"],
+          "answer": 0,
+          "explain": "Aquí sí es college: educación superior."
+        }
+      ]
+    }
+  ]
+}
