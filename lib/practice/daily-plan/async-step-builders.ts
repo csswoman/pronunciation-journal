@@ -1,6 +1,9 @@
 import { generateConnectedSpeechExercises } from '@/lib/exercises/generators/connected-speech'
+import { generateFalseFriendExercises } from '@/lib/exercises/generators/false-friends'
 import { fetchTextFragments, generateReorderFromFragments } from '@/lib/exercises/generators/reorder-from-fragments'
 import { generateReorderAI } from '@/lib/exercises/generators/reorder-ai'
+import { fetchFalseFriendsForDay, toFalseFriendIntro } from '@/lib/false-friends/data'
+import type { CefrLevel } from '@/lib/false-friends/types'
 import { fromGenericExercise } from '@/lib/practice/adapters'
 import { orderFragmentsByDue } from '@/lib/practice/fragment-priority'
 import type { DailyStep } from '@/lib/practice/types'
@@ -8,7 +11,7 @@ import { resolveReaderPassage } from '@/lib/practice/reader/get-passage'
 import { getCachedReaderPassage, saveReaderPassage } from '@/lib/db'
 import { generateReaderPassage, resolveReaderLevel } from '@/lib/practice/reader/queries'
 import { pickTargets, type ReaderTargetRow } from '@/lib/practice/reader/select-targets'
-import { SENTENCE_BUILDER_EXERCISE_COUNT } from './constants'
+import { FALSE_FRIENDS_EXERCISE_COUNT, SENTENCE_BUILDER_EXERCISE_COUNT } from './constants'
 import { dayOfYear, dedupeByContentId } from './selectors'
 
 /** Paso de habla conectada — solo días pares; null si offline o impar. */
@@ -33,6 +36,39 @@ export async function buildConnectedSpeechStep(): Promise<DailyStep | null> {
     icon: 'AudioWaveform',
     exercises,
     estMinutes: Math.max(2, Math.round(exercises.length * 1.2)),
+  }
+}
+
+/**
+ * Paso de falsos amigos: elección en contexto entre la trampa y la palabra
+ * correcta. Cadencia de días impares para alternar con habla conectada (par),
+ * de modo que ninguno de los dos desplace al otro de forma permanente.
+ */
+export async function buildFalseFriendsStep(
+  maxLevel: CefrLevel = 'B1',
+): Promise<DailyStep | null> {
+  if (dayOfYear() % 2 === 0) return null
+
+  const day = dayOfYear()
+  const entries = await fetchFalseFriendsForDay(day, FALSE_FRIENDS_EXERCISE_COUNT, maxLevel)
+    .catch(() => [])
+  if (entries.length === 0) return null
+
+  const generated = generateFalseFriendExercises(entries, FALSE_FRIENDS_EXERCISE_COUNT, day)
+  const exercises = dedupeByContentId(generated.map((ex) => fromGenericExercise(ex, 'daily')))
+  if (exercises.length === 0) return null
+
+  return {
+    kind: 'false_friends',
+    id: 'false_friends',
+    title: 'Falsos amigos',
+    subtitle: 'Palabras que no significan lo que parecen',
+    icon: 'AlertCircle',
+    exercises,
+    featuredWords: entries.map((e) => e.word),
+    // Presented before the exercises: the pair itself is the lesson.
+    falseFriends: entries.map(toFalseFriendIntro),
+    estMinutes: Math.max(2, Math.round(exercises.length * 1.1)),
   }
 }
 

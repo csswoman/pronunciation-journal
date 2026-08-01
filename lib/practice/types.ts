@@ -9,7 +9,7 @@ import type {
   AttributionVersion,
   EvidenceAttribution,
 } from '@/lib/practice/attribution'
-import type { StudyCardModel } from '@/lib/practice/study-card/model'
+import type { FalseFriendIntro, StudyCardModel } from '@/lib/practice/study-card/model'
 import type { ReaderPassage } from '@/lib/practice/reader/types'
 import type { ExerciseErrorCode } from '@/lib/exercises/error-taxonomy'
 
@@ -168,6 +168,7 @@ export type DailyStepKind =
   | 'minimal_pairs'    // discriminación de pares mínimos
   | 'listening'        // dictation desde words del seed
   | 'sentence_builder' // reorder_words desde text_fragments (lecciones y grammar decks)
+  | 'false_friends'    // elección en contexto entre un falso amigo y la palabra correcta
   | 'concept'          // mini-lección / language concept del día (lectura ligera)
   | 'study_deck'       // lección de la ruta, elegida desde el progreso del usuario
   | 'reader'           // comprehensible-input: párrafo i+1 que recicla vocab reciente
@@ -193,6 +194,8 @@ export type DailyStep = {
   readerPassage?: ReaderPassage
   /** Palabras ancla del paso (vocab/reader) para el hilo entre pasos. */
   featuredWords?: string[]
+  /** Solo para 'false_friends': pares que se presentan antes de practicarlos. */
+  falseFriends?: FalseFriendIntro[]
 }
 
 /** Narrative framing metadata for a daily session (opening banner + closing recap). */

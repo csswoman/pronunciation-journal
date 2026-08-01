@@ -1,0 +1,577 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "id": "apply",
+      "word": "apply",
+      "looksLike": "aplicar (una regla)",
+      "actualMeaning": "solicitar / postularse",
+      "correctWord": "enforce",
+      "kind": "partial-overlap",
+      "cefr_level": "B1",
+      "prompts": [
+        {
+          "sentence": "The city will ___ the new parking rules from June.",
+          "options": ["enforce", "apply"],
+          "answer": 0,
+          "explain": "Aplicar una norma es enforce. Apply es solicitar algo."
+        },
+        {
+          "sentence": "I want to ___ for the marketing position.",
+          "options": ["apply", "enforce"],
+          "answer": 0,
+          "explain": "Aquí sí es apply: presentar una candidatura."
+        }
+      ],
+      "note": "Apply sí funciona para cremas y para \"apply to a case\". El error es usarlo por \"hacer cumplir\"."
+    },
+    {
+      "id": "argument",
+      "word": "argument",
+      "looksLike": "argumento (de una película)",
+      "actualMeaning": "discusión / razonamiento",
+      "correctWord": "plot",
+      "kind": "meaning-shift",
+      "cefr_level": "B1",
+      "prompts": [
+        {
+          "sentence": "The ___ of the novel is hard to follow.",
+          "options": ["plot", "argument"],
+          "answer": 0,
+          "explain": "El argumento de una historia es the plot. Argument es una discusión."
+        },
+        {
+          "sentence": "They had a loud ___ about money.",
+          "options": ["argument", "plot"],
+          "answer": 0,
+          "explain": "Aquí sí es argument: una pelea verbal."
+        }
+      ]
+    },
+    {
+      "id": "commodity",
+      "word": "commodity",
+      "looksLike": "comodidad",
+      "actualMeaning": "materia prima / mercancía",
+      "correctWord": "comfort",
+      "kind": "unrelated",
+      "cefr_level": "B2",
+      "prompts": [
+        {
+          "sentence": "The hotel offers every modern ___.",
+          "options": ["comfort", "commodity"],
+          "answer": 0,
+          "explain": "Comodidad es comfort o convenience. Commodity es una materia prima."
+        },
+        {
+          "sentence": "Oil is the most traded ___ in the world.",
+          "options": ["commodity", "comfort"],
+          "answer": 0,
+          "explain": "Aquí sí es commodity: un bien que se comercia."
+        }
+      ]
+    },
+    {
+      "id": "complexion",
+      "word": "complexion",
+      "looksLike": "complexión (corporal)",
+      "actualMeaning": "tono de piel",
+      "correctWord": "build",
+      "kind": "meaning-shift",
+      "cefr_level": "B2",
+      "prompts": [
+        {
+          "sentence": "The player has a strong athletic ___.",
+          "options": ["build", "complexion"],
+          "answer": 0,
+          "explain": "La complexión física es build. Complexion es el cutis."
+        },
+        {
+          "sentence": "She has a fair ___ and burns easily in the sun.",
+          "options": ["complexion", "build"],
+          "answer": 0,
+          "explain": "Aquí sí es complexion: el tono de la piel."
+        }
+      ]
+    },
+    {
+      "id": "conference",
+      "word": "conference",
+      "looksLike": "conferencia (charla)",
+      "actualMeaning": "congreso",
+      "correctWord": "lecture",
+      "kind": "partial-overlap",
+      "cefr_level": "B2",
+      "prompts": [
+        {
+          "sentence": "She gave a one-hour ___ to the students on Tuesday.",
+          "options": ["lecture", "conference"],
+          "answer": 0,
+          "explain": "Una conferencia (una charla) es a lecture o a talk. A conference es un congreso de varios días."
+        },
+        {
+          "sentence": "Two thousand researchers attended the annual ___.",
+          "options": ["conference", "lecture"],
+          "answer": 0,
+          "explain": "Aquí sí es conference: un congreso con muchos participantes."
+        }
+      ]
+    },
+    {
+      "id": "demand",
+      "word": "demand",
+      "looksLike": "demandar (juicio)",
+      "actualMeaning": "exigir",
+      "correctWord": "sue",
+      "kind": "meaning-shift",
+      "cefr_level": "B2",
+      "prompts": [
+        {
+          "sentence": "They decided to ___ the company for negligence.",
+          "options": ["sue", "demand"],
+          "answer": 0,
+          "explain": "Demandar en los tribunales es to sue. Demand es exigir."
+        },
+        {
+          "sentence": "The workers ___ better conditions.",
+          "options": ["demand", "sue"],
+          "answer": 0,
+          "explain": "Aquí sí es demand: exigir con firmeza."
+        }
+      ]
+    },
+    {
+      "id": "disgust",
+      "word": "disgust",
+      "looksLike": "disgusto",
+      "actualMeaning": "asco / repugnancia",
+      "correctWord": "upset",
+      "kind": "meaning-shift",
+      "cefr_level": "B2",
+      "prompts": [
+        {
+          "sentence": "The news left her deeply ___.",
+          "options": ["upset", "disgusted"],
+          "answer": 0,
+          "explain": "Un disgusto es being upset. Disgust es asco físico o moral."
+        },
+        {
+          "sentence": "The smell of the rotten fish filled me with ___.",
+          "options": ["disgust", "upset"],
+          "answer": 0,
+          "explain": "Aquí sí es disgust: repugnancia."
+        }
+      ]
+    },
+    {
+      "id": "diversion",
+      "word": "diversion",
+      "looksLike": "diversión",
+      "actualMeaning": "desvío / distracción",
+      "correctWord": "fun",
+      "kind": "meaning-shift",
+      "cefr_level": "B1",
+      "prompts": [
+        {
+          "sentence": "The kids had a lot of ___ at the party.",
+          "options": ["fun", "diversion"],
+          "answer": 0,
+          "explain": "Diversión es fun. Diversion es un desvío."
+        },
+        {
+          "sentence": "There's a ___ ahead because of roadworks.",
+          "options": ["diversion", "fun"],
+          "answer": 0,
+          "explain": "Aquí sí es diversion: hay que tomar otra ruta."
+        }
+      ]
+    },
+    {
+      "id": "editor",
+      "word": "editor",
+      "looksLike": "editor (empresa)",
+      "actualMeaning": "redactor / corrector",
+      "correctWord": "publisher",
+      "kind": "meaning-shift",
+      "cefr_level": "B2",
+      "prompts": [
+        {
+          "sentence": "The book was rejected by three ___ before it sold.",
+          "options": ["publishers", "editors"],
+          "answer": 0,
+          "explain": "La editorial es the publisher. An editor es quien revisa el texto."
+        },
+        {
+          "sentence": "My ___ suggested cutting the first chapter.",
+          "options": ["editor", "publisher"],
+          "answer": 0,
+          "explain": "Aquí sí es editor: trabaja sobre el manuscrito."
+        }
+      ]
+    },
+    {
+      "id": "facility",
+      "word": "facility",
+      "looksLike": "facilidad",
+      "actualMeaning": "instalación",
+      "correctWord": "ease",
+      "kind": "meaning-shift",
+      "cefr_level": "B2",
+      "prompts": [
+        {
+          "sentence": "He solved the problem with surprising ___.",
+          "options": ["ease", "facility"],
+          "answer": 0,
+          "explain": "Facilidad es ease. A facility es una instalación."
+        },
+        {
+          "sentence": "The new sports ___ opens next month.",
+          "options": ["facility", "ease"],
+          "answer": 0,
+          "explain": "Aquí sí es facility: un edificio o instalación."
+        }
+      ]
+    },
+    {
+      "id": "figure",
+      "word": "figure",
+      "looksLike": "figura (persona famosa)",
+      "actualMeaning": "cifra / silueta",
+      "correctWord": "public figure",
+      "kind": "partial-overlap",
+      "cefr_level": "B2",
+      "prompts": [
+        {
+          "sentence": "Sales reached a record ___ last quarter.",
+          "options": ["figure", "public figure"],
+          "answer": 0,
+          "explain": "Aquí figure es una cifra numérica, el uso más frecuente."
+        },
+        {
+          "sentence": "As a well-known ___, she avoids social media.",
+          "options": ["public figure", "figure"],
+          "answer": 0,
+          "explain": "Para una personalidad se dice public figure, no solo figure."
+        }
+      ]
+    },
+    {
+      "id": "gracious",
+      "word": "gracious",
+      "looksLike": "gracioso",
+      "actualMeaning": "cortés / amable",
+      "correctWord": "funny",
+      "kind": "unrelated",
+      "cefr_level": "B2",
+      "prompts": [
+        {
+          "sentence": "His jokes are really ___.",
+          "options": ["funny", "gracious"],
+          "answer": 0,
+          "explain": "Gracioso es funny. Gracious es cortés y generoso."
+        },
+        {
+          "sentence": "She was ___ in defeat and congratulated the winner.",
+          "options": ["gracious", "funny"],
+          "answer": 0,
+          "explain": "Aquí sí es gracious: elegante y cortés."
+        }
+      ]
+    },
+    {
+      "id": "ingenuity",
+      "word": "ingenuity",
+      "looksLike": "ingenuidad",
+      "actualMeaning": "ingenio / inventiva",
+      "correctWord": "naivety",
+      "kind": "meaning-shift",
+      "cefr_level": "C1",
+      "prompts": [
+        {
+          "sentence": "His ___ made him an easy target for the scam.",
+          "options": ["naivety", "ingenuity"],
+          "answer": 0,
+          "explain": "Ingenuidad es naivety. Ingenuity es capacidad inventiva."
+        },
+        {
+          "sentence": "The design shows remarkable ___.",
+          "options": ["ingenuity", "naivety"],
+          "answer": 0,
+          "explain": "Aquí sí es ingenuity: creatividad para resolver problemas."
+        }
+      ]
+    },
+    {
+      "id": "inhabitant",
+      "word": "inhabitant",
+      "looksLike": "habitante",
+      "actualMeaning": "habitante",
+      "correctWord": "resident",
+      "kind": "partial-overlap",
+      "cefr_level": "B2",
+      "prompts": [
+        {
+          "sentence": "Every ___ of the building received the notice.",
+          "options": ["resident", "inhabitant"],
+          "answer": 0,
+          "explain": "Para un edificio se usa resident. Inhabitant suena a censo o geografía."
+        },
+        {
+          "sentence": "The island has fewer than 200 ___.",
+          "options": ["inhabitants", "residents"],
+          "answer": 0,
+          "explain": "Aquí sí encaja inhabitant: población de un lugar."
+        }
+      ],
+      "note": "No es un falso amigo de significado sino de registro: inhabitant es correcto pero formal."
+    },
+    {
+      "id": "involve",
+      "word": "involve",
+      "looksLike": "envolver",
+      "actualMeaning": "implicar / conllevar",
+      "correctWord": "wrap",
+      "kind": "unrelated",
+      "cefr_level": "B1",
+      "prompts": [
+        {
+          "sentence": "Could you ___ the gift in blue paper?",
+          "options": ["wrap", "involve"],
+          "answer": 0,
+          "explain": "Envolver un paquete es wrap. Involve es implicar."
+        },
+        {
+          "sentence": "The job will ___ some travel.",
+          "options": ["involve", "wrap"],
+          "answer": 0,
+          "explain": "Aquí sí es involve: conlleva viajar."
+        }
+      ]
+    },
+    {
+      "id": "mayor",
+      "word": "mayor",
+      "looksLike": "mayor (más grande)",
+      "actualMeaning": "alcalde",
+      "correctWord": "bigger",
+      "kind": "unrelated",
+      "cefr_level": "A2",
+      "prompts": [
+        {
+          "sentence": "This room is ___ than the other one.",
+          "options": ["bigger", "mayor"],
+          "answer": 0,
+          "explain": "Mayor (comparativo) es bigger o larger. Mayor en inglés es el alcalde."
+        },
+        {
+          "sentence": "The ___ opened the new library yesterday.",
+          "options": ["mayor", "bigger"],
+          "answer": 0,
+          "explain": "Aquí sí es mayor: quien gobierna la ciudad."
+        }
+      ]
+    },
+    {
+      "id": "misery",
+      "word": "misery",
+      "looksLike": "miseria (pobreza)",
+      "actualMeaning": "sufrimiento / desdicha",
+      "correctWord": "poverty",
+      "kind": "meaning-shift",
+      "cefr_level": "B2",
+      "prompts": [
+        {
+          "sentence": "The programme aims to reduce extreme ___ in rural areas.",
+          "options": ["poverty", "misery"],
+          "answer": 0,
+          "explain": "La miseria económica es poverty. Misery es sufrimiento emocional."
+        },
+        {
+          "sentence": "The injury made his life a ___ for months.",
+          "options": ["misery", "poverty"],
+          "answer": 0,
+          "explain": "Aquí sí es misery: padecimiento."
+        }
+      ]
+    },
+    {
+      "id": "preservative",
+      "word": "preservative",
+      "looksLike": "preservativo",
+      "actualMeaning": "conservante",
+      "correctWord": "condom",
+      "kind": "unrelated",
+      "cefr_level": "B2",
+      "prompts": [
+        {
+          "sentence": "The label says the juice contains no ___.",
+          "options": ["preservatives", "condoms"],
+          "answer": 0,
+          "explain": "Conservante es preservative. Preservativo es condom."
+        }
+      ],
+      "note": "Error de alto riesgo social: pedir \"preservatives\" en una farmacia no da lo que esperas."
+    },
+    {
+      "id": "petition",
+      "word": "petition",
+      "looksLike": "petición (solicitud)",
+      "actualMeaning": "petición firmada por muchos",
+      "correctWord": "request",
+      "kind": "meaning-shift",
+      "cefr_level": "B2",
+      "prompts": [
+        {
+          "sentence": "I sent a formal ___ for more information.",
+          "options": ["request", "petition"],
+          "answer": 0,
+          "explain": "Una petición normal es a request. A petition lleva firmas."
+        },
+        {
+          "sentence": "Ten thousand people signed the ___ against the closure.",
+          "options": ["petition", "request"],
+          "answer": 0,
+          "explain": "Aquí sí es petition: un documento con firmas."
+        }
+      ]
+    },
+    {
+      "id": "professor",
+      "word": "professor",
+      "looksLike": "profesor (de colegio)",
+      "actualMeaning": "catedrático universitario",
+      "correctWord": "teacher",
+      "kind": "meaning-shift",
+      "cefr_level": "A2",
+      "prompts": [
+        {
+          "sentence": "My son's maths ___ at school is very patient.",
+          "options": ["teacher", "professor"],
+          "answer": 0,
+          "explain": "El profesor de colegio es a teacher. Professor es un cargo universitario alto."
+        },
+        {
+          "sentence": "She was appointed ___ of physics at Cambridge.",
+          "options": ["professor", "teacher"],
+          "answer": 0,
+          "explain": "Aquí sí es professor: rango académico universitario."
+        }
+      ]
+    },
+    {
+      "id": "proper",
+      "word": "proper",
+      "looksLike": "propio (de uno)",
+      "actualMeaning": "adecuado / correcto",
+      "correctWord": "own",
+      "kind": "unrelated",
+      "cefr_level": "B1",
+      "prompts": [
+        {
+          "sentence": "She started her ___ business at twenty-five.",
+          "options": ["own", "proper"],
+          "answer": 0,
+          "explain": "Propio (de uno mismo) es own. Proper es adecuado."
+        },
+        {
+          "sentence": "You need ___ shoes for hiking.",
+          "options": ["proper", "own"],
+          "answer": 0,
+          "explain": "Aquí sí es proper: el calzado adecuado."
+        }
+      ]
+    },
+    {
+      "id": "relevant",
+      "word": "relevant",
+      "looksLike": "relevante (importante)",
+      "actualMeaning": "pertinente / relacionado",
+      "correctWord": "significant",
+      "kind": "partial-overlap",
+      "cefr_level": "B2",
+      "prompts": [
+        {
+          "sentence": "The discovery had a ___ impact on the field.",
+          "options": ["significant", "relevant"],
+          "answer": 0,
+          "explain": "Relevante como \"importante\" es significant. Relevant es pertinente al tema."
+        },
+        {
+          "sentence": "Please only include ___ information in the report.",
+          "options": ["relevant", "significant"],
+          "answer": 0,
+          "explain": "Aquí sí es relevant: lo que viene al caso."
+        }
+      ]
+    },
+    {
+      "id": "rest",
+      "word": "rest",
+      "looksLike": "restar",
+      "actualMeaning": "descansar / el resto",
+      "correctWord": "subtract",
+      "kind": "unrelated",
+      "cefr_level": "A2",
+      "prompts": [
+        {
+          "sentence": "If you ___ four from ten, you get six.",
+          "options": ["subtract", "rest"],
+          "answer": 0,
+          "explain": "Restar es subtract o take away. Rest es descansar."
+        },
+        {
+          "sentence": "You look tired — you should ___ for an hour.",
+          "options": ["rest", "subtract"],
+          "answer": 0,
+          "explain": "Aquí sí es rest: descansar."
+        }
+      ]
+    },
+    {
+      "id": "signature",
+      "word": "signature",
+      "looksLike": "asignatura",
+      "actualMeaning": "firma",
+      "correctWord": "subject",
+      "kind": "unrelated",
+      "cefr_level": "B1",
+      "prompts": [
+        {
+          "sentence": "Chemistry is my hardest ___ this year.",
+          "options": ["subject", "signature"],
+          "answer": 0,
+          "explain": "Asignatura es subject. Signature es la firma."
+        },
+        {
+          "sentence": "The contract needs your ___ at the bottom.",
+          "options": ["signature", "subject"],
+          "answer": 0,
+          "explain": "Aquí sí es signature: firmar el documento."
+        }
+      ]
+    },
+    {
+      "id": "target",
+      "word": "target",
+      "looksLike": "tarjeta",
+      "actualMeaning": "objetivo / blanco",
+      "correctWord": "card",
+      "kind": "unrelated",
+      "cefr_level": "A2",
+      "prompts": [
+        {
+          "sentence": "I paid with my credit ___.",
+          "options": ["card", "target"],
+          "answer": 0,
+          "explain": "Tarjeta es card. Target es un objetivo."
+        },
+        {
+          "sentence": "The team missed its sales ___ this year.",
+          "options": ["target", "card"],
+          "answer": 0,
+          "explain": "Aquí sí es target: la meta fijada."
+        }
+      ]
+    }
+  ]
+}

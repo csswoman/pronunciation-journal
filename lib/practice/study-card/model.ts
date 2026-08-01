@@ -28,6 +28,25 @@ export interface StudyCardModel {
   srsBadge?: string;
 }
 
+/**
+ * Presentation view model for one false-friend pair. Mirrors the noticing role
+ * of `StudyCardModel` but carries a contrast instead of a single word: the trap,
+ * what it is mistaken for, what it really means, and what to say instead.
+ */
+export interface FalseFriendIntro {
+  /** The misleading English word. */
+  word: string;
+  /** The Spanish word it is mistaken for. */
+  looksLike: string;
+  /** What the English word actually means, in Spanish. */
+  actualMeaning: string;
+  /** The English word that really expresses `looksLike`. */
+  correctWord: string;
+  levelBadge?: string;
+  /** Optional caveat (e.g. partial overlap, social risk). */
+  note?: string;
+}
+
 /** Maps a word_bank `srs_status` to a learner-readable badge, or undefined. */
 function srsBadgeLabel(status: string | null | undefined): string | undefined {
   switch (status) {

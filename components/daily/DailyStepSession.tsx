@@ -3,6 +3,7 @@
 // Planned structure:
 // <DailyStepSession>
 //   <WordIntroStep />       — si word_intro: presentación de palabras nuevas
+//   <FalseFriendsIntroStep /> — si false_friends: presenta los pares antes de practicar
 //   <DailyReaderStep />     — si reader: lectura con comprehensible input
 //   <DailyThreadStrip />    — hilo solo fuera de la práctica activa
 //   <PhonemeLessonIntro />  — si phoneme_focus + ipa conocido + no iniciado
@@ -14,6 +15,7 @@ import PracticeSession from '@/components/practice/PracticeSession'
 import { useHideMobileNavDuringSession } from '@/hooks/useHideMobileNavDuringSession'
 import { PhonemeLessonIntro } from '@/components/phoneme-practice/PhonemeLessonIntro'
 import { WordIntroStep } from '@/components/daily/WordIntroStep'
+import { FalseFriendsIntroStep } from '@/components/daily/FalseFriendsIntroStep'
 import { DailyReaderStep } from '@/components/daily/DailyReaderStep'
 import { DailyThreadStrip } from '@/components/daily/DailyThreadStrip'
 import { getThreadHintsForStep } from '@/lib/practice/daily-plan/step-thread'
@@ -47,7 +49,10 @@ export default function DailyStepSession({
     !!step.ipa &&
     !!IPA_EXTRA[step.ipa]
 
-  const [started, setStarted] = useState(!showable)
+  const showFalseFriendsIntro =
+    step.kind === 'false_friends' && (step.falseFriends?.length ?? 0) > 0
+
+  const [started, setStarted] = useState(!showable && !showFalseFriendsIntro)
 
   if (step.kind === 'word_intro') {
     return (
@@ -65,6 +70,20 @@ export default function DailyStepSession({
         threadHints={threadHints}
         onComplete={onComplete}
       />
+    )
+  }
+
+  // Noticing before testing: present the pairs, then fall through to the
+  // exercises in the same step (unlike word_intro, which is a step of its own).
+  if (!started && showFalseFriendsIntro) {
+    return (
+      <div className="mx-auto flex max-w-prose flex-col gap-4 layout-card-pad pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] lg:pb-[var(--layout-section-gap)]">
+        {threadHints.length > 0 ? <DailyThreadStrip hints={threadHints} /> : null}
+        <FalseFriendsIntroStep
+          pairs={step.falseFriends ?? []}
+          onComplete={() => setStarted(true)}
+        />
+      </div>
     )
   }
 

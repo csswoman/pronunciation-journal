@@ -1,0 +1,566 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "id": "actually",
+      "word": "actually",
+      "looksLike": "actualmente",
+      "actualMeaning": "en realidad / de hecho",
+      "correctWord": "currently",
+      "kind": "meaning-shift",
+      "cefr_level": "A2",
+      "prompts": [
+        {
+          "sentence": "I ___ live in Madrid, but I'm moving next year.",
+          "options": ["currently", "actually"],
+          "answer": 0,
+          "explain": "\"Actualmente\" (en este momento) es currently. Actually significa \"en realidad\"."
+        },
+        {
+          "sentence": "It looks expensive, but it's ___ quite cheap.",
+          "options": ["actually", "currently"],
+          "answer": 0,
+          "explain": "Aquí sí corresponde actually: corrige una impresión equivocada."
+        }
+      ]
+    },
+    {
+      "id": "embarrassed",
+      "word": "embarrassed",
+      "looksLike": "embarazada",
+      "actualMeaning": "avergonzado/a",
+      "correctWord": "pregnant",
+      "kind": "unrelated",
+      "cefr_level": "A2",
+      "prompts": [
+        {
+          "sentence": "She's six months ___ and due in April.",
+          "options": ["pregnant", "embarrassed"],
+          "answer": 0,
+          "explain": "Embarazada es pregnant. Embarrassed significa avergonzado."
+        },
+        {
+          "sentence": "I was so ___ when I forgot his name.",
+          "options": ["embarrassed", "pregnant"],
+          "answer": 0,
+          "explain": "Aquí sí es embarrassed: sentir vergüenza."
+        }
+      ]
+    },
+    {
+      "id": "realize",
+      "word": "realize",
+      "looksLike": "realizar",
+      "actualMeaning": "darse cuenta",
+      "correctWord": "carry out",
+      "kind": "meaning-shift",
+      "cefr_level": "B1",
+      "prompts": [
+        {
+          "sentence": "The team will ___ the study over three months.",
+          "options": ["carry out", "realize"],
+          "answer": 0,
+          "explain": "\"Realizar\" un trabajo es carry out o perform. Realize es darse cuenta."
+        },
+        {
+          "sentence": "I didn't ___ how late it was.",
+          "options": ["realize", "carry out"],
+          "answer": 0,
+          "explain": "Aquí sí es realize: darse cuenta de algo."
+        }
+      ]
+    },
+    {
+      "id": "assist",
+      "word": "assist",
+      "looksLike": "asistir (a un evento)",
+      "actualMeaning": "ayudar",
+      "correctWord": "attend",
+      "kind": "partial-overlap",
+      "cefr_level": "B1",
+      "prompts": [
+        {
+          "sentence": "Will you ___ the meeting on Friday?",
+          "options": ["attend", "assist"],
+          "answer": 0,
+          "explain": "Asistir a un evento es attend. Assist significa ayudar."
+        },
+        {
+          "sentence": "A nurse will ___ the doctor during surgery.",
+          "options": ["assist", "attend"],
+          "answer": 0,
+          "explain": "Aquí sí es assist: prestar ayuda."
+        }
+      ],
+      "note": "Assist existe en español como \"asistir a alguien\" (ayudar). El error es usarlo para eventos."
+    },
+    {
+      "id": "sensible",
+      "word": "sensible",
+      "looksLike": "sensible (emocional)",
+      "actualMeaning": "sensato / razonable",
+      "correctWord": "sensitive",
+      "kind": "meaning-shift",
+      "cefr_level": "B1",
+      "prompts": [
+        {
+          "sentence": "He's very ___ and cries during movies.",
+          "options": ["sensitive", "sensible"],
+          "answer": 0,
+          "explain": "Sensible (emocional) es sensitive. Sensible en inglés es sensato."
+        },
+        {
+          "sentence": "Buying insurance was a ___ decision.",
+          "options": ["sensible", "sensitive"],
+          "answer": 0,
+          "explain": "Aquí sí es sensible: una decisión sensata."
+        }
+      ]
+    },
+    {
+      "id": "eventually",
+      "word": "eventually",
+      "looksLike": "eventualmente (quizá)",
+      "actualMeaning": "finalmente / con el tiempo",
+      "correctWord": "possibly",
+      "kind": "meaning-shift",
+      "cefr_level": "B1",
+      "prompts": [
+        {
+          "sentence": "We might ___ need a bigger office, but nothing is decided.",
+          "options": ["possibly", "eventually"],
+          "answer": 0,
+          "explain": "\"Eventualmente\" (tal vez) es possibly. Eventually significa finalmente."
+        },
+        {
+          "sentence": "After years of trying, she ___ got the job.",
+          "options": ["eventually", "possibly"],
+          "answer": 0,
+          "explain": "Aquí sí es eventually: ocurrió al final, tras un proceso."
+        }
+      ]
+    },
+    {
+      "id": "support",
+      "word": "support",
+      "looksLike": "soportar (tolerar)",
+      "actualMeaning": "apoyar / sostener",
+      "correctWord": "put up with",
+      "kind": "partial-overlap",
+      "cefr_level": "B1",
+      "prompts": [
+        {
+          "sentence": "I can't ___ his constant complaining.",
+          "options": ["put up with", "support"],
+          "answer": 0,
+          "explain": "Soportar algo molesto es put up with o stand. Support es apoyar."
+        },
+        {
+          "sentence": "My family always ___ my decisions.",
+          "options": ["support", "put up with"],
+          "answer": 0,
+          "explain": "Aquí sí es support: dar apoyo."
+        }
+      ]
+    },
+    {
+      "id": "attend",
+      "word": "attend",
+      "looksLike": "atender (a un cliente)",
+      "actualMeaning": "asistir a un evento",
+      "correctWord": "serve",
+      "kind": "meaning-shift",
+      "cefr_level": "B1",
+      "prompts": [
+        {
+          "sentence": "A waiter will ___ you shortly.",
+          "options": ["serve", "attend"],
+          "answer": 0,
+          "explain": "Atender a un cliente es serve o help. Attend es asistir a un evento."
+        },
+        {
+          "sentence": "Three hundred people will ___ the conference.",
+          "options": ["attend", "serve"],
+          "answer": 0,
+          "explain": "Aquí sí es attend: estar presente en un evento."
+        }
+      ]
+    },
+    {
+      "id": "carpet",
+      "word": "carpet",
+      "looksLike": "carpeta",
+      "actualMeaning": "alfombra",
+      "correctWord": "folder",
+      "kind": "unrelated",
+      "cefr_level": "A2",
+      "prompts": [
+        {
+          "sentence": "Save the file in the shared ___.",
+          "options": ["folder", "carpet"],
+          "answer": 0,
+          "explain": "Carpeta es folder. Carpet es alfombra."
+        },
+        {
+          "sentence": "They put a red ___ on the floor.",
+          "options": ["carpet", "folder"],
+          "answer": 0,
+          "explain": "Aquí sí es carpet: una alfombra."
+        }
+      ]
+    },
+    {
+      "id": "library",
+      "word": "library",
+      "looksLike": "librería",
+      "actualMeaning": "biblioteca",
+      "correctWord": "bookstore",
+      "kind": "meaning-shift",
+      "cefr_level": "A1",
+      "prompts": [
+        {
+          "sentence": "I bought this novel at a ___ downtown.",
+          "options": ["bookstore", "library"],
+          "answer": 0,
+          "explain": "Librería (donde se compra) es bookstore. Library es biblioteca."
+        },
+        {
+          "sentence": "You can borrow the book from the ___ for free.",
+          "options": ["library", "bookstore"],
+          "answer": 0,
+          "explain": "Aquí sí es library: se presta, no se vende."
+        }
+      ]
+    },
+    {
+      "id": "constipated",
+      "word": "constipated",
+      "looksLike": "constipado (resfriado)",
+      "actualMeaning": "estreñido",
+      "correctWord": "have a cold",
+      "kind": "unrelated",
+      "cefr_level": "B1",
+      "prompts": [
+        {
+          "sentence": "I can't stop sneezing — I ___.",
+          "options": ["have a cold", "am constipated"],
+          "answer": 0,
+          "explain": "Estar constipado (resfriado) es to have a cold. Constipated es estreñido."
+        }
+      ]
+    },
+    {
+      "id": "exit",
+      "word": "exit",
+      "looksLike": "éxito",
+      "actualMeaning": "salida",
+      "correctWord": "success",
+      "kind": "unrelated",
+      "cefr_level": "A2",
+      "prompts": [
+        {
+          "sentence": "The product launch was a huge ___.",
+          "options": ["success", "exit"],
+          "answer": 0,
+          "explain": "Éxito es success. Exit es la salida."
+        },
+        {
+          "sentence": "Please use the emergency ___ at the back.",
+          "options": ["exit", "success"],
+          "answer": 0,
+          "explain": "Aquí sí es exit: la puerta de salida."
+        }
+      ]
+    },
+    {
+      "id": "actual",
+      "word": "actual",
+      "looksLike": "actual (de ahora)",
+      "actualMeaning": "real / verdadero",
+      "correctWord": "current",
+      "kind": "meaning-shift",
+      "cefr_level": "B1",
+      "prompts": [
+        {
+          "sentence": "What is the ___ version of the app?",
+          "options": ["current", "actual"],
+          "answer": 0,
+          "explain": "La versión actual es the current version. Actual significa real."
+        },
+        {
+          "sentence": "The ___ cost was higher than the estimate.",
+          "options": ["actual", "current"],
+          "answer": 0,
+          "explain": "Aquí sí es actual: el coste real, no el estimado."
+        }
+      ]
+    },
+    {
+      "id": "pretend",
+      "word": "pretend",
+      "looksLike": "pretender",
+      "actualMeaning": "fingir",
+      "correctWord": "intend",
+      "kind": "meaning-shift",
+      "cefr_level": "B1",
+      "prompts": [
+        {
+          "sentence": "We ___ to finish the project by June.",
+          "options": ["intend", "pretend"],
+          "answer": 0,
+          "explain": "Pretender (tener intención) es intend o aim. Pretend es fingir."
+        },
+        {
+          "sentence": "The kids like to ___ they're astronauts.",
+          "options": ["pretend", "intend"],
+          "answer": 0,
+          "explain": "Aquí sí es pretend: fingir, jugar a ser."
+        }
+      ]
+    },
+    {
+      "id": "discuss",
+      "word": "discuss",
+      "looksLike": "discutir (pelear)",
+      "actualMeaning": "hablar sobre algo",
+      "correctWord": "argue",
+      "kind": "partial-overlap",
+      "cefr_level": "B1",
+      "prompts": [
+        {
+          "sentence": "They started to ___ loudly and someone left the room.",
+          "options": ["argue", "discuss"],
+          "answer": 0,
+          "explain": "Discutir con enfado es argue. Discuss es tratar un tema."
+        },
+        {
+          "sentence": "Let's ___ the budget at tomorrow's meeting.",
+          "options": ["discuss", "argue"],
+          "answer": 0,
+          "explain": "Aquí sí es discuss: hablar del tema, sin conflicto."
+        }
+      ],
+      "note": "Discuss nunca lleva about: \"discuss the budget\", no \"discuss about the budget\"."
+    },
+    {
+      "id": "advertisement",
+      "word": "advertisement",
+      "looksLike": "advertencia",
+      "actualMeaning": "anuncio publicitario",
+      "correctWord": "warning",
+      "kind": "unrelated",
+      "cefr_level": "B1",
+      "prompts": [
+        {
+          "sentence": "The label carries a health ___ about sugar.",
+          "options": ["warning", "advertisement"],
+          "answer": 0,
+          "explain": "Advertencia es warning. Advertisement es un anuncio."
+        },
+        {
+          "sentence": "I saw an ___ for the concert online.",
+          "options": ["advertisement", "warning"],
+          "answer": 0,
+          "explain": "Aquí sí es advertisement: publicidad."
+        }
+      ]
+    },
+    {
+      "id": "record",
+      "word": "record",
+      "looksLike": "recordar",
+      "actualMeaning": "grabar / registrar",
+      "correctWord": "remember",
+      "kind": "unrelated",
+      "cefr_level": "A2",
+      "prompts": [
+        {
+          "sentence": "I can't ___ where I parked the car.",
+          "options": ["remember", "record"],
+          "answer": 0,
+          "explain": "Recordar es remember. Record es grabar o registrar."
+        },
+        {
+          "sentence": "They will ___ the meeting so we can watch it later.",
+          "options": ["record", "remember"],
+          "answer": 0,
+          "explain": "Aquí sí es record: grabar."
+        }
+      ]
+    },
+    {
+      "id": "large",
+      "word": "large",
+      "looksLike": "largo",
+      "actualMeaning": "grande",
+      "correctWord": "long",
+      "kind": "unrelated",
+      "cefr_level": "A1",
+      "prompts": [
+        {
+          "sentence": "The meeting was very ___ — almost three hours.",
+          "options": ["long", "large"],
+          "answer": 0,
+          "explain": "Largo (duración o longitud) es long. Large es grande."
+        },
+        {
+          "sentence": "Can I get a ___ coffee, please?",
+          "options": ["large", "long"],
+          "answer": 0,
+          "explain": "Aquí sí es large: tamaño grande."
+        }
+      ]
+    },
+    {
+      "id": "molest",
+      "word": "molest",
+      "looksLike": "molestar",
+      "actualMeaning": "abusar sexualmente",
+      "correctWord": "bother",
+      "kind": "unrelated",
+      "cefr_level": "B2",
+      "prompts": [
+        {
+          "sentence": "Sorry to ___ you, but do you have a minute?",
+          "options": ["bother", "molest"],
+          "answer": 0,
+          "explain": "Molestar es bother o disturb. Molest tiene un significado grave y sexual: nunca lo uses así."
+        }
+      ],
+      "note": "Error de alto riesgo social. Molest solo aparece en contextos de delito sexual."
+    },
+    {
+      "id": "compromise",
+      "word": "compromise",
+      "looksLike": "compromiso (obligación)",
+      "actualMeaning": "acuerdo con concesiones mutuas",
+      "correctWord": "commitment",
+      "kind": "meaning-shift",
+      "cefr_level": "B2",
+      "prompts": [
+        {
+          "sentence": "Joining the team is a long-term ___.",
+          "options": ["commitment", "compromise"],
+          "answer": 0,
+          "explain": "Compromiso (obligación asumida) es commitment. Compromise es ceder para llegar a un acuerdo."
+        },
+        {
+          "sentence": "After hours of talks, both sides reached a ___.",
+          "options": ["compromise", "commitment"],
+          "answer": 0,
+          "explain": "Aquí sí es compromise: cada parte cedió algo."
+        }
+      ]
+    },
+    {
+      "id": "resume",
+      "word": "resume",
+      "looksLike": "resumir",
+      "actualMeaning": "reanudar",
+      "correctWord": "summarize",
+      "kind": "meaning-shift",
+      "cefr_level": "B2",
+      "prompts": [
+        {
+          "sentence": "Could you ___ the report in two paragraphs?",
+          "options": ["summarize", "resume"],
+          "answer": 0,
+          "explain": "Resumir es summarize. Resume significa reanudar algo interrumpido."
+        },
+        {
+          "sentence": "The match will ___ after the rain stops.",
+          "options": ["resume", "summarize"],
+          "answer": 0,
+          "explain": "Aquí sí es resume: continuar tras una pausa."
+        }
+      ],
+      "note": "El sustantivo résumé (con acentos) es el CV en inglés americano."
+    },
+    {
+      "id": "quit",
+      "word": "quit",
+      "looksLike": "quitar",
+      "actualMeaning": "dejar / renunciar",
+      "correctWord": "remove",
+      "kind": "unrelated",
+      "cefr_level": "B1",
+      "prompts": [
+        {
+          "sentence": "Please ___ the old files from the folder.",
+          "options": ["remove", "quit"],
+          "answer": 0,
+          "explain": "Quitar algo es remove o take away. Quit es abandonar o renunciar."
+        },
+        {
+          "sentence": "He decided to ___ his job and travel.",
+          "options": ["quit", "remove"],
+          "answer": 0,
+          "explain": "Aquí sí es quit: dejar el trabajo."
+        }
+      ]
+    },
+    {
+      "id": "rope",
+      "word": "rope",
+      "looksLike": "ropa",
+      "actualMeaning": "cuerda",
+      "correctWord": "clothes",
+      "kind": "unrelated",
+      "cefr_level": "A2",
+      "prompts": [
+        {
+          "sentence": "I need to wash my ___ this weekend.",
+          "options": ["clothes", "rope"],
+          "answer": 0,
+          "explain": "Ropa es clothes. Rope es una cuerda."
+        }
+      ]
+    },
+    {
+      "id": "sympathetic",
+      "word": "sympathetic",
+      "looksLike": "simpático",
+      "actualMeaning": "comprensivo / empático",
+      "correctWord": "nice",
+      "kind": "meaning-shift",
+      "cefr_level": "B2",
+      "prompts": [
+        {
+          "sentence": "Everyone likes her — she's so friendly and ___.",
+          "options": ["nice", "sympathetic"],
+          "answer": 0,
+          "explain": "Simpático (agradable) es nice o friendly. Sympathetic es comprensivo ante un problema."
+        },
+        {
+          "sentence": "She was very ___ when I told her about the accident.",
+          "options": ["sympathetic", "nice"],
+          "answer": 0,
+          "explain": "Aquí sí es sympathetic: mostró comprensión ante algo malo."
+        }
+      ]
+    },
+    {
+      "id": "career",
+      "word": "career",
+      "looksLike": "carrera (universitaria)",
+      "actualMeaning": "trayectoria profesional",
+      "correctWord": "degree",
+      "kind": "meaning-shift",
+      "cefr_level": "B1",
+      "prompts": [
+        {
+          "sentence": "She studied a five-year ___ in architecture.",
+          "options": ["degree", "career"],
+          "answer": 0,
+          "explain": "La carrera que se estudia es a degree. Career es la trayectoria profesional."
+        },
+        {
+          "sentence": "He built a successful ___ in journalism.",
+          "options": ["career", "degree"],
+          "answer": 0,
+          "explain": "Aquí sí es career: la vida profesional."
+        }
+      ]
+    }
+  ]
+}

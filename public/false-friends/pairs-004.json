@@ -1,0 +1,582 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "id": "abstract",
+      "word": "abstract",
+      "looksLike": "abstracto (solo adjetivo)",
+      "actualMeaning": "resumen de un artículo",
+      "correctWord": "summary",
+      "kind": "partial-overlap",
+      "cefr_level": "C1",
+      "prompts": [
+        {
+          "sentence": "Each paper begins with a 200-word ___ of its findings.",
+          "options": ["abstract", "summary"],
+          "answer": 0,
+          "explain": "En contexto académico el resumen inicial se llama the abstract."
+        },
+        {
+          "sentence": "Can you give me a quick ___ of what happened at the meeting?",
+          "options": ["summary", "abstract"],
+          "answer": 0,
+          "explain": "Para un resumen informal se dice summary, no abstract."
+        }
+      ]
+    },
+    {
+      "id": "advocate",
+      "word": "advocate",
+      "looksLike": "abogado",
+      "actualMeaning": "defensor de una causa",
+      "correctWord": "lawyer",
+      "kind": "meaning-shift",
+      "cefr_level": "C1",
+      "prompts": [
+        {
+          "sentence": "You should speak to a ___ before signing the contract.",
+          "options": ["lawyer", "advocate"],
+          "answer": 0,
+          "explain": "El abogado que ejerce es a lawyer o attorney. Advocate es quien defiende una causa."
+        },
+        {
+          "sentence": "She is a lifelong ___ for children's rights.",
+          "options": ["advocate", "lawyer"],
+          "answer": 0,
+          "explain": "Aquí sí es advocate: defiende una causa públicamente."
+        }
+      ]
+    },
+    {
+      "id": "apt",
+      "word": "apt",
+      "looksLike": "apto",
+      "actualMeaning": "acertado / propenso",
+      "correctWord": "suitable",
+      "kind": "meaning-shift",
+      "cefr_level": "C1",
+      "prompts": [
+        {
+          "sentence": "The film is not ___ for young children.",
+          "options": ["suitable", "apt"],
+          "answer": 0,
+          "explain": "Apto para algo es suitable. Apt significa acertado o propenso a."
+        },
+        {
+          "sentence": "\"Chaotic\" is an ___ description of the situation.",
+          "options": ["apt", "suitable"],
+          "answer": 0,
+          "explain": "Aquí sí es apt: una descripción muy acertada."
+        }
+      ]
+    },
+    {
+      "id": "candid",
+      "word": "candid",
+      "looksLike": "cándido (ingenuo)",
+      "actualMeaning": "franco / sincero",
+      "correctWord": "naive",
+      "kind": "meaning-shift",
+      "cefr_level": "C1",
+      "prompts": [
+        {
+          "sentence": "It was ___ of him to believe that story.",
+          "options": ["naive", "candid"],
+          "answer": 0,
+          "explain": "Cándido (ingenuo) es naive. Candid es franco y directo."
+        },
+        {
+          "sentence": "In a ___ interview, she admitted the project had failed.",
+          "options": ["candid", "naive"],
+          "answer": 0,
+          "explain": "Aquí sí es candid: habló con sinceridad."
+        }
+      ]
+    },
+    {
+      "id": "comprehensive",
+      "word": "comprehensive",
+      "looksLike": "comprensivo (empático)",
+      "actualMeaning": "exhaustivo / completo",
+      "correctWord": "understanding",
+      "kind": "meaning-shift",
+      "cefr_level": "B2",
+      "prompts": [
+        {
+          "sentence": "My boss was very ___ when I explained the delay.",
+          "options": ["understanding", "comprehensive"],
+          "answer": 0,
+          "explain": "Comprensivo (que comprende) es understanding. Comprehensive es exhaustivo."
+        },
+        {
+          "sentence": "The report gives a ___ overview of the market.",
+          "options": ["comprehensive", "understanding"],
+          "answer": 0,
+          "explain": "Aquí sí es comprehensive: cubre todo el tema."
+        }
+      ]
+    },
+    {
+      "id": "consequent",
+      "word": "consequent",
+      "looksLike": "consecuente (coherente)",
+      "actualMeaning": "resultante",
+      "correctWord": "consistent",
+      "kind": "meaning-shift",
+      "cefr_level": "C1",
+      "prompts": [
+        {
+          "sentence": "If you value honesty, be ___ and tell the truth now.",
+          "options": ["consistent", "consequent"],
+          "answer": 0,
+          "explain": "Ser consecuente con los principios es to be consistent. Consequent es \"resultante\"."
+        },
+        {
+          "sentence": "The drought and the ___ crop failure hit the region hard.",
+          "options": ["consequent", "consistent"],
+          "answer": 0,
+          "explain": "Aquí sí es consequent: lo que resulta de la sequía."
+        }
+      ]
+    },
+    {
+      "id": "convenient",
+      "word": "convenient",
+      "looksLike": "conveniente (recomendable)",
+      "actualMeaning": "práctico / cómodo",
+      "correctWord": "advisable",
+      "kind": "meaning-shift",
+      "cefr_level": "B2",
+      "prompts": [
+        {
+          "sentence": "It would be ___ to see a doctor about that cough.",
+          "options": ["advisable", "convenient"],
+          "answer": 0,
+          "explain": "Conveniente como \"recomendable\" es advisable. Convenient es práctico."
+        },
+        {
+          "sentence": "Would Tuesday at ten be ___ for you?",
+          "options": ["convenient", "advisable"],
+          "answer": 0,
+          "explain": "Aquí sí es convenient: te viene bien."
+        }
+      ]
+    },
+    {
+      "id": "dependent",
+      "word": "dependent",
+      "looksLike": "dependiente (de tienda)",
+      "actualMeaning": "que depende de algo",
+      "correctWord": "shop assistant",
+      "kind": "unrelated",
+      "cefr_level": "B1",
+      "prompts": [
+        {
+          "sentence": "The ___ helped me find my size.",
+          "options": ["shop assistant", "dependent"],
+          "answer": 0,
+          "explain": "El dependiente de una tienda es a shop assistant o clerk. Dependent es \"que depende\"."
+        },
+        {
+          "sentence": "The result is ___ on the weather.",
+          "options": ["dependent", "shop assistant"],
+          "answer": 0,
+          "explain": "Aquí sí es dependent: depende del tiempo."
+        }
+      ]
+    },
+    {
+      "id": "eventual",
+      "word": "eventual",
+      "looksLike": "eventual (temporal)",
+      "actualMeaning": "final / con el tiempo",
+      "correctWord": "temporary",
+      "kind": "meaning-shift",
+      "cefr_level": "B2",
+      "prompts": [
+        {
+          "sentence": "He took a ___ job for the summer months.",
+          "options": ["temporary", "eventual"],
+          "answer": 0,
+          "explain": "Un trabajo eventual es a temporary job. Eventual es \"final\"."
+        },
+        {
+          "sentence": "Everyone expected the ___ collapse of the company.",
+          "options": ["eventual", "temporary"],
+          "answer": 0,
+          "explain": "Aquí sí es eventual: lo que acabó ocurriendo."
+        }
+      ]
+    },
+    {
+      "id": "exploit",
+      "word": "exploit",
+      "looksLike": "explotar (una bomba)",
+      "actualMeaning": "explotar / aprovechar",
+      "correctWord": "explode",
+      "kind": "unrelated",
+      "cefr_level": "B2",
+      "prompts": [
+        {
+          "sentence": "The device could ___ if it overheats.",
+          "options": ["explode", "exploit"],
+          "answer": 0,
+          "explain": "Explotar (estallar) es explode. Exploit es aprovecharse de algo."
+        },
+        {
+          "sentence": "The company was accused of trying to ___ its workers.",
+          "options": ["exploit", "explode"],
+          "answer": 0,
+          "explain": "Aquí sí es exploit: explotación laboral."
+        }
+      ]
+    },
+    {
+      "id": "extravagant",
+      "word": "extravagant",
+      "looksLike": "extravagante (raro)",
+      "actualMeaning": "derrochador / excesivo",
+      "correctWord": "eccentric",
+      "kind": "meaning-shift",
+      "cefr_level": "C1",
+      "prompts": [
+        {
+          "sentence": "He's an ___ character who wears a cape to work.",
+          "options": ["eccentric", "extravagant"],
+          "answer": 0,
+          "explain": "Extravagante (excéntrico) es eccentric. Extravagant es gastar en exceso."
+        },
+        {
+          "sentence": "They spent an ___ amount on the wedding.",
+          "options": ["extravagant", "eccentric"],
+          "answer": 0,
+          "explain": "Aquí sí es extravagant: gasto desmedido."
+        }
+      ]
+    },
+    {
+      "id": "fastidious",
+      "word": "fastidious",
+      "looksLike": "fastidioso",
+      "actualMeaning": "meticuloso / quisquilloso",
+      "correctWord": "annoying",
+      "kind": "meaning-shift",
+      "cefr_level": "C1",
+      "prompts": [
+        {
+          "sentence": "The constant noise from upstairs is really ___.",
+          "options": ["annoying", "fastidious"],
+          "answer": 0,
+          "explain": "Fastidioso es annoying. Fastidious es meticuloso hasta el detalle."
+        },
+        {
+          "sentence": "She is ___ about keeping her notes in order.",
+          "options": ["fastidious", "annoying"],
+          "answer": 0,
+          "explain": "Aquí sí es fastidious: extremadamente cuidadosa."
+        }
+      ]
+    },
+    {
+      "id": "genial",
+      "word": "genial",
+      "looksLike": "genial (fantástico)",
+      "actualMeaning": "afable / cordial",
+      "correctWord": "brilliant",
+      "kind": "meaning-shift",
+      "cefr_level": "C1",
+      "prompts": [
+        {
+          "sentence": "What a ___ idea — it solves everything!",
+          "options": ["brilliant", "genial"],
+          "answer": 0,
+          "explain": "Genial (excelente) es brilliant o great. Genial en inglés es afable."
+        },
+        {
+          "sentence": "Our host was a ___ man who made everyone feel welcome.",
+          "options": ["genial", "brilliant"],
+          "answer": 0,
+          "explain": "Aquí sí es genial: trato cordial y amistoso."
+        }
+      ]
+    },
+    {
+      "id": "gentle",
+      "word": "gentle",
+      "looksLike": "gentil",
+      "actualMeaning": "suave / delicado",
+      "correctWord": "kind",
+      "kind": "partial-overlap",
+      "cefr_level": "B1",
+      "prompts": [
+        {
+          "sentence": "It was very ___ of you to help her with the bags.",
+          "options": ["kind", "gentle"],
+          "answer": 0,
+          "explain": "Gentil (amable) es kind. Gentle es suave en el trato o el movimiento."
+        },
+        {
+          "sentence": "Use a ___ soap on the baby's skin.",
+          "options": ["gentle", "kind"],
+          "answer": 0,
+          "explain": "Aquí sí es gentle: no agresivo."
+        }
+      ]
+    },
+    {
+      "id": "inconvenient",
+      "word": "inconvenient",
+      "looksLike": "inconveniente (problema)",
+      "actualMeaning": "poco práctico / inoportuno",
+      "correctWord": "drawback",
+      "kind": "meaning-shift",
+      "cefr_level": "B2",
+      "prompts": [
+        {
+          "sentence": "The main ___ of the plan is the cost.",
+          "options": ["drawback", "inconvenient"],
+          "answer": 0,
+          "explain": "Un inconveniente (desventaja) es a drawback. Inconvenient es un adjetivo: inoportuno."
+        },
+        {
+          "sentence": "Is Friday ___ for you? We can move it.",
+          "options": ["inconvenient", "drawback"],
+          "answer": 0,
+          "explain": "Aquí sí es inconvenient: te viene mal."
+        }
+      ]
+    },
+    {
+      "id": "intoxicated",
+      "word": "intoxicated",
+      "looksLike": "intoxicado (comida)",
+      "actualMeaning": "ebrio",
+      "correctWord": "poisoned",
+      "kind": "meaning-shift",
+      "cefr_level": "B2",
+      "prompts": [
+        {
+          "sentence": "Ten guests were ___ by the shellfish.",
+          "options": ["poisoned", "intoxicated"],
+          "answer": 0,
+          "explain": "Intoxicado por comida es food poisoned. Intoxicated significa borracho."
+        },
+        {
+          "sentence": "He was arrested for driving while ___.",
+          "options": ["intoxicated", "poisoned"],
+          "answer": 0,
+          "explain": "Aquí sí es intoxicated: bajo los efectos del alcohol."
+        }
+      ]
+    },
+    {
+      "id": "labor",
+      "word": "labor",
+      "looksLike": "labor (tarea)",
+      "actualMeaning": "trabajo / mano de obra / parto",
+      "correctWord": "task",
+      "kind": "partial-overlap",
+      "cefr_level": "B2",
+      "prompts": [
+        {
+          "sentence": "Cleaning the archive was a long and boring ___.",
+          "options": ["task", "labor"],
+          "answer": 0,
+          "explain": "Una labor concreta es a task o job. Labor es mano de obra en general."
+        },
+        {
+          "sentence": "The cost includes materials and ___.",
+          "options": ["labor", "task"],
+          "answer": 0,
+          "explain": "Aquí sí es labor: el coste de la mano de obra."
+        }
+      ],
+      "note": "In labor también significa \"de parto\": She went into labor."
+    },
+    {
+      "id": "mundane",
+      "word": "mundane",
+      "looksLike": "mundano (del mundo)",
+      "actualMeaning": "rutinario / anodino",
+      "correctWord": "worldly",
+      "kind": "meaning-shift",
+      "cefr_level": "C1",
+      "prompts": [
+        {
+          "sentence": "He left his ___ possessions behind and joined the monastery.",
+          "options": ["worldly", "mundane"],
+          "answer": 0,
+          "explain": "Mundano (terrenal) es worldly. Mundane es aburrido y rutinario."
+        },
+        {
+          "sentence": "Most of the job is ___ paperwork.",
+          "options": ["mundane", "worldly"],
+          "answer": 0,
+          "explain": "Aquí sí es mundane: tareas monótonas."
+        }
+      ]
+    },
+    {
+      "id": "particular",
+      "word": "particular",
+      "looksLike": "particular (privado)",
+      "actualMeaning": "concreto / específico",
+      "correctWord": "private",
+      "kind": "meaning-shift",
+      "cefr_level": "B1",
+      "prompts": [
+        {
+          "sentence": "She gives ___ lessons at her home.",
+          "options": ["private", "particular"],
+          "answer": 0,
+          "explain": "Clases particulares son private lessons. Particular es \"concreto\"."
+        },
+        {
+          "sentence": "Is there a ___ reason you chose this city?",
+          "options": ["particular", "private"],
+          "answer": 0,
+          "explain": "Aquí sí es particular: una razón concreta."
+        }
+      ]
+    },
+    {
+      "id": "pavement",
+      "word": "pavement",
+      "looksLike": "pavimento (calzada)",
+      "actualMeaning": "acera",
+      "correctWord": "road surface",
+      "kind": "meaning-shift",
+      "cefr_level": "B1",
+      "prompts": [
+        {
+          "sentence": "The ___ was damaged by heavy trucks.",
+          "options": ["road surface", "pavement"],
+          "answer": 0,
+          "explain": "El pavimento de la calzada es the road surface. En inglés británico pavement es la acera."
+        },
+        {
+          "sentence": "Please walk on the ___, not in the street.",
+          "options": ["pavement", "road surface"],
+          "answer": 0,
+          "explain": "Aquí sí es pavement (británico): la acera. En EE. UU. se dice sidewalk."
+        }
+      ],
+      "note": "Varía por dialecto: en inglés americano pavement sí puede ser el asfalto."
+    },
+    {
+      "id": "plain",
+      "word": "plain",
+      "looksLike": "plano (mapa)",
+      "actualMeaning": "sencillo / sin adornos",
+      "correctWord": "map",
+      "kind": "unrelated",
+      "cefr_level": "B1",
+      "prompts": [
+        {
+          "sentence": "Look at the ___ to find the exit.",
+          "options": ["map", "plain"],
+          "answer": 0,
+          "explain": "Un plano es a map o a plan. Plain es sencillo o liso."
+        },
+        {
+          "sentence": "I ordered a ___ omelette, with nothing in it.",
+          "options": ["plain", "map"],
+          "answer": 0,
+          "explain": "Aquí sí es plain: sin añadidos."
+        }
+      ]
+    },
+    {
+      "id": "resort",
+      "word": "resort",
+      "looksLike": "resorte",
+      "actualMeaning": "complejo turístico / recurso",
+      "correctWord": "spring",
+      "kind": "unrelated",
+      "cefr_level": "B2",
+      "prompts": [
+        {
+          "sentence": "The metal ___ inside the mattress broke.",
+          "options": ["spring", "resort"],
+          "answer": 0,
+          "explain": "Un resorte es a spring. Resort es un complejo turístico."
+        },
+        {
+          "sentence": "They spent a week at a beach ___ in Mexico.",
+          "options": ["resort", "spring"],
+          "answer": 0,
+          "explain": "Aquí sí es resort: un hotel vacacional."
+        }
+      ]
+    },
+    {
+      "id": "sane",
+      "word": "sane",
+      "looksLike": "sano",
+      "actualMeaning": "cuerdo",
+      "correctWord": "healthy",
+      "kind": "meaning-shift",
+      "cefr_level": "B2",
+      "prompts": [
+        {
+          "sentence": "Eating vegetables keeps you ___.",
+          "options": ["healthy", "sane"],
+          "answer": 0,
+          "explain": "Sano de cuerpo es healthy. Sane es sano mentalmente, cuerdo."
+        },
+        {
+          "sentence": "The court found him ___ and fit to stand trial.",
+          "options": ["sane", "healthy"],
+          "answer": 0,
+          "explain": "Aquí sí es sane: en pleno uso de sus facultades."
+        }
+      ]
+    },
+    {
+      "id": "spectacles",
+      "word": "spectacles",
+      "looksLike": "espectáculos",
+      "actualMeaning": "gafas",
+      "correctWord": "shows",
+      "kind": "unrelated",
+      "cefr_level": "B2",
+      "prompts": [
+        {
+          "sentence": "The festival offers free ___ every evening.",
+          "options": ["shows", "spectacles"],
+          "answer": 0,
+          "explain": "Espectáculos son shows o performances. Spectacles son gafas."
+        },
+        {
+          "sentence": "He cleaned his ___ before reading the letter.",
+          "options": ["spectacles", "shows"],
+          "answer": 0,
+          "explain": "Aquí sí es spectacles: las gafas, en registro formal."
+        }
+      ]
+    },
+    {
+      "id": "ultimately",
+      "word": "ultimately",
+      "looksLike": "últimamente",
+      "actualMeaning": "en última instancia",
+      "correctWord": "lately",
+      "kind": "meaning-shift",
+      "cefr_level": "B2",
+      "prompts": [
+        {
+          "sentence": "I haven't seen him much ___.",
+          "options": ["lately", "ultimately"],
+          "answer": 0,
+          "explain": "Últimamente es lately o recently. Ultimately es \"al final\"."
+        },
+        {
+          "sentence": "___, the decision is yours.",
+          "options": ["Ultimately", "Lately"],
+          "answer": 0,
+          "explain": "Aquí sí es ultimately: en última instancia."
+        }
+      ]
+    }
+  ]
+}
