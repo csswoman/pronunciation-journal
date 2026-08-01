@@ -25,7 +25,7 @@ export async function checkSupabase(): Promise<CheckResult> {
   const start = Date.now();
   try {
     const client = createClient(url, anonKey, { auth: { persistSession: false } });
-    const { error } = await client.from("user_profiles").select("id").limit(0);
+    const { error } = await client.rpc("health_check");
     const latencyMs = Date.now() - start;
     if (error) return { ok: false, latencyMs, message: error.message };
     return { ok: true, latencyMs };

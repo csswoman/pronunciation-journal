@@ -1,14 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-const limit = vi.fn();
+const rpc = vi.fn();
 
 vi.mock("@supabase/supabase-js", () => ({
   createClient: () => ({
-    from: () => ({
-      select: () => ({
-        limit,
-      }),
-    }),
+    rpc,
   }),
 }));
 
@@ -25,7 +21,7 @@ describe("GET /api/health/ready", () => {
       NEXT_PUBLIC_SUPABASE_ANON_KEY: "test-anon-key",
       GEMINI_API_KEY: "test-gemini-key",
     };
-    limit.mockResolvedValue({ error: null });
+    rpc.mockResolvedValue({ error: null });
   });
 
   afterEach(() => {
@@ -56,7 +52,7 @@ describe("GET /api/health/ready", () => {
   });
 
   it("returns degraded when Supabase check fails", async () => {
-    limit.mockResolvedValueOnce({ error: { message: "network timeout" } });
+    rpc.mockResolvedValueOnce({ error: { message: "network timeout" } });
 
     const res = await GET();
 
