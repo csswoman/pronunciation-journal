@@ -10,8 +10,8 @@
 
 import { useEffect, useRef } from 'react'
 import Link from 'next/link'
-import { CheckCircle2, Sparkles, AlertCircle } from '@/components/icons'
-import Button from '@/components/ui/Button'
+import { CheckCircle2, Sparkles, AlertCircle, Loader2 } from '@/components/icons'
+import { PillButton } from '@/components/ui/PillButton'
 import { playUiCue } from '@/lib/ui-sounds/cues'
 import { cn } from '@/lib/cn'
 import type { EssentialWordsSessionSummary, EssentialWordsStats } from '@/hooks/useEssentialWordsSession'
@@ -106,33 +106,34 @@ export function SessionDone({
         )}
       </div>
 
-      <div className="flex w-full max-w-sm flex-col gap-2.5">
+      <div className="flex w-full max-w-sm flex-col gap-[var(--layout-stack)]">
         {onLearnMore ? (
-          <Button
+          <PillButton
             type="button"
-            variant="secondary"
+            variant="outline"
             size="md"
-            fullWidth
+            className="w-full"
             onClick={onLearnMore}
             data-cuelume-press="press"
             data-cuelume-release="release"
           >
             Aprender 10 nuevas más
-          </Button>
+          </PillButton>
         ) : null}
         {onContinue ? (
-          <Button
+          <PillButton
             type="button"
             variant="primary"
             size="md"
-            fullWidth
+            className="w-full"
+            icon={continueLoading ? <Loader2 size={16} /> : undefined}
             isLoading={continueLoading}
             onClick={onContinue}
             data-cuelume-press="press"
             data-cuelume-release="release"
           >
             {loadFailed ? 'Reintentar carga' : 'Buscar palabras para practicar'}
-          </Button>
+          </PillButton>
         ) : null}
         <details className="w-full text-center">
           <summary className="cursor-pointer rounded-md px-3 py-2 text-caption font-semibold text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg focus-ring">

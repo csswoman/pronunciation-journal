@@ -8,7 +8,7 @@ import { SessionHelpPopover } from '../SessionHelpPopover'
 describe('SessionHelpPopover', () => {
   it('moves focus into the dialog and restores it to the trigger on close', async () => {
     const user = userEvent.setup()
-    render(<SessionHelpPopover />)
+    render(<SessionHelpPopover stats={{ totalWords: 2800, learned: 12, dueCount: 3, newToday: 2, newQuota: 10 }} />)
 
     const trigger = screen.getByRole('button', { name: 'Cómo funciona esta práctica' })
     await user.click(trigger)

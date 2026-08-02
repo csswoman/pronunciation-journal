@@ -68,7 +68,7 @@ export function RouteSettingsPopover({ value, onChange, disabled }: Props) {
       <button
         ref={triggerRef}
         type="button"
-        className={cn( 'flex size-9 items-center justify-center rounded-full text-fg-subtle', 'transition-colors duration-150 ease-out-quart focus-ring', 'hover:bg-surface-raised hover:text-fg-muted', open && 'bg-surface-raised text-fg-muted', )}
+        className={cn( 'flex size-11 items-center justify-center rounded-full text-fg-subtle', 'transition-colors duration-150 ease-out-quart focus-ring', 'hover:bg-surface-raised hover:text-fg-muted', open && 'bg-surface-raised text-fg-muted', )}
         aria-label="Elegir ruta de práctica"
         aria-expanded={open}
         aria-haspopup="dialog"
@@ -85,7 +85,7 @@ export function RouteSettingsPopover({ value, onChange, disabled }: Props) {
               id={panelId}
               role="dialog"
               aria-label="Elegir ruta de práctica"
-              className="animate-state-in fixed z-9999 w-72 max-w-[calc(100vw-2rem)] origin-top-right rounded-md border border-border-default bg-surface-raised p-4 shadow-lg"
+              className="animate-state-in fixed z-50 w-72 max-w-[calc(100vw-2rem)] origin-top-right rounded-md border border-border-default bg-surface-raised p-4 shadow-lg"
               style={{ top: anchor.top, right: anchor.right }}
             >
               <div className="mb-3 flex items-center justify-between">
