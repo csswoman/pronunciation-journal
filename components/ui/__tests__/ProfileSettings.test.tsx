@@ -17,12 +17,24 @@ vi.mock("@/components/auth/AuthProvider", () => ({
 
 vi.mock("@/hooks/useUserPreferences", () => ({
   useUserPreferences: () => ({
-    preferences: { full_name: "Learner", avatar_url: "", cefr_level: "A2" },
+    preferences: { full_name: "Learner", avatar_url: "", cefr_level: "A2", interests: [] },
     loading: false,
     updateFullName: vi.fn(),
     updateAvatar: vi.fn(),
     updatePassword: vi.fn(),
     updateCefrLevel,
+    updateInterests: vi.fn(),
+  }),
+}));
+
+vi.mock("@/hooks/useOKLCHTheme", () => ({
+  useOKLCHTheme: () => ({
+    hue: 250,
+    setHue: vi.fn(),
+    resetHue: vi.fn(),
+    mode: "light",
+    toggleMode: vi.fn(),
+    mounted: true,
   }),
 }));
 
@@ -34,11 +46,18 @@ describe("ProfileSettings", () => {
   it("shows and updates the persisted CEFR level", async () => {
     render(<ProfileSettings />);
 
-    const select = screen.getByLabelText("English level");
-    expect(select).toHaveValue("A2");
+    expect(screen.getByRole("button", { name: "A2" })).toHaveAttribute("aria-pressed", "true");
 
-    fireEvent.change(select, { target: { value: "B1" } });
+    fireEvent.click(screen.getByRole("button", { name: "B1" }));
 
     await waitFor(() => expect(updateCefrLevel).toHaveBeenCalledWith("B1"));
+  });
+
+  it("orders preferences with theme before study level", () => {
+    render(<ProfileSettings />);
+
+    const theme = screen.getByLabelText("Color del tema");
+    const levelGroup = screen.getByRole("group", { name: "Nivel de estudio" });
+    expect(theme.compareDocumentPosition(levelGroup) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 });
