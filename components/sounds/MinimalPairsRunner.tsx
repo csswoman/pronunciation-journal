@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Headphones } from "@/components/icons";
 import { speakText } from "@/lib/speech/synthesis";
 import { canonicalizeSoundIpa } from "@/lib/sounds/inventory";
 import {
@@ -144,15 +143,26 @@ export function MinimalPairsRunner({
   }, [pair, speakWord]);
 
   useEffect(() => {
-    if (!quizTarget || verdict) return;
     const onKeyDown = (event: KeyboardEvent) => {
       if ((event.target as HTMLElement | null)?.closest("input, textarea, select")) return;
-      if (event.key.toLowerCase() === "a") handleGuess("A");
-      if (event.key.toLowerCase() === "b") handleGuess("B");
+
+      if (quizTarget && !verdict) {
+        if (event.key.toLowerCase() === "a") handleGuess("A");
+        if (event.key.toLowerCase() === "b") handleGuess("B");
+        return;
+      }
+
+      if (event.key !== "Enter" && event.key !== "ArrowRight") return;
+      event.preventDefault();
+      if (quizTarget && verdict) {
+        goToNextPair(true);
+      } else if (!quizTarget) {
+        goToNextPair();
+      }
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [handleGuess, quizTarget, verdict]);
+  }, [goToNextPair, handleGuess, quizTarget, verdict]);
 
   useEffect(() => {
     if (!quizTarget) return;
@@ -195,7 +205,7 @@ export function MinimalPairsRunner({
   return (
     <section
       id={embedded ? "sound-detail-minimal-pairs-practice" : undefined}
-      className={embedded ? "sound-detail__pairs-practice" : "ipa-chart__section"}
+      className={embedded ? "sound-detail__pairs-practice" : "sound-lab__minimal-pairs-runner"}
       aria-label={`Pares mínimos para ${phoneme}`}
     >
       {embedded ? (
@@ -213,34 +223,25 @@ export function MinimalPairsRunner({
           </div>
         </div>
       ) : (
-        <header className="ipa-chart__mp-head">
-          <div className="flex min-w-0 flex-1 items-center gap-3">
-            <span className="ipa-chart__mp-icon shrink-0" aria-hidden><Headphones size={18} /></span>
-            <div>
-              <h2 className="ipa-chart__section-title">Pares mínimos {phoneme}</h2>
-              <p className="ipa-chart__lead">Entrena solo los contrastes de este sonido.</p>
-            </div>
-          </div>
-          {accuracy !== null ? <span className="font-kicker text-fg-subtle">Precisión {accuracy}%</span> : null}
-        </header>
+        <div className="sound-detail__pairs-practice-nav">
+          <span className="font-ipa text-h3 font-bold text-fg">
+            {contrast ? `${contrast.phonemeA} vs ${contrast.phonemeB}` : phoneme}
+          </span>
+          <span className="font-kicker tabular-nums text-fg-subtle">
+            Par {pairIdx + 1} de {pairs.length}{accuracy !== null ? ` · ${accuracy}%` : ""}
+          </span>
+        </div>
       )}
 
       {!isDone ? (
         <>
-          {!embedded ? (
-            <div className="mb-3 flex items-center justify-end">
-              <span className="font-kicker font-bold tabular-nums text-fg-subtle">
-                Par <span className="text-fg">{pairIdx + 1}</span> de {pairs.length}
-              </span>
-            </div>
-          ) : null}
           <div
             key={`${phoneme}-${pairIdx}`}
-            className={`ipa-chart__mpcards ${embedded ? "sound-detail__mpcards" : ""} animate-fadeIn`}
+            className={`${embedded ? "ipa-chart__mpcards sound-detail__mpcards" : "sound-lab__pair-cards"} animate-fadeIn`}
           >
-            <WordCard word={pair.wordA} symbol={pair.phonemeA} side="A" isPlaying={playingSide === "A"} highlight={highlights.A} selectable={quizTarget !== null && verdict === null} compact={embedded} onPlay={() => playSide("A")} onPick={() => handleGuess("A")} />
-            <span className="ipa-chart__mpvs">vs</span>
-            <WordCard word={pair.wordB} symbol={pair.phonemeB} side="B" isPlaying={playingSide === "B"} highlight={highlights.B} selectable={quizTarget !== null && verdict === null} compact={embedded} onPlay={() => playSide("B")} onPick={() => handleGuess("B")} />
+            <WordCard word={pair.wordA} symbol={pair.phonemeA} side="A" isPlaying={playingSide === "A"} highlight={highlights.A} selectable={quizTarget !== null && verdict === null} compact={embedded} workspace={!embedded} onPlay={() => playSide("A")} onPick={() => handleGuess("A")} />
+            {embedded ? <span className="ipa-chart__mpvs">vs</span> : null}
+            <WordCard word={pair.wordB} symbol={pair.phonemeB} side="B" isPlaying={playingSide === "B"} highlight={highlights.B} selectable={quizTarget !== null && verdict === null} compact={embedded} workspace={!embedded} onPlay={() => playSide("B")} onPick={() => handleGuess("B")} />
           </div>
         </>
       ) : null}

@@ -41,43 +41,6 @@
   }
 }
 
-.sound-lab__utility-bar {
-  display: flex;
-  min-width: 0;
-  min-height: 2.75rem;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: var(--space-4);
-}
-
-.sound-lab__resume-button {
-  display: inline-flex;
-  min-height: 2.75rem;
-  flex-shrink: 0;
-  align-items: center;
-  gap: var(--space-2);
-  margin-top: 1.375rem;
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-md);
-  background: var(--surface-raised);
-  color: var(--text-primary);
-  padding: 0.5rem 0.875rem;
-  font-size: var(--text-size-caption);
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
-}
-
-.sound-lab__resume-button:hover {
-  border-color: var(--border-strong);
-  background: var(--surface-sunken);
-}
-
-.sound-lab__resume-button:focus-visible {
-  outline: 2px solid var(--focus-ring);
-  outline-offset: 2px;
-}
-
 .sound-lab__loading-shell {
   min-height: 16rem;
 }
@@ -92,33 +55,93 @@
 .sound-lab__minimal-pairs {
   display: flex;
   flex-direction: column;
-  gap: var(--layout-stack-loose);
+  gap: var(--layout-stack);
+  width: 100%;
   min-width: 0;
 }
 
-.sound-lab__contrast-picker {
+/* Selector group: category + contrast on one line, hint below, then a
+   gap (not a hairline) separates the choice from the practice card below. */
+.sound-lab__contrast-selector {
   display: flex;
-  gap: var(--space-2);
-  max-width: 100%;
-  padding-bottom: var(--space-2);
-  overflow-x: auto;
-  scrollbar-width: none;
-  border-bottom: 1px solid var(--border-default);
+  flex-direction: column;
+  gap: 0;
 }
 
-.sound-lab__contrast-picker::-webkit-scrollbar {
+.sound-lab__contrast-row {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: var(--space-3);
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.sound-lab__contrast-row::-webkit-scrollbar {
   display: none;
+}
+
+.sound-lab__contrast-row-divider {
+  width: 1px;
+  height: 1.25rem;
+  flex-shrink: 0;
+  background: var(--border-default);
+}
+
+/* Category picker: plain text toggles, no button chrome — the quietest
+   control on the line, so it reads as "which set" before the contrast
+   pills ask "which pair". */
+.sound-lab__contrast-category-picker {
+  display: inline-flex;
+  flex-shrink: 0;
+  gap: var(--space-3);
+}
+
+.sound-lab__contrast-category-option {
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-tertiary);
+  font-size: var(--text-size-caption);
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.sound-lab__contrast-category-option:hover {
+  color: var(--text-secondary);
+}
+
+.sound-lab__contrast-category-option[data-active="true"] {
+  color: var(--primary);
+}
+
+.sound-lab__contrast-category-option:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Contrast picker: the actual choice, so it's the only pill-weight control
+   on the line. */
+.sound-lab__contrast-picker {
+  display: flex;
+  flex-shrink: 0;
+  gap: var(--space-2);
 }
 
 .sound-lab__contrast-option {
   display: inline-flex;
-  min-height: 2.75rem;
+  min-height: 2.5rem;
   align-items: center;
   gap: var(--space-1);
   flex-shrink: 0;
-  padding: 0.5rem 0.75rem;
+  padding: 0.375rem 0.625rem;
   border: 1px solid var(--border-default);
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-sm);
   background: var(--surface-raised);
   color: var(--text-secondary);
   font-size: var(--text-size-caption);
@@ -143,13 +166,148 @@
   outline-offset: 2px;
 }
 
-.sound-lab__contrast-hint {
-  max-width: 62ch;
-  margin: calc(var(--space-2) * -1) 0 0;
+.sound-lab__minimal-pairs-runner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--layout-stack);
+  padding: var(--layout-card-pad);
+  border: 1px solid var(--primary);
+  border-radius: var(--radius-lg);
+  background: color-mix(in oklch, var(--primary-soft) 38%, var(--surface-raised));
+}
+
+.sound-lab__minimal-pairs-runner .sound-detail__pairs-practice-nav > :first-child {
+  color: var(--primary);
+}
+
+.sound-lab .sound-lab__pair-cards {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-1);
+  align-items: stretch;
+}
+
+.sound-lab .sound-lab__pair-card {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr) auto;
+  min-height: 4.5rem;
+  align-items: center;
+  justify-content: stretch;
+  column-gap: var(--space-3);
+  padding: var(--space-3) var(--layout-card-pad);
+  text-align: left;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+}
+
+.sound-lab .sound-lab__pair-card + .sound-lab__pair-card {
+  border-top: 1px solid var(--border-subtle);
+}
+
+.sound-lab .sound-lab__pair-card:hover {
+  border-color: transparent;
+  background: var(--surface-sunken);
+}
+
+.sound-lab .sound-lab__pair-card.ipa-chart__mpcard--correct {
+  background: var(--success-soft);
+}
+
+.sound-lab .sound-lab__pair-card.ipa-chart__mpcard--wrong {
+  background: var(--error-soft);
+}
+
+.sound-lab .sound-lab__pair-card .ipa-chart__mpcard-lab {
+  position: static;
+  min-width: 3.75rem;
+}
+
+.sound-lab .sound-lab__pair-card .ipa-chart__mpcard-sym {
+  margin: 0;
+  font-size: var(--text-size-h3);
+}
+
+.sound-lab .sound-lab__pair-card .ipa-chart__mpcard-word {
+  min-width: 0;
+  font-size: var(--text-size-h3);
+  overflow-wrap: anywhere;
+}
+
+.sound-lab .sound-lab__pair-card .ipa-chart__mpcard-play {
+  display: inline-flex;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin: 0;
+  border: 1px solid color-mix(in oklch, var(--primary) 32%, var(--border-default));
+  border-radius: var(--radius-sm);
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.sound-lab .sound-lab__pair-card:hover .ipa-chart__mpcard-play {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: var(--on-primary);
+}
+
+.sound-lab__minimal-pairs-runner .ipa-chart__mpfoot {
+  margin-top: 0;
+  padding-top: var(--layout-stack);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.sound-lab__minimal-pairs-runner .ipa-chart__btn {
+  border-radius: var(--radius-md);
+  font-size: var(--text-size-label);
+}
+
+.sound-lab__minimal-pairs-runner .ipa-chart__btn--ghost {
+  border-color: transparent;
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.sound-lab__minimal-pairs-runner .ipa-chart__btn--ghost:hover {
+  border-color: transparent;
+  background: var(--surface-sunken);
+  color: var(--text-primary);
+}
+
+.sound-lab__minimal-pairs-runner .ipa-chart__btn--primary {
+  background: var(--cta-bg);
+  color: var(--cta-fg);
+}
+
+.sound-lab__minimal-pairs-runner .ipa-chart__btn--primary:hover {
+  background: var(--cta-bg-hover);
+}
+
+@media (max-width: 600px) {
+  .sound-lab .sound-lab__pair-card {
+    grid-template-columns: auto auto minmax(0, 1fr) auto;
+    min-height: 4.25rem;
+    column-gap: var(--space-2);
+    padding-inline: var(--space-3);
+  }
+
+  .sound-lab .sound-lab__pair-card .ipa-chart__mpcard-lab {
+    min-width: 2.5rem;
+  }
+
+  .sound-lab .sound-lab__pair-card .ipa-chart__mpcard-word {
+    font-size: var(--text-size-label);
+  }
+
+  .sound-lab .sound-lab__pair-card .ipa-chart__mpcard-play {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .sound-lab__contrast-option {
+  .sound-lab__contrast-option,
+  .sound-lab__contrast-category-option {
     transition-duration: 0.01ms;
   }
 }
@@ -393,23 +551,55 @@
   min-height: 160px;
 }
 
-/* Shared workspace switcher: the lab and its IPA reference are sibling modes. */
+/* Tabs scroll under a fixed-position IPA trigger, so the trigger is always
+   visible next to the tab strip instead of being pushed off-screen. */
+.sound-lab__workspace-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  max-width: 100%;
+}
+
 .sound-lab__workspace-tabs {
   display: flex;
   align-items: center;
-  gap: var(--space-4);
-  width: 100%;
-  max-width: 100%;
+  gap: var(--space-2);
+  min-width: 0;
+  flex: 1 1 auto;
   padding: 0;
   overflow-x: auto;
+  -webkit-mask-image: linear-gradient(to right, black calc(100% - 24px), transparent);
+  mask-image: linear-gradient(to right, black calc(100% - 24px), transparent);
   border-bottom: 0;
   border-radius: 0;
   background: transparent;
   scrollbar-width: none;
 }
 
+@media (min-width: 640px) {
+  .sound-lab__workspace-tabs {
+    gap: var(--space-4);
+  }
+}
+
 .sound-lab__workspace-tabs::-webkit-scrollbar {
   display: none;
+}
+
+.sound-lab__workspace-tab--ipa {
+  gap: var(--space-1);
+  flex-shrink: 0;
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+@media (max-width: 480px) {
+  .sound-lab__ipa-trigger-label {
+    display: none;
+  }
 }
 
 .sound-lab__workspace-tab {
@@ -419,12 +609,22 @@
   justify-content: center;
   flex-shrink: 0;
   padding: var(--space-2) var(--space-1) var(--space-2);
+  border: 0;
   border-bottom: 2px solid transparent;
+  background: transparent;
   color: var(--text-secondary);
-  font-size: var(--text-size-body-sm);
+  font-family: inherit;
+  font-size: var(--text-size-caption);
   font-weight: 600;
   text-decoration: none;
+  cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+@media (min-width: 640px) {
+  .sound-lab__workspace-tab {
+    font-size: var(--text-size-body-sm);
+  }
 }
 
 .sound-lab__workspace-tab:hover {
@@ -568,10 +768,12 @@
 
 .sound-lab__divider-fill {
   display: block;
+  width: 100%;
   height: 100%;
   border-radius: inherit;
   background: var(--primary);
-  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: left;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .sound-lab__divider-fill--done {
@@ -627,7 +829,7 @@
 /* Section group title */
 .sound-lab__group-title {
   font-family: var(--font-sans), sans-serif;
-  font-weight: 480;
+  font-weight: 500;
   font-size: var(--text-size-h3);
   color: var(--text-primary);
 }
@@ -777,6 +979,88 @@
 
   .sound-lab__detail-sheet {
     min-height: auto;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+}
+
+/* IPA reference panel — a wide dialog (holds a matrix), not a lateral slide-over. */
+.sound-lab__ipa-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .sound-lab__ipa-backdrop {
+    background: color-mix(in oklch, var(--surface-base) 18%, transparent);
+  }
+}
+
+.sound-lab__ipa-dialog {
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 56rem);
+  max-height: min(88dvh, 44rem);
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  background: var(--surface-base);
+  box-shadow: var(--shadow-xl);
+}
+
+.sound-lab__ipa-dialog-header {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: var(--space-4);
+}
+
+.sound-lab__ipa-dialog-close {
+  display: inline-flex;
+  min-height: 2.25rem;
+  min-width: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.sound-lab__ipa-dialog-close:hover {
+  background: var(--surface-sunken);
+  color: var(--text-primary);
+}
+
+.sound-lab__ipa-dialog-close:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.sound-lab__ipa-dialog-body {
+  overflow-y: auto;
+  padding: var(--space-4);
+}
+
+@media (max-width: 640px) {
+  .sound-lab__ipa-backdrop {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .sound-lab__ipa-dialog {
+    width: 100%;
+    max-height: 92dvh;
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   }
 }

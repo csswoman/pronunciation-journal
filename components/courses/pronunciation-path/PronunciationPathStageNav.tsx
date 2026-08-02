@@ -1,11 +1,9 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import Link from 'next/link'
 import { Check } from '@/components/icons'
 import { cn } from '@/lib/cn'
 import { deriveStageProgress } from '@/lib/pronunciation/path/stage-progress'
-import { stageIdToPronunciationPathRoute } from '@/lib/pronunciation/path/routes'
 import type { PathStage, PathStageId, UnitLearningState } from '@/lib/pronunciation/path/types'
 
 interface PronunciationPathStageNavProps {
@@ -13,6 +11,7 @@ interface PronunciationPathStageNavProps {
   activeStageId: PathStageId
   unitStates: ReadonlyMap<string, UnitLearningState>
   recommendedStageId?: PathStageId | null
+  onStageChange: (stageId: PathStageId) => void
 }
 
 export function PronunciationPathStageNav({
@@ -20,8 +19,9 @@ export function PronunciationPathStageNav({
   activeStageId,
   unitStates,
   recommendedStageId = null,
+  onStageChange,
 }: PronunciationPathStageNavProps) {
-  const activeRef = useRef<HTMLAnchorElement | null>(null)
+  const activeRef = useRef<HTMLButtonElement | null>(null)
 
   useEffect(() => {
     const node = activeRef.current
@@ -55,23 +55,24 @@ export function PronunciationPathStageNav({
 
           return (
             <li key={stage.id} className={cn('flex items-start', !isLast && 'flex-1')}>
-              <Link
+              <button
                 ref={isActive ? activeRef : undefined}
-                href={stageIdToPronunciationPathRoute(stage.id)}
-                aria-current={isActive ? 'page' : undefined}
+                type="button"
+                aria-pressed={isActive}
                 aria-label={stageLabel}
                 className="group flex shrink-0 flex-col items-center gap-1.5 rounded-sm px-1 pt-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                onClick={() => onStageChange(stage.id)}
               >
                 <span
                   className={cn(
                     'flex h-8 w-8 shrink-0 items-center justify-center rounded-full font-label text-caption transition-colors',
                     isComplete
-                      ? 'bg-primary text-on-primary'
+                      ? 'bg-success-soft text-success ring-1 ring-inset ring-success-border'
                       : isActive
                         ? 'bg-primary-soft text-primary ring-2 ring-inset ring-primary'
                         : isRecommended
-                          ? 'bg-surface-sunken text-fg ring-1 ring-inset ring-badge-primary-border'
-                          : 'bg-surface-sunken text-fg-subtle group-hover:text-fg'
+                          ? 'bg-primary-soft text-primary ring-1 ring-inset ring-badge-primary-border'
+                          : 'bg-surface-raised text-fg-subtle ring-1 ring-inset ring-border-subtle group-hover:text-fg'
                   )}
                 >
                   {isComplete ? <Check size={16} aria-hidden /> : index + 1}
@@ -84,13 +85,13 @@ export function PronunciationPathStageNav({
                 >
                   {stage.titleShortEs}
                 </span>
-              </Link>
+              </button>
               {!isLast ? (
                 <div
                   aria-hidden
                   className={cn(
                     'mt-4 h-px min-w-4 flex-1 sm:min-w-8',
-                    isComplete ? 'bg-primary' : 'bg-border-default'
+                    isComplete ? 'bg-success-border' : 'bg-border-default'
                   )}
                 />
               ) : null}

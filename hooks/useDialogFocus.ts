@@ -6,6 +6,7 @@ const FOCUSABLE =
 export function useDialogFocus<T extends HTMLElement>(
   open: boolean,
   onClose: () => void,
+  closeButtonSelector = '[aria-label="Cerrar detalle"]',
 ) {
   const dialogRef = useRef<T>(null);
   const triggerRef = useRef<HTMLElement | null>(null);
@@ -17,11 +18,18 @@ export function useDialogFocus<T extends HTMLElement>(
   }, []);
 
   useEffect(() => {
+    // Fallback for callers that don't explicitly call captureTrigger() before
+    // opening (e.g. a simple toggle button): the trigger is still the active
+    // element on the render right before this effect runs the first time.
+    if (open && !triggerRef.current) captureTrigger();
+  }, [open, captureTrigger]);
+
+  useEffect(() => {
     if (!open) return;
     const dialog = dialogRef.current;
     const previousFocus = triggerRef.current;
     const focusTimer = window.setTimeout(() => {
-      const closeButton = dialog?.querySelector<HTMLElement>('[aria-label="Cerrar detalle"]');
+      const closeButton = dialog?.querySelector<HTMLElement>(closeButtonSelector);
       (closeButton ?? dialog)?.focus();
     }, 0);
 

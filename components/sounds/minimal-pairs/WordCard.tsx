@@ -14,6 +14,7 @@ export function WordCard({
   highlight,
   selectable,
   compact = false,
+  workspace = false,
   onPlay,
   onPick,
 }: {
@@ -24,6 +25,7 @@ export function WordCard({
   highlight: Verdict;
   selectable: boolean;
   compact?: boolean;
+  workspace?: boolean;
   onPlay: () => void;
   onPick: () => void;
 }) {
@@ -38,12 +40,13 @@ export function WordCard({
         "ipa-chart__mpcard",
         compact && "sound-detail__mpcard",
         compact && "sound-detail__pairs-practice-card",
+        workspace && "sound-lab__pair-card",
         isCorrect && "ipa-chart__mpcard--correct",
         isWrong && "ipa-chart__mpcard--wrong",
       )}
       aria-label={`${side}: ${word}, ${symbol}`}
     >
-      <span className="ipa-chart__mpcard-lab">{compact ? side : `Opción ${side}`}</span>
+      <span className="ipa-chart__mpcard-lab">{compact || workspace ? side : `Opción ${side}`}</span>
       <span className="ipa-chart__mpcard-sym">{symbol}</span>
       <span className="ipa-chart__mpcard-word">{word}</span>
       <span className="ipa-chart__mpcard-play" aria-hidden>

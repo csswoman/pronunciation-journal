@@ -86,9 +86,9 @@ describe('PronunciationPathPage', () => {
     expect(within(unitRegion).getByRole('link', { name: /volver a/i })).toBeInTheDocument()
     expect(within(unitRegion).queryByText(/unidad seleccionada/i)).not.toBeInTheDocument()
     expect(screen.getByRole('region', { name: /tu siguiente práctica/i })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /^5\.\s*entonación$/i })).toHaveAttribute(
-      'aria-current',
-      'page'
+    expect(screen.getByRole('button', { name: /^5\.\s*entonación$/i })).toHaveAttribute(
+      'aria-pressed',
+      'true'
     )
   })
 

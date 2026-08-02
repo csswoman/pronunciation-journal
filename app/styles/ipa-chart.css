@@ -223,6 +223,16 @@
   color: var(--text-secondary);
 }
 
+.ipa-chart__kbd--inline {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .ipa-chart__kbd--inline {
+    display: inline-flex;
+  }
+}
+
 .ipa-chart__tab:focus-visible,
 .ipa-chart__progress-reset:focus-visible,
 .ipa-chart__progress-undo:focus-visible,
