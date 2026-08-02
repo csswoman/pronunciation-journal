@@ -24,6 +24,10 @@ vi.mock('@/lib/essential-words/client', () => ({
   fetchEssentialWords: coreWordClientMocks.fetchEssentialWords,
 }))
 
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ push: vi.fn(), replace: vi.fn(), back: vi.fn(), refresh: vi.fn() }),
+}))
+
 const dbMocks = vi.hoisted(() => ({
   getEssentialWordsSrsEntries: vi.fn(async (): Promise<SRSData[]> => []),
   getEssentialWordsIntroducedToday: vi.fn(async (): Promise<string[]> => []),
@@ -35,6 +39,7 @@ const dbMocks = vi.hoisted(() => ({
   saveAttempt: vi.fn(async () => undefined),
   updateDailyProgress: vi.fn(async () => undefined),
   updateUserStats: vi.fn(async () => undefined),
+  migrateArchivedSrsRows: vi.fn(async () => undefined),
 }))
 vi.mock('@/lib/db', () => ({
   db: {
@@ -112,6 +117,18 @@ beforeEach(() => {
 })
 
 describe('EssentialWordsSession', () => {
+  it('shows only the loader during loading — no session chrome/header', async () => {
+    coreWordClientMocks.fetchEssentialWords.mockImplementation(
+      () => new Promise(() => {}),
+    )
+
+    render(<EssentialWordsSession />)
+
+    expect(await screen.findByText('Preparando tu sesión')).toBeTruthy()
+    expect(screen.queryByText('Palabras esenciales')).toBeNull()
+    expect(screen.queryByLabelText(/baúl/i)).toBeNull()
+  })
+
   it('introduces a new card as study first, then speak with self-grade fallback', async () => {
     const user = userEvent.setup()
     render(<EssentialWordsSession />)

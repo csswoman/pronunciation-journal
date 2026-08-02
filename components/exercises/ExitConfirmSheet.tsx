@@ -12,9 +12,21 @@ interface ExitConfirmSheetProps {
   onConfirm: () => void
   onCancel: () => void
   backdrop?: boolean
+  title?: string
+  description?: string
+  confirmLabel?: string
+  cancelLabel?: string
 }
 
-export function ExitConfirmSheet({ open, onConfirm, onCancel }: ExitConfirmSheetProps) {
+export function ExitConfirmSheet({
+  open,
+  onConfirm,
+  onCancel,
+  title = 'Quit this session?',
+  description = "You'll lose your progress in this session.",
+  confirmLabel = 'End session',
+  cancelLabel = 'Keep practicing',
+}: ExitConfirmSheetProps) {
   const firstButtonRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
@@ -34,7 +46,7 @@ export function ExitConfirmSheet({ open, onConfirm, onCancel }: ExitConfirmSheet
       role="dialog"
       aria-modal="true"
       aria-labelledby="exit-dialog-title"
-      className="absolute inset-0 z-50 flex items-end sm:items-center sm:justify-center"
+      className="fixed inset-0 z-50 flex items-end sm:items-center sm:justify-center"
     >
       {/* Blur backdrop */}
       <button
@@ -49,10 +61,10 @@ export function ExitConfirmSheet({ open, onConfirm, onCancel }: ExitConfirmSheet
         {/* Header */}
         <div className="flex flex-col gap-1.5">
           <h2 id="exit-dialog-title" className="text-body-lg font-semibold leading-snug tracking-tight text-(--fg)">
-            Quit this session?
+            {title}
           </h2>
           <p className="text-caption text-(--fg-muted) leading-relaxed">
-            You&apos;ll lose your progress in this session.
+            {description}
           </p>
         </div>
 
@@ -64,14 +76,14 @@ export function ExitConfirmSheet({ open, onConfirm, onCancel }: ExitConfirmSheet
             onClick={onConfirm}
             className="w-full rounded-md py-3 text-body-sm font-semibold bg-error-soft text-error border border-(--error)/30 transition-colors hover:bg-error-solid hover:text-white hover:border-transparent cursor-pointer"
           >
-            End session
+            {confirmLabel}
           </button>
           <button
             type="button"
             onClick={onCancel}
             className="w-full rounded-md py-3 text-body-sm font-semibold bg-(--cta-bg) text-(--cta-fg) transition-opacity hover:opacity-85 cursor-pointer"
           >
-            Keep practicing
+            {cancelLabel}
           </button>
         </div>
       </div>

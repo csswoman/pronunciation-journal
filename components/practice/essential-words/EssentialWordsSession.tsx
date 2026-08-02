@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, type ReactNode } from 'react'
+import { useRouter } from 'next/navigation'
 import { cn } from '@/lib/cn'
 import { useEssentialWordsSession } from '@/hooks/useEssentialWordsSession'
 import { useLoadingWords } from '@/hooks/useLoadingWords'
@@ -8,7 +9,8 @@ import { SessionStatsCard } from './SessionStatsCard'
 import { WordStudyCard } from './WordStudyCard'
 import { SpeakReviewCard } from './SpeakReviewCard'
 import { SessionDone } from './SessionDone'
-import { RoutePicker } from './RoutePicker'
+import { EssentialWordsChrome } from './EssentialWordsChrome'
+import { ExitConfirmSheet } from '@/components/exercises/ExitConfirmSheet'
 import { WordCarousel } from '@/components/practice/session/WordCarousel'
 import { getRoute } from '@/lib/essential-words/routes'
 import Button from '@/components/ui/Button'
@@ -21,7 +23,9 @@ export function EssentialWordsSession() {
     keepSnooze, masterWord,
   } = useEssentialWordsSession()
   const loadingWords = useLoadingWords()
+  const router = useRouter()
   const [loadingSlow, setLoadingSlow] = useState(false)
+  const [exitConfirmOpen, setExitConfirmOpen] = useState(false)
 
   useEffect(() => {
     if (phase !== 'loading') {
@@ -35,35 +39,42 @@ export function EssentialWordsSession() {
   // A guided route drives level + part of speech. Otherwise, the learner can
   // optionally refine their recommended CEFR level.
   const activeRoute = getRoute(activeRouteId)
-  const isLoading = phase === 'loading'
   const selectionLabel = activeRoute
     ? `Cargando la ruta ${activeRoute.label}`
     : levels?.length === 1
       ? `Cargando palabras de nivel ${levels[0]}`
       : 'Cargando palabras para practicar'
 
-  const filters = (
-    <div className="flex flex-col items-center gap-2">
-      <RoutePicker
-        value={activeRouteId}
-        onChange={(id) => void setRoute(id)}
-        disabled={isLoading}
+  const speaking = phase === 'speak'
+  const exitToHub = () => router.push('/')
+
+  const chrome = (
+    <>
+      <EssentialWordsChrome
+        speaking={speaking}
+        onExit={() => setExitConfirmOpen(true)}
+        activeRouteId={activeRouteId}
+        onRouteChange={(id) => void setRoute(id)}
       />
-      {!activeRouteId && levels?.length === 1 && (
-        <p className="m-0 text-center text-caption text-fg-subtle">
-          Nivel de estudio: {levels[0]}. Puedes cambiarlo desde Ajustes rápidos.
-        </p>
-      )}
-        {isLoading && <p className="m-0 text-caption text-fg-subtle">{selectionLabel}</p>}
-    </div>
+      <ExitConfirmSheet
+        open={exitConfirmOpen}
+        onConfirm={() => { setExitConfirmOpen(false); exitToHub() }}
+        onCancel={() => setExitConfirmOpen(false)}
+        title="¿Salir de la práctica?"
+        description="Perderás el progreso de esta sesión."
+        confirmLabel="Salir"
+        cancelLabel="Seguir practicando"
+      />
+    </>
   )
 
   // One centered column for every phase, so content width never jumps as the
   // session moves loading → study → speak → done.
+  // Immersive prep: only the carousel — chrome (kicker, vault, settings) waits
+  // until the session actually starts so the loader isn't competing with chrome.
   if (phase === 'loading') {
     return (
       <Frame className="min-h-[calc(100vh-10rem)] justify-center">
-        <div className="mb-3">{filters}</div>
         <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">
           {selectionLabel}
         </p>
@@ -85,7 +96,7 @@ export function EssentialWordsSession() {
   if (phase === 'empty' || phase === 'done' || phase === 'error') {
     return (
       <Frame>
-        <div className="mb-3">{filters}</div>
+        {chrome}
         <SessionDone
           stats={stats}
           sessionSummary={sessionSummary}
@@ -101,10 +112,12 @@ export function EssentialWordsSession() {
 
   return (
     <Frame>
-      <div className="mb-3 flex w-full flex-col gap-2">
-        <div className="flex justify-center sm:justify-start">{filters}</div>
-        <SessionStatsCard stats={stats} counts={counts} />
-      </div>
+      {chrome}
+      {!speaking && (
+        <div className="mb-3 flex w-full flex-col gap-2">
+          <SessionStatsCard stats={stats} counts={counts} />
+        </div>
+      )}
 
       <div className="mt-4 flex flex-col items-center">
         {phase === 'study' && current && (
@@ -130,5 +143,5 @@ export function EssentialWordsSession() {
 }
 
 function Frame({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={cn('mx-auto flex w-full max-w-[var(--layout-session-max)] flex-col', className)}>{children}</div>
+  return <div className={cn('relative mx-auto flex w-full max-w-[var(--layout-session-max)] flex-col', className)}>{children}</div>
 }

@@ -1,7 +1,7 @@
-import Script from "next/script";
 import "./globals.css";
 import "./markdown.css";
 import { Andika, DM_Sans, DM_Mono } from "next/font/google";
+import { THEME_INIT_SCRIPT } from "@/lib/theme/theme-init-script";
 
 // Body + UI + headings — DM Sans
 const dmSans = DM_Sans({
@@ -30,12 +30,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Fonts live on <body> so React does not own <html className> and wipe a
+  // pre-paint `.dark` class set by the blocking theme script.
+  const fontVars = `${dmSans.variable} ${dmMono.variable} ${andika.variable}`;
+
   return (
-    <html
-      lang="es"
-      suppressHydrationWarning
-      className={`${dmSans.variable} ${dmMono.variable} ${andika.variable}`}
-    >
+    <html lang="es" suppressHydrationWarning>
       <head>
         <title>Pronunciation Journal</title>
         <meta name="description" content="Track and improve your pronunciation" />
@@ -46,23 +46,16 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="PronJournal" />
-        <Script
+        {/* Raw blocking script (not next/script): runs while HTML parses, before paint. */}
+        <script
           id="theme-init"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              document.documentElement.classList.toggle(
-                'dark',
-                localStorage.getItem('theme-mode') === 'dark' ||
-                (!localStorage.getItem('theme-mode') && window.matchMedia('(prefers-color-scheme: dark)').matches)
-              );
-              const savedHue = localStorage.getItem('theme-hue');
-              if (savedHue) document.documentElement.style.setProperty('--hue', savedHue);
-            `,
-          }}
+          dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }}
         />
       </head>
-      <body className="bg-surface-base text-fg transition-colors" suppressHydrationWarning>
+      <body
+        className={`${fontVars} bg-surface-base text-fg`}
+        suppressHydrationWarning
+      >
         {children}
       </body>
     </html>
