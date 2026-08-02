@@ -2,7 +2,6 @@ import {
   Home,
   MicVocal,
   BookOpen,
-  Ear,
   TrendingUp,
   LibraryBig,
   BookMarked,
@@ -17,41 +16,30 @@ import { NavSectionType } from "./NavSection";
 export const coreNav: NavSectionType = {
   label: "",
   items: [
-    { name: "Home", href: "/", icon: Home },
+    { name: "Inicio", href: "/", icon: Home },
     { name: "Diario", href: "/journal", icon: FileText },
   ],
 };
 
+/** Practice + review destinations — the daily work surface. */
 export const practiceNav: NavSectionType = {
   label: "Práctica",
   items: [
     { name: "Laboratorio de sonidos", href: "/practice/sounds", icon: MicVocal },
     { name: "Palabras esenciales", href: "/practice/essential-words", icon: ListOrdered },
+    { name: "Mazos", href: "/practice/decks", icon: Layers },
+    { name: "Repaso", href: "/practice/review", icon: RotateCcw },
   ],
 };
 
-export const learnNav: NavSectionType = {
-  label: "Aprendizaje",
+/** Courses, reference, and tracking — browse and look back. */
+export const exploreNav: NavSectionType = {
+  label: "Explorar",
   items: [
     { name: "Ruta", href: "/courses", icon: BookOpen },
-    { name: "Pronunciación", href: "/courses/pronunciation", icon: Ear },
-    { name: "Decks", href: "/practice/decks", icon: Layers },
-    { name: "Mini Lessons", href: "/mini-lessons", icon: BookMarked },
-  ],
-};
-
-export const referenceNav: NavSectionType = {
-  label: "Referencia",
-  items: [
-    { name: "Dictionary", href: "/dictionary", icon: LibraryBig },
-  ],
-};
-
-export const trackingNav: NavSectionType = {
-  label: "Seguimiento",
-  items: [
-    { name: "Saved", href: "/tracking", icon: Bookmark },
-    { name: "Review", href: "/practice/review", icon: RotateCcw },
-    { name: "Progress", href: "/progress", icon: TrendingUp },
+    { name: "Mini lecciones", href: "/mini-lessons", icon: BookMarked },
+    { name: "Diccionario", href: "/dictionary", icon: LibraryBig },
+    { name: "Guardado", href: "/tracking", icon: Bookmark },
+    { name: "Progreso", href: "/progress", icon: TrendingUp },
   ],
 };

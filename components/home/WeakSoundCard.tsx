@@ -1,6 +1,6 @@
 // Planned structure:
 // <WeakSoundCard>
-//   kicker + title/body + CTA → /practice/sounds
+//   section title + title/body + CTA → /practice/sounds
 //   OR focused phoneme when data exists
 // </WeakSoundCard>
 
@@ -16,10 +16,25 @@ function formatIpaDisplay(ipa: string): string {
   return ipa.startsWith("/") ? ipa : `/${ipa}/`;
 }
 
-function accuracyLabel(accuracy: number): string {
-  if (accuracy >= 85) return "Ya suena claro";
-  if (accuracy >= 60) return "Vas mejorando";
-  return "Conviene practicar";
+/** One concrete reason to practice — never a vague label. */
+function reasonParts(phoneme: WeakestPhonemeHome): {
+  prefix: string;
+  confusable?: string;
+  suffix?: string;
+} {
+  const wrong = Math.max(0, phoneme.totalAttempts - phoneme.correctAnswers);
+  if (phoneme.confusableIpa && wrong > 0) {
+    return {
+      prefix: "Lo confundes con ",
+      confusable: formatIpaDisplay(phoneme.confusableIpa),
+    };
+  }
+  if (phoneme.totalAttempts > 0 && wrong > 0) {
+    return { prefix: `Lo fallaste ${wrong} de ${phoneme.totalAttempts} veces` };
+  }
+  if (phoneme.accuracy >= 85) return { prefix: "Ya suena claro" };
+  if (phoneme.accuracy >= 60) return { prefix: "Vas mejorando" };
+  return { prefix: "Este es tu sonido más débil ahora" };
 }
 
 /** Aside card: pronunciation focus + path into Sound Lab. */
@@ -32,8 +47,10 @@ export default function WeakSoundCard({ weakestPhoneme = null }: WeakSoundCardPr
         href="/practice/sounds"
         className="home-sidebar-card focus-ring group flex flex-col gap-2 transition-colors hover:bg-surface-sunken"
       >
-        <span className="font-kicker text-fg-subtle">Pronunciación</span>
-        <span className="text-h4 text-balance text-fg">Laboratorio de sonidos</span>
+        <span className="font-label text-fg">Pronunciación</span>
+        <span className="font-body-sm text-pretty text-fg-muted">
+          Laboratorio de sonidos
+        </span>
         <span className="font-body-sm text-pretty text-fg-muted">
           Contrastes, pares mínimos y práctica guiada para afinar el oído.
         </span>
@@ -44,29 +61,31 @@ export default function WeakSoundCard({ weakestPhoneme = null }: WeakSoundCardPr
     );
   }
 
+  const reason = reasonParts(weakestPhoneme!);
+
   return (
     <Link
       href="/practice/sounds"
       className="home-sidebar-card focus-ring group flex flex-col gap-3 transition-colors hover:bg-surface-sunken"
     >
-      <span className="font-kicker text-fg-subtle">Pronunciación</span>
+      <span className="font-label text-fg">Pronunciación</span>
       <div className="flex items-start gap-3">
-        <span className="font-ipa shrink-0 text-display-ipa font-bold leading-none text-warning">
+        <span className="font-ipa shrink-0 text-display-ipa font-bold leading-none text-fg">
           {formatIpaDisplay(weakestPhoneme!.ipa)}
         </span>
         <div className="min-w-0 flex-1">
-          {weakestPhoneme!.label ? (
-            <p className="font-body-sm line-clamp-2 text-fg-muted">{weakestPhoneme!.label}</p>
-          ) : (
-            <p className="font-body-sm text-fg-muted">Tu sonido a reforzar</p>
-          )}
+          <p className="font-body-sm text-fg-muted">Tu sonido a reforzar</p>
           <p className="font-body-sm mt-1 text-fg">
-            {accuracyLabel(weakestPhoneme!.accuracy)}
+            {reason.prefix}
+            {reason.confusable ? (
+              <span className="font-ipa text-body-md">{reason.confusable}</span>
+            ) : null}
+            {reason.suffix ?? null}
           </p>
         </div>
       </div>
       <span className="inline-flex min-h-10 items-center gap-1.5 font-body-sm text-fg-muted group-hover:text-fg group-hover:underline">
-        Practicar este sonido <ArrowRight size={16} aria-hidden />
+        Practica este sonido <ArrowRight size={16} aria-hidden />
       </span>
     </Link>
   );

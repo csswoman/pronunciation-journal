@@ -9,7 +9,7 @@ function makeStep(overrides: Partial<DailyStep> = {}): DailyStep {
     kind: 'word_review',
     id: 'step-1',
     title: 'Repaso de palabras',
-    subtitle: 'Afianza 6 palabras de tu léxico',
+    subtitle: 'Afianza 6 palabras de tu vocabulario',
     icon: 'book',
     exercises: [{ id: 'ex-1' } as DailyStep['exercises'][number]],
     estMinutes: 5,
@@ -80,20 +80,20 @@ describe('DailyStepList (collapseFutureSteps=true)', () => {
 
     // Current step: expanded (subtitle visible). Regex, not exact string —
     // the expanded row joins subtitle + stepMeta() into one text node
-    // (e.g. "Afianza 6 palabras · 1 ejercicio · ≈5 min"), same as the
+    // (e.g. "Afianza 6 palabras · 1 ejercicio · 5 min"), same as the
     // default-rendering tests above.
     expect(screen.getByText('Repaso de palabras')).toBeInTheDocument()
     expect(screen.getByText(/Afianza 6 palabras/)).toBeInTheDocument()
     expect(screen.getByText('Empieza aquí')).toBeInTheDocument()
 
-    // Next 2 pending steps: compact (title + time visible, subtitle not)
+    // Next 2 pending steps: compact (title + subtitle + time)
     expect(screen.getByText('Lectura')).toBeInTheDocument()
-    expect(screen.getByText(/≈3 min/)).toBeInTheDocument()
-    expect(screen.queryByText('Tus palabras recientes')).not.toBeInTheDocument()
+    expect(screen.getByText(/3 min/)).toBeInTheDocument()
+    expect(screen.getByText('Tus palabras recientes')).toBeInTheDocument()
 
     expect(screen.getByText('Práctica de sonido')).toBeInTheDocument()
-    expect(screen.getByText(/≈8 min/)).toBeInTheDocument()
-    expect(screen.queryByText('4 ejercicios')).not.toBeInTheDocument()
+    expect(screen.getByText(/8 min/)).toBeInTheDocument()
+    expect(screen.getByText('4 ejercicios')).toBeInTheDocument()
 
     // Remaining 2 steps hidden behind the toggle
     expect(screen.queryByText('Estudia teoría')).not.toBeInTheDocument()

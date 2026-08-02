@@ -6,15 +6,23 @@ interface HomeReviewBannerProps {
   soundsDueCount?: number;
 }
 
+function wordLabel(count: number): string {
+  return `${count} ${count === 1 ? "palabra" : "palabras"}`;
+}
+
+function soundLabel(count: number): string {
+  return `${count} ${count === 1 ? "sonido" : "sonidos"}`;
+}
+
 function primaryTarget(wordsDueCount: number, soundsDueCount: number): {
   href: string;
   label: string;
 } {
   if (wordsDueCount >= soundsDueCount && wordsDueCount > 0) {
-    return { href: "/practice/review", label: "Repasar palabras" };
+    return { href: "/practice/review", label: `Repasar ${wordLabel(wordsDueCount)}` };
   }
   if (soundsDueCount > 0) {
-    return { href: "/practice/sounds", label: "Repasar sonidos" };
+    return { href: "/practice/sounds", label: `Repasar ${soundLabel(soundsDueCount)}` };
   }
   return { href: "/practice/review", label: "Repasar ahora" };
 }
@@ -30,34 +38,24 @@ export default function HomeReviewBanner({
   const total = wordsDueCount + soundsDueCount;
   if (total <= 0) return null;
 
-  const parts = [
-    wordsDueCount > 0 &&
-      `${wordsDueCount} ${wordsDueCount === 1 ? "palabra" : "palabras"}`,
-    soundsDueCount > 0 &&
-      `${soundsDueCount} ${soundsDueCount === 1 ? "sonido" : "sonidos"}`,
-  ].filter(Boolean);
-
   const { href, label } = primaryTarget(wordsDueCount, soundsDueCount);
   const secondary =
     wordsDueCount > 0 && soundsDueCount > 0
       ? wordsDueCount >= soundsDueCount
         ? {
             href: "/practice/sounds",
-            label: `También ${soundsDueCount} ${soundsDueCount === 1 ? "sonido" : "sonidos"}`,
+            label: `o ${soundLabel(soundsDueCount)} →`,
           }
         : {
             href: "/practice/review",
-            label: `También ${wordsDueCount} ${wordsDueCount === 1 ? "palabra" : "palabras"}`,
+            label: `o ${wordLabel(wordsDueCount)} →`,
           }
       : null;
 
   return (
     <div className="flex flex-col gap-3 rounded-xl border border-border-subtle bg-primary-soft/40 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-5">
       <div className="min-w-0 flex flex-col gap-0.5">
-        <p className="font-label font-semibold text-fg">Pendiente de repasar</p>
-        <p className="font-body-sm tabular-nums text-fg-muted">
-          {parts.length > 0 ? parts.join(" · ") : `${total} pendientes`}
-        </p>
+        <p className="font-label font-semibold text-fg">Te toca repasar</p>
       </div>
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <Link

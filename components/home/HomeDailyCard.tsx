@@ -3,23 +3,40 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { ArrowRight, Flame } from "@/components/icons"
+import { ArrowRight } from '@/components/icons'
 import Button from '@/components/ui/Button'
 import DailyStepList, { readInProgressStepId } from '@/components/daily/DailyStepList'
 import HomeFirstSessionHint from '@/components/home/HomeFirstSessionHint'
+import { PlanSegmentProgress } from '@/components/home/PlanSegmentProgress'
 import { useDailyPlan, type ConceptLesson, type DailyStep } from '@/hooks/useDailyPlan'
 import { useAuth } from '@/components/auth/AuthProvider'
+import type { SessionArc } from '@/lib/practice/types'
+
+/** Review kinds already surfaced as plan step 01 — banner would duplicate the CTA. */
+const REVIEW_ENTRY_KINDS = new Set(['word_review', 'word_intro'])
+
+export interface HomePlanStatus {
+  empty: boolean
+  settled: boolean
+  reviewIsEntry: boolean
+  conceptSlug: string | null
+  allDone: boolean
+  arc: SessionArc | undefined
+  stepCount: number
+}
 
 interface HomeDailyCardProps {
   conceptLesson: ConceptLesson | null
-  /** When true, demote plan entry highlight — review strip is the primary. */
   reviewDue?: boolean
-  /** First-visit empty copy; activation strip above owns the primary CTAs. */
   isNewLearner?: boolean
-  /** Point-of-use tip when Empieza aquí is available. */
   showFirstSessionHint?: boolean
-  /** Notify parent when the plan settles (collapse aside extras / learn row). */
-  onPlanStatusChange?: (status: { empty: boolean; settled: boolean }) => void
+  onPlanStatusChange?: (status: HomePlanStatus) => void
+}
+
+function isReviewEntryStep(step: DailyStep | undefined): boolean {
+  if (!step) return false
+  if (REVIEW_ENTRY_KINDS.has(step.kind)) return true
+  return step.id.startsWith('review_sound:') || step.id === 'failed_sentences'
 }
 
 export default function HomeDailyCard({
@@ -31,7 +48,7 @@ export default function HomeDailyCard({
 }: HomeDailyCardProps) {
   const { user } = useAuth()
   const router = useRouter()
-  const { status, steps, getStepStatus, completedCount, allDone, load, celebrate } = useDailyPlan({
+  const { status, steps, getStepStatus, completedCount, allDone, arc, load, celebrate } = useDailyPlan({
     conceptLesson,
     autoLoad: false,
   })
@@ -49,15 +66,44 @@ export default function HomeDailyCard({
     setInProgressStepId(readInProgressStepId())
   }, [status, steps])
 
+  const entryStep = useMemo(() => {
+    return steps.find((s) => {
+      const st = getStepStatus(s.id)
+      return st !== 'done' && st !== 'resolved'
+    })
+  }, [steps, getStepStatus])
+
+  const reviewIsEntry = isReviewEntryStep(entryStep)
+  const conceptSlug =
+    steps.find((s) => s.kind === 'concept' && s.id.startsWith('concept:'))?.id.replace(/^concept:/, '') ??
+    null
+  const demoteEntryHighlight = reviewDue && !reviewIsEntry
+
   useEffect(() => {
     if (!onPlanStatusChange) return
     if (status === 'loading' || status === 'idle') {
-      onPlanStatusChange({ empty: false, settled: false })
+      onPlanStatusChange({
+        empty: false,
+        settled: false,
+        reviewIsEntry: false,
+        conceptSlug: null,
+        allDone: false,
+        arc: undefined,
+        stepCount: 0,
+      })
       return
     }
     const empty = status === 'ready' && !allDone && steps.length === 0
-    onPlanStatusChange({ empty, settled: status === 'ready' || status === 'error' })
-  }, [status, allDone, steps.length, onPlanStatusChange])
+    onPlanStatusChange({
+      empty,
+      settled: status === 'ready' || status === 'error',
+      reviewIsEntry: status === 'ready' && reviewIsEntry,
+      conceptSlug: status === 'ready' ? conceptSlug : null,
+      allDone: status === 'ready' && allDone,
+      arc: status === 'ready' ? arc : undefined,
+      stepCount: steps.length,
+    })
+  }, [status, allDone, steps.length, reviewIsEntry, conceptSlug, arc, onPlanStatusChange])
 
   const handleStartStep = useCallback((step: DailyStep) => {
     if (step.kind === 'concept') return
@@ -78,16 +124,14 @@ export default function HomeDailyCard({
   const progressLabel = useMemo(() => {
     if (steps.length === 0) return ''
     if (completedCount === 0) {
-      const parts = [
-        `${steps.length} ${steps.length === 1 ? 'paso' : 'pasos'}`,
-      ]
+      const parts = [`${steps.length} ${steps.length === 1 ? 'paso' : 'pasos'}`]
       if (inProgressStepId) parts.push('en curso')
-      if (remainingMinutes > 0) parts.push(`≈${remainingMinutes} min`)
+      if (remainingMinutes > 0) parts.push(`${remainingMinutes} min`)
       return parts.join(' · ')
     }
     const parts = [`${completedCount} de ${steps.length}`]
     if (inProgressStepId) parts.push('en curso')
-    if (remainingMinutes > 0) parts.push(`≈${remainingMinutes} min restantes`)
+    if (remainingMinutes > 0) parts.push(`${remainingMinutes} min restantes`)
     return parts.join(' · ')
   }, [steps.length, completedCount, inProgressStepId, remainingMinutes])
 
@@ -104,9 +148,7 @@ export default function HomeDailyCard({
             {(['w-4/5', 'w-3/4', 'w-11/12', 'w-2/3', 'w-5/6'] as const).map((widthClass, i) => (
               <div key={i} className="flex items-center gap-3">
                 <div className="h-3 w-6 shrink-0 animate-pulse rounded bg-surface-sunken" />
-                <div
-                  className={`h-4 animate-pulse rounded-md bg-surface-sunken ${widthClass}`}
-                />
+                <div className={`h-4 animate-pulse rounded-md bg-surface-sunken ${widthClass}`} />
               </div>
             ))}
             <p className="font-body-sm mt-2 animate-pulse text-center text-fg-muted">
@@ -140,7 +182,6 @@ export default function HomeDailyCard({
                   : 'Se arma cuando empiezas un curso o practicas sonidos.'}
               </p>
             </div>
-            {/* New-learner empty: activation strip above owns the primary CTAs. */}
             {!isNewLearner || reviewDue ? (
               <Link href="/courses">
                 <Button
@@ -156,47 +197,37 @@ export default function HomeDailyCard({
           </div>
         )}
 
-        {status === 'ready' &&
-          (allDone ? (
-            <div className="animate-state-in flex flex-col items-center gap-3 py-[var(--layout-section-gap)] text-center">
-              <div className="animate-step-done grid h-12 w-12 place-items-center rounded-full bg-success-soft text-success">
-                <Flame size={24} />
-              </div>
-              <p className="font-label font-semibold text-fg">¡Plan completo!</p>
-              <p className="font-body-sm max-w-xs text-fg-muted">
-                Terminaste los {steps.length} pasos de hoy.
-              </p>
-              <Link href="/practice/sounds">
-                <Button variant="secondary" size="md" icon={<ArrowRight size={18} />} iconPosition="right">
-                  Práctica libre
-                </Button>
-              </Link>
-            </div>
-          ) : steps.length > 0 ? (
-            <div className="animate-state-in">
-              <div className="mb-4 flex items-center gap-2.5">
-                <span className="font-label shrink-0 text-fg">Plan de hoy</span>
-                <div className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-primary-soft">
-                  <div
-                    className="progress-fill progress-fill-mount h-full w-full rounded-full bg-primary"
-                    style={{ transform: `scaleX(${steps.length ? completedCount / steps.length : 0})` }}
-                  />
-                </div>
-                <span className="font-caption shrink-0 tabular-nums text-fg-muted">
-                  {progressLabel}
-                </span>
-              </div>
-              <HomeFirstSessionHint enabled={showFirstSessionHint} />
-              <DailyStepList
-                steps={steps}
+        {/* Post-plan surface is owned by HomeCommandGrid (replaces this card). */}
+        {status === 'ready' && allDone ? (
+          <p className="sr-only">Plan diario completo</p>
+        ) : null}
+
+        {status === 'ready' && !allDone && steps.length > 0 ? (
+          <div className="animate-state-in flex flex-col gap-4">
+            <div className="flex items-center gap-2.5">
+              <span className="font-label shrink-0 text-fg">Plan de hoy</span>
+              <PlanSegmentProgress
+                stepIds={steps.map((s) => s.id)}
+                completedCount={completedCount}
                 getStepStatus={getStepStatus}
-                onStartStep={handleStartStep}
-                inProgressStepId={inProgressStepId}
-                demoteEntryHighlight={reviewDue}
-                collapseFutureSteps
+                activeStepId={inProgressStepId}
+                entryStepId={entryStep?.id ?? null}
               />
+              <span className="font-caption shrink-0 tabular-nums text-fg-muted">
+                {progressLabel}
+              </span>
             </div>
-          ) : null)}
+            <HomeFirstSessionHint enabled={showFirstSessionHint} />
+            <DailyStepList
+              steps={steps}
+              getStepStatus={getStepStatus}
+              onStartStep={handleStartStep}
+              inProgressStepId={inProgressStepId}
+              demoteEntryHighlight={demoteEntryHighlight}
+              collapseFutureSteps
+            />
+          </div>
+        ) : null}
       </div>
     </section>
   )

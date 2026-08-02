@@ -2,8 +2,7 @@
 
 // Planned structure:
 // <EssentialWordsProgressCard>
-//   kicker + title + milestone copy
-//   quiet progress wash / level rows
+//   title + empty copy OR level progress + state-aware CTA
 // </EssentialWordsProgressCard>
 
 import Link from 'next/link'
@@ -13,16 +12,11 @@ import { db, ensureDbReady } from '@/lib/db'
 import { ESSENTIAL_WORD_PREFIX } from '@/lib/essential-words/types'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { LevelProgressBreakdown } from './LevelProgressBreakdown'
+import { cn } from '@/lib/cn'
 
 const ESSENTIAL_WORD_TARGET = 2800
-
-function milestoneLabel(learned: number): string {
-  if (learned < 50) return 'Primeras palabras'
-  if (learned < 200) return 'Base en marcha'
-  if (learned < 1000) return 'Mitad del camino cerca'
-  if (learned < ESSENTIAL_WORD_TARGET) return 'Casi el mazo completo'
-  return 'Mazo completo'
-}
+/** Below this, promote a stronger CTA — early-route signal, not a nav tile. */
+const EARLY_PROGRESS_THRESHOLD = 50
 
 export default function EssentialWordsProgressCard() {
   const { user } = useAuth()
@@ -51,19 +45,32 @@ export default function EssentialWordsProgressCard() {
     )
   }
 
+  const early = learned < EARLY_PROGRESS_THRESHOLD
+  const ctaLabel =
+    learned === 0
+      ? 'Empezar palabras esenciales'
+      : early
+        ? 'Seguir palabras esenciales'
+        : 'Abrir palabras esenciales'
+
   if (learned === 0) {
     return (
       <Link
         href="/practice/essential-words"
         className="home-sidebar-card focus-ring group flex flex-col gap-2 transition-colors hover:bg-surface-sunken"
       >
-        <span className="font-kicker text-fg-subtle">Vocabulario</span>
-        <span className="text-h4 text-balance text-fg">Palabras esenciales</span>
+        <span className="font-label text-fg">Vocabulario</span>
+        <span className="font-body-sm text-pretty text-fg-muted">Palabras esenciales</span>
         <span className="font-body-sm text-pretty text-fg-muted line-clamp-2">
           Las palabras más frecuentes del inglés, en un mazo progresivo.
         </span>
-        <span className="mt-auto inline-flex min-h-10 items-center gap-1.5 font-body-sm text-fg-muted group-hover:text-fg group-hover:underline">
-          Abrir mazo <ArrowRight size={16} aria-hidden />
+        <span
+          className={cn(
+            'mt-auto inline-flex min-h-10 items-center gap-1.5 font-body-sm font-medium',
+            'text-primary group-hover:underline',
+          )}
+        >
+          {ctaLabel} <ArrowRight size={16} aria-hidden />
         </span>
       </Link>
     )
@@ -76,12 +83,19 @@ export default function EssentialWordsProgressCard() {
       href="/practice/essential-words"
       className="home-sidebar-card focus-ring group flex flex-col gap-2 transition-colors hover:bg-surface-sunken"
     >
-      <span className="font-kicker text-fg-subtle">Vocabulario</span>
-      <span className="text-h4 text-balance text-fg">Palabras esenciales</span>
-      <span className="font-body-sm text-pretty text-fg-muted">
-        {milestoneLabel(learned)}
-      </span>
+      <span className="font-label text-fg">Vocabulario</span>
+      <span className="font-body-sm text-pretty text-fg-muted">Palabras esenciales</span>
       <LevelProgressBreakdown fallbackRatio={ratio} />
+      <span
+        className={cn(
+          'mt-auto inline-flex min-h-10 items-center gap-1.5 font-body-sm',
+          early
+            ? 'font-medium text-primary group-hover:underline'
+            : 'text-fg-muted group-hover:text-fg group-hover:underline',
+        )}
+      >
+        {ctaLabel} <ArrowRight size={16} aria-hidden />
+      </span>
     </Link>
   )
 }

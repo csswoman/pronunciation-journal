@@ -13,7 +13,7 @@ import { isPublicAuthPath } from "@/lib/auth/public-paths";
 import { cn } from "@/lib/cn";
 
 const Sidebar = dynamic(() => import("./Sidebar"), {
-  loading: () => <div className="hidden lg:block w-64 flex-shrink-0" aria-hidden />,
+  loading: () => <div className="hidden lg:block w-64 shrink-0" aria-hidden />,
 });
 
 const BottomNav = dynamic(() => import("./BottomNav"), {
@@ -29,7 +29,7 @@ const AICoachPanel = dynamic(importAICoachPanel, {
   // loading screen; it matches the sliding panel chrome instead.
   loading: () => (
     <div
-      className="fixed z-50 flex flex-col bg-surface-raised shadow-lg max-md:inset-0 md:top-0 md:right-0 md:bottom-0 md:w-[380px] md:border-l md:border-border-subtle"
+      className="fixed z-50 flex flex-col bg-surface-raised shadow-lg max-md:inset-0 md:top-0 md:right-0 md:bottom-0 md:w-95 md:border-l md:border-border-subtle"
       aria-hidden
     />
   ),
@@ -79,11 +79,11 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     isPanelOpen && !isFullscreen ? `${panelWidth}px` : "0px";
 
   return (
-    <div className="flex h-screen bg-[var(--page-bg)] overflow-hidden">
+    <div className="flex h-screen bg-page-bg overflow-hidden">
       <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-white focus:rounded-md">
         Skip to main content
       </a>
-      <Sidebar className="hidden lg:flex w-64 flex-col" />
+      <Sidebar className="hidden lg:flex h-screen w-64 shrink-0 flex-col" />
       <main
         id="main-content"
         className={cn( "main-scrollbar flex min-h-0 flex-1 flex-col overflow-y-auto overflow-x-hidden lg:pb-0", hideMobileNav ? "pb-0" : "pb-20", )}
@@ -103,7 +103,12 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       {user && (
         <>
           {hasMountedCoach && <AICoachPanel />}
-          {!hideMobileNav && <AICoachTrigger className="hidden lg:flex" />}
+          {!hideMobileNav && (
+            <AICoachTrigger
+              variant={pathname === "/" ? "labeled" : "fab"}
+              className="hidden lg:flex"
+            />
+          )}
         </>
       )}
     </div>

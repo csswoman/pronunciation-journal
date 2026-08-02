@@ -1,7 +1,7 @@
 // Planned structure:
 // <HomeLayout>
 //   <HomePageHeader />
-//   <HomeCommandGrid />  — review strip full-width; plan | aside
+//   <HomeCommandGrid />  — review strip; plan | aside (journal + suggested)
 // </HomeLayout>
 
 import HomePageHeader from "@/components/home/HomePageHeader";
@@ -22,6 +22,7 @@ interface HomeLayoutProps {
   dailyGoal?: DailyGoalProgress | null;
   weakestPhoneme?: WeakestPhonemeHome | null;
   vocabularyProgress?: VocabularyProgressSeed | null;
+  /** Kept for page-server compatibility; lessons live only as plan steps. */
   todaysLesson?: MiniLesson | null;
   secondaryLesson?: MiniLesson | null;
   placementState: HomePlacementState;
@@ -36,12 +37,11 @@ export default function HomeLayout({
   dailyGoal = null,
   weakestPhoneme = null,
   vocabularyProgress = null,
-  todaysLesson = null,
-  secondaryLesson = null,
   placementState,
   pronunciationDiagnosticState,
 }: HomeLayoutProps) {
   const isNewLearner = !placementState.hasMeaningfulProgress;
+  const currentStreak = streak?.currentStreak ?? 0;
 
   return (
     <div className="home-layout home-layout-shell">
@@ -56,10 +56,9 @@ export default function HomeLayout({
         <HomeCommandGrid
           conceptLesson={conceptLesson}
           weakestPhoneme={weakestPhoneme}
-          todaysLesson={todaysLesson}
-          secondaryLesson={secondaryLesson}
           wordsDueCount={wordsDueCount}
           soundsDueCount={soundsDueCount}
+          streak={currentStreak}
           placementState={placementState}
           pronunciationDiagnosticState={pronunciationDiagnosticState}
         />

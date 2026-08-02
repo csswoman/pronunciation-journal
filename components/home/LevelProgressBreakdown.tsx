@@ -2,25 +2,26 @@
 
 // Planned structure:
 // <LevelProgressBreakdown>
-//   <LevelRow × 5 />   — A1..C1: label + mini bar + learned/total
+//   level rows including current (A1 · 2 de 740) + collapsed rest
 // </LevelProgressBreakdown>
-// Falls back to a single aggregate bar until the dataset resolves (keeps the
-// home card cheap on first paint and resilient offline).
 
 import { useEffect, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '@/lib/db'
 import { ESSENTIAL_WORD_PREFIX } from '@/lib/essential-words/types'
 import { fetchLevelIndex } from '@/lib/essential-words/level-index-client'
-import { tallyLevelProgress, type LevelTallyWord } from '@/lib/essential-words/level-progress'
+import {
+  displayLevelProgress,
+  tallyLevelProgress,
+  type LevelTallyWord,
+} from '@/lib/essential-words/level-progress'
 import { useAuth } from '@/components/auth/AuthProvider'
 
 interface Props {
-  /** Aggregate ratio shown while the per-level dataset is still loading. */
-  fallbackRatio: number
+  fallbackRatio?: number
 }
 
-export function LevelProgressBreakdown({ fallbackRatio }: Props) {
+export function LevelProgressBreakdown({ fallbackRatio: _fallbackRatio }: Props) {
   const { user } = useAuth()
   const [words, setWords] = useState<LevelTallyWord[] | null>(null)
 
@@ -33,41 +34,35 @@ export function LevelProgressBreakdown({ fallbackRatio }: Props) {
     let cancelled = false
     fetchLevelIndex()
       .then((w) => { if (!cancelled) setWords(w) })
-      .catch(() => { /* keep aggregate fallback bar */ })
+      .catch(() => { /* wait for data */ })
     return () => { cancelled = true }
   }, [])
 
   if (!words || !learnedIds) {
     return (
-      <div className="mt-auto h-1.5 w-full overflow-hidden rounded-full bg-primary-soft">
-        <div
-          className="progress-fill h-full w-full rounded-full bg-primary"
-          style={{ transform: `scaleX(${fallbackRatio})` }}
-        />
-      </div>
+      <p className="mt-auto font-body-sm text-fg-muted">Cargando progreso…</p>
     )
   }
 
   const rows = tallyLevelProgress(words, new Set(learnedIds as string[]))
+  const displayRows = displayLevelProgress(rows)
 
   return (
-    <div className="mt-auto flex flex-col gap-1.5">
-      {rows.map((row) => (
-        <div key={row.level} className="flex items-center gap-2">
-          <span className="w-6 font-kicker text-fg-subtle">
-            {row.level}
-          </span>
-          <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-primary-soft">
-            <div
-              className="progress-fill h-full w-full rounded-full bg-primary"
-              style={{ transform: `scaleX(${row.total > 0 ? row.learned / row.total : 0})` }}
-            />
-          </div>
-          <span className="w-12 text-right font-caption tabular-nums text-fg-subtle">
-            {row.learned}/{row.total}
-          </span>
-        </div>
-      ))}
+    <div className="mt-auto flex flex-col gap-1">
+      {displayRows.map((row) =>
+        row.kind === 'collapsed' ? (
+          <p
+            key={`${row.from}-${row.to}`}
+            className="font-caption text-fg-muted"
+          >
+            {row.from}–{row.to} · sin empezar
+          </p>
+        ) : (
+          <p key={row.level} className="font-caption tabular-nums text-fg-muted">
+            {row.level} · {row.learned} de {row.total}
+          </p>
+        ),
+      )}
     </div>
   )
 }

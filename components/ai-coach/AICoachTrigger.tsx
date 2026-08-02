@@ -5,7 +5,7 @@ import { cn } from "@/lib/cn";
 import { useAICoachStore } from "@/lib/stores/aiCoachStore";
 
 interface AICoachTriggerProps {
-  variant?: "fab" | "nav";
+  variant?: "fab" | "nav" | "labeled";
   className?: string;
 }
 
@@ -50,6 +50,33 @@ export default function AICoachTrigger({ variant = "fab", className }: AICoachTr
         style={{ backgroundColor: "var(--primary)", boxShadow: navShadow }}
       >
         <TriggerIcon isOpen={isOpen} />
+      </button>
+    );
+  }
+
+  if (variant === "labeled") {
+    return (
+      <button
+        type="button"
+        onClick={toggle}
+        aria-label={isOpen ? "Cerrar el asistente de práctica" : "Abrir el asistente de práctica"}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        className={cn(
+          "fixed bottom-6 right-6 z-40 flex min-h-11 items-center gap-2 rounded-xl px-3.5 font-label text-on-primary transition-all duration-200 lg:bottom-8 lg:right-8",
+          "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary motion-reduce:transition-none",
+          className,
+        )}
+        style={{
+          backgroundColor: isOpen
+            ? "var(--primary)"
+            : "color-mix(in oklch, var(--primary) 88%, transparent)",
+          boxShadow: shadow,
+          transform: hovered ? "scale(1.03)" : "scale(1)",
+        }}
+      >
+        <TriggerIcon isOpen={isOpen} />
+        <span>{isOpen ? "Cerrar" : "Coach"}</span>
       </button>
     );
   }
