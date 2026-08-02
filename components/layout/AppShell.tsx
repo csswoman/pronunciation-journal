@@ -1,9 +1,8 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { quickAddWord } from "@/lib/word-bank/queries";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useAICoachStore } from "@/lib/stores/aiCoachStore";
 import {
@@ -22,12 +21,6 @@ const BottomNav = dynamic(() => import("./BottomNav"), {
 });
 
 const AICoachTrigger = dynamic(() => import("@/components/ai-coach/AICoachTrigger"));
-
-const QuickAddModal = dynamic(() =>
-  import("@/components/vocabulary/words/QuickAddModal").then((mod) => ({
-    default: mod.QuickAddModal,
-  })),
-);
 
 const importAICoachPanel = () => import("@/components/ai-coach/AICoachPanel");
 
@@ -54,9 +47,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     pathname === "/assessment/pronunciation";
   const hideMobileNav = useSessionChromeStore(selectHideMobileNav);
   const { user } = useAuth();
-  const [open, setOpen] = useState(false);
-  const openModal = useCallback(() => setOpen(true), []);
-  const closeModal = useCallback(() => setOpen(false), []);
   const { isOpen: isPanelOpen, launch, isFullscreen, panelWidth } = useAICoachStore();
   const [hasMountedCoach, setHasMountedCoach] = useState(false);
 
@@ -81,25 +71,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     const timer = setTimeout(() => void importAICoachPanel(), 1500);
     return () => clearTimeout(timer);
   }, [user, hasMountedCoach]);
-
-  useEffect(() => {
-    if (!user) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (open) return;
-      const tag = (e.target as HTMLElement)?.tagName;
-      if (tag === "INPUT" || tag === "TEXTAREA" || (e.target as HTMLElement)?.isContentEditable) return;
-      if (e.key === "n" || e.key === "N") {
-        e.preventDefault();
-        openModal();
-      }
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open, openModal, user]);
-
-  const handleSubmit = async (input: { text: string; context?: string | null }) => {
-    await quickAddWord(input);
-  };
 
   if (isAuthPage) return <>{children}</>;
 
@@ -129,17 +100,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       </main>
       {!hideMobileNav && <BottomNav className="lg:hidden" />}
-      {user && open && (
-        <QuickAddModal
-          open={open}
-          onClose={closeModal}
-          onSubmit={handleSubmit}
-        />
-      )}
       {user && (
         <>
           {hasMountedCoach && <AICoachPanel />}
-          <AICoachTrigger className="hidden lg:flex" />
+          {!hideMobileNav && <AICoachTrigger className="hidden lg:flex" />}
         </>
       )}
     </div>

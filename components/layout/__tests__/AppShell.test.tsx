@@ -170,7 +170,7 @@ describe("AppShell mount behavior", () => {
     });
   });
 
-  it("mounts Quick Add when opened via keyboard shortcut", async () => {
+  it("does not reserve N for global vocabulary capture", async () => {
     render(
       <AppShell>
         <div>Page</div>
@@ -179,10 +179,8 @@ describe("AppShell mount behavior", () => {
 
     fireEvent.keyDown(window, { key: "n" });
 
-    await waitFor(() => {
-      expect(quickAddMount).toHaveBeenCalled();
-      expect(screen.getByTestId("quick-add-modal")).toBeInTheDocument();
-    });
+    await waitFor(() => expect(quickAddMount).not.toHaveBeenCalled());
+    expect(screen.queryByTestId("quick-add-modal")).not.toBeInTheDocument();
   });
 
   it("mounts AI Coach panel when the panel opens", async () => {

@@ -14,5 +14,6 @@
 @import "./styles/lexicon-area.css";
 @import "./styles/ipa-chart.css";
 @import "./styles/mini-lessons.css";
+@import "./styles/tracking.css";
 
 @custom-variant dark (&:where(.dark, .dark *));

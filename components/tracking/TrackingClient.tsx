@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Bookmark, BookOpen, FileText, Play } from "@/components/icons";
+import { Bookmark, BookmarkPlus, BookOpen, FileText, Play, Plus } from "@/components/icons";
 import PageHeader from "@/components/layout/PageHeader";
 import PageLayout from "@/components/layout/PageLayout";
 import { useTracking } from "@/hooks/useTracking";
@@ -28,8 +28,8 @@ const registry: Record<TrackedKind, { label: string; icon: typeof Bookmark }> = 
 function TrackingCard({ item }: { item: TrackingItem }) {
   const entry = registry[item.kind];
   const Icon = entry.icon;
-  const content = <><span className="text-fg-subtle"><Icon size={16} aria-hidden /></span><span className="min-w-0"><span className="block text-body-sm font-semibold text-fg">{item.title}</span>{item.description && <span className="block truncate text-body-sm text-fg-muted">{item.description}</span>}</span><span className="ml-auto flex shrink-0 flex-col items-end gap-0.5 text-caption text-fg-subtle"><span>{entry.label}</span>{item.progressLabel && <span>{item.progressLabel}</span>}</span></>;
-  return item.href ? <Link href={item.href} className="flex items-center gap-3 rounded-md border border-border-subtle bg-surface-raised px-4 py-3 transition-colors hover:bg-surface-sunken">{content}</Link> : <div className="flex items-center gap-3 rounded-md border border-border-subtle bg-surface-raised px-4 py-3">{content}</div>;
+  const content = <><span className="text-fg-subtle"><Icon size={16} aria-hidden /></span><span className="min-w-0"><span className="block text-body-sm font-semibold text-fg">{item.title}</span>{item.description && <span className="block truncate text-body-sm text-fg-muted">{item.description}</span>}</span><span className="flex shrink-0 flex-col items-end gap-0.5 text-caption text-fg-subtle"><span>{entry.label}</span>{item.progressLabel && <span>{item.progressLabel}</span>}</span></>;
+  return item.href ? <Link href={item.href} className="tracking-item">{content}</Link> : <div className="tracking-item">{content}</div>;
 }
 
 export default function TrackingClient() {
@@ -39,10 +39,28 @@ export default function TrackingClient() {
   const [phrase, setPhrase] = useState("");
   const [showWordModal, setShowWordModal] = useState(false);
   const [showPhraseModal, setShowPhraseModal] = useState(false);
+
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (showWordModal || showPhraseModal || event.ctrlKey || event.metaKey || event.altKey) return;
+      const target = event.target as HTMLElement | null;
+      if (target?.tagName === "INPUT" || target?.tagName === "TEXTAREA" || target?.isContentEditable) return;
+      if (event.key === "n" || event.key === "N") {
+        event.preventDefault();
+        setShowWordModal(true);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [showPhraseModal, showWordModal]);
   const visible = useMemo(() => filter === "all" ? items : items.filter((item) => item.kind === filter), [filter, items]);
   const visibleSources = useMemo(
     () => filter === "all" ? reviewSources : reviewSources.filter((source) => source.item.kind === filter),
     [filter, reviewSources],
+  );
+  const availableReviewCount = useMemo(
+    () => buildTrackingReviewQueue(visibleSources).items.length,
+    [visibleSources],
   );
   const [startingReview, setStartingReview] = useState(false);
   const [reviewError, setReviewError] = useState<string | null>(null);
@@ -74,12 +92,30 @@ export default function TrackingClient() {
     setShowPhraseModal(false);
   }
 
-  return <PageLayout archetype="catalog"><PageHeader kicker="Tracking" title="Contenido guardado" subtitle="Palabras, frases y lecciones que quieres volver a practicar." primaryCta={{ label: startingReview ? "Preparando…" : "Repasar", icon: <Play size={15} aria-hidden />, onClick: () => void startReview() }} />
-    <div className="mb-6 flex flex-wrap gap-2"><Button onClick={() => setShowWordModal(true)}>Agregar palabra</Button><Button variant="secondary" onClick={() => setShowPhraseModal(true)}>Agregar frase</Button></div>
-    {reviewError ? <p role="alert" className="mb-5 text-body-sm text-fg-muted">{reviewError}</p> : null}
-    <div className="mb-6 flex flex-wrap gap-2" aria-label="Filtrar contenido guardado">{FILTERS.map(({ id, label }) => <button key={id} type="button" onClick={() => setFilter(id)} aria-pressed={filter === id} className={filter === id ? "rounded-full bg-primary px-3 py-1.5 text-body-sm font-medium text-on-primary" : "rounded-full border border-border-subtle px-3 py-1.5 text-body-sm font-medium text-fg-muted hover:text-fg"}>{label}</button>)}</div>
-    {loading ? <p className="text-body-sm text-fg-muted">Cargando contenido guardado…</p> : visible.length ? <div className="space-y-3">{visible.map((item) => <TrackingCard key={`${item.kind}:${item.id}`} item={item} />)}</div> : <TrackingEmptyState filter={filter} onAddWord={() => setShowWordModal(true)} onAddPhrase={() => setShowPhraseModal(true)} />}
-    <QuickAddModal open={showWordModal} onClose={() => setShowWordModal(false)} onSubmit={addWord} />
+  const canReview = availableReviewCount > 0;
+
+  return <PageLayout archetype="catalog"><PageHeader kicker="Tracking" title="Mi inglés" />
+    <div className="tracking-workspace">
+      <aside className="tracking-capture" aria-label="Guardar contenido nuevo">
+        <div className="flex items-start gap-3">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-primary-soft text-primary"><BookmarkPlus size={19} aria-hidden /></span>
+          <div>
+            <h2 className="text-h4 text-fg">Añadir a mi lista</h2>
+          </div>
+        </div>
+        <div className="tracking-capture__actions">
+          <Button fullWidth onClick={() => setShowWordModal(true)} icon={<Plus size={16} aria-hidden />}>Guardar palabra</Button>
+          <Button fullWidth variant="secondary" onClick={() => setShowPhraseModal(true)} icon={<FileText size={16} aria-hidden />}>Guardar frase</Button>
+        </div>
+        <p className="mt-[var(--layout-stack)] text-caption text-fg-subtle"><kbd className="rounded-sm border border-border-subtle bg-surface-sunken px-1 font-mono text-fg">N</kbd> abre una palabra.</p>
+      </aside>
+      <main className="tracking-workspace__content min-w-0">
+        {reviewError ? <p role="alert" className="mb-[var(--layout-stack)] text-body-sm text-error">{reviewError}</p> : null}
+        <div className="tracking-toolbar"><div className="flex flex-wrap gap-2" aria-label="Filtrar contenido guardado">{FILTERS.map(({ id, label }) => <button key={id} type="button" onClick={() => setFilter(id)} aria-pressed={filter === id} className={filter === id ? "rounded-full bg-primary px-3 py-1.5 text-body-sm font-medium text-on-primary" : "rounded-full border border-border-subtle bg-surface-raised px-3 py-1.5 text-body-sm font-medium text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg"}>{label}</button>)}</div>{canReview ? <Button onClick={() => void startReview()} disabled={startingReview} icon={<Play size={15} aria-hidden />}>{startingReview ? "Preparando…" : "Repasar"}</Button> : null}</div>
+        {loading ? <p className="text-body-sm text-fg-muted">Cargando contenido guardado…</p> : visible.length ? <div className="tracking-list">{visible.map((item) => <TrackingCard key={`${item.kind}:${item.id}`} item={item} />)}</div> : <TrackingEmptyState filter={filter} />}
+      </main>
+    </div>
+    <QuickAddModal open={showWordModal} onClose={() => setShowWordModal(false)} onSubmit={addWord} contextLabel="TRACKING" />
     <PhraseCaptureModal open={showPhraseModal} value={phrase} onChange={setPhrase} onClose={() => setShowPhraseModal(false)} onSubmit={() => void addPhrase()} />
   </PageLayout>;
 }

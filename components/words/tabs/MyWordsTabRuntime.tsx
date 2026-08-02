@@ -87,14 +87,9 @@ export default function MyWordsTabRuntime({
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (showAddWord) return;
       const target = e.target as HTMLElement | null;
       const isTyping = target?.tagName === "INPUT" || target?.tagName === "TEXTAREA" || target?.isContentEditable;
       if (isTyping) return;
-      if (e.key === "n" || e.key === "N") {
-        e.preventDefault();
-        setShowAddWord(true);
-      }
       if (e.key === "a" || e.key === "A") {
         if (!selectMode) return;
         e.preventDefault();
@@ -108,7 +103,7 @@ export default function MyWordsTabRuntime({
 
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [showAddWord, selectMode, selectedWordIds, words]);
+  }, [selectMode, selectedWordIds, words]);
 
   useEffect(() => {
     if (loading) return;
