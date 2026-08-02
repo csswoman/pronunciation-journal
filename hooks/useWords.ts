@@ -14,8 +14,10 @@ import {
   deleteWord as apiDeleteWord,
   getMyWords,
   quickAddWord as apiQuickAddWord,
+  updateWordDetails as apiUpdateWordDetails,
 } from "@/lib/word-bank/queries";
 import type { WordBankEntry } from "@/lib/word-bank/types";
+import type { WordDetailsUpdate } from "@/lib/word-bank/queries";
 
 interface UseWordsState {
   words: WordBankEntry[];
@@ -24,6 +26,7 @@ interface UseWordsState {
   addWord: (input: { text: string; context?: string | null; deckId?: string | null }) => Promise<void>;
   removeWord: (id: string) => Promise<void>;
   retry: (id: string) => Promise<void>;
+  updateWord: (id: string, input: WordDetailsUpdate) => Promise<void>;
   refresh: () => Promise<void>;
 }
 
@@ -165,5 +168,20 @@ export function useWords(): UseWordsState {
     }
   }, []);
 
-  return { words, loading, error, addWord, removeWord, retry, refresh };
+  const updateWord = useCallback(async (id: string, input: WordDetailsUpdate) => {
+    const current = wordsRef.current.find((word) => word.id === id);
+    if (!current) throw new Error("Word not found");
+
+    const optimistic = { ...current, ...input, updated_at: new Date().toISOString() };
+    setWords((prev) => prev.map((word) => word.id === id ? optimistic : word));
+    try {
+      const updated = await apiUpdateWordDetails(id, input);
+      setWords((prev) => prev.map((word) => word.id === id ? updated : word));
+    } catch {
+      setWords((prev) => prev.map((word) => word.id === id ? current : word));
+      throw new Error(publicDataErrorMessage());
+    }
+  }, []);
+
+  return { words, loading, error, addWord, removeWord, retry, updateWord, refresh };
 }

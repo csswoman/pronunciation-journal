@@ -35,7 +35,7 @@
 .tracking-item {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
+  align-items: start;
   gap: var(--layout-stack);
   min-block-size: 3rem;
   border: 1px solid var(--border-subtle);
@@ -43,6 +43,10 @@
   background: var(--surface-raised);
   padding: var(--space-3) var(--space-4);
   color: var(--text-primary);
+}
+
+.tracking-item > :last-child {
+  padding-top: 0.125rem;
 }
 
 a.tracking-item {

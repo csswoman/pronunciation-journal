@@ -3,18 +3,22 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Bookmark, BookmarkPlus, BookOpen, FileText, Play, Plus } from "@/components/icons";
+import { Bookmark, BookmarkPlus, BookOpen, FileText, Pencil, Play, Plus, Trash2 } from "@/components/icons";
 import PageHeader from "@/components/layout/PageHeader";
 import PageLayout from "@/components/layout/PageLayout";
 import { useTracking } from "@/hooks/useTracking";
 import { QuickAddModal } from "@/components/vocabulary/words/QuickAddModal";
 import { TrackingEmptyState } from "./TrackingEmptyState";
 import { PhraseCaptureModal } from "./PhraseCaptureModal";
+import { EditWordModal } from "./EditWordModal";
+import { DeleteWordDialog } from "./DeleteWordDialog";
 import { saveTrackedItem } from "@/lib/tracking/queries";
 import { buildTrackingReviewQueue } from "@/lib/tracking/review-queue";
 import { createTrackingReviewSession } from "@/lib/tracking/session-store";
 import Button from "@/components/ui/Button";
-import type { TrackedKind, TrackingItem } from "@/lib/tracking/types";
+import type { TrackingReviewSource } from "@/lib/tracking/review-queue";
+import type { TrackedKind } from "@/lib/tracking/types";
+import type { WordBankEntry } from "@/lib/word-bank/types";
 
 const FILTERS: { id: "all" | TrackedKind; label: string }[] = [
   { id: "all", label: "Todo" }, { id: "word", label: "Palabras" },
@@ -25,20 +29,44 @@ const registry: Record<TrackedKind, { label: string; icon: typeof Bookmark }> = 
   word: { label: "Palabra", icon: Bookmark }, phrase: { label: "Frase", icon: FileText }, lesson: { label: "Lección", icon: BookOpen },
 };
 
-function TrackingCard({ item }: { item: TrackingItem }) {
+function TrackingCard({ source, onEditWord, onDeleteWord }: { source: TrackingReviewSource; onEditWord: (word: WordBankEntry) => void; onDeleteWord: (word: WordBankEntry) => void }) {
+  const { item } = source;
   const entry = registry[item.kind];
   const Icon = entry.icon;
-  const content = <><span className="text-fg-subtle"><Icon size={16} aria-hidden /></span><span className="min-w-0"><span className="block text-body-sm font-semibold text-fg">{item.title}</span>{item.description && <span className="block truncate text-body-sm text-fg-muted">{item.description}</span>}</span><span className="flex shrink-0 flex-col items-end gap-0.5 text-caption text-fg-subtle"><span>{entry.label}</span>{item.progressLabel && <span>{item.progressLabel}</span>}</span></>;
+  const word = "word" in source ? source.word : null;
+  const phraseContext = "trackedItem" in source && typeof source.trackedItem.payload.context === "string"
+    ? source.trackedItem.payload.context
+    : null;
+  const content = <>
+    <span className="self-start pt-0.5 text-fg-subtle"><Icon size={16} aria-hidden /></span>
+    <span className="min-w-0">
+      <span className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+        <span className="text-body-sm font-semibold text-fg">{item.title}</span>
+        {word?.ipa ? <span className="font-ipa text-body-sm text-fg-muted">/{word.ipa.replace(/^\/+|\/+$/g, "")}/</span> : null}
+      </span>
+      {word ? <>
+        {word.translation ? <span className="block text-body-sm font-medium text-fg-muted">{word.translation}</span> : null}
+        {word.meaning ? <span className="mt-0.5 block text-caption text-fg-subtle">{word.meaning}</span> : null}
+        {word.context ? <span className="mt-2 block text-body-sm italic text-fg-muted">“{word.context}”</span> : null}
+      </> : <>
+        {phraseContext ? <span className="mt-1 block text-caption text-fg-subtle">Contexto: {phraseContext}</span> : null}
+      </>}
+    </span>
+    <span className="flex shrink-0 items-start gap-1 text-caption text-fg-subtle"><span className="flex flex-col items-end gap-0.5 pt-2"><span>{entry.label}</span>{item.progressLabel && <span>{item.progressLabel}</span>}</span>{word ? <><button type="button" onClick={() => onEditWord(word)} aria-label={`Editar ${word.text}`} title="Editar palabra" className="flex min-h-11 min-w-11 items-center justify-center rounded-[var(--radius-sm)] text-fg-subtle transition-colors hover:bg-surface-sunken hover:text-fg active:scale-[0.96]"><Pencil size={16} aria-hidden /></button><button type="button" onClick={() => onDeleteWord(word)} aria-label={`Eliminar ${word.text}`} title="Eliminar palabra" className="flex min-h-11 min-w-11 items-center justify-center rounded-[var(--radius-sm)] text-fg-subtle transition-colors hover:bg-error-soft hover:text-error active:scale-[0.96]"><Trash2 size={16} aria-hidden /></button></> : null}</span>
+  </>;
   return item.href ? <Link href={item.href} className="tracking-item">{content}</Link> : <div className="tracking-item">{content}</div>;
 }
 
 export default function TrackingClient() {
   const router = useRouter();
-  const { items, reviewSources, loading, userId, addWord } = useTracking();
+  const { reviewSources, loading, userId, addWord, removeWord, updateWord } = useTracking();
   const [filter, setFilter] = useState<"all" | TrackedKind>("all");
   const [phrase, setPhrase] = useState("");
+  const [phraseContext, setPhraseContext] = useState("");
   const [showWordModal, setShowWordModal] = useState(false);
   const [showPhraseModal, setShowPhraseModal] = useState(false);
+  const [editingWord, setEditingWord] = useState<WordBankEntry | null>(null);
+  const [deletingWord, setDeletingWord] = useState<WordBankEntry | null>(null);
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -53,7 +81,6 @@ export default function TrackingClient() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [showPhraseModal, showWordModal]);
-  const visible = useMemo(() => filter === "all" ? items : items.filter((item) => item.kind === filter), [filter, items]);
   const visibleSources = useMemo(
     () => filter === "all" ? reviewSources : reviewSources.filter((source) => source.item.kind === filter),
     [filter, reviewSources],
@@ -87,9 +114,17 @@ export default function TrackingClient() {
   async function addPhrase() {
     const text = phrase.trim();
     if (!userId || !text) return;
-    await saveTrackedItem({ userId, kind: "phrase", ref: text.toLocaleLowerCase(), title: text, payload: { text } });
+    const context = phraseContext.trim();
+    await saveTrackedItem({ userId, kind: "phrase", ref: text.toLocaleLowerCase(), title: text, payload: { text, ...(context ? { context } : {}) } });
     setPhrase("");
+    setPhraseContext("");
     setShowPhraseModal(false);
+  }
+
+  function closePhraseModal() {
+    setShowPhraseModal(false);
+    setPhrase("");
+    setPhraseContext("");
   }
 
   const canReview = availableReviewCount > 0;
@@ -112,10 +147,12 @@ export default function TrackingClient() {
       <main className="tracking-workspace__content min-w-0">
         {reviewError ? <p role="alert" className="mb-[var(--layout-stack)] text-body-sm text-error">{reviewError}</p> : null}
         <div className="tracking-toolbar"><div className="flex flex-wrap gap-2" aria-label="Filtrar contenido guardado">{FILTERS.map(({ id, label }) => <button key={id} type="button" onClick={() => setFilter(id)} aria-pressed={filter === id} className={filter === id ? "rounded-full bg-primary px-3 py-1.5 text-body-sm font-medium text-on-primary" : "rounded-full border border-border-subtle bg-surface-raised px-3 py-1.5 text-body-sm font-medium text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg"}>{label}</button>)}</div>{canReview ? <Button onClick={() => void startReview()} disabled={startingReview} icon={<Play size={15} aria-hidden />}>{startingReview ? "Preparando…" : "Repasar"}</Button> : null}</div>
-        {loading ? <p className="text-body-sm text-fg-muted">Cargando contenido guardado…</p> : visible.length ? <div className="tracking-list">{visible.map((item) => <TrackingCard key={`${item.kind}:${item.id}`} item={item} />)}</div> : <TrackingEmptyState filter={filter} />}
+        {loading ? <p className="text-body-sm text-fg-muted">Cargando contenido guardado…</p> : visibleSources.length ? <div className="tracking-list">{visibleSources.map((source) => <TrackingCard key={`${source.item.kind}:${source.item.id}`} source={source} onEditWord={setEditingWord} onDeleteWord={setDeletingWord} />)}</div> : <TrackingEmptyState filter={filter} />}
       </main>
     </div>
     <QuickAddModal open={showWordModal} onClose={() => setShowWordModal(false)} onSubmit={addWord} contextLabel="TRACKING" />
-    <PhraseCaptureModal open={showPhraseModal} value={phrase} onChange={setPhrase} onClose={() => setShowPhraseModal(false)} onSubmit={() => void addPhrase()} />
+    <PhraseCaptureModal open={showPhraseModal} value={phrase} onChange={setPhrase} context={phraseContext} onContextChange={setPhraseContext} onClose={closePhraseModal} onSubmit={() => void addPhrase()} />
+    <EditWordModal word={editingWord} onClose={() => setEditingWord(null)} onSubmit={updateWord} />
+    <DeleteWordDialog word={deletingWord} onClose={() => setDeletingWord(null)} onConfirm={removeWord} />
   </PageLayout>;
 }
