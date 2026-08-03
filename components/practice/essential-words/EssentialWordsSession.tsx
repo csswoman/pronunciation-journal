@@ -12,6 +12,7 @@ import { SpeakReviewCard } from './SpeakReviewCard'
 import { RecognizeCard } from './RecognizeCard'
 import { DictationCard } from './DictationCard'
 import { WeakFormCard } from './WeakFormCard'
+import { ClozeCard } from './ClozeCard'
 import { SessionDone } from './SessionDone'
 import { EssentialWordsChrome } from './EssentialWordsChrome'
 import { ExitConfirmSheet } from '@/components/exercises/ExitConfirmSheet'
@@ -165,6 +166,9 @@ export function EssentialWordsSession() {
               )}
               {currentMode === 'weak_form' && (
                 <WeakFormCard entry={current.entry} onGraded={submitGrade} />
+              )}
+              {currentMode === 'cloze_sentence' && (
+                <ClozeCard entry={current.entry} onGraded={submitGrade} />
               )}
               {/* 'study' mode belongs to the study phase's WordStudyCard; a new
                   word reaching the speak phase (post-study) still falls back

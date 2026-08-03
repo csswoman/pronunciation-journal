@@ -277,4 +277,36 @@ describe('EssentialWordsSession', () => {
     await waitFor(() => expect(dbMocks.masterEssentialWord).toHaveBeenCalledWith('the', 'user-1'))
     await screen.findByRole('heading', { name: 'be' })
   })
+
+  it('renders ClozeCard for a middle-tier review whose rotation picks cloze', async () => {
+    // selectMode es determinista (hash de palabra + repetitions). Buscamos el
+    // reps del tier medio que produce cloze para "the" en vez de hardcodearlo,
+    // así el test no depende de la función de hash.
+    const { selectMode } = await import('@/lib/essential-words/exercise-modes')
+    const theEntry = WORDS[0]
+    const reps = [3, 4, 5].find(
+      (r) => selectMode({ kind: 'review', entry: theEntry, repetitions: r }) === 'cloze_sentence',
+    )
+    expect(reps).toBeDefined()
+
+    dbMocks.getEssentialWordsSrsEntries.mockResolvedValue([
+      {
+        wordId: 'c1k:the',
+        word: 'the',
+        interval: 6,
+        ease: 2.5,
+        repetitions: reps!,
+        nextReview: '2026-07-01T00:00:00.000Z',
+      },
+    ])
+    // Sin cuota de nuevas, para que la primera card sea el review de "the".
+    dbMocks.getEssentialWordsIntroducedToday.mockResolvedValue(
+      Array.from({ length: 10 }, (_, i) => `w${i}`),
+    )
+
+    render(<EssentialWordsSession />)
+
+    expect(await screen.findByText('Completa la oración')).toBeTruthy()
+    expect(screen.getByText('Give me ___ book please.')).toBeTruthy()
+  })
 })
