@@ -71,14 +71,14 @@ describe('JournalSupportRail vocabulary resolution', () => {
           errors: [],
           newWords: ['unwind'],
           scheduledTopics: [
-            { topicId: 'present-simple-s', nextReviewAt: '2026-08-10T12:00:00.000Z', intervalDays: 8 },
+            { topicId: 'grammar:present simple', nextReviewAt: '2026-08-10T12:00:00.000Z', intervalDays: 8 },
           ],
         }}
       />,
     )
 
     expect(screen.getByText('Reglas programadas')).toBeInTheDocument()
-    expect(screen.getByText('-s de tercera persona')).toBeInTheDocument()
+    expect(screen.getByText('Presente simple')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /unwind/i })).toBeInTheDocument()
     expect(screen.getByText(/No se añaden automáticamente/)).toBeInTheDocument()
   })

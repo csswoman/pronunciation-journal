@@ -20,7 +20,8 @@
       "ipa_strong": "/ˈbiː/",
       "example_sentence": "I want to be happy.",
       "cefr_level": "A1",
-      "sentence_ipa": "/ˈaɪ ˈwɑnt ˈtuː ˈbiː ˈhæpiː/",
+      "ipa_weak": "/bi/",
+      "sentence_ipa": "/ˈaɪ ˈwɑnt ˈtuː bi ˈhæpiː/",
       "meaning": "to exist or to have a quality or identity",
       "translation": "ser / estar"
     },
@@ -173,8 +174,8 @@
       "cefr_level": "A1",
       "ipa_weak": "/ðət/",
       "sentence_ipa": "/ˈaɪ ˈhoʊp ðət ˈɪt ˈwɜrks/",
-      "meaning": "used to refer to a specific thing or person already mentioned",
-      "translation": "ese/esa"
+      "meaning": "used to introduce a clause explaining or following a verb",
+      "translation": "que"
     },
     {
       "rank": 16,
@@ -4128,7 +4129,8 @@
       "ipa_strong": "/ˈpɜr/",
       "example_sentence": "The speed limit is ninety kilometers per hour.",
       "cefr_level": "A2",
-      "sentence_ipa": "/ðə ˈspiːd ˈlɪmət ˈɪz ˈnaɪntiː kəˈlɑˌmʌtɜrz ˈpɜr ˈaʊɜr/",
+      "ipa_weak": "/pər/",
+      "sentence_ipa": "/ðə ˈspiːd ˈlɪmət ˈɪz ˈnaɪntiː kəˈlɑˌmʌtɜrz pər ˈaʊɜr/",
       "meaning": "for each; used to show rate or proportion",
       "translation": "por"
     },
@@ -8715,7 +8717,7 @@
       "ipa_strong": "/ˈpɑpjəlɜr/",
       "example_sentence": "This café is very popular with students because of its cheap coffee.",
       "cefr_level": "A1",
-      "sentence_ipa": "/ˈðɪs caf ˈɪz ˈvɛɹiː ˈpɑpjəlɜr ˈwɪð ˈstuːdənts bɪˈkɔz ˈʌv ˈɪts ˈtʃiːp ˈkɑfiː/",
+      "sentence_ipa": "/ˈðɪs kæˈfeɪ ˈɪz ˈvɛɹiː ˈpɑpjəlɜr ˈwɪð ˈstuːdənts bɪˈkɔz ˈʌv ˈɪts ˈtʃiːp ˈkɑfiː/",
       "meaning": "liked or enjoyed by many people",
       "translation": "popular"
     },
@@ -8902,7 +8904,8 @@
       "ipa_strong": "/ˈʃæl/",
       "example_sentence": "Shall we meet at the café at noon?",
       "cefr_level": "A2",
-      "sentence_ipa": "/ˈʃæl ˈwiː ˈmiːt ˈæt ðə caf ˈæt ˈnuːn/",
+      "ipa_weak": "/ʃəl/",
+      "sentence_ipa": "/ʃəl ˈwiː ˈmiːt ˈæt ðə kæˈfeɪ ˈæt ˈnuːn/",
       "meaning": "used to express future or suggestions",
       "translation": "deberá"
     },
@@ -10436,13 +10439,13 @@
       "translation": "muerto"
     },
     {
-      "cefr_level": "A1",
-      "example_sentence": "They met at the café on Saturday afternoon.",
-      "ipa_strong": "/ˌæftɜrˈnuːn/",
-      "pos": "noun",
       "rank": 947,
       "word": "afternoon",
-      "sentence_ipa": "/ˈðeɪ ˈmɛt ˈæt ðə caf ˈɑn ˈsætɜrdiː ˌæftɜrˈnuːn/",
+      "pos": "noun",
+      "ipa_strong": "/ˌæftɜrˈnuːn/",
+      "example_sentence": "They met at the café on Saturday afternoon.",
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈðeɪ ˈmɛt ˈæt ðə kæˈfeɪ ˈɑn ˈsætɜrdiː ˌæftɜrˈnuːn/",
       "meaning": "time between noon and evening",
       "translation": "tarde"
     },
@@ -13874,7 +13877,7 @@
       "ipa_strong": "/ˈpleɪn/",
       "example_sentence": "The large plane landed safely at the airport despite the strong crosswind.",
       "cefr_level": "A1",
-      "sentence_ipa": "/ðə ˈlɑɹdʒ ˈpleɪn ˈlændəd ˈseɪfliː ˈæt ðə ˈɛˌɹpɔɹt dɪˈspaɪt ðə ˈstɹɔŋ crosswind/",
+      "sentence_ipa": "/ðə ˈlɑɹdʒ ˈpleɪn ˈlændəd ˈseɪfliː ˈæt ðə ˈɛˌɹpɔɹt dɪˈspaɪt ðə ˈstɹɔŋ ˈkɹɔsˌwɪnd/",
       "meaning": "a vehicle that flies in the sky",
       "translation": "avión"
     },
@@ -16085,7 +16088,7 @@
       "ipa_strong": "/əˈreɪndʒmənt/",
       "example_sentence": "We made an arrangement to meet at the café at noon.",
       "cefr_level": "A2",
-      "sentence_ipa": "/ˈwiː ˈmeɪd ˈæn ɜrˈeɪndʒmənt ˈtuː ˈmiːt ˈæt ðə caf ˈæt ˈnuːn/",
+      "sentence_ipa": "/ˈwiː ˈmeɪd ˈæn ɜrˈeɪndʒmənt ˈtuː ˈmiːt ˈæt ðə kæˈfeɪ ˈæt ˈnuːn/",
       "meaning": "A plan or preparation for something that will happen.",
       "translation": "arreglo, preparativo"
     },
@@ -18483,7 +18486,7 @@
       "ipa_strong": "/ˈkæt/",
       "example_sentence": "The cat jumped onto the windowsill and watched the birds outside.",
       "cefr_level": "A1",
-      "sentence_ipa": "/ðə ˈkæt ˈdʒʌmpt ˈɑntuː ðə windowsill ənd ˈwɑtʃt ðə ˈbɜrdz ˈaʊˈtsaɪd/",
+      "sentence_ipa": "/ðə ˈkæt ˈdʒʌmpt ˈɑntuː ðə ˈwɪndoʊˌsɪl ənd ˈwɑtʃt ðə ˈbɜrdz ˈaʊˈtsaɪd/",
       "meaning": "small animal that catches mice",
       "translation": "gato"
     },
@@ -20045,7 +20048,7 @@
       "ipa_strong": "/ˈtɛmpɜrˌɛɹiː/",
       "example_sentence": "He found a temporary job at the café while waiting to hear back from other employers.",
       "cefr_level": "B2",
-      "sentence_ipa": "/ˈhiː ˈfaʊnd ə ˈtɛmpɜrˌɛɹiː ˈdʒɑb ˈæt ðə caf ˈwaɪl ˈweɪtɪŋ ˈtuː ˈhiːɹ ˈbæk ˈfɹʌm ˈʌðɜr ɛˈmplɔɪɜrz/",
+      "sentence_ipa": "/ˈhiː ˈfaʊnd ə ˈtɛmpɜrˌɛɹiː ˈdʒɑb ˈæt ðə kæˈfeɪ ˈwaɪl ˈweɪtɪŋ ˈtuː ˈhiːɹ ˈbæk ˈfɹʌm ˈʌðɜr ɛˈmplɔɪɜrz/",
       "meaning": "Lasting for only a limited period of time.",
       "translation": "temporal"
     },
@@ -20870,7 +20873,7 @@
       "ipa_strong": "/ˈnɪˈɹbaɪ/",
       "example_sentence": "They stopped for lunch at a nearby café just a few minutes from the hotel.",
       "cefr_level": "B2",
-      "sentence_ipa": "/ˈðeɪ ˈstɑpt ˈfɔɹ ˈlʌntʃ ˈæt ə ˈnɪˈɹbaɪ caf ˈdʒʌst ə ˈfjuː ˈmɪnəts ˈfɹʌm ðə hoʊˈtɛl/",
+      "sentence_ipa": "/ˈðeɪ ˈstɑpt ˈfɔɹ ˈlʌntʃ ˈæt ə ˈnɪˈɹbaɪ kæˈfeɪ ˈdʒʌst ə ˈfjuː ˈmɪnəts ˈfɹʌm ðə hoʊˈtɛl/",
       "meaning": "Located a short distance away; close to a particular place. Something nearby is within easy reach or walking distance.",
       "translation": "cercano"
     },
@@ -24126,7 +24129,7 @@
       "ipa_strong": "/ˈtuːn/",
       "example_sentence": "He hummed a familiar tune while washing the dishes.",
       "cefr_level": "B2",
-      "sentence_ipa": "/ˈhiː hummed ə fəˈmɪljɜr ˈtuːn ˈwaɪl ˈwɑʃɪŋ ðə ˈdɪʃəz/",
+      "sentence_ipa": "/ˈhiː ˈhʌmd ə fəˈmɪljɜr ˈtuːn ˈwaɪl ˈwɑʃɪŋ ðə ˈdɪʃəz/",
       "meaning": "A short and simple piece of music that is easy to remember. It is a melody or musical theme.",
       "translation": "melodía"
     },
@@ -25237,7 +25240,7 @@
       "ipa_strong": "/ɹɪˈzɪstəns/",
       "example_sentence": "There was strong public resistance to the plan to build a motorway through the village.",
       "cefr_level": "C1",
-      "sentence_ipa": "/ˈðɛɹ ˈwɑz ˈstɹɔŋ ˈpʌblɪk ɹɪˈzɪstəns ˈtuː ðə ˈplæn ˈtuː ˈbɪld ə motorway ˈθɹuː ðə ˈvɪlədʒ/",
+      "sentence_ipa": "/ˈðɛɹ ˈwɑz ˈstɹɔŋ ˈpʌblɪk ɹɪˈzɪstəns ˈtuː ðə ˈplæn ˈtuː ˈbɪld ə ˈmoʊtɜrˌweɪ ˈθɹuː ðə ˈvɪlədʒ/",
       "meaning": "The act of opposing or refusing to accept something. In physics, it refers to the opposition to the flow of electrical current.",
       "translation": "resistencia"
     },
@@ -26117,7 +26120,7 @@
       "ipa_strong": "/ˈsænd/",
       "example_sentence": "The children built a sandcastle on the beach using wet sand.",
       "cefr_level": "B1",
-      "sentence_ipa": "/ðə ˈtʃɪldɹən ˈbɪlt ə sandcastle ˈɑn ðə ˈbiːtʃ ˈjuːzɪŋ ˈwɛt ˈsænd/",
+      "sentence_ipa": "/ðə ˈtʃɪldɹən ˈbɪlt ə ˈsændˌkæsəl ˈɑn ðə ˈbiːtʃ ˈjuːzɪŋ ˈwɛt ˈsænd/",
       "meaning": "tiny pieces of rock",
       "translation": "arena"
     },

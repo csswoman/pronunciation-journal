@@ -507,13 +507,13 @@
       "translation": "muerto"
     },
     {
-      "cefr_level": "A1",
-      "example_sentence": "They met at the café on Saturday afternoon.",
-      "ipa_strong": "/ˌæftɜrˈnuːn/",
-      "pos": "noun",
       "rank": 947,
       "word": "afternoon",
-      "sentence_ipa": "/ˈðeɪ ˈmɛt ˈæt ðə caf ˈɑn ˈsætɜrdiː ˌæftɜrˈnuːn/",
+      "pos": "noun",
+      "ipa_strong": "/ˌæftɜrˈnuːn/",
+      "example_sentence": "They met at the café on Saturday afternoon.",
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈðeɪ ˈmɛt ˈæt ðə kæˈfeɪ ˈɑn ˈsætɜrdiː ˌæftɜrˈnuːn/",
       "meaning": "time between noon and evening",
       "translation": "tarde"
     },

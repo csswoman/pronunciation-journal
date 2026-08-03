@@ -20,7 +20,8 @@
       "ipa_strong": "/ˈbiː/",
       "example_sentence": "I want to be happy.",
       "cefr_level": "A1",
-      "sentence_ipa": "/ˈaɪ ˈwɑnt ˈtuː ˈbiː ˈhæpiː/",
+      "ipa_weak": "/bi/",
+      "sentence_ipa": "/ˈaɪ ˈwɑnt ˈtuː bi ˈhæpiː/",
       "meaning": "to exist or to have a quality or identity",
       "translation": "ser / estar"
     },
@@ -173,8 +174,8 @@
       "cefr_level": "A1",
       "ipa_weak": "/ðət/",
       "sentence_ipa": "/ˈaɪ ˈhoʊp ðət ˈɪt ˈwɜrks/",
-      "meaning": "used to refer to a specific thing or person already mentioned",
-      "translation": "ese/esa"
+      "meaning": "used to introduce a clause explaining or following a verb",
+      "translation": "que"
     },
     {
       "rank": 16,

@@ -800,7 +800,8 @@
       "ipa_strong": "/ˈpɜr/",
       "example_sentence": "The speed limit is ninety kilometers per hour.",
       "cefr_level": "A2",
-      "sentence_ipa": "/ðə ˈspiːd ˈlɪmət ˈɪz ˈnaɪntiː kəˈlɑˌmʌtɜrz ˈpɜr ˈaʊɜr/",
+      "ipa_weak": "/pər/",
+      "sentence_ipa": "/ðə ˈspiːd ˈlɪmət ˈɪz ˈnaɪntiː kəˈlɑˌmʌtɜrz pər ˈaʊɜr/",
       "meaning": "for each; used to show rate or proportion",
       "translation": "por"
     },
