@@ -9,6 +9,11 @@ export interface EssentialWordQueueItem {
   entry: EssentialWord;
   kind: 'new' | 'review' | 'learning';
   fromSnooze?: boolean;
+  /**
+   * SM-2 consecutive-correct count for this word, when it has SRS history.
+   * Undefined for new words. Drives exercise-mode maturity tiers.
+   */
+  repetitions?: number;
 }
 
 export interface BuildQueueOptions {
@@ -65,13 +70,21 @@ export function buildSessionQueue({
   const seen = new Set(srsEntries.map((e) => e.wordId));
 
   // Caller must run activateExpiredSnoozes before buildSessionQueue.
+  interface DuePair {
+    entry: EssentialWord;
+    repetitions?: number;
+  }
+
   const due: EssentialWordQueueItem[] = srsEntries
     .filter((e) => isDueForQueue(e, now))
-    .map((e) => byId.get(e.wordId))
-    .filter((entry): entry is EssentialWord => entry !== undefined)
-    .filter((entry) => matchesFilter(entry, levels, pos))
-    .sort((a, b) => a.rank - b.rank)
-    .map((entry) => ({ entry, kind: 'review' as const }));
+    .map((e): DuePair | undefined => {
+      const entry = byId.get(e.wordId);
+      return entry ? { entry, repetitions: e.repetitions } : undefined;
+    })
+    .filter((pair): pair is DuePair => pair !== undefined)
+    .filter((pair) => matchesFilter(pair.entry, levels, pos))
+    .sort((a, b) => a.entry.rank - b.entry.rank)
+    .map(({ entry, repetitions }) => ({ entry, kind: 'review' as const, repetitions }));
 
   const quota = Math.max(0, newPerDay - introducedToday.length);
   const fresh: EssentialWordQueueItem[] = words

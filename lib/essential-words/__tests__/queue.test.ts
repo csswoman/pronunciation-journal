@@ -269,6 +269,38 @@ describe("themed route filter (level + pos)", () => {
   });
 });
 
+describe("buildSessionQueue repetitions", () => {
+  it("carries SM-2 repetitions onto due review items", () => {
+    const w = word(1, "through");
+    const dueSrs: SRSData = {
+      ...srs("through", "2020-01-01T00:00:00.000Z"),
+      repetitions: 7,
+    };
+    const q = buildSessionQueue({
+      words: [w],
+      srsEntries: [dueSrs],
+      introducedToday: [],
+      now: NOW,
+    });
+
+    expect(q[0].kind).toBe("review");
+    expect(q[0].repetitions).toBe(7);
+  });
+
+  it("leaves repetitions undefined for new words", () => {
+    const w = word(1, "apple");
+    const q = buildSessionQueue({
+      words: [w],
+      srsEntries: [],
+      introducedToday: [],
+      now: NOW,
+    });
+
+    expect(q[0].kind).toBe("new");
+    expect(q[0].repetitions).toBeUndefined();
+  });
+});
+
 describe("appendNewBatch", () => {
   it("appends next N new words by rank, skipping already queued or seen", () => {
     const existing = [
