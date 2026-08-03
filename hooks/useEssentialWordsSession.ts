@@ -59,6 +59,7 @@ export function useEssentialWordsSession() {
   const [counts, setCounts] = useState<EssentialWordsCounts>(EMPTY_COUNTS);
   const [sessionSummary, setSessionSummary] = useState<EssentialWordsSessionSummary | null>(null);
   const [reloadLoading, setReloadLoading] = useState(false);
+  const [previousMode, setPreviousMode] = useState<EssentialWordMode | undefined>(undefined);
 
   const sessionResultsRef = useRef<ExerciseResult[]>([]);
   const finishingRef = useRef(false);
@@ -173,6 +174,7 @@ export function useEssentialWordsSession() {
     sessionResultsRef.current = [];
     pendingLapsesRef.current = new Map();
     persistPendingLapses();
+    setPreviousMode(undefined);
     syncCounts(items, 0);
     setPhase(initialPhase);
   }, [persistPendingLapses, syncCounts]);
@@ -216,7 +218,8 @@ export function useEssentialWordsSession() {
       if (!item) return;
       const wordId = essentialWordId(item.entry.word.toLowerCase());
 
-      const result = buildEssentialWordExerciseResult(item, quality, extras, selectMode(item));
+      const result = buildEssentialWordExerciseResult(item, quality, extras, currentModeRef.current);
+      setPreviousMode(currentModeRef.current);
 
       if (quality >= 3) {
         await gradeEssentialWord(item.entry.word, quality, extras, user?.id);
@@ -315,7 +318,13 @@ export function useEssentialWordsSession() {
   }, [bootstrap]);
 
   const current = queue[index] ?? null;
-  const currentMode: EssentialWordMode = current ? selectMode(current) : "speak_sentence";
+  const currentMode: EssentialWordMode = current
+    ? selectMode(current, previousMode)
+    : "speak_sentence";
+  // Ref-mirror so submitGrade (a useCallback) reads the mode actually rendered,
+  // without re-deriving it and without adding it to dependency arrays.
+  const currentModeRef = useRef<EssentialWordMode>(currentMode);
+  currentModeRef.current = currentMode;
   // Other words in this session, used as recognition distractors.
   const distractorPool = queue
     .filter((_, i) => i !== index)
