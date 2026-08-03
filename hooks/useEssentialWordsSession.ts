@@ -22,6 +22,7 @@ import {
   type EssentialWordsSessionSummary,
 } from "@/lib/essential-words/session-model";
 import { readStoredCefrLevel } from "@/lib/essential-words/target-level";
+import { selectMode, type EssentialWordMode } from "@/lib/essential-words/exercise-modes";
 import { readGuestStudyLevel } from "@/lib/preferences/guest-study-level";
 import {
   masterEssentialWord,
@@ -215,7 +216,7 @@ export function useEssentialWordsSession() {
       if (!item) return;
       const wordId = essentialWordId(item.entry.word.toLowerCase());
 
-      const result = buildEssentialWordExerciseResult(item, quality, extras);
+      const result = buildEssentialWordExerciseResult(item, quality, extras, selectMode(item));
 
       if (quality >= 3) {
         await gradeEssentialWord(item.entry.word, quality, extras, user?.id);
@@ -313,9 +314,18 @@ export function useEssentialWordsSession() {
     await bootstrap();
   }, [bootstrap]);
 
+  const current = queue[index] ?? null;
+  const currentMode: EssentialWordMode = current ? selectMode(current) : "speak_sentence";
+  // Other words in this session, used as recognition distractors.
+  const distractorPool = queue
+    .filter((_, i) => i !== index)
+    .map((qi) => qi.entry);
+
   return {
     phase,
-    current: queue[index] ?? null,
+    current,
+    currentMode,
+    distractorPool,
     stats,
     counts,
     sessionSummary,
