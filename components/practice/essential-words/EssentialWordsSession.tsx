@@ -9,6 +9,9 @@ import { useLoadingWords } from '@/hooks/useLoadingWords'
 import { SessionStatsCard } from './SessionStatsCard'
 import { WordStudyCard } from './WordStudyCard'
 import { SpeakReviewCard } from './SpeakReviewCard'
+import { RecognizeCard } from './RecognizeCard'
+import { DictationCard } from './DictationCard'
+import { WeakFormCard } from './WeakFormCard'
 import { SessionDone } from './SessionDone'
 import { EssentialWordsChrome } from './EssentialWordsChrome'
 import { ExitConfirmSheet } from '@/components/exercises/ExitConfirmSheet'
@@ -18,7 +21,7 @@ import Button from '@/components/ui/Button'
 
 export function EssentialWordsSession() {
   const {
-    phase, current, stats, counts, sessionSummary,
+    phase, current, currentMode, distractorPool, stats, counts, sessionSummary,
     reloadLoading, levels, activeRouteId, setRoute,
     startSpeak, submitGrade, reload, learnMore, archiveWord,
     keepSnooze, masterWord,
@@ -140,14 +143,43 @@ export function EssentialWordsSession() {
             />
           )}
           {phase === 'speak' && current && (
-            <SpeakReviewCard
-              entry={current.entry}
-              onGraded={submitGrade}
-              onArchive={() => void archiveWord(current.entry.word)}
-              fromSnooze={current.fromSnooze}
-              onKeepSnooze={() => void keepSnooze(current.entry.word)}
-              onMaster={() => void masterWord(current.entry.word)}
-            />
+            <>
+              {currentMode === 'recognize_translation' && (
+                <RecognizeCard
+                  entry={current.entry}
+                  prompt={current.entry.translation!}
+                  distractors={distractorPool}
+                  onGraded={submitGrade}
+                />
+              )}
+              {currentMode === 'recognize_meaning' && (
+                <RecognizeCard
+                  entry={current.entry}
+                  prompt={current.entry.meaning!}
+                  distractors={distractorPool}
+                  onGraded={submitGrade}
+                />
+              )}
+              {currentMode === 'dictation_sentence' && (
+                <DictationCard entry={current.entry} onGraded={submitGrade} />
+              )}
+              {currentMode === 'weak_form' && (
+                <WeakFormCard entry={current.entry} onGraded={submitGrade} />
+              )}
+              {/* 'study' mode belongs to the study phase's WordStudyCard; a new
+                  word reaching the speak phase (post-study) still falls back
+                  to full production here. */}
+              {(currentMode === 'speak_sentence' || currentMode === 'study') && (
+                <SpeakReviewCard
+                  entry={current.entry}
+                  onGraded={submitGrade}
+                  onArchive={() => void archiveWord(current.entry.word)}
+                  fromSnooze={current.fromSnooze}
+                  onKeepSnooze={() => void keepSnooze(current.entry.word)}
+                  onMaster={() => void masterWord(current.entry.word)}
+                />
+              )}
+            </>
           )}
         </div>
       </Frame>

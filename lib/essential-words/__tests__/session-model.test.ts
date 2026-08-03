@@ -47,3 +47,32 @@ describe("core 1000 session model", () => {
     expect(advanceSummary({ practiced: 3, correct: 2 }, false)).toEqual({ practiced: 4, correct: 2 });
   });
 });
+
+describe("exercise result mode tagging", () => {
+  it("records the practiced mode in the payload", () => {
+    const result = buildEssentialWordExerciseResult(
+      item,
+      4,
+      { accuracy: 88, transcript: "test" },
+      "speak_sentence",
+    );
+    expect(result.exercisePayload).toMatchObject({ mode: "speak_sentence" });
+  });
+
+  it("keeps slug and exerciseTypeId stable for speech and text", () => {
+    const speech = buildEssentialWordExerciseResult(
+      item, 4, { accuracy: 88, transcript: "test" }, "speak_sentence",
+    );
+    expect(speech).toMatchObject({ slug: "speak_word", exerciseTypeId: 10 });
+
+    const text = buildEssentialWordExerciseResult(
+      item, 2, undefined, "recognize_translation",
+    );
+    expect(text).toMatchObject({ slug: "fill_blank", exerciseTypeId: 5 });
+  });
+
+  it("defaults to speak_sentence when no mode is passed", () => {
+    const result = buildEssentialWordExerciseResult(item, 4);
+    expect(result.exercisePayload).toMatchObject({ mode: "speak_sentence" });
+  });
+});
