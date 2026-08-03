@@ -1,5 +1,6 @@
 import { essentialWordId } from "@/lib/essential-words/types";
 import type { GradeExtras } from "@/lib/essential-words/grade";
+import type { EssentialWordMode } from "@/lib/essential-words/exercise-modes";
 import type { EssentialWordQueueItem } from "@/lib/essential-words/queue";
 import type { ExerciseResult } from "@/lib/practice/types";
 
@@ -18,12 +19,16 @@ export function buildEssentialWordExerciseResult(
   item: EssentialWordQueueItem,
   quality: number,
   extras?: GradeExtras,
+  mode: EssentialWordMode = "speak_sentence",
 ): ExerciseResult {
   const wordId = essentialWordId(item.entry.word.toLowerCase());
   const isSpeech = extras?.accuracy !== undefined;
 
   return {
     exerciseId: wordId,
+    // slug/exerciseTypeId stay keyed on speech-vs-text so historical rows in
+    // answer_history remain comparable; `mode` in the payload carries the
+    // finer detail without widening the shared PracticeAnswer type.
     slug: isSpeech ? "speak_word" : "fill_blank",
     exerciseTypeId: isSpeech ? 10 : 5,
     isCorrect: quality >= 3,
@@ -33,6 +38,7 @@ export function buildEssentialWordExerciseResult(
     timeMs: 0,
     score: extras?.accuracy,
     completedAt: new Date(),
+    exercisePayload: { mode },
   };
 }
 
