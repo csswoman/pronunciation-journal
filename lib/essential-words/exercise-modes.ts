@@ -1,3 +1,4 @@
+import { clozeFor } from "./cloze";
 import type { EssentialWordQueueItem } from "./queue";
 import type { EssentialWord } from "./types";
 
@@ -10,13 +11,14 @@ export type EssentialWordMode =
   | "recognize_translation"
   | "recognize_meaning"
   | "dictation_sentence"
+  | "cloze_sentence"
   | "weak_form"
   | "speak_sentence";
 
 /**
  * The optional `EssentialWord` field each mode needs. Modes backed by a
- * mandatory field map to null. Exported so tests can assert the invariant that
- * a mode is never chosen without its data.
+ * mandatory field — or by a computed check (cloze) — map to null. Exported so
+ * tests can assert the invariant that a mode is never chosen without data.
  */
 export const MODE_REQUIRED_FIELD: Record<
   EssentialWordMode,
@@ -26,6 +28,7 @@ export const MODE_REQUIRED_FIELD: Record<
   recognize_translation: "translation",
   recognize_meaning: "meaning",
   dictation_sentence: null, // example_sentence is mandatory
+  cloze_sentence: null, // computed: clozeFor(entry) must be non-null
   weak_form: "ipa_weak",
   speak_sentence: null, // example_sentence is mandatory
 };
@@ -34,46 +37,79 @@ export const MODE_REQUIRED_FIELD: Record<
 const TENDER_MAX = 2;
 const MIDDLE_MAX = 5;
 
-function hasData(entry: EssentialWord, mode: EssentialWordMode): boolean {
+/** True when `entry` has everything `mode` needs to render. */
+export function modeHasData(entry: EssentialWord, mode: EssentialWordMode): boolean {
   const field = MODE_REQUIRED_FIELD[mode];
-  if (!field) return true;
-  return Boolean(entry[field]);
+  if (field && !entry[field]) return false;
+  if (mode === "cloze_sentence") return clozeFor(entry) !== null;
+  return true;
 }
 
-/** First mode whose backing data is present, else `speak_sentence`. */
-function firstUsable(
+/** Deterministic per-word seed so rotation varies across words, not renders. */
+function wordSeed(word: string): number {
+  let hash = 0;
+  for (const char of word) hash = (hash * 31 + char.charCodeAt(0)) | 0;
+  return Math.abs(hash);
+}
+
+/**
+ * Pick from `candidates` rotating deterministically by word + repetitions.
+ * If the pick would repeat `previousMode` and another candidate has data,
+ * advance one position so two consecutive cards differ.
+ */
+function pickRotating(
   entry: EssentialWord,
   candidates: EssentialWordMode[],
+  repetitions: number,
+  previousMode?: EssentialWordMode,
 ): EssentialWordMode {
-  return candidates.find((mode) => hasData(entry, mode)) ?? "speak_sentence";
+  const usable = candidates.filter((mode) => modeHasData(entry, mode));
+  if (usable.length === 0) return "speak_sentence";
+  let index = (wordSeed(entry.word) + repetitions) % usable.length;
+  if (usable[index] === previousMode && usable.length > 1) {
+    index = (index + 1) % usable.length;
+  }
+  return usable[index];
 }
 
 /**
  * Pick how to practice this item.
  *
- * New words study. Otherwise the SRS maturity tier decides: recognition while
- * the word is tender, dictation/weak-form in the middle, full production once
- * it is mature. `learning` items (a lapse re-inserted mid-session) always get
- * recognition — they just failed, so production would only fail again.
+ * New words study. Otherwise the SRS maturity tier decides the candidate set,
+ * and a deterministic rotation (word hash + repetitions) walks through it so
+ * the same word is practiced differently across reviews. `learning` items (a
+ * lapse re-inserted mid-session) always get recognition — they just failed,
+ * so production would only fail again.
+ *
+ * `previousMode` is the mode of the card graded just before this one; when
+ * provided, the rotation avoids repeating it if an alternative has data.
  *
  * Never returns a mode whose backing data is missing; falls back to
  * `speak_sentence`, which is always renderable.
  */
-export function selectMode(item: EssentialWordQueueItem): EssentialWordMode {
+export function selectMode(
+  item: EssentialWordQueueItem,
+  previousMode?: EssentialWordMode,
+): EssentialWordMode {
   if (item.kind === "new") return "study";
 
   const { entry } = item;
+  const reps = item.repetitions ?? 0;
   const recognition: EssentialWordMode[] = [
     "recognize_translation",
     "recognize_meaning",
   ];
 
-  if (item.kind === "learning") return firstUsable(entry, recognition);
-
-  const reps = item.repetitions ?? 0;
-  if (reps <= TENDER_MAX) return firstUsable(entry, recognition);
-  if (reps <= MIDDLE_MAX) {
-    return firstUsable(entry, ["weak_form", "dictation_sentence"]);
+  if (item.kind === "learning" || reps <= TENDER_MAX) {
+    return pickRotating(entry, recognition, reps, previousMode);
   }
-  return "speak_sentence";
+  if (reps <= MIDDLE_MAX) {
+    return pickRotating(
+      entry,
+      ["weak_form", "dictation_sentence", "cloze_sentence"],
+      reps,
+      previousMode,
+    );
+  }
+  return pickRotating(entry, ["speak_sentence", "cloze_sentence"], reps, previousMode);
 }
