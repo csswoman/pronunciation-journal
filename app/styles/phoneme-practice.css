@@ -1,7 +1,6 @@
 /* Phoneme focus session — solo lo que no puede ser Tailwind */
 
 .phoneme-focus {
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;

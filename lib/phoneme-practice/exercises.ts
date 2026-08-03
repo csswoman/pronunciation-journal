@@ -223,7 +223,7 @@ export function generateSpeakWord(
 const CARRIER_PHRASES = [
   (word: string) => `Say ${word} again.`,
   (word: string) => `I said ${word}.`,
-  (word: string) => `Can you hear ${word}?`,
+  (word: string) => `Can you hear the word ${word}?`,
 ] as const
 
 /**
