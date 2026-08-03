@@ -64,10 +64,8 @@ export type EssentialWordMode =
   | 'weak_form'               // function words only
   | 'speak_sentence'          // current behavior; universal fallback
 
-export function selectMode(
-  item: EssentialWordQueueItem,
-  repetitions: number,
-): EssentialWordMode
+// `repetitions` rides on the queue item, so selection takes a single argument.
+export function selectMode(item: EssentialWordQueueItem): EssentialWordMode
 ```
 
 `selectMode` is pure: no I/O, no Dexie, no randomness. Testable as a table.
