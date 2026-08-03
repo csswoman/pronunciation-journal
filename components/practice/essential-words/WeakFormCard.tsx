@@ -40,7 +40,6 @@ export function WeakFormCard({ entry, onGraded }: Props) {
       <ListenButton
         onPlay={() => speak(phrase, { rate: 0.95 })}
         label="Escuchar la forma débil"
-        disabled={false}
       />
 
       <div className="flex gap-2">

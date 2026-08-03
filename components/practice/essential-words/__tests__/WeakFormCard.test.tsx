@@ -19,7 +19,11 @@ const entry: EssentialWord = {
 };
 
 describe("WeakFormCard", () => {
-  beforeEach(() => vi.clearAllMocks());
+  beforeEach(() => {
+    vi.clearAllMocks();
+    // jsdom has no speechSynthesis; stub it so ListenButton's availability gate reports true.
+    vi.stubGlobal("speechSynthesis", { speak: vi.fn(), cancel: vi.fn() });
+  });
 
   it("shows both the strong and weak pronunciations", () => {
     render(<WeakFormCard entry={entry} onGraded={vi.fn().mockResolvedValue(undefined)} />);
