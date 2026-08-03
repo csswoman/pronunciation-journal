@@ -61,4 +61,38 @@ describe('enqueueTopicSRSUpdate', () => {
       status: 'pending',
     })
   })
+
+  it('canonicalizes accepted aliases before writing', async () => {
+    await enqueueTopicSRSUpdate('user-1', 'grammar:present_simple_s', 2)
+
+    const payload = enqueueMock.mock.calls[0][3] as Record<string, unknown>
+    expect(payload.p_topic).toBe('grammar:present simple')
+    const events = await db.srsRatingEvents.where('userId').equals('user-1').toArray()
+    expect(events[0]?.topic).toBe('grammar:present simple')
+  })
+
+  it('rejects bare topics and unknown catalog ids before touching the outbox', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+
+    await expect(enqueueTopicSRSUpdate('user-1', 'past_simple', 2)).resolves.toBeNull()
+    await expect(enqueueTopicSRSUpdate('user-1', 'grammar:not-in-catalog', 2)).resolves.toBeNull()
+
+    expect(enqueueMock).not.toHaveBeenCalled()
+    expect(await db.srsRatingEvents.where('userId').equals('user-1').toArray()).toEqual([])
+    expect(warn).toHaveBeenCalledTimes(2)
+    warn.mockRestore()
+  })
+
+  it('supports a server writer without importing the browser outbox', async () => {
+    const write = vi.fn().mockResolvedValue({ next_review_at: '2026-01-01T00:00:00.000Z' })
+
+    const result = await enqueueTopicSRSUpdate('user-1', 'grammar:articles', 2, { write })
+
+    expect(result).toMatchObject({ topic: 'grammar:articles', result: { next_review_at: '2026-01-01T00:00:00.000Z' } })
+    expect(write).toHaveBeenCalledWith(expect.objectContaining({
+      topic: 'grammar:articles',
+      rpcArgs: expect.objectContaining({ p_topic: 'grammar:articles', p_grade: 2 }),
+    }))
+    expect(enqueueMock).not.toHaveBeenCalled()
+  })
 })

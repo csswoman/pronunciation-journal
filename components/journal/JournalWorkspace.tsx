@@ -11,25 +11,83 @@
 //   <JournalHistoryList />
 // </JournalWorkspace>
 
-import { ChevronDown } from '@/components/icons'
-import { PillButton } from '@/components/ui/PillButton'
+import Button from '@/components/ui/Button'
+import { useEffect, useRef } from 'react'
 import { useJournalEntry } from '@/hooks/useJournalEntry'
+import type { JournalFeedback } from '@/lib/journal/correction'
 import type { JournalEntryRecord } from '@/lib/journal/types'
+import type { WritingScaffold } from '@/lib/journal/writing-scaffold'
 import { JournalEditor } from './JournalEditor'
 import { JournalFeedbackView } from './JournalFeedbackView'
-import { JournalHistoryList } from './JournalHistoryList'
-import { WritingGuidePanel } from './WritingGuidePanel'
 
 interface JournalWorkspaceProps {
   entry: JournalEntryRecord
+  targetLength?: number
+  structure?: WritingScaffold['structure']
+  hintsEnabled: boolean
+  onHintsEnabledChange: (enabled: boolean) => void
+  onDraftChange?: (draft: JournalDraftState) => void
+  starterRequest?: string | null
+  onStarterRequestHandled?: () => void
+  onCorrection?: (feedback: JournalFeedback) => void
 }
 
-export function JournalWorkspace({ entry }: JournalWorkspaceProps) {
+export interface JournalDraftState {
+  content: string
+  wordCount: number
+}
+
+export function JournalWorkspace({
+  entry,
+  targetLength = 60,
+  structure = DEFAULT_STRUCTURE,
+  hintsEnabled,
+  onHintsEnabledChange,
+  onDraftChange,
+  starterRequest = null,
+  onStarterRequestHandled,
+  onCorrection,
+}: JournalWorkspaceProps) {
   const journal = useJournalEntry(entry)
+  const reportedCorrection = useRef(false)
+  const handledStarterRequest = useRef<string | null>(null)
   const showEmptyHints = journal.status === 'draft' && !journal.canSubmit && !journal.correcting
+  const wordCount = journal.content.trim() ? journal.content.trim().split(/\s+/).length : 0
+  const meetsTarget = wordCount >= targetLength
+
+  useEffect(() => {
+    if (!starterRequest) {
+      handledStarterRequest.current = null
+      return
+    }
+    if (starterRequest === handledStarterRequest.current) return
+
+    handledStarterRequest.current = starterRequest
+    const starter = starterRequest.replace(/\.\.\.\s*$/, '').trim()
+    if (starter) {
+      const separator = journal.content.length === 0 || /\s$/.test(journal.content) ? '' : ' '
+      journal.updateContent(`${journal.content}${separator}${starter}`)
+    }
+    onStarterRequestHandled?.()
+  }, [journal.content, journal.updateContent, onStarterRequestHandled, starterRequest])
+
+  useEffect(() => {
+    onDraftChange?.({ content: journal.content, wordCount })
+  }, [journal.content, onDraftChange, wordCount])
+
+  useEffect(() => {
+    if (journal.status !== 'corrected') {
+      reportedCorrection.current = false
+      return
+    }
+    if (journal.feedback && onCorrection && !reportedCorrection.current) {
+      reportedCorrection.current = true
+      onCorrection(journal.feedback)
+    }
+  }, [journal.feedback, journal.status, onCorrection])
 
   return (
-    <div className="flex flex-col layout-section-gap">
+    <section className="flex w-full flex-col layout-section-gap rounded-[var(--radius-lg)] border border-border-subtle bg-surface-raised layout-card-pad">
       <section aria-labelledby="journal-prompt" className="flex flex-col gap-2">
         <p className="font-body-sm text-fg-muted">Pregunta de hoy</p>
         <h2
@@ -40,13 +98,16 @@ export function JournalWorkspace({ entry }: JournalWorkspaceProps) {
         </h2>
       </section>
 
-      {journal.status === 'draft' && <WritingGuidePanel />}
-
       {journal.status !== 'corrected' && (
         <JournalEditor
           content={journal.content}
           onChange={journal.updateContent}
           saveState={journal.saveState}
+          wordCount={wordCount}
+          targetLength={targetLength}
+          structure={structure}
+          hintsEnabled={hintsEnabled}
+          onHintsEnabledChange={onHintsEnabledChange}
           disabled={journal.status !== 'draft' || journal.correcting}
           onSubmitShortcut={
             journal.status === 'draft' && journal.canSubmit && !journal.correcting
@@ -58,10 +119,11 @@ export function JournalWorkspace({ entry }: JournalWorkspaceProps) {
 
       {journal.status === 'draft' && (
         <div className="flex flex-col gap-2">
-          <PillButton
-            variant="primary"
+          <Button
+            variant={meetsTarget ? 'primary' : 'secondary'}
             size="md"
-            className="min-h-11 w-full"
+            fullWidth
+            className="min-h-11"
             disabled={!journal.canSubmit || journal.correcting}
             isLoading={journal.correcting}
             onClick={() => void journal.submit()}
@@ -71,27 +133,9 @@ export function JournalWorkspace({ entry }: JournalWorkspaceProps) {
               : journal.isOnline
                 ? 'Revisar mi texto'
                 : 'Guardar sin conexión'}
-          </PillButton>
+          </Button>
           {showEmptyHints && (
-            <>
-              <p className="font-body-sm text-fg-muted">
-                Escribe al menos una frase. Luego puedes pedir una revisión cuando quieras.
-              </p>
-              <details className="group rounded-[var(--radius-md)] border border-border-subtle bg-surface-sunken">
-                <summary className="focus-ring flex cursor-pointer list-none items-center gap-2 px-3 py-2.5 font-body-sm font-medium text-fg">
-                  <ChevronDown
-                    size={14}
-                    className="shrink-0 text-fg-subtle transition-transform duration-150 group-open:rotate-180"
-                    aria-hidden
-                  />
-                  ¿Qué pasa después?
-                </summary>
-                <p className="border-t border-border-subtle px-3 py-2.5 font-body-sm text-fg-muted">
-                  Te devolvemos una versión más natural de tu texto y unos pocos detalles para
-                  notar — sin tachones en rojo. Tú eliges qué palabras guardar.
-                </p>
-              </details>
-            </>
+            <p className="font-body-sm text-fg-muted">Escribe al menos una frase para activar la revisión.</p>
           )}
           {!journal.isOnline && journal.canSubmit && (
             <p role="status" className="font-body-sm text-fg-muted">
@@ -105,30 +149,36 @@ export function JournalWorkspace({ entry }: JournalWorkspaceProps) {
       {journal.status === 'submitted' && (
         <div className="flex flex-col gap-2">
           <p role="status" className="font-body-sm text-fg-muted">
-            Página guardada.{' '}
-            {journal.isOnline
-              ? 'Puedes pedir la revisión cuando quieras.'
-              : 'Recupera la conexión para pedir la revisión.'}
+            {journal.correctionError
+              ? 'No pudimos revisar tu texto. Tu página sigue guardada.'
+              : journal.isOnline
+                ? 'Tu página está lista para revisar.'
+                : 'Tu página se guardó aquí. Recupera la conexión para pedir la revisión.'}
           </p>
-          <PillButton
+          <Button
             variant="primary"
             size="md"
-            className="min-h-11 w-full"
+            fullWidth
+            className="min-h-11"
             disabled={!journal.canCorrect || journal.correcting}
             isLoading={journal.correcting}
             onClick={() => void journal.requestCorrection()}
           >
-            {journal.correcting ? 'Leyendo tu texto…' : 'Pedir revisión'}
-          </PillButton>
+            {journal.correcting
+              ? 'Leyendo tu texto…'
+              : journal.correctionError
+                ? 'Reintentar revisión'
+                : 'Pedir revisión'}
+          </Button>
           {journal.canResumeDraft && (
-            <PillButton
-              variant="quiet"
+            <Button
+              variant="ghost"
               size="md"
-              className="w-full"
+              fullWidth
               onClick={() => void journal.resumeDraft()}
             >
               Seguir editando
-            </PillButton>
+            </Button>
           )}
         </div>
       )}
@@ -144,10 +194,16 @@ export function JournalWorkspace({ entry }: JournalWorkspaceProps) {
           originalContent={journal.content}
           correctedContent={journal.correctedContent}
           feedback={journal.feedback}
+          userId={entry.userId}
+          showReactive={!onCorrection}
         />
       )}
-
-      <JournalHistoryList userId={entry.userId} excludeDate={entry.entryDate} />
-    </div>
+    </section>
   )
 }
+
+const DEFAULT_STRUCTURE: WritingScaffold['structure'] = [
+  { label: 'Empieza', hint: 'Di dónde o cuándo ocurrió.' },
+  { label: 'Desarrolla', hint: 'Añade uno o dos detalles concretos.' },
+  { label: 'Cierra', hint: 'Explica qué pensaste o sentiste.' },
+]

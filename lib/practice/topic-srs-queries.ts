@@ -1,5 +1,44 @@
-import { db, type SRSRatingEventRecord } from '@/lib/db'
-import { enqueue } from '@/lib/sync/sync-manager'
+import type { SRSRatingEventRecord } from '@/lib/db'
+import { canonicalTopic, type TopicId } from '@/lib/topic-catalog'
+
+type ClientDependencies = {
+  db: typeof import('@/lib/db')['db']
+  enqueue: typeof import('@/lib/sync/sync-manager')['enqueue']
+}
+
+let clientDependencies: Promise<ClientDependencies> | null = null
+
+function loadClientDependencies(): Promise<ClientDependencies> {
+  clientDependencies ??= Promise.all([
+    import('@/lib/db'),
+    import('@/lib/sync/sync-manager'),
+  ]).then(([dbModule, syncModule]) => ({ db: dbModule.db, enqueue: syncModule.enqueue }))
+  return clientDependencies
+}
+
+export interface TopicSrsWriteContext {
+  event: SRSRatingEventRecord
+  rpcArgs: Record<string, unknown>
+  topic: TopicId
+}
+
+/**
+ * Optional persistence adapter used by the authenticated server path. The
+ * default path remains the Dexie + sync-outbox writer used by the browser.
+ */
+export type TopicSrsWrite = (context: TopicSrsWriteContext) => Promise<unknown>
+
+export interface EnqueueTopicSRSOptions {
+  /** Restrict a caller to a narrower, already-canonical subset of topics. */
+  allowedTopics?: ReadonlySet<string>
+  /** Replace the browser Dexie/outbox sink (used by authenticated server code). */
+  write?: TopicSrsWrite
+}
+
+export interface EnqueueTopicSRSResult {
+  topic: TopicId
+  result?: unknown
+}
 
 /**
  * Build the local rating-event row + outbox RPC-call args for a topic_srs
@@ -49,18 +88,41 @@ export function buildTopicSrsRatingEvent(
 }
 
 /**
- * Local-only: write the rating event to Dexie and enqueue the RPC call to
+ * Browser default: write the rating event to Dexie and enqueue the RPC call to
  * the outbox, in one Dexie transaction. No network read — see
  * buildTopicSrsRatingEvent's design note. Call this INSIDE a Dexie
  * transaction alongside other related writes for atomicity; it does not
- * open its own transaction.
+ * open its own transaction. Server callers pass the optional writer adapter
+ * so they share validation without importing Dexie.
  */
 export async function enqueueTopicSRSUpdate(
   userId: string,
   topic: string,
   grade: number,
-): Promise<void> {
-  const { event, rpcArgs } = buildTopicSrsRatingEvent(userId, topic, grade)
+  options: EnqueueTopicSRSOptions = {},
+): Promise<EnqueueTopicSRSResult | null> {
+  const canonical = canonicalTopic(topic)
+  if (!canonical || (options.allowedTopics && !options.allowedTopics.has(canonical))) {
+    console.warn('[topic-srs] dropped topic outside the canonical catalog', {
+      topic: String(topic).trim().slice(0, 120),
+    })
+    return null
+  }
+
+  const { event, rpcArgs } = buildTopicSrsRatingEvent(userId, canonical, grade)
+
+  // The server-side journal path supplies a Supabase RPC adapter here. This
+  // keeps validation at this same choke point without importing browser-only
+  // Dexie/sync modules into an API route.
+  if (options.write) {
+    return {
+      topic: canonical,
+      result: await options.write({ event, rpcArgs, topic: canonical }),
+    }
+  }
+
+  const { db, enqueue } = await loadClientDependencies()
   await db.srsRatingEvents.add(event)
   await enqueue(userId, 'topic_srs', 'rpc', rpcArgs, undefined, undefined, 'apply_topic_srs_rating_event')
+  return { topic: canonical }
 }

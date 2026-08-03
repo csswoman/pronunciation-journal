@@ -108,7 +108,7 @@ export function SessionHelpPopover({ stats }: Props) {
               role="dialog"
               aria-label="Cómo funciona esta práctica"
               className="animate-state-in fixed z-50 w-72 max-w-[calc(100vw-2rem)] origin-top-right rounded-md border border-border-default bg-surface-raised p-4 shadow-lg"
-              style={{ top: anchor.top, right: anchor.right }}
+              style={{ top: `${anchor.top}px`, right: `${anchor.right}px` }}
             >
               <div className="mb-3 flex items-center justify-between">
                 <h2 className="m-0 text-label font-semibold text-fg">Cómo funciona</h2>

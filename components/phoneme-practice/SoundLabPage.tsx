@@ -232,11 +232,11 @@ export default function SoundLabPage({ userId }: SoundLabPageProps) {
             role="status"
           >
             <Headphones size={14} className="sound-lab__focus-banner-icon shrink-0" aria-hidden />
-            <span className="min-w-0 flex-1 text-body-sm text-[color:var(--text-secondary)]">
+            <span className="min-w-0 flex-1 text-body-sm text-fg-muted">
               Enfoque:{" "}
               <span className="sound-lab__focus-tokens font-ipa">{focusTokens.join(" · ")}</span>
               {!focusSection && (
-                <span className="text-[color:var(--text-secondary)]">
+                <span className="text-fg-muted">
                   . Aún no hay lecciones que coincidan.
                 </span>
               )}
@@ -244,7 +244,7 @@ export default function SoundLabPage({ userId }: SoundLabPageProps) {
             {focusSection?.lessons[0]?.href ? (
               <Link
                 href={focusSection.lessons[0].href}
-                className="inline-flex min-h-9 shrink-0 items-center rounded-md bg-[var(--cta-bg)] px-3 text-caption font-semibold text-[var(--cta-fg)]"
+                className="inline-flex min-h-9 shrink-0 items-center rounded-md bg-cta-bg px-3 text-caption font-semibold text-cta-fg"
               >
                 Abrir este sonido
               </Link>

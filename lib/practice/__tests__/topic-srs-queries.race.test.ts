@@ -114,7 +114,7 @@ describe('enqueueTopicSRSUpdate (rewritten: local-only, no network read)', () =>
   it('GAP CLOSED: offline (no network) no longer prevents enqueueing — there is no read to fail', async () => {
     await expect(
       enqueueTopicSRSUpdate('user-1', 'grammar:present simple', 4),
-    ).resolves.toBeUndefined()
+    ).resolves.toMatchObject({ topic: 'grammar:present simple' })
     expect(enqueueMock).toHaveBeenCalledTimes(1)
   })
 })

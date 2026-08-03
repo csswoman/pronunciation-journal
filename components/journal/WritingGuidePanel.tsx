@@ -1,15 +1,6 @@
 'use client'
 
-// Planned structure:
-// <WritingGuidePanel>
-//   <details> (collapsible wrapper, closed by default)
-//     tab buttons: Tiempos / Frases
-//     <VerbTensesGuide /> or <UsefulPhrasesGuide />
-//   </details>
-// </WritingGuidePanel>
-
 import { useState } from 'react'
-import { BookOpen, ChevronDown } from '@/components/icons'
 import { cn } from '@/lib/cn'
 import { VerbTensesGuide } from './VerbTensesGuide'
 import { UsefulPhrasesGuide } from './UsefulPhrasesGuide'
@@ -18,47 +9,54 @@ type GuideTab = 'tenses' | 'phrases'
 
 export function WritingGuidePanel() {
   const [activeTab, setActiveTab] = useState<GuideTab>('tenses')
+  const isTenses = activeTab === 'tenses'
 
   return (
-    <details className="group rounded-[var(--radius-lg)] border border-border-subtle bg-surface-sunken">
-      <summary className="focus-ring flex cursor-pointer list-none items-center gap-2 px-3 py-2.5 font-body-sm font-medium text-fg">
-        <BookOpen size={14} className="shrink-0 text-fg-subtle" aria-hidden />
-        Guía de apoyo
-        <ChevronDown
-          size={14}
-          className="ml-auto shrink-0 text-fg-subtle transition-transform duration-150 group-open:rotate-180"
-          aria-hidden
-        />
-      </summary>
-      <div className="flex flex-col gap-3 border-t border-border-subtle px-3 py-3">
-        <div role="tablist" className="flex gap-2">
-          <button
-            type="button"
-            role="tab"
-            aria-selected={activeTab === 'tenses'}
-            onClick={() => setActiveTab('tenses')}
-            className={cn(
-              'focus-ring rounded-[var(--radius-sm)] px-2.5 py-1 font-body-sm font-medium transition-colors duration-150',
-              activeTab === 'tenses' ? 'bg-surface text-fg' : 'text-fg-muted',
-            )}
-          >
-            Tiempos verbales
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={activeTab === 'phrases'}
-            onClick={() => setActiveTab('phrases')}
-            className={cn(
-              'focus-ring rounded-[var(--radius-sm)] px-2.5 py-1 font-body-sm font-medium transition-colors duration-150',
-              activeTab === 'phrases' ? 'bg-surface text-fg' : 'text-fg-muted',
-            )}
-          >
-            Frases útiles
-          </button>
-        </div>
-        {activeTab === 'tenses' ? <VerbTensesGuide /> : <UsefulPhrasesGuide />}
+    <section aria-label="Referencia de escritura" className="flex flex-col gap-4">
+      <div>
+        <p className="font-body-sm text-fg-muted">
+          {isTenses
+            ? 'Mira un modelo y adáptalo a lo que quieres contar.'
+            : 'Elige una frase y hazla tuya para seguir escribiendo.'}
+        </p>
       </div>
-    </details>
+      <div role="tablist" aria-label="Tipo de referencia" className="flex rounded-[var(--radius-md)] bg-surface-sunken p-1">
+        <button
+          type="button"
+          role="tab"
+          id="journal-reference-tenses-tab"
+          aria-selected={isTenses}
+          aria-controls="journal-reference-tenses"
+          onClick={() => setActiveTab('tenses')}
+          className={cn(
+            'focus-ring min-h-11 flex-1 rounded-[var(--radius-sm)] px-2 text-center font-body-sm font-medium transition-colors duration-150',
+            isTenses ? 'bg-surface-raised text-fg' : 'text-fg-muted hover:text-fg',
+          )}
+        >
+          Ejemplos por tiempo
+        </button>
+        <button
+          type="button"
+          role="tab"
+          id="journal-reference-phrases-tab"
+          aria-selected={!isTenses}
+          aria-controls="journal-reference-phrases"
+          onClick={() => setActiveTab('phrases')}
+          className={cn(
+            'focus-ring min-h-11 flex-1 rounded-[var(--radius-sm)] px-2 text-center font-body-sm font-medium transition-colors duration-150',
+            !isTenses ? 'bg-surface-raised text-fg' : 'text-fg-muted hover:text-fg',
+          )}
+        >
+          Frases para tu texto
+        </button>
+      </div>
+      <div
+        id={isTenses ? 'journal-reference-tenses' : 'journal-reference-phrases'}
+        role="tabpanel"
+        aria-labelledby={isTenses ? 'journal-reference-tenses-tab' : 'journal-reference-phrases-tab'}
+      >
+        {isTenses ? <VerbTensesGuide /> : <UsefulPhrasesGuide />}
+      </div>
+    </section>
   )
 }

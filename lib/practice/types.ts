@@ -143,7 +143,7 @@ export type PracticeAnswer = {
   attribution?: EvidenceAttribution
   /** Stamped when `attribution` is present so reports can segment legacy rows. */
   attributionVersion?: AttributionVersion
-  /** Raw concept label from the exercise (e.g. "grammar:present_simple"). Normalized before persisting/scheduling. */
+  /** Raw namespaced concept label from the exercise (e.g. "grammar:present simple"). Canonicalized before SRS persistence/scheduling. */
   topic?: string
 }
 

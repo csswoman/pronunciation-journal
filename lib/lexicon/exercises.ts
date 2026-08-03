@@ -37,17 +37,20 @@ export function generateSentenceContextExercises(
     const blanked = blankLemma(w.exampleSentence, w.word)
     return blanked !== null && hasEnoughContext(blanked)
   })
-  const selected = pick(usable, MAX_SENTENCE_CONTEXT)
 
-  return selected.map((word) => {
+  return pick(usable, MAX_SENTENCE_CONTEXT).flatMap((word) => {
     const blanked = blankLemma(word.exampleSentence!, word.word)!
     const distractors = pickDistractors(word, sessionPool)
+    // A short pool would render 2–3 choices, making the answer guessable;
+    // drop the item rather than ship an easier-than-intended question.
+    if (distractors.length < OPTIONS_COUNT - 1) return []
+
     const options: SentenceContextOption[] = shuffle([
       { id: word.id, word: word.word },
       ...distractors,
     ])
 
-    return {
+    return [{
       id: exerciseId('sentence_context', word.id, 'v1'),
       type: 'sentence_context',
       sourceRef: word.bankId
@@ -59,7 +62,7 @@ export function generateSentenceContextExercises(
       answer: word.word,
       definition: word.definition,
       options,
-    }
+    }]
   })
 }
 
@@ -68,11 +71,24 @@ function pickDistractors(
   pool: SentenceContextSourceWord[],
 ): SentenceContextOption[] {
   const needed = OPTIONS_COUNT - 1
-  const others = pool.filter((w) => w.id !== target.id)
+  // Exclude by id *and* spelling: a different catalog entry sharing the
+  // target's surface form would render as a second correct-looking answer.
+  const answer = target.word.toLowerCase()
+  const seen = new Set<string>([answer])
+  const others = pool.filter((w) => {
+    if (w.id === target.id) return false
+    const key = w.word.toLowerCase()
+    if (seen.has(key)) return false
+    seen.add(key)
+    return true
+  })
 
-  // Prefer words sharing a tag with the target (plausible distractors)
+  // Prefer words sharing a tag with the target (plausible distractors),
+  // then backfill from the rest of the pool so a thin same-tag set still
+  // yields a full set of options.
   const sameTag = others.filter((w) => w.tags.some((t) => target.tags.includes(t)))
-  const candidates = sameTag.length >= needed ? sameTag : others
+  const rest = others.filter((w) => !sameTag.includes(w))
+  const candidates = [...pick(sameTag, needed), ...pick(rest, needed)]
 
-  return pick(candidates, needed).map((w) => ({ id: w.id, word: w.word }))
+  return candidates.slice(0, needed).map((w) => ({ id: w.id, word: w.word }))
 }

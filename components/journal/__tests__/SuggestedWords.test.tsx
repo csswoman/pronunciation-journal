@@ -33,6 +33,18 @@ describe('SuggestedWords', () => {
     expect(screen.getByRole('button', { name: /commute/i })).toHaveAttribute('aria-pressed', 'true')
   })
 
+  it('shows the next review returned by word_bank after opt-in', async () => {
+    const nextReviewAt = new Date(Date.now() + 86_400_000).toISOString()
+    quickAddWord.mockResolvedValue({ next_review_at: nextReviewAt })
+    render(<SuggestedWords words={['commute']} />)
+
+    fireEvent.click(screen.getByRole('button', { name: /commute/i }))
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /la ves de nuevo mañana/i })).toBeDisabled()
+    })
+  })
+
   it('marks only the failed word as error and keeps the rest usable', async () => {
     quickAddWord.mockRejectedValueOnce(new Error('boom'))
     render(<SuggestedWords words={['commute', 'deadline']} />)

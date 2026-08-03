@@ -7,7 +7,7 @@ export default function EssentialWordsPage() {
   return (
     <PageLayout
       archetype="session"
-      className="pt-[var(--space-8)]! pb-[calc(var(--layout-page-block-end)+var(--space-12))]! sm:pt-[var(--space-10)]! sm:pb-[var(--layout-page-block-end)]!"
+      className="pt-space-8! pb-[calc(var(--layout-page-block-end)+var(--space-12))]! sm:pt-space-10! sm:pb-layout-page-block-end!"
     >
       <EssentialWordsSession />
     </PageLayout>

@@ -14,13 +14,15 @@ type WordState = 'idle' | 'adding' | 'added' | 'error'
 export function SuggestedWords({ words }: { words: string[] }) {
   const unique = [...new Set(words.map((w) => w.trim()).filter(Boolean))]
   const [states, setStates] = useState<Record<string, WordState>>({})
+  const [nextReviews, setNextReviews] = useState<Record<string, string | null>>({})
 
   if (unique.length === 0) return null
 
   async function add(word: string) {
     setStates((prev) => ({ ...prev, [word]: 'adding' }))
     try {
-      await quickAddWord({ text: word, source: 'manual' })
+      const saved = await quickAddWord({ text: word, source: 'manual' })
+      setNextReviews((prev) => ({ ...prev, [word]: saved.next_review_at }))
       setStates((prev) => ({ ...prev, [word]: 'added' }))
     } catch {
       setStates((prev) => ({ ...prev, [word]: 'error' }))
@@ -49,7 +51,7 @@ export function SuggestedWords({ words }: { words: string[] }) {
                 className={cn( 'focus-ring inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-body-sm transition-colors', added ? 'border-success-border bg-success-soft text-success' : 'border-border-default bg-surface-raised text-fg hover:border-primary', state === 'error' && 'border-error-border text-error', )}
               >
                 {added ? <Check size={14} aria-hidden /> : <Plus size={14} aria-hidden />}
-                {word}
+                {added && nextReviews[word] ? `${word} · ${reviewCopy(nextReviews[word]!)}` : word}
                 <span className="sr-only">
                   {added
                     ? ' guardada en tu banco de palabras'
@@ -64,4 +66,11 @@ export function SuggestedWords({ words }: { words: string[] }) {
       </ul>
     </section>
   )
+}
+
+function reviewCopy(nextReviewAt: string): string {
+  const days = Math.ceil((new Date(nextReviewAt).getTime() - Date.now()) / 86_400_000)
+  if (days <= 1) return 'la ves de nuevo mañana'
+  if (days < 7) return `vuelve en ${days} días`
+  return `vuelve el ${new Intl.DateTimeFormat('es-PE', { day: 'numeric', month: 'long' }).format(new Date(nextReviewAt))}`
 }

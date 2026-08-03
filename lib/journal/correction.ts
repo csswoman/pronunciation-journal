@@ -31,11 +31,46 @@ export const journalCorrectionResultSchema = z
 
 export type JournalCorrectionResult = z.infer<typeof journalCorrectionResultSchema>
 
+/** A topic scheduled as a consequence of reviewing a correction. */
+export const scheduledTopicSchema = z
+  .object({
+    topicId: z.string().min(1).max(120),
+    nextReviewAt: z.string().datetime(),
+    intervalDays: z.number().int().nonnegative(),
+  })
+  .strict()
+
+export type ScheduledTopic = z.infer<typeof scheduledTopicSchema>
+
+/** A word scheduled after the learner explicitly opts it into the word bank. */
+export const scheduledWordSchema = z
+  .object({
+    text: z.string().min(1).max(80),
+    nextReviewAt: z.string().datetime(),
+  })
+  .strict()
+
+export type ScheduledWord = z.infer<typeof scheduledWordSchema>
+
+export const journalCorrectionResponseSchema = journalCorrectionResultSchema
+  .extend({
+    scheduled: z
+      .object({
+        topics: z.array(scheduledTopicSchema).max(8),
+        words: z.array(scheduledWordSchema).max(8),
+      })
+      .strict(),
+  })
+  .strict()
+
+export type JournalCorrectionResponse = z.infer<typeof journalCorrectionResponseSchema>
+
 /** Feedback payload persisted on the journal entry (the correction minus its text). */
 export const journalFeedbackSchema = z
   .object({
     errors: z.array(journalErrorSchema).max(8),
     newWords: z.array(z.string().max(80)).max(8),
+    scheduledTopics: z.array(scheduledTopicSchema).max(8).optional(),
   })
   .strict()
 

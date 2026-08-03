@@ -148,15 +148,12 @@ describe('POST /api/words', () => {
       data: { text: 'ephemeral' },
       error: null,
     })
-    const userClientMock = {
-      from: vi.fn().mockReturnValue({
-        insert: vi.fn().mockReturnValue({
+    const insert = vi.fn().mockReturnValue({
           select: vi.fn().mockReturnValue({
             single: vi.fn().mockResolvedValue({ data: fakeWord, error: null }),
           }),
-        }),
-      }),
-    }
+        })
+    const userClientMock = { from: vi.fn().mockReturnValue({ insert }) }
 
     mockCreateUserScopedClient.mockReturnValue(userClientMock as never)
 
@@ -169,6 +166,11 @@ describe('POST /api/words', () => {
     expect(res.status).toBe(201)
     const body = await res.json()
     expect(body.word.text).toBe('ephemeral')
+    expect(userClientMock.from).toHaveBeenCalledWith('word_bank')
+    expect(insert).toHaveBeenCalledWith(expect.objectContaining({
+      interval_days: 1,
+      next_review_at: expect.any(String),
+    }))
   })
 
   it('stores reader as the source only for a new word', async () => {

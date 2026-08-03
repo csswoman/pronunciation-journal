@@ -84,7 +84,7 @@ export function buildWordReviewStep(
   const savedCount = savedOrFamiliarIds
     ? words.filter((word) => savedOrFamiliarIds.has(word.id)).length
     : 0
-  const baseSubtitle = `Afianza ${words.length} ${words.length === 1 ? 'palabra' : 'palabras'} de tu léxico`
+  const baseSubtitle = `Afianza ${words.length} ${words.length === 1 ? 'palabra' : 'palabras'} de tu vocabulario`
   const subtitle = savedCount > 0
     ? `${baseSubtitle} · Guardaste ${savedCount === 1 ? 'esta palabra' : 'estas palabras'}`
     : baseSubtitle

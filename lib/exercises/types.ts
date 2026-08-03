@@ -36,7 +36,7 @@ interface BaseGenericExercise {
   exerciseType?: CanonicalExerciseType
   sourceRef: ExerciseSourceRef
   level?: CEFRLevel
-  /** Concept label this exercise teaches (e.g. "grammar:present_simple"). Drives topic SRS. Absent for word/phoneme-sourced exercises. */
+  /** Concept label this exercise teaches (e.g. "grammar:present simple"). The SRS boundary canonicalizes legacy underscores. Absent for word/phoneme-sourced exercises. */
   topic?: string
 }
 

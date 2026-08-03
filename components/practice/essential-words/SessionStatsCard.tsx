@@ -33,7 +33,7 @@ function StatColumn({
 export function SessionStatsCard({ stats, counts }: Props) {
   return (
     <section aria-label="Estado de la sesión" className="relative flex w-full items-start justify-center">
-      <div className="grid w-full max-w-xs grid-cols-3 gap-[var(--layout-stack)] sm:gap-[var(--space-5)]">
+      <div className="grid w-full max-w-xs grid-cols-3 gap-layout-stack sm:gap-space-5">
         <StatColumn label="Nuevas" value={counts.newRemaining} zero />
         <StatColumn label="Aprendiendo" value={counts.learningRemaining} accent zero />
         <StatColumn label="Repaso" value={counts.reviewRemaining} zero />

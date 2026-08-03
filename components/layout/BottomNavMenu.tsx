@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { BookOpen, Ear, FileText, Layers, MicVocal, Moon, RotateCcw, Sun, User } from "@/components/icons";
+import { BookOpen, FileText, Layers, MicVocal, Moon, RotateCcw, Sun, User } from "@/components/icons";
 import { useEffect } from "react";
 import { cn } from "@/lib/cn";
 import { useOKLCHTheme } from "@/hooks/useOKLCHTheme";
@@ -12,7 +12,6 @@ const navItems = [
   { name: "Mazos", href: "/practice/decks", icon: Layers },
   { name: "Laboratorio de sonidos", href: "/practice/sounds", icon: MicVocal },
   { name: "Ruta", href: "/courses", icon: BookOpen },
-  { name: "Pronunciación", href: "/courses/pronunciation", icon: Ear },
   { name: "Perfil", href: "/profile", icon: User },
 ] as const;
 
@@ -57,7 +56,7 @@ export default function BottomNavMenu({ open, onClose, isActive }: BottomNavMenu
         id="bottom-nav-menu"
         role="dialog"
         aria-modal="true"
-        aria-label="More navigation"
+        aria-label="Más navegación"
         className={cn(
           "fixed left-4 right-4 z-50 overflow-hidden",
           "rounded-xl border border-(--line-divider) bg-(--surface-translucent) shadow-xl backdrop-blur-md",

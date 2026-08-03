@@ -182,7 +182,7 @@ export function SpeakReviewCard({
           : 'Escucha el modelo y graba tu voz cuando estés listo.'
 
   return (
-    <div className="flex w-full flex-col items-center gap-[var(--space-5)] rounded-lg border border-border-subtle bg-surface-raised layout-card-pad sm:gap-[var(--layout-stack-loose)]">
+    <div className="flex w-full flex-col items-center gap-space-5 rounded-lg border border-border-subtle bg-surface-raised layout-card-pad sm:gap-layout-stack-loose">
       <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">
         {statusMessage}
       </p>

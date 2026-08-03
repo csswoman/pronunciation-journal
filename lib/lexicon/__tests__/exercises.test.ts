@@ -25,13 +25,18 @@ function makeWordEntry(
 
 describe('generateSentenceContextExercises', () => {
   it('skips words without an example sentence', () => {
+    // Pool is padded so the only reason 'vague' is excluded is its missing
+    // example sentence, not a shortage of distractors.
     const pool = [
       makeWordEntry({ id: '1', word: 'focus' }),
       makeWordEntry({ id: '2', word: 'vague', exampleSentence: undefined }),
+      makeWordEntry({ id: '3', word: 'clarity' }),
+      makeWordEntry({ id: '4', word: 'effort' }),
+      makeWordEntry({ id: '5', word: 'patience' }),
     ]
     const exercises = generateSentenceContextExercises(pool, pool)
-    expect(exercises).toHaveLength(1)
-    expect(exercises[0].answer).toBe('focus')
+    expect(exercises.some((ex) => ex.answer === 'focus')).toBe(true)
+    expect(exercises.every((ex) => ex.answer !== 'vague')).toBe(true)
   })
 
   it('accepts inflected surface forms via blankLemma', () => {
@@ -101,6 +106,72 @@ describe('generateSentenceContextExercises', () => {
     const [ex] = generateSentenceContextExercises([pool[0]], pool)
     expect(ex.sourceRef).toEqual({ source: 'word_bank', id: bankUuid })
     expect(ex.options.some((o) => o.id === 'ship')).toBe(true)
+  })
+
+  it('always emits four options when it emits an exercise', () => {
+    const pool = [
+      makeWordEntry({ id: 'ship', word: 'ship', tags: ['t'] }),
+      makeWordEntry({ id: 'a', word: 'boat', tags: ['t'] }),
+      makeWordEntry({ id: 'b', word: 'car', tags: ['t'] }),
+      makeWordEntry({ id: 'c', word: 'train', tags: ['t'] }),
+    ]
+    for (const ex of generateSentenceContextExercises(pool, pool)) {
+      expect(ex.options).toHaveLength(4)
+    }
+  })
+
+  it('drops words whose pool cannot supply three distractors', () => {
+    // Only two candidates besides the target — not enough for four options.
+    const pool = [
+      makeWordEntry({ id: 'ship', word: 'ship', tags: ['t'] }),
+      makeWordEntry({ id: 'a', word: 'boat', tags: ['t'] }),
+    ]
+    expect(generateSentenceContextExercises(pool, pool)).toEqual([])
+  })
+
+  it('backfills distractors from outside the tag when same-tag words are scarce', () => {
+    const pool = [
+      makeWordEntry({ id: 'ship', word: 'ship', tags: ['transport'] }),
+      makeWordEntry({ id: 'a', word: 'boat', tags: ['transport'] }),
+      makeWordEntry({ id: 'b', word: 'apple', tags: ['food'] }),
+      makeWordEntry({ id: 'c', word: 'bread', tags: ['food'] }),
+    ]
+    const [ex] = generateSentenceContextExercises([pool[0]], pool)
+    expect(ex.options).toHaveLength(4)
+  })
+
+  it('never renders the same surface form twice in the options', () => {
+    // Two distinct catalog ids share the spelling "boat".
+    const pool = [
+      makeWordEntry({ id: 'ship', word: 'ship', tags: ['t'] }),
+      makeWordEntry({ id: 'a', word: 'boat', tags: ['t'] }),
+      makeWordEntry({ id: 'a2', word: 'boat', tags: ['t'] }),
+      makeWordEntry({ id: 'b', word: 'car', tags: ['t'] }),
+      makeWordEntry({ id: 'c', word: 'train', tags: ['t'] }),
+    ]
+    for (let i = 0; i < 50; i++) {
+      const [ex] = generateSentenceContextExercises([pool[0]], pool)
+      if (!ex) continue
+      const words = ex.options.map((o) => o.word)
+      expect(new Set(words).size).toBe(words.length)
+    }
+  })
+
+  it('never offers a distractor spelled like the answer', () => {
+    // A different id carrying the answer's spelling must not become a choice.
+    const pool = [
+      makeWordEntry({ id: 'ship', word: 'ship', tags: ['t'] }),
+      makeWordEntry({ id: 'dupe', word: 'Ship', tags: ['t'] }),
+      makeWordEntry({ id: 'b', word: 'car', tags: ['t'] }),
+      makeWordEntry({ id: 'c', word: 'train', tags: ['t'] }),
+      makeWordEntry({ id: 'd', word: 'plane', tags: ['t'] }),
+    ]
+    for (let i = 0; i < 50; i++) {
+      const [ex] = generateSentenceContextExercises([pool[0]], pool)
+      if (!ex) continue
+      const matching = ex.options.filter((o) => o.word.toLowerCase() === 'ship')
+      expect(matching).toHaveLength(1)
+    }
   })
 
   it('marks unsaved lexicon items as lexicon source (no bank UUID)', () => {

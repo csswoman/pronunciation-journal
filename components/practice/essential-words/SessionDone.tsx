@@ -72,7 +72,7 @@ export function SessionDone({
       : 'bg-success text-white'
 
   return (
-    <div className="flex flex-col items-center layout-stack-loose py-[var(--layout-page-block)] text-center animate-message-in">
+    <div className="flex flex-col items-center layout-stack-loose py-layout-page-block text-center animate-message-in">
       <div className="flex flex-col items-center gap-3">
         <span
           className={cn( 'inline-flex h-12 w-12 items-center justify-center rounded-full', iconTone, !loadFailed && 'animate-step-done', )}
@@ -106,7 +106,7 @@ export function SessionDone({
         )}
       </div>
 
-      <div className="flex w-full max-w-sm flex-col gap-[var(--layout-stack)]">
+      <div className="flex w-full max-w-sm flex-col gap-layout-stack">
         {onLearnMore ? (
           <PillButton
             type="button"

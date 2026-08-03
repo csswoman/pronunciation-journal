@@ -137,7 +137,11 @@ export function useJournalEntry(initial: JournalEntryRecord): UseJournalEntry {
       await persist({
         status: 'corrected',
         correctedContent: result.correctedContent,
-        feedback: { errors: result.errors, newWords: result.newWords },
+        feedback: {
+          errors: result.errors,
+          newWords: result.newWords,
+          scheduledTopics: result.scheduled?.topics ?? [],
+        },
       })
     } catch (err) {
       setCorrectionError(

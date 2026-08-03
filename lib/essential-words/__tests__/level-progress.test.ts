@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { tallyLevelProgress } from "../level-progress";
+import {
+  currentLevelStatus,
+  displayLevelProgress,
+  tallyLevelProgress,
+  type LevelProgress,
+} from "../level-progress";
 import { essentialWordId, type EssentialWord } from "../types";
 
 function word(rank: number, w: string, cefr: EssentialWord["cefr_level"]): EssentialWord {
@@ -30,5 +35,27 @@ describe("tallyLevelProgress", () => {
     expect(byLevel.A2).toMatchObject({ learned: 0, total: 1 });
     expect(byLevel.B1).toMatchObject({ learned: 1, total: 1 });
     expect(byLevel.B2).toMatchObject({ learned: 0, total: 0 });
+  });
+});
+
+describe("currentLevelStatus / displayLevelProgress", () => {
+  const rows: LevelProgress[] = [
+    { level: "A1", learned: 2, total: 740 },
+    { level: "A2", learned: 0, total: 645 },
+    { level: "B1", learned: 0, total: 524 },
+    { level: "B2", learned: 0, total: 754 },
+    { level: "C1", learned: 0, total: 137 },
+  ];
+
+  it("names the level where the learner is parked", () => {
+    expect(currentLevelStatus(rows)).toBe("Vas por A1 · 2 de 740");
+  });
+
+  it("keeps the frontier and collapses the unstarted streak", () => {
+    expect(displayLevelProgress(rows)).toEqual([
+      { kind: "level", level: "A1", learned: 2, total: 740 },
+      { kind: "level", level: "A2", learned: 0, total: 645 },
+      { kind: "collapsed", from: "B1", to: "C1" },
+    ]);
   });
 });

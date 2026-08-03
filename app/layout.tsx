@@ -30,9 +30,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Fonts live on <body> so React does not own <html className> and wipe a
-  // pre-paint `.dark` class set by the blocking theme script.
+  // Font variable *classes* stay on <body> so React never owns <html className>
+  // and cannot wipe a pre-paint `.dark` from the blocking theme script.
+  // Family names are also mirrored onto :root so tokens.css composites
+  // (--font-body, --font-kicker, …) resolve against DM Sans / Mono / Andika
+  // instead of Tailwind's default ui-sans-serif stack on <html>.
   const fontVars = `${dmSans.variable} ${dmMono.variable} ${andika.variable}`;
+  const rootFontVars = `:root{--font-sans:${dmSans.style.fontFamily};--font-mono-var:${dmMono.style.fontFamily};--font-ipa:${andika.style.fontFamily};}`;
 
   return (
     <html lang="es" suppressHydrationWarning>
@@ -50,6 +54,10 @@ export default function RootLayout({
         <script
           id="theme-init"
           dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }}
+        />
+        <style
+          id="root-font-vars"
+          dangerouslySetInnerHTML={{ __html: rootFontVars }}
         />
       </head>
       <body

@@ -1,3 +1,13 @@
+import {
+  selectDictionarySense,
+  type DictionaryMeaning,
+} from "@/lib/word-of-day/select-sense";
+
+export {
+  selectDictionarySense,
+  type SelectedDictionarySense,
+} from "@/lib/word-of-day/select-sense";
+
 export interface WordOfDay {
   word: string;
   ipa: string;
@@ -55,10 +65,7 @@ interface DictionaryApiEntry {
   word?: string;
   phonetic?: string;
   phonetics?: Array<{ text?: string; audio?: string }>;
-  meanings?: Array<{
-    partOfSpeech?: string;
-    definitions?: Array<{ definition?: string; example?: string }>;
-  }>;
+  meanings?: DictionaryMeaning[];
 }
 
 let cachedKey = "";
@@ -135,23 +142,15 @@ async function fetchWordData(word: string): Promise<WordOfDay | null> {
     entry.phonetic ??
     "";
 
-  const meaningWithExample =
-    entry.meanings?.find((meaning) =>
-      meaning.definitions?.some((definition) => definition.example && definition.definition),
-    ) ?? entry.meanings?.[0];
-
-  const definition =
-    meaningWithExample?.definitions?.find((item) => item.example && item.definition) ??
-    meaningWithExample?.definitions?.[0];
-
-  if (!definition?.definition) return null;
+  const sense = selectDictionarySense(entry.meanings);
+  if (!sense) return null;
 
   return {
     word,
     ipa: phonetic,
-    part_of_speech: meaningWithExample?.partOfSpeech ?? "",
-    definition: definition.definition,
-    example_sentence: definition.example ?? "",
+    part_of_speech: sense.partOfSpeech,
+    definition: sense.definition,
+    example_sentence: sense.example,
     difficulty: getDifficulty(word),
   };
 }

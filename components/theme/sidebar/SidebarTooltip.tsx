@@ -39,8 +39,8 @@ export function SidebarTooltipPortal({ label, top, left, visible }: SidebarToolt
 
   return createPortal(
     <span
-      className="fixed z-[9999] px-2 py-1 rounded-md text-caption font-medium whitespace-nowrap shadow-md pointer-events-none -translate-y-1/2 bg-surface-raised text-fg border border-border-default"
-      style={{ top: top, left: left }}
+      className="pointer-events-none fixed z-tooltip -translate-y-1/2 whitespace-nowrap rounded-md border border-border-default bg-surface-raised px-2 py-1 text-caption font-medium text-fg shadow-md"
+      style={{ top: `${top}px`, left: `${left}px` }}
     >
       {label}
     </span>,

@@ -44,15 +44,15 @@ export function WordCarousel({ words }: WordCarouselProps) {
   if (!current) return null
 
   return (
-    <div className="flex flex-col items-center gap-4 py-[var(--layout-section-gap)] px-[var(--layout-page-inline)] w-full max-w-xs mx-auto">
+    <div className="mx-auto flex w-full max-w-xs flex-col items-center gap-4 px-layout-page-inline py-layout-section-gap">
       {/* Word + IPA slot */}
       <div
         className={cn(
-          'flex flex-col items-center gap-1 min-h-14 justify-center duration-300',
+          'flex min-h-14 flex-col items-center justify-center gap-1 duration-300',
           prefersReduced.current
             ? 'transition-opacity'
-            : 'transition-[opacity,transform] [transition-timing-function:var(--ease-out-expo)]',
-          visible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-1.5',
+            : 'transition-[opacity,transform] ease-out-expo',
+          visible ? 'translate-y-0 opacity-100' : '-translate-y-1.5 opacity-0',
         )}
       >
         <span className="font-mono text-h4 font-medium text-primary tracking-wide">

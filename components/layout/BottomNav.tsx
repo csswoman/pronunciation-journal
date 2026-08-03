@@ -15,8 +15,8 @@ interface BottomNavProps {
 }
 
 const primaryTabs = [
-  { name: "Home", href: "/", icon: Home },
-  { name: "Practice", href: "/practice", icon: Target },
+  { name: "Inicio", href: "/", icon: Home },
+  { name: "Práctica", href: "/practice", icon: Target },
   { name: "Ruta", href: "/courses", icon: BookOpen },
 ] as const;
 
@@ -40,9 +40,9 @@ export default function BottomNav({ className = "" }: BottomNavProps) {
       <BottomNavMenu open={showMenu} onClose={closeMenu} isActive={isActive} />
 
       <nav
-        aria-label="Main navigation"
+        aria-label="Navegación principal"
         className={cn(
-          "fixed inset-x-0 bottom-0 z-50 grid grid-cols-5 items-end border-t border-[var(--line-divider)] bg-[var(--card-bg)]/90 backdrop-blur-md px-1 pt-2",
+          "fixed inset-x-0 bottom-0 z-50 grid grid-cols-5 items-end border-t border-line-divider bg-card-bg/90 backdrop-blur-md px-1 pt-2",
           "pb-[max(0.5rem,env(safe-area-inset-bottom))]",
           className,
         )}
@@ -84,7 +84,7 @@ export default function BottomNav({ className = "" }: BottomNavProps) {
 
         <div className="flex justify-center">
           <BottomNavTab
-            name="Menu"
+            name="Menú"
             icon={<Menu className="h-5 w-5" strokeWidth={showMenu ? 2.25 : 1.75} />}
             active={showMenu}
             onClick={toggleMenu}

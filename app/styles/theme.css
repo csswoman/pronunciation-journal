@@ -48,6 +48,11 @@
   --color-border-default: var(--border-default);
   --color-border-strong:  var(--border-strong);
   --color-border-focus:   var(--border-focus);
+  --color-line-divider:   var(--line-divider);
+
+  /* ── Legacy surface aliases (bg-page-bg, bg-card-bg) ───────────────────── */
+  --color-page-bg: var(--page-bg);
+  --color-card-bg: var(--card-bg);
 
   /* ── Overlays ──────────────────────────────────────────────────────────── */
   --color-overlay-subtle: var(--overlay-subtle);
@@ -119,6 +124,24 @@
   --spacing-space-12: var(--space-12);
   --spacing-space-16: var(--space-16);
   --spacing-space-20: var(--space-20);
+
+  /* ── Layout spacing — mirrors tokens.css (--layout-*) ───────────────────── */
+  --spacing-layout-page-inline:     var(--layout-page-inline);
+  --spacing-layout-page-block:      var(--layout-page-block);
+  --spacing-layout-page-block-end:  var(--layout-page-block-end);
+  --spacing-layout-section-gap:     var(--layout-section-gap);
+  --spacing-layout-stack-tight:     var(--layout-stack-tight);
+  --spacing-layout-stack:           var(--layout-stack);
+  --spacing-layout-stack-loose:     var(--layout-stack-loose);
+  --spacing-layout-card-pad:        var(--layout-card-pad);
+  --spacing-layout-session-max:     var(--layout-session-max);
+
+  /* ── Motion easings — same curves as tokens.css ─────────────────────────── */
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-expo:  cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ── Z-index ───────────────────────────────────────────────────────────── */
+  --z-tooltip: 9999;
 
   /* ── Border radius — keep literals (same names as tokens.css; no var loop) */
   --radius-xs:   4px;

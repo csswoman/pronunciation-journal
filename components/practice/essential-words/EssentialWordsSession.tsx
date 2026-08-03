@@ -121,7 +121,7 @@ export function EssentialWordsSession() {
   return (
     <>
       <Frame className={speaking ? 'min-h-[calc(100dvh-6rem)]' : undefined}>
-        <div className="flex flex-col gap-[var(--layout-stack)]">
+        <div className="flex flex-col gap-layout-stack">
           {chrome}
           {!speaking && <SessionStatsCard stats={stats} counts={counts} />}
         </div>
@@ -160,7 +160,7 @@ function Frame({ children, className }: { children: ReactNode; className?: strin
   return (
     <div
       className={cn(
-        'relative mx-auto flex w-full max-w-[var(--layout-session-max)] flex-col gap-[var(--space-6)] sm:gap-[var(--space-8)]',
+        'relative mx-auto flex w-full max-w-layout-session-max flex-col gap-space-6 sm:gap-space-8',
         className,
       )}
     >
