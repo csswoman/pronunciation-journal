@@ -249,6 +249,19 @@ export interface SRSRatingEventRecord {
   isRepair?: boolean;
 }
 
+/** Pre-graduation intermediate state for one Essential Words word. */
+export interface EssentialWordProgressRecord {
+  /** Primary key: `${userId}:${wordId}`. */
+  id: string;
+  wordId: string;
+  userId: string;
+  exposedAt: string;
+  highestLevel: 0 | 1 | 2 | 3;
+  lastLevelAt: string;
+  lastSessionId: string;
+  attempts: number;
+}
+
 class PronunciationDB extends Dexie {
   attempts!: Table<Attempt, number>;
   srsData!: Table<SRSData, string>;
@@ -275,6 +288,7 @@ class PronunciationDB extends Dexie {
   localDataQuarantine!: Table<LocalDataQuarantineRecord, number>;
   srsEntityState!: Table<SRSEntityStateRecord, string>;
   srsRatingEvents!: Table<SRSRatingEventRecord, string>;
+  essentialWordProgress!: Table<EssentialWordProgressRecord, string>;
   pronunciationAssessments!: Table<PronunciationAssessmentRecord, string>;
   pronunciationFeedbackEvidence!: Table<PronunciationFeedbackEvidenceRecord, string>;
   missionSessions!: Table<MissionSessionRecord, string>;
@@ -487,6 +501,10 @@ class PronunciationDB extends Dexie {
     // §3.3). Purely additive — no index/store-shape change.
     this.version(29).stores({
       srsRatingEvents: 'id, userId, status, [userId+status], [userId+entityType+entityId], [userId+entityType+topic]',
+    });
+    // v30: pre-graduation Essential Words progress, scoped by account.
+    this.version(30).stores({
+      essentialWordProgress: 'id, userId, wordId, [userId+wordId], lastLevelAt',
     });
 
     this.pronunciationMastery = this.table("pronunciationMasteryV2") as Table<PronunciationMasteryRecord, string>;
@@ -708,6 +726,33 @@ export async function recordEssentialWordsReviewEvent(
     latencyMs: input.latencyMs,
     isRepair: input.isRepair ?? false,
   });
+}
+
+function essentialWordProgressId(wordId: string, userId: string): string {
+  return `${userId}:${wordId}`;
+}
+
+/** Pre-graduation progress for one word, or undefined if none is stored. */
+export async function getEssentialWordProgress(
+  wordId: string,
+  userId: string,
+): Promise<EssentialWordProgressRecord | undefined> {
+  return db.essentialWordProgress.get(essentialWordProgressId(wordId, userId));
+}
+
+/** Upserts pre-graduation progress for a word and account. */
+export async function saveEssentialWordProgress(
+  record: Omit<EssentialWordProgressRecord, "id">,
+): Promise<void> {
+  await db.essentialWordProgress.put({
+    ...record,
+    id: essentialWordProgressId(record.wordId, record.userId),
+  });
+}
+
+/** Removes pre-graduation progress on graduation or expired resumption. */
+export async function archiveEssentialWordProgress(wordId: string, userId: string): Promise<void> {
+  await db.essentialWordProgress.delete(essentialWordProgressId(wordId, userId));
 }
 
 async function getOrCreateEssentialWordSrsRow(word: string, userId?: string): Promise<SRSData | undefined> {
