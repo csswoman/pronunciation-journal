@@ -46,6 +46,21 @@ describe("selectMode — tiers", () => {
     }
   });
 
+  it("sends snooze-reactivated words to production, whatever the tier", () => {
+    // SpeakReviewCard es la única card con las acciones "seguir pausada" /
+    // "ya la domino"; sin esta regla, una palabra reactivada con reps bajas
+    // caería en reconocimiento y esas acciones serían inalcanzables.
+    for (let reps = 0; reps <= 12; reps++) {
+      const revived: EssentialWordQueueItem = {
+        kind: "review",
+        entry: entry(),
+        repetitions: reps,
+        fromSnooze: true,
+      };
+      expect(selectMode(revived)).toBe("speak_sentence");
+    }
+  });
+
   it("uses recognition for tender reviews (repetitions <= 2)", () => {
     for (let reps = 0; reps <= 2; reps++) {
       const mode = selectMode(item("review", entry(), reps));

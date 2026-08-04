@@ -96,6 +96,10 @@ export function selectMode(
   previousMode?: EssentialWordMode,
 ): EssentialWordMode {
   if (item.kind === "new") return "study";
+  // A word coming back from snooze gets full production: that card is the only
+  // one offering the keep-snoozed / already-mastered decision, which is the
+  // whole point of resurfacing it.
+  if (item.fromSnooze) return "speak_sentence";
 
   const { entry } = item;
   const reps = item.repetitions ?? 0;

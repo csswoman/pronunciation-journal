@@ -10,9 +10,11 @@ import { SessionStatsCard } from './SessionStatsCard'
 import { WordStudyCard } from './WordStudyCard'
 import { SpeakReviewCard } from './SpeakReviewCard'
 import { RecognizeCard } from './RecognizeCard'
+import { RecognizeAudioCard } from './RecognizeAudioCard'
 import { DictationCard } from './DictationCard'
 import { WeakFormCard } from './WeakFormCard'
 import { ClozeCard } from './ClozeCard'
+import { RecallTranslationCard } from './RecallTranslationCard'
 import { SessionDone } from './SessionDone'
 import { EssentialWordsChrome } from './EssentialWordsChrome'
 import { ExitConfirmSheet } from '@/components/exercises/ExitConfirmSheet'
@@ -161,6 +163,13 @@ export function EssentialWordsSession() {
                   onGraded={submitGrade}
                 />
               )}
+              {currentMode === 'recognize_audio' && (
+                <RecognizeAudioCard
+                  entry={current.entry}
+                  distractors={distractorPool}
+                  onGraded={submitGrade}
+                />
+              )}
               {currentMode === 'dictation_sentence' && (
                 <DictationCard entry={current.entry} onGraded={submitGrade} />
               )}
@@ -169,6 +178,9 @@ export function EssentialWordsSession() {
               )}
               {currentMode === 'cloze_sentence' && (
                 <ClozeCard entry={current.entry} onGraded={submitGrade} />
+              )}
+              {currentMode === 'recall_translation' && (
+                <RecallTranslationCard entry={current.entry} onGraded={submitGrade} />
               )}
               {/* 'study' mode belongs to the study phase's WordStudyCard; a new
                   word reaching the speak phase (post-study) still falls back
