@@ -59,4 +59,14 @@ describe("Core 1000 dataset", () => {
     const report = bad.map(({ w, i }) => `#${w.rank} ${w.word} variante ${i + 1}`).join("\n");
     expect(bad, `\n${report}`).toEqual([]);
   });
+
+  it("every entry has at least one cloze-viable sentence", async () => {
+    const { clozeFor } = await import("../cloze");
+    const failing = words.filter((w) => {
+      const pool = [w.example_sentence, ...(w.example_sentences ?? []).map((v) => v.sentence)];
+      return !pool.some((s) => clozeFor(w, s) !== null);
+    });
+    const report = failing.map((w) => `#${w.rank} ${w.word}`).join(", ");
+    expect(failing, `Words with no cloze-viable sentence: ${report}`).toEqual([]);
+  });
 });
