@@ -211,9 +211,11 @@ describe('EssentialWordsSession', () => {
     expect(dbMocks.saveSRSData).toHaveBeenCalledWith(expect.objectContaining({
       wordId: 'c1k:the',
       word: 'the',
-      interval: 1,
+      interval: 0,
       repetitions: 0,
-      ease: 2.18,
+      ease: 2.5,
+      stability: expect.any(Number), difficulty: expect.any(Number),
+      state: expect.any(String), fsrsRealReviews: 1,
     }), 'user-1')
     expect(window.sessionStorage.getItem('core1000:pending-lapses')).toBeNull()
   })

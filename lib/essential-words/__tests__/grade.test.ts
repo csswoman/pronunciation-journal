@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const dbMocks = vi.hoisted(() => ({
   getSRSData: vi.fn(),
-  saveSRSData: vi.fn(async (..._args: unknown[]) => undefined),
+  saveSRSData: vi.fn(async () => undefined),
   saveAttempt: vi.fn(async () => undefined),
   updateDailyProgress: vi.fn(async () => undefined),
   updateUserStats: vi.fn(async () => undefined),
@@ -70,7 +70,7 @@ describe("gradeEssentialWord", () => {
 
     await gradeEssentialWord("to", 4, {}, USER_ID);
 
-    const saved = dbMocks.saveSRSData.mock.calls[0][0] as SRSData;
+    const saved = (dbMocks.saveSRSData.mock.calls as unknown[][])[0][0] as SRSData;
     expect(saved.stability).toBeGreaterThan(0);
     expect(saved.difficulty).toBeGreaterThanOrEqual(1);
     expect(saved.difficulty).toBeLessThanOrEqual(10);
@@ -86,13 +86,13 @@ describe("gradeEssentialWord", () => {
 
     await gradeEssentialWord("to", 4, {}, USER_ID);
 
-    const saved = dbMocks.saveSRSData.mock.calls[0][0] as SRSData;
+    const saved = (dbMocks.saveSRSData.mock.calls as unknown[][])[0][0] as SRSData;
     expect(saved.fsrsRealReviews).toBe(1);
   });
 
   it("advances nextReview into the future via the FSRS scheduler", async () => {
     await gradeEssentialWord("to", 4, {}, USER_ID);
-    const saved = dbMocks.saveSRSData.mock.calls[0][0] as SRSData;
+    const saved = (dbMocks.saveSRSData.mock.calls as unknown[][])[0][0] as SRSData;
     expect(new Date(saved.nextReview).getTime()).toBeGreaterThan(Date.now());
   });
 
