@@ -10,9 +10,11 @@ export type EssentialWordMode =
   | "study"
   | "recognize_translation"
   | "recognize_meaning"
+  | "recognize_audio"
   | "dictation_sentence"
   | "cloze_sentence"
   | "weak_form"
+  | "recall_translation"
   | "speak_sentence";
 
 /**
@@ -27,9 +29,11 @@ export const MODE_REQUIRED_FIELD: Record<
   study: null,
   recognize_translation: "translation",
   recognize_meaning: "meaning",
+  recognize_audio: null, // only needs `word` + TTS, both always available
   dictation_sentence: null, // example_sentence is mandatory
   cloze_sentence: null, // computed: clozeFor(entry) must be non-null
   weak_form: "ipa_weak",
+  recall_translation: "translation", // ES prompt → user produces the English
   speak_sentence: null, // example_sentence is mandatory
 };
 
@@ -98,6 +102,7 @@ export function selectMode(
   const recognition: EssentialWordMode[] = [
     "recognize_translation",
     "recognize_meaning",
+    "recognize_audio",
   ];
 
   if (item.kind === "learning" || reps <= TENDER_MAX) {
@@ -111,5 +116,10 @@ export function selectMode(
       previousMode,
     );
   }
-  return pickRotating(entry, ["speak_sentence", "cloze_sentence"], reps, previousMode);
+  return pickRotating(
+    entry,
+    ["speak_sentence", "cloze_sentence", "recall_translation"],
+    reps,
+    previousMode,
+  );
 }

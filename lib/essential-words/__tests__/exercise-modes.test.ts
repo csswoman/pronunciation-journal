@@ -38,14 +38,22 @@ describe("selectMode — tiers", () => {
   it("gives learning items recognition, never production", () => {
     for (let reps = 0; reps <= 10; reps++) {
       const mode = selectMode(item("learning", entry(), reps));
-      expect(["recognize_translation", "recognize_meaning"]).toContain(mode);
+      expect([
+        "recognize_translation",
+        "recognize_meaning",
+        "recognize_audio",
+      ]).toContain(mode);
     }
   });
 
   it("uses recognition for tender reviews (repetitions <= 2)", () => {
     for (let reps = 0; reps <= 2; reps++) {
       const mode = selectMode(item("review", entry(), reps));
-      expect(["recognize_translation", "recognize_meaning"]).toContain(mode);
+      expect([
+        "recognize_translation",
+        "recognize_meaning",
+        "recognize_audio",
+      ]).toContain(mode);
     }
   });
 
@@ -59,7 +67,11 @@ describe("selectMode — tiers", () => {
   it("uses production or cloze for mature reviews (>= 6)", () => {
     for (let reps = 6; reps <= 12; reps++) {
       const mode = selectMode(item("review", entry(), reps));
-      expect(["speak_sentence", "cloze_sentence"]).toContain(mode);
+      expect([
+        "speak_sentence",
+        "cloze_sentence",
+        "recall_translation",
+      ]).toContain(mode);
     }
   });
 });
@@ -72,12 +84,17 @@ describe("selectMode — rotación", () => {
 
   it("varies the tender mode as repetitions advance (meaning is no longer dead code)", () => {
     const seen = new Set<EssentialWordMode>();
-    for (let reps = 0; reps <= 2; reps++) {
-      seen.add(selectMode(item("review", entry(), reps)));
+    // La rotación avanza con repetitions; el tier tender se corta en 2, así que
+    // se recorre el ciclo completo con kind 'learning', que usa el mismo set.
+    for (let reps = 0; reps <= 5; reps++) {
+      seen.add(selectMode(item("learning", entry(), reps)));
     }
-    // Con 2 candidatos y 3 reps consecutivas, ambos modos deben aparecer.
     expect(seen).toEqual(
-      new Set(["recognize_translation", "recognize_meaning"]),
+      new Set([
+        "recognize_translation",
+        "recognize_meaning",
+        "recognize_audio",
+      ]),
     );
   });
 
@@ -96,20 +113,61 @@ describe("selectMode — anti-repetición (previousMode)", () => {
     const chosen = selectMode(target);
     const avoided = selectMode(target, chosen);
     expect(avoided).not.toBe(chosen);
-    expect(["recognize_translation", "recognize_meaning"]).toContain(avoided);
+    expect([
+      "recognize_translation",
+      "recognize_meaning",
+      "recognize_audio",
+    ]).toContain(avoided);
   });
 
   it("repeats the mode when it is the only usable candidate", () => {
-    // Sin meaning, el único candidato tender con datos es recognize_translation.
-    const only = item("review", entry({ meaning: undefined }), 1);
-    expect(selectMode(only, "recognize_translation")).toBe("recognize_translation");
+    // Tier medio sin ipa_weak (no weak_form) y con una oración sin contexto
+    // suficiente (no cloze) deja dictation_sentence como único viable.
+    const only = item("review", entry({ example_sentence: "It is through." }), 3);
+    expect(selectMode(only)).toBe("dictation_sentence");
+    expect(selectMode(only, "dictation_sentence")).toBe("dictation_sentence");
+  });
+});
+
+describe("selectMode — modos nuevos (fase 1.5)", () => {
+  it("puts recognize_audio in the tender tier", () => {
+    const seen = new Set<EssentialWordMode>();
+    for (let reps = 0; reps <= 5; reps++) {
+      seen.add(selectMode(item("learning", entry(), reps)));
+    }
+    expect(seen.has("recognize_audio")).toBe(true);
+  });
+
+  it("puts recall_translation in the mature tier", () => {
+    const seen = new Set<EssentialWordMode>();
+    for (let reps = 6; reps <= 14; reps++) {
+      seen.add(selectMode(item("review", entry(), reps)));
+    }
+    expect(seen.has("recall_translation")).toBe(true);
+  });
+
+  it("recognize_audio needs no optional field — only the word itself", () => {
+    const bare = entry({ meaning: undefined, translation: undefined });
+    expect(modeHasData(bare, "recognize_audio")).toBe(true);
+  });
+
+  it("skips recall_translation when translation is missing", () => {
+    const noTranslation = entry({ translation: undefined });
+    expect(modeHasData(noTranslation, "recall_translation")).toBe(false);
+    for (let reps = 6; reps <= 14; reps++) {
+      expect(selectMode(item("review", noTranslation, reps))).not.toBe(
+        "recall_translation",
+      );
+    }
   });
 });
 
 describe("selectMode — fallbacks", () => {
-  it("falls back to speech when no tender candidate has data", () => {
+  it("uses audio recognition when no text-based tender candidate has data", () => {
+    // recognize_audio solo necesita `word`, así que sigue siendo viable aunque
+    // falten meaning y translation — no hace falta caer a speak_sentence.
     const bare = entry({ meaning: undefined, translation: undefined });
-    expect(selectMode(item("review", bare, 1))).toBe("speak_sentence");
+    expect(selectMode(item("review", bare, 1))).toBe("recognize_audio");
   });
 
   // Invariante central: nunca elegir un modo sin datos.
@@ -128,6 +186,8 @@ describe("selectMode — fallbacks", () => {
       "recognize_translation",
       "dictation_sentence",
       "speak_sentence",
+      "recognize_audio",
+      "recall_translation",
     ];
 
     for (const e of variants) {
@@ -147,6 +207,8 @@ describe("selectMode — fallbacks", () => {
       [
         "cloze_sentence",
         "dictation_sentence",
+        "recall_translation",
+        "recognize_audio",
         "recognize_meaning",
         "recognize_translation",
         "speak_sentence",
