@@ -43,26 +43,37 @@ el dato antes de diseñar alrededor del hueco ahorra un componente entero.
 El log de revisiones (§3.3) se implementa en **Fase A**, antes que FSRS: es el único
 dato irreconstruible.
 
-### Fase A entrega solo niveles 1 y 2
+### Fases A y B se despliegan juntas
 
 Existe un hueco de UX entre A y B: la Fase A entrega la estructura de bloques, pero
 la escalera de pistas y el feedback con diff llegan en B. Un nivel de producción sin
-pistas y con feedback pobre sería **más duro que el app actual** — una regresión para
-el usuario, no una mejora.
+pistas y con feedback pobre sería **más duro que el app actual**.
 
-**Resolución:** la Fase A envía bloques con **niveles 1 y 2 únicamente**. El nivel 3
-(producción) permanece apagado tras un flag hasta que la Fase B aporte hints y
-feedback.
+La salida obvia —que A entregue solo niveles 1 y 2— **es una regresión funcional
+peor**, no un estado intermedio benigno. El razonamiento completo:
 
-Esto no compromete lo irreversible de A:
+> La graduación exige ronda final de producción (§3.4). Si A no tiene producción,
+> **ninguna palabra nueva entra jamás a repaso** mientras A esté desplegada. Las
+> palabras se acumulan en "aprendiendo" indefinidamente, la cola de repaso se seca, y
+> el usuario repite exposición y niveles 1-2 de material ya trabajado sin que nada
+> consolide. Es un app que deja de enseñar, y dura lo que dure la brecha A→B.
 
-- El **log de revisiones** (§3.3) se acumula igual desde el primer día.
-- El **estado intermedio** (§4.2) registra `highestLevel` con normalidad.
-- La graduación (§3.4) requiere ronda final de producción, así que **en Fase A ninguna
-  palabra gradúa a FSRS todavía** — lo cual es correcto: FSRS llega en C.
+**Resolución: A es estado interno de desarrollo. A y B se despliegan juntas.**
 
-La alternativa (meter una versión mínima de hints en A) mezcla dos fases y deja una
-escalera a medias que habría que rehacer.
+- La Fase A se implementa y verifica, pero **no llega a usuarios** hasta que B aporte
+  hints y feedback.
+- Ninguna palabra gradúa con criterio débil, así que **no hacen falta cartas marcadas
+  como `graduatedWeak`** ni una rama de graduación desde nivel 2.
+- El optimizador de la Fase C no recibe cartas graduadas por criterio más débil, que
+  distorsionarían igual que las migradas (§3.2).
+
+**Consecuencia para el plan de fases:** el plan de A no incluye despliegue. El punto
+de entrega a usuarios es el final de B.
+
+> Si en algún momento se decidiera desplegar A sola, la graduación tendría que
+> ocurrir desde nivel 2 con ronda final de recuerdo, grado tope **Good** (nunca Easy),
+> y flag `graduatedWeak` para excluir esas cartas del optimizador. No es el plan
+> actual, y queda aquí solo para que la decisión no se rehaga sin ver el costo.
 
 ---
 
@@ -359,6 +370,14 @@ Si los distractores salen al azar del dataset, unas veces la pregunta es trivial
 `we`). Esa varianza entra directa en la señal de dificultad — justo lo que la
 Sección 2 existe para mantener limpia.
 
+**De dónde salen.** Del **pool de palabras que ese usuario ya vio** (expuestas o
+graduadas), no del dataset completo. Si salen del dataset entero, el usuario puede
+acertar por eliminación al reconocer las otras tres; con palabras conocidas se ve
+obligado a **discriminar** en vez de reconocer.
+
+Fallback al dataset filtrado cuando el pool del usuario aún es pequeño (primeras
+sesiones), aplicando los mismos criterios de abajo.
+
 **Política declarada**, en `lib/essential-words/distractors.ts`:
 
 1. **Misma categoría gramatical** que el objetivo (`pos` idéntico).
@@ -579,23 +598,62 @@ RLS obligatoria si se sincroniza a Supabase.
 - **`high` (rank 148) y `offer` (rank 237):** añadir una frase de ejemplo clozeable.
   Son 2 entradas, editables a mano, sin llamar a Gemini.
 
-  Frases candidatas ya verificadas contra `clozeFor` (las 4 producen cloze válido):
+  Frases a añadir:
 
-  | Palabra | Frase | Resultado |
+  | Palabra | Frase | Resultado del cloze |
   |---|---|---|
-  | `high` | The mountain behind our village is extremely high. | `... extremely ___.` |
-  | `high` | She jumped high enough to reach the shelf. | `She jumped ___ enough ...` |
-  | `offer` | They offer free coffee to every morning customer. | `They ___ free coffee ...` |
-  | `offer` | The company will offer him a better position. | `The company will ___ him ...` |
+  | `high` | The wall in the garden is very high. | `The wall in the garden is very ___.` |
+  | `offer` | They offer free coffee every morning. | `They ___ free coffee every morning.` |
 
   Ambas fallan hoy porque sus frases actuales son demasiado cortas para
   `hasEnoughContext`: `"The wall is very high."` y `"They offered help."`.
+
+  > **Nota de redacción.** Las primeras candidatas fueron
+  > `"The mountain behind our village is extremely high."` y
+  > `"They offer free coffee to every morning customer."`. Producen cloze válido,
+  > pero introducen `village`, `extremely`, `behind` y `customer` — vocabulario más
+  > difícil que la palabra que se enseña. La causa raíz ("la frase falla por corta")
+  > empuja justo hacia ese error: alargar es fácil, alargar sin salirse del
+  > vocabulario conocido no.
 
   Al aplicarlas, `cloze_sentence` pasa a **100%** de cobertura y `define_to_word` deja
   de ser necesario (§1.5).
 
 - **Glosa de `dictation_word`:** ya existe — es el campo `translation`, completo al
   100%.
+
+### 5.1 Guía de redacción para frases nuevas
+
+Al escribir frases de ejemplo, preferir vocabulario **concreto y cotidiano**, y no
+introducir palabras raras solo para alcanzar la longitud que pide
+`hasEnoughContext`. `"The wall in the garden is very high"` cumple longitud sin
+salirse del vocabulario básico; `"The mountain behind our village is extremely high"`
+no.
+
+**Por qué esto es una guía y no un invariante automático.** Se evaluó la regla
+"ninguna palabra de la frase debe ser menos frecuente que la palabra objetivo",
+medida sobre las 2800 entradas:
+
+| Formulación | Entradas que la violan |
+|---|---|
+| Estricta | **2797 / 2800 (99.9%)** |
+| Con techo `rank + 600` y manejo de flexiones | **2563 / 2800 (91.5%)** |
+| Con techo `rank + 1000` | 2463 / 2800 (88.0%) |
+
+La regla estricta es **matemáticamente imposible** para vocabulario de alta
+frecuencia: para enseñar `the` (#1), toda palabra de contenido es por definición más
+rara. `"Give me the book please."` es una frase A1 impecable y la viola (`give` #77,
+`book` #171).
+
+Con techo generoso siguen marcadas frases correctas: `"I have a dog at home"`
+(`dog` #894), `"They are playing in the park now"` (`park` #657). El vocabulario
+concreto — `dog`, `park`, `pen`, `cup` — tiene rank alto porque las listas de
+frecuencia están dominadas por palabras funcionales, pero es justo el vocabulario que
+un A1 conoce.
+
+El principio pedagógico es correcto; **el rank de frecuencia no es el proxy que lo
+mide**. Un invariante que falla en el 91-99% de los casos no es un invariante: es
+ruido que nadie puede arreglar y que acabaría silenciado.
 
 ---
 
@@ -625,7 +683,8 @@ Todos ≤250 líneas, con comentario de estructura planeada antes de implementar
    palabra sin frase clozeable ni dictable, este test falla.)*
 3. **Nunca la misma palabra dos veces seguidas** (distancia ≥2).
 3b. Ningún distractor está a **distancia ortográfica 1** del objetivo ni es homófono
-   suyo (§2.4b).
+   suyo, y todos salen del **pool ya visto por el usuario** mientras ese pool alcance
+   (§2.4b).
 4. Un ejercicio **nunca** se renderiza con datos ausentes.
 5. **Un solo write de grade por palabra y sesión** (el primer intento).
 6. Una palabra nueva **no escribe en el scheduler** antes de graduar.
@@ -647,5 +706,8 @@ Todos ≤250 líneas, con comentario de estructura planeada antes de implementar
   reparables con contenido. Se reconsidera solo si el invariante 2 de §7 empieza a
   fallar por contenido nuevo.
 - Generación de contenido a escala vía Gemini: solo 2 entradas manuales (§5).
-- **Nivel 3 (producción) en Fase A**: apagado tras flag hasta la Fase B, para no
-  entregar ejercicios de escritura sin escalera de pistas ni feedback con diff.
+- **Despliegue de la Fase A por separado**: A es estado interno; A y B llegan juntas a
+  usuarios. Desplegar A sola secaría la cola de repaso (ver "Fases A y B se despliegan
+  juntas").
+- **Invariante automático de frecuencia de vocabulario**: descartado tras medirlo
+  (§5.1). Queda como guía de redacción.
