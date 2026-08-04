@@ -6,6 +6,7 @@ import type { EssentialWord } from "@/lib/essential-words/types";
 import { selectSentence } from "@/lib/essential-words/sentence-variants";
 
 vi.mock("@/lib/ui-sounds/cues", () => ({ playUiCue: vi.fn() }));
+vi.mock("@/lib/phoneme-practice/tts", () => ({ speak: vi.fn() }));
 
 const entry: EssentialWord = {
   rank: 67,
@@ -28,9 +29,9 @@ const withVariants: EssentialWord = {
   ],
 };
 
-function setup(onGraded = vi.fn().mockResolvedValue(undefined)) {
-  render(<ClozeCard entry={entry} onGraded={onGraded} />);
-  return onGraded;
+function setup(onAttempt = vi.fn().mockResolvedValue(undefined)) {
+  render(<ClozeCard entry={entry} onAttempt={onAttempt} />);
+  return onAttempt;
 }
 
 describe("ClozeCard", () => {
@@ -47,46 +48,61 @@ describe("ClozeCard", () => {
     expect(screen.getByText(/trabajar/)).toBeInTheDocument();
   });
 
-  it("grades 5 on the exact surface form", () => {
-    const onGraded = setup();
+  it("calls onAttempt with a clean correct outcome", () => {
+    const onAttempt = setup();
     fireEvent.change(screen.getByLabelText("Escribe la palabra que falta"), {
       target: { value: "Works" },
     });
     fireEvent.click(screen.getByRole("button", { name: "Comprobar" }));
-    expect(onGraded).toHaveBeenCalledWith(5);
+    expect(onAttempt).toHaveBeenCalledWith(
+      expect.objectContaining({ correct: true, hintsUsed: 0 }),
+    );
   });
 
-  it("grades 5 on the base form too", () => {
-    const onGraded = setup();
+  it("accepts the base form too", () => {
+    const onAttempt = setup();
     fireEvent.change(screen.getByLabelText("Escribe la palabra que falta"), {
       target: { value: "work" },
     });
     fireEvent.click(screen.getByRole("button", { name: "Comprobar" }));
-    expect(onGraded).toHaveBeenCalledWith(5);
+    expect(onAttempt).toHaveBeenCalledWith(expect.objectContaining({ correct: true }));
   });
 
-  it("grades 2 on a wrong answer and reveals the full sentence", () => {
-    const onGraded = setup();
+  it("wrong answer shows AnswerDiff before the repair attempt", () => {
+    const onAttempt = setup();
     fireEvent.change(screen.getByLabelText("Escribe la palabra que falta"), {
       target: { value: "sleeps" },
     });
     fireEvent.click(screen.getByRole("button", { name: "Comprobar" }));
-    expect(onGraded).toHaveBeenCalledWith(2);
-    expect(
-      screen.getByText("She works at a hospital downtown every single day."),
-    ).toBeInTheDocument();
+    expect(onAttempt).not.toHaveBeenCalled();
+    expect(screen.getByTestId("answer-diff-message")).toBeInTheDocument();
   });
 
   it("does not grade an empty answer", () => {
-    const onGraded = setup();
+    const onAttempt = setup();
     fireEvent.click(screen.getByRole("button", { name: "Comprobar" }));
-    expect(onGraded).not.toHaveBeenCalled();
+    expect(onAttempt).not.toHaveBeenCalled();
   });
 
-  it("blanks and reveals the selected variant's sentence, not the base one", () => {
-    const onGraded = vi.fn().mockResolvedValue(undefined);
-    // "work" seeds to index 1 (the variant) at repetitions=0.
-    render(<ClozeCard entry={withVariants} onGraded={onGraded} repetitions={0} />);
+  it("prices the optional audio hint after a failed first attempt", () => {
+    const onAttempt = setup();
+    fireEvent.change(screen.getByLabelText("Escribe la palabra que falta"), {
+      target: { value: "wrongword" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Comprobar" }));
+    fireEvent.click(screen.getByRole("button", { name: /intentar de nuevo/i }));
+    fireEvent.click(screen.getByRole("button", { name: /pista/i })); // category, priced
+    fireEvent.click(screen.getByRole("button", { name: /pista/i })); // audio, also priced for cloze
+    fireEvent.change(screen.getByLabelText("Escribe la palabra que falta"), {
+      target: { value: entry.word },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Comprobar" }));
+    expect(onAttempt.mock.calls[0][0].hintsUsed).toBeGreaterThan(0);
+  });
+
+  it("blanks and gives diff feedback against the selected variant sentence", () => {
+    const onAttempt = vi.fn().mockResolvedValue(undefined);
+    render(<ClozeCard entry={withVariants} onAttempt={onAttempt} repetitions={0} />);
 
     const expectedSentence = selectSentence(withVariants, 0).sentence;
     expect(expectedSentence).not.toBe(withVariants.example_sentence);
@@ -96,10 +112,8 @@ describe("ClozeCard", () => {
     });
     fireEvent.click(screen.getByRole("button", { name: "Comprobar" }));
 
-    expect(onGraded).toHaveBeenCalledWith(2);
-    expect(screen.getByText(expectedSentence)).toBeInTheDocument();
-    expect(
-      screen.queryByText(withVariants.example_sentence),
-    ).not.toBeInTheDocument();
+    expect(onAttempt).not.toHaveBeenCalled();
+    expect(screen.getByTestId("answer-diff-message")).toHaveTextContent(/respuesta era "work"/i);
+    expect(screen.queryByText(withVariants.example_sentence)).not.toBeInTheDocument();
   });
 });
