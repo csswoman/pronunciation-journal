@@ -270,3 +270,37 @@ export function buildJournalNudgePrompt(input: {
 }): string {
   return `The learner is writing an English journal entry and is stuck. Use the following context:\n\nPrompt: ${input.prompt}\nCEFR level: ${input.cefrLevel}\nTarget length: ${input.targetLength} words\nUnused seed words: ${JSON.stringify(input.unusedSeedWords)}\nPartial text (do not correct it):\n${input.partialText}\n\nReturn exactly three nudges in the required JSON shape.`
 }
+
+// ── Essential Words: extra example sentences ──
+
+/**
+ * Extra example sentences for Essential Words entries. Batched: one call covers
+ * many words to keep the offline generation job cheap. Consumed by
+ * scripts/essential-words/generate-example-sentences.mjs.
+ */
+export function essentialWordSentencesPrompt(
+  words: { word: string; pos: string; cefr_level: string; example_sentence: string }[],
+  perWord: number,
+): string {
+  const list = words
+    .map((w) => `- ${w.word} (${w.pos}, ${w.cefr_level}) — ya tiene: "${w.example_sentence}"`)
+    .join("\n");
+
+  return `Eres un redactor de material didáctico de inglés para hispanohablantes.
+
+Para cada palabra de la lista, escribe ${perWord} oraciones de ejemplo NUEVAS.
+
+Reglas estrictas:
+- Cada oración DEBE contener la palabra objetivo (una forma flexionada es válida: "works" para "work").
+- Entre 6 y 12 palabras. Suficiente contexto para que un estudiante adivine la palabra si se borra.
+- Inglés americano natural y cotidiano. Sin nombres propios raros, sin jerga, sin frases hechas oscuras.
+- Vocabulario apropiado al nivel CEFR indicado o más simple.
+- NO repitas la oración que ya tiene, ni la parafrasees mínimamente.
+- Las ${perWord} oraciones de una misma palabra deben diferir en estructura y contexto entre sí.
+
+Palabras:
+${list}
+
+Responde SOLO con JSON válido, sin texto alrededor, con esta forma exacta:
+{"words":{"<palabra>":["oración 1","oración 2"]}}`;
+}
