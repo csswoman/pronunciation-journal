@@ -8,7 +8,12 @@ import { lookupIpaFromCmu } from "@/lib/lexicon/ipa";
 import { WEAK_FORM_WHITELIST } from "./weak-forms";
 import type { EssentialWord } from "./types";
 
-export type IssueKind = "ipa-mismatch" | "weak-not-whitelisted" | "sentence-missing-word";
+export type IssueKind =
+  | "ipa-mismatch"
+  | "weak-not-whitelisted"
+  | "sentence-missing-word"
+  | "variant-missing-word"
+  | "variant-duplicate";
 
 export interface ValidationIssue {
   rank: number;
@@ -58,6 +63,25 @@ export function validateEntry(entry: EssentialWord): ValidationIssue[] {
       rank, word, kind: "sentence-missing-word",
       detail: `"${entry.example_sentence}" no contiene "${word}"`,
     });
+  }
+
+  const seen = new Set([entry.example_sentence.trim().toLowerCase()]);
+  for (const [i, variant] of (entry.example_sentences ?? []).entries()) {
+    const text = variant.sentence.trim();
+    if (!sentenceContainsLemma(text, word)) {
+      issues.push({
+        rank, word, kind: "variant-missing-word",
+        detail: `variante ${i + 1}: "${text}" no contiene "${word}"`,
+      });
+    }
+    const key = text.toLowerCase();
+    if (seen.has(key)) {
+      issues.push({
+        rank, word, kind: "variant-duplicate",
+        detail: `variante ${i + 1} repite una oración ya presente: "${text}"`,
+      });
+    }
+    seen.add(key);
   }
 
   return issues;
