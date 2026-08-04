@@ -30,13 +30,39 @@ Dos consecuencias:
 
 | # | Subsistema | Fase | Depende de |
 |---|---|---|---|
-| 1 | Estructura de sesión (bloques, escalera, secuenciación) | A | — |
+| — | **Contenido**: frases clozeables para `high` y `offer` | **0** | — |
+| 1 | Estructura de sesión (bloques, escalera, secuenciación) | A | 0 |
 | 2 | Hints con precio + feedback | B | 1 |
 | 3 | Migración SM-2 → FSRS | C | 2 |
 | 4 | Techo de tiempo + estado intermedio | A/D | 1 |
 
+**El contenido va primero (Fase 0).** Son 2 entradas y ~10 minutos, pero eliminan la
+necesidad de construir `define_to_word` y su rama de grading (§1.5, §1.6). Arreglar
+el dato antes de diseñar alrededor del hueco ahorra un componente entero.
+
 El log de revisiones (§3.3) se implementa en **Fase A**, antes que FSRS: es el único
 dato irreconstruible.
+
+### Fase A entrega solo niveles 1 y 2
+
+Existe un hueco de UX entre A y B: la Fase A entrega la estructura de bloques, pero
+la escalera de pistas y el feedback con diff llegan en B. Un nivel de producción sin
+pistas y con feedback pobre sería **más duro que el app actual** — una regresión para
+el usuario, no una mejora.
+
+**Resolución:** la Fase A envía bloques con **niveles 1 y 2 únicamente**. El nivel 3
+(producción) permanece apagado tras un flag hasta que la Fase B aporte hints y
+feedback.
+
+Esto no compromete lo irreversible de A:
+
+- El **log de revisiones** (§3.3) se acumula igual desde el primer día.
+- El **estado intermedio** (§4.2) registra `highestLevel` con normalidad.
+- La graduación (§3.4) requiere ronda final de producción, así que **en Fase A ninguna
+  palabra gradúa a FSRS todavía** — lo cual es correcto: FSRS llega en C.
+
+La alternativa (meter una versión mínima de hints en A) mezcla dos fases y deja una
+escalera a medias que habría que rehacer.
 
 ---
 
@@ -103,7 +129,7 @@ la graduación**, no el último ejercicio del bloque.
 |---|---|---|
 | **1 · Reconocimiento** | `recognize_translation`, `recognize_meaning`, `recognize_audio` | forma → significado |
 | **2 · Recuerdo** | `recall_translation`, `dictation_word` *(nuevo)* | significado → forma / **sonido → forma** |
-| **3 · Producción** | `cloze_sentence`, `dictation_sentence`, `define_to_word` *(nuevo)*, `speak_sentence` *(opcional)* | producción libre |
+| **3 · Producción** | `cloze_sentence`, `dictation_sentence`, `speak_sentence` *(opcional)* | producción libre |
 
 Cada vez que una palabra reaparece dentro del bloque, sube un nivel.
 
@@ -112,10 +138,19 @@ canal sonido→forma, que hoy no entrena nadie y que es la habilidad más débil
 hispanohablantes. La glosa desambigua homófonos (`be`/`bee`, `to`/`too`/`two`) sin
 regalar la ortografía.
 
-**`define_to_word` (nuevo).** Definición **en inglés** → escribir la palabra.
-Monolingüe, por lo que no colisiona con `recall_translation` (que va de español a
-inglés). Cubre el 100% del dataset (`meaning` está completo) y no depende de frase ni
-de micrófono. Para A1, la traducción al español es el primer peldaño de pista.
+**`define_to_word` — descartado del alcance actual.** Se diseñó como piso garantizado
+para las palabras sin cloze viable. Medido el dataset, **serviría a 2 entradas**
+(`high`, `offer`), y ambas se arreglan con contenido (§5): las 4 frases candidatas
+producen cloze válido, verificado contra `clozeFor`.
+
+Construirlo ahora significaría un componente entero para dos palabras, y arrastraría
+una rama de grading ("el piso degradado nunca da Easy") que casi nunca se ejecuta, un
+peldaño de pista propio y una ruta de audio-como-pista.
+
+La garantía se conserva **sin código**: el invariante 2 de §7 (toda palabra tiene ≥1
+modo elegible en cada nivel) se verifica por test sobre las 2800 entradas, y **falla
+el día que alguien añada una palabra sin frase clozeable**. Ese test es la señal para
+reconsiderar este modo.
 
 **`weak_form` sale del primer encuentro.** Solo 31 de 2800 palabras tienen `ipa_weak`
 (1.1%), todas funcionales — cero sustantivos, cero verbos léxicos. Es un matiz de
@@ -153,16 +188,19 @@ frases disponibles, no solo la rotada.
 Solo `high` (rank 148) y `offer` (rank 237) carecen de cloze en cualquier frase, y se
 resuelven con contenido (§5), no con arquitectura.
 
-Cadena de degradación dentro de producción, como salvavidas real (0.07% de casos), no
-como mecanismo cotidiano:
+Cadena de degradación dentro de producción:
 
 ```
 cloze_sentence (cualquier frase)
-  → dictation_sentence
-    → define_to_word   (piso garantizado, siempre disponible)
+  → dictation_sentence   (piso: example_sentence es obligatorio en toda entrada)
 ```
 
 `speak_sentence` queda fuera de la cadena: es capacidad opcional, no piso.
+
+`dictation_sentence` es piso suficiente porque `example_sentence` es obligatorio en
+todas las entradas. Tras arreglar `high` y `offer` (§5), la cadena no se ejecuta para
+ninguna palabra del dataset actual: existe como red de seguridad ante contenido
+futuro, no como mecanismo.
 
 ### 1.7 Secuenciación
 
@@ -293,7 +331,7 @@ del enunciado**:
 | Modo | ¿El audio es el enunciado? | Costo |
 |---|---|---|
 | `dictation_word`, `dictation_sentence` | Sí — es el prompt | **Libre e ilimitado** |
-| `define_to_word` | No — el enunciado es la definición | **Pista (peldaño 2)** |
+| `cloze_sentence` (audio de la palabra objetivo) | No — el enunciado es la frase escrita | **Pista (peldaño 2)** |
 | Resto | No revela la respuesta | Libre |
 
 Castigar la reproducción del estímulo penalizaría a quien no captó el audio la
@@ -310,6 +348,31 @@ calificar. Por eso **siempre produce Again**, aunque acierte.
 Un formato, un rol: por eso "recall con opciones" **no** existe como modo regular del
 nivel 2. Si el mismo formato fuera a veces rescate y a veces ejercicio programado, la
 señal de dificultad dejaría de significar nada.
+
+### 2.4b Política de distractores
+
+Las 624 colisiones a distancia 1 (§2.6) afectan también a la **generación de
+distractores**, tanto en reconocimiento (nivel 1) como en el rescate a opciones.
+
+Si los distractores salen al azar del dataset, unas veces la pregunta es trivial
+(`the` vs `elephant`) y otras es un test de discriminación fina (`be` vs `he` vs
+`we`). Esa varianza entra directa en la señal de dificultad — justo lo que la
+Sección 2 existe para mantener limpia.
+
+**Política declarada**, en `lib/essential-words/distractors.ts`:
+
+1. **Misma categoría gramatical** que el objetivo (`pos` idéntico).
+2. **Distancia ortográfica mínima ≥2** respecto al objetivo: excluye vecinos a
+   distancia 1 (`be`/`he`, `to`/`do`, `of`/`on`).
+3. **Sin homófonos** del objetivo (`be`/`bee`, `to`/`too`/`two`), que en
+   `recognize_audio` y `dictation_word` harían la pregunta irresoluble por diseño.
+4. **Sin duplicados** por forma superficial (ya implementado en `RecognizeCard`).
+5. Si el filtro deja menos de los distractores necesarios, se **relaja el criterio 1
+   antes que el 2**: mejor mezclar categorías que producir discriminación fina
+   accidental.
+
+La dificultad debe venir de si el usuario sabe la palabra, no de qué distractores le
+tocaron.
 
 ### 2.5 Feedback al fallar
 
@@ -434,7 +497,10 @@ SM-2 no lo use:
 |---|---|
 | Sin pistas + latencia baja + modo de **producción completo** | **Easy** |
 | Todo lo demás que acierta | **Good** |
-| Graduó por el **piso degradado** (`define_to_word`) | **nunca Easy** — es tope |
+
+El modo actúa como **techo**: un modo degradado nunca puede dar Easy, solo Good. Con
+el dataset actual esa rama no se ejecuta (§1.6), pero la regla se implementa porque
+es la que mantiene válido el techo si entra contenido sin cloze viable.
 
 Por qué no escalar multiplicadores de estabilidad inicial: FSRS tiene 4 valores de
 estabilidad inicial (uno por grado) que vienen del set de parámetros. Escalarlos por
@@ -444,8 +510,8 @@ usarse** sobre el log.
 Por qué tampoco basta con "modo → grado" directo: haría que la **disponibilidad de
 contenido** determinara el grado. Una palabra resuelta con una pista y 30 s de duda
 graduaría Easy por tener frase clozeable, y otra resuelta al instante graduaría Good
-por tocarle el piso degradado. En FSRS la diferencia Good/Easy en estabilidad inicial
-es de varias veces, no un matiz.
+por haber caído a `dictation_sentence`. En FSRS la diferencia Good/Easy en estabilidad
+inicial es de varias veces, no un matiz.
 
 **Se registra con qué modo graduó cada palabra**, para poder auditar después.
 
@@ -508,8 +574,26 @@ RLS obligatoria si se sincroniza a Supabase.
 
 ## 5. Contenido
 
+**Esta es la Fase 0: va antes que todo lo demás** (§"Los cuatro subsistemas").
+
 - **`high` (rank 148) y `offer` (rank 237):** añadir una frase de ejemplo clozeable.
   Son 2 entradas, editables a mano, sin llamar a Gemini.
+
+  Frases candidatas ya verificadas contra `clozeFor` (las 4 producen cloze válido):
+
+  | Palabra | Frase | Resultado |
+  |---|---|---|
+  | `high` | The mountain behind our village is extremely high. | `... extremely ___.` |
+  | `high` | She jumped high enough to reach the shelf. | `She jumped ___ enough ...` |
+  | `offer` | They offer free coffee to every morning customer. | `They ___ free coffee ...` |
+  | `offer` | The company will offer him a better position. | `The company will ___ him ...` |
+
+  Ambas fallan hoy porque sus frases actuales son demasiado cortas para
+  `hasEnoughContext`: `"The wall is very high."` y `"They offered help."`.
+
+  Al aplicarlas, `cloze_sentence` pasa a **100%** de cobertura y `define_to_word` deja
+  de ser necesario (§1.5).
+
 - **Glosa de `dictation_word`:** ya existe — es el campo `translation`, completo al
   100%.
 
@@ -523,8 +607,8 @@ RLS obligatoria si se sincroniza a Supabase.
 | `lib/essential-words/attempt-grade.ts` | `AttemptOutcome` → `Grade`. Único mapeo a scheduler |
 | `lib/essential-words/typo.ts` | Detección semántica de typos |
 | `lib/essential-words/hint-ladder.ts` | Escalera por longitud y por modo |
+| `lib/essential-words/distractors.ts` | Política de distractores (§2.4b) |
 | `components/.../DictationWordCard.tsx` | Audio + glosa → escribir |
-| `components/.../DefineToWordCard.tsx` | Definición en inglés → escribir |
 | `components/.../HintButton.tsx` | Botón discreto, activación diferida |
 | `components/.../AnswerDiff.tsx` | Feedback con diff |
 
@@ -536,8 +620,12 @@ Todos ≤250 líneas, con comentario de estructura planeada antes de implementar
 ## 7. Invariantes testeables
 
 1. Todo bloque tiene **3 o 4** palabras.
-2. Toda palabra tiene **≥1 modo elegible en cada nivel**.
+2. Toda palabra tiene **≥1 modo elegible en cada nivel**. *(Verificado sobre las 2800
+   entradas. Es la garantía que sustituye a `define_to_word`: si alguien añade una
+   palabra sin frase clozeable ni dictable, este test falla.)*
 3. **Nunca la misma palabra dos veces seguidas** (distancia ≥2).
+3b. Ningún distractor está a **distancia ortográfica 1** del objetivo ni es homófono
+   suyo (§2.4b).
 4. Un ejercicio **nunca** se renderiza con datos ausentes.
 5. **Un solo write de grade por palabra y sesión** (el primer intento).
 6. Una palabra nueva **no escribe en el scheduler** antes de graduar.
@@ -555,4 +643,9 @@ Todos ≤250 líneas, con comentario de estructura planeada antes de implementar
 - Optimización de parámetros FSRS sobre el log. Requiere meses de datos reales;
   el log se empieza a acumular en Fase A.
 - `weak_form` en el flujo de primer encuentro (§1.5).
+- **`define_to_word`** (§1.5): descartado tras medir que serviría a 2 entradas, ambas
+  reparables con contenido. Se reconsidera solo si el invariante 2 de §7 empieza a
+  fallar por contenido nuevo.
 - Generación de contenido a escala vía Gemini: solo 2 entradas manuales (§5).
+- **Nivel 3 (producción) en Fase A**: apagado tras flag hasta la Fase B, para no
+  entregar ejercicios de escritura sin escalera de pistas ni feedback con diff.
