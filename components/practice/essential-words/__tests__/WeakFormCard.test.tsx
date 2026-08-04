@@ -27,22 +27,31 @@ describe("WeakFormCard", () => {
   });
 
   it("shows both the strong and weak pronunciations", () => {
-    render(<WeakFormCard entry={entry} onGraded={vi.fn().mockResolvedValue(undefined)} />);
+    render(<WeakFormCard entry={entry} onAttempt={vi.fn().mockResolvedValue(undefined)} />);
     expect(screen.getByText(/tuː/)).toBeInTheDocument();
     expect(screen.getByText(/tə/)).toBeInTheDocument();
   });
 
   it("plays the weak form in its phrase context", () => {
-    render(<WeakFormCard entry={entry} onGraded={vi.fn().mockResolvedValue(undefined)} />);
+    render(<WeakFormCard entry={entry} onAttempt={vi.fn().mockResolvedValue(undefined)} />);
     fireEvent.click(screen.getByRole("button", { name: /escuchar/i }));
     expect(speak).toHaveBeenCalled();
   });
 
-  it("submits the learner self-grade", () => {
-    const onGraded = vi.fn().mockResolvedValue(undefined);
-    render(<WeakFormCard entry={entry} onGraded={onGraded} />);
+  it("calls onAttempt when the learner self-grades as correct", () => {
+    const onAttempt = vi.fn().mockResolvedValue(undefined);
+    render(<WeakFormCard entry={entry} onAttempt={onAttempt} />);
     fireEvent.click(screen.getByRole("button", { name: /lo dije bien/i }));
-    expect(onGraded).toHaveBeenCalledWith(5);
+    expect(onAttempt).toHaveBeenCalledWith(
+      expect.objectContaining({ correct: true, hintsUsed: 0, rescued: false, typo: false }),
+    );
+  });
+
+  it("calls onAttempt with an incorrect outcome when the learner struggled", () => {
+    const onAttempt = vi.fn().mockResolvedValue(undefined);
+    render(<WeakFormCard entry={entry} onAttempt={onAttempt} />);
+    fireEvent.click(screen.getByRole("button", { name: /me costó/i }));
+    expect(onAttempt).toHaveBeenCalledWith(expect.objectContaining({ correct: false }));
   });
 
   describe("sentence rotation", () => {
@@ -67,7 +76,7 @@ describe("WeakFormCard", () => {
         <WeakFormCard
           entry={withVariants}
           repetitions={1}
-          onGraded={vi.fn().mockResolvedValue(undefined)}
+          onAttempt={vi.fn().mockResolvedValue(undefined)}
         />,
       );
       expect(screen.getByText(expectedPhrase(1))).toBeInTheDocument();
@@ -78,7 +87,7 @@ describe("WeakFormCard", () => {
         <WeakFormCard
           entry={withVariants}
           repetitions={2}
-          onGraded={vi.fn().mockResolvedValue(undefined)}
+          onAttempt={vi.fn().mockResolvedValue(undefined)}
         />,
       );
       fireEvent.click(screen.getByRole("button", { name: /escuchar/i }));
@@ -92,7 +101,7 @@ describe("WeakFormCard", () => {
           <WeakFormCard
             entry={withVariants}
             repetitions={reps}
-            onGraded={vi.fn().mockResolvedValue(undefined)}
+            onAttempt={vi.fn().mockResolvedValue(undefined)}
           />,
         );
         seen.add(screen.getByText(expectedPhrase(reps)).textContent ?? "");
@@ -105,16 +114,13 @@ describe("WeakFormCard", () => {
       render(
         <WeakFormCard
           entry={withVariants}
-          onGraded={vi.fn().mockResolvedValue(undefined)}
+          onAttempt={vi.fn().mockResolvedValue(undefined)}
         />,
       );
       expect(screen.getByText(expectedPhrase(0))).toBeInTheDocument();
     });
 
     it("falls back to the base sentence when a variant lacks the target word", () => {
-      // weakFormPhrase returns the bare word when it cannot locate it, which
-      // would strip the card of all phrase context. The card must not pick such
-      // a variant.
       const broken: EssentialWord = {
         ...entry,
         example_sentences: [
@@ -126,7 +132,7 @@ describe("WeakFormCard", () => {
           <WeakFormCard
             entry={broken}
             repetitions={reps}
-            onGraded={vi.fn().mockResolvedValue(undefined)}
+            onAttempt={vi.fn().mockResolvedValue(undefined)}
           />,
         );
         // "to go" comes from the base sentence; a bare "to" means the fallback fired.

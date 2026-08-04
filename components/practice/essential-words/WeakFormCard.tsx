@@ -7,11 +7,13 @@
 //   <SelfGradeBar />
 // </WeakFormCard>
 
+import { useRef } from 'react'
 import { speak } from '@/lib/phoneme-practice/tts'
 import { ListenButton } from '@/components/ui/ListenButton'
 import { PillButton } from '@/components/ui/PillButton'
 import { weakFormPhrase } from '@/lib/practice/study-card/model'
 import { selectSentence } from '@/lib/essential-words/sentence-variants'
+import type { AttemptOutcome } from '@/lib/essential-words/attempt-grade'
 import type { EssentialWord } from '@/lib/essential-words/types'
 
 interface Props {
@@ -19,13 +21,11 @@ interface Props {
   entry: EssentialWord
   /** SM-2 repetition count — rotates which example sentence frames the weak form. */
   repetitions?: number
-  onGraded: (quality: number) => Promise<void>
+  onAttempt: (outcome: AttemptOutcome) => Promise<void>
 }
 
-const GOT_IT_QUALITY = 5
-const MISSED_QUALITY = 2
-
-export function WeakFormCard({ entry, repetitions = 0, onGraded }: Props) {
+export function WeakFormCard({ entry, repetitions = 0, onAttempt }: Props) {
+  const startedAtRef = useRef(Date.now())
   const { sentence } = selectSentence(entry, repetitions)
   // weakFormPhrase returns the bare word when it cannot locate it in the
   // sentence, which would strip the card of the phrase context that is the
@@ -36,6 +36,17 @@ export function WeakFormCard({ entry, repetitions = 0, onGraded }: Props) {
     rotated === entry.word
       ? weakFormPhrase(entry.example_sentence, entry.word)
       : rotated
+
+  const handleSelfGrade = (correct: boolean) => {
+    void onAttempt({
+      correct,
+      hintsUsed: 0,
+      rescued: false,
+      typo: false,
+      firstTryFailed: false,
+      latencyMs: Date.now() - startedAtRef.current,
+    })
+  }
 
   return (
     <div className="flex w-full flex-col items-center gap-space-5 rounded-lg border border-border-subtle bg-surface-raised layout-card-pad">
@@ -55,10 +66,10 @@ export function WeakFormCard({ entry, repetitions = 0, onGraded }: Props) {
       />
 
       <div className="flex gap-2">
-        <PillButton variant="outline" size="sm" onClick={() => void onGraded(MISSED_QUALITY)}>
+        <PillButton variant="outline" size="sm" onClick={() => handleSelfGrade(false)}>
           Me costó
         </PillButton>
-        <PillButton variant="primary" size="sm" onClick={() => void onGraded(GOT_IT_QUALITY)}>
+        <PillButton variant="primary" size="sm" onClick={() => handleSelfGrade(true)}>
           Lo dije bien
         </PillButton>
       </div>
