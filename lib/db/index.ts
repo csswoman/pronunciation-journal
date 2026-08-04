@@ -226,10 +226,10 @@ export interface SRSRatingEventRecord {
   /** Idempotency key — PK. Passed verbatim as p_idempotency_key to the RPC. */
   id: string;
   userId: string;
-  entityType: "word_bank" | "topic_srs";
-  /** word_bank: required. topic_srs: undefined. */
+  entityType: "word_bank" | "topic_srs" | "essential_words";
+  /** word_bank: required. topic_srs: undefined. essential_words: c1k: wordId. */
   entityId?: string;
-  /** topic_srs: required (natural key; the row may not exist yet). word_bank: undefined. */
+  /** topic_srs: required (natural key; the row may not exist yet). word_bank / essential_words: undefined. */
   topic?: string;
   grade: number;
   occurredAt: string; // ISO
@@ -237,6 +237,16 @@ export interface SRSRatingEventRecord {
   /** Local submission bookkeeping — separate from the outbox's own status. */
   status: "pending" | "applied";
   createdAt: string; // ISO
+
+  // Essential Words review fields. Optional so existing word_bank/topic_srs
+  // rows and their readers remain unchanged.
+  stability?: number;
+  difficulty?: number;
+  elapsedDays?: number;
+  state?: "new" | "learning" | "review" | "relearning";
+  hintsUsed?: number;
+  latencyMs?: number;
+  isRepair?: boolean;
 }
 
 class PronunciationDB extends Dexie {
@@ -472,6 +482,12 @@ class PronunciationDB extends Dexie {
     this.version(28).stores({
       missionSessions: 'id, userId, missionId, [userId+missionId], [userId+startedAt]',
     });
+    // v29: essential_words entityType + FSRS-precursor fields on
+    // srsRatingEvents (Fase A, essential-words-learning-sessions-design
+    // §3.3). Purely additive — no index/store-shape change.
+    this.version(29).stores({
+      srsRatingEvents: 'id, userId, status, [userId+status], [userId+entityType+entityId], [userId+entityType+topic]',
+    });
 
     this.pronunciationMastery = this.table("pronunciationMasteryV2") as Table<PronunciationMasteryRecord, string>;
     this.pronunciationCoachState = this.table("pronunciationCoachStateV2") as Table<PronunciationCoachStateRecord, string>;
@@ -654,6 +670,44 @@ export async function getEssentialWordsSrsEntries(userId?: string): Promise<SRSD
   return db.srsData
     .filter((e) => e.userId === userId && e.wordId.startsWith(CORE1000_SRS_PREFIX))
     .toArray();
+}
+
+export interface EssentialWordsReviewEventInput {
+  userId: string;
+  wordId: string;
+  grade: number;
+  stability: number;
+  difficulty: number;
+  elapsedDays: number;
+  state: "new" | "learning" | "review" | "relearning";
+  hintsUsed: number;
+  latencyMs: number;
+  isRepair?: boolean;
+}
+
+/** Writes the irreconstructible Essential Words review log. Fase A records
+ * it only; later phases may consume it for scheduling. */
+export async function recordEssentialWordsReviewEvent(
+  input: EssentialWordsReviewEventInput,
+): Promise<void> {
+  const now = new Date().toISOString();
+  await db.srsRatingEvents.add({
+    id: crypto.randomUUID(),
+    userId: input.userId,
+    entityType: "essential_words",
+    entityId: input.wordId,
+    grade: input.grade,
+    occurredAt: now,
+    status: "pending",
+    createdAt: now,
+    stability: input.stability,
+    difficulty: input.difficulty,
+    elapsedDays: input.elapsedDays,
+    state: input.state,
+    hintsUsed: input.hintsUsed,
+    latencyMs: input.latencyMs,
+    isRepair: input.isRepair ?? false,
+  });
 }
 
 async function getOrCreateEssentialWordSrsRow(word: string, userId?: string): Promise<SRSData | undefined> {
