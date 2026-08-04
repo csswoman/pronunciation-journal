@@ -974,6 +974,10 @@
         {
           "sentence": "The prices are too high for me.",
           "sentence_ipa": "/ðə ˈpɹaɪsəz ˈɑɹ ˈtuː ˈhaɪ ˈfɔɹ ˈmiː/"
+        },
+        {
+          "sentence": "The wall in the garden is very high.",
+          "sentence_ipa": "/ðə ˈwɔl ɪn ðə ˈɡɑɹdən ˈɪz ˈvɛɹiː ˈhaɪ/"
         }
       ]
     },
