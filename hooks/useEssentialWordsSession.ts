@@ -23,6 +23,18 @@ import {
 } from "@/lib/essential-words/session-model";
 import { readStoredCefrLevel } from "@/lib/essential-words/target-level";
 import { selectMode, type EssentialWordMode } from "@/lib/essential-words/exercise-modes";
+import {
+  createSessionPlan,
+  nextStep as planNextStep,
+  applyResult as planApplyResult,
+  deriveCounts as derivePlanCounts,
+  removeWord as removeWordFromPlan,
+  appendWords as appendWordsToPlan,
+  type SessionState as PlanSessionState,
+} from "@/lib/essential-words/session-plan";
+import type { Step as PlanStep } from "@/lib/essential-words/session-plan-types";
+import { truncateToTimeBudget, SESSION_BUDGET_MS } from "@/lib/essential-words/session-plan-time-ceiling";
+import { ESSENTIAL_WORDS_LEVEL3_ENABLED, gateLevel3Mode } from "@/lib/essential-words/level3-flag";
 import { readGuestStudyLevel } from "@/lib/preferences/guest-study-level";
 import {
   masterEssentialWord,
@@ -49,6 +61,10 @@ const EMPTY_STATS: EssentialWordsStats = {
 const EMPTY_COUNTS: EssentialWordsCounts = {
   newRemaining: 0, learningRemaining: 0, reviewRemaining: 0,
 };
+
+/** Internal-only toggle for the Fase A block-based engine. */
+const USE_SESSION_PLAN_ENGINE = false;
+void USE_SESSION_PLAN_ENGINE;
 
 export function useEssentialWordsSession() {
   const { user } = useAuth();
