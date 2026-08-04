@@ -55,4 +55,17 @@ describe("clozeFor", () => {
     const e = entry({ word: "cat", example_sentence: "It is a cat." });
     expect(clozeFor(e)).toBeNull();
   });
+
+  it("blanks an explicitly supplied sentence instead of the entry's own", () => {
+    const e = entry();
+    const result = clozeFor(e, "She walked through a long dark tunnel today.");
+    expect(result?.blanked).toContain("___");
+    expect(result?.blanked).not.toContain("park");
+    expect(result?.answer).toBe("through");
+  });
+
+  it("falls back to the entry's sentence when none is supplied", () => {
+    const e = entry();
+    expect(clozeFor(e)?.blanked).toBe(clozeFor(e, e.example_sentence)?.blanked);
+  });
 });

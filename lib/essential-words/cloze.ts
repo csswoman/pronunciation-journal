@@ -17,12 +17,13 @@ export interface ClozeData {
  * ejercicio no es viable (la palabra no aparece, o el resto de la oración no
  * da contexto suficiente para adivinarla).
  */
-export function clozeFor(entry: EssentialWord): ClozeData | null {
-  const blanked = blankLemma(entry.example_sentence, entry.word);
+export function clozeFor(entry: EssentialWord, sentence?: string): ClozeData | null {
+  const text = sentence ?? entry.example_sentence;
+  const blanked = blankLemma(text, entry.word);
   if (!blanked || !hasEnoughContext(blanked)) return null;
 
   // Recupera el token quitado comparando token a token contra el original.
-  const original = entry.example_sentence.split(/\s+/);
+  const original = text.split(/\s+/);
   const gapped = blanked.split(/\s+/);
   const idx = gapped.findIndex((token, i) => token !== original[i]);
   const raw = original[idx] ?? entry.word;

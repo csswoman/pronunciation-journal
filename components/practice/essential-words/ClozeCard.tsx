@@ -11,11 +11,14 @@ import { useState } from 'react'
 import { PillButton } from '@/components/ui/PillButton'
 import { playUiCue } from '@/lib/ui-sounds/cues'
 import { clozeFor } from '@/lib/essential-words/cloze'
+import { selectSentence } from '@/lib/essential-words/sentence-variants'
 import type { EssentialWord } from '@/lib/essential-words/types'
 
 interface Props {
   entry: EssentialWord
   onGraded: (quality: number) => Promise<void>
+  /** SM-2 repetition count — rotates which example sentence is blanked. */
+  repetitions?: number
 }
 
 /** Quality scores: a correct fill is a 5, a miss is a lapse (2). */
@@ -27,13 +30,14 @@ function normalize(text: string): string {
   return text.toLowerCase().replace(/[^a-z0-9']/g, '').trim()
 }
 
-export function ClozeCard({ entry, onGraded }: Props) {
+export function ClozeCard({ entry, onGraded, repetitions = 0 }: Props) {
   const [answer, setAnswer] = useState('')
   const [revealed, setRevealed] = useState(false)
+  const { sentence } = selectSentence(entry, repetitions)
 
   // selectMode garantiza clozeFor(entry) !== null antes de elegir este modo;
   // el fallback existe solo para no romper el render si esa invariante falla.
-  const cloze = clozeFor(entry)
+  const cloze = clozeFor(entry, sentence)
 
   const handleCheck = () => {
     if (revealed || answer.trim() === '' || !cloze) return
@@ -68,7 +72,7 @@ export function ClozeCard({ entry, onGraded }: Props) {
 
       {revealed ? (
         <p className="m-0 max-w-[42ch] text-center text-body-lg text-fg">
-          {entry.example_sentence}
+          {sentence}
         </p>
       ) : (
         <PillButton type="button" variant="primary" onClick={handleCheck}>

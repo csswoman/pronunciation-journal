@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { ClozeCard } from "../ClozeCard";
 import type { EssentialWord } from "@/lib/essential-words/types";
+import { selectSentence } from "@/lib/essential-words/sentence-variants";
 
 vi.mock("@/lib/ui-sounds/cues", () => ({ playUiCue: vi.fn() }));
 
@@ -15,6 +16,16 @@ const entry: EssentialWord = {
   cefr_level: "A1",
   meaning: "to do a job",
   translation: "trabajar",
+};
+
+const withVariants: EssentialWord = {
+  ...entry,
+  example_sentences: [
+    {
+      sentence: "They work together on every big project at the office.",
+      sentence_ipa: "/ðeɪ wɜrk təˈɡɛðər/",
+    },
+  ],
 };
 
 function setup(onGraded = vi.fn().mockResolvedValue(undefined)) {
@@ -70,5 +81,25 @@ describe("ClozeCard", () => {
     const onGraded = setup();
     fireEvent.click(screen.getByRole("button", { name: "Comprobar" }));
     expect(onGraded).not.toHaveBeenCalled();
+  });
+
+  it("blanks and reveals the selected variant's sentence, not the base one", () => {
+    const onGraded = vi.fn().mockResolvedValue(undefined);
+    // "work" seeds to index 1 (the variant) at repetitions=0.
+    render(<ClozeCard entry={withVariants} onGraded={onGraded} repetitions={0} />);
+
+    const expectedSentence = selectSentence(withVariants, 0).sentence;
+    expect(expectedSentence).not.toBe(withVariants.example_sentence);
+
+    fireEvent.change(screen.getByLabelText("Escribe la palabra que falta"), {
+      target: { value: "wrong" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Comprobar" }));
+
+    expect(onGraded).toHaveBeenCalledWith(2);
+    expect(screen.getByText(expectedSentence)).toBeInTheDocument();
+    expect(
+      screen.queryByText(withVariants.example_sentence),
+    ).not.toBeInTheDocument();
   });
 });

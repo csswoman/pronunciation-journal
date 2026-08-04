@@ -26,6 +26,7 @@ import { SpeakSkipActions } from './SpeakSkipActions'
 import { micErrorMessage } from './mic-error-message'
 import { playUiCue } from '@/lib/ui-sounds/cues'
 import { cn } from '@/lib/cn'
+import { selectSentence } from '@/lib/essential-words/sentence-variants'
 import type { EssentialWord } from '@/lib/essential-words/types'
 import type { WordResult } from '@/lib/types'
 
@@ -36,6 +37,8 @@ interface Props {
   fromSnooze?: boolean
   onKeepSnooze?: () => void
   onMaster?: () => void
+  /** SM-2 repetition count — rotates which example sentence is practiced. */
+  repetitions?: number
 }
 
 interface Scored {
@@ -51,6 +54,7 @@ export function SpeakReviewCard({
   fromSnooze,
   onKeepSnooze,
   onMaster,
+  repetitions = 0,
 }: Props) {
   const { getStream, release } = useSharedMicStream()
   const { state, result, error: speechError, isSupported, start, stop, abort, reset } =
@@ -64,7 +68,7 @@ export function SpeakReviewCard({
   const [showSoundDetail, setShowSoundDetail] = useState(false)
   const submitted = useRef(false)
 
-  const sentence = entry.example_sentence
+  const { sentence } = selectSentence(entry, repetitions)
 
   useEffect(() => {
     submitted.current = false
