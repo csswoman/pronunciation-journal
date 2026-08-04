@@ -38,11 +38,13 @@ function isAdjacentKeyTypo(a: string, b: string): boolean {
 
 function isDoubledLetterTypo(a: string, b: string): boolean {
   // One is the other with a single character duplicated once (or missing a
-  // duplicate): |len diff| === 1, and removing the extra char from the
-  // longer one yields the shorter one.
+  // duplicate): |len diff| === 1, and removing one of two adjacent equal
+  // characters from the longer one yields the shorter one. A generic
+  // deletion would misclassify valid words such as "though" for "through".
   const [shorter, longer] = a.length < b.length ? [a, b] : [b, a];
   if (longer.length - shorter.length !== 1) return false;
   for (let i = 0; i < longer.length; i++) {
+    if (longer[i] !== longer[i - 1] && longer[i] !== longer[i + 1]) continue;
     const candidate = longer.slice(0, i) + longer.slice(i + 1);
     if (candidate === shorter) return true;
   }

@@ -34,6 +34,10 @@ describe("isTypo — semantic criterion, not a length threshold (spec §2.6)", (
     expect(isTypo("cat", "dog")).toBe(false);
   });
 
+  it("does not treat a valid word formed by deleting a non-duplicated letter as a typo", () => {
+    expect(isTypo("though", "through")).toBe(false);
+  });
+
   it("rejects an exact match (not a typo — it's just correct)", () => {
     expect(isTypo("happy", "happy")).toBe(false);
   });
