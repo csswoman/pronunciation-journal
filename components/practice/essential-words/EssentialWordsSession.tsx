@@ -171,13 +171,21 @@ export function EssentialWordsSession() {
                 />
               )}
               {currentMode === 'dictation_sentence' && (
-                <DictationCard entry={current.entry} onGraded={submitGrade} />
+                <DictationCard
+                  entry={current.entry}
+                  repetitions={current.repetitions ?? 0}
+                  onGraded={submitGrade}
+                />
               )}
               {currentMode === 'weak_form' && (
                 <WeakFormCard entry={current.entry} onGraded={submitGrade} />
               )}
               {currentMode === 'cloze_sentence' && (
-                <ClozeCard entry={current.entry} onGraded={submitGrade} />
+                <ClozeCard
+                  entry={current.entry}
+                  repetitions={current.repetitions ?? 0}
+                  onGraded={submitGrade}
+                />
               )}
               {currentMode === 'recall_translation' && (
                 <RecallTranslationCard entry={current.entry} onGraded={submitGrade} />
@@ -188,6 +196,7 @@ export function EssentialWordsSession() {
               {(currentMode === 'speak_sentence' || currentMode === 'study') && (
                 <SpeakReviewCard
                   entry={current.entry}
+                  repetitions={current.repetitions ?? 0}
                   onGraded={submitGrade}
                   onArchive={() => void archiveWord(current.entry.word)}
                   fromSnooze={current.fromSnooze}
