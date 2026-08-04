@@ -1,0 +1,85 @@
+{
+  "version": 1,
+  "words": {
+    "the": [
+      "The sun is shining brightly today.",
+      "Can you close the window, please?"
+    ],
+    "be": [
+      "It will be a great party.",
+      "They were late for the meeting."
+    ],
+    "and": [
+      "I like apples and bananas.",
+      "He reads books and writes stories."
+    ],
+    "of": [
+      "She is a friend of mine.",
+      "That is a piece of cake."
+    ],
+    "to": [
+      "We want to learn English.",
+      "He needs to buy some milk."
+    ],
+    "a": [
+      "I have a cat.",
+      "She bought a new car yesterday."
+    ],
+    "in": [
+      "My phone is in my bag.",
+      "The cat is sleeping in the box."
+    ],
+    "have": [
+      "They have two children.",
+      "I have a question for you."
+    ],
+    "it": [
+      "It is a beautiful day.",
+      "Look at it! It's so funny."
+    ],
+    "you": [
+      "Can you help me with this?",
+      "I hope you have a good time."
+    ],
+    "he": [
+      "He works in a big office.",
+      "Did he finish his homework already?"
+    ],
+    "for": [
+      "This book is for your brother.",
+      "We are waiting for the bus."
+    ],
+    "they": [
+      "They live in a small town.",
+      "They are playing in the park now."
+    ],
+    "not": [
+      "I am not hungry anymore.",
+      "She did not go to the party."
+    ],
+    "that": [
+      "That is my favorite song.",
+      "I think that he is right."
+    ],
+    "we": [
+      "We are going to the cinema.",
+      "We can start the game now."
+    ],
+    "on": [
+      "The book is on the shelf.",
+      "Turn on the light, please."
+    ],
+    "with": [
+      "She is talking with her friend.",
+      "I need to go with you."
+    ],
+    "this": [
+      "This is my house.",
+      "I like this color very much."
+    ],
+    "i": [
+      "I love to eat pizza.",
+      "I will see you later today."
+    ]
+  }
+}
