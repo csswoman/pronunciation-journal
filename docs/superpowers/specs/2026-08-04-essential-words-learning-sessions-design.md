@@ -630,9 +630,11 @@ introducir palabras raras solo para alcanzar la longitud que pide
 salirse del vocabulario básico; `"The mountain behind our village is extremely high"`
 no.
 
-**Por qué esto es una guía y no un invariante automático.** Se evaluó la regla
-"ninguna palabra de la frase debe ser menos frecuente que la palabra objetivo",
-medida sobre las 2800 entradas:
+**Por qué esto es una guía y no un invariante automático.** Se evaluaron dos
+formulaciones sobre las 2800 entradas.
+
+**Relativa** ("ninguna palabra de la frase debe ser menos frecuente que la palabra
+objetivo"):
 
 | Formulación | Entradas que la violan |
 |---|---|
@@ -640,20 +642,43 @@ medida sobre las 2800 entradas:
 | Con techo `rank + 600` y manejo de flexiones | **2563 / 2800 (91.5%)** |
 | Con techo `rank + 1000` | 2463 / 2800 (88.0%) |
 
-La regla estricta es **matemáticamente imposible** para vocabulario de alta
-frecuencia: para enseñar `the` (#1), toda palabra de contenido es por definición más
-rara. `"Give me the book please."` es una frase A1 impecable y la viola (`give` #77,
-`book` #171).
+Matemáticamente imposible para vocabulario de alta frecuencia: para enseñar `the`
+(#1), toda palabra de contenido es por definición más rara. `"Give me the book
+please."` es una frase A1 impecable y la viola (`give` #77, `book` #171). Se descartó
+por incoherencia de construcción, no solo por volumen.
 
-Con techo generoso siguen marcadas frases correctas: `"I have a dog at home"`
-(`dog` #894), `"They are playing in the park now"` (`park` #657). El vocabulario
-concreto — `dog`, `park`, `pen`, `cup` — tiene rank alto porque las listas de
-frecuencia están dominadas por palabras funcionales, pero es justo el vocabulario que
-un A1 conoce.
+**Absoluta** ("toda palabra de la frase debe estar entre las N más frecuentes del
+dataset, exentos números, días, meses y gentilicios; comparación por lema"):
 
-El principio pedagógico es correcto; **el rank de frecuencia no es el proxy que lo
-mide**. Un invariante que falla en el 91-99% de los casos no es un invariante: es
-ruido que nadie puede arreglar y que acabaría silenciado.
+| Techo | Entradas que violan | Frases que violan |
+|---|---|---|
+| N=1000 | 2612 / 2800 (93.3%) | 65.3% |
+| N=2000 | 1941 / 2800 (69.3%) | 35.2% |
+
+Esta versión sí es lógicamente coherente — distingue `"Give me the book please"`
+(pasa) de `"The mountain behind our village is extremely high"` (falla) — pero el
+volumen tampoco cae a algo manejable. Los infractores principales en N=2000 son
+vocabulario A1 concreto y cotidiano: `bread`, `soup`, `vegetables`, `cake`,
+`homework`, `birthday`, `cat` (#1678), `cup` (#1491), `milk` (#1789). Aparecen tarde
+en el rank del dataset porque el rank mide frecuencia en corpus general —dominado por
+palabras funcionales y abstractas—, no dificultad para un aprendiz A1. El **proxy**
+de frecuencia (el rank propio del dataset), no la formulación de la regla, es lo que
+falla aquí: no hay una lista de frecuencia A1 de referencia en el repo con la que
+medir contra la variable correcta (ver §8).
+
+**Verificación directa, sin proxy.** Se revisó a ojo una muestra aleatoria de 30
+frases (seed fija, reproducible), con el criterio de un profesor A1/A2: ¿la palabra
+objetivo es apropiada a su rank, y el resto de la frase la sostiene sin exigir
+vocabulario fuera de ese nivel? De 30, **1 se sintió por encima de nivel**
+(`"pinch of salt"` para enseñar `add` — vocabulario de cocina específico) y ninguna
+más fue clara. Esa es una tasa baja: no hay evidencia de un problema de contenido
+presente en las 2800 entradas.
+
+El principio pedagógico es correcto; ninguna de las dos formulaciones automáticas es
+el proxy que lo mide con el dato disponible hoy. Un invariante que falla en el 65-99%
+de los casos no es un invariante: es ruido que nadie puede arreglar y que acabaría
+silenciado. Queda como guía de redacción, respaldada por la revisión manual en vez de
+por una regla automática.
 
 ---
 
@@ -710,4 +735,22 @@ Todos ≤250 líneas, con comentario de estructura planeada antes de implementar
   usuarios. Desplegar A sola secaría la cola de repaso (ver "Fases A y B se despliegan
   juntas").
 - **Invariante automático de frecuencia de vocabulario**: descartado tras medirlo
-  (§5.1). Queda como guía de redacción.
+  (§5.1). Queda como guía de redacción. **No se trae una lista de frecuencia A1
+  externa (Oxford 3000 o similar) en este trabajo:**
+  - La razón original para querer el invariante era el riesgo de generar frases
+    malas al alargarlas — riesgo de las 4 frases de Fase 0, que ya están escritas a
+    mano y revisadas. El invariante protegería contenido *futuro*, no el actual.
+  - Traer la lista no es gratis: licencia por revisar, mapeo de lemas contra el
+    dataset propio, y es en sí misma otro proxy discutible, no una fuente de verdad.
+  - La revisión manual de 30 frases (§5.1) encontró ~1 caso dudoso en 30 — no hay
+    evidencia de un problema de contenido presente que justifique el costo ahora.
+
+  **Si se reconsidera:** medir la tasa de violación contra la lista externa antes de
+  construir nada automático. **Criterio de éxito:** si la tasa de violación se
+  mantiene por encima de ~10% incluso con una referencia A1 real, la conclusión es
+  que esto no se automatiza — no bajar el umbral hasta que el número cuadre. Y el
+  punto de aplicación correcto es **advertencia en la entrada de contenido nuevo**,
+  no gate de CI sobre las 2800 entradas legado: un check con 30%+ de falsos
+  positivos es tolerable si lo resuelve un humano al escribir una frase; como test
+  rojo permanente sobre contenido ya revisado, se acaba silenciando — el mismo fallo
+  que esta nota busca evitar.
