@@ -11,6 +11,9 @@
  * Idempotent: rewrites example_sentences from staging every run, so fixing the
  * staging file and re-running converges. Rebuilds words-all.json.
  *
+ * `example_sentences` in the chunk files is generated output, not hand-editable —
+ * a manual edit there is silently overwritten on the next run of this script.
+ *
  * Usage:
  *   node scripts/essential-words/apply-example-sentences.mjs
  *   node scripts/essential-words/apply-example-sentences.mjs --dry-run
