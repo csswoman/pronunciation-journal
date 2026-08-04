@@ -10,6 +10,7 @@ overrides:
 allowBuilds:
   '@google/genai': true
   canvas: true
+  esbuild: true
   protobufjs: true
   sharp: true
   unrs-resolver: true
