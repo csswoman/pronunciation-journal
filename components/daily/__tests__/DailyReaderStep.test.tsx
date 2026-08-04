@@ -71,7 +71,7 @@ describe('DailyReaderStep', () => {
     )
 
     expect(screen.getByText('A resilient learner keeps practicing.')).toBeInTheDocument()
-    expect(screen.getByText('Reaparecen hoy')).toBeInTheDocument()
+    expect(screen.getByText('Te tocan hoy')).toBeInTheDocument()
     expect(screen.queryByText(/de Introducción/i)).not.toBeInTheDocument()
 
     fireEvent.click(screen.getByRole('button', { name: 'Finish reader' }))

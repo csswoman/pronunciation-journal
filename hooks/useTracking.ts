@@ -11,7 +11,7 @@ import { useWords } from "./useWords";
 
 export function useTracking() {
   const { user } = useAuth();
-  const { words, loading: wordsLoading, addWord } = useWords();
+  const { words, loading: wordsLoading, addWord, removeWord, updateWord } = useWords();
   const trackedItems = useLiveQuery(
     () => user ? listTrackedItems(user.id) : Promise.resolve([]),
     [user?.id],
@@ -43,7 +43,7 @@ export function useTracking() {
         id: trackedItem.id,
         kind: trackedItem.kind,
         title: trackedItem.title ?? trackedItem.ref,
-        description: typeof trackedItem.payload.text === "string" ? trackedItem.payload.text : null,
+        description: typeof trackedItem.payload.context === "string" ? trackedItem.payload.context : null,
         href: trackedItem.kind === "lesson" ? `/mini-lessons/${trackedItem.ref}` : undefined,
         progressState: 'saved',
         progressLabel: WORD_PROGRESS_LABELS.saved,
@@ -55,5 +55,5 @@ export function useTracking() {
 
   const items = useMemo(() => reviewSources.map((source) => source.item), [reviewSources]);
 
-  return { items, reviewSources, loading: wordsLoading, userId: user?.id ?? null, addWord };
+  return { items, reviewSources, loading: wordsLoading, userId: user?.id ?? null, addWord, removeWord, updateWord };
 }

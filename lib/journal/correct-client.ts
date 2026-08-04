@@ -1,10 +1,7 @@
 import { publicAiErrorMessage } from '@/lib/degradation/messages'
-import type {
-  JournalCorrectRequest,
-  JournalCorrectionResult,
-} from '@/lib/journal/correction'
+import type { JournalCorrectRequest, JournalCorrectionResponse } from '@/lib/journal/correction'
 
-export type { JournalCorrectRequest, JournalCorrectionResult }
+export type { JournalCorrectRequest, JournalCorrectionResponse }
 
 const JOURNAL_AI_UNAVAILABLE_MESSAGE =
   'No pudimos revisar tu página en este momento. Tu texto sigue guardado — puedes intentarlo de nuevo en unos minutos.'
@@ -26,7 +23,7 @@ export class JournalCorrectionError extends Error {
  */
 export async function correctJournalEntry(
   input: JournalCorrectRequest,
-): Promise<JournalCorrectionResult> {
+): Promise<JournalCorrectionResponse> {
   if (typeof navigator !== 'undefined' && !navigator.onLine) {
     throw new JournalCorrectionError(
       'Necesitas conexión a internet para corregir tu entrada.',
@@ -56,5 +53,5 @@ export async function correctJournalEntry(
     )
   }
 
-  return res.json() as Promise<JournalCorrectionResult>
+  return res.json() as Promise<JournalCorrectionResponse>
 }

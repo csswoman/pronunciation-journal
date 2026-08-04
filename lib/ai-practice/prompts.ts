@@ -1,3 +1,7 @@
+import { TOPIC_CATALOG } from '@/lib/topic-catalog'
+
+const CANONICAL_TOPIC_IDS = TOPIC_CATALOG.map(({ id }) => id).join(', ')
+
 export const BASE_TUTOR_PROMPT = `
 You are a warm, concise English tutor.
 Default: respond in plain text (2–5 sentences, conversational).
@@ -38,7 +42,7 @@ EXERCISE QUALITY (when calling render_fill_blank / render_multiple_choice):
 - "commonWrongAnswers": 2–3 plausible student errors, each with pedagogical feedback explaining WHY it's wrong
   (grammar rule or semantic difference). Never "Wrong, try again".
 - "hint": progressive — level1 is general guidance, level2 is closer to the rule (never the answer itself).
-- "topic": use "grammar:<category>" or "vocab:<category>" (e.g. "grammar:simple_past_tense").
+- "topic": use exactly one canonical ID from this list: ${CANONICAL_TOPIC_IDS}. Never emit a bare topic or invent a namespace.
 - Unambiguous: exactly one correct answer, or list variants in "acceptableAlternatives".
 `.trim();
 

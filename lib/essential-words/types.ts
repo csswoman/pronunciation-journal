@@ -22,6 +22,16 @@ export const ESSENTIAL_WORD_POS = [
 ] as const;
 export type EssentialWordPos = (typeof ESSENTIAL_WORD_POS)[number];
 
+/**
+ * One example sentence plus its IPA. The entry's own `example_sentence` /
+ * `sentence_ipa` is variant 0 and stays mandatory; this array holds the
+ * *additional* sentences, so a word with no variants behaves as before.
+ */
+export interface SentenceVariant {
+  sentence: string;
+  sentence_ipa: string;
+}
+
 export interface EssentialWord {
   rank: number; // 1–2800, único, contiguo por chunk
   word: string;
@@ -33,6 +43,7 @@ export interface EssentialWord {
   cefr_level: CefrLevel;
   meaning?: string; // definición corta en inglés (backfill-meaning)
   translation?: string; // traducción al español (backfill-meaning)
+  example_sentences?: SentenceVariant[]; // extra sentences beyond example_sentence
 }
 
 export const ESSENTIAL_WORD_PREFIX = "c1k:";

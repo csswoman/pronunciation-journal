@@ -1,5 +1,5 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { rankWeakestSounds } from "@/lib/phoneme-practice/mastery-pct";
+import { normalizeIpaKey, rankWeakestSounds } from "@/lib/phoneme-practice/mastery-pct";
 import type { UserContrastProgress } from "@/lib/phoneme-practice/types";
 import { STREAK_TIMEZONE, toLocalDateString } from "@/lib/daily/streak-core";
 import { getTodaysMiniLesson } from "@/lib/content/lessons";
@@ -98,14 +98,40 @@ export async function getWeakestPhonemeForHome(
 
   if (error) throw error;
 
-  const ranked = rankWeakestSounds((data ?? []) as UserContrastProgress[], { limit: 1 });
+  const rows = (data ?? []) as UserContrastProgress[];
+  const ranked = rankWeakestSounds(rows, { limit: 1 });
   const weakest = ranked[0];
   if (!weakest) return null;
+
+  const related = rows.filter((row) =>
+    row.contrast_id.split("|").some((part) => normalizeIpaKey(part) === weakest.ipa),
+  );
+  const worst = [...related].sort((a, b) => {
+    const accA = a.total_attempts > 0 ? a.correct_answers / a.total_attempts : 1;
+    const accB = b.total_attempts > 0 ? b.correct_answers / b.total_attempts : 1;
+    return accA - accB;
+  })[0];
+
+  let confusableIpa: string | null = null;
+  let totalAttempts = weakest.totalAttempts;
+  let correctAnswers = 0;
+
+  if (worst) {
+    totalAttempts = worst.total_attempts;
+    correctAnswers = worst.correct_answers;
+    const partner = worst.contrast_id
+      .split("|")
+      .map(normalizeIpaKey)
+      .find((part) => part && part !== weakest.ipa);
+    confusableIpa = partner ?? null;
+  }
 
   return {
     ipa: weakest.ipa,
     accuracy: weakest.mastery,
-    totalAttempts: weakest.totalAttempts,
+    totalAttempts,
+    correctAnswers,
+    confusableIpa,
     label: null,
   };
 }
@@ -186,14 +212,14 @@ export async function getDailyPlanPreview(userId: string): Promise<DailyPlanPrev
     steps.push({
       id: "word_review",
       title: "Repaso de palabras",
-      subtitle: "Afianza palabras de tu léxico",
+      subtitle: "Afianza palabras de tu vocabulario",
       icon: "BookMarked",
     });
   }
 
   steps.push({
     id: "phoneme_focus",
-    title: "Sound",
+    title: "Práctica de sonido",
     subtitle: hasProgress ? "Tu sonido a reforzar hoy" : "Empieza con un sonido clave",
     icon: "Waves",
   });

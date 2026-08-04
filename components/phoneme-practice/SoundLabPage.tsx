@@ -3,13 +3,12 @@
 import { useCallback, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Headphones } from "@/components/icons";
+import { Headphones, Play } from "@/components/icons";
 import PageLayout from "@/components/layout/PageLayout";
+import PageHeader from "@/components/layout/PageHeader";
 import { SoundDetail } from "@/components/sounds/SoundDetail";
-import IPAChart from "@/components/ipa/IPAChart";
 import MinimalPairsWorkspace from "./MinimalPairsWorkspace";
 import { PronunciationPathPage } from "@/components/courses/pronunciation-path/PronunciationPathPage";
-import { SoundLabHeader } from "./SoundLabHeader";
 import { SoundLabFilterRow } from "./SoundLabFilterRow";
 import { SoundLabLessonGrid } from "./SoundLabLessonGrid";
 import type { LessonSection } from "./SoundLabLessonGrid";
@@ -18,8 +17,9 @@ import type { SoundLabChip } from "./SoundLabFilterRow";
 import type { Lesson } from "@/lib/types";
 import { ipaFromLessonTitle } from "@/lib/sound-lab/display";
 import { useDialogFocus } from "@/hooks/useDialogFocus";
+import { useSoundLabWorkspace } from "@/hooks/useSoundLabWorkspace";
 import { SoundsWorkspaceTabs } from "./SoundsWorkspaceTabs";
-import type { SoundsWorkspaceTab } from "./SoundsWorkspaceTabs";
+import { IPAReferenceDialog } from "./IPAReferenceDialog";
 import {
   CANONICAL_SOUND_COUNT,
   getCanonicalSound,
@@ -44,6 +44,22 @@ function resolveGroupId(lesson: Lesson): string {
   return getLessonSectionId(lesson);
 }
 
+function headerStatsLine(inProgressCount: number, totalCount: number): string {
+  if (inProgressCount > 0) {
+    return `${inProgressCount} de ${totalCount} sonidos en curso`;
+  }
+  if (totalCount === 1) {
+    return "1 sonido listo para practicar";
+  }
+  return `${totalCount} sonidos listos para practicar`;
+}
+
+function continueCtaLabel(lesson: Lesson | null): string {
+  const ipa = lesson ? ipaFromLessonTitle(lesson.title) : null;
+  if (ipa) return `Continuar ${ipa}`;
+  return "Continuar lección";
+}
+
 /** True when a lesson teaches any of the focused IPA symbols (from a course handoff). */
 function matchesFocus(lesson: Lesson, tokens: string[]): boolean {
   if (tokens.length === 0) return false;
@@ -65,18 +81,16 @@ export default function SoundLabPage({ userId }: SoundLabPageProps) {
     useSoundLabData();
 
   const searchParams = useSearchParams();
-  const activeTab: SoundsWorkspaceTab =
-      searchParams.get("tab") === "ipa"
-      ? "ipa"
-      : searchParams.get("tab") === "minimal-pairs"
-        ? "minimal-pairs"
-        : searchParams.get("tab") === "path"
-          ? "path"
-        : "sounds";
-  const isSoundsView = activeTab === "sounds";
-  const isIPAView = activeTab === "ipa";
-  const isMinimalPairsView = activeTab === "minimal-pairs";
-  const isPathView = activeTab === "path";
+  const {
+    activeTab,
+    isSoundsView,
+    isMinimalPairsView,
+    isPathView,
+    isIPAOpen,
+    selectTab,
+    openIPA,
+    closeIPA,
+  } = useSoundLabWorkspace();
   const focusTokens = useMemo(() => {
     const raw = searchParams.get("focus");
     return raw ? raw.split(",").map((s) => s.trim()).filter(Boolean) : [];
@@ -180,14 +194,26 @@ export default function SoundLabPage({ userId }: SoundLabPageProps) {
   return (
     <PageLayout archetype="catalog" className="sound-lab min-h-screen">
       <header className="sound-lab__page-header">
-        <SoundLabHeader
-          totalCount={CANONICAL_SOUND_COUNT}
-          inProgressCount={inProgressCount}
-          heroLesson={heroLesson.lesson}
-          onResume={isSoundsView ? handleResume : undefined}
+        <PageHeader
+          kicker="Práctica"
+          title="Laboratorio de sonidos"
+          subtitle={headerStatsLine(inProgressCount, CANONICAL_SOUND_COUNT)}
+          primaryCta={
+            isSoundsView && heroLesson.lesson
+              ? {
+                  label: continueCtaLabel(heroLesson.lesson),
+                  icon: <Play size={14} className="fill-current" aria-hidden />,
+                  onClick: handleResume,
+                }
+              : undefined
+          }
         />
 
-        <SoundsWorkspaceTabs activeTab={activeTab} />
+        <SoundsWorkspaceTabs
+          activeTab={activeTab}
+          onTabChange={selectTab}
+          onOpenIPA={openIPA}
+        />
 
         {isSoundsView ? (
           <SoundLabFilterRow
@@ -206,11 +232,11 @@ export default function SoundLabPage({ userId }: SoundLabPageProps) {
             role="status"
           >
             <Headphones size={14} className="sound-lab__focus-banner-icon shrink-0" aria-hidden />
-            <span className="min-w-0 flex-1 text-body-sm text-[color:var(--text-secondary)]">
+            <span className="min-w-0 flex-1 text-body-sm text-fg-muted">
               Enfoque:{" "}
               <span className="sound-lab__focus-tokens font-ipa">{focusTokens.join(" · ")}</span>
               {!focusSection && (
-                <span className="text-[color:var(--text-secondary)]">
+                <span className="text-fg-muted">
                   . Aún no hay lecciones que coincidan.
                 </span>
               )}
@@ -218,7 +244,7 @@ export default function SoundLabPage({ userId }: SoundLabPageProps) {
             {focusSection?.lessons[0]?.href ? (
               <Link
                 href={focusSection.lessons[0].href}
-                className="inline-flex min-h-9 shrink-0 items-center rounded-md bg-[var(--cta-bg)] px-3 text-caption font-semibold text-[var(--cta-fg)]"
+                className="inline-flex min-h-9 shrink-0 items-center rounded-md bg-cta-bg px-3 text-caption font-semibold text-cta-fg"
               >
                 Abrir este sonido
               </Link>
@@ -233,9 +259,7 @@ export default function SoundLabPage({ userId }: SoundLabPageProps) {
         )}
       </header>
 
-      {isIPAView ? (
-        <IPAChart lessons={allLessons} />
-      ) : isMinimalPairsView ? (
+      {isMinimalPairsView ? (
         <MinimalPairsWorkspace />
       ) : isPathView ? (
         <PronunciationPathPage
@@ -286,6 +310,8 @@ export default function SoundLabPage({ userId }: SoundLabPageProps) {
           </div>
         </div>
       ) : null}
+
+      <IPAReferenceDialog open={isIPAOpen} onClose={closeIPA} lessons={allLessons} />
     </PageLayout>
   );
 }

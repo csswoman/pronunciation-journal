@@ -70,3 +70,35 @@ describe("validateEntry", () => {
     expect(issues.filter((i) => i.kind === "sentence-missing-word")).toEqual([]);
   });
 });
+
+describe("example_sentences variants", () => {
+  it("accepts variants that contain the word", () => {
+    const issues = validateEntry({
+      ...to,
+      example_sentences: [
+        { sentence: "I want to eat now.", sentence_ipa: "/aɪ wɑnt tu it naʊ/" },
+      ],
+    });
+    expect(issues).toEqual([]);
+  });
+
+  it("flags a variant that does not contain the word", () => {
+    const issues = validateEntry({
+      ...to,
+      example_sentences: [
+        { sentence: "A totally unrelated line.", sentence_ipa: "/ə laɪn/" },
+      ],
+    });
+    expect(issues.map((i) => i.kind)).toContain("variant-missing-word");
+  });
+
+  it("flags a variant identical to the base sentence", () => {
+    const issues = validateEntry({
+      ...to,
+      example_sentences: [
+        { sentence: to.example_sentence, sentence_ipa: "/dup/" },
+      ],
+    });
+    expect(issues.map((i) => i.kind)).toContain("variant-duplicate");
+  });
+});

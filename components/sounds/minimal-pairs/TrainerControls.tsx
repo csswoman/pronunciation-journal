@@ -83,16 +83,23 @@ export function TrainerControls({
           className="ipa-chart__btn ipa-chart__btn--ghost sound-detail__pairs-action sound-detail__pairs-action--listen"
         >
           <Play size={13} fill="currentColor" aria-hidden />
-          {embedded ? "Escuchar ambos" : "Reproducir ambos"}
+          {embedded ? "Escuchar ambos" : "Escuchar ambas"}
         </button>
-        <button
-          type="button"
-          onClick={onNextPair}
-          className="ipa-chart__btn ipa-chart__btn--ghost sound-detail__pairs-action sound-detail__pairs-action--next"
-        >
-          {isLastPair ? "Último par" : "Siguiente par"}
-          <ArrowRight size={13} aria-hidden />
-        </button>
+        <div className="flex items-center gap-1.5">
+          <button
+            type="button"
+            onClick={onNextPair}
+            className="ipa-chart__btn ipa-chart__btn--ghost sound-detail__pairs-action sound-detail__pairs-action--next"
+          >
+            {isLastPair ? "Último" : "Siguiente"}
+            <ArrowRight size={13} aria-hidden />
+          </button>
+          {!embedded ? (
+            <kbd className="ipa-chart__kbd ipa-chart__kbd--inline" aria-hidden>
+              Enter
+            </kbd>
+          ) : null}
+        </div>
         {quizTarget ? (
           <button
             type="button"
@@ -109,7 +116,7 @@ export function TrainerControls({
             className="ipa-chart__btn ipa-chart__btn--primary ipa-chart__mpfoot-quiz sound-detail__pairs-action sound-detail__pairs-action--quiz"
           >
             <HelpCircle size={14} aria-hidden />
-            {embedded ? "Escuchar una opción" : "Escucha una, adivina cuál"}
+            {embedded ? "Escuchar una opción" : "Escuchar una opción"}
           </button>
         )}
       </div>
@@ -133,10 +140,17 @@ export function TrainerControls({
                   {verdict === "correct" ? "¡Correcto!" : `Era «${correctWord}».`}
                 </p>
               </div>
-              <button type="button" onClick={onNextRound} className="ipa-chart__btn ipa-chart__btn--primary">
-                {isLastPair ? "Ver resultado" : "Siguiente"}
-                <ArrowRight size={13} aria-hidden />
-              </button>
+              <div className="flex items-center gap-1.5">
+                <button type="button" onClick={onNextRound} className="ipa-chart__btn ipa-chart__btn--primary">
+                  {isLastPair ? "Ver resultado" : "Siguiente"}
+                  <ArrowRight size={13} aria-hidden />
+                </button>
+                {!embedded ? (
+                  <kbd className="ipa-chart__kbd ipa-chart__kbd--inline" aria-hidden>
+                    Enter
+                  </kbd>
+                ) : null}
+              </div>
             </>
           ) : (
             <p className="text-body-sm text-fg-muted" role="status">

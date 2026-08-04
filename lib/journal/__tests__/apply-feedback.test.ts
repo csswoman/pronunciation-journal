@@ -5,21 +5,14 @@ import { applyJournalFeedback } from '@/lib/journal/apply-feedback'
 import type { JournalCorrectionResult } from '@/lib/journal/correction'
 
 interface TopicRow {
-  id: string
-  ease_factor: number
+  topic: string
   interval_days: number
-  repetitions: number
   next_review_at: string | null
-  srs_status: string
-  last_reviewed_at: string | null
-  review_count: number
 }
 
 interface MockState {
   journalUpdatePayload: Record<string, unknown> | null
-  topicSelects: string[]
-  topicUpdates: Record<string, unknown>[]
-  topicInserts: Record<string, unknown>[]
+  topicRpcArgs: Record<string, unknown>[]
 }
 
 function createSupabaseMock(opts: {
@@ -28,65 +21,40 @@ function createSupabaseMock(opts: {
 }): { client: SupabaseClient<Database>; state: MockState } {
   const state: MockState = {
     journalUpdatePayload: null,
-    topicSelects: [],
-    topicUpdates: [],
-    topicInserts: [],
-  }
-
-  const thenable = (result: unknown) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- test double
-    const chain: any = {
-      eq: () => chain,
-      then: (resolve: (value: unknown) => unknown) => Promise.resolve(result).then(resolve),
-    }
-    return chain
+    topicRpcArgs: [],
   }
 
   const from = vi.fn((table: string) => {
-    if (table === 'journal_entries') {
-      return {
-        update(payload: Record<string, unknown>) {
-          state.journalUpdatePayload = payload
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- test double
-          const builder: any = {
-            eq: () => builder,
-            select: async () => opts.journalUpdate,
-          }
-          return builder
-        },
-      }
-    }
+    if (table !== 'journal_entries') throw new Error(`unexpected table ${table}`)
 
-    if (table === 'topic_srs') {
-      let selectedTopic = ''
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- test double
-      const selectBuilder: any = {
-        eq: (col: string, val: string) => {
-          if (col === 'topic') selectedTopic = val
-          return selectBuilder
-        },
-        maybeSingle: async () => {
-          state.topicSelects.push(selectedTopic)
-          return { data: opts.topicRow?.(selectedTopic) ?? null, error: null }
-        },
-      }
-      return {
-        select: () => selectBuilder,
-        update(payload: Record<string, unknown>) {
-          state.topicUpdates.push(payload)
-          return thenable({ error: null })
-        },
-        insert(payload: Record<string, unknown>) {
-          state.topicInserts.push(payload)
-          return thenable({ error: null })
-        },
-      }
+    return {
+      update(payload: Record<string, unknown>) {
+        state.journalUpdatePayload = payload
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- test double
+        const builder: any = {
+          eq: () => builder,
+          select: async () => opts.journalUpdate,
+        }
+        return builder
+      },
     }
-
-    throw new Error(`unexpected table ${table}`)
   })
 
-  return { client: { from } as unknown as SupabaseClient<Database>, state }
+  const rpc = vi.fn(async (name: string, args: Record<string, unknown>) => {
+    expect(name).toBe('apply_topic_srs_rating_event')
+    state.topicRpcArgs.push(args)
+    const existing = opts.topicRow?.(String(args.p_topic))
+    return {
+      data: existing ?? {
+        topic: args.p_topic,
+        interval_days: 1,
+        next_review_at: '2026-01-01T00:00:00.000Z',
+      },
+      error: null,
+    }
+  })
+
+  return { client: { from, rpc } as unknown as SupabaseClient<Database>, state }
 }
 
 const baseCorrection: JournalCorrectionResult = {
@@ -98,7 +66,7 @@ const baseCorrection: JournalCorrectionResult = {
 }
 
 describe('applyJournalFeedback', () => {
-  it('marks the entry corrected and schedules an SM-2 review (not a bare counter bump)', async () => {
+  it('marks the entry corrected and schedules the canonical topic through the RPC', async () => {
     const { client, state } = createSupabaseMock({ journalUpdate: { data: [{ id: 'e1' }], error: null } })
 
     const result = await applyJournalFeedback(client, {
@@ -107,45 +75,56 @@ describe('applyJournalFeedback', () => {
       correction: baseCorrection,
     })
 
-    expect(result).toEqual({ applied: true, scheduledTopics: ['grammar:past simple'] })
-    expect(state.journalUpdatePayload).toMatchObject({ status: 'corrected', corrected_content: 'Yesterday I went to work.' })
-    // New topic → insert with full SM-2 fields, proving real scheduling.
-    expect(state.topicInserts).toHaveLength(1)
-    expect(state.topicInserts[0]).toMatchObject({
-      user_id: 'u1',
-      topic: 'grammar:past simple',
-      review_count: 1,
+    expect(result).toMatchObject({ applied: true })
+    expect(result.applied && result.scheduledTopics).toHaveLength(1)
+    expect(result.applied && result.scheduledTopics[0]).toMatchObject({
+      topicId: 'grammar:past simple',
+      intervalDays: 1,
     })
-    expect(state.topicInserts[0]).toHaveProperty('ease_factor')
-    expect(state.topicInserts[0]).toHaveProperty('interval_days')
-    expect(state.topicInserts[0]).toHaveProperty('next_review_at')
-    expect(state.topicInserts[0]).toHaveProperty('srs_status')
+    expect(state.journalUpdatePayload).toMatchObject({ status: 'corrected', corrected_content: 'Yesterday I went to work.' })
+    expect(state.topicRpcArgs).toHaveLength(1)
+    expect(state.topicRpcArgs[0]).toMatchObject({ p_user_id: 'u1', p_topic: 'grammar:past simple', p_grade: 2 })
   })
 
-  it('updates an existing topic_srs row with SM-2 fields and increments review_count', async () => {
+  it('captures the dates returned for two different canonical topics', async () => {
+    const correction: JournalCorrectionResult = {
+      correctedContent: 'I went to the shop.',
+      errors: [
+        { quote: 'go', correction: 'went', type: 'tense', explanationEs: 'Usa pasado.', topic: 'grammar:past_simple' },
+        { quote: 'shop', correction: 'the shop', type: 'article', explanationEs: 'Usa artículo.', topic: 'grammar:articles' },
+      ],
+      newWords: [],
+    }
+    const { client, state } = createSupabaseMock({ journalUpdate: { data: [{ id: 'e1' }], error: null } })
+
+    const result = await applyJournalFeedback(client, { userId: 'u1', entryId: 'e1', correction })
+
+    expect(result).toMatchObject({ applied: true })
+    if (!result.applied) return
+    expect(result.scheduledTopics.map((topic) => topic.topicId)).toEqual(['grammar:past simple', 'grammar:articles'])
+    expect(state.topicRpcArgs.map((args) => args.p_topic)).toEqual(['grammar:past simple', 'grammar:articles'])
+    for (const scheduled of result.scheduledTopics) {
+      const row = state.topicRpcArgs.find((args) => args.p_topic === scheduled.topicId)
+      expect(row).toBeDefined()
+    }
+  })
+
+  it('uses the server RPC result for an existing topic row', async () => {
     const existing: TopicRow = {
-      id: 't1',
-      ease_factor: 2.5,
+      topic: 'grammar:past simple',
       interval_days: 6,
-      repetitions: 2,
       next_review_at: '2026-01-01T00:00:00.000Z',
-      srs_status: 'review',
-      last_reviewed_at: '2025-12-26T00:00:00.000Z',
-      review_count: 4,
     }
     const { client, state } = createSupabaseMock({
       journalUpdate: { data: [{ id: 'e1' }], error: null },
       topicRow: () => existing,
     })
 
-    await applyJournalFeedback(client, { userId: 'u1', entryId: 'e1', correction: baseCorrection })
+    const result = await applyJournalFeedback(client, { userId: 'u1', entryId: 'e1', correction: baseCorrection })
 
-    expect(state.topicInserts).toHaveLength(0)
-    expect(state.topicUpdates).toHaveLength(1)
-    expect(state.topicUpdates[0]).toMatchObject({ review_count: 5 })
-    // Real reschedule: interval math ran and moved the card, not just a counter.
-    expect(state.topicUpdates[0]).toHaveProperty('next_review_at')
-    expect(state.topicUpdates[0].interval_days).not.toBe(existing.interval_days)
+    expect(result).toMatchObject({ applied: true })
+    expect(result.applied && result.scheduledTopics[0]).toMatchObject({ topicId: 'grammar:past simple', intervalDays: 6 })
+    expect(state.topicRpcArgs).toHaveLength(1)
   })
 
   it('is idempotent: a non-submitted entry skips SRS entirely', async () => {
@@ -158,18 +137,18 @@ describe('applyJournalFeedback', () => {
     })
 
     expect(result).toEqual({ applied: false, reason: 'not_submitted' })
-    expect(state.topicSelects).toEqual([])
-    expect(state.topicInserts).toEqual([])
-    expect(state.topicUpdates).toEqual([])
+    expect(state.topicRpcArgs).toEqual([])
   })
 
-  it('dedupes topics and normalizes unknown/empty labels to grammar:other', async () => {
+  it('dedupes canonical spellings and warns/discards topics outside the journal catalog', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
     const correction: JournalCorrectionResult = {
       correctedContent: 'ok',
       errors: [
-        { quote: 'a', correction: 'b', type: 't', explanationEs: 'x', topic: 'Past Simple' },
-        { quote: 'c', correction: 'd', type: 't', explanationEs: 'y', topic: 'past  simple' },
-        { quote: 'e', correction: 'f', type: 't', explanationEs: 'z', topic: '   ' },
+        { quote: 'a', correction: 'b', type: 't', explanationEs: 'x', topic: 'grammar:past_simple' },
+        { quote: 'c', correction: 'd', type: 't', explanationEs: 'y', topic: 'grammar:past  simple' },
+        { quote: 'e', correction: 'f', type: 't', explanationEs: 'z', topic: 'grammar:conditionals' },
+        { quote: 'g', correction: 'h', type: 't', explanationEs: 'z', topic: 'past_simple' },
       ],
       newWords: [],
     }
@@ -178,15 +157,18 @@ describe('applyJournalFeedback', () => {
     const result = await applyJournalFeedback(client, { userId: 'u1', entryId: 'e1', correction })
 
     expect(result).toMatchObject({ applied: true })
-    expect(result.applied && result.scheduledTopics.sort()).toEqual(['grammar:other', 'past simple'])
-    expect(state.topicInserts).toHaveLength(2)
+    expect(result.applied && result.scheduledTopics).toHaveLength(1)
+    expect(result.applied && result.scheduledTopics[0]?.topicId).toBe('grammar:past simple')
+    expect(state.topicRpcArgs).toHaveLength(1)
+    expect(warn).toHaveBeenCalledTimes(2)
+    warn.mockRestore()
   })
 
-  it('does not add newWords to the word bank', async () => {
-    const { client } = createSupabaseMock({ journalUpdate: { data: [{ id: 'e1' }], error: null } })
+  it('does not add newWords to the word bank or write topic_srs directly', async () => {
+    const { client, state } = createSupabaseMock({ journalUpdate: { data: [{ id: 'e1' }], error: null } })
     await applyJournalFeedback(client, { userId: 'u1', entryId: 'e1', correction: baseCorrection })
-    // Only journal_entries + topic_srs tables are ever touched.
-    const tables = (client.from as unknown as { mock: { calls: string[][] } }).mock.calls.map((c) => c[0])
-    expect(new Set(tables)).toEqual(new Set(['journal_entries', 'topic_srs']))
+
+    expect((client.from as unknown as { mock: { calls: string[][] } }).mock.calls.map((c) => c[0])).toEqual(['journal_entries'])
+    expect(state.topicRpcArgs).toHaveLength(1)
   })
 })

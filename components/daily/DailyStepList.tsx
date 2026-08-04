@@ -59,7 +59,7 @@ function stepMeta(step: DailyStep): string {
     parts.push(`${cardCount} ${cardCount === 1 ? 'palabra' : 'palabras'}`)
   }
   if (step.readerPassage) parts.push('lectura')
-  parts.push(`≈${step.estMinutes} min`)
+  parts.push(`${step.estMinutes} min`)
   return parts.join(' · ')
 }
 
@@ -159,24 +159,38 @@ export default function DailyStepList({
           if (hidden) return null
 
           const cardClass = cn(
-            'home-card-lift focus-ring group flex w-full flex-col gap-2 rounded-[var(--radius-lg)] border bg-surface-raised text-left',
+            'home-card-lift focus-ring group flex w-full flex-col gap-2 rounded-[var(--radius-lg)] border text-left',
             compact ? 'px-4 py-2' : 'px-4 py-3.5',
             visual === 'entry' &&
               (demoteEntryHighlight
-                ? 'border-border-subtle hover:border-border-default'
+                ? 'border-border-default bg-surface-raised hover:border-border-default'
                 : 'border-primary bg-primary-soft hover:border-primary'),
             visual === 'current' &&
               'border-primary bg-primary-soft hover:border-primary',
             visual === 'pending' &&
-              'border-border-subtle hover:border-border-default',
-            visual === 'done' && 'border-border-subtle opacity-80',
+              'border-border-subtle bg-transparent hover:border-border-default hover:bg-surface-raised/50',
+            visual === 'done' &&
+              'border-transparent bg-transparent opacity-70',
           )
 
+          const localizedSubtitle = localizeDailyStepSubtitle(step.subtitle)
           const inner = compact ? (
             <div className="flex w-full items-center justify-between gap-3">
-              <span className={cn('truncate font-body-sm font-medium', done ? 'text-fg-muted/70' : 'text-fg')}>
-                {localizeDailyStepTitle(step.title)}
-              </span>
+              <div className="min-w-0 flex-1">
+                <span
+                  className={cn(
+                    'block truncate font-body-sm font-medium',
+                    done ? 'text-fg-muted' : 'text-fg',
+                  )}
+                >
+                  {localizeDailyStepTitle(step.title)}
+                </span>
+                {!done && localizedSubtitle ? (
+                  <span className="mt-0.5 block truncate font-caption text-fg-muted">
+                    {localizedSubtitle}
+                  </span>
+                ) : null}
+              </div>
               {done ? (
                 <span className="inline-flex shrink-0 items-center gap-1 font-body-sm font-medium text-success">
                   <Check size={14} aria-hidden />
@@ -184,24 +198,28 @@ export default function DailyStepList({
                 </span>
               ) : (
                 <span className="shrink-0 font-caption tabular-nums text-fg-muted">
-                  ≈{step.estMinutes} min
+                  {step.estMinutes} min
                 </span>
               )}
             </div>
           ) : (
             <div className="flex w-full items-center gap-3">
               <div className="min-w-0 flex-1">
-                <div className={cn(done && 'opacity-60')}>
+                <div className={cn(done && 'opacity-70')}>
                   <DailyStepTitle
                     title={localizeDailyStepTitle(step.title)}
                     ipa={step.ipa}
                     index={i}
+                    muted={done}
                   />
                 </div>
                 <p
-                  className={cn( 'mt-0.5 truncate font-body-sm', done ? 'text-fg-muted/70' : 'text-fg-muted', )}
+                  className={cn(
+                    'mt-0.5 truncate font-body-sm text-fg-muted',
+                    done && 'opacity-80',
+                  )}
                 >
-                  {[localizeDailyStepSubtitle(step.subtitle), stepMeta(step)]
+                  {[localizedSubtitle, stepMeta(step)]
                     .filter(Boolean)
                     .join(' · ')}
                 </p>
@@ -260,7 +278,7 @@ export default function DailyStepList({
       {collapseFutureSteps && !showAllCompact && hiddenCount > 0 ? (
         <button
           type="button"
-          className="focus-ring self-start font-body-sm font-medium text-fg-muted hover:text-fg"
+          className="focus-ring self-start font-body-sm font-medium text-fg hover:underline"
           onClick={() => setShowAllCompact(true)}
         >
           Ver {hiddenCount} más

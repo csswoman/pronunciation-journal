@@ -9,7 +9,7 @@
 // </SpeakReviewCard>
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Mic, MicOff } from '@/components/icons'
+import { Mic, MicOff, Loader2 } from '@/components/icons'
 import { speak } from '@/lib/phoneme-practice/tts'
 import { PillButton } from '@/components/ui/PillButton'
 import { ListenButton } from '@/components/ui/ListenButton'
@@ -26,6 +26,7 @@ import { SpeakSkipActions } from './SpeakSkipActions'
 import { micErrorMessage } from './mic-error-message'
 import { playUiCue } from '@/lib/ui-sounds/cues'
 import { cn } from '@/lib/cn'
+import { selectSentence } from '@/lib/essential-words/sentence-variants'
 import type { EssentialWord } from '@/lib/essential-words/types'
 import type { WordResult } from '@/lib/types'
 
@@ -36,6 +37,8 @@ interface Props {
   fromSnooze?: boolean
   onKeepSnooze?: () => void
   onMaster?: () => void
+  /** SM-2 repetition count — rotates which example sentence is practiced. */
+  repetitions?: number
 }
 
 interface Scored {
@@ -51,6 +54,7 @@ export function SpeakReviewCard({
   fromSnooze,
   onKeepSnooze,
   onMaster,
+  repetitions = 0,
 }: Props) {
   const { getStream, release } = useSharedMicStream()
   const { state, result, error: speechError, isSupported, start, stop, abort, reset } =
@@ -64,7 +68,7 @@ export function SpeakReviewCard({
   const [showSoundDetail, setShowSoundDetail] = useState(false)
   const submitted = useRef(false)
 
-  const sentence = entry.example_sentence
+  const { sentence } = selectSentence(entry, repetitions)
 
   useEffect(() => {
     submitted.current = false
@@ -182,11 +186,11 @@ export function SpeakReviewCard({
           : 'Escucha el modelo y graba tu voz cuando estés listo.'
 
   return (
-    <div className="flex w-full max-w-md flex-col items-center gap-5 rounded-lg border border-border-subtle bg-surface-raised layout-card-pad sm:gap-[var(--layout-stack-loose)]">
+    <div className="flex w-full flex-col items-center gap-space-5 rounded-lg border border-border-subtle bg-surface-raised layout-card-pad sm:gap-layout-stack-loose">
       <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">
         {statusMessage}
       </p>
-      <div className="flex flex-col items-center gap-1 text-center">
+      <div className="flex max-w-[42ch] flex-col items-center gap-1 text-center">
         <p className="font-kicker m-0 text-fg-muted">Di la oración</p>
         <p className="m-0 text-center text-body-lg font-medium leading-relaxed text-balance text-fg">{sentence}</p>
         {entry.sentence_ipa && (
@@ -208,15 +212,22 @@ export function SpeakReviewCard({
         </div>
       ) : !scored ? (
         <div className="flex flex-col items-center gap-2">
-          <button
+          <PillButton
             type="button"
+            variant="primary"
             onClick={() => void handleMicToggle()}
             disabled={isProcessing}
             aria-label={isListening ? 'Detener grabación' : 'Grabar mi voz'}
-            className={cn( 'flex h-16 w-16 items-center justify-center rounded-full border-none text-on-primary transition-colors focus-ring disabled:opacity-40', isListening ? 'bg-error' : 'bg-primary', )}
+            className={cn( 'h-16 w-16 p-0', isListening && 'bg-error hover:bg-error', )}
           >
-            {isListening ? <MicOff size={24} /> : <Mic size={24} />}
-          </button>
+            {isProcessing ? (
+              <Loader2 size={24} className="animate-spin" />
+            ) : isListening ? (
+              <MicOff size={24} />
+            ) : (
+              <Mic size={24} />
+            )}
+          </PillButton>
           <p className="m-0 text-caption text-fg-subtle">
             {isListening
               ? 'Escuchando… toca para parar'
@@ -246,7 +257,14 @@ export function SpeakReviewCard({
             <PillButton variant="outline" size="sm" onClick={handleRetry}>
               Intentar de nuevo
             </PillButton>
-            <PillButton variant="primary" size="sm" onClick={handleContinue} disabled={isSubmitting}>
+            <PillButton
+              variant="primary"
+              size="sm"
+              onClick={handleContinue}
+              disabled={isSubmitting}
+              isLoading={isSubmitting}
+              icon={isSubmitting ? <Loader2 size={16} /> : undefined}
+            >
               Guardar y ver la siguiente
             </PillButton>
           </div>

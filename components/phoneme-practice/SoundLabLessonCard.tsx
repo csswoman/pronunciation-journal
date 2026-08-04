@@ -210,9 +210,9 @@ function CardBody({
                   isDone && "sound-lab__divider-fill--done",
                 )}
                 style={{
-                  width: isDone
-                    ? "100%"
-                    : `${progressPct}%`,
+                  transform: isDone
+                    ? "scaleX(1)"
+                    : `scaleX(${(progressPct ?? 0) / 100})`,
                 }}
               />
             </div>

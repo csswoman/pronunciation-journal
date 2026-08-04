@@ -22,8 +22,12 @@ export interface DailyGoalProgress {
 
 export interface WeakestPhonemeHome {
   ipa: string;
+  /** Mastery 0–100 (for qualitative fallbacks). */
   accuracy: number;
   totalAttempts: number;
+  correctAnswers: number;
+  /** Partner IPA from the weakest contrast, if known. */
+  confusableIpa: string | null;
   label: string | null;
 }
 
@@ -84,10 +88,10 @@ export const REVIEW_SOURCE_HREF: Record<ReviewSourceId, string> = {
 };
 
 export const REVIEW_SOURCE_LABEL: Record<ReviewSourceId, string> = {
-  vocabulary: "Vocabulary",
-  essential: "Essential words",
-  sounds: "Sounds",
-};
+  vocabulary: "Vocabulario",
+  essential: "Palabras esenciales",
+  sounds: "Sonidos",
+}
 
 /** Derives tone from a count. Keeps presentation logic out of components. */
 export function reviewToneForCount(count: number): "primary" | "warning" {

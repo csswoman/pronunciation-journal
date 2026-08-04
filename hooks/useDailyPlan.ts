@@ -13,6 +13,7 @@ import { localizeDailyPlanSubtitles } from '@/lib/daily/localize-step-copy'
 import { recordDailyStepCompletion } from '@/lib/progress/activity-hub'
 import { syncTodayReconciledSteps } from '@/lib/progress/activity-queries-client'
 import { buildDailyPlan, DAILY_PLAN_STEP_COUNT } from '@/lib/practice/daily-plan'
+import { requiredPracticeSteps } from '@/lib/practice/daily-plan/step-completion'
 import type { DailyPlan, DailyStep } from '@/lib/practice/types'
 
 /** Mini-lección del día para el paso 'concept' (inyectada por el server). */
@@ -156,7 +157,12 @@ export function useDailyPlan({ conceptLesson, autoLoad = true }: UseDailyPlanOpt
     () => steps.filter((s) => doneIds.has(s.id) || resolvedIds.has(s.id)).length,
     [steps, doneIds, resolvedIds],
   )
-  const allDone = steps.length > 0 && completedCount >= steps.length
+  // Concept/study_deck links never auto-complete — don't let them block post-plan.
+  const allDone = useMemo(() => {
+    const required = requiredPracticeSteps(steps)
+    if (required.length === 0) return false
+    return required.every((s) => doneIds.has(s.id) || resolvedIds.has(s.id))
+  }, [steps, doneIds, resolvedIds])
 
   const celebrate = useCallback(() => undefined, [])
 
@@ -164,6 +170,8 @@ export function useDailyPlan({ conceptLesson, autoLoad = true }: UseDailyPlanOpt
     plan,
     status,
     steps,
+    /** Session framing for coach / post-plan recommendations. */
+    arc: plan?.arc,
     doneIds,
     resolvedIds,
     getStepStatus,

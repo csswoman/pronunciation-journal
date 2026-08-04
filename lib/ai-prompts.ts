@@ -1,4 +1,5 @@
 import type { CEFRLevel } from '@/lib/exercises/cefr'
+import { JOURNAL_TOPIC_CATALOG } from '@/lib/journal/topic-catalog'
 
 // ── Transcription ──
 
@@ -243,7 +244,63 @@ export function buildGenerateReaderUserPrompt(input: {
   return `Target words to embed: ${input.targets.join(', ')}\nLevel: ${input.level}${interestsClause(input.interests ?? [])}\n\nReturn JSON: { "passage": string, "topic": string, "questions": [{ "prompt": string, "options": [string,string,string,string], "correctIndex": number }] }`
 }
 
-export const JOURNAL_CORRECTION_SYSTEM_PROMPT = `You are an English teacher for Spanish speakers. Return JSON only with correctedContent, errors (max 8 items with quote, correction, type, explanationEs, topic), and newWords (max 8 strings). Keep explanations concise in Spanish.`
+const JOURNAL_TOPIC_IDS = JOURNAL_TOPIC_CATALOG.map(({ id }) => id).join(', ')
+
+export const JOURNAL_CORRECTION_SYSTEM_PROMPT = `You are an English teacher for Spanish speakers. Return JSON only with correctedContent, errors (max 8 items with quote, correction, type, explanationEs, topic), and newWords (max 8 strings). Keep explanations concise in Spanish. Every errors[].topic must be one of these stable IDs: ${JOURNAL_TOPIC_IDS}.`
 export function buildJournalCorrectionPrompt(content: string, interests: readonly string[] = []): string {
-  return `Correct this learner journal entry. Topics must be short grammar labels.${interestsClause(interests)}\n\n${content}`
+  return `Correct this learner journal entry. Use only these stable topic IDs in errors[].topic; never invent another value: ${JOURNAL_TOPIC_IDS}.${interestsClause(interests)}\n\n${content}`
+}
+
+export const JOURNAL_NUDGE_SYSTEM_PROMPT = `You help a Spanish-speaking English learner continue a journal entry when they are stuck. Return ONLY valid JSON with exactly three nudges: { "nudges": [{ "en": "...", "es": "..." }, { "en": "...", "es": "..." }, { "en": "...", "es": "..." }] }.
+
+Rules:
+1. Never correct, rewrite, or mention anything the learner has written. Ignore errors completely.
+2. Each nudge must be a question about the learner's existing text, or an incomplete sentence starter ending in "...". Never provide a complete sentence that can be copied as a continuation.
+3. Connect every nudge to what the learner already wrote, not to the prompt in the abstract.
+4. At least one nudge must point indirectly toward one of the unused seed words.
+5. Match the vocabulary and grammar to the supplied CEFR level.
+6. Write each question or starter in English and its explanation/translation in Spanish.`
+
+export function buildJournalNudgePrompt(input: {
+  prompt: string
+  partialText: string
+  cefrLevel: string
+  unusedSeedWords: readonly string[]
+  targetLength: number
+}): string {
+  return `The learner is writing an English journal entry and is stuck. Use the following context:\n\nPrompt: ${input.prompt}\nCEFR level: ${input.cefrLevel}\nTarget length: ${input.targetLength} words\nUnused seed words: ${JSON.stringify(input.unusedSeedWords)}\nPartial text (do not correct it):\n${input.partialText}\n\nReturn exactly three nudges in the required JSON shape.`
+}
+
+// ── Essential Words: extra example sentences ──
+
+/**
+ * Extra example sentences for Essential Words entries. Batched: one call covers
+ * many words to keep the offline generation job cheap. Consumed by
+ * scripts/essential-words/generate-example-sentences.mjs.
+ */
+export function essentialWordSentencesPrompt(
+  words: { word: string; pos: string; cefr_level: string; example_sentence: string }[],
+  perWord: number,
+): string {
+  const list = words
+    .map((w) => `- ${w.word} (${w.pos}, ${w.cefr_level}) — ya tiene: "${w.example_sentence}"`)
+    .join("\n");
+
+  return `Eres un redactor de material didáctico de inglés para hispanohablantes.
+
+Para cada palabra de la lista, escribe ${perWord} oraciones de ejemplo NUEVAS.
+
+Reglas estrictas:
+- Cada oración DEBE contener la palabra objetivo (una forma flexionada es válida: "works" para "work").
+- Entre 6 y 12 palabras. Suficiente contexto para que un estudiante adivine la palabra si se borra.
+- Inglés americano natural y cotidiano. Sin nombres propios raros, sin jerga, sin frases hechas oscuras.
+- Vocabulario apropiado al nivel CEFR indicado o más simple.
+- NO repitas la oración que ya tiene, ni la parafrasees mínimamente.
+- Las ${perWord} oraciones de una misma palabra deben diferir en estructura y contexto entre sí.
+
+Palabras:
+${list}
+
+Responde SOLO con JSON válido, sin texto alrededor, con esta forma exacta:
+{"words":{"<palabra>":["oración 1","oración 2"]}}`;
 }

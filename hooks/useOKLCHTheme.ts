@@ -1,16 +1,19 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useLayoutEffect, useState, useCallback } from "react";
+import {
+  resolveThemeMode,
+  type ThemeMode,
+} from "@/lib/theme/resolve-theme-mode";
 
 const DEFAULT_HUE = 250;
 const STORAGE_HUE_KEY = "theme-hue";
 const STORAGE_MODE_KEY = "theme-mode";
 
-type ThemeMode = "light" | "dark";
 type Listener = () => void;
 
 // ── Module-level singleton ──────────────────────────────────────────────────
-// All hook instances share this state, so only one useEffect ever calls
+// All hook instances share this state, so only one layout effect ever calls
 // applyMode/applyHue — no race conditions between ThemeProvider and any
 // component that also calls useOKLCHTheme().
 
@@ -28,11 +31,8 @@ function applyHue(newHue: number) {
 }
 
 function applyMode(newMode: ThemeMode) {
-  if (newMode === "dark") {
-    document.documentElement.classList.add("dark");
-  } else {
-    document.documentElement.classList.remove("dark");
-  }
+  document.documentElement.classList.toggle("dark", newMode === "dark");
+  document.documentElement.style.colorScheme = newMode;
 }
 
 function initOnce() {
@@ -48,12 +48,10 @@ function initOnce() {
     }
   }
 
-  const savedMode = localStorage.getItem(STORAGE_MODE_KEY) as ThemeMode | null;
-  if (savedMode === "light" || savedMode === "dark") {
-    _mode = savedMode;
-  } else {
-    _mode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-  }
+  _mode = resolveThemeMode(
+    localStorage.getItem(STORAGE_MODE_KEY),
+    window.matchMedia("(prefers-color-scheme: dark)").matches,
+  );
   applyMode(_mode);
 
   notify();
@@ -66,8 +64,8 @@ export function useOKLCHTheme() {
   const [mode, setModeLocal] = useState<ThemeMode>(_mode);
   const [mounted, setMounted] = useState(_mounted);
 
-  // Subscribe to singleton changes
-  useEffect(() => {
+  // useLayoutEffect: re-apply before paint if hydration touched <html>.
+  useLayoutEffect(() => {
     const sync = () => {
       setHueLocal(_hue);
       setModeLocal(_mode);

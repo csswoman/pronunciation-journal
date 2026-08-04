@@ -3,6 +3,7 @@
    Semantic Colors (fixed hues, independent of --hue) */
 
 :root {
+  color-scheme: light;
   --sidebar-width: 256px;
   --hue: 250;
 
@@ -378,6 +379,7 @@
 
 /* ── Dark Mode ──────────────────────────────────────────────────────────── */
 .dark {
+  color-scheme: dark;
   /* Primary scale — adapted lightness for dark backgrounds */
   --primary-50:  oklch(0.18 0.03 var(--hue));
   --primary-100: oklch(0.22 0.05 var(--hue));

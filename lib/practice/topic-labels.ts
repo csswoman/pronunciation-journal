@@ -4,13 +4,14 @@ import { normalizeTopic } from '@/lib/practice/normalize-topic'
  * Human-facing display labels for grammar/vocab topics. Keys are the
  * normalized topic body (no domain prefix) as produced by `normalizeTopic`.
  * Maps the technical concept label that drives topic SRS
- * (e.g. `grammar:present_simple`) to learner-readable Spanish
+ * (e.g. `grammar:present simple`) to learner-readable Spanish
  * (e.g. "Presente simple") so the session can narrate what each step trains.
  *
  * Unknown topics fall back to a title-cased version of the body, so the UI
  * degrades gracefully instead of leaking raw slugs.
  */
 const TOPIC_LABELS: Record<string, string> = {
+  'subject omission': 'Omisión del sujeto',
   'present simple': 'Presente simple',
   'present continuous': 'Presente continuo',
   'past simple': 'Pasado simple',

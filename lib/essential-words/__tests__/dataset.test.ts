@@ -49,4 +49,14 @@ describe("Core 1000 dataset", () => {
       .join("\n");
     expect(missing, `\n${report}`).toEqual([]);
   });
+
+  it("every example_sentences variant has slash-wrapped sentence_ipa", () => {
+    const bad = words.flatMap((w) =>
+      (w.example_sentences ?? [])
+        .map((v, i) => ({ w, v, i }))
+        .filter(({ v }) => !v.sentence_ipa || !v.sentence_ipa.trim().startsWith("/"))
+    );
+    const report = bad.map(({ w, i }) => `#${w.rank} ${w.word} variante ${i + 1}`).join("\n");
+    expect(bad, `\n${report}`).toEqual([]);
+  });
 });

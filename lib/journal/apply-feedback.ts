@@ -1,8 +1,10 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import type { Database } from '@/lib/supabase/types'
-import { computeSM2, type SM2Progress } from '@/lib/srs/compute'
+import { canonicalTopic } from '@/lib/topic-catalog'
+import { enqueueTopicSRSUpdate } from '@/lib/practice/topic-srs-queries'
 import { normalizeTopic } from '@/lib/practice/normalize-topic'
-import type { JournalCorrectionResult, JournalFeedback } from './correction'
+import { JOURNAL_TOPIC_IDS } from './topic-catalog'
+import type { JournalCorrectionResult, JournalFeedback, ScheduledTopic } from './correction'
 
 /**
  * Correcting an entry is a "recall failure" for every topic the learner tripped
@@ -12,9 +14,6 @@ import type { JournalCorrectionResult, JournalFeedback } from './correction'
  */
 const JOURNAL_TOPIC_GRADE = 2
 
-/** Topics outside the known allowlist collapse here so free text never leaks in. */
-const FALLBACK_TOPIC = 'grammar:other'
-
 export interface ApplyJournalFeedbackParams {
   userId: string
   entryId: string
@@ -22,7 +21,7 @@ export interface ApplyJournalFeedbackParams {
 }
 
 export type ApplyJournalFeedbackResult =
-  | { applied: true; scheduledTopics: string[] }
+  | { applied: true; scheduledTopics: ScheduledTopic[] }
   | { applied: false; reason: 'not_submitted' }
 
 /**
@@ -68,69 +67,64 @@ export async function applyJournalFeedback(
   }
 
   const topics = uniqueNormalizedTopics(correction.errors)
-  await Promise.all(topics.map((topic) => scheduleTopicReview(supabase, userId, topic)))
+  const scheduledTopics = (await Promise.all(
+    topics.map((topic) => scheduleTopicReview(supabase, userId, topic)),
+  )).filter((topic): topic is ScheduledTopic => topic !== null)
 
-  return { applied: true, scheduledTopics: topics }
+  return { applied: true, scheduledTopics }
 }
 
 function uniqueNormalizedTopics(errors: JournalCorrectionResult['errors']): string[] {
-  return [...new Set(errors.map((error) => normalizeTopic(error.topic) ?? FALLBACK_TOPIC))]
+  const seen = new Set<string>()
+  const topics: string[] = []
+
+  for (const error of errors) {
+    const raw = error.topic.trim()
+    if (!raw) continue
+
+    // Dedupe equivalent spellings before the shared writer validates and
+    // persists the canonical key. Invalid values intentionally remain in the
+    // list so enqueueTopicSRSUpdate can emit its warning at the one boundary.
+    const key = canonicalTopic(raw) ?? normalizeTopic(raw) ?? raw.toLowerCase()
+    if (seen.has(key)) continue
+    seen.add(key)
+    topics.push(raw)
+  }
+
+  return topics
 }
 
 /**
- * Apply an SM-2 grade-2 update to the user's `topic_srs` row, inserting a fresh
- * row on first review. Server-side mirror of enqueueTopicSRSUpdate (which runs
- * client-side via the Dexie outbox); here the request is already authenticated
- * and RLS-scoped, so we write straight to Supabase.
+ * Apply an SM-2 grade-2 update through the same validated topic writer used by
+ * browser practice. The server supplies an RPC sink so this online path does
+ * not import Dexie or write `topic_srs` directly; the database RPC remains the
+ * single state transition for the row.
  */
 async function scheduleTopicReview(
   supabase: SupabaseClient<Database>,
   userId: string,
   topic: string,
-): Promise<void> {
-  const { data, error } = await supabase
-    .from('topic_srs')
-    .select(
-      'id, ease_factor, interval_days, repetitions, next_review_at, srs_status, last_reviewed_at, review_count',
-    )
-    .eq('user_id', userId)
-    .eq('topic', topic)
-    .maybeSingle()
+): Promise<ScheduledTopic | null> {
+  const result = await enqueueTopicSRSUpdate(userId, topic, JOURNAL_TOPIC_GRADE, {
+    allowedTopics: JOURNAL_TOPIC_IDS,
+    write: async ({ rpcArgs }) => {
+      const { data, error } = await supabase.rpc(
+        'apply_topic_srs_rating_event',
+        rpcArgs as Database['public']['Functions']['apply_topic_srs_rating_event']['Args'],
+      )
+      if (error) throw error
+      return data
+    },
+  })
 
-  if (error) throw error
+  if (!result) return null
 
-  const current: SM2Progress | null = data
-    ? {
-        ease_factor: data.ease_factor,
-        interval_days: data.interval_days,
-        repetitions: data.repetitions,
-        next_review_at: data.next_review_at,
-        status: data.srs_status as SM2Progress['status'],
-        last_reviewed_at: data.last_reviewed_at,
-      }
-    : null
+  const row = result.result as Database['public']['Functions']['apply_topic_srs_rating_event']['Returns'] | null | undefined
+  if (!row?.next_review_at) throw new Error('Topic review was scheduled without a date')
 
-  const next = computeSM2(current, JOURNAL_TOPIC_GRADE)
-  const srsFields = {
-    ease_factor: next.ease_factor,
-    interval_days: next.interval_days,
-    repetitions: next.repetitions,
-    next_review_at: next.next_review_at,
-    srs_status: next.status,
-    last_reviewed_at: next.last_reviewed_at,
-  }
-
-  if (data) {
-    const { error: updateError } = await supabase
-      .from('topic_srs')
-      .update({ ...srsFields, review_count: (data.review_count ?? 0) + 1 })
-      .eq('id', data.id)
-      .eq('user_id', userId)
-    if (updateError) throw updateError
-  } else {
-    const { error: insertError } = await supabase
-      .from('topic_srs')
-      .insert({ user_id: userId, topic, ...srsFields, review_count: 1 })
-    if (insertError) throw insertError
+  return {
+    topicId: result.topic,
+    nextReviewAt: row.next_review_at,
+    intervalDays: row.interval_days,
   }
 }

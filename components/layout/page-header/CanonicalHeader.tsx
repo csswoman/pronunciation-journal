@@ -38,7 +38,7 @@ export function CanonicalHeader({
       {chromeKicker ? (
         <span className="font-kicker text-fg-muted">{chromeKicker}</span>
       ) : null}
-      <div className="flex flex-col gap-[var(--layout-stack-tight)] sm:flex-row sm:items-start sm:justify-between sm:gap-[var(--layout-stack-loose)]">
+      <div className="flex flex-col gap-layout-stack-tight sm:flex-row sm:items-start sm:justify-between sm:gap-layout-stack-loose">
         <div className="layout-stack-tight min-w-0">
           <h1 className={cn("text-balance text-fg", isCompact ? "text-h3" : "text-h2")}>
             {title}
@@ -50,14 +50,14 @@ export function CanonicalHeader({
           ) : null}
         </div>
         {!hasProgress && (primaryCta || secondaryCta) ? (
-          <div className="flex shrink-0 flex-wrap gap-[var(--layout-stack-tight)]">
+          <div className="flex shrink-0 flex-wrap gap-layout-stack-tight">
             <CtaButtons primaryCta={primaryCta} secondaryCta={secondaryCta} rounded="md" />
           </div>
         ) : null}
       </div>
       {hasProgress ? (
         <div className="layout-stack-tight">
-          <div className="flex items-center gap-[var(--layout-stack-tight)]">
+          <div className="flex items-center gap-layout-stack-tight">
             {phonemeLabel ? (
               <span className="rounded-full bg-surface-sunken px-2 py-0.5 font-caption text-fg">
                 {phonemeLabel}

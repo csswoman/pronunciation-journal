@@ -29,6 +29,17 @@ if (typeof window !== 'undefined') {
     });
   }
 
+  // speechSynthesis is not implemented in jsdom; stub it so modules that
+  // feature-detect it at import time (e.g. ListenButton's ttsAvailable)
+  // see it as available before any test file's imports run.
+  if (typeof window.speechSynthesis === 'undefined') {
+    Object.defineProperty(window, 'speechSynthesis', {
+      configurable: true,
+      writable: true,
+      value: { speak: () => {}, cancel: () => {} },
+    })
+  }
+
   // matchMedia is not implemented in jsdom
   Object.defineProperty(window, 'matchMedia', {
     writable: true,

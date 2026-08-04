@@ -140,46 +140,62 @@ export function buildAdaptiveSession(
 
   const ex: MixedExercise[] = []
 
+  /**
+   * Add a generated exercise unless it declined.
+   *
+   * Generators return empty `options` when the deck cannot support a valid
+   * trial (no contrast words, a single target word, a degenerate pair). Those
+   * must be dropped here: the renderers show whatever they are given, so an
+   * empty exercise becomes an unanswerable card with silent audio.
+   */
+  const add = (data: Exercise) => {
+    if (data.options.length === 0) return
+    ex.push({ kind: 'phoneme', data: stamp(data) })
+  }
+
   if (canUseAbx) {
     // B1+: 2 ABX in place of 2 identify
     for (let i = 0; i < 2; i++) {
-      ex.push({ kind: 'phoneme', data: stamp(generateAbx(sound, targetWords, allSounds, allWordsBySoundId, pairs)) })
+      add(generateAbx(sound, targetWords, allSounds, allWordsBySoundId, pairs))
     }
   } else {
     // A1/A2: 2 identify
     for (let i = 0; i < 2; i++) {
-      ex.push({ kind: 'phoneme', data: stamp(generateIdentify(sound, targetWords, allSounds, allWordsBySoundId)) })
+      add(generateIdentify(sound, targetWords, allSounds, allWordsBySoundId))
     }
   }
 
   // AX same/different × 2
   for (let i = 0; i < 2; i++) {
-    ex.push({ kind: 'phoneme', data: stamp(generateAxSameDifferent(sound, targetWords, allSounds, allWordsBySoundId)) })
+    add(generateAxSameDifferent(sound, targetWords, allSounds, allWordsBySoundId))
   }
 
   // odd_one_out × 1
-  ex.push({ kind: 'phoneme', data: stamp(generateOddOneOut(sound, targetWords, allSounds, allWordsBySoundId)) })
+  add(generateOddOneOut(sound, targetWords, allSounds, allWordsBySoundId))
 
   // pick_word × 1
-  ex.push({ kind: 'phoneme', data: stamp(generatePickWord(sound, targetWords, allSounds, allWordsBySoundId)) })
+  add(generatePickWord(sound, targetWords, allSounds, allWordsBySoundId))
 
   // minimal_pair × 1 (fallback pick_word if no pairs)
   const mp = generateMinimalPair(sound, pairs)
-  ex.push({
-    kind: 'phoneme',
-    data: stamp(mp.options.length > 0 ? mp : generatePickWord(sound, targetWords, allSounds, allWordsBySoundId)),
-  })
+  add(mp.options.length > 0 ? mp : generatePickWord(sound, targetWords, allSounds, allWordsBySoundId))
 
-  // dictation × 1 — listening of the target sound; attribute to focus contrast when known
-  ex.push({ kind: 'phoneme', data: stamp(generateDictation(sound, targetWords)) })
+  // dictation × 1 — listening of the target sound; attribute to focus contrast
+  // when known. Dictation carries no options, so it bypasses the `add` guard.
+  const dictation = generateDictation(sound, targetWords)
+  if (dictation.targetWord) ex.push({ kind: 'phoneme', data: stamp(dictation) })
 
   // Production: word, then a short carrier-phrase production — only once
   // there is prior evidence for the focus contrast (never first for a
   // brand-new contrast) and it isn't mastered yet. Word comes before phrase
   // per the target learning loop (word production precedes phrase production).
   if (focusContrastId && focusProgress && !isContrastMastered(focusProgress)) {
-    ex.push({ kind: 'phoneme', data: stamp(generateSpeakWord(sound, targetWords, { maxLevel: userLevel })) })
-    ex.push({ kind: 'phoneme', data: stamp(generateSpeakPhrase(sound, targetWords, { maxLevel: userLevel })) })
+    // Production exercises carry no options; a missing targetWord means there
+    // is nothing to say, so skip rather than render an empty prompt.
+    const speakWord = generateSpeakWord(sound, targetWords, { maxLevel: userLevel })
+    if (speakWord.targetWord) ex.push({ kind: 'phoneme', data: stamp(speakWord) })
+    const speakPhrase = generateSpeakPhrase(sound, targetWords, { maxLevel: userLevel })
+    if (speakPhrase.targetWord) ex.push({ kind: 'phoneme', data: stamp(speakPhrase) })
   }
 
   // Optional: match_pairs + reorder (aggregate / example drills — no contrast stamp)
@@ -209,11 +225,14 @@ export function buildFinalConsonantSession(
 
   const ex: MixedExercise[] = []
 
+  // Same contract as buildAdaptiveSession: drop trials with no playable stimuli.
   for (let i = 0; i < 3; i++) {
-    ex.push({ kind: 'phoneme', data: generateFinalConsonantAx(sound) })
+    const ax = generateFinalConsonantAx(sound)
+    if ((ax.stimuli?.length ?? 0) > 0) ex.push({ kind: 'phoneme', data: ax })
   }
   for (let i = 0; i < 3; i++) {
-    ex.push({ kind: 'phoneme', data: generateFinalConsonantMinimalPair(sound) })
+    const mp = generateFinalConsonantMinimalPair(sound)
+    if (mp.options.length > 0) ex.push({ kind: 'phoneme', data: mp })
   }
 
   return shuffle(ex)

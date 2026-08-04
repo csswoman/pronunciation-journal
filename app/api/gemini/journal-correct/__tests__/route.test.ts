@@ -145,6 +145,25 @@ describe('journal-correct route', () => {
 
     expect(res.status).toBe(200)
     expect(body.correctedContent).toBe('Yesterday I went to work.')
+    expect(body.scheduled).toEqual({ topics: [], words: [] })
+  })
+
+  it('returns every topic date captured while scheduling the correction', async () => {
+    mocks.validateBody.mockResolvedValueOnce(goodBody())
+    mocks.maybeSingle.mockResolvedValueOnce({ data: { id: validEntryId, status: 'submitted' }, error: null })
+    mocks.callGeminiJson.mockResolvedValueOnce(geminiResult)
+    const scheduledTopics = [
+      { topicId: 'grammar:past simple', nextReviewAt: '2026-08-03T09:00:00.000Z', intervalDays: 1 },
+      { topicId: 'grammar:articles', nextReviewAt: '2026-08-06T09:00:00.000Z', intervalDays: 4 },
+    ]
+    mocks.applyJournalFeedback.mockResolvedValueOnce({ applied: true, scheduledTopics })
+
+    const res = await POST(reqWith() as never)
+    const body = await res.json()
+
+    expect(res.status).toBe(200)
+    expect(body.scheduled.topics).toEqual(scheduledTopics)
+    expect(body.scheduled.words).toEqual([])
   })
 
   it('returns 409 when a concurrent request already corrected the entry (idempotent)', async () => {

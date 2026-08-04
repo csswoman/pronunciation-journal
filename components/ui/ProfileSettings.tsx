@@ -1,224 +1,223 @@
 "use client";
 
-import { useState } from "react";
+// Planned structure:
+// <ProfileSettings>
+//   <PageLayout>
+//     <PageHeader />
+//     <Toast />
+//     <IdentityBlock />          — open canvas (auth only)
+//     <ProfilePreferencesPanel />
+//     <AccountPanel />           — password + email (auth only)
+//     <GuestSignInCard />        — guest only
+//   </PageLayout>
+// </ProfileSettings>
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useUserPreferences } from "@/hooks/useUserPreferences";
 import { useAuth } from "@/components/auth/AuthProvider";
+import PageLayout from "@/components/layout/PageLayout";
+import PageHeader from "@/components/layout/PageHeader";
 import ProfileAvatarCard from "@/components/profile/ProfileAvatarCard";
 import ProfileNameCard from "@/components/profile/ProfileNameCard";
 import ProfilePasswordCard from "@/components/profile/ProfilePasswordCard";
-import SoundSettingsCard from "@/components/ui-sounds/SoundSettingsCard";
-import InterestsEditor from "@/components/profile/InterestsEditor";
-import { H1, H2 } from "@/components/ui/Typography";
+import ProfilePreferencesPanel from "@/components/profile/ProfilePreferencesPanel";
+import { readGuestStudyLevel, saveGuestStudyLevel } from "@/lib/preferences/guest-study-level";
+import type { CefrLevel } from "@/lib/essential-words/types";
+import { cn } from "@/lib/cn";
 
 function Toast({ message, type }: { message: string; type: "success" | "error" }) {
   return (
-    <div className={`flex items-center gap-2 rounded-xl border px-4 py-3 text-body-sm font-medium shadow-lg ${ type === "success" ? "border-[var(--success)] bg-[var(--success-soft)] text-[var(--success)]" : "border-[var(--error)] bg-[var(--error-soft)] text-[var(--error)]" }`}>
-      {type === "success" ? (
-        <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-        </svg>
-      ) : (
-        <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
+    <div
+      role="status"
+      className={cn(
+        "flex items-center gap-2 rounded-md border px-4 py-3 font-caption font-medium shadow-md",
+        type === "success"
+          ? "border-[var(--success)] bg-success text-success"
+          : "border-[var(--error)] bg-error text-error",
       )}
+    >
       {message}
-    </div>
-  );
-}
-
-function SectionCard({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="space-y-4 rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
-      {children}
     </div>
   );
 }
 
 export default function ProfileSettings() {
   const { user } = useAuth();
-  const { preferences, loading, updateFullName, updateAvatar, updatePassword, updateCefrLevel, updateInterests } = useUserPreferences();
+  const {
+    preferences,
+    loading,
+    updateFullName,
+    updateAvatar,
+    updatePassword,
+    updateCefrLevel,
+    updateInterests,
+  } = useUserPreferences();
+
+  const isGuest = !user || (user as { is_anonymous?: boolean }).is_anonymous;
+  const [guestLevel, setGuestLevel] = useState<CefrLevel>("A1");
+  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+
+  useEffect(() => {
+    if (isGuest) setGuestLevel(readGuestStudyLevel());
+  }, [isGuest]);
 
   const displayName =
     preferences?.full_name ||
     user?.user_metadata?.full_name ||
     user?.email?.split("@")[0] ||
-    "Guest";
+    "Invitado";
 
-  const initials = displayName === "Guest"
-    ? "?"
-    : displayName
-        .split(" ")
-        .slice(0, 2)
-        .map((w: string) => w[0])
-        .join("")
-        .toUpperCase();
+  const initials =
+    displayName === "Invitado"
+      ? "·"
+      : displayName
+          .split(" ")
+          .slice(0, 2)
+          .map((word: string) => word[0])
+          .join("")
+          .toUpperCase();
 
-  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+  const level = isGuest ? guestLevel : preferences?.cefr_level ?? "A1";
 
   const showToast = (message: string, type: "success" | "error" = "success") => {
     setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
+    window.setTimeout(() => setToast(null), 3000);
   };
 
-  const handleAvatarUpdate = async (file: File) => {
-    await updateAvatar(file);
-    showToast("Profile photo updated");
+  const handleLevelChange = async (next: CefrLevel) => {
+    if (isGuest) {
+      saveGuestStudyLevel(next);
+      setGuestLevel(next);
+      showToast("Nivel actualizado en este dispositivo");
+      return;
+    }
+    await updateCefrLevel(next);
+    showToast("Nivel de estudio actualizado");
   };
 
-  const handleNameSave = async (name: string) => {
-    await updateFullName(name);
-    showToast("Display name updated");
-  };
-
-  const handlePasswordSave = async (password: string) => {
-    await updatePassword(password);
-    showToast("Password updated successfully");
-  };
-
-  const handleLevelChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
-    await updateCefrLevel(event.target.value as "A1" | "A2" | "B1" | "B2" | "C1");
-    showToast("English level updated");
-  };
+  const header = (
+    <PageHeader
+      kicker="Cuenta"
+      title="Perfil"
+      subtitle="Tu identidad y las preferencias que usas cada día."
+    />
+  );
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[40vh]">
-        <div className="flex items-center gap-3 text-fg-muted">
-          <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-          <span className="text-body-sm">Loading profile…</span>
+      <PageLayout archetype="catalog">
+        <div className="flex w-full max-w-xl flex-col gap-8">
+          {header}
+          <div className="flex items-center gap-3 text-fg-muted">
+            <div className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+            <span className="font-caption">Cargando perfil…</span>
+          </div>
         </div>
-      </div>
+      </PageLayout>
     );
   }
 
-  const isGuest = !user || (user as { is_anonymous?: boolean }).is_anonymous;
-
   if (isGuest) {
     return (
-      <div className="max-w-lg mx-auto py-[var(--layout-page-block)] px-[var(--layout-page-inline)]">
-        <div className="flex flex-col items-center gap-4 rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] layout-card-pad text-center">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[var(--bg-tertiary)]">
-            <svg className="w-8 h-8 text-fg-subtle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
+      <PageLayout archetype="catalog">
+        <div className="flex w-full max-w-xl flex-col gap-8">
+          {header}
+          {toast && <Toast message={toast.message} type={toast.type} />}
+
+          <div className="flex flex-col gap-3 rounded-xl border border-border-subtle bg-surface-raised px-5 py-5 sm:flex-row sm:items-center sm:justify-between">
+            <div className="layout-stack-tight min-w-0">
+              <p className="font-label text-fg m-0">Aún no has iniciado sesión</p>
+              <p className="font-caption text-fg-muted m-0">
+                Puedes ajustar tema, sonidos y nivel aquí. Inicia sesión para guardar tu perfil.
+              </p>
+            </div>
+            <Link
+              href="/login"
+              className="focus-ring btn-primary inline-flex shrink-0 items-center justify-center rounded-md px-5 py-2.5 font-label"
+            >
+              Iniciar sesión
+            </Link>
           </div>
-          <div>
-            <H2 className="text-base font-semibold">
-              You&apos;re not signed in
-            </H2>
-            <p className="text-body-sm mt-1 text-fg-muted">
-              Sign in to view and edit your profile
-            </p>
-          </div>
-          <a
-            href="/login"
-            className="inline-flex items-center gap-2 rounded-xl bg-[var(--primary)] px-5 py-2.5 text-body-sm font-medium text-[var(--on-primary)] transition-all hover:-translate-y-0.5"
-          >
-            Sign in
-          </a>
+
+          <ProfilePreferencesPanel
+            level={level}
+            onLevelChange={(next) => void handleLevelChange(next)}
+            hint="Se guardan en este dispositivo hasta que inicies sesión."
+          />
         </div>
-      </div>
+      </PageLayout>
     );
   }
 
   return (
-    <div className="max-w-lg mx-auto py-[var(--layout-page-block)] px-[var(--layout-page-inline)] space-y-5">
-      {/* Header */}
-      <div>
-        <H1 className="text-h2 font-bold text-fg">Profile</H1>
-        <p className="text-body-sm mt-0.5 text-fg-muted">
-          Manage your account information and preferences
-        </p>
-      </div>
+    <PageLayout archetype="catalog">
+      <div className="flex w-full max-w-xl flex-col gap-10">
+        {header}
+        {toast && <Toast message={toast.message} type={toast.type} />}
 
-      {/* Toast */}
-      {toast && <Toast message={toast.message} type={toast.type} />}
-
-      {/* Identity card */}
-      <SectionCard>
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <p className="text-body-sm font-medium text-fg">English level</p>
-            <p className="text-caption text-fg-muted">Controls the course content available to you.</p>
+        <section aria-labelledby="profile-identity-title" className="layout-stack-loose">
+          <h2 id="profile-identity-title" className="sr-only">
+            Identidad
+          </h2>
+          <div className="layout-stack rounded-xl border border-border-subtle bg-surface-raised p-5">
+            <ProfileAvatarCard
+              avatarUrl={preferences?.avatar_url}
+              initials={initials}
+              displayName={displayName}
+              email={user?.email}
+              onAvatarUpdate={async (file) => {
+                await updateAvatar(file);
+                showToast("Foto de perfil actualizada");
+              }}
+            />
+            <div className="border-t border-border-subtle pt-4">
+              <ProfileNameCard
+                currentName={preferences?.full_name || ""}
+                onSave={async (name) => {
+                  await updateFullName(name);
+                  showToast("Nombre actualizado");
+                }}
+              />
+            </div>
           </div>
-          <select
-            aria-label="English level"
-            value={preferences?.cefr_level ?? "A1"}
-            onChange={handleLevelChange}
-            className="rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-2 text-body-sm font-semibold text-fg"
-          >
-            {["A1", "A2", "B1", "B2", "C1"].map((level) => (
-              <option key={level} value={level}>{level}</option>
-            ))}
-          </select>
-        </div>
-        <div className="flex flex-wrap gap-3 border-t border-[var(--border)] pt-4">
-          <Link href="/assessment" className="text-body-sm font-semibold text-primary hover:text-primary-hover">
-            Hacer prueba de nivel
-          </Link>
-          <Link
-            href={`/assessment?mode=checkpoint&level=${(preferences?.cefr_level ?? "A1").toLowerCase()}`}
-            className="text-body-sm font-medium text-fg-muted hover:text-fg"
-          >
-            Comprobar mi nivel actual
-          </Link>
-        </div>
-      </SectionCard>
+        </section>
 
-      <SectionCard>
-        <ProfileAvatarCard
-          avatarUrl={preferences?.avatar_url}
-          initials={initials}
-          displayName={displayName}
-          email={user?.email}
-          onAvatarUpdate={handleAvatarUpdate}
+        <ProfilePreferencesPanel
+          level={level}
+          onLevelChange={(next) => void handleLevelChange(next)}
+          interests={preferences?.interests ?? []}
+          onInterestsSave={async (next) => {
+            await updateInterests(next);
+            showToast("Intereses guardados");
+          }}
         />
-        <div className="border-t border-[var(--border)] pt-4">
-          <ProfileNameCard
-            currentName={preferences?.full_name || ""}
-            onSave={handleNameSave}
-          />
-        </div>
-      </SectionCard>
 
-      {/* Sound preferences */}
-      <SoundSettingsCard />
-      <InterestsEditor interests={preferences?.interests ?? []} onSave={updateInterests} />
-
-      {/* Security card */}
-      <SectionCard>
-        <div className="flex items-center gap-2 mb-1">
-          <svg className="w-4 h-4 text-fg-subtle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-          </svg>
-          <span className="text-caption font-semibold uppercase tracking-widest text-fg-subtle">Security</span>
-        </div>
-        <ProfilePasswordCard onSave={handlePasswordSave} />
-      </SectionCard>
-
-      {/* Account info */}
-      <SectionCard>
-        <div className="flex items-center gap-2 mb-3">
-          <svg className="w-4 h-4 text-fg-subtle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-          </svg>
-          <span className="text-caption font-semibold uppercase tracking-widest text-fg-subtle">Account</span>
-        </div>
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-body-sm text-fg-muted">Email</span>
-            <span className="text-body-sm font-medium text-fg">{user?.email}</span>
+        <section aria-labelledby="profile-account-title" className="layout-stack-loose">
+          <div className="layout-stack-tight px-0.5">
+            <h2 id="profile-account-title" className="font-label text-fg m-0">
+              Cuenta
+            </h2>
+            <p className="font-caption text-fg-muted m-0">Datos de acceso y seguridad.</p>
           </div>
-          <div className="flex items-center justify-between">
-            <span className="text-body-sm text-fg-muted">Account ID</span>
-            <span className="text-caption font-mono text-fg-subtle">
-              {user?.id?.slice(0, 8)}…
-            </span>
+          <div className="overflow-hidden rounded-xl border border-border-subtle bg-surface-raised divide-y divide-border-subtle">
+            <div className="px-5 py-4">
+              <div className="flex items-center justify-between gap-3">
+                <span className="font-caption text-fg-muted">Correo</span>
+                <span className="truncate font-caption font-medium text-fg">{user?.email}</span>
+              </div>
+            </div>
+            <div className="px-5 py-4">
+              <ProfilePasswordCard
+                onSave={async (password) => {
+                  await updatePassword(password);
+                  showToast("Contraseña actualizada");
+                }}
+              />
+            </div>
           </div>
-        </div>
-      </SectionCard>
-    </div>
+        </section>
+      </div>
+    </PageLayout>
   );
 }

@@ -32,12 +32,13 @@ export async function quickAddWord(input: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
     },
+    // Omit null optionals — Zod .optional() rejects null (e.g. deckId: null → 400).
     body: JSON.stringify({
       text: input.text,
-      context: input.context ?? null,
-      deckId: input.deckId ?? null,
       source: input.source ?? "manual",
-      enrichment: input.enrichment,
+      ...(input.context != null ? { context: input.context } : {}),
+      ...(input.deckId != null ? { deckId: input.deckId } : {}),
+      ...(input.enrichment ? { enrichment: input.enrichment } : {}),
     }),
   });
 
@@ -107,6 +108,27 @@ export async function deleteWord(id: string): Promise<void> {
   const supabase = getSupabaseBrowserClient();
   const { error } = await supabase.from(TABLE).delete().eq("id", id);
   if (error) throw error;
+}
+
+export interface WordDetailsUpdate {
+  text: string;
+  ipa: string | null;
+  translation: string | null;
+  meaning: string | null;
+  context: string | null;
+}
+
+/** Update learner-authored details without resetting the word's SRS or source. */
+export async function updateWordDetails(id: string, input: WordDetailsUpdate): Promise<WordBankEntry> {
+  const supabase = getSupabaseBrowserClient();
+  const { data, error } = await supabase
+    .from(TABLE)
+    .update(input)
+    .eq("id", id)
+    .select("id, user_id, text, context, meaning, translation, ipa, example, synonyms, image_prompt, audio_url, status, difficulty, error_reason, audio_fetch_attempts, has_audio, ease_factor, interval_days, repetitions, srs_status, next_review_at, last_reviewed_at, review_count, is_favorite, familiarity_status, familiarity_confidence, verification_due_at, mastery_provenance, mastery_version, objective_evidence_count, source, source_ref, created_at, updated_at")
+    .single();
+  if (error) throw error;
+  return data as WordBankEntry;
 }
 
 export interface LexiconWordInput {

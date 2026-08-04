@@ -24,6 +24,10 @@ vi.mock('@/lib/essential-words/client', () => ({
   fetchEssentialWords: coreWordClientMocks.fetchEssentialWords,
 }))
 
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ push: vi.fn(), replace: vi.fn(), back: vi.fn(), refresh: vi.fn() }),
+}))
+
 const dbMocks = vi.hoisted(() => ({
   getEssentialWordsSrsEntries: vi.fn(async (): Promise<SRSData[]> => []),
   getEssentialWordsIntroducedToday: vi.fn(async (): Promise<string[]> => []),
@@ -35,6 +39,7 @@ const dbMocks = vi.hoisted(() => ({
   saveAttempt: vi.fn(async () => undefined),
   updateDailyProgress: vi.fn(async () => undefined),
   updateUserStats: vi.fn(async () => undefined),
+  migrateArchivedSrsRows: vi.fn(async () => undefined),
 }))
 vi.mock('@/lib/db', () => ({
   db: {
@@ -112,6 +117,18 @@ beforeEach(() => {
 })
 
 describe('EssentialWordsSession', () => {
+  it('shows only the loader during loading — no session chrome/header', async () => {
+    coreWordClientMocks.fetchEssentialWords.mockImplementation(
+      () => new Promise(() => {}),
+    )
+
+    render(<EssentialWordsSession />)
+
+    expect(await screen.findByText('Preparando tu sesión')).toBeTruthy()
+    expect(screen.queryByText('Palabras esenciales')).toBeNull()
+    expect(screen.queryByLabelText(/baúl/i)).toBeNull()
+  })
+
   it('introduces a new card as study first, then speak with self-grade fallback', async () => {
     const user = userEvent.setup()
     render(<EssentialWordsSession />)
@@ -259,5 +276,89 @@ describe('EssentialWordsSession', () => {
 
     await waitFor(() => expect(dbMocks.masterEssentialWord).toHaveBeenCalledWith('the', 'user-1'))
     await screen.findByRole('heading', { name: 'be' })
+  })
+
+  it('renders ClozeCard for a middle-tier review whose rotation picks cloze', async () => {
+    // selectMode es determinista (hash de palabra + repetitions). Buscamos el
+    // reps del tier medio que produce cloze para "the" en vez de hardcodearlo,
+    // así el test no depende de la función de hash.
+    const { selectMode } = await import('@/lib/essential-words/exercise-modes')
+    const theEntry = WORDS[0]
+    const reps = [3, 4, 5].find(
+      (r) => selectMode({ kind: 'review', entry: theEntry, repetitions: r }) === 'cloze_sentence',
+    )
+    expect(reps).toBeDefined()
+
+    dbMocks.getEssentialWordsSrsEntries.mockResolvedValue([
+      {
+        wordId: 'c1k:the',
+        word: 'the',
+        interval: 6,
+        ease: 2.5,
+        repetitions: reps!,
+        nextReview: '2026-07-01T00:00:00.000Z',
+      },
+    ])
+    // Sin cuota de nuevas, para que la primera card sea el review de "the".
+    dbMocks.getEssentialWordsIntroducedToday.mockResolvedValue(
+      Array.from({ length: 10 }, (_, i) => `w${i}`),
+    )
+
+    render(<EssentialWordsSession />)
+
+    expect(await screen.findByText('Completa la oración')).toBeTruthy()
+    expect(screen.getByText('Give me ___ book please.')).toBeTruthy()
+  })
+
+  it('threads repetitions into ClozeCard so the rotated sentence variant is blanked', async () => {
+    const { selectMode } = await import('@/lib/essential-words/exercise-modes')
+    const { selectSentence } = await import('@/lib/essential-words/sentence-variants')
+    const { clozeFor } = await import('@/lib/essential-words/cloze')
+
+    const theEntry: EssentialWord = {
+      ...WORDS[0],
+      example_sentences: [
+        { sentence: 'Please give the dog the bone today.', sentence_ipa: '' },
+        { sentence: 'She put the cup on the table gently.', sentence_ipa: '' },
+      ],
+    }
+
+    // Sanity check: at repetitions=0 (the value ClozeCard falls back to when
+    // nothing is threaded through), selectSentence must resolve to the base
+    // sentence — otherwise this fixture wouldn't distinguish "wired" from
+    // "not wired".
+    expect(selectSentence(theEntry, 0).sentence).toBe(theEntry.example_sentence)
+
+    // Find a repetitions value that (a) routes to cloze_sentence and
+    // (b) rotates selectSentence to an extra variant, not the base sentence.
+    const reps = Array.from({ length: 20 }, (_, i) => i).find((r) => {
+      const mode = selectMode({ kind: 'review', entry: theEntry, repetitions: r })
+      const variant = selectSentence(theEntry, r)
+      return mode === 'cloze_sentence' && variant.sentence !== theEntry.example_sentence
+    })
+    expect(reps).toBeDefined()
+
+    const expectedSentence = selectSentence(theEntry, reps!).sentence
+    const expectedCloze = clozeFor(theEntry, expectedSentence)
+    expect(expectedCloze).not.toBeNull()
+
+    coreWordClientMocks.fetchEssentialWords.mockResolvedValue([theEntry, WORDS[1]])
+    dbMocks.getEssentialWordsSrsEntries.mockResolvedValue([
+      {
+        wordId: 'c1k:the',
+        word: 'the',
+        interval: 6,
+        ease: 2.5,
+        repetitions: reps!,
+        nextReview: '2026-07-01T00:00:00.000Z',
+      },
+    ])
+    dbMocks.getEssentialWordsIntroducedToday.mockResolvedValue(
+      Array.from({ length: 10 }, (_, i) => `w${i}`),
+    )
+
+    render(<EssentialWordsSession />)
+
+    expect(await screen.findByText(expectedCloze!.blanked)).toBeTruthy()
   })
 })

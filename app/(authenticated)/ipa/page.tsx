@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
 export default function IPAPage() {
-  redirect("/practice/sounds?tab=ipa");
+  redirect("/practice/sounds?openIPA=1");
 }

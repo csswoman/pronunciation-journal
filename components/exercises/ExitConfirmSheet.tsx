@@ -12,9 +12,21 @@ interface ExitConfirmSheetProps {
   onConfirm: () => void
   onCancel: () => void
   backdrop?: boolean
+  title?: string
+  description?: string
+  confirmLabel?: string
+  cancelLabel?: string
 }
 
-export function ExitConfirmSheet({ open, onConfirm, onCancel }: ExitConfirmSheetProps) {
+export function ExitConfirmSheet({
+  open,
+  onConfirm,
+  onCancel,
+  title = 'Quit this session?',
+  description = "You'll lose your progress in this session.",
+  confirmLabel = 'End session',
+  cancelLabel = 'Keep practicing',
+}: ExitConfirmSheetProps) {
   const firstButtonRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
@@ -34,25 +46,25 @@ export function ExitConfirmSheet({ open, onConfirm, onCancel }: ExitConfirmSheet
       role="dialog"
       aria-modal="true"
       aria-labelledby="exit-dialog-title"
-      className="absolute inset-0 z-50 flex items-end sm:items-center sm:justify-center"
+      className="fixed inset-0 z-50 flex items-end sm:items-center sm:justify-center"
     >
       {/* Blur backdrop */}
       <button
         type="button"
         aria-label="Dismiss"
         onClick={onCancel}
-        className="absolute inset-0 bg-(--page-bg)/60 backdrop-blur-md cursor-default w-full h-full"
+        className="absolute inset-0 bg-page-bg/60 backdrop-blur-md cursor-default w-full h-full"
       />
 
       {/* Panel: bottom sheet on mobile, centered modal on sm+ */}
-      <div className="relative z-10 w-full sm:max-w-sm bg-(--card-bg) rounded-t-2xl sm:rounded-2xl px-[var(--layout-card-pad)] pt-[var(--layout-card-pad)] pb-[calc(var(--layout-card-pad)+env(safe-area-inset-bottom,0px))] sm:pb-[var(--layout-card-pad)] layout-stack-loose sm:shadow-xl sm:mx-4">
+      <div className="relative z-10 w-full sm:max-w-sm bg-card-bg rounded-t-2xl sm:rounded-2xl px-layout-card-pad pt-layout-card-pad pb-[calc(var(--layout-card-pad)+env(safe-area-inset-bottom,0px))] sm:pb-layout-card-pad layout-stack-loose sm:shadow-xl sm:mx-4">
         {/* Header */}
         <div className="flex flex-col gap-1.5">
-          <h2 id="exit-dialog-title" className="text-body-lg font-semibold leading-snug tracking-tight text-(--fg)">
-            Quit this session?
+          <h2 id="exit-dialog-title" className="text-body-lg font-semibold leading-snug tracking-tight text-fg">
+            {title}
           </h2>
-          <p className="text-caption text-(--fg-muted) leading-relaxed">
-            You&apos;ll lose your progress in this session.
+          <p className="text-caption text-fg-muted leading-relaxed">
+            {description}
           </p>
         </div>
 
@@ -62,16 +74,16 @@ export function ExitConfirmSheet({ open, onConfirm, onCancel }: ExitConfirmSheet
             ref={firstButtonRef}
             type="button"
             onClick={onConfirm}
-            className="w-full rounded-md py-3 text-body-sm font-semibold bg-error-soft text-error border border-(--error)/30 transition-colors hover:bg-error-solid hover:text-white hover:border-transparent cursor-pointer"
+            className="w-full rounded-md py-3 text-body-sm font-semibold bg-error-soft text-error border border-error/30 transition-colors hover:bg-error-solid hover:text-white hover:border-transparent cursor-pointer"
           >
-            End session
+            {confirmLabel}
           </button>
           <button
             type="button"
             onClick={onCancel}
-            className="w-full rounded-md py-3 text-body-sm font-semibold bg-(--cta-bg) text-(--cta-fg) transition-opacity hover:opacity-85 cursor-pointer"
+            className="w-full rounded-md py-3 text-body-sm font-semibold bg-cta-bg text-cta-fg transition-opacity hover:opacity-85 cursor-pointer"
           >
-            Keep practicing
+            {cancelLabel}
           </button>
         </div>
       </div>

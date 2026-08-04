@@ -144,6 +144,7 @@ function JournalHistoryEntry({ entry }: { entry: JournalEntryRecord }) {
           originalContent={entry.content}
           correctedContent={correctedContent}
           feedback={feedback}
+          userId={entry.userId}
         />
       )}
     </article>

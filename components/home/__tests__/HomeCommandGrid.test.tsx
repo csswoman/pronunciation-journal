@@ -10,29 +10,75 @@ vi.mock("@/components/home/HomeDailyCard", () => ({
   default: ({
     onPlanStatusChange,
   }: {
-    onPlanStatusChange?: (status: { empty: boolean; settled: boolean }) => void;
+    onPlanStatusChange?: (status: {
+      empty: boolean;
+      settled: boolean;
+      reviewIsEntry: boolean;
+      conceptSlug: string | null;
+      allDone: boolean;
+      arc: undefined;
+      stepCount: number;
+    }) => void;
   }) => {
     useEffect(() => {
       onPlanStatusChange?.({
         empty: dailyCardState.empty,
         settled: dailyCardState.settled,
+        reviewIsEntry: false,
+        conceptSlug: null,
+        allDone: false,
+        arc: undefined,
+        stepCount: 5,
       });
     }, [onPlanStatusChange]);
     return <div>Daily plan</div>;
   },
 }));
 vi.mock("@/components/home/HomeReviewBanner", () => ({ default: () => null }));
-vi.mock("@/components/home/HomeLearnRow", () => ({ default: () => null }));
+vi.mock("@/components/home/HomeJournalCard", () => ({
+  default: () => <div>Diario card</div>,
+}));
 vi.mock("@/components/home/EssentialWordsProgressCard", () => ({ default: () => null }));
 vi.mock("@/components/home/WeakSoundCard", () => ({ default: () => null }));
 vi.mock("@/components/home/HomeWordOfDayCard", () => ({
   default: () => <div>Palabra del día</div>,
 }));
+vi.mock("@/components/home/HomeSpeakPrompt", () => ({
+  default: () => <div>Speak prompt</div>,
+}));
 
 const baseProps = {
   conceptLesson: null,
-  todaysLesson: null,
 };
+
+describe("HomeCommandGrid journal and lessons", () => {
+  it("shows the journal card when the plan is settled and never a loose learn row", () => {
+    dailyCardState.empty = false;
+    dailyCardState.settled = true;
+    render(
+      <HomeCommandGrid
+        {...baseProps}
+        placementState={{ hasPlacement: true, hasMeaningfulProgress: true }}
+        pronunciationDiagnosticState={{ hasPronunciationDiagnostic: true }}
+      />,
+    );
+    expect(screen.getByText("Diario card")).toBeInTheDocument();
+    expect(screen.queryByText(/mini lección/i)).not.toBeInTheDocument();
+  });
+
+  it("hides the journal card while the plan is still loading", () => {
+    dailyCardState.empty = false;
+    dailyCardState.settled = false;
+    render(
+      <HomeCommandGrid
+        {...baseProps}
+        placementState={{ hasPlacement: true, hasMeaningfulProgress: true }}
+        pronunciationDiagnosticState={{ hasPronunciationDiagnostic: true }}
+      />,
+    );
+    expect(screen.queryByText("Diario card")).not.toBeInTheDocument();
+  });
+});
 
 describe("HomeCommandGrid first-visit activation", () => {
   it("shows one activation strip when the plan is empty for a new learner", () => {

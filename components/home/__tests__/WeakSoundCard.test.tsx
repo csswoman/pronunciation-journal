@@ -14,21 +14,42 @@ describe("WeakSoundCard", () => {
     );
   });
 
-  it("renders IPA and qualitative accuracy when data is present", () => {
+  it("renders IPA and a concrete practice reason when data is present", () => {
     render(
       <WeakSoundCard
         weakestPhoneme={{
           ipa: "ð",
           accuracy: 40,
-          totalAttempts: 12,
+          totalAttempts: 10,
+          correctAnswers: 6,
+          confusableIpa: "d",
           label: "voiced dental fricative",
         }}
       />,
     );
     expect(screen.getByText("/ð/")).toBeInTheDocument();
     expect(screen.queryByText(/40%/)).not.toBeInTheDocument();
-    expect(screen.getByText(/conviene practicar/i)).toBeInTheDocument();
-    expect(screen.getByText(/practicar este sonido/i)).toBeInTheDocument();
+    expect(
+      screen.getByText((_, el) => el?.textContent === "Lo confundes con /d/"),
+    ).toBeInTheDocument();
+    expect(screen.getByText("/d/")).toBeInTheDocument();
+    expect(screen.getByText(/practica este sonido/i)).toBeInTheDocument();
     expect(screen.getByRole("link")).toHaveAttribute("href", "/practice/sounds");
+  });
+
+  it("falls back to fail count when there is no confusable partner", () => {
+    render(
+      <WeakSoundCard
+        weakestPhoneme={{
+          ipa: "θ",
+          accuracy: 35,
+          totalAttempts: 10,
+          correctAnswers: 6,
+          confusableIpa: null,
+          label: null,
+        }}
+      />,
+    );
+    expect(screen.getByText(/lo fallaste 4 de 10 veces/i)).toBeInTheDocument();
   });
 });

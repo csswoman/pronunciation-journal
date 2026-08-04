@@ -4,6 +4,11 @@
 import { z } from "zod";
 import { ESSENTIAL_WORD_POS } from "./types";
 
+export const SentenceVariantSchema = z.object({
+  sentence: z.string().min(1),
+  sentence_ipa: z.string().regex(/^\/.+\/$/, "IPA entre slashes"),
+});
+
 export const EssentialWordSchema = z
   .object({
     rank: z.number().int().min(1).max(2800),
@@ -16,6 +21,7 @@ export const EssentialWordSchema = z
     cefr_level: z.enum(["A1", "A2", "B1", "B2", "C1"]),
     meaning: z.string().min(1).optional(),
     translation: z.string().min(1).optional(),
+    example_sentences: z.array(SentenceVariantSchema).nonempty().optional(),
   })
   .refine((w) => !w.ipa_weak || !!w.sentence_ipa, {
     message: "sentence_ipa es obligatorio cuando hay ipa_weak",

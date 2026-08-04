@@ -113,9 +113,9 @@ Cada ítem lleva `kind: 'new' | 'learning' | 'review'` (antes era un booleano `i
 
 **Tabla:** `topic_srs` (Supabase). Espeja `word_bank` con columnas SM-2, RLS por `user_id`, y `UNIQUE (user_id, topic)`. Migración: `supabase/migrations/20260618120000_topic_srs.sql`.
 
-**Algoritmo:** SM-2 cliente. La escritura se encola con `enqueueTopicSRSUpdate` (`lib/practice/topic-srs-queries.ts`) tras guardar una respuesta.
+**Algoritmo:** SM-2 cliente. La escritura se encola con `enqueueTopicSRSUpdate` (`lib/practice/topic-srs-queries.ts`) tras guardar una respuesta. Ese es el único límite de validación: exige namespace, normaliza aliases conocidos y descarta con warning cualquier ID que no esté en `lib/topic-catalog.ts`. El diario usa el mismo escritor con un adaptador al RPC; no hace DML directo sobre `topic_srs`.
 
-**Clave del tema:** `normalizeTopic()` (`lib/practice/normalize-topic.ts`) produce la clave canónica: minúsculas, espacios colapsados, prefijo de dominio preservado (`grammar:present simple`). Mantiene distintos los conceptos homónimos entre dominios (`grammar:articles` ≠ `vocab:articles`).
+**Clave del tema:** `canonicalTopic()` (`lib/topic-catalog.ts`) exige un prefijo de dominio y valida contra el catálogo cerrado. `normalizeTopic()` (`lib/practice/normalize-topic.ts`) aporta la normalización de minúsculas, espacios colapsados y prefijo preservado (`grammar:present simple`). Mantiene distintos los conceptos homónimos entre dominios (`grammar:articles` ≠ `vocab:articles`). La migración `20260803053244_enforce_topic_srs_catalog.sql` replica la allowlist como constraint de base de datos.
 
 **Trazabilidad:** `answer_history.topic` (nullable) guarda el tema del ejercicio que originó la respuesta. Migración: `supabase/migrations/20260618130000_answer_history_topic.sql`.
 

@@ -2,7 +2,7 @@
 
 // Planned structure:
 // <HomePageHeader>
-//   <PageHeader title={greeting} subtitle={retention | orientation} />
+//   greeting + retention (incl. streak as text signal, not a header button)
 // </HomePageHeader>
 
 import PageHeader from "@/components/layout/PageHeader";
@@ -27,18 +27,19 @@ function getGreeting(): "Buenos días" | "Buenas tardes" | "Buenas noches" {
   return "Buenas noches";
 }
 
-/** Only non-zero retention — never "0 días · 0 dominadas" above the fold. */
-function buildRetentionSubtitle(
+function buildSubtitle(
   current: number,
   wordsMastered: number,
   week: number,
+  hasProgress: boolean,
+  isNewLearner: boolean,
 ): string | undefined {
   const parts: string[] = [];
 
   if (current > 0) {
-    parts.push(
-      `${current} ${current === 1 ? "día seguido" : "días seguidos"}`,
-    );
+    parts.push(current === 1 ? "Racha: 1 día" : `Racha: ${current} días`);
+  } else if (hasProgress) {
+    parts.push("Racha: 0 — completa el plan para empezar");
   }
 
   if (wordsMastered > 0) {
@@ -51,10 +52,14 @@ function buildRetentionSubtitle(
     parts.push(`${week} min esta semana`);
   }
 
-  return parts.length > 0 ? parts.join(" · ") : undefined;
+  if (parts.length > 0) return parts.join(" · ");
+  if (isNewLearner) {
+    return "Tu plan de hoy es el camino más corto — empieza cuando quieras.";
+  }
+  return undefined;
 }
 
-/** Canonical PageHeader for home — greeting + retention or first-visit orientation. */
+/** Canonical home header — streak lives in the subtitle with a number. */
 export default function HomePageHeader({
   streak,
   wordsMastered = 0,
@@ -74,14 +79,10 @@ export default function HomePageHeader({
   const current = streak?.currentStreak ?? 0;
   const week = weekMinutes ?? dailyGoal?.weekMinutes ?? 0;
   const greeting = getGreeting();
+  const hasProgress = !isNewLearner || wordsMastered > 0 || week > 0;
 
   const title = userName ? `${greeting}, ${userName}` : greeting;
-  const retention = buildRetentionSubtitle(current, wordsMastered, week);
-  const subtitle =
-    retention ??
-    (isNewLearner
-      ? "Tu plan de hoy es el camino más corto — empieza cuando quieras."
-      : undefined);
+  const subtitle = buildSubtitle(current, wordsMastered, week, hasProgress, isNewLearner);
 
   return <PageHeader title={title} subtitle={subtitle} />;
 }

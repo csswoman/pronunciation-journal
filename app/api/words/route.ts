@@ -54,6 +54,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const deckId = body.deckId ?? null;
   const source = body.source;
   const enrichment = body.enrichment;
+  const nextReviewAt = new Date();
+  nextReviewAt.setDate(nextReviewAt.getDate() + 1);
 
   // User-scoped client so RLS applies and user_id is enforced.
   const userClient = createUserScopedClient(accessToken);
@@ -91,6 +93,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       text,
       context,
       source,
+      interval_days: 1,
+      next_review_at: nextReviewAt.toISOString(),
       status: enrichment ? "ready" : "processing",
       ...(enrichment ? {
         meaning: enrichment.meaning,

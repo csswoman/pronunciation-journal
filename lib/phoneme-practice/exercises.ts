@@ -1,4 +1,5 @@
 import type { Exercise, ExerciseOptions, Option, Sound, SoundWord, MinimalPair, AudioStimulus } from './types'
+import type { ExerciseVariant } from '@/lib/exercises/taxonomy'
 import { filterByCEFR, numericToCEFR } from './cefr'
 import { pickConfusableIpas } from './phoneme-similarity'
 import { IPA_EXTRA, type FinalConsonantPair } from '@/lib/pronunciation/ipa-data'
@@ -37,6 +38,78 @@ function getConfusableSounds(
 }
 
 /**
+ * Words whose sound differs from the target — the only safe source of
+ * "not the target phoneme" material.
+ *
+ * Discrimination exercises (identify / AX / odd-one-out / ABX) score the
+ * learner against the *claim* that a word lacks the target sound. Falling back
+ * to target words when the confusable pool is empty produces an exercise whose
+ * answer key is wrong, so this returns an empty array instead and callers
+ * decline. Excludes words whose spelling collides with a target word, since an
+ * identical surface form gives the learner no decidable question.
+ */
+function getContrastWords(
+  targetSound: Sound,
+  targetWords: SoundWord[],
+  allSounds: Sound[],
+  allWordsBySoundId: Map<number, SoundWord[]>,
+  opts?: ExerciseOptions
+): SoundWord[] {
+  const targetSpellings = new Set(targetWords.map(w => w.word.toLowerCase()))
+  const confusables = getConfusableSounds(targetSound, allSounds, 3)
+  const ordered = [
+    ...confusables,
+    ...allSounds.filter(s => s.id !== targetSound.id && !confusables.some(c => c.id === s.id)),
+  ]
+
+  const pool: SoundWord[] = []
+  for (const sound of ordered) {
+    if (sound.id === targetSound.id) continue
+    for (const w of applyLevel(allWordsBySoundId.get(sound.id) ?? [], opts)) {
+      if (w.sound_id === targetSound.id) continue
+      if (targetSpellings.has(w.word.toLowerCase())) continue
+      pool.push(w)
+    }
+  }
+  return pool
+}
+
+/** IPA of the sound a word belongs to, for stimulus labelling. */
+function ipaForWord(word: SoundWord | undefined, allSounds: Sound[]): string {
+  if (!word) return ''
+  return allSounds.find(s => s.id === word.sound_id)?.ipa ?? ''
+}
+
+/** Distinct-by-spelling, preserving order. */
+function uniqueByWord(words: SoundWord[]): SoundWord[] {
+  const seen = new Set<string>()
+  return words.filter(w => {
+    const key = w.word.toLowerCase()
+    if (seen.has(key)) return false
+    seen.add(key)
+    return true
+  })
+}
+
+/** An exercise carrying no options — the caller should skip it. */
+function declined(
+  type: Exercise['type'],
+  variant: ExerciseVariant,
+  targetSound: Sound,
+  extra: Partial<Exercise> = {}
+): Exercise {
+  return {
+    type,
+    exerciseType: { domain: 'pronunciation', mode: 'multiple_choice', variant },
+    soundId: targetSound.id,
+    ipa: targetSound.ipa,
+    options: [],
+    correctIds: [],
+    ...extra,
+  }
+}
+
+/**
  * pick_word: show the IPA symbol, choose which words contain that sound.
  * Distractor words come from phonetically similar sounds (e.g. /ɪ/ vs /iː/).
  */
@@ -50,23 +123,18 @@ export function generatePickWord(
   const correctCount = opts?.correctCount ?? 2
   const distractorCount = opts?.distractorCount ?? 2
   const leveled = applyLevel(targetWords, opts)
-  const correctWords = pick(leveled, correctCount)
+  // Distinct spellings only: two rows sharing a spelling would render as
+  // duplicate options, one of which is scored wrong.
+  const correctWords = pick(uniqueByWord(leveled), correctCount)
+  if (correctWords.length === 0) return declined('pick_word', 'pick_word', targetSound)
 
-  const confusables = getConfusableSounds(targetSound, allSounds, 3)
-  const distractorPool: SoundWord[] = []
-  for (const sound of confusables) {
-    const words = applyLevel(allWordsBySoundId.get(sound.id) ?? [], opts)
-    distractorPool.push(...words)
-  }
-  // Backfill if confusable pool is too thin
-  if (distractorPool.length < distractorCount) {
-    const others = allSounds.filter(s => s.id !== targetSound.id)
-    for (const sound of pick(others, 3)) {
-      const words = applyLevel(allWordsBySoundId.get(sound.id) ?? [], opts)
-      distractorPool.push(...words)
-    }
-  }
+  // Contrast words only — a distractor that also contains the target sound
+  // would be marked wrong despite being a valid answer.
+  const distractorPool = uniqueByWord(
+    getContrastWords(targetSound, correctWords, allSounds, allWordsBySoundId, opts)
+  )
   const distractorWords = pick(distractorPool, distractorCount)
+  if (distractorWords.length === 0) return declined('pick_word', 'pick_word', targetSound)
 
   const options: Option[] = shuffle([
     ...correctWords.map(w => ({ id: `c-${w.id}`, label: w.word, isCorrect: true })),
@@ -99,14 +167,24 @@ export function generatePickSound(
   const distractorCount = opts?.distractorCount ?? 3
   const leveled = applyLevel(targetWords, opts)
   const [targetWord] = pick(leveled, 1)
+  // Without a word to present there is no question to ask.
+  if (!targetWord) return declined('pick_sound', 'pick_sound', targetSound)
 
-  const distractors = getConfusableSounds(targetSound, allSounds, distractorCount)
-  if (distractors.length < distractorCount) {
-    const others = allSounds.filter(
-      s => s.id !== targetSound.id && !distractors.some(d => d.id === s.id)
-    )
-    distractors.push(...pick(others, distractorCount - distractors.length))
+  const confusables = getConfusableSounds(targetSound, allSounds, distractorCount)
+  const backfill = allSounds.filter(
+    s => s.id !== targetSound.id && !confusables.some(d => d.id === s.id)
+  )
+  // Dedupe by IPA: distinct sound rows can share a symbol, which would render
+  // the same label twice with only one marked correct.
+  const seenIpa = new Set([targetSound.ipa])
+  const distractors: Sound[] = []
+  for (const s of [...confusables, ...shuffle(backfill)]) {
+    if (distractors.length >= distractorCount) break
+    if (seenIpa.has(s.ipa)) continue
+    seenIpa.add(s.ipa)
+    distractors.push(s)
   }
+  if (distractors.length === 0) return declined('pick_sound', 'pick_sound', targetSound)
 
   const options: Option[] = shuffle([
     { id: `s-${targetSound.id}`, label: targetSound.ipa, isCorrect: true },
@@ -153,19 +231,15 @@ export function generateMinimalPair(
   const extra = IPA_EXTRA[targetSound.ipa]
   const synthPairs = (extra?.minimalPairs ?? []).map(s => normalizeSynthPair(s, targetSound.ipa))
 
-  // Prefer DB pairs but include synth pairs to widen the pool
-  const pool = dbPairs.length > 0 ? [...dbPairs, ...synthPairs] : synthPairs
+  // Prefer DB pairs but include synth pairs to widen the pool.
+  // A pair whose two sides share a spelling is not a minimal pair — it renders
+  // as the same word twice with one side arbitrarily marked wrong.
+  const pool = (dbPairs.length > 0 ? [...dbPairs, ...synthPairs] : synthPairs).filter(
+    p => p.wordA.toLowerCase() !== p.wordB.toLowerCase()
+  )
 
   if (pool.length === 0) {
-    return {
-      type: 'minimal_pair',
-      exerciseType: { domain: 'pronunciation', mode: 'multiple_choice', variant: 'minimal_pair' },
-      soundId: targetSound.id,
-      ipa: targetSound.ipa,
-      options: [],
-      correctIds: [],
-      synthetic: true,
-    }
+    return declined('minimal_pair', 'minimal_pair', targetSound, { synthetic: true })
   }
 
   const chosen = pool[Math.floor(Math.random() * pool.length)]
@@ -223,7 +297,7 @@ export function generateSpeakWord(
 const CARRIER_PHRASES = [
   (word: string) => `Say ${word} again.`,
   (word: string) => `I said ${word}.`,
-  (word: string) => `Can you hear ${word}?`,
+  (word: string) => `Can you hear the word ${word}?`,
 ] as const
 
 /**
@@ -266,18 +340,14 @@ export function generateIdentify(
   opts?: ExerciseOptions
 ): Exercise {
   const leveled = applyLevel(targetWords, opts)
-  // 50% chance the test word actually has the target sound
-  const useTarget = Math.random() < 0.5
-  let testWord: SoundWord | undefined
+  const contrastPool = getContrastWords(targetSound, leveled, allSounds, allWordsBySoundId, opts)
 
-  if (useTarget) {
-    ;[testWord] = pick(leveled, 1)
-  } else {
-    const confusables = getConfusableSounds(targetSound, allSounds, 2)
-    const pool: SoundWord[] = []
-    for (const s of confusables) pool.push(...(allWordsBySoundId.get(s.id) ?? []))
-    ;[testWord] = pick(pool.length > 0 ? pool : leveled, 1)
-  }
+  // 50% chance the test word actually has the target sound. When no contrast
+  // word exists we must ask a "yes" trial rather than mislabel a target word
+  // as "no" — the previous fallback did exactly that.
+  const useTarget = contrastPool.length === 0 ? true : Math.random() < 0.5
+  const [testWord] = useTarget ? pick(leveled, 1) : pick(contrastPool, 1)
+  if (!testWord) return declined('identify', 'identify', targetSound)
 
   const isCorrect = useTarget
   const options: Option[] = [
@@ -308,25 +378,27 @@ export function generateAxSameDifferent(
   opts?: ExerciseOptions
 ): Exercise {
   const leveled = applyLevel(targetWords, opts)
-  const same = Math.random() < 0.5
-
   const [wordA] = pick(leveled, 1)
-  let wordX: SoundWord | undefined
+  if (!wordA) return declined('ax_same_different', 'ax_same_different', targetSound)
 
-  if (same) {
-    // Pick a different word with the same sound
-    const others = leveled.filter(w => w.id !== wordA?.id)
-    ;[wordX] = pick(others.length > 0 ? others : leveled, 1)
-  } else {
-    const confusables = getConfusableSounds(targetSound, allSounds, 2)
-    const pool: SoundWord[] = []
-    for (const s of confusables) pool.push(...(allWordsBySoundId.get(s.id) ?? []))
-    ;[wordX] = pick(pool.length > 0 ? pool : leveled, 1)
+  const contrastPool = getContrastWords(targetSound, leveled, allSounds, allWordsBySoundId, opts)
+  // A "same" trial needs a second target word; a "different" trial needs a
+  // contrast word. Only offer the trial types the data can actually support,
+  // instead of silently reusing wordA and mislabelling the result.
+  const sameOthers = leveled.filter(w => w.word.toLowerCase() !== wordA.word.toLowerCase())
+  const canSame = sameOthers.length > 0
+  const canDiff = contrastPool.length > 0
+  if (!canSame && !canDiff) {
+    return declined('ax_same_different', 'ax_same_different', targetSound)
   }
+  const same = canSame && canDiff ? Math.random() < 0.5 : canSame
+
+  const [wordX] = same ? pick(sameOthers, 1) : pick(contrastPool, 1)
+  if (!wordX) return declined('ax_same_different', 'ax_same_different', targetSound)
 
   const stimuli: AudioStimulus[] = [
-    { word: wordA?.word ?? '', ipa: targetSound.ipa },
-    { word: wordX?.word ?? '', ipa: same ? targetSound.ipa : (allSounds.find(s => allWordsBySoundId.get(s.id)?.some(w => w.id === wordX?.id))?.ipa ?? '') },
+    { word: wordA.word, ipa: targetSound.ipa },
+    { word: wordX.word, ipa: same ? targetSound.ipa : ipaForWord(wordX, allSounds) },
   ]
 
   const options: Option[] = [
@@ -357,25 +429,30 @@ export function generateOddOneOut(
   opts?: ExerciseOptions
 ): Exercise {
   const leveled = applyLevel(targetWords, opts)
-  const targetSample = pick(leveled, 3)
+  const targetSample = pick(uniqueByWord(leveled), 3)
 
-  const confusables = getConfusableSounds(targetSound, allSounds, 2)
-  const pool: SoundWord[] = []
-  for (const s of confusables) pool.push(...(allWordsBySoundId.get(s.id) ?? []))
-  const [oddWord] = pick(pool.length > 0 ? pool : leveled, 1)
+  const contrastPool = getContrastWords(targetSound, leveled, allSounds, allWordsBySoundId, opts)
+  const [oddWord] = pick(uniqueByWord(contrastPool), 1)
+  // The odd one must genuinely differ; reusing a target word made every option
+  // correct-by-accident. Needs at least two same-sound words to be a real set.
+  if (!oddWord || targetSample.length < 2) {
+    return declined('odd_one_out', 'odd_one_out', targetSound)
+  }
 
-  const oddIndex = Math.floor(Math.random() * 4)
+  // Insert within bounds: a thin targetSample previously let oddIndex point
+  // past the end, so the marked answer was not the odd word.
+  const oddIndex = Math.floor(Math.random() * (targetSample.length + 1))
   const allWords = [...targetSample]
-  allWords.splice(oddIndex, 0, oddWord!)
+  allWords.splice(oddIndex, 0, oddWord)
 
   const stimuli: AudioStimulus[] = allWords.map((w, i) => ({
-    word: w?.word ?? '',
-    ipa: i === oddIndex ? '' : targetSound.ipa,
+    word: w.word,
+    ipa: i === oddIndex ? ipaForWord(oddWord, allSounds) : targetSound.ipa,
   }))
 
   const options: Option[] = allWords.map((w, i) => ({
     id: String(i),
-    label: w?.word ?? '',
+    label: w.word,
     isCorrect: i === oddIndex,
   }))
 
@@ -414,21 +491,25 @@ export function generateAbx(
   let wordB: string
   let ipaB: string
 
-  if (soundPairs.length > 0) {
-    const chosen = soundPairs[Math.floor(Math.random() * soundPairs.length)]
+  // Only usable pairs: A and B must be audibly distinct for X to be decidable.
+  const usablePairs = soundPairs.filter(p => p.word_a.toLowerCase() !== p.word_b.toLowerCase())
+
+  if (usablePairs.length > 0) {
+    const chosen = usablePairs[Math.floor(Math.random() * usablePairs.length)]
     const targetIsA = chosen.contrast_sound_a_id === targetSound.id
     wordA = targetIsA ? chosen.word_a : chosen.word_b
     wordB = targetIsA ? chosen.word_b : chosen.word_a
     ipaB = targetIsA ? (chosen.contrast_ipa_b ?? '') : (chosen.contrast_ipa_a ?? '')
   } else {
-    // Fallback: pick from confusables
-    const confusables = getConfusableSounds(targetSound, allSounds, 1)
-    const confusableWords = allWordsBySoundId.get(confusables[0]?.id ?? 0) ?? []
+    // Fallback: contrast words only. Reusing a target word for B produced a
+    // trial where both candidates were identical.
+    const contrastPool = getContrastWords(targetSound, leveled, allSounds, allWordsBySoundId, opts)
     const [wA] = pick(leveled, 1)
-    const [wB] = pick(confusableWords.length > 0 ? confusableWords : leveled, 1)
-    wordA = wA?.word ?? ''
-    wordB = wB?.word ?? ''
-    ipaB = confusables[0]?.ipa ?? ''
+    const [wB] = pick(contrastPool, 1)
+    if (!wA || !wB) return declined('abx', 'abx', targetSound)
+    wordA = wA.word
+    wordB = wB.word
+    ipaB = ipaForWord(wB, allSounds)
   }
 
   // X matches either A or B randomly

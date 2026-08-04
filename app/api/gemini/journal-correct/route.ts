@@ -8,6 +8,7 @@ import {
   journalCorrectRequestSchema,
   journalCorrectionResultSchema,
 } from '@/lib/journal/correction'
+import type { ScheduledTopic } from '@/lib/journal/correction'
 import { applyJournalFeedback } from '@/lib/journal/apply-feedback'
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
@@ -28,13 +29,23 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const result = await callGeminiJson({ endpoint: '/api/gemini/journal-correct', userId: user.id, params: { contents: buildJournalCorrectionPrompt(parsed.data.content, interests), config: { systemInstruction: JOURNAL_CORRECTION_SYSTEM_PROMPT, responseMimeType: 'application/json', temperature: 0.1, maxOutputTokens: 1400 } }, parse: (raw) => journalCorrectionResultSchema.parse(parseGeminiJson(raw, (json) => json)), failureMessage: 'Failed to correct journal entry' })
   if (result.response) return result.response
 
+  let scheduledTopics: ScheduledTopic[] = []
   try {
     const applied = await applyJournalFeedback(supabase, { userId: user.id, entryId: parsed.data.entryId, correction: result.data })
     // A lost race (entry already corrected) must not surface a fresh correction.
     if (!applied.applied) return NextResponse.json({ error: 'Journal entry must be submitted before correction' }, { status: 409 })
+    scheduledTopics = applied.scheduledTopics
   } catch {
     return NextResponse.json({ error: 'Failed to save journal correction' }, { status: 500 })
   }
 
-  return NextResponse.json(result.data)
+  return NextResponse.json({
+    ...result.data,
+    scheduled: {
+      topics: scheduledTopics,
+      // Suggested words remain opt-in and are scheduled by /api/words after
+      // the learner explicitly adds them to the word bank.
+      words: [],
+    },
+  })
 }

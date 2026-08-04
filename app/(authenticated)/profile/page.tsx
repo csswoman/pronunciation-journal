@@ -1,8 +1,8 @@
 import ProfileSettings from "@/components/ui/ProfileSettings";
 
 export const metadata = {
-  title: "Profile Settings - Pronunciation Journal",
-  description: "Manage your profile, preferences, and account settings",
+  title: "Perfil — English Journal",
+  description: "Tu identidad, preferencias y datos de cuenta",
 };
 
 export default function ProfilePage() {

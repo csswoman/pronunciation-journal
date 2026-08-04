@@ -9,7 +9,7 @@
 //   <PronunciationPathExplore />
 // </PronunciationPathPage>
 
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { getLearnerTargetCopy } from '@/lib/pronunciation/assessment/learner-copy'
 import { contentHrefForRefs } from '@/lib/pronunciation/path/content-href'
 import { isPronunciationPathCopyEnabled } from '@/lib/pronunciation/path/copy-flag'
@@ -89,6 +89,9 @@ export function PronunciationPathPage({
     evidenceOverride ?? EMPTY_EVIDENCE
   )
   const [evidenceReady, setEvidenceReady] = useState(Boolean(evidenceOverride))
+  const [selectedStageId, setSelectedStageId] = useState<PathStageId | null>(() =>
+    resolveStageId(initialStage)
+  )
 
   useEffect(() => {
     if (evidenceOverride) {
@@ -107,6 +110,33 @@ export function PronunciationPathPage({
       cancelled = true
     }
   }, [userId, evidenceOverride])
+
+  useEffect(() => {
+    setSelectedStageId(resolveStageId(initialStage))
+  }, [initialStage])
+
+  const selectStage = useCallback((stageId: PathStageId) => {
+    setSelectedStageId(stageId)
+
+    const params = new URLSearchParams(window.location.search)
+    params.set('tab', 'path')
+    params.set('stage', stageId)
+    window.history.pushState(
+      null,
+      '',
+      `${window.location.pathname}?${params.toString()}`
+    )
+  }, [])
+
+  useEffect(() => {
+    const onPopState = () => {
+      setSelectedStageId(
+        resolveStageId(new URLSearchParams(window.location.search).get('stage') ?? undefined)
+      )
+    }
+    window.addEventListener('popstate', onPopState)
+    return () => window.removeEventListener('popstate', onPopState)
+  }, [])
 
   const unitStates = useMemo(() => {
     const map = new Map<string, ReturnType<typeof deriveUnitLearningState>>()
@@ -134,7 +164,7 @@ export function PronunciationPathPage({
     [unitStates, evidence.diagnosticPriorityIds]
   )
 
-  const stageFromParam = resolveStageId(initialStage)
+  const stageFromParam = selectedStageId
   const unitFromParam = initialTargetId ? getPathUnit(initialTargetId) : null
   const recommendedUnit = recommendation.targetId
     ? getPathUnit(recommendation.targetId)
@@ -183,6 +213,7 @@ export function PronunciationPathPage({
               activeStageId={activeStageId}
               unitStates={unitStates}
               recommendedStageId={evidenceReady ? recommendation.stageId : null}
+              onStageChange={selectStage}
             />
 
             <div className="flex min-w-0 flex-col gap-4">
@@ -214,7 +245,7 @@ export function PronunciationPathPage({
             </div>
           </main>
 
-          <aside className="min-w-0 rounded-lg bg-surface-sunken px-4 py-3 lg:sticky lg:top-4">
+          <aside className="min-w-0 rounded-lg bg-surface-raised px-4 py-3 ring-1 ring-inset ring-border-subtle lg:sticky lg:top-4">
             <PronunciationPathExplore
               stages={curriculum.stages}
               unitStates={unitStates}

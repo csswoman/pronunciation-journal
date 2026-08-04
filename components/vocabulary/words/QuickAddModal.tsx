@@ -14,13 +14,16 @@ export interface QuickAddModalProps {
   onClose: () => void;
   onSubmit: (input: { text: string; context?: string | null; deckId?: string | null }) => Promise<void> | void;
   initialText?: string;
+  contextLabel?: string;
 }
 
-export function QuickAddModal({ open, onClose, onSubmit, initialText = "" }: QuickAddModalProps) {
+export function QuickAddModal({ open, onClose, onSubmit, initialText = "", contextLabel = "VOCABULARIO" }: QuickAddModalProps) {
   const { user } = useAuth();
   const [text, setText] = useState("");
   const [context, setContext] = useState("");
   const [success, setSuccess] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
   const [decks, setDecks] = useState<DeckSummary[]>([]);
   const [selectedDeckId, setSelectedDeckId] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -37,23 +40,37 @@ export function QuickAddModal({ open, onClose, onSubmit, initialText = "" }: Qui
     setText(initialText);
     setContext("");
     setSuccess(false);
+    setIsSaving(false);
+    setSaveError(null);
     const t = setTimeout(() => inputRef.current?.focus(), 30);
     return () => clearTimeout(t);
   }, [open, initialText]);
 
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape" && !isSaving) onClose(); };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [open, onClose]);
+  }, [isSaving, open, onClose]);
 
   const handleSubmit = async () => {
     const trimmed = text.trim();
-    if (!trimmed) return;
-    void onSubmit({ text: trimmed, context: context.trim() || null, deckId: selectedDeckId });
-    setSuccess(true);
-    setTimeout(() => { onClose(); setSuccess(false); }, 1500);
+    if (!trimmed || isSaving) return;
+    setIsSaving(true);
+    setSaveError(null);
+    try {
+      await onSubmit({ text: trimmed, context: context.trim() || null, deckId: selectedDeckId });
+      setSuccess(true);
+      setTimeout(() => { onClose(); setSuccess(false); }, 1500);
+    } catch {
+      setSaveError("No pudimos guardar la palabra. Inténtalo de nuevo.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const requestClose = () => {
+    if (!isSaving) onClose();
   };
 
   useEffect(() => {
@@ -99,7 +116,7 @@ export function QuickAddModal({ open, onClose, onSubmit, initialText = "" }: Qui
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-[var(--layout-card-pad)]"
       style={{ background: "var(--overlay-medium)" }}
-      onClick={onClose}
+      onClick={requestClose}
     >
       <div
         ref={modalRef}
@@ -109,7 +126,7 @@ export function QuickAddModal({ open, onClose, onSubmit, initialText = "" }: Qui
         tabIndex={-1}
         onClick={e => e.stopPropagation()}
         className={cn(
-          "w-full max-w-md overflow-hidden",
+          "w-full max-w-2xl overflow-hidden",
           "rounded-[var(--radius-lg)] border border-border-subtle",
           "bg-surface-raised shadow-xl",
           "animate-[modal-in_200ms_ease-out]",
@@ -122,7 +139,7 @@ export function QuickAddModal({ open, onClose, onSubmit, initialText = "" }: Qui
             <div className="border-b border-border-subtle layout-card-pad">
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="font-kicker text-fg-subtle">VOCABULARIO</p>
+                  <p className="font-kicker text-fg-subtle">{contextLabel}</p>
                   <h2 id={titleId} className="mt-1 text-body-lg font-semibold leading-snug text-fg">Guardar palabra</h2>
                   <div className="mt-2 flex items-center gap-1.5">
                     <Sparkles size={13} className="shrink-0 text-primary" />
@@ -133,7 +150,8 @@ export function QuickAddModal({ open, onClose, onSubmit, initialText = "" }: Qui
                 </div>
                 <button
                   type="button"
-                  onClick={onClose}
+                  onClick={requestClose}
+                  disabled={isSaving}
                   aria-label="Cerrar"
                   className="shrink-0 rounded-[var(--radius-sm)] p-2 text-fg-subtle transition-colors duration-150 hover:bg-surface-sunken hover:text-fg"
                 >
@@ -188,13 +206,15 @@ export function QuickAddModal({ open, onClose, onSubmit, initialText = "" }: Qui
                 />
               </div>
               <p className="-mt-2 text-caption text-fg-subtle">Pulsa Enter para guardar rápido.</p>
+              {saveError ? <p role="alert" className="-mt-2 text-body-sm text-error">{saveError}</p> : null}
             </div>
 
             <div className="flex flex-col-reverse gap-3 border-t border-border-subtle bg-surface-base px-[var(--layout-card-pad)] py-4 sm:flex-row sm:items-center sm:justify-between">
               <DeckSelector decks={decks} selectedId={selectedDeckId} onChange={setSelectedDeckId} />
               <Button
                 onClick={() => void handleSubmit()}
-                disabled={!text.trim()}
+                disabled={!text.trim() || isSaving}
+                isLoading={isSaving}
                 icon={<CornerDownLeft size={13} />}
                 iconPosition="right"
                 size="sm"
