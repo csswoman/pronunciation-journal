@@ -26,39 +26,57 @@ describe("RecognizeCard", () => {
         entry={word()}
         prompt="a través de"
         distractors={distractors}
-        onGraded={vi.fn().mockResolvedValue(undefined)}
+        onAttempt={vi.fn().mockResolvedValue(undefined)}
       />,
     );
     expect(screen.getByText("a través de")).toBeInTheDocument();
     expect(screen.getAllByRole("button", { name: /through|under|over|into/ })).toHaveLength(4);
   });
 
-  it("grades 5 when the correct word is chosen", async () => {
-    const onGraded = vi.fn().mockResolvedValue(undefined);
+  it("calls onAttempt with correct=true and no hints for the correct choice", () => {
+    const onAttempt = vi.fn().mockResolvedValue(undefined);
     render(
       <RecognizeCard
         entry={word()}
         prompt="a través de"
         distractors={distractors}
-        onGraded={onGraded}
+        onAttempt={onAttempt}
       />,
     );
     fireEvent.click(screen.getByRole("button", { name: "through" }));
-    expect(onGraded).toHaveBeenCalledWith(5);
+    expect(onAttempt).toHaveBeenCalledWith(
+      expect.objectContaining({ correct: true, hintsUsed: 0, rescued: false }),
+    );
   });
 
-  it("grades 2 when a wrong word is chosen", async () => {
-    const onGraded = vi.fn().mockResolvedValue(undefined);
+  it("calls onAttempt with correct=false and rescued=false for a wrong pick", () => {
+    const onAttempt = vi.fn().mockResolvedValue(undefined);
     render(
       <RecognizeCard
         entry={word()}
         prompt="a través de"
         distractors={distractors}
-        onGraded={onGraded}
+        onAttempt={onAttempt}
       />,
     );
     fireEvent.click(screen.getByRole("button", { name: "under" }));
-    expect(onGraded).toHaveBeenCalledWith(2);
+    expect(onAttempt).toHaveBeenCalledWith(
+      expect.objectContaining({ correct: false, rescued: false }),
+    );
+  });
+
+  it("records latencyMs", () => {
+    const onAttempt = vi.fn().mockResolvedValue(undefined);
+    render(
+      <RecognizeCard
+        entry={word()}
+        prompt="a través de"
+        distractors={distractors}
+        onAttempt={onAttempt}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "through" }));
+    expect(typeof onAttempt.mock.calls[0][0].latencyMs).toBe("number");
   });
 
   it("never renders a duplicate option label", () => {
@@ -67,7 +85,7 @@ describe("RecognizeCard", () => {
         entry={word()}
         prompt="a través de"
         distractors={[word({ word: "through" }), word({ word: "over" }), word({ word: "into" })]}
-        onGraded={vi.fn().mockResolvedValue(undefined)}
+        onAttempt={vi.fn().mockResolvedValue(undefined)}
       />,
     );
     const labels = screen.getAllByRole("button").map((b) => b.textContent);

@@ -24,15 +24,15 @@ const distractors: EssentialWord[] = [
   { ...entry, rank: 4, word: "thorough", translation: "minucioso" },
 ];
 
-function setup(onGraded = vi.fn().mockResolvedValue(undefined)) {
+function setup(onAttempt = vi.fn().mockResolvedValue(undefined)) {
   render(
     <RecognizeAudioCard
       entry={entry}
       distractors={distractors}
-      onGraded={onGraded}
+      onAttempt={onAttempt}
     />,
   );
-  return onGraded;
+  return onAttempt;
 }
 
 describe("RecognizeAudioCard", () => {
@@ -62,22 +62,32 @@ describe("RecognizeAudioCard", () => {
     expect(speak).toHaveBeenCalledWith(entry.word, expect.anything());
   });
 
-  it("grades 5 when the learner picks the spoken word", () => {
-    const onGraded = setup();
+  it("calls onAttempt with a clean correct outcome", () => {
+    const onAttempt = setup();
     fireEvent.click(screen.getByRole("button", { name: "through" }));
-    expect(onGraded).toHaveBeenCalledWith(5);
+    expect(onAttempt).toHaveBeenCalledWith(
+      expect.objectContaining({ correct: true, hintsUsed: 0, rescued: false }),
+    );
   });
 
-  it("grades 2 when the learner picks a lookalike", () => {
-    const onGraded = setup();
+  it("calls onAttempt with correct=false for a lookalike", () => {
+    const onAttempt = setup();
     fireEvent.click(screen.getByRole("button", { name: "thought" }));
-    expect(onGraded).toHaveBeenCalledWith(2);
+    expect(onAttempt).toHaveBeenCalledWith(
+      expect.objectContaining({ correct: false, rescued: false, hintsUsed: 0 }),
+    );
+  });
+
+  it("records latencyMs", () => {
+    const onAttempt = setup();
+    fireEvent.click(screen.getByRole("button", { name: "through" }));
+    expect(typeof onAttempt.mock.calls[0][0].latencyMs).toBe("number");
   });
 
   it("ignores a second choice", () => {
-    const onGraded = setup();
+    const onAttempt = setup();
     fireEvent.click(screen.getByRole("button", { name: "through" }));
     fireEvent.click(screen.getByRole("button", { name: "thought" }));
-    expect(onGraded).toHaveBeenCalledTimes(1);
+    expect(onAttempt).toHaveBeenCalledTimes(1);
   });
 });

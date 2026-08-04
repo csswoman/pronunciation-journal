@@ -6,29 +6,28 @@
 //   <OptionGrid />
 // </RecognizeAudioCard>
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { PillButton } from '@/components/ui/PillButton'
 import { ListenButton } from '@/components/ui/ListenButton'
 import { speak } from '@/lib/phoneme-practice/tts'
 import { playUiCue } from '@/lib/ui-sounds/cues'
 import { cn } from '@/lib/cn'
+import { selectDistractors } from '@/lib/essential-words/distractors'
+import type { AttemptOutcome } from '@/lib/essential-words/attempt-grade'
 import type { EssentialWord } from '@/lib/essential-words/types'
 
 interface Props {
   entry: EssentialWord
   /** Other session words used as wrong answers. */
   distractors: EssentialWord[]
-  onGraded: (quality: number) => Promise<void>
+  onAttempt: (outcome: AttemptOutcome) => Promise<void>
 }
 
 const OPTION_COUNT = 4
 
-/** Quality scores: a clean recognition is a 5, a miss is a lapse (2). */
-const CORRECT_QUALITY = 5
-const WRONG_QUALITY = 2
-
-export function RecognizeAudioCard({ entry, distractors, onGraded }: Props) {
+export function RecognizeAudioCard({ entry, distractors, onAttempt }: Props) {
   const [chosen, setChosen] = useState<string | null>(null)
+  const startedAtRef = useRef(Date.now())
 
   const play = () => speak(entry.word, { rate: 0.9 })
 
@@ -37,18 +36,8 @@ export function RecognizeAudioCard({ entry, distractors, onGraded }: Props) {
     speak(entry.word, { rate: 0.9 })
   }, [entry.word])
 
-  // Dedupe by surface form so the answer never appears twice — same rule as
-  // RecognizeCard.
   const options = useMemo(() => {
-    const seen = new Set([entry.word.toLowerCase()])
-    const wrong: EssentialWord[] = []
-    for (const d of distractors) {
-      const key = d.word.toLowerCase()
-      if (seen.has(key)) continue
-      seen.add(key)
-      wrong.push(d)
-      if (wrong.length === OPTION_COUNT - 1) break
-    }
+    const wrong = selectDistractors(entry, distractors, [], OPTION_COUNT - 1)
     const all = [entry, ...wrong].map((w) => w.word)
     return all.sort(() => Math.random() - 0.5)
   }, [entry, distractors])
@@ -58,7 +47,14 @@ export function RecognizeAudioCard({ entry, distractors, onGraded }: Props) {
     setChosen(choice)
     const isCorrect = choice.toLowerCase() === entry.word.toLowerCase()
     playUiCue(isCorrect ? 'correct' : 'wrong')
-    void onGraded(isCorrect ? CORRECT_QUALITY : WRONG_QUALITY)
+    void onAttempt({
+      correct: isCorrect,
+      hintsUsed: 0, // spec §2.3: multiple choice never offers hints
+      rescued: false,
+      typo: false,
+      firstTryFailed: false,
+      latencyMs: Date.now() - startedAtRef.current,
+    })
   }
 
   return (

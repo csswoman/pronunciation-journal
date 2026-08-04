@@ -6,44 +6,32 @@
 //   <OptionGrid />
 // </RecognizeCard>
 
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { PillButton } from '@/components/ui/PillButton'
 import { playUiCue } from '@/lib/ui-sounds/cues'
 import { cn } from '@/lib/cn'
+import { selectDistractors } from '@/lib/essential-words/distractors'
+import type { AttemptOutcome } from '@/lib/essential-words/attempt-grade'
 import type { EssentialWord } from '@/lib/essential-words/types'
 
 interface Props {
   entry: EssentialWord
   /** Translation or meaning — whichever mode selected this card. */
   prompt: string
-  /** Other session words used as wrong answers. */
+  /** Words the learner has already seen this session — the distractor pool. */
   distractors: EssentialWord[]
-  onGraded: (quality: number) => Promise<void>
+  onAttempt: (outcome: AttemptOutcome) => Promise<void>
 }
 
 const OPTION_COUNT = 4
 
-/** Quality scores: a clean recognition is a 5, a miss is a lapse (2). */
-const CORRECT_QUALITY = 5
-const WRONG_QUALITY = 2
-
-export function RecognizeCard({ entry, prompt, distractors, onGraded }: Props) {
+export function RecognizeCard({ entry, prompt, distractors, onAttempt }: Props) {
   const [chosen, setChosen] = useState<string | null>(null)
+  const startedAtRef = useRef(Date.now())
 
-  // Dedupe by surface form so the answer never appears twice — same rule as
-  // lib/lexicon/exercises.ts.
   const options = useMemo(() => {
-    const seen = new Set([entry.word.toLowerCase()])
-    const wrong: EssentialWord[] = []
-    for (const d of distractors) {
-      const key = d.word.toLowerCase()
-      if (seen.has(key)) continue
-      seen.add(key)
-      wrong.push(d)
-      if (wrong.length === OPTION_COUNT - 1) break
-    }
+    const wrong = selectDistractors(entry, distractors, [], OPTION_COUNT - 1)
     const all = [entry, ...wrong].map((w) => w.word)
-    // Deterministic-enough shuffle; order only needs to vary per render.
     return all.sort(() => Math.random() - 0.5)
   }, [entry, distractors])
 
@@ -52,7 +40,14 @@ export function RecognizeCard({ entry, prompt, distractors, onGraded }: Props) {
     setChosen(choice)
     const isCorrect = choice.toLowerCase() === entry.word.toLowerCase()
     playUiCue(isCorrect ? 'correct' : 'wrong')
-    void onGraded(isCorrect ? CORRECT_QUALITY : WRONG_QUALITY)
+    void onAttempt({
+      correct: isCorrect,
+      hintsUsed: 0, // spec §2.3: multiple choice never offers hints
+      rescued: false,
+      typo: false,
+      firstTryFailed: false,
+      latencyMs: Date.now() - startedAtRef.current,
+    })
   }
 
   return (
