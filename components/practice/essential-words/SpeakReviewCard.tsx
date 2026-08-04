@@ -17,7 +17,6 @@ import { useSpeechInput } from '@/hooks/useSpeechInput'
 import { useSharedMicStream } from '@/hooks/useSharedMicStream'
 import { defaultEvaluationEngine } from '@/lib/exercises/evaluation'
 import { getEvaluationWordResults } from '@/lib/exercises/evaluation/word-results'
-import { accuracyToQuality } from '@/lib/srs'
 import { getFeedbackMessage } from '@/lib/pronunciation/scoring'
 import { PhonemeFeedbackTable } from '@/components/lesson/PhonemeFeedbackTable'
 import { SelfGradeBar } from './SelfGradeBar'
@@ -27,12 +26,14 @@ import { micErrorMessage } from './mic-error-message'
 import { playUiCue } from '@/lib/ui-sounds/cues'
 import { cn } from '@/lib/cn'
 import { selectSentence } from '@/lib/essential-words/sentence-variants'
+import { buildSpeakOutcome } from './useSpeakOutcome'
+import type { AttemptOutcome } from '@/lib/essential-words/attempt-grade'
 import type { EssentialWord } from '@/lib/essential-words/types'
 import type { WordResult } from '@/lib/types'
 
 interface Props {
   entry: EssentialWord
-  onGraded: (quality: number, extras?: { accuracy: number; transcript: string }) => Promise<void>
+  onAttempt: (outcome: AttemptOutcome) => Promise<void>
   onArchive: () => void
   fromSnooze?: boolean
   onKeepSnooze?: () => void
@@ -49,7 +50,7 @@ interface Scored {
 
 export function SpeakReviewCard({
   entry,
-  onGraded,
+  onAttempt,
   onArchive,
   fromSnooze,
   onKeepSnooze,
@@ -67,11 +68,13 @@ export function SpeakReviewCard({
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [showSoundDetail, setShowSoundDetail] = useState(false)
   const submitted = useRef(false)
+  const startedAtRef = useRef(Date.now())
 
   const { sentence } = selectSentence(entry, repetitions)
 
   useEffect(() => {
     submitted.current = false
+    startedAtRef.current = Date.now()
     setScored(null)
     setMicError(null)
     setSubmitError(null)
@@ -131,10 +134,7 @@ export function SpeakReviewCard({
     submitted.current = true
     setSubmitError(null)
     setIsSubmitting(true)
-    void onGraded(accuracyToQuality(scored.score), {
-      accuracy: scored.score,
-      transcript: scored.transcript,
-    })
+    void onAttempt(buildSpeakOutcome({ accuracy: scored.score, startedAt: startedAtRef.current }))
       .catch(() => {
         submitted.current = false
         setSubmitError('No se pudo guardar este resultado. Intenta de nuevo.')
@@ -149,7 +149,7 @@ export function SpeakReviewCard({
     submitted.current = true
     setSubmitError(null)
     setIsSubmitting(true)
-    void onGraded(quality)
+    void onAttempt(buildSpeakOutcome({ selfGradeQuality: quality, startedAt: startedAtRef.current }))
       .catch(() => {
         submitted.current = false
         setSubmitError('No se pudo guardar este resultado. Intenta de nuevo.')

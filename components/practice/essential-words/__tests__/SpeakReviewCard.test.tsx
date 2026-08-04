@@ -47,7 +47,7 @@ describe('SpeakReviewCard', () => {
     render(
       <SpeakReviewCard
         entry={ENTRY}
-        onGraded={vi.fn()}
+        onAttempt={vi.fn().mockResolvedValue(undefined)}
         onArchive={vi.fn()}
         fromSnooze
         onKeepSnooze={onKeepSnooze}
@@ -70,12 +70,35 @@ describe('SpeakReviewCard', () => {
     render(
       <SpeakReviewCard
         entry={ENTRY}
-        onGraded={vi.fn()}
+        onAttempt={vi.fn().mockResolvedValue(undefined)}
         onArchive={vi.fn()}
       />,
     )
 
     expect(screen.queryByRole('button', { name: 'Seguir en 90 días' })).toBeNull()
     expect(screen.queryByRole('button', { name: 'No me la recuerdes más' })).toBeNull()
+  })
+
+  it('self-grade fallback calls onAttempt with a valid AttemptOutcome', async () => {
+    const user = userEvent.setup()
+    const onAttempt = vi.fn().mockResolvedValue(undefined)
+
+    render(
+      <SpeakReviewCard
+        entry={ENTRY}
+        onAttempt={onAttempt}
+        onArchive={vi.fn()}
+      />,
+    )
+
+    await user.click(screen.getByRole('button', { name: 'Bien' }))
+    expect(onAttempt).toHaveBeenCalledWith(
+      expect.objectContaining({
+        correct: true,
+        hintsUsed: 0,
+        rescued: false,
+        typo: false,
+      }),
+    )
   })
 })
