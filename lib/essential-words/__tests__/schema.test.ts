@@ -57,3 +57,34 @@ describe("helpers", () => {
     expect(essentialWordId("To")).toBe("c1k:to");
   });
 });
+
+describe("example_sentences", () => {
+  it("accepts an entry with no variants (back-compat)", () => {
+    expect(EssentialWordSchema.safeParse(base).success).toBe(true);
+  });
+
+  it("accepts well-formed variants", () => {
+    const withVariants = {
+      ...base,
+      example_sentences: [
+        { sentence: "I want to go home.", sentence_ipa: "/aɪ wɑnt tu ɡoʊ hoʊm/" },
+        { sentence: "We want more time.", sentence_ipa: "/wi wɑnt mɔr taɪm/" },
+      ],
+    };
+    expect(EssentialWordSchema.safeParse(withVariants).success).toBe(true);
+  });
+
+  it("rejects a variant whose sentence_ipa is not slash-wrapped", () => {
+    const bad = {
+      ...base,
+      example_sentences: [{ sentence: "I want it.", sentence_ipa: "aɪ wɑnt ɪt" }],
+    };
+    expect(EssentialWordSchema.safeParse(bad).success).toBe(false);
+  });
+
+  it("rejects an empty variants array — omit the field instead", () => {
+    expect(
+      EssentialWordSchema.safeParse({ ...base, example_sentences: [] }).success
+    ).toBe(false);
+  });
+});
