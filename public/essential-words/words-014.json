@@ -1690,7 +1690,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈʃiː ˈfɹaɪd ˈæn ˈɛɡ ˈfɔɹ ˈbɹɛkfəst ənd ˈmeɪd ˈsʌm ˈtoʊst/",
       "meaning": "a round object laid by a bird, eaten as food",
-      "translation": "huevo"
+      "translation": "huevo",
+      "example_sentences": [
+        {
+          "sentence": "She cracked an egg into the mixing bowl carefully.",
+          "sentence_ipa": "/ˈʃiː ˈkɹækt ˈæn ˈɛɡ ˈɪntuː ðə ˈmɪksɪŋ ˈboʊl ˈkɛɹfəliː/"
+        },
+        {
+          "sentence": "One egg has about six grams of protein inside.",
+          "sentence_ipa": "/ˈwʌn ˈɛɡ ˈhæz əˈbaʊt ˈsɪks ˈɡɹæmz ˈʌv ˈpɹoʊˌtiːn ˌɪˈnsaɪd/"
+        }
+      ]
     },
     {
       "rank": 1382,
@@ -1701,7 +1711,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ðə ˈkɑnsɜrt ˈsoʊld ˈaʊt wɪˈðɪn ˈmɪnəts ˈʌv ˈtɪkəts ˈɡoʊɪŋ ˈɑn ˈseɪl/",
       "meaning": "musical performance",
-      "translation": "concierto"
+      "translation": "concierto",
+      "example_sentences": [
+        {
+          "sentence": "We bought tickets for the concert next month already.",
+          "sentence_ipa": "/ˈwiː ˈbɑt ˈtɪkəts ˈfɔɹ ðə ˈkɑnsɜrt ˈnɛkst ˈmʌnθ ɔˈlɹɛdiː/"
+        },
+        {
+          "sentence": "The band played their best songs at the concert tonight.",
+          "sentence_ipa": "/ðə ˈbænd ˈpleɪd ˈðɛɹ ˈbɛst ˈsɔŋz ˈæt ðə ˈkɑnsɜrt təˈnaɪt/"
+        }
+      ]
     },
     {
       "rank": 1383,
@@ -1712,7 +1732,17 @@
       "cefr_level": "B2",
       "sentence_ipa": "/ðə ˈnuːz ˈkeɪm ˈæz ə kəˈmpliːt ˈʃɑk ˈtuː ˈɛvɹiːˌwʌn ɪn ðə ˈɔfɪs/",
       "meaning": "A strong feeling of surprise and distress caused by something unexpected and often unpleasant.",
-      "translation": "conmoción"
+      "translation": "conmoción",
+      "example_sentences": [
+        {
+          "sentence": "The loud noise gave me a shock when I woke up.",
+          "sentence_ipa": "/ðə ˈlaʊd ˈnɔɪz ˈɡeɪv ˈmiː ə ˈʃɑk ˈwɛn ˈaɪ ˈwoʊk ˈʌp/"
+        },
+        {
+          "sentence": "She felt a shock when she touched the metal door.",
+          "sentence_ipa": "/ˈʃiː ˈfɛlt ə ˈʃɑk ˈwɛn ˈʃiː ˈtʌtʃt ðə ˈmɛtəl ˈdɔɹ/"
+        }
+      ]
     },
     {
       "rank": 1384,
@@ -1723,7 +1753,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/ðə ˈnuː ˈsoʊfə ˈɪz ˈvɛɹiː ˈkʌmfɜrtəbəl ənd ˈɡɹeɪt ˈfɔɹ ɹɪˈlæksɪŋ/",
       "meaning": "feeling relaxed and at ease",
-      "translation": "cómodo"
+      "translation": "cómodo",
+      "example_sentences": [
+        {
+          "sentence": "These shoes are comfortable enough for a long walk.",
+          "sentence_ipa": "/ˈðiːz ˈʃuːz ˈɑɹ ˈkʌmfɜrtəbəl ɪˈnʌf ˈfɔɹ ə ˈlɔŋ ˈwɔk/"
+        },
+        {
+          "sentence": "Make yourself comfortable while you wait for the doctor.",
+          "sentence_ipa": "/ˈmeɪk jɜrˈsɛlf ˈkʌmfɜrtəbəl ˈwaɪl ˈjuː ˈweɪt ˈfɔɹ ðə ˈdɑktɜr/"
+        }
+      ]
     },
     {
       "rank": 1385,
@@ -1734,7 +1774,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/ˈʃiː ɜrˈaɪvd ˈæt ðə ˈjuːʒəwəl ˈtaɪm ənd ˈsæt ˈæt ˈhɜr ˈdɛsk/",
       "meaning": "Happening or done most of the time in the same way; normal or typical.",
-      "translation": "habitual"
+      "translation": "habitual",
+      "example_sentences": [
+        {
+          "sentence": "He ordered his usual coffee at the cafe this morning.",
+          "sentence_ipa": "/ˈhiː ˈɔɹdɜrd ˈhɪz ˈjuːʒəwəl ˈkɑfiː ˈæt ðə kəˈfeɪ ˈðɪs ˈmɔɹnɪŋ/"
+        },
+        {
+          "sentence": "It is usual to tip the server after a good meal.",
+          "sentence_ipa": "/ˈɪt ˈɪz ˈjuːʒəwəl ˈtuː ˈtɪp ðə ˈsɜrvɜr ˈæftɜr ə ˈɡʊd ˈmiːl/"
+        }
+      ]
     },
     {
       "rank": 1386,
@@ -1745,7 +1795,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/ˈpliːz ˈɹɛd ðə ˌɪˈnstɹʌkʃənz ˈkɛɹfəliː bɪˈfɔɹ ˈjuː bɪˈɡɪn/",
       "meaning": "In a way that gives a lot of attention to what you are doing.",
-      "translation": "cuidadosamente"
+      "translation": "cuidadosamente",
+      "example_sentences": [
+        {
+          "sentence": "She carefully placed the glass on the shelf above.",
+          "sentence_ipa": "/ˈʃiː ˈkɛɹfəliː ˈpleɪst ðə ˈɡlæs ˈɑn ðə ˈʃɛlf əˈbʌv/"
+        },
+        {
+          "sentence": "Think carefully before you make a big decision today.",
+          "sentence_ipa": "/ˈθɪŋk ˈkɛɹfəliː bɪˈfɔɹ ˈjuː ˈmeɪk ə ˈbɪɡ dɪˈsɪʒən təˈdeɪ/"
+        }
+      ]
     },
     {
       "rank": 1387,
@@ -1756,7 +1816,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/ˈdoʊnt fɜrˈɡɛt ˈtuː ˈpæk ˈjɔɹ ˈtʃɑɹdʒɜr bɪˈfɔɹ ðə ˈtɹɪp/",
       "meaning": "to put things into a bag or container for travel",
-      "translation": "empacar"
+      "translation": "empacar",
+      "example_sentences": [
+        {
+          "sentence": "I need to pack my clothes for the trip tomorrow.",
+          "sentence_ipa": "/ˈaɪ ˈniːd ˈtuː ˈpæk ˈmaɪ ˈkloʊðz ˈfɔɹ ðə ˈtɹɪp təˈmɑˌɹoʊ/"
+        },
+        {
+          "sentence": "They pack fresh fruit every morning at the local store.",
+          "sentence_ipa": "/ˈðeɪ ˈpæk ˈfɹɛʃ ˈfɹuːt ˈɛvɜriː ˈmɔɹnɪŋ ˈæt ðə ˈloʊkəl ˈstɔɹ/"
+        }
+      ]
     },
     {
       "rank": 1388,
@@ -1767,7 +1837,17 @@
       "cefr_level": "B2",
       "sentence_ipa": "/ˈkæn ˈjuː ˈɹiːˌkɔl ˈwɛɹ ˈjuː ˈfɜrst ˈmɛt ˈjɔɹ ˈbɛst ˈfɹɛnd/",
       "meaning": "To remember; to bring back from memory.",
-      "translation": "recordar"
+      "translation": "recordar",
+      "example_sentences": [
+        {
+          "sentence": "I cannot recall his name right now at all.",
+          "sentence_ipa": "/ˈaɪ ˈkænɑt ˈɹiːˌkɔl ˈhɪz ˈneɪm ˈɹaɪt ˈnaʊ ˈæt ˈɔl/"
+        },
+        {
+          "sentence": "The company will recall the product due to a safety defect.",
+          "sentence_ipa": "/ðə ˈkʌmpəˌniː ˈwɪl ˈɹiːˌkɔl ðə ˈpɹɑdəkt ˈduː ˈtuː ə ˈseɪftiː ˈdiːfɛkt/"
+        }
+      ]
     },
     {
       "rank": 1389,
@@ -1778,7 +1858,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈðeɪ ˈtʃoʊz ə ˈloʊkəl ˈɹɛd ˈwaɪn ˈtuː ˈɡoʊ ˈwɪð ˈdɪnɜr/",
       "meaning": "alcoholic drink made from fermented grapes",
-      "translation": "vino"
+      "translation": "vino",
+      "example_sentences": [
+        {
+          "sentence": "Would you like a glass of wine with your meal?",
+          "sentence_ipa": "/ˈwʊd ˈjuː ˈlaɪk ə ˈɡlæs ˈʌv ˈwaɪn ˈwɪð ˈjɔɹ ˈmiːl/"
+        },
+        {
+          "sentence": "This wine tastes better when it is slightly chilled.",
+          "sentence_ipa": "/ˈðɪs ˈwaɪn ˈteɪsts ˈbɛtɜr ˈwɛn ˈɪt ˈɪz ˈslaɪtliː ˈtʃɪld/"
+        }
+      ]
     },
     {
       "rank": 1390,
@@ -1789,7 +1879,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈʃiː ˈbɑt ə ˈnuː ˈkæmɜrə ˈtuː ˈteɪk ˈfoʊˌtoʊz ˈdʊɹɪŋ ˈhɜr veɪˈkeɪʃən/",
       "meaning": "device for taking pictures",
-      "translation": "cámara"
+      "translation": "cámara",
+      "example_sentences": [
+        {
+          "sentence": "He set up the camera on a tripod for the shot.",
+          "sentence_ipa": "/ˈhiː ˈsɛt ˈʌp ðə ˈkæmɜrə ˈɑn ə ˈtɹaɪˌpɑd ˈfɔɹ ðə ˈʃɑt/"
+        },
+        {
+          "sentence": "The security camera recorded what happened at the front door.",
+          "sentence_ipa": "/ðə sɪˈkjʊɹətiː ˈkæmɜrə ɹəˈkɔɹdɪd ˈwʌt ˈhæpənd ˈæt ðə ˈfɹʌnt ˈdɔɹ/"
+        }
+      ]
     },
     {
       "rank": 1391,
@@ -1800,7 +1900,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈhiː ˈɡoʊz ˈtuː ðə ˈpuːl ˈtuː ˈswɪm ˈlæps ˈɛvɜriː ˈmɔɹnɪŋ/",
       "meaning": "move through water",
-      "translation": "nadar"
+      "translation": "nadar",
+      "example_sentences": [
+        {
+          "sentence": "The children love to swim in the lake during summer.",
+          "sentence_ipa": "/ðə ˈtʃɪldɹən ˈlʌv ˈtuː ˈswɪm ɪn ðə ˈleɪk ˈdʊɹɪŋ ˈsʌmɜr/"
+        },
+        {
+          "sentence": "Can you swim across the pool without stopping once?",
+          "sentence_ipa": "/ˈkæn ˈjuː ˈswɪm əˈkɹɔs ðə ˈpuːl wɪˈθaʊt ˈstɑpɪŋ ˈwʌns/"
+        }
+      ]
     },
     {
       "rank": 1392,
@@ -1811,7 +1921,17 @@
       "cefr_level": "B2",
       "sentence_ipa": "/ˈðeɪ ˈplæn ˈtuː ˌmænjəˈfæktʃɜr ðə ˈnuː ˈpɹɑdəkt ˈloʊkəliː/",
       "meaning": "To make or produce goods in large quantities, usually in a factory using machines. Manufactured goods are made on a large industrial scale.",
-      "translation": "fabricar"
+      "translation": "fabricar",
+      "example_sentences": [
+        {
+          "sentence": "The company will manufacture parts at its new factory soon.",
+          "sentence_ipa": "/ðə ˈkʌmpəˌniː ˈwɪl ˌmænjəˈfæktʃɜr ˈpɑɹts ˈæt ˈɪts ˈnuː ˈfæktɜriː ˈsuːn/"
+        },
+        {
+          "sentence": "They manufacture shoes using recycled materials from old bottles.",
+          "sentence_ipa": "/ˈðeɪ ˌmænjəˈfæktʃɜr ˈʃuːz ˈjuːzɪŋ ɹiːˈsaɪkəld məˈtɪɹiːəlz ˈfɹʌm ˈoʊld ˈbɑtəlz/"
+        }
+      ]
     },
     {
       "rank": 1393,
@@ -1822,7 +1942,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈwiː ˈsɔ ə ˈɡɹeɪt ˈpleɪ ˈæt ðə ˈθiːətɜr ˈɑn ˈsætɜrdiː ˈnaɪt/",
       "meaning": "place for performances",
-      "translation": "teatro"
+      "translation": "teatro",
+      "example_sentences": [
+        {
+          "sentence": "The theater seats five hundred people for each show.",
+          "sentence_ipa": "/ðə ˈθiːətɜr ˈsiːts ˈfaɪv ˈhʌndɹəd ˈpiːpəl ˈfɔɹ ˈiːtʃ ˈʃoʊ/"
+        },
+        {
+          "sentence": "We waited in line outside the theater for our tickets.",
+          "sentence_ipa": "/ˈwiː ˈweɪtɪd ɪn ˈlaɪn ˈaʊˈtsaɪd ðə ˈθiːətɜr ˈfɔɹ ˈaʊɜr ˈtɪkəts/"
+        }
+      ]
     },
     {
       "rank": 1394,
@@ -1833,7 +1963,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/ðə ˈwɔtɜr ˈsaɪkəl dɪˈskɹaɪbz ˈhaʊ ˈwɔtɜr ˈmuːvz ˈθɹuː ðə ɪˈnvaɪɹənmənt/",
       "meaning": "a series of events that repeat regularly",
-      "translation": "ciclo"
+      "translation": "ciclo",
+      "example_sentences": [
+        {
+          "sentence": "The life cycle of a frog includes several distinct stages.",
+          "sentence_ipa": "/ðə ˈlaɪf ˈsaɪkəl ˈʌv ə ˈfɹɑɡ ˌɪˈnkluːdz ˈsɛvɹəl dɪˈstɪŋkt ˈsteɪdʒəz/"
+        },
+        {
+          "sentence": "We studied the carbon cycle in science class last week.",
+          "sentence_ipa": "/ˈwiː ˈstʌdiːd ðə ˈkɑɹbən ˈsaɪkəl ɪn ˈsaɪəns ˈklæs ˈlæst ˈwiːk/"
+        }
+      ]
     },
     {
       "rank": 1395,
@@ -1844,7 +1984,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈʃiː ˈdɹɪŋks ˈtuː ˈkʌps ˈʌv ˈkɑfiː ˈɛvɜriː ˈmɔɹnɪŋ ˈtuː ˈweɪk ˈʌp/",
       "meaning": "a hot drink made from coffee beans",
-      "translation": "café"
+      "translation": "café",
+      "example_sentences": [
+        {
+          "sentence": "Would you like some coffee with your breakfast today?",
+          "sentence_ipa": "/ˈwʊd ˈjuː ˈlaɪk ˈsʌm ˈkɑfiː ˈwɪð ˈjɔɹ ˈbɹɛkfəst təˈdeɪ/"
+        },
+        {
+          "sentence": "The coffee shop opens early on weekday mornings downtown.",
+          "sentence_ipa": "/ðə ˈkɑfiː ˈʃɑp ˈoʊpənz ˈɜrliː ˈɑn ˈwiːˌkdeɪ ˈmɔɹnɪŋz ˈdaʊˈntaʊn/"
+        }
+      ]
     },
     {
       "rank": 1396,
@@ -1855,7 +2005,17 @@
       "cefr_level": "B1",
       "sentence_ipa": "/ˈaɪ ˈtoʊtəliː əˈɡɹiː ˈwɪð ˈwʌt ˈjuː ˈsɛd əˈbaʊt ðə ˈnuː ˈplæn/",
       "meaning": "Completely and in every way; absolutely.",
-      "translation": "totalmente, completamente"
+      "translation": "totalmente, completamente",
+      "example_sentences": [
+        {
+          "sentence": "I totally forgot to bring my keys this morning.",
+          "sentence_ipa": "/ˈaɪ ˈtoʊtəliː fɜrˈɡɑt ˈtuː ˈbɹɪŋ ˈmaɪ ˈkiːz ˈðɪs ˈmɔɹnɪŋ/"
+        },
+        {
+          "sentence": "The room was totally empty when we arrived there.",
+          "sentence_ipa": "/ðə ˈɹuːm ˈwɑz ˈtoʊtəliː ˈɛmptiː ˈwɛn ˈwiː ɜrˈaɪvd ˈðɛɹ/"
+        }
+      ]
     },
     {
       "rank": 1397,
@@ -1866,7 +2026,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ðə ˈsɪtiː mjuːˈziːəm ˈhæz ˈæn ˌɪˈmpɹɛsɪv kəˈlɛkʃən ˈʌv ˈeɪntʃənt ˈɑɹt/",
       "meaning": "place showing history/art",
-      "translation": "museo"
+      "translation": "museo",
+      "example_sentences": [
+        {
+          "sentence": "We spent the afternoon at the art museum downtown.",
+          "sentence_ipa": "/ˈwiː ˈspɛnt ðə ˌæftɜrˈnuːn ˈæt ðə ˈɑɹt mjuːˈziːəm ˈdaʊˈntaʊn/"
+        },
+        {
+          "sentence": "The museum offers free entry on the first Sunday monthly.",
+          "sentence_ipa": "/ðə mjuːˈziːəm ˈɔfɜrz ˈfɹiː ˈɛntɹiː ˈɑn ðə ˈfɜrst ˈsʌˌndeɪ ˈmʌnθliː/"
+        }
+      ]
     },
     {
       "rank": 1398,
@@ -1877,7 +2047,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈɛvɜriː ˈvɪzɪtɜr ˈmʌst ˈsaɪn ɪn ˈæt ðə ɹɪˈsɛpʃən ˈdɛsk/",
       "meaning": "a person who visits a place or person",
-      "translation": "visitante"
+      "translation": "visitante",
+      "example_sentences": [
+        {
+          "sentence": "Each visitor received a map at the entrance gate.",
+          "sentence_ipa": "/ˈiːtʃ ˈvɪzɪtɜr ɹəˈsiːvd ə ˈmæp ˈæt ðə ˈɛntɹəns ˈɡeɪt/"
+        },
+        {
+          "sentence": "The park welcomes every visitor with open gates all year.",
+          "sentence_ipa": "/ðə ˈpɑɹk ˈwɛlkəmz ˈɛvɜriː ˈvɪzɪtɜr ˈwɪð ˈoʊpən ˈɡeɪts ˈɔl ˈjɪɹ/"
+        }
+      ]
     },
     {
       "rank": 1399,
@@ -1888,7 +2068,17 @@
       "cefr_level": "B2",
       "sentence_ipa": "/ˈfɹiːdəm ˈʌv ˈspiːtʃ ˈɪz pɹəˈtɛktɪd ˈbaɪ ðə ˈkʌntɹiːz ˌkɑnstəˈtuːʃən/",
       "meaning": "state of being free",
-      "translation": "libertad"
+      "translation": "libertad",
+      "example_sentences": [
+        {
+          "sentence": "Birds enjoy the freedom to fly wherever they want.",
+          "sentence_ipa": "/ˈbɜrdz ˌɛˈndʒɔɪ ðə ˈfɹiːdəm ˈtuː ˈflaɪ wɛˈɹɛvɜr ˈðeɪ ˈwɑnt/"
+        },
+        {
+          "sentence": "Students need freedom to choose their own research topics.",
+          "sentence_ipa": "/ˈstuːdənts ˈniːd ˈfɹiːdəm ˈtuː ˈtʃuːz ˈðɛɹ ˈoʊn ɹiːˈsɜrtʃ ˈtɑpɪks/"
+        }
+      ]
     },
     {
       "rank": 1400,
@@ -1899,7 +2089,17 @@
       "cefr_level": "B2",
       "sentence_ipa": "/kəˈnstɹʌkʃən ˈʌv ðə ˈnuː ˈbɹɪdʒ ˈɪz ɪˈkspɛktəd ˈtuː ˈfɪnɪʃ ˈnɛkst ˈjɪɹ/",
       "meaning": "the process of building or making something, especially buildings, roads, or bridges",
-      "translation": "construcción"
+      "translation": "construcción",
+      "example_sentences": [
+        {
+          "sentence": "The noise from the construction woke us up very early.",
+          "sentence_ipa": "/ðə ˈnɔɪz ˈfɹʌm ðə kəˈnstɹʌkʃən ˈwoʊk ˈʌs ˈʌp ˈvɛɹiː ˈɜrliː/"
+        },
+        {
+          "sentence": "Construction workers wear hard hats on the site every day.",
+          "sentence_ipa": "/kəˈnstɹʌkʃən ˈwɜrkɜrz ˈwɛɹ ˈhɑɹd ˈhæts ˈɑn ðə ˈsaɪt ˈɛvɜriː ˈdeɪ/"
+        }
+      ]
     }
   ]
 }

@@ -10,7 +10,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ðə ˈdɑktɜr ˈsɛd ðə ˈhjuːmən ˈbɑdiː ˈniːdz ˈæt ˈliːst ˈeɪt ˈaʊɜrz ˈʌv ˈsliːp/",
       "meaning": "the physical part of a person",
-      "translation": "cuerpo"
+      "translation": "cuerpo",
+      "example_sentences": [
+        {
+          "sentence": "Exercise is good for your body and mind.",
+          "sentence_ipa": "/ˈɛksɜrˌsaɪz ˈɪz ˈɡʊd ˈfɔɹ ˈjɔɹ ˈbɑdiː ənd ˈmaɪnd/"
+        },
+        {
+          "sentence": "She felt pain in her body after the run.",
+          "sentence_ipa": "/ˈʃiː ˈfɛlt ˈpeɪn ɪn ˈhɜr ˈbɑdiː ˈæftɜr ðə ˈɹʌn/"
+        }
+      ]
     },
     {
       "rank": 402,
@@ -21,7 +31,17 @@
       "cefr_level": "B1",
       "sentence_ipa": "/ˈðɪs ˈdʒɑb ɹiːˈkwaɪɜrz ˈæt ˈliːst ˈtuː ˈjɪɹz ˈʌv ɪˈkspɪɹiːəns/",
       "meaning": "to need something",
-      "translation": "requerir"
+      "translation": "requerir",
+      "example_sentences": [
+        {
+          "sentence": "Most courses require a password to log in.",
+          "sentence_ipa": "/ˈmoʊst ˈkɔɹsəz ˌɹiːˈkwaɪɜr ə ˈpæˌswɜrd ˈtuː ˈlɔɡ ɪn/"
+        },
+        {
+          "sentence": "The recipe will require two eggs and some milk.",
+          "sentence_ipa": "/ðə ˈɹɛsəpiː ˈwɪl ˌɹiːˈkwaɪɜr ˈtuː ˈɛɡz ənd ˈsʌm ˈmɪlk/"
+        }
+      ]
     },
     {
       "rank": 403,
@@ -32,7 +52,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈʃiː ˈhæd ˈtuː ˈweɪt ˈæn ˈaʊɜr ˈfɔɹ ðə ˈbʌs ˈtuː ɜrˈaɪv/",
       "meaning": "to stay until something happens",
-      "translation": "esperar"
+      "translation": "esperar",
+      "example_sentences": [
+        {
+          "sentence": "Please wait here until I come back.",
+          "sentence_ipa": "/ˈpliːz ˈweɪt ˈhiːɹ əˈntɪl ˈaɪ ˈkʌm ˈbæk/"
+        },
+        {
+          "sentence": "We had to wait in a long line.",
+          "sentence_ipa": "/ˈwiː ˈhæd ˈtuː ˈweɪt ɪn ə ˈlɔŋ ˈlaɪn/"
+        }
+      ]
     },
     {
       "rank": 404,
@@ -43,7 +73,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/ðə ˈtiːtʃɜr ˈɡeɪv ðə ˈklæs ˈsʌm ˈdʒɛnɜrəl æˈdvaɪs əˈbaʊt ðə ɪˈɡzæm/",
       "meaning": "Affecting or concerning all or most people, places, or things; not specialized or limited.",
-      "translation": "general"
+      "translation": "general",
+      "example_sentences": [
+        {
+          "sentence": "In general, the food here is very good.",
+          "sentence_ipa": "/ɪn ˈdʒɛnɜrəl ðə ˈfuːd ˈhiːɹ ˈɪz ˈvɛɹiː ˈɡʊd/"
+        },
+        {
+          "sentence": "He gave a general description of the plan.",
+          "sentence_ipa": "/ˈhiː ˈɡeɪv ə ˈdʒɛnɜrəl dɪˈskɹɪpʃən ˈʌv ðə ˈplæn/"
+        }
+      ]
     },
     {
       "rank": 405,
@@ -54,7 +94,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/ə ˈmɛsədʒ əˈpɪɹd ˈɑn ðə ˈskɹiːn ˈwɛn ˈaɪ ˈtɜrnd ˈɑn ðə kəˈmpjuːtɜr/",
       "meaning": "to become visible",
-      "translation": "aparecer"
+      "translation": "aparecer",
+      "example_sentences": [
+        {
+          "sentence": "Stars appear in the sky after sunset.",
+          "sentence_ipa": "/ˈstɑɹz əˈpɪɹ ɪn ðə ˈskaɪ ˈæftɜr ˈsʌˌnsɛt/"
+        },
+        {
+          "sentence": "He did not appear at the meeting today.",
+          "sentence_ipa": "/ˈhiː ˈdɪd ˈnɑt əˈpɪɹ ˈæt ðə ˈmiːtɪŋ təˈdeɪ/"
+        }
+      ]
     },
     {
       "rank": 406,
@@ -65,7 +115,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/ˈʃiː ˈwɔkt təˈwɔɹd ðə ˈdɔɹ ˈwɛn ˈʃiː ˈhɜrd ðə ˈnɑk/",
       "meaning": "in the direction of",
-      "translation": "hacia"
+      "translation": "hacia",
+      "example_sentences": [
+        {
+          "sentence": "The boat moved slowly toward the shore.",
+          "sentence_ipa": "/ðə ˈboʊt ˈmuːvd ˈsloʊliː təˈwɔɹd ðə ˈʃɔɹ/"
+        },
+        {
+          "sentence": "He took a step toward the open window.",
+          "sentence_ipa": "/ˈhiː ˈtʊk ə ˈstɛp təˈwɔɹd ðə ˈoʊpən ˈwɪndoʊ/"
+        }
+      ]
     },
     {
       "rank": 407,
@@ -76,7 +136,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈaʊɜr ˈtiːm ˈwʌn ðə ˈtʃæmpiːəˌnʃɪp ˈæftɜr ˈmʌnθs ˈʌv ˈhɑɹd ˈpɹæktəs/",
       "meaning": "a group of people working or playing together",
-      "translation": "equipo"
+      "translation": "equipo",
+      "example_sentences": [
+        {
+          "sentence": "The team meets every Tuesday after school.",
+          "sentence_ipa": "/ðə ˈtiːm ˈmiːts ˈɛvɜriː ˈtuːzdiː ˈæftɜr ˈskuːl/"
+        },
+        {
+          "sentence": "She joined the team at the start of fall.",
+          "sentence_ipa": "/ˈʃiː ˈdʒɔɪnd ðə ˈtiːm ˈæt ðə ˈstɑɹt ˈʌv ˈfɔl/"
+        }
+      ]
     },
     {
       "rank": 408,
@@ -87,7 +157,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ðə ˈfɜrst ˈɛksɜrˌsaɪz ˈwɑz ˈiːziː ˈbʌt ðə ˈsɛkənd ˈwʌn ˈwɑz ˈmʌtʃ ˈhɑɹdɜr/",
       "meaning": "not hard to do or understand",
-      "translation": "fácil"
+      "translation": "fácil",
+      "example_sentences": [
+        {
+          "sentence": "This recipe is easy to follow at home.",
+          "sentence_ipa": "/ˈðɪs ˈɹɛsəpiː ˈɪz ˈiːziː ˈtuː ˈfɑloʊ ˈæt ˈhoʊm/"
+        },
+        {
+          "sentence": "The quiz was easy for the whole class.",
+          "sentence_ipa": "/ðə ˈkwɪz ˈwɑz ˈiːziː ˈfɔɹ ðə ˈhoʊl ˈklæs/"
+        }
+      ]
     },
     {
       "rank": 409,
@@ -98,7 +178,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/ˈiːtʃ ˌɪndəˈvɪdʒəwəl ˈɑn ðə ˈtiːm ˈhæz ə ˈdɪfɜrənt ˈskɪl ˈtuː kəˈntɹɪbjuːt/",
       "meaning": "a single person considered separately",
-      "translation": "individuo"
+      "translation": "individuo",
+      "example_sentences": [
+        {
+          "sentence": "Every individual has the right to speak up.",
+          "sentence_ipa": "/ˈɛvɜriː ˌɪndəˈvɪdʒəwəl ˈhæz ðə ˈɹaɪt ˈtuː ˈspiːk ˈʌp/"
+        },
+        {
+          "sentence": "The teacher spoke to each individual after class.",
+          "sentence_ipa": "/ðə ˈtiːtʃɜr ˈspoʊk ˈtuː ˈiːtʃ ˌɪndəˈvɪdʒəwəl ˈæftɜr ˈklæs/"
+        }
+      ]
     },
     {
       "rank": 410,
@@ -109,7 +199,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ðə ˈpɑɹkɪŋ ˈlɑt ˈwɑz kəˈmpliːtliː ˈfʊl ˈsoʊ ˈwiː ˈhæd ˈtuː ˈpɑɹk ˈɑn ðə ˈstɹiːt/",
       "meaning": "completely filled",
-      "translation": "lleno"
+      "translation": "lleno",
+      "example_sentences": [
+        {
+          "sentence": "The glass is full of cold water.",
+          "sentence_ipa": "/ðə ˈɡlæs ˈɪz ˈfʊl ˈʌv ˈkoʊld ˈwɔtɜr/"
+        },
+        {
+          "sentence": "The bus was full, so we stood up.",
+          "sentence_ipa": "/ðə ˈbʌs ˈwɑz ˈfʊl ˈsoʊ ˈwiː ˈstʊd ˈʌp/"
+        }
+      ]
     },
     {
       "rank": 411,
@@ -120,7 +220,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈʃiː ˈwɔɹ ə ˈblæk ˈkoʊt ˈtuː ðə ˈfjuːnɜrəl/",
       "meaning": "darkest color",
-      "translation": "negro"
+      "translation": "negro",
+      "example_sentences": [
+        {
+          "sentence": "He bought a pair of black shoes yesterday.",
+          "sentence_ipa": "/ˈhiː ˈbɑt ə ˈpɛɹ ˈʌv ˈblæk ˈʃuːz ˈjɛstɜrˌdeɪ/"
+        },
+        {
+          "sentence": "The cat has soft black fur all over.",
+          "sentence_ipa": "/ðə ˈkæt ˈhæz ˈsɑft ˈblæk ˈfɜr ˈɔl ˈoʊvɜr/"
+        }
+      ]
     },
     {
       "rank": 412,
@@ -131,7 +241,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/ˈɪt ˈmeɪks ˈnoʊ ˈsɛns ˈtuː ˈliːv wɪˈθaʊt ˈtɛlɪŋ ˈɛniːˌwʌn ˈwɛɹ ˈjuː ˈɑɹ ˈɡoʊɪŋ/",
       "meaning": "a feeling or one of the five natural abilities",
-      "translation": "sentido"
+      "translation": "sentido",
+      "example_sentences": [
+        {
+          "sentence": "That idea makes a lot of sense to me.",
+          "sentence_ipa": "/ˈðæt aɪˈdiːə ˈmeɪks ə ˈlɑt ˈʌv ˈsɛns ˈtuː ˈmiː/"
+        },
+        {
+          "sentence": "She has a good sense of direction outdoors.",
+          "sentence_ipa": "/ˈʃiː ˈhæz ə ˈɡʊd ˈsɛns ˈʌv dɜrˈɛkʃən ˈaʊˈtdɔɹz/"
+        }
+      ]
     },
     {
       "rank": 413,
@@ -142,7 +262,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/pɜrˈhæps ˈwiː ˈʃʊd ˈkɔl ˈfɜrst bɪˈfɔɹ ˈɡoʊɪŋ ˈtuː ˈðɛɹ ˈhaʊs/",
       "meaning": "maybe",
-      "translation": "quizás"
+      "translation": "quizás",
+      "example_sentences": [
+        {
+          "sentence": "Perhaps we can meet again next week.",
+          "sentence_ipa": "/pɜrˈhæps ˈwiː ˈkæn ˈmiːt əˈɡɛn ˈnɛkst ˈwiːk/"
+        },
+        {
+          "sentence": "Perhaps it will rain later this afternoon.",
+          "sentence_ipa": "/pɜrˈhæps ˈɪt ˈwɪl ˈɹeɪn ˈleɪtɜr ˈðɪs ˌæftɜrˈnuːn/"
+        }
+      ]
     },
     {
       "rank": 414,
@@ -153,7 +283,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈʃiː ˈædəd ə ˈpɪntʃ ˈʌv ˈsɔlt ˈtuː ðə ˈsuːp bɪˈfɔɹ ˈsɜrvɪŋ ˈɪt/",
       "meaning": "to put something together with something else to increase the total",
-      "translation": "añadir"
+      "translation": "añadir",
+      "example_sentences": [
+        {
+          "sentence": "Please add your name to the list.",
+          "sentence_ipa": "/ˈpliːz ˈæd ˈjɔɹ ˈneɪm ˈtuː ðə ˈlɪst/"
+        },
+        {
+          "sentence": "Can you add more water to the pot?",
+          "sentence_ipa": "/ˈkæn ˈjuː ˈæd ˈmɔɹ ˈwɔtɜr ˈtuː ðə ˈpɑt/"
+        }
+      ]
     },
     {
       "rank": 415,
@@ -164,7 +304,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ðə ˈkɪŋ ˈɹuːld ðə ˈkʌntɹiː ˈfɔɹ ˈmɔɹ ˈðæn ˈθɜrˌdiː ˈjɪɹz/",
       "meaning": "an instruction that says what must or must not be done",
-      "translation": "regla"
+      "translation": "regla",
+      "example_sentences": [
+        {
+          "sentence": "Strong leaders should rule with fairness and care.",
+          "sentence_ipa": "/ˈstɹɔŋ ˈliːdɜrz ˈʃʊd ˈɹuːl ˈwɪð ˈfɛɹnəs ənd ˈkɛɹ/"
+        },
+        {
+          "sentence": "Who will rule the land after he leaves?",
+          "sentence_ipa": "/ˈhuː ˈwɪl ˈɹuːl ðə ˈlænd ˈæftɜr ˈhiː ˈliːvz/"
+        }
+      ]
     },
     {
       "rank": 416,
@@ -175,7 +325,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/ˈhiː ˈstʌdiːd ˈhɑɹd ənd ˈwɑz ɹɪˈliːvd ˈwɛn ˈhiː ˈpæst ðə ɪˈɡzæm/",
       "meaning": "to move past or go by something",
-      "translation": "pasar"
+      "translation": "pasar",
+      "example_sentences": [
+        {
+          "sentence": "Please pass the salt across the table.",
+          "sentence_ipa": "/ˈpliːz ˈpæs ðə ˈsɔlt əˈkɹɔs ðə ˈteɪbəl/"
+        },
+        {
+          "sentence": "Time seems to pass quickly on vacation.",
+          "sentence_ipa": "/ˈtaɪm ˈsiːmz ˈtuː ˈpæs ˈkwɪkliː ˈɑn veɪˈkeɪʃən/"
+        }
+      ]
     },
     {
       "rank": 417,
@@ -186,7 +346,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/ˈðɪs ˈfæktɜriː pɹəˈduːsəz ˈθaʊzəndz ˈʌv ˈkɑɹz ˈɛvɜriː ˈmʌnθ/",
       "meaning": "To make, create, or bring about.",
-      "translation": "producir"
+      "translation": "producir",
+      "example_sentences": [
+        {
+          "sentence": "Local farms produce fresh fruit in the summer.",
+          "sentence_ipa": "/ˈloʊkəl ˈfɑɹmz pɹəˈduːs ˈfɹɛʃ ˈfɹuːt ɪn ðə ˈsʌmɜr/"
+        },
+        {
+          "sentence": "The meeting did not produce any clear results.",
+          "sentence_ipa": "/ðə ˈmiːtɪŋ ˈdɪd ˈnɑt pɹəˈduːs ˈɛniː ˈklɪɹ ɹɪˈzʌlts/"
+        }
+      ]
     },
     {
       "rank": 418,
@@ -197,7 +367,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈðeɪ ˈsɛl ˈfɹɛʃ ˈvɛdʒtəbəlz ˈæt ðə ˈmɑɹkət ˈɛvɜriː ˈsætɜrdiː ˈmɔɹnɪŋ/",
       "meaning": "to give something to someone in exchange for money",
-      "translation": "vender"
+      "translation": "vender",
+      "example_sentences": [
+        {
+          "sentence": "They sell books and maps at the shop.",
+          "sentence_ipa": "/ˈðeɪ ˈsɛl ˈbʊks ənd ˈmæps ˈæt ðə ˈʃɑp/"
+        },
+        {
+          "sentence": "How much did you sell the old bike for?",
+          "sentence_ipa": "/ˈhaʊ ˈmʌtʃ ˈdɪd ˈjuː ˈsɛl ðə ˈoʊld ˈbaɪk ˈfɔɹ/"
+        }
+      ]
     },
     {
       "rank": 419,
@@ -208,7 +388,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ðə ˈspiːtʃ ˈwɑz ˈʃɔɹt ˈlæstɪŋ ˈoʊnliː ˈfaɪv ˈmɪnəts/",
       "meaning": "small length",
-      "translation": "corto/bajo"
+      "translation": "corto/bajo",
+      "example_sentences": [
+        {
+          "sentence": "Her hair is short and easy to wash.",
+          "sentence_ipa": "/ˈhɜr ˈhɛɹ ˈɪz ˈʃɔɹt ənd ˈiːziː ˈtuː ˈwɑʃ/"
+        },
+        {
+          "sentence": "We took a short walk after dinner tonight.",
+          "sentence_ipa": "/ˈwiː ˈtʊk ə ˈʃɔɹt ˈwɔk ˈæftɜr ˈdɪnɜr təˈnaɪt/"
+        }
+      ]
     },
     {
       "rank": 420,
@@ -219,7 +409,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈboʊθ ˈsaɪdz əˈɡɹiːd ˈtuː ˈsaɪn ðə ˈkɑˌntɹækt ˈbaɪ ðə ˈɛnd ˈʌv ðə ˈwiːk/",
       "meaning": "to have the same opinion as someone",
-      "translation": "estar de acuerdo"
+      "translation": "estar de acuerdo",
+      "example_sentences": [
+        {
+          "sentence": "I agree with you on that point.",
+          "sentence_ipa": "/ˈaɪ əˈɡɹiː ˈwɪð ˈjuː ˈɑn ˈðæt ˈpɔɪnt/"
+        },
+        {
+          "sentence": "They agree to meet again on Friday morning.",
+          "sentence_ipa": "/ˈðeɪ əˈɡɹiː ˈtuː ˈmiːt əˈɡɛn ˈɑn ˈfɹaɪdiː ˈmɔɹnɪŋ/"
+        }
+      ]
     },
     {
       "rank": 421,
@@ -230,7 +430,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/ˈðɛɹ ˈɪz ə ˈlɔ ˈðæt ɹiːˈkwaɪɜrz ˈdɹaɪvɜrz ˈtuː ˈwɛɹ ə ˈsiːˌtbɛlt ˈæt ˈɔl ˈtaɪmz/",
       "meaning": "a rule made by the government that people must follow",
-      "translation": "ley"
+      "translation": "ley",
+      "example_sentences": [
+        {
+          "sentence": "Everyone must follow the law in this country.",
+          "sentence_ipa": "/ˈɛvɹiːˌwʌn ˈmʌst ˈfɑloʊ ðə ˈlɔ ɪn ˈðɪs ˈkʌntɹiː/"
+        },
+        {
+          "sentence": "She studied law at college for three years.",
+          "sentence_ipa": "/ˈʃiː ˈstʌdiːd ˈlɔ ˈæt ˈkɑlɪdʒ ˈfɔɹ ˈθɹiː ˈjɪɹz/"
+        }
+      ]
     },
     {
       "rank": 422,
@@ -241,7 +451,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈʃiː ˈpækt ˈɛvɹiːˌθɪŋ ˈʃiː ˈniːdəd bɪˈfɔɹ ˈliːvɪŋ ˈfɔɹ ðə ˈtɹɪp/",
       "meaning": "all things",
-      "translation": "todo"
+      "translation": "todo",
+      "example_sentences": [
+        {
+          "sentence": "Everything looks ready for the party tonight.",
+          "sentence_ipa": "/ˈɛvɹiːˌθɪŋ ˈlʊks ˈɹɛdiː ˈfɔɹ ðə ˈpɑɹtiː təˈnaɪt/"
+        },
+        {
+          "sentence": "Did you bring everything you need for school?",
+          "sentence_ipa": "/ˈdɪd ˈjuː ˈbɹɪŋ ˈɛvɹiːˌθɪŋ ˈjuː ˈniːd ˈfɔɹ ˈskuːl/"
+        }
+      ]
     },
     {
       "rank": 423,
@@ -252,7 +472,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/ˈʃiː ˈspɛnt ˈmʌnθs ɹiːˈsɜrtʃɪŋ ðə ˈkɑzəz ˈʌv ðə dɪˈziːz/",
       "meaning": "systematic investigation",
-      "translation": "investigación"
+      "translation": "investigación",
+      "example_sentences": [
+        {
+          "sentence": "Scientists research new ways to treat illness.",
+          "sentence_ipa": "/ˈsaɪəntɪsts ɹiːˈsɜrtʃ ˈnuː ˈweɪz ˈtuː ˈtɹiːt ˈɪlnəs/"
+        },
+        {
+          "sentence": "I need to research hotels before our trip.",
+          "sentence_ipa": "/ˈaɪ ˈniːd ˈtuː ɹiːˈsɜrtʃ hoʊˈtɛlz bɪˈfɔɹ ˈaʊɜr ˈtɹɪp/"
+        }
+      ]
     },
     {
       "rank": 424,
@@ -263,7 +493,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/ðə ˈblæŋkət ˈwɑz ˈbɪɡ ɪˈnʌf ˈtuː ˈkʌvɜr ðə ɪˈntaɪɜr ˈbɛd/",
       "meaning": "to put something over or include",
-      "translation": "cubrir"
+      "translation": "cubrir",
+      "example_sentences": [
+        {
+          "sentence": "Please cover the food before you put it away.",
+          "sentence_ipa": "/ˈpliːz ˈkʌvɜr ðə ˈfuːd bɪˈfɔɹ ˈjuː ˈpʊt ˈɪt əˈweɪ/"
+        },
+        {
+          "sentence": "Snow will cover the roads by tomorrow morning.",
+          "sentence_ipa": "/ˈsnoʊ ˈwɪl ˈkʌvɜr ðə ˈɹoʊdz ˈbaɪ təˈmɑˌɹoʊ ˈmɔɹnɪŋ/"
+        }
+      ]
     },
     {
       "rank": 425,
@@ -274,7 +514,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈʃiː ˈɹoʊt ˈhɜr ˈfoʊn ˈnʌmbɜr ˈɑn ə ˈsmɔl ˈpiːs ˈʌv ˈpeɪpɜr ənd ˈhændəd ˈɪt ˈtuː ˈhɪm/",
       "meaning": "thin material used for writing or printing",
-      "translation": "papel"
+      "translation": "papel",
+      "example_sentences": [
+        {
+          "sentence": "I need more paper for the printer.",
+          "sentence_ipa": "/ˈaɪ ˈniːd ˈmɔɹ ˈpeɪpɜr ˈfɔɹ ðə ˈpɹɪntɜr/"
+        },
+        {
+          "sentence": "She folded the paper into a small plane.",
+          "sentence_ipa": "/ˈʃiː ˈfoʊldəd ðə ˈpeɪpɜr ˈɪntuː ə ˈsmɔl ˈpleɪn/"
+        }
+      ]
     },
     {
       "rank": 426,
@@ -285,7 +535,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/ˈhiː əˈplaɪd ˈfɔɹ ðə pəˈzɪʃən ˈʌv ˈmænədʒɜr ˈæt ðə ˈnuː ˈkʌmpəˌniː/",
       "meaning": "A place or location; a viewpoint or stance.",
-      "translation": "posición"
+      "translation": "posición",
+      "example_sentences": [
+        {
+          "sentence": "Hold that position for ten more seconds, please.",
+          "sentence_ipa": "/ˈhoʊld ˈðæt pəˈzɪʃən ˈfɔɹ ˈtɛn ˈmɔɹ ˈsɛkəndz ˈpliːz/"
+        },
+        {
+          "sentence": "She got a new position at the bank.",
+          "sentence_ipa": "/ˈʃiː ˈɡɑt ə ˈnuː pəˈzɪʃən ˈæt ðə ˈbæŋk/"
+        }
+      ]
     },
     {
       "rank": 427,
@@ -296,7 +556,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ðə ˈskuːl ˈɪz ˈnɪɹ ðə ˈtɹeɪn ˈsteɪʃən ˈsoʊ ˈɪt ˈɪz ˈiːziː ˈtuː ˈɡɛt ˈðɛɹ/",
       "meaning": "close to",
-      "translation": "cerca"
+      "translation": "cerca",
+      "example_sentences": [
+        {
+          "sentence": "The cafe is near the bus stop downtown.",
+          "sentence_ipa": "/ðə kəˈfeɪ ˈɪz ˈnɪɹ ðə ˈbʌs ˈstɑp ˈdaʊˈntaʊn/"
+        },
+        {
+          "sentence": "We live near a big park with trees.",
+          "sentence_ipa": "/ˈwiː ˈlaɪv ˈnɪɹ ə ˈbɪɡ ˈpɑɹk ˈwɪð ˈtɹiːz/"
+        }
+      ]
     },
     {
       "rank": 428,
@@ -307,7 +577,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/ˈmeɪkɪŋ mɪˈsteɪks ˈɪz ə ˈnætʃɜrəl ˈpɑɹt ˈʌv ˈhjuːmən bɪˈheɪvjɜr/",
       "meaning": "Relating to or characteristic of people, as opposed to animals or machines.",
-      "translation": "humano"
+      "translation": "humano",
+      "example_sentences": [
+        {
+          "sentence": "Kindness is a basic human need for all people.",
+          "sentence_ipa": "/ˈkaɪndnəs ˈɪz ə ˈbeɪsɪk ˈhjuːmən ˈniːd ˈfɔɹ ˈɔl ˈpiːpəl/"
+        },
+        {
+          "sentence": "The report studied human growth over many years.",
+          "sentence_ipa": "/ðə ɹiːˈpɔɹt ˈstʌdiːd ˈhjuːmən ˈɡɹoʊθ ˈoʊvɜr ˈmɛniː ˈjɪɹz/"
+        }
+      ]
     },
     {
       "rank": 429,
@@ -318,7 +598,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈʃiː ˈjuːsəz ˈhɜr kəˈmpjuːtɜr ˈɛvɜriː ˈiːvnɪŋ ˈtuː ˈfɪnɪʃ ˈhɜr ˈhoʊˌmwɜrk/",
       "meaning": "an electronic machine for storing and processing data",
-      "translation": "computadora"
+      "translation": "computadora",
+      "example_sentences": [
+        {
+          "sentence": "My computer is slow when too many tabs open.",
+          "sentence_ipa": "/ˈmaɪ kəˈmpjuːtɜr ˈɪz ˈsloʊ ˈwɛn ˈtuː ˈmɛniː ˈtæbz ˈoʊpən/"
+        },
+        {
+          "sentence": "He fixed the computer after it stopped working.",
+          "sentence_ipa": "/ˈhiː ˈfɪkst ðə kəˈmpjuːtɜr ˈæftɜr ˈɪt ˈstɑpt ˈwɜrkɪŋ/"
+        }
+      ]
     },
     {
       "rank": 430,
@@ -329,7 +619,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ðə ˈdɑktɜr ˈhæd ˈtuː ˈækt ˈkwɪkliː bɪˈkɔz ðə ˌsɪtʃuːˈeɪʃən ˈwɑz ˈvɛɹiː ˈsɪɹiːəs/",
       "meaning": "the set of circumstances or conditions at a particular time",
-      "translation": "situacion"
+      "translation": "situacion",
+      "example_sentences": [
+        {
+          "sentence": "We need to understand the situation before we decide.",
+          "sentence_ipa": "/ˈwiː ˈniːd ˈtuː ˌʌndɜrˈstænd ðə ˌsɪtʃuːˈeɪʃən bɪˈfɔɹ ˈwiː ˌdɪˈsaɪd/"
+        },
+        {
+          "sentence": "The situation got better after they talked calmly.",
+          "sentence_ipa": "/ðə ˌsɪtʃuːˈeɪʃən ˈɡɑt ˈbɛtɜr ˈæftɜr ˈðeɪ ˈtɔkt ˈkɑmliː/"
+        }
+      ]
     },
     {
       "rank": 431,
@@ -340,7 +640,17 @@
       "cefr_level": "B1",
       "sentence_ipa": "/ðə hoʊˈtɛl ˈstæf ˈɡɹiːtəd ˈɛvɜriː ˈɡɛst ˈwɪð ə ˈwɔɹm ˈsmaɪl/",
       "meaning": "The group of people who work for an organization or business.",
-      "translation": "personal, plantilla"
+      "translation": "personal, plantilla",
+      "example_sentences": [
+        {
+          "sentence": "The office staff left early on Friday afternoon.",
+          "sentence_ipa": "/ðə ˈɔfɪs ˈstæf ˈlɛft ˈɜrliː ˈɑn ˈfɹaɪdiː ˌæftɜrˈnuːn/"
+        },
+        {
+          "sentence": "Hospital staff worked through the night after the storm.",
+          "sentence_ipa": "/ˈhɑˌspɪtəl ˈstæf ˈwɜrkt ˈθɹuː ðə ˈnaɪt ˈæftɜr ðə ˈstɔɹm/"
+        }
+      ]
     },
     {
       "rank": 432,
@@ -351,7 +661,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈswɪmɪŋ ˈɪz ə ˈɡɹeɪt æˈktɪvətiː ˈfɔɹ ˈpiːpəl ˈʌv ˈɔl ˈeɪdʒəz/",
       "meaning": "something that you do for enjoyment",
-      "translation": "actividad"
+      "translation": "actividad",
+      "example_sentences": [
+        {
+          "sentence": "Drawing is her favorite activity on rainy days.",
+          "sentence_ipa": "/ˈdɹɔɪŋ ˈɪz ˈhɜr ˈfeɪvɜrɪt æˈktɪvətiː ˈɑn ˈɹeɪniː ˈdeɪz/"
+        },
+        {
+          "sentence": "The school planned a fun activity for the kids.",
+          "sentence_ipa": "/ðə ˈskuːl ˈplænd ə ˈfʌn æˈktɪvətiː ˈfɔɹ ðə ˈkɪdz/"
+        }
+      ]
     },
     {
       "rank": 433,
@@ -362,7 +682,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈwiː ˈwɑtʃt ə ˈfɪlm əˈbaʊt ðə ˈsɛkənd ˈwɜrld ˈwɔɹ ˈlæst ˈnaɪt/",
       "meaning": "a story shown in moving pictures; a movie",
-      "translation": "película"
+      "translation": "película",
+      "example_sentences": [
+        {
+          "sentence": "The film started late because of technical problems.",
+          "sentence_ipa": "/ðə ˈfɪlm ˈstɑɹtɪd ˈleɪt bɪˈkɔz ˈʌv ˈtɛknɪkəl ˈpɹɑbləmz/"
+        },
+        {
+          "sentence": "She wants to make a short film this summer.",
+          "sentence_ipa": "/ˈʃiː ˈwɑnts ˈtuː ˈmeɪk ə ˈʃɔɹt ˈfɪlm ˈðɪs ˈsʌmɜr/"
+        }
+      ]
     },
     {
       "rank": 434,
@@ -373,7 +703,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈʃiː ˈdɹɪŋks ə ˈkʌp ˈʌv ˈkɑfiː ˈɛvɜriː ˈmɔɹnɪŋ bɪˈfɔɹ ˈɡoʊɪŋ ˈtuː ˈwɜrk/",
       "meaning": "early day",
-      "translation": "mañana"
+      "translation": "mañana",
+      "example_sentences": [
+        {
+          "sentence": "The morning was cold, but the sun came out.",
+          "sentence_ipa": "/ðə ˈmɔɹnɪŋ ˈwɑz ˈkoʊld ˈbʌt ðə ˈsʌn ˈkeɪm ˈaʊt/"
+        },
+        {
+          "sentence": "I feel better after a good morning walk today.",
+          "sentence_ipa": "/ˈaɪ ˈfiːl ˈbɛtɜr ˈæftɜr ə ˈɡʊd ˈmɔɹnɪŋ ˈwɔk təˈdeɪ/"
+        }
+      ]
     },
     {
       "rank": 435,
@@ -384,7 +724,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/ðə ˈwɔɹ ˈlæstəd ˈfɔɹ ˈfɔɹ ˈjɪɹz ənd ˈkɑzd ɪˈnɔɹməs dɪˈstɹʌkʃən/",
       "meaning": "A period of armed fighting between countries or groups of people.",
-      "translation": "guerra"
+      "translation": "guerra",
+      "example_sentences": [
+        {
+          "sentence": "The book tells the story of a long war.",
+          "sentence_ipa": "/ðə ˈbʊk ˈtɛlz ðə ˈstɔɹiː ˈʌv ə ˈlɔŋ ˈwɔɹ/"
+        },
+        {
+          "sentence": "Many families left home during the war years.",
+          "sentence_ipa": "/ˈmɛniː ˈfæməliːz ˈlɛft ˈhoʊm ˈdʊɹɪŋ ðə ˈwɔɹ ˈjɪɹz/"
+        }
+      ]
     },
     {
       "rank": 436,
@@ -395,7 +745,17 @@
       "cefr_level": "B1",
       "sentence_ipa": "/ˈjuː ˈniːd ˈtuː kɹiːˈeɪt ˈæn əˈkaʊnt bɪˈfɔɹ ˈjuː ˈkæn ˈjuːs ðə ˈwɛˌbsaɪt/",
       "meaning": "money kept in bank",
-      "translation": "cuenta"
+      "translation": "cuenta",
+      "example_sentences": [
+        {
+          "sentence": "She opened a bank account when she got paid.",
+          "sentence_ipa": "/ˈʃiː ˈoʊpənd ə ˈbæŋk əˈkaʊnt ˈwɛn ˈʃiː ˈɡɑt ˈpeɪd/"
+        },
+        {
+          "sentence": "Log in to your account to see your orders.",
+          "sentence_ipa": "/ˈlɔɡ ɪn ˈtuː ˈjɔɹ əˈkaʊnt ˈtuː ˈsiː ˈjɔɹ ˈɔɹdɜrz/"
+        }
+      ]
     },
     {
       "rank": 437,
@@ -406,7 +766,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈðɛɹ ˈɪz ə ˈsmɔl ˈbɹɛd ˈʃɑp ˈæt ðə ˈɛnd ˈʌv ˈaʊɜr ˈstɹiːt/",
       "meaning": "a place to buy things; to buy things",
-      "translation": "tienda"
+      "translation": "tienda",
+      "example_sentences": [
+        {
+          "sentence": "The shop closes at six on weekdays.",
+          "sentence_ipa": "/ðə ˈʃɑp ˈkloʊzɪz ˈæt ˈsɪks ˈɑn ˈwiːˌkdeɪz/"
+        },
+        {
+          "sentence": "We stopped at a flower shop on the way.",
+          "sentence_ipa": "/ˈwiː ˈstɑpt ˈæt ə ˈflaʊɜr ˈʃɑp ˈɑn ðə ˈweɪ/"
+        }
+      ]
     },
     {
       "rank": 438,
@@ -417,7 +787,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/ðə ˈɜrˌθkweɪk ˈkɑzd ˈmeɪdʒɜr ˈdæmədʒ ˈtuː ˈbɪldɪŋz əˈkɹɔs ðə ˈsɪtiː/",
       "meaning": "Important, serious, or significant.",
-      "translation": "principal"
+      "translation": "principal",
+      "example_sentences": [
+        {
+          "sentence": "Traffic was a major problem during the storm.",
+          "sentence_ipa": "/ˈtɹæfɪk ˈwɑz ə ˈmeɪdʒɜr ˈpɹɑbləm ˈdʊɹɪŋ ðə ˈstɔɹm/"
+        },
+        {
+          "sentence": "She made a major change to her daily routine.",
+          "sentence_ipa": "/ˈʃiː ˈmeɪd ə ˈmeɪdʒɜr ˈtʃeɪndʒ ˈtuː ˈhɜr ˈdeɪliː ɹuːˈtiːn/"
+        }
+      ]
     },
     {
       "rank": 439,
@@ -428,7 +808,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈsʌˌmwʌn ˈlɛft ˈðɛɹ əˈmbɹɛlə ˈɑn ðə ˈbʌs ˈðɪs ˈmɔɹnɪŋ/",
       "meaning": "an unknown or unspecified person",
-      "translation": "alguien"
+      "translation": "alguien",
+      "example_sentences": [
+        {
+          "sentence": "Someone is knocking at the door right now.",
+          "sentence_ipa": "/ˈsʌˌmwʌn ˈɪz ˈnɑkɪŋ ˈæt ðə ˈdɔɹ ˈɹaɪt ˈnaʊ/"
+        },
+        {
+          "sentence": "Can someone help me carry these heavy boxes?",
+          "sentence_ipa": "/ˈkæn ˈsʌˌmwʌn ˈhɛlp ˈmiː ˈkæɹiː ˈðiːz ˈhɛviː ˈbɑksəz/"
+        }
+      ]
     },
     {
       "rank": 440,
@@ -439,7 +829,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ðə ˈtɛmpɹətʃɜr ˈɹoʊz əˈbʌv ˈθɜrˌdiː dɪˈɡɹiːz ˈfɔɹ ðə ˈfɜrst ˈtaɪm ˈðɪs ˈsʌmɜr/",
       "meaning": "higher than something",
-      "translation": "arriba"
+      "translation": "arriba",
+      "example_sentences": [
+        {
+          "sentence": "The picture hangs above the couch in the living room.",
+          "sentence_ipa": "/ðə ˈpɪktʃɜr ˈhæŋz əˈbʌv ðə ˈkaʊtʃ ɪn ðə ˈlɪvɪŋ ˈɹuːm/"
+        },
+        {
+          "sentence": "Birds flew above the trees in the park.",
+          "sentence_ipa": "/ˈbɜrdz ˈfluː əˈbʌv ðə ˈtɹiːz ɪn ðə ˈpɑɹk/"
+        }
+      ]
     },
     {
       "rank": 441,
@@ -450,7 +850,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈʃiː dɪˈzaɪnd ðə ˈnuː ˈloʊɡoʊ ˈfɔɹ ðə ˈkʌmpəˌniː ˈoʊvɜr ðə ˈwiːˌkɛnd/",
       "meaning": "a plan for how something should look",
-      "translation": "diseñar"
+      "translation": "diseñar",
+      "example_sentences": [
+        {
+          "sentence": "He will design the poster for the school event.",
+          "sentence_ipa": "/ˈhiː ˈwɪl dɪˈzaɪn ðə ˈpoʊstɜr ˈfɔɹ ðə ˈskuːl ɪˈvɛnt/"
+        },
+        {
+          "sentence": "They design clothes for young people every season.",
+          "sentence_ipa": "/ˈðeɪ dɪˈzaɪn ˈkloʊðz ˈfɔɹ ˈjʌŋ ˈpiːpəl ˈɛvɜriː ˈsiːzən/"
+        }
+      ]
     },
     {
       "rank": 442,
@@ -461,7 +871,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ðə ˈskuːl ˈɪz ˈɔɹɡəˌnaɪzɪŋ ˈæn ɪˈvɛnt ˈtuː ˈɹeɪz ˈmʌniː ˈfɔɹ ˈnuː ɪˈkwɪpmənt/",
       "meaning": "something that happens",
-      "translation": "evento"
+      "translation": "evento",
+      "example_sentences": [
+        {
+          "sentence": "The event starts at seven in the evening.",
+          "sentence_ipa": "/ðə ɪˈvɛnt ˈstɑɹts ˈæt ˈsɛvən ɪn ðə ˈiːvnɪŋ/"
+        },
+        {
+          "sentence": "It was the biggest event of the year.",
+          "sentence_ipa": "/ˈɪt ˈwɑz ðə ˈbɪɡəst ɪˈvɛnt ˈʌv ðə ˈjɪɹ/"
+        }
+      ]
     },
     {
       "rank": 443,
@@ -472,7 +892,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈðeɪ ˈkʊkt ə ˈspɛʃəl ˈmiːl ˈtuː ˈsɛləˌbɹeɪt ˈðɛɹ ˌænəˈvɜrsɜriː/",
       "meaning": "different from normal",
-      "translation": "especial"
+      "translation": "especial",
+      "example_sentences": [
+        {
+          "sentence": "Today is a special day for our whole family.",
+          "sentence_ipa": "/təˈdeɪ ˈɪz ə ˈspɛʃəl ˈdeɪ ˈfɔɹ ˈaʊɜr ˈhoʊl ˈfæməliː/"
+        },
+        {
+          "sentence": "She wore a special dress to the party tonight.",
+          "sentence_ipa": "/ˈʃiː ˈwɔɹ ə ˈspɛʃəl ˈdɹɛs ˈtuː ðə ˈpɑɹtiː təˈnaɪt/"
+        }
+      ]
     },
     {
       "rank": 444,
@@ -483,7 +913,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈʃiː səˈmtaɪmz ˈwɔks ˈtuː ˈskuːl ˌɪˈnstɛd ˈʌv ˈteɪkɪŋ ðə ˈbʌs/",
       "meaning": "not always, but at times",
-      "translation": "a veces"
+      "translation": "a veces",
+      "example_sentences": [
+        {
+          "sentence": "I sometimes forget where I put my keys.",
+          "sentence_ipa": "/ˈaɪ səˈmtaɪmz fɜrˈɡɛt ˈwɛɹ ˈaɪ ˈpʊt ˈmaɪ ˈkiːz/"
+        },
+        {
+          "sentence": "Sometimes it is hard to wake up early.",
+          "sentence_ipa": "/səˈmtaɪmz ˈɪt ˈɪz ˈhɑɹd ˈtuː ˈweɪk ˈʌp ˈɜrliː/"
+        }
+      ]
     },
     {
       "rank": 445,
@@ -494,7 +934,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/ðə ˈdɑktɜr ˈsɛd ˈhɜr kəˈndɪʃən ˈwɑz ˌɪˈmpɹuːvɪŋ ˈæftɜr ˈtuː ˈwiːks ˈʌv ˈtɹiːtmənt/",
       "meaning": "the state that something is in",
-      "translation": "condición"
+      "translation": "condición",
+      "example_sentences": [
+        {
+          "sentence": "The car is in good condition for its age.",
+          "sentence_ipa": "/ðə ˈkɑɹ ˈɪz ɪn ˈɡʊd kəˈndɪʃən ˈfɔɹ ˈɪts ˈeɪdʒ/"
+        },
+        {
+          "sentence": "Keep the room in a clean condition always.",
+          "sentence_ipa": "/ˈkiːp ðə ˈɹuːm ɪn ə ˈkliːn kəˈndɪʃən ˈɔˌlweɪz/"
+        }
+      ]
     },
     {
       "rank": 446,
@@ -505,7 +955,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈhiː ˈkæɹiːd ˈɔl ðə ˈɡɹoʊsɜriː ˈbæɡz ˈfɹʌm ðə ˈkɑɹ ˈtuː ðə ˈkɪtʃən ɪn ˈwʌn ˈtɹɪp/",
       "meaning": "to hold and move something",
-      "translation": "llevar"
+      "translation": "llevar",
+      "example_sentences": [
+        {
+          "sentence": "Can you carry this box to the garage?",
+          "sentence_ipa": "/ˈkæn ˈjuː ˈkæɹiː ˈðɪs ˈbɑks ˈtuː ðə ɡɜrˈɑʒ/"
+        },
+        {
+          "sentence": "Please carry these bags into the kitchen.",
+          "sentence_ipa": "/ˈpliːz ˈkæɹiː ˈðiːz ˈbæɡz ˈɪntuː ðə ˈkɪtʃən/"
+        }
+      ]
     },
     {
       "rank": 447,
@@ -516,7 +976,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈɪt ˈwɑz ˈhɑɹd ˈtuː ˈtʃuːz bɪˈtwiːn ðə ˈtuː ˈɑpʃənz bɪˈkɔz ˈboʊθ ˈwɜr ˈɡʊd/",
       "meaning": "to pick one thing from several options",
-      "translation": "elegir"
+      "translation": "elegir",
+      "example_sentences": [
+        {
+          "sentence": "Please choose one answer and write it down.",
+          "sentence_ipa": "/ˈpliːz ˈtʃuːz ˈwʌn ˈænsɜr ənd ˈɹaɪt ˈɪt ˈdaʊn/"
+        },
+        {
+          "sentence": "You can choose any seat in the room.",
+          "sentence_ipa": "/ˈjuː ˈkæn ˈtʃuːz ˈɛniː ˈsiːt ɪn ðə ˈɹuːm/"
+        }
+      ]
     },
     {
       "rank": 448,
@@ -527,7 +997,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈhɜr ˈfɑðɜr ˈtɔt ˈhɜr ˈhaʊ ˈtuː ˈɹaɪd ə ˈbaɪk ˈwɛn ˈʃiː ˈwɑz ˈsɪks ˈjɪɹz ˈoʊld/",
       "meaning": "male parent",
-      "translation": "padre"
+      "translation": "padre",
+      "example_sentences": [
+        {
+          "sentence": "My father cooks dinner on most weeknights.",
+          "sentence_ipa": "/ˈmaɪ ˈfɑðɜr ˈkʊks ˈdɪnɜr ˈɑn ˈmoʊst weeknights/"
+        },
+        {
+          "sentence": "Her father picked her up after school today.",
+          "sentence_ipa": "/ˈhɜr ˈfɑðɜr ˈpɪkt ˈhɜr ˈʌp ˈæftɜr ˈskuːl təˈdeɪ/"
+        }
+      ]
     },
     {
       "rank": 449,
@@ -538,7 +1018,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/ˈmuːvɪŋ ˈtuː əˈnʌðɜr ˈsɪtiː ˈwɑz ðə ˈmoʊst ˈdɪfəkəlt dɪˈsɪʒən ˈʃiː ˈɛvɜr ˈmeɪd/",
       "meaning": "A choice that you make after thinking about something.",
-      "translation": "decisión"
+      "translation": "decisión",
+      "example_sentences": [
+        {
+          "sentence": "That was a hard decision for the whole team.",
+          "sentence_ipa": "/ˈðæt ˈwɑz ə ˈhɑɹd dɪˈsɪʒən ˈfɔɹ ðə ˈhoʊl ˈtiːm/"
+        },
+        {
+          "sentence": "We made the decision after talking for an hour.",
+          "sentence_ipa": "/ˈwiː ˈmeɪd ðə dɪˈsɪʒən ˈæftɜr ˈtɔkɪŋ ˈfɔɹ ˈæn ˈaʊɜr/"
+        }
+      ]
     },
     {
       "rank": 450,
@@ -549,7 +1039,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈðeɪ ˈsæt ɜrˈaʊnd ðə ˈteɪbəl ənd ˈtɔkt ˈfɔɹ ˈaʊɜrz ˈæftɜr ˈdɪnɜr/",
       "meaning": "a piece of furniture with a flat top",
-      "translation": "mesa"
+      "translation": "mesa",
+      "example_sentences": [
+        {
+          "sentence": "Set the table before the guests arrive tonight.",
+          "sentence_ipa": "/ˈsɛt ðə ˈteɪbəl bɪˈfɔɹ ðə ˈɡɛsts ɜrˈaɪv təˈnaɪt/"
+        },
+        {
+          "sentence": "The keys are on the table by the door.",
+          "sentence_ipa": "/ðə ˈkiːz ˈɑɹ ˈɑn ðə ˈteɪbəl ˈbaɪ ðə ˈdɔɹ/"
+        }
+      ]
     },
     {
       "rank": 451,
@@ -560,7 +1060,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/ˈaɪ ˈæm ˈnɑt ˈsɜrtən ˈwɪtʃ ˈbʌs ˈɡoʊz ˈtuː ðə ˈsɪtiː ˈsɛntɜr/",
       "meaning": "known for sure; definite",
-      "translation": "cierto"
+      "translation": "cierto",
+      "example_sentences": [
+        {
+          "sentence": "Are you certain this is the right address?",
+          "sentence_ipa": "/ˈɑɹ ˈjuː ˈsɜrtən ˈðɪs ˈɪz ðə ˈɹaɪt ˈæˌdɹɛs/"
+        },
+        {
+          "sentence": "She felt certain that everything would work out fine.",
+          "sentence_ipa": "/ˈʃiː ˈfɛlt ˈsɜrtən ˈðæt ˈɛvɹiːˌθɪŋ ˈwʊd ˈwɜrk ˈaʊt ˈfaɪn/"
+        }
+      ]
     },
     {
       "rank": 452,
@@ -571,7 +1081,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/ðə ˈtiːm ˈmuːvd ˈfɔɹwɜrd ˈwɪð ˈðɛɹ ˈplæn dɪˈspaɪt ðə ˈtʃæləndʒɪz/",
       "meaning": "towards a direction in front; onwards",
-      "translation": "hacia adelante"
+      "translation": "hacia adelante",
+      "example_sentences": [
+        {
+          "sentence": "Step forward when I call your name, please.",
+          "sentence_ipa": "/ˈstɛp ˈfɔɹwɜrd ˈwɛn ˈaɪ ˈkɔl ˈjɔɹ ˈneɪm ˈpliːz/"
+        },
+        {
+          "sentence": "Look forward and keep your eyes on the road.",
+          "sentence_ipa": "/ˈlʊk ˈfɔɹwɜrd ənd ˈkiːp ˈjɔɹ ˈaɪz ˈɑn ðə ˈɹoʊd/"
+        }
+      ]
     },
     {
       "rank": 453,
@@ -582,7 +1102,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ðə ˈmeɪn ˈɹiːzən ˈʃiː ˈlɛft ðə ˈdʒɑb ˈwɑz ðə ˈlɔŋ kəˈmjuːt ˈɛvɜriː ˈdeɪ/",
       "meaning": "the most important or largest",
-      "translation": "principal"
+      "translation": "principal",
+      "example_sentences": [
+        {
+          "sentence": "The main entrance is on the left side.",
+          "sentence_ipa": "/ðə ˈmeɪn ˈɛntɹəns ˈɪz ˈɑn ðə ˈlɛft ˈsaɪd/"
+        },
+        {
+          "sentence": "What is the main idea of this chapter?",
+          "sentence_ipa": "/ˈwʌt ˈɪz ðə ˈmeɪn aɪˈdiːə ˈʌv ˈðɪs ˈtʃæptɜr/"
+        }
+      ]
     },
     {
       "rank": 454,
@@ -593,7 +1123,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ðə ˈplænt ˈwɪl ˈdaɪ ˈɪf ˈjuː ˈduː ˈnɑt ˈwɔtɜr ˈɪt ˈɹɛɡjəlɜrliː/",
       "meaning": "to stop living",
-      "translation": "morir"
+      "translation": "morir",
+      "example_sentences": [
+        {
+          "sentence": "Flowers die quickly without water and sunlight.",
+          "sentence_ipa": "/ˈflaʊɜrz ˈdaɪ ˈkwɪkliː wɪˈθaʊt ˈwɔtɜr ənd ˈsʌˌnlaɪt/"
+        },
+        {
+          "sentence": "Old habits die hard, but change is possible.",
+          "sentence_ipa": "/ˈoʊld ˈhæbəts ˈdaɪ ˈhɑɹd ˈbʌt ˈtʃeɪndʒ ˈɪz ˈpɑsəbəl/"
+        }
+      ]
     },
     {
       "rank": 455,
@@ -604,7 +1144,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/ðə ˈhaɪkɜrz ˈsɔ ə ˈbɛɹ ˈnɪɹ ðə ˈɹɪvɜr ənd ˈwɔkt əˈweɪ ˈsloʊliː/",
       "meaning": "a large heavy mammal with thick fur",
-      "translation": "oso"
+      "translation": "oso",
+      "example_sentences": [
+        {
+          "sentence": "The bear looked for food before winter came.",
+          "sentence_ipa": "/ðə ˈbɛɹ ˈlʊkt ˈfɔɹ ˈfuːd bɪˈfɔɹ ˈwɪntɜr ˈkeɪm/"
+        },
+        {
+          "sentence": "A large bear stood on the other side.",
+          "sentence_ipa": "/ə ˈlɑɹdʒ ˈbɛɹ ˈstʊd ˈɑn ðə ˈʌðɜr ˈsaɪd/"
+        }
+      ]
     },
     {
       "rank": 456,
@@ -615,7 +1165,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈʃiː ˈkʌt ðə ˈbɹɛd ˈɪntuː ˈθɪk ˈslaɪsəz ˈfɔɹ ðə ˈsændwɪtʃɪz/",
       "meaning": "to divide with a sharp tool",
-      "translation": "cortar"
+      "translation": "cortar",
+      "example_sentences": [
+        {
+          "sentence": "Be careful when you cut vegetables with a knife.",
+          "sentence_ipa": "/ˈbiː ˈkɛɹfəl ˈwɛn ˈjuː ˈkʌt ˈvɛdʒtəbəlz ˈwɪð ə ˈnaɪf/"
+        },
+        {
+          "sentence": "He cut his finger while opening the box.",
+          "sentence_ipa": "/ˈhiː ˈkʌt ˈhɪz ˈfɪŋɡɜr ˈwaɪl ˈoʊpənɪŋ ðə ˈbɑks/"
+        }
+      ]
     },
     {
       "rank": 457,
@@ -626,7 +1186,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈkæn ˈjuː dɪˈskɹaɪb ˈwʌt ðə ˈpɜrsən ˈhuː ˈtʊk ˈjɔɹ ˈbæɡ ˈlʊkt ˈlaɪk/",
       "meaning": "to say what something is like",
-      "translation": "describir"
+      "translation": "describir",
+      "example_sentences": [
+        {
+          "sentence": "Can you describe the house where you grew up?",
+          "sentence_ipa": "/ˈkæn ˈjuː dɪˈskɹaɪb ðə ˈhaʊs ˈwɛɹ ˈjuː ˈɡɹuː ˈʌp/"
+        },
+        {
+          "sentence": "Words cannot describe how happy I felt today.",
+          "sentence_ipa": "/ˈwɜrdz ˈkænɑt dɪˈskɹaɪb ˈhaʊ ˈhæpiː ˈaɪ ˈfɛlt təˈdeɪ/"
+        }
+      ]
     },
     {
       "rank": 458,
@@ -637,7 +1207,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/ˈhiː ˈmeɪd hɪˈmsɛlf ə ˈsændwɪtʃ bɪˈkɔz ˈnoʊ ˈwʌn ˈɛls ˈwɑz ˈhoʊm/",
       "meaning": "used to refer to a man or boy as the object",
-      "translation": "él mismo"
+      "translation": "él mismo",
+      "example_sentences": [
+        {
+          "sentence": "He hurt himself when he fell off the bike.",
+          "sentence_ipa": "/ˈhiː ˈhɜrt hɪˈmsɛlf ˈwɛn ˈhiː ˈfɛl ˈɔf ðə ˈbaɪk/"
+        },
+        {
+          "sentence": "He built the shelf all by himself last weekend.",
+          "sentence_ipa": "/ˈhiː ˈbɪlt ðə ˈʃɛlf ˈɔl ˈbaɪ hɪˈmsɛlf ˈlæst ˈwiːˌkɛnd/"
+        }
+      ]
     },
     {
       "rank": 459,
@@ -648,7 +1228,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/ðə ˈdɑktɜr ˈɪz ˈnɑt əˈveɪləbəl ˈɑn ˈwiːˌkɛndz ˈsoʊ ˈkɔl bɪˈfɔɹ ˈfɹaɪdiː/",
       "meaning": "free to be used or obtained",
-      "translation": "disponible"
+      "translation": "disponible",
+      "example_sentences": [
+        {
+          "sentence": "Are there any tickets available for tonight's show?",
+          "sentence_ipa": "/ˈɑɹ ˈðɛɹ ˈɛniː ˈtɪkəts əˈveɪləbəl ˈfɔɹ təˈnaɪts ˈʃoʊ/"
+        },
+        {
+          "sentence": "Help is available if you ask the front desk.",
+          "sentence_ipa": "/ˈhɛlp ˈɪz əˈveɪləbəl ˈɪf ˈjuː ˈæsk ðə ˈfɹʌnt ˈdɛsk/"
+        }
+      ]
     },
     {
       "rank": 460,
@@ -659,7 +1249,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/ˈʃiː ˈlʌvz ˈɔl ˈfɹuːts əˈspɛʃliː ˈmæŋɡoʊz ənd ˈstɹɔˌbɛɹiːz/",
       "meaning": "more than usual",
-      "translation": "especialmente"
+      "translation": "especialmente",
+      "example_sentences": [
+        {
+          "sentence": "I like summer, especially when the days are long.",
+          "sentence_ipa": "/ˈaɪ ˈlaɪk ˈsʌmɜr əˈspɛʃliː ˈwɛn ðə ˈdeɪz ˈɑɹ ˈlɔŋ/"
+        },
+        {
+          "sentence": "Read carefully, especially the questions at the end.",
+          "sentence_ipa": "/ˈɹɛd ˈkɛɹfəliː əˈspɛʃliː ðə ˈkwɛstʃənz ˈæt ðə ˈɛnd/"
+        }
+      ]
     },
     {
       "rank": 461,
@@ -670,7 +1270,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈjuː ˈniːd ˈtuː ˈbiː ˈstɹɔŋ ˈtuː ˈkæɹiː ˈðoʊz ˈhɛviː ˈbɑksəz ˈʌp ðə ˈstɛɹz/",
       "meaning": "having great physical power or force",
-      "translation": "fuerte"
+      "translation": "fuerte",
+      "example_sentences": [
+        {
+          "sentence": "The rope was strong enough to hold the heavy box.",
+          "sentence_ipa": "/ðə ˈɹoʊp ˈwɑz ˈstɹɔŋ ɪˈnʌf ˈtuː ˈhoʊld ðə ˈhɛviː ˈbɑks/"
+        },
+        {
+          "sentence": "He felt strong after weeks of daily exercise.",
+          "sentence_ipa": "/ˈhiː ˈfɛlt ˈstɹɔŋ ˈæftɜr ˈwiːks ˈʌv ˈdeɪliː ˈɛksɜrˌsaɪz/"
+        }
+      ]
     },
     {
       "rank": 462,
@@ -681,7 +1291,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/ðə ˈpɹaɪs ˈʌv ˈfuːd ˈtɛndz ˈtuː ˈɹaɪz ˈdʊɹɪŋ ðə ˈwɪntɜr ˈmʌnθs/",
       "meaning": "An increase in amount, extent, or intensity; to move upward.",
-      "translation": "aumento"
+      "translation": "aumento",
+      "example_sentences": [
+        {
+          "sentence": "The sun will rise early tomorrow morning.",
+          "sentence_ipa": "/ðə ˈsʌn ˈwɪl ˈɹaɪz ˈɜrliː təˈmɑˌɹoʊ ˈmɔɹnɪŋ/"
+        },
+        {
+          "sentence": "Water levels rise after heavy rain in spring.",
+          "sentence_ipa": "/ˈwɔtɜr ˈlɛvəlz ˈɹaɪz ˈæftɜr ˈhɛviː ˈɹeɪn ɪn ˈspɹɪŋ/"
+        }
+      ]
     },
     {
       "rank": 463,
@@ -692,7 +1312,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ðə ˈlɪtəl ˈɡɜrl ˈæskt ˈhɜr ˈmʌðɜr ˈɪf ˈʃiː ˈkʊd ˈɡɛt ə ˈpʌpiː ˈfɔɹ ˈhɜr ˈbɜrˌθdeɪ/",
       "meaning": "a young female person",
-      "translation": "chica"
+      "translation": "chica",
+      "example_sentences": [
+        {
+          "sentence": "A young girl waited at the bus stop alone.",
+          "sentence_ipa": "/ə ˈjʌŋ ˈɡɜrl ˈweɪtɪd ˈæt ðə ˈbʌs ˈstɑp əˈloʊn/"
+        },
+        {
+          "sentence": "The girl smiled when she opened the gift.",
+          "sentence_ipa": "/ðə ˈɡɜrl ˈsmaɪld ˈwɛn ˈʃiː ˈoʊpənd ðə ˈɡɪft/"
+        }
+      ]
     },
     {
       "rank": 464,
@@ -703,7 +1333,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈmeɪbiː ˈwiː ˈʃʊd ˈliːv ˈɜrliːɜr ˈtuː əˈvɔɪd ðə ˈtɹæfɪk/",
       "meaning": "perhaps",
-      "translation": "tal vez"
+      "translation": "tal vez",
+      "example_sentences": [
+        {
+          "sentence": "Maybe it will rain this afternoon.",
+          "sentence_ipa": "/ˈmeɪbiː ˈɪt ˈwɪl ˈɹeɪn ˈðɪs ˌæftɜrˈnuːn/"
+        },
+        {
+          "sentence": "Maybe we can meet at the park later.",
+          "sentence_ipa": "/ˈmeɪbiː ˈwiː ˈkæn ˈmiːt ˈæt ðə ˈpɑɹk ˈleɪtɜr/"
+        }
+      ]
     },
     {
       "rank": 465,
@@ -714,7 +1354,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/ðə ˈhoʊl kəˈmjuːnətiː ˈkeɪm təˈɡɛðɜr ˈtuː ˈkliːn ˈʌp ðə ˈpɑɹk ˈæftɜr ðə ˈstɔɹm/",
       "meaning": "group of people living together",
-      "translation": "comunidad"
+      "translation": "comunidad",
+      "example_sentences": [
+        {
+          "sentence": "Our community holds a fair every summer.",
+          "sentence_ipa": "/ˈaʊɜr kəˈmjuːnətiː ˈhoʊldz ə ˈfɛɹ ˈɛvɜriː ˈsʌmɜr/"
+        },
+        {
+          "sentence": "She volunteers at a local community center.",
+          "sentence_ipa": "/ˈʃiː ˌvɑləˈntɪɹz ˈæt ə ˈloʊkəl kəˈmjuːnətiː ˈsɛntɜr/"
+        }
+      ]
     },
     {
       "rank": 466,
@@ -725,7 +1375,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈɪz ˈðɛɹ ˈɛniːˌθɪŋ ˈɛls ˈaɪ ˈkæn ˈhɛlp ˈjuː ˈwɪð təˈdeɪ/",
       "meaning": "other than this",
-      "translation": "más/otro"
+      "translation": "más/otro",
+      "example_sentences": [
+        {
+          "sentence": "What else do you need from the store?",
+          "sentence_ipa": "/ˈwʌt ˈɛls ˈduː ˈjuː ˈniːd ˈfɹʌm ðə ˈstɔɹ/"
+        },
+        {
+          "sentence": "Everyone left early; no one else stayed behind.",
+          "sentence_ipa": "/ˈɛvɹiːˌwʌn ˈlɛft ˈɜrliː ˈnoʊ ˈwʌn ˈɛls ˈsteɪd bɪˈhaɪnd/"
+        }
+      ]
     },
     {
       "rank": 467,
@@ -736,7 +1396,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/ˈɪz ˈðɛɹ ə pɜrˈtɪkjəlɜr ˈɹiːzən ˈjuː ˈtʃoʊz ˈðɪs ˈskuːl ˈoʊvɜr ðə ˈʌðɜrz/",
       "meaning": "Specific; individual; distinguished from others.",
-      "translation": "particular"
+      "translation": "particular",
+      "example_sentences": [
+        {
+          "sentence": "She has a particular way of making tea.",
+          "sentence_ipa": "/ˈʃiː ˈhæz ə pɜrˈtɪkjəlɜr ˈweɪ ˈʌv ˈmeɪkɪŋ ˈtiː/"
+        },
+        {
+          "sentence": "I am looking for a particular book on cooking.",
+          "sentence_ipa": "/ˈaɪ ˈæm ˈlʊkɪŋ ˈfɔɹ ə pɜrˈtɪkjəlɜr ˈbʊk ˈɑn ˈkʊkɪŋ/"
+        }
+      ]
     },
     {
       "rank": 468,
@@ -747,7 +1417,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/ˈpɛɹənts ˈpleɪ ˈæn ˌɪˈmpɔɹtənt ˈɹoʊl ɪn ˈðɛɹ ˈtʃɪldɹənz ˌɛdʒəˈkeɪʃən/",
       "meaning": "The function assumed by or assigned to someone or something.",
-      "translation": "papel"
+      "translation": "papel",
+      "example_sentences": [
+        {
+          "sentence": "What role does sleep play in good health?",
+          "sentence_ipa": "/ˈwʌt ˈɹoʊl ˈdʌz ˈsliːp ˈpleɪ ɪn ˈɡʊd ˈhɛlθ/"
+        },
+        {
+          "sentence": "He accepted a new role on the team.",
+          "sentence_ipa": "/ˈhiː æˈksɛptɪd ə ˈnuː ˈɹoʊl ˈɑn ðə ˈtiːm/"
+        }
+      ]
     },
     {
       "rank": 469,
@@ -758,7 +1438,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈʃiː ˌdɪˈsaɪdɪd ˈtuː ˈdʒɔɪn ðə ˈskuːl ˈkwaɪɜr ˈæftɜr ˈhiːɹɪŋ ˈðɛm pɜrˈfɔɹm/",
       "meaning": "to become a member of or connect with",
-      "translation": "unirse"
+      "translation": "unirse",
+      "example_sentences": [
+        {
+          "sentence": "Would you like to join us for lunch?",
+          "sentence_ipa": "/ˈwʊd ˈjuː ˈlaɪk ˈtuː ˈdʒɔɪn ˈʌs ˈfɔɹ ˈlʌntʃ/"
+        },
+        {
+          "sentence": "Many people want to join the club this year.",
+          "sentence_ipa": "/ˈmɛniː ˈpiːpəl ˈwɑnt ˈtuː ˈdʒɔɪn ðə ˈklʌb ˈðɪs ˈjɪɹ/"
+        }
+      ]
     },
     {
       "rank": 470,
@@ -769,7 +1459,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈlɜrnɪŋ ə ˈnuː ˈlæŋɡwədʒ ˈɪz ˈdɪfəkəlt ˈbʌt ˈvɛɹiː ɹɪˈwɔɹdɪŋ ɪn ðə ˈɛnd/",
       "meaning": "hard to do or understand",
-      "translation": "difícil"
+      "translation": "difícil",
+      "example_sentences": [
+        {
+          "sentence": "This math problem is too difficult for me.",
+          "sentence_ipa": "/ˈðɪs ˈmæθ ˈpɹɑbləm ˈɪz ˈtuː ˈdɪfəkəlt ˈfɔɹ ˈmiː/"
+        },
+        {
+          "sentence": "It was difficult to hear over the loud noise.",
+          "sentence_ipa": "/ˈɪt ˈwɑz ˈdɪfəkəlt ˈtuː ˈhiːɹ ˈoʊvɜr ðə ˈlaʊd ˈnɔɪz/"
+        }
+      ]
     },
     {
       "rank": 471,
@@ -780,7 +1480,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈkʊd ˈjuː ˈpliːz ˈkloʊs ðə ˈwɪndoʊ ˈɪt ˈɪz ˈɡɛtɪŋ ˈkoʊld ɪn ˈhiːɹ/",
       "meaning": "polite request",
-      "translation": "por favor"
+      "translation": "por favor",
+      "example_sentences": [
+        {
+          "sentence": "Please pass the salt when you get a chance.",
+          "sentence_ipa": "/ˈpliːz ˈpæs ðə ˈsɔlt ˈwɛn ˈjuː ˈɡɛt ə ˈtʃæns/"
+        },
+        {
+          "sentence": "Please wait here until I come back.",
+          "sentence_ipa": "/ˈpliːz ˈweɪt ˈhiːɹ əˈntɪl ˈaɪ ˈkʌm ˈbæk/"
+        }
+      ]
     },
     {
       "rank": 472,
@@ -791,7 +1501,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ðə ɹiːˈpɔɹt ˌɪˈnkluːdəd ˈɛvɜriː dɪˈteɪl əˈbaʊt ˈwʌt ˈhæpənd ˈðæt ˈnaɪt/",
       "meaning": "a small piece of information",
-      "translation": "detalle"
+      "translation": "detalle",
+      "example_sentences": [
+        {
+          "sentence": "Pay attention to every detail in the instructions.",
+          "sentence_ipa": "/ˈpeɪ əˈtɛnʃən ˈtuː ˈɛvɜriː dɪˈteɪl ɪn ðə ˌɪˈnstɹʌkʃənz/"
+        },
+        {
+          "sentence": "She wrote down each detail from the meeting.",
+          "sentence_ipa": "/ˈʃiː ˈɹoʊt ˈdaʊn ˈiːtʃ dɪˈteɪl ˈfɹʌm ðə ˈmiːtɪŋ/"
+        }
+      ]
     },
     {
       "rank": 473,
@@ -802,7 +1522,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈkæn ˈjuː ɪˈkspleɪn ðə ˈdɪfɜrəns bɪˈtwiːn ˈðiːz ˈtuː ˈwɜrdz/",
       "meaning": "how things are not the same",
-      "translation": "diferencia"
+      "translation": "diferencia",
+      "example_sentences": [
+        {
+          "sentence": "There is a big difference between the two plans.",
+          "sentence_ipa": "/ˈðɛɹ ˈɪz ə ˈbɪɡ ˈdɪfɜrəns bɪˈtwiːn ðə ˈtuː ˈplænz/"
+        },
+        {
+          "sentence": "I cannot see any difference in these two photos.",
+          "sentence_ipa": "/ˈaɪ ˈkænɑt ˈsiː ˈɛniː ˈdɪfɜrəns ɪn ˈðiːz ˈtuː ˈfoʊˌtoʊz/"
+        }
+      ]
     },
     {
       "rank": 474,
@@ -813,7 +1543,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ðə ˈɡʌvɜrmənt ˈniːdz ˈtuː ˈteɪk ˌɪˈmiːˌdiːət ˈækʃən ˈtuː pɹəˈtɛkt ðə ɪˈnvaɪɹənmənt/",
       "meaning": "something that you do",
-      "translation": "acción"
+      "translation": "acción",
+      "example_sentences": [
+        {
+          "sentence": "We must take action before the problem gets worse.",
+          "sentence_ipa": "/ˈwiː ˈmʌst ˈteɪk ˈækʃən bɪˈfɔɹ ðə ˈpɹɑbləm ˈɡɛts ˈwɜrs/"
+        },
+        {
+          "sentence": "His quick action saved the child from falling.",
+          "sentence_ipa": "/ˈhɪz ˈkwɪk ˈækʃən ˈseɪvd ðə ˈtʃaɪld ˈfɹʌm ˈfɑlɪŋ/"
+        }
+      ]
     },
     {
       "rank": 475,
@@ -824,7 +1564,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈɹɛɡjəlɜr ˈɛksɜrˌsaɪz ənd ə ˈɡʊd ˈdaɪət ˈɑɹ ˌɪˈmpɔɹtənt ˈfɔɹ ˈjɔɹ ˈhɛlθ/",
       "meaning": "condition of body",
-      "translation": "salud"
+      "translation": "salud",
+      "example_sentences": [
+        {
+          "sentence": "Good sleep is important for your health.",
+          "sentence_ipa": "/ˈɡʊd ˈsliːp ˈɪz ˌɪˈmpɔɹtənt ˈfɔɹ ˈjɔɹ ˈhɛlθ/"
+        },
+        {
+          "sentence": "She cares a lot about her health every day.",
+          "sentence_ipa": "/ˈʃiː ˈkɛɹz ə ˈlɑt əˈbaʊt ˈhɜr ˈhɛlθ ˈɛvɜriː ˈdeɪ/"
+        }
+      ]
     },
     {
       "rank": 476,
@@ -835,7 +1585,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈʃiː ˈtɹaɪz ˈtuː ˈiːt ˈmɔɹ ˈvɛdʒtəbəlz ənd ˈlɛs ˈʃʊɡɜr ˈɛvɜriː ˈdeɪ/",
       "meaning": "put food in mouth",
-      "translation": "comer"
+      "translation": "comer",
+      "example_sentences": [
+        {
+          "sentence": "We usually eat dinner at six o'clock.",
+          "sentence_ipa": "/ˈwiː ˈjuːʒəwəliː ˈiːt ˈdɪnɜr ˈæt ˈsɪks əˈklɑk/"
+        },
+        {
+          "sentence": "Do not eat too much candy before bed.",
+          "sentence_ipa": "/ˈduː ˈnɑt ˈiːt ˈtuː ˈmʌtʃ ˈkændiː bɪˈfɔɹ ˈbɛd/"
+        }
+      ]
     },
     {
       "rank": 477,
@@ -846,7 +1606,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/ˈhiː ˈstɛpt əˈsaɪd ˈtuː ˈlɛt ðə ˈɛldɜrliː ˈwʊmən ˈpæs ˈθɹuː ðə ˈdɔɹ/",
       "meaning": "a stage in a process",
-      "translation": "paso"
+      "translation": "paso",
+      "example_sentences": [
+        {
+          "sentence": "Please step back from the edge of the platform.",
+          "sentence_ipa": "/ˈpliːz ˈstɛp ˈbæk ˈfɹʌm ðə ˈɛdʒ ˈʌv ðə ˈplæˌtfɔɹm/"
+        },
+        {
+          "sentence": "She had to step over a puddle on the path.",
+          "sentence_ipa": "/ˈʃiː ˈhæd ˈtuː ˈstɛp ˈoʊvɜr ə ˈpʌdəl ˈɑn ðə ˈpæθ/"
+        }
+      ]
     },
     {
       "rank": 478,
@@ -857,7 +1627,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈɪz ˈɪt ˈtɹuː ˈðæt ðə ˈskuːl ˈwɪl ˈbiː ˈkloʊzd ˈnɛkst ˈmʌndiː/",
       "meaning": "in accordance with fact or reality; correct",
-      "translation": "verdadero"
+      "translation": "verdadero",
+      "example_sentences": [
+        {
+          "sentence": "It is not true that all dogs can swim.",
+          "sentence_ipa": "/ˈɪt ˈɪz ˈnɑt ˈtɹuː ˈðæt ˈɔl ˈdɑɡz ˈkæn ˈswɪm/"
+        },
+        {
+          "sentence": "That story sounds true, but I am not sure.",
+          "sentence_ipa": "/ˈðæt ˈstɔɹiː ˈsaʊndz ˈtɹuː ˈbʌt ˈaɪ ˈæm ˈnɑt ˈʃʊɹ/"
+        }
+      ]
     },
     {
       "rank": 479,
@@ -868,7 +1648,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈʃiː fɜrˈɡɑt ˈhɜr ˈfoʊn ˈæt ˈhoʊm ənd ˈkʊd ˈnɑt ˈkɑˌntækt ˈɛniːˌwʌn ˈɔl ˈdeɪ/",
       "meaning": "a device for calling or texting",
-      "translation": "teléfono"
+      "translation": "teléfono",
+      "example_sentences": [
+        {
+          "sentence": "My phone battery died before I got home.",
+          "sentence_ipa": "/ˈmaɪ ˈfoʊn ˈbætɜriː ˈdaɪd bɪˈfɔɹ ˈaɪ ˈɡɑt ˈhoʊm/"
+        },
+        {
+          "sentence": "Can I use your phone to make a quick call?",
+          "sentence_ipa": "/ˈkæn ˈaɪ ˈjuːs ˈjɔɹ ˈfoʊn ˈtuː ˈmeɪk ə ˈkwɪk ˈkɔl/"
+        }
+      ]
     },
     {
       "rank": 480,
@@ -879,7 +1669,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/ðə ˈtʃɪldɹən ˈkʊkt ˈdɪnɜr ðɛˈmsɛlvz ˈwaɪl ˈðɛɹ ˈpɛɹənts ˈwɜr əˈweɪ/",
       "meaning": "used to refer back to the subject (plural)",
-      "translation": "ellos mismos"
+      "translation": "ellos mismos",
+      "example_sentences": [
+        {
+          "sentence": "They built the small shed all by themselves.",
+          "sentence_ipa": "/ˈðeɪ ˈbɪlt ðə ˈsmɔl ˈʃɛd ˈɔl ˈbaɪ ðɛˈmsɛlvz/"
+        },
+        {
+          "sentence": "The students organized the event themselves without any help.",
+          "sentence_ipa": "/ðə ˈstuːdənts ˈɔɹɡəˌnaɪzd ðə ɪˈvɛnt ðɛˈmsɛlvz wɪˈθaʊt ˈɛniː ˈhɛlp/"
+        }
+      ]
     },
     {
       "rank": 481,
@@ -890,7 +1690,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ðə ˈtiːtʃɜr ˈæskt ðə ˈstuːdənts ˈtuː ˈdɹɔ ə ˈmæp ˈʌv ˈðɛɹ ˈneɪbɜrˌhʊd/",
       "meaning": "make pictures with pen",
-      "translation": "dibujar"
+      "translation": "dibujar",
+      "example_sentences": [
+        {
+          "sentence": "Can you draw a simple picture of a house?",
+          "sentence_ipa": "/ˈkæn ˈjuː ˈdɹɔ ə ˈsɪmpəl ˈpɪktʃɜr ˈʌv ə ˈhaʊs/"
+        },
+        {
+          "sentence": "She likes to draw with colored pencils after school.",
+          "sentence_ipa": "/ˈʃiː ˈlaɪks ˈtuː ˈdɹɔ ˈwɪð ˈkʌlɜrd ˈpɛnsəlz ˈæftɜr ˈskuːl/"
+        }
+      ]
     },
     {
       "rank": 482,
@@ -901,7 +1711,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈʃiː ˈpeɪntɪd ðə ˈwɔlz ˈwaɪt ˈtuː ˈmeɪk ðə ˈɹuːm ˈlʊk ˈbɪɡɜr ənd ˈbɹaɪtɜr/",
       "meaning": "lightest color",
-      "translation": "blanco"
+      "translation": "blanco",
+      "example_sentences": [
+        {
+          "sentence": "She wore a white shirt to the interview.",
+          "sentence_ipa": "/ˈʃiː ˈwɔɹ ə ˈwaɪt ˈʃɜrt ˈtuː ðə ˈɪntɜrˌvjuː/"
+        },
+        {
+          "sentence": "The white clouds moved slowly across the blue sky.",
+          "sentence_ipa": "/ðə ˈwaɪt ˈklaʊdz ˈmuːvd ˈsloʊliː əˈkɹɔs ðə ˈbluː ˈskaɪ/"
+        }
+      ]
     },
     {
       "rank": 483,
@@ -912,7 +1732,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈwʌt ˈɪz ðə ˈdeɪt ˈʌv ˈjɔɹ ˈflaɪt ˈaɪ ˈwɑnt ˈtuː ˈmeɪk ˈʃʊɹ ˈaɪ ˈæm ˈæt ðə ˈɛˌɹpɔɹt ˈɑn ˈtaɪm/",
       "meaning": "day, month, and year",
-      "translation": "fecha/cita"
+      "translation": "fecha/cita",
+      "example_sentences": [
+        {
+          "sentence": "Please write the date at the top of the page.",
+          "sentence_ipa": "/ˈpliːz ˈɹaɪt ðə ˈdeɪt ˈæt ðə ˈtɑp ˈʌv ðə ˈpeɪdʒ/"
+        },
+        {
+          "sentence": "What date did you move into this apartment?",
+          "sentence_ipa": "/ˈwʌt ˈdeɪt ˈdɪd ˈjuː ˈmuːv ˈɪntuː ˈðɪs əˈpɑɹtmənt/"
+        }
+      ]
     },
     {
       "rank": 484,
@@ -923,7 +1753,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈdeɪliː ˈpɹæktəs ˈɪz ðə ˈbɛst ˈweɪ ˈtuː ˌɪˈmpɹuːv ˈjɔɹ ˈɪŋɡlɪʃ ˈskɪlz/",
       "meaning": "to do something repeatedly to get better",
-      "translation": "practicar"
+      "translation": "practicar",
+      "example_sentences": [
+        {
+          "sentence": "You need more practice before the big test.",
+          "sentence_ipa": "/ˈjuː ˈniːd ˈmɔɹ ˈpɹæktəs bɪˈfɔɹ ðə ˈbɪɡ ˈtɛst/"
+        },
+        {
+          "sentence": "Piano practice every day helped her play better.",
+          "sentence_ipa": "/piːˈænoʊ ˈpɹæktəs ˈɛvɜriː ˈdeɪ ˈhɛlpt ˈhɜr ˈpleɪ ˈbɛtɜr/"
+        }
+      ]
     },
     {
       "rank": 485,
@@ -934,7 +1774,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ðə ˈtiːtʃɜr ˈmɑdəld ðə kɜrˈɛkt pɹoʊˌnʌnsiːˈeɪʃən bɪˈfɔɹ ˈæskɪŋ ˈstuːdənts ˈtuː ɹɪˈpiːt/",
       "meaning": "a small copy of something; a person who displays clothes; an example",
-      "translation": "modelo"
+      "translation": "modelo",
+      "example_sentences": [
+        {
+          "sentence": "Parents should model good manners for their children.",
+          "sentence_ipa": "/ˈpɛɹənts ˈʃʊd ˈmɑdəl ˈɡʊd ˈmænɜrz ˈfɔɹ ˈðɛɹ ˈtʃɪldɹən/"
+        },
+        {
+          "sentence": "The coach will model the move before we try it.",
+          "sentence_ipa": "/ðə ˈkoʊtʃ ˈwɪl ˈmɑdəl ðə ˈmuːv bɪˈfɔɹ ˈwiː ˈtɹaɪ ˈɪt/"
+        }
+      ]
     },
     {
       "rank": 486,
@@ -945,7 +1795,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/ðə ˌɔɹɡənəˈzeɪʃən ˈɹeɪzd ɪˈnʌf ˈmʌniː ˈtuː ˈbɪld ə ˈnuː ˈskuːl ɪn ðə ˈvɪlədʒ/",
       "meaning": "To lift or move to a higher position; to bring up for discussion.",
-      "translation": "plantear"
+      "translation": "plantear",
+      "example_sentences": [
+        {
+          "sentence": "They want to raise prices next month.",
+          "sentence_ipa": "/ˈðeɪ ˈwɑnt ˈtuː ˈɹeɪz ˈpɹaɪsəz ˈnɛkst ˈmʌnθ/"
+        },
+        {
+          "sentence": "Farmers raise chickens and sell eggs at the market.",
+          "sentence_ipa": "/ˈfɑɹmɜrz ˈɹeɪz ˈtʃɪkənz ənd ˈsɛl ˈɛɡz ˈæt ðə ˈmɑɹkət/"
+        }
+      ]
     },
     {
       "rank": 487,
@@ -956,7 +1816,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ðə ˈstɔɹ ˈɔfɜrz ə dɪˈskaʊnt ˈtuː ˈɛniː ˈkʌstəmɜr ˈhuː ˈspɛndz ˈmɔɹ ˈðæn ˈfɪftiː ˈdɑlɜrz/",
       "meaning": "person who buys",
-      "translation": "cliente"
+      "translation": "cliente",
+      "example_sentences": [
+        {
+          "sentence": "Every customer received a free sample at the door.",
+          "sentence_ipa": "/ˈɛvɜriː ˈkʌstəmɜr ɹəˈsiːvd ə ˈfɹiː ˈsæmpəl ˈæt ðə ˈdɔɹ/"
+        },
+        {
+          "sentence": "The customer asked for help finding the right size.",
+          "sentence_ipa": "/ðə ˈkʌstəmɜr ˈæskt ˈfɔɹ ˈhɛlp ˈfaɪndɪŋ ðə ˈɹaɪt ˈsaɪz/"
+        }
+      ]
     },
     {
       "rank": 488,
@@ -967,7 +1837,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈʃiː ˈsæt ˈæt ðə ˈfɹʌnt ˈʌv ðə ˈklæs ˈsoʊ ˈʃiː ˈkʊd ˈsiː ðə ˈbɔɹd ˈklɪɹliː/",
       "meaning": "forward part",
-      "translation": "frente"
+      "translation": "frente",
+      "example_sentences": [
+        {
+          "sentence": "Please wait in front of the main entrance.",
+          "sentence_ipa": "/ˈpliːz ˈweɪt ɪn ˈfɹʌnt ˈʌv ðə ˈmeɪn ˈɛntɹəns/"
+        },
+        {
+          "sentence": "There is a garden in front of the house.",
+          "sentence_ipa": "/ˈðɛɹ ˈɪz ə ˈɡɑɹdən ɪn ˈfɹʌnt ˈʌv ðə ˈhaʊs/"
+        }
+      ]
     },
     {
       "rank": 489,
@@ -978,7 +1858,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈkæn ˈjuː ɪˈkspleɪn ˈwaɪ ˈjuː ˈwɜr ˈleɪt ˈtuː ðə ˈmiːtɪŋ ˈðɪs ˈmɔɹnɪŋ/",
       "meaning": "to make something clear by describing it",
-      "translation": "explicar"
+      "translation": "explicar",
+      "example_sentences": [
+        {
+          "sentence": "Can you explain this rule in simple words?",
+          "sentence_ipa": "/ˈkæn ˈjuː ɪˈkspleɪn ˈðɪs ˈɹuːl ɪn ˈsɪmpəl ˈwɜrdz/"
+        },
+        {
+          "sentence": "The guide will explain how the machine works.",
+          "sentence_ipa": "/ðə ˈɡaɪd ˈwɪl ɪˈkspleɪn ˈhaʊ ðə məˈʃiːn ˈwɜrks/"
+        }
+      ]
     },
     {
       "rank": 490,
@@ -989,7 +1879,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈpliːz ˈkloʊs ðə ˈdɔɹ ˈwɛn ˈjuː ˈliːv ˈsoʊ ðə ˈnɔɪz ˈdʌz ˈnɑt dɪˈstɜrb ˈʌðɜrz/",
       "meaning": "a movable part of a room or building you can open and close",
-      "translation": "puerta"
+      "translation": "puerta",
+      "example_sentences": [
+        {
+          "sentence": "Someone knocked on the door late at night.",
+          "sentence_ipa": "/ˈsʌˌmwʌn ˈnɑkt ˈɑn ðə ˈdɔɹ ˈleɪt ˈæt ˈnaɪt/"
+        },
+        {
+          "sentence": "Leave the door open so the cat can come in.",
+          "sentence_ipa": "/ˈliːv ðə ˈdɔɹ ˈoʊpən ˈsoʊ ðə ˈkæt ˈkæn ˈkʌm ɪn/"
+        }
+      ]
     },
     {
       "rank": 491,
@@ -1000,7 +1900,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ðə ˈtʃɪldɹən ˈwɛnt ˈaʊˈtsaɪd ˈtuː ˈpleɪ ˈæftɜr ˈɪt ˈstɑpt ˈɹeɪnɪŋ/",
       "meaning": "not inside",
-      "translation": "fuera"
+      "translation": "fuera",
+      "example_sentences": [
+        {
+          "sentence": "It is too cold to eat outside tonight.",
+          "sentence_ipa": "/ˈɪt ˈɪz ˈtuː ˈkoʊld ˈtuː ˈiːt ˈaʊˈtsaɪd təˈnaɪt/"
+        },
+        {
+          "sentence": "Wait outside until the room is ready for you.",
+          "sentence_ipa": "/ˈweɪt ˈaʊˈtsaɪd əˈntɪl ðə ˈɹuːm ˈɪz ˈɹɛdiː ˈfɔɹ ˈjuː/"
+        }
+      ]
     },
     {
       "rank": 492,
@@ -1011,7 +1921,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈʃiː ˈhɪd bɪˈhaɪnd ðə ˈdɔɹ ənd sɜrˈpɹaɪzd ˈhɪm ˈwɛn ˈhiː ˈwɔkt ɪn/",
       "meaning": "at the back of",
-      "translation": "detrás"
+      "translation": "detrás",
+      "example_sentences": [
+        {
+          "sentence": "The keys are behind the books on the shelf.",
+          "sentence_ipa": "/ðə ˈkiːz ˈɑɹ bɪˈhaɪnd ðə ˈbʊks ˈɑn ðə ˈʃɛlf/"
+        },
+        {
+          "sentence": "The bus stopped right behind our car at the light.",
+          "sentence_ipa": "/ðə ˈbʌs ˈstɑpt ˈɹaɪt bɪˈhaɪnd ˈaʊɜr ˈkɑɹ ˈæt ðə ˈlaɪt/"
+        }
+      ]
     },
     {
       "rank": 493,
@@ -1022,7 +1942,17 @@
       "cefr_level": "B1",
       "sentence_ipa": "/ðə ˈkʌntɹiː ˈɪz ˈfeɪsɪŋ ˈsɪɹiːəs ˌɛkəˈnɑmɪk ˈpɹɑbləmz ˈæftɜr ˈjɪɹz ˈʌv ˈpuːɹ ˈmænədʒmənt/",
       "meaning": "relating to the economy or finances",
-      "translation": "económico"
+      "translation": "económico",
+      "example_sentences": [
+        {
+          "sentence": "The town is facing serious economic problems this year.",
+          "sentence_ipa": "/ðə ˈtaʊn ˈɪz ˈfeɪsɪŋ ˈsɪɹiːəs ˌɛkəˈnɑmɪk ˈpɹɑbləmz ˈðɪs ˈjɪɹ/"
+        },
+        {
+          "sentence": "Economic growth slowed after prices rose across the region.",
+          "sentence_ipa": "/ˌɛkəˈnɑmɪk ˈɡɹoʊθ ˈsloʊd ˈæftɜr ˈpɹaɪsəz ˈɹoʊz əˈkɹɔs ðə ˈɹiːdʒən/"
+        }
+      ]
     },
     {
       "rank": 494,
@@ -1033,7 +1963,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/ˈwɜrkɜrz bɪˈɡæn ˈbɪldɪŋ ˈɑn ðə kəˈnstɹʌkʃən ˈsaɪt ˈɜrliː ɪn ðə ˈmɔɹnɪŋ/",
       "meaning": "a place where something is or happens",
-      "translation": "sitio"
+      "translation": "sitio",
+      "example_sentences": [
+        {
+          "sentence": "This site has rules about where you can park.",
+          "sentence_ipa": "/ˈðɪs ˈsaɪt ˈhæz ˈɹuːlz əˈbaʊt ˈwɛɹ ˈjuː ˈkæn ˈpɑɹk/"
+        },
+        {
+          "sentence": "They chose a new site for the community garden.",
+          "sentence_ipa": "/ˈðeɪ ˈtʃoʊz ə ˈnuː ˈsaɪt ˈfɔɹ ðə kəˈmjuːnətiː ˈɡɑɹdən/"
+        }
+      ]
     },
     {
       "rank": 495,
@@ -1044,7 +1984,17 @@
       "cefr_level": "B2",
       "sentence_ipa": "/ðə ˈtiːtʃɜr ˈjuːzd ə ˈnuː əˈpɹoʊtʃ ˈtuː ˈhɛlp ˈstuːdənts ˌʌndɜrˈstænd ðə ˈlɛsən ˈbɛtɜr/",
       "meaning": "a way of dealing with something; to come near",
-      "translation": "enfoque"
+      "translation": "enfoque",
+      "example_sentences": [
+        {
+          "sentence": "We need a new approach to solve this problem.",
+          "sentence_ipa": "/ˈwiː ˈniːd ə ˈnuː əˈpɹoʊtʃ ˈtuː ˈsɑlv ˈðɪs ˈpɹɑbləm/"
+        },
+        {
+          "sentence": "Her approach to learning is slow but very careful.",
+          "sentence_ipa": "/ˈhɜr əˈpɹoʊtʃ ˈtuː ˈlɜrnɪŋ ˈɪz ˈsloʊ ˈbʌt ˈvɛɹiː ˈkɛɹfəl/"
+        }
+      ]
     },
     {
       "rank": 496,
@@ -1055,7 +2005,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ðə ˈtiːtʃɜr ɪˈkspleɪnd ðə ˈɡɹæmɜr ˈɹuːl ˈklɪɹliː ənd ˈɡeɪv ˈsɛvɹəl ɪˈɡzæmpəlz/",
       "meaning": "someone who teaches students",
-      "translation": "profesor/a"
+      "translation": "profesor/a",
+      "example_sentences": [
+        {
+          "sentence": "Our teacher gives us homework every Monday night.",
+          "sentence_ipa": "/ˈaʊɜr ˈtiːtʃɜr ˈɡɪvz ˈʌs ˈhoʊˌmwɜrk ˈɛvɜriː ˈmʌndiː ˈnaɪt/"
+        },
+        {
+          "sentence": "The teacher smiled when the whole class passed the test.",
+          "sentence_ipa": "/ðə ˈtiːtʃɜr ˈsmaɪld ˈwɛn ðə ˈhoʊl ˈklæs ˈpæst ðə ˈtɛst/"
+        }
+      ]
     },
     {
       "rank": 497,
@@ -1066,7 +2026,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ðə ˈpleɪn ˈlændəd ˈseɪfliː dɪˈspaɪt ðə ˈstɹɔŋ ˈwaɪnd ənd ˈhɛviː ˈɹeɪn/",
       "meaning": "the solid part of the Earth's surface; ground",
-      "translation": "tierra"
+      "translation": "tierra",
+      "example_sentences": [
+        {
+          "sentence": "The bird will land on the branch in a moment.",
+          "sentence_ipa": "/ðə ˈbɜrd ˈwɪl ˈlænd ˈɑn ðə ˈbɹæntʃ ɪn ə ˈmoʊmənt/"
+        },
+        {
+          "sentence": "We watched the plane land on the long runway.",
+          "sentence_ipa": "/ˈwiː ˈwɑtʃt ðə ˈpleɪn ˈlænd ˈɑn ðə ˈlɔŋ ˈɹʌˌnweɪ/"
+        }
+      ]
     },
     {
       "rank": 498,
@@ -1077,7 +2047,17 @@
       "cefr_level": "B1",
       "sentence_ipa": "/ˈðɛɹ ˈɪz ˈnoʊ ˈtʃɑɹdʒ ˈfɔɹ ˈtʃɪldɹən ˈʌndɜr ˈfaɪv ˈæt ðə mjuːˈziːəm/",
       "meaning": "to ask for money as payment",
-      "translation": "cobrar/cargar"
+      "translation": "cobrar/cargar",
+      "example_sentences": [
+        {
+          "sentence": "There is a small charge for late returns at the library.",
+          "sentence_ipa": "/ˈðɛɹ ˈɪz ə ˈsmɔl ˈtʃɑɹdʒ ˈfɔɹ ˈleɪt ɹɪˈtɜrnz ˈæt ðə ˈlaɪbɹɛˌɹiː/"
+        },
+        {
+          "sentence": "The hotel added a charge for extra towels in the room.",
+          "sentence_ipa": "/ðə hoʊˈtɛl ˈædəd ə ˈtʃɑɹdʒ ˈfɔɹ ˈɛkstɹə ˈtaʊəlz ɪn ðə ˈɹuːm/"
+        }
+      ]
     },
     {
       "rank": 499,
@@ -1088,7 +2068,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/ˈæftɜr ˈweɪtɪŋ ˈfɔɹ ˈoʊvɜr ˈæn ˈaʊɜr ðə ˈbʌs ˈfaɪnəliː ɜrˈaɪvd ˈæt ðə ˈstɑp/",
       "meaning": "after a long time or delay; at the end",
-      "translation": "finalmente"
+      "translation": "finalmente",
+      "example_sentences": [
+        {
+          "sentence": "We finally found the keys under the couch cushions.",
+          "sentence_ipa": "/ˈwiː ˈfaɪnəliː ˈfaʊnd ðə ˈkiːz ˈʌndɜr ðə ˈkaʊtʃ ˈkʊʃənz/"
+        },
+        {
+          "sentence": "After many tries, she finally learned to ride a bike.",
+          "sentence_ipa": "/ˈæftɜr ˈmɛniː ˈtɹaɪz ˈʃiː ˈfaɪnəliː ˈlɜrnd ˈtuː ˈɹaɪd ə ˈbaɪk/"
+        }
+      ]
     },
     {
       "rank": 500,
@@ -1099,7 +2089,17 @@
       "cefr_level": "A2",
       "sentence_ipa": "/ˈboʊθ ˈmænədʒɜrz ˈsaɪnd ðə ˈkɑˌntɹækt ˈæt ðə ˈɛnd ˈʌv ðə ˈmiːtɪŋ/",
       "meaning": "a board with information or a symbol with meaning",
-      "translation": "señal"
+      "translation": "señal",
+      "example_sentences": [
+        {
+          "sentence": "Please sign your name at the bottom of the form.",
+          "sentence_ipa": "/ˈpliːz ˈsaɪn ˈjɔɹ ˈneɪm ˈæt ðə ˈbɑtəm ˈʌv ðə ˈfɔɹm/"
+        },
+        {
+          "sentence": "They will sign the lease before moving into the apartment.",
+          "sentence_ipa": "/ˈðeɪ ˈwɪl ˈsaɪn ðə ˈliːs bɪˈfɔɹ ˈmuːvɪŋ ˈɪntuː ðə əˈpɑɹtmənt/"
+        }
+      ]
     }
   ]
 }
