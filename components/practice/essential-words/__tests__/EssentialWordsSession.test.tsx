@@ -117,6 +117,15 @@ beforeEach(() => {
 })
 
 describe('EssentialWordsSession', () => {
+  it('renders the exposure phase before any exercise for a batch of new words (Fase A block structure)', async () => {
+    dbMocks.getEssentialWordsSrsEntries.mockResolvedValue([])
+    dbMocks.getEssentialWordsIntroducedToday.mockResolvedValue([])
+
+    render(<EssentialWordsSession />)
+
+    expect(await screen.findByRole('heading', { name: WORDS[0].word })).toBeTruthy()
+  })
+
   it('shows only the loader during loading — no session chrome/header', async () => {
     coreWordClientMocks.fetchEssentialWords.mockImplementation(
       () => new Promise(() => {}),
