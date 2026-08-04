@@ -12,11 +12,14 @@ import { speak } from '@/lib/phoneme-practice/tts'
 import { PillButton } from '@/components/ui/PillButton'
 import { ListenButton } from '@/components/ui/ListenButton'
 import { playUiCue } from '@/lib/ui-sounds/cues'
+import { selectSentence } from '@/lib/essential-words/sentence-variants'
 import type { EssentialWord } from '@/lib/essential-words/types'
 
 interface Props {
   entry: EssentialWord
   onGraded: (quality: number) => Promise<void>
+  /** SM-2 repetition count — rotates which example sentence is dictated. */
+  repetitions?: number
 }
 
 /** Quality scores: an exact match is a 5, a miss is a lapse (2). */
@@ -32,13 +35,14 @@ function normalize(text: string): string {
     .trim()
 }
 
-export function DictationCard({ entry, onGraded }: Props) {
+export function DictationCard({ entry, onGraded, repetitions = 0 }: Props) {
   const [answer, setAnswer] = useState('')
   const [revealed, setRevealed] = useState(false)
+  const { sentence } = selectSentence(entry, repetitions)
 
   const handleCheck = () => {
     if (revealed || answer.trim() === '') return
-    const isCorrect = normalize(answer) === normalize(entry.example_sentence)
+    const isCorrect = normalize(answer) === normalize(sentence)
     setRevealed(true)
     playUiCue(isCorrect ? 'correct' : 'wrong')
     void onGraded(isCorrect ? CORRECT_QUALITY : WRONG_QUALITY)
@@ -49,7 +53,7 @@ export function DictationCard({ entry, onGraded }: Props) {
       <p className="font-kicker m-0 text-fg-muted">Escucha y escribe la oración</p>
 
       <ListenButton
-        onPlay={() => speak(entry.example_sentence, { rate: 0.95 })}
+        onPlay={() => speak(sentence, { rate: 0.95 })}
         label="Escuchar de nuevo"
       />
 
@@ -65,7 +69,7 @@ export function DictationCard({ entry, onGraded }: Props) {
 
       {revealed ? (
         <p className="m-0 max-w-[42ch] text-center text-body-lg text-fg">
-          {entry.example_sentence}
+          {sentence}
         </p>
       ) : (
         <PillButton type="button" variant="primary" onClick={handleCheck}>
