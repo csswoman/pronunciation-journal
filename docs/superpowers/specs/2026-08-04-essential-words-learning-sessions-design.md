@@ -34,7 +34,7 @@ Dos consecuencias:
 | 1 | Estructura de sesión (bloques, escalera, secuenciación) | A | 0 |
 | 2 | Hints con precio + feedback | B | 1 |
 | 3 | Migración SM-2 → FSRS | C | 2 |
-| 4 | Techo de tiempo + estado intermedio | A/D | 1 |
+| 4 | Techo de tiempo + estado intermedio | A | 1 |
 
 **El contenido va primero (Fase 0).** Son 2 entradas y ~10 minutos, pero eliminan la
 necesidad de construir `define_to_word` y su rama de grading (§1.5, §1.6). Arreglar
@@ -144,6 +144,11 @@ la graduación**, no el último ejercicio del bloque.
 
 Cada vez que una palabra reaparece dentro del bloque, sube un nivel.
 
+**Invariante de monotonía** (§7): ninguna palabra recibe un ejercicio de nivel 3 sin
+haber pasado por los niveles 1 y 2 **en ese mismo bloque**. Es la premisa de toda la
+escalera — sin esta garantía, "reconocimiento antes que producción" es una intención
+de diseño, no una propiedad verificada.
+
 **`dictation_word` (nuevo).** Audio de la palabra + glosa en español debajo. Cubre el
 canal sonido→forma, que hoy no entrena nadie y que es la habilidad más débil de
 hispanohablantes. La glosa desambigua homófonos (`be`/`bee`, `to`/`too`/`two`) sin
@@ -158,7 +163,7 @@ Construirlo ahora significaría un componente entero para dos palabras, y arrast
 una rama de grading ("el piso degradado nunca da Easy") que casi nunca se ejecuta, un
 peldaño de pista propio y una ruta de audio-como-pista.
 
-La garantía se conserva **sin código**: el invariante 2 de §7 (toda palabra tiene ≥1
+La garantía se conserva **sin código**: el invariante 1 de §7.1 (toda palabra tiene ≥1
 modo elegible en cada nivel) se verifica por test sobre las 2800 entradas, y **falla
 el día que alguien añada una palabra sin frase clozeable**. Ese test es la señal para
 reconsiderar este modo.
@@ -225,6 +230,20 @@ Reglas, verificables como invariantes:
   delante, **el bloque se extiende** con el ítem fallado. Mantiene la reparación
   cerca del contexto donde falló; el techo de tiempo limita cuánto puede crecer.
 
+**Tope de reinserciones — máximo 1 por palabra por bloque.** Si una palabra falla
+**dos veces** dentro del mismo bloque, **sale**: no gradúa, no se reinserta más, y
+vuelve al día siguiente como repaso vencido de nivel bajo.
+
+Sin este tope, un usuario que falla mucho entra en un bloque que crece sin límite y
+el techo de tiempo lo corta a mitad del bloque — la peor experiencia posible. Con el
+tope, el "bloque se extiende" de la regla anterior tiene un techo natural: como máximo
++1 ejercicio por palabra fallida, nunca una cascada.
+
+Esto hace la máquina de estados **necesariamente terminante** (§1.8): cada palabra
+puede reinsertarse como máximo una vez, así que la longitud del bloque está acotada
+por `4 × (ejercicios por nivel) + reinserciones_máximas`, un número finito conocido de
+antemano.
+
 ### 1.8 Arquitectura: máquina de estados, no lista
 
 El plan **no puede ser un array estático**: un fallo reinserta ítems y extiende el
@@ -271,6 +290,14 @@ type Grade = 'Again' | 'Hard' | 'Good' | 'Easy'
 
 Las cards emiten un `AttemptOutcome`, **no un número**. El mapeo a `quality` 0-5
 (SM-2 hoy, FSRS después) vive en un solo sitio — lo que hace barata la Fase C.
+
+**`hintsUsed` cuenta solo peldaños con precio.** La escalera de pistas (§2.3) y el
+contador de `AttemptOutcome` **no son la misma lista**. En `dictation_word` el audio
+es el peldaño 2 de la escalera pero es libre e ilimitado (§2.3): repetirlo **no**
+incrementa `hintsUsed`. Si lo hiciera, el usuario que vuelve a escuchar el enunciado
+caería a Hard por escuchar dos veces — penalizaría exactamente el comportamiento que
+la regla de audio libre existe para proteger. Cada peldaño de la escalera declara si
+cuenta para `hintsUsed`; solo los peldaños "con costo" en la tabla de §2.3 lo hacen.
 
 | Resolución | Grado | Efecto |
 |---|---|---|
@@ -470,17 +497,30 @@ excepción **declarada aquí con su razón**, no como olvido.
 Razón: no existe log histórico de essential-words (§3.3), así que no hay nada que
 recalcular. Un recálculo retroactivo sería inventar datos.
 
-Derivación por carta:
+**Estabilidad — corregida.** La versión anterior (`min(interval, elapsedDays)`
+aplicada a toda carta) estaba mal generalizada: el razonamiento de "subestimar es
+seguro" solo vale para cartas **vencidas**. Aplicado a una carta sana —intervalo de
+60 días, revisada ayer— produciría `stability = 1` e inundaría la cola de repasos con
+cartas que no lo necesitan.
 
 ```
-stability  = min(interval, elapsedDays)
-difficulty = f(ease)
+elapsedDays = hoy − lastReview
+
+si elapsedDays <= interval:   stability = interval          // sana: se confía en el intervalo
+si elapsedDays >  interval:   stability = max(1, elapsedDays) // vencida: conservador, con piso
+
+difficulty = clamp(1, 10, round(11 − 9 × (ease − 1.3) / (2.5 − 1.3)))
 ```
 
-`min(interval, elapsedDays)` porque derivar solo desde `interval` únicamente es
-razonable si la carta está cerca de su vencimiento: una carta con 30 días de
-intervalo pero 90 vencida tiene una estabilidad real muy distinta de 30.
-**Subestimar es seguro; sobreestimar pierde la carta.**
+Una carta con 30 días de intervalo vencida 90 días tiene una estabilidad real muy
+distinta de 30: ahí se aplica la rama conservadora. Una carta sana no se toca. **Piso
+de `stability = 1`** en ambas ramas — `stability = 0` es degenerado en FSRS.
+
+**`difficulty` se deriva de `ease`, no se pierde.** FSRS necesita ambos parámetros;
+sin `difficulty`, toda carta migrada arrancaría con el valor por defecto y se perdería
+la señal de qué palabras costaban. La fórmula mapea el rango de `ease` de SM-2
+(`1.3`–`2.5`) al rango de `difficulty` de FSRS (`1`–`10`, invertido: más `ease` es
+más fácil, mientras que en FSRS más `difficulty` es más difícil).
 
 **Ciclo de vida del flag.** No es un booleano permanente, es un contador:
 
@@ -512,14 +552,25 @@ SM-2 no lo use:
 
 **El modo no asigna el grado: lo limita.** El desempeño en la ronda final decide.
 
+**"Producción completa" — definido.** Con `define_to_word` descartado (§1.5), el piso
+de la cadena de producción es `dictation_sentence` (§1.6):
+`cloze_sentence → dictation_sentence`. **Ambos cuentan como producción completa.**
+`dictation_sentence` no es el "piso degradado" en el sentido de la regla de tope —
+sigue siendo producción real (transcribir la oración completa), solo más fácil que
+completar el hueco. El techo de la tabla de abajo es para un futuro modo
+verdaderamente degradado (p. ej. si `define_to_word` se reconsiderara, §8), no para
+`dictation_sentence`.
+
 | Condición | Grado |
 |---|---|
-| Sin pistas + latencia baja + modo de **producción completo** | **Easy** |
+| Sin pistas + latencia baja + graduó por `cloze_sentence` o `dictation_sentence` | **Easy** |
 | Todo lo demás que acierta | **Good** |
+| *(reservado)* Si en el futuro existe un modo degradado (§8) | **nunca Easy** — tope |
 
-El modo actúa como **techo**: un modo degradado nunca puede dar Easy, solo Good. Con
-el dataset actual esa rama no se ejecuta (§1.6), pero la regla se implementa porque
-es la que mantiene válido el techo si entra contenido sin cloze viable.
+El modo actúa como **techo** para el caso futuro, no como distinción entre
+`cloze_sentence` y `dictation_sentence` hoy: ambos son producción real. Con el
+dataset actual la fila reservada no se ejecuta (§1.6), pero se documenta para que la
+regla siga siendo válida si algún día entra un modo verdaderamente degradado.
 
 Por qué no escalar multiplicadores de estabilidad inicial: FSRS tiene 4 valores de
 estabilidad inicial (uno por grado) que vienen del set de parámetros. Escalarlos por
@@ -569,6 +620,7 @@ Tabla nueva en Dexie, `essentialWordProgress`:
   wordId, userId,
   exposedAt: string,        // vio la tarjeta de presentación
   highestLevel: 0|1|2|3,    // nivel alcanzado
+  lastLevelAt: string,      // cuándo alcanzó highestLevel — decide la caducidad
   lastSessionId: string,
   attempts: number,         // conserva hintsUsed acumulado
 }
@@ -579,15 +631,26 @@ crea la fila FSRS y este registro se archiva.
 
 RLS obligatoria si se sincroniza a Supabase.
 
-### 4.3 Regla de reanudación
+### 4.3 Regla de reanudación — con ventana de caducidad
 
-| Estado al reanudar | Qué ve el usuario |
-|---|---|
-| Expuesta, 0 ejercicios | Exposición **abreviada** (recordatorio, no presentación completa) + práctica desde nivel 1 |
-| Nivel 1-2 alcanzado | **Sin exposición.** Retoma en el nivel alcanzado |
-| Nivel 3 sin ronda final | **Sin exposición.** Va directo a ronda final |
+El invariante 15 (§7.4) — "una palabra con `highestLevel > 0` nunca vuelve a
+exposición completa" — es correcto para reanudar al día siguiente y **falso a los
+dos meses**.
+Una palabra expuesta una vez y abandonada en marzo debe volver a presentación en
+mayo: sin esto, `highestLevel` se convierte en una promesa permanente sobre una
+palabra que el usuario probablemente olvidó.
 
-**Nunca vuelve a la presentación completa de algo ya trabajado.**
+**Ventana de reanudación: 14 días** desde `lastLevelAt`.
+
+| Estado al reanudar | Dentro de 14 días | Fuera de 14 días |
+|---|---|---|
+| Expuesta, 0 ejercicios | Exposición **abreviada** + práctica desde nivel 1 | Exposición completa, como palabra nueva |
+| Nivel 1-2 alcanzado | **Sin exposición.** Retoma en el nivel alcanzado | Exposición completa; el registro se archiva |
+| Nivel 3 sin ronda final | **Sin exposición.** Va directo a ronda final | Exposición completa; el registro se archiva |
+
+**Dentro de la ventana, nunca vuelve a la presentación completa de algo ya
+trabajado.** Fuera de ella, se trata como si no hubiera progreso — 14 días es
+suficiente para que el olvido natural haga irrelevante el nivel alcanzado.
 
 ---
 
@@ -702,22 +765,66 @@ Todos ≤250 líneas, con comentario de estructura planeada antes de implementar
 
 ## 7. Invariantes testeables
 
-1. Todo bloque tiene **3 o 4** palabras.
-2. Toda palabra tiene **≥1 modo elegible en cada nivel**. *(Verificado sobre las 2800
-   entradas. Es la garantía que sustituye a `define_to_word`: si alguien añade una
-   palabra sin frase clozeable ni dictable, este test falla.)*
+Agrupados por **cómo se verifican** — sin esta distinción, los que necesitan
+simulación de sesión tienden a quedarse sin test, porque parecen cubiertos por los
+property tests puros y no lo están.
+
+### 7.1 Aserciones sobre el dataset
+
+Se ejecutan una vez contra las 2800 entradas; no necesitan sesión ni simulación.
+
+1. Toda palabra tiene **≥1 modo elegible en cada nivel**. *(Es la garantía que
+   sustituye a `define_to_word`: si alguien añade una palabra sin frase clozeable ni
+   dictable, este test falla. Absorbe también "un ejercicio nunca se renderiza con
+   datos ausentes" — es la misma propiedad medida en el mismo punto: si el modo es
+   elegible, sus datos existen por construcción.)*
+
+### 7.2 Property tests puros (`session-plan.ts`, `attempt-grade.ts`, `distractors.ts`)
+
+Sobre las funciones puras, sin I/O ni sesión real — se les puede dar cualquier
+secuencia de entradas y verificar la salida.
+
+2. Todo bloque tiene **3 o 4** palabras.
 3. **Nunca la misma palabra dos veces seguidas** (distancia ≥2).
-3b. Ningún distractor está a **distancia ortográfica 1** del objetivo ni es homófono
+4. Ninguna palabra recibe un ejercicio de **nivel 3 sin haber pasado por los niveles
+   1 y 2 en ese mismo bloque** (monotonía de la escalera, §1.5).
+5. Ningún distractor está a **distancia ortográfica 1** del objetivo ni es homófono
    suyo, y todos salen del **pool ya visto por el usuario** mientras ese pool alcance
    (§2.4b).
-4. Un ejercicio **nunca** se renderiza con datos ausentes.
-5. **Un solo write de grade por palabra y sesión** (el primer intento).
-6. Una palabra nueva **no escribe en el scheduler** antes de graduar.
-7. Ningún peldaño de pista **entrega la respuesta completa**.
-8. El rescate a opciones **siempre** produce `Again`.
-9. Toda revisión de carta migrada con `fsrsRealReviews < 3` queda **excluida del
-   optimizador**.
-10. Una palabra con `highestLevel > 0` **nunca** vuelve a exposición completa.
+6. Ningún peldaño de pista **entrega la respuesta completa**.
+7. El rescate a opciones **siempre** produce `Again`.
+8. **Máximo 1 reinserción por palabra por bloque.** Al segundo fallo en el mismo
+   bloque, la palabra sale: no gradúa, no se reinserta más (§1.7).
+9. **La máquina de estados siempre termina.** Consecuencia directa de 8: con
+   reinserciones acotadas, la longitud de cualquier bloque está acotada por un número
+   finito conocido de antemano. Es el invariante crítico de cualquier máquina con
+   reinserción, y no basta con probarlo en casos concretos — se verifica generando
+   secuencias de fallos adversariales (property test) y confirmando que `nextStep`
+   siempre devuelve `null` en un número acotado de pasos.
+
+### 7.3 Simulación de sesión (integración sobre `session-plan.ts` + `attempt-grade.ts` orquestados)
+
+Requieren encadenar varios pasos de una sesión simulada; no son verificables sobre
+una función aislada.
+
+10. **Un solo write de grade por palabra y sesión** (el primer intento; §2.2).
+11. Una palabra nueva **no escribe en el scheduler** antes de graduar.
+12. **El techo de tiempo prioriza repasos sobre nuevas al truncar** (§1.3, §4.1): en
+    una simulación con más ítems de los que caben en la ventana, los repasos vencidos
+    sobreviven al corte antes que las palabras nuevas. Sin este test, "repasos antes
+    que nuevas" es una decisión de prioridad importante que vive solo en prosa.
+13. **El corte del techo respeta el mínimo de bloque:** si no cabe un bloque completo
+    de 3, no se empieza (§4.1) — nunca un bloque de 1 o 2 por recorte de tiempo.
+
+### 7.4 Verificados contra el log real, no en CI
+
+No son property tests: dependen de datos que solo existen tras uso real.
+
+14. Toda revisión de carta migrada con `fsrsRealReviews < 3` queda **excluida del
+    optimizador**.
+15. Una palabra con `highestLevel > 0` **nunca** vuelve a exposición completa
+    **dentro de la ventana de reanudación de 14 días** (§4.3). Fuera de la ventana,
+    sí vuelve — es el comportamiento correcto, no una violación.
 
 ---
 
@@ -728,7 +835,7 @@ Todos ≤250 líneas, con comentario de estructura planeada antes de implementar
   el log se empieza a acumular en Fase A.
 - `weak_form` en el flujo de primer encuentro (§1.5).
 - **`define_to_word`** (§1.5): descartado tras medir que serviría a 2 entradas, ambas
-  reparables con contenido. Se reconsidera solo si el invariante 2 de §7 empieza a
+  reparables con contenido. Se reconsidera solo si el invariante 1 de §7.1 empieza a
   fallar por contenido nuevo.
 - Generación de contenido a escala vía Gemini: solo 2 entradas manuales (§5).
 - **Despliegue de la Fase A por separado**: A es estado interno; A y B llegan juntas a
