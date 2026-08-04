@@ -3,6 +3,7 @@ import { describe, expect, it, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { RecallTranslationCard } from "../RecallTranslationCard";
 import type { EssentialWord } from "@/lib/essential-words/types";
+import { selectSentence } from "@/lib/essential-words/sentence-variants";
 
 vi.mock("@/lib/ui-sounds/cues", () => ({ playUiCue: vi.fn() }));
 
@@ -19,8 +20,11 @@ const entry: EssentialWord = {
 function setup(
   onGraded = vi.fn().mockResolvedValue(undefined),
   e: EssentialWord = entry,
+  repetitions?: number,
 ) {
-  render(<RecallTranslationCard entry={e} onGraded={onGraded} />);
+  render(
+    <RecallTranslationCard entry={e} repetitions={repetitions} onGraded={onGraded} />,
+  );
   return onGraded;
 }
 
@@ -67,5 +71,46 @@ describe("RecallTranslationCard", () => {
     const onGraded = setup();
     fireEvent.click(screen.getByRole("button", { name: "Comprobar" }));
     expect(onGraded).not.toHaveBeenCalled();
+  });
+
+  describe("sentence rotation", () => {
+    const withVariants: EssentialWord = {
+      ...entry,
+      example_sentences: [
+        { sentence: "He drove through a long tunnel.", sentence_ipa: "/hi droʊv θru ə lɔŋ ˈtʌnəl/" },
+        { sentence: "Water flows through the pipe.", sentence_ipa: "/ˈwɔtər floʊz θru ðə paɪp/" },
+      ],
+    };
+
+    it("reveals the selected variant as context, not always the base sentence", () => {
+      setup(undefined, withVariants, 1);
+      answer("through");
+      expect(
+        screen.getByText(selectSentence(withVariants, 1).sentence),
+      ).toBeInTheDocument();
+    });
+
+    it("shows a different context sentence across repetitions", () => {
+      const seen = new Set<string>();
+      for (const reps of [0, 1, 2]) {
+        const { unmount } = render(
+          <RecallTranslationCard
+            entry={withVariants}
+            repetitions={reps}
+            onGraded={vi.fn().mockResolvedValue(undefined)}
+          />,
+        );
+        answer("through");
+        seen.add(selectSentence(withVariants, reps).sentence);
+        unmount();
+      }
+      expect(seen.size).toBeGreaterThan(1);
+    });
+
+    it("defaults to the base sentence when no repetitions are passed", () => {
+      setup(undefined, withVariants);
+      answer("through");
+      expect(screen.getByText(withVariants.example_sentence)).toBeInTheDocument();
+    });
   });
 });

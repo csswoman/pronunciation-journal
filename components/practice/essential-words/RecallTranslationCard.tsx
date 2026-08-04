@@ -10,10 +10,13 @@
 import { useState } from 'react'
 import { PillButton } from '@/components/ui/PillButton'
 import { playUiCue } from '@/lib/ui-sounds/cues'
+import { selectSentence } from '@/lib/essential-words/sentence-variants'
 import type { EssentialWord } from '@/lib/essential-words/types'
 
 interface Props {
   entry: EssentialWord
+  /** SM-2 repetition count — rotates which example sentence is revealed as context. */
+  repetitions?: number
   onGraded: (quality: number) => Promise<void>
 }
 
@@ -29,9 +32,10 @@ function normalize(text: string): string {
     .trim()
 }
 
-export function RecallTranslationCard({ entry, onGraded }: Props) {
+export function RecallTranslationCard({ entry, repetitions = 0, onGraded }: Props) {
   const [answer, setAnswer] = useState('')
   const [revealed, setRevealed] = useState(false)
+  const { sentence } = selectSentence(entry, repetitions)
 
   // selectMode only picks this mode when `translation` is present.
   if (!entry.translation) return null
@@ -66,7 +70,7 @@ export function RecallTranslationCard({ entry, onGraded }: Props) {
       {revealed ? (
         <div className="flex max-w-[42ch] flex-col items-center gap-1 text-center">
           <p className="m-0 text-body-lg font-medium text-fg">{entry.word}</p>
-          <p className="m-0 text-body text-fg-muted">{entry.example_sentence}</p>
+          <p className="m-0 text-body text-fg-muted">{sentence}</p>
         </div>
       ) : (
         <PillButton type="button" variant="primary" onClick={handleCheck}>

@@ -178,7 +178,11 @@ export function EssentialWordsSession() {
                 />
               )}
               {currentMode === 'weak_form' && (
-                <WeakFormCard entry={current.entry} onGraded={submitGrade} />
+                <WeakFormCard
+                  entry={current.entry}
+                  repetitions={current.repetitions ?? 0}
+                  onGraded={submitGrade}
+                />
               )}
               {currentMode === 'cloze_sentence' && (
                 <ClozeCard
@@ -188,7 +192,11 @@ export function EssentialWordsSession() {
                 />
               )}
               {currentMode === 'recall_translation' && (
-                <RecallTranslationCard entry={current.entry} onGraded={submitGrade} />
+                <RecallTranslationCard
+                  entry={current.entry}
+                  repetitions={current.repetitions ?? 0}
+                  onGraded={submitGrade}
+                />
               )}
               {/* 'study' mode belongs to the study phase's WordStudyCard; a new
                   word reaching the speak phase (post-study) still falls back

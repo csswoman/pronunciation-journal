@@ -11,19 +11,31 @@ import { speak } from '@/lib/phoneme-practice/tts'
 import { ListenButton } from '@/components/ui/ListenButton'
 import { PillButton } from '@/components/ui/PillButton'
 import { weakFormPhrase } from '@/lib/practice/study-card/model'
+import { selectSentence } from '@/lib/essential-words/sentence-variants'
 import type { EssentialWord } from '@/lib/essential-words/types'
 
 interface Props {
   /** Caller guarantees `ipa_weak` is present (selectMode checks it). */
   entry: EssentialWord
+  /** SM-2 repetition count — rotates which example sentence frames the weak form. */
+  repetitions?: number
   onGraded: (quality: number) => Promise<void>
 }
 
 const GOT_IT_QUALITY = 5
 const MISSED_QUALITY = 2
 
-export function WeakFormCard({ entry, onGraded }: Props) {
-  const phrase = weakFormPhrase(entry.example_sentence, entry.word)
+export function WeakFormCard({ entry, repetitions = 0, onGraded }: Props) {
+  const { sentence } = selectSentence(entry, repetitions)
+  // weakFormPhrase returns the bare word when it cannot locate it in the
+  // sentence, which would strip the card of the phrase context that is the
+  // whole point. Fall back to the base sentence, which the dataset gate
+  // guarantees contains the word.
+  const rotated = weakFormPhrase(sentence, entry.word)
+  const phrase =
+    rotated === entry.word
+      ? weakFormPhrase(entry.example_sentence, entry.word)
+      : rotated
 
   return (
     <div className="flex w-full flex-col items-center gap-space-5 rounded-lg border border-border-subtle bg-surface-raised layout-card-pad">
