@@ -11,7 +11,17 @@
       "ipa_weak": "/ðə/",
       "sentence_ipa": "/ˈɡɪv ˈmiː ðə ˈbʊk ˈpliːz/",
       "meaning": "used before a noun to refer to a specific thing",
-      "translation": "el/la"
+      "translation": "el/la",
+      "example_sentences": [
+        {
+          "sentence": "The sun is shining brightly today.",
+          "sentence_ipa": "/ðə ˈsʌn ˈɪz ˈʃaɪnɪŋ ˈbɹaɪtliː təˈdeɪ/"
+        },
+        {
+          "sentence": "Can you close the window, please?",
+          "sentence_ipa": "/ˈkæn ˈjuː ˈkloʊs ðə ˈwɪndoʊ ˈpliːz/"
+        }
+      ]
     },
     {
       "rank": 2,
@@ -23,7 +33,13 @@
       "ipa_weak": "/bi/",
       "sentence_ipa": "/ˈaɪ ˈwɑnt ˈtuː bi ˈhæpiː/",
       "meaning": "to exist or to have a quality or identity",
-      "translation": "ser / estar"
+      "translation": "ser / estar",
+      "example_sentences": [
+        {
+          "sentence": "It will be a great party.",
+          "sentence_ipa": "/ˈɪt ˈwɪl bi ə ˈɡɹeɪt ˈpɑɹtiː/"
+        }
+      ]
     },
     {
       "rank": 3,
@@ -35,7 +51,17 @@
       "ipa_weak": "/ənd/",
       "sentence_ipa": "/ˈbɹɛd ənd ˈbʌtɜr ˈhiːɹ/",
       "meaning": "used to connect words, phrases, or clauses of the same type",
-      "translation": "y"
+      "translation": "y",
+      "example_sentences": [
+        {
+          "sentence": "I like apples and bananas.",
+          "sentence_ipa": "/ˈaɪ ˈlaɪk ˈæpəlz ənd bəˈnænəz/"
+        },
+        {
+          "sentence": "He reads books and writes stories.",
+          "sentence_ipa": "/ˈhiː ˈɹiːdz ˈbʊks ənd ˈɹaɪts ˈstɔɹiːz/"
+        }
+      ]
     },
     {
       "rank": 4,
@@ -47,7 +73,17 @@
       "ipa_weak": "/əv/",
       "sentence_ipa": "/ə ˈkʌp əv ˈtiː ˈpliːz/",
       "meaning": "belonging to or connected with",
-      "translation": "de"
+      "translation": "de",
+      "example_sentences": [
+        {
+          "sentence": "She is a friend of mine.",
+          "sentence_ipa": "/ˈʃiː ˈɪz ə ˈfɹɛnd əv ˈmaɪn/"
+        },
+        {
+          "sentence": "That is a piece of cake.",
+          "sentence_ipa": "/ˈðæt ˈɪz ə ˈpiːs əv ˈkeɪk/"
+        }
+      ]
     },
     {
       "rank": 5,
@@ -59,7 +95,17 @@
       "ipa_weak": "/tə/",
       "sentence_ipa": "/ˈaɪ ˈwɑnt tə ˈɡoʊ ˈhoʊm/",
       "meaning": "showing direction, purpose, or an infinitive",
-      "translation": "a / para"
+      "translation": "a / para",
+      "example_sentences": [
+        {
+          "sentence": "We want to learn English.",
+          "sentence_ipa": "/ˈwiː ˈwɑnt tə ˈlɜrn ˈɪŋɡlɪʃ/"
+        },
+        {
+          "sentence": "He needs to buy some milk.",
+          "sentence_ipa": "/ˈhiː ˈniːdz tə ˈbaɪ ˈsʌm ˈmɪlk/"
+        }
+      ]
     },
     {
       "rank": 6,
@@ -71,7 +117,17 @@
       "ipa_weak": "/ə/",
       "sentence_ipa": "/ˈaɪ ˈniːd ə ˈpɛn ˈnaʊ/",
       "meaning": "one; an indefinite article",
-      "translation": "un / una"
+      "translation": "un / una",
+      "example_sentences": [
+        {
+          "sentence": "I have a cat.",
+          "sentence_ipa": "/ˈaɪ ˈhæv ə ˈkæt/"
+        },
+        {
+          "sentence": "She bought a new car yesterday.",
+          "sentence_ipa": "/ˈʃiː ˈbɑt ə ˈnuː ˈkɑɹ ˈjɛstɜrˌdeɪ/"
+        }
+      ]
     },
     {
       "rank": 7,
@@ -82,7 +138,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ðə ˈkiːz ˈɑɹ ɪn ðə ˈdɹɔɹ/",
       "meaning": "inside or within a place, time, or state",
-      "translation": "en / dentro de"
+      "translation": "en / dentro de",
+      "example_sentences": [
+        {
+          "sentence": "My phone is in my bag.",
+          "sentence_ipa": "/ˈmaɪ ˈfoʊn ˈɪz ɪn ˈmaɪ ˈbæɡ/"
+        },
+        {
+          "sentence": "The cat is sleeping in the box.",
+          "sentence_ipa": "/ðə ˈkæt ˈɪz ˈsliːpɪŋ ɪn ðə ˈbɑks/"
+        }
+      ]
     },
     {
       "rank": 8,
@@ -94,7 +160,17 @@
       "ipa_weak": "/həv/",
       "sentence_ipa": "/ˈaɪ həv ə ˈdɔɡ ˈæt ˈhoʊm/",
       "meaning": "to own or possess something; to experience something",
-      "translation": "tener"
+      "translation": "tener",
+      "example_sentences": [
+        {
+          "sentence": "They have two children.",
+          "sentence_ipa": "/ˈðeɪ həv ˈtuː ˈtʃɪldɹən/"
+        },
+        {
+          "sentence": "I have a question for you.",
+          "sentence_ipa": "/ˈaɪ həv ə ˈkwɛstʃən ˈfɔɹ ˈjuː/"
+        }
+      ]
     },
     {
       "rank": 9,
@@ -105,7 +181,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈaɪ ˈsɔ ˈɪt ˈæt ˈskuːl/",
       "meaning": "the thing, animal, or idea mentioned",
-      "translation": "lo / ello"
+      "translation": "lo / ello",
+      "example_sentences": [
+        {
+          "sentence": "It is a beautiful day.",
+          "sentence_ipa": "/ˈɪt ˈɪz ə ˈbjuːtəfəl ˈdeɪ/"
+        },
+        {
+          "sentence": "Look at it! It's so funny.",
+          "sentence_ipa": "/ˈlʊk ˈæt ˈɪt ˈɪts ˈsoʊ ˈfʌniː/"
+        }
+      ]
     },
     {
       "rank": 10,
@@ -117,7 +203,17 @@
       "ipa_weak": "/jə/",
       "sentence_ipa": "/ˈdɪd jə ˈsiː ˈðæt təˈdeɪ/",
       "meaning": "The person or people being spoken to.",
-      "translation": "tú"
+      "translation": "tú",
+      "example_sentences": [
+        {
+          "sentence": "Can you help me with this?",
+          "sentence_ipa": "/ˈkæn jə ˈhɛlp ˈmiː ˈwɪð ˈðɪs/"
+        },
+        {
+          "sentence": "I hope you have a good time.",
+          "sentence_ipa": "/ˈaɪ ˈhoʊp jə ˈhæv ə ˈɡʊd ˈtaɪm/"
+        }
+      ]
     },
     {
       "rank": 11,
@@ -129,7 +225,17 @@
       "ipa_weak": "/i/",
       "sentence_ipa": "/ˈdɪd i ˈseɪ ˈjɛs təˈdeɪ/",
       "meaning": "the male person mentioned before",
-      "translation": "él"
+      "translation": "él",
+      "example_sentences": [
+        {
+          "sentence": "He works in a big office.",
+          "sentence_ipa": "/i ˈwɜrks ɪn ə ˈbɪɡ ˈɔfɪs/"
+        },
+        {
+          "sentence": "Did he finish his homework already?",
+          "sentence_ipa": "/ˈdɪd i ˈfɪnɪʃ ˈhɪz ˈhoʊˌmwɜrk ɔˈlɹɛdiː/"
+        }
+      ]
     },
     {
       "rank": 12,
@@ -141,7 +247,17 @@
       "ipa_weak": "/fər/",
       "sentence_ipa": "/ˈðɪs ˈɡɪft ˈɪz fər ˈjuː/",
       "meaning": "used to show purpose, reason, or the person something is intended for",
-      "translation": "para"
+      "translation": "para",
+      "example_sentences": [
+        {
+          "sentence": "This book is for your brother.",
+          "sentence_ipa": "/ˈðɪs ˈbʊk ˈɪz fər ˈjɔɹ ˈbɹʌðɜr/"
+        },
+        {
+          "sentence": "We are waiting for the bus.",
+          "sentence_ipa": "/ˈwiː ˈɑɹ ˈweɪtɪŋ fər ðə ˈbʌs/"
+        }
+      ]
     },
     {
       "rank": 13,
@@ -152,7 +268,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈðeɪ ˈɑɹ ˈæt ˈskuːl təˈdeɪ/",
       "meaning": "used to refer to two or more people or things",
-      "translation": "ellos/ellas"
+      "translation": "ellos/ellas",
+      "example_sentences": [
+        {
+          "sentence": "They live in a small town.",
+          "sentence_ipa": "/ˈðeɪ ˈlaɪv ɪn ə ˈsmɔl ˈtaʊn/"
+        },
+        {
+          "sentence": "They are playing in the park now.",
+          "sentence_ipa": "/ˈðeɪ ˈɑɹ ˈpleɪɪŋ ɪn ðə ˈpɑɹk ˈnaʊ/"
+        }
+      ]
     },
     {
       "rank": 14,
@@ -163,7 +289,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈʃiː ˈdɪd ˈnɑt ˈænsɜr ðə ˈfoʊn/",
       "meaning": "used to make a word or phrase negative",
-      "translation": "no"
+      "translation": "no",
+      "example_sentences": [
+        {
+          "sentence": "I am not hungry anymore.",
+          "sentence_ipa": "/ˈaɪ ˈæm ˈnɑt ˈhʌŋɡɹiː ˌɛniːˈmɔɹ/"
+        },
+        {
+          "sentence": "She did not go to the party.",
+          "sentence_ipa": "/ˈʃiː ˈdɪd ˈnɑt ˈɡoʊ ˈtuː ðə ˈpɑɹtiː/"
+        }
+      ]
     },
     {
       "rank": 15,
@@ -175,7 +311,17 @@
       "ipa_weak": "/ðət/",
       "sentence_ipa": "/ˈaɪ ˈhoʊp ðət ˈɪt ˈwɜrks/",
       "meaning": "used to introduce a clause explaining or following a verb",
-      "translation": "que"
+      "translation": "que",
+      "example_sentences": [
+        {
+          "sentence": "That is my favorite song.",
+          "sentence_ipa": "/ðət ˈɪz ˈmaɪ ˈfeɪvɜrɪt ˈsɔŋ/"
+        },
+        {
+          "sentence": "I think that he is right.",
+          "sentence_ipa": "/ˈaɪ ˈθɪŋk ðət ˈhiː ˈɪz ˈɹaɪt/"
+        }
+      ]
     },
     {
       "rank": 16,
@@ -187,7 +333,17 @@
       "ipa_weak": "/wi/",
       "sentence_ipa": "/wi ˈkæn ˈɡoʊ ˈhoʊm ˈnaʊ/",
       "meaning": "the speaker together with others",
-      "translation": "nosotros"
+      "translation": "nosotros",
+      "example_sentences": [
+        {
+          "sentence": "We are going to the cinema.",
+          "sentence_ipa": "/wi ˈɑɹ ˈɡoʊɪŋ ˈtuː ðə ˈsɪnəmə/"
+        },
+        {
+          "sentence": "We can start the game now.",
+          "sentence_ipa": "/wi ˈkæn ˈstɑɹt ðə ˈɡeɪm ˈnaʊ/"
+        }
+      ]
     },
     {
       "rank": 17,
@@ -198,7 +354,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ðə ˈkʌp ˈɪz ˈɑn ðə ˈteɪbəl/",
       "meaning": "touching a surface; about a topic",
-      "translation": "en / sobre"
+      "translation": "en / sobre",
+      "example_sentences": [
+        {
+          "sentence": "The book is on the shelf.",
+          "sentence_ipa": "/ðə ˈbʊk ˈɪz ˈɑn ðə ˈʃɛlf/"
+        },
+        {
+          "sentence": "Turn on the light, please.",
+          "sentence_ipa": "/ˈtɜrn ˈɑn ðə ˈlaɪt ˈpliːz/"
+        }
+      ]
     },
     {
       "rank": 18,
@@ -209,7 +375,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈʃiː ˈkeɪm ˈwɪð ˈhɜr ˈsɪstɜr/",
       "meaning": "accompanied by; using",
-      "translation": "con"
+      "translation": "con",
+      "example_sentences": [
+        {
+          "sentence": "She is talking with her friend.",
+          "sentence_ipa": "/ˈʃiː ˈɪz ˈtɔkɪŋ ˈwɪð ˈhɜr ˈfɹɛnd/"
+        },
+        {
+          "sentence": "I need to go with you.",
+          "sentence_ipa": "/ˈaɪ ˈniːd ˈtuː ˈɡoʊ ˈwɪð ˈjuː/"
+        }
+      ]
     },
     {
       "rank": 19,
@@ -220,7 +396,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈaɪ ˈsɔ ˈðɪs ˈæt ˈskuːl/",
       "meaning": "used to refer to something near or just mentioned",
-      "translation": "este/esta"
+      "translation": "este/esta",
+      "example_sentences": [
+        {
+          "sentence": "This is my house.",
+          "sentence_ipa": "/ˈðɪs ˈɪz ˈmaɪ ˈhaʊs/"
+        },
+        {
+          "sentence": "I like this color very much.",
+          "sentence_ipa": "/ˈaɪ ˈlaɪk ˈðɪs ˈkʌlɜr ˈvɛɹiː ˈmʌtʃ/"
+        }
+      ]
     },
     {
       "rank": 20,
@@ -231,7 +417,17 @@
       "cefr_level": "A1",
       "sentence_ipa": "/ˈaɪ ˈæm ˈɹɛdiː ˈnaʊ/",
       "meaning": "the person who is speaking",
-      "translation": "yo"
+      "translation": "yo",
+      "example_sentences": [
+        {
+          "sentence": "I love to eat pizza.",
+          "sentence_ipa": "/ˈaɪ ˈlʌv ˈtuː ˈiːt ˈpiːtsə/"
+        },
+        {
+          "sentence": "I will see you later today.",
+          "sentence_ipa": "/ˈaɪ ˈwɪl ˈsiː ˈjuː ˈleɪtɜr təˈdeɪ/"
+        }
+      ]
     },
     {
       "rank": 21,
