@@ -4,27 +4,29 @@
 // <DictationCard>
 //   <ListenButton />
 //   <AnswerInput />
-//   <Reveal />
+//   <HintButton />
+//   <AnswerDiff | Reveal />
 // </DictationCard>
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { speak } from '@/lib/phoneme-practice/tts'
 import { PillButton } from '@/components/ui/PillButton'
 import { ListenButton } from '@/components/ui/ListenButton'
 import { playUiCue } from '@/lib/ui-sounds/cues'
 import { selectSentence } from '@/lib/essential-words/sentence-variants'
+import { buildHintLadder } from '@/lib/essential-words/hint-ladder'
+import { isTypo } from '@/lib/essential-words/typo'
+import { HintButton } from './HintButton'
+import { AnswerDiff } from './AnswerDiff'
+import type { AttemptOutcome } from '@/lib/essential-words/attempt-grade'
 import type { EssentialWord } from '@/lib/essential-words/types'
 
 interface Props {
   entry: EssentialWord
-  onGraded: (quality: number) => Promise<void>
+  onAttempt: (outcome: AttemptOutcome) => Promise<void>
   /** SM-2 repetition count — rotates which example sentence is dictated. */
   repetitions?: number
 }
-
-/** Quality scores: an exact match is a 5, a miss is a lapse (2). */
-const CORRECT_QUALITY = 5
-const WRONG_QUALITY = 2
 
 /** Compare ignoring case, punctuation, and repeated whitespace. */
 function normalize(text: string): string {
@@ -35,17 +37,74 @@ function normalize(text: string): string {
     .trim()
 }
 
-export function DictationCard({ entry, onGraded, repetitions = 0 }: Props) {
+export function DictationCard({ entry, onAttempt, repetitions = 0 }: Props) {
   const [answer, setAnswer] = useState('')
   const [revealed, setRevealed] = useState(false)
+  const [outcome, setOutcome] = useState<{ correct: boolean; typo: boolean } | null>(null)
+  const hintsUsedRef = useRef(0)
+  const firstTryFailedRef = useRef(false)
+  const startedAtRef = useRef(Date.now())
   const { sentence } = selectSentence(entry, repetitions)
+  const ladder = buildHintLadder(entry, 'dictation_sentence')
+
+  const submitOutcome = (finalOutcome: AttemptOutcome) => {
+    setOutcome({ correct: finalOutcome.correct, typo: finalOutcome.typo })
+    void onAttempt(finalOutcome)
+  }
 
   const handleCheck = () => {
     if (revealed || answer.trim() === '') return
-    const isCorrect = normalize(answer) === normalize(sentence)
+    const normalizedAnswer = normalize(answer)
+    const normalizedSentence = normalize(sentence)
+    const isExact = normalizedAnswer === normalizedSentence
+    const typo = !isExact && isTypo(normalizedAnswer, normalizedSentence)
+    const correct = isExact || typo
+
+    if (!correct && !firstTryFailedRef.current) {
+      // First failure: reveal feedback, but don't grade yet — the learner
+      // gets one ungraded retry (spec §2.2: only the FIRST graded attempt
+      // fixes the grade; a retry after feedback is a repair, not a new attempt).
+      firstTryFailedRef.current = true
+      setOutcome({ correct: false, typo: false })
+      setRevealed(true)
+      playUiCue('wrong')
+      return
+    }
+
     setRevealed(true)
-    playUiCue(isCorrect ? 'correct' : 'wrong')
-    void onGraded(isCorrect ? CORRECT_QUALITY : WRONG_QUALITY)
+    playUiCue(correct ? 'correct' : 'wrong')
+    submitOutcome({
+      correct,
+      hintsUsed: hintsUsedRef.current,
+      rescued: false,
+      typo,
+      firstTryFailed: firstTryFailedRef.current && correct,
+      latencyMs: Date.now() - startedAtRef.current,
+    })
+  }
+
+  const handleRepair = () => {
+    setRevealed(false)
+    setOutcome(null)
+    setAnswer('')
+  }
+
+  const handleHintAdvance = (rung: (typeof ladder)[number]) => {
+    if (rung.priced) hintsUsedRef.current += 1
+    if (rung.kind === 'audio') speak(sentence, { rate: 0.95 })
+    if (rung.isGiveUp) {
+      setRevealed(true)
+      setOutcome({ correct: false, typo: false })
+      playUiCue('wrong')
+      submitOutcome({
+        correct: false,
+        hintsUsed: hintsUsedRef.current,
+        rescued: false,
+        typo: false,
+        firstTryFailed: true,
+        latencyMs: Date.now() - startedAtRef.current,
+      })
+    }
   }
 
   return (
@@ -67,7 +126,23 @@ export function DictationCard({ entry, onGraded, repetitions = 0 }: Props) {
         className="w-full max-w-sm rounded-md border border-border-subtle bg-surface px-3 py-2 text-body text-fg focus-ring"
       />
 
-      {revealed ? (
+      {!revealed && (
+        <HintButton
+          ladder={ladder}
+          hasFailedOnce={firstTryFailedRef.current}
+          idleMs={0}
+          onAdvance={handleHintAdvance}
+        />
+      )}
+
+      {revealed && outcome && !outcome.correct && firstTryFailedRef.current && !outcome.typo ? (
+        <>
+          <AnswerDiff written={answer || '(sin respuesta)'} expected={sentence} isTypo={false} word={entry.word} />
+          <PillButton type="button" variant="outline" size="sm" onClick={handleRepair}>
+            Intentar de nuevo
+          </PillButton>
+        </>
+      ) : revealed ? (
         <p className="m-0 max-w-[42ch] text-center text-body-lg text-fg">
           {sentence}
         </p>
