@@ -80,6 +80,1526 @@
     "i": [
       "I love to eat pizza.",
       "I will see you later today."
+    ],
+    "do": [
+      "How do you spell your name?",
+      "They do their homework every evening."
+    ],
+    "as": [
+      "He works as a teacher in a school.",
+      "Speak as clearly as you can."
+    ],
+    "at": [
+      "Meet me at the bus stop.",
+      "The price is good at that store."
+    ],
+    "she": [
+      "She likes to read books.",
+      "When did she arrive home yesterday?"
+    ],
+    "but": [
+      "He is tired, but he must work.",
+      "The shirt is blue, but I want red."
+    ],
+    "from": [
+      "This gift is from my aunt.",
+      "Where are you from originally?"
+    ],
+    "by": [
+      "The train will arrive by noon.",
+      "We travel by car most of the time."
+    ],
+    "will": [
+      "The weather will be sunny tomorrow.",
+      "Will you help me with this task?"
+    ],
+    "or": [
+      "Do you prefer pizza or pasta?",
+      "We can go on Monday or Tuesday."
+    ],
+    "say": [
+      "Please say hello to your parents.",
+      "What did the news say this morning?"
+    ],
+    "go": [
+      "Can I go to the bathroom please?",
+      "We will go shopping this weekend."
+    ],
+    "so": [
+      "I'm hungry, so let's eat something.",
+      "The movie was long, so I slept."
+    ],
+    "all": [
+      "All the food is gone now.",
+      "She wants to know all about it."
+    ],
+    "if": [
+      "I will go if you come.",
+      "You can join us if you want."
+    ],
+    "one": [
+      "She bought only one apple today.",
+      "Pick one color you like the best."
+    ],
+    "would": [
+      "I would like a glass of water.",
+      "What would you do in this case?"
+    ],
+    "about": [
+      "Tell me about your vacation plans.",
+      "This book is about history."
+    ],
+    "can": [
+      "Can you swim very well?",
+      "We can meet after class today."
+    ],
+    "which": [
+      "Which color do you like more?",
+      "Which bus goes to the city center?"
+    ],
+    "there": [
+      "Is there any milk left?",
+      "Put the box over there please."
+    ],
+    "know": [
+      "I do not know the answer to this question.",
+      "They know how to fix the car."
+    ],
+    "more": [
+      "I want more pizza, please.",
+      "We saw more birds in the park today."
+    ],
+    "get": [
+      "He will get a new book soon.",
+      "Let's get some rest now."
+    ],
+    "who": [
+      "Who wants to play a game?",
+      "Who ate the last cookie?"
+    ],
+    "like": [
+      "Do you like the new painting?",
+      "My dog likes to chase balls."
+    ],
+    "when": [
+      "When does the store open?",
+      "She left when the movie finished."
+    ],
+    "think": [
+      "I think it will rain tomorrow.",
+      "He likes to think about his future."
+    ],
+    "make": [
+      "We can make a cake for her.",
+      "Let's make a plan for the weekend."
+    ],
+    "time": [
+      "We don't have much time left.",
+      "It's time to go home now."
+    ],
+    "see": [
+      "I can see a small boat far away.",
+      "Did you see that funny movie?"
+    ],
+    "what": [
+      "What is this object?",
+      "What did you eat for lunch?"
+    ],
+    "up": [
+      "Please hold your hand up high.",
+      "The sun comes up every morning."
+    ],
+    "some": [
+      "Can I have some water, please?",
+      "There are some apples in the basket."
+    ],
+    "other": [
+      "He chose the other option instead.",
+      "She is talking to the other person."
+    ],
+    "out": [
+      "Please take the trash out now.",
+      "Let's go out for dinner tonight."
+    ],
+    "good": [
+      "This food tastes very good.",
+      "He is a good student at school."
+    ],
+    "people": [
+      "Many people are waiting for the bus.",
+      "These people are very friendly."
+    ],
+    "year": [
+      "Happy New Year to everyone!",
+      "This is my first year here."
+    ],
+    "take": [
+      "Please take your shoes off.",
+      "It will take longer than expected."
+    ],
+    "no": [
+      "No, I don't want any more.",
+      "She said no to the offer."
+    ],
+    "well": [
+      "He sings very well in the choir.",
+      "The food tastes really well seasoned today."
+    ],
+    "because": [
+      "He is happy because he passed the test.",
+      "We waited for you because you were late."
+    ],
+    "very": [
+      "That was a very exciting movie we watched.",
+      "The water is very cold in the ocean."
+    ],
+    "just": [
+      "I just need a little more time.",
+      "He will just wait for a moment."
+    ],
+    "come": [
+      "Let's come to the party on Saturday.",
+      "Please come with us to the park."
+    ],
+    "could": [
+      "She said she could see you later.",
+      "He thought he could finish the job."
+    ],
+    "work": [
+      "My computer does not work anymore.",
+      "This plan will work if we try."
+    ],
+    "use": [
+      "Can I use your laptop for a bit?",
+      "We use this room for meetings."
+    ],
+    "than": [
+      "This car is newer than mine.",
+      "He is taller than his brother."
+    ],
+    "now": [
+      "Let's eat lunch now before it gets cold.",
+      "He needs to leave right now."
+    ],
+    "then": [
+      "Read this chapter, then answer the questions.",
+      "She studied hard, then took the exam."
+    ],
+    "also": [
+      "He likes coffee and he also likes tea.",
+      "She plays the guitar and also the piano."
+    ],
+    "into": [
+      "The cat jumped into the small box.",
+      "He walked into the store looking for help."
+    ],
+    "only": [
+      "She has only one cookie left.",
+      "I only eat vegetables for breakfast."
+    ],
+    "look": [
+      "Look, the sun is coming out now.",
+      "Please look for my keys on the table."
+    ],
+    "want": [
+      "They want to visit the museum.",
+      "I want to learn how to cook."
+    ],
+    "give": [
+      "Can you give me that book please?",
+      "She will give him a present tomorrow."
+    ],
+    "first": [
+      "My first day of school was great.",
+      "He took the first step towards change."
+    ],
+    "new": [
+      "We bought a new car last week.",
+      "The students learned a new song."
+    ],
+    "way": [
+      "This is the best way to cook eggs.",
+      "Can you show me the way to the station?"
+    ],
+    "find": [
+      "I cannot find my wallet anywhere in this room.",
+      "Let's find a quiet place to talk about this."
+    ],
+    "over": [
+      "The cat jumped over the fence into the garden.",
+      "He looked over the document carefully before signing it."
+    ],
+    "any": [
+      "Do you need any help with your homework assignment?",
+      "There aren't any cookies left in the jar."
+    ],
+    "after": [
+      "We can go shopping after we eat lunch today.",
+      "She always wakes up early after a good night's sleep."
+    ],
+    "day": [
+      "Today is a good day to start something new.",
+      "He had a very busy day at his new job."
+    ],
+    "where": [
+      "Where is the nearest bus stop from here?",
+      "She asked me where I was going next."
+    ],
+    "thing": [
+      "That is a very important thing to remember always.",
+      "What is the most interesting thing you saw today?"
+    ],
+    "most": [
+      "She is the most talented artist in the class.",
+      "Most of the food was already gone."
+    ],
+    "should": [
+      "You should visit the museum when you are in town.",
+      "He should finish his project by Friday evening."
+    ],
+    "need": [
+      "We need more milk for breakfast tomorrow morning.",
+      "Do you need anything else from the store?"
+    ],
+    "much": [
+      "He doesn't talk much about his personal life.",
+      "She drank much water after the long run."
+    ],
+    "right": [
+      "Turn right at the next traffic light, please.",
+      "He finally found the right key for the door."
+    ],
+    "how": [
+      "How often do you go to the gym for workouts?",
+      "Tell me how to make this delicious cake."
+    ],
+    "back": [
+      "I want to go back home as soon as possible.",
+      "She can play the piano very well too."
+    ],
+    "mean": [
+      "I didn't mean to interrupt your conversation just now.",
+      "What does this strange symbol mean on the map?"
+    ],
+    "even": [
+      "She was so tired, she could not even stand.",
+      "He didn't even know her name yet."
+    ],
+    "may": [
+      "Students may leave the classroom early today.",
+      "It may rain later this afternoon, so bring an umbrella."
+    ],
+    "here": [
+      "Please leave your coats here by the entrance.",
+      "Are you sure you want to stay here longer?"
+    ],
+    "many": [
+      "Many students participated in the school play this year.",
+      "There are many different ways to solve this problem."
+    ],
+    "such": [
+      "It was such a difficult test, I am not sure.",
+      "They live in such a big house in the country."
+    ],
+    "last": [
+      "Did you see the last episode yet?",
+      "This is my last cookie; I saved it."
+    ],
+    "child": [
+      "The child drew a picture of a dog.",
+      "All children need love and care."
+    ],
+    "tell": [
+      "Can you tell me how to get there?",
+      "He will tell a story to the class."
+    ],
+    "really": [
+      "She is really good at playing piano.",
+      "Do you really want to go now?"
+    ],
+    "call": [
+      "I will call you when I arrive.",
+      "Please call the waiter for the bill."
+    ],
+    "before": [
+      "He ate breakfast before leaving home.",
+      "Please arrive at the party before 8 PM."
+    ],
+    "company": [
+      "My uncle works for a big company.",
+      "We need good company on the trip."
+    ],
+    "through": [
+      "We drove through the tunnel quickly.",
+      "The light shone through the window."
+    ],
+    "down": [
+      "He looked down at his shoes.",
+      "The airplane is flying down south."
+    ],
+    "show": [
+      "Can you show me the way?",
+      "The teacher will show us how to solve it."
+    ],
+    "life": [
+      "Every person has one life to live.",
+      "He enjoys his new life in the city."
+    ],
+    "man": [
+      "That man is wearing a blue hat.",
+      "He is a strong and kind man."
+    ],
+    "change": [
+      "We need to change our plans.",
+      "Will the weather change today?"
+    ],
+    "place": [
+      "This is a nice place to visit.",
+      "Can you place the books on the shelf?"
+    ],
+    "long": [
+      "How long does the movie last?",
+      "They walked a long distance."
+    ],
+    "between": [
+      "Put your keys between the papers.",
+      "The store is located between the bank and the post office."
+    ],
+    "feel": [
+      "I feel happy when I see you.",
+      "How do you feel about this idea?"
+    ],
+    "too": [
+      "This soup is too hot to eat.",
+      "He is too tired to walk."
+    ],
+    "still": [
+      "The flowers are still beautiful.",
+      "They are still working on the project."
+    ],
+    "problem": [
+      "This is a difficult problem to solve.",
+      "The car has a small problem."
+    ],
+    "write": [
+      "She can write a short letter.",
+      "Please write the date on the paper."
+    ],
+    "same": [
+      "They live in the same building.",
+      "We have the same favorite color."
+    ],
+    "lot": [
+      "There is a lot of food.",
+      "He wants to learn a lot."
+    ],
+    "great": [
+      "This is a great idea for the party.",
+      "The weather is great today."
+    ],
+    "try": [
+      "You should try the new restaurant.",
+      "Let's try to finish this task."
+    ],
+    "leave": [
+      "Do not leave your bag here.",
+      "We will leave after dinner."
+    ],
+    "number": [
+      "Please write your phone number.",
+      "That is a lucky number for me."
+    ],
+    "both": [
+      "Both books are very interesting.",
+      "They are both happy with the result."
+    ],
+    "own": [
+      "He bought his own car last year.",
+      "Everyone can have their own opinion."
+    ],
+    "part": [
+      "This is the easiest part of the test.",
+      "He played a small part in the film."
+    ],
+    "point": [
+      "He will point out the mistake.",
+      "My main point is simple."
+    ],
+    "little": [
+      "She has a little dog.",
+      "Just a little sugar, please."
+    ],
+    "help": [
+      "I need some help with this box.",
+      "My mother always helps me."
+    ],
+    "ask": [
+      "You can ask me any question.",
+      "She will ask for directions."
+    ],
+    "meet": [
+      "Let's meet at the park.",
+      "We will meet after work."
+    ],
+    "start": [
+      "The movie will start soon.",
+      "We need to start the project."
+    ],
+    "talk": [
+      "Can we talk about this later?",
+      "They like to talk about sports."
+    ],
+    "something": [
+      "I want to buy something new.",
+      "Did you see something fall down?"
+    ],
+    "put": [
+      "You can put the book on the shelf.",
+      "Please put your phone away now."
+    ],
+    "another": [
+      "Would you like another cup of tea?",
+      "She is wearing another dress today."
+    ],
+    "become": [
+      "He wants to become a doctor.",
+      "She hopes to become a teacher someday."
+    ],
+    "interest": [
+      "He has an interest in music.",
+      "That topic is of great interest to me."
+    ],
+    "country": [
+      "The country is very large.",
+      "She visited another country last year."
+    ],
+    "old": [
+      "That car is old.",
+      "My grandmother has an old photo album."
+    ],
+    "each": [
+      "Each student received a book.",
+      "Please give each person one ticket."
+    ],
+    "school": [
+      "The school is nearby.",
+      "My son started a new school."
+    ],
+    "late": [
+      "He arrived late.",
+      "Don't be late for the meeting."
+    ],
+    "high": [
+      "The wall is very high.",
+      "The prices are too high for me."
+    ],
+    "different": [
+      "The two bags are different.",
+      "We all have different opinions."
+    ],
+    "off": [
+      "The picture fell off the wall.",
+      "Please turn off the lights."
+    ],
+    "next": [
+      "See you next week.",
+      "Who is sitting in the next seat?"
+    ],
+    "end": [
+      "The movie ends soon.",
+      "Let's watch the show until the end."
+    ],
+    "live": [
+      "I live near the beach.",
+      "Many people live in big cities."
+    ],
+    "why": [
+      "Why are you sad?",
+      "I don't know why he left."
+    ],
+    "while": [
+      "She smiled while cooking.",
+      "He read a book while waiting."
+    ],
+    "world": [
+      "The world is changing.",
+      "It's a beautiful world we live in."
+    ],
+    "week": [
+      "I was busy all week.",
+      "What are you doing this week?"
+    ],
+    "play": [
+      "The children play outside.",
+      "We like to play board games."
+    ],
+    "might": [
+      "It might rain later.",
+      "She might be home by now."
+    ],
+    "must": [
+      "You must wear a seatbelt.",
+      "We must finish this project today."
+    ],
+    "home": [
+      "We felt at home in the new city.",
+      "She lives in a small home near the park."
+    ],
+    "never": [
+      "He will never forget that experience.",
+      "She is never late for school."
+    ],
+    "include": [
+      "Does the tour price include lunch?",
+      "Please include your contact information on the form."
+    ],
+    "course": [
+      "He wants to take a cooking course.",
+      "This online course teaches basic Spanish."
+    ],
+    "house": [
+      "They bought a new house last year.",
+      "Her house has a beautiful garden."
+    ],
+    "report": [
+      "Did you report the lost item?",
+      "We must report any suspicious activity immediately."
+    ],
+    "group": [
+      "The class is divided into small groups.",
+      "Can I join your study group?"
+    ],
+    "case": [
+      "This is a very difficult case for the police.",
+      "He presented his case very well."
+    ],
+    "woman": [
+      "That woman is a doctor.",
+      "A kind woman helped me find my way."
+    ],
+    "around": [
+      "The cat likes to sleep around the house.",
+      "Children ran around the playground happily."
+    ],
+    "book": [
+      "I need to book a flight for my vacation.",
+      "This is a great book to learn English."
+    ],
+    "family": [
+      "My family lives in another country.",
+      "They are a very happy family."
+    ],
+    "seem": [
+      "The cake seems delicious, can I have a piece?",
+      "This project will seem easy after we start."
+    ],
+    "let": [
+      "Let's go to the cinema tonight.",
+      "They won't let us enter the building."
+    ],
+    "again": [
+      "Can you say that again, please?",
+      "She will practice the song again tomorrow."
+    ],
+    "kind": [
+      "She is always very kind to everyone.",
+      "That was a very kind gesture."
+    ],
+    "keep": [
+      "Please keep your voice down in the library.",
+      "You can keep the book for one week."
+    ],
+    "hear": [
+      "Did you hear the news on the radio?",
+      "I can hear the birds singing outside."
+    ],
+    "system": [
+      "The new computer system is very fast.",
+      "Our company uses a complex reservation system."
+    ],
+    "every": [
+      "Every student must bring a pencil.",
+      "Every morning, he drinks a cup of tea."
+    ],
+    "question": [
+      "Do not question the teacher's instructions.",
+      "He will question why the rules changed."
+    ],
+    "during": [
+      "We talked during the long car ride.",
+      "She felt tired during the hot afternoon."
+    ],
+    "always": [
+      "He always brings a book to read.",
+      "They always eat dinner together as a family."
+    ],
+    "big": [
+      "That is a big house with a red door.",
+      "He bought a big new computer yesterday."
+    ],
+    "set": [
+      "Please set the table for dinner.",
+      "They want to set a new record."
+    ],
+    "small": [
+      "She lives in a small apartment downtown.",
+      "The baby bird is very small."
+    ],
+    "study": [
+      "I need to study for my exam tonight.",
+      "We will study this chapter again tomorrow."
+    ],
+    "follow": [
+      "Can you follow me to the next room?",
+      "Drivers must follow traffic lights."
+    ],
+    "begin": [
+      "The movie will begin in five minutes.",
+      "Let's begin the game now, shall we?"
+    ],
+    "important": [
+      "It is important to drink water every day.",
+      "This is an important message for you."
+    ],
+    "since": [
+      "I have been tired since I woke up.",
+      "He hasn't called since last week."
+    ],
+    "run": [
+      "Let's run to the park this afternoon.",
+      "They will run the race next Saturday."
+    ],
+    "under": [
+      "The keys are under the newspaper.",
+      "He hid the toy under his bed."
+    ],
+    "turn": [
+      "You need to turn off the lights.",
+      "Please turn the page slowly and carefully."
+    ],
+    "few": [
+      "She has a few friends in the city.",
+      "There are only a few cookies left."
+    ],
+    "bring": [
+      "Can you bring some snacks for the party?",
+      "He will bring his guitar to play."
+    ],
+    "early": [
+      "The store opens early on Saturdays.",
+      "We should leave early to avoid traffic."
+    ],
+    "hand": [
+      "Please give me a hand with this box.",
+      "She has a beautiful hand cream."
+    ],
+    "state": [
+      "Can you state your name again?",
+      "They will state their reasons for leaving."
+    ],
+    "move": [
+      "They decided to move to a new city.",
+      "Can you move the chair closer?"
+    ],
+    "money": [
+      "He wants to save money for a car.",
+      "Did you find any money on the street?"
+    ],
+    "fact": [
+      "It is a simple fact that the sun is hot.",
+      "We learned a new fact about history today."
+    ],
+    "however": [
+      "The weather was bad; however, we went out.",
+      "He felt tired, however, he kept working."
+    ],
+    "area": [
+      "This area is known for its beautiful parks.",
+      "Please stay within this designated area."
+    ],
+    "provide": [
+      "Can you provide me with a blanket?",
+      "The hotel will provide towels for guests."
+    ],
+    "name": [
+      "She remembers everyone's name easily.",
+      "Can you tell me the name of this song?"
+    ],
+    "read": [
+      "I want to read a new book.",
+      "Do you like to read magazines?"
+    ],
+    "friend": [
+      "My friend is coming over later.",
+      "She is a very kind friend."
+    ],
+    "month": [
+      "We will travel next month.",
+      "This is the third month of the year."
+    ],
+    "large": [
+      "They bought a large house downtown.",
+      "Can I have a large coffee, please?"
+    ],
+    "business": [
+      "He started a small online business.",
+      "Her business trip was very successful."
+    ],
+    "without": [
+      "It is hard to live without water.",
+      "She left the party without saying goodbye."
+    ],
+    "information": [
+      "I need more information about the course.",
+      "The website has helpful information for tourists."
+    ],
+    "open": [
+      "The door was not completely open.",
+      "We need to keep an open mind."
+    ],
+    "order": [
+      "Please order your food now.",
+      "He gave the soldiers a clear order."
+    ],
+    "government": [
+      "The government has many responsibilities.",
+      "New laws were passed by the government."
+    ],
+    "word": [
+      "Please spell that word for me.",
+      "I don't understand this word."
+    ],
+    "issue": [
+      "This is a difficult issue to solve.",
+      "They are working on a technical issue."
+    ],
+    "market": [
+      "We went to the farmer's market.",
+      "The product is popular in the market."
+    ],
+    "pay": [
+      "You do not have to pay extra.",
+      "When will the company pay its employees?"
+    ],
+    "build": [
+      "We will build a new house next year.",
+      "They build strong teams."
+    ],
+    "hold": [
+      "Can you hold my bag for a moment?",
+      "Please hold the door."
+    ],
+    "service": [
+      "The restaurant offers great customer service.",
+      "The service was excellent."
+    ],
+    "against": [
+      "He leaned against the counter.",
+      "The bike is against the wall."
+    ],
+    "believe": [
+      "I believe this is the right way.",
+      "I believe you."
+    ],
+    "second": [
+      "This is my second time visiting.",
+      "Take the second exit."
+    ],
+    "though": [
+      "It was cold, though the sun was shining.",
+      "Though tired, she smiled."
+    ],
+    "yes": [
+      "Yes, I can come to the party.",
+      "Yes, that's correct."
+    ],
+    "love": [
+      "I love spending time with family.",
+      "I love this song."
+    ],
+    "increase": [
+      "The company hopes to increase profits.",
+      "Sales increased this year."
+    ],
+    "job": [
+      "This job requires good computer skills.",
+      "She found a new job."
+    ],
+    "plan": [
+      "She has a plan to save money.",
+      "We plan ahead."
+    ],
+    "result": [
+      "What was the final result of the game?",
+      "The result surprised everyone."
+    ],
+    "away": [
+      "Please throw the trash away.",
+      "Put your phone away."
+    ],
+    "example": [
+      "This is a clear example for students.",
+      "Here's a good example."
+    ],
+    "happen": [
+      "What will happen if we are late?",
+      "Mistakes happen sometimes."
+    ],
+    "offer": [
+      "She will offer him a cookie.",
+      "They offered help."
+    ],
+    "young": [
+      "The young boy loved playing soccer.",
+      "He's still young."
+    ],
+    "close": [
+      "My apartment is close to the park.",
+      "The station is close."
+    ],
+    "program": [
+      "The TV program will start soon.",
+      "The program starts Monday."
+    ],
+    "learn": [
+      "You can learn a lot from books.",
+      "I want to learn how to cook."
+    ],
+    "level": [
+      "Please, raise your voice to this level.",
+      "The water level is rising quickly."
+    ],
+    "person": [
+      "He is a very friendly person.",
+      "Every person needs to eat."
+    ],
+    "experience": [
+      "Cooking is a fun experience for me.",
+      "We gained valuable experience at work."
+    ],
+    "once": [
+      "I will call you once I arrive.",
+      "He visited Paris only once."
+    ],
+    "member": [
+      "He is a new member of the club.",
+      "Are you a member of this group?"
+    ],
+    "enough": [
+      "Do you have enough money for this?",
+      "We have enough food for everyone."
+    ],
+    "bad": [
+      "This is a bad idea, do not do it.",
+      "He feels bad after eating that."
+    ],
+    "city": [
+      "This city has many beautiful parks.",
+      "The city lights are very bright."
+    ],
+    "night": [
+      "Let's go for a walk tonight.",
+      "The stars shine brightly at night."
+    ],
+    "able": [
+      "I am able to speak two languages.",
+      "Are you able to finish the task?"
+    ],
+    "support": [
+      "My family will support my decision.",
+      "The government will support the project."
+    ],
+    "whether": [
+      "Tell me whether you are coming or not.",
+      "I am unsure whether to accept the offer."
+    ],
+    "line": [
+      "The production line needs repair.",
+      "Draw a straight line across the page."
+    ],
+    "present": [
+      "She gave him a nice present.",
+      "Is your father present in the room?"
+    ],
+    "side": [
+      "My house is on the other side.",
+      "Please sit on this side of the table."
+    ],
+    "quite": [
+      "This is quite a difficult question.",
+      "He is quite good at playing piano."
+    ],
+    "although": [
+      "Although it rained, we went out.",
+      "She passed, although she did not study."
+    ],
+    "sure": [
+      "I am sure he will win the game.",
+      "Are you sure this is the right way?"
+    ],
+    "term": [
+      "This is a long-term project.",
+      "What is the term for this disease?"
+    ],
+    "trend": [
+      "Fashion designers are always looking for the next big trend.",
+      "This new social media trend is quite popular with young people."
+    ],
+    "initial": [
+      "Please write your initial here to confirm your agreement.",
+      "The initial plan was simple, but it became complicated later."
+    ],
+    "pleasure": [
+      "Sharing a quiet meal with good friends brings me great pleasure.",
+      "He finds immense pleasure in watching the sunset over the ocean."
+    ],
+    "suggestion": [
+      "I have a suggestion about how to organize the files.",
+      "Thank you for your helpful suggestion regarding the project timeline."
+    ],
+    "critical": [
+      "It is critical to double-check your work for any errors.",
+      "The patient's condition is critical and requires immediate medical attention."
+    ],
+    "gather": [
+      "We will gather at the park for a picnic this Saturday.",
+      "Please gather all the necessary documents before the meeting."
+    ],
+    "mostly": [
+      "The audience was mostly comprised of students from the university.",
+      "The weather forecast indicates that it will be cloudy, mostly in the morning."
+    ],
+    "earth": [
+      "Plants need sunlight, water, and nutrients from the earth to grow.",
+      "Many people are concerned about protecting the earth from pollution."
+    ],
+    "pop": [
+      "Be careful not to pop the bubble wrap too quickly.",
+      "The champagne cork will pop with a loud noise."
+    ],
+    "essential": [
+      "Regular exercise is essential for maintaining good physical health.",
+      "Having a reliable internet connection is essential for remote work."
+    ],
+    "desire": [
+      "He has a strong desire to travel the world and see new places.",
+      "Her deepest desire was to become a successful artist."
+    ],
+    "promote": [
+      "We need to promote the new product launch to increase sales.",
+      "This event will promote cultural understanding between the two countries."
+    ],
+    "currently": [
+      "The library is currently undergoing renovations until next month.",
+      "What are you currently reading for your literature class?"
+    ],
+    "employ": [
+      "Our company plans to employ more staff next quarter.",
+      "Many small businesses struggle to employ enough people."
+    ],
+    "path": [
+      "We walked along a scenic path beside the river.",
+      "The shortest path to the station is through the market."
+    ],
+    "topic": [
+      "Let's discuss this important topic at our next meeting.",
+      "The teacher introduced a new topic for classroom discussion."
+    ],
+    "beach": [
+      "We love to swim and relax at the beach in summer.",
+      "The children built sandcastles on the warm, sunny beach."
+    ],
+    "attract": [
+      "Bright colors often attract the attention of young children.",
+      "The beautiful scenery will attract many tourists to the region."
+    ],
+    "engage": [
+      "It is important to engage with your customers to build loyalty.",
+      "The politician tried to engage the voters with his speech."
+    ],
+    "powerful": [
+      "The engine of the new car is incredibly powerful.",
+      "She delivered a powerful message about environmental protection."
+    ],
+    "flower": [
+      "A beautiful flower bloomed in her window box.",
+      "He gave her a single red flower for her birthday."
+    ],
+    "crisis": [
+      "The government is trying to manage the current refugee crisis.",
+      "We need to act now to avoid a future environmental crisis."
+    ],
+    "settle": [
+      "The family plans to settle in a new town next year.",
+      "He finally agreed to settle the bill with a cashier's check."
+    ],
+    "boat": [
+      "They took a boat trip across the lake.",
+      "A small boat was anchored near the shore."
+    ],
+    "aid": [
+      "She offered her friend some financial aid for college.",
+      "The organization provides disaster relief aid to affected areas."
+    ],
+    "fan": [
+      "The ceiling fan keeps the room cool in summer.",
+      "Turn on the fan; it is very hot today."
+    ],
+    "kitchen": [
+      "Please put the groceries away in the kitchen.",
+      "We ate breakfast together in the small kitchen."
+    ],
+    "twice": [
+      "He checks his email twice every day.",
+      "She reads the instructions twice before starting."
+    ],
+    "fresh": [
+      "I love the smell of fresh bread.",
+      "Do you want fresh juice or bottled?"
+    ],
+    "delay": [
+      "There was a significant delay in the train service.",
+      "The unexpected delay caused us to miss our appointment."
+    ],
+    "safety": [
+      "The children's safety is our top priority.",
+      "Always check the safety instructions before using new equipment."
+    ],
+    "engineer": [
+      "The civil engineer is responsible for road construction.",
+      "My brother works as a software engineer for a tech company."
+    ],
+    "quiet": [
+      "Let's find a quiet place to talk.",
+      "The neighborhood is usually very quiet at night."
+    ],
+    "insurance": [
+      "My car insurance policy covers damages from accidents.",
+      "She is looking for affordable health insurance options."
+    ],
+    "nurse": [
+      "The nurse gave the patient some medicine.",
+      "A kind nurse helped her recover quickly."
+    ],
+    "divide": [
+      "Can you help me divide these cookies equally?",
+      "The teacher will divide the class into small groups."
+    ],
+    "length": [
+      "What is the length of the movie?",
+      "We measured the length of the garden fence."
+    ],
+    "investigation": [
+      "The investigation is ongoing and requires more evidence.",
+      "The journalist followed the investigation closely for updates."
+    ],
+    "package": [
+      "He received a large package in the mail.",
+      "The delivery driver left the package at the front door."
+    ],
+    "somewhere": [
+      "We should go somewhere relaxing for vacation.",
+      "He thinks he saw the cat somewhere in the garden."
+    ],
+    "expand": [
+      "The small business hopes to expand its services next year.",
+      "We need to expand our understanding of this complex subject."
+    ],
+    "commit": [
+      "He promised to commit to the project despite the challenges.",
+      "The government will commit funds to improve public transportation."
+    ],
+    "obvious": [
+      "Her happiness was obvious to everyone in the room.",
+      "It's obvious that the plan needs more details before we start."
+    ],
+    "jump": [
+      "He will jump at the chance to travel abroad.",
+      "Let's jump over this small fence to reach the park."
+    ],
+    "weapon": [
+      "The police are trained to handle situations without using a weapon.",
+      "Knowledge can be a powerful weapon against ignorance."
+    ],
+    "relatively": [
+      "The new software is relatively easy to learn and use.",
+      "Compared to the last one, this test was relatively short."
+    ],
+    "host": [
+      "She will host the evening's event at her home.",
+      "Our main host for the conference is from Japan."
+    ],
+    "winter": [
+      "We plan a trip south to escape the winter cold.",
+      "The first snow of winter usually falls in December."
+    ],
+    "district": [
+      "The school is located in the historic district of the town.",
+      "We must vote for the candidate representing our district."
+    ],
+    "broad": [
+      "The internet provides a broad range of information for research.",
+      "He has a broad smile that makes him very friendly."
+    ],
+    "tire": [
+      "Please check the tire pressure before you drive the car.",
+      "My car tire is making a strange noise."
+    ],
+    "spring": [
+      "The park is beautiful in the spring with all the flowers.",
+      "She decided to spring into action when she saw the problem."
+    ],
+    "spirit": [
+      "The community came together in the spirit of cooperation.",
+      "His creative spirit inspired many of his colleagues."
+    ],
+    "lunch": [
+      "Let's meet at the cafe for lunch tomorrow afternoon.",
+      "She packed a simple lunch to take to the office."
+    ],
+    "actual": [
+      "The actual time of arrival is still uncertain.",
+      "What was the actual price of the item purchased?"
+    ],
+    "pool": [
+      "They decided to build a swimming pool in their backyard.",
+      "The children enjoyed splashing in the shallow end of the pool."
+    ],
+    "battle": [
+      "The two armies prepared for a decisive battle.",
+      "It was a difficult battle to win but they succeeded."
+    ],
+    "tradition": [
+      "This family has a tradition of baking cookies every year.",
+      "Attending the festival is a cherished local tradition."
+    ],
+    "cash": [
+      "I need to withdraw some cash from the ATM.",
+      "He paid for the groceries with cash instead of a card."
+    ],
+    "hardly": [
+      "He could hardly hear the music over the crowd.",
+      "She arrived so late that we had hardly started dinner."
+    ],
+    "award": [
+      "The artist received an award for her painting.",
+      "Winning an award is a great honor for any athlete."
+    ],
+    "coach": [
+      "My basketball coach gives us good advice.",
+      "She asked the life coach for some guidance."
+    ],
+    "experiment": [
+      "Scientists often perform an experiment to test theories.",
+      "This simple experiment shows how plants grow."
+    ],
+    "consideration": [
+      "We must give careful consideration to all options.",
+      "Your safety is our primary consideration."
+    ],
+    "strange": [
+      "He had a strange feeling about the empty house.",
+      "The music sounded a little strange at first."
+    ],
+    "code": [
+      "We need to break the secret code.",
+      "He learned to write computer code online."
+    ],
+    "possibly": [
+      "Could you possibly bring some water?",
+      "She will possibly arrive late today."
+    ],
+    "threat": [
+      "The storm was a serious threat to the town.",
+      "His words were a clear threat to my safety."
+    ],
+    "accident": [
+      "It was a minor accident with no injuries.",
+      "They learned about the car accident on the news."
+    ],
+    "impossible": [
+      "It felt impossible to lift the heavy box.",
+      "Reaching the summit seemed impossible in this weather."
+    ],
+    "revenue": [
+      "The shop hopes to increase its revenue this year.",
+      "Government revenue comes from taxes."
+    ],
+    "enable": [
+      "Good hearing aids enable him to hear better.",
+      "This tool will enable you to fix it."
+    ],
+    "afraid": [
+      "She is not afraid of spiders.",
+      "I am afraid I cannot help you."
+    ],
+    "active": [
+      "They lead a very active lifestyle.",
+      "Being active is important for good health."
+    ],
+    "conclude": [
+      "Let's conclude this meeting with a summary.",
+      "We will conclude the report tomorrow morning."
+    ],
+    "religious": [
+      "The city has many ancient religious sites.",
+      "He followed strict religious customs."
+    ],
+    "cancer": [
+      "Researchers are studying new ways to treat cancer.",
+      "Her grandmother fought bravely against cancer."
+    ],
+    "convince": [
+      "We need to convince the manager to approve it.",
+      "He tried to convince them to change their minds."
+    ],
+    "vary": [
+      "The colors of the flowers vary greatly.",
+      "These ingredients can vary from recipe to recipe."
+    ],
+    "environmental": [
+      "We need to protect the environmental balance.",
+      "The company discussed its environmental impact."
+    ],
+    "sun": [
+      "The warm sun felt good on my skin after being in the cold.",
+      "We could see the sun rising over the mountains."
+    ],
+    "healthy": [
+      "She tries to eat a healthy diet and exercise regularly.",
+      "A good night's sleep is important for being healthy."
+    ],
+    "blow": [
+      "Careful, or the strong wind will blow your hat off.",
+      "Don't let the bad news blow away your motivation."
+    ],
+    "volume": [
+      "The immense volume of water filled the entire reservoir.",
+      "Can you increase the volume of the audio file?"
+    ],
+    "location": [
+      "We need to find a suitable location for the picnic.",
+      "The apartment's location offers great views of the city."
+    ],
+    "invest": [
+      "Many people decide to invest in the stock market.",
+      "He plans to invest in a new business venture."
+    ],
+    "proceed": [
+      "Please wait here until we tell you to proceed.",
+      "We will proceed to the next stage of the project."
+    ],
+    "wash": [
+      "Please wash the dishes after dinner tonight.",
+      "He needs to wash his car this weekend."
+    ],
+    "actor": [
+      "That actor is famous for playing comedic roles.",
+      "The young actor delivered his lines perfectly."
+    ],
+    "glad": [
+      "We were glad to hear about your promotion.",
+      "She will be glad to help you with your homework."
+    ],
+    "tape": [
+      "He used strong tape to repair the broken chair.",
+      "Put the poster on the wall with some tape."
+    ],
+    "whereas": [
+      "Some people prefer coffee, whereas others like tea.",
+      "He studies diligently, whereas his brother often procrastinates."
+    ],
+    "opposite": [
+      "My house is the one directly opposite the park.",
+      "She wore a blue shirt with an opposite colored skirt."
+    ],
+    "stone": [
+      "The path was made of large, flat stones.",
+      "He found a smooth, colorful stone on the beach."
+    ],
+    "sum": [
+      "They calculated the total sum of money needed.",
+      "The manager will approve the final sum for the project."
+    ],
+    "murder": [
+      "The book is a mystery novel about a murder.",
+      "The police are still trying to solve the murder case."
+    ],
+    "monitor": [
+      "We must closely monitor the patient's condition.",
+      "The teacher will monitor the students during the exam."
+    ],
+    "soldier": [
+      "The brave soldier defended the country with honor.",
+      "Each soldier received proper training before deployment."
+    ],
+    "finance": [
+      "Understanding personal finance is crucial for everyone.",
+      "The company needs more investment in its finance department."
+    ],
+    "hate": [
+      "Some people hate crowded places very much.",
+      "I really hate when my internet connection is slow."
+    ],
+    "concentrate": [
+      "Please try to concentrate on your studies right now.",
+      "He needs quiet to concentrate when he is reading."
+    ],
+    "plenty": [
+      "We have plenty of time to finish the project.",
+      "She brought plenty of ideas to the brainstorming meeting."
+    ],
+    "export": [
+      "Can this small farm export its organic vegetables?",
+      "They will export fresh fruit to neighboring countries."
+    ],
+    "entirely": [
+      "This new strategy is entirely based on market research.",
+      "His success was not entirely due to luck."
+    ],
+    "strongly": [
+      "I disagree strongly with your opinion on this matter.",
+      "The evidence suggests strongly that he is innocent."
+    ],
+    "bridge": [
+      "A new bridge will connect the two sides of the city.",
+      "They built a small bridge over the stream in the park."
+    ],
+    "consist": [
+      "The team consists of five experienced players.",
+      "This simple recipe will consist of only three ingredients."
+    ],
+    "graduate": [
+      "Many students graduate with honors from this school.",
+      "He will graduate next spring and start a new job."
+    ],
+    "brand": [
+      "I need to find a specific brand of paint.",
+      "This new clothing brand is becoming very popular."
+    ],
+    "moral": [
+      "It is a moral issue that requires careful consideration.",
+      "He tried to be a moral person in his daily life."
+    ],
+    "insist": [
+      "She will insist on paying for dinner tonight.",
+      "He had to insist that the rules were followed."
+    ],
+    "combination": [
+      "A good combination of colors made the room beautiful.",
+      "This dish is a delicious combination of sweet and savory."
+    ],
+    "abuse": [
+      "The report detailed the abuse of power by officials.",
+      "We must protect individuals from any form of abuse."
+    ],
+    "ice": [
+      "Would you like some ice in your water?",
+      "The lake froze over with a thick layer of ice."
+    ],
+    "principal": [
+      "Safety is the principal concern for the school administration.",
+      "The principal issue was the lack of communication."
+    ],
+    "master": [
+      "She hopes to master the art of cooking.",
+      "He learned to master the complex software quickly."
+    ],
+    "definitely": [
+      "We will definitely need more chairs for the guests.",
+      "I will definitely call you back tomorrow morning."
+    ],
+    "session": [
+      "The yoga session helped me relax and feel refreshed.",
+      "We had a long discussion during the planning session."
+    ],
+    "grade": [
+      "He hopes to get a good grade on the exam.",
+      "The teacher assigned a homework grade for this assignment."
+    ],
+    "nevertheless": [
+      "The weather was bad; nevertheless, the event was successful.",
+      "She felt tired; nevertheless, she continued working hard."
+    ],
+    "predict": [
+      "Forecasting the weather is a difficult task to predict.",
+      "It's impossible to predict what will happen next year."
+    ],
+    "previously": [
+      "He mentioned his previously held opinions in the meeting.",
+      "We visited this city previously, many years ago."
+    ],
+    "protection": [
+      "The thick helmet offers good protection during sports.",
+      "We need more environmental protection laws."
+    ],
+    "largely": [
+      "The success of the event was largely due to volunteers.",
+      "This issue is largely a matter of personal preference."
+    ],
+    "wed": [
+      "They plan to wed next spring in the garden.",
+      "The royal couple will wed in a grand ceremony."
+    ],
+    "rent": [
+      "Can we rent a car for the weekend?",
+      "He needed to rent a larger place for his family."
+    ],
+    "shot": [
+      "The doctor gave him a flu shot.",
+      "She took a shot at the basketball hoop."
+    ],
+    "appearance": [
+      "His sudden appearance surprised everyone in the room.",
+      "The model's appearance changed for the fashion show."
+    ],
+    "reasonable": [
+      "She made a reasonable suggestion during the discussion.",
+      "The lawyer presented a reasonable defense for his client."
+    ],
+    "guarantee": [
+      "I can guarantee that the work will be finished on time.",
+      "This product comes with a one-year guarantee."
+    ],
+    "till": [
+      "We waited patiently till the rain stopped.",
+      "Please keep the door open till everyone is inside."
+    ],
+    "theme": [
+      "The party had a fun '80s music theme.",
+      "Nature is a common theme in his paintings."
+    ],
+    "judgment": [
+      "Making quick judgment can lead to mistakes.",
+      "Her sound judgment helped the company avoid financial trouble."
+    ],
+    "odd": [
+      "That is an odd number; it cannot be divided evenly.",
+      "He wore an odd sock on his left foot."
+    ],
+    "approve": [
+      "Her parents did not approve of her boyfriend.",
+      "The city council will approve the new construction plans."
+    ],
+    "loan": [
+      "They took out a loan to buy their first house.",
+      "The library offers a student loan program."
+    ],
+    "definition": [
+      "Could you provide a simpler definition for me?",
+      "The exact definition is still debated by experts."
+    ],
+    "elect": [
+      "The members will elect a new president next month.",
+      "We will elect a committee to handle the event."
+    ],
+    "atmosphere": [
+      "The peaceful atmosphere was perfect for meditation.",
+      "The city has a lively nightlife atmosphere."
+    ],
+    "farmer": [
+      "The farmer sold fresh vegetables at the market.",
+      "A dedicated farmer cultivates the land carefully."
     ]
   }
 }
