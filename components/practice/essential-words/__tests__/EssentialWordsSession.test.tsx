@@ -213,7 +213,7 @@ describe('EssentialWordsSession', () => {
       word: 'the',
       interval: 1,
       repetitions: 0,
-      ease: 1.96,
+      ease: 2.18,
     }), 'user-1')
     expect(window.sessionStorage.getItem('core1000:pending-lapses')).toBeNull()
   })

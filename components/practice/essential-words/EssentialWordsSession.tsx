@@ -20,6 +20,7 @@ import { EssentialWordsChrome } from './EssentialWordsChrome'
 import { ExitConfirmSheet } from '@/components/exercises/ExitConfirmSheet'
 import { WordCarousel } from '@/components/practice/session/WordCarousel'
 import { getRoute } from '@/lib/essential-words/routes'
+import { attemptGrade, gradeToLegacyQuality, type AttemptOutcome } from '@/lib/essential-words/attempt-grade'
 import Button from '@/components/ui/Button'
 
 export function EssentialWordsSession() {
@@ -57,6 +58,15 @@ export function EssentialWordsSession() {
 
   const speaking = phase === 'speak'
   const exitToHub = () => router.push('/')
+
+  // Cards describe what happened; this is the only boundary that translates
+  // that evidence into the legacy numeric scheduler input. Fase C can replace
+  // this adapter with a Grade-consuming scheduler without touching a card.
+  const handleAttempt = async (outcome: AttemptOutcome) => {
+    const grade = attemptGrade(outcome)
+    const quality = gradeToLegacyQuality(grade)
+    await submitGrade(quality)
+  }
 
   const chrome = (
     <EssentialWordsChrome
@@ -152,7 +162,7 @@ export function EssentialWordsSession() {
                   entry={current.entry}
                   prompt={current.entry.translation!}
                   distractors={distractorPool}
-                  onGraded={submitGrade}
+                  onAttempt={handleAttempt}
                 />
               )}
               {currentMode === 'recognize_meaning' && (
@@ -160,42 +170,42 @@ export function EssentialWordsSession() {
                   entry={current.entry}
                   prompt={current.entry.meaning!}
                   distractors={distractorPool}
-                  onGraded={submitGrade}
+                  onAttempt={handleAttempt}
                 />
               )}
               {currentMode === 'recognize_audio' && (
                 <RecognizeAudioCard
                   entry={current.entry}
                   distractors={distractorPool}
-                  onGraded={submitGrade}
+                  onAttempt={handleAttempt}
                 />
               )}
               {currentMode === 'dictation_sentence' && (
                 <DictationCard
                   entry={current.entry}
                   repetitions={current.repetitions ?? 0}
-                  onGraded={submitGrade}
+                  onAttempt={handleAttempt}
                 />
               )}
               {currentMode === 'weak_form' && (
                 <WeakFormCard
                   entry={current.entry}
                   repetitions={current.repetitions ?? 0}
-                  onGraded={submitGrade}
+                  onAttempt={handleAttempt}
                 />
               )}
               {currentMode === 'cloze_sentence' && (
                 <ClozeCard
                   entry={current.entry}
                   repetitions={current.repetitions ?? 0}
-                  onGraded={submitGrade}
+                  onAttempt={handleAttempt}
                 />
               )}
               {currentMode === 'recall_translation' && (
                 <RecallTranslationCard
                   entry={current.entry}
                   repetitions={current.repetitions ?? 0}
-                  onGraded={submitGrade}
+                  onAttempt={handleAttempt}
                 />
               )}
               {/* 'study' mode belongs to the study phase's WordStudyCard; a new
@@ -205,7 +215,7 @@ export function EssentialWordsSession() {
                 <SpeakReviewCard
                   entry={current.entry}
                   repetitions={current.repetitions ?? 0}
-                  onGraded={submitGrade}
+                  onAttempt={handleAttempt}
                   onArchive={() => void archiveWord(current.entry.word)}
                   fromSnooze={current.fromSnooze}
                   onKeepSnooze={() => void keepSnooze(current.entry.word)}
