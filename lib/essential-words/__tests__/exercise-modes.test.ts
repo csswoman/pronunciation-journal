@@ -221,6 +221,7 @@ describe("selectMode — fallbacks", () => {
     expect(Object.keys(MODE_REQUIRED_FIELD).sort()).toEqual(
       [
         "cloze_sentence",
+        "dictation_word",
         "dictation_sentence",
         "recall_translation",
         "recognize_audio",

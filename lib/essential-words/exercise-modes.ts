@@ -11,6 +11,7 @@ export type EssentialWordMode =
   | "recognize_translation"
   | "recognize_meaning"
   | "recognize_audio"
+  | "dictation_word"
   | "dictation_sentence"
   | "cloze_sentence"
   | "weak_form"
@@ -30,6 +31,7 @@ export const MODE_REQUIRED_FIELD: Record<
   recognize_translation: "translation",
   recognize_meaning: "meaning",
   recognize_audio: null, // only needs `word` + TTS, both always available
+  dictation_word: null, // word audio is the prompt; the card is added with production UI
   dictation_sentence: null, // example_sentence is mandatory
   cloze_sentence: null, // computed: clozeFor(entry) must be non-null
   weak_form: "ipa_weak",
