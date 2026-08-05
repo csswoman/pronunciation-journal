@@ -78,6 +78,7 @@ export function useEssentialWordsSession() {
   const [stats, setStats] = useState<EssentialWordsStats>(EMPTY_STATS);
   const [counts, setCounts] = useState<EssentialWordsCounts>(EMPTY_COUNTS);
   const [sessionSummary, setSessionSummary] = useState<EssentialWordsSessionSummary | null>(null);
+  const [strugglingWords, setStrugglingWords] = useState<string[]>([]);
   const [reloadLoading, setReloadLoading] = useState(false);
   const [previousMode, setPreviousMode] = useState<EssentialWordMode | undefined>(undefined);
 
@@ -149,6 +150,12 @@ export function useEssentialWordsSession() {
     if (finishingRef.current) return;
     finishingRef.current = true;
     setPhase("done");
+    // Snapshot before flushLapses() mutates/clears pendingLapsesRef — flushing
+    // deletes each entry as it persists, so reading the ref after would miss
+    // (or fully lose) the words that actually struggled this session.
+    setStrugglingWords(
+      Array.from(pendingLapsesRef.current.keys()).map((wordId) => wordId.replace("c1k:", "")),
+    );
     await flushLapses();
     if (!user?.id) {
       finishingRef.current = false;
@@ -186,6 +193,7 @@ export function useEssentialWordsSession() {
       setCurrentStep(null);
       setStats(nextStats);
       setSessionSummary(null);
+      setStrugglingWords([]);
       sessionResultsRef.current = [];
       pendingLapsesRef.current = new Map();
       persistPendingLapses();
@@ -214,6 +222,7 @@ export function useEssentialWordsSession() {
     setCurrentStep(first);
     setStats(nextStats);
     setSessionSummary(null);
+    setStrugglingWords([]);
     sessionResultsRef.current = [];
     pendingLapsesRef.current = new Map();
     persistPendingLapses();
@@ -492,6 +501,7 @@ export function useEssentialWordsSession() {
     stats,
     counts,
     sessionSummary,
+    strugglingWords,
     reloadLoading,
     levels,
     setLevels,
