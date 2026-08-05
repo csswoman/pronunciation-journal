@@ -56,7 +56,7 @@ export interface EssentialWordsCounts {
 }
 
 const EMPTY_STATS: EssentialWordsStats = {
-  totalWords: 0, learned: 0, dueCount: 0, newToday: 0, newQuota: NEW_CARDS_PER_DAY,
+  totalWords: 0, learned: 0, dueCount: 0, newToday: 0, newQuota: NEW_CARDS_PER_DAY, vaulted: 0,
 };
 const EMPTY_COUNTS: EssentialWordsCounts = {
   newRemaining: 0, learningRemaining: 0, reviewRemaining: 0,

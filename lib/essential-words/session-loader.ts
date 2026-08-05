@@ -4,6 +4,7 @@ import { essentialWordId, NEW_CARDS_PER_DAY, type CefrLevel, type EssentialWordP
 import { getEssentialWordsIntroducedToday } from "@/lib/db";
 import { prepareEssentialWordsSrsEntries } from "@/lib/essential-words/prepare-srs";
 import { phaseForEssentialWordItem, type EssentialWordsPhase } from "@/lib/essential-words/session-model";
+import { isVaultEntry } from "@/lib/srs/vault";
 
 export interface EssentialWordsStats {
   totalWords: number;
@@ -11,6 +12,7 @@ export interface EssentialWordsStats {
   dueCount: number;
   newToday: number;
   newQuota: number;
+  vaulted: number;
 }
 
 export interface LoadedEssentialWordsQueue {
@@ -57,6 +59,7 @@ export async function loadEssentialWordsQueue(
       dueCount: items.filter((item) => item.kind === "review").length,
       newToday: introducedToday.length,
       newQuota: NEW_CARDS_PER_DAY,
+      vaulted: srsEntries.filter(isVaultEntry).length,
     },
     allWords: words,
     seenIds,

@@ -61,4 +61,41 @@ describe("loadEssentialWordsQueue", () => {
     expect(result.items[0].fromSnooze).toBe(true);
     expect(result.initialPhase).toBe("speak");
   });
+
+  it("counts snoozed and mastered entries as vaulted", async () => {
+    vi.mocked(getEssentialWordsSrsEntries).mockResolvedValue([
+      {
+        wordId: "c1k:snoozed-word",
+        word: "snoozed-word",
+        ease: 2.5,
+        interval: 1,
+        repetitions: 1,
+        nextReview: "2099-01-01T00:00:00.000Z",
+        status: "snoozed",
+        snoozedAt: "2026-01-01T00:00:00.000Z",
+      },
+      {
+        wordId: "c1k:mastered-word",
+        word: "mastered-word",
+        ease: 2.5,
+        interval: 1,
+        repetitions: 1,
+        nextReview: "2026-07-01T00:00:00.000Z",
+        status: "mastered",
+        masteredAt: "2026-01-01T00:00:00.000Z",
+      },
+      {
+        wordId: "c1k:test",
+        word: "test",
+        ease: 2.5,
+        interval: 1,
+        repetitions: 1,
+        nextReview: "2026-07-01T00:00:00.000Z",
+      },
+    ]);
+
+    const result = await loadEssentialWordsQueue();
+
+    expect(result.stats.vaulted).toBe(2);
+  });
 });
