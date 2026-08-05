@@ -16,6 +16,7 @@ import { WeakFormCard } from './WeakFormCard'
 import { ClozeCard } from './ClozeCard'
 import { RecallTranslationCard } from './RecallTranslationCard'
 import { SessionDone } from './SessionDone'
+import { SessionReady } from './SessionReady'
 import { EssentialWordsChrome } from './EssentialWordsChrome'
 import { ExitConfirmSheet } from '@/components/exercises/ExitConfirmSheet'
 import { WordCarousel } from '@/components/practice/session/WordCarousel'
@@ -26,8 +27,8 @@ import Button from '@/components/ui/Button'
 export function EssentialWordsSession() {
   const {
     phase, current, currentMode, distractorPool, stats, counts, sessionSummary,
-    reloadLoading, levels, activeRouteId, setRoute,
-    startSpeak, submitGrade, reload, learnMore, archiveWord,
+    strugglingWords, reloadLoading, levels, activeRouteId, setRoute,
+    startSpeak, beginSession, submitGrade, reload, learnMore, archiveWord,
     keepSnooze, masterWord,
   } = useEssentialWordsSession()
   const loadingWords = useLoadingWords()
@@ -111,6 +112,18 @@ export function EssentialWordsSession() {
           </div>
         )}
       </Frame>
+    )
+  }
+
+  if (phase === 'ready') {
+    return (
+      <>
+        <Frame>
+          {chrome}
+          <SessionReady counts={counts} vaulted={stats.vaulted} onBegin={beginSession} />
+        </Frame>
+        {exitSheet}
+      </>
     )
   }
 

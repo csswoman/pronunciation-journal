@@ -102,6 +102,11 @@ vi.mock('@/hooks/useSpeechInput', () => ({
 
 import { EssentialWordsSession } from '../EssentialWordsSession'
 
+async function clickEmpezar() {
+  const user = userEvent.setup()
+  await user.click(await screen.findByRole('button', { name: 'Empezar' }))
+}
+
 beforeEach(() => {
   vi.clearAllMocks()
   Object.defineProperty(window, 'localStorage', {
@@ -122,6 +127,7 @@ describe('EssentialWordsSession', () => {
     dbMocks.getEssentialWordsIntroducedToday.mockResolvedValue([])
 
     render(<EssentialWordsSession />)
+    await clickEmpezar()
 
     expect(await screen.findByRole('heading', { name: WORDS[0].word })).toBeTruthy()
   })
@@ -141,6 +147,7 @@ describe('EssentialWordsSession', () => {
   it('introduces a new card as study first, then speak with self-grade fallback', async () => {
     const user = userEvent.setup()
     render(<EssentialWordsSession />)
+    await clickEmpezar()
 
     await screen.findByRole('heading', { name: 'the' })
     expect(screen.getByText('/ðʌ/')).toBeTruthy()
@@ -172,6 +179,7 @@ describe('EssentialWordsSession', () => {
       Array.from({ length: 9 }, (_, i) => `w${i}`)
     )
     render(<EssentialWordsSession />)
+    await clickEmpezar()
 
     await screen.findByRole('heading', { name: 'the' })
     await user.click(screen.getByRole('button', { name: 'Practicar' }))
@@ -197,6 +205,7 @@ describe('EssentialWordsSession', () => {
   it('persists pending lapses and flushes them on pagehide', async () => {
     const user = userEvent.setup()
     render(<EssentialWordsSession />)
+    await clickEmpezar()
 
     await screen.findByRole('heading', { name: 'the' })
     await user.click(screen.getByRole('button', { name: 'Practicar' }))
@@ -225,6 +234,7 @@ describe('EssentialWordsSession', () => {
     dbMocks.getEssentialWordsIntroducedToday.mockResolvedValue(Array.from({ length: 9 }, (_, i) => `w${i}`))
 
     render(<EssentialWordsSession />)
+    await clickEmpezar()
 
     await screen.findByRole('heading', { name: 'the' })
     await user.click(screen.getByRole('button', { name: 'Ya la sé' }))
@@ -253,6 +263,7 @@ describe('EssentialWordsSession', () => {
     ])
 
     render(<EssentialWordsSession />)
+    await clickEmpezar()
 
     expect(await screen.findByText('Give me the book please.')).toBeTruthy()
     expect(screen.getByRole('button', { name: 'Seguir en 90 días' })).toBeTruthy()
@@ -280,6 +291,7 @@ describe('EssentialWordsSession', () => {
     ])
 
     render(<EssentialWordsSession />)
+    await clickEmpezar()
 
     await screen.findByText('Give me the book please.')
     await user.click(screen.getByRole('button', { name: 'No me la recuerdes más' }))
@@ -316,6 +328,7 @@ describe('EssentialWordsSession', () => {
     )
 
     render(<EssentialWordsSession />)
+    await clickEmpezar()
 
     expect(await screen.findByText('Completa la oración')).toBeTruthy()
     expect(screen.getByText('Give me ___ book please.')).toBeTruthy()
@@ -369,7 +382,22 @@ describe('EssentialWordsSession', () => {
     )
 
     render(<EssentialWordsSession />)
+    await clickEmpezar()
 
     expect(await screen.findByText(expectedCloze!.blanked)).toBeTruthy()
+  })
+
+  it('shows the ready screen before the first card and only advances after Empezar', async () => {
+    dbMocks.getEssentialWordsSrsEntries.mockResolvedValue([])
+    dbMocks.getEssentialWordsIntroducedToday.mockResolvedValue([])
+
+    render(<EssentialWordsSession />)
+
+    await screen.findByRole('button', { name: 'Empezar' })
+    expect(screen.queryByRole('heading', { name: WORDS[0].word })).toBeNull()
+
+    await clickEmpezar()
+
+    expect(await screen.findByRole('heading', { name: WORDS[0].word })).toBeTruthy()
   })
 })
