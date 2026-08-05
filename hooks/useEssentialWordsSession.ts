@@ -191,7 +191,7 @@ export function useEssentialWordsSession() {
       persistPendingLapses();
       setPreviousMode(undefined);
       setCounts(deriveCounts(items, 0));
-      setPhase(items[0].kind === "new" ? "study" : "speak");
+      setPhase(items.length > 0 ? "ready" : "empty");
       return;
     }
 
@@ -220,7 +220,7 @@ export function useEssentialWordsSession() {
     setPreviousMode(undefined);
     if (nextPlanState) setCounts(derivePlanCounts(nextPlanState));
     else setCounts(EMPTY_COUNTS);
-    setPhase(first ? (first.kind === "expose" ? "study" : "speak") : "empty");
+    setPhase(first ? "ready" : "empty");
   }, [persistPendingLapses, user?.id]);
 
   useEffect(() => {
@@ -273,6 +273,16 @@ export function useEssentialWordsSession() {
     if (!next) { void finishSession(); return; }
     setPhase(next.kind === "expose" ? "study" : "speak");
   }, [planState, currentStep, finishSession]);
+
+  const beginSession = useCallback(() => {
+    if (phase !== "ready") return;
+    if (compatModeRef.current) {
+      const item = compatQueue[compatIndex];
+      setPhase(item && item.kind === "new" ? "study" : "speak");
+      return;
+    }
+    setPhase(currentStep && currentStep.kind === "expose" ? "study" : "speak");
+  }, [phase, compatQueue, compatIndex, currentStep]);
 
   const submitGrade = useCallback(
     async (quality: number, extras?: GradeExtras) => {
@@ -489,6 +499,7 @@ export function useEssentialWordsSession() {
     activeRouteId,
     setRoute,
     startSpeak,
+    beginSession,
     submitGrade,
     reload,
     learnMore,
