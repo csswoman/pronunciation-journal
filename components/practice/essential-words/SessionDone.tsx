@@ -14,6 +14,7 @@ import { CheckCircle2, Sparkles, AlertCircle, Loader2 } from '@/components/icons
 import { PillButton } from '@/components/ui/PillButton'
 import { playUiCue } from '@/lib/ui-sounds/cues'
 import { cn } from '@/lib/cn'
+import { StatBlock } from './StatBlock'
 import type { EssentialWordsSessionSummary, EssentialWordsStats } from '@/hooks/useEssentialWordsSession'
 
 interface Props {
@@ -25,6 +26,7 @@ interface Props {
   onContinue?: () => void
   continueLoading?: boolean
   onLearnMore?: () => void
+  strugglingWords?: string[]
 }
 
 export function SessionDone({
@@ -35,6 +37,7 @@ export function SessionDone({
   onContinue,
   continueLoading,
   onLearnMore,
+  strugglingWords,
 }: Props) {
   const practiced = sessionSummary?.practiced ?? 0
   const accuracy =
@@ -82,9 +85,38 @@ export function SessionDone({
         </span>
         <h2 className="m-0 text-h3 text-fg">{headline}</h2>
         {!wasEmpty && !loadFailed && practiced > 0 ? (
-          <p className="m-0 text-body-sm text-fg-muted">
-            {practiced} {practiced === 1 ? 'palabra practicada' : 'palabras practicadas'}
-            {accuracy !== null ? ` · ${accuracy}% precisión` : ''}
+          <StatBlock
+            stats={[
+              { label: 'Aprendidas hoy', value: stats.newToday },
+              { label: 'Repasadas', value: Math.max(0, practiced - stats.newToday) },
+              {
+                label: 'Sin fallos',
+                value: Math.max(0, practiced - (strugglingWords?.length ?? 0)),
+              },
+            ]}
+          />
+        ) : null}
+        {!wasEmpty && !loadFailed && strugglingWords && strugglingWords.length > 0 ? (
+          <div className="flex w-full flex-col items-center gap-2">
+            <span className="text-caption font-semibold text-fg-muted">
+              Estas te costaron — vuelven mañana
+            </span>
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              {strugglingWords.map((word) => (
+                <span
+                  key={word}
+                  className="inline-flex items-center rounded-full bg-warning-soft px-3 py-1 text-caption text-warning"
+                >
+                  {word}
+                </span>
+              ))}
+            </div>
+          </div>
+        ) : null}
+        {!wasEmpty && !loadFailed ? (
+          <p className="m-0 text-caption text-fg-subtle">
+            Mañana: {(strugglingWords?.length ?? 0) + stats.dueCount} repasos y {stats.newQuota}{' '}
+            palabras nuevas
           </p>
         ) : null}
         <p className="m-0 text-body-sm text-fg-muted">

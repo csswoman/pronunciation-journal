@@ -140,6 +140,7 @@ export function EssentialWordsSession() {
             onContinue={reload}
             continueLoading={reloadLoading}
             onLearnMore={phase === 'done' ? learnMore : undefined}
+            strugglingWords={strugglingWords}
           />
         </Frame>
         {exitSheet}
