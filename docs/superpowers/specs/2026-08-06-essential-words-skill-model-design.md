@@ -577,14 +577,22 @@ Observación y colocación son funciones separadas. Colapsarlas hace que `learni
 lea erróneamente como "no hubo evidencia":
 
 ```ts
-function deriveObservations(assessment: AttemptAssessment): SkillObservation[];
+function deriveObservations(
+  assessment: AttemptAssessment,
+  now: Date,
+): SkillObservation[];
 
 function derivePlacements(
   observations: SkillObservation[],
   assessment: AttemptAssessment,
   currentItems: LearningItem[],
+  now: Date,
 ): SkillPlacement[];
 ```
+
+Ambas reciben el reloj en vez de llamar a `new Date()` por dentro: la simulación
+de carga (§9) inyecta su propio reloj, y una función que consulta la hora del
+sistema no es simulable ni testeable de forma determinista.
 
 **Paso 1 — qué habilidades evaluó el intento: lo decide la modalidad.
 Con qué signo: lo decide el acierto.**

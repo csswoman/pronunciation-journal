@@ -693,8 +693,10 @@ Expected: FAIL — "Cannot find module '../skill-item'".
 // Nada de esto se persiste: derivar en lectura elimina la posibilidad de que
 // el estado almacenado y la programación diverjan.
 
+// `Skill` y `MaturityPolicy` los usan las tareas 1.3 y 1.5 de este mismo
+// fichero; se importan ya aquí para no acabar con dos import del mismo módulo.
 import type {
-  LearningItem, MaturityPolicy, ReviewLog, SkillStatus,
+  LearningItem, MaturityPolicy, ReviewLog, Skill, SkillStatus,
 } from "./verification/types";
 
 /** Estado de dominio de un ítem, derivado exclusivamente de `schedule`. */
@@ -1071,9 +1073,10 @@ Expected: FAIL — funciones no exportadas.
 
 - [ ] **Step 3: Implementar en `skill-item.ts`**
 
-```ts
-import type { Skill } from "./verification/types";
+`Skill` ya está en el import de la tarea 1.2: no añadas un segundo `import` del
+mismo módulo. Añade solo lo que sigue al final del fichero.
 
+```ts
 const BASE_SKILLS: readonly Skill[] = ["meaning", "listening", "production"];
 
 function slugify(expression: string): string {
@@ -1993,7 +1996,7 @@ git commit -m "feat(essential-words): ejecutor transaccional de la migracion al 
 
 **Objetivo:** que un intento produzca `AttemptAssessment` → observaciones → colocaciones → `ReviewLog`, y que **solo** los eventos con `affectsSchedule: true` toquen FSRS.
 
-**Condición de salida:** invariantes 1, 2, 3, 12, 13, 16, 24 verdes. Un test demuestra que un evento de práctica no mueve el calendario ni alimenta el optimizador.
+**Condición de salida:** invariantes 1, 2, 3, 12, 13, 16, 24 verdes. Un test demuestra que un evento de práctica no mueve el calendario ni alimenta el optimizador, y el umbral global de 25 s ha dejado de decidir el escalón `Easy`/`Good` en la ruta nueva (3.7).
 
 ### Task 3.1: `AttemptOutcome` → `AttemptAssessment`
 
@@ -2134,8 +2137,10 @@ const assess = (
   usedHints: false, rescued: false, acceptedVariant: false,
 });
 
+const NOW = new Date("2026-08-06T10:00:00.000Z");
+
 const skillsOf = (a: AttemptAssessment) =>
-  deriveObservations(a).map((o) => o.skill).sort();
+  deriveObservations(a, NOW).map((o) => o.skill).sort();
 
 describe("deriveObservations — qué habilidades evaluó el intento", () => {
   it("producción observa meaning y production", () => {
@@ -2169,7 +2174,7 @@ describe("deriveObservations — qué habilidades evaluó el intento", () => {
 
 describe("deriveObservations — signo", () => {
   it("una respuesta correcta da outcome success", () => {
-    const obs = deriveObservations(assess("production", true));
+    const obs = deriveObservations(assess("production", true), NOW);
     expect(obs.every((o) => o.outcome === "success")).toBe(true);
   });
 
@@ -2177,8 +2182,8 @@ describe("deriveObservations — signo", () => {
     const ok = skillsOf(assess("production", true));
     const ko = skillsOf(assess("production", false));
     expect(ko).toEqual(ok);
-    expect(deriveObservations(assess("production", false)).every((o) => o.outcome === "failure"))
-      .toBe(true);
+    expect(deriveObservations(assess("production", false), NOW)
+      .every((o) => o.outcome === "failure")).toBe(true);
   });
 
   it("un fallo de producción sigue sin observar listening", () => {
@@ -2186,19 +2191,24 @@ describe("deriveObservations — signo", () => {
   });
 
   it("un Again nunca deja la lista vacía: derivePlacements tiene contrato", () => {
-    expect(deriveObservations(assess("listening", false))).toHaveLength(2);
+    expect(deriveObservations(assess("listening", false), NOW)).toHaveLength(2);
   });
 });
 
 describe("deriveObservations — procedencia", () => {
   it("marca source direct y basis attempt con su modalidad", () => {
-    const [first] = deriveObservations(assess("listening", true));
+    const [first] = deriveObservations(assess("listening", true), NOW);
     expect(first.source).toBe("direct");
     expect(first.basis).toEqual({ kind: "attempt", modality: "listening" });
   });
 
   it("la evidencia directa tiene confianza 1", () => {
-    expect(deriveObservations(assess("production", true))[0].evidenceConfidence).toBe(1);
+    expect(deriveObservations(assess("production", true), NOW)[0].evidenceConfidence).toBe(1);
+  });
+
+  it("observedAt viene del reloj inyectado, no de la hora del sistema", () => {
+    const [first] = deriveObservations(assess("production", true), NOW);
+    expect(first.observedAt).toBe(NOW.toISOString());
   });
 });
 ```
@@ -2237,9 +2247,17 @@ const OBSERVED_SKILLS: Record<AttemptModality, readonly Skill[]> = {
   pronunciation: ["production"],
 };
 
-export function deriveObservations(assessment: AttemptAssessment): SkillObservation[] {
+/**
+ * Recibe el reloj en vez de llamar a `new Date()`: la simulacion de carga
+ * (Fase 8) inyecta el suyo, y una funcion que consulta la hora del sistema no
+ * es simulable ni testeable de forma determinista.
+ */
+export function deriveObservations(
+  assessment: AttemptAssessment,
+  now: Date,
+): SkillObservation[] {
   const outcome = assessment.correct ? "success" : "failure";
-  const observedAt = new Date().toISOString();
+  const observedAt = now.toISOString();
 
   return OBSERVED_SKILLS[assessment.modality].map((skill) => ({
     skill,
@@ -2255,7 +2273,7 @@ export function deriveObservations(assessment: AttemptAssessment): SkillObservat
 - [ ] **Step 4: Ejecutar**
 
 Run: `pnpm test lib/essential-words/verification/__tests__/observations.test.ts`
-Expected: PASS (12 tests).
+Expected: PASS (13 tests).
 
 - [ ] **Step 5: Commit**
 
@@ -2426,7 +2444,7 @@ const unseen = (skill: LearningItem["skill"]): LearningItem => ({
 });
 
 const place = (a: AttemptAssessment, items = [unseen("meaning"), unseen("production")]) =>
-  derivePlacements(deriveObservations(a), a, items, NOW);
+  derivePlacements(deriveObservations(a, NOW), a, items, NOW);
 
 describe("derivePlacements — verificación directa de producción", () => {
   it("Easy coloca ambas habilidades como provisionales", () => {
@@ -2503,10 +2521,10 @@ describe("derivePlacements — reglas transversales", () => {
   });
 
   it("una colocación provisional nunca produce un ítem maduro (invariante 4)", () => {
+    // Sobre ítems SIN historial: un Easy los deja provisionales, que por
+    // construcción no pueden ser maduros (isMature exige schedule.kind fsrs).
     const placements = place(assess("production", "Easy"));
-    for (const p of placements) {
-      expect(p.schedule.kind).not.toBe("fsrs");
-    }
+    expect(placements.every((p) => p.schedule.kind === "provisional")).toBe(true);
   });
 });
 ```
@@ -2518,10 +2536,19 @@ Expected: FAIL — `derivePlacements` no exportado.
 
 - [ ] **Step 3: Implementar en `policy.ts`**
 
+Los dos primeros `import` son nuevos. El tercero **amplía** el `import type`
+que la tarea 3.2 ya creó: añade `ItemSchedule`, `LearningItem` y
+`SkillPlacement` a esa línea en vez de escribir un segundo `import` del mismo
+módulo.
+
 ```ts
 import { scheduleFsrsReview } from "@/lib/srs/fsrs-schedule";
 import { provisionalDueAt, type ProvisionalOrigin } from "./provisional-intervals";
-import type { ItemSchedule, LearningItem, SkillPlacement } from "./types";
+// Línea existente de la tarea 3.2, ampliada:
+import type {
+  AttemptAssessment, AttemptModality, ItemSchedule, LearningItem,
+  Skill, SkillObservation, SkillPlacement,
+} from "./types";
 
 /** Estado FSRS inicial de una habilidad que arranca en aprendizaje. */
 const INITIAL_FSRS = { stability: 0, difficulty: 0, state: "New" as const };
@@ -2818,7 +2845,7 @@ export interface AttemptRecordPlan {
 
 export function planAttemptRecord(input: AttemptRecordInput): AttemptRecordPlan {
   const { assessment, currentItems, now, eventType } = input;
-  const observations = deriveObservations(assessment);
+  const observations = deriveObservations(assessment, now);
   const affectsSchedule = SCHEDULING_EVENTS.has(eventType);
 
   const base = {
@@ -2958,6 +2985,264 @@ Expected: PASS (4 tests). Si el segundo falla porque un provisional con `Again` 
 git add lib/essential-words/__tests__/provisional-graduation.test.ts
 git commit -m "test(essential-words): un provisional vencido crea una tarjeta FSRS real"
 ```
+### Task 3.7: Umbral de latencia por modalidad
+
+**Files:**
+- Create: `lib/essential-words/verification/latency.ts`
+- Modify: `lib/essential-words/verification/assessment.ts`
+- Test: `lib/essential-words/verification/__tests__/latency.test.ts`
+
+El umbral fijo de 25 s (`LOW_LATENCY_MS`) es frágil (spec §3.5): la latencia depende de longitud de frase, escribir vs. hablar, teclado móvil vs. escritorio y accesibilidad. Un mismo número para dictado con audio y para elección múltiple penaliza sistemáticamente al primero.
+
+`attemptGrade` **no se toca**: sigue siendo la función que decide el `Grade` para la ruta vieja. El umbral por modalidad se aplica en `buildAssessment`, que es la entrada al modelo nuevo.
+
+- [ ] **Step 1: Escribir el test**
+
+```ts
+// lib/essential-words/verification/__tests__/latency.test.ts
+import { describe, it, expect } from "vitest";
+import {
+  isFastFor, LATENCY_THRESHOLDS_MS, calibrateLatencyThresholds,
+} from "../latency";
+import type { ReviewLog } from "../types";
+
+describe("LATENCY_THRESHOLDS_MS", () => {
+  it("define un umbral por cada modalidad", () => {
+    expect(Object.keys(LATENCY_THRESHOLDS_MS).sort()).toEqual(
+      ["listening", "production", "pronunciation", "recognition"],
+    );
+  });
+
+  it("reconocimiento es más exigente que producción", () => {
+    // Elegir entre cuatro opciones no puede permitirse los mismos 25s que
+    // escribir una frase completa.
+    expect(LATENCY_THRESHOLDS_MS.recognition)
+      .toBeLessThan(LATENCY_THRESHOLDS_MS.production);
+  });
+
+  it("las modalidades con audio toleran más latencia", () => {
+    expect(LATENCY_THRESHOLDS_MS.listening)
+      .toBeGreaterThan(LATENCY_THRESHOLDS_MS.recognition);
+  });
+});
+
+describe("isFastFor", () => {
+  it("una respuesta por debajo del umbral de SU modalidad es rápida", () => {
+    expect(isFastFor("recognition", LATENCY_THRESHOLDS_MS.recognition - 1)).toBe(true);
+  });
+
+  it("el umbral es exclusivo: justo en el límite no es rápida", () => {
+    expect(isFastFor("recognition", LATENCY_THRESHOLDS_MS.recognition)).toBe(false);
+  });
+
+  it("la misma latencia puede ser rápida en una modalidad y lenta en otra", () => {
+    const latency = LATENCY_THRESHOLDS_MS.recognition + 1;
+    expect(isFastFor("recognition", latency)).toBe(false);
+    expect(isFastFor("production", latency)).toBe(true);
+  });
+});
+
+describe("calibrateLatencyThresholds", () => {
+  const log = (modality: keyof typeof LATENCY_THRESHOLDS_MS, latencyMs: number): ReviewLog => ({
+    id: crypto.randomUUID(), learningItemId: "c1k:on#meaning", sessionId: "s1",
+    assessment: {
+      grade: "Good", modality, correct: true,
+      latencyMs, interactionDurationMs: latencyMs * 3,
+      usedHints: false, rescued: false, acceptedVariant: false,
+    },
+    observations: [], eventType: "scheduled-review",
+    affectsSchedule: true, fsrsLogId: "f1",
+    occurredAt: "2026-08-06T10:00:00.000Z",
+  });
+
+  it("recalibra con la mediana de los aciertos reales del usuario", () => {
+    const logs = Array.from({ length: 20 }, () => log("recognition", 4_000));
+    expect(calibrateLatencyThresholds(logs, LATENCY_THRESHOLDS_MS, 10).recognition)
+      .toBeLessThan(LATENCY_THRESHOLDS_MS.recognition);
+  });
+
+  it("mantiene el valor por defecto sin muestras suficientes", () => {
+    const logs = [log("recognition", 4_000)];
+    expect(calibrateLatencyThresholds(logs, LATENCY_THRESHOLDS_MS, 10).recognition)
+      .toBe(LATENCY_THRESHOLDS_MS.recognition);
+  });
+
+  it("solo usa aciertos: un fallo lento no ensancha el umbral", () => {
+    const failures = Array.from({ length: 20 }, () => {
+      const base = log("recognition", 90_000);
+      return {
+        ...base,
+        assessment: { ...base.assessment, grade: "Again" as const, correct: false },
+      } as ReviewLog;
+    });
+    expect(calibrateLatencyThresholds(failures, LATENCY_THRESHOLDS_MS, 10).recognition)
+      .toBe(LATENCY_THRESHOLDS_MS.recognition);
+  });
+
+  it("cada modalidad se calibra por separado", () => {
+    const logs = [
+      ...Array.from({ length: 20 }, () => log("recognition", 3_000)),
+      ...Array.from({ length: 20 }, () => log("listening", 40_000)),
+    ];
+    const next = calibrateLatencyThresholds(logs, LATENCY_THRESHOLDS_MS, 10);
+    expect(next.recognition).toBeLessThan(LATENCY_THRESHOLDS_MS.recognition);
+    expect(next.listening).toBeGreaterThan(LATENCY_THRESHOLDS_MS.recognition);
+    expect(next.production).toBe(LATENCY_THRESHOLDS_MS.production);
+  });
+});
+```
+
+- [ ] **Step 2: Ejecutar — debe fallar**
+
+Run: `pnpm test lib/essential-words/verification/__tests__/latency.test.ts`
+Expected: FAIL — "Cannot find module '../latency'".
+
+- [ ] **Step 3: Implementar**
+
+```ts
+// lib/essential-words/verification/latency.ts
+// Umbral de "respuesta rapida" POR MODALIDAD (spec 3.5). El umbral global de
+// 25s era fragil: la latencia depende de longitud de frase, escribir vs.
+// hablar, teclado movil vs. escritorio y accesibilidad, y un unico numero
+// penaliza sistematicamente a las modalidades con audio.
+
+import type { AttemptModality, ReviewLog } from "./types";
+
+/**
+ * Valores iniciales PROVISIONALES y declarados como tales (spec 10,
+ * decision 1). Se reemplazan por la medicion real del usuario en cuanto haya
+ * muestras suficientes.
+ */
+export const LATENCY_THRESHOLDS_MS: Record<AttemptModality, number> = {
+  recognition: 8_000,
+  production: 25_000,
+  listening: 15_000,
+  pronunciation: 20_000,
+};
+
+/** True cuando la respuesta fue rapida PARA ESE TIPO DE EJERCICIO. */
+export function isFastFor(
+  modality: AttemptModality,
+  latencyMs: number,
+  thresholds: Record<AttemptModality, number> = LATENCY_THRESHOLDS_MS,
+): boolean {
+  return latencyMs < thresholds[modality];
+}
+
+function median(values: number[]): number {
+  const sorted = [...values].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 === 0
+    ? (sorted[mid - 1] + sorted[mid]) / 2
+    : sorted[mid];
+}
+
+/**
+ * Recalibra con el historial real. Solo cuentan los ACIERTOS: un fallo lento
+ * describe una recuperacion que no ocurrio, y meterlo en la mediana
+ * ensancharia el umbral hasta volverlo inutil.
+ */
+export function calibrateLatencyThresholds(
+  logs: ReviewLog[],
+  fallback: Record<AttemptModality, number>,
+  minSamples: number,
+): Record<AttemptModality, number> {
+  const byModality = new Map<AttemptModality, number[]>();
+
+  for (const log of logs) {
+    if (!log.affectsSchedule) continue;
+    if (log.assessment.grade === "Again") continue;
+    const bucket = byModality.get(log.assessment.modality) ?? [];
+    bucket.push(log.assessment.latencyMs);
+    byModality.set(log.assessment.modality, bucket);
+  }
+
+  const result = { ...fallback };
+  for (const [modality, samples] of byModality) {
+    if (samples.length < minSamples) continue;
+    // La mediana de los aciertos marca lo que es "normal" para este usuario;
+    // por encima de ella la respuesta deja de ser fluida.
+    result[modality] = Math.round(median(samples));
+  }
+  return result;
+}
+```
+
+- [ ] **Step 4: Usarlo en `buildAssessment`**
+
+`attemptGrade` sigue intacto para la ruta vieja. Lo que cambia es que el modelo nuevo **reevalúa** el escalón `Easy`/`Good` con el umbral de la modalidad. Sustituir el cuerpo de `buildAssessment` en `verification/assessment.ts`:
+
+```ts
+import { attemptGrade, type AttemptOutcome } from "../attempt-grade";
+import { isFastFor, LATENCY_THRESHOLDS_MS } from "./latency";
+import type { AttemptAssessment, AttemptModality } from "./types";
+
+export function buildAssessment(
+  outcome: AttemptOutcome,
+  modality: AttemptModality,
+  interactionDurationMs: number,
+  thresholds: Record<AttemptModality, number> = LATENCY_THRESHOLDS_MS,
+): AttemptAssessment {
+  const base = attemptGrade(outcome);
+  // attemptGrade usa un umbral global; solo el escalon Easy/Good depende de
+  // la latencia, asi que es el unico que se reevalua por modalidad. Again y
+  // Hard vienen de pistas o fallos y no se tocan.
+  const grade = (base === "Easy" || base === "Good")
+    ? (isFastFor(modality, outcome.latencyMs, thresholds) ? "Easy" : "Good")
+    : base;
+
+  return {
+    grade,
+    modality,
+    correct: outcome.correct || outcome.typo,
+    latencyMs: outcome.latencyMs,
+    interactionDurationMs: Math.max(interactionDurationMs, outcome.latencyMs),
+    usedHints: outcome.hintsUsed > 0,
+    rescued: outcome.rescued,
+    acceptedVariant: outcome.typo,
+  };
+}
+```
+
+- [ ] **Step 5: Añadir el test que demuestra el cambio de comportamiento**
+
+Añadir a `verification/__tests__/assessment.test.ts`:
+
+```ts
+it("el escalón Easy/Good usa el umbral de la modalidad, no los 25s globales", () => {
+  // 10s: rápido escribiendo una frase, lento eligiendo entre cuatro opciones.
+  const slowForRecognition = buildAssessment(outcome({ latencyMs: 10_000 }), "recognition", 12_000);
+  const fastForProduction = buildAssessment(outcome({ latencyMs: 10_000 }), "production", 12_000);
+  expect(slowForRecognition.grade).toBe("Good");
+  expect(fastForProduction.grade).toBe("Easy");
+});
+
+it("un Again no se reevalúa por latencia: viene de un fallo, no de lentitud", () => {
+  const failed = buildAssessment(
+    outcome({ correct: false, latencyMs: 100 }), "recognition", 200);
+  expect(failed.grade).toBe("Again");
+});
+
+it("un Hard no se reevalúa: viene de una pista", () => {
+  const hinted = buildAssessment(
+    outcome({ hintsUsed: 1, latencyMs: 100 }), "recognition", 200);
+  expect(hinted.grade).toBe("Hard");
+});
+```
+
+- [ ] **Step 6: Ejecutar**
+
+Run: `pnpm test lib/essential-words/verification`
+Expected: PASS. El test de caracterización de la Fase 0 sigue verde: `attemptGrade` y `LOW_LATENCY_MS` no se han tocado.
+
+- [ ] **Step 7: Commit**
+
+```bash
+git add lib/essential-words/verification/latency.ts lib/essential-words/verification/assessment.ts lib/essential-words/verification/__tests__/
+git commit -m "feat(essential-words): umbral de latencia por modalidad, calibrable con el historial"
+```
+
+
 
 ---
 
@@ -5593,3 +5878,1161 @@ Expected: PASS.
 git add lib/essential-words/usage/__tests__/
 git commit -m "test(essential-words): fixtures authored y ciclo de usage sin proveedor"
 ```
+
+---
+
+## Fase 8 — Simulación y calibración
+
+**Objetivo:** ejecutar la simulación de carga **antes** de dar el motor por terminado, y fijar con ella los valores que las fases anteriores dejaron declarados como provisionales.
+
+**Depende de:** fases 4–7 completas.
+**Condición de salida:** los once criterios de §9.5 pasan para los cinco perfiles, y las cinco decisiones abiertas de §10 tienen valor.
+
+> **Este es el riesgo real del diseño.** Si la simulación falla, puede obligar a revisar §1 (quizá tres habilidades sean demasiadas) o §4 (colocación menos agresiva). Es más barato descubrirlo aquí que en producción.
+
+### Task 8.1: Reloj inyectado y perfiles de usuario
+
+**Files:**
+- Create: `lib/essential-words/simulation/profiles.ts`
+- Test: `lib/essential-words/simulation/__tests__/profiles.test.ts`
+
+- [ ] **Step 1: Escribir el test**
+
+```ts
+// lib/essential-words/simulation/__tests__/profiles.test.ts
+import { describe, it, expect } from "vitest";
+import { PROFILES, practicesOn, answerCorrectly } from "../profiles";
+
+const day = (n: number) => new Date(2026, 7, 1 + n);
+
+describe("PROFILES", () => {
+  it("define los cinco perfiles de la spec", () => {
+    expect(Object.keys(PROFILES).sort()).toEqual(
+      ["advanced", "beginner", "bursty", "intermittent", "steady"],
+    );
+  });
+});
+
+describe("practicesOn", () => {
+  it("Constante practica a diario", () => {
+    const days = Array.from({ length: 30 }, (_, i) => practicesOn(PROFILES.steady, day(i), 0));
+    expect(days.every(Boolean)).toBe(true);
+  });
+
+  it("Intermitente se salta días", () => {
+    const days = Array.from({ length: 30 }, (_, i) => practicesOn(PROFILES.intermittent, day(i), 0));
+    const active = days.filter(Boolean).length;
+    expect(active).toBeGreaterThan(10);
+    expect(active).toBeLessThan(26);
+  });
+
+  it("Ráfagas tiene periodos largos de abandono", () => {
+    const days = Array.from({ length: 42 }, (_, i) => practicesOn(PROFILES.bursty, day(i), 0));
+    // Debe existir una racha de al menos 10 días seguidos sin practicar.
+    let longestGap = 0;
+    let gap = 0;
+    for (const practiced of days) {
+      gap = practiced ? 0 : gap + 1;
+      longestGap = Math.max(longestGap, gap);
+    }
+    expect(longestGap).toBeGreaterThanOrEqual(10);
+  });
+
+  it("es determinista: misma semilla, mismo calendario", () => {
+    const a = Array.from({ length: 30 }, (_, i) => practicesOn(PROFILES.bursty, day(i), 7));
+    const b = Array.from({ length: 30 }, (_, i) => practicesOn(PROFILES.bursty, day(i), 7));
+    expect(a).toEqual(b);
+  });
+});
+
+describe("answerCorrectly", () => {
+  it("Constante ronda el 85% de precisión", () => {
+    const results = Array.from({ length: 1000 }, (_, i) => answerCorrectly(PROFILES.steady, i));
+    const rate = results.filter(Boolean).length / results.length;
+    expect(rate).toBeGreaterThan(0.78);
+    expect(rate).toBeLessThan(0.92);
+  });
+
+  it("Principiante ronda el 60%", () => {
+    const results = Array.from({ length: 1000 }, (_, i) => answerCorrectly(PROFILES.beginner, i));
+    const rate = results.filter(Boolean).length / results.length;
+    expect(rate).toBeGreaterThan(0.52);
+    expect(rate).toBeLessThan(0.68);
+  });
+});
+```
+
+- [ ] **Step 2: Ejecutar — debe fallar**
+
+Run: `pnpm test lib/essential-words/simulation/__tests__/profiles.test.ts`
+Expected: FAIL — módulo inexistente.
+
+- [ ] **Step 3: Implementar**
+
+```ts
+// lib/essential-words/simulation/profiles.ts
+// Perfiles de usuario para la simulacion de carga (spec 9.2). Todo
+// deterministico: una simulacion que no se puede reproducir no sirve para
+// calibrar parametros.
+
+export interface SimulationProfile {
+  id: string;
+  /** Probabilidad de practicar un dia dado. */
+  practiceRate: number;
+  /** Precision media al responder. */
+  accuracy: number;
+  /** Patron de rafagas: dias activos seguidos de dias muertos. */
+  burst?: { activeDays: number; idleDays: number };
+  /** Confianza esperada de la colocacion inicial. */
+  placementConfidence: "high" | "low";
+}
+
+export const PROFILES: Record<string, SimulationProfile> = {
+  steady: { id: "steady", practiceRate: 1, accuracy: 0.85, placementConfidence: "low" },
+  intermittent: { id: "intermittent", practiceRate: 0.5, accuracy: 0.8, placementConfidence: "low" },
+  bursty: {
+    id: "bursty", practiceRate: 1, accuracy: 0.8,
+    burst: { activeDays: 7, idleDays: 14 }, placementConfidence: "low",
+  },
+  beginner: { id: "beginner", practiceRate: 0.85, accuracy: 0.6, placementConfidence: "low" },
+  advanced: { id: "advanced", practiceRate: 0.9, accuracy: 0.9, placementConfidence: "high" },
+};
+
+function hash(...parts: (string | number)[]): number {
+  let h = 0;
+  for (const part of parts.join(":")) h = (h * 31 + part.charCodeAt(0)) | 0;
+  return Math.abs(h) / 0x7fffffff;
+}
+
+const DAY_MS = 86_400_000;
+
+export function practicesOn(profile: SimulationProfile, date: Date, seed: number): boolean {
+  if (profile.burst) {
+    const dayIndex = Math.floor(date.getTime() / DAY_MS);
+    const cycle = profile.burst.activeDays + profile.burst.idleDays;
+    return dayIndex % cycle < profile.burst.activeDays;
+  }
+  return hash(profile.id, seed, date.toISOString().slice(0, 10)) < profile.practiceRate;
+}
+
+export function answerCorrectly(profile: SimulationProfile, attempt: number): boolean {
+  return hash(profile.id, "answer", attempt) < profile.accuracy;
+}
+```
+
+- [ ] **Step 4: Ejecutar y commit**
+
+Run: `pnpm test lib/essential-words/simulation/__tests__/profiles.test.ts`
+Expected: PASS (7 tests). Si el test de ráfagas falla por el alineamiento del ciclo, ajustar `activeDays`/`idleDays` hasta que exista una racha ≥10.
+
+```bash
+git add lib/essential-words/simulation/profiles.ts lib/essential-words/simulation/__tests__/profiles.test.ts
+git commit -m "feat(essential-words): perfiles deterministas para la simulacion de carga"
+```
+
+### Task 8.2: Motor de simulación
+
+**Files:**
+- Create: `lib/essential-words/simulation/run-simulation.ts`
+- Test: `lib/essential-words/simulation/__tests__/run-simulation.test.ts`
+
+- [ ] **Step 1: Escribir el test**
+
+```ts
+// lib/essential-words/simulation/__tests__/run-simulation.test.ts
+import { describe, it, expect } from "vitest";
+import { runSimulation } from "../run-simulation";
+import { PROFILES } from "../profiles";
+
+const options = { days: 90, corpusSize: 1000, seed: 42 };
+
+describe("runSimulation", () => {
+  it("registra un día por jornada simulada", () => {
+    const result = runSimulation(PROFILES.steady, options);
+    expect(result.days).toHaveLength(options.days);
+  });
+
+  it("distingue sesiones activas de días naturales", () => {
+    const result = runSimulation(PROFILES.bursty, options);
+    expect(result.activeSessions).toBeLessThan(options.days);
+    expect(result.activeSessions).toBeGreaterThan(0);
+  });
+
+  it("mide la cola planificada, no solo el trabajo completado", () => {
+    const result = runSimulation(PROFILES.steady, options);
+    const day = result.days.find((d) => d.active)!;
+    expect(day.plannedSeconds).toBeGreaterThan(0);
+    expect(day).toHaveProperty("completedItems");
+  });
+
+  it("registra el desglose por origen para el análisis de picos", () => {
+    const result = runSimulation(PROFILES.advanced, options);
+    const day = result.days.find((d) => d.active)!;
+    expect(day).toHaveProperty("provisionalItems");
+    expect(day).toHaveProperty("usageActivations");
+  });
+
+  it("es reproducible: misma semilla, mismo resultado", () => {
+    const a = runSimulation(PROFILES.steady, options);
+    const b = runSimulation(PROFILES.steady, options);
+    expect(a.days.map((d) => d.plannedSeconds)).toEqual(b.days.map((d) => d.plannedSeconds));
+  });
+
+  it("un día sin práctica no planifica nada, pero acumula backlog", () => {
+    const result = runSimulation(PROFILES.bursty, options);
+    const idle = result.days.find((d) => !d.active)!;
+    expect(idle.plannedSeconds).toBe(0);
+  });
+});
+```
+
+- [ ] **Step 2: Ejecutar — debe fallar**
+
+Run: `pnpm test lib/essential-words/simulation/__tests__/run-simulation.test.ts`
+Expected: FAIL — módulo inexistente.
+
+- [ ] **Step 3: Implementar**
+
+```ts
+// lib/essential-words/simulation/run-simulation.ts
+// Simulacion de carga con reloj inyectado (spec 9). Con 3 habilidades base
+// por palabra, mas 0..N usage, mas provisionales de colocacion, el sistema
+// puede parecer correcto una semana y enterrar al usuario al mes.
+
+import { planDailyAllowance } from "../daily-budget";
+import { buildSkillQueue } from "../skill-queue";
+import { estimateItemsSeconds, DEFAULT_SECONDS_BY_MODALITY } from "../cost-estimate";
+import { DEFAULT_ACTIVATION_LIMITS, DEFAULT_DAILY_BUDGET_SECONDS } from "../planning-types";
+import { practicesOn, answerCorrectly, type SimulationProfile } from "./profiles";
+import type { PlannedItem } from "../planning-types";
+
+export interface SimulationOptions {
+  days: number;
+  corpusSize: number;
+  seed: number;
+  dailyBudgetSeconds?: number;
+}
+
+export interface SimulatedDay {
+  date: string;
+  active: boolean;
+  plannedSeconds: number;
+  plannedItems: number;
+  completedItems: number;
+  backlogSeconds: number;
+  mode: "normal" | "recovery";
+  /** Desglose por origen, para el analisis de picos sincronizados (9.4). */
+  provisionalItems: number;
+  usageActivations: number;
+  newWords: number;
+  skillActivations: number;
+}
+
+export interface SimulationResult {
+  profile: string;
+  days: SimulatedDay[];
+  activeSessions: number;
+}
+
+const DAY_MS = 86_400_000;
+
+/**
+ * Simulacion simplificada: modela la DINAMICA de carga (cuantos items vencen,
+ * cuantos se completan, cuanto se acumula), no la exactitud de FSRS, que ya
+ * esta testeada en su propio modulo.
+ */
+export function runSimulation(
+  profile: SimulationProfile,
+  options: SimulationOptions,
+): SimulationResult {
+  const budget = options.dailyBudgetSeconds ?? DEFAULT_DAILY_BUDGET_SECONDS;
+  const start = new Date("2026-08-01T00:00:00.000Z");
+  const days: SimulatedDay[] = [];
+
+  let backlog: PlannedItem[] = [];
+  let dueToday: PlannedItem[] = [];
+  let previousMode: "normal" | "recovery" = "normal";
+  let introduced = 0;
+  let attempt = 0;
+
+  for (let d = 0; d < options.days; d += 1) {
+    const date = new Date(start.getTime() + d * DAY_MS);
+    const active = practicesOn(profile, date, options.seed);
+
+    if (!active) {
+      // Lo que vencia hoy pasa a ser deuda.
+      backlog = [...backlog, ...dueToday];
+      dueToday = [];
+      days.push({
+        date: date.toISOString().slice(0, 10),
+        active: false, plannedSeconds: 0, plannedItems: 0, completedItems: 0,
+        backlogSeconds: estimateItemsSeconds(backlog, DEFAULT_SECONDS_BY_MODALITY),
+        mode: previousMode,
+        provisionalItems: 0, usageActivations: 0, newWords: 0, skillActivations: 0,
+      });
+      continue;
+    }
+
+    const remainingCorpus = Math.max(0, options.corpusSize - introduced);
+    const allowance = planDailyAllowance({
+      dailyBudgetSeconds: budget,
+      mandatory: { learning: [], overdue: backlog, dueToday, provisionalDue: [] },
+      candidates: {
+        baseSkillActivations: [],
+        usageActivations: [],
+        newWords: Array.from({ length: Math.min(10, remainingCorpus) }, (_, i) => ({
+          wordId: `c1k:w${introduced + i}`, rank: introduced + i,
+        })),
+      },
+      estimatedSeconds: {
+        byModality: DEFAULT_SECONDS_BY_MODALITY, newWordIntroduction: 40,
+      },
+      consumed: { skillActivations: 0, usageActivations: 0 },
+      previousMode,
+    }, DEFAULT_ACTIVATION_LIMITS);
+
+    const queue = buildSkillQueue({
+      mandatory: { learning: [], overdue: backlog, dueToday, provisionalDue: [] },
+      candidates: {
+        baseSkillActivations: [], usageActivations: [],
+        newWords: Array.from({ length: allowance.newWords }, (_, i) => ({
+          wordId: `c1k:w${introduced + i}`, rank: introduced + i,
+        })),
+      },
+      allowance,
+    });
+
+    // El usuario hace lo que cabe en su presupuesto real.
+    let spent = 0;
+    let completed = 0;
+    const nextDue: PlannedItem[] = [];
+
+    for (const item of queue) {
+      const cost = DEFAULT_SECONDS_BY_MODALITY[item.modality];
+      if (spent + cost > budget) break;
+      spent += cost;
+      completed += 1;
+      attempt += 1;
+
+      // Acierto -> vuelve mas tarde; fallo -> vuelve pronto.
+      const correct = answerCorrectly(profile, attempt);
+      const intervalDays = correct ? 3 + (attempt % 12) : 1;
+      nextDue.push({ ...item, dueAt: new Date(date.getTime() + intervalDays * DAY_MS).toISOString() });
+    }
+
+    const done = new Set(queue.slice(0, completed).map((i) => i.itemId));
+    backlog = [...backlog, ...dueToday].filter((i) => !done.has(i.itemId));
+    introduced += allowance.newWords;
+    previousMode = allowance.mode;
+
+    // Lo reprogramado que cae manana entra en dueToday del proximo dia.
+    const tomorrow = new Date(date.getTime() + DAY_MS).toISOString().slice(0, 10);
+    dueToday = nextDue.filter((i) => i.dueAt.slice(0, 10) <= tomorrow);
+    backlog = [...backlog, ...nextDue.filter((i) => i.dueAt.slice(0, 10) > tomorrow)]
+      .filter((i) => i.dueAt.slice(0, 10) <= date.toISOString().slice(0, 10));
+
+    days.push({
+      date: date.toISOString().slice(0, 10),
+      active: true,
+      plannedSeconds: allowance.plannedSeconds,
+      plannedItems: queue.length,
+      completedItems: completed,
+      backlogSeconds: estimateItemsSeconds(backlog, DEFAULT_SECONDS_BY_MODALITY),
+      mode: allowance.mode,
+      provisionalItems: 0,
+      usageActivations: allowance.usageActivations,
+      newWords: allowance.newWords,
+      skillActivations: allowance.skillActivations,
+    });
+  }
+
+  return {
+    profile: profile.id,
+    days,
+    activeSessions: days.filter((d) => d.active).length,
+  };
+}
+```
+
+- [ ] **Step 4: Ejecutar y commit**
+
+Run: `pnpm test lib/essential-words/simulation/__tests__/run-simulation.test.ts`
+Expected: PASS (6 tests).
+
+```bash
+git add lib/essential-words/simulation/run-simulation.ts lib/essential-words/simulation/__tests__/run-simulation.test.ts
+git commit -m "feat(essential-words): motor de simulacion de carga con reloj inyectado"
+```
+
+### Task 8.3: Criterios de aprobación
+
+**Files:**
+- Create: `lib/essential-words/simulation/criteria.ts`
+- Test: `lib/essential-words/simulation/__tests__/criteria.test.ts`
+
+- [ ] **Step 1: Escribir el test**
+
+```ts
+// lib/essential-words/simulation/__tests__/criteria.test.ts
+import { describe, it, expect } from "vitest";
+import {
+  budgetRespected, percentile95, recoveryExits, backlogSlope,
+  usageShare, isPeak, synchronizedPeaks, introducesNewWords,
+} from "../criteria";
+import type { SimulatedDay } from "../run-simulation";
+
+const day = (over: Partial<SimulatedDay> = {}): SimulatedDay => ({
+  date: "2026-08-01", active: true, plannedSeconds: 800, plannedItems: 20,
+  completedItems: 20, backlogSeconds: 0, mode: "normal",
+  provisionalItems: 0, usageActivations: 0, newWords: 2, skillActivations: 2, ...over,
+});
+
+const BUDGET = 900;
+
+describe("criterio 1 — 90% de sesiones activas bajo 1.2× el presupuesto", () => {
+  it("aprueba cuando casi todas caben", () => {
+    const days = Array.from({ length: 100 }, () => day({ plannedSeconds: 850 }));
+    expect(budgetRespected(days, BUDGET)).toBe(true);
+  });
+
+  it("falla cuando más del 10% se desborda", () => {
+    const days = [
+      ...Array.from({ length: 80 }, () => day({ plannedSeconds: 850 })),
+      ...Array.from({ length: 20 }, () => day({ plannedSeconds: 2_000 })),
+    ];
+    expect(budgetRespected(days, BUDGET)).toBe(false);
+  });
+
+  it("ignora los días sin práctica: no son fallo del planificador", () => {
+    const days = [
+      ...Array.from({ length: 10 }, () => day({ plannedSeconds: 850 })),
+      ...Array.from({ length: 90 }, () => day({ active: false, plannedSeconds: 0 })),
+    ];
+    expect(budgetRespected(days, BUDGET)).toBe(true);
+  });
+});
+
+describe("criterio 2 — percentil 95", () => {
+  it("calcula el p95 sobre sesiones activas", () => {
+    const days = Array.from({ length: 100 }, (_, i) => day({ plannedSeconds: i * 10 }));
+    expect(percentile95(days)).toBeGreaterThan(900);
+  });
+});
+
+describe("criterio 3 — el modo recuperación sale", () => {
+  it("aprueba si vuelve a normal tras entrar", () => {
+    const days = [
+      ...Array.from({ length: 5 }, () => day({ mode: "recovery" })),
+      ...Array.from({ length: 5 }, () => day({ mode: "normal" })),
+    ];
+    expect(recoveryExits(days)).toBe(true);
+  });
+
+  it("falla si queda atrapado hasta el final", () => {
+    const days = Array.from({ length: 30 }, () => day({ mode: "recovery" }));
+    expect(recoveryExits(days)).toBe(false);
+  });
+});
+
+describe("criterio 4 — pendiente del backlog", () => {
+  it("una pendiente negativa aprueba", () => {
+    const days = Array.from({ length: 60 }, (_, i) => day({ backlogSeconds: 3_000 - i * 40 }));
+    expect(backlogSlope(days)).toBeLessThanOrEqual(0);
+  });
+
+  it("detecta crecimiento sostenido aunque baje a ratos", () => {
+    // Sube 50/día pero baja 20 cada tercer día: no es monótono y aun así crece.
+    const days = Array.from({ length: 60 }, (_, i) =>
+      day({ backlogSeconds: i * 50 - (i % 3 === 0 ? 20 : 0) }));
+    expect(backlogSlope(days)).toBeGreaterThan(0);
+  });
+});
+
+describe("criterio 6 — proporción de usage", () => {
+  it("no aplica el porcentaje por debajo del denominador mínimo", () => {
+    const days = [day({ usageActivations: 1, skillActivations: 0, newWords: 0 })];
+    expect(usageShare(days)).toBeNull();
+  });
+
+  it("calcula la proporción con muestras suficientes", () => {
+    const days = Array.from({ length: 7 }, () =>
+      day({ usageActivations: 1, skillActivations: 3, newWords: 0 }));
+    const share = usageShare(days)!;
+    expect(share).toBeCloseTo(7 / 28, 2);
+  });
+});
+
+describe("criterio 7 — picos sincronizados", () => {
+  it("un valor 1.5× sobre la mediana de las 4 ventanas previas es pico", () => {
+    expect(isPeak(160, [100, 100, 100, 100])).toBe(true);
+    expect(isPeak(140, [100, 100, 100, 100])).toBe(false);
+  });
+
+  it("usa mediana, no media: un pico aislado no eleva la referencia", () => {
+    // Con media, [100,100,100,400] daría 175 y ocultaría el siguiente pico.
+    expect(isPeak(200, [100, 100, 100, 400])).toBe(true);
+  });
+
+  it("solo falla si ambas series pican Y la cola se desborda", () => {
+    const provisional = [100, 100, 100, 100, 200];
+    const usage = [10, 10, 10, 10, 30];
+    expect(synchronizedPeaks(provisional, usage, [800, 800, 800, 800, 1_600], 900)).toBe(true);
+    // Mismos picos, pero la cola no se desborda: no es fallo.
+    expect(synchronizedPeaks(provisional, usage, [800, 800, 800, 800, 850], 900)).toBe(false);
+  });
+});
+
+describe("criterios 8-11 — progreso y liveness", () => {
+  it("un planificador que nunca introduce nada FALLA el criterio 8", () => {
+    const days = Array.from({ length: 30 }, () =>
+      day({ newWords: 0, plannedSeconds: 100, mode: "normal" }));
+    expect(introducesNewWords(days, 10)).toBe(false);
+  });
+
+  it("aprueba si introduce al menos el 60% de lo candidato sin presión", () => {
+    const days = Array.from({ length: 30 }, () =>
+      day({ newWords: 7, plannedSeconds: 100, mode: "normal" }));
+    expect(introducesNewWords(days, 10)).toBe(true);
+  });
+
+  it("no exige introducir cuando hay presión de backlog", () => {
+    const days = Array.from({ length: 30 }, () =>
+      day({ newWords: 0, plannedSeconds: 890, mode: "normal" }));
+    expect(introducesNewWords(days, 10)).toBe(true);
+  });
+});
+```
+
+- [ ] **Step 2: Ejecutar — debe fallar**
+
+Run: `pnpm test lib/essential-words/simulation/__tests__/criteria.test.ts`
+Expected: FAIL — módulo inexistente.
+
+- [ ] **Step 3: Implementar**
+
+```ts
+// lib/essential-words/simulation/criteria.ts
+// Criterios de aprobacion (spec 9.5). Los siete primeros acotan CARGA; los
+// cuatro ultimos comprueban PROGRESO, porque un planificador que devolviera
+// siempre ceros cumpliria casi todos los primeros.
+
+import type { SimulatedDay } from "./run-simulation";
+
+const activeOnly = (days: SimulatedDay[]) => days.filter((d) => d.active);
+
+/** Criterio 1: >=90% de sesiones activas bajo 1.2x el presupuesto. */
+export function budgetRespected(days: SimulatedDay[], budget: number): boolean {
+  const active = activeOnly(days);
+  if (active.length === 0) return true;
+  const within = active.filter((d) => d.plannedSeconds <= budget * 1.2).length;
+  return within / active.length >= 0.9;
+}
+
+/** Criterio 2: el p95 de minutos planificados no supera 1.5x. */
+export function percentile95(days: SimulatedDay[]): number {
+  const values = activeOnly(days).map((d) => d.plannedSeconds).sort((a, b) => a - b);
+  if (values.length === 0) return 0;
+  return values[Math.min(values.length - 1, Math.floor(values.length * 0.95))];
+}
+
+/** Criterio 3: si entra en recuperacion, tambien sale. */
+export function recoveryExits(days: SimulatedDay[]): boolean {
+  const entered = days.some((d) => d.mode === "recovery");
+  if (!entered) return true;
+  const lastRecovery = days.map((d) => d.mode).lastIndexOf("recovery");
+  return lastRecovery < days.length - 1;
+}
+
+/**
+ * Criterio 4: pendiente del backlog por regresion lineal. "No crece de forma
+ * monotona" era demasiado debil: una serie que baja ocasionalmente puede
+ * crecer sin limite a largo plazo.
+ */
+export function backlogSlope(days: SimulatedDay[]): number {
+  const values = days.map((d) => d.backlogSeconds);
+  const n = values.length;
+  if (n < 2) return 0;
+
+  const meanX = (n - 1) / 2;
+  const meanY = values.reduce((a, b) => a + b, 0) / n;
+  let numerator = 0;
+  let denominator = 0;
+  for (let i = 0; i < n; i += 1) {
+    numerator += (i - meanX) * (values[i] - meanY);
+    denominator += (i - meanX) ** 2;
+  }
+  return denominator === 0 ? 0 : numerator / denominator;
+}
+
+/** Denominador minimo antes de aplicar el porcentaje: con 1 activacion, un
+ *  usage da 100% y el criterio seria ruido. */
+const MIN_ACTIVATIONS = 10;
+
+/** Criterio 6: proporcion de usage sobre activaciones totales, o null si no
+ *  hay muestras suficientes. */
+export function usageShare(days: SimulatedDay[]): number | null {
+  const active = activeOnly(days);
+  const usage = active.reduce((sum, d) => sum + d.usageActivations, 0);
+  const total = active.reduce(
+    (sum, d) => sum + d.usageActivations + d.skillActivations + d.newWords, 0);
+  if (total < MIN_ACTIVATIONS) return null;
+  return usage / total;
+}
+
+/**
+ * Criterio 7: una ventana es pico si supera 1.5x la MEDIANA de las cuatro
+ * anteriores. Mediana y no media, para que un pico aislado no eleve la
+ * referencia y enmascare al siguiente.
+ */
+export function isPeak(value: number, previous: number[]): boolean {
+  if (previous.length === 0) return false;
+  const sorted = [...previous].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  const median = sorted.length % 2 === 0
+    ? (sorted[mid - 1] + sorted[mid]) / 2
+    : sorted[mid];
+  return value > median * 1.5;
+}
+
+/** Falla solo si AMBAS series pican en la misma ventana Y la cola supera
+ *  1.5x el presupuesto. */
+export function synchronizedPeaks(
+  provisional: number[],
+  usage: number[],
+  plannedSeconds: number[],
+  budget: number,
+): boolean {
+  for (let i = 4; i < provisional.length; i += 1) {
+    const window = (series: number[]) => series.slice(i - 4, i);
+    if (
+      isPeak(provisional[i], window(provisional))
+      && isPeak(usage[i], window(usage))
+      && plannedSeconds[i] > budget * 1.5
+    ) return true;
+  }
+  return false;
+}
+
+/**
+ * Criterio 8: sin presion de backlog se introduce al menos el 60% de las
+ * palabras candidatas. Sin esto, un planificador que devuelve
+ * `{ newWords: 0 }` aprobaria la simulacion entera.
+ */
+export function introducesNewWords(
+  days: SimulatedDay[],
+  candidatesPerDay: number,
+): boolean {
+  const relaxed = activeOnly(days).filter(
+    (d) => d.mode === "normal" && d.plannedSeconds < 900 * 0.8,
+  );
+  if (relaxed.length === 0) return true;
+  const introduced = relaxed.reduce((sum, d) => sum + d.newWords, 0);
+  return introduced >= relaxed.length * candidatesPerDay * 0.6;
+}
+```
+
+- [ ] **Step 4: Ejecutar y commit**
+
+Run: `pnpm test lib/essential-words/simulation/__tests__/criteria.test.ts`
+Expected: PASS (15 tests).
+
+```bash
+git add lib/essential-words/simulation/criteria.ts lib/essential-words/simulation/__tests__/criteria.test.ts
+git commit -m "feat(essential-words): criterios de aprobacion, carga y progreso"
+```
+
+### Task 8.4: Ejecutar la simulación sobre los cinco perfiles
+
+**Files:**
+- Create: `lib/essential-words/simulation/__tests__/acceptance.test.ts`
+
+- [ ] **Step 1: Escribir el test de aceptación**
+
+```ts
+// lib/essential-words/simulation/__tests__/acceptance.test.ts
+// REQUISITO DE ACEPTACIÓN del motor (spec §9). Se ejecuta ANTES de dar el
+// motor por terminado, no después.
+
+import { describe, it, expect } from "vitest";
+import { runSimulation } from "../run-simulation";
+import { PROFILES } from "../profiles";
+import {
+  budgetRespected, percentile95, recoveryExits, backlogSlope,
+  usageShare, introducesNewWords,
+} from "../criteria";
+import { DEFAULT_DAILY_BUDGET_SECONDS } from "../../planning-types";
+
+const BUDGET = DEFAULT_DAILY_BUDGET_SECONDS;
+const options = { days: 90, corpusSize: 1000, seed: 42 };
+
+describe.each(Object.values(PROFILES))("perfil $id", (profile) => {
+  const result = runSimulation(profile, options);
+
+  it("criterio 1: 90% de sesiones activas bajo 1.2× el presupuesto", () => {
+    expect(budgetRespected(result.days, BUDGET)).toBe(true);
+  });
+
+  it("criterio 2: p95 bajo 1.5× el presupuesto", () => {
+    expect(percentile95(result.days)).toBeLessThanOrEqual(BUDGET * 1.5);
+  });
+
+  it("criterio 3: el modo recuperación no queda atrapado", () => {
+    expect(recoveryExits(result.days)).toBe(true);
+  });
+
+  it("criterio 6: usage no supera el 30% de las activaciones", () => {
+    const share = usageShare(result.days);
+    if (share !== null) expect(share).toBeLessThanOrEqual(0.3);
+  });
+});
+
+describe("perfil Constante — criterios específicos", () => {
+  const result = runSimulation(PROFILES.steady, options);
+
+  it("criterio 4: la pendiente del backlog es ≤ 0 tras el calentamiento", () => {
+    const warm = result.days.slice(14);
+    expect(backlogSlope(warm)).toBeLessThanOrEqual(0);
+  });
+
+  it("criterio 8: introduce palabras nuevas cuando no hay presión", () => {
+    expect(introducesNewWords(result.days, 10)).toBe(true);
+  });
+});
+
+describe("perfil Ráfagas — recuperación tras ausencia", () => {
+  const result = runSimulation(PROFILES.bursty, options);
+
+  it("criterio 5: vuelve a régimen normal en ≤14 sesiones activas", () => {
+    const active = result.days.filter((d) => d.active);
+    const firstNormalAfterGap = active.findIndex((d, i) => i > 0 && d.mode === "normal");
+    // Si nunca entró en recuperación, el criterio se cumple trivialmente.
+    const enteredRecovery = active.some((d) => d.mode === "recovery");
+    if (enteredRecovery) {
+      expect(firstNormalAfterGap).toBeLessThanOrEqual(14);
+    }
+  });
+});
+```
+
+- [ ] **Step 2: Ejecutar**
+
+Run: `pnpm test lib/essential-words/simulation/__tests__/acceptance.test.ts`
+Expected: **puede FALLAR.** Eso es información, no un error del plan.
+
+- [ ] **Step 3: Si algún criterio falla, calibrar — no relajar el criterio**
+
+Ajustar, en este orden:
+
+1. `DEFAULT_ACTIVATION_LIMITS` en `planning-types.ts` (menos activaciones por sesión).
+2. `DEFAULT_CONVERSIONS_PER_DAY` en `placement/policy.ts` (colocación más lenta).
+3. `PROVISIONAL_WINDOWS` en `verification/provisional-intervals.ts` (ventanas más anchas reparten mejor).
+4. `DEFAULT_RECOVERY_POLICY` en `recovery-mode.ts` (banda de histéresis).
+
+Reejecutar tras cada ajuste. **Si tras agotar los cuatro sigue fallando**, el problema es de diseño, no de parámetros: parar y reportar cuál criterio falla y con qué perfil. Puede obligar a revisar §1 (tres habilidades base quizá sean demasiadas) o §4 (colocación menos agresiva).
+
+- [ ] **Step 4: Registrar los valores calibrados**
+
+Crear `docs/superpowers/plans/notes/2026-08-06-fase8-calibracion.md` con los valores finales de las cinco decisiones abiertas de §10 y qué criterio forzó cada ajuste.
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add lib/essential-words/simulation/__tests__/acceptance.test.ts docs/superpowers/plans/notes/2026-08-06-fase8-calibracion.md lib/essential-words/
+git commit -m "test(essential-words): simulacion de aceptacion sobre los cinco perfiles"
+```
+
+### Task 8.5: Fijar las decisiones abiertas
+
+**Files:**
+- Modify: `lib/essential-words/skill-item.ts` (`DEFAULT_MATURITY_POLICY`)
+- Modify: `lib/essential-words/planning-types.ts` (`DEFAULT_ACTIVATION_LIMITS`)
+- Modify: `lib/essential-words/cost-estimate.ts` (`DEFAULT_SECONDS_BY_MODALITY`)
+- Modify: `lib/essential-words/verification/provisional-intervals.ts` (`PROVISIONAL_WINDOWS`)
+- Modify: `lib/essential-words/recovery-mode.ts` (`DEFAULT_RECOVERY_POLICY`)
+- Modify: `docs/superpowers/specs/2026-08-06-essential-words-skill-model-design.md` (§10)
+
+- [ ] **Step 1: Sustituir los valores y las marcas de "provisional"**
+
+En cada constante, reemplazar el valor por el calibrado y cambiar el comentario de "PROVISIONAL: se calibra en la Fase 8" por la referencia a la nota de calibración. Ejemplo:
+
+```ts
+/**
+ * Calibrada con la simulación de la Fase 8; ver
+ * docs/superpowers/plans/notes/2026-08-06-fase8-calibracion.md.
+ * Al ser `mature` un predicado derivado, cambiar estos umbrales no requiere
+ * migración: basta con subir `version`.
+ */
+export const DEFAULT_MATURITY_POLICY: MaturityPolicy = { version: "v1", /* … */ };
+```
+
+- [ ] **Step 2: Actualizar §10 de la spec**
+
+Sustituir cada decisión abierta por su valor y un enlace a la nota. Si alguna sigue abierta, decirlo explícitamente en vez de inventar un valor.
+
+- [ ] **Step 3: Ejecutar todo**
+
+Run: `pnpm test && pnpm type-check && pnpm lint`
+Expected: PASS.
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add -A
+git commit -m "feat(essential-words): fijar los parametros calibrados con la simulacion"
+```
+
+---
+
+## Fase 9 — Retirada del modelo anterior
+
+**Objetivo:** eliminar la lectura y escritura del `SRSData` viejo de Essential Words.
+
+**Precondiciones — TODAS obligatorias.** No empezar esta fase sin marcarlas:
+
+- [ ] Migración verificada sobre datos reales (no solo fixtures)
+- [ ] Sincronización estable: sin entradas `failed` en el outbox para `learning_items` / `review_logs`
+- [ ] Simulación de la Fase 8 aprobada
+- [ ] Métricas de producción razonables con el flag encendido
+- [ ] Posibilidad de reconstruir la programación desde `review_logs`
+
+**Condición de salida:** el flag deja de existir; `gradeEssentialWord` ya no escribe `SRSData` con prefijo `c1k:`.
+
+### Task 9.1: Reconstrucción de programación desde logs
+
+**Files:**
+- Create: `lib/essential-words/rebuild-from-logs.ts`
+- Test: `lib/essential-words/__tests__/rebuild-from-logs.test.ts`
+
+Es la red de seguridad que hace reversible la retirada. Se escribe **antes** de borrar nada.
+
+- [ ] **Step 1: Escribir el test**
+
+```ts
+// lib/essential-words/__tests__/rebuild-from-logs.test.ts
+import { describe, it, expect } from "vitest";
+import { rebuildScheduleFromLogs } from "../rebuild-from-logs";
+import type { LearningItem, ReviewLog } from "../verification/types";
+
+const NOW = new Date("2026-09-01T10:00:00.000Z");
+
+const item = (): LearningItem => ({
+  id: "c1k:on#meaning", wordId: "c1k:on", skill: "meaning",
+  contentOrigin: "authored", schedule: { kind: "none" },
+  repetitions: 0, lapses: 0, suspended: false,
+});
+
+const log = (
+  grade: "Again" | "Good", occurredAt: string, affects = true,
+): ReviewLog => ({
+  id: crypto.randomUUID(), learningItemId: "c1k:on#meaning", sessionId: "s1",
+  assessment: {
+    grade, modality: "production", correct: grade !== "Again",
+    latencyMs: 3_000, interactionDurationMs: 9_000,
+    usedHints: false, rescued: false, acceptedVariant: false,
+  },
+  observations: [], eventType: affects ? "scheduled-review" : "practice",
+  occurredAt,
+  ...(affects ? { affectsSchedule: true as const, fsrsLogId: "f1" } : { affectsSchedule: false as const }),
+} as ReviewLog);
+
+describe("rebuildScheduleFromLogs", () => {
+  it("reconstruye una programación FSRS desde el historial", () => {
+    const logs = [
+      log("Good", "2026-08-01T10:00:00.000Z"),
+      log("Good", "2026-08-10T10:00:00.000Z"),
+      log("Good", "2026-08-25T10:00:00.000Z"),
+    ];
+    const rebuilt = rebuildScheduleFromLogs(item(), logs, NOW);
+    expect(rebuilt.schedule.kind).toBe("fsrs");
+    expect(rebuilt.repetitions).toBe(3);
+  });
+
+  it("ignora los eventos que no afectan a la programación", () => {
+    const logs = [
+      log("Good", "2026-08-01T10:00:00.000Z"),
+      log("Good", "2026-08-02T10:00:00.000Z", false),
+      log("Good", "2026-08-03T10:00:00.000Z", false),
+    ];
+    expect(rebuildScheduleFromLogs(item(), logs, NOW).repetitions).toBe(1);
+  });
+
+  it("cuenta los lapses", () => {
+    const logs = [
+      log("Good", "2026-08-01T10:00:00.000Z"),
+      log("Again", "2026-08-10T10:00:00.000Z"),
+      log("Good", "2026-08-15T10:00:00.000Z"),
+    ];
+    const rebuilt = rebuildScheduleFromLogs(item(), logs, NOW);
+    expect(rebuilt.lapses).toBe(1);
+    expect(rebuilt.repetitions).toBe(2);
+  });
+
+  it("aplica los logs en orden cronológico, no en el de llegada", () => {
+    const inOrder = [
+      log("Good", "2026-08-01T10:00:00.000Z"),
+      log("Again", "2026-08-20T10:00:00.000Z"),
+    ];
+    const shuffled = [inOrder[1], inOrder[0]];
+    expect(rebuildScheduleFromLogs(item(), shuffled, NOW).schedule)
+      .toEqual(rebuildScheduleFromLogs(item(), inOrder, NOW).schedule);
+  });
+
+  it("sin logs devuelve el ítem sin programar", () => {
+    expect(rebuildScheduleFromLogs(item(), [], NOW).schedule).toEqual({ kind: "none" });
+  });
+
+  it("solo usa los logs de ESE ítem", () => {
+    const foreign = { ...log("Good", "2026-08-01T10:00:00.000Z"), learningItemId: "c1k:the#meaning" };
+    expect(rebuildScheduleFromLogs(item(), [foreign], NOW).schedule).toEqual({ kind: "none" });
+  });
+});
+```
+
+- [ ] **Step 2: Ejecutar — debe fallar**
+
+Run: `pnpm test lib/essential-words/__tests__/rebuild-from-logs.test.ts`
+Expected: FAIL — módulo inexistente.
+
+- [ ] **Step 3: Implementar**
+
+```ts
+// lib/essential-words/rebuild-from-logs.ts
+// Red de seguridad de la Fase 9: si la programacion se corrompe, se
+// reconstruye desde ReviewLog. Es la precondicion que hace reversible la
+// retirada del modelo anterior.
+
+import { scheduleFsrsReview } from "@/lib/srs/fsrs-schedule";
+import type { LearningItem, ReviewLog } from "./verification/types";
+
+export function rebuildScheduleFromLogs(
+  item: LearningItem,
+  logs: ReviewLog[],
+  now: Date,
+): LearningItem {
+  const relevant = logs
+    .filter((log) => log.learningItemId === item.id && log.affectsSchedule)
+    .sort((a, b) => a.occurredAt.localeCompare(b.occurredAt));
+
+  if (relevant.length === 0) return { ...item, schedule: { kind: "none" } };
+
+  let stability = 0;
+  let difficulty = 0;
+  let state: "New" | "Learning" | "Review" | "Relearning" = "New";
+  let dueAt = now;
+  let repetitions = 0;
+  let lapses = 0;
+
+  for (const log of relevant) {
+    const next = scheduleFsrsReview({
+      stability, difficulty, state,
+      grade: log.assessment.grade,
+      now: new Date(log.occurredAt),
+    });
+    stability = next.stability;
+    difficulty = next.difficulty;
+    state = next.state;
+    dueAt = next.dueAt;
+
+    if (log.assessment.grade === "Again") lapses += 1;
+    else repetitions += 1;
+  }
+
+  return {
+    ...item,
+    schedule: { kind: "fsrs", dueAt: dueAt.toISOString(), stability, difficulty, state },
+    lastReview: relevant[relevant.length - 1].occurredAt,
+    repetitions,
+    lapses,
+  };
+}
+```
+
+- [ ] **Step 4: Ejecutar y commit**
+
+Run: `pnpm test lib/essential-words/__tests__/rebuild-from-logs.test.ts`
+Expected: PASS (6 tests).
+
+```bash
+git add lib/essential-words/rebuild-from-logs.ts lib/essential-words/__tests__/rebuild-from-logs.test.ts
+git commit -m "feat(essential-words): reconstruccion de programacion desde ReviewLog"
+```
+
+### Task 9.2: Verificar las precondiciones sobre datos reales
+
+**Files:**
+- Create: `docs/superpowers/plans/notes/2026-08-06-fase9-precondiciones.md`
+
+- [ ] **Step 1: Ejecutar la migración con el flag encendido y medir**
+
+Con `NEXT_PUBLIC_SKILL_MODEL=true` en `.env.local`, arrancar `pnpm dev`, entrar en `/practice/essential-words` y comprobar en DevTools → Application → IndexedDB:
+
+- `learningItems` tiene 3 filas por cada `srsData` con prefijo `c1k:`
+- ninguna fila `learningItems` tiene `mature` ni `status`
+- `srsData` conserva **todas** sus filas
+
+- [ ] **Step 2: Comprobar el outbox**
+
+En la consola del navegador:
+
+```js
+const failed = await db.syncOutbox.where('status').equals('failed').toArray();
+console.table(failed.filter(e => ['learning_items','review_logs'].includes(e.table)));
+```
+
+Expected: array vacío.
+
+- [ ] **Step 3: Escribir la nota con las cinco precondiciones**
+
+Marcar cada una con evidencia (números medidos, no impresiones). Si alguna falla, **la fase 9 no empieza**: se corrige antes.
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add docs/superpowers/plans/notes/2026-08-06-fase9-precondiciones.md
+git commit -m "docs(essential-words): verificacion de precondiciones para retirar SRSData"
+```
+
+### Task 9.3: Retirar la escritura del modelo anterior
+
+**Files:**
+- Modify: `lib/essential-words/grade.ts`
+- Modify: `hooks/useEssentialWordsSession.ts`
+- Test: `lib/essential-words/__tests__/grade.test.ts`
+
+- [ ] **Step 1: Añadir el test de que ya no se escribe `SRSData`**
+
+```ts
+// Añadir a lib/essential-words/__tests__/grade.test.ts
+it("ya no escribe SRSData con prefijo c1k:", async () => {
+  const saved: unknown[] = [];
+  // El mock de @/lib/db de este fichero ya intercepta saveSRSData;
+  // reutilizarlo y comprobar que no se llama para wordIds c1k:.
+  await gradeEssentialWord("on", 4, {}, "user-1");
+  expect(saved.filter((s: any) => String(s?.wordId).startsWith("c1k:"))).toHaveLength(0);
+});
+```
+
+Ajustar al mock real del fichero: la aserción es "no hay escritura `c1k:` en `srsData`", el mecanismo depende de cómo esté montado el mock.
+
+- [ ] **Step 2: Ejecutar — debe fallar**
+
+Run: `pnpm test lib/essential-words/__tests__/grade.test.ts`
+Expected: FAIL — todavía escribe.
+
+- [ ] **Step 3: Sustituir el cuerpo de `gradeEssentialWord`**
+
+Reemplazar la escritura de `saveSRSData` por la ruta nueva: construir `AttemptAssessment`, llamar a `planAttemptRecord`, y persistir `learningItems` + `reviewLogs` vía `queries.ts`. Conservar la escritura de `answer_history` (`savePracticeAnswer`), que es ortogonal y alimenta las gráficas.
+
+- [ ] **Step 4: Retirar el flag**
+
+Eliminar `isSkillModelEnabled` de `lib/feature-flags.ts` y sus llamadas. Si el fichero se queda vacío, borrarlo.
+
+- [ ] **Step 5: Ejecutar todo**
+
+Run: `pnpm test && pnpm type-check && pnpm lint && pnpm build`
+Expected: PASS. `pnpm build` es obligatorio aquí: es el primer momento en que la ruta nueva es la única.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add -A
+git commit -m "refactor(essential-words): retirar la escritura de SRSData y el feature flag"
+```
+
+### Task 9.4: Limpieza final
+
+**Files:**
+- Delete: `lib/essential-words/queue.ts` (si ya no tiene llamantes)
+- Modify: `docs/superpowers/plans/notes/2026-08-06-fase0-baseline.md`
+
+- [ ] **Step 1: Comprobar si el planificador viejo sigue en uso**
+
+Run: `grep -rn "buildSessionQueue\|from \"@/lib/essential-words/queue\"" --include=*.ts --include=*.tsx . | grep -v __tests__`
+
+Si no hay resultados fuera de tests, borrar `queue.ts` y sus tests. Si los hay, **no borrar**: migrar primero esos llamantes y dejar constancia en la nota.
+
+- [ ] **Step 2: Cerrar la nota de baseline**
+
+Añadir al final de la nota de Fase 0 una sección "Estado final" con la suite después de las nueve fases, para poder comparar con el punto de partida.
+
+- [ ] **Step 3: Ejecutar la suite completa por última vez**
+
+Run: `pnpm test && pnpm type-check && pnpm lint && pnpm build`
+Expected: PASS.
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add -A
+git commit -m "chore(essential-words): retirar el planificador anterior y cerrar la baseline"
+```
+
+---
+
+## Criterio de aprobación de cada fase
+
+Ninguna fase se da por terminada sin las cinco:
+
+1. `pnpm type-check` limpio y `pnpm lint` sin errores nuevos
+2. Tests unitarios de sus invariantes, en verde
+3. Tests de integración de sus límites (lo que entra y sale de la fase)
+4. Migraciones reversibles o conservadoras
+5. **Sin activar dependencias de fases posteriores** — el flag sigue apagado hasta la 9
+
+## Mapa de invariantes por fase
+
+| Invariantes (§7 de la spec) | Fase |
+|---|---|
+| 10, 19, 20, 21, 25, 26, 30 | 1 |
+| 18, 19 | 2 |
+| 1, 2, 3, 12, 13, 16, 24 | 3 |
+| 7, 11, 14, 27, 28, 29 | 4 |
+| 8, 28 | 5 |
+| 4, 11, 25, 26 | 6 |
+| 5, 7, 9, 23 | 7 |
+| 6, 15, 17, 22 | 8 (vía simulación) |
+
+## Trazabilidad spec → fase
+
+Cada sección de la spec tiene una tarea que la implementa. Si al ejecutar el
+plan encuentras una sección sin tarea, es un fallo del plan: repórtalo en vez
+de improvisar.
+
+| Spec | Qué exige | Tarea |
+|---|---|---|
+| §1.2 `LearningItem` | 3 habilidades base + 0..N usos | 1.1 |
+| §1.3 `ItemSchedule` | unión discriminada | 1.1 |
+| §1.4 `SkillStatus` derivado | `deriveSkillStatus`, `getLearningReason` | 1.2 |
+| §1.5 `mature` predicado | `isMature` + `MaturityPolicy` con ventana | 1.3 |
+| §1.7 `SkillObservation` | observación con signo y `basis` tipada | 1.1, 3.2 |
+| §1.8 `AttemptAssessment` | grade + modalidad + `interactionDurationMs` | 1.1, 3.1 |
+| §1.9b `PlacementInference` | campo propio, solo habilidades base | 1.1, 6.2 |
+| §1.10 `ReviewLog` | unión `affectsSchedule` / `fsrsLogId` | 1.1, 3.5 |
+| §1.11 Persistencia | Dexie + Supabase + RLS | 2.2, 2.3, 2.4 |
+| §1.12 Migración | idempotente y conservadora | 2.6, 2.7 |
+| §2.1 Cola | seis tramos por urgencia | 4.5 |
+| §2.2 Presupuesto | `DailyPlanningInput` → `DailyAllowance` | 4.1, 4.2, 4.4 |
+| §2.3 Recuperación | segundos + histéresis + tres fuentes | 4.3 |
+| §2.4 UI | ítems y minutos en vez de palabras | 5.2 (copy); vistas → spec siguiente |
+| §2.5 Activación base | presupuesto propio, tramo 4, límite por habilidad | 4.1, 4.4, 4.5 |
+| §3.1 Verificación inmediata | sin exposición previa | 5.1, 5.3 |
+| §3.2 Dos pasos | `deriveObservations` + `derivePlacements` | 3.2, 3.4 |
+| §3.3–3.4 Tablas por prueba | producción y auditiva | 3.4 |
+| §3.5 Latencia por modalidad | umbral configurable y calibrable | 3.7 |
+| §3.5 Pistas tipificadas | **ya existe**: `hint-ladder.ts` distingue `HintRungKind` y marca `priced`; solo las de pago llegan a `hintsUsed` | — |
+| §3.6 Intervalos provisionales | deterministas y distribuidos | 3.3 |
+| §4.1 Bandas | muestreo estratificado sin familias léxicas | 6.1 |
+| §4.2 Inferido ≠ activo | `placementInference` + conversión gradual | 6.2, 6.3 |
+| §4.3 Muestreo de control | 1–2 de cada 20 + recalibración | 6.4 |
+| §5.1 Dos tipos de uso | `context_usage` / `advanced_usage` | 7.1 |
+| §5.1 Pérdida de madurez | bloquea activación, no retira | 7.2 |
+| §5.2 `usage` es `LearningItem` | ciclo derivado, sin `activationStatus` | 1.4, 7.4 |
+| §5.3 Presupuesto de `usage` | cuenta contra el diario | 4.4 |
+| §5.4 Offline | la sesión nunca se rompe | 7.4 |
+| §5.5 Validación y telemetría | motivos de no-aparición | 7.3 |
+| §9 Simulación | perfiles, criterios, calibración | 8.1–8.5 |
+
+**Fuera de alcance de este plan**, por decisión de la spec (§11): vistas de
+habilidad, pipeline de contenido, AI Coach y ruta teórica. Los ganchos quedan
+listos (`contentOrigin`, `SkillObservation.source: "journal"`, `queries.ts`,
+`ReviewLog`), pero ninguna tarea los usa todavía.
