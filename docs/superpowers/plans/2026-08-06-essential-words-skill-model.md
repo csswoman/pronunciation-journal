@@ -4101,3 +4101,1495 @@ El fichero de la Fase 0 fijaba el bug (10 nuevas por encima de 40 atrasados)
 para que corregirlo fuera una decision explicita. Ya existe el gating real,
 asi que se retira y se sustituye por los tests contrarios."
 ```
+
+---
+
+## Fase 5 — Verificación "Ya la conozco"
+
+**Objetivo:** la prueba ocurre **inmediatamente**, sin exponer antes definición, ejemplo ni audio, y coloca por evidencia en vez de archivar la palabra entera.
+
+**Depende de:** Fase 4 (las colocaciones consumen presupuesto).
+**Condición de salida:** invariantes 8, 28 verdes. Detrás del flag, porque cambia una interacción existente.
+
+### Task 5.1: Política de verificación inmediata
+
+**Files:**
+- Create: `lib/essential-words/verification/claim-known.ts`
+- Test: `lib/essential-words/verification/__tests__/claim-known.test.ts`
+
+- [ ] **Step 1: Escribir el test**
+
+```ts
+// lib/essential-words/verification/__tests__/claim-known.test.ts
+import { describe, it, expect } from "vitest";
+import { planKnownClaim, verificationCost } from "../claim-known";
+import type { LearningItem } from "../types";
+import type { EssentialWord } from "../../types";
+
+const word = {
+  word: "on", rank: 12, cefr_level: "A1", pos: "preposition",
+  translation: "en / sobre", meaning: "in contact with a surface",
+  example_sentence: "The book is on the table.",
+} as EssentialWord;
+
+const unseen = (skill: LearningItem["skill"]): LearningItem => ({
+  id: `c1k:on#${skill}`, wordId: "c1k:on", skill,
+  contentOrigin: "authored", schedule: { kind: "none" },
+  repetitions: 0, lapses: 0, suspended: false,
+});
+
+const items = () => [unseen("meaning"), unseen("production"), unseen("listening")];
+
+describe("planKnownClaim", () => {
+  it("devuelve una prueba de producción, no una omisión", () => {
+    const plan = planKnownClaim(word, items());
+    expect(plan.kind).toBe("verify");
+    if (plan.kind === "verify") {
+      expect(plan.step.modality).toBe("production");
+    }
+  });
+
+  it("la prueba NO revela la respuesta (invariante 8)", () => {
+    const plan = planKnownClaim(word, items());
+    if (plan.kind !== "verify") throw new Error("expected verify");
+    const serialized = JSON.stringify(plan.step);
+    // El prompt es en español; la palabra inglesa es lo que hay que producir.
+    expect(serialized).not.toContain(word.example_sentence);
+    expect(plan.step.revealsAnswer).toBe(false);
+  });
+
+  it("el prompt es la traducción: español → inglés", () => {
+    const plan = planKnownClaim(word, items());
+    if (plan.kind !== "verify") throw new Error("expected verify");
+    expect(plan.step.prompt).toBe(word.translation);
+    expect(plan.step.expected).toBe(word.word);
+  });
+
+  it("no verifica una habilidad ya programada: no hay nada que averiguar", () => {
+    const scheduled = items().map((item) =>
+      item.skill === "meaning"
+        ? { ...item, schedule: { kind: "fsrs" as const, dueAt: "2026-09-01T00:00:00.000Z", stability: 30, difficulty: 5, state: "Review" as const } }
+        : item);
+    const plan = planKnownClaim(word, scheduled);
+    // production sigue sin programar, así que aún hay algo que verificar.
+    expect(plan.kind).toBe("verify");
+  });
+
+  it("si todas las habilidades base están programadas, no hay verificación que hacer", () => {
+    const allScheduled = items().map((item) => ({
+      ...item,
+      schedule: { kind: "fsrs" as const, dueAt: "2026-09-01T00:00:00.000Z", stability: 30, difficulty: 5, state: "Review" as const },
+    }));
+    expect(planKnownClaim(word, allScheduled).kind).toBe("nothing-to-verify");
+  });
+
+  it("sin traducción cae a una prueba basada en el significado", () => {
+    const noTranslation = { ...word, translation: undefined } as EssentialWord;
+    const plan = planKnownClaim(noTranslation, items());
+    if (plan.kind !== "verify") throw new Error("expected verify");
+    expect(plan.step.prompt).toBe(noTranslation.meaning);
+  });
+});
+
+describe("verificationCost", () => {
+  it("una verificación que acredita dos habilidades cuesta dos activaciones (invariante 28)", () => {
+    // Un Easy en producción crea provisionales de meaning Y production.
+    expect(verificationCost("production")).toBe(2);
+    expect(verificationCost("listening")).toBe(2);
+  });
+
+  it("una de reconocimiento acredita solo meaning: cuesta una", () => {
+    expect(verificationCost("recognition")).toBe(1);
+  });
+});
+```
+
+- [ ] **Step 2: Ejecutar — debe fallar**
+
+Run: `pnpm test lib/essential-words/verification/__tests__/claim-known.test.ts`
+Expected: FAIL — módulo inexistente.
+
+- [ ] **Step 3: Implementar**
+
+```ts
+// lib/essential-words/verification/claim-known.ts
+// "Ya conozco esta palabra" -> "Compruebalo con una pregunta corta".
+//
+// La prueba ocurre INMEDIATAMENTE (spec 3.1). El modelo anterior la diferia a
+// la ronda final, y entre pulsar el boton y la prueba la palabra podia
+// aparecer en otro ejercicio, en una lectura, o seguir fresca en memoria de
+// trabajo: el resultado quedaba contaminado.
+
+import { deriveSkillStatus } from "../skill-item";
+import type { EssentialWord } from "../types";
+import type { AttemptModality, LearningItem, Skill } from "./types";
+
+const BASE_SKILLS: readonly Skill[] = ["meaning", "listening", "production"];
+
+export interface VerificationStep {
+  modality: AttemptModality;
+  /** Lo que se muestra: espanol, nunca la respuesta inglesa. */
+  prompt: string;
+  /** Lo que se espera. NO se renderiza antes de responder. */
+  expected: string;
+  /** Siempre false: si fuera true, la verificacion no mediria nada. */
+  revealsAnswer: false;
+}
+
+export type KnownClaimPlan =
+  | { kind: "verify"; step: VerificationStep }
+  | { kind: "nothing-to-verify" };
+
+/**
+ * Cuantas activaciones consume una verificacion de esta modalidad. Un Easy en
+ * produccion crea DOS provisionales (meaning + production) y no puede
+ * saltarse el presupuesto por venir de una sola pregunta (invariante 28).
+ */
+export function verificationCost(modality: AttemptModality): number {
+  return modality === "recognition" || modality === "pronunciation" ? 1 : 2;
+}
+
+export function planKnownClaim(
+  word: EssentialWord,
+  items: LearningItem[],
+): KnownClaimPlan {
+  const bySkill = new Map(items.map((item) => [item.skill, item]));
+  const pending = BASE_SKILLS.filter((skill) => {
+    const item = bySkill.get(skill);
+    return !item || deriveSkillStatus(item) === "unseen";
+  });
+
+  if (pending.length === 0) return { kind: "nothing-to-verify" };
+
+  // Produccion escrita: es la prueba mas informativa por interaccion, porque
+  // observa `meaning` y `production` a la vez (spec 3.3).
+  return {
+    kind: "verify",
+    step: {
+      modality: "production",
+      prompt: word.translation ?? word.meaning ?? word.word,
+      expected: word.word,
+      revealsAnswer: false,
+    },
+  };
+}
+```
+
+- [ ] **Step 4: Ejecutar y commit**
+
+Run: `pnpm test lib/essential-words/verification/__tests__/claim-known.test.ts`
+Expected: PASS (8 tests).
+
+```bash
+git add lib/essential-words/verification/claim-known.ts lib/essential-words/verification/__tests__/claim-known.test.ts
+git commit -m "feat(essential-words): verificacion inmediata para 'ya conozco esta palabra'"
+```
+
+### Task 5.2: Copy de la interfaz
+
+**Files:**
+- Modify: `components/practice/study-card/StudyCard.tsx:262`
+- Test: `components/practice/study-card/__tests__/StudyCard.test.tsx`
+
+- [ ] **Step 1: Añadir el test al fichero existente**
+
+```tsx
+// Añadir dentro del describe principal de StudyCard.test.tsx
+it("el copy del claim no promete saltarse la palabra", () => {
+  const onOmit = vi.fn();
+  render(
+    <StudyCard
+      {...baseProps}
+      onOmit={onOmit}
+      omitLabel="Ya conozco esta palabra"
+    />,
+  );
+  const button = screen.getByRole("button", { name: /ya conozco esta palabra/i });
+  expect(button).toBeInTheDocument();
+  // El copy viejo prometía saltarla, y luego la verificaba igualmente.
+  expect(screen.queryByText(/sáltala/i)).not.toBeInTheDocument();
+});
+```
+
+`baseProps` ya existe en ese fichero; reutilizarlo tal cual.
+
+- [ ] **Step 2: Ejecutar — debe fallar**
+
+Run: `pnpm test components/practice/study-card/__tests__/StudyCard.test.tsx`
+Expected: FAIL — el botón sigue diciendo "Ya la sé, sáltala".
+
+- [ ] **Step 3: Cambiar el valor por defecto**
+
+En `components/practice/study-card/StudyCard.tsx:262`, sustituir:
+
+```tsx
+  omitLabel = 'Ya la sé, sáltala',
+```
+
+por:
+
+```tsx
+  // "Sáltala" prometía omitir y luego se verificaba igualmente. El copy ahora
+  // dice lo que de verdad pasa: hay una comprobación corta (spec §3.1).
+  omitLabel = 'Ya conozco esta palabra',
+```
+
+- [ ] **Step 4: Ejecutar y ajustar otros tests que fijaban el copy viejo**
+
+Run: `pnpm test components/practice`
+Expected: PASS. Si algún test busca "Ya la sé, sáltala", actualizarlo al copy nuevo.
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add components/practice/study-card/StudyCard.tsx components/practice/study-card/__tests__/StudyCard.test.tsx
+git commit -m "feat(essential-words): copy honesto en el claim de palabra conocida"
+```
+
+### Task 5.3: Verificación sin exposición previa
+
+**Files:**
+- Test: `lib/essential-words/verification/__tests__/no-pre-exposure.test.ts`
+
+Comprobación de composición, sin código nuevo. Si falla, el arreglo va en 5.1.
+
+- [ ] **Step 1: Escribir el test**
+
+```ts
+// lib/essential-words/verification/__tests__/no-pre-exposure.test.ts
+import { describe, it, expect } from "vitest";
+import { planKnownClaim } from "../claim-known";
+import { buildAssessment } from "../assessment";
+import { planAttemptRecord } from "../../record-attempt";
+import type { LearningItem } from "../types";
+import type { EssentialWord } from "../../types";
+
+const word = {
+  word: "on", rank: 12, cefr_level: "A1", pos: "preposition",
+  translation: "en / sobre", meaning: "in contact with a surface",
+  example_sentence: "The book is on the table.",
+  ipa: "/ɒn/",
+} as EssentialWord;
+
+const unseen = (skill: LearningItem["skill"]): LearningItem => ({
+  id: `c1k:on#${skill}`, wordId: "c1k:on", skill,
+  contentOrigin: "authored", schedule: { kind: "none" },
+  repetitions: 0, lapses: 0, suspended: false,
+});
+
+describe("el flujo de claim no expone la respuesta antes de medir", () => {
+  it("el paso de verificación no incluye la palabra inglesa en el prompt", () => {
+    const plan = planKnownClaim(word, [unseen("meaning"), unseen("production")]);
+    if (plan.kind !== "verify") throw new Error("expected verify");
+    expect(plan.step.prompt.toLowerCase()).not.toContain(word.word.toLowerCase());
+  });
+
+  it("no incluye ipa ni frase de ejemplo: ambas darían la respuesta", () => {
+    const plan = planKnownClaim(word, [unseen("meaning"), unseen("production")]);
+    if (plan.kind !== "verify") throw new Error("expected verify");
+    const serialized = JSON.stringify(plan.step);
+    expect(serialized).not.toContain("/ɒn/");
+    expect(serialized).not.toContain(word.example_sentence);
+  });
+
+  it("un Easy verificado coloca provisionales, no archiva la palabra", () => {
+    const assessment = buildAssessment(
+      { correct: true, hintsUsed: 0, rescued: false, typo: false, firstTryFailed: false, latencyMs: 4_000 },
+      "production", 11_000,
+    );
+    const plan = planAttemptRecord({
+      wordId: "c1k:on", sessionId: "s1", assessment,
+      eventType: "verification",
+      currentItems: [unseen("meaning"), unseen("production")],
+      now: new Date("2026-08-06T10:00:00.000Z"),
+    });
+    expect(plan.updatedItems.every((i) => i.schedule.kind === "provisional")).toBe(true);
+    // Nada quedó suspendido: la palabra sigue en el sistema.
+    expect(plan.updatedItems.every((i) => i.suspended === false)).toBe(true);
+  });
+
+  it("un Again verificado NO castiga: coloca en aprendizaje normal", () => {
+    const assessment = buildAssessment(
+      { correct: false, hintsUsed: 0, rescued: false, typo: false, firstTryFailed: false, latencyMs: 8_000 },
+      "production", 15_000,
+    );
+    const plan = planAttemptRecord({
+      wordId: "c1k:on", sessionId: "s1", assessment,
+      eventType: "verification",
+      currentItems: [unseen("meaning"), unseen("production")],
+      now: new Date("2026-08-06T10:00:00.000Z"),
+    });
+    expect(plan.updatedItems).toHaveLength(2);
+    expect(plan.updatedItems.every((i) => i.schedule.kind === "fsrs")).toBe(true);
+  });
+});
+```
+
+- [ ] **Step 2: Ejecutar y commit**
+
+Run: `pnpm test lib/essential-words/verification/__tests__/no-pre-exposure.test.ts`
+Expected: PASS (4 tests).
+
+```bash
+git add lib/essential-words/verification/__tests__/no-pre-exposure.test.ts
+git commit -m "test(essential-words): la verificacion no expone la respuesta antes de medir"
+```
+
+---
+
+## Fase 6 — Colocación inicial
+
+**Objetivo:** muestreo estratificado por bandas, inferencias persistidas y activación **gradual**.
+
+**Depende de:** Fase 4. **No debe bloquear** el funcionamiento normal: la sesión de colocación es opcional.
+**Condición de salida:** invariantes 4, 11, 25, 26 verdes.
+
+### Task 6.1: Muestreo estratificado por bandas
+
+**Files:**
+- Create: `lib/essential-words/placement/bands.ts`
+- Test: `lib/essential-words/placement/__tests__/bands.test.ts`
+
+- [ ] **Step 1: Escribir el test**
+
+```ts
+// lib/essential-words/placement/__tests__/bands.test.ts
+import { describe, it, expect } from "vitest";
+import { buildBands, sampleForPlacement, BAND_COUNT, SAMPLES_PER_BAND } from "../bands";
+import type { EssentialWord } from "../../types";
+
+const corpus = (n: number): EssentialWord[] =>
+  Array.from({ length: n }, (_, i) => ({
+    word: `word${i}`, rank: i + 1, cefr_level: "A1",
+    pos: i % 3 === 0 ? "noun" : i % 3 === 1 ? "verb" : "adjective",
+    translation: `t${i}`, meaning: `m${i}`, example_sentence: `s${i}`,
+  } as EssentialWord));
+
+describe("buildBands", () => {
+  it("parte el corpus en bandas de frecuencia", () => {
+    expect(buildBands(corpus(1000))).toHaveLength(BAND_COUNT);
+  });
+
+  it("las bandas están ordenadas de más a menos frecuente", () => {
+    const bands = buildBands(corpus(1000));
+    const firstRanks = bands.map((b) => b.words[0].rank);
+    expect([...firstRanks].sort((a, b) => a - b)).toEqual(firstRanks);
+  });
+
+  it("un corpus pequeño no revienta: produce bandas más pequeñas", () => {
+    expect(() => buildBands(corpus(10))).not.toThrow();
+  });
+});
+
+describe("sampleForPlacement", () => {
+  it("toma unas 5 palabras por banda", () => {
+    const sample = sampleForPlacement(corpus(1000), 42);
+    expect(sample.length).toBeLessThanOrEqual(BAND_COUNT * SAMPLES_PER_BAND);
+    expect(sample.length).toBeGreaterThan(0);
+  });
+
+  it("evita varias palabras de la misma familia", () => {
+    const family = [
+      { word: "develop", rank: 100 }, { word: "developer", rank: 101 },
+      { word: "development", rank: 102 }, { word: "unrelated", rank: 103 },
+    ].map((w) => ({ ...w, cefr_level: "B1", pos: "verb", translation: "t", meaning: "m", example_sentence: "s" } as EssentialWord));
+
+    const sample = sampleForPlacement(family, 7);
+    const stems = sample.map((w) => w.word.slice(0, 6));
+    expect(new Set(stems).size).toBe(stems.length);
+  });
+
+  it("estratifica por parte de la oración", () => {
+    const sample = sampleForPlacement(corpus(1000), 42);
+    const posSet = new Set(sample.map((w) => w.pos));
+    expect(posSet.size).toBeGreaterThan(1);
+  });
+
+  it("es determinista con la misma semilla", () => {
+    const a = sampleForPlacement(corpus(500), 99).map((w) => w.word);
+    const b = sampleForPlacement(corpus(500), 99).map((w) => w.word);
+    expect(a).toEqual(b);
+  });
+
+  it("semillas distintas dan muestras distintas", () => {
+    const a = sampleForPlacement(corpus(500), 1).map((w) => w.word);
+    const b = sampleForPlacement(corpus(500), 2).map((w) => w.word);
+    expect(a).not.toEqual(b);
+  });
+});
+```
+
+- [ ] **Step 2: Ejecutar — debe fallar**
+
+Run: `pnpm test lib/essential-words/placement/__tests__/bands.test.ts`
+Expected: FAIL — módulo inexistente.
+
+- [ ] **Step 3: Implementar**
+
+```ts
+// lib/essential-words/placement/bands.ts
+// El conocimiento de vocabulario NO es monotonico (spec 4.1): alguien puede
+// conocer terminos tecnicos poco frecuentes y fallar palabras mas frecuentes
+// de otro contexto. Una frontera unica seria falsa; por eso, bandas.
+
+import type { EssentialWord } from "../types";
+
+export const BAND_COUNT = 6;
+export const SAMPLES_PER_BAND = 5;
+
+export interface FrequencyBand {
+  id: string;
+  words: EssentialWord[];
+}
+
+export function buildBands(words: EssentialWord[]): FrequencyBand[] {
+  const sorted = [...words].sort((a, b) => a.rank - b.rank);
+  const size = Math.ceil(sorted.length / BAND_COUNT);
+
+  return Array.from({ length: BAND_COUNT }, (_, i) => ({
+    id: `band-${i + 1}`,
+    words: sorted.slice(i * size, (i + 1) * size),
+  })).filter((band) => band.words.length > 0);
+}
+
+/** Semilla deterministica: nada de Math.random, para poder reproducir. */
+function seeded(seed: number): () => number {
+  let state = seed | 0 || 1;
+  return () => {
+    state = (state * 1_103_515_245 + 12_345) & 0x7fffffff;
+    return state / 0x7fffffff;
+  };
+}
+
+/** Raiz aproximada, para no muestrear develop / developer / development. */
+function stem(word: string): string {
+  return word.toLowerCase().slice(0, 6);
+}
+
+/**
+ * Muestreo estratificado por banda y por parte de la oracion, evitando
+ * familias lexicas: acertar `develop` no dice casi nada sobre `development`,
+ * asi que gastar dos de las ~30 muestras en la misma raiz es desperdiciarlas.
+ */
+export function sampleForPlacement(words: EssentialWord[], seed: number): EssentialWord[] {
+  const random = seeded(seed);
+  const usedStems = new Set<string>();
+  const sample: EssentialWord[] = [];
+
+  for (const band of buildBands(words)) {
+    const byPos = new Map<string, EssentialWord[]>();
+    for (const word of band.words) {
+      const bucket = byPos.get(word.pos) ?? [];
+      bucket.push(word);
+      byPos.set(word.pos, bucket);
+    }
+
+    const buckets = [...byPos.values()];
+    let taken = 0;
+    let guard = 0;
+
+    while (taken < SAMPLES_PER_BAND && guard < band.words.length * 2) {
+      guard += 1;
+      const bucket = buckets[Math.floor(random() * buckets.length)];
+      if (!bucket || bucket.length === 0) continue;
+
+      const candidate = bucket[Math.floor(random() * bucket.length)];
+      const key = stem(candidate.word);
+      if (usedStems.has(key)) continue;
+
+      usedStems.add(key);
+      sample.push(candidate);
+      taken += 1;
+    }
+  }
+
+  return sample;
+}
+```
+
+- [ ] **Step 4: Ejecutar y commit**
+
+Run: `pnpm test lib/essential-words/placement/__tests__/bands.test.ts`
+Expected: PASS (9 tests).
+
+```bash
+git add lib/essential-words/placement/bands.ts lib/essential-words/placement/__tests__/bands.test.ts
+git commit -m "feat(essential-words): muestreo estratificado por bandas de frecuencia"
+```
+
+### Task 6.2: Confianza por banda y persistencia de la inferencia
+
+**Files:**
+- Create: `lib/essential-words/placement/policy.ts`
+- Test: `lib/essential-words/placement/__tests__/policy.test.ts`
+
+- [ ] **Step 1: Escribir el test**
+
+```ts
+// lib/essential-words/placement/__tests__/policy.test.ts
+import { describe, it, expect } from "vitest";
+import {
+  bandConfidence, planInferences, PLACEMENT_POLICY_VERSION,
+} from "../policy";
+import type { EssentialWord } from "../../types";
+
+const words = (n: number, from = 1): EssentialWord[] =>
+  Array.from({ length: n }, (_, i) => ({
+    word: `w${from + i}`, rank: from + i, cefr_level: "A1", pos: "noun",
+    translation: "t", meaning: "m", example_sentence: "s",
+  } as EssentialWord));
+
+describe("bandConfidence", () => {
+  it("5/5 y 4/5 dan confianza alta", () => {
+    expect(bandConfidence(5, 5).tier).toBe("high");
+    expect(bandConfidence(4, 5).tier).toBe("high");
+  });
+
+  it("3/5 es fronteriza: verificación individual, no fast-track", () => {
+    expect(bandConfidence(3, 5).tier).toBe("borderline");
+  });
+
+  it("0-2/5 da confianza baja: aprendizaje normal", () => {
+    expect(bandConfidence(2, 5).tier).toBe("low");
+    expect(bandConfidence(0, 5).tier).toBe("low");
+  });
+
+  it("la confianza numérica crece con los aciertos", () => {
+    expect(bandConfidence(5, 5).value).toBeGreaterThan(bandConfidence(3, 5).value);
+  });
+});
+
+describe("planInferences", () => {
+  const bandWords = words(50);
+
+  it("solo infiere en bandas de confianza alta", () => {
+    const low = planInferences([{ bandId: "band-1", words: bandWords, cleanHits: 1, sampled: 5 }]);
+    expect(low).toHaveLength(0);
+  });
+
+  it("marca placementInference sin programar (invariante 26)", () => {
+    const inferred = planInferences([{ bandId: "band-1", words: bandWords, cleanHits: 5, sampled: 5 }]);
+    expect(inferred.length).toBeGreaterThan(0);
+    for (const item of inferred) {
+      expect(item.schedule).toEqual({ kind: "none" });
+      expect(item.placementInference?.bandId).toBe("band-1");
+    }
+  });
+
+  it("registra la versión de la política, para poder recalibrar después", () => {
+    const inferred = planInferences([{ bandId: "band-1", words: bandWords, cleanHits: 5, sampled: 5 }]);
+    expect(inferred[0].placementInference?.policyVersion).toBe(PLACEMENT_POLICY_VERSION);
+  });
+
+  it("nunca infiere sobre usage (invariante 25)", () => {
+    const inferred = planInferences([{ bandId: "band-1", words: bandWords, cleanHits: 5, sampled: 5 }]);
+    expect(inferred.every((i) => i.skill !== "usage")).toBe(true);
+  });
+
+  it("una inferencia nunca produce un ítem maduro (invariante 4)", () => {
+    const inferred = planInferences([{ bandId: "band-1", words: bandWords, cleanHits: 5, sampled: 5 }]);
+    // Sin programación FSRS, isMature() devuelve false por construcción.
+    expect(inferred.every((i) => i.schedule.kind === "none")).toBe(true);
+  });
+});
+```
+
+- [ ] **Step 2: Ejecutar — debe fallar**
+
+Run: `pnpm test lib/essential-words/placement/__tests__/policy.test.ts`
+Expected: FAIL — módulo inexistente.
+
+- [ ] **Step 3: Implementar**
+
+```ts
+// lib/essential-words/placement/policy.ts
+// Confianza por banda y persistencia de la inferencia (spec 4.1, 4.2).
+//
+// La inferencia NO activa: marca. La conversion a provisional activo es
+// gradual (6.3), porque sembrar cientos de vencimientos sincronizados es
+// exactamente el pico que la simulacion busca detectar.
+
+import { learningItemId } from "../skill-item";
+import type { EssentialWord } from "../types";
+import type { LearningItem, Skill } from "../verification/types";
+
+export const PLACEMENT_POLICY_VERSION = "v1";
+
+const BASE_SKILLS: readonly Skill[] = ["meaning", "listening", "production"];
+
+export type ConfidenceTier = "high" | "borderline" | "low";
+
+export interface BandConfidence {
+  tier: ConfidenceTier;
+  value: number;
+}
+
+export interface BandResult {
+  bandId: string;
+  words: EssentialWord[];
+  cleanHits: number;
+  sampled: number;
+}
+
+/**
+ * Explicable y testeable, sin modelo estadistico complejo (spec 4.1). Los
+ * fronterizos NO se infieren: se verifican individualmente.
+ */
+export function bandConfidence(cleanHits: number, sampled: number): BandConfidence {
+  const value = sampled > 0 ? cleanHits / sampled : 0;
+  if (value >= 0.8) return { tier: "high", value };
+  if (value >= 0.6) return { tier: "borderline", value };
+  return { tier: "low", value };
+}
+
+/**
+ * Items inferidos: existen, llevan su procedencia, y siguen SIN programar.
+ * `meaning` es la unica habilidad que se infiere — acertar una palabra en un
+ * muestreo escrito no dice nada sobre reconocerla de oido.
+ */
+export function planInferences(bands: BandResult[]): LearningItem[] {
+  const now = new Date().toISOString();
+  const items: LearningItem[] = [];
+
+  for (const band of bands) {
+    const confidence = bandConfidence(band.cleanHits, band.sampled);
+    if (confidence.tier !== "high") continue;
+
+    for (const word of band.words) {
+      const wordId = `c1k:${word.word.toLowerCase()}`;
+      for (const skill of BASE_SKILLS) {
+        items.push({
+          id: learningItemId(wordId, skill),
+          wordId,
+          skill,
+          contentOrigin: "authored",
+          schedule: { kind: "none" },
+          // Solo `meaning` recibe la inferencia: es lo unico que el muestreo
+          // escrito observo.
+          placementInference: skill === "meaning"
+            ? {
+                bandId: band.bandId,
+                confidence: confidence.value,
+                inferredAt: now,
+                policyVersion: PLACEMENT_POLICY_VERSION,
+              }
+            : undefined,
+          repetitions: 0,
+          lapses: 0,
+          suspended: false,
+        });
+      }
+    }
+  }
+
+  return items;
+}
+```
+
+- [ ] **Step 4: Ejecutar y commit**
+
+Run: `pnpm test lib/essential-words/placement/__tests__/policy.test.ts`
+Expected: PASS (10 tests).
+
+```bash
+git add lib/essential-words/placement/policy.ts lib/essential-words/placement/__tests__/policy.test.ts
+git commit -m "feat(essential-words): confianza por banda e inferencias sin activar"
+```
+
+### Task 6.3: Conversión gradual inferido → provisional
+
+**Files:**
+- Modify: `lib/essential-words/placement/policy.ts`
+- Test: `lib/essential-words/placement/__tests__/gradual-activation.test.ts`
+
+- [ ] **Step 1: Escribir el test**
+
+```ts
+// lib/essential-words/placement/__tests__/gradual-activation.test.ts
+import { describe, it, expect } from "vitest";
+import { convertInferences, DEFAULT_CONVERSIONS_PER_DAY } from "../policy";
+import type { LearningItem } from "../../verification/types";
+
+const NOW = new Date("2026-08-06T10:00:00.000Z");
+
+const inferred = (n: number): LearningItem[] =>
+  Array.from({ length: n }, (_, i) => ({
+    id: `c1k:w${i}#meaning`, wordId: `c1k:w${i}`, skill: "meaning" as const,
+    contentOrigin: "authored" as const,
+    schedule: { kind: "none" as const },
+    placementInference: {
+      bandId: "band-1", confidence: 0.9,
+      inferredAt: "2026-08-01T00:00:00.000Z", policyVersion: "v1",
+    },
+    repetitions: 0, lapses: 0, suspended: false,
+  }));
+
+describe("convertInferences", () => {
+  it("respeta el límite diario de conversiones (invariante 11)", () => {
+    const converted = convertInferences(inferred(500), DEFAULT_CONVERSIONS_PER_DAY, NOW);
+    expect(converted).toHaveLength(DEFAULT_CONVERSIONS_PER_DAY);
+  });
+
+  it("los convertidos pasan a provisional con source placement-inference", () => {
+    const converted = convertInferences(inferred(10), 5, NOW);
+    for (const item of converted) {
+      expect(item.schedule.kind).toBe("provisional");
+      if (item.schedule.kind === "provisional") {
+        expect(item.schedule.source).toBe("placement-inference");
+      }
+    }
+  });
+
+  it("hereda la confianza de la banda como evidenceConfidence", () => {
+    const [first] = convertInferences(inferred(1), 1, NOW);
+    if (first.schedule.kind !== "provisional") throw new Error("expected provisional");
+    expect(first.schedule.evidenceConfidence).toBe(0.9);
+  });
+
+  it("DISTRIBUYE los vencimientos: no caen todos el mismo día", () => {
+    const converted = convertInferences(inferred(30), 30, NOW);
+    const days = new Set(converted.map((i) =>
+      i.schedule.kind === "provisional" ? i.schedule.dueAt.slice(0, 10) : ""));
+    // Sin esto, la colocación siembra un pico sincronizado a 7-21 días.
+    expect(days.size).toBeGreaterThanOrEqual(7);
+  });
+
+  it("conserva placementInference como telemetría tras convertir", () => {
+    const [first] = convertInferences(inferred(1), 1, NOW);
+    expect(first.placementInference?.bandId).toBe("band-1");
+  });
+
+  it("ignora ítems ya programados: no reconvierte", () => {
+    const already = inferred(3).map((item) => ({
+      ...item,
+      schedule: {
+        kind: "provisional" as const, dueAt: "2026-08-20T00:00:00.000Z",
+        source: "placement-inference" as const, evidenceConfidence: 0.9,
+      },
+    }));
+    expect(convertInferences(already, 10, NOW)).toHaveLength(0);
+  });
+
+  it("ignora ítems sin inferencia", () => {
+    const plain = inferred(3).map((item) => ({ ...item, placementInference: undefined }));
+    expect(convertInferences(plain, 10, NOW)).toHaveLength(0);
+  });
+});
+```
+
+- [ ] **Step 2: Ejecutar — debe fallar**
+
+Run: `pnpm test lib/essential-words/placement/__tests__/gradual-activation.test.ts`
+Expected: FAIL — `convertInferences` no exportado.
+
+- [ ] **Step 3: Implementar en `placement/policy.ts`**
+
+```ts
+import { provisionalDueAt } from "../verification/provisional-intervals";
+
+/** PROVISIONAL: se calibra en la Fase 8 (spec 10, decision 4). */
+export const DEFAULT_CONVERSIONS_PER_DAY = 8;
+
+/**
+ * Convierte inferidos en provisionales activos, con limite diario y
+ * vencimientos DISTRIBUIDOS. Sin esto, la colocacion siembra cientos de
+ * vencimientos sincronizados a 7-21 dias: exactamente el pico que el
+ * criterio 7 de la simulacion busca detectar.
+ *
+ * `placementInference` se conserva tras convertir: deja de determinar la
+ * programacion, pero sigue sirviendo para recalibrar la banda (spec 4.3).
+ */
+export function convertInferences(
+  items: LearningItem[],
+  limit: number,
+  now: Date,
+): LearningItem[] {
+  return items
+    .filter((item) => item.placementInference && item.schedule.kind === "none")
+    .slice(0, limit)
+    .map((item) => ({
+      ...item,
+      schedule: {
+        kind: "provisional" as const,
+        dueAt: provisionalDueAt("inference", item.id, now).toISOString(),
+        source: "placement-inference" as const,
+        evidenceConfidence: item.placementInference!.confidence,
+      },
+    }));
+}
+```
+
+- [ ] **Step 4: Ejecutar**
+
+Run: `pnpm test lib/essential-words/placement/__tests__/gradual-activation.test.ts`
+Expected: PASS (7 tests).
+
+- [ ] **Step 5: Verificar tamaño y commit**
+
+Run: `wc -l lib/essential-words/placement/policy.ts`
+Expected: <250.
+
+```bash
+git add lib/essential-words/placement/policy.ts lib/essential-words/placement/__tests__/gradual-activation.test.ts
+git commit -m "feat(essential-words): conversion gradual de inferencias con vencimientos distribuidos"
+```
+
+### Task 6.4: Muestreo de control
+
+**Files:**
+- Create: `lib/essential-words/placement/control-sampling.ts`
+- Test: `lib/essential-words/placement/__tests__/control-sampling.test.ts`
+
+- [ ] **Step 1: Escribir el test**
+
+```ts
+// lib/essential-words/placement/__tests__/control-sampling.test.ts
+import { describe, it, expect } from "vitest";
+import { pickControlSamples, recalibrateConfidence, CONTROL_RATE } from "../control-sampling";
+import type { LearningItem } from "../../verification/types";
+
+const fastTracked = (n: number, bandId = "band-1"): LearningItem[] =>
+  Array.from({ length: n }, (_, i) => ({
+    id: `c1k:w${i}#meaning`, wordId: `c1k:w${i}`, skill: "meaning" as const,
+    contentOrigin: "authored" as const,
+    schedule: {
+      kind: "provisional" as const, dueAt: "2026-08-20T00:00:00.000Z",
+      source: "placement-inference" as const, evidenceConfidence: 0.9,
+    },
+    placementInference: {
+      bandId, confidence: 0.9, inferredAt: "2026-08-01T00:00:00.000Z", policyVersion: "v1",
+    },
+    repetitions: 0, lapses: 0, suspended: false,
+  }));
+
+describe("pickControlSamples", () => {
+  it("verifica 1-2 de cada 20 fast-tracked", () => {
+    const picked = pickControlSamples(fastTracked(20), 42);
+    expect(picked.length).toBeGreaterThanOrEqual(1);
+    expect(picked.length).toBeLessThanOrEqual(2);
+  });
+
+  it("escala con el volumen", () => {
+    const picked = pickControlSamples(fastTracked(100), 42);
+    expect(picked.length).toBeGreaterThanOrEqual(Math.floor(100 * CONTROL_RATE));
+  });
+
+  it("es determinista con la misma semilla", () => {
+    const a = pickControlSamples(fastTracked(60), 7).map((i) => i.id);
+    const b = pickControlSamples(fastTracked(60), 7).map((i) => i.id);
+    expect(a).toEqual(b);
+  });
+
+  it("solo elige ítems con inferencia de banda", () => {
+    const mixed = [
+      ...fastTracked(10),
+      ...fastTracked(10).map((i) => ({ ...i, placementInference: undefined })),
+    ];
+    expect(pickControlSamples(mixed, 3).every((i) => i.placementInference)).toBe(true);
+  });
+});
+
+describe("recalibrateConfidence", () => {
+  it("baja la confianza de una banda con muchos fallos", () => {
+    const next = recalibrateConfidence(0.9, { checked: 10, failed: 6 });
+    expect(next).toBeLessThan(0.9);
+  });
+
+  it("mantiene la confianza si el control confirma la inferencia", () => {
+    const next = recalibrateConfidence(0.9, { checked: 10, failed: 0 });
+    expect(next).toBeGreaterThanOrEqual(0.9);
+  });
+
+  it("nunca sale del rango 0-1", () => {
+    expect(recalibrateConfidence(0.9, { checked: 10, failed: 10 })).toBeGreaterThanOrEqual(0);
+    expect(recalibrateConfidence(0.99, { checked: 10, failed: 0 })).toBeLessThanOrEqual(1);
+  });
+
+  it("sin muestras no cambia nada: no recalibra a ciegas", () => {
+    expect(recalibrateConfidence(0.9, { checked: 0, failed: 0 })).toBe(0.9);
+  });
+});
+```
+
+- [ ] **Step 2: Ejecutar — debe fallar**
+
+Run: `pnpm test lib/essential-words/placement/__tests__/control-sampling.test.ts`
+Expected: FAIL — módulo inexistente.
+
+- [ ] **Step 3: Implementar**
+
+```ts
+// lib/essential-words/placement/control-sampling.ts
+// La colocacion es inferencia sobre ~30 muestras: se VA a equivocar en
+// algunas palabras. Es aceptable *porque* existe este mecanismo de
+// correccion, no porque la estimacion sea precisa (spec 4.4).
+
+import type { LearningItem } from "../verification/types";
+
+/** 1-2 de cada 20 fast-tracked se verifican en sesiones proximas. */
+export const CONTROL_RATE = 0.075;
+
+function seeded(seed: number): () => number {
+  let state = seed | 0 || 1;
+  return () => {
+    state = (state * 1_103_515_245 + 12_345) & 0x7fffffff;
+    return state / 0x7fffffff;
+  };
+}
+
+export function pickControlSamples(items: LearningItem[], seed: number): LearningItem[] {
+  const eligible = items.filter((item) => item.placementInference);
+  if (eligible.length === 0) return [];
+
+  const random = seeded(seed);
+  const target = Math.max(1, Math.round(eligible.length * CONTROL_RATE));
+  const shuffled = [...eligible].sort(() => random() - 0.5);
+  return shuffled.slice(0, target);
+}
+
+/**
+ * Si la tasa de fallo de una banda es alta, se REDUCE su confianza. La
+ * recalibracion es suave a proposito: cambiar la confianza de golpe
+ * adelantaria una avalancha de verificaciones, que es justo lo que la
+ * colocacion gradual evita.
+ */
+export function recalibrateConfidence(
+  current: number,
+  control: { checked: number; failed: number },
+): number {
+  if (control.checked === 0) return current;
+  const observed = 1 - control.failed / control.checked;
+  const blended = current * 0.5 + observed * 0.5;
+  return Math.min(1, Math.max(0, blended));
+}
+```
+
+- [ ] **Step 4: Ejecutar y commit**
+
+Run: `pnpm test lib/essential-words/placement/__tests__/control-sampling.test.ts`
+Expected: PASS (8 tests).
+
+```bash
+git add lib/essential-words/placement/control-sampling.ts lib/essential-words/placement/__tests__/control-sampling.test.ts
+git commit -m "feat(essential-words): muestreo de control y recalibracion de bandas"
+```
+
+---
+
+## Fase 7 — Ciclo de vida de `usage`
+
+**Objetivo:** elegibilidad, prefetch, validación, activación presupuestada y telemetría de no-aparición. **La generación remota se sustituye por fixtures `authored`** para probar el ciclo completo sin depender del proveedor.
+
+**Depende de:** Fase 4.
+**Condición de salida:** invariantes 5, 7, 9, 23 verdes.
+
+### Task 7.1: Elegibilidad de `usage`
+
+**Files:**
+- Create: `lib/essential-words/usage/lifecycle.ts`
+- Test: `lib/essential-words/usage/__tests__/eligibility.test.ts`
+
+- [ ] **Step 1: Escribir el test**
+
+```ts
+// lib/essential-words/usage/__tests__/eligibility.test.ts
+import { describe, it, expect } from "vitest";
+import { usageEligibility } from "../lifecycle";
+import { DEFAULT_MATURITY_POLICY } from "../../skill-item";
+import type { ItemSchedule, LearningItem, ReviewLog } from "../../verification/types";
+
+const item = (skill: LearningItem["skill"], schedule: ItemSchedule): LearningItem => ({
+  id: `c1k:on#${skill}`, wordId: "c1k:on", skill,
+  contentOrigin: "authored", schedule,
+  repetitions: 0, lapses: 0, suspended: false,
+});
+
+const review = (stability = 30): ItemSchedule => ({
+  kind: "fsrs", dueAt: "2026-09-06T00:00:00.000Z", stability, difficulty: 5, state: "Review",
+});
+
+const log = (): ReviewLog => ({
+  id: crypto.randomUUID(), learningItemId: "c1k:on#meaning", sessionId: "s1",
+  assessment: {
+    grade: "Good", modality: "production", correct: true,
+    latencyMs: 3_000, interactionDurationMs: 9_000,
+    usedHints: false, rescued: false, acceptedVariant: false,
+  },
+  observations: [], eventType: "scheduled-review",
+  affectsSchedule: true, fsrsLogId: "f1",
+  occurredAt: "2026-08-06T10:00:00.000Z",
+});
+
+const history = () => Array.from({ length: 5 }, log);
+
+describe("usageEligibility — context_usage", () => {
+  it("se desbloquea con meaning en review", () => {
+    const eligible = usageEligibility(
+      [item("meaning", review()), item("production", { kind: "none" })],
+      history(), DEFAULT_MATURITY_POLICY,
+    );
+    expect(eligible.context_usage).toBe(true);
+  });
+
+  it("un meaning provisional NO lo desbloquea", () => {
+    const provisional: ItemSchedule = {
+      kind: "provisional", dueAt: "2026-08-20T00:00:00.000Z",
+      source: "direct", evidenceConfidence: 1,
+    };
+    const eligible = usageEligibility(
+      [item("meaning", provisional)], history(), DEFAULT_MATURITY_POLICY,
+    );
+    expect(eligible.context_usage).toBe(false);
+  });
+});
+
+describe("usageEligibility — advanced_usage", () => {
+  it("exige meaning Y production maduros", () => {
+    const eligible = usageEligibility(
+      [item("meaning", review()), item("production", review())],
+      history(), DEFAULT_MATURITY_POLICY,
+    );
+    expect(eligible.advanced_usage).toBe(true);
+  });
+
+  it("con production sin madurar no se desbloquea", () => {
+    const eligible = usageEligibility(
+      [item("meaning", review()), item("production", review(1))],
+      history(), DEFAULT_MATURITY_POLICY,
+    );
+    expect(eligible.advanced_usage).toBe(false);
+  });
+
+  it("no exige listening: encadenarlo todo sería artificialmente rígido", () => {
+    const eligible = usageEligibility(
+      [item("meaning", review()), item("production", review()), item("listening", { kind: "none" })],
+      history(), DEFAULT_MATURITY_POLICY,
+    );
+    expect(eligible.advanced_usage).toBe(true);
+  });
+});
+```
+
+- [ ] **Step 2: Ejecutar — debe fallar**
+
+Run: `pnpm test lib/essential-words/usage/__tests__/eligibility.test.ts`
+Expected: FAIL — módulo inexistente.
+
+- [ ] **Step 3: Implementar**
+
+```ts
+// lib/essential-words/usage/lifecycle.ts
+// Dos tipos de uso, no uno (spec 5.1). Encadenar todo uso avanzado detras de
+// "las tres habilidades maduras" es artificialmente rigido: el uso en
+// contexto tambien FORTALECE meaning y production, no solo las corona.
+
+import { deriveSkillStatus, isMature } from "../skill-item";
+import type {
+  LearningItem, MaturityPolicy, ReviewLog, UsageKind,
+} from "../verification/types";
+
+export type UsageEligibility = Record<UsageKind, boolean>;
+
+export function usageEligibility(
+  items: LearningItem[],
+  history: ReviewLog[],
+  policy: MaturityPolicy,
+): UsageEligibility {
+  const bySkill = new Map(items.map((item) => [item.skill, item]));
+  const meaning = bySkill.get("meaning");
+  const production = bySkill.get("production");
+
+  const historyFor = (item: LearningItem) =>
+    history.filter((log) => log.learningItemId === item.id);
+
+  // Un item provisional NO desbloquea usage: la evidencia aun no se ha
+  // confirmado con un evento FSRS real.
+  const meaningInReview = meaning ? deriveSkillStatus(meaning) === "review" : false;
+
+  return {
+    context_usage: meaningInReview,
+    advanced_usage: Boolean(
+      meaning && production
+      && isMature(meaning, historyFor(meaning), policy)
+      && isMature(production, historyFor(production), policy),
+    ),
+  };
+}
+```
+
+- [ ] **Step 4: Ejecutar y commit**
+
+Run: `pnpm test lib/essential-words/usage/__tests__/eligibility.test.ts`
+Expected: PASS (5 tests).
+
+```bash
+git add lib/essential-words/usage/lifecycle.ts lib/essential-words/usage/__tests__/eligibility.test.ts
+git commit -m "feat(essential-words): elegibilidad de usage por tipo, sin exigir listening"
+```
+
+### Task 7.2: La pérdida de madurez no retira contenido activo
+
+**Files:**
+- Modify: `lib/essential-words/usage/lifecycle.ts`
+- Test: `lib/essential-words/usage/__tests__/maturity-loss.test.ts`
+
+- [ ] **Step 1: Escribir el test**
+
+```ts
+// lib/essential-words/usage/__tests__/maturity-loss.test.ts
+import { describe, it, expect } from "vitest";
+import { planUsageAfterLapse } from "../lifecycle";
+import type { LearningItem, UsagePayload } from "../../verification/types";
+
+const payload = (over: Partial<UsagePayload> = {}): UsagePayload => ({
+  usageKind: "advanced_usage", expression: "depend on",
+  sentence: "It depends on the weather.", acceptedVariants: [],
+  generationStatus: "ready", metadata: { schemaVersion: 1 },
+  activatedAt: "2026-08-01T00:00:00.000Z", ...over,
+});
+
+const activeUsage = (): LearningItem => ({
+  id: "c1k:on#usage:depend-on", wordId: "c1k:on", skill: "usage",
+  contentOrigin: "generated", generatorProvider: "gemini",
+  payload: payload(),
+  schedule: { kind: "fsrs", dueAt: "2026-08-25T00:00:00.000Z", stability: 12, difficulty: 5, state: "Review" },
+  repetitions: 3, lapses: 0, suspended: false,
+});
+
+describe("planUsageAfterLapse", () => {
+  it("NO retira los usage ya activos (invariante 23)", () => {
+    const result = planUsageAfterLapse([activeUsage()], { canActivateNew: false });
+    expect(result.retired).toHaveLength(0);
+  });
+
+  it("los activos conservan su calendario propio", () => {
+    const before = activeUsage();
+    const result = planUsageAfterLapse([before], { canActivateNew: false });
+    expect(result.unchanged[0].schedule).toEqual(before.schedule);
+  });
+
+  it("bloquea la activación de nuevos mientras no vuelva la madurez", () => {
+    const result = planUsageAfterLapse([activeUsage()], { canActivateNew: false });
+    expect(result.blockNewActivations).toBe(true);
+  });
+
+  it("con madurez recuperada vuelve a permitir activaciones", () => {
+    const result = planUsageAfterLapse([activeUsage()], { canActivateNew: true });
+    expect(result.blockNewActivations).toBe(false);
+  });
+
+  it("un fallo aislado no desestabiliza la experiencia", () => {
+    // Sin esta regla, un lapse o un cambio de MaturityPolicy retiraría
+    // contenido ya introducido.
+    const usages = [activeUsage(), activeUsage()];
+    const result = planUsageAfterLapse(usages, { canActivateNew: false });
+    expect(result.unchanged).toHaveLength(2);
+    expect(result.retired).toHaveLength(0);
+  });
+});
+```
+
+- [ ] **Step 2: Ejecutar — debe fallar**
+
+Run: `pnpm test lib/essential-words/usage/__tests__/maturity-loss.test.ts`
+Expected: FAIL — `planUsageAfterLapse` no exportado.
+
+- [ ] **Step 3: Implementar**
+
+```ts
+/**
+ * Perder la madurez controla la ACTIVACION DE CONTENIDO NUEVO, nada mas
+ * (spec 5.1). Sin esta regla, un fallo aislado —o un cambio de
+ * MaturityPolicy— retiraria contenido ya introducido y volveria la
+ * experiencia inestable.
+ */
+export function planUsageAfterLapse(
+  usageItems: LearningItem[],
+  eligibility: { canActivateNew: boolean },
+): {
+  unchanged: LearningItem[];
+  retired: LearningItem[];
+  blockNewActivations: boolean;
+} {
+  return {
+    // Los activos siguen su propio calendario. No se tocan.
+    unchanged: usageItems,
+    retired: [],
+    blockNewActivations: !eligibility.canActivateNew,
+  };
+}
+```
+
+- [ ] **Step 4: Ejecutar y commit**
+
+Run: `pnpm test lib/essential-words/usage/__tests__/maturity-loss.test.ts`
+Expected: PASS (5 tests).
+
+```bash
+git add lib/essential-words/usage/lifecycle.ts lib/essential-words/usage/__tests__/maturity-loss.test.ts
+git commit -m "feat(essential-words): perder madurez bloquea activaciones sin retirar contenido"
+```
+
+### Task 7.3: Validación y telemetría de no-aparición
+
+**Files:**
+- Create: `lib/essential-words/usage/validation.ts`
+- Test: `lib/essential-words/usage/__tests__/validation.test.ts`
+
+- [ ] **Step 1: Escribir el test**
+
+```ts
+// lib/essential-words/usage/__tests__/validation.test.ts
+import { describe, it, expect } from "vitest";
+import { validateUsagePayload, type NonAppearanceReason } from "../validation";
+import type { UsagePayload } from "../../verification/types";
+
+const valid = (over: Partial<UsagePayload> = {}): UsagePayload => ({
+  usageKind: "advanced_usage",
+  expression: "depend on",
+  sentence: "The result depends on the weather.",
+  acceptedVariants: ["depends on"],
+  generationStatus: "ready",
+  metadata: { schemaVersion: 1 },
+  ...over,
+});
+
+describe("validateUsagePayload", () => {
+  it("acepta un payload correcto", () => {
+    expect(validateUsagePayload(valid(), [])).toEqual({ ok: true });
+  });
+
+  it("rechaza si la frase no contiene la expresión", () => {
+    const result = validateUsagePayload(
+      valid({ sentence: "The weather is nice today." }), []);
+    expect(result.ok).toBe(false);
+  });
+
+  it("rechaza un payload sin generar", () => {
+    const result = validateUsagePayload(valid({ generationStatus: "pending" }), []);
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.reason).toBe("not_generated");
+  });
+
+  it("rechaza una generación fallida", () => {
+    const result = validateUsagePayload(valid({ generationStatus: "failed" }), []);
+    if (!result.ok) expect(result.reason).toBe("generation_failed");
+  });
+
+  it("rechaza un duplicado de un ítem existente", () => {
+    const result = validateUsagePayload(valid(), ["depend on"]);
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.reason).toBe("invalid_content");
+  });
+
+  it("rechaza una frase demasiado corta para evaluar el uso", () => {
+    const result = validateUsagePayload(valid({ sentence: "Depend on." }), []);
+    expect(result.ok).toBe(false);
+  });
+
+  it("exige schemaVersion: una actualización del generador invalida lo viejo", () => {
+    const noVersion = { ...valid(), metadata: {} } as UsagePayload;
+    expect(validateUsagePayload(noVersion, []).ok).toBe(false);
+  });
+});
+
+describe("motivos de no-aparición", () => {
+  it("cubre los cinco casos de la spec", () => {
+    const reasons: NonAppearanceReason[] = [
+      "not_generated", "generation_failed", "offline",
+      "invalid_content", "daily_capacity_reached",
+    ];
+    expect(reasons).toHaveLength(5);
+  });
+});
+```
+
+- [ ] **Step 2: Ejecutar — debe fallar**
+
+Run: `pnpm test lib/essential-words/usage/__tests__/validation.test.ts`
+Expected: FAIL — módulo inexistente.
+
+- [ ] **Step 3: Implementar**
+
+```ts
+// lib/essential-words/usage/validation.ts
+// Validacion antes de activar (spec 5.5). Sin la telemetria de no-aparicion
+// es imposible distinguir "funciona correctamente" de "la generacion lleva
+// tres semanas fallando".
+
+import type { UsagePayload } from "../verification/types";
+
+export type NonAppearanceReason =
+  | "not_generated"
+  | "generation_failed"
+  | "offline"
+  | "invalid_content"
+  | "daily_capacity_reached";
+
+export type UsageValidation =
+  | { ok: true }
+  | { ok: false; reason: NonAppearanceReason; detail: string };
+
+/** Minimo de palabras para que la frase evalue el uso y no sea un eco. */
+const MIN_SENTENCE_WORDS = 5;
+
+export function validateUsagePayload(
+  payload: UsagePayload,
+  existingExpressions: string[],
+): UsageValidation {
+  if (payload.generationStatus === "pending") {
+    return { ok: false, reason: "not_generated", detail: "generation pending" };
+  }
+  if (payload.generationStatus === "failed") {
+    return { ok: false, reason: "generation_failed", detail: "generator reported failure" };
+  }
+  if (payload.metadata.schemaVersion === undefined) {
+    return { ok: false, reason: "invalid_content", detail: "missing schemaVersion" };
+  }
+
+  const normalized = payload.sentence.toLowerCase();
+  if (!normalized.includes(payload.expression.toLowerCase())) {
+    return { ok: false, reason: "invalid_content", detail: "sentence lacks the expression" };
+  }
+  if (payload.sentence.trim().split(/\s+/).length < MIN_SENTENCE_WORDS) {
+    return { ok: false, reason: "invalid_content", detail: "sentence too short to test usage" };
+  }
+
+  const duplicate = existingExpressions.some(
+    (existing) => existing.toLowerCase() === payload.expression.toLowerCase(),
+  );
+  if (duplicate) {
+    return { ok: false, reason: "invalid_content", detail: "duplicates an existing item" };
+  }
+
+  return { ok: true };
+}
+```
+
+- [ ] **Step 4: Ejecutar y commit**
+
+Run: `pnpm test lib/essential-words/usage/__tests__/validation.test.ts`
+Expected: PASS (8 tests).
+
+```bash
+git add lib/essential-words/usage/validation.ts lib/essential-words/usage/__tests__/validation.test.ts
+git commit -m "feat(essential-words): validacion de usage con motivos de no-aparicion"
+```
+
+### Task 7.4: Fixtures `authored` y funcionamiento offline
+
+**Files:**
+- Create: `lib/essential-words/usage/__tests__/fixtures/authored-usage.ts`
+- Test: `lib/essential-words/usage/__tests__/offline.test.ts`
+
+La generación remota se sustituye por fixtures para probar el ciclo completo sin depender del proveedor. El pipeline real es una spec posterior.
+
+- [ ] **Step 1: Crear las fixtures**
+
+```ts
+// lib/essential-words/usage/__tests__/fixtures/authored-usage.ts
+import type { LearningItem, UsageKind } from "../../../verification/types";
+
+/**
+ * Contenido `authored` para probar el ciclo de vida completo sin llamar a
+ * Gemini. El pipeline de generacion es una spec posterior; el motor solo
+ * necesita saber que un payload valido existe.
+ */
+export function authoredUsage(
+  wordId: string,
+  expression: string,
+  sentence: string,
+  usageKind: UsageKind = "advanced_usage",
+): LearningItem {
+  return {
+    id: `${wordId}#usage:${expression.replace(/\s+/g, "-")}`,
+    wordId,
+    skill: "usage",
+    contentOrigin: "authored",
+    payload: {
+      usageKind,
+      expression,
+      sentence,
+      acceptedVariants: [],
+      generationStatus: "ready",
+      generatedAt: "2026-08-01T00:00:00.000Z",
+      metadata: { schemaVersion: 1, reviewed: true },
+    },
+    schedule: { kind: "none" },
+    repetitions: 0,
+    lapses: 0,
+    suspended: false,
+  };
+}
+
+export const AUTHORED_ON_USAGES = [
+  authoredUsage("c1k:on", "depend on", "The result depends on the weather today."),
+  authoredUsage("c1k:on", "on purpose", "She did it on purpose, not by accident."),
+  authoredUsage("c1k:on", "on Monday", "We have a meeting on Monday morning.", "context_usage"),
+];
+```
+
+- [ ] **Step 2: Escribir el test de offline**
+
+```ts
+// lib/essential-words/usage/__tests__/offline.test.ts
+import { describe, it, expect } from "vitest";
+import { deriveUsageLifecycle } from "../../skill-item";
+import { AUTHORED_ON_USAGES } from "./fixtures/authored-usage";
+import { buildSkillQueue } from "../../skill-queue";
+import type { DailyAllowance } from "../../planning-types";
+
+const allowance = (over: Partial<DailyAllowance> = {}): DailyAllowance => ({
+  newWords: 0, skillActivations: 0, usageActivations: 2,
+  plannedSeconds: 0, mode: "normal", ...over,
+});
+
+describe("usage sin generación disponible", () => {
+  it("un usage sin activar no entra en la cola (invariante 5)", () => {
+    expect(AUTHORED_ON_USAGES.every((i) => deriveUsageLifecycle(i) === "inactive")).toBe(true);
+  });
+
+  it("la sesión funciona igual sin ningún candidato usage (invariante 9)", () => {
+    const queue = buildSkillQueue({
+      mandatory: {
+        learning: [], overdue: [{
+          itemId: "c1k:on#meaning", wordId: "c1k:on", skill: "meaning",
+          modality: "recognition", dueAt: "2026-08-01T00:00:00.000Z", retrievability: 0.4,
+        }], dueToday: [], provisionalDue: [],
+      },
+      candidates: { baseSkillActivations: [], usageActivations: [], newWords: [] },
+      allowance: allowance(),
+    });
+    // La sesión existe y tiene contenido: la palabra simplemente espera.
+    expect(queue).toHaveLength(1);
+  });
+
+  it("el contenido authored no necesita proveedor para ser válido", () => {
+    expect(AUTHORED_ON_USAGES.every((i) => i.contentOrigin === "authored")).toBe(true);
+    expect(AUTHORED_ON_USAGES.every((i) => i.generatorProvider === undefined)).toBe(true);
+  });
+
+  it("distingue context_usage de advanced_usage", () => {
+    const kinds = new Set(AUTHORED_ON_USAGES.map((i) => i.payload?.usageKind));
+    expect(kinds).toContain("context_usage");
+    expect(kinds).toContain("advanced_usage");
+  });
+});
+```
+
+- [ ] **Step 3: Ejecutar**
+
+Run: `pnpm test lib/essential-words/usage`
+Expected: PASS.
+
+- [ ] **Step 4: Verificar la fase completa**
+
+Run: `pnpm test lib/essential-words && pnpm type-check && pnpm lint`
+Expected: PASS.
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add lib/essential-words/usage/__tests__/
+git commit -m "test(essential-words): fixtures authored y ciclo de usage sin proveedor"
+```
