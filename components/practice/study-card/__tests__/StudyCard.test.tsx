@@ -67,7 +67,7 @@ describe("StudyCard", () => {
     expect(screen.getByRole("button", { name: /practicar/i })).toBeInTheDocument();
   });
 
-  it("fires onOmit when Ya la sé, sáltala is pressed", () => {
+  it("fires onOmit when Ya conozco esta palabra is pressed", () => {
     const onOmit = vi.fn();
     render(
       <StudyCard
@@ -77,8 +77,24 @@ describe("StudyCard", () => {
         onOmit={onOmit}
       />,
     );
-    fireEvent.click(screen.getByRole("button", { name: /ya la sé, sáltala/i }));
+    fireEvent.click(screen.getByRole("button", { name: /ya conozco esta palabra/i }));
     expect(onOmit).toHaveBeenCalledOnce();
+  });
+
+  it("uses claim copy that does not promise to skip the word", () => {
+    render(
+      <StudyCard
+        model={minimal}
+        onContinue={() => {}}
+        onListen={() => {}}
+        onOmit={() => {}}
+      />,
+    );
+
+    expect(
+      screen.getByRole("button", { name: /ya conozco esta palabra/i }),
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/sáltala/i)).not.toBeInTheDocument();
   });
 
   it("uses the skip link label when onOmit is provided", () => {
@@ -91,7 +107,7 @@ describe("StudyCard", () => {
         onArchive={() => {}}
       />,
     );
-    expect(screen.getByRole("button", { name: /ya la sé, sáltala/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /ya conozco esta palabra/i })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /^ya la sé$/i })).not.toBeInTheDocument();
   });
 

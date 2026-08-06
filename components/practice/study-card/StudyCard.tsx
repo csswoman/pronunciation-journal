@@ -259,7 +259,9 @@ export function StudyCard({
   variant = 'default',
   contextLine,
   onOmit,
-  omitLabel = 'Ya la sé, sáltala',
+  // "Sáltala" prometía omitir y luego se verificaba igualmente. El claim abre
+  // una comprobación corta, por eso el copy no promete saltarse la palabra.
+  omitLabel = 'Ya conozco esta palabra',
   onArchive,
 }: Props) {
   const immersive = variant === 'immersive'
