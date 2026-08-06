@@ -96,3 +96,14 @@ export function isMature(
   const lapses = recent.filter((event) => event.grade === "Again").length;
   return lapses <= policy.maxRecentLapses;
 }
+
+/**
+ * Ciclo de vida derivado de un ítem usage. No se persiste un estado de
+ * activación: la programación es la fuente de verdad para cola y ciclo.
+ */
+export function deriveUsageLifecycle(
+  item: LearningItem,
+): "inactive" | "active" | "retired" {
+  if (item.payload?.retiredAt) return "retired";
+  return item.schedule.kind === "none" ? "inactive" : "active";
+}
