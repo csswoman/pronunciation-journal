@@ -66,6 +66,12 @@ export interface ActivationLimits {
   maxPerItemPerSession: number;
 }
 
+export interface ActivationSelection {
+  selected: ActivationCandidate[];
+  deferred: ActivationCandidate[];
+  seconds: number;
+}
+
 export interface DailyPlan {
   allowance: DailyAllowance;
   mandatorySelected: PlannedItem[];
