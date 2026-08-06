@@ -1,4 +1,10 @@
-import type { LearningItem, Skill, SkillStatus } from "./verification/types";
+import type {
+  LearningItem,
+  MaturityPolicy,
+  Skill,
+  SkillStatus,
+  SrsReviewEvent,
+} from "./verification/types";
 
 /** Estado de dominio de un ítem, derivado exclusivamente de `schedule`. */
 export function deriveSkillStatus(item: LearningItem): SkillStatus {
@@ -57,4 +63,36 @@ export function parseLearningItemId(id: string): ParsedLearningItemId | null {
   return BASE_SKILLS.includes(rest as Skill)
     ? { wordId, skill: rest as Skill }
     : null;
+}
+
+export const DEFAULT_MATURITY_POLICY: MaturityPolicy = {
+  version: "provisional-1",
+  minStabilityDays: 21,
+  minSuccessfulReviews: 3,
+  maxRecentLapses: 1,
+  recentReviewWindow: 5,
+};
+
+/**
+ * Madurez derivada de la programación FSRS y de los eventos del propio ítem.
+ * La política versionada cambia la lectura sin reescribir el historial.
+ */
+export function isMature(
+  item: LearningItem,
+  events: SrsReviewEvent[],
+  policy: MaturityPolicy,
+): boolean {
+  if (item.schedule.kind !== "fsrs" || item.schedule.state !== "Review") return false;
+  if (item.schedule.stability < policy.minStabilityDays) return false;
+
+  const own = events
+    .filter((event) => event.learningItemId === item.id)
+    .sort((a, b) => a.occurredAt.localeCompare(b.occurredAt));
+
+  const successes = own.filter((event) => event.grade !== "Again");
+  if (successes.length < policy.minSuccessfulReviews) return false;
+
+  const recent = own.slice(-policy.recentReviewWindow);
+  const lapses = recent.filter((event) => event.grade === "Again").length;
+  return lapses <= policy.maxRecentLapses;
 }
