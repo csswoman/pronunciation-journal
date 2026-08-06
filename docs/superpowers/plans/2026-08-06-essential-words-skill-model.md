@@ -1986,3 +1986,2118 @@ Expected: PASS. Con el flag apagado, ninguna ruta de la app llama todavía a est
 git add lib/essential-words/run-skill-model-migration.ts lib/essential-words/__tests__/run-skill-model-migration.test.ts
 git commit -m "feat(essential-words): ejecutor transaccional de la migracion al modelo de habilidades"
 ```
+
+---
+
+## Fase 3 — Eventos, observaciones y FSRS
+
+**Objetivo:** que un intento produzca `AttemptAssessment` → observaciones → colocaciones → `ReviewLog`, y que **solo** los eventos con `affectsSchedule: true` toquen FSRS.
+
+**Condición de salida:** invariantes 1, 2, 3, 12, 13, 16, 24 verdes. Un test demuestra que un evento de práctica no mueve el calendario ni alimenta el optimizador.
+
+### Task 3.1: `AttemptOutcome` → `AttemptAssessment`
+
+**Files:**
+- Create: `lib/essential-words/verification/assessment.ts`
+- Test: `lib/essential-words/verification/__tests__/assessment.test.ts`
+
+`attemptGrade` no se toca: sigue siendo la función que decide el `Grade`. Lo nuevo es envolverla con la modalidad y la duración de interacción, que ella no conoce.
+
+- [ ] **Step 1: Escribir el test**
+
+```ts
+// lib/essential-words/verification/__tests__/assessment.test.ts
+import { describe, it, expect } from "vitest";
+import { buildAssessment } from "../assessment";
+import type { AttemptOutcome } from "../../attempt-grade";
+
+const outcome = (over: Partial<AttemptOutcome> = {}): AttemptOutcome => ({
+  correct: true, hintsUsed: 0, rescued: false, typo: false,
+  firstTryFailed: false, latencyMs: 3_000, ...over,
+});
+
+describe("buildAssessment", () => {
+  it("conserva el Grade que decide attemptGrade", () => {
+    const a = buildAssessment(outcome(), "production", 9_000);
+    expect(a.grade).toBe("Easy");
+    const b = buildAssessment(outcome({ hintsUsed: 1 }), "production", 9_000);
+    expect(b.grade).toBe("Hard");
+  });
+
+  it("lleva la modalidad, que attemptGrade no conoce", () => {
+    expect(buildAssessment(outcome(), "listening", 9_000).modality).toBe("listening");
+  });
+
+  it("distingue latencyMs de interactionDurationMs", () => {
+    const a = buildAssessment(outcome({ latencyMs: 3_000 }), "listening", 12_000);
+    expect(a.latencyMs).toBe(3_000);
+    expect(a.interactionDurationMs).toBe(12_000);
+  });
+
+  it("marca usedHints a partir de las pistas de pago", () => {
+    expect(buildAssessment(outcome({ hintsUsed: 0 }), "production", 1).usedHints).toBe(false);
+    expect(buildAssessment(outcome({ hintsUsed: 1 }), "production", 1).usedHints).toBe(true);
+  });
+
+  it("un typo cuenta como correcto y como variante aceptada", () => {
+    const a = buildAssessment(outcome({ typo: true }), "production", 1);
+    expect(a.correct).toBe(true);
+    expect(a.acceptedVariant).toBe(true);
+  });
+
+  it("una respuesta revelada nunca es Easy ni Good (invariante 3)", () => {
+    const revealed = buildAssessment(outcome({ rescued: true }), "production", 1);
+    expect(revealed.grade).toBe("Again");
+    const failedFirst = buildAssessment(outcome({ firstTryFailed: true }), "production", 1);
+    expect(failedFirst.grade).toBe("Again");
+  });
+
+  it("interactionDurationMs nunca es menor que latencyMs", () => {
+    // El llamante podría pasarlos al revés; se corrige aquí en vez de
+    // envenenar la estimación de presupuesto de la Fase 4.
+    const a = buildAssessment(outcome({ latencyMs: 10_000 }), "production", 2_000);
+    expect(a.interactionDurationMs).toBeGreaterThanOrEqual(a.latencyMs);
+  });
+});
+```
+
+- [ ] **Step 2: Ejecutar — debe fallar**
+
+Run: `pnpm test lib/essential-words/verification/__tests__/assessment.test.ts`
+Expected: FAIL — "Cannot find module '../assessment'".
+
+- [ ] **Step 3: Implementar**
+
+```ts
+// lib/essential-words/verification/assessment.ts
+// Envuelve attemptGrade con lo que esa funcion no conoce: la modalidad del
+// ejercicio y la duracion completa de la interaccion (spec 1.8).
+
+import { attemptGrade, type AttemptOutcome } from "../attempt-grade";
+import type { AttemptAssessment, AttemptModality } from "./types";
+
+export function buildAssessment(
+  outcome: AttemptOutcome,
+  modality: AttemptModality,
+  interactionDurationMs: number,
+): AttemptAssessment {
+  return {
+    grade: attemptGrade(outcome),
+    modality,
+    // Un typo se acepta como correcto (spec Fase B); attemptGrade ya asume
+    // que el llamante lo normalizo, y aqui lo hacemos explicito.
+    correct: outcome.correct || outcome.typo,
+    latencyMs: outcome.latencyMs,
+    // La duracion total nunca puede ser menor que la latencia de respuesta:
+    // si el llamante se equivoca, no envenenamos el presupuesto (Fase 4).
+    interactionDurationMs: Math.max(interactionDurationMs, outcome.latencyMs),
+    usedHints: outcome.hintsUsed > 0,
+    rescued: outcome.rescued,
+    acceptedVariant: outcome.typo,
+  };
+}
+```
+
+- [ ] **Step 4: Ejecutar y commit**
+
+Run: `pnpm test lib/essential-words/verification/__tests__/assessment.test.ts`
+Expected: PASS (7 tests).
+
+```bash
+git add lib/essential-words/verification/assessment.ts lib/essential-words/verification/__tests__/assessment.test.ts
+git commit -m "feat(essential-words): buildAssessment con modalidad y duracion de interaccion"
+```
+
+### Task 3.2: `deriveObservations`
+
+**Files:**
+- Create: `lib/essential-words/verification/policy.ts`
+- Test: `lib/essential-words/verification/__tests__/observations.test.ts`
+
+- [ ] **Step 1: Escribir el test**
+
+Este es el test que cierra el agujero de la revisión: un fallo debe observar **las mismas habilidades** que un acierto, con signo opuesto.
+
+```ts
+// lib/essential-words/verification/__tests__/observations.test.ts
+import { describe, it, expect } from "vitest";
+import { deriveObservations } from "../policy";
+import type { AttemptAssessment, AttemptModality } from "../types";
+
+const assess = (
+  modality: AttemptModality,
+  correct: boolean,
+): AttemptAssessment => ({
+  grade: correct ? "Good" : "Again",
+  modality, correct,
+  latencyMs: 3_000, interactionDurationMs: 9_000,
+  usedHints: false, rescued: false, acceptedVariant: false,
+});
+
+const skillsOf = (a: AttemptAssessment) =>
+  deriveObservations(a).map((o) => o.skill).sort();
+
+describe("deriveObservations — qué habilidades evaluó el intento", () => {
+  it("producción observa meaning y production", () => {
+    expect(skillsOf(assess("production", true))).toEqual(["meaning", "production"]);
+  });
+
+  it("escucha observa meaning y listening", () => {
+    expect(skillsOf(assess("listening", true))).toEqual(["listening", "meaning"]);
+  });
+
+  it("reconocimiento observa solo meaning", () => {
+    expect(skillsOf(assess("recognition", true))).toEqual(["meaning"]);
+  });
+
+  it("pronunciación observa production, nunca listening (invariante 16)", () => {
+    const skills = skillsOf(assess("pronunciation", true));
+    expect(skills).toEqual(["production"]);
+    expect(skills).not.toContain("listening");
+  });
+
+  it("una prueba textual nunca acredita listening (invariante 1)", () => {
+    for (const modality of ["production", "recognition"] as const) {
+      expect(skillsOf(assess(modality, true))).not.toContain("listening");
+    }
+  });
+
+  it("una prueba auditiva nunca acredita production (invariante 2)", () => {
+    expect(skillsOf(assess("listening", true))).not.toContain("production");
+  });
+});
+
+describe("deriveObservations — signo", () => {
+  it("una respuesta correcta da outcome success", () => {
+    const obs = deriveObservations(assess("production", true));
+    expect(obs.every((o) => o.outcome === "success")).toBe(true);
+  });
+
+  it("un fallo observa LAS MISMAS habilidades, con failure (invariante 24)", () => {
+    const ok = skillsOf(assess("production", true));
+    const ko = skillsOf(assess("production", false));
+    expect(ko).toEqual(ok);
+    expect(deriveObservations(assess("production", false)).every((o) => o.outcome === "failure"))
+      .toBe(true);
+  });
+
+  it("un fallo de producción sigue sin observar listening", () => {
+    expect(skillsOf(assess("production", false))).not.toContain("listening");
+  });
+
+  it("un Again nunca deja la lista vacía: derivePlacements tiene contrato", () => {
+    expect(deriveObservations(assess("listening", false))).toHaveLength(2);
+  });
+});
+
+describe("deriveObservations — procedencia", () => {
+  it("marca source direct y basis attempt con su modalidad", () => {
+    const [first] = deriveObservations(assess("listening", true));
+    expect(first.source).toBe("direct");
+    expect(first.basis).toEqual({ kind: "attempt", modality: "listening" });
+  });
+
+  it("la evidencia directa tiene confianza 1", () => {
+    expect(deriveObservations(assess("production", true))[0].evidenceConfidence).toBe(1);
+  });
+});
+```
+
+- [ ] **Step 2: Ejecutar — debe fallar**
+
+Run: `pnpm test lib/essential-words/verification/__tests__/observations.test.ts`
+Expected: FAIL — "Cannot find module '../policy'".
+
+- [ ] **Step 3: Implementar**
+
+```ts
+// lib/essential-words/verification/policy.ts
+// Dos pasos, nunca uno (spec 3.2):
+//   1. deriveObservations — QUE evaluo el intento. Lo decide la MODALIDAD.
+//      Con que signo, lo decide el acierto.
+//   2. derivePlacements   — DONDE queda cada habilidad. Lo decide el GRADE.
+//
+// Colapsarlos fue el error del modelo anterior, y hace que `learning` se lea
+// como "no hubo evidencia" cuando en realidad si la hubo.
+
+import type {
+  AttemptAssessment, AttemptModality, Skill, SkillObservation,
+} from "./types";
+
+/**
+ * Que habilidades evalua cada modalidad. La tabla NO depende del resultado:
+ * una produccion fallida evalua exactamente lo mismo que una correcta.
+ */
+const OBSERVED_SKILLS: Record<AttemptModality, readonly Skill[]> = {
+  production: ["meaning", "production"],
+  listening: ["meaning", "listening"],
+  recognition: ["meaning"],
+  // `pronunciation` acredita produccion, nunca escucha por si sola: repetir
+  // un audio no demuestra haberlo comprendido (invariante 16).
+  pronunciation: ["production"],
+};
+
+export function deriveObservations(assessment: AttemptAssessment): SkillObservation[] {
+  const outcome = assessment.correct ? "success" : "failure";
+  const observedAt = new Date().toISOString();
+
+  return OBSERVED_SKILLS[assessment.modality].map((skill) => ({
+    skill,
+    outcome,
+    source: "direct",
+    basis: { kind: "attempt", modality: assessment.modality },
+    evidenceConfidence: 1,
+    observedAt,
+  }));
+}
+```
+
+- [ ] **Step 4: Ejecutar**
+
+Run: `pnpm test lib/essential-words/verification/__tests__/observations.test.ts`
+Expected: PASS (12 tests).
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add lib/essential-words/verification/policy.ts lib/essential-words/verification/__tests__/observations.test.ts
+git commit -m "feat(essential-words): deriveObservations con signo, determinado por modalidad"
+```
+
+### Task 3.3: Intervalos provisionales deterministas
+
+**Files:**
+- Create: `lib/essential-words/verification/provisional-intervals.ts`
+- Test: `lib/essential-words/verification/__tests__/provisional-intervals.test.ts`
+
+Lo necesita `derivePlacements` (3.4) y también la colocación por bandas (Fase 6), así que va en su propio módulo.
+
+- [ ] **Step 1: Escribir el test**
+
+```ts
+// lib/essential-words/verification/__tests__/provisional-intervals.test.ts
+import { describe, it, expect } from "vitest";
+import {
+  provisionalDueAt, PROVISIONAL_WINDOWS,
+} from "../provisional-intervals";
+
+const NOW = new Date("2026-08-06T10:00:00.000Z");
+const daysBetween = (a: Date, b: Date) =>
+  Math.round((b.getTime() - a.getTime()) / 86_400_000);
+
+describe("provisionalDueAt", () => {
+  it("verificación directa Easy cae en la ventana 14-30 días", () => {
+    const due = provisionalDueAt("direct-easy", "c1k:on#meaning", NOW);
+    const days = daysBetween(NOW, due);
+    expect(days).toBeGreaterThanOrEqual(PROVISIONAL_WINDOWS["direct-easy"].minDays);
+    expect(days).toBeLessThanOrEqual(PROVISIONAL_WINDOWS["direct-easy"].maxDays);
+  });
+
+  it("la inferencia de banda usa una ventana más corta que la evidencia directa", () => {
+    // La evidencia directa es más fuerte que "conoce el 85% de esta banda".
+    expect(PROVISIONAL_WINDOWS["inference"].maxDays)
+      .toBeLessThan(PROVISIONAL_WINDOWS["direct-easy"].maxDays);
+  });
+
+  it("Good cae en el extremo bajo de la ventana de Easy", () => {
+    expect(PROVISIONAL_WINDOWS["direct-good"].maxDays)
+      .toBeLessThanOrEqual(PROVISIONAL_WINDOWS["direct-easy"].maxDays);
+  });
+
+  it("es determinista: mismo ítem y mismo origen dan la misma fecha (invariante 17)", () => {
+    const a = provisionalDueAt("direct-easy", "c1k:on#meaning", NOW);
+    const b = provisionalDueAt("direct-easy", "c1k:on#meaning", NOW);
+    expect(a.toISOString()).toBe(b.toISOString());
+  });
+
+  it("distribuye: distintos ítems no caen todos el mismo día", () => {
+    const ids = Array.from({ length: 40 }, (_, i) => `c1k:w${i}#meaning`);
+    const days = new Set(ids.map((id) => daysBetween(NOW, provisionalDueAt("inference", id, NOW))));
+    // Con 40 ítems sobre una ventana de 15 días, esperamos buena dispersión.
+    expect(days.size).toBeGreaterThanOrEqual(8);
+  });
+
+  it("no usa Math.random: dos procesos distintos coinciden", () => {
+    const first = provisionalDueAt("inference", "c1k:the#listening", NOW).toISOString();
+    // Simula otra ejecución: mismo input, sin estado compartido.
+    const second = provisionalDueAt("inference", "c1k:the#listening", NOW).toISOString();
+    expect(first).toBe(second);
+  });
+});
+```
+
+- [ ] **Step 2: Ejecutar — debe fallar**
+
+Run: `pnpm test lib/essential-words/verification/__tests__/provisional-intervals.test.ts`
+Expected: FAIL — módulo inexistente.
+
+- [ ] **Step 3: Implementar**
+
+```ts
+// lib/essential-words/verification/provisional-intervals.ts
+// Fechas provisionales deterministas (spec 3.6). Nada de Math.random: la
+// fecha es funcion del itemId, para que sea testeable y para repartir
+// vencimientos en lugar de amontonarlos (invariante 17).
+
+export type ProvisionalOrigin = "direct-easy" | "direct-good" | "inference";
+
+export interface ProvisionalWindow {
+  minDays: number;
+  maxDays: number;
+}
+
+/**
+ * Ventanas PROVISIONALES en el doble sentido: programan un provisional, y sus
+ * valores se calibran en la Fase 8 (spec 10, decision 2).
+ *
+ * La evidencia directa es mas fuerte que una inferencia estadistica, asi que
+ * no reciben la misma colocacion.
+ */
+export const PROVISIONAL_WINDOWS: Record<ProvisionalOrigin, ProvisionalWindow> = {
+  "direct-easy": { minDays: 14, maxDays: 30 },
+  "direct-good": { minDays: 14, maxDays: 21 },
+  inference: { minDays: 7, maxDays: 21 },
+};
+
+const DAY_MS = 86_400_000;
+
+/** Hash estable de string a entero no negativo. */
+function hash(value: string): number {
+  let h = 0;
+  for (const char of value) h = (h * 31 + char.charCodeAt(0)) | 0;
+  return Math.abs(h);
+}
+
+/**
+ * Fecha de vencimiento dentro de la ventana del origen, distribuida de forma
+ * determinista por `itemId`.
+ */
+export function provisionalDueAt(
+  origin: ProvisionalOrigin,
+  itemId: string,
+  now: Date,
+): Date {
+  const { minDays, maxDays } = PROVISIONAL_WINDOWS[origin];
+  const span = maxDays - minDays + 1;
+  const days = minDays + (hash(itemId) % span);
+  return new Date(now.getTime() + days * DAY_MS);
+}
+```
+
+- [ ] **Step 4: Ejecutar y commit**
+
+Run: `pnpm test lib/essential-words/verification/__tests__/provisional-intervals.test.ts`
+Expected: PASS (6 tests).
+
+```bash
+git add lib/essential-words/verification/provisional-intervals.ts lib/essential-words/verification/__tests__/provisional-intervals.test.ts
+git commit -m "feat(essential-words): fechas provisionales deterministas y distribuidas"
+```
+
+### Task 3.4: `derivePlacements`
+
+**Files:**
+- Modify: `lib/essential-words/verification/policy.ts`
+- Test: `lib/essential-words/verification/__tests__/placements.test.ts`
+
+- [ ] **Step 1: Escribir el test**
+
+```ts
+// lib/essential-words/verification/__tests__/placements.test.ts
+import { describe, it, expect } from "vitest";
+import { deriveObservations, derivePlacements } from "../policy";
+import type { AttemptAssessment, AttemptModality, LearningItem } from "../types";
+
+const NOW = new Date("2026-08-06T10:00:00.000Z");
+
+const assess = (
+  modality: AttemptModality,
+  grade: AttemptAssessment["grade"],
+): AttemptAssessment => ({
+  grade, modality, correct: grade !== "Again",
+  latencyMs: 3_000, interactionDurationMs: 9_000,
+  usedHints: grade === "Hard", rescued: false, acceptedVariant: false,
+});
+
+const unseen = (skill: LearningItem["skill"]): LearningItem => ({
+  id: `c1k:on#${skill}`, wordId: "c1k:on", skill,
+  contentOrigin: "authored", schedule: { kind: "none" },
+  repetitions: 0, lapses: 0, suspended: false,
+});
+
+const place = (a: AttemptAssessment, items = [unseen("meaning"), unseen("production")]) =>
+  derivePlacements(deriveObservations(a), a, items, NOW);
+
+describe("derivePlacements — verificación directa de producción", () => {
+  it("Easy coloca ambas habilidades como provisionales", () => {
+    const placements = place(assess("production", "Easy"));
+    expect(placements).toHaveLength(2);
+    expect(placements.every((p) => p.schedule.kind === "provisional")).toBe(true);
+    expect(placements.every((p) => p.verificationSource === "direct")).toBe(true);
+  });
+
+  it("Good deja meaning provisional y production en learning", () => {
+    const placements = place(assess("production", "Good"));
+    const meaning = placements.find((p) => p.skill === "meaning")!;
+    const production = placements.find((p) => p.skill === "production")!;
+    expect(meaning.schedule.kind).toBe("provisional");
+    expect(production.schedule.kind).toBe("fsrs");
+  });
+
+  it("Hard coloca production en learning", () => {
+    const production = place(assess("production", "Hard")).find((p) => p.skill === "production")!;
+    expect(production.schedule.kind).toBe("fsrs");
+  });
+
+  it("Again coloca AMBAS en learning, sin reinterpretar la modalidad", () => {
+    const placements = place(assess("production", "Again"));
+    expect(placements).toHaveLength(2);
+    expect(placements.every((p) => p.schedule.kind === "fsrs")).toBe(true);
+    expect(placements.map((p) => p.skill).sort()).toEqual(["meaning", "production"]);
+  });
+
+  it("nunca coloca listening desde una prueba escrita (invariante 1)", () => {
+    for (const grade of ["Easy", "Good", "Hard", "Again"] as const) {
+      expect(place(assess("production", grade)).map((p) => p.skill)).not.toContain("listening");
+    }
+  });
+});
+
+describe("derivePlacements — prueba auditiva", () => {
+  const items = [unseen("meaning"), unseen("listening")];
+
+  it("Easy coloca meaning y listening como provisionales", () => {
+    const placements = place(assess("listening", "Easy"), items);
+    expect(placements.every((p) => p.schedule.kind === "provisional")).toBe(true);
+  });
+
+  it("Hard deja listening en learning", () => {
+    const listening = place(assess("listening", "Hard"), items)
+      .find((p) => p.skill === "listening")!;
+    expect(listening.schedule.kind).toBe("fsrs");
+  });
+
+  it("nunca coloca production (invariante 2)", () => {
+    for (const grade of ["Easy", "Good", "Hard", "Again"] as const) {
+      expect(place(assess("listening", grade), items).map((p) => p.skill))
+        .not.toContain("production");
+    }
+  });
+});
+
+describe("derivePlacements — reglas transversales", () => {
+  it("no coloca una habilidad que no fue observada", () => {
+    const placements = place(assess("recognition", "Easy"), [unseen("meaning"), unseen("listening")]);
+    expect(placements.map((p) => p.skill)).toEqual(["meaning"]);
+  });
+
+  it("un ítem ya en FSRS no se degrada a provisional (spec 1.6)", () => {
+    const mature: LearningItem = {
+      ...unseen("meaning"),
+      schedule: { kind: "fsrs", dueAt: "2026-09-01T00:00:00.000Z", stability: 30, difficulty: 5, state: "Review" },
+    };
+    const placements = place(assess("production", "Easy"), [mature, unseen("production")]);
+    const meaning = placements.find((p) => p.skill === "meaning")!;
+    // Un provisional es más débil que un FSRS real: no puede sobrescribirlo.
+    expect(meaning.schedule.kind).toBe("fsrs");
+  });
+
+  it("una colocación provisional nunca produce un ítem maduro (invariante 4)", () => {
+    const placements = place(assess("production", "Easy"));
+    for (const p of placements) {
+      expect(p.schedule.kind).not.toBe("fsrs");
+    }
+  });
+});
+```
+
+- [ ] **Step 2: Ejecutar — debe fallar**
+
+Run: `pnpm test lib/essential-words/verification/__tests__/placements.test.ts`
+Expected: FAIL — `derivePlacements` no exportado.
+
+- [ ] **Step 3: Implementar en `policy.ts`**
+
+```ts
+import { scheduleFsrsReview } from "@/lib/srs/fsrs-schedule";
+import { provisionalDueAt, type ProvisionalOrigin } from "./provisional-intervals";
+import type { ItemSchedule, LearningItem, SkillPlacement } from "./types";
+
+/** Estado FSRS inicial de una habilidad que arranca en aprendizaje. */
+const INITIAL_FSRS = { stability: 0, difficulty: 0, state: "New" as const };
+
+/**
+ * Paso 2: donde queda cada habilidad OBSERVADA. Lo decide el grade.
+ *
+ * No mira `assessment.modality` para elegir a quien colocar: eso ya lo
+ * resolvio `deriveObservations`. Colocar exactamente lo observado es lo que
+ * mantiene separadas las dos responsabilidades.
+ */
+export function derivePlacements(
+  observations: SkillObservation[],
+  assessment: AttemptAssessment,
+  currentItems: LearningItem[],
+  now: Date,
+): SkillPlacement[] {
+  const bySkill = new Map(currentItems.map((item) => [item.skill, item]));
+
+  return observations.map((observation) => {
+    const current = bySkill.get(observation.skill);
+    const itemId = current?.id ?? `${observation.skill}`;
+
+    return {
+      skill: observation.skill,
+      schedule: scheduleForObservation(observation, assessment, current, itemId, now),
+      verificationSource: observation.source === "placement-inference"
+        ? "placement-inference"
+        : "direct",
+    };
+  });
+}
+
+function scheduleForObservation(
+  observation: SkillObservation,
+  assessment: AttemptAssessment,
+  current: LearningItem | undefined,
+  itemId: string,
+  now: Date,
+): ItemSchedule {
+  const alreadyScheduled = current && current.schedule.kind === "fsrs";
+
+  // Un provisional es evidencia mas debil que una tarjeta FSRS real: nunca
+  // puede sobrescribirla. Si el item ya tiene historial, se le aplica el
+  // grade normalmente.
+  if (alreadyScheduled || observation.outcome === "failure") {
+    const base = current?.schedule.kind === "fsrs" ? current.schedule : INITIAL_FSRS;
+    const next = scheduleFsrsReview({
+      stability: base.stability,
+      difficulty: base.difficulty,
+      state: base.state,
+      grade: assessment.grade,
+      now,
+    });
+    return {
+      kind: "fsrs",
+      dueAt: next.dueAt.toISOString(),
+      stability: next.stability,
+      difficulty: next.difficulty,
+      state: next.state,
+    };
+  }
+
+  const origin = provisionalOrigin(observation, assessment);
+  if (!origin) {
+    // Observacion positiva pero con grade que no merece provisional (Hard,
+    // o Good en la habilidad principal): entra en aprendizaje normal.
+    const next = scheduleFsrsReview({ ...INITIAL_FSRS, grade: assessment.grade, now });
+    return {
+      kind: "fsrs",
+      dueAt: next.dueAt.toISOString(),
+      stability: next.stability,
+      difficulty: next.difficulty,
+      state: next.state,
+    };
+  }
+
+  return {
+    kind: "provisional",
+    dueAt: provisionalDueAt(origin, itemId, now).toISOString(),
+    source: observation.source === "placement-inference" ? "placement-inference" : "direct",
+    evidenceConfidence: observation.evidenceConfidence,
+  };
+}
+
+/**
+ * Que ventana provisional corresponde, o null si la habilidad debe entrar en
+ * aprendizaje normal (spec 3.3 y 3.4).
+ *
+ * `meaning` es mas permisiva que la habilidad principal del ejercicio: un
+ * Good en produccion demuestra que el significado esta solido aunque la
+ * produccion no lo este.
+ */
+function provisionalOrigin(
+  observation: SkillObservation,
+  assessment: AttemptAssessment,
+): ProvisionalOrigin | null {
+  if (observation.source === "placement-inference") return "inference";
+  if (assessment.grade === "Easy") return "direct-easy";
+
+  const isSupportSkill = observation.skill === "meaning" && assessment.modality !== "recognition";
+  if (assessment.grade === "Good") {
+    return isSupportSkill ? "direct-good" : null;
+  }
+  // Hard: solo `meaning` conserva un provisional corto.
+  if (assessment.grade === "Hard" && isSupportSkill) return "direct-good";
+  return null;
+}
+```
+
+- [ ] **Step 4: Ejecutar**
+
+Run: `pnpm test lib/essential-words/verification/__tests__/placements.test.ts`
+Expected: PASS (11 tests). Si alguna expectativa de ventana no encaja, ajustar `provisionalOrigin` — la tabla de la spec §3.3/§3.4 es la referencia, no el código.
+
+- [ ] **Step 5: Verificar el tamaño de `policy.ts`**
+
+Run: `wc -l lib/essential-words/verification/policy.ts`
+Expected: <250. Si lo supera, mover `scheduleForObservation` y `provisionalOrigin` a `verification/placement-rules.ts` y reejecutar los tests.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add lib/essential-words/verification/policy.ts lib/essential-words/verification/__tests__/placements.test.ts
+git commit -m "feat(essential-words): derivePlacements sobre observaciones, decidido por grade"
+```
+
+### Task 3.5: Escritura de `ReviewLog` y aplicación de FSRS
+
+**Files:**
+- Create: `lib/essential-words/record-attempt.ts`
+- Test: `lib/essential-words/__tests__/record-attempt.test.ts`
+
+Este es **el** test de la fase: que un evento de práctica no toque el calendario.
+
+- [ ] **Step 1: Escribir el test**
+
+```ts
+// lib/essential-words/__tests__/record-attempt.test.ts
+import { describe, it, expect } from "vitest";
+import { planAttemptRecord } from "../record-attempt";
+import type { AttemptAssessment, LearningItem } from "../verification/types";
+
+const NOW = new Date("2026-08-06T10:00:00.000Z");
+
+const assess = (grade: AttemptAssessment["grade"] = "Good"): AttemptAssessment => ({
+  grade, modality: "production", correct: grade !== "Again",
+  latencyMs: 3_000, interactionDurationMs: 9_000,
+  usedHints: false, rescued: false, acceptedVariant: false,
+});
+
+const item = (skill: LearningItem["skill"], schedule: LearningItem["schedule"] = { kind: "none" }): LearningItem => ({
+  id: `c1k:on#${skill}`, wordId: "c1k:on", skill,
+  contentOrigin: "authored", schedule,
+  repetitions: 0, lapses: 0, suspended: false,
+});
+
+const items = () => [item("meaning"), item("production")];
+
+describe("planAttemptRecord — eventos que SÍ mueven el calendario", () => {
+  it("un scheduled-review actualiza la programación", () => {
+    const plan = planAttemptRecord({
+      wordId: "c1k:on", sessionId: "s1", assessment: assess(),
+      eventType: "scheduled-review", currentItems: items(), now: NOW,
+    });
+    expect(plan.log.affectsSchedule).toBe(true);
+    expect(plan.updatedItems.length).toBeGreaterThan(0);
+  });
+
+  it("una verification actualiza la programación", () => {
+    const plan = planAttemptRecord({
+      wordId: "c1k:on", sessionId: "s1", assessment: assess("Easy"),
+      eventType: "verification", currentItems: items(), now: NOW,
+    });
+    expect(plan.log.affectsSchedule).toBe(true);
+    expect(plan.updatedItems.some((i) => i.schedule.kind === "provisional")).toBe(true);
+  });
+});
+
+describe("planAttemptRecord — eventos que NO mueven el calendario", () => {
+  it("un evento de práctica no cambia ningún schedule (invariante 12)", () => {
+    const before = items();
+    const plan = planAttemptRecord({
+      wordId: "c1k:on", sessionId: "s1", assessment: assess(),
+      eventType: "practice", currentItems: before, now: NOW,
+    });
+    expect(plan.log.affectsSchedule).toBe(false);
+    expect(plan.updatedItems).toHaveLength(0);
+  });
+
+  it("un learning-step tampoco mueve el calendario", () => {
+    const plan = planAttemptRecord({
+      wordId: "c1k:on", sessionId: "s1", assessment: assess(),
+      eventType: "learning-step", currentItems: items(), now: NOW,
+    });
+    expect(plan.log.affectsSchedule).toBe(false);
+    expect(plan.updatedItems).toHaveLength(0);
+  });
+
+  it("un evento sin efecto no lleva fsrsLogId", () => {
+    const plan = planAttemptRecord({
+      wordId: "c1k:on", sessionId: "s1", assessment: assess(),
+      eventType: "practice", currentItems: items(), now: NOW,
+    });
+    expect(plan.log.fsrsLogId).toBeUndefined();
+  });
+
+  it("un evento de práctica SÍ registra observaciones: es telemetría, no silencio", () => {
+    const plan = planAttemptRecord({
+      wordId: "c1k:on", sessionId: "s1", assessment: assess(),
+      eventType: "practice", currentItems: items(), now: NOW,
+    });
+    expect(plan.log.observations).toHaveLength(2);
+  });
+});
+
+describe("planAttemptRecord — contabilidad del ítem", () => {
+  it("un Again incrementa lapses y no incrementa repetitions", () => {
+    const current = [item("meaning", {
+      kind: "fsrs", dueAt: "2026-08-10T00:00:00.000Z", stability: 10, difficulty: 5, state: "Review",
+    }), item("production")];
+    const plan = planAttemptRecord({
+      wordId: "c1k:on", sessionId: "s1", assessment: assess("Again"),
+      eventType: "scheduled-review", currentItems: current, now: NOW,
+    });
+    const meaning = plan.updatedItems.find((i) => i.skill === "meaning")!;
+    expect(meaning.lapses).toBe(1);
+    expect(meaning.repetitions).toBe(0);
+  });
+
+  it("un acierto incrementa repetitions", () => {
+    const plan = planAttemptRecord({
+      wordId: "c1k:on", sessionId: "s1", assessment: assess("Good"),
+      eventType: "scheduled-review", currentItems: items(), now: NOW,
+    });
+    expect(plan.updatedItems.every((i) => i.repetitions === 1)).toBe(true);
+  });
+
+  it("nunca escribe mature ni status en el ítem (invariante 19)", () => {
+    const plan = planAttemptRecord({
+      wordId: "c1k:on", sessionId: "s1", assessment: assess(),
+      eventType: "scheduled-review", currentItems: items(), now: NOW,
+    });
+    for (const updated of plan.updatedItems) {
+      expect(updated).not.toHaveProperty("mature");
+      expect(updated).not.toHaveProperty("status");
+    }
+  });
+});
+```
+
+- [ ] **Step 2: Ejecutar — debe fallar**
+
+Run: `pnpm test lib/essential-words/__tests__/record-attempt.test.ts`
+Expected: FAIL — módulo inexistente.
+
+- [ ] **Step 3: Implementar**
+
+```ts
+// lib/essential-words/record-attempt.ts
+// Convierte un intento en (a) un ReviewLog y (b) los LearningItem
+// actualizados. PURA: el I/O lo hace el llamante.
+//
+// La regla central de la fase (spec 1.10, invariante 12): todo intento
+// produce telemetria, pero solo `verification` y `scheduled-review` mueven el
+// calendario. Alimentar el optimizador FSRS con ejercicios que no eran
+// recuperaciones programadas corromperia la calibracion.
+
+import { deriveObservations, derivePlacements } from "./verification/policy";
+import type {
+  AttemptAssessment, LearningItem, ReviewLog,
+} from "./verification/types";
+
+/** Los unicos tipos de evento autorizados a modificar la programacion. */
+const SCHEDULING_EVENTS = new Set<ReviewLog["eventType"]>([
+  "verification",
+  "scheduled-review",
+]);
+
+export interface AttemptRecordInput {
+  wordId: string;
+  sessionId: string;
+  assessment: AttemptAssessment;
+  eventType: ReviewLog["eventType"];
+  currentItems: LearningItem[];
+  now: Date;
+}
+
+export interface AttemptRecordPlan {
+  log: ReviewLog;
+  /** Vacio cuando el evento no afecta a la programacion. */
+  updatedItems: LearningItem[];
+}
+
+export function planAttemptRecord(input: AttemptRecordInput): AttemptRecordPlan {
+  const { assessment, currentItems, now, eventType } = input;
+  const observations = deriveObservations(assessment);
+  const affectsSchedule = SCHEDULING_EVENTS.has(eventType);
+
+  const base = {
+    id: crypto.randomUUID(),
+    learningItemId: currentItems[0]?.id ?? input.wordId,
+    sessionId: input.sessionId,
+    assessment,
+    observations,
+    eventType,
+    occurredAt: now.toISOString(),
+  };
+
+  if (!affectsSchedule) {
+    // Telemetria sin efecto: la union discriminada impide adjuntar fsrsLogId.
+    return { log: { ...base, affectsSchedule: false }, updatedItems: [] };
+  }
+
+  const placements = derivePlacements(observations, assessment, currentItems, now);
+  const bySkill = new Map(currentItems.map((item) => [item.skill, item]));
+  const isLapse = assessment.grade === "Again";
+
+  const updatedItems = placements.flatMap((placement) => {
+    const current = bySkill.get(placement.skill);
+    if (!current) return [];
+    return [{
+      ...current,
+      schedule: placement.schedule,
+      lastReview: now.toISOString(),
+      repetitions: current.repetitions + (isLapse ? 0 : 1),
+      lapses: current.lapses + (isLapse ? 1 : 0),
+    }];
+  });
+
+  return {
+    log: { ...base, affectsSchedule: true, fsrsLogId: crypto.randomUUID() },
+    updatedItems,
+  };
+}
+```
+
+- [ ] **Step 4: Ejecutar**
+
+Run: `pnpm test lib/essential-words/__tests__/record-attempt.test.ts`
+Expected: PASS (10 tests).
+
+- [ ] **Step 5: Ejecutar la fase completa**
+
+Run: `pnpm test lib/essential-words && pnpm type-check && pnpm lint`
+Expected: PASS. Los tests de caracterización de la Fase 0 siguen verdes: `attemptGrade` no se ha tocado.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add lib/essential-words/record-attempt.ts lib/essential-words/__tests__/record-attempt.test.ts
+git commit -m "feat(essential-words): planAttemptRecord separa telemetria de evento SRS"
+```
+
+### Task 3.6: Primer intento sobre un provisional crea una tarjeta FSRS real
+
+**Files:**
+- Test: `lib/essential-words/__tests__/provisional-graduation.test.ts`
+
+No hay código nuevo: es la comprobación de que la composición de 3.4 y 3.5 cumple la spec §1.6. Si falla, el arreglo va en `derivePlacements`.
+
+- [ ] **Step 1: Escribir el test**
+
+```ts
+// lib/essential-words/__tests__/provisional-graduation.test.ts
+import { describe, it, expect } from "vitest";
+import { planAttemptRecord } from "../record-attempt";
+import type { AttemptAssessment, LearningItem } from "../verification/types";
+
+const NOW = new Date("2026-08-20T10:00:00.000Z");
+
+const provisional = (skill: LearningItem["skill"]): LearningItem => ({
+  id: `c1k:on#${skill}`, wordId: "c1k:on", skill,
+  contentOrigin: "authored",
+  schedule: {
+    kind: "provisional", dueAt: "2026-08-20T00:00:00.000Z",
+    source: "direct", evidenceConfidence: 1,
+  },
+  repetitions: 0, lapses: 0, suspended: false,
+});
+
+const assess = (grade: AttemptAssessment["grade"]): AttemptAssessment => ({
+  grade, modality: "production", correct: grade !== "Again",
+  latencyMs: 3_000, interactionDurationMs: 9_000,
+  usedHints: false, rescued: false, acceptedVariant: false,
+});
+
+const graduate = (grade: AttemptAssessment["grade"]) => planAttemptRecord({
+  wordId: "c1k:on", sessionId: "s1", assessment: assess(grade),
+  eventType: "scheduled-review",
+  currentItems: [provisional("meaning"), provisional("production")],
+  now: NOW,
+});
+
+describe("un provisional que vence y se practica", () => {
+  it("adopta lo que devuelva FSRS, no un estado prefijado", () => {
+    const updated = graduate("Good").updatedItems;
+    expect(updated.every((i) => i.schedule.kind === "fsrs")).toBe(true);
+  });
+
+  it("con Again termina en aprendizaje, no en review (spec 1.6)", () => {
+    const production = graduate("Again").updatedItems.find((i) => i.skill === "production")!;
+    expect(production.schedule.kind).toBe("fsrs");
+    if (production.schedule.kind === "fsrs") {
+      expect(["Learning", "Relearning", "New"]).toContain(production.schedule.state);
+    }
+  });
+
+  it("el primer evento FSRS real es este, no uno sintético", () => {
+    // El provisional no tenía historial: no se fabricaron reviews previas.
+    const plan = graduate("Good");
+    expect(plan.log.affectsSchedule).toBe(true);
+    expect(plan.updatedItems.every((i) => i.repetitions === 1)).toBe(true);
+  });
+
+  it("no arrastra stability inventada del provisional", () => {
+    const meaning = graduate("Good").updatedItems.find((i) => i.skill === "meaning")!;
+    if (meaning.schedule.kind === "fsrs") {
+      expect(Number.isFinite(meaning.schedule.stability)).toBe(true);
+      expect(meaning.schedule.stability).toBeGreaterThan(0);
+    }
+  });
+});
+```
+
+- [ ] **Step 2: Ejecutar**
+
+Run: `pnpm test lib/essential-words/__tests__/provisional-graduation.test.ts`
+Expected: PASS (4 tests). Si el segundo falla porque un provisional con `Again` acaba en `Review`, corregir `scheduleForObservation`: un provisional debe entrar a FSRS con `INITIAL_FSRS`, no con estado `Review`.
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add lib/essential-words/__tests__/provisional-graduation.test.ts
+git commit -m "test(essential-words): un provisional vencido crea una tarjeta FSRS real"
+```
+
+---
+
+## Fase 4 — Planificador y presupuesto
+
+**Objetivo:** la cola de seis tramos con presupuesto real, activaciones contabilizadas y modo recuperación con histéresis. **Aquí se resuelve el riesgo principal de acumulación.**
+
+**Condición de salida:** invariantes 7, 11, 14, 27, 28, 29 verdes; los tests de caracterización de la Fase 0 sobre el gating viejo se borran **conscientemente** en la tarea 4.6, sustituidos por los nuevos.
+
+### Task 4.1: Tipos de planificación
+
+**Files:**
+- Create: `lib/essential-words/planning-types.ts`
+- Test: `lib/essential-words/__tests__/planning-types.test.ts`
+
+- [ ] **Step 1: Escribir el test**
+
+```ts
+// lib/essential-words/__tests__/planning-types.test.ts
+import { describe, it, expect } from "vitest";
+import type {
+  DailyPlanningInput, DailyAllowance, PlannedItem, ActivationCandidate,
+} from "../planning-types";
+
+describe("tipos de planificación", () => {
+  it("DailyAllowance separa tres unidades y devuelve plannedSeconds", () => {
+    const allowance: DailyAllowance = {
+      newWords: 3, skillActivations: 5, usageActivations: 1,
+      plannedSeconds: 840, mode: "normal",
+    };
+    expect(allowance.newWords).not.toBe(allowance.skillActivations);
+    expect(allowance.plannedSeconds).toBe(840);
+  });
+
+  it("los obligatorios se separan por categoría, no en un contador único", () => {
+    const input: DailyPlanningInput = {
+      dailyBudgetSeconds: 900,
+      mandatory: { learning: [], overdue: [], dueToday: [], provisionalDue: [] },
+      candidates: { baseSkillActivations: [], usageActivations: [], newWords: [] },
+      estimatedSeconds: {
+        byModality: { recognition: 12, production: 25, listening: 20, pronunciation: 30 },
+        newWordIntroduction: 40,
+      },
+      consumed: { skillActivations: 0, usageActivations: 0 },
+    };
+    expect(Object.keys(input.mandatory)).toHaveLength(4);
+  });
+
+  it("un PlannedItem lleva su modalidad para poder estimar su coste", () => {
+    const planned: PlannedItem = {
+      itemId: "c1k:on#meaning", wordId: "c1k:on", skill: "meaning",
+      modality: "recognition", dueAt: "2026-08-06T00:00:00.000Z",
+      retrievability: 0.72,
+    };
+    expect(planned.modality).toBe("recognition");
+  });
+
+  it("un candidato de activación declara qué habilidad activaría", () => {
+    const candidate: ActivationCandidate = {
+      itemId: "c1k:on#listening", wordId: "c1k:on", skill: "listening",
+      modality: "listening",
+    };
+    expect(candidate.skill).toBe("listening");
+  });
+});
+```
+
+- [ ] **Step 2: Ejecutar — debe fallar**
+
+Run: `pnpm test lib/essential-words/__tests__/planning-types.test.ts`
+Expected: FAIL — "Cannot find module '../planning-types'".
+
+- [ ] **Step 3: Implementar**
+
+```ts
+// lib/essential-words/planning-types.ts
+// Contratos del planificador (spec 2.2). Cuatro contadores y un promedio
+// global NO bastan para calcular tres presupuestos independientes: no dicen
+// cuanto cuesta lo obligatorio, ni que candidatos hay de cada categoria, ni
+// cuanto se lleva consumido en la sesion.
+
+import type { AttemptModality, Skill } from "./verification/types";
+
+/** Un item ya programado que compite por el tiempo de hoy. */
+export interface PlannedItem {
+  itemId: string;
+  wordId: string;
+  skill: Skill;
+  /** Como se va a practicar: determina su coste estimado. */
+  modality: AttemptModality;
+  dueAt: string;
+  /** Recuperabilidad FSRS, si la tiene. Los provisionales no. */
+  retrievability?: number;
+}
+
+/** Una habilidad que existe con schedule "none" y podria activarse hoy. */
+export interface ActivationCandidate {
+  itemId: string;
+  wordId: string;
+  skill: Skill;
+  modality: AttemptModality;
+}
+
+export interface NewWordCandidate {
+  wordId: string;
+  rank: number;
+}
+
+export interface DailyPlanningInput {
+  dailyBudgetSeconds: number;
+
+  /** No negociable: se planifica siempre y consume presupuesto antes que nada. */
+  mandatory: {
+    learning: PlannedItem[];
+    overdue: PlannedItem[];
+    dueToday: PlannedItem[];
+    provisionalDue: PlannedItem[];
+  };
+
+  /** Negociable: entra solo con el presupuesto que sobre, por tramos (spec 2.1). */
+  candidates: {
+    baseSkillActivations: ActivationCandidate[];
+    usageActivations: ActivationCandidate[];
+    newWords: NewWordCandidate[];
+  };
+
+  estimatedSeconds: {
+    byModality: Record<AttemptModality, number>;
+    newWordIntroduction: number;
+  };
+
+  /** Ya gastado en esta sesion: el helper es idempotente al recalcularse. */
+  consumed: {
+    skillActivations: number;
+    usageActivations: number;
+  };
+
+  /** Modo de la sesion anterior, para la histeresis del modo recuperacion. */
+  previousMode?: "normal" | "recovery";
+}
+
+export interface DailyAllowance {
+  newWords: number;
+  skillActivations: number;
+  usageActivations: number;
+  /** Coste estimado de la cola resultante. Es lo que la simulacion (Fase 8)
+   *  mide contra el presupuesto; sin devolverlo habria que recalcularlo
+   *  fuera con otra formula. */
+  plannedSeconds: number;
+  mode: "normal" | "recovery";
+}
+
+/** Limites de activacion. PROVISIONALES: se calibran en la Fase 8. */
+export interface ActivationLimits {
+  maxSkillActivationsPerSession: number;
+  maxUsageActivationsPerSession: number;
+  /** Maximo una activacion nueva persistente por habilidad y sesion. */
+  maxPerSkillPerSession: number;
+}
+
+export const DEFAULT_ACTIVATION_LIMITS: ActivationLimits = {
+  maxSkillActivationsPerSession: 6,
+  maxUsageActivationsPerSession: 2,
+  maxPerSkillPerSession: 1,
+};
+
+/** Presupuesto por defecto: 15 minutos (spec 2.2). */
+export const DEFAULT_DAILY_BUDGET_SECONDS = 900;
+```
+
+- [ ] **Step 4: Ejecutar y commit**
+
+Run: `pnpm test lib/essential-words/__tests__/planning-types.test.ts && pnpm type-check`
+Expected: PASS (4 tests).
+
+```bash
+git add lib/essential-words/planning-types.ts lib/essential-words/__tests__/planning-types.test.ts
+git commit -m "feat(essential-words): contratos de planificacion con tres unidades de presupuesto"
+```
+
+### Task 4.2: Estimación de coste por modalidad
+
+**Files:**
+- Create: `lib/essential-words/cost-estimate.ts`
+- Test: `lib/essential-words/__tests__/cost-estimate.test.ts`
+
+- [ ] **Step 1: Escribir el test**
+
+```ts
+// lib/essential-words/__tests__/cost-estimate.test.ts
+import { describe, it, expect } from "vitest";
+import {
+  estimateItemsSeconds, estimateFromLogs, DEFAULT_SECONDS_BY_MODALITY,
+} from "../cost-estimate";
+import type { PlannedItem } from "../planning-types";
+import type { ReviewLog } from "../verification/types";
+
+const planned = (modality: PlannedItem["modality"]): PlannedItem => ({
+  itemId: `c1k:x#${modality}`, wordId: "c1k:x", skill: "meaning",
+  modality, dueAt: "2026-08-06T00:00:00.000Z",
+});
+
+const log = (modality: PlannedItem["modality"], durationMs: number): ReviewLog => ({
+  id: crypto.randomUUID(), learningItemId: "c1k:x#meaning", sessionId: "s1",
+  assessment: {
+    grade: "Good", modality, correct: true,
+    latencyMs: Math.round(durationMs / 3), interactionDurationMs: durationMs,
+    usedHints: false, rescued: false, acceptedVariant: false,
+  },
+  observations: [], eventType: "scheduled-review",
+  affectsSchedule: true, fsrsLogId: "f1",
+  occurredAt: "2026-08-06T10:00:00.000Z",
+});
+
+describe("estimateItemsSeconds", () => {
+  it("suma el coste de cada ítem según SU modalidad", () => {
+    const seconds = estimateItemsSeconds(
+      [planned("recognition"), planned("pronunciation")],
+      DEFAULT_SECONDS_BY_MODALITY,
+    );
+    expect(seconds).toBe(
+      DEFAULT_SECONDS_BY_MODALITY.recognition + DEFAULT_SECONDS_BY_MODALITY.pronunciation,
+    );
+  });
+
+  it("una lista vacía cuesta cero", () => {
+    expect(estimateItemsSeconds([], DEFAULT_SECONDS_BY_MODALITY)).toBe(0);
+  });
+
+  it("las modalidades con audio cuestan más que reconocimiento", () => {
+    // Un promedio global único haría desbordarse a quien practica audio.
+    expect(DEFAULT_SECONDS_BY_MODALITY.listening)
+      .toBeGreaterThan(DEFAULT_SECONDS_BY_MODALITY.recognition);
+    expect(DEFAULT_SECONDS_BY_MODALITY.pronunciation)
+      .toBeGreaterThan(DEFAULT_SECONDS_BY_MODALITY.recognition);
+  });
+});
+
+describe("estimateFromLogs", () => {
+  it("mide con interactionDurationMs, no con latencyMs", () => {
+    const logs = [log("listening", 30_000), log("listening", 30_000)];
+    const estimate = estimateFromLogs(logs, DEFAULT_SECONDS_BY_MODALITY, 2);
+    expect(estimate.listening).toBe(30);
+  });
+
+  it("mantiene el valor por defecto si no hay muestras suficientes", () => {
+    const estimate = estimateFromLogs([log("listening", 60_000)], DEFAULT_SECONDS_BY_MODALITY, 5);
+    expect(estimate.listening).toBe(DEFAULT_SECONDS_BY_MODALITY.listening);
+  });
+
+  it("cada modalidad se calibra por separado", () => {
+    const logs = [
+      log("recognition", 6_000), log("recognition", 6_000),
+      log("pronunciation", 45_000), log("pronunciation", 45_000),
+    ];
+    const estimate = estimateFromLogs(logs, DEFAULT_SECONDS_BY_MODALITY, 2);
+    expect(estimate.recognition).toBe(6);
+    expect(estimate.pronunciation).toBe(45);
+    // Las no medidas conservan su valor por defecto.
+    expect(estimate.listening).toBe(DEFAULT_SECONDS_BY_MODALITY.listening);
+  });
+
+  it("solo usa logs con affectsSchedule true", () => {
+    const practice = {
+      ...log("recognition", 90_000), affectsSchedule: false, fsrsLogId: undefined,
+    } as ReviewLog;
+    const estimate = estimateFromLogs([practice, practice], DEFAULT_SECONDS_BY_MODALITY, 2);
+    expect(estimate.recognition).toBe(DEFAULT_SECONDS_BY_MODALITY.recognition);
+  });
+});
+```
+
+- [ ] **Step 2: Ejecutar — debe fallar**
+
+Run: `pnpm test lib/essential-words/__tests__/cost-estimate.test.ts`
+Expected: FAIL — módulo inexistente.
+
+- [ ] **Step 3: Implementar**
+
+```ts
+// lib/essential-words/cost-estimate.ts
+// Coste estimado POR MODALIDAD, no con un promedio global (spec 2.2). Una
+// dictacion con audio y una eleccion multiple no duran lo mismo, y un usuario
+// que practica sobre todo audio veria su sesion desbordarse con un unico
+// promedio.
+
+import type { AttemptModality, ReviewLog } from "./verification/types";
+import type { PlannedItem } from "./planning-types";
+
+/**
+ * Segundos por interaccion completa (audio + lectura + respuesta +
+ * transicion), no solo latencia de respuesta.
+ *
+ * PROVISIONALES (spec 10, decision 3): se reemplazan por la medicion real del
+ * usuario en cuanto haya muestras suficientes.
+ */
+export const DEFAULT_SECONDS_BY_MODALITY: Record<AttemptModality, number> = {
+  recognition: 12,
+  production: 25,
+  listening: 20,
+  pronunciation: 30,
+};
+
+export function estimateItemsSeconds(
+  items: PlannedItem[],
+  byModality: Record<AttemptModality, number>,
+): number {
+  return items.reduce((total, item) => total + byModality[item.modality], 0);
+}
+
+/**
+ * Recalibra los costes con el historial real. Solo cuentan los logs con
+ * `affectsSchedule: true`: los pasos de practica intra-sesion tienen otra
+ * dinamica y contaminarian la estimacion de una sesion de repaso.
+ *
+ * Una modalidad con menos de `minSamples` muestras conserva su valor por
+ * defecto: es mejor una estimacion declarada que una medicion de una muestra.
+ */
+export function estimateFromLogs(
+  logs: ReviewLog[],
+  fallback: Record<AttemptModality, number>,
+  minSamples: number,
+): Record<AttemptModality, number> {
+  const totals = new Map<AttemptModality, { sum: number; count: number }>();
+
+  for (const log of logs) {
+    if (!log.affectsSchedule) continue;
+    const { modality, interactionDurationMs } = log.assessment;
+    const acc = totals.get(modality) ?? { sum: 0, count: 0 };
+    acc.sum += interactionDurationMs;
+    acc.count += 1;
+    totals.set(modality, acc);
+  }
+
+  const result = { ...fallback };
+  for (const [modality, { sum, count }] of totals) {
+    if (count < minSamples) continue;
+    result[modality] = Math.round(sum / count / 1000);
+  }
+  return result;
+}
+```
+
+- [ ] **Step 4: Ejecutar y commit**
+
+Run: `pnpm test lib/essential-words/__tests__/cost-estimate.test.ts`
+Expected: PASS (8 tests).
+
+```bash
+git add lib/essential-words/cost-estimate.ts lib/essential-words/__tests__/cost-estimate.test.ts
+git commit -m "feat(essential-words): estimacion de coste por modalidad medida con interactionDuration"
+```
+
+### Task 4.3: Modo recuperación con histéresis
+
+**Files:**
+- Create: `lib/essential-words/recovery-mode.ts`
+- Test: `lib/essential-words/__tests__/recovery-mode.test.ts`
+
+- [ ] **Step 1: Escribir el test**
+
+```ts
+// lib/essential-words/__tests__/recovery-mode.test.ts
+import { describe, it, expect } from "vitest";
+import {
+  resolveMode, backlogSeconds, DEFAULT_RECOVERY_POLICY,
+} from "../recovery-mode";
+import type { PlannedItem } from "../planning-types";
+import { DEFAULT_SECONDS_BY_MODALITY } from "../cost-estimate";
+
+const item = (modality: PlannedItem["modality"] = "recognition"): PlannedItem => ({
+  itemId: crypto.randomUUID(), wordId: "c1k:x", skill: "meaning",
+  modality, dueAt: "2026-08-01T00:00:00.000Z",
+});
+
+const BUDGET = 900;
+
+describe("backlogSeconds", () => {
+  it("incluye las tres fuentes: FSRS atrasados, provisionales vencidos y learning steps", () => {
+    const seconds = backlogSeconds(
+      { learning: [item()], overdue: [item()], provisionalDue: [item()], dueToday: [] },
+      DEFAULT_SECONDS_BY_MODALITY,
+    );
+    expect(seconds).toBe(DEFAULT_SECONDS_BY_MODALITY.recognition * 3);
+  });
+
+  it("no cuenta lo que vence hoy: eso es carga normal, no deuda", () => {
+    const seconds = backlogSeconds(
+      { learning: [], overdue: [], provisionalDue: [], dueToday: [item(), item()] },
+      DEFAULT_SECONDS_BY_MODALITY,
+    );
+    expect(seconds).toBe(0);
+  });
+});
+
+describe("resolveMode", () => {
+  it("entra en recuperación al superar el ratio de entrada", () => {
+    const backlog = BUDGET * DEFAULT_RECOVERY_POLICY.enterAtBacklogBudgetRatio + 1;
+    expect(resolveMode(backlog, BUDGET, "normal", DEFAULT_RECOVERY_POLICY)).toBe("recovery");
+  });
+
+  it("no entra justo por debajo del umbral", () => {
+    const backlog = BUDGET * DEFAULT_RECOVERY_POLICY.enterAtBacklogBudgetRatio - 1;
+    expect(resolveMode(backlog, BUDGET, "normal", DEFAULT_RECOVERY_POLICY)).toBe("normal");
+  });
+
+  it("sale solo al bajar del ratio de salida, más exigente", () => {
+    const backlog = BUDGET * DEFAULT_RECOVERY_POLICY.exitAtBacklogBudgetRatio - 1;
+    expect(resolveMode(backlog, BUDGET, "recovery", DEFAULT_RECOVERY_POLICY)).toBe("normal");
+  });
+
+  it("NO oscila: en la banda intermedia mantiene el modo anterior (invariante 29)", () => {
+    const mid = BUDGET * (
+      (DEFAULT_RECOVERY_POLICY.enterAtBacklogBudgetRatio
+        + DEFAULT_RECOVERY_POLICY.exitAtBacklogBudgetRatio) / 2
+    );
+    expect(resolveMode(mid, BUDGET, "recovery", DEFAULT_RECOVERY_POLICY)).toBe("recovery");
+    expect(resolveMode(mid, BUDGET, "normal", DEFAULT_RECOVERY_POLICY)).toBe("normal");
+  });
+
+  it("los umbrales de entrada y salida son distintos: eso ES la histéresis", () => {
+    expect(DEFAULT_RECOVERY_POLICY.exitAtBacklogBudgetRatio)
+      .toBeLessThan(DEFAULT_RECOVERY_POLICY.enterAtBacklogBudgetRatio);
+  });
+
+  it("sin modo previo arranca en normal salvo que el backlog obligue", () => {
+    expect(resolveMode(0, BUDGET, undefined, DEFAULT_RECOVERY_POLICY)).toBe("normal");
+    expect(resolveMode(BUDGET * 5, BUDGET, undefined, DEFAULT_RECOVERY_POLICY)).toBe("recovery");
+  });
+});
+```
+
+- [ ] **Step 2: Ejecutar — debe fallar**
+
+Run: `pnpm test lib/essential-words/__tests__/recovery-mode.test.ts`
+Expected: FAIL — módulo inexistente.
+
+- [ ] **Step 3: Implementar**
+
+```ts
+// lib/essential-words/recovery-mode.ts
+// Modo recuperacion en SEGUNDOS ESTIMADOS, no en numero de items (spec 2.3):
+// el presupuesto es tiempo, y comparar un contador de items contra minutos
+// mezcla unidades.
+//
+// Entrada y salida usan umbrales DISTINTOS. Esa banda es la histeresis, y
+// evita el ciclo entrar/salir/entrar en sesiones consecutivas.
+
+import { estimateItemsSeconds } from "./cost-estimate";
+import type { AttemptModality } from "./verification/types";
+import type { DailyPlanningInput } from "./planning-types";
+
+export interface RecoveryPolicy {
+  enterAtBacklogBudgetRatio: number;
+  exitAtBacklogBudgetRatio: number;
+}
+
+/** PROVISIONALES: la banda se ajusta en la Fase 8 (spec 10, decision 6). */
+export const DEFAULT_RECOVERY_POLICY: RecoveryPolicy = {
+  enterAtBacklogBudgetRatio: 2.0,
+  exitAtBacklogBudgetRatio: 0.75,
+};
+
+/**
+ * Deuda acumulada, en segundos. Incluye las TRES fuentes que compiten por el
+ * mismo tiempo diario: repasos FSRS atrasados, provisionales vencidos y pasos
+ * de aprendizaje vencidos. Excluir alguna daria un backlog que subestima la
+ * carga y dejaria al usuario fuera del modo justo cuando mas lo necesita.
+ *
+ * Lo que vence HOY no es deuda: es la carga normal del dia.
+ */
+export function backlogSeconds(
+  mandatory: DailyPlanningInput["mandatory"],
+  byModality: Record<AttemptModality, number>,
+): number {
+  return estimateItemsSeconds(
+    [...mandatory.learning, ...mandatory.overdue, ...mandatory.provisionalDue],
+    byModality,
+  );
+}
+
+export function resolveMode(
+  backlog: number,
+  dailyBudgetSeconds: number,
+  previousMode: "normal" | "recovery" | undefined,
+  policy: RecoveryPolicy,
+): "normal" | "recovery" {
+  const enterAt = dailyBudgetSeconds * policy.enterAtBacklogBudgetRatio;
+  const exitAt = dailyBudgetSeconds * policy.exitAtBacklogBudgetRatio;
+
+  if (backlog > enterAt) return "recovery";
+  if (backlog < exitAt) return "normal";
+  // Banda intermedia: se mantiene el modo anterior. Esto es la histeresis.
+  return previousMode ?? "normal";
+}
+```
+
+- [ ] **Step 4: Ejecutar y commit**
+
+Run: `pnpm test lib/essential-words/__tests__/recovery-mode.test.ts`
+Expected: PASS (8 tests).
+
+```bash
+git add lib/essential-words/recovery-mode.ts lib/essential-words/__tests__/recovery-mode.test.ts
+git commit -m "feat(essential-words): modo recuperacion en segundos con histeresis"
+```
+
+### Task 4.4: `planDailyAllowance`
+
+**Files:**
+- Create: `lib/essential-words/daily-budget.ts`
+- Test: `lib/essential-words/__tests__/daily-budget.test.ts`
+
+- [ ] **Step 1: Escribir el test**
+
+```ts
+// lib/essential-words/__tests__/daily-budget.test.ts
+import { describe, it, expect } from "vitest";
+import { planDailyAllowance } from "../daily-budget";
+import { DEFAULT_SECONDS_BY_MODALITY } from "../cost-estimate";
+import { DEFAULT_ACTIVATION_LIMITS } from "../planning-types";
+import type {
+  ActivationCandidate, DailyPlanningInput, PlannedItem,
+} from "../planning-types";
+
+const item = (modality: PlannedItem["modality"] = "recognition"): PlannedItem => ({
+  itemId: crypto.randomUUID(), wordId: `c1k:${Math.random()}`, skill: "meaning",
+  modality, dueAt: "2026-08-01T00:00:00.000Z",
+});
+
+const activation = (skill: ActivationCandidate["skill"], wordId = "c1k:x"): ActivationCandidate => ({
+  itemId: `${wordId}#${skill}`, wordId, skill,
+  modality: skill === "listening" ? "listening" : "production",
+});
+
+const input = (over: Partial<DailyPlanningInput> = {}): DailyPlanningInput => ({
+  dailyBudgetSeconds: 900,
+  mandatory: { learning: [], overdue: [], dueToday: [], provisionalDue: [] },
+  candidates: { baseSkillActivations: [], usageActivations: [], newWords: [] },
+  estimatedSeconds: {
+    byModality: DEFAULT_SECONDS_BY_MODALITY,
+    newWordIntroduction: 40,
+  },
+  consumed: { skillActivations: 0, usageActivations: 0 },
+  ...over,
+});
+
+const newWords = (n: number) =>
+  Array.from({ length: n }, (_, i) => ({ wordId: `c1k:new${i}`, rank: i }));
+
+describe("planDailyAllowance — lo obligatorio manda", () => {
+  it("con presupuesto libre introduce palabras nuevas", () => {
+    const allowance = planDailyAllowance(input({
+      candidates: { baseSkillActivations: [], usageActivations: [], newWords: newWords(10) },
+    }), DEFAULT_ACTIVATION_LIMITS);
+    expect(allowance.newWords).toBeGreaterThan(0);
+    expect(allowance.mode).toBe("normal");
+  });
+
+  it("con los atrasados llenando el presupuesto no introduce nada nuevo", () => {
+    // 60 repasos × 12s = 720s de 900s: casi todo el presupuesto.
+    const allowance = planDailyAllowance(input({
+      mandatory: {
+        learning: [], overdue: Array.from({ length: 60 }, () => item()),
+        dueToday: [], provisionalDue: [],
+      },
+      candidates: { baseSkillActivations: [], usageActivations: [], newWords: newWords(10) },
+    }), DEFAULT_ACTIVATION_LIMITS);
+    expect(allowance.newWords).toBe(0);
+  });
+
+  it("ESTE es el bug que corregimos: 40 atrasados ya no dejan pasar 10 nuevas", () => {
+    const allowance = planDailyAllowance(input({
+      mandatory: {
+        learning: [], overdue: Array.from({ length: 40 }, () => item("production")),
+        dueToday: [], provisionalDue: [],
+      },
+      candidates: { baseSkillActivations: [], usageActivations: [], newWords: newWords(10) },
+    }), DEFAULT_ACTIVATION_LIMITS);
+    // 40 × 25s = 1000s > 900s de presupuesto.
+    expect(allowance.newWords).toBe(0);
+    expect(allowance.mode).toBe("recovery");
+  });
+
+  it("plannedSeconds refleja el coste de la cola resultante", () => {
+    const allowance = planDailyAllowance(input({
+      mandatory: {
+        learning: [], overdue: [item(), item()], dueToday: [], provisionalDue: [],
+      },
+    }), DEFAULT_ACTIVATION_LIMITS);
+    expect(allowance.plannedSeconds).toBeGreaterThanOrEqual(
+      DEFAULT_SECONDS_BY_MODALITY.recognition * 2,
+    );
+  });
+});
+
+describe("planDailyAllowance — contabilidad de activaciones", () => {
+  it("introducir una palabra consume al menos una skillActivation (invariante 27)", () => {
+    const allowance = planDailyAllowance(input({
+      candidates: { baseSkillActivations: [], usageActivations: [], newWords: newWords(3) },
+    }), DEFAULT_ACTIVATION_LIMITS);
+    expect(allowance.skillActivations).toBeGreaterThanOrEqual(allowance.newWords);
+  });
+
+  it("respeta el límite de activaciones por sesión", () => {
+    const allowance = planDailyAllowance(input({
+      candidates: {
+        baseSkillActivations: Array.from({ length: 20 }, (_, i) =>
+          activation("listening", `c1k:w${i}`)),
+        usageActivations: [], newWords: [],
+      },
+    }), DEFAULT_ACTIVATION_LIMITS);
+    expect(allowance.skillActivations)
+      .toBeLessThanOrEqual(DEFAULT_ACTIVATION_LIMITS.maxSkillActivationsPerSession);
+  });
+
+  it("descuenta lo ya consumido en la sesión", () => {
+    const base = input({
+      candidates: {
+        baseSkillActivations: Array.from({ length: 20 }, (_, i) =>
+          activation("listening", `c1k:w${i}`)),
+        usageActivations: [], newWords: [],
+      },
+    });
+    const fresh = planDailyAllowance(base, DEFAULT_ACTIVATION_LIMITS);
+    const partial = planDailyAllowance(
+      { ...base, consumed: { skillActivations: 4, usageActivations: 0 } },
+      DEFAULT_ACTIVATION_LIMITS,
+    );
+    expect(partial.skillActivations).toBeLessThan(fresh.skillActivations);
+  });
+
+  it("los usage cuentan contra el presupuesto (invariante 7)", () => {
+    const allowance = planDailyAllowance(input({
+      dailyBudgetSeconds: 60, // presupuesto minúsculo
+      mandatory: {
+        learning: [], overdue: [item("production"), item("production")],
+        dueToday: [], provisionalDue: [],
+      },
+      candidates: {
+        baseSkillActivations: [], newWords: [],
+        usageActivations: [activation("usage" as never), activation("usage" as never)],
+      },
+    }), DEFAULT_ACTIVATION_LIMITS);
+    expect(allowance.usageActivations).toBe(0);
+  });
+});
+
+describe("planDailyAllowance — modo recuperación", () => {
+  const overloaded = () => input({
+    dailyBudgetSeconds: 900,
+    mandatory: {
+      learning: [], overdue: Array.from({ length: 200 }, () => item()),
+      dueToday: [], provisionalDue: [],
+    },
+    candidates: {
+      baseSkillActivations: [activation("listening")],
+      usageActivations: [activation("usage" as never)],
+      newWords: newWords(10),
+    },
+  });
+
+  it("cero palabras nuevas", () => {
+    expect(planDailyAllowance(overloaded(), DEFAULT_ACTIVATION_LIMITS).newWords).toBe(0);
+  });
+
+  it("cero activaciones de habilidad base y de usage", () => {
+    const allowance = planDailyAllowance(overloaded(), DEFAULT_ACTIVATION_LIMITS);
+    expect(allowance.skillActivations).toBe(0);
+    expect(allowance.usageActivations).toBe(0);
+  });
+
+  it("declara el modo explícitamente para que la UI pueda comunicarlo", () => {
+    expect(planDailyAllowance(overloaded(), DEFAULT_ACTIVATION_LIMITS).mode).toBe("recovery");
+  });
+});
+```
+
+- [ ] **Step 2: Ejecutar — debe fallar**
+
+Run: `pnpm test lib/essential-words/__tests__/daily-budget.test.ts`
+Expected: FAIL — módulo inexistente.
+
+- [ ] **Step 3: Implementar**
+
+```ts
+// lib/essential-words/daily-budget.ts
+// Presupuesto diario en TRES unidades distintas (spec 2.2): "palabra nueva" e
+// "item nuevo" no son lo mismo, y colapsarlas fue lo que dejaba pasar diez
+// palabras nuevas por encima de cuarenta repasos atrasados.
+
+import { estimateItemsSeconds } from "./cost-estimate";
+import { backlogSeconds, resolveMode, DEFAULT_RECOVERY_POLICY, type RecoveryPolicy } from "./recovery-mode";
+import type {
+  ActivationCandidate, ActivationLimits, DailyAllowance, DailyPlanningInput,
+} from "./planning-types";
+
+/**
+ * Cuantas habilidades activa de facto introducir una palabra. `meaning` se
+ * activa al introducirla, asi que el minimo es 1 (invariante 27).
+ */
+const SKILL_ACTIVATIONS_PER_NEW_WORD = 1;
+
+export function planDailyAllowance(
+  input: DailyPlanningInput,
+  limits: ActivationLimits,
+  policy: RecoveryPolicy = DEFAULT_RECOVERY_POLICY,
+): DailyAllowance {
+  const { byModality } = input.estimatedSeconds;
+
+  const mandatorySeconds = estimateItemsSeconds(
+    [
+      ...input.mandatory.learning,
+      ...input.mandatory.overdue,
+      ...input.mandatory.dueToday,
+      ...input.mandatory.provisionalDue,
+    ],
+    byModality,
+  );
+
+  const backlog = backlogSeconds(input.mandatory, byModality);
+  const mode = resolveMode(backlog, input.dailyBudgetSeconds, input.previousMode, policy);
+
+  if (mode === "recovery") {
+    // Cero de todo lo negociable (spec 2.3). Lo obligatorio sigue planificado:
+    // el modo acota la sesion, no cancela los repasos.
+    return {
+      newWords: 0, skillActivations: 0, usageActivations: 0,
+      plannedSeconds: mandatorySeconds, mode,
+    };
+  }
+
+  let remaining = input.dailyBudgetSeconds - mandatorySeconds;
+
+  // Tramo 4: activaciones de habilidad base.
+  const skillActivations = fitActivations(
+    input.candidates.baseSkillActivations,
+    remaining,
+    byModality,
+    Math.max(0, limits.maxSkillActivationsPerSession - input.consumed.skillActivations),
+    limits.maxPerSkillPerSession,
+  );
+  remaining -= skillActivations.seconds;
+
+  // Tramo 5: activaciones de usage.
+  const usageActivations = fitActivations(
+    input.candidates.usageActivations,
+    remaining,
+    byModality,
+    Math.max(0, limits.maxUsageActivationsPerSession - input.consumed.usageActivations),
+    limits.maxPerSkillPerSession,
+  );
+  remaining -= usageActivations.seconds;
+
+  // Tramo 6: palabras nuevas, solo con lo que sobre. El coste de una palabra
+  // incluye su introduccion Y la activacion de `meaning` que dispara.
+  const perNewWord = input.estimatedSeconds.newWordIntroduction
+    + byModality.recognition * SKILL_ACTIVATIONS_PER_NEW_WORD;
+  const affordableWords = perNewWord > 0 ? Math.floor(remaining / perNewWord) : 0;
+  const newWords = Math.max(0, Math.min(input.candidates.newWords.length, affordableWords));
+  const newWordSeconds = newWords * perNewWord;
+
+  return {
+    newWords,
+    // Invariante 27: cada palabra nueva consume al menos una activacion.
+    skillActivations: skillActivations.count + newWords * SKILL_ACTIVATIONS_PER_NEW_WORD,
+    usageActivations: usageActivations.count,
+    plannedSeconds: mandatorySeconds
+      + skillActivations.seconds + usageActivations.seconds + newWordSeconds,
+    mode,
+  };
+}
+
+/**
+ * Cuantos candidatos caben en `remaining`, respetando el tope de sesion y el
+ * maximo de una activacion nueva por habilidad.
+ */
+function fitActivations(
+  candidates: ActivationCandidate[],
+  remaining: number,
+  byModality: DailyPlanningInput["estimatedSeconds"]["byModality"],
+  sessionCap: number,
+  perSkillCap: number,
+): { count: number; seconds: number } {
+  const perSkill = new Map<string, number>();
+  let count = 0;
+  let seconds = 0;
+
+  for (const candidate of candidates) {
+    if (count >= sessionCap) break;
+    const used = perSkill.get(candidate.skill) ?? 0;
+    if (used >= perSkillCap) continue;
+
+    const cost = byModality[candidate.modality];
+    if (seconds + cost > remaining) break;
+
+    seconds += cost;
+    count += 1;
+    perSkill.set(candidate.skill, used + 1);
+  }
+
+  return { count, seconds };
+}
+```
+
+- [ ] **Step 4: Ejecutar**
+
+Run: `pnpm test lib/essential-words/__tests__/daily-budget.test.ts`
+Expected: PASS (11 tests).
+
+- [ ] **Step 5: Verificar el tamaño**
+
+Run: `wc -l lib/essential-words/daily-budget.ts`
+Expected: <250.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add lib/essential-words/daily-budget.ts lib/essential-words/__tests__/daily-budget.test.ts
+git commit -m "feat(essential-words): planDailyAllowance con tres presupuestos y gating real"
+```
+
+### Task 4.5: Cola de seis tramos
+
+**Files:**
+- Create: `lib/essential-words/skill-queue.ts`
+- Test: `lib/essential-words/__tests__/skill-queue.test.ts`
+
+- [ ] **Step 1: Escribir el test**
+
+```ts
+// lib/essential-words/__tests__/skill-queue.test.ts
+import { describe, it, expect } from "vitest";
+import { buildSkillQueue } from "../skill-queue";
+import { DEFAULT_SECONDS_BY_MODALITY } from "../cost-estimate";
+import type { ActivationCandidate, DailyAllowance, PlannedItem } from "../planning-types";
+
+const item = (
+  over: Partial<PlannedItem> = {},
+): PlannedItem => ({
+  itemId: crypto.randomUUID(), wordId: "c1k:x", skill: "meaning",
+  modality: "recognition", dueAt: "2026-08-01T00:00:00.000Z", ...over,
+});
+
+const allowance = (over: Partial<DailyAllowance> = {}): DailyAllowance => ({
+  newWords: 2, skillActivations: 2, usageActivations: 1,
+  plannedSeconds: 0, mode: "normal", ...over,
+});
+
+describe("buildSkillQueue — orden de los seis tramos", () => {
+  it("learning va primero, antes que atrasados", () => {
+    const learning = item({ skill: "production" });
+    const overdue = item({ skill: "meaning" });
+    const queue = buildSkillQueue({
+      mandatory: { learning: [learning], overdue: [overdue], dueToday: [], provisionalDue: [] },
+      candidates: { baseSkillActivations: [], usageActivations: [], newWords: [] },
+      allowance: allowance(),
+    });
+    expect(queue[0].itemId).toBe(learning.itemId);
+  });
+
+  it("los atrasados van antes que los que vencen hoy", () => {
+    const overdue = item();
+    const dueToday = item();
+    const queue = buildSkillQueue({
+      mandatory: { learning: [], overdue: [overdue], dueToday: [dueToday], provisionalDue: [] },
+      candidates: { baseSkillActivations: [], usageActivations: [], newWords: [] },
+      allowance: allowance(),
+    });
+    expect(queue.map((i) => i.itemId)).toEqual([overdue.itemId, dueToday.itemId]);
+  });
+
+  it("las activaciones de habilidad base ocupan el tramo 4, antes que usage y nuevas", () => {
+    const activation: ActivationCandidate = {
+      itemId: "c1k:on#listening", wordId: "c1k:on", skill: "listening", modality: "listening",
+    };
+    const usage: ActivationCandidate = {
+      itemId: "c1k:on#usage:depend-on", wordId: "c1k:on", skill: "usage", modality: "production",
+    };
+    const queue = buildSkillQueue({
+      mandatory: { learning: [], overdue: [], dueToday: [], provisionalDue: [] },
+      candidates: {
+        baseSkillActivations: [activation], usageActivations: [usage],
+        newWords: [{ wordId: "c1k:new", rank: 1 }],
+      },
+      allowance: allowance({ newWords: 1, skillActivations: 1, usageActivations: 1 }),
+    });
+    const ids = queue.map((i) => i.itemId);
+    expect(ids.indexOf("c1k:on#listening")).toBeLessThan(ids.indexOf("c1k:on#usage:depend-on"));
+  });
+});
+
+describe("buildSkillQueue — prioridad dentro de los atrasados", () => {
+  it("ordena por recuperabilidad ascendente, no por frecuencia", () => {
+    const urgent = item({ itemId: "urgent", retrievability: 0.30 });
+    const relaxed = item({ itemId: "relaxed", retrievability: 0.85 });
+    const queue = buildSkillQueue({
+      mandatory: { learning: [], overdue: [relaxed, urgent], dueToday: [], provisionalDue: [] },
+      candidates: { baseSkillActivations: [], usageActivations: [], newWords: [] },
+      allowance: allowance(),
+    });
+    expect(queue.map((i) => i.itemId)).toEqual(["urgent", "relaxed"]);
+  });
+
+  it("los provisionales, sin recuperabilidad, se ordenan por antigüedad de vencimiento", () => {
+    const older = item({ itemId: "older", dueAt: "2026-07-01T00:00:00.000Z" });
+    const newer = item({ itemId: "newer", dueAt: "2026-08-01T00:00:00.000Z" });
+    const queue = buildSkillQueue({
+      mandatory: { learning: [], overdue: [], dueToday: [], provisionalDue: [newer, older] },
+      candidates: { baseSkillActivations: [], usageActivations: [], newWords: [] },
+      allowance: allowance(),
+    });
+    expect(queue.map((i) => i.itemId)).toEqual(["older", "newer"]);
+  });
+});
+
+describe("buildSkillQueue — respeta el allowance", () => {
+  it("no mete más activaciones de las concedidas (invariante 11)", () => {
+    const candidates = Array.from({ length: 10 }, (_, i): ActivationCandidate => ({
+      itemId: `c1k:w${i}#listening`, wordId: `c1k:w${i}`, skill: "listening", modality: "listening",
+    }));
+    const queue = buildSkillQueue({
+      mandatory: { learning: [], overdue: [], dueToday: [], provisionalDue: [] },
+      candidates: { baseSkillActivations: candidates, usageActivations: [], newWords: [] },
+      allowance: allowance({ skillActivations: 2, newWords: 0, usageActivations: 0 }),
+    });
+    expect(queue).toHaveLength(2);
+  });
+
+  it("en modo recuperación la cola son solo obligatorios", () => {
+    const queue = buildSkillQueue({
+      mandatory: { learning: [item()], overdue: [item()], dueToday: [], provisionalDue: [] },
+      candidates: {
+        baseSkillActivations: [{
+          itemId: "a", wordId: "c1k:x", skill: "listening", modality: "listening",
+        }],
+        usageActivations: [], newWords: [{ wordId: "c1k:new", rank: 1 }],
+      },
+      allowance: allowance({ newWords: 0, skillActivations: 0, usageActivations: 0, mode: "recovery" }),
+    });
+    expect(queue).toHaveLength(2);
+  });
+});
+```
+
+- [ ] **Step 2: Ejecutar — debe fallar**
+
+Run: `pnpm test lib/essential-words/__tests__/skill-queue.test.ts`
+Expected: FAIL — módulo inexistente.
+
+- [ ] **Step 3: Implementar**
+
+```ts
+// lib/essential-words/skill-queue.ts
+// Cola de SEIS tramos (spec 2.1). El tramo 4 faltaba en el diseño anterior:
+// habia sitio para usage y palabras nuevas, pero no para un `listening` que
+// existe con schedule "none" y espera activacion, asi que la politica de
+// activacion no tenia ejecutor.
+
+import type {
+  ActivationCandidate, DailyAllowance, DailyPlanningInput, PlannedItem,
+} from "./planning-types";
+
+export interface SkillQueueInput {
+  mandatory: DailyPlanningInput["mandatory"];
+  candidates: DailyPlanningInput["candidates"];
+  allowance: DailyAllowance;
+}
+
+/**
+ * Menor recuperabilidad primero: es lo que esta a punto de olvidarse. El
+ * modelo anterior ordenaba por `entry.rank`, que es frecuencia lexica, no
+ * urgencia de repaso.
+ */
+function byUrgency(a: PlannedItem, b: PlannedItem): number {
+  if (a.retrievability !== undefined && b.retrievability !== undefined) {
+    return a.retrievability - b.retrievability;
+  }
+  // Los provisionales no tienen recuperabilidad FSRS: se ordenan por
+  // antiguedad de vencimiento.
+  return a.dueAt.localeCompare(b.dueAt);
+}
+
+function activationToPlanned(candidate: ActivationCandidate): PlannedItem {
+  return {
+    itemId: candidate.itemId,
+    wordId: candidate.wordId,
+    skill: candidate.skill,
+    modality: candidate.modality,
+    // Una activacion se practica hoy por definicion.
+    dueAt: new Date(0).toISOString(),
+  };
+}
+
+export function buildSkillQueue(input: SkillQueueInput): PlannedItem[] {
+  const { mandatory, candidates, allowance } = input;
+
+  return [
+    // 1. Learning / Relearning
+    ...[...mandatory.learning].sort(byUrgency),
+    // 2. Provisionales vencidos y repasos atrasados
+    ...[...mandatory.overdue, ...mandatory.provisionalDue].sort(byUrgency),
+    // 3. Repasos que vencen hoy
+    ...[...mandatory.dueToday].sort(byUrgency),
+    // 4. Activaciones de habilidad base
+    ...candidates.baseSkillActivations
+      .slice(0, allowance.skillActivations)
+      .map(activationToPlanned),
+    // 5. Activaciones de usage
+    ...candidates.usageActivations
+      .slice(0, allowance.usageActivations)
+      .map(activationToPlanned),
+    // 6. Palabras nuevas — solo con el presupuesto que sobre
+    ...candidates.newWords
+      .slice(0, allowance.newWords)
+      .map((word): PlannedItem => ({
+        itemId: `${word.wordId}#meaning`,
+        wordId: word.wordId,
+        skill: "meaning",
+        modality: "recognition",
+        dueAt: new Date(0).toISOString(),
+      })),
+  ];
+}
+```
+
+- [ ] **Step 4: Ejecutar**
+
+Run: `pnpm test lib/essential-words/__tests__/skill-queue.test.ts`
+Expected: PASS (7 tests). Nota: el test "no mete más activaciones de las concedidas" cuenta 2 porque `allowance.skillActivations` es 2, aunque `maxPerSkillPerSession` limite las de una MISMA habilidad — el allowance ya viene calculado de 4.4.
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add lib/essential-words/skill-queue.ts lib/essential-words/__tests__/skill-queue.test.ts
+git commit -m "feat(essential-words): cola de seis tramos ordenada por urgencia"
+```
+
+### Task 4.6: Retirar los tests de caracterización del gating viejo
+
+**Files:**
+- Delete: `lib/essential-words/__tests__/queue.characterization.test.ts`
+- Create: `lib/essential-words/__tests__/gating-regression.test.ts`
+
+El fichero de la Fase 0 documentaba el bug. Ahora que existe el gating correcto, se sustituye por su contrario. Borrarlo es una decisión, no un descuido: por eso es un paso explícito.
+
+- [ ] **Step 1: Escribir el test de regresión**
+
+```ts
+// lib/essential-words/__tests__/gating-regression.test.ts
+// Sustituye a queue.characterization.test.ts (Fase 0), que documentaba el
+// gating roto. Cada test de aquí es el contrario de uno de allí.
+
+import { describe, it, expect } from "vitest";
+import { planDailyAllowance } from "../daily-budget";
+import { DEFAULT_SECONDS_BY_MODALITY } from "../cost-estimate";
+import { DEFAULT_ACTIVATION_LIMITS } from "../planning-types";
+import { buildSkillQueue } from "../skill-queue";
+import type { DailyPlanningInput, PlannedItem } from "../planning-types";
+
+const overdue = (n: number): PlannedItem[] =>
+  Array.from({ length: n }, (_, i) => ({
+    itemId: `c1k:w${i}#meaning`, wordId: `c1k:w${i}`, skill: "meaning",
+    modality: "production", dueAt: "2026-08-01T00:00:00.000Z",
+    retrievability: 0.4 + i / 1000,
+  }));
+
+const input = (overdueCount: number): DailyPlanningInput => ({
+  dailyBudgetSeconds: 900,
+  mandatory: { learning: [], overdue: overdue(overdueCount), dueToday: [], provisionalDue: [] },
+  candidates: {
+    baseSkillActivations: [], usageActivations: [],
+    newWords: Array.from({ length: 10 }, (_, i) => ({ wordId: `c1k:new${i}`, rank: i })),
+  },
+  estimatedSeconds: {
+    byModality: DEFAULT_SECONDS_BY_MODALITY, newWordIntroduction: 40,
+  },
+  consumed: { skillActivations: 0, usageActivations: 0 },
+});
+
+describe("el gating ya NO ignora los repasos atrasados", () => {
+  it("40 atrasados bloquean las palabras nuevas", () => {
+    const allowance = planDailyAllowance(input(40), DEFAULT_ACTIVATION_LIMITS);
+    expect(allowance.newWords).toBe(0);
+  });
+
+  it("sin atrasados sí introduce palabras nuevas", () => {
+    const allowance = planDailyAllowance(input(0), DEFAULT_ACTIVATION_LIMITS);
+    expect(allowance.newWords).toBeGreaterThan(0);
+  });
+
+  it("la deuda alta activa el modo recuperación en vez de acumular en silencio", () => {
+    expect(planDailyAllowance(input(100), DEFAULT_ACTIVATION_LIMITS).mode).toBe("recovery");
+  });
+});
+
+describe("los repasos ya NO se ordenan por frecuencia", () => {
+  it("ordena por recuperabilidad ascendente", () => {
+    const common: PlannedItem = {
+      itemId: "common", wordId: "c1k:common", skill: "meaning",
+      modality: "recognition", dueAt: "2026-08-01T00:00:00.000Z", retrievability: 0.9,
+    };
+    const rare: PlannedItem = {
+      itemId: "rare", wordId: "c1k:rare", skill: "meaning",
+      modality: "recognition", dueAt: "2026-08-01T00:00:00.000Z", retrievability: 0.2,
+    };
+    const queue = buildSkillQueue({
+      mandatory: { learning: [], overdue: [common, rare], dueToday: [], provisionalDue: [] },
+      candidates: { baseSkillActivations: [], usageActivations: [], newWords: [] },
+      allowance: { newWords: 0, skillActivations: 0, usageActivations: 0, plannedSeconds: 0, mode: "normal" },
+    });
+    // Lo que está a punto de olvidarse va primero, sea frecuente o no.
+    expect(queue[0].itemId).toBe("rare");
+  });
+});
+```
+
+- [ ] **Step 2: Ejecutar el nuevo test**
+
+Run: `pnpm test lib/essential-words/__tests__/gating-regression.test.ts`
+Expected: PASS (4 tests).
+
+- [ ] **Step 3: Borrar el test de caracterización, ya sustituido**
+
+```bash
+git rm lib/essential-words/__tests__/queue.characterization.test.ts
+```
+
+- [ ] **Step 4: Verificar la fase completa**
+
+Run: `pnpm test lib/essential-words && pnpm type-check && pnpm lint`
+Expected: PASS. `queue.ts` sigue intacto y en uso por la ruta vieja: el flag sigue apagado.
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add lib/essential-words/__tests__/gating-regression.test.ts
+git commit -m "test(essential-words): sustituir caracterizacion del gating roto por su regresion
+
+El fichero de la Fase 0 fijaba el bug (10 nuevas por encima de 40 atrasados)
+para que corregirlo fuera una decision explicita. Ya existe el gating real,
+asi que se retira y se sustituye por los tests contrarios."
+```
