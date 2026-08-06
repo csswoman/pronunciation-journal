@@ -245,6 +245,13 @@ export async function saveAttemptBundle(
     await putAttemptLogTx(tx, userId, attempt);
     await putSrsReviewEventsTx(tx, userId, events);
     await putLearningItemsTx(tx, userId, items);
-    await putOutboxEntriesTx(tx, userId, outbox);
+
+    // Entity writes are `put`s keyed by stable plan IDs. Keep the outbox
+    // equally idempotent: retrying a local bundle while it is still pending
+    // must not enqueue a second remote copy of its attempt and effects.
+    const existingOutbox = await tx.table<SyncOutboxEntry>("syncOutbox").toArray();
+    const bundleAlreadyQueued = existingOutbox.some((entry) =>
+      entry.userId === userId && entry.bundleId === bundle.attempt.id);
+    if (!bundleAlreadyQueued) await putOutboxEntriesTx(tx, userId, outbox);
   });
 }
