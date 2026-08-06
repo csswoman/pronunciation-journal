@@ -56,6 +56,7 @@ describe('SessionReady', () => {
       <SessionReady
         counts={{ newRemaining: 8, learningRemaining: 0, reviewRemaining: 16 }}
         stats={baseStats}
+        streak={3}
         activeRouteId={null}
         onRouteChange={vi.fn()}
         onBegin={vi.fn()}
@@ -72,6 +73,7 @@ describe('SessionReady', () => {
       <SessionReady
         counts={{ newRemaining: 2, learningRemaining: 3, reviewRemaining: 4 }}
         stats={baseStats}
+        streak={3}
         activeRouteId={null}
         onRouteChange={vi.fn()}
         onBegin={vi.fn()}
@@ -91,6 +93,7 @@ describe('SessionReady', () => {
       <SessionReady
         counts={{ newRemaining: 3, learningRemaining: 0, reviewRemaining: 0 }}
         stats={baseStats}
+        streak={3}
         activeRouteId={null}
         onRouteChange={vi.fn()}
         onBegin={onBegin}

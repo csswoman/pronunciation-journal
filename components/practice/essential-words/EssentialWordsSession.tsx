@@ -20,7 +20,7 @@ import { exerciseLevelLabel } from '@/lib/essential-words/level-labels'
 import { attemptGrade, gradeToLegacyQuality, type AttemptOutcome } from '@/lib/essential-words/attempt-grade'
 import Button from '@/components/ui/Button'
 
-export function EssentialWordsSession() {
+export function EssentialWordsSession({ initialStreak = 0 }: { initialStreak?: number } = {}) {
   const {
     phase, currentStepId, current, currentMode, currentExerciseLevel, distractorPool, stats, counts,
     sessionProgress, studyContext, sessionSummary,
@@ -183,6 +183,7 @@ export function EssentialWordsSession() {
           <SessionReady
             counts={counts}
             stats={stats}
+            streak={initialStreak}
             activeRouteId={activeRouteId}
             onRouteChange={(id) => void setRoute(id)}
             onBegin={beginSession}
