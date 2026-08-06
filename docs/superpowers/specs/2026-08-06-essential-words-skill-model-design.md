@@ -48,22 +48,30 @@ Existe una escalera de dominio, pero vive **solo dentro de la sesión**:
 
 ## Principio rector
 
-> **Ninguna habilidad recibe crédito si la interacción no produjo evidencia de esa
-> habilidad.**
+> **Ninguna habilidad recibe crédito positivo si la interacción no produjo evidencia
+> positiva de esa habilidad.**
 
 Un acierto limpio en producción escrita no acredita escucha. La calidad de una
-respuesta (`Grade`) y **qué** demuestra esa respuesta (modalidad → evidencia) son
+respuesta (`Grade`) y **qué** demuestra esa respuesta (modalidad → observación) son
 dimensiones distintas, y colapsarlas es el error que esta spec corrige.
+
+**Un fallo también es evidencia.** No es evidencia de dominio; es evidencia de que la
+recuperación no fue exitosa, y es exactamente la información que el planificador
+necesita para colocar la habilidad en `learning`. Por eso el modelo registra
+**observaciones** con signo (`success` | `failure`), no solo créditos positivos: si
+solo se representara el crédito, un `Again` dejaría la lista vacía y la colocación
+tendría que reinterpretar la modalidad por su cuenta, volviendo a mezclar
+responsabilidades.
 
 Tres conceptos que se mantienen separados en todo el diseño:
 
 | Concepto | Qué es | Determinado por | Dónde vive |
 |---|---|---|---|
 | **Grade** | calidad de una respuesta concreta | acierto, pistas, latencia | `attempt-grade.ts` |
-| **Evidencia** | qué habilidad evaluó realmente esa respuesta | **la modalidad** | `deriveEvidence` |
-| **Colocación** | con qué estado e intervalo arranca cada habilidad | **el grade**, sobre lo que tuvo evidencia | `derivePlacements` |
+| **Observación** | qué habilidad evaluó esa respuesta, y con qué signo | **la modalidad** (habilidad) + **el acierto** (signo) | `deriveObservations` |
+| **Colocación** | con qué estado e intervalo arranca cada habilidad | **el grade**, sobre lo observado | `derivePlacements` |
 
-Que una habilidad quede en `learning` **no** significa que no hubo evidencia: una
+Que una habilidad quede en `learning` **no** significa que no hubo observación: una
 respuesta `Good` de producción sí demostró producción; la política simplemente decide
 colocarla ahí. Son dos pasos (§3.2), no una tabla.
 
@@ -105,8 +113,8 @@ interface LearningItem {
 }
 ```
 
-`pronunciation` **no es una `Skill`**: es una modalidad (§1.4), y la evidencia que
-produce acredita `production`. `context` se descarta: se solapa con `usage`.
+`pronunciation` **no es una `Skill`**: es una `AttemptModality` (§1.7), y lo que
+observa acredita `production`. `context` se descarta: se solapa con `usage`.
 
 ### 1.3 `ItemSchedule` — unión discriminada
 
@@ -178,6 +186,8 @@ interface MaturityPolicy {
   minStabilityDays: number;
   minSuccessfulReviews: number;
   maxRecentLapses: number;
+  /** Ventana de "recent": las últimas N revisiones con `affectsSchedule: true`. */
+  recentReviewWindow: number;
 }
 
 function isMature(
@@ -186,6 +196,16 @@ function isMature(
   policy: MaturityPolicy,
 ): boolean;
 ```
+
+`maxRecentLapses` no significa nada sin definir "recent". Se define en **número de
+revisiones**, no en días: esta app tiene perfiles intermitentes y de ráfagas (§9.2), y
+una ventana temporal deja a un usuario que estuvo dos semanas ausente con un historial
+reciente vacío, declarando maduro cualquier ítem por omisión de datos. Una ventana de
+N revisiones se comporta igual con práctica diaria que con práctica esporádica.
+
+**Solo cuentan los logs con `affectsSchedule: true`.** Los pasos de práctica intra-
+sesión no son recuperaciones programadas; incluirlos inflaría tanto
+`minSuccessfulReviews` como la ventana de lapses.
 
 Solo un ítem con `schedule.kind === "fsrs"` y `state === "Review"` puede ser maduro.
 Los umbrales concretos quedan abiertos (§10); el contrato queda cerrado aquí.
@@ -211,22 +231,35 @@ que FSRS devuelva** — que con `Again` será aprendizaje, no `review`.
 
 **La inferencia de colocación nunca produce un ítem maduro.**
 
-### 1.7 `SkillEvidence` — nunca booleanos sueltos
+### 1.7 `SkillObservation` — con signo, nunca booleanos sueltos
 
 Colapsar evidencia directa e inferencia estadística a un `boolean` pierde información
-necesaria para depurar y recalibrar:
+necesaria para depurar y recalibrar. Y representar **solo** el crédito positivo deja
+a `derivePlacements` sin contrato en un `Again` (§ principio rector). La unidad es
+por tanto una observación con signo y con una base tipada:
 
 ```ts
-interface SkillEvidence {
+interface SkillObservation {
   skill: Skill;
+  outcome: "success" | "failure";
   source: "direct" | "placement-inference" | "journal";
-  modality: "recognition" | "production" | "listening" | "pronunciation";
-  /** Confianza en que ESTA interacción evaluó ESTA habilidad — no en que la
+  basis:
+    | { kind: "attempt"; modality: AttemptModality }
+    | { kind: "band-inference"; bandId: string; policyVersion: string };
+  /** Confianza en que ESTA observación evaluó ESTA habilidad — no en que la
    *  persona la domine. Directa ≈ 1.0; inferida = confianza de banda. */
   evidenceConfidence: number;
   observedAt: string;
 }
+
+type AttemptModality = "recognition" | "production" | "listening" | "pronunciation";
 ```
+
+`basis` es una unión, no un `modality` obligatorio: una inferencia de banda **no fue
+evaluada** por reconocimiento, producción ni escucha, y obligarla a declarar una
+modalidad sería inventarle una procedencia que no tuvo. `AttemptModality` se extrae
+como tipo con nombre porque lo consumen `AttemptAssessment` (§1.8), la estimación de
+coste (§2.2) y los umbrales de latencia (§3.5).
 
 ### 1.8 `AttemptAssessment` — Grade y modalidad viajan juntos
 
@@ -235,17 +268,25 @@ Un `Easy` en reconocimiento no equivale a un `Easy` en producción:
 ```ts
 interface AttemptAssessment {
   grade: Grade;
-  modality: "recognition" | "production" | "listening" | "pronunciation";
+  modality: AttemptModality;
   correct: boolean;
   latencyMs: number;
+  /** Tiempo total de la interacción: audio, lectura, respuesta y transición.
+   *  `latencyMs` mide solo la respuesta y subestima el coste real (§2.2). */
+  interactionDurationMs: number;
   usedHints: boolean;
   rescued: boolean;
   acceptedVariant: boolean;
 }
 ```
 
-`AttemptAssessment` **no lleva evidencia**: la evidencia es el resultado de aplicarle
-una política (§3.2), no un campo del intento.
+`AttemptAssessment` **no lleva observaciones**: la observación es el resultado de
+aplicarle una política (§3.2), no un campo del intento.
+
+`interactionDurationMs` existe porque el presupuesto (§2.2) se calibra con el tiempo
+que la sesión consume de verdad. `latencyMs` no incluye reproducción de audio,
+lectura del enunciado, transiciones ni el hueco entre ejercicios; usarlo para estimar
+duración subestima sistemáticamente toda modalidad con audio.
 
 ### 1.9 `SkillPlacement`
 
@@ -257,6 +298,34 @@ interface SkillPlacement {
 }
 ```
 
+### 1.9b `PlacementInference` — la inferencia de banda necesita dónde vivir
+
+La colocación por bandas (§4) produce una estimación que **no es una programación**:
+la palabra queda inferida y todavía sin activar. No cabe en `ItemSchedule` (no hay
+fecha) ni en `SkillStatus` (que es derivado y no se persiste), así que es un campo
+propio de `LearningItem`:
+
+```ts
+interface PlacementInference {
+  bandId: string;
+  confidence: number;
+  inferredAt: string;
+  policyVersion: string;
+}
+
+interface LearningItem {
+  // …
+  placementInference?: PlacementInference;
+}
+```
+
+Invariantes (24–26 en §7):
+
+- `placementInference` solo puede existir en habilidades base, nunca en `usage`.
+- Un ítem inferido y no activado conserva `schedule.kind === "none"`.
+- Al confirmarse con evidencia directa, la inferencia **se conserva como telemetría**
+  —sirve para recalibrar bandas (§4.3)— pero deja de determinar la programación.
+
 ### 1.10 `ReviewLog` — práctica ≠ evento SRS
 
 Dentro de una sesión hay intentos iniciales, pistas, rescates, repeticiones,
@@ -264,18 +333,25 @@ verificaciones y ejercicios complementarios. **Todos se registran; solo algunos
 modifican el calendario.** Alimentar el optimizador FSRS con ejercicios que no eran
 recuperaciones programadas corrompería la calibración.
 
+`affectsSchedule` y `fsrsLogId` no pueden contradecirse: un log que no toca el
+calendario no tiene entrada FSRS que referenciar. La unión discriminada lo hace
+imposible por construcción, en lugar de dejarlo a una invariante de runtime:
+
 ```ts
-interface ReviewLog {
+interface ReviewLogBase {
   id: string;
   learningItemId: string;
   sessionId: string;
   assessment: AttemptAssessment;
-  evidence: SkillEvidence[];
+  observations: SkillObservation[];
   eventType: "practice" | "verification" | "scheduled-review" | "learning-step";
-  affectsSchedule: boolean;
-  fsrsLogId?: string;
   occurredAt: string;
 }
+
+type ReviewLog = ReviewLogBase & (
+  | { affectsSchedule: false; fsrsLogId?: never }
+  | { affectsSchedule: true;  fsrsLogId: string }
+);
 ```
 
 > **Invariante:** todo intento produce telemetría; solo un intento con
@@ -310,62 +386,141 @@ Dos requisitos:
 
 ### 2.1 Orden de la cola
 
-Cinco tramos, en orden estricto:
+**Seis** tramos, en orden estricto:
 
 1. Ítems en `Learning` / `Relearning`
-2. Repasos atrasados, ordenados por **menor recuperabilidad primero** (FSRS ya la
-   calcula; hoy se ordena por `entry.rank`, que es frecuencia, no urgencia)
+2. Provisionales vencidos y repasos atrasados, ordenados por **menor recuperabilidad
+   primero** (FSRS ya la calcula; hoy se ordena por `entry.rank`, que es frecuencia,
+   no urgencia). Los provisionales no tienen recuperabilidad FSRS: se ordenan por
+   antigüedad de vencimiento.
 3. Repasos que vencen hoy
-4. Activaciones de `usage` pendientes (sujetas a §5.3)
-5. Palabras nuevas — **solo con el presupuesto que sobre**
+4. **Activaciones de habilidades base pendientes** (sujetas a §2.5)
+5. Activaciones de `usage` pendientes (sujetas a §5.3)
+6. Palabras nuevas — **solo con el presupuesto que sobre**
 
-Los tramos 4 y 5 desaparecen bajo presión. Es intencional.
+El tramo 4 faltaba: la cola tenía dónde colocar `usage` y palabras nuevas, pero no un
+`listening` o `production` que ya existe con `schedule: { kind: "none" }` y espera
+activación. Sin ese tramo, la política de §2.5 no tiene ejecutor.
+
+Los tramos 4, 5 y 6 desaparecen bajo presión. Es intencional.
 
 ### 2.2 Presupuesto
 
 Helper puro nuevo, `lib/essential-words/daily-budget.ts`. Devuelve **tres unidades
-distintas**, porque "palabra nueva" e "ítem nuevo" no son lo mismo:
+distintas**, porque "palabra nueva" e "ítem nuevo" no son lo mismo.
+
+Cuatro contadores y un promedio global no bastan para calcular tres presupuestos
+independientes: no dicen cuánto cuesta lo obligatorio, ni qué candidatos hay de cada
+categoría, ni cuánto se lleva consumido en la sesión. La entrada es un objeto
+estructurado:
 
 ```ts
+interface DailyPlanningInput {
+  dailyBudgetSeconds: number;
+
+  /** No negociable: se planifica siempre y consume presupuesto antes que nada. */
+  mandatory: {
+    learning: PlannedItem[];
+    overdue: PlannedItem[];
+    dueToday: PlannedItem[];
+    provisionalDue: PlannedItem[];
+  };
+
+  /** Negociable: entra solo con el presupuesto que sobre, por tramos (§2.1). */
+  candidates: {
+    baseSkillActivations: ActivationCandidate[];
+    usageActivations: ActivationCandidate[];
+    newWords: NewWordCandidate[];
+  };
+
+  estimatedSeconds: {
+    byModality: Record<AttemptModality, number>;
+    newWordIntroduction: number;
+  };
+
+  /** Ya gastado en esta sesión: el helper es idempotente al recalcularse. */
+  consumed: {
+    skillActivations: number;
+    usageActivations: number;
+  };
+}
+
 interface DailyAllowance {
   newWords: number;          // palabras a introducir
   skillActivations: number;  // activaciones de habilidad base (§2.5)
   usageActivations: number;  // activaciones de usage (§5.3)
+  plannedSeconds: number;    // coste estimado de la cola resultante
   mode: "normal" | "recovery";
 }
 
-function newWordsAllowed(input: {
-  targetNewWords: number;
-  overdueCount: number;
-  dueTodayCount: number;
-  dailyBudgetMinutes: number;
-  avgSecondsPerItem: number;
-}): DailyAllowance;
+function planDailyAllowance(input: DailyPlanningInput): DailyAllowance;
 ```
 
-`targetNewWords` cuenta **palabras**, no ítems. El coste estimado de una palabra
-nueva incluye las habilidades que previsiblemente activará (§2.5), no solo su
-exposición.
+`plannedSeconds` es lo que §9.5 mide contra el presupuesto: sin devolverlo, el
+criterio de aceptación tendría que recalcularlo por fuera con otra fórmula.
 
-`avgSecondsPerItem` se **mide**, no se adivina: el `ReviewLog` (§1.10) guarda latencia
-real. Arranca con una estimación declarada como provisional y se reemplaza por el
-promedio del usuario en cuanto haya datos suficientes.
+`targetNewWords` desaparece como escalar suelto: son `candidates.newWords`, y su coste
+incluye las activaciones que previsiblemente disparará (§2.5), no solo la exposición.
+
+**El coste se estima por modalidad, no con un promedio global.** Una dictación con
+audio y una elección múltiple no duran lo mismo, y un usuario que practica sobre todo
+audio vería su sesión desbordarse sistemáticamente con un promedio único.
+`estimatedSeconds` se **mide**: el `ReviewLog` guarda `interactionDurationMs` (§1.8),
+que sí incluye audio, lectura y transiciones. Arranca con estimaciones declaradas como
+provisionales (§10) y se reemplaza por los promedios del usuario por modalidad en
+cuanto haya datos suficientes.
+
+Dos invariantes de contabilidad (27–28 en §7):
+
+- **Introducir una palabra consume al menos una `skillActivation`**, porque `meaning`
+  se activa al introducirla.
+- **Una verificación que acredita dos habilidades consume dos `skillActivations`**,
+  aunque provengan de una sola pregunta. Esto importa sobre todo en "Ya conozco esta
+  palabra": un `Easy` puede crear dos provisionales y no puede saltarse el
+  presupuesto por venir de un único intento.
 
 **Presupuesto por defecto: 15 minutos**, configurable.
 
 ### 2.3 Modo recuperación
 
-Si `overdueCount > 2 × carga_diaria_normal`: `mode: "recovery"`.
+El umbral se expresa **en segundos estimados**, no en número de ítems: el presupuesto
+es tiempo, y comparar un contador de ítems contra un presupuesto en minutos mezcla
+unidades. Y entrar y salir con el mismo umbral haría oscilar el modo entre sesiones
+consecutivas, así que los umbrales son distintos:
+
+```ts
+interface RecoveryPolicy {
+  enterAtBacklogBudgetRatio: number; // p. ej. 2.0
+  exitAtBacklogBudgetRatio: number;  // p. ej. 0.75
+}
+```
+
+- **Entrar:** `backlogEstimatedSeconds > enterAt × dailyBudgetSeconds`
+- **Salir:** `backlogEstimatedSeconds < exitAt × dailyBudgetSeconds`
+
+La banda entre ambos ratios es la histéresis: evita el ciclo entrar/salir/entrar en
+días consecutivos.
+
+**`backlogEstimatedSeconds` incluye las tres fuentes**, estimadas con
+`estimatedSeconds.byModality` (§2.2):
+
+- repasos FSRS atrasados,
+- **provisionales vencidos**,
+- pasos de aprendizaje vencidos.
+
+Las tres compiten por el mismo tiempo diario; excluir alguna daría un backlog que
+subestima la carga real y dejaría al usuario fuera del modo recuperación justo cuando
+más lo necesita.
+
+En modo recuperación:
 
 - Cero palabras nuevas
-- Cero activaciones de `usage`
+- Cero activaciones de habilidad base (§2.5) y cero de `usage` (§5.3)
 - Sesión acotada
 - Priorización por recuperabilidad ascendente
 - **Se comunica explícitamente en pantalla** — no se adivina
 - Se conservan fechas e historial; no se marca nada como estudiado ni se reinician
   tarjetas
-
-Sale solo al bajar del umbral.
 
 ### 2.4 Consecuencia en la UI
 
@@ -387,9 +542,12 @@ Política:
   `schedule: { kind: "none" }` — existen, pero **no están programadas**.
 - **Solo se programa la habilidad efectivamente practicada.** Un ítem pasa de `none`
   a programado cuando la sesión lo ejercita, no cuando la palabra se introduce.
-- **Cada activación consume presupuesto** (`skillActivations` en `DailyAllowance`).
+- **Cada activación consume presupuesto** (`skillActivations` en `DailyAllowance`),
+  incluidas las que nacen de una verificación (§2.2, invariantes 27–28).
 - **Máximo una activación nueva persistente por habilidad y sesión.**
-- `targetNewWords` cuenta palabras; el coste estimado de una palabra incluye las
+- Las activaciones pendientes ocupan el **tramo 4** de la cola (§2.1): existen como
+  ítems con `schedule: { kind: "none" }` y esperan turno como cualquier otro candidato.
+- `candidates.newWords` cuenta palabras; el coste estimado de una palabra incluye las
   activaciones que previsiblemente disparará.
 - En modo recuperación (§2.3): cero activaciones nuevas.
 
@@ -415,36 +573,50 @@ claro que no se está saltando definitivamente.
 
 ### 3.2 Dos pasos, no uno
 
-Evidencia y colocación son funciones separadas. Colapsarlas hace que `learning` se
+Observación y colocación son funciones separadas. Colapsarlas hace que `learning` se
 lea erróneamente como "no hubo evidencia":
 
 ```ts
-function deriveEvidence(assessment: AttemptAssessment): SkillEvidence[];
+function deriveObservations(assessment: AttemptAssessment): SkillObservation[];
 
 function derivePlacements(
-  evidence: SkillEvidence[],
+  observations: SkillObservation[],
   assessment: AttemptAssessment,
   currentItems: LearningItem[],
 ): SkillPlacement[];
 ```
 
-**Paso 1 — evidencia, determinada por la modalidad**, no por el grade:
+**Paso 1 — qué habilidades evaluó el intento: lo decide la modalidad.
+Con qué signo: lo decide el acierto.**
 
-| Modalidad | Acredita evidencia de |
+| Modalidad | Habilidades observadas |
 |---|---|
-| `production` (correcta) | `meaning` + `production` |
-| `listening` (correcta) | `meaning` + `listening` |
-| `recognition` (correcta) | `meaning` |
-| `pronunciation` (correcta) | `production` — **nunca** `listening` por sí sola |
+| `production` | `meaning` + `production` |
+| `listening` | `meaning` + `listening` |
+| `recognition` | `meaning` |
+| `pronunciation` | `production` — **nunca** `listening` por sí sola |
 
-Una respuesta incorrecta no produce evidencia de dominio, pero sí se registra.
+La tabla no cambia según el resultado: una producción **incorrecta** observa las
+mismas dos habilidades que una correcta, con `outcome: "failure"`. Lo que nunca
+aparece es una habilidad que la modalidad no evaluó — una producción fallida no
+observa `listening` en ningún caso.
 
-**Paso 2 — colocación, determinada por el grade** sobre las habilidades que sí
-tuvieron evidencia.
+Ejemplo, producción:
+
+```
+correcta   → { meaning: success }, { production: success }
+incorrecta → { meaning: failure }, { production: failure }
+en ambos   → ninguna observación de listening
+```
+
+**Paso 2 — colocación, determinada por el grade** sobre las habilidades observadas.
+Con la lista siempre poblada, `derivePlacements` no necesita mirar
+`assessment.modality` para saber a quién colocar en `learning` tras un `Again`:
+coloca exactamente lo observado. Es lo que cierra la fuga de responsabilidad.
 
 ### 3.3 Prueba de producción (español → inglés, escrita)
 
-Evidencia: `meaning` + `production`. **`listening` nunca**, en ninguna fila.
+Observa `meaning` + `production`. **`listening` nunca**, en ninguna fila.
 
 | Grade | `meaning` | `production` | Siguiente paso |
 |---|---|---|---|
@@ -455,7 +627,7 @@ Evidencia: `meaning` + `production`. **`listening` nunca**, en ninguna fila.
 
 ### 3.4 Prueba auditiva (audio inglés → significado o transcripción)
 
-Evidencia: `meaning` + `listening`. **`production` nunca**.
+Observa `meaning` + `listening`. **`production` nunca**.
 
 | Grade | `meaning` | `listening` |
 |---|---|---|
@@ -535,11 +707,17 @@ Explicable y testeable, sin modelo estadístico complejo.
 ### 4.2 Inferido ≠ provisional activo
 
 **La colocación no activa masivamente.** Las palabras de una banda de alta confianza
-se marcan como **inferidas**, no como provisionales activas:
+se marcan como **inferidas**, no como provisionales activas. La marca es
+`placementInference` (§1.9b), con `schedule` intacto:
 
 ```ts
-{ status: "unseen", inferred: { band, confidence, inferredAt } }
+{
+  schedule: { kind: "none" },          // sigue sin programar → status derivado: "unseen"
+  placementInference: { bandId, confidence, inferredAt, policyVersion },
+}
 ```
+
+`status` no aparece en el registro: es derivado (§1.4) y se calcula al leer.
 
 La conversión de inferido → `provisional` activo es **gradual**, con:
 
@@ -608,16 +786,37 @@ interface UsagePayload {
   acceptedVariants: string[];
 
   generationStatus: "pending" | "ready" | "failed";
-  activationStatus: "inactive" | "active" | "retired";
   generatedAt?: string;
   activatedAt?: string;
+  retiredAt?: string;
 
   metadata: GeneratedContentMetadata;
 }
 ```
 
-Permite generar varios candidatos sin añadirlos todos a la carga futura: un `usage`
-con `activationStatus: "inactive"` nunca entra en la cola (invariante 5).
+**No hay `activationStatus`.** Un enum de activación junto a `schedule` crearía
+exactamente el problema que §1.4 resolvió para `SkillStatus`: dos fuentes de verdad
+que pueden contradecirse (`"inactive"` con `schedule.kind === "fsrs"`, o `"active"`
+con `kind: "none"`) sin que nada diga cuál manda. Se deriva, como todo lo demás:
+
+```ts
+function deriveUsageLifecycle(
+  item: LearningItem,
+): "inactive" | "active" | "retired" {
+  if (item.payload?.retiredAt) return "retired";
+  return item.schedule.kind === "none" ? "inactive" : "active";
+}
+```
+
+`activatedAt` y `retiredAt` se conservan porque son **hechos con fecha**, no estado
+duplicado: dicen *cuándo* ocurrió la transición, algo que `schedule` no registra.
+
+Esto permite generar varios candidatos sin añadirlos todos a la carga futura: un
+`usage` inactivo tiene `schedule.kind === "none"` y por tanto no puede entrar en la
+cola —ninguna query de vencimientos lo alcanza— sin necesidad de un filtro extra
+(invariante 5).
+
+`deriveUsageLifecycle` vive en `skill-item.ts`, junto a las demás funciones derivadas.
 
 ### 5.3 Los `usage` cuentan contra el presupuesto
 
@@ -672,11 +871,13 @@ respuesta.
 ```
 lib/essential-words/
   session-plan.ts          sin cambios de responsabilidad
-  daily-budget.ts          §2.2, §2.5 — presupuesto, activaciones, recuperación
-  skill-item.ts            deriveSkillStatus, getLearningReason, isMature (§1.4, §1.5)
+  daily-budget.ts          §2.2, §2.3, §2.5 — presupuesto, activaciones, recuperación
+  skill-item.ts            deriveSkillStatus, getLearningReason, isMature,
+                           deriveUsageLifecycle (§1.4, §1.5, §5.2)
   verification/
-    policy.ts              deriveEvidence + derivePlacements (§3.2)
-    types.ts               ItemSchedule, AttemptAssessment, SkillEvidence, SkillPlacement
+    policy.ts              deriveObservations + derivePlacements (§3.2)
+    types.ts               ItemSchedule, AttemptAssessment, AttemptModality,
+                           SkillObservation, SkillPlacement, PlacementInference
   placement/
     bands.ts               muestreo estratificado + estimación por banda (§4.1)
     policy.ts              confianza → colocación, conversión gradual, control (§4.2, §4.3)
@@ -688,14 +889,15 @@ Flujo:
 
 ```
 attempt-grade.ts        → AttemptAssessment
-verification/policy.ts  → deriveEvidence  → SkillEvidence[]
-                        → derivePlacements → SkillPlacement[]
+verification/policy.ts  → deriveObservations → SkillObservation[]
+                        → derivePlacements   → SkillPlacement[]
+daily-budget.ts         → DailyPlanningInput → DailyAllowance
 session-plan.ts         → qué ítems entran hoy
 ```
 
-`skill-item.ts` es aparte porque sus tres funciones derivadas las consumen el
-planificador, las políticas y las vistas por igual; enterrarlas en `verification/`
-las escondería de la mitad de sus llamadores.
+`skill-item.ts` es aparte porque sus funciones derivadas las consumen el planificador,
+las políticas y las vistas por igual; enterrarlas en `verification/` las escondería de
+la mitad de sus llamadores.
 
 Si un archivo supera ~250 líneas se parte **entonces**, con la evidencia delante.
 
@@ -709,7 +911,8 @@ Cada una es un test:
 2. Una prueba auditiva **nunca** acredita `production`.
 3. Una respuesta revelada **nunca** produce `Easy` ni `Good`.
 4. Una inferencia de colocación **nunca** produce un ítem maduro.
-5. Un ítem generado pero inactivo **nunca** aparece en la cola SRS.
+5. Un ítem generado pero inactivo (`deriveUsageLifecycle === "inactive"`) **nunca**
+   aparece en la cola SRS.
 6. Una palabra **no puede** tener dos ítems activos equivalentes.
 7. Los ítems `usage` **cuentan** contra el presupuesto diario.
 8. Pulsar "Ya la sé" **no expone** la respuesta antes de verificarla.
@@ -718,8 +921,9 @@ Cada una es un test:
 11. La colocación **no activa** más de `N` provisionales por día (§4.2).
 12. Un intento con `affectsSchedule: false` **no modifica** FSRS ni alimenta el
     optimizador (§1.10).
-13. Una respuesta correcta de producción **siempre** produce evidencia de
-    `production`, aunque su colocación resultante sea `learning` (§3.2).
+13. Una respuesta correcta de producción **siempre** produce una observación de
+    `production` con `outcome: "success"`, aunque su colocación resultante sea
+    `learning` (§3.2).
 14. Una palabra nueva **no puede** activar habilidades base sin consumir presupuesto
     (§2.5).
 15. Un ítem maduro **puede degradarse** tras un lapse.
@@ -737,6 +941,19 @@ Cada una es un test:
     reescribe** el historial FSRS (§1.5).
 23. Perder la madurez **bloquea** nuevas activaciones de `advanced_usage`, pero **no
     desactiva** los `usage` ya activos (§5.1).
+24. Un intento fallido produce observaciones con `outcome: "failure"` para **las
+    mismas habilidades** que produciría acertando, y **ninguna más** (§3.2).
+25. `placementInference` **solo** existe en habilidades base, nunca en `usage`
+    (§1.9b).
+26. Un ítem con `placementInference` y sin activar conserva `schedule.kind === "none"`
+    (§1.9b, §4.2).
+27. Introducir una palabra consume **al menos una** `skillActivation` (§2.2).
+28. Una verificación que acredita dos habilidades consume **dos** `skillActivations`
+    (§2.2).
+29. El modo recuperación **no oscila**: con un backlog entre los ratios de salida y
+    entrada, el modo de la sesión anterior se mantiene (§2.3).
+30. `isMature` **solo** considera logs con `affectsSchedule: true` dentro de
+    `recentReviewWindow` (§1.5).
 
 ---
 
@@ -745,7 +962,7 @@ Cada una es un test:
 Vitest, junto a cada módulo o en `__tests__/`. Los helpers de §6 son puros: se testean
 sin I/O.
 
-Además de las 23 invariantes: la migración §1.12 (preservación de estado FSRS +
+Además de las 30 invariantes: la migración §1.12 (preservación de estado FSRS +
 idempotencia), las transiciones del grafo §1.6 (incluidas las degradaciones), y el
 gating §2 en sus tres regímenes (normal, presupuesto ajustado, recuperación).
 
@@ -800,6 +1017,15 @@ Métrica: proporción de la cola planificada que proviene de (a) provisionales d
 colocación y (b) activaciones de `usage`, por ventana móvil de 7 días activos, y
 correlación entre ambas series.
 
+**Definición operativa de pico**, para que la comprobación sea automatizable y no
+quede a interpretación:
+
+> Una ventana es un **pico** de una serie si su volumen supera **1.5 ×** la mediana de
+> las **cuatro ventanas anteriores** de esa serie.
+
+Las cuatro ventanas previas se toman como mediana, no como media, para que un pico
+aislado no eleve la referencia y enmascare al siguiente.
+
 ### 9.5 Criterios de aprobación
 
 Para **todos** los perfiles, en el horizonte completo:
@@ -808,22 +1034,43 @@ Para **todos** los perfiles, en el horizonte completo:
    **1.2 ×** el presupuesto diario.
 2. El **percentil 95** de minutos planificados no supera **1.5 ×** el presupuesto.
 3. El modo recuperación se activa cuando debe y **sale** de él (no queda atrapado).
-4. El backlog no crece de forma monótona en el perfil **Constante**.
+4. En el perfil **Constante**, tras un calentamiento de 14 sesiones activas, la
+   **pendiente** del backlog (regresión lineal sobre segundos estimados) es **≤ 0**, y
+   el backlog final no supera **1 ×** el presupuesto diario.
 5. En el perfil **Ráfagas**, tras una ausencia de 14 días el sistema vuelve a régimen
    normal en ≤ 14 **sesiones activas**.
 6. Las activaciones nuevas de `usage` no superan el **30 %** de las activaciones
    totales en una **ventana móvil de 7 días activos**, con un denominador mínimo de
    **10 activaciones** antes de aplicar el porcentaje.
-7. Las series de (a) provisionales y (b) `usage` de §9.4 **no muestran picos
-   coincidentes** que dupliquen la cola planificada respecto a la ventana previa.
+7. Las series de (a) provisionales y (b) `usage` de §9.4 **no presentan un pico en la
+   misma ventana** cuando además la cola planificada de esa ventana supera **1.5 ×**
+   el presupuesto.
+
+Los siete anteriores solo acotan carga: un planificador que devolviera siempre
+`{ newWords: 0, skillActivations: 0, usageActivations: 0 }` los cumpliría casi todos.
+Los cuatro siguientes son **criterios de progreso y liveness**, e impiden aprobar por
+no hacer nada:
+
+8. En el perfil **Constante**, en sesiones sin presión de backlog (`mode: "normal"` y
+   `plannedSeconds` < 0.8 × presupuesto), se introduce al menos el **60 %** de las
+   palabras nuevas candidatas.
+9. Una habilidad base elegible para activación **no permanece sin activar más de 5
+   sesiones activas** mientras haya presupuesto disponible en esas sesiones.
+10. **No hay starvation permanente**: ningún repaso atrasado con recuperabilidad alta
+    queda sin planificar durante más de 7 sesiones activas consecutivas.
+11. La retención observada sobre los repasos programados (`affectsSchedule: true`) se
+    mantiene dentro del rango objetivo de FSRS (±10 puntos porcentuales del
+    `requestRetention` configurado).
 
 Si alguno falla, se ajustan los parámetros (§10) y se vuelve a simular.
 
-> Los criterios 1, 2 y 6 sustituyen a formulaciones anteriores que eran inválidas:
+> Los criterios 1, 2, 4 y 6 sustituyen a formulaciones anteriores que eran inválidas:
 > "ningún día supera 2× la media móvil" se rompe en el perfil Ráfagas (la media se
 > contamina con ceros de la ausencia, y el primer día de regreso la viola con el
-> planificador sano), y "`usage` ≤ 30 % diario" da 100 % cuando el día tiene un solo
-> repaso.
+> planificador sano); "`usage` ≤ 30 % diario" da 100 % cuando el día tiene un solo
+> repaso; y "el backlog no crece de forma monótona" es demasiado débil, porque una
+> serie que baja ocasionalmente puede crecer sin límite a largo plazo — de ahí la
+> pendiente y el techo final.
 
 ---
 
@@ -834,13 +1081,18 @@ Dependen de datos que hoy no existen. Se declaran, no se adivinan:
 1. **Umbrales de latencia por modalidad** (§3.5) — valores iniciales provisionales,
    recalibrados con `ReviewLog`.
 2. **Intervalos provisionales exactos** dentro de los rangos de §3.6.
-3. **`avgSecondsPerItem` inicial** (§2.2) — estimación hasta tener medición real.
+3. **`estimatedSeconds.byModality` inicial** (§2.2) — estimación por modalidad hasta
+   tener medición real de `interactionDurationMs`.
 4. **`N` de activaciones `usage` por sesión** (§5.3), **límite diario de conversión
    inferido → provisional** (§4.2) y **límite de `skillActivations`** (§2.5) — los
    tres se fijan con la simulación de §9.
 5. **Umbrales de `MaturityPolicy`** (§1.5) — `minStabilityDays`,
-   `minSuccessfulReviews`, `maxRecentLapses`. El contrato está cerrado; los valores
-   se calibran con la simulación. Al ser derivada, cambiarlos no requiere migración.
+   `minSuccessfulReviews`, `maxRecentLapses`, `recentReviewWindow`. El contrato está
+   cerrado; los valores se calibran con la simulación. Al ser derivada, cambiarlos no
+   requiere migración.
+6. **Ratios de `RecoveryPolicy`** (§2.3) — `enterAtBacklogBudgetRatio` y
+   `exitAtBacklogBudgetRatio`. Los valores de partida (2.0 / 0.75) son provisionales;
+   la banda entre ambos se ajusta con el criterio 3 de §9.5.
 
 ---
 
@@ -861,8 +1113,9 @@ Todas dependen de que exista el `LearningItem`. Por eso van después, no en para
   `generatorProvider` — el pipeline escribe filas, no migra esquema. El valor
   `journal` reserva el caso "usé esta palabra escribiendo en el diario" (hoy no hay
   ningún puente entre `lib/journal/` y essential-words).
-- `SkillEvidence.source: "journal"` — el mismo gancho en la capa de evidencia: un uso
-  correcto en el diario podrá acreditar `production` sin inventar una modalidad nueva.
+- `SkillObservation.source: "journal"` — el mismo gancho en la capa de observación: un
+  uso correcto en el diario podrá acreditar `production` sin inventar una modalidad
+  nueva, y uno incorrecto podrá observarse con `outcome: "failure"`.
 - Query de estado de habilidades en `lib/essential-words/queries.ts` — legible por
   Coach y ruta teórica sin tocar el motor.
 - Tablas `usage` en Supabase con RLS desde el día uno.
