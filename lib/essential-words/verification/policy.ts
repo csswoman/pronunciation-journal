@@ -83,10 +83,13 @@ function scheduleForObservation(
   now: Date,
 ): ItemSchedule {
   const currentFsrs = current?.schedule.kind === "fsrs" ? current.schedule : undefined;
+  const currentProvisional = current?.schedule.kind === "provisional";
 
-  // Provisional evidence cannot overwrite an existing FSRS history. Failures
-  // also enter ordinary learning, regardless of the attempted modality.
-  if (currentFsrs || observation.outcome === "failure") {
+  // A due provisional is a one-time placement. Its first real review starts
+  // an FSRS card from New, while the resulting event retains the provisional
+  // schedule as an auditable prior state. Existing FSRS history is preserved.
+  // Failures likewise enter ordinary learning regardless of modality.
+  if (currentFsrs || currentProvisional || observation.outcome === "failure") {
     return nextFsrsSchedule(currentFsrs ?? INITIAL_FSRS, assessment, now);
   }
 
