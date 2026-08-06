@@ -4,55 +4,95 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { SessionReady } from '../SessionReady'
 
+const baseStats = {
+  totalWords: 200,
+  learned: 12,
+  dueCount: 12,
+  dueTomorrow: 0,
+  newToday: 0,
+  newQuota: 10,
+  vaulted: 2,
+}
+
+vi.mock('../SessionReadyLevelProgress', () => ({
+  SessionReadyLevelProgress: () => <div data-testid="level-progress" />,
+}))
+
+vi.mock('../SessionReadyInsights', () => ({
+  SessionReadyInsights: () => <div data-testid="insights" />,
+}))
+
+vi.mock('../SessionReadyVaultRow', () => ({
+  SessionReadyVaultRow: () => null,
+}))
+
+vi.mock('../SessionReadyHero', () => ({
+  SessionReadyHero: ({
+    counts,
+    isResume,
+    onBegin,
+  }: {
+    counts: { newRemaining: number; learningRemaining: number; reviewRemaining: number }
+    isResume: boolean
+    onBegin: () => void
+  }) => {
+    const total = counts.newRemaining + counts.learningRemaining + counts.reviewRemaining
+    return (
+      <div>
+        <h2 id="session-ready-title">
+          {isResume ? 'Continuar donde lo dejaste' : `Hoy te tocan ${total} palabras`}
+        </h2>
+        <button type="button" onClick={onBegin}>
+          {isResume ? 'Continuar' : 'Empezar'}
+        </button>
+      </div>
+    )
+  },
+}))
+
 describe('SessionReady', () => {
-  it('shows the total word count, time estimate, and per-kind stats', () => {
+  it('composes the ready screen sections', () => {
     render(
       <SessionReady
         counts={{ newRemaining: 8, learningRemaining: 0, reviewRemaining: 16 }}
-        vaulted={8}
+        stats={baseStats}
+        activeRouteId={null}
+        onRouteChange={vi.fn()}
         onBegin={vi.fn()}
       />,
     )
 
-    expect(screen.getByText('Hoy te tocan 24 palabras')).toBeTruthy()
-    expect(screen.getAllByText('8')).toHaveLength(2)
-    expect(screen.getByText('16')).toBeTruthy()
-    expect(screen.getByText('En el baúl')).toBeTruthy()
+    expect(screen.getByRole('heading', { name: 'Hoy te tocan 24 palabras' })).toBeInTheDocument()
+    expect(screen.getByTestId('level-progress')).toBeInTheDocument()
+    expect(screen.getByTestId('insights')).toBeInTheDocument()
   })
 
-  it('describes the block structure when there are new words', () => {
+  it('forwards resume state to the hero', () => {
     render(
       <SessionReady
-        counts={{ newRemaining: 8, learningRemaining: 0, reviewRemaining: 16 }}
-        vaulted={8}
+        counts={{ newRemaining: 2, learningRemaining: 3, reviewRemaining: 4 }}
+        stats={baseStats}
+        activeRouteId={null}
+        onRouteChange={vi.fn()}
         onBegin={vi.fn()}
       />,
     )
 
     expect(
-      screen.getByText('3 bloques de palabras nuevas, más los repasos y una ronda final'),
-    ).toBeTruthy()
+      screen.getByRole('heading', { name: 'Continuar donde lo dejaste' }),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Continuar' })).toBeInTheDocument()
   })
 
-  it('omits the structure note when there are no new words', () => {
-    render(
-      <SessionReady
-        counts={{ newRemaining: 0, learningRemaining: 0, reviewRemaining: 5 }}
-        vaulted={0}
-        onBegin={vi.fn()}
-      />,
-    )
-
-    expect(screen.queryByText(/bloques de palabras nuevas/)).toBeNull()
-  })
-
-  it('calls onBegin when Empezar is pressed', async () => {
+  it('calls onBegin from the hero CTA', async () => {
     const user = userEvent.setup()
     const onBegin = vi.fn()
     render(
       <SessionReady
         counts={{ newRemaining: 3, learningRemaining: 0, reviewRemaining: 0 }}
-        vaulted={0}
+        stats={baseStats}
+        activeRouteId={null}
+        onRouteChange={vi.fn()}
         onBegin={onBegin}
       />,
     )

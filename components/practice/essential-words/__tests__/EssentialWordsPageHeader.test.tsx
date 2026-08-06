@@ -7,6 +7,7 @@ const baseStats = {
   totalWords: 200,
   learned: 12,
   dueCount: 3,
+  dueTomorrow: 0,
   newToday: 0,
   newQuota: 10,
   vaulted: 2,

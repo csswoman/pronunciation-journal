@@ -10,6 +10,7 @@ const stats: EssentialWordsStats = {
   totalWords: 500,
   learned: 120,
   dueCount: 7,
+  dueTomorrow: 0,
   newToday: 5,
   newQuota: 9,
   vaulted: 3,

@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { loadEssentialWordsQueue } from "../session-loader";
 import { getEssentialWordsSrsEntries } from "@/lib/db";
+import { getEssentialWordsDueTomorrowCount } from "../due-tomorrow";
 import type { SRSData } from "@/lib/types";
 
 vi.mock("../client", () => ({
@@ -24,6 +25,10 @@ vi.mock("@/lib/db", () => ({
   },
   getEssentialWordsSrsEntries: vi.fn(async () => []),
   getEssentialWordsIntroducedToday: vi.fn(async () => []),
+}))
+
+vi.mock("../due-tomorrow", () => ({
+  getEssentialWordsDueTomorrowCount: vi.fn(async () => 0),
 }))
 
 describe("loadEssentialWordsQueue", () => {
@@ -97,5 +102,13 @@ describe("loadEssentialWordsQueue", () => {
     const result = await loadEssentialWordsQueue();
 
     expect(result.stats.vaulted).toBe(2);
+  });
+
+  it("surfaces the dueTomorrow count from getEssentialWordsDueTomorrowCount", async () => {
+    vi.mocked(getEssentialWordsDueTomorrowCount).mockResolvedValue(3);
+
+    const result = await loadEssentialWordsQueue(null, null, "user-1");
+
+    expect(result.stats.dueTomorrow).toBe(3);
   });
 });

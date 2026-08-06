@@ -3,6 +3,7 @@ import { buildSessionQueue, matchesFilter, type EssentialWordQueueItem } from "@
 import { essentialWordId, NEW_CARDS_PER_DAY, type CefrLevel, type EssentialWordPos, type EssentialWord } from "@/lib/essential-words/types";
 import { getEssentialWordsIntroducedToday } from "@/lib/db";
 import { prepareEssentialWordsSrsEntries } from "@/lib/essential-words/prepare-srs";
+import { getEssentialWordsDueTomorrowCount } from "@/lib/essential-words/due-tomorrow";
 import { phaseForEssentialWordItem, type EssentialWordsPhase } from "@/lib/essential-words/session-model";
 import { isVaultEntry } from "@/lib/srs/vault";
 
@@ -10,6 +11,8 @@ export interface EssentialWordsStats {
   totalWords: number;
   learned: number;
   dueCount: number;
+  /** Reviews scheduled for the calendar day after today (not today's due count). */
+  dueTomorrow: number;
   newToday: number;
   newQuota: number;
   vaulted: number;
@@ -28,9 +31,10 @@ export async function loadEssentialWordsQueue(
   pos?: readonly EssentialWordPos[] | null,
   userId?: string,
 ): Promise<LoadedEssentialWordsQueue> {
-  const [words, introducedToday] = await Promise.all([
+  const [words, introducedToday, dueTomorrow] = await Promise.all([
     fetchEssentialWords(),
     getEssentialWordsIntroducedToday(userId),
+    getEssentialWordsDueTomorrowCount(userId),
   ]);
 
   const now = new Date();
@@ -57,6 +61,7 @@ export async function loadEssentialWordsQueue(
       totalWords: scopedWords.length,
       learned,
       dueCount: items.filter((item) => item.kind === "review").length,
+      dueTomorrow,
       newToday: introducedToday.length,
       newQuota: NEW_CARDS_PER_DAY,
       vaulted: srsEntries.filter(isVaultEntry).length,
