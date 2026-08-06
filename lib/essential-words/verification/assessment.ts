@@ -1,9 +1,11 @@
 import { attemptGrade, type AttemptOutcome } from "../attempt-grade";
+import { LATENCY_THRESHOLDS_MS } from "./latency";
 import type { AttemptAssessment, AttemptModality } from "./types";
 
 export interface AssessmentContext {
   interactionDurationMs: number;
   freeAudioReplays?: number;
+  latencyThresholds?: Readonly<Record<AttemptModality, number>>;
 }
 
 /**
@@ -16,8 +18,14 @@ export function buildAssessment(
   modality: AttemptModality,
   context: AssessmentContext,
 ): AttemptAssessment {
+  const baseGrade = attemptGrade(outcome);
+  const thresholds = context.latencyThresholds ?? LATENCY_THRESHOLDS_MS;
+  const grade = baseGrade === "Easy" || baseGrade === "Good"
+    ? outcome.latencyMs < thresholds[modality] ? "Easy" : "Good"
+    : baseGrade;
+
   return {
-    grade: attemptGrade(outcome),
+    grade,
     modality,
     correct: outcome.correct || outcome.typo,
     latencyMs: outcome.latencyMs,
