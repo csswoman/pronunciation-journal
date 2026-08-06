@@ -100,6 +100,40 @@ describe("ClozeCard", () => {
     expect(onAttempt.mock.calls[0][0].hintsUsed).toBeGreaterThan(0);
   });
 
+  it("shows the correct feedback banner and a Continuar action once resolved", () => {
+    const onAttempt = setup();
+    fireEvent.change(screen.getByLabelText("Escribe la palabra que falta"), {
+      target: { value: "work" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Comprobar" }));
+    expect(onAttempt).toHaveBeenCalled();
+    expect(screen.getByText(/¡correcto!/i)).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Continuar" })).not.toBeInTheDocument();
+  });
+
+  it("renders the Continuar button inside the card when onContinue is provided", () => {
+    const onAttempt = vi.fn().mockResolvedValue(undefined);
+    const onContinue = vi.fn();
+    render(<ClozeCard entry={entry} onAttempt={onAttempt} onContinue={onContinue} />);
+    fireEvent.change(screen.getByLabelText("Escribe la palabra que falta"), {
+      target: { value: "work" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Comprobar" }));
+    const continueButton = screen.getByRole("button", { name: "Continuar" });
+    expect(continueButton).toBeInTheDocument();
+    fireEvent.click(continueButton);
+    expect(onContinue).toHaveBeenCalled();
+  });
+
+  it("does not show the feedback banner during the first-attempt repair prompt", () => {
+    setup();
+    fireEvent.change(screen.getByLabelText("Escribe la palabra que falta"), {
+      target: { value: "sleeps" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Comprobar" }));
+    expect(screen.queryByText(/¡correcto!|no exactamente/i)).not.toBeInTheDocument();
+  });
+
   it("blanks and gives diff feedback against the selected variant sentence", () => {
     const onAttempt = vi.fn().mockResolvedValue(undefined);
     render(<ClozeCard entry={withVariants} onAttempt={onAttempt} repetitions={0} />);

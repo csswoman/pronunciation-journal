@@ -4,7 +4,7 @@
 // <SpeakReviewCard>
 //   <SentencePrompt />
 //   <MicButton | SelfGradeBar />
-//   <QuietSpeakFeedback + PhonemeFeedbackTable />
+//   <InlineFeedback + QuietSpeakFeedback + PhonemeFeedbackTable />
 //   <SpeakSkipActions />
 // </SpeakReviewCard>
 
@@ -21,18 +21,22 @@ import { getFeedbackMessage } from '@/lib/pronunciation/scoring'
 import { PhonemeFeedbackTable } from '@/components/lesson/PhonemeFeedbackTable'
 import { SelfGradeBar } from './SelfGradeBar'
 import { QuietSpeakFeedback } from './QuietSpeakFeedback'
+import { InlineFeedback } from '@/components/practice/session/InlineFeedback'
 import { SpeakSkipActions } from './SpeakSkipActions'
 import { micErrorMessage } from './mic-error-message'
 import { playUiCue } from '@/lib/ui-sounds/cues'
 import { cn } from '@/lib/cn'
 import { selectSentence } from '@/lib/essential-words/sentence-variants'
+import { displayEnglishText } from '@/lib/essential-words/word-display'
 import { buildSpeakOutcome } from './useSpeakOutcome'
+import { ExercisePhaseLabel } from './ExercisePhaseLabel'
 import type { AttemptOutcome } from '@/lib/essential-words/attempt-grade'
 import type { EssentialWord } from '@/lib/essential-words/types'
 import type { WordResult } from '@/lib/types'
 
 interface Props {
   entry: EssentialWord
+  levelLabel?: string
   onAttempt: (outcome: AttemptOutcome) => Promise<void>
   onArchive: () => void
   fromSnooze?: boolean
@@ -50,6 +54,7 @@ interface Scored {
 
 export function SpeakReviewCard({
   entry,
+  levelLabel,
   onAttempt,
   onArchive,
   fromSnooze,
@@ -190,9 +195,12 @@ export function SpeakReviewCard({
       <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">
         {statusMessage}
       </p>
+      <ExercisePhaseLabel label={levelLabel} />
       <div className="flex max-w-[42ch] flex-col items-center gap-1 text-center">
-        <p className="font-kicker m-0 text-fg-muted">Di la oración</p>
-        <p className="m-0 text-center text-body-lg font-medium leading-relaxed text-balance text-fg">{sentence}</p>
+        <p className="m-0 w-full text-body text-fg">Di la oración en voz alta</p>
+        <p className="m-0 text-center text-body-lg font-medium leading-relaxed text-balance text-fg">
+          {displayEnglishText(sentence)}
+        </p>
         {entry.sentence_ipa && (
           <p className="ipa m-0 max-w-[36ch] text-center text-body-lg leading-relaxed text-fg-muted">
             {entry.sentence_ipa}
@@ -250,6 +258,7 @@ export function SpeakReviewCard({
         </div>
       ) : (
         <div className="flex w-full flex-col items-center gap-4">
+          <InlineFeedback isCorrect={scored.score >= 70} />
           {feedback && (
             <QuietSpeakFeedback accuracy={scored.score} message={feedback.message} />
           )}

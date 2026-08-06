@@ -70,6 +70,16 @@ describe('SessionDone', () => {
     expect(screen.getByText('Mañana: 10 repasos y 9 palabras nuevas')).toBeTruthy()
   })
 
+  it('omits the zero side of the tomorrow preview instead of showing "0 repasos"', () => {
+    const noReviewsDue: EssentialWordsStats = { ...stats, dueCount: 0 }
+    render(
+      <SessionDone stats={noReviewsDue} sessionSummary={sessionSummary} strugglingWords={[]} />,
+    )
+
+    expect(screen.getByText('Mañana: 9 palabras nuevas')).toBeTruthy()
+    expect(screen.queryByText(/repasos/)).toBeNull()
+  })
+
   it('does not render StatBlock, chips, or tomorrow preview in the wasEmpty variant', () => {
     render(
       <SessionDone
@@ -87,6 +97,30 @@ describe('SessionDone', () => {
     expect(screen.queryByText('Sin fallos')).toBeNull()
     expect(screen.queryByText('Estas te costaron — vuelven mañana')).toBeNull()
     expect(screen.queryByText(/^Mañana:/)).toBeNull()
+  })
+
+  it('shows "Ver progreso" and "Abrir plan de hoy" directly, without needing to expand anything', () => {
+    render(
+      <SessionDone stats={stats} sessionSummary={sessionSummary} strugglingWords={strugglingWords} />,
+    )
+
+    expect(screen.getByRole('link', { name: 'Ver progreso' })).toBeVisible()
+    expect(screen.getByRole('link', { name: 'Abrir plan de hoy' })).toBeVisible()
+  })
+
+  it('makes "Aprender 10 nuevas más" the primary action when both CTAs are present', () => {
+    render(
+      <SessionDone
+        stats={stats}
+        sessionSummary={sessionSummary}
+        strugglingWords={strugglingWords}
+        onLearnMore={vi.fn()}
+        onContinue={vi.fn()}
+      />,
+    )
+
+    expect(screen.getByRole('button', { name: 'Aprender 10 nuevas más' }).className).toContain('bg-primary')
+    expect(screen.getByRole('button', { name: 'Buscar palabras para practicar' }).className).not.toContain('bg-primary')
   })
 
   it('does not render StatBlock, chips, or tomorrow preview in the loadFailed variant', () => {
