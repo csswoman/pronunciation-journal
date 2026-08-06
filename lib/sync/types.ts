@@ -2,7 +2,21 @@
 // Shared types for the offline-first sync queue between Dexie and Supabase.
 
 /** Tables that can be queued for sync */
-export type SyncTable = 'user_contrast_progress' | 'answer_history' | 'activity_sessions' | 'user_learning_state' | 'word_bank' | 'topic_srs' | 'journal_entries' | 'tracked_items' | 'lesson_completions' | 'pronunciation_assessments' | 'pronunciation_feedback_evidence'
+export type SyncTable =
+  | 'user_contrast_progress'
+  | 'answer_history'
+  | 'activity_sessions'
+  | 'user_learning_state'
+  | 'word_bank'
+  | 'topic_srs'
+  | 'journal_entries'
+  | 'tracked_items'
+  | 'lesson_completions'
+  | 'pronunciation_assessments'
+  | 'pronunciation_feedback_evidence'
+  | 'learning_items'
+  | 'attempt_logs'
+  | 'srs_review_events'
 
 /** RPC functions that can be queued for sync via an 'rpc' operation entry. */
 export type SyncRpc = 'apply_word_bank_rating_event' | 'apply_topic_srs_rating_event'
@@ -47,6 +61,12 @@ export interface SyncOutboxEntry {
   onConflict?: string
   /** Required when operation is 'rpc': the Postgres function to call. */
   rpcName?: SyncRpc
+  /**
+   * Stable ID shared by every outbox row produced by one atomic local write.
+   * Skill-model bundles use the AttemptLog ID so partial remote failures can
+   * retain and retry the complete parent/child set together.
+   */
+  bundleId?: string
   /** Current processing status */
   status: SyncStatus
   /** ISO timestamp when the entry was created */
