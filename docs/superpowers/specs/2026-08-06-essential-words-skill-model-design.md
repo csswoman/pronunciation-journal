@@ -192,7 +192,7 @@ interface MaturityPolicy {
 
 function isMature(
   item: LearningItem,
-  history: ReviewLog[],
+  history: SrsReviewEvent[],
   policy: MaturityPolicy,
 ): boolean;
 ```
@@ -203,8 +203,8 @@ una ventana temporal deja a un usuario que estuvo dos semanas ausente con un his
 reciente vacío, declarando maduro cualquier ítem por omisión de datos. Una ventana de
 N revisiones se comporta igual con práctica diaria que con práctica esporádica.
 
-**Solo cuentan los logs con `affectsSchedule: true`.** Los pasos de práctica intra-
-sesión no son recuperaciones programadas; incluirlos inflaría tanto
+**Solo cuentan los eventos con `affectsSchedule: true`.** Los pasos de práctica intra-
+sesión no producen un evento SRS; incluir intentos sin evento inflaría tanto
 `minSuccessfulReviews` como la ventana de lapses.
 
 Solo un ítem con `schedule.kind === "fsrs"` y `state === "Review"` puede ser maduro.
@@ -326,21 +326,16 @@ Invariantes (24–26 en §7):
 - Al confirmarse con evidencia directa, la inferencia **se conserva como telemetría**
   —sirve para recalibrar bandas (§4.3)— pero deja de determinar la programación.
 
-### 1.10 `ReviewLog` — práctica ≠ evento SRS
+### 1.10 `AttemptLog` y `SrsReviewEvent` — intento pedagógico ≠ efectos SRS
 
-Dentro de una sesión hay intentos iniciales, pistas, rescates, repeticiones,
-verificaciones y ejercicios complementarios. **Todos se registran; solo algunos
-modifican el calendario.** Alimentar el optimizador FSRS con ejercicios que no eran
-recuperaciones programadas corrompería la calibración.
-
-`affectsSchedule` y `fsrsLogId` no pueden contradecirse: un log que no toca el
-calendario no tiene entrada FSRS que referenciar. La unión discriminada lo hace
-imposible por construcción, en lugar de dejarlo a una invariante de runtime:
+Una interacción puede evaluar varias habilidades: una producción escrita, por
+ejemplo, observa `meaning` y `production`. Persistir un único registro singular con el
+primer `learningItemId` pierde el segundo calendario y hace imposible reconstruirlo.
+Por ello hay dos hechos inmutables relacionados, no uno:
 
 ```ts
-interface ReviewLogBase {
+interface AttemptLog {
   id: string;
-  learningItemId: string;
   sessionId: string;
   assessment: AttemptAssessment;
   observations: SkillObservation[];
@@ -348,21 +343,40 @@ interface ReviewLogBase {
   occurredAt: string;
 }
 
-type ReviewLog = ReviewLogBase & (
-  | { affectsSchedule: false; fsrsLogId?: never }
-  | { affectsSchedule: true;  fsrsLogId: string }
-);
+interface SrsReviewEvent {
+  id: string;
+  attemptLogId: string;
+  learningItemId: string;
+  /** Siempre true: la ausencia de evento representa un intento sin efecto FSRS. */
+  affectsSchedule: true;
+  grade: Grade;
+  occurredAt: string;
+  /** Snapshot inmutable para reconstrucción/auditoría sin volver a inferir. */
+  assessment: AttemptAssessment;
+  fsrsLogId: string;
+  priorSchedule?: ItemSchedule;
+  resultingSchedule: ItemSchedule;
+}
 ```
 
-> **Invariante:** todo intento produce telemetría; solo un intento con
-> `affectsSchedule: true` puede modificar la programación o alimentar el optimizador.
+Todo intento crea **un** `AttemptLog`; crea cero o más `SrsReviewEvent`, uno por cada
+`LearningItem` cuyo calendario cambie. Un intento de práctica tiene cero eventos y no
+puede tocar FSRS. Uno que acredita dos habilidades tiene dos eventos, cada uno ligado
+al mismo `attemptLogId` y a un `learningItemId` distinto. Las actualizaciones de
+`LearningItem`, el `AttemptLog`, sus eventos y sus entradas de outbox se escriben en
+**una única transacción Dexie**. Así se conservan a la vez la interacción original,
+la telemetría de intentos sin SRS y la reconstrucción independiente por ítem.
+
+> **Invariante:** solamente un `SrsReviewEvent` con `affectsSchedule: true` puede
+> modificar programación o alimentar FSRS; no puede existir sin su `AttemptLog`.
 
 ### 1.11 Persistencia
 
 | Dato | Dónde | Por qué |
 |---|---|---|
 | `LearningItem` | Dexie ⇄ Supabase vía `lib/sync/` | dato de usuario, debe ir offline |
-| `ReviewLog` | Dexie ⇄ Supabase vía `lib/sync/` | idem |
+| `AttemptLog` | Dexie ⇄ Supabase vía `lib/sync/` | telemetría pedagógica inmutable |
+| `SrsReviewEvent` | Dexie ⇄ Supabase vía `lib/sync/` | reconstrucción y calendario por ítem |
 | `usage` generados | Supabase con RLS, cache en Dexie | contenido de sistema |
 
 RLS obligatoria en las tablas nuevas antes de merge.
@@ -440,16 +454,22 @@ interface DailyPlanningInput {
 
   /** Ya gastado en esta sesión: el helper es idempotente al recalcularse. */
   consumed: {
-    skillActivations: number;
+    baseSkillActivations: number;
     usageActivations: number;
+    newWordMeaningActivations: number;
   };
 }
 
 interface DailyAllowance {
-  newWords: number;          // palabras a introducir
-  skillActivations: number;  // activaciones de habilidad base (§2.5)
-  usageActivations: number;  // activaciones de usage (§5.3)
-  plannedSeconds: number;    // coste estimado de la cola resultante
+  newWords: number;                 // palabras a introducir
+  /** Solo candidatos base ya existentes; EXCLUYE meaning de una palabra nueva. */
+  baseSkillActivations: number;
+  usageActivations: number;
+  /** Derivado: una por cada palabra nueva; se expone para telemetría, no para cortar candidatos. */
+  newWordMeaningActivations: number;
+  /** Derivado: base + usage + newWordMeaning. Nunca limita el tramo base. */
+  totalSkillActivations: number;
+  plannedSeconds: number;            // coste estimado de la cola presentada
   mode: "normal" | "recovery";
 }
 
@@ -465,19 +485,23 @@ incluye las activaciones que previsiblemente disparará (§2.5), no solo la expo
 **El coste se estima por modalidad, no con un promedio global.** Una dictación con
 audio y una elección múltiple no duran lo mismo, y un usuario que practica sobre todo
 audio vería su sesión desbordarse sistemáticamente con un promedio único.
-`estimatedSeconds` se **mide**: el `ReviewLog` guarda `interactionDurationMs` (§1.8),
+`estimatedSeconds` se **mide**: el `AttemptLog` guarda `interactionDurationMs` (§1.8),
 que sí incluye audio, lectura y transiciones. Arranca con estimaciones declaradas como
 provisionales (§10) y se reemplaza por los promedios del usuario por modalidad en
 cuanto haya datos suficientes.
 
-Dos invariantes de contabilidad (27–28 en §7):
+Tres reglas de contabilidad:
 
-- **Introducir una palabra consume al menos una `skillActivation`**, porque `meaning`
-  se activa al introducirla.
-- **Una verificación que acredita dos habilidades consume dos `skillActivations`**,
+- Introducir una palabra consume una `newWordMeaningActivation`; no aumenta
+  `baseSkillActivations` ni permite candidatos base adicionales.
+- Una verificación que acredita dos habilidades consume dos activaciones en la
+  categoría que corresponda,
   aunque provengan de una sola pregunta. Esto importa sobre todo en "Ya conozco esta
   palabra": un `Easy` puede crear dos provisionales y no puede saltarse el
   presupuesto por venir de un único intento.
+- El máximo "una activación persistente por habilidad y sesión" se identifica por
+  `itemId` (o `${wordId}#${skill}`), **nunca** por `skill`: no convierte todos los
+  `listening` de todas las palabras en un cupo global de uno.
 
 **Presupuesto por defecto: 15 minutos**, configurable.
 
@@ -522,6 +546,11 @@ En modo recuperación:
 - Se conservan fechas e historial; no se marca nada como estudiado ni se reinician
   tarjetas
 
+"Obligatorio" no significa "presentar sin límite". El planificador devuelve
+`mandatorySelected` y `deferredMandatory`: selecciona por tramo, urgencia y un límite
+explícito de recuperación; el resto queda en backlog sin reprogramarse. Por tanto,
+incluso con varias horas vencidas la cola presentada queda acotada y medible.
+
 ### 2.4 Consecuencia en la UI
 
 Con habilidades separadas, "Hoy te tocan 2 palabras" deja de ser correcto: una
@@ -542,7 +571,8 @@ Política:
   `schedule: { kind: "none" }` — existen, pero **no están programadas**.
 - **Solo se programa la habilidad efectivamente practicada.** Un ítem pasa de `none`
   a programado cuando la sesión lo ejercita, no cuando la palabra se introduce.
-- **Cada activación consume presupuesto** (`skillActivations` en `DailyAllowance`),
+- **Cada activación consume presupuesto** (`baseSkillActivations`,
+  `usageActivations` o `newWordMeaningActivations` en `DailyAllowance`),
   incluidas las que nacen de una verificación (§2.2, invariantes 27–28).
 - **Máximo una activación nueva persistente por habilidad y sesión.**
 - Las activaciones pendientes ocupan el **tramo 4** de la cola (§2.1): existen como
@@ -550,6 +580,24 @@ Política:
 - `candidates.newWords` cuenta palabras; el coste estimado de una palabra incluye las
   activaciones que previsiblemente disparará.
 - En modo recuperación (§2.3): cero activaciones nuevas.
+
+### 2.6 Contexto de ejecución reproducible
+
+Las políticas puras y simulables no consultan el reloj ni generan UUIDs por su
+cuenta. Reciben un contexto explícito:
+
+```ts
+interface ExecutionContext {
+  now: Date;
+  newId(): string;
+}
+```
+
+`deriveObservations`, `derivePlacements`, `planInferences`, conversión gradual,
+intervalos provisionales, el planificador y la simulación reciben `now`/`context`.
+`new Date()`, `Date.now()`, `crypto.randomUUID()` y `Math.random()` quedan en
+adaptadores de UI/I/O. La simulación inyecta reloj, secuencia de IDs y PRNG semillado,
+por lo que la misma semilla produce el mismo resultado.
 
 Orden natural de activación: `meaning` al introducir la palabra; `listening` y
 `production` cuando la sesión las ejercita o cuando una verificación las acredita
@@ -657,7 +705,7 @@ Cambios:
 
 - Umbral **por modalidad**, configurable desde el día uno (no una constante global).
 - Valores iniciales explícitos y **marcados como provisionales**.
-- `ReviewLog` guarda latencia cruda para recalibrar por tipo de ejercicio con datos
+- `AttemptLog` guarda latencia cruda para recalibrar por tipo de ejercicio con datos
   reales.
 - **Las pistas se tipifican.** Repetir el audio no equivale a revelar la primera letra
   ni a eliminar opciones. Solo las pistas "sustantivas" degradan el grade.
@@ -886,6 +934,8 @@ lib/essential-words/
     policy.ts              deriveObservations + derivePlacements (§3.2)
     types.ts               ItemSchedule, AttemptAssessment, AttemptModality,
                            SkillObservation, SkillPlacement, PlacementInference
+    latency.ts             calibración de umbrales por modalidad (§3.5, §10)
+  record-attempt.ts        transacción AttemptLog + SrsReviewEvent + LearningItem
   placement/
     bands.ts               muestreo estratificado + estimación por banda (§4.1)
     policy.ts              confianza → colocación, conversión gradual, control (§4.2, §4.3)
@@ -899,6 +949,7 @@ Flujo:
 attempt-grade.ts        → AttemptAssessment
 verification/policy.ts  → deriveObservations → SkillObservation[]
                         → derivePlacements   → SkillPlacement[]
+record-attempt.ts        → AttemptLog + 0..N SrsReviewEvent + ítems actualizados
 daily-budget.ts         → DailyPlanningInput → DailyAllowance
 session-plan.ts         → qué ítems entran hoy
 ```
@@ -927,7 +978,7 @@ Cada una es un test:
 9. La app funciona **offline** aunque `usage` no esté generado.
 10. Un ítem `provisional` **nunca** usa campos reservados al estado FSRS (§1.3).
 11. La colocación **no activa** más de `N` provisionales por día (§4.2).
-12. Un intento con `affectsSchedule: false` **no modifica** FSRS ni alimenta el
+12. Un `AttemptLog` sin `SrsReviewEvent` **no modifica** FSRS ni alimenta el
     optimizador (§1.10).
 13. Una respuesta correcta de producción **siempre** produce una observación de
     `production` con `outcome: "success"`, aunque su colocación resultante sea
@@ -955,13 +1006,20 @@ Cada una es un test:
     (§1.9b).
 26. Un ítem con `placementInference` y sin activar conserva `schedule.kind === "none"`
     (§1.9b, §4.2).
-27. Introducir una palabra consume **al menos una** `skillActivation` (§2.2).
-28. Una verificación que acredita dos habilidades consume **dos** `skillActivations`
-    (§2.2).
+27. Introducir una palabra consume exactamente una `newWordMeaningActivation`, sin
+    aumentar `baseSkillActivations` (§2.2).
+28. Una verificación que acredita dos habilidades produce dos eventos/activaciones
+    atribuibles a los ítems afectados (§1.10, §2.2).
 29. El modo recuperación **no oscila**: con un backlog entre los ratios de salida y
     entrada, el modo de la sesión anterior se mantiene (§2.3).
-30. `isMature` **solo** considera logs con `affectsSchedule: true` dentro de
+30. `isMature` **solo** considera eventos con `affectsSchedule: true` dentro de
     `recentReviewWindow` (§1.5).
+31. Un intento que modifica N ítems persiste un `AttemptLog`, N `SrsReviewEvent`, N
+    actualizaciones de ítem y sus outbox entries de manera local atómica (§1.10).
+32. El límite de activación se aplica por `itemId`, no por `skill` global (§2.2).
+33. La cola en recuperación mantiene `mandatorySelected` acotado y deja el resto en
+    `deferredMandatory` sin marcarlo como realizado (§2.3).
+34. Las funciones puras/simulables reciben reloj e IDs inyectados (§2.6).
 
 ---
 
@@ -970,9 +1028,10 @@ Cada una es un test:
 Vitest, junto a cada módulo o en `__tests__/`. Los helpers de §6 son puros: se testean
 sin I/O.
 
-Además de las 30 invariantes: la migración §1.12 (preservación de estado FSRS +
-idempotencia), las transiciones del grafo §1.6 (incluidas las degradaciones), y el
-gating §2 en sus tres regímenes (normal, presupuesto ajustado, recuperación).
+Además de las 34 invariantes: la migración §1.12 (preservación de estado FSRS +
+idempotencia), las transiciones del grafo §1.6 (incluidas las degradaciones), el
+registro atómico §1.10, y el gating §2 en sus tres regímenes (normal, presupuesto
+ajustado, recuperación).
 
 ---
 
@@ -996,6 +1055,32 @@ colocación, el sistema puede parecer correcto una semana y enterrar al usuario 
 | **Ráfagas** | una semana intensa, dos de abandono, retoma |
 | **Principiante** | colocación de baja confianza, precisión ~60 % |
 | **Avanzada (B1+)** | colocación de alta confianza en bandas bajas, muchos `usage` |
+
+### 9.2b Estado y ciclo que se simulan
+
+La simulación no puede representar campos decorativos siempre vacíos. Mantiene estado
+por palabra e ítem: `meaning`, `listening`, `production` y `usage` activos/inactivos;
+`ItemSchedule`; `PlacementInference`; backlog; fechas de vencimiento; resultados de
+intento; activaciones consumidas; y modo normal/recuperación. Usa las políticas reales
+o un adaptador fiel con los mismos contratos, no una cuota paralela simplificada.
+
+En cada día activo ejecuta, en este orden:
+
+1. actualizar vencimientos y backlog;
+2. construir obligatorios;
+3. construir candidatos de habilidades base;
+4. construir candidatos de `usage`;
+5. convertir inferencias gradualmente;
+6. calcular `DailyAllowance`;
+7. construir cola (incluidos `mandatorySelected`/`deferredMandatory`);
+8. simular lo que el perfil completa;
+9. aplicar resultados, escribir eventos y reprogramar cada ítem; y
+10. registrar métricas del día.
+
+La simulación debe producir, en perfiles donde sean elegibles, valores no triviales de
+`baseSkillActivations`, conversiones/provisionales vencidos y `usageActivations`.
+Una ejecución que mantiene cualquiera de esas series siempre en cero es inválida y
+falla antes de evaluar los once criterios.
 
 ### 9.3 Qué se mide
 
@@ -1055,7 +1140,8 @@ Para **todos** los perfiles, en el horizonte completo:
    el presupuesto.
 
 Los siete anteriores solo acotan carga: un planificador que devolviera siempre
-`{ newWords: 0, skillActivations: 0, usageActivations: 0 }` los cumpliría casi todos.
+`{ newWords: 0, baseSkillActivations: 0, usageActivations: 0, newWordMeaningActivations: 0 }`
+los cumpliría casi todos.
 Los cuatro siguientes son **criterios de progreso y liveness**, e impiden aprobar por
 no hacer nada:
 
@@ -1072,6 +1158,15 @@ no hacer nada:
 
 Si alguno falla, se ajustan los parámetros (§10) y se vuelve a simular.
 
+Cada criterio tiene una función concreta, tests unitarios de éxito y de motor
+defectuoso, y una invocación explícita en `simulation/__tests__/acceptance.test.ts` para
+los perfiles que le corresponden. En particular, los criterios 7 (picos), 9
+(activaciones base), 10 (starvation) y 11 (retención) nunca son helpers huérfanos.
+La prueba adversarial debe fallar si el motor nunca activa `listening`, `production` o
+`usage`; siempre devuelve cero palabras nuevas; ignora colocación; cuenta activaciones
+dos veces; aplaza atrasados indefinidamente; presenta todo el backlog en recuperación;
+sincroniza provisionales; o obtiene retención muy inferior al objetivo.
+
 > Los criterios 1, 2, 4 y 6 sustituyen a formulaciones anteriores que eran inválidas:
 > "ningún día supera 2× la media móvil" se rompe en el perfil Ráfagas (la media se
 > contamina con ceros de la ausencia, y el primer día de regreso la viola con el
@@ -1082,29 +1177,57 @@ Si alguno falla, se ajustan los parámetros (§10) y se vuelve a simular.
 
 ---
 
-## 10. Decisiones abiertas
+## 10. Decisiones abiertas y calibración
 
 Dependen de datos que hoy no existen. Se declaran, no se adivinan:
 
 1. **Umbrales de latencia por modalidad** (§3.5) — valores iniciales provisionales,
-   recalibrados con `ReviewLog`.
+   recalibrados con `verification/latency.ts` a partir de intentos autónomos:
+   `event.affectsSchedule && event.assessment.correct && !usedHints && !rescued &&`
+   `(grade === "Easy" || grade === "Good")`. Se excluyen autocorrecciones,
+   variantes aceptadas, intentos cuyo primer intento falló y repeticiones de audio
+   gratuitas: son éxito pedagógico válido, pero no muestras limpias de velocidad.
 2. **Intervalos provisionales exactos** dentro de los rangos de §3.6.
 3. **`estimatedSeconds.byModality` inicial** (§2.2) — estimación por modalidad hasta
    tener medición real de `interactionDurationMs`.
-4. **`N` de activaciones `usage` por sesión** (§5.3), **límite diario de conversión
-   inferido → provisional** (§4.2) y **límite de `skillActivations`** (§2.5) — los
-   tres se fijan con la simulación de §9.
-5. **Umbrales de `MaturityPolicy`** (§1.5) — `minStabilityDays`,
+4. **Límite de activaciones base** por sesión y por `itemId` (§2.5).
+5. **Límite de activaciones `usage`** por sesión (§5.3).
+6. **Límite diario de conversión inferido → provisional** (§4.2).
+7. **Umbrales de `MaturityPolicy`** (§1.5) — `minStabilityDays`,
    `minSuccessfulReviews`, `maxRecentLapses`, `recentReviewWindow`. El contrato está
    cerrado; los valores se calibran con la simulación. Al ser derivada, cambiarlos no
    requiere migración.
-6. **Ratios de `RecoveryPolicy`** (§2.3) — `enterAtBacklogBudgetRatio` y
+8. **Ratios de `RecoveryPolicy`** (§2.3) — `enterAtBacklogBudgetRatio` y
    `exitAtBacklogBudgetRatio`. Los valores de partida (2.0 / 0.75) son provisionales;
    la banda entre ambos se ajusta con el criterio 3 de §9.5.
 
+Si se agotan parámetros seguros y un criterio sigue fallando, se detiene el rollout y
+se reporta una revisión de diseño; nunca se relaja un criterio para obtener verde.
+
 ---
 
-## 11. Fuera de alcance — specs siguientes
+## 11. Integración y rollout bajo feature flag
+
+El flag selecciona una ruta real, no solo habilita migraciones. Apagado, Essential
+Words lee y escribe exclusivamente `SRSData`; encendido, lee `LearningItem` y escribe
+`AttemptLog` + `SrsReviewEvent` + ítems actualizados en una transacción. La selección
+ocurre en el adaptador de sesión/grade antes de construir la cola; nunca se bifurca
+dentro de los repositorios, para impedir doble escritura accidental.
+
+El rollout admite `off`, `shadow` y `on`, resueltos por entorno y cohorte estable de
+usuario. En `shadow` la ruta vieja decide y persiste; la nueva solo calcula una sombra
+sin escribir y registra diferencias agregadas (longitud/coste de cola, ítems debidos,
+decisión de activación y errores). En `on` solo la ruta nueva escribe sus tablas; la
+vieja permanece intacta y de solo lectura como rollback. Se observa un mínimo de 14
+días y 100 sesiones por cohorte, con outbox fallido, discrepancias shadow, errores de
+reconstrucción, tamaño de backlog y retención. Se pasa a retirada solo con la
+simulación verde, discrepancias explicadas, cero duplicados/doble escritura y métricas
+dentro de los límites documentados. Revertir es cambiar a `off`; no borra datos nuevos
+ni reprograma ítems.
+
+---
+
+## 12. Fuera de alcance — specs siguientes
 
 Todas dependen de que exista el `LearningItem`. Por eso van después, no en paralelo.
 
@@ -1127,4 +1250,4 @@ Todas dependen de que exista el `LearningItem`. Por eso van después, no en para
 - Query de estado de habilidades en `lib/essential-words/queries.ts` — legible por
   Coach y ruta teórica sin tocar el motor.
 - Tablas `usage` en Supabase con RLS desde el día uno.
-- `ReviewLog` — sustrato para el optimizador FSRS y para el Coach.
+- `AttemptLog` + `SrsReviewEvent` — sustrato para el optimizador FSRS y para el Coach.
