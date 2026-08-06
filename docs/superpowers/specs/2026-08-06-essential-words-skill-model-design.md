@@ -57,11 +57,15 @@ dimensiones distintas, y colapsarlas es el error que esta spec corrige.
 
 Tres conceptos que se mantienen separados en todo el diseño:
 
-| Concepto | Qué es | Dónde vive |
-|---|---|---|
-| **Grade** | calidad de una respuesta concreta | `attempt-grade.ts` |
-| **Evidencia** | qué habilidad evaluó realmente esa respuesta | `verification/policy.ts` |
-| **Colocación** | con qué estado e intervalo arranca cada habilidad | `verification/policy.ts` |
+| Concepto | Qué es | Determinado por | Dónde vive |
+|---|---|---|---|
+| **Grade** | calidad de una respuesta concreta | acierto, pistas, latencia | `attempt-grade.ts` |
+| **Evidencia** | qué habilidad evaluó realmente esa respuesta | **la modalidad** | `deriveEvidence` |
+| **Colocación** | con qué estado e intervalo arranca cada habilidad | **el grade**, sobre lo que tuvo evidencia | `derivePlacements` |
+
+Que una habilidad quede en `learning` **no** significa que no hubo evidencia: una
+respuesta `Good` de producción sí demostró producción; la política simplemente decide
+colocarla ahí. Son dos pasos (§3.2), no una tabla.
 
 ---
 
@@ -76,31 +80,24 @@ El JSON en `public/essential-words/`. Sigue siendo la fuente del léxico.
 Una fila por **habilidad** de una palabra. Reemplaza al `SRSData` único como unidad
 de programación.
 
+**Tres habilidades base + 0..N usos**, no "cuatro habilidades": `meaning`,
+`listening` y `production` existen exactamente una vez por palabra; `usage` es
+variable y se instancia bajo demanda (§5).
+
 ```ts
 type Skill = "meaning" | "listening" | "production" | "usage";
-
-type SkillStatus =
-  | "unseen"
-  | "learning"
-  | "provisional"
-  | "review"
-  | "mature";
 
 interface LearningItem {
   id: string;              // "c1k:on#meaning" | "c1k:on#usage:depend-on"
   wordId: string;          // "c1k:on"
   skill: Skill;
-  status: SkillStatus;
-  source: "authored" | "gemini" | "journal";
-  payload?: UsagePayload;  // solo skill:"usage"
 
-  // Estado FSRS — solo poblado en status "review" | "mature" (ver §1.5)
-  stability?: number;
-  difficulty?: number;
-  state?: FsrsCardState;
-  // Ausente en "unseen": un ítem no visto no está programado.
-  // En "provisional" lo calcula verification/policy.ts, no FSRS.
-  nextReview?: string;
+  contentOrigin: "authored" | "generated" | "journal";
+  generatorProvider?: "gemini";
+
+  payload?: UsagePayload;  // solo skill:"usage" (§5)
+
+  schedule: ItemSchedule;  // única fuente de verdad de programación
   lastReview?: string;
   repetitions: number;
   lapses: number;
@@ -108,35 +105,132 @@ interface LearningItem {
 }
 ```
 
-**Cuatro habilidades, no seis.** `pronunciation` se descarta: el flujo hablado ya la
-evalúa dentro de `production`. `context` se descarta: se solapa con `usage`. Menos
-ítems significa menos carga de repaso, y con el gating de §2 eso importa
-directamente.
+`pronunciation` **no es una `Skill`**: es una modalidad (§1.4), y la evidencia que
+produce acredita `production`. `context` se descarta: se solapa con `usage`.
 
-`meaning` / `listening` / `production` existen para toda palabra: exactamente una de
-cada. `usage` es **0..N por palabra**, se instancia bajo demanda (§4), y su `payload`
-guarda el uso concreto. De ahí el sufijo en el id.
+### 1.3 `ItemSchedule` — unión discriminada
 
-### 1.3 `SkillEvidence` — nunca booleanos sueltos
+`nextReview` sobrecargado (fecha FSRS *y* fecha provisional en el mismo campo) hace
+trivial que una query trate un provisional como tarjeta FSRS. Se separan por
+construcción:
 
-Colapsar evidencia directa e inferencia estadística a un `boolean` pierde
-información que hace falta para depurar y recalibrar. La evidencia conserva
-procedencia:
+```ts
+type ItemSchedule =
+  | { kind: "none" }
+  | {
+      kind: "provisional";
+      dueAt: string;
+      source: "direct" | "placement-inference";
+      evidenceConfidence: number;
+    }
+  | {
+      kind: "fsrs";
+      dueAt: string;
+      stability: number;
+      difficulty: number;
+      state: FsrsCardState;
+    };
+```
+
+Un ítem en aprendizaje o reaprendizaje **sí tiene estado FSRS real** (`state:
+"Learning" | "Relearning"`). Lo que nunca existe es estado FSRS en un ítem
+`provisional`.
+
+### 1.4 `SkillStatus` — derivado, no persistido
+
+`SkillStatus` no se almacena como campo independiente: se deriva de `schedule`. Así
+no puede divergir.
+
+```ts
+type SkillStatus = "unseen" | "learning" | "provisional" | "review";
+
+function deriveSkillStatus(item: LearningItem): SkillStatus {
+  if (item.schedule.kind === "none") return "unseen";
+  if (item.schedule.kind === "provisional") return "provisional";
+  return item.schedule.state === "Review" ? "review" : "learning";
+}
+```
+
+`relearning` **no** es un estado de dominio: FSRS ya lo distingue, y duplicarlo aquí
+crearía dos fuentes de verdad. La razón del aprendizaje también se deriva:
+
+```ts
+function getLearningReason(item: LearningItem): "new" | "lapse" | undefined {
+  if (deriveSkillStatus(item) !== "learning") return undefined;
+  if (item.schedule.kind !== "fsrs") return "new";
+  return item.schedule.state === "Relearning" ? "lapse" : "new";
+}
+```
+
+Si por razones de consulta en Dexie hace falta materializar `SkillStatus` como índice,
+es un **campo derivado** y se actualiza atómicamente con `schedule` en la misma
+transacción.
+
+### 1.5 `mature` — predicado, nunca estado
+
+`mature` **no se persiste**. Si se almacenara, un cambio de parámetros FSRS o del
+umbral dejaría miles de filas mintiendo. Es una función pura sobre el estado FSRS, el
+historial y una política versionada:
+
+```ts
+interface MaturityPolicy {
+  version: string;
+  minStabilityDays: number;
+  minSuccessfulReviews: number;
+  maxRecentLapses: number;
+}
+
+function isMature(
+  item: LearningItem,
+  history: ReviewLog[],
+  policy: MaturityPolicy,
+): boolean;
+```
+
+Solo un ítem con `schedule.kind === "fsrs"` y `state === "Review"` puede ser maduro.
+Los umbrales concretos quedan abiertos (§10); el contrato queda cerrado aquí.
+
+### 1.6 Estados y transiciones
+
+**La progresión NO es lineal.** Aristas válidas:
+
+```
+unseen ─────────────────► provisional        (verificación directa, §3)
+unseen ─────────────────► learning           (aprendizaje normal)
+provisional + intento ──► lo que devuelva FSRS
+learning ───────────────► review
+review + lapse ─────────► learning
+```
+
+`mature` no aparece: es un predicado sobre ítems en `review` (§1.5), no un nodo.
+
+**`provisional` se programa FUERA del historial FSRS.** No se crean reviews
+sintéticas ni se fabrica `stability`/`difficulty`. El primer intento real sobre un
+provisional **crea una tarjeta FSRS nueva, aplica el `Grade` real, y adopta el estado
+que FSRS devuelva** — que con `Again` será aprendizaje, no `review`.
+
+**La inferencia de colocación nunca produce un ítem maduro.**
+
+### 1.7 `SkillEvidence` — nunca booleanos sueltos
+
+Colapsar evidencia directa e inferencia estadística a un `boolean` pierde información
+necesaria para depurar y recalibrar:
 
 ```ts
 interface SkillEvidence {
   skill: Skill;
   source: "direct" | "placement-inference" | "journal";
   modality: "recognition" | "production" | "listening" | "pronunciation";
-  confidence: number;      // 0–1. Directa ≈ 1.0; inferida = confianza de banda
+  /** Confianza en que ESTA interacción evaluó ESTA habilidad — no en que la
+   *  persona la domine. Directa ≈ 1.0; inferida = confianza de banda. */
+  evidenceConfidence: number;
   observedAt: string;
 }
 ```
 
-### 1.4 `AttemptAssessment` — Grade y modalidad viajan juntos
+### 1.8 `AttemptAssessment` — Grade y modalidad viajan juntos
 
-Un `Easy` en reconocimiento no equivale a un `Easy` en producción. El resultado de
-un intento conserva ambas dimensiones:
+Un `Easy` en reconocimiento no equivale a un `Easy` en producción:
 
 ```ts
 interface AttemptAssessment {
@@ -147,42 +241,47 @@ interface AttemptAssessment {
   usedHints: boolean;
   rescued: boolean;
   acceptedVariant: boolean;
-  evidence: SkillEvidence[];   // vacío si el intento no acredita nada
 }
 ```
 
-### 1.5 Estados y transiciones
+`AttemptAssessment` **no lleva evidencia**: la evidencia es el resultado de aplicarle
+una política (§3.2), no un campo del intento.
 
-**La progresión NO es lineal.** Es un grafo con estas aristas válidas:
+### 1.9 `SkillPlacement`
 
+```ts
+interface SkillPlacement {
+  skill: Skill;
+  schedule: ItemSchedule;
+  verificationSource: "direct" | "placement-inference";
+}
 ```
-unseen ──────────────────────────► provisional     (verificación directa, §3)
-unseen ──► learning ──► review ──► mature          (aprendizaje normal)
-provisional ──► review                             (primer acierto FSRS real)
-provisional ──► learning                           (fallo: se degrada)
-review ──► learning                                (lapse)
-review ──► mature                                  (madurez sostenida)
+
+### 1.10 `ReviewLog` — práctica ≠ evento SRS
+
+Dentro de una sesión hay intentos iniciales, pistas, rescates, repeticiones,
+verificaciones y ejercicios complementarios. **Todos se registran; solo algunos
+modifican el calendario.** Alimentar el optimizador FSRS con ejercicios que no eran
+recuperaciones programadas corrompería la calibración.
+
+```ts
+interface ReviewLog {
+  id: string;
+  learningItemId: string;
+  sessionId: string;
+  assessment: AttemptAssessment;
+  evidence: SkillEvidence[];
+  eventType: "practice" | "verification" | "scheduled-review" | "learning-step";
+  affectsSchedule: boolean;
+  fsrsLogId?: string;
+  occurredAt: string;
+}
 ```
 
-Dos reglas duras:
+> **Invariante:** todo intento produce telemetría; solo un intento con
+> `affectsSchedule: true` puede modificar la programación o alimentar el optimizador.
 
-- **`provisional` se programa FUERA del historial FSRS.** No se crean reviews
-  sintéticas ni se fabrica `stability`/`difficulty` para simular meses de estudio. El
-  `nextReview` de un ítem provisional es una fecha calculada por
-  `verification/policy.ts`, y los campos FSRS quedan **sin poblar**. La primera
-  verificación futura que el ítem supere es su **primer evento FSRS real** y es ahí
-  donde nace su estado FSRS.
-- **La inferencia de colocación nunca produce `mature`.** Solo verificación directa
-  repetida llega ahí.
-
-### 1.6 `ReviewLog` — nuevo
-
-Un evento por intento: ítem, `AttemptAssessment` completo, timestamp. Hoy esta
-información se calcula y se tira. Guardarla habilita el optimizador FSRS (ya existe
-`fsrs-optimizer-eligibility.ts`), la recalibración de umbrales de latencia (§3.4) y
-—más adelante— que el AI Coach lea qué estás trabajando.
-
-### 1.7 Persistencia
+### 1.11 Persistencia
 
 | Dato | Dónde | Por qué |
 |---|---|---|
@@ -192,12 +291,18 @@ información se calcula y se tira. Guardarla habilita el optimizador FSRS (ya ex
 
 RLS obligatoria en las tablas nuevas antes de merge.
 
-### 1.8 Migración
+### 1.12 Migración
 
 Cada `SRSData` con prefijo `c1k:` se convierte en un `LearningItem` de skill
-`meaning`, heredando su estado FSRS **tal cual**: no se pierde progreso ni se
-reinician intervalos. `listening` y `production` nacen `unseen`. Migración de un solo
-sentido, con test.
+`meaning`, con `schedule: { kind: "fsrs", … }` heredando su estado **tal cual**: no
+se pierde progreso ni se reinician intervalos. `listening` y `production` nacen con
+`schedule: { kind: "none" }`.
+
+Dos requisitos:
+
+- **Idempotente.** Ejecutarla dos veces no crea duplicados (invariante 19).
+- **Conservadora.** Los `SRSData` originales se conservan hasta verificar que la
+  sincronización terminó correctamente; no se borran en la misma operación.
 
 ---
 
@@ -211,26 +316,38 @@ Cinco tramos, en orden estricto:
 2. Repasos atrasados, ordenados por **menor recuperabilidad primero** (FSRS ya la
    calcula; hoy se ordena por `entry.rank`, que es frecuencia, no urgencia)
 3. Repasos que vencen hoy
-4. Activaciones de `usage` pendientes (sujetas a §4.4)
+4. Activaciones de `usage` pendientes (sujetas a §5.3)
 5. Palabras nuevas — **solo con el presupuesto que sobre**
 
 Los tramos 4 y 5 desaparecen bajo presión. Es intencional.
 
 ### 2.2 Presupuesto
 
-Helper puro nuevo, `lib/essential-words/daily-budget.ts`:
+Helper puro nuevo, `lib/essential-words/daily-budget.ts`. Devuelve **tres unidades
+distintas**, porque "palabra nueva" e "ítem nuevo" no son lo mismo:
 
 ```ts
-function newItemsAllowed(input: {
-  targetNew: number;
+interface DailyAllowance {
+  newWords: number;          // palabras a introducir
+  skillActivations: number;  // activaciones de habilidad base (§2.5)
+  usageActivations: number;  // activaciones de usage (§5.3)
+  mode: "normal" | "recovery";
+}
+
+function newWordsAllowed(input: {
+  targetNewWords: number;
   overdueCount: number;
   dueTodayCount: number;
   dailyBudgetMinutes: number;
   avgSecondsPerItem: number;
-}): { allowed: number; mode: "normal" | "recovery" }
+}): DailyAllowance;
 ```
 
-`avgSecondsPerItem` se **mide**, no se adivina: el `ReviewLog` (§1.6) guarda latencia
+`targetNewWords` cuenta **palabras**, no ítems. El coste estimado de una palabra
+nueva incluye las habilidades que previsiblemente activará (§2.5), no solo su
+exposición.
+
+`avgSecondsPerItem` se **mide**, no se adivina: el `ReviewLog` (§1.10) guarda latencia
 real. Arranca con una estimación declarada como provisional y se reemplaza por el
 promedio del usuario en cuanto haya datos suficientes.
 
@@ -258,6 +375,28 @@ palabra puede aportar tres ítems. La pantalla pasa a hablar de **ítems y minut
 
 Corrige de paso el "unos **1** min" (falta el singular) visible hoy.
 
+### 2.5 Activación de habilidades base
+
+**Este es el principal origen potencial de acumulación.** Sin política explícita, diez
+palabras nuevas producirían treinta ítems programados antes siquiera de que `usage`
+entre en juego.
+
+Política:
+
+- Al introducir una palabra se crean sus tres habilidades base con
+  `schedule: { kind: "none" }` — existen, pero **no están programadas**.
+- **Solo se programa la habilidad efectivamente practicada.** Un ítem pasa de `none`
+  a programado cuando la sesión lo ejercita, no cuando la palabra se introduce.
+- **Cada activación consume presupuesto** (`skillActivations` en `DailyAllowance`).
+- **Máximo una activación nueva persistente por habilidad y sesión.**
+- `targetNewWords` cuenta palabras; el coste estimado de una palabra incluye las
+  activaciones que previsiblemente disparará.
+- En modo recuperación (§2.3): cero activaciones nuevas.
+
+Orden natural de activación: `meaning` al introducir la palabra; `listening` y
+`production` cuando la sesión las ejercita o cuando una verificación las acredita
+(§3).
+
 ---
 
 ## 3. Verificación por evidencia
@@ -274,28 +413,61 @@ definición, ejemplo o audio.**
 Copy: **"Ya conozco esta palabra"** → **"Compruébalo con una pregunta corta"**. Deja
 claro que no se está saltando definitivamente.
 
-### 3.2 Prueba de producción (español → inglés, escrita)
+### 3.2 Dos pasos, no uno
 
-| Resultado | `meaning` | `production` | `listening` | Siguiente paso |
-|---|---|---|---|---|
-| `Easy` sin pistas | provisional largo | provisional largo | **sin acreditar** | programar prueba auditiva |
-| `Good` | provisional moderado | `learning`, entrando por encima del primer peldaño | **sin acreditar** | práctica de producción |
-| `Hard` / con pista | provisional corto | aprendizaje normal | **sin acreditar** | reforzar producción |
-| `Again` | aprendizaje normal | aprendizaje normal | **sin acreditar** | flujo completo |
+Evidencia y colocación son funciones separadas. Colapsarlas hace que `learning` se
+lea erróneamente como "no hubo evidencia":
 
-### 3.3 Prueba auditiva (audio inglés → significado o transcripción)
+```ts
+function deriveEvidence(assessment: AttemptAssessment): SkillEvidence[];
 
-| Resultado | `meaning` | `listening` | `production` |
+function derivePlacements(
+  evidence: SkillEvidence[],
+  assessment: AttemptAssessment,
+  currentItems: LearningItem[],
+): SkillPlacement[];
+```
+
+**Paso 1 — evidencia, determinada por la modalidad**, no por el grade:
+
+| Modalidad | Acredita evidencia de |
+|---|---|
+| `production` (correcta) | `meaning` + `production` |
+| `listening` (correcta) | `meaning` + `listening` |
+| `recognition` (correcta) | `meaning` |
+| `pronunciation` (correcta) | `production` — **nunca** `listening` por sí sola |
+
+Una respuesta incorrecta no produce evidencia de dominio, pero sí se registra.
+
+**Paso 2 — colocación, determinada por el grade** sobre las habilidades que sí
+tuvieron evidencia.
+
+### 3.3 Prueba de producción (español → inglés, escrita)
+
+Evidencia: `meaning` + `production`. **`listening` nunca**, en ninguna fila.
+
+| Grade | `meaning` | `production` | Siguiente paso |
 |---|---|---|---|
-| `Easy` | provisional largo | provisional largo | **sin acreditar** |
-| `Good` | provisional moderado | provisional moderado | **sin acreditar** |
-| `Hard` | provisional corto | aprendizaje normal | **sin acreditar** |
-| `Again` | aprendizaje normal | aprendizaje normal | **sin acreditar** |
+| `Easy` sin pistas | provisional largo | provisional largo | programar prueba auditiva |
+| `Good` | provisional moderado | `learning` (hubo evidencia; la política lo coloca ahí) | práctica de producción |
+| `Hard` / con pista sustantiva | provisional corto | `learning` | reforzar producción |
+| `Again` | `learning` | `learning` | flujo completo |
+
+### 3.4 Prueba auditiva (audio inglés → significado o transcripción)
+
+Evidencia: `meaning` + `listening`. **`production` nunca**.
+
+| Grade | `meaning` | `listening` |
+|---|---|---|
+| `Easy` | provisional largo | provisional largo |
+| `Good` | provisional moderado | provisional moderado |
+| `Hard` | provisional corto | `learning` |
+| `Again` | `learning` | `learning` |
 
 Las dos pruebas no tienen que ocurrir en la misma sesión. La auditiva puede
 programarse como siguiente habilidad.
 
-### 3.4 Latencia y pistas
+### 3.5 Latencia y pistas
 
 El umbral fijo de 25 s (`LOW_LATENCY_MS`) es frágil: la latencia depende de longitud
 de frase, escribir vs. hablar, teclado móvil vs. escritorio, complejidad gramatical y
@@ -318,7 +490,7 @@ Definiciones resultantes:
 - `Hard`: correcta solo tras una pista sustantiva
 - `Again`: incorrecta, respuesta revelada, o rescate sustancial
 
-### 3.5 Intervalos provisionales
+### 3.6 Intervalos provisionales
 
 | Origen | Rango |
 |---|---|
@@ -328,6 +500,10 @@ Definiciones resultantes:
 
 La evidencia directa es más fuerte que "conoce el 85 % de esta banda, probablemente
 conoce esta". No reciben la misma colocación.
+
+**La fecha dentro de la ventana se distribuye de forma determinista** —función del
+`itemId` y una semilla, no `Math.random()`— para que sea testeable y para repartir
+vencimientos en lugar de amontonarlos (invariante 18).
 
 Los valores exactos dentro de estos rangos quedan **abiertos** (§10).
 
@@ -368,7 +544,7 @@ se marcan como **inferidas**, no como provisionales activas:
 La conversión de inferido → `provisional` activo es **gradual**, con:
 
 - **límite diario** de conversiones
-- **distribución de vencimientos** — los `nextReview` se reparten en el tiempo en
+- **distribución de vencimientos** — los `schedule.dueAt` se reparten en el tiempo en
   lugar de caer todos juntos a los 7–21 días
 
 Sin esto, la colocación siembra cientos de vencimientos sincronizados: exactamente el
@@ -387,7 +563,7 @@ lento.
 
 **Límite declarado:** es inferencia sobre ~30 muestras. Se va a equivocar en algunas
 palabras. Es aceptable *porque* existen los mecanismos de corrección (§4.3 y la
-degradación `provisional → learning` de §1.5), no porque la estimación sea precisa.
+degradación `provisional → learning` de §1.6), no porque la estimación sea precisa.
 
 ---
 
@@ -399,27 +575,49 @@ Encadenar todo uso avanzado detrás de "las tres habilidades maduras" es
 artificialmente rígido: el uso en contexto también **fortalece** `meaning` y
 `production`, no solo las corona.
 
-| Tipo | Se desbloquea con | Ejemplo (`on`) |
+| Tipo (`usageKind`) | Se desbloquea con | Ejemplo (`on`) |
 |---|---|---|
-| `context_usage` | `meaning` en `review` o `mature` | `on Monday`, `on the table`, `the TV is on` |
-| `advanced_usage` | `meaning` **y** `production` en `mature` | `depend on`, `on purpose`, `on the verge of` |
+| `context_usage` | `meaning` con `status === "review"` | `on Monday`, `on the table`, `the TV is on` |
+| `advanced_usage` | `meaning` **y** `production` con `isMature() === true` | `depend on`, `on purpose`, `on the verge of` |
 
-Los estados son los de §1.5. Un ítem `provisional` **no** desbloquea `usage`: la
-evidencia todavía no se ha confirmado con un evento FSRS real.
+Un ítem `provisional` **no** desbloquea `usage`: la evidencia aún no se ha confirmado
+con un evento FSRS real.
 
-### 5.2 Generado ≠ disponible ≠ activado
+**Perder la madurez no retira contenido ya activado.** La madurez controla la
+*activación de contenido nuevo*, nada más:
+
+- Un lapse posterior de `meaning` o `production` **no elimina ni retira** los `usage`
+  ya activos: siguen su propio calendario.
+- Mientras la palabra no vuelva a ser madura, **no se activan nuevos**
+  `advanced_usage`.
+
+Sin esta regla, un fallo aislado —o un cambio de `MaturityPolicy`— retiraría
+contenido ya introducido y volvería la experiencia inestable.
+
+### 5.2 `usage` es un `LearningItem`, no una entidad aparte
+
+Un `usage` **es** un `LearningItem` con `skill: "usage"`; su ciclo de vida y contenido
+viven en `payload`. Un solo registro programable, no dos entidades que sincronizar:
 
 ```ts
-interface UsageItem {
+interface UsagePayload {
+  usageKind: "context_usage" | "advanced_usage";
+  expression: string;        // "depend on"
+  sentence: string;
+  sentenceIpa?: string;
+  acceptedVariants: string[];
+
   generationStatus: "pending" | "ready" | "failed";
   activationStatus: "inactive" | "active" | "retired";
-  source: "authored" | "generated";
-  generatedAt?: Date;
-  activatedAt?: Date;
+  generatedAt?: string;
+  activatedAt?: string;
+
+  metadata: GeneratedContentMetadata;
 }
 ```
 
-Permite generar varios candidatos sin añadirlos todos a la carga futura.
+Permite generar varios candidatos sin añadirlos todos a la carga futura: un `usage`
+con `activationStatus: "inactive"` nunca entra en la cola (invariante 5).
 
 ### 5.3 Los `usage` cuentan contra el presupuesto
 
@@ -438,9 +636,11 @@ cuando llega, y se cachea en Dexie. Si no hay conexión ni caché, el ítem
 
 ### 5.5 Versionado, validación y telemetría
 
+La procedencia vive en `LearningItem.contentOrigin` / `generatorProvider` (§1.2) y no
+se duplica aquí. Esto son los datos de **versionado**:
+
 ```ts
 interface GeneratedContentMetadata {
-  source: "authored" | "generated";
   generatorVersion?: string;
   promptVersion?: string;
   modelVersion?: string;
@@ -472,10 +672,11 @@ respuesta.
 ```
 lib/essential-words/
   session-plan.ts          sin cambios de responsabilidad
-  daily-budget.ts          §2.2 — presupuesto y modo recuperación
+  daily-budget.ts          §2.2, §2.5 — presupuesto, activaciones, recuperación
+  skill-item.ts            deriveSkillStatus, getLearningReason, isMature (§1.4, §1.5)
   verification/
-    policy.ts              evidencia + colocación (§1.3, §1.4, §3)
-    types.ts               AttemptAssessment, SkillEvidence, SkillPlacement, SkillStatus
+    policy.ts              deriveEvidence + derivePlacements (§3.2)
+    types.ts               ItemSchedule, AttemptAssessment, SkillEvidence, SkillPlacement
   placement/
     bands.ts               muestreo estratificado + estimación por banda (§4.1)
     policy.ts              confianza → colocación, conversión gradual, control (§4.2, §4.3)
@@ -487,10 +688,14 @@ Flujo:
 
 ```
 attempt-grade.ts        → AttemptAssessment
-verification/policy.ts  → SkillEvidence[]
-                        → SkillPlacement[]
+verification/policy.ts  → deriveEvidence  → SkillEvidence[]
+                        → derivePlacements → SkillPlacement[]
 session-plan.ts         → qué ítems entran hoy
 ```
+
+`skill-item.ts` es aparte porque sus tres funciones derivadas las consumen el
+planificador, las políticas y las vistas por igual; enterrarlas en `verification/`
+las escondería de la mitad de sus llamadores.
 
 Si un archivo supera ~250 líneas se parte **entonces**, con la evidencia delante.
 
@@ -503,14 +708,35 @@ Cada una es un test:
 1. Una prueba textual **nunca** acredita `listening`.
 2. Una prueba auditiva **nunca** acredita `production`.
 3. Una respuesta revelada **nunca** produce `Easy` ni `Good`.
-4. Una inferencia de colocación **nunca** crea estado `mature`.
+4. Una inferencia de colocación **nunca** produce un ítem maduro.
 5. Un ítem generado pero inactivo **nunca** aparece en la cola SRS.
 6. Una palabra **no puede** tener dos ítems activos equivalentes.
 7. Los ítems `usage` **cuentan** contra el presupuesto diario.
 8. Pulsar "Ya la sé" **no expone** la respuesta antes de verificarla.
 9. La app funciona **offline** aunque `usage` no esté generado.
-10. Un ítem `provisional` **no tiene** estado FSRS poblado (§1.5).
+10. Un ítem `provisional` **nunca** usa campos reservados al estado FSRS (§1.3).
 11. La colocación **no activa** más de `N` provisionales por día (§4.2).
+12. Un intento con `affectsSchedule: false` **no modifica** FSRS ni alimenta el
+    optimizador (§1.10).
+13. Una respuesta correcta de producción **siempre** produce evidencia de
+    `production`, aunque su colocación resultante sea `learning` (§3.2).
+14. Una palabra nueva **no puede** activar habilidades base sin consumir presupuesto
+    (§2.5).
+15. Un ítem maduro **puede degradarse** tras un lapse.
+16. La modalidad `pronunciation` **solo** puede acreditar `production`, nunca
+    `listening` por sí sola (§3.2).
+17. Una fecha provisional se distribuye de forma **determinista** y testeable dentro
+    de su ventana (§3.6).
+18. La misma ejecución de la migración **no crea registros duplicados** (§1.12).
+19. `mature` **nunca** se persiste en `LearningItem` (§1.5).
+20. Si existe programación FSRS, la razón de aprendizaje se deriva **exclusivamente**
+    de `FsrsCardState` (§1.4).
+21. Un estado FSRS `Relearning` se presenta **siempre** como `status: "learning"` con
+    `reason: "lapse"` (§1.4).
+22. Un cambio en `MaturityPolicy` puede cambiar `isMature`, pero **no modifica ni
+    reescribe** el historial FSRS (§1.5).
+23. Perder la madurez **bloquea** nuevas activaciones de `advanced_usage`, pero **no
+    desactiva** los `usage` ya activos (§5.1).
 
 ---
 
@@ -519,9 +745,9 @@ Cada una es un test:
 Vitest, junto a cada módulo o en `__tests__/`. Los helpers de §6 son puros: se testean
 sin I/O.
 
-Además de las 11 invariantes: la migración §1.8 (preservación de estado FSRS), las
-transiciones del grafo §1.5 (incluidas las degradaciones), y el gating §2 en sus tres
-regímenes (normal, presupuesto ajustado, recuperación).
+Además de las 23 invariantes: la migración §1.12 (preservación de estado FSRS +
+idempotencia), las transiciones del grafo §1.6 (incluidas las degradaciones), y el
+gating §2 en sus tres regímenes (normal, presupuesto ajustado, recuperación).
 
 ---
 
@@ -529,8 +755,8 @@ regímenes (normal, presupuesto ajustado, recuperación).
 
 **Se ejecuta ANTES de dar el motor por terminado, no después.**
 
-Con 4 habilidades por palabra, más `usage`, más provisionales de colocación, el
-sistema puede parecer correcto una semana y enterrar al usuario al mes.
+Con 3 habilidades base por palabra, más 0..N `usage`, más provisionales de
+colocación, el sistema puede parecer correcto una semana y enterrar al usuario al mes.
 
 ### 9.1 Horizonte
 
@@ -546,29 +772,58 @@ sistema puede parecer correcto una semana y enterrar al usuario al mes.
 | **Principiante** | colocación de baja confianza, precisión ~60 % |
 | **Avanzada (B1+)** | colocación de alta confianza en bandas bajas, muchos `usage` |
 
-### 9.3 Comprobación específica de picos sincronizados
+### 9.3 Qué se mide
+
+Ambigüedad a eliminar antes de escribir los criterios. Se distinguen cuatro
+magnitudes:
+
+| Magnitud | Definición |
+|---|---|
+| **Cola planificada** | lo que el planificador presenta al usuario ese día |
+| **Trabajo completado** | lo que el usuario efectivamente hizo |
+| **Vencidos** | ítems cuyo `dueAt` cayó ese día |
+| **Backlog** | atrasados acumulados |
+
+**Los criterios de gating se evalúan sobre la cola planificada**, porque es lo único
+que el planificador controla. El backlog se mide aparte: es consecuencia del
+comportamiento del usuario, no del planificador.
+
+Los criterios se expresan en **sesiones activas**, no en días naturales — un día sin
+práctica no es un fallo del planificador.
+
+### 9.4 Comprobación de picos sincronizados
 
 La colocación siembra provisionales que vencen a 7–21 días; los `usage` se activan en
-cohortes. **Se mide explícitamente si esos dos vencimientos se sincronizan.**
+cohortes. Se mide explícitamente si esos dos vencimientos **se sincronizan**.
 
-Métrica: desviación de la carga diaria respecto a la media móvil de 7 días, y
-detección de días cuya carga supera 2× esa media.
+Métrica: proporción de la cola planificada que proviene de (a) provisionales de
+colocación y (b) activaciones de `usage`, por ventana móvil de 7 días activos, y
+correlación entre ambas series.
 
-### 9.4 Criterios de aprobación
+### 9.5 Criterios de aprobación
 
 Para **todos** los perfiles, en el horizonte completo:
 
-1. La carga diaria no supera el presupuesto en más del **20 %** en más del **10 %** de
-   los días.
-2. **Ningún** día supera **2×** la media móvil de 7 días (§9.3).
+1. En al menos el **90 % de las sesiones activas**, la cola planificada no supera
+   **1.2 ×** el presupuesto diario.
+2. El **percentil 95** de minutos planificados no supera **1.5 ×** el presupuesto.
 3. El modo recuperación se activa cuando debe y **sale** de él (no queda atrapado).
-4. Los atrasados no crecen de forma monótona en el perfil **Constante**.
+4. El backlog no crece de forma monótona en el perfil **Constante**.
 5. En el perfil **Ráfagas**, tras una ausencia de 14 días el sistema vuelve a régimen
-   normal en ≤ 14 días de práctica.
-6. La proporción de ítems `usage` no supera el **30 %** de la carga diaria en ningún
-   día.
+   normal en ≤ 14 **sesiones activas**.
+6. Las activaciones nuevas de `usage` no superan el **30 %** de las activaciones
+   totales en una **ventana móvil de 7 días activos**, con un denominador mínimo de
+   **10 activaciones** antes de aplicar el porcentaje.
+7. Las series de (a) provisionales y (b) `usage` de §9.4 **no muestran picos
+   coincidentes** que dupliquen la cola planificada respecto a la ventana previa.
 
 Si alguno falla, se ajustan los parámetros (§10) y se vuelve a simular.
+
+> Los criterios 1, 2 y 6 sustituyen a formulaciones anteriores que eran inválidas:
+> "ningún día supera 2× la media móvil" se rompe en el perfil Ráfagas (la media se
+> contamina con ceros de la ausencia, y el primer día de regreso la viola con el
+> planificador sano), y "`usage` ≤ 30 % diario" da 100 % cuando el día tiene un solo
+> repaso.
 
 ---
 
@@ -576,12 +831,16 @@ Si alguno falla, se ajustan los parámetros (§10) y se vuelve a simular.
 
 Dependen de datos que hoy no existen. Se declaran, no se adivinan:
 
-1. **Umbrales de latencia por modalidad** (§3.4) — valores iniciales provisionales,
+1. **Umbrales de latencia por modalidad** (§3.5) — valores iniciales provisionales,
    recalibrados con `ReviewLog`.
-2. **Intervalos provisionales exactos** dentro de los rangos de §3.5.
+2. **Intervalos provisionales exactos** dentro de los rangos de §3.6.
 3. **`avgSecondsPerItem` inicial** (§2.2) — estimación hasta tener medición real.
-4. **`N` de activaciones `usage` por sesión** (§5.3) y **límite diario de conversión
-   inferido → provisional** (§4.2) — ambos se fijan con la simulación de §9.
+4. **`N` de activaciones `usage` por sesión** (§5.3), **límite diario de conversión
+   inferido → provisional** (§4.2) y **límite de `skillActivations`** (§2.5) — los
+   tres se fijan con la simulación de §9.
+5. **Umbrales de `MaturityPolicy`** (§1.5) — `minStabilityDays`,
+   `minSuccessfulReviews`, `maxRecentLapses`. El contrato está cerrado; los valores
+   se calibran con la simulación. Al ser derivada, cambiarlos no requiere migración.
 
 ---
 
@@ -598,10 +857,12 @@ Todas dependen de que exista el `LearningItem`. Por eso van después, no en para
 
 ### Ganchos dejados listos en esta spec
 
-- `LearningItem.source` (`authored` | `gemini` | `journal`) — el pipeline escribe
-  filas, no migra esquema. El valor `journal` reserva el caso "usé esta palabra
-  escribiendo en el diario" (hoy no hay ningún puente entre `lib/journal/` y
-  essential-words).
+- `LearningItem.contentOrigin` (`authored` | `generated` | `journal`) +
+  `generatorProvider` — el pipeline escribe filas, no migra esquema. El valor
+  `journal` reserva el caso "usé esta palabra escribiendo en el diario" (hoy no hay
+  ningún puente entre `lib/journal/` y essential-words).
+- `SkillEvidence.source: "journal"` — el mismo gancho en la capa de evidencia: un uso
+  correcto en el diario podrá acreditar `production` sin inventar una modalidad nueva.
 - Query de estado de habilidades en `lib/essential-words/queries.ts` — legible por
   Coach y ruta teórica sin tocar el motor.
 - Tablas `usage` en Supabase con RLS desde el día uno.
