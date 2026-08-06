@@ -10,7 +10,7 @@
 //   <ContinueButton />
 // </RecallTranslationCard>
 
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { speak } from '@/lib/phoneme-practice/tts'
 import { PillButton } from '@/components/ui/PillButton'
 import Button from '@/components/ui/Button'
@@ -23,6 +23,7 @@ import { HintButton } from './HintButton'
 import { AnswerDiff } from './AnswerDiff'
 import { ExercisePhaseLabel } from './ExercisePhaseLabel'
 import { InlineFeedback } from '@/components/practice/session/InlineFeedback'
+import { useEnterToContinue } from '@/hooks/useEnterToContinue'
 import type { AttemptOutcome } from '@/lib/essential-words/attempt-grade'
 import type { EssentialWord } from '@/lib/essential-words/types'
 
@@ -36,6 +37,7 @@ interface Props {
   /** Present once the final attempt has been graded — renders the internal
    * "Continuar" action that advances to the next exercise. */
   onContinue?: () => void
+  onArchive?: () => void
   isContinuing?: boolean
 }
 
@@ -44,7 +46,7 @@ function normalize(text: string): string {
   return normalizeEnglishAnswer(text)
 }
 
-export function RecallTranslationCard({ entry, levelLabel, repetitions = 0, onAttempt, onRetry, onContinue, isContinuing = false }: Props) {
+export function RecallTranslationCard({ entry, levelLabel, repetitions = 0, onAttempt, onRetry, onContinue, onArchive, isContinuing = false }: Props) {
   const [answer, setAnswer] = useState('')
   const [revealed, setRevealed] = useState(false)
   const [outcome, setOutcome] = useState<{ correct: boolean; typo: boolean } | null>(null)
@@ -56,8 +58,15 @@ export function RecallTranslationCard({ entry, levelLabel, repetitions = 0, onAt
   const hintsUsedRef = useRef(0)
   const firstTryFailedRef = useRef(false)
   const startedAtRef = useRef(Date.now())
+  const answerInputRef = useRef<HTMLInputElement>(null)
   const { sentence } = selectSentence(entry, repetitions)
   const ladder = buildHintLadder(entry, 'recall_translation')
+
+  useEffect(() => {
+    answerInputRef.current?.focus()
+  }, [])
+
+  useEnterToContinue(Boolean(onContinue && resolved && outcome && !isContinuing), onContinue)
 
   const submitOutcome = (finalOutcome: AttemptOutcome) => {
     setOutcome({ correct: finalOutcome.correct, typo: finalOutcome.typo })
@@ -124,7 +133,7 @@ export function RecallTranslationCard({ entry, levelLabel, repetitions = 0, onAt
 
   return (
     <div className="flex w-full flex-col items-center gap-[var(--space-5)] rounded-lg border border-border-subtle bg-surface-raised layout-card-pad">
-      <ExercisePhaseLabel label={levelLabel} />
+      <ExercisePhaseLabel label={levelLabel} onArchive={onArchive} />
       <div className="flex max-w-[42ch] flex-col items-center gap-1 text-center">
         <p className="m-0 w-full text-body text-fg">Escribe la palabra en inglés</p>
         <p className="m-0 text-body-lg font-medium leading-relaxed text-balance text-fg">
@@ -133,10 +142,16 @@ export function RecallTranslationCard({ entry, levelLabel, repetitions = 0, onAt
       </div>
 
       <input
+        ref={answerInputRef}
         type="text"
         value={answer}
         onChange={(e) => setAnswer(e.target.value)}
-        onKeyDown={(e) => e.key === 'Enter' && handleCheck()}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault()
+            handleCheck()
+          }
+        }}
         disabled={revealed}
         aria-label="Escribe la palabra en inglés"
         autoCapitalize="none"

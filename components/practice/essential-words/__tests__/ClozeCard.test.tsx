@@ -48,6 +48,11 @@ describe("ClozeCard", () => {
     expect(screen.getByText(/trabajar/)).toBeInTheDocument();
   });
 
+  it("focuses the answer input when the exercise opens", () => {
+    setup();
+    expect(screen.getByLabelText("Escribe la palabra que falta")).toHaveFocus();
+  });
+
   it("calls onAttempt with a clean correct outcome", () => {
     const onAttempt = setup();
     fireEvent.change(screen.getByLabelText("Escribe la palabra que falta"), {
@@ -123,6 +128,22 @@ describe("ClozeCard", () => {
     expect(continueButton).toBeInTheDocument();
     fireEvent.click(continueButton);
     expect(onContinue).toHaveBeenCalled();
+  });
+
+  it("uses the next Enter for continuation after showing feedback", () => {
+    const onAttempt = vi.fn().mockResolvedValue(undefined);
+    const onContinue = vi.fn();
+    render(<ClozeCard entry={entry} onAttempt={onAttempt} onContinue={onContinue} />);
+    const input = screen.getByLabelText("Escribe la palabra que falta");
+
+    fireEvent.change(input, { target: { value: "work" } });
+    fireEvent.keyDown(input, { key: "Enter" });
+
+    expect(screen.getByText(/¡correcto!/i)).toBeInTheDocument();
+    expect(onContinue).not.toHaveBeenCalled();
+
+    fireEvent.keyDown(window, { key: "Enter" });
+    expect(onContinue).toHaveBeenCalledOnce();
   });
 
   it("does not show the feedback banner during the first-attempt repair prompt", () => {

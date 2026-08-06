@@ -30,6 +30,7 @@ import { selectSentence } from '@/lib/essential-words/sentence-variants'
 import { displayEnglishText } from '@/lib/essential-words/word-display'
 import { buildSpeakOutcome } from './useSpeakOutcome'
 import { ExercisePhaseLabel } from './ExercisePhaseLabel'
+import { useEnterToContinue } from '@/hooks/useEnterToContinue'
 import type { AttemptOutcome } from '@/lib/essential-words/attempt-grade'
 import type { EssentialWord } from '@/lib/essential-words/types'
 import type { WordResult } from '@/lib/types'
@@ -163,6 +164,8 @@ export function SpeakReviewCard({
         setIsSubmitting(false)
       })
   }
+
+  useEnterToContinue(Boolean(scored && !isSubmitting), handleContinue)
 
   const handleRetry = () => {
     setScored(null)

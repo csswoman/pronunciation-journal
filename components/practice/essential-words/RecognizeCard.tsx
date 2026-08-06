@@ -18,6 +18,7 @@ import { recognizePromptFor } from '@/lib/essential-words/recognize-prompt'
 import { ExercisePhaseLabel } from './ExercisePhaseLabel'
 import { RecognizeOptionGrid } from './RecognizeOptionGrid'
 import { InlineFeedback } from '@/components/practice/session/InlineFeedback'
+import { useEnterToContinue } from '@/hooks/useEnterToContinue'
 import Button from '@/components/ui/Button'
 import type { AttemptOutcome } from '@/lib/essential-words/attempt-grade'
 import type { EssentialWord } from '@/lib/essential-words/types'
@@ -33,6 +34,7 @@ interface Props {
   /** Present once the choice has been graded — renders the internal
    * "Continuar" action that advances to the next exercise. */
   onContinue?: () => void
+  onArchive?: () => void
   isContinuing?: boolean
 }
 
@@ -46,6 +48,7 @@ export function RecognizeCard({
   repetitions = 0,
   onAttempt,
   onContinue,
+  onArchive,
   isContinuing = false,
 }: Props) {
   const [chosen, setChosen] = useState<string | null>(null)
@@ -68,7 +71,6 @@ export function RecognizeCard({
   const options = useMemo(() => {
     const all = [entry.word, ...cardDistractorsKey.split('|').filter(Boolean)]
     return all.sort(() => Math.random() - 0.5)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entry.word, cardDistractorsKey])
 
   const handleChoose = (choice: string) => {
@@ -86,11 +88,13 @@ export function RecognizeCard({
     })
   }
 
+  useEnterToContinue(Boolean(onContinue && chosen && !isContinuing), onContinue)
+
   if (!prompt) return null
 
   return (
     <div className="flex w-full max-w-md flex-col items-center gap-4 rounded-lg border border-border-subtle bg-surface-raised layout-card-pad">
-      <ExercisePhaseLabel label={levelLabel} />
+      <ExercisePhaseLabel label={levelLabel} onArchive={onArchive} />
 
       <p className="m-0 w-full text-center text-body text-fg">{prompt.instruction}</p>
 

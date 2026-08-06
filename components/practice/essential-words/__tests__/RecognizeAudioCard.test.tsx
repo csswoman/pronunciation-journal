@@ -90,4 +90,39 @@ describe("RecognizeAudioCard", () => {
     fireEvent.click(screen.getByRole("button", { name: "thought" }));
     expect(onAttempt).toHaveBeenCalledTimes(1);
   });
+
+  it("continues with Enter after the choice feedback is visible", () => {
+    const onContinue = vi.fn();
+    render(
+      <RecognizeAudioCard
+        entry={entry}
+        distractors={distractors}
+        onAttempt={vi.fn().mockResolvedValue(undefined)}
+        onContinue={onContinue}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: /through/ }));
+    expect(screen.getByText(/¡correcto!/i)).toBeInTheDocument();
+    fireEvent.keyDown(window, { key: "Enter" });
+
+    expect(onContinue).toHaveBeenCalledOnce();
+  });
+
+  it("offers Ya la sé and confirms the pause action", () => {
+    const onArchive = vi.fn();
+    render(
+      <RecognizeAudioCard
+        entry={entry}
+        distractors={distractors}
+        onAttempt={vi.fn().mockResolvedValue(undefined)}
+        onArchive={onArchive}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Ya la sé" }));
+    fireEvent.click(screen.getByRole("button", { name: "Sí, pausar" }));
+
+    expect(onArchive).toHaveBeenCalledOnce();
+  });
 });

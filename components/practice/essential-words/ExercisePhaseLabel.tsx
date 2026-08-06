@@ -1,12 +1,18 @@
 'use client'
 
+import { ArchiveConfirmAction } from '@/components/practice/study-card/ArchiveConfirmAction'
+
 interface Props {
   label?: string
+  onArchive?: () => void
 }
 
-export function ExercisePhaseLabel({ label }: Props) {
-  if (!label) return null
+export function ExercisePhaseLabel({ label, onArchive }: Props) {
+  if (!label && !onArchive) return null
   return (
-    <p className="m-0 w-full text-center font-caption text-fg-muted">{label}</p>
+    <div className="flex w-full flex-col items-center gap-1">
+      {label && <p className="m-0 w-full text-center font-caption text-fg-muted">{label}</p>}
+      {onArchive && <ArchiveConfirmAction onArchive={onArchive} />}
+    </div>
   )
 }

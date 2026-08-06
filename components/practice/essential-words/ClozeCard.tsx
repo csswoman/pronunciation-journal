@@ -10,7 +10,7 @@
 //   <ContinueButton />
 // </ClozeCard>
 
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { speak } from '@/lib/phoneme-practice/tts'
 import { PillButton } from '@/components/ui/PillButton'
 import Button from '@/components/ui/Button'
@@ -24,6 +24,7 @@ import { HintButton } from './HintButton'
 import { AnswerDiff } from './AnswerDiff'
 import { ExercisePhaseLabel } from './ExercisePhaseLabel'
 import { InlineFeedback } from '@/components/practice/session/InlineFeedback'
+import { useEnterToContinue } from '@/hooks/useEnterToContinue'
 import type { AttemptOutcome } from '@/lib/essential-words/attempt-grade'
 import type { EssentialWord } from '@/lib/essential-words/types'
 
@@ -35,6 +36,7 @@ interface Props {
   /** Present once the final attempt has been graded — renders the internal
    * "Continuar" action that advances to the next exercise. */
   onContinue?: () => void
+  onArchive?: () => void
   isContinuing?: boolean
   /** SM-2 repetition count — rotates which example sentence is blanked. */
   repetitions?: number
@@ -45,7 +47,7 @@ function normalize(text: string): string {
   return normalizeEnglishAnswer(text)
 }
 
-export function ClozeCard({ entry, levelLabel, onAttempt, onRetry, onContinue, isContinuing = false, repetitions = 0 }: Props) {
+export function ClozeCard({ entry, levelLabel, onAttempt, onRetry, onContinue, onArchive, isContinuing = false, repetitions = 0 }: Props) {
   const [answer, setAnswer] = useState('')
   const [revealed, setRevealed] = useState(false)
   const [outcome, setOutcome] = useState<{ correct: boolean; typo: boolean } | null>(null)
@@ -57,9 +59,16 @@ export function ClozeCard({ entry, levelLabel, onAttempt, onRetry, onContinue, i
   const hintsUsedRef = useRef(0)
   const firstTryFailedRef = useRef(false)
   const startedAtRef = useRef(Date.now())
+  const answerInputRef = useRef<HTMLInputElement>(null)
   const { sentence } = selectSentence(entry, repetitions)
   const cloze = clozeFor(entry, sentence)
   const ladder = buildHintLadder(entry, 'cloze_sentence')
+
+  useEffect(() => {
+    answerInputRef.current?.focus()
+  }, [])
+
+  useEnterToContinue(Boolean(onContinue && resolved && outcome && !isContinuing), onContinue)
 
   const submitOutcome = (finalOutcome: AttemptOutcome) => {
     setOutcome({ correct: finalOutcome.correct, typo: finalOutcome.typo })
@@ -125,7 +134,7 @@ export function ClozeCard({ entry, levelLabel, onAttempt, onRetry, onContinue, i
 
   return (
     <div className="flex w-full flex-col items-center gap-[var(--space-5)] rounded-lg border border-border-subtle bg-surface-raised layout-card-pad">
-      <ExercisePhaseLabel label={levelLabel} />
+      <ExercisePhaseLabel label={levelLabel} onArchive={onArchive} />
       <p className="m-0 w-full text-center text-body text-fg">Completa la oración</p>
 
       <p className="m-0 max-w-[42ch] text-center text-body-lg text-fg">{displayEnglishText(cloze.blanked)}</p>
@@ -135,10 +144,16 @@ export function ClozeCard({ entry, levelLabel, onAttempt, onRetry, onContinue, i
       )}
 
       <input
+        ref={answerInputRef}
         type="text"
         value={answer}
         onChange={(e) => setAnswer(e.target.value)}
-        onKeyDown={(e) => e.key === 'Enter' && handleCheck()}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault()
+            handleCheck()
+          }
+        }}
         disabled={revealed}
         aria-label="Escribe la palabra que falta"
         autoCapitalize="none"

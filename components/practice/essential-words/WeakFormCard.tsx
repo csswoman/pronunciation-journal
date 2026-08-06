@@ -21,6 +21,7 @@ import type { EssentialWord } from '@/lib/essential-words/types'
 import { displayEnglishWord, displayEnglishText } from '@/lib/essential-words/word-display'
 import { ExercisePhaseLabel } from './ExercisePhaseLabel'
 import { InlineFeedback } from '@/components/practice/session/InlineFeedback'
+import { useEnterToContinue } from '@/hooks/useEnterToContinue'
 
 interface Props {
   /** Caller guarantees `ipa_weak` is present (selectMode checks it). */
@@ -32,10 +33,11 @@ interface Props {
   /** Present once the self-grade has been recorded — renders the internal
    * "Continuar" action that advances to the next exercise. */
   onContinue?: () => void
+  onArchive?: () => void
   isContinuing?: boolean
 }
 
-export function WeakFormCard({ entry, levelLabel, repetitions = 0, onAttempt, onContinue, isContinuing = false }: Props) {
+export function WeakFormCard({ entry, levelLabel, repetitions = 0, onAttempt, onContinue, onArchive, isContinuing = false }: Props) {
   const startedAtRef = useRef(Date.now())
   const [graded, setGraded] = useState(false)
   const [correct, setCorrect] = useState<boolean | null>(null)
@@ -49,6 +51,8 @@ export function WeakFormCard({ entry, levelLabel, repetitions = 0, onAttempt, on
     rotated === entry.word
       ? weakFormPhrase(entry.example_sentence, entry.word)
       : rotated
+
+  useEnterToContinue(Boolean(onContinue && graded && !isContinuing), onContinue)
 
   const handleSelfGrade = (isCorrect: boolean) => {
     if (graded) return
@@ -66,7 +70,7 @@ export function WeakFormCard({ entry, levelLabel, repetitions = 0, onAttempt, on
 
   return (
     <div className="flex w-full flex-col items-center gap-space-5 rounded-lg border border-border-subtle bg-surface-raised layout-card-pad">
-      <ExercisePhaseLabel label={levelLabel} />
+      <ExercisePhaseLabel label={levelLabel} onArchive={onArchive} />
       <div className="flex max-w-[42ch] flex-col items-center gap-1 text-center">
         <p className="m-0 w-full text-body text-fg">Escucha la forma débil en contexto</p>
         <p className="m-0 text-body-lg font-medium text-fg">

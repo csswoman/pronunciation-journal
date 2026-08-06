@@ -10,7 +10,7 @@
 //   <ContinueButton />
 // </DictationCard>
 
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { speak, speakSequence } from '@/lib/phoneme-practice/tts'
 import { PillButton } from '@/components/ui/PillButton'
 import { ListenButton } from '@/components/ui/ListenButton'
@@ -22,6 +22,7 @@ import { displayEnglishText, displayEnglishWord } from '@/lib/essential-words/wo
 import { AnswerDiff } from './AnswerDiff'
 import { ExercisePhaseLabel } from './ExercisePhaseLabel'
 import { InlineFeedback } from '@/components/practice/session/InlineFeedback'
+import { useEnterToContinue } from '@/hooks/useEnterToContinue'
 import Button from '@/components/ui/Button'
 import type { AttemptOutcome } from '@/lib/essential-words/attempt-grade'
 import type { EssentialWord } from '@/lib/essential-words/types'
@@ -31,12 +32,13 @@ interface Props {
   levelLabel?: string
   onAttempt: (outcome: AttemptOutcome) => Promise<void>
   onContinue?: () => void
+  onArchive?: () => void
   isContinuing?: boolean
   /** SM-2 repetition count — rotates which example sentence is dictated. */
   repetitions?: number
 }
 
-export function DictationCard({ entry, levelLabel, onAttempt, onContinue, isContinuing = false, repetitions = 0 }: Props) {
+export function DictationCard({ entry, levelLabel, onAttempt, onContinue, onArchive, isContinuing = false, repetitions = 0 }: Props) {
   const [answer, setAnswer] = useState('')
   const [revealed, setRevealed] = useState(false)
   const [outcome, setOutcome] = useState<{ correct: boolean; typo: boolean; feedback: DictationFeedback } | null>(null)
@@ -45,7 +47,14 @@ export function DictationCard({ entry, levelLabel, onAttempt, onContinue, isCont
   const slowAudioUsedRef = useRef(false)
   const segmentedAudioUsedRef = useRef(false)
   const startedAtRef = useRef(Date.now())
+  const answerInputRef = useRef<HTMLInputElement>(null)
   const { sentence } = selectSentence(entry, repetitions)
+
+  useEffect(() => {
+    if (!revealed) answerInputRef.current?.focus()
+  }, [revealed])
+
+  useEnterToContinue(Boolean(onContinue && revealed && outcome && !isContinuing), onContinue)
 
   const submitOutcome = (finalOutcome: AttemptOutcome) => {
     void onAttempt(finalOutcome)
@@ -88,7 +97,7 @@ export function DictationCard({ entry, levelLabel, onAttempt, onContinue, isCont
 
   return (
     <div className="flex w-full flex-col items-center gap-space-5 rounded-lg border border-border-subtle bg-surface-raised layout-card-pad">
-      <ExercisePhaseLabel label={levelLabel} />
+      <ExercisePhaseLabel label={levelLabel} onArchive={onArchive} />
       <p className="m-0 w-full text-center text-body text-fg">Escucha y escribe la oración</p>
 
       <div className="flex flex-wrap items-center justify-center gap-2" aria-label="Opciones de audio">
@@ -125,10 +134,16 @@ export function DictationCard({ entry, levelLabel, onAttempt, onContinue, isCont
 
       {!revealed && (
         <input
+          ref={answerInputRef}
           type="text"
           value={answer}
           onChange={(e) => setAnswer(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && void handleCheck()}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault()
+              void handleCheck()
+            }
+          }}
           aria-label="Escribe lo que escuchaste"
           autoCapitalize="none"
           autoCorrect="off"

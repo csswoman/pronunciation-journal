@@ -69,6 +69,7 @@ export function EssentialWordsExerciseCard({
         distractors={distractorPool}
         onAttempt={onAttempt}
         onContinue={onContinue}
+        onArchive={onArchive}
         isContinuing={isContinuing}
       />
     )
@@ -83,6 +84,7 @@ export function EssentialWordsExerciseCard({
         distractors={distractorPool}
         onAttempt={onAttempt}
         onContinue={onContinue}
+        onArchive={onArchive}
         isContinuing={isContinuing}
       />
     )
@@ -97,6 +99,7 @@ export function EssentialWordsExerciseCard({
         repetitions={current.repetitions ?? 0}
         onAttempt={onAttempt}
         onContinue={onContinue}
+        onArchive={onArchive}
         isContinuing={isContinuing}
       />
     )
@@ -111,6 +114,7 @@ export function EssentialWordsExerciseCard({
         repetitions={current.repetitions ?? 0}
         onAttempt={onAttempt}
         onContinue={onContinue}
+        onArchive={onArchive}
         isContinuing={isContinuing}
       />
     )
@@ -126,6 +130,7 @@ export function EssentialWordsExerciseCard({
         onAttempt={onAttempt}
         onRetry={onRetry}
         onContinue={onContinue}
+        onArchive={onArchive}
         isContinuing={isContinuing}
       />
     )
@@ -141,6 +146,7 @@ export function EssentialWordsExerciseCard({
         onAttempt={onAttempt}
         onRetry={onRetry}
         onContinue={onContinue}
+        onArchive={onArchive}
         isContinuing={isContinuing}
       />
     )
