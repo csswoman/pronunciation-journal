@@ -5,6 +5,11 @@ import type { UserLearningState } from "../ai-practice/learning-state";
 import type { GenericExercise, GenericExerciseType, ExerciseSource } from "../exercises/types";
 import type { ExerciseResult, PracticeExercise } from "../practice/types";
 import type { ReaderPassage } from "../practice/reader/types";
+import type {
+  AttemptLog,
+  LearningItem,
+  SrsReviewEvent,
+} from "../essential-words/verification/types";
 import { getRelativeLocalDateKey, getTodayLocalDateKey } from "../date/local-date";
 import { migrateArchivedRow } from "../srs/migrate-archived";
 import { patchActivateNow, patchMaster, patchSnooze } from "../srs/status";
@@ -262,6 +267,28 @@ export interface EssentialWordProgressRecord {
   attempts: number;
 }
 
+/** Indexed local projection of one schedulable Essential Words skill. */
+export type LearningItemRecord = LearningItem & {
+  userId: string;
+  /** Indexed mirror of schedule.dueAt, omitted for unscheduled items. */
+  dueAt?: string;
+  /** Indexed mirror of schedule.kind. */
+  scheduleKind: LearningItem["schedule"]["kind"];
+  updatedAt: string;
+};
+
+/** Immutable local log of one pedagogical interaction. */
+export interface AttemptLogRecord extends AttemptLog {
+  userId: string;
+  synced: boolean;
+}
+
+/** Immutable SRS effect for exactly one learning item. */
+export interface SrsReviewEventRecord extends SrsReviewEvent {
+  userId: string;
+  synced: boolean;
+}
+
 class PronunciationDB extends Dexie {
   attempts!: Table<Attempt, number>;
   srsData!: Table<SRSData, string>;
@@ -292,6 +319,9 @@ class PronunciationDB extends Dexie {
   pronunciationAssessments!: Table<PronunciationAssessmentRecord, string>;
   pronunciationFeedbackEvidence!: Table<PronunciationFeedbackEvidenceRecord, string>;
   missionSessions!: Table<MissionSessionRecord, string>;
+  learningItems!: Table<LearningItemRecord, string>;
+  attemptLogs!: Table<AttemptLogRecord, string>;
+  srsReviewEvents!: Table<SrsReviewEventRecord, string>;
 
   constructor() {
     super("pronunciation-journal");
@@ -505,6 +535,13 @@ class PronunciationDB extends Dexie {
     // v30: pre-graduation Essential Words progress, scoped by account.
     this.version(30).stores({
       essentialWordProgress: 'id, userId, wordId, [userId+wordId], lastLevelAt',
+    });
+    // v31: skill-model local records. Indexed schedule mirrors make the
+    // planner queryable without persisting derived status or maturity.
+    this.version(31).stores({
+      learningItems: 'id, userId, [userId+wordId], [userId+skill], [userId+dueAt], [userId+scheduleKind], updatedAt',
+      attemptLogs: 'id, userId, [userId+sessionId], [userId+wordId], [userId+occurredAt], synced',
+      srsReviewEvents: 'id, userId, [userId+attemptLogId], [userId+learningItemId], [userId+occurredAt], synced',
     });
 
     this.pronunciationMastery = this.table("pronunciationMasteryV2") as Table<PronunciationMasteryRecord, string>;
