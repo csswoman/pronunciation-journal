@@ -132,7 +132,7 @@ export function RecallTranslationCard({ entry, levelLabel, repetitions = 0, onAt
   if (!entry.translation) return null
 
   return (
-    <div className="flex w-full flex-col items-center gap-[var(--space-5)] rounded-lg border border-border-subtle bg-surface-raised layout-card-pad">
+    <div className="flex w-full flex-col items-center gap-(--space-5) rounded-lg border border-border-subtle bg-surface-raised layout-card-pad">
       <ExercisePhaseLabel label={levelLabel} onArchive={onArchive} />
       <div className="flex max-w-[42ch] flex-col items-center gap-1 text-center">
         <p className="m-0 w-full text-body text-fg">Escribe la palabra en inglés</p>

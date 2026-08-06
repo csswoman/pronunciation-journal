@@ -133,7 +133,7 @@ export function ClozeCard({ entry, levelLabel, onAttempt, onRetry, onContinue, o
   if (!cloze) return null
 
   return (
-    <div className="flex w-full flex-col items-center gap-[var(--space-5)] rounded-lg border border-border-subtle bg-surface-raised layout-card-pad">
+    <div className="flex w-full flex-col items-center gap-(--space-5) rounded-lg border border-border-subtle bg-surface-raised layout-card-pad">
       <ExercisePhaseLabel label={levelLabel} onArchive={onArchive} />
       <p className="m-0 w-full text-center text-body text-fg">Completa la oración</p>
 
