@@ -115,4 +115,34 @@ describe('SessionReadyHero', () => {
 
     expect(onBegin).toHaveBeenCalledOnce()
   })
+
+  it('shows the daily-quota-met banner when today\'s quota is filled and nothing is due', () => {
+    render(
+      <SessionReadyHero
+        counts={{ newRemaining: 0, learningRemaining: 0, reviewRemaining: 5 }}
+        stats={{ ...baseStats, dueCount: 0, newToday: 10, newQuota: 10 }}
+        isResume={false}
+        activeRouteId={null}
+        onRouteChange={vi.fn()}
+        onBegin={vi.fn()}
+      />,
+    )
+
+    expect(screen.getByText(/ya completaste tu diaria de hoy/i)).toBeInTheDocument()
+  })
+
+  it('does not show the banner while reviews are still due today', () => {
+    render(
+      <SessionReadyHero
+        counts={{ newRemaining: 0, learningRemaining: 0, reviewRemaining: 5 }}
+        stats={{ ...baseStats, dueCount: 3, newToday: 10, newQuota: 10 }}
+        isResume={false}
+        activeRouteId={null}
+        onRouteChange={vi.fn()}
+        onBegin={vi.fn()}
+      />,
+    )
+
+    expect(screen.queryByText(/ya completaste tu diaria de hoy/i)).not.toBeInTheDocument()
+  })
 })

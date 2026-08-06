@@ -6,7 +6,9 @@
 // </SessionReadyHero>
 
 import { estimateDurationMs } from '@/lib/essential-words/session-plan-time-ceiling'
+import { isDailyQuotaMet } from '@/lib/essential-words/daily-quota'
 import { PillButton } from '@/components/ui/PillButton'
+import { Sparkles } from '@/components/icons'
 import type { EssentialWordsCounts, EssentialWordsStats } from '@/hooks/useEssentialWordsSession'
 import { SessionReadyRouteHint } from './SessionReadyRouteHint'
 import { SessionSurface } from './session-chrome'
@@ -56,6 +58,7 @@ function SessionStat({ value, label }: { value: number; label: string }) {
 
 export function SessionReadyHero({
   counts,
+  stats,
   isResume,
   activeRouteId,
   onRouteChange,
@@ -71,6 +74,7 @@ export function SessionReadyHero({
           : 'palabras'
       }`
   const ctaLabel = isResume ? 'Continuar' : 'Empezar'
+  const quotaMet = !isResume && isDailyQuotaMet(stats)
 
   return (
     <SessionSurface className="gap-layout-stack">
@@ -82,6 +86,13 @@ export function SessionReadyHero({
           unos {minutes} min
         </span>
       </header>
+
+      {quotaMet ? (
+        <div className="flex items-center gap-2 rounded-md bg-primary-soft px-3 py-2 text-caption text-primary">
+          <Sparkles size={14} aria-hidden />
+          <span>Ya completaste tu diaria de hoy — esto es práctica extra</span>
+        </div>
+      ) : null}
 
       <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
         {counts.newRemaining > 0 ? (
