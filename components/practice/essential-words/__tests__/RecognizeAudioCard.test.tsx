@@ -64,7 +64,7 @@ describe("RecognizeAudioCard", () => {
 
   it("calls onAttempt with a clean correct outcome", () => {
     const onAttempt = setup();
-    fireEvent.click(screen.getByRole("button", { name: "through" }));
+    fireEvent.click(screen.getByRole("button", { name: /through/ }));
     expect(onAttempt).toHaveBeenCalledWith(
       expect.objectContaining({ correct: true, hintsUsed: 0, rescued: false }),
     );
@@ -72,7 +72,7 @@ describe("RecognizeAudioCard", () => {
 
   it("calls onAttempt with correct=false for a lookalike", () => {
     const onAttempt = setup();
-    fireEvent.click(screen.getByRole("button", { name: "thought" }));
+    fireEvent.click(screen.getByRole("button", { name: /thought/ }));
     expect(onAttempt).toHaveBeenCalledWith(
       expect.objectContaining({ correct: false, rescued: false, hintsUsed: 0 }),
     );
@@ -80,14 +80,14 @@ describe("RecognizeAudioCard", () => {
 
   it("records latencyMs", () => {
     const onAttempt = setup();
-    fireEvent.click(screen.getByRole("button", { name: "through" }));
+    fireEvent.click(screen.getByRole("button", { name: /through/ }));
     expect(typeof onAttempt.mock.calls[0][0].latencyMs).toBe("number");
   });
 
   it("ignores a second choice", () => {
     const onAttempt = setup();
-    fireEvent.click(screen.getByRole("button", { name: "through" }));
-    fireEvent.click(screen.getByRole("button", { name: "thought" }));
+    fireEvent.click(screen.getByRole("button", { name: /through/ }));
+    fireEvent.click(screen.getByRole("button", { name: /thought/ }));
     expect(onAttempt).toHaveBeenCalledTimes(1);
   });
 

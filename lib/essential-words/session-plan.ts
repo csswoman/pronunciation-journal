@@ -21,6 +21,7 @@ export function createSessionPlan(words: EssentialWord[], seed: number): Session
     history: [],
     finalRoundQueue: words.map((w) => essentialWordId(w.word)),
     finalRoundDone: false,
+    claimedKnownIds: new Set(),
   };
 }
 
@@ -63,13 +64,25 @@ export function nextStep(state: SessionState, allWords: Map<string, EssentialWor
   const block = state.blocks[state.blockIndex];
   if (block) {
     const nextToExpose = block.wordIds.find((id) => !block.exposed.has(id));
-    if (nextToExpose) return { kind: "expose", word: wordById(nextToExpose, allWords) };
+    if (nextToExpose) {
+      return {
+        id: `expose:${state.blockIndex}:${nextToExpose}`,
+        kind: "expose",
+        word: wordById(nextToExpose, allWords),
+      };
+    }
 
     const pending = nextPendingInBlock(block, state.history);
     if (pending) {
       const word = wordById(pending.id, allWords);
       const { mode } = pickModeForLevel(word, pending.level);
-      return { kind: "exercise", word, level: pending.level, mode };
+      return {
+        id: `block:${state.blockIndex}:${pending.id}:${pending.level}:${block.failCount[pending.id]}`,
+        kind: "exercise",
+        word,
+        level: pending.level,
+        mode,
+      };
     }
     return finalRoundStep(state, allWords);
   }
@@ -81,7 +94,7 @@ function finalRoundStep(state: SessionState, allWords: Map<string, EssentialWord
   const id = state.finalRoundQueue[0];
   const word = wordById(id, allWords);
   const mode = modeHasData(word, "cloze_sentence") ? "cloze_sentence" : "speak_sentence";
-  return { kind: "exercise", word, level: 3, mode };
+  return { id: `final:${id}`, kind: "exercise", word, level: 3, mode };
 }
 
 export function applyResult(
@@ -150,6 +163,29 @@ export function deriveCounts(state: SessionState): PlanCounts {
   return { newRemaining, learningRemaining, reviewRemaining };
 }
 
+/**
+ * Number of steps still scheduled from the current state, including the step
+ * returned by `nextStep`. This deliberately counts learning actions, not just
+ * unique words: a new word has an exposure, three in-block exercises, and a
+ * final-round exercise. A failed attempt remains pending, so it stays in this
+ * count and naturally extends the session by one step.
+ */
+export function countScheduledSteps(state: SessionState): number {
+  let count = state.finalRoundQueue.length;
+
+  for (let i = state.blockIndex; i < state.blocks.length; i++) {
+    const block = state.blocks[i];
+    for (const id of block.wordIds) {
+      if (!block.exposed.has(id)) count += 1;
+      if (!hasExited(block, id)) {
+        count += 3 - block.levelReached[id];
+      }
+    }
+  }
+
+  return count;
+}
+
 export function removeWord(state: SessionState, wordId: string): SessionState {
   const blocks = state.blocks.map((b) => {
     if (!b.wordIds.includes(wordId)) return b;
@@ -161,12 +197,56 @@ export function removeWord(state: SessionState, wordId: string): SessionState {
     exposed.delete(wordId);
     return { ...b, wordIds: b.wordIds.filter((id) => id !== wordId), levelReached, failCount, exposed };
   });
+  const claimedKnownIds = new Set(state.claimedKnownIds);
+  claimedKnownIds.delete(wordId);
   return {
     ...state,
     blocks,
     finalRoundQueue: state.finalRoundQueue.filter((id) => id !== wordId),
     history: state.history.filter((id) => id !== wordId),
+    claimedKnownIds,
   };
+}
+
+/**
+ * Learner claims they already know the word at exposure. Marks it exposed,
+ * skips in-block L1–L3 practice, and moves it to the end of the final-round
+ * queue for a deferred verification exercise. Does not remove from the plan.
+ */
+export function deferWordToFinalVerification(
+  state: SessionState,
+  wordId: string,
+): SessionState {
+  const blocks = state.blocks.map((b) => ({
+    ...b,
+    levelReached: { ...b.levelReached },
+    failCount: { ...b.failCount },
+    exposed: new Set(b.exposed),
+  }));
+  const block = blocks[state.blockIndex];
+  if (block?.wordIds.includes(wordId)) {
+    block.exposed.add(wordId);
+    block.levelReached[wordId] = 3;
+  }
+
+  const claimedKnownIds = new Set(state.claimedKnownIds);
+  claimedKnownIds.add(wordId);
+
+  const finalRoundQueue = [
+    ...state.finalRoundQueue.filter((id) => id !== wordId),
+    wordId,
+  ];
+
+  let blockIndex = state.blockIndex;
+  let history = state.history;
+  if (block && blockComplete(block) && blockIndex + 1 < state.blocks.length) {
+    blockIndex += 1;
+    history = [];
+  } else if (block && blockComplete(block) && blockIndex + 1 >= state.blocks.length) {
+    blockIndex = state.blocks.length;
+  }
+
+  return { ...state, blocks, blockIndex, history, finalRoundQueue, claimedKnownIds };
 }
 
 export function appendWords(state: SessionState, words: EssentialWord[], seed: number): SessionState {

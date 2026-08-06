@@ -1,34 +1,19 @@
 'use client'
 
 // Planned structure:
-// <SrsVaultTrigger count onOpen />
-// <SrsVaultModal open onClose entries>
-//   <SrsVaultFilters />
-//   <SrsVaultRow />*
-// </SrsVaultModal>
+// <SrsVault>
+//   <SrsVaultTrigger count onOpen />
+//   <SrsVaultModal open onClose entries>
+// </SrsVault>
 
-import { useEffect, useMemo, useState } from 'react'
-import { useLiveQuery } from 'dexie-react-hooks'
-import { db, migrateArchivedSrsRows } from '@/lib/db'
-import { isVaultEntry } from '@/lib/srs/vault'
+import { useState } from 'react'
 import { SrsVaultModal } from './SrsVaultModal'
 import { SrsVaultTrigger } from './SrsVaultTrigger'
-import { useAuth } from '@/components/auth/AuthProvider'
+import { useSrsVaultEntries } from '@/hooks/useSrsVaultEntries'
 
 export function SrsVault() {
-  const { user } = useAuth()
   const [open, setOpen] = useState(false)
-
-  useEffect(() => {
-    void migrateArchivedSrsRows(user?.id)
-  }, [user?.id])
-
-  const allEntries = useLiveQuery(() => user?.id ? db.srsData.where('userId').equals(user.id).toArray() : [], [user?.id]) ?? []
-
-  const vaultEntries = useMemo(
-    () => allEntries.filter(isVaultEntry),
-    [allEntries],
-  )
+  const vaultEntries = useSrsVaultEntries()
 
   return (
     <>

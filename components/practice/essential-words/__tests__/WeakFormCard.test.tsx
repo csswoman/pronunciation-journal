@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
+import { displayEnglishText } from "@/lib/essential-words/word-display";
 import { WeakFormCard } from "../WeakFormCard";
 import type { EssentialWord } from "@/lib/essential-words/types";
 import { speak } from "@/lib/phoneme-practice/tts";
@@ -63,12 +64,16 @@ describe("WeakFormCard", () => {
       ],
     };
 
-    /** The two-token weak-form phrase the card should build for a given rotation. */
-    function expectedPhrase(reps: number): string {
+    /** Raw weak-form phrase (TTS); display copy is capitalized separately. */
+    function expectedPhraseRaw(reps: number): string {
       const { sentence } = selectSentence(withVariants, reps);
       const tokens = sentence.match(/\b[\w']+\b/g) ?? [];
       const idx = tokens.findIndex((t) => t.toLowerCase() === withVariants.word);
       return tokens.slice(idx, idx + 2).join(" ");
+    }
+
+    function expectedPhraseDisplay(reps: number): string {
+      return displayEnglishText(expectedPhraseRaw(reps));
     }
 
     it("builds the phrase from the selected variant, not always the base sentence", () => {
@@ -79,7 +84,7 @@ describe("WeakFormCard", () => {
           onAttempt={vi.fn().mockResolvedValue(undefined)}
         />,
       );
-      expect(screen.getByText(expectedPhrase(1))).toBeInTheDocument();
+      expect(screen.getByText(expectedPhraseDisplay(1))).toBeInTheDocument();
     });
 
     it("speaks the phrase from the selected variant", () => {
@@ -91,7 +96,7 @@ describe("WeakFormCard", () => {
         />,
       );
       fireEvent.click(screen.getByRole("button", { name: /escuchar/i }));
-      expect(speak).toHaveBeenCalledWith(expectedPhrase(2), expect.anything());
+      expect(speak).toHaveBeenCalledWith(expectedPhraseRaw(2), expect.anything());
     });
 
     it("shows a different phrase across repetitions", () => {
@@ -104,7 +109,7 @@ describe("WeakFormCard", () => {
             onAttempt={vi.fn().mockResolvedValue(undefined)}
           />,
         );
-        seen.add(screen.getByText(expectedPhrase(reps)).textContent ?? "");
+        seen.add(screen.getByText(expectedPhraseDisplay(reps)).textContent ?? "");
         unmount();
       }
       expect(seen.size).toBeGreaterThan(1);
@@ -117,7 +122,7 @@ describe("WeakFormCard", () => {
           onAttempt={vi.fn().mockResolvedValue(undefined)}
         />,
       );
-      expect(screen.getByText(expectedPhrase(0))).toBeInTheDocument();
+      expect(screen.getByText(expectedPhraseDisplay(0))).toBeInTheDocument();
     });
 
     it("falls back to the base sentence when a variant lacks the target word", () => {
@@ -136,7 +141,7 @@ describe("WeakFormCard", () => {
           />,
         );
         // "to go" comes from the base sentence; a bare "to" means the fallback fired.
-        expect(screen.getByText("to go")).toBeInTheDocument();
+        expect(screen.getByText(displayEnglishText("to go"))).toBeInTheDocument();
         unmount();
       }
     });

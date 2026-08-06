@@ -3,29 +3,38 @@ import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { AnswerDiff } from "../AnswerDiff";
 
+const feedback = (status: 'error' | 'typo' = 'error') => ({
+  words: [
+    { expected: 'Did', written: 'did', status: 'match' as const, isTarget: false },
+    { expected: 'he', written: status === 'typo' ? 'eh' : 'you', status, isTarget: true },
+  ],
+  extras: [],
+  terminalPunctuation: '?',
+  hasDifferences: true,
+  hasTypos: status === 'typo',
+  targetCorrect: status === 'typo',
+});
+
 describe("AnswerDiff", () => {
-  it("shows what was written and what was expected, not just the correct answer alone", () => {
-    render(<AnswerDiff written="bi" expected="be" isTypo={false} word="be" />);
-    expect(screen.getByTestId("answer-diff-message")).toHaveTextContent(/bi/);
-    expect(screen.getByTestId("answer-diff-message")).toHaveTextContent(/be/);
+  it("renders the correct sentence with the written mismatch below it", () => {
+    render(<AnswerDiff feedback={feedback()} word="be" />);
+    expect(screen.getByTestId("answer-diff-message")).toHaveTextContent(/Did he\?/);
+    expect(screen.getByTestId("answer-diff-written")).toHaveTextContent(/you/);
   });
 
-  it("shows a gentler message for a typo than for a genuine miss", () => {
-    const { unmount } = render(<AnswerDiff written="hapy" expected="happy" isTypo={true} word="happy" />);
-    const typoText = screen.getByTestId("answer-diff-message").textContent;
-    unmount();
-    render(<AnswerDiff written="sad" expected="happy" isTypo={false} word="happy" />);
-    const missText = screen.getByTestId("answer-diff-message").textContent;
-    expect(typoText).not.toBe(missText);
+  it("marks a typo with a distinct semantic style", () => {
+    render(<AnswerDiff feedback={feedback('typo')} word="happy" />);
+    expect(screen.getByText(/he\?/)).toHaveClass('text-warning');
   });
 
   it("shows the explanation when one exists for the word", () => {
-    render(<AnswerDiff written="am" expected="be" isTypo={false} word="be" />);
+    render(<AnswerDiff feedback={feedback()} word="be" />);
     expect(screen.getByText(/am \/ is \/ are/i)).toBeInTheDocument();
+    expect(screen.getByText('Escuchaste you, pero era he')).toBeInTheDocument();
   });
 
   it("shows no explanation text when none exists for the word", () => {
-    render(<AnswerDiff written="sad" expected="happy" isTypo={false} word="happy" />);
+    render(<AnswerDiff feedback={feedback()} word="happy" />);
     expect(screen.queryByTestId("answer-diff-explanation")).not.toBeInTheDocument();
   });
 });

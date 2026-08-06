@@ -22,11 +22,11 @@ describe("WordIntroStep", () => {
     const onComplete = vi.fn();
     render(<WordIntroStep cards={cards} onComplete={onComplete} />);
 
-    fireEvent.click(screen.getByRole("button", { name: /practicar/i }));
+    fireEvent.click(screen.getByRole("button", { name: /continuar/i }));
     expect(screen.getByRole("heading", { name: "beta" })).toBeInTheDocument();
     expect(onComplete).not.toHaveBeenCalled();
 
-    fireEvent.click(screen.getByRole("button", { name: /practicar/i }));
+    fireEvent.click(screen.getByRole("button", { name: /continuar/i }));
     expect(onComplete).toHaveBeenCalledOnce();
   });
 

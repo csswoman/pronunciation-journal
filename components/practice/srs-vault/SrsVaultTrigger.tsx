@@ -14,7 +14,7 @@ export function SrsVaultTrigger({ count, onOpen }: SrsVaultTriggerProps) {
     <button
       type="button"
       onClick={onOpen}
-      className="min-h-11 rounded-md px-3 py-2 text-caption text-fg-subtle transition-colors hover:bg-surface-raised hover:text-fg-muted focus-ring"
+      className="min-h-10 rounded-md px-2.5 py-1.5 text-caption text-fg-subtle transition-colors hover:bg-surface-raised hover:text-fg-muted focus-ring"
     >
       Baúl · {count} {noun}
     </button>

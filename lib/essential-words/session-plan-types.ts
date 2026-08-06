@@ -7,8 +7,8 @@ import type { EssentialWordMode } from "./exercise-modes";
 
 /** One unit of work the hook renders. Exposure has no exercise; practice does. */
 export type Step =
-  | { kind: "expose"; word: EssentialWord }
-  | { kind: "exercise"; word: EssentialWord; level: 1 | 2 | 3; mode: EssentialWordMode };
+  | { id: string; kind: "expose"; word: EssentialWord }
+  | { id: string; kind: "exercise"; word: EssentialWord; level: 1 | 2 | 3; mode: EssentialWordMode };
 
 /**
  * One block: 3 or 4 words (spec §1.1), never fewer. `levelReached` tracks the
@@ -36,6 +36,8 @@ export interface AttemptResult {
  * block*, used to enforce the distance-≥2 sequencing rule (§1.7).
  * `finalRoundQueue`/`finalRoundDone` back the mixed final round (§1.4), run
  * once all blocks are exhausted.
+ * `claimedKnownIds` tracks words the learner omitted at exposure; they skip
+ * in-block practice and return in the final round for a verification exercise.
  */
 export interface SessionState {
   seed: number;
@@ -44,4 +46,5 @@ export interface SessionState {
   history: string[];
   finalRoundQueue: string[];
   finalRoundDone: boolean;
+  claimedKnownIds: Set<string>;
 }

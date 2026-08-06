@@ -6,6 +6,10 @@ describe("isTypo — semantic criterion, not a length threshold (spec §2.6)", (
     expect(isTypo("hapy", "happy")).toBe(true);
   });
 
+  it("accepts one omitted letter without a word-length threshold", () => {
+    expect(isTypo("alredy", "already")).toBe(true);
+  });
+
   it("accepts an adjacent-key typo", () => {
     expect(isTypo("wprk", "work")).toBe(true); // o/p adjacent on QWERTY
   });

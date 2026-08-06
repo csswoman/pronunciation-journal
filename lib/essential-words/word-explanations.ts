@@ -10,6 +10,7 @@ const EXPLANATIONS: Record<string, string> = {
   have: "cambia a has con he/she/it",
   do: "cambia a does con he/she/it",
   go: "cambia a goes con he/she/it",
+  he: "En habla natural la h de he puede desaparecer: did he suena /dɪdi/.",
 };
 
 /** Returns the explanation string for `word`, or undefined when none exists

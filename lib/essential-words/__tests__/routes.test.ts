@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { VOCAB_ROUTES, getRoute, wordsInRoute } from "../routes";
+import { VOCAB_ROUTES, getRoute, groupRoutesByLevel, routeShortLabel, wordsInRoute } from "../routes";
 import type { EssentialWord } from "../types";
 
 function word(rank: number, w: string, cefr: EssentialWord["cefr_level"], pos: EssentialWord["pos"]): EssentialWord {
@@ -25,6 +25,23 @@ describe("getRoute", () => {
     expect(getRoute("verbs-b1")?.label).toBe("Verbos B1");
     expect(getRoute("nope")).toBeUndefined();
     expect(getRoute(null)).toBeUndefined();
+  });
+});
+
+describe("routeShortLabel / groupRoutesByLevel", () => {
+  it("strips the level suffix from route labels", () => {
+    expect(routeShortLabel(getRoute("verbs-b1")!)).toBe("Verbos");
+    expect(routeShortLabel(getRoute("advanced-c1")!)).toBe("Avanzado");
+  });
+
+  it("groups routes by their primary CEFR level", () => {
+    const groups = groupRoutesByLevel();
+    expect(groups.map((group) => group.level)).toEqual(["A2", "B1", "B2", "C1"]);
+    expect(groups.find((group) => group.level === "B1")?.routes.map((route) => route.id)).toEqual([
+      "verbs-b1",
+      "adjectives-b1",
+      "adverbs-b1",
+    ]);
   });
 });
 

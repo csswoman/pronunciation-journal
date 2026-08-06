@@ -34,7 +34,7 @@ function StatColumn({ label, value, accent }: StatBlockItem) {
 
 export function StatBlock({ stats }: Props) {
   return (
-    <div className="grid w-full grid-cols-3 gap-layout-stack rounded-md border border-border-subtle bg-surface-raised p-4 sm:gap-space-5 sm:p-5">
+    <div className="grid w-full grid-cols-3 gap-layout-stack rounded-md border border-border-subtle bg-surface-base p-3 sm:gap-space-4 sm:p-4">
       {stats.map((stat) => (
         <StatColumn key={stat.label} {...stat} />
       ))}

@@ -10,8 +10,8 @@
 //      known collision words — the dataset's own vocabulary — so a genuine
 //      different word never qualifies), and
 //   2. the edit from the answer to the target belongs to a typical typing-
-//      error class: adjacent QWERTY key, a doubled letter, or a transposed
-//      adjacent pair.
+//      error class: a letter omitted/added, adjacent QWERTY key, a doubled
+//      letter, or a transposed adjacent pair.
 
 // Adjacency map for a standard QWERTY layout — only the letters that matter
 // for typo classification (rows only; enough for realistic near-misses).
@@ -51,6 +51,26 @@ function isDoubledLetterTypo(a: string, b: string): boolean {
   return false;
 }
 
+function isSingleLetterOmissionTypo(a: string, b: string): boolean {
+  if (Math.abs(a.length - b.length) !== 1) return false
+  const [shorter, longer] = a.length < b.length ? [a, b] : [b, a]
+  let shortIndex = 0
+  let longIndex = 0
+  let skipped = false
+  while (shortIndex < shorter.length && longIndex < longer.length) {
+    if (shorter[shortIndex] === longer[longIndex]) {
+      shortIndex += 1
+      longIndex += 1
+    } else if (skipped) {
+      return false
+    } else {
+      skipped = true
+      longIndex += 1
+    }
+  }
+  return true
+}
+
 function isTranspositionTypo(a: string, b: string): boolean {
   if (a.length !== b.length) return false;
   let firstDiff = -1;
@@ -67,6 +87,7 @@ function isTranspositionTypo(a: string, b: string): boolean {
 function isTypingErrorClass(written: string, target: string): boolean {
   return (
     isAdjacentKeyTypo(written, target) ||
+    isSingleLetterOmissionTypo(written, target) ||
     isDoubledLetterTypo(written, target) ||
     isTranspositionTypo(written, target)
   );
@@ -83,6 +104,7 @@ function isTypingErrorClass(written: string, target: string): boolean {
 const KNOWN_COLLISION_WORDS = new Set([
   "he", "be", "to", "do", "of", "on", "in", "it", "so", "no", "go", "we", "me",
   "him", "her", "his", "any", "and",
+  "though",
 ]);
 
 export function isTypo(

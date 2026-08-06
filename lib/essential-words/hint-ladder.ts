@@ -5,6 +5,7 @@
 
 import type { EssentialWord } from "./types";
 import type { EssentialWordMode } from "./exercise-modes";
+import { essentialWordPosLabel } from "./pos-label";
 
 export type HintRungKind = "category" | "audio" | "firstLetter" | "reveal";
 
@@ -31,17 +32,11 @@ const AUDIO_IS_PROMPT_MODES: ReadonlySet<EssentialWordMode> = new Set([
 
 /** Modes with no hint ladder at all — already reconnaissance, not production. */
 const NO_HINT_MODES: ReadonlySet<EssentialWordMode> = new Set([
-  "recognize_translation", "recognize_meaning", "recognize_audio",
+  "recognize_translation", "recognize_meaning", "recognize_audio", "recognize_cloze",
 ]);
 
 function posLabel(pos: EssentialWord["pos"]): string {
-  const labels: Record<EssentialWord["pos"], string> = {
-    noun: "sustantivo", verb: "verbo", adjective: "adjetivo", adverb: "adverbio",
-    pronoun: "pronombre", preposition: "preposición", conjunction: "conjunción",
-    determiner: "determinante", article: "artículo", modal: "modal",
-    auxiliary: "auxiliar", number: "número", interjection: "interjección",
-  };
-  return labels[pos] ?? pos;
+  return essentialWordPosLabel(pos);
 }
 
 function categoryContent(entry: EssentialWord, isShort: boolean): string {

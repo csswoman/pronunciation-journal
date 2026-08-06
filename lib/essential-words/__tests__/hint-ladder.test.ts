@@ -75,7 +75,7 @@ describe("buildHintLadder — length-aware (spec §2.3)", () => {
   });
 
   it("multiple-choice modes (recognize_*) have NO hints at all — empty ladder", () => {
-    for (const mode of ["recognize_translation", "recognize_meaning", "recognize_audio"] as const) {
+    for (const mode of ["recognize_translation", "recognize_meaning", "recognize_audio", "recognize_cloze"] as const) {
       expect(buildHintLadder(word(), mode)).toEqual([]);
     }
   });

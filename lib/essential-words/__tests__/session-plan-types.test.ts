@@ -8,8 +8,14 @@ const fixtureWord = {
 
 describe("session-plan-types", () => {
   it("Step discriminates on kind", () => {
-    const expose: Step = { kind: "expose", word: fixtureWord };
-    const exercise: Step = { kind: "exercise", word: fixtureWord, level: 1, mode: "recognize_translation" };
+    const expose: Step = { id: "expose:0:c1k:the", kind: "expose", word: fixtureWord };
+    const exercise: Step = {
+      id: "block:0:c1k:the:1:0",
+      kind: "exercise",
+      word: fixtureWord,
+      level: 1,
+      mode: "recognize_translation",
+    };
     expect(expose.kind).toBe("expose");
     expect(exercise.kind).toBe("exercise");
   });
@@ -17,6 +23,7 @@ describe("session-plan-types", () => {
   it("SessionState carries blocks, cursor, and seed", () => {
     const state: SessionState = {
       seed: 1, blocks: [], blockIndex: 0, history: [], finalRoundQueue: [], finalRoundDone: false,
+      claimedKnownIds: new Set(),
     };
     expect(state.seed).toBe(1);
   });

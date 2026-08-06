@@ -13,25 +13,25 @@ describe("level3-flag", () => {
   });
 
   it("gateLevel3Mode caps a level-3 exercise step down to level 2 when the flag is off", () => {
-    const step: Step = { kind: "exercise", word: exerciseWord, level: 3, mode: "cloze_sentence" };
+    const step: Step = { id: "block:0:c1k:the:3:0", kind: "exercise", word: exerciseWord, level: 3, mode: "cloze_sentence" };
     const result = gateLevel3Mode(step, false);
     expect(result.kind === "exercise" && result.level).toBe(2);
   });
 
   it("gateLevel3Mode passes level 1-2 exercise steps through unchanged regardless of the flag", () => {
-    const level1: Step = { kind: "exercise", word: exerciseWord, level: 1, mode: "recognize_translation" };
-    const level2: Step = { kind: "exercise", word: exerciseWord, level: 2, mode: "recall_translation" };
+    const level1: Step = { id: "block:0:c1k:the:1:0", kind: "exercise", word: exerciseWord, level: 1, mode: "recognize_translation" };
+    const level2: Step = { id: "block:0:c1k:the:2:0", kind: "exercise", word: exerciseWord, level: 2, mode: "recall_translation" };
     expect((gateLevel3Mode(level1, false) as { level: number }).level).toBe(1);
     expect((gateLevel3Mode(level2, false) as { level: number }).level).toBe(2);
   });
 
   it("gateLevel3Mode passes level 3 through unchanged when the flag is on", () => {
-    const step: Step = { kind: "exercise", word: exerciseWord, level: 3, mode: "cloze_sentence" };
+    const step: Step = { id: "block:0:c1k:the:3:0", kind: "exercise", word: exerciseWord, level: 3, mode: "cloze_sentence" };
     expect((gateLevel3Mode(step, true) as { level: number }).level).toBe(3);
   });
 
   it("gateLevel3Mode passes an expose step through unchanged regardless of the flag", () => {
-    const step: Step = { kind: "expose", word: exerciseWord };
+    const step: Step = { id: "expose:0:c1k:the", kind: "expose", word: exerciseWord };
     expect(gateLevel3Mode(step, false)).toEqual(step);
   });
 });

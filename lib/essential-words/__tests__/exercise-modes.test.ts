@@ -3,6 +3,7 @@ import {
   selectMode,
   modeHasData,
   MODE_REQUIRED_FIELD,
+  level1ModesFor,
   type EssentialWordMode,
 } from "../exercise-modes";
 import type { EssentialWordQueueItem } from "../queue";
@@ -40,9 +41,9 @@ describe("selectMode — tiers", () => {
       const mode = selectMode(item("learning", entry(), reps));
       expect([
         "recognize_translation",
-        "recognize_meaning",
         "recognize_audio",
-      ]).toContain(mode);
+        "recognize_cloze",
+      ].filter((m) => modeHasData(entry(), m as EssentialWordMode))).toContain(mode);
     }
   });
 
@@ -64,12 +65,30 @@ describe("selectMode — tiers", () => {
   it("uses recognition for tender reviews (repetitions <= 2)", () => {
     for (let reps = 0; reps <= 2; reps++) {
       const mode = selectMode(item("review", entry(), reps));
-      expect([
-        "recognize_translation",
-        "recognize_meaning",
-        "recognize_audio",
-      ]).toContain(mode);
+      expect(level1ModesFor(entry()).filter((m) => modeHasData(entry(), m))).toContain(mode);
     }
+  });
+
+  it("offers at least two level-1 modes for every dataset word", async () => {
+    const { loadEssentialWords } = await import("../data");
+    const words = loadEssentialWords();
+    const failing = words.filter((word) => {
+      const modes = level1ModesFor(word).filter((mode) => modeHasData(word, mode));
+      return modes.length < 2;
+    });
+    expect(
+      failing.map((w) => w.word),
+      `Words with fewer than two level-1 modes: ${failing.slice(0, 10).map((w) => w.word).join(", ")}`,
+    ).toEqual([]);
+  });
+
+  it("falls back to recognize_meaning when translation is missing", () => {
+    const noTranslation = entry({ translation: undefined });
+    const seen = new Set<EssentialWordMode>();
+    for (let reps = 0; reps <= 5; reps++) {
+      seen.add(selectMode(item("learning", noTranslation, reps)));
+    }
+    expect(seen.has("recognize_meaning")).toBe(true);
   });
 
   it("uses dictation, weak form, or cloze for middle reviews (3-5)", () => {
@@ -97,20 +116,21 @@ describe("selectMode — rotación", () => {
     expect(selectMode(it1)).toBe(selectMode(it1));
   });
 
-  it("varies the tender mode as repetitions advance (meaning is no longer dead code)", () => {
+  it("varies the tender mode as repetitions advance", () => {
     const seen = new Set<EssentialWordMode>();
-    // La rotación avanza con repetitions; el tier tender se corta en 2, así que
-    // se recorre el ciclo completo con kind 'learning', que usa el mismo set.
     for (let reps = 0; reps <= 5; reps++) {
       seen.add(selectMode(item("learning", entry(), reps)));
     }
-    expect(seen).toEqual(
-      new Set([
-        "recognize_translation",
-        "recognize_meaning",
-        "recognize_audio",
-      ]),
-    );
+    expect(seen).toEqual(new Set(["recognize_translation", "recognize_audio"]));
+  });
+
+  it("includes recognize_cloze in rotation for functional words with a candidate", () => {
+    const pronoun = item("learning", entry({ word: "i", pos: "pronoun", example_sentence: "I am ready now." }), 0);
+    const modes = new Set<EssentialWordMode>();
+    for (let reps = 0; reps <= 8; reps++) {
+      modes.add(selectMode({ ...pronoun, repetitions: reps }));
+    }
+    expect(modes.has("recognize_cloze")).toBe(true);
   });
 
   it("varies the middle mode across repetitions", () => {
@@ -128,11 +148,9 @@ describe("selectMode — anti-repetición (previousMode)", () => {
     const chosen = selectMode(target);
     const avoided = selectMode(target, chosen);
     expect(avoided).not.toBe(chosen);
-    expect([
-      "recognize_translation",
-      "recognize_meaning",
-      "recognize_audio",
-    ]).toContain(avoided);
+    expect(["recognize_translation", "recognize_audio", "recognize_cloze"].filter(
+      (m) => modeHasData(entry(), m as EssentialWordMode),
+    )).toContain(avoided);
   });
 
   it("repeats the mode when it is the only usable candidate", () => {
@@ -225,6 +243,7 @@ describe("selectMode — fallbacks", () => {
         "dictation_sentence",
         "recall_translation",
         "recognize_audio",
+        "recognize_cloze",
         "recognize_meaning",
         "recognize_translation",
         "speak_sentence",

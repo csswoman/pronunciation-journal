@@ -28,6 +28,7 @@ import {
   nextStep as planNextStep,
   applyResult as planApplyResult,
   deriveCounts as derivePlanCounts,
+  countScheduledSteps,
   removeWord as removeWordFromPlan,
   appendWords as appendWordsToPlan,
   deferWordToFinalVerification,
@@ -313,7 +314,13 @@ export function useEssentialWordsSession() {
 
   const beginSession = useCallback(() => {
     if (phase !== "ready") return;
-    const total = counts.newRemaining + counts.learningRemaining + counts.reviewRemaining;
+    // `counts` is word-oriented copy for the ready screen. The progress
+    // chrome is step-oriented, so initialize it from the session plan itself.
+    const total = compatModeRef.current
+      ? compatQueue.length - compatIndex
+      : planState
+        ? countScheduledSteps(planState)
+        : 0;
     sessionActiveRef.current = true;
     seenStepIdsRef.current.clear();
     setSessionProgress({ current: 1, total: Math.max(total, 1) });
@@ -323,7 +330,7 @@ export function useEssentialWordsSession() {
       return;
     }
     setPhase(currentStep && currentStep.kind === "expose" ? "study" : "speak");
-  }, [phase, compatQueue, compatIndex, currentStep, counts]);
+  }, [phase, compatQueue, compatIndex, currentStep, planState]);
 
   const submitGrade = useCallback(
     async (quality: number, extras?: GradeExtras, expectedStepId?: string) => {
@@ -423,6 +430,13 @@ export function useEssentialWordsSession() {
       setCompatIndex(nextIndex);
       setCompatStepId(nextCompatStepId(newQueue[nextIndex]));
       setCounts(deriveCounts(newQueue, nextIndex));
+      if (phase === "done") {
+        // “Aprender 10 nuevas más” starts a distinct extra session. Its
+        // counter must not inherit the completed session's seen steps.
+        sessionActiveRef.current = true;
+        seenStepIdsRef.current.clear();
+        setSessionProgress({ current: 1, total: Math.max(newQueue.length - nextIndex, 1) });
+      }
       setPhase(newQueue[nextIndex].kind === "new" ? "study" : "speak");
       return;
     }
@@ -440,6 +454,13 @@ export function useEssentialWordsSession() {
     const nextPlanState = appendWordsToPlan(planState, batch, Date.now());
     setPlanState(nextPlanState);
     setCounts(derivePlanCounts(nextPlanState));
+    if (phase === "done") {
+      // The completed blocks remain in the plan for learning history, but the
+      // visible progress begins again for this newly requested batch.
+      sessionActiveRef.current = true;
+      seenStepIdsRef.current.clear();
+      setSessionProgress({ current: 1, total: Math.max(countScheduledSteps(nextPlanState), 1) });
+    }
     if (!currentStep) {
       const next = planNextStep(nextPlanState, wordsByIdRef.current);
       setCurrentStep(next);
@@ -545,11 +566,25 @@ export function useEssentialWordsSession() {
   useEffect(() => {
     if (!sessionActiveRef.current || !currentStepId || !sessionProgress) return;
     if (seenStepIdsRef.current.has(currentStepId)) return;
+    // The plan expands a word into several learning actions, and a failed
+    // action is deliberately reinserted. Keep the denominator tied to the
+    // actual remaining plan so the counter never runs past its advertised end.
+    const completedBeforeCurrent = seenStepIdsRef.current.size;
+    const remainingIncludingCurrent = compatModeRef.current
+      ? compatQueue.length - compatIndex
+      : planState
+        ? countScheduledSteps(planState)
+        : 0;
     seenStepIdsRef.current.add(currentStepId);
     setSessionProgress((prev) =>
-      prev ? { ...prev, current: seenStepIdsRef.current.size } : prev,
+      prev
+        ? {
+            current: seenStepIdsRef.current.size,
+            total: Math.max(prev.total, completedBeforeCurrent + remainingIncludingCurrent),
+          }
+        : prev,
     );
-  }, [currentStepId, sessionProgress]);
+  }, [compatIndex, compatQueue.length, currentStepId, planState, sessionProgress]);
 
   const studyContext =
     phase === "study" && planState && gatedStep?.kind === "expose"

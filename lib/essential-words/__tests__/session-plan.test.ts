@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createSessionPlan, nextStep, applyResult } from "../session-plan";
+import { appendWords, countScheduledSteps, createSessionPlan, nextStep, applyResult, deferWordToFinalVerification } from "../session-plan";
 import type { EssentialWord } from "../types";
 import { essentialWordId } from "../types";
 
@@ -54,6 +54,48 @@ describe("session-plan — exposure precedes practice within a block", () => {
   it("emits all exposure steps for a 3-word block before any exercise step", () => {
     const { log } = drain(words(3), 1, () => true, 3);
     expect(log.map((l) => l.step.kind)).toEqual(["expose", "expose", "expose"]);
+  });
+});
+
+describe("session-plan — scheduled step count", () => {
+  it("counts every action the learner will see, not only the number of words", () => {
+    const state = createSessionPlan(words(3), 1);
+
+    // 3 exposures + 3 in-block exercises per word + 3 final-round exercises.
+    expect(countScheduledSteps(state)).toBe(15);
+  });
+
+  it("keeps a failed action in the schedule until its retry is completed", () => {
+    const ws = words(3);
+    const allWords = wordMap(ws);
+    let state = createSessionPlan(ws, 1);
+
+    for (let i = 0; i < 3; i++) {
+      const exposure = nextStep(state, allWords);
+      expect(exposure?.kind).toBe("expose");
+      state = applyResult(state, { wordId: essentialWordId(exposure!.word.word), level: 1, correct: true }, "expose");
+    }
+
+    const exercise = nextStep(state, allWords);
+    expect(exercise?.kind).toBe("exercise");
+    const beforeFailure = countScheduledSteps(state);
+    state = applyResult(state, { wordId: essentialWordId(exercise!.word.word), level: 1, correct: false });
+
+    // The just-failed action is still pending as a retry, rather than silently
+    // disappearing from the session total.
+    expect(countScheduledSteps(state)).toBe(beforeFailure);
+  });
+
+  it("counts only the added batch after the preceding plan is complete", () => {
+    const firstBatch = words(3);
+    const { finalState } = drain(firstBatch, 1, () => true);
+    const extraBatch = words(3).map((entry, index) => ({ ...entry, word: `extra${index + 1}` }));
+
+    const extended = appendWords(finalState, extraBatch, 2);
+
+    // The old completed block is kept as history, but does not enter the
+    // schedule for the extra session.
+    expect(countScheduledSteps(extended)).toBe(15);
   });
 });
 
@@ -176,5 +218,45 @@ describe("session-plan — edge cases", () => {
   it("N=0 (empty word list): nextStep returns null immediately", () => {
     const state = createSessionPlan([], 1);
     expect(nextStep(state, new Map())).toBeNull();
+  });
+});
+
+describe("session-plan — deferWordToFinalVerification (Omitir)", () => {
+  it("marks exposed, skips in-block practice, and moves the word to the end of the final queue", () => {
+    const ws = words(3);
+    const allWords = wordMap(ws);
+    let state = createSessionPlan(ws, 1);
+    const first = nextStep(state, allWords);
+    expect(first?.kind).toBe("expose");
+    const omittedId = essentialWordId(first!.word.word);
+
+    state = deferWordToFinalVerification(state, omittedId);
+    expect(state.claimedKnownIds.has(omittedId)).toBe(true);
+    expect(state.blocks[0].exposed.has(omittedId)).toBe(true);
+    expect(state.blocks[0].levelReached[omittedId]).toBe(3);
+    expect(state.finalRoundQueue.at(-1)).toBe(omittedId);
+
+    // Remaining exposures, then in-block exercises never include the omitted word.
+    const log: string[] = [];
+    for (let i = 0; i < 40; i++) {
+      const step = nextStep(state, allWords);
+      if (!step) break;
+      if (step.kind === "expose") {
+        log.push(`expose:${essentialWordId(step.word.word)}`);
+        state = applyResult(state, { wordId: essentialWordId(step.word.word), level: 1, correct: true }, "expose");
+        continue;
+      }
+      const id = essentialWordId(step.word.word);
+      const isFinal = step.id.startsWith("final:");
+      if (!isFinal) {
+        expect(id).not.toBe(omittedId);
+      }
+      log.push(`${isFinal ? "final" : "ex"}:${id}:${step.level}`);
+      state = applyResult(state, { wordId: id, level: step.level, correct: true });
+    }
+
+    const finals = log.filter((l) => l.startsWith("final:"));
+    expect(finals.at(-1)).toBe(`final:${omittedId}:3`);
+    expect(finals.filter((l) => l.includes(omittedId))).toHaveLength(1);
   });
 });

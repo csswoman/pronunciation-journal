@@ -2,7 +2,7 @@
 
 // Thin Core-1000 wrapper over the source-agnostic <StudyCard>: maps a EssentialWord
 // to the shared StudyCardModel and wires its three listen targets to TTS.
-// Presentation lives in components/practice/study-card/StudyCard.tsx.
+// Wrapped in <SessionSurface> for a single study card on the immersive screen.
 
 import { speak } from '@/lib/phoneme-practice/tts'
 import type { EssentialWord } from '@/lib/essential-words/types'
@@ -11,14 +11,16 @@ import {
   weakFormPhrase,
 } from '@/lib/practice/study-card/model'
 import { StudyCard, type ListenTarget } from '@/components/practice/study-card/StudyCard'
+import { SessionSurface } from './session-chrome'
 
 interface Props {
   entry: EssentialWord
+  contextLine?: string
   onContinue: () => void
-  onArchive: () => void
+  onOmit: () => void
 }
 
-export function WordStudyCard({ entry, onContinue, onArchive }: Props) {
+export function WordStudyCard({ entry, contextLine, onContinue, onOmit }: Props) {
   const model = essentialWordToStudyCard(entry)
 
   const onListen = (target: ListenTarget) => {
@@ -28,11 +30,15 @@ export function WordStudyCard({ entry, onContinue, onArchive }: Props) {
   }
 
   return (
-    <StudyCard
-      model={model}
-      onContinue={onContinue}
-      onArchive={onArchive}
-      onListen={onListen}
-    />
+    <SessionSurface className="w-full gap-layout-stack">
+      <StudyCard
+        model={model}
+        variant="immersive"
+        contextLine={contextLine}
+        onContinue={onContinue}
+        onOmit={onOmit}
+        onListen={onListen}
+      />
+    </SessionSurface>
   )
 }
