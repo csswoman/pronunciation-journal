@@ -1,9 +1,12 @@
 import type { ExecutionContext } from "../execution-context";
 import { learningItemId } from "../skill-item";
 import { essentialWordId, type EssentialWord } from "../types";
+import { provisionalDueAt } from "../verification/provisional-intervals";
 import type { BaseSkill, LearningItem } from "../verification/types";
 
 export const PLACEMENT_POLICY_VERSION = "band-v1";
+/** Provisional: se calibra en la Fase 8. */
+export const DEFAULT_CONVERSIONS_PER_DAY = 8;
 
 const HIGH_CONFIDENCE_THRESHOLD = 0.8;
 const BORDERLINE_CONFIDENCE_THRESHOLD = 0.5;
@@ -66,6 +69,33 @@ export function planInferences(
       }));
     });
   });
+}
+
+/**
+ * Convierte inferidos en provisionales activos, con límite diario y
+ * vencimientos distribuidos. Sin este límite, la colocación podría sembrar
+ * cientos de revisiones sincronizadas en la misma ventana de 7 a 21 días.
+ *
+ * La inferencia se conserva como telemetría: deja de controlar el schedule,
+ * pero permite recalibrar la política de banda después de verificaciones.
+ */
+export function convertInferences(
+  items: LearningItem[],
+  limit: number,
+  now: Date,
+): LearningItem[] {
+  return items
+    .filter((item) => item.placementInference && item.schedule.kind === "none")
+    .slice(0, limit)
+    .map((item) => ({
+      ...item,
+      schedule: {
+        kind: "provisional" as const,
+        dueAt: provisionalDueAt("inference", item.id, now).toISOString(),
+        source: "placement-inference" as const,
+        evidenceConfidence: item.placementInference!.confidence,
+      },
+    }));
 }
 
 function confidenceScore(result: Pick<BandResult, "attempted" | "correct">): number {
