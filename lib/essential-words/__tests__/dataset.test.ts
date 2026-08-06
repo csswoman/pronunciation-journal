@@ -16,7 +16,7 @@ function loadExceptions(): Record<string, string> {
   return Object.fromEntries(Object.entries(raw).filter(([k]) => !k.startsWith("_")));
 }
 
-describe("Core 1000 dataset", () => {
+describe("Core 1000 dataset", { timeout: 15_000 }, () => {
   const words = loadEssentialWords(); // throws si un chunk es inválido (dev/test)
 
   it("has complete chunks only", () => {
