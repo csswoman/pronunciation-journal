@@ -3200,8 +3200,31 @@ export interface NewWordCandidate {
   rank: number;
 }
 
+export interface ForecastSessionCapacity {
+  sessionOffset: number; // 1..8, solo sesiones activas
+  availableSeconds: number;
+  listeningSeconds: number;
+  productionSeconds: number;
+}
+
+export interface CapacityReservation {
+  itemId: string;
+  source: "pending-base" | "placement" | "usage" | "new-word";
+  skill: Skill;
+  deadlineSession: number;
+  estimatedSeconds: number;
+}
+
+export interface ForecastCapacityDemand {
+  itemId: string;
+  skill: Skill;
+  deadlineSession: number;
+  estimatedSeconds: number;
+}
+
 export interface DailyPlanningInput {
   dailyBudgetSeconds: number;
+  configuredNewWordLimit: number;
   mandatory: {
     learning: PlannedItem[];
     overdue: PlannedItem[];
@@ -3223,10 +3246,17 @@ export interface DailyPlanningInput {
     newWords: number;
   };
   previousMode: "normal" | "recovery";
+  capacityForecast: {
+    sessions: ForecastSessionCapacity[];
+    mandatory: ForecastCapacityDemand[];
+    dueReservations: CapacityReservation[];
+    futureReservations: CapacityReservation[];
+  };
 }
 
 export interface DailyAllowance {
   newWords: number;
+  capacitySafeNewWords: number;
   baseSkillActivations: number;
   usageActivations: number;
   newWordMeaningActivations: number;
@@ -3249,6 +3279,7 @@ export interface DailyPlan {
   baseSkillSelected: ActivationCandidate[];
   usageSelected: ActivationCandidate[];
   newWordsSelected: NewWordCandidate[];
+  futureReservations: CapacityReservation[];
 }
 ```
 
@@ -3267,6 +3298,7 @@ describe("unidades del plan diario", () => {
   it("separa base, meaning implícito y usage", () => {
     const allowance: DailyAllowance = {
       newWords: 3,
+      capacitySafeNewWords: 3,
       baseSkillActivations: 2,
       newWordMeaningActivations: 3,
       usageActivations: 1,
@@ -6147,34 +6179,42 @@ simulación usa su calendario semillado. Si el runtime no puede proyectar ocho
 sesiones, el ledger devuelve `insufficient-forecast` y bloquea nuevas palabras
 y conversiones placement, pero sigue sirviendo obligatorios y base pendiente.
 
-Cada slot `s ∈ [0, 7]` contiene:
+Cada slot `s ∈ [1, 8]` contiene:
 
 ```ts
-interface ForecastSlot {
-  activeOffset: number;
-  projectedAt: string;
-  budgetSeconds: number;
-  reservedSecondsByModality: Record<AttemptModality, number>;
-  reservations: CapacityReservation[];
+interface ForecastSessionCapacity {
+  sessionOffset: number; // 1..8
+  availableSeconds: number;
+  listeningSeconds: number;
+  productionSeconds: number;
 }
 
-remainingSeconds(s) = budgetSeconds(s)
-  - sum(reservation.estimatedSeconds for reservation in s)
+interface CapacityReservation {
+  itemId: string;
+  source: "pending-base" | "placement" | "usage" | "new-word";
+  skill: Skill;
+  deadlineSession: number;
+  estimatedSeconds: number;
+}
 
-capacity(s, modality) = floor(
-  remainingSeconds(s) / estimatedSecondsByModality[modality]
-)
+interface ForecastCapacityDemand {
+  itemId: string;
+  skill: Skill;
+  deadlineSession: number;
+  estimatedSeconds: number;
+}
 ```
 
-`remainingSeconds` es compartido: las capacidades por modalidad son vistas del
-mismo presupuesto y nunca se suman entre sí. Una reserva cabe si su coste es
-finito, no negativo y `cost <= remainingSeconds(s)`.
+`availableSeconds` es compartido. Una reserva siempre lo descuenta y, si es
+listening o production, descuenta además su carril. Los carriles nunca amplían
+el presupuesto compartido. Una reserva cabe únicamente si su coste es finito,
+no negativo y cabe en ambos saldos aplicables.
 
 La entrada deja de mezclar categorías bajo `mandatory` o `candidates`:
 
 ```ts
 interface ForecastPlanningInput {
-  activeSessions: readonly ForecastSlot[]; // exactamente 8
+  activeSessions: readonly ForecastSessionCapacity[]; // exactamente 8
   mandatoryReviews: readonly PlannedItem[]; // FSRS Review
   learningSteps: readonly PlannedItem[]; // New, Learning, Relearning
   pendingBaseSkills: readonly ActivationCandidate[];
@@ -6202,17 +6242,23 @@ El ledger se construye y reserva en este orden estable:
 8. palabras nuevas, únicamente con capacidad residual y reserva atómica.
 
 Dentro de una prioridad se usa earliest-deadline-first y luego `itemId`. Cada
-reserva lleva `kind`, `itemId`, `wordId`, `modality`, `estimatedSeconds`,
-`earliestActiveOffset`, `latestActiveOffset` y `sourcePolicyVersion`.
+reserva lleva `itemId`, `source`, `skill`, `deadlineSession` y
+`estimatedSeconds`; el slot confirmado queda reflejado en `deadlineSession`.
 
 Para una palabra nueva se clona el ledger y se intenta, como una transacción:
 
-1. reservar introducción + meaning en slot `0`;
-2. reservar listening en el primer slot con capacidad entre `1` y `6`;
-3. reservar production en el primer slot con capacidad posterior a listening y
-   como máximo `7`;
-4. confirmar las tres reservas solo si todas caben; de lo contrario, revertir
-   la copia y no admitir la palabra.
+1. comprobar que introducción + meaning cabe en la sesión actual;
+2. reservar listening en el primer slot futuro con capacidad;
+3. reservar production en el primer slot posterior a listening y como máximo
+   en `sessionOffset = 8`;
+4. confirmar ambas reservas solo si las dos caben; de lo contrario, revertir la
+   copia y no admitir la palabra.
+
+El máximo diario queda subordinado al ledger:
+
+```text
+newWords = min(configuredNewWordLimit, capacitySafeNewWords)
+```
 
 Por tanto, toda palabra admitida tiene listening y production reservados dentro
 de ocho sesiones activas. Un límite diario fijo puede coexistir como protección
@@ -6244,38 +6290,61 @@ aproximación.
 
 #### Gate de datos empíricos
 
-Costes y latencia se instrumentan uniendo `SrsReviewEvent.attemptLogId` con
-`AttemptLog.id`, deduplicando por intento y separando modalidad. El resultado
-por modalidad es:
+Implementación: `lib/essential-words/calibration/` (Task 8.8). La telemetría de
+calibración se **deriva** de `AttemptLog` + flags opcionales / `priorSchedule`
+(`toInteractionTelemetry`); no hay tabla Dexie/Supabase nueva. `userId` en
+`AttemptLogRecord` permite `minDistinctUsersPerModality`.
 
-```ts
-type CalibrationStatus = "ready" | "insufficient-data";
+**Separación de tiempos (nunca mezclar):**
 
-interface EmpiricalEstimate {
-  status: CalibrationStatus;
-  modality: AttemptModality;
-  sampleCount: number;
-  minimumSamples: 200;
-  statistic: "median-after-mad-filter";
-  value?: number;
-  datasetVersion: string;
-  fallbackVersion: string;
-}
+| Campo | Definición | Uso |
+| --- | --- | --- |
+| `latencyMs` | Ventana de respuesta relevante para Easy/Good. Sin carga previa, red, transición posterior ni background. | Dataset de latencia |
+| `interactionDurationMs` | Coste completo: presentación, audio, lectura, respuesta, feedback y transición de la interacción. | Dataset de coste |
+
+Invariante: `interactionDurationMs >= latencyMs` en interacciones válidas
+(salvo fallo técnico documentado). `buildAssessment` ya aplica
+`max(context, latencyMs)`.
+
+**Autonomía (`isAutonomousLatencySample`) — solo latencia Easy/Good:**
+
+```
+correct
+&& !usedHints && !rescued && !acceptedVariant && !firstTryFailed
+&& freeAudioReplays === 0
+&& priorScheduleState === "Review"
+&& source !== "synthetic"
+&& timing válido && !technicalFailure && !interrupted && !debugSession
 ```
 
-Una muestra autónoma exige revisión programada sobre
-`priorSchedule.state === "Review"`, corrección, cero pistas, rescate, variante,
-primer fallo y replays. `interactionDurationMs` alimenta costes y `latencyMs`
-alimenta Easy/Good; nunca se mezclan. Por modalidad:
+Coste puede incluir correctas e incorrectas (ambas consumen tiempo) y practice
+con hints si el evento es elegible; excluye abandonos técnicos, debug,
+background/interrupted, duplicados, duraciones inválidas y `source: "synthetic"`.
 
-1. calcular mediana `m` y `MAD = median(|x - m|)`;
-2. conservar `|x - m| <= 3 × 1,4826 × MAD` (si `MAD = 0`, conservar todos);
-3. usar la mediana del conjunto filtrado;
-4. exigir al menos 200 muestras válidas antes y después del filtro.
+**Política versionada (`CalibrationDataPolicy` v1):**
 
-Con menos de 200, el producto puede seguir usando el fallback versionado, pero
-la calibración devuelve `insufficient-data` y la Fase 8 no puede cerrarse. Una
-muestra generada por simulación nunca cambia ese estado a `ready`.
+- `minSamplesPerModality = 200`
+- `minDistinctUsersPerModality = 20`
+- estadística: mediana tras filtro MAD (`multiplier = 3`, escala 1,4826)
+- si `MAD = 0`, conservar todas las finitas
+- no usar media aritmética como estimador del gate
+
+**Resultado discriminado (`evaluateCalibrationGate`):**
+
+```ts
+type CalibrationDatasetStatus =
+  | { status: "ready"; cost: CalibrationSummary; latency: CalibrationSummary }
+  | { status: "insufficient-data"; missing: CalibrationGap[] };
+```
+
+`insufficient-data` **nunca** se convierte en `ready` vía fallback. El producto
+puede seguir usando `DEFAULT_COST_FALLBACK` / `DEFAULT_LATENCY_FALLBACK`
+(`provenance: "fallback"`) mientras el gate no esté ready. Una cohorte
+`source: "synthetic"` (simulación) nunca satisface el gate empírico.
+
+**Desbloqueo posterior:** 8.11 solo fija costes/latencia cuando el gate es
+`ready` por modalidad; 8.12 exige dataset empírico listo además de C1–C11.
+No modificar umbrales C1–C11 en esta instrumentación.
 
 ### Task 8.5: Modelo determinista de C11
 
@@ -6305,10 +6374,15 @@ Implementar la fórmula anterior sin tocar sus límites. Tests obligatorios:
 ### Task 8.6: Forecast y ledger de ocho sesiones
 
 **Files:**
-- Create: `lib/essential-words/capacity-ledger.ts`
+- Create: `lib/essential-words/capacity-forecast.ts`
+- Create: `lib/essential-words/admission-control.ts`
+- Create: `lib/essential-words/future-capacity.ts`
 - Modify: `lib/essential-words/planning-types.ts`
 - Modify: `lib/essential-words/daily-budget.ts`
-- Test: `lib/essential-words/__tests__/capacity-ledger.test.ts`
+- Modify: `lib/essential-words/simulation/run-simulation.ts`
+- Create: `lib/essential-words/simulation/capacity.ts`
+- Create: `lib/essential-words/simulation/capacity-state.ts`
+- Test: `lib/essential-words/__tests__/capacity-forecast.test.ts`
 - Test: `lib/essential-words/__tests__/admission-control.test.ts`
 
 Implementar slots, prioridades, earliest-deadline-first y transacciones de
@@ -6342,22 +6416,23 @@ Eliminar el límite diario como condición suficiente. Tests obligatorios:
 ### Task 8.8: Telemetría y dataset empírico
 
 **Files:**
+- Create: `lib/essential-words/calibration/types.ts`
+- Create: `lib/essential-words/calibration/policy.ts`
+- Create: `lib/essential-words/calibration/telemetry.ts`
 - Create: `lib/essential-words/calibration/dataset.ts`
 - Create: `lib/essential-words/calibration/robust-estimate.ts`
-- Modify: `lib/essential-words/cost-estimate.ts`
-- Modify: `lib/essential-words/verification/latency.ts`
+- Modify: `lib/essential-words/cost-estimate.ts` (documentar fallback; no sustituir valores)
+- Modify: `lib/essential-words/verification/latency.ts` (idem)
 - Test: `lib/essential-words/calibration/__tests__/dataset.test.ts`
 - Test: `lib/essential-words/calibration/__tests__/robust-estimate.test.ts`
+- Test: `lib/essential-words/calibration/__tests__/filters-and-fallback.test.ts`
 
-Tests obligatorios:
+Persistencia: opción A — derivar desde `AttemptLog` (sin tabla nueva).
 
-- deduplicación por intento y separación por modalidad;
-- exclusión de muestras asistidas y no programadas;
-- duración y latencia producen datasets diferentes;
-- MAD filtra outliers determinísticamente;
-- `199` muestras devuelven `insufficient-data`; `200` pueden devolver `ready`;
-- un dataset sintético nunca satisface el gate empírico;
-- fallback incluye versión y no se presenta como calibración final.
+Tests obligatorios (A–R del brief): separación duration/latency; invariante
+`duration >= latency`; coste vs autonomía; exclusiones quality/synthetic;
+umbral 200×20; MAD robusto; fallback versionado; serialización sin contenido
+pedagógico; instrumentación sin cambiar grading/schedule.
 
 ### Task 8.9: Recalibración estructural
 

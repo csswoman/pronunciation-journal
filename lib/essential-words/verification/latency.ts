@@ -1,12 +1,18 @@
 import type { AttemptModality, SrsReviewEvent } from "./types";
 
-/** Provisional defaults; phase 8 calibrates them against production evidence. */
+/**
+ * Versioned Easy/Good latency fallbacks (ms) per modality.
+ * Empirical replacement is gated by calibration/dataset.ts (Task 8.8/8.11).
+ * Values are unchanged here — only provenance/versioning is clarified.
+ */
 export const LATENCY_THRESHOLDS_MS: Record<AttemptModality, number> = {
   recognition: 8_000,
   production: 25_000,
   listening: 30_000,
   pronunciation: 20_000,
 };
+
+export const LATENCY_FALLBACK_VERSION = "latency-fallback-v1";
 
 const MODALITIES: AttemptModality[] = [
   "recognition",
@@ -38,6 +44,9 @@ function median(values: number[]): number {
 /**
  * Calibrates each modality from unassisted successful SRS events. Multiple
  * effects from one interaction share an attempt ID and count as one sample.
+ *
+ * Uses latencyMs only (never interactionDurationMs). Temporary mean-free
+ * median helper; Task 8.11 consumes the empirical gate when ready.
  */
 export function calibrateLatencyThresholds(
   events: SrsReviewEvent[],

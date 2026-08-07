@@ -8,12 +8,19 @@ const MODALITIES: AttemptModality[] = [
   "pronunciation",
 ];
 
+/**
+ * Versioned production fallback for session costs (seconds).
+ * Empirical replacement is gated by calibration/dataset.ts (Task 8.8/8.11).
+ * provenance remains "fallback" until an empirical gate returns ready.
+ */
 export const DEFAULT_SECONDS_BY_MODALITY: Record<AttemptModality, number> = {
   recognition: 12,
   production: 25,
   listening: 20,
   pronunciation: 30,
 };
+
+export const COST_FALLBACK_VERSION = "cost-fallback-v1";
 
 export function estimateItemsSeconds(
   items: PlannedItem[],
@@ -26,6 +33,10 @@ export function estimateItemsSeconds(
  * Estimates session costs from interactions, rather than SRS events. A single
  * production interaction can update multiple learning items, but it still
  * consumes time only once.
+ *
+ * Uses interactionDurationMs (full interaction cost), never latencyMs.
+ * Mean is retained as the temporary estimator until Task 8.11 switches to the
+ * median-after-MAD empirical gate when status === "ready".
  */
 export function estimateFromAttempts(
   attempts: AttemptLog[],
