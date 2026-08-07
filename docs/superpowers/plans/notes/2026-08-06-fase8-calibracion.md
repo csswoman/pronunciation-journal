@@ -1,110 +1,95 @@
-# Fase 8 — Task 8.9c: feasibility objetivo + fairness pending-base
+# Fase 8 — Task 8.9d: feasibility multidimensional (segundos + slots)
 
 Fecha: 2026-08-07
 
-Estado: **rates corregidos; fairness integrada; C8/C9 siguen rojos en
-perfiles aplicables**. Target feasibility steady = `feasible` con margen,
-pero C8/C9 no pasan → **seguir diagnóstico de scheduler**. No se inicia 8.10.
-No se declara 8.9 estructuralmente cerrada.
+Estado: **DETENER — C8/C9 matemáticamente incompatibles con el contrato
+actual de `maxBaseSkillActivationsPerSession=4`.** No se inicia 8.10.
+No se elige automáticamente opción A ni B.
 
-## Baseline 8.9b
+## Contrato real de `maxBaseSkillActivationsPerSession`
 
-| Perfil | C8 | C9 | C11 |
-|---|---|---|---|
-| steady | ✗ ~0.10 | ✗ 16 | ✓ |
-| intermittent | n/a* | ✗ 55 | ✗ |
-| bursty | n/a* | ✓ 8 | ✗ |
-| beginner | n/a* | ✗ 72 | ✗ |
-| advanced | n/a* | ✗ 12–18 | ✓ |
+Documentado en `describeMaxBaseSkillActivationsContract()`
+(`base-throughput-contract-v1`):
 
-\*C8 solo aplica a perfil **constante** (`steady`) según tabla de aceptación
-de la spec. No aplicable ≠ PASS/FAIL.
+| Pregunta | Respuesta (comportamiento LIVE) |
+|---|---|
+| A. ¿Hard cap? | **Sí**, techo de `selectActivations` para pending-base |
+| B. ¿Safety/default? | Origen Task 8.9 como knob estructural; hoy se aplica |
+| C. ¿L+P conjunto? | **Sí**, un solo contador |
+| D. ¿Placement consume el cap? | **No** en conversión; sí después al activar L/P |
+| E. ¿Learning steps? | **No** — van por `selectMandatory` |
+| Excepción | `dueBaseCount` puede **subir** el techo para due ya reservados |
 
-## Cambios 8.9c
+Para demanda C8 de nuevas palabras, feasibility modela
+`serviceCapacity = maxBase` (sin due override): los due excepcionales sirven
+deuda heredada, no crean capacidad para 12 activaciones/sesión nuevas.
 
-### Rates
-- `actualArrival` = trabajo realmente admitido (envelope × admitted).
-- `requiredArrival` = `ceil(target × 0.60) × envelopeSecondsPerWord` cuando C8
-  aplica. Con target=10 y envelope=79 → **474 s/sesión**.
-- No se usa admitted words para required arrival.
+## Demanda derivada (no hardcode)
 
-### Feasibility
-- `actualStatus` / `targetStatus`: `feasible` | `marginal` | `infeasible`.
-- Política versionada `marginal-feasibility-v1` (margen < 5% del presupuesto).
-- Dump advanced incluye placement real (no forzado a 0).
+```
+requiredNewWords = ceil(10 × 0.60) = 6
+requiredBaseSkills = [listening, production]  // contrato C9
+requiredBase/session = 6 × 2 = 12
+requiredBase/horizonte8 = 12 × 8 = 96
+serviceBase/horizonte8 = 4 × 8 = 32
+96 > 32 ⇒ baseActivations.infeasible ⇒ overall.infeasible
+```
 
-### Fairness pending-base (`pending-base-fairness-v1`)
-Prioridad dentro de pending-base:
-1. deadline C9 más próximo (`remainingSessions`);
-2. mayor `waitSessions`;
-3. `serviceUrgency`;
-4. desempate `itemId`.
+Segundos pueden seguir `feasible` — **no** salvan overall.
 
-No puede saltar mandatory, exceder presupuesto ni consumir hard reserves.
-
-### Gate provisional
-No activar listening/production mientras meaning es provisional
-`placement-inference` aún no due (evita reescribir el schedule al observar
-meaning). Tradeoff: advanced C9 empeora (más espera en palabras de placement).
-
-## Resultado post-8.9c
-
-| Perfil | C1–C5 | C6 | C7 | C8 | C9 | C10 | C11 |
-|---|---|---|---|---|---|---|---|
-| steady | ✓ | ✗ ~0.37 | ✓ | ✗ ~0.109 | ✗ 15 | ✓ | ✓ ~0.863 |
-| intermittent | ✓ | ✓ | ✓ | n/a | ✗ 55 | ✓ | ✗ ~0.778 |
-| bursty | ✓ | ✓ | ✓ | n/a | ✓ 8 | ✓ | ✗ ~0.776 |
-| beginner | ✓ | ✓ | ✓ | n/a | ✗ 72 | ✓ | ✗ ~0.662 |
-| advanced | ✓ | ✗ ~0.60 | ✓ | n/a | ✗ 46 | ✓ | ✓ ~0.887 |
-
-## Steady rates / feasibility
+## Steady (hipótesis 96 vs 32)
 
 | Métrica | Valor |
 |---|---|
-| requiredArrival | 474 s/sesión |
-| actualArrival | ~83 s/sesión |
-| service | ~839 s/sesión |
-| mandatory horizonte / sesión | ~2811 / ~351 s |
-| target margin | ~50 s/sesión |
-| targetFeasibility | **feasible** (días infeasible ~26%) |
-| topBaseBlockingReason | `mandatory-capacity` |
-| capacitySafeNewWords avg | ~1.11 |
-| pendingBase avg count / oldest wait | ~4.4 / ~2.3 |
+| required new words/sesión | 6 |
+| required base/sesión | 12 |
+| base service cap/sesión | 4 |
+| served base/sesión (sim) | ~2.1 |
+| required over 8 (solo C8) | **96** |
+| capacity over 8 | **32** |
+| seconds status | feasible |
+| base-slot status | **infeasible** |
+| overall target | **infeasible** |
+| worst rolling-window margin | −213 |
+| placement base demand | 0 |
 
-## Feasibility por perfil
+## Cinco perfiles (sin cambiar políticas)
 
-| Perfil | C8 applicable | target | actual | placement / base |
-|---|---|---|---|---|
-| steady | true | feasible | feasible | base~109s; placement n/a |
-| intermittent | false | not-applicable | feasible | base~166s |
-| bursty | false | not-applicable | feasible | base~116s |
-| beginner | false | not-applicable | feasible | base~100s |
-| advanced | false | not-applicable | feasible | **placement~630s**, demandSessions=167; base~147s |
+| Perfil | C8 | req base/s | cap | served | over8 req* | over8 cap | placement/s | worst window | seconds | slots | overall |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| steady | sí | 12 | 4 | ~2.1 | 96† / ~131* | 32 | 0 | −213 | feasible | **infeasible** | **infeasible** |
+| intermittent | n/a | 0 | 4 | ~1.6 | ~57* | 32 | 0 | −178 | feasible | infeasible | n/a |
+| bursty | n/a | 0 | 4 | ~1.9 | ~38* | 32 | 0 | −134 | feasible | infeasible | n/a |
+| beginner | n/a | 0 | 4 | ~0.6 | ~36* | 32 | 0 | −120 | feasible | infeasible | n/a |
+| advanced | n/a | 0 | 4 | ~2.7 | ~239* | 32 | **~23.3** | −875 | feasible | infeasible | n/a |
 
-## Efecto fairness / hipótesis C8
+\*Incluye pending (+ placement). †Hipótesis pura C8→C9 sin deuda heredada.
 
-- C9 steady: 16 → **15** (mejora marginal; sigue rojo).
-- C8 steady: 0.101 → **0.109** (mejora marginal; sigue rojo).
-- `capacitySafeNewWords` avg ~1.1 frente a required 6 → el horizonte sigue
-  saturado por mandatory + throughput cap, no solo por orden injusto.
-- Hipótesis “pending ineficiente bloquea admission pese a capacidad agregada”:
-  **parcialmente rechazada**. Hay capacidad agregada y target feasible, pero el
-  bloqueo dominante diagnosticado es `mandatory-capacity` / saturación de
-  servicio base (maxBase=4), no solo orden FIFO.
+## Efecto placement
 
-## C11 / lateness
+Advanced añade ~23 activaciones/sesión de reservas L/P de placement al
+numerador → bottleneck `placement` + `base-activation-slots`.
 
-Fórmula C11 sin cambios. Tras fairness:
-- steady/advanced siguen verdes;
-- intermittent/bursty/beginner siguen rojos (retención observada baja).
-Pendiente: lateness p50/p95/max por perfil (diagnóstico; no desiredRetention).
+## C11
+
+Sin cambios. Baseline 8.9c conservado.
 
 ## Adversariales
 
 11/11 correctos.
 
-## Cierre 8.9
+## Opciones de diseño (NO elegidas)
 
-target feasible + C8/C9 rojos con causa explicada (servicio/mandatory/
-throughput, no rates ficticios) → **no cerrar 8.9 estructuralmente**;
-continuar scheduler. **No 8.10.**
+**A.** `maxBase` es hard cap de producto.
+→ Spec C8≥0.60 + C9≤8 + target 10 es **incompatible** con service≤4.
+Requiere decisión de producto (bajar target/share, relajar C9, o aceptar
+cap más alto como política explícita).
+
+**B.** `maxBase` era safety/default.
+→ Tarea posterior: `dynamicBaseActivationAllowance` desde capacidad residual
+real, preservando C1–C5 y recovery. No subir el knobs en silencio aquí.
+
+## No hecho
+
+Sin subir/eliminar maxBase, sin cambiar admission/fairness para forzar verde,
+sin tocar C8/C9/presupuesto/MaturityPolicy/8.10.
