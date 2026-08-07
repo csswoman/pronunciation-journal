@@ -187,6 +187,25 @@ export function applyCompletedSession(
   const newWordIds = new Set(plan.newWordsSelected.map((item) => item.wordId));
   const baseIds = new Set(plan.baseSkillSelected.map((item) => item.itemId));
   const usageIds = new Set(plan.usageSelected.map((item) => item.itemId));
+  /**
+   * Task 8.9f — ownership fix. `itemsObservedBy` reprograma `meaning` como
+   * efecto lateral de completar listening/production (legítimo cuando
+   * meaning no tiene su propia completion esta sesión). Dos problemas
+   * distintos pueden aplicar FSRS dos veces al mismo item en una sesión:
+   * (a) meaning tiene su propia completion Y además un sibling la observa
+   *     — su propia completion debe ser la única fuente, nunca un sibling;
+   * (b) meaning NO tiene completion propia pero DOS siblings distintos la
+   *     observan en la misma sesión (p.ej. listening con scheduled-review
+   *     due hoy + production con activación base el mismo día) — sólo la
+   *     PRIMERA observación debe aplicarse; la segunda partiría ya del
+   *     resultingSchedule pisado por la primera, doble-contando growth.
+   * `settledItemIds` arranca con todo lo que tendrá completion propia esta
+   * sesión (reservado de antemano, sin importar el orden del loop) y crece
+   * con cada item efectivamente observado, para que ningún item se asiente
+   * más de una vez por sesión salvo por su propia completion.
+   */
+  const directlyCompletedItemIds = new Set(completions.map((completion) => completion.item.itemId));
+  const settledItemIds = new Set(directlyCompletedItemIds);
   let newWords = 0;
   let baseSkillActivations = 0;
   let usageActivations = 0;
@@ -196,7 +215,10 @@ export function applyCompletedSession(
   for (const completion of completions) {
     const word = world.words.get(completion.item.wordId);
     if (!word) throw new Error(`missing simulated word: ${completion.item.wordId}`);
-    const currentItems = itemsObservedBy(completion.item, word);
+    const currentItems = itemsObservedBy(completion.item, word).filter((item) => (
+      item.id === completion.item.itemId || !settledItemIds.has(item.id)
+    ));
+    for (const item of currentItems) settledItemIds.add(item.id);
     const current = findWordItem(word, completion.item.itemId);
     if (!current) throw new Error(`missing simulated item: ${completion.item.itemId}`);
     const record = completion.item.skill === "usage"
