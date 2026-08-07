@@ -112,8 +112,19 @@ export function collectMandatory(
   return result;
 }
 
-function baseCandidates(word: SimulatedWordState): ActivationCandidate[] {
+function baseCandidates(word: SimulatedWordState, now?: Date): ActivationCandidate[] {
   if (!word.introducedAt || word.meaning.schedule.kind === "none") return [];
+
+  // Completing listening/production observes meaning and can rewrite an unripe
+  // placement-inference provisional before it becomes due (Task 8.9c).
+  if (
+    word.meaning.schedule.kind === "provisional"
+    && word.meaning.schedule.source === "placement-inference"
+    && now
+    && new Date(word.meaning.schedule.dueAt) > now
+  ) {
+    return [];
+  }
 
   if (word.listening.schedule.kind === "none" && !word.listening.suspended) {
     return [{
@@ -152,7 +163,7 @@ export function collectCandidates(
   context: ExecutionContext,
 ): SimulationCandidates {
   const words = [...world.words.values()].sort((left, right) => left.rank - right.rank);
-  const baseSkillActivations = words.flatMap(baseCandidates);
+  const baseSkillActivations = words.flatMap((word) => baseCandidates(word, context.now));
   const usageActivations = words.flatMap((word): ActivationCandidate[] => {
     const eligibility = usageEligibility(
       [word.meaning, word.production],

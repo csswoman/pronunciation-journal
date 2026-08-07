@@ -50,6 +50,8 @@ export interface SimulationWorld {
   introducedWords: number;
   placementConversions: number;
   futureReservations: CapacityReservation[];
+  /** First active session where a base skill became eligible (Task 8.9c). */
+  baseEligibleSinceSession: Map<string, number>;
 }
 
 export interface SimulationOptions {
@@ -134,6 +136,7 @@ export function createInitialWorld(
     introducedWords: 0,
     placementConversions: 0,
     futureReservations: [],
+    baseEligibleSinceSession: new Map(),
   };
 }
 

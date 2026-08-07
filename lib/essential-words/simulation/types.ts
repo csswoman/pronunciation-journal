@@ -40,10 +40,27 @@ export interface SimulatedDay {
   expectedFsrsDebtSeconds: number;
   futureResidualSeconds: number;
   admissionDemandSeconds: number;
-  feasibilityStatus: "feasible" | "infeasible" | "n/a";
+  feasibilityStatus: "feasible" | "marginal" | "infeasible" | "n/a";
+  actualFeasibilityStatus?: "feasible" | "marginal" | "infeasible";
+  targetFeasibilityStatus?: "feasible" | "marginal" | "infeasible" | "n/a";
   serviceRateSeconds?: number;
+  /** @deprecated Prefer actualArrivalRateSeconds */
   arrivalRateSeconds?: number;
+  actualArrivalRateSeconds?: number;
+  requiredArrivalRateSeconds?: number;
   arrivalMinusServiceSeconds?: number;
+  targetMarginSeconds?: number | null;
+  c8CriterionApplicable?: boolean;
+  pendingBaseCount?: number;
+  oldestPendingWait?: number;
+  servedListening?: number;
+  servedProduction?: number;
+  capacitySafeNewWords?: number;
+  committedMandatorySeconds?: number;
+  committedBaseSeconds?: number;
+  committedPlacementSeconds?: number;
+  usageSeconds?: number;
+  topBaseBlockingReason?: string | null;
 }
 
 export interface SimulationResult {

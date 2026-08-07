@@ -1,4 +1,8 @@
 import { buildCapacityForecast, type CapacityForecast } from "./capacity-forecast";
+import {
+  rankPendingBaseCandidates,
+  toPendingBaseCandidate,
+} from "./pending-base-fairness";
 import type {
   ActivationCandidate,
   CapacityReservation,
@@ -6,6 +10,10 @@ import type {
   PlannedItem,
 } from "./planning-types";
 
+/**
+ * Orders pending-base candidates with C9 fairness (Task 8.9c).
+ * Due reservations still inform deadlineSession when present.
+ */
 export function orderDueReservationsFirst(
   candidates: ActivationCandidate[],
   dueReservations: CapacityReservation[],
@@ -14,11 +22,17 @@ export function orderDueReservationsFirst(
     reservation.itemId,
     reservation.deadlineSession,
   ]));
-  return [...candidates].sort((left, right) => {
-    const leftDeadline = deadlines.get(left.itemId) ?? Number.POSITIVE_INFINITY;
-    const rightDeadline = deadlines.get(right.itemId) ?? Number.POSITIVE_INFINITY;
-    return leftDeadline - rightDeadline;
+  const enriched = candidates.map((candidate) => {
+    const deadline = deadlines.get(candidate.itemId);
+    const waitFromDeadline = deadline !== undefined
+      ? Math.max(0, 8 - deadline)
+      : candidate.waitSessions ?? 0;
+    return toPendingBaseCandidate(candidate, {
+      waitSessions: Math.max(candidate.waitSessions ?? 0, waitFromDeadline),
+      deadlineSession: deadline ?? candidate.deadlineSession,
+    });
   });
+  return rankPendingBaseCandidates(enriched);
 }
 
 function pendingBaseReservations(

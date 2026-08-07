@@ -4,9 +4,18 @@ import { backlogSeconds, DEFAULT_RECOVERY_POLICY } from "../recovery-mode";
 import { buildSkillQueue } from "../skill-queue";
 import type { AttemptModality } from "../verification/types";
 import {
+  DEFAULT_SECONDS_BY_MODALITY,
+  estimateItemsSeconds,
+} from "../cost-estimate";
+import { buildActiveSimulatedDay } from "./active-day";
+import {
   applyCompletedSession,
   completePlannedSession,
 } from "./apply-session";
+import {
+  annotateBaseCandidatesWithWait,
+  clearServedBaseEligibility,
+} from "./base-wait";
 import {
   collectCandidates,
   collectMandatory,
@@ -17,7 +26,6 @@ import type {
   DeferredObservation,
   EligibilityObservation,
 } from "./criteria";
-import { buildActiveDayForecastTelemetry } from "./day-forecast-telemetry";
 import { emptyForecastTelemetry } from "./forecast-telemetry";
 import {
   createEligibilityAccumulator,
@@ -44,10 +52,6 @@ import {
   type SimulationOptions,
 } from "./state";
 import type { SimulatedDay, SimulationResult } from "./types";
-import {
-  DEFAULT_SECONDS_BY_MODALITY,
-  estimateItemsSeconds,
-} from "../cost-estimate";
 
 export const SIMULATION_COSTS: Record<AttemptModality, number> = {
   ...DEFAULT_SECONDS_BY_MODALITY,
@@ -136,8 +140,15 @@ export function runSimulation(
       .map((active, index) => (
         active && index > dayIndex ? dateAtDay(start, index) : null
       ))
-      .filter((date): date is Date => date !== null);
+      .filter((value): value is Date => value !== null);
     const dueReservations = beginActiveSessionReservations(world);
+    candidates = {
+      ...candidates,
+      baseSkillActivations: annotateBaseCandidatesWithWait(
+        candidates.baseSkillActivations,
+        world,
+      ),
+    };
     const planningInput: DailyPlanningInput = {
       dailyBudgetSeconds: options.dailyBudgetSeconds,
       configuredNewWordLimit: options.targetNewWords,
@@ -213,6 +224,10 @@ export function runSimulation(
       context,
       context.newId(),
     );
+    clearServedBaseEligibility(
+      world,
+      plan.baseSkillSelected.map((item) => item.itemId),
+    );
     const availableSeconds = Math.max(
       0,
       options.dailyBudgetSeconds
@@ -226,51 +241,30 @@ export function runSimulation(
     ));
     deferredObservations.push(...observeDeferred(mandatory, plan, sessionIndex));
     const waiting = waitingBaseCounts(world, profile, now, options.seed);
-    const forecastTelemetry = buildActiveDayForecastTelemetry({
+    let simulatedDay = buildActiveSimulatedDay({
+      date,
       profileId: profile.id,
       dailyBudgetSeconds: options.dailyBudgetSeconds,
       targetNewWords: options.targetNewWords,
-      newWords: summary.newWords,
-      usageActivations: summary.usageActivations,
-      completedSeconds: summary.completedSeconds,
+      backlogSeconds: backlog,
+      plan,
+      summary,
+      queueLength: queue.length,
+      completionsLength: completions.length,
+      deferredSize: world.deferred.size,
+      mandatory,
+      candidates,
+      placementConversions,
+      placementReservations,
+      provisionalDueDistribution,
+      waiting,
+      world,
+      sessionIndex,
+      planningMandatory: planningInput.capacityForecast.mandatory,
       costs: SIMULATION_COSTS,
       introductionSeconds: SIMULATION_NEW_WORD_INTRODUCTION_SECONDS,
-      futureMandatory: planningInput.capacityForecast.mandatory,
-      futureReservations: plan.futureReservations,
-      placementReservations,
+      activationLimits: SIMULATION_ACTIVATION_LIMITS,
     });
-
-    let simulatedDay: SimulatedDay = {
-      date, active: true, dailyBudgetSeconds: options.dailyBudgetSeconds,
-      plannedSeconds: plan.allowance.plannedSeconds,
-      completedSeconds: summary.completedSeconds, plannedItems: queue.length,
-      completedItems: completions.length,
-      mandatorySelected: plan.mandatorySelected.length,
-      deferredMandatory: world.deferred.size, backlogSeconds: backlog,
-      mode: plan.allowance.mode, newWords: summary.newWords,
-      baseSkillActivations: summary.baseSkillActivations,
-      newWordMeaningActivations: summary.newWords,
-      usageActivations: summary.usageActivations,
-      provisionalDue: mandatory.provisionalDue.length,
-      placementCandidates: candidates.placementCandidates.length,
-      placementConversions,
-      placementConversionsDeferred: plan.placementDeferred,
-      placementReservedSeconds: placementReservations.reduce(
-        (total, item) => total + item.estimatedSeconds,
-        0,
-      ),
-      placementListeningReservations: placementReservations
-        .filter((item) => item.skill === "listening").length,
-      placementProductionReservations: placementReservations
-        .filter((item) => item.skill === "production").length,
-      provisionalDueDistribution,
-      scheduledReviews: summary.scheduledReviews,
-      correctScheduledReviews: summary.correctScheduledReviews,
-      oldestDeferredAgeSessions: oldestDeferredAge(world),
-      listeningEligibleWaiting: waiting.listening,
-      productionEligibleWaiting: waiting.production,
-      ...forecastTelemetry,
-    };
     simulatedDay = hooks.mutateDay?.(simulatedDay, hookContext) ?? simulatedDay;
     days.push(simulatedDay);
   }

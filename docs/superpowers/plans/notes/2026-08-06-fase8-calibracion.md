@@ -1,90 +1,110 @@
-# Fase 8 — Task 8.9b: hard mandatory forecast + feasibility
+# Fase 8 — Task 8.9c: feasibility objetivo + fairness pending-base
 
 Fecha: 2026-08-07
 
-Estado: **forecast implementado; C8/C9/C11 siguen rojos**. Feasibility
-estructural media dice `feasible` → el bloqueo restante es de
-**scheduling/servicio**, no de knobs estructurales adicionales. No se inicia
-8.10.
+Estado: **rates corregidos; fairness integrada; C8/C9 siguen rojos en
+perfiles aplicables**. Target feasibility steady = `feasible` con margen,
+pero C8/C9 no pasan → **seguir diagnóstico de scheduler**. No se inicia 8.10.
+No se declara 8.9 estructuralmente cerrada.
 
-## Baseline previo (fin 8.9 / DETENTE)
+## Baseline 8.9b
 
-| Perfil | C8 | C9 | C11 | Notas |
-|---|---|---|---|---|
-| steady | ✗ ~0.10 | ✗ 16 | ✓ | maxBase=4 + debt + throughput cap |
-| intermittent | ✗ | ✗ 55 | ✗ | |
-| bursty | ✗ | ✓ 8 | ✗ | |
-| beginner | ✗ | ✗ 72 | ✗ | |
-| advanced | ✗ | ✗ 12 | ✓ | |
+| Perfil | C8 | C9 | C11 |
+|---|---|---|---|
+| steady | ✗ ~0.10 | ✗ 16 | ✓ |
+| intermittent | n/a* | ✗ 55 | ✗ |
+| bursty | n/a* | ✓ 8 | ✗ |
+| beginner | n/a* | ✗ 72 | ✗ |
+| advanced | n/a* | ✗ 12–18 | ✓ |
 
-C1–C5, C7, C10 verdes. C6 entregado a 8.10.
+\*C8 solo aplica a perfil **constante** (`steady`) según tabla de aceptación
+de la spec. No aplicable ≠ PASS/FAIL.
 
-## Hard mandatory forecast
+## Cambios 8.9c
 
-- `mapDueAtToActiveSession(dueAt, activeSessionDates)` mapea vencimientos a
-  offsets 1..8 (días inactivos omitidos → siguiente sesión activa).
-- `buildSimulationCapacityInput` usa ese mapeo para FSRS/provisional/learning
-  futuros; deduplica por `itemId`.
-- `applyMandatoryWithRollover` mueve mandatory no atendido al siguiente slot
-  sin duplicar `itemId`.
-- Ownership: `CapacityWorkKind` + `dedupeCapacityWork` (scheduled-review gana
-  sobre `admission-future-review`).
+### Rates
+- `actualArrival` = trabajo realmente admitido (envelope × admitted).
+- `requiredArrival` = `ceil(target × 0.60) × envelopeSecondsPerWord` cuando C8
+  aplica. Con target=10 y envelope=79 → **474 s/sesión**.
+- No se usa admitted words para required arrival.
 
-## Admission envelope (`admission-envelope-v1`)
+### Feasibility
+- `actualStatus` / `targetStatus`: `feasible` | `marginal` | `infeasible`.
+- Política versionada `marginal-feasibility-v1` (margen < 5% del presupuesto).
+- Dump advanced incluye placement real (no forzado a 0).
 
-Provenance: `simulation-model` (dataset 8.8 sigue `insufficient-data`).
+### Fairness pending-base (`pending-base-fairness-v1`)
+Prioridad dentro de pending-base:
+1. deadline C9 más próximo (`remainingSessions`);
+2. mayor `waitSessions`;
+3. `serviceUrgency`;
+4. desempate `itemId`.
 
-```
-immediateSeconds = intro(10) + recognition(12) = 22
-baseActivationSeconds = listening(20) + production(25) = 45
-expectedReviewSecondsBySession[7] = recognition(12)
-  // primer Easy desde New ≈ 8 días (ts-fsrs@5.4.1, desiredRetention=0.9)
-```
+No puede saltar mandatory, exceder presupuesto ni consumir hard reserves.
 
-`admitNewWords` aplica `applyExpectedFsrsReserve` antes de cada par
-listening/production cuando se pasa el envelope (vía `planDailySession`).
+### Gate provisional
+No activar listening/production mientras meaning es provisional
+`placement-inference` aún no due (evita reescribir el schedule al observar
+meaning). Tradeoff: advanced C9 empeora (más espera en palabras de placement).
 
-## Resultado post-8.9b (mismos parámetros estructurales)
+## Resultado post-8.9c
 
 | Perfil | C1–C5 | C6 | C7 | C8 | C9 | C10 | C11 |
 |---|---|---|---|---|---|---|---|
-| steady | ✓ | ✗ 0.40 | ✓ | ✗ 0.101 | ✗ 16 | ✓ | ✓ 0.855 |
-| intermittent | ✓ | ✓ | ✓ | ✗ | ✗ 55 | ✓ | ✗ 0.776 |
-| bursty | ✓ | ✓ | ✓ | ✗ | ✓ 8 | ✓ | ✗ 0.776 |
-| beginner | ✓ | ✓ | ✓ | ✗ | ✗ 72 | ✓ | ✗ 0.663 |
-| advanced | ✓ | ✗ 0.60 | ✓ | ✗ | ✗ 18 | ✓ | ✓ 0.882 |
+| steady | ✓ | ✗ ~0.37 | ✓ | ✗ ~0.109 | ✗ 15 | ✓ | ✓ ~0.863 |
+| intermittent | ✓ | ✓ | ✓ | n/a | ✗ 55 | ✓ | ✗ ~0.778 |
+| bursty | ✓ | ✓ | ✓ | n/a | ✓ 8 | ✓ | ✗ ~0.776 |
+| beginner | ✓ | ✓ | ✓ | n/a | ✗ 72 | ✓ | ✗ ~0.662 |
+| advanced | ✓ | ✗ ~0.60 | ✓ | n/a | ✗ 46 | ✓ | ✓ ~0.887 |
 
-## Feasibility (C8≥0.60 ⇒ 6 nuevas/sesión; C9≤8)
+## Steady rates / feasibility
 
-Requisito: `requiredNewWordsPerSession = 6`.
+| Métrica | Valor |
+|---|---|
+| requiredArrival | 474 s/sesión |
+| actualArrival | ~83 s/sesión |
+| service | ~839 s/sesión |
+| mandatory horizonte / sesión | ~2811 / ~351 s |
+| target margin | ~50 s/sesión |
+| targetFeasibility | **feasible** (días infeasible ~26%) |
+| topBaseBlockingReason | `mandatory-capacity` |
+| capacitySafeNewWords avg | ~1.11 |
+| pendingBase avg count / oldest wait | ~4.4 / ~2.3 |
 
-| Perfil | structuralFeasibility | días infeasible (telemetría) | avg mandatory horizonte (s) | arrival−service (steady) |
+## Feasibility por perfil
+
+| Perfil | C8 applicable | target | actual | placement / base |
 |---|---|---|---|---|
-| steady | feasible | 5% | ~2792 | ~−760 (servicio > arrival medido) |
-| intermittent | feasible | 0% | ~1317 | n/a |
-| bursty | feasible | 0% | ~1175 | n/a |
-| beginner | feasible | 0% | ~735 | n/a |
-| advanced | feasible* | **69%** | ~3407 | n/a |
+| steady | true | feasible | feasible | base~109s; placement n/a |
+| intermittent | false | not-applicable | feasible | base~166s |
+| bursty | false | not-applicable | feasible | base~116s |
+| beginner | false | not-applicable | feasible | base~100s |
+| advanced | false | not-applicable | feasible | **placement~630s**, demandSessions=167; base~147s |
 
-\*Media estructural con base/placement=0 en el dump; a nivel día advanced
-suele marcar `infeasible` cuando se exige la tasa C8 completa sobre mandatory
-alto.
+## Efecto fairness / hipótesis C8
 
-## Interpretación
+- C9 steady: 16 → **15** (mejora marginal; sigue rojo).
+- C8 steady: 0.101 → **0.109** (mejora marginal; sigue rojo).
+- `capacitySafeNewWords` avg ~1.1 frente a required 6 → el horizonte sigue
+  saturado por mandatory + throughput cap, no solo por orden injusto.
+- Hipótesis “pending ineficiente bloquea admission pese a capacidad agregada”:
+  **parcialmente rechazada**. Hay capacidad agregada y target feasible, pero el
+  bloqueo dominante diagnosticado es `mandatory-capacity` / saturación de
+  servicio base (maxBase=4), no solo orden FIFO.
 
-1. El presupuesto **no** es imposible en media para 6 nuevas/sesión + envelope
-   FSRS si mandatory futuro está acotado.
-2. C8/C9 siguen rojos → fallo de **servicio/scheduling** (activaciones,
-   orden, saturación temprana, huecos de práctica), no de umbrales C1–C11.
-3. No se tocan MaturityPolicy, latencia, costes empíricos ni perfiles.
-4. Revisar diseño de servicio de pending-base / fairness dentro de la clase
-   antes de 8.10.
+## C11 / lateness
+
+Fórmula C11 sin cambios. Tras fairness:
+- steady/advanced siguen verdes;
+- intermittent/bursty/beginner siguen rojos (retención observada baja).
+Pendiente: lateness p50/p95/max por perfil (diagnóstico; no desiredRetention).
 
 ## Adversariales
 
-11/11 correctos tras 8.9b.
+11/11 correctos.
 
-## Dataset empírico
+## Cierre 8.9
 
-Sigue `insufficient-data`. Envelope `simulation-model` no implica calibración
-empírica ready.
+target feasible + C8/C9 rojos con causa explicada (servicio/mandatory/
+throughput, no rates ficticios) → **no cerrar 8.9 estructuralmente**;
+continuar scheduler. **No 8.10.**

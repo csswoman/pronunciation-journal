@@ -21,6 +21,10 @@ export interface ActivationCandidate {
   skill: Skill;
   modality: AttemptModality;
   deadlineSession?: number;
+  /** Sessions waited while eligible (Task 8.9c fairness). */
+  waitSessions?: number;
+  firstEligibleSession?: number;
+  admittedSession?: number;
 }
 
 /** A word not yet introduced to the learner. */
