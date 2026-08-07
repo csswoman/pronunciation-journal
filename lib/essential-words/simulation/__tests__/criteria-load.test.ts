@@ -8,6 +8,7 @@ import {
   recoveryReturnSessions,
 } from "../criteria";
 import type { SimulatedDay } from "../run-simulation";
+import { emptyForecastTelemetry } from "../forecast-telemetry";
 
 function day(overrides: Partial<SimulatedDay> = {}): SimulatedDay {
   return {
@@ -39,6 +40,7 @@ function day(overrides: Partial<SimulatedDay> = {}): SimulatedDay {
     oldestDeferredAgeSessions: 0,
     listeningEligibleWaiting: 0,
     productionEligibleWaiting: 0,
+    ...emptyForecastTelemetry(),
     ...overrides,
   };
 }

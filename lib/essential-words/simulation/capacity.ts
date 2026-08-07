@@ -1,3 +1,4 @@
+import { mapDueAtToActiveSession } from "../active-session-map";
 import { forecastActiveSessionCapacities } from "../capacity-forecast";
 import type {
   CapacityForecastPlanningInput,
@@ -26,6 +27,10 @@ function futureActiveDayIndexes(
     .map(({ dayIndex }) => dayIndex);
 }
 
+/**
+ * Hard-reserves known FSRS / provisional / learning work into the next eight
+ * active sessions. dueAt maps onto the first active session that can serve it.
+ */
 function mandatoryDemand(
   item: LearningItem,
   activeDates: Date[],
@@ -35,12 +40,13 @@ function mandatoryDemand(
   if (item.suspended || item.schedule.kind === "none") return null;
   const dueAt = new Date(item.schedule.dueAt);
   if (Number.isNaN(dueAt.getTime()) || dueAt <= now) return null;
-  const firstDueSession = activeDates.findIndex((date) => date >= dueAt);
-  if (firstDueSession < 0) return null;
+
+  const sessionOffset = mapDueAtToActiveSession(dueAt, activeDates);
+  if (sessionOffset === null) return null;
   return {
     itemId: item.id,
     skill: item.skill,
-    deadlineSession: firstDueSession + 1,
+    deadlineSession: sessionOffset,
     estimatedSeconds: costs[modalityForSkill(item.skill)],
   };
 }
@@ -57,10 +63,14 @@ export function buildSimulationCapacityInput(
   const activeDayIndexes = futureActiveDayIndexes(calendar, currentDayIndex);
   const activeDates = activeDayIndexes.map((dayIndex) => dateAtDay(start, dayIndex));
   const now = dateAtDay(start, currentDayIndex);
-  const mandatory = itemsInWorld(world).flatMap((item) => {
+  const seen = new Set<string>();
+  const mandatory: ForecastCapacityDemand[] = [];
+  for (const item of itemsInWorld(world)) {
     const demand = mandatoryDemand(item, activeDates, now, costs);
-    return demand ? [demand] : [];
-  });
+    if (!demand || seen.has(demand.itemId)) continue;
+    seen.add(demand.itemId);
+    mandatory.push(demand);
+  }
 
   return {
     sessions: forecastActiveSessionCapacities(

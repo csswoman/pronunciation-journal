@@ -1,5 +1,6 @@
 import { admitNewWords, admitPlacementConversions } from "./admission-control";
 import { applyAdmissionThroughputCap } from "./admission-capacity";
+import { buildAdmissionLoadEnvelope } from "./admission-envelope";
 import { buildFutureCapacity, mergeReservations, orderDueReservationsFirst } from "./future-capacity";
 import { buildLoadBreakdown } from "./planning-load";
 import type {
@@ -223,6 +224,11 @@ export function planDailySession(
   const sessionCap = perNewWord > 0
     ? Math.floor(availableForNewWords / perNewWord)
     : input.configuredNewWordLimit;
+  const admissionEnvelope = buildAdmissionLoadEnvelope({
+    costs: input.estimatedSeconds.byModality,
+    introductionSeconds: input.estimatedSeconds.newWordIntroduction,
+    horizonSessions: 8,
+  });
   const admission = admitNewWords({
     candidates: input.candidates.newWords.slice(0, sessionCap),
     configuredNewWordLimit: Math.max(0, input.configuredNewWordLimit - input.consumed.newWords),
@@ -232,6 +238,8 @@ export function planDailySession(
       input.estimatedSeconds.byModality,
     ),
     estimatedSecondsByModality: input.estimatedSeconds.byModality,
+    admissionEnvelope,
+    introductionSeconds: input.estimatedSeconds.newWordIntroduction,
   });
   const newWords = {
     selected: admission.admitted,

@@ -35,6 +35,15 @@ export interface SimulatedDay {
   oldestDeferredAgeSessions: number;
   listeningEligibleWaiting: number;
   productionEligibleWaiting: number;
+  /** Task 8.9b — hard future mandatory reserved across next 8 active sessions. */
+  futureMandatoryReservedSeconds: number;
+  expectedFsrsDebtSeconds: number;
+  futureResidualSeconds: number;
+  admissionDemandSeconds: number;
+  feasibilityStatus: "feasible" | "infeasible" | "n/a";
+  serviceRateSeconds?: number;
+  arrivalRateSeconds?: number;
+  arrivalMinusServiceSeconds?: number;
 }
 
 export interface SimulationResult {

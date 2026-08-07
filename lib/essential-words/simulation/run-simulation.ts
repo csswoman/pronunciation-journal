@@ -1,7 +1,3 @@
-import {
-  DEFAULT_SECONDS_BY_MODALITY,
-  estimateItemsSeconds,
-} from "../cost-estimate";
 import { planDailySession } from "../daily-budget";
 import type { ActivationLimits, DailyPlanningInput } from "../planning-types";
 import { backlogSeconds, DEFAULT_RECOVERY_POLICY } from "../recovery-mode";
@@ -21,6 +17,8 @@ import type {
   DeferredObservation,
   EligibilityObservation,
 } from "./criteria";
+import { buildActiveDayForecastTelemetry } from "./day-forecast-telemetry";
+import { emptyForecastTelemetry } from "./forecast-telemetry";
 import {
   createEligibilityAccumulator,
   dateAtDay,
@@ -46,6 +44,10 @@ import {
   type SimulationOptions,
 } from "./state";
 import type { SimulatedDay, SimulationResult } from "./types";
+import {
+  DEFAULT_SECONDS_BY_MODALITY,
+  estimateItemsSeconds,
+} from "../cost-estimate";
 
 export const SIMULATION_COSTS: Record<AttemptModality, number> = {
   ...DEFAULT_SECONDS_BY_MODALITY,
@@ -125,6 +127,7 @@ export function runSimulation(
         oldestDeferredAgeSessions: oldestDeferredAge(world),
         listeningEligibleWaiting: waiting.listening,
         productionEligibleWaiting: waiting.production,
+        ...emptyForecastTelemetry(),
       });
       continue;
     }
@@ -223,6 +226,19 @@ export function runSimulation(
     ));
     deferredObservations.push(...observeDeferred(mandatory, plan, sessionIndex));
     const waiting = waitingBaseCounts(world, profile, now, options.seed);
+    const forecastTelemetry = buildActiveDayForecastTelemetry({
+      profileId: profile.id,
+      dailyBudgetSeconds: options.dailyBudgetSeconds,
+      targetNewWords: options.targetNewWords,
+      newWords: summary.newWords,
+      usageActivations: summary.usageActivations,
+      completedSeconds: summary.completedSeconds,
+      costs: SIMULATION_COSTS,
+      introductionSeconds: SIMULATION_NEW_WORD_INTRODUCTION_SECONDS,
+      futureMandatory: planningInput.capacityForecast.mandatory,
+      futureReservations: plan.futureReservations,
+      placementReservations,
+    });
 
     let simulatedDay: SimulatedDay = {
       date, active: true, dailyBudgetSeconds: options.dailyBudgetSeconds,
@@ -253,6 +269,7 @@ export function runSimulation(
       oldestDeferredAgeSessions: oldestDeferredAge(world),
       listeningEligibleWaiting: waiting.listening,
       productionEligibleWaiting: waiting.production,
+      ...forecastTelemetry,
     };
     simulatedDay = hooks.mutateDay?.(simulatedDay, hookContext) ?? simulatedDay;
     days.push(simulatedDay);

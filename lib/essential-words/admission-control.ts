@@ -2,6 +2,8 @@ import {
   reserveCapacity,
   type CapacityForecast,
 } from "./capacity-forecast";
+import type { AdmissionLoadEnvelope } from "./admission-envelope";
+import { applyExpectedFsrsReserve } from "./hard-mandatory-forecast";
 import type {
   CapacityReservation,
   NewWordCandidate,
@@ -19,6 +21,9 @@ export interface NewWordAdmissionInput {
   configuredNewWordLimit: number;
   forecast: CapacityForecast;
   estimatedSecondsByModality: Record<AttemptModality, number>;
+  /** Optional FSRS future-load envelope; defaults to simulation-model v1. */
+  admissionEnvelope?: AdmissionLoadEnvelope;
+  introductionSeconds?: number;
 }
 
 export interface NewWordAdmissionResult {
@@ -26,6 +31,7 @@ export interface NewWordAdmissionResult {
   capacitySafeNewWords: number;
   newReservations: CapacityReservation[];
   forecast: CapacityForecast;
+  expectedFsrsReservedSeconds: number;
 }
 
 interface ReservedPair {
@@ -51,9 +57,19 @@ function reservePair(
   forecast: CapacityForecast,
   candidate: NewWordCandidate,
   costs: Record<AttemptModality, number>,
+  envelope: AdmissionLoadEnvelope | undefined,
 ): ReservedPair | null {
+  const baseForecast: CapacityForecast = envelope
+    ? {
+        ...forecast,
+        sessions: applyExpectedFsrsReserve(
+          forecast.sessions,
+          envelope.expectedReviewSecondsBySession,
+        ),
+      }
+    : forecast;
   const listening = reserveCapacity(
-    forecast,
+    baseForecast,
     reservation(candidate.wordId, "listening", costs.listening),
   );
   if (!listening) return null;
@@ -73,11 +89,13 @@ export function admitNewWords(input: NewWordAdmissionInput): NewWordAdmissionRes
   const configuredLimit = Number.isFinite(input.configuredNewWordLimit)
     ? Math.max(0, Math.floor(input.configuredNewWordLimit))
     : 0;
+  const envelope = input.admissionEnvelope;
   let capacityForecast = input.forecast;
   let committedForecast = input.forecast;
   const admitted: NewWordCandidate[] = [];
   const newReservations: CapacityReservation[] = [];
   const seenWordIds = new Set<string>();
+  let expectedFsrsReservedSeconds = 0;
 
   if (
     capacityForecast.status !== "ready"
@@ -88,6 +106,7 @@ export function admitNewWords(input: NewWordAdmissionInput): NewWordAdmissionRes
       capacitySafeNewWords: 0,
       newReservations,
       forecast: committedForecast,
+      expectedFsrsReservedSeconds: 0,
     };
   }
 
@@ -102,14 +121,19 @@ export function admitNewWords(input: NewWordAdmissionInput): NewWordAdmissionRes
       capacityForecast,
       candidate,
       input.estimatedSecondsByModality,
+      envelope,
     );
     if (!pair) continue;
     capacityForecast = pair.forecast;
     capacitySafeNewWords += 1;
+    const reviewSeconds = envelope
+      ? envelope.expectedReviewSecondsBySession.reduce((total, value) => total + value, 0)
+      : 0;
     if (admitted.length >= configuredLimit) continue;
     committedForecast = pair.forecast;
     admitted.push(candidate);
     newReservations.push(...pair.reservations);
+    expectedFsrsReservedSeconds += reviewSeconds;
   }
 
   return {
@@ -117,5 +141,6 @@ export function admitNewWords(input: NewWordAdmissionInput): NewWordAdmissionRes
     capacitySafeNewWords,
     newReservations,
     forecast: committedForecast,
+    expectedFsrsReservedSeconds,
   };
 }
