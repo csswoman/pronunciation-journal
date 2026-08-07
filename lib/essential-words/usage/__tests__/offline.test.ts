@@ -6,6 +6,7 @@ import { AUTHORED_ON_USAGES } from "./fixtures/authored-usage";
 
 const allowance = (over: Partial<DailyAllowance> = {}): DailyAllowance => ({
   newWords: 0,
+  capacitySafeNewWords: 0,
   baseSkillActivations: 0,
   usageActivations: 2,
   newWordMeaningActivations: 0,
@@ -22,6 +23,7 @@ const plan = (over: Partial<DailyPlan> = {}): DailyPlan => ({
   baseSkillSelected: [],
   usageSelected: [],
   newWordsSelected: [],
+  futureReservations: [],
   ...over,
 });
 

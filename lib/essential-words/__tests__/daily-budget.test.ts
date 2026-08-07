@@ -44,6 +44,7 @@ const newWord = (wordId: string, rank: number): NewWordCandidate => ({ wordId, r
 
 const input = (overrides: Partial<DailyPlanningInput> = {}): DailyPlanningInput => ({
   dailyBudgetSeconds: 900,
+  configuredNewWordLimit: 10,
   mandatory: { learning: [], overdue: [], dueToday: [], provisionalDue: [] },
   candidates: { baseSkillActivations: [], usageActivations: [], newWords: [] },
   estimatedSeconds: {
@@ -52,6 +53,17 @@ const input = (overrides: Partial<DailyPlanningInput> = {}): DailyPlanningInput 
   },
   consumed: { baseSkillActivations: 0, usageActivations: 0, newWords: 0 },
   previousMode: "normal",
+  capacityForecast: {
+    sessions: Array.from({ length: 8 }, (_, index) => ({
+      sessionOffset: index + 1,
+      availableSeconds: 900,
+      listeningSeconds: 900,
+      productionSeconds: 900,
+    })),
+    mandatory: [],
+    dueReservations: [],
+    futureReservations: [],
+  },
   ...overrides,
 });
 

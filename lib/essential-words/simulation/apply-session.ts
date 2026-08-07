@@ -19,6 +19,7 @@ import {
   type SimulatedScheduledReview,
 } from "./scheduled-review-outcome";
 import { simulateAttemptOutcome } from "./simulated-outcome";
+import { updateSimulationCapacityReservations } from "./capacity-state";
 import {
   findWordItem,
   replaceWorldItem,
@@ -225,6 +226,7 @@ export function applyCompletedSession(
   }
 
   updateSimulationDeferred(world, plan, completedIds);
+  updateSimulationCapacityReservations(world, plan, completedIds);
   world.previousMode = plan.allowance.mode;
   world.sessionIndex += 1;
 

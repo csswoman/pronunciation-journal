@@ -18,6 +18,7 @@ describe("unidades del plan diario", () => {
   it("separa base, meaning implícito y usage", () => {
     const allowance: DailyAllowance = {
       newWords: 3,
+      capacitySafeNewWords: 3,
       baseSkillActivations: 2,
       newWordMeaningActivations: 3,
       usageActivations: 1,
@@ -42,8 +43,10 @@ describe("unidades del plan diario", () => {
       baseSkillSelected: [],
       usageSelected: [],
       newWordsSelected: [],
+      futureReservations: [],
       allowance: {
         newWords: 0,
+        capacitySafeNewWords: 0,
         baseSkillActivations: 0,
         newWordMeaningActivations: 0,
         usageActivations: 0,
@@ -70,6 +73,7 @@ describe("unidades del plan diario", () => {
   it("no expone unidades ambiguas", () => {
     const allowance: DailyAllowance = {
       newWords: 0,
+      capacitySafeNewWords: 0,
       baseSkillActivations: 0,
       usageActivations: 0,
       newWordMeaningActivations: 0,

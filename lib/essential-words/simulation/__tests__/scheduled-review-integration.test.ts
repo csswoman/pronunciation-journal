@@ -20,6 +20,7 @@ function plan(item: PlannedItem): DailyPlan {
   return {
     allowance: {
       newWords: 0,
+      capacitySafeNewWords: 0,
       baseSkillActivations: 0,
       usageActivations: 0,
       newWordMeaningActivations: 0,
@@ -32,6 +33,7 @@ function plan(item: PlannedItem): DailyPlan {
     baseSkillSelected: [],
     usageSelected: [],
     newWordsSelected: [],
+    futureReservations: [],
   };
 }
 

@@ -1,5 +1,9 @@
 import type { ExecutionContext } from "../execution-context";
-import type { DailyPlan, PlannedItem } from "../planning-types";
+import type {
+  CapacityReservation,
+  DailyPlan,
+  PlannedItem,
+} from "../planning-types";
 import type {
   AttemptLog,
   LearningItem,
@@ -45,6 +49,7 @@ export interface SimulationWorld {
   sessionIndex: number;
   introducedWords: number;
   placementConversions: number;
+  futureReservations: CapacityReservation[];
 }
 
 export interface SimulationOptions {
@@ -128,6 +133,7 @@ export function createInitialWorld(
     sessionIndex: 0,
     introducedWords: 0,
     placementConversions: 0,
+    futureReservations: [],
   };
 }
 

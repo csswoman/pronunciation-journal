@@ -1,3 +1,5 @@
+import { admitNewWords } from "./admission-control";
+import { buildFutureCapacity, mergeReservations, orderDueReservationsFirst } from "./future-capacity";
 import type {
   ActivationCandidate,
   ActivationLimits,
@@ -5,7 +7,6 @@ import type {
   DailyAllowance,
   DailyPlan,
   DailyPlanningInput,
-  NewWordCandidate,
   PlannedItem,
 } from "./planning-types";
 import { backlogSeconds, resolveMode, type RecoveryPolicy } from "./recovery-mode";
@@ -110,28 +111,6 @@ function selectActivations(
   return { selected, deferred, seconds };
 }
 
-function selectNewWords(
-  candidates: NewWordCandidate[],
-  availableSeconds: number,
-  input: DailyPlanningInput,
-): { selected: NewWordCandidate[]; seconds: number } {
-  const selected: NewWordCandidate[] = [];
-  const seenWordIds = new Set<string>();
-  const cost = input.estimatedSeconds.newWordIntroduction
-    + input.estimatedSeconds.byModality.recognition;
-  let seconds = 0;
-
-  for (const candidate of candidates) {
-    if (seenWordIds.has(candidate.wordId)) continue;
-    if (seconds + cost > availableSeconds) break;
-    selected.push(candidate);
-    seenWordIds.add(candidate.wordId);
-    seconds += cost;
-  }
-
-  return { selected, seconds };
-}
-
 export function planDailySession(
   input: DailyPlanningInput,
   limits: ActivationLimits,
@@ -151,16 +130,40 @@ export function planDailySession(
   const remainingAfterMandatory = Math.max(0, input.dailyBudgetSeconds - mandatory.seconds);
 
   if (mode === "recovery") {
-    return planFromSelections(mode, mandatory, emptyActivations(), emptyActivations(), {
-      selected: [], seconds: 0,
-    });
+    const base = { selected: [], deferred: input.candidates.baseSkillActivations, seconds: 0 };
+    const forecast = buildFutureCapacity(input, mandatory.deferred, base.deferred);
+    return planFromSelections(
+      mode,
+      mandatory,
+      base,
+      { selected: [], deferred: input.candidates.usageActivations, seconds: 0 },
+      { selected: [], seconds: 0 },
+      0,
+      mergeReservations([
+        ...input.capacityForecast.dueReservations,
+        ...forecast.reservations,
+      ]),
+    );
   }
 
   const selectedItemIds = new Set(mandatory.selected.map((item) => item.itemId));
   const maxPerItem = Math.min(1, Math.max(0, limits.maxPerItemPerSession));
-  const base = selectActivations(
+  const orderedBase = orderDueReservationsFirst(
     input.candidates.baseSkillActivations,
-    Math.max(0, limits.maxBaseSkillActivationsPerSession - input.consumed.baseSkillActivations),
+    input.capacityForecast.dueReservations,
+  );
+  const dueBaseCount = orderedBase.filter((candidate) => (
+    input.capacityForecast.dueReservations.some((reservation) => (
+      reservation.itemId === candidate.itemId
+    ))
+  )).length;
+  const configuredBaseLimit = Math.max(
+    0,
+    limits.maxBaseSkillActivationsPerSession - input.consumed.baseSkillActivations,
+  );
+  const base = selectActivations(
+    orderedBase,
+    Math.max(configuredBaseLimit, dueBaseCount),
     remainingAfterMandatory,
     input.estimatedSeconds.byModality,
     selectedItemIds,
@@ -174,17 +177,43 @@ export function planDailySession(
     selectedItemIds,
     maxPerItem,
   );
-  const newWords = selectNewWords(
-    input.candidates.newWords,
+  const availableForNewWords = Math.max(
+    0,
     remainingAfterMandatory - base.seconds - usage.seconds,
-    input,
   );
+  const newWordSeconds = input.estimatedSeconds.newWordIntroduction
+    + input.estimatedSeconds.byModality.recognition;
+  const currentSessionCapacity = newWordSeconds > 0
+    ? Math.floor(availableForNewWords / newWordSeconds)
+    : input.configuredNewWordLimit;
+  const configuredRemaining = Math.max(
+    0,
+    input.configuredNewWordLimit - input.consumed.newWords,
+  );
+  const forecast = buildFutureCapacity(input, mandatory.deferred, base.deferred);
+  const admission = admitNewWords({
+    candidates: input.candidates.newWords.slice(0, currentSessionCapacity),
+    configuredNewWordLimit: configuredRemaining,
+    forecast,
+    estimatedSecondsByModality: input.estimatedSeconds.byModality,
+  });
+  const newWords = {
+    selected: admission.admitted,
+    seconds: admission.admitted.length * newWordSeconds,
+  };
 
-  return planFromSelections(mode, mandatory, base, usage, newWords);
-}
-
-function emptyActivations(): ActivationSelection {
-  return { selected: [], deferred: [], seconds: 0 };
+  return planFromSelections(
+    mode,
+    mandatory,
+    base,
+    usage,
+    newWords,
+    admission.capacitySafeNewWords,
+    mergeReservations([
+      ...input.capacityForecast.dueReservations,
+      ...admission.forecast.reservations,
+    ]),
+  );
 }
 
 function planFromSelections(
@@ -192,11 +221,14 @@ function planFromSelections(
   mandatory: MandatorySelection,
   base: ActivationSelection,
   usage: ActivationSelection,
-  newWords: { selected: NewWordCandidate[]; seconds: number },
+  newWords: { selected: DailyPlan["newWordsSelected"]; seconds: number },
+  capacitySafeNewWords: number,
+  futureReservations: DailyPlan["futureReservations"],
 ): DailyPlan {
   const newWordMeaningActivations = newWords.selected.length;
   const allowance: DailyAllowance = {
     newWords: newWords.selected.length,
+    capacitySafeNewWords,
     baseSkillActivations: base.selected.length,
     usageActivations: usage.selected.length,
     newWordMeaningActivations,
@@ -212,5 +244,6 @@ function planFromSelections(
     baseSkillSelected: base.selected,
     usageSelected: usage.selected,
     newWordsSelected: newWords.selected,
+    futureReservations,
   };
 }

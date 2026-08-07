@@ -27,6 +27,7 @@ const options: SimulationOptions = {
 
 const allowance = (mode: "normal" | "recovery" = "normal") => ({
   newWords: 0,
+  capacitySafeNewWords: 0,
   baseSkillActivations: 0,
   usageActivations: 0,
   newWordMeaningActivations: 0,
@@ -43,6 +44,7 @@ function dailyPlan(overrides: Partial<DailyPlan> = {}): DailyPlan {
     baseSkillSelected: [],
     usageSelected: [],
     newWordsSelected: [],
+    futureReservations: [],
     ...overrides,
   };
 }

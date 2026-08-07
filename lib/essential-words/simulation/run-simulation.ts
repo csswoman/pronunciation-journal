@@ -15,6 +15,8 @@ import {
   collectCandidates,
   collectMandatory,
 } from "./candidates";
+import { buildSimulationCapacityInput } from "./capacity";
+import { beginActiveSessionReservations } from "./capacity-state";
 import type {
   DeferredObservation,
   EligibilityObservation,
@@ -127,13 +129,15 @@ export function runSimulation(
     );
     candidates = collectCandidates(world, profile, context);
     candidates = hooks.mutateCandidates?.(candidates, hookContext) ?? candidates;
+    const dueReservations = beginActiveSessionReservations(world);
     const planningInput: DailyPlanningInput = {
       dailyBudgetSeconds: options.dailyBudgetSeconds,
+      configuredNewWordLimit: options.targetNewWords,
       mandatory,
       candidates: {
         baseSkillActivations: candidates.baseSkillActivations,
         usageActivations: candidates.usageActivations,
-        newWords: candidates.newWords.slice(0, options.targetNewWords),
+        newWords: candidates.newWords,
       },
       estimatedSeconds: {
         byModality: SIMULATION_COSTS,
@@ -141,6 +145,15 @@ export function runSimulation(
       },
       consumed: { baseSkillActivations: 0, usageActivations: 0, newWords: 0 },
       previousMode: world.previousMode,
+      capacityForecast: buildSimulationCapacityInput(
+        world,
+        calendar,
+        dayIndex,
+        start,
+        options.dailyBudgetSeconds,
+        SIMULATION_COSTS,
+        dueReservations,
+      ),
     };
     let plan = planDailySession(
       planningInput,

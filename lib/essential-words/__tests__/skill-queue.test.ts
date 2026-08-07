@@ -41,6 +41,7 @@ const newWord = (wordId: string, rank: number): NewWordCandidate => ({ wordId, r
 
 const allowance = (overrides: Partial<DailyAllowance> = {}): DailyAllowance => ({
   newWords: 0,
+  capacitySafeNewWords: 0,
   baseSkillActivations: 0,
   usageActivations: 0,
   newWordMeaningActivations: 0,
@@ -57,6 +58,7 @@ const plan = (overrides: Partial<DailyPlan> = {}): DailyPlan => ({
   baseSkillSelected: [],
   usageSelected: [],
   newWordsSelected: [],
+  futureReservations: [],
   ...overrides,
 });
 
@@ -140,6 +142,7 @@ describe("buildSkillQueue", () => {
   it("mantiene la duración planificada como suma de las selecciones", () => {
     const planningInput: DailyPlanningInput = {
       dailyBudgetSeconds: 100,
+      configuredNewWordLimit: 10,
       mandatory: { learning: [mandatory("c1k:due#meaning")], overdue: [], dueToday: [], provisionalDue: [] },
       candidates: {
         baseSkillActivations: [activation("c1k:base#meaning", "production")],
@@ -149,6 +152,17 @@ describe("buildSkillQueue", () => {
       estimatedSeconds: { byModality: DEFAULT_SECONDS_BY_MODALITY, newWordIntroduction: 10 },
       consumed: { baseSkillActivations: 0, usageActivations: 0, newWords: 0 },
       previousMode: "normal",
+      capacityForecast: {
+        sessions: Array.from({ length: 8 }, (_, index) => ({
+          sessionOffset: index + 1,
+          availableSeconds: 100,
+          listeningSeconds: 100,
+          productionSeconds: 100,
+        })),
+        mandatory: [],
+        dueReservations: [],
+        futureReservations: [],
+      },
     };
     const queuePlan = planDailySession(planningInput, limits, DEFAULT_RECOVERY_POLICY);
 

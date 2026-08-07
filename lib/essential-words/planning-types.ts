@@ -16,6 +16,7 @@ export interface ActivationCandidate {
   wordId: string;
   skill: Skill;
   modality: AttemptModality;
+  deadlineSession?: number;
 }
 
 /** A word not yet introduced to the learner. */
@@ -24,8 +25,38 @@ export interface NewWordCandidate {
   rank: number;
 }
 
+export interface ForecastSessionCapacity {
+  sessionOffset: number;
+  availableSeconds: number;
+  listeningSeconds: number;
+  productionSeconds: number;
+}
+
+export interface CapacityReservation {
+  itemId: string;
+  source: "pending-base" | "placement" | "usage" | "new-word";
+  skill: Skill;
+  deadlineSession: number;
+  estimatedSeconds: number;
+}
+
+export interface ForecastCapacityDemand {
+  itemId: string;
+  skill: Skill;
+  deadlineSession: number;
+  estimatedSeconds: number;
+}
+
+export interface CapacityForecastPlanningInput {
+  sessions: ForecastSessionCapacity[];
+  mandatory: ForecastCapacityDemand[];
+  dueReservations: CapacityReservation[];
+  futureReservations: CapacityReservation[];
+}
+
 export interface DailyPlanningInput {
   dailyBudgetSeconds: number;
+  configuredNewWordLimit: number;
   mandatory: {
     learning: PlannedItem[];
     overdue: PlannedItem[];
@@ -47,10 +78,12 @@ export interface DailyPlanningInput {
     newWords: number;
   };
   previousMode: "normal" | "recovery";
+  capacityForecast: CapacityForecastPlanningInput;
 }
 
 export interface DailyAllowance {
   newWords: number;
+  capacitySafeNewWords: number;
   baseSkillActivations: number;
   usageActivations: number;
   newWordMeaningActivations: number;
@@ -79,4 +112,5 @@ export interface DailyPlan {
   baseSkillSelected: ActivationCandidate[];
   usageSelected: ActivationCandidate[];
   newWordsSelected: NewWordCandidate[];
+  futureReservations: CapacityReservation[];
 }
