@@ -16,6 +16,7 @@ export {
   type EligibilityObservation,
 } from "./progress";
 export {
+  isScheduledReviewEligibleForC11,
   observedRetention,
   observedRetentionWithinTarget,
   type RetentionResult,

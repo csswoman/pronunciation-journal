@@ -8,6 +8,21 @@ export type RetentionResult =
   | { status: "measured"; retention: number; sampleSize: number }
   | { status: "insufficient-data"; sampleSize: number; required: number };
 
+/**
+ * Canonical C11 eligibility (Task 8.5, reaudited 8.9g): an attempt counts
+ * toward observed retention only if it is a genuine FSRS scheduled review
+ * that affected the item's schedule. `verification`, `practice`,
+ * `learning-step`, `placement` and introduction attempts are never eligible,
+ * regardless of correctness — this is the single source of truth other
+ * modules (diagnostics, tests) must reuse instead of re-deriving the filter.
+ */
+export function isScheduledReviewEligibleForC11(
+  attempt: Pick<AttemptLog, "eventType">,
+  event: Pick<SrsReviewEvent, "affectsSchedule">,
+): boolean {
+  return attempt.eventType === "scheduled-review" && event.affectsSchedule === true;
+}
+
 export function observedRetention(
   attempts: AttemptLog[],
   events: SrsReviewEvent[],
@@ -16,7 +31,7 @@ export function observedRetention(
   const attemptsById = new Map(attempts.map((attempt) => [attempt.id, attempt]));
   const scheduledAttemptIds = new Set(events.flatMap((event) => {
     const attempt = attemptsById.get(event.attemptLogId);
-    return event.affectsSchedule && attempt?.eventType === "scheduled-review"
+    return attempt && isScheduledReviewEligibleForC11(attempt, event)
       ? [attempt.id]
       : [];
   }));

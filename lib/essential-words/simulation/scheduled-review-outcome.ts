@@ -6,6 +6,11 @@ import type { RandomSource } from "./random";
 export interface ScheduledReviewRecall {
   retrievability: number;
   recalled: boolean;
+  /** Diagnostic only (Task 8.9g): the raw RNG draw compared against
+   * retrievability. Never consumed by scheduling or C11 — exists so the
+   * audit trace can prove `recalled === (rngSample < retrievability)`
+   * without re-deriving randomness out of band. */
+  rngSample: number;
 }
 
 export interface SimulatedScheduledReview extends ScheduledReviewRecall {
@@ -39,8 +44,10 @@ export function simulateScheduledReviewOutcome(
     lastReview,
     now,
   });
+  const rngSample = random.next();
   return {
     retrievability,
-    recalled: random.next() < retrievability,
+    recalled: rngSample < retrievability,
+    rngSample,
   };
 }
