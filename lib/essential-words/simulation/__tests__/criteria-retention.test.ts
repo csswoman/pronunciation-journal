@@ -2,9 +2,13 @@ import { describe, expect, it } from "vitest";
 import type {
   AttemptEventType,
   AttemptLog,
+  ItemSchedule,
   SrsReviewEvent,
 } from "../../verification/types";
-import { observedRetentionWithinTarget } from "../criteria";
+import {
+  observedRetention,
+  observedRetentionWithinTarget,
+} from "../criteria";
 
 function attempt(
   index: number,
@@ -33,14 +37,26 @@ function attempt(
   };
 }
 
-function event(source: AttemptLog): SrsReviewEvent {
+const REVIEW_SCHEDULE: ItemSchedule = {
+  kind: "fsrs",
+  dueAt: "2026-08-01T00:00:00.000Z",
+  stability: 10,
+  difficulty: 5,
+  state: "Review",
+};
+
+function event(
+  source: AttemptLog,
+  priorSchedule: ItemSchedule = REVIEW_SCHEDULE,
+  suffix = "",
+): SrsReviewEvent {
   return {
-    id: `event-${source.id}`,
+    id: `event-${source.id}${suffix}`,
     attemptLogId: source.id,
     learningItemId: `${source.wordId}#meaning`,
     grade: source.assessment.grade,
     assessment: source.assessment,
-    priorSchedule: { kind: "none" },
+    priorSchedule,
     resultingSchedule: {
       kind: "fsrs",
       dueAt: "2026-08-02T00:00:00.000Z",
@@ -58,17 +74,19 @@ function reviewSample(
   total: number,
   correct: number,
   eventType: AttemptEventType = "scheduled-review",
+  startIndex = 0,
 ): { attempts: AttemptLog[]; events: SrsReviewEvent[] } {
   const attempts = Array.from({ length: total }, (_, index) => (
-    attempt(index, index < correct, eventType)
+    attempt(startIndex + index, index < correct, eventType)
   ));
-  return { attempts, events: attempts.map(event) };
+  return { attempts, events: attempts.map((source) => event(source)) };
 }
 
 describe("observedRetentionWithinTarget", () => {
-  it("criterio 11 pasa dentro del objetivo y falla con retención baja", () => {
+  it("criterio 11 acepta el intervalo cerrado y falla por debajo o por encima", () => {
     const passing = reviewSample(100, 90);
-    const failing = reviewSample(100, 55);
+    const tooLow = reviewSample(100, 55);
+    const tooHigh = reviewSample(100, 100);
 
     expect(observedRetentionWithinTarget(
       passing.attempts,
@@ -78,16 +96,23 @@ describe("observedRetentionWithinTarget", () => {
       50,
     )).toMatchObject({ passed: true, measured: 0.9 });
     expect(observedRetentionWithinTarget(
-      failing.attempts,
-      failing.events,
+      tooLow.attempts,
+      tooLow.events,
       0.9,
       0.05,
       50,
     )).toMatchObject({ passed: false, measured: 0.55 });
+    expect(observedRetentionWithinTarget(
+      tooHigh.attempts,
+      tooHigh.events,
+      0.9,
+      0.05,
+      50,
+    )).toMatchObject({ passed: false, measured: 1 });
   });
 
   it("devuelve insufficient sample y no declara éxito", () => {
-    const sample = reviewSample(20, 18);
+    const sample = reviewSample(49, 44);
     const result = observedRetentionWithinTarget(
       sample.attempts,
       sample.events,
@@ -96,8 +121,37 @@ describe("observedRetentionWithinTarget", () => {
       50,
     );
 
-    expect(result).toMatchObject({ passed: false, measured: 20, limit: 50 });
-    expect(result.detail).toContain("insufficient sample");
+    expect(result).toMatchObject({ passed: false, measured: 49, limit: 50 });
+    expect(result.detail).toContain("insufficient-data");
+    expect(observedRetention(sample.attempts, sample.events, 50)).toEqual({
+      status: "insufficient-data",
+      sampleSize: 49,
+      required: 50,
+    });
+
+    const enough = reviewSample(50, 45);
+    expect(observedRetention(enough.attempts, enough.events, 50)).toEqual({
+      status: "measured",
+      retention: 0.9,
+      sampleSize: 50,
+    });
+  });
+
+  it("cuenta una vez cada intento scheduled-review que parte de FSRS Review", () => {
+    const scheduled = reviewSample(50, 45);
+    const duplicatedEffects = scheduled.events.map((source) => ({
+      ...source,
+      id: `${source.id}-second-effect`,
+      learningItemId: source.learningItemId.replace("#meaning", "#listening"),
+    }));
+
+    expect(observedRetentionWithinTarget(
+      scheduled.attempts,
+      [...scheduled.events, ...duplicatedEffects],
+      0.9,
+      0.05,
+      50,
+    )).toMatchObject({ passed: true, measured: 0.9 });
   });
 
   it("excluye verification, learning-step, practice y eventos huérfanos", () => {

@@ -31,7 +31,8 @@ export type SimulationMutation =
   | "starve-overdue"
   | "show-entire-recovery-backlog"
   | "synchronize-provisionals"
-  | "low-retention";
+  | "low-retention"
+  | "perfect-retention";
 
 function removeItem(plan: DailyPlan, itemId: string): DailyPlan {
   const removed = plan.mandatorySelected.find((item) => item.itemId === itemId);
@@ -134,6 +135,36 @@ function hooksForMutation(mutation: SimulationMutation): SimulationHarnessHooks 
         correct: false,
         firstTryFailed: true,
       },
+      ...(completion.scheduledReview
+        ? {
+            scheduledReview: {
+              ...completion.scheduledReview,
+              recalled: false,
+              grade: "Again" as const,
+            },
+          }
+        : {}),
+    }));
+  } else if (mutation === "perfect-retention") {
+    hooks.mutateCompletions = (completions) => completions.map((completion) => ({
+      ...completion,
+      assessment: {
+        ...completion.assessment,
+        grade: "Easy",
+        correct: true,
+        usedHints: false,
+        rescued: false,
+        firstTryFailed: false,
+      },
+      ...(completion.scheduledReview
+        ? {
+            scheduledReview: {
+              ...completion.scheduledReview,
+              recalled: true,
+              grade: "Easy" as const,
+            },
+          }
+        : {}),
     }));
   }
 

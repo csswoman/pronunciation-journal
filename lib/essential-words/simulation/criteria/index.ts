@@ -15,4 +15,8 @@ export {
   type DeferredObservation,
   type EligibilityObservation,
 } from "./progress";
-export { observedRetentionWithinTarget } from "./retention";
+export {
+  observedRetention,
+  observedRetentionWithinTarget,
+  type RetentionResult,
+} from "./retention";

@@ -123,7 +123,9 @@ export interface SrsReviewEvent {
   affectsSchedule: true;
   fsrsAudit: {
     schedulerVersion: string;
+    parametersVersion?: string;
     desiredRetention: number;
+    retrievabilityBeforeReview?: number;
   };
 }
 

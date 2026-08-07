@@ -5812,6 +5812,24 @@ tramo, dueAt y edad.
 #### Criterio 11 — retención observada
 
 ```ts
+export interface SimulatedScheduledReview {
+  retrievability: number;
+  recalled: boolean;
+  grade: Grade;
+  eventType: "scheduled-review";
+  affectsSchedule: true;
+}
+
+export type RetentionResult =
+  | { status: "measured"; retention: number; sampleSize: number }
+  | { status: "insufficient-data"; sampleSize: number; required: number };
+
+export function observedRetention(
+  attempts: AttemptLog[],
+  events: SrsReviewEvent[],
+  minimumReviews: number,
+): RetentionResult;
+
 export function observedRetentionWithinTarget(
   attempts: AttemptLog[],
   events: SrsReviewEvent[],
@@ -5821,10 +5839,18 @@ export function observedRetentionWithinTarget(
 ): CriterionResult;
 ```
 
-Resolver `attemptLogId` contra `AttemptLog` y usar solo eventos cuyo intento
-fue `scheduled-review`. Excluir verificaciones, learning steps y practice. Con muestra suficiente, exigir retención dentro de
-`target ± tolerance`. Por debajo del mínimo, devolver “insufficient sample” y
-no declarar éxito de calibración final.
+Para cada revisión FSRS en estado `Review`, calcular primero la retrievability
+con el schedule y el reloj inyectado, y después resolver
+`recalled = seededRng.next() < retrievability`. La precisión o fluidez fija de
+la modalidad no participa en `recalled`; solo puede afectar después el grade,
+`latencyMs`, `interactionDurationMs` y otros parámetros secundarios.
+
+Resolver `attemptLogId` contra `AttemptLog` y usar una sola vez cada intento
+con `eventType === "scheduled-review"` que tenga un evento con
+`affectsSchedule === true`. Excluir verification, practice, learning-step y
+placement. Con muestra suficiente, exigir retención dentro de
+`target ± tolerance`. Por debajo del mínimo, devolver `insufficient-data` y no
+declarar éxito de calibración final.
 
 - [ ] **Step 2: Tests de éxito y fallo**
 
@@ -6074,17 +6100,16 @@ Sea `A` el mapa de `AttemptLog` por `id`. El conjunto evaluable es:
 ```text
 E = { event |
   event.affectsSchedule = true
-  ∧ event.priorSchedule.kind = "fsrs"
-  ∧ event.priorSchedule.state = "Review"
   ∧ A[event.attemptLogId].eventType = "scheduled-review"
 }
 ```
 
-La condición sobre `priorSchedule.state` excluye explícitamente verification,
-practice y los pasos `New | Learning | Relearning`, aunque alguno haya creado
-un evento FSRS. La simulación calcula la retrievability antes de construir el
-intento, usando `lastReview`, `stability` y los parámetros versionados del mismo
-scheduler FSRS:
+La clasificación del intento garantiza que solo un FSRS en estado `Review`
+usa `scheduled-review`; `New | Learning | Relearning` usan `learning-step`, y
+verification, practice y placement conservan sus tipos no programados. La
+simulación calcula la retrievability antes de construir el intento, usando
+`lastReview`, `stability` y los parámetros versionados del mismo scheduler
+FSRS:
 
 ```text
 t_i = max(0, (now_i - lastReview_i) / DAY_MS)
@@ -6094,7 +6119,7 @@ r_i = clamp(round((1 + factor × t_i / stability_i) ^ decay, 8), 0, 1)
 u_i = siguiente valor del PRNG semillado de la simulación
 correct_i = 1 si u_i < r_i; 0 en otro caso
 
-n = |E|
+n = número de attemptLogId únicos en E
 observedRetention = (Σ correct_i) / n
 ```
 
@@ -6107,7 +6132,7 @@ desde `priorSchedule`, porque `lastReview` no vive dentro de `ItemSchedule`.
 de `r_i`; no se sustituye por una probabilidad fija del perfil. Con
 `desiredRetention ≈ 0,90`, `n >= 50` y horizonte suficiente, C11 aprueba solo
 si `0,85 <= observedRetention <= 0,95`. Si `n < 50`, devuelve
-`insufficient-sample` y la aceptación continúa roja.
+`insufficient-data` y la aceptación continúa roja.
 
 La modalidad no participa en `correct_i`. Sí puede cambiar la distribución de
 `latencyMs`, `interactionDurationMs`, dificultad, pistas y la frontera
@@ -6256,6 +6281,8 @@ muestra generada por simulación nunca cambia ese estado a `ready`.
 
 **Files:**
 - Create: `lib/essential-words/simulation/scheduled-review-outcome.ts`
+- Create: `lib/essential-words/simulation/simulated-outcome.ts`
+- Create: `lib/essential-words/simulation/types.ts`
 - Modify: `lib/essential-words/simulation/apply-session.ts`
 - Modify: `lib/essential-words/simulation/criteria/retention.ts`
 - Modify: `lib/essential-words/verification/types.ts`
@@ -6270,8 +6297,10 @@ Implementar la fórmula anterior sin tocar sus límites. Tests obligatorios:
 - cambiar `accuracyByModality` no cambia la corrección de scheduled Review;
 - el evento audita retrievability y versiones de scheduler/parámetros;
 - verification, practice, New, Learning y Relearning no entran en C11;
-- `49` muestras devuelven `insufficient-sample`; `50` sí se evalúan;
-- `desiredRetention = 0,90` cierra C11 sin alterar C1–C10.
+- `49` muestras devuelven `insufficient-data`; `50` sí se evalúan;
+- una muestra controlada y suficiente programada alrededor de
+  `desiredRetention = 0,90` cierra C11 sin alterar C1–C10; el baseline completo
+  puede seguir rojo por retrasos/capacidad hasta las tareas posteriores.
 
 ### Task 8.6: Forecast y ledger de ocho sesiones
 

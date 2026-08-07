@@ -29,6 +29,7 @@ const cases: Array<{
   { mutation: "show-entire-recovery-backlog", profile: "bursty", expected: [1, 2] },
   { mutation: "synchronize-provisionals", profile: "steady", expected: [7] },
   { mutation: "low-retention", profile: "steady", expected: [11] },
+  { mutation: "perfect-retention", profile: "steady", expected: [11] },
 ];
 
 describe("motores adversariales", () => {

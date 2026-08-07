@@ -1,4 +1,9 @@
 import type { ExecutionContext } from "./execution-context";
+import {
+  FSRS_DESIRED_RETENTION,
+  FSRS_PARAMETERS_VERSION,
+  FSRS_SCHEDULER_VERSION,
+} from "@/lib/srs/fsrs-schedule";
 import { saveAttemptBundle } from "./queries";
 import { deriveObservations, derivePlacements } from "./verification/policy";
 import type {
@@ -10,8 +15,9 @@ import type {
 } from "./verification/types";
 
 const FSRS_AUDIT = {
-  schedulerVersion: "ts-fsrs-current",
-  desiredRetention: 0.9,
+  schedulerVersion: FSRS_SCHEDULER_VERSION,
+  parametersVersion: FSRS_PARAMETERS_VERSION,
+  desiredRetention: FSRS_DESIRED_RETENTION,
 } as const;
 
 export interface AttemptRecordInput {
@@ -20,6 +26,7 @@ export interface AttemptRecordInput {
   assessment: AttemptAssessment;
   eventType: AttemptEventType;
   currentItems: LearningItem[];
+  retrievabilityBeforeReview?: number;
 }
 
 export interface AttemptRecordPlan {
@@ -30,8 +37,9 @@ export interface AttemptRecordPlan {
 
 /**
  * Plans one immutable pedagogical interaction and its per-item SRS effects.
- * Practice and learning-step interactions retain evidence but do not modify a
- * schedule, so they intentionally create no review events.
+ * Practice interactions retain evidence but do not modify a schedule.
+ * FSRS learning steps do affect their schedule, but remain distinguishable
+ * from scheduled Review attempts for retention measurement.
  */
 export function planAttemptRecord(
   input: AttemptRecordInput,
@@ -49,7 +57,7 @@ export function planAttemptRecord(
     occurredAt,
   };
 
-  if (input.eventType === "practice" || input.eventType === "learning-step") {
+  if (input.eventType === "practice") {
     return { attemptLog, srsEvents: [], updatedItems: [] };
   }
 
@@ -78,7 +86,12 @@ export function planAttemptRecord(
     resultingSchedule: item.schedule,
     occurredAt,
     affectsSchedule: true,
-    fsrsAudit: FSRS_AUDIT,
+    fsrsAudit: {
+      ...FSRS_AUDIT,
+      ...(input.retrievabilityBeforeReview === undefined
+        ? {}
+        : { retrievabilityBeforeReview: input.retrievabilityBeforeReview }),
+    },
   }));
 
   return { attemptLog, srsEvents, updatedItems };

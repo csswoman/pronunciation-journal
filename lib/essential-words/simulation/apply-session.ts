@@ -1,4 +1,3 @@
-import type { AttemptOutcome } from "../attempt-grade";
 import type { ExecutionContext } from "../execution-context";
 import type { DailyPlan, PlannedItem } from "../planning-types";
 import {
@@ -13,8 +12,13 @@ import type {
   LearningItem,
 } from "../verification/types";
 import type { BaseLearningItem } from "./fixtures";
-import { answerCorrectly, type SimulationProfile } from "./profiles";
+import type { SimulationProfile } from "./profiles";
 import type { RandomSource } from "./random";
+import {
+  simulateScheduledReviewOutcome,
+  type SimulatedScheduledReview,
+} from "./scheduled-review-outcome";
+import { simulateAttemptOutcome } from "./simulated-outcome";
 import {
   findWordItem,
   replaceWorldItem,
@@ -26,6 +30,12 @@ import {
 export interface SimulatedCompletion {
   item: PlannedItem;
   assessment: AttemptAssessment;
+  scheduledReview?: SimulatedScheduledReview;
+}
+
+export interface SimulationReviewContext {
+  now: Date;
+  resolveItem(item: PlannedItem): LearningItem | undefined;
 }
 
 export interface AppliedSessionSummary {
@@ -37,41 +47,13 @@ export interface AppliedSessionSummary {
   correctScheduledReviews: number;
 }
 
-function simulatedOutcome(
-  item: PlannedItem,
-  profile: SimulationProfile,
-  durationMs: number,
-  random: RandomSource,
-): { outcome: AttemptOutcome; freeAudioReplays: number } {
-  const correct = answerCorrectly(profile, item.modality, random);
-  const supportRate = (1 - profile.accuracyByModality[item.modality]) * 0.4;
-  const hintsUsed = random.chance(supportRate) ? random.integer(1, 2) : 0;
-  const firstTryFailed = !correct && random.chance(profile.alreadyKnownOverestimateRate);
-  const rescued = !correct && !firstTryFailed && random.chance(0.2);
-  const audioModality = item.modality === "listening" || item.modality === "pronunciation";
-  const freeAudioReplays = audioModality && random.chance(profile.audioReplayRate)
-    ? random.integer(1, 2)
-    : 0;
-
-  return {
-    outcome: {
-      correct,
-      hintsUsed,
-      rescued,
-      typo: false,
-      firstTryFailed,
-      latencyMs: Math.max(500, Math.round(durationMs * (0.55 + random.next() * 0.3))),
-    },
-    freeAudioReplays,
-  };
-}
-
 export function completePlannedSession(
   queue: PlannedItem[],
   profile: SimulationProfile,
   costs: Record<AttemptModality, number>,
   budgetSeconds: number,
   random: RandomSource,
+  reviewContext?: SimulationReviewContext,
 ): SimulatedCompletion[] {
   const completions: SimulatedCompletion[] = [];
   const completionBudgetMs = budgetSeconds * profile.completionBudgetRatio * 1_000;
@@ -84,18 +66,38 @@ export function completePlannedSession(
     );
     if (completions.length > 0 && consumedMs + durationMs > completionBudgetMs) break;
 
-    const { outcome, freeAudioReplays } = simulatedOutcome(
+    const scheduled = reviewContext
+      ? (() => {
+          const current = reviewContext.resolveItem(item);
+          return current
+            ? simulateScheduledReviewOutcome(current, reviewContext.now, random)
+            : null;
+        })()
+      : null;
+    const { outcome, freeAudioReplays } = simulateAttemptOutcome(
       item,
       profile,
       durationMs,
       random,
+      scheduled?.recalled,
     );
+    const assessment = buildAssessment(outcome, item.modality, {
+      interactionDurationMs: durationMs,
+      freeAudioReplays,
+    });
     completions.push({
       item,
-      assessment: buildAssessment(outcome, item.modality, {
-        interactionDurationMs: durationMs,
-        freeAudioReplays,
-      }),
+      assessment,
+      ...(scheduled
+        ? {
+            scheduledReview: {
+              ...scheduled,
+              grade: assessment.grade,
+              eventType: "scheduled-review" as const,
+              affectsSchedule: true as const,
+            },
+          }
+        : {}),
     });
     consumedMs += durationMs;
   }
@@ -116,7 +118,8 @@ export function itemsObservedBy(
 }
 
 function eventTypeFor(item: LearningItem): AttemptEventType {
-  return item.schedule.kind === "fsrs" ? "scheduled-review" : "verification";
+  if (item.schedule.kind !== "fsrs") return "verification";
+  return item.schedule.state === "Review" ? "scheduled-review" : "learning-step";
 }
 
 function usageAttemptPlan(
@@ -136,6 +139,7 @@ function usageAttemptPlan(
     assessment: completion.assessment,
     eventType: eventTypeFor(item),
     currentItems: [surrogate],
+    retrievabilityBeforeReview: completion.scheduledReview?.retrievability,
   }, context);
   const scheduled = plan.updatedItems[0];
   if (!scheduled || !item.payload) throw new Error("usage activation produced no schedule");
@@ -202,6 +206,7 @@ export function applyCompletedSession(
           assessment: completion.assessment,
           eventType: eventTypeFor(current),
           currentItems,
+          retrievabilityBeforeReview: completion.scheduledReview?.retrievability,
         }, context);
 
     applyAttemptRecordToWorld(world, record);

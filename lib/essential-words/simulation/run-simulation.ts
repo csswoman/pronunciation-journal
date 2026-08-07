@@ -6,11 +6,7 @@ import { planDailySession } from "../daily-budget";
 import type { ActivationLimits, DailyPlanningInput } from "../planning-types";
 import { backlogSeconds, DEFAULT_RECOVERY_POLICY } from "../recovery-mode";
 import { buildSkillQueue } from "../skill-queue";
-import type {
-  AttemptLog,
-  AttemptModality,
-  SrsReviewEvent,
-} from "../verification/types";
+import type { AttemptModality } from "../verification/types";
 import {
   applyCompletedSession,
   completePlannedSession,
@@ -46,9 +42,8 @@ import {
   findWordItem,
   simulationContext,
   type SimulationOptions,
-  type SimulationWorld,
-  type SimulationWorldCounts,
 } from "./state";
+import type { SimulatedDay, SimulationResult } from "./types";
 
 export const SIMULATION_COSTS: Record<AttemptModality, number> = {
   ...DEFAULT_SECONDS_BY_MODALITY,
@@ -60,45 +55,8 @@ export const SIMULATION_ACTIVATION_LIMITS: ActivationLimits = {
   maxPerItemPerSession: 1,
 };
 
-export interface SimulatedDay {
-  date: string;
-  active: boolean;
-  dailyBudgetSeconds: number;
-  plannedSeconds: number;
-  completedSeconds: number;
-  plannedItems: number;
-  completedItems: number;
-  mandatorySelected: number;
-  deferredMandatory: number;
-  backlogSeconds: number;
-  mode: "normal" | "recovery";
-  newWords: number;
-  baseSkillActivations: number;
-  newWordMeaningActivations: number;
-  usageActivations: number;
-  provisionalDue: number;
-  placementConversions: number;
-  scheduledReviews: number;
-  correctScheduledReviews: number;
-  oldestDeferredAgeSessions: number;
-  listeningEligibleWaiting: number;
-  productionEligibleWaiting: number;
-}
-
-export interface SimulationResult {
-  days: SimulatedDay[];
-  world: SimulationWorld;
-  worldCounts: SimulationWorldCounts;
-  attemptLogs: AttemptLog[];
-  srsEvents: SrsReviewEvent[];
-  eligibility: EligibilityObservation[];
-  deferredObservations: DeferredObservation[];
-  nonTrivialFailures: string[];
-  maxDeferredAgeSessions: number;
-  options: SimulationOptions;
-}
-
 export type { SimulationHarnessHooks, SimulationHookContext } from "./observations";
+export type { SimulatedDay, SimulationResult } from "./types";
 
 export function runSimulation(
   profile: SimulationProfile,
@@ -197,6 +155,13 @@ export function runSimulation(
       SIMULATION_COSTS,
       options.dailyBudgetSeconds,
       random,
+      {
+        now,
+        resolveItem: (item) => {
+          const word = world.words.get(item.wordId);
+          return word ? findWordItem(word, item.itemId) : undefined;
+        },
+      },
     );
     completions = hooks.mutateCompletions?.(completions, hookContext) ?? completions;
     const sessionIndex = world.sessionIndex;

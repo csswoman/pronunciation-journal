@@ -8,7 +8,13 @@
  * that table is a separate SM-2 domain and does not use SRSData.
  */
 
-import { fsrs, generatorParameters, Rating, State } from "ts-fsrs";
+import {
+  forgetting_curve,
+  fsrs,
+  generatorParameters,
+  Rating,
+  State,
+} from "ts-fsrs";
 import type { Card, Grade as FsrsRating } from "ts-fsrs";
 import type { FsrsCardState } from "@/lib/types";
 import type { Grade } from "@/lib/essential-words/attempt-grade";
@@ -54,8 +60,40 @@ const FSRS_TO_STATE: Record<State, FsrsCardState> = {
   [State.Relearning]: "Relearning",
 };
 
-const DAY_MS = 86_400_000;
-const scheduler = fsrs(generatorParameters());
+export const FSRS_SCHEDULER_VERSION = "ts-fsrs@5.4.1";
+export const FSRS_PARAMETERS_VERSION = "ts-fsrs@5.4.1/default-w";
+export const FSRS_DESIRED_RETENTION = 0.9;
+export const DAY_MS = 86_400_000;
+
+const FSRS_PARAMETERS = generatorParameters({
+  request_retention: FSRS_DESIRED_RETENTION,
+});
+const scheduler = fsrs(FSRS_PARAMETERS);
+
+export interface FsrsRetrievabilityInput {
+  stability: number;
+  lastReview: Date;
+  now: Date;
+}
+
+/** Calculates recall probability using the same versioned parameters as scheduling. */
+export function calculateFsrsRetrievability(
+  input: FsrsRetrievabilityInput,
+): number {
+  if (!Number.isFinite(input.stability) || input.stability <= 0) {
+    throw new Error("FSRS retrievability requires positive stability");
+  }
+  const elapsedDays = Math.max(
+    0,
+    (input.now.getTime() - input.lastReview.getTime()) / DAY_MS,
+  );
+  const retrievability = forgetting_curve(
+    FSRS_PARAMETERS.w,
+    elapsedDays,
+    input.stability,
+  );
+  return Math.min(1, Math.max(0, retrievability));
+}
 
 export function scheduleFsrsReview(input: FsrsScheduleInput): FsrsScheduleResult {
   const now = input.now ?? new Date();
