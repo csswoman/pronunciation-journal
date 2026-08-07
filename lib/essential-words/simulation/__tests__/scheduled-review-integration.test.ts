@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { DEFAULT_SECONDS_BY_MODALITY } from "../../cost-estimate";
+import { emptyLoadBreakdown } from "../../planning-load";
 import type { DailyPlan, PlannedItem } from "../../planning-types";
 import { applyCompletedSession, completePlannedSession } from "../apply-session";
 import { PROFILES } from "../profiles";
@@ -33,7 +34,10 @@ function plan(item: PlannedItem): DailyPlan {
     baseSkillSelected: [],
     usageSelected: [],
     newWordsSelected: [],
+    placementSelected: [],
+    placementDeferred: 0,
     futureReservations: [],
+    loadBreakdown: emptyLoadBreakdown(),
   };
 }
 

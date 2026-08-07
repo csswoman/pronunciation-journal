@@ -51,7 +51,8 @@ export function buildFutureCapacity(
       })),
     ],
     pendingBase: pendingBaseReservations(deferredBase, input),
-    futureReservations: input.capacityForecast.futureReservations,
+    futureReservations: input.capacityForecast.futureReservations
+      .filter((reservation) => reservation.deadlineSession <= 8),
   });
 }
 

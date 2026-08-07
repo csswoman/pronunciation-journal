@@ -113,7 +113,14 @@ export function runSimulation(
         deferredMandatory: world.deferred.size, backlogSeconds: backlog,
         mode: world.previousMode, newWords: 0, baseSkillActivations: 0,
         newWordMeaningActivations: 0, usageActivations: 0,
-        provisionalDue: mandatory.provisionalDue.length, placementConversions: 0,
+        provisionalDue: mandatory.provisionalDue.length,
+        placementCandidates: candidates.placementCandidates.length,
+        placementConversions: 0,
+        placementConversionsDeferred: candidates.placementCandidates.length,
+        placementReservedSeconds: 0,
+        placementListeningReservations: 0,
+        placementProductionReservations: 0,
+        provisionalDueDistribution: {},
         scheduledReviews: 0, correctScheduledReviews: 0,
         oldestDeferredAgeSessions: oldestDeferredAge(world),
         listeningEligibleWaiting: waiting.listening,
@@ -122,13 +129,11 @@ export function runSimulation(
       continue;
     }
 
-    const placementConversions = applyInferenceConversions(
-      world,
-      candidates.inferredConversions,
-      date,
-    );
-    candidates = collectCandidates(world, profile, context);
-    candidates = hooks.mutateCandidates?.(candidates, hookContext) ?? candidates;
+    const activeSessionDates = calendar
+      .map((active, index) => (
+        active && index > dayIndex ? dateAtDay(start, index) : null
+      ))
+      .filter((date): date is Date => date !== null);
     const dueReservations = beginActiveSessionReservations(world);
     const planningInput: DailyPlanningInput = {
       dailyBudgetSeconds: options.dailyBudgetSeconds,
@@ -138,6 +143,7 @@ export function runSimulation(
         baseSkillActivations: candidates.baseSkillActivations,
         usageActivations: candidates.usageActivations,
         newWords: candidates.newWords,
+        placementCandidates: candidates.placementCandidates,
       },
       estimatedSeconds: {
         byModality: SIMULATION_COSTS,
@@ -154,6 +160,11 @@ export function runSimulation(
         SIMULATION_COSTS,
         dueReservations,
       ),
+      placementContext: {
+        now,
+        maxConversionsPerSession: candidates.conversionLimit,
+        activeSessionDates,
+      },
     };
     let plan = planDailySession(
       planningInput,
@@ -161,6 +172,20 @@ export function runSimulation(
       DEFAULT_RECOVERY_POLICY,
     );
     plan = hooks.mutatePlan?.(plan, mandatory, hookContext) ?? plan;
+    const placementConversions = applyInferenceConversions(
+      world,
+      plan.placementSelected,
+      date,
+    );
+    const placementReservations = plan.futureReservations.filter((item) => (
+      item.source === "placement"
+    ));
+    const provisionalDueDistribution: Record<string, number> = {};
+    for (const item of plan.placementSelected) {
+      if (item.schedule.kind !== "provisional") continue;
+      const key = item.schedule.dueAt.slice(0, 10);
+      provisionalDueDistribution[key] = (provisionalDueDistribution[key] ?? 0) + 1;
+    }
     const queue = buildSkillQueue({ plan });
     let completions = completePlannedSession(
       queue,
@@ -211,7 +236,18 @@ export function runSimulation(
       newWordMeaningActivations: summary.newWords,
       usageActivations: summary.usageActivations,
       provisionalDue: mandatory.provisionalDue.length,
+      placementCandidates: candidates.placementCandidates.length,
       placementConversions,
+      placementConversionsDeferred: plan.placementDeferred,
+      placementReservedSeconds: placementReservations.reduce(
+        (total, item) => total + item.estimatedSeconds,
+        0,
+      ),
+      placementListeningReservations: placementReservations
+        .filter((item) => item.skill === "listening").length,
+      placementProductionReservations: placementReservations
+        .filter((item) => item.skill === "production").length,
+      provisionalDueDistribution,
       scheduledReviews: summary.scheduledReviews,
       correctScheduledReviews: summary.correctScheduledReviews,
       oldestDeferredAgeSessions: oldestDeferredAge(world),

@@ -131,23 +131,21 @@ describe("collectCandidates", () => {
     ).baseSkillActivations[0].skill).toBe("production");
   });
 
-  it("convierte placement gradualmente y una confianza menor reduce el lote", () => {
+  it("limita conversiones placement y una confianza menor reduce el techo", () => {
     const high = createInitialWorld(options, PROFILES.advanced);
     const degraded = createInitialWorld(options, PROFILES.advanced);
     for (const word of degraded.words.values()) {
       if (word.meaning.placementInference) word.meaning.placementInference.confidence = 0.2;
     }
     const context = simulationContext(NOW, 42, { value: 0 });
-    const highConversions = collectCandidates(high, PROFILES.advanced, context)
-      .inferredConversions;
-    const lowConversions = collectCandidates(degraded, PROFILES.advanced, context)
-      .inferredConversions;
+    const highCandidates = collectCandidates(high, PROFILES.advanced, context);
+    const lowCandidates = collectCandidates(degraded, PROFILES.advanced, context);
 
-    expect(highConversions.length).toBeGreaterThan(0);
-    expect(highConversions.length).toBeLessThanOrEqual(8);
-    expect(lowConversions.length).toBeLessThan(highConversions.length);
-    expect(highConversions.every((item) => (
-      item.schedule.kind === "provisional"
+    expect(highCandidates.placementCandidates.length).toBeGreaterThan(0);
+    expect(highCandidates.conversionLimit).toBeLessThanOrEqual(8);
+    expect(lowCandidates.conversionLimit).toBeLessThan(highCandidates.conversionLimit);
+    expect(highCandidates.placementCandidates.every((item) => (
+      item.schedule.kind === "none"
       && item.placementInference !== undefined
     ))).toBe(true);
   });

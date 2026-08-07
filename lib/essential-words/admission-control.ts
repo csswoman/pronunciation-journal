@@ -8,6 +8,12 @@ import type {
 } from "./planning-types";
 import type { AttemptModality } from "./verification/types";
 
+export {
+  admitPlacementConversions,
+  type PlacementAdmissionInput,
+  type PlacementAdmissionResult,
+} from "./placement/admission";
+
 export interface NewWordAdmissionInput {
   candidates: readonly NewWordCandidate[];
   configuredNewWordLimit: number;

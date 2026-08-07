@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { DEFAULT_SECONDS_BY_MODALITY } from "../cost-estimate";
 import { planDailySession } from "../daily-budget";
 import { buildSkillQueue } from "../skill-queue";
+import { emptyLoadBreakdown } from "../planning-load";
 import type {
   ActivationCandidate,
   ActivationLimits,
@@ -58,7 +59,10 @@ const plan = (overrides: Partial<DailyPlan> = {}): DailyPlan => ({
   baseSkillSelected: [],
   usageSelected: [],
   newWordsSelected: [],
+  placementSelected: [],
+  placementDeferred: 0,
   futureReservations: [],
+  loadBreakdown: emptyLoadBreakdown(),
   ...overrides,
 });
 

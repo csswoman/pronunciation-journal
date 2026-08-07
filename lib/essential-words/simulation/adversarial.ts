@@ -72,7 +72,9 @@ function hooksForMutation(mutation: SimulationMutation): SimulationHarnessHooks 
   } else if (mutation === "ignore-placement") {
     hooks.mutateCandidates = (candidates) => ({
       ...candidates,
+      placementCandidates: [],
       inferredConversions: [],
+      conversionLimit: 0,
     });
   } else if (mutation === "duplicate-base-activations") {
     hooks.mutatePlan = (plan) => {

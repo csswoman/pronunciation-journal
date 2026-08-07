@@ -76,6 +76,10 @@ export function planInferences(
  * vencimientos distribuidos. Sin este límite, la colocación podría sembrar
  * cientos de revisiones sincronizadas en la misma ventana de 7 a 21 días.
  *
+ * En planificación real, `admitPlacementConversions` debe filtrar antes por
+ * capacidad futura; este helper solo aplica el schedule provisional al lote
+ * ya admitido (o a tests unitarios del techo diario).
+ *
  * La inferencia se conserva como telemetría: deja de controlar el schedule,
  * pero permite recalibrar la política de banda después de verificaciones.
  */

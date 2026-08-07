@@ -23,7 +23,13 @@ export interface SimulatedDay {
   newWordMeaningActivations: number;
   usageActivations: number;
   provisionalDue: number;
+  placementCandidates: number;
   placementConversions: number;
+  placementConversionsDeferred: number;
+  placementReservedSeconds: number;
+  placementListeningReservations: number;
+  placementProductionReservations: number;
+  provisionalDueDistribution: Record<string, number>;
   scheduledReviews: number;
   correctScheduledReviews: number;
   oldestDeferredAgeSessions: number;

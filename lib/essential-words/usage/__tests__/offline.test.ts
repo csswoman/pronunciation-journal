@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { deriveUsageLifecycle } from "../../skill-item";
 import { buildSkillQueue } from "../../skill-queue";
+import { emptyLoadBreakdown } from "../../planning-load";
 import type { DailyAllowance, DailyPlan } from "../../planning-types";
 import { AUTHORED_ON_USAGES } from "./fixtures/authored-usage";
 
@@ -23,7 +24,10 @@ const plan = (over: Partial<DailyPlan> = {}): DailyPlan => ({
   baseSkillSelected: [],
   usageSelected: [],
   newWordsSelected: [],
+  placementSelected: [],
+  placementDeferred: 0,
   futureReservations: [],
+  loadBreakdown: emptyLoadBreakdown(),
   ...over,
 });
 

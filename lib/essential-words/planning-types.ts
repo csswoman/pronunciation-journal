@@ -1,4 +1,8 @@
-import type { AttemptModality, Skill } from "./verification/types";
+import type {
+  AttemptModality,
+  LearningItem,
+  Skill,
+} from "./verification/types";
 
 /** An already-scheduled item that competes for the daily time budget. */
 export interface PlannedItem {
@@ -47,6 +51,42 @@ export interface ForecastCapacityDemand {
   estimatedSeconds: number;
 }
 
+/** Future load created by converting one PlacementInference. */
+export interface PlacementConversionDemand {
+  inferenceId: string;
+  wordId: string;
+  reservations: Array<{
+    itemId: string;
+    skill: "listening" | "production";
+    estimatedSeconds: number;
+    deadlineSession: number;
+  }>;
+  provisionalDemand?: Array<{
+    itemId: string;
+    estimatedSeconds: number;
+    dueWindowStartSession: number;
+    dueWindowEndSession: number;
+  }>;
+}
+
+/** Planned seconds separated by source — never a generic "skill" bucket. */
+export interface PlanningLoadBreakdown {
+  mandatoryReviewSeconds: number;
+  learningStepSeconds: number;
+  pendingBaseSeconds: number;
+  placementSeconds: number;
+  usageSeconds: number;
+  newWordSeconds: number;
+  deferredMandatorySeconds: number;
+  futureReservedSeconds: number;
+}
+
+export interface PlacementPlanningContext {
+  now: Date;
+  maxConversionsPerSession: number;
+  activeSessionDates: readonly Date[];
+}
+
 export interface CapacityForecastPlanningInput {
   sessions: ForecastSessionCapacity[];
   mandatory: ForecastCapacityDemand[];
@@ -67,6 +107,7 @@ export interface DailyPlanningInput {
     baseSkillActivations: ActivationCandidate[];
     usageActivations: ActivationCandidate[];
     newWords: NewWordCandidate[];
+    placementCandidates?: LearningItem[];
   };
   estimatedSeconds: {
     byModality: Record<AttemptModality, number>;
@@ -79,6 +120,7 @@ export interface DailyPlanningInput {
   };
   previousMode: "normal" | "recovery";
   capacityForecast: CapacityForecastPlanningInput;
+  placementContext?: PlacementPlanningContext;
 }
 
 export interface DailyAllowance {
@@ -112,5 +154,8 @@ export interface DailyPlan {
   baseSkillSelected: ActivationCandidate[];
   usageSelected: ActivationCandidate[];
   newWordsSelected: NewWordCandidate[];
+  placementSelected: LearningItem[];
+  placementDeferred: number;
   futureReservations: CapacityReservation[];
+  loadBreakdown: PlanningLoadBreakdown;
 }

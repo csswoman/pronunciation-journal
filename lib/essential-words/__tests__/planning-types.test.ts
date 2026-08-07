@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { emptyLoadBreakdown } from "../planning-load";
 import type {
   DailyAllowance,
   DailyPlan,
@@ -43,7 +44,10 @@ describe("unidades del plan diario", () => {
       baseSkillSelected: [],
       usageSelected: [],
       newWordsSelected: [],
+      placementSelected: [],
+      placementDeferred: 0,
       futureReservations: [],
+      loadBreakdown: emptyLoadBreakdown(),
       allowance: {
         newWords: 0,
         capacitySafeNewWords: 0,

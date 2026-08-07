@@ -1,9 +1,6 @@
 import type { ExecutionContext } from "../execution-context";
 import { DEFAULT_MATURITY_POLICY } from "../skill-item";
-import {
-  convertInferences,
-  DEFAULT_CONVERSIONS_PER_DAY,
-} from "../placement/policy";
+import { DEFAULT_CONVERSIONS_PER_DAY } from "../placement/policy";
 import { pickControlSamples } from "../placement/control-sampling";
 import type {
   ActivationCandidate,
@@ -26,7 +23,11 @@ export interface SimulationCandidates {
   baseSkillActivations: ActivationCandidate[];
   usageActivations: ActivationCandidate[];
   newWords: NewWordCandidate[];
+  /** Inferred meanings awaiting capacity-aware conversion. */
+  placementCandidates: LearningItem[];
+  /** @deprecated Prefer placementCandidates; kept for adversarial hooks. */
   inferredConversions: LearningItem[];
+  conversionLimit: number;
 }
 
 function modalityFor(skill: Skill): PlannedItem["modality"] {
@@ -185,17 +186,13 @@ export function collectCandidates(
     .filter((item) => item.placementInference && item.schedule.kind === "none");
   const controls = pickControlSamples(inferred, world.sessionIndex + 1);
   const controlIds = new Set(controls.map((item) => item.id));
-  const orderedInferences = [
-    ...controls,
-    ...inferred.filter((item) => !controlIds.has(item.id)),
-  ];
-  const inferredConversions = profile.placementConfidence === "high"
-    ? convertInferences(
-        orderedInferences,
-        conversionLimit(orderedInferences),
-        context.now,
-      )
+  const placementCandidates = profile.placementConfidence === "high"
+    ? [
+        ...controls,
+        ...inferred.filter((item) => !controlIds.has(item.id)),
+      ]
     : [];
+  const limit = conversionLimit(placementCandidates);
 
   const newWords = words
     .filter((word) => (
@@ -210,6 +207,8 @@ export function collectCandidates(
     baseSkillActivations,
     usageActivations,
     newWords,
-    inferredConversions,
+    placementCandidates,
+    inferredConversions: placementCandidates,
+    conversionLimit: limit,
   };
 }

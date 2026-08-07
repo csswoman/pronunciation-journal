@@ -27,6 +27,24 @@ function hash(value: string): number {
 }
 
 /**
+ * Deterministic due dates inside the origin window, starting at
+ * `hash(itemId) mod span` and walking the rest of the offsets.
+ */
+export function provisionalDueCandidates(
+  origin: ProvisionalOrigin,
+  itemId: string,
+  now: Date,
+): Date[] {
+  const { minDays, maxDays } = PROVISIONAL_WINDOWS[origin];
+  const span = maxDays - minDays + 1;
+  const start = hash(itemId) % span;
+  return Array.from({ length: span }, (_, index) => {
+    const days = minDays + ((start + index) % span);
+    return new Date(now.getTime() + days * DAY_MS);
+  });
+}
+
+/**
  * Returns a deterministic due date inside the origin's window. Item-derived
  * offsets spread provisional reviews without relying on random state.
  */
@@ -35,9 +53,28 @@ export function provisionalDueAt(
   itemId: string,
   now: Date,
 ): Date {
-  const { minDays, maxDays } = PROVISIONAL_WINDOWS[origin];
-  const span = maxDays - minDays + 1;
-  const days = minDays + (hash(itemId) % span);
+  return provisionalDueCandidates(origin, itemId, now)[0];
+}
 
-  return new Date(now.getTime() + days * DAY_MS);
+/** True when active sessions cover the full provisional window for `origin`. */
+export function hasProvisionalForecast(
+  origin: ProvisionalOrigin,
+  now: Date,
+  activeSessionDates: readonly Date[],
+): boolean {
+  if (activeSessionDates.length === 0) return false;
+  const maxDue = new Date(
+    now.getTime() + PROVISIONAL_WINDOWS[origin].maxDays * DAY_MS,
+  );
+  const last = activeSessionDates[activeSessionDates.length - 1];
+  return last.getTime() >= maxDue.getTime();
+}
+
+/** 1-based active-session offset whose date is >= dueAt, or null. */
+export function activeSessionOffsetForDueAt(
+  activeSessionDates: readonly Date[],
+  dueAt: Date,
+): number | null {
+  const index = activeSessionDates.findIndex((date) => date.getTime() >= dueAt.getTime());
+  return index >= 0 ? index + 1 : null;
 }
