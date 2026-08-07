@@ -1614,7 +1614,15 @@ requiere proveedor.
 
 ## Fase 8 — Simulación fiel y calibración
 
-**Estado:** detenida en 8.5 por bloqueo de diseño. No iniciar Fase 9.
+**Estado:** detenida en 8.9j por bloqueo de diseño en C9. No iniciar 8.10 ni
+Fase 9. Auditoría 8.9j (ver
+`docs/superpowers/plans/notes/2026-08-07-fase8-9j-c9-audit-report.md`)
+confirmó que el contrato de reserva de 8.6 es correcto (cero reservas
+perdidas o faltantes en 5 perfiles) y que el rojo de C9 viene de: (a)
+forecast de admisión sistemáticamente optimista bajo demanda sostenida
+(steady/intermittent/beginner — requiere decisión hard-vs-best-effort), y
+(b) placement sin freno agregado contra C9, contradiciendo el texto de la
+Task 8.7 (advanced — corrección identificada, no implementada).
 
 Objetivo: simular el diseño real durante 180 días, corregir primero los
 contratos estructurales y fijar parámetros solo con aceptación verde y datos
@@ -1837,10 +1845,10 @@ relaja un criterio.
 | §9 criterio 5 | recoveryReturnSessions | 8.3 | 8.4 Ráfagas, 8.9 |
 | §9 criterio 6 | usageActivationShare | 8.3 | 8.4, 8.10 |
 | §9 criterio 7 | synchronizedPeaks | 8.3 | 8.4, 8.10 |
-| §9 criterio 8 | newWordLiveness | 8.3 | 8.4 Constante, 8.9 |
-| §9 criterio 9 | baseSkillActivationLiveness | 8.3, 8.6–8.7 | 8.4, 8.9–8.10 |
+| §9 criterio 8 | newWordLiveness (capacity-conditioned, 8.9i) | 8.3, 8.9h–8.9i | 8.4 Constante, 8.9 |
+| §9 criterio 9 | baseSkillActivationLiveness (auditado 8.9j) | 8.3, 8.6–8.7, 8.9j | 8.4, 8.9–8.10 |
 | §9 criterio 10 | overdueStarvation | 8.3 | 8.4, 8.9 |
-| §9 criterio 11 | observedRetention | 8.3, 8.5 | 8.4, 8.9 |
+| §9 criterio 11 | observedRetention / retentionCalibrationWithinExpected (8.9i) | 8.3, 8.5, 8.9g–8.9i | 8.4, 8.9 |
 | §10 calibración | calibration/*, nota | 8.8 | 8.9–8.12 |
 | §11 rollout | router/flags/telemetry | 9.1–9.3 | 9.4 |
 | §12 fuera de alcance | documentación, sin implementación | — | — |
