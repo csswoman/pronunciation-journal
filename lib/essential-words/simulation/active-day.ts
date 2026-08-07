@@ -81,7 +81,9 @@ export function buildActiveSimulatedDay(input: {
     .reduce((total, item) => total + input.costs[item.modality], 0);
   const remainingBaseSlots = Math.max(
     0,
-    input.activationLimits.maxBaseSkillActivationsPerSession
+    input.activationLimits.absoluteBaseActivationSafetyCeiling
+      ?? input.activationLimits.maxBaseSkillActivationsPerSession
+      ?? 24
       - input.plan.baseSkillSelected.length,
   );
   const topBaseBlockingReason = topBlockingReasonFromDiagnostics(
@@ -155,5 +157,8 @@ export function buildActiveSimulatedDay(input: {
     productionEligibleWaiting: input.waiting.production,
     ...forecastTelemetry,
     topBaseBlockingReason,
+    mandatorySelectedSeconds: mandatorySeconds,
+    dynamicBaseAllowanceMax: input.plan.allowance.dynamicBaseAllowanceMax,
+    dynamicBaseLimitingFactor: input.plan.allowance.dynamicBaseLimitingFactor,
   };
 }

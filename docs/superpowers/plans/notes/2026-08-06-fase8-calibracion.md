@@ -1,95 +1,76 @@
-# Fase 8 — Task 8.9d: feasibility multidimensional (segundos + slots)
+# Fase 8 — Task 8.9e: dynamic base activation allowance
 
 Fecha: 2026-08-07
 
-Estado: **DETENER — C8/C9 matemáticamente incompatibles con el contrato
-actual de `maxBaseSkillActivationsPerSession=4`.** No se inicia 8.10.
-No se elige automáticamente opción A ni B.
+Estado: **implementado allowance dinámico (opción B).** No se inicia 8.10.
+Gate estructural C8/C9 **no cerrado**: el limitador real es mandatory de
+sesión (~780s/900), no el hard cap de 4. C1–C5/C7/C10 verdes donde aplica
+acceptance. C6 diferido a 8.10. No se relajan criterios.
 
-## Contrato real de `maxBaseSkillActivationsPerSession`
+## Decisión
 
-Documentado en `describeMaxBaseSkillActivationsContract()`
-(`base-throughput-contract-v1`):
+`maxBaseSkillActivationsPerSession=4` **no** es hard cap de producto.
+Sustituido por:
 
-| Pregunta | Respuesta (comportamiento LIVE) |
-|---|---|
-| A. ¿Hard cap? | **Sí**, techo de `selectActivations` para pending-base |
-| B. ¿Safety/default? | Origen Task 8.9 como knob estructural; hoy se aplica |
-| C. ¿L+P conjunto? | **Sí**, un solo contador |
-| D. ¿Placement consume el cap? | **No** en conversión; sí después al activar L/P |
-| E. ¿Learning steps? | **No** — van por `selectMandatory` |
-| Excepción | `dueBaseCount` puede **subir** el techo para due ya reservados |
+| Campo | Valor | Rol |
+|---|---|---|
+| `absoluteSafetyCeiling` / `absoluteBaseActivationSafetyCeiling` | **24** | Anti-runaway (2× demanda C8=12). No target habitual. |
+| `reserveShare` | 0.1 | Reserva residual para mandatory no previsto |
+| `maxWaitSessions` | 8 | Deadline C9 |
+| Packer | uno-a-uno por fairness + coste modalidad | Capacidad real |
 
-Para demanda C8 de nuevas palabras, feasibility modela
-`serviceCapacity = maxBase` (sin due override): los due excepcionales sirven
-deuda heredada, no crean capacidad para 12 activaciones/sesión nuevas.
+Legacy `maxBaseSkillActivationsPerSession` queda `@deprecated`.
+`describeMaxBaseSkillActivationsContract()` → `isHardCap: false`.
 
-## Demanda derivada (no hardcode)
+## Algoritmo
 
 ```
-requiredNewWords = ceil(10 × 0.60) = 6
-requiredBaseSkills = [listening, production]  // contrato C9
-requiredBase/session = 6 × 2 = 12
-requiredBase/horizonte8 = 12 × 8 = 96
-serviceBase/horizonte8 = 4 × 8 = 32
-96 > 32 ⇒ baseActivations.infeasible ⇒ overall.infeasible
+residualAfterReserve = residualSecondsToday × (1 − reserveShare)
+ordenar: deadline C9 → wait → urgency → itemId
+  (+ interleave L/P urgentes; pending > placement)
+recovery: near-C9 primero, luego menos urgentes (pending no desaparece)
+para cada candidato:
+  si no cabe (segundos / forecast / ceiling) → PARAR
+  si cabe → seleccionar y descontar coste real de modalidad
 ```
 
-Segundos pueden seguir `feasible` — **no** salvan overall.
+No `floor(available / averageBaseCost)`.
 
-## Steady (hipótesis 96 vs 32)
+## Justificación ceiling=24
 
-| Métrica | Valor |
-|---|---|
-| required new words/sesión | 6 |
-| required base/sesión | 12 |
-| base service cap/sesión | 4 |
-| served base/sesión (sim) | ~2.1 |
-| required over 8 (solo C8) | **96** |
-| capacity over 8 | **32** |
-| seconds status | feasible |
-| base-slot status | **infeasible** |
-| overall target | **infeasible** |
-| worst rolling-window margin | −213 |
-| placement base demand | 0 |
+Superior a la demanda normal factible C8 (12 act/sesión) para que
+`limitingFactor` habitual sea `time-budget` / `future-capacity` / `no-pending`,
+no `safety-ceiling`. Acota runaway si el packer o admission fallan.
 
-## Cinco perfiles (sin cambiar políticas)
+## Dump seed=42 / 180d / budget 900 (post-8.9e)
 
-| Perfil | C8 | req base/s | cap | served | over8 req* | over8 cap | placement/s | worst window | seconds | slots | overall |
+| Perfil | allow p50/p95/max | limiting | served | L/P | C8 | C9 | C11 | mand s | proj svc | sec | slots |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| steady | sí | 12 | 4 | ~2.1 | 96† / ~131* | 32 | 0 | −213 | feasible | **infeasible** | **infeasible** |
-| intermittent | n/a | 0 | 4 | ~1.6 | ~57* | 32 | 0 | −178 | feasible | infeasible | n/a |
-| bursty | n/a | 0 | 4 | ~1.9 | ~38* | 32 | 0 | −134 | feasible | infeasible | n/a |
-| beginner | n/a | 0 | 4 | ~0.6 | ~36* | 32 | 0 | −120 | feasible | infeasible | n/a |
-| advanced | n/a | 0 | 4 | ~2.7 | ~239* | 32 | **~23.3** | −875 | feasible | infeasible | n/a |
+| steady | 0/9/20 | no-pend 93, time 87 | 2.11 | 1.08/1.08 | 0.11 fail | 26 | pass | 779 | 4 | **infeas** | **infeas** |
+| intermittent | 0/10/20 | time 68 | 1.73 | 1.17/1.08 | n/a | 21 | fail | 780 | 4 | feas | infeas |
+| bursty | 0/10/20 | mix | 1.78 | 0.94/0.84 | n/a | 14 | fail | 783 | 4 | feas | infeas |
+| beginner | 0/6/20 | time 124 | 0.55 | 0.58/0.58 | n/a | 66 | fail | 839 | 2 | feas | infeas |
+| advanced | 1/10/20 | mix | 2.75 | 1.39/1.40 | n/a | 24 | pass | 715 | 7 | feas | infeas |
 
-\*Incluye pending (+ placement). †Hipótesis pura C8→C9 sin deuda heredada.
+Feasibility ahora usa `mandatorySelectedSeconds` real. Con ~780s mandatory,
+proyección ≈ 2–4 act/sesión ≪ 12 requeridas → overall **infeasible** de forma
+honesta (el “seconds feasible” de 8.9d subestimaba mandatory de sesión vía
+`futureMandatory/8`).
 
-## Efecto placement
+Tests unitarios A–P del packer: con 12 pending y segundos suficientes
+selecciona **>4**. Live residual tras mandatory ≈ 100s → ~2 served.
 
-Advanced añade ~23 activaciones/sesión de reservas L/P de placement al
-numerador → bottleneck `placement` + `base-activation-slots`.
+## Loop admission ↔ service
 
-## C11
-
-Sin cambios. Baseline 8.9c conservado.
+- Admission cap = safety ceiling 24 (`admission-capacity-v2`).
+- Servicio no rechaza solo por maxBase=4.
+- `clearServedBaseEligibility` solo limpia **completados**.
 
 ## Adversariales
 
 11/11 correctos.
 
-## Opciones de diseño (NO elegidas)
-
-**A.** `maxBase` es hard cap de producto.
-→ Spec C8≥0.60 + C9≤8 + target 10 es **incompatible** con service≤4.
-Requiere decisión de producto (bajar target/share, relajar C9, o aceptar
-cap más alto como política explícita).
-
-**B.** `maxBase` era safety/default.
-→ Tarea posterior: `dynamicBaseActivationAllowance` desde capacidad residual
-real, preservando C1–C5 y recovery. No subir el knobs en silencio aquí.
-
 ## No hecho
 
-Sin subir/eliminar maxBase, sin cambiar admission/fairness para forzar verde,
-sin tocar C8/C9/presupuesto/MaturityPolicy/8.10.
+8.10; cambios a umbrales C1–C11, target=10, C8 share, C9=8, presupuesto,
+MaturityPolicy, desiredRetention, latencia, costes, perfiles.

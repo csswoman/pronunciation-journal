@@ -58,7 +58,7 @@ export const SIMULATION_COSTS: Record<AttemptModality, number> = {
 };
 export const SIMULATION_NEW_WORD_INTRODUCTION_SECONDS = 10;
 export const SIMULATION_ACTIVATION_LIMITS: ActivationLimits = {
-  maxBaseSkillActivationsPerSession: 4,
+  absoluteBaseActivationSafetyCeiling: 24,
   maxUsageActivationsPerSession: 1,
   maxPerItemPerSession: 1,
 };
@@ -226,7 +226,9 @@ export function runSimulation(
     );
     clearServedBaseEligibility(
       world,
-      plan.baseSkillSelected.map((item) => item.itemId),
+      completions
+        .map((completion) => completion.item.itemId)
+        .filter((itemId) => plan.baseSkillSelected.some((item) => item.itemId === itemId)),
     );
     const availableSeconds = Math.max(
       0,

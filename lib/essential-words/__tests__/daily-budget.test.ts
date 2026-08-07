@@ -11,7 +11,7 @@ import type {
 import { DEFAULT_RECOVERY_POLICY } from "../recovery-mode";
 
 const limits: ActivationLimits = {
-  maxBaseSkillActivationsPerSession: 2,
+  absoluteBaseActivationSafetyCeiling: 2,
   maxUsageActivationsPerSession: 1,
   maxPerItemPerSession: 1,
 };
@@ -167,7 +167,7 @@ describe("planDailySession", () => {
         usageActivations: [],
         newWords: [],
       },
-    }), { ...limits, maxBaseSkillActivationsPerSession: 3 }, DEFAULT_RECOVERY_POLICY);
+    }), { ...limits, absoluteBaseActivationSafetyCeiling: 3 }, DEFAULT_RECOVERY_POLICY);
 
     expect(plan.baseSkillSelected.map((item) => item.itemId)).toEqual([
       "c1k:one#listening",

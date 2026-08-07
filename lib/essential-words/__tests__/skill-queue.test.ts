@@ -67,7 +67,7 @@ const plan = (overrides: Partial<DailyPlan> = {}): DailyPlan => ({
 });
 
 const limits: ActivationLimits = {
-  maxBaseSkillActivationsPerSession: 1,
+  absoluteBaseActivationSafetyCeiling: 1,
   maxUsageActivationsPerSession: 1,
   maxPerItemPerSession: 1,
 };

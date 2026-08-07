@@ -1,3 +1,4 @@
+import { DEFAULT_BASE_ACTIVATION_POLICY } from "./base-activation-allowance";
 import {
   BASE_THROUGHPUT_CONTRACT_VERSION,
   C9_HORIZON_SESSIONS,
@@ -20,6 +21,35 @@ export {
   type MaxBaseSkillActivationsContractDoc,
   type RequiredBaseSkill,
 } from "./base-throughput-contract";
+
+/** Pack alternating listening/production into residual seconds (Task 8.9e). */
+export function projectBaseServiceCapacityPerSession(input: {
+  availableSecondsPerSession: number;
+  committedMandatorySecondsPerSession: number;
+  listeningCost: number;
+  productionCost: number;
+  reserveShare?: number;
+  absoluteSafetyCeiling?: number;
+}): number {
+  const reserve = input.reserveShare ?? DEFAULT_BASE_ACTIVATION_POLICY.reserveShare;
+  const ceiling = input.absoluteSafetyCeiling
+    ?? DEFAULT_BASE_ACTIVATION_POLICY.absoluteSafetyCeiling;
+  let seconds = Math.max(
+    0,
+    (input.availableSecondsPerSession - input.committedMandatorySecondsPerSession)
+      * (1 - reserve),
+  );
+  let count = 0;
+  let next: "listening" | "production" = "listening";
+  while (count < ceiling) {
+    const cost = next === "listening" ? input.listeningCost : input.productionCost;
+    if (seconds < cost) break;
+    seconds -= cost;
+    count += 1;
+    next = next === "listening" ? "production" : "listening";
+  }
+  return count;
+}
 
 export interface ResourceFeasibility {
   requiredPerSession: number;
@@ -144,7 +174,11 @@ export interface MultidimensionalFeasibilityInput {
   committedBaseSecondsPerSession?: number;
   committedPlacementSecondsPerSession?: number;
   usageSecondsPerSession?: number;
-  maxBaseSkillActivationsPerSession: number;
+  /**
+   * Projected base activations/session from residual packing (Task 8.9e).
+   * Do not pass a fixed hard-cap×1 unless that is the measured projection.
+   */
+  projectedBaseServicePerSession: number;
   requiredArrivalSecondsPerSession?: number;
   actualArrivalSecondsPerSession?: number;
   placementBaseActivationsPerSession?: number;
@@ -153,6 +187,8 @@ export interface MultidimensionalFeasibilityInput {
   productionRequiredPerSession?: number;
   listeningServedPerSession?: number;
   productionServedPerSession?: number;
+  /** @deprecated Prefer projectedBaseServicePerSession. */
+  maxBaseSkillActivationsPerSession?: number;
 }
 
 export function evaluateMultidimensionalFeasibility(
@@ -169,7 +205,12 @@ export function evaluateMultidimensionalFeasibility(
   const requiredBasePerSession = derived.requiredBaseActivationsPerSession
     + placementPer
     + pendingPer;
-  const serviceBasePerSession = Math.max(0, input.maxBaseSkillActivationsPerSession);
+  const serviceBasePerSession = Math.max(
+    0,
+    input.projectedBaseServicePerSession
+      ?? input.maxBaseSkillActivationsPerSession
+      ?? 0,
+  );
 
   const baseActivations = buildResourceFeasibility({
     requiredPerSession: requiredBasePerSession,

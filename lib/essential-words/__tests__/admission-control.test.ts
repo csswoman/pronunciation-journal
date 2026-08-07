@@ -162,7 +162,7 @@ describe("planDailySession admission gate", () => {
       },
     };
     const limits: ActivationLimits = {
-      maxBaseSkillActivationsPerSession: 100,
+      absoluteBaseActivationSafetyCeiling: 100,
       maxUsageActivationsPerSession: 100,
       maxPerItemPerSession: 1,
     };

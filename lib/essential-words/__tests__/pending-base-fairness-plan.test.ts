@@ -132,7 +132,7 @@ describe("fairness integration in planDailySession", () => {
         newWords: [],
       },
     }), {
-      maxBaseSkillActivationsPerSession: 4,
+      absoluteBaseActivationSafetyCeiling: 4,
       maxUsageActivationsPerSession: 1,
       maxPerItemPerSession: 1,
     }, DEFAULT_RECOVERY_POLICY);

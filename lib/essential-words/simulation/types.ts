@@ -61,6 +61,10 @@ export interface SimulatedDay {
   committedPlacementSeconds?: number;
   usageSeconds?: number;
   topBaseBlockingReason?: string | null;
+  /** Seconds consumed by mandatory selected in this session (Task 8.9e). */
+  mandatorySelectedSeconds?: number;
+  dynamicBaseAllowanceMax?: number;
+  dynamicBaseLimitingFactor?: string;
 }
 
 export interface SimulationResult {

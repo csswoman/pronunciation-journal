@@ -11,7 +11,7 @@ import type {
 import { DEFAULT_RECOVERY_POLICY } from "../recovery-mode";
 
 const limits: ActivationLimits = {
-  maxBaseSkillActivationsPerSession: 2,
+  absoluteBaseActivationSafetyCeiling: 2,
   maxUsageActivationsPerSession: 1,
   maxPerItemPerSession: 1,
 };

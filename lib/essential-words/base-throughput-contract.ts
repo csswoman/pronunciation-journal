@@ -40,23 +40,18 @@ export interface MaxBaseSkillActivationsContractDoc {
 export function describeMaxBaseSkillActivationsContract(): MaxBaseSkillActivationsContractDoc {
   return {
     version: BASE_THROUGHPUT_CONTRACT_VERSION,
-    isHardCap: true,
+    isHardCap: false,
     isSafetyDefaultOrigin: true,
     jointListeningAndProduction: true,
     placementConsumesSameSelectionCap: false,
     learningStepsConsumeSameSelectionCap: false,
     dueReservationCanRaiseCap: true,
     notes: [
-      "A. Hard cap for pending-base selection: selectActivations maximum is",
-      "max(maxBase - consumed, dueBaseCount). Without due overrides, service ≤ 4.",
-      "B. Introduced as a safety/default structural knob in Task 8.9; still enforced.",
-      "C. Shared across listening+production (one counter).",
-      "D. Placement does not consume the selection cap at conversion time; created",
-      "listening/production later compete for the same maxBase slots.",
-      "E. Learning steps / mandatory reviews use selectMandatory, not maxBase.",
-      "Feasibility for C8 target demand models serviceCapacity = maxBase (no due",
-      "override), because due exceptions serve inherited debt rather than creating",
-      "capacity for 12 new-word activations/session.",
+      "Task 8.9e: absoluteBaseActivationSafetyCeiling (24) is a runaway belt,",
+      "not an operational hard cap. Service packs by residual seconds + forecast.",
+      "Legacy maxBaseSkillActivationsPerSession=4 is retired as a hard limiter.",
+      "Listening+production share the dynamic packer; placement conversions do not",
+      "consume the selection path at conversion time; learning uses selectMandatory.",
     ].join(" "),
   };
 }

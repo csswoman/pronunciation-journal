@@ -17,7 +17,7 @@ export type BaseBlockingReason =
   | "other";
 
 export interface PendingBaseCandidate extends ActivationCandidate {
-  source: "pending-base";
+  source: "pending-base" | "placement";
   waitSessions: number;
   firstEligibleSession: number;
   admittedSession: number;
@@ -100,7 +100,7 @@ export function toPendingBaseCandidate(
     ?? remainingSessionsUntilC9(waitSessions);
   return {
     ...candidate,
-    source: "pending-base",
+    source: candidate.source === "placement" ? "placement" : "pending-base",
     waitSessions,
     firstEligibleSession: meta.firstEligibleSession
       ?? candidate.firstEligibleSession

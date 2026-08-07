@@ -28,15 +28,15 @@ describe("applyAdmissionThroughputCap", () => {
 
     const capped = applyAdmissionThroughputCap(
       forecast,
-      DEFAULT_ADMISSION_CAPACITY_POLICY.maxBaseActivationsPerSession,
+      DEFAULT_ADMISSION_CAPACITY_POLICY.absoluteBaseActivationSafetyCeiling,
       costs,
     );
 
     for (const session of capped.sessions) {
       expect(session.availableSeconds)
-        .toBeLessThanOrEqual(DEFAULT_ADMISSION_CAPACITY_POLICY.maxBaseActivationsPerSession * 25);
+        .toBeLessThanOrEqual(DEFAULT_ADMISSION_CAPACITY_POLICY.absoluteBaseActivationSafetyCeiling * 25);
       expect(session.listeningSeconds)
-        .toBeLessThanOrEqual(DEFAULT_ADMISSION_CAPACITY_POLICY.maxBaseActivationsPerSession * 20);
+        .toBeLessThanOrEqual(DEFAULT_ADMISSION_CAPACITY_POLICY.absoluteBaseActivationSafetyCeiling * 20);
     }
   });
 });

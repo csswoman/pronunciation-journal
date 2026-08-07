@@ -3,6 +3,7 @@ import {
   C9_HORIZON_SESSIONS,
   deriveRequiredBaseActivations,
   evaluateMultidimensionalFeasibility,
+  projectBaseServiceCapacityPerSession,
 } from "../../base-throughput-feasibility";
 import { DEFAULT_ACTIVATION_LIMITS } from "../../daily-budget";
 import { PROFILES } from "../profiles";
@@ -18,7 +19,7 @@ const options: SimulationOptions = {
   targetNewWords: 10,
 };
 
-describe("Task 8.9d profile multidimensional feasibility", () => {
+describe("Task 8.9e profile multidimensional feasibility", () => {
   it("M: cinco perfiles deterministas reportan base-slot status", () => {
     for (const profile of Object.values(PROFILES)) {
       const first = runSimulation(profile, options);
@@ -26,37 +27,48 @@ describe("Task 8.9d profile multidimensional feasibility", () => {
       expect(second.days.map((day) => day.baseSkillActivations))
         .toEqual(first.days.map((day) => day.baseSkillActivations));
 
+      const projected = projectBaseServiceCapacityPerSession({
+        availableSecondsPerSession: 900,
+        committedMandatorySecondsPerSession: 100,
+        listeningCost: 20,
+        productionCost: 25,
+        absoluteSafetyCeiling:
+          DEFAULT_ACTIVATION_LIMITS.absoluteBaseActivationSafetyCeiling,
+      });
       const multi = evaluateMultidimensionalFeasibility({
         configuredNewWordsTarget: profile.id === "steady" ? 10 : 0,
         minimumC8Share: 0.6,
         horizonSessions: C9_HORIZON_SESSIONS,
         availableSecondsPerSession: 900,
-        maxBaseSkillActivationsPerSession:
-          DEFAULT_ACTIVATION_LIMITS.maxBaseSkillActivationsPerSession,
+        projectedBaseServicePerSession: projected,
         requiredArrivalSecondsPerSession: profile.id === "steady" ? 474 : 0,
       });
       expect(["feasible", "marginal", "infeasible"]).toContain(multi.overallStatus);
-      expect(multi.baseActivations.serviceCapacityPerSession).toBe(4);
+      expect(multi.baseActivations.serviceCapacityPerSession).toBeGreaterThan(4);
     }
   });
 
-  it("steady: hipótesis 96 vs 32 bajo política actual", () => {
+  it("steady: proyección residual no usa hard cap 4×8", () => {
     const derived = deriveRequiredBaseActivations({
       configuredNewWordsTarget: 10,
       minimumC8Share: 0.6,
       horizonSessions: 8,
     });
     expect(derived.requiredBaseActivationsOverHorizon).toBe(96);
-    expect(4 * 8).toBe(32);
+    const projected = projectBaseServiceCapacityPerSession({
+      availableSecondsPerSession: 900,
+      committedMandatorySecondsPerSession: 100,
+      listeningCost: 20,
+      productionCost: 25,
+    });
     const multi = evaluateMultidimensionalFeasibility({
       configuredNewWordsTarget: 10,
       minimumC8Share: 0.6,
       horizonSessions: 8,
       availableSecondsPerSession: 900,
-      maxBaseSkillActivationsPerSession: 4,
+      projectedBaseServicePerSession: projected,
       requiredArrivalSecondsPerSession: 474,
     });
-    expect(multi.baseActivations.status).toBe("infeasible");
-    expect(multi.overallStatus).toBe("infeasible");
+    expect(multi.baseActivations.serviceCapacityOverHorizon).toBeGreaterThan(32);
   });
 });

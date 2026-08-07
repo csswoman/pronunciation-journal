@@ -1,6 +1,11 @@
 import { admitNewWords, admitPlacementConversions } from "./admission-control";
 import { applyAdmissionThroughputCap } from "./admission-capacity";
+import {
+  DEFAULT_ACTIVATION_LIMITS,
+  resolveAbsoluteBaseActivationSafetyCeiling,
+} from "./activation-limits";
 import { buildAdmissionLoadEnvelope } from "./admission-envelope";
+import { selectBaseDynamically } from "./daily-budget-base";
 import { buildFutureCapacity, mergeReservations, orderDueReservationsFirst } from "./future-capacity";
 import { buildLoadBreakdown } from "./planning-load";
 import type {
@@ -17,11 +22,7 @@ import type {
 import { backlogSeconds, resolveMode, type RecoveryPolicy } from "./recovery-mode";
 import type { AttemptModality, LearningItem } from "./verification/types";
 
-export const DEFAULT_ACTIVATION_LIMITS: ActivationLimits = {
-  maxBaseSkillActivationsPerSession: 4,
-  maxUsageActivationsPerSession: 1,
-  maxPerItemPerSession: 1,
-};
+export { DEFAULT_ACTIVATION_LIMITS, resolveAbsoluteBaseActivationSafetyCeiling };
 
 interface MandatorySelection {
   selected: PlannedItem[];
@@ -145,14 +146,22 @@ export function planDailySession(
   );
   const remainingAfterMandatory = Math.max(0, input.dailyBudgetSeconds - mandatory.seconds);
   const placementIds = placementIdSet(input);
+  const selectedItemIds = new Set(mandatory.selected.map((item) => item.itemId));
+  const orderedBase = orderDueReservationsFirst(
+    input.candidates.baseSkillActivations,
+    input.capacityForecast.dueReservations,
+  );
 
   if (mode === "recovery") {
-    const base = { selected: [], deferred: input.candidates.baseSkillActivations, seconds: 0 };
-    const forecast = buildFutureCapacity(
+    const base = selectBaseDynamically(
       input,
-      mandatory.deferred,
-      base.deferred,
+      limits,
+      orderedBase,
+      remainingAfterMandatory,
+      selectedItemIds,
+      true,
     );
+    const forecast = buildFutureCapacity(input, mandatory.deferred, base.deferred);
     const futureReservations = mergeReservations([
       ...input.capacityForecast.dueReservations,
       ...beyondHorizon(input.capacityForecast.futureReservations),
@@ -166,29 +175,15 @@ export function planDailySession(
     );
   }
 
-  const selectedItemIds = new Set(mandatory.selected.map((item) => item.itemId));
-  const maxPerItem = Math.min(1, Math.max(0, limits.maxPerItemPerSession));
-  const orderedBase = orderDueReservationsFirst(
-    input.candidates.baseSkillActivations,
-    input.capacityForecast.dueReservations,
-  );
-  const dueBaseCount = orderedBase.filter((candidate) => (
-    input.capacityForecast.dueReservations.some((r) => r.itemId === candidate.itemId)
-  )).length;
-  const base = selectActivations(
-    orderedBase,
-    Math.max(0, limits.maxBaseSkillActivationsPerSession - input.consumed.baseSkillActivations, dueBaseCount),
-    remainingAfterMandatory,
-    input.estimatedSeconds.byModality,
-    selectedItemIds,
-    maxPerItem,
-  );
-
-  const forecast = buildFutureCapacity(
+  const base = selectBaseDynamically(
     input,
-    mandatory.deferred,
-    base.deferred,
+    limits,
+    orderedBase,
+    remainingAfterMandatory,
+    selectedItemIds,
+    false,
   );
+  const forecast = buildFutureCapacity(input, mandatory.deferred, base.deferred);
   const placement = input.placementContext
     ? admitPlacementConversions({
         candidates: input.candidates.placementCandidates ?? [],
@@ -216,7 +211,7 @@ export function planDailySession(
     remainingAfterMandatory - base.seconds,
     input.estimatedSeconds.byModality,
     selectedItemIds,
-    maxPerItem,
+    Math.min(1, Math.max(0, limits.maxPerItemPerSession)),
   );
   const availableForNewWords = Math.max(0, remainingAfterMandatory - base.seconds - usage.seconds);
   const perNewWord = input.estimatedSeconds.newWordIntroduction
@@ -234,7 +229,7 @@ export function planDailySession(
     configuredNewWordLimit: Math.max(0, input.configuredNewWordLimit - input.consumed.newWords),
     forecast: applyAdmissionThroughputCap(
       placement.forecast,
-      limits.maxBaseSkillActivationsPerSession,
+      resolveAbsoluteBaseActivationSafetyCeiling(limits),
       input.estimatedSeconds.byModality,
     ),
     estimatedSecondsByModality: input.estimatedSeconds.byModality,
@@ -283,6 +278,8 @@ function planFromSelections(
       totalSkillActivations: base.selected.length + newWordMeaningActivations,
       plannedSeconds: mandatory.seconds + base.seconds + usage.seconds + newWords.seconds,
       mode,
+      dynamicBaseAllowanceMax: base.dynamicBaseAllowanceMax ?? base.selected.length,
+      dynamicBaseLimitingFactor: base.dynamicBaseLimitingFactor,
     },
     mandatorySelected: mandatory.selected,
     deferredMandatory: mandatory.deferred,

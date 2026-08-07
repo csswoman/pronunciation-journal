@@ -8,26 +8,26 @@ import type { AttemptModality } from "./verification/types";
  * than the planner can serve within the C9 horizon of eight active sessions.
  */
 export const DEFAULT_ADMISSION_CAPACITY_POLICY = {
-  version: "admission-capacity-v1",
+  version: "admission-capacity-v2",
   /**
-   * Throughput used when reserving NEW words only.
-   * Kept at or below the session base-activation limit so admissions cannot
-   * outrun the planner inside the eight-session C9 horizon.
+   * Aligns admission lane caps with the base-activation safety ceiling
+   * (Task 8.9e). Not an operational hard target of 4.
    */
-  maxBaseActivationsPerSession: 4,
+  absoluteBaseActivationSafetyCeiling:
+    24,
 } as const;
 
 /**
  * Caps residual listening/production lanes so admission cannot reserve more
- * work than `maxBaseActivationsPerSession` can serve per forecast slot.
+ * work than the dynamic service safety ceiling can ever serve per slot.
  */
 export function applyAdmissionThroughputCap(
   forecast: CapacityForecast,
-  maxBaseActivationsPerSession: number,
+  absoluteBaseActivationSafetyCeiling: number,
   costs: Record<AttemptModality, number>,
 ): CapacityForecast {
   if (forecast.status !== "ready") return forecast;
-  const activations = Math.max(0, Math.floor(maxBaseActivationsPerSession));
+  const activations = Math.max(0, Math.floor(absoluteBaseActivationSafetyCeiling));
   if (activations === 0) {
     return {
       ...forecast,

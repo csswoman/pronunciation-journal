@@ -25,6 +25,8 @@ export interface ActivationCandidate {
   waitSessions?: number;
   firstEligibleSession?: number;
   admittedSession?: number;
+  /** Origin hint for service priority (Task 8.9e). */
+  source?: "pending-base" | "placement" | "usage" | "new-word";
 }
 
 /** A word not yet introduced to the learner. */
@@ -137,18 +139,32 @@ export interface DailyAllowance {
   totalSkillActivations: number;
   plannedSeconds: number;
   mode: "normal" | "recovery";
+  /** Task 8.9e — realized dynamic base allowance for the session. */
+  dynamicBaseAllowanceMax?: number;
+  dynamicBaseLimitingFactor?: string;
 }
 
 export interface ActivationLimits {
-  maxBaseSkillActivationsPerSession: number;
+  /**
+   * Absolute runaway ceiling for base activations (Task 8.9e).
+   * Not an operational target — dynamic allowance packs by residual capacity.
+   */
+  absoluteBaseActivationSafetyCeiling: number;
   maxUsageActivationsPerSession: number;
   maxPerItemPerSession: number;
+  /**
+   * @deprecated Use absoluteBaseActivationSafetyCeiling (Task 8.9e).
+   * Kept temporarily for call-site migration.
+   */
+  maxBaseSkillActivationsPerSession?: number;
 }
 
 export interface ActivationSelection {
   selected: ActivationCandidate[];
   deferred: ActivationCandidate[];
   seconds: number;
+  dynamicBaseAllowanceMax?: number;
+  dynamicBaseLimitingFactor?: string;
 }
 
 export interface DailyPlan {
