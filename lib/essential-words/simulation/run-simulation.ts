@@ -43,6 +43,7 @@ export const SIMULATION_ACTIVATION_LIMITS: ActivationLimits = {
 export interface SimulatedDay {
   date: string;
   active: boolean;
+  dailyBudgetSeconds: number;
   plannedSeconds: number;
   completedSeconds: number;
   plannedItems: number;
@@ -165,7 +166,8 @@ export function runSimulation(
     if (!calendar[dayIndex]) {
       const waiting = waitingBaseCounts(world, profile, now, options.seed);
       days.push({
-        date, active: false, plannedSeconds: 0, completedSeconds: 0,
+        date, active: false, dailyBudgetSeconds: options.dailyBudgetSeconds,
+        plannedSeconds: 0, completedSeconds: 0,
         plannedItems: 0, completedItems: 0, mandatorySelected: 0,
         deferredMandatory: world.deferred.size, backlogSeconds: backlog,
         mode: world.previousMode, newWords: 0, baseSkillActivations: 0,
@@ -223,7 +225,8 @@ export function runSimulation(
     const waiting = waitingBaseCounts(world, profile, now, options.seed);
 
     days.push({
-      date, active: true, plannedSeconds: plan.allowance.plannedSeconds,
+      date, active: true, dailyBudgetSeconds: options.dailyBudgetSeconds,
+      plannedSeconds: plan.allowance.plannedSeconds,
       completedSeconds: summary.completedSeconds, plannedItems: queue.length,
       completedItems: completions.length,
       mandatorySelected: plan.mandatorySelected.length,
