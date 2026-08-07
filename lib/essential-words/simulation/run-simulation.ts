@@ -52,7 +52,7 @@ export const SIMULATION_COSTS: Record<AttemptModality, number> = {
 };
 export const SIMULATION_NEW_WORD_INTRODUCTION_SECONDS = 10;
 export const SIMULATION_ACTIVATION_LIMITS: ActivationLimits = {
-  maxBaseSkillActivationsPerSession: 2,
+  maxBaseSkillActivationsPerSession: 4,
   maxUsageActivationsPerSession: 1,
   maxPerItemPerSession: 1,
 };

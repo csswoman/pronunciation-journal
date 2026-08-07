@@ -1,4 +1,4 @@
-import { buildCapacityForecast } from "./capacity-forecast";
+import { buildCapacityForecast, type CapacityForecast } from "./capacity-forecast";
 import type {
   ActivationCandidate,
   CapacityReservation,
@@ -27,7 +27,7 @@ function pendingBaseReservations(
 ): CapacityReservation[] {
   return candidates.map((candidate) => ({
     itemId: candidate.itemId,
-    source: "pending-base",
+    source: "pending-base" as const,
     skill: candidate.skill,
     deadlineSession: candidate.deadlineSession ?? 8,
     estimatedSeconds: input.estimatedSeconds.byModality[candidate.modality],
@@ -38,7 +38,7 @@ export function buildFutureCapacity(
   input: DailyPlanningInput,
   deferredMandatory: PlannedItem[],
   deferredBase: ActivationCandidate[],
-) {
+): CapacityForecast {
   return buildCapacityForecast({
     sessions: input.capacityForecast.sessions,
     mandatory: [

@@ -1,4 +1,5 @@
 import { admitNewWords, admitPlacementConversions } from "./admission-control";
+import { applyAdmissionThroughputCap } from "./admission-capacity";
 import { buildFutureCapacity, mergeReservations, orderDueReservationsFirst } from "./future-capacity";
 import { buildLoadBreakdown } from "./planning-load";
 import type {
@@ -16,7 +17,7 @@ import { backlogSeconds, resolveMode, type RecoveryPolicy } from "./recovery-mod
 import type { AttemptModality, LearningItem } from "./verification/types";
 
 export const DEFAULT_ACTIVATION_LIMITS: ActivationLimits = {
-  maxBaseSkillActivationsPerSession: 2,
+  maxBaseSkillActivationsPerSession: 4,
   maxUsageActivationsPerSession: 1,
   maxPerItemPerSession: 1,
 };
@@ -146,7 +147,11 @@ export function planDailySession(
 
   if (mode === "recovery") {
     const base = { selected: [], deferred: input.candidates.baseSkillActivations, seconds: 0 };
-    const forecast = buildFutureCapacity(input, mandatory.deferred, base.deferred);
+    const forecast = buildFutureCapacity(
+      input,
+      mandatory.deferred,
+      base.deferred,
+    );
     const futureReservations = mergeReservations([
       ...input.capacityForecast.dueReservations,
       ...beyondHorizon(input.capacityForecast.futureReservations),
@@ -178,7 +183,11 @@ export function planDailySession(
     maxPerItem,
   );
 
-  const forecast = buildFutureCapacity(input, mandatory.deferred, base.deferred);
+  const forecast = buildFutureCapacity(
+    input,
+    mandatory.deferred,
+    base.deferred,
+  );
   const placement = input.placementContext
     ? admitPlacementConversions({
         candidates: input.candidates.placementCandidates ?? [],
@@ -217,7 +226,11 @@ export function planDailySession(
   const admission = admitNewWords({
     candidates: input.candidates.newWords.slice(0, sessionCap),
     configuredNewWordLimit: Math.max(0, input.configuredNewWordLimit - input.consumed.newWords),
-    forecast: placement.forecast,
+    forecast: applyAdmissionThroughputCap(
+      placement.forecast,
+      limits.maxBaseSkillActivationsPerSession,
+      input.estimatedSeconds.byModality,
+    ),
     estimatedSecondsByModality: input.estimatedSeconds.byModality,
   });
   const newWords = {
