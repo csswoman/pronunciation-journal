@@ -1,6 +1,6 @@
 # Essential Words — Modelo de habilidades: plan de implementación
 
-**Estado:** plan ejecutable integrado — 57 tareas en 11 fases (Fase 0–10)
+**Estado:** ejecución detenida en 8.5 — 62 tareas en 11 fases (Fase 0–10)
 
 **Goal:** Sustituir el modelo “una palabra = una tarjeta SRS” por ítems de habilidad (meaning / listening / production / usage), con evidencia por modalidad, programación FSRS por ítem, presupuesto real y rollout reversible.
 
@@ -1614,11 +1614,20 @@ requiere proveedor.
 
 ## Fase 8 — Simulación fiel y calibración
 
-Objetivo: simular el diseño real durante 60–90 días antes de fijar parámetros.
+**Estado:** detenida en 8.5 por bloqueo de diseño. No iniciar Fase 9.
+
+Objetivo: simular el diseño real durante 180 días, corregir primero los
+contratos estructurales y fijar parámetros solo con aceptación verde y datos
+empíricos suficientes.
 
 Condición de salida: 11 criterios pasan en perfiles aplicables; señales base,
-provisional y usage no son triviales; ocho decisiones tienen valor o el diseño se
-detiene.
+provisional y usage no son triviales; diez adversariales pasan; los ocho grupos
+tienen versión; costes y latencia tienen al menos 200 muestras empíricas por
+modalidad. `insufficient-sample`, `insufficient-forecast` o
+`insufficient-data` bloquean la salida.
+
+Regla transversal: después de cada cambio de Tasks 8.5–8.11 ejecutar los cinco
+perfiles y los diez adversariales y registrar el delta completo de C1–C11.
 
 ### Task 8.1: Perfiles y contexto
 
@@ -1627,57 +1636,96 @@ Files: simulation/profiles.ts, simulation/__tests__/profiles.test.ts
 Definir cinco perfiles. Inyectar reloj, IDs y PRNG; misma semilla produce calendario,
 precisión y ausencias idénticos.
 
-### Task 8.2: Estado por palabra e ítem
+### Task 8.2: Motor diario fiel
 
-Files: simulation/model.ts, simulation/__tests__/model.test.ts
+Files: simulation/state.ts, simulation/candidates.ts,
+simulation/apply-session.ts, simulation/run-simulation.ts y sus tests
 
-Mantener meaning/listening/production, usage activo/inactivo, ItemSchedule,
-PlacementInference, backlog, dueAt, resultados, activaciones y modo. Candidatos
-elegibles deben producir activaciones/provisionales; campos permanentemente vacíos
+Ejecutar estado por palabra, due, obligatorios, candidatos, allowance, cola,
+completado, eventos y métricas mediante políticas reales. Candidatos elegibles
+deben producir activaciones/provisionales; campos permanentemente vacíos
 invalidan la simulación.
 
-### Task 8.3: Motor diario
+### Task 8.3: Once criterios unitarios
 
-Files: simulation/run-simulation.ts, simulation/__tests__/run-simulation.test.ts
+Files: simulation/criteria/*, simulation/__tests__/criteria-*.test.ts
 
-Ejecutar due, obligatorios, candidatos base, candidatos usage, conversiones, allowance,
-cola, completado, resultados/reprogramación y métricas. Probar picos y retención desde
-eventos SRS.
+Mantener C1–C11 con sus límites existentes y casos pass/fail. Falta de muestra
+no equivale a pass.
 
-### Task 8.4: Criterios unitarios
+### Task 8.4: Aceptación y adversariales
 
-Files: simulation/criteria.ts, simulation/__tests__/criteria.test.ts
+Files: simulation/__tests__/acceptance.test.ts, simulation/adversarial.ts,
+simulation/__tests__/adversarial.test.ts
 
-Crear funciones con casos pass/fail: budgetRespected, percentile95, recoveryExits,
-backlogSlope, recoveryReturnSessions, usageActivationShare, synchronizedPeaks,
-newWordLiveness, baseSkillActivationLiveness, overdueStarvation y observedRetention.
+Invocar explícitamente C1–C11 y probar los diez motores defectuosos. Baseline
+detenida: 33/43 tests formales verdes; C4 constante, C8 constante, C9 en cinco
+perfiles y C11 en intermitente/ráfagas/principiante continúan rojos.
 
-### Task 8.5: Aceptación explícita
+### Task 8.5: Modelo C11 desde retrievability
 
-Files: simulation/__tests__/acceptance.test.ts
+Files: simulation/scheduled-review-outcome.ts, simulation/apply-session.ts,
+simulation/criteria/retention.ts, verification/types.ts, record-attempt.ts y tests
 
-Invocar explícitamente las 11 funciones: 1–3, 6–7, 10–11 en perfiles con muestras;
-4/8 en Constante; 5 en Ráfagas; 9 donde haya candidatos base. Falta de muestras no
-equivale a pass.
+Para `priorSchedule.kind=fsrs`, `state=Review` y eventType scheduled-review:
+`correct = seededRandom.next() < fsrsRetrievability(currentItem, now)`; el
+evento audita la retrievability previa.
+La modalidad modifica latencia/duración/dificultad, no la probabilidad binaria.
+C11 sigue siendo `correctas / n`, muestra mínima 50 y rango 0,85–0,95. Excluir
+verification, practice, New, Learning y Relearning.
 
-### Task 8.6: Adversariales
+### Task 8.6: Ledger de ocho sesiones activas
 
-Files: simulation/__tests__/adversarial.test.ts
+Files: capacity-ledger.ts, planning-types.ts, daily-budget.ts y tests
 
-Deben fallar motores que nunca activan listening/production/usage, devuelven cero
-nuevas, ignoran placement, duplican activaciones, posponen atrasados, muestran todo
-backlog en recovery, sincronizan provisionales o tienen baja retención.
+Crear ocho slots que avanzan solo con sesiones activas y comparten presupuesto
+en segundos. Reservar en orden: reservas futuras, Review obligatorio, learning,
+diferido, base pendiente, placement, usage y nuevas. Cada palabra nueva reserva
+atómicamente meaning actual, listening y production dentro del horizonte; si
+falla una reserva, no se admite.
 
-### Task 8.7: Calibración segura
+### Task 8.7: Reservas de placement
 
-Files: skill-item.ts, planning-types.ts, cost-estimate.ts, recovery-mode.ts,
-placement/policy.ts, verification/provisional-intervals.ts,
-verification/latency.ts, docs/superpowers/plans/notes/2026-08-06-fase8-calibracion.md
+Files: placement/policy.ts, verification/provisional-intervals.ts,
+simulation/candidates.ts y tests
 
-Calibrar MaturityPolicy, límites base/usage, conversiones, ventanas, costes,
-RecoveryPolicy y latencia. Filtrar latencia por evento programado/correcto/sin
-hints/rescate/Easy|Good; excluir autocorrección, variantes, primer fallo y replay
-gratuito. Agotar parámetros seguros; si falla, reportar y detener.
+Cada conversión reserva listening, production y provisional contra el mismo
+ledger. Probar offsets deterministas dentro de la ventana y rechazar la cohorte
+si rompe C9 o no existe forecast hasta dueAt. El límite diario queda como
+protección secundaria, nunca como control suficiente.
+
+### Task 8.8: Telemetría y dataset empírico
+
+Files: calibration/dataset.ts, calibration/robust-estimate.ts,
+cost-estimate.ts, verification/latency.ts y tests
+
+Separar `interactionDurationMs` y `latencyMs` por modalidad, deduplicar intentos
+y filtrar revisiones Review autónomas. Exigir 200 muestras por modalidad. Usar
+mediana tras filtro MAD; con menos datos devolver `insufficient-data` y mantener
+fallback versionado sin declarar calibración final. Datos sintéticos no abren el
+gate.
+
+### Task 8.9: Recalibración estructural
+
+Cerrar primero C1–C5 y C8–C11. Ejecutar cinco perfiles y diez adversariales
+después de cada ajuste. No tocar madurez ni latencia.
+
+### Task 8.10: Madurez
+
+Solo con la estructura verde, calibrar MaturityPolicy y comprobar C6, C7 y C9
+tras cada cambio, además de perfiles y adversariales.
+
+### Task 8.11: Costes y latencia
+
+Solo con dataset empírico ready en cuatro modalidades. Costes proceden de
+duration; Easy/Good de latency. Versionar valores y fallbacks por separado y
+repetir aceptación completa después de cada ajuste.
+
+### Task 8.12: Cierre y versionado
+
+Fijar ocho grupos y retirar comentarios provisionales solo con C1–C11 y diez
+adversariales verdes, forecast suficiente y dataset empírico ready. Hasta
+entonces Fase 8 y Fase 9 permanecen abiertas/bloqueadas respectivamente.
 
 
 ## Fase 9 — Integración y rollout real bajo feature flag
@@ -1774,26 +1822,26 @@ relaja un criterio.
 | §1.10 intento y N efectos | record-attempt.ts | 3.5–3.7 | 10.1 |
 | §1.11 persistencia/RLS/sync | DB, queries, outbox | 2.2–2.5 | 2.7, 9.3 |
 | §1.12 migración | migrate-to-skill-model.ts | 2.6–2.7 | 10.1 |
-| §2.1–2.5 cola/allowance/recovery | daily-budget.ts, skill-queue.ts | 4.1–4.6 | 8.3, 8.5 |
+| §2.1–2.5 cola/allowance/recovery | daily-budget.ts, skill-queue.ts, capacity-ledger.ts | 4.1–4.6, 8.6 | 8.4, 8.9 |
 | §2.6 ExecutionContext | execution-context.ts | 1.5–1.6 | 8.1 |
-| §3.1–3.6 evidencia/latencia/provisionales | verification/* | 3.1–3.4, 3.8 | 5.1–5.3, 8.7 |
-| §4 placement | placement/* | 6.1–6.4 | 8.2–8.6 |
-| §5 usage/offline | usage/* | 7.1–7.4 | 8.2–8.5 |
+| §3.1–3.6 evidencia/latencia/provisionales | verification/*, calibration/* | 3.1–3.4, 3.8, 8.8 | 5.1–5.3, 8.11 |
+| §4 placement | placement/*, capacity-ledger.ts | 6.1–6.4, 8.7 | 8.4, 8.9 |
+| §5 usage/offline | usage/* | 7.1–7.4 | 8.4, 8.9–8.10 |
 | §6 arquitectura | rutas de fases | tests locales | type-check/build |
 | §7 invariantes | módulos correspondientes | invariant tests | acceptance/adversarial |
 | §8 testing | Vitest y gates | todas | cada fase |
-| §9 criterio 1 | budgetRespected | 8.4 | 8.5 |
-| §9 criterio 2 | percentile95 | 8.4 | 8.5 |
-| §9 criterio 3 | recoveryExits | 8.4 | 8.5 |
-| §9 criterio 4 | backlogSlope | 8.4 | 8.5 Constante |
-| §9 criterio 5 | recoveryReturnSessions | 8.4 | 8.5 Ráfagas |
-| §9 criterio 6 | usageActivationShare | 8.4 | 8.5 |
-| §9 criterio 7 | synchronizedPeaks | 8.4 | 8.5 |
-| §9 criterio 8 | newWordLiveness | 8.4 | 8.5 Constante |
-| §9 criterio 9 | baseSkillActivationLiveness | 8.4 | 8.5 |
-| §9 criterio 10 | overdueStarvation | 8.4 | 8.5 |
-| §9 criterio 11 | observedRetention | 8.4 | 8.5 |
-| §10 calibración | verification/latency.ts + nota | 8.7 | 8.5, 9.4 |
+| §9 criterio 1 | budgetRespected | 8.3 | 8.4, 8.9 |
+| §9 criterio 2 | percentile95 | 8.3 | 8.4, 8.9 |
+| §9 criterio 3 | recoveryExits | 8.3 | 8.4, 8.9 |
+| §9 criterio 4 | backlogSlope | 8.3 | 8.4 Constante, 8.9 |
+| §9 criterio 5 | recoveryReturnSessions | 8.3 | 8.4 Ráfagas, 8.9 |
+| §9 criterio 6 | usageActivationShare | 8.3 | 8.4, 8.10 |
+| §9 criterio 7 | synchronizedPeaks | 8.3 | 8.4, 8.10 |
+| §9 criterio 8 | newWordLiveness | 8.3 | 8.4 Constante, 8.9 |
+| §9 criterio 9 | baseSkillActivationLiveness | 8.3, 8.6–8.7 | 8.4, 8.9–8.10 |
+| §9 criterio 10 | overdueStarvation | 8.3 | 8.4, 8.9 |
+| §9 criterio 11 | observedRetention | 8.3, 8.5 | 8.4, 8.9 |
+| §10 calibración | calibration/*, nota | 8.8 | 8.9–8.12 |
 | §11 rollout | router/flags/telemetry | 9.1–9.3 | 9.4 |
 | §12 fuera de alcance | documentación, sin implementación | — | — |
 | Pistas tipificadas existentes | hint-ladder.ts, HintRungKind, priced, hintsUsed | tests existentes | 3.1, 3.8 |
@@ -1806,7 +1854,7 @@ relaja un criterio.
 - Ejecución acumulativa: tipos antes de persistencia; persistencia antes de eventos;
   eventos antes de simulación; rollout antes de retirada; sin logs singulares, contador
   global ambiguo ni reloj global en funciones puras.
-- Adversarial: los motores defectuosos de Task 8.6 deben fallar; si uno pasa, el plan
+- Adversarial: los motores defectuosos de Task 8.4 deben fallar; si uno pasa, el plan
   permanece abierto.
 
 El plan queda abierto hasta demostrar esa condición.

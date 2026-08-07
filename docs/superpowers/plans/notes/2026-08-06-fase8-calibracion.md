@@ -132,3 +132,17 @@ Antes de reanudar la calibración hay que decidir y probar:
 
 Hasta resolver esos puntos, se conservan los comentarios y versiones
 provisionales. No hay cambios de schedule ni migración de historial.
+
+## Revisión contractual posterior
+
+La spec y el plan incorporan la resolución del bloqueo como Tasks 8.5–8.12:
+
+- C11 usa retrievability únicamente para scheduled Review;
+- admisión y placement comparten un ledger de ocho sesiones activas;
+- costes y latencia exigen 200 muestras empíricas por modalidad;
+- recalibración estructural, madurez y latencia quedan secuenciadas;
+- detenerse no cierra Fase 8 y Fase 9 continúa bloqueada.
+
+Esta revisión no implementa la recalibración. Permanecen rojos C4 constante,
+C8 constante, C9 en los cinco perfiles y C11 en intermitente, ráfagas y
+principiante. Los límites de C1–C11 no cambiaron.

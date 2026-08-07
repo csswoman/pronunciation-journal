@@ -5081,13 +5081,15 @@ palabra, inferencias de colocación, verificaciones provisionales, activación d
 - los perfiles elegibles generan activaciones base, provisionales y `usage` no
   triviales;
 - los once criterios de §9.5 tienen función, test unitario y llamada explícita
-  en aceptación;
+  en aceptación, y todos pasan en los perfiles aplicables;
 - los diez motores adversariales fallan por el criterio esperado;
-- los ocho grupos de parámetros quedan fijados o el proceso se detiene con un
-  informe de fallo de diseño.
+- los cuatro datasets por modalidad tienen al menos 200 muestras empíricas y
+  ningún gate devuelve `insufficient-*`;
+- los ocho grupos de parámetros quedan fijados y versionados.
 
-> Esta fase puede fallar. Si falla después de agotar ajustes seguros, se revisa
-> la arquitectura; no se rebaja el criterio.
+> Esta fase puede detenerse, pero detenerse no equivale a cerrarla. Si falla
+> después de agotar ajustes seguros, permanece abierta, bloquea Fase 9 y obliga
+> a revisar la arquitectura; no se rebaja ningún criterio.
 
 ### Task 8.1: Perfiles, PRNG semillado y estado simulado por palabra
 
@@ -6052,128 +6054,315 @@ git add lib/essential-words/simulation/
 git commit -m "test(essential-words): aceptacion y motores adversariales del planificador"
 ```
 
-### Task 8.5: Calibrar ocho grupos sin relajar criterios
+### Estado de parada de la Fase 8
 
-**Files:**
-- Modify: `lib/essential-words/skill-item.ts`
-- Modify: `lib/essential-words/planning-types.ts`
-- Modify: `lib/essential-words/placement/policy.ts`
-- Modify: `lib/essential-words/verification/provisional-intervals.ts`
-- Modify: `lib/essential-words/cost-estimate.ts`
-- Modify: `lib/essential-words/recovery-mode.ts`
-- Modify: `lib/essential-words/verification/latency.ts`
-- Create: `docs/superpowers/plans/notes/2026-08-06-fase8-calibracion.md`
-- Modify: `docs/superpowers/specs/2026-08-06-essential-words-skill-model-design.md` (§10)
+La ejecución se detuvo en la antigua Task 8.5. No iniciar Fase 9 ni una tarea
+posterior de calibración hasta completar las Tasks 8.5–8.12. Los umbrales de
+C1–C11 permanecen literalmente iguales. El diagnóstico reproducible está en
+[`2026-08-06-fase8-calibracion.md`](../plans/notes/2026-08-06-fase8-calibracion.md).
 
-Calibrar y documentar ocho grupos independientes:
+**Regla transversal:** después de cada cambio de Tasks 8.5–8.11 se ejecutan los
+cinco perfiles y los diez adversariales, y se registra el delta de C1–C11.
+Ninguna tarea se considera verde solo por sus tests unitarios.
 
-1. `MaturityPolicy`;
-2. límite de activaciones base;
-3. límite de activaciones `usage`;
-4. conversiones inferido → provisional;
-5. ventanas provisionales;
-6. coste por modalidad e introducción;
-7. `RecoveryPolicy`;
-8. umbrales de latencia por modalidad.
+### Contratos revisados de simulación y planificación
 
-- [x] **Step 1: Registrar baseline antes de tocar parámetros**
+#### Fórmula exacta de C11
 
-La nota de calibración debe contener por perfil:
+Sea `A` el mapa de `AttemptLog` por `id`. El conjunto evaluable es:
 
-- semilla y horizonte;
-- los once resultados con valor medido y límite;
-- máximo y p95 de carga;
-- pendiente y backlog final;
-- activaciones por tipo;
-- distribución de espera de listening/production;
-- edad máxima de atrasados;
-- retención y tamaño de muestra;
-- picos detectados.
+```text
+E = { event |
+  event.affectsSchedule = true
+  ∧ event.priorSchedule.kind = "fsrs"
+  ∧ event.priorSchedule.state = "Review"
+  ∧ A[event.attemptLogId].eventType = "scheduled-review"
+}
+```
 
-- [ ] **Step 2: Ajustar carga en orden seguro**
+La condición sobre `priorSchedule.state` excluye explícitamente verification,
+practice y los pasos `New | Learning | Relearning`, aunque alguno haya creado
+un evento FSRS. La simulación calcula la retrievability antes de construir el
+intento, usando `lastReview`, `stability` y los parámetros versionados del mismo
+scheduler FSRS:
 
-Ante sobrecarga:
+```text
+t_i = max(0, (now_i - lastReview_i) / DAY_MS)
+decay = -w[20]
+factor = exp(log(0.9) / decay) - 1
+r_i = clamp(round((1 + factor × t_i / stability_i) ^ decay, 8), 0, 1)
+u_i = siguiente valor del PRNG semillado de la simulación
+correct_i = 1 si u_i < r_i; 0 en otro caso
 
-1. reducir límites de activación base/usage;
-2. reducir conversiones de placement por sesión;
-3. ampliar y distribuir ventanas provisionales;
-4. recalibrar costes con `interactionDurationMs` real;
-5. ajustar histéresis de recovery.
+n = |E|
+observedRetention = (Σ correct_i) / n
+```
 
-Reejecutar los cinco perfiles y adversariales después de cada cambio. Registrar
-qué criterio motivó el cambio y su efecto en los demás.
+El evento persiste `fsrsAudit.retrievabilityBeforeReview = r_i`, junto con las
+versiones de scheduler y parámetros. C11 usa `assessment.correct` para el
+cociente y ese audit para demostrar el modelo; no intenta reconstruir `r_i`
+desde `priorSchedule`, porque `lastReview` no vive dentro de `ItemSchedule`.
 
-No usar latencia para esconder carga; latencia decide `Easy/Good`, no el número
-de actividades que caben.
+`desiredRetention` controla el vencimiento FSRS y, por tanto, la distribución
+de `r_i`; no se sustituye por una probabilidad fija del perfil. Con
+`desiredRetention ≈ 0,90`, `n >= 50` y horizonte suficiente, C11 aprueba solo
+si `0,85 <= observedRetention <= 0,95`. Si `n < 50`, devuelve
+`insufficient-sample` y la aceptación continúa roja.
 
-- [ ] **Step 3: Calibrar madurez**
+La modalidad no participa en `correct_i`. Sí puede cambiar la distribución de
+`latencyMs`, `interactionDurationMs`, dificultad, pistas y la frontera
+`Easy/Good`. `accuracyByModality` permanece disponible para verification,
+practice y learning-step, nunca como techo de una revisión `Review` vencida.
 
-Modificar `MaturityPolicy` solo después de que la carga esté estable. Una
-madurez más temprana puede disparar `advanced_usage`; una más tardía puede
-producir starvation de contenido. Verificar criterios 6, 7 y 9 tras cada cambio.
+#### Ledger exacto de ocho sesiones activas
 
-- [ ] **Step 4: Calibrar latencia con muestras autónomas**
+El horizonte es `H = 8` sesiones activas ordinales. Un día sin práctica no
+consume slot. El planificador recibe un `ActiveSessionForecast` explícito; la
+simulación usa su calendario semillado. Si el runtime no puede proyectar ocho
+sesiones, el ledger devuelve `insufficient-forecast` y bloquea nuevas palabras
+y conversiones placement, pero sigue sirviendo obligatorios y base pendiente.
 
-`calibrateLatencyThresholds` solo usa eventos que cumplan:
+Cada slot `s ∈ [0, 7]` contiene:
 
 ```ts
-const autonomous =
-  event.assessment.correct
-  && !event.assessment.usedHints
-  && !event.assessment.rescued
-  && !event.assessment.acceptedVariant
-  && !event.assessment.firstTryFailed
-  && event.assessment.freeAudioReplays === 0
-  && (event.grade === "Easy" || event.grade === "Good");
+interface ForecastSlot {
+  activeOffset: number;
+  projectedAt: string;
+  budgetSeconds: number;
+  reservedSecondsByModality: Record<AttemptModality, number>;
+  reservations: CapacityReservation[];
+}
+
+remainingSeconds(s) = budgetSeconds(s)
+  - sum(reservation.estimatedSeconds for reservation in s)
+
+capacity(s, modality) = floor(
+  remainingSeconds(s) / estimatedSecondsByModality[modality]
+)
 ```
 
-Además:
+`remainingSeconds` es compartido: las capacidades por modalidad son vistas del
+mismo presupuesto y nunca se suman entre sí. Una reserva cabe si su coste es
+finito, no negativo y `cost <= remainingSeconds(s)`.
 
-- separar por modalidad;
-- exigir muestra mínima;
-- usar una estadística robusta documentada;
-- conservar fallback versionado;
-- no mezclar `interactionDurationMs` con `latencyMs`;
-- no usar practice o learning-step como revisión autónoma si la política exige
-  recuperación programada.
+La entrada deja de mezclar categorías bajo `mandatory` o `candidates`:
 
-- [x] **Step 5: Regla de parada**
-
-Si después de agotar ajustes seguros un criterio continúa rojo:
-
-1. detener la fase;
-2. guardar series y diagnóstico;
-3. identificar perfil y criterio;
-4. reportar si el problema apunta a tres habilidades base, placement o usage;
-5. abrir revisión de spec;
-6. no cambiar el umbral del criterio para obtener verde.
-
-**Resultado 2026-08-06 — actualización de las decisiones abiertas de §10:**
-la fase se detuvo y abrió revisión de spec. C11 exige al perfil principiante
-una retención mínima de `0,85`, pero todas sus probabilidades de corrección por
-modalidad son ≤`0,68`; ninguno de los ocho parámetros calibrables puede cerrar
-esa diferencia. Además, C8 y C9 revelan que el objetivo de palabras nuevas no
-está ligado a la capacidad de servicio de sus habilidades base. La baseline,
-el ensayo reversible `base 2 → 20`, las series por perfil y el diagnóstico de
-placement/usage están en
-[`2026-08-06-fase8-calibracion.md`](../plans/notes/2026-08-06-fase8-calibracion.md).
-No se fijan versiones ni se rebajan criterios hasta resolver esa revisión.
-
-- [ ] **Step 6: Fijar valores y versiones**
-
-Sustituir comentarios `PROVISIONAL` por la referencia a la nota. Incrementar la
-versión de cada política. Como `mature` es derivado, cambiar su política no
-requiere migración; los cambios de schedule sí deben respetar el historial.
-
-- [ ] **Step 7: Suite completa y commit**
-
-```bash
-pnpm test
-pnpm type-check
-pnpm lint
-git add -A
-git commit -m "feat(essential-words): fijar parametros tras simulacion fiel"
+```ts
+interface ForecastPlanningInput {
+  activeSessions: readonly ForecastSlot[]; // exactamente 8
+  mandatoryReviews: readonly PlannedItem[]; // FSRS Review
+  learningSteps: readonly PlannedItem[]; // New, Learning, Relearning
+  pendingBaseSkills: readonly ActivationCandidate[];
+  placementCandidates: readonly PlacementCandidate[];
+  usageCandidates: readonly ActivationCandidate[];
+  newWordCandidates: readonly NewWordCandidate[];
+  deferredWork: readonly DeferredWork[];
+  futureReservations: readonly CapacityReservation[];
+  estimatedSeconds: CalibratedOrFallbackCosts;
+}
 ```
+
+El `DailyPlan` conserva esas categorías separadas en selección, diferidos y
+telemetría; ninguna se reconstruye después desde una cola plana.
+
+El ledger se construye y reserva en este orden estable:
+
+1. reservas futuras ya persistidas que entren en el horizonte;
+2. revisiones `Review` obligatorias;
+3. learning steps `New | Learning | Relearning`;
+4. trabajo obligatorio diferido, conservando `firstDeferredSession`;
+5. habilidades base pendientes, por deadline C9 e `itemId`;
+6. conversiones placement que superen su reserva atómica;
+7. `usage`, únicamente con capacidad residual;
+8. palabras nuevas, únicamente con capacidad residual y reserva atómica.
+
+Dentro de una prioridad se usa earliest-deadline-first y luego `itemId`. Cada
+reserva lleva `kind`, `itemId`, `wordId`, `modality`, `estimatedSeconds`,
+`earliestActiveOffset`, `latestActiveOffset` y `sourcePolicyVersion`.
+
+Para una palabra nueva se clona el ledger y se intenta, como una transacción:
+
+1. reservar introducción + meaning en slot `0`;
+2. reservar listening en el primer slot con capacidad entre `1` y `6`;
+3. reservar production en el primer slot con capacidad posterior a listening y
+   como máximo `7`;
+4. confirmar las tres reservas solo si todas caben; de lo contrario, revertir
+   la copia y no admitir la palabra.
+
+Por tanto, toda palabra admitida tiene listening y production reservados dentro
+de ocho sesiones activas. Un límite diario fijo puede coexistir como protección
+secundaria, pero nunca sustituye esta transacción.
+
+#### Reserva de placement
+
+Cada candidato inferido se evalúa contra una copia del mismo ledger, en orden
+estable `control sample → inferredAt → itemId`. Una conversión solo confirma si:
+
+1. listening cabe en el primer slot con capacidad entre `0` y `6`, y production
+   cabe en el primer slot posterior, como máximo `7`;
+2. la verificación provisional cabe en el primer slot activo proyectado cuya
+   fecha sea `>= dueAt`;
+3. ningún slot compartido queda con saldo negativo;
+4. el deadline C9 de ninguna habilidad base existente se desplaza.
+
+`dueAt` conserva la ventana provisional. Para distribuir cohortes se recorren
+determinísticamente los offsets permitidos comenzando por
+`hash(itemId) mod windowLength`; se elige el primer `dueAt` cuyo bucket tenga
+capacidad. Si ninguno cabe, no se convierte el ítem.
+
+El forecast de placement cubre los ocho slots de servicio y, adicionalmente,
+los buckets fechados hasta el máximo de la ventana provisional. Una reserva
+fuera de los ocho slots se persiste como `futureReservation` y entra en el
+ledger cuando su fecha alcanza el horizonte. Sin forecast hasta `dueAt`, la
+conversión devuelve `insufficient-forecast`; no usa el límite diario como
+aproximación.
+
+#### Gate de datos empíricos
+
+Costes y latencia se instrumentan uniendo `SrsReviewEvent.attemptLogId` con
+`AttemptLog.id`, deduplicando por intento y separando modalidad. El resultado
+por modalidad es:
+
+```ts
+type CalibrationStatus = "ready" | "insufficient-data";
+
+interface EmpiricalEstimate {
+  status: CalibrationStatus;
+  modality: AttemptModality;
+  sampleCount: number;
+  minimumSamples: 200;
+  statistic: "median-after-mad-filter";
+  value?: number;
+  datasetVersion: string;
+  fallbackVersion: string;
+}
+```
+
+Una muestra autónoma exige revisión programada sobre
+`priorSchedule.state === "Review"`, corrección, cero pistas, rescate, variante,
+primer fallo y replays. `interactionDurationMs` alimenta costes y `latencyMs`
+alimenta Easy/Good; nunca se mezclan. Por modalidad:
+
+1. calcular mediana `m` y `MAD = median(|x - m|)`;
+2. conservar `|x - m| <= 3 × 1,4826 × MAD` (si `MAD = 0`, conservar todos);
+3. usar la mediana del conjunto filtrado;
+4. exigir al menos 200 muestras válidas antes y después del filtro.
+
+Con menos de 200, el producto puede seguir usando el fallback versionado, pero
+la calibración devuelve `insufficient-data` y la Fase 8 no puede cerrarse. Una
+muestra generada por simulación nunca cambia ese estado a `ready`.
+
+### Task 8.5: Modelo determinista de C11
+
+**Files:**
+- Create: `lib/essential-words/simulation/scheduled-review-outcome.ts`
+- Modify: `lib/essential-words/simulation/apply-session.ts`
+- Modify: `lib/essential-words/simulation/criteria/retention.ts`
+- Modify: `lib/essential-words/verification/types.ts`
+- Modify: `lib/essential-words/record-attempt.ts`
+- Test: `lib/essential-words/simulation/__tests__/scheduled-review-outcome.test.ts`
+- Test: `lib/essential-words/simulation/__tests__/criteria-retention.test.ts`
+
+Implementar la fórmula anterior sin tocar sus límites. Tests obligatorios:
+
+- misma semilla y schedules producen la misma secuencia;
+- `10.000` reviews con `retrievability = 0,90` quedan entre `0,85` y `0,95`;
+- cambiar `accuracyByModality` no cambia la corrección de scheduled Review;
+- el evento audita retrievability y versiones de scheduler/parámetros;
+- verification, practice, New, Learning y Relearning no entran en C11;
+- `49` muestras devuelven `insufficient-sample`; `50` sí se evalúan;
+- `desiredRetention = 0,90` cierra C11 sin alterar C1–C10.
+
+### Task 8.6: Forecast y ledger de ocho sesiones
+
+**Files:**
+- Create: `lib/essential-words/capacity-ledger.ts`
+- Modify: `lib/essential-words/planning-types.ts`
+- Modify: `lib/essential-words/daily-budget.ts`
+- Test: `lib/essential-words/__tests__/capacity-ledger.test.ts`
+- Test: `lib/essential-words/__tests__/admission-control.test.ts`
+
+Implementar slots, prioridades, earliest-deadline-first y transacciones de
+reserva. Tests obligatorios:
+
+- inactividad no consume un slot activo;
+- las capacidades por modalidad comparten segundos y no se duplican;
+- obligatorios, learning, diferidos y base se reservan antes que usage/nuevas;
+- listening y production se confirman o revierten juntos;
+- una sola habilidad sin capacidad rechaza la palabra completa;
+- dos ejecuciones con el mismo forecast producen el mismo ledger;
+- el backlog base existente conserva deadline C9 ≤8.
+
+### Task 8.7: Placement sobre reservas futuras
+
+**Files:**
+- Modify: `lib/essential-words/placement/policy.ts`
+- Modify: `lib/essential-words/verification/provisional-intervals.ts`
+- Modify: `lib/essential-words/simulation/candidates.ts`
+- Test: `lib/essential-words/placement/__tests__/capacity-reservations.test.ts`
+
+Eliminar el límite diario como condición suficiente. Tests obligatorios:
+
+- una conversión reserva listening, production y su provisional atómicamente;
+- una cohorte que rompería C9 no se convierte;
+- colisiones de `dueAt` se distribuyen dentro de la ventana sin aleatoriedad;
+- sin forecast hasta `dueAt` se devuelve `insufficient-forecast`;
+- una reserva futura reaparece al entrar en los ocho slots;
+- control samples conservan prioridad sin saltarse capacidad.
+
+### Task 8.8: Telemetría y dataset empírico
+
+**Files:**
+- Create: `lib/essential-words/calibration/dataset.ts`
+- Create: `lib/essential-words/calibration/robust-estimate.ts`
+- Modify: `lib/essential-words/cost-estimate.ts`
+- Modify: `lib/essential-words/verification/latency.ts`
+- Test: `lib/essential-words/calibration/__tests__/dataset.test.ts`
+- Test: `lib/essential-words/calibration/__tests__/robust-estimate.test.ts`
+
+Tests obligatorios:
+
+- deduplicación por intento y separación por modalidad;
+- exclusión de muestras asistidas y no programadas;
+- duración y latencia producen datasets diferentes;
+- MAD filtra outliers determinísticamente;
+- `199` muestras devuelven `insufficient-data`; `200` pueden devolver `ready`;
+- un dataset sintético nunca satisface el gate empírico;
+- fallback incluye versión y no se presenta como calibración final.
+
+### Task 8.9: Recalibración estructural
+
+Reejecutar baseline y ajustar exclusivamente estructura/capacidad para cerrar
+C1–C5 y C8–C11, en ese orden. Después de cada cambio ejecutar los cinco
+perfiles y los diez adversariales. Registrar impacto en todos los criterios.
+No tocar madurez ni latencia en esta tarea.
+
+### Task 8.10: Calibración de `MaturityPolicy`
+
+Solo empieza con C1–C5 y C8–C11 verdes. Ajustar madurez y reejecutar C6, C7 y
+C9 después de cada cambio, además de los cinco perfiles y diez adversariales.
+`mature` sigue derivado y no reescribe historial.
+
+### Task 8.11: Costes y latencia
+
+Solo empieza cuando cada modalidad tiene dataset empírico `ready`. Fijar costes
+desde `interactionDurationMs` y Easy/Good desde `latencyMs`; versionar valores y
+fallbacks por separado. Después de cada ajuste ejecutar perfiles y
+adversariales. No usar datos sintéticos como calibración final.
+
+### Task 8.12: Cierre y versionado
+
+Fijar los ocho grupos y reemplazar comentarios provisionales únicamente cuando:
+
+- C1–C11 estén verdes en todos los perfiles aplicables;
+- los diez adversariales estén verdes;
+- ningún resultado sea `insufficient-sample`, `insufficient-forecast` o
+  `insufficient-data`;
+- el dataset empírico cumpla `200` muestras por modalidad;
+- la nota de calibración registre valores, versiones, series y comandos.
+
+Hasta entonces la Fase 8 permanece abierta y Fase 9 bloqueada. Ejecutar suite,
+type-check y lint solo para cerrar, sin `git add -A` en un worktree mixto.
 
 ---
 
