@@ -1614,15 +1614,35 @@ requiere proveedor.
 
 ## Fase 8 — Simulación fiel y calibración
 
-**Estado:** detenida en 8.9j por bloqueo de diseño en C9. No iniciar 8.10 ni
-Fase 9. Auditoría 8.9j (ver
+**Estado:** detenida en 8.9k por bloqueo de diseño en C9 (regla de parada
+§14, distinto del bloqueo de 8.9j). No iniciar 8.10 ni Fase 9. Auditoría
+8.9j (ver
 `docs/superpowers/plans/notes/2026-08-07-fase8-9j-c9-audit-report.md`)
 confirmó que el contrato de reserva de 8.6 es correcto (cero reservas
 perdidas o faltantes en 5 perfiles) y que el rojo de C9 viene de: (a)
 forecast de admisión sistemáticamente optimista bajo demanda sostenida
 (steady/intermittent/beginner — requiere decisión hard-vs-best-effort), y
 (b) placement sin freno agregado contra C9, contradiciendo el texto de la
-Task 8.7 (advanced — corrección identificada, no implementada).
+Task 8.7 (advanced — corrección identificada en 8.9j, implementada en 8.9k).
+
+Task 8.9k restauró el contrato de 8.7 en `admitPlacementConversions`
+(evaluación acumulativa de la cohorte, contrato atómico, mismo envelope
+FSRS que `admitNewWords`, re-chequeo explícito de la cohorte comprometida,
+`accepted = min(safetyCeiling, capacitySafeConversions)`). Verificado: cero
+reservas perdidas/faltantes, cero admisiones "a ciegas" del forecast, cero
+rechazos del guardia agregado (`rejectedForAggregateC9 = 0` en todas las
+corridas) — el mecanismo de admisión es correcto. Sin embargo, advanced
+sigue con 93/224 violaciones de C9 en placement, sin cambio frente a antes
+del fix. Causa identificada (regla de parada §14, no corregida en 8.9k por
+estar fuera de su alcance): el `CapacityForecast` mide segundos por sesión,
+pero la selección diaria real (`selectBaseDynamically`) está gobernada
+también por un techo de **conteo** (`absoluteBaseActivationSafetyCeiling
+= 24`/sesión) que la admisión no modela. Una ráfaga de hasta 8 conversiones
+placement/día (16 obligaciones) puede verse "segura en segundos" en el
+ledger y aun así no ser servida a tiempo porque el conteo diario de slots
+está saturado por el propio backlog generado por la ráfaga. Unir ambos
+ledgers (segundos + conteo) es una decisión de spec nueva, no un ajuste de
+placement.
 
 Objetivo: simular el diseño real durante 180 días, corregir primero los
 contratos estructurales y fijar parámetros solo con aceptación verde y datos

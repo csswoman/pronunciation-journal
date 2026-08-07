@@ -176,6 +176,13 @@ export interface DailyPlan {
   newWordsSelected: NewWordCandidate[];
   placementSelected: LearningItem[];
   placementDeferred: number;
+  /** Task 8.9k §9 — aggregate placement admission telemetry for this session. */
+  placementCapacity?: {
+    capacitySafeConversions: number;
+    rejectedForCapacity: number;
+    rejectedForSafetyCeiling: number;
+    rejectedForAggregateC9: number;
+  };
   futureReservations: CapacityReservation[];
   loadBreakdown: PlanningLoadBreakdown;
 }

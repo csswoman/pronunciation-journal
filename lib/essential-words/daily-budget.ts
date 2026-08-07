@@ -171,6 +171,12 @@ export function planDailySession(
       mode, mandatory, base,
       { selected: [], deferred: input.candidates.usageActivations, seconds: 0 },
       { selected: [], seconds: 0 }, 0, [], 0, futureReservations,
+      {
+        capacitySafeConversions: 0,
+        rejectedForCapacity: 0,
+        rejectedForSafetyCeiling: 0,
+        rejectedForAggregateC9: 0,
+      },
       buildLoadBreakdown(input, mandatory, base, { selected: [], deferred: [], seconds: 0 }, 0, futureReservations, placementIds),
     );
   }
@@ -184,6 +190,15 @@ export function planDailySession(
     false,
   );
   const forecast = buildFutureCapacity(input, mandatory.deferred, base.deferred);
+  // Built once and reused by both admission gates (Task 8.9k §1): placement
+  // must reserve against the same expected-FSRS-debt margin new-word
+  // admission already does, or it can look C9-safe against a forecast that
+  // is systematically more optimistic than the one that actually gates C9.
+  const admissionEnvelope = buildAdmissionLoadEnvelope({
+    costs: input.estimatedSeconds.byModality,
+    introductionSeconds: input.estimatedSeconds.newWordIntroduction,
+    horizonSessions: 8,
+  });
   const placement = input.placementContext
     ? admitPlacementConversions({
         candidates: input.candidates.placementCandidates ?? [],
@@ -192,6 +207,7 @@ export function planDailySession(
         estimatedSecondsByModality: input.estimatedSeconds.byModality,
         now: input.placementContext.now,
         activeSessionDates: input.placementContext.activeSessionDates,
+        admissionEnvelope,
       })
     : {
         admitted: [] as LearningItem[],
@@ -200,6 +216,9 @@ export function planDailySession(
         newReservations: [] as CapacityReservation[],
         forecast,
         status: "ready" as const,
+        rejectedForCapacity: 0,
+        rejectedForSafetyCeiling: 0,
+        rejectedForAggregateC9: 0,
       };
   for (const reservation of placement.newReservations) {
     if (reservation.source === "placement") placementIds.add(reservation.itemId);
@@ -219,11 +238,6 @@ export function planDailySession(
   const sessionCap = perNewWord > 0
     ? Math.floor(availableForNewWords / perNewWord)
     : input.configuredNewWordLimit;
-  const admissionEnvelope = buildAdmissionLoadEnvelope({
-    costs: input.estimatedSeconds.byModality,
-    introductionSeconds: input.estimatedSeconds.newWordIntroduction,
-    horizonSessions: 8,
-  });
   const admission = admitNewWords({
     candidates: input.candidates.newWords.slice(0, sessionCap),
     configuredNewWordLimit: Math.max(0, input.configuredNewWordLimit - input.consumed.newWords),
@@ -249,6 +263,12 @@ export function planDailySession(
   return planFromSelections(
     mode, mandatory, base, usage, newWords, admission.capacitySafeNewWords,
     placement.admitted, placement.deferred.length, futureReservations,
+    {
+      capacitySafeConversions: placement.capacitySafeConversions,
+      rejectedForCapacity: placement.rejectedForCapacity,
+      rejectedForSafetyCeiling: placement.rejectedForSafetyCeiling,
+      rejectedForAggregateC9: placement.rejectedForAggregateC9,
+    },
     buildLoadBreakdown(
       input, mandatory, base, usage, newWords.seconds, futureReservations, placementIds,
     ),
@@ -265,6 +285,7 @@ function planFromSelections(
   placementSelected: LearningItem[],
   placementDeferred: number,
   futureReservations: DailyPlan["futureReservations"],
+  placementCapacity: DailyPlan["placementCapacity"],
   loadBreakdown: PlanningLoadBreakdown,
 ): DailyPlan {
   const newWordMeaningActivations = newWords.selected.length;
@@ -288,6 +309,7 @@ function planFromSelections(
     newWordsSelected: newWords.selected,
     placementSelected,
     placementDeferred,
+    placementCapacity,
     futureReservations,
     loadBreakdown,
   };

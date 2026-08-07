@@ -26,6 +26,11 @@ export interface SimulatedDay {
   placementCandidates: number;
   placementConversions: number;
   placementConversionsDeferred: number;
+  /** Task 8.9k §9 — placement admission telemetry, aggregate-C9-safe. */
+  placementCapacitySafeConversions?: number;
+  placementRejectedForCapacity?: number;
+  placementRejectedForSafetyCeiling?: number;
+  placementRejectedForAggregateC9?: number;
   placementReservedSeconds: number;
   placementListeningReservations: number;
   placementProductionReservations: number;
