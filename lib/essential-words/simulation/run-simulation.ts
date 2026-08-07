@@ -1,5 +1,6 @@
 import {
   DEFAULT_SECONDS_BY_MODALITY,
+  estimateItemsSeconds,
 } from "../cost-estimate";
 import { planDailySession } from "../daily-budget";
 import type { ActivationLimits, DailyPlanningInput } from "../planning-types";
@@ -14,7 +15,25 @@ import {
   applyCompletedSession,
   completePlannedSession,
 } from "./apply-session";
-import { collectCandidates, collectMandatory } from "./candidates";
+import {
+  collectCandidates,
+  collectMandatory,
+} from "./candidates";
+import type {
+  DeferredObservation,
+  EligibilityObservation,
+} from "./criteria";
+import {
+  createEligibilityAccumulator,
+  dateAtDay,
+  findNonTrivialFailures,
+  observeDeferred,
+  observeEligibility,
+  oldestDeferredAge,
+  waitingBaseCounts,
+  type SimulationHarnessHooks,
+  type SimulationHookContext,
+} from "./observations";
 import {
   buildPracticeCalendar,
   type SimulationProfile,
@@ -24,6 +43,7 @@ import {
   applyInferenceConversions,
   countSimulationWorld,
   createInitialWorld,
+  findWordItem,
   simulationContext,
   type SimulationOptions,
   type SimulationWorld,
@@ -71,71 +91,19 @@ export interface SimulationResult {
   worldCounts: SimulationWorldCounts;
   attemptLogs: AttemptLog[];
   srsEvents: SrsReviewEvent[];
+  eligibility: EligibilityObservation[];
+  deferredObservations: DeferredObservation[];
+  nonTrivialFailures: string[];
   maxDeferredAgeSessions: number;
+  options: SimulationOptions;
 }
 
-function dateAtDay(start: Date, dayIndex: number): Date {
-  return new Date(start.getTime() + dayIndex * 86_400_000);
-}
-
-function oldestDeferredAge(world: SimulationWorld): number {
-  return Math.max(
-    0,
-    ...[...world.deferred.values()].map((state) => (
-      world.sessionIndex - state.firstDeferredSession
-    )),
-  );
-}
-
-function waitingBaseCounts(
-  world: SimulationWorld,
-  profile: SimulationProfile,
-  now: Date,
-  seed: number,
-): { listening: number; production: number } {
-  const candidates = collectCandidates(
-    world,
-    profile,
-    simulationContext(now, seed, { value: 0 }),
-  ).baseSkillActivations;
-  return {
-    listening: candidates.filter((item) => item.skill === "listening").length,
-    production: candidates.filter((item) => item.skill === "production").length,
-  };
-}
-
-function assertNonTrivialDynamics(
-  profile: SimulationProfile,
-  options: SimulationOptions,
-  result: SimulationResult,
-  initialInferences: number,
-): void {
-  if (
-    options.days >= 90
-    && options.corpusSize > 0
-    && options.targetNewWords > 0
-    && !result.days.some((day) => day.baseSkillActivations > 0)
-  ) throw new Error("simulation produced no base skill activations");
-
-  if (profile.placementConfidence === "high" && initialInferences > 0 && options.days >= 30) {
-    if (!result.days.some((day) => day.placementConversions > 0)) {
-      throw new Error("simulation produced no placement conversions");
-    }
-    if (!result.days.some((day) => day.provisionalDue > 0)) {
-      throw new Error("simulation produced no provisional reviews");
-    }
-  }
-  if (
-    profile.id === "advanced"
-    && options.days >= 180
-    && options.corpusSize > 0
-    && !result.days.some((day) => day.usageActivations > 0)
-  ) throw new Error("simulation produced no usage activations");
-}
+export type { SimulationHarnessHooks, SimulationHookContext } from "./observations";
 
 export function runSimulation(
   profile: SimulationProfile,
   options: SimulationOptions,
+  hooks: SimulationHarnessHooks = {},
 ): SimulationResult {
   if (!Number.isInteger(options.days) || options.days < 0) {
     throw new Error("days must be a non-negative integer");
@@ -154,14 +122,27 @@ export function runSimulation(
   const calendar = buildPracticeCalendar(profile, options.days, random);
   const idCounter = { value: 0 };
   const days: SimulatedDay[] = [];
+  const eligibility: EligibilityObservation[] = [];
+  const deferredObservations: DeferredObservation[] = [];
+  const eligibilityAccumulator = createEligibilityAccumulator();
+  let sawPlacementProvisionalDue = false;
 
   for (let dayIndex = 0; dayIndex < options.days; dayIndex += 1) {
     const now = dateAtDay(start, dayIndex);
     const date = now.toISOString();
     const context = simulationContext(now, options.seed, idCounter);
-    const mandatory = collectMandatory(world, now);
+    const hookContext: SimulationHookContext = { dayIndex, now, world, options };
+    let mandatory = collectMandatory(world, now);
+    mandatory = hooks.mutateMandatory?.(mandatory, hookContext) ?? mandatory;
+    sawPlacementProvisionalDue ||= mandatory.provisionalDue.some((planned) => {
+      const word = world.words.get(planned.wordId);
+      const item = word ? findWordItem(word, planned.itemId) : undefined;
+      return item?.schedule.kind === "provisional"
+        && item.schedule.source === "placement-inference";
+    });
     const backlog = backlogSeconds(mandatory, SIMULATION_COSTS);
     let candidates = collectCandidates(world, profile, context);
+    candidates = hooks.mutateCandidates?.(candidates, hookContext) ?? candidates;
 
     if (!calendar[dayIndex]) {
       const waiting = waitingBaseCounts(world, profile, now, options.seed);
@@ -187,6 +168,7 @@ export function runSimulation(
       date,
     );
     candidates = collectCandidates(world, profile, context);
+    candidates = hooks.mutateCandidates?.(candidates, hookContext) ?? candidates;
     const planningInput: DailyPlanningInput = {
       dailyBudgetSeconds: options.dailyBudgetSeconds,
       mandatory,
@@ -202,19 +184,22 @@ export function runSimulation(
       consumed: { baseSkillActivations: 0, usageActivations: 0, newWords: 0 },
       previousMode: world.previousMode,
     };
-    const plan = planDailySession(
+    let plan = planDailySession(
       planningInput,
       SIMULATION_ACTIVATION_LIMITS,
       DEFAULT_RECOVERY_POLICY,
     );
+    plan = hooks.mutatePlan?.(plan, mandatory, hookContext) ?? plan;
     const queue = buildSkillQueue({ plan });
-    const completions = completePlannedSession(
+    let completions = completePlannedSession(
       queue,
       profile,
       SIMULATION_COSTS,
       options.dailyBudgetSeconds,
       random,
     );
+    completions = hooks.mutateCompletions?.(completions, hookContext) ?? completions;
+    const sessionIndex = world.sessionIndex;
     const summary = applyCompletedSession(
       world,
       plan,
@@ -222,9 +207,21 @@ export function runSimulation(
       context,
       context.newId(),
     );
+    const availableSeconds = Math.max(
+      0,
+      options.dailyBudgetSeconds
+        - estimateItemsSeconds(plan.mandatorySelected, SIMULATION_COSTS),
+    );
+    eligibility.push(...observeEligibility(
+      world,
+      sessionIndex,
+      availableSeconds,
+      eligibilityAccumulator,
+    ));
+    deferredObservations.push(...observeDeferred(mandatory, plan, sessionIndex));
     const waiting = waitingBaseCounts(world, profile, now, options.seed);
 
-    days.push({
+    let simulatedDay: SimulatedDay = {
       date, active: true, dailyBudgetSeconds: options.dailyBudgetSeconds,
       plannedSeconds: plan.allowance.plannedSeconds,
       completedSeconds: summary.completedSeconds, plannedItems: queue.length,
@@ -242,17 +239,32 @@ export function runSimulation(
       oldestDeferredAgeSessions: oldestDeferredAge(world),
       listeningEligibleWaiting: waiting.listening,
       productionEligibleWaiting: waiting.production,
-    });
+    };
+    simulatedDay = hooks.mutateDay?.(simulatedDay, hookContext) ?? simulatedDay;
+    days.push(simulatedDay);
   }
 
+  const nonTrivialFailures = findNonTrivialFailures(
+    profile,
+    options,
+    days,
+    initialInferences,
+    sawPlacementProvisionalDue,
+  );
   const result: SimulationResult = {
     days,
     world,
     worldCounts: countSimulationWorld(world),
     attemptLogs: world.attemptLogs,
     srsEvents: world.srsEvents,
+    eligibility,
+    deferredObservations,
+    nonTrivialFailures,
     maxDeferredAgeSessions: Math.max(0, ...days.map((day) => day.oldestDeferredAgeSessions)),
+    options: { ...options },
   };
-  assertNonTrivialDynamics(profile, options, result, initialInferences);
+  if (!hooks.allowTrivialDynamics && nonTrivialFailures.length > 0) {
+    throw new Error(`simulation produced trivial dynamics: ${nonTrivialFailures.join(", ")}`);
+  }
   return result;
 }
