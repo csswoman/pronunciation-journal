@@ -5803,17 +5803,44 @@ anteriores. Fallar cuando:
 - `usageActivations` es pico en la misma sesión;
 - `plannedSeconds > 1.5 × dailyBudgetSeconds`.
 
-#### Criterio 8 — liveness de palabras nuevas
+#### Criterio 8 — liveness de palabras nuevas (capacity-conditioned, Task 8.9i)
 
 ```ts
+export interface NewWordLivenessResult extends CriterionResult {
+  highCapacitySessions: number;
+  lowCapacitySessions: number;
+  zeroCapacitySessions: number;
+  longestStarvationRunSessions: number;
+}
+
 export function newWordLiveness(
   days: SimulatedDay[],
   targetNewWords: number,
-): CriterionResult;
+  starvationLimitSessions?: number,
+): NewWordLivenessResult;
 ```
 
-En sesiones normales, con backlog inferior a 80 % del presupuesto, introducir
-al menos 60 % del objetivo agregado.
+**Semántica revisada (Task 8.9h/8.9i, Decisión 1 aprobada).** `targetNewWords`
+es un máximo por sesión, no una cuota que deba alcanzarse en cualquier
+régimen. En sesiones normales con backlog inferior a 80 % del presupuesto,
+particionadas por `capacitySafeNewWords` (el forecast completo de admisión,
+nunca recortado artificialmente):
+
+- `capacitySafeNewWords >= ceil(target × 0.60)` ("alta capacidad"): exigir
+  que lo admitido agregado alcance ese 60 %.
+- `0 < capacitySafeNewWords < ceil(target × 0.60)` ("baja capacidad"):
+  exento del 60 % nominal; solo se exige liveness (no starvation).
+- `capacitySafeNewWords = 0`: exento por completo — el forecast ya probó
+  que 0 es lo máximo posible.
+
+Starvation: falla si existe una racha de sesiones consecutivas con
+`capacitySafeNewWords > 0` y cero admitidas mayor que
+`starvationLimitSessions` (por defecto 8, el mismo horizonte que C9). C8
+nunca sustituye a C9 ni viceversa; la aceptación exige ambos de forma
+independiente. Ver
+[`2026-08-07-fase8-9h-c8-c9-spec-review.md`](../plans/notes/2026-08-07-fase8-9h-c8-c9-spec-review.md)
+y
+[`2026-08-07-fase8-9h-decision-record.md`](../plans/notes/2026-08-07-fase8-9h-decision-record.md).
 
 #### Criterio 9 — liveness de habilidades base
 
@@ -5841,7 +5868,7 @@ Fallar si un obligatorio elegible acumula más de `Y` sesiones activas sin ser
 seleccionado, salvo suspensión explícita. El diagnóstico incluye `itemId`,
 tramo, dueAt y edad.
 
-#### Criterio 11 — retención observada
+#### Criterio 11 — calibración de retención (Task 8.9i, Decisión 2 aprobada)
 
 ```ts
 export interface SimulatedScheduledReview {
@@ -5862,6 +5889,7 @@ export function observedRetention(
   minimumReviews: number,
 ): RetentionResult;
 
+/** @deprecated superseded by retentionCalibrationWithinExpected (Task 8.9i). */
 export function observedRetentionWithinTarget(
   attempts: AttemptLog[],
   events: SrsReviewEvent[],
@@ -5869,6 +5897,32 @@ export function observedRetentionWithinTarget(
   tolerance: number,
   minimumReviews: number,
 ): CriterionResult;
+
+export interface RetentionCalibrationResult extends CriterionResult {
+  sampleSize: number;
+  expectedRetention: number | null;
+  observedRetentionValue: number | null;
+  zScore: number | null;
+}
+
+export function retentionCalibrationWithinExpected(
+  attempts: AttemptLog[],
+  events: SrsReviewEvent[],
+  minimumReviews: number,
+  zCriticalValue?: number,
+): RetentionCalibrationResult;
+
+export interface RetrievabilitySegmentResult {
+  segment: "stable" | "low-stability-post-lapse";
+  sampleSize: number;
+  meanRetrievability: number | null;
+}
+
+export function meanRetrievabilityAtReview(
+  attempts: AttemptLog[],
+  events: SrsReviewEvent[],
+  lowStabilityThresholdDays?: number,
+): RetrievabilitySegmentResult[];
 ```
 
 Para cada revisión FSRS en estado `Review`, calcular primero la retrievability
@@ -5880,9 +5934,36 @@ la modalidad no participa en `recalled`; solo puede afectar después el grade,
 Resolver `attemptLogId` contra `AttemptLog` y usar una sola vez cada intento
 con `eventType === "scheduled-review"` que tenga un evento con
 `affectsSchedule === true`. Excluir verification, practice, learning-step y
-placement. Con muestra suficiente, exigir retención dentro de
-`target ± tolerance`. Por debajo del mínimo, devolver `insufficient-data` y no
-declarar éxito de calibración final.
+placement.
+
+**Semántica revisada (Task 8.9i, Decisión 2 aprobada).** 8.9g demostró que
+`recalled` sigue correctamente la retrievability calculada, pero que el
+redondeo a día entero del scheduler FSRS compartido deprime la
+retrievability real para ítems de `stability` baja — comparar
+`observedRetention` contra un umbral fijo (`0,9 ± 0,05`) mezclaba esa
+propiedad de scheduling con la calibración del propio pipeline
+`recalled`/`retrievability`. C11 separa ambas cosas:
+
+- `expectedRetention = mean(retrievabilityBeforeReview)` sobre las reviews
+  elegibles.
+- `observedRetention = correct / n`.
+- `z = (observedRetention − expectedRetention) / sqrt(expectedRetention × (1 − expectedRetention) / n)`.
+- C11 aprueba si `|z| <= 3` (no 1.96/95 %: con miles de reviews elegibles, un
+  95 % marca ruido de muestreo como "no calibrado" — ver la nota de decisión
+  8.9i). Por debajo de `minimumReviews`, falla explícitamente
+  (`insufficient-data`), nunca aprueba de forma vacía.
+- No usa `desiredRetention` como comparador directo, no usa
+  `accuracyByModality`, no usa umbrales distintos por perfil.
+
+La calidad de scheduling (¿el scheduler alcanza ~0,90 de retrievability?) se
+mide aparte, sin decidir pass/fail, con `meanRetrievabilityAtReview`,
+segmentada en `stable` y `low-stability-post-lapse` (`stability` previa
+< 1 día). Un segmento puede estar lejos de 0,90 mientras C11 sigue en verde
+— eso es esperado, no un fallo de C11. Ver
+[`2026-08-07-fase8-9h-c8-c9-spec-review.md`](../plans/notes/2026-08-07-fase8-9h-c8-c9-spec-review.md)
+(Parte B) y
+[`2026-08-07-fase8-9h-decision-record.md`](../plans/notes/2026-08-07-fase8-9h-decision-record.md)
+(Decisión 2).
 
 - [ ] **Step 2: Tests de éxito y fallo**
 
@@ -6161,10 +6242,14 @@ cociente y ese audit para demostrar el modelo; no intenta reconstruir `r_i`
 desde `priorSchedule`, porque `lastReview` no vive dentro de `ItemSchedule`.
 
 `desiredRetention` controla el vencimiento FSRS y, por tanto, la distribución
-de `r_i`; no se sustituye por una probabilidad fija del perfil. Con
-`desiredRetention ≈ 0,90`, `n >= 50` y horizonte suficiente, C11 aprueba solo
-si `0,85 <= observedRetention <= 0,95`. Si `n < 50`, devuelve
-`insufficient-data` y la aceptación continúa roja.
+de `r_i`. **(Actualizado, Task 8.9i, Decisión 2 aprobada)** C11 ya no compara
+`observedRetention` contra `desiredRetention ± tolerancia`; compara
+`observedRetention` contra `expectedRetention = mean(r_i)` de la misma
+muestra, vía un z-test (`|z| <= 3`, ver Criterio 11 arriba). Esto separa la
+calibración del pipeline `recalled`/`retrievability` (C11) de si el
+scheduler realmente alcanza `desiredRetention ≈ 0,90` (medido aparte por
+`meanRetrievabilityAtReview`, sin decidir pass/fail). Si `n < 50`, devuelve
+`insufficient-data` y la aceptación continúa roja — igual que antes.
 
 La modalidad no participa en `correct_i`. Sí puede cambiar la distribución de
 `latencyMs`, `interactionDurationMs`, dificultad, pistas y la frontera
@@ -7141,10 +7226,17 @@ El flag permanece `off` durante las fases 0–8. La fase 9 es la única que pued
 | 5 | volver tras ausencia | `recoveryReturnSessions` | sesiones activas | ráfagas |
 | 6 | cuota usage | `usageActivationShare` | denominador/ventana | aplicables |
 | 7 | sin picos sincronizados | `noSynchronizedPeaks` | pico/no pico | todos |
-| 8 | liveness nuevas | `newWordLiveness` | cero/progreso | constante |
+| 8 | liveness nuevas (capacity-conditioned, 8.9i) | `newWordLiveness` | 6 escenarios de capacidad/starvation | constante |
 | 9 | liveness base | `baseSkillActivationLiveness` | starvation/no starvation | elegibles |
 | 10 | no starvation atrasados | `noOverdueStarvation` | edad máxima | todos |
-| 11 | retención objetivo | `observedRetentionWithinTarget` | baja/aceptable | todos |
+| 11 | calibración de retención (8.9i) | `retentionCalibrationWithinExpected` | calibrado/descalibrado/insuficiente | todos |
+
+> `observedRetentionWithinTarget` (umbral fijo `0,9 ± 0,05`) queda
+> `@deprecated`, retenida solo por regresión histórica en
+> `criteria-retention.test.ts` / `c11-accuracy-independence.test.ts`. La
+> acceptance/adversarial de C11 usa `retentionCalibrationWithinExpected`.
+> `meanRetrievabilityAtReview` es una métrica de scheduling adicional, no un
+> criterio pass/fail — no tiene fila propia en esta tabla.
 
 ## Alcance explícitamente diferido
 

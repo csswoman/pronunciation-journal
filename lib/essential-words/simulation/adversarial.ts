@@ -6,10 +6,10 @@ import {
   newWordLiveness,
   noOverdueStarvation,
   noSynchronizedPeaks,
-  observedRetentionWithinTarget,
   percentile95WithinBudget,
   recoveryExits,
   recoveryReturnSessions,
+  retentionCalibrationWithinExpected,
   usageActivationShare,
 } from "./criteria";
 import type { SimulationProfile } from "./profiles";
@@ -68,7 +68,16 @@ function hooksForMutation(mutation: SimulationMutation): SimulationHarnessHooks 
       usageActivations: [],
     });
   } else if (mutation === "zero-new-words") {
-    hooks.mutateCandidates = (candidates) => ({ ...candidates, newWords: [] });
+    // Task 8.9i (Decisión 1): vaciar los candidatos ANTES del forecast (la
+    // implementación anterior) hace que `capacitySafeNewWords` sea
+    // legítimamente 0 bajo la nueva semántica capacity-conditioned — deja de
+    // ser una violación (ver decision record 8.9h/8.9i). El adversarial
+    // correcto para "hay capacidad real, pero se suprime la admisión"
+    // preserva los candidatos (el forecast ve capacidad genuina) y solo
+    // vacía lo efectivamente seleccionado, forzando starvation real.
+    hooks.mutatePlan = (plan) => (
+      plan.newWordsSelected.length > 0 ? { ...plan, newWordsSelected: [] } : plan
+    );
   } else if (mutation === "ignore-placement") {
     hooks.mutateCandidates = (candidates) => ({
       ...candidates,
@@ -199,11 +208,9 @@ export function failedCriterionNumbers(result: SimulationResult): number[] {
   if (failed(newWordLiveness(days, options.targetNewWords))) failures.push(8);
   if (failed(baseSkillActivationLiveness(result.eligibility, 8))) failures.push(9);
   if (failed(noOverdueStarvation(result.deferredObservations, 12))) failures.push(10);
-  if (failed(observedRetentionWithinTarget(
+  if (failed(retentionCalibrationWithinExpected(
     result.attemptLogs,
     result.srsEvents,
-    0.9,
-    0.05,
     50,
   ))) failures.push(11);
   return failures;

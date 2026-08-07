@@ -6,10 +6,10 @@ import {
   newWordLiveness,
   noOverdueStarvation,
   noSynchronizedPeaks,
-  observedRetentionWithinTarget,
   percentile95WithinBudget,
   recoveryExits,
   recoveryReturnSessions,
+  retentionCalibrationWithinExpected,
   usageActivationShare,
 } from "../criteria";
 import { PROFILES } from "../profiles";
@@ -67,12 +67,13 @@ for (const profile of Object.values(PROFILES)) {
         .toMatchObject({ passed: true });
     });
 
-    it("criterio 11 — retención", () => {
-      expect(observedRetentionWithinTarget(
+    it("criterio 11 — calibración de retención (Task 8.9i, Decisión 2)", () => {
+      // C11 valida que `recalled` sigue la retrievability calculada, no que
+      // la retrievability esté cerca de 0.90 (eso es scheduling quality,
+      // medido aparte por meanRetrievabilityAtReview — ver la nota 8.9i).
+      expect(retentionCalibrationWithinExpected(
         result.attemptLogs,
         result.srsEvents,
-        0.9,
-        0.05,
         50,
       )).toMatchObject({ passed: true });
     });

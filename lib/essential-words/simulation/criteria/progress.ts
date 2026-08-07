@@ -52,33 +52,101 @@ export function usageActivationShare(
   };
 }
 
+/** Same horizon as C9 (`baseSkillActivationLiveness`'s deadline), for a single starvation clock. */
+export const DEFAULT_CAPACITY_STARVATION_LIMIT_SESSIONS = 8;
+
+export interface NewWordLivenessResult extends CriterionResult {
+  /** Eligible sessions where capacitySafeNewWords >= ceil(target * 0.60). */
+  highCapacitySessions: number;
+  /** Eligible sessions where 0 < capacitySafeNewWords < ceil(target * 0.60). */
+  lowCapacitySessions: number;
+  /** Eligible sessions where capacitySafeNewWords === 0 (exempt entirely). */
+  zeroCapacitySessions: number;
+  /** Longest run of consecutive capacity>0 eligible sessions with 0 admitted. */
+  longestStarvationRunSessions: number;
+}
+
+/**
+ * C8, capacity-conditioned liveness (Task 8.9h proposal, approved as
+ * Decisión 1 in Task 8.9i — see
+ * docs/superpowers/plans/notes/2026-08-07-fase8-9h-c8-c9-spec-review.md and
+ * .../2026-08-07-fase8-9h-decision-record.md).
+ *
+ * `targetNewWords` stays a per-session maximum (already enforced upstream
+ * by `configuredNewWordLimit`, `daily-budget.ts`), not a quota C8 must hit
+ * in every steady state regardless of forecasted capacity:
+ *
+ *   when capacitySafeNewWords > 0:
+ *     admission must make progress and must not starve.
+ *   when capacitySafeNewWords >= ceil(target * 0.60):
+ *     admittedNewWords must reach ceil(target * 0.60) in aggregate over
+ *     those "high capacity" sessions.
+ *   when capacitySafeNewWords < ceil(target * 0.60):
+ *     do not fail for not admitting work the forecast already proved
+ *     impossible — "low capacity" sessions are graded on liveness
+ *     (starvation), not on hitting the nominal 60% target.
+ *
+ * `capacitySafeNewWords` must come from the full admission forecast
+ * (`admission-control.ts::NewWordAdmissionResult.capacitySafeNewWords`,
+ * `SimulatedDay.capacitySafeNewWords`) — this criterion does not, and must
+ * not, recompute or narrow it; doing so would let C8 be satisfied by
+ * artificially shrinking the reported capacity instead of by admitting
+ * real work.
+ */
 export function newWordLiveness(
   days: SimulatedDay[],
   targetNewWords: number,
-): CriterionResult {
+  starvationLimitSessions: number = DEFAULT_CAPACITY_STARVATION_LIMIT_SESSIONS,
+): NewWordLivenessResult {
+  const threshold = Math.ceil(targetNewWords * 0.6);
   const eligible = days.filter((day) => (
     day.active
     && day.mode === "normal"
     && day.backlogSeconds < day.dailyBudgetSeconds * 0.8
   ));
-  if (eligible.length === 0) {
-    return {
-      passed: true,
-      name: "new-word-liveness",
-      measured: null,
-      limit: 0.6,
-      detail: "no low-pressure normal sessions",
-    };
+
+  const capacityOf = (day: SimulatedDay): number => day.capacitySafeNewWords ?? Infinity;
+  const highCapacityDays = eligible.filter((day) => capacityOf(day) >= threshold);
+  const lowCapacityDays = eligible.filter((day) => (
+    capacityOf(day) > 0 && capacityOf(day) < threshold
+  ));
+  const zeroCapacityDays = eligible.filter((day) => capacityOf(day) === 0);
+  const capacityPositiveDays = eligible.filter((day) => capacityOf(day) > 0);
+
+  const admittedHigh = highCapacityDays.reduce((total, day) => total + day.newWords, 0);
+  const requiredHigh = threshold * highCapacityDays.length;
+  const highCapacityLive = highCapacityDays.length === 0 || admittedHigh >= requiredHigh;
+
+  let longestStarvationRunSessions = 0;
+  let currentRun = 0;
+  for (const day of capacityPositiveDays) {
+    if (day.newWords === 0) {
+      currentRun += 1;
+      longestStarvationRunSessions = Math.max(longestStarvationRunSessions, currentRun);
+    } else {
+      currentRun = 0;
+    }
   }
-  const target = eligible.length * targetNewWords;
-  const introduced = eligible.reduce((total, day) => total + day.newWords, 0);
-  const measured = target === 0 ? 1 : introduced / target;
+  const noStarvation = longestStarvationRunSessions <= starvationLimitSessions;
+
+  const passed = highCapacityLive && noStarvation;
+  const detail = `high-capacity: ${admittedHigh}/${requiredHigh} over `
+    + `${highCapacityDays.length} session(s); longest starvation run `
+    + `${longestStarvationRunSessions}/${starvationLimitSessions} over `
+    + `${capacityPositiveDays.length} capacity>0 session(s); low-capacity `
+    + `${lowCapacityDays.length} session(s) exempt from the 60% target; `
+    + `zero-capacity ${zeroCapacityDays.length} session(s) exempt entirely`;
+
   return {
-    passed: measured >= 0.6,
+    passed,
     name: "new-word-liveness",
-    measured,
+    measured: requiredHigh === 0 ? null : admittedHigh / requiredHigh,
     limit: 0.6,
-    detail: `${introduced}/${target} target words introduced in ${eligible.length} eligible sessions`,
+    detail,
+    highCapacitySessions: highCapacityDays.length,
+    lowCapacitySessions: lowCapacityDays.length,
+    zeroCapacitySessions: zeroCapacityDays.length,
+    longestStarvationRunSessions,
   };
 }
 

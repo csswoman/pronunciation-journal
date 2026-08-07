@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   baseSkillActivationLiveness,
+  DEFAULT_CAPACITY_STARVATION_LIMIT_SESSIONS,
   newWordLiveness,
   noOverdueStarvation,
   usageActivationShare,
@@ -97,18 +98,105 @@ describe("cuota usage y palabras nuevas", () => {
     });
   });
 
-  it("criterio 8 exige 60 % del objetivo solo con presión baja", () => {
-    const passing = Array.from({ length: 4 }, () => day({ newWords: 3 }));
-    const failing = Array.from({ length: 4 }, () => day({ newWords: 2 }));
-    const excluded = day({ backlogSeconds: 90, newWords: 0 });
+  it("criterio 8 excluye sesiones de alta presión del cómputo", () => {
+    const passing = Array.from({ length: 4 }, () => day({ newWords: 3, capacitySafeNewWords: 3 }));
+    const excluded = day({ backlogSeconds: 90, newWords: 0, capacitySafeNewWords: 0 });
 
     expect(newWordLiveness([...passing, excluded], 5)).toMatchObject({
       passed: true,
-      measured: 0.6,
+      measured: 1,
+      highCapacitySessions: 4,
     });
-    expect(newWordLiveness(failing, 5)).toMatchObject({ passed: false, measured: 0.4 });
   });
 });
+
+describe(
+  "criterio 8 — capacity-conditioned liveness (Task 8.9i, Decisión 1 aprobada)",
+  () => {
+    const TARGET = 10;
+    const THRESHOLD = Math.ceil(TARGET * 0.6); // 6
+
+    it("capacidad >=6 y admisión <6 => FAIL", () => {
+      const days = Array.from({ length: 5 }, () => day({
+        capacitySafeNewWords: THRESHOLD,
+        newWords: THRESHOLD - 1,
+      }));
+
+      expect(newWordLiveness(days, TARGET)).toMatchObject({ passed: false });
+    });
+
+    it("capacidad >=6 y admisión >=6 => PASS", () => {
+      const days = Array.from({ length: 5 }, () => day({
+        capacitySafeNewWords: THRESHOLD,
+        newWords: THRESHOLD,
+      }));
+
+      const result = newWordLiveness(days, TARGET);
+      expect(result).toMatchObject({ passed: true, measured: 1 });
+      expect(result.longestStarvationRunSessions).toBe(0);
+    });
+
+    it("capacidad=2 y admisión=2 => PASS (no se exige el 60% nominal)", () => {
+      const days = Array.from({ length: 5 }, () => day({
+        capacitySafeNewWords: 2,
+        newWords: 2,
+      }));
+
+      const result = newWordLiveness(days, TARGET);
+      expect(result).toMatchObject({ passed: true, highCapacitySessions: 0, lowCapacitySessions: 5 });
+      expect(result.measured).toBeNull();
+    });
+
+    it("capacidad=2 y admisión=0 repetidamente => FAIL por starvation", () => {
+      const days = Array.from(
+        { length: DEFAULT_CAPACITY_STARVATION_LIMIT_SESSIONS + 2 },
+        () => day({ capacitySafeNewWords: 2, newWords: 0 }),
+      );
+
+      const result = newWordLiveness(days, TARGET);
+      expect(result).toMatchObject({ passed: false, highCapacitySessions: 0 });
+      expect(result.longestStarvationRunSessions).toBe(
+        DEFAULT_CAPACITY_STARVATION_LIMIT_SESSIONS + 2,
+      );
+    });
+
+    it("capacity=0 legítima no obliga a introducir", () => {
+      const days = Array.from({ length: 20 }, () => day({
+        capacitySafeNewWords: 0,
+        newWords: 0,
+      }));
+
+      const result = newWordLiveness(days, TARGET);
+      expect(result).toMatchObject({ passed: true, zeroCapacitySessions: 20 });
+      expect(result.longestStarvationRunSessions).toBe(0);
+    });
+
+    it("C8 pass no implica C9 pass: ambos se evalúan de forma independiente", () => {
+      const days = Array.from({ length: 5 }, () => day({
+        capacitySafeNewWords: 2,
+        newWords: 2,
+      }));
+      const c8Result = newWordLiveness(days, TARGET);
+      expect(c8Result.passed).toBe(true);
+
+      const neverActivatedListening: EligibilityObservation[] = Array.from(
+        { length: 20 },
+        (_, sessionIndex) => ({
+          itemId: "c1k:on#listening",
+          skill: "listening",
+          sessionIndex,
+          eligible: true,
+          scheduleKind: "none",
+          cumulativeAvailableSeconds: (sessionIndex + 1) * 30,
+        }),
+      );
+      const c9Result = baseSkillActivationLiveness(neverActivatedListening, 8);
+
+      expect(c9Result.passed).toBe(false);
+      expect(c8Result.passed).not.toBe(c9Result.passed);
+    });
+  },
+);
 
 describe("liveness por ítem", () => {
   it("criterio 9 pasa al activar y falla si listening nunca se activa", () => {
