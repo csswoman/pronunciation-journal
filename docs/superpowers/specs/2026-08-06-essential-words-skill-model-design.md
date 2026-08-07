@@ -6076,7 +6076,7 @@ Calibrar y documentar ocho grupos independientes:
 7. `RecoveryPolicy`;
 8. umbrales de latencia por modalidad.
 
-- [ ] **Step 1: Registrar baseline antes de tocar parámetros**
+- [x] **Step 1: Registrar baseline antes de tocar parámetros**
 
 La nota de calibración debe contener por perfil:
 
@@ -6137,7 +6137,7 @@ Además:
 - no usar practice o learning-step como revisión autónoma si la política exige
   recuperación programada.
 
-- [ ] **Step 5: Regla de parada**
+- [x] **Step 5: Regla de parada**
 
 Si después de agotar ajustes seguros un criterio continúa rojo:
 
@@ -6147,6 +6147,17 @@ Si después de agotar ajustes seguros un criterio continúa rojo:
 4. reportar si el problema apunta a tres habilidades base, placement o usage;
 5. abrir revisión de spec;
 6. no cambiar el umbral del criterio para obtener verde.
+
+**Resultado 2026-08-06 — actualización de las decisiones abiertas de §10:**
+la fase se detuvo y abrió revisión de spec. C11 exige al perfil principiante
+una retención mínima de `0,85`, pero todas sus probabilidades de corrección por
+modalidad son ≤`0,68`; ninguno de los ocho parámetros calibrables puede cerrar
+esa diferencia. Además, C8 y C9 revelan que el objetivo de palabras nuevas no
+está ligado a la capacidad de servicio de sus habilidades base. La baseline,
+el ensayo reversible `base 2 → 20`, las series por perfil y el diagnóstico de
+placement/usage están en
+[`2026-08-06-fase8-calibracion.md`](../plans/notes/2026-08-06-fase8-calibracion.md).
+No se fijan versiones ni se rebajan criterios hasta resolver esa revisión.
 
 - [ ] **Step 6: Fijar valores y versiones**
 
