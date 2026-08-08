@@ -857,9 +857,9 @@ import type {
 } from "./verification/types";
 
 export const DEFAULT_MATURITY_POLICY: MaturityPolicy = {
-  version: "provisional-1",
-  minStabilityDays: 21,
-  minSuccessfulReviews: 3,
+  version: "maturity-v2",
+  minStabilityDays: 30,
+  minSuccessfulReviews: 4,
   maxRecentLapses: 1,
   recentReviewWindow: 5,
 };
@@ -6548,6 +6548,30 @@ No tocar madurez ni latencia en esta tarea.
 Solo empieza con C1–C5 y C8–C11 verdes. Ajustar madurez y reejecutar C6, C7 y
 C9 después de cada cambio, además de los cinco perfiles y diez adversariales.
 `mature` sigue derivado y no reescribe historial.
+
+Calibración cerrada con las políticas versionadas siguientes:
+
+```ts
+const DEFAULT_MATURITY_POLICY = {
+  version: "maturity-v2",
+  minStabilityDays: 30,
+  minSuccessfulReviews: 4,
+  maxRecentLapses: 1,
+  recentReviewWindow: 5,
+};
+
+const USAGE_ACTIVATION_POLICY = {
+  version: "usage-activation-v1",
+  maxUsageActivationsPerSession: 1,
+  usageActivationWindowSessions: 7,
+  maxUsageActivationsPerWindow: 3,
+};
+```
+
+La ventana usa únicamente sesiones activas y cuenta nuevas activaciones
+completadas. No bloquea reviews FSRS mandatory de usage ya activo. La cadencia
+es global, no depende del perfil, y vuelve a abrir capacidad cuando las
+activaciones previas salen de la ventana.
 
 ### Task 8.11: Costes y latencia
 

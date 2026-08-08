@@ -2,6 +2,7 @@ import { admitNewWords, admitPlacementConversions } from "./admission-control";
 import {
   DEFAULT_ACTIVATION_LIMITS,
   resolveAbsoluteBaseActivationSafetyCeiling,
+  usageActivationLimitForSession,
 } from "./activation-limits";
 import {
   type MandatorySelection,
@@ -173,7 +174,11 @@ export function planDailySession(
   // but usage stays residual — never displaces new-word admission on its own).
   const usage = selectActivations(
     input.candidates.usageActivations,
-    Math.max(0, limits.maxUsageActivationsPerSession - input.consumed.usageActivations),
+    Math.max(
+      0,
+      usageActivationLimitForSession(input.recentUsageActivations ?? [], limits)
+        - input.consumed.usageActivations,
+    ),
     remainingAfterPlacement,
     input.estimatedSeconds.byModality,
     selectedItemIds,

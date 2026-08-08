@@ -50,6 +50,7 @@ for (const profile of Object.values(PROFILES)) {
     it("criterio 6 — cuota usage (diagnóstico para Task 8.10)", () => {
       const diagnostic = usageActivationShare(result.days, 7, 10, 0.3);
       expect(diagnostic).toMatchObject({
+        passed: true,
         name: "usage-activation-share",
         limit: 0.3,
       });

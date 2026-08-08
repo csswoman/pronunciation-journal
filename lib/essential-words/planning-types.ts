@@ -130,6 +130,8 @@ export interface DailyPlanningInput {
   recentBaseService?: readonly BaseServiceSample[];
   /** All current L/P debt, including skills still gated by domain policy. */
   pendingBaseObligationCount?: number;
+  /** Completed new usage activations in prior active sessions, oldest first. */
+  recentUsageActivations?: readonly number[];
   capacityForecast: CapacityForecastPlanningInput;
   placementContext?: PlacementPlanningContext;
 }
@@ -156,6 +158,10 @@ export interface ActivationLimits {
    */
   absoluteBaseActivationSafetyCeiling: number;
   maxUsageActivationsPerSession: number;
+  /** Active-session window used to pace completed new usage activations. */
+  usageActivationWindowSessions?: number;
+  /** Maximum completed new usage activations in the active-session window. */
+  maxUsageActivationsPerWindow?: number;
   maxPerItemPerSession: number;
   /**
    * @deprecated Use absoluteBaseActivationSafetyCeiling (Task 8.9e).

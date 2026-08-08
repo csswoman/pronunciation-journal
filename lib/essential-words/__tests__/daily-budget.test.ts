@@ -1,4 +1,8 @@
 import { describe, expect, it } from "vitest";
+import {
+  DEFAULT_ACTIVATION_LIMITS,
+  USAGE_ACTIVATION_POLICY_VERSION,
+} from "../activation-limits";
 import { DEFAULT_SECONDS_BY_MODALITY } from "../cost-estimate";
 import { planDailySession, selectMandatory } from "../daily-budget";
 import type {
@@ -99,6 +103,16 @@ describe("selectMandatory", () => {
 });
 
 describe("planDailySession", () => {
+  it("versiona la cadencia global sin depender del perfil", () => {
+    expect(USAGE_ACTIVATION_POLICY_VERSION).toBe("usage-activation-v1");
+    expect(DEFAULT_ACTIVATION_LIMITS).toMatchObject({
+      maxUsageActivationsPerSession: 1,
+      usageActivationWindowSessions: 7,
+      maxUsageActivationsPerWindow: 3,
+    });
+    expect(DEFAULT_ACTIVATION_LIMITS).not.toHaveProperty("profile");
+  });
+
   it("2 base y 3 nuevas no se convierten en 5 activaciones base", () => {
     const plan = planDailySession(input({
       candidates: {
@@ -186,6 +200,59 @@ describe("planDailySession", () => {
     }), limits, DEFAULT_RECOVERY_POLICY);
 
     expect(plan.baseSkillSelected).toHaveLength(1);
+    expect(plan.usageSelected).toHaveLength(0);
+  });
+
+  it("respeta un máximo de tres nuevas activaciones usage en siete sesiones activas", () => {
+    const usageCandidate = candidate("c1k:usage#usage", "production");
+    const cadenceLimits = {
+      ...limits,
+      usageActivationWindowSessions: 7,
+      maxUsageActivationsPerWindow: 3,
+    };
+
+    const blocked = planDailySession(input({
+      recentUsageActivations: [1, 1, 1, 0, 0, 0],
+      candidates: {
+        baseSkillActivations: [],
+        usageActivations: [usageCandidate],
+        newWords: [],
+      },
+    }), cadenceLimits, DEFAULT_RECOVERY_POLICY);
+
+    const availableAgain = planDailySession(input({
+      recentUsageActivations: [1, 1, 0, 0, 0, 0],
+      candidates: {
+        baseSkillActivations: [],
+        usageActivations: [usageCandidate],
+        newWords: [],
+      },
+    }), cadenceLimits, DEFAULT_RECOVERY_POLICY);
+
+    expect(blocked.usageSelected).toHaveLength(0);
+    expect(availableAgain.usageSelected).toEqual([usageCandidate]);
+  });
+
+  it("la cadencia no bloquea reviews mandatory de usage ya activo", () => {
+    const dueUsage: PlannedItem = {
+      ...planned("c1k:usage#usage", "production"),
+      skill: "usage",
+    };
+    const plan = planDailySession(input({
+      recentUsageActivations: [1, 1, 1],
+      mandatory: { learning: [], overdue: [dueUsage], dueToday: [], provisionalDue: [] },
+      candidates: {
+        baseSkillActivations: [],
+        usageActivations: [candidate("c1k:new-usage#usage", "production")],
+        newWords: [],
+      },
+    }), {
+      ...limits,
+      usageActivationWindowSessions: 7,
+      maxUsageActivationsPerWindow: 3,
+    }, DEFAULT_RECOVERY_POLICY);
+
+    expect(plan.mandatorySelected).toContainEqual(dueUsage);
     expect(plan.usageSelected).toHaveLength(0);
   });
 

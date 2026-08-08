@@ -1,13 +1,71 @@
-# Fase 8 — Task 8.9e: dynamic base activation allowance
+# Fase 8 — calibración estructural y Task 8.10
 
 Fecha: 2026-08-07
 
-Estado: **implementado allowance dinámico (opción B).** No se inicia 8.10.
-Gate estructural C8/C9 **no cerrado**: el limitador real es mandatory de
-sesión (~780s/900), no el hard cap de 4. C1–C5/C7/C10 verdes donde aplica
-acceptance. C6 diferido a 8.10. No se relajan criterios.
+Estado: **Task 8.10 calibrada.** C1–C11 verdes en acceptance, incluido C9 en
+5/5 perfiles. No se relajan criterios y no se inicia 8.11.
 
-## Decisión
+## Task 8.10 — baseline y diagnóstico C6
+
+Definición canónica conservada: máximo en ventanas de 7 sesiones activas,
+denominador mínimo 10, numerador `usageActivations`, denominador
+`baseSkillActivations + newWordMeaningActivations + usageActivations`, límite
+0.30 y cinco perfiles aplicables.
+
+Cada perfil parte de 1.000 fixtures `context_usage` authored y 1.000
+`advanced_usage` generated. Las cifras de segundos incluyen activaciones y
+reviews mandatory de usage ya activo; las activaciones completadas se separan
+por tipo.
+
+| Perfil | elegibles únicos C/A | activados C/A | base | nuevas | mandatory completados | sesiones usage/activas | segundos usage | C6 | peor ventana C/A; base+nuevas |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---|
+| steady | 155/104 | 63/59 | 310 | 156 | 6.550 | 122/180 | 33.504 | 0.500 | 2/3; 2+3 |
+| intermittent | 64/29 | 16/11 | 127 | 65 | 3.425 | 27/96 | 9.915 | 0.231 | 0/3; 6+4 |
+| bursty | 48/10 | 20/3 | 94 | 48 | 2.398 | 23/63 | 7.482 | 0.300 | 3/0; 5+2 |
+| beginner | 26/0 | 18/0 | 52 | 26 | 6.190 | 18/156 | 22.995 | 0.333 | 4/0; 5+3 |
+| advanced | 183/116 | 75/34 | 365 | 25 | 5.330 | 109/167 | 23.927 | 0.636 | 7/0; 4+0 |
+
+Diagnóstico: había abundancia de elegibles y el cap por sesión seleccionaba
+usage de forma continua cuando quedaba capacidad. C9 redujo el denominador
+negociable. `advanced` y `beginner` fallaban por context, no por madurez;
+`steady` mezclaba context y advanced. Por eso MaturityPolicy sola no podía
+cerrar C6.
+
+## Experimentos Task 8.10
+
+| Maturity | cadence | C6 steady/intermittent/bursty/beginner/advanced | resto | decisión |
+|---|---|---|---|---|
+| 21/3/1/5 provisional | sin ventana | .500/.231/.300/.333/.636 | baseline C9 5/5 | rojo |
+| 30/4/1/5 | sin ventana | .500/.286/.300/.333/.636 | no procede gate | maturity sola no basta |
+| 21/3/1/5 | 1 sesión intermedia | .400/.273/.143/.200/.400 | no procede gate | cadence insuficiente |
+| 30/4/1/5 | 2 sesiones intermedias | .250/.154/.167/.095/.300 | C9 beginner rojo | demasiado restrictiva |
+| 21/3/1/5 | máximo 3/7 activas | .300/.250/.200/.182/.300 | C11 intermittent rojo | rechazada |
+| **30/4/1/5** | **máximo 3/7 activas** | **.300/.250/.200/.182/.300** | **C1–C11 verdes** | **aceptada** |
+
+Políticas finales:
+
+- `maturity-v2`: estabilidad mínima 30 días, 4 reviews exitosas, máximo 1
+  lapse en las 5 reviews recientes.
+- `usage-activation-v1`: máximo 1 nueva activación por sesión y 3 en cualquier
+  ventana de 7 sesiones activas.
+- La pérdida de maturity no retira usage activo. Sus reviews FSRS continúan
+  mandatory; la ventana solo controla nuevas activaciones completadas.
+
+## Maturity final (porcentaje final; p50/p95 días hasta primera maturity)
+
+| Perfil | meaning | production | advanced usage activado |
+|---|---:|---:|---:|
+| steady | 64.5%; 41/99 | 50.0%; 99/158 | 31 |
+| intermittent | 33.3%; 57/144 | 41.7%; 125/157 | 6 |
+| bursty | 18.9%; 80/166 | 34.0%; 150/174 | 1 |
+| beginner | 8.3%; 39/126 | 33.3%; 107/169 | 2 |
+| advanced | 68.4%; 47/89 | 48.9%; 112/157 | 21 |
+
+`context_usage` conserva meaning en `Review` como único requisito. Advanced
+conserva meaning + production maduras; no exige listening. El adversarial
+`never-usage` continúa fallando y advanced mantiene usage real.
+
+## Registro histórico — Task 8.9e
 
 `maxBaseSkillActivationsPerSession=4` **no** es hard cap de producto.
 Sustituido por:
@@ -70,7 +128,7 @@ selecciona **>4**. Live residual tras mandatory ≈ 100s → ~2 served.
 
 11/11 correctos.
 
-## No hecho
+## Fuera de Task 8.10
 
-8.10; cambios a umbrales C1–C11, target=10, C8 share, C9=8, presupuesto,
-MaturityPolicy, desiredRetention, latencia, costes, perfiles.
+Task 8.11; cambios a umbrales C1–C11, target=10, C8 share, C9=8,
+presupuesto, desiredRetention, latencia, costes o perfiles.

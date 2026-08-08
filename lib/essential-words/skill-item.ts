@@ -66,9 +66,9 @@ export function parseLearningItemId(id: string): ParsedLearningItemId | null {
 }
 
 export const DEFAULT_MATURITY_POLICY: MaturityPolicy = {
-  version: "provisional-1",
-  minStabilityDays: 21,
-  minSuccessfulReviews: 3,
+  version: "maturity-v2",
+  minStabilityDays: 30,
+  minSuccessfulReviews: 4,
   maxRecentLapses: 1,
   recentReviewWindow: 5,
 };

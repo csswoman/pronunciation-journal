@@ -4,10 +4,6 @@ import type { ItemSchedule, LearningItem, MaturityPolicy, SrsReviewEvent } from 
 
 const policy: MaturityPolicy = {
   ...DEFAULT_MATURITY_POLICY,
-  minStabilityDays: 21,
-  minSuccessfulReviews: 3,
-  maxRecentLapses: 1,
-  recentReviewWindow: 5,
 };
 
 const item = (schedule: ItemSchedule, id = "c1k:on#meaning"): LearningItem => ({
@@ -22,7 +18,7 @@ const item = (schedule: ItemSchedule, id = "c1k:on#meaning"): LearningItem => ({
 });
 
 const reviewSchedule = (
-  stability = 21,
+  stability = 30,
   state: "New" | "Learning" | "Review" | "Relearning" = "Review",
 ): ItemSchedule => ({
   kind: "fsrs",
@@ -66,17 +62,30 @@ const successfulEvents = (learningItemId = "c1k:on#meaning"): SrsReviewEvent[] =
   event("event-1", learningItemId, "Good", "2026-08-01T00:00:00.000Z"),
   event("event-2", learningItemId, "Hard", "2026-08-02T00:00:00.000Z"),
   event("event-3", learningItemId, "Easy", "2026-08-03T00:00:00.000Z"),
+  event("event-4", learningItemId, "Good", "2026-08-04T00:00:00.000Z"),
 ];
 
 describe("isMature", () => {
+  it("usa una política estable y no depende de perfiles de simulación", () => {
+    expect(DEFAULT_MATURITY_POLICY).toEqual({
+      version: "maturity-v2",
+      minStabilityDays: 30,
+      minSuccessfulReviews: 4,
+      maxRecentLapses: 1,
+      recentReviewWindow: 5,
+    });
+    expect(DEFAULT_MATURITY_POLICY).not.toHaveProperty("profile");
+  });
+
   it("nunca madura sin schedule FSRS o fuera de Review", () => {
     expect(isMature(item({ kind: "none" }), successfulEvents(), policy)).toBe(false);
-    expect(isMature(item(reviewSchedule(21, "Learning")), successfulEvents(), policy)).toBe(false);
+    expect(isMature(item(reviewSchedule(30, "Learning")), successfulEvents(), policy)).toBe(false);
   });
 
   it("exige estabilidad mínima y revisiones exitosas", () => {
-    expect(isMature(item(reviewSchedule(20)), successfulEvents(), policy)).toBe(false);
-    expect(isMature(item(reviewSchedule()), successfulEvents().slice(0, 2), policy)).toBe(false);
+    expect(isMature(item(reviewSchedule(29)), successfulEvents(), policy)).toBe(false);
+    expect(isMature(item(reviewSchedule(30)), successfulEvents(), policy)).toBe(true);
+    expect(isMature(item(reviewSchedule()), successfulEvents().slice(0, 3), policy)).toBe(false);
     expect(isMature(item(reviewSchedule()), successfulEvents(), policy)).toBe(true);
   });
 
@@ -99,7 +108,12 @@ describe("isMature", () => {
   });
 
   it("aplica recentReviewWindow sobre eventos cronológicos del ítem", () => {
-    const strictPolicy = { ...policy, maxRecentLapses: 0, recentReviewWindow: 2 };
+    const strictPolicy = {
+      ...policy,
+      minSuccessfulReviews: 3,
+      maxRecentLapses: 0,
+      recentReviewWindow: 2,
+    };
     const events = [
       event("third", "c1k:on#meaning", "Good", "2026-08-03T00:00:00.000Z"),
       event("first", "c1k:on#meaning", "Again", "2026-08-01T00:00:00.000Z"),
@@ -116,5 +130,19 @@ describe("isMature", () => {
       event("lapse-2", "c1k:on#meaning", "Again", "2026-08-05T00:00:00.000Z"),
     ];
     expect(isMature(item(reviewSchedule()), events, policy)).toBe(false);
+  });
+
+  it("acepta exactamente el límite de lapses recientes", () => {
+    const events = [
+      ...successfulEvents(),
+      event("lapse-at-limit", "c1k:on#meaning", "Again", "2026-08-04T00:00:00.000Z"),
+    ];
+    expect(isMature(item(reviewSchedule()), events, policy)).toBe(true);
+  });
+
+  it("mature siempre es derivado y nunca se persiste en el item", () => {
+    const matureItem = item(reviewSchedule());
+    expect(isMature(matureItem, successfulEvents(), policy)).toBe(true);
+    expect(matureItem).not.toHaveProperty("mature");
   });
 });

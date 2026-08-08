@@ -1,3 +1,4 @@
+import { DEFAULT_ACTIVATION_LIMITS } from "../activation-limits";
 import { planDailySession } from "../daily-budget";
 import type { ActivationLimits, DailyPlanningInput } from "../planning-types";
 import { backlogSeconds, DEFAULT_RECOVERY_POLICY } from "../recovery-mode";
@@ -60,9 +61,7 @@ export const SIMULATION_COSTS: Record<AttemptModality, number> = {
 };
 export const SIMULATION_NEW_WORD_INTRODUCTION_SECONDS = 10;
 export const SIMULATION_ACTIVATION_LIMITS: ActivationLimits = {
-  absoluteBaseActivationSafetyCeiling: 24,
-  maxUsageActivationsPerSession: 1,
-  maxPerItemPerSession: 1,
+  ...DEFAULT_ACTIVATION_LIMITS,
 };
 
 export type { SimulationHarnessHooks, SimulationHookContext } from "./observations";
@@ -172,6 +171,7 @@ export function runSimulation(
       previousMode: world.previousMode,
       recentBaseService: recentBaseService(days),
       pendingBaseObligationCount: countPendingBaseObligations(world),
+      recentUsageActivations: days.filter((day) => day.active).map((day) => day.usageActivations),
       capacityForecast: buildSimulationCapacityInput(
         world,
         calendar,

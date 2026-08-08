@@ -11,13 +11,9 @@ import { usageEligibility } from "../lifecycle";
 
 const policy: MaturityPolicy = {
   ...DEFAULT_MATURITY_POLICY,
-  minStabilityDays: 21,
-  minSuccessfulReviews: 3,
-  maxRecentLapses: 1,
-  recentReviewWindow: 5,
 };
 
-const reviewSchedule = (stability = 21): ItemSchedule => ({
+const reviewSchedule = (stability = 30): ItemSchedule => ({
   kind: "fsrs",
   dueAt: "2026-08-20T00:00:00.000Z",
   stability,
@@ -68,6 +64,7 @@ const successfulEvents = (learningItemId: string): SrsReviewEvent[] => [
   event("event-1", learningItemId, "2026-08-01T00:00:00.000Z"),
   event("event-2", learningItemId, "2026-08-02T00:00:00.000Z"),
   event("event-3", learningItemId, "2026-08-03T00:00:00.000Z"),
+  event("event-4", learningItemId, "2026-08-04T00:00:00.000Z"),
 ];
 
 describe("usageEligibility", () => {
