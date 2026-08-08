@@ -16,10 +16,12 @@ describe("ChromeMicTip", () => {
 
   it("shows the login tip with Chrome guidance", () => {
     render(<ChromeMicTip variant="login" />);
-    expect(screen.getByRole("note")).toHaveTextContent(/Google Chrome/i);
-    expect(screen.getByRole("note")).toHaveTextContent(/Brave/i);
-    expect(screen.getByRole("note")).toHaveTextContent(/Opera/i);
-    expect(screen.getByRole("note")).toHaveTextContent(/Edge/i);
+    const tip = screen.getByRole("note");
+    expect(tip).toHaveAccessibleName(/Mejor con Google Chrome/i);
+    expect(tip).toHaveTextContent(/Google Chrome/i);
+    expect(tip).toHaveTextContent(/Brave/i);
+    expect(tip).toHaveTextContent(/Opera/i);
+    expect(tip).toHaveTextContent(/Edge/i);
   });
 
   it("shows and dismisses the app banner when Web Speech is unreliable", async () => {

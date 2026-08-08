@@ -23,25 +23,16 @@ export default function AuthPanel() {
 
   return (
     <div className="min-h-screen flex bg-surface-base">
-      <AuthImagePanel index={auth.imageIndex} />
+      <AuthImagePanel />
 
-      <div
-        className="flex-1 flex flex-col min-h-screen bg-surface-raised"
-        style={
-          {
-            "--primary-100": `oklch(0.93 0.04 ${auth.hue})`,
-            "--primary-500": `oklch(0.65 0.15 ${auth.hue})`,
-            "--primary-600": `oklch(0.58 0.16 ${auth.hue})`,
-          } as React.CSSProperties
-        }
-      >
-        <AuthMobileIdentity index={auth.imageIndex} />
+      <div className="flex-1 flex flex-col min-h-screen bg-surface-raised">
+        <AuthMobileIdentity />
 
         <div className="flex-1 px-[var(--layout-page-inline)] flex flex-col items-center justify-center py-[var(--layout-page-block)] lg:py-[var(--layout-page-block-end)]">
-          <div className="w-full max-w-sm">
-            <div className="hidden lg:flex items-start justify-between mb-10">
+          <div className="w-full max-w-md">
+            <div className="hidden lg:flex items-start justify-between mb-8">
               <div>
-                <p className="text-h3 text-fg font-bold leading-none tracking-tight">
+                <p className="text-h4 text-fg font-semibold leading-none tracking-tight">
                   English Journal
                 </p>
                 <p className="mt-1.5 text-body-sm text-fg-muted">
@@ -52,20 +43,22 @@ export default function AuthPanel() {
             </div>
 
             {showExplorePrimary || isSave ? (
-              <div className="mb-8 flex flex-col gap-2">
-                <h1 className="text-h3 font-bold text-balance text-fg">
-                  {isSave
-                    ? "Guarda tu progreso"
-                    : "Empieza a practicar sin registrarte"}
-                </h1>
-                <p className="text-body-sm text-pretty text-fg-muted max-w-[40ch]">
-                  {isSave
-                    ? auth.upgradingGuest
-                      ? "Convierte esta sesión en una cuenta. Conservas el mismo progreso."
-                      : "Crea una cuenta o inicia sesión para no perder lo que practiques."
-                    : "Entra al escritorio, prueba una sesión y crea una cuenta solo cuando quieras guardar."}
-                </p>
-                <ChromeMicTip variant="login" className="mt-1" />
+              <div className="mb-8 flex flex-col gap-5">
+                <div className="flex flex-col gap-2">
+                  <h1 className="text-h3 font-bold text-balance text-fg">
+                    {isSave
+                      ? "Guarda tu progreso"
+                      : "Empieza a practicar sin registrarte"}
+                  </h1>
+                  <p className="text-body-sm text-pretty text-fg-muted max-w-[42ch]">
+                    {isSave
+                      ? auth.upgradingGuest
+                        ? "Convierte esta sesión en una cuenta. Conservas el mismo progreso."
+                        : "Crea una cuenta o inicia sesión para no perder lo que practiques."
+                      : "Entra al escritorio, prueba una sesión y crea una cuenta solo cuando quieras guardar."}
+                  </p>
+                </div>
+                <ChromeMicTip variant="login" />
               </div>
             ) : null}
 

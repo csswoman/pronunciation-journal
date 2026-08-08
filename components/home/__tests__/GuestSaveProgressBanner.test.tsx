@@ -16,9 +16,11 @@ describe("GuestSaveProgressBanner", () => {
 
   it("emphasizes save after practice", () => {
     render(<GuestSaveProgressBanner variant="emphasized" />);
-    expect(
-      screen.getByRole("heading", { name: /Ya practicaste — guarda este progreso/i }),
-    ).toBeInTheDocument();
+    const title = screen.getByRole("heading", {
+      name: /Ya practicaste — guarda este progreso/i,
+    });
+    expect(title).toBeInTheDocument();
+    expect(title).toHaveClass("text-h3");
     expect(screen.getByRole("link", { name: "Crear cuenta" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Iniciar sesión" })).toHaveAttribute(
       "href",

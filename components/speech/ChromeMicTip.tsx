@@ -54,15 +54,24 @@ export default function ChromeMicTip({
 
   if (variant === "login") {
     return (
-      <p
+      <aside
         className={cn(
-          "rounded-md border border-border-subtle bg-surface-sunken px-3 py-2.5 font-body-sm text-pretty text-fg-muted",
+          "flex flex-col gap-2 rounded-lg border border-border-subtle bg-surface-sunken px-4 py-4",
           className,
         )}
         role="note"
+        aria-labelledby="chrome-mic-login-title"
       >
-        {CHROME_MIC_TIP_ES}
-      </p>
+        <p
+          id="chrome-mic-login-title"
+          className="font-label font-semibold text-balance text-fg"
+        >
+          {CHROME_MIC_BANNER_TITLE_ES}
+        </p>
+        <p className="font-body-sm max-w-[60ch] text-pretty text-fg-muted">
+          {CHROME_MIC_TIP_ES}
+        </p>
+      </aside>
     );
   }
 

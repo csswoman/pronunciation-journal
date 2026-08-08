@@ -20,8 +20,6 @@ import { publicAuthErrorMessage, validatePasswordPolicy } from "@/lib/auth/passw
 export type AuthPanelMode = "login" | "register" | "reset" | "recovery";
 export type AuthPanelIntent = "explore" | "save";
 
-export const AUTH_PANEL_HUES = [350, 145, 220, 30] as const;
-
 function resolveInitialMode(searchParams: URLSearchParams): AuthPanelMode {
   const mode = searchParams.get("mode");
   if (mode === "reset") return "reset";
@@ -46,24 +44,7 @@ export function useAuthPanelController() {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
-  const [imageIndex, setImageIndex] = useState(0);
   const [upgradingGuest, setUpgradingGuest] = useState(false);
-
-  useEffect(() => {
-    const id = setInterval(
-      () => setImageIndex((index) => (index + 1) % AUTH_PANEL_HUES.length),
-      5000,
-    );
-    return () => clearInterval(id);
-  }, []);
-
-  useEffect(() => {
-    document.documentElement.style.setProperty("--hue", String(AUTH_PANEL_HUES[imageIndex]));
-    return () => {
-      const saved = localStorage.getItem("hue");
-      document.documentElement.style.setProperty("--hue", saved ?? "250");
-    };
-  }, [imageIndex]);
 
   useEffect(() => {
     if (searchParams.get("message") === "password-updated") {
@@ -283,8 +264,6 @@ export function useAuthPanelController() {
     message,
     error,
     pending,
-    imageIndex,
-    hue: AUTH_PANEL_HUES[imageIndex],
     clearFeedback,
     handleRecovery,
     handleLogin,

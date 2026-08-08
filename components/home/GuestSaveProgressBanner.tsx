@@ -18,7 +18,7 @@ interface GuestSaveProgressBannerProps {
  * Evident save-progress cue for anonymous guests.
  * inline — quiet under first-practice activation (does not steal primary CTA)
  * default — full strip on Home
- * emphasized — after real practice progress
+ * emphasized — after real practice progress (owns more of the fold)
  */
 export default function GuestSaveProgressBanner({
   variant = "default",
@@ -54,41 +54,64 @@ export default function GuestSaveProgressBanner({
   return (
     <section
       className={cn(
-        "flex flex-col gap-3 rounded-xl border px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-5",
+        "flex flex-col rounded-xl border",
         emphasized
-          ? "border-primary/30 bg-primary-soft"
-          : "border-border-subtle bg-surface-raised",
+          ? "gap-5 border-primary/30 bg-primary-soft px-5 py-6 sm:gap-6 sm:px-6 sm:py-7"
+          : "gap-4 border-border-subtle bg-surface-raised px-4 py-5 sm:flex-row sm:items-center sm:justify-between sm:gap-5 sm:px-5 sm:py-5",
         className,
       )}
       aria-labelledby="guest-save-progress-title"
       data-variant={variant}
     >
-      <div className="min-w-0 flex flex-col gap-1">
+      <div className={cn("min-w-0 flex flex-col", emphasized ? "gap-2" : "gap-1")}>
         <h2
           id="guest-save-progress-title"
-          className="font-label font-semibold text-balance text-fg"
+          className={cn(
+            "text-balance text-fg",
+            emphasized
+              ? "text-h3 font-bold tracking-tight"
+              : "font-label font-semibold",
+          )}
         >
           {emphasized
             ? "Ya practicaste — guarda este progreso"
             : "Estás explorando sin cuenta"}
         </h2>
-        <p className="font-body-sm max-w-[60ch] text-pretty text-fg-muted">
+        <p
+          className={cn(
+            "max-w-[60ch] text-pretty text-fg-muted",
+            emphasized ? "font-body" : "font-body-sm",
+          )}
+        >
           {emphasized
             ? "Si cambias de dispositivo o borras los datos del navegador, puedes perder lo de esta sesión. Una cuenta lo conserva."
             : "Puedes practicar y explorar con libertad. Crea una cuenta o inicia sesión cuando quieras conservar rachas, plan y resultados."}
         </p>
       </div>
 
-      <div className="flex shrink-0 flex-col gap-2 sm:flex-row sm:items-center">
+      <div
+        className={cn(
+          "flex shrink-0",
+          emphasized
+            ? "flex-col gap-3 sm:flex-row sm:items-stretch"
+            : "flex-col gap-2 sm:flex-row sm:items-center",
+        )}
+      >
         <Link
           href="/login?intent=save&mode=register"
-          className="focus-ring inline-flex min-h-11 items-center justify-center rounded-md bg-primary px-4 font-label text-on-primary transition-colors hover:bg-primary-hover"
+          className={cn(
+            "focus-ring inline-flex items-center justify-center rounded-md bg-primary font-label text-on-primary transition-colors hover:bg-primary-hover",
+            emphasized ? "min-h-12 px-5" : "min-h-11 px-4",
+          )}
         >
           Crear cuenta
         </Link>
         <Link
           href="/login?intent=save"
-          className="focus-ring inline-flex min-h-11 items-center justify-center rounded-md border border-border-default bg-transparent px-4 font-label text-fg transition-colors hover:bg-surface-sunken"
+          className={cn(
+            "focus-ring inline-flex items-center justify-center rounded-md border border-border-default bg-transparent font-label text-fg transition-colors hover:bg-surface-sunken",
+            emphasized ? "min-h-12 px-5" : "min-h-11 px-4",
+          )}
         >
           Iniciar sesión
         </Link>
