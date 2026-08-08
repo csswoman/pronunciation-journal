@@ -2,9 +2,12 @@
 
 SHA inicial: `4bc146e574d57ce6e6af349f47b7b98c48f20d6d`.
 
-Estado actual: **WAITING FOR REAL SHADOW DATA**.
+Estado actual: **PERSONAL ON AUTORIZADO** para el único usuario del proyecto.
 
 Sesiones shadow reales verificadas en esta entrega: **0**.
+
+La activación final fue autorizada explícitamente como excepción personal; no declara que
+el gate estadístico de shadow se haya cumplido ni modifica sus umbrales.
 
 No se atribuyen sesiones reales a pruebas, fixtures o simulaciones. El estado solo puede
 cambiar cuando el sink de 9.2 contenga evidencia de uso personal real y las comprobaciones
@@ -67,6 +70,30 @@ modifican el planner.
 - alguna propuesta de recovery.
 
 Una diferencia entre motores es esperable y por sí sola no bloquea el rollout.
+
+## Runtime personal
+
+La integración final conecta `useEssentialWordsSession` al router existente. En `on`, la
+planificación, la evaluación y la persistencia SRS usan exclusivamente LearningItems,
+AttemptLogs y SrsReviewEvents; `answer_history` se conserva como historial ortogonal. En
+`off`, la experiencia vuelve íntegramente a SRSData legacy. `shadow` continúa mostrando y
+persistiendo sólo legacy y ejecuta el cálculo skill sin escrituras.
+
+Las funciones secundarias que exigirían nuevas decisiones de scheduling quedan limitadas
+en `on`: “aprender más” reconstruye una sesión desde el planner (sin inyectar tarjetas), y
+archivar, posponer o marcar dominada sólo omiten el ítem actual. “Ya la sé” sí usa el flujo
+skill existente de verificación provisional.
+
+Activación personal:
+
+```dotenv
+NEXT_PUBLIC_SKILL_MODEL_MODE=on
+NEXT_PUBLIC_SKILL_MODEL_COHORT_PERCENT=100
+NEXT_PUBLIC_SKILL_MODEL_COHORT_SALT=essential-words-personal-v1
+```
+
+El rollback cambia únicamente `NEXT_PUBLIC_SKILL_MODEL_MODE=off`; no elimina ni modifica
+los datos skill acumulados.
 
 ## Integridad y rollback
 

@@ -48,6 +48,15 @@ import { recordActivitySession } from "@/lib/progress/activity-hub";
 import { buildSessionResult } from "@/lib/practice/session-result";
 import { studyContextLine } from "@/lib/essential-words/study-context";
 import type { ExerciseResult } from "@/lib/practice/types";
+import {
+  createEssentialWordsRuntime,
+  type RuntimeAttemptInput,
+} from "@/lib/essential-words/runtime-engine";
+import {
+  toKnownClaimQueueItem,
+  type SkillRuntimeQueueItem,
+} from "@/lib/essential-words/runtime-adapter";
+import type { AttemptOutcome } from "@/lib/essential-words/attempt-grade";
 
 export type { EssentialWordsPhase, EssentialWordsSessionSummary } from "@/lib/essential-words/session-model";
 export type { EssentialWordsStats } from "@/lib/essential-words/session-loader";
@@ -95,6 +104,10 @@ export function useEssentialWordsSession() {
   const [sessionProgress, setSessionProgress] = useState<SessionProgress | null>(null);
   const sessionActiveRef = useRef(false);
   const seenStepIdsRef = useRef<Set<string>>(new Set());
+  const runtimeRef = useRef<Awaited<ReturnType<typeof createEssentialWordsRuntime>> | null>(null);
+  const skillModeRef = useRef(false);
+  const skillPlannerModeRef = useRef<"normal" | "recovery">("normal");
+  const sessionIdRef = useRef(crypto.randomUUID());
 
   const sessionResultsRef = useRef<ExerciseResult[]>([]);
   const finishingRef = useRef(false);
@@ -184,7 +197,7 @@ export function useEssentialWordsSession() {
     try {
       await recordActivitySession(user.id, { practiceContext: "essential-words", sessionResult });
       const { flushOutbox } = await import("@/lib/sync/sync-manager");
-      await flushOutbox();
+      await flushOutbox(user.id);
     } catch (err) {
       console.error("[EssentialWordsSession] recordActivitySession failed", err);
     } finally {
@@ -193,8 +206,23 @@ export function useEssentialWordsSession() {
   }, [user?.id, flushLapses]);
 
   const bootstrap = useCallback(async () => {
-    const { items, stats: nextStats, allWords, seenIds } =
-      await loadEssentialWordsQueue(levelsRef.current, posRef.current, user?.id);
+    const runtime = user?.id ? await createEssentialWordsRuntime(user.id) : null;
+    runtimeRef.current = runtime;
+    const loaded = runtime
+      ? await runtime.buildSession({
+        levels: levelsRef.current,
+        pos: posRef.current,
+        now: new Date(),
+        previousMode: skillPlannerModeRef.current,
+      })
+      : await loadEssentialWordsQueue(levelsRef.current, posRef.current, user?.id)
+        .then((session) => ({ source: "legacy" as const, ...session }));
+    const { items, stats: nextStats, allWords, seenIds } = loaded;
+    skillModeRef.current = loaded.source === "skill";
+    if ("skillPlan" in loaded && loaded.skillPlan) {
+      skillPlannerModeRef.current = loaded.skillPlan.allowance.mode;
+    }
+    sessionIdRef.current = crypto.randomUUID();
     finishingRef.current = false;
     allWordsRef.current = allWords;
     seenIdsRef.current = seenIds;
@@ -202,7 +230,7 @@ export function useEssentialWordsSession() {
     // A filtered queue can legitimately contain fewer than one complete
     // 3-word block. The pure Fase A engine leaves that remainder for a later
     // combined session; preserve the existing one-card UX for this edge case.
-    if (items.length > 0 && items.length < 3) {
+    if (loaded.source === "skill" || (items.length > 0 && items.length < 3)) {
       compatModeRef.current = true;
       setCompatQueue(items);
       setCompatIndex(0);
@@ -333,7 +361,12 @@ export function useEssentialWordsSession() {
   }, [phase, compatQueue, compatIndex, currentStep, planState]);
 
   const submitGrade = useCallback(
-    async (quality: number, extras?: GradeExtras, expectedStepId?: string) => {
+    async (
+      quality: number,
+      extras?: GradeExtras,
+      expectedStepId?: string,
+      outcome?: AttemptOutcome,
+    ) => {
       if (expectedStepId && expectedStepId !== activeStepIdRef.current) return;
       if (compatModeRef.current) {
         const item = compatQueue[compatIndex];
@@ -341,6 +374,35 @@ export function useEssentialWordsSession() {
         const wordId = essentialWordId(item.entry.word.toLowerCase());
         const result = buildEssentialWordExerciseResult(item, quality, extras, currentModeRef.current);
         setPreviousMode(currentModeRef.current);
+        if (skillModeRef.current) {
+          if (!outcome || !("plannedItem" in item) || !runtimeRef.current) {
+            throw new Error("El intento skill requiere evidencia y un ítem planificado");
+          }
+          await runtimeRef.current.recordAttempt({
+            item,
+            outcome,
+            quality,
+            extras,
+            sessionId: sessionIdRef.current,
+          } satisfies RuntimeAttemptInput);
+          seenIdsRef.current.add(wordId);
+          pendingLapsesRef.current.delete(wordId);
+          persistPendingLapses();
+          sessionResultsRef.current.push(result);
+          setSessionSummary((prev) => advanceSummary(prev, quality >= 3));
+          if (item.kind === "new" && quality >= 3) {
+            setStats((state) => ({
+              ...state,
+              newToday: state.newToday + 1,
+              learned: state.learned + 1,
+            }));
+          }
+          const nextQueue = quality >= 3
+            ? compatQueue
+            : reinsertLearning(compatQueue, compatIndex, item);
+          advanceCompat(nextQueue, compatIndex);
+          return;
+        }
         if (quality >= 3) {
           await gradeEssentialWord(item.entry.word, quality, extras, user?.id);
           seenIdsRef.current.add(wordId);
@@ -420,6 +482,13 @@ export function useEssentialWordsSession() {
   );
 
   const learnMore = useCallback(() => {
+    if (skillModeRef.current) {
+      // The skill planner is the sole authority for extra work. Rebuilding the
+      // session preserves its daily budget and already-consumed evidence.
+      setPhase("loading");
+      void bootstrap();
+      return;
+    }
     if (compatModeRef.current) {
       const newQueue = appendNewBatch(
         compatQueue, allWordsRef.current, seenIdsRef.current, NEW_CARDS_PER_DAY, levelsRef.current, posRef.current,
@@ -466,7 +535,7 @@ export function useEssentialWordsSession() {
       setCurrentStep(next);
       if (next) setPhase(next.kind === "expose" ? "study" : "speak");
     }
-  }, [compatQueue, compatIndex, nextCompatStepId, phase, planState, currentStep]);
+  }, [bootstrap, compatQueue, compatIndex, nextCompatStepId, phase, planState, currentStep]);
 
   const removeCurrentAndAdvance = useCallback((word: string) => {
     if (compatModeRef.current) {
@@ -496,6 +565,10 @@ export function useEssentialWordsSession() {
   }, [compatQueue, compatIndex, finishSession, nextCompatStepId, planState]);
 
   const archiveWord = useCallback(async (word: string) => {
+    if (skillModeRef.current) {
+      removeCurrentAndAdvance(word);
+      return;
+    }
     await snoozeEssentialWord(word, 90, user?.id);
     removeCurrentAndAdvance(word);
   }, [removeCurrentAndAdvance, user?.id]);
@@ -505,6 +578,25 @@ export function useEssentialWordsSession() {
     if (compatModeRef.current) {
       const item = compatQueue[compatIndex];
       if (!item) return;
+      if (skillModeRef.current && "plannedItem" in item) {
+        const verification = toKnownClaimQueueItem(item as SkillRuntimeQueueItem);
+        const nextQueue = compatQueue.filter((_, index) => index !== compatIndex);
+        if (verification) nextQueue.push(verification);
+        setCompatQueue(nextQueue);
+        if (nextQueue.length === 0 || compatIndex >= nextQueue.length) {
+          setCompatIndex(Math.max(0, nextQueue.length - 1));
+        }
+        const nextIndex = Math.min(compatIndex, Math.max(0, nextQueue.length - 1));
+        if (nextQueue.length === 0) {
+          setCompatStepId(null);
+          void finishSession();
+          return;
+        }
+        setCompatStepId(nextCompatStepId(nextQueue[nextIndex]));
+        setCounts(deriveCounts(nextQueue, nextIndex));
+        setPhase("speak");
+        return;
+      }
       // Compat has no final round: soft-skip without archiving.
       removeCurrentAndAdvance(item.entry.word);
       return;
@@ -521,11 +613,19 @@ export function useEssentialWordsSession() {
   }, [compatQueue, compatIndex, planState, currentStep, finishSession, removeCurrentAndAdvance]);
 
   const keepSnooze = useCallback(async (word: string) => {
+    if (skillModeRef.current) {
+      removeCurrentAndAdvance(word);
+      return;
+    }
     await snoozeEssentialWord(word, 90, user?.id);
     removeCurrentAndAdvance(word);
   }, [removeCurrentAndAdvance, user?.id]);
 
   const masterWord = useCallback(async (word: string) => {
+    if (skillModeRef.current) {
+      removeCurrentAndAdvance(word);
+      return;
+    }
     await masterEssentialWord(word, user?.id);
     removeCurrentAndAdvance(word);
   }, [removeCurrentAndAdvance]);
@@ -602,7 +702,9 @@ export function useEssentialWordsSession() {
       }
     : null);
   const currentMode: EssentialWordMode = compatCurrent
-    ? selectMode(compatCurrent, previousMode)
+    ? skillModeRef.current && "forcedMode" in compatCurrent && phase !== "study"
+      ? compatCurrent.forcedMode as EssentialWordMode
+      : selectMode(compatCurrent, previousMode)
     : gatedStep && gatedStep.kind === "exercise"
       ? gatedStep.mode
       : current

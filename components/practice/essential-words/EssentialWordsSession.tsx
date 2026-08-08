@@ -87,7 +87,7 @@ export function EssentialWordsSession({ initialStreak = 0 }: { initialStreak?: n
     if (!attemptStepId || attemptStepId !== currentStepIdRef.current) return
     const grade = attemptGrade(outcome)
     const quality = gradeToLegacyQuality(grade)
-    await submitGrade(quality, undefined, attemptStepId)
+    await submitGrade(quality, undefined, attemptStepId, outcome)
   }
 
   const clearPendingAttempt = () => {
@@ -111,7 +111,7 @@ export function EssentialWordsSession({ initialStreak = 0 }: { initialStreak?: n
     setIsContinuing(true)
     try {
       const grade = attemptGrade(pending.outcome)
-      await submitGrade(gradeToLegacyQuality(grade), undefined, pending.stepId)
+      await submitGrade(gradeToLegacyQuality(grade), undefined, pending.stepId, pending.outcome)
       if (pendingAttemptRef.current?.stepId === pending.stepId) {
         pendingAttemptRef.current = null
         setPendingAttempt(null)

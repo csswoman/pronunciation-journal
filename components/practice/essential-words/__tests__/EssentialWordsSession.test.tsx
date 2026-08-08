@@ -117,6 +117,8 @@ async function clickEmpezar() {
 
 beforeEach(() => {
   vi.clearAllMocks()
+  vi.stubEnv('NEXT_PUBLIC_SKILL_MODEL_MODE', 'off')
+  vi.stubEnv('NEXT_PUBLIC_SKILL_MODEL_COHORT_PERCENT', '0')
   Object.defineProperty(window, 'localStorage', {
     configurable: true,
     value: window.sessionStorage,
