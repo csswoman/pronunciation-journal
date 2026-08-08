@@ -5851,9 +5851,26 @@ export function baseSkillActivationLiveness(
 ): CriterionResult;
 ```
 
-Una habilidad base elegible no permanece con `schedule.kind === "none"` más de
-`Y` sesiones activas si existe presupuesto acumulado. Medir listening y
-production por separado en el diagnóstico.
+Una obligación listening/production elegible no permanece sin servicio durante
+más de ocho oportunidades reales de servicio. Para cada obligación y sesión:
+
+```ts
+serviceOpportunity(item, session) =
+  isEligibleForBaseActivation(item, session)
+  && session.availableSecondsAfterMandatory >= estimatedCost(item.skill)
+```
+
+La elegibilidad procede exclusivamente de la policy pedagógica que genera
+`baseCandidates`; C9 y el runtime comparten el mismo predicado. Los segundos se
+miden inmediatamente después de mandatory y antes de pending base, placement,
+new words y usage. Una sesión sin elegibilidad o sin segundos suficientes no
+incrementa ni reinicia el reloj. Servir la obligación termina su espera.
+
+Existencia no equivale a elegibilidad y elegibilidad no equivale a capacidad.
+El provisional de placement no cuenta antes de su unlock; su primera sesión
+elegible con segundos suficientes sí cuenta. No existe una excepción ni un
+reloj específico por source: new-word y placement usan la misma definición.
+Medir listening y production por separado en el diagnóstico.
 
 #### Criterio 10 — no starvation de atrasados
 

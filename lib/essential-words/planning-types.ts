@@ -3,6 +3,7 @@ import type {
   LearningItem,
   Skill,
 } from "./verification/types";
+import type { BaseBackpressure, BaseServiceSample } from "./base-backpressure";
 
 /** An already-scheduled item that competes for the daily time budget. */
 export interface PlannedItem {
@@ -125,6 +126,10 @@ export interface DailyPlanningInput {
     newWords: number;
   };
   previousMode: "normal" | "recovery";
+  /** Outcomes from the latest active sessions; empty means startup. */
+  recentBaseService?: readonly BaseServiceSample[];
+  /** All current L/P debt, including skills still gated by domain policy. */
+  pendingBaseObligationCount?: number;
   capacityForecast: CapacityForecastPlanningInput;
   placementContext?: PlacementPlanningContext;
 }
@@ -182,6 +187,7 @@ export interface DailyPlan {
     rejectedForCapacity: number;
     rejectedForSafetyCeiling: number;
   };
+  baseBackpressure?: BaseBackpressure;
   futureReservations: CapacityReservation[];
   loadBreakdown: PlanningLoadBreakdown;
 }

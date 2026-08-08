@@ -28,6 +28,10 @@ import type {
 } from "./planning-types";
 import { backlogSeconds, resolveMode, type RecoveryPolicy } from "./recovery-mode";
 import type { LearningItem } from "./verification/types";
+import {
+  consumeBaseObligationCapacity,
+  deriveBaseBackpressure,
+} from "./base-backpressure";
 
 export { DEFAULT_ACTIVATION_LIMITS, resolveAbsoluteBaseActivationSafetyCeiling };
 export { selectMandatory } from "./daily-budget-selectors";
@@ -109,6 +113,16 @@ export function planDailySession(
   // service — the same signal placement and new-word admission both react
   // to (encargo §7/§8): serving base work today relieves tomorrow's pressure.
   const backlogAfterService = pendingBaseBacklogSeconds(base.deferred, input.estimatedSeconds.byModality);
+  const pendingObligationsAfterService = Math.max(
+    0,
+    (input.pendingBaseObligationCount ?? base.deferred.length) - base.selected.length,
+  );
+  const baseBackpressure = deriveBaseBackpressure({
+    pendingBaseCount: pendingObligationsAfterService,
+    recentService: input.recentBaseService ?? [],
+    remainingSecondsAfterMandatory: remainingAfterMandatory,
+    modalityCosts: input.estimatedSeconds.byModality,
+  });
 
   if (mode === "recovery") {
     const futureReservations = rolloverReservations(input, []);
@@ -117,6 +131,7 @@ export function planDailySession(
       { selected: [], deferred: input.candidates.usageActivations, seconds: 0 },
       { selected: [], seconds: 0 }, 0, [], 0, futureReservations,
       { capacitySafeConversions: 0, rejectedForCapacity: 0, rejectedForSafetyCeiling: 0 },
+      baseBackpressure,
       buildLoadBreakdown(input, mandatory, base, { selected: [], deferred: [], seconds: 0 }, 0, futureReservations, placementIds),
     );
   }
@@ -131,6 +146,7 @@ export function planDailySession(
         estimatedSecondsByModality: input.estimatedSeconds.byModality,
         pendingBaseBacklogSeconds: backlogAfterService,
         backlogPolicy,
+        baseBackpressure,
         now: input.placementContext.now,
         activeSessionDates: input.placementContext.activeSessionDates,
       })
@@ -148,6 +164,10 @@ export function planDailySession(
   }
   const placementSeconds = placement.admitted.length * input.estimatedSeconds.byModality.recognition;
   const remainingAfterPlacement = Math.max(0, remainingAfterBase - placementSeconds);
+  const backpressureAfterPlacement = consumeBaseObligationCapacity(
+    baseBackpressure,
+    placement.newReservations.length,
+  );
 
   // Step 5 (computed before new words to bound their share of what's left,
   // but usage stays residual — never displaces new-word admission on its own).
@@ -184,6 +204,7 @@ export function planDailySession(
     estimatedSecondsByModality: input.estimatedSeconds.byModality,
     pendingBaseBacklogSeconds: backlogAfterService,
     backlogPolicy,
+    baseBackpressure: backpressureAfterPlacement,
   });
   const newWords = {
     selected: admission.admitted,
@@ -203,6 +224,7 @@ export function planDailySession(
       rejectedForCapacity: placement.rejectedForCapacity,
       rejectedForSafetyCeiling: placement.rejectedForSafetyCeiling,
     },
+    baseBackpressure,
     buildLoadBreakdown(
       input, mandatory, base, usage, newWords.seconds, futureReservations, placementIds,
     ),
@@ -220,6 +242,7 @@ function planFromSelections(
   placementDeferred: number,
   futureReservations: DailyPlan["futureReservations"],
   placementCapacity: DailyPlan["placementCapacity"],
+  baseBackpressure: DailyPlan["baseBackpressure"],
   loadBreakdown: PlanningLoadBreakdown,
 ): DailyPlan {
   const newWordMeaningActivations = newWords.selected.length;
@@ -244,6 +267,7 @@ function planFromSelections(
     placementSelected,
     placementDeferred,
     placementCapacity,
+    baseBackpressure,
     futureReservations,
     loadBreakdown,
   };

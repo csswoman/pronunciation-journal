@@ -46,12 +46,21 @@ function day(overrides: Partial<SimulatedDay> = {}): SimulatedDay {
   };
 }
 
+/**
+ * Task 8.9-final — C9 canónico por service opportunity: cada sesión trae su
+ * propio `sessionAvailableSeconds`/`skillCostSeconds`. Por defecto una
+ * oportunidad real (30s disponibles, coste de skill 20s) para no romper por
+ * accidente los fixtures preexistentes que no la mencionan explícitamente.
+ */
 function eligibleForSessions(
   itemId: string,
   skill: EligibilityObservation["skill"],
   sessions: number,
   activateAt?: number,
+  opportunity: { availableSeconds?: number; costSeconds?: number } = {},
 ): EligibilityObservation[] {
+  const availableSeconds = opportunity.availableSeconds ?? 30;
+  const costSeconds = opportunity.costSeconds ?? 20;
   return Array.from({ length: sessions }, (_, sessionIndex) => ({
     itemId,
     skill,
@@ -59,6 +68,8 @@ function eligibleForSessions(
     eligible: true,
     scheduleKind: activateAt !== undefined && sessionIndex >= activateAt ? "fsrs" : "none",
     cumulativeAvailableSeconds: (sessionIndex + 1) * 30,
+    sessionAvailableSeconds: availableSeconds,
+    skillCostSeconds: costSeconds,
   }));
 }
 
@@ -188,6 +199,8 @@ describe(
           eligible: true,
           scheduleKind: "none",
           cumulativeAvailableSeconds: (sessionIndex + 1) * 30,
+          sessionAvailableSeconds: 30,
+          skillCostSeconds: 20,
         }),
       );
       const c9Result = baseSkillActivationLiveness(neverActivatedListening, 8);

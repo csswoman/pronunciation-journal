@@ -11,13 +11,23 @@ export interface EligibilityObservation {
   cumulativeAvailableSeconds: number;
   /**
    * Seconds left in *this* session after mandatory review/learning was
-   * selected (`dailyBudgetSeconds - mandatorySelectedSeconds`), and the
-   * budget it was measured against. Optional so existing fixtures/tests
-   * that predate the C9 mandatory-saturation exemption keep passing
-   * (absence is treated as "not saturated" — see `isMandatorySaturated`).
+   * selected (`dailyBudgetSeconds - mandatorySelectedSeconds`), measured
+   * before pending base/placement/new-words/usage spend any of it (Task
+   * 8.9-final C9 reformulation, §6 — no gaming: this must be the real
+   * post-mandatory state, never a value narrowed to make a session count or
+   * not count). Optional so pre-existing fixtures default to "no data" (see
+   * `hasServiceOpportunity`).
    */
   sessionAvailableSeconds?: number;
   sessionDailyBudgetSeconds?: number;
+  /**
+   * This skill's estimated cost in seconds (Task 8.9-final C9
+   * reformulation, §5 — listening/production use their real, possibly
+   * different, per-modality costs). Paired with `sessionAvailableSeconds`
+   * to decide whether this session was a genuine service opportunity for
+   * this item.
+   */
+  skillCostSeconds?: number;
 }
 
 export interface DeferredObservation {
@@ -165,32 +175,47 @@ interface WaitingResult {
 }
 
 /**
- * Same exemption pattern approved for C8 (Decisión 1, 8.9h/8.9i), applied to
- * C9: a session where mandatory review/learning alone already consumes the
- * large majority of the budget leaves the planner no seconds to service any
- * base skill, regardless of admission/backpressure policy (confirmed by
- * diagnostic evidence — 2026-08-07, see fase8-final-planner-simplification
- * notes: capacitySafeNewWords correctly falls to 0 in these sessions and
- * pendingBase still grows unbounded, because there is no time left, not
- * because backpressure is misconfigured). Mirrors C8's
- * `backlogSeconds < dailyBudgetSeconds * 0.8` cutoff on the "available"
- * side: mandatory-saturated when less than 20% of the budget remains.
+ * C9, capacity-conditioned liveness by real service opportunities (Task
+ * 8.9-final, replaces the 80/20 mandatory-saturation exemption — see
+ * docs/superpowers/plans/notes/2026-08-08-fase8-c9-service-opportunity.md).
+ *
+ * A session is a service opportunity for a candidate only when, right after
+ * mandatory selection and before pending-base/placement/new-words/usage
+ * spend anything, there are enough seconds left to actually serve that
+ * candidate's skill:
+ *
+ *   serviceOpportunity(candidate, session) =
+ *     candidateIsEligible
+ *     && sessionAvailableSeconds >= skillCostSeconds
+ *
+ * Sessions that are not opportunities (no data, inactive day, or genuinely
+ * not enough time after mandatory) do not advance the starvation clock —
+ * they also do not reset it. Mandatory keeps absolute priority: it is what
+ * creates or removes an opportunity, never something reserved against
+ * artificially to make this criterion pass. Lower-priority work (placement,
+ * new words, usage) consuming an opportunity that pending base could have
+ * used is exactly what SHOULD advance the clock — this function only reads
+ * `sessionAvailableSeconds` as measured immediately after mandatory, so it
+ * cannot tell the difference between "no time" and "time taken by lower
+ * priority work" by construction, and that is intentional per §4 of the
+ * encargo: both must count as an opportunity that was not used to serve the
+ * oldest pending item.
  */
-const MANDATORY_SATURATION_AVAILABLE_SHARE = 0.2;
-
-function isMandatorySaturated(observation: EligibilityObservation): boolean {
+function hasServiceOpportunity(observation: EligibilityObservation): boolean {
   if (
     observation.sessionAvailableSeconds === undefined
-    || observation.sessionDailyBudgetSeconds === undefined
-    || observation.sessionDailyBudgetSeconds <= 0
-  ) return false;
-  return observation.sessionAvailableSeconds
-    < observation.sessionDailyBudgetSeconds * MANDATORY_SATURATION_AVAILABLE_SHARE;
+    || observation.skillCostSeconds === undefined
+  ) {
+    // No opportunity data recorded (older fixtures) — do not count, do not
+    // reset, consistent with "sessions without opportunity data are neutral".
+    return false;
+  }
+  return observation.sessionAvailableSeconds >= observation.skillCostSeconds;
 }
 
 function maximumEligibilityWait(
   observations: EligibilityObservation[],
-): WaitingResult & { saturatedSessions: number } {
+): WaitingResult & { opportunitySessions: number; skippedSessions: number } {
   const byItem = new Map<string, EligibilityObservation[]>();
   for (const observation of observations) {
     const group = byItem.get(observation.itemId) ?? [];
@@ -199,28 +224,34 @@ function maximumEligibilityWait(
   }
 
   let result: WaitingResult = { maximum: 0 };
-  let saturatedSessions = 0;
+  let opportunitySessions = 0;
+  let skippedSessions = 0;
   for (const [itemId, group] of byItem) {
     let waiting = 0;
-    let budgetReached = false;
     for (const observation of group.sort((left, right) => left.sessionIndex - right.sessionIndex)) {
-      if (!observation.eligible || observation.scheduleKind !== "none") {
+      if (observation.scheduleKind !== "none") {
+        // Served (or no longer applicable) — the wait clock resets.
         waiting = 0;
-        budgetReached = false;
         continue;
       }
-      if (isMandatorySaturated(observation)) {
-        // Mandatory left no capacity to serve anything this session — does
-        // not count toward the starvation clock, does not reset it either.
-        saturatedSessions += 1;
+      if (!observation.eligible) {
+        // The obligation exists but domain policy did not allow service.
+        // This is neutral: existence is not a service opportunity.
+        skippedSessions += 1;
         continue;
       }
-      budgetReached ||= observation.cumulativeAvailableSeconds > 0;
-      if (budgetReached) waiting += 1;
+      if (!hasServiceOpportunity(observation)) {
+        // No real capacity to serve this skill this session — does not
+        // advance the clock, does not reset it either (§1/§2 encargo).
+        skippedSessions += 1;
+        continue;
+      }
+      opportunitySessions += 1;
+      waiting += 1;
       if (waiting > result.maximum) result = { maximum: waiting, itemId };
     }
   }
-  return { ...result, saturatedSessions };
+  return { ...result, opportunitySessions, skippedSessions };
 }
 
 export function baseSkillActivationLiveness(
@@ -242,8 +273,10 @@ export function baseSkillActivationLiveness(
     limit: maximumWaitingSessions,
     detail: `listening=${listening.maximum}; production=${production.maximum}`
       + (offender.itemId ? `; oldest=${offender.itemId}` : "")
-      + `; mandatory-saturated sessions exempt: listening=${listening.saturatedSessions}, `
-      + `production=${production.saturatedSessions}`,
+      + `; opportunities counted: listening=${listening.opportunitySessions}, `
+      + `production=${production.opportunitySessions}`
+      + `; sessions without opportunity (skipped): listening=${listening.skippedSessions}, `
+      + `production=${production.skippedSessions}`,
   };
 }
 

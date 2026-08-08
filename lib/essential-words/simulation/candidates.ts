@@ -11,6 +11,9 @@ import { usageEligibility } from "../usage/lifecycle";
 import type { LearningItem, Skill } from "../verification/types";
 import type { SimulationProfile } from "./profiles";
 import type { SimulationWorld, SimulatedWordState } from "./state";
+import {
+  eligibleBaseActivationSkill,
+} from "./base-eligibility";
 
 export interface SimulationMandatory {
   learning: PlannedItem[];
@@ -113,33 +116,14 @@ export function collectMandatory(
 }
 
 function baseCandidates(word: SimulatedWordState, now?: Date): ActivationCandidate[] {
-  if (!word.introducedAt || word.meaning.schedule.kind === "none") return [];
-
-  // Completing listening/production observes meaning and can rewrite an unripe
-  // placement-inference provisional before it becomes due (Task 8.9c).
-  if (
-    word.meaning.schedule.kind === "provisional"
-    && word.meaning.schedule.source === "placement-inference"
-    && now
-    && new Date(word.meaning.schedule.dueAt) > now
-  ) {
-    return [];
-  }
-
-  if (word.listening.schedule.kind === "none" && !word.listening.suspended) {
+  if (!now) return [];
+  const skill = eligibleBaseActivationSkill(word, now);
+  if (skill) {
     return [{
-      itemId: word.listening.id,
+      itemId: word[skill].id,
       wordId: word.wordId,
-      skill: "listening",
-      modality: "listening",
-    }];
-  }
-  if (word.production.schedule.kind === "none" && !word.production.suspended) {
-    return [{
-      itemId: word.production.id,
-      wordId: word.wordId,
-      skill: "production",
-      modality: "production",
+      skill,
+      modality: skill,
     }];
   }
   return [];

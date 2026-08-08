@@ -54,6 +54,8 @@ describe("Task 8.9j — contrato C9 reservation\u2192service", () => {
           eligible: true,
           scheduleKind: "none",
           cumulativeAvailableSeconds: 100 * (sessionIndex + 1),
+          sessionAvailableSeconds: 100,
+          skillCostSeconds: 20,
         });
       }
       return observations;

@@ -8,6 +8,7 @@ import {
   estimateItemsSeconds,
 } from "../cost-estimate";
 import { buildActiveSimulatedDay } from "./active-day";
+import { collectEligibleBaseItemIds, countPendingBaseObligations } from "./base-eligibility";
 import {
   applyCompletedSession,
   completePlannedSession,
@@ -34,6 +35,7 @@ import {
   observeDeferred,
   observeEligibility,
   oldestDeferredAge,
+  recentBaseService,
   waitingBaseCounts,
   type SimulationHarnessHooks,
   type SimulationHookContext,
@@ -71,9 +73,7 @@ export function runSimulation(
   options: SimulationOptions,
   hooks: SimulationHarnessHooks = {},
 ): SimulationResult {
-  if (!Number.isInteger(options.days) || options.days < 0) {
-    throw new Error("days must be a non-negative integer");
-  }
+  if (!Number.isInteger(options.days) || options.days < 0) throw new Error("days must be a non-negative integer");
   if (options.dailyBudgetSeconds <= 0) throw new Error("dailyBudgetSeconds must be positive");
   if (!Number.isInteger(options.targetNewWords) || options.targetNewWords < 0) {
     throw new Error("targetNewWords must be a non-negative integer");
@@ -98,6 +98,7 @@ export function runSimulation(
     const date = now.toISOString();
     const context = simulationContext(now, options.seed, idCounter);
     const hookContext: SimulationHookContext = { dayIndex, now, world, options };
+    const eligibleBaseItemIds = collectEligibleBaseItemIds(world, now);
     let mandatory = collectMandatory(world, now);
     mandatory = hooks.mutateMandatory?.(mandatory, hookContext) ?? mandatory;
     sawPlacementProvisionalDue ||= mandatory.provisionalDue.some((planned) => {
@@ -169,6 +170,8 @@ export function runSimulation(
       },
       consumed: { baseSkillActivations: 0, usageActivations: 0, newWords: 0 },
       previousMode: world.previousMode,
+      recentBaseService: recentBaseService(days),
+      pendingBaseObligationCount: countPendingBaseObligations(world),
       capacityForecast: buildSimulationCapacityInput(
         world,
         calendar,
@@ -244,7 +247,9 @@ export function runSimulation(
       sessionIndex,
       availableSeconds,
       eligibilityAccumulator,
+      eligibleBaseItemIds,
       options.dailyBudgetSeconds,
+      SIMULATION_COSTS,
     ));
     deferredObservations.push(...observeDeferred(mandatory, plan, sessionIndex));
     const waiting = waitingBaseCounts(world, profile, now, options.seed);

@@ -70,6 +70,12 @@ export interface SimulatedDay {
   mandatorySelectedSeconds?: number;
   dynamicBaseAllowanceMax?: number;
   dynamicBaseLimitingFactor?: string;
+  baseServiceOpportunity?: boolean;
+  pendingBaseObligations?: number;
+  recentBaseServicePerOpportunity?: number;
+  serviceCapacityWithinC9?: number;
+  availableObligationCapacity?: number;
+  baseBackpressureStatus?: "open" | "constrained" | "closed";
 }
 
 export interface SimulationResult {

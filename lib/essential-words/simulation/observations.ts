@@ -1,4 +1,6 @@
 import type { DailyPlan } from "../planning-types";
+import type { BaseServiceSample } from "../base-backpressure";
+import type { AttemptModality } from "../verification/types";
 import type { SimulatedCompletion } from "./apply-session";
 import type {
   DeferredObservation,
@@ -54,38 +56,43 @@ export function createEligibilityAccumulator(): EligibilityAccumulator {
   return { availableSecondsByItem: new Map() };
 }
 
+export function recentBaseService(days: readonly SimulatedDay[]): BaseServiceSample[] {
+  return days.filter((day) => day.active).slice(-8).map((day) => ({
+    servedBaseActivations: day.baseSkillActivations,
+    serviceOpportunity: day.baseServiceOpportunity ?? false,
+  }));
+}
+
 export function observeEligibility(
   world: SimulationWorld,
   sessionIndex: number,
   availableSeconds: number,
   accumulator: EligibilityAccumulator,
+  eligibleBaseItemIds: ReadonlySet<string>,
   dailyBudgetSeconds?: number,
+  costsByModality?: Record<AttemptModality, number>,
 ): EligibilityObservation[] {
   const observations: EligibilityObservation[] = [];
   for (const word of world.words.values()) {
     if (!word.introducedAt || word.meaning.schedule.kind === "none") continue;
-    const skills = [
-      { item: word.listening, eligible: true },
-      {
-        item: word.production,
-        eligible: word.listening.schedule.kind !== "none",
-      },
-    ] as const;
+    const skills = [word.listening, word.production] as const;
 
-    for (const { item, eligible } of skills) {
-      if (!eligible || item.suspended || item.schedule.kind !== "none") continue;
+    for (const item of skills) {
+      if (item.suspended || item.schedule.kind !== "none") continue;
+      const eligible = eligibleBaseItemIds.has(item.id);
       const cumulative = (accumulator.availableSecondsByItem.get(item.id) ?? 0)
-        + availableSeconds;
+        + (eligible ? availableSeconds : 0);
       accumulator.availableSecondsByItem.set(item.id, cumulative);
       observations.push({
         itemId: item.id,
         skill: item.skill,
         sessionIndex,
-        eligible: true,
+        eligible,
         scheduleKind: "none",
         cumulativeAvailableSeconds: cumulative,
         sessionAvailableSeconds: availableSeconds,
         sessionDailyBudgetSeconds: dailyBudgetSeconds,
+        skillCostSeconds: costsByModality?.[item.skill],
       });
     }
   }

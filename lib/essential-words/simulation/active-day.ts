@@ -77,6 +77,9 @@ export function buildActiveSimulatedDay(input: {
     0,
     input.dailyBudgetSeconds - mandatorySeconds,
   );
+  const baseServiceOpportunity = input.candidates.baseSkillActivations.some(
+    (item) => remainingAfterMandatory >= input.costs[item.modality],
+  );
   const selectedBaseSeconds = input.plan.baseSkillSelected
     .reduce((total, item) => total + input.costs[item.modality], 0);
   const remainingBaseSlots = Math.max(
@@ -164,5 +167,11 @@ export function buildActiveSimulatedDay(input: {
     mandatorySelectedSeconds: mandatorySeconds,
     dynamicBaseAllowanceMax: input.plan.allowance.dynamicBaseAllowanceMax,
     dynamicBaseLimitingFactor: input.plan.allowance.dynamicBaseLimitingFactor,
+    baseServiceOpportunity,
+    pendingBaseObligations: input.plan.baseBackpressure?.pendingBaseCount,
+    recentBaseServicePerOpportunity: input.plan.baseBackpressure?.recentServiceRate,
+    serviceCapacityWithinC9: input.plan.baseBackpressure?.serviceCapacityWithinC9,
+    availableObligationCapacity: input.plan.baseBackpressure?.availableObligationCapacity,
+    baseBackpressureStatus: input.plan.baseBackpressure?.status,
   };
 }

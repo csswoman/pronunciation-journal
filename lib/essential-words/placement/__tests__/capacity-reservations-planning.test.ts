@@ -7,7 +7,7 @@ import type {
 } from "../../planning-types";
 import { DEFAULT_RECOVERY_POLICY } from "../../recovery-mode";
 import {
-  backlogStable,
+  baseSkillActivationLiveness,
   budgetRespected,
   percentile95WithinBudget,
   recoveryExits,
@@ -129,7 +129,7 @@ describe("admitPlacementConversions — distribución y simulación", () => {
     expect(Object.keys(load)).not.toContain("skillSeconds");
   });
 
-  it("L: advanced genera placement no trivial sin romper C1–C5", () => {
+  it("L: advanced genera placement no trivial sin romper presupuesto ni C9", () => {
     const result = runSimulation(PROFILES.advanced, {
       days: 180,
       corpusSize: 300,
@@ -155,7 +155,8 @@ describe("admitPlacementConversions — distribución y simulación", () => {
     expect(budgetRespected(result.days, 900)).toMatchObject({ passed: true });
     expect(percentile95WithinBudget(result.days, 900)).toMatchObject({ passed: true });
     expect(recoveryExits(result.days)).toMatchObject({ passed: true });
-    expect(backlogStable(result.days, 14, 2, 900)).toMatchObject({ passed: true });
+    expect(baseSkillActivationLiveness(result.eligibility, 8))
+      .toMatchObject({ passed: true });
   }, 120_000);
 
   it("sin forecast hasta dueAt devuelve insufficient-forecast y no convierte", () => {

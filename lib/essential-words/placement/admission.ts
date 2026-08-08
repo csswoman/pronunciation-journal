@@ -8,6 +8,7 @@ import {
   provisionalDueAt,
 } from "../verification/provisional-intervals";
 import type { AttemptModality, LearningItem } from "../verification/types";
+import type { BaseBackpressure } from "../base-backpressure";
 
 /**
  * Fase 8 final simplification (docs/superpowers/plans/notes/
@@ -26,6 +27,7 @@ export interface PlacementAdmissionInput {
   estimatedSecondsByModality: Record<AttemptModality, number>;
   pendingBaseBacklogSeconds: number;
   backlogPolicy: BaseBacklogPolicy;
+  baseBackpressure?: BaseBackpressure;
   now: Date;
   activeSessionDates: readonly Date[];
   safetyReserveShare?: number;
@@ -77,6 +79,8 @@ function conversionReservations(
   ];
 }
 
+const PLACEMENT_BASE_OBLIGATIONS = 2;
+
 export function admitPlacementConversions(
   input: PlacementAdmissionInput,
 ): PlacementAdmissionResult {
@@ -110,7 +114,16 @@ export function admitPlacementConversions(
     ? Math.floor(safeRemainingSeconds / input.perConversionSeconds)
     : 0;
   const pressure = backpressureFactor(input.pendingBaseBacklogSeconds, input.backlogPolicy);
-  const capacitySafeConversions = Math.max(0, Math.floor(budgetSafeConversions * pressure));
+  const backlogSafeConversions = input.baseBackpressure
+    ? Math.floor(
+        input.baseBackpressure.availableObligationCapacity
+          / PLACEMENT_BASE_OBLIGATIONS,
+      )
+    : Math.floor(budgetSafeConversions * pressure);
+  const capacitySafeConversions = Math.max(
+    0,
+    Math.min(budgetSafeConversions, backlogSafeConversions),
+  );
 
   const admitted: LearningItem[] = [];
   const deferred: LearningItem[] = [...deferredIneligible];

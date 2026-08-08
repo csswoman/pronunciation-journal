@@ -7,6 +7,7 @@ import type {
   NewWordCandidate,
 } from "./planning-types";
 import type { AttemptModality } from "./verification/types";
+import type { BaseBackpressure } from "./base-backpressure";
 
 export {
   admitPlacementConversions,
@@ -31,6 +32,7 @@ export interface NewWordAdmissionInput {
   estimatedSecondsByModality: Record<AttemptModality, number>;
   pendingBaseBacklogSeconds: number;
   backlogPolicy: BaseBacklogPolicy;
+  baseBackpressure?: BaseBackpressure;
   /** Share of remainingSeconds held back for estimation error. Default 0.1. */
   safetyReserveShare?: number;
 }
@@ -70,6 +72,8 @@ function newWordReservations(
   ];
 }
 
+const NEW_WORD_BASE_OBLIGATIONS = 2;
+
 export function admitNewWords(input: NewWordAdmissionInput): NewWordAdmissionResult {
   const configuredLimit = Number.isFinite(input.configuredNewWordLimit)
     ? Math.max(0, Math.floor(input.configuredNewWordLimit))
@@ -84,12 +88,21 @@ export function admitNewWords(input: NewWordAdmissionInput): NewWordAdmissionRes
     ? Math.floor(safeRemainingSeconds / input.perNewWordSeconds)
     : 0;
   const pressure = backpressureFactor(input.pendingBaseBacklogSeconds, input.backlogPolicy);
-  const capacityEstimate = Math.floor(budgetSafeNewWords * pressure);
+  const backlogSafeNewWords = input.baseBackpressure
+    ? Math.floor(
+        input.baseBackpressure.availableObligationCapacity
+          / NEW_WORD_BASE_OBLIGATIONS,
+      )
+    : Math.floor(budgetSafeNewWords * pressure);
+  const capacityEstimate = Math.min(budgetSafeNewWords, backlogSafeNewWords);
 
   let limitingFactor: NewWordAdmissionLimit;
   if (capacityEstimate >= configuredLimit) {
     limitingFactor = "target";
-  } else if (pressure < 1 && capacityEstimate < budgetSafeNewWords) {
+  } else if (
+    (input.baseBackpressure && backlogSafeNewWords < budgetSafeNewWords)
+    || (!input.baseBackpressure && pressure < 1 && capacityEstimate < budgetSafeNewWords)
+  ) {
     limitingFactor = "pending-base-backpressure";
   } else {
     limitingFactor = "budget";
