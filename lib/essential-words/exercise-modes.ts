@@ -1,4 +1,5 @@
 import { clozeFor } from "./cloze";
+import { hasRecognizeClozeCandidate } from "./recognize-cloze";
 import type { EssentialWordQueueItem } from "./queue";
 import type { EssentialWord } from "./types";
 
@@ -11,6 +12,8 @@ export type EssentialWordMode =
   | "recognize_translation"
   | "recognize_meaning"
   | "recognize_audio"
+  | "recognize_cloze"
+  | "dictation_word"
   | "dictation_sentence"
   | "cloze_sentence"
   | "weak_form"
@@ -30,6 +33,8 @@ export const MODE_REQUIRED_FIELD: Record<
   recognize_translation: "translation",
   recognize_meaning: "meaning",
   recognize_audio: null, // only needs `word` + TTS, both always available
+  recognize_cloze: null, // computed: hasRecognizeClozeCandidate(entry)
+  dictation_word: null, // word audio is the prompt; the card is added with production UI
   dictation_sentence: null, // example_sentence is mandatory
   cloze_sentence: null, // computed: clozeFor(entry) must be non-null
   weak_form: "ipa_weak",
@@ -46,6 +51,7 @@ export function modeHasData(entry: EssentialWord, mode: EssentialWordMode): bool
   const field = MODE_REQUIRED_FIELD[mode];
   if (field && !entry[field]) return false;
   if (mode === "cloze_sentence") return clozeFor(entry) !== null;
+  if (mode === "recognize_cloze") return hasRecognizeClozeCandidate(entry);
   return true;
 }
 
@@ -76,6 +82,18 @@ function pickRotating(
   return usable[index];
 }
 
+/** Level-1 modes. Spanish gloss by default; cloze when syntactically viable. */
+export function level1ModesFor(entry: EssentialWord): EssentialWordMode[] {
+  const modes: EssentialWordMode[] = ["recognize_translation", "recognize_audio"];
+  if (hasRecognizeClozeCandidate(entry)) modes.push("recognize_cloze");
+  if (!entry.translation && entry.meaning) modes.push("recognize_meaning");
+  return modes;
+}
+
+function recognitionModes(entry: EssentialWord): EssentialWordMode[] {
+  return level1ModesFor(entry);
+}
+
 /**
  * Pick how to practice this item.
  *
@@ -103,11 +121,7 @@ export function selectMode(
 
   const { entry } = item;
   const reps = item.repetitions ?? 0;
-  const recognition: EssentialWordMode[] = [
-    "recognize_translation",
-    "recognize_meaning",
-    "recognize_audio",
-  ];
+  const recognition = recognitionModes(entry);
 
   if (item.kind === "learning" || reps <= TENDER_MAX) {
     return pickRotating(entry, recognition, reps, previousMode);

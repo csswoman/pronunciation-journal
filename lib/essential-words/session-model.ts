@@ -4,7 +4,7 @@ import type { EssentialWordMode } from "@/lib/essential-words/exercise-modes";
 import type { EssentialWordQueueItem } from "@/lib/essential-words/queue";
 import type { ExerciseResult } from "@/lib/practice/types";
 
-export type EssentialWordsPhase = "loading" | "study" | "speak" | "done" | "empty" | "error";
+export type EssentialWordsPhase = "loading" | "ready" | "study" | "speak" | "done" | "empty" | "error";
 
 export interface EssentialWordsSessionSummary {
   practiced: number;

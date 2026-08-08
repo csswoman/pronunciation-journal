@@ -67,7 +67,7 @@ describe("essentialWordToStudyCard", () => {
     expect(model.sentence).toBe("I want to go home.");
     expect(model.sentenceIpa).toBe("/aɪ wɑnt tə ɡoʊ hoʊm/");
     expect(model.weakForm).toEqual({ ipa: "/tə/", phrase: "to go" });
-    expect(model.chips).toEqual(["#3", "preposition"]);
+    expect(model.chips).toEqual(["#3 más frecuente", "preposición"]);
     expect(model.levelBadge).toBe("A1");
   });
 

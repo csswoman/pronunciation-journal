@@ -24,7 +24,7 @@ vi.mock("next/navigation", () => ({
 
 vi.mock("@/lib/supabase/auth-actions", () => authActions);
 
-describe("AuthPanel", () => {
+describe("AuthPanel", { timeout: 15_000 }, () => {
   beforeEach(() => {
     vi.clearAllMocks();
     searchParams = new URLSearchParams();

@@ -2,7 +2,7 @@
 
 // Planned structure:
 // <WordIntroStep>           — sequences the new-word presentation cards
-//   <StudyCard />           — one card at a time; "Practicar" advances
+//   <StudyCard />           — one card at a time; Continuar advances
 // Presentation is non-evaluated (no answer_history); it precedes word_review.
 
 import { useEffect, useState } from 'react'

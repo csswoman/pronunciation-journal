@@ -3,7 +3,7 @@
 // which the Essential Words session can focus on. Pure data + selectors: no I/O.
 
 import { matchesFilter } from "./queue";
-import type { CefrLevel, EssentialWordPos, EssentialWord } from "./types";
+import { CEFR_LEVELS, type CefrLevel, type EssentialWordPos, type EssentialWord } from "./types";
 
 export interface VocabularyRoute {
   id: string;
@@ -75,6 +75,41 @@ export const VOCAB_ROUTES: readonly VocabularyRoute[] = [
 export function getRoute(id: string | null | undefined): VocabularyRoute | undefined {
   if (!id) return undefined;
   return VOCAB_ROUTES.find((r) => r.id === id);
+}
+
+export interface RouteLevelGroup {
+  level: CefrLevel;
+  routes: readonly VocabularyRoute[];
+}
+
+/** Groups themed routes under their primary CEFR level, ordered A1 → C1. */
+export function groupRoutesByLevel(
+  routes: readonly VocabularyRoute[] = VOCAB_ROUTES,
+): RouteLevelGroup[] {
+  const byLevel = new Map<CefrLevel, VocabularyRoute[]>();
+
+  for (const route of routes) {
+    const level = route.levels[0];
+    if (!level) continue;
+    const bucket = byLevel.get(level) ?? [];
+    bucket.push(route);
+    byLevel.set(level, bucket);
+  }
+
+  return CEFR_LEVELS.filter((level) => (byLevel.get(level)?.length ?? 0) > 0).map(
+    (level) => ({ level, routes: byLevel.get(level)! }),
+  );
+}
+
+/** Short label for the route row (e.g. "Verbos A2" → "Verbos"). */
+export function routeShortLabel(route: VocabularyRoute): string {
+  if (route.levels.length === 1) {
+    const suffix = ` ${route.levels[0]}`;
+    if (route.label.endsWith(suffix)) {
+      return route.label.slice(0, -suffix.length);
+    }
+  }
+  return route.label;
 }
 
 /** Words belonging to a route (level + pos slice), preserving rank order. */

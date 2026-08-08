@@ -55,4 +55,28 @@ describe("upsertFragmentSrs", () => {
     await upsertFragmentSrs("abc-123", 1);
     expect(dbMocks.saveSRSData).toHaveBeenCalledTimes(1);
   });
+
+  it("migrates a legacy SM-2 entry to FSRS fields on first FSRS-routed grade", async () => {
+    dbMocks.getSRSData.mockResolvedValue({
+      wordId: "fragment:abc-123", word: "fragment:abc-123", ease: 2.5, interval: 5,
+      repetitions: 1, nextReview: "2026-08-09T00:00:00.000Z", lastReview: "2026-08-01T00:00:00.000Z",
+    } satisfies SRSData);
+
+    await upsertFragmentSrs("abc-123", 5);
+
+    const saved = dbMocks.saveSRSData.mock.calls[0][0] as SRSData;
+    expect(saved.stability).toBeGreaterThan(0);
+    expect(saved.difficulty).toBeGreaterThanOrEqual(1);
+    expect(saved.state).toBeDefined();
+    expect(saved.fsrsRealReviews).toBe(1);
+  });
+
+  it("uses the shared FSRS scheduler shape for a normal upsert", async () => {
+    await upsertFragmentSrs("abc-123", 4);
+
+    const saved = dbMocks.saveSRSData.mock.calls[0][0] as SRSData;
+    expect(saved.wordId).toBe("fragment:abc-123");
+    expect(typeof saved.stability).toBe("number");
+    expect(typeof saved.difficulty).toBe("number");
+  });
 });

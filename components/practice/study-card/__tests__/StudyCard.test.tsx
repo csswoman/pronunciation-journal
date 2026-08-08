@@ -51,11 +51,67 @@ describe("StudyCard", () => {
   it("fires onContinue when the primary action is pressed", () => {
     const onContinue = vi.fn();
     render(<StudyCard model={minimal} onContinue={onContinue} onListen={() => {}} />);
-    fireEvent.click(screen.getByRole("button", { name: /practicar/i }));
+    fireEvent.click(screen.getByRole("button", { name: /continuar/i }));
     expect(onContinue).toHaveBeenCalledOnce();
   });
 
-  it("renders the archive action only when onArchive is provided", () => {
+  it("respects continueLabel", () => {
+    render(
+      <StudyCard
+        model={minimal}
+        onContinue={() => {}}
+        onListen={() => {}}
+        continueLabel="Practicar"
+      />,
+    );
+    expect(screen.getByRole("button", { name: /practicar/i })).toBeInTheDocument();
+  });
+
+  it("fires onOmit when Ya conozco esta palabra is pressed", () => {
+    const onOmit = vi.fn();
+    render(
+      <StudyCard
+        model={minimal}
+        onContinue={() => {}}
+        onListen={() => {}}
+        onOmit={onOmit}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: /ya conozco esta palabra/i }));
+    expect(onOmit).toHaveBeenCalledOnce();
+  });
+
+  it("uses claim copy that does not promise to skip the word", () => {
+    render(
+      <StudyCard
+        model={minimal}
+        onContinue={() => {}}
+        onListen={() => {}}
+        onOmit={() => {}}
+      />,
+    );
+
+    expect(
+      screen.getByRole("button", { name: /ya conozco esta palabra/i }),
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/sáltala/i)).not.toBeInTheDocument();
+  });
+
+  it("uses the skip link label when onOmit is provided", () => {
+    render(
+      <StudyCard
+        model={minimal}
+        onContinue={() => {}}
+        onListen={() => {}}
+        onOmit={() => {}}
+        onArchive={() => {}}
+      />,
+    );
+    expect(screen.getByRole("button", { name: /ya conozco esta palabra/i })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /^ya la sé$/i })).not.toBeInTheDocument();
+  });
+
+  it("renders the archive action only when onArchive is provided without onOmit", () => {
     const onArchive = vi.fn();
     const { rerender } = render(
       <StudyCard model={minimal} onContinue={() => {}} onListen={() => {}} />,

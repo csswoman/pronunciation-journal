@@ -2,89 +2,108 @@
 
 // Planned structure:
 // <RecognizeAudioCard>
-//   <AudioPrompt />   — kicker + ListenButton (replay)
-//   <OptionGrid />
+//   <PhaseLabel />
+//   <Instruction />
+//   <ListenButton />
+//   <RecognizeOptionGrid />
+//   <InlineFeedback />
+//   <ContinueButton />
 // </RecognizeAudioCard>
 
-import { useEffect, useMemo, useState } from 'react'
-import { PillButton } from '@/components/ui/PillButton'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { ListenButton } from '@/components/ui/ListenButton'
 import { speak } from '@/lib/phoneme-practice/tts'
 import { playUiCue } from '@/lib/ui-sounds/cues'
-import { cn } from '@/lib/cn'
+import { selectDistractors } from '@/lib/essential-words/distractors'
+import { RecognizeOptionGrid } from './RecognizeOptionGrid'
+import { ExercisePhaseLabel } from './ExercisePhaseLabel'
+import { InlineFeedback } from '@/components/practice/session/InlineFeedback'
+import { useEnterToContinue } from '@/hooks/useEnterToContinue'
+import Button from '@/components/ui/Button'
+import type { AttemptOutcome } from '@/lib/essential-words/attempt-grade'
 import type { EssentialWord } from '@/lib/essential-words/types'
 
 interface Props {
   entry: EssentialWord
-  /** Other session words used as wrong answers. */
   distractors: EssentialWord[]
-  onGraded: (quality: number) => Promise<void>
+  levelLabel?: string
+  onAttempt: (outcome: AttemptOutcome) => Promise<void>
+  /** Present once the choice has been graded — renders the internal
+   * "Continuar" action that advances to the next exercise. */
+  onContinue?: () => void
+  onArchive?: () => void
+  isContinuing?: boolean
 }
 
 const OPTION_COUNT = 4
 
-/** Quality scores: a clean recognition is a 5, a miss is a lapse (2). */
-const CORRECT_QUALITY = 5
-const WRONG_QUALITY = 2
-
-export function RecognizeAudioCard({ entry, distractors, onGraded }: Props) {
+export function RecognizeAudioCard({ entry, distractors, levelLabel, onAttempt, onContinue, onArchive, isContinuing = false }: Props) {
   const [chosen, setChosen] = useState<string | null>(null)
+  const startedAtRef = useRef(Date.now())
 
   const play = () => speak(entry.word, { rate: 0.9 })
 
-  // The prompt *is* the audio, so it plays once per word. Replay stays manual.
   useEffect(() => {
     speak(entry.word, { rate: 0.9 })
   }, [entry.word])
 
-  // Dedupe by surface form so the answer never appears twice — same rule as
-  // RecognizeCard.
+  const wrong = useMemo(
+    () => selectDistractors(entry, distractors, [], OPTION_COUNT - 1),
+    [entry, distractors],
+  )
+  const wrongKey = wrong.map((w) => w.word).join('|')
+
+  // Keyed on word content (not array reference) so the shuffle stays stable
+  // across parent re-renders that recompute `distractors` with a new
+  // reference but the same words — otherwise the options jump after choosing.
   const options = useMemo(() => {
-    const seen = new Set([entry.word.toLowerCase()])
-    const wrong: EssentialWord[] = []
-    for (const d of distractors) {
-      const key = d.word.toLowerCase()
-      if (seen.has(key)) continue
-      seen.add(key)
-      wrong.push(d)
-      if (wrong.length === OPTION_COUNT - 1) break
-    }
-    const all = [entry, ...wrong].map((w) => w.word)
+    const all = [entry.word, ...wrongKey.split('|').filter(Boolean)]
     return all.sort(() => Math.random() - 0.5)
-  }, [entry, distractors])
+  }, [entry.word, wrongKey])
 
   const handleChoose = (choice: string) => {
     if (chosen) return
     setChosen(choice)
     const isCorrect = choice.toLowerCase() === entry.word.toLowerCase()
     playUiCue(isCorrect ? 'correct' : 'wrong')
-    void onGraded(isCorrect ? CORRECT_QUALITY : WRONG_QUALITY)
+    void onAttempt({
+      correct: isCorrect,
+      hintsUsed: 0,
+      rescued: false,
+      typo: false,
+      firstTryFailed: false,
+      latencyMs: Date.now() - startedAtRef.current,
+    })
   }
 
+  useEnterToContinue(Boolean(onContinue && chosen && !isContinuing), onContinue)
+
   return (
-    <div className="flex w-full flex-col items-center gap-[var(--space-5)] rounded-lg border border-border-subtle bg-surface-raised layout-card-pad">
-      <p className="font-kicker m-0 text-fg-muted">¿Qué palabra escuchaste?</p>
+    <div className="flex w-full max-w-md flex-col items-center gap-4 rounded-lg border border-border-subtle bg-surface-raised layout-card-pad">
+      <ExercisePhaseLabel label={levelLabel} onArchive={onArchive} />
+
+      <p className="m-0 w-full text-center text-body text-fg">
+        Elige la palabra que escuchaste
+      </p>
 
       <ListenButton onPlay={play} label="Escuchar de nuevo" />
 
-      <div className="grid w-full max-w-sm grid-cols-2 gap-2">
-        {options.map((option) => (
-          <PillButton
-            key={option}
-            type="button"
-            variant={chosen === option ? 'primary' : 'outline'}
-            onClick={() => handleChoose(option)}
-            disabled={Boolean(chosen)}
-            className={cn(
-              chosen &&
-                option.toLowerCase() === entry.word.toLowerCase() &&
-                'bg-success hover:bg-success',
-            )}
-          >
-            {option}
-          </PillButton>
-        ))}
-      </div>
+      <RecognizeOptionGrid
+        options={options}
+        chosen={chosen}
+        correctWord={entry.word}
+        onChoose={handleChoose}
+      />
+
+      {chosen && (
+        <InlineFeedback isCorrect={chosen.toLowerCase() === entry.word.toLowerCase()} />
+      )}
+
+      {chosen && onContinue && (
+        <Button type="button" variant="primary" size="lg" className="w-full" onClick={onContinue} disabled={isContinuing} isLoading={isContinuing}>
+          Continuar
+        </Button>
+      )}
     </div>
   )
 }

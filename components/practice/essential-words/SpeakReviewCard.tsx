@@ -4,7 +4,7 @@
 // <SpeakReviewCard>
 //   <SentencePrompt />
 //   <MicButton | SelfGradeBar />
-//   <QuietSpeakFeedback + PhonemeFeedbackTable />
+//   <InlineFeedback + QuietSpeakFeedback + PhonemeFeedbackTable />
 //   <SpeakSkipActions />
 // </SpeakReviewCard>
 
@@ -17,22 +17,28 @@ import { useSpeechInput } from '@/hooks/useSpeechInput'
 import { useSharedMicStream } from '@/hooks/useSharedMicStream'
 import { defaultEvaluationEngine } from '@/lib/exercises/evaluation'
 import { getEvaluationWordResults } from '@/lib/exercises/evaluation/word-results'
-import { accuracyToQuality } from '@/lib/srs'
 import { getFeedbackMessage } from '@/lib/pronunciation/scoring'
 import { PhonemeFeedbackTable } from '@/components/lesson/PhonemeFeedbackTable'
 import { SelfGradeBar } from './SelfGradeBar'
 import { QuietSpeakFeedback } from './QuietSpeakFeedback'
+import { InlineFeedback } from '@/components/practice/session/InlineFeedback'
 import { SpeakSkipActions } from './SpeakSkipActions'
 import { micErrorMessage } from './mic-error-message'
 import { playUiCue } from '@/lib/ui-sounds/cues'
 import { cn } from '@/lib/cn'
 import { selectSentence } from '@/lib/essential-words/sentence-variants'
+import { displayEnglishText } from '@/lib/essential-words/word-display'
+import { buildSpeakOutcome } from './useSpeakOutcome'
+import { ExercisePhaseLabel } from './ExercisePhaseLabel'
+import { useEnterToContinue } from '@/hooks/useEnterToContinue'
+import type { AttemptOutcome } from '@/lib/essential-words/attempt-grade'
 import type { EssentialWord } from '@/lib/essential-words/types'
 import type { WordResult } from '@/lib/types'
 
 interface Props {
   entry: EssentialWord
-  onGraded: (quality: number, extras?: { accuracy: number; transcript: string }) => Promise<void>
+  levelLabel?: string
+  onAttempt: (outcome: AttemptOutcome) => Promise<void>
   onArchive: () => void
   fromSnooze?: boolean
   onKeepSnooze?: () => void
@@ -49,7 +55,8 @@ interface Scored {
 
 export function SpeakReviewCard({
   entry,
-  onGraded,
+  levelLabel,
+  onAttempt,
   onArchive,
   fromSnooze,
   onKeepSnooze,
@@ -67,11 +74,13 @@ export function SpeakReviewCard({
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [showSoundDetail, setShowSoundDetail] = useState(false)
   const submitted = useRef(false)
+  const startedAtRef = useRef(Date.now())
 
   const { sentence } = selectSentence(entry, repetitions)
 
   useEffect(() => {
     submitted.current = false
+    startedAtRef.current = Date.now()
     setScored(null)
     setMicError(null)
     setSubmitError(null)
@@ -131,10 +140,7 @@ export function SpeakReviewCard({
     submitted.current = true
     setSubmitError(null)
     setIsSubmitting(true)
-    void onGraded(accuracyToQuality(scored.score), {
-      accuracy: scored.score,
-      transcript: scored.transcript,
-    })
+    void onAttempt(buildSpeakOutcome({ accuracy: scored.score, startedAt: startedAtRef.current }))
       .catch(() => {
         submitted.current = false
         setSubmitError('No se pudo guardar este resultado. Intenta de nuevo.')
@@ -149,7 +155,7 @@ export function SpeakReviewCard({
     submitted.current = true
     setSubmitError(null)
     setIsSubmitting(true)
-    void onGraded(quality)
+    void onAttempt(buildSpeakOutcome({ selfGradeQuality: quality, startedAt: startedAtRef.current }))
       .catch(() => {
         submitted.current = false
         setSubmitError('No se pudo guardar este resultado. Intenta de nuevo.')
@@ -158,6 +164,8 @@ export function SpeakReviewCard({
         setIsSubmitting(false)
       })
   }
+
+  useEnterToContinue(Boolean(scored && !isSubmitting), handleContinue)
 
   const handleRetry = () => {
     setScored(null)
@@ -190,9 +198,12 @@ export function SpeakReviewCard({
       <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">
         {statusMessage}
       </p>
+      <ExercisePhaseLabel label={levelLabel} />
       <div className="flex max-w-[42ch] flex-col items-center gap-1 text-center">
-        <p className="font-kicker m-0 text-fg-muted">Di la oración</p>
-        <p className="m-0 text-center text-body-lg font-medium leading-relaxed text-balance text-fg">{sentence}</p>
+        <p className="m-0 w-full text-body text-fg">Di la oración en voz alta</p>
+        <p className="m-0 text-center text-body-lg font-medium leading-relaxed text-balance text-fg">
+          {displayEnglishText(sentence)}
+        </p>
         {entry.sentence_ipa && (
           <p className="ipa m-0 max-w-[36ch] text-center text-body-lg leading-relaxed text-fg-muted">
             {entry.sentence_ipa}
@@ -250,6 +261,7 @@ export function SpeakReviewCard({
         </div>
       ) : (
         <div className="flex w-full flex-col items-center gap-4">
+          <InlineFeedback isCorrect={scored.score >= 70} />
           {feedback && (
             <QuietSpeakFeedback accuracy={scored.score} message={feedback.message} />
           )}

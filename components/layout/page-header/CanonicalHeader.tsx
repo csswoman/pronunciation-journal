@@ -18,6 +18,7 @@ export function CanonicalHeader({
   description,
   primaryCta,
   secondaryCta,
+  actions,
   variant,
   hasProgress,
   safeProgress,
@@ -49,9 +50,12 @@ export function CanonicalHeader({
             </p>
           ) : null}
         </div>
-        {!hasProgress && (primaryCta || secondaryCta) ? (
-          <div className="flex shrink-0 flex-wrap gap-layout-stack-tight">
-            <CtaButtons primaryCta={primaryCta} secondaryCta={secondaryCta} rounded="md" />
+        {!hasProgress && (primaryCta || secondaryCta || actions) ? (
+          <div className="flex shrink-0 flex-wrap items-center gap-layout-stack-tight">
+            {actions}
+            {(primaryCta || secondaryCta) ? (
+              <CtaButtons primaryCta={primaryCta} secondaryCta={secondaryCta} rounded="md" />
+            ) : null}
           </div>
         ) : null}
       </div>

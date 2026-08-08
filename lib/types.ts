@@ -94,6 +94,7 @@ export interface FavoriteWord {
 // ── SRS Types ──
 
 export type SrsStatus = "active" | "snoozed" | "mastered";
+export type FsrsCardState = "New" | "Learning" | "Review" | "Relearning";
 
 export interface SRSData {
   userId?: string;
@@ -117,6 +118,16 @@ export interface SRSData {
    * touches it. The scheduler ignores this when choosing what to review.
    */
   exposure?: { lastAt: number; count: number };
+  /**
+   * FSRS fields (Fase C, spec §3). Additive and optional so readers that only
+   * use the existing SM-2 fields remain compatible with legacy rows.
+   */
+  stability?: number;
+  difficulty?: number;
+  /** FSRS card state per ts-fsrs's model. */
+  state?: FsrsCardState;
+  /** Real reviews since migration; absent on cards never touched by FSRS. */
+  fsrsRealReviews?: number;
 }
 
 // ── Attempt / Progress Types ──

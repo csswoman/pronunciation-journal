@@ -1,4 +1,6 @@
 import { hasReduction, type EssentialWord } from "@/lib/essential-words/types";
+import { essentialWordPosLabel } from "@/lib/essential-words/pos-label";
+import { displayEnglishText, displayEnglishWord } from "@/lib/essential-words/word-display";
 import type { WordBankEntry } from "@/lib/word-bank/types";
 
 /**
@@ -79,16 +81,16 @@ function present(value: string | null | undefined): string | undefined {
 
 export function essentialWordToStudyCard(entry: EssentialWord): StudyCardModel {
   return {
-    word: entry.word,
+    word: displayEnglishWord(entry.word, { pos: entry.pos }),
     ipa: present(entry.ipa_strong),
-    meaning: present(entry.meaning),
+    meaning: present(entry.meaning ? displayEnglishText(entry.meaning) : undefined),
     translation: present(entry.translation),
-    sentence: present(entry.example_sentence),
+    sentence: present(entry.example_sentence ? displayEnglishText(entry.example_sentence) : undefined),
     sentenceIpa: present(entry.sentence_ipa),
     weakForm: hasReduction(entry)
       ? { ipa: entry.ipa_weak!, phrase: weakFormPhrase(entry.example_sentence, entry.word) }
       : undefined,
-    chips: [`#${entry.rank}`, entry.pos],
+    chips: [`#${entry.rank} más frecuente`, essentialWordPosLabel(entry.pos)],
     levelBadge: entry.cefr_level,
   };
 }

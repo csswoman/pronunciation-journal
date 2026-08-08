@@ -61,4 +61,45 @@ describe("gradeEssentialWord", () => {
     expect(dbMocks.getSRSData).not.toHaveBeenCalled();
     expect(dbMocks.saveSRSData).not.toHaveBeenCalled();
   });
+
+  it("migrates a legacy SM-2 entry to FSRS fields on first FSRS-routed grade", async () => {
+    dbMocks.getSRSData.mockResolvedValue({
+      wordId: "c1k:to", word: "to", ease: 2.5, interval: 10,
+      repetitions: 2, nextReview: "2026-08-10T00:00:00Z", lastReview: "2026-08-01T00:00:00Z",
+    } satisfies SRSData);
+
+    await gradeEssentialWord("to", 4, {}, USER_ID);
+
+    const saved = (dbMocks.saveSRSData.mock.calls as unknown[][])[0][0] as SRSData;
+    expect(saved.stability).toBeGreaterThan(0);
+    expect(saved.difficulty).toBeGreaterThanOrEqual(1);
+    expect(saved.difficulty).toBeLessThanOrEqual(10);
+    expect(saved.state).toBeDefined();
+  });
+
+  it("increments fsrsRealReviews from 0 on the first migrated FSRS review", async () => {
+    dbMocks.getSRSData.mockResolvedValue({
+      wordId: "c1k:to", word: "to", ease: 2.5, interval: 10,
+      repetitions: 2, nextReview: "2026-08-10T00:00:00Z", lastReview: "2026-08-01T00:00:00Z",
+      stability: 10, difficulty: 3, state: "Review", fsrsRealReviews: 0,
+    } satisfies SRSData);
+
+    await gradeEssentialWord("to", 4, {}, USER_ID);
+
+    const saved = (dbMocks.saveSRSData.mock.calls as unknown[][])[0][0] as SRSData;
+    expect(saved.fsrsRealReviews).toBe(1);
+  });
+
+  it("advances nextReview into the future via the FSRS scheduler", async () => {
+    await gradeEssentialWord("to", 4, {}, USER_ID);
+    const saved = (dbMocks.saveSRSData.mock.calls as unknown[][])[0][0] as SRSData;
+    expect(new Date(saved.nextReview).getTime()).toBeGreaterThan(Date.now());
+  });
+
+  it("keeps attempt, daily progress, and stats side effects on the speak path", async () => {
+    await gradeEssentialWord("to", 4, { accuracy: 90, transcript: "to the store" }, USER_ID);
+    expect(dbMocks.saveAttempt).toHaveBeenCalledOnce();
+    expect(dbMocks.updateDailyProgress).toHaveBeenCalledOnce();
+    expect(dbMocks.updateUserStats).toHaveBeenCalledOnce();
+  });
 });

@@ -18,6 +18,8 @@ export interface PageHeaderProps {
   description?: string;
   primaryCta?: CTAButton;
   secondaryCta?: CTAButton;
+  /** Trailing controls in the title row (e.g. vault, settings). */
+  actions?: ReactNode;
   illustration?: ReactNode;
   variant?: "default" | "compact" | "hero-compact";
   progress?: number;

@@ -13,7 +13,9 @@ import Link from 'next/link'
 import { CheckCircle2, Sparkles, AlertCircle, Loader2 } from '@/components/icons'
 import { PillButton } from '@/components/ui/PillButton'
 import { playUiCue } from '@/lib/ui-sounds/cues'
+import { displayEnglishWord } from '@/lib/essential-words/word-display'
 import { cn } from '@/lib/cn'
+import { StatBlock } from './StatBlock'
 import type { EssentialWordsSessionSummary, EssentialWordsStats } from '@/hooks/useEssentialWordsSession'
 
 interface Props {
@@ -25,6 +27,17 @@ interface Props {
   onContinue?: () => void
   continueLoading?: boolean
   onLearnMore?: () => void
+  strugglingWords?: string[]
+}
+
+/** Phrases the tomorrow preview naturally, omitting a zero side instead of
+ * showing noise like "0 repasos y 10 palabras nuevas". */
+function tomorrowPreview(reviews: number, newQuota: number): string {
+  const reviewsPart = reviews === 1 ? '1 repaso' : `${reviews} repasos`
+  const newPart = newQuota === 1 ? '1 palabra nueva' : `${newQuota} palabras nuevas`
+  if (reviews === 0) return newPart
+  if (newQuota === 0) return reviewsPart
+  return `${reviewsPart} y ${newPart}`
 }
 
 export function SessionDone({
@@ -35,6 +48,7 @@ export function SessionDone({
   onContinue,
   continueLoading,
   onLearnMore,
+  strugglingWords,
 }: Props) {
   const practiced = sessionSummary?.practiced ?? 0
   const accuracy =
@@ -58,6 +72,8 @@ export function SessionDone({
     else playUiCue('reveal')
   }, [loadFailed, wasEmpty, accuracy, practiced])
 
+  const reviewsTomorrow = (strugglingWords?.length ?? 0) + stats.dueCount
+
   const headline = loadFailed
     ? 'No se pudo cargar la sesión'
     : wasEmpty
@@ -69,7 +85,7 @@ export function SessionDone({
     ? 'bg-error-soft text-error'
     : wasEmpty
       ? 'bg-primary-soft text-primary'
-      : 'bg-success text-white'
+      : 'bg-[var(--success-icon-bg)] text-[var(--success-value)]'
 
   return (
     <div className="flex flex-col items-center layout-stack-loose py-layout-page-block text-center animate-message-in">
@@ -82,15 +98,39 @@ export function SessionDone({
         </span>
         <h2 className="m-0 text-h3 text-fg">{headline}</h2>
         {!wasEmpty && !loadFailed && practiced > 0 ? (
-          <p className="m-0 text-body-sm text-fg-muted">
-            {practiced} {practiced === 1 ? 'palabra practicada' : 'palabras practicadas'}
-            {accuracy !== null ? ` · ${accuracy}% precisión` : ''}
+          <StatBlock
+            stats={[
+              { label: 'Aprendidas hoy', value: stats.newToday },
+              { label: 'Repasadas', value: Math.max(0, practiced - stats.newToday) },
+              {
+                label: 'Sin fallos',
+                value: Math.max(0, practiced - (strugglingWords?.length ?? 0)),
+              },
+            ]}
+          />
+        ) : null}
+        {!wasEmpty && !loadFailed && strugglingWords && strugglingWords.length > 0 ? (
+          <div className="flex w-full flex-col items-center gap-2">
+            <span className="text-caption font-semibold text-fg-muted">
+              Estas te costaron — vuelven mañana
+            </span>
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              {strugglingWords.map((word) => (
+                <span
+                  key={word}
+                  className="inline-flex items-center rounded-full bg-warning-soft px-3 py-1 text-caption text-warning"
+                >
+                  {displayEnglishWord(word)}
+                </span>
+              ))}
+            </div>
+          </div>
+        ) : null}
+        {!wasEmpty && !loadFailed ? (
+          <p className="m-0 text-caption text-fg-subtle">
+            Mañana: {tomorrowPreview(reviewsTomorrow, stats.newQuota)}
           </p>
         ) : null}
-        <p className="m-0 text-body-sm text-fg-muted">
-          {stats.learned} de {stats.totalWords} palabras en tu deck, {stats.newToday}/
-          {stats.newQuota} nuevas hoy
-        </p>
         {loadFailed ? (
           <p className="m-0 max-w-[36ch] text-caption text-fg-subtle">
             Revisa tu conexión o vuelve a intentar la carga.
@@ -110,7 +150,7 @@ export function SessionDone({
         {onLearnMore ? (
           <PillButton
             type="button"
-            variant="outline"
+            variant="primary"
             size="md"
             className="w-full"
             onClick={onLearnMore}
@@ -123,7 +163,7 @@ export function SessionDone({
         {onContinue ? (
           <PillButton
             type="button"
-            variant="primary"
+            variant={onLearnMore ? 'outline' : 'primary'}
             size="md"
             className="w-full"
             icon={continueLoading ? <Loader2 size={16} /> : undefined}
@@ -135,27 +175,22 @@ export function SessionDone({
             {loadFailed ? 'Reintentar carga' : 'Buscar palabras para practicar'}
           </PillButton>
         ) : null}
-        <details className="w-full text-center">
-          <summary className="cursor-pointer rounded-md px-3 py-2 text-caption font-semibold text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg focus-ring">
-            Ver más
-          </summary>
-          <div className="mt-2 flex flex-col items-center gap-1">
-            <Link
-              href="/progress"
-              className="rounded-md px-3 py-2 text-caption font-semibold text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg focus-ring"
-              data-cuelume-hover="tick"
-            >
-              Ver progreso
-            </Link>
-            <Link
-              href="/daily"
-              className="rounded-md px-3 py-2 text-caption font-semibold text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg focus-ring"
-              data-cuelume-hover="tick"
-            >
-              Abrir plan de hoy
-            </Link>
-          </div>
-        </details>
+        <div className="flex w-full items-center justify-center gap-1">
+          <Link
+            href="/progress"
+            className="rounded-md px-3 py-2 text-caption font-semibold text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg focus-ring"
+            data-cuelume-hover="tick"
+          >
+            Ver progreso
+          </Link>
+          <Link
+            href="/daily"
+            className="rounded-md px-3 py-2 text-caption font-semibold text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg focus-ring"
+            data-cuelume-hover="tick"
+          >
+            Abrir plan de hoy
+          </Link>
+        </div>
       </div>
     </div>
   )

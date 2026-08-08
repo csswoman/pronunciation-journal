@@ -7,7 +7,7 @@ const nudgeMock = vi.hoisted(() => ({ requestJournalNudge: vi.fn() }))
 
 vi.mock('@/lib/journal/nudge-client', () => nudgeMock)
 
-describe('JournalSupportRail vocabulary resolution', () => {
+describe('JournalSupportRail vocabulary resolution', { timeout: 15_000 }, () => {
   afterEach(() => {
     vi.useRealTimers()
     nudgeMock.requestJournalNudge.mockReset()

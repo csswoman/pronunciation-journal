@@ -591,8 +591,8 @@
       "cefr_level": "A1",
       "ipa_weak": "/əl/",
       "sentence_ipa": "/ˈaɪ əl ˈkɔl ˈjuː ˈleɪtɜr/",
-      "meaning": "a legal document stating how a person's property should be distributed after death",
-      "translation": "testamento",
+      "meaning": "used before a verb to talk about the future",
+      "translation": "verbo modal usado para hablar del futuro",
       "example_sentences": [
         {
           "sentence": "The weather will be sunny tomorrow.",
@@ -3094,6 +3094,10 @@
         {
           "sentence": "The prices are too high for me.",
           "sentence_ipa": "/ðə ˈpɹaɪsəz ˈɑɹ ˈtuː ˈhaɪ ˈfɔɹ ˈmiː/"
+        },
+        {
+          "sentence": "The wall in the garden is very high.",
+          "sentence_ipa": "/ðə ˈwɔl ɪn ðə ˈɡɑɹdən ˈɪz ˈvɛɹiː ˈhaɪ/"
         }
       ]
     },
@@ -4844,6 +4848,10 @@
         {
           "sentence": "She will offer him a cookie.",
           "sentence_ipa": "/ˈʃiː ˈwɪl ˈɔfɜr ˈhɪm ə ˈkʊkiː/"
+        },
+        {
+          "sentence": "They offer free coffee every morning.",
+          "sentence_ipa": "/ˈðeɪ ˈɔfɜr ˈfɹiː ˈkɑfiː ˈɛvɜriː ˈmɔɹnɪŋ/"
         }
       ]
     },

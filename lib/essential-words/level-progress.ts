@@ -13,6 +13,16 @@ export type LevelProgressDisplayRow =
   | { kind: "level"; level: CefrLevel; learned: number; total: number }
   | { kind: "collapsed"; from: CefrLevel; to: CefrLevel };
 
+export type LevelBarSegmentState = "complete" | "current" | "upcoming";
+
+export interface LevelBarSegment {
+  level: CefrLevel;
+  total: number;
+  learned: number;
+  fillRatio: number;
+  state: LevelBarSegmentState;
+}
+
 /**
  * The only fields tallying reads. Declaring it structurally lets callers pass
  * either a full `EssentialWord[]` or the slim projection from `level-index-client`,
@@ -43,6 +53,50 @@ export function tallyLevelProgress(
     learned: learned.get(level) ?? 0,
     total: totals.get(level) ?? 0,
   }));
+}
+
+/** Segments for a proportional CEFR progress bar (one segment per level with content). */
+export function levelProgressBarSegments(
+  rows: readonly LevelProgress[],
+): LevelBarSegment[] {
+  const visible = rows.filter((row) => row.total > 0);
+  const frontierIndex = visible.findIndex((row) => row.learned < row.total);
+
+  return visible.map((row, index) => {
+    const isComplete = row.learned >= row.total;
+    const isCurrent = !isComplete && index === frontierIndex;
+    const state: LevelBarSegmentState = isComplete
+      ? "complete"
+      : isCurrent
+        ? "current"
+        : "upcoming";
+    const fillRatio =
+      state === "complete" ? 1 : state === "current" ? row.learned / row.total : 0;
+
+    return {
+      level: row.level,
+      total: row.total,
+      learned: row.learned,
+      fillRatio,
+      state,
+    };
+  });
+}
+
+/** Milestone copy for the learner's current CEFR frontier. */
+export function levelMilestoneMessage(rows: readonly LevelProgress[]): string | null {
+  const withContent = rows.filter((row) => row.total > 0);
+  if (withContent.length === 0) return null;
+
+  const current = withContent.find((row) => row.learned < row.total);
+  if (!current) {
+    const last = withContent[withContent.length - 1];
+    return `Completaste el nivel ${last.level}`;
+  }
+
+  const remaining = current.total - current.learned;
+  const noun = remaining === 1 ? "palabra" : "palabras";
+  return `Te faltan ${remaining} ${noun} para completar el nivel ${current.level}`;
 }
 
 /** First incomplete level — where the learner is parked. */

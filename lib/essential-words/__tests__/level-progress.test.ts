@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import {
   currentLevelStatus,
   displayLevelProgress,
+  levelMilestoneMessage,
+  levelProgressBarSegments,
   tallyLevelProgress,
   type LevelProgress,
 } from "../level-progress";
@@ -57,5 +59,61 @@ describe("currentLevelStatus / displayLevelProgress", () => {
       { kind: "level", level: "A2", learned: 0, total: 645 },
       { kind: "collapsed", from: "B1", to: "C1" },
     ]);
+  });
+});
+
+describe("levelProgressBarSegments / levelMilestoneMessage", () => {
+  const rows: LevelProgress[] = [
+    { level: "A1", learned: 654, total: 740 },
+    { level: "A2", learned: 0, total: 645 },
+    { level: "B1", learned: 0, total: 524 },
+    { level: "B2", learned: 0, total: 754 },
+    { level: "C1", learned: 0, total: 137 },
+  ];
+
+  it("builds proportional segments with the current frontier partially filled", () => {
+    expect(levelProgressBarSegments(rows)).toEqual([
+      {
+        level: "A1",
+        total: 740,
+        learned: 654,
+        fillRatio: 654 / 740,
+        state: "current",
+      },
+      {
+        level: "A2",
+        total: 645,
+        learned: 0,
+        fillRatio: 0,
+        state: "upcoming",
+      },
+      {
+        level: "B1",
+        total: 524,
+        learned: 0,
+        fillRatio: 0,
+        state: "upcoming",
+      },
+      {
+        level: "B2",
+        total: 754,
+        learned: 0,
+        fillRatio: 0,
+        state: "upcoming",
+      },
+      {
+        level: "C1",
+        total: 137,
+        learned: 0,
+        fillRatio: 0,
+        state: "upcoming",
+      },
+    ]);
+  });
+
+  it("names the remaining words for the current level", () => {
+    expect(levelMilestoneMessage(rows)).toBe(
+      "Te faltan 86 palabras para completar el nivel A1",
+    );
   });
 });

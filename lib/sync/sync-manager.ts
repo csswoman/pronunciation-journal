@@ -20,6 +20,13 @@ import type {
   SyncRpc,
 } from './types'
 import { getNextRetryAt, isReadyToRetry, reclaimStaleSyncingEntries } from './recovery'
+import {
+  buildSkillModelBundles,
+  isSkillModelEntry,
+  processSkillModelBundle,
+  remoteFailureChanges,
+  type RemoteEntryResult,
+} from './skill-model-handler'
 
 // ── Constants ──────────────────────────────────────────────────────────────
 
@@ -42,12 +49,13 @@ const UPSERT_CONFLICT_COLUMNS: Partial<Record<SyncTable, string>> = {
   user_learning_state: 'user_id',
   journal_entries: 'id',
   lesson_completions: 'user_id,course_slug,lesson_slug',
+  learning_items: 'user_id,id',
 }
 
 /**
- * Tables where a plain `insert` entry's `payload.id` is BOTH the table's
- * primary key AND a value the client generated itself (a uuid minted before
- * the row ever reaches the server — see each table's producer, e.g.
+ * Tables where a plain `insert` entry's `payload.id` is part of the primary
+ * identity and a value the client generated itself (minted before the row
+ * ever reaches the server — see each table's producer, e.g.
  * `lib/pronunciation/assessment/persistence.ts`), never a business/natural
  * key. For these tables, a 23505 on retry can only mean "this exact row,
  * identified by a key only this client could have produced, already landed"
@@ -55,14 +63,17 @@ const UPSERT_CONFLICT_COLUMNS: Partial<Record<SyncTable, string>> = {
  * to the `rpc` + `p_idempotency_key` case above, just reached via a plain
  * insert's primary-key conflict instead of a ledger's unique constraint.
  *
- * Do NOT add a table here unless its `id` column is (a) the primary key and
- * (b) always client-generated — e.g. `lesson_completions` must stay OUT of
+ * Do NOT add a table here unless its `id` column is (a) a primary-key identity
+ * component scoped by `user_id` at most and (b) always client-generated —
+ * e.g. `lesson_completions` must stay OUT of
  * this set because its conflict target is a business key
  * (`user_id,course_slug,lesson_slug`), not a client-minted identity value, so
  * a 23505 there could be two genuinely different logical writes colliding.
  */
 const TABLES_WITH_CLIENT_GENERATED_ID_IDEMPOTENCY: ReadonlySet<SyncTable> = new Set([
   'pronunciation_assessments',
+  'attempt_logs',
+  'srs_review_events',
 ])
 
 let flushInFlight: Promise<SyncFlushResult> | null = null
@@ -163,6 +174,33 @@ export function classifyUniqueViolationAsIdempotentSuccess(entry: SyncOutboxEntr
     return typeof id === 'string' && id.length > 0
   }
   return false
+}
+
+async function attemptRemoteEntry(entry: SyncOutboxEntry): Promise<RemoteEntryResult> {
+  try {
+    await flushEntry(entry)
+    return { synced: true }
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err)
+    const code = (err as { code?: string }).code
+
+    if (code === '23505' && classifyUniqueViolationAsIdempotentSuccess(entry)) {
+      return { synced: true }
+    }
+
+    const retryCount = entry.retryCount + 1
+    const permanent =
+      isPermanentError(message, code) || code === '23505' || retryCount >= MAX_RETRIES
+    const attemptedAt = now()
+    return {
+      synced: false,
+      message,
+      permanent,
+      retryCount,
+      attemptedAt,
+      nextRetryAt: permanent ? undefined : getNextRetryAt(retryCount, attemptedAt),
+    }
+  }
 }
 
 // ── Flush logic ────────────────────────────────────────────────────────────
@@ -337,6 +375,7 @@ export async function enqueue(
   matchKey?: Record<string, unknown>,
   onConflict?: string,
   rpcName?: SyncRpc,
+  bundleId?: string,
 ): Promise<number> {
   if (typeof userId !== 'string' || !userId) {
     throw new Error(`Outbox entry for ${table} requires an explicit user_id`)
@@ -352,6 +391,7 @@ export async function enqueue(
     matchKey,
     onConflict,
     rpcName,
+    bundleId,
     status: 'pending',
     createdAt: now(),
     retryCount: 0,
@@ -414,11 +454,14 @@ async function flushOutboxInternal(userId: string): Promise<SyncFlushResult> {
 
   if (batch.length === 0) return emptyFlushResult()
 
-  // Group by entity so operations on the same logical row are sent to
+  const skillModelEntries = batch.filter(isSkillModelEntry)
+  const ordinaryEntries = batch.filter((entry) => !isSkillModelEntry(entry))
+
+  // Group ordinary entries by entity so operations on the same logical row are sent to
   // Postgres strictly in submission order (avoids out-of-order/racing
   // writes to one row), while unrelated entities still flush concurrently.
   const groups = new Map<string, SyncOutboxEntry[]>()
-  for (const entry of batch) {
+  for (const entry of ordinaryEntries) {
     const key = entityKeyFor(entry)
     const group = groups.get(key)
     if (group) group.push(entry)
@@ -426,41 +469,18 @@ async function flushOutboxInternal(userId: string): Promise<SyncFlushResult> {
   }
 
   async function processEntry(entry: SyncOutboxEntry): Promise<void> {
-    try {
-      await flushEntry(entry)
+    const result = await attemptRemoteEntry(entry)
+    if (result.synced) {
       await db.syncOutbox.delete(entry.id!)
       operations.push({ id: entry.id!, table: entry.table, operation: entry.operation, outcome: 'synced' })
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : String(err)
-      const code = (err as { code?: string }).code
-
-      if (code === '23505' && classifyUniqueViolationAsIdempotentSuccess(entry)) {
-        // This entry's own idempotency key was rejected as a duplicate —
-        // proof (per classifyUniqueViolationAsIdempotentSuccess's reasoning)
-        // that this exact operation already landed. Treat as success.
-        await db.syncOutbox.delete(entry.id!)
-        operations.push({ id: entry.id!, table: entry.table, operation: entry.operation, outcome: 'synced' })
-        return
-      }
-
-      const newRetryCount = entry.retryCount + 1
-      const permanent =
-        isPermanentError(message, code) || code === '23505' || newRetryCount >= MAX_RETRIES
-
-      const attemptedAt = now()
-      await db.syncOutbox.update(entry.id!, {
-        status: permanent ? 'failed' : 'pending',
-        retryCount: newRetryCount,
-        errorMessage: message,
-        lastAttemptAt: attemptedAt,
-        nextRetryAt: permanent ? undefined : getNextRetryAt(newRetryCount, attemptedAt),
-      })
+    } else {
+      await db.syncOutbox.update(entry.id!, remoteFailureChanges(result))
       operations.push({
         id: entry.id!,
         table: entry.table,
         operation: entry.operation,
         outcome: 'failed',
-        errorMessage: message,
+        errorMessage: result.message,
       })
     }
   }
@@ -474,9 +494,21 @@ async function flushOutboxInternal(userId: string): Promise<SyncFlushResult> {
     }
   }
 
-  // Different entities flush concurrently; entries within one entity are
-  // strictly ordered (see processGroupInOrder).
-  await Promise.allSettled(Array.from(groups.values()).map(processGroupInOrder))
+  const skillBundles = buildSkillModelBundles(skillModelEntries)
+
+  // Ordinary entities retain their existing concurrency. Skill-model rows
+  // use explicit parent-before-child phases so an attempt always reaches the
+  // server before any SRS event that references it.
+  await Promise.allSettled([
+    ...Array.from(groups.values()).map(processGroupInOrder),
+    ...Array.from(skillBundles.values()).map((entries) => processSkillModelBundle(entries, {
+      attempt: attemptRemoteEntry,
+      recordFailure: (entry, result) => db.syncOutbox.update(entry.id!, remoteFailureChanges(result)),
+      update: (id, changes) => db.syncOutbox.update(id, changes),
+      remove: (id) => db.syncOutbox.delete(id),
+      operations,
+    })),
+  ])
 
   // Items that were claimed as `syncing` but not resolved (shouldn't happen, but safety net)
   const resolvedIds = new Set(operations.map((op) => op.id))

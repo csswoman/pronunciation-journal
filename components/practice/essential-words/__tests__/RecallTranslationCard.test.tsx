@@ -6,6 +6,7 @@ import type { EssentialWord } from "@/lib/essential-words/types";
 import { selectSentence } from "@/lib/essential-words/sentence-variants";
 
 vi.mock("@/lib/ui-sounds/cues", () => ({ playUiCue: vi.fn() }));
+vi.mock("@/lib/phoneme-practice/tts", () => ({ speak: vi.fn() }));
 
 const entry: EssentialWord = {
   rank: 1,
@@ -18,14 +19,14 @@ const entry: EssentialWord = {
 };
 
 function setup(
-  onGraded = vi.fn().mockResolvedValue(undefined),
+  onAttempt = vi.fn().mockResolvedValue(undefined),
   e: EssentialWord = entry,
   repetitions?: number,
 ) {
   render(
-    <RecallTranslationCard entry={e} repetitions={repetitions} onGraded={onGraded} />,
+    <RecallTranslationCard entry={e} repetitions={repetitions} onAttempt={onAttempt} />,
   );
-  return onGraded;
+  return onAttempt;
 }
 
 function answer(value: string) {
@@ -48,29 +49,40 @@ describe("RecallTranslationCard", () => {
     expect(screen.queryByText("through")).not.toBeInTheDocument();
   });
 
-  it("grades 5 for the right word ignoring case and spacing", () => {
-    const onGraded = setup();
+  it("calls onAttempt with a correct outcome for the right word", () => {
+    const onAttempt = setup();
     answer("  Through ");
-    expect(onGraded).toHaveBeenCalledWith(5);
+    expect(onAttempt).toHaveBeenCalledWith(
+      expect.objectContaining({ correct: true, hintsUsed: 0, rescued: false }),
+    );
   });
 
-  it("grades 2 for a wrong word and reveals the answer", () => {
-    const onGraded = setup();
+  it("shows AnswerDiff on a wrong word before grading a repair", () => {
+    const onAttempt = setup();
     answer("though");
-    expect(onGraded).toHaveBeenCalledWith(2);
-    expect(screen.getByText("through")).toBeInTheDocument();
+    expect(onAttempt).not.toHaveBeenCalled();
+    expect(screen.getByTestId("answer-diff-message")).toBeInTheDocument();
   });
 
-  it("shows the example sentence as context after answering", () => {
+  it("shows the example sentence as context after a correct answer", () => {
     setup();
     answer("through");
     expect(screen.getByText(entry.example_sentence)).toBeInTheDocument();
   });
 
   it("does not grade an empty answer", () => {
-    const onGraded = setup();
+    const onAttempt = setup();
     fireEvent.click(screen.getByRole("button", { name: "Comprobar" }));
-    expect(onGraded).not.toHaveBeenCalled();
+    expect(onAttempt).not.toHaveBeenCalled();
+  });
+
+  it("prices hints after the first failed attempt", () => {
+    const onAttempt = setup();
+    answer("though");
+    fireEvent.click(screen.getByRole("button", { name: /intentar de nuevo/i }));
+    fireEvent.click(screen.getByRole("button", { name: /pista/i }));
+    answer("through");
+    expect(onAttempt).toHaveBeenCalledWith(expect.objectContaining({ hintsUsed: 1 }));
   });
 
   describe("sentence rotation", () => {
@@ -97,7 +109,7 @@ describe("RecallTranslationCard", () => {
           <RecallTranslationCard
             entry={withVariants}
             repetitions={reps}
-            onGraded={vi.fn().mockResolvedValue(undefined)}
+            onAttempt={vi.fn().mockResolvedValue(undefined)}
           />,
         );
         answer("through");
