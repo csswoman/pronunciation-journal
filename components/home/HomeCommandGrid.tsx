@@ -3,11 +3,15 @@
 // Planned structure:
 // <HomeCommandGrid>
 //   review strip
+//   activation / placement / pronunciation
+//   guest save progress (when not inline under activation)
 //   main: plan + word-of-day  OR  HomePlanDone when practice complete
 //   aside: journal · speak · pronunciation · vocab
 // </HomeCommandGrid>
 
 import { useCallback, useState } from "react";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { isAnonymousUser } from "@/lib/auth/is-anonymous";
 import HomeDailyCard, { type HomePlanStatus } from "@/components/home/HomeDailyCard";
 import HomeReviewBanner from "@/components/home/HomeReviewBanner";
 import EssentialWordsProgressCard from "@/components/home/EssentialWordsProgressCard";
@@ -19,6 +23,7 @@ import HomePlanDone from "@/components/home/HomePlanDone";
 import HomePlacementPrompt from "@/components/home/HomePlacementPrompt";
 import HomePronunciationPrompt from "@/components/home/HomePronunciationPrompt";
 import HomeActivationStrip from "@/components/home/HomeActivationStrip";
+import GuestSaveProgressBanner from "@/components/home/GuestSaveProgressBanner";
 import type { ConceptLesson } from "@/hooks/useDailyPlan";
 import type { WeakestPhonemeHome } from "@/lib/home/constants";
 import type { HomePlacementState } from "@/lib/home/placement-state";
@@ -44,6 +49,9 @@ export default function HomeCommandGrid({
   placementState,
   pronunciationDiagnosticState,
 }: HomeCommandGridProps) {
+  const { user } = useAuth();
+  const isGuest = isAnonymousUser(user);
+
   const [planEmpty, setPlanEmpty] = useState(false);
   const [planSettled, setPlanSettled] = useState(false);
   const [reviewIsEntry, setReviewIsEntry] = useState(false);
@@ -76,6 +84,11 @@ export default function HomeCommandGrid({
   const showPlanExtras = planSettled && !planEmpty;
   const showPostPlan = showPlanExtras && allDone;
 
+  const guestHasProgress =
+    isGuest && (placementState.hasMeaningfulProgress || allDone);
+  const showGuestSaveStrip = isGuest && planSettled && !showActivation;
+  const guestSaveVariant = guestHasProgress ? "emphasized" : "default";
+
   return (
     <div className="home-command-grid">
       {showReviewBanner ? (
@@ -92,7 +105,14 @@ export default function HomeCommandGrid({
           <HomeActivationStrip
             showPlacementLink={needsPlacement}
             showPronunciationLink={needsPronunciation}
+            showGuestSaveInline={isGuest}
           />
+        </div>
+      ) : null}
+
+      {showGuestSaveStrip ? (
+        <div className="home-command-review">
+          <GuestSaveProgressBanner variant={guestSaveVariant} />
         </div>
       ) : null}
 
@@ -109,7 +129,6 @@ export default function HomeCommandGrid({
       ) : null}
 
       <div className="home-command-main">
-        {/* Keep mounted so allDone keeps updating; hide when post-plan owns the column. */}
         <div className={showPostPlan ? "hidden" : "contents"}>
           <HomeDailyCard
             conceptLesson={conceptLesson}

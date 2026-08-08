@@ -4,29 +4,40 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import {
+  getBrowserSession,
+  linkGoogleIdentity,
   resetPasswordForEmail,
   signInAsGuest,
   signInWithEmail,
   signInWithGoogle,
   signUpWithEmail,
   updatePassword,
+  upgradeGuestWithEmail,
 } from "@/lib/supabase/auth-actions";
+import { isAnonymousUser } from "@/lib/auth/is-anonymous";
 import { publicAuthErrorMessage, validatePasswordPolicy } from "@/lib/auth/password-policy";
 
 export type AuthPanelMode = "login" | "register" | "reset" | "recovery";
+export type AuthPanelIntent = "explore" | "save";
 
 export const AUTH_PANEL_HUES = [350, 145, 220, 30] as const;
+
+function resolveInitialMode(searchParams: URLSearchParams): AuthPanelMode {
+  const mode = searchParams.get("mode");
+  if (mode === "reset") return "reset";
+  if (mode === "recovery") return "recovery";
+  if (mode === "register") return "register";
+  if (searchParams.get("intent") === "save" && mode !== "login") return "register";
+  return "login";
+}
 
 export function useAuthPanelController() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const initialMode: AuthPanelMode = searchParams.get("mode") === "reset"
-    ? "reset"
-    : searchParams.get("mode") === "recovery"
-      ? "recovery"
-      : "login";
+  const intent: AuthPanelIntent =
+    searchParams.get("intent") === "save" ? "save" : "explore";
 
-  const [mode, setMode] = useState<AuthPanelMode>(initialMode);
+  const [mode, setMode] = useState<AuthPanelMode>(() => resolveInitialMode(searchParams));
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -36,9 +47,13 @@ export function useAuthPanelController() {
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
+  const [upgradingGuest, setUpgradingGuest] = useState(false);
 
   useEffect(() => {
-    const id = setInterval(() => setImageIndex((index) => (index + 1) % AUTH_PANEL_HUES.length), 5000);
+    const id = setInterval(
+      () => setImageIndex((index) => (index + 1) % AUTH_PANEL_HUES.length),
+      5000,
+    );
     return () => clearInterval(id);
   }, []);
 
@@ -53,14 +68,30 @@ export function useAuthPanelController() {
   useEffect(() => {
     if (searchParams.get("message") === "password-updated") {
       setMode("login");
-      setMessage("Password updated. You can sign in now.");
+      setMessage("Contraseña actualizada. Ya puedes iniciar sesión.");
       router.replace("/login");
     }
   }, [router, searchParams]);
 
+  useEffect(() => {
+    let cancelled = false;
+    void getBrowserSession().then(({ data: { session } }) => {
+      if (cancelled) return;
+      setUpgradingGuest(isAnonymousUser(session?.user ?? null) && Boolean(session?.user));
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const clearFeedback = () => {
     setError(null);
     setMessage(null);
+  };
+
+  const finishSignedIn = () => {
+    router.replace("/");
+    router.refresh();
   };
 
   const handleRecovery = async (event: React.FormEvent) => {
@@ -69,7 +100,7 @@ export function useAuthPanelController() {
     setPending(true);
     try {
       if (password !== confirmPassword) {
-        setError("Passwords do not match.");
+        setError("Las contraseñas no coinciden.");
         return;
       }
       const policyError = validatePasswordPolicy(password);
@@ -100,14 +131,16 @@ export function useAuthPanelController() {
       const { data, error: err } = await signInWithEmail(email.trim(), password);
       if (err) {
         console.error("[auth] sign in failed", err);
-        setError("Incorrect email or password. Double-check your credentials or create a new account below.");
+        setError(
+          "Correo o contraseña incorrectos. Revísalos o crea una cuenta nueva.",
+        );
         return;
       }
       if (data.session) {
-        router.replace("/");
+        finishSignedIn();
         return;
       }
-      setMessage("Please confirm your email address before signing in.");
+      setMessage("Confirma tu correo antes de iniciar sesión.");
     } finally {
       setPending(false);
     }
@@ -118,13 +151,35 @@ export function useAuthPanelController() {
     clearFeedback();
     setPending(true);
     try {
+      const policyError = validatePasswordPolicy(password);
+      if (policyError) {
+        setError(policyError);
+        return;
+      }
+
+      if (upgradingGuest) {
+        const { data, error: err } = await upgradeGuestWithEmail(email.trim(), password);
+        if (err) {
+          console.error("[auth] guest upgrade failed", err);
+          setError(publicAuthErrorMessage());
+          return;
+        }
+        if (data.user) {
+          setMessage(
+            "Revisa tu bandeja para confirmar el correo. Tu progreso de esta sesión se conserva.",
+          );
+          finishSignedIn();
+          return;
+        }
+      }
+
       const { error: err } = await signUpWithEmail(email.trim(), password);
       if (err) {
         console.error("[auth] sign up failed", err);
         setError(publicAuthErrorMessage());
         return;
       }
-      setMessage("Check your inbox to confirm your email address.");
+      setMessage("Revisa tu bandeja para confirmar tu correo.");
     } finally {
       setPending(false);
     }
@@ -134,6 +189,16 @@ export function useAuthPanelController() {
     clearFeedback();
     setPending(true);
     try {
+      if (upgradingGuest && intent === "save") {
+        const { error: err } = await linkGoogleIdentity();
+        if (err) {
+          console.error("[auth] google link failed", err);
+          setError(publicAuthErrorMessage());
+          return;
+        }
+        router.refresh();
+        return;
+      }
       const { error: err } = await signInWithGoogle();
       if (err) {
         console.error("[auth] google sign in failed", err);
@@ -150,6 +215,13 @@ export function useAuthPanelController() {
     clearFeedback();
     setPending(true);
     try {
+      const {
+        data: { session: existing },
+      } = await getBrowserSession();
+      if (existing?.user) {
+        finishSignedIn();
+        return;
+      }
       const { data, error: err } = await signInAsGuest();
       if (err) {
         console.error("[auth] guest sign in failed", err);
@@ -157,8 +229,7 @@ export function useAuthPanelController() {
         return;
       }
       if (data.session) {
-        router.replace("/");
-        router.refresh();
+        finishSignedIn();
       }
     } finally {
       setPending(false);
@@ -176,7 +247,7 @@ export function useAuthPanelController() {
         setError(publicAuthErrorMessage());
         return;
       }
-      setMessage("If that email exists, you'll receive a password reset link.");
+      setMessage("Si ese correo existe, recibirás un enlace para restablecer la contraseña.");
     } finally {
       setPending(false);
     }
@@ -185,7 +256,7 @@ export function useAuthPanelController() {
   const goToLogin = () => {
     setMode("login");
     clearFeedback();
-    router.replace("/login");
+    router.replace(intent === "save" ? "/login?intent=save" : "/login?intent=explore");
   };
 
   const goToReset = () => {
@@ -197,6 +268,8 @@ export function useAuthPanelController() {
   return {
     mode,
     setMode,
+    intent,
+    upgradingGuest,
     email,
     setEmail,
     name,

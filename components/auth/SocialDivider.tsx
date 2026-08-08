@@ -2,7 +2,7 @@ export function SocialDivider() {
   return (
     <div className="flex items-center gap-4 text-fg-muted text-caption font-semibold uppercase tracking-widest">
       <div className="flex-1 border-t border-border-subtle" />
-      or
+      o
       <div className="flex-1 border-t border-border-subtle" />
     </div>
   );

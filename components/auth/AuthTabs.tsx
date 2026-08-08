@@ -8,8 +8,8 @@ interface AuthTabsProps {
 }
 
 const TABS: { value: Mode; label: string }[] = [
-  { value: "login",    label: "Sign in" },
-  { value: "register", label: "Create account" },
+  { value: "login", label: "Iniciar sesión" },
+  { value: "register", label: "Crear cuenta" },
 ];
 
 export function AuthTabs({ mode, onModeChange }: AuthTabsProps) {

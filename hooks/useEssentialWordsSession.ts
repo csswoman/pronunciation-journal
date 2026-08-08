@@ -294,8 +294,13 @@ export function useEssentialWordsSession() {
         // Seed the level filter from the user's stored CEFR level (offline-safe)
         // so a placed learner starts at their level. Only when untouched (null).
         if (levelsRef.current === null) {
-          const isGuest = !user || (user as { is_anonymous?: boolean }).is_anonymous;
-          const level = isGuest ? readGuestStudyLevel() : await readStoredCefrLevel(user.id);
+          const { isAnonymousUser } = await import("@/lib/auth/is-anonymous");
+          const isGuest = isAnonymousUser(user);
+          const level = isGuest
+            ? readGuestStudyLevel()
+            : user
+              ? await readStoredCefrLevel(user.id)
+              : null;
           if (!cancelled && level && level !== "A1") {
             levelsRef.current = [level];
             setLevelsState([level]);

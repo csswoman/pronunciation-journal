@@ -15,6 +15,9 @@ const authActions = vi.hoisted(() => ({
   signInWithGoogle: vi.fn(),
   resetPasswordForEmail: vi.fn(),
   updatePassword: vi.fn(),
+  upgradeGuestWithEmail: vi.fn(),
+  linkGoogleIdentity: vi.fn(),
+  getBrowserSession: vi.fn().mockResolvedValue({ data: { session: null } }),
 }));
 
 vi.mock("next/navigation", () => ({
@@ -28,6 +31,7 @@ describe("AuthPanel", { timeout: 15_000 }, () => {
   beforeEach(() => {
     vi.clearAllMocks();
     searchParams = new URLSearchParams();
+    authActions.getBrowserSession.mockResolvedValue({ data: { session: null } });
     const store = new Map<string, string>();
     Object.defineProperty(window, "localStorage", {
       configurable: true,
@@ -40,6 +44,16 @@ describe("AuthPanel", { timeout: 15_000 }, () => {
     });
   });
 
+  it("surfaces explore-first guest CTA on the default login view", () => {
+    render(<AuthPanel />);
+    expect(
+      screen.getByRole("button", { name: "Explorar sin cuenta" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: /Empieza a practicar sin registrarte/i }),
+    ).toBeInTheDocument();
+  });
+
   it("shows a friendly message instead of provider login details", async () => {
     authActions.signInWithEmail.mockResolvedValue({
       data: { session: null },
@@ -48,11 +62,15 @@ describe("AuthPanel", { timeout: 15_000 }, () => {
 
     render(<AuthPanel />);
 
-    fireEvent.change(screen.getByLabelText("Email address"), { target: { value: "user@example.com" } });
-    fireEvent.change(screen.getByLabelText("Password"), { target: { value: "wrong-password" } });
-    fireEvent.click(screen.getByRole("button", { name: "Sign in" }));
+    fireEvent.change(screen.getByLabelText("Correo electrónico"), {
+      target: { value: "user@example.com" },
+    });
+    fireEvent.change(screen.getByLabelText("Contraseña"), {
+      target: { value: "wrong-password" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Iniciar sesión" }));
 
-    expect(await screen.findByText(/Incorrect email or password/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Correo o contraseña incorrectos/i)).toBeInTheDocument();
     expect(screen.queryByText(/Supabase AuthApiError/i)).not.toBeInTheDocument();
   });
 
@@ -64,11 +82,17 @@ describe("AuthPanel", { timeout: 15_000 }, () => {
 
     render(<AuthPanel />);
 
-    fireEvent.change(screen.getByLabelText("Email address"), { target: { value: "unconfirmed@example.com" } });
-    fireEvent.change(screen.getByLabelText("Password"), { target: { value: "SomePass1" } });
-    fireEvent.click(screen.getByRole("button", { name: "Sign in" }));
+    fireEvent.change(screen.getByLabelText("Correo electrónico"), {
+      target: { value: "unconfirmed@example.com" },
+    });
+    fireEvent.change(screen.getByLabelText("Contraseña"), {
+      target: { value: "SomePass1" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Iniciar sesión" }));
 
-    expect(await screen.findByText("Please confirm your email address before signing in.")).toBeInTheDocument();
+    expect(
+      await screen.findByText("Confirma tu correo antes de iniciar sesión."),
+    ).toBeInTheDocument();
     expect(replace).not.toHaveBeenCalled();
     expect(refresh).not.toHaveBeenCalled();
   });
@@ -81,12 +105,16 @@ describe("AuthPanel", { timeout: 15_000 }, () => {
 
     render(<AuthPanel />);
 
-    fireEvent.change(screen.getByLabelText("Email address"), { target: { value: "new@example.com" } });
-    fireEvent.change(screen.getByLabelText("Password"), { target: { value: "new-password" } });
-    fireEvent.click(screen.getByRole("button", { name: "Sign in" }));
+    fireEvent.change(screen.getByLabelText("Correo electrónico"), {
+      target: { value: "new@example.com" },
+    });
+    fireEvent.change(screen.getByLabelText("Contraseña"), {
+      target: { value: "new-password" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Iniciar sesión" }));
 
-    expect(await screen.findByText(/Incorrect email or password/i)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Create one" })).toBeInTheDocument();
+    expect(await screen.findByText(/Correo o contraseña incorrectos/i)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Crear una" })).toBeInTheDocument();
     expect(authActions.signUpWithEmail).not.toHaveBeenCalled();
   });
 
@@ -98,15 +126,59 @@ describe("AuthPanel", { timeout: 15_000 }, () => {
 
     render(<AuthPanel />);
 
-    fireEvent.change(screen.getByLabelText("Email address"), { target: { value: "new@example.com" } });
-    fireEvent.change(screen.getByLabelText("Password"), { target: { value: "new-password" } });
-    fireEvent.click(screen.getByRole("button", { name: "Sign in" }));
+    fireEvent.change(screen.getByLabelText("Correo electrónico"), {
+      target: { value: "new@example.com" },
+    });
+    fireEvent.change(screen.getByLabelText("Contraseña"), {
+      target: { value: "new-password" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Iniciar sesión" }));
 
-    await screen.findByText(/Incorrect email or password/i);
-    fireEvent.click(screen.getByRole("button", { name: "Create one" }));
+    await screen.findByText(/Correo o contraseña incorrectos/i);
+    fireEvent.click(screen.getByRole("button", { name: "Crear una" }));
 
-    expect(screen.getByRole("tab", { name: "Create account", selected: true })).toBeInTheDocument();
-    expect(screen.queryByText(/Incorrect email or password/i)).not.toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Crear cuenta", selected: true })).toBeInTheDocument();
+    expect(screen.queryByText(/Correo o contraseña incorrectos/i)).not.toBeInTheDocument();
+  });
+
+  it("upgrades an anonymous guest instead of signing up a new user", async () => {
+    searchParams = new URLSearchParams("intent=save&mode=register");
+    authActions.getBrowserSession.mockResolvedValue({
+      data: {
+        session: {
+          user: { id: "anon-1", is_anonymous: true },
+        },
+      },
+    });
+    authActions.upgradeGuestWithEmail.mockResolvedValue({
+      data: { user: { id: "anon-1", is_anonymous: false } },
+      error: null,
+    });
+
+    render(<AuthPanel />);
+
+    await waitFor(() =>
+      expect(
+        screen.getByRole("button", { name: "Guardar con esta cuenta" }),
+      ).toBeInTheDocument(),
+    );
+
+    fireEvent.change(screen.getByLabelText("Correo electrónico"), {
+      target: { value: "keep@example.com" },
+    });
+    fireEvent.change(screen.getByLabelText("Contraseña"), {
+      target: { value: "StrongPass1" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Guardar con esta cuenta" }));
+
+    await waitFor(() => {
+      expect(authActions.upgradeGuestWithEmail).toHaveBeenCalledWith(
+        "keep@example.com",
+        "StrongPass1",
+      );
+    });
+    expect(authActions.signUpWithEmail).not.toHaveBeenCalled();
+    expect(replace).toHaveBeenCalledWith("/");
   });
 
   it("blocks weak recovery passwords before calling Supabase", async () => {
@@ -139,11 +211,15 @@ describe("AuthPanel", { timeout: 15_000 }, () => {
 
     render(<AuthPanel />);
 
-    fireEvent.change(screen.getByLabelText("New password"), { target: { value: "StrongPass1" } });
-    fireEvent.change(screen.getByLabelText("Confirm password"), { target: { value: "StrongPass2" } });
+    fireEvent.change(screen.getByLabelText("New password"), {
+      target: { value: "StrongPass1" },
+    });
+    fireEvent.change(screen.getByLabelText("Confirm password"), {
+      target: { value: "StrongPass2" },
+    });
     fireEvent.click(screen.getByRole("button", { name: "Update password" }));
 
-    expect(await screen.findByRole("alert")).toHaveTextContent("Passwords do not match.");
+    expect(await screen.findByRole("alert")).toHaveTextContent("Las contraseñas no coinciden.");
     expect(authActions.updatePassword).not.toHaveBeenCalled();
   });
 });

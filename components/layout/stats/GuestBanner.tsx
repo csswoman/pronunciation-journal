@@ -1,69 +1,42 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { LogIn, Sparkles } from "@/components/icons";
-import Button from "@/components/ui/Button";
-import { H2 } from "@/components/ui/Typography";
+import Link from "next/link";
+import { LogIn } from "@/components/icons";
+import GuestSaveProgressBanner from "@/components/home/GuestSaveProgressBanner";
 
+/**
+ * Empty / no-session surface for Progress & Review.
+ * Prefer GuestSaveProgressBanner when an anonymous session already exists.
+ */
 export function GuestBanner() {
-  const router = useRouter();
-
   return (
-    <div className="space-y-4">
-      {/* Hero empty state */}
-      <div
-        className="rounded-3xl layout-card-pad flex flex-col items-center text-center layout-stack-loose"
-        style={{
-          background: "linear-gradient(145deg, color-mix(in oklch, var(--primary) 10%, var(--card-bg)), var(--card-bg))",
-          border: "1px solid color-mix(in oklch, var(--primary) 16%, var(--line-divider))",
-        }}
+    <div className="flex flex-col gap-4">
+      <GuestSaveProgressBanner variant="emphasized" />
+
+      <section
+        className="flex flex-col items-center gap-4 rounded-xl border border-border-subtle bg-surface-raised px-4 py-8 text-center sm:px-6"
+        aria-labelledby="guest-banner-title"
       >
-        <div
-          className="flex h-14 w-14 items-center justify-center rounded-2xl"
-          style={{ background: "color-mix(in oklch, var(--primary) 13%, transparent)", color: "var(--primary)" }}
-        >
-          <Sparkles size={28} />
+        <div className="grid size-12 place-items-center rounded-lg bg-primary-soft text-primary">
+          <LogIn size={22} aria-hidden />
         </div>
-        <div>
-          <H2 className="text-h4">
-            Track your English journey
-          </H2>
-          <p className="mt-2 text-body-sm max-w-sm mx-auto text-fg-muted">
-            Sign in to see your streaks, XP, weekly charts, word recognition accuracy, and personalized insights.
+        <div className="flex max-w-md flex-col gap-2">
+          <h2 id="guest-banner-title" className="font-label text-h4 font-semibold text-fg text-balance">
+            Inicia sesión para ver tu seguimiento
+          </h2>
+          <p className="font-body-sm text-pretty text-fg-muted">
+            Rachas, precisión semanal y el perfil de habilidades aparecen cuando hay una
+            cuenta o una sesión de práctica guardada.
           </p>
         </div>
-        <Button
-          variant="primary"
-          icon={<LogIn size={16} />}
-          onClick={() => router.push("/auth/login")}
-          className="font-bold px-6 py-3"
+        <Link
+          href="/login?intent=save"
+          className="focus-ring inline-flex min-h-11 items-center justify-center gap-1.5 rounded-md bg-primary px-4 font-label text-on-primary transition-colors hover:bg-primary-hover"
         >
-          Sign in to get started
-        </Button>
-      </div>
-
-      {/* Preview tiles — blurred placeholders */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5 opacity-40 pointer-events-none select-none blur-[2px]">
-        {["Consistency Score", "Current Streak", "Weekly Accuracy", "XP This Week", "Total Words"].map((label) => (
-          <div
-            key={label}
-            className="flex flex-col gap-2 rounded-3xl p-4 bg-surface-raised border border-border-subtle"
-          >
-            <div className="h-9 w-9 rounded-xl bg-border-subtle" />
-            <div className="space-y-1">
-              <p className="font-kicker text-fg-muted">{label}</p>
-              <p className="text-h3 font-black text-fg">—</p>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div
-        className="rounded-3xl layout-card-pad layout-stack-tight flex flex-col items-center text-center opacity-40 pointer-events-none select-none blur-[2px] bg-surface-raised border border-border-subtle h-[200px]"
-      >
-        <p className="text-base font-bold text-fg">Weekly progress chart</p>
-      </div>
+          <LogIn size={16} aria-hidden />
+          Iniciar sesión
+        </Link>
+      </section>
     </div>
   );
 }
-

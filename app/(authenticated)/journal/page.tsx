@@ -8,7 +8,8 @@ import { redirect } from 'next/navigation'
 
 export default async function JournalPage() {
   const userId = await getSupabaseServerUserId()
-  if (!userId) redirect('/login')
+  // Guest bootstrap may still be establishing the session; avoid a hard login wall.
+  if (!userId) redirect('/login?intent=explore')
 
   const entryDate = getTodayLocalDateKey()
   const prompt = journalPromptForDate(entryDate)

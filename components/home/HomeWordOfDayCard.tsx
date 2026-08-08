@@ -13,6 +13,7 @@ import Button from "@/components/ui/Button";
 import { SyllableWord } from "@/components/ui/SyllableWord";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useWordOfDay } from "@/hooks/useWordOfDay";
+import { isAnonymousUser } from "@/lib/auth/is-anonymous";
 import { readStoredCefrLevel } from "@/lib/essential-words/target-level";
 import { readGuestStudyLevel } from "@/lib/preferences/guest-study-level";
 import { formatIpaDisplay } from "@/lib/lexicon/format-ipa";
@@ -36,8 +37,10 @@ export default function HomeWordOfDayCard() {
 
   useEffect(() => {
     let cancelled = false;
-    const isGuest = !user || (user as { is_anonymous?: boolean }).is_anonymous;
-    const storedLevel = isGuest ? Promise.resolve(readGuestStudyLevel()) : readStoredCefrLevel(user.id);
+    const isGuest = isAnonymousUser(user);
+    const storedLevel = isGuest
+      ? Promise.resolve(readGuestStudyLevel())
+      : readStoredCefrLevel(user!.id);
     void storedLevel.then((l) => {
       if (!cancelled && l) setLevel(l.toLowerCase());
     });

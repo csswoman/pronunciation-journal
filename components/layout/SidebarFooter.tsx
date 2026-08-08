@@ -19,6 +19,7 @@ import { createPortal } from "react-dom";
 import { cn } from "@/lib/cn";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useUserPreferences } from "@/hooks/useUserPreferences";
+import { isAnonymousUser } from "@/lib/auth/is-anonymous";
 import { type CefrLevel } from "@/lib/essential-words/types";
 import { readGuestStudyLevel, saveGuestStudyLevel } from "@/lib/preferences/guest-study-level";
 import { LogIn, LogOut, Settings2 } from "@/components/icons";
@@ -38,10 +39,10 @@ export default function SidebarFooter() {
   const [guestLevel, setGuestLevel] = useState<CefrLevel>("A1");
   const footerRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
-  const isGuest = !user || (user as { is_anonymous?: boolean }).is_anonymous;
+  const isGuest = isAnonymousUser(user);
   const level = isGuest ? guestLevel : preferences?.cefr_level ?? "A1";
   const displayName = isGuest
-    ? "Ajustes rápidos"
+    ? "Explorando sin cuenta"
     : preferences?.full_name || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Mi perfil";
   const avatarUrl = user?.user_metadata?.avatar_url as string | undefined;
   const initials = isGuest
@@ -127,7 +128,9 @@ export default function SidebarFooter() {
               <div>
                 <p className="font-label text-fg">Ajustes rápidos</p>
                 <p className="font-caption text-fg-muted">
-                  {isGuest ? "Se guardan en este dispositivo" : "Se guardan en tu perfil"}
+                  {isGuest
+                    ? "Para no perder tu progreso, crea una cuenta"
+                    : "Se guardan en tu perfil"}
                 </p>
               </div>
               {!isGuest && (
@@ -149,14 +152,40 @@ export default function SidebarFooter() {
             <StudyLevelControls level={level} onChange={(next) => void setLevel(next)} />
 
             <div className="border-t border-border-subtle pt-2">
-              <button
-                type="button"
-                onClick={isGuest ? () => router.push("/login") : signOut}
-                className="focus-ring flex min-h-10 w-full items-center gap-2 rounded-sm px-2 text-left font-label text-fg-muted hover:bg-surface-sunken hover:text-fg"
-              >
-                {isGuest ? <LogIn size={16} aria-hidden /> : <LogOut size={16} aria-hidden />}
-                {isGuest ? "Iniciar sesión" : "Cerrar sesión"}
-              </button>
+              {isGuest ? (
+                <div className="flex flex-col gap-1">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOpen(false);
+                      router.push("/login?intent=save&mode=register");
+                    }}
+                    className="focus-ring flex min-h-10 w-full items-center gap-2 rounded-sm px-2 text-left font-label text-primary hover:bg-primary-soft"
+                  >
+                    <LogIn size={16} aria-hidden />
+                    Guardar progreso
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOpen(false);
+                      router.push("/login?intent=save");
+                    }}
+                    className="focus-ring flex min-h-10 w-full items-center gap-2 rounded-sm px-2 text-left font-label text-fg-muted hover:bg-surface-sunken hover:text-fg"
+                  >
+                    Iniciar sesión
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={signOut}
+                  className="focus-ring flex min-h-10 w-full items-center gap-2 rounded-sm px-2 text-left font-label text-fg-muted hover:bg-surface-sunken hover:text-fg"
+                >
+                  <LogOut size={16} aria-hidden />
+                  Cerrar sesión
+                </button>
+              )}
             </div>
           </div>,
           document.body,

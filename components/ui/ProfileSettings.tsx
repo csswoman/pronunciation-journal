@@ -22,6 +22,7 @@ import ProfileAvatarCard from "@/components/profile/ProfileAvatarCard";
 import ProfileNameCard from "@/components/profile/ProfileNameCard";
 import ProfilePasswordCard from "@/components/profile/ProfilePasswordCard";
 import ProfilePreferencesPanel from "@/components/profile/ProfilePreferencesPanel";
+import { isAnonymousUser } from "@/lib/auth/is-anonymous";
 import { readGuestStudyLevel, saveGuestStudyLevel } from "@/lib/preferences/guest-study-level";
 import type { CefrLevel } from "@/lib/essential-words/types";
 import { cn } from "@/lib/cn";
@@ -54,7 +55,7 @@ export default function ProfileSettings() {
     updateInterests,
   } = useUserPreferences();
 
-  const isGuest = !user || (user as { is_anonymous?: boolean }).is_anonymous;
+  const isGuest = isAnonymousUser(user);
   const [guestLevel, setGuestLevel] = useState<CefrLevel>("A1");
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
 
@@ -127,23 +128,23 @@ export default function ProfileSettings() {
 
           <div className="flex flex-col gap-3 rounded-xl border border-border-subtle bg-surface-raised px-5 py-5 sm:flex-row sm:items-center sm:justify-between">
             <div className="layout-stack-tight min-w-0">
-              <p className="font-label text-fg m-0">Aún no has iniciado sesión</p>
+              <p className="font-label text-fg m-0">Estás explorando sin cuenta</p>
               <p className="font-caption text-fg-muted m-0">
-                Puedes ajustar tema, sonidos y nivel aquí. Inicia sesión para guardar tu perfil.
+                Puedes ajustar tema, sonidos y nivel. Crea una cuenta para conservar el progreso.
               </p>
             </div>
             <Link
-              href="/login"
+              href="/login?intent=save&mode=register"
               className="focus-ring btn-primary inline-flex shrink-0 items-center justify-center rounded-md px-5 py-2.5 font-label"
             >
-              Iniciar sesión
+              Guardar progreso
             </Link>
           </div>
 
           <ProfilePreferencesPanel
             level={level}
             onLevelChange={(next) => void handleLevelChange(next)}
-            hint="Se guardan en este dispositivo hasta que inicies sesión."
+            hint="Tema y nivel locales. Crea una cuenta para no perder el progreso de práctica."
           />
         </div>
       </PageLayout>
