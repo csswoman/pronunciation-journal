@@ -28,6 +28,11 @@ describe('coreWordToWordBankEntry', () => {
     expect(entry.ipa).toBe('bɪld')
   })
 
+  it('preserves the authored meaning for vocabulary exercises', () => {
+    const entry = coreWordToWordBankEntry(makeWord({ meaning: 'to construct something' }))
+    expect(entry.meaning).toBe('to construct something')
+  })
+
   it('maps A1 cefr_level to difficulty 1', () => {
     expect(coreWordToWordBankEntry(makeWord({ cefr_level: 'A1' })).difficulty).toBe(1)
   })

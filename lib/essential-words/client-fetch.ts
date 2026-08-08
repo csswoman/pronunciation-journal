@@ -13,8 +13,10 @@ export function coreWordToWordBankEntry(w: EssentialWord): WordBankEntry {
     id: `core1k:${w.word.toLowerCase()}`,
     user_id: '',
     text: w.word,
-    meaning: null,
-    translation: null,
+    // The authored Core dataset owns these fields. Preserve them when the
+    // entry is adapted for generic practice modes such as match_pairs.
+    meaning: w.meaning ?? null,
+    translation: w.translation ?? null,
     example: w.example_sentence,
     ipa: w.ipa_strong,
     difficulty: cefrToDifficulty(w.cefr_level),

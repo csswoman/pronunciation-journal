@@ -52,11 +52,12 @@ export type ReviewPlan = {
 export async function buildReviewPlan(userId: string): Promise<ReviewPlan> {
   const reviewContext = 'review' as const
 
-  const [failedItems, weakWords, reviewWords, dueSounds] = await Promise.all([
+  const [failedItems, weakWords, reviewWords, dueSounds, essentialMatchWords] = await Promise.all([
     fetchRecentFailedSentences(userId, 5),
     fetchWeakWords(userId, WORD_REVIEW_WORD_COUNT),
     fetchDueReviewWords(userId, WORD_REVIEW_WORD_COUNT),
     fetchDueSounds(userId),
+    fetchEssentialWordsForDay(dayOfYear(), 4),
   ])
 
   const mergedWords = mergeReviewWords(weakWords, reviewWords, WORD_REVIEW_WORD_COUNT)
@@ -90,6 +91,7 @@ export async function buildReviewPlan(userId: string): Promise<ReviewPlan> {
       minimalPairs,
       true,
       reviewContext,
+      essentialMatchWords,
     )
     if (focus) steps.push({ ...focus, id: `review_sound:${targetSound.id}`, kind: 'phoneme_focus' })
   }
@@ -123,6 +125,9 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
   if (reviewWords.length === 0) {
     reviewWords = await fetchEssentialWordsForDay(dayOfYear(), WORD_REVIEW_WORD_COUNT)
   }
+  const essentialMatchWords = hasWordBank
+    ? await fetchEssentialWordsForDay(dayOfYear(), 4)
+    : reviewWords.slice(0, 4)
 
   const readCompletedLessons = async () => {
     const store = db.completedLessons as typeof db.completedLessons & {
@@ -176,6 +181,8 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
       wordsBySoundId,
       minimalPairs,
       hasProgress,
+      'daily',
+      essentialMatchWords,
     )
     if (focus) newSteps.push(focus)
 
@@ -287,6 +294,8 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
         wordsBySoundId,
         minimalPairs,
         false,
+        'daily',
+        essentialMatchWords,
       )
       if (focus && !usedIds.has(focus.id)) {
         steps.push(focus)
