@@ -120,6 +120,15 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
     setView({ mode: 'checklist' })
   }, [router])
 
+  const recommendation = useMemo(() => {
+    if (status !== 'ready' || !plan?.arc) return null
+    return resolveRecommendedMode({
+      fromDaily: true,
+      arc: plan.arc,
+      lastModeId: null,
+    })
+  }, [status, plan?.arc])
+
   // ── Render: sesión de un paso ──────────────────────────────────────────────
   if (view.mode === 'step') {
     const { step, exerciseIndex } = view
@@ -148,15 +157,6 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
       />
     )
   }
-
-  const recommendation = useMemo(() => {
-    if (status !== 'ready' || !plan?.arc) return null
-    return resolveRecommendedMode({
-      fromDaily: true,
-      arc: plan.arc,
-      lastModeId: null,
-    })
-  }, [status, plan?.arc])
 
   // ── Render: checklist ──────────────────────────────────────────────────────
   return (

@@ -44,15 +44,15 @@ vi.mock('@/lib/review/client-queries', () => ({
   fetchDueTomorrowCount: vi.fn().mockResolvedValue(0),
 }))
 
-vi.mock('./DailyStepSession', () => ({
+vi.mock('../DailyStepSession', () => ({
   default: () => <div>Step session</div>,
 }))
 
-vi.mock('./SessionRecapCard', () => ({
+vi.mock('../SessionRecapCard', () => ({
   default: () => <div>Recap</div>,
 }))
 
-vi.mock('./SessionOpeningBanner', () => ({
+vi.mock('../SessionOpeningBanner', () => ({
   default: () => <div>Opening banner</div>,
 }))
 
@@ -113,5 +113,14 @@ describe('DailyChecklist (checklist surface)', () => {
     render(<DailyChecklist conceptLesson={null} />)
     expect(screen.queryByText(/Keep going with/)).not.toBeInTheDocument()
     expect(screen.getByText(/Want free practice/)).toBeInTheDocument()
+  })
+
+  it('enters DailyStepSession when starting the entry step', async () => {
+    const { default: userEvent } = await import('@testing-library/user-event')
+    const user = userEvent.setup()
+    render(<DailyChecklist conceptLesson={null} />)
+    expect(screen.queryByText('Step session')).not.toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /Empieza aquí/i }))
+    expect(screen.getByText('Step session')).toBeInTheDocument()
   })
 })
