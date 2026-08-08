@@ -1785,6 +1785,18 @@ skill-model-rollout.test.ts
 Observar mínimo 14 días y 100 sesiones por cohorte: outbox failed, discrepancias,
 duplicados, reconstrucción, backlog y retención. off no borra datos ni reprograma.
 
+#### Adaptación explícita para rollout personal
+
+El gate original está diseñado para rollout multiusuario. Este proyecto utiliza un gate
+personal intencionalmente más ligero. No se elimina ni se considera cumplido el criterio
+original de 14 días, 100 sesiones, 50 scheduled reviews y observación por cohorte: para
+este despliegue personal se sustituye por `personal-rollout-v1`.
+
+`personal-rollout-v1` requiere al menos 10 sesiones shadow reales, cero errores skill,
+cero double-write, cero escrituras skill huérfanas, rollback verificado y sanity checks
+sin anomalías críticas. Las diferencias normales entre legacy y skill se reportan como
+warnings; el gate no activa `on` automáticamente.
+
 ### Task 9.4: Gate de promoción
 
 No iniciar Fase 10 hasta simulación verde, discrepancias explicadas, cero double-write

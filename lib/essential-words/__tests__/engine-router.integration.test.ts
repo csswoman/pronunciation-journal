@@ -146,4 +146,26 @@ describe("engine router sin double-write", () => {
       expect(state.legacy > 0 && state.attempts > 0).toBe(false);
     }
   });
+
+  it("rollback shadow → on → off conserva datos y recupera el camino legacy", async () => {
+    const routed = (mode: SkillEngineMode) => createEssentialWordsEngineRouter({
+      userId: USER,
+      rollout: { mode, cohortPercent: 100, cohortSalt: "rollback", internalUsers: [] },
+      ...engines(),
+      shadow,
+    });
+
+    await routed("shadow").recordAttempt("shadow-attempt");
+    expect(await counts()).toEqual({ legacy: 1, items: 0, attempts: 0, events: 0, outbox: 0 });
+
+    await routed("on").recordAttempt("on-attempt");
+    const afterOn = await counts();
+    expect(afterOn).toEqual({ legacy: 1, items: 1, attempts: 1, events: 1, outbox: 3 });
+
+    const off = routed("off");
+    expect(await off.buildSession("after-rollback")).toBe("legacy-session");
+    await off.recordAttempt("off-attempt");
+    expect(await counts()).toEqual(afterOn);
+    expect(await db.learningItems.get(meaning.id)).toBeDefined();
+  });
 });
