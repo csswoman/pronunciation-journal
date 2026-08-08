@@ -157,19 +157,30 @@ export async function buildCapabilitySnapshot(
   const micPermission = micPermissionOverride ?? await queryMicPermission()
   const online = isBrowserOnline()
 
+  // Brave/Edge/etc. expose SpeechRecognition but lack Google's speech key.
+  // Treat them as unsupported for production scoring so preflight is honest.
+  const { isWebSpeechReliable } = await import(
+    "@/lib/speech/adapters/webSpeechAdapter"
+  )
+  const speechUsable = hasSpeechRecognition && isWebSpeechReliable()
+
   return {
     micPermission,
     sttAvailable: deriveSttAvailable(
-      hasSpeechRecognition,
+      speechUsable,
       micPermission,
       online,
       hasMicrophoneCapture
     ),
-    browserSupport: deriveBrowserSupport(
-      hasSpeechRecognition,
-      micPermission,
-      hasMicrophoneCapture
-    ),
+    browserSupport: speechUsable
+      ? deriveBrowserSupport(
+          hasSpeechRecognition,
+          micPermission,
+          hasMicrophoneCapture
+        )
+      : hasSpeechRecognition
+        ? "partial"
+        : "unsupported",
     capturedAt: new Date().toISOString(),
   }
 }

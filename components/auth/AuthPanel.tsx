@@ -12,6 +12,7 @@ import { RegisterForm } from "@/components/auth/RegisterForm";
 import { ResetForm } from "@/components/auth/ResetForm";
 import { RecoveryForm } from "@/components/auth/RecoveryForm";
 import { SocialDivider } from "@/components/auth/SocialDivider";
+import ChromeMicTip from "@/components/speech/ChromeMicTip";
 import { useAuthPanelController } from "@/components/auth/useAuthPanelController";
 
 export default function AuthPanel() {
@@ -64,6 +65,7 @@ export default function AuthPanel() {
                       : "Crea una cuenta o inicia sesión para no perder lo que practiques."
                     : "Entra al escritorio, prueba una sesión y crea una cuenta solo cuando quieras guardar."}
                 </p>
+                <ChromeMicTip variant="login" className="mt-1" />
               </div>
             ) : null}
 
