@@ -1,16 +1,17 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Sparkles } from "@/components/icons"
+import { Sparkles } from '@/components/icons'
 import PageLayout from '@/components/layout/PageLayout'
 import PageHeader from '@/components/layout/PageHeader'
+import RecommendedPracticeCard from '@/components/practice/hub/RecommendedPracticeCard'
+import { resolveRecommendedMode } from '@/lib/practice/practice-modes'
 import DailyStepSession from './DailyStepSession'
 import SessionOpeningBanner from './SessionOpeningBanner'
 import SessionRecapCard from './SessionRecapCard'
-import Button from '@/components/ui/Button'
-import DailyStepList from './DailyStepList'
+import DailyPlanCard from './DailyPlanCard'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { useDailyPlan, type ConceptLesson, type DailyStep } from '@/hooks/useDailyPlan'
 import { fetchDueTomorrowCount } from '@/lib/review/client-queries'
@@ -119,28 +120,6 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
     setView({ mode: 'checklist' })
   }, [router])
 
-  // ── Render: estados de carga / error ──────────────────────────────────────
-  if (status === 'loading' || status === 'idle') {
-    return (
-      <div className="phoneme-focus fixed inset-0 z-40 flex items-center justify-center">
-        <div className="animate-pulse text-fg-subtle">Preparing your plan…</div>
-      </div>
-    )
-  }
-
-  if (status === 'error') {
-    return (
-      <div className="phoneme-focus fixed inset-0 z-40 flex items-center justify-center p-[var(--layout-card-pad)]">
-        <div className="space-y-3 text-center">
-          <p className="text-error">Couldn't prepare your plan. Please try again.</p>
-          <Button type="button" variant="primary" size="sm" onClick={load}>
-            Retry
-          </Button>
-        </div>
-      </div>
-    )
-  }
-
   // ── Render: sesión de un paso ──────────────────────────────────────────────
   if (view.mode === 'step') {
     const { step, exerciseIndex } = view
@@ -170,6 +149,15 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
     )
   }
 
+  const recommendation = useMemo(() => {
+    if (status !== 'ready' || !plan?.arc) return null
+    return resolveRecommendedMode({
+      fromDaily: true,
+      arc: plan.arc,
+      lastModeId: null,
+    })
+  }, [status, plan?.arc])
+
   // ── Render: checklist ──────────────────────────────────────────────────────
   return (
     <PageLayout archetype="session">
@@ -177,17 +165,32 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
         variant="compact"
         kicker="Hoy"
         title="Plan diario"
-        subtitle={`${completedCount} de ${steps.length} pasos · completa los ${steps.length} para mantener tu racha.`}
-        progress={steps.length ? Math.round((completedCount / steps.length) * 100) : 0}
+        subtitle={
+          status === 'ready' && steps.length > 0
+            ? `${completedCount} de ${steps.length} pasos · completa los ${steps.length} para mantener tu racha.`
+            : 'Preparando tu plan…'
+        }
+        progress={status === 'ready' && steps.length ? Math.round((completedCount / steps.length) * 100) : 0}
       />
 
-      <SessionOpeningBanner arc={plan?.arc} />
+      {status === 'ready' ? <SessionOpeningBanner arc={plan?.arc} /> : null}
 
-      <DailyStepList
+      <DailyPlanCard
+        status={status}
         steps={steps}
         getStepStatus={getStepStatus}
+        completedCount={completedCount}
+        allDone={allDone}
         onStartStep={handleStartStep}
+        onRetry={() => void load()}
+        collapseFutureSteps
       />
+
+      {recommendation ? (
+        <div className="mt-6">
+          <RecommendedPracticeCard recommendation={recommendation} />
+        </div>
+      ) : null}
 
       <div className="mt-8 flex flex-col items-center gap-2 text-center">
         <Link href="/practice/sounds" className="inline-flex items-center gap-1.5 text-caption text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]">
