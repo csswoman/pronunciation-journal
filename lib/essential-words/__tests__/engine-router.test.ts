@@ -9,6 +9,7 @@ import {
   createEssentialWordsEngineRouter,
   type EssentialWordsEngine,
 } from "../engine-router";
+import type { ShadowRunnerOptions } from "../shadow-runner";
 
 type Plan = { source: "legacy" | "skill"; items: string[] };
 type Progress = { source: "legacy" | "skill"; completed: number };
@@ -33,22 +34,41 @@ function engine(source: "legacy" | "skill"): Engine {
   };
 }
 
+const shadowOptions = (
+  record = vi.fn(),
+): ShadowRunnerOptions<Plan, Plan> => ({
+  summarizeLegacy: (session) => ({
+    queueSize: session.items.length,
+    estimatedSeconds: 10,
+    dueCount: 1,
+  }),
+  summarizeSkill: (session) => ({
+    queueSize: session.items.length,
+    estimatedSeconds: 12,
+    dueCount: 1,
+    mandatorySelected: 1,
+    deferredMandatory: 0,
+    baseSkillActivations: 0,
+    usageActivations: 0,
+    mode: "normal",
+  }),
+  sink: { record },
+});
+
 function router(mode: SkillEngineMode) {
   const legacyEngine = engine("legacy");
   const skillEngine = engine("skill");
-  const compareSession = vi.fn();
-  const compareProgress = vi.fn();
+  const recordComparison = vi.fn();
   return {
     legacyEngine,
     skillEngine,
-    compareSession,
-    compareProgress,
+    recordComparison,
     router: createEssentialWordsEngineRouter({
       userId: "user-1",
       rollout: rollout(mode),
       legacyEngine,
       skillEngine,
-      shadowComparator: { compareSession, compareProgress },
+      shadow: shadowOptions(recordComparison),
     }),
   };
 }
@@ -112,11 +132,10 @@ describe("createEssentialWordsEngineRouter", () => {
     expect(await fixture.router.getProgress("progress")).toMatchObject({ source: "legacy" });
     expect(fixture.skillEngine.buildSession).toHaveBeenCalledOnce();
     expect(fixture.skillEngine.getProgress).toHaveBeenCalledOnce();
-    expect(fixture.compareSession).toHaveBeenCalledWith(
-      expect.objectContaining({ source: "legacy" }),
-      expect.objectContaining({ source: "skill" }),
-    );
-    expect(fixture.compareProgress).toHaveBeenCalledOnce();
+    expect(fixture.recordComparison).toHaveBeenCalledWith(expect.objectContaining({
+      legacy: expect.objectContaining({ queueSize: 1 }),
+      skill: expect.objectContaining({ queueSize: 1 }),
+    }));
   });
 
   it("shadow nunca llama la persistencia del skill engine", async () => {
@@ -158,9 +177,11 @@ describe("createEssentialWordsEngineRouter", () => {
     const skillEngine = engine("skill");
     const active = createEssentialWordsEngineRouter({
       userId: "user-1", rollout: rollout("on"), legacyEngine, skillEngine,
+      shadow: shadowOptions(),
     });
     const rolledBack = createEssentialWordsEngineRouter({
       userId: "user-1", rollout: rollout("off"), legacyEngine, skillEngine,
+      shadow: shadowOptions(),
     });
     await active.recordAttempt("on-attempt");
     await rolledBack.recordAttempt("off-attempt");

@@ -3,6 +3,10 @@ import {
   type SkillEngineMode,
   type SkillEngineRolloutConfig,
 } from "../feature-flags";
+import {
+  runShadowComparison,
+  type ShadowRunnerOptions,
+} from "./shadow-runner";
 
 export interface EssentialWordsEngine<
   BuildInput,
@@ -32,12 +36,6 @@ export interface EssentialWordsEngineRouter<
   readonly mode: SkillEngineMode;
 }
 
-export interface ShadowComparator<SessionPlan, ProgressSnapshot> {
-  compareSession?(legacy: SessionPlan, skill: SessionPlan): void | Promise<void>;
-  compareProgress?(legacy: ProgressSnapshot, skill: ProgressSnapshot): void | Promise<void>;
-  onError?(operation: "buildSession" | "getProgress", error: unknown): void | Promise<void>;
-}
-
 interface RouterDependencies<
   BuildInput,
   SessionPlan,
@@ -61,23 +59,14 @@ interface RouterDependencies<
     ProgressInput,
     ProgressSnapshot
   >;
-  shadowComparator?: ShadowComparator<SessionPlan, ProgressSnapshot>;
+  shadow: ShadowRunnerOptions<SessionPlan, SessionPlan>;
 }
 
-async function observeShadow<T>(
-  operation: "buildSession" | "getProgress",
-  calculate: () => Promise<T>,
-  compare: (skill: T) => void | Promise<void>,
-  comparator?: Pick<ShadowComparator<never, never>, "onError">,
-): Promise<void> {
+async function observeReadonlyShadow<T>(calculate: () => Promise<T>): Promise<void> {
   try {
-    await compare(await calculate());
-  } catch (error) {
-    try {
-      await comparator?.onError?.(operation, error);
-    } catch {
-      // Shadow observability must never change the legacy experience.
-    }
+    await calculate();
+  } catch {
+    // Shadow reads must never change the legacy experience.
   }
 }
 
@@ -101,23 +90,23 @@ export function createEssentialWordsEngineRouter<
   ProgressInput,
   ProgressSnapshot
 > {
-  const { legacyEngine, skillEngine, shadowComparator } = dependencies;
+  const { legacyEngine, skillEngine } = dependencies;
   const mode = resolveSkillEngineMode(dependencies.userId, dependencies.rollout);
 
   return {
     mode,
     async buildSession(input) {
       if (mode === "on") return skillEngine.buildSession(input);
-      const legacy = await legacyEngine.buildSession(input);
       if (mode === "shadow") {
-        await observeShadow(
-          "buildSession",
-          () => skillEngine.buildSession(input),
-          (skill) => shadowComparator?.compareSession?.(legacy, skill),
-          shadowComparator,
+        const result = await runShadowComparison(
+          input,
+          { buildSession: (value) => legacyEngine.buildSession(value) },
+          { buildSession: (value) => skillEngine.buildSession(value) },
+          dependencies.shadow,
         );
+        return result.session;
       }
-      return legacy;
+      return legacyEngine.buildSession(input);
     },
     async recordAttempt(input) {
       if (mode === "on") return skillEngine.recordAttempt(input);
@@ -127,12 +116,7 @@ export function createEssentialWordsEngineRouter<
       if (mode === "on") return skillEngine.getProgress(input);
       const legacy = await legacyEngine.getProgress(input);
       if (mode === "shadow") {
-        await observeShadow(
-          "getProgress",
-          () => skillEngine.getProgress(input),
-          (skill) => shadowComparator?.compareProgress?.(legacy, skill),
-          shadowComparator,
-        );
+        await observeReadonlyShadow(() => skillEngine.getProgress(input));
       }
       return legacy;
     },

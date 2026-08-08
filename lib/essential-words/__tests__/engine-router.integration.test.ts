@@ -72,6 +72,20 @@ const engines = (): { legacyEngine: Engine; skillEngine: Engine } => ({
   },
 });
 
+const shadow = {
+  summarizeLegacy: () => ({ queueSize: 1, estimatedSeconds: 10, dueCount: 1 }),
+  summarizeSkill: () => ({
+    queueSize: 1,
+    estimatedSeconds: 12,
+    dueCount: 1,
+    mandatorySelected: 1,
+    deferredMandatory: 0,
+    baseSkillActivations: 0,
+    usageActivations: 0,
+    mode: "normal" as const,
+  }),
+};
+
 const counts = async () => ({
   legacy: await db.srsData.where("wordId").startsWith("c1k:").count(),
   items: await db.learningItems.count(),
@@ -96,6 +110,7 @@ describe("engine router sin double-write", () => {
         userId: USER,
         rollout: { mode, cohortPercent: 100, cohortSalt: "integration", internalUsers: [] },
         ...engines(),
+        shadow,
       });
       expect(await router.buildSession("build")).toBe("legacy-session");
       await router.recordAttempt("attempt");
@@ -108,6 +123,7 @@ describe("engine router sin double-write", () => {
       userId: USER,
       rollout: { mode: "on", cohortPercent: 100, cohortSalt: "integration", internalUsers: [] },
       ...engines(),
+      shadow,
     });
     expect(await router.buildSession("build")).toBe("skill-session");
     await router.recordAttempt("attempt");
@@ -123,6 +139,7 @@ describe("engine router sin double-write", () => {
         userId: USER,
         rollout: { mode, cohortPercent: 100, cohortSalt: "integration", internalUsers: [] },
         ...engines(),
+        shadow,
       });
       await router.recordAttempt("attempt");
       const state = await counts();
