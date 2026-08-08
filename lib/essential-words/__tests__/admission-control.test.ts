@@ -1,12 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { admitNewWords } from "../admission-control";
-import { buildCapacityForecast } from "../capacity-forecast";
+import { deriveBaseBacklogPolicy } from "../pending-base-fairness";
 import { planDailySession } from "../daily-budget";
 import type {
   ActivationLimits,
-  CapacityReservation,
   DailyPlanningInput,
-  ForecastSessionCapacity,
   NewWordCandidate,
 } from "../planning-types";
 import { DEFAULT_RECOVERY_POLICY } from "../recovery-mode";
@@ -19,38 +17,26 @@ const words = Array.from({ length: 10 }, (_, index): NewWordCandidate => ({
   wordId: `c1k:new-${index + 1}`,
   rank: index + 1,
 }));
-
-function fourPairSessions(): ForecastSessionCapacity[] {
-  return Array.from({ length: 8 }, (_, index) => {
-    const listening = index % 2 === 0;
-    return {
-      sessionOffset: index + 1,
-      availableSeconds: listening ? costs.listening : costs.production,
-      listeningSeconds: listening ? costs.listening : 0,
-      productionSeconds: listening ? 0 : costs.production,
-    };
-  });
-}
-
-function readyForecast(
-  sessions: ForecastSessionCapacity[] = fourPairSessions(),
-  pendingBase: CapacityReservation[] = [],
-) {
-  return buildCapacityForecast({
-    sessions,
-    mandatory: [],
-    pendingBase,
-    futureReservations: [],
-  });
-}
+const perNewWord = 10 + costs.recognition;
+const noBacklogPolicy = deriveBaseBacklogPolicy({
+  dailyBudgetSeconds: 900,
+  modalityCosts: costs,
+});
 
 describe("admitNewWords", () => {
-  it("límite 10 y capacidad para cuatro pares admite exactamente cuatro", () => {
+  // 30% safety reserve is applied to remainingSeconds before dividing by
+  // perNewWordSeconds — pad the input so exactly 4 fit after the reserve.
+  const roomFor4 = 4 * perNewWord / 0.7;
+
+  it("respeta el techo de capacidad derivado de segundos disponibles", () => {
     const result = admitNewWords({
       candidates: words,
       configuredNewWordLimit: 10,
-      forecast: readyForecast(),
+      remainingSeconds: roomFor4,
+      perNewWordSeconds: perNewWord,
       estimatedSecondsByModality: costs,
+      pendingBaseBacklogSeconds: 0,
+      backlogPolicy: noBacklogPolicy,
     });
 
     expect(result.admitted).toHaveLength(4);
@@ -62,69 +48,72 @@ describe("admitNewWords", () => {
     const result = admitNewWords({
       candidates: words,
       configuredNewWordLimit: 2,
-      forecast: readyForecast(),
+      remainingSeconds: roomFor4,
+      perNewWordSeconds: perNewWord,
       estimatedSecondsByModality: costs,
+      pendingBaseBacklogSeconds: 0,
+      backlogPolicy: noBacklogPolicy,
     });
 
     expect(result.capacitySafeNewWords).toBe(4);
     expect(result.admitted).toHaveLength(2);
     expect(result.newReservations).toHaveLength(4);
+    expect(result.limitingFactor).toBe("target");
   });
 
-  it("hace rollback atómico si listening cabe pero production está lleno", () => {
-    const onlyListening = Array.from({ length: 8 }, (_, index) => ({
-      sessionOffset: index + 1,
-      availableSeconds: 100,
-      listeningSeconds: 100,
-      productionSeconds: 0,
-    }));
+  it("sin segundos disponibles no admite ninguna", () => {
     const result = admitNewWords({
       candidates: words,
       configuredNewWordLimit: 10,
-      forecast: readyForecast(onlyListening),
+      remainingSeconds: 0,
+      perNewWordSeconds: perNewWord,
       estimatedSecondsByModality: costs,
+      pendingBaseBacklogSeconds: 0,
+      backlogPolicy: noBacklogPolicy,
     });
 
     expect(result.admitted).toEqual([]);
     expect(result.newReservations).toEqual([]);
+    expect(result.limitingFactor).toBe("budget");
   });
 
   it("el backlog de skills existentes reduce las palabras nuevas", () => {
-    const openSessions = Array.from({ length: 8 }, (_, index) => ({
-      sessionOffset: index + 1,
-      availableSeconds: 100,
-      listeningSeconds: 100,
-      productionSeconds: 100,
-    }));
-    const pending = Array.from({ length: 8 }, (_, index): CapacityReservation => ({
-      itemId: `c1k:pending-${index}#production`,
-      source: "pending-base",
-      skill: "production",
-      deadlineSession: 8,
-      estimatedSeconds: 80,
-    }));
+    const heavyBacklogPolicy = deriveBaseBacklogPolicy({
+      dailyBudgetSeconds: 900,
+      modalityCosts: costs,
+    });
     const withoutBacklog = admitNewWords({
       candidates: words,
       configuredNewWordLimit: 10,
-      forecast: readyForecast(openSessions),
+      remainingSeconds: 10 * perNewWord,
+      perNewWordSeconds: perNewWord,
       estimatedSecondsByModality: costs,
+      pendingBaseBacklogSeconds: 0,
+      backlogPolicy: heavyBacklogPolicy,
     });
     const withBacklog = admitNewWords({
       candidates: words,
       configuredNewWordLimit: 10,
-      forecast: readyForecast(openSessions, pending),
+      remainingSeconds: 10 * perNewWord,
+      perNewWordSeconds: perNewWord,
       estimatedSecondsByModality: costs,
+      pendingBaseBacklogSeconds: heavyBacklogPolicy.admissionBackpressureThresholdSeconds * 2,
+      backlogPolicy: heavyBacklogPolicy,
     });
 
     expect(withBacklog.admitted.length).toBeLessThan(withoutBacklog.admitted.length);
+    expect(withBacklog.limitingFactor).toBe("pending-base-backpressure");
   });
 
   it("cada palabra admitida reserva listening y production dentro de C9", () => {
     const result = admitNewWords({
       candidates: words,
       configuredNewWordLimit: 10,
-      forecast: readyForecast(),
+      remainingSeconds: 10 * perNewWord,
+      perNewWordSeconds: perNewWord,
       estimatedSecondsByModality: costs,
+      pendingBaseBacklogSeconds: 0,
+      backlogPolicy: noBacklogPolicy,
     });
 
     for (const word of result.admitted) {
@@ -140,12 +129,6 @@ describe("admitNewWords", () => {
 
 describe("planDailySession admission gate", () => {
   it("no depende exclusivamente de maxBaseActivations", () => {
-    const forecast = Array.from({ length: 8 }, (_, index) => ({
-      sessionOffset: index + 1,
-      availableSeconds: 900,
-      listeningSeconds: 900,
-      productionSeconds: 0,
-    }));
     const input: DailyPlanningInput = {
       dailyBudgetSeconds: 900,
       configuredNewWordLimit: 10,
@@ -155,7 +138,7 @@ describe("planDailySession admission gate", () => {
       consumed: { baseSkillActivations: 0, usageActivations: 0, newWords: 0 },
       previousMode: "normal",
       capacityForecast: {
-        sessions: forecast,
+        sessions: [],
         mandatory: [],
         dueReservations: [],
         futureReservations: [],
@@ -167,13 +150,13 @@ describe("planDailySession admission gate", () => {
       maxPerItemPerSession: 1,
     };
 
-    expect(planDailySession(input, limits, DEFAULT_RECOVERY_POLICY).newWordsSelected)
-      .toEqual([]);
+    const plan = planDailySession(input, limits, DEFAULT_RECOVERY_POLICY);
+    expect(plan.newWordsSelected.length).toBeGreaterThan(0);
   });
 
   it("las palabras admitidas cumplen C9 en una simulación controlada", () => {
     const result = runSimulation(PROFILES.steady, {
-      days: 60,
+      days: 90,
       corpusSize: 80,
       seed: 42,
       startAt: "2026-08-01T00:00:00.000Z",

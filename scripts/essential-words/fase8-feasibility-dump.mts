@@ -1,13 +1,13 @@
 /** Feasibility + arrival/service dump for Task 8.9c. */
-import { buildAdmissionLoadEnvelope } from "../../lib/essential-words/admission-envelope";
-import { isC8Applicable } from "../../lib/essential-words/criterion-applicability";
+import { buildAdmissionLoadEnvelope } from "../../lib/essential-words/simulation/admission-envelope";
+import { isC8Applicable } from "../../lib/essential-words/simulation/criterion-applicability";
 import {
   evaluateThroughputFeasibility,
-} from "../../lib/essential-words/throughput-feasibility";
+} from "../../lib/essential-words/simulation/throughput-feasibility";
 import {
   computeRequiredArrivalSecondsPerSession,
   envelopeSecondsPerNewWord,
-} from "../../lib/essential-words/throughput-rates";
+} from "../../lib/essential-words/simulation/throughput-rates";
 import { PROFILES } from "../../lib/essential-words/simulation/profiles";
 import {
   runSimulation,

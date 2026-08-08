@@ -2,7 +2,6 @@ import {
   DEFAULT_BASE_ACTIVATION_POLICY,
   selectPendingBaseWithDynamicAllowance,
 } from "./base-activation-allowance";
-import type { CapacityForecast } from "./capacity-forecast";
 import { resolveAbsoluteBaseActivationSafetyCeiling } from "./activation-limits";
 import type {
   ActivationCandidate,
@@ -10,18 +9,6 @@ import type {
   ActivationSelection,
   DailyPlanningInput,
 } from "./planning-types";
-
-export function serviceForecastFromInput(input: DailyPlanningInput): CapacityForecast {
-  return {
-    status: "ready",
-    sessions: input.capacityForecast.sessions.map((session) => ({ ...session })),
-    reservations: [
-      ...input.capacityForecast.dueReservations,
-      ...input.capacityForecast.futureReservations,
-    ],
-    unreservedItemIds: [],
-  };
-}
 
 export function selectBaseDynamically(
   input: DailyPlanningInput,
@@ -43,7 +30,6 @@ export function selectBaseDynamically(
   const result = selectPendingBaseWithDynamicAllowance({
     pendingBase: orderedBase,
     residualSecondsToday: residualSeconds,
-    futureCapacity: serviceForecastFromInput(input),
     modalityCosts: input.estimatedSeconds.byModality,
     mandatoryDueBaseCount: dueBaseCount,
     recoveryMode,

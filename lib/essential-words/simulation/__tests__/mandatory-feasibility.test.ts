@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { buildAdmissionLoadEnvelope } from "../../admission-envelope";
-import { deriveRequiredBaseActivations } from "../../base-throughput-contract";
+import { buildAdmissionLoadEnvelope } from "../admission-envelope";
+import { deriveRequiredBaseActivations } from "../base-throughput-contract";
 import { SIMULATION_COSTS, SIMULATION_NEW_WORD_INTRODUCTION_SECONDS } from "../run-simulation";
 import {
   computeMandatoryHeadroom,

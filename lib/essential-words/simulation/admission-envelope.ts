@@ -1,17 +1,22 @@
 import { FSRS_DESIRED_RETENTION } from "@/lib/srs/fsrs-schedule";
-import type { AttemptModality } from "./verification/types";
+import type { AttemptModality } from "../verification/types";
 
 /**
- * Versioned admission load envelope (Task 8.9b).
- *
- * Provenance remains "simulation-model" while empirical calibration is
- * insufficient-data — this does NOT mark Task 8.8 ready.
+ * Fase 8 final simplification (docs/superpowers/plans/notes/
+ * 2026-08-07-fase8-final-planner-simplification.md §4/C). This module used
+ * to live in `lib/essential-words/` and gate admission at runtime twice
+ * (placement + new-word) via a shared forecast reserve. The runtime gate is
+ * now a 3-line inline amortized cost inside `daily-budget.ts`
+ * (`perNewWordAmortized`) — no versioned envelope object. This module
+ * survives only as a `simulation/` telemetry helper: `day-forecast-telemetry.ts`
+ * still reports the modeled review-debt-per-session breakdown for diagnostic
+ * dashboards, which is legitimately richer than what the runtime gate needs.
  *
  * Calculation (simulation-model):
  * - immediateSeconds = newWordIntroduction + recognition (meaning intro)
  * - baseActivationSeconds = listening + production (C9 pair within 8 sessions)
  * - expectedReviewSecondsBySession: first FSRS Review after an Easy grade from
- *   New lands at interval ≈ 8 days (ts-fsrs default, desiredRetention=0.9).
+ *   New lands at interval ~8 days (ts-fsrs default, desiredRetention=0.9).
  *   On a daily active calendar that maps to sessionOffset 8. Cost = recognition
  *   (meaning). Listening/production first reviews typically fall outside the
  *   immediate 8-session horizon after activation, so they are not hard-coded

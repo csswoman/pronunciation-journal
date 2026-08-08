@@ -1,4 +1,4 @@
-import { mapDueAtToActiveSession } from "../active-session-map";
+import { mapDueAtToActiveSession } from "./active-session-map";
 import { forecastActiveSessionCapacities } from "../capacity-forecast";
 import type {
   CapacityForecastPlanningInput,

@@ -4,7 +4,7 @@ import {
   deriveRequiredBaseActivations,
   evaluateMultidimensionalFeasibility,
   projectBaseServiceCapacityPerSession,
-} from "../../base-throughput-feasibility";
+} from "../base-throughput-feasibility";
 import { DEFAULT_ACTIVATION_LIMITS } from "../../daily-budget";
 import { PROFILES } from "../profiles";
 import { runSimulation } from "../run-simulation";

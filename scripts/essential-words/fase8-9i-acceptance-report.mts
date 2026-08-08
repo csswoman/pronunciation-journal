@@ -18,7 +18,7 @@ import {
   retentionCalibrationWithinExpected,
   usageActivationShare,
 } from "../../lib/essential-words/simulation/criteria";
-import { isC8Applicable, isC9Applicable } from "../../lib/essential-words/criterion-applicability";
+import { isC8Applicable, isC9Applicable } from "../../lib/essential-words/simulation/criterion-applicability";
 import { PROFILES, type SimulationProfileId } from "../../lib/essential-words/simulation/profiles";
 import { runSimulation } from "../../lib/essential-words/simulation/run-simulation";
 import type { SimulationOptions } from "../../lib/essential-words/simulation/state";

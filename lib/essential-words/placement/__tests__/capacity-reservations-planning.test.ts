@@ -24,8 +24,6 @@ import {
   costs,
   inferred,
   NOW,
-  openSessions,
-  readyForecast,
 } from "./capacity-reservations.fixtures";
 
 describe("admitPlacementConversions — distribución y simulación", () => {
@@ -33,7 +31,7 @@ describe("admitPlacementConversions — distribución y simulación", () => {
     const result = admit({
       candidates: inferred(40),
       maxConversionsPerSession: 40,
-      forecast: readyForecast(openSessions(2_000)),
+      remainingSeconds: 2_000,
     });
     const days = new Set(result.admitted.map((item) => (
       item.schedule.kind === "provisional" ? item.schedule.dueAt.slice(0, 10) : ""
@@ -47,12 +45,12 @@ describe("admitPlacementConversions — distribución y simulación", () => {
     const first = admit({
       candidates: inferred(12),
       maxConversionsPerSession: 8,
-      forecast: readyForecast(openSessions(500)),
+      remainingSeconds: 500,
     });
     const second = admit({
       candidates: inferred(12),
       maxConversionsPerSession: 8,
-      forecast: readyForecast(openSessions(500)),
+      remainingSeconds: 500,
     });
 
     expect(second.admitted.map((item) => item.id)).toEqual(
@@ -97,7 +95,7 @@ describe("admitPlacementConversions — distribución y simulación", () => {
       consumed: { baseSkillActivations: 0, usageActivations: 0, newWords: 0 },
       previousMode: "normal",
       capacityForecast: {
-        sessions: openSessions(900),
+        sessions: [],
         mandatory: [],
         dueReservations: [],
         futureReservations: [],
@@ -164,7 +162,7 @@ describe("admitPlacementConversions — distribución y simulación", () => {
     const result = admit({
       candidates: inferred(2),
       activeSessionDates: [],
-      forecast: readyForecast(openSessions(500)),
+      remainingSeconds: 500,
     });
 
     expect(result.status).toBe("insufficient-forecast");

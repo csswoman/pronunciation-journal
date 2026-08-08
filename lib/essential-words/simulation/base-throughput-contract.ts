@@ -1,4 +1,4 @@
-import { C9_BASE_ACTIVATION_LIMIT } from "./pending-base-fairness";
+import { C9_BASE_ACTIVATION_LIMIT } from "../pending-base-fairness";
 
 /** Task 8.9d — base throughput contract constants + documentation. */
 export const BASE_THROUGHPUT_CONTRACT_VERSION = "base-throughput-contract-v1";

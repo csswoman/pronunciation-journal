@@ -1,4 +1,4 @@
-import { DEFAULT_BASE_ACTIVATION_POLICY } from "./base-activation-allowance";
+import { DEFAULT_BASE_ACTIVATION_POLICY } from "../base-activation-allowance";
 import {
   BASE_THROUGHPUT_CONTRACT_VERSION,
   C9_HORIZON_SESSIONS,

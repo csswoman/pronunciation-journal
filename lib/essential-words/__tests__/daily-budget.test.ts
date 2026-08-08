@@ -214,8 +214,16 @@ describe("planDailySession", () => {
   });
 
   it("suma los costes de cada selección materializada", () => {
+    // Fase 8 final simplification: admitir una palabra nueva ahora reserva
+    // capacidad también contra su costo amortizado de listening+production+
+    // review futuro (encargo §7a), no solo contra el costo inmediato de
+    // introducción+recognition. Un presupuesto de 900 (en vez de 100) deja
+    // margen real para eso sin cambiar lo que este test verifica: que
+    // `plannedSeconds` es la suma exacta de los segundos de cada selección
+    // materializada (mandatory + base + usage + newWord), no un valor que
+    // dependa de un ledger de reservas.
     const plan = planDailySession(input({
-      dailyBudgetSeconds: 100,
+      dailyBudgetSeconds: 900,
       mandatory: { learning: [planned("c1k:due#meaning")], overdue: [], dueToday: [], provisionalDue: [] },
       candidates: {
         baseSkillActivations: [candidate("c1k:base#production", "production")],
@@ -224,6 +232,11 @@ describe("planDailySession", () => {
       },
     }), limits, DEFAULT_RECOVERY_POLICY);
 
-    expect(plan.allowance.plannedSeconds).toBe(79);
+    expect(plan.newWordsSelected).toHaveLength(1);
+    const expected = DEFAULT_SECONDS_BY_MODALITY.recognition // mandatory
+      + DEFAULT_SECONDS_BY_MODALITY.production // base
+      + DEFAULT_SECONDS_BY_MODALITY.listening // usage
+      + (10 + DEFAULT_SECONDS_BY_MODALITY.recognition); // new word immediate cost
+    expect(plan.allowance.plannedSeconds).toBe(expected);
   });
 });

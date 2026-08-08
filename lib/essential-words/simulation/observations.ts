@@ -59,6 +59,7 @@ export function observeEligibility(
   sessionIndex: number,
   availableSeconds: number,
   accumulator: EligibilityAccumulator,
+  dailyBudgetSeconds?: number,
 ): EligibilityObservation[] {
   const observations: EligibilityObservation[] = [];
   for (const word of world.words.values()) {
@@ -83,6 +84,8 @@ export function observeEligibility(
         eligible: true,
         scheduleKind: "none",
         cumulativeAvailableSeconds: cumulative,
+        sessionAvailableSeconds: availableSeconds,
+        sessionDailyBudgetSeconds: dailyBudgetSeconds,
       });
     }
   }

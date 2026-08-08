@@ -1,14 +1,14 @@
-import { buildAdmissionLoadEnvelope } from "../admission-envelope";
-import { isC8Applicable } from "../criterion-applicability";
+import { buildAdmissionLoadEnvelope } from "./admission-envelope";
+import { isC8Applicable } from "./criterion-applicability";
 import type { CapacityReservation } from "../planning-types";
 import {
   computeRequiredArrivalSecondsPerSession,
   envelopeSecondsPerNewWord,
-} from "../throughput-rates";
+} from "./throughput-rates";
 import {
   evaluateThroughputFeasibility,
   type FeasibilityStatus,
-} from "../throughput-feasibility";
+} from "./throughput-feasibility";
 import type { AttemptModality } from "../verification/types";
 import type { SimulatedDay } from "./types";
 

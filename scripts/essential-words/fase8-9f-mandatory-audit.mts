@@ -7,9 +7,9 @@
  * si la carga mandatory observada (~780/900 s en steady) es legítima (B),
  * un bug (A) o transitoria (C).
  */
-import { C9_HORIZON_SESSIONS, } from "../../lib/essential-words/base-throughput-feasibility";
-import { deriveRequiredBaseActivations } from "../../lib/essential-words/base-throughput-contract";
-import { buildAdmissionLoadEnvelope } from "../../lib/essential-words/admission-envelope";
+import { C9_HORIZON_SESSIONS, } from "../../lib/essential-words/simulation/base-throughput-feasibility";
+import { deriveRequiredBaseActivations } from "../../lib/essential-words/simulation/base-throughput-contract";
+import { buildAdmissionLoadEnvelope } from "../../lib/essential-words/simulation/admission-envelope";
 import {
   baseSkillActivationLiveness,
   backlogStable,

@@ -1,133 +1,69 @@
 import { admitNewWords, admitPlacementConversions } from "./admission-control";
-import { applyAdmissionThroughputCap } from "./admission-capacity";
 import {
   DEFAULT_ACTIVATION_LIMITS,
   resolveAbsoluteBaseActivationSafetyCeiling,
 } from "./activation-limits";
-import { buildAdmissionLoadEnvelope } from "./admission-envelope";
+import {
+  type MandatorySelection,
+  orderDueFirst,
+  placementIdSet,
+  rolloverReservations,
+  selectActivations,
+  selectMandatory,
+} from "./daily-budget-selectors";
 import { selectBaseDynamically } from "./daily-budget-base";
-import { buildFutureCapacity, mergeReservations, orderDueReservationsFirst } from "./future-capacity";
 import { buildLoadBreakdown } from "./planning-load";
+import {
+  deriveBaseBacklogPolicy,
+  pendingBaseBacklogSeconds,
+} from "./pending-base-fairness";
 import type {
-  ActivationCandidate,
   ActivationLimits,
   ActivationSelection,
   CapacityReservation,
   DailyAllowance,
   DailyPlan,
   DailyPlanningInput,
-  PlannedItem,
   PlanningLoadBreakdown,
 } from "./planning-types";
 import { backlogSeconds, resolveMode, type RecoveryPolicy } from "./recovery-mode";
-import type { AttemptModality, LearningItem } from "./verification/types";
+import type { LearningItem } from "./verification/types";
 
 export { DEFAULT_ACTIVATION_LIMITS, resolveAbsoluteBaseActivationSafetyCeiling };
+export { selectMandatory } from "./daily-budget-selectors";
 
-interface MandatorySelection {
-  selected: PlannedItem[];
-  deferred: PlannedItem[];
-  seconds: number;
-}
+/**
+ * First Easy interval from New in ts-fsrs defaults (see fsrs-schedule tests) —
+ * the horizon at which a newly admitted word's first scheduled review lands.
+ * Replaces admission-envelope.ts's versioned envelope (encargo §7a): the only
+ * number that mattered from it, kept as a plain constant.
+ */
+const FSRS_NEW_EASY_INTERVAL_DAYS = 8;
 
-function urgencyOrder(left: PlannedItem, right: PlannedItem): number {
-  const leftRetrievability = left.retrievability ?? 1;
-  const rightRetrievability = right.retrievability ?? 1;
-  if (leftRetrievability !== rightRetrievability) {
-    return leftRetrievability - rightRetrievability;
-  }
-  return left.dueAt.localeCompare(right.dueAt);
-}
-
-function orderMandatory(mandatory: DailyPlanningInput["mandatory"]): PlannedItem[] {
-  return deduplicateItems([
-    ...[...mandatory.learning].sort(urgencyOrder),
-    ...[...mandatory.overdue, ...mandatory.provisionalDue].sort(urgencyOrder),
-    ...[...mandatory.dueToday].sort(urgencyOrder),
-  ]);
-}
-
-function deduplicateItems<T extends { itemId: string }>(items: T[]): T[] {
-  const seenItemIds = new Set<string>();
-  return items.filter((item) => {
-    if (seenItemIds.has(item.itemId)) return false;
-    seenItemIds.add(item.itemId);
-    return true;
-  });
-}
-
-export function selectMandatory(
-  mandatory: DailyPlanningInput["mandatory"],
-  budgetSeconds: number,
-  byModality: Record<AttemptModality, number>,
-): MandatorySelection {
-  const ordered = orderMandatory(mandatory);
-  const selected: PlannedItem[] = [];
-  const deferred: PlannedItem[] = [];
-  let seconds = 0;
-
-  for (let index = 0; index < ordered.length; index += 1) {
-    const item = ordered[index];
-    const cost = byModality[item.modality];
-    if (selected.length > 0 && seconds + cost > budgetSeconds) {
-      deferred.push(...ordered.slice(index));
-      break;
-    }
-    selected.push(item);
-    seconds += cost;
-  }
-
-  return { selected, deferred, seconds };
-}
-
-function selectActivations(
-  candidates: ActivationCandidate[],
-  maximum: number,
-  availableSeconds: number,
-  byModality: Record<AttemptModality, number>,
-  selectedItemIds: Set<string>,
-  maxPerItemPerSession: number,
-): ActivationSelection {
-  const selected: ActivationCandidate[] = [];
-  const deferred: ActivationCandidate[] = [];
-  let seconds = 0;
-
-  for (let index = 0; index < candidates.length; index += 1) {
-    const candidate = candidates[index];
-    const cost = byModality[candidate.modality];
-    if (selected.length >= maximum || selectedItemIds.has(candidate.itemId)) {
-      deferred.push(candidate);
-      continue;
-    }
-    if (maxPerItemPerSession < 1 || seconds + cost > availableSeconds) {
-      deferred.push(...candidates.slice(index));
-      break;
-    }
-    selected.push(candidate);
-    selectedItemIds.add(candidate.itemId);
-    seconds += cost;
-  }
-
-  return { selected, deferred, seconds };
-}
-
-function beyondHorizon(
-  reservations: readonly CapacityReservation[],
-): CapacityReservation[] {
-  return reservations.filter((reservation) => reservation.deadlineSession > 8);
-}
-
-function placementIdSet(input: DailyPlanningInput): Set<string> {
-  return new Set(
-    [
-      ...input.capacityForecast.dueReservations,
-      ...input.capacityForecast.futureReservations,
-    ]
-      .filter((reservation) => reservation.source === "placement")
-      .map((reservation) => reservation.itemId),
-  );
-}
-
+/**
+ * Fase 8 final simplification (docs/superpowers/plans/notes/
+ * 2026-08-07-fase8-final-planner-simplification.md §3). One economy —
+ * available seconds — and one backpressure signal — pending-base backlog
+ * seconds. Five steps, in priority order:
+ *
+ *   1. mandatory (scheduled reviews + learning/relearning)
+ *   2. pending base already committed (listening/production backlog)
+ *   3. placement conversions already committed, same backpressure as (2)
+ *   4. new words, min(target, capacityEstimate) gated by the same backlog
+ *   5. usage, residual only
+ *
+ * No 8-session reservation ledger is built or reconciled here anymore —
+ * `futureReservations` on the output is now a flat rollover (previous
+ * reservations not yet served, plus whatever this session newly promised),
+ * kept only so the C9 obligation audit (simulation/audit/c9-obligation-trace.ts)
+ * and simulation's cross-session bookkeeping (simulation/capacity-state.ts)
+ * keep a stable, append-only ledger of individual listening/production
+ * promises — never a capacity solver production code depends on.
+ *
+ * Selection primitives (selectMandatory/selectActivations/orderDueFirst/
+ * rolloverReservations) live in daily-budget-selectors.ts to keep this file
+ * under the repo's 250-line convention.
+ */
 export function planDailySession(
   input: DailyPlanningInput,
   limits: ActivationLimits,
@@ -139,6 +75,8 @@ export function planDailySession(
     input.previousMode,
     recovery,
   );
+
+  // Step 1 — mandatory (scheduled reviews + learning/relearning).
   const mandatory = selectMandatory(
     input.mandatory,
     input.dailyBudgetSeconds,
@@ -147,117 +85,114 @@ export function planDailySession(
   const remainingAfterMandatory = Math.max(0, input.dailyBudgetSeconds - mandatory.seconds);
   const placementIds = placementIdSet(input);
   const selectedItemIds = new Set(mandatory.selected.map((item) => item.itemId));
-  const orderedBase = orderDueReservationsFirst(
+  const orderedBase = orderDueFirst(
     input.candidates.baseSkillActivations,
     input.capacityForecast.dueReservations,
   );
 
-  if (mode === "recovery") {
-    const base = selectBaseDynamically(
-      input,
-      limits,
-      orderedBase,
-      remainingAfterMandatory,
-      selectedItemIds,
-      true,
-    );
-    const forecast = buildFutureCapacity(input, mandatory.deferred, base.deferred);
-    const futureReservations = mergeReservations([
-      ...input.capacityForecast.dueReservations,
-      ...beyondHorizon(input.capacityForecast.futureReservations),
-      ...forecast.reservations,
-    ]);
-    return planFromSelections(
-      mode, mandatory, base,
-      { selected: [], deferred: input.candidates.usageActivations, seconds: 0 },
-      { selected: [], seconds: 0 }, 0, [], 0, futureReservations,
-      {
-        capacitySafeConversions: 0,
-        rejectedForCapacity: 0,
-        rejectedForSafetyCeiling: 0,
-        rejectedForAggregateC9: 0,
-      },
-      buildLoadBreakdown(input, mandatory, base, { selected: [], deferred: [], seconds: 0 }, 0, futureReservations, placementIds),
-    );
-  }
-
+  // Step 2 — pending base already committed (listening/production backlog).
   const base = selectBaseDynamically(
     input,
     limits,
     orderedBase,
     remainingAfterMandatory,
     selectedItemIds,
-    false,
+    mode === "recovery",
   );
-  const forecast = buildFutureCapacity(input, mandatory.deferred, base.deferred);
-  // Built once and reused by both admission gates (Task 8.9k §1): placement
-  // must reserve against the same expected-FSRS-debt margin new-word
-  // admission already does, or it can look C9-safe against a forecast that
-  // is systematically more optimistic than the one that actually gates C9.
-  const admissionEnvelope = buildAdmissionLoadEnvelope({
-    costs: input.estimatedSeconds.byModality,
-    introductionSeconds: input.estimatedSeconds.newWordIntroduction,
-    horizonSessions: 8,
+  const remainingAfterBase = Math.max(0, remainingAfterMandatory - base.seconds);
+
+  const backlogPolicy = deriveBaseBacklogPolicy({
+    dailyBudgetSeconds: input.dailyBudgetSeconds,
+    modalityCosts: input.estimatedSeconds.byModality,
   });
+  // Backlog counts what is still pending after this session's own base
+  // service — the same signal placement and new-word admission both react
+  // to (encargo §7/§8): serving base work today relieves tomorrow's pressure.
+  const backlogAfterService = pendingBaseBacklogSeconds(base.deferred, input.estimatedSeconds.byModality);
+
+  if (mode === "recovery") {
+    const futureReservations = rolloverReservations(input, []);
+    return planFromSelections(
+      mode, mandatory, base,
+      { selected: [], deferred: input.candidates.usageActivations, seconds: 0 },
+      { selected: [], seconds: 0 }, 0, [], 0, futureReservations,
+      { capacitySafeConversions: 0, rejectedForCapacity: 0, rejectedForSafetyCeiling: 0 },
+      buildLoadBreakdown(input, mandatory, base, { selected: [], deferred: [], seconds: 0 }, 0, futureReservations, placementIds),
+    );
+  }
+
+  // Step 3 — placement conversions already committed, same backpressure.
   const placement = input.placementContext
     ? admitPlacementConversions({
         candidates: input.candidates.placementCandidates ?? [],
         maxConversionsPerSession: input.placementContext.maxConversionsPerSession,
-        forecast,
+        remainingSeconds: remainingAfterBase,
+        perConversionSeconds: input.estimatedSeconds.byModality.recognition,
         estimatedSecondsByModality: input.estimatedSeconds.byModality,
+        pendingBaseBacklogSeconds: backlogAfterService,
+        backlogPolicy,
         now: input.placementContext.now,
         activeSessionDates: input.placementContext.activeSessionDates,
-        admissionEnvelope,
       })
     : {
         admitted: [] as LearningItem[],
         deferred: input.candidates.placementCandidates ?? [],
         capacitySafeConversions: 0,
         newReservations: [] as CapacityReservation[],
-        forecast,
         status: "ready" as const,
         rejectedForCapacity: 0,
         rejectedForSafetyCeiling: 0,
-        rejectedForAggregateC9: 0,
       };
   for (const reservation of placement.newReservations) {
     if (reservation.source === "placement") placementIds.add(reservation.itemId);
   }
+  const placementSeconds = placement.admitted.length * input.estimatedSeconds.byModality.recognition;
+  const remainingAfterPlacement = Math.max(0, remainingAfterBase - placementSeconds);
 
+  // Step 5 (computed before new words to bound their share of what's left,
+  // but usage stays residual — never displaces new-word admission on its own).
   const usage = selectActivations(
     input.candidates.usageActivations,
     Math.max(0, limits.maxUsageActivationsPerSession - input.consumed.usageActivations),
-    remainingAfterMandatory - base.seconds,
+    remainingAfterPlacement,
     input.estimatedSeconds.byModality,
     selectedItemIds,
     Math.min(1, Math.max(0, limits.maxPerItemPerSession)),
   );
-  const availableForNewWords = Math.max(0, remainingAfterMandatory - base.seconds - usage.seconds);
-  const perNewWord = input.estimatedSeconds.newWordIntroduction
+
+  // Step 4 — new words: min(target, capacityEstimate), same backpressure.
+  const availableForNewWords = Math.max(0, remainingAfterPlacement - usage.seconds);
+  // Immediate seconds actually spent this session per admitted word.
+  const perNewWordImmediate = input.estimatedSeconds.newWordIntroduction
     + input.estimatedSeconds.byModality.recognition;
-  const sessionCap = perNewWord > 0
-    ? Math.floor(availableForNewWords / perNewWord)
-    : input.configuredNewWordLimit;
+  // Inline safety reserve replacing admission-envelope.ts + hard-mandatory-forecast.ts
+  // (encargo §7a): a word admitted today also creates a listening+production
+  // base obligation and a first FSRS review in ~FSRS_NEW_EASY_INTERVAL_DAYS
+  // sessions. Amortizing that debt into the admission throttle (not into the
+  // seconds actually charged to today's plan) is what keeps early-run
+  // admission from outrunning sustained base-service capacity — without a
+  // versioned envelope module or a session ledger.
+  const perNewWordAmortized = perNewWordImmediate
+    + input.estimatedSeconds.byModality.listening
+    + input.estimatedSeconds.byModality.production
+    + input.estimatedSeconds.byModality.recognition / FSRS_NEW_EASY_INTERVAL_DAYS;
   const admission = admitNewWords({
-    candidates: input.candidates.newWords.slice(0, sessionCap),
+    candidates: input.candidates.newWords,
     configuredNewWordLimit: Math.max(0, input.configuredNewWordLimit - input.consumed.newWords),
-    forecast: applyAdmissionThroughputCap(
-      placement.forecast,
-      resolveAbsoluteBaseActivationSafetyCeiling(limits),
-      input.estimatedSeconds.byModality,
-    ),
+    remainingSeconds: availableForNewWords,
+    perNewWordSeconds: perNewWordAmortized,
     estimatedSecondsByModality: input.estimatedSeconds.byModality,
-    admissionEnvelope,
-    introductionSeconds: input.estimatedSeconds.newWordIntroduction,
+    pendingBaseBacklogSeconds: backlogAfterService,
+    backlogPolicy,
   });
   const newWords = {
     selected: admission.admitted,
-    seconds: admission.admitted.length * perNewWord,
+    seconds: admission.admitted.length * perNewWordImmediate,
   };
-  const futureReservations = mergeReservations([
-    ...input.capacityForecast.dueReservations,
-    ...beyondHorizon(input.capacityForecast.futureReservations),
-    ...admission.forecast.reservations,
+
+  const futureReservations = rolloverReservations(input, [
+    ...placement.newReservations,
+    ...admission.newReservations,
   ]);
 
   return planFromSelections(
@@ -267,7 +202,6 @@ export function planDailySession(
       capacitySafeConversions: placement.capacitySafeConversions,
       rejectedForCapacity: placement.rejectedForCapacity,
       rejectedForSafetyCeiling: placement.rejectedForSafetyCeiling,
-      rejectedForAggregateC9: placement.rejectedForAggregateC9,
     },
     buildLoadBreakdown(
       input, mandatory, base, usage, newWords.seconds, futureReservations, placementIds,

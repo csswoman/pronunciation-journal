@@ -244,6 +244,7 @@ export function runSimulation(
       sessionIndex,
       availableSeconds,
       eligibilityAccumulator,
+      options.dailyBudgetSeconds,
     ));
     deferredObservations.push(...observeDeferred(mandatory, plan, sessionIndex));
     const waiting = waitingBaseCounts(world, profile, now, options.seed);

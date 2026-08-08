@@ -144,8 +144,13 @@ describe("buildSkillQueue", () => {
   });
 
   it("mantiene la duración planificada como suma de las selecciones", () => {
+    // Fase 8 final simplification: admitir una palabra nueva reserva
+    // capacidad también contra su costo amortizado de listening+production+
+    // review futuro (encargo §7a). Presupuesto 900 (en vez de 100) deja
+    // margen real para admitir la palabra sin cambiar lo que este test
+    // verifica: la cola tiene 4 ítems y `plannedSeconds` es la suma exacta.
     const planningInput: DailyPlanningInput = {
-      dailyBudgetSeconds: 100,
+      dailyBudgetSeconds: 900,
       configuredNewWordLimit: 10,
       mandatory: { learning: [mandatory("c1k:due#meaning")], overdue: [], dueToday: [], provisionalDue: [] },
       candidates: {
@@ -157,12 +162,7 @@ describe("buildSkillQueue", () => {
       consumed: { baseSkillActivations: 0, usageActivations: 0, newWords: 0 },
       previousMode: "normal",
       capacityForecast: {
-        sessions: Array.from({ length: 8 }, (_, index) => ({
-          sessionOffset: index + 1,
-          availableSeconds: 100,
-          listeningSeconds: 100,
-          productionSeconds: 100,
-        })),
+        sessions: [],
         mandatory: [],
         dueReservations: [],
         futureReservations: [],
@@ -172,6 +172,10 @@ describe("buildSkillQueue", () => {
 
     const queue = buildSkillQueue({ plan: queuePlan });
     expect(queue).toHaveLength(4);
-    expect(queuePlan.allowance.plannedSeconds).toBe(79);
+    const expected = DEFAULT_SECONDS_BY_MODALITY.recognition // mandatory
+      + DEFAULT_SECONDS_BY_MODALITY.production // base
+      + DEFAULT_SECONDS_BY_MODALITY.listening // usage
+      + (10 + DEFAULT_SECONDS_BY_MODALITY.recognition); // new word immediate cost
+    expect(queuePlan.allowance.plannedSeconds).toBe(expected);
   });
 });

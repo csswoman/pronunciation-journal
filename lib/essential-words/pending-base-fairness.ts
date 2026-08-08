@@ -157,3 +157,80 @@ export function blockingReasonWithDetail(
 }
 
 export type ModalityCosts = Record<AttemptModality, number>;
+
+/**
+ * Backpressure policy for admission control (new words + placement).
+ *
+ * Fase 8 final simplification (docs/superpowers/plans/notes/
+ * 2026-08-07-fase8-final-planner-simplification.md §7). Replaces the
+ * 8-session `CapacityForecast` reservation ledger as the admission gate:
+ * the single signal that throttles new-word/placement admission is the size
+ * of the pending listening/production backlog, not a rolling window solver.
+ *
+ * `maxWaitSessions` mirrors C9 (§9 of the encargo) — it is the measurement
+ * horizon, not a structure the runtime maintains. `admissionBackpressureThreshold`
+ * is derived from how many listening+production pairs the planner can
+ * realistically clear within that horizon at the given modality costs; once
+ * the backlog approaches that volume, admission throttles down.
+ */
+export const BASE_BACKLOG_POLICY_VERSION = "base-backlog-policy-v1";
+
+export interface BaseBacklogPolicy {
+  version: string;
+  maxWaitSessions: 8;
+  /** Seconds of pending-base backlog at which admission starts throttling. */
+  admissionBackpressureThresholdSeconds: number;
+  /** Safety guard on backlog size, not a throughput target. */
+  maxPendingBaseSeconds?: number;
+}
+
+/**
+ * Derives a backpressure threshold from measured quantities instead of a
+ * hardcoded constant (encargo §7): the amount of listening+production work
+ * the planner can serve within `maxWaitSessions` sessions at the current
+ * per-session budget, reserving `reserveShare` for mandatory/unplanned load.
+ */
+export function deriveBaseBacklogPolicy(input: {
+  dailyBudgetSeconds: number;
+  modalityCosts: ModalityCosts;
+  reserveShare?: number;
+}): BaseBacklogPolicy {
+  const reserveShare = input.reserveShare ?? 0.5;
+  const servableSecondsPerSession = Math.max(
+    0,
+    input.dailyBudgetSeconds * (1 - reserveShare),
+  );
+  const servableSecondsOverHorizon = servableSecondsPerSession * C9_BASE_ACTIVATION_LIMIT;
+  return {
+    version: BASE_BACKLOG_POLICY_VERSION,
+    maxWaitSessions: C9_BASE_ACTIVATION_LIMIT,
+    admissionBackpressureThresholdSeconds: servableSecondsOverHorizon,
+    maxPendingBaseSeconds: servableSecondsOverHorizon * 2,
+  };
+}
+
+/** Sum of estimated seconds for pending listening/production not yet served. */
+export function pendingBaseBacklogSeconds(
+  pendingBase: readonly ActivationCandidate[],
+  modalityCosts: ModalityCosts,
+): number {
+  return pendingBase.reduce(
+    (total, candidate) => total + modalityCosts[candidate.modality],
+    0,
+  );
+}
+
+/**
+ * Backpressure factor in (0, 1]: 1 when backlog is at/below zero, shrinking
+ * linearly to 0 as backlog approaches (or exceeds) the policy threshold.
+ * This is the single throttle new-word and placement admission share — no
+ * per-candidate rolling-window solver.
+ */
+export function backpressureFactor(
+  backlogSeconds: number,
+  policy: BaseBacklogPolicy,
+): number {
+  if (policy.admissionBackpressureThresholdSeconds <= 0) return backlogSeconds > 0 ? 0 : 1;
+  const ratio = backlogSeconds / policy.admissionBackpressureThresholdSeconds;
+  return Math.max(0, Math.min(1, 1 - ratio));
+}

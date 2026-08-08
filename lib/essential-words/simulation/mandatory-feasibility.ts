@@ -2,8 +2,8 @@
 // crecimiento. Puramente analítico: no cambia selección, FSRS, presupuesto
 // ni C1-C11. Consume series ya observadas (arrival/service por sesión) o
 // agregados ya existentes (envelope, requeridos C8/C9) para reportar.
-import type { AdmissionLoadEnvelope } from "../admission-envelope";
-import { totalExpectedReviewSeconds } from "../admission-envelope";
+import type { AdmissionLoadEnvelope } from "./admission-envelope";
+import { totalExpectedReviewSeconds } from "./admission-envelope";
 import type { MandatoryAuditDay } from "./mandatory-audit";
 
 export type MandatoryFeasibilityStatus = "stable" | "marginal" | "unstable";

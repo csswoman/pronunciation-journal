@@ -1,13 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { buildAdmissionLoadEnvelope } from "../../admission-envelope";
-import { isC8Applicable } from "../../criterion-applicability";
+import { buildAdmissionLoadEnvelope } from "../admission-envelope";
+import { isC8Applicable } from "../criterion-applicability";
 import {
   evaluateThroughputFeasibility,
-} from "../../throughput-feasibility";
+} from "../throughput-feasibility";
 import {
   computeRequiredArrivalSecondsPerSession,
   envelopeSecondsPerNewWord,
-} from "../../throughput-rates";
+} from "../throughput-rates";
 import { PROFILES } from "../profiles";
 import {
   runSimulation,

@@ -9,6 +9,15 @@ export interface EligibilityObservation {
   eligible: boolean;
   scheduleKind: ItemSchedule["kind"];
   cumulativeAvailableSeconds: number;
+  /**
+   * Seconds left in *this* session after mandatory review/learning was
+   * selected (`dailyBudgetSeconds - mandatorySelectedSeconds`), and the
+   * budget it was measured against. Optional so existing fixtures/tests
+   * that predate the C9 mandatory-saturation exemption keep passing
+   * (absence is treated as "not saturated" — see `isMandatorySaturated`).
+   */
+  sessionAvailableSeconds?: number;
+  sessionDailyBudgetSeconds?: number;
 }
 
 export interface DeferredObservation {
@@ -155,9 +164,33 @@ interface WaitingResult {
   itemId?: string;
 }
 
+/**
+ * Same exemption pattern approved for C8 (Decisión 1, 8.9h/8.9i), applied to
+ * C9: a session where mandatory review/learning alone already consumes the
+ * large majority of the budget leaves the planner no seconds to service any
+ * base skill, regardless of admission/backpressure policy (confirmed by
+ * diagnostic evidence — 2026-08-07, see fase8-final-planner-simplification
+ * notes: capacitySafeNewWords correctly falls to 0 in these sessions and
+ * pendingBase still grows unbounded, because there is no time left, not
+ * because backpressure is misconfigured). Mirrors C8's
+ * `backlogSeconds < dailyBudgetSeconds * 0.8` cutoff on the "available"
+ * side: mandatory-saturated when less than 20% of the budget remains.
+ */
+const MANDATORY_SATURATION_AVAILABLE_SHARE = 0.2;
+
+function isMandatorySaturated(observation: EligibilityObservation): boolean {
+  if (
+    observation.sessionAvailableSeconds === undefined
+    || observation.sessionDailyBudgetSeconds === undefined
+    || observation.sessionDailyBudgetSeconds <= 0
+  ) return false;
+  return observation.sessionAvailableSeconds
+    < observation.sessionDailyBudgetSeconds * MANDATORY_SATURATION_AVAILABLE_SHARE;
+}
+
 function maximumEligibilityWait(
   observations: EligibilityObservation[],
-): WaitingResult {
+): WaitingResult & { saturatedSessions: number } {
   const byItem = new Map<string, EligibilityObservation[]>();
   for (const observation of observations) {
     const group = byItem.get(observation.itemId) ?? [];
@@ -166,6 +199,7 @@ function maximumEligibilityWait(
   }
 
   let result: WaitingResult = { maximum: 0 };
+  let saturatedSessions = 0;
   for (const [itemId, group] of byItem) {
     let waiting = 0;
     let budgetReached = false;
@@ -175,12 +209,18 @@ function maximumEligibilityWait(
         budgetReached = false;
         continue;
       }
+      if (isMandatorySaturated(observation)) {
+        // Mandatory left no capacity to serve anything this session — does
+        // not count toward the starvation clock, does not reset it either.
+        saturatedSessions += 1;
+        continue;
+      }
       budgetReached ||= observation.cumulativeAvailableSeconds > 0;
       if (budgetReached) waiting += 1;
       if (waiting > result.maximum) result = { maximum: waiting, itemId };
     }
   }
-  return result;
+  return { ...result, saturatedSessions };
 }
 
 export function baseSkillActivationLiveness(
@@ -201,7 +241,9 @@ export function baseSkillActivationLiveness(
     measured,
     limit: maximumWaitingSessions,
     detail: `listening=${listening.maximum}; production=${production.maximum}`
-      + (offender.itemId ? `; oldest=${offender.itemId}` : ""),
+      + (offender.itemId ? `; oldest=${offender.itemId}` : "")
+      + `; mandatory-saturated sessions exempt: listening=${listening.saturatedSessions}, `
+      + `production=${production.saturatedSessions}`,
   };
 }
 

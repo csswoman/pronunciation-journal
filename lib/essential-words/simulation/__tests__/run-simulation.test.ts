@@ -44,10 +44,18 @@ describe("runSimulation", () => {
   });
 
   it("lo diferido no desaparece", () => {
+    // Fase 8 final simplification: con dailyBudgetSeconds=90 el costo
+    // amortizado de una sola palabra nueva (encargo §7a: introducción +
+    // recognition + listening + production + review futuro) ya no cabe
+    // dentro del presupuesto de seguridad — cero palabras nuevas es
+    // comportamiento correcto (encargo §5), no un motor defectuoso, pero
+    // deja este escenario sin ninguna obligación mandatory que pueda
+    // diferirse. 120s deja margen para admitir palabras y seguir siendo
+    // lo bastante ajustado para que el mandatory se difiera bajo presión.
     const result = runSimulation(PROFILES.bursty, {
       ...options,
       days: 120,
-      dailyBudgetSeconds: 90,
+      dailyBudgetSeconds: 120,
     });
 
     expect(result.days.some((day) => day.deferredMandatory > 0)).toBe(true);

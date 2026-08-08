@@ -1,3 +1,8 @@
+// Fase 8 final simplification (docs/superpowers/plans/notes/
+// 2026-08-07-fase8-final-planner-simplification.md §10): moved from
+// lib/essential-words/ into simulation/ — only ever consumed by
+// simulation/day-forecast-telemetry.ts and simulation/mandatory-feasibility.ts,
+// never by a runtime admission gate.
 import type { AdmissionLoadEnvelope } from "./admission-envelope";
 import { totalExpectedReviewSeconds } from "./admission-envelope";
 

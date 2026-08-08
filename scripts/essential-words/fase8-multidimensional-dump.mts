@@ -7,12 +7,12 @@ import {
   evaluateBaseActivationWindows,
   evaluateMultidimensionalFeasibility,
   projectBaseServiceCapacityPerSession,
-} from "../../lib/essential-words/base-throughput-feasibility";
-import { buildAdmissionLoadEnvelope } from "../../lib/essential-words/admission-envelope";
-import { isC8Applicable } from "../../lib/essential-words/criterion-applicability";
+} from "../../lib/essential-words/simulation/base-throughput-feasibility";
+import { buildAdmissionLoadEnvelope } from "../../lib/essential-words/simulation/admission-envelope";
+import { isC8Applicable } from "../../lib/essential-words/simulation/criterion-applicability";
 import {
   computeRequiredArrivalSecondsPerSession,
-} from "../../lib/essential-words/throughput-rates";
+} from "../../lib/essential-words/simulation/throughput-rates";
 import {
   baseSkillActivationLiveness,
   backlogStable,

@@ -144,7 +144,7 @@ export function buildActiveSimulatedDay(input: {
     placementCapacitySafeConversions: input.plan.placementCapacity?.capacitySafeConversions ?? 0,
     placementRejectedForCapacity: input.plan.placementCapacity?.rejectedForCapacity ?? 0,
     placementRejectedForSafetyCeiling: input.plan.placementCapacity?.rejectedForSafetyCeiling ?? 0,
-    placementRejectedForAggregateC9: input.plan.placementCapacity?.rejectedForAggregateC9 ?? 0,
+    placementRejectedForAggregateC9: 0,
     placementReservedSeconds: input.placementReservations.reduce(
       (total, item) => total + item.estimatedSeconds,
       0,

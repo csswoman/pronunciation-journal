@@ -1,4 +1,3 @@
-import type { CapacityForecast } from "./capacity-forecast";
 import {
   comparePendingBaseCandidates,
   remainingSessionsUntilC9,
@@ -9,15 +8,19 @@ import type { ActivationCandidate, ActivationSelection } from "./planning-types"
 import type { AttemptModality } from "./verification/types";
 
 /**
- * Base activation policy (Task 8.9e).
+ * Base activation policy (Task 8.9e; simplified Fase 8 final — docs/superpowers/
+ * plans/notes/2026-08-07-fase8-final-planner-simplification.md §7e).
  *
  * absoluteSafetyCeiling = 24:
- * - 2× the C8-derived demand (6 words × 2 skills = 12) so the ceiling is not
+ * - 2x the C8-derived demand (6 words x 2 skills = 12) so the ceiling is not
  *   the habitual limiter when time exists;
- * - still bounds runaway if packing/forecast bugs admit huge pending sets;
- * - normally limitingFactor should be time-budget or future-capacity.
+ * - still bounds runaway if a packing bug admits a huge pending set;
+ * - normally limitingFactor should be time-budget, not safety-ceiling.
+ *
+ * The dynamic allowance now has a single capacity economy — remaining
+ * seconds today — instead of also consulting a per-lane 8-session forecast.
  */
-export const BASE_ACTIVATION_POLICY_VERSION = "base-activation-policy-v1";
+export const BASE_ACTIVATION_POLICY_VERSION = "base-activation-policy-v2";
 
 export interface BaseActivationPolicy {
   version: string;
@@ -39,7 +42,6 @@ export const DEFAULT_BASE_ACTIVATION_POLICY: BaseActivationPolicy = {
 
 export type BaseAllowanceLimitingFactor =
   | "time-budget"
-  | "future-capacity"
   | "recovery"
   | "no-pending"
   | "safety-ceiling";
@@ -47,7 +49,6 @@ export type BaseAllowanceLimitingFactor =
 export interface DynamicBaseAllowanceInput {
   pendingBase: readonly ActivationCandidate[];
   residualSecondsToday: number;
-  futureCapacity: CapacityForecast;
   modalityCosts: Record<AttemptModality, number>;
   mandatoryDueBaseCount: number;
   recoveryMode: boolean;
@@ -61,23 +62,6 @@ export interface DynamicBaseAllowance {
   reservedSeconds: number;
   limitingFactor: BaseAllowanceLimitingFactor;
   availableSeconds: number;
-}
-
-function sessionOneCapacity(forecast: CapacityForecast): {
-  available: number;
-  listening: number;
-  production: number;
-} {
-  const session = forecast.sessions.find((item) => item.sessionOffset === 1)
-    ?? forecast.sessions[0];
-  if (!session || forecast.status !== "ready") {
-    return { available: 0, listening: 0, production: 0 };
-  }
-  return {
-    available: session.availableSeconds,
-    listening: session.listeningSeconds,
-    production: session.productionSeconds,
-  };
 }
 
 function isUrgent(candidate: PendingBaseCandidate, policy: BaseActivationPolicy): boolean {
@@ -195,12 +179,6 @@ export function selectPendingBaseWithDynamicAllowance(input: DynamicBaseAllowanc
     ordered = [...urgent, ...rest];
   }
 
-  const lane = sessionOneCapacity(input.futureCapacity);
-  let forecastAvailable = lane.available;
-  let forecastListening = lane.listening;
-  let forecastProduction = lane.production;
-  const forecastReady = input.futureCapacity.status === "ready";
-
   const selected: ActivationCandidate[] = [];
   const deferred: ActivationCandidate[] = [];
   const selectedIds = input.probeOnly
@@ -232,31 +210,13 @@ export function selectPendingBaseWithDynamicAllowance(input: DynamicBaseAllowanc
       limitingFactor = "time-budget";
       break;
     }
-    if (forecastReady) {
-      const laneOk = forecastAvailable >= cost
-        && (
-          candidate.modality === "listening"
-            ? forecastListening >= cost
-            : candidate.modality === "production"
-              ? forecastProduction >= cost
-              : true
-        );
-      if (!laneOk) {
-        deferred.push(...ordered.slice(index));
-        limitingFactor = "future-capacity";
-        break;
-      }
-    }
 
     selected.push(candidate);
     selectedIds.add(candidate.itemId);
     seconds += cost;
-    forecastAvailable -= cost;
     if (candidate.modality === "listening") {
-      forecastListening -= cost;
       listeningSlots += 1;
     } else if (candidate.modality === "production") {
-      forecastProduction -= cost;
       productionSlots += 1;
     }
   }
@@ -267,9 +227,7 @@ export function selectPendingBaseWithDynamicAllowance(input: DynamicBaseAllowanc
     } else if (selected.length === 0) {
       limitingFactor = input.recoveryMode && residualAfterReserve > 0
         ? "recovery"
-        : residualAfterReserve <= 0
-          ? "time-budget"
-          : "future-capacity";
+        : "time-budget";
     } else if (selected.length >= policy.absoluteSafetyCeiling) {
       limitingFactor = "safety-ceiling";
     } else if (deferred.some((item) => !selectedIds.has(item.itemId))) {

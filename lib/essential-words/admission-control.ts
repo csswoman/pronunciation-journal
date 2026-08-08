@@ -1,9 +1,7 @@
 import {
-  reserveCapacity,
-  type CapacityForecast,
-} from "./capacity-forecast";
-import type { AdmissionLoadEnvelope } from "./admission-envelope";
-import { applyExpectedFsrsReserve } from "./hard-mandatory-forecast";
+  backpressureFactor,
+  type BaseBacklogPolicy,
+} from "./pending-base-fairness";
 import type {
   CapacityReservation,
   NewWordCandidate,
@@ -16,131 +14,108 @@ export {
   type PlacementAdmissionResult,
 } from "./placement/admission";
 
+/**
+ * Fase 8 final simplification (docs/superpowers/plans/notes/
+ * 2026-08-07-fase8-final-planner-simplification.md §7d). `admitNewWords` is
+ * now `min(target, capacityEstimate)`: no 8-session reservation ledger, no
+ * FSRS-debt envelope layered twice. `capacityEstimate` derives directly from
+ * remaining seconds and the same pending-base backpressure that gates
+ * placement (§7/§8 of the encargo) — a small safety reserve protects against
+ * per-word cost underestimation, nothing more.
+ */
 export interface NewWordAdmissionInput {
   candidates: readonly NewWordCandidate[];
   configuredNewWordLimit: number;
-  forecast: CapacityForecast;
+  remainingSeconds: number;
+  perNewWordSeconds: number;
   estimatedSecondsByModality: Record<AttemptModality, number>;
-  /** Optional FSRS future-load envelope; defaults to simulation-model v1. */
-  admissionEnvelope?: AdmissionLoadEnvelope;
-  introductionSeconds?: number;
+  pendingBaseBacklogSeconds: number;
+  backlogPolicy: BaseBacklogPolicy;
+  /** Share of remainingSeconds held back for estimation error. Default 0.1. */
+  safetyReserveShare?: number;
 }
+
+export type NewWordAdmissionLimit =
+  | "target"
+  | "budget"
+  | "pending-base-backpressure"
+  | "recovery";
 
 export interface NewWordAdmissionResult {
   admitted: NewWordCandidate[];
   capacitySafeNewWords: number;
   newReservations: CapacityReservation[];
-  forecast: CapacityForecast;
-  expectedFsrsReservedSeconds: number;
+  limitingFactor: NewWordAdmissionLimit;
 }
 
-interface ReservedPair {
-  forecast: CapacityForecast;
-  reservations: [CapacityReservation, CapacityReservation];
-}
-
-function reservation(
+function newWordReservations(
   wordId: string,
-  skill: "listening" | "production",
-  estimatedSeconds: number,
-): CapacityReservation {
-  return {
-    itemId: `${wordId}#${skill}`,
-    source: "new-word",
-    skill,
-    deadlineSession: 8,
-    estimatedSeconds,
-  };
-}
-
-function reservePair(
-  forecast: CapacityForecast,
-  candidate: NewWordCandidate,
   costs: Record<AttemptModality, number>,
-  envelope: AdmissionLoadEnvelope | undefined,
-): ReservedPair | null {
-  const baseForecast: CapacityForecast = envelope
-    ? {
-        ...forecast,
-        sessions: applyExpectedFsrsReserve(
-          forecast.sessions,
-          envelope.expectedReviewSecondsBySession,
-        ),
-      }
-    : forecast;
-  const listening = reserveCapacity(
-    baseForecast,
-    reservation(candidate.wordId, "listening", costs.listening),
-  );
-  if (!listening) return null;
-  const production = reserveCapacity(
-    listening.forecast,
-    reservation(candidate.wordId, "production", costs.production),
-    listening.reservation.deadlineSession + 1,
-  );
-  if (!production) return null;
-  return {
-    forecast: production.forecast,
-    reservations: [listening.reservation, production.reservation],
-  };
+): [CapacityReservation, CapacityReservation] {
+  return [
+    {
+      itemId: `${wordId}#listening`,
+      source: "new-word",
+      skill: "listening",
+      deadlineSession: 8,
+      estimatedSeconds: costs.listening,
+    },
+    {
+      itemId: `${wordId}#production`,
+      source: "new-word",
+      skill: "production",
+      deadlineSession: 8,
+      estimatedSeconds: costs.production,
+    },
+  ];
 }
 
 export function admitNewWords(input: NewWordAdmissionInput): NewWordAdmissionResult {
   const configuredLimit = Number.isFinite(input.configuredNewWordLimit)
     ? Math.max(0, Math.floor(input.configuredNewWordLimit))
     : 0;
-  const envelope = input.admissionEnvelope;
-  let capacityForecast = input.forecast;
-  let committedForecast = input.forecast;
-  const admitted: NewWordCandidate[] = [];
-  const newReservations: CapacityReservation[] = [];
-  const seenWordIds = new Set<string>();
-  let expectedFsrsReservedSeconds = 0;
+  const reserveShare = input.safetyReserveShare ?? 0.3;
+  const safeRemainingSeconds = Math.max(
+    0,
+    input.remainingSeconds * (1 - reserveShare),
+  );
 
-  if (
-    capacityForecast.status !== "ready"
-    || capacityForecast.unreservedItemIds.length > 0
-  ) {
-    return {
-      admitted,
-      capacitySafeNewWords: 0,
-      newReservations,
-      forecast: committedForecast,
-      expectedFsrsReservedSeconds: 0,
-    };
+  const budgetSafeNewWords = input.perNewWordSeconds > 0
+    ? Math.floor(safeRemainingSeconds / input.perNewWordSeconds)
+    : 0;
+  const pressure = backpressureFactor(input.pendingBaseBacklogSeconds, input.backlogPolicy);
+  const capacityEstimate = Math.floor(budgetSafeNewWords * pressure);
+
+  let limitingFactor: NewWordAdmissionLimit;
+  if (capacityEstimate >= configuredLimit) {
+    limitingFactor = "target";
+  } else if (pressure < 1 && capacityEstimate < budgetSafeNewWords) {
+    limitingFactor = "pending-base-backpressure";
+  } else {
+    limitingFactor = "budget";
   }
+
+  const capacitySafeNewWords = Math.max(0, capacityEstimate);
+  const admittedCount = Math.min(configuredLimit, capacitySafeNewWords);
 
   const candidates = [...input.candidates].sort((left, right) => (
     left.rank - right.rank || left.wordId.localeCompare(right.wordId)
   ));
-  let capacitySafeNewWords = 0;
+  const seenWordIds = new Set<string>();
+  const admitted: NewWordCandidate[] = [];
+  const newReservations: CapacityReservation[] = [];
   for (const candidate of candidates) {
+    if (admitted.length >= admittedCount) break;
     if (seenWordIds.has(candidate.wordId)) continue;
     seenWordIds.add(candidate.wordId);
-    const pair = reservePair(
-      capacityForecast,
-      candidate,
-      input.estimatedSecondsByModality,
-      envelope,
-    );
-    if (!pair) continue;
-    capacityForecast = pair.forecast;
-    capacitySafeNewWords += 1;
-    const reviewSeconds = envelope
-      ? envelope.expectedReviewSecondsBySession.reduce((total, value) => total + value, 0)
-      : 0;
-    if (admitted.length >= configuredLimit) continue;
-    committedForecast = pair.forecast;
     admitted.push(candidate);
-    newReservations.push(...pair.reservations);
-    expectedFsrsReservedSeconds += reviewSeconds;
+    newReservations.push(...newWordReservations(candidate.wordId, input.estimatedSecondsByModality));
   }
 
   return {
     admitted,
     capacitySafeNewWords,
     newReservations,
-    forecast: committedForecast,
-    expectedFsrsReservedSeconds,
+    limitingFactor,
   };
 }

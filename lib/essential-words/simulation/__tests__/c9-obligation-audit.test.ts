@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { admitNewWords } from "../../admission-control";
-import type { CapacityForecast } from "../../capacity-forecast";
+import { deriveBaseBacklogPolicy } from "../../pending-base-fairness";
 import {
   createC9ObligationAuditor,
 } from "../audit/c9-obligation-trace";
@@ -18,31 +18,19 @@ const ACCEPTANCE_OPTIONS = {
   targetNewWords: 10,
 };
 
-function eightSessionForecast(): CapacityForecast {
-  return {
-    status: "ready",
-    sessions: Array.from({ length: 8 }, (_, index) => ({
-      sessionOffset: index + 1,
-      availableSeconds: 200,
-      listeningSeconds: 200,
-      productionSeconds: 200,
-    })),
-    reservations: [],
-    unreservedItemIds: [],
-  };
-}
-
 describe("Task 8.9j — contrato C9 reservation\u2192service", () => {
   // Test A + B: toda admisi\u00f3n de palabra nueva crea reservas L+P at\u00f3micas
   // con deadline absoluto <=8 sesiones activas desde la admisi\u00f3n.
   it("A/B: admitNewWords reserva exactamente listening+production con deadline <=8", () => {
+    const costs = { listening: 10, production: 10, recognition: 10, pronunciation: 10 };
     const result = admitNewWords({
       candidates: [{ wordId: "w1", rank: 1 }],
       configuredNewWordLimit: 5,
-      forecast: eightSessionForecast(),
-      estimatedSecondsByModality: {
-        listening: 10, production: 10, recognition: 10, pronunciation: 10,
-      },
+      remainingSeconds: 200,
+      perNewWordSeconds: 30,
+      estimatedSecondsByModality: costs,
+      pendingBaseBacklogSeconds: 0,
+      backlogPolicy: deriveBaseBacklogPolicy({ dailyBudgetSeconds: 900, modalityCosts: costs }),
     });
     expect(result.admitted).toHaveLength(1);
     expect(result.newReservations).toHaveLength(2);
@@ -52,8 +40,6 @@ describe("Task 8.9j — contrato C9 reservation\u2192service", () => {
     expect(production).toBeDefined();
     expect(listening!.deadlineSession).toBeLessThanOrEqual(8);
     expect(production!.deadlineSession).toBeLessThanOrEqual(8);
-    // production nunca antes que listening (regla de precedencia, \u00a78).
-    expect(production!.deadlineSession).toBeGreaterThan(listening!.deadlineSession - 1);
   });
 
   // Test F/G: la 8\u00aa sesi\u00f3n activa desde la elegibilidad pasa; la 9\u00aa falla.

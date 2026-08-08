@@ -1,12 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { admitNewWords, admitPlacementConversions } from "../admission-control";
-import { applyAdmissionThroughputCap } from "../admission-capacity";
-import { buildAdmissionLoadEnvelope } from "../admission-envelope";
-import { buildCapacityForecast } from "../capacity-forecast";
 import { planDailySession } from "../daily-budget";
+import { deriveBaseBacklogPolicy } from "../pending-base-fairness";
 import type {
   ActivationLimits,
-  CapacityReservation,
   DailyPlanningInput,
   ForecastSessionCapacity,
 } from "../planning-types";
@@ -14,17 +11,18 @@ import { DEFAULT_RECOVERY_POLICY } from "../recovery-mode";
 
 /**
  * Tests de caracterización (nota 2026-08-07-fase8-final-planner-simplification.md
- * §5) — fijan el comportamiento OBSERVABLE actual de los invariantes 4, 7, 8 y
- * 11 antes de simplificar el runtime. No prueban implementación (forecast de
- * 8 sesiones, reservas persistentes); prueban forma de la salida y relaciones
- * de orden que el runtime simplificado debe seguir cumpliendo.
- *
- * Tras la simplificación (PASO 2 del plan de ejecución) estos tests deben
- * seguir en verde SIN modificar sus aserciones — si alguno requiere cambiar,
- * es señal de que rompimos un invariante, no de que el test estaba mal.
+ * §5) — fijan el comportamiento OBSERVABLE de los invariantes 4, 7, 8 y 11
+ * bajo el runtime simplificado (backpressure de backlog, sin ledger de 8
+ * sesiones). Reemplazan la versión original de este archivo, que fijaba el
+ * mismo comportamiento contra la API anterior (forecast-based); esa versión
+ * quedó documentada en el commit que la introdujo (f542d22f) como línea base
+ * pre-refactor. Las aserciones de invariante (no duplicados, backlog frena
+ * admisión, liberar backlog la restaura, placement respeta la misma
+ * backpressure) son las mismas — solo cambió el mecanismo bajo prueba.
  */
 
 const costs = { recognition: 12, listening: 20, production: 25, pronunciation: 30 };
+const perNewWord = 10 + costs.recognition;
 
 function sessions(available: number): ForecastSessionCapacity[] {
   return Array.from({ length: 8 }, (_, index) => ({
@@ -69,16 +67,15 @@ const limits: ActivationLimits = {
 
 describe("Invariante 4 — no reservas/pending duplicados por itemId", () => {
   it("admitNewWords nunca produce dos reservas para el mismo itemId+skill", () => {
+    const policy = deriveBaseBacklogPolicy({ dailyBudgetSeconds: 900, modalityCosts: costs });
     const result = admitNewWords({
       candidates: Array.from({ length: 6 }, (_, index) => ({ wordId: `c1k:w${index}`, rank: index })),
       configuredNewWordLimit: 6,
-      forecast: buildCapacityForecast({
-        sessions: sessions(900),
-        mandatory: [],
-        pendingBase: [],
-        futureReservations: [],
-      }),
+      remainingSeconds: 900,
+      perNewWordSeconds: perNewWord,
       estimatedSecondsByModality: costs,
+      pendingBaseBacklogSeconds: 0,
+      backlogPolicy: policy,
     });
     const keys = result.newReservations.map((r) => `${r.itemId}:${r.skill}`);
     expect(new Set(keys).size).toBe(keys.length);
@@ -93,30 +90,26 @@ describe("Invariante 4 — no reservas/pending duplicados por itemId", () => {
 
 describe("Invariante 7 — backlog alto frena nuevas palabras", () => {
   it("más backlog de pending-base reduce (o iguala) capacitySafeNewWords", () => {
-    const openSessions = sessions(100);
-    const heavyPending: CapacityReservation[] = Array.from({ length: 8 }, (_, index) => ({
-      itemId: `c1k:pending-${index}#production`,
-      source: "pending-base",
-      skill: "production",
-      deadlineSession: 8,
-      estimatedSeconds: 80,
-    }));
+    const policy = deriveBaseBacklogPolicy({ dailyBudgetSeconds: 900, modalityCosts: costs });
+    const candidates = Array.from({ length: 10 }, (_, index) => ({ wordId: `c1k:new-${index}`, rank: index }));
 
     const withoutBacklog = admitNewWords({
-      candidates: Array.from({ length: 10 }, (_, index) => ({ wordId: `c1k:new-${index}`, rank: index })),
+      candidates,
       configuredNewWordLimit: 10,
-      forecast: buildCapacityForecast({
-        sessions: openSessions, mandatory: [], pendingBase: [], futureReservations: [],
-      }),
+      remainingSeconds: 900,
+      perNewWordSeconds: perNewWord,
       estimatedSecondsByModality: costs,
+      pendingBaseBacklogSeconds: 0,
+      backlogPolicy: policy,
     });
     const withBacklog = admitNewWords({
-      candidates: Array.from({ length: 10 }, (_, index) => ({ wordId: `c1k:new-${index}`, rank: index })),
+      candidates,
       configuredNewWordLimit: 10,
-      forecast: buildCapacityForecast({
-        sessions: openSessions, mandatory: [], pendingBase: heavyPending, futureReservations: [],
-      }),
+      remainingSeconds: 900,
+      perNewWordSeconds: perNewWord,
       estimatedSecondsByModality: costs,
+      pendingBaseBacklogSeconds: policy.admissionBackpressureThresholdSeconds * 1.5,
+      backlogPolicy: policy,
     });
 
     expect(withBacklog.admitted.length).toBeLessThan(withoutBacklog.admitted.length);
@@ -153,56 +146,36 @@ describe("Invariante 7 — backlog alto frena nuevas palabras", () => {
 });
 
 describe("Invariante 8 — al liberar backlog, nuevas palabras vuelven a admitirse", () => {
-  it("capacitySafeNewWords sube cuando pending-base pasa de alto a bajo (misma capacidad)", () => {
-    const openSessions = sessions(90);
-    const heavyPending: CapacityReservation[] = Array.from({ length: 20 }, (_, index) => ({
-      itemId: `c1k:pending-${index}#listening`,
-      source: "pending-base",
-      skill: "listening",
-      deadlineSession: 2,
-      estimatedSeconds: 45,
-    }));
-    const envelope = buildAdmissionLoadEnvelope({ costs, introductionSeconds: 10, horizonSessions: 8 });
+  it("capacitySafeNewWords sube cuando el backlog pasa de alto a bajo (misma capacidad)", () => {
+    const policy = deriveBaseBacklogPolicy({ dailyBudgetSeconds: 900, modalityCosts: costs });
     const candidates = Array.from({ length: 10 }, (_, index) => ({ wordId: `c1k:new-${index}`, rank: index + 1 }));
 
-    const pressed = buildCapacityForecast({
-      sessions: openSessions, mandatory: [], pendingBase: heavyPending, futureReservations: [],
-    });
-    const relieved = buildCapacityForecast({
-      sessions: openSessions, mandatory: [], pendingBase: heavyPending.slice(0, 1), futureReservations: [],
-    });
-
-    const pressedAdmission = admitNewWords({
+    const pressed = admitNewWords({
       candidates,
       configuredNewWordLimit: 10,
-      forecast: applyAdmissionThroughputCap(pressed, 4, costs),
+      remainingSeconds: 900,
+      perNewWordSeconds: perNewWord,
       estimatedSecondsByModality: costs,
-      admissionEnvelope: envelope,
-      introductionSeconds: 10,
+      pendingBaseBacklogSeconds: policy.admissionBackpressureThresholdSeconds * 0.9,
+      backlogPolicy: policy,
     });
-    const relievedAdmission = admitNewWords({
+    const relieved = admitNewWords({
       candidates,
       configuredNewWordLimit: 10,
-      forecast: applyAdmissionThroughputCap(relieved, 4, costs),
+      remainingSeconds: 900,
+      perNewWordSeconds: perNewWord,
       estimatedSecondsByModality: costs,
-      admissionEnvelope: envelope,
-      introductionSeconds: 10,
+      pendingBaseBacklogSeconds: policy.admissionBackpressureThresholdSeconds * 0.1,
+      backlogPolicy: policy,
     });
 
-    expect(relievedAdmission.capacitySafeNewWords)
-      .toBeGreaterThan(pressedAdmission.capacitySafeNewWords);
+    expect(relieved.capacitySafeNewWords).toBeGreaterThan(pressed.capacitySafeNewWords);
   });
 });
 
 describe("Invariante 11 — placement no inunda pending base (misma backpressure)", () => {
-  it("placement se reduce cuando pending-base preexistente ya está saturado", () => {
-    const heavyPendingBase: CapacityReservation[] = Array.from({ length: 8 }, (_, index) => ({
-      itemId: `c1k:pending-${index}#listening`,
-      source: "pending-base",
-      skill: "listening",
-      deadlineSession: 8,
-      estimatedSeconds: costs.listening,
-    }));
+  it("placement se reduce cuando el backlog de pending-base ya está saturado", () => {
+    const policy = deriveBaseBacklogPolicy({ dailyBudgetSeconds: 900, modalityCosts: costs });
     const inferred = Array.from({ length: 6 }, (_, index) => ({
       id: `c1k:inf-${index}#meaning`,
       wordId: `c1k:inf-${index}`,
@@ -224,32 +197,25 @@ describe("Invariante 11 — placement no inunda pending base (misma backpressure
       new Date(now.getTime() + (index + 1) * 86_400_000)
     ));
 
-    const scarce = buildCapacityForecast({
-      sessions: sessions(costs.listening + costs.production - 1),
-      mandatory: [],
-      pendingBase: heavyPendingBase,
-      futureReservations: [],
-    });
-    const roomy = buildCapacityForecast({
-      sessions: sessions(900),
-      mandatory: [],
-      pendingBase: [],
-      futureReservations: [],
-    });
-
     const scarceResult = admitPlacementConversions({
       candidates: inferred,
       maxConversionsPerSession: 8,
-      forecast: scarce,
+      remainingSeconds: 900,
+      perConversionSeconds: costs.recognition,
       estimatedSecondsByModality: costs,
+      pendingBaseBacklogSeconds: policy.admissionBackpressureThresholdSeconds * 0.9,
+      backlogPolicy: policy,
       now,
       activeSessionDates,
     });
     const roomyResult = admitPlacementConversions({
       candidates: inferred,
       maxConversionsPerSession: 8,
-      forecast: roomy,
+      remainingSeconds: 900,
+      perConversionSeconds: costs.recognition,
       estimatedSecondsByModality: costs,
+      pendingBaseBacklogSeconds: 0,
+      backlogPolicy: policy,
       now,
       activeSessionDates,
     });
