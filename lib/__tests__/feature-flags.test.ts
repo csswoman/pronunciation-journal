@@ -1,19 +1,30 @@
 import { describe, expect, it } from "vitest";
-import { isSkillModelEnabled } from "../feature-flags";
+import {
+  readSkillEngineRolloutConfig,
+  resolveSkillEngineMode,
+} from "../feature-flags";
 
-describe("isSkillModelEnabled", () => {
-  it("está apagado por defecto", () => {
-    expect(isSkillModelEnabled({})).toBe(false);
+describe("skill engine rollout config", () => {
+  it("resuelve off de forma segura para modo inválido", () => {
+    const config = readSkillEngineRolloutConfig({
+      NEXT_PUBLIC_SKILL_MODEL_MODE: "enabled",
+      NEXT_PUBLIC_SKILL_MODEL_COHORT_PERCENT: "100",
+    });
+    expect(config.mode).toBe("off");
+    expect(resolveSkillEngineMode("user-1", config)).toBe("off");
   });
 
-  it("se enciende solo con el string exacto 'true'", () => {
-    expect(isSkillModelEnabled({ NEXT_PUBLIC_SKILL_MODEL: "true" })).toBe(true);
-    expect(isSkillModelEnabled({ NEXT_PUBLIC_SKILL_MODEL: "1" })).toBe(false);
-    expect(isSkillModelEnabled({ NEXT_PUBLIC_SKILL_MODEL: "yes" })).toBe(false);
-    expect(isSkillModelEnabled({ NEXT_PUBLIC_SKILL_MODEL: "TRUE" })).toBe(false);
-  });
-
-  it("un valor vacío no lo enciende", () => {
-    expect(isSkillModelEnabled({ NEXT_PUBLIC_SKILL_MODEL: "" })).toBe(false);
+  it("parsea modo, cohorte, salt y usuarios internos", () => {
+    expect(readSkillEngineRolloutConfig({
+      NEXT_PUBLIC_SKILL_MODEL_MODE: "shadow",
+      NEXT_PUBLIC_SKILL_MODEL_COHORT_PERCENT: "12.5",
+      NEXT_PUBLIC_SKILL_MODEL_COHORT_SALT: "stable-salt",
+      NEXT_PUBLIC_SKILL_MODEL_INTERNAL_USERS: " user-1, user-2 ",
+    })).toEqual({
+      mode: "shadow",
+      cohortPercent: 12.5,
+      cohortSalt: "stable-salt",
+      internalUsers: ["user-1", "user-2"],
+    });
   });
 });
