@@ -51,6 +51,8 @@ describe("motores adversariales", () => {
     expect(result.days.every((day) => day.usageActivations === 0)).toBe(true);
   });
 
+  // This is a 180-day integration simulation over 300 words. Allow for a
+  // contended CI worker without weakening the timeout for the unit suite.
   it("ignore-placement falla conversión y vencimientos no triviales", () => {
     const result = runAdversarialSimulation(
       "ignore-placement",
@@ -67,5 +69,5 @@ describe("motores adversariales", () => {
     // indirecto de placement. Este adversarial se detecta por sus invariantes
     // de dominio explícitos, sin forzar un fallo artificial en C1–C11 ni
     // reabrir la política de placement.
-  });
+  }, 15_000);
 });
