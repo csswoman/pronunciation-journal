@@ -719,10 +719,8 @@ export function useEssentialWordsSession() {
   // without re-deriving it and without adding it to dependency arrays.
   const currentModeRef = useRef<EssentialWordMode>(currentMode);
   currentModeRef.current = currentMode;
-  // Other words in this session, used as recognition distractors.
-  const distractorPool = Array.from(wordsByIdRef.current.values()).filter(
-    (w) => w.word !== current?.entry.word,
-  );
+  // Recognition needs varied alternatives, not the two other words in a short session.
+  const audioDistractorPool = allWordsRef.current;
 
   return {
     phase,
@@ -730,7 +728,7 @@ export function useEssentialWordsSession() {
     current,
     currentMode,
     currentExerciseLevel,
-    distractorPool,
+    audioDistractorPool,
     stats,
     counts,
     sessionProgress,

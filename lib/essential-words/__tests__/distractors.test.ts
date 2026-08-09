@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { selectDistractors } from "../distractors";
+import { selectAudioDistractors, selectDistractors } from "../distractors";
 import type { EssentialWord } from "../types";
 
 function w(rank: number, word: string, pos: EssentialWord["pos"] = "noun"): EssentialWord {
@@ -57,5 +57,18 @@ describe("selectDistractors — spec §2.4b policy", () => {
     const pool = [w(2, "bat", "noun")]; // distance 1 from "cat" — excluded
     const result = selectDistractors(target, pool, [], 3);
     expect(result.length).toBe(0);
+  });
+});
+
+describe("selectAudioDistractors", () => {
+  it("prefers near phonetic alternatives over unrelated words", () => {
+    const target = { ...w(1, "might"), ipa_strong: "maɪt" };
+    const pool = [
+      { ...w(2, "such"), ipa_strong: "sʌtʃ" },
+      { ...w(3, "mate"), ipa_strong: "meɪt" },
+      { ...w(4, "met"), ipa_strong: "mɛt" },
+    ];
+
+    expect(selectAudioDistractors(target, pool, 2).map((item) => item.word)).toEqual(["mate", "met"]);
   });
 });

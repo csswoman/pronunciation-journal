@@ -22,7 +22,7 @@ import Button from '@/components/ui/Button'
 
 export function EssentialWordsSession({ initialStreak = 0 }: { initialStreak?: number } = {}) {
   const {
-    phase, currentStepId, current, currentMode, currentExerciseLevel, distractorPool, stats, counts,
+    phase, currentStepId, current, currentMode, currentExerciseLevel, audioDistractorPool, stats, counts,
     sessionProgress, studyContext, sessionSummary,
     strugglingWords, reloadLoading, levels, activeRouteId, setRoute,
     startSpeak, beginSession, omitWord, submitGrade, reload, learnMore, archiveWord,
@@ -254,7 +254,7 @@ export function EssentialWordsSession({ initialStreak = 0 }: { initialStreak?: n
                   currentMode={currentMode}
                   currentStepId={currentStepId}
                   levelLabel={exerciseLevelLabelText}
-                  distractorPool={distractorPool}
+                  audioDistractorPool={audioDistractorPool}
                   onAttempt={handleAttempt}
                   onSpeakAttempt={handleSpeakAttempt}
                   onRetry={clearPendingAttempt}

@@ -26,7 +26,7 @@ interface Props {
   currentMode: EssentialWordMode
   currentStepId: string | null
   levelLabel?: string
-  distractorPool: EssentialWordQueueItem['entry'][]
+  audioDistractorPool: EssentialWordQueueItem['entry'][]
   onAttempt: (outcome: AttemptOutcome) => Promise<void>
   onSpeakAttempt: (outcome: AttemptOutcome) => Promise<void>
   onRetry: () => void
@@ -42,7 +42,7 @@ export function EssentialWordsExerciseCard({
   currentMode,
   currentStepId,
   levelLabel,
-  distractorPool,
+  audioDistractorPool,
   onAttempt,
   onSpeakAttempt,
   onRetry,
@@ -66,7 +66,7 @@ export function EssentialWordsExerciseCard({
         mode={currentMode}
         repetitions={current.repetitions ?? 0}
         levelLabel={levelLabel}
-        distractors={distractorPool}
+        distractors={audioDistractorPool}
         onAttempt={onAttempt}
         onContinue={onContinue}
         onArchive={onArchive}
@@ -81,7 +81,7 @@ export function EssentialWordsExerciseCard({
         key={key}
         entry={current.entry}
         levelLabel={levelLabel}
-        distractors={distractorPool}
+        distractors={audioDistractorPool}
         onAttempt={onAttempt}
         onContinue={onContinue}
         onArchive={onArchive}

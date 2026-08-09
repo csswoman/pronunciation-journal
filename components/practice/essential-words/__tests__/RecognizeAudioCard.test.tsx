@@ -3,9 +3,9 @@ import { describe, expect, it, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { RecognizeAudioCard } from "../RecognizeAudioCard";
 import type { EssentialWord } from "@/lib/essential-words/types";
-import { speak } from "@/lib/phoneme-practice/tts";
+import { speak, speakSequence } from "@/lib/phoneme-practice/tts";
 
-vi.mock("@/lib/phoneme-practice/tts", () => ({ speak: vi.fn() }));
+vi.mock("@/lib/phoneme-practice/tts", () => ({ speak: vi.fn(), speakSequence: vi.fn() }));
 vi.mock("@/lib/ui-sounds/cues", () => ({ playUiCue: vi.fn() }));
 
 const entry: EssentialWord = {
@@ -19,9 +19,9 @@ const entry: EssentialWord = {
 };
 
 const distractors: EssentialWord[] = [
-  { ...entry, rank: 2, word: "though", translation: "aunque" },
-  { ...entry, rank: 3, word: "thought", translation: "pensamiento" },
-  { ...entry, rank: 4, word: "thorough", translation: "minucioso" },
+  { ...entry, rank: 2, word: "though", ipa_strong: "ðoʊ", translation: "aunque" },
+  { ...entry, rank: 3, word: "thought", ipa_strong: "θɔːt", translation: "pensamiento" },
+  { ...entry, rank: 4, word: "thorough", ipa_strong: "θʌroʊ", translation: "minucioso" },
 ];
 
 function setup(onAttempt = vi.fn().mockResolvedValue(undefined)) {
@@ -78,6 +78,23 @@ describe("RecognizeAudioCard", () => {
     );
   });
 
+  it("shows the correct and chosen options with their IPA after an incorrect answer", () => {
+    setup();
+    fireEvent.click(screen.getByRole("button", { name: /thought/ }));
+
+    expect(screen.getByText(/θruː/)).toBeInTheDocument();
+    expect(screen.getByText(/θɔːt/)).toBeInTheDocument();
+    expect(screen.getByText(/la diferencia está en/i)).toBeInTheDocument();
+  });
+
+  it("lets the learner compare the mistaken and correct sounds", () => {
+    setup();
+    fireEvent.click(screen.getByRole("button", { name: /thought/ }));
+    fireEvent.click(screen.getByRole("button", { name: /comparar sonidos/i }));
+
+    expect(speakSequence).toHaveBeenCalledWith(["thought", "through"], { rate: 0.9 });
+  });
+
   it("records latencyMs", () => {
     const onAttempt = setup();
     fireEvent.click(screen.getByRole("button", { name: /through/ }));
@@ -103,13 +120,13 @@ describe("RecognizeAudioCard", () => {
     );
 
     fireEvent.click(screen.getByRole("button", { name: /through/ }));
-    expect(screen.getByText(/¡correcto!/i)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /continuar/i })).toBeInTheDocument();
     fireEvent.keyDown(window, { key: "Enter" });
 
     expect(onContinue).toHaveBeenCalledOnce();
   });
 
-  it("offers Ya la sé and confirms the pause action", () => {
+  it("offers an explicit skip action in the card footer and confirms it", () => {
     const onArchive = vi.fn();
     render(
       <RecognizeAudioCard
@@ -120,7 +137,7 @@ describe("RecognizeAudioCard", () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Ya la sé" }));
+    fireEvent.click(screen.getByRole("button", { name: "Saltar esta palabra por ahora" }));
     fireEvent.click(screen.getByRole("button", { name: "Sí, pausar" }));
 
     expect(onArchive).toHaveBeenCalledOnce();
