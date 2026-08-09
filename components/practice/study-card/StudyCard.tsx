@@ -6,7 +6,7 @@
 //   <WordHeading />      — the word itself
 //   <MeaningBlock />     — optional meaning + translation
 //   <PronRow natural />  — optional weak-form IPA + listen
-//   <PronRow cuidada />  — optional IPA + listen (word audio)
+//   <PronRow completa /> — optional IPA + listen (word audio)
 //   <SentenceBlock />    — optional example + listen + sentence IPA
 //   <Actions />          — Continuar + optional skip link
 // </StudyCard>
@@ -199,7 +199,7 @@ function StudyCardBody({
               ) : null}
               {model.ipa ? (
                 <PronRow
-                  label="cuidada"
+                  label="completa"
                   ipa={model.ipa}
                   onPlay={() => onListen('word')}
                   immersive
@@ -220,7 +220,7 @@ function StudyCardBody({
               <div className="w-full">
                 {model.ipa ? (
                   <PronRow
-                    label="Cuidada"
+                    label="Completa"
                     ipa={model.ipa}
                     onPlay={() => onListen('word')}
                   />
@@ -271,8 +271,8 @@ export function StudyCard({
       {immersive && contextLine ? (
         <p className="m-0 text-center text-caption text-fg-muted">{contextLine}</p>
       ) : null}
-      {!immersive && model.srsBadge ? (
-        <span className="font-kicker text-accent">{model.srsBadge}</span>
+      {model.srsBadge ? (
+        <span className="font-kicker text-primary">{model.srsBadge}</span>
       ) : null}
       <StudyCardBody model={model} onListen={onListen} immersive={immersive} />
     </>

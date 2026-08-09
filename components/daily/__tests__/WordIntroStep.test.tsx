@@ -7,7 +7,13 @@ import type { StudyCardModel } from "@/lib/practice/study-card/model";
 vi.mock("@/lib/phoneme-practice/tts", () => ({ speak: vi.fn() }));
 
 const cards: StudyCardModel[] = [
-  { word: "alpha", meaning: "first" },
+  {
+    word: "alpha",
+    meaning: "first",
+    translation: "primero",
+    chips: ["sustantivo"],
+    srsBadge: "Nueva",
+  },
   { word: "beta", meaning: "second" },
 ];
 
@@ -15,6 +21,9 @@ describe("WordIntroStep", () => {
   it("shows the first card initially", () => {
     render(<WordIntroStep cards={cards} onComplete={() => {}} />);
     expect(screen.getByRole("heading", { name: "alpha" })).toBeInTheDocument();
+    expect(screen.getByText("primero")).toBeInTheDocument();
+    expect(screen.getByText("sustantivo")).toBeInTheDocument();
+    expect(screen.getByText("Nueva")).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "beta" })).not.toBeInTheDocument();
   });
 

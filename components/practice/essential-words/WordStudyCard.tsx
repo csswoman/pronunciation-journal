@@ -35,6 +35,7 @@ export function WordStudyCard({ entry, contextLine, onContinue, onOmit }: Props)
         model={model}
         variant="immersive"
         contextLine={contextLine}
+        continueLabel="Continuar con la práctica"
         onContinue={onContinue}
         onOmit={onOmit}
         onListen={onListen}

@@ -3,6 +3,14 @@ import { essentialWordPosLabel } from "@/lib/essential-words/pos-label";
 import { displayEnglishText, displayEnglishWord } from "@/lib/essential-words/word-display";
 import type { WordBankEntry } from "@/lib/word-bank/types";
 
+type EssentialMetadataEntry = WordBankEntry & {
+  essentialMetadata?: {
+    rank: number;
+    pos: EssentialWord["pos"];
+    cefr_level: EssentialWord["cefr_level"];
+  };
+};
+
 /**
  * Source-agnostic view model for a word/concept presentation card. Both Core
  * 1000 (`EssentialWord`) and the general word bank (`WordBankEntry`) map onto this
@@ -96,6 +104,8 @@ export function essentialWordToStudyCard(entry: EssentialWord): StudyCardModel {
 }
 
 export function wordBankEntryToStudyCard(entry: WordBankEntry): StudyCardModel {
+  const essentialMetadata = (entry as EssentialMetadataEntry).essentialMetadata;
+
   return {
     word: entry.text,
     ipa: present(entry.ipa),
@@ -103,6 +113,10 @@ export function wordBankEntryToStudyCard(entry: WordBankEntry): StudyCardModel {
     translation: present(entry.translation),
     sentence: present(entry.example),
     srsBadge: srsBadgeLabel(entry.srs_status),
+    levelBadge: essentialMetadata?.cefr_level,
+    chips: essentialMetadata
+      ? [`#${essentialMetadata.rank} más frecuente`, essentialWordPosLabel(essentialMetadata.pos)]
+      : undefined,
     // word_bank has no weak-form or sentence-IPA data.
   };
 }

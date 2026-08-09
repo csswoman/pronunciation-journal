@@ -5,6 +5,7 @@ import {
 } from "../model";
 import type { EssentialWord } from "@/lib/essential-words/types";
 import type { WordBankEntry } from "@/lib/word-bank/types";
+import { coreWordToWordBankEntry } from "@/lib/essential-words/client-fetch";
 
 const coreFunctionWord: EssentialWord = {
   rank: 3,
@@ -108,6 +109,13 @@ describe("wordBankEntryToStudyCard", () => {
     expect(
       wordBankEntryToStudyCard(wordBank({ srs_status: "mastered" })).srsBadge,
     ).toBe("Dominada");
+  });
+
+  it("retains Essential Words level, frequency and part of speech through the generic adapter", () => {
+    const model = wordBankEntryToStudyCard(coreWordToWordBankEntry(coreContentWord));
+
+    expect(model.levelBadge).toBe("A1");
+    expect(model.chips).toEqual(["#120 más frecuente", "sustantivo"]);
   });
 
   it("omits the badge for an unknown SRS status", () => {
