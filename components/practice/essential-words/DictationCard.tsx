@@ -47,7 +47,7 @@ export function DictationCard({ entry, levelLabel, onAttempt, onContinue, onArch
   const slowAudioUsedRef = useRef(false)
   const segmentedAudioUsedRef = useRef(false)
   const startedAtRef = useRef(Date.now())
-  const answerInputRef = useRef<HTMLInputElement>(null)
+  const answerInputRef = useRef<HTMLTextAreaElement>(null)
   const { sentence } = selectSentence(entry, repetitions)
 
   useEffect(() => {
@@ -133,9 +133,9 @@ export function DictationCard({ entry, levelLabel, onAttempt, onContinue, onArch
       </div>
 
       {!revealed && (
-        <input
+        <textarea
           ref={answerInputRef}
-          type="text"
+          rows={3}
           value={answer}
           onChange={(e) => setAnswer(e.target.value)}
           onKeyDown={(e) => {
@@ -148,7 +148,7 @@ export function DictationCard({ entry, levelLabel, onAttempt, onContinue, onArch
           autoCapitalize="none"
           autoCorrect="off"
           spellCheck={false}
-          className="w-full max-w-sm rounded-md border border-border-subtle bg-surface px-3 py-2 text-body text-fg focus-ring"
+          className="w-full max-w-sm resize-y rounded-md border border-border-subtle bg-surface px-3 py-2 text-body text-fg focus-ring"
         />
       )}
 

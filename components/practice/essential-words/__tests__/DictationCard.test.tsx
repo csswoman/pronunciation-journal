@@ -108,6 +108,8 @@ describe('DictationCard', () => {
   it('disables browser capitalization, correction and spelling tools on the input', () => {
     render(<DictationCard entry={entry} onAttempt={vi.fn().mockResolvedValue(undefined)} />)
     const input = screen.getByRole('textbox')
+    expect(input.tagName).toBe('TEXTAREA')
+    expect(input).toHaveAttribute('rows', '3')
     expect(input).toHaveAttribute('autocapitalize', 'none')
     expect(input).toHaveAttribute('autocorrect', 'off')
     expect(input).toHaveAttribute('spellcheck', 'false')
