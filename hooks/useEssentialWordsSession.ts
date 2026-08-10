@@ -8,7 +8,7 @@ import {
   type EssentialWordQueueItem,
 } from "@/lib/essential-words/queue";
 import { gradeEssentialWord, type GradeExtras } from "@/lib/essential-words/grade";
-import { essentialWordId, NEW_CARDS_PER_DAY, type CefrLevel, type EssentialWordPos, type EssentialWord } from "@/lib/essential-words/types";
+import { essentialWordId, GUIDED_SESSION_NEW_CARDS, NEW_CARDS_PER_DAY, type CefrLevel, type EssentialWordPos, type EssentialWord } from "@/lib/essential-words/types";
 import { getRoute } from "@/lib/essential-words/routes";
 import { loadPendingLapses, savePendingLapses } from "@/lib/essential-words/pending-lapses";
 import {
@@ -23,6 +23,7 @@ import {
 } from "@/lib/essential-words/session-model";
 import { readStoredCefrLevel } from "@/lib/essential-words/target-level";
 import { selectMode, type EssentialWordMode } from "@/lib/essential-words/exercise-modes";
+import { resolveRenderedSkillMode } from "@/lib/essential-words/rendered-skill-mode";
 import {
   createSessionPlan,
   nextStep as planNextStep,
@@ -47,6 +48,7 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { recordActivitySession } from "@/lib/progress/activity-hub";
 import { buildSessionResult } from "@/lib/practice/session-result";
 import { studyContextLine } from "@/lib/essential-words/study-context";
+import { saveLastEssentialWordsSession } from "@/lib/essential-words/ready-last-session";
 import type { ExerciseResult } from "@/lib/practice/types";
 import {
   createEssentialWordsRuntime,
@@ -73,7 +75,7 @@ export interface EssentialWordsCounts {
 }
 
 const EMPTY_STATS: EssentialWordsStats = {
-  totalWords: 0, learned: 0, dueCount: 0, dueTomorrow: 0, newToday: 0, newQuota: NEW_CARDS_PER_DAY, vaulted: 0,
+  totalWords: 0, learned: 0, dueCount: 0, dueTomorrow: 0, newToday: 0, newQuota: GUIDED_SESSION_NEW_CARDS, vaulted: 0,
 };
 const EMPTY_COUNTS: EssentialWordsCounts = {
   newRemaining: 0, learningRemaining: 0, reviewRemaining: 0,
@@ -105,12 +107,15 @@ export function useEssentialWordsSession() {
   const sessionActiveRef = useRef(false);
   const seenStepIdsRef = useRef<Set<string>>(new Set());
   const runtimeRef = useRef<Awaited<ReturnType<typeof createEssentialWordsRuntime>> | null>(null);
+  const skillItemsByWordRef = useRef<Map<string, SkillRuntimeQueueItem>>(new Map());
   const skillModeRef = useRef(false);
   const skillPlannerModeRef = useRef<"normal" | "recovery">("normal");
   const sessionIdRef = useRef(crypto.randomUUID());
 
   const sessionResultsRef = useRef<ExerciseResult[]>([]);
   const finishingRef = useRef(false);
+  const sessionStartedAtRef = useRef<number | null>(null);
+  const stepPresentedAtRef = useRef<number | null>(null);
   // Pending lapses: wordId → quality — flushed to Dexie on session end
   const pendingLapsesRef = useRef<Map<string, number>>(new Map());
   const lapseFlushRef = useRef<Promise<void> | null>(null);
@@ -178,6 +183,16 @@ export function useEssentialWordsSession() {
     };
   }, [flushLapses]);
 
+  const markStepPresented = useCallback(() => {
+    stepPresentedAtRef.current = Date.now();
+  }, []);
+
+  const elapsedStepMs = useCallback(() => {
+    const started = stepPresentedAtRef.current;
+    if (started == null) return 0;
+    return Math.max(0, Date.now() - started);
+  }, []);
+
   const finishSession = useCallback(async () => {
     if (finishingRef.current) return;
     finishingRef.current = true;
@@ -193,14 +208,29 @@ export function useEssentialWordsSession() {
       finishingRef.current = false;
       return;
     }
-    const sessionResult = buildSessionResult(sessionResultsRef.current);
+    const built = buildSessionResult(sessionResultsRef.current);
+    const wallMs = sessionStartedAtRef.current
+      ? Math.max(0, Date.now() - sessionStartedAtRef.current)
+      : 0;
+    const sessionResult = {
+      ...built,
+      totalTimeMs: wallMs > 0 ? wallMs : built.totalTimeMs,
+    };
     try {
       await recordActivitySession(user.id, { practiceContext: "essential-words", sessionResult });
+      saveLastEssentialWordsSession(user.id, {
+        practiced: sessionResult.results.length,
+        correct: sessionResult.results.filter((r) => r.isCorrect).length,
+        durationMs: sessionResult.totalTimeMs,
+        completedAt: new Date().toISOString(),
+      });
       const { flushOutbox } = await import("@/lib/sync/sync-manager");
       await flushOutbox(user.id);
     } catch (err) {
       console.error("[EssentialWordsSession] recordActivitySession failed", err);
     } finally {
+      sessionStartedAtRef.current = null;
+      stepPresentedAtRef.current = null;
       finishingRef.current = false;
     }
   }, [user?.id, flushLapses]);
@@ -230,7 +260,12 @@ export function useEssentialWordsSession() {
     // A filtered queue can legitimately contain fewer than one complete
     // 3-word block. The pure Fase A engine leaves that remainder for a later
     // combined session; preserve the existing one-card UX for this edge case.
-    if (loaded.source === "skill" || (items.length > 0 && items.length < 3)) {
+    const skillItems = items.filter((item) => "plannedItem" in item) as SkillRuntimeQueueItem[];
+    skillItemsByWordRef.current = new Map(
+      skillItems.map((item) => [essentialWordId(item.entry.word), item]),
+    );
+
+    if (items.length > 0 && items.length < 3) {
       compatModeRef.current = true;
       setCompatQueue(items);
       setCompatIndex(0);
@@ -327,12 +362,14 @@ export function useEssentialWordsSession() {
     setCompatIndex(next);
     setCompatStepId(nextCompatStepId(queue[next]));
     setCounts(deriveCounts(queue, next));
+    markStepPresented();
     setPhase(queue[next].kind === "new" ? "study" : "speak");
-  }, [finishSession, nextCompatStepId]);
+  }, [finishSession, nextCompatStepId, markStepPresented]);
 
   const startSpeak = useCallback(() => {
     if (!planState || !currentStep || currentStep.kind !== "expose") {
       setPhase("speak");
+      markStepPresented();
       return;
     }
     const wordId = essentialWordId(currentStep.word.word.toLowerCase());
@@ -342,8 +379,9 @@ export function useEssentialWordsSession() {
     setCurrentStep(next);
     setCounts(derivePlanCounts(nextPlanState));
     if (!next) { void finishSession(); return; }
+    markStepPresented();
     setPhase(next.kind === "expose" ? "study" : "speak");
-  }, [planState, currentStep, finishSession]);
+  }, [planState, currentStep, finishSession, markStepPresented]);
 
   const beginSession = useCallback(() => {
     if (phase !== "ready") return;
@@ -355,6 +393,8 @@ export function useEssentialWordsSession() {
         ? countScheduledSteps(planState)
         : 0;
     sessionActiveRef.current = true;
+    sessionStartedAtRef.current = Date.now();
+    markStepPresented();
     seenStepIdsRef.current.clear();
     setSessionProgress({ current: 1, total: Math.max(total, 1) });
     if (compatModeRef.current) {
@@ -363,7 +403,7 @@ export function useEssentialWordsSession() {
       return;
     }
     setPhase(currentStep && currentStep.kind === "expose" ? "study" : "speak");
-  }, [phase, compatQueue, compatIndex, currentStep, planState]);
+  }, [phase, compatQueue, compatIndex, currentStep, planState, markStepPresented]);
 
   const submitGrade = useCallback(
     async (
@@ -377,7 +417,13 @@ export function useEssentialWordsSession() {
         const item = compatQueue[compatIndex];
         if (!item) return;
         const wordId = essentialWordId(item.entry.word.toLowerCase());
-        const result = buildEssentialWordExerciseResult(item, quality, extras, currentModeRef.current);
+        const result = buildEssentialWordExerciseResult(
+          item,
+          quality,
+          extras,
+          currentModeRef.current,
+          elapsedStepMs(),
+        );
         setPreviousMode(currentModeRef.current);
         if (skillModeRef.current) {
           if (!outcome || !("plannedItem" in item) || !runtimeRef.current) {
@@ -389,6 +435,7 @@ export function useEssentialWordsSession() {
             quality,
             extras,
             sessionId: sessionIdRef.current,
+            renderedMode: currentModeRef.current,
           } satisfies RuntimeAttemptInput);
           seenIdsRef.current.add(wordId);
           pendingLapsesRef.current.delete(wordId);
@@ -408,8 +455,20 @@ export function useEssentialWordsSession() {
           advanceCompat(nextQueue, compatIndex);
           return;
         }
-        if (quality >= 3) {
+        if (runtimeRef.current && outcome) {
+          await runtimeRef.current.recordAttempt({
+            item,
+            outcome,
+            quality,
+            extras,
+            sessionId: sessionIdRef.current,
+            renderedMode: currentModeRef.current,
+            persistLegacySrs: quality >= 3,
+          } satisfies RuntimeAttemptInput);
+        } else if (quality >= 3) {
           await gradeEssentialWord(item.entry.word, quality, extras, user?.id);
+        }
+        if (quality >= 3) {
           seenIdsRef.current.add(wordId);
           pendingLapsesRef.current.delete(wordId);
           persistPendingLapses();
@@ -438,11 +497,58 @@ export function useEssentialWordsSession() {
       const isFinalRound = currentStep.id.startsWith("final:");
 
       const result = buildEssentialWordExerciseResult(
-        { entry: currentStep.word, kind: "review" }, quality, extras, currentModeRef.current,
+        { entry: currentStep.word, kind: "review" },
+        quality,
+        extras,
+        currentModeRef.current,
+        elapsedStepMs(),
       );
       setPreviousMode(currentModeRef.current);
 
       const correct = quality >= 3;
+      if (skillModeRef.current) {
+        const baseItem = skillItemsByWordRef.current.get(wordId);
+        if (!baseItem || !outcome || !runtimeRef.current) {
+          throw new Error("El intento skill requiere evidencia y una palabra planificada");
+        }
+        // The guided block deliberately has several exercises per word. Its
+        // in-block attempts are evidence-only; the final verification is the
+        // one that advances the word's skill schedule.
+        await runtimeRef.current.recordAttempt({
+          item: {
+            ...baseItem,
+            eventType: isFinalRound ? baseItem.eventType : "practice",
+          },
+          outcome,
+          quality,
+          extras,
+          sessionId: sessionIdRef.current,
+          renderedMode: currentModeRef.current,
+        } satisfies RuntimeAttemptInput);
+        seenIdsRef.current.add(wordId);
+        pendingLapsesRef.current.delete(wordId);
+        persistPendingLapses();
+        if (currentStep.level === 1 && correct) {
+          setStats((state) => ({ ...state, newToday: state.newToday + 1, learned: state.learned + 1 }));
+        }
+        sessionResultsRef.current.push(result);
+        setSessionSummary((prev) => advanceSummary(prev, correct));
+
+        let nextPlanState = planApplyResult(planState, { wordId, level: currentStep.level, correct });
+        if (claimedKnown) {
+          const claimedKnownIds = new Set(nextPlanState.claimedKnownIds);
+          claimedKnownIds.delete(wordId);
+          nextPlanState = { ...nextPlanState, claimedKnownIds };
+        }
+        const next = planNextStep(nextPlanState, wordsByIdRef.current);
+        setPlanState(nextPlanState);
+        setCurrentStep(next);
+        setCounts(derivePlanCounts(nextPlanState));
+        if (!next) { void finishSession(); return; }
+        markStepPresented();
+        setPhase(next.kind === "expose" ? "study" : "speak");
+        return;
+      }
       if (correct && claimedKnown && isFinalRound) {
         // Deferred Omitir verification passed → archive (90d snooze).
         await snoozeEssentialWord(currentStep.word.word, 90, user?.id);
@@ -452,7 +558,18 @@ export function useEssentialWordsSession() {
         sessionResultsRef.current.push(result);
         setSessionSummary((prev) => advanceSummary(prev, true));
       } else if (correct) {
-        await gradeEssentialWord(currentStep.word.word, quality, extras, user?.id);
+        if (runtimeRef.current && outcome) {
+          await runtimeRef.current.recordAttempt({
+            item: { entry: currentStep.word, kind: "review" },
+            outcome,
+            quality,
+            extras,
+            sessionId: sessionIdRef.current,
+            renderedMode: currentModeRef.current,
+          } satisfies RuntimeAttemptInput);
+        } else {
+          await gradeEssentialWord(currentStep.word.word, quality, extras, user?.id);
+        }
         seenIdsRef.current.add(wordId);
         pendingLapsesRef.current.delete(wordId);
         persistPendingLapses();
@@ -463,6 +580,17 @@ export function useEssentialWordsSession() {
         sessionResultsRef.current.push(result);
         setSessionSummary((prev) => advanceSummary(prev, true));
       } else {
+        if (runtimeRef.current && outcome) {
+          await runtimeRef.current.recordAttempt({
+            item: { entry: currentStep.word, kind: "review" },
+            outcome,
+            quality,
+            extras,
+            sessionId: sessionIdRef.current,
+            renderedMode: currentModeRef.current,
+            persistLegacySrs: false,
+          } satisfies RuntimeAttemptInput);
+        }
         seenIdsRef.current.add(wordId);
         pendingLapsesRef.current.set(wordId, quality);
         persistPendingLapses();
@@ -481,9 +609,10 @@ export function useEssentialWordsSession() {
       setCurrentStep(next);
       setCounts(derivePlanCounts(nextPlanState));
       if (!next) { void finishSession(); return; }
+      markStepPresented();
       setPhase(next.kind === "expose" ? "study" : "speak");
     },
-    [compatQueue, compatIndex, planState, currentStep, persistPendingLapses, user?.id, finishSession, advanceCompat],
+    [compatQueue, compatIndex, planState, currentStep, persistPendingLapses, user?.id, finishSession, advanceCompat, elapsedStepMs, markStepPresented],
   );
 
   const learnMore = useCallback(() => {
@@ -706,12 +835,19 @@ export function useEssentialWordsSession() {
           : undefined,
       }
     : null);
+  const skillItem: SkillRuntimeQueueItem | undefined = skillModeRef.current && current
+    ? (compatCurrent && "plannedItem" in compatCurrent
+      ? compatCurrent as SkillRuntimeQueueItem
+      : skillItemsByWordRef.current.get(essentialWordId(current.entry.word)))
+    : undefined;
   const currentMode: EssentialWordMode = compatCurrent
-    ? skillModeRef.current && "forcedMode" in compatCurrent && phase !== "study"
-      ? compatCurrent.forcedMode as EssentialWordMode
+    ? skillItem && phase !== "study"
+      ? resolveRenderedSkillMode(current!.entry, skillItem.forcedMode, skillItem)
       : selectMode(compatCurrent, previousMode)
     : gatedStep && gatedStep.kind === "exercise"
-      ? gatedStep.mode
+      ? skillItem
+        ? resolveRenderedSkillMode(gatedStep.word, gatedStep.mode, skillItem)
+        : gatedStep.mode
       : current
         ? selectMode(current, previousMode)
         : "speak_sentence";
@@ -719,6 +855,10 @@ export function useEssentialWordsSession() {
   // without re-deriving it and without adding it to dependency arrays.
   const currentModeRef = useRef<EssentialWordMode>(currentMode);
   currentModeRef.current = currentMode;
+  const listeningTier = skillItem?.listeningLadder?.level;
+  const isListeningSkill = skillItem?.plannedItem.skill === 'listening';
+  const focusContrastId = skillItem?.focusContrastId;
+  const retiredBlankKeys = skillItem?.retiredBlankKeys;
   // Recognition needs varied alternatives, not the two other words in a short session.
   const audioDistractorPool = allWordsRef.current;
 
@@ -727,6 +867,10 @@ export function useEssentialWordsSession() {
     currentStepId,
     current,
     currentMode,
+    listeningTier,
+    isListeningSkill,
+    focusContrastId,
+    retiredBlankKeys,
     currentExerciseLevel,
     audioDistractorPool,
     stats,

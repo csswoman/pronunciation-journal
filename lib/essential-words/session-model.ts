@@ -20,6 +20,7 @@ export function buildEssentialWordExerciseResult(
   quality: number,
   extras?: GradeExtras,
   mode: EssentialWordMode = "speak_sentence",
+  timeMs = 0,
 ): ExerciseResult {
   const wordId = essentialWordId(item.entry.word.toLowerCase());
   const isSpeech = extras?.accuracy !== undefined;
@@ -35,7 +36,7 @@ export function buildEssentialWordExerciseResult(
     userAnswer: extras?.transcript,
     contentId: wordId,
     context: "essential-words",
-    timeMs: 0,
+    timeMs: Math.max(0, Math.round(timeMs)),
     score: extras?.accuracy,
     completedAt: new Date(),
     exercisePayload: { mode },
