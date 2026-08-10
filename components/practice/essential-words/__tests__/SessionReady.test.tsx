@@ -50,18 +50,20 @@ vi.mock('../SessionReadyHero', () => ({
   },
 }))
 
+const readyProps = {
+  counts: { newRemaining: 8, learningRemaining: 0, reviewRemaining: 16 },
+  stats: baseStats,
+  streak: 3,
+  activeRouteId: null as string | null,
+  onRouteChange: vi.fn(),
+  sessionSize: 'recommended' as const,
+  onSessionSizeChange: vi.fn(),
+  onBegin: vi.fn(),
+}
+
 describe('SessionReady', () => {
   it('composes the ready screen sections', () => {
-    render(
-      <SessionReady
-        counts={{ newRemaining: 8, learningRemaining: 0, reviewRemaining: 16 }}
-        stats={baseStats}
-        streak={3}
-        activeRouteId={null}
-        onRouteChange={vi.fn()}
-        onBegin={vi.fn()}
-      />,
-    )
+    render(<SessionReady {...readyProps} />)
 
     expect(screen.getByRole('heading', { name: 'Hoy te tocan 24 palabras' })).toBeInTheDocument()
     expect(screen.getByTestId('level-progress')).toBeInTheDocument()
@@ -71,12 +73,8 @@ describe('SessionReady', () => {
   it('forwards resume state to the hero', () => {
     render(
       <SessionReady
+        {...readyProps}
         counts={{ newRemaining: 2, learningRemaining: 3, reviewRemaining: 4 }}
-        stats={baseStats}
-        streak={3}
-        activeRouteId={null}
-        onRouteChange={vi.fn()}
-        onBegin={vi.fn()}
       />,
     )
 
@@ -91,11 +89,8 @@ describe('SessionReady', () => {
     const onBegin = vi.fn()
     render(
       <SessionReady
+        {...readyProps}
         counts={{ newRemaining: 3, learningRemaining: 0, reviewRemaining: 0 }}
-        stats={baseStats}
-        streak={3}
-        activeRouteId={null}
-        onRouteChange={vi.fn()}
         onBegin={onBegin}
       />,
     )

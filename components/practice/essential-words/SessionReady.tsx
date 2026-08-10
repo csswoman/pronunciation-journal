@@ -8,6 +8,7 @@
 //   <SessionReadyVaultRow />
 // </SessionReady>
 
+import type { SessionSizeId } from '@/lib/essential-words/session-size'
 import type { EssentialWordsCounts, EssentialWordsStats } from '@/hooks/useEssentialWordsSession'
 import { SessionReadyHero } from './SessionReadyHero'
 import { SessionReadyInsights } from './SessionReadyInsights'
@@ -20,6 +21,8 @@ interface Props {
   streak: number
   activeRouteId: string | null
   onRouteChange: (routeId: string | null) => void
+  sessionSize: SessionSizeId
+  onSessionSizeChange: (id: SessionSizeId) => void
   onBegin: () => void
 }
 
@@ -29,6 +32,8 @@ export function SessionReady({
   streak,
   activeRouteId,
   onRouteChange,
+  sessionSize,
+  onSessionSizeChange,
   onBegin,
 }: Props) {
   const isResume = counts.learningRemaining > 0
@@ -36,7 +41,7 @@ export function SessionReady({
   return (
     <section
       aria-labelledby="session-ready-title"
-      className="flex w-full flex-col gap-layout-stack animate-message-in"
+      className="flex w-full flex-col gap-space-6 animate-message-in sm:gap-space-8"
     >
       <SessionReadyHero
         counts={counts}
@@ -44,6 +49,8 @@ export function SessionReady({
         isResume={isResume}
         activeRouteId={activeRouteId}
         onRouteChange={onRouteChange}
+        sessionSize={sessionSize}
+        onSessionSizeChange={onSessionSizeChange}
         onBegin={onBegin}
       />
       <SessionReadyLevelProgress />

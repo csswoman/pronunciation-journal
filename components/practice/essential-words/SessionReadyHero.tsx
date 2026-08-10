@@ -2,15 +2,20 @@
 
 // Planned structure:
 // <SessionReadyHero>
-//   title row + inline stats + note + CTA + <SessionReadyRouteHint />
+//   title + minutes
+//   breakdown
+//   note
+//   <SessionReadySizePicker />
+//   <SessionReadyRouteChips />
+//   CTA
 // </SessionReadyHero>
 
 import { estimateDurationMs } from '@/lib/essential-words/session-plan-time-ceiling'
-import { isDailyQuotaMet } from '@/lib/essential-words/daily-quota'
+import type { SessionSizeId } from '@/lib/essential-words/session-size'
 import { PillButton } from '@/components/ui/PillButton'
-import { Sparkles } from '@/components/icons'
 import type { EssentialWordsCounts, EssentialWordsStats } from '@/hooks/useEssentialWordsSession'
-import { SessionReadyRouteHint } from './SessionReadyRouteHint'
+import { SessionReadyRouteChips } from './SessionReadyRouteChips'
+import { SessionReadySizePicker } from './SessionReadySizePicker'
 import { SessionSurface } from './session-chrome'
 
 interface Props {
@@ -19,6 +24,8 @@ interface Props {
   isResume: boolean
   activeRouteId: string | null
   onRouteChange: (routeId: string | null) => void
+  sessionSize: SessionSizeId
+  onSessionSizeChange: (id: SessionSizeId) => void
   onBegin: () => void
 }
 
@@ -48,36 +55,35 @@ function structureNote(counts: EssentialWordsCounts, isResume: boolean): string 
   return null
 }
 
-function SessionStat({ value, label }: { value: number; label: string }) {
-  return (
-    <span className="text-body-sm text-fg-muted">
-      <span className="font-semibold tabular-nums text-fg">{value}</span> {label}
-    </span>
-  )
+function breakdownLine(counts: EssentialWordsCounts): string | null {
+  const parts: string[] = []
+  if (counts.newRemaining > 0) parts.push(`${counts.newRemaining} nuevas`)
+  if (counts.reviewRemaining > 0) parts.push(`${counts.reviewRemaining} repasos`)
+  if (parts.length === 0) return null
+  return parts.join(' · ')
 }
 
 export function SessionReadyHero({
   counts,
-  stats,
   isResume,
   activeRouteId,
   onRouteChange,
+  sessionSize,
+  onSessionSizeChange,
   onBegin,
 }: Props) {
   const minutes = estimateSessionMinutes(counts)
   const note = structureNote(counts, isResume)
+  const breakdown = breakdownLine(counts)
+  const total =
+    counts.newRemaining + counts.learningRemaining + counts.reviewRemaining
   const title = isResume
     ? 'Continuar donde lo dejaste'
-    : `Hoy te tocan ${counts.newRemaining + counts.learningRemaining + counts.reviewRemaining} ${
-        counts.newRemaining + counts.learningRemaining + counts.reviewRemaining === 1
-          ? 'palabra'
-          : 'palabras'
-      }`
+    : `Hoy te tocan ${total} ${total === 1 ? 'palabra' : 'palabras'}`
   const ctaLabel = isResume ? 'Continuar' : 'Empezar'
-  const quotaMet = !isResume && isDailyQuotaMet(stats)
 
   return (
-    <SessionSurface className="gap-layout-stack">
+    <SessionSurface className="gap-layout-stack-loose">
       <header className="flex items-start justify-between gap-3">
         <h2 id="session-ready-title" className="m-0 text-h3 text-balance text-fg">
           {title}
@@ -87,23 +93,14 @@ export function SessionReadyHero({
         </span>
       </header>
 
-      {quotaMet ? (
-        <div className="flex items-center gap-2 rounded-md bg-primary-soft px-3 py-2 text-caption text-primary">
-          <Sparkles size={14} aria-hidden />
-          <span>Ya completaste tu diaria de hoy — esto es práctica extra</span>
-        </div>
+      {breakdown ? (
+        <p className="m-0 text-body-sm text-fg-muted">{breakdown}</p>
       ) : null}
 
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-        {counts.newRemaining > 0 ? (
-          <SessionStat value={counts.newRemaining} label="nuevas" />
-        ) : null}
-        {counts.reviewRemaining > 0 ? (
-          <SessionStat value={counts.reviewRemaining} label="repasos" />
-        ) : null}
-      </div>
-
       {note ? <p className="m-0 text-caption text-pretty text-fg-muted">{note}</p> : null}
+
+      <SessionReadySizePicker value={sessionSize} onChange={onSessionSizeChange} />
+      <SessionReadyRouteChips activeRouteId={activeRouteId} onRouteChange={onRouteChange} />
 
       <PillButton
         type="button"
@@ -116,8 +113,6 @@ export function SessionReadyHero({
       >
         {ctaLabel}
       </PillButton>
-
-      <SessionReadyRouteHint activeRouteId={activeRouteId} onRouteChange={onRouteChange} />
     </SessionSurface>
   )
 }

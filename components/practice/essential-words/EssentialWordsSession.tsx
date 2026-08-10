@@ -22,11 +22,12 @@ import Button from '@/components/ui/Button'
 
 export function EssentialWordsSession({ initialStreak = 0 }: { initialStreak?: number } = {}) {
   const {
-    phase, currentStepId, current, currentMode, currentExerciseLevel, audioDistractorPool, stats, counts,
+    phase, currentStepId, current, currentMode, listeningTier, isListeningSkill, focusContrastId, retiredBlankKeys, currentExerciseLevel, audioDistractorPool, stats, counts,
     sessionProgress, studyContext, sessionSummary,
     strugglingWords, reloadLoading, levels, activeRouteId, setRoute,
     startSpeak, beginSession, omitWord, submitGrade, reload, learnMore, archiveWord,
     keepSnooze, masterWord,
+    sessionSize, setSessionSize,
   } = useEssentialWordsSession()
   const loadingWords = useLoadingWords()
   const router = useRouter()
@@ -177,7 +178,7 @@ export function EssentialWordsSession({ initialStreak = 0 }: { initialStreak?: n
   if (phase === 'ready') {
     return (
       <>
-        <SessionShell className="min-h-[calc(100dvh-10rem)] sm:min-h-[calc(100dvh-8rem)]">
+        <SessionShell className="min-h-[calc(100dvh-10rem)] gap-space-6 sm:min-h-[calc(100dvh-8rem)] sm:gap-space-8">
           {pageHeader}
           {sessionToolbar}
           <SessionReady
@@ -186,6 +187,8 @@ export function EssentialWordsSession({ initialStreak = 0 }: { initialStreak?: n
             streak={initialStreak}
             activeRouteId={activeRouteId}
             onRouteChange={(id) => void setRoute(id)}
+            sessionSize={sessionSize}
+            onSessionSizeChange={setSessionSize}
             onBegin={beginSession}
           />
         </SessionShell>
@@ -252,6 +255,10 @@ export function EssentialWordsSession({ initialStreak = 0 }: { initialStreak?: n
                 <EssentialWordsExerciseCard
                   current={current}
                   currentMode={currentMode}
+                  listeningTier={listeningTier}
+                  isListeningSkill={isListeningSkill}
+                  focusContrastId={focusContrastId}
+                  retiredBlankKeys={retiredBlankKeys}
                   currentStepId={currentStepId}
                   levelLabel={exerciseLevelLabelText}
                   audioDistractorPool={audioDistractorPool}
@@ -263,6 +270,7 @@ export function EssentialWordsSession({ initialStreak = 0 }: { initialStreak?: n
                   onArchive={() => void archiveWord(current.entry.word)}
                   onKeepSnooze={() => void keepSnooze(current.entry.word)}
                   onMaster={() => void masterWord(current.entry.word)}
+                  isAdvancedListening={isListeningSkill && listeningTier === 3}
                 />
               )}
             </div>
