@@ -27,7 +27,7 @@ export function EssentialWordsSession({ initialStreak = 0 }: { initialStreak?: n
     strugglingWords, reloadLoading, levels, activeRouteId, setRoute,
     startSpeak, beginSession, omitWord, submitGrade, reload, learnMore, archiveWord,
     keepSnooze, masterWord,
-    sessionSize, setSessionSize,
+    sessionSize, setSessionSize, startLeechReview,
   } = useEssentialWordsSession()
   const loadingWords = useLoadingWords()
   const router = useRouter()
@@ -190,6 +190,7 @@ export function EssentialWordsSession({ initialStreak = 0 }: { initialStreak?: n
             sessionSize={sessionSize}
             onSessionSizeChange={setSessionSize}
             onBegin={beginSession}
+            onLeechReview={startLeechReview}
           />
         </SessionShell>
         {exitSheet}

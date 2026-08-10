@@ -14,16 +14,28 @@ const baseStats = {
   vaulted: 2,
 }
 
-vi.mock('../SessionReadyLevelProgress', () => ({
-  SessionReadyLevelProgress: () => <div data-testid="level-progress" />,
-}))
-
-vi.mock('../SessionReadyInsights', () => ({
-  SessionReadyInsights: () => <div data-testid="insights" />,
+vi.mock('@/hooks/useEssentialWordsReadyDashboard', () => ({
+  useEssentialWordsReadyDashboard: () => ({
+    forecast: Array.from({ length: 7 }, (_, i) => ({
+      dayKey: `2026-08-${10 + i}`,
+      label: 'L',
+      count: i,
+    })),
+    vocabulary: { nuevas: 2, aprendiendo: 3, en_repaso: 4, dominadas: 1 },
+    retention: { pct: 87, sampleSize: 20 },
+    leeches: [{ wordId: 'c1k:hard', word: 'hard', lapses: 4 }],
+    streakMarks: [false, false, true, true, false, false, true],
+    heatmap: Array.from({ length: 84 }, (_, i) => ({
+      dayKey: `d${i}`,
+      count: i % 3,
+      level: (i % 5) as 0 | 1 | 2 | 3 | 4,
+    })),
+    lastSession: { practiced: 9, correct: 8, durationMs: 342000, completedAt: '2026-08-09T12:00:00.000Z' },
+  }),
 }))
 
 vi.mock('../SessionReadyVaultRow', () => ({
-  SessionReadyVaultRow: () => null,
+  SessionReadyVaultRow: () => <div data-testid="vault" />,
 }))
 
 vi.mock('../SessionReadyHero', () => ({
@@ -59,44 +71,29 @@ const readyProps = {
   sessionSize: 'recommended' as const,
   onSessionSizeChange: vi.fn(),
   onBegin: vi.fn(),
+  onLeechReview: vi.fn(),
 }
 
 describe('SessionReady', () => {
-  it('composes the ready screen sections', () => {
+  it('composes hero, recap, forecast, vocabulary, rail, and heatmap', () => {
     render(<SessionReady {...readyProps} />)
 
     expect(screen.getByRole('heading', { name: 'Hoy te tocan 24 palabras' })).toBeInTheDocument()
-    expect(screen.getByTestId('level-progress')).toBeInTheDocument()
-    expect(screen.getByTestId('insights')).toBeInTheDocument()
-  })
-
-  it('forwards resume state to the hero', () => {
-    render(
-      <SessionReady
-        {...readyProps}
-        counts={{ newRemaining: 2, learningRemaining: 3, reviewRemaining: 4 }}
-      />,
-    )
-
-    expect(
-      screen.getByRole('heading', { name: 'Continuar donde lo dejaste' }),
-    ).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Continuar' })).toBeInTheDocument()
+    expect(screen.getByText(/Última: 8\/9/)).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Próximos 7 días' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Tu vocabulario' })).toBeInTheDocument()
+    expect(screen.getByText('Racha')).toBeInTheDocument()
+    expect(screen.getByText('Retención 30 días')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Se te resisten' })).toBeInTheDocument()
+    expect(screen.getByTestId('vault')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Últimas 12 semanas' })).toBeInTheDocument()
   })
 
   it('calls onBegin from the hero CTA', async () => {
     const user = userEvent.setup()
     const onBegin = vi.fn()
-    render(
-      <SessionReady
-        {...readyProps}
-        counts={{ newRemaining: 3, learningRemaining: 0, reviewRemaining: 0 }}
-        onBegin={onBegin}
-      />,
-    )
-
+    render(<SessionReady {...readyProps} onBegin={onBegin} />)
     await user.click(screen.getByRole('button', { name: 'Empezar' }))
-
     expect(onBegin).toHaveBeenCalledOnce()
   })
 })
