@@ -26,27 +26,20 @@ describe('SessionReadyHero', () => {
 
     expect(screen.getByRole('heading', { name: 'Hoy te tocan 24 palabras' })).toBeInTheDocument()
     expect(screen.getByText(/unos \d+ min/)).toBeInTheDocument()
-    expect(screen.getByText('8 nuevas · 16 repasos')).toBeInTheDocument()
+    expect(screen.getByText('8 nuevas · 16 repasos · 1 ronda final')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Recomendada · 9' })).toHaveAttribute('aria-pressed', 'true')
     expect(screen.getByRole('button', { name: 'Sesión recomendada' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Empezar' })).toBeInTheDocument()
   })
 
-  it('describes the block structure when there are new words', () => {
-    render(<SessionReadyHero {...heroProps} />)
-    expect(
-      screen.getByText('3 bloques de palabras nuevas, más los repasos y una ronda final'),
-    ).toBeTruthy()
-  })
-
-  it('uses review-only copy when there are no new words', () => {
+  it('uses review-only copy with final round when there are no new words', () => {
     render(
       <SessionReadyHero
         {...heroProps}
         counts={{ newRemaining: 0, learningRemaining: 0, reviewRemaining: 5 }}
       />,
     )
-    expect(screen.getByText('Solo repaso de palabras que ya has visto')).toBeInTheDocument()
+    expect(screen.getByText('5 repasos · 1 ronda final')).toBeInTheDocument()
   })
 
   it('switches to resume copy when learning cards remain', () => {
@@ -60,6 +53,7 @@ describe('SessionReadyHero', () => {
     expect(
       screen.getByRole('heading', { name: 'Continuar donde lo dejaste' }),
     ).toBeInTheDocument()
+    expect(screen.getByText('Retoma la sesión que dejaste a medias')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Continuar' })).toBeInTheDocument()
   })
 

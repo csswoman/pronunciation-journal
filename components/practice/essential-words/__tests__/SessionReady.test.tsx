@@ -79,7 +79,7 @@ describe('SessionReady', () => {
     render(<SessionReady {...readyProps} />)
 
     expect(screen.getByRole('heading', { name: 'Hoy te tocan 24 palabras' })).toBeInTheDocument()
-    expect(screen.getByText(/Última: 8\/9/)).toBeInTheDocument()
+    expect(screen.getByText(/Última: buen ritmo · 8\/9/)).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Próximos 7 días' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Tu vocabulario' })).toBeInTheDocument()
     expect(screen.getByText('Racha')).toBeInTheDocument()

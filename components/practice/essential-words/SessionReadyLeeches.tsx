@@ -18,16 +18,16 @@ export function SessionReadyLeeches({ leeches, onReview }: Props) {
   const preview = leeches.slice(0, 3)
 
   return (
-    <SessionSurface className="gap-layout-stack">
+    <SessionSurface density="compact">
       <div className="flex items-center gap-2">
-        <AlertCircle size={16} className="text-warning" aria-hidden />
+        <AlertCircle size={16} className="shrink-0 text-warning" aria-hidden />
         <h3 className="m-0 font-label text-fg">Se te resisten</h3>
       </div>
       <div className="flex flex-wrap gap-2">
         {preview.map((leech) => (
           <span
             key={leech.wordId}
-            className="rounded-full bg-warning-soft px-3 py-1 text-caption text-warning"
+            className="rounded-full bg-warning-soft px-3 py-1.5 text-caption text-warning"
           >
             {displayEnglishWord(leech.word)}
           </span>
@@ -36,7 +36,7 @@ export function SessionReadyLeeches({ leeches, onReview }: Props) {
       <button
         type="button"
         onClick={() => onReview(leeches.map((l) => l.wordId))}
-        className="text-left text-caption font-semibold text-primary focus-ring hover:underline"
+        className="inline-flex min-h-10 w-full items-center rounded-md px-1 text-left text-caption font-semibold text-info transition-colors duration-150 ease-out-quart hover:underline focus-ring"
       >
         Repasar las {leeches.length} difíciles →
       </button>

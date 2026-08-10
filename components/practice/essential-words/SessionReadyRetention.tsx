@@ -1,7 +1,7 @@
 'use client'
 
 // Planned structure:
-// <SessionReadyRetention> label + pct </SessionReadyRetention>
+// <SessionReadyRetention> label + pct + sample </SessionReadyRetention>
 
 import { SessionSurface } from './session-chrome'
 
@@ -12,11 +12,11 @@ interface Props {
 
 export function SessionReadyRetention({ pct, sampleSize }: Props) {
   return (
-    <SessionSurface className="gap-layout-stack-tight">
-      <span className="font-kicker text-fg-subtle">Retención 30 días</span>
-      <span className="type-stat text-h3 tracking-tight text-fg">{pct}%</span>
-      <span className="text-caption text-fg-muted">
-        {sampleSize} repasos recientes
+    <SessionSurface density="compact">
+      <span className="font-kicker text-fg-muted">Retención 30 días</span>
+      <span className="type-stat text-h3 tracking-tight tabular-nums text-fg">{pct}%</span>
+      <span className="text-caption text-pretty text-fg-muted">
+        {sampleSize} {sampleSize === 1 ? 'repaso reciente' : 'repasos recientes'}
       </span>
     </SessionSurface>
   )

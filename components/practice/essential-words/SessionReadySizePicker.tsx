@@ -1,7 +1,7 @@
 'use client'
 
 // Planned structure:
-// <SessionReadySizePicker> size chip × 3 </SessionReadySizePicker>
+// <SessionReadySizePicker> size pill × 3 </SessionReadySizePicker>
 
 import { cn } from '@/lib/cn'
 import { SESSION_SIZES, type SessionSizeId } from '@/lib/essential-words/session-size'
@@ -10,6 +10,17 @@ interface Props {
   value: SessionSizeId
   onChange: (id: SessionSizeId) => void
 }
+
+const chipClass = (selected: boolean) =>
+  cn(
+    'inline-flex min-h-10 w-full items-center justify-center rounded-full px-2 py-2',
+    'text-caption font-semibold transition-[color,background-color,border-color,transform]',
+    'duration-150 ease-out-quart focus-ring active:scale-[0.97]',
+    'motion-reduce:transition-colors motion-reduce:active:scale-100',
+    selected
+      ? 'border border-info bg-info-soft text-fg'
+      : 'border border-transparent bg-surface-sunken text-fg-muted hover:bg-surface-raised hover:text-fg',
+  )
 
 export function SessionReadySizePicker({ value, onChange }: Props) {
   return (
@@ -26,12 +37,7 @@ export function SessionReadySizePicker({ value, onChange }: Props) {
             type="button"
             aria-pressed={selected}
             onClick={() => onChange(size.id)}
-            className={cn(
-              'rounded-md px-2 py-2 text-center text-caption font-semibold transition-colors focus-ring',
-              selected
-                ? 'bg-primary-soft text-primary'
-                : 'bg-surface-sunken text-fg-muted hover:text-fg',
-            )}
+            className={chipClass(selected)}
           >
             {size.label}
           </button>

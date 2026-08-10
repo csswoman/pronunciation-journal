@@ -1,7 +1,7 @@
 'use client'
 
 // Planned structure:
-// <SessionReadyHeatmap> title + 12w grid </SessionReadyHeatmap>
+// <SessionReadyHeatmap> rail-width card + 12w grid filling the card </SessionReadyHeatmap>
 
 import type { HeatmapDay } from '@/lib/essential-words/ready-heatmap'
 import { SessionSurface } from './session-chrome'
@@ -21,10 +21,10 @@ interface Props {
 
 export function SessionReadyHeatmap({ days }: Props) {
   return (
-    <SessionSurface className="gap-layout-stack">
+    <SessionSurface density="compact" className="min-w-0">
       <h3 className="m-0 font-label text-fg">Últimas 12 semanas</h3>
       <div
-        className="grid grid-flow-col grid-rows-7 gap-1"
+        className="grid w-full grid-flow-col grid-rows-7 gap-1"
         role="img"
         aria-label="Actividad de palabras esenciales en las últimas 12 semanas"
       >
@@ -32,7 +32,13 @@ export function SessionReadyHeatmap({ days }: Props) {
           <span
             key={day.dayKey}
             title={`${day.dayKey}: ${day.count}`}
-            className={cn('size-2.5 rounded-sm', LEVEL_CLASS[day.level])}
+            className={cn(
+              'aspect-square min-h-0 min-w-0 w-full rounded-[2px]',
+              'transition-[filter,transform] duration-150 ease-out-quart',
+              'motion-reduce:transition-none',
+              day.level > 0 && 'hover:brightness-110 hover:scale-110',
+              LEVEL_CLASS[day.level],
+            )}
           />
         ))}
       </div>

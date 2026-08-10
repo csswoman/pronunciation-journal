@@ -178,7 +178,7 @@ export function EssentialWordsSession({ initialStreak = 0 }: { initialStreak?: n
   if (phase === 'ready') {
     return (
       <>
-        <SessionShell className="min-h-[calc(100dvh-10rem)] gap-space-6 sm:min-h-[calc(100dvh-8rem)] sm:gap-space-8">
+        <SessionShell className="min-h-[calc(100dvh-10rem)] max-w-[52rem] gap-space-6 sm:min-h-[calc(100dvh-8rem)] sm:gap-space-8">
           {pageHeader}
           {sessionToolbar}
           <SessionReady

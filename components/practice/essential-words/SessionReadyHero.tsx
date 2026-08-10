@@ -4,10 +4,9 @@
 // <SessionReadyHero>
 //   title + minutes
 //   breakdown
-//   note
 //   <SessionReadySizePicker />
-//   <SessionReadyRouteChips />
 //   CTA
+//   <SessionReadyRouteChips /> (secondary)
 // </SessionReadyHero>
 
 import { estimateDurationMs } from '@/lib/essential-words/session-plan-time-ceiling'
@@ -41,24 +40,19 @@ function estimateSessionMinutes(counts: EssentialWordsCounts): number {
   return Math.max(1, Math.round((newMs + reviewMs) / 60000))
 }
 
-function structureNote(counts: EssentialWordsCounts, isResume: boolean): string | null {
+function breakdownLine(counts: EssentialWordsCounts, isResume: boolean): string | null {
   if (isResume) {
     return 'Retoma la sesión que dejaste a medias'
   }
-  if (counts.newRemaining > 0) {
-    const blocks = Math.ceil(counts.newRemaining / 3)
-    return `${blocks} ${blocks === 1 ? 'bloque' : 'bloques'} de palabras nuevas, más los repasos y una ronda final`
-  }
-  if (counts.reviewRemaining > 0) {
-    return 'Solo repaso de palabras que ya has visto'
-  }
-  return null
-}
-
-function breakdownLine(counts: EssentialWordsCounts): string | null {
   const parts: string[] = []
   if (counts.newRemaining > 0) parts.push(`${counts.newRemaining} nuevas`)
   if (counts.reviewRemaining > 0) parts.push(`${counts.reviewRemaining} repasos`)
+  if (counts.learningRemaining > 0) {
+    parts.push(`${counts.learningRemaining} en curso`)
+  }
+  if (counts.newRemaining > 0 || counts.reviewRemaining > 0) {
+    parts.push('1 ronda final')
+  }
   if (parts.length === 0) return null
   return parts.join(' · ')
 }
@@ -73,8 +67,7 @@ export function SessionReadyHero({
   onBegin,
 }: Props) {
   const minutes = estimateSessionMinutes(counts)
-  const note = structureNote(counts, isResume)
-  const breakdown = breakdownLine(counts)
+  const breakdown = breakdownLine(counts, isResume)
   const total =
     counts.newRemaining + counts.learningRemaining + counts.reviewRemaining
   const title = isResume
@@ -83,36 +76,38 @@ export function SessionReadyHero({
   const ctaLabel = isResume ? 'Continuar' : 'Empezar'
 
   return (
-    <SessionSurface className="gap-layout-stack-loose">
+    <SessionSurface density="primary" className="animate-home-in">
       <header className="flex items-start justify-between gap-3">
-        <h2 id="session-ready-title" className="m-0 text-h3 text-balance text-fg">
-          {title}
-        </h2>
-        <span className="shrink-0 pt-0.5 font-caption tabular-nums text-fg-muted">
+        <div className="min-w-0 flex flex-col gap-1.5">
+          <h2 id="session-ready-title" className="m-0 text-h3 text-balance text-fg">
+            {title}
+          </h2>
+          {breakdown ? (
+            <p className="m-0 text-body-sm text-pretty tabular-nums text-fg-muted">
+              {breakdown}
+            </p>
+          ) : null}
+        </div>
+        <span className="shrink-0 pt-1 font-caption tabular-nums text-fg-muted">
           unos {minutes} min
         </span>
       </header>
 
-      {breakdown ? (
-        <p className="m-0 text-body-sm text-fg-muted">{breakdown}</p>
-      ) : null}
-
-      {note ? <p className="m-0 text-caption text-pretty text-fg-muted">{note}</p> : null}
-
       <SessionReadySizePicker value={sessionSize} onChange={onSessionSizeChange} />
-      <SessionReadyRouteChips activeRouteId={activeRouteId} onRouteChange={onRouteChange} />
 
       <PillButton
         type="button"
         variant="primary"
         size="md"
-        className="w-full"
+        className="w-full active:scale-[0.99] motion-reduce:active:scale-100"
         onClick={onBegin}
         data-cuelume-press="press"
         data-cuelume-release="release"
       >
         {ctaLabel}
       </PillButton>
+
+      <SessionReadyRouteChips activeRouteId={activeRouteId} onRouteChange={onRouteChange} />
     </SessionSurface>
   )
 }

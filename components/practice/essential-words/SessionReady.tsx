@@ -2,10 +2,9 @@
 
 // Planned structure:
 // <SessionReady>
-//   <SessionReadyHero />
+//   <SessionReadyHero /> (full width)
 //   <SessionReadyRecap />
-//   main: forecast + vocabulary | rail: streak, retention, leeches, vault
-//   <SessionReadyHeatmap />
+//   main: forecast + vocabulary + vault | rail: streak, retention, leeches, heatmap
 // </SessionReady>
 
 import type { SessionSizeId } from '@/lib/essential-words/session-size'
@@ -50,7 +49,7 @@ export function SessionReady({
   return (
     <section
       aria-labelledby="session-ready-title"
-      className="flex w-full flex-col gap-space-6 sm:gap-space-8"
+      className="flex w-full flex-col gap-space-4 sm:gap-space-5"
     >
       <SessionReadyHero
         counts={counts}
@@ -67,15 +66,22 @@ export function SessionReady({
         <SessionReadyRecap session={dashboard.lastSession} />
       ) : null}
 
-      <div className="flex flex-col gap-space-4 md:grid md:grid-cols-[minmax(0,1.4fr)_minmax(12rem,0.9fr)] md:items-start md:gap-space-4">
-        <div className="order-1 flex flex-col gap-space-4">
+      <div className="flex flex-col gap-space-3 md:grid md:grid-cols-[minmax(0,1fr)_minmax(12.5rem,15rem)] md:items-start md:gap-space-3">
+        <div className="flex min-w-0 flex-col gap-space-3 animate-home-in animate-home-in-d1">
           {dashboard ? <SessionReadyForecast days={dashboard.forecast} /> : null}
           {dashboard?.vocabulary ? (
-            <SessionReadyVocabulary buckets={dashboard.vocabulary} />
+            <SessionReadyVocabulary
+              buckets={dashboard.vocabulary}
+              totalWords={stats.totalWords}
+            />
           ) : null}
+          <SessionReadyVaultRow />
         </div>
 
-        <aside className="order-2 flex flex-col gap-space-3" aria-label="Contexto">
+        <aside
+          className="flex min-w-0 flex-col gap-space-3 animate-home-in animate-home-in-d2"
+          aria-label="Contexto"
+        >
           {dashboard ? (
             <SessionReadyStreak streak={streak} marks={dashboard.streakMarks} />
           ) : null}
@@ -88,11 +94,9 @@ export function SessionReady({
           {dashboard ? (
             <SessionReadyLeeches leeches={dashboard.leeches} onReview={onLeechReview} />
           ) : null}
-          <SessionReadyVaultRow />
+          {dashboard?.heatmap ? <SessionReadyHeatmap days={dashboard.heatmap} /> : null}
         </aside>
       </div>
-
-      {dashboard?.heatmap ? <SessionReadyHeatmap days={dashboard.heatmap} /> : null}
     </section>
   )
 }
