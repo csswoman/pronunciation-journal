@@ -1,5 +1,6 @@
 import { clozeFor } from "./cloze";
 import { hasRecognizeClozeCandidate } from "./recognize-cloze";
+import { hasProductionClozeSentence } from "./sentence-variants";
 import type { EssentialWordQueueItem } from "./queue";
 import type { EssentialWord } from "./types";
 
@@ -50,7 +51,7 @@ const MIDDLE_MAX = 5;
 export function modeHasData(entry: EssentialWord, mode: EssentialWordMode): boolean {
   const field = MODE_REQUIRED_FIELD[mode];
   if (field && !entry[field]) return false;
-  if (mode === "cloze_sentence") return clozeFor(entry) !== null;
+  if (mode === "cloze_sentence") return hasProductionClozeSentence(entry);
   if (mode === "recognize_cloze") return hasRecognizeClozeCandidate(entry);
   return true;
 }

@@ -16,7 +16,7 @@ import { PillButton } from '@/components/ui/PillButton'
 import Button from '@/components/ui/Button'
 import { playUiCue } from '@/lib/ui-sounds/cues'
 import { clozeFor } from '@/lib/essential-words/cloze'
-import { selectSentence } from '@/lib/essential-words/sentence-variants'
+import { selectProductionClozeSentence } from '@/lib/essential-words/sentence-variants'
 import { buildHintLadder } from '@/lib/essential-words/hint-ladder'
 import { isTypo } from '@/lib/essential-words/typo'
 import { normalizeEnglishAnswer, displayEnglishText } from '@/lib/essential-words/word-display'
@@ -60,8 +60,8 @@ export function ClozeCard({ entry, levelLabel, onAttempt, onRetry, onContinue, o
   const firstTryFailedRef = useRef(false)
   const startedAtRef = useRef(Date.now())
   const answerInputRef = useRef<HTMLInputElement>(null)
-  const { sentence } = selectSentence(entry, repetitions)
-  const cloze = clozeFor(entry, sentence)
+  const selectedSentence = selectProductionClozeSentence(entry, repetitions)
+  const cloze = selectedSentence ? clozeFor(entry, selectedSentence.sentence) : null
   const ladder = buildHintLadder(entry, 'cloze_sentence')
 
   useEffect(() => {

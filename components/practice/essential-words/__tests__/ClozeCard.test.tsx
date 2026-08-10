@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { ClozeCard } from "../ClozeCard";
 import type { EssentialWord } from "@/lib/essential-words/types";
-import { selectSentence } from "@/lib/essential-words/sentence-variants";
+import { selectProductionClozeSentence, selectSentence } from "@/lib/essential-words/sentence-variants";
 
 vi.mock("@/lib/ui-sounds/cues", () => ({ playUiCue: vi.fn() }));
 vi.mock("@/lib/phoneme-practice/tts", () => ({ speak: vi.fn() }));
@@ -170,5 +170,25 @@ describe("ClozeCard", () => {
     expect(onAttempt).not.toHaveBeenCalled();
     expect(screen.getByTestId("answer-diff-message")).toHaveTextContent(/respuesta era "work"/i);
     expect(screen.queryByText(withVariants.example_sentence)).not.toBeInTheDocument();
+  });
+
+  it("does not render a written cloze from an excluded ambiguous variant", () => {
+    const program: EssentialWord = {
+      ...entry,
+      word: "program",
+      pos: "noun",
+      example_sentence: "The program starts Monday.",
+      example_sentences: [{
+        sentence: "The TV program will start soon.",
+        sentence_ipa: "/ðə tiːviː proʊɡræm wɪl stɑrt suːn/",
+      }],
+    };
+    expect(selectSentence(program, 1).sentence).toBe("The TV program will start soon.");
+    expect(selectProductionClozeSentence(program, 1)?.sentence).toBe("The program starts Monday.");
+
+    render(<ClozeCard entry={program} repetitions={1} onAttempt={vi.fn()} />);
+
+    expect(screen.getByText("The ___ starts Monday.")).toBeInTheDocument();
+    expect(screen.queryByText("The TV ___ will start soon.")).not.toBeInTheDocument();
   });
 });

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { sentenceVariants, selectSentence } from "../sentence-variants";
+import { sentenceVariants, selectProductionClozeSentence, selectSentence } from "../sentence-variants";
 import type { EssentialWord } from "../types";
 
 function entry(overrides: Partial<EssentialWord> = {}): EssentialWord {
@@ -70,5 +70,23 @@ describe("selectSentence", () => {
   it("treats a negative or fractional repetitions count as 0", () => {
     expect(selectSentence(withTwo, -1)).toEqual(selectSentence(withTwo, 0));
     expect(selectSentence(withTwo, 2.7)).toEqual(selectSentence(withTwo, 2));
+  });
+});
+
+describe("selectProductionClozeSentence", () => {
+  it("skips an editorially excluded synonym-ambiguous variant", () => {
+    const program = entry({
+      word: "program",
+      pos: "noun",
+      example_sentence: "The program starts Monday.",
+      example_sentences: [
+        { sentence: "The TV program will start soon.", sentence_ipa: "/ðə tiːviː proʊɡræm wɪl stɑrt suːn/" },
+      ],
+    });
+
+    for (let repetitions = 0; repetitions < 6; repetitions++) {
+      expect(selectProductionClozeSentence(program, repetitions)?.sentence)
+        .toBe("The program starts Monday.");
+    }
   });
 });
