@@ -49,6 +49,12 @@ import { recordActivitySession } from "@/lib/progress/activity-hub";
 import { buildSessionResult } from "@/lib/practice/session-result";
 import { studyContextLine } from "@/lib/essential-words/study-context";
 import { saveLastEssentialWordsSession } from "@/lib/essential-words/ready-last-session";
+import {
+  readSessionSizePreference,
+  sessionSizeById,
+  writeSessionSizePreference,
+  type SessionSizeId,
+} from "@/lib/essential-words/session-size";
 import type { ExerciseResult } from "@/lib/practice/types";
 import {
   createEssentialWordsRuntime,
@@ -128,6 +134,10 @@ export function useEssentialWordsSession() {
   const [pos, setPosState] = useState<EssentialWordPos[] | null>(null);
   const posRef = useRef<EssentialWordPos[] | null>(null);
   const [activeRouteId, setActiveRouteId] = useState<string | null>(null);
+  const [sessionSize, setSessionSizeState] = useState<SessionSizeId>(() => readSessionSizePreference());
+  const sessionSizeRef = useRef<SessionSizeId>(sessionSize);
+  sessionSizeRef.current = sessionSize;
+  const leechWordIdsRef = useRef<string[] | null>(null);
 
   const nextCompatStepId = useCallback((item: EssentialWordQueueItem) => {
     compatStepSerialRef.current += 1;
@@ -236,6 +246,7 @@ export function useEssentialWordsSession() {
   }, [user?.id, flushLapses]);
 
   const bootstrap = useCallback(async () => {
+    const { newCardCeiling, wordBudget } = sessionSizeById(sessionSizeRef.current);
     const runtime = user?.id ? await createEssentialWordsRuntime(user.id) : null;
     runtimeRef.current = runtime;
     const loaded = runtime
@@ -244,10 +255,30 @@ export function useEssentialWordsSession() {
         pos: posRef.current,
         now: new Date(),
         previousMode: skillPlannerModeRef.current,
+        newCardCeiling,
       })
-      : await loadEssentialWordsQueue(levelsRef.current, posRef.current, user?.id)
+      : await loadEssentialWordsQueue(levelsRef.current, posRef.current, user?.id, { newCardCeiling })
         .then((session) => ({ source: "legacy" as const, ...session }));
-    const { items, stats: nextStats, allWords, seenIds } = loaded;
+    let { items, stats: nextStats, allWords, seenIds } = loaded;
+
+    const leechIds = leechWordIdsRef.current;
+    if (leechIds && leechIds.length > 0) {
+      const wanted = new Set(leechIds);
+      items = items.filter((item) => wanted.has(essentialWordId(item.entry.word)));
+      leechWordIdsRef.current = null;
+    } else if (wordBudget > 0 && items.length > 0) {
+      const admitted = new Set<string>();
+      const truncated: typeof items = [];
+      for (const item of items) {
+        const id = essentialWordId(item.entry.word);
+        if (!admitted.has(id)) {
+          if (admitted.size >= wordBudget) continue;
+          admitted.add(id);
+        }
+        if (admitted.has(id)) truncated.push(item);
+      }
+      items = truncated;
+    }
     skillModeRef.current = loaded.source === "skill";
     if ("skillPlan" in loaded && loaded.skillPlan) {
       skillPlannerModeRef.current = loaded.skillPlan.allowance.mode;
@@ -820,6 +851,23 @@ export function useEssentialWordsSession() {
     );
   }, [compatIndex, compatQueue.length, currentStepId, planState, sessionProgress]);
 
+  const setSessionSize = useCallback((id: SessionSizeId) => {
+    writeSessionSizePreference(id);
+    setSessionSizeState(id);
+    sessionSizeRef.current = id;
+    setPhase("loading");
+    void bootstrap();
+  }, [bootstrap]);
+
+  const startLeechReview = useCallback((wordIds: string[]) => {
+    if (wordIds.length === 0) return;
+    leechWordIdsRef.current = wordIds.map((id) =>
+      id.startsWith("c1k:") ? id : essentialWordId(id),
+    );
+    setPhase("loading");
+    void bootstrap();
+  }, [bootstrap]);
+
   const studyContext =
     phase === "study" && planState && gatedStep?.kind === "expose"
       ? studyContextLine(planState.blockIndex, planState.blocks.length)
@@ -894,5 +942,8 @@ export function useEssentialWordsSession() {
     archiveWord,
     keepSnooze,
     masterWord,
+    sessionSize,
+    setSessionSize,
+    startLeechReview,
   };
 }
