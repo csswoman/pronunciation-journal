@@ -16,12 +16,13 @@ import { PillButton } from '@/components/ui/PillButton'
 import { ListenButton } from '@/components/ui/ListenButton'
 import { playUiCue } from '@/lib/ui-sounds/cues'
 import { selectSentence } from '@/lib/essential-words/sentence-variants'
-import { buildDictationFeedback, splitDictationIntoParts, type DictationFeedback } from '@/lib/essential-words/dictation-feedback'
-import { isValidEnglishWord } from '@/lib/essential-words/english-word-validator'
-import { displayEnglishText, displayEnglishWord } from '@/lib/essential-words/word-display'
+import { buildDictationFeedback, dictationAttemptDiagnostic, splitDictationIntoParts, type DictationFeedback } from '@/lib/essential-words/dictation-feedback'
+import { englishPronunciation, isValidEnglishWord } from '@/lib/essential-words/english-word-validator'
+import { comparePronunciations } from '@/lib/essential-words/phonetic-substitution'
+import { displayEnglishText } from '@/lib/essential-words/word-display'
 import { AnswerDiff } from './AnswerDiff'
 import { ExercisePhaseLabel } from './ExercisePhaseLabel'
-import { InlineFeedback } from '@/components/practice/session/InlineFeedback'
+import { ArchiveConfirmAction } from '@/components/practice/study-card/ArchiveConfirmAction'
 import { useEnterToContinue } from '@/hooks/useEnterToContinue'
 import Button from '@/components/ui/Button'
 import type { AttemptOutcome } from '@/lib/essential-words/attempt-grade'
@@ -34,11 +35,14 @@ interface Props {
   onContinue?: () => void
   onArchive?: () => void
   isContinuing?: boolean
+  /** The listening ladder reserves full sentence dictation for its advanced step. */
+  isAdvancedListening?: boolean
+  listeningTier?: 1 | 2 | 3
   /** SM-2 repetition count — rotates which example sentence is dictated. */
   repetitions?: number
 }
 
-export function DictationCard({ entry, levelLabel, onAttempt, onContinue, onArchive, isContinuing = false, repetitions = 0 }: Props) {
+export function DictationCard({ entry, levelLabel, onAttempt, onContinue, onArchive, isContinuing = false, isAdvancedListening = false, listeningTier, repetitions = 0 }: Props) {
   const [answer, setAnswer] = useState('')
   const [revealed, setRevealed] = useState(false)
   const [outcome, setOutcome] = useState<{ correct: boolean; typo: boolean; feedback: DictationFeedback } | null>(null)
@@ -49,6 +53,7 @@ export function DictationCard({ entry, levelLabel, onAttempt, onContinue, onArch
   const startedAtRef = useRef(Date.now())
   const answerInputRef = useRef<HTMLTextAreaElement>(null)
   const { sentence } = selectSentence(entry, repetitions)
+  const allowIsolatedTts = !['preposition', 'conjunction', 'determiner', 'article', 'modal', 'auxiliary', 'pronoun'].includes(entry.pos)
 
   useEffect(() => {
     if (!revealed) answerInputRef.current?.focus()
@@ -75,8 +80,26 @@ export function DictationCard({ entry, levelLabel, onAttempt, onContinue, onArch
             candidates.map(async (candidate) => [candidate, await isValidEnglishWord(candidate)] as const),
           ))
         : new Map<string, boolean>()
-      const feedback = buildDictationFeedback(answer, sentence, entry.word, (word) => validity.get(word) ?? false)
-      const correct = feedback.targetCorrect
+      const pronunciationWords = preliminary.words
+        .filter((item) => item.status === 'error' && item.written)
+        .flatMap((item) => [item.expected, item.written!])
+      const pronunciations = new Map(await Promise.all([...new Set(pronunciationWords)].map(async (word) => [word, await englishPronunciation(word)] as const)))
+      const feedback = buildDictationFeedback(
+        answer,
+        sentence,
+        entry.word,
+        (word) => validity.get(word) ?? false,
+        (expected, written) => {
+          const expectedArpa = pronunciations.get(expected)
+          const writtenArpa = pronunciations.get(written)
+          return expectedArpa && writtenArpa ? comparePronunciations(expectedArpa, writtenArpa) : { kind: 'guess' }
+        },
+        listeningTier,
+      )
+      // A dictation result must reflect the full sentence. `targetCorrect` is
+      // retained as learning evidence for the focus word, but it must not turn
+      // visible feedback green when other dictated words were wrong.
+      const correct = feedback.sentenceCorrect
       const typo = feedback.hasTypos
 
       setRevealed(true)
@@ -89,6 +112,8 @@ export function DictationCard({ entry, levelLabel, onAttempt, onContinue, onArch
         typo,
         firstTryFailed: false,
         latencyMs: Date.now() - startedAtRef.current,
+        ...dictationAttemptDiagnostic(feedback),
+        listeningTier,
       })
     } finally {
       setIsChecking(false)
@@ -96,12 +121,21 @@ export function DictationCard({ entry, levelLabel, onAttempt, onContinue, onArch
   }
 
   return (
-    <div className="flex w-full flex-col items-center gap-space-5 rounded-lg border border-border-subtle bg-surface-raised layout-card-pad">
-      <ExercisePhaseLabel label={levelLabel} onArchive={onArchive} />
-      <p className="m-0 w-full text-center text-body text-fg">Escucha y escribe la oración</p>
+    <div className="flex w-full flex-col items-center gap-layout-stack rounded-lg border border-border-subtle bg-surface-raised layout-card-pad">
+      <ExercisePhaseLabel label={levelLabel} />
 
-      <div className="flex flex-wrap items-center justify-center gap-2" aria-label="Opciones de audio">
-        <ListenButton onPlay={() => speak(sentence, { rate: 0.95 })} label="Escuchar" />
+      <div className="flex w-full flex-col items-center gap-2 text-center">
+        {isAdvancedListening ? <p className="m-0 font-kicker text-fg-subtle">Escucha · dictado avanzado</p> : null}
+        <p className="m-0 text-label font-semibold text-fg">{revealed ? 'Escucha la diferencia' : 'Escucha y escribe la oración'}</p>
+        <p className="m-0 text-caption text-fg-muted">{revealed ? 'Compara lo que escribiste con la palabra correcta' : 'Puedes repetirla antes de responder'}</p>
+      </div>
+
+      <div className="flex flex-wrap items-center justify-center gap-2" aria-label={revealed ? 'Comparación de audio' : 'Opciones de audio'}>
+        {revealed && outcome && allowIsolatedTts && !outcome.feedback.words.some((item) => item.category === 'guess') ? <>
+          {outcome.feedback.words.filter((item) => item.status !== 'match' && item.written).slice(0, 1).map((item) => <ListenButton key="written" onPlay={() => speak(item.written!, { rate: 0.95 })} label={item.written!} />)}
+          <ListenButton onPlay={() => speak(outcome.feedback.words.find((item) => item.status !== 'match')?.expected ?? entry.word, { rate: 0.95 })} label={outcome.feedback.words.find((item) => item.status !== 'match')?.expected ?? entry.word} />
+          <PillButton type="button" variant="outline" size="sm" onClick={() => { const item = outcome.feedback.words.find((candidate) => candidate.status !== 'match'); if (item?.written) speakSequence([item.written, item.expected], { rate: 0.95 }) }}>Comparar</PillButton>
+        </> : <ListenButton onPlay={() => speak(sentence, { rate: 0.95 })} label={revealed ? 'Escuchar contexto' : 'Escuchar'} />}
         <PillButton
           type="button"
           variant="outline"
@@ -116,7 +150,7 @@ export function DictationCard({ entry, levelLabel, onAttempt, onContinue, onArch
         >
           0.75x
         </PillButton>
-        <PillButton
+        {!revealed && <PillButton
           type="button"
           variant="outline"
           size="sm"
@@ -129,7 +163,7 @@ export function DictationCard({ entry, levelLabel, onAttempt, onContinue, onArch
           }}
         >
           Por partes
-        </PillButton>
+        </PillButton>}
       </div>
 
       {!revealed && (
@@ -145,16 +179,13 @@ export function DictationCard({ entry, levelLabel, onAttempt, onContinue, onArch
             }
           }}
           aria-label="Escribe lo que escuchaste"
+          placeholder="Escribe lo que escuchaste"
           autoCapitalize="none"
           autoCorrect="off"
           spellCheck={false}
-          className="w-full max-w-sm resize-y rounded-md border border-border-subtle bg-surface px-3 py-2 text-body text-fg focus-ring"
+          className="w-full max-w-sm resize-y rounded-md border border-border-subtle bg-surface-sunken px-3 py-2 text-body text-fg focus-ring"
         />
       )}
-
-      {revealed && outcome ? (
-        <InlineFeedback isCorrect={outcome.correct} />
-      ) : null}
 
       {revealed && outcome?.feedback?.hasDifferences ? (
         <AnswerDiff feedback={outcome.feedback} word={entry.word} />
@@ -166,6 +197,10 @@ export function DictationCard({ entry, levelLabel, onAttempt, onContinue, onArch
         <PillButton type="button" variant="primary" onClick={() => void handleCheck()} disabled={isChecking}>
           {isChecking ? 'Comprobando…' : 'Comprobar'}
         </PillButton>
+      )}
+
+      {!revealed && onArchive && (
+        <ArchiveConfirmAction onArchive={onArchive} label="Pausar esta palabra" />
       )}
 
       {revealed && onContinue && (
@@ -181,11 +216,6 @@ export function DictationCard({ entry, levelLabel, onAttempt, onContinue, onArch
           >
             Continuar
           </Button>
-          {!outcome?.correct && (
-            <p className="m-0 mt-space-3 text-center text-body-sm text-fg-muted">
-              Volverás a ver {displayEnglishWord(entry.word, { pos: entry.pos })} en unos ejercicios
-            </p>
-          )}
         </div>
       )}
     </div>

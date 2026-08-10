@@ -98,7 +98,7 @@ export { resolveOnConflict }
  * function alone no longer makes that call.
  */
 export function isPermanentError(message: string, code?: string): boolean {
-  const permanentCodes = ['42501', '23514', '23503', 'PGRST205', '42P01']
+  const permanentCodes = ['42501', '23514', '23503', 'PGRST204', 'PGRST205', '42P01']
   if (code && permanentCodes.includes(code)) return true
   // Supabase REST errors come as strings; check for common keywords
   return (
@@ -184,6 +184,19 @@ async function attemptRemoteEntry(entry: SyncOutboxEntry): Promise<RemoteEntryRe
     const message = err instanceof Error ? err.message : String(err)
     const code = (err as { code?: string }).code
 
+    // A rolling deploy can briefly put a newer browser bundle in front of a
+    // database whose PostgREST schema cache does not expose `diagnostic` yet.
+    // Preserve the local diagnostic, but let the immutable attempt itself land.
+    if (isMissingAttemptDiagnosticColumn(entry, message, code)) {
+      const { diagnostic: _diagnostic, ...legacyPayload } = entry.payload as Record<string, unknown>
+      console.warn('[sync-manager] attempt_logs.diagnostic unavailable; synced attempt without diagnostic', {
+        entryId: entry.id,
+        code,
+      })
+      await flushEntry({ ...entry, payload: legacyPayload })
+      return { synced: true }
+    }
+
     if (code === '23505' && classifyUniqueViolationAsIdempotentSuccess(entry)) {
       return { synced: true }
     }
@@ -195,12 +208,31 @@ async function attemptRemoteEntry(entry: SyncOutboxEntry): Promise<RemoteEntryRe
     return {
       synced: false,
       message,
+      ...(code ? { code } : {}),
+      ...(typeof (err as { details?: unknown }).details === 'string'
+        ? { details: (err as { details: string }).details }
+        : {}),
+      ...(typeof (err as { hint?: unknown }).hint === 'string'
+        ? { hint: (err as { hint: string }).hint }
+        : {}),
       permanent,
       retryCount,
       attemptedAt,
       nextRetryAt: permanent ? undefined : getNextRetryAt(retryCount, attemptedAt),
     }
   }
+}
+
+export function isMissingAttemptDiagnosticColumn(
+  entry: SyncOutboxEntry,
+  message: string,
+  code?: string,
+): boolean {
+  return entry.table === 'attempt_logs'
+    && entry.operation === 'insert'
+    && 'diagnostic' in (entry.payload as Record<string, unknown>)
+    && (code === 'PGRST204' || /diagnostic/i.test(message))
+    && /(column|schema cache|could not find)/i.test(message)
 }
 
 // ── Flush logic ────────────────────────────────────────────────────────────
@@ -214,7 +246,7 @@ async function flushEntry(entry: SyncOutboxEntry): Promise<void> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const table = entry.table as any
 
-  let error: { message: string; code?: string } | null = null
+  let error: { message: string; code?: string; details?: string; hint?: string } | null = null
 
   switch (operation) {
     case 'insert': {
@@ -259,7 +291,11 @@ async function flushEntry(entry: SyncOutboxEntry): Promise<void> {
   }
 
   if (error) {
-    throw Object.assign(new Error(error.message), { code: (error as { code?: string }).code })
+    throw Object.assign(new Error(error.message), {
+      code: error.code,
+      details: error.details,
+      hint: error.hint,
+    })
   }
 }
 

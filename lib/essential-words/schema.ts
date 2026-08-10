@@ -4,9 +4,20 @@
 import { z } from "zod";
 import { ESSENTIAL_WORD_POS } from "./types";
 
+export const SentenceTokenSchema = z.object({
+  start: z.number().int().min(0),
+  end: z.number().int().positive(),
+  text: z.string().min(1),
+  normalized: z.string().min(1),
+  ipa: z.string().regex(/^\/.+\/$/, "IPA entre slashes"),
+  role: z.enum(["content", "function"]),
+  contrastIds: z.array(z.string().min(3)),
+}).refine((token) => token.end > token.start, { message: "offset inválido" });
+
 export const SentenceVariantSchema = z.object({
   sentence: z.string().min(1),
   sentence_ipa: z.string().regex(/^\/.+\/$/, "IPA entre slashes"),
+  tokens: z.array(SentenceTokenSchema).min(1).optional(),
 });
 
 export const EssentialWordSchema = z
@@ -18,6 +29,7 @@ export const EssentialWordSchema = z
     ipa_weak: z.string().regex(/^\/.+\/$/).optional(),
     example_sentence: z.string().min(1),
     sentence_ipa: z.string().regex(/^\/.+\/$/).optional(),
+    example_tokens: z.array(SentenceTokenSchema).min(1).optional(),
     cefr_level: z.enum(["A1", "A2", "B1", "B2", "C1"]),
     meaning: z.string().min(1).optional(),
     translation: z.string().min(1).optional(),

@@ -30,6 +30,18 @@ export type EssentialWordPos = (typeof ESSENTIAL_WORD_POS)[number];
 export interface SentenceVariant {
   sentence: string;
   sentence_ipa: string;
+  tokens?: SentenceToken[];
+}
+
+/** Audited word-level metadata for an authored listening sentence. */
+export interface SentenceToken {
+  start: number;
+  end: number;
+  text: string;
+  normalized: string;
+  ipa: string;
+  role: "content" | "function";
+  contrastIds: string[];
 }
 
 export interface EssentialWord {
@@ -40,6 +52,7 @@ export interface EssentialWord {
   ipa_weak?: string; // solo function words (whitelist en ./weak-forms)
   example_sentence: string; // contiene la palabra; ahí vive la weak form
   sentence_ipa?: string; // obligatorio si hay ipa_weak (Zod refine)
+  example_tokens?: SentenceToken[];
   cefr_level: CefrLevel;
   meaning?: string; // definición corta en inglés (backfill-meaning)
   translation?: string; // traducción al español (backfill-meaning)
@@ -48,6 +61,8 @@ export interface EssentialWord {
 
 export const ESSENTIAL_WORD_PREFIX = "c1k:";
 export const NEW_CARDS_PER_DAY = 10;
+/** A guided session introduces one complete 3-word block: 15 learning actions. */
+export const GUIDED_SESSION_NEW_CARDS = 3;
 export const CHUNK_SIZE = 100;
 export const MAX_CHUNKS = 28;
 

@@ -2,12 +2,13 @@
 // selectMode (deterministic on word + repetitions), so a re-render never swaps
 // the sentence under the learner mid-card.
 
-import type { EssentialWord, SentenceVariant } from "./types";
+import type { EssentialWord, SentenceToken, SentenceVariant } from "./types";
 
 /** A variant as consumed by cards: IPA is optional because fixtures may omit it. */
 export interface ResolvedSentence {
   sentence: string;
   sentence_ipa?: string;
+  tokens?: SentenceToken[];
 }
 
 /** Deterministic per-word seed. Mirrors exercise-modes.ts — kept local so the
@@ -26,6 +27,7 @@ export function sentenceVariants(entry: EssentialWord): ResolvedSentence[] {
   const base: ResolvedSentence = {
     sentence: entry.example_sentence,
     sentence_ipa: entry.sentence_ipa,
+    tokens: entry.example_tokens,
   };
   const extra: SentenceVariant[] = entry.example_sentences ?? [];
   return [base, ...extra.filter((v) => v.sentence.trim().length > 0)];
