@@ -6,8 +6,8 @@ export function classifyTouchedWord(args: {
   meaningStatus: SkillStatusLike | null
   vaultStatus?: 'active' | 'snoozed' | 'mastered'
   mature?: boolean
-  /** FSRS CardState when skill status is unavailable: 0 New, 1 Learning, 2 Review, 3 Relearning */
-  legacyState?: number
+  /** Legacy FSRS card state when skill status is unavailable */
+  legacyState?: 'New' | 'Learning' | 'Review' | 'Relearning' | number
 }): VocabBucket {
   if (args.vaultStatus === 'mastered' || args.mature === true) return 'dominadas'
 
@@ -17,8 +17,11 @@ export function classifyTouchedWord(args: {
   }
   if (args.meaningStatus === 'unseen') return 'nuevas'
 
-  if (args.legacyState === 2) return 'en_repaso'
-  if (args.legacyState === 1 || args.legacyState === 3) return 'aprendiendo'
+  const legacy = args.legacyState
+  if (legacy === 'Review' || legacy === 2) return 'en_repaso'
+  if (legacy === 'Learning' || legacy === 'Relearning' || legacy === 1 || legacy === 3) {
+    return 'aprendiendo'
+  }
   return 'nuevas'
 }
 
