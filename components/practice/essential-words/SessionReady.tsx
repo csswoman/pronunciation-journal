@@ -50,7 +50,7 @@ export function SessionReady({
   return (
     <section
       aria-labelledby="session-ready-title"
-      className="flex w-full flex-col gap-space-6 animate-message-in sm:gap-space-8"
+      className="flex w-full flex-col gap-space-6 sm:gap-space-8"
     >
       <SessionReadyHero
         counts={counts}

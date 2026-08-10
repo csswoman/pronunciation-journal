@@ -90,6 +90,8 @@ const EMPTY_COUNTS: EssentialWordsCounts = {
 export function useEssentialWordsSession() {
   const { user } = useAuth();
   const [phase, setPhase] = useState<EssentialWordsPhase>("loading");
+  const phaseRef = useRef<EssentialWordsPhase>(phase);
+  phaseRef.current = phase;
   const [planState, setPlanState] = useState<PlanSessionState | null>(null);
   const wordsByIdRef = useRef<Map<string, EssentialWord>>(new Map());
   const repetitionsByIdRef = useRef<Map<string, number | undefined>>(new Map());
@@ -801,6 +803,15 @@ export function useEssentialWordsSession() {
     finally { setReloadLoading(false); }
   }, [bootstrap]);
 
+  const reloadQuietlyOrFlash = useCallback(async () => {
+    // Stay on ready while preferences change — flashing "loading" remounts the
+    // whole SessionReady tree and looks like a page blink.
+    if (phaseRef.current !== "ready") {
+      setPhase("loading");
+    }
+    await bootstrap();
+  }, [bootstrap]);
+
   const setLevels = useCallback(async (next: CefrLevel[] | null) => {
     const normalized = next && next.length > 0 ? next : null;
     levelsRef.current = normalized;
@@ -808,9 +819,8 @@ export function useEssentialWordsSession() {
     setLevelsState(normalized);
     setPosState(null);
     setActiveRouteId(null);
-    setPhase("loading");
-    await bootstrap();
-  }, [bootstrap]);
+    await reloadQuietlyOrFlash();
+  }, [reloadQuietlyOrFlash]);
 
   const setRoute = useCallback(async (routeId: string | null) => {
     const route = getRoute(routeId);
@@ -819,8 +829,23 @@ export function useEssentialWordsSession() {
     setLevelsState(levelsRef.current);
     setPosState(posRef.current);
     setActiveRouteId(route ? route.id : null);
+    await reloadQuietlyOrFlash();
+  }, [reloadQuietlyOrFlash]);
+
+  const setSessionSize = useCallback((id: SessionSizeId) => {
+    writeSessionSizePreference(id);
+    setSessionSizeState(id);
+    sessionSizeRef.current = id;
+    void reloadQuietlyOrFlash();
+  }, [reloadQuietlyOrFlash]);
+
+  const startLeechReview = useCallback((wordIds: string[]) => {
+    if (wordIds.length === 0) return;
+    leechWordIdsRef.current = wordIds.map((id) =>
+      id.startsWith("c1k:") ? id : essentialWordId(id),
+    );
     setPhase("loading");
-    await bootstrap();
+    void bootstrap();
   }, [bootstrap]);
 
   const compatCurrent = compatModeRef.current ? compatQueue[compatIndex] ?? null : null;
@@ -850,23 +875,6 @@ export function useEssentialWordsSession() {
         : prev,
     );
   }, [compatIndex, compatQueue.length, currentStepId, planState, sessionProgress]);
-
-  const setSessionSize = useCallback((id: SessionSizeId) => {
-    writeSessionSizePreference(id);
-    setSessionSizeState(id);
-    sessionSizeRef.current = id;
-    setPhase("loading");
-    void bootstrap();
-  }, [bootstrap]);
-
-  const startLeechReview = useCallback((wordIds: string[]) => {
-    if (wordIds.length === 0) return;
-    leechWordIdsRef.current = wordIds.map((id) =>
-      id.startsWith("c1k:") ? id : essentialWordId(id),
-    );
-    setPhase("loading");
-    void bootstrap();
-  }, [bootstrap]);
 
   const studyContext =
     phase === "study" && planState && gatedStep?.kind === "expose"
