@@ -9,6 +9,7 @@ export interface EvidenceExitContract {
 
 export const EVIDENCE_EXIT_CONTRACTS: readonly EvidenceExitContract[] = [
   { adapter: 'grammar_deck_quiz', answerWriter: 'savePracticeAnswer', sessionWriter: 'recordActivitySession', domainWriter: 'topic_srs' },
+  { adapter: 'grammar_deck_topic_review', answerWriter: 'savePracticeAnswer', sessionWriter: 'recordActivitySession', domainWriter: 'topic_srs' },
   { adapter: 'mini_lesson_quiz', answerWriter: 'savePracticeAnswer', sessionWriter: 'recordActivitySession', domainWriter: 'topic_srs' },
   { adapter: 'essential_words_runtime', answerWriter: 'savePracticeAnswer', sessionWriter: 'recordActivitySession', domainWriter: 'essential_words' },
   { adapter: 'target_practice_route', answerWriter: 'savePracticeAnswer', sessionWriter: 'recordActivitySession', domainWriter: 'pronunciation' },

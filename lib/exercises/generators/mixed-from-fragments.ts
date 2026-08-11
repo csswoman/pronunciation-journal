@@ -5,6 +5,7 @@ import type {
   SentenceDictationExercise,
 } from '@/lib/exercises/types'
 import { blankWord, exerciseId, isLikelySentence, pick, shuffle, tokenize } from '@/lib/exercises/utils'
+import { isLikelyEnglish, shuffleDistinct } from './primitives'
 import type { TextFragment } from './reorder-from-fragments'
 
 const MIN_TOKENS = 4
@@ -26,29 +27,7 @@ function cleanToken(token: string): string {
   return token.replace(/^[^\p{L}\p{N}']+|[^\p{L}\p{N}']+$/gu, '')
 }
 
-/** Common Spanish function words — strong signal the sentence is not English. */
-const SPANISH_MARKERS = new Set([
-  'el', 'la', 'los', 'las', 'un', 'una', 'unos', 'unas', 'de', 'que', 'y',
-  'en', 'con', 'por', 'para', 'voy', 'soy', 'es', 'son', 'mi', 'tu', 'su',
-  'ver', 'cada', 'muchas', 'este', 'esta', 'al', 'del', 'mes', 'semana',
-])
-
-/**
- * Heuristic: true when the sentence reads as English, not Spanish.
- * Rejects Spanish punctuation/accents and sentences dominated by Spanish
- * function words, so non-English seed fragments don't become broken exercises.
- */
-export function isLikelyEnglish(text: string): boolean {
-  // Spanish-only punctuation or accented characters.
-  if (/[¿¡áíóúñ]/i.test(text)) return false
-
-  const words = tokenize(text).map((w) => cleanToken(w).toLowerCase()).filter(Boolean)
-  if (words.length === 0) return false
-
-  const spanishHits = words.filter((w) => SPANISH_MARKERS.has(w)).length
-  // More than a third of the words being Spanish markers → treat as Spanish.
-  return spanishHits / words.length <= 0.34
-}
+export { isLikelyEnglish } from './primitives'
 
 /** Picks the longest content word in a sentence (skips stopwords). */
 function pickContentWord(sentence: string): string | null {
@@ -57,15 +36,6 @@ function pickContentWord(sentence: string): string | null {
     .filter((w) => w.length >= 3 && !STOPWORDS.has(w.toLowerCase()))
   if (words.length === 0) return null
   return words.sort((a, b) => b.length - a.length)[0]
-}
-
-function shuffleDistinct(tokens: string[]): string[] {
-  if (tokens.length <= 1) return [...tokens]
-  let result = shuffle(tokens)
-  for (let i = 0; i < 10 && result.every((t, idx) => t === tokens[idx]); i++) {
-    result = shuffle(tokens)
-  }
-  return result
 }
 
 function buildReorder(fragment: TextFragment): ReorderWordsExercise {

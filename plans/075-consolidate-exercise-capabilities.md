@@ -19,7 +19,7 @@
 - **Reconciles**: plans/050-error-correction-exercise.md, plans/051-conjugation-blank-exercise.md
 - **Category**: pedagogy, tech-debt, tests, docs
 - **Planned at**: commit `ce654374`, 2026-08-10
-- **Current status**: TODO
+- **Current status**: DONE (2026-08-11)
 
 ## Why this matters
 
@@ -316,16 +316,25 @@ Todo debe salir con exit 0.
 
 ## Done criteria
 
-- [ ] Todo `ExerciseSlug` declara status y producer contract.
-- [ ] Ninguna capacidad active carece de productor real.
-- [ ] `error_correction` aparece en topic review desde pares autorados y offline.
-- [ ] Topic review conserva cap de tres y fallback multiple choice.
-- [ ] `conjugation_blank` queda deferred, sin borrar compatibilidad histórica.
-- [ ] Plan 050 queda realmente DONE; Plan 051 queda REJECTED/deferred con gate.
-- [ ] Existe una sola implementación de `shuffleDistinct`.
-- [ ] No se unificaron adapters con reglas pedagógicas distintas.
-- [ ] Learning/content audits, tests, migrations, typecheck, lint y diff check pasan.
-- [ ] No se añadieron tipos de ejercicio, tablas ni schedulers.
+- [x] Todo `ExerciseSlug` declara status y producer contract.
+- [x] Ninguna capacidad active carece de productor real.
+- [x] `error_correction` aparece en topic review desde pares autorados y offline.
+- [x] Topic review conserva cap de tres y fallback multiple choice.
+- [x] `conjugation_blank` queda deferred, sin borrar compatibilidad histórica.
+- [x] Plan 050 queda realmente DONE; Plan 051 queda REJECTED/deferred con gate.
+- [x] Existe una sola implementación de `shuffleDistinct`.
+- [x] No se unificaron adapters con reglas pedagógicas distintas.
+- [x] Learning/content audits, tests, migrations, typecheck, lint y diff check pasan.
+- [x] No se añadieron tipos de ejercicio, tablas ni schedulers.
+
+## Execution report
+
+- Cobertura autorada: 128 decks, 272 pares válidos y 207 líneas omitidas con
+  reason code; el audit imprime los slugs cubiertos.
+- Capabilities: 22 activas y `conjugation_blank` deferred. `reader` declara
+  exposición sin escritura a `answer_history`.
+- Consolidación: `shuffleDistinct` vive únicamente en `primitives.ts`; los
+  adapters conservan sourceRef, topic, level, distractores y fallbacks propios.
 
 ## STOP conditions
 

@@ -70,7 +70,7 @@ function grammarDeckEntries(): LearningContentManifestEntry[] {
         { namespace: 'topic', id: theoryTopicForDeck(summary.slug) },
         ...pronunciationRefs(deck?.pronunciationTargetIds ?? []),
       ],
-      practice: { status: 'objective', adapter: 'grammar_deck_quiz' },
+      practice: { status: 'objective', adapter: 'grammar_deck_topic_review' },
       owners: ['topic_srs', 'activity_sessions'],
     }
   })

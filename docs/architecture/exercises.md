@@ -152,6 +152,24 @@ Ver [Evidencia de habla](#evidencia-de-habla-niveles-de-señal-y-matriz-surfaces
 
 ## Ejercicios genéricos (Generic Exercises)
 
+### Manifest de capacidades
+
+`lib/exercises/capabilities.ts` es el inventario exhaustivo de cada
+`ExerciseSlug`: status (`active`, `deferred` o `legacy`), productores reales,
+renderer, evaluator, fuentes compatibles, skills, ID de base de datos y política
+de escritura a `answer_history`. `pnpm audit:learning-loop` falla si falta una
+declaración, una capacidad activa no tiene productor, una capacidad no activa
+queda seleccionable o se duplica/desvía un ID histórico.
+
+`reader` es una capacidad activa de exposición: no tiene ID de base de datos ni
+escribe `answer_history`. El status de una capacidad nunca implica por sí solo
+elegibilidad SRS; esa decisión sigue perteneciendo al contrato de evidencia.
+
+`conjugation_blank` está **deferred**. Se conservan su slug, ID 21, payload,
+renderer y evaluator para compatibilidad histórica/test-gallery, pero ningún
+productor o CTA lo selecciona. Solo puede reactivarse con un catálogo tipado de
+plantillas autoradas, respuestas aceptadas explícitas y fixtures.
+
 **Ruta:** `/practice/exercises`
 **Motor:** `lib/exercises/`
 
@@ -306,6 +324,22 @@ Reordenar tokens (palabras) mezclados para reconstruir la oración original.
 
 **Requisitos de datos:** `text_fragments` con oraciones de 3–12 palabras, o `word_bank.example` con ≥4 tokens (`assessWordBankEntry(..., 'reorder_words')`)
 
+### Error Correction
+
+**Slug:** `error_correction`
+**Componente:** `components/exercises/ErrorCorrectionExercise.tsx`
+**Generador:** `lib/exercises/generators/error-correction.ts`
+
+Usa exclusivamente pares autorados `bad` seguido inmediatamente de `good`
+dentro del mismo bloque `pairs` de un grammar deck. No empareja por distancia,
+no cruza bloques y no llama a red o Gemini. El `bad` es el prompt, el `good` es
+`correctSentence` y la nota autorada se conserva como explicación.
+
+Topic review coloca como máximo una corrección autorada y completa el cap
+existente de tres con `multiple_choice`; si no existe un par válido conserva el
+fallback quiz-only. El audit actual reporta 272 pares válidos en 128 decks y 207
+líneas omitidas con reason code.
+
 ---
 
 ## Contrato de elegibilidad
@@ -380,7 +414,7 @@ SoundLabPage
 
 | Tabla | Qué guarda |
 |---|---|
-| `exercise_types` | Catálogo de tipos: `pick_word`, `pick_sound`, `minimal_pair`, `dictation`, `speak_word`, `fill_blank`, `sentence_dictation`, `match_pairs`, `reorder_words`, `multiple_choice`, `cs_shadow_phrase` (id 23, migración `20260720190000_add_cs_shadow_phrase_exercise_type.sql`) |
+| `exercise_types` | Catálogo histórico completo descrito por `EXERCISE_TYPE_IDS` y `EXERCISE_CAPABILITIES`; incluye `error_correction` (19), `conjugation_blank` deferred (21) y `cs_shadow_phrase` (23). Un ID persistido no implica que el formato siga seleccionable. |
 | `answer_history` | Cada respuesta: `user_id`, `exercise_type_id`, `is_correct`, `user_answer`, `target_word`, `time_ms`, `exercise_payload` (JSONB con `sourceRef`), `sound_id` (nullable) |
 | `user_contrast_progress` | Progreso SM-2 por usuario × **contraste de fonemas** (`contrast_id`, ej. `"iː\|ɪ"` — no por sonido aislado). Ver [`lib/phoneme-practice/types.ts`](../../lib/phoneme-practice/types.ts) (`UserContrastProgress`) y [`lib/phoneme-practice/mastery.ts`](../../lib/phoneme-practice/mastery.ts) (`isContrastMastered`). |
 | `deck_entry_progress` | Progreso SM-2 por usuario × entrada de deck |

@@ -8,6 +8,8 @@
 - **Depends on**: 046, 048
 - **Category**: direction
 - **Planned at**: commit `38c3abe5`, 2026-07-17
+- **Current status**: REJECTED / deferred (2026-08-11 via Plan 075 — no existe
+  catálogo autorado de plantillas; el contrato histórico permanece compatible)
 
 ## Why this matters
 
@@ -49,6 +51,14 @@ Los bloques `conjugation` y `verb-table` presentan formas verbales, pero no exig
 - [ ] Respuestas aceptadas se declaran por ejercicio y no mediante una equivalencia global insegura.
 - [ ] El tipo persiste con ID 21 y topic.
 - [ ] Funciona offline con contenido ya disponible.
+
+## Deferred decision (Plan 075)
+
+La capacidad no se ofrece ni se selecciona en producto. Se conservan slug, ID
+21, schema, adapter, evaluator, renderer y test-gallery para leer y renderizar
+historial. El gate para retomarla es un catálogo tipado de plantillas autoradas
+que declare oraciones, respuestas aceptadas y fixtures; no se inferirá semántica
+desde tablas de conjugación ni se generará contenido con IA.
 
 ## STOP conditions
 

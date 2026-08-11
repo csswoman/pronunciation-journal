@@ -76,8 +76,8 @@ your row when done.
 | 047 | Propagate the real `speak_word` score into persistence | P1 | S | 046 | DONE (2026-07-18; see `TODO.md`) |
 | 048 | Turn `topic_srs` rows into actionable Review sessions | P1 | M | 046 | DONE (2026-07-18; see `TODO.md`) |
 | 049 | Add a secure cross-feature interest profile | P1 product | M | — | DONE (2026-07-18; see `TODO.md`) |
-| 050 | Add the local/offline `error_correction` grammar exercise | P1 pedagogical | M | 046, 048 | DONE (2026-07-18; see `TODO.md`) |
-| 051 | Add the local/offline `conjugation_blank` grammar exercise | P1 pedagogical | M | 046, 048 | DONE (2026-07-18; see `TODO.md`) |
+| 050 | Add the local/offline `error_correction` grammar exercise | P1 pedagogical | M | 046, 048 | DONE (2026-08-11 via Plan 075; 272 authored pairs across 128 decks, mixed topic-review producer) |
+| 051 | Add the local/offline `conjugation_blank` grammar exercise | P1 pedagogical | M | 046, 048 | REJECTED / deferred (2026-08-11 via Plan 075; resume only with typed authored templates, accepted answers and fixtures) |
 | 052 | Build Journal storage and offline-first sync | P1 product | L | RLS-INT/T56 baseline | DONE (2026-07-18; see `TODO.md`) |
 | 053 | Correct Journal entries with Gemini and feed errors into SRS | P1 product | M | 049, 052 | DONE (2026-07-18; see `TODO.md`) |
 | 054 | Ship the Journal UI and optional Daily entry point | P1 product | M | 052, 053 | DONE (2026-07-18; see `TODO.md`) |
@@ -101,7 +101,7 @@ your row when done.
 | 072 | Vary and expand the diagnostic item bank | P2 product/pedagogy | M | 067 | DONE (2026-07-25: per-session seed + 18-item word-stress bank sampled 5/run via seeded PRNG; scoring/evidence now run-size-relative (`perceptionItemCount`), not bank-size-relative; focused tests, typecheck and token lint pass. The stale `PronunciationAssessmentClient` finish-error fixture was fixed in the 067 close-out — mock now uses an actually-invalid prosody+STT score) |
 | 074 | Sanitize Review and learning evidence before broader integration | P1 correctness/foundation | L | 059, 061, 062 | DONE (2026-08-10: pure topic-aware Review composition; canonical context-free answer→skills; completion removed from learning score; stable/idempotent Essential Words answers) |
 | 073 | Connect all content to the shared learning loop | P1 product/pedagogy | XL | 074, 066 | DONE (2026-08-10: executable 3,230-entry manifest, shared theory identity, tracked phrases, canonical launches, deterministic Daily policy, audited evidence exits and separate activity/coverage/learning projections) |
-| 075 | Consolidate active exercise capabilities and retire producer-less promises | P1 pedagogy/tech-debt | M | 073 | TODO (finish authored `error_correction`, defer unsafe `conjugation_blank`, inventory producers and share only equivalent generator primitives) |
+| 075 | Consolidate active exercise capabilities and retire producer-less promises | P1 pedagogy/tech-debt | M | 073 | DONE (2026-08-11; audited capability inventory, authored error correction, deferred conjugation and shared safe primitives) |
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJECTED (with one-line rationale)
 
