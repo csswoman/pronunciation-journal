@@ -22,6 +22,11 @@ import { PhonemeFeedbackTable } from '@/components/lesson/PhonemeFeedbackTable'
 import { SelfGradeBar } from './SelfGradeBar'
 import { QuietSpeakFeedback } from './QuietSpeakFeedback'
 import { InlineFeedback } from '@/components/practice/session/InlineFeedback'
+import {
+  PracticeActionBar,
+  PracticeContinueButton,
+  PracticeExerciseCard,
+} from '@/components/practice/session/PracticeActionBar'
 import { SpeakSkipActions } from './SpeakSkipActions'
 import { micErrorMessage } from './mic-error-message'
 import { playUiCue } from '@/lib/ui-sounds/cues'
@@ -194,7 +199,7 @@ export function SpeakReviewCard({
           : 'Escucha el modelo y graba tu voz cuando estés listo.'
 
   return (
-    <div className="flex w-full flex-col items-center gap-space-5 rounded-lg border border-border-subtle bg-surface-raised layout-card-pad sm:gap-layout-stack-loose">
+    <PracticeExerciseCard spacing="roomy" className="sm:gap-layout-stack-loose">
       <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">
         {statusMessage}
       </p>
@@ -265,21 +270,19 @@ export function SpeakReviewCard({
           {feedback && (
             <QuietSpeakFeedback accuracy={scored.score} message={feedback.message} />
           )}
-          <div className="flex gap-2">
-            <PillButton variant="outline" size="sm" onClick={handleRetry}>
+          <PracticeActionBar>
+            <PillButton variant="outline" size="md" className="w-full" onClick={handleRetry}>
               Intentar de nuevo
             </PillButton>
-            <PillButton
-              variant="primary"
-              size="sm"
+            <PracticeContinueButton
               onClick={handleContinue}
               disabled={isSubmitting}
               isLoading={isSubmitting}
-              icon={isSubmitting ? <Loader2 size={16} /> : undefined}
+              shortcutLabel="Enter"
             >
               Guardar y ver la siguiente
-            </PillButton>
-          </div>
+            </PracticeContinueButton>
+          </PracticeActionBar>
           {scored.wordResults.some((word) => word.phonemes?.alignment?.length) && (
             <div className="flex w-full flex-col items-center gap-3">
               <button
@@ -303,6 +306,6 @@ export function SpeakReviewCard({
         onKeepSnooze={onKeepSnooze}
         onMaster={onMaster}
       />
-    </div>
+    </PracticeExerciseCard>
   )
 }

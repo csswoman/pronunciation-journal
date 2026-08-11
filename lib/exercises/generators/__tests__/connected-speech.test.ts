@@ -115,6 +115,17 @@ describe('generateCsShadowPhrase', () => {
     }
   })
 
+  it('preserves authored IPA and omits it when the source has none', () => {
+    const authored = generateCsShadowPhrase(mockDeck, SLUG, 10)
+    expect(authored.every((exercise) => exercise.phraseIpa?.startsWith('/'))).toBe(true)
+
+    const withoutIpa = {
+      quiz: [],
+      cards: [{ blocks: [{ type: 'pronunciation', examples: [{ text: 'We speak clearly today.' }] }] }],
+    }
+    expect(generateCsShadowPhrase(withoutIpa, SLUG, 1)[0]).not.toHaveProperty('phraseIpa')
+  })
+
   it('never emits a lone reduction key as the shadow phrase', () => {
     const exercises = generateCsShadowPhrase(mockDeck, SLUG, 3)
     for (const ex of exercises) {

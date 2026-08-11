@@ -14,7 +14,8 @@
 
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import { Mic, MicOff } from '@/components/icons'
-import { PillButton } from '@/components/ui/PillButton'
+import Button from '@/components/ui/Button'
+import { PracticeActionBar, PracticeContinueButton } from '@/components/practice/session/PracticeActionBar'
 import { ProductionFeedback } from '@/components/exercises/ProductionFeedback'
 import { ProductionHint } from '@/components/exercises/ProductionHint'
 import { ProductionTaskHeader } from '@/components/exercises/ProductionTaskHeader'
@@ -242,24 +243,19 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
             grade={grade}
             transcript={speechResult?.transcript.trim()}
           />
-          <div className="flex w-full flex-col gap-2">
-            <PillButton
-              variant={grade.usedTarget ? 'primary' : 'outline'}
-              size="md"
-              className="min-h-11 w-full"
-              onClick={grade.usedTarget ? handleContinue : handleRetry}
-            >
-              {grade.usedTarget ? 'Continuar' : 'Intentar de nuevo'}
-            </PillButton>
-            <PillButton
-              variant={grade.usedTarget ? 'outline' : 'primary'}
-              size="md"
-              className="min-h-11 w-full"
-              onClick={grade.usedTarget ? handleRetry : handleContinue}
-            >
-              {grade.usedTarget ? 'Intentar de nuevo' : 'Continuar de todos modos'}
-            </PillButton>
-          </div>
+          <PracticeActionBar>
+            {grade.usedTarget ? (
+              <>
+                <Button variant="secondary" size="lg" fullWidth onClick={handleRetry}>Intentar de nuevo</Button>
+                <PracticeContinueButton onClick={handleContinue} />
+              </>
+            ) : (
+              <>
+                <Button variant="secondary" size="lg" fullWidth onClick={handleContinue}>Continuar de todos modos</Button>
+                <Button variant="primary" size="lg" fullWidth onClick={handleRetry}>Intentar de nuevo</Button>
+              </>
+            )}
+          </PracticeActionBar>
         </>
       )}
     </div>

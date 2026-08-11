@@ -13,7 +13,7 @@
 // </MatchPairsExercise>
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { cn } from '@/lib/cn'
+import Button from '@/components/ui/Button'
 import { shuffle } from '@/lib/exercises/utils'
 import { speak } from '@/lib/phoneme-practice/tts'
 import type { MatchPairsExercise as MatchPairsExerciseType } from '@/lib/exercises/types'
@@ -244,21 +244,18 @@ export function MatchPairsExercise({ exercise, onResult }: Props) {
       />
 
       {!submitted && (
-        <button
-          type="button"
+        <Button
+          variant="primary"
+          size="lg"
+          fullWidth
           onClick={handleCheck}
           disabled={!allMatched}
           data-cuelume-press="press"
           data-cuelume-release="release"
-          className={cn(
-            'w-full max-w-xl rounded-full py-3.5 text-body-sm font-semibold transition-all duration-150',
-            allMatched
-              ? 'cursor-pointer bg-(--cta-bg) text-(--cta-fg) hover:opacity-90 active:scale-[0.99]'
-              : 'cursor-not-allowed bg-surface-raised text-fg-subtle opacity-50',
-          )}
+          className="max-w-xl"
         >
           Comprobar
-        </button>
+        </Button>
       )}
     </div>
   )

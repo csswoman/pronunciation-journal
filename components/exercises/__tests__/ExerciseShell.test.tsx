@@ -25,27 +25,27 @@ describe('ExerciseShell', () => {
     expect(screen.getByText('pleasantly peaceful')).toBeInTheDocument()
   })
 
-  it('shows Skip while idle (result null)', () => {
+  it('shows Omitir while idle (result null)', () => {
     render(<ExerciseShell {...baseProps} />)
-    expect(screen.getByRole('button', { name: /skip/i })).toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: /continue/i })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /omitir/i })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /continuar/i })).not.toBeInTheDocument()
   })
 
-  it('shows Continue and hides Skip when result is set', () => {
+  it('shows Continuar and hides Omitir when result is set', () => {
     render(
       <ExerciseShell
         {...baseProps}
         result={{ isCorrect: true, userAnswer: 'hello', timeMs: 1000 }}
       />
     )
-    expect(screen.getByRole('button', { name: /continue/i })).toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: /skip/i })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /continuar/i })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /omitir/i })).not.toBeInTheDocument()
   })
 
-  it('calls onSkip when Skip is clicked', () => {
+  it('calls onSkip when Omitir is clicked', () => {
     const onSkip = vi.fn()
     render(<ExerciseShell {...baseProps} onSkip={onSkip} />)
-    fireEvent.click(screen.getByRole('button', { name: /skip/i }))
+    fireEvent.click(screen.getByRole('button', { name: /omitir/i }))
     expect(onSkip).toHaveBeenCalledOnce()
   })
 
@@ -58,7 +58,7 @@ describe('ExerciseShell', () => {
         result={{ isCorrect: false, userAnswer: 'wrong', timeMs: 500 }}
       />
     )
-    fireEvent.click(screen.getByRole('button', { name: /continue/i }))
+    fireEvent.click(screen.getByRole('button', { name: /continuar/i }))
     expect(onContinue).toHaveBeenCalledOnce()
   })
 
@@ -134,7 +134,7 @@ describe('ExerciseShell', () => {
         result={{ isCorrect: false, userAnswer: 'a', timeMs: 1, feedback: { immediate: 'No.' } }}
       />
     )
-    expect(screen.queryByRole('button', { name: /try again/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /intentar de nuevo/i })).not.toBeInTheDocument()
     rerender(
       <ExerciseShell
         {...baseProps}
@@ -142,6 +142,6 @@ describe('ExerciseShell', () => {
         result={{ isCorrect: false, userAnswer: 'a', timeMs: 1, feedback: { immediate: 'No.', canRetry: true } }}
       />
     )
-    expect(screen.getByRole('button', { name: /try again/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /intentar de nuevo/i })).toBeInTheDocument()
   })
 })

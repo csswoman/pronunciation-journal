@@ -11,6 +11,7 @@
 import { useState } from 'react'
 import { IPA_EXTRA } from '@/lib/pronunciation/ipa-data'
 import { PhonemePlayButton } from '@/components/phoneme-practice/PhonemePlayButton'
+import Button from '@/components/ui/Button'
 import { playUiCue } from '@/lib/ui-sounds/cues'
 import { cn } from '@/lib/cn'
 
@@ -46,15 +47,16 @@ export function ExerciseHints({ ipa, targetWord, onRetry, onContinue, voice }: P
         voice={voice}
       />
 
-      <button
-        type="button"
+      <Button
         onClick={onRetry}
-        className="pf-cta pf-cta--primary"
+        variant="primary"
+        size="lg"
+        fullWidth
         data-cuelume-press="press"
         data-cuelume-release="release"
       >
         Reintentar
-      </button>
+      </Button>
 
       <div className="phoneme-hints__secondary">
         {hasMoreHints ? (

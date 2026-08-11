@@ -1,5 +1,7 @@
 'use client'
 
+import Button from '@/components/ui/Button'
+
 // Planned structure:
 // <PhonemeConfirmButton /> — CTA primaria compartida (pf-cta)
 
@@ -17,16 +19,17 @@ export function PhonemeConfirmButton({
   'aria-label': ariaLabel,
 }: Props) {
   return (
-    <button
-      type="button"
+    <Button
+      variant="primary"
+      size="lg"
+      fullWidth
       onClick={onClick}
       disabled={disabled}
       aria-label={ariaLabel ?? children}
-      className="pf-cta pf-cta--primary"
       data-cuelume-press="press"
       data-cuelume-release="release"
     >
       {children}
-    </button>
+    </Button>
   )
 }

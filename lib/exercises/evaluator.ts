@@ -190,10 +190,10 @@ function wrongResult(
     userAnswer,
     expectedAnswer: design.correctAnswer,
     feedback: {
-      immediate: "Not quite.",
+      immediate: "Todavía no.",
       explanation: specificFeedback,
-      example: `The correct answer is: "${design.correctAnswer}"`,
-      tip: design.hint?.level2 || `Instruction: ${design.instruction}`,
+      example: `La respuesta correcta es: "${design.correctAnswer}"`,
+      tip: design.hint?.level2 || `Instrucción: ${design.instruction}`,
     },
     score: 0,
     gradedBy: "client",
@@ -218,18 +218,18 @@ function genericWrongResult(
     userAnswer,
     expectedAnswer: design.correctAnswer,
     feedback: {
-      immediate: isEarlyLearner ? "Almost!" : "Not quite.",
+      immediate: isEarlyLearner ? "¡Casi!" : "Todavía no.",
       explanation:
         levelOfWrongness === "form_error"
           ? isEarlyLearner
-            ? `Check the ending — the answer is "${design.correctAnswer}".`
-            : `Watch the verb form — "${design.correctAnswer}" is the correct inflection here.`
+            ? `Revisa la terminación; la respuesta es "${design.correctAnswer}".`
+            : `Revisa la forma verbal; "${design.correctAnswer}" es la flexión correcta aquí.`
           : isEarlyLearner
-            ? `Not this one. The answer is "${design.correctAnswer}".`
-            : `That's not the target structure. The answer is "${design.correctAnswer}".`,
-      tip: design.hint?.level1 || "Try again.",
+            ? `Esta no. La respuesta es "${design.correctAnswer}".`
+            : `Esa no es la estructura objetivo. La respuesta es "${design.correctAnswer}".`,
+      tip: design.hint?.level1 || "Inténtalo de nuevo.",
       example: design.sentence
-        ? `Example: "${design.sentence.replace("___", `"${design.correctAnswer}"`)}"`
+        ? `Ejemplo: "${design.sentence.replace("___", `"${design.correctAnswer}"`)}"`
         : undefined,
     },
     score: 0,

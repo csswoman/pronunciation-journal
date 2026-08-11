@@ -13,6 +13,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { speak, speakSequence } from '@/lib/phoneme-practice/tts'
 import { PillButton } from '@/components/ui/PillButton'
+import Button from '@/components/ui/Button'
 import { ListenButton } from '@/components/ui/ListenButton'
 import { playUiCue } from '@/lib/ui-sounds/cues'
 import { selectSentence } from '@/lib/essential-words/sentence-variants'
@@ -24,7 +25,11 @@ import { AnswerDiff } from './AnswerDiff'
 import { ExercisePhaseLabel } from './ExercisePhaseLabel'
 import { ArchiveConfirmAction } from '@/components/practice/study-card/ArchiveConfirmAction'
 import { useEnterToContinue } from '@/hooks/useEnterToContinue'
-import Button from '@/components/ui/Button'
+import {
+  PracticeActionBar,
+  PracticeContinueButton,
+  PracticeExerciseCard,
+} from '@/components/practice/session/PracticeActionBar'
 import type { AttemptOutcome } from '@/lib/essential-words/attempt-grade'
 import type { EssentialWord } from '@/lib/essential-words/types'
 
@@ -121,7 +126,7 @@ export function DictationCard({ entry, levelLabel, onAttempt, onContinue, onArch
   }
 
   return (
-    <div className="flex w-full flex-col items-center gap-layout-stack rounded-lg border border-border-subtle bg-surface-raised layout-card-pad">
+    <PracticeExerciseCard>
       <ExercisePhaseLabel label={levelLabel} />
 
       <div className="flex w-full flex-col items-center gap-2 text-center">
@@ -194,9 +199,9 @@ export function DictationCard({ entry, levelLabel, onAttempt, onContinue, onArch
           {displayEnglishText(sentence)}
         </p>
       ) : (
-        <PillButton type="button" variant="primary" onClick={() => void handleCheck()} disabled={isChecking}>
+        <Button type="button" variant="primary" size="lg" fullWidth onClick={() => void handleCheck()} disabled={isChecking}>
           {isChecking ? 'Comprobando…' : 'Comprobar'}
-        </PillButton>
+        </Button>
       )}
 
       {!revealed && onArchive && (
@@ -204,20 +209,14 @@ export function DictationCard({ entry, levelLabel, onAttempt, onContinue, onArch
       )}
 
       {revealed && onContinue && (
-        <div className="w-full border-t border-line-divider pt-space-4">
-          <Button
-            type="button"
-            variant="primary"
-            size="lg"
-            className="w-full"
+        <PracticeActionBar>
+          <PracticeContinueButton
             onClick={onContinue}
             disabled={isContinuing}
             isLoading={isContinuing}
-          >
-            Continuar
-          </Button>
-        </div>
+          />
+        </PracticeActionBar>
       )}
-    </div>
+    </PracticeExerciseCard>
   )
 }

@@ -11,8 +11,8 @@
 //   <Actions />          — Continuar + optional skip link
 // </StudyCard>
 
-import { PillButton } from '@/components/ui/PillButton'
 import { ListenButton } from '@/components/ui/ListenButton'
+import { PracticeActionBar, PracticeContinueButton } from '@/components/practice/session/PracticeActionBar'
 import { ArchiveConfirmAction } from './ArchiveConfirmAction'
 import { cn } from '@/lib/cn'
 import type { StudyCardModel } from '@/lib/practice/study-card/model'
@@ -433,17 +433,8 @@ export function StudyCard({
         </div>
       )}
 
-      <div className={cn('flex w-full flex-col items-center', immersive ? 'gap-3' : 'max-w-sm gap-2')}>
-        <PillButton
-          variant="primary"
-          size="md"
-          className="w-full"
-          onClick={onContinue}
-          data-cuelume-press="press"
-          data-cuelume-release="release"
-        >
-          {continueLabel}
-        </PillButton>
+      <PracticeActionBar className={immersive ? undefined : 'max-w-sm'}>
+        <PracticeContinueButton onClick={onContinue}>{continueLabel}</PracticeContinueButton>
         {onOmit ? (
           <button
             type="button"
@@ -454,7 +445,7 @@ export function StudyCard({
           </button>
         ) : null}
         {!onOmit && onArchive ? <ArchiveConfirmAction onArchive={onArchive} /> : null}
-      </div>
+      </PracticeActionBar>
     </div>
   )
 }

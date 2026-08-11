@@ -12,8 +12,12 @@
 import { useRef, useState } from 'react'
 import { speak } from '@/lib/phoneme-practice/tts'
 import { ListenButton } from '@/components/ui/ListenButton'
-import { PillButton } from '@/components/ui/PillButton'
 import Button from '@/components/ui/Button'
+import {
+  PracticeActionBar,
+  PracticeContinueButton,
+  PracticeExerciseCard,
+} from '@/components/practice/session/PracticeActionBar'
 import { weakFormPhrase } from '@/lib/practice/study-card/model'
 import { selectSentence } from '@/lib/essential-words/sentence-variants'
 import type { AttemptOutcome } from '@/lib/essential-words/attempt-grade'
@@ -69,7 +73,7 @@ export function WeakFormCard({ entry, levelLabel, repetitions = 0, onAttempt, on
   }
 
   return (
-    <div className="flex w-full flex-col items-center gap-space-5 rounded-lg border border-border-subtle bg-surface-raised layout-card-pad">
+    <PracticeExerciseCard spacing="roomy">
       <ExercisePhaseLabel label={levelLabel} onArchive={onArchive} />
       <div className="flex max-w-[42ch] flex-col items-center gap-1 text-center">
         <p className="m-0 w-full text-body text-fg">Escucha la forma débil en contexto</p>
@@ -88,22 +92,22 @@ export function WeakFormCard({ entry, levelLabel, repetitions = 0, onAttempt, on
         label="Escuchar la forma débil"
       />
 
-      <div className="flex gap-2">
-        <PillButton variant="outline" size="sm" onClick={() => handleSelfGrade(false)} disabled={graded}>
+      <div className="grid w-full grid-cols-2 gap-3">
+        <Button variant="secondary" size="md" onClick={() => handleSelfGrade(false)} disabled={graded}>
           Me costó
-        </PillButton>
-        <PillButton variant="primary" size="sm" onClick={() => handleSelfGrade(true)} disabled={graded}>
+        </Button>
+        <Button variant="primary" size="md" onClick={() => handleSelfGrade(true)} disabled={graded}>
           Lo dije bien
-        </PillButton>
+        </Button>
       </div>
 
       {graded && correct !== null && <InlineFeedback isCorrect={correct} />}
 
       {graded && onContinue && (
-        <Button type="button" variant="primary" size="lg" className="w-full" onClick={onContinue} disabled={isContinuing} isLoading={isContinuing}>
-          Continuar
-        </Button>
+        <PracticeActionBar>
+          <PracticeContinueButton onClick={onContinue} disabled={isContinuing} isLoading={isContinuing} />
+        </PracticeActionBar>
       )}
-    </div>
+    </PracticeExerciseCard>
   )
 }

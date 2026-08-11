@@ -19,6 +19,7 @@ import {
 import type { SessionResult } from '@/lib/practice/types'
 import type { PronunciationTargetId } from '@/lib/pronunciation/targets/types'
 import { PronunciationMissionLaunchButton } from '@/components/pronunciation/PronunciationMissionLaunchButton'
+import Button from '@/components/ui/Button'
 
 export { formatExerciseLabel }
 
@@ -166,21 +167,23 @@ export function SessionSummary({
         />
       ) : null}
 
-      <div className="mt-auto flex shrink-0 items-center gap-3 pt-2">
-        <button
-          type="button"
+      <div className="mt-auto flex shrink-0 flex-col gap-2 pt-2 sm:flex-row sm:gap-3">
+        <Button
+          variant="secondary"
+          size="lg"
+          fullWidth
           onClick={onPracticeAgain}
-          className="flex-1 rounded-xl border border-border-default bg-surface-raised px-4 py-3 text-body-sm font-semibold text-fg-primary transition-colors hover:border-border-strong hover:bg-surface-sunken"
         >
           Practicar de nuevo
-        </button>
-        <button
-          type="button"
+        </Button>
+        <Button
+          variant="primary"
+          size="lg"
+          fullWidth
           onClick={onFinish}
-          className="flex-1 rounded-xl bg-cta-bg px-4 py-3 text-body-sm font-semibold text-cta-fg transition-all hover:-translate-y-px hover:opacity-90"
         >
           Terminar
-        </button>
+        </Button>
       </div>
     </div>
   )

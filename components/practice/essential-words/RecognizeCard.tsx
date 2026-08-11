@@ -20,7 +20,11 @@ import { RecognizeOptionGrid } from './RecognizeOptionGrid'
 import { ArchiveConfirmAction } from '@/components/practice/study-card/ArchiveConfirmAction'
 import { InlineFeedback } from '@/components/practice/session/InlineFeedback'
 import { useEnterToContinue } from '@/hooks/useEnterToContinue'
-import Button from '@/components/ui/Button'
+import {
+  PracticeActionBar,
+  PracticeContinueButton,
+  PracticeExerciseCard,
+} from '@/components/practice/session/PracticeActionBar'
 import type { AttemptOutcome } from '@/lib/essential-words/attempt-grade'
 import type { EssentialWord } from '@/lib/essential-words/types'
 
@@ -94,7 +98,7 @@ export function RecognizeCard({
   if (!prompt) return null
 
   return (
-    <div className="flex w-full max-w-md flex-col items-center gap-layout-stack rounded-lg border border-border-subtle bg-surface-raised layout-card-pad">
+    <PracticeExerciseCard className="max-w-md">
       <ExercisePhaseLabel label={levelLabel} />
 
       <div className="flex w-full flex-col items-center gap-2 text-center">
@@ -128,10 +132,10 @@ export function RecognizeCard({
       )}
 
       {chosen && onContinue && (
-        <Button type="button" variant="primary" size="lg" className="w-full" onClick={onContinue} disabled={isContinuing} isLoading={isContinuing}>
-          Continuar
-        </Button>
+        <PracticeActionBar>
+          <PracticeContinueButton onClick={onContinue} disabled={isContinuing} isLoading={isContinuing} />
+        </PracticeActionBar>
       )}
-    </div>
+    </PracticeExerciseCard>
   )
 }

@@ -32,9 +32,9 @@ export function buildPedagogicalFeedback(
     case 'written_production':
     case 'spoken_production':
       return {
-        immediate: isCorrect ? 'Good work using the target item.' : 'Review the model feedback before continuing.',
+        immediate: isCorrect ? 'Usaste bien el elemento objetivo.' : 'Revisa el feedback antes de continuar.',
         expectedAnswer: exercise.exampleSentence,
-        tip: exercise.targetMeaning ? `Keep the meaning of "${exercise.targetItem}" in mind: ${exercise.targetMeaning}.` : undefined,
+        tip: exercise.targetMeaning ? `Ten presente el significado de “${exercise.targetItem}”: ${exercise.targetMeaning}.` : undefined,
         category: isCorrect ? 'production_accepted' : 'production_review',
         errorCode: isCorrect
           ? 'correct'
@@ -45,7 +45,7 @@ export function buildPedagogicalFeedback(
       }
     case 'sentence_context':
       return {
-        immediate: isCorrect ? 'That fits the sentence.' : 'Look at the full sentence and try the meaning again.',
+        immediate: isCorrect ? 'Esa opción encaja en la oración.' : 'Lee la oración completa y vuelve a revisar el significado.',
         expectedAnswer: exercise.answer,
         correction: exercise.fullSentence,
         explanation: exercise.definition,
@@ -64,7 +64,7 @@ export function buildPedagogicalFeedback(
       return { immediate: isCorrect ? 'Correcto.' : 'Compara tu traducción con la referencia.', expectedAnswer: exercise.referenceEn, correction: exercise.referenceEn, errorCode: isCorrect ? 'correct' : 'meaning_choice', canRetry: !isCorrect, nextAction: isCorrect ? 'continue' : 'retry' }
     case 'cs_shadow_phrase':
       return {
-        immediate: isCorrect ? 'Great shadowing!' : emptyAnswer ? "That attempt wasn't scored — keep practicing." : 'Keep practicing this phrase.',
+        immediate: isCorrect ? '¡Muy buena imitación!' : emptyAnswer ? 'Este intento no recibió puntuación. Sigue practicando.' : 'Sigue practicando esta frase.',
         expectedAnswer: exercise.phrase,
         category: isCorrect ? 'correct' : emptyAnswer ? 'unscored' : 'production_review',
         errorCode: isCorrect ? 'correct' : 'unknown',
@@ -118,10 +118,10 @@ function fillBlankFeedback(
 ): PedagogicalFeedback {
   const sentence = exercise.sentence.replace('___', exercise.answer)
   return {
-    immediate: isCorrect ? 'Yes, that word completes the sentence.' : 'Not quite. Use the word that makes the sentence read naturally.',
+    immediate: isCorrect ? 'Sí, esa palabra completa la oración.' : 'Aún no. Elige la palabra que haga que la oración suene natural.',
     explanation: isCorrect
       ? undefined
-      : 'In this exercise, the missing word must fit both the meaning and the grammar around the blank.',
+      : 'La palabra que falta debe encajar tanto en el significado como en la gramática de la oración.',
     expectedAnswer: exercise.answer,
     correction: sentence,
     tip: exercise.hints?.level2 ?? exercise.hint,
@@ -150,13 +150,13 @@ function dictationFeedback(
   isCorrect: boolean,
 ): PedagogicalFeedback {
   return {
-    immediate: isCorrect ? 'You heard the full sentence clearly.' : 'Close. Compare what you typed with the full sentence.',
+    immediate: isCorrect ? 'Escuchaste con claridad la oración completa.' : 'Casi. Compara lo que escribiste con la oración completa.',
     explanation: isCorrect
       ? undefined
-      : 'Dictation trains the link between English sounds and written words. Small missing words still change the sentence.',
+      : 'El dictado entrena la relación entre los sonidos del inglés y las palabras escritas. Incluso una palabra corta puede cambiar la oración.',
     expectedAnswer: exercise.sentence,
     correction: exercise.sentence,
-    tip: 'Replay the slow audio and listen for short words and endings.',
+    tip: 'Reproduce el audio lento y presta atención a las palabras cortas y a las terminaciones.',
     example: exercise.sentence,
     category: isCorrect ? 'dictation_correct' : 'dictation_sound_to_text',
     errorCode: isCorrect ? 'correct' : 'listening_omission',
@@ -170,13 +170,13 @@ function reorderFeedback(
   isCorrect: boolean,
 ): PedagogicalFeedback {
   return {
-    immediate: isCorrect ? 'Good order.' : 'The words are right, but the order needs work.',
+    immediate: isCorrect ? 'El orden es correcto.' : 'Las palabras son correctas, pero debes revisar el orden.',
     explanation: isCorrect
       ? undefined
-      : 'English word order carries the sentence meaning. Start with the subject, then the main verb, then the rest of the idea.',
+      : 'El orden de las palabras comunica el sentido de la oración. Empieza por el sujeto, sigue con el verbo principal y después completa la idea.',
     expectedAnswer: exercise.sentence,
     correction: exercise.sentence,
-    tip: 'Read your sentence aloud. If it sounds like a question or a fragment, check the subject and verb first.',
+    tip: 'Lee la oración en voz alta. Si suena como una pregunta o un fragmento, revisa primero el sujeto y el verbo.',
     example: exercise.sentence,
     category: isCorrect ? 'reorder_correct' : 'reorder_word_order',
     errorCode: isCorrect ? 'correct' : 'word_order',
@@ -191,11 +191,11 @@ function multipleChoiceFeedback(
 ): PedagogicalFeedback {
   const expected = exercise.options[exercise.answerIndex]
   return {
-    immediate: isCorrect ? 'Correct choice.' : 'Not this option. Check the correct answer before moving on.',
+    immediate: isCorrect ? 'Elegiste la opción correcta.' : 'Esa opción no encaja. Revisa la respuesta correcta antes de continuar.',
     explanation: exercise.explanation,
     expectedAnswer: expected,
     correction: expected,
-    tip: isCorrect ? undefined : 'Read the question again and look for the word that controls the answer.',
+    tip: isCorrect ? undefined : 'Lee otra vez la pregunta y busca la palabra que determina la respuesta.',
     category: isCorrect ? 'multiple_choice_correct' : 'multiple_choice_concept',
     errorCode: isCorrect ? 'correct' : 'meaning_choice',
     canRetry: !isCorrect,
@@ -210,12 +210,12 @@ function matchPairsFeedback(
   totalPairCount = exercise.pairs.length,
 ): PedagogicalFeedback {
   const expected = exercise.pairs.map((pair) => `${pair.left} = ${pair.right}`).join('; ')
-  const countLine = correctPairCount == null ? undefined : `${correctPairCount} of ${totalPairCount} pairs matched.`
+  const countLine = correctPairCount == null ? undefined : `${correctPairCount} de ${totalPairCount} pares correctos.`
   return {
-    immediate: isCorrect ? 'All pairs match.' : countLine ?? 'Some pairs need another look.',
-    explanation: isCorrect ? undefined : 'Pair each item with the meaning, sound, or form that belongs to it.',
+    immediate: isCorrect ? 'Todos los pares coinciden.' : countLine ?? 'Revisa algunos pares.',
+    explanation: isCorrect ? undefined : 'Relaciona cada elemento con el significado, sonido o forma que le corresponde.',
     expectedAnswer: expected,
-    tip: 'Match the easiest pair first, then use elimination for the rest.',
+    tip: 'Empieza por el par más fácil y usa el descarte para resolver los demás.',
     category: isCorrect ? 'match_pairs_correct' : 'match_pairs_mapping',
     errorCode: isCorrect ? 'correct' : 'pair_mapping',
     canRetry: !isCorrect,

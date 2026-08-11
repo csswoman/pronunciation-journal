@@ -75,7 +75,7 @@ export const GENERIC_REGISTRY: GenericRegistry = {
     noHint: true,
   },
   fill_blank: {
-    title: 'Complete the sentence',
+    title: 'Completa la oración',
     render: (exercise: FillBlankExerciseType, { onResult, hintCount }) => (
       <FillBlankExercise
         exercise={exercise}
@@ -85,7 +85,7 @@ export const GENERIC_REGISTRY: GenericRegistry = {
     ),
   },
   reorder_words: {
-    title: 'Put the words in the correct order',
+    title: 'Ordena las palabras',
     noHint: true,
     render: (exercise: ReorderWordsExerciseType, { onResult, focusUi }) => (
       <ReorderWordsExercise
@@ -96,7 +96,7 @@ export const GENERIC_REGISTRY: GenericRegistry = {
     ),
   },
   sentence_dictation: {
-    title: 'Listen and type the sentence',
+    title: 'Escucha y escribe la oración',
     render: (exercise: SentenceDictationExerciseType, { onResult, hintCount }) => (
       <SentenceDictationExercise
         exercise={exercise}
@@ -106,7 +106,7 @@ export const GENERIC_REGISTRY: GenericRegistry = {
     ),
   },
   sentence_context: {
-    title: 'Choose the best option',
+    title: 'Elige la mejor opción',
     noHint: true,
     render: (exercise: SentenceContextExerciseType, { onResult }) => (
       <SentenceContextExercise
@@ -116,7 +116,7 @@ export const GENERIC_REGISTRY: GenericRegistry = {
     ),
   },
   multiple_choice: {
-    title: 'Choose the correct answer',
+    title: 'Elige la respuesta correcta',
     render: (exercise: MultipleChoiceExerciseType, { onResult, hintCount }) => (
       <MultipleChoiceExercise
         exercise={exercise}
@@ -152,10 +152,10 @@ export const GENERIC_REGISTRY: GenericRegistry = {
   sentence_transformation: { title: 'Transforma la oración', noHint: true, render: (exercise: SentenceTransformationExerciseType, { onResult, onSkip }) => <SentenceTransformationExercise exercise={exercise} onResult={onResult} onSkip={onSkip} /> },
   translation_es_en: { title: 'Traduce al inglés', noHint: true, render: (exercise: TranslationEsEnExerciseType, { onResult }) => <TranslationEsEnExercise exercise={exercise} onResult={onResult} /> },
   cs_shadow_phrase: {
-    title: 'Shadow the phrase',
+    title: 'Imita la frase',
     noHint: true,
-    render: (exercise: CsShadowPhraseExerciseType, { onResult, onSkip }) => (
-      <CsShadowPhraseExercise exercise={exercise} onResult={onResult} onSkip={onSkip} />
+    render: (exercise: CsShadowPhraseExerciseType, { onResult }) => (
+      <CsShadowPhraseExercise exercise={exercise} onResult={onResult} />
     ),
   },
 }

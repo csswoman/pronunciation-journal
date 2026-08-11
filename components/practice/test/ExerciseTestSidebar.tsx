@@ -68,7 +68,7 @@ export function ExerciseTestSidebar(props: Props) {
     >
       <div className="flex items-center justify-between border-b border-border-subtle px-4 py-3">
         <div>
-          <p className="font-caption font-semibold uppercase tracking-wide text-fg-subtle">Test UI</p>
+          <p className="font-kicker text-fg-subtle">Banco de pruebas</p>
           <p className="text-body-sm font-medium text-fg">Navegación</p>
         </div>
         {overlayOpen || essentialWordsOpen ? (

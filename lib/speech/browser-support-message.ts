@@ -34,9 +34,15 @@ export const CHROME_MIC_BANNER_BODY_ES =
 export const BROWSER_BLOCKS_SCORING_EN =
   "This browser (like Brave, Opera, Edge, or Firefox) blocks voice scoring, so we can't rate your pronunciation. You can listen and repeat here, but for scored pronunciation practice, open the app in Google Chrome."
 
+export const BROWSER_BLOCKS_SCORING_ES =
+  `Este navegador (como ${NON_CHROME_BROWSERS_ES}) bloquea la puntuación por voz. Puedes escuchar y repetir aquí; para recibir una puntuación, abre la app en Google Chrome.`
+
 /** English, shadowing-fallback message tuned for shadow-phrase exercises. */
 export const BROWSER_BLOCKS_SCORING_SHADOW_EN =
   "This browser (like Brave, Opera, Edge, or Firefox) blocks voice scoring. Listen and repeat to shadow the phrase, but for scored pronunciation practice, open the app in Google Chrome."
+
+export const BROWSER_BLOCKS_SCORING_SHADOW_ES =
+  `Este navegador (como ${NON_CHROME_BROWSERS_ES}) bloquea la puntuación por voz. Escucha e imita la frase aquí; para recibir una puntuación, abre la app en Google Chrome.`
 
 /** localStorage key — ephemeral UI pref, not learning data. */
 export const CHROME_MIC_TIP_DISMISSED_KEY = "speech:chrome-mic-tip-dismissed"

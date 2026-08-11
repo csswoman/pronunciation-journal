@@ -205,6 +205,8 @@ export interface CsShadowPhraseExercise extends BaseGenericExercise {
   type: 'cs_shadow_phrase'
   /** The full sentence to shadow (already embeds the connected-speech feature). */
   phrase: string
+  /** Authored phrase-level IPA. Omitted when the source deck does not provide it. */
+  phraseIpa?: string
   /** Which connected-speech deck this phrase came from (linking, reductions, etc). */
   deckSlug: string
   /** One authored target at most: a phrase-level STT score cannot update a group. */

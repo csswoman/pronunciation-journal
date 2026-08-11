@@ -64,7 +64,7 @@ describe('SpeakScoredExercise', () => {
     await waitFor(() => {
       expect(evaluationMocks.evaluate).toHaveBeenCalled()
     })
-    const continueBtn = await screen.findByRole('button', { name: 'Continue' }, { timeout: 3000 })
+    const continueBtn = await screen.findByRole('button', { name: /continuar/i }, { timeout: 3000 })
     fireEvent.click(continueBtn)
 
     expect(onSubmit).toHaveBeenCalledWith(true, 'thought', { score: 72 })
@@ -84,7 +84,7 @@ describe('SpeakScoredExercise', () => {
 
     render(<SpeakScoredExercise exercise={exercise} onSubmit={onSubmit} />)
 
-    fireEvent.click(screen.getByRole('button', { name: 'Continue' }))
+    fireEvent.click(screen.getByRole('button', { name: /continuar/i }))
 
     await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(false, ''))
     // Never a correct answer, never a score — cannot affect accuracy/SRS/mastery.
@@ -105,8 +105,8 @@ describe('SpeakScoredExercise', () => {
 
     render(<SpeakScoredExercise exercise={exercise} onSubmit={onSubmit} />)
 
-    expect(screen.getByText(/doesn't support voice scoring/i)).toBeInTheDocument()
-    fireEvent.click(screen.getByRole('button', { name: 'Continue' }))
+    expect(screen.getByText(/no admite puntuación por voz/i)).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: /continuar/i }))
 
     await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(false, ''))
   })
@@ -127,7 +127,7 @@ describe('SpeakScoredExercise', () => {
     render(<SpeakScoredExercise exercise={exercise} onSubmit={onSubmit} />)
 
     await waitFor(() => expect(evaluationMocks.evaluate).toHaveBeenCalled())
-    const continueBtn = await screen.findByRole('button', { name: 'Continue' }, { timeout: 3000 })
+    const continueBtn = await screen.findByRole('button', { name: /continuar/i }, { timeout: 3000 })
     fireEvent.click(continueBtn)
 
     await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(false, ''))

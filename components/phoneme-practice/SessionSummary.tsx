@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Button from '@/components/ui/Button'
 
 interface Props {
   soundIpa: string
@@ -11,10 +12,10 @@ interface Props {
 }
 
 function getResult(accuracy: number) {
-  if (accuracy === 100) return { emoji: '🎉', title: 'Perfect!',        subtitle: 'You nailed every single one.' }
-  if (accuracy >= 80)  return { emoji: '🌟', title: 'Great job!',       subtitle: 'Almost perfect — keep it up.' }
-  if (accuracy >= 50)  return { emoji: '💪', title: 'Good effort!',     subtitle: 'Practice a bit more to master this.' }
-  return               { emoji: '📚', title: 'Keep practicing!', subtitle: 'This sound needs more attention.' }
+  if (accuracy === 100) return { emoji: '🎉', title: '¡Perfecto!', subtitle: 'Acertaste todos los ejercicios.' }
+  if (accuracy >= 80) return { emoji: '🌟', title: '¡Muy bien!', subtitle: 'Casi perfecto. Mantén ese ritmo.' }
+  if (accuracy >= 50) return { emoji: '💪', title: 'Buen esfuerzo', subtitle: 'Practica un poco más para consolidarlo.' }
+  return { emoji: '📚', title: 'Sigue practicando', subtitle: 'Este sonido necesita más atención.' }
 }
 
 export function SessionSummary({ soundIpa, scoreableCorrect, originalTotal, nextReview, onPracticeAgain }: Props) {
@@ -27,7 +28,7 @@ export function SessionSummary({ soundIpa, scoreableCorrect, originalTotal, next
     'text-[var(--error)]'
 
   const nextReviewLabel = nextReview
-    ? new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'short', day: 'numeric' }).format(nextReview)
+    ? new Intl.DateTimeFormat('es-PE', { weekday: 'long', month: 'short', day: 'numeric' }).format(nextReview)
     : null
 
   return (
@@ -58,31 +59,32 @@ export function SessionSummary({ soundIpa, scoreableCorrect, originalTotal, next
           {accuracy}%
         </div>
         <p className="text-body-sm text-[var(--text-tertiary)] m-0">
-          {scoreableCorrect} of {originalTotal} correct
+          {scoreableCorrect} de {originalTotal} correctos
         </p>
 
         {/* Next review chip */}
         {nextReviewLabel && (
           <div className="mt-1 py-3 px-5 rounded-[var(--radius-lg)] border border-[var(--border-subtle)] bg-[var(--surface-sunken)] text-caption text-[var(--text-secondary)]">
-            Next review: <strong className="text-[var(--text-primary)]">{nextReviewLabel}</strong>
+            Próximo repaso: <strong className="text-[var(--text-primary)]">{nextReviewLabel}</strong>
           </div>
         )}
       </div>
 
       {/* Buttons */}
-      <button
-        type="button"
+      <Button
+        variant="primary"
+        size="lg"
+        fullWidth
         onClick={onPracticeAgain}
-        className="w-full p-5 rounded-[var(--radius-xl)] border-none [font-family:inherit] text-base font-bold cursor-pointer bg-[var(--gradient-primary)] text-white shadow-[0_4px_20px_color-mix(in_oklch,var(--primary)_30%,transparent)]"
       >
-        Practice again
-      </button>
+        Practicar de nuevo
+      </Button>
 
       <Link
         href="/practice/sounds"
-        className="block w-full p-5 rounded-[var(--radius-xl)] border border-[var(--border-subtle)] bg-[var(--surface-raised)] [font-family:inherit] text-base font-semibold text-[var(--text-secondary)] text-center no-underline"
+        className="flex h-12 w-full items-center justify-center rounded-md border border-border-default bg-surface-raised px-6 text-body-sm font-semibold text-fg no-underline transition-colors hover:bg-surface-sunken focus-ring"
       >
-        Back to practice
+        Volver a práctica
       </Link>
     </div>
   )

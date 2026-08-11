@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import { PillButton } from '@/components/ui/PillButton'
+import Button from '@/components/ui/Button'
 import { gradeProduction, ProductionGradeError } from '@/lib/exercises/grade-production-client'
 import { pedagogicalFeedbackFromProductionGrade } from '@/lib/exercises/feedback'
 import type { SentenceTransformationExercise as Exercise } from '@/lib/exercises/types'
@@ -37,11 +37,11 @@ export function SentenceTransformationExercise({ exercise, onResult, onSkip }: {
   }
 
   return <div className="flex flex-col gap-4">
-    <p className="rounded border border-border-default bg-surface-sunken p-3 text-fg">{exercise.sourceSentence}</p>
-    <p className="font-medium text-fg">{exercise.instruction}</p>
-    <textarea value={answer} onChange={(event) => setAnswer(event.target.value)} rows={3} disabled={grading} placeholder="Escribe la nueva oración…" className="w-full rounded border border-border-default bg-surface-raised p-3 text-fg" />
+    <p className="rounded-md border border-border-default bg-surface-sunken px-4 py-3 text-body-md leading-relaxed text-fg">{exercise.sourceSentence}</p>
+    <p className="max-w-[65ch] text-body-md font-medium leading-relaxed text-fg">{exercise.instruction}</p>
+    <textarea value={answer} onChange={(event) => setAnswer(event.target.value)} rows={3} disabled={grading} placeholder="Escribe la nueva oración…" className="w-full rounded-md border border-border-default bg-surface-sunken px-4 py-3 text-body-md leading-relaxed text-fg focus-ring" />
     {error ? <p role="alert" className="text-body-sm text-error">{error}</p> : null}
-    <PillButton variant="primary" size="md" onClick={() => void submit()} disabled={!answer.trim() || grading}>{grading ? 'Corrigiendo…' : 'Corregir'}</PillButton>
+    <Button variant="primary" size="lg" fullWidth onClick={() => void submit()} disabled={!answer.trim() || grading}>{grading ? 'Corrigiendo…' : 'Corregir'}</Button>
     {onSkip ? <button type="button" onClick={onSkip} className="self-center text-body-sm text-fg-muted focus-ring">Omitir este</button> : null}
   </div>
 }

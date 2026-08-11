@@ -1,6 +1,7 @@
 'use client'
 
 import type { ReactNode } from 'react'
+import Button from '@/components/ui/Button'
 
 interface Props {
   exerciseType: string
@@ -18,7 +19,7 @@ export function ExerciseCard({ children, feedback, onNext, finishLabel }: Props)
       {feedback && (
         <div
           className={[
-            'flex items-center justify-between rounded-[var(--radius-lg)] px-5 py-4',
+            'flex flex-col items-stretch justify-between gap-3 rounded-[var(--radius-lg)] px-5 py-4 sm:flex-row sm:items-center',
             feedback.isCorrect
               ? 'border-[1.5px] border-[var(--success-border)] bg-[var(--success-soft)]'
               : 'border-[1.5px] border-[var(--error-border)] bg-[var(--error-soft)]',
@@ -40,13 +41,14 @@ export function ExerciseCard({ children, feedback, onNext, finishLabel }: Props)
             )}
           </div>
           {onNext && (
-            <button
-              type="button"
+            <Button
+              variant={feedback.isCorrect ? 'success' : 'error'}
+              size="sm"
               onClick={onNext}
-              className="cursor-pointer rounded-[var(--radius-full)] border-none bg-[var(--gradient-primary)] px-5 py-2 text-caption font-semibold text-white font-inherit"
+              className="w-full sm:w-auto"
             >
               {finishLabel ? 'Terminar ✓' : 'Siguiente →'}
-            </button>
+            </Button>
           )}
         </div>
       )}

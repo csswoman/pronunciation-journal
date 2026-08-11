@@ -10,11 +10,11 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Mic, MicOff } from '@/components/icons'
-import { PillButton } from '@/components/ui/PillButton'
+import Button from '@/components/ui/Button'
 import { ListenButton } from '@/components/ui/ListenButton'
 import PronunciationFeedback from '@/components/lesson/PronunciationFeedback'
 import { useSpeechRecognition } from '@/hooks/useSpeechRecognition'
-import { BROWSER_BLOCKS_SCORING_SHADOW_EN } from '@/lib/speech/browser-support-message'
+import { BROWSER_BLOCKS_SCORING_SHADOW_ES } from '@/lib/speech/browser-support-message'
 import { scorePronunciation, getFeedbackMessage, calculateXP } from '@/lib/pronunciation/scoring'
 import { speak } from '@/lib/phoneme-practice/tts'
 import { cn } from '@/lib/cn'
@@ -22,6 +22,7 @@ import { useAuth } from '@/components/auth/AuthProvider'
 import { feedbackFromScoringResult } from '@/lib/pronunciation/feedback/from-scoring'
 import { persistPronunciationFeedbackEvidence } from '@/lib/pronunciation/feedback/persistence'
 import { RemediationSequence } from '@/components/pronunciation-feedback/RemediationSequence'
+import { PracticeActionBar, PracticeContinueButton } from '@/components/practice/session/PracticeActionBar'
 import type { ScoringResult } from '@/lib/types'
 import type { CsShadowPhraseExercise as CsShadowPhraseExerciseType } from '@/lib/exercises/types'
 import type { GenericRenderExtras } from '@/lib/practice/exercise-renderer/generic-registry'
@@ -34,10 +35,9 @@ interface Props {
     timeMs: number,
     extras?: GenericRenderExtras,
   ) => void
-  onSkip?: () => void
 }
 
-export function CsShadowPhraseExercise({ exercise, onResult, onSkip }: Props) {
+export function CsShadowPhraseExercise({ exercise, onResult }: Props) {
   const { user } = useAuth()
   const { status, result: speechResult, errorCode, isSupported, start, stop, reset } =
     useSpeechRecognition()
@@ -103,15 +103,16 @@ export function CsShadowPhraseExercise({ exercise, onResult, onSkip }: Props) {
 
   return (
     <div className="layout-stack-loose w-full items-center">
-      <h2 className="m-0 text-center text-h4 text-balance text-fg">
-        Shadow the phrase
-      </h2>
-
       <div className="flex flex-col items-center gap-2">
         <p className="m-0 max-w-xs text-center text-body-lg font-medium text-fg">
           {exercise.phrase}
         </p>
-        <ListenButton onPlay={() => speak(exercise.phrase)} label="Listen" />
+        {exercise.phraseIpa ? (
+          <p className="font-ipa m-0 max-w-md text-center text-body-md leading-relaxed text-fg-muted">
+            {exercise.phraseIpa}
+          </p>
+        ) : null}
+        <ListenButton onPlay={() => speak(exercise.phrase)} label="Escuchar" />
       </div>
 
       {!scoring && !isShadowing && (
@@ -120,7 +121,7 @@ export function CsShadowPhraseExercise({ exercise, onResult, onSkip }: Props) {
             type="button"
             onClick={isListening ? stop : start}
             disabled={isDone || isScoring}
-            aria-label={isListening ? 'Stop recording' : 'Record my voice'}
+            aria-label={isListening ? 'Detener grabación' : 'Grabar mi voz'}
             className={cn(
               'flex h-20 w-20 items-center justify-center rounded-full border-none text-on-primary transition-all focus-ring disabled:opacity-40 cursor-pointer',
               isListening
@@ -131,7 +132,7 @@ export function CsShadowPhraseExercise({ exercise, onResult, onSkip }: Props) {
             {isListening ? <MicOff size={28} /> : <Mic size={28} />}
           </button>
           <p className="m-0 text-caption tracking-wider text-fg-subtle">
-            {isListening ? 'Listening… tap to stop' : isScoring ? 'Analyzing…' : 'Tap to speak'}
+            {isListening ? 'Escuchando… toca para parar' : isScoring ? 'Analizando…' : 'Toca para hablar'}
           </p>
         </div>
       )}
@@ -140,45 +141,32 @@ export function CsShadowPhraseExercise({ exercise, onResult, onSkip }: Props) {
         <div className="flex flex-col items-center gap-4">
           <p className="m-0 max-w-xs text-center text-caption text-fg-muted">
             {!isSupported
-              ? "Your browser doesn't support voice scoring. Listen to the model and repeat it out loud, then continue — this attempt won't be scored."
+              ? 'Tu navegador no admite puntuación por voz. Escucha el modelo y repítelo en voz alta; este intento no recibirá puntuación.'
               : isNetworkShadowing
-                ? BROWSER_BLOCKS_SCORING_SHADOW_EN
-                : "Voice scoring isn't available right now. Listen to the model and repeat it out loud, then continue — this attempt won't be scored."}
+                ? BROWSER_BLOCKS_SCORING_SHADOW_ES
+                : 'La puntuación por voz no está disponible ahora. Escucha el modelo y repítelo en voz alta; este intento no recibirá puntuación.'}
           </p>
-          <ListenButton onPlay={() => speak(exercise.phrase)} label="Listen" />
-          <PillButton variant="primary" size="sm" onClick={handleShadowingDone}>
-            Continue
-          </PillButton>
+          <PracticeActionBar>
+            <PracticeContinueButton onClick={handleShadowingDone}>Continuar sin puntuación</PracticeContinueButton>
+          </PracticeActionBar>
         </div>
       )}
 
       {isError && !isShadowing && !scoring && (
         <p className="m-0 text-center text-caption text-fg-muted">
           {errorCode === 'not-allowed'
-            ? 'Microphone access was denied. Allow microphone access in your browser settings.'
+            ? 'Se denegó el acceso al micrófono. Permítelo en la configuración del navegador.'
             : errorCode === 'no-speech'
-              ? 'No speech detected. Tap the mic and speak clearly.'
-              : 'Speech recognition failed.'}{' '}
+              ? 'No se detectó voz. Toca el micrófono y habla con claridad.'
+              : 'No se pudo reconocer tu voz.'}{' '}
           <button
             type="button"
             onClick={handleRetry}
             className="cursor-pointer border-none bg-transparent font-[inherit] text-caption text-fg-muted underline focus-ring"
           >
-            Retry
+            Reintentar
           </button>
         </p>
-      )}
-
-      {onSkip && !scoring && (
-        <button
-          type="button"
-          onClick={onSkip}
-          disabled={isScoring || isListening}
-          aria-label="Omitir este ejercicio"
-          className="min-h-11 cursor-pointer border-none bg-transparent px-4 text-body-sm font-medium text-fg-subtle transition-colors hover:text-fg-muted focus-ring disabled:cursor-not-allowed disabled:opacity-40"
-        >
-          Omitir este
-        </button>
       )}
 
       {scoring && (
@@ -199,14 +187,10 @@ export function CsShadowPhraseExercise({ exercise, onResult, onSkip }: Props) {
             }}
             onRetry={handleRetry}
           />
-          <div className="flex gap-2">
-            <PillButton variant="outline" size="sm" onClick={handleRetry}>
-              Try again
-            </PillButton>
-            <PillButton variant="primary" size="sm" onClick={handleContinue}>
-              Continue
-            </PillButton>
-          </div>
+          <PracticeActionBar>
+            <Button variant="secondary" size="lg" fullWidth onClick={handleRetry}>Intentar de nuevo</Button>
+            <PracticeContinueButton onClick={handleContinue} />
+          </PracticeActionBar>
         </>
       )}
     </div>

@@ -31,9 +31,9 @@ export function ExerciseTestControls({
   onOpenEssentialWords,
 }: Props) {
   return (
-    <section className="flex flex-col gap-4 rounded-[var(--radius-lg)] border border-border-subtle bg-surface-raised p-4">
+    <section className="flex flex-col gap-layout-stack-loose rounded-lg border border-border-subtle bg-surface-raised layout-card-pad">
       <div className="flex flex-col gap-2">
-        <p className="font-caption font-semibold uppercase tracking-wide text-fg-muted">
+        <p className="font-kicker text-fg-muted">
           Panel A
         </p>
         <div className="flex flex-wrap gap-1.5">
@@ -43,7 +43,7 @@ export function ExerciseTestControls({
               type="button"
               onClick={() => onContextChange(value)}
               className={cn(
-                'rounded-[var(--radius-full)] px-2.5 py-1 text-caption font-medium transition-colors',
+                'min-h-11 rounded-full px-3 py-2 text-caption font-medium transition-colors focus-ring',
                 context === value
                   ? 'bg-primary text-white'
                   : 'bg-surface-sunken text-fg-secondary hover:text-fg',
@@ -56,7 +56,7 @@ export function ExerciseTestControls({
       </div>
 
       <div className="flex flex-col gap-2">
-        <p className="font-caption font-semibold uppercase tracking-wide text-fg-muted">
+        <p className="font-kicker text-fg-muted">
           Panel B
         </p>
         <div className="flex flex-wrap gap-1.5">
@@ -66,7 +66,7 @@ export function ExerciseTestControls({
               type="button"
               onClick={() => onCompareContextChange(value)}
               className={cn(
-                'rounded-[var(--radius-full)] px-2.5 py-1 text-caption font-medium transition-colors',
+                'min-h-11 rounded-full px-3 py-2 text-caption font-medium transition-colors focus-ring',
                 compareContext === value
                   ? 'bg-primary text-white'
                   : 'bg-surface-sunken text-fg-secondary hover:text-fg',

@@ -6,11 +6,11 @@
 //   <ContrastRow />   — ✗ what it is NOT · ✓ what it means
 //   <CorrectionBlock /> — "¿querías decir X? → usa Y"
 //   <CardNote />      — optional caveat (partial overlap, social risk)
-//   <PillButton />    — advance to the next card / start practising
+//   <PracticeActionBar /> — advance to the next card / start practising
 
 import { cn } from '@/lib/cn'
 import { Volume2 } from '@/components/icons'
-import { PillButton } from '@/components/ui/PillButton'
+import { PracticeActionBar, PracticeContinueButton } from '@/components/practice/session/PracticeActionBar'
 import type { FalseFriendIntro } from '@/lib/practice/study-card/model'
 
 interface Props {
@@ -67,11 +67,9 @@ export function FalseFriendCard({ model, onContinue, onListen, continueLabel = '
         </p>
       )}
 
-      <div className="-mb-1 flex w-full justify-center">
-        <PillButton variant="primary" size="md" onClick={onContinue}>
-          {continueLabel}
-        </PillButton>
-      </div>
+      <PracticeActionBar>
+        <PracticeContinueButton onClick={onContinue}>{continueLabel}</PracticeContinueButton>
+      </PracticeActionBar>
     </div>
   )
 }

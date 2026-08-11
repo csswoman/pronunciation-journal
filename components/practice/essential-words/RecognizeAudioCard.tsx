@@ -19,6 +19,7 @@ import { selectAudioDistractors } from '@/lib/essential-words/distractors'
 import { ExercisePhaseLabel } from './ExercisePhaseLabel'
 import { useEnterToContinue } from '@/hooks/useEnterToContinue'
 import Button from '@/components/ui/Button'
+import { PracticeActionBar, PracticeContinueButton, PracticeExerciseCard } from '@/components/practice/session/PracticeActionBar'
 import { cn } from '@/lib/cn'
 import { displayEnglishWord } from '@/lib/essential-words/word-display'
 import { ArchiveConfirmAction } from '@/components/practice/study-card/ArchiveConfirmAction'
@@ -97,7 +98,7 @@ export function RecognizeAudioCard({ entry, distractors, levelLabel, onAttempt, 
   const chosenOption = options.find((option) => option.word === chosen)
   const incorrectChoice = chosenOption && chosenOption.word !== entry.word ? chosenOption : null
   return (
-    <div className="flex w-full max-w-md flex-col items-center gap-layout-stack rounded-lg border border-border-subtle bg-surface-raised layout-card-pad">
+    <PracticeExerciseCard className="max-w-md">
       <ExercisePhaseLabel label={levelLabel} />
 
       <div className="flex w-full flex-col items-center gap-3 text-center">
@@ -165,14 +166,14 @@ export function RecognizeAudioCard({ entry, distractors, levelLabel, onAttempt, 
       )}
 
       {chosen && onContinue && (
-        <Button type="button" variant="secondary" size="lg" className="w-full" onClick={onContinue} disabled={isContinuing} isLoading={isContinuing}>
-          Continuar <span className="font-mono text-caption text-fg-muted">⏎</span>
-        </Button>
+        <PracticeActionBar>
+          <PracticeContinueButton onClick={onContinue} disabled={isContinuing} isLoading={isContinuing} />
+        </PracticeActionBar>
       )}
 
       {!chosen && onArchive && (
         <ArchiveConfirmAction onArchive={onArchive} label="Saltar esta palabra por ahora" />
       )}
-    </div>
+    </PracticeExerciseCard>
   )
 }

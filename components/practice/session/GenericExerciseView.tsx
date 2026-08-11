@@ -114,6 +114,7 @@ export function GenericExerciseView({ exercise, onSubmit, focusUi = false }: Pro
         onRetry={handleRetry}
         onSkip={handleSkip}
         hintSlot={hintSlot}
+        surface={focusUi ? 'flat' : 'raised'}
       >
         <div key={retryKey}>
           {content ?? <UnsupportedExercise slug={slug} onSkip={handleSkip} />}

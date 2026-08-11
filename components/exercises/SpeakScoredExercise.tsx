@@ -13,18 +13,19 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { Mic, MicOff } from "@/components/icons"
 import { speak } from '@/lib/phoneme-practice/tts'
 import { useSpeechRecognition } from '@/hooks/useSpeechRecognition'
-import { BROWSER_BLOCKS_SCORING_EN } from '@/lib/speech/browser-support-message'
+import { BROWSER_BLOCKS_SCORING_ES } from '@/lib/speech/browser-support-message'
 import { defaultEvaluationEngine } from '@/lib/exercises/evaluation'
 import { getEvaluationWordResults } from '@/lib/exercises/evaluation/word-results'
 import { getFeedbackMessage, calculateXP } from '@/lib/pronunciation/scoring'
 import PronunciationFeedback from '@/components/lesson/PronunciationFeedback'
-import { PillButton } from '@/components/ui/PillButton'
+import Button from '@/components/ui/Button'
 import { ListenButton } from '@/components/ui/ListenButton'
 import { cn } from '@/lib/cn'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { feedbackFromScoringResult } from '@/lib/pronunciation/feedback/from-scoring'
 import { persistPronunciationFeedbackEvidence } from '@/lib/pronunciation/feedback/persistence'
 import { RemediationSequence } from '@/components/pronunciation-feedback/RemediationSequence'
+import { PracticeActionBar, PracticeContinueButton } from '@/components/practice/session/PracticeActionBar'
 import type { Exercise } from '@/lib/phoneme-practice/types'
 import type { WordResult } from '@/lib/types'
 import type { PracticeSubmitHandler } from '@/lib/practice/types'
@@ -58,7 +59,7 @@ function WordDisplay({ word, ipa, onListen }: { word?: string; ipa: string; onLi
         <div className="text-display-word font-bold text-fg tracking-tight">
           {word ?? '—'}
         </div>
-        <ListenButton iconOnly onPlay={onListen} aria-label="Listen" />
+        <ListenButton iconOnly onPlay={onListen} aria-label="Escuchar" />
       </div>
       <div className="ipa text-fg-muted">
         {ipa}
@@ -84,15 +85,15 @@ function ShadowingFallback({
     <div className="flex flex-col items-center gap-4">
       <p className="text-caption text-fg-muted text-center max-w-xs m-0">
         {reason === 'unsupported'
-          ? "Your browser doesn't support voice scoring. Listen to the model and repeat it out loud, then continue — this attempt won't be scored."
+          ? 'Tu navegador no admite puntuación por voz. Escucha el modelo y repite la palabra; este intento no recibirá puntuación.'
           : reason === 'browser'
-            ? BROWSER_BLOCKS_SCORING_EN
-            : "Voice scoring isn't available right now. Listen to the model and repeat it out loud, then continue — this attempt won't be scored."}
+            ? BROWSER_BLOCKS_SCORING_ES
+            : 'La puntuación por voz no está disponible ahora. Escucha el modelo y repite la palabra; este intento no recibirá puntuación.'}
       </p>
-      <ListenButton onPlay={() => word && speak(word)} label="Listen" />
-      <PillButton variant="primary" size="sm" onClick={onContinue}>
-        Continue
-      </PillButton>
+      <ListenButton onPlay={() => word && speak(word)} label="Escuchar" />
+      <PracticeActionBar>
+        <PracticeContinueButton onClick={onContinue}>Continuar sin puntuación</PracticeContinueButton>
+      </PracticeActionBar>
     </div>
   )
 }
@@ -183,7 +184,7 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
       <h2
         className="m-0 text-center text-h4 text-fg"
       >
-        Say the word
+        Di la palabra
       </h2>
 
       <WordDisplay
@@ -199,7 +200,7 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
             type="button"
             onClick={isListening ? stop : start}
             disabled={isDone || isScoring}
-            aria-label={isListening ? 'Stop recording' : 'Record my voice'}
+            aria-label={isListening ? 'Detener grabación' : 'Grabar mi voz'}
             className={cn(
               'w-20 h-20 rounded-full border-none flex items-center justify-center cursor-pointer transition-all text-on-primary focus-ring disabled:opacity-40',
               isListening
@@ -210,7 +211,7 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
             {isListening ? <MicOff size={28} /> : <Mic size={28} />}
           </button>
           <p className="text-caption text-fg-subtle tracking-wider m-0">
-            {isListening ? 'Listening… tap to stop' : isScoring ? 'Analyzing…' : 'Tap to speak'}
+            {isListening ? 'Escuchando… toca para parar' : isScoring ? 'Analizando…' : 'Toca para hablar'}
           </p>
         </div>
       )}
@@ -224,12 +225,12 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
       {isError && !isShadowing && !scored && (
         <p className="text-caption text-fg-muted text-center m-0">
           {errorCode === 'not-allowed'
-            ? 'Microphone access was denied. Allow microphone access in your browser settings.'
+            ? 'Se denegó el acceso al micrófono. Permítelo en la configuración del navegador.'
             : errorCode === 'no-speech'
-              ? 'No speech detected. Tap the mic and speak clearly.'
-              : 'Speech recognition failed.'}{' '}
+              ? 'No se detectó voz. Toca el micrófono y habla con claridad.'
+              : 'No se pudo reconocer tu voz.'}{' '}
           <button type="button" onClick={handleRetry} className="underline cursor-pointer bg-transparent border-none font-[inherit] text-caption text-fg-muted focus-ring">
-            Retry
+            Reintentar
           </button>
         </p>
       )}
@@ -254,14 +255,10 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
             }}
             onRetry={handleRetry}
           />
-          <div className="flex gap-2">
-            <PillButton variant="outline" size="sm" onClick={handleRetry}>
-              Try again
-            </PillButton>
-            <PillButton variant="primary" size="sm" onClick={handleContinue}>
-              Continue
-            </PillButton>
-          </div>
+          <PracticeActionBar>
+            <Button variant="secondary" size="lg" fullWidth onClick={handleRetry}>Intentar de nuevo</Button>
+            <PracticeContinueButton onClick={handleContinue} />
+          </PracticeActionBar>
         </>
       )}
     </div>

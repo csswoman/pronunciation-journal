@@ -45,31 +45,31 @@ function feedbackForScore(
 
   if (passed) {
     return {
-      immediate: score >= 90 ? "Excellent!" : "Good!",
+      immediate: score >= 90 ? "¡Excelente!" : "¡Bien!",
       explanation: isEarlyLearner
-        ? `You said: "${transcript}" — that's correct!`
-        : `Accuracy: ${Math.round(score)}%. "${transcript}" matches the target well.`,
+        ? `Dijiste: "${transcript}". ¡Es correcto!`
+        : `Precisión: ${Math.round(score)} %. "${transcript}" coincide bien con el objetivo.`,
       tip: score >= 90
         ? undefined
         : missedPhoneme
-          ? `Almost perfect — watch the /${missedPhoneme}/ sound in "${expected}".`
+          ? `Casi perfecto: cuida el sonido /${missedPhoneme}/ en "${expected}".`
           : isEarlyLearner
-            ? `Keep practicing: "${expected}"`
-            : `Good, but aim for even clearer pronunciation of "${expected}".`,
+            ? `Sigue practicando: "${expected}".`
+            : `Bien. Intenta pronunciar "${expected}" con aún más claridad.`,
     };
   }
 
   const phonemeTip = missedPhoneme
-    ? `Focus on the /${missedPhoneme}/ sound — listen to the model and try again.`
+    ? `Concéntrate en el sonido /${missedPhoneme}/: escucha el modelo e inténtalo de nuevo.`
     : isEarlyLearner
-      ? "Listen to the word and repeat slowly."
-      : "Try breaking the word into syllables and recording again.";
+      ? "Escucha la palabra y repítela despacio."
+      : "Separa la palabra en sílabas y vuelve a grabarte.";
 
   return {
-    immediate: isEarlyLearner ? "Almost!" : "Not quite.",
+    immediate: isEarlyLearner ? "¡Casi!" : "Todavía no.",
     explanation: isEarlyLearner
-      ? `You said: "${transcript}". Try again — the target is "${expected}".`
-      : `Accuracy: ${Math.round(score)}%. Target: "${expected}". Focus on matching each syllable.`,
+      ? `Dijiste: "${transcript}". Inténtalo de nuevo; el objetivo es "${expected}".`
+      : `Precisión: ${Math.round(score)} %. Objetivo: "${expected}". Intenta reproducir cada sílaba.`,
     tip: phonemeTip,
   };
 }

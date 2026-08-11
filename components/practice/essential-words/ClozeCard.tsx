@@ -14,6 +14,11 @@ import { useEffect, useRef, useState } from 'react'
 import { speak } from '@/lib/phoneme-practice/tts'
 import { PillButton } from '@/components/ui/PillButton'
 import Button from '@/components/ui/Button'
+import {
+  PracticeActionBar,
+  PracticeContinueButton,
+  PracticeExerciseCard,
+} from '@/components/practice/session/PracticeActionBar'
 import { playUiCue } from '@/lib/ui-sounds/cues'
 import { clozeFor } from '@/lib/essential-words/cloze'
 import { selectProductionClozeSentence } from '@/lib/essential-words/sentence-variants'
@@ -134,7 +139,7 @@ export function ClozeCard({ entry, levelLabel, onAttempt, onRetry, onContinue, o
   if (!cloze) return null
 
   return (
-    <div className="flex w-full flex-col items-center gap-layout-stack rounded-lg border border-border-subtle bg-surface-raised layout-card-pad">
+    <PracticeExerciseCard>
       <ExercisePhaseLabel label={levelLabel} />
       <div className="flex max-w-[42ch] flex-col items-center gap-2 text-center">
         <p className="m-0 w-full text-label font-semibold text-fg">Completa la oración</p>
@@ -188,21 +193,21 @@ export function ClozeCard({ entry, levelLabel, onAttempt, onRetry, onContinue, o
             <AnswerDiff written={answer || '(sin respuesta)'} expected={cloze.answer} isTypo={outcome.typo} word={entry.word} />
           ) : null}
           {onContinue && (
-            <Button type="button" variant="primary" size="lg" className="w-full" onClick={onContinue} disabled={isContinuing} isLoading={isContinuing}>
-              Continuar
-            </Button>
+            <PracticeActionBar>
+              <PracticeContinueButton onClick={onContinue} disabled={isContinuing} isLoading={isContinuing} />
+            </PracticeActionBar>
           )}
         </>
       ) : (
         <div className="flex w-full flex-col items-center gap-2">
-          <PillButton type="button" variant="primary" onClick={handleCheck}>
+          <Button type="button" variant="primary" size="lg" fullWidth onClick={handleCheck}>
             Comprobar
-          </PillButton>
+          </Button>
           {onArchive ? (
             <ArchiveConfirmAction onArchive={onArchive} label="Pausar esta palabra" />
           ) : null}
         </div>
       )}
-    </div>
+    </PracticeExerciseCard>
   )
 }

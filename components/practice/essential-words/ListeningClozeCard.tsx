@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Button from '@/components/ui/Button'
+import { PracticeActionBar, PracticeContinueButton, PracticeExerciseCard } from '@/components/practice/session/PracticeActionBar'
 import { ListenButton } from '@/components/ui/ListenButton'
 import { Check, X } from '@/components/icons'
 import { playUiCue } from '@/lib/ui-sounds/cues'
@@ -119,7 +120,7 @@ export function ListeningClozeCard({
   const tail = sentenceWithFallbackTokens.sentence.slice(cursor)
 
   return (
-    <div className="flex w-full flex-col items-center gap-layout-stack rounded-lg border border-border-subtle bg-surface-raised layout-card-pad">
+    <PracticeExerciseCard>
       <ExercisePhaseLabel label={levelLabel} />
       <div className="flex max-w-[42ch] flex-col items-center gap-2 text-center">
         <p className="m-0 text-label font-semibold text-fg">{submitted ? 'Escucha la diferencia' : `Escucha y completa ${blanks.length === 1 ? 'la palabra' : 'las palabras'}`}</p>
@@ -153,7 +154,16 @@ export function ListeningClozeCard({
         {tail}
       </p>
 
-      {!submitted ? <div className="flex w-full flex-col items-center gap-2"><Button type="button" variant="primary" onClick={submit} disabled={!complete}>Comprobar</Button>{onArchive ? <ArchiveConfirmAction onArchive={onArchive} label="Pausar esta palabra" /> : null}</div> : onContinue ? <Button type="button" variant="primary" size="lg" className="w-full" onClick={onContinue} disabled={isContinuing} isLoading={isContinuing}>Continuar <span className="ml-1 text-caption opacity-75">Enter</span></Button> : null}
-    </div>
+      {!submitted ? (
+        <div className="flex w-full flex-col items-center gap-2">
+          <Button type="button" variant="primary" onClick={submit} disabled={!complete}>Comprobar</Button>
+          {onArchive ? <ArchiveConfirmAction onArchive={onArchive} label="Pausar esta palabra" /> : null}
+        </div>
+      ) : onContinue ? (
+        <PracticeActionBar>
+          <PracticeContinueButton onClick={onContinue} disabled={isContinuing} isLoading={isContinuing} />
+        </PracticeActionBar>
+      ) : null}
+    </PracticeExerciseCard>
   )
 }

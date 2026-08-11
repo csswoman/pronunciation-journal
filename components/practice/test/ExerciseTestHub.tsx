@@ -184,15 +184,15 @@ export function ExerciseTestHub() {
             ) : <EssentialWordsSession key="test-essential-words" />}
           </div>
         ) : !overlayOpen ? (
-          <div className="flex h-full flex-col justify-center px-6 py-12 lg:px-10">
-            <header className="flex max-w-lg flex-col gap-2">
+          <div className="flex h-full flex-col justify-center px-layout-page-inline py-layout-section-gap lg:px-10">
+            <header className="flex max-w-[65ch] flex-col gap-layout-stack">
               <span className="font-kicker text-fg-subtle">
-                Dev only
+                Solo desarrollo
               </span>
-              <h1 className="text-h2 font-normal tracking-[-0.02em] text-fg">
-                Exercise UI gallery
+              <h1 className="text-h2 font-semibold text-balance text-fg">
+                Galería de ejercicios
               </h1>
-              <p className="text-body-sm text-fg-muted">
+              <p className="text-body-md leading-relaxed text-pretty text-fg-muted">
                 Elige un ejercicio en el panel de la derecha. Usa{' '}
                 <span className="font-medium text-fg-secondary">Rotar</span> para cambiar sin cerrar la
                 sesión.

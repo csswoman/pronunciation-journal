@@ -68,7 +68,7 @@ describe('buildPedagogicalFeedback', () => {
     }
     const feedback = buildPedagogicalFeedback(exercise, false, 'They leave near station')
     expect(feedback.expectedAnswer).toBe('They live near the station.')
-    expect(feedback.explanation).toContain('sounds and written words')
+    expect(feedback.explanation).toContain('sonidos del inglés y las palabras escritas')
     expect(feedback.errorCode).toBe('listening_omission')
   })
 
@@ -81,7 +81,7 @@ describe('buildPedagogicalFeedback', () => {
       tokens: ['We', 'study', 'at', 'night.'],
     }
     const feedback = buildPedagogicalFeedback(exercise, true, 'We study at night.')
-    expect(feedback.immediate).toBe('Good order.')
+    expect(feedback.immediate).toBe('El orden es correcto.')
     expect(feedback.explanation).toBeUndefined()
     expect(feedback.canRetry).toBe(false)
     expect(feedback.errorCode).toBe('correct')
