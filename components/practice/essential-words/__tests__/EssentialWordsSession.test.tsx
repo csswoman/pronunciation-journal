@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 /* eslint-disable max-lines -- session integration coverage keeps its full fixture locally */
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { act, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import type { EssentialWord } from '@/lib/essential-words/types'
 import type { SRSData } from '@/lib/types'
@@ -30,8 +30,12 @@ vi.mock('next/navigation', () => ({
 }))
 
 const dbMocks = vi.hoisted(() => ({
+  sessionDrafts: new Map<string, unknown>(),
   getEssentialWordsSrsEntries: vi.fn(async (): Promise<SRSData[]> => []),
   getEssentialWordsIntroducedToday: vi.fn(async (): Promise<string[]> => []),
+  getEssentialWordProgressForUser: vi.fn(async () => []),
+  saveEssentialWordProgress: vi.fn(async () => undefined),
+  archiveEssentialWordProgress: vi.fn(async () => undefined),
   recordEssentialWordIntroduction: vi.fn(async () => undefined),
   snoozeEssentialWord: vi.fn(async () => undefined),
   masterEssentialWord: vi.fn(async () => undefined),
@@ -49,6 +53,15 @@ vi.mock('@/lib/db', () => ({
       // The session loader also reads the non-mutating tomorrow count through
       // Dexie's collection API. Keep this fixture aligned with its contract.
       filter: () => ({ toArray: async () => [] }),
+    },
+    essentialWordSessionDrafts: {
+      get: vi.fn(async (userId: string) => dbMocks.sessionDrafts.get(userId)),
+      put: vi.fn(async (draft: { userId: string }) => {
+        dbMocks.sessionDrafts.set(draft.userId, draft)
+      }),
+      delete: vi.fn(async (userId: string) => {
+        dbMocks.sessionDrafts.delete(userId)
+      }),
     },
   },
   ...dbMocks,
@@ -124,6 +137,7 @@ beforeEach(() => {
     value: window.sessionStorage,
   })
   window.sessionStorage.clear()
+  dbMocks.sessionDrafts.clear()
   authMocks.user = { id: 'user-1' }
   coreWordClientMocks.fetchEssentialWords.mockResolvedValue(WORDS)
   dbMocks.getEssentialWordsSrsEntries.mockResolvedValue([])
@@ -153,7 +167,7 @@ describe('EssentialWordsSession', () => {
     expect(screen.getByRole('heading', { name: 'Palabras esenciales' })).toBeInTheDocument()
   })
 
-  it('introduces a new card as study first, then speak with self-grade fallback', async () => {
+  it('counts exposure, persists level progress, and stays on the new-word sequence', async () => {
     const user = userEvent.setup()
     render(<EssentialWordsSession />)
     await clickEmpezar()
@@ -162,14 +176,17 @@ describe('EssentialWordsSession', () => {
     expect(screen.getByText('/ðʌ/')).toBeTruthy()
     expect(screen.getByText('/ðə/')).toBeTruthy()
 
-    await user.click(screen.getByRole('button', { name: 'Continuar' }))
+    await user.click(screen.getByRole('button', { name: 'Continuar con la práctica' }))
 
-    expect(await screen.findByText('Give me the book please.')).toBeTruthy()
-    await user.click(screen.getByRole('button', { name: 'Bien' }))
+    const correctChoice = await screen.findByRole('button', { name: /the/ })
+    await user.click(correctChoice)
+    await user.click(screen.getByRole('button', { name: /^Continuar/ }))
 
-    await waitFor(() => expect(dbMocks.saveSRSData).toHaveBeenCalledOnce())
-    expect(dbMocks.recordEssentialWordIntroduction).toHaveBeenCalledWith('the', 'user-1')
-    await screen.findByRole('heading', { name: 'be' })
+    await waitFor(() => {
+      expect(dbMocks.saveEssentialWordProgress).toHaveBeenCalled()
+      expect(dbMocks.recordEssentialWordIntroduction).toHaveBeenCalledWith('the', 'user-1')
+    })
+    expect(screen.queryByRole('heading', { name: 'be' })).toBeNull()
   })
 
   it('keeps a failed multiple-choice result pending until Continue and remounts the next step cleanly', async () => {
@@ -197,14 +214,14 @@ describe('EssentialWordsSession', () => {
 
     expect(firstWord).toBeDisabled()
     expect(wrongChoice).toBeDisabled()
-    expect(screen.getByRole('button', { name: 'Continuar' })).toBeEnabled()
+    expect(screen.getByRole('button', { name: /^Continuar/ })).toBeEnabled()
     expect(dbMocks.saveSRSData).not.toHaveBeenCalled()
 
-    await user.click(screen.getByRole('button', { name: 'Continuar' }))
+    await user.click(screen.getByRole('button', { name: /^Continuar/ }))
 
     const nextWord = await screen.findByRole('button', { name: /be/ })
     expect(nextWord).not.toBeDisabled()
-    expect(screen.queryByRole('button', { name: 'Continuar' })).toBeNull()
+    expect(screen.queryByRole('button', { name: /^Continuar/ })).toBeNull()
   })
 
   it('continues with Enter after a multiple-choice result is graded', async () => {
@@ -227,39 +244,43 @@ describe('EssentialWordsSession', () => {
     await clickEmpezar()
 
     await user.click(screen.getByRole('button', { name: /be/ }))
-    expect(screen.getByRole('button', { name: 'Continuar' })).toBeEnabled()
+    expect(screen.getByRole('button', { name: /^Continuar/ })).toBeEnabled()
 
     await user.keyboard('{Enter}')
 
     expect(await screen.findByRole('button', { name: /be/ })).not.toBeDisabled()
-    expect(screen.queryByRole('button', { name: 'Continuar' })).toBeNull()
+    expect(screen.queryByRole('button', { name: /^Continuar/ })).toBeNull()
   })
 
   it('shows the empty state when there is nothing due and no quota left', async () => {
-    dbMocks.getEssentialWordsIntroducedToday.mockResolvedValue(
-      Array.from({ length: 10 }, (_, i) => `w${i}`)
-    )
+    coreWordClientMocks.fetchEssentialWords.mockResolvedValue([])
     render(<EssentialWordsSession />)
     expect(await screen.findByText('Nada pendiente por hoy')).toBeTruthy()
     expect(screen.getByRole('link', { name: 'Ver progreso' })).toBeTruthy()
     expect(screen.getByRole('link', { name: 'Abrir plan de hoy' })).toBeTruthy()
   })
 
-  it('resumes on the first appended card when learning more after finishing', async () => {
+  it('builds a fresh selected-size plan when practising another session', async () => {
     const user = userEvent.setup()
-    dbMocks.getEssentialWordsIntroducedToday.mockResolvedValue(
-      Array.from({ length: 9 }, (_, i) => `w${i}`)
-    )
+    coreWordClientMocks.fetchEssentialWords.mockResolvedValue([WORDS[0]])
+    dbMocks.getEssentialWordsSrsEntries.mockResolvedValue([{
+      wordId: 'c1k:the', word: 'the', interval: 1, ease: 2.5, repetitions: 0,
+      nextReview: '2026-07-01T00:00:00.000Z',
+    }])
     render(<EssentialWordsSession />)
     await clickEmpezar()
 
-    await screen.findByRole('heading', { name: 'the' })
-    await user.click(screen.getByRole('button', { name: 'Continuar' }))
-    await screen.findByText('Give me the book please.')
-    await user.click(screen.getByRole('button', { name: 'Bien' }))
+    await user.click(await screen.findByRole('button', { name: /the/ }))
+    await user.click(screen.getByRole('button', { name: /^Continuar/ }))
 
     await screen.findByText(/Sesión completa/)
-    await user.click(screen.getByRole('button', { name: 'Aprender 10 nuevas más' }))
+    coreWordClientMocks.fetchEssentialWords.mockResolvedValue(WORDS)
+    dbMocks.getEssentialWordsSrsEntries.mockResolvedValue([{
+      wordId: 'c1k:the', word: 'the', interval: 1, ease: 2.5, repetitions: 1,
+      nextReview: '2099-07-01T00:00:00.000Z',
+    }])
+    await user.click(screen.getByRole('button', { name: 'Practicar otra sesión' }))
+    await clickEmpezar()
 
     expect(await screen.findByRole('heading', { name: 'be' })).toBeTruthy()
   })
@@ -274,15 +295,34 @@ describe('EssentialWordsSession', () => {
     expect(screen.getByRole('button', { name: 'Reintentar carga' })).toBeTruthy()
   })
 
+  it('restores an unfinished session after leaving following an exposure', async () => {
+    const user = userEvent.setup()
+    const firstRender = render(<EssentialWordsSession />)
+    await clickEmpezar()
+    await screen.findByRole('heading', { name: 'the' })
+    await user.click(screen.getByRole('button', { name: 'Continuar con la práctica' }))
+    await waitFor(() => {
+      const stored = dbMocks.sessionDrafts.get('user-1') as { plan?: { completedActions?: number } }
+      expect(stored.plan?.completedActions).toBe(1)
+    })
+
+    firstRender.unmount()
+    render(<EssentialWordsSession />)
+
+    expect(await screen.findByRole('heading', { name: 'Continuar donde lo dejaste' })).toBeTruthy()
+    expect(screen.getByRole('button', { name: 'Continuar' })).toBeTruthy()
+    expect(screen.getByRole('button', { name: 'Descartar sesión' })).toBeTruthy()
+  })
+
   it('persists pending lapses and flushes them on pagehide', async () => {
     const user = userEvent.setup()
     render(<EssentialWordsSession />)
     await clickEmpezar()
 
     await screen.findByRole('heading', { name: 'the' })
-    await user.click(screen.getByRole('button', { name: 'Continuar' }))
-    await screen.findByText('Give me the book please.')
-    await user.click(screen.getByRole('button', { name: 'Otra vez' }))
+    await user.click(screen.getByRole('button', { name: 'Continuar con la práctica' }))
+    await user.click(await screen.findByRole('button', { name: /be/ }))
+    await user.click(screen.getByRole('button', { name: /^Continuar/ }))
 
     expect(window.sessionStorage.getItem('core1000:pending-lapses')).toContain('"c1k:the"')
 
@@ -303,16 +343,18 @@ describe('EssentialWordsSession', () => {
 
   it('records the finished session only once when the last card is archived', async () => {
     const user = userEvent.setup()
-    dbMocks.getEssentialWordsIntroducedToday.mockResolvedValue(Array.from({ length: 9 }, (_, i) => `w${i}`))
+    coreWordClientMocks.fetchEssentialWords.mockResolvedValue([{
+      ...WORDS[0],
+      example_sentence: 'Give me a book please.',
+    }])
 
     render(<EssentialWordsSession />)
     await clickEmpezar()
 
     await screen.findByRole('heading', { name: 'the' })
-    await user.click(screen.getByRole('button', { name: 'Continuar' }))
-    await screen.findByText('Give me the book please.')
-    await user.click(screen.getByRole('button', { name: 'Ya la sé' }))
-    await user.click(screen.getByRole('button', { name: 'Sí, pausar' }))
+    await user.click(screen.getByRole('button', { name: 'Ya conozco esta palabra' }))
+    await screen.findByText('Give me a book please.')
+    await user.click(screen.getByRole('button', { name: 'Bien' }))
 
     await screen.findByText(/Sesión completa/)
     await waitFor(() => expect(activityMocks.recordActivitySession).toHaveBeenCalledTimes(1))
@@ -473,5 +515,26 @@ describe('EssentialWordsSession', () => {
     await clickEmpezar()
 
     expect(await screen.findByRole('heading', { name: WORDS[0].word })).toBeTruthy()
+  })
+
+  it('ignores an older preview response after rapid size changes', async () => {
+    const user = userEvent.setup()
+    render(<EssentialWordsSession />)
+    await screen.findByRole('button', { name: 'Empezar' })
+
+    let resolveShort!: (words: EssentialWord[]) => void
+    let resolveLong!: (words: EssentialWord[]) => void
+    coreWordClientMocks.fetchEssentialWords
+      .mockImplementationOnce(() => new Promise((resolve) => { resolveShort = resolve }))
+      .mockImplementationOnce(() => new Promise((resolve) => { resolveLong = resolve }))
+
+    await user.click(screen.getByRole('button', { name: 'Corta · 5' }))
+    await user.click(screen.getByRole('button', { name: 'Larga · 25' }))
+    await act(async () => resolveLong(WORDS))
+    expect(await screen.findByRole('heading', { name: 'Hoy tienes 10 ejercicios' })).toBeTruthy()
+
+    await act(async () => resolveShort([WORDS[0]]))
+    expect(screen.getByRole('heading', { name: 'Hoy tienes 10 ejercicios' })).toBeTruthy()
+    expect(screen.getByRole('button', { name: 'Larga · 25' })).toHaveAttribute('aria-pressed', 'true')
   })
 })

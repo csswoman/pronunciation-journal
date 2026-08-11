@@ -16,6 +16,12 @@ interface CsRuleRow {
 
 interface CsPronExample {
   text?: string
+  ipa?: string
+}
+
+interface CsPhrase {
+  text: string
+  ipa?: string
 }
 
 interface CsBlock {
@@ -87,8 +93,8 @@ export function generateCsQuiz(deck: CsDeck, slug: CsDeckSlug, count: number): M
  * sentences (e.g. "I'm gonna call you later.") that already embed the reduction
  * in context.
  */
-function extractPhrases(deck: CsDeck): string[] {
-  const sentences: string[] = []
+function extractPhrases(deck: CsDeck): CsPhrase[] {
+  const sentences = new Map<string, CsPhrase>()
   for (const card of deck.cards) {
     for (const block of card.blocks) {
       if (block.type !== 'pronunciation' || !block.examples) continue
@@ -97,22 +103,26 @@ function extractPhrases(deck: CsDeck): string[] {
         const sentence = example.text.trim()
         // Require a genuine sentence, not a lone reduced form or notation row.
         if (sentence.length < 80 && isLikelySentence(sentence)) {
-          sentences.push(sentence)
+          const ipa = example.ipa?.trim()
+          const current = sentences.get(sentence)
+          if (!current || (!current.ipa && ipa)) {
+            sentences.set(sentence, { text: sentence, ...(ipa ? { ipa } : {}) })
+          }
         }
       }
     }
   }
-  return [...new Set(sentences)]
+  return [...sentences.values()]
 }
 
 /** Generate sentence_dictation exercises from a deck's example phrases. */
 export function generateCsDictation(deck: CsDeck, slug: string, count: number): SentenceDictationExercise[] {
   const phrases = pick(extractPhrases(deck), count)
-  return phrases.map((phrase) => ({
-    id: exerciseId('sentence_dictation', `${slug}-dict-${phrase}`, 'v1'),
+  return phrases.map(({ text }) => ({
+    id: exerciseId('sentence_dictation', `${slug}-dict-${text}`, 'v1'),
     type: 'sentence_dictation' as const,
     sourceRef: { source: 'text_fragments' as const, id: slug },
-    sentence: phrase,
+    sentence: text,
     audioUrl: null,
   }))
 }
@@ -125,11 +135,12 @@ export function generateCsDictation(deck: CsDeck, slug: string, count: number): 
  */
 export function generateCsShadowPhrase(deck: CsDeck, slug: CsDeckSlug, count: number): CsShadowPhraseExercise[] {
   const phrases = pick(extractPhrases(deck), count)
-  return phrases.map((phrase) => ({
-    id: exerciseId('cs_shadow_phrase', `${slug}-shadow-${phrase}`, 'v1'),
+  return phrases.map(({ text, ipa }) => ({
+    id: exerciseId('cs_shadow_phrase', `${slug}-shadow-${text}`, 'v1'),
     type: 'cs_shadow_phrase' as const,
     sourceRef: { source: 'text_fragments' as const, id: slug },
-    phrase,
+    phrase: text,
+    ...(ipa ? { phraseIpa: ipa } : {}),
     deckSlug: slug,
   }))
 }

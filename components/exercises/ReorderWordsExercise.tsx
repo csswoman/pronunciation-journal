@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { cn } from '@/lib/cn'
+import Button from '@/components/ui/Button'
 import type { ReorderWordsExercise as ReorderWordsExerciseType } from '@/lib/exercises/types'
 import { useUISounds } from '@/hooks/useUISounds'
 import { gradeReorder } from '@/lib/exercises/grade-reorder'
@@ -70,7 +71,7 @@ export function ReorderWordsExercise({ exercise, onResult, focusUi = false }: Pr
 
         <div
           className={cn('pf-order-answer', answer.length === 0 && 'pf-order-answer--empty')}
-          aria-label="Your answer"
+          aria-label="Tu respuesta"
         >
           {answer.map((chip) => (
             <button
@@ -85,7 +86,7 @@ export function ReorderWordsExercise({ exercise, onResult, focusUi = false }: Pr
           ))}
         </div>
 
-        <div className="pf-order-tray" aria-label="Available words">
+        <div className="pf-order-tray" aria-label="Palabras disponibles">
           {bank.map((chip) => (
             <button
               key={chip.key}
@@ -100,19 +101,20 @@ export function ReorderWordsExercise({ exercise, onResult, focusUi = false }: Pr
         </div>
 
         {state === 'idle' && (
-          <button
-            type="button"
+          <Button
+            variant="primary"
+            size="lg"
+            fullWidth
             onClick={handleCheck}
             disabled={!canCheck}
-            className="pf-cta pf-cta--primary"
           >
-            Check
-          </button>
+            Comprobar
+          </Button>
         )}
 
         {state !== 'idle' && (
           <p className="pf-answer-note">
-            Correct order: <strong>{exercise.sentence}</strong>
+            Orden correcto: <strong>{exercise.sentence}</strong>
           </p>
         )}
       </div>
@@ -123,31 +125,28 @@ export function ReorderWordsExercise({ exercise, onResult, focusUi = false }: Pr
     <div className="flex w-full flex-col gap-3">
       <div
         className={cn( 'min-h-13 flex flex-wrap gap-2 rounded-xl border-[1.5px] border-dashed p-3 transition-colors', answer.length === 0 ? 'border-border-subtle' : 'border-primary', )}
-        aria-label="Your answer"
+        aria-label="Tu respuesta"
       >
         {answer.map((chip) => (
           <WordChip key={chip.key} chip={chip} variant="placed" done={state !== 'idle'} onClick={moveToBank} />
         ))}
       </div>
-      <div className="flex flex-wrap gap-2 py-1" aria-label="Available words">
+      <div className="flex flex-wrap gap-2 py-1" aria-label="Palabras disponibles">
         {bank.map((chip) => (
           <WordChip key={chip.key} chip={chip} variant="bank" done={state !== 'idle'} onClick={moveToAnswer} />
         ))}
       </div>
       {state === 'idle' && (
-        <button
-          type="button"
+        <Button
+          variant="primary"
+          size="lg"
+          fullWidth
           onClick={handleCheck}
           disabled={!canCheck}
-          className={cn(
-            'w-full rounded-full py-3.5 text-body-sm font-semibold transition-all duration-150 mt-3',
-            canCheck
-              ? 'bg-(--cta-bg) text-(--cta-fg) cursor-pointer hover:opacity-90 active:scale-[0.99]'
-              : 'bg-surface-raised text-fg-subtle cursor-not-allowed opacity-50',
-          )}
+          className="mt-3"
         >
-          Check
-        </button>
+          Comprobar
+        </Button>
       )}
     </div>
   )

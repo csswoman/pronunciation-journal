@@ -2,9 +2,26 @@
 import { useEffect } from "react";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import HomeCommandGrid from "@/components/home/HomeCommandGrid";
 
 const dailyCardState = vi.hoisted(() => ({ empty: false, settled: true }));
+const authMock = vi.hoisted(() => ({
+  useAuth: vi.fn(() => ({
+    user: { id: "user-1" },
+    session: null,
+    loading: false,
+    supabaseEnabled: true,
+    signOutUser: vi.fn(async () => undefined),
+  })),
+}));
+
+vi.mock("@/components/auth/AuthProvider", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/components/auth/AuthProvider")>();
+  return {
+    ...actual,
+    __esModule: true,
+    useAuth: authMock.useAuth,
+  };
+});
 
 vi.mock("@/components/home/HomeDailyCard", () => ({
   default: ({
@@ -46,6 +63,8 @@ vi.mock("@/components/home/HomeWordOfDayCard", () => ({
 vi.mock("@/components/home/HomeSpeakPrompt", () => ({
   default: () => <div>Speak prompt</div>,
 }));
+
+import HomeCommandGrid from "@/components/home/HomeCommandGrid";
 
 const baseProps = {
   conceptLesson: null,
@@ -93,7 +112,7 @@ describe("HomeCommandGrid first-visit activation", () => {
     );
 
     expect(
-      screen.getByRole("heading", { name: "Tu primera práctica empieza hoy" }),
+      screen.getByRole("heading", { name: /Una práctica ahora/i }),
     ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Abrir laboratorio/i })).toHaveAttribute(
       "href",
@@ -137,7 +156,7 @@ describe("HomeCommandGrid first-visit activation", () => {
     );
 
     expect(
-      screen.queryByRole("heading", { name: "Tu primera práctica empieza hoy" }),
+      screen.queryByRole("heading", { name: /Una práctica ahora/i }),
     ).not.toBeInTheDocument();
     expect(screen.queryByText("Ajusta tu ruta")).not.toBeInTheDocument();
     expect(screen.queryByText("Diagnóstico oral")).not.toBeInTheDocument();
@@ -158,7 +177,7 @@ describe("HomeCommandGrid placement visibility", () => {
 
     expect(screen.getByRole("heading", { name: "Afina tu nivel" })).toBeInTheDocument();
     expect(
-      screen.queryByRole("heading", { name: "Tu primera práctica empieza hoy" }),
+      screen.queryByRole("heading", { name: /Una práctica ahora/i }),
     ).not.toBeInTheDocument();
   });
 

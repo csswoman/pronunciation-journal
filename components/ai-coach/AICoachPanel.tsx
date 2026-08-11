@@ -20,6 +20,7 @@ import { getPageContext } from "./page-context";
 import { usePanelResize } from "./usePanelResize";
 import { AICoachHeader, ConversationHistoryPanel } from "./AICoachPanelParts";
 import { MissionWorkspace } from "./missions/MissionWorkspace";
+import type { MissionLaunch } from '@/lib/ai-practice/missions/launch'
 
 export const PANEL_WIDTH = 380;
 
@@ -39,6 +40,7 @@ export default function AICoachPanel() {
   const [activeTab, setActiveTab] = useState<TabId>("chat");
   const [inputPrefill, setInputPrefill] = useState<string | undefined>(undefined);
   const [showHistory, setShowHistory] = useState(false);
+  const [missionLaunch, setMissionLaunch] = useState<MissionLaunch | null>(null);
   const [conversations, setConversations] = useState<AIConversation[]>([]);
 
   const wasOpen = useRef(false);
@@ -56,11 +58,16 @@ export default function AICoachPanel() {
     if (launch) {
       if (launch.tab) setActiveTab(launch.tab);
       if (launch.prefill) setInputPrefill(launch.prefill);
+      if (launch.mission) {
+        setMissionLaunch(launch.mission);
+        setActiveTab('missions');
+        void changeMode(`mission:${launch.mission.missionId}`);
+      }
       consumeLaunch();
     } else if (justOpened) {
       setActiveTab("chat");
     }
-  }, [isOpen, launch, consumeLaunch]);
+  }, [isOpen, launch, consumeLaunch, changeMode]);
 
   useEffect(() => {
     if (activeMissionId) setActiveTab("missions");
@@ -140,6 +147,7 @@ export default function AICoachPanel() {
             {activeMissionId
               ? <MissionWorkspace
                   missionId={activeMissionId}
+                  launch={missionLaunch?.missionId === activeMissionId ? missionLaunch : null}
                   setMissionIntentHandler={setMissionIntentHandler}
                   messages={messages}
                   isStreaming={isStreaming}

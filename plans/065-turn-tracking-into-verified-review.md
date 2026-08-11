@@ -13,7 +13,7 @@
 - **Depends on**: 058, 061, 062, 063, 066
 - **Category**: direction, bug
 - **Planned at**: commit `c779781b`, 2026-07-19
-- **Current status**: IN PROGRESS (2026-07-21: familiarity/provenance, exact word/lesson queue, offline Dexie recovery, bounded Daily priority and progress copy landed; phrase targets remain gated by plan 066)
+- **Current status**: DONE (2026-08-10: Plan 073 closed phrase practice with explicit registry refs when authored and honest activity-only shadowing otherwise; no target guessing or parallel SRS namespace)
 
 ## Why this matters
 
@@ -24,7 +24,7 @@ Words y Dictionary sí llegan al engine de práctica en varios recorridos, pero 
 - **Resuelto:** `lib/word-bank/srs-queries.ts` conserva `known` como familiaridad y fecha de verificación cercana; ya no escribe `mastered`.
 - `hooks/useLexiconPracticeSession.ts:205` todavía puede terminar tras autoevaluación, pero el resultado queda separado de la evidencia objetiva y la promoción SRS.
 - **Resuelto:** `lib/word-bank/server-queries.ts` y el perfil de progreso distinguen dominio objetivo, familiaridad, evidencia y filas legacy.
-- **Resuelto parcialmente:** `hooks/useTracking.ts` y `components/tracking/TrackingClient.tsx` crean una cola exacta; frases sin destino canónico se reportan como omitidas hasta 066.
+- **Resuelto:** `hooks/useTracking.ts` y `components/tracking/TrackingClient.tsx` crean una cola exacta; frases sin target se practican como shadowing no-SRS y las refs explícitas conservan su owner canónico.
 - Plan 058 conserva palabras en `word_bank` y frases/lecciones en `tracked_items`; esa frontera es correcta y no debe duplicarse.
 - **Señal consumida**: la producción hablada de una frase guardada (Step 3, vía `SpokenAttempt` del plan 063) solo se scorea con `stt_intelligibility` (reconocimiento de palabras vía STT). No hay score acústico de fonema/stress/ritmo/intonation hasta la decisión del plan-071 benchmark. `objective_evidence` en la modalidad de producción significa "inteligible en STT", no "pronunciación correcta a nivel fonema".
 
@@ -86,7 +86,7 @@ Reject unknown/deleted refs with an actionable skipped-item result; never route 
 
 **Verify**: `pnpm exec vitest run lib/tracking` proves a mixed selection resolves canonical (registry-066) targets, creates a session from supported items and reports unsupported items without corrupting SRS.
 
-**Implementation**: word and lesson adapters are active. Phrase entries intentionally report `canonical_target_unresolved` until 066 supplies the resolver; no `tracked_items` SRS namespace is invented.
+**Implementation**: word, lesson and phrase adapters are active. Plain phrases produce activity-only shadowing; authored pronunciation/topic refs route to their existing owners. No `tracked_items` SRS namespace is invented.
 
 ### Step 4: Make “Repasar” launch the exact filtered queue
 
@@ -94,7 +94,7 @@ Pass a stable queue/session id to the practice route or dedicated adapter route,
 
 **Verify**: `pnpm exec vitest run lib/tracking hooks/__tests__/useTracking*` proves phrase filter launches those phrases, word filter launches those words, lesson filter opens exact refs, and reload/offline recovery works. The evidence written by `savePracticeAnswer`/`recordActivitySession` inherits the per-user isolation from plan 060 (user-leading key, no cross-account leakage) — add a two-account (A→sign out→B) assertion that B never sees A's tracked-review evidence.
 
-**Implementation**: `/tracking/review?session=<id>` restores the user-scoped queue from Dexie and routes lessons to their exact refs. Phrase-only queues remain skipped/actionable until 066.
+**Implementation**: `/tracking/review?session=<id>` restores the user-scoped queue from Dexie and routes lessons/phrases to their exact refs. Stale refs are skipped explicitly and never guessed from text.
 
 ### Step 5: Add a bounded Daily priority signal
 
@@ -122,8 +122,8 @@ Reports must show saved/familiar/verified/mastered distinctly. Avoid promising �
 ## Done criteria
 
 - [x] `known` no longer immediately means objectively mastered.
-- [ ] Tracking review launches the exact filtered content. (Words/lessons are active; phrase resolution awaits 066.)
-- [ ] Saved phrases can be practiced in context and orally. (Blocked on canonical target resolution from 066.)
+- [x] Tracking review launches the exact filtered content.
+- [x] Saved phrases can be practiced orally; only explicit canonical refs affect learning state.
 - [x] Bookmarked lessons remain distinct from completion.
 - [x] Daily boost is bounded and never changes SRS intervals.
 - [x] Progress distinguishes familiarity from verified mastery.

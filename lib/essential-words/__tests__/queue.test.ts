@@ -62,6 +62,21 @@ describe("buildSessionQueue", () => {
     expect(q.map((i) => i.entry.word)).toEqual(["and"]); // 3 - 2 = 1 nueva
   });
 
+  it("caps a session after prioritizing reviews and filling the remainder with new words", () => {
+    const q = buildSessionQueue({
+      words: WORDS,
+      srsEntries: [srs("the", "2026-06-10T00:00:00Z"), srs("be", "2026-06-10T00:00:00Z")],
+      introducedToday: ["the", "be"],
+      now: NOW,
+      newPerDay: 5,
+      maxItems: 3,
+    });
+
+    expect(q.map((item) => [item.entry.word, item.kind])).toEqual([
+      ["the", "review"], ["be", "review"], ["and", "new"],
+    ]);
+  });
+
   it("never returns a negative quota", () => {
     const q = buildSessionQueue({
       words: WORDS,

@@ -8,7 +8,10 @@ import { selectSentence } from '@/lib/essential-words/sentence-variants'
 const audioMocks = vi.hoisted(() => ({ speak: vi.fn(), speakSequence: vi.fn() }))
 vi.mock('@/lib/phoneme-practice/tts', () => audioMocks)
 vi.mock('@/lib/ui-sounds/cues', () => ({ playUiCue: vi.fn() }))
-vi.mock('@/lib/essential-words/english-word-validator', () => ({ isValidEnglishWord: vi.fn(async () => false) }))
+vi.mock('@/lib/essential-words/english-word-validator', () => ({
+  isValidEnglishWord: vi.fn(async () => false),
+  englishPronunciation: vi.fn(async () => null),
+}))
 vi.mock('@/components/ui/ListenButton', () => ({
   ListenButton: ({ onPlay, label }: { onPlay: () => void; label: string }) => (
     <button type="button" onClick={onPlay}>{label}</button>
@@ -52,12 +55,11 @@ describe('DictationCard', () => {
     fireEvent.change(screen.getByRole('textbox'), { target: { value: 'did you finish your homework alredy?' } })
     fireEvent.click(screen.getByRole('button', { name: /comprobar/i }))
 
-    expect(await screen.findByTestId('answer-diff-message')).toHaveTextContent('Did he finish his homework already?')
-    expect(screen.getByTestId('answer-diff-written')).toHaveTextContent('you · your · alredy')
+    expect(await screen.findByTestId('answer-diff-message')).toHaveTextContent('Did youhe finish yourhis homework alredyalready?')
     expect(screen.queryByRole('button', { name: /intentar de nuevo/i })).not.toBeInTheDocument()
     expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Continuar' })).toBeInTheDocument()
-    expect(screen.getByText('Volverás a ver he en unos ejercicios')).toBeInTheDocument()
+    expect(screen.queryByText(/Volverás a ver/)).not.toBeInTheDocument()
     await waitFor(() => expect(onAttempt).toHaveBeenCalledTimes(1))
     expect(onAttempt).toHaveBeenCalledWith(expect.objectContaining({ correct: false, typo: true }))
   })
@@ -74,8 +76,18 @@ describe('DictationCard', () => {
     fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Did he finish his homework alredy?' } })
     fireEvent.click(screen.getByRole('button', { name: /comprobar/i }))
 
-    expect(await screen.findByTestId('answer-diff-written')).toHaveTextContent('alredy')
+    expect(await screen.findByTestId('answer-diff-message')).toHaveTextContent('alredyalready')
     expect(onAttempt).toHaveBeenCalledWith(expect.objectContaining({ correct: true, typo: true }))
+  })
+
+  it('does not show a correct result when a non-target word is replaced', async () => {
+    const onAttempt = vi.fn().mockResolvedValue(undefined)
+    render(<DictationCard entry={entry} onAttempt={onAttempt} />)
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'We walked through the city.' } })
+    fireEvent.click(screen.getByRole('button', { name: /comprobar/i }))
+
+    expect(await screen.findByLabelText('Oración correcta')).toBeInTheDocument()
+    await waitFor(() => expect(onAttempt).toHaveBeenCalledWith(expect.objectContaining({ correct: false, typo: false })))
   })
 
   it('grades against the selected variant, not always the base sentence', async () => {
@@ -108,8 +120,19 @@ describe('DictationCard', () => {
   it('disables browser capitalization, correction and spelling tools on the input', () => {
     render(<DictationCard entry={entry} onAttempt={vi.fn().mockResolvedValue(undefined)} />)
     const input = screen.getByRole('textbox')
+    expect(input.tagName).toBe('TEXTAREA')
+    expect(input).toHaveAttribute('rows', '3')
     expect(input).toHaveAttribute('autocapitalize', 'none')
     expect(input).toHaveAttribute('autocorrect', 'off')
     expect(input).toHaveAttribute('spellcheck', 'false')
+  })
+
+  it('places the pause action below Comprobar', () => {
+    render(<DictationCard entry={entry} onAttempt={vi.fn()} onArchive={vi.fn()} />)
+
+    const check = screen.getByRole('button', { name: 'Comprobar' })
+    const pause = screen.getByRole('button', { name: 'Pausar esta palabra' })
+
+    expect(check.compareDocumentPosition(pause) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
   })
 })

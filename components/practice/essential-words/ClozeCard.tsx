@@ -14,9 +14,14 @@ import { useEffect, useRef, useState } from 'react'
 import { speak } from '@/lib/phoneme-practice/tts'
 import { PillButton } from '@/components/ui/PillButton'
 import Button from '@/components/ui/Button'
+import {
+  PracticeActionBar,
+  PracticeContinueButton,
+  PracticeExerciseCard,
+} from '@/components/practice/session/PracticeActionBar'
 import { playUiCue } from '@/lib/ui-sounds/cues'
 import { clozeFor } from '@/lib/essential-words/cloze'
-import { selectSentence } from '@/lib/essential-words/sentence-variants'
+import { selectProductionClozeSentence } from '@/lib/essential-words/sentence-variants'
 import { buildHintLadder } from '@/lib/essential-words/hint-ladder'
 import { isTypo } from '@/lib/essential-words/typo'
 import { normalizeEnglishAnswer, displayEnglishText } from '@/lib/essential-words/word-display'
@@ -24,6 +29,7 @@ import { HintButton } from './HintButton'
 import { AnswerDiff } from './AnswerDiff'
 import { ExercisePhaseLabel } from './ExercisePhaseLabel'
 import { InlineFeedback } from '@/components/practice/session/InlineFeedback'
+import { ArchiveConfirmAction } from '@/components/practice/study-card/ArchiveConfirmAction'
 import { useEnterToContinue } from '@/hooks/useEnterToContinue'
 import type { AttemptOutcome } from '@/lib/essential-words/attempt-grade'
 import type { EssentialWord } from '@/lib/essential-words/types'
@@ -60,8 +66,8 @@ export function ClozeCard({ entry, levelLabel, onAttempt, onRetry, onContinue, o
   const firstTryFailedRef = useRef(false)
   const startedAtRef = useRef(Date.now())
   const answerInputRef = useRef<HTMLInputElement>(null)
-  const { sentence } = selectSentence(entry, repetitions)
-  const cloze = clozeFor(entry, sentence)
+  const selectedSentence = selectProductionClozeSentence(entry, repetitions)
+  const cloze = selectedSentence ? clozeFor(entry, selectedSentence.sentence) : null
   const ladder = buildHintLadder(entry, 'cloze_sentence')
 
   useEffect(() => {
@@ -133,14 +139,15 @@ export function ClozeCard({ entry, levelLabel, onAttempt, onRetry, onContinue, o
   if (!cloze) return null
 
   return (
-    <div className="flex w-full flex-col items-center gap-(--space-5) rounded-lg border border-border-subtle bg-surface-raised layout-card-pad">
-      <ExercisePhaseLabel label={levelLabel} onArchive={onArchive} />
-      <p className="m-0 w-full text-center text-body text-fg">Completa la oración</p>
-
-      <p className="m-0 max-w-[42ch] text-center text-body-lg text-fg">{displayEnglishText(cloze.blanked)}</p>
+    <PracticeExerciseCard>
+      <ExercisePhaseLabel label={levelLabel} />
+      <div className="flex max-w-[42ch] flex-col items-center gap-2 text-center">
+        <p className="m-0 w-full text-label font-semibold text-fg">Completa la oración</p>
+        <p className="m-0 text-h3 font-medium leading-relaxed text-balance text-fg">{displayEnglishText(cloze.blanked)}</p>
+      </div>
 
       {entry.translation && (
-        <p className="m-0 text-body text-fg-muted">Pista: {entry.translation}</p>
+        <p className="m-0 font-kicker text-fg-muted">Pista · {entry.translation}</p>
       )}
 
       <input
@@ -156,6 +163,7 @@ export function ClozeCard({ entry, levelLabel, onAttempt, onRetry, onContinue, o
         }}
         disabled={revealed}
         aria-label="Escribe la palabra que falta"
+        placeholder="Escribe la palabra en inglés"
         autoCapitalize="none"
         autoCorrect="off"
         spellCheck={false}
@@ -181,24 +189,25 @@ export function ClozeCard({ entry, levelLabel, onAttempt, onRetry, onContinue, o
       ) : revealed && outcome ? (
         <>
           <InlineFeedback isCorrect={outcome.correct} />
-          {outcome.correct && !outcome.typo ? (
-            <p className="m-0 max-w-[42ch] text-center text-body-lg text-fg">
-              {displayEnglishText(sentence)}
-            </p>
-          ) : (
+          {!outcome.correct || outcome.typo ? (
             <AnswerDiff written={answer || '(sin respuesta)'} expected={cloze.answer} isTypo={outcome.typo} word={entry.word} />
-          )}
+          ) : null}
           {onContinue && (
-            <Button type="button" variant="primary" size="lg" className="w-full" onClick={onContinue} disabled={isContinuing} isLoading={isContinuing}>
-              Continuar
-            </Button>
+            <PracticeActionBar>
+              <PracticeContinueButton onClick={onContinue} disabled={isContinuing} isLoading={isContinuing} />
+            </PracticeActionBar>
           )}
         </>
       ) : (
-        <PillButton type="button" variant="primary" onClick={handleCheck}>
-          Comprobar
-        </PillButton>
+        <div className="flex w-full flex-col items-center gap-2">
+          <Button type="button" variant="primary" size="lg" fullWidth onClick={handleCheck}>
+            Comprobar
+          </Button>
+          {onArchive ? (
+            <ArchiveConfirmAction onArchive={onArchive} label="Pausar esta palabra" />
+          ) : null}
+        </div>
       )}
-    </div>
+    </PracticeExerciseCard>
   )
 }

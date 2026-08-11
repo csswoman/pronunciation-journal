@@ -102,3 +102,71 @@ describe("example_sentences variants", () => {
     expect(issues.map((i) => i.kind)).toContain("variant-duplicate");
   });
 });
+
+describe("study content references", () => {
+  const study = {
+    pronunciation: {
+      soundAnchors: [{ id: "schwa", ipa: "/ə/", explanationEs: "como una vocal relajada" }],
+      variants: [{
+        id: "before_consonant_sound",
+        labelEs: "Antes de sonido de consonante",
+        ipa: "/tə/",
+        spokenExample: "**to** school",
+        anchorIds: ["schwa"],
+      }],
+    },
+    examples: [{
+      english: "I go **to** school.",
+      translationEs: "Voy a la escuela.",
+      variantId: "before_consonant_sound",
+    }],
+  };
+
+  it("accepts linked, compilable study content", () => {
+    expect(validateEntry({ ...to, study })).toEqual([]);
+  });
+
+  it("flags unknown references and uncovered pronunciation variants", () => {
+    const issues = validateEntry({
+      ...to,
+      study: {
+        ...study,
+        pronunciation: {
+          ...study.pronunciation,
+          variants: [{ ...study.pronunciation.variants[0], anchorIds: ["missing"] }],
+        },
+        examples: [{ ...study.examples[0], variantId: "unknown" }],
+      },
+    });
+    expect(issues.map((issue) => issue.kind)).toEqual(expect.arrayContaining([
+      "study-unknown-anchor",
+      "study-unknown-variant",
+      "study-missing-variant-example",
+    ]));
+  });
+
+  it("flags invalid markup and missing explanations for non-template contrasts", () => {
+    const issues = validateEntry({
+      ...to,
+      study: {
+        examples: [{ english: "I **go to school.", translationEs: "Voy a la escuela." }],
+        contrasts: {
+          titleEs: "No se traduce literalmente",
+          pairs: [{ pattern: "replacement", spanish: "Depende **de** ti", english: "It depends **on** you" }],
+        },
+      },
+    });
+    expect(issues.map((issue) => issue.kind)).toEqual(expect.arrayContaining([
+      "study-markup",
+      "study-missing-explanation",
+    ]));
+  });
+
+  it("flags a study rule id that is not in the shared catalogue", () => {
+    const issues = validateEntry({
+      ...to,
+      study: { usage: { ruleId: "invented_rule" } },
+    });
+    expect(issues.map((issue) => issue.kind)).toContain("study-unknown-rule");
+  });
+});

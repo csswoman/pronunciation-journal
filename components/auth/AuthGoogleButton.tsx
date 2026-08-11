@@ -3,17 +3,22 @@
 interface AuthGoogleButtonProps {
   onClick: () => void;
   pending: boolean;
+  label?: string;
 }
 
 const SOCIAL_BTN = "w-full flex items-center justify-center gap-3 h-11 px-4 rounded-lg border border-border-default bg-surface-raised text-body-sm font-medium text-fg-muted transition-all hover:bg-surface-sunken hover:border-border-strong hover:text-fg disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2";
 
 export { SOCIAL_BTN };
 
-export function AuthGoogleButton({ onClick, pending }: AuthGoogleButtonProps) {
+export function AuthGoogleButton({
+  onClick,
+  pending,
+  label = "Continuar con Google",
+}: AuthGoogleButtonProps) {
   return (
     <button type="button" onClick={onClick} disabled={pending} className={SOCIAL_BTN}>
       <GoogleIcon />
-      <span>Continue with Google</span>
+      <span>{label}</span>
     </button>
   );
 }

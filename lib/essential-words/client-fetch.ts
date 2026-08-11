@@ -2,19 +2,27 @@ import type { EssentialWord, CefrLevel } from './types'
 import { MAX_CHUNKS } from './types'
 import type { WordBankEntry } from '@/lib/word-bank/types'
 
+/** Essential-word details retained while the entry is adapted for generic practice. */
+export type EssentialWordPresentationMetadata = Pick<EssentialWord, 'rank' | 'pos' | 'cefr_level'>
+export type EssentialWordBankEntry = WordBankEntry & {
+  essentialMetadata: EssentialWordPresentationMetadata
+}
+
 function cefrToDifficulty(level: CefrLevel): number {
   if (level === 'C1') return 3
   if (level === 'B1' || level === 'B2') return 2
   return 1 // A1, A2
 }
 
-export function coreWordToWordBankEntry(w: EssentialWord): WordBankEntry {
+export function coreWordToWordBankEntry(w: EssentialWord): EssentialWordBankEntry {
   return {
     id: `core1k:${w.word.toLowerCase()}`,
     user_id: '',
     text: w.word,
-    meaning: null,
-    translation: null,
+    // The authored Core dataset owns these fields. Preserve them when the
+    // entry is adapted for generic practice modes such as match_pairs.
+    meaning: w.meaning ?? null,
+    translation: w.translation ?? null,
     example: w.example_sentence,
     ipa: w.ipa_strong,
     difficulty: cefrToDifficulty(w.cefr_level),
@@ -36,6 +44,11 @@ export function coreWordToWordBankEntry(w: EssentialWord): WordBankEntry {
     review_count: 0,
     source: 'core1k',
     source_ref: null,
+    essentialMetadata: {
+      rank: w.rank,
+      pos: w.pos,
+      cefr_level: w.cefr_level,
+    },
     synonyms: null,
     is_favorite: false,
     familiarity_confidence: 0,
@@ -80,7 +93,7 @@ async function loadChunk(n: number): Promise<EssentialWord[]> {
  * Selection rotates by `day` so different days surface different words.
  * Loads additional chunks if the first chunk doesn't yield enough eligible words.
  */
-export async function fetchEssentialWordsForDay(day: number, count: number): Promise<WordBankEntry[]> {
+export async function fetchEssentialWordsForDay(day: number, count: number): Promise<EssentialWordBankEntry[]> {
   const collected: EssentialWord[] = []
   let chunkIndex = 1
 

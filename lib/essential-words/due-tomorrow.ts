@@ -1,14 +1,7 @@
 import type { SRSData } from "@/lib/types";
 import { db } from "@/lib/db";
 import { ESSENTIAL_WORD_PREFIX } from "./types";
-
-/** YYYY-MM-DD in the local timezone of `d`. Local, not UTC, so "tomorrow" matches the user's day. */
-function localDateKey(d: Date): string {
-  const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
+import { localDateKey } from "./ready-date";
 
 /** Pure: count SRS entries due exactly on the calendar day after `now`. */
 export function countDueTomorrow(entries: SRSData[], now: Date): number {

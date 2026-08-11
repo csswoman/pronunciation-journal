@@ -8,6 +8,7 @@
 import PageHeader from "@/components/layout/PageHeader";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useUserPreferences } from "@/hooks/useUserPreferences";
+import { isPermanentUser } from "@/lib/auth/is-anonymous";
 import type { DailyStreakResult } from "@/lib/daily/streak-core";
 import type { DailyGoalProgress } from "@/lib/home/constants";
 
@@ -70,11 +71,10 @@ export default function HomePageHeader({
   const { user } = useAuth();
   const { preferences } = useUserPreferences();
 
-  const isLoggedIn = user && !(user as { is_anonymous?: boolean }).is_anonymous;
   const metadataName =
     typeof user?.user_metadata?.full_name === "string" ? user.user_metadata.full_name : "";
   const fullName = preferences?.full_name || metadataName || user?.email?.split("@")[0] || null;
-  const userName = isLoggedIn && fullName ? fullName.split(" ")[0] : null;
+  const userName = isPermanentUser(user) && fullName ? fullName.split(" ")[0] : null;
 
   const current = streak?.currentStreak ?? 0;
   const week = weekMinutes ?? dailyGoal?.weekMinutes ?? 0;

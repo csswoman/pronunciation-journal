@@ -6,6 +6,7 @@ import { useUISounds } from "@/hooks/useUISounds";
 import { isLessonComplete } from "@/lib/db";
 import { recordLessonComplete, recordLessonQuizAttempt } from "@/lib/practice/queries";
 import { getCurrentUser } from "@/lib/auth/session";
+import { theoryTopicForMiniLesson } from "@/lib/learning-loop/theory-targets";
 
 const COURSE_SLUG = "mini-lessons";
 
@@ -81,7 +82,7 @@ export default function MiniLessonQuiz({ questions, slug }: Props) {
               correctAnswer: q.options[q.correct] ?? "",
               isCorrect: selectedIndex === q.correct,
               timeMs: answerTimesMs[index] ?? 0,
-              topic: slug,
+              topic: theoryTopicForMiniLesson(slug),
             };
           }),
         );

@@ -14,7 +14,7 @@ export function SessionProgress({ current, total }: Props) {
     <div className="w-full flex flex-col gap-2">
       <div className="flex items-center justify-between">
         <span className="font-kicker font-semibold text-fg-tertiary">
-          Exercise {displayIndex} of {total}
+          Ejercicio {displayIndex} de {total}
         </span>
         <span className="text-xxs font-semibold tabular-nums text-fg-tertiary">
           {pct}%
@@ -25,7 +25,7 @@ export function SessionProgress({ current, total }: Props) {
         aria-valuenow={pct}
         aria-valuemin={0}
         aria-valuemax={100}
-        aria-label={`Exercise ${displayIndex} of ${total}`}
+        aria-label={`Ejercicio ${displayIndex} de ${total}`}
         className="h-1.5 rounded-full overflow-hidden bg-border-subtle"
       >
         <div

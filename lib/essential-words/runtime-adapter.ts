@@ -12,7 +12,7 @@ import type { EssentialWordQueueItem } from "./queue";
 import { DEFAULT_RECOVERY_POLICY } from "./recovery-mode";
 import { buildSkillQueue } from "./skill-queue";
 import { learningItemId } from "./skill-item";
-import { essentialWordId, type EssentialWord } from "./types";
+import { essentialWordId, GUIDED_SESSION_NEW_CARDS, type EssentialWord } from "./types";
 import type {
   AttemptEventType,
   AttemptLog,
@@ -20,12 +20,13 @@ import type {
   BaseSkill,
   LearningItem,
 } from "./verification/types";
-import type { EssentialWordMode } from "./exercise-modes";
+import { modeHasData, SKILL_MODE_FALLBACKS, type EssentialWordMode } from "./exercise-modes";
+import type { InitialListeningLevel } from "./initial-listening-level";
+import type { ListeningLadderState } from "./listening-ladder";
 import { planKnownClaim } from "./verification/claim-known";
 
 const BASE_SKILLS: readonly BaseSkill[] = ["meaning", "listening", "production"];
 const DAILY_BUDGET_SECONDS = 8 * 60;
-const NEW_WORD_LIMIT = 10;
 
 const modalityForSkill = (skill: LearningItem["skill"]): AttemptModality => {
   if (skill === "listening") return "listening";
@@ -38,6 +39,9 @@ export interface SkillRuntimeQueueItem extends EssentialWordQueueItem {
   currentItems: LearningItem[];
   eventType: AttemptEventType;
   forcedMode: EssentialWordMode;
+  listeningLadder?: ListeningLadderState;
+  focusContrastId?: string;
+  retiredBlankKeys?: string[];
 }
 
 export interface RuntimePlanningSnapshot {
@@ -46,9 +50,10 @@ export interface RuntimePlanningSnapshot {
   attempts: AttemptLog[];
   now: Date;
   previousMode?: "normal" | "recovery";
+  maxNewWords?: number;
 }
 
-export function createBaseLearningItems(wordId: string): LearningItem[] {
+export function createBaseLearningItems(wordId: string, initialListeningLevel?: InitialListeningLevel): LearningItem[] {
   return BASE_SKILLS.map((skill) => ({
     id: learningItemId(wordId, skill),
     wordId,
@@ -58,6 +63,7 @@ export function createBaseLearningItems(wordId: string): LearningItem[] {
     repetitions: 0,
     lapses: 0,
     suspended: false,
+    ...(skill === "listening" && initialListeningLevel ? { initialListeningLevel } : {}),
   }));
 }
 
@@ -143,8 +149,10 @@ export function buildRuntimePlanningInput(
 
   const today = attemptsToday(snapshot.attempts, snapshot.now);
   const consumed = {
-    newWords: today.filter((attempt) =>
-      attempt.eventType === "learning-step" && attempt.assessment.modality === "recognition").length,
+    // Essential Words budgets introductions per session. Attempts served by
+    // Daily Plan or an earlier Essential Words session must not spend the new
+    // word allowance of the session being built now.
+    newWords: 0,
     baseSkillActivations: today.filter((attempt) =>
       attempt.eventType === "learning-step"
       && (attempt.assessment.modality === "listening"
@@ -158,7 +166,8 @@ export function buildRuntimePlanningInput(
 
   return {
     dailyBudgetSeconds: DAILY_BUDGET_SECONDS,
-    configuredNewWordLimit: NEW_WORD_LIMIT,
+    // Keep the live skill planner aligned with the selected surface size.
+    configuredNewWordLimit: snapshot.maxNewWords ?? GUIDED_SESSION_NEW_CARDS,
     mandatory: classifyMandatory(items, snapshot.now),
     candidates: {
       baseSkillActivations,
@@ -200,17 +209,39 @@ export function planRuntimeSession(snapshot: RuntimePlanningSnapshot): DailyPlan
   );
 }
 
-const modeForSkill = (skill: LearningItem["skill"]): EssentialWordMode => {
-  if (skill === "listening") return "dictation_word";
-  if (skill === "production") return "speak_sentence";
-  if (skill === "usage") return "cloze_sentence";
-  return "recognize_translation";
-};
+export interface SkillModeMaterializationDiagnostic {
+  kind: "fallback" | "unrenderable";
+  wordId: string;
+  skill: LearningItem["skill"];
+  requestedMode: EssentialWordMode;
+  resolvedMode?: EssentialWordMode;
+}
+
+type SkillModeReporter = (diagnostic: SkillModeMaterializationDiagnostic) => void;
+
+function resolveModeForSkill(
+  entry: EssentialWord,
+  plannedItem: PlannedItem,
+  report?: SkillModeReporter,
+): EssentialWordMode | null {
+  const candidates = SKILL_MODE_FALLBACKS[plannedItem.skill];
+  const [requestedMode] = candidates;
+  const resolvedMode = candidates.find((mode) => modeHasData(entry, mode));
+  if (!resolvedMode) {
+    report?.({ kind: "unrenderable", wordId: plannedItem.wordId, skill: plannedItem.skill, requestedMode });
+    return null;
+  }
+  if (resolvedMode !== requestedMode) {
+    report?.({ kind: "fallback", wordId: plannedItem.wordId, skill: plannedItem.skill, requestedMode, resolvedMode });
+  }
+  return resolvedMode;
+}
 
 export function toRuntimeQueue(
   plan: DailyPlan,
   words: EssentialWord[],
   existingItems: LearningItem[],
+  reportModeDiagnostic?: SkillModeReporter,
 ): SkillRuntimeQueueItem[] {
   const wordsById = new Map(words.map((word) => [essentialWordId(word.word), word]));
   const itemsByWord = new Map<string, LearningItem[]>();
@@ -224,6 +255,8 @@ export function toRuntimeQueue(
   return buildSkillQueue({ plan }).flatMap((plannedItem) => {
     const entry = wordsById.get(plannedItem.wordId);
     if (!entry) return [];
+    const forcedMode = resolveModeForSkill(entry, plannedItem, reportModeDiagnostic);
+    if (!forcedMode) return [];
     const currentItems = completeBaseItems(
       plannedItem.wordId,
       itemsByWord.get(plannedItem.wordId) ?? [],
@@ -241,8 +274,31 @@ export function toRuntimeQueue(
       plannedItem,
       currentItems,
       eventType,
-      forcedMode: modeForSkill(plannedItem.skill),
+      forcedMode,
     }];
+  });
+}
+
+/**
+ * Materializes the dedicated Essential Words queue for the skill engine.
+ * Its word selection belongs to the practice surface, not to Daily Plan:
+ * reviews come first and the remaining slots are filled with new words.
+ */
+export function toEssentialWordsSkillQueue(
+  plan: DailyPlan,
+  words: EssentialWord[],
+  existingItems: LearningItem[],
+  reportModeDiagnostic?: SkillModeReporter,
+): SkillRuntimeQueueItem[] {
+  // buildSkillQueue orders mandatory, base, usage, then new activations. The
+  // first item per word is therefore the planner's highest-priority choice;
+  // lower-priority items remain unchanged in learningItems and are proposed
+  // again next session rather than being recorded as served.
+  const chosenWordIds = new Set<string>();
+  return toRuntimeQueue(plan, words, existingItems, reportModeDiagnostic).filter((item) => {
+    if (chosenWordIds.has(item.plannedItem.wordId)) return false;
+    chosenWordIds.add(item.plannedItem.wordId);
+    return true;
   });
 }
 

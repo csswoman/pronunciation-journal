@@ -1,19 +1,9 @@
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
 import type { ReorderWordsExercise } from '@/lib/exercises/types'
-import { exerciseId, isLikelySentence, pick, shuffle, tokenize } from '@/lib/exercises/utils'
-import { isLikelyEnglish } from './mixed-from-fragments'
+import { exerciseId, isLikelySentence, pick, tokenize } from '@/lib/exercises/utils'
+import { isLikelyEnglish, shuffleDistinct } from './primitives'
 
 const MIN_TOKENS = 4
-
-/** Shuffles until the result differs from the original order (max 10 attempts). */
-function shuffleDistinct(tokens: string[]): string[] {
-  if (tokens.length <= 1) return [...tokens]
-  let result = shuffle(tokens)
-  for (let i = 0; i < 10 && result.every((t, idx) => t === tokens[idx]); i++) {
-    result = shuffle(tokens)
-  }
-  return result
-}
 
 export interface TextFragment {
   id: string

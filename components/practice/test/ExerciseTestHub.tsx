@@ -6,13 +6,15 @@
 //   <ExerciseTestSidebar />
 // </ExerciseTestHub>
 
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   ExerciseTestOverlay,
   overlayEntryId,
   type ExerciseTestOverlayState,
 } from '@/components/practice/test/ExerciseTestOverlay'
 import { ExerciseTestSidebar } from '@/components/practice/test/ExerciseTestSidebar'
+import { EssentialWordsSession } from '@/components/practice/essential-words/EssentialWordsSession'
+import { WordStudyCard } from '@/components/practice/essential-words/WordStudyCard'
 import { DOMAIN_ORDER } from '@/components/practice/test/constants'
 import {
   FOCUS_UI_CONTEXTS,
@@ -21,6 +23,7 @@ import {
   type TestGalleryEntry,
 } from '@/lib/practice/test-gallery/fixtures'
 import type { PracticeContext } from '@/lib/practice/types'
+import type { EssentialWord } from '@/lib/essential-words/types'
 
 type ViewMode = 'single' | 'split'
 
@@ -44,6 +47,18 @@ export function ExerciseTestHub() {
   const [viewMode, setViewMode] = useState<ViewMode>('single')
   const [sessionKey, setSessionKey] = useState(0)
   const [overlay, setOverlay] = useState<ExerciseTestOverlayState>({ mode: 'idle' })
+  const [essentialWordsOpen, setEssentialWordsOpen] = useState(false)
+  const [pilotEntries, setPilotEntries] = useState<EssentialWord[]>([])
+  const [pilotWord, setPilotWord] = useState('')
+
+  useEffect(() => {
+    void fetch('/essential-words/words-all.json')
+      .then((response) => response.ok ? response.json() : null)
+      .then((data: { entries?: EssentialWord[] } | null) => {
+        setPilotEntries((data?.entries ?? []).filter((entry) => entry.study))
+      })
+      .catch(() => setPilotEntries([]))
+  }, [])
 
   const grouped = useMemo(() => groupByDomain(TEST_GALLERY_ENTRIES), [])
   const usesFocusShell = FOCUS_UI_CONTEXTS.includes(context)
@@ -51,6 +66,7 @@ export function ExerciseTestHub() {
   const activeEntryId = overlayEntryId(overlay)
   const overlayOpen = overlay.mode !== 'idle'
   const canStep = activeEntryId != null
+  const selectedPilotEntry = pilotEntries.find((entry) => entry.word === pilotWord)
 
   const bumpSessionKey = useCallback(() => {
     setSessionKey((k) => k + 1)
@@ -59,6 +75,7 @@ export function ExerciseTestHub() {
   const launch = useCallback(
     (entry: TestGalleryEntry) => {
       bumpSessionKey()
+      setEssentialWordsOpen(false)
       setOverlay({
         mode: 'single',
         entryId: entry.id,
@@ -75,6 +92,7 @@ export function ExerciseTestHub() {
     (entry: TestGalleryEntry) => {
       if (!canSplit) return
       bumpSessionKey()
+      setEssentialWordsOpen(false)
       setOverlay({
         mode: 'split',
         entryId: entry.id,
@@ -108,6 +126,7 @@ export function ExerciseTestHub() {
 
   const launchAll = useCallback(() => {
     bumpSessionKey()
+    setEssentialWordsOpen(false)
     setOverlay({
       mode: 'all',
       phase: 'session',
@@ -120,6 +139,7 @@ export function ExerciseTestHub() {
   const launchSplitQuick = useCallback(() => {
     const entry = TEST_GALLERY_ENTRIES[0]!
     bumpSessionKey()
+    setEssentialWordsOpen(false)
     setOverlay({
       mode: 'split',
       entryId: entry.id,
@@ -131,6 +151,12 @@ export function ExerciseTestHub() {
 
   const exitOverlay = useCallback(() => {
     setOverlay({ mode: 'idle' })
+    setEssentialWordsOpen(false)
+  }, [])
+
+  const openEssentialWords = useCallback(() => {
+    setOverlay({ mode: 'idle' })
+    setEssentialWordsOpen(true)
   }, [])
 
   return (
@@ -138,16 +164,35 @@ export function ExerciseTestHub() {
       <div className="relative min-h-[50dvh] min-w-0 flex-1 lg:min-h-dvh">
         <ExerciseTestOverlay state={overlay} sessionKey={sessionKey} onExit={exitOverlay} />
 
-        {!overlayOpen ? (
-          <div className="flex h-full flex-col justify-center px-6 py-12 lg:px-10">
-            <header className="flex max-w-lg flex-col gap-2">
+        {essentialWordsOpen ? (
+          <div className="min-h-dvh px-4 py-6 sm:px-8 sm:py-10">
+            {pilotEntries.length > 0 ? (
+              <label className="mb-layout-stack flex max-w-sm flex-col gap-1 text-label text-fg">
+                Revisar palabra del piloto
+                <select
+                  value={pilotWord}
+                  onChange={(event) => setPilotWord(event.target.value)}
+                  className="rounded-md border border-border-subtle bg-surface-raised px-3 py-2 text-body-sm text-fg focus-ring"
+                >
+                  <option value="">Sesión real</option>
+                  {pilotEntries.map((entry) => <option key={entry.word} value={entry.word}>{entry.word}</option>)}
+                </select>
+              </label>
+            ) : null}
+            {selectedPilotEntry ? (
+              <WordStudyCard entry={selectedPilotEntry} onContinue={() => undefined} onOmit={() => undefined} />
+            ) : <EssentialWordsSession key="test-essential-words" />}
+          </div>
+        ) : !overlayOpen ? (
+          <div className="flex h-full flex-col justify-center px-layout-page-inline py-layout-section-gap lg:px-10">
+            <header className="flex max-w-[65ch] flex-col gap-layout-stack">
               <span className="font-kicker text-fg-subtle">
-                Dev only
+                Solo desarrollo
               </span>
-              <h1 className="text-h2 font-normal tracking-[-0.02em] text-fg">
-                Exercise UI gallery
+              <h1 className="text-h2 font-semibold text-balance text-fg">
+                Galería de ejercicios
               </h1>
-              <p className="text-body-sm text-fg-muted">
+              <p className="text-body-md leading-relaxed text-pretty text-fg-muted">
                 Elige un ejercicio en el panel de la derecha. Usa{' '}
                 <span className="font-medium text-fg-secondary">Rotar</span> para cambiar sin cerrar la
                 sesión.
@@ -166,6 +211,7 @@ export function ExerciseTestHub() {
         activeEntryId={activeEntryId}
         viewMode={viewMode}
         overlayOpen={overlayOpen}
+        essentialWordsOpen={essentialWordsOpen}
         canStep={canStep}
         onContextChange={setContext}
         onCompareContextChange={setCompareContext}
@@ -176,6 +222,7 @@ export function ExerciseTestHub() {
         onNext={() => stepEntry(1)}
         onSelect={openEntry}
         onExitOverlay={exitOverlay}
+        onOpenEssentialWords={openEssentialWords}
       />
     </div>
   )

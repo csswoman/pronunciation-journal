@@ -22,6 +22,8 @@ export interface BuildQueueOptions {
   introducedToday: string[];
   now: Date;
   newPerDay?: number;
+  /** Optional cap for this queue, after due reviews have taken priority. */
+  maxItems?: number;
   /** When set (non-empty), restricts both reviews and new cards to these CEFR levels. */
   levels?: readonly CefrLevel[] | null;
   /** When set (non-empty), restricts both reviews and new cards to these parts of speech. */
@@ -61,6 +63,7 @@ export function buildSessionQueue({
   introducedToday,
   now,
   newPerDay = NEW_CARDS_PER_DAY,
+  maxItems,
   levels,
   pos,
 }: BuildQueueOptions): EssentialWordQueueItem[] {
@@ -92,7 +95,8 @@ export function buildSessionQueue({
     .slice(0, quota)
     .map((entry) => ({ entry, kind: 'new' as const }));
 
-  return [...due, ...fresh];
+  const queue = [...due, ...fresh];
+  return maxItems === undefined ? queue : queue.slice(0, Math.max(0, maxItems));
 }
 
 /** Re-inserts a failed item ~3 positions ahead as `kind: 'learning'`. Pure. */

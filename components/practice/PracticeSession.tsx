@@ -17,6 +17,7 @@ import { SessionSummary } from './session/SessionSummary'
 import { useSessionState, buildSessionResult } from './session/useSessionState'
 import { formatIpaDisplay, resolveSessionIpa } from '@/lib/practice/resolve-session-ipa'
 import { playUiCue } from '@/lib/ui-sounds/cues'
+import { getTarget, phonemeTargetId } from '@/lib/pronunciation/targets/registry'
 
 type Phase = 'exercising' | 'feedback' | 'hints' | 'complete'
 
@@ -72,6 +73,11 @@ export default function PracticeSession(config: PracticeConfig) {
     () => resolveSessionIpa(soundIpa, exercises),
     [soundIpa, exercises],
   )
+  const followupTargetId = useMemo(() => {
+    if (context !== 'sound_lab' || !sessionIpa) return undefined
+    const id = phonemeTargetId(`/${sessionIpa.replace(/^\/+|\/+$/g, '')}/`)
+    return getTarget(id).ok ? id : undefined
+  }, [context, sessionIpa])
 
   const completionCuePlayed = useRef(false)
   useEffect(() => {
@@ -122,6 +128,7 @@ export default function PracticeSession(config: PracticeConfig) {
         result={sessionResult}
         practiceIpa={sessionIpa}
         progressSaveStatus={progressSaveStatus}
+        followupTargetId={followupTargetId}
         onRetrySync={handleRetrySync}
         onPracticeAgain={handlePracticeAgain}
         onFinish={() => onExit?.(sessionResult)}

@@ -255,10 +255,19 @@ export async function getAllContrastProgress(
 ): Promise<UserContrastProgress[]> {
   const { data, error } = await supabase()
     .from('user_contrast_progress')
-    .select('id, user_id, contrast_id, ease_factor, interval_days, next_review, last_seen, total_attempts, correct_answers, streak, mastery_pct')
+    .select('id, user_id, contrast_id, ease_factor, interval_days, next_review, last_seen, total_attempts, correct_answers, streak, mastery_pct, adaptive_score, observation_count')
     .eq('user_id', userId)
   if (error) throw error
-  return canonicalizeProgressRows(data as UserContrastProgress[])
+  return canonicalizeProgressRows(data as unknown as UserContrastProgress[])
+}
+
+export async function getRetiredEssentialWordBlankKeys(): Promise<string[]> {
+  // Generated database types lag the just-applied migration.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await supabase().from('essential_word_blank_review_queue' as any)
+    .select('sentence_id, token_index').eq('status', 'retired_for_review')
+  if (error) throw error
+  return ((data ?? []) as unknown as Array<{ sentence_id: string; token_index: number }>).map((row) => `${row.sentence_id}:${row.token_index}`)
 }
 
 export async function getContrastProgress(

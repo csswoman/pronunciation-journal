@@ -58,36 +58,36 @@ export function ExerciseTestNav({
         </Button>
       </div>
 
-      <div className="flex gap-1 rounded-[var(--radius-md)] bg-surface-sunken p-1">
+      <div className="flex gap-1 rounded-md bg-surface-sunken p-1">
         <button
           type="button"
           onClick={() => onViewModeChange('single')}
           className={cn(
-            'flex flex-1 items-center justify-center gap-1 rounded-[var(--radius-sm)] py-1.5 text-caption font-medium transition-colors',
+            'flex min-h-11 flex-1 items-center justify-center gap-1 rounded-sm px-2 py-2 text-caption font-medium transition-colors focus-ring',
             viewMode === 'single' ? 'bg-surface-raised text-fg shadow-sm' : 'text-fg-muted',
           )}
         >
           <Play size={12} aria-hidden />
-          Single
+          Individual
         </button>
         <button
           type="button"
           onClick={() => onViewModeChange('split')}
           disabled={!canSplit}
           className={cn(
-            'flex flex-1 items-center justify-center gap-1 rounded-[var(--radius-sm)] py-1.5 text-caption font-medium transition-colors',
+            'flex min-h-11 flex-1 items-center justify-center gap-1 rounded-sm px-2 py-2 text-caption font-medium transition-colors focus-ring',
             viewMode === 'split' ? 'bg-surface-raised text-fg shadow-sm' : 'text-fg-muted',
             !canSplit && 'cursor-not-allowed opacity-50',
           )}
         >
           <Columns2 size={12} aria-hidden />
-          Split
+          Comparar
         </button>
       </div>
 
       {grouped.map(({ domain, items }) => (
         <div key={domain} className="flex flex-col gap-1">
-          <p className="px-1 font-caption font-semibold uppercase tracking-wide text-fg-subtle">
+          <p className="px-1 font-kicker text-fg-subtle">
             {DOMAIN_LABELS[domain]}
           </p>
           <ul className="flex flex-col gap-0.5">
@@ -99,7 +99,7 @@ export function ExerciseTestNav({
                     type="button"
                     onClick={() => onSelect(entry, viewMode)}
                     className={cn(
-                      'flex w-full flex-col rounded-[var(--radius-md)] px-2.5 py-2 text-left transition-colors',
+                      'flex min-h-11 w-full flex-col justify-center rounded-md px-3 py-2.5 text-left transition-colors focus-ring',
                       active
                         ? 'bg-primary/10 text-fg ring-1 ring-primary/30'
                         : 'text-fg-secondary hover:bg-surface-sunken hover:text-fg',

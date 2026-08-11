@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import { ExerciseTestHub } from '@/components/practice/test/ExerciseTestHub'
 import '@/app/styles/exercise-test.css'
 
-export const metadata = { title: 'Exercise UI Test' }
+export const metadata = { title: 'Galería de ejercicios' }
 
 export default function ExerciseTestPage() {
   if (process.env.NODE_ENV === 'production') notFound()

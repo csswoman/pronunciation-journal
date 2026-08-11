@@ -153,14 +153,26 @@ describe('deriveSttAvailable', () => {
   })
 })
 
+/** Chrome UA without Edge/Brave — required for isWebSpeechReliable(). */
+function chromeNavigator(partial: Record<string, unknown> = {}) {
+  return {
+    userAgent:
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+    ...partial,
+  }
+}
+
 describe('buildCapabilitySnapshot', () => {
   it('produces a snapshot matching CapabilitySnapshotSchema — supported/online path', async () => {
     vi.stubGlobal('window', { SpeechRecognition: function () {} })
-    vi.stubGlobal('navigator', {
-      onLine: true,
-      permissions: { query: vi.fn().mockResolvedValue({ state: 'granted' }) },
-      mediaDevices: { getUserMedia: vi.fn() },
-    })
+    vi.stubGlobal(
+      'navigator',
+      chromeNavigator({
+        onLine: true,
+        permissions: { query: vi.fn().mockResolvedValue({ state: 'granted' }) },
+        mediaDevices: { getUserMedia: vi.fn() },
+      }),
+    )
 
     const snapshot = await buildCapabilitySnapshot()
 
@@ -172,13 +184,34 @@ describe('buildCapabilitySnapshot', () => {
     })
   })
 
-  it('produces a snapshot for permission-denied path', async () => {
+  it('marks Brave-like browsers as partial even when SpeechRecognition exists', async () => {
     vi.stubGlobal('window', { SpeechRecognition: function () {} })
     vi.stubGlobal('navigator', {
+      userAgent:
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+      brave: {},
       onLine: true,
-      permissions: { query: vi.fn().mockResolvedValue({ state: 'denied' }) },
+      permissions: { query: vi.fn().mockResolvedValue({ state: 'granted' }) },
       mediaDevices: { getUserMedia: vi.fn() },
     })
+
+    const snapshot = await buildCapabilitySnapshot()
+
+    expect(snapshot.sttAvailable).toBe(false)
+    expect(snapshot.browserSupport).toBe('partial')
+    expect(canEvaluateProduction(snapshot)).toBe(false)
+  })
+
+  it('produces a snapshot for permission-denied path', async () => {
+    vi.stubGlobal('window', { SpeechRecognition: function () {} })
+    vi.stubGlobal(
+      'navigator',
+      chromeNavigator({
+        onLine: true,
+        permissions: { query: vi.fn().mockResolvedValue({ state: 'denied' }) },
+        mediaDevices: { getUserMedia: vi.fn() },
+      }),
+    )
 
     const snapshot = await buildCapabilitySnapshot()
 
@@ -193,10 +226,13 @@ describe('buildCapabilitySnapshot', () => {
 
   it('produces a snapshot for unsupported-browser path', async () => {
     vi.stubGlobal('window', {})
-    vi.stubGlobal('navigator', {
-      onLine: true,
-      mediaDevices: { getUserMedia: vi.fn() },
-    })
+    vi.stubGlobal(
+      'navigator',
+      chromeNavigator({
+        onLine: true,
+        mediaDevices: { getUserMedia: vi.fn() },
+      }),
+    )
 
     const snapshot = await buildCapabilitySnapshot()
 
@@ -210,11 +246,14 @@ describe('buildCapabilitySnapshot', () => {
 
   it('produces a snapshot for offline path (sttAvailable forced false)', async () => {
     vi.stubGlobal('window', { SpeechRecognition: function () {} })
-    vi.stubGlobal('navigator', {
-      onLine: false,
-      permissions: { query: vi.fn().mockResolvedValue({ state: 'granted' }) },
-      mediaDevices: { getUserMedia: vi.fn() },
-    })
+    vi.stubGlobal(
+      'navigator',
+      chromeNavigator({
+        onLine: false,
+        permissions: { query: vi.fn().mockResolvedValue({ state: 'granted' }) },
+        mediaDevices: { getUserMedia: vi.fn() },
+      }),
+    )
 
     const snapshot = await buildCapabilitySnapshot()
 
@@ -225,11 +264,14 @@ describe('buildCapabilitySnapshot', () => {
 
   it('produces a snapshot for evaluator-unavailable path (API present, permission unknown, but treated as evaluator down)', async () => {
     vi.stubGlobal('window', { webkitSpeechRecognition: function () {} })
-    vi.stubGlobal('navigator', {
-      onLine: true,
-      permissions: undefined,
-      mediaDevices: { getUserMedia: vi.fn() },
-    })
+    vi.stubGlobal(
+      'navigator',
+      chromeNavigator({
+        onLine: true,
+        permissions: undefined,
+        mediaDevices: { getUserMedia: vi.fn() },
+      }),
+    )
 
     const snapshot = await buildCapabilitySnapshot()
 
@@ -244,11 +286,14 @@ describe('buildCapabilitySnapshot', () => {
       webkitSpeechRecognition: function () {},
       isSecureContext: false,
     })
-    vi.stubGlobal('navigator', {
-      onLine: true,
-      permissions: undefined,
-      mediaDevices: undefined,
-    })
+    vi.stubGlobal(
+      'navigator',
+      chromeNavigator({
+        onLine: true,
+        permissions: undefined,
+        mediaDevices: undefined,
+      }),
+    )
 
     const snapshot = await buildCapabilitySnapshot()
 

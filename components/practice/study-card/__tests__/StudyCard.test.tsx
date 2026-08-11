@@ -81,6 +81,28 @@ describe("StudyCard", () => {
     expect(onOmit).toHaveBeenCalledOnce();
   });
 
+  it("renders the known-word claim as a centered, keyboard-accessible secondary action", () => {
+    render(
+      <StudyCard
+        model={minimal}
+        onContinue={() => {}}
+        onListen={() => {}}
+        onOmit={() => {}}
+      />,
+    );
+
+    expect(screen.getByRole("button", { name: /ya conozco esta palabra/i })).toHaveClass(
+      "self-center",
+      "min-h-11",
+      "min-w-11",
+      "font-normal",
+      "text-fg-muted",
+      "hover:bg-surface-sunken",
+      "hover:text-fg",
+      "focus-ring",
+    );
+  });
+
   it("uses claim copy that does not promise to skip the word", () => {
     render(
       <StudyCard
@@ -132,4 +154,48 @@ describe("StudyCard", () => {
     fireEvent.click(screen.getByRole("button", { name: /sí, pausar/i }));
     expect(onArchive).toHaveBeenCalledOnce();
   });
+
+  it("keeps a repeated definition out of the hero and collapses pronunciation", () => {
+    render(
+      <StudyCard
+        model={{
+          word: 'the',
+          study: {
+            translation: ['el', 'la', 'los', 'las'],
+            definitionEs: 'Se usa cuando ya se sabe de cuál hablas.',
+            usageRuleEs: 'Se omite al hablar en general; se usa cuando ya se sabe de cuál hablas.',
+            pronunciation: {
+              soundAnchors: [],
+              variants: [{
+                id: 'before_consonant',
+                labelEs: 'Antes de sonido de consonante',
+                ipa: '/ðə/',
+                spokenExample: { text: 'the book', highlights: [{ start: 0, end: 3 }] },
+                ttsText: 'the book',
+                anchorIds: [],
+              }],
+            },
+            contrasts: {
+              titleEs: 'En inglés se omite',
+              pairs: [{
+                pattern: 'omission',
+                spanish: { text: 'Me gusta el café', highlights: [{ start: 9, end: 11 }] },
+                english: { text: 'I like coffee', highlights: [] },
+                ttsText: 'I like coffee',
+              }],
+            },
+          },
+        }}
+        onContinue={() => {}}
+        onListen={() => {}}
+      />,
+    )
+
+    expect(screen.queryAllByText('Se usa cuando ya se sabe de cuál hablas.')).toHaveLength(0)
+    expect(screen.getByText('Cuándo se usa')).toBeInTheDocument()
+    expect(screen.getByText(/Se omite al hablar en general/)).toBeInTheDocument()
+    expect(screen.queryByText('En inglés se omite')).not.toBeInTheDocument()
+    expect(screen.getByText('Aquí no va “the”.')).toBeInTheDocument()
+    expect(screen.getByText('Cómo suena').closest('details')).not.toHaveAttribute('open')
+  })
 });

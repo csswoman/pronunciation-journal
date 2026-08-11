@@ -81,6 +81,10 @@ describe('isPermanentError', () => {
     expect(isPermanentError('insert or update violates foreign key constraint', '23503')).toBe(true)
   })
 
+  it('returns true for a PostgREST schema-cache mismatch', () => {
+    expect(isPermanentError("Could not find the 'rendered_mode' column", 'PGRST204')).toBe(true)
+  })
+
   it('does NOT classify duplicate-key code 23505 as permanent on its own — flushOutboxInternal decides that per-entry via classifyUniqueViolationAsIdempotentSuccess', () => {
     expect(isPermanentError('duplicate key value violates unique constraint', '23505')).toBe(false)
   })

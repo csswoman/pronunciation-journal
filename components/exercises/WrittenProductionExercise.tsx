@@ -14,7 +14,8 @@
 // </WrittenProductionExercise>
 
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
-import { PillButton } from '@/components/ui/PillButton'
+import Button from '@/components/ui/Button'
+import { PracticeActionBar, PracticeContinueButton } from '@/components/practice/session/PracticeActionBar'
 import { ProductionFeedback } from '@/components/exercises/ProductionFeedback'
 import { ProductionHint } from '@/components/exercises/ProductionHint'
 import { ProductionTaskHeader } from '@/components/exercises/ProductionTaskHeader'
@@ -160,15 +161,15 @@ export function WrittenProductionExercise({ exercise, onResult, onSkip }: Props)
           )}
 
           <div className="flex flex-col gap-2">
-            <PillButton
+            <Button
               variant="primary"
-              size="md"
-              className="min-h-11 w-full"
+              size="lg"
+              fullWidth
               onClick={() => void handleSubmit()}
               disabled={!text.trim() || grading || !online}
             >
               {grading ? 'Corrigiendo…' : 'Enviar'}
-            </PillButton>
+            </Button>
             {onSkip && (
               <button
                 type="button"
@@ -187,24 +188,12 @@ export function WrittenProductionExercise({ exercise, onResult, onSkip }: Props)
       {grade && (
         <>
           <ProductionFeedback grade={grade} />
-          <div className="flex w-full flex-col gap-2">
-            <PillButton
-              variant="primary"
-              size="md"
-              className="min-h-11 w-full"
-              onClick={handleContinue}
-            >
-              Continuar
-            </PillButton>
-            <PillButton
-              variant="outline"
-              size="md"
-              className="min-h-11 w-full"
-              onClick={handleRetry}
-            >
+          <PracticeActionBar>
+            <Button variant="secondary" size="lg" fullWidth onClick={handleRetry}>
               Intentar de nuevo
-            </PillButton>
-          </div>
+            </Button>
+            <PracticeContinueButton onClick={handleContinue} />
+          </PracticeActionBar>
         </>
       )}
     </div>

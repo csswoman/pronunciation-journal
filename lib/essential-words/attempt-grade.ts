@@ -3,6 +3,27 @@
 // SM-2 -> FSRS migration (Fase C) a one-file change instead of a rewrite of
 // every card.
 
+export type AttemptResult = 'correcto' | 'casi' | 'incorrecto'
+export type AttemptWordCategory = 'ok' | 'spelling' | 'phonetic_substitution' | 'omission' | 'insertion' | 'grammatical' | 'guess' | 'ortografia' | 'no_percibida' | 'sobrante'
+export type AttemptSkill = 'listening' | 'production'
+export type AttemptSkillVerdict = 'acierto' | 'fallo' | 'neutro'
+
+/** Diagnostic evidence that can later be routed to a skill-specific item. */
+export interface AttemptWordEvidence {
+  expected?: string
+  written?: string
+  categoria: AttemptWordCategory
+  isTarget?: boolean
+  expectedIpa?: string
+  writtenIpa?: string
+  contrastId?: string
+}
+
+export interface AttemptSkillEvidence {
+  habilidad: AttemptSkill
+  veredicto: AttemptSkillVerdict
+}
+
 /** What actually happened on one graded attempt. Cards build this; nothing
  * downstream should reconstruct it from partial data. */
 export interface AttemptOutcome {
@@ -19,6 +40,16 @@ export interface AttemptOutcome {
   firstTryFailed: boolean;
   /** Time from render/first-focus to submit, milliseconds. */
   latencyMs: number;
+  /** Optional diagnostic detail. Existing exercise producers remain valid. */
+  resultado?: AttemptResult
+  palabras?: AttemptWordEvidence[]
+  errorDominante?: Exclude<AttemptWordCategory, 'ok'>
+  evidencia?: AttemptSkillEvidence[]
+  /** Global listening tier rendered for this attempt. */
+  listeningTier?: 1 | 2 | 3
+  /** Contrast used to choose the blank(s), when the exercise has one. */
+  focusContrastId?: string
+  guessBlankKeys?: Array<{ sentenceId: string; tokenIndex: number }>
 }
 
 export type Grade = "Again" | "Hard" | "Good" | "Easy";

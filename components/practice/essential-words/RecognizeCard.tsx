@@ -17,9 +17,14 @@ import type { EssentialWordMode } from '@/lib/essential-words/exercise-modes'
 import { recognizePromptFor } from '@/lib/essential-words/recognize-prompt'
 import { ExercisePhaseLabel } from './ExercisePhaseLabel'
 import { RecognizeOptionGrid } from './RecognizeOptionGrid'
+import { ArchiveConfirmAction } from '@/components/practice/study-card/ArchiveConfirmAction'
 import { InlineFeedback } from '@/components/practice/session/InlineFeedback'
 import { useEnterToContinue } from '@/hooks/useEnterToContinue'
-import Button from '@/components/ui/Button'
+import {
+  PracticeActionBar,
+  PracticeContinueButton,
+  PracticeExerciseCard,
+} from '@/components/practice/session/PracticeActionBar'
 import type { AttemptOutcome } from '@/lib/essential-words/attempt-grade'
 import type { EssentialWord } from '@/lib/essential-words/types'
 
@@ -93,17 +98,16 @@ export function RecognizeCard({
   if (!prompt) return null
 
   return (
-    <div className="flex w-full max-w-md flex-col items-center gap-4 rounded-lg border border-border-subtle bg-surface-raised layout-card-pad">
-      <ExercisePhaseLabel label={levelLabel} onArchive={onArchive} />
+    <PracticeExerciseCard className="max-w-md">
+      <ExercisePhaseLabel label={levelLabel} />
 
-      <p className="m-0 w-full text-center text-body text-fg">{prompt.instruction}</p>
-
-      <div className="w-full rounded-lg border border-border bg-surface px-4 py-4">
+      <div className="flex w-full flex-col items-center gap-2 text-center">
+        <p className="m-0 text-label font-semibold text-fg">{prompt.instruction}</p>
         <p
           className={
             prompt.variant === 'cloze'
-              ? 'm-0 text-left text-body-lg leading-relaxed text-pretty text-fg'
-              : 'm-0 text-center text-body-lg leading-relaxed text-balance text-fg'
+              ? 'm-0 max-w-[42ch] text-left text-h3 font-medium leading-relaxed text-pretty text-fg'
+              : 'm-0 max-w-[42ch] self-center text-center text-h3 font-medium leading-relaxed text-balance text-fg'
           }
         >
           {prompt.prompt}
@@ -117,15 +121,21 @@ export function RecognizeCard({
         onChoose={handleChoose}
       />
 
+      {!chosen && onArchive && (
+        <div className="flex w-full justify-center pt-space-2">
+          <ArchiveConfirmAction onArchive={onArchive} label="Pausar esta palabra" />
+        </div>
+      )}
+
       {chosen && (
         <InlineFeedback isCorrect={chosen.toLowerCase() === entry.word.toLowerCase()} />
       )}
 
       {chosen && onContinue && (
-        <Button type="button" variant="primary" size="lg" className="w-full" onClick={onContinue} disabled={isContinuing} isLoading={isContinuing}>
-          Continuar
-        </Button>
+        <PracticeActionBar>
+          <PracticeContinueButton onClick={onContinue} disabled={isContinuing} isLoading={isContinuing} />
+        </PracticeActionBar>
       )}
-    </div>
+    </PracticeExerciseCard>
   )
 }

@@ -1,61 +1,66 @@
 import { describe, expect, it } from 'vitest'
-import { parseMissionLaunch, type MissionLaunchSource } from '../launch'
+import {
+  missionForTarget,
+  parseMissionLaunch,
+  reconcileMissionLaunch,
+  type MissionLaunchSource,
+} from '../launch'
+import type { MissionOutcome } from '../outcome'
 
-describe('parseMissionLaunch', () => {
-  it('parses a full launch payload', () => {
-    const launch = parseMissionLaunch({ missionId: 'roleplay.cafe', targetIds: ['segmental.phoneme./ə/'], source: 'route' })
+const TARGET = 'segmental.phoneme./ə/'
 
-    expect(launch).toEqual({ missionId: 'roleplay.cafe', targetIds: ['segmental.phoneme./ə/'], source: 'route' })
+function outcome(overrides: Partial<MissionOutcome> = {}): MissionOutcome {
+  return {
+    missionId: 'roleplay.airport',
+    goalAchieved: true,
+    intelligibilityEvidence: { attempts: [], scoredCount: 1 },
+    targetEvidence: [{ targetId: TARGET as never, outcome: 'needs_more_evidence' }],
+    repairUsed: false,
+    unscoredReasons: [],
+    ...overrides,
+  }
+}
+
+describe('canonical mission launches', () => {
+  it('preserves exact route target identity', () => {
+    const launch = parseMissionLaunch({ missionId: 'roleplay.airport', targetIds: [TARGET], source: 'route' })
+    expect(launch).toMatchObject({ missionId: 'roleplay.airport', targetIds: [TARGET], source: 'route' })
   })
 
-  it('defaults targetIds to an empty array when omitted', () => {
-    const launch = parseMissionLaunch({ missionId: 'roleplay.cafe', source: 'coach' })
-
-    expect(launch.targetIds).toEqual([])
+  it('requires the originating daily step and exact targets', () => {
+    expect(() => parseMissionLaunch({ missionId: 'roleplay.airport', targetIds: [TARGET], source: 'daily' })).toThrow(/step id/)
+    expect(() => parseMissionLaunch({ missionId: 'roleplay.airport', source: 'tracking' })).toThrow(/exact target/)
   })
 
-  it('rejects an unknown source', () => {
-    expect(() => parseMissionLaunch({ missionId: 'roleplay.cafe', source: 'not-a-source' as MissionLaunchSource })).toThrow()
+  it('rejects unknown sources, missions, targets, and targets from another mission', () => {
+    expect(() => parseMissionLaunch({ missionId: 'roleplay.airport', source: 'bad' as MissionLaunchSource })).toThrow()
+    expect(() => parseMissionLaunch({ missionId: 'missing', source: 'coach' })).toThrow()
+    expect(() => parseMissionLaunch({ missionId: 'roleplay.airport', targetIds: ['missing.target'], source: 'route' })).toThrow()
+    expect(() => parseMissionLaunch({ missionId: 'roleplay.airport', targetIds: ['connected.linking'], source: 'route' })).toThrow()
   })
 
-  it('rejects an unknown missionId', () => {
-    expect(() => parseMissionLaunch({ missionId: 'not.a.mission', source: 'coach' })).toThrow()
+  it('finds only authored target-to-mission links', () => {
+    expect(missionForTarget(TARGET)?.id).toBe('roleplay.airport')
+    expect(missionForTarget('missing.target')).toBeNull()
   })
 })
 
-describe('parseMissionLaunch — per-source contracts', () => {
-  it('route launches carry the transfer step target ids', () => {
-    const launch = parseMissionLaunch({
-      missionId: 'roleplay.cafe',
-      targetIds: ['segmental.contrast.iː|ɪ'],
-      source: 'route',
-    })
-
-    expect(launch.source).toBe('route')
-    expect(launch.targetIds).toContain('segmental.contrast.iː|ɪ')
+describe('mission launch reconciliation', () => {
+  const launch = parseMissionLaunch({
+    launchId: 'daily-launch-1',
+    missionId: 'roleplay.airport',
+    targetIds: [TARGET],
+    source: 'daily',
+    stepId: 'mission:schwa',
   })
 
-  it('daily launches carry no target ids unless explicitly seeded', () => {
-    const launch = parseMissionLaunch({ missionId: 'roleplay.standup', source: 'daily' })
-
-    expect(launch.source).toBe('daily')
-    expect(launch.targetIds).toEqual([])
+  it('closes only the exact originating daily step after goal plus target evidence', () => {
+    expect(reconcileMissionLaunch(launch, outcome())).toEqual({ completed: true, stepId: 'mission:schwa' })
   })
 
-  it('tracking launches seed target ids without mutating the mission', () => {
-    const launch = parseMissionLaunch({
-      missionId: 'roleplay.doctor',
-      targetIds: ['segmental.contrast.θ|ð'],
-      source: 'tracking',
-    })
-
-    expect(launch.source).toBe('tracking')
-  })
-
-  it('direct coach launches have source coach and no seeded targets', () => {
-    const launch = parseMissionLaunch({ missionId: 'roleplay.airport', source: 'coach' })
-
-    expect(launch.source).toBe('coach')
-    expect(launch.targetIds).toEqual([])
+  it('does not reconcile cancel, another mission, or another target', () => {
+    expect(reconcileMissionLaunch(launch, outcome({ goalAchieved: false }))).toEqual({ completed: false, stepId: null })
+    expect(reconcileMissionLaunch(launch, outcome({ missionId: 'roleplay.cafe' }))).toEqual({ completed: false, stepId: null })
+    expect(reconcileMissionLaunch(launch, outcome({ targetEvidence: [] }))).toEqual({ completed: false, stepId: null })
   })
 })

@@ -1,6 +1,7 @@
 'use client'
 
 import { ListenButton } from '@/components/ui/ListenButton'
+import Button from '@/components/ui/Button'
 import { PillButton } from '@/components/ui/PillButton'
 
 interface Props {
@@ -21,7 +22,7 @@ export function RemediationSequence({ cue, onListen, onSlow, onRetry, onTransfer
       <div className="flex flex-wrap gap-2">
         <ListenButton onPlay={onListen} label="Escuchar modelo" />
         <ListenButton onPlay={onSlow} label="Más lento" />
-        <PillButton variant="primary" size="sm" onClick={onRetry}>Reintentar</PillButton>
+        <Button variant="secondary" size="sm" onClick={onRetry}>Reintentar</Button>
         {onTransfer && <PillButton variant="outline" size="sm" onClick={onTransfer}>Frase variada</PillButton>}
       </div>
     </section>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Sparkles, BookOpen, Briefcase } from "@/components/icons";
+import { Sparkles, BookOpen, Briefcase, ArrowRight } from "@/components/icons";
 import InterviewConfig, { type Scenario, type Level, type Difficulty, CURATED_SCENARIOS } from "./InterviewConfig";
 import InterviewSession, { type InterviewTurn } from "@/components/interview/InterviewSession";
 import type { ExerciseDifficulty } from "@/components/interview/CandidateRecorder";
@@ -132,7 +132,7 @@ export default function InterviewView() {
                 disabled={disabled}
                 className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-body-sm font-semibold transition-[background,color] duration-150 ${ active ? "bg-[var(--surface-raised)] text-[var(--text-primary)] shadow-sm" : disabled ? "text-[var(--text-disabled)] cursor-not-allowed" : "text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]" }`}
               >
-                <Icon size={15} strokeWidth={2} />
+                <Icon size={16} strokeWidth={2} aria-hidden />
                 {label}
               </button>
             );
@@ -169,9 +169,14 @@ export default function InterviewView() {
             color: "var(--on-primary)",
           }}
         >
-          {phase === "loading"
-            ? activeMode === "curated" ? "Loading…" : "Generating…"
-            : "Start interview →"}
+          {phase === "loading" ? (
+            activeMode === "curated" ? "Loading…" : "Generating…"
+          ) : (
+            <span className="inline-flex items-center justify-center gap-1.5">
+              Start interview
+              <ArrowRight size={16} strokeWidth={2.25} aria-hidden />
+            </span>
+          )}
         </button>
       </footer>
     </div>

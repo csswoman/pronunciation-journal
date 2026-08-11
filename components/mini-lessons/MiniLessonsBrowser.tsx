@@ -57,107 +57,152 @@ export default function MiniLessonsBrowser({ lessons }: { lessons: MiniLesson[] 
       />
 
       <div className="mini-lessons__wrap mini-lessons__wrap--shell">
-        <div className="mini-lessons__toolbar" role="group" aria-label="Filtros">
-          <div className="mini-lessons__filter-row">
-            {/* Level chips */}
-            <button
-              type="button"
-              className={cn("mini-lessons__chip", selectedLevel === "all" && "mini-lessons__chip--on")}
-              onClick={() => setSelectedLevel("all")}
+        <div className="mini-lessons__catalog">
+          <aside className="mini-lessons__filters" aria-label="Filtrar lecciones">
+            <div
+              className="mini-lessons__filter-group"
+              role="group"
+              aria-labelledby="lesson-level-filter"
             >
-              Todos
-            </button>
-            {levels.map((level) => (
-              <button
-                key={level}
-                type="button"
-                className={cn("mini-lessons__chip", selectedLevel === level && "mini-lessons__chip--on")}
-                onClick={() => setSelectedLevel(level)}
-              >
-                {MINI_LESSON_LEVEL_LABELS[level]}
-                {levelCounts[level] !== undefined && (
-                  <span className="mini-lessons__chip-count">{levelCounts[level]}</span>
-                )}
-              </button>
-            ))}
+              <span id="lesson-level-filter" className="mini-lessons__filter-label">
+                Nivel
+              </span>
+              <div className="mini-lessons__filter-options">
+                <button
+                  type="button"
+                  className={cn(
+                    "mini-lessons__chip",
+                    selectedLevel === "all" && "mini-lessons__chip--on",
+                  )}
+                  aria-pressed={selectedLevel === "all"}
+                  onClick={() => setSelectedLevel("all")}
+                >
+                  Todos
+                </button>
+                {levels.map((level) => (
+                  <button
+                    key={level}
+                    type="button"
+                    className={cn(
+                      "mini-lessons__chip",
+                      selectedLevel === level && "mini-lessons__chip--on",
+                    )}
+                    aria-pressed={selectedLevel === level}
+                    onClick={() => setSelectedLevel(level)}
+                  >
+                    {MINI_LESSON_LEVEL_LABELS[level]}
+                    {levelCounts[level] !== undefined && (
+                      <span className="mini-lessons__chip-count">{levelCounts[level]}</span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
 
-            <span className="mini-lessons__toolbar-divider" aria-hidden />
-
-            {/* Category chips */}
-            {categories.map((category) => (
-              <button
-                key={category}
-                type="button"
-                className={cn("mini-lessons__chip", selectedCategory === category && "mini-lessons__chip--on")}
-                onClick={() => setSelectedCategory(category)}
-              >
-                {MINI_LESSON_CATEGORY_LABELS[category]}
-                {categoryCounts[category] !== undefined && (
-                  <span className="mini-lessons__chip-count">{categoryCounts[category]}</span>
-                )}
-              </button>
-            ))}
-          </div>
-
-          <div className="mini-lessons__toolbar-meta">
-            <span className="mini-lessons__count">
-              {filteredLessons.length}/{lessons.length}
-            </span>
-            {hasActiveFilters && (
-              <button
-                type="button"
-                className="mini-lessons__toolbar-reset"
-                onClick={clearFilters}
-              >
-                Limpiar
-              </button>
-            )}
-          </div>
-        </div>
-
-        <div className="mini-lessons__grid">
-          {filteredLessons.map((lesson) => (
-            <Link
-              key={lesson.id}
-              href={`/mini-lessons/${lesson.slug}`}
-              className={`mini-lessons__card mini-lessons__card--${lesson.category}`}
+            <div
+              className="mini-lessons__filter-group"
+              role="group"
+              aria-labelledby="lesson-category-filter"
             >
-              <div className="mini-lessons__card-top">
-                <div className="mini-lessons__card-meta">
-                  <span className="mini-lessons__pill mini-lessons__pill--level">
-                    {MINI_LESSON_LEVEL_LABELS[lesson.level]}
-                  </span>
-                  <span className="mini-lessons__pill mini-lessons__pill--category">
-                    {MINI_LESSON_CATEGORY_LABELS[lesson.category]}
-                  </span>
-                </div>
-                <span className="mini-lessons__card-duration">{lesson.duration} min</span>
+              <span id="lesson-category-filter" className="mini-lessons__filter-label">
+                Tema
+              </span>
+              <div className="mini-lessons__filter-options mini-lessons__filter-options--categories">
+                <button
+                  type="button"
+                  className={cn(
+                    "mini-lessons__chip",
+                    selectedCategory === "all" && "mini-lessons__chip--on",
+                  )}
+                  aria-pressed={selectedCategory === "all"}
+                  onClick={() => setSelectedCategory("all")}
+                >
+                  Todas
+                </button>
+                {categories.map((category) => (
+                  <button
+                    key={category}
+                    type="button"
+                    className={cn(
+                      "mini-lessons__chip",
+                      selectedCategory === category && "mini-lessons__chip--on",
+                    )}
+                    aria-pressed={selectedCategory === category}
+                    onClick={() => setSelectedCategory(category)}
+                  >
+                    {MINI_LESSON_CATEGORY_LABELS[category]}
+                    {categoryCounts[category] !== undefined && (
+                      <span className="mini-lessons__chip-count">
+                        {categoryCounts[category]}
+                      </span>
+                    )}
+                  </button>
+                ))}
               </div>
+            </div>
+          </aside>
 
-              <h2 className="mini-lessons__card-title">{lesson.title}</h2>
-              <p className="mini-lessons__card-body">{lesson.body}</p>
+          <section className="mini-lessons__results" aria-label="Lecciones disponibles">
+            <div className="mini-lessons__results-header">
+              <p className="mini-lessons__count" aria-live="polite">
+                {filteredLessons.length} {filteredLessons.length === 1 ? "lección" : "lecciones"}
+              </p>
+              {hasActiveFilters && (
+                <button
+                  type="button"
+                  className="mini-lessons__toolbar-reset"
+                  onClick={clearFilters}
+                >
+                  Limpiar filtros
+                </button>
+              )}
+            </div>
 
-              <div className="mini-lessons__card-foot">
-                <span>{lesson.subtitle}</span>
-                <span className="mini-lessons__card-arrow" aria-hidden>
-                  →
-                </span>
-              </div>
-            </Link>
-          ))}
+            <div className="mini-lessons__grid">
+              {filteredLessons.map((lesson) => (
+                <Link
+                  key={lesson.id}
+                  href={`/mini-lessons/${lesson.slug}`}
+                  className="mini-lessons__card"
+                >
+                  <div className="mini-lessons__card-top">
+                    <div className="mini-lessons__card-meta">
+                      <span className="mini-lessons__pill mini-lessons__pill--level">
+                        {MINI_LESSON_LEVEL_LABELS[lesson.level]}
+                      </span>
+                      <span className="mini-lessons__pill mini-lessons__pill--category">
+                        {MINI_LESSON_CATEGORY_LABELS[lesson.category]}
+                      </span>
+                    </div>
+                    <span className="mini-lessons__card-duration">{lesson.duration} min</span>
+                  </div>
 
-          {filteredLessons.length === 0 && (
-            <p className="mini-lessons__empty">
-              No hay lecciones con estos filtros.{" "}
-              <button
-                type="button"
-                className="mini-lessons__toolbar-reset"
-                onClick={clearFilters}
-              >
-                Ver todas
-              </button>
-            </p>
-          )}
+                  <h2 className="mini-lessons__card-title">{lesson.title}</h2>
+                  <p className="mini-lessons__card-body">{lesson.body}</p>
+
+                  <div className="mini-lessons__card-foot">
+                    <span>{lesson.subtitle}</span>
+                    <span className="mini-lessons__card-arrow" aria-hidden>
+                      →
+                    </span>
+                  </div>
+                </Link>
+              ))}
+
+              {filteredLessons.length === 0 && (
+                <p className="mini-lessons__empty">
+                  No hay lecciones con estos filtros.{" "}
+                  <button
+                    type="button"
+                    className="mini-lessons__toolbar-reset"
+                    onClick={clearFilters}
+                  >
+                    Ver todas
+                  </button>
+                </p>
+              )}
+            </div>
+          </section>
         </div>
       </div>
     </>

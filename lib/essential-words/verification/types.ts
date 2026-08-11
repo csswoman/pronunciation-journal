@@ -1,4 +1,6 @@
 import type { Grade } from "../attempt-grade";
+import type { EssentialWordMode } from "../exercise-modes";
+import type { InitialListeningLevel } from "../initial-listening-level";
 
 export type FsrsCardState = "New" | "Learning" | "Review" | "Relearning";
 export type Skill = "meaning" | "listening" | "production" | "usage";
@@ -63,6 +65,8 @@ interface LearningItemFields {
   repetitions: number;
   lapses: number;
   suspended: boolean;
+  /** One-time legacy seed; only writers for listening assign it. */
+  initialListeningLevel?: InitialListeningLevel;
 }
 
 export type LearningItem =
@@ -109,6 +113,13 @@ export interface AttemptLog {
   observations: SkillObservation[];
   eventType: AttemptEventType;
   occurredAt: string;
+  /** The exercise shown to the learner; distinct from assessment.modality. */
+  renderedMode?: EssentialWordMode;
+  diagnostic?: {
+    tier?: 1 | 2 | 3;
+    focusContrastId?: string;
+    words: Array<{ expected?: string; written?: string; category: string; expectedIpa?: string; writtenIpa?: string; contrastId?: string }>;
+  };
 }
 
 export interface SrsReviewEvent {

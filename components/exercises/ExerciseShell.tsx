@@ -11,6 +11,12 @@
 import { useEffect } from 'react'
 import type React from 'react'
 import { cn } from '@/lib/cn'
+import Button from '@/components/ui/Button'
+import {
+  PracticeActionBar,
+  PracticeContinueButton,
+  PracticeExerciseCard,
+} from '@/components/practice/session/PracticeActionBar'
 import type { PedagogicalFeedback } from '@/lib/practice/types'
 
 export interface ExerciseResult {
@@ -39,6 +45,7 @@ interface ExerciseShellProps {
   onSkip: () => void
   children: React.ReactNode
   hintSlot?: React.ReactNode
+  surface?: 'flat' | 'raised'
 }
 
 export function ExerciseShell({
@@ -52,6 +59,7 @@ export function ExerciseShell({
   onSkip,
   children,
   hintSlot,
+  surface = 'flat',
 }: ExerciseShellProps) {
   const done = result !== null
   const hasDetailedFeedback = !!result?.feedback && Boolean(
@@ -74,23 +82,29 @@ export function ExerciseShell({
     return () => { clearTimeout(timer); window.removeEventListener('keydown', handleKey) }
   }, [done, hasDetailedFeedback, onContinue, result?.isCorrect])
 
-  return (
-    <div className="layout-stack-loose w-full">
+  const content = (
+    <>
       <ShellHeader title={title} eyebrow={eyebrow} description={description} hintSlot={hintSlot} />
       {hint && <HintChip word={hint.word} meaning={hint.meaning} />}
       {children}
       {done && <FeedbackBanner result={result} />}
       {done && (
-        <div className="flex flex-col gap-2">
+        <PracticeActionBar>
           {result.feedback?.canRetry && onRetry && (
             <RetryButton onRetry={onRetry} />
           )}
           <ContinueButton onContinue={onContinue} />
-        </div>
+        </PracticeActionBar>
       )}
       {!done && <SkipButton onSkip={onSkip} />}
-    </div>
+    </>
   )
+
+  if (surface === 'raised') {
+    return <PracticeExerciseCard spacing="roomy" className="items-stretch">{content}</PracticeExerciseCard>
+  }
+
+  return <div className="layout-stack-loose w-full">{content}</div>
 }
 
 function ShellHeader({
@@ -105,8 +119,8 @@ function ShellHeader({
   hintSlot?: React.ReactNode
 }) {
   return (
-    <div className="flex items-start justify-between gap-3">
-      <div className="flex flex-col gap-1">
+    <div className="flex w-full items-start justify-between gap-4">
+      <div className="flex max-w-[65ch] flex-col gap-2">
         {eyebrow && (
           <span className="font-kicker text-accent">
             {eyebrow}
@@ -116,7 +130,7 @@ function ShellHeader({
           {title}
         </p>
         {description && (
-          <p className="text-caption text-fg-muted leading-snug text-pretty">
+          <p className="text-body-sm leading-relaxed text-pretty text-fg-muted">
             {description}
           </p>
         )}
@@ -135,16 +149,16 @@ function SkipButton({ onSkip }: { onSkip: () => void }) {
     <button
       type="button"
       onClick={onSkip}
-      className="w-full text-center font-kicker font-semibold text-fg-subtle transition-opacity hover:opacity-70 cursor-pointer py-1"
+      className="min-h-11 w-full cursor-pointer rounded-md px-3 py-2 text-center text-body-sm font-medium text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg focus-ring"
     >
-      Skip this one
+      Omitir este ejercicio
     </button>
   )
 }
 
 function HintChip({ word, meaning }: { word: string; meaning?: string }) {
   return (
-    <div className="flex items-center gap-2 rounded-[var(--radius-md)] bg-surface-raised px-3 py-2 text-caption">
+    <div className="flex items-center gap-2 rounded-[var(--radius-md)] bg-surface-sunken px-3 py-2 text-body-sm">
       <span className="font-semibold text-fg">{word}</span>
       {meaning && (
         <>
@@ -158,10 +172,10 @@ function HintChip({ word, meaning }: { word: string; meaning?: string }) {
 
 function FeedbackBanner({ result }: { result: ExerciseResult }) {
   const { isCorrect, feedback } = result
-  const status = feedback?.immediate ?? (isCorrect ? 'Well done!' : 'Not quite. Keep going.')
+  const status = feedback?.immediate ?? (isCorrect ? '¡Muy bien!' : 'Aún no. Sigue intentándolo.')
   const expected = feedback?.correction ?? feedback?.expectedAnswer
   return (
-    <div className={cn( 'flex flex-col gap-2 rounded-md border px-4 py-3.5 text-caption', isCorrect ? 'bg-success-soft border-success-border text-success' : 'bg-error-soft border-error-border text-error', )}>
+    <div className={cn( 'flex flex-col gap-3 rounded-md border px-4 py-4 text-body-sm', isCorrect ? 'bg-success-soft border-success-border text-success' : 'bg-error-soft border-error-border text-error', )}>
       <p className="flex items-center gap-2.5 font-semibold">
         <span aria-hidden>{isCorrect ? '✓' : '✗'}</span>
         <span>{status}</span>
@@ -171,19 +185,19 @@ function FeedbackBanner({ result }: { result: ExerciseResult }) {
       )}
       {expected && (
         <p className="leading-relaxed text-fg">
-          <span className="font-semibold">Expected: </span>
+          <span className="font-semibold">Respuesta esperada: </span>
           <span>{expected}</span>
         </p>
       )}
       {feedback?.tip && (
         <p className="leading-relaxed text-fg-muted">
-          <span className="font-semibold text-fg">Tip: </span>
+          <span className="font-semibold text-fg">Pista: </span>
           <span>{feedback.tip}</span>
         </p>
       )}
       {feedback?.example && feedback.example !== expected && (
         <p className="leading-relaxed text-fg-muted">
-          <span className="font-semibold text-fg">Example: </span>
+          <span className="font-semibold text-fg">Ejemplo: </span>
           <span>{feedback.example}</span>
         </p>
       )}
@@ -193,30 +207,14 @@ function FeedbackBanner({ result }: { result: ExerciseResult }) {
 
 function RetryButton({ onRetry }: { onRetry: () => void }) {
   return (
-    <button
-      type="button"
-      onClick={onRetry}
-      className={cn(
-        'w-full rounded-[var(--radius-full)] border border-border-default py-3.5 text-body-sm font-semibold',
-        'bg-surface-raised text-fg transition-all hover:bg-surface-sunken cursor-pointer',
-      )}
-    >
-      Try again
-    </button>
+    <Button type="button" variant="secondary" size="lg" fullWidth onClick={onRetry}>
+      Intentar de nuevo
+    </Button>
   )
 }
 
 function ContinueButton({ onContinue }: { onContinue: () => void }) {
   return (
-    <button
-      type="button"
-      onClick={onContinue}
-      className={cn(
-        'w-full rounded-[var(--radius-full)] py-3.5 text-body-sm font-semibold',
-        'bg-(--cta-bg) text-(--cta-fg) shadow-sm transition-all hover:opacity-90 cursor-pointer',
-      )}
-    >
-      Continue
-    </button>
+    <PracticeContinueButton onClick={onContinue} />
   )
 }

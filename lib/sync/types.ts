@@ -17,9 +17,10 @@ export type SyncTable =
   | 'learning_items'
   | 'attempt_logs'
   | 'srs_review_events'
+  | 'essential_word_blank_quality'
 
 /** RPC functions that can be queued for sync via an 'rpc' operation entry. */
-export type SyncRpc = 'apply_word_bank_rating_event' | 'apply_topic_srs_rating_event'
+export type SyncRpc = 'apply_word_bank_rating_event' | 'apply_topic_srs_rating_event' | 'apply_essential_word_contrast_observation'
 
 /**
  * DML operations supported, plus 'rpc' — an outbox entry whose `payload` is
@@ -79,6 +80,12 @@ export interface SyncOutboxEntry {
   retryCount: number
   /** Human-readable reason for the last failure */
   errorMessage?: string
+  /** Structured remote error code; used only for deterministic recovery. */
+  errorCode?: string
+  /** PostgREST diagnostic context; local-only and never a recovery input. */
+  errorDetails?: string
+  /** PostgREST remediation hint; local-only and never a recovery input. */
+  errorHint?: string
 }
 
 /** Outcome of a single outbox entry's processing within one flush pass. */

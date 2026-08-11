@@ -30,6 +30,90 @@ export type EssentialWordPos = (typeof ESSENTIAL_WORD_POS)[number];
 export interface SentenceVariant {
   sentence: string;
   sentence_ipa: string;
+  tokens?: SentenceToken[];
+}
+
+/** Audited word-level metadata for an authored listening sentence. */
+export interface SentenceToken {
+  start: number;
+  end: number;
+  text: string;
+  normalized: string;
+  ipa: string;
+  role: "content" | "function";
+  contrastIds: string[];
+}
+
+/** Author-authored contrast behaviours. The UI has a fixed treatment for each. */
+export const STUDY_CONTRAST_PATTERNS = [
+  "omission",
+  "addition",
+  "replacement",
+  "false_friend",
+] as const;
+export type StudyContrastPattern = (typeof STUDY_CONTRAST_PATTERNS)[number];
+
+export interface StudySoundAnchor {
+  id: string;
+  ipa: string;
+  explanationEs: string;
+}
+
+export interface StudyPronunciationVariant {
+  id: string;
+  labelEs: string;
+  ipa: string;
+  /** `**focus**` authoring markup; compiled before reaching the card. */
+  spokenExample: string;
+  /** Only when TTS must read something different than the compiled text. */
+  ttsTextOverride?: string;
+  anchorIds: string[];
+}
+
+export interface StudyPronunciation {
+  soundAnchors?: StudySoundAnchor[];
+  variants?: StudyPronunciationVariant[];
+}
+
+export interface StudyExample {
+  /** `**focus**` authoring markup; compiled before reaching the card. */
+  english: string;
+  translationEs: string;
+  variantId?: string;
+  /** Only when TTS must read something different than the compiled text. */
+  ttsTextOverride?: string;
+}
+
+export interface StudyContrastPair {
+  pattern: StudyContrastPattern;
+  /** `**focus**` authoring markup; compiled before reaching the card. */
+  spanish: string;
+  /** `**focus**` authoring markup; compiled before reaching the card. */
+  english: string;
+  /** Required for contrasts whose explanation cannot be generated safely. */
+  explanationEs?: string;
+  /** Only when TTS must read something different than the compiled English text. */
+  ttsTextOverride?: string;
+}
+
+/** Optional pedagogical layer. Entries without it keep the compact legacy card. */
+export interface EssentialWordStudy {
+  definitionEs?: string;
+  translation?: string[];
+  translationNote?: string;
+  spellingVariants?: Array<{ spelling: string; localeEs: string }>;
+  usage?: {
+    /** Shared rule selected from study-rules.ts. */
+    ruleId?: string;
+    /** Word-specific rule when a reusable catalogue entry would be artificial. */
+    ruleEsOverride?: string;
+  };
+  pronunciation?: StudyPronunciation;
+  contrasts?: {
+    titleEs: string;
+    pairs: StudyContrastPair[];
+  };
+  examples?: StudyExample[];
 }
 
 export interface EssentialWord {
@@ -40,14 +124,20 @@ export interface EssentialWord {
   ipa_weak?: string; // solo function words (whitelist en ./weak-forms)
   example_sentence: string; // contiene la palabra; ahí vive la weak form
   sentence_ipa?: string; // obligatorio si hay ipa_weak (Zod refine)
+  example_tokens?: SentenceToken[];
   cefr_level: CefrLevel;
   meaning?: string; // definición corta en inglés (backfill-meaning)
   translation?: string; // traducción al español (backfill-meaning)
   example_sentences?: SentenceVariant[]; // extra sentences beyond example_sentence
+  study?: EssentialWordStudy;
+  /** Words introduced in the same learning unit, not prerequisites. */
+  teachWith?: string[];
 }
 
 export const ESSENTIAL_WORD_PREFIX = "c1k:";
 export const NEW_CARDS_PER_DAY = 10;
+/** A guided session introduces one complete 3-word block: 15 learning actions. */
+export const GUIDED_SESSION_NEW_CARDS = 3;
 export const CHUNK_SIZE = 100;
 export const MAX_CHUNKS = 28;
 

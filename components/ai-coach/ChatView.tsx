@@ -2,8 +2,15 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { AIMessage, ExerciseResult } from "@/lib/ai-practice/types";
+import { cn } from "@/lib/cn";
 import MessageBubble from "./MessageBubble";
 import TypingIndicator from "./TypingIndicator";
+
+// Planned structure:
+// <ChatView>
+//   <MessageStack />
+//   <TypingIndicator />
+// </ChatView>
 
 const MIN_THINKING_MS = 700;
 
@@ -53,7 +60,7 @@ export default function ChatView({
     if (m.role === "tool") return false;
     if (m.role === "user" && m.hidden) return false;
     if (i === messages.length - 1 && m.role === "model") {
-      const hasText = m.contentParts.some(p => p.type === "text" && p.text.trim().length > 0);
+      const hasText = m.contentParts.some((p) => p.type === "text" && p.text.trim().length > 0);
       if (!hasText) return false;
       if (thinkingHold) return false;
       return true;
@@ -63,15 +70,13 @@ export default function ChatView({
 
   const showIndicator = isStreaming || thinkingHold;
 
-  // Compute grouping: is this the last message of a consecutive run from same sender?
   const isLastInGroup = visibleMessages.map((msg, i) => {
     const next = visibleMessages[i + 1];
     return !next || next.role !== msg.role;
   });
 
-  // Gap between messages: small within same sender group, larger on sender change
-  const gapBefore = visibleMessages.map((msg, i) => {
-    if (i === 0) return false;
+  const senderChanged = visibleMessages.map((msg, i) => {
+    if (i === 0) return true;
     return visibleMessages[i - 1].role !== msg.role;
   });
 
@@ -79,12 +84,15 @@ export default function ChatView({
   const indicatorVisible = showIndicator && lastVisible?.role !== "model";
 
   return (
-    <div className="chat-messages-container flex flex-col justify-end h-full py-4">
-      <div className="mt-auto flex flex-col mx-4 sm:mx-5">
+    <div className="chat-messages-container flex h-full min-h-0 flex-col justify-end py-3">
+      <div className="mt-auto flex w-full flex-col px-3 @[22rem]:px-4">
         {visibleMessages.map((msg, i) => (
           <div
             key={i}
-            className={`${gapBefore[i] ? "mt-4" : "mt-1"} ${msg.role === "model" ? "animate-message-in" : ""}`}
+            className={cn(
+              senderChanged[i] ? "mt-4 first:mt-0" : "mt-1.5",
+              msg.role === "model" && "animate-message-in",
+            )}
           >
             <MessageBubble
               message={msg}
@@ -98,13 +106,13 @@ export default function ChatView({
         ))}
 
         {indicatorVisible && (
-          <div className={visibleMessages.length > 0 ? "mt-4" : ""}>
+          <div className={cn(visibleMessages.length > 0 && "mt-4")}>
             <TypingIndicator />
           </div>
         )}
-      </div>
 
-      <div ref={bottomRef} />
+        <div ref={bottomRef} className="h-px shrink-0" aria-hidden />
+      </div>
     </div>
   );
 }

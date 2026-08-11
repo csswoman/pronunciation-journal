@@ -42,6 +42,8 @@ export interface CoursePathLesson {
   title: string;
   /** Matches the grammar deck JSON filename when study content exists */
   slug?: string;
+  /** Canonical theory owner shared with the deck and equivalent mini-lessons. */
+  topicId?: string;
   priority: LessonPriority;
   /** Part of the broad curriculum (p === 0), shown after priority block */
   isOptional: boolean;

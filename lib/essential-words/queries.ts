@@ -18,11 +18,13 @@ import type {
   SrsReviewEvent,
   UsagePayload,
 } from "./verification/types";
+import type { InitialListeningLevel } from "./initial-listening-level";
 
 export interface LearningItemRow {
   id: string; user_id: string; word_id: string; skill: Skill;
   content_origin: LearningItem["contentOrigin"]; generator_provider: "gemini" | null;
   payload: UsagePayload | null; placement_inference: PlacementInference | null;
+  initial_listening_level: InitialListeningLevel | null;
   schedule: ItemSchedule; schedule_kind: ItemSchedule["kind"]; due_at: string | null;
   last_review: string | null; repetitions: number; lapses: number;
   suspended: boolean; updated_at: string;
@@ -30,7 +32,7 @@ export interface LearningItemRow {
 export interface AttemptLogRow {
   id: string; user_id: string; session_id: string; word_id: string;
   assessment: AttemptAssessment; observations: SkillObservation[];
-  event_type: AttemptEventType; occurred_at: string;
+  event_type: AttemptEventType; occurred_at: string; rendered_mode?: AttemptLog["renderedMode"] | null; diagnostic?: AttemptLog["diagnostic"] | null;
 }
 export interface SrsReviewEventRow {
   id: string; user_id: string; attempt_log_id: string; learning_item_id: string;
@@ -42,6 +44,8 @@ export interface AttemptPersistenceBundle {
   attempt: AttemptLog;
   events: SrsReviewEvent[];
   updatedItems: LearningItem[];
+  /** Initial base items written with an evidence-only attempt, without an SRS event. */
+  seedItems?: LearningItem[];
 }
 export interface AttemptLogFilters {
   sessionId?: string;
@@ -79,6 +83,7 @@ export function toLearningItemRow(record: LearningItemRecord): LearningItemRow {
     id: record.id, user_id: record.userId, word_id: record.wordId, skill: record.skill,
     content_origin: record.contentOrigin, generator_provider: record.generatorProvider ?? null,
     payload: record.payload ?? null, placement_inference: record.placementInference ?? null,
+    initial_listening_level: record.skill === "listening" ? record.initialListeningLevel ?? null : null,
     schedule: record.schedule, schedule_kind: record.scheduleKind, due_at: record.dueAt ?? null,
     last_review: record.lastReview ?? null, repetitions: record.repetitions,
     lapses: record.lapses, suspended: record.suspended, updated_at: record.updatedAt,
@@ -101,6 +106,9 @@ export function fromLearningItemRow(
     ...(row.generator_provider ? { generatorProvider: row.generator_provider } : {}),
     ...(row.payload ? { payload: row.payload } : {}),
     ...(row.placement_inference ? { placementInference: row.placement_inference } : {}),
+    ...(row.skill === "listening" && row.initial_listening_level
+      ? { initialListeningLevel: row.initial_listening_level }
+      : {}),
     schedule: row.schedule, ...(row.last_review ? { lastReview: row.last_review } : {}),
     repetitions: row.repetitions, lapses: row.lapses, suspended: row.suspended,
   } as LearningItem;
@@ -109,12 +117,14 @@ export function fromLearningItemRow(
 export const toAttemptLogRow = (record: AttemptLogRecord): AttemptLogRow => ({
   id: record.id, user_id: record.userId, session_id: record.sessionId, word_id: record.wordId,
   assessment: record.assessment, observations: record.observations,
-  event_type: record.eventType, occurred_at: record.occurredAt,
+  event_type: record.eventType, occurred_at: record.occurredAt, rendered_mode: record.renderedMode ?? null, diagnostic: record.diagnostic ?? null,
 });
 
 export const fromAttemptLogRow = (row: AttemptLogRow): AttemptLog => ({
   id: row.id, sessionId: row.session_id, wordId: row.word_id, assessment: row.assessment,
   observations: row.observations, eventType: row.event_type, occurredAt: row.occurred_at,
+  ...(row.rendered_mode ? { renderedMode: row.rendered_mode } : {}),
+  ...(row.diagnostic ? { diagnostic: row.diagnostic } : {}),
 });
 
 export const toSrsReviewEventRow = (record: SrsReviewEventRecord): SrsReviewEventRow => ({
@@ -223,6 +233,9 @@ export function validateAttemptBundle(bundle: AttemptPersistenceBundle): void {
   if (bundle.events.some((event) => !itemIds.has(event.learningItemId))) {
     throw new Error("Evento sin ítem actualizado correspondiente");
   }
+  if ((bundle.seedItems ?? []).some((item) => itemIds.has(item.id))) {
+    throw new Error("Ítem inicial duplicado en el bundle");
+  }
 }
 
 export async function saveAttemptBundle(
@@ -232,7 +245,8 @@ export async function saveAttemptBundle(
   validateAttemptBundle(bundle);
   const attempt = toAttemptLogRecord(bundle.attempt, userId);
   const events = bundle.events.map((event) => toSrsReviewEventRecord(event, userId));
-  const items = bundle.updatedItems.map((item) => toLearningItemRecord(item, userId, bundle.attempt.occurredAt));
+  const items = [...(bundle.seedItems ?? []), ...bundle.updatedItems]
+    .map((item) => toLearningItemRecord(item, userId, bundle.attempt.occurredAt));
   const base = { userId, status: "pending" as const, createdAt: bundle.attempt.occurredAt, retryCount: 0, bundleId: bundle.attempt.id };
   const outbox: SyncOutboxEntry[] = [
     ...items.map((record) => ({ ...base, table: "learning_items" as const, operation: "upsert" as const,

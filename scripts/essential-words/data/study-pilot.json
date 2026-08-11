@@ -1,0 +1,152 @@
+{
+  "version": 1,
+  "editorialNotes": [
+    "for figura como conjunction en la fuente léxica, pero su tarjeta piloto enseña el uso preposicional; auditar POS pedagógico en una tarea aparte."
+  ],
+  "exclusions": [
+    {
+      "word": "be",
+      "reasonEs": "Clase no cubierta: los verbos irregulares de alta frecuencia necesitan un contrato de forms propio (be, have, do, go)."
+    },
+    {
+      "word": "go",
+      "reasonEs": "Clase no cubierta: los verbos irregulares de alta frecuencia necesitan un contrato de forms propio (be, have, do, go)."
+    }
+  ],
+  "entries": [
+    {
+      "word": "depend",
+      "study": {
+        "definitionEs": "Necesitar que alguien o algo haga posible un resultado.",
+        "translation": ["depender"],
+        "translationNote": "se construye con on, no con de",
+        "usage": {"ruleEsOverride": "Después de depend se usa on."},
+        "contrasts": {"titleEs": "La preposición cambia", "pairs": [{"pattern": "replacement", "spanish": "Depende **de** ti", "english": "It depends **on** you", "explanationEs": "Después de depend se usa on."}]},
+        "examples": [{"english": "I **depend** on my team.", "translationEs": "Dependo de mi equipo."}]
+      }
+    },
+    {
+      "word": "assist",
+      "study": {
+        "definitionEs": "Ayudar a una persona a hacer algo.",
+        "translation": ["ayudar", "asistir"],
+        "translationNote": "assist es ayudar; para ir a un evento se usa attend",
+        "contrasts": {"titleEs": "No es un falso amigo directo", "pairs": [{"pattern": "false_friend", "spanish": "Ella **asiste** a la reunión", "english": "She **attends** the meeting", "explanationEs": "Attend significa ir a un evento; assist significa ayudar."}]},
+        "examples": [{"english": "Can you **assist** me?", "translationEs": "¿Puedes ayudarme?"}]
+      }
+    },
+    {
+      "word": "actually",
+      "study": {
+        "definitionEs": "En realidad; se usa para corregir o precisar una idea.",
+        "translation": ["en realidad", "de hecho"],
+        "contrasts": {"titleEs": "No significa actualmente", "pairs": [{"pattern": "false_friend", "spanish": "**Actualmente** vivo aquí", "english": "I **currently** live here", "explanationEs": "Actually significa en realidad, no actualmente."}]},
+        "examples": [{"english": "I **actually** like coffee.", "translationEs": "En realidad sí me gusta el café."}]
+      }
+    },
+    {
+      "word": "realize",
+      "study": {
+        "definitionEs": "Darse cuenta o comprender algo.",
+        "translation": ["darse cuenta"],
+        "spellingVariants": [{"spelling": "realise", "localeEs": "inglés británico"}],
+        "usage": {"ruleEsOverride": "En inglés cotidiano, realize significa darse cuenta; no significa «realizar»."},
+        "contrasts": {"titleEs": "No significa realizar", "pairs": [{"pattern": "false_friend", "spanish": "Voy a **realizar** el proyecto", "english": "I will **complete** the project", "explanationEs": "Para realizar una tarea, el verbo depende de la acción: complete, carry out o make."}]},
+        "examples": [{"english": "I **realize** my mistake now.", "translationEs": "Ahora me doy cuenta de mi error."}]
+      }
+    },
+    {
+      "word": "library",
+      "study": {
+        "definitionEs": "Lugar donde se prestan o consultan libros.",
+        "translation": ["biblioteca"],
+        "contrasts": {"titleEs": "No es una librería", "pairs": [{"pattern": "false_friend", "spanish": "La **librería** vende libros", "english": "The **bookstore** sells books", "explanationEs": "Library es biblioteca; bookstore es librería."}]},
+        "examples": [{"english": "The **library** is quiet.", "translationEs": "La biblioteca es silenciosa."}]
+      }
+    },
+    {
+      "word": "information",
+      "study": {"definitionEs": "Datos o detalles que ayudan a saber algo.", "translation": ["información"], "usage": {"ruleId": "uncountable_no_plural"}, "contrasts": {"titleEs": "No lleva plural", "pairs": [{"pattern": "replacement", "spanish": "Necesito más **informaciones**", "english": "I need more **information**", "explanationEs": "Information no lleva s."}]}, "examples": [{"english": "This **information** is useful.", "translationEs": "Esta información es útil."}]}
+    },
+    {
+      "word": "advice",
+      "study": {"definitionEs": "Recomendación sobre qué hacer.", "translation": ["consejo"], "usage": {"ruleId": "uncountable_no_plural"}, "contrasts": {"titleEs": "No lleva plural", "pairs": [{"pattern": "replacement", "spanish": "Tus **consejos** ayudan", "english": "Your **advice** helps", "explanationEs": "Advice no lleva s."}]}, "examples": [{"english": "Your **advice** helps me.", "translationEs": "Tu consejo me ayuda."}]}
+    },
+    {
+      "word": "furniture",
+      "study": {"definitionEs": "Conjunto de muebles de una casa o lugar.", "translation": ["muebles"], "usage": {"ruleId": "uncountable_no_plural"}, "contrasts": {"titleEs": "No lleva plural", "pairs": [{"pattern": "replacement", "spanish": "Los **muebles** son nuevos", "english": "The **furniture** is new", "explanationEs": "Furniture no lleva s."}]}, "examples": [{"english": "The **furniture** is new.", "translationEs": "Los muebles son nuevos."}]}
+    },
+    {
+      "word": "news",
+      "study": {"definitionEs": "Información reciente sobre hechos importantes.", "translation": ["noticias"], "usage": {"ruleId": "news_singular"}, "contrasts": {"titleEs": "Termina en s, pero es singular", "pairs": [{"pattern": "replacement", "spanish": "Las noticias **son** buenas", "english": "The news **is** good", "explanationEs": "News usa is, no are."}]}, "examples": [{"english": "The **news** is good.", "translationEs": "Las noticias son buenas."}]}
+    },
+    {
+      "word": "on",
+      "study": {"definitionEs": "En contacto con una superficie; también aparece en expresiones fijas.", "translation": ["en", "sobre"], "usage": {"ruleEsOverride": "Para una superficie, usa on; no in."}, "contrasts": {"titleEs": "Superficie", "pairs": [{"pattern": "replacement", "spanish": "El libro está **en** la mesa", "english": "The book is **on** the table", "explanationEs": "On indica contacto con una superficie."}]}, "examples": [{"english": "The book is **on** the table.", "translationEs": "El libro está sobre la mesa."}]}
+    },
+    {
+      "word": "to",
+      "study": {
+        "definitionEs": "Indica dirección, destino o propósito.",
+        "translation": ["a", "para"],
+        "usage": {"ruleEsOverride": "Para ir a un lugar, usa to; no for."},
+        "contrasts": {"titleEs": "Destino", "pairs": [{"pattern": "replacement", "spanish": "Voy **a** la escuela", "english": "I go **to** school", "explanationEs": "To indica destino."}]},
+        "pronunciation": {"soundAnchors": [{"id": "schwa", "ipa": "/ə/", "explanationEs": "vocal relajada, parecida a una e muy breve"}], "variants": [{"id": "before_consonant_sound", "labelEs": "Antes de sonido de consonante", "ipa": "/tə/", "spokenExample": "**to** school", "anchorIds": ["schwa"]}]},
+        "examples": [{"english": "I go **to** school.", "translationEs": "Voy a la escuela.", "variantId": "before_consonant_sound"}]
+      }
+    },
+    {
+      "word": "in",
+      "study": {"definitionEs": "Dentro de un lugar, periodo o situación.", "translation": ["en", "dentro de"], "usage": {"ruleEsOverride": "Para días de la semana, usa on; no in."}, "contrasts": {"titleEs": "Días", "pairs": [{"pattern": "replacement", "spanish": "**El lunes** trabajo", "english": "I work **on Monday**", "explanationEs": "Para días, usa on."}]}, "examples": [{"english": "She is **in** the room.", "translationEs": "Ella está en la habitación."}]}
+    },
+    {
+      "word": "of",
+      "study": {"definitionEs": "Relaciona una parte, cantidad o cosa con otra.", "translation": ["de"], "usage": {"ruleEsOverride": "«De» no se traduce automáticamente como of: usa from para origen y ’s para posesión de personas."}, "contrasts": {"titleEs": "No traduzcas de automáticamente", "pairs": [{"pattern": "replacement", "spanish": "Soy **de** Perú", "english": "I'm **from** Peru", "explanationEs": "Para origen, usa from."}, {"pattern": "replacement", "spanish": "El libro **de** Juan", "english": "Juan**'s** book", "explanationEs": "Para posesión de una persona, usa ’s."}]}, "examples": [{"english": "A cup **of** tea, please.", "translationEs": "Una taza de té, por favor."}]}
+    },
+    {
+      "word": "for",
+      "study": {"definitionEs": "Indica destinatario, propósito o duración.", "translation": ["para", "por"], "usage": {"ruleEsOverride": "Para destinatario o beneficio, usa for; no to."}, "contrasts": {"titleEs": "Destinatario", "pairs": [{"pattern": "replacement", "spanish": "Este regalo es **para** ti", "english": "This gift is **for** you", "explanationEs": "For indica para quién es algo."}]}, "examples": [{"english": "This gift is **for** you.", "translationEs": "Este regalo es para ti."}]}
+    },
+    {
+      "word": "make",
+      "study": {"definitionEs": "Crear, producir o causar algo.", "translation": ["hacer", "crear"], "translationNote": "pasado: made", "usage": {"ruleEsOverride": "Para crear o preparar algo, usa make; no do."}, "contrasts": {"titleEs": "Crear", "pairs": [{"pattern": "replacement", "spanish": "Hago **la cama**", "english": "I **make** the bed", "explanationEs": "Make se usa para crear o preparar."}]}, "examples": [{"english": "They **make** bread here.", "translationEs": "Ellos hacen pan aquí."}]}
+    },
+    {
+      "word": "take",
+      "study": {"definitionEs": "Tomar, llevar o dedicar tiempo a algo.", "translation": ["tomar", "llevar"], "translationNote": "pasado: took", "usage": {"ruleEsOverride": "Para consumir comida o bebida, normalmente usa have; no take."}, "contrasts": {"titleEs": "Comida y bebida", "pairs": [{"pattern": "replacement", "spanish": "Tomo **café**", "english": "I **have coffee**", "explanationEs": "Have es la opción habitual para comida y bebida."}]}, "examples": [{"english": "Please **take** this book.", "translationEs": "Por favor, toma este libro."}]}
+    },
+    {
+      "word": "work",
+      "study": {"definitionEs": "Trabajar o funcionar correctamente.", "translation": ["trabajar", "funcionar"], "usage": {"ruleEsOverride": "Para un empleo concreto, usa job; work es trabajo en general."}, "contrasts": {"titleEs": "Trabajo general o empleo", "pairs": [{"pattern": "replacement", "spanish": "Tengo un **trabajo**", "english": "I have a **job**", "explanationEs": "Job es un empleo concreto."}]}, "examples": [{"english": "This key does not **work**.", "translationEs": "Esta llave no funciona."}]}
+    },
+    {
+      "word": "the",
+      "teachWith": ["a", "an"],
+      "study": {
+        "definitionEs": "Se usa cuando ya se sabe de cuál hablas.",
+        "translation": ["el", "la", "los", "las"],
+        "translationNote": "igual para singular y plural, masculino y femenino",
+        "usage": {"ruleId": "article_general_vs_specific"},
+        "pronunciation": {"soundAnchors": [{"id": "voiced_th", "ipa": "/ð/", "explanationEs": "como la d suave de nada, no la d inicial de dos"}], "variants": [{"id": "before_consonant_sound", "labelEs": "Antes de sonido de consonante", "ipa": "/ðə/", "spokenExample": "**the** book", "anchorIds": ["voiced_th"]}, {"id": "before_vowel_sound", "labelEs": "Antes de sonido de vocal", "ipa": "/ði/", "spokenExample": "**the** apple", "anchorIds": ["voiced_th"]}]},
+        "contrasts": {"titleEs": "En inglés se omite", "pairs": [{"pattern": "omission", "spanish": "Me gusta **el** café", "english": "I like coffee"}]},
+        "examples": [{"english": "**The** book is heavy.", "translationEs": "El libro es pesado.", "variantId": "before_consonant_sound"}, {"english": "**The** apple is red.", "translationEs": "La manzana es roja.", "variantId": "before_vowel_sound"}]
+      }
+    },
+    {
+      "word": "book",
+      "study": {"definitionEs": "Conjunto de páginas para leer.", "translation": ["libro"], "examples": [{"english": "This **book** is interesting.", "translationEs": "Este libro es interesante."}]}
+    },
+    {
+      "word": "small",
+      "study": {"definitionEs": "De tamaño reducido.", "translation": ["pequeño", "pequeña"], "examples": [{"english": "The box is **small**.", "translationEs": "La caja es pequeña."}]}
+    },
+    {
+      "word": "water",
+      "study": {"definitionEs": "Líquido que bebemos y usamos todos los días.", "translation": ["agua"], "examples": [{"english": "Drink **water** every day.", "translationEs": "Bebe agua todos los días."}]}
+    },
+    {
+      "word": "red",
+      "study": {"definitionEs": "Del color de una manzana roja.", "translation": ["rojo", "roja"], "examples": [{"english": "She has a **red** dress.", "translationEs": "Ella tiene un vestido rojo."}]}
+    }
+  ]
+}

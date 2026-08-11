@@ -35,7 +35,7 @@ describe('computeFluencyScores', () => {
 
   it('scores pronunciation from phoneme answers', () => {
     const answers = Array.from({ length: 10 }, () =>
-      answer({ exerciseTypeId: 4, context: 'sound_lab', isCorrect: true }),
+      answer({ exerciseTypeId: 3, context: 'sound_lab', isCorrect: true }),
     )
     const scores = computeFluencyScores({ ...baseInput, answers })
     expect(scores.pronunciation).toBeGreaterThan(0)
@@ -44,7 +44,7 @@ describe('computeFluencyScores', () => {
 
   it('scores vocabulary from essential-words context', () => {
     const answers = Array.from({ length: 8 }, () =>
-      answer({ exerciseTypeId: 10, context: 'essential-words', isCorrect: true }),
+      answer({ exerciseTypeId: 10, context: 'essential-words', exercisePayload: { mode: 'speak_sentence' }, isCorrect: true }),
     )
     const scores = computeFluencyScores({
       ...baseInput,
@@ -62,6 +62,30 @@ describe('computeFluencyScores', () => {
       wordsByStatus: { new: 2, learning: 3, review: 5, mastered: 10 },
     })
     expect(scores.vocabulary).toBeGreaterThan(0)
+  })
+
+  it('does not turn lesson completion into grammar or reading evidence', () => {
+    const scores = computeFluencyScores({ ...baseInput, answers: [], lessonsCompleted: 10 })
+    expect(scores.grammar).toBe(0)
+    expect(scores.reading).toBe(0)
+  })
+
+  it('uses the canonical ids for modern exercise types', () => {
+    const scores = computeFluencyScores({
+      ...baseInput,
+      answers: [19, 20, 21, 22, 23].map((exerciseTypeId) => answer({ exerciseTypeId, context: 'practice' })),
+    })
+    expect(scores.grammar).toBeGreaterThan(0)
+    expect(scores.vocabulary).toBeGreaterThan(0)
+    expect(scores.speaking).toBeGreaterThan(0)
+  })
+
+  it('does not infer reading from course context alone', () => {
+    const scores = computeFluencyScores({
+      ...baseInput,
+      answers: [answer({ exerciseTypeId: 10, context: 'courses' })],
+    })
+    expect(scores.reading).toBe(0)
   })
 })
 

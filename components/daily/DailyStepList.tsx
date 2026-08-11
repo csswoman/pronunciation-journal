@@ -4,8 +4,6 @@ import { useEffect, useState } from 'react'
 import { ArrowRight, Check } from "@/components/icons"
 import { DailyStepTitle } from './DailyStepTitle'
 import { DailyThreadStrip } from './DailyThreadStrip'
-import { getThreadHintsForStep } from '@/lib/practice/daily-plan/step-thread'
-import type { StepThreadHint } from '@/lib/practice/daily-plan/step-thread'
 import type { DailyStepStatus } from '@/hooks/useDailyPlan'
 import type { DailyStep } from '@/lib/practice/types'
 import { cn } from '@/lib/cn'
@@ -14,8 +12,14 @@ import {
   localizeDailyStepSubtitle,
   localizeDailyStepTitle,
 } from '@/lib/daily/localize-step-copy'
+import {
+  collectPlanHints,
+  readInProgressStepId,
+  rowVisual,
+  stepMeta,
+} from './daily-step-list-helpers'
 
-const STORAGE_KEY = 'daily:step'
+export { readInProgressStepId }
 
 interface DailyStepListProps {
   steps: DailyStep[]
@@ -35,60 +39,6 @@ interface DailyStepListProps {
    * rows. Off by default so /daily (DailyChecklist) keeps full expansion.
    */
   collapseFutureSteps?: boolean
-}
-
-function collectPlanHints(steps: DailyStep[]): StepThreadHint[] {
-  const byWord = new Map<string, StepThreadHint>()
-  for (let i = 0; i < steps.length; i++) {
-    for (const hint of getThreadHintsForStep(steps, i)) {
-      if (!byWord.has(hint.word)) byWord.set(hint.word, hint)
-    }
-  }
-  return [...byWord.values()].sort((a, b) => a.word.localeCompare(b.word))
-}
-
-function stepMeta(step: DailyStep): string {
-  const parts: string[] = []
-  if (step.exercises.length > 0) {
-    parts.push(
-      `${step.exercises.length} ${step.exercises.length === 1 ? 'ejercicio' : 'ejercicios'}`,
-    )
-  }
-  const cardCount = step.studyCards?.length ?? 0
-  if (cardCount > 0) {
-    parts.push(`${cardCount} ${cardCount === 1 ? 'palabra' : 'palabras'}`)
-  }
-  if (step.readerPassage) parts.push('lectura')
-  parts.push(`${step.estMinutes} min`)
-  return parts.join(' · ')
-}
-
-type RowVisual = 'done' | 'entry' | 'current' | 'pending'
-
-function rowVisual(
-  status: DailyStepStatus,
-  isInProgress: boolean,
-  isEntry: boolean,
-): RowVisual {
-  if (status === 'done' || status === 'resolved') return 'done'
-  if (isInProgress) return 'current'
-  if (isEntry) return 'entry'
-  return 'pending'
-}
-
-/** True mid-session: storage exists and at least one exercise was advanced. */
-export function readInProgressStepId(): string | null {
-  if (typeof window === 'undefined') return null
-  try {
-    const raw = sessionStorage.getItem(STORAGE_KEY)
-    if (!raw) return null
-    const parsed = JSON.parse(raw) as { stepId?: string; exerciseIndex?: number }
-    if (!parsed.stepId || typeof parsed.exerciseIndex !== 'number') return null
-    if (parsed.exerciseIndex <= 0) return null
-    return parsed.stepId
-  } catch {
-    return null
-  }
 }
 
 /** Daily step checklist shared by /daily and home. */
@@ -154,23 +104,23 @@ export default function DailyStepList({
           const isReadingStep = step.kind === 'concept' || step.kind === 'study_deck'
           const cardCount = step.studyCards?.length ?? 0
           const hasReader = !!step.readerPassage
-          const isStartable = step.exercises.length > 0 || cardCount > 0 || hasReader
+          const isStartable = step.exercises.length > 0 || cardCount > 0 || hasReader || Boolean(step.missionLaunch)
 
           if (hidden) return null
 
           const cardClass = cn(
-            'home-card-lift focus-ring group flex w-full flex-col gap-2 rounded-[var(--radius-lg)] border text-left',
-            compact ? 'px-4 py-2' : 'px-4 py-3.5',
+            'home-card-lift focus-ring group flex w-full min-h-11 flex-col gap-2 rounded-[var(--radius-md)] text-left',
+            compact ? 'px-3 py-2.5' : 'px-3.5 py-3.5',
             visual === 'entry' &&
               (demoteEntryHighlight
-                ? 'border-border-default bg-surface-raised hover:border-border-default'
-                : 'border-primary bg-primary-soft hover:border-primary'),
+                ? 'border border-border-default bg-surface-raised hover:border-border-default'
+                : 'border border-primary bg-primary-wash'),
             visual === 'current' &&
-              'border-primary bg-primary-soft hover:border-primary',
+              'border border-primary bg-primary-wash',
             visual === 'pending' &&
-              'border-border-subtle bg-transparent hover:border-border-default hover:bg-surface-raised/50',
+              'border border-transparent bg-transparent hover:bg-surface-sunken/70',
             visual === 'done' &&
-              'border-transparent bg-transparent opacity-70',
+              'border border-transparent bg-transparent',
           )
 
           const localizedSubtitle = localizeDailyStepSubtitle(step.subtitle)
@@ -192,7 +142,7 @@ export default function DailyStepList({
                 ) : null}
               </div>
               {done ? (
-                <span className="inline-flex shrink-0 items-center gap-1 font-body-sm font-medium text-success">
+                <span className="inline-flex shrink-0 items-center gap-1 rounded-md bg-success-soft px-2 py-0.5 font-caption font-semibold text-success">
                   <Check size={14} aria-hidden />
                   Hecho
                 </span>
@@ -205,18 +155,17 @@ export default function DailyStepList({
           ) : (
             <div className="flex w-full items-center gap-3">
               <div className="min-w-0 flex-1">
-                <div className={cn(done && 'opacity-70')}>
-                  <DailyStepTitle
-                    title={localizeDailyStepTitle(step.title)}
-                    ipa={step.ipa}
-                    index={i}
-                    muted={done}
-                  />
-                </div>
+                <DailyStepTitle
+                  title={localizeDailyStepTitle(step.title)}
+                  ipa={step.ipa}
+                  index={i}
+                  muted={done}
+                  emphasize={isEntryOrCurrent && !demoteEntryHighlight}
+                />
                 <p
                   className={cn(
-                    'mt-0.5 truncate font-body-sm text-fg-muted',
-                    done && 'opacity-80',
+                    'mt-0.5 truncate font-body-sm',
+                    done ? 'text-fg-subtle' : 'text-fg-muted',
                   )}
                 >
                   {[localizedSubtitle, stepMeta(step)]
@@ -225,27 +174,28 @@ export default function DailyStepList({
                 </p>
               </div>
               {done ? (
-                <span className="animate-state-in inline-flex shrink-0 items-center gap-1 font-body-sm font-medium text-success">
+                <span className="animate-state-in inline-flex shrink-0 items-center gap-1 rounded-md bg-success-soft px-2.5 py-1 font-caption font-semibold text-success">
                   <Check size={16} aria-hidden />
                   Hecho
                 </span>
               ) : visual === 'entry' ? (
-                <span
-                  className={cn(
-                    'shrink-0 font-body-sm font-medium',
-                    demoteEntryHighlight ? 'text-fg-muted' : 'text-primary',
-                  )}
-                >
-                  Empieza aquí
-                </span>
+                demoteEntryHighlight ? (
+                  <span className="shrink-0 font-body-sm font-medium text-fg-muted">
+                    Empieza aquí
+                  </span>
+                ) : (
+                  <span className="inline-flex shrink-0 items-center rounded-md bg-cta-bg px-2.5 py-1 font-caption font-semibold text-cta-fg">
+                    Empieza aquí
+                  </span>
+                )
               ) : visual === 'current' ? (
-                <span className="shrink-0 font-body-sm font-medium text-primary">
+                <span className="inline-flex shrink-0 items-center rounded-md bg-primary px-2.5 py-1 font-caption font-semibold text-on-primary">
                   En curso
                 </span>
               ) : (
                 <ArrowRight
                   size={18}
-                  className="shrink-0 text-fg-muted transition-transform duration-150 group-hover:translate-x-0.5"
+                  className="shrink-0 text-fg-muted transition-colors duration-150 group-hover:translate-x-0.5 group-hover:text-primary"
                 />
               )}
             </div>
@@ -278,13 +228,13 @@ export default function DailyStepList({
       {collapseFutureSteps && !showAllCompact && hiddenCount > 0 ? (
         <button
           type="button"
-          className="focus-ring self-start font-body-sm font-medium text-fg hover:underline"
+          className="focus-ring min-h-11 self-center px-3 font-body-sm font-semibold text-fg underline-offset-2 hover:underline"
           onClick={() => setShowAllCompact(true)}
         >
           Ver {hiddenCount} más
         </button>
       ) : null}
-      {threadHints.length > 0 ? <DailyThreadStrip hints={threadHints} /> : null}
+      {threadHints.length > 0 ? <DailyThreadStrip hints={threadHints} embedded /> : null}
     </div>
   )
 }

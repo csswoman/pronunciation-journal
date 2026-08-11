@@ -2,6 +2,7 @@ import { contrastTargetId, getTarget, phonemeTargetId } from '@/lib/pronunciatio
 import type { WordResult } from '@/lib/types'
 import { buildPronunciationFeedback } from './model'
 import type { FeedbackTargetCandidate, PronunciationFeedbackModel } from './types'
+import type { PronunciationTargetId } from '@/lib/pronunciation/targets/types'
 
 function ipa(value: string | undefined): string | null {
   if (!value) return null
@@ -50,10 +51,14 @@ export function feedbackFromScoringResult(input: {
   wordResults: readonly WordResult[]
   evaluatorVersion?: string
   previous?: PronunciationFeedbackModel
+  /** Exact authored target for this phrase; disables transcript-derived guessing. */
+  authoredTargetId?: PronunciationTargetId
 }): PronunciationFeedbackModel {
-  const candidates = candidatesFromWordResults(input.wordResults)
+  const candidates = input.authoredTargetId
+    ? [{ targetId: input.authoredTargetId, confidence: 1, relevance: 1 }]
+    : candidatesFromWordResults(input.wordResults)
   return buildPronunciationFeedback({
-    signal: candidates.length > 0
+    signal: candidates.length > 0 && !input.authoredTargetId
       ? {
           kind: 'transcript_phoneme_inference',
           evaluatorVersion: input.evaluatorVersion ?? 'legacy-stt-v1',

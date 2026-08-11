@@ -3,14 +3,18 @@
 //   title + why-it-matters
 //   primary → Sound Lab · secondary → courses
 //   optional quiet assessment links
+//   optional guest save inline
 // </HomeActivationStrip>
 
 import Link from "next/link";
 import { ArrowRight } from "@/components/icons";
+import GuestSaveProgressBanner from "@/components/home/GuestSaveProgressBanner";
 
 interface HomeActivationStripProps {
   showPlacementLink?: boolean;
   showPronunciationLink?: boolean;
+  /** Soft save cue so explore stays practice-first. */
+  showGuestSaveInline?: boolean;
 }
 
 /**
@@ -20,6 +24,7 @@ interface HomeActivationStripProps {
 export default function HomeActivationStrip({
   showPlacementLink = false,
   showPronunciationLink = false,
+  showGuestSaveInline = false,
 }: HomeActivationStripProps) {
   const showAssessments = showPlacementLink || showPronunciationLink;
 
@@ -29,12 +34,15 @@ export default function HomeActivationStrip({
       aria-labelledby="home-activation-title"
     >
       <div className="min-w-0 flex flex-col gap-1">
-        <h2 id="home-activation-title" className="font-label font-semibold text-balance text-fg">
-          Tu primera práctica empieza hoy
+        <h2
+          id="home-activation-title"
+          className="font-label font-semibold text-balance text-fg"
+        >
+          Una práctica ahora — sin cuenta
         </h2>
         <p className="font-body-sm max-w-[60ch] text-pretty text-fg-muted">
-          El plan se arma al practicar. Empieza con sonidos o un curso corto — no hace falta
-          saber IPA para comenzar.
+          El plan se arma al practicar. Empieza con sonidos o un curso corto; no hace
+          falta saber IPA para sentir el progreso.
         </p>
       </div>
 
@@ -79,6 +87,8 @@ export default function HomeActivationStrip({
           .
         </p>
       ) : null}
+
+      {showGuestSaveInline ? <GuestSaveProgressBanner variant="inline" /> : null}
     </section>
   );
 }

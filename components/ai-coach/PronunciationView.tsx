@@ -69,6 +69,7 @@ export default function PronunciationView() {
             hasMistakes={hasMistakes}
             onListen={() => speakPhrase(activePhrase)}
             onSlow={() => speakPhrase(activePhrase, 0.55)}
+            onListenWord={(word) => speakPhrase(word, 0.75)}
           />
 
           {focus && !analyzing && (

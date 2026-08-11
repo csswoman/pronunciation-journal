@@ -14,12 +14,13 @@
 
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import { Mic, MicOff } from '@/components/icons'
-import { PillButton } from '@/components/ui/PillButton'
+import Button from '@/components/ui/Button'
+import { PracticeActionBar, PracticeContinueButton } from '@/components/practice/session/PracticeActionBar'
 import { ProductionFeedback } from '@/components/exercises/ProductionFeedback'
 import { ProductionHint } from '@/components/exercises/ProductionHint'
 import { ProductionTaskHeader } from '@/components/exercises/ProductionTaskHeader'
-import { useSpeechRecognition } from '@/hooks/useSpeechRecognition'
-import { BROWSER_BLOCKS_STT_ES } from '@/lib/speech/browser-support-message'
+import { useSharedMicStream } from '@/hooks/useSharedMicStream'
+import { useSpeechInput } from '@/hooks/useSpeechInput'
 import {
   gradeProduction,
   isOnline,
@@ -43,8 +44,16 @@ interface Props {
 }
 
 export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) {
-  const { status, result: speechResult, errorCode, isSupported, start, stop, reset } =
-    useSpeechRecognition()
+  const { getStream, release } = useSharedMicStream()
+  const {
+    state: speechState,
+    result: speechResult,
+    error: speechError,
+    isSupported,
+    start,
+    stop,
+    reset,
+  } = useSpeechInput({ prefer: 'gemini', getStream })
   const [grading, setGrading] = useState(false)
   const [grade, setGrade] = useState<ProductionGradeResult | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -72,6 +81,8 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
       window.removeEventListener('offline', syncOnline)
     }
   }, [])
+
+  useEffect(() => release, [release])
 
   const runGrading = useCallback(async (transcript: string) => {
     if (!isOnline()) {
@@ -101,14 +112,14 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
   }, [exercise])
 
   useEffect(() => {
-    if (status !== 'done' || !speechResult || grading || grade) return
+    if (speechState !== 'done' || !speechResult || grading || grade) return
     const transcript = speechResult.transcript.trim()
     if (!transcript) {
       setError('No se detectó voz. Toca el micrófono y habla con claridad.')
       return
     }
     void runGrading(transcript)
-  }, [status, speechResult, grading, grade, runGrading])
+  }, [speechState, speechResult, grading, grade, runGrading])
 
   const handleContinue = useCallback(() => {
     if (!grade || submitted.current) return
@@ -136,9 +147,9 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
     )
   }
 
-  const isListening = status === 'listening'
-  const isDone = status === 'done'
-  const isMicError = status === 'error'
+  const isListening = speechState === 'listening'
+  const isDone = speechState === 'done'
+  const isMicError = speechState === 'error'
 
   return (
     <div
@@ -186,13 +197,11 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
 
           {isMicError && (
             <p className="m-0 text-center text-body-sm text-fg-muted" role="alert">
-              {errorCode === 'not-allowed'
+              {speechError === 'not-allowed'
                 ? 'Se denegó el acceso al micrófono.'
-                : errorCode === 'no-speech'
+                : speechError === 'no-speech'
                   ? 'No se detectó voz. Toca el micrófono y habla con claridad.'
-                  : errorCode === 'network'
-                    ? BROWSER_BLOCKS_STT_ES
-                    : 'Falló el reconocimiento de voz.'}{' '}
+                  : 'No se pudo transcribir tu respuesta. Inténtalo de nuevo.'}{' '}
               <button
                 type="button"
                 onClick={handleRetry}
@@ -234,24 +243,19 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
             grade={grade}
             transcript={speechResult?.transcript.trim()}
           />
-          <div className="flex w-full flex-col gap-2">
-            <PillButton
-              variant="primary"
-              size="md"
-              className="min-h-11 w-full"
-              onClick={handleContinue}
-            >
-              Continuar
-            </PillButton>
-            <PillButton
-              variant="outline"
-              size="md"
-              className="min-h-11 w-full"
-              onClick={handleRetry}
-            >
-              Intentar de nuevo
-            </PillButton>
-          </div>
+          <PracticeActionBar>
+            {grade.usedTarget ? (
+              <>
+                <Button variant="secondary" size="lg" fullWidth onClick={handleRetry}>Intentar de nuevo</Button>
+                <PracticeContinueButton onClick={handleContinue} />
+              </>
+            ) : (
+              <>
+                <Button variant="secondary" size="lg" fullWidth onClick={handleContinue}>Continuar de todos modos</Button>
+                <Button variant="primary" size="lg" fullWidth onClick={handleRetry}>Intentar de nuevo</Button>
+              </>
+            )}
+          </PracticeActionBar>
         </>
       )}
     </div>

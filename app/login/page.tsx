@@ -1,7 +1,7 @@
 import AuthPanel from "@/components/auth/AuthPanel";
 
 export const metadata = {
-  title: "Sign in — English Journal",
+  title: "Entrar — English Journal",
 };
 
 export default function LoginPage() {

@@ -25,6 +25,7 @@ interface Props {
   viewMode: ViewMode
   overlayOpen: boolean
   canStep: boolean
+  essentialWordsOpen: boolean
   onContextChange: (value: PracticeContext) => void
   onCompareContextChange: (value: PracticeContext) => void
   onLaunchAll: () => void
@@ -34,6 +35,7 @@ interface Props {
   onNext: () => void
   onSelect: (entry: TestGalleryEntry, mode: ViewMode) => void
   onExitOverlay: () => void
+  onOpenEssentialWords: () => void
 }
 
 export function ExerciseTestSidebar(props: Props) {
@@ -47,6 +49,7 @@ export function ExerciseTestSidebar(props: Props) {
     viewMode,
     overlayOpen,
     canStep,
+    essentialWordsOpen,
     onContextChange,
     onCompareContextChange,
     onLaunchAll,
@@ -56,6 +59,7 @@ export function ExerciseTestSidebar(props: Props) {
     onNext,
     onSelect,
     onExitOverlay,
+    onOpenEssentialWords,
   } = props
 
   return (
@@ -64,10 +68,10 @@ export function ExerciseTestSidebar(props: Props) {
     >
       <div className="flex items-center justify-between border-b border-border-subtle px-4 py-3">
         <div>
-          <p className="font-caption font-semibold uppercase tracking-wide text-fg-subtle">Test UI</p>
+          <p className="font-kicker text-fg-subtle">Banco de pruebas</p>
           <p className="text-body-sm font-medium text-fg">Navegación</p>
         </div>
-        {overlayOpen ? (
+        {overlayOpen || essentialWordsOpen ? (
           <button
             type="button"
             onClick={onExitOverlay}
@@ -89,6 +93,7 @@ export function ExerciseTestSidebar(props: Props) {
           onCompareContextChange={onCompareContextChange}
           onLaunchAll={onLaunchAll}
           onSplitQuick={onSplitQuick}
+          onOpenEssentialWords={onOpenEssentialWords}
         />
         <ExerciseTestNav
           grouped={grouped}

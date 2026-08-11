@@ -1209,32 +1209,6 @@
   line-height: 1.4;
 }
 
-.phoneme-focus__footer-cta {
-  border: none;
-  border-radius: var(--radius-md);
-  padding: var(--space-2) var(--space-5);
-  font-family: inherit;
-  font-weight: 700;
-  font-size: var(--text-size-body-sm);
-  white-space: nowrap;
-  flex-shrink: 0;
-  transition: transform var(--transition-fast);
-}
-
-.phoneme-focus__footer-cta:active {
-  transform: scale(0.98);
-}
-
-.phoneme-focus__footer-cta--ok {
-  background: var(--success);
-  color: var(--on-primary);
-}
-
-.phoneme-focus__footer-cta--bad {
-  background: var(--error);
-  color: var(--on-primary);
-}
-
 .phoneme-focus__skip {
   display: block;
   width: 100%;

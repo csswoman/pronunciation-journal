@@ -19,6 +19,8 @@ import Button from "@/components/ui/Button";
 import type { TrackingReviewSource } from "@/lib/tracking/review-queue";
 import type { TrackedKind } from "@/lib/tracking/types";
 import type { WordBankEntry } from "@/lib/word-bank/types";
+import { PronunciationMissionLaunchButton } from '@/components/pronunciation/PronunciationMissionLaunchButton'
+import { getTarget, targetId } from '@/lib/pronunciation/targets/registry'
 
 const FILTERS: { id: "all" | TrackedKind; label: string }[] = [
   { id: "all", label: "Todo" }, { id: "word", label: "Palabras" },
@@ -37,6 +39,10 @@ function TrackingCard({ source, onEditWord, onDeleteWord }: { source: TrackingRe
   const phraseContext = "trackedItem" in source && typeof source.trackedItem.payload.context === "string"
     ? source.trackedItem.payload.context
     : null;
+  const rawPhraseTarget = "trackedItem" in source ? source.trackedItem.payload.pronunciationTargetId : undefined;
+  const phraseTargetId = typeof rawPhraseTarget === 'string' && getTarget(rawPhraseTarget).ok
+    ? targetId(rawPhraseTarget)
+    : null;
   const content = <>
     <span className="self-start pt-0.5 text-fg-subtle"><Icon size={16} aria-hidden /></span>
     <span className="min-w-0">
@@ -52,7 +58,7 @@ function TrackingCard({ source, onEditWord, onDeleteWord }: { source: TrackingRe
         {phraseContext ? <span className="mt-1 block text-caption text-fg-subtle">Contexto: {phraseContext}</span> : null}
       </>}
     </span>
-    <span className="flex shrink-0 items-start gap-1 text-caption text-fg-subtle"><span className="flex flex-col items-end gap-0.5 pt-2"><span>{entry.label}</span>{item.progressLabel && <span>{item.progressLabel}</span>}</span>{word ? <><button type="button" onClick={() => onEditWord(word)} aria-label={`Editar ${word.text}`} title="Editar palabra" className="flex min-h-11 min-w-11 items-center justify-center rounded-[var(--radius-sm)] text-fg-subtle transition-colors hover:bg-surface-sunken hover:text-fg active:scale-[0.96]"><Pencil size={16} aria-hidden /></button><button type="button" onClick={() => onDeleteWord(word)} aria-label={`Eliminar ${word.text}`} title="Eliminar palabra" className="flex min-h-11 min-w-11 items-center justify-center rounded-[var(--radius-sm)] text-fg-subtle transition-colors hover:bg-error-soft hover:text-error active:scale-[0.96]"><Trash2 size={16} aria-hidden /></button></> : null}</span>
+    <span className="flex shrink-0 items-start gap-1 text-caption text-fg-subtle"><span className="flex flex-col items-end gap-0.5 pt-2"><span>{entry.label}</span>{item.progressLabel && <span>{item.progressLabel}</span>}</span>{phraseTargetId ? <PronunciationMissionLaunchButton targetId={phraseTargetId} source="tracking" label="Misión" className="min-h-11 rounded-[var(--radius-sm)] px-3 text-caption font-semibold text-primary hover:bg-primary-soft focus-ring" /> : null}{word ? <><button type="button" onClick={() => onEditWord(word)} aria-label={`Editar ${word.text}`} title="Editar palabra" className="flex min-h-11 min-w-11 items-center justify-center rounded-[var(--radius-sm)] text-fg-subtle transition-colors hover:bg-surface-sunken hover:text-fg active:scale-[0.96]"><Pencil size={16} aria-hidden /></button><button type="button" onClick={() => onDeleteWord(word)} aria-label={`Eliminar ${word.text}`} title="Eliminar palabra" className="flex min-h-11 min-w-11 items-center justify-center rounded-[var(--radius-sm)] text-fg-subtle transition-colors hover:bg-error-soft hover:text-error active:scale-[0.96]"><Trash2 size={16} aria-hidden /></button></> : null}</span>
   </>;
   return item.href ? <Link href={item.href} className="tracking-item">{content}</Link> : <div className="tracking-item">{content}</div>;
 }

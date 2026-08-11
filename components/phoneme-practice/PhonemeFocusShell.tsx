@@ -2,6 +2,7 @@
 
 import type { ReactNode } from 'react'
 import { cn } from '@/lib/cn'
+import Button from '@/components/ui/Button'
 
 export type PhonemeFocusFeedback = {
   isCorrect: boolean
@@ -84,13 +85,14 @@ export function PhonemeFocusShell({
                 </div>
               </div>
               {feedback.onContinue && (
-                <button
-                  type="button"
-                  className={cn( 'phoneme-focus__footer-cta', feedback.isCorrect ? 'phoneme-focus__footer-cta--ok' : 'phoneme-focus__footer-cta--bad', )}
+                <Button
+                  variant={feedback.isCorrect ? 'success' : 'error'}
+                  size="md"
+                  className="shrink-0"
                   onClick={feedback.onContinue}
                 >
                   Continuar
-                </button>
+                </Button>
               )}
             </div>
           )}

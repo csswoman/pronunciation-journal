@@ -16,6 +16,7 @@ import { RecognizeAudioCard } from './RecognizeAudioCard'
 import { DictationCard } from './DictationCard'
 import { WeakFormCard } from './WeakFormCard'
 import { ClozeCard } from './ClozeCard'
+import { ListeningClozeCard } from './ListeningClozeCard'
 import { RecallTranslationCard } from './RecallTranslationCard'
 import type { EssentialWordMode } from '@/lib/essential-words/exercise-modes'
 import type { AttemptOutcome } from '@/lib/essential-words/attempt-grade'
@@ -24,9 +25,13 @@ import type { EssentialWordQueueItem } from '@/lib/essential-words/queue'
 interface Props {
   current: EssentialWordQueueItem
   currentMode: EssentialWordMode
+  listeningTier?: 1 | 2 | 3
+  isListeningSkill?: boolean
+  focusContrastId?: string
+  retiredBlankKeys?: string[]
   currentStepId: string | null
   levelLabel?: string
-  distractorPool: EssentialWordQueueItem['entry'][]
+  audioDistractorPool: EssentialWordQueueItem['entry'][]
   onAttempt: (outcome: AttemptOutcome) => Promise<void>
   onSpeakAttempt: (outcome: AttemptOutcome) => Promise<void>
   onRetry: () => void
@@ -35,14 +40,19 @@ interface Props {
   onArchive: () => void
   onKeepSnooze: () => void
   onMaster: () => void
+  isAdvancedListening?: boolean
 }
 
 export function EssentialWordsExerciseCard({
   current,
   currentMode,
+  listeningTier,
+  isListeningSkill = false,
+  focusContrastId,
+  retiredBlankKeys,
   currentStepId,
   levelLabel,
-  distractorPool,
+  audioDistractorPool,
   onAttempt,
   onSpeakAttempt,
   onRetry,
@@ -51,6 +61,7 @@ export function EssentialWordsExerciseCard({
   onArchive,
   onKeepSnooze,
   onMaster,
+  isAdvancedListening = false,
 }: Props) {
   const key = currentStepId ?? `exercise:${current.entry.word}`
 
@@ -66,7 +77,7 @@ export function EssentialWordsExerciseCard({
         mode={currentMode}
         repetitions={current.repetitions ?? 0}
         levelLabel={levelLabel}
-        distractors={distractorPool}
+        distractors={audioDistractorPool}
         onAttempt={onAttempt}
         onContinue={onContinue}
         onArchive={onArchive}
@@ -81,7 +92,7 @@ export function EssentialWordsExerciseCard({
         key={key}
         entry={current.entry}
         levelLabel={levelLabel}
-        distractors={distractorPool}
+        distractors={audioDistractorPool}
         onAttempt={onAttempt}
         onContinue={onContinue}
         onArchive={onArchive}
@@ -90,11 +101,35 @@ export function EssentialWordsExerciseCard({
     )
   }
 
+  if ((isListeningSkill || currentMode === 'dictation_sentence') && (listeningTier ?? 1) < 3) {
+    return <ListeningClozeCard key={key} entry={current.entry} tier={listeningTier ?? 1} focusContrastId={focusContrastId} retiredBlankKeys={retiredBlankKeys} levelLabel={levelLabel} repetitions={current.repetitions ?? 0} onAttempt={onAttempt} onContinue={onContinue} onArchive={onArchive} isContinuing={isContinuing} />
+  }
+
   if (currentMode === 'dictation_sentence') {
     return (
       <DictationCard
         key={key}
         entry={current.entry}
+        levelLabel={levelLabel}
+        repetitions={current.repetitions ?? 0}
+        onAttempt={onAttempt}
+        onContinue={onContinue}
+        onArchive={onArchive}
+        isContinuing={isContinuing}
+        isAdvancedListening={isAdvancedListening}
+        listeningTier={listeningTier}
+      />
+    )
+  }
+
+  if (currentMode === 'listening_cloze_sentence') {
+    return (
+      <ListeningClozeCard
+        key={key}
+        entry={current.entry}
+        tier={listeningTier ?? 1}
+        focusContrastId={focusContrastId}
+        retiredBlankKeys={retiredBlankKeys}
         levelLabel={levelLabel}
         repetitions={current.repetitions ?? 0}
         onAttempt={onAttempt}

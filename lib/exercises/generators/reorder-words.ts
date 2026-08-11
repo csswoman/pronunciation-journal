@@ -2,8 +2,9 @@ import type { ReorderWordsExercise } from '@/lib/exercises/types'
 import type { Sound } from '@/lib/phoneme-practice/types'
 import type { WordBankEntry } from '@/lib/word-bank/types'
 import { normalizeCEFR } from '@/lib/exercises/cefr'
-import { exerciseId, isLikelySentence, pick, shuffle, tokenize } from '@/lib/exercises/utils'
+import { exerciseId, isLikelySentence, pick, tokenize } from '@/lib/exercises/utils'
 import { VOCABULARY_TOPIC } from '@/lib/practice/topic-labels'
+import { shuffleDistinct } from './primitives'
 
 const MIN_TOKENS = 4
 
@@ -38,21 +39,6 @@ export function generateReorderWordsFromWordBank(
       tokens,
     }
   })
-}
-
-/** Shuffle until the result differs from the original order. */
-function shuffleDistinct<T>(arr: T[]): T[] {
-  if (arr.length <= 1) return [...arr]
-  let result = shuffle(arr)
-  // Retry at most 10 times to avoid an infinite loop on pathological inputs.
-  for (let i = 0; i < 10 && isSameOrder(arr, result); i++) {
-    result = shuffle(arr)
-  }
-  return result
-}
-
-function isSameOrder<T>(a: T[], b: T[]): boolean {
-  return a.every((v, i) => v === b[i])
 }
 
 /**

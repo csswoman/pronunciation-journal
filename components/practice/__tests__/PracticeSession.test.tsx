@@ -227,15 +227,15 @@ describe('PracticeSession', () => {
     )
 
     await user.click(await screen.findByRole('button', { name: 'drink' }))
-    expect(screen.getByRole('button', { name: /try again/i })).toBeInTheDocument()
-    expect(screen.getByText(/missing word must fit/i)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /intentar de nuevo/i })).toBeInTheDocument()
+    expect(screen.getByText(/palabra que falta debe encajar/i)).toBeInTheDocument()
     expect(savePracticeAnswer).not.toHaveBeenCalled()
 
-    await user.click(screen.getByRole('button', { name: /try again/i }))
+    await user.click(screen.getByRole('button', { name: /intentar de nuevo/i }))
     expect(screen.getByRole('button', { name: 'drink' })).toBeEnabled()
 
     await user.click(screen.getByRole('button', { name: 'drink' }))
-    await user.click(screen.getByRole('button', { name: /continue/i }))
+    await user.click(screen.getByRole('button', { name: /continuar/i }))
 
     await waitFor(() => expect(savePracticeAnswer).toHaveBeenCalledTimes(1))
     const [, saved] = vi.mocked(savePracticeAnswer).mock.calls[0]

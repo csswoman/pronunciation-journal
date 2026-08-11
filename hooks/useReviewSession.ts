@@ -11,6 +11,7 @@ import { cacheTransformations, getCachedTransformations } from '@/lib/exercises/
 import type { SentenceTransformationExercise } from '@/lib/exercises/types'
 import type { TranslationEsEnExercise } from '@/lib/exercises/types'
 import { cacheTranslations, getCachedTranslations } from '@/lib/exercises/translations'
+import { composeReviewSessionPlan } from '@/lib/review/session-plan'
 
 function transformationCacheKey(topic: string) {
   return `transform:${topic.trim().toLowerCase().replace(/\s+/g, '_')}`
@@ -64,13 +65,13 @@ export function useReviewSession() {
         fetch('/api/review/topics', { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}' }).catch(() => null),
       ])
       const topicSteps: DailyStep[] = topicResponse?.ok ? (await topicResponse.json()).steps ?? [] : []
-      plan.steps.push(...topicSteps)
-      if (plan.nothingDue || plan.steps.length === 0) {
+      const sessionPlan = composeReviewSessionPlan(plan, topicSteps)
+      if (sessionPlan.nothingDue) {
         setState({ phase: 'done' })
         return
       }
       setSessionKey((k) => k + 1)
-      setState({ phase: 'session', steps: plan.steps, stepIndex: 0 })
+      setState({ phase: 'session', steps: sessionPlan.steps, stepIndex: 0 })
     } catch {
       setState({ phase: 'error' })
     }

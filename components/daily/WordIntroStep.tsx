@@ -40,7 +40,19 @@ export function WordIntroStep({ cards, onComplete }: Props) {
 
   return (
     <div className="flex min-h-[calc(100vh-10rem)] flex-col items-center justify-center px-4">
-      <StudyCard key={index} model={card} onContinue={advance} onListen={onListen} />
+      <div
+        className="flex w-full flex-col rounded-xl border border-border-subtle bg-daily-card px-[var(--layout-card-pad)] pb-[var(--layout-card-pad)] pt-5"
+      >
+        <StudyCard
+          key={index}
+          model={card}
+          variant="immersive"
+          contextLine={`Palabras nuevas · ${index + 1} de ${cards.length}`}
+          onContinue={advance}
+          onListen={onListen}
+          onListenText={(text) => speak(text, { rate: 0.95 })}
+        />
+      </div>
     </div>
   )
 }

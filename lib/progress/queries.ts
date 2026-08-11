@@ -22,6 +22,8 @@ import { rankWeakestSounds } from '@/lib/phoneme-practice/mastery-pct'
 import type { UserContrastProgress } from '@/lib/phoneme-practice/types'
 import { startOfRollingWindow, sumWeeklyExercises } from '@/lib/progress/windows'
 import { deriveWordProgressSignal } from '@/lib/word-bank/progress-state'
+import { projectProgress, type ProgressFact, type ProgressProjections } from './projections'
+import type { EvidenceAttribution } from '@/lib/practice/attribution'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -101,6 +103,7 @@ export interface ProgressPageData {
   weeklySummary: WeeklySummaryStats
   coachInsights: CoachInsights
   recentSessions: ActivitySessionSummary[]
+  projections: ProgressProjections
 }
 
 // ── Queries ───────────────────────────────────────────────────────────────────
@@ -338,7 +341,7 @@ async function getFluencyProfile(userId: string, skillProfile: SkillProfileData)
   const [answersResult, contrastResult] = await Promise.all([
     supabase
       .from('answer_history')
-      .select('exercise_type_id, context, is_correct, grade, answered_at')
+      .select('exercise_type_id, context, is_correct, grade, exercise_payload, answered_at')
       .eq('user_id', userId)
       .gte('answered_at', since30.toISOString())
       .not('answered_at', 'is', null),
@@ -360,12 +363,14 @@ async function getFluencyProfile(userId: string, skillProfile: SkillProfileData)
     context: string | null
     is_correct: boolean
     grade: number | null
+    exercise_payload: unknown
     answered_at: string
   }>
 
   const mapRows = (list: typeof rows): FluencyRawAnswer[] =>
     list.map((row) => ({
       exerciseTypeId: row.exercise_type_id,
+      exercisePayload: row.exercise_payload,
       context: row.context,
       isCorrect: row.is_correct,
       grade: row.grade,
@@ -387,9 +392,18 @@ async function getFluencyProfile(userId: string, skillProfile: SkillProfileData)
     return d >= since14 && d < since7
   })
 
+  // Week comparison measures answers in each window only. Current aggregate
+  // vocabulary/completion state must not be projected into both weeks.
+  const windowBase = {
+    wordsByStatus: { new: 0, learning: 0, review: 0, mastered: 0 },
+    contrastCorrect: 0,
+    contrastTotal: 0,
+    core1000Practiced: 0,
+    lessonsCompleted: 0,
+  }
   const comparisonLabel = fluencyComparisonLabel(
-    computeFluencyScores({ ...base, answers: mapRows(current7) }),
-    computeFluencyScores({ ...base, answers: mapRows(previous7) }),
+    computeFluencyScores({ ...windowBase, answers: mapRows(current7) }),
+    computeFluencyScores({ ...windowBase, answers: mapRows(previous7) }),
   )
 
   return { scores, comparisonLabel }
@@ -427,8 +441,92 @@ async function getRecentActivitySessions(userId: string): Promise<ActivitySessio
   }
 }
 
+function attributedAnswerFacts(rows: Array<{
+  id: string
+  is_correct: boolean
+  answered_at: string | null
+  exercise_payload: unknown
+}>): ProgressFact[] {
+  return rows.flatMap((row) => {
+    if (!row.exercise_payload || typeof row.exercise_payload !== 'object') return []
+    const payload = row.exercise_payload as {
+      attributionVersion?: number
+      attribution?: EvidenceAttribution
+      missionId?: string
+      targetId?: string
+      modality?: string
+    }
+    if (
+      payload.missionId
+      && payload.targetId
+      && payload.modality === 'stt_intelligibility'
+    ) {
+      return [{
+        id: row.id,
+        signal: 'transfer' as const,
+        occurredAt: row.answered_at ?? '',
+        targetId: `pronunciation:${payload.targetId}`,
+        correct: row.is_correct,
+        provenance: 'oral_mission.answer_history',
+        modality: 'stt_intelligibility' as const,
+      }]
+    }
+    if (payload.attributionVersion !== 1 || !payload.attribution?.srsEligible) return []
+    return payload.attribution.outcomes.map((outcome, index) => ({
+      id: `${row.id}:${index}`,
+      signal: payload.missionId ? 'transfer' as const : 'objective_evidence' as const,
+      occurredAt: row.answered_at ?? '',
+      targetId: `${outcome.target.namespace}:${outcome.target.id}`,
+      correct: outcome.correct,
+      provenance: 'answer_history',
+      modality: outcome.modality,
+    }))
+  })
+}
+
+async function getProgressProjections(userId: string): Promise<ProgressProjections> {
+  const supabase = await createSupabaseServerClient()
+  const [sessions, completions, answers] = await Promise.all([
+    supabase.from('activity_sessions')
+      .select('id, exercises_total, duration_ms, completed_at')
+      .eq('user_id', userId),
+    supabase.from('lesson_completions')
+      .select('id, completed_at, source')
+      .eq('user_id', userId),
+    supabase.from('answer_history')
+      .select('id, is_correct, answered_at, exercise_payload')
+      .eq('user_id', userId)
+      .not('answered_at', 'is', null),
+  ])
+
+  const facts: ProgressFact[] = [
+    ...(sessions.data ?? []).map((row) => ({
+      id: row.id,
+      signal: 'objective_evidence' as const,
+      occurredAt: row.completed_at,
+      exercises: row.exercises_total,
+      durationMs: row.duration_ms,
+      provenance: 'activity_sessions',
+    })),
+    ...(completions.data ?? []).map((row) => ({
+      id: row.id,
+      signal: 'completion' as const,
+      occurredAt: row.completed_at,
+      provenance: row.source,
+    })),
+    ...attributedAnswerFacts((answers.data ?? []) as Array<{
+      id: string
+      is_correct: boolean
+      answered_at: string | null
+      exercise_payload: unknown
+    }>),
+  ]
+
+  return projectProgress(facts)
+}
+
 export async function getProgressPageData(userId: string): Promise<ProgressPageData> {
-  const [streak, dailyCompletion, accuracy, skillProfile, weeklySummary, coachInsights, recentSessions] =
+  const [streak, dailyCompletion, accuracy, skillProfile, weeklySummary, coachInsights, recentSessions, projections] =
     await Promise.all([
       getDailyStreak(userId),
       getDailyCompletionStats(userId),
@@ -437,6 +535,7 @@ export async function getProgressPageData(userId: string): Promise<ProgressPageD
       getWeeklySummaryStats(userId),
       getCoachInsights(userId),
       getRecentActivitySessions(userId),
+      getProgressProjections(userId),
     ])
 
   const fluencyProfile = await getFluencyProfile(userId, skillProfile)
@@ -450,5 +549,6 @@ export async function getProgressPageData(userId: string): Promise<ProgressPageD
     weeklySummary,
     coachInsights,
     recentSessions,
+    projections,
   }
 }

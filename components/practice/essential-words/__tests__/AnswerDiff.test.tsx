@@ -12,25 +12,33 @@ const feedback = (status: 'error' | 'typo' = 'error') => ({
   terminalPunctuation: '?',
   hasDifferences: true,
   hasTypos: status === 'typo',
+  sentenceCorrect: status === 'typo',
   targetCorrect: status === 'typo',
 });
 
 describe("AnswerDiff", () => {
-  it("renders the correct sentence with the written mismatch below it", () => {
+  it("marks an incorrect word answer with an explicit error state", () => {
+    render(<AnswerDiff written="si" expected="hold" isTypo={false} word="hold" />);
+
+    expect(screen.getByRole("status")).toHaveClass("bg-error-soft");
+    expect(screen.getByText("No es esa palabra")).toHaveClass("text-error");
+    expect(screen.getByTestId("answer-diff-message")).toHaveTextContent(/la respuesta era "hold"/i);
+  });
+
+  it("renders the written and correct words inline in the sentence", () => {
     render(<AnswerDiff feedback={feedback()} word="be" />);
-    expect(screen.getByTestId("answer-diff-message")).toHaveTextContent(/Did he\?/);
+    expect(screen.getByTestId("answer-diff-message")).toHaveTextContent(/Did youhe\?/);
     expect(screen.getByTestId("answer-diff-written")).toHaveTextContent(/you/);
   });
 
-  it("marks a typo with a distinct semantic style", () => {
+  it("marks a typo with correction semantics", () => {
     render(<AnswerDiff feedback={feedback('typo')} word="happy" />);
-    expect(screen.getByText(/he\?/)).toHaveClass('text-warning');
+    expect(screen.getByTestId('answer-diff-written')).toHaveClass('text-error');
   });
 
-  it("shows the explanation when one exists for the word", () => {
+  it("does not repeat a loose explanation below the inline correction", () => {
     render(<AnswerDiff feedback={feedback()} word="be" />);
-    expect(screen.getByText(/am \/ is \/ are/i)).toBeInTheDocument();
-    expect(screen.getByText('Escuchaste you, pero era he')).toBeInTheDocument();
+    expect(screen.queryByTestId('answer-diff-explanation')).not.toBeInTheDocument();
   });
 
   it("shows no explanation text when none exists for the word", () => {

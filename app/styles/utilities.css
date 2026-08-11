@@ -476,3 +476,43 @@
   background-color: var(--surface-raised);
   padding: var(--layout-card-pad);
 }
+/* Practice actions: in-flow on larger screens, thumb-reachable on phones. */
+.practice-action-bar__spacer {
+  display: none;
+}
+
+.practice-action-bar__content {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+@media (max-width: 767px) {
+  .practice-action-bar__spacer {
+    display: block;
+    height: calc(4.5rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .practice-action-bar:has(.practice-action-bar__content > :nth-child(2))
+    .practice-action-bar__spacer {
+    height: calc(8.5rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .practice-action-bar__dock {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 30;
+    border-top: 1px solid var(--border-subtle);
+    background: var(--surface-raised);
+    padding: var(--space-3) var(--layout-page-inline)
+      max(var(--space-3), env(safe-area-inset-bottom, 0px));
+  }
+
+  .practice-action-bar__content {
+    max-width: var(--layout-session-max);
+    margin-inline: auto;
+  }
+}

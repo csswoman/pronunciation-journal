@@ -1,5 +1,6 @@
 import { clozeFor } from "./cloze";
 import { hasRecognizeClozeCandidate } from "./recognize-cloze";
+import { hasProductionClozeSentence } from "./sentence-variants";
 import type { EssentialWordQueueItem } from "./queue";
 import type { EssentialWord } from "./types";
 
@@ -15,6 +16,7 @@ export type EssentialWordMode =
   | "recognize_cloze"
   | "dictation_word"
   | "dictation_sentence"
+  | "listening_cloze_sentence"
   | "cloze_sentence"
   | "weak_form"
   | "recall_translation"
@@ -36,10 +38,19 @@ export const MODE_REQUIRED_FIELD: Record<
   recognize_cloze: null, // computed: hasRecognizeClozeCandidate(entry)
   dictation_word: null, // word audio is the prompt; the card is added with production UI
   dictation_sentence: null, // example_sentence is mandatory
+  listening_cloze_sentence: null, // audio prompt + computed target blank
   cloze_sentence: null, // computed: clozeFor(entry) must be non-null
   weak_form: "ipa_weak",
   recall_translation: "translation", // ES prompt → user produces the English
   speak_sentence: null, // example_sentence is mandatory
+};
+
+/** Ordered, render-safe alternatives for an activation selected by the skill planner. */
+export const SKILL_MODE_FALLBACKS: Record<"meaning" | "listening" | "production" | "usage", readonly EssentialWordMode[]> = {
+  meaning: ["recognize_translation", "recognize_meaning", "recognize_audio"],
+  listening: ["listening_cloze_sentence", "dictation_sentence", "recognize_audio"],
+  production: ["speak_sentence", "recall_translation", "cloze_sentence"],
+  usage: ["cloze_sentence", "speak_sentence", "recognize_audio"],
 };
 
 /** Maturity tiers, driven by SM-2 consecutive-correct count. */
@@ -48,9 +59,12 @@ const MIDDLE_MAX = 5;
 
 /** True when `entry` has everything `mode` needs to render. */
 export function modeHasData(entry: EssentialWord, mode: EssentialWordMode): boolean {
+  if ((mode === "dictation_word" || mode === "recognize_audio") && !entry.word.trim()) return false;
+  if ((mode === "dictation_sentence" || mode === "listening_cloze_sentence" || mode === "speak_sentence") && !entry.example_sentence.trim()) return false;
   const field = MODE_REQUIRED_FIELD[mode];
   if (field && !entry[field]) return false;
-  if (mode === "cloze_sentence") return clozeFor(entry) !== null;
+  if (mode === "cloze_sentence") return hasProductionClozeSentence(entry);
+  if (mode === "listening_cloze_sentence") return clozeFor(entry) !== null;
   if (mode === "recognize_cloze") return hasRecognizeClozeCandidate(entry);
   return true;
 }

@@ -18,3 +18,11 @@ export async function isValidEnglishWord(word: string): Promise<boolean> {
   const entries = await dictionary()
   return Boolean(entries[normalized] ?? entries[normalized.replace(/'/g, '')])
 }
+
+/** First CMU pronunciation, retained as ARPAbet for deterministic IPA comparison. */
+export async function englishPronunciation(word: string): Promise<string | null> {
+  const normalized = word.toLowerCase().replace(/[^a-z']/g, '')
+  if (!normalized) return null
+  const entries = await dictionary()
+  return entries[normalized] ?? entries[normalized.replace(/'/g, '')] ?? null
+}

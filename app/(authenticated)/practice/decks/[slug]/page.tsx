@@ -15,6 +15,7 @@ export default async function PracticeDeckPage({ params }: PageProps) {
   return (
     <GrammarStudyDeck
       deck={deck}
+      deckSlug={slug}
       backHref="/practice/decks"
       backLabel="Todos los decks"
     />

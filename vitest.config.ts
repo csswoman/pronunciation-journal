@@ -16,7 +16,8 @@ export default defineConfig({
     exclude: [".claude/**", "node_modules/**", "**/*.integration.test.{ts,tsx}"],
     setupFiles: ["./vitest.setup.ts"],
     // Cap forks under coverage so workers finish booting before the 90s timeout.
-    ...(isCoverage ? { maxWorkers: 4 } : {}),
+    // Instrumentation slows simulation suites; 5s default timeouts flake under coverage.
+    ...(isCoverage ? { maxWorkers: 4, testTimeout: 30_000 } : {}),
     // Node 22+ warns when localStorage is touched without a persistence file.
     execArgv: [
       `--localstorage-file=${path.join(os.tmpdir(), "vitest-localstorage")}`,

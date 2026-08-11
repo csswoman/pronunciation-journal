@@ -118,7 +118,10 @@ describe('MiniLessonQuiz', () => {
     expect(recordLessonCompleteMock).toHaveBeenCalledWith('mini-lessons', 'schwa-sound')
     expect(recordLessonQuizAttemptMock).toHaveBeenCalledWith(
       'user-1',
-      expect.arrayContaining([expect.objectContaining({ timeMs: expect.any(Number) })]),
+      expect.arrayContaining([expect.objectContaining({
+        timeMs: expect.any(Number),
+        topic: 'mini:schwa sound',
+      })]),
     )
   })
 

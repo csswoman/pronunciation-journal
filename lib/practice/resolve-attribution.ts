@@ -6,12 +6,14 @@ import {
   core1kId,
   nonSrsAttribution,
   textFragmentId,
+  topicId,
   wordBankId,
   type EvidenceModality,
   type EvidenceAttribution,
 } from '@/lib/practice/attribution'
 import type { PracticeExercise } from '@/lib/practice/types'
 import { isUuid } from '@/lib/review/content-ref'
+import { normalizeTopic } from '@/lib/practice/normalize-topic'
 
 export function evidenceModalityForExercise(
   exercise: Pick<PracticeExercise, 'slug'>,
@@ -74,8 +76,12 @@ export function resolveAnswerAttribution(
   }
 
   const ref = exercise.sourceRef
+  const genericTopic = exercise.payload.kind === 'generic'
+    ? normalizeTopic(exercise.payload.data.topic ?? '')
+    : null
+  const outcomes: Array<Parameters<typeof attributeSingleTarget>[0]> = []
   if (ref?.source === 'word_bank' && isUuid(ref.id)) {
-    return attributeSingleTarget({
+    outcomes.push({
       target: { namespace: 'word_bank', id: wordBankId(ref.id) },
       correct: isCorrect,
       score,
@@ -88,7 +94,7 @@ export function resolveAnswerAttribution(
   }
 
   if (ref?.source === 'text_fragments') {
-    return attributeSingleTarget({
+    outcomes.push({
       target: { namespace: 'text_fragments', id: textFragmentId(ref.id) },
       correct: isCorrect,
       score,
@@ -97,12 +103,26 @@ export function resolveAnswerAttribution(
   }
 
   if (ref?.source === 'core1k') {
-    return attributeSingleTarget({
+    outcomes.push({
       target: { namespace: 'core1k', id: core1kId(ref.id) },
       correct: isCorrect,
       score,
       modality,
     })
+  }
+
+  if (genericTopic) {
+    outcomes.push({
+      target: { namespace: 'topic', id: topicId(genericTopic) },
+      correct: isCorrect,
+      score,
+      modality,
+    })
+  }
+
+  if (outcomes.length > 0) {
+    const [first, ...rest] = outcomes
+    return { srsEligible: true, outcomes: [first!, ...rest] }
   }
 
   // No deterministic target — answer_history only.

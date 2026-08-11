@@ -62,23 +62,12 @@ describe('SessionDone', () => {
     expect(screen.queryByText('Estas te costaron — vuelven mañana')).toBeNull()
   })
 
-  it('renders the tomorrow preview line with correct X/Y numbers', () => {
+  it('explains that another session uses the selected action size', () => {
     render(
       <SessionDone stats={stats} sessionSummary={sessionSummary} strugglingWords={strugglingWords} />,
     )
 
-    // X = strugglingWords.length(3) + dueCount(7) = 10, Y = newQuota = 9
-    expect(screen.getByText('Mañana: 10 repasos y 9 palabras nuevas')).toBeTruthy()
-  })
-
-  it('omits the zero side of the tomorrow preview instead of showing "0 repasos"', () => {
-    const noReviewsDue: EssentialWordsStats = { ...stats, dueCount: 0 }
-    render(
-      <SessionDone stats={noReviewsDue} sessionSummary={sessionSummary} strugglingWords={[]} />,
-    )
-
-    expect(screen.getByText('Mañana: 9 palabras nuevas')).toBeTruthy()
-    expect(screen.queryByText(/repasos/)).toBeNull()
+    expect(screen.getByText('La próxima sesión se armará con el tamaño seleccionado.')).toBeTruthy()
   })
 
   it('does not render StatBlock, chips, or tomorrow preview in the wasEmpty variant', () => {
@@ -97,7 +86,7 @@ describe('SessionDone', () => {
     expect(screen.queryByText('Repasadas')).toBeNull()
     expect(screen.queryByText('Sin fallos')).toBeNull()
     expect(screen.queryByText('Estas te costaron — vuelven mañana')).toBeNull()
-    expect(screen.queryByText(/^Mañana:/)).toBeNull()
+    expect(screen.queryByText(/^Próxima sesión:/)).toBeNull()
   })
 
   it('shows "Ver progreso" and "Abrir plan de hoy" directly, without needing to expand anything', () => {
@@ -109,7 +98,7 @@ describe('SessionDone', () => {
     expect(screen.getByRole('link', { name: 'Abrir plan de hoy' })).toBeVisible()
   })
 
-  it('makes "Aprender 10 nuevas más" the primary action when both CTAs are present', () => {
+  it('makes "Practicar otra sesión" the primary action when both CTAs are present', () => {
     render(
       <SessionDone
         stats={stats}
@@ -120,7 +109,7 @@ describe('SessionDone', () => {
       />,
     )
 
-    expect(screen.getByRole('button', { name: 'Aprender 10 nuevas más' }).className).toContain('bg-primary')
+    expect(screen.getByRole('button', { name: 'Practicar otra sesión' }).className).toContain('bg-primary')
     expect(screen.getByRole('button', { name: 'Buscar palabras para practicar' }).className).not.toContain('bg-primary')
   })
 
@@ -140,6 +129,6 @@ describe('SessionDone', () => {
     expect(screen.queryByText('Repasadas')).toBeNull()
     expect(screen.queryByText('Sin fallos')).toBeNull()
     expect(screen.queryByText('Estas te costaron — vuelven mañana')).toBeNull()
-    expect(screen.queryByText(/^Mañana:/)).toBeNull()
+    expect(screen.queryByText(/^Próxima sesión:/)).toBeNull()
   })
 })

@@ -14,6 +14,11 @@ import { useEffect, useRef, useState } from 'react'
 import { speak } from '@/lib/phoneme-practice/tts'
 import { PillButton } from '@/components/ui/PillButton'
 import Button from '@/components/ui/Button'
+import {
+  PracticeActionBar,
+  PracticeContinueButton,
+  PracticeExerciseCard,
+} from '@/components/practice/session/PracticeActionBar'
 import { playUiCue } from '@/lib/ui-sounds/cues'
 import { selectSentence } from '@/lib/essential-words/sentence-variants'
 import { buildHintLadder } from '@/lib/essential-words/hint-ladder'
@@ -132,7 +137,7 @@ export function RecallTranslationCard({ entry, levelLabel, repetitions = 0, onAt
   if (!entry.translation) return null
 
   return (
-    <div className="flex w-full flex-col items-center gap-(--space-5) rounded-lg border border-border-subtle bg-surface-raised layout-card-pad">
+    <PracticeExerciseCard spacing="roomy">
       <ExercisePhaseLabel label={levelLabel} onArchive={onArchive} />
       <div className="flex max-w-[42ch] flex-col items-center gap-1 text-center">
         <p className="m-0 w-full text-body text-fg">Escribe la palabra en inglés</p>
@@ -190,16 +195,16 @@ export function RecallTranslationCard({ entry, levelLabel, repetitions = 0, onAt
             <AnswerDiff written={answer || '(sin respuesta)'} expected={entry.word} isTypo={outcome.typo} word={entry.word} />
           )}
           {onContinue && (
-            <Button type="button" variant="primary" size="lg" className="w-full" onClick={onContinue} disabled={isContinuing} isLoading={isContinuing}>
-              Continuar
-            </Button>
+            <PracticeActionBar>
+              <PracticeContinueButton onClick={onContinue} disabled={isContinuing} isLoading={isContinuing} />
+            </PracticeActionBar>
           )}
         </>
       ) : (
-        <PillButton type="button" variant="primary" onClick={handleCheck}>
+        <Button type="button" variant="primary" size="lg" fullWidth onClick={handleCheck}>
           Comprobar
-        </PillButton>
+        </Button>
       )}
-    </div>
+    </PracticeExerciseCard>
   )
 }

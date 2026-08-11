@@ -6,6 +6,7 @@ import type {
   LessonPriority,
 } from "./types";
 import type { PronunciationTargetId } from "@/lib/pronunciation/targets/types";
+import { theoryTopicForDeck } from "@/lib/learning-loop/theory-targets";
 
 export interface CourseInput {
   t: string;
@@ -28,6 +29,7 @@ function toLesson(
     number,
     title: course.t,
     slug: course.g,
+    topicId: course.g ? theoryTopicForDeck(course.g) : undefined,
     priority: course.p,
     isOptional: course.p === 0,
     soundLab: course.s,

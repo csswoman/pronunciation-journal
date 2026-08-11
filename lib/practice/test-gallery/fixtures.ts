@@ -129,6 +129,7 @@ const GENERIC_FIXTURES: Record<
     type: 'cs_shadow_phrase',
     sourceRef: { source: 'text_fragments', id: 'cs-linking' },
     phrase: "I'm gonna call you later.",
+    phraseIpa: '/aɪm ˈɡɑnə ˈkɔl jə ˈleɪtər/',
     deckSlug: 'cs-linking',
   },
 }

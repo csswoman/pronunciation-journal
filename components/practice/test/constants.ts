@@ -2,9 +2,9 @@ import type { TestGalleryDomain } from '@/lib/practice/test-gallery/fixtures'
 import type { PracticeContext } from '@/lib/practice/types'
 
 export const CONTEXT_LABELS: Record<PracticeContext, string> = {
-  daily: 'Daily',
-  review: 'Review',
-  practice: 'Practice',
+  daily: 'Plan diario',
+  review: 'Repaso',
+  practice: 'Práctica',
   sound_lab: 'Sound Lab',
   courses: 'Ruta',
   ai_coach: 'AI Coach',

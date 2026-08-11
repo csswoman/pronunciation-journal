@@ -29,8 +29,8 @@ export function LevelProgressBar({ segments, className }: Props) {
       {segments.map((segment) => (
         <div
           key={segment.level}
-          className="relative h-full min-w-px bg-surface-sunken"
-          style={{ flexGrow: segment.total, flexBasis: 0 }}
+          className="relative h-full min-w-px basis-0 bg-surface-sunken"
+          style={{ flexGrow: segment.total }}
           title={`${segment.level}: ${segment.learned} de ${segment.total}`}
         >
           <div

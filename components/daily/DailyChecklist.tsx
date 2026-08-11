@@ -1,19 +1,21 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Sparkles } from "@/components/icons"
+import { Sparkles } from '@/components/icons'
 import PageLayout from '@/components/layout/PageLayout'
 import PageHeader from '@/components/layout/PageHeader'
+import RecommendedPracticeCard from '@/components/practice/hub/RecommendedPracticeCard'
+import { resolveRecommendedMode } from '@/lib/practice/practice-modes'
 import DailyStepSession from './DailyStepSession'
 import SessionOpeningBanner from './SessionOpeningBanner'
 import SessionRecapCard from './SessionRecapCard'
-import Button from '@/components/ui/Button'
-import DailyStepList from './DailyStepList'
+import DailyPlanCard from './DailyPlanCard'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { useDailyPlan, type ConceptLesson, type DailyStep } from '@/hooks/useDailyPlan'
 import { fetchDueTomorrowCount } from '@/lib/review/client-queries'
+import { useAICoachStore } from '@/lib/stores/aiCoachStore'
 
 export type { ConceptLesson }
 
@@ -62,6 +64,7 @@ type View =
 export default function DailyChecklist({ conceptLesson, initialStepId, streak = null }: DailyChecklistProps) {
   const router = useRouter()
   const { user } = useAuth()
+  const openCoach = useAICoachStore((state) => state.openCoach)
   const { plan, status, steps, getStepStatus, completedCount, allDone, load, markDone, celebrate } = useDailyPlan({
     conceptLesson,
     autoLoad: true,
@@ -77,7 +80,7 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
   useEffect(() => {
     if (status !== 'ready' || !initialStepId || autoStartedRef.current) return
     const step = steps.find((s) => s.id === initialStepId)
-    if (!step || step.kind === 'concept' || step.kind === 'study_deck') return
+    if (!step || step.kind === 'concept' || step.kind === 'study_deck' || step.kind === 'mission') return
     autoStartedRef.current = true
     const stored = readStepStorage()
     const exerciseIndex = stored?.stepId === initialStepId ? (stored.exerciseIndex ?? 0) : 0
@@ -100,11 +103,15 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
 
   const handleStartStep = useCallback((step: DailyStep) => {
     if (step.kind === 'concept' || step.kind === 'study_deck') return
+    if (step.kind === 'mission' && step.missionLaunch) {
+      openCoach({ tab: 'missions', mission: { ...step.missionLaunch, launchId: crypto.randomUUID() } })
+      return
+    }
     writeStepStorage(step.id, 0)
     setSessionKey((k) => k + 1)
     setView({ mode: 'step', step, exerciseIndex: 0 })
     router.replace(`/daily?step=${step.id}`)
-  }, [router])
+  }, [openCoach, router])
 
   const handleComplete = useCallback(async (stepId: string) => {
     clearStepStorage()
@@ -119,27 +126,14 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
     setView({ mode: 'checklist' })
   }, [router])
 
-  // ── Render: estados de carga / error ──────────────────────────────────────
-  if (status === 'loading' || status === 'idle') {
-    return (
-      <div className="phoneme-focus fixed inset-0 z-40 flex items-center justify-center">
-        <div className="animate-pulse text-fg-subtle">Preparing your plan…</div>
-      </div>
-    )
-  }
-
-  if (status === 'error') {
-    return (
-      <div className="phoneme-focus fixed inset-0 z-40 flex items-center justify-center p-[var(--layout-card-pad)]">
-        <div className="space-y-3 text-center">
-          <p className="text-error">Couldn't prepare your plan. Please try again.</p>
-          <Button type="button" variant="primary" size="sm" onClick={load}>
-            Retry
-          </Button>
-        </div>
-      </div>
-    )
-  }
+  const recommendation = useMemo(() => {
+    if (status !== 'ready' || !plan?.arc) return null
+    return resolveRecommendedMode({
+      fromDaily: true,
+      arc: plan.arc,
+      lastModeId: null,
+    })
+  }, [status, plan?.arc])
 
   // ── Render: sesión de un paso ──────────────────────────────────────────────
   if (view.mode === 'step') {
@@ -177,22 +171,46 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
         variant="compact"
         kicker="Hoy"
         title="Plan diario"
-        subtitle={`${completedCount} de ${steps.length} pasos · completa los ${steps.length} para mantener tu racha.`}
-        progress={steps.length ? Math.round((completedCount / steps.length) * 100) : 0}
+        subtitle={
+          status === 'ready' && steps.length > 0
+            ? completedCount === 0
+              ? `Completa ${steps.length} pasos para mantener tu racha.`
+              : `${completedCount} de ${steps.length} hechos · sigue para mantener tu racha.`
+            : status === 'ready'
+              ? 'Tu plan se arma con cursos y sonidos.'
+              : 'Preparando tu plan…'
+        }
       />
 
-      <SessionOpeningBanner arc={plan?.arc} />
+      {status === 'ready' ? <SessionOpeningBanner arc={plan?.arc} /> : null}
 
-      <DailyStepList
+      <DailyPlanCard
+        status={status}
         steps={steps}
         getStepStatus={getStepStatus}
+        completedCount={completedCount}
+        allDone={allDone}
         onStartStep={handleStartStep}
+        onRetry={() => void load()}
+        collapseFutureSteps
       />
 
-      <div className="mt-8 flex flex-col items-center gap-2 text-center">
-        <Link href="/practice/sounds" className="inline-flex items-center gap-1.5 text-caption text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]">
-          <Sparkles size={14} />
-          Want free practice? Choose what to work on.
+      {recommendation ? (
+        <div className="mt-[var(--layout-section-gap)]">
+          <p className="font-kicker mb-[var(--layout-stack-tight)] text-fg-muted">
+            Después del plan
+          </p>
+          <RecommendedPracticeCard recommendation={recommendation} />
+        </div>
+      ) : null}
+
+      <div className="mt-[var(--layout-section-gap)] flex flex-col items-center text-center">
+        <Link
+          href="/practice"
+          className="focus-ring inline-flex min-h-11 items-center gap-1.5 rounded-md px-2 font-caption font-medium text-fg-muted transition-colors hover:text-primary"
+        >
+          <Sparkles size={14} className="text-primary" aria-hidden />
+          ¿Práctica libre? Elige qué trabajar
         </Link>
       </div>
     </PageLayout>

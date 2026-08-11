@@ -19,6 +19,7 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:integration": "vitest run --config vitest.integration.config.ts",
+    "test:learning-loop:integration": "vitest run --config vitest.integration.config.ts lib/essential-words/__tests__/runtime-engine.integration.test.ts lib/learning-loop/__tests__/roundtrip.integration.test.ts --maxWorkers=1",
     "test:rls:integration": "node scripts/rls-integration.mjs",
     "test:srs-rating-events:integration": "node scripts/srs-rating-events-integration.mjs",
     "test:a11y": "playwright test",
@@ -29,6 +30,7 @@
     "essential-words:gen-sentences": "tsx --env-file=.env.local scripts/essential-words/generate-example-sentences.mjs",
     "essential-words:apply-sentences": "node scripts/essential-words/apply-example-sentences.mjs",
     "audit:course-content": "vitest run lib/courses/__tests__/content-audit.test.ts lib/courses/__tests__/grammar-deck-coverage.test.ts",
+    "audit:learning-loop": "tsx scripts/audit-learning-loop.mjs",
     "analyze:bundle": "node scripts/analyze-bundle.mjs",
     "analyze:bundle:check": "node scripts/analyze-bundle.mjs --check",
     "lexicon:enrich": "node scripts/enrich-lexicon.mjs --all"

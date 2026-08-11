@@ -8,6 +8,8 @@
 - **Depends on**: 046, 048
 - **Category**: direction
 - **Planned at**: commit `38c3abe5`, 2026-07-17
+- **Current status**: DONE (2026-08-11 via Plan 075 — authored-pair generator,
+  topic-review call site, capability audit and deterministic coverage report)
 
 ## Why this matters
 
@@ -46,10 +48,17 @@ Los grammar decks solo evalúan con multiple choice aunque muchos contienen pare
 
 ## Done criteria
 
-- [ ] Un deck fixture genera ejercicios válidos con topic/sourceRef deterministas.
-- [ ] Respuestas correctas, incorrectas y typo cercano producen feedback distinto.
-- [ ] El tipo se renderiza solo vía registry y persiste con ID 19.
-- [ ] Funciona sin red una vez cargado el deck.
+- [x] Un deck fixture genera ejercicios válidos con topic/sourceRef deterministas.
+- [x] Respuestas correctas, incorrectas y typo cercano producen feedback distinto.
+- [x] El tipo se renderiza solo vía registry y persiste con ID 19.
+- [x] Funciona sin red una vez cargado el deck.
+
+## Closure report (Plan 075)
+
+`pnpm audit:learning-loop` encontró 272 pares adyacentes válidos en 128 decks y
+207 líneas omitidas de forma determinista. El generador solo acepta `bad`
+seguido inmediatamente de `good` dentro del mismo bloque; topic review incluye
+como máximo una corrección y completa hasta tres ejercicios con quiz.
 
 ## STOP conditions
 

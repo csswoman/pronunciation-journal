@@ -1,3 +1,7 @@
+import { resolveAnswerSkills } from './skill-matrix'
+import * as PracticeTypes from '@/lib/practice/types'
+import type { ExerciseSlug } from '@/lib/practice/types'
+
 export type SkillKey =
   | 'pronunciation'
   | 'grammar'
@@ -26,6 +30,8 @@ export interface FluencyWordBankStatus {
 
 export interface FluencyRawAnswer {
   exerciseTypeId: number
+  slug?: ExerciseSlug | null
+  exercisePayload?: unknown
   context: string | null
   isCorrect: boolean
   grade: number | null
@@ -43,33 +49,15 @@ export interface FluencyScoreInput {
 /** Target answers in 30 days for frequency component to reach 100. */
 const TARGET_ANSWERS_PER_SKILL = 20
 
-const PHONEME_TYPES = new Set([1, 2, 3, 4, 11, 12, 13, 14])
-const LISTENING_TYPES = new Set([3, 4, 6, 12, 13, 14])
-const GRAMMAR_TYPES = new Set([5, 7, 8])
-const SPEAKING_TYPES = new Set([10])
-
 function answerAccuracy(answer: FluencyRawAnswer): number {
   if (answer.grade != null) return Math.round((answer.grade / 5) * 100)
   return answer.isCorrect ? 100 : 0
 }
 
 function skillsForAnswer(answer: FluencyRawAnswer): SkillKey[] {
-  const skills = new Set<SkillKey>()
-  const { exerciseTypeId: typeId, context } = answer
-
-  if (context === 'courses') skills.add('reading')
-  if (context === 'ai_coach') skills.add('speaking')
-  if (context === 'essential-words') {
-    skills.add('vocabulary')
-    if (typeId === 10) skills.add('speaking')
-  }
-  if (context === 'sound_lab' || PHONEME_TYPES.has(typeId)) skills.add('pronunciation')
-  if (LISTENING_TYPES.has(typeId)) skills.add('listening')
-  if (SPEAKING_TYPES.has(typeId)) skills.add('speaking')
-  if (GRAMMAR_TYPES.has(typeId) && context !== 'essential-words') skills.add('grammar')
-  if (typeId === 7 || typeId === 5) skills.add('vocabulary')
-
-  return [...skills]
+  const slug =
+    answer.slug ?? PracticeTypes.slugForExerciseTypeId(answer.exerciseTypeId)
+  return [...resolveAnswerSkills(slug, answer.exercisePayload)]
 }
 
 function emptyBuckets(): Record<SkillKey, { correct: number; total: number }> {
@@ -96,7 +84,7 @@ function bucketAnswers(answers: FluencyRawAnswer[]): Record<SkillKey, { correct:
 }
 
 function retentionForSkill(skill: SkillKey, input: FluencyScoreInput): number {
-  const { wordsByStatus, contrastCorrect, contrastTotal, core1000Practiced, lessonsCompleted } = input
+  const { wordsByStatus, contrastCorrect, contrastTotal, core1000Practiced } = input
   const wordTotal = Object.values(wordsByStatus).reduce((a, b) => a + b, 0)
 
   switch (skill) {
@@ -112,9 +100,6 @@ function retentionForSkill(skill: SkillKey, input: FluencyScoreInput): number {
       return contrastTotal >= 5
         ? Math.round((contrastCorrect / contrastTotal) * 100)
         : 0
-    case 'grammar':
-    case 'reading':
-      return Math.min(100, lessonsCompleted * 8)
     default:
       return 0
   }

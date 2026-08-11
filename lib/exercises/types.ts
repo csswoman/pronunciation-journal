@@ -1,9 +1,10 @@
 import type { CEFRLevel } from '@/lib/exercises/cefr'
+import type { PronunciationTargetId } from '@/lib/pronunciation/targets/types'
 import type { ExerciseType as CanonicalExerciseType } from './taxonomy'
 
 // ── Source references ──────────────────────────────────────────────────────
 
-export type ExerciseSource = 'words' | 'text_fragments' | 'word_bank' | 'core1k' | 'lexicon' | 'false_friends'
+export type ExerciseSource = 'words' | 'text_fragments' | 'word_bank' | 'core1k' | 'lexicon' | 'false_friends' | 'tracked_items'
 
 export interface ExerciseSourceRef {
   source: ExerciseSource
@@ -204,8 +205,12 @@ export interface CsShadowPhraseExercise extends BaseGenericExercise {
   type: 'cs_shadow_phrase'
   /** The full sentence to shadow (already embeds the connected-speech feature). */
   phrase: string
+  /** Authored phrase-level IPA. Omitted when the source deck does not provide it. */
+  phraseIpa?: string
   /** Which connected-speech deck this phrase came from (linking, reductions, etc). */
   deckSlug: string
+  /** One authored target at most: a phrase-level STT score cannot update a group. */
+  pronunciationTargetId?: PronunciationTargetId
 }
 
 export type GenericExercise =

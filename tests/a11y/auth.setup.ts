@@ -11,7 +11,7 @@ const AUTH_FILE = "tests/a11y/.auth/guest.json";
  */
 setup("authenticate as guest", async ({ page }) => {
   await page.goto("/login");
-  const guestButton = page.getByRole("button", { name: "Continue as guest" });
+  const guestButton = page.getByRole("button", { name: "Explorar sin cuenta" });
   await expect(guestButton).toBeVisible();
   await guestButton.click();
 

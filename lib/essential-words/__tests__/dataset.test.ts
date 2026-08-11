@@ -60,6 +60,16 @@ describe("Core 1000 dataset", { timeout: 15_000 }, () => {
     expect(bad, `\n${report}`).toEqual([]);
   });
 
+  it("has complete auditable word metadata for every sentence", () => {
+    const failures = words.flatMap((word) => [
+      { sentence: word.example_sentence, tokens: word.example_tokens, label: "base" },
+      ...(word.example_sentences ?? []).map((variant, index) => ({ sentence: variant.sentence, tokens: variant.tokens, label: `variant ${index}` })),
+    ].filter(({ sentence, tokens }) => !tokens?.length || tokens.some((token) =>
+      token.text !== sentence.slice(token.start, token.end) || !token.normalized || !token.ipa.startsWith("/")
+    )).map(({ label }) => `#${word.rank} ${word.word} ${label}`));
+    expect(failures, failures.join("\n")).toEqual([]);
+  });
+
   it("every entry has at least one cloze-viable sentence", async () => {
     const { clozeFor } = await import("../cloze");
     const failing = words.filter((w) => {

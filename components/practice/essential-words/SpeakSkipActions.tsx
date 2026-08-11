@@ -2,7 +2,7 @@
 
 // Planned structure:
 // <SpeakSkipActions>
-//   <ArchiveConfirm />     — Ya la sé → confirma pausa 90d
+//   <ArchiveConfirm />     — pausa explícita de 90 días
 //   <FromSnoozeActions />  — Seguir 90d / Dominar con confirmación
 // </SpeakSkipActions>
 
@@ -43,7 +43,7 @@ export function SpeakSkipActions({
 
   return (
     <div className="flex w-full flex-col items-center gap-2 border-t border-border-subtle pt-4">
-      <ArchiveConfirmAction onArchive={onArchive} />
+      <ArchiveConfirmAction onArchive={onArchive} label="Pausar esta palabra" />
       {fromSnooze && (
         <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
           <button

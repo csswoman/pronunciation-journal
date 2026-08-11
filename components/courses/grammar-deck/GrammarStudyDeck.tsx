@@ -22,6 +22,7 @@ import GrammarDeckHeader from "./GrammarDeckHeader";
 import QuizStep from "./QuizStep";
 import { DeckDoneScreen } from "./DeckDoneScreen";
 import { DeckCarousel } from "./DeckCarousel";
+import { theoryTopicForDeck } from "@/lib/learning-loop/theory-targets";
 
 interface GrammarStudyDeckProps {
   deck: GrammarStudyDeckData;
@@ -185,7 +186,8 @@ export default function GrammarStudyDeck({
             questions={deck.quiz}
             onDone={(correct, totalQ, pickedAnswers, answerTimesMs) => {
               setQuizScore({ correct, total: totalQ });
-              if (levelId && lessonId) {
+              const evidenceLessonSlug = lessonId ?? deckSlug;
+              if (evidenceLessonSlug && deckSlug) {
                 void getCurrentUser().then((user) => {
                   if (!user || !deck.quiz) return;
                   return recordLessonQuizAttempt(
@@ -194,14 +196,14 @@ export default function GrammarStudyDeck({
                       const selectedIndex = pickedAnswers[index];
                       return {
                         questionId: `${lessonId}:quiz:${index + 1}`,
-                        courseSlug: levelId,
-                        lessonSlug: lessonId,
+                        courseSlug: levelId ?? "decks",
+                        lessonSlug: evidenceLessonSlug,
                         question: question.q,
                         selectedAnswer: selectedIndex == null ? "" : question.options[selectedIndex] ?? "",
                         correctAnswer: question.options[question.answer] ?? "",
                         isCorrect: selectedIndex === question.answer,
                         timeMs: answerTimesMs[index] ?? 0,
-                        topic: lessonId,
+                        topic: deck.topicId ?? theoryTopicForDeck(deckSlug),
                       };
                     }),
                   );

@@ -25,6 +25,18 @@
   flex: 1;
 }
 
+/* Two simultaneous exercises cannot both own the viewport bottom. */
+.exercise-test-split-pane .practice-action-bar__spacer {
+  display: none;
+}
+
+.exercise-test-split-pane .practice-action-bar__dock {
+  position: static;
+  border-top: 0;
+  background: transparent;
+  padding: 0;
+}
+
 @media (max-width: 1023px) {
   .exercise-test-split-pane .phoneme-focus {
     min-height: 70dvh;

@@ -29,6 +29,12 @@ function isSafeDistance(target: string, candidate: string): boolean {
   return editDistance(target.toLowerCase(), candidate.toLowerCase()) >= MIN_DISTANCE;
 }
 
+function phoneticDistance(target: string, candidate: string): number {
+  const targetSymbols = Array.from(target.replace(/[ˈˌ.\s]/g, ''));
+  const candidateSymbols = Array.from(candidate.replace(/[ˈˌ.\s]/g, ''));
+  return editDistance(targetSymbols.join(''), candidateSymbols.join(''));
+}
+
 /**
  * Selects up to `count` distractors for `target` from `pool`, applying (in
  * order, relaxing category first if the strict filter starves the result):
@@ -78,4 +84,33 @@ export function selectDistractors(
   // Relax category constraint before distance/homophone (spec §2.4b: "mejor
   // mezclar categorías que producir discriminación fina accidental").
   return dedupe(base);
+}
+
+/**
+ * Chooses alternatives for an audio-recognition exercise. Unlike meaning
+ * recognition, this deliberately favours the closest available pronunciations
+ * so the learner has to discriminate the sound they heard.
+ */
+export function selectAudioDistractors(
+  target: EssentialWord,
+  pool: EssentialWord[],
+  count: number,
+): EssentialWord[] {
+  const targetKey = target.word.toLowerCase();
+  const seen = new Set<string>();
+
+  return pool
+    .filter((candidate) => {
+      const key = candidate.word.toLowerCase();
+      if (key === targetKey || seen.has(key) || !candidate.ipa_strong) return false;
+      seen.add(key);
+      return true;
+    })
+    .sort((a, b) => {
+      const distance = phoneticDistance(target.ipa_strong, a.ipa_strong)
+        - phoneticDistance(target.ipa_strong, b.ipa_strong);
+      if (distance !== 0) return distance;
+      return a.word.localeCompare(b.word);
+    })
+    .slice(0, count);
 }

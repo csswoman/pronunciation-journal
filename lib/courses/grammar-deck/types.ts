@@ -88,6 +88,8 @@ export interface GrammarQuizQuestion {
 
 export interface GrammarStudyDeckData {
   meta: GrammarDeckMeta;
+  /** Derived from the stable deck slug by the server loader. */
+  topicId?: string;
   /** Target IPA sounds for the Sound Lab handoff. @deprecated kept for compatibility — prefer `pronunciationTargetIds`. */
   sounds?: string[];
   /** Authored pronunciation targets this deck teaches. Never inferred at runtime. */

@@ -30,13 +30,32 @@ describe('buildTrackingReviewQueue', () => {
     expect(queue.skipped).toEqual([])
   })
 
-  it('does not invent a phrase namespace when the canonical resolver is absent', () => {
+  it('keeps an unresolved personal phrase as activity-only shadowing', () => {
     const queue = buildTrackingReviewQueue([
       { item: { id: 'phrase-1', kind: 'phrase', title: 'I am going to call' }, trackedItem: tracked('phrase', 'i am going to call') },
     ])
 
-    expect(queue.exercises).toHaveLength(0)
-    expect(queue.skipped[0]).toMatchObject({ code: 'canonical_target_unresolved', itemId: 'phrase-1' })
+    expect(queue.exercises).toHaveLength(1)
+    expect(queue.exercises[0]?.sourceRef).toEqual({ source: 'tracked_items', id: 'phrase-1' })
+    expect(queue.notices[0]).toMatchObject({ code: 'activity_only', itemId: 'phrase-1' })
+    expect(queue.skipped).toEqual([])
+  })
+
+  it('preserves one explicit authored target and rejects stale refs', () => {
+    const targeted = tracked('phrase', 'I am gonna call')
+    targeted.payload.pronunciationTargetId = 'connected.reduction.gonna'
+    const stale = tracked('phrase', 'stale')
+    stale.id = 'phrase-stale'
+    stale.payload.pronunciationTargetId = 'connected.missing'
+    const queue = buildTrackingReviewQueue([
+      { item: { id: 'phrase-1', kind: 'phrase', title: 'I am gonna call' }, trackedItem: targeted },
+      { item: { id: 'phrase-stale', kind: 'phrase', title: 'stale' }, trackedItem: stale },
+    ])
+
+    const data = queue.exercises[0]?.payload.kind === 'generic' ? queue.exercises[0].payload.data : null
+    expect(data).toMatchObject({ pronunciationTargetId: 'connected.reduction.gonna' })
+    expect(queue.skipped[0]).toMatchObject({ code: 'invalid_target_ref', itemId: 'phrase-stale' })
+    expect(queue.notices).toEqual([])
   })
 
   it('uses the resolved canonical target for a phrase and skips stale words', () => {

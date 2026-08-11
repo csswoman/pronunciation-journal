@@ -1,17 +1,20 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 import {
   createContext,
   useCallback,
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { signInAsGuest } from "@/lib/supabase/auth-actions";
 import { useLoadingWords } from "@/hooks/useLoadingWords";
 import { initSyncListeners } from "@/lib/sync/init-sync-listeners";
 
@@ -45,10 +48,12 @@ export default function AuthProvider({
   initialUser?: User | null;
   children: React.ReactNode;
 }) {
+  const router = useRouter();
   const supabaseEnabled = useMemo(() => isSupabaseConfigured(), []);
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(initialUser);
   const [loading, setLoading] = useState(supabaseEnabled && !initialUser);
+  const guestBootstrapTried = useRef(false);
 
   const signOutUser = useCallback(async () => {
     if (!supabaseEnabled) return;
@@ -58,6 +63,8 @@ export default function AuthProvider({
       const { flushOutbox } = await import("@/lib/sync/sync-manager");
       await flushOutbox(user.id).catch(() => {});
     }
+    // Allow a fresh anonymous bootstrap after sign-out (explore-first).
+    guestBootstrapTried.current = false;
     const supabase = getSupabaseBrowserClient();
     await supabase.auth.signOut();
   }, [supabaseEnabled, user?.id]);
@@ -86,7 +93,13 @@ export default function AuthProvider({
           .maybeSingle();
         const profile = data as { cefr_level?: string } | null;
 
-        const [{ db, ensureDbReady }, { getUserLearningState }, { hydrateFromRemote }, { normalizeCEFR }, { hydrateLessonCompletions }] = await Promise.all([
+        const [
+          { db, ensureDbReady },
+          { getUserLearningState },
+          { hydrateFromRemote },
+          { normalizeCEFR },
+          { hydrateLessonCompletions },
+        ] = await Promise.all([
           import("@/lib/db"),
           import("@/lib/ai-practice/load-state"),
           import("@/lib/ai-practice/queries"),
@@ -104,7 +117,10 @@ export default function AuthProvider({
         if (existing) {
           await db.learningState.put({
             ...existing,
-            state: { ...existing.state, level: { ...existing.state.level, cefrEstimate: nextLevel } },
+            state: {
+              ...existing.state,
+              level: { ...existing.state.level, cefrEstimate: nextLevel },
+            },
             updatedAt: new Date().toISOString(),
           });
           return;
@@ -115,14 +131,35 @@ export default function AuthProvider({
           state: { ...base, level: { ...base.level, cefrEstimate: nextLevel } },
           updatedAt: new Date().toISOString(),
         });
-      } catch {}
+      } catch {
+        /* hydration is best-effort */
+      }
     };
 
-    supabase.auth.getSession().then(({ data: { session: s } }) => {
-      setSession(s);
-      setUser(s?.user ?? initialUser);
-      if (s?.user?.id) void hydrateCEFR(s.user.id);
+    const bootstrapGuestIfNeeded = async (current: Session | null) => {
+      if (current?.user) return { session: current, didBootstrap: false };
+      if (guestBootstrapTried.current) return { session: null, didBootstrap: false };
+      guestBootstrapTried.current = true;
+      const { data, error } = await signInAsGuest();
+      if (error || !data.session) {
+        console.error("[auth] guest bootstrap failed", error);
+        router.replace("/login?intent=explore");
+        return { session: null, didBootstrap: false };
+      }
+      return { session: data.session, didBootstrap: true };
+    };
+
+    supabase.auth.getSession().then(async ({ data: { session: s } }) => {
+      const hadUser = Boolean(s?.user);
+      const { session: resolved, didBootstrap } = hadUser
+        ? { session: s, didBootstrap: false }
+        : await bootstrapGuestIfNeeded(s);
+      setSession(resolved);
+      setUser(resolved?.user ?? null);
+      if (resolved?.user?.id) void hydrateCEFR(resolved.user.id);
       setLoading(false);
+      // Re-run RSC loaders now that the anonymous cookie exists.
+      if (didBootstrap) router.refresh();
     });
 
     const {
@@ -137,7 +174,7 @@ export default function AuthProvider({
       cleanupSyncListeners();
       subscription.unsubscribe();
     };
-  }, [initialUser, supabaseEnabled, user?.id]);
+  }, [initialUser, router, supabaseEnabled, user?.id]);
 
   const value = useMemo<AuthContextValue>(
     () => ({
@@ -147,13 +184,11 @@ export default function AuthProvider({
       supabaseEnabled,
       signOutUser,
     }),
-    [user, session, loading, supabaseEnabled, signOutUser]
+    [user, session, loading, supabaseEnabled, signOutUser],
   );
 
   if (!supabaseEnabled) {
-    return (
-      <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
-    );
+    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
   }
 
   if (loading) {
@@ -164,9 +199,18 @@ export default function AuthProvider({
     );
   }
 
+  // Stay on the loading screen while redirecting after a failed bootstrap.
+  if (!user) {
+    return (
+      <AuthContext.Provider value={value}>
+        <AuthLoadingScreen />
+      </AuthContext.Provider>
+    );
+  }
+
   return (
     <AuthContext.Provider value={value}>
-      <div key={user?.id ?? "signed-out"}>{children}</div>
+      <div key={user.id}>{children}</div>
     </AuthContext.Provider>
   );
 }

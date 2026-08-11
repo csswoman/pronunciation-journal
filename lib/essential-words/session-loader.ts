@@ -1,6 +1,12 @@
 import { fetchEssentialWords } from "@/lib/essential-words/client";
 import { buildSessionQueue, matchesFilter, type EssentialWordQueueItem } from "@/lib/essential-words/queue";
-import { essentialWordId, NEW_CARDS_PER_DAY, type CefrLevel, type EssentialWordPos, type EssentialWord } from "@/lib/essential-words/types";
+import {
+  essentialWordId,
+  GUIDED_SESSION_NEW_CARDS,
+  type CefrLevel,
+  type EssentialWordPos,
+  type EssentialWord,
+} from "@/lib/essential-words/types";
 import { getEssentialWordsIntroducedToday } from "@/lib/db";
 import { prepareEssentialWordsSrsEntries } from "@/lib/essential-words/prepare-srs";
 import { getEssentialWordsDueTomorrowCount } from "@/lib/essential-words/due-tomorrow";
@@ -30,7 +36,9 @@ export async function loadEssentialWordsQueue(
   levels?: readonly CefrLevel[] | null,
   pos?: readonly EssentialWordPos[] | null,
   userId?: string,
+  options?: { maxNewWords?: number },
 ): Promise<LoadedEssentialWordsQueue> {
+  const maxNewWords = options?.maxNewWords ?? GUIDED_SESSION_NEW_CARDS;
   const [words, introducedToday, dueTomorrow] = await Promise.all([
     fetchEssentialWords(),
     getEssentialWordsIntroducedToday(userId),
@@ -40,7 +48,18 @@ export async function loadEssentialWordsQueue(
   const now = new Date();
   const { entries: srsEntries, activatedWordIds } = await prepareEssentialWordsSrsEntries(now, userId);
 
-  const items = buildSessionQueue({ words, srsEntries, introducedToday, now, levels, pos }).map((item) => ({
+  // Essential Words owns a complete three-word session (15 actions). Reviews
+  // take priority and new words fill what remains; today's Daily Plan quota
+  // never reduces this practice queue.
+  const items = buildSessionQueue({
+    words,
+    srsEntries,
+    introducedToday,
+    now,
+    newPerDay: introducedToday.length + maxNewWords,
+    levels,
+    pos,
+  }).map((item) => ({
     ...item,
     fromSnooze: activatedWordIds.includes(essentialWordId(item.entry.word)),
   }));
@@ -63,7 +82,7 @@ export async function loadEssentialWordsQueue(
       dueCount: items.filter((item) => item.kind === "review").length,
       dueTomorrow,
       newToday: introducedToday.length,
-      newQuota: NEW_CARDS_PER_DAY,
+      newQuota: maxNewWords,
       vaulted: srsEntries.filter(isVaultEntry).length,
     },
     allWords: words,

@@ -75,4 +75,15 @@ describe("exercise result mode tagging", () => {
     const result = buildEssentialWordExerciseResult(item, 4);
     expect(result.exercisePayload).toMatchObject({ mode: "speak_sentence" });
   });
+
+  it("forwards timeMs into the exercise result", () => {
+    const result = buildEssentialWordExerciseResult(
+      item,
+      4,
+      undefined,
+      "cloze_sentence",
+      12_500,
+    );
+    expect(result.timeMs).toBe(12_500);
+  });
 });

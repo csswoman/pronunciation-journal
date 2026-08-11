@@ -22,11 +22,12 @@ import Button from '@/components/ui/Button'
 
 export function EssentialWordsSession({ initialStreak = 0 }: { initialStreak?: number } = {}) {
   const {
-    phase, currentStepId, current, currentMode, currentExerciseLevel, distractorPool, stats, counts,
-    sessionProgress, studyContext, sessionSummary,
+    phase, currentStepId, current, currentMode, listeningTier, isListeningSkill, focusContrastId, retiredBlankKeys, currentExerciseLevel, audioDistractorPool, stats,
+    sessionProgress, sessionPreview, isResume, previewLoading, studyContext, sessionSummary,
     strugglingWords, reloadLoading, levels, activeRouteId, setRoute,
     startSpeak, beginSession, omitWord, submitGrade, reload, learnMore, archiveWord,
     keepSnooze, masterWord,
+    sessionSize, setSessionSize, discardSession, pauseAndPersistSession, startLeechReview,
   } = useEssentialWordsSession()
   const loadingWords = useLoadingWords()
   const router = useRouter()
@@ -66,7 +67,10 @@ export function EssentialWordsSession({ initialStreak = 0 }: { initialStreak?: n
   const exerciseLevelLabelText = currentExerciseLevel
     ? exerciseLevelLabel(currentExerciseLevel)
     : undefined
-  const exitToHub = () => router.push('/')
+  const exitToHub = async () => {
+    await pauseAndPersistSession()
+    router.push('/')
+  }
 
   // Cards describe what happened; this is the only boundary that translates
   // that evidence into the legacy numeric scheduler input. Fase C can replace
@@ -138,10 +142,10 @@ export function EssentialWordsSession({ initialStreak = 0 }: { initialStreak?: n
   const exitSheet = (
     <ExitConfirmSheet
       open={exitConfirmOpen}
-      onConfirm={() => { setExitConfirmOpen(false); exitToHub() }}
+      onConfirm={() => { setExitConfirmOpen(false); void exitToHub() }}
       onCancel={() => setExitConfirmOpen(false)}
       title="¿Salir de la práctica?"
-      description="Perderás el progreso de esta sesión."
+      description="Tu progreso quedará guardado para que puedas continuar después."
       confirmLabel="Salir"
       cancelLabel="Seguir practicando"
     />
@@ -177,16 +181,22 @@ export function EssentialWordsSession({ initialStreak = 0 }: { initialStreak?: n
   if (phase === 'ready') {
     return (
       <>
-        <SessionShell className="min-h-[calc(100dvh-10rem)] sm:min-h-[calc(100dvh-8rem)]">
+        <SessionShell className="min-h-[calc(100dvh-10rem)] max-w-[52rem] gap-space-6 sm:min-h-[calc(100dvh-8rem)] sm:gap-space-8">
           {pageHeader}
           {sessionToolbar}
           <SessionReady
-            counts={counts}
+            preview={sessionPreview!}
             stats={stats}
             streak={initialStreak}
             activeRouteId={activeRouteId}
             onRouteChange={(id) => void setRoute(id)}
+            sessionSize={sessionSize}
+            onSessionSizeChange={setSessionSize}
             onBegin={beginSession}
+            isResume={isResume}
+            previewLoading={previewLoading}
+            onDiscard={discardSession}
+            onLeechReview={startLeechReview}
           />
         </SessionShell>
         {exitSheet}
@@ -252,9 +262,13 @@ export function EssentialWordsSession({ initialStreak = 0 }: { initialStreak?: n
                 <EssentialWordsExerciseCard
                   current={current}
                   currentMode={currentMode}
+                  listeningTier={listeningTier}
+                  isListeningSkill={isListeningSkill}
+                  focusContrastId={focusContrastId}
+                  retiredBlankKeys={retiredBlankKeys}
                   currentStepId={currentStepId}
                   levelLabel={exerciseLevelLabelText}
-                  distractorPool={distractorPool}
+                  audioDistractorPool={audioDistractorPool}
                   onAttempt={handleAttempt}
                   onSpeakAttempt={handleSpeakAttempt}
                   onRetry={clearPendingAttempt}
@@ -263,6 +277,7 @@ export function EssentialWordsSession({ initialStreak = 0 }: { initialStreak?: n
                   onArchive={() => void archiveWord(current.entry.word)}
                   onKeepSnooze={() => void keepSnooze(current.entry.word)}
                   onMaster={() => void masterWord(current.entry.word)}
+                  isAdvancedListening={isListeningSkill && listeningTier === 3}
                 />
               )}
             </div>

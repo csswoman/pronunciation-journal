@@ -16,13 +16,21 @@ interface Props {
 }
 
 export function ProductionFeedback({ grade, transcript }: Props) {
+  const needsTranscriptReview = !grade.usedTarget
+
   return (
     <div className="flex w-full flex-col gap-3">
-      <StatusBanner correct={grade.correct} score={grade.score} />
-      <CriteriaChips usedTarget={grade.usedTarget} grammaticallyCorrect={grade.grammaticallyCorrect} />
+      <StatusBanner
+        correct={grade.correct}
+        score={grade.score}
+        needsTranscriptReview={needsTranscriptReview}
+      />
+      {!needsTranscriptReview && (
+        <CriteriaChips usedTarget={grade.usedTarget} grammaticallyCorrect={grade.grammaticallyCorrect} />
+      )}
       {transcript && (
         <p className="m-0 text-body-sm text-fg-muted italic">
-          Dijiste: &ldquo;{transcript}&rdquo;
+          {needsTranscriptReview ? 'Entendimos' : 'Dijiste'}: &ldquo;{transcript}&rdquo;
         </p>
       )}
       <p className="m-0 max-w-[70ch] text-body-sm leading-relaxed text-pretty text-fg">
@@ -40,7 +48,29 @@ export function ProductionFeedback({ grade, transcript }: Props) {
   )
 }
 
-function StatusBanner({ correct, score }: { correct: boolean; score: number }) {
+function StatusBanner({
+  correct,
+  score,
+  needsTranscriptReview,
+}: {
+  correct: boolean
+  score: number
+  needsTranscriptReview: boolean
+}) {
+  if (needsTranscriptReview) {
+    return (
+      <div className="flex flex-col gap-0.5 rounded-[var(--radius-md)] border border-warning-border bg-warning-soft px-4 py-3 text-warning">
+        <p className="m-0 flex items-center gap-2.5 text-body-sm font-semibold">
+          <span aria-hidden>○</span>
+          <span>No pudimos verificar la palabra objetivo.</span>
+        </p>
+        <p className="m-0 pl-6 text-caption font-medium opacity-80">
+          Revisa lo que entendimos y vuelve a intentarlo si no coincide con lo que dijiste.
+        </p>
+      </div>
+    )
+  }
+
   return (
     <div
       className={cn(

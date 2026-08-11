@@ -9,7 +9,7 @@
 import { explanationFor } from '@/lib/essential-words/word-explanations'
 import { displayEnglishWord } from '@/lib/essential-words/word-display'
 import type { DictationFeedback } from '@/lib/essential-words/dictation-feedback'
-import { Ear, GitCompareArrows } from '@/components/icons'
+import { AlertCircle, Check, Ear, GitCompareArrows, X } from '@/components/icons'
 
 interface DictationProps {
   feedback: DictationFeedback
@@ -30,85 +30,59 @@ export function AnswerDiff(props: DictationProps | WordProps) {
     const explanation = explanationFor(props.word)
     const expected = displayEnglishWord(props.expected)
     const written = props.written
-    const message = props.isTypo
-      ? `Casi — escribiste "${written}", revisa la ortografía de "${expected}".`
-      : `Escribiste "${written}", la respuesta era "${expected}".`
+    const isTypo = props.isTypo
+    const title = isTypo ? 'Revisa la ortografía' : 'No es esa palabra'
+    const message = isTypo
+      ? `Escribiste "${written}". Revisa la ortografía de "${expected}".`
+      : `Escribiste "${written}". La respuesta era "${expected}".`
     return (
-      <div className="flex w-full flex-col items-center gap-1 text-center">
-        <p data-testid="answer-diff-message" className="m-0 text-body text-fg">{message}</p>
+      <div
+        role="status"
+        aria-live="polite"
+        className={`flex w-full max-w-[42ch] items-start gap-3 rounded-md border px-4 py-3 text-left ${
+          isTypo ? 'border-warning/30 bg-warning-soft' : 'border-error/30 bg-error-soft'
+        }`}
+      >
+        <AlertCircle
+          size={20}
+          aria-hidden
+          className={`mt-0.5 shrink-0 ${isTypo ? 'text-warning' : 'text-error'}`}
+        />
+        <div className="min-w-0">
+          <p className={`m-0 text-label font-semibold ${isTypo ? 'text-warning' : 'text-error'}`}>{title}</p>
+          <p data-testid="answer-diff-message" className="m-0 mt-1 text-body text-fg">{message}</p>
         {explanation && (
-          <p data-testid="answer-diff-explanation" className="m-0 text-caption text-fg-muted">{explanation}</p>
+            <p data-testid="answer-diff-explanation" className="m-0 mt-1 text-caption text-fg-muted">{explanation}</p>
         )}
+        </div>
       </div>
     )
   }
 
-  const { feedback, word } = props
-  const explanation = explanationFor(word)
+  const { feedback } = props
   const differences = feedback.words.filter((item) => item.status !== 'match')
-  const writtenAtDifferences = [
-    ...differences.map((item) => item.written ?? '—'),
-    ...feedback.extras,
-  ]
-  const hasTargetError = differences.some(
-    (item) => item.isTarget && (item.status === 'error' || item.status === 'missing'),
-  )
-  const targetErrors = differences.filter(
-    (item) => item.isTarget && (item.status === 'error' || item.status === 'missing'),
-  )
-  const typos = differences.filter((item) => item.status === 'typo')
+  const phonetic = differences.find((item) => item.category === 'phonetic_substitution')
+  const guess = differences.find((item) => item.category === 'guess')
 
   return (
     <div className="flex w-full flex-col items-center gap-space-4 text-center">
-      <div className="flex flex-col items-center gap-space-2">
+      <div className="flex flex-col items-center gap-space-3">
         <p data-testid="answer-diff-message" className="m-0 max-w-[48ch] text-h3 text-fg" aria-label="Oración correcta">
         {feedback.words.map((item, index) => {
-          const statusClass = item.status === 'error' || item.status === 'missing'
-            ? 'bg-error-soft text-error'
-            : item.status === 'typo'
-              ? 'bg-warning-soft text-warning'
-              : ''
+          const isDifference = item.status !== 'match'
           return (
-            <span key={`${item.expected}-${index}`} className={statusClass ? `mx-0.5 inline-block rounded-xs px-1 py-0.5 ${statusClass}` : undefined}>
-              {item.expected}{index < feedback.words.length - 1 ? ' ' : feedback.terminalPunctuation}
+            <span key={`${item.expected}-${index}`} className="mx-0.5 inline">
+              {isDifference && item.written ? <span data-testid="answer-diff-written" className="inline-flex items-center gap-0.5 rounded-xs bg-error-soft px-1 py-0.5 text-error"><X size={14} aria-hidden />{item.written}</span> : null}
+              {isDifference ? <span className="inline-flex items-center gap-0.5 rounded-xs bg-success-soft px-1 py-0.5 text-success"><Check size={14} aria-hidden />{item.expected}</span> : item.expected}
+              {index < feedback.words.length - 1 ? ' ' : feedback.terminalPunctuation}
             </span>
           )
         })}
         </p>
-        {writtenAtDifferences.length > 0 && (
-          <p data-testid="answer-diff-written" className="m-0 text-body-sm text-fg-muted">
-            escribiste: {writtenAtDifferences.join(' · ')}
-          </p>
-        )}
       </div>
 
-      {(targetErrors.length > 0 || typos.length > 0) && (
-        <div className="flex w-full flex-col gap-space-4 border-t border-line-divider pt-space-4 text-left" aria-label="Detalles de corrección">
-          {targetErrors.map((item, index) => (
-            <div key={`${item.expected}-${index}`} className="flex items-start gap-space-3">
-              <Ear size={20} aria-hidden className="mt-0.5 shrink-0 text-error" />
-              <div className="min-w-0">
-                <p className="m-0 text-label text-fg">
-                  {item.written ? `Escuchaste ${item.written}, pero era ${item.expected}` : `Faltó ${item.expected}`}
-                </p>
-                {explanation && hasTargetError && (
-                  <p data-testid="answer-diff-explanation" className="m-0 mt-1 text-body-sm text-fg-muted">
-                    {explanation}
-                  </p>
-                )}
-              </div>
-            </div>
-          ))}
-          {typos.map((item, index) => (
-            <div key={`${item.expected}-${index}`} className="flex items-start gap-space-3">
-              <GitCompareArrows size={20} aria-hidden className="mt-0.5 shrink-0 text-warning" />
-              <p className="m-0 text-body-sm text-fg-muted">
-                {item.written} → {item.expected} · errata, no cuenta como error
-              </p>
-            </div>
-          ))}
-        </div>
-      )}
+      {phonetic ? <div className="flex w-full items-start gap-space-3 border-t border-line-divider pt-space-4 text-left" aria-label="Contraste fonético"><Ear size={20} aria-hidden className="mt-0.5 shrink-0 text-fg-muted" /><div><p className="m-0 font-ipa text-label text-fg">{phonetic.written} {phonetic.writtenIpa} → {phonetic.expected} {phonetic.expectedIpa}</p><p className="m-0 mt-1 text-body-sm text-fg-muted">Escucha el sonido que cambia entre ambas palabras.</p></div></div> : null}
+      {guess ? <div className="flex w-full items-start gap-space-3 border-t border-line-divider pt-space-4 text-left" aria-label="Escucha de nuevo la oración"><Ear size={20} aria-hidden className="mt-0.5 shrink-0 text-fg-muted" /><p className="m-0 text-body-sm text-fg-muted">No hay un contraste fonético atribuible. Vuelve a escuchar la oración completa.</p></div> : null}
     </div>
   )
 }

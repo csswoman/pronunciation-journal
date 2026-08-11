@@ -33,6 +33,12 @@ describe("planSkillModelMigration", () => {
     }
   });
 
+  it("siembra listening con la misma estimación provisional legacy", () => {
+    const source = { ...srsFsrs("not"), repetitions: 14, stability: 120, state: "Review" as const };
+    const listening = planSkillModelMigration([source], [], NOW).find((item) => item.skill === "listening")!;
+    expect(listening.initialListeningLevel).toMatchObject({ level: 5, provisional: true });
+  });
+
   it("deriva estado FSRS para filas SM-2 sin stability", () => {
     const meaning = planSkillModelMigration([srsLegacySm2("the")], [], NOW)
       .find((item) => item.skill === "meaning")!;

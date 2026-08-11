@@ -44,8 +44,9 @@ export function AuthInput({
     ? "border border-error focus:border-error focus-visible:ring-error"
     : "border border-border-subtle focus:border-primary focus-visible:ring-primary";
 
-  // When masked, show bullets at display size — track-tight keeps them readable
-  const maskedClass = masked ? "tracking-[0.2em]" : "";
+  // Wide tracking only while masked bullets are visible — not on the empty placeholder
+  const maskedClass =
+    masked && value.length > 0 ? "tracking-[0.2em]" : "placeholder:tracking-normal";
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!masked) { onChange(e.target.value); return; }

@@ -64,5 +64,9 @@
   "noun": { "meaning": "a word for a person, place, or thing", "translation": "sustantivo" },
   "alright": { "meaning": "all right; acceptable", "translation": "de acuerdo / bien" },
   "insure": { "meaning": "to protect something with insurance", "translation": "asegurar" },
-  "thirst": { "meaning": "the feeling of needing to drink", "translation": "sed" }
+  "thirst": { "meaning": "the feeling of needing to drink", "translation": "sed" },
+  "rather": {
+    "meaning": "preferably; more willingly (I'd rather = I'd prefer)",
+    "translation": "antes / preferiría"
+  }
 }

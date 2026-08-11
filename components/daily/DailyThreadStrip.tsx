@@ -21,24 +21,30 @@ export function DailyThreadStrip({ hints, embedded = false }: DailyThreadStripPr
 
   return (
     <div
-      className={cn( embedded ? 'border-t border-border-subtle pt-2' : 'rounded-lg border border-border-subtle bg-surface-sunken/60 px-3 py-2.5', )}
+      className={cn(
+        embedded
+          ? 'border-t border-border-subtle pt-3'
+          : 'rounded-lg border border-border-subtle bg-surface-sunken/60 px-3 py-2.5',
+      )}
     >
-      <p className="font-caption mb-1.5 text-fg-subtle">Te tocan hoy</p>
+      <p className="font-caption mb-1.5 text-fg-muted">Te tocan hoy</p>
       <ul className="flex flex-wrap gap-1.5" aria-label="Palabras de pasos anteriores">
         {visible.map((hint) => {
           const ipa = formatIpaDisplay(hint.ipa)
           return (
             <li
               key={hint.word}
-              className="inline-flex max-w-full items-center gap-1.5 rounded-md border border-border-subtle bg-surface-sunken px-2 py-0.5"
+              className="inline-flex max-w-full items-center gap-1.5 rounded-md border border-border-subtle bg-surface-raised px-2 py-1"
             >
               <span className="font-body-sm font-medium capitalize text-fg">{hint.word}</span>
-              {ipa ? <span className="font-ipa shrink-0 text-caption">{ipa}</span> : null}
+              {ipa ? (
+                <span className="font-ipa shrink-0 text-caption text-primary">{ipa}</span>
+              ) : null}
             </li>
           )
         })}
         {overflow > 0 ? (
-          <li className="inline-flex items-center rounded-md px-1.5 py-0.5 font-caption text-fg-muted">
+          <li className="inline-flex items-center rounded-md px-1.5 py-1 font-caption text-fg-muted">
             +{overflow}
           </li>
         ) : null}

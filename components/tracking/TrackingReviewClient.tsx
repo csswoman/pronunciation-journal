@@ -80,6 +80,14 @@ export default function TrackingReviewClient({ sessionId }: { sessionId: string 
         </div>
       ) : null}
 
+      {session.queue.notices?.length > 0 ? (
+        <div role="note" className="mb-5 rounded-[var(--radius-md)] border border-border-subtle bg-surface-sunken p-4 text-body-sm text-fg-muted">
+          {session.queue.notices.length === 1
+            ? session.queue.notices[0]!.detail
+            : `${session.queue.notices.length} frases se practicarán como shadowing sin cambiar tu progreso.`}
+        </div>
+      ) : null}
+
       {lessonItems.length > 0 ? (
         <section className="mb-6" aria-labelledby="tracking-review-lessons">
           <h2 id="tracking-review-lessons" className="mb-3 text-body-sm font-semibold text-fg">Lecciones guardadas</h2>

@@ -12,6 +12,8 @@ import type {
   AttemptLog,
   LearningItem,
   SrsReviewEvent,
+  Skill,
+  SkillObservation,
 } from "./verification/types";
 
 const FSRS_AUDIT = {
@@ -26,6 +28,10 @@ export interface AttemptRecordInput {
   assessment: AttemptAssessment;
   eventType: AttemptEventType;
   currentItems: LearningItem[];
+  renderedMode?: AttemptLog["renderedMode"];
+  diagnostic?: AttemptLog["diagnostic"];
+  observations?: SkillObservation[];
+  assessmentsBySkill?: Partial<Record<Skill, AttemptAssessment>>;
   retrievabilityBeforeReview?: number;
 }
 
@@ -46,7 +52,7 @@ export function planAttemptRecord(
   context: ExecutionContext,
 ): AttemptRecordPlan {
   const occurredAt = context.now.toISOString();
-  const observations = deriveObservations(input.assessment, context.now);
+  const observations = input.observations ?? deriveObservations(input.assessment, context.now);
   const attemptLog: AttemptLog = {
     id: context.newId(),
     sessionId: input.sessionId,
@@ -55,6 +61,8 @@ export function planAttemptRecord(
     observations,
     eventType: input.eventType,
     occurredAt,
+    ...(input.renderedMode ? { renderedMode: input.renderedMode } : {}),
+    ...(input.diagnostic ? { diagnostic: input.diagnostic } : {}),
   };
 
   if (input.eventType === "practice") {
@@ -62,8 +70,12 @@ export function planAttemptRecord(
   }
 
   const currentBySkill = new Map(input.currentItems.map((item) => [item.skill, item]));
-  const placements = derivePlacements(observations, input.assessment, input.currentItems, context.now);
-  const updatedItems = placements.flatMap((placement) => {
+  const placements = observations.flatMap((observation) => {
+    const assessment = input.assessmentsBySkill?.[observation.skill] ?? input.assessment;
+    return derivePlacements([observation], assessment, input.currentItems, context.now)
+      .map((placement) => ({ placement, assessment }));
+  });
+  const updatedItems = placements.flatMap(({ placement, assessment }) => {
     const current = currentBySkill.get(placement.skill);
     if (!current) return [];
 
@@ -72,16 +84,20 @@ export function planAttemptRecord(
       schedule: placement.schedule,
       lastReview: occurredAt,
       repetitions: current.repetitions + 1,
-      lapses: current.lapses + (input.assessment.grade === "Again" ? 1 : 0),
+      lapses: current.lapses + (assessment.grade === "Again" ? 1 : 0),
     }];
   });
   const priorById = new Map(input.currentItems.map((item) => [item.id, item.schedule]));
+  const assessmentByItemId = new Map(placements.map(({ placement, assessment }) => [
+    currentBySkill.get(placement.skill)?.id,
+    assessment,
+  ]));
   const srsEvents: SrsReviewEvent[] = updatedItems.map((item) => ({
     id: context.newId(),
     attemptLogId: attemptLog.id,
     learningItemId: item.id,
-    grade: input.assessment.grade,
-    assessment: input.assessment,
+    grade: assessmentByItemId.get(item.id)?.grade ?? input.assessment.grade,
+    assessment: assessmentByItemId.get(item.id) ?? input.assessment,
     priorSchedule: priorById.get(item.id)!,
     resultingSchedule: item.schedule,
     occurredAt,
@@ -101,10 +117,12 @@ export function planAttemptRecord(
 export async function persistAttemptRecord(
   userId: string,
   plan: AttemptRecordPlan,
+  seedItems: LearningItem[] = [],
 ): Promise<void> {
   await saveAttemptBundle(userId, {
     attempt: plan.attemptLog,
     events: plan.srsEvents,
     updatedItems: plan.updatedItems,
+    seedItems,
   });
 }

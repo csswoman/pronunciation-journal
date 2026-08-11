@@ -1,6 +1,7 @@
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { loadEssentialWordsQueue } from "../session-loader";
-import { getEssentialWordsSrsEntries } from "@/lib/db";
+import { fetchEssentialWords } from "../client";
+import { getEssentialWordsIntroducedToday, getEssentialWordsSrsEntries } from "@/lib/db";
 import { getEssentialWordsDueTomorrowCount } from "../due-tomorrow";
 import type { SRSData } from "@/lib/types";
 
@@ -32,6 +33,92 @@ vi.mock("../due-tomorrow", () => ({
 }))
 
 describe("loadEssentialWordsQueue", () => {
+  beforeEach(() => {
+    vi.mocked(fetchEssentialWords).mockResolvedValue([
+      {
+        rank: 1,
+        word: "test",
+        pos: "noun",
+        ipa_strong: "test",
+        example_sentence: "This is a test.",
+        cefr_level: "A1",
+      },
+    ]);
+    vi.mocked(getEssentialWordsSrsEntries).mockResolvedValue([]);
+    vi.mocked(getEssentialWordsIntroducedToday).mockResolvedValue([]);
+    vi.mocked(getEssentialWordsDueTomorrowCount).mockResolvedValue(0);
+  });
+
+  it("limits a first session to one complete three-word guided block", async () => {
+    vi.mocked(fetchEssentialWords).mockResolvedValue(
+      Array.from({ length: 10 }, (_, index) => ({
+        rank: index + 1,
+        word: `word-${index + 1}`,
+        pos: "noun" as const,
+        ipa_strong: `word-${index + 1}`,
+        example_sentence: "This is a word.",
+        cefr_level: "A1" as const,
+      })),
+    );
+
+    const result = await loadEssentialWordsQueue();
+
+    expect(result.items).toHaveLength(3);
+    expect(result.items.every((item) => item.kind === "new")).toBe(true);
+  });
+
+  it("fills the Essential Words block even when the Daily Plan recorded introductions today", async () => {
+    vi.mocked(fetchEssentialWords).mockResolvedValue(
+      Array.from({ length: 5 }, (_, index) => ({
+        rank: index + 1,
+        word: `word-${index + 1}`,
+        pos: "noun" as const,
+        ipa_strong: `word-${index + 1}`,
+        example_sentence: "This is a word.",
+        cefr_level: "A1" as const,
+      })),
+    );
+    vi.mocked(getEssentialWordsIntroducedToday).mockResolvedValue(["word-1", "word-2"]);
+    vi.mocked(getEssentialWordsSrsEntries).mockResolvedValue([
+      {
+        wordId: "c1k:word-1", word: "word-1", ease: 2.5, interval: 1,
+        repetitions: 1, nextReview: "2099-01-01T00:00:00.000Z",
+      },
+      {
+        wordId: "c1k:word-2", word: "word-2", ease: 2.5, interval: 1,
+        repetitions: 1, nextReview: "2099-01-01T00:00:00.000Z",
+      },
+    ]);
+
+    const result = await loadEssentialWordsQueue();
+
+    expect(result.items).toHaveLength(3);
+    expect(result.items.map((item) => item.entry.word)).toEqual(["word-3", "word-4", "word-5"]);
+  });
+
+  it("keeps every due review and applies maxNewWords only to fresh words", async () => {
+    const words = Array.from({ length: 9 }, (_, index) => ({
+      rank: index + 1,
+      word: `word-${index + 1}`,
+      pos: "noun" as const,
+      ipa_strong: `word-${index + 1}`,
+      example_sentence: "This is a word.",
+      cefr_level: "A1" as const,
+    }));
+    vi.mocked(fetchEssentialWords).mockResolvedValue(words);
+    vi.mocked(getEssentialWordsSrsEntries).mockResolvedValue(
+      words.slice(0, 4).map((entry) => ({
+        wordId: `c1k:${entry.word}`, word: entry.word, ease: 2.5, interval: 1,
+        repetitions: 1, nextReview: "2026-07-01T00:00:00.000Z",
+      })),
+    );
+
+    const result = await loadEssentialWordsQueue(null, null, undefined, { maxNewWords: 1 });
+
+    expect(result.items.filter((item) => item.kind === "review")).toHaveLength(4);
+    expect(result.items.filter((item) => item.kind === "new")).toHaveLength(1);
+  });
+
   it("loads words, builds queue stats, and derives initial phase", async () => {
     const result = await loadEssentialWordsQueue();
 

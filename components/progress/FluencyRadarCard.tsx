@@ -14,12 +14,12 @@ interface Props {
 }
 
 const SKILL_ORDER: { key: SkillKey; label: string; source: string }[] = [
-  { key: 'pronunciation', label: 'Pronunciation', source: 'Sound Lab · word recognition' },
-  { key: 'grammar', label: 'Grammar', source: 'Curriculum · lessons completed' },
-  { key: 'vocabulary', label: 'Vocabulary', source: 'Dictionary · words mastered' },
-  { key: 'listening', label: 'Listening', source: 'Minimal pairs + story audio' },
-  { key: 'speaking', label: 'Speaking', source: 'AI Coach · conversation' },
-  { key: 'reading', label: 'Reading', source: 'Reading lessons' },
+  { key: 'pronunciation', label: 'Pronunciación', source: 'Sound Lab · evidencia del evaluador' },
+  { key: 'grammar', label: 'Gramática', source: 'Respuestas evaluadas' },
+  { key: 'vocabulary', label: 'Vocabulario', source: 'Repaso y retención verificada' },
+  { key: 'listening', label: 'Escucha', source: 'Percepción y dictado' },
+  { key: 'speaking', label: 'Habla', source: 'Producción evaluada' },
+  { key: 'reading', label: 'Lectura', source: 'Comprensión evaluada' },
 ]
 
 const SIZE = 380
@@ -210,8 +210,8 @@ export function FluencyRadarCard({ scores, comparisonLabel }: Props) {
       <div className="flex items-start justify-between gap-3">
         <ProgressCardHeader
           icon={<Radar size={16} />}
-          eyebrow="Skills · 6 dimensions"
-          title="Your fluency profile"
+          eyebrow="Práctica · 6 dimensiones"
+          title="Perfil de práctica"
         />
         {!isEmpty && comparisonLabel ? (
           <span className="rounded-full border border-border-subtle bg-surface-sunken px-3 py-1 text-tiny font-semibold text-fg-muted">

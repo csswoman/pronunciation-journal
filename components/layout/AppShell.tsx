@@ -22,6 +22,10 @@ const BottomNav = dynamic(() => import("./BottomNav"), {
 
 const AICoachTrigger = dynamic(() => import("@/components/ai-coach/AICoachTrigger"));
 
+const ChromeMicTip = dynamic(() => import("@/components/speech/ChromeMicTip"), {
+  ssr: false,
+});
+
 const importAICoachPanel = () => import("@/components/ai-coach/AICoachPanel");
 
 const AICoachPanel = dynamic(importAICoachPanel, {
@@ -96,6 +100,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
               : "w-full"
           }
         >
+          {/* Soft tip only outside active sessions — session chrome stays sacred. */}
+          {!isImmersivePractice && !hideMobileNav ? (
+            <ChromeMicTip variant="app" />
+          ) : null}
           {children}
         </div>
       </main>
@@ -104,10 +112,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         <>
           {hasMountedCoach && <AICoachPanel />}
           {!hideMobileNav && (
-            <AICoachTrigger
-              variant={pathname === "/" ? "labeled" : "fab"}
-              className="hidden lg:flex"
-            />
+            <AICoachTrigger variant="labeled" className="hidden lg:flex" />
           )}
         </>
       )}

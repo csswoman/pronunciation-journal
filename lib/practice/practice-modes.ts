@@ -98,11 +98,12 @@ export function resolveRecommendedMode(input: ResolveInput): RecommendedResult {
 
   if (input.fromDaily && input.arc?.soundIpa) {
     const mode = modeById('sounds')!
+    const ipa = input.arc.soundIpa.replace(/^\/+|\/+$/g, '')
     return {
       mode,
       reason: 'daily-sound',
-      headline: `Keep going with /${input.arc.soundIpa}/`,
-      subtext: "Reinforce the sound from today's daily.",
+      headline: `Sigue con /${ipa}/`,
+      subtext: 'Refuerza el sonido del plan de hoy.',
     }
   }
 
@@ -110,8 +111,8 @@ export function resolveRecommendedMode(input: ResolveInput): RecommendedResult {
     return {
       mode: fallback,
       reason: 'daily-words',
-      headline: 'Keep building your core vocabulary',
-      subtext: "Pick up where today's daily left off.",
+      headline: 'Sigue con tu vocabulario esencial',
+      subtext: 'Retoma desde el plan de hoy.',
     }
   }
 

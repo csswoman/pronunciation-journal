@@ -1,17 +1,21 @@
-import PageLayout from '@/components/layout/PageLayout'
-import PageHeader from '@/components/layout/PageHeader'
-import { GuestBanner } from '@/components/layout/stats/GuestBanner'
-import { ReviewHubClient } from '@/components/practice/review/ReviewHubClient'
-import { createSupabaseServerClient } from '@/lib/supabase/server'
-import { getReviewHubSummary } from '@/lib/review/server-queries'
+import PageLayout from "@/components/layout/PageLayout";
+import PageHeader from "@/components/layout/PageHeader";
+import { GuestBanner } from "@/components/layout/stats/GuestBanner";
+import GuestSaveProgressBanner from "@/components/home/GuestSaveProgressBanner";
+import { ReviewHubClient } from "@/components/practice/review/ReviewHubClient";
+import { isAnonymousUser } from "@/lib/auth/is-anonymous";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { getReviewHubSummary } from "@/lib/review/server-queries";
 
-export const metadata = { title: 'Review Hub' }
+export const metadata = { title: "Review Hub" };
 
 export default async function PracticeReviewPage() {
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  const summary = user ? await getReviewHubSummary(user.id) : null
+  const summary = user ? await getReviewHubSummary(user.id) : null;
 
   return (
     <PageLayout archetype="dashboard">
@@ -24,8 +28,13 @@ export default async function PracticeReviewPage() {
       {!user || !summary ? (
         <GuestBanner />
       ) : (
-        <ReviewHubClient summary={summary} />
+        <div className="flex flex-col gap-4">
+          {isAnonymousUser(user) ? (
+            <GuestSaveProgressBanner variant="emphasized" />
+          ) : null}
+          <ReviewHubClient summary={summary} />
+        </div>
       )}
     </PageLayout>
-  )
+  );
 }
