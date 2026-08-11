@@ -6,11 +6,48 @@ import {
   Briefcase,
   Circle,
   Minus,
+  Utensils,
+  User,
+  Sun,
+  ShoppingBag,
+  CalendarDays,
+  Map,
+  Stethoscope,
+  BookOpen,
+  Mail,
+  MessageCircle,
+  Smile,
+  Handshake,
+  CloudFog,
+  Theater,
+  Target,
 } from "@/components/icons";
 import { cn } from "@/lib/cn";
-import type { CoursePathLegendIcon, ElectiveSpineIcon } from "@/lib/courses/types";
+import type {
+  CoursePathLegendIcon,
+  ElectiveSpineIcon,
+  RealLifeScenarioIcon,
+} from "@/lib/courses/types";
 
 const iconClass = "shrink-0";
+
+const REAL_LIFE_ICONS = {
+  utensils: Utensils,
+  user: User,
+  sun: Sun,
+  shopping: ShoppingBag,
+  calendar: CalendarDays,
+  map: Map,
+  stethoscope: Stethoscope,
+  book: BookOpen,
+  mail: Mail,
+  message: MessageCircle,
+  smile: Smile,
+  handshake: Handshake,
+  fog: CloudFog,
+  theater: Theater,
+  target: Target,
+} as const satisfies Record<RealLifeScenarioIcon, typeof Utensils>;
 
 export function CoursePathPriorityCount({
   count,
@@ -51,6 +88,26 @@ export function CoursePathElectiveSpineIcon({
   if (icon === "laptop") return <Laptop {...props} />;
   if (icon === "mic") return <MicVocal {...props} />;
   return <Briefcase {...props} />;
+}
+
+export function CoursePathRealLifeIcon({
+  icon,
+  size = 20,
+  className,
+}: {
+  icon: RealLifeScenarioIcon;
+  size?: number;
+  className?: string;
+}) {
+  const Icon = REAL_LIFE_ICONS[icon];
+  return (
+    <Icon
+      size={size}
+      strokeWidth={1.75}
+      className={cn(iconClass, className)}
+      aria-hidden
+    />
+  );
 }
 
 export function CoursePathLegendIconDisplay({

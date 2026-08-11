@@ -49,7 +49,7 @@ export const COURSE_PATH_CURRICULUM: CoursePathCurriculum = {
         {
           id: "a1-restaurant",
           title: "En el restaurante",
-          emoji: "🍽️",
+          icon: "utensils",
           phrases: [
             "A table for two, please.",
             "Can I see the menu?",
@@ -66,7 +66,7 @@ export const COURSE_PATH_CURRICULUM: CoursePathCurriculum = {
         {
           id: "a1-introduction",
           title: "Presentarte por primera vez",
-          emoji: "👋",
+          icon: "user",
           phrases: [
             "Nice to meet you, I'm [name].",
             "What do you do?",
@@ -83,7 +83,7 @@ export const COURSE_PATH_CURRICULUM: CoursePathCurriculum = {
         {
           id: "a1-daily-routine",
           title: "Contar cómo va tu día",
-          emoji: "☀️",
+          icon: "sun",
           phrases: [
             "I usually wake up at seven.",
             "I have breakfast at home.",
@@ -138,7 +138,7 @@ export const COURSE_PATH_CURRICULUM: CoursePathCurriculum = {
         {
           id: "a2-shopping",
           title: "De compras",
-          emoji: "🛍️",
+          icon: "shopping",
           phrases: [
             "How much does this cost?",
             "Do you have this in another size?",
@@ -155,7 +155,7 @@ export const COURSE_PATH_CURRICULUM: CoursePathCurriculum = {
         {
           id: "a2-making-plans",
           title: "Quedar con alguien",
-          emoji: "📅",
+          icon: "calendar",
           phrases: [
             "Are you free on Saturday?",
             "What do you want to do?",
@@ -172,7 +172,7 @@ export const COURSE_PATH_CURRICULUM: CoursePathCurriculum = {
         {
           id: "a2-directions",
           title: "Pedir indicaciones",
-          emoji: "🗺️",
+          icon: "map",
           phrases: [
             "Excuse me, where is the bank?",
             "Turn left at the traffic light.",
@@ -230,7 +230,7 @@ export const COURSE_PATH_CURRICULUM: CoursePathCurriculum = {
         {
           id: "b1-doctor",
           title: "En el médico",
-          emoji: "🏥",
+          icon: "stethoscope",
           phrases: [
             "I've had a headache for two days.",
             "It hurts when I move it.",
@@ -247,7 +247,7 @@ export const COURSE_PATH_CURRICULUM: CoursePathCurriculum = {
         {
           id: "b1-storytelling",
           title: "Contar una historia",
-          emoji: "📖",
+          icon: "book",
           phrases: [
             "So what happened was…",
             "I couldn't believe it.",
@@ -264,7 +264,7 @@ export const COURSE_PATH_CURRICULUM: CoursePathCurriculum = {
         {
           id: "b1-work-email",
           title: "Un correo de trabajo",
-          emoji: "✉️",
+          icon: "mail",
           phrases: [
             "I'm writing to follow up on…",
             "Please let me know if you need anything else.",
@@ -319,7 +319,7 @@ export const COURSE_PATH_CURRICULUM: CoursePathCurriculum = {
         {
           id: "b2-opinions",
           title: "Dar tu opinión",
-          emoji: "💬",
+          icon: "message",
           phrases: [
             "I'd argue that…",
             "To be honest, I think…",
@@ -336,7 +336,7 @@ export const COURSE_PATH_CURRICULUM: CoursePathCurriculum = {
         {
           id: "b2-anecdote",
           title: "Contar una anécdota",
-          emoji: "😄",
+          icon: "smile",
           phrases: [
             "I was just about to leave when…",
             "The thing is, I had no idea that…",
@@ -353,7 +353,7 @@ export const COURSE_PATH_CURRICULUM: CoursePathCurriculum = {
         {
           id: "b2-negotiation",
           title: "Negociar en el trabajo",
-          emoji: "🤝",
+          icon: "handshake",
           phrases: [
             "I understand your position, however…",
             "Could we find a middle ground?",
@@ -430,7 +430,7 @@ export const COURSE_PATH_CURRICULUM: CoursePathCurriculum = {
         {
           id: "c1-ambiguity",
           title: "Cuando no está claro",
-          emoji: "🌫️",
+          icon: "fog",
           phrases: [
             "I see where you're coming from, but…",
             "That depends on how you look at it.",
@@ -447,7 +447,7 @@ export const COURSE_PATH_CURRICULUM: CoursePathCurriculum = {
         {
           id: "c1-humor",
           title: "Humor e ironía en contexto",
-          emoji: "😏",
+          icon: "theater",
           phrases: [
             "Oh, obviously that went exactly as planned.",
             "Well, that was fun. Said no one ever.",
@@ -464,7 +464,7 @@ export const COURSE_PATH_CURRICULUM: CoursePathCurriculum = {
         {
           id: "c1-persuasion",
           title: "Convencer sin imponer",
-          emoji: "🎯",
+          icon: "target",
           phrases: [
             "You might want to consider…",
             "It's worth bearing in mind that…",
