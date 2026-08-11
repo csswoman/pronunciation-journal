@@ -67,13 +67,13 @@ export default function QuizStep({ questions, onDone }: QuizStepProps) {
   return (
     <section className="gd-quiz" aria-live="polite">
       <div className="gd-quiz__head">
-        <span className="gd-quiz__kicker">Comprueba lo aprendido</span>
+        <span className="gd-quiz__kicker font-kicker">Comprueba lo aprendido</span>
         <span className="gd-quiz__pos">
           {index + 1} / {questions.length}
         </span>
       </div>
 
-      <h2 className="gd-quiz__q">{q.q}</h2>
+      <h2 className="gd-quiz__q text-pretty">{q.q}</h2>
 
       <div className="gd-quiz__options">
         {q.options.map((opt, i) => {
