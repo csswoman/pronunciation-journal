@@ -65,6 +65,16 @@ describe('savePracticeAnswer transactional atomicity', () => {
     expect(ratingEvents.some((e) => e.entityType === 'topic_srs' && e.topic === 'grammar:present simple')).toBe(true)
   })
 
+  it('uses a caller-provided attempt id as the idempotency key', async () => {
+    const answer = { ...baseAnswer, attemptId: 'attempt-1' }
+    await savePracticeAnswer('user-1', answer)
+    await savePracticeAnswer('user-1', answer)
+    const answerEntries = (await db.syncOutbox.where('userId').equals('user-1').toArray())
+      .filter((entry) => entry.table === 'answer_history')
+    expect(answerEntries).toHaveLength(1)
+    expect(answerEntries[0]?.payload.id).toBe('attempt-1')
+  })
+
   it('crash simulation: a failure partway through the transaction rolls back ALL operations — none land', async () => {
     // Force the topic rating-event write (the last write inside the
     // transaction) to throw, simulating a crash/exception after the answer

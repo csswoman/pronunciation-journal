@@ -17,6 +17,8 @@ import {
   type PerformanceRow,
 } from '@/lib/practice/session-summary-view'
 import type { SessionResult } from '@/lib/practice/types'
+import type { PronunciationTargetId } from '@/lib/pronunciation/targets/types'
+import { PronunciationMissionLaunchButton } from '@/components/pronunciation/PronunciationMissionLaunchButton'
 
 export { formatExerciseLabel }
 
@@ -27,6 +29,7 @@ interface Props {
   onFinish: () => void
   progressSaveStatus?: 'idle' | 'saving' | 'saved_local' | 'synced' | 'error'
   onRetrySync?: () => void
+  followupTargetId?: PronunciationTargetId
 }
 
 function formatDuration(ms: number): string {
@@ -84,6 +87,7 @@ export function SessionSummary({
   onFinish,
   progressSaveStatus = 'idle',
   onRetrySync,
+  followupTargetId,
 }: Props) {
   const correctCount = result.results.filter((r) => r.isCorrect).length
   const showProgressStatus = progressSaveStatus !== 'idle'
@@ -152,6 +156,15 @@ export function SessionSummary({
           ))}
         </ul>
       )}
+
+      {followupTargetId ? (
+        <PronunciationMissionLaunchButton
+          targetId={followupTargetId}
+          source="sound_lab"
+          label="Usar este foco en una misión"
+          className="min-h-11 w-full rounded-xl border border-border-default bg-surface-raised px-4 py-3 text-body-sm font-semibold text-fg-primary transition-colors hover:bg-surface-sunken focus-ring"
+        />
+      ) : null}
 
       <div className="mt-auto flex shrink-0 items-center gap-3 pt-2">
         <button

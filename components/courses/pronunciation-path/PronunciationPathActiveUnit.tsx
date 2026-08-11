@@ -9,6 +9,8 @@ import {
 } from '@/lib/pronunciation/path/unit-labels'
 import type { PathUnit, UnitLearningState } from '@/lib/pronunciation/path/types'
 import { pathCtaSecondaryClass, pathPanelQuietClass } from './path-action-styles'
+import { missionForTarget } from '@/lib/ai-practice/missions/launch'
+import { PronunciationMissionLaunchButton } from '@/components/pronunciation/PronunciationMissionLaunchButton'
 
 interface PronunciationPathActiveUnitProps {
   unit: PathUnit
@@ -35,7 +37,8 @@ export function PronunciationPathActiveUnit({
   const contentHref = contentHrefForRefs(unit.contentRefs)
   const practiceHref = unit.practiceHref
   const stateLabel = copyEnabled ? unitStateLabelEs(state) : 'Unidad'
-  const awaitingTransferMission = unit.stageId === 'intonation-transfer' && !practiceHref
+  const hasMission = Boolean(missionForTarget(unit.targetId))
+  const awaitingTransferMission = unit.stageId === 'intonation-transfer' && !practiceHref && !hasMission
   const isExploring = Boolean(recommendedHref && recommendedTitle)
 
   return (
@@ -90,6 +93,13 @@ export function PronunciationPathActiveUnit({
           <Link href={practiceHref} className={pathCtaSecondaryClass}>
             Practicar en Sound Lab
           </Link>
+        ) : null}
+        {hasMission ? (
+          <PronunciationMissionLaunchButton
+            targetId={unit.targetId}
+            source="route"
+            className={pathCtaSecondaryClass}
+          />
         ) : null}
         {contentHref ? (
           <Link href={contentHref} className={pathCtaSecondaryClass}>

@@ -33,6 +33,9 @@ import { fetchReaderTargetRows } from './reader-targets'
 import { dayOfYear, pickSeedSound } from './selectors'
 import { biasWordsBySound } from './sound-word-bridge'
 import { selectDailyReviewWords } from './saved-priority'
+import { candidate, selectDailyCandidates } from './policy'
+import { missionForTarget, parseMissionLaunch } from '@/lib/ai-practice/missions/launch'
+import { getTarget, phonemeTargetId } from '@/lib/pronunciation/targets/registry'
 import {
   buildContextPracticeStep,
   buildListeningStep,
@@ -304,28 +307,61 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     }
   }
 
-  // The client appends the rotating mini-lesson afterwards. Reserve this slot
-  // for the route-based theory lesson so the five-step plan remains: three
-  // practice steps, then the two theory links.
-  const practiceCapacity = DAILY_PLAN_STEP_COUNT - (studyDeckStep ? 1 : 0)
-  let finalSteps = steps.slice(0, practiceCapacity)
-  // Preserve the learning arc for a populated word bank before adding more
-  // phoneme fallbacks: notice → recall → use in context → read. The remaining
-  // practice capacity is filled from the original mixed candidate order.
-  const vocabularyArc = ['word_intro', 'word_review', 'context_practice', 'reader'] as const
-  const prioritized = vocabularyArc
-    .map((kind) => steps.find((step) => step.kind === kind))
-    .filter((step): step is DailyStep => Boolean(step))
-  if (prioritized.length > 0) {
-    const selected = prioritized.slice(0, practiceCapacity)
-    const selectedIds = new Set(selected.map((step) => step.id))
-    finalSteps = [
-      ...selected,
-      ...steps.filter((step) => !selectedIds.has(step.id)).slice(0, practiceCapacity - selected.length),
-    ]
-  }
+  const rawPrimaryTarget = primarySound
+    ? phonemeTargetId(`/${primarySound.ipa.replace(/^\/+|\/+$/g, '')}/`)
+    : null
+  const primaryTarget = rawPrimaryTarget && getTarget(rawPrimaryTarget).ok ? rawPrimaryTarget : null
+  const mission = primaryTarget ? missionForTarget(primaryTarget) : null
+  const missionStep: DailyStep | null = mission && primaryTarget
+    ? {
+        kind: 'mission',
+        id: `mission:${mission.id}:${primaryTarget}`,
+        title: 'Usa el foco en una conversación',
+        subtitle: 'Misión oral con un objetivo exacto',
+        icon: 'Messages',
+        exercises: [],
+        estMinutes: 5,
+        missionLaunch: parseMissionLaunch({
+          missionId: mission.id,
+          targetIds: [primaryTarget],
+          source: 'daily',
+          stepId: `mission:${mission.id}:${primaryTarget}`,
+        }),
+      }
+    : null
 
-  if (studyDeckStep) finalSteps.push(studyDeckStep)
+  const targetRefsForStep = (step: DailyStep): string[] => {
+    if (step.kind === 'mission' && step.missionLaunch) return step.missionLaunch.targetIds
+    if (['phoneme_focus', 'minimal_pairs', 'listening'].includes(step.kind)) {
+      return [primaryTarget ?? `sound:${step.ipa ?? primarySound?.id ?? step.id}`]
+    }
+    if (step.kind === 'word_intro') return (step.featuredWords ?? []).map((word) => `exposure:word:${word}`)
+    if (step.kind === 'word_review') return step.exercises.map((exercise) => `word-meaning:${exercise.sourceRef?.id ?? exercise.contentId}`)
+    if (step.kind === 'context_practice' || step.kind === 'reader') {
+      return step.exercises.map((exercise) => `word-context:${exercise.sourceRef?.id ?? exercise.contentId}`)
+    }
+    if (step.kind === 'study_deck' || step.kind === 'concept') return [step.id]
+    return step.exercises.length > 0 ? step.exercises.map((exercise) => exercise.contentId) : [step.id]
+  }
+  const reasonForStep = (step: DailyStep) => {
+    if (step.id.startsWith('review_') || (hasDueSrs && step.kind === 'word_review')) return 'due' as const
+    if (step.id.includes('failed') || step.kind === 'sentence_builder' && weakTopic) return 'recent_error' as const
+    if (hasProgress && ['phoneme_focus', 'minimal_pairs', 'listening'].includes(step.kind)) return 'weak_target' as const
+    if (step.kind === 'study_deck') return 'route_next' as const
+    if (step.kind === 'word_review' && dailyWordSelection.savedOrFamiliarIds.size > 0) return 'saved_intent' as const
+    return 'variety' as const
+  }
+  const candidates = [...steps, ...(studyDeckStep ? [studyDeckStep] : []), ...(missionStep ? [missionStep] : [])]
+    .map((step) => candidate(step, {
+      reason: reasonForStep(step),
+      targetRefs: targetRefsForStep(step),
+      source: step.kind === 'mission' ? 'pronunciation_route' : step.kind,
+      ...(step.kind === 'mission' ? { requiredCapability: 'speech_recognition' as const } : {}),
+    }))
+  let finalSteps = selectDailyCandidates(candidates, {
+    limit: DAILY_PLAN_STEP_COUNT,
+    availableCapabilities: new Set(['network', 'microphone', 'speech_recognition']),
+  })
 
   // Optional Journal link: appended AFTER the cap on its cadence so it never
   // displaces an evaluated step. Concept steps carry no exercises and are not

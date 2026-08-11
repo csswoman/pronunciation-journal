@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import type { MissionLaunch } from '@/lib/ai-practice/missions/launch'
 
 const PANEL_DEFAULT_WIDTH = 380;
 
@@ -7,6 +8,7 @@ export type AICoachTab = "chat" | "missions" | "pronunciation";
 export interface OpenCoachOptions {
   tab?: AICoachTab;
   prefill?: string;
+  mission?: MissionLaunch;
 }
 
 interface AICoachState {

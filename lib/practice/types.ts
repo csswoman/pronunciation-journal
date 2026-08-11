@@ -11,6 +11,7 @@ import type {
 } from '@/lib/practice/attribution'
 import type { FalseFriendIntro, StudyCardModel } from '@/lib/practice/study-card/model'
 import type { ReaderPassage } from '@/lib/practice/reader/types'
+import type { MissionLaunch } from '@/lib/ai-practice/missions/launch'
 import type { ExerciseErrorCode } from '@/lib/exercises/error-taxonomy'
 
 // Slugs mapped from `exercise_types` rows in Supabase.
@@ -67,6 +68,20 @@ export const EXERCISE_TYPE_IDS: Record<ExerciseSlug, number | null> = {
   cs_shadow_phrase: 23,
 }
 
+const EXERCISE_SLUG_BY_TYPE_ID = new Map<number, ExerciseSlug>()
+for (const [slug, id] of Object.entries(EXERCISE_TYPE_IDS) as Array<[ExerciseSlug, number | null]>) {
+  if (id === null) continue
+  if (EXERCISE_SLUG_BY_TYPE_ID.has(id)) {
+    throw new Error(`Duplicate exercise type id ${id}`)
+  }
+  EXERCISE_SLUG_BY_TYPE_ID.set(id, slug)
+}
+
+/** The single DB-id → exercise identity projection for legacy answer rows. */
+export function slugForExerciseTypeId(id: number | null | undefined): ExerciseSlug | null {
+  return id == null ? null : EXERCISE_SLUG_BY_TYPE_ID.get(id) ?? null
+}
+
 export type PracticeContext =
   | 'sound_lab'
   | 'courses'
@@ -118,6 +133,8 @@ export type PracticeExercise = {
 }
 
 export type PracticeAnswer = {
+  /** Stable caller-provided identity makes retries idempotent in answer_history. */
+  attemptId?: string
   exerciseId: string
   slug: ExerciseSlug
   /** Null for exercises that do not write to answer_history. */
@@ -172,6 +189,23 @@ export type DailyStepKind =
   | 'concept'          // mini-lección / language concept del día (lectura ligera)
   | 'study_deck'       // lección de la ruta, elegida desde el progreso del usuario
   | 'reader'           // comprehensible-input: párrafo i+1 que recicla vocab reciente
+  | 'mission'          // transferencia oral con target/source/step exactos
+
+export type DailySelectionReason =
+  | 'due'
+  | 'verification_due'
+  | 'recent_error'
+  | 'weak_target'
+  | 'route_next'
+  | 'saved_intent'
+  | 'variety'
+
+export interface DailySelectionMetadata {
+  reason: DailySelectionReason
+  targetRefs: string[]
+  source: string
+  requiredCapability?: 'network' | 'microphone' | 'speech_recognition'
+}
 
 export type DailyStep = {
   kind: DailyStepKind
@@ -196,6 +230,10 @@ export type DailyStep = {
   featuredWords?: string[]
   /** Solo para 'false_friends': pares que se presentan antes de practicarlos. */
   falseFriends?: FalseFriendIntro[]
+  /** Auditable selection provenance; absent only on cached legacy plans. */
+  selection?: DailySelectionMetadata
+  /** Exact oral handoff for mission steps. */
+  missionLaunch?: MissionLaunch
 }
 
 /** Narrative framing metadata for a daily session (opening banner + closing recap). */

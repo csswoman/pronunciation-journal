@@ -5,6 +5,7 @@ import { useAuth } from '@/components/auth/AuthProvider'
 import {
   loadCachedDailyPlan,
   loadDoneIds,
+  loadResolvedIds,
   saveCachedDailyPlan,
   saveDoneIds,
   saveResolvedIds,
@@ -15,6 +16,7 @@ import { syncTodayReconciledSteps } from '@/lib/progress/activity-queries-client
 import { buildDailyPlan, DAILY_PLAN_STEP_COUNT } from '@/lib/practice/daily-plan'
 import { requiredPracticeSteps } from '@/lib/practice/daily-plan/step-completion'
 import type { DailyPlan, DailyStep } from '@/lib/practice/types'
+import { candidate, selectDailyCandidates } from '@/lib/practice/daily-plan/policy'
 
 /** Mini-lección del día para el paso 'concept' (inyectada por el server). */
 export interface ConceptLesson {
@@ -63,13 +65,7 @@ export function useDailyPlan({ conceptLesson, autoLoad = true }: UseDailyPlanOpt
   }, [])
 
   const applyPlan = useCallback((built: DailyPlan, lesson: ConceptLesson | null, userId: string) => {
-    // Keep both theory links at the end. The composer fills five candidates,
-    // so admitting the server-provided mini lesson means releasing one
-    // practice candidate when a route study deck is present.
-    const studyDeck = built.steps.find((step) => step.kind === 'study_deck')
-    const practiceSteps = built.steps.filter((step) => step.kind !== 'study_deck')
-    const steps = practiceSteps.slice(0, studyDeck ? DAILY_PLAN_STEP_COUNT - 2 : DAILY_PLAN_STEP_COUNT - 1)
-    if (studyDeck) steps.push(studyDeck)
+    const steps = [...built.steps]
     if (lesson) {
       steps.push({
         kind: 'concept',
@@ -80,9 +76,20 @@ export function useDailyPlan({ conceptLesson, autoLoad = true }: UseDailyPlanOpt
         exercises: [],
         estMinutes: 2,
         href: `/mini-lessons/${lesson.slug}`,
+        selection: {
+          reason: 'variety',
+          targetRefs: [`concept:${lesson.slug}`],
+          source: 'mini_lesson',
+        },
       })
     }
-    const finalPlan = { ...built, steps: steps.slice(0, DAILY_PLAN_STEP_COUNT) }
+    const selectedSteps = selectDailyCandidates(
+      steps.map((step) => candidate(step, step.selection ?? {
+        reason: 'variety', targetRefs: [step.id], source: step.kind,
+      })),
+      { limit: DAILY_PLAN_STEP_COUNT },
+    )
+    const finalPlan = { ...built, steps: selectedSteps }
     setPlan(finalPlan)
     void hydrateStepIds(userId)
     setStatus('ready')
@@ -117,6 +124,13 @@ export function useDailyPlan({ conceptLesson, autoLoad = true }: UseDailyPlanOpt
   useEffect(() => {
     if (autoLoad) load()
   }, [autoLoad, load])
+
+  useEffect(() => {
+    if (!user) return
+    const refreshResolved = () => setResolvedIds(loadResolvedIds(user.id))
+    window.addEventListener('daily-step-resolved', refreshResolved)
+    return () => window.removeEventListener('daily-step-resolved', refreshResolved)
+  }, [user])
 
   const markDone = useCallback(
     async (stepId: string) => {

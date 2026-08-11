@@ -18,6 +18,12 @@ import type { PracticeAnswer } from '@/lib/practice/types'
 export type ActivitySessionInput = {
   practiceContext: PracticeContext
   sessionResult: SessionResult
+  /** Stable owner-provided id for replay-safe cross-surface summaries. */
+  activitySessionId?: string
+  /** Coherent unscored sessions (for example a mission fallback) still count as activity. */
+  allowEmptySession?: boolean
+  /** Exact step ids reconciled by a canonical launch contract. */
+  explicitReconciledStepIds?: string[]
   /** Override inferred source (e.g. lexicon). */
   source?: ActivitySource
   /** When omitted, today's cached daily plan is used for reconciliation. */
@@ -104,10 +110,11 @@ export function buildSessionTelemetry(
   const skillTags = deriveSkillTags(practiceContext, sessionResult)
   const correct = sessionResult.results.filter((r) => r.isCorrect).length
   const planSteps = input.dailyPlanSteps ?? []
-  const reconciledStepIds =
+  const reconciledStepIds = input.explicitReconciledStepIds ?? (
     practiceContext === 'daily'
       ? []
-    : reconcileDailySteps(planSteps, sessionResult, practiceContext, input.metadata)
+      : reconcileDailySteps(planSteps, sessionResult, practiceContext, input.metadata)
+  )
 
   return {
     activitySession: {
@@ -144,14 +151,14 @@ export async function recordActivitySession(
 ): Promise<RecordActivityOutcome> {
   const { sessionResult } = input
   const total = sessionResult.results.length
-  if (total === 0) return { reconciledStepIds: [] }
+  if (total === 0 && !input.allowEmptySession) return { reconciledStepIds: [] }
 
   const planSteps =
     input.dailyPlanSteps ?? loadCachedDailyPlan(userId)?.steps ?? []
   const telemetry = buildSessionTelemetry(userId, {
     ...input,
     dailyPlanSteps: planSteps,
-  })
+  }, { id: input.activitySessionId })
   const { reconciledStepIds } = telemetry
 
   if (reconciledStepIds.length > 0) {

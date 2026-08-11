@@ -137,7 +137,7 @@ export async function savePracticeAnswer(
   )
 
   const row = {
-    id: crypto.randomUUID(),
+    id: answer.attemptId ?? crypto.randomUUID(),
     user_id: userId,
     sound_id: answer.soundId ?? null,
     exercise_type_id: answer.exerciseTypeId,
@@ -157,7 +157,13 @@ export async function savePracticeAnswer(
   const rowWithGrade = { ...row, grade }
 
   await db.transaction('rw', [db.syncOutbox, db.srsRatingEvents, db.srsData], async () => {
-    await enqueue(userId, 'answer_history', 'upsert', rowWithGrade as Record<string, unknown>, undefined, 'id')
+    const existingAnswer = await db.syncOutbox
+      .where('userId').equals(userId)
+      .and((entry) => entry.table === 'answer_history' && entry.payload.id === row.id)
+      .first()
+    if (!existingAnswer) {
+      await enqueue(userId, 'answer_history', 'upsert', rowWithGrade as Record<string, unknown>, undefined, 'id')
+    }
 
     // Plan 062: explicit non-SRS attribution blocks entity updates.
     const allowSrs = attribution?.srsEligible !== false
@@ -165,6 +171,12 @@ export async function savePracticeAnswer(
       ? attribution.outcomes.find(
           (outcome) => outcome.target.namespace === 'word_bank'
             && outcome.target.id === answer.sourceRef?.id,
+        )
+      : undefined
+    const topicOutcome = attribution?.srsEligible === true
+      ? attribution.outcomes.find(
+          (outcome) => outcome.target.namespace === 'topic'
+            && outcome.target.id === normalizedTopic,
         )
       : undefined
     const sourceTargetIsExplicitlyDifferent = attribution !== undefined
@@ -191,7 +203,7 @@ export async function savePracticeAnswer(
     }
 
     // Enqueue SRS update for the concept (topic) when the exercise carries one.
-    if (allowSrs && normalizedTopic) {
+    if (allowSrs && normalizedTopic && (!attribution || topicOutcome)) {
       await enqueueTopicSRSUpdate(userId, normalizedTopic, grade)
     }
   })

@@ -29,6 +29,7 @@
     "essential-words:gen-sentences": "tsx --env-file=.env.local scripts/essential-words/generate-example-sentences.mjs",
     "essential-words:apply-sentences": "node scripts/essential-words/apply-example-sentences.mjs",
     "audit:course-content": "vitest run lib/courses/__tests__/content-audit.test.ts lib/courses/__tests__/grammar-deck-coverage.test.ts",
+    "audit:learning-loop": "tsx scripts/audit-learning-loop.mjs",
     "analyze:bundle": "node scripts/analyze-bundle.mjs",
     "analyze:bundle:check": "node scripts/analyze-bundle.mjs --check",
     "lexicon:enrich": "node scripts/enrich-lexicon.mjs --all"

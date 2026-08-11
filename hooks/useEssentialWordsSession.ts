@@ -35,6 +35,7 @@ import {
 import { useAuth } from "@/components/auth/AuthProvider";
 import { recordActivitySession } from "@/lib/progress/activity-hub";
 import { buildSessionResult } from "@/lib/practice/session-result";
+import { savePracticeAnswer } from "@/lib/practice/queries";
 import { saveLastEssentialWordsSession } from "@/lib/essential-words/ready-last-session";
 import {
   readSessionSizePreference,
@@ -339,17 +340,17 @@ export function useEssentialWordsSession() {
     });
     const candidates: SessionCandidate[] = [
       ...continuations,
-      ...items.filter((item) => !continuationIds.has(essentialWordId(item.entry.word))).map((item) => ({
-        entry: item.entry,
-        source: item.kind === 'new' ? 'new' as const : 'review' as const,
-        repetitions: item.repetitions,
-        fromSnooze: item.fromSnooze,
-        forcedMode: 'forcedMode' in item
-          ? item.forcedMode
-          : item.fromSnooze
-            ? 'speak_sentence'
-            : undefined,
-      })),
+      ...items.filter((item) => !continuationIds.has(essentialWordId(item.entry.word))).map((item) => {
+        const wordId = essentialWordId(item.entry.word)
+        return {
+          entry: item.entry,
+          source: item.kind === 'new' ? 'new' as const : 'review' as const,
+          repetitions: item.repetitions,
+          fromSnooze: item.fromSnooze,
+          forcedMode: skillItemsByWordRef.current.get(wordId)?.forcedMode
+            ?? (item.fromSnooze ? 'speak_sentence' as const : undefined),
+        }
+      }),
     ];
     let nextPlanState = createActionSession(candidates, actionBudget);
     let resumed = false;
@@ -609,6 +610,8 @@ export function useEssentialWordsSession() {
         currentModeRef.current,
         elapsedStepMs(),
       );
+      const attemptId = crypto.randomUUID();
+      result.attemptId = attemptId;
       setPreviousMode(currentModeRef.current);
 
       const correct = quality >= 3;
@@ -623,6 +626,8 @@ export function useEssentialWordsSession() {
             ...baseItem,
             eventType: isFinalRound || currentAction.source === 'review' ? baseItem.eventType : "practice",
           },
+          attemptId,
+          answer: result,
           outcome,
           quality,
           extras,
@@ -636,6 +641,8 @@ export function useEssentialWordsSession() {
         if (runtimeRef.current && outcome) {
           await runtimeRef.current.recordAttempt({
             item: { entry: currentStep.word, kind: "review" },
+            attemptId,
+            answer: result,
             outcome,
             quality,
             extras,
@@ -644,11 +651,14 @@ export function useEssentialWordsSession() {
           } satisfies RuntimeAttemptInput);
         } else {
           await gradeEssentialWord(currentStep.word.word, quality, extras, user?.id);
+          if (user?.id) await savePracticeAnswer(user.id, result);
         }
       } else {
         if (runtimeRef.current && outcome) {
           await runtimeRef.current.recordAttempt({
             item: { entry: currentStep.word, kind: "review" },
+            attemptId,
+            answer: result,
             outcome,
             quality,
             extras,

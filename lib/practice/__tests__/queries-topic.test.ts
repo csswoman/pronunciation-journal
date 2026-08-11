@@ -1,12 +1,24 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
-const { enqueueMock, topicSrsMock, wordBankSrsMock, fragmentSrsMock, transactionMock } = vi.hoisted(() => ({
-  enqueueMock: vi.fn(),
-  topicSrsMock: vi.fn(),
-  wordBankSrsMock: vi.fn(),
-  fragmentSrsMock: vi.fn(),
-  transactionMock: vi.fn(async (_mode: string, _tables: unknown[], callback: () => Promise<void>) => callback()),
-}))
+const { enqueueMock, topicSrsMock, wordBankSrsMock, fragmentSrsMock, transactionMock, syncOutboxFirstMock, syncOutboxWhereMock } = vi.hoisted(() => {
+  const syncOutboxFirstMock = vi.fn(async () => undefined)
+  const syncOutboxWhereMock = vi.fn(() => ({
+    equals: vi.fn(() => ({
+      and: vi.fn(() => ({
+        first: syncOutboxFirstMock,
+      })),
+    })),
+  }))
+  return {
+    enqueueMock: vi.fn(),
+    topicSrsMock: vi.fn(),
+    wordBankSrsMock: vi.fn(),
+    fragmentSrsMock: vi.fn(),
+    transactionMock: vi.fn(async (_mode: string, _tables: unknown[], callback: () => Promise<void>) => callback()),
+    syncOutboxFirstMock,
+    syncOutboxWhereMock,
+  }
+})
 
 vi.mock('@/lib/sync/sync-manager', () => ({ enqueue: (...a: unknown[]) => enqueueMock(...a) }))
 vi.mock('@/lib/word-bank/srs-queries', () => ({
@@ -20,7 +32,12 @@ vi.mock('@/lib/practice/fragment-srs', () => ({
 }))
 vi.mock('@/lib/db', () => ({
   markLessonComplete: vi.fn(),
-  db: { syncOutbox: {}, srsRatingEvents: {}, srsData: {}, transaction: transactionMock },
+  db: {
+    syncOutbox: { where: syncOutboxWhereMock },
+    srsRatingEvents: {},
+    srsData: {},
+    transaction: transactionMock,
+  },
 }))
 
 import { savePracticeAnswer } from '@/lib/practice/queries'

@@ -15,6 +15,7 @@ import DailyPlanCard from './DailyPlanCard'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { useDailyPlan, type ConceptLesson, type DailyStep } from '@/hooks/useDailyPlan'
 import { fetchDueTomorrowCount } from '@/lib/review/client-queries'
+import { useAICoachStore } from '@/lib/stores/aiCoachStore'
 
 export type { ConceptLesson }
 
@@ -63,6 +64,7 @@ type View =
 export default function DailyChecklist({ conceptLesson, initialStepId, streak = null }: DailyChecklistProps) {
   const router = useRouter()
   const { user } = useAuth()
+  const openCoach = useAICoachStore((state) => state.openCoach)
   const { plan, status, steps, getStepStatus, completedCount, allDone, load, markDone, celebrate } = useDailyPlan({
     conceptLesson,
     autoLoad: true,
@@ -78,7 +80,7 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
   useEffect(() => {
     if (status !== 'ready' || !initialStepId || autoStartedRef.current) return
     const step = steps.find((s) => s.id === initialStepId)
-    if (!step || step.kind === 'concept' || step.kind === 'study_deck') return
+    if (!step || step.kind === 'concept' || step.kind === 'study_deck' || step.kind === 'mission') return
     autoStartedRef.current = true
     const stored = readStepStorage()
     const exerciseIndex = stored?.stepId === initialStepId ? (stored.exerciseIndex ?? 0) : 0
@@ -101,11 +103,15 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
 
   const handleStartStep = useCallback((step: DailyStep) => {
     if (step.kind === 'concept' || step.kind === 'study_deck') return
+    if (step.kind === 'mission' && step.missionLaunch) {
+      openCoach({ tab: 'missions', mission: { ...step.missionLaunch, launchId: crypto.randomUUID() } })
+      return
+    }
     writeStepStorage(step.id, 0)
     setSessionKey((k) => k + 1)
     setView({ mode: 'step', step, exerciseIndex: 0 })
     router.replace(`/daily?step=${step.id}`)
-  }, [router])
+  }, [openCoach, router])
 
   const handleComplete = useCallback(async (stepId: string) => {
     clearStepStorage()

@@ -104,7 +104,7 @@ export default function DailyStepList({
           const isReadingStep = step.kind === 'concept' || step.kind === 'study_deck'
           const cardCount = step.studyCards?.length ?? 0
           const hasReader = !!step.readerPassage
-          const isStartable = step.exercises.length > 0 || cardCount > 0 || hasReader
+          const isStartable = step.exercises.length > 0 || cardCount > 0 || hasReader || Boolean(step.missionLaunch)
 
           if (hidden) return null
 

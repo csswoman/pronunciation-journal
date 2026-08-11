@@ -30,4 +30,16 @@ describe('feedbackFromScoringResult', () => {
     expect(model.signal.kind).toBe('stt_intelligibility')
     expect(model.priority).toBeNull()
   })
+
+  it('uses an authored phrase target with STT wording instead of phonetic inference', () => {
+    const authoredTargetId = contrastTargetId('/θ/', '/ð/')
+    const model = feedbackFromScoringResult({
+      accuracy: 75,
+      transcript: 'thin',
+      wordResults: unmappedMismatch,
+      authoredTargetId,
+    })
+    expect(model.signal.kind).toBe('stt_intelligibility')
+    expect(model.priority?.targetId).toBe(authoredTargetId)
+  })
 })

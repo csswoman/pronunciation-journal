@@ -19,9 +19,11 @@ import MissionRunner from './MissionRunner'
 import MissionResult from './MissionResult'
 import ChatView from '../ChatView'
 import CustomPromptPanel from '../CustomPromptPanel'
+import type { MissionLaunch } from '@/lib/ai-practice/missions/launch'
 
 interface MissionWorkspaceProps {
   missionId: string
+  launch?: MissionLaunch | null
   setMissionIntentHandler: (handler: ((intentId: string) => void) | null) => void
   messages: AIMessage[]
   isStreaming: boolean
@@ -34,6 +36,7 @@ interface MissionWorkspaceProps {
 /** Owns mission reducer state so the streaming transport remains state-free. */
 export function MissionWorkspace({
   missionId,
+  launch = null,
   setMissionIntentHandler,
   messages,
   isStreaming,
@@ -147,8 +150,8 @@ export function MissionWorkspace({
     const sessionKey = `${mission.id}:${state.turnCount}:${state.status}`
     if (persistedSessionRef.current === sessionKey) return
     persistedSessionRef.current = sessionKey
-    void persistMissionSession(user.id, mission, state, outcome).catch(() => undefined)
-  }, [mission, outcome, state, user?.id])
+    void persistMissionSession(user.id, mission, state, outcome, launch).catch(() => undefined)
+  }, [launch, mission, outcome, state, user?.id])
 
   if (!mission || !state) return null
 

@@ -20,6 +20,7 @@ import { buildAssessment } from "./verification/assessment";
 import type { DailyPlan } from "./planning-types";
 import type { AttemptLog } from "./verification/types";
 import { savePracticeAnswer } from "@/lib/practice/queries";
+import type { PracticeAnswer } from "@/lib/practice/types";
 import { db } from "@/lib/db";
 import { enqueue } from "@/lib/sync/sync-manager";
 import { dictationContrastEvidence, weakestEligibleContrast } from "./contrast-profile-writer";
@@ -44,13 +45,14 @@ export interface EssentialWordsRuntimeSession {
 }
 
 export interface RuntimeAttemptInput {
+  attemptId?: string;
   item: EssentialWordQueueItem | SkillRuntimeQueueItem;
   outcome: AttemptOutcome;
   quality: number;
   extras?: GradeExtras;
   sessionId: string;
   renderedMode?: EssentialWordMode;
-  /** False preserves legacy retry behavior while still writing skill evidence. */
+  answer?: PracticeAnswer;
   persistLegacySrs?: boolean;
 }
 
@@ -75,7 +77,6 @@ async function enqueueDictationContrastEvidence(userId: string, attemptId: strin
     }, undefined, undefined, undefined, attemptId)
   }
 }
-
 function skillStats(
   words: EssentialWord[],
   items: Awaited<ReturnType<typeof getLearningItems>>,
@@ -107,7 +108,6 @@ function skillStats(
     vaulted: 0,
   };
 }
-
 async function buildSkillSession(
   userId: string,
   input: RuntimeBuildInput,
@@ -155,7 +155,6 @@ async function buildSkillSession(
     skillPlan: plan,
   };
 }
-
 async function buildLegacySession(
   userId: string,
   input: RuntimeBuildInput,
@@ -165,7 +164,6 @@ async function buildLegacySession(
   });
   return { source: "legacy", ...loaded };
 }
-
 async function recordSkillAttempt(userId: string, input: RuntimeAttemptInput): Promise<void> {
   if (!isSkillItem(input.item)) throw new Error("Skill runtime requires a planned item");
   const context = systemExecutionContext();
@@ -200,7 +198,6 @@ async function recordSkillAttempt(userId: string, input: RuntimeAttemptInput): P
   }
   await enqueueDictationContrastEvidence(userId, plan.attemptLog.id, input.outcome);
 }
-
 async function recordLegacySkillAttempt(userId: string, input: RuntimeAttemptInput): Promise<void> {
   const wordId = essentialWordId(input.item.entry.word.toLowerCase());
   const [existingItems, priorAttempts] = await Promise.all([
@@ -240,7 +237,6 @@ async function recordLegacySkillAttempt(userId: string, input: RuntimeAttemptInp
     retiredListening && retiredListening !== listening ? [retiredListening] : seedItems);
   await enqueueDictationContrastEvidence(userId, plan.attemptLog.id, input.outcome);
 }
-
 export async function createEssentialWordsRuntime(
   userId: string,
 ) {
@@ -291,28 +287,30 @@ export async function createEssentialWordsRuntime(
     },
   });
 
-  // The migration is an idempotent prerequisite of the live skill engine. It
-  // is deliberately excluded from off and shadow so those modes remain
-  // read-only with respect to the skill bundle.
   if (router.mode === "on") await runSkillModelMigration(userId, new Date());
+  const recordedAttemptIds = new Set<string>();
 
   return {
     mode: router.mode,
     buildSession: (input: RuntimeBuildInput) => router.buildSession(input),
     async recordAttempt(input: RuntimeAttemptInput): Promise<void> {
+      const attemptId = input.attemptId ?? crypto.randomUUID();
+      if (recordedAttemptIds.has(attemptId)) return;
       await router.recordAttempt(input);
-      if (router.mode !== "on") return;
       const plannedItem = isSkillItem(input.item) ? input.item.plannedItem : undefined;
-      await savePracticeAnswer(userId, {
+      const answer = input.answer ?? {
+        attemptId,
         exerciseId: plannedItem?.itemId ?? input.item.entry.word,
         exerciseTypeId: input.extras?.accuracy !== undefined ? 10 : 5,
         slug: input.extras?.accuracy !== undefined ? "speak_word" : "fill_blank",
         isCorrect: input.quality >= 3,
         userAnswer: input.extras?.transcript,
         contentId: plannedItem?.wordId ?? input.item.entry.word,
-        context: "essential-words",
+        context: "essential-words" as const,
         timeMs: input.outcome.latencyMs,
-      }).catch(() => undefined);
+      } satisfies PracticeAnswer;
+      await savePracticeAnswer(userId, { ...answer, attemptId }).catch(() => undefined);
+      recordedAttemptIds.add(attemptId);
     },
   };
 }

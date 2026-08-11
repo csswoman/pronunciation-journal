@@ -36,3 +36,27 @@ export type ExerciseSkillMatrix = typeof EXERCISE_SKILL_MATRIX
 export function skillsForSlug(slug: ExerciseSlug): readonly SkillTag[] {
   return EXERCISE_SKILL_MATRIX[slug]
 }
+
+type EssentialWordsPayload = { mode?: unknown }
+
+const LISTENING_ESSENTIAL_WORD_MODES = new Set([
+  'dictation_word', 'dictation_sentence', 'listening_cloze_sentence', 'recognize_audio',
+])
+
+/** Context identifies origin, never a practiced skill. */
+export function resolveAnswerSkills(
+  slug: ExerciseSlug | null,
+  exercisePayload: unknown,
+): readonly SkillTag[] {
+  if (!slug) return []
+  const baseline = new Set<SkillTag>(skillsForSlug(slug))
+  if (slug !== 'fill_blank' && slug !== 'speak_word') return [...baseline]
+  const payload = exercisePayload && typeof exercisePayload === 'object'
+    ? exercisePayload as EssentialWordsPayload
+    : undefined
+  if (typeof payload?.mode !== 'string') return [...baseline]
+  const skills = new Set<SkillTag>(['vocabulary'])
+  if (LISTENING_ESSENTIAL_WORD_MODES.has(payload.mode)) skills.add('listening')
+  if (payload.mode === 'speak_sentence' && slug === 'speak_word') skills.add('speaking')
+  return [...skills]
+}

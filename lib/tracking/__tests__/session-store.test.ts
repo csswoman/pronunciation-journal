@@ -5,7 +5,7 @@ import { db } from '@/lib/db'
 import { createTrackingReviewSession, loadTrackingReviewSession } from '../session-store'
 import type { TrackingReviewQueue } from '../review-queue'
 
-const queue: TrackingReviewQueue = { items: [], exercises: [], skipped: [] }
+const queue: TrackingReviewQueue = { items: [], exercises: [], skipped: [], notices: [] }
 
 describe('tracking review session store', () => {
   beforeEach(async () => {
@@ -28,6 +28,7 @@ describe('tracking review session store', () => {
       skipped: [{
         itemId: 'a', kind: 'phrase', title: 'private phrase', code: 'canonical_target_unresolved', detail: 'private',
       }],
+      notices: [],
     })
     expect(await loadTrackingReviewSession('user-b', created.id)).toBeNull()
     expect(await loadTrackingReviewSession('user-a', created.id)).not.toBeNull()

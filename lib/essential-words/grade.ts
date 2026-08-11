@@ -10,7 +10,6 @@ import {
   getSRSData, saveSRSData, saveAttempt, updateDailyProgress, updateUserStats,
 } from "@/lib/db";
 import { essentialWordId } from "./types";
-import { savePracticeAnswer } from "@/lib/practice/queries";
 import type { SRSData } from "@/lib/types";
 
 export interface GradeExtras {
@@ -108,21 +107,4 @@ export async function gradeEssentialWord(
     await updateUserStats(extras.accuracy, xp, userId);
   }
 
-  // Write to answer_history so Core 1000 progress shows in streak/accuracy charts.
-  if (userId) {
-    try {
-      await savePracticeAnswer(userId, {
-        exerciseId: wordId,
-        exerciseTypeId: extras.accuracy !== undefined ? 10 : 5, // speak_word : fill_blank
-        slug: extras.accuracy !== undefined ? 'speak_word' : 'fill_blank',
-        isCorrect: quality >= 3,
-        userAnswer: extras.transcript,
-        contentId: wordId,
-        context: 'essential-words',
-        timeMs: 0,
-      })
-    } catch {
-      // Best-effort — never break the grading flow for a logging failure.
-    }
-  }
 }

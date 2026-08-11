@@ -12,6 +12,7 @@
 - **Depends on**: plans/063-build-pronunciation-production-spine.md, plans/066-create-pronunciation-target-registry.md, plans/068-build-pronunciation-learning-route.md, plans/069-unify-actionable-pronunciation-feedback.md
 - **Category**: direction
 - **Planned at**: commit `99c871cb`, 2026-07-20
+- **Current status**: DONE (2026-08-10: Plan 073 activated Route, Daily, Tracking and Sound Lab launch call sites; completion reconciles only the exact launch target/step and retries are idempotent)
 
 ## Why this matters
 
@@ -165,7 +166,7 @@ Allow launches with `missionId`, `targetIds` and source metadata from pronunciat
 - Selecting a mission keeps the conversation surface mounted under the runner. Typed turns dispatch `turn_text`; microphone transcripts are scored against the active target before dispatching `turn_spoken`, so text cannot create correction evidence. Completed sessions now derive/render `MissionResult` and persist the mission outcome before offering the existing review route.
 - A streamed `start_mission` tool call now switches `useAIPractice` to `mission:${missionId}` and the Coach panel to the Missions tab; the following request therefore retains the authored mission prompt instead of silently continuing as free chat.
 - When that tool starts from an existing chat stream, the same user-owned conversation is relabelled to the mission mode after its id is available. This preserves the active stream and messages while ensuring history resumes with the authored prompt.
-- Route/Daily/Tracking search found no current `roleplay:` launch call sites in `components/courses/`, `lib/practice/daily-plan/`, or `components/tracking/`; `parseMissionLaunch` now defines and tests their exact launch contracts instead of fabricating integrations.
+- Plan 073 added real Route/Daily/Tracking/Sound Lab call sites around `parseMissionLaunch`; launches preserve exact target ids/source/step, and only a matching successful outcome reconciles the originating Daily step.
 - Passed: `pnpm exec vitest run lib/ai-practice/missions lib/ai-practice/__tests__/stream-processor.test.ts`, focused Coach/Interview/hooks tests, `pnpm audit:ai-prompts`, `pnpm type-check`, `pnpm lint:design-tokens`, and the full Vitest suite. The mission runner additionally tests keyboard activation of the retry control.
 - Closed the a11y verification gap: added `tests/a11y/auth.setup.ts`, an authenticated Playwright setup project that signs in through the real login UI via `signInAsGuest()` (Supabase anonymous sign-in) and saves `storageState` to `tests/a11y/.auth/guest.json` (gitignored). `tests/a11y/oral-mission.a11y.spec.ts` reuses that session, opens the Coach panel, selects the first mission, and axe-scans the briefing phase. `playwright.config.ts` now declares a `setup` project that `chromium` depends on.
   - This depends on `enable_anonymous_sign_ins = true` on whichever Supabase project `NEXT_PUBLIC_SUPABASE_URL` points to. It's `false` in the local `supabase/config.toml`; the connected project's actual setting wasn't confirmed. If guest sign-in fails, `auth.setup.ts` skips itself (not fail) and `oral-mission.a11y.spec.ts` skips too, so this can never break `pnpm test:a11y` or CI — it just silently stays unverified until anonymous sign-in is confirmed/enabled on that project.

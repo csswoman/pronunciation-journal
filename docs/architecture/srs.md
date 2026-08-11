@@ -1,5 +1,10 @@
 # Sistemas SRS — English Journal
 
+Este documento especializa scheduling y estados por dominio. La relación de
+estos sistemas con contenido, ejercicios, Plan diario, Repaso y Progreso está
+definida en [`integrated-learning-loop.md`](integrated-learning-loop.md). Ningún
+SRS convierte exposición, completion o guardado en dominio por sí solo.
+
 Cuatro sistemas de repetición espaciada conviven en la app. Cada uno tiene un dominio distinto y no se solapan.
 
 | Sistema | Almacenamiento | Algoritmo | Clave |

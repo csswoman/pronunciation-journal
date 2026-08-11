@@ -181,6 +181,8 @@ export interface MissionSessionRecord {
   userId: string;
   missionId: string;
   targetIds: string[];
+  launchSource?: string;
+  sourceStepId?: string;
   outcome: Record<string, unknown>;
   turnCount: number;
   status: 'in_progress' | 'completed' | 'cancelled' | 'provider_error';

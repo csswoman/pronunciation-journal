@@ -58,6 +58,7 @@ export function CsShadowPhraseExercise({ exercise, onResult, onSkip }: Props) {
           const feedback = feedbackFromScoringResult({
             accuracy: result.accuracy, transcript: result.transcript, wordResults: result.wordResults,
             evaluatorVersion: 'shadow-stt-v1',
+            authoredTargetId: exercise.pronunciationTargetId,
           })
           void persistPronunciationFeedbackEvidence(user.id, feedback).catch(() => undefined)
         }
@@ -69,7 +70,7 @@ export function CsShadowPhraseExercise({ exercise, onResult, onSkip }: Props) {
         setEvalFailed(true)
       })
       .finally(() => setIsScoring(false))
-  }, [status, speechResult, isScoring, scoring, evalFailed, exercise.phrase, user?.id])
+  }, [status, speechResult, isScoring, scoring, evalFailed, exercise.phrase, exercise.pronunciationTargetId, user?.id])
 
   const handleContinue = useCallback(() => {
     if (!scoring || submitted.current) return

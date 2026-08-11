@@ -6,6 +6,8 @@ import type { PracticeExercise } from '@/lib/practice/types'
 import type { WordBankEntry } from '@/lib/word-bank/types'
 import { isUuid } from '@/lib/review/content-ref'
 import type { TrackedItem, TrackingItem, TrackedKind } from './types'
+import { getTarget, targetId } from '@/lib/pronunciation/targets/registry'
+import type { PronunciationTargetId } from '@/lib/pronunciation/targets/types'
 
 export type TrackingReviewSource =
   | { item: TrackingItem; word: WordBankEntry }
@@ -15,6 +17,8 @@ export interface CanonicalPhraseReviewTarget {
   sourceRef: ExerciseSourceRef
   phrase: string
   deckSlug: string
+  pronunciationTargetId?: PronunciationTargetId
+  topic?: string
 }
 
 export type TrackingReviewSkipCode =
@@ -22,6 +26,7 @@ export type TrackingReviewSkipCode =
   | 'invalid_word_ref'
   | 'unsupported_word'
   | 'canonical_target_unresolved'
+  | 'invalid_target_ref'
   | 'missing_lesson_ref'
 
 export interface TrackingReviewSkip {
@@ -44,10 +49,45 @@ export interface TrackingReviewQueue {
   items: TrackingReviewQueueItem[]
   exercises: PracticeExercise[]
   skipped: TrackingReviewSkip[]
+  notices: Array<{ itemId: string; code: 'activity_only'; detail: string }>
 }
 
 export interface BuildTrackingReviewQueueOptions {
   resolvePhrase?: (trackedItem: TrackedItem) => CanonicalPhraseReviewTarget | null
+}
+
+export type TrackedPhraseResolution =
+  | { ok: true; target: CanonicalPhraseReviewTarget }
+  | { ok: false; detail: string }
+
+/** Resolve payload metadata only; phrase text is never used to guess a target. */
+export function resolveTrackedPhrase(trackedItem: TrackedItem): TrackedPhraseResolution {
+  const phrase = typeof trackedItem.payload.text === 'string'
+    ? trackedItem.payload.text.trim()
+    : (trackedItem.title ?? trackedItem.ref).trim()
+  if (!phrase) return { ok: false, detail: 'La frase guardada ya no contiene texto practicable.' }
+
+  const rawTargetId = trackedItem.payload.pronunciationTargetId
+  let pronunciationTargetId: PronunciationTargetId | undefined
+  if (rawTargetId !== undefined) {
+    if (typeof rawTargetId !== 'string' || !getTarget(rawTargetId).ok) {
+      return { ok: false, detail: 'La referencia de pronunciación ya no existe.' }
+    }
+    pronunciationTargetId = targetId(rawTargetId)
+  }
+  const topic = typeof trackedItem.payload.topicId === 'string'
+    ? trackedItem.payload.topicId.trim() || undefined
+    : undefined
+  return {
+    ok: true,
+    target: {
+      sourceRef: { source: 'tracked_items', id: trackedItem.id },
+      phrase,
+      deckSlug: 'tracking-phrases',
+      pronunciationTargetId,
+      topic,
+    },
+  }
 }
 
 function queueItem(item: TrackingItem, href?: string): TrackingReviewQueueItem {
@@ -89,6 +129,7 @@ export function buildTrackingReviewQueue(
   const items: TrackingReviewQueueItem[] = []
   const exercises: PracticeExercise[] = []
   const skipped: TrackingReviewSkip[] = []
+  const notices: TrackingReviewQueue['notices'] = []
   const seenItemIds = new Set<string>()
 
   for (const source of sources) {
@@ -138,20 +179,35 @@ export function buildTrackingReviewQueue(
 
     if (source.item.kind === 'phrase') {
       const trackedItem = 'trackedItem' in source ? source.trackedItem : undefined
-      const target = trackedItem && options.resolvePhrase?.(trackedItem)
-      if (!target) {
-        skipped.push(skip(source, 'canonical_target_unresolved', 'La frase necesita un destino canónico de pronunciación para practicarla.'))
+      const externalTarget = trackedItem && options.resolvePhrase?.(trackedItem)
+      const resolution = externalTarget
+        ? { ok: true as const, target: externalTarget }
+        : trackedItem
+          ? resolveTrackedPhrase(trackedItem)
+          : { ok: false as const, detail: 'La frase guardada ya no está disponible.' }
+      if (!resolution.ok) {
+        skipped.push(skip(source, 'invalid_target_ref', resolution.detail))
         continue
       }
+      const target = resolution.target
       const phraseExercise: CsShadowPhraseExercise = {
         id: `tracking-phrase:${target.sourceRef.source}:${target.sourceRef.id}`,
         type: 'cs_shadow_phrase',
         sourceRef: target.sourceRef,
         phrase: target.phrase,
         deckSlug: target.deckSlug,
+        pronunciationTargetId: target.pronunciationTargetId,
+        topic: target.topic,
       }
       items.push(queueItem(source.item))
       exercises.push(fromGenericExercise(phraseExercise, 'review'))
+      if (!target.pronunciationTargetId && !target.topic) {
+        notices.push({
+          itemId: source.item.id,
+          code: 'activity_only',
+          detail: 'Esta frase practica escucha y shadowing, pero no cambia progreso hasta tener un objetivo explícito.',
+        })
+      }
       continue
     }
 
@@ -163,5 +219,5 @@ export function buildTrackingReviewQueue(
     items.push(queueItem(source.item, `/mini-lessons/${trackedItem.ref}`))
   }
 
-  return { items, exercises, skipped }
+  return { items, exercises, skipped, notices }
 }

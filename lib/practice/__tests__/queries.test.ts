@@ -3,19 +3,31 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 // ── Mock dependencies ──────────────────────────────────────────────────────
 
-const mocks = vi.hoisted(() => ({
-  mockSupabaseAuthGetUser: vi.fn(),
-  mockSupabaseFrom: vi.fn(),
-  mockDbTransaction: vi.fn(),
-  mockSyncOutboxAdd: vi.fn(),
-  mockSyncOutboxDelete: vi.fn(),
-  mockMarkLessonComplete: vi.fn(),
-  mockMarkLessonIncomplete: vi.fn(),
-  mockEnqueue: vi.fn(),
-  mockBuildSessionResult: vi.fn(),
-  mockRecordActivitySession: vi.fn(),
-  mockIsLessonComplete: vi.fn(),
-}))
+const mocks = vi.hoisted(() => {
+  const mockSyncOutboxFirst = vi.fn(async () => undefined)
+  const mockSyncOutboxWhere = vi.fn(() => ({
+    equals: vi.fn(() => ({
+      and: vi.fn(() => ({
+        first: mockSyncOutboxFirst,
+      })),
+    })),
+  }))
+  return {
+    mockSupabaseAuthGetUser: vi.fn(),
+    mockSupabaseFrom: vi.fn(),
+    mockDbTransaction: vi.fn(),
+    mockSyncOutboxAdd: vi.fn(),
+    mockSyncOutboxDelete: vi.fn(),
+    mockSyncOutboxFirst,
+    mockSyncOutboxWhere,
+    mockMarkLessonComplete: vi.fn(),
+    mockMarkLessonIncomplete: vi.fn(),
+    mockEnqueue: vi.fn(),
+    mockBuildSessionResult: vi.fn(),
+    mockRecordActivitySession: vi.fn(),
+    mockIsLessonComplete: vi.fn(),
+  }
+})
 
 vi.mock('@/lib/supabase/client', () => ({
   getSupabaseBrowserClient: () => ({
@@ -26,7 +38,13 @@ vi.mock('@/lib/supabase/client', () => ({
 
 vi.mock('@/lib/db', () => ({
   db: {
-    syncOutbox: { add: mocks.mockSyncOutboxAdd, delete: mocks.mockSyncOutboxDelete },
+    syncOutbox: {
+      add: mocks.mockSyncOutboxAdd,
+      delete: mocks.mockSyncOutboxDelete,
+      where: mocks.mockSyncOutboxWhere,
+    },
+    srsRatingEvents: {},
+    srsData: {},
     completedLessons: {},
     transaction: mocks.mockDbTransaction,
   },

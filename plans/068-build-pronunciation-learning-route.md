@@ -13,6 +13,7 @@
 - **Depends on**: plans/059-separate-learning-evidence-and-lesson-completion.md, plans/063-build-pronunciation-production-spine.md, plans/066-create-pronunciation-target-registry.md, plans/067-build-pronunciation-diagnostic.md
 - **Category**: direction
 - **Planned at**: commit `99c871cb`, 2026-07-20
+- **Current status**: DONE (2026-08-10: Plan 073 connected exact mission launches from Route, bounded Daily selection and Sound Lab follow-up without changing route completion semantics)
 
 ## Why this matters
 
@@ -151,8 +152,9 @@ Expose the route from Courses and Sound Lab first; do not add another primary si
 ### Thin-vertical note (2026-07-25)
 
 Shipped: pure path model, UI, diagnostic CTA, Courses aside link, architecture doc.
-Still open from original plan: Daily integration, Sound Lab “next phrase”, full
-`pnpm audit:course-content` gap authoring, Playwright a11y grep, sidebar primary item.
+Plan 073 closed Daily integration and Sound Lab/Route next-transfer launches with
+canonical target ids. The broader content-authoring audit, Playwright grep and
+sidebar-capacity decision remain independent quality/navigation follow-ups.
 
 ## STOP conditions
 

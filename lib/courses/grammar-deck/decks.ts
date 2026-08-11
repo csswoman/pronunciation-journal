@@ -15,6 +15,7 @@ import { getLevelById } from "@/lib/courses/curriculumIndex";
 import type { CoursePathTrackId } from "@/lib/courses/types";
 import { getTarget, targetId } from "@/lib/pronunciation/targets/registry";
 import { resolveLegacyIpaToken } from "@/lib/pronunciation/targets/legacy-links";
+import { theoryTopicForDeck } from "@/lib/learning-loop/theory-targets";
 
 const DECKS_DIR = path.join(process.cwd(), "public", "grammar-decks");
 
@@ -59,6 +60,7 @@ export function getDeckBySlug(slug: string): GrammarStudyDeckData | null {
   // have to keep `index` in sync by hand.
   return {
     meta: result.data.meta ?? DEFAULT_META,
+    topicId: theoryTopicForDeck(slug),
     sounds: result.data.sounds,
     pronunciationTargetIds: authoredTargetIds.map(targetId),
     related: result.data.related,

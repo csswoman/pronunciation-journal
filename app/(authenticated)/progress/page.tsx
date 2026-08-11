@@ -14,6 +14,7 @@ import { FluencyRadarCard } from "@/components/progress/FluencyRadarCard";
 import { SkillProfileCard } from "@/components/progress/SkillProfileCard";
 import { ThisWeekCard } from "@/components/progress/ThisWeekCard";
 import { ActivityHistoryCard } from "@/components/progress/ActivityHistoryCard";
+import { ProgressProjectionCards } from "@/components/progress/ProgressProjectionCards";
 
 const progressHeader = (
   <PageHeader
@@ -69,6 +70,7 @@ export default async function ProgressPage() {
         <DailyCompletionRate stats={data.dailyCompletion} />
         <AccuracyTrend stats={data.accuracy} />
       </div>
+      <ProgressProjectionCards data={data.projections} />
       <FluencyRadarCard
         scores={data.fluencyProfile.scores}
         comparisonLabel={data.fluencyProfile.comparisonLabel}

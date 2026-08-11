@@ -2,6 +2,10 @@
 
 Documentación del sistema de ejercicios de la app: qué tipos existen, cómo funcionan, dónde vive el código y cómo están conectados a los datos.
 
+Este documento especializa la capa de práctica. La relación canónica entre
+contenido, targets, evidencia, Plan diario, Repaso y Progreso está definida en
+[`integrated-learning-loop.md`](integrated-learning-loop.md).
+
 ---
 
 ## Índice
