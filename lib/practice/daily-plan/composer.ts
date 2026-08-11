@@ -347,7 +347,7 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     if (step.id.startsWith('review_') || (hasDueSrs && step.kind === 'word_review')) return 'due' as const
     if (step.id.includes('failed') || step.kind === 'sentence_builder' && weakTopic) return 'recent_error' as const
     if (hasProgress && ['phoneme_focus', 'minimal_pairs', 'listening'].includes(step.kind)) return 'weak_target' as const
-    if (step.kind === 'study_deck') return 'route_next' as const
+    if (step.kind === 'study_deck' || step.kind === 'reader') return 'route_next' as const
     if (step.kind === 'word_review' && dailyWordSelection.savedOrFamiliarIds.size > 0) return 'saved_intent' as const
     return 'variety' as const
   }

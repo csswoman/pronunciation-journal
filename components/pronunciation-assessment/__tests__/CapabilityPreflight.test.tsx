@@ -5,6 +5,10 @@ import userEvent from '@testing-library/user-event'
 
 import { CapabilityPreflight } from '../CapabilityPreflight'
 
+vi.mock('@/lib/speech/adapters/webSpeechAdapter', () => ({
+  isWebSpeechReliable: () => true,
+}))
+
 afterEach(() => {
   cleanup()
   vi.unstubAllGlobals()
@@ -102,7 +106,7 @@ describe('CapabilityPreflight', () => {
     render(<CapabilityPreflight onContinue={onContinue} />)
 
     await waitFor(() => {
-      expect(screen.getByText(/activa el micrófono en chrome/i)).toBeInTheDocument()
+      expect(screen.getByText(/activa el micrófono en el navegador/i)).toBeInTheDocument()
     })
 
     const continueButton = screen.getByRole('button', { name: /continuar sin micrófono/i })
@@ -163,7 +167,7 @@ describe('CapabilityPreflight', () => {
     })
 
     render(<CapabilityPreflight onContinue={vi.fn()} />)
-    await screen.findByText(/activa el micrófono en chrome/i)
+    await screen.findByText(/activa el micrófono en el navegador/i)
 
     permissionStatus.state = 'granted'
     listeners.forEach((listener) => listener())

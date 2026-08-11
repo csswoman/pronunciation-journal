@@ -33,7 +33,7 @@ export function SessionReadyHeatmap({ days }: Props) {
             key={day.dayKey}
             title={`${day.dayKey}: ${day.count}`}
             className={cn(
-              'aspect-square min-h-0 min-w-0 w-full rounded-[2px]',
+              'aspect-square min-h-0 min-w-0 w-full rounded-sm',
               'transition-[filter,transform] duration-150 ease-out-quart',
               'motion-reduce:transition-none',
               day.level > 0 && 'hover:brightness-110 hover:scale-110',

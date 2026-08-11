@@ -24,6 +24,11 @@ const words: EssentialWord[] = [{
 
 vi.mock("../client", () => ({ fetchEssentialWords: vi.fn(async () => words) }));
 vi.mock("@/lib/practice/queries", () => ({ savePracticeAnswer: vi.fn(async () => undefined) }));
+vi.mock("@/lib/phoneme-practice/queries", async (importOriginal) => ({
+  ...await importOriginal<typeof import("@/lib/phoneme-practice/queries")>(),
+  getAllContrastProgress: vi.fn(async () => []),
+  getRetiredEssentialWordBlankKeys: vi.fn(async () => new Set()),
+}));
 
 const legacy: SRSData = {
   userId: USER,
@@ -39,6 +44,7 @@ const legacy: SRSData = {
 };
 
 beforeEach(async () => {
+  vi.clearAllMocks();
   vi.stubEnv("NEXT_PUBLIC_SKILL_MODEL_MODE", "on");
   vi.stubEnv("NEXT_PUBLIC_SKILL_MODEL_COHORT_PERCENT", "100");
   db.close();
@@ -82,6 +88,7 @@ describe("runtime skill happy path", () => {
     expect(item).toHaveProperty("plannedItem");
 
     await runtime.recordAttempt({
+      attemptId: "attempt-on-1",
       item,
       quality: 4,
       sessionId: "real-session-1",
@@ -124,6 +131,10 @@ describe("runtime skill happy path", () => {
       "learning_items", "attempt_logs", "srs_review_events",
     ]));
     expect(savePracticeAnswer).toHaveBeenCalledOnce();
+    expect(savePracticeAnswer).toHaveBeenCalledWith(USER, expect.objectContaining({
+      attemptId: "attempt-on-1",
+      isCorrect: true,
+    }));
 
     const reloaded = await createEssentialWordsRuntime(USER);
     const second = await reloaded.buildSession({
@@ -187,6 +198,35 @@ describe("runtime skill happy path", () => {
         expect.objectContaining({ skill: "production", outcome: "failure" }),
       ],
     });
+  });
+
+  it("off persiste una answer por attempt ID y distingue intentos diferentes", async () => {
+    vi.stubEnv("NEXT_PUBLIC_SKILL_MODEL_MODE", "off");
+    const { createEssentialWordsRuntime } = await import("../runtime-engine");
+    const runtime = await createEssentialWordsRuntime(USER);
+    const session = await runtime.buildSession({ levels: null, pos: null, now: NOW });
+    const input = (attemptId: string, quality: number): RuntimeAttemptInput => ({
+      attemptId,
+      item: session.items[0],
+      quality,
+      sessionId: "off-answer-evidence",
+      persistLegacySrs: false,
+      outcome: dictationOutcome({ correct: quality >= 3 }),
+    });
+
+    await runtime.recordAttempt(input("attempt-off-incorrect", 2));
+    await runtime.recordAttempt(input("attempt-off-incorrect", 2));
+    await runtime.recordAttempt(input("attempt-off-correct", 4));
+
+    expect(savePracticeAnswer).toHaveBeenCalledTimes(2);
+    expect(vi.mocked(savePracticeAnswer).mock.calls.map(([, answer]) => ({
+      attemptId: answer.attemptId,
+      isCorrect: answer.isCorrect,
+    }))).toEqual([
+      { attemptId: "attempt-off-incorrect", isCorrect: false },
+      { attemptId: "attempt-off-correct", isCorrect: true },
+    ]);
+    expect(await db.attemptLogs.where("userId").equals(USER).count()).toBe(2);
   });
 
   it("siembra en off la misma entrada provisional que la migración", async () => {
@@ -315,6 +355,7 @@ describe("runtime skill happy path", () => {
     expect(session.source).toBe("legacy");
 
     await runtime.recordAttempt({
+      attemptId: "attempt-shadow-1",
       item: session.items[0], quality: 2, sessionId: "shadow-evidence",
       renderedMode: "dictation_sentence", persistLegacySrs: false,
       outcome: dictationOutcome(),
@@ -322,5 +363,9 @@ describe("runtime skill happy path", () => {
 
     expect(await db.attemptLogs.where("userId").equals(USER).count()).toBe(0);
     expect(await db.learningItems.where("userId").equals(USER).count()).toBe(0);
+    expect(savePracticeAnswer).toHaveBeenCalledOnce();
+    expect(savePracticeAnswer).toHaveBeenCalledWith(USER, expect.objectContaining({
+      attemptId: "attempt-shadow-1",
+    }));
   });
 });

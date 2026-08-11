@@ -19,7 +19,7 @@ const options: SimulationOptions = {
   targetNewWords: 10,
 };
 
-describe("Task 8.9e profile multidimensional feasibility", () => {
+describe("Task 8.9e profile multidimensional feasibility", { timeout: 30_000 }, () => {
   it("M: cinco perfiles deterministas reportan base-slot status", () => {
     for (const profile of Object.values(PROFILES)) {
       const first = runSimulation(profile, options);

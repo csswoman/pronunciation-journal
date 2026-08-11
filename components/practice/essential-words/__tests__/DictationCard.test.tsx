@@ -86,7 +86,7 @@ describe('DictationCard', () => {
     fireEvent.change(screen.getByRole('textbox'), { target: { value: 'We walked through the city.' } })
     fireEvent.click(screen.getByRole('button', { name: /comprobar/i }))
 
-    expect(await screen.findByLabelText('Palabra correcta')).toBeInTheDocument()
+    expect(await screen.findByLabelText('Oración correcta')).toBeInTheDocument()
     await waitFor(() => expect(onAttempt).toHaveBeenCalledWith(expect.objectContaining({ correct: false, typo: false })))
   })
 

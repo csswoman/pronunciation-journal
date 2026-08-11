@@ -119,9 +119,11 @@ const RAW_COLOR_ALLOWLIST = new Set([
  * never blocks CI on a false positive.
  */
 // Any of: template interpolation, CSS var() reference, spread, arrow fn,
-// ternary, or a bare identifier used as a value (`prop: someVar,`) all
-// indicate the object is computed rather than a pure literal.
-const RUNTIME_COMPUTED_HINTS = /\$\{|var\(--|\.\.\.|=>|\?|:\s*[a-zA-Z_]\w*\s*[,}]/;
+// ternary, or an identifier/member expression used as a value
+// (`prop: someVar`, `prop: segment.total`) all indicate the object is
+// computed rather than a pure literal.
+const RUNTIME_COMPUTED_HINTS =
+  /\$\{|var\(--|\.\.\.|=>|\?|:\s*[a-zA-Z_]\w*(?:\??\.[a-zA-Z_]\w*)*\s*[,}]/;
 
 // --- File walker -------------------------------------------------------------
 

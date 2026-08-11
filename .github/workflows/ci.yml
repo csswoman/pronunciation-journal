@@ -10,6 +10,7 @@ jobs:
   lint-and-test:
     runs-on: ubuntu-latest
     name: Lint, Type Check & Test
+    timeout-minutes: 15
 
     steps:
       - uses: actions/checkout@v4
@@ -31,6 +32,12 @@ jobs:
 
       - run: pnpm type-check
         name: TypeScript type check
+
+      - name: Audit integrated learning loop
+        run: pnpm audit:learning-loop
+
+      - name: Verify learning-loop integrations
+        run: pnpm test:learning-loop:integration
 
       - run: pnpm test:coverage
         name: Run tests with coverage

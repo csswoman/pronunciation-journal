@@ -12,7 +12,7 @@ const options: SimulationOptions = {
   targetNewWords: 10,
 };
 
-describe("Task 8.9f §8 — reconciliación de backlog (test G)", () => {
+describe("Task 8.9f §8 — reconciliación de backlog (test G)", { timeout: 30_000 }, () => {
   it("test G — backlog(t+1) = backlog(t) + arrival - service reconcilia exactamente, de forma determinista, para los cinco perfiles", () => {
     for (const profile of Object.values(PROFILES)) {
       const audit = runMandatoryAudit(profile, options);

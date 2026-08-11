@@ -5,10 +5,11 @@ Last reconciled: **2026-08-10**. Plans 046–057 were written against HEAD
 `38c3abe5` and are now implemented per `TODO.md`; plans 059–065 were produced
 from the learning-loop audit at HEAD `c779781b`; plans 066–070 extend the oral
 product roadmap at HEAD `99c871cb`; plan 073 consolidates the app-wide learning
-loop at HEAD `ce654374`; plans 074–075 capture the verified evidence-sanitizing
-and exercise-consolidation work around that integration. Statuses through 045
-preserve the earlier focused-test and linked Supabase verification recorded in
-their rows.
+loop at HEAD `ce654374`; plans 074–075 capture the evidence-sanitizing and
+exercise-consolidation work around that integration; plan 076 closes the
+remaining acceptance gates and adds a real cold-retention pilot at HEAD
+`8d69ef3b`. Statuses through 045 preserve the earlier focused-test and linked
+Supabase verification recorded in their rows.
 
 > **Fuente de verdad para trabajo nuevo:** `TODO.md`, `plans/032-post-production-improvement-roadmap.md`
 > y los planes atómicos 046–057.
@@ -102,6 +103,7 @@ your row when done.
 | 074 | Sanitize Review and learning evidence before broader integration | P1 correctness/foundation | L | 059, 061, 062 | DONE (2026-08-10: pure topic-aware Review composition; canonical context-free answer→skills; completion removed from learning score; stable/idempotent Essential Words answers) |
 | 073 | Connect all content to the shared learning loop | P1 product/pedagogy | XL | 074, 066 | DONE (2026-08-10: executable 3,230-entry manifest, shared theory identity, tracked phrases, canonical launches, deterministic Daily policy, audited evidence exits and separate activity/coverage/learning projections) |
 | 075 | Consolidate active exercise capabilities and retire producer-less promises | P1 pedagogy/tech-debt | M | 073 | DONE (2026-08-11; audited capability inventory, authored error correction, deferred conjugation and shared safe primitives) |
+| 076 | Close learning-loop acceptance and run a cold retention/transfer pilot | P1 release/pedagogy | M + 7–14 days | 074, 073, 075 | IN PROGRESS (2026-08-11: integrations, CI gates, two coverage runs and 56-check visual matrix green; data-backed browser flows and real day-0/day-2/day-7 pilot pending) |
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJECTED (with one-line rationale)
 
@@ -224,6 +226,12 @@ Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJE
      equivalent generator primitives.
   Do not implement 073 as one monolithic PR or start 075 from a stale/incomplete
   coverage manifest.
+- Execute 076 after 075. It does not expand the product: first it restores the
+  red Essential Words integration, makes `audit:learning-loop` and a real
+  writer/read-model round-trip block CI, and closes coverage/browser acceptance.
+  It remains IN PROGRESS until the day-7 cold-retention/transfer pilot has real
+  results. Plan 043 stays conditional until that evidence shows a return-loop
+  problem.
 
 ## Findings considered and rejected
 
