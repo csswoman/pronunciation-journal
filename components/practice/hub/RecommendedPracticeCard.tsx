@@ -29,16 +29,21 @@ export default function RecommendedPracticeCard({ recommendation }: Props) {
     <Link
       href={mode.href}
       onClick={() => void setLastPracticeMode(mode.id)}
-      className="flex items-center gap-4 rounded-[var(--radius-xl)] border border-border-subtle bg-[var(--hue-icon-bg)] p-5 transition-colors hover:bg-surface-sunken focus-ring"
+      aria-label={`${headline}. ${subtext}`}
+      className="home-card-lift focus-ring group flex min-h-14 items-center gap-4 rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-4 transition-colors hover:border-primary"
     >
-      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-[var(--radius-lg)] bg-surface-raised text-[var(--primary)]">
+      <span className="icon-wrap-hue grid h-11 w-11 shrink-0 place-items-center rounded-[var(--radius-md)]">
         <Icon size={22} aria-hidden />
       </span>
-      <div className="flex-1">
-        <p className="font-body-sm font-semibold text-[var(--text-primary)]">{headline}</p>
-        <p className="font-caption text-[var(--text-tertiary)]">{subtext}</p>
+      <div className="min-w-0 flex-1">
+        <p className="font-label text-fg">{headline}</p>
+        <p className="font-caption text-pretty text-fg-muted">{subtext}</p>
       </div>
-      <ArrowRight size={18} className="text-[var(--text-tertiary)]" aria-hidden />
+      <ArrowRight
+        size={18}
+        className="shrink-0 text-primary transition-transform duration-150 group-hover:translate-x-0.5"
+        aria-hidden
+      />
     </Link>
   )
 }

@@ -109,7 +109,12 @@ describe('outbox retry-after-reload and duplicate-idempotency-key characterizati
       update: vi.fn(() => ({
         eq: vi.fn(() => ({
           eq: vi.fn().mockResolvedValue({
-            error: { message: 'new row violates row-level security policy', code: '42501' },
+            error: {
+              message: 'new row violates row-level security policy',
+              code: '42501',
+              details: 'policy learning_items_select_own',
+              hint: 'authenticate first',
+            },
           }),
         })),
       })),
@@ -123,6 +128,11 @@ describe('outbox retry-after-reload and duplicate-idempotency-key characterizati
     expect(entries).toHaveLength(1)
     expect(entries[0].status).toBe('failed')
     expect(entries[0].retryCount).toBe(1)
+    expect(entries[0]).toMatchObject({
+      errorCode: '42501',
+      errorDetails: 'policy learning_items_select_own',
+      errorHint: 'authenticate first',
+    })
 
     // A subsequent flush must NOT re-attempt a failed entry.
     const secondResult = await flushOutbox('user-1')

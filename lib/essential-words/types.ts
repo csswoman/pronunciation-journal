@@ -44,6 +44,78 @@ export interface SentenceToken {
   contrastIds: string[];
 }
 
+/** Author-authored contrast behaviours. The UI has a fixed treatment for each. */
+export const STUDY_CONTRAST_PATTERNS = [
+  "omission",
+  "addition",
+  "replacement",
+  "false_friend",
+] as const;
+export type StudyContrastPattern = (typeof STUDY_CONTRAST_PATTERNS)[number];
+
+export interface StudySoundAnchor {
+  id: string;
+  ipa: string;
+  explanationEs: string;
+}
+
+export interface StudyPronunciationVariant {
+  id: string;
+  labelEs: string;
+  ipa: string;
+  /** `**focus**` authoring markup; compiled before reaching the card. */
+  spokenExample: string;
+  /** Only when TTS must read something different than the compiled text. */
+  ttsTextOverride?: string;
+  anchorIds: string[];
+}
+
+export interface StudyPronunciation {
+  soundAnchors?: StudySoundAnchor[];
+  variants?: StudyPronunciationVariant[];
+}
+
+export interface StudyExample {
+  /** `**focus**` authoring markup; compiled before reaching the card. */
+  english: string;
+  translationEs: string;
+  variantId?: string;
+  /** Only when TTS must read something different than the compiled text. */
+  ttsTextOverride?: string;
+}
+
+export interface StudyContrastPair {
+  pattern: StudyContrastPattern;
+  /** `**focus**` authoring markup; compiled before reaching the card. */
+  spanish: string;
+  /** `**focus**` authoring markup; compiled before reaching the card. */
+  english: string;
+  /** Required for contrasts whose explanation cannot be generated safely. */
+  explanationEs?: string;
+  /** Only when TTS must read something different than the compiled English text. */
+  ttsTextOverride?: string;
+}
+
+/** Optional pedagogical layer. Entries without it keep the compact legacy card. */
+export interface EssentialWordStudy {
+  definitionEs?: string;
+  translation?: string[];
+  translationNote?: string;
+  spellingVariants?: Array<{ spelling: string; localeEs: string }>;
+  usage?: {
+    /** Shared rule selected from study-rules.ts. */
+    ruleId?: string;
+    /** Word-specific rule when a reusable catalogue entry would be artificial. */
+    ruleEsOverride?: string;
+  };
+  pronunciation?: StudyPronunciation;
+  contrasts?: {
+    titleEs: string;
+    pairs: StudyContrastPair[];
+  };
+  examples?: StudyExample[];
+}
+
 export interface EssentialWord {
   rank: number; // 1–2800, único, contiguo por chunk
   word: string;
@@ -57,6 +129,9 @@ export interface EssentialWord {
   meaning?: string; // definición corta en inglés (backfill-meaning)
   translation?: string; // traducción al español (backfill-meaning)
   example_sentences?: SentenceVariant[]; // extra sentences beyond example_sentence
+  study?: EssentialWordStudy;
+  /** Words introduced in the same learning unit, not prerequisites. */
+  teachWith?: string[];
 }
 
 export const ESSENTIAL_WORD_PREFIX = "c1k:";

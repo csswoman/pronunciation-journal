@@ -50,6 +50,7 @@ export function WordIntroStep({ cards, onComplete }: Props) {
           contextLine={`Palabras nuevas · ${index + 1} de ${cards.length}`}
           onContinue={advance}
           onListen={onListen}
+          onListenText={(text) => speak(text, { rate: 0.95 })}
         />
       </div>
     </div>

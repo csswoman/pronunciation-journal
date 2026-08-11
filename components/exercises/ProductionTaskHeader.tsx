@@ -13,27 +13,29 @@ interface Props {
 
 export function ProductionTaskHeader({ exercise, title }: Props) {
   return (
-    <div className="flex w-full flex-col gap-2">
+    <div className="flex w-full flex-col gap-3">
       <p className="m-0 text-h3 text-balance text-fg">
         {title}
       </p>
       <p className="m-0 max-w-[70ch] text-body-md leading-snug text-pretty text-fg">
         {exercise.taskPrompt}
       </p>
-      <div className="flex min-w-0 items-center gap-2 rounded-[var(--radius-md)] bg-surface-raised px-3 py-2 text-caption">
-        <span className="shrink-0 font-semibold text-fg">{exercise.targetItem}</span>
+      <div className="flex min-w-0 flex-col gap-2 rounded-[var(--radius-md)] bg-surface-raised p-3">
+        <div className="flex min-w-0 items-center justify-between gap-3">
+          <span className="min-w-0 text-h4 font-semibold text-fg">{exercise.targetItem}</span>
+          <ListenButton
+            iconOnly
+            className="h-11 w-11"
+            onPlay={() => speak(exercise.targetItem)}
+            aria-label={`Escuchar ${exercise.targetItem}`}
+          />
+        </div>
         {exercise.targetMeaning && (
-          <>
-            <span className="shrink-0 text-fg-subtle" aria-hidden>·</span>
-            <span className="min-w-0 truncate italic text-fg-muted">{exercise.targetMeaning}</span>
-          </>
+          <p className="m-0 text-body-sm leading-relaxed text-fg-muted text-pretty">
+            <span className="font-medium text-fg">Significado: </span>
+            {exercise.targetMeaning}
+          </p>
         )}
-        <ListenButton
-          iconOnly
-          className="ml-auto h-11 w-11"
-          onPlay={() => speak(exercise.targetItem)}
-          aria-label="Escuchar la palabra objetivo"
-        />
       </div>
     </div>
   )

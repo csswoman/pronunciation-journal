@@ -32,4 +32,12 @@ describe('MissionLibrary category filter', () => {
     expect(screen.queryByText(interview.communicativeGoal)).not.toBeInTheDocument()
     expect(screen.getByText(cafe.communicativeGoal)).toBeInTheDocument()
   })
+
+  it('shows an empty filter state when the category has no missions', () => {
+    render(<MissionLibrary missions={listMissions()} onSelect={vi.fn()} />)
+
+    fireEvent.click(screen.getByRole('button', { name: /^social$/i }))
+
+    expect(screen.getByText(/no hay misiones en social/i)).toBeInTheDocument()
+  })
 })

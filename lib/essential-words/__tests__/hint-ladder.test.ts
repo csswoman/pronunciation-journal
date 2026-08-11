@@ -26,12 +26,14 @@ describe("buildHintLadder — length-aware (spec §2.3)", () => {
     const ladder = buildHintLadder(word({ word: "to", pos: "preposition" }), "cloze_sentence");
     const category = ladder.find((r) => r.kind === "category")!;
     expect(category.content).not.toMatch(/\d+ letras/);
+    expect(category.content).toBe("La respuesta es una preposición.");
   });
 
   it("category rung for a long word includes the letter count", () => {
     const ladder = buildHintLadder(word({ word: "happy", pos: "adjective" }), "cloze_sentence");
     const category = ladder.find((r) => r.kind === "category")!;
     expect(category.content).toMatch(/5 letras/);
+    expect(category.content).toBe("La respuesta es un adjetivo y tiene 5 letras.");
   });
 
   it("no rung's content ever equals the target word itself (no rung gives the full answer)", () => {

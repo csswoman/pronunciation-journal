@@ -167,10 +167,13 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
         title="Plan diario"
         subtitle={
           status === 'ready' && steps.length > 0
-            ? `${completedCount} de ${steps.length} pasos · completa los ${steps.length} para mantener tu racha.`
-            : 'Preparando tu plan…'
+            ? completedCount === 0
+              ? `Completa ${steps.length} pasos para mantener tu racha.`
+              : `${completedCount} de ${steps.length} hechos · sigue para mantener tu racha.`
+            : status === 'ready'
+              ? 'Tu plan se arma con cursos y sonidos.'
+              : 'Preparando tu plan…'
         }
-        progress={status === 'ready' && steps.length ? Math.round((completedCount / steps.length) * 100) : 0}
       />
 
       {status === 'ready' ? <SessionOpeningBanner arc={plan?.arc} /> : null}
@@ -187,15 +190,21 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
       />
 
       {recommendation ? (
-        <div className="mt-6">
+        <div className="mt-[var(--layout-section-gap)]">
+          <p className="font-kicker mb-[var(--layout-stack-tight)] text-fg-muted">
+            Después del plan
+          </p>
           <RecommendedPracticeCard recommendation={recommendation} />
         </div>
       ) : null}
 
-      <div className="mt-8 flex flex-col items-center gap-2 text-center">
-        <Link href="/practice/sounds" className="inline-flex items-center gap-1.5 text-caption text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]">
-          <Sparkles size={14} />
-          Want free practice? Choose what to work on.
+      <div className="mt-[var(--layout-section-gap)] flex flex-col items-center text-center">
+        <Link
+          href="/practice"
+          className="focus-ring inline-flex min-h-11 items-center gap-1.5 rounded-md px-2 font-caption font-medium text-fg-muted transition-colors hover:text-primary"
+        >
+          <Sparkles size={14} className="text-primary" aria-hidden />
+          ¿Práctica libre? Elige qué trabajar
         </Link>
       </div>
     </PageLayout>

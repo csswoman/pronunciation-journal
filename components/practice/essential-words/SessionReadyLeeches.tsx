@@ -11,9 +11,10 @@ import { SessionSurface } from './session-chrome'
 interface Props {
   leeches: LeechWord[]
   onReview: (wordIds: string[]) => void
+  disabled?: boolean
 }
 
-export function SessionReadyLeeches({ leeches, onReview }: Props) {
+export function SessionReadyLeeches({ leeches, onReview, disabled = false }: Props) {
   if (leeches.length === 0) return null
   const preview = leeches.slice(0, 3)
 
@@ -36,7 +37,8 @@ export function SessionReadyLeeches({ leeches, onReview }: Props) {
       <button
         type="button"
         onClick={() => onReview(leeches.map((l) => l.wordId))}
-        className="inline-flex min-h-10 w-full items-center rounded-md px-1 text-left text-caption font-semibold text-info transition-colors duration-150 ease-out-quart hover:underline focus-ring"
+        disabled={disabled}
+        className="inline-flex min-h-10 w-full items-center rounded-md px-1 text-left text-caption font-semibold text-info transition-colors duration-150 ease-out-quart hover:underline focus-ring disabled:cursor-not-allowed disabled:opacity-60"
       >
         Repasar las {leeches.length} difíciles →
       </button>

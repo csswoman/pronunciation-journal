@@ -4,30 +4,36 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { SessionReadyHero } from '../SessionReadyHero'
 
-const baseStats = {
-  totalWords: 740, learned: 10, dueCount: 0, dueTomorrow: 0,
-  newToday: 0, newQuota: 10, vaulted: 0,
-}
-
 const heroProps = {
-  counts: { newRemaining: 8, learningRemaining: 0, reviewRemaining: 16 },
-  stats: baseStats,
+  preview: {
+    actionBudget: 15,
+    scheduledActions: 15,
+    uniqueWords: 5,
+    newWordCount: 3,
+    reviewActionCount: 4,
+    continuationActionCount: 0,
+    estimatedDurationMs: 168_000,
+    completedActions: 0,
+    remainingActions: 15,
+  },
   isResume: false,
   activeRouteId: null as string | null,
   onRouteChange: vi.fn(),
   sessionSize: 'recommended' as const,
   onSessionSizeChange: vi.fn(),
   onBegin: vi.fn(),
+  onDiscard: vi.fn(),
+  previewLoading: false,
 }
 
 describe('SessionReadyHero', () => {
   it('shows the commitment headline, breakdown, size picker, route chips, and start CTA', () => {
     render(<SessionReadyHero {...heroProps} />)
 
-    expect(screen.getByRole('heading', { name: 'Hoy te tocan 24 palabras' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Hoy tienes 15 ejercicios' })).toBeInTheDocument()
     expect(screen.getByText(/unos \d+ min/)).toBeInTheDocument()
-    expect(screen.getByText('8 nuevas · 16 repasos · 1 ronda final')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Recomendada · 9' })).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByText('3 palabras nuevas · 4 repasos')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Recomendada · 15' })).toHaveAttribute('aria-pressed', 'true')
     expect(screen.getByRole('button', { name: 'Sesión recomendada' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Empezar' })).toBeInTheDocument()
   })
@@ -36,25 +42,26 @@ describe('SessionReadyHero', () => {
     render(
       <SessionReadyHero
         {...heroProps}
-        counts={{ newRemaining: 0, learningRemaining: 0, reviewRemaining: 5 }}
+        preview={{ ...heroProps.preview, newWordCount: 0, reviewActionCount: 5 }}
       />,
     )
-    expect(screen.getByText('5 repasos · 1 ronda final')).toBeInTheDocument()
+    expect(screen.getByText('5 repasos')).toBeInTheDocument()
   })
 
   it('switches to resume copy when learning cards remain', () => {
     render(
       <SessionReadyHero
         {...heroProps}
-        counts={{ newRemaining: 2, learningRemaining: 3, reviewRemaining: 4 }}
+        preview={{ ...heroProps.preview, completedActions: 6, remainingActions: 9, continuationActionCount: 3 }}
         isResume
       />,
     )
     expect(
       screen.getByRole('heading', { name: 'Continuar donde lo dejaste' }),
     ).toBeInTheDocument()
-    expect(screen.getByText('Retoma la sesión que dejaste a medias')).toBeInTheDocument()
+    expect(screen.getByText('9 ejercicios pendientes')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Continuar' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Descartar sesión' })).toBeInTheDocument()
   })
 
   it('calls onBegin when Empezar is pressed', async () => {
@@ -69,7 +76,28 @@ describe('SessionReadyHero', () => {
     const user = userEvent.setup()
     const onSessionSizeChange = vi.fn()
     render(<SessionReadyHero {...heroProps} onSessionSizeChange={onSessionSizeChange} />)
-    await user.click(screen.getByRole('button', { name: 'Larga · 15' }))
+    await user.click(screen.getByRole('button', { name: 'Larga · 25' }))
     expect(onSessionSizeChange).toHaveBeenCalledWith('long')
+  })
+
+  it('keeps the hero mounted and disables start while rebuilding the preview', () => {
+    render(<SessionReadyHero {...heroProps} previewLoading />)
+
+    expect(screen.getByRole('heading', { name: 'Hoy tienes 15 ejercicios' })).toBeInTheDocument()
+    expect(screen.getByRole('status')).toHaveTextContent('Actualizando sesión')
+    expect(screen.getByRole('button', { name: 'Actualizando…' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: 'Corta · 5' })).toBeEnabled()
+    expect(screen.getByRole('button', { name: 'Sesión recomendada' })).toBeEnabled()
+  })
+
+  it('freezes route and size but lets the learner discard a resumed session', async () => {
+    const user = userEvent.setup()
+    const onDiscard = vi.fn()
+    render(<SessionReadyHero {...heroProps} isResume onDiscard={onDiscard} />)
+
+    expect(screen.getByRole('button', { name: 'Corta · 5' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: 'Sesión recomendada' })).toBeDisabled()
+    await user.click(screen.getByRole('button', { name: 'Descartar sesión' }))
+    expect(onDiscard).toHaveBeenCalledOnce()
   })
 })

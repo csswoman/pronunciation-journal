@@ -112,10 +112,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         <>
           {hasMountedCoach && <AICoachPanel />}
           {!hideMobileNav && (
-            <AICoachTrigger
-              variant={pathname === "/" ? "labeled" : "fab"}
-              className="hidden lg:flex"
-            />
+            <AICoachTrigger variant="labeled" className="hidden lg:flex" />
           )}
         </>
       )}

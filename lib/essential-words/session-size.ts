@@ -3,14 +3,14 @@ const STORAGE_KEY = 'ej:essential-words:session-size'
 export type SessionSizeId = 'short' | 'recommended' | 'long'
 
 export const SESSION_SIZES = [
-  { id: 'short' as const, label: 'Corta · 5', wordBudget: 5, newCardCeiling: 2 },
-  { id: 'recommended' as const, label: 'Recomendada · 9', wordBudget: 9, newCardCeiling: 3 },
-  { id: 'long' as const, label: 'Larga · 15', wordBudget: 15, newCardCeiling: 5 },
+  { id: 'short' as const, label: 'Corta · 5', actionBudget: 5, maxNewWords: 1 },
+  { id: 'recommended' as const, label: 'Recomendada · 15', actionBudget: 15, maxNewWords: 3 },
+  { id: 'long' as const, label: 'Larga · 25', actionBudget: 25, maxNewWords: 5 },
 ] as const
 
 export function sessionSizeById(id: SessionSizeId) {
   const row = SESSION_SIZES.find((s) => s.id === id) ?? SESSION_SIZES[1]
-  return { wordBudget: row.wordBudget, newCardCeiling: row.newCardCeiling }
+  return { actionBudget: row.actionBudget, maxNewWords: row.maxNewWords }
 }
 
 export function readSessionSizePreference(): SessionSizeId {

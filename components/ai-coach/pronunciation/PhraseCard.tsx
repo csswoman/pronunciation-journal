@@ -12,6 +12,7 @@ interface Props {
   hasMistakes: boolean;
   onListen: () => void;
   onSlow: () => void;
+  onListenWord: (word: string) => void;
 }
 
 export default function PhraseCard({
@@ -23,22 +24,36 @@ export default function PhraseCard({
   hasMistakes,
   onListen,
   onSlow,
+  onListenWord,
 }: Props) {
+  const words = phrase.split(/\s+/).filter(Boolean);
+
   return (
     <div className="flex flex-col items-center justify-center text-center px-[var(--layout-card-pad)] py-[var(--layout-section-gap)] flex-1">
 
-      <h1
-        className="mb-5 text-display-word font-medium leading-snug tracking-[-0.02em] text-[var(--fg)]"
-      >
-        {phrase}
-      </h1>
+      <div className="mb-5 flex max-w-full flex-col items-center gap-1.5">
+        <h1 className="m-0 flex flex-wrap justify-center text-display-word font-medium leading-snug tracking-[-0.02em] text-[var(--fg)]">
+          {words.map((word, index) => (
+            <button
+              key={`${word}-${index}`}
+              type="button"
+              onClick={() => onListenWord(word.replace(/[^a-zA-Z']/g, ''))}
+              className="inline-flex min-h-11 items-center border-none bg-transparent px-1 text-inherit transition-[color,transform] duration-150 hover:text-primary focus-ring cursor-pointer active:scale-[0.96]"
+              aria-label={`Escuchar ${word.replace(/[^a-zA-Z']/g, '')}`}
+            >
+              {word}{index < words.length - 1 ? '\u00a0' : ''}
+            </button>
+          ))}
+        </h1>
+        <p className="m-0 text-caption text-fg-subtle">Toca una palabra para escucharla.</p>
+      </div>
 
       {ipaLoading ? (
         <div className="flex justify-center mb-4">
           <Loader2 size={13} className="animate-spin text-[var(--text-tertiary)]" />
         </div>
       ) : wordIPAs.length > 0 ? (
-        <div className="flex flex-wrap justify-center gap-x-3 gap-y-1.5 mb-5 font-mono text-body-sm">
+        <div className="flex flex-wrap justify-center gap-x-3 gap-y-1.5 mb-5 font-ipa text-body-sm">
           {wordIPAs.map((entry, i) => {
             const hasError   = entry.alignment?.some(a => a.status !== "correct");
             const allCorrect = hasAnalysis && entry.alignment?.every(a => a.status === "correct");

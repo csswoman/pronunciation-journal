@@ -15913,7 +15913,33 @@
           "role": "content",
           "contrastIds": []
         }
-      ]
+      ],
+      "study": {
+        "definitionEs": "Información reciente sobre hechos importantes.",
+        "translation": [
+          "noticias"
+        ],
+        "usage": {
+          "ruleId": "news_singular"
+        },
+        "contrasts": {
+          "titleEs": "Termina en s, pero es singular",
+          "pairs": [
+            {
+              "pattern": "replacement",
+              "spanish": "Las noticias **son** buenas",
+              "english": "The news **is** good",
+              "explanationEs": "News usa is, no are."
+            }
+          ]
+        },
+        "examples": [
+          {
+            "english": "The **news** is good.",
+            "translationEs": "Las noticias son buenas."
+          }
+        ]
+      }
     },
     {
       "rank": 547,
@@ -18791,7 +18817,39 @@
           "role": "content",
           "contrastIds": []
         }
-      ]
+      ],
+      "study": {
+        "definitionEs": "Darse cuenta o comprender algo.",
+        "translation": [
+          "darse cuenta"
+        ],
+        "spellingVariants": [
+          {
+            "spelling": "realise",
+            "localeEs": "inglés británico"
+          }
+        ],
+        "usage": {
+          "ruleEsOverride": "En inglés cotidiano, realize significa darse cuenta; no significa «realizar»."
+        },
+        "contrasts": {
+          "titleEs": "No significa realizar",
+          "pairs": [
+            {
+              "pattern": "false_friend",
+              "spanish": "Voy a **realizar** el proyecto",
+              "english": "I will **complete** the project",
+              "explanationEs": "Para realizar una tarea, el verbo depende de la acción: complete, carry out o make."
+            }
+          ]
+        },
+        "examples": [
+          {
+            "english": "I **realize** my mistake now.",
+            "translationEs": "Ahora me doy cuenta de mi error."
+          }
+        ]
+      }
     },
     {
       "rank": 555,

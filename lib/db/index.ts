@@ -267,6 +267,26 @@ export interface EssentialWordProgressRecord {
   attempts: number;
 }
 
+/** Device-local, account-scoped snapshot of an unfinished Essential Words session. */
+export interface EssentialWordSessionDraftRecord {
+  /** One active draft per account. */
+  userId: string;
+  version: 1;
+  sessionId: string;
+  source: "legacy" | "skill";
+  sizeId: "short" | "recommended" | "long";
+  routeId: string | null;
+  levels: string[] | null;
+  pos: string[] | null;
+  plan: unknown;
+  results: unknown[];
+  progress: unknown[];
+  summary: { practiced: number; correct: number } | null;
+  activeElapsedMs: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
 /** Indexed local projection of one schedulable Essential Words skill. */
 export type LearningItemRecord = LearningItem & {
   userId: string;
@@ -316,6 +336,7 @@ class PronunciationDB extends Dexie {
   srsEntityState!: Table<SRSEntityStateRecord, string>;
   srsRatingEvents!: Table<SRSRatingEventRecord, string>;
   essentialWordProgress!: Table<EssentialWordProgressRecord, string>;
+  essentialWordSessionDrafts!: Table<EssentialWordSessionDraftRecord, string>;
   pronunciationAssessments!: Table<PronunciationAssessmentRecord, string>;
   pronunciationFeedbackEvidence!: Table<PronunciationFeedbackEvidenceRecord, string>;
   missionSessions!: Table<MissionSessionRecord, string>;
@@ -542,6 +563,10 @@ class PronunciationDB extends Dexie {
       learningItems: 'id, userId, [userId+wordId], [userId+skill], [userId+dueAt], [userId+scheduleKind], updatedAt',
       attemptLogs: 'id, userId, [userId+sessionId], [userId+wordId], [userId+occurredAt], synced',
       srsReviewEvents: 'id, userId, [userId+attemptLogId], [userId+learningItemId], [userId+occurredAt], synced',
+    });
+    // v32: device-local resumable Essential Words session, one row per account.
+    this.version(32).stores({
+      essentialWordSessionDrafts: 'userId, updatedAt, sessionId',
     });
 
     this.pronunciationMastery = this.table("pronunciationMasteryV2") as Table<PronunciationMasteryRecord, string>;
@@ -775,6 +800,13 @@ export async function getEssentialWordProgress(
   userId: string,
 ): Promise<EssentialWordProgressRecord | undefined> {
   return db.essentialWordProgress.get(essentialWordProgressId(wordId, userId));
+}
+
+/** All unfinished pre-graduation words for one account. */
+export async function getEssentialWordProgressForUser(
+  userId: string,
+): Promise<EssentialWordProgressRecord[]> {
+  return db.essentialWordProgress.where('userId').equals(userId).toArray();
 }
 
 /** Upserts pre-graduation progress for a word and account. */

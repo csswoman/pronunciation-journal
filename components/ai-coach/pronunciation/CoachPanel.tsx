@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Volume2, BookmarkPlus, Check, Circle, Lightbulb } from "@/components/icons";
+import { ArrowRight, Volume2, BookmarkPlus, Check, Circle, Lightbulb } from "@/components/icons";
 import { RemediationSequence } from '@/components/pronunciation-feedback/RemediationSequence'
 import { isActionablePronunciationFeedbackCopyEnabled } from '@/lib/pronunciation/feedback/copy-flag'
 
@@ -61,7 +61,7 @@ export default function CoachPanel({
           {feedbackCopyEnabled ? (
             <div className="text-body-lg font-medium leading-snug tracking-[-0.01em] text-(--fg)">
               <span>&ldquo;{focus.word}&rdquo;</span>
-              <span className="mx-1.5 text-fg-subtle">→</span>
+              <ArrowRight size={14} strokeWidth={2} className="mx-1.5 inline-block align-middle text-fg-subtle" aria-hidden />
               <span className="rounded bg-[color-mix(in_oklch,var(--primary)_12%,transparent)] px-2 py-0.5 font-mono text-base font-medium text-primary">
                 /{focus.ipa}/
               </span>
@@ -75,12 +75,12 @@ export default function CoachPanel({
 
         <div className="flex gap-1 shrink-0">
           <IconBtn title="Listen to this sound" onClick={() => onListen(focus.word)}>
-            <Volume2 size={13} />
+            <Volume2 size={14} strokeWidth={2} aria-hidden />
           </IconBtn>
           <IconBtn title={isSaved ? "Saved" : "Save for practice"} onClick={handleSave} disabled={isSaved}>
             {isSaved
-              ? <Check size={13} className={justSaved ? "animate-bounce" : ""} />
-              : <BookmarkPlus size={13} />
+              ? <Check size={14} strokeWidth={2.25} className={justSaved ? "animate-bounce" : ""} aria-hidden />
+              : <BookmarkPlus size={14} strokeWidth={2} aria-hidden />
             }
           </IconBtn>
         </div>

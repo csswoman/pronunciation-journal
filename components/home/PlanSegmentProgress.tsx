@@ -5,29 +5,25 @@ interface PlanSegmentProgressProps {
   stepIds: string[]
   completedCount: number
   getStepStatus: (stepId: string) => DailyStepStatus
-  /** Step currently mid-session, if any. */
+  /** Step currently mid-session, if any. (Marked in the step list, not here.) */
   activeStepId?: string | null
-  /** First pending step when nothing is mid-session — not filled, only marked. */
+  /** First pending step when nothing is mid-session. (Marked in the step list.) */
   entryStepId?: string | null
 }
 
 /**
  * Discrete N-segment progress.
- * Done = solid fill. Current/entry = outline only (never looks completed).
- * Pending = quiet track.
+ * Only completed steps fill solid primary — current/entry live in the step list,
+ * so the track stays quiet at 0% instead of a washed outline or soft blob.
  */
 export function PlanSegmentProgress({
   stepIds,
   completedCount,
   getStepStatus,
-  activeStepId = null,
-  entryStepId = null,
 }: PlanSegmentProgressProps) {
-  const currentId = activeStepId ?? entryStepId
-
   return (
     <div
-      className="flex min-w-0 flex-1 gap-1"
+      className="flex min-w-0 flex-1 gap-0.5"
       role="progressbar"
       aria-valuemin={0}
       aria-valuemax={stepIds.length}
@@ -37,17 +33,14 @@ export function PlanSegmentProgress({
       {stepIds.map((id) => {
         const st = getStepStatus(id)
         const done = st === 'done' || st === 'resolved'
-        const current = !done && id === currentId
         return (
           <div
             key={id}
             className={cn(
-              'h-1.5 min-w-0 flex-1 rounded-full',
-              done && 'bg-primary',
-              current && 'bg-transparent ring-2 ring-inset ring-primary',
-              !done && !current && 'bg-border-default',
+              'h-1.5 min-w-0 flex-1 rounded-full transition-colors duration-200 motion-reduce:transition-none',
+              done ? 'bg-primary' : 'bg-border-default',
             )}
-            title={done ? 'Hecho' : current ? (activeStepId === id ? 'En curso' : 'Siguiente') : 'Pendiente'}
+            aria-hidden
           />
         )
       })}

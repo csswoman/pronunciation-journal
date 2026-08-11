@@ -1,15 +1,10 @@
 import { fetchEssentialWords } from "./client";
 import { createEssentialWordsEngineRouter } from "./engine-router";
-import { readSkillEngineRolloutConfig } from "../feature-flags";
+import { readSkillEngineRolloutConfig, resolveSkillEngineMode } from "../feature-flags";
 import { gradeEssentialWord, type GradeExtras } from "./grade";
 import { getAttemptLogs, getLearningItems } from "./queries";
 import { persistAttemptRecord, planAttemptRecord } from "./record-attempt";
-import {
-  planRuntimeSession,
-  createBaseLearningItems,
-  toEssentialWordsSkillQueue,
-  type SkillRuntimeQueueItem,
-} from "./runtime-adapter";
+import { planRuntimeSession, createBaseLearningItems, toEssentialWordsSkillQueue, type SkillRuntimeQueueItem } from "./runtime-adapter";
 import { runSkillModelMigration } from "./run-skill-model-migration";
 import { loadEssentialWordsQueue, type EssentialWordsStats } from "./session-loader";
 import { summarizeSkillDailyPlan } from "./shadow-metrics";
@@ -27,18 +22,16 @@ import type { AttemptLog } from "./verification/types";
 import { savePracticeAnswer } from "@/lib/practice/queries";
 import { db } from "@/lib/db";
 import { enqueue } from "@/lib/sync/sync-manager";
-import { dictationContrastEvidence } from "./contrast-profile-writer";
-import { weakestEligibleContrast } from "./contrast-profile-writer";
+import { dictationContrastEvidence, weakestEligibleContrast } from "./contrast-profile-writer";
 import { SPANISH_COLD_START_CONTRASTS } from "./listening-blanks";
 import { getAllContrastProgress, getRetiredEssentialWordBlankKeys } from "../phoneme-practice/queries";
-
 export interface RuntimeBuildInput {
   levels: readonly CefrLevel[] | null;
   pos: readonly EssentialWordPos[] | null;
   now: Date;
   previousMode?: "normal" | "recovery";
-  /** Optional override for new-card ceiling (session size control). */
-  newCardCeiling?: number;
+  /** Optional per-session ceiling for new words selected by this surface. */
+  maxNewWords?: number;
 }
 
 export interface EssentialWordsRuntimeSession {
@@ -89,6 +82,7 @@ function skillStats(
   attempts: AttemptLog[],
   queue: SkillRuntimeQueueItem[],
   now: Date,
+  maxNewWords: number,
 ): EssentialWordsStats {
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const tomorrowStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
@@ -109,7 +103,7 @@ function skillStats(
     dueCount: queue.filter((item) => item.eventType !== "learning-step").length,
     dueTomorrow,
     newToday,
-    newQuota: GUIDED_SESSION_NEW_CARDS,
+    newQuota: maxNewWords,
     vaulted: 0,
   };
 }
@@ -133,6 +127,7 @@ async function buildSkillSession(
     attempts,
     now: input.now,
     previousMode: input.previousMode,
+    maxNewWords: input.maxNewWords,
   });
   const materialized = toEssentialWordsSkillQueue(plan, words, items, (diagnostic) => {
     console.warn("[essential-words] skill mode materialization", diagnostic);
@@ -154,7 +149,7 @@ async function buildSkillSession(
   return {
     source: "skill",
     items: queue,
-    stats: skillStats(words, items, attempts, queue, input.now),
+    stats: skillStats(words, items, attempts, queue, input.now, input.maxNewWords ?? GUIDED_SESSION_NEW_CARDS),
     allWords,
     seenIds: new Set(items.map((item) => item.wordId)),
     skillPlan: plan,
@@ -166,7 +161,7 @@ async function buildLegacySession(
   input: RuntimeBuildInput,
 ): Promise<EssentialWordsRuntimeSession> {
   const loaded = await loadEssentialWordsQueue(input.levels, input.pos, userId, {
-    newCardCeiling: input.newCardCeiling,
+    maxNewWords: input.maxNewWords,
   });
   return { source: "legacy", ...loaded };
 }
@@ -249,19 +244,23 @@ async function recordLegacySkillAttempt(userId: string, input: RuntimeAttemptInp
 export async function createEssentialWordsRuntime(
   userId: string,
 ) {
+  const rollout = readSkillEngineRolloutConfig();
+  const resolvedMode = resolveSkillEngineMode(userId, rollout);
   const router = createEssentialWordsEngineRouter({
     userId,
-    rollout: readSkillEngineRolloutConfig(),
+    rollout,
     legacyEngine: {
       buildSession: (input: RuntimeBuildInput) => buildLegacySession(userId, input),
       recordAttempt: async (input: RuntimeAttemptInput) => {
         if (input.persistLegacySrs !== false) {
           await gradeEssentialWord(input.item.entry.word, input.quality, input.extras, userId);
         }
-        try {
-          await recordLegacySkillAttempt(userId, input);
-        } catch (error) {
-          console.error("[essential-words] legacy skill evidence failed", error);
+        if (resolvedMode !== "shadow") {
+          try {
+            await recordLegacySkillAttempt(userId, input);
+          } catch (error) {
+            console.error("[essential-words] legacy skill evidence failed", error);
+          }
         }
       },
       getProgress: async () => getLearningItems(userId),

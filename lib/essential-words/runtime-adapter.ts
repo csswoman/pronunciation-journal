@@ -50,6 +50,7 @@ export interface RuntimePlanningSnapshot {
   attempts: AttemptLog[];
   now: Date;
   previousMode?: "normal" | "recovery";
+  maxNewWords?: number;
 }
 
 export function createBaseLearningItems(wordId: string, initialListeningLevel?: InitialListeningLevel): LearningItem[] {
@@ -148,8 +149,10 @@ export function buildRuntimePlanningInput(
 
   const today = attemptsToday(snapshot.attempts, snapshot.now);
   const consumed = {
-    newWords: today.filter((attempt) =>
-      attempt.eventType === "learning-step" && attempt.assessment.modality === "recognition").length,
+    // Essential Words budgets introductions per session. Attempts served by
+    // Daily Plan or an earlier Essential Words session must not spend the new
+    // word allowance of the session being built now.
+    newWords: 0,
     baseSkillActivations: today.filter((attempt) =>
       attempt.eventType === "learning-step"
       && (attempt.assessment.modality === "listening"
@@ -163,10 +166,8 @@ export function buildRuntimePlanningInput(
 
   return {
     dailyBudgetSeconds: DAILY_BUDGET_SECONDS,
-    // Keep the live skill planner aligned with the guided flow: automatic
-    // sessions contain one complete three-word block, rather than a full day
-    // of introductions at once.
-    configuredNewWordLimit: GUIDED_SESSION_NEW_CARDS,
+    // Keep the live skill planner aligned with the selected surface size.
+    configuredNewWordLimit: snapshot.maxNewWords ?? GUIDED_SESSION_NEW_CARDS,
     mandatory: classifyMandatory(items, snapshot.now),
     candidates: {
       baseSkillActivations,

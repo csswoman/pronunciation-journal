@@ -12990,7 +12990,33 @@
           "role": "content",
           "contrastIds": []
         }
-      ]
+      ],
+      "study": {
+        "definitionEs": "Recomendación sobre qué hacer.",
+        "translation": [
+          "consejo"
+        ],
+        "usage": {
+          "ruleId": "uncountable_no_plural"
+        },
+        "contrasts": {
+          "titleEs": "No lleva plural",
+          "pairs": [
+            {
+              "pattern": "replacement",
+              "spanish": "Tus **consejos** ayudan",
+              "english": "Your **advice** helps",
+              "explanationEs": "Advice no lleva s."
+            }
+          ]
+        },
+        "examples": [
+          {
+            "english": "Your **advice** helps me.",
+            "translationEs": "Tu consejo me ayuda."
+          }
+        ]
+      }
     },
     {
       "rank": 1041,

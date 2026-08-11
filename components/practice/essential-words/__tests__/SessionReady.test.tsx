@@ -40,19 +40,18 @@ vi.mock('../SessionReadyVaultRow', () => ({
 
 vi.mock('../SessionReadyHero', () => ({
   SessionReadyHero: ({
-    counts,
+    preview,
     isResume,
     onBegin,
   }: {
-    counts: { newRemaining: number; learningRemaining: number; reviewRemaining: number }
+    preview: { scheduledActions: number }
     isResume: boolean
     onBegin: () => void
   }) => {
-    const total = counts.newRemaining + counts.learningRemaining + counts.reviewRemaining
     return (
       <div>
         <h2 id="session-ready-title">
-          {isResume ? 'Continuar donde lo dejaste' : `Hoy te tocan ${total} palabras`}
+          {isResume ? 'Continuar donde lo dejaste' : `Hoy tienes ${preview.scheduledActions} ejercicios`}
         </h2>
         <button type="button" onClick={onBegin}>
           {isResume ? 'Continuar' : 'Empezar'}
@@ -63,7 +62,11 @@ vi.mock('../SessionReadyHero', () => ({
 }))
 
 const readyProps = {
-  counts: { newRemaining: 8, learningRemaining: 0, reviewRemaining: 16 },
+  preview: {
+    actionBudget: 15, scheduledActions: 15, uniqueWords: 5, newWordCount: 3,
+    reviewActionCount: 4, continuationActionCount: 0, estimatedDurationMs: 168_000,
+    completedActions: 0, remainingActions: 15,
+  },
   stats: baseStats,
   streak: 3,
   activeRouteId: null as string | null,
@@ -72,13 +75,16 @@ const readyProps = {
   onSessionSizeChange: vi.fn(),
   onBegin: vi.fn(),
   onLeechReview: vi.fn(),
+  isResume: false,
+  previewLoading: false,
+  onDiscard: vi.fn(),
 }
 
 describe('SessionReady', () => {
   it('composes hero, recap, forecast, vocabulary, rail, and heatmap', () => {
     render(<SessionReady {...readyProps} />)
 
-    expect(screen.getByRole('heading', { name: 'Hoy te tocan 24 palabras' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Hoy tienes 15 ejercicios' })).toBeInTheDocument()
     expect(screen.getByText(/Última: buen ritmo · 8\/9/)).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Próximos 7 días' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Tu vocabulario' })).toBeInTheDocument()
@@ -95,5 +101,10 @@ describe('SessionReady', () => {
     render(<SessionReady {...readyProps} onBegin={onBegin} />)
     await user.click(screen.getByRole('button', { name: 'Empezar' }))
     expect(onBegin).toHaveBeenCalledOnce()
+  })
+
+  it('disables the alternate leech route while resuming a draft', () => {
+    render(<SessionReady {...readyProps} isResume />)
+    expect(screen.getByRole('button', { name: 'Repasar las 1 difíciles →' })).toBeDisabled()
   })
 })

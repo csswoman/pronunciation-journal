@@ -241,6 +241,7 @@ describe("selectMode — fallbacks", () => {
         "cloze_sentence",
         "dictation_word",
         "dictation_sentence",
+        "listening_cloze_sentence",
         "recall_translation",
         "recognize_audio",
         "recognize_cloze",

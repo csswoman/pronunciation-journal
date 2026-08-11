@@ -23,9 +23,9 @@ const WRITTEN_PROMPTS = [
 ] as const
 
 const SPOKEN_PROMPTS = [
-  (word: string) => `Say a sentence using "${word}".`,
-  (word: string) => `Respond aloud: use "${word}" in your own sentence.`,
-  (word: string) => `Speak a sentence that includes "${word}".`,
+  (word: string) => `Di una oración usando "${word}".`,
+  (word: string) => `Responde en voz alta e incluye "${word}" en una oración propia.`,
+  (word: string) => `Crea y di una oración que contenga "${word}".`,
 ] as const
 
 function promptIndex(entryId: string, modulo: number): number {

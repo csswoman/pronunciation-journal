@@ -104,15 +104,15 @@ describe('DailyChecklist (checklist surface)', () => {
 
   it('shows recommended practice card when arc is present', () => {
     render(<DailyChecklist conceptLesson={null} />)
-    expect(screen.getByText(/Keep going with \/h\//)).toBeInTheDocument()
+    expect(screen.getByText(/Sigue con \/h\//)).toBeInTheDocument()
   })
 
   it('hides recommended practice card when arc is missing', () => {
     mockState.arc = undefined
     mockState.plan = { arc: undefined }
     render(<DailyChecklist conceptLesson={null} />)
-    expect(screen.queryByText(/Keep going with/)).not.toBeInTheDocument()
-    expect(screen.getByText(/Want free practice/)).toBeInTheDocument()
+    expect(screen.queryByText(/Sigue con/)).not.toBeInTheDocument()
+    expect(screen.getByText(/¿Práctica libre\?/)).toBeInTheDocument()
   })
 
   it('enters DailyStepSession when starting the entry step', async () => {

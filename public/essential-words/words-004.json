@@ -6208,7 +6208,19 @@
           "role": "content",
           "contrastIds": []
         }
-      ]
+      ],
+      "study": {
+        "definitionEs": "Líquido que bebemos y usamos todos los días.",
+        "translation": [
+          "agua"
+        ],
+        "examples": [
+          {
+            "english": "Drink **water** every day.",
+            "translationEs": "Bebe agua todos los días."
+          }
+        ]
+      }
     },
     {
       "rank": 323,

@@ -228,6 +228,74 @@
             "/eɪ/|/iː/"
           ]
         }
+      ],
+      "study": {
+        "definitionEs": "Se usa cuando ya se sabe de cuál hablas.",
+        "translation": [
+          "el",
+          "la",
+          "los",
+          "las"
+        ],
+        "translationNote": "igual para singular y plural, masculino y femenino",
+        "usage": {
+          "ruleId": "article_general_vs_specific"
+        },
+        "pronunciation": {
+          "soundAnchors": [
+            {
+              "id": "voiced_th",
+              "ipa": "/ð/",
+              "explanationEs": "como la d suave de nada, no la d inicial de dos"
+            }
+          ],
+          "variants": [
+            {
+              "id": "before_consonant_sound",
+              "labelEs": "Antes de sonido de consonante",
+              "ipa": "/ðə/",
+              "spokenExample": "**the** book",
+              "anchorIds": [
+                "voiced_th"
+              ]
+            },
+            {
+              "id": "before_vowel_sound",
+              "labelEs": "Antes de sonido de vocal",
+              "ipa": "/ði/",
+              "spokenExample": "**the** apple",
+              "anchorIds": [
+                "voiced_th"
+              ]
+            }
+          ]
+        },
+        "contrasts": {
+          "titleEs": "En inglés se omite",
+          "pairs": [
+            {
+              "pattern": "omission",
+              "spanish": "Me gusta **el** café",
+              "english": "I like coffee"
+            }
+          ]
+        },
+        "examples": [
+          {
+            "english": "**The** book is heavy.",
+            "translationEs": "El libro es pesado.",
+            "variantId": "before_consonant_sound"
+          },
+          {
+            "english": "**The** apple is red.",
+            "translationEs": "La manzana es roja.",
+            "variantId": "before_vowel_sound"
+          }
+        ]
+      },
+      "teachWith": [
+        "a",
+        "an"
       ]
     },
     {
@@ -582,7 +650,19 @@
             "/eɪ/|/iː/"
           ]
         }
-      ]
+      ],
+      "study": {
+        "definitionEs": "Une palabras o ideas.",
+        "translation": [
+          "y"
+        ],
+        "examples": [
+          {
+            "english": "Bread **and** butter.",
+            "translationEs": "Pan y mantequilla."
+          }
+        ]
+      }
     },
     {
       "rank": 4,
@@ -817,7 +897,39 @@
             "/eɪ/|/iː/"
           ]
         }
-      ]
+      ],
+      "study": {
+        "definitionEs": "Relaciona una parte, cantidad o cosa con otra.",
+        "translation": [
+          "de"
+        ],
+        "usage": {
+          "ruleEsOverride": "«De» no se traduce automáticamente como of: usa from para origen y ’s para posesión de personas."
+        },
+        "contrasts": {
+          "titleEs": "No traduzcas de automáticamente",
+          "pairs": [
+            {
+              "pattern": "replacement",
+              "spanish": "Soy **de** Perú",
+              "english": "I'm **from** Peru",
+              "explanationEs": "Para origen, usa from."
+            },
+            {
+              "pattern": "replacement",
+              "spanish": "El libro **de** Juan",
+              "english": "Juan**'s** book",
+              "explanationEs": "Para posesión de una persona, usa ’s."
+            }
+          ]
+        },
+        "examples": [
+          {
+            "english": "A cup **of** tea, please.",
+            "translationEs": "Una taza de té, por favor."
+          }
+        ]
+      }
     },
     {
       "rank": 5,
@@ -1017,6 +1129,57 @@
           "role": "content",
           "contrastIds": []
         }
+      ],
+      "study": {
+        "definitionEs": "Indica destino o propósito.",
+        "translation": [
+          "a",
+          "para"
+        ],
+        "usage": {
+          "ruleId": "purpose_to_vs_for"
+        },
+        "contrasts": {
+          "titleEs": "Propósito",
+          "pairs": [
+            {
+              "pattern": "replacement",
+              "spanish": "Vine **para** estudiar",
+              "english": "I came **to** study",
+              "explanationEs": "To va antes de un verbo."
+            }
+          ]
+        },
+        "pronunciation": {
+          "soundAnchors": [
+            {
+              "id": "schwa",
+              "ipa": "/ə/",
+              "explanationEs": "vocal relajada, parecida a una e muy breve"
+            }
+          ],
+          "variants": [
+            {
+              "id": "before_consonant_sound",
+              "labelEs": "Antes de sonido de consonante",
+              "ipa": "/tə/",
+              "spokenExample": "**to** school",
+              "anchorIds": [
+                "schwa"
+              ]
+            }
+          ]
+        },
+        "examples": [
+          {
+            "english": "I want **to** go home.",
+            "translationEs": "Quiero ir a casa.",
+            "variantId": "before_consonant_sound"
+          }
+        ]
+      },
+      "teachWith": [
+        "for"
       ]
     },
     {
@@ -1201,6 +1364,43 @@
           "role": "content",
           "contrastIds": []
         }
+      ],
+      "study": {
+        "definitionEs": "Artículo para una cosa no específica.",
+        "translation": [
+          "un",
+          "una"
+        ],
+        "usage": {
+          "ruleId": "indefinite_article_a_an"
+        },
+        "contrasts": {
+          "titleEs": "Artículos: a, an y the",
+          "pairs": [
+            {
+              "pattern": "replacement",
+              "spanish": "Vi **un** perro. **El** perro era grande.",
+              "english": "I saw **a** dog. **The** dog was big.",
+              "explanationEs": "A presenta algo nuevo; the retoma algo conocido."
+            },
+            {
+              "pattern": "replacement",
+              "spanish": "Quiero **una** manzana",
+              "english": "I want **an** apple.",
+              "explanationEs": "An va antes de un sonido vocálico."
+            }
+          ]
+        },
+        "examples": [
+          {
+            "english": "I need **a** pen.",
+            "translationEs": "Necesito un bolígrafo."
+          }
+        ]
+      },
+      "teachWith": [
+        "an",
+        "the"
       ]
     },
     {
@@ -1442,7 +1642,34 @@
           "role": "content",
           "contrastIds": []
         }
-      ]
+      ],
+      "study": {
+        "definitionEs": "Dentro de un lugar, periodo o situación.",
+        "translation": [
+          "en",
+          "dentro de"
+        ],
+        "usage": {
+          "ruleEsOverride": "Para días de la semana, usa on; no in."
+        },
+        "contrasts": {
+          "titleEs": "Días",
+          "pairs": [
+            {
+              "pattern": "replacement",
+              "spanish": "**El lunes** trabajo",
+              "english": "I work **on Monday**",
+              "explanationEs": "Para días, usa on."
+            }
+          ]
+        },
+        "examples": [
+          {
+            "english": "She is **in** the room.",
+            "translationEs": "Ella está en la habitación."
+          }
+        ]
+      }
     },
     {
       "rank": 8,
@@ -1850,6 +2077,41 @@
           "role": "content",
           "contrastIds": []
         }
+      ],
+      "study": {
+        "definitionEs": "Pronombre para una cosa, animal o idea; también ocupa el sujeto vacío.",
+        "translation": [
+          "lo",
+          "ello"
+        ],
+        "usage": {
+          "ruleId": "dummy_it_subject"
+        },
+        "contrasts": {
+          "titleEs": "Sujeto vacío",
+          "pairs": [
+            {
+              "pattern": "addition",
+              "spanish": "Llueve",
+              "english": "**It’s** raining",
+              "explanationEs": "El inglés necesita it."
+            }
+          ]
+        },
+        "examples": [
+          {
+            "english": "I saw **it** yesterday.",
+            "translationEs": "Lo vi ayer."
+          }
+        ]
+      },
+      "teachWith": [
+        "i",
+        "you",
+        "he",
+        "she",
+        "we",
+        "they"
       ]
     },
     {
@@ -2074,6 +2336,42 @@
           "role": "content",
           "contrastIds": []
         }
+      ],
+      "study": {
+        "definitionEs": "Pronombre para la persona o personas a quienes hablas.",
+        "translation": [
+          "tú",
+          "usted",
+          "ustedes"
+        ],
+        "usage": {
+          "ruleId": "subject_pronoun_required"
+        },
+        "contrasts": {
+          "titleEs": "Sujeto explícito",
+          "pairs": [
+            {
+              "pattern": "addition",
+              "spanish": "¿Tienes hambre?",
+              "english": "Are **you** hungry?",
+              "explanationEs": "El inglés expresa el sujeto."
+            }
+          ]
+        },
+        "examples": [
+          {
+            "english": "**You** can sit here.",
+            "translationEs": "Puedes sentarte aquí."
+          }
+        ]
+      },
+      "teachWith": [
+        "i",
+        "he",
+        "she",
+        "we",
+        "they",
+        "it"
       ]
     },
     {
@@ -2301,6 +2599,40 @@
           "role": "content",
           "contrastIds": []
         }
+      ],
+      "study": {
+        "definitionEs": "Pronombre para un hombre o niño.",
+        "translation": [
+          "él"
+        ],
+        "usage": {
+          "ruleId": "subject_pronoun_required"
+        },
+        "contrasts": {
+          "titleEs": "Sujeto explícito",
+          "pairs": [
+            {
+              "pattern": "addition",
+              "spanish": "Trabaja aquí",
+              "english": "**He** works here",
+              "explanationEs": "No se omite he."
+            }
+          ]
+        },
+        "examples": [
+          {
+            "english": "**He** is my brother.",
+            "translationEs": "Él es mi hermano."
+          }
+        ]
+      },
+      "teachWith": [
+        "i",
+        "you",
+        "she",
+        "we",
+        "they",
+        "it"
       ]
     },
     {
@@ -2527,6 +2859,36 @@
           "role": "function",
           "contrastIds": []
         }
+      ],
+      "study": {
+        "definitionEs": "Indica destinatario, beneficio o duración.",
+        "translation": [
+          "para",
+          "por"
+        ],
+        "usage": {
+          "ruleId": "purpose_to_vs_for"
+        },
+        "contrasts": {
+          "titleEs": "Destinatario",
+          "pairs": [
+            {
+              "pattern": "replacement",
+              "spanish": "Esto es **para** ti",
+              "english": "This is **for** you",
+              "explanationEs": "For indica destinatario o beneficio."
+            }
+          ]
+        },
+        "examples": [
+          {
+            "english": "This gift is **for** you.",
+            "translationEs": "Este regalo es para ti."
+          }
+        ]
+      },
+      "teachWith": [
+        "to"
       ]
     },
     {
@@ -2735,6 +3097,41 @@
           "role": "content",
           "contrastIds": []
         }
+      ],
+      "study": {
+        "definitionEs": "Pronombre para varias personas o cosas.",
+        "translation": [
+          "ellos",
+          "ellas"
+        ],
+        "usage": {
+          "ruleId": "subject_pronoun_required"
+        },
+        "contrasts": {
+          "titleEs": "Sujeto explícito",
+          "pairs": [
+            {
+              "pattern": "addition",
+              "spanish": "Llegan tarde",
+              "english": "**They** arrive late",
+              "explanationEs": "El inglés expresa el sujeto."
+            }
+          ]
+        },
+        "examples": [
+          {
+            "english": "**They** play outside.",
+            "translationEs": "Ellos juegan afuera."
+          }
+        ]
+      },
+      "teachWith": [
+        "i",
+        "you",
+        "he",
+        "she",
+        "we",
+        "it"
       ]
     },
     {
@@ -3383,6 +3780,41 @@
           "role": "content",
           "contrastIds": []
         }
+      ],
+      "study": {
+        "definitionEs": "Pronombre para el hablante y otras personas.",
+        "translation": [
+          "nosotros",
+          "nosotras"
+        ],
+        "usage": {
+          "ruleId": "subject_pronoun_required"
+        },
+        "contrasts": {
+          "titleEs": "Sujeto explícito",
+          "pairs": [
+            {
+              "pattern": "addition",
+              "spanish": "Vivimos cerca",
+              "english": "**We** live nearby",
+              "explanationEs": "El inglés expresa el sujeto."
+            }
+          ]
+        },
+        "examples": [
+          {
+            "english": "**We** cook dinner together.",
+            "translationEs": "Preparamos la cena juntos."
+          }
+        ]
+      },
+      "teachWith": [
+        "i",
+        "you",
+        "he",
+        "she",
+        "they",
+        "it"
       ]
     },
     {
@@ -3586,6 +4018,43 @@
             "/b/|/p/"
           ]
         }
+      ],
+      "study": {
+        "definitionEs": "En contacto con una superficie.",
+        "translation": [
+          "en",
+          "sobre"
+        ],
+        "usage": {
+          "ruleId": "in_on_at_time_place"
+        },
+        "contrasts": {
+          "titleEs": "Lugar y día",
+          "pairs": [
+            {
+              "pattern": "replacement",
+              "spanish": "El libro está **en** la mesa",
+              "english": "The book is **on** the table",
+              "explanationEs": "On indica una superficie."
+            },
+            {
+              "pattern": "replacement",
+              "spanish": "**El lunes**",
+              "english": "**On Monday**",
+              "explanationEs": "On se usa con días."
+            }
+          ]
+        },
+        "examples": [
+          {
+            "english": "The cup is **on** the table.",
+            "translationEs": "La taza está sobre la mesa."
+          }
+        ]
+      },
+      "teachWith": [
+        "in",
+        "at"
       ]
     },
     {
@@ -3802,6 +4271,35 @@
             "/ə/|/ɪ/"
           ]
         }
+      ],
+      "study": {
+        "definitionEs": "Indica compañía o relación.",
+        "translation": [
+          "con"
+        ],
+        "usage": {
+          "ruleId": "with_verb_complements"
+        },
+        "contrasts": {
+          "titleEs": "Con un verbo",
+          "pairs": [
+            {
+              "pattern": "replacement",
+              "spanish": "Soñé **con** mi perro",
+              "english": "I dreamed **about** my dog",
+              "explanationEs": "Dream se usa con about."
+            }
+          ]
+        },
+        "examples": [
+          {
+            "english": "I went **with** my friend.",
+            "translationEs": "Fui con mi amiga."
+          }
+        ]
+      },
+      "teachWith": [
+        "about"
       ]
     },
     {
@@ -4000,7 +4498,21 @@
           "role": "content",
           "contrastIds": []
         }
-      ]
+      ],
+      "study": {
+        "definitionEs": "Señala algo cercano.",
+        "translation": [
+          "este",
+          "esta"
+        ],
+        "examples": [
+          {
+            "english": "**This** is my bag.",
+            "translationEs": "Esta es mi bolsa."
+          }
+        ]
+      },
+      "teachWith": []
     },
     {
       "rank": 20,
@@ -4193,6 +4705,40 @@
           "role": "content",
           "contrastIds": []
         }
+      ],
+      "study": {
+        "definitionEs": "Pronombre de la persona que habla.",
+        "translation": [
+          "yo"
+        ],
+        "usage": {
+          "ruleId": "subject_pronoun_required"
+        },
+        "contrasts": {
+          "titleEs": "Sujeto explícito",
+          "pairs": [
+            {
+              "pattern": "addition",
+              "spanish": "Trabajo desde casa",
+              "english": "**I** work from home",
+              "explanationEs": "El inglés expresa el sujeto."
+            }
+          ]
+        },
+        "examples": [
+          {
+            "english": "**I** am happy today.",
+            "translationEs": "Hoy estoy feliz."
+          }
+        ]
+      },
+      "teachWith": [
+        "you",
+        "he",
+        "she",
+        "we",
+        "they",
+        "it"
       ]
     },
     {
@@ -4638,6 +5184,35 @@
             "/eɪ/|/iː/"
           ]
         }
+      ],
+      "study": {
+        "definitionEs": "Indica función o papel.",
+        "translation": [
+          "como"
+        ],
+        "usage": {
+          "ruleId": "as_role_vs_like"
+        },
+        "contrasts": {
+          "titleEs": "Función",
+          "pairs": [
+            {
+              "pattern": "replacement",
+              "spanish": "Trabaja **como** médico",
+              "english": "He works **as** a doctor",
+              "explanationEs": "As indica el papel de una persona."
+            }
+          ]
+        },
+        "examples": [
+          {
+            "english": "Use it **as** a tool.",
+            "translationEs": "Úsalo como herramienta."
+          }
+        ]
+      },
+      "teachWith": [
+        "like"
       ]
     },
     {
@@ -4867,6 +5442,43 @@
           "role": "content",
           "contrastIds": []
         }
+      ],
+      "study": {
+        "definitionEs": "Indica un punto concreto de lugar o tiempo.",
+        "translation": [
+          "en",
+          "a"
+        ],
+        "usage": {
+          "ruleId": "in_on_at_time_place"
+        },
+        "contrasts": {
+          "titleEs": "Punto y hora",
+          "pairs": [
+            {
+              "pattern": "replacement",
+              "spanish": "Nos vemos **en** la estación",
+              "english": "Meet me **at** the station",
+              "explanationEs": "At señala un punto."
+            },
+            {
+              "pattern": "replacement",
+              "spanish": "**A** las seis",
+              "english": "**At** six",
+              "explanationEs": "At se usa con horas."
+            }
+          ]
+        },
+        "examples": [
+          {
+            "english": "Meet me **at** the door.",
+            "translationEs": "Encuéntrame en la puerta."
+          }
+        ]
+      },
+      "teachWith": [
+        "in",
+        "on"
       ]
     },
     {
@@ -5065,6 +5677,40 @@
           "role": "content",
           "contrastIds": []
         }
+      ],
+      "study": {
+        "definitionEs": "Pronombre para una mujer o niña.",
+        "translation": [
+          "ella"
+        ],
+        "usage": {
+          "ruleId": "subject_pronoun_required"
+        },
+        "contrasts": {
+          "titleEs": "Sujeto explícito",
+          "pairs": [
+            {
+              "pattern": "addition",
+              "spanish": "Estudia inglés",
+              "english": "**She** studies English",
+              "explanationEs": "El inglés expresa el sujeto."
+            }
+          ]
+        },
+        "examples": [
+          {
+            "english": "**She** lives nearby.",
+            "translationEs": "Ella vive cerca."
+          }
+        ]
+      },
+      "teachWith": [
+        "i",
+        "you",
+        "he",
+        "we",
+        "they",
+        "it"
       ]
     },
     {
@@ -5315,7 +5961,19 @@
           "role": "content",
           "contrastIds": []
         }
-      ]
+      ],
+      "study": {
+        "definitionEs": "Une una idea con otra que la contrasta.",
+        "translation": [
+          "pero"
+        ],
+        "examples": [
+          {
+            "english": "Small **but** useful.",
+            "translationEs": "Pequeño pero útil."
+          }
+        ]
+      }
     },
     {
       "rank": 26,
@@ -5528,6 +6186,36 @@
           "role": "content",
           "contrastIds": []
         }
+      ],
+      "study": {
+        "definitionEs": "Indica origen o punto de partida.",
+        "translation": [
+          "de",
+          "desde"
+        ],
+        "usage": {
+          "ruleId": "source_from_vs_of_or_possessive"
+        },
+        "contrasts": {
+          "titleEs": "Origen",
+          "pairs": [
+            {
+              "pattern": "replacement",
+              "spanish": "Soy **de** Perú",
+              "english": "I’m **from** Peru",
+              "explanationEs": "From indica origen."
+            }
+          ]
+        },
+        "examples": [
+          {
+            "english": "She is **from** Lima.",
+            "translationEs": "Ella es de Lima."
+          }
+        ]
+      },
+      "teachWith": [
+        "of"
       ]
     },
     {
@@ -5778,7 +6466,46 @@
           "role": "content",
           "contrastIds": []
         }
-      ]
+      ],
+      "study": {
+        "definitionEs": "Indica agente, medio o fecha límite.",
+        "translation": [
+          "por",
+          "en"
+        ],
+        "usage": {
+          "ruleId": "by_agent_method_deadline"
+        },
+        "contrasts": {
+          "titleEs": "Agente, medio y fecha",
+          "pairs": [
+            {
+              "pattern": "replacement",
+              "spanish": "El libro fue escrito **por** Ana",
+              "english": "The book was written **by** Ana",
+              "explanationEs": "By puede indicar agente."
+            },
+            {
+              "pattern": "replacement",
+              "spanish": "Voy **en** coche",
+              "english": "I go **by car**",
+              "explanationEs": "By puede indicar medio."
+            },
+            {
+              "pattern": "replacement",
+              "spanish": "Termina **para** el viernes",
+              "english": "Finish it **by Friday**",
+              "explanationEs": "By puede indicar fecha límite."
+            }
+          ]
+        },
+        "examples": [
+          {
+            "english": "The book was written **by** Ana.",
+            "translationEs": "El libro fue escrito por Ana."
+          }
+        ]
+      }
     },
     {
       "rank": 28,
@@ -10426,7 +11153,35 @@
             "/eɪ/|/iː/"
           ]
         }
-      ]
+      ],
+      "study": {
+        "definitionEs": "Crear, producir o causar algo.",
+        "translation": [
+          "hacer",
+          "crear"
+        ],
+        "translationNote": "pasado: made",
+        "usage": {
+          "ruleEsOverride": "Para crear o preparar algo, usa make; no do."
+        },
+        "contrasts": {
+          "titleEs": "Crear",
+          "pairs": [
+            {
+              "pattern": "replacement",
+              "spanish": "Hago **la cama**",
+              "english": "I **make** the bed",
+              "explanationEs": "Make se usa para crear o preparar."
+            }
+          ]
+        },
+        "examples": [
+          {
+            "english": "They **make** bread here.",
+            "translationEs": "Ellos hacen pan aquí."
+          }
+        ]
+      }
     },
     {
       "rank": 49,
@@ -12938,7 +13693,35 @@
           "role": "content",
           "contrastIds": []
         }
-      ]
+      ],
+      "study": {
+        "definitionEs": "Tomar, llevar o dedicar tiempo a algo.",
+        "translation": [
+          "tomar",
+          "llevar"
+        ],
+        "translationNote": "pasado: took",
+        "usage": {
+          "ruleEsOverride": "Para consumir comida o bebida, normalmente usa have; no take."
+        },
+        "contrasts": {
+          "titleEs": "Comida y bebida",
+          "pairs": [
+            {
+              "pattern": "replacement",
+              "spanish": "Tomo **café**",
+              "english": "I **have coffee**",
+              "explanationEs": "Have es la opción habitual para comida y bebida."
+            }
+          ]
+        },
+        "examples": [
+          {
+            "english": "Please **take** this book.",
+            "translationEs": "Por favor, toma este libro."
+          }
+        ]
+      }
     },
     {
       "rank": 60,
@@ -14905,7 +15688,34 @@
           "role": "content",
           "contrastIds": []
         }
-      ]
+      ],
+      "study": {
+        "definitionEs": "Trabajar o funcionar correctamente.",
+        "translation": [
+          "trabajar",
+          "funcionar"
+        ],
+        "usage": {
+          "ruleEsOverride": "Para un empleo concreto, usa job; work es trabajo en general."
+        },
+        "contrasts": {
+          "titleEs": "Trabajo general o empleo",
+          "pairs": [
+            {
+              "pattern": "replacement",
+              "spanish": "Tengo un **trabajo**",
+              "english": "I have a **job**",
+              "explanationEs": "Job es un empleo concreto."
+            }
+          ]
+        },
+        "examples": [
+          {
+            "english": "This key does not **work**.",
+            "translationEs": "Esta llave no funciona."
+          }
+        ]
+      }
     },
     {
       "rank": 68,

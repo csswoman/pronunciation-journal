@@ -11,6 +11,9 @@ export type RemoteEntryResult =
   | {
       synced: false;
       message: string;
+      code?: string;
+      details?: string;
+      hint?: string;
       permanent: boolean;
       retryCount: number;
       attemptedAt: string;
@@ -39,6 +42,9 @@ export function remoteFailureChanges(
     status: result.permanent ? "failed" : "pending",
     retryCount: result.retryCount,
     errorMessage: result.message,
+    ...(result.code ? { errorCode: result.code } : {}),
+    ...(result.details ? { errorDetails: result.details } : {}),
+    ...(result.hint ? { errorHint: result.hint } : {}),
     lastAttemptAt: result.attemptedAt,
     nextRetryAt: result.nextRetryAt,
   };
@@ -123,6 +129,9 @@ export async function processSkillModelBundle(
     await update(entry.id!, {
       status: permanent ? "failed" : "pending",
       errorMessage: retainedMessage,
+      ...(firstFailure.code ? { errorCode: firstFailure.code } : {}),
+      ...(firstFailure.details ? { errorDetails: firstFailure.details } : {}),
+      ...(firstFailure.hint ? { errorHint: firstFailure.hint } : {}),
       lastAttemptAt: firstFailure.attemptedAt,
       nextRetryAt: permanent ? undefined : firstFailure.nextRetryAt,
     });

@@ -5,7 +5,7 @@ import { HintButton } from "../HintButton";
 import type { HintRung } from "@/lib/essential-words/hint-ladder";
 
 const ladder: HintRung[] = [
-  { kind: "category", content: "adjetivo, 5 letras", priced: true, isGiveUp: false },
+  { kind: "category", content: "La respuesta es un adjetivo y tiene 5 letras.", priced: true, isGiveUp: false },
   { kind: "audio", content: "Escuchar la palabra", priced: true, isGiveUp: false },
   { kind: "reveal", content: "happy", priced: false, isGiveUp: true },
 ];
@@ -26,7 +26,7 @@ describe("HintButton", () => {
     render(<HintButton ladder={ladder} hasFailedOnce={true} idleMs={0} onAdvance={onAdvance} />);
     fireEvent.click(screen.getByRole("button", { name: /pista/i }));
     expect(onAdvance).toHaveBeenCalledWith(ladder[0]);
-    expect(screen.getByText("adjetivo, 5 letras")).toBeInTheDocument();
+    expect(screen.getByText("La respuesta es un adjetivo y tiene 5 letras.")).toBeInTheDocument();
   });
 
   it("clicking again advances through subsequent rungs in order", () => {

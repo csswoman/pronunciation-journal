@@ -22559,7 +22559,30 @@
             "/eɪ/|/iː/"
           ]
         }
-      ]
+      ],
+      "study": {
+        "definitionEs": "Lugar donde se prestan o consultan libros.",
+        "translation": [
+          "biblioteca"
+        ],
+        "contrasts": {
+          "titleEs": "No es una librería",
+          "pairs": [
+            {
+              "pattern": "false_friend",
+              "spanish": "La **librería** vende libros",
+              "english": "The **bookstore** sells books",
+              "explanationEs": "Library es biblioteca; bookstore es librería."
+            }
+          ]
+        },
+        "examples": [
+          {
+            "english": "The **library** is quiet.",
+            "translationEs": "La biblioteca es silenciosa."
+          }
+        ]
+      }
     },
     {
       "rank": 1163,

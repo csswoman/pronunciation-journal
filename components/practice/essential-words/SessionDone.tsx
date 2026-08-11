@@ -30,16 +30,6 @@ interface Props {
   strugglingWords?: string[]
 }
 
-/** Phrases the tomorrow preview naturally, omitting a zero side instead of
- * showing noise like "0 repasos y 10 palabras nuevas". */
-function tomorrowPreview(reviews: number, newQuota: number): string {
-  const reviewsPart = reviews === 1 ? '1 repaso' : `${reviews} repasos`
-  const newPart = newQuota === 1 ? '1 palabra nueva' : `${newQuota} palabras nuevas`
-  if (reviews === 0) return newPart
-  if (newQuota === 0) return reviewsPart
-  return `${reviewsPart} y ${newPart}`
-}
-
 export function SessionDone({
   stats,
   sessionSummary,
@@ -71,8 +61,6 @@ export function SessionDone({
     else if (practiced > 0) playUiCue('soft')
     else playUiCue('reveal')
   }, [loadFailed, wasEmpty, accuracy, practiced])
-
-  const reviewsTomorrow = (strugglingWords?.length ?? 0) + stats.dueCount
 
   const headline = loadFailed
     ? 'No se pudo cargar la sesión'
@@ -128,7 +116,7 @@ export function SessionDone({
         ) : null}
         {!wasEmpty && !loadFailed ? (
           <p className="m-0 text-caption text-fg-subtle">
-            Mañana: {tomorrowPreview(reviewsTomorrow, stats.newQuota)}
+            La próxima sesión se armará con el tamaño seleccionado.
           </p>
         ) : null}
         {loadFailed ? (
@@ -157,7 +145,7 @@ export function SessionDone({
             data-cuelume-press="press"
             data-cuelume-release="release"
           >
-            Aprender 10 nuevas más
+            Practicar otra sesión
           </PillButton>
         ) : null}
         {onContinue ? (

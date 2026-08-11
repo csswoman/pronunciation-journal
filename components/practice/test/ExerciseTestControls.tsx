@@ -16,6 +16,7 @@ interface Props {
   onCompareContextChange: (value: PracticeContext) => void
   onLaunchAll: () => void
   onSplitQuick: () => void
+  onOpenEssentialWords: () => void
 }
 
 export function ExerciseTestControls({
@@ -27,6 +28,7 @@ export function ExerciseTestControls({
   onCompareContextChange,
   onLaunchAll,
   onSplitQuick,
+  onOpenEssentialWords,
 }: Props) {
   return (
     <section className="flex flex-col gap-4 rounded-[var(--radius-lg)] border border-border-subtle bg-surface-raised p-4">
@@ -89,6 +91,15 @@ export function ExerciseTestControls({
       </p>
 
       <div className="flex flex-col gap-2">
+        <Button
+          type="button"
+          variant="primary"
+          size="sm"
+          onClick={onOpenEssentialWords}
+          fullWidth
+        >
+          Abrir Palabras esenciales
+        </Button>
         <Button
           type="button"
           variant="secondary"

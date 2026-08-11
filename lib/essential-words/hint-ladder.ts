@@ -5,7 +5,6 @@
 
 import type { EssentialWord } from "./types";
 import type { EssentialWordMode } from "./exercise-modes";
-import { essentialWordPosLabel } from "./pos-label";
 
 export type HintRungKind = "category" | "audio" | "firstLetter" | "reveal";
 
@@ -28,6 +27,7 @@ const SHORT_WORD_MAX_LENGTH = 4;
 const AUDIO_IS_PROMPT_MODES: ReadonlySet<EssentialWordMode> = new Set([
   "dictation_word",
   "dictation_sentence",
+  "listening_cloze_sentence",
 ]);
 
 /** Modes with no hint ladder at all — already reconnaissance, not production. */
@@ -35,13 +35,27 @@ const NO_HINT_MODES: ReadonlySet<EssentialWordMode> = new Set([
   "recognize_translation", "recognize_meaning", "recognize_audio", "recognize_cloze",
 ]);
 
-function posLabel(pos: EssentialWord["pos"]): string {
-  return essentialWordPosLabel(pos);
-}
+const POS_HINTS: Record<EssentialWord["pos"], string> = {
+  noun: "un sustantivo",
+  verb: "un verbo",
+  adjective: "un adjetivo",
+  adverb: "un adverbio",
+  pronoun: "un pronombre",
+  preposition: "una preposición",
+  conjunction: "una conjunción",
+  determiner: "un determinante",
+  article: "un artículo",
+  modal: "un verbo modal",
+  auxiliary: "un verbo auxiliar",
+  number: "un número",
+  interjection: "una interjección",
+};
 
 function categoryContent(entry: EssentialWord, isShort: boolean): string {
-  const label = posLabel(entry.pos);
-  return isShort ? label : `${label}, ${entry.word.length} letras`;
+  const category = POS_HINTS[entry.pos] ?? "una palabra";
+  return isShort
+    ? `La respuesta es ${category}.`
+    : `La respuesta es ${category} y tiene ${entry.word.length} letras.`;
 }
 
 function firstLetterContent(entry: EssentialWord): string {

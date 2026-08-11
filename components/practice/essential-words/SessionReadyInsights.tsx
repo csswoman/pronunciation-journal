@@ -29,7 +29,7 @@ export function SessionReadyInsights({ stats, streak }: Props) {
   const tomorrowLabel = `${stats.dueTomorrow} ${stats.dueTomorrow === 1 ? 'repaso' : 'repasos'}`
 
   return (
-    <div className="grid grid-cols-2 gap-layout-stack">
+    <div className="grid grid-cols-2 gap-space-4 sm:gap-space-5">
       <InsightCard label="Racha" value={streakLabel} />
       <InsightCard label="Mañana" value={tomorrowLabel} />
     </div>

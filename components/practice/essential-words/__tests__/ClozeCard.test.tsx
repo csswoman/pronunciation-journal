@@ -89,6 +89,15 @@ describe("ClozeCard", () => {
     expect(onAttempt).not.toHaveBeenCalled();
   });
 
+  it("places the pause action after Comprobar", () => {
+    render(<ClozeCard entry={entry} onAttempt={vi.fn()} onArchive={vi.fn()} />);
+
+    const check = screen.getByRole("button", { name: "Comprobar" });
+    const pause = screen.getByRole("button", { name: "Pausar esta palabra" });
+
+    expect(check.compareDocumentPosition(pause) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
   it("prices the optional audio hint after a failed first attempt", () => {
     const onAttempt = setup();
     fireEvent.change(screen.getByLabelText("Escribe la palabra que falta"), {
@@ -113,6 +122,7 @@ describe("ClozeCard", () => {
     fireEvent.click(screen.getByRole("button", { name: "Comprobar" }));
     expect(onAttempt).toHaveBeenCalled();
     expect(screen.getByText(/¡correcto!/i)).toBeInTheDocument();
+    expect(screen.queryByText(entry.example_sentence)).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Continuar" })).not.toBeInTheDocument();
   });
 

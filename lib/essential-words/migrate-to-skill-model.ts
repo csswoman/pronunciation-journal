@@ -4,6 +4,7 @@
 import { deriveFsrsState } from "@/lib/srs/fsrs-migrate";
 import type { SRSData } from "@/lib/types";
 import { learningItemId } from "./skill-item";
+import { estimateInitialListeningLevel } from "./initial-listening-level";
 import type {
   BaseSkill,
   ItemSchedule,
@@ -69,6 +70,7 @@ export function planSkillModelMigration(
         repetitions: isMeaning ? source.repetitions : 0,
         lapses: 0,
         suspended: false,
+        ...(skill === "listening" ? { initialListeningLevel: estimateInitialListeningLevel(source) } : {}),
       });
       present.add(id);
     }

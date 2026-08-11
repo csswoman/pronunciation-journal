@@ -2992,7 +2992,33 @@
             "/ə/|/ɪ/"
           ]
         }
-      ]
+      ],
+      "study": {
+        "definitionEs": "Datos o detalles que ayudan a saber algo.",
+        "translation": [
+          "información"
+        ],
+        "usage": {
+          "ruleId": "uncountable_no_plural"
+        },
+        "contrasts": {
+          "titleEs": "No lleva plural",
+          "pairs": [
+            {
+              "pattern": "replacement",
+              "spanish": "Necesito más **informaciones**",
+              "english": "I need more **information**",
+              "explanationEs": "Information no lleva s."
+            }
+          ]
+        },
+        "examples": [
+          {
+            "english": "This **information** is useful.",
+            "translationEs": "Esta información es útil."
+          }
+        ]
+      }
     },
     {
       "rank": 214,
@@ -18652,7 +18678,31 @@
             "/eɪ/|/iː/"
           ]
         }
-      ]
+      ],
+      "study": {
+        "definitionEs": "En realidad; se usa para corregir o precisar una idea.",
+        "translation": [
+          "en realidad",
+          "de hecho"
+        ],
+        "contrasts": {
+          "titleEs": "No significa actualmente",
+          "pairs": [
+            {
+              "pattern": "false_friend",
+              "spanish": "**Actualmente** vivo aquí",
+              "english": "I **currently** live here",
+              "explanationEs": "Actually significa en realidad, no actualmente."
+            }
+          ]
+        },
+        "examples": [
+          {
+            "english": "I **actually** like coffee.",
+            "translationEs": "En realidad sí me gusta el café."
+          }
+        ]
+      }
     },
     {
       "rank": 292,

@@ -32989,7 +32989,32 @@
             "/eɪ/|/iː/"
           ]
         }
-      ]
+      ],
+      "study": {
+        "definitionEs": "Ayudar a una persona a hacer algo.",
+        "translation": [
+          "ayudar",
+          "asistir"
+        ],
+        "translationNote": "assist es ayudar; para ir a un evento se usa attend",
+        "contrasts": {
+          "titleEs": "No es un falso amigo directo",
+          "pairs": [
+            {
+              "pattern": "false_friend",
+              "spanish": "Ella **asiste** a la reunión",
+              "english": "She **attends** the meeting",
+              "explanationEs": "Attend significa ir a un evento; assist significa ayudar."
+            }
+          ]
+        },
+        "examples": [
+          {
+            "english": "Can you **assist** me?",
+            "translationEs": "¿Puedes ayudarme?"
+          }
+        ]
+      }
     },
     {
       "rank": 2099,

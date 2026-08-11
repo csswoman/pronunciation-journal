@@ -1,5 +1,6 @@
 import { flushOutbox } from './sync-manager'
 import { getEarliestPendingRetryAt } from './recovery'
+import { exposeSyncRecoveryDevTools } from './schema-failure-recovery'
 
 let removeOnlineListener: (() => void) | undefined
 let retryTimer: ReturnType<typeof setTimeout> | undefined
@@ -59,6 +60,7 @@ export function initSyncListeners(userId: string | null = null): () => void {
   if (typeof window === 'undefined') return () => {}
   if (removeOnlineListener) return removeOnlineListener
 
+  if (userId) exposeSyncRecoveryDevTools(userId)
   if (userId) void drainAndReschedule(userId)
 
   const onOnline = () => { if (userId) void drainAndReschedule(userId) }

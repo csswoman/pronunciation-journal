@@ -9,6 +9,7 @@ import { SESSION_SIZES, type SessionSizeId } from '@/lib/essential-words/session
 interface Props {
   value: SessionSizeId
   onChange: (id: SessionSizeId) => void
+  disabled?: boolean
 }
 
 const chipClass = (selected: boolean) =>
@@ -22,11 +23,11 @@ const chipClass = (selected: boolean) =>
       : 'border border-transparent bg-surface-sunken text-fg-muted hover:bg-surface-raised hover:text-fg',
   )
 
-export function SessionReadySizePicker({ value, onChange }: Props) {
+export function SessionReadySizePicker({ value, onChange, disabled = false }: Props) {
   return (
     <div
       role="group"
-      aria-label="Tamaño de sesión"
+      aria-label="Cantidad de ejercicios"
       className="grid grid-cols-3 gap-2"
     >
       {SESSION_SIZES.map((size) => {
@@ -36,8 +37,9 @@ export function SessionReadySizePicker({ value, onChange }: Props) {
             key={size.id}
             type="button"
             aria-pressed={selected}
+            disabled={disabled}
             onClick={() => onChange(size.id)}
-            className={chipClass(selected)}
+            className={cn(chipClass(selected), 'disabled:cursor-not-allowed disabled:opacity-60')}
           >
             {size.label}
           </button>

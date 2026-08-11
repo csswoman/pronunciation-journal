@@ -15,9 +15,10 @@ describe('ready-vocabulary', () => {
   })
 
   it('falls back to legacy FSRS state', () => {
+    expect(classifyTouchedWord({ meaningStatus: null, legacyState: 'Review' })).toBe('en_repaso')
+    expect(classifyTouchedWord({ meaningStatus: null, legacyState: 'Learning' })).toBe('aprendiendo')
+    expect(classifyTouchedWord({ meaningStatus: null, legacyState: 'New' })).toBe('nuevas')
     expect(classifyTouchedWord({ meaningStatus: null, legacyState: 2 })).toBe('en_repaso')
-    expect(classifyTouchedWord({ meaningStatus: null, legacyState: 1 })).toBe('aprendiendo')
-    expect(classifyTouchedWord({ meaningStatus: null, legacyState: 0 })).toBe('nuevas')
   })
 
   it('tallies unique wordIds', () => {

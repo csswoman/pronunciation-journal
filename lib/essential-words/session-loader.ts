@@ -36,9 +36,9 @@ export async function loadEssentialWordsQueue(
   levels?: readonly CefrLevel[] | null,
   pos?: readonly EssentialWordPos[] | null,
   userId?: string,
-  options?: { newCardCeiling?: number },
+  options?: { maxNewWords?: number },
 ): Promise<LoadedEssentialWordsQueue> {
-  const newCardCeiling = options?.newCardCeiling ?? GUIDED_SESSION_NEW_CARDS;
+  const maxNewWords = options?.maxNewWords ?? GUIDED_SESSION_NEW_CARDS;
   const [words, introducedToday, dueTomorrow] = await Promise.all([
     fetchEssentialWords(),
     getEssentialWordsIntroducedToday(userId),
@@ -56,8 +56,7 @@ export async function loadEssentialWordsQueue(
     srsEntries,
     introducedToday,
     now,
-    newPerDay: introducedToday.length + newCardCeiling,
-    maxItems: newCardCeiling,
+    newPerDay: introducedToday.length + maxNewWords,
     levels,
     pos,
   }).map((item) => ({
@@ -83,7 +82,7 @@ export async function loadEssentialWordsQueue(
       dueCount: items.filter((item) => item.kind === "review").length,
       dueTomorrow,
       newToday: introducedToday.length,
-      newQuota: newCardCeiling,
+      newQuota: maxNewWords,
       vaulted: srsEntries.filter(isVaultEntry).length,
     },
     allWords: words,

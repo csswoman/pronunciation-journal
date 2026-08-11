@@ -14,9 +14,10 @@ import { getRoute, groupRoutesByLevel, routeShortLabel } from '@/lib/essential-w
 interface Props {
   activeRouteId: string | null
   onRouteChange: (routeId: string | null) => void
+  disabled?: boolean
 }
 
-export function SessionReadyRouteChips({ activeRouteId, onRouteChange }: Props) {
+export function SessionReadyRouteChips({ activeRouteId, onRouteChange, disabled = false }: Props) {
   const groups = groupRoutesByLevel()
   const recommended = activeRouteId === null
   const activeRoute = getRoute(activeRouteId)
@@ -29,11 +30,13 @@ export function SessionReadyRouteChips({ activeRouteId, onRouteChange }: Props) 
         type="button"
         aria-expanded={expanded}
         aria-controls="session-ready-route-panel"
+        disabled={disabled}
         onClick={() => setExpanded((open) => !open)}
         className={cn(
           'flex min-h-10 w-full items-center justify-between gap-2 rounded-md px-1 py-1.5',
           'text-left transition-colors duration-150 ease-out-quart focus-ring',
           'text-fg-muted hover:text-fg',
+          'disabled:cursor-not-allowed disabled:opacity-60',
         )}
       >
         <span className="min-w-0 truncate text-caption">
@@ -65,6 +68,7 @@ export function SessionReadyRouteChips({ activeRouteId, onRouteChange }: Props) 
             <button
               type="button"
               aria-pressed={recommended}
+              disabled={disabled}
               aria-label="Sesión recomendada"
               tabIndex={expanded ? undefined : -1}
               onClick={() => onRouteChange(null)}
@@ -72,6 +76,7 @@ export function SessionReadyRouteChips({ activeRouteId, onRouteChange }: Props) 
                 'flex min-h-11 w-full items-center justify-between gap-3 rounded-md border px-3 py-2.5',
                 'text-left transition-[color,background-color,border-color,transform] duration-150 ease-out-quart focus-ring',
                 'active:scale-[0.99] motion-reduce:active:scale-100',
+                'disabled:cursor-not-allowed disabled:opacity-60',
                 recommended
                   ? 'border-primary bg-primary-soft text-primary'
                   : 'border-border-subtle bg-surface-sunken text-fg-muted hover:bg-surface-raised hover:text-fg',
@@ -111,6 +116,7 @@ export function SessionReadyRouteChips({ activeRouteId, onRouteChange }: Props) 
                           key={route.id}
                           type="button"
                           aria-pressed={selected}
+                          disabled={disabled}
                           aria-label={route.label}
                           tabIndex={expanded ? undefined : -1}
                           onClick={() => onRouteChange(route.id)}
@@ -119,6 +125,7 @@ export function SessionReadyRouteChips({ activeRouteId, onRouteChange }: Props) 
                             'text-caption font-semibold transition-[color,background-color,transform]',
                             'duration-150 ease-out-quart focus-ring active:scale-[0.97]',
                             'motion-reduce:transition-colors motion-reduce:active:scale-100',
+                            'disabled:cursor-not-allowed disabled:opacity-60',
                             selected
                               ? 'bg-primary-soft text-primary'
                               : 'bg-surface-sunken text-fg-muted hover:bg-surface-raised hover:text-fg',

@@ -10085,7 +10085,34 @@
           "role": "content",
           "contrastIds": []
         }
-      ]
+      ],
+      "study": {
+        "definitionEs": "Necesitar que alguien o algo haga posible un resultado.",
+        "translation": [
+          "depender"
+        ],
+        "translationNote": "se construye con on, no con de",
+        "usage": {
+          "ruleEsOverride": "Después de depend se usa on."
+        },
+        "contrasts": {
+          "titleEs": "La preposición cambia",
+          "pairs": [
+            {
+              "pattern": "replacement",
+              "spanish": "Depende **de** ti",
+              "english": "It depends **on** you",
+              "explanationEs": "Después de depend se usa on."
+            }
+          ]
+        },
+        "examples": [
+          {
+            "english": "I **depend** on my team.",
+            "translationEs": "Dependo de mi equipo."
+          }
+        ]
+      }
     },
     {
       "rank": 732,
@@ -33824,7 +33851,20 @@
           "role": "function",
           "contrastIds": []
         }
-      ]
+      ],
+      "study": {
+        "definitionEs": "Del color de una manzana roja.",
+        "translation": [
+          "rojo",
+          "roja"
+        ],
+        "examples": [
+          {
+            "english": "She has a **red** dress.",
+            "translationEs": "Ella tiene un vestido rojo."
+          }
+        ]
+      }
     }
   ]
 }

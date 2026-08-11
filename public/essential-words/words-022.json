@@ -23388,7 +23388,33 @@
           "role": "content",
           "contrastIds": []
         }
-      ]
+      ],
+      "study": {
+        "definitionEs": "Conjunto de muebles de una casa o lugar.",
+        "translation": [
+          "muebles"
+        ],
+        "usage": {
+          "ruleId": "uncountable_no_plural"
+        },
+        "contrasts": {
+          "titleEs": "No lleva plural",
+          "pairs": [
+            {
+              "pattern": "replacement",
+              "spanish": "Los **muebles** son nuevos",
+              "english": "The **furniture** is new",
+              "explanationEs": "Furniture no lleva s."
+            }
+          ]
+        },
+        "examples": [
+          {
+            "english": "The **furniture** is new.",
+            "translationEs": "Los muebles son nuevos."
+          }
+        ]
+      }
     },
     {
       "rank": 2166,

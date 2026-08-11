@@ -22,12 +22,12 @@ import Button from '@/components/ui/Button'
 
 export function EssentialWordsSession({ initialStreak = 0 }: { initialStreak?: number } = {}) {
   const {
-    phase, currentStepId, current, currentMode, listeningTier, isListeningSkill, focusContrastId, retiredBlankKeys, currentExerciseLevel, audioDistractorPool, stats, counts,
-    sessionProgress, studyContext, sessionSummary,
+    phase, currentStepId, current, currentMode, listeningTier, isListeningSkill, focusContrastId, retiredBlankKeys, currentExerciseLevel, audioDistractorPool, stats,
+    sessionProgress, sessionPreview, isResume, previewLoading, studyContext, sessionSummary,
     strugglingWords, reloadLoading, levels, activeRouteId, setRoute,
     startSpeak, beginSession, omitWord, submitGrade, reload, learnMore, archiveWord,
     keepSnooze, masterWord,
-    sessionSize, setSessionSize, startLeechReview,
+    sessionSize, setSessionSize, discardSession, pauseAndPersistSession, startLeechReview,
   } = useEssentialWordsSession()
   const loadingWords = useLoadingWords()
   const router = useRouter()
@@ -67,7 +67,10 @@ export function EssentialWordsSession({ initialStreak = 0 }: { initialStreak?: n
   const exerciseLevelLabelText = currentExerciseLevel
     ? exerciseLevelLabel(currentExerciseLevel)
     : undefined
-  const exitToHub = () => router.push('/')
+  const exitToHub = async () => {
+    await pauseAndPersistSession()
+    router.push('/')
+  }
 
   // Cards describe what happened; this is the only boundary that translates
   // that evidence into the legacy numeric scheduler input. Fase C can replace
@@ -139,10 +142,10 @@ export function EssentialWordsSession({ initialStreak = 0 }: { initialStreak?: n
   const exitSheet = (
     <ExitConfirmSheet
       open={exitConfirmOpen}
-      onConfirm={() => { setExitConfirmOpen(false); exitToHub() }}
+      onConfirm={() => { setExitConfirmOpen(false); void exitToHub() }}
       onCancel={() => setExitConfirmOpen(false)}
       title="¿Salir de la práctica?"
-      description="Perderás el progreso de esta sesión."
+      description="Tu progreso quedará guardado para que puedas continuar después."
       confirmLabel="Salir"
       cancelLabel="Seguir practicando"
     />
@@ -182,7 +185,7 @@ export function EssentialWordsSession({ initialStreak = 0 }: { initialStreak?: n
           {pageHeader}
           {sessionToolbar}
           <SessionReady
-            counts={counts}
+            preview={sessionPreview!}
             stats={stats}
             streak={initialStreak}
             activeRouteId={activeRouteId}
@@ -190,6 +193,9 @@ export function EssentialWordsSession({ initialStreak = 0 }: { initialStreak?: n
             sessionSize={sessionSize}
             onSessionSizeChange={setSessionSize}
             onBegin={beginSession}
+            isResume={isResume}
+            previewLoading={previewLoading}
+            onDiscard={discardSession}
             onLeechReview={startLeechReview}
           />
         </SessionShell>

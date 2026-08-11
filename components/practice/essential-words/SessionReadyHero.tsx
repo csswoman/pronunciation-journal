@@ -9,70 +9,53 @@
 //   <SessionReadyRouteChips /> (secondary)
 // </SessionReadyHero>
 
-import { estimateDurationMs } from '@/lib/essential-words/session-plan-time-ceiling'
 import type { SessionSizeId } from '@/lib/essential-words/session-size'
 import { PillButton } from '@/components/ui/PillButton'
-import type { EssentialWordsCounts, EssentialWordsStats } from '@/hooks/useEssentialWordsSession'
+import type { EssentialWordsSessionPreview } from '@/lib/essential-words/action-session'
 import { SessionReadyRouteChips } from './SessionReadyRouteChips'
 import { SessionReadySizePicker } from './SessionReadySizePicker'
 import { SessionSurface } from './session-chrome'
 
 interface Props {
-  counts: EssentialWordsCounts
-  stats: EssentialWordsStats
+  preview: EssentialWordsSessionPreview
   isResume: boolean
   activeRouteId: string | null
   onRouteChange: (routeId: string | null) => void
   sessionSize: SessionSizeId
   onSessionSizeChange: (id: SessionSizeId) => void
   onBegin: () => void
+  onDiscard: () => void
+  previewLoading: boolean
 }
 
-function estimateSessionMinutes(counts: EssentialWordsCounts): number {
-  const newMs = estimateDurationMs({
-    exposeCount: counts.newRemaining,
-    exerciseCount: counts.newRemaining * 3,
-  })
-  const reviewMs = estimateDurationMs({
-    exposeCount: 0,
-    exerciseCount: (counts.learningRemaining + counts.reviewRemaining) * 3,
-  })
-  return Math.max(1, Math.round((newMs + reviewMs) / 60000))
-}
-
-function breakdownLine(counts: EssentialWordsCounts, isResume: boolean): string | null {
+function breakdownLine(preview: EssentialWordsSessionPreview, isResume: boolean): string | null {
   if (isResume) {
-    return 'Retoma la sesión que dejaste a medias'
+    return `${preview.remainingActions} ${preview.remainingActions === 1 ? 'ejercicio pendiente' : 'ejercicios pendientes'}`
   }
   const parts: string[] = []
-  if (counts.newRemaining > 0) parts.push(`${counts.newRemaining} nuevas`)
-  if (counts.reviewRemaining > 0) parts.push(`${counts.reviewRemaining} repasos`)
-  if (counts.learningRemaining > 0) {
-    parts.push(`${counts.learningRemaining} en curso`)
-  }
-  if (counts.newRemaining > 0 || counts.reviewRemaining > 0) {
-    parts.push('1 ronda final')
-  }
+  if (preview.newWordCount > 0) parts.push(`${preview.newWordCount} ${preview.newWordCount === 1 ? 'palabra nueva' : 'palabras nuevas'}`)
+  if (preview.reviewActionCount > 0) parts.push(`${preview.reviewActionCount} ${preview.reviewActionCount === 1 ? 'repaso' : 'repasos'}`)
+  if (preview.continuationActionCount > 0) parts.push(`${preview.continuationActionCount} ${preview.continuationActionCount === 1 ? 'acción en curso' : 'acciones en curso'}`)
   if (parts.length === 0) return null
   return parts.join(' · ')
 }
 
 export function SessionReadyHero({
-  counts,
+  preview,
   isResume,
   activeRouteId,
   onRouteChange,
   sessionSize,
   onSessionSizeChange,
   onBegin,
+  onDiscard,
+  previewLoading,
 }: Props) {
-  const minutes = estimateSessionMinutes(counts)
-  const breakdown = breakdownLine(counts, isResume)
-  const total =
-    counts.newRemaining + counts.learningRemaining + counts.reviewRemaining
+  const minutes = Math.max(1, Math.round(preview.estimatedDurationMs / 60000))
+  const breakdown = breakdownLine(preview, isResume)
   const title = isResume
     ? 'Continuar donde lo dejaste'
-    : `Hoy te tocan ${total} ${total === 1 ? 'palabra' : 'palabras'}`
+    : `Hoy tienes ${preview.scheduledActions} ${preview.scheduledActions === 1 ? 'ejercicio' : 'ejercicios'}`
   const ctaLabel = isResume ? 'Continuar' : 'Empezar'
 
   return (
@@ -93,7 +76,11 @@ export function SessionReadyHero({
         </span>
       </header>
 
-      <SessionReadySizePicker value={sessionSize} onChange={onSessionSizeChange} />
+      <SessionReadySizePicker value={sessionSize} onChange={onSessionSizeChange} disabled={isResume} />
+
+      <p className="sr-only" role="status" aria-live="polite">
+        {previewLoading ? 'Actualizando sesión' : ''}
+      </p>
 
       <PillButton
         type="button"
@@ -101,13 +88,20 @@ export function SessionReadyHero({
         size="md"
         className="w-full active:scale-[0.99] motion-reduce:active:scale-100"
         onClick={onBegin}
+        disabled={previewLoading}
         data-cuelume-press="press"
         data-cuelume-release="release"
       >
-        {ctaLabel}
+        {previewLoading ? 'Actualizando…' : ctaLabel}
       </PillButton>
 
-      <SessionReadyRouteChips activeRouteId={activeRouteId} onRouteChange={onRouteChange} />
+      {isResume ? (
+        <PillButton type="button" variant="outline" size="sm" className="w-full" onClick={onDiscard}>
+          Descartar sesión
+        </PillButton>
+      ) : null}
+
+      <SessionReadyRouteChips activeRouteId={activeRouteId} onRouteChange={onRouteChange} disabled={isResume} />
     </SessionSurface>
   )
 }

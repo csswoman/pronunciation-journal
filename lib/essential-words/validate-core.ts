@@ -7,13 +7,22 @@ import { sentenceContainsLemma } from "@/lib/exercises/eligibility";
 import { lookupIpaFromCmu } from "@/lib/lexicon/ipa";
 import { WEAK_FORM_WHITELIST } from "./weak-forms";
 import type { EssentialWord } from "./types";
+import { compileMarkedText, StudyMarkupError } from "./study-markup";
+import { STUDY_RULES } from "./study-rules";
 
 export type IssueKind =
   | "ipa-mismatch"
   | "weak-not-whitelisted"
   | "sentence-missing-word"
   | "variant-missing-word"
-  | "variant-duplicate";
+  | "variant-duplicate"
+  | "study-markup"
+  | "study-unknown-variant"
+  | "study-unknown-anchor"
+  | "study-missing-variant-example"
+  | "study-missing-examples"
+  | "study-missing-explanation"
+  | "study-unknown-rule";
 
 export interface ValidationIssue {
   rank: number;
@@ -82,6 +91,87 @@ export function validateEntry(entry: EssentialWord): ValidationIssue[] {
       });
     }
     seen.add(key);
+  }
+
+  const study = entry.study;
+  if (!study) return issues;
+
+  if (study.usage?.ruleId && !(study.usage.ruleId in STUDY_RULES)) {
+    issues.push({
+      rank,
+      word,
+      kind: "study-unknown-rule",
+      detail: `usage.ruleId inexistente: "${study.usage.ruleId}"`,
+    });
+  }
+
+  const validateMarkup = (path: string, text: string) => {
+    try {
+      compileMarkedText(text);
+    } catch (error) {
+      const detail = error instanceof StudyMarkupError ? error.message : String(error);
+      issues.push({ rank, word, kind: "study-markup", detail: `${path}: ${detail}` });
+    }
+  };
+
+  const anchors = new Set(study.pronunciation?.soundAnchors?.map((anchor) => anchor.id) ?? []);
+  const variants = new Set(study.pronunciation?.variants?.map((variant) => variant.id) ?? []);
+  const referencedVariants = new Set<string>();
+
+  for (const [i, variant] of (study.pronunciation?.variants ?? []).entries()) {
+    validateMarkup(`pronunciation.variants[${i}].spokenExample`, variant.spokenExample);
+    for (const anchorId of variant.anchorIds) {
+      if (!anchors.has(anchorId)) {
+        issues.push({
+          rank,
+          word,
+          kind: "study-unknown-anchor",
+          detail: `pronunciation.variants[${i}] referencia anchorId inexistente: "${anchorId}"`,
+        });
+      }
+    }
+  }
+
+  for (const [i, example] of (study.examples ?? []).entries()) {
+    validateMarkup(`examples[${i}].english`, example.english);
+    if (example.variantId) {
+      referencedVariants.add(example.variantId);
+      if (!variants.has(example.variantId)) {
+        issues.push({
+          rank,
+          word,
+          kind: "study-unknown-variant",
+          detail: `examples[${i}] referencia variantId inexistente: "${example.variantId}"`,
+        });
+      }
+    }
+  }
+
+  if (variants.size > 0 && !study.examples?.length) {
+    issues.push({ rank, word, kind: "study-missing-examples", detail: "Hay variantes de pronunciación sin ejemplos." });
+  }
+  for (const variantId of variants) {
+    if (!referencedVariants.has(variantId)) {
+      issues.push({
+        rank,
+        word,
+        kind: "study-missing-variant-example",
+        detail: `La variante "${variantId}" no tiene ningún ejemplo asociado.`,
+      });
+    }
+  }
+
+  for (const [i, pair] of (study.contrasts?.pairs ?? []).entries()) {
+    validateMarkup(`contrasts.pairs[${i}].spanish`, pair.spanish);
+    validateMarkup(`contrasts.pairs[${i}].english`, pair.english);
+    if ((pair.pattern === "replacement" || pair.pattern === "false_friend") && !pair.explanationEs) {
+      issues.push({
+        rank,
+        word,
+        kind: "study-missing-explanation",
+        detail: `contrasts.pairs[${i}] (${pair.pattern}) requiere explanationEs.`,
+      });
+    }
   }
 
   return issues;

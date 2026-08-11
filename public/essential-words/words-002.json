@@ -14132,7 +14132,19 @@
             "/ə/|/ɪ/"
           ]
         }
-      ]
+      ],
+      "study": {
+        "definitionEs": "Conjunto de páginas para leer.",
+        "translation": [
+          "libro"
+        ],
+        "examples": [
+          {
+            "english": "This **book** is interesting.",
+            "translationEs": "Este libro es interesante."
+          }
+        ]
+      }
     },
     {
       "rank": 172,
@@ -17468,7 +17480,20 @@
           "role": "content",
           "contrastIds": []
         }
-      ]
+      ],
+      "study": {
+        "definitionEs": "De tamaño reducido.",
+        "translation": [
+          "pequeño",
+          "pequeña"
+        ],
+        "examples": [
+          {
+            "english": "The box is **small**.",
+            "translationEs": "La caja es pequeña."
+          }
+        ]
+      }
     },
     {
       "rank": 187,

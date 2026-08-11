@@ -92,7 +92,7 @@ export default function DailyPlanCard({
 
   return (
     <section aria-label="Plan de hoy">
-      <div className="flex flex-col rounded-xl border border-border-subtle bg-daily-card px-[var(--layout-card-pad)] pb-[var(--layout-card-pad)] pt-5">
+      <div className="flex flex-col rounded-xl border border-border-default bg-daily-card px-[var(--layout-card-pad)] pb-[var(--layout-card-pad)] pt-5 shadow-sm motion-reduce:shadow-none">
         <div aria-live="polite" aria-atomic="true" className="sr-only">
           {status === 'ready' && !allDone && `Plan de hoy listo, ${steps.length} pasos`}
           {status === 'ready' && allDone && 'Plan diario completo'}
@@ -159,9 +159,23 @@ export default function DailyPlanCard({
         ) : null}
 
         {status === 'ready' && !allDone && steps.length > 0 ? (
-          <div className="animate-state-in flex flex-col gap-4">
-            <div className="flex items-center gap-2.5">
-              <span className="font-label shrink-0 text-fg">Plan de hoy</span>
+          <div className="animate-state-in flex flex-col gap-5">
+            <div className="flex flex-col gap-2">
+              <div className="flex items-baseline justify-between gap-3">
+                <h2 className="text-h4 shrink-0 text-fg">Plan de hoy</h2>
+                <span className="font-caption shrink-0 tabular-nums text-fg-muted">
+                  {completedCount > 0 ? (
+                    <>
+                      <span className="font-semibold text-primary">{completedCount}</span>
+                      {` de ${steps.length}`}
+                      {inProgressStepId ? ' · en curso' : ''}
+                      {remainingMinutes > 0 ? ` · ${remainingMinutes} min restantes` : ''}
+                    </>
+                  ) : (
+                    progressLabel
+                  )}
+                </span>
+              </div>
               <PlanSegmentProgress
                 stepIds={steps.map((s) => s.id)}
                 completedCount={completedCount}
@@ -169,9 +183,6 @@ export default function DailyPlanCard({
                 activeStepId={inProgressStepId}
                 entryStepId={entryStep?.id ?? null}
               />
-              <span className="font-caption shrink-0 tabular-nums text-fg-muted">
-                {progressLabel}
-              </span>
             </div>
             {listPrefix}
             <DailyStepList

@@ -8,7 +8,8 @@
 // </SessionReady>
 
 import type { SessionSizeId } from '@/lib/essential-words/session-size'
-import type { EssentialWordsCounts, EssentialWordsStats } from '@/hooks/useEssentialWordsSession'
+import type { EssentialWordsStats } from '@/hooks/useEssentialWordsSession'
+import type { EssentialWordsSessionPreview } from '@/lib/essential-words/action-session'
 import { useEssentialWordsReadyDashboard } from '@/hooks/useEssentialWordsReadyDashboard'
 import { SessionReadyForecast } from './SessionReadyForecast'
 import { SessionReadyHeatmap } from './SessionReadyHeatmap'
@@ -21,7 +22,7 @@ import { SessionReadyVaultRow } from './SessionReadyVaultRow'
 import { SessionReadyVocabulary } from './SessionReadyVocabulary'
 
 interface Props {
-  counts: EssentialWordsCounts
+  preview: EssentialWordsSessionPreview
   stats: EssentialWordsStats
   streak: number
   activeRouteId: string | null
@@ -29,11 +30,14 @@ interface Props {
   sessionSize: SessionSizeId
   onSessionSizeChange: (id: SessionSizeId) => void
   onBegin: () => void
+  isResume: boolean
+  previewLoading: boolean
+  onDiscard: () => void
   onLeechReview: (wordIds: string[]) => void
 }
 
 export function SessionReady({
-  counts,
+  preview,
   stats,
   streak,
   activeRouteId,
@@ -41,9 +45,11 @@ export function SessionReady({
   sessionSize,
   onSessionSizeChange,
   onBegin,
+  isResume,
+  previewLoading,
+  onDiscard,
   onLeechReview,
 }: Props) {
-  const isResume = counts.learningRemaining > 0
   const dashboard = useEssentialWordsReadyDashboard()
 
   return (
@@ -52,14 +58,15 @@ export function SessionReady({
       className="flex w-full flex-col gap-space-4 sm:gap-space-5"
     >
       <SessionReadyHero
-        counts={counts}
-        stats={stats}
+        preview={preview}
         isResume={isResume}
         activeRouteId={activeRouteId}
         onRouteChange={onRouteChange}
         sessionSize={sessionSize}
         onSessionSizeChange={onSessionSizeChange}
         onBegin={onBegin}
+        onDiscard={onDiscard}
+        previewLoading={previewLoading}
       />
 
       {dashboard?.lastSession ? (
@@ -92,7 +99,11 @@ export function SessionReady({
             />
           ) : null}
           {dashboard ? (
-            <SessionReadyLeeches leeches={dashboard.leeches} onReview={onLeechReview} />
+            <SessionReadyLeeches
+              leeches={dashboard.leeches}
+              onReview={onLeechReview}
+              disabled={isResume || previewLoading}
+            />
           ) : null}
           {dashboard?.heatmap ? <SessionReadyHeatmap days={dashboard.heatmap} /> : null}
         </aside>

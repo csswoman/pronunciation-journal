@@ -9,32 +9,32 @@ export function getPageContext(pathname: string): PageContext {
     { label: "Free conversation", prompt: "Let's have a free conversation in English" },
   ];
   if (pathname === "/") {
-    return { label: "🏠 Home", chips: [
+    return { label: "Inicio", chips: [
       { label: "What should I practice?", prompt: "What should I practice today based on my learning progress?" },
       { label: "Word of the day", prompt: "Can you give me a word of the day and explain it with examples?" },
       ...universal,
     ]};
   }
   if (pathname.startsWith("/dictionary") || pathname.startsWith("/decks")) {
-    return { label: "📖 Word Bank", chips: [
+    return { label: "Léxico", chips: [
       { label: "Use it in a sentence", prompt: "Use this word in a sentence and explain when to use it" },
       { label: "Similar words?", prompt: "What's the difference between this word and similar words?" },
       ...universal,
     ]};
   }
   if (pathname.startsWith("/practice") || pathname.startsWith("/ipa") || pathname.startsWith("/review")) {
-    return { label: "🎯 Practice", chips: [
+    return { label: "Práctica", chips: [
       { label: "Explain this sound", prompt: "Explain this English phoneme and how to pronounce it correctly" },
       { label: "More words to practice", prompt: "Give me more words to practice with this sound" },
       ...universal,
     ]};
   }
   if (pathname.startsWith("/lessons")) {
-    return { label: "📚 Lessons", chips: [
+    return { label: "Lecciones", chips: [
       { label: "Explain this topic", prompt: "Can you explain this grammar topic in more detail with examples?" },
       { label: "Give me examples", prompt: "Give me more examples of this grammar concept" },
       ...universal,
     ]};
   }
-  return { label: "✦ AI Coach", chips: universal };
+  return { label: "AI Coach", chips: universal };
 }

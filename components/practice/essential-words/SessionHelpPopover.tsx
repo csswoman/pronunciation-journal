@@ -131,7 +131,7 @@ export function SessionHelpPopover({ stats }: Props) {
                   Vencidas <span className="font-medium text-fg">{stats.dueCount}</span>
                 </li>
                 <li>
-                  Cupo diario <span className="font-medium text-fg">{stats.newToday}/{stats.newQuota}</span>
+                  Tamaño de sesión <span className="font-medium text-fg">{stats.newQuota} palabras</span>
                 </li>
               </ul>
 

@@ -39,6 +39,7 @@ export function WordStudyCard({ entry, contextLine, onContinue, onOmit }: Props)
         onContinue={onContinue}
         onOmit={onOmit}
         onListen={onListen}
+        onListenText={(text) => speak(text, { rate: 0.95 })}
       />
     </SessionSurface>
   )
