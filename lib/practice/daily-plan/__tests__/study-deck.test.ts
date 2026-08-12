@@ -8,6 +8,7 @@ function signal(
   lessonSlug: string,
   level: ConceptSignal['level'],
   status: ConceptSignal['status'],
+  opts?: { verificationDueAt?: string },
 ): ConceptSignal {
   return {
     lessonSlug,
@@ -18,6 +19,7 @@ function signal(
     correct: 0,
     total: 1,
     assessedAt: '2026-07-18T12:00:00.000Z',
+    ...opts,
   }
 }
 
@@ -97,5 +99,42 @@ describe('study-deck daily step', () => {
     const target = selectStudyDeckTarget(new Set(), 'a2', [])
 
     expect(target).toEqual(expected)
+  })
+
+  it('does not prioritize review claims that are not due yet', () => {
+    const future = new Date(Date.now() + 86_400_000).toISOString()
+    const concepts: ConceptSignal[] = [{
+      lessonSlug: 'a1-adverbios-frecuencia',
+      level: 'a1',
+      title: 'Adverbs',
+      selfRating: 'familiar',
+      status: 'review',
+      correct: 0,
+      total: 0,
+      assessedAt: new Date().toISOString(),
+      verificationDueAt: future,
+    }]
+    const completed = new Set<string>()
+    const target = selectStudyDeckTarget(completed, 'a1', concepts)
+    expect(target?.lesson.slug).not.toBe('a1-adverbios-frecuencia')
+  })
+
+  it('prioritizes due review claims over learn', () => {
+    const past = new Date(Date.now() - 1000).toISOString()
+    const concepts: ConceptSignal[] = [
+      {
+        lessonSlug: 'a1-adverbios-frecuencia',
+        level: 'a1',
+        title: 'Adverbs',
+        selfRating: 'familiar',
+        status: 'review',
+        correct: 0,
+        total: 0,
+        assessedAt: past,
+        verificationDueAt: past,
+      },
+    ]
+    const target = selectStudyDeckTarget(new Set(), 'a1', concepts)
+    expect(target?.lesson.slug).toBe('a1-adverbios-frecuencia')
   })
 })

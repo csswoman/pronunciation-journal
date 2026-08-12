@@ -27,10 +27,14 @@ function signaledTarget(
     for (const level of eligibleLevels) {
       const lesson = level.units
         .flatMap((unit) => unit.lessons)
-        .find((candidate) =>
-          !completedIds.has(lessonProgressKey(level.id, candidate.id)) &&
-          signalBySlug.get(candidate.slug ?? '')?.status === status
-        )
+        .find((candidate) => {
+          const signal = signalBySlug.get(candidate.slug ?? '')
+          if (!signal || signal.status !== status) return false
+          if (status === 'review' && signal.verificationDueAt) {
+            if (Date.parse(signal.verificationDueAt) > Date.now()) return false
+          }
+          return !completedIds.has(lessonProgressKey(level.id, candidate.id))
+        })
       if (lesson) return { level, lesson }
     }
   }
