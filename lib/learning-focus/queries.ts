@@ -19,8 +19,13 @@ async function readState(userId: string): Promise<UserLearningState> {
 function threadsEqual(a: FocusThread | null, b: FocusThread | null): boolean {
   if (a === b) return true
   if (!a || !b) return false
-  if (a.kind !== b.kind) return false
-  return a.kind === 'theory' ? a.topicId === b.topicId : a.key === b.key
+  if (a.kind === 'theory' && b.kind === 'theory') {
+    return a.topicId === b.topicId
+  }
+  if (a.kind === 'sound' && b.kind === 'sound') {
+    return a.key === b.key
+  }
+  return false
 }
 
 function suggestedEquals(
