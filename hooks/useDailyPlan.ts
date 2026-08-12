@@ -37,8 +37,8 @@ interface UseDailyPlanOptions {
 
 /**
  * Estado compartido de la diaria de 5 pasos: genera el plan en el cliente
- * (usa el navegador de Supabase), le añade el paso 'concept' del día, recuerda
- * los pasos hechos hoy en localStorage y dispara confetti al completarlos.
+ * (usa el navegador de Supabase), le añade el paso 'concept' del día y
+ * recuerda los pasos hechos hoy en localStorage.
  *
  * El plan generado se persiste en localStorage con clave de fecha: si el usuario
  * recarga la página el mismo día, se restaura el plan ya generado sin volver a

@@ -208,8 +208,6 @@
   --font-ui:        var(--font-sans);
   --font-heading:   var(--font-sans);
   --font-phoneme:   var(--font-ipa);
-  --font-editorial: var(--font-sans);
-  --font-display:   var(--font-sans), system-ui, sans-serif;
 
   /* Size ramp — mobile defaults */
   --text-size-h1: 1.5rem;          /* 24px — rare display / streak heroes */

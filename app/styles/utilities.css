@@ -159,8 +159,6 @@
 .dot-info    { background: var(--info); }
 
 /* ── Typography helpers ──────────────────────────────────────────────────── */
-.font-display  { font-family: var(--font-sans), system-ui, sans-serif; }
-.font-editorial { font-family: var(--font-sans), system-ui, sans-serif; }
 .font-phoneme  { font-family: var(--font-mono-var), monospace; }
 .font-h1       { font: var(--font-h1); letter-spacing: var(--text-tracking-h1); }
 .font-h2       { font: var(--font-h2); letter-spacing: var(--text-tracking-h2); }
