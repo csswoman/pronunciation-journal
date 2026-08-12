@@ -192,6 +192,7 @@ export default function ProfileSettings() {
             await updateInterests(next);
             showToast("Intereses guardados");
           }}
+          hint="Esto ajusta recomendaciones. Tu progreso se conserva; puedes seguir explorando cualquier contenido."
         />
 
         <section aria-labelledby="profile-account-title" className="layout-stack-loose">

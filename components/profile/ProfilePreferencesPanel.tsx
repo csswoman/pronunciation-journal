@@ -33,7 +33,7 @@ export default function ProfilePreferencesPanel({
   onLevelChange,
   interests,
   onInterestsSave,
-  hint = "Se aplican de inmediato en toda la app.",
+  hint = "Esto ajusta recomendaciones. Tu progreso se conserva; puedes seguir explorando cualquier contenido.",
 }: Props) {
   return (
     <section aria-labelledby="profile-prefs-title" className="layout-stack-loose">
