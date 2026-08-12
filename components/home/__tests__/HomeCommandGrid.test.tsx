@@ -63,6 +63,9 @@ vi.mock("@/components/home/HomeWordOfDayCard", () => ({
 vi.mock("@/components/home/HomeSpeakPrompt", () => ({
   default: () => <div>Speak prompt</div>,
 }));
+vi.mock("@/components/home/LearningFocusCard", () => ({
+  default: () => null,
+}));
 
 import HomeCommandGrid from "@/components/home/HomeCommandGrid";
 
