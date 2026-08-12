@@ -59,3 +59,26 @@ export function getLessonBySlug(slug: string): CoursePathLesson | undefined {
   }
   return undefined;
 }
+
+/** First Route lesson that uses this deck slug (track + number for study URLs). */
+export function findStudyByDeckSlug(
+  deckSlug: string
+): { trackId: CoursePathTrackId; lesson: CoursePathLesson } | undefined {
+  for (const level of ALL_LEVELS) {
+    for (const unit of level.units) {
+      const lesson = unit.lessons.find((l) => l.slug === deckSlug);
+      if (lesson) return { trackId: level.id, lesson };
+    }
+  }
+  return undefined;
+}
+
+/**
+ * Prefer the Route study URL when the deck is on a path; otherwise open the
+ * standalone practice deck viewer.
+ */
+export function studyOrPracticeDeckHref(deckSlug: string): string {
+  const found = findStudyByDeckSlug(deckSlug);
+  if (found) return studyLessonPath(found.trackId, found.lesson.number);
+  return `/practice/decks/${deckSlug}`;
+}

@@ -15,13 +15,13 @@ export const MINI_LESSON_EQUIVALENT_DECKS: Readonly<Record<string, string>> = Ob
   'collocations-make-do': 'b2-formacion-palabras-colocaciones',
   'common-contractions': 'c1-conectores-contracciones-informales',
   'conditionals-zero-first': 'b1-primer-condicional-pasado-continuo',
-  'countable-uncountable': 'a2-cuantificadores-esenciales',
+  'countable-uncountable': 'a1-contables-incontables',
   'discourse-markers': 'b1-conectores-discurso',
   'ellipsis-substitution': 'c1-elipsis-sustitucion-referencia',
-  'frequency-adverbs': 'a2-adverbios-expresiones-tiempo',
+  'frequency-adverbs': 'a1-adverbios-frecuencia',
   'hedging-language': 'c1-hedging-matices',
   'inversion-emphasis': 'b2-inversion-enfasis',
-  'linking-words-basic': 'b1-conectores-discurso',
+  'linking-words-basic': 'a1-conjunciones-basicas',
   'modal-verbs-ability': 'a1-can-capacidad-permiso',
   'modals-deduction': 'b1-modales-deduccion',
   'participle-clauses': 'b2-clausulas-participio',
@@ -43,6 +43,11 @@ function requiredTopic(raw: string): string {
   return normalized
 }
 
+/** Authored deck slug when this mini-lesson shares a theory topic; otherwise null. */
+export function equivalentDeckSlugForMiniLesson(slug: string): string | null {
+  return MINI_LESSON_EQUIVALENT_DECKS[slug] ?? null
+}
+
 /** Stable topic shared by Route and the corresponding authored deck. */
 export function theoryTopicForDeck(deckSlug: string): string {
   return requiredTopic(`theory:${deckSlug}`)
@@ -50,6 +55,6 @@ export function theoryTopicForDeck(deckSlug: string): string {
 
 /** Explicit equivalence when authored; otherwise a complementary topic. */
 export function theoryTopicForMiniLesson(slug: string): string {
-  const deckSlug = MINI_LESSON_EQUIVALENT_DECKS[slug]
+  const deckSlug = equivalentDeckSlugForMiniLesson(slug)
   return deckSlug ? theoryTopicForDeck(deckSlug) : requiredTopic(`mini:${slug}`)
 }

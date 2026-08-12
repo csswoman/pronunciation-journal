@@ -281,6 +281,19 @@
   flex-direction: column;
 }
 
+.mini-lessons__deck-cta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.mini-lessons__deck-cta-copy {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--text-size-caption);
+  line-height: 1.45;
+}
+
 .mini-lessons__lesson-link {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;

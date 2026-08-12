@@ -14,8 +14,10 @@ import {
 } from "@/lib/content/mini-lesson-labels";
 import MiniLessonQuiz from "@/components/mini-lessons/MiniLessonQuiz";
 import MiniLessonComplete from "@/components/mini-lessons/MiniLessonComplete";
+import MiniLessonArticleRail from "@/components/mini-lessons/MiniLessonArticleRail";
 import ExerciseBlock from "@/components/mini-lessons/ExerciseBlock";
 import { TrackingSaveButton } from "@/components/tracking/TrackingSaveButton";
+import { resolveMiniLessonDeckLink } from "@/lib/learning-loop/mini-lesson-deck-link";
 
 interface MiniLessonPageProps {
   params: Promise<{ slug: string }>;
@@ -37,6 +39,7 @@ export default async function MiniLessonDetailPage({ params }: MiniLessonPagePro
   const currentIndex = allLessons.findIndex((l) => l.slug === slug);
   const previousLesson = currentIndex > 0 ? allLessons[currentIndex - 1] : undefined;
   const nextLesson = currentIndex >= 0 ? allLessons[currentIndex + 1] : undefined;
+  const deckLink = resolveMiniLessonDeckLink(slug);
 
   const tocItems = [
     ...content.sections.map((section, idx) => ({
@@ -83,44 +86,12 @@ export default async function MiniLessonDetailPage({ params }: MiniLessonPagePro
           </header>
         }
         rail={
-          <>
-            <nav className="mini-lessons__contents">
-              <span className="mini-lessons__aside-kicker">En esta lección</span>
-              <ol className="mini-lessons__contents-list">
-                {tocItems.map((item) => (
-                  <li key={item.href}>
-                    <a href={item.href}>{item.label}</a>
-                  </li>
-                ))}
-              </ol>
-            </nav>
-            <div className="mini-lessons__aside-divider" />
-            <div className="mini-lessons__lesson-nav">
-              <span className="mini-lessons__aside-kicker">Sigue explorando</span>
-              {nextLesson ? (
-                <Link href={`/mini-lessons/${nextLesson.slug}`} className="mini-lessons__lesson-link">
-                  <span>Siguiente lección</span>
-                  <strong>{nextLesson.title}</strong>
-                  <span aria-hidden>→</span>
-                </Link>
-              ) : previousLesson ? (
-                <Link
-                  href={`/mini-lessons/${previousLesson.slug}`}
-                  className="mini-lessons__lesson-link"
-                >
-                  <span>Lección anterior</span>
-                  <strong>{previousLesson.title}</strong>
-                  <span aria-hidden>←</span>
-                </Link>
-              ) : (
-                <Link href="/mini-lessons" className="mini-lessons__lesson-link">
-                  <span>Ver todas</span>
-                  <strong>Mini lecciones</strong>
-                  <span aria-hidden>→</span>
-                </Link>
-              )}
-            </div>
-          </>
+          <MiniLessonArticleRail
+            tocItems={tocItems}
+            deckLink={deckLink}
+            nextLesson={nextLesson}
+            previousLesson={previousLesson}
+          />
         }
         railLabel="Resumen de la lección"
       >
@@ -218,10 +189,16 @@ export default async function MiniLessonDetailPage({ params }: MiniLessonPagePro
           </Link>
           {content.quiz.length === 0 && <MiniLessonComplete slug={slug} />}
           <TrackingSaveButton kind="lesson" reference={slug} title={lesson.title} />
-          {nextLesson && (
-            <Link href={`/mini-lessons/${nextLesson.slug}`} className="mini-lessons__btn">
-              Siguiente: {nextLesson.title} →
+          {deckLink ? (
+            <Link href={deckLink.href} className="mini-lessons__btn">
+              {deckLink.viaRoute ? "Estudiar en la Ruta" : "Abrir mazo"} →
             </Link>
+          ) : (
+            nextLesson && (
+              <Link href={`/mini-lessons/${nextLesson.slug}`} className="mini-lessons__btn">
+                Siguiente: {nextLesson.title} →
+              </Link>
+            )
           )}
         </footer>
       </PageLayout>
