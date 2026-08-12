@@ -413,7 +413,7 @@
 }
 
 .ipa-chart__ph-sym {
-  font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
+  font-family: var(--font-ipa), sans-serif;
   font-size: var(--text-size-display-ipa);
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -549,7 +549,7 @@
 }
 
 .ipa-chart__panel-sym {
-  font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
+  font-family: var(--font-ipa), sans-serif;
   font-size: var(--text-size-display-ipa);
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -731,7 +731,7 @@
 }
 
 .ipa-chart__hard-sym {
-  font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
+  font-family: var(--font-ipa), sans-serif;
   font-size: var(--text-size-display-ipa);
   font-weight: 500;
   color: var(--ipa-accent-text);
@@ -861,7 +861,7 @@
   position: absolute;
   top: 12px;
   left: 14px;
-  font-family: var(--font-mono-var), "DM Mono", monospace;
+  font-family: var(--font-mono-var), monospace;
   font-size: var(--text-size-tiny);
   font-weight: 500;
   letter-spacing: 0.08em;
@@ -869,7 +869,7 @@
 }
 
 .ipa-chart__mpcard-sym {
-  font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
+  font-family: var(--font-ipa), sans-serif;
   font-size: var(--text-size-display-ipa);
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -913,7 +913,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-mono-var), "DM Mono", monospace;
+  font-family: var(--font-mono-var), monospace;
   font-size: var(--text-size-tiny);
   font-weight: 500;
   letter-spacing: 0.04em;
@@ -1365,7 +1365,7 @@
 .ipa-chart__vgrid-ch,
 .ipa-chart__vgrid-rl,
 .ipa-chart__chartfoot {
-  font-family: var(--font-mono-var), "DM Mono", monospace;
+  font-family: var(--font-mono-var), monospace;
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }

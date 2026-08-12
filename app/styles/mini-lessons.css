@@ -739,7 +739,7 @@
 }
 
 .mini-lessons__example-ipa {
-  font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
+  font-family: var(--font-ipa), sans-serif;
   font-size: var(--text-size-body-lg);
   font-weight: 400;
   color: var(--text-secondary);

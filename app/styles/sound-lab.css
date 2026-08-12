@@ -801,7 +801,7 @@
 
 /* IPA glyph — dominant, brand ink (not hashed rainbow) */
 .sound-lab__ipa {
-  font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
+  font-family: var(--font-ipa), sans-serif;
   font-optical-sizing: auto;
   font-size: var(--text-size-ipa-hero);
   font-weight: 700;
@@ -898,7 +898,7 @@
 
 /* Focus tokens in the banner — mono/IPA style */
 .sound-lab__focus-tokens {
-  font-family: var(--font-mono, "DM Mono", monospace);
+  font-family: var(--font-mono, monospace);
   font-size: var(--text-size-caption);
   font-weight: 500;
   color: var(--sound-lab-ink);

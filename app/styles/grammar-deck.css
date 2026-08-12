@@ -848,7 +848,7 @@
 }
 
 .grammar-card__idx {
-  font-family: var(--font-mono-var), "Fira Code", monospace;
+  font-family: var(--font-mono-var), monospace;
   font-size: var(--text-size-caption);
   line-height: var(--text-leading-caption);
   color: var(--text-tertiary);
@@ -920,7 +920,7 @@
   text-transform: uppercase;
   color: var(--text-tertiary);
   font-weight: var(--text-weight-kicker);
-  font-family: var(--font-mono-var), "Fira Code", monospace;
+  font-family: var(--font-mono-var), monospace;
   padding: var(--space-2) var(--space-3);
   text-align: left;
 }
@@ -1178,7 +1178,7 @@
 }
 
 .grammar-pron__ipa {
-  font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
+  font-family: var(--font-ipa), sans-serif;
   font-size: var(--text-size-body);
   font-weight: 400;
   letter-spacing: 0.05em;

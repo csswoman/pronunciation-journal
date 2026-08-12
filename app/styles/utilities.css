@@ -161,7 +161,7 @@
 /* ── Typography helpers ──────────────────────────────────────────────────── */
 .font-display  { font-family: var(--font-sans), system-ui, sans-serif; }
 .font-editorial { font-family: var(--font-sans), system-ui, sans-serif; }
-.font-phoneme  { font-family: var(--font-mono-var), "Fira Code", monospace; }
+.font-phoneme  { font-family: var(--font-mono-var), monospace; }
 .font-h1       { font: var(--font-h1); letter-spacing: var(--text-tracking-h1); }
 .font-h2       { font: var(--font-h2); letter-spacing: var(--text-tracking-h2); }
 .font-h3       { font: var(--font-h3); letter-spacing: var(--text-tracking-h3); }
@@ -196,12 +196,12 @@
   color: var(--text-primary);
 }
 .font-mono {
-  font-family: var(--font-mono-var), "Fira Code", monospace;
+  font-family: var(--font-mono-var), monospace;
 }
 
 /* IPA glyphs — Andika (SIL): even IPA metrics, literacy-first forms */
 .font-ipa {
-  font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
+  font-family: var(--font-ipa), sans-serif;
   font-style: normal;
   font-weight: 400;
   font-optical-sizing: auto;
@@ -213,7 +213,7 @@
 
 /** Sentence / multi-token IPA transcription */
 .ipa {
-  font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
+  font-family: var(--font-ipa), sans-serif;
   font-size: var(--text-size-body-lg);
   font-weight: 400;
   font-optical-sizing: auto;

@@ -64,7 +64,7 @@
   border-radius: var(--radius-sm);
   background: var(--primary-soft);
   color: var(--primary);
-  font-family: var(--font-mono-var), "Fira Code", monospace;
+  font-family: var(--font-mono-var), monospace;
   font-size: var(--text-size-xxs);
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -74,7 +74,7 @@
 .course-path__aside-kicker {
   margin: 0;
   color: var(--text-tertiary);
-  font-family: var(--font-mono-var), "Fira Code", monospace;
+  font-family: var(--font-mono-var), monospace;
   font-size: var(--text-size-xxs);
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -1148,7 +1148,7 @@
 
 .course-path__irl-kicker {
   margin: 0;
-  font-family: var(--font-mono-var), "Fira Code", monospace;
+  font-family: var(--font-mono-var), monospace;
   font-size: var(--text-size-xxs);
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -1202,7 +1202,7 @@
 .course-path__irl-counter {
   flex-shrink: 0;
   padding-top: 0.2rem;
-  font-family: var(--font-mono-var), "Fira Code", monospace;
+  font-family: var(--font-mono-var), monospace;
   font-size: var(--text-size-xxs);
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -1321,7 +1321,7 @@
 
 .course-path__irl-card-label {
   margin: 0;
-  font-family: var(--font-mono-var), "Fira Code", monospace;
+  font-family: var(--font-mono-var), monospace;
   font-size: var(--text-size-xxs);
   font-weight: 600;
   letter-spacing: 0.06em;
