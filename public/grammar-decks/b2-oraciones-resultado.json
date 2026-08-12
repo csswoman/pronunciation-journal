@@ -1,0 +1,211 @@
+{
+  "meta": {
+    "eyebrow": "B2 · Resultado",
+    "title": "So/such",
+    "titleEmphasis": "… that",
+    "goal": "Ya expresas resultado con so + adj/adv + that y such + (a) + sustantivo + that."
+  },
+  "cards": [
+    {
+      "id": "b2-oraciones-resultado-concept",
+      "tag": "Idea central",
+      "title": "So/such: qué expresa",
+      "lede": "Ya expresas resultado con so + adj/adv + that y such + (a) + sustantivo + that.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "so + adj",
+              "value": "so tired that I fell asleep",
+              "highlights": [
+                "so tired that"
+              ]
+            },
+            {
+              "key": "such + noun",
+              "value": "such a mess that…",
+              "highlights": [
+                "such a"
+              ]
+            },
+            {
+              "key": "so many/much",
+              "value": "so many people that…",
+              "highlights": [
+                "so many"
+              ]
+            },
+            {
+              "key": "Resultado",
+              "value": "that + cláusula de consecuencia",
+              "highlights": [
+                "that"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "b2-oraciones-resultado-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "so + adj",
+              "value": "so tired that I fell asleep",
+              "highlights": [
+                "so tired that"
+              ]
+            },
+            {
+              "key": "such + noun",
+              "value": "such a mess that…",
+              "highlights": [
+                "such a"
+              ]
+            },
+            {
+              "key": "so many/much",
+              "value": "so many people that…",
+              "highlights": [
+                "so many"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-oraciones-resultado-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "so tired that I fell asleep"
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "such a mess that…"
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "so many people that…"
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "that + cláusula de consecuencia"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-oraciones-resultado-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "so + adj",
+              "rule": "so tired that I fell asleep",
+              "examples": [
+                "so tired that I fell asleep"
+              ]
+            },
+            {
+              "label": "such + noun",
+              "rule": "such a mess that…",
+              "examples": [
+                "such a mess that…"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-oraciones-resultado-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "It was so a long day."
+            },
+            {
+              "variant": "good",
+              "text": "It was such a long day.",
+              "note": "such + sustantivo; so + adjetivo"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-oraciones-resultado-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "It was ___ cold that we stayed inside.",
+      "options": [
+        "so",
+        "such"
+      ],
+      "answer": 0,
+      "explain": "so + adjetivo (cold)."
+    }
+  ]
+}

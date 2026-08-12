@@ -1,0 +1,211 @@
+{
+  "meta": {
+    "eyebrow": "C1 · Tiempo",
+    "title": "Futuro",
+    "titleEmphasis": "en el pasado",
+    "goal": "Ya describes planes o predicciones pasadas con was/were going to y would desde un punto de vista anterior."
+  },
+  "cards": [
+    {
+      "id": "c1-futuro-en-pasado-concept",
+      "tag": "Idea central",
+      "title": "Futuro: qué expresa",
+      "lede": "Ya describes planes o predicciones pasadas con was/were going to y would desde un punto de vista anterior.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "was going to",
+              "value": "I was going to call, but I forgot. · plan no cumplido",
+              "highlights": [
+                "was going to"
+              ]
+            },
+            {
+              "key": "would",
+              "value": "We knew the price would rise. · predicción desde el pasado",
+              "highlights": [
+                "would rise"
+              ]
+            },
+            {
+              "key": "Narrativa",
+              "value": "She was going to resign when the offer arrived.",
+              "highlights": [
+                "was going to"
+              ]
+            },
+            {
+              "key": "Reported",
+              "value": "He said he would finish by Friday.",
+              "highlights": [
+                "would finish"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "c1-futuro-en-pasado-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "was going to",
+              "value": "I was going to call, but I forgot. · plan no cumplido",
+              "highlights": [
+                "was going to"
+              ]
+            },
+            {
+              "key": "would",
+              "value": "We knew the price would rise. · predicción desde el pasado",
+              "highlights": [
+                "would rise"
+              ]
+            },
+            {
+              "key": "Narrativa",
+              "value": "She was going to resign when the offer arrived.",
+              "highlights": [
+                "was going to"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-futuro-en-pasado-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "plan no cumplido"
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "predicción desde el pasado"
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "She was going to resign when the offer arrived."
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "He said he would finish by Friday."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-futuro-en-pasado-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "was going to",
+              "rule": "I was going to call, but I forgot. · plan no cumplido",
+              "examples": [
+                "plan no cumplido"
+              ]
+            },
+            {
+              "label": "would",
+              "rule": "We knew the price would rise. · predicción desde el pasado",
+              "examples": [
+                "predicción desde el pasado"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-futuro-en-pasado-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "I was going to called him."
+            },
+            {
+              "variant": "good",
+              "text": "I was going to call him.",
+              "note": "going to + base del verbo"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-futuro-en-pasado-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "They ___ going to launch in March, but postponed.",
+      "options": [
+        "were",
+        "would"
+      ],
+      "answer": 0,
+      "explain": "Plan pasado → was/were going to."
+    }
+  ]
+}

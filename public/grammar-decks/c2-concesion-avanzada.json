@@ -1,0 +1,211 @@
+{
+  "meta": {
+    "eyebrow": "C2 · Concesión",
+    "title": "Concesión",
+    "titleEmphasis": "avanzada",
+    "goal": "Ya concedes y matizas con much as, whatever, however + adj/adv y estructuras invertidas de concesión."
+  },
+  "cards": [
+    {
+      "id": "c2-concesion-avanzada-concept",
+      "tag": "Idea central",
+      "title": "Concesión: qué expresa",
+      "lede": "Ya concedes y matizas con much as, whatever, however + adj/adv y estructuras invertidas de concesión.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "much as",
+              "value": "Much as I admire her work, I disagree.",
+              "highlights": [
+                "Much as"
+              ]
+            },
+            {
+              "key": "whatever",
+              "value": "Whatever the outcome, we proceed.",
+              "highlights": [
+                "Whatever"
+              ]
+            },
+            {
+              "key": "however",
+              "value": "However hard we try, delays persist.",
+              "highlights": [
+                "However hard"
+              ]
+            },
+            {
+              "key": "Matiz",
+              "value": "reconoces un punto antes de refutarlo",
+              "highlights": [
+                "Much as"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "c2-concesion-avanzada-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "much as",
+              "value": "Much as I admire her work, I disagree.",
+              "highlights": [
+                "Much as"
+              ]
+            },
+            {
+              "key": "whatever",
+              "value": "Whatever the outcome, we proceed.",
+              "highlights": [
+                "Whatever"
+              ]
+            },
+            {
+              "key": "however",
+              "value": "However hard we try, delays persist.",
+              "highlights": [
+                "However hard"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-concesion-avanzada-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "Much as I admire her work, I disagree."
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "Whatever the outcome, we proceed."
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "However hard we try, delays persist."
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "reconoces un punto antes de refutarlo"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-concesion-avanzada-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "much as",
+              "rule": "Much as I admire her work, I disagree.",
+              "examples": [
+                "Much as I admire her work, I disagree."
+              ]
+            },
+            {
+              "label": "whatever",
+              "rule": "Whatever the outcome, we proceed.",
+              "examples": [
+                "Whatever the outcome, we proceed."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-concesion-avanzada-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "Much as I admire her, but I disagree."
+            },
+            {
+              "variant": "good",
+              "text": "Much as I admire her, I disagree.",
+              "note": "no añadas but tras much as"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-concesion-avanzada-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "___ the evidence, doubts remain.",
+      "options": [
+        "Compelling as",
+        "As compelling"
+      ],
+      "answer": 0,
+      "explain": "Adj + as + sujeto + verbo: concesión invertida."
+    }
+  ]
+}

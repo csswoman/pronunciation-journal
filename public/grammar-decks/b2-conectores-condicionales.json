@@ -1,0 +1,211 @@
+{
+  "meta": {
+    "eyebrow": "B2 · Condicionales",
+    "title": "Unless, provided",
+    "titleEmphasis": "y as long as",
+    "goal": "Ya matizas condiciones con unless, provided (that) y as long as."
+  },
+  "cards": [
+    {
+      "id": "b2-conectores-condicionales-concept",
+      "tag": "Idea central",
+      "title": "Unless, provided: qué expresa",
+      "lede": "Ya matizas condiciones con unless, provided (that) y as long as.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "unless",
+              "value": "a menos que (= if not) · unless you hurry",
+              "highlights": [
+                "unless"
+              ]
+            },
+            {
+              "key": "provided (that)",
+              "value": "siempre que · provided you pay",
+              "highlights": [
+                "provided"
+              ]
+            },
+            {
+              "key": "as long as",
+              "value": "mientras / con tal de que · as long as you're happy",
+              "highlights": [
+                "as long as"
+              ]
+            },
+            {
+              "key": "in case",
+              "value": "por si acaso · take an umbrella in case",
+              "highlights": [
+                "in case"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "b2-conectores-condicionales-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "unless",
+              "value": "a menos que (= if not) · unless you hurry",
+              "highlights": [
+                "unless"
+              ]
+            },
+            {
+              "key": "provided (that)",
+              "value": "siempre que · provided you pay",
+              "highlights": [
+                "provided"
+              ]
+            },
+            {
+              "key": "as long as",
+              "value": "mientras / con tal de que · as long as you're happy",
+              "highlights": [
+                "as long as"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-conectores-condicionales-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "unless you hurry"
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "provided you pay"
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "as long as you're happy"
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "take an umbrella in case"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-conectores-condicionales-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "unless",
+              "rule": "a menos que (= if not) · unless you hurry",
+              "examples": [
+                "unless you hurry"
+              ]
+            },
+            {
+              "label": "provided (that)",
+              "rule": "siempre que · provided you pay",
+              "examples": [
+                "provided you pay"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-conectores-condicionales-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "Unless you will not hurry…"
+            },
+            {
+              "variant": "good",
+              "text": "Unless you hurry…",
+              "note": "unless ya implica negación"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-conectores-condicionales-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "You can go out ___ you finish your homework.",
+      "options": [
+        "as long as",
+        "unless"
+      ],
+      "answer": 0,
+      "explain": "Condición positiva → as long as."
+    }
+  ]
+}

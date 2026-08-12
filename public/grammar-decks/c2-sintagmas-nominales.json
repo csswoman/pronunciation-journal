@@ -1,0 +1,214 @@
+{
+  "meta": {
+    "eyebrow": "C2 · Sintaxis",
+    "title": "Sintagmas",
+    "titleEmphasis": "nominales complejos",
+    "goal": "Ya construyes sintagmas nominales densos con modificadores, participios, prep. y relativas alrededor del núcleo."
+  },
+  "cards": [
+    {
+      "id": "c2-sintagmas-nominales-concept",
+      "tag": "Idea central",
+      "title": "Sintagmas: qué expresa",
+      "lede": "Ya construyes sintagmas nominales densos con modificadores, participios, prep. y relativas alrededor del núcleo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Núcleo",
+              "value": "sustantivo central · decision",
+              "highlights": [
+                "decision"
+              ]
+            },
+            {
+              "key": "Modificadores",
+              "value": "the recent controversial board decision on restructuring",
+              "highlights": [
+                "recent",
+                "controversial"
+              ]
+            },
+            {
+              "key": "Participio",
+              "value": "the policy announced yesterday",
+              "highlights": [
+                "announced"
+              ]
+            },
+            {
+              "key": "Relativa",
+              "value": "the analyst who led the review",
+              "highlights": [
+                "who led"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "c2-sintagmas-nominales-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Núcleo",
+              "value": "sustantivo central · decision",
+              "highlights": [
+                "decision"
+              ]
+            },
+            {
+              "key": "Modificadores",
+              "value": "the recent controversial board decision on restructuring",
+              "highlights": [
+                "recent",
+                "controversial"
+              ]
+            },
+            {
+              "key": "Participio",
+              "value": "the policy announced yesterday",
+              "highlights": [
+                "announced"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-sintagmas-nominales-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "decision"
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "the recent controversial board decision on restructuring"
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "the policy announced yesterday"
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "the analyst who led the review"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-sintagmas-nominales-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Núcleo",
+              "rule": "sustantivo central · decision",
+              "examples": [
+                "decision"
+              ]
+            },
+            {
+              "label": "Modificadores",
+              "rule": "the recent controversial board decision on restructuring",
+              "examples": [
+                "the recent controversial board decision on restructuring"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-sintagmas-nominales-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "a decision recent controversial"
+            },
+            {
+              "variant": "good",
+              "text": "a recent controversial decision",
+              "note": "orden de adjetivos en inglés"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-sintagmas-nominales-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Identify the head noun: 'the rapidly evolving regulatory framework'",
+      "options": [
+        "rapidly",
+        "framework",
+        "regulatory"
+      ],
+      "answer": 1,
+      "explain": "framework es el núcleo del sintagma."
+    }
+  ]
+}

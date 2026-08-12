@@ -1,0 +1,211 @@
+{
+  "meta": {
+    "eyebrow": "B1 · Artículos",
+    "title": "Artículos con",
+    "titleEmphasis": "superlativos y cero",
+    "goal": "Ya usas the con superlativos y omites el artículo con sustantivos abstractos o generales."
+  },
+  "cards": [
+    {
+      "id": "b1-articulos-superlativos-cero-concept",
+      "tag": "Idea central",
+      "title": "Artículos con: qué expresa",
+      "lede": "Ya usas the con superlativos y omites el artículo con sustantivos abstractos o generales.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Superlativo",
+              "value": "the + -est/most · the best student",
+              "highlights": [
+                "the best"
+              ]
+            },
+            {
+              "key": "Único",
+              "value": "the sun, the president · cosas únicas",
+              "highlights": [
+                "the"
+              ]
+            },
+            {
+              "key": "Artículo cero",
+              "value": "sin artículo · Life is hard.",
+              "highlights": [
+                "Life"
+              ]
+            },
+            {
+              "key": "General plural",
+              "value": "Dogs are loyal. · categorías",
+              "highlights": [
+                "Dogs"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "b1-articulos-superlativos-cero-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Superlativo",
+              "value": "the + -est/most · the best student",
+              "highlights": [
+                "the best"
+              ]
+            },
+            {
+              "key": "Único",
+              "value": "the sun, the president · cosas únicas",
+              "highlights": [
+                "the"
+              ]
+            },
+            {
+              "key": "Artículo cero",
+              "value": "sin artículo · Life is hard.",
+              "highlights": [
+                "Life"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-articulos-superlativos-cero-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "the best student"
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "cosas únicas"
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "Life is hard."
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "categorías"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-articulos-superlativos-cero-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Superlativo",
+              "rule": "the + -est/most · the best student",
+              "examples": [
+                "the best student"
+              ]
+            },
+            {
+              "label": "Único",
+              "rule": "the sun, the president · cosas únicas",
+              "examples": [
+                "cosas únicas"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-articulos-superlativos-cero-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "She is best in class."
+            },
+            {
+              "variant": "good",
+              "text": "She is the best in class.",
+              "note": "superlativo → the"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-articulos-superlativos-cero-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "He is ___ tallest in the team.",
+      "options": [
+        "the",
+        "a"
+      ],
+      "answer": 0,
+      "explain": "Con superlativo va the."
+    }
+  ]
+}

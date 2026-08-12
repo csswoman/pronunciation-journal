@@ -1,0 +1,200 @@
+{
+  "meta": {
+    "eyebrow": "A2 · Pasado",
+    "title": "Pasado",
+    "titleEmphasis": "continuo",
+    "goal": "Ya describes acciones en progreso en el pasado con was/were + -ing."
+  },
+  "cards": [
+    {
+      "id": "a2-pasado-continuo-concept",
+      "tag": "Idea central",
+      "title": "Pasado: qué expresa",
+      "lede": "Ya describes acciones en progreso en el pasado con was/were + -ing.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Forma",
+              "value": "I was working · They were waiting",
+              "highlights": [
+                "was working"
+              ]
+            },
+            {
+              "key": "Fondo",
+              "value": "It was raining when we left.",
+              "highlights": [
+                "was raining"
+              ]
+            },
+            {
+              "key": "Interrupción",
+              "value": "I was reading when you called.",
+              "highlights": [
+                "when"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "a2-pasado-continuo-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Forma",
+              "value": "I was working · They were waiting",
+              "highlights": [
+                "was working"
+              ]
+            },
+            {
+              "key": "Fondo",
+              "value": "It was raining when we left.",
+              "highlights": [
+                "was raining"
+              ]
+            },
+            {
+              "key": "Interrupción",
+              "value": "I was reading when you called.",
+              "highlights": [
+                "when"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-pasado-continuo-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "They were waiting"
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "It was raining when we left."
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "I was reading when you called."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-pasado-continuo-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Forma",
+              "rule": "I was working · They were waiting",
+              "examples": [
+                "They were waiting"
+              ]
+            },
+            {
+              "label": "Fondo",
+              "rule": "It was raining when we left.",
+              "examples": [
+                "It was raining when we left."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-pasado-continuo-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "I was work at 8pm."
+            },
+            {
+              "variant": "good",
+              "text": "I was working at 8pm.",
+              "note": "continuo = was/were + -ing"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-pasado-continuo-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "They ___ dinner at 7pm.",
+      "options": [
+        "were having",
+        "were have"
+      ],
+      "answer": 0,
+      "explain": "Pasado continuo = were + -ing."
+    }
+  ]
+}

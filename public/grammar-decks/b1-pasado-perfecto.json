@@ -1,0 +1,211 @@
+{
+  "meta": {
+    "eyebrow": "B1 · Pasado perfecto",
+    "title": "Pasado",
+    "titleEmphasis": "perfecto",
+    "goal": "Ya ordenas dos acciones pasadas con had + participio para la más antigua."
+  },
+  "cards": [
+    {
+      "id": "b1-pasado-perfecto-concept",
+      "tag": "Idea central",
+      "title": "Pasado: qué expresa",
+      "lede": "Ya ordenas dos acciones pasadas con had + participio para la más antigua.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Forma",
+              "value": "had + participio · had left",
+              "highlights": [
+                "had"
+              ]
+            },
+            {
+              "key": "Antes de otra",
+              "value": "When I arrived, he had left.",
+              "highlights": [
+                "had left"
+              ]
+            },
+            {
+              "key": "Experiencia previa",
+              "value": "I had never seen snow before.",
+              "highlights": [
+                "had never seen"
+              ]
+            },
+            {
+              "key": "Señal",
+              "value": "already, just, never, by the time",
+              "highlights": [
+                "by the time"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "b1-pasado-perfecto-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Forma",
+              "value": "had + participio · had left",
+              "highlights": [
+                "had"
+              ]
+            },
+            {
+              "key": "Antes de otra",
+              "value": "When I arrived, he had left.",
+              "highlights": [
+                "had left"
+              ]
+            },
+            {
+              "key": "Experiencia previa",
+              "value": "I had never seen snow before.",
+              "highlights": [
+                "had never seen"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-pasado-perfecto-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "had left"
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "When I arrived, he had left."
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "I had never seen snow before."
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "already, just, never, by the time"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-pasado-perfecto-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Forma",
+              "rule": "had + participio · had left",
+              "examples": [
+                "had left"
+              ]
+            },
+            {
+              "label": "Antes de otra",
+              "rule": "When I arrived, he had left.",
+              "examples": [
+                "When I arrived, he had left."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-pasado-perfecto-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "When I arrived, he left already."
+            },
+            {
+              "variant": "good",
+              "text": "When I arrived, he had already left.",
+              "note": "la salida fue antes de llegar"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-pasado-perfecto-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "She ___ the keys before she left.",
+      "options": [
+        "had lost",
+        "lost"
+      ],
+      "answer": 0,
+      "explain": "Perder las llaves fue antes de irse."
+    }
+  ]
+}

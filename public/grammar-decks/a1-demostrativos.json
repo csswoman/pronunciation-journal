@@ -1,0 +1,211 @@
+{
+  "meta": {
+    "eyebrow": "A1 · Demostrativos",
+    "title": "Demostrativos",
+    "titleEmphasis": "this, that, these, those",
+    "goal": "Ya puedes señalar cosas cerca o lejos con this/that/these/those."
+  },
+  "cards": [
+    {
+      "id": "a1-demostrativos-concept",
+      "tag": "Idea central",
+      "title": "Demostrativos: qué expresa",
+      "lede": "Ya puedes señalar cosas cerca o lejos con this/that/these/those.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "this",
+              "value": "singular cerca · this book",
+              "highlights": [
+                "this"
+              ]
+            },
+            {
+              "key": "that",
+              "value": "singular lejos · that car",
+              "highlights": [
+                "that"
+              ]
+            },
+            {
+              "key": "these",
+              "value": "plural cerca · these shoes",
+              "highlights": [
+                "these"
+              ]
+            },
+            {
+              "key": "those",
+              "value": "plural lejos · those houses",
+              "highlights": [
+                "those"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "a1-demostrativos-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "this",
+              "value": "singular cerca · this book",
+              "highlights": [
+                "this"
+              ]
+            },
+            {
+              "key": "that",
+              "value": "singular lejos · that car",
+              "highlights": [
+                "that"
+              ]
+            },
+            {
+              "key": "these",
+              "value": "plural cerca · these shoes",
+              "highlights": [
+                "these"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-demostrativos-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "this book"
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "that car"
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "these shoes"
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "those houses"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-demostrativos-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "this",
+              "rule": "singular cerca · this book",
+              "examples": [
+                "this book"
+              ]
+            },
+            {
+              "label": "that",
+              "rule": "singular lejos · that car",
+              "examples": [
+                "that car"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-demostrativos-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "This books are new."
+            },
+            {
+              "variant": "good",
+              "text": "These books are new.",
+              "note": "books es plural → these"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-demostrativos-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Look at ___ flowers over there.",
+      "options": [
+        "those",
+        "that"
+      ],
+      "answer": 0,
+      "explain": "flowers es plural y están lejos → those."
+    }
+  ]
+}

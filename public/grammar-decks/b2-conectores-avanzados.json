@@ -1,0 +1,211 @@
+{
+  "meta": {
+    "eyebrow": "B2 · Conectores",
+    "title": "Conectores",
+    "titleEmphasis": "avanzados",
+    "goal": "Ya enlazas ideas formales con however, furthermore, therefore y nevertheless."
+  },
+  "cards": [
+    {
+      "id": "b2-conectores-avanzados-concept",
+      "tag": "Idea central",
+      "title": "Conectores: qué expresa",
+      "lede": "Ya enlazas ideas formales con however, furthermore, therefore y nevertheless.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "however",
+              "value": "contraste · However, the plan failed.",
+              "highlights": [
+                "However"
+              ]
+            },
+            {
+              "key": "furthermore",
+              "value": "añadir · Furthermore, costs rose.",
+              "highlights": [
+                "Furthermore"
+              ]
+            },
+            {
+              "key": "therefore",
+              "value": "consecuencia · Therefore, we postponed.",
+              "highlights": [
+                "Therefore"
+              ]
+            },
+            {
+              "key": "nevertheless",
+              "value": "a pesar de · Nevertheless, we continued.",
+              "highlights": [
+                "Nevertheless"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "b2-conectores-avanzados-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "however",
+              "value": "contraste · However, the plan failed.",
+              "highlights": [
+                "However"
+              ]
+            },
+            {
+              "key": "furthermore",
+              "value": "añadir · Furthermore, costs rose.",
+              "highlights": [
+                "Furthermore"
+              ]
+            },
+            {
+              "key": "therefore",
+              "value": "consecuencia · Therefore, we postponed.",
+              "highlights": [
+                "Therefore"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-conectores-avanzados-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "However, the plan failed."
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "Furthermore, costs rose."
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "Therefore, we postponed."
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "Nevertheless, we continued."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-conectores-avanzados-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "however",
+              "rule": "contraste · However, the plan failed.",
+              "examples": [
+                "However, the plan failed."
+              ]
+            },
+            {
+              "label": "furthermore",
+              "rule": "añadir · Furthermore, costs rose.",
+              "examples": [
+                "Furthermore, costs rose."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-conectores-avanzados-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "However it was late, but we stayed."
+            },
+            {
+              "variant": "good",
+              "text": "However, it was late, so we left.",
+              "note": "no mezcles however con but"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-conectores-avanzados-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Costs rose; ___, we raised prices.",
+      "options": [
+        "therefore",
+        "although"
+      ],
+      "answer": 0,
+      "explain": "Consecuencia lógica → therefore."
+    }
+  ]
+}

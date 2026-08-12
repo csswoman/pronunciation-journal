@@ -1,0 +1,213 @@
+{
+  "meta": {
+    "eyebrow": "C2 · Registro",
+    "title": "Cambio de",
+    "titleEmphasis": "registro",
+    "goal": "Ya pasas de formal a informal (y viceversa) ajustando densidad, pasiva, nominalización y phrasal verbs."
+  },
+  "cards": [
+    {
+      "id": "c2-cambio-registro-concept",
+      "tag": "Idea central",
+      "title": "Cambio de: qué expresa",
+      "lede": "Ya pasas de formal a informal (y viceversa) ajustando densidad, pasiva, nominalización y phrasal verbs.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Formal",
+              "value": "The implementation was delayed. · pasiva, nominalización",
+              "highlights": [
+                "implementation"
+              ]
+            },
+            {
+              "key": "Informal",
+              "value": "They put off rolling it out. · phrasal, activa",
+              "highlights": [
+                "put off"
+              ]
+            },
+            {
+              "key": "Variables",
+              "value": "densidad, contracciones, explicitud, evidencia",
+              "highlights": [
+                "formal",
+                "informal"
+              ]
+            },
+            {
+              "key": "Propósito",
+              "value": "misma información, distinta relación con la audiencia",
+              "highlights": [
+                "audience"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "c2-cambio-registro-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Formal",
+              "value": "The implementation was delayed. · pasiva, nominalización",
+              "highlights": [
+                "implementation"
+              ]
+            },
+            {
+              "key": "Informal",
+              "value": "They put off rolling it out. · phrasal, activa",
+              "highlights": [
+                "put off"
+              ]
+            },
+            {
+              "key": "Variables",
+              "value": "densidad, contracciones, explicitud, evidencia",
+              "highlights": [
+                "formal",
+                "informal"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-cambio-registro-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "pasiva, nominalización"
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "phrasal, activa"
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "densidad, contracciones, explicitud, evidencia"
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "misma información, distinta relación con la audiencia"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-cambio-registro-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Formal",
+              "rule": "The implementation was delayed. · pasiva, nominalización",
+              "examples": [
+                "pasiva, nominalización"
+              ]
+            },
+            {
+              "label": "Informal",
+              "rule": "They put off rolling it out. · phrasal, activa",
+              "examples": [
+                "phrasal, activa"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-cambio-registro-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "Hey, pursuant to our discussion…"
+            },
+            {
+              "variant": "good",
+              "text": "As we discussed… / Following our chat…",
+              "note": "alinea registro con canal y relación"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-cambio-registro-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Which is more formal?",
+      "options": [
+        "We need to look into it.",
+        "The matter requires investigation."
+      ],
+      "answer": 1,
+      "explain": "Nominalización + vocabulario latino = registro formal."
+    }
+  ]
+}

@@ -1,0 +1,211 @@
+{
+  "meta": {
+    "eyebrow": "C1 · Colocaciones",
+    "title": "Verbos",
+    "titleEmphasis": "delexicales",
+    "goal": "Ya combinas make/do/take/have con sustantivos en colocaciones fijas: make a decision, take responsibility."
+  },
+  "cards": [
+    {
+      "id": "c1-verbos-delexicales-concept",
+      "tag": "Idea central",
+      "title": "Verbos: qué expresa",
+      "lede": "Ya combinas make/do/take/have con sustantivos en colocaciones fijas: make a decision, take responsibility.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "make",
+              "value": "make a mistake · make progress · make an effort",
+              "highlights": [
+                "make"
+              ]
+            },
+            {
+              "key": "do",
+              "value": "do research · do your best · do business",
+              "highlights": [
+                "do"
+              ]
+            },
+            {
+              "key": "take",
+              "value": "take action · take responsibility · take a break",
+              "highlights": [
+                "take"
+              ]
+            },
+            {
+              "key": "have",
+              "value": "have a meeting · have an impact · have trouble",
+              "highlights": [
+                "have"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "c1-verbos-delexicales-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "make",
+              "value": "make a mistake · make progress · make an effort",
+              "highlights": [
+                "make"
+              ]
+            },
+            {
+              "key": "do",
+              "value": "do research · do your best · do business",
+              "highlights": [
+                "do"
+              ]
+            },
+            {
+              "key": "take",
+              "value": "take action · take responsibility · take a break",
+              "highlights": [
+                "take"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-verbos-delexicales-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "make progress"
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "do your best"
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "take responsibility"
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "have an impact"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-verbos-delexicales-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "make",
+              "rule": "make a mistake · make progress · make an effort",
+              "examples": [
+                "make progress"
+              ]
+            },
+            {
+              "label": "do",
+              "rule": "do research · do your best · do business",
+              "examples": [
+                "do your best"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-verbos-delexicales-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "do a decision"
+            },
+            {
+              "variant": "good",
+              "text": "make a decision",
+              "note": "colocación fija, no traducible palabra a palabra"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-verbos-delexicales-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "We need to ___ responsibility for the delay.",
+      "options": [
+        "take",
+        "make"
+      ],
+      "answer": 0,
+      "explain": "take responsibility es la colocación natural."
+    }
+  ]
+}

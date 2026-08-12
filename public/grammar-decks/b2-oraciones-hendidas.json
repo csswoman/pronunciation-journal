@@ -1,0 +1,213 @@
+{
+  "meta": {
+    "eyebrow": "B2 · Énfasis",
+    "title": "Oraciones",
+    "titleEmphasis": "hendidas",
+    "goal": "Ya destacas información con it-cleft y what-cleft."
+  },
+  "cards": [
+    {
+      "id": "b2-oraciones-hendidas-concept",
+      "tag": "Idea central",
+      "title": "Oraciones: qué expresa",
+      "lede": "Ya destacas información con it-cleft y what-cleft.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "It-cleft",
+              "value": "It was John who called.",
+              "highlights": [
+                "It was John who"
+              ]
+            },
+            {
+              "key": "What-cleft",
+              "value": "What I need is a break.",
+              "highlights": [
+                "What I need is"
+              ]
+            },
+            {
+              "key": "Énfasis",
+              "value": "resalta sujeto, objeto o adverbio",
+              "highlights": [
+                "who",
+                "what"
+              ]
+            },
+            {
+              "key": "All-cleft",
+              "value": "All I want is peace.",
+              "highlights": [
+                "All I want"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "b2-oraciones-hendidas-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "It-cleft",
+              "value": "It was John who called.",
+              "highlights": [
+                "It was John who"
+              ]
+            },
+            {
+              "key": "What-cleft",
+              "value": "What I need is a break.",
+              "highlights": [
+                "What I need is"
+              ]
+            },
+            {
+              "key": "Énfasis",
+              "value": "resalta sujeto, objeto o adverbio",
+              "highlights": [
+                "who",
+                "what"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-oraciones-hendidas-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "It was John who called."
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "What I need is a break."
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "resalta sujeto, objeto o adverbio"
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "All I want is peace."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-oraciones-hendidas-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "It-cleft",
+              "rule": "It was John who called.",
+              "examples": [
+                "It was John who called."
+              ]
+            },
+            {
+              "label": "What-cleft",
+              "rule": "What I need is a break.",
+              "examples": [
+                "What I need is a break."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-oraciones-hendidas-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "It was John called me."
+            },
+            {
+              "variant": "good",
+              "text": "It was John who called me.",
+              "note": "it-cleft necesita who/that"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-oraciones-hendidas-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "___ I can't stand is the noise.",
+      "options": [
+        "What",
+        "That"
+      ],
+      "answer": 0,
+      "explain": "What-cleft: What + cláusula + is/was."
+    }
+  ]
+}

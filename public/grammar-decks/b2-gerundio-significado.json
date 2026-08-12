@@ -1,0 +1,211 @@
+{
+  "meta": {
+    "eyebrow": "B2 · Gerundio vs infinitivo",
+    "title": "Cambio de",
+    "titleEmphasis": "significado",
+    "goal": "Ya distingues remember/stop/try con -ing o to según el significado."
+  },
+  "cards": [
+    {
+      "id": "b2-gerundio-significado-concept",
+      "tag": "Idea central",
+      "title": "Cambio de: qué expresa",
+      "lede": "Ya distingues remember/stop/try con -ing o to según el significado.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "stop + -ing",
+              "value": "dejar de · stop smoking",
+              "highlights": [
+                "stop smoking"
+              ]
+            },
+            {
+              "key": "stop + to",
+              "value": "parar para · stop to rest",
+              "highlights": [
+                "stop to rest"
+              ]
+            },
+            {
+              "key": "remember + -ing",
+              "value": "recordar hecho pasado · remember meeting her",
+              "highlights": [
+                "remember meeting"
+              ]
+            },
+            {
+              "key": "remember + to",
+              "value": "no olvidar · remember to call",
+              "highlights": [
+                "remember to call"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "b2-gerundio-significado-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "stop + -ing",
+              "value": "dejar de · stop smoking",
+              "highlights": [
+                "stop smoking"
+              ]
+            },
+            {
+              "key": "stop + to",
+              "value": "parar para · stop to rest",
+              "highlights": [
+                "stop to rest"
+              ]
+            },
+            {
+              "key": "remember + -ing",
+              "value": "recordar hecho pasado · remember meeting her",
+              "highlights": [
+                "remember meeting"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-gerundio-significado-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "stop smoking"
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "stop to rest"
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "remember meeting her"
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "remember to call"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-gerundio-significado-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "stop + -ing",
+              "rule": "dejar de · stop smoking",
+              "examples": [
+                "stop smoking"
+              ]
+            },
+            {
+              "label": "stop + to",
+              "rule": "parar para · stop to rest",
+              "examples": [
+                "stop to rest"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-gerundio-significado-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "I stopped to smoke."
+            },
+            {
+              "variant": "good",
+              "text": "I stopped smoking.",
+              "note": "dejar el hábito → stop + -ing"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-gerundio-significado-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Remember ___ the door when you leave.",
+      "options": [
+        "to lock",
+        "locking"
+      ],
+      "answer": 0,
+      "explain": "Acción futura que no debes olvidar → to."
+    }
+  ]
+}

@@ -1,0 +1,211 @@
+{
+  "meta": {
+    "eyebrow": "B2 · Pasiva",
+    "title": "Pasiva en",
+    "titleEmphasis": "todos los tiempos",
+    "goal": "Ya formas la voz pasiva en todos los tiempos verbales comunes."
+  },
+  "cards": [
+    {
+      "id": "b2-pasiva-completa-concept",
+      "tag": "Idea central",
+      "title": "Pasiva en: qué expresa",
+      "lede": "Ya formas la voz pasiva en todos los tiempos verbales comunes.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Presente",
+              "value": "is/are + pp · is made",
+              "highlights": [
+                "is made"
+              ]
+            },
+            {
+              "key": "Pasado",
+              "value": "was/were + pp · was built",
+              "highlights": [
+                "was built"
+              ]
+            },
+            {
+              "key": "Perfecto",
+              "value": "has been + pp · has been done",
+              "highlights": [
+                "has been"
+              ]
+            },
+            {
+              "key": "Modales",
+              "value": "can be + pp · must be finished",
+              "highlights": [
+                "can be"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "b2-pasiva-completa-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Presente",
+              "value": "is/are + pp · is made",
+              "highlights": [
+                "is made"
+              ]
+            },
+            {
+              "key": "Pasado",
+              "value": "was/were + pp · was built",
+              "highlights": [
+                "was built"
+              ]
+            },
+            {
+              "key": "Perfecto",
+              "value": "has been + pp · has been done",
+              "highlights": [
+                "has been"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-pasiva-completa-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "is made"
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "was built"
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "has been done"
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "must be finished"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-pasiva-completa-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Presente",
+              "rule": "is/are + pp · is made",
+              "examples": [
+                "is made"
+              ]
+            },
+            {
+              "label": "Pasado",
+              "rule": "was/were + pp · was built",
+              "examples": [
+                "was built"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-pasiva-completa-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "The house was build in 1990."
+            },
+            {
+              "variant": "good",
+              "text": "The house was built in 1990.",
+              "note": "pasiva → participio pasado"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-pasiva-completa-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "The report ___ by Friday.",
+      "options": [
+        "must be finished",
+        "must finish"
+      ],
+      "answer": 0,
+      "explain": "Obligación pasiva → must be + pp."
+    }
+  ]
+}

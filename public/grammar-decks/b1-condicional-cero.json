@@ -1,0 +1,211 @@
+{
+  "meta": {
+    "eyebrow": "B1 · Condicional cero",
+    "title": "Condicional",
+    "titleEmphasis": "cero",
+    "goal": "Ya expresas verdades generales y reglas con if + presente, presente."
+  },
+  "cards": [
+    {
+      "id": "b1-condicional-cero-concept",
+      "tag": "Idea central",
+      "title": "Condicional: qué expresa",
+      "lede": "Ya expresas verdades generales y reglas con if + presente, presente.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Estructura",
+              "value": "if + presente, presente · If you heat ice, it melts.",
+              "highlights": [
+                "If you heat"
+              ]
+            },
+            {
+              "key": "Reglas",
+              "value": "scientific facts · general truths",
+              "highlights": [
+                "melts"
+              ]
+            },
+            {
+              "key": "when",
+              "value": "When it rains, the streets get wet.",
+              "highlights": [
+                "When"
+              ]
+            },
+            {
+              "key": "unless",
+              "value": "unless = if not · a menos que",
+              "highlights": [
+                "unless"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "b1-condicional-cero-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Estructura",
+              "value": "if + presente, presente · If you heat ice, it melts.",
+              "highlights": [
+                "If you heat"
+              ]
+            },
+            {
+              "key": "Reglas",
+              "value": "scientific facts · general truths",
+              "highlights": [
+                "melts"
+              ]
+            },
+            {
+              "key": "when",
+              "value": "When it rains, the streets get wet.",
+              "highlights": [
+                "When"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-condicional-cero-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "If you heat ice, it melts."
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "general truths"
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "When it rains, the streets get wet."
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "a menos que"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-condicional-cero-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Estructura",
+              "rule": "if + presente, presente · If you heat ice, it melts.",
+              "examples": [
+                "If you heat ice, it melts."
+              ]
+            },
+            {
+              "label": "Reglas",
+              "rule": "scientific facts · general truths",
+              "examples": [
+                "general truths"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-condicional-cero-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "If you will heat ice, it melts."
+            },
+            {
+              "variant": "good",
+              "text": "If you heat ice, it melts.",
+              "note": "condicional cero: sin will tras if"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-condicional-cero-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "If water ___ to 100°C, it boils.",
+      "options": [
+        "is heated",
+        "will be heated"
+      ],
+      "answer": 0,
+      "explain": "Verdad general → presente en ambas partes."
+    }
+  ]
+}

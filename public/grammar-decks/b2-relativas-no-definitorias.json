@@ -1,0 +1,211 @@
+{
+  "meta": {
+    "eyebrow": "B2 · Relativas",
+    "title": "Cláusulas",
+    "titleEmphasis": "explicativas",
+    "goal": "Ya usas oraciones de relativo no definitorias con comas y who/which."
+  },
+  "cards": [
+    {
+      "id": "b2-relativas-no-definitorias-concept",
+      "tag": "Idea central",
+      "title": "Cláusulas: qué expresa",
+      "lede": "Ya usas oraciones de relativo no definitorias con comas y who/which.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Comas",
+              "value": "My brother, who lives in Rome, …",
+              "highlights": [
+                ","
+              ]
+            },
+            {
+              "key": "Información extra",
+              "value": "no define; solo añade detalle",
+              "highlights": [
+                "who"
+              ]
+            },
+            {
+              "key": "which",
+              "value": "The book, which I bought yesterday, …",
+              "highlights": [
+                "which"
+              ]
+            },
+            {
+              "key": "that",
+              "value": "no se usa that en no definitorias",
+              "highlights": [
+                "which"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "b2-relativas-no-definitorias-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Comas",
+              "value": "My brother, who lives in Rome, …",
+              "highlights": [
+                ","
+              ]
+            },
+            {
+              "key": "Información extra",
+              "value": "no define; solo añade detalle",
+              "highlights": [
+                "who"
+              ]
+            },
+            {
+              "key": "which",
+              "value": "The book, which I bought yesterday, …",
+              "highlights": [
+                "which"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-relativas-no-definitorias-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "My brother, who lives in Rome, …"
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "no define; solo añade detalle"
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "The book, which I bought yesterday, …"
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "no se usa that en no definitorias"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-relativas-no-definitorias-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Comas",
+              "rule": "My brother, who lives in Rome, …",
+              "examples": [
+                "My brother, who lives in Rome, …"
+              ]
+            },
+            {
+              "label": "Información extra",
+              "rule": "no define; solo añade detalle",
+              "examples": [
+                "no define; solo añade detalle"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-relativas-no-definitorias-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "My brother that lives in Rome…"
+            },
+            {
+              "variant": "good",
+              "text": "My brother, who lives in Rome,…",
+              "note": "información extra → comas + who"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-relativas-no-definitorias-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "London, ___ I visited last year, is huge.",
+      "options": [
+        "which",
+        "that"
+      ],
+      "answer": 0,
+      "explain": "No definitoria → which entre comas."
+    }
+  ]
+}

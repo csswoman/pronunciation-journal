@@ -1,0 +1,211 @@
+{
+  "meta": {
+    "eyebrow": "C2 · Cohesión",
+    "title": "Elipsis y sustitución",
+    "titleEmphasis": "avanzadas",
+    "goal": "Ya comprimes el discurso con elipsis sofisticada y sustitución con do so, not y one/ones en textos densos."
+  },
+  "cards": [
+    {
+      "id": "c2-elipsis-sustitucion-avanzada-concept",
+      "tag": "Idea central",
+      "title": "Elipsis y sustitución: qué expresa",
+      "lede": "Ya comprimes el discurso con elipsis sofisticada y sustitución con do so, not y one/ones en textos densos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Elipsis verbal",
+              "value": "A: Will you attend? B: I might. (= might attend)",
+              "highlights": [
+                "might"
+              ]
+            },
+            {
+              "key": "do so",
+              "value": "The firm may restructure if required to do so.",
+              "highlights": [
+                "do so"
+              ]
+            },
+            {
+              "key": "not",
+              "value": "Will it succeed? I hope not.",
+              "highlights": [
+                "not"
+              ]
+            },
+            {
+              "key": "Economía",
+              "value": "evita repetir cláusulas completas con elegancia",
+              "highlights": [
+                "do so"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "c2-elipsis-sustitucion-avanzada-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Elipsis verbal",
+              "value": "A: Will you attend? B: I might. (= might attend)",
+              "highlights": [
+                "might"
+              ]
+            },
+            {
+              "key": "do so",
+              "value": "The firm may restructure if required to do so.",
+              "highlights": [
+                "do so"
+              ]
+            },
+            {
+              "key": "not",
+              "value": "Will it succeed? I hope not.",
+              "highlights": [
+                "not"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-elipsis-sustitucion-avanzada-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "A: Will you attend? B: I might. (= might attend)"
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "The firm may restructure if required to do so."
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "Will it succeed? I hope not."
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "evita repetir cláusulas completas con elegancia"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-elipsis-sustitucion-avanzada-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Elipsis verbal",
+              "rule": "A: Will you attend? B: I might. (= might attend)",
+              "examples": [
+                "A: Will you attend? B: I might. (= might attend)"
+              ]
+            },
+            {
+              "label": "do so",
+              "rule": "The firm may restructure if required to do so.",
+              "examples": [
+                "The firm may restructure if required to do so."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-elipsis-sustitucion-avanzada-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "I hope no."
+            },
+            {
+              "variant": "good",
+              "text": "I hope not.",
+              "note": "not sustituye la cláusula negativa completa"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-elipsis-sustitucion-avanzada-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "The board may vote; shareholders are expected to do ___.",
+      "options": [
+        "so",
+        "it"
+      ],
+      "answer": 0,
+      "explain": "do so recupera la acción vote."
+    }
+  ]
+}

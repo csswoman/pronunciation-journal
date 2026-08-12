@@ -1,0 +1,211 @@
+{
+  "meta": {
+    "eyebrow": "B2 · Concesión",
+    "title": "Even though,",
+    "titleEmphasis": "while y whereas",
+    "goal": "Ya contrastas ideas con even though, while y whereas."
+  },
+  "cards": [
+    {
+      "id": "b2-concesion-concept",
+      "tag": "Idea central",
+      "title": "Even though,: qué expresa",
+      "lede": "Ya contrastas ideas con even though, while y whereas.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "even though",
+              "value": "aunque (énfasis) · Even though it rained…",
+              "highlights": [
+                "Even though"
+              ]
+            },
+            {
+              "key": "while",
+              "value": "mientras / aunque · While I agree…",
+              "highlights": [
+                "While"
+              ]
+            },
+            {
+              "key": "whereas",
+              "value": "mientras que (contraste) · whereas he prefers tea",
+              "highlights": [
+                "whereas"
+              ]
+            },
+            {
+              "key": "Posición",
+              "value": "pueden ir al inicio o en medio",
+              "highlights": [
+                "Even though"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "b2-concesion-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "even though",
+              "value": "aunque (énfasis) · Even though it rained…",
+              "highlights": [
+                "Even though"
+              ]
+            },
+            {
+              "key": "while",
+              "value": "mientras / aunque · While I agree…",
+              "highlights": [
+                "While"
+              ]
+            },
+            {
+              "key": "whereas",
+              "value": "mientras que (contraste) · whereas he prefers tea",
+              "highlights": [
+                "whereas"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-concesion-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "Even though it rained…"
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "While I agree…"
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "whereas he prefers tea"
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "pueden ir al inicio o en medio"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-concesion-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "even though",
+              "rule": "aunque (énfasis) · Even though it rained…",
+              "examples": [
+                "Even though it rained…"
+              ]
+            },
+            {
+              "label": "while",
+              "rule": "mientras / aunque · While I agree…",
+              "examples": [
+                "While I agree…"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-concesion-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "Even though it was late, but we stayed."
+            },
+            {
+              "variant": "good",
+              "text": "Even though it was late, we stayed.",
+              "note": "no uses but con even though"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-concesion-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "___ he is rich, he lives simply.",
+      "options": [
+        "Whereas",
+        "Because"
+      ],
+      "answer": 0,
+      "explain": "Contraste entre dos hechos → whereas."
+    }
+  ]
+}

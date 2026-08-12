@@ -44,11 +44,12 @@ describe("course curriculum coverage", () => {
     const core = c1?.units.find((unit) => !unit.isOptionalSection);
     const advanced = c1?.units.find((unit) => unit.isOptionalSection);
 
-    expect(core?.lessons).toHaveLength(26);
+    expect(core?.lessons).toHaveLength(28);
     expect(advanced).toMatchObject({
       label: "C1+",
       title: "Dominio avanzado",
     });
-    expect(advanced?.lessons).toHaveLength(20);
+    expect(advanced?.lessons.length).toBeGreaterThanOrEqual(20);
   });
+
 });

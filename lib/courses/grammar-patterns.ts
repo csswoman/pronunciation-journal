@@ -1,0 +1,254 @@
+import type { CefrLevelId } from "./types";
+
+/** One micro-pattern in the grammar spine (reference taxonomy). */
+export interface GrammarPattern {
+  id: string;
+  title: string;
+  /** Stable deck slug under public/grammar-decks/ */
+  deckSlug: string;
+  /**
+   * Pedagogical sequence within the level (1-based).
+   * `/courses/study/:n` follows `level-curriculum-order.ts`.
+   */
+  order: number;
+}
+
+const a1Patterns: GrammarPattern[] = [
+  { order: 1, id: "subject-pronouns", title: "Pronombres sujeto — I/you/he/she…", deckSlug: "a1-pronombres-sujeto" },
+  { order: 2, id: "to-be-present", title: "El verbo to be — am/is/are", deckSlug: "a1-verbo-to-be" },
+  { order: 3, id: "indefinite-articles", title: "Artículos indefinidos — a / an", deckSlug: "a1-articulos-basicos" },
+  { order: 4, id: "definite-article", title: "Artículo definido — the", deckSlug: "a1-articulos-basicos" },
+  { order: 5, id: "demonstratives", title: "Demostrativos — this/that/these/those", deckSlug: "a1-demostrativos" },
+  { order: 6, id: "plural-regular", title: "Sustantivos plurales — -s / -es", deckSlug: "a1-plurales" },
+  { order: 7, id: "plural-irregular", title: "Plurales irregulares — children/men/feet", deckSlug: "a1-plurales" },
+  { order: 8, id: "possessive-s", title: "Genitivo sajón — 's", deckSlug: "a1-genitivo-sajon" },
+  { order: 9, id: "possessive-adjectives", title: "Adjetivos posesivos — my/your/his…", deckSlug: "a1-posesivos" },
+  { order: 10, id: "present-simple-regular", title: "Presente simple — verbos regulares", deckSlug: "a1-presente-simple" },
+  { order: 11, id: "present-simple-third-s", title: "Presente simple — la -s de tercera persona", deckSlug: "a1-presente-simple" },
+  { order: 12, id: "present-simple-negative", title: "Presente simple negativo — don't/doesn't", deckSlug: "a1-presente-simple" },
+  { order: 13, id: "yes-no-questions", title: "Preguntas cerradas — do/does", deckSlug: "a1-preguntas-do-does" },
+  { order: 14, id: "wh-questions", title: "Palabras interrogativas — what/who/where…", deckSlug: "a1-palabras-interrogativas" },
+  { order: 15, id: "there-is-are", title: "There is / there are — hay", deckSlug: "a1-there-is-there-are" },
+  { order: 16, id: "how-much-many", title: "¿Cuánto? / ¿Cuántos?", deckSlug: "a1-cuanto-cuantos" },
+  { order: 17, id: "can", title: "Can — capacidad y permiso", deckSlug: "a1-can-capacidad-permiso" },
+  { order: 18, id: "have-got", title: "Have / have got — posesión", deckSlug: "a1-verbos-comunes" },
+  { order: 19, id: "object-pronouns", title: "Pronombres de objeto — me/him/her…", deckSlug: "a1-pronombres-objeto" },
+  { order: 20, id: "imperatives", title: "Imperativos", deckSlug: "a1-imperativo" },
+  { order: 21, id: "present-continuous", title: "Presente continuo — be + -ing", deckSlug: "a1-presente-continuo" },
+  { order: 22, id: "prep-place", title: "Preposiciones de lugar — in/on/under/at", deckSlug: "a1-preposiciones-lugar-tiempo" },
+  { order: 23, id: "prep-time", title: "Preposiciones de tiempo — in/on/at", deckSlug: "a1-preposiciones-lugar-tiempo" },
+  { order: 24, id: "frequency-adverbs", title: "Adverbios de frecuencia — always/usually/never", deckSlug: "a1-adverbios-frecuencia" },
+  { order: 25, id: "basic-conjunctions", title: "Conjunciones básicas — and/but/or", deckSlug: "a1-conjunciones-basicas" },
+  { order: 26, id: "countable-uncountable", title: "Sustantivos contables e incontables", deckSlug: "a1-contables-incontables" },
+  { order: 27, id: "like-ing", title: "Like/love/hate + -ing", deckSlug: "a1-preferencias-habilidades" },
+  { order: 28, id: "want-to", title: "Want to + infinitivo", deckSlug: "a1-verbos-comunes" },
+];
+
+const a2Patterns: GrammarPattern[] = [
+  { order: 1, id: "past-be", title: "Pasado simple — was/were", deckSlug: "a2-pasado-to-be" },
+  { order: 2, id: "past-simple-regular", title: "Pasado simple — verbos regulares (-ed)", deckSlug: "a2-experiencias-pasadas-planes" },
+  { order: 3, id: "past-simple-irregular", title: "Pasado simple — verbos irregulares", deckSlug: "a2-experiencias-pasadas-planes" },
+  { order: 4, id: "past-simple-questions", title: "Pasado simple — preguntas y negaciones (did)", deckSlug: "a2-experiencias-pasadas-planes" },
+  { order: 5, id: "past-continuous", title: "Pasado continuo — was/were + -ing", deckSlug: "a2-pasado-continuo" },
+  { order: 6, id: "when-while-past", title: "When/while con tiempos pasados", deckSlug: "a2-when-while-pasado" },
+  { order: 7, id: "present-perfect-intro", title: "Presente perfecto — ever/never", deckSlug: "a2-presente-perfecto-experiencias" },
+  { order: 8, id: "present-continuous-future", title: "Presente continuo para planes futuros", deckSlug: "a2-presente-continuo-futuro" },
+  { order: 9, id: "going-to", title: "Going to — planes futuros", deckSlug: "a2-will-going-to" },
+  { order: 10, id: "will", title: "Will — predicciones y decisiones", deckSlug: "a2-will-going-to" },
+  { order: 11, id: "comparatives", title: "Adjetivos comparativos — -er / more", deckSlug: "a2-descripciones-comparaciones" },
+  { order: 12, id: "superlatives", title: "Adjetivos superlativos — -est / most", deckSlug: "a2-cuantificadores-superlativos" },
+  { order: 13, id: "adjective-order", title: "Adjetivos antes del sustantivo", deckSlug: "a2-orden-adjetivos" },
+  { order: 14, id: "adverbs-ly", title: "Adverbios de modo — -ly", deckSlug: "a2-adverbios-expresiones-tiempo" },
+  { order: 15, id: "adverbs-degree", title: "Adverbios de grado — very/really/quite", deckSlug: "a2-adverbios-grado" },
+  { order: 16, id: "too-enough", title: "Too / enough", deckSlug: "a2-adverbios-expresiones-tiempo" },
+  { order: 17, id: "some-any", title: "Some / any", deckSlug: "a2-cuantificadores-esenciales" },
+  { order: 18, id: "much-many", title: "Much / many / a lot of", deckSlug: "a2-cuantificadores-esenciales" },
+  { order: 19, id: "few-little", title: "(A) few / (a) little", deckSlug: "a2-cuantificadores-superlativos" },
+  { order: 20, id: "possessive-pronouns", title: "Pronombres posesivos — mine/yours…", deckSlug: "a1-posesivos" },
+  { order: 21, id: "have-to", title: "Have to — obligación", deckSlug: "a2-obligacion-prohibicion" },
+  { order: 22, id: "must", title: "Must / mustn't", deckSlug: "a2-obligacion-prohibicion" },
+  { order: 23, id: "should", title: "Should / shouldn't — consejos", deckSlug: "a2-modales-consejo-posibilidad" },
+  { order: 24, id: "so-because", title: "So / because — causa y resultado", deckSlug: "a2-conjunciones-verbos" },
+  { order: 25, id: "infinitive-purpose", title: "Infinitivo de propósito — to + verbo", deckSlug: "a2-infinitivos-presente-continuo" },
+  { order: 26, id: "prep-movement", title: "Preposiciones de movimiento — to/into/through", deckSlug: "a1-audio-preposiciones" },
+  { order: 27, id: "reflexive-pronouns", title: "Pronombres reflexivos — myself/yourself…", deckSlug: "a2-pronombres-reflexivos" },
+  { order: 28, id: "one-ones", title: "One / ones — sustitución", deckSlug: "a2-one-ones" },
+];
+
+const b1Patterns: GrammarPattern[] = [
+  { order: 1, id: "articles-superlative-zero", title: "Artículos — superlativos y artículo cero", deckSlug: "b1-articulos-superlativos-cero" },
+  { order: 2, id: "comparative-modifiers", title: "Modificadores de comparativos — much/far/a bit + -er", deckSlug: "b1-modificadores-comparativos" },
+  { order: 3, id: "as-as", title: "Comparaciones — as … as / not as … as", deckSlug: "b1-comparativos-planes-futuros" },
+  { order: 4, id: "defining-relatives", title: "Oraciones de relativo especificativas — who/which/that", deckSlug: "b1-pronombres-clausulas-relativas" },
+  { order: 5, id: "dependent-prepositions", title: "Preposiciones dependientes — tras adjetivos/verbos", deckSlug: "b1-preposiciones-dependientes" },
+  { order: 6, id: "first-conditional", title: "Primer condicional", deckSlug: "b1-primer-condicional-pasado-continuo" },
+  { order: 7, id: "future-continuous", title: "Futuro continuo", deckSlug: "b1-futuro-continuo" },
+  { order: 8, id: "future-time-clauses", title: "Cláusulas de tiempo futuro — when/as soon as + presente", deckSlug: "b1-primer-condicional-pasado-continuo" },
+  { order: 9, id: "gerunds-infinitives", title: "Gerundios e infinitivos después de verbos", deckSlug: "b1-gerundios-infinitivos" },
+  { order: 10, id: "indirect-questions", title: "Preguntas indirectas", deckSlug: "b1-adjetivos-preguntas-indirectas" },
+  { order: 11, id: "contrast-connectors", title: "Conectores de contraste — although/however", deckSlug: "b1-conectores-discurso" },
+  { order: 12, id: "modals-deduction", title: "Modales de deducción — must/might/can't", deckSlug: "b1-modales-deduccion" },
+  { order: 13, id: "passive-voice", title: "Voz pasiva — presente y pasado simple", deckSlug: "b1-voz-pasiva-consejos" },
+  { order: 14, id: "past-perfect", title: "Pasado perfecto", deckSlug: "b1-pasado-perfecto" },
+  { order: 15, id: "phrasal-verbs", title: "Verbos frasales — separables e inseparables", deckSlug: "b1-phrasal-verbs-tipos" },
+  { order: 16, id: "present-perfect-continuous", title: "Presente perfecto continuo", deckSlug: "b1-presente-perfecto-continuo" },
+  { order: 17, id: "pp-vs-past-simple", title: "Presente perfecto vs pasado simple", deckSlug: "b1-presente-perfecto-preposiciones" },
+  { order: 18, id: "pp-for-since", title: "Presente perfecto con for / since", deckSlug: "b1-presente-perfecto-preposiciones" },
+  { order: 19, id: "quantifiers", title: "Cuantificadores — all/most/none/each/every", deckSlug: "b1-cuantificadores" },
+  { order: 20, id: "question-tags", title: "Coletillas interrogativas", deckSlug: "b1-confirmacion-posibilidades" },
+  { order: 21, id: "reported-statements", title: "Estilo indirecto — afirmaciones", deckSlug: "b1-estilo-indirecto" },
+  { order: 22, id: "second-conditional", title: "Segundo condicional", deckSlug: "b1-segundo-condicional" },
+  { order: 23, id: "verb-patterns-ing", title: "Patrones de verbos — stop/remember/try + -ing/infinitivo", deckSlug: "b1-gerundios-infinitivos" },
+  { order: 24, id: "zero-conditional", title: "Condicional cero", deckSlug: "b1-condicional-cero" },
+  { order: 25, id: "both-either-neither", title: "Both / either / neither", deckSlug: "b1-both-either-neither" },
+  { order: 26, id: "make-let-allow", title: "Make / let / allow", deckSlug: "b1-make-let-allow" },
+  { order: 27, id: "used-to", title: "Used to — hábitos y estados pasados", deckSlug: "b1-habitos-pasados" },
+  { order: 28, id: "wish-present", title: "Wish + pasado simple — lamentos sobre el presente", deckSlug: "b1-wish-presente" },
+  { order: 29, id: "would-past-habits", title: "Would — acciones repetidas en el pasado", deckSlug: "b1-habitos-pasados" },
+];
+
+const b2Patterns: GrammarPattern[] = [
+  { order: 1, id: "advanced-connectors", title: "Conectores avanzados — however/furthermore/therefore", deckSlug: "b2-conectores-avanzados" },
+  { order: 2, id: "causative", title: "Causativa — hacer que algo se haga", deckSlug: "b2-causativo" },
+  { order: 3, id: "cleft-sentences", title: "Oraciones hendidas — it-cleft y what-cleft", deckSlug: "b2-oraciones-hendidas" },
+  { order: 4, id: "concession", title: "Oraciones de concesión — even though/while/whereas", deckSlug: "b2-concesion" },
+  { order: 5, id: "conditional-connectors", title: "Conectores condicionales — unless/provided/as long as", deckSlug: "b2-conectores-condicionales" },
+  { order: 6, id: "emphasis-auxiliaries", title: "Énfasis — auxiliares do/does/did", deckSlug: "b2-enfasis-auxiliares" },
+  { order: 7, id: "future-perfect", title: "Futuro perfecto", deckSlug: "b2-futuro-perfecto-continuo" },
+  { order: 8, id: "future-perfect-continuous", title: "Futuro perfecto continuo", deckSlug: "b2-futuro-perfecto-continuo" },
+  { order: 9, id: "gerund-infinitive-meaning", title: "Gerundio vs infinitivo — cambio de significado", deckSlug: "b2-gerundio-significado" },
+  { order: 10, id: "inversion-negative-adverbs", title: "Inversión tras adverbios negativos", deckSlug: "b2-inversion-enfasis" },
+  { order: 11, id: "mixed-conditionals", title: "Condicionales mixtos", deckSlug: "b2-condicionales-mixtos" },
+  { order: 12, id: "non-defining-relatives", title: "Cláusulas relativas explicativas", deckSlug: "b2-relativas-no-definitorias" },
+  { order: 13, id: "participle-clauses", title: "Cláusulas de participio", deckSlug: "b2-clausulas-participio" },
+  { order: 14, id: "passive-reporting", title: "Reportaje pasivo — it is said that…", deckSlug: "b2-pasiva-reportada" },
+  { order: 15, id: "passive-all-tenses", title: "Voz pasiva — todos los tiempos", deckSlug: "b2-pasiva-completa" },
+  { order: 16, id: "perfect-modals", title: "Modales perfectos — should/must/could have + pp", deckSlug: "b2-modales-pasado" },
+  { order: 17, id: "relatives-prepositions", title: "Relativas con preposiciones y cuantificadores", deckSlug: "b2-relativas-preposiciones" },
+  { order: 18, id: "reported-questions-commands", title: "Estilo indirecto — preguntas y órdenes", deckSlug: "b2-discurso-indirecto-condicionales" },
+  { order: 19, id: "result-clauses", title: "Oraciones de resultado — so/such … that", deckSlug: "b2-oraciones-resultado" },
+  { order: 20, id: "third-conditional", title: "Condicional del tercero", deckSlug: "b2-tercer-condicional" },
+  { order: 21, id: "unreal-past", title: "Pasado irreal — it's time / would rather / as if", deckSlug: "b2-deseos-arrepentimientos" },
+  { order: 22, id: "verb-object-ing", title: "Verbo + objeto + infinitivo/gerundio", deckSlug: "b2-verbo-objeto-gerundio" },
+  { order: 23, id: "despite-in-spite", title: "Despite / in spite of vs although", deckSlug: "b2-despite-in-spite" },
+  { order: 24, id: "neednt-have", title: "Needn't have vs didn't need to", deckSlug: "b2-modales-pasado" },
+  { order: 25, id: "wish-past-perfect", title: "Wish / if only — lamentos sobre el pasado", deckSlug: "b2-deseos-arrepentimientos" },
+];
+
+const c1Patterns: GrammarPattern[] = [
+  { order: 1, id: "cohesion-reference", title: "Cohesión y referencia avanzada", deckSlug: "c1-cohesion-discurso" },
+  { order: 2, id: "double-comparatives", title: "Comparativos dobles — the … the …", deckSlug: "c1-comparativos-dobles" },
+  { order: 3, id: "cleft-pseudo-cleft", title: "Oraciones de escisión y pseudoescisión", deckSlug: "c1-cleft-estructura-informativa" },
+  { order: 4, id: "complex-relatives", title: "Estructuras relativas complejas", deckSlug: "c1-relativas-complejas" },
+  { order: 5, id: "delexical-verbs", title: "Verbos delexicales — make/do/take/have", deckSlug: "c1-verbos-delexicales" },
+  { order: 6, id: "discourse-markers", title: "Marcadores del discurso — nivel avanzado", deckSlug: "c1-marcadores-discurso" },
+  { order: 7, id: "ellipsis-substitution", title: "Elipsis y sustitución", deckSlug: "c1-elipsis-sustitucion-referencia" },
+  { order: 8, id: "fronting-emphasis", title: "Anteposición para énfasis", deckSlug: "c1-anteposicion-enfasis" },
+  { order: 9, id: "future-in-past", title: "Futuro en el pasado — was going to / would", deckSlug: "c1-futuro-en-pasado" },
+  { order: 10, id: "hedging-caution", title: "Lenguaje de cautela y atenuación", deckSlug: "c1-hedging-matices" },
+  { order: 11, id: "inversion-full", title: "Inversión — barely / not only / under no circumstances", deckSlug: "c1-enfasis-inversion-avanzada" },
+  { order: 12, id: "modal-nuance", title: "Matices modales — will/would y may/might", deckSlug: "c1-matices-modales" },
+  { order: 13, id: "nominalization", title: "Nominalización", deckSlug: "c1-nominalizacion" },
+  { order: 14, id: "participle-clauses", title: "Oraciones de participio — perfecto y pasivo", deckSlug: "c1-clausulas-reducidas-participiales" },
+  { order: 15, id: "advanced-phrasals", title: "Verbos frasales avanzados e idiomáticos", deckSlug: "c1-phrasal-verbs-avanzados" },
+  { order: 16, id: "formal-subjunctive", title: "Subjuntivo — suggest/insist/demand + base", deckSlug: "c1-subjuntivo-formal" },
+  { order: 17, id: "unreal-past-advanced", title: "Pasado irreal — usos avanzados", deckSlug: "c1-pasado-irreal-avanzado" },
+];
+
+const c2Patterns: GrammarPattern[] = [
+  { order: 1, id: "ellipsis-substitution-advanced", title: "Elipsis y sustitución avanzadas", deckSlug: "c2-elipsis-sustitucion-avanzada" },
+  { order: 2, id: "complex-noun-phrases", title: "Sintagmas nominales complejos", deckSlug: "c2-sintagmas-nominales" },
+  { order: 3, id: "concessive-advanced", title: "Estructuras concesivas y contrastivas avanzadas", deckSlug: "c2-concesion-avanzada" },
+  { order: 4, id: "idiomatic-conditionals", title: "Condicionales idiomáticas y elípticas", deckSlug: "c2-condicionales-idiomaticas" },
+  { order: 5, id: "literary-inversion", title: "Inversión literaria y enfática", deckSlug: "c2-inversion-literaria" },
+  { order: 6, id: "topicalization", title: "Orden de palabras marcado y topicalización", deckSlug: "c2-topicalizacion" },
+  { order: 7, id: "nuanced-modality", title: "Modalidad matizada — especulación y deducción", deckSlug: "c2-modalidad-matizada" },
+  { order: 8, id: "pragmatic-markers", title: "Marcadores pragmáticos y posicionamiento", deckSlug: "c2-marcadores-pragmaticos" },
+  { order: 9, id: "register-shift", title: "Cambio de registro — formal ↔ informal", deckSlug: "c2-cambio-registro" },
+  { order: 10, id: "stylistic-passive", title: "Pasiva estilística e impersonales", deckSlug: "c2-pasiva-estilistica" },
+  { order: 11, id: "formulaic-subjunctive", title: "Subjuntivo — expresiones fijas y formulaicas", deckSlug: "c2-subjuntivo-formulas" },
+];
+
+export type GrammarPatternLevel = "a1" | "a2" | "b1" | "b2" | "c1";
+
+export const GRAMMAR_PATTERNS_BY_LEVEL: Record<GrammarPatternLevel, readonly GrammarPattern[]> = {
+  a1: a1Patterns,
+  a2: a2Patterns,
+  b1: b1Patterns,
+  b2: b2Patterns,
+  // In the app there is no dedicated "c2" level. We still want the C2 content, so we merge it into the C1 spine.
+  c1: [...c1Patterns, ...c2Patterns],
+};
+
+/** Deck slugs that were added to fill pattern gaps (new JSON under public/grammar-decks/). */
+export const NEW_PATTERN_DECK_SLUGS = [
+  "a1-pronombres-sujeto",
+  "a1-demostrativos",
+  "a1-genitivo-sajon",
+  "a1-palabras-interrogativas",
+  "a1-cuanto-cuantos",
+  "a1-presente-continuo",
+  "a1-conjunciones-basicas",
+  "a1-contables-incontables",
+  "a1-adverbios-frecuencia",
+  "a2-pasado-to-be",
+  "a2-pasado-continuo",
+  "a2-presente-continuo-futuro",
+  "a2-when-while-pasado",
+  "a2-pronombres-reflexivos",
+  "a2-one-ones",
+  "a2-adverbios-grado",
+  "b1-articulos-superlativos-cero",
+  "b1-modificadores-comparativos",
+  "b1-preposiciones-dependientes",
+  "b1-futuro-continuo",
+  "b1-pasado-perfecto",
+  "b1-condicional-cero",
+  "b1-both-either-neither",
+  "b1-make-let-allow",
+  "b1-wish-presente",
+  "b1-cuantificadores",
+  "b2-conectores-avanzados",
+  "b2-oraciones-hendidas",
+  "b2-concesion",
+  "b2-conectores-condicionales",
+  "b2-enfasis-auxiliares",
+  "b2-gerundio-significado",
+  "b2-condicionales-mixtos",
+  "b2-relativas-no-definitorias",
+  "b2-pasiva-reportada",
+  "b2-pasiva-completa",
+  "b2-relativas-preposiciones",
+  "b2-oraciones-resultado",
+  "b2-verbo-objeto-gerundio",
+  "b2-despite-in-spite",
+  "c1-comparativos-dobles",
+  "c1-relativas-complejas",
+  "c1-verbos-delexicales",
+  "c1-marcadores-discurso",
+  "c1-anteposicion-enfasis",
+  "c1-futuro-en-pasado",
+  "c1-matices-modales",
+  "c1-phrasal-verbs-avanzados",
+  "c1-subjuntivo-formal",
+  "c1-pasado-irreal-avanzado",
+  "c2-elipsis-sustitucion-avanzada",
+  "c2-sintagmas-nominales",
+  "c2-concesion-avanzada",
+  "c2-condicionales-idiomaticas",
+  "c2-inversion-literaria",
+  "c2-topicalizacion",
+  "c2-modalidad-matizada",
+  "c2-marcadores-pragmaticos",
+  "c2-cambio-registro",
+  "c2-pasiva-estilistica",
+  "c2-subjuntivo-formulas",
+] as const;
+
+export function patternsForLevel(level: GrammarPatternLevel): readonly GrammarPattern[] {
+  return GRAMMAR_PATTERNS_BY_LEVEL[level];
+}
+
+export function uniqueDeckSlugsForLevel(level: GrammarPatternLevel): string[] {
+  return [...new Set(patternsForLevel(level).map((p) => p.deckSlug))];
+}

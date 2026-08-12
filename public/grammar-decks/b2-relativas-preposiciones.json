@@ -1,0 +1,211 @@
+{
+  "meta": {
+    "eyebrow": "B2 · Relativas",
+    "title": "Relativas con",
+    "titleEmphasis": "preposiciones",
+    "goal": "Ya colocas preposiciones al final o antes del relativo en estilo formal."
+  },
+  "cards": [
+    {
+      "id": "b2-relativas-preposiciones-concept",
+      "tag": "Idea central",
+      "title": "Relativas con: qué expresa",
+      "lede": "Ya colocas preposiciones al final o antes del relativo en estilo formal.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Al final",
+              "value": "the person I spoke to · informal",
+              "highlights": [
+                "spoke to"
+              ]
+            },
+            {
+              "key": "Formal",
+              "value": "the person to whom I spoke",
+              "highlights": [
+                "to whom"
+              ]
+            },
+            {
+              "key": "whose",
+              "value": "the student whose essay won",
+              "highlights": [
+                "whose"
+              ]
+            },
+            {
+              "key": "quantifiers",
+              "value": "many of whom, most of which",
+              "highlights": [
+                "of whom"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "b2-relativas-preposiciones-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Al final",
+              "value": "the person I spoke to · informal",
+              "highlights": [
+                "spoke to"
+              ]
+            },
+            {
+              "key": "Formal",
+              "value": "the person to whom I spoke",
+              "highlights": [
+                "to whom"
+              ]
+            },
+            {
+              "key": "whose",
+              "value": "the student whose essay won",
+              "highlights": [
+                "whose"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-relativas-preposiciones-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "informal"
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "the person to whom I spoke"
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "the student whose essay won"
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "many of whom, most of which"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-relativas-preposiciones-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Al final",
+              "rule": "the person I spoke to · informal",
+              "examples": [
+                "informal"
+              ]
+            },
+            {
+              "label": "Formal",
+              "rule": "the person to whom I spoke",
+              "examples": [
+                "the person to whom I spoke"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-relativas-preposiciones-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "the person to who I spoke"
+            },
+            {
+              "variant": "good",
+              "text": "the person who I spoke to",
+              "note": "who no lleva preposición delante en uso cotidiano"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-relativas-preposiciones-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "The colleagues ___ I work with are great.",
+      "options": [
+        "who/that",
+        "whose"
+      ],
+      "answer": 0,
+      "explain": "Sujeto/objeto de la relativa → who/that."
+    }
+  ]
+}
