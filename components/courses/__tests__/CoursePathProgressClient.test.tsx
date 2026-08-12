@@ -23,11 +23,28 @@ vi.mock("@/lib/supabase/client", () => ({
   getSupabaseBrowserClient: () => ({ auth: { getUser: async () => ({ data: { user: { id: "user-1" } } }) } }),
 }));
 
+vi.mock("@/hooks/useLoadingWords", () => ({
+  useLoadingWords: () => [{ text: "thought", ipa: "/θɔːt/" }],
+}));
+
+vi.mock("@/components/practice/session/WordCarousel", () => ({
+  WordCarousel: () => <div data-testid="page-loader">Cargando…</div>,
+}));
+
 import CoursePathProgressClient from "../CoursePathProgressClient";
 
 describe("CoursePathProgressClient", () => {
   beforeEach(() => {
     bulkGet.mockReset();
+  });
+
+  it("shows the centered page loader while progress hydrates", () => {
+    bulkGet.mockImplementation(() => new Promise(() => {}));
+
+    render(<CoursePathProgressClient level={COURSE_PATH_CURRICULUM.levels[0]} />);
+
+    expect(screen.getByLabelText("Comprobando tu progreso")).toBeInTheDocument();
+    expect(screen.getByTestId("page-loader")).toBeInTheDocument();
   });
 
   it("shows the first lesson CTA when there is no local progress", async () => {

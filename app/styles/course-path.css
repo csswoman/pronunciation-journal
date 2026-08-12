@@ -20,7 +20,8 @@
 
 .course-path__wrap--shell {
   padding-inline: 0;
-  padding-top: 0;
+  /* Extra top air: page-shell already pads, but this page no longer has a PageHeader */
+  padding-top: var(--layout-page-block);
 }
 
 .course-path__desktop-layout {
@@ -1046,38 +1047,6 @@
   opacity: 0.72;
 }
 
-/* Loading skeleton */
-.course-path__load-skeleton {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  padding: var(--space-6) 0;
-}
-
-@keyframes course-path-shimmer {
-  from { background-position: 200% 0; }
-  to   { background-position: -200% 0; }
-}
-
-.course-path__skeleton-bar {
-  height: 48px;
-  border-radius: var(--radius-md);
-  background: linear-gradient(
-    90deg,
-    var(--surface-sunken) 25%,
-    color-mix(in oklch, var(--surface-sunken) 60%, var(--surface-raised)) 50%,
-    var(--surface-sunken) 75%
-  );
-  background-size: 200% 100%;
-  animation: course-path-shimmer 1.4s ease-in-out infinite;
-}
-
-.course-path__skeleton-bar--head {
-  height: 32px;
-  width: 55%;
-  border-radius: var(--radius-sm);
-}
-
 /* Error state */
 .course-path__load-error {
   display: flex;
@@ -1097,16 +1066,12 @@
 
 .course-path__progress-loading {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: var(--space-3);
-  min-height: 4rem;
+  justify-content: center;
+  min-height: min(24rem, 50dvh);
   margin-bottom: var(--space-4);
-  color: var(--text-secondary);
-  font-size: var(--text-size-body-sm);
-}
-
-.course-path__progress-loading .course-path__skeleton-bar {
-  flex: 0 0 8rem;
+  padding-block: var(--space-8);
 }
 
 .course-path__load-retry {
@@ -1463,7 +1428,6 @@
 
 @media (max-width: 480px) {
   .course-path__wrap {
-    padding-top: var(--space-5);
     padding-inline: var(--space-3);
     padding-bottom: var(--space-12);
   }
@@ -1865,10 +1829,6 @@
 /* ── Reduced motion ──────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
-  .course-path__skeleton-bar {
-    animation: none;
-  }
-
   .course-path__panel-enter {
     animation: none;
   }

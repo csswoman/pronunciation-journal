@@ -156,95 +156,77 @@
   grid-column: 1 / -1;
 }
 
-/* ── Article internals ────────────────────────────────────────────────────── */
+/* ── Article internals (open canvas + dashboard rail) ─────────────────────── */
 
-/* Article gets a narrower reading container with a white card surface */
-.mini-lessons--article .mini-lessons__wrap {
-  max-width: 1180px;
-  gap: 0;
-  padding: 24px 0 56px;
+/* Keep reading column + rail as one proximate unit (avoid a dead mid-gutter) */
+.mini-lessons--article .page-dashboard {
+  gap: var(--space-8);
+  max-width: calc(42rem + var(--layout-rail-max) + var(--space-8));
+  width: 100%;
 }
 
-@media (max-width: 640px) {
-  .mini-lessons--article .mini-lessons__wrap {
-    padding: 16px 0 40px;
-  }
-}
-
-/* Back link sits 20px above the hero; subsequent spacing governed by sections */
-.mini-lessons--article .mini-lessons__back {
-  display: inline-block;
-  margin-bottom: 20px;
-}
-
-.mini-lessons__article-hero {
+.mini-lessons__article-intro {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding-top: 8px;
-  padding-bottom: 32px;
+  gap: var(--layout-stack-tight);
+  padding-bottom: var(--layout-section-gap);
   border-bottom: 1px solid var(--border-subtle);
+}
+
+.mini-lessons--article .mini-lessons__back {
+  display: inline-flex;
+  align-self: flex-start;
+  margin-bottom: var(--space-1);
+}
+
+.mini-lessons--article .page-header {
+  max-width: 42rem;
 }
 
 .mini-lessons__article-badges {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-2);
   flex-wrap: wrap;
-  margin-bottom: 28px;
+  margin-top: var(--space-1);
 }
 
-.mini-lessons__article-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(220px, 272px);
-  align-items: start;
-  gap: 48px;
-}
-
+/* Reading column: no card shell — proximity + measure create structure */
 .mini-lessons__article-main {
   min-width: 0;
-  padding: 8px 48px 44px;
-  background: var(--surface-raised);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--ml-radius);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
 }
 
 /* Anchor navigation gets a calm, short landing cue. */
 .mini-lessons--article :is([id^="lesson-section-"], #lesson-examples, #lesson-exercises, #lesson-quiz) {
-  scroll-margin-top: 24px;
+  scroll-margin-top: var(--space-6);
 }
 
 .mini-lessons--article :is([id^="lesson-section-"], #lesson-examples, #lesson-exercises, #lesson-quiz):target {
   animation: ml-anchor-focus 520ms ease-out;
 }
 
-.mini-lessons__article-aside {
-  position: sticky;
-  top: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 20px;
-  background: var(--surface-raised);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--ml-radius);
+/* Rail: quiet sticky companion — no second card */
+.mini-lessons--article .page-dashboard__rail {
+  gap: var(--space-5);
+  padding-block: var(--space-1);
 }
 
 .mini-lessons__aside-kicker {
   display: block;
-  margin-bottom: 12px;
+  margin-bottom: var(--space-3);
   color: var(--text-tertiary);
-  font-family: var(--font-mono), monospace;
-  font-size: var(--text-size-xxs);
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font: var(--font-kicker);
   text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 .mini-lessons__contents-list {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-1);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -257,14 +239,15 @@
 
 .mini-lessons__contents-list a {
   display: grid;
-  grid-template-columns: 20px minmax(0, 1fr);
-  gap: 8px;
-  padding: 7px 8px;
-  border-radius: var(--radius-sm, 8px);
+  grid-template-columns: 1.5rem minmax(0, 1fr);
+  gap: var(--space-2);
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
   color: var(--text-secondary);
   font-size: var(--text-size-caption);
   line-height: 1.35;
   text-decoration: none;
+  overflow-wrap: anywhere;
   transition: background-color 150ms ease-out, color 150ms ease-out;
 }
 
@@ -272,7 +255,7 @@
   content: counter(lesson-content, decimal-leading-zero);
   color: var(--text-tertiary);
   font-family: var(--font-mono), monospace;
-  font-size: var(--text-size-xxs);
+  font-size: var(--text-size-kicker);
   padding-top: 1px;
 }
 
@@ -301,17 +284,19 @@
 .mini-lessons__lesson-link {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 5px 8px;
-  padding: 12px;
-  border-radius: var(--ml-radius-sm);
+  gap: var(--space-1) var(--space-2);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
   background: var(--ml-accent-soft);
   color: var(--text-secondary);
-  font-size: var(--text-size-tiny);
+  font-size: var(--text-size-caption);
   text-decoration: none;
+  transition: color 150ms ease-out, background-color 150ms ease-out;
 }
 
 .mini-lessons__lesson-link:hover {
   color: var(--text-primary);
+  background: color-mix(in oklch, var(--primary) 18%, transparent);
 }
 
 .mini-lessons__lesson-link strong {
@@ -321,20 +306,24 @@
   line-height: 1.35;
 }
 
-@media (max-width: 900px) {
-  .mini-lessons__article-layout {
-    grid-template-columns: 1fr;
-    gap: 24px;
+/* Mobile: TOC before reading; hide “next” (footer already covers it) */
+@media (max-width: 767px) {
+  .mini-lessons--article .page-dashboard:has(> .page-dashboard__rail) {
+    display: flex;
+    flex-direction: column;
   }
 
-  .mini-lessons__article-aside {
-    position: static;
+  .mini-lessons--article .page-dashboard__rail {
     order: -1;
+    position: static;
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid var(--border-subtle);
   }
 
   .mini-lessons__contents-list {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-1);
   }
 
   .mini-lessons__aside-divider,
@@ -344,18 +333,9 @@
 }
 
 @media (max-width: 640px) {
-  .mini-lessons__article-main {
-    padding: 4px 20px 32px;
-    border-radius: var(--ml-radius-sm);
-  }
-
-  .mini-lessons__article-aside {
-    padding: 16px;
-    border-radius: var(--ml-radius-sm);
-  }
-
   .mini-lessons__contents-list {
     display: flex;
+    flex-direction: column;
   }
 }
 
@@ -363,73 +343,56 @@
 .mini-lessons__section {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-}
-
-.mini-lessons--article .mini-lessons__section {
-  padding-top: 36px;
-}
-
-/* First content section gets extra presence — it's the core concept */
-.mini-lessons--article .mini-lessons__section:first-of-type {
-  padding-top: 44px;
-}
-
-.mini-lessons--article .mini-lessons__section:first-of-type .mini-lessons__section-title {
-  font-size: var(--text-size-display-word);
+  gap: var(--space-3);
 }
 
 .mini-lessons__section--examples {
-  gap: 14px;
-}
-
-.mini-lessons--article .mini-lessons__section--examples {
-  padding: 36px 0 0;
-}
-
-.mini-lessons__section--examples > .mini-lessons__section-title {
-  margin-bottom: 2px;
+  gap: var(--space-3);
 }
 
 .mini-lessons__examples {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 0;
   background: var(--surface-sunken);
-  border-radius: var(--ml-radius-sm);
-  padding: 16px;
+  border-radius: var(--radius-md);
+  padding: var(--space-1) var(--space-4);
 }
 
 .mini-lessons__example {
-  padding: 12px 14px;
+  padding: var(--space-3) 0;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-1);
 }
 
-/* Tip aside: extra breathing room above and below */
+.mini-lessons__example + .mini-lessons__example {
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* Tip: quiet callout between sections */
 .mini-lessons--article .mini-lessons__tip {
-  margin-top: 44px;
+  margin: 0;
 }
 
 .mini-lessons__block {
-  padding: 14px 16px;
+  padding: var(--space-3) var(--space-4);
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--space-3);
 }
 
 .mini-lessons__quiz {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 .mini-lessons__quiz-answer {
-  padding: 12px 16px;
+  padding: var(--space-3) var(--space-4);
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-1);
 }
 
 .mini-lessons__eyebrow {
@@ -729,44 +692,35 @@
 
 /* ── Article view ─────────────────────────────────────────────────────────── */
 
-.mini-lessons__article-title {
-  font-family: var(--font-sans), sans-serif;
-  font-size: var(--text-size-ipa-hero);
-  font-weight: 480;
-  letter-spacing: -0.02em;
-  color: var(--text-primary);
-}
-
-.mini-lessons__article-subtitle {
-  font-size: var(--text-size-body-lg);
-  color: var(--text-secondary);
-  max-width: 65ch;
-}
-
 .mini-lessons__section-title {
   font-family: var(--font-sans), sans-serif;
-  font-size: var(--text-size-h3);
-  font-weight: 480;
+  font-size: var(--text-size-h4);
+  font-weight: 600;
+  letter-spacing: -0.01em;
   color: var(--text-primary);
+  text-wrap: balance;
 }
 
 .mini-lessons__section-body {
-  font-size: var(--text-size-label);
+  font-size: var(--text-size-body);
+  line-height: 1.6;
   color: var(--text-secondary);
   white-space: pre-wrap;
   max-width: 65ch;
+  text-wrap: pretty;
 }
 
-
-.mini-lessons__example {
-  border-radius: var(--ml-radius-sm);
-  border: 1px solid var(--border-subtle);
-  background: var(--surface-raised);
+.mini-lessons__examples,
+.mini-lessons__tip,
+.mini-lessons__block,
+.mini-lessons__quiz {
+  max-width: 42rem;
 }
 
 .mini-lessons__example-en {
   font-family: var(--font-sans), sans-serif;
-  font-size: var(--text-size-body-lg);
+  font-size: var(--text-size-body);
+  font-weight: 500;
   color: var(--text-primary);
   font-optical-sizing: auto;
 }
@@ -797,15 +751,15 @@
 
 /* Tip aside */
 .mini-lessons__tip {
-  border-radius: var(--ml-radius-sm);
+  border-radius: var(--radius-md);
   border: 1px solid color-mix(in oklch, var(--warning) 35%, transparent);
   background: var(--warning-soft);
   font-size: var(--text-size-body-sm);
   color: var(--text-primary);
   display: flex;
-  gap: 12px;
+  gap: var(--space-3);
   align-items: flex-start;
-  padding: 14px 16px;
+  padding: var(--space-3) var(--space-4);
 }
 
 .mini-lessons__tip-icon {
@@ -1143,14 +1097,15 @@
 
 /* Footer */
 .mini-lessons__footer {
-  margin-top: 52px;
-  padding-top: 28px;
+  margin-top: var(--space-4);
+  padding-top: var(--space-6);
   border-top: 1px solid var(--border-subtle);
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: var(--space-3);
+  max-width: 42rem;
 }
 
 .mini-lessons__btn {
@@ -1245,7 +1200,7 @@
 }
 
 /* Article entrance */
-.mini-lessons--article .mini-lessons__article-hero {
+.mini-lessons--article .mini-lessons__article-intro {
   animation: ml-fade-up 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
@@ -1266,7 +1221,7 @@
   .mini-lessons__toolbar,
   .mini-lessons__card,
   .mini-lessons__empty,
-  .mini-lessons--article .mini-lessons__article-hero,
+  .mini-lessons--article .mini-lessons__article-intro,
   .mini-lessons--article .mini-lessons__section {
     animation-duration: 0.01ms !important;
     animation-delay: 0ms !important;

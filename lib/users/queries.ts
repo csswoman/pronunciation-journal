@@ -22,13 +22,14 @@ export async function getUserPreferences(
   authMetadata?: Record<string, unknown> | null,
 ): Promise<UserPreferences> {
   const supabase = getSupabaseBrowserClient();
+  // maybeSingle: missing profile is valid (new/anonymous users); .single() → HTTP 406.
   const { data, error } = await supabase
     .from("user_profiles")
     .select("display_name, cefr_level, interests")
     .eq("id", userId)
-    .single();
+    .maybeSingle();
 
-  if (error && error.code !== "PGRST116") throw error;
+  if (error) throw error;
 
   return {
     full_name: data?.display_name || metadataString(authMetadata?.full_name) || "",
