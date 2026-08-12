@@ -7,11 +7,12 @@
 //   <footer actions />
 // </LearningFocusTopicsSheet>
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { COURSE_PATH_CURRICULUM } from '@/lib/courses/curriculum'
 import type { AssessmentConcept } from '@/lib/courses/concept-profile'
 import type { CefrLevelId } from '@/lib/courses/types'
 import { cn } from '@/lib/cn'
+import { useDialogFocus } from '@/hooks/useDialogFocus'
 import type { FocusLevel } from '@/lib/learning-focus/types'
 
 type LearningFocusTopicsSheetProps = {
@@ -47,7 +48,7 @@ export default function LearningFocusTopicsSheet({
   onClose,
   onClaim,
 }: LearningFocusTopicsSheetProps) {
-  const firstFocusRef = useRef<HTMLButtonElement>(null)
+  const { dialogRef } = useDialogFocus<HTMLDivElement>(open, onClose, '[aria-label="Cerrar"]')
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [saving, setSaving] = useState(false)
 
@@ -56,25 +57,25 @@ export default function LearningFocusTopicsSheet({
   useEffect(() => {
     if (!open) return
     setSelected(new Set(claimedSlugs))
-    firstFocusRef.current?.focus()
-    const handler = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose()
-    }
-    document.addEventListener('keydown', handler)
-    return () => document.removeEventListener('keydown', handler)
-  }, [open, claimedSlugs, onClose])
+  }, [open, claimedSlugs])
 
-  const toggleLesson = useCallback((slug: string) => {
-    setSelected((prev) => {
-      const next = new Set(prev)
-      if (next.has(slug)) next.delete(slug)
-      else next.add(slug)
-      return next
-    })
-  }, [])
+  const toggleLesson = useCallback(
+    (slug: string) => {
+      if (claimedSlugs.has(slug)) return
+      setSelected((prev) => {
+        const next = new Set(prev)
+        if (next.has(slug)) next.delete(slug)
+        else next.add(slug)
+        return next
+      })
+    },
+    [claimedSlugs],
+  )
 
   const handleSave = useCallback(async () => {
-    const concepts = lessons.filter((lesson) => selected.has(lesson.lessonSlug))
+    const concepts = lessons.filter(
+      (lesson) => selected.has(lesson.lessonSlug) && !claimedSlugs.has(lesson.lessonSlug),
+    )
     if (concepts.length === 0) {
       onClose()
       return
@@ -86,19 +87,14 @@ export default function LearningFocusTopicsSheet({
     } finally {
       setSaving(false)
     }
-  }, [lessons, onClaim, onClose, selected])
+  }, [claimedSlugs, lessons, onClaim, onClose, selected])
 
   if (!open) return null
 
   const levelLabel = level.toUpperCase()
 
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="focus-topics-title"
-      className="fixed inset-0 z-50 flex items-end sm:items-center sm:justify-center"
-    >
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center sm:justify-center">
       <button
         type="button"
         aria-label="Cerrar"
@@ -106,14 +102,21 @@ export default function LearningFocusTopicsSheet({
         className="absolute inset-0 h-full w-full cursor-default bg-page-bg/60 backdrop-blur-md"
       />
 
-      <div className="relative z-10 flex max-h-[min(85dvh,640px)] w-full flex-col rounded-t-2xl bg-card-bg sm:mx-4 sm:max-w-md sm:rounded-2xl sm:shadow-xl">
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="focus-topics-title"
+        tabIndex={-1}
+        className="relative z-10 flex max-h-[min(85dvh,640px)] w-full flex-col rounded-t-2xl bg-card-bg sm:mx-4 sm:max-w-md sm:rounded-2xl sm:shadow-xl"
+      >
         <div className="flex flex-col gap-1.5 border-b border-border-subtle px-layout-card-pad pt-layout-card-pad pb-4">
           <h2 id="focus-topics-title" className="text-body-lg font-semibold tracking-tight text-fg">
             Temas que ya sé
           </h2>
           <p className="text-caption leading-relaxed text-fg-muted">
-            Marca lo que ya dominas en {levelLabel}. Lo veremos en el repaso; dominar se gana
-            practicando.
+            Marca lo que ya dominas en {levelLabel}. Los temas ya guardados no se pueden quitar
+            por ahora.
           </p>
         </div>
 
@@ -123,26 +126,29 @@ export default function LearningFocusTopicsSheet({
           ) : (
             <ul className="flex flex-col gap-1">
               {lessons.map((lesson) => {
-                const checked = selected.has(lesson.lessonSlug)
                 const alreadyClaimed = claimedSlugs.has(lesson.lessonSlug)
+                const checked = alreadyClaimed || selected.has(lesson.lessonSlug)
                 return (
                   <li key={lesson.lessonSlug}>
                     <label
                       className={cn(
-                        'focus-within:ring-primary flex cursor-pointer items-start gap-3 rounded-md px-2 py-2 transition-colors hover:bg-surface-sunken',
-                        alreadyClaimed && 'opacity-80',
+                        'focus-within:ring-primary flex items-start gap-3 rounded-md px-2 py-2 transition-colors',
+                        alreadyClaimed
+                          ? 'cursor-default opacity-80'
+                          : 'cursor-pointer hover:bg-surface-sunken',
                       )}
                     >
                       <input
                         type="checkbox"
                         checked={checked}
+                        disabled={alreadyClaimed}
                         onChange={() => toggleLesson(lesson.lessonSlug)}
-                        className="mt-0.5 size-4 shrink-0 accent-primary"
+                        className="mt-0.5 size-4 shrink-0 accent-primary disabled:cursor-not-allowed"
                       />
                       <span className="min-w-0 flex-1">
                         <span className="text-body-sm text-fg">{lesson.title}</span>
                         {alreadyClaimed ? (
-                          <span className="mt-0.5 block text-tiny text-fg-muted">Ya marcado</span>
+                          <span className="mt-0.5 block text-tiny text-fg-muted">Ya guardado</span>
                         ) : null}
                       </span>
                     </label>
@@ -155,7 +161,6 @@ export default function LearningFocusTopicsSheet({
 
         <div className="flex flex-col gap-2 border-t border-border-subtle px-layout-card-pad pt-4 pb-[calc(var(--layout-card-pad)+env(safe-area-inset-bottom,0px))] sm:pb-layout-card-pad">
           <button
-            ref={firstFocusRef}
             type="button"
             onClick={() => void handleSave()}
             disabled={saving}

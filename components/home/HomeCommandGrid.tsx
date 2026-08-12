@@ -33,6 +33,7 @@ import type { SessionArc } from "@/lib/practice/types";
 
 interface HomeCommandGridProps {
   conceptLesson: ConceptLesson | null;
+  profileLevel: string | null;
   weakestPhoneme?: WeakestPhonemeHome | null;
   wordsDueCount?: number;
   soundsDueCount?: number;
@@ -43,6 +44,7 @@ interface HomeCommandGridProps {
 
 export default function HomeCommandGrid({
   conceptLesson,
+  profileLevel,
   weakestPhoneme = null,
   wordsDueCount = 0,
   soundsDueCount = 0,
@@ -131,6 +133,7 @@ export default function HomeCommandGrid({
 
       <div className="home-command-main">
         <LearningFocusCard
+          profileLevel={profileLevel}
           routeLevel={null}
           recentTheoryLessonSlug={null}
           weakSoundKey={weakestPhoneme?.ipa ?? null}

@@ -71,6 +71,7 @@ import HomeCommandGrid from "@/components/home/HomeCommandGrid";
 
 const baseProps = {
   conceptLesson: null,
+  profileLevel: null,
 };
 
 describe("HomeCommandGrid journal and lessons", () => {

@@ -12,7 +12,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/components/auth/AuthProvider'
-import { useUserPreferences } from '@/hooks/useUserPreferences'
 import LearningFocusTopicsSheet from '@/components/home/LearningFocusTopicsSheet'
 import { cn } from '@/lib/cn'
 import { toFocusLevel } from '@/lib/learning-focus/cefr'
@@ -38,21 +37,19 @@ const LEVEL_LABELS: Record<FocusLevel, string> = {
 }
 
 type LearningFocusCardProps = {
-  profileLevel?: string | null
+  profileLevel: string | null
   routeLevel: string | null
   recentTheoryLessonSlug: string | null
   weakSoundKey: string | null
 }
 
 export default function LearningFocusCard({
-  profileLevel: profileLevelProp,
+  profileLevel,
   routeLevel,
   recentTheoryLessonSlug,
   weakSoundKey,
 }: LearningFocusCardProps) {
   const { user } = useAuth()
-  const { preferences } = useUserPreferences()
-  const profileLevel = profileLevelProp ?? preferences?.cefr_level ?? null
 
   const [focus, setFocus] = useState<LearningFocus | null>(null)
   const [claimedSlugs, setClaimedSlugs] = useState<Set<string>>(new Set())
