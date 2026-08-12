@@ -3,6 +3,7 @@ import { studyLessonPath } from '@/lib/courses/curriculumIndex'
 import { deriveLevelView, lessonProgressKey } from '@/lib/courses/progress'
 import type { CefrLevelId, CoursePathLesson, CoursePathLevel } from '@/lib/courses/types'
 import type { ConceptSignal, ConceptStatus } from '@/lib/courses/concept-profile'
+import { isConceptSignalDue } from '@/lib/learning-focus/claims'
 import type { DailyStep } from '@/lib/practice/types'
 
 type StudyDeckTarget = { level: CoursePathLevel; lesson: CoursePathLesson }
@@ -61,8 +62,17 @@ export function selectStudyDeckTarget(
     completedIds = new Set(completedIds)
     for (const level of CORE_LEVELS) {
       for (const lesson of level.units.flatMap((unit) => unit.lessons)) {
-        if (concepts.some((signal) => signal.lessonSlug === lesson.slug && signal.status === 'mastered')) {
-          completedIds.add(lessonProgressKey(level.id, lesson.id))
+        const key = lessonProgressKey(level.id, lesson.id)
+        for (const signal of concepts) {
+          if (signal.lessonSlug !== lesson.slug) continue
+          if (signal.status === 'mastered') {
+            completedIds.add(key)
+            break
+          }
+          if (signal.status === 'review' && !isConceptSignalDue(signal)) {
+            completedIds.add(key)
+            break
+          }
         }
       }
     }

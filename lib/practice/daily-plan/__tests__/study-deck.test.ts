@@ -101,22 +101,18 @@ describe('study-deck daily step', () => {
     expect(target).toEqual(expected)
   })
 
-  it('does not prioritize review claims that are not due yet', () => {
+  it('skips not-due review on the first current lesson in fallback', () => {
+    const a1 = COURSE_PATH_CURRICULUM.levels[0]
+    const [first, second] = a1.units[0].lessons
     const future = new Date(Date.now() + 86_400_000).toISOString()
-    const concepts: ConceptSignal[] = [{
-      lessonSlug: 'a1-adverbios-frecuencia',
-      level: 'a1',
-      title: 'Adverbs',
-      selfRating: 'familiar',
-      status: 'review',
-      correct: 0,
-      total: 0,
-      assessedAt: new Date().toISOString(),
-      verificationDueAt: future,
-    }]
     const completed = new Set<string>()
-    const target = selectStudyDeckTarget(completed, 'a1', concepts)
-    expect(target?.lesson.slug).not.toBe('a1-adverbios-frecuencia')
+
+    const target = selectStudyDeckTarget(completed, 'a1', [
+      signal(first.slug!, 'a1', 'review', { verificationDueAt: future }),
+    ])
+
+    expect(target?.lesson.id).toBe(second.id)
+    expect(completed.size).toBe(0)
   })
 
   it('prioritizes due review claims over learn', () => {
