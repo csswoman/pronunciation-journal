@@ -1,0 +1,211 @@
+{
+  "meta": {
+    "eyebrow": "B1 · Causa y permiso",
+    "title": "Make, let",
+    "titleEmphasis": "y allow",
+    "goal": "Ya usas make/let + objeto + base y allow + objeto + to + infinitivo."
+  },
+  "cards": [
+    {
+      "id": "b1-make-let-allow-concept",
+      "tag": "Idea central",
+      "title": "Make, let: qué expresa",
+      "lede": "Ya usas make/let + objeto + base y allow + objeto + to + infinitivo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "make",
+              "value": "obligar · She made me wait.",
+              "highlights": [
+                "made me wait"
+              ]
+            },
+            {
+              "key": "let",
+              "value": "permitir · Let me help you.",
+              "highlights": [
+                "Let me"
+              ]
+            },
+            {
+              "key": "allow",
+              "value": "permitir (formal) · allow us to leave",
+              "highlights": [
+                "allow us to"
+              ]
+            },
+            {
+              "key": "passive",
+              "value": "I was made to apologise.",
+              "highlights": [
+                "was made to"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "b1-make-let-allow-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "make",
+              "value": "obligar · She made me wait.",
+              "highlights": [
+                "made me wait"
+              ]
+            },
+            {
+              "key": "let",
+              "value": "permitir · Let me help you.",
+              "highlights": [
+                "Let me"
+              ]
+            },
+            {
+              "key": "allow",
+              "value": "permitir (formal) · allow us to leave",
+              "highlights": [
+                "allow us to"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-make-let-allow-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "She made me wait."
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "Let me help you."
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "allow us to leave"
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "I was made to apologise."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-make-let-allow-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "make",
+              "rule": "obligar · She made me wait.",
+              "examples": [
+                "She made me wait."
+              ]
+            },
+            {
+              "label": "let",
+              "rule": "permitir · Let me help you.",
+              "examples": [
+                "Let me help you."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-make-let-allow-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "She let me to go."
+            },
+            {
+              "variant": "good",
+              "text": "She let me go.",
+              "note": "let + objeto + verbo base, sin to"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-make-let-allow-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "My parents won't ___ me stay out late.",
+      "options": [
+        "let",
+        "allow"
+      ],
+      "answer": 0,
+      "explain": "let + objeto + base; allow llevaría to."
+    }
+  ]
+}

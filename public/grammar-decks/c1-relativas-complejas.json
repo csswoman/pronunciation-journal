@@ -1,0 +1,211 @@
+{
+  "meta": {
+    "eyebrow": "C1 · Relativas",
+    "title": "Estructuras",
+    "titleEmphasis": "relativas complejas",
+    "goal": "Ya usas relativas reducidas, preposición al inicio y relativas encajadas para empaquetar información precisa."
+  },
+  "cards": [
+    {
+      "id": "c1-relativas-complejas-concept",
+      "tag": "Idea central",
+      "title": "Estructuras: qué expresa",
+      "lede": "Ya usas relativas reducidas, preposición al inicio y relativas encajadas para empaquetar información precisa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Reducida",
+              "value": "The report submitted yesterday… (= which was submitted)",
+              "highlights": [
+                "submitted"
+              ]
+            },
+            {
+              "key": "Prep. inicial",
+              "value": "the person to whom I spoke · formal",
+              "highlights": [
+                "to whom"
+              ]
+            },
+            {
+              "key": "Encajada",
+              "value": "The policy, which the board debated, which analysts criticised…",
+              "highlights": [
+                "which"
+              ]
+            },
+            {
+              "key": "Precisión",
+              "value": "una sola oración, múltiples capas de detalle",
+              "highlights": [
+                "which"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "c1-relativas-complejas-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Reducida",
+              "value": "The report submitted yesterday… (= which was submitted)",
+              "highlights": [
+                "submitted"
+              ]
+            },
+            {
+              "key": "Prep. inicial",
+              "value": "the person to whom I spoke · formal",
+              "highlights": [
+                "to whom"
+              ]
+            },
+            {
+              "key": "Encajada",
+              "value": "The policy, which the board debated, which analysts criticised…",
+              "highlights": [
+                "which"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-relativas-complejas-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "The report submitted yesterday… (= which was submitted)"
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "formal"
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "The policy, which the board debated, which analysts criticised…"
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "una sola oración, múltiples capas de detalle"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-relativas-complejas-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Reducida",
+              "rule": "The report submitted yesterday… (= which was submitted)",
+              "examples": [
+                "The report submitted yesterday… (= which was submitted)"
+              ]
+            },
+            {
+              "label": "Prep. inicial",
+              "rule": "the person to whom I spoke · formal",
+              "examples": [
+                "formal"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-relativas-complejas-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "The man who I spoke to him…"
+            },
+            {
+              "variant": "good",
+              "text": "The man to whom I spoke… / The man I spoke to.",
+              "note": "no dupliques el pronombre objeto"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-relativas-complejas-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "The documents ___ last week are ready.",
+      "options": [
+        "reviewed",
+        "reviewing"
+      ],
+      "answer": 0,
+      "explain": "Relativa reducida pasiva → participio pasado."
+    }
+  ]
+}

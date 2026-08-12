@@ -1,0 +1,211 @@
+{
+  "meta": {
+    "eyebrow": "C2 · Subjuntivo",
+    "title": "Subjuntivo",
+    "titleEmphasis": "fórmulas fijas",
+    "goal": "Ya reconoces y usas fórmulas subjuntivas: be that as it may, come what may, suffice it to say, so be it."
+  },
+  "cards": [
+    {
+      "id": "c2-subjuntivo-formulas-concept",
+      "tag": "Idea central",
+      "title": "Subjuntivo: qué expresa",
+      "lede": "Ya reconoces y usas fórmulas subjuntivas: be that as it may, come what may, suffice it to say, so be it.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "be that as it may",
+              "value": "sea como fuere · concesión formal",
+              "highlights": [
+                "be that as it may"
+              ]
+            },
+            {
+              "key": "come what may",
+              "value": "pase lo que pase",
+              "highlights": [
+                "come what may"
+              ]
+            },
+            {
+              "key": "suffice it to say",
+              "value": "baste decir",
+              "highlights": [
+                "suffice it to say"
+              ]
+            },
+            {
+              "key": "so be it",
+              "value": "así sea · aceptación solemne",
+              "highlights": [
+                "so be it"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "c2-subjuntivo-formulas-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "be that as it may",
+              "value": "sea como fuere · concesión formal",
+              "highlights": [
+                "be that as it may"
+              ]
+            },
+            {
+              "key": "come what may",
+              "value": "pase lo que pase",
+              "highlights": [
+                "come what may"
+              ]
+            },
+            {
+              "key": "suffice it to say",
+              "value": "baste decir",
+              "highlights": [
+                "suffice it to say"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-subjuntivo-formulas-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "concesión formal"
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "pase lo que pase"
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "baste decir"
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "aceptación solemne"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-subjuntivo-formulas-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "be that as it may",
+              "rule": "sea como fuere · concesión formal",
+              "examples": [
+                "concesión formal"
+              ]
+            },
+            {
+              "label": "come what may",
+              "rule": "pase lo que pase",
+              "examples": [
+                "pase lo que pase"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-subjuntivo-formulas-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "Be that as it is…"
+            },
+            {
+              "variant": "good",
+              "text": "Be that as it may…",
+              "note": "fórmula fija congelada"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-subjuntivo-formulas-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "___, we must proceed regardless.",
+      "options": [
+        "Come what may",
+        "Comes what may"
+      ],
+      "answer": 0,
+      "explain": "Fórmula subjuntiva fija: come what may."
+    }
+  ]
+}

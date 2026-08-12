@@ -17,6 +17,7 @@ import type { Sound } from '@/lib/phoneme-practice/types'
 import { buildJournalDailyStep, shouldOfferJournalStep } from '@/lib/journal/daily-step'
 import { normalizeFalseFriendsLevel } from '@/lib/false-friends/data'
 import { buildConnectedSpeechStep, buildFalseFriendsStep, buildReaderStep, buildSentenceBuilderStep } from './async-step-builders'
+import { getEffectiveFocus } from '@/lib/learning-focus/effective-focus'
 import { buildStudyDeckStep } from './study-deck'
 import { DAILY_PLAN_STEP_COUNT, WORD_REVIEW_WORD_COUNT } from './constants'
 import {
@@ -247,9 +248,12 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     }
   }
 
+  const studyDeckActiveLevel = aiState?.focus
+    ? getEffectiveFocus(aiState.focus).level
+    : activeLevel
   const studyDeckStep = buildStudyDeckStep(
     completedLessonIds,
-    activeLevel,
+    studyDeckActiveLevel,
     aiState?.theory?.concepts,
   )
   let steps: DailyStep[] = [...allSteps, ...reviewSteps]

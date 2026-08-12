@@ -1,0 +1,213 @@
+{
+  "meta": {
+    "eyebrow": "B2 · Énfasis",
+    "title": "Do/does/did",
+    "titleEmphasis": "de énfasis",
+    "goal": "Ya enfatizas con auxiliares do/does/did en afirmaciones."
+  },
+  "cards": [
+    {
+      "id": "b2-enfasis-auxiliares-concept",
+      "tag": "Idea central",
+      "title": "Do/does/did: qué expresa",
+      "lede": "Ya enfatizas con auxiliares do/does/did en afirmaciones.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "do/does",
+              "value": "I do agree. · She does know.",
+              "highlights": [
+                "do agree",
+                "does know"
+              ]
+            },
+            {
+              "key": "did",
+              "value": "I did tell you! · pasado",
+              "highlights": [
+                "did tell"
+              ]
+            },
+            {
+              "key": "Contraste",
+              "value": "I like it → I do like it (énfasis)",
+              "highlights": [
+                "do"
+              ]
+            },
+            {
+              "key": "Pronunciación",
+              "value": "el auxiliar lleva el acento",
+              "highlights": [
+                "do"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "b2-enfasis-auxiliares-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "do/does",
+              "value": "I do agree. · She does know.",
+              "highlights": [
+                "do agree",
+                "does know"
+              ]
+            },
+            {
+              "key": "did",
+              "value": "I did tell you! · pasado",
+              "highlights": [
+                "did tell"
+              ]
+            },
+            {
+              "key": "Contraste",
+              "value": "I like it → I do like it (énfasis)",
+              "highlights": [
+                "do"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-enfasis-auxiliares-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "She does know."
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "pasado"
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "I like it → I do like it (énfasis)"
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "el auxiliar lleva el acento"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-enfasis-auxiliares-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "do/does",
+              "rule": "I do agree. · She does know.",
+              "examples": [
+                "She does know."
+              ]
+            },
+            {
+              "label": "did",
+              "rule": "I did tell you! · pasado",
+              "examples": [
+                "pasado"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-enfasis-auxiliares-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "I do likes it."
+            },
+            {
+              "variant": "good",
+              "text": "I do like it.",
+              "note": "tras do/does/did va la base del verbo"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-enfasis-auxiliares-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "She ___ want to come, honestly.",
+      "options": [
+        "does",
+        "is"
+      ],
+      "answer": 0,
+      "explain": "Énfasis en presente → does + base."
+    }
+  ]
+}

@@ -13,7 +13,7 @@ describe('learning-loop content manifest', () => {
     const manifest = await buildLearningContentManifest()
     const summary = summarizeLearningContentManifest(manifest)
     expect(summary).toMatchObject({
-      grammar_deck: 175,
+      grammar_deck: 236,
       mini_lesson: 50,
       essential_words: new Set(loadEssentialWords().map((word) => word.word.trim().toLowerCase())).size,
       oral_mission: 8,

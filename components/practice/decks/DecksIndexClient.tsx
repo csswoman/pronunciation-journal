@@ -7,17 +7,24 @@
 //   <DeckGrid>
 //     <DeckCard /> × N
 //   </DeckGrid>
+//   <DeckPagination />
 // </DecksIndexClient>
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { BookOpen, Search } from "@/components/icons"
 import { cn } from '@/lib/cn'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
+import { DeckPagination } from '@/components/practice/decks/DeckPagination'
 import type { DeckSummary, DeckLevel } from '@/lib/courses/grammar-deck/decks'
 
 interface Props {
   decks: DeckSummary[]
 }
+
+/** Desktop fills 5×3 grid rows; mobile stacks taller cards — paginate sooner. */
+const PAGE_SIZE_DESKTOP = 15
+const PAGE_SIZE_MOBILE = 8
 
 const LEVEL_LABELS: Record<DeckLevel, string> = {
   a1: 'A1',
@@ -36,6 +43,17 @@ const ALL_LEVELS: DeckLevel[] = ['a1', 'a2', 'b1', 'b2', 'c1', 'biz', 'tech', 'c
 export function DecksIndexClient({ decks }: Props) {
   const [activeLevel, setActiveLevel] = useState<DeckLevel | 'all'>('all')
   const [query, setQuery] = useState('')
+  const [currentPage, setCurrentPage] = useState(1)
+  const [layoutReady, setLayoutReady] = useState(false)
+  const listRef = useRef<HTMLDivElement>(null)
+
+  const isSmUp = useMediaQuery('(min-width: 640px)')
+  // SSR + first paint use desktop size to avoid hydration mismatch; mobile size after mount.
+  const pageSize = layoutReady && !isSmUp ? PAGE_SIZE_MOBILE : PAGE_SIZE_DESKTOP
+
+  useEffect(() => {
+    setLayoutReady(true)
+  }, [])
 
   const availableLevels = useMemo(
     () => ALL_LEVELS.filter((l) => decks.some((d) => d.level === l)),
@@ -54,6 +72,30 @@ export function DecksIndexClient({ decks }: Props) {
     return result
   }, [decks, activeLevel, query])
 
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize))
+
+  const paginated = useMemo(() => {
+    const start = (currentPage - 1) * pageSize
+    return filtered.slice(start, start + pageSize)
+  }, [filtered, currentPage, pageSize])
+
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [activeLevel, query])
+
+  useEffect(() => {
+    setCurrentPage((page) => Math.min(page, totalPages))
+  }, [totalPages])
+
+  function handlePageChange(page: number) {
+    setCurrentPage(page)
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    listRef.current?.scrollIntoView({
+      behavior: reduceMotion ? 'auto' : 'smooth',
+      block: 'start',
+    })
+  }
+
   return (
     <div className="flex flex-col gap-4 sm:gap-[var(--layout-section-gap)]">
       <LevelFilterBar
@@ -67,7 +109,16 @@ export function DecksIndexClient({ decks }: Props) {
           No decks match your filter.
         </p>
       ) : (
-        <DeckGrid decks={filtered} />
+        <div ref={listRef} className="flex flex-col gap-4">
+          <DeckGrid decks={paginated} />
+          <DeckPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalItems={filtered.length}
+            pageSize={pageSize}
+            onPageChange={handlePageChange}
+          />
+        </div>
       )}
     </div>
   )

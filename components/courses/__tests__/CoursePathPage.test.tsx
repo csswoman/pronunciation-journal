@@ -15,10 +15,6 @@ vi.mock("../CoursePathLevelPanel", () => ({
   default: ({ level }: { level: { id: string; title: string } }) => <div>{level.title}</div>,
 }));
 
-vi.mock("../CoursePathIcons", () => ({
-  CoursePathLegendIconDisplay: ({ icon }: { icon: string }) => <span>{icon}</span>,
-}));
-
 describe("CoursePathPage", () => {
   it("defaults to A1 when no level is provided", () => {
     render(<CoursePathPage />);
@@ -49,12 +45,27 @@ describe("CoursePathPage", () => {
     expect(screen.queryByText("Inglés en acción B1")).not.toBeInTheDocument();
   });
 
-  it("keeps rationale and legend visible", () => {
+  it("keeps assessment actions in the level picker", () => {
+    render(<CoursePathPage />);
+
+    expect(screen.queryByRole("heading", { name: "Ruta" })).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Prueba de nivel" })).toHaveAttribute("href", "/assessment");
+    expect(screen.getByRole("link", { name: "Comprobar nivel" })).toHaveAttribute(
+      "href",
+      "/assessment?mode=checkpoint&level=a1",
+    );
+  });
+
+  it("links to the pronunciation path from the level aside", () => {
     render(<CoursePathPage levelParam="a2" />);
 
-    expect(screen.getByText("Pronunciación en paralelo")).toBeInTheDocument();
-    expect(screen.getByText("La ruta trabaja la gramática y Sound Lab trabaja la pronunciación. Las lecciones con micrófono te llevan a prácticas del mismo nivel.")).toBeInTheDocument();
-    expect(screen.getByText("Practica también en Sound Lab")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Ruta de pronunciación/i })).toHaveAttribute(
+      "href",
+      "/courses/pronunciation",
+    );
+    expect(screen.queryByText("Cómo leer la ruta")).not.toBeInTheDocument();
+    expect(screen.queryByText("Pronunciación en paralelo")).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /Abrir Sound Lab/i })).not.toBeInTheDocument();
   });
 
   it("keeps every level available for exploration", () => {

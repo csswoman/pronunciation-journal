@@ -1,0 +1,211 @@
+{
+  "meta": {
+    "eyebrow": "B2 · Patrones verbales",
+    "title": "Verbo + objeto",
+    "titleEmphasis": "+ -ing / to",
+    "goal": "Ya usas patrones como want someone to, catch someone -ing y persuade someone to."
+  },
+  "cards": [
+    {
+      "id": "b2-verbo-objeto-gerundio-concept",
+      "tag": "Idea central",
+      "title": "Verbo + objeto: qué expresa",
+      "lede": "Ya usas patrones como want someone to, catch someone -ing y persuade someone to.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "want/expect + obj + to",
+              "value": "I want you to try.",
+              "highlights": [
+                "want you to"
+              ]
+            },
+            {
+              "key": "catch/find + obj + -ing",
+              "value": "I caught him lying.",
+              "highlights": [
+                "caught him lying"
+              ]
+            },
+            {
+              "key": "persuade/convince",
+              "value": "persuade her to stay",
+              "highlights": [
+                "persuade her to"
+              ]
+            },
+            {
+              "key": "see/hear + obj + base/-ing",
+              "value": "I saw her leave / leaving",
+              "highlights": [
+                "saw her"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "b2-verbo-objeto-gerundio-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "want/expect + obj + to",
+              "value": "I want you to try.",
+              "highlights": [
+                "want you to"
+              ]
+            },
+            {
+              "key": "catch/find + obj + -ing",
+              "value": "I caught him lying.",
+              "highlights": [
+                "caught him lying"
+              ]
+            },
+            {
+              "key": "persuade/convince",
+              "value": "persuade her to stay",
+              "highlights": [
+                "persuade her to"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-verbo-objeto-gerundio-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "I want you to try."
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "I caught him lying."
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "persuade her to stay"
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "I saw her leave / leaving"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-verbo-objeto-gerundio-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "want/expect + obj + to",
+              "rule": "I want you to try.",
+              "examples": [
+                "I want you to try."
+              ]
+            },
+            {
+              "label": "catch/find + obj + -ing",
+              "rule": "I caught him lying.",
+              "examples": [
+                "I caught him lying."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-verbo-objeto-gerundio-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "I want that you help me."
+            },
+            {
+              "variant": "good",
+              "text": "I want you to help me.",
+              "note": "want + objeto + to, no that"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-verbo-objeto-gerundio-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "She persuaded me ___ the job.",
+      "options": [
+        "to accept",
+        "accepting"
+      ],
+      "answer": 0,
+      "explain": "persuade + objeto + to + infinitivo."
+    }
+  ]
+}

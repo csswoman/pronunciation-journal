@@ -1,0 +1,200 @@
+{
+  "meta": {
+    "eyebrow": "A1 · Adverbios",
+    "title": "Adverbios de",
+    "titleEmphasis": "frecuencia",
+    "goal": "Ya colocas always, usually, sometimes y never en la posición correcta."
+  },
+  "cards": [
+    {
+      "id": "a1-adverbios-frecuencia-concept",
+      "tag": "Idea central",
+      "title": "Adverbios de: qué expresa",
+      "lede": "Ya colocas always, usually, sometimes y never en la posición correcta.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Orden",
+              "value": "always → usually → often → sometimes → never",
+              "highlights": [
+                "always"
+              ]
+            },
+            {
+              "key": "Posición",
+              "value": "I always drink coffee. (después del sujeto)",
+              "highlights": [
+                "always drink"
+              ]
+            },
+            {
+              "key": "to be",
+              "value": "She is always late. (después del verbo be)",
+              "highlights": [
+                "is always"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "a1-adverbios-frecuencia-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Orden",
+              "value": "always → usually → often → sometimes → never",
+              "highlights": [
+                "always"
+              ]
+            },
+            {
+              "key": "Posición",
+              "value": "I always drink coffee. (después del sujeto)",
+              "highlights": [
+                "always drink"
+              ]
+            },
+            {
+              "key": "to be",
+              "value": "She is always late. (después del verbo be)",
+              "highlights": [
+                "is always"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-adverbios-frecuencia-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "always → usually → often → sometimes → never"
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "I always drink coffee. (después del sujeto)"
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "She is always late. (después del verbo be)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-adverbios-frecuencia-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Orden",
+              "rule": "always → usually → often → sometimes → never",
+              "examples": [
+                "always → usually → often → sometimes → never"
+              ]
+            },
+            {
+              "label": "Posición",
+              "rule": "I always drink coffee. (después del sujeto)",
+              "examples": [
+                "I always drink coffee. (después del sujeto)"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-adverbios-frecuencia-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "I drink always coffee."
+            },
+            {
+              "variant": "good",
+              "text": "I always drink coffee.",
+              "note": "el adverbio va antes del verbo principal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-adverbios-frecuencia-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "He is ___ late.",
+      "options": [
+        "always",
+        "always is"
+      ],
+      "answer": 0,
+      "explain": "Con to be: be + adverbio + complemento."
+    }
+  ]
+}

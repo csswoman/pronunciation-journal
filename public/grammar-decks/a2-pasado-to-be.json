@@ -1,0 +1,200 @@
+{
+  "meta": {
+    "eyebrow": "A2 · Pasado",
+    "title": "To be en",
+    "titleEmphasis": "pasado",
+    "goal": "Ya usas was/were para describir estados y lugares en el pasado."
+  },
+  "cards": [
+    {
+      "id": "a2-pasado-to-be-concept",
+      "tag": "Idea central",
+      "title": "To be en: qué expresa",
+      "lede": "Ya usas was/were para describir estados y lugares en el pasado.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "was",
+              "value": "I / he / she / it was tired",
+              "highlights": [
+                "was"
+              ]
+            },
+            {
+              "key": "were",
+              "value": "you / we / they were at home",
+              "highlights": [
+                "were"
+              ]
+            },
+            {
+              "key": "Negativo",
+              "value": "wasn't / weren't",
+              "highlights": [
+                "wasn't"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "a2-pasado-to-be-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "was",
+              "value": "I / he / she / it was tired",
+              "highlights": [
+                "was"
+              ]
+            },
+            {
+              "key": "were",
+              "value": "you / we / they were at home",
+              "highlights": [
+                "were"
+              ]
+            },
+            {
+              "key": "Negativo",
+              "value": "wasn't / weren't",
+              "highlights": [
+                "wasn't"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-pasado-to-be-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "I / he / she / it was tired"
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "you / we / they were at home"
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "wasn't / weren't"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-pasado-to-be-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "was",
+              "rule": "I / he / she / it was tired",
+              "examples": [
+                "I / he / she / it was tired"
+              ]
+            },
+            {
+              "label": "were",
+              "rule": "you / we / they were at home",
+              "examples": [
+                "you / we / they were at home"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-pasado-to-be-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "They was happy."
+            },
+            {
+              "variant": "good",
+              "text": "They were happy.",
+              "note": "they → were"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-pasado-to-be-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "We ___ at school yesterday.",
+      "options": [
+        "were",
+        "was"
+      ],
+      "answer": 0,
+      "explain": "We → were."
+    }
+  ]
+}

@@ -16,7 +16,7 @@ export default function GrammarDeckHeader({
   reviewedCount,
   totalCount,
   backHref = "/courses",
-  backLabel = "Ruta de aprendizaje",
+  backLabel = "Ruta",
   subtitle,
 }: GrammarDeckHeaderProps) {
   const pct = totalCount === 0 ? 0 : Math.round((reviewedCount / totalCount) * 100);
@@ -27,24 +27,26 @@ export default function GrammarDeckHeader({
         <ArrowLeft size={14} aria-hidden />
         {backLabel}
       </Link>
-      <span className="grammar-deck__eyebrow">{subtitle ?? meta.eyebrow}</span>
-      <h1 className="grammar-deck__title">
-        {meta.title}
-        {meta.titleEmphasis && <em> {meta.titleEmphasis}</em>}
-      </h1>
-      {meta.goal && (
-        <p className="grammar-deck__goal">
-          <Target size={13} strokeWidth={2.25} aria-hidden />
-          <span>{meta.goal}</span>
-        </p>
-      )}
+      <div className="grammar-deck__identity">
+        <span className="grammar-deck__eyebrow">{subtitle ?? meta.eyebrow}</span>
+        <h1 className="grammar-deck__title">
+          {meta.title}
+          {meta.titleEmphasis && <em> {meta.titleEmphasis}</em>}
+        </h1>
+        {meta.goal && (
+          <p className="grammar-deck__goal">
+            <Target size={13} strokeWidth={2.25} aria-hidden />
+            <span>{meta.goal}</span>
+          </p>
+        )}
+      </div>
       <div className="grammar-deck__meta">
-        <div className="grammar-deck__prog" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
-          <span className="grammar-deck__prog-fill" style={{ transform: `scaleX(${pct / 100})` }} />
-        </div>
         <span className="grammar-deck__count">
           <b>{reviewedCount}</b> / {totalCount} repasadas
         </span>
+        <div className="grammar-deck__prog" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
+          <span className="grammar-deck__prog-fill" style={{ transform: `scaleX(${pct / 100})` }} />
+        </div>
       </div>
     </header>
   );

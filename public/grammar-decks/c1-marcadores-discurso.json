@@ -1,0 +1,211 @@
+{
+  "meta": {
+    "eyebrow": "C1 · Discurso",
+    "title": "Marcadores",
+    "titleEmphasis": "del discurso",
+    "goal": "Ya organizas argumentos complejos con marcadores avanzados: notwithstanding, in so far as, to put it another way."
+  },
+  "cards": [
+    {
+      "id": "c1-marcadores-discurso-concept",
+      "tag": "Idea central",
+      "title": "Marcadores: qué expresa",
+      "lede": "Ya organizas argumentos complejos con marcadores avanzados: notwithstanding, in so far as, to put it another way.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Marco",
+              "value": "To put it another way, the risk remains.",
+              "highlights": [
+                "To put it another way"
+              ]
+            },
+            {
+              "key": "Concesión",
+              "value": "Notwithstanding this, we proceeded.",
+              "highlights": [
+                "Notwithstanding"
+              ]
+            },
+            {
+              "key": "Alcance",
+              "value": "In so far as I know, the data is accurate.",
+              "highlights": [
+                "In so far as"
+              ]
+            },
+            {
+              "key": "Cierre",
+              "value": "It goes without saying that safety comes first.",
+              "highlights": [
+                "It goes without saying"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "c1-marcadores-discurso-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Marco",
+              "value": "To put it another way, the risk remains.",
+              "highlights": [
+                "To put it another way"
+              ]
+            },
+            {
+              "key": "Concesión",
+              "value": "Notwithstanding this, we proceeded.",
+              "highlights": [
+                "Notwithstanding"
+              ]
+            },
+            {
+              "key": "Alcance",
+              "value": "In so far as I know, the data is accurate.",
+              "highlights": [
+                "In so far as"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-marcadores-discurso-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "To put it another way, the risk remains."
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "Notwithstanding this, we proceeded."
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "In so far as I know, the data is accurate."
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "It goes without saying that safety comes first."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-marcadores-discurso-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Marco",
+              "rule": "To put it another way, the risk remains.",
+              "examples": [
+                "To put it another way, the risk remains."
+              ]
+            },
+            {
+              "label": "Concesión",
+              "rule": "Notwithstanding this, we proceeded.",
+              "examples": [
+                "Notwithstanding this, we proceeded."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-marcadores-discurso-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "Notwithstanding this, but we continued."
+            },
+            {
+              "variant": "good",
+              "text": "Notwithstanding this, we continued.",
+              "note": "no mezcles con but"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-marcadores-discurso-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "___, the figures are still preliminary.",
+      "options": [
+        "It goes without saying",
+        "In so far as"
+      ],
+      "answer": 0,
+      "explain": "Introduce algo obvio o acordado."
+    }
+  ]
+}

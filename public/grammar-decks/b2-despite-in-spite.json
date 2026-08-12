@@ -1,0 +1,212 @@
+{
+  "meta": {
+    "eyebrow": "B2 · Concesión",
+    "title": "Despite /",
+    "titleEmphasis": "in spite of",
+    "goal": "Ya contrastas con despite/in spite of + sustantivo o -ing (no cláusula con verbo conjugado)."
+  },
+  "cards": [
+    {
+      "id": "b2-despite-in-spite-concept",
+      "tag": "Idea central",
+      "title": "Despite /: qué expresa",
+      "lede": "Ya contrastas con despite/in spite of + sustantivo o -ing (no cláusula con verbo conjugado).",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "despite",
+              "value": "despite the rain · + sustantivo/-ing",
+              "highlights": [
+                "despite"
+              ]
+            },
+            {
+              "key": "in spite of",
+              "value": "in spite of the delay",
+              "highlights": [
+                "in spite of"
+              ]
+            },
+            {
+              "key": "although",
+              "value": "although it rained · + cláusula",
+              "highlights": [
+                "although"
+              ]
+            },
+            {
+              "key": "Contraste",
+              "value": "despite ≠ although en estructura",
+              "highlights": [
+                "despite",
+                "although"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "b2-despite-in-spite-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "despite",
+              "value": "despite the rain · + sustantivo/-ing",
+              "highlights": [
+                "despite"
+              ]
+            },
+            {
+              "key": "in spite of",
+              "value": "in spite of the delay",
+              "highlights": [
+                "in spite of"
+              ]
+            },
+            {
+              "key": "although",
+              "value": "although it rained · + cláusula",
+              "highlights": [
+                "although"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-despite-in-spite-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "+ sustantivo/-ing"
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "in spite of the delay"
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "+ cláusula"
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "despite ≠ although en estructura"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-despite-in-spite-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "despite",
+              "rule": "despite the rain · + sustantivo/-ing",
+              "examples": [
+                "+ sustantivo/-ing"
+              ]
+            },
+            {
+              "label": "in spite of",
+              "rule": "in spite of the delay",
+              "examples": [
+                "in spite of the delay"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-despite-in-spite-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "Despite it rained…"
+            },
+            {
+              "variant": "good",
+              "text": "Despite the rain… / Although it rained…",
+              "note": "despite + sustantivo, no oración completa"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-despite-in-spite-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "___ the weather, we went out.",
+      "options": [
+        "Despite",
+        "Although"
+      ],
+      "answer": 0,
+      "explain": "Tras despite va sustantivo (the weather)."
+    }
+  ]
+}

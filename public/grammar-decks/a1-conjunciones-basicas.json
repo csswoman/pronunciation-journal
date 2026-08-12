@@ -1,0 +1,200 @@
+{
+  "meta": {
+    "eyebrow": "A1 · Conectores",
+    "title": "Conjunciones",
+    "titleEmphasis": "and, but, or",
+    "goal": "Ya puedes unir ideas con and, but y or en frases simples."
+  },
+  "cards": [
+    {
+      "id": "a1-conjunciones-basicas-concept",
+      "tag": "Idea central",
+      "title": "Conjunciones: qué expresa",
+      "lede": "Ya puedes unir ideas con and, but y or en frases simples.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "and",
+              "value": "suma · tea and coffee",
+              "highlights": [
+                "and"
+              ]
+            },
+            {
+              "key": "but",
+              "value": "contraste · cheap but good",
+              "highlights": [
+                "but"
+              ]
+            },
+            {
+              "key": "or",
+              "value": "opción · tea or coffee?",
+              "highlights": [
+                "or"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "a1-conjunciones-basicas-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "and",
+              "value": "suma · tea and coffee",
+              "highlights": [
+                "and"
+              ]
+            },
+            {
+              "key": "but",
+              "value": "contraste · cheap but good",
+              "highlights": [
+                "but"
+              ]
+            },
+            {
+              "key": "or",
+              "value": "opción · tea or coffee?",
+              "highlights": [
+                "or"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-conjunciones-basicas-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "tea and coffee"
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "cheap but good"
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "tea or coffee?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-conjunciones-basicas-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "and",
+              "rule": "suma · tea and coffee",
+              "examples": [
+                "tea and coffee"
+              ]
+            },
+            {
+              "label": "but",
+              "rule": "contraste · cheap but good",
+              "examples": [
+                "cheap but good"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-conjunciones-basicas-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "I like tea, and but I prefer coffee."
+            },
+            {
+              "variant": "good",
+              "text": "I like tea, but I prefer coffee.",
+              "note": "no combines but con and"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-conjunciones-basicas-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Do you want tea ___ coffee?",
+      "options": [
+        "or",
+        "but"
+      ],
+      "answer": 0,
+      "explain": "Opción → or."
+    }
+  ]
+}

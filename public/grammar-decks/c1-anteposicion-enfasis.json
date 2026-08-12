@@ -1,0 +1,211 @@
+{
+  "meta": {
+    "eyebrow": "C1 · Énfasis",
+    "title": "Anteposición",
+    "titleEmphasis": "para énfasis",
+    "goal": "Ya adelantas objetos o adverbiales al inicio de la oración para destacar información y crear contraste."
+  },
+  "cards": [
+    {
+      "id": "c1-anteposicion-enfasis-concept",
+      "tag": "Idea central",
+      "title": "Anteposición: qué expresa",
+      "lede": "Ya adelantas objetos o adverbiales al inicio de la oración para destacar información y crear contraste.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Objeto",
+              "value": "This proposal, we cannot accept.",
+              "highlights": [
+                "This proposal"
+              ]
+            },
+            {
+              "key": "Adverbial",
+              "value": "On no account should you share the password.",
+              "highlights": [
+                "On no account"
+              ]
+            },
+            {
+              "key": "Contraste",
+              "value": "The budget I can manage; the timeline is another matter.",
+              "highlights": [
+                "The budget"
+              ]
+            },
+            {
+              "key": "Registro",
+              "value": "formal, retórico, escrito académico",
+              "highlights": [
+                "should"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "c1-anteposicion-enfasis-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Objeto",
+              "value": "This proposal, we cannot accept.",
+              "highlights": [
+                "This proposal"
+              ]
+            },
+            {
+              "key": "Adverbial",
+              "value": "On no account should you share the password.",
+              "highlights": [
+                "On no account"
+              ]
+            },
+            {
+              "key": "Contraste",
+              "value": "The budget I can manage; the timeline is another matter.",
+              "highlights": [
+                "The budget"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-anteposicion-enfasis-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "This proposal, we cannot accept."
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "On no account should you share the password."
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "The budget I can manage; the timeline is another matter."
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "formal, retórico, escrito académico"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-anteposicion-enfasis-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Objeto",
+              "rule": "This proposal, we cannot accept.",
+              "examples": [
+                "This proposal, we cannot accept."
+              ]
+            },
+            {
+              "label": "Adverbial",
+              "rule": "On no account should you share the password.",
+              "examples": [
+                "On no account should you share the password."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-anteposicion-enfasis-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "This point we cannot ignore it."
+            },
+            {
+              "variant": "good",
+              "text": "This point we cannot ignore.",
+              "note": "no repitas el pronombre tras topicalizar"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-anteposicion-enfasis-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "___ should this data be shared externally.",
+      "options": [
+        "Under no circumstances",
+        "Under no circumstance"
+      ],
+      "answer": 0,
+      "explain": "Anteposición + inversión con expresión negativa."
+    }
+  ]
+}

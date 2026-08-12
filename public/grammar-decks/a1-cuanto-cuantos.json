@@ -1,0 +1,200 @@
+{
+  "meta": {
+    "eyebrow": "A1 · Cantidad",
+    "title": "¿Cuánto?",
+    "titleEmphasis": "how much / how many",
+    "goal": "Ya distingues How much (incontable) y How many (contable)."
+  },
+  "cards": [
+    {
+      "id": "a1-cuanto-cuantos-concept",
+      "tag": "Idea central",
+      "title": "¿Cuánto?: qué expresa",
+      "lede": "Ya distingues How much (incontable) y How many (contable).",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "How many",
+              "value": "+ plural contable · How many apples?",
+              "highlights": [
+                "How many"
+              ]
+            },
+            {
+              "key": "How much",
+              "value": "+ incontable · How much water?",
+              "highlights": [
+                "How much"
+              ]
+            },
+            {
+              "key": "Respuesta corta",
+              "value": "Two. / A lot. / Not much.",
+              "highlights": [
+                "Two"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "a1-cuanto-cuantos-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "How many",
+              "value": "+ plural contable · How many apples?",
+              "highlights": [
+                "How many"
+              ]
+            },
+            {
+              "key": "How much",
+              "value": "+ incontable · How much water?",
+              "highlights": [
+                "How much"
+              ]
+            },
+            {
+              "key": "Respuesta corta",
+              "value": "Two. / A lot. / Not much.",
+              "highlights": [
+                "Two"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-cuanto-cuantos-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "How many apples?"
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "How much water?"
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "Two. / A lot. / Not much."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-cuanto-cuantos-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "How many",
+              "rule": "+ plural contable · How many apples?",
+              "examples": [
+                "How many apples?"
+              ]
+            },
+            {
+              "label": "How much",
+              "rule": "+ incontable · How much water?",
+              "examples": [
+                "How much water?"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-cuanto-cuantos-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "How much books?"
+            },
+            {
+              "variant": "good",
+              "text": "How many books?",
+              "note": "books es contable → many"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-cuanto-cuantos-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "___ money do you have?",
+      "options": [
+        "How much",
+        "How many"
+      ],
+      "answer": 0,
+      "explain": "money es incontable."
+    }
+  ]
+}

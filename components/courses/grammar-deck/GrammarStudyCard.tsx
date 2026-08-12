@@ -17,13 +17,15 @@ export default function GrammarStudyCard({ card, reviewed, onToggleReviewed }: G
 
   return (
     <article className={cn("grammar-card", reviewed && "grammar-card--done")}>
-      <div className="grammar-card__top">
-        <span className="grammar-card__tag">{card.tag}</span>
-        <span className="grammar-card__idx">{indexLabel}</span>
-      </div>
+      <div className="grammar-card__intro">
+        <div className="grammar-card__top">
+          <span className="grammar-card__tag">{card.tag}</span>
+          <span className="grammar-card__idx">{indexLabel}</span>
+        </div>
 
-      <GrammarCardTitle title={card.title} titleItalic={card.titleItalic} />
-      <p className="grammar-card__lede">{card.lede}</p>
+        <GrammarCardTitle title={card.title} titleItalic={card.titleItalic} />
+        <p className="grammar-card__lede">{card.lede}</p>
+      </div>
 
       <GrammarCardBody blocks={card.blocks} />
 

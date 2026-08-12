@@ -1,0 +1,211 @@
+{
+  "meta": {
+    "eyebrow": "C2 · Modalidad",
+    "title": "Modalidad",
+    "titleEmphasis": "matizada",
+    "goal": "Ya calibras certeza con may well, must have, can't have y would have to be con precisión epistémica."
+  },
+  "cards": [
+    {
+      "id": "c2-modalidad-matizada-concept",
+      "tag": "Idea central",
+      "title": "Modalidad: qué expresa",
+      "lede": "Ya calibras certeza con may well, must have, can't have y would have to be con precisión epistémica.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "may well",
+              "value": "It may well be true. · probabilidad alta",
+              "highlights": [
+                "may well"
+              ]
+            },
+            {
+              "key": "must have",
+              "value": "She must have left early. · inferencia fuerte pasada",
+              "highlights": [
+                "must have"
+              ]
+            },
+            {
+              "key": "can't have",
+              "value": "He can't have known. · imposibilidad inferida",
+              "highlights": [
+                "can't have"
+              ]
+            },
+            {
+              "key": "would have to",
+              "value": "That would have to be the answer. · conclusión forzada",
+              "highlights": [
+                "would have to"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "c2-modalidad-matizada-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "may well",
+              "value": "It may well be true. · probabilidad alta",
+              "highlights": [
+                "may well"
+              ]
+            },
+            {
+              "key": "must have",
+              "value": "She must have left early. · inferencia fuerte pasada",
+              "highlights": [
+                "must have"
+              ]
+            },
+            {
+              "key": "can't have",
+              "value": "He can't have known. · imposibilidad inferida",
+              "highlights": [
+                "can't have"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-modalidad-matizada-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "probabilidad alta"
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "inferencia fuerte pasada"
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "imposibilidad inferida"
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "conclusión forzada"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-modalidad-matizada-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "may well",
+              "rule": "It may well be true. · probabilidad alta",
+              "examples": [
+                "probabilidad alta"
+              ]
+            },
+            {
+              "label": "must have",
+              "rule": "She must have left early. · inferencia fuerte pasada",
+              "examples": [
+                "inferencia fuerte pasada"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-modalidad-matizada-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "She must left early."
+            },
+            {
+              "variant": "good",
+              "text": "She must have left early.",
+              "note": "inferencia pasada → must have + pp"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-modalidad-matizada-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "They ___ have missed the memo; everyone else complied.",
+      "options": [
+        "can't",
+        "mustn't"
+      ],
+      "answer": 0,
+      "explain": "can't have = imposible que haya ocurrido."
+    }
+  ]
+}

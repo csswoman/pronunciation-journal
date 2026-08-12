@@ -36,6 +36,7 @@ import {
   IconCircleCheck,
   IconClipboardList,
   IconClockHour4,
+  IconCloudFog,
   IconCode,
   IconColumns2,
   IconComponents,
@@ -54,6 +55,7 @@ import {
   IconGridDots,
   IconHeadphones,
   IconHeart,
+  IconHeartHandshake,
   IconHelpCircle,
   IconHistory,
   IconHome,
@@ -69,8 +71,11 @@ import {
   IconLock,
   IconLogin,
   IconLogout,
+  IconMail,
+  IconMap,
   IconMenu2,
   IconMessageCircle,
+  IconMoodSmile,
   IconMicrophone,
   IconMicrophone2,
   IconMicrophoneOff,
@@ -95,7 +100,9 @@ import {
   IconServer,
   IconSettings,
   IconSettings2,
+  IconShoppingBag,
   IconSparkles,
+  IconStethoscope,
   IconSquare,
   IconSquareCheck,
   IconStack2,
@@ -103,6 +110,7 @@ import {
   IconSun,
   IconTarget,
   IconTheater,
+  IconToolsKitchen2,
   IconTrash,
   IconTrendingUp,
   IconTrophy,
@@ -144,6 +152,7 @@ export const ChevronUp = createIcon(IconChevronUp, "ChevronUp");
 export const Circle = createIcon(IconCircle, "Circle");
 export const Clapperboard = createIcon(IconMovie, "Clapperboard");
 export const ClipboardList = createIcon(IconClipboardList, "ClipboardList");
+export const CloudFog = createIcon(IconCloudFog, "CloudFog");
 export const Code2 = createIcon(IconCode, "Code2");
 export const Columns2 = createIcon(IconColumns2, "Columns2");
 export const Component = createIcon(IconComponents, "Component");
@@ -160,6 +169,7 @@ export const GitCompareArrows = createIcon(IconGitCompare, "GitCompareArrows");
 export const GraduationCap = createIcon(IconSchool, "GraduationCap");
 export const Grid2x2 = createIcon(IconGridDots, "Grid2x2");
 export const Headphones = createIcon(IconHeadphones, "Headphones");
+export const Handshake = createIcon(IconHeartHandshake, "Handshake");
 export const Heart = createIcon(IconHeart, "Heart");
 export const HelpCircle = createIcon(IconHelpCircle, "HelpCircle");
 export const History = createIcon(IconHistory, "History");
@@ -178,6 +188,8 @@ export const Loader2 = createIcon(IconLoader2, "Loader2");
 export const Lock = createIcon(IconLock, "Lock");
 export const LogIn = createIcon(IconLogin, "LogIn");
 export const LogOut = createIcon(IconLogout, "LogOut");
+export const Mail = createIcon(IconMail, "Mail");
+export const Map = createIcon(IconMap, "Map");
 export const Maximize2 = createIcon(IconArrowsMaximize, "Maximize2");
 export const Menu = createIcon(IconMenu2, "Menu");
 export const MessageCircle = createIcon(IconMessageCircle, "MessageCircle");
@@ -205,10 +217,13 @@ export const SendHorizonal = createIcon(IconSend, "SendHorizonal");
 export const Server = createIcon(IconServer, "Server");
 export const Settings = createIcon(IconSettings, "Settings");
 export const Settings2 = createIcon(IconSettings2, "Settings2");
+export const ShoppingBag = createIcon(IconShoppingBag, "ShoppingBag");
 export const SkipForward = createIcon(IconPlayerSkipForward, "SkipForward");
+export const Smile = createIcon(IconMoodSmile, "Smile");
 export const Sparkles = createIcon(IconSparkles, "Sparkles");
 export const Square = createIcon(IconSquare, "Square");
 export const Star = createIcon(IconStar, "Star");
+export const Stethoscope = createIcon(IconStethoscope, "Stethoscope");
 export const Sun = createIcon(IconSun, "Sun");
 export const Target = createIcon(IconTarget, "Target");
 export const Theater = createIcon(IconTheater, "Theater");
@@ -218,6 +233,7 @@ export const TrendingUp = createIcon(IconTrendingUp, "TrendingUp");
 export const Trophy = createIcon(IconTrophy, "Trophy");
 export const Undo2 = createIcon(IconRotateClockwise, "Undo2");
 export const User = createIcon(IconUser, "User");
+export const Utensils = createIcon(IconToolsKitchen2, "Utensils");
 export const Volume2 = createIcon(IconVolume, "Volume2");
 export const Waves = createIcon(IconWaveSine, "Waves");
 export const X = createIcon(IconX, "X");

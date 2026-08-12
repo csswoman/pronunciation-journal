@@ -1,0 +1,200 @@
+{
+  "meta": {
+    "eyebrow": "A1 · Sustantivos",
+    "title": "Contables e",
+    "titleEmphasis": "incontables",
+    "goal": "Ya distingues sustantivos que puedes contar de los que van en masa."
+  },
+  "cards": [
+    {
+      "id": "a1-contables-incontables-concept",
+      "tag": "Idea central",
+      "title": "Contables e: qué expresa",
+      "lede": "Ya distingues sustantivos que puedes contar de los que van en masa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Contable",
+              "value": "an apple, two apples, many apples",
+              "highlights": [
+                "apples"
+              ]
+            },
+            {
+              "key": "Incontable",
+              "value": "water, rice, money (sin plural)",
+              "highlights": [
+                "water"
+              ]
+            },
+            {
+              "key": "a/an",
+              "value": "solo con contables singulares · a book",
+              "highlights": [
+                "a"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "a1-contables-incontables-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Contable",
+              "value": "an apple, two apples, many apples",
+              "highlights": [
+                "apples"
+              ]
+            },
+            {
+              "key": "Incontable",
+              "value": "water, rice, money (sin plural)",
+              "highlights": [
+                "water"
+              ]
+            },
+            {
+              "key": "a/an",
+              "value": "solo con contables singulares · a book",
+              "highlights": [
+                "a"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-contables-incontables-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "an apple, two apples, many apples"
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "water, rice, money (sin plural)"
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "a book"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-contables-incontables-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Contable",
+              "rule": "an apple, two apples, many apples",
+              "examples": [
+                "an apple, two apples, many apples"
+              ]
+            },
+            {
+              "label": "Incontable",
+              "rule": "water, rice, money (sin plural)",
+              "examples": [
+                "water, rice, money (sin plural)"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-contables-incontables-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "I need an informations."
+            },
+            {
+              "variant": "good",
+              "text": "I need some information.",
+              "note": "information es incontable"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-contables-incontables-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Can I have ___ water?",
+      "options": [
+        "some",
+        "a"
+      ],
+      "answer": 0,
+      "explain": "water es incontable → some."
+    }
+  ]
+}

@@ -20,10 +20,28 @@ export interface RealLifeVocabItem {
   meaning: string;
 }
 
+/** Icon key for Real Life scenario cards (replaces emoji badges) */
+export type RealLifeScenarioIcon =
+  | "utensils"
+  | "user"
+  | "sun"
+  | "shopping"
+  | "calendar"
+  | "map"
+  | "stethoscope"
+  | "book"
+  | "mail"
+  | "message"
+  | "smile"
+  | "handshake"
+  | "fog"
+  | "theater"
+  | "target";
+
 export interface RealLifeScenario {
   id: string;
   title: string;
-  emoji?: string;
+  icon: RealLifeScenarioIcon;
   phrases: string[];
   vocab: RealLifeVocabItem[];
 }

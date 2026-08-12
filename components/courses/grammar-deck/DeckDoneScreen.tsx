@@ -45,20 +45,22 @@ export function DeckDoneScreen({
   const related = relatedLinks ?? deck.related;
   return (
     <section className="grammar-deck__done" aria-live="polite">
-      <div className="grammar-deck__done-badge">
-        <Check size={30} strokeWidth={3} aria-hidden />
+      <div className="grammar-deck__done-intro">
+        <div className="grammar-deck__done-badge">
+          <Check size={28} strokeWidth={2.75} aria-hidden />
+        </div>
+        <h2 className="grammar-deck__done-title">¡Lección completada!</h2>
+        {courseTitle && <p className="grammar-deck__done-sub">{courseTitle}</p>}
+        {deck.meta.goal && <p className="grammar-deck__done-goal">{deck.meta.goal}</p>}
       </div>
-      <h2 className="grammar-deck__done-title">¡Lección completada!</h2>
-      {courseTitle && <p className="grammar-deck__done-sub">{courseTitle}</p>}
-      {deck.meta.goal && <p className="grammar-deck__done-goal">{deck.meta.goal}</p>}
 
       {quizScore && (
-        <div className="grammar-deck__done-stats">
-          <div>
-            <b>{quizScore.correct}/{quizScore.total}</b>
-            <span>respuestas correctas</span>
-          </div>
-        </div>
+        <p className="grammar-deck__done-score">
+          <span className="grammar-deck__done-score-value">
+            {quizScore.correct}/{quizScore.total}
+          </span>
+          <span className="grammar-deck__done-score-label">respuestas correctas</span>
+        </p>
       )}
 
       {lessonId && (
@@ -85,7 +87,7 @@ export function DeckDoneScreen({
 
       {related && related.length > 0 && (
         <div className="grammar-deck__related">
-          <span className="grammar-deck__related-label">Continúa con</span>
+          <span className="grammar-deck__related-label font-kicker">Continúa con</span>
           <ul>
             {related.map((r) => (
               <li key={r.slug}>

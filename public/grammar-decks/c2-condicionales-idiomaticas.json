@@ -1,0 +1,211 @@
+{
+  "meta": {
+    "eyebrow": "C2 · Condicionales",
+    "title": "Condicionales",
+    "titleEmphasis": "idiomáticas",
+    "goal": "Ya usas condicionales comprimidas: Had I known…, Were it not for…, If need be, If so/if not."
+  },
+  "cards": [
+    {
+      "id": "c2-condicionales-idiomaticas-concept",
+      "tag": "Idea central",
+      "title": "Condicionales: qué expresa",
+      "lede": "Ya usas condicionales comprimidas: Had I known…, Were it not for…, If need be, If so/if not.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Had I known",
+              "value": "Had I known, I would have acted. · elipsis de if",
+              "highlights": [
+                "Had I known"
+              ]
+            },
+            {
+              "key": "Were it not for",
+              "value": "Were it not for her help, we would have failed.",
+              "highlights": [
+                "Were it not for"
+              ]
+            },
+            {
+              "key": "If need be",
+              "value": "We can reschedule if need be.",
+              "highlights": [
+                "if need be"
+              ]
+            },
+            {
+              "key": "If so / if not",
+              "value": "Is it urgent? If so, call me.",
+              "highlights": [
+                "If so"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "c2-condicionales-idiomaticas-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Had I known",
+              "value": "Had I known, I would have acted. · elipsis de if",
+              "highlights": [
+                "Had I known"
+              ]
+            },
+            {
+              "key": "Were it not for",
+              "value": "Were it not for her help, we would have failed.",
+              "highlights": [
+                "Were it not for"
+              ]
+            },
+            {
+              "key": "If need be",
+              "value": "We can reschedule if need be.",
+              "highlights": [
+                "if need be"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-condicionales-idiomaticas-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "elipsis de if"
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "Were it not for her help, we would have failed."
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "We can reschedule if need be."
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "Is it urgent? If so, call me."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-condicionales-idiomaticas-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Had I known",
+              "rule": "Had I known, I would have acted. · elipsis de if",
+              "examples": [
+                "elipsis de if"
+              ]
+            },
+            {
+              "label": "Were it not for",
+              "rule": "Were it not for her help, we would have failed.",
+              "examples": [
+                "Were it not for her help, we would have failed."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-condicionales-idiomaticas-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "If I would have known…"
+            },
+            {
+              "variant": "good",
+              "text": "Had I known… / If I had known…",
+              "note": "condicional pasado sin would en la parte if"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-condicionales-idiomaticas-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "___ it not for the grant, the project would collapse.",
+      "options": [
+        "Were",
+        "Was"
+      ],
+      "answer": 0,
+      "explain": "Were it not for = if it were not for."
+    }
+  ]
+}

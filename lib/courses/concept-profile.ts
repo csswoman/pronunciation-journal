@@ -20,6 +20,8 @@ export interface ConceptSignal {
   correct: number;
   total: number;
   assessedAt: string;
+  /** When set, Daily study_deck ignores this review signal until due. */
+  verificationDueAt?: string;
 }
 
 export function deriveConceptSignal(

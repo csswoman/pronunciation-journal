@@ -5,6 +5,8 @@ import { ArrowRight } from "@/components/icons";
 import { useEffect, useMemo, useState } from "react";
 import CoursePathLessonRow from "@/components/courses/CoursePathLessonRow";
 import CoursePracticeSuggestions from "@/components/courses/CoursePracticeSuggestions";
+import { WordCarousel } from "@/components/practice/session/WordCarousel";
+import { useLoadingWords } from "@/hooks/useLoadingWords";
 import { studyLessonPath } from "@/lib/courses/curriculumIndex";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth/session";
@@ -31,6 +33,7 @@ function completionKey(userId: string, courseSlug: string, lessonSlug: string): 
 }
 
 export default function CoursePathProgressClient({ level, compactHead }: CoursePathProgressClientProps) {
+  const loadingWords = useLoadingWords();
   const [completedIds, setCompletedIds] = useState<Set<string> | null>(null);
   const [loadError, setLoadError] = useState(false);
   const [retryKey, setRetryKey] = useState(0);
@@ -87,9 +90,15 @@ export default function CoursePathProgressClient({ level, compactHead }: CourseP
 
   if (!derived || !completedIds) {
     return (
-      <div className="course-path__progress-loading" role="status" aria-live="polite">
-        <span className="course-path__skeleton-bar course-path__skeleton-bar--head" aria-hidden />
-        <span>Comprobando tu progreso…</span>
+      <div
+        className="course-path__progress-loading"
+        role="status"
+        aria-live="polite"
+        aria-busy="true"
+        aria-label="Comprobando tu progreso"
+      >
+        <span className="sr-only">Comprobando tu progreso…</span>
+        <WordCarousel words={loadingWords} />
       </div>
     );
   }
@@ -106,14 +115,11 @@ export default function CoursePathProgressClient({ level, compactHead }: CourseP
       )}
 
       <div className={compactHead ? "course-path__head course-path__head--compact" : "course-path__head"}>
-        <h2>{derived.level.title}</h2>
-        <div className="course-path__prog">
-          <b className="course-path__prog-pct">{derived.progressPercent}%</b>
-          <div className="course-path__prog-meta">
-            {derived.completedCoreLessons} de {derived.totalCoreLessons} lecciones esenciales
-            {derived.level.hours && <span>{derived.level.hours}</span>}
-          </div>
-        </div>
+        {compactHead ? (
+          <h2>{derived.level.title}</h2>
+        ) : (
+          <h1>{derived.level.title}</h1>
+        )}
       </div>
 
       {completedIds.size === 0 && firstLesson && (

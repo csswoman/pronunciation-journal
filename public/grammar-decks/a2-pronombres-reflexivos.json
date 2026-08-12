@@ -1,0 +1,200 @@
+{
+  "meta": {
+    "eyebrow": "A2 · Pronombres",
+    "title": "Pronombres",
+    "titleEmphasis": "reflexivos",
+    "goal": "Ya usas myself, yourself, himself… cuando sujeto y objeto son la misma persona."
+  },
+  "cards": [
+    {
+      "id": "a2-pronombres-reflexivos-concept",
+      "tag": "Idea central",
+      "title": "Pronombres: qué expresa",
+      "lede": "Ya usas myself, yourself, himself… cuando sujeto y objeto son la misma persona.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "myself",
+              "value": "I hurt myself.",
+              "highlights": [
+                "myself"
+              ]
+            },
+            {
+              "key": "yourself",
+              "value": "Help yourself.",
+              "highlights": [
+                "yourself"
+              ]
+            },
+            {
+              "key": "himself / herself",
+              "value": "She taught herself.",
+              "highlights": [
+                "herself"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "a2-pronombres-reflexivos-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "myself",
+              "value": "I hurt myself.",
+              "highlights": [
+                "myself"
+              ]
+            },
+            {
+              "key": "yourself",
+              "value": "Help yourself.",
+              "highlights": [
+                "yourself"
+              ]
+            },
+            {
+              "key": "himself / herself",
+              "value": "She taught herself.",
+              "highlights": [
+                "herself"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-pronombres-reflexivos-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "I hurt myself."
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "Help yourself."
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "She taught herself."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-pronombres-reflexivos-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "myself",
+              "rule": "I hurt myself.",
+              "examples": [
+                "I hurt myself."
+              ]
+            },
+            {
+              "label": "yourself",
+              "rule": "Help yourself.",
+              "examples": [
+                "Help yourself."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-pronombres-reflexivos-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "I cut me."
+            },
+            {
+              "variant": "good",
+              "text": "I cut myself.",
+              "note": "misma persona → reflexivo"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-pronombres-reflexivos-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Be careful. Don't hurt ___.",
+      "options": [
+        "yourself",
+        "you"
+      ],
+      "answer": 0,
+      "explain": "Acción sobre uno mismo → yourself."
+    }
+  ]
+}

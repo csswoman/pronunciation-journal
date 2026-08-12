@@ -267,9 +267,9 @@
   --font-body-sm: var(--text-weight-body) var(--text-size-body-sm) / var(--text-leading-body-sm) var(--font-sans), sans-serif;
   --font-caption: var(--text-weight-body) var(--text-size-caption) / var(--text-leading-caption) var(--font-sans), sans-serif;
   --font-label:   var(--text-weight-label) var(--text-size-label) / var(--text-leading-label) var(--font-sans), sans-serif;
-  --font-kicker:  var(--text-weight-kicker) var(--text-size-kicker) / var(--text-leading-kicker) var(--font-mono-var), "Fira Code", monospace;
+  --font-kicker:  var(--text-weight-kicker) var(--text-size-kicker) / var(--text-leading-kicker) var(--font-mono-var), monospace;
   --font-tiny:    var(--text-weight-tiny) var(--text-size-tiny) / var(--text-leading-tiny) var(--font-sans), sans-serif;
-  --font-mono:    var(--text-weight-body) var(--text-size-caption) / var(--text-leading-body) var(--font-mono-var), "Fira Code", monospace;
+  --font-mono:    var(--text-weight-body) var(--text-size-caption) / var(--text-leading-body) var(--font-mono-var), monospace;
 
   /* ── 12. Transitions ─────────────────────────────────────────────────── */
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);

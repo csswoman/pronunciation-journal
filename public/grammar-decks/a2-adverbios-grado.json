@@ -1,0 +1,200 @@
+{
+  "meta": {
+    "eyebrow": "A2 · Adverbios",
+    "title": "Adverbios de",
+    "titleEmphasis": "grado",
+    "goal": "Ya matizas intensidad con very, really y quite delante de adjetivos."
+  },
+  "cards": [
+    {
+      "id": "a2-adverbios-grado-concept",
+      "tag": "Idea central",
+      "title": "Adverbios de: qué expresa",
+      "lede": "Ya matizas intensidad con very, really y quite delante de adjetivos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "very",
+              "value": "muy · very hot, very tired",
+              "highlights": [
+                "very"
+              ]
+            },
+            {
+              "key": "really",
+              "value": "de verdad · really good",
+              "highlights": [
+                "really"
+              ]
+            },
+            {
+              "key": "quite",
+              "value": "bastante · quite interesting",
+              "highlights": [
+                "quite"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "a2-adverbios-grado-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "very",
+              "value": "muy · very hot, very tired",
+              "highlights": [
+                "very"
+              ]
+            },
+            {
+              "key": "really",
+              "value": "de verdad · really good",
+              "highlights": [
+                "really"
+              ]
+            },
+            {
+              "key": "quite",
+              "value": "bastante · quite interesting",
+              "highlights": [
+                "quite"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-adverbios-grado-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "very hot, very tired"
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "really good"
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "quite interesting"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-adverbios-grado-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "very",
+              "rule": "muy · very hot, very tired",
+              "examples": [
+                "very hot, very tired"
+              ]
+            },
+            {
+              "label": "really",
+              "rule": "de verdad · really good",
+              "examples": [
+                "really good"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-adverbios-grado-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "It is very much hot."
+            },
+            {
+              "variant": "good",
+              "text": "It is very hot.",
+              "note": "very + adjetivo, sin much"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-adverbios-grado-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "The movie was ___ good.",
+      "options": [
+        "really",
+        "real"
+      ],
+      "answer": 0,
+      "explain": "Intensificador del adjetivo → really."
+    }
+  ]
+}

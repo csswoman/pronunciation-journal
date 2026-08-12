@@ -16,6 +16,7 @@ import type { HomePronunciationDiagnosticState } from "@/lib/home/pronunciation-
 
 interface HomeLayoutProps {
   streak?: DailyStreakResult;
+  profileLevel?: string | null;
   wordsDueCount?: number;
   soundsDueCount?: number;
   conceptLesson?: ConceptLesson | null;
@@ -31,6 +32,7 @@ interface HomeLayoutProps {
 
 export default function HomeLayout({
   streak,
+  profileLevel = null,
   wordsDueCount = 0,
   soundsDueCount = 0,
   conceptLesson = null,
@@ -55,6 +57,7 @@ export default function HomeLayout({
         />
         <HomeCommandGrid
           conceptLesson={conceptLesson}
+          profileLevel={profileLevel}
           weakestPhoneme={weakestPhoneme}
           wordsDueCount={wordsDueCount}
           soundsDueCount={soundsDueCount}

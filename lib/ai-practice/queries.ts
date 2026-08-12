@@ -70,7 +70,7 @@ export async function persistLearningState(
   userId: string,
   state: UserLearningState,
 ): Promise<void> {
-  const updatedAt = new Date().toISOString()
+  const updatedAt = state.updatedAt || new Date().toISOString()
   await db.transaction('rw', [db.learningState, db.syncOutbox], async () => {
     await db.learningState.put({ userId, state, updatedAt })
     await enqueue(

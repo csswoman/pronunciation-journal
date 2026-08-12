@@ -1,0 +1,211 @@
+{
+  "meta": {
+    "eyebrow": "C1 · Subjuntivo",
+    "title": "Subjuntivo",
+    "titleEmphasis": "formal",
+    "goal": "Ya usas la forma base tras suggest/insist/demand + that: They insisted that he be present."
+  },
+  "cards": [
+    {
+      "id": "c1-subjuntivo-formal-concept",
+      "tag": "Idea central",
+      "title": "Subjuntivo: qué expresa",
+      "lede": "Ya usas la forma base tras suggest/insist/demand + that: They insisted that he be present.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Verbos",
+              "value": "suggest · insist · demand · recommend · propose",
+              "highlights": [
+                "insist"
+              ]
+            },
+            {
+              "key": "Estructura",
+              "value": "that + sujeto + base · no -s en 3ª persona",
+              "highlights": [
+                "that he be"
+              ]
+            },
+            {
+              "key": "Ejemplo",
+              "value": "She demanded that he leave immediately.",
+              "highlights": [
+                "leave"
+              ]
+            },
+            {
+              "key": "Alternativa",
+              "value": "should + infinitivo en registro menos formal",
+              "highlights": [
+                "should"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "c1-subjuntivo-formal-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Verbos",
+              "value": "suggest · insist · demand · recommend · propose",
+              "highlights": [
+                "insist"
+              ]
+            },
+            {
+              "key": "Estructura",
+              "value": "that + sujeto + base · no -s en 3ª persona",
+              "highlights": [
+                "that he be"
+              ]
+            },
+            {
+              "key": "Ejemplo",
+              "value": "She demanded that he leave immediately.",
+              "highlights": [
+                "leave"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-subjuntivo-formal-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "insist"
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "no -s en 3ª persona"
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "She demanded that he leave immediately."
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "should + infinitivo en registro menos formal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-subjuntivo-formal-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Verbos",
+              "rule": "suggest · insist · demand · recommend · propose",
+              "examples": [
+                "insist"
+              ]
+            },
+            {
+              "label": "Estructura",
+              "rule": "that + sujeto + base · no -s en 3ª persona",
+              "examples": [
+                "no -s en 3ª persona"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-subjuntivo-formal-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "They insisted that he leaves."
+            },
+            {
+              "variant": "good",
+              "text": "They insisted that he leave.",
+              "note": "subjuntivo formal → base sin -s"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-subjuntivo-formal-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "The board recommended that she ___ the role.",
+      "options": [
+        "take",
+        "takes"
+      ],
+      "answer": 0,
+      "explain": "Tras recommend that → forma base."
+    }
+  ]
+}

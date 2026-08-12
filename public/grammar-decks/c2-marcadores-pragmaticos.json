@@ -1,0 +1,211 @@
+{
+  "meta": {
+    "eyebrow": "C2 · Pragmática",
+    "title": "Marcadores",
+    "titleEmphasis": "pragmáticos",
+    "goal": "Ya posicionas tu actitud con frankly, presumably, as it were y if you ask me."
+  },
+  "cards": [
+    {
+      "id": "c2-marcadores-pragmaticos-concept",
+      "tag": "Idea central",
+      "title": "Marcadores: qué expresa",
+      "lede": "Ya posicionas tu actitud con frankly, presumably, as it were y if you ask me.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "frankly",
+              "value": "Frankly, the plan won't work. · honestidad directa",
+              "highlights": [
+                "Frankly"
+              ]
+            },
+            {
+              "key": "presumably",
+              "value": "Presumably, they already know.",
+              "highlights": [
+                "Presumably"
+              ]
+            },
+            {
+              "key": "as it were",
+              "value": "a kind of bridge, as it were · distanciamiento irónico",
+              "highlights": [
+                "as it were"
+              ]
+            },
+            {
+              "key": "if you ask me",
+              "value": "If you ask me, it's too risky. · opinión personal",
+              "highlights": [
+                "If you ask me"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "c2-marcadores-pragmaticos-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "frankly",
+              "value": "Frankly, the plan won't work. · honestidad directa",
+              "highlights": [
+                "Frankly"
+              ]
+            },
+            {
+              "key": "presumably",
+              "value": "Presumably, they already know.",
+              "highlights": [
+                "Presumably"
+              ]
+            },
+            {
+              "key": "as it were",
+              "value": "a kind of bridge, as it were · distanciamiento irónico",
+              "highlights": [
+                "as it were"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-marcadores-pragmaticos-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "honestidad directa"
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "Presumably, they already know."
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "distanciamiento irónico"
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "opinión personal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-marcadores-pragmaticos-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "frankly",
+              "rule": "Frankly, the plan won't work. · honestidad directa",
+              "examples": [
+                "honestidad directa"
+              ]
+            },
+            {
+              "label": "presumably",
+              "rule": "Presumably, they already know.",
+              "examples": [
+                "Presumably, they already know."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-marcadores-pragmaticos-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "Frankly to say…"
+            },
+            {
+              "variant": "good",
+              "text": "Frankly, … / To be frank, …",
+              "note": "frankly va al inicio o como frase hecha"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-marcadores-pragmaticos-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "___, the merger is already decided.",
+      "options": [
+        "Presumably",
+        "Frankly"
+      ],
+      "answer": 0,
+      "explain": "Presumably = suposición razonable, no confesión directa."
+    }
+  ]
+}

@@ -1,0 +1,212 @@
+{
+  "meta": {
+    "eyebrow": "C2 · Pasiva",
+    "title": "Pasiva",
+    "titleEmphasis": "estilística",
+    "goal": "Ya usas pasiva impersonal y reportada: It is believed that…, He is said to be…, It is reported that…"
+  },
+  "cards": [
+    {
+      "id": "c2-pasiva-estilistica-concept",
+      "tag": "Idea central",
+      "title": "Pasiva: qué expresa",
+      "lede": "Ya usas pasiva impersonal y reportada: It is believed that…, He is said to be…, It is reported that…",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "It is believed",
+              "value": "It is believed that costs will rise.",
+              "highlights": [
+                "It is believed"
+              ]
+            },
+            {
+              "key": "is said to",
+              "value": "He is said to be considering retirement.",
+              "highlights": [
+                "is said to be"
+              ]
+            },
+            {
+              "key": "Impersonal",
+              "value": "oculta o difumina el agente",
+              "highlights": [
+                "It is"
+              ]
+            },
+            {
+              "key": "Registro",
+              "value": "académico, periodístico, oficial",
+              "highlights": [
+                "believed",
+                "reported"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "c2-pasiva-estilistica-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "It is believed",
+              "value": "It is believed that costs will rise.",
+              "highlights": [
+                "It is believed"
+              ]
+            },
+            {
+              "key": "is said to",
+              "value": "He is said to be considering retirement.",
+              "highlights": [
+                "is said to be"
+              ]
+            },
+            {
+              "key": "Impersonal",
+              "value": "oculta o difumina el agente",
+              "highlights": [
+                "It is"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-pasiva-estilistica-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "It is believed that costs will rise."
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "He is said to be considering retirement."
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "oculta o difumina el agente"
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "académico, periodístico, oficial"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-pasiva-estilistica-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "It is believed",
+              "rule": "It is believed that costs will rise.",
+              "examples": [
+                "It is believed that costs will rise."
+              ]
+            },
+            {
+              "label": "is said to",
+              "rule": "He is said to be considering retirement.",
+              "examples": [
+                "He is said to be considering retirement."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-pasiva-estilistica-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "People is said that…"
+            },
+            {
+              "variant": "good",
+              "text": "It is said that… / He is said to…",
+              "note": "estructura impersonal fija"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-pasiva-estilistica-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "The CEO ___ to be negotiating a deal.",
+      "options": [
+        "is said",
+        "says"
+      ],
+      "answer": 0,
+      "explain": "Reportaje pasivo → is said to + infinitivo."
+    }
+  ]
+}

@@ -1,0 +1,200 @@
+{
+  "meta": {
+    "eyebrow": "A2 · Futuro",
+    "title": "Continuo para",
+    "titleEmphasis": "planes",
+    "goal": "Ya usas presente continuo para citas y planes ya acordados."
+  },
+  "cards": [
+    {
+      "id": "a2-presente-continuo-futuro-concept",
+      "tag": "Idea central",
+      "title": "Continuo para: qué expresa",
+      "lede": "Ya usas presente continuo para citas y planes ya acordados.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Plan fijo",
+              "value": "I'm meeting John at 6. (ya acordado)",
+              "highlights": [
+                "I'm meeting"
+              ]
+            },
+            {
+              "key": "Señales",
+              "value": "tonight, tomorrow, next week",
+              "highlights": [
+                "tomorrow"
+              ]
+            },
+            {
+              "key": "vs going to",
+              "value": "I'm going to study = intención general",
+              "highlights": [
+                "going to"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "a2-presente-continuo-futuro-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Plan fijo",
+              "value": "I'm meeting John at 6. (ya acordado)",
+              "highlights": [
+                "I'm meeting"
+              ]
+            },
+            {
+              "key": "Señales",
+              "value": "tonight, tomorrow, next week",
+              "highlights": [
+                "tomorrow"
+              ]
+            },
+            {
+              "key": "vs going to",
+              "value": "I'm going to study = intención general",
+              "highlights": [
+                "going to"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-presente-continuo-futuro-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "I'm meeting John at 6. (ya acordado)"
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "tonight, tomorrow, next week"
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "I'm going to study = intención general"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-presente-continuo-futuro-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Plan fijo",
+              "rule": "I'm meeting John at 6. (ya acordado)",
+              "examples": [
+                "I'm meeting John at 6. (ya acordado)"
+              ]
+            },
+            {
+              "label": "Señales",
+              "rule": "tonight, tomorrow, next week",
+              "examples": [
+                "tonight, tomorrow, next week"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-presente-continuo-futuro-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "I meet him tomorrow."
+            },
+            {
+              "variant": "good",
+              "text": "I'm meeting him tomorrow.",
+              "note": "cita acordada → continuo"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-presente-continuo-futuro-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "We ___ lunch with them on Friday.",
+      "options": [
+        "are having",
+        "have"
+      ],
+      "answer": 0,
+      "explain": "Plan acordado → present continuous."
+    }
+  ]
+}

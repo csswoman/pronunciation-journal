@@ -1,0 +1,211 @@
+{
+  "meta": {
+    "eyebrow": "C2 · Inversión",
+    "title": "Inversión",
+    "titleEmphasis": "literaria",
+    "goal": "Ya creas énfasis dramático con So great was…, Such was… y otras inversiones literarias."
+  },
+  "cards": [
+    {
+      "id": "c2-inversion-literaria-concept",
+      "tag": "Idea central",
+      "title": "Inversión: qué expresa",
+      "lede": "Ya creas énfasis dramático con So great was…, Such was… y otras inversiones literarias.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "So + adj",
+              "value": "So great was her despair that she resigned.",
+              "highlights": [
+                "So great was"
+              ]
+            },
+            {
+              "key": "Such + noun",
+              "value": "Such was his courage that everyone followed.",
+              "highlights": [
+                "Such was"
+              ]
+            },
+            {
+              "key": "Registro",
+              "value": "literario, ceremonial, retórico",
+              "highlights": [
+                "So great"
+              ]
+            },
+            {
+              "key": "Efecto",
+              "value": "llama la atención al elemento inicial",
+              "highlights": [
+                "was"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "c2-inversion-literaria-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "So + adj",
+              "value": "So great was her despair that she resigned.",
+              "highlights": [
+                "So great was"
+              ]
+            },
+            {
+              "key": "Such + noun",
+              "value": "Such was his courage that everyone followed.",
+              "highlights": [
+                "Such was"
+              ]
+            },
+            {
+              "key": "Registro",
+              "value": "literario, ceremonial, retórico",
+              "highlights": [
+                "So great"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-inversion-literaria-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "So great was her despair that she resigned."
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "Such was his courage that everyone followed."
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "literario, ceremonial, retórico"
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "llama la atención al elemento inicial"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-inversion-literaria-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "So + adj",
+              "rule": "So great was her despair that she resigned.",
+              "examples": [
+                "So great was her despair that she resigned."
+              ]
+            },
+            {
+              "label": "Such + noun",
+              "rule": "Such was his courage that everyone followed.",
+              "examples": [
+                "Such was his courage that everyone followed."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-inversion-literaria-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "So great her despair was…"
+            },
+            {
+              "variant": "good",
+              "text": "So great was her despair…",
+              "note": "inversión: So + adj + was + sujeto"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-inversion-literaria-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "___ impressive was the result that applause erupted.",
+      "options": [
+        "So",
+        "Such"
+      ],
+      "answer": 0,
+      "explain": "So + adjetivo + was + sujeto."
+    }
+  ]
+}

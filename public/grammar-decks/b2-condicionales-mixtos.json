@@ -1,0 +1,215 @@
+{
+  "meta": {
+    "eyebrow": "B2 · Condicionales",
+    "title": "Condicionales",
+    "titleEmphasis": "mixtos",
+    "goal": "Ya combinas tiempos en condicionales mixtos (pasado → presente, etc.)."
+  },
+  "cards": [
+    {
+      "id": "b2-condicionales-mixtos-concept",
+      "tag": "Idea central",
+      "title": "Condicionales: qué expresa",
+      "lede": "Ya combinas tiempos en condicionales mixtos (pasado → presente, etc.).",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Pasado → presente",
+              "value": "If I had studied, I would have a better job now.",
+              "highlights": [
+                "had studied",
+                "would have"
+              ]
+            },
+            {
+              "key": "Presente → pasado",
+              "value": "If I were taller, I would have joined the team.",
+              "highlights": [
+                "were",
+                "would have"
+              ]
+            },
+            {
+              "key": "Idea",
+              "value": "condición en un tiempo, resultado en otro",
+              "highlights": [
+                "If"
+              ]
+            },
+            {
+              "key": "Señal",
+              "value": "now, then, at the time",
+              "highlights": [
+                "now"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "b2-condicionales-mixtos-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Pasado → presente",
+              "value": "If I had studied, I would have a better job now.",
+              "highlights": [
+                "had studied",
+                "would have"
+              ]
+            },
+            {
+              "key": "Presente → pasado",
+              "value": "If I were taller, I would have joined the team.",
+              "highlights": [
+                "were",
+                "would have"
+              ]
+            },
+            {
+              "key": "Idea",
+              "value": "condición en un tiempo, resultado en otro",
+              "highlights": [
+                "If"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-condicionales-mixtos-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "If I had studied, I would have a better job now."
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "If I were taller, I would have joined the team."
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "condición en un tiempo, resultado en otro"
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "now, then, at the time"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-condicionales-mixtos-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Pasado → presente",
+              "rule": "If I had studied, I would have a better job now.",
+              "examples": [
+                "If I had studied, I would have a better job now."
+              ]
+            },
+            {
+              "label": "Presente → pasado",
+              "rule": "If I were taller, I would have joined the team.",
+              "examples": [
+                "If I were taller, I would have joined the team."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-condicionales-mixtos-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "If I studied harder, I would have passed."
+            },
+            {
+              "variant": "good",
+              "text": "If I had studied harder, I would have passed.",
+              "note": "arrepentimiento pasado → past perfect"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-condicionales-mixtos-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "If I ___ the train, I would be there now.",
+      "options": [
+        "had caught",
+        "caught"
+      ],
+      "answer": 0,
+      "explain": "Condición pasada, resultado presente → had + pp."
+    }
+  ]
+}

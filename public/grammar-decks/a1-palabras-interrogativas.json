@@ -1,0 +1,213 @@
+{
+  "meta": {
+    "eyebrow": "A1 · Preguntas",
+    "title": "Palabras",
+    "titleEmphasis": "interrogativas",
+    "goal": "Ya puedes preguntar con what, who, where, when, why y how."
+  },
+  "cards": [
+    {
+      "id": "a1-palabras-interrogativas-concept",
+      "tag": "Idea central",
+      "title": "Palabras: qué expresa",
+      "lede": "Ya puedes preguntar con what, who, where, when, why y how.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "What",
+              "value": "¿Qué? · What is this?",
+              "highlights": [
+                "What"
+              ]
+            },
+            {
+              "key": "Who",
+              "value": "¿Quién? · Who is she?",
+              "highlights": [
+                "Who"
+              ]
+            },
+            {
+              "key": "Where",
+              "value": "¿Dónde? · Where do you live?",
+              "highlights": [
+                "Where"
+              ]
+            },
+            {
+              "key": "When / Why / How",
+              "value": "¿Cuándo? / ¿Por qué? / ¿Cómo?",
+              "highlights": [
+                "When",
+                "Why",
+                "How"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "a1-palabras-interrogativas-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "What",
+              "value": "¿Qué? · What is this?",
+              "highlights": [
+                "What"
+              ]
+            },
+            {
+              "key": "Who",
+              "value": "¿Quién? · Who is she?",
+              "highlights": [
+                "Who"
+              ]
+            },
+            {
+              "key": "Where",
+              "value": "¿Dónde? · Where do you live?",
+              "highlights": [
+                "Where"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-palabras-interrogativas-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "What is this?"
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "Who is she?"
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "Where do you live?"
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "¿Cuándo? / ¿Por qué? / ¿Cómo?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-palabras-interrogativas-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "What",
+              "rule": "¿Qué? · What is this?",
+              "examples": [
+                "What is this?"
+              ]
+            },
+            {
+              "label": "Who",
+              "rule": "¿Quién? · Who is she?",
+              "examples": [
+                "Who is she?"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-palabras-interrogativas-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "Where you live?"
+            },
+            {
+              "variant": "good",
+              "text": "Where do you live?",
+              "note": "pregunta con do/does + sujeto + verbo base"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-palabras-interrogativas-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "___ is your name?",
+      "options": [
+        "What",
+        "Where"
+      ],
+      "answer": 0,
+      "explain": "Pides información → What."
+    }
+  ]
+}

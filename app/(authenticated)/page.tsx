@@ -6,7 +6,11 @@ import { getSupabaseServerUserId } from "@/lib/supabase/session";
 import { getVocabularyProgressSeed } from "@/lib/vocabulary/server-progress";
 import { getHomeMiniLessons } from "@/lib/content/lessons";
 import { getDailyStreak } from "@/lib/daily/streak";
-import { getTodayPracticeGoal, getWeakestPhonemeForHome } from "@/lib/home/queries";
+import {
+  getTodayPracticeGoal,
+  getUserProfileLevel,
+  getWeakestPhonemeForHome,
+} from "@/lib/home/queries";
 import { getReviewQueueSummary } from "@/lib/home/review-queue";
 import { getHomePlacementState, type HomePlacementState } from "@/lib/home/placement-state";
 import {
@@ -54,6 +58,7 @@ export default async function HomePage() {
     vocabulary,
     goal,
     weakSound,
+    profileLevel,
     placementState,
     pronunciationDiagnosticState,
   ] = await Promise.all([
@@ -74,6 +79,11 @@ export default async function HomePage() {
       userId ? getWeakestPhonemeForHome(userId) : Promise.resolve(null),
       null as WeakestPhonemeHome | null,
       "weak phoneme",
+    ),
+    settled(
+      userId ? getUserProfileLevel(userId) : Promise.resolve(null),
+      null as string | null,
+      "profile level",
     ),
     settled(
       userId ? getHomePlacementState(userId) : Promise.resolve(hiddenPlacementPrompt),
@@ -101,6 +111,7 @@ export default async function HomePage() {
     <PageLayout archetype="dashboard">
       <HomeLayout
         streak={streak}
+        profileLevel={profileLevel}
         wordsDueCount={queue.sources.find((s) => s.id === "vocabulary")?.count ?? 0}
         soundsDueCount={queue.sources.find((s) => s.id === "sounds")?.count ?? 0}
         conceptLesson={conceptLesson}

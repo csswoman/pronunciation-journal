@@ -1,6 +1,7 @@
 import type { ExerciseResult } from "./types";
 import type { CEFRLevel } from "@/lib/exercises/cefr";
 import type { ConceptSignal } from "@/lib/courses/concept-profile";
+import type { LearningFocus } from "@/lib/learning-focus/types";
 
 export interface UserLearningState {
   userId: string;
@@ -52,6 +53,8 @@ export interface UserLearningState {
     exercisesCompleted: number;
     correctRate: number;
   }>;
+
+  focus?: LearningFocus | null;
 }
 
 export function compactState(s: UserLearningState): string {

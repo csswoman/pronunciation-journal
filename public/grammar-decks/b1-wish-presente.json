@@ -1,0 +1,211 @@
+{
+  "meta": {
+    "eyebrow": "B1 · Wish",
+    "title": "Wish + pasado",
+    "titleEmphasis": "simple",
+    "goal": "Ya lamentas situaciones presentes con I wish + pasado simple."
+  },
+  "cards": [
+    {
+      "id": "b1-wish-presente-concept",
+      "tag": "Idea central",
+      "title": "Wish + pasado: qué expresa",
+      "lede": "Ya lamentas situaciones presentes con I wish + pasado simple.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Presente irreal",
+              "value": "I wish I had more time.",
+              "highlights": [
+                "had"
+              ]
+            },
+            {
+              "key": "Estado",
+              "value": "I wish I lived closer.",
+              "highlights": [
+                "lived"
+              ]
+            },
+            {
+              "key": "were",
+              "value": "I wish it were warmer. · todas las personas",
+              "highlights": [
+                "were"
+              ]
+            },
+            {
+              "key": "Contraste",
+              "value": "I don't have time → I wish I had time.",
+              "highlights": [
+                "wish"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "b1-wish-presente-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Presente irreal",
+              "value": "I wish I had more time.",
+              "highlights": [
+                "had"
+              ]
+            },
+            {
+              "key": "Estado",
+              "value": "I wish I lived closer.",
+              "highlights": [
+                "lived"
+              ]
+            },
+            {
+              "key": "were",
+              "value": "I wish it were warmer. · todas las personas",
+              "highlights": [
+                "were"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-wish-presente-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "I wish I had more time."
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "I wish I lived closer."
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "todas las personas"
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "I don't have time → I wish I had time."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-wish-presente-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Presente irreal",
+              "rule": "I wish I had more time.",
+              "examples": [
+                "I wish I had more time."
+              ]
+            },
+            {
+              "label": "Estado",
+              "rule": "I wish I lived closer.",
+              "examples": [
+                "I wish I lived closer."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-wish-presente-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "I wish I have more money."
+            },
+            {
+              "variant": "good",
+              "text": "I wish I had more money.",
+              "note": "wish + pasado para presente irreal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-wish-presente-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "I wish I ___ speak French.",
+      "options": [
+        "could",
+        "can"
+      ],
+      "answer": 0,
+      "explain": "Deseo sobre el presente → pasado modal."
+    }
+  ]
+}

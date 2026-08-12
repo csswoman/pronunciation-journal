@@ -1,0 +1,200 @@
+{
+  "meta": {
+    "eyebrow": "A1 · Posesión",
+    "title": "Genitivo sajón",
+    "titleEmphasis": "'s",
+    "goal": "Ya puedes expresar posesión con 's: Maria's phone, my brother's car."
+  },
+  "cards": [
+    {
+      "id": "a1-genitivo-sajon-concept",
+      "tag": "Idea central",
+      "title": "Genitivo sajón: qué expresa",
+      "lede": "Ya puedes expresar posesión con 's: Maria's phone, my brother's car.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "persona + 's",
+              "value": "Maria's phone · my brother's car",
+              "highlights": [
+                "'s"
+              ]
+            },
+            {
+              "key": "plural en -s",
+              "value": "the students' books (solo apóstrofo)",
+              "highlights": [
+                "students'"
+              ]
+            },
+            {
+              "key": "cosas / lugares",
+              "value": "today's news · the city's park",
+              "highlights": [
+                "today's"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "a1-genitivo-sajon-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "persona + 's",
+              "value": "Maria's phone · my brother's car",
+              "highlights": [
+                "'s"
+              ]
+            },
+            {
+              "key": "plural en -s",
+              "value": "the students' books (solo apóstrofo)",
+              "highlights": [
+                "students'"
+              ]
+            },
+            {
+              "key": "cosas / lugares",
+              "value": "today's news · the city's park",
+              "highlights": [
+                "today's"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-genitivo-sajon-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "my brother's car"
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "the students' books (solo apóstrofo)"
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "the city's park"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-genitivo-sajon-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "persona + 's",
+              "rule": "Maria's phone · my brother's car",
+              "examples": [
+                "my brother's car"
+              ]
+            },
+            {
+              "label": "plural en -s",
+              "rule": "the students' books (solo apóstrofo)",
+              "examples": [
+                "the students' books (solo apóstrofo)"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-genitivo-sajon-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "The book of Maria."
+            },
+            {
+              "variant": "good",
+              "text": "Maria's book.",
+              "note": "en inglés cotidiano preferimos 's"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-genitivo-sajon-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "This is ___ laptop.",
+      "options": [
+        "Anna's",
+        "Anna"
+      ],
+      "answer": 0,
+      "explain": "Posesión → Anna's."
+    }
+  ]
+}

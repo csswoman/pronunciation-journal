@@ -1,0 +1,204 @@
+{
+  "meta": {
+    "eyebrow": "A1 · Presente",
+    "title": "Presente",
+    "titleEmphasis": "continuo",
+    "goal": "Ya puedes describir acciones que pasan ahora con am/is/are + -ing."
+  },
+  "cards": [
+    {
+      "id": "a1-presente-continuo-concept",
+      "tag": "Idea central",
+      "title": "Presente: qué expresa",
+      "lede": "Ya puedes describir acciones que pasan ahora con am/is/are + -ing.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Forma",
+              "value": "I am working · She is reading · They are waiting",
+              "highlights": [
+                "am",
+                "is",
+                "are"
+              ]
+            },
+            {
+              "key": "Ahora",
+              "value": "now, right now, at the moment",
+              "highlights": [
+                "now"
+              ]
+            },
+            {
+              "key": "Negativo",
+              "value": "I'm not working · She isn't reading",
+              "highlights": [
+                "n't"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "a1-presente-continuo-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Forma",
+              "value": "I am working · She is reading · They are waiting",
+              "highlights": [
+                "am",
+                "is",
+                "are"
+              ]
+            },
+            {
+              "key": "Ahora",
+              "value": "now, right now, at the moment",
+              "highlights": [
+                "now"
+              ]
+            },
+            {
+              "key": "Negativo",
+              "value": "I'm not working · She isn't reading",
+              "highlights": [
+                "n't"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-presente-continuo-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "She is reading"
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "now, right now, at the moment"
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "She isn't reading"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-presente-continuo-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Forma",
+              "rule": "I am working · She is reading · They are waiting",
+              "examples": [
+                "She is reading"
+              ]
+            },
+            {
+              "label": "Ahora",
+              "rule": "now, right now, at the moment",
+              "examples": [
+                "now, right now, at the moment"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-presente-continuo-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "I working now."
+            },
+            {
+              "variant": "good",
+              "text": "I am working now.",
+              "note": "falta el verbo to be"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-presente-continuo-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "She ___ TV now.",
+      "options": [
+        "is watching",
+        "watching"
+      ],
+      "answer": 0,
+      "explain": "Continuo = is + -ing."
+    }
+  ]
+}

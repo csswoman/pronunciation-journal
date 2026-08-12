@@ -1,0 +1,211 @@
+{
+  "meta": {
+    "eyebrow": "C2 · Topicalización",
+    "title": "Orden de palabras",
+    "titleEmphasis": "marcado",
+    "goal": "Ya topicalizas elementos al inicio para marcar el tema del discurso y crear cohesión temática."
+  },
+  "cards": [
+    {
+      "id": "c2-topicalizacion-concept",
+      "tag": "Idea central",
+      "title": "Orden de palabras: qué expresa",
+      "lede": "Ya topicalizas elementos al inicio para marcar el tema del discurso y crear cohesión temática.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Topicalización",
+              "value": "This issue, we have debated for years.",
+              "highlights": [
+                "This issue"
+              ]
+            },
+            {
+              "key": "Foco",
+              "value": "señala qué es el tema de la frase siguiente",
+              "highlights": [
+                "This issue"
+              ]
+            },
+            {
+              "key": "Contraste",
+              "value": "The data I trust; the interpretation, less so.",
+              "highlights": [
+                "The data"
+              ]
+            },
+            {
+              "key": "Estilo",
+              "value": "escritura formal, retórica, análisis",
+              "highlights": [
+                "less so"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "c2-topicalizacion-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Topicalización",
+              "value": "This issue, we have debated for years.",
+              "highlights": [
+                "This issue"
+              ]
+            },
+            {
+              "key": "Foco",
+              "value": "señala qué es el tema de la frase siguiente",
+              "highlights": [
+                "This issue"
+              ]
+            },
+            {
+              "key": "Contraste",
+              "value": "The data I trust; the interpretation, less so.",
+              "highlights": [
+                "The data"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-topicalizacion-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "This issue, we have debated for years."
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "señala qué es el tema de la frase siguiente"
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "The data I trust; the interpretation, less so."
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "escritura formal, retórica, análisis"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-topicalizacion-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Topicalización",
+              "rule": "This issue, we have debated for years.",
+              "examples": [
+                "This issue, we have debated for years."
+              ]
+            },
+            {
+              "label": "Foco",
+              "rule": "señala qué es el tema de la frase siguiente",
+              "examples": [
+                "señala qué es el tema de la frase siguiente"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-topicalizacion-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "This issue, we have debated it for years."
+            },
+            {
+              "variant": "good",
+              "text": "This issue, we have debated for years.",
+              "note": "no dupliques el objeto topicalizado"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2-topicalizacion-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "The timeline, ___ cannot accept.",
+      "options": [
+        "we",
+        "us"
+      ],
+      "answer": 0,
+      "explain": "Sujeto tras topicalización: we."
+    }
+  ]
+}

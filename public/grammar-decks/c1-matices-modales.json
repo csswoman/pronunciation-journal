@@ -1,0 +1,212 @@
+{
+  "meta": {
+    "eyebrow": "C1 · Modales",
+    "title": "Matices",
+    "titleEmphasis": "modales",
+    "goal": "Ya usas will/would para hábitos característicos y may/might en concesiones: That may be true, but…"
+  },
+  "cards": [
+    {
+      "id": "c1-matices-modales-concept",
+      "tag": "Idea central",
+      "title": "Matices: qué expresa",
+      "lede": "Ya usas will/would para hábitos característicos y may/might en concesiones: That may be true, but…",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "will (hábito)",
+              "value": "She will talk for hours. · tendencia irritante o típica",
+              "highlights": [
+                "will talk"
+              ]
+            },
+            {
+              "key": "would (pasado)",
+              "value": "He would always arrive late.",
+              "highlights": [
+                "would always"
+              ]
+            },
+            {
+              "key": "may/might (concesión)",
+              "value": "That may be true, but the data suggests otherwise.",
+              "highlights": [
+                "may be true"
+              ]
+            },
+            {
+              "key": "Matiz",
+              "value": "no es futuro literal; es actitud del hablante",
+              "highlights": [
+                "will",
+                "may"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "c1-matices-modales-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "will (hábito)",
+              "value": "She will talk for hours. · tendencia irritante o típica",
+              "highlights": [
+                "will talk"
+              ]
+            },
+            {
+              "key": "would (pasado)",
+              "value": "He would always arrive late.",
+              "highlights": [
+                "would always"
+              ]
+            },
+            {
+              "key": "may/might (concesión)",
+              "value": "That may be true, but the data suggests otherwise.",
+              "highlights": [
+                "may be true"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-matices-modales-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "tendencia irritante o típica"
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "He would always arrive late."
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "That may be true, but the data suggests otherwise."
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "no es futuro literal; es actitud del hablante"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-matices-modales-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "will (hábito)",
+              "rule": "She will talk for hours. · tendencia irritante o típica",
+              "examples": [
+                "tendencia irritante o típica"
+              ]
+            },
+            {
+              "label": "would (pasado)",
+              "rule": "He would always arrive late.",
+              "examples": [
+                "He would always arrive late."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-matices-modales-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "She will to talk for hours."
+            },
+            {
+              "variant": "good",
+              "text": "She will talk for hours.",
+              "note": "will + base, sin to"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-matices-modales-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "He ___ always forget his keys. (hábito pasado)",
+      "options": [
+        "would",
+        "will"
+      ],
+      "answer": 0,
+      "explain": "Hábito pasado característico → would."
+    }
+  ]
+}

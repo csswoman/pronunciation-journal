@@ -24,6 +24,7 @@ import HomePlacementPrompt from "@/components/home/HomePlacementPrompt";
 import HomePronunciationPrompt from "@/components/home/HomePronunciationPrompt";
 import HomeActivationStrip from "@/components/home/HomeActivationStrip";
 import GuestSaveProgressBanner from "@/components/home/GuestSaveProgressBanner";
+import LearningFocusCard from "@/components/home/LearningFocusCard";
 import type { ConceptLesson } from "@/hooks/useDailyPlan";
 import type { WeakestPhonemeHome } from "@/lib/home/constants";
 import type { HomePlacementState } from "@/lib/home/placement-state";
@@ -32,6 +33,7 @@ import type { SessionArc } from "@/lib/practice/types";
 
 interface HomeCommandGridProps {
   conceptLesson: ConceptLesson | null;
+  profileLevel: string | null;
   weakestPhoneme?: WeakestPhonemeHome | null;
   wordsDueCount?: number;
   soundsDueCount?: number;
@@ -42,6 +44,7 @@ interface HomeCommandGridProps {
 
 export default function HomeCommandGrid({
   conceptLesson,
+  profileLevel,
   weakestPhoneme = null,
   wordsDueCount = 0,
   soundsDueCount = 0,
@@ -129,6 +132,13 @@ export default function HomeCommandGrid({
       ) : null}
 
       <div className="home-command-main">
+        <LearningFocusCard
+          profileLevel={profileLevel}
+          routeLevel={null}
+          recentTheoryLessonSlug={null}
+          weakSoundKey={weakestPhoneme?.ipa ?? null}
+        />
+
         <div className={showPostPlan ? "hidden" : "contents"}>
           <HomeDailyCard
             conceptLesson={conceptLesson}

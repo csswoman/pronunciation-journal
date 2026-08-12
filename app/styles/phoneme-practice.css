@@ -111,7 +111,7 @@
 }
 
 .phoneme-focus__session-name--ipa {
-  font-family: var(--font-mono-var), "Fira Code", monospace;
+  font-family: var(--font-mono-var), monospace;
   font-size: var(--text-size-h2);
   font-weight: 480;
   color: var(--primary);
@@ -444,7 +444,7 @@
 }
 
 .phoneme-focus__badge {
-  font-family: var(--font-mono-var), "Fira Code", monospace;
+  font-family: var(--font-mono-var), monospace;
   font-size: var(--text-size-h4);
   font-weight: 500;
   color: var(--primary);
@@ -548,7 +548,7 @@
 }
 
 .phoneme-play-btn__caption {
-  font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
+  font-family: var(--font-ipa), sans-serif;
   font-size: var(--text-size-label);
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -692,7 +692,7 @@
 }
 
 .pf-opt--ipa {
-  font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
+  font-family: var(--font-ipa), sans-serif;
   font-size: var(--text-size-body-lg);
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -803,7 +803,7 @@
 }
 
 .pf-chip--ipa {
-  font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
+  font-family: var(--font-ipa), sans-serif;
   letter-spacing: 0.04em;
 }
 
@@ -820,7 +820,7 @@
 }
 
 .pf-pron__ipa {
-  font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
+  font-family: var(--font-ipa), sans-serif;
   font-size: var(--text-size-h3);
   font-weight: 400;
   letter-spacing: 0.05em;
@@ -992,7 +992,7 @@
 }
 
 .pf-minimal-pair__ipa {
-  font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
+  font-family: var(--font-ipa), sans-serif;
   font-size: var(--text-size-ipa-hero);
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -1279,7 +1279,7 @@
 
 .phoneme-hints__ipa {
   margin: 0;
-  font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
+  font-family: var(--font-ipa), sans-serif;
   font-size: var(--text-size-display-ipa);
   font-weight: 700;
   letter-spacing: 0.04em;

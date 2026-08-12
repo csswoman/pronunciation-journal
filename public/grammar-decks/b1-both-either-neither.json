@@ -1,0 +1,211 @@
+{
+  "meta": {
+    "eyebrow": "B1 · Cuantificadores",
+    "title": "Both, either",
+    "titleEmphasis": "y neither",
+    "goal": "Ya distingues both (los dos), either (uno u otro) y neither (ninguno de los dos)."
+  },
+  "cards": [
+    {
+      "id": "b1-both-either-neither-concept",
+      "tag": "Idea central",
+      "title": "Both, either: qué expresa",
+      "lede": "Ya distingues both (los dos), either (uno u otro) y neither (ninguno de los dos).",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "both",
+              "value": "los dos · Both answers are correct.",
+              "highlights": [
+                "Both"
+              ]
+            },
+            {
+              "key": "either",
+              "value": "cualquiera de dos · Either option works.",
+              "highlights": [
+                "Either"
+              ]
+            },
+            {
+              "key": "neither",
+              "value": "ninguno · Neither answer is right.",
+              "highlights": [
+                "Neither"
+              ]
+            },
+            {
+              "key": "So do I",
+              "value": "So do I. / Neither do I. · acuerdo",
+              "highlights": [
+                "So do I"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "b1-both-either-neither-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "both",
+              "value": "los dos · Both answers are correct.",
+              "highlights": [
+                "Both"
+              ]
+            },
+            {
+              "key": "either",
+              "value": "cualquiera de dos · Either option works.",
+              "highlights": [
+                "Either"
+              ]
+            },
+            {
+              "key": "neither",
+              "value": "ninguno · Neither answer is right.",
+              "highlights": [
+                "Neither"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-both-either-neither-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "Both answers are correct."
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "Either option works."
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "Neither answer is right."
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "acuerdo"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-both-either-neither-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "both",
+              "rule": "los dos · Both answers are correct.",
+              "examples": [
+                "Both answers are correct."
+              ]
+            },
+            {
+              "label": "either",
+              "rule": "cualquiera de dos · Either option works.",
+              "examples": [
+                "Either option works."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-both-either-neither-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "Both of them doesn't like it."
+            },
+            {
+              "variant": "good",
+              "text": "Neither of them likes it.",
+              "note": "neither + singular"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-both-either-neither-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "___ of the two roads leads to the centre.",
+      "options": [
+        "Neither",
+        "Both"
+      ],
+      "answer": 0,
+      "explain": "Ninguna de las dos → neither."
+    }
+  ]
+}

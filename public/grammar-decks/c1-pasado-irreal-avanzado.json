@@ -1,0 +1,212 @@
+{
+  "meta": {
+    "eyebrow": "C1 · Pasado irreal",
+    "title": "Pasado irreal",
+    "titleEmphasis": "avanzado",
+    "goal": "Ya usas wish/if only + past perfect, as if + past, e it's time + past simple para significados hipotéticos."
+  },
+  "cards": [
+    {
+      "id": "c1-pasado-irreal-avanzado-concept",
+      "tag": "Idea central",
+      "title": "Pasado irreal: qué expresa",
+      "lede": "Ya usas wish/if only + past perfect, as if + past, e it's time + past simple para significados hipotéticos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "wish + pp",
+              "value": "I wish I had studied harder. · arrepentimiento pasado",
+              "highlights": [
+                "had studied"
+              ]
+            },
+            {
+              "key": "as if",
+              "value": "He talks as if he knew everything. · irreal presente",
+              "highlights": [
+                "knew"
+              ]
+            },
+            {
+              "key": "it's time",
+              "value": "It's high time we left. · debería ocurrir ya",
+              "highlights": [
+                "we left"
+              ]
+            },
+            {
+              "key": "Idea",
+              "value": "pasado = irreal, no tiempo literal",
+              "highlights": [
+                "wish",
+                "as if"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "c1-pasado-irreal-avanzado-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "wish + pp",
+              "value": "I wish I had studied harder. · arrepentimiento pasado",
+              "highlights": [
+                "had studied"
+              ]
+            },
+            {
+              "key": "as if",
+              "value": "He talks as if he knew everything. · irreal presente",
+              "highlights": [
+                "knew"
+              ]
+            },
+            {
+              "key": "it's time",
+              "value": "It's high time we left. · debería ocurrir ya",
+              "highlights": [
+                "we left"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-pasado-irreal-avanzado-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "arrepentimiento pasado"
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "irreal presente"
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "debería ocurrir ya"
+            },
+            {
+              "key": "Ejemplo 4",
+              "value": "pasado = irreal, no tiempo literal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-pasado-irreal-avanzado-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "wish + pp",
+              "rule": "I wish I had studied harder. · arrepentimiento pasado",
+              "examples": [
+                "arrepentimiento pasado"
+              ]
+            },
+            {
+              "label": "as if",
+              "rule": "He talks as if he knew everything. · irreal presente",
+              "examples": [
+                "irreal presente"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-pasado-irreal-avanzado-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "It's time we leave."
+            },
+            {
+              "variant": "good",
+              "text": "It's time we left.",
+              "note": "it's time + past simple para urgencia"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-pasado-irreal-avanzado-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "She acts as if she ___ the owner.",
+      "options": [
+        "were",
+        "is"
+      ],
+      "answer": 0,
+      "explain": "as if + past para hipótesis irreal."
+    }
+  ]
+}

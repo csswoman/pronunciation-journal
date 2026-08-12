@@ -1,0 +1,202 @@
+{
+  "meta": {
+    "eyebrow": "A2 · Tiempo",
+    "title": "When y while",
+    "titleEmphasis": "en pasado",
+    "goal": "Ya conectas dos acciones pasadas con when y while."
+  },
+  "cards": [
+    {
+      "id": "a2-when-while-pasado-concept",
+      "tag": "Idea central",
+      "title": "When y while: qué expresa",
+      "lede": "Ya conectas dos acciones pasadas con when y while.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "when + pasado",
+              "value": "When I arrived, she left.",
+              "highlights": [
+                "When"
+              ]
+            },
+            {
+              "key": "while + continuo",
+              "value": "While I was cooking, he called.",
+              "highlights": [
+                "While",
+                "was cooking"
+              ]
+            },
+            {
+              "key": "Idea",
+              "value": "while enfatiza duración; when puede ser puntual",
+              "highlights": [
+                "while"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "a2-when-while-pasado-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "when + pasado",
+              "value": "When I arrived, she left.",
+              "highlights": [
+                "When"
+              ]
+            },
+            {
+              "key": "while + continuo",
+              "value": "While I was cooking, he called.",
+              "highlights": [
+                "While",
+                "was cooking"
+              ]
+            },
+            {
+              "key": "Idea",
+              "value": "while enfatiza duración; when puede ser puntual",
+              "highlights": [
+                "while"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-when-while-pasado-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "When I arrived, she left."
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "While I was cooking, he called."
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "while enfatiza duración; when puede ser puntual"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-when-while-pasado-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende del contexto y la intención.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "when + pasado",
+              "rule": "When I arrived, she left.",
+              "examples": [
+                "When I arrived, she left."
+              ]
+            },
+            {
+              "label": "while + continuo",
+              "rule": "While I was cooking, he called.",
+              "examples": [
+                "While I was cooking, he called."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-when-while-pasado-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "While I cooked, he called."
+            },
+            {
+              "variant": "good",
+              "text": "While I was cooking, he called.",
+              "note": "acción larga en fondo → past continuous"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-when-while-pasado-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma del patrón."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, tiempo y número."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase en voz alta."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "I read ___ she was sleeping.",
+      "options": [
+        "while",
+        "because"
+      ],
+      "answer": 0,
+      "explain": "Simultaneidad → while."
+    }
+  ]
+}
