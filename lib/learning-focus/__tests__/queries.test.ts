@@ -16,7 +16,7 @@ vi.mock('@/lib/db', () => ({
 }))
 
 import { db } from '@/lib/db'
-import { pinFocus, releaseFocusPin, claimTheoryTopics } from '../queries'
+import { pinFocus, claimTheoryTopics, refreshSuggestedFocus } from '../queries'
 
 describe('learning-focus queries', () => {
   beforeEach(() => {
@@ -47,6 +47,43 @@ describe('learning-focus queries', () => {
     const saved = persistMock.mock.calls[0][1]
     expect(saved.focus.pinned).toBe(true)
     expect(saved.focus.source).toBe('manual')
+  })
+
+  it('refreshSuggestedFocus skips persist when suggested is unchanged', async () => {
+    const existingFocus = {
+      level: 'a1' as const,
+      thread: null,
+      pinned: false,
+      suggested: { level: 'a1' as const, thread: null, source: 'profile' as const },
+      source: 'profile' as const,
+      updatedAt: '2026-08-12T00:00:00.000Z',
+    }
+    ;(db.learningState.get as ReturnType<typeof vi.fn>).mockResolvedValue({
+      userId: 'u1',
+      updatedAt: '2026-08-12T00:00:00.000Z',
+      state: {
+        userId: 'u1',
+        updatedAt: '2026-08-12T00:00:00.000Z',
+        deviceId: 'd1',
+        level: { cefrEstimate: 'A1', confidence: 0.5 },
+        vocabulary: { knownCount: 0, strugglingWords: [], savedWords: [] },
+        grammar: { weakTopics: [] },
+        theory: { concepts: [] },
+        pronunciation: { averageAccuracy: 0, strugglingSounds: [] },
+        lastSessions: [],
+        focus: existingFocus,
+      },
+    })
+
+    const result = await refreshSuggestedFocus('u1', {
+      profileLevel: 'A1',
+      routeLevel: null,
+      recentTheoryLessonSlug: null,
+      weakSoundKey: null,
+    })
+
+    expect(persistMock).not.toHaveBeenCalled()
+    expect(result).toEqual(existingFocus)
   })
 
   it('claimTheoryTopics writes review signals that are not mastered', async () => {

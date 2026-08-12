@@ -16,6 +16,24 @@ async function readState(userId: string): Promise<UserLearningState> {
   return local?.state ?? (await getUserLearningState(userId))
 }
 
+function threadsEqual(a: FocusThread | null, b: FocusThread | null): boolean {
+  if (a === b) return true
+  if (!a || !b) return false
+  if (a.kind !== b.kind) return false
+  return a.kind === 'theory' ? a.topicId === b.topicId : a.key === b.key
+}
+
+function suggestedEquals(
+  a: LearningFocus['suggested'],
+  b: LearningFocus['suggested'],
+): boolean {
+  return (
+    a.level === b.level &&
+    a.source === b.source &&
+    threadsEqual(a.thread, b.thread)
+  )
+}
+
 function ensureFocus(state: UserLearningState, nowIso: string): LearningFocus {
   if (state.focus) return state.focus
   const suggested = deriveSuggestedFocus({
@@ -95,6 +113,9 @@ export async function refreshSuggestedFocus(
   const state = await readState(userId)
   const current = ensureFocus(state, nowIso)
   const suggested = deriveSuggestedFocus(input)
+  if (state.focus && suggestedEquals(current.suggested, suggested)) {
+    return current
+  }
   const next: LearningFocus = {
     ...current,
     suggested,
