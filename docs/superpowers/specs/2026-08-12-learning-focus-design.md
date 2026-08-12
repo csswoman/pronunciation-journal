@@ -33,6 +33,8 @@ Ship a **canonical learning focus** plus **theory topic claims**, so the app can
 - Replacing Daily plan orchestration
 - Writing self-report claims directly into `topic_srs` as `mastered`
 - Shell / sidebar focus editor
+- Auto-completing or bulk-marking lessons/topics when profile or focus level changes
+- Syncing Home focus level edits back into `user_profiles.cefr_level` (profile remains the place to change “Tu nivel”)
 
 ## Decisions (from brainstorming)
 
@@ -113,6 +115,25 @@ When deriving `suggested`, first match wins:
 
 Pinning freezes effective level/thread until the user releases. Releasing recalculates suggested immediately.
 
+## Level vs progress vs exploration
+
+Three distinct concepts — do not collapse them:
+
+| Concept | Meaning | Who sets it | Effect of changing it |
+|---|---|---|---|
+| **Profile level** | “Tu nivel” (placement / self-declared CEFR in profile or assessment) | Profile settings, assessment | Updates recommendations / default focus inputs. **Never** bulk-completes lessons, never wipes SRS, never marks lower-level content as done. |
+| **Focus** | “En qué estoy trabajando” (level + optional thread) | Home focus card (pin/suggest) | Soft lens for Daily bias and later catalog suggestions. Exploring other levels’ content does **not** require changing profile level or focus. |
+| **Progress** | Completions, claims, SRS, verification queues | Practice, claims, review | Independent evidence. Only grows from real activity or explicit topic claims — not from a level dropdown. |
+
+**Copy policy when changing level**
+
+- **Do not** use an aggressive warning like “si cambias de nivel se marcará el contenido como completado” — that behavior must not exist.
+- **Profile level change:** quiet helper text only, e.g. “Esto ajusta recomendaciones. Tu progreso se conserva; puedes seguir explorando cualquier contenido.”
+- **Focus level change (Home):** even quieter — it pins focus for prioritization; no progress rewrite, no completion cascade.
+- Free exploration of mazos / ruta / mini-lecciones at any level remains allowed without touching profile level.
+
+Changing focus level does **not** auto-claim or auto-complete topics below the new level. If the user wants lower topics treated as known, they use **Temas que ya sé** explicitly.
+
 ## UX — Home “Tu foco”
 
 Compact block near the daily plan (not a dashboard metric strip):
@@ -120,12 +141,19 @@ Compact block near the daily plan (not a dashboard metric strip):
 - Status line: level + optional thread label
 - Quiet badge: `Sugerido` | `Fijado`
 - Actions:
-  - Change level → sets level, `pinned = true`, `source = manual`
+  - Change **focus** level → sets override level, `pinned = true`, `source = manual` (does **not** rewrite profile CEFR in v1)
   - Choose / clear thread (theory topics for focus level, or recent/weak sounds) → pin
   - Pin / Release
   - “Temas que ya sé” → inline sheet with checkboxes for theory topics in the focus level
 - No mandatory modal; one primary action per zone
 - Does not filter or hide other routes
+- Optional quiet hint when focus level ≠ profile level, with link to profile (“Tu nivel”) — non-blocking
+
+**Profile settings (existing CEFR control)**
+
+- Keep manual level change in profile.
+- Add quiet helper (not a blocking confirm): progress is preserved; changing level only adjusts recommendations / suggestion inputs.
+- No completion cascade UI, because there is no completion cascade behavior.
 
 ## Module boundaries
 
@@ -159,6 +187,8 @@ Daily may optionally bias `study_deck` toward effective level/thread if a trivia
 | Orphan thread (deleted topic/sound) | Clear thread; keep level |
 | Release with empty suggested | Re-run derive immediately |
 | Claim already mastered by evidence | Keep evidence mastery; claim is no-op or shows as already strong |
+| Profile CEFR changed manually | Re-derive suggested focus if unpinned; **never** mutate completions / SRS / claims |
+| User browses other CEFR content | Allowed; does not change profile level or focus unless they pin |
 
 ## Testing
 
