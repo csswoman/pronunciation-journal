@@ -334,6 +334,39 @@ describe('buildDailyPlan', () => {
     expect(vi.mocked(getSessionDatasets)).toHaveBeenCalledWith([1, 2])
   })
 
+  it('study_deck usa el nivel de focus efectivo cuando el focus está pinned', async () => {
+    vi.mocked(db.learningState.get).mockResolvedValue({
+      userId: 'user-1',
+      updatedAt: new Date().toISOString(),
+      state: {
+        pronunciation: { averageAccuracy: 0, strugglingSounds: [] },
+        grammar: { weakTopics: [] },
+        level: { cefrEstimate: 'A2', confidence: 0.5 },
+        vocabulary: { knownCount: 0, strugglingWords: [], savedWords: [] },
+        lastSessions: [],
+        userId: 'user-1',
+        deviceId: 'dev',
+        focus: {
+          level: 'b1',
+          thread: null,
+          pinned: true,
+          suggested: { level: 'a2', thread: null, source: 'profile' },
+          source: 'manual',
+          updatedAt: '2026-08-12T12:00:00.000Z',
+        },
+      },
+    } as never)
+    setupProgressMock(null)
+    setupWordBankMock([], [])
+
+    const plan = await buildDailyPlan('user-1')
+    const studyDeck = plan.steps.find((s) => s.kind === 'study_deck')
+    expect(studyDeck).toBeDefined()
+    expect(studyDeck!.href).toContain('level=b1')
+    expect(studyDeck!.href).not.toContain('level=a2')
+    vi.mocked(db.learningState.get).mockResolvedValue(null)
+  })
+
   it('incluye paso reader cuando hay word_bank y buildReaderStep devuelve paso', async () => {
     const words = Array.from({ length: 4 }, (_, i) =>
       makeLexiconWordBankEntry({ id: `w-${i}`, text: `word${i}`, example: `We saw word${i} today.` }),
