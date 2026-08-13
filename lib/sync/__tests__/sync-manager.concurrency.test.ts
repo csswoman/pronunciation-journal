@@ -35,12 +35,11 @@ describe('flushOutbox batch isolation', () => {
       lastAttemptAt: new Date(currentTime).toISOString(), retryCount: 0,
     })
     let resolveUpsert: (value: { error: null }) => void
-    from.mockReturnValue({
-      upsert: vi.fn(() => new Promise<{ error: null }>((resolve) => { resolveUpsert = resolve })),
-    })
+    const upsert = vi.fn(() => new Promise<{ error: null }>((resolve) => { resolveUpsert = resolve }))
+    from.mockReturnValue({ upsert })
 
     const flush = flushOutbox('user-1')
-    await vi.waitFor(async () => expect((await db.syncOutbox.get(claimedId))?.status).toBe('syncing'))
+    await vi.waitFor(() => expect(upsert).toHaveBeenCalled())
     resolveUpsert!({ error: null })
     await flush
 

@@ -20,7 +20,6 @@
  * this file does not need to persist the id anywhere itself.
  */
 
-import { mirrorSyncedPronunciationAssessment } from './persistence'
 import {
   validateDiagnosticResult,
   type PronunciationDiagnosticResult,
@@ -75,6 +74,8 @@ async function claim(userId: string): Promise<boolean> {
 
     // Mirror into Dexie so /courses/pronunciation can recommend without a
     // query string — claiming only the server left the path blind.
+    // Dynamic import keeps Dexie/sync-manager out of the auth bootstrap chunk.
+    const { mirrorSyncedPronunciationAssessment } = await import('./persistence')
     await mirrorSyncedPronunciationAssessment(userId, validated.result, id)
 
     window.localStorage.removeItem(GUEST_DIAGNOSTIC_KEY)

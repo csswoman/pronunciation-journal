@@ -9,7 +9,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { cn } from '@/lib/cn'
-import type { LoadingWord } from '@/hooks/useLoadingWords'
+import type { LoadingWord } from '@/hooks/loading-words-data'
 
 interface WordCarouselProps {
   words: LoadingWord[]

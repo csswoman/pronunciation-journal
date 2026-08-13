@@ -76,7 +76,13 @@ export default function AuthProvider({
     }
 
     const supabase = getSupabaseBrowserClient();
-    const cleanupSyncListeners = initSyncListeners(user?.id ?? null);
+    let cancelled = false;
+    let cleanupSyncListeners = () => {};
+    void import("@/lib/db").then(async ({ ensureDbReady }) => {
+      await ensureDbReady().catch(() => {});
+      if (cancelled) return;
+      cleanupSyncListeners = initSyncListeners(user?.id ?? null);
+    });
     const hydrateCEFR = async (userId: string) => {
       try {
         const { claimGuestPlacement } = await import("@/lib/courses/guest-assessment");
@@ -171,6 +177,7 @@ export default function AuthProvider({
     });
 
     return () => {
+      cancelled = true;
       cleanupSyncListeners();
       subscription.unsubscribe();
     };

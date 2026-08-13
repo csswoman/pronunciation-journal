@@ -71,14 +71,18 @@ export default function LearningFocusCard({
     let cancelled = false
 
     async function load() {
-      const [loaded, claimed] = await Promise.all([
-        loadLearningFocus(user!.id),
-        listClaimedTheoryTopics(user!.id),
-      ])
-      const refreshed = await refreshSuggestedFocus(user!.id, deriveInput)
-      if (cancelled) return
-      setFocus(refreshed ?? loaded)
-      setClaimedSlugs(new Set(claimed.map((item) => item.lessonSlug)))
+      try {
+        const [loaded, claimed] = await Promise.all([
+          loadLearningFocus(user!.id),
+          listClaimedTheoryTopics(user!.id),
+        ])
+        const refreshed = await refreshSuggestedFocus(user!.id, deriveInput)
+        if (cancelled) return
+        setFocus(refreshed ?? loaded)
+        setClaimedSlugs(new Set(claimed.map((item) => item.lessonSlug)))
+      } catch {
+        // IndexedDB may still be recovering from Chrome UnknownError on open.
+      }
     }
 
     void load()

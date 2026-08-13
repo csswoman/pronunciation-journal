@@ -9,7 +9,7 @@
  */
 
 import Dexie from 'dexie'
-import { db } from '@/lib/db'
+import { db, ensureDbReady } from '@/lib/db'
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
 import type {
   SyncOutboxEntry,
@@ -469,6 +469,7 @@ function summarize(operations: SyncOperationOutcome[]): SyncFlushResult {
 }
 
 async function flushOutboxInternal(userId: string): Promise<SyncFlushResult> {
+  await ensureDbReady()
   await reclaimStaleSyncingEntries()
   if (!navigator.onLine) return emptyFlushResult()
 

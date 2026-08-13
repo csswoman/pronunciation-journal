@@ -1,5 +1,5 @@
 import { WordCarousel } from '@/components/practice/session/WordCarousel'
-import { FALLBACK_WORDS } from '@/hooks/useLoadingWords'
+import { FALLBACK_WORDS } from '@/hooks/loading-words-data'
 
 export default function Loading() {
   return (

@@ -197,6 +197,12 @@ describe('initSyncListeners', () => {
     firstCleanup()
     cleanup = undefined
   })
+
+  it('does not leave an uncaught rejection when IndexedDB is closed during drain', async () => {
+    db.close()
+    cleanup = initSyncListeners('user-1')
+    await new Promise((resolve) => setTimeout(resolve, 40))
+  })
 })
 
 describe('initSyncListeners multi-tab coordination', () => {

@@ -1,12 +1,16 @@
 "use client";
 import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import { PanelLeftClose, PanelLeftOpen } from "@/components/icons";
-import SidebarFooter from "./SidebarFooter";
 import { NavSection, NavLink, coreNav, practiceNav, exploreNav } from "../theme/sidebar/index";
 
 import { SidebarContext } from "../theme/sidebar/SidebarContext";
 import { isNavActive } from "@/lib/navigation/is-nav-active";
+
+const SidebarFooter = dynamic(() => import("./SidebarFooter"), {
+  loading: () => <div className="h-14 shrink-0 border-t border-border-subtle" aria-hidden />,
+});
 
 interface SidebarProps {
   className?: string;

@@ -1,5 +1,5 @@
 import { enqueue } from '@/lib/sync/sync-manager'
-import { calculateXP } from '@/lib/pronunciation/scoring'
+import { calculateXP } from '@/lib/pronunciation/xp'
 import {
   loadCachedDailyPlan,
   loadResolvedIds,

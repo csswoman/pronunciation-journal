@@ -10,9 +10,10 @@
 // </HomeCommandGrid>
 
 import { useCallback, useState } from "react";
+import dynamic from "next/dynamic";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { isAnonymousUser } from "@/lib/auth/is-anonymous";
-import HomeDailyCard, { type HomePlanStatus } from "@/components/home/HomeDailyCard";
+import type { HomePlanStatus } from "@/components/home/HomeDailyCard";
 import HomeReviewBanner from "@/components/home/HomeReviewBanner";
 import EssentialWordsProgressCard from "@/components/home/EssentialWordsProgressCard";
 import WeakSoundCard from "@/components/home/WeakSoundCard";
@@ -24,12 +25,28 @@ import HomePlacementPrompt from "@/components/home/HomePlacementPrompt";
 import HomePronunciationPrompt from "@/components/home/HomePronunciationPrompt";
 import HomeActivationStrip from "@/components/home/HomeActivationStrip";
 import GuestSaveProgressBanner from "@/components/home/GuestSaveProgressBanner";
-import LearningFocusCard from "@/components/home/LearningFocusCard";
 import type { ConceptLesson } from "@/hooks/useDailyPlan";
 import type { WeakestPhonemeHome } from "@/lib/home/constants";
 import type { HomePlacementState } from "@/lib/home/placement-state";
 import type { HomePronunciationDiagnosticState } from "@/lib/home/pronunciation-diagnostic-state";
 import type { SessionArc } from "@/lib/practice/types";
+
+// Daily plan pulls buildDailyPlan + sync — keep it out of the initial page chunk.
+const HomeDailyCard = dynamic(() => import("@/components/home/HomeDailyCard"), {
+  loading: () => (
+    <div
+      className="h-40 animate-pulse rounded-2xl bg-surface-sunken"
+      aria-busy="true"
+      aria-label="Cargando plan diario"
+    />
+  ),
+});
+
+const LearningFocusCard = dynamic(() => import("@/components/home/LearningFocusCard"), {
+  loading: () => (
+    <div className="h-24 animate-pulse rounded-2xl bg-surface-sunken" aria-hidden />
+  ),
+});
 
 interface HomeCommandGridProps {
   conceptLesson: ConceptLesson | null;

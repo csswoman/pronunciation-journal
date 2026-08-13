@@ -26,9 +26,7 @@ const ChromeMicTip = dynamic(() => import("@/components/speech/ChromeMicTip"), {
   ssr: false,
 });
 
-const importAICoachPanel = () => import("@/components/ai-coach/AICoachPanel");
-
-const AICoachPanel = dynamic(importAICoachPanel, {
+const AICoachPanel = dynamic(() => import("@/components/ai-coach/AICoachPanel"), {
   // Panel-shaped placeholder so a slow first load never flashes the route-level
   // loading screen; it matches the sliding panel chrome instead.
   loading: () => (
@@ -59,22 +57,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       setHasMountedCoach(true);
     }
   }, [isPanelOpen, launch]);
-
-  // Warm the AI Coach chunk during idle time so the first open feels instant
-  // (otherwise the panel lazy-loads on tap, causing a visible loading delay).
-  useEffect(() => {
-    if (!user || hasMountedCoach) return;
-    const w = window as Window & {
-      requestIdleCallback?: (cb: () => void) => number;
-      cancelIdleCallback?: (id: number) => void;
-    };
-    if (w.requestIdleCallback) {
-      const id = w.requestIdleCallback(() => void importAICoachPanel());
-      return () => w.cancelIdleCallback?.(id);
-    }
-    const timer = setTimeout(() => void importAICoachPanel(), 1500);
-    return () => clearTimeout(timer);
-  }, [user, hasMountedCoach]);
 
   if (isAuthPage) return <>{children}</>;
 

@@ -44,6 +44,7 @@ vi.mock('@/lib/db', () => ({
     },
     transaction: (...args: unknown[]) => mocks.mockDbTransaction(...args),
   },
+  ensureDbReady: () => Promise.resolve(),
 }))
 
 vi.mock('dexie', () => ({

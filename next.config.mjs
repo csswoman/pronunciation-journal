@@ -13,9 +13,25 @@ const withSerwist = withSerwistInit({
 
 const isDev = process.env.NODE_ENV === "development";
 
+/**
+ * Next injects `polyfill-module` for all browsers. Those polyfills target
+ * browsers older than Next 16's supported set; alias them out so modern
+ * clients do not download Legacy JavaScript flagged by Lighthouse.
+ * @see https://github.com/vercel/next.js/issues/86785
+ */
+const emptyNextPolyfill = "./lib/empty-next-polyfill-module.js";
+const nextPolyfillModuleIds = [
+  "../build/polyfills/polyfill-module",
+  "next/dist/build/polyfills/polyfill-module",
+];
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  turbopack: {},
+  turbopack: {
+    resolveAlias: Object.fromEntries(
+      nextPolyfillModuleIds.map((id) => [id, emptyNextPolyfill]),
+    ),
+  },
   async headers() {
     return [
       {
@@ -96,6 +112,11 @@ const nextConfig = {
     ],
   },
   webpack: (config, { isServer }) => {
+    // `false` → empty module (webpack). Turbopack needs a real file (above).
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      ...Object.fromEntries(nextPolyfillModuleIds.map((id) => [id, false])),
+    };
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
@@ -107,6 +128,7 @@ const nextConfig = {
     return config;
   },
   experimental: {
+    optimizePackageImports: ["@tabler/icons-react"],
     serverActions: {
       bodySizeLimit: "10mb",
     },
