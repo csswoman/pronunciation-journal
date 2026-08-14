@@ -47,12 +47,12 @@ export default async function MiniLessonDetailPage({ params }: MiniLessonPagePro
       label: section.heading,
     })),
     ...(content.examples.length > 0
-      ? [{ href: "#lesson-examples", label: "Examples" }]
+      ? [{ href: "#lesson-examples", label: "Ejemplos" }]
       : []),
     ...(content.exercises.length > 0
-      ? [{ href: "#lesson-exercises", label: "Exercises" }]
+      ? [{ href: "#lesson-exercises", label: "Ejercicios" }]
       : []),
-    ...(content.quiz.length > 0 ? [{ href: "#lesson-quiz", label: "Quiz" }] : []),
+    ...(content.quiz.length > 0 ? [{ href: "#lesson-quiz", label: "Comprobación" }] : []),
   ];
 
   return (
@@ -112,7 +112,7 @@ export default async function MiniLessonDetailPage({ params }: MiniLessonPagePro
               id="lesson-examples"
               className="mini-lessons__section mini-lessons__section--examples"
             >
-              <h2 className="mini-lessons__section-title">Examples</h2>
+              <h2 className="mini-lessons__section-title">Ejemplos</h2>
               <div className="mini-lessons__examples">
                 {content.examples.map((example, idx) => (
                   <div key={idx} className="mini-lessons__example">
@@ -156,7 +156,7 @@ export default async function MiniLessonDetailPage({ params }: MiniLessonPagePro
                 />
               </svg>
               <div>
-                <span className="mini-lessons__tip-label">Tip</span>
+                <span className="mini-lessons__tip-label">Consejo</span>
                 <p className="mini-lessons__tip-body">{lesson.tip}</p>
               </div>
             </aside>
@@ -164,7 +164,7 @@ export default async function MiniLessonDetailPage({ params }: MiniLessonPagePro
 
           {content.exercises.length > 0 && (
             <section id="lesson-exercises" className="mini-lessons__section">
-              <h2 className="mini-lessons__section-title">Exercises</h2>
+              <h2 className="mini-lessons__section-title">Ejercicios</h2>
               {content.exercises.map((exercise, idx) => (
                 <ExerciseBlock
                   key={idx}
@@ -177,7 +177,7 @@ export default async function MiniLessonDetailPage({ params }: MiniLessonPagePro
 
           {content.quiz.length > 0 && (
             <section id="lesson-quiz" className="mini-lessons__section">
-              <h2 className="mini-lessons__section-title">Quiz</h2>
+              <h2 className="mini-lessons__section-title">Comprobación</h2>
               <MiniLessonQuiz questions={content.quiz} slug={slug} />
             </section>
           )}

@@ -4,16 +4,16 @@
   "level": "basic",
   "category": "grammar",
   "duration": 5,
-  "title": "Irregular past tense verbs",
-  "subtitle": "Grammar of the day",
-  "body": "The 50 most common English verbs are irregular in the past tense. There's no shortcut — but there are patterns to spot.",
+  "title": "Verbos irregulares en pasado",
+  "subtitle": "Gramática del día",
+  "body": "Los 50 verbos ingleses más comunes son irregulares en tiempo pasado. No hay atajos, pero hay patrones que detectar.",
   "examples": [
     {
       "word": "go → went · come → came · see → saw"
     },
     {
       "word": "buy → bought · think → thought · bring → brought",
-      "translation": "grupo '-ought'"
+      "translation": "grupo '-debería'"
     }
   ],
   "href": "/mini-lessons/past-simple-irregular"

@@ -2,53 +2,53 @@
   "slug": "silent-letters",
   "sections": [
     {
-      "heading": "Why does English have silent letters?",
-      "body": "English spelling was largely fixed in the 15th century, but pronunciation kept evolving. Silent letters are relics — sounds that were once pronounced but disappeared over centuries of language change."
+      "heading": "¿Por qué el inglés tiene letras mudas?",
+      "body": "La ortografía inglesa se fijó en gran medida en el siglo XV, pero la pronunciación siguió evolucionando. Las letras mudas son reliquias: sonidos que alguna vez se pronunciaron pero que desaparecieron durante siglos de cambios de idioma."
     },
     {
-      "heading": "Common silent letter patterns",
-      "body": "**Silent K:** always before 'n' at the start of a word (know, knife, kneel, knock). **Silent W:** before 'r' at the start of a word (write, wrong, wrap, wrist). **Silent G:** before 'n' at the start or end (gnat, gnaw, sign, foreign). **Silent B:** after 'm' at the end (bomb, comb, lamb, thumb). **Silent H:** in many common words (hour, honest, heir, ghost)."
+      "heading": "Patrones comunes de letras mudas",
+      "body": "**Silent K:** siempre antes de 'n' al comienzo de una palabra (saber, cuchillo, arrodillarse, tocar). **W silenciosa:** antes de 'r' al comienzo de una palabra (escribir, incorrecto, envolver, muñeca). **G silenciosa:** antes de 'n' al principio o al final (mosquito, roe, signo, extranjero). **Silencio B:** después de 'm' al final (bomba, peine, cordero, pulgar). **Silent H:** en muchas palabras comunes (hora, honesto, heredero, fantasma)."
     },
     {
-      "heading": "Silent letters in the middle",
-      "body": "Many common words have silent letters in the middle that trip up even advanced learners: 'Wednesday' /ˈwɛnzdeɪ/, 'February' /ˈfɛbruɛri/ → often /ˈfɛbjuɛri/, 'comfortable' /ˈkʌmftəbəl/, 'vegetable' /ˈvɛdʒtəbəl/."
+      "heading": "Letras silenciosas en el medio.",
+      "body": "Muchas palabras comunes tienen letras mudas en el medio que hacen tropezar incluso a los estudiantes avanzados: 'miércoles' /ˈwɛnzdeɪ/, 'febrero' /ˈfɛbruɛri/ → a menudo /ˈfɛbjuɛri/, 'cómodo' /ˈkʌmftəbəl/, 'vegetal' /ˈvɛdʒtəbəl/."
     }
   ],
   "examples": [
     {
       "english": "knife",
       "ipa": "/naɪf/",
-      "translation": "K is silent"
+      "translation": "k esta en silencio"
     },
     {
       "english": "island",
       "ipa": "/ˈaɪlənd/",
-      "translation": "S is silent"
+      "translation": "S está en silencio"
     },
     {
       "english": "castle",
       "ipa": "/ˈkæsəl/",
-      "translation": "T is silent"
+      "translation": "T está en silencio"
     },
     {
       "english": "receipt",
       "ipa": "/rɪˈsiːt/",
-      "translation": "P is silent"
+      "translation": "P está en silencio"
     },
     {
       "english": "psychology",
       "ipa": "/saɪˈkɑlədʒi/",
-      "translation": "P is silent"
+      "translation": "P está en silencio"
     },
     {
       "english": "subtle",
       "ipa": "/ˈsʌtəl/",
-      "translation": "B is silent"
+      "translation": "B está en silencio"
     }
   ],
   "exercises": [
     {
-      "instruction": "Cross out the silent letter(s) in each word.",
+      "instruction": "Tacha las letras mudas de cada palabra.",
       "items": [
         "knight",
         "wrap",
@@ -60,31 +60,31 @@
         "Wednesday"
       ],
       "answers": [
-        "k-night",
-        "w-rap",
-        "g-nome",
-        "lam-b",
-        "h-onest",
-        "daugh-ter",
-        "forei-gn",
-        "Wed-nes-day"
+        "caballero",
+        "envoltura",
+        "gnomo",
+        "cordero",
+        "honesto",
+        "hija",
+        "extranjero",
+        "Miércoles"
       ]
     }
   ],
   "quiz": [
     {
-      "question": "Which word has a silent 'p'?",
+      "question": "¿Qué palabra tiene una 'p' muda?",
       "options": [
-        "spin",
-        "pneumonia",
-        "plus",
-        "upon"
+        "girar",
+        "neumonía",
+        "más",
+        "al"
       ],
       "correct": 1,
-      "explanation": "'Pneumonia' is pronounced /njuːˈmoʊniə/ — the P is completely silent."
+      "explanation": "'neumonía' se pronuncia /njuːˈmoʊniə/; la P es completamente silenciosa."
     },
     {
-      "question": "The word 'castle' is pronounced:",
+      "question": "La palabra \"castillo\" se pronuncia:",
       "options": [
         "/ˈkæstəl/",
         "/ˈkæsəl/",
@@ -92,7 +92,7 @@
         "/ˈkæsl/"
       ],
       "correct": 1,
-      "explanation": "The T in 'castle' is silent: /ˈkæsəl/ (British English)."
+      "explanation": "La T en 'castillo' es muda: /ˈkæsəl/ (inglés británico)."
     }
   ]
 }

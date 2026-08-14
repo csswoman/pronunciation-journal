@@ -4,9 +4,9 @@
   "level": "basic",
   "category": "grammar",
   "duration": 5,
-  "title": "Present Simple vs. Present Continuous",
-  "subtitle": "Grammar of the day",
-  "body": "Use Present Simple for habits and facts. Use Present Continuous for actions happening right now or temporary situations.",
+  "title": "Presente simple versus presente continuo",
+  "subtitle": "Gramática del día",
+  "body": "Utilice Presente simple para hábitos y hechos. Utilice Presente Continuo para acciones que suceden en este momento o situaciones temporales.",
   "examples": [
     {
       "word": "I drink coffee every morning.",
@@ -17,6 +17,6 @@
       "translation": "en este momento"
     }
   ],
-  "tip": "Stative verbs (know, like, believe) almost never use the continuous form.",
+  "tip": "Los verbos estáticos (saber, gustar, creer) casi nunca usan la forma continua.",
   "href": "/mini-lessons/present-simple-vs-continuous"
 }

@@ -2,47 +2,47 @@
   "slug": "present-simple-vs-continuous",
   "sections": [
     {
-      "heading": "The core distinction",
-      "body": "Present Simple describes what is generally true: habits, facts, schedules, and states. Present Continuous describes what is happening at or around the moment of speaking — actions in progress or temporary situations."
+      "heading": "La distinción central",
+      "body": "Present Simple describe lo que es generalmente cierto: hábitos, hechos, horarios y estados. Presente Continuo describe lo que está sucediendo en el momento de hablar o alrededor de él: acciones en progreso o situaciones temporales."
     },
     {
-      "heading": "Signal words",
-      "body": "Present Simple often appears with: always, usually, often, sometimes, never, every day/week/year, on Mondays. Present Continuous often appears with: now, right now, at the moment, currently, today, this week."
+      "heading": "Palabras de señal",
+      "body": "El presente simple suele aparecer con: siempre, normalmente, a menudo, a veces, nunca, todos los días/semana/año, los lunes. El presente continuo suele aparecer con: ahora, ahora mismo, en este momento, actualmente, hoy, esta semana."
     },
     {
-      "heading": "Stative verbs — the exception",
-      "body": "Some verbs describe states, not actions, and almost never appear in continuous form even when you're talking about right now. These are called stative verbs: know, believe, understand, want, need, prefer, love, hate, seem, appear, contain, belong."
+      "heading": "Verbos estáticos: la excepción",
+      "body": "Algunos verbos describen estados, no acciones, y casi nunca aparecen en forma continua, incluso cuando se habla del momento presente. Se llaman verbos estativos: saber, creer, entender, querer, necesitar, preferir, amar, odiar, parecer, aparecer, contener, pertenecer."
     },
     {
-      "heading": "Changing meaning",
-      "body": "A few verbs change meaning depending on which form you use. 'I think you're right' expresses an opinion (stative). 'I'm thinking about the problem' describes a mental process in progress (dynamic). Same verb, very different meaning."
+      "heading": "Cambiando de significado",
+      "body": "Algunos verbos cambian de significado según la forma que uses. 'Creo que tienes razón' expresa una opinión (estativa). \"Estoy pensando en el problema\" describe un proceso mental en progreso (dinámico). Mismo verbo, significado muy diferente."
     }
   ],
   "examples": [
     {
       "english": "She works at a hospital.",
-      "note": "Habit / general fact — Present Simple"
+      "note": "Hábito / hecho general - Presente simple"
     },
     {
       "english": "She's working from home this week.",
-      "note": "Temporary situation — Present Continuous"
+      "note": "Situación temporal — Presente continuo"
     },
     {
       "english": "Water boils at 100°C.",
-      "note": "Scientific fact — always Present Simple"
+      "note": "Hecho científico: siempre presente simple"
     },
     {
       "english": "I'm thinking about quitting.",
-      "note": "'Think' used dynamically — Continuous OK"
+      "note": "'Pensar' usado dinámicamente - Continuo OK"
     },
     {
       "english": "I think that's wrong.",
-      "note": "'Think' as opinion — Continuous NOT OK"
+      "note": "'Pensar' como opinión - Continuo NO ESTÁ BIEN"
     }
   ],
   "exercises": [
     {
-      "instruction": "Choose the correct form: Present Simple or Present Continuous.",
+      "instruction": "Elija la forma correcta: Presente simple o Presente continuo.",
       "items": [
         "I ___ (study) Japanese right now.",
         "She ___ (drink) coffee every morning.",
@@ -51,36 +51,36 @@
         "He ___ (seem) tired lately."
       ],
       "answers": [
-        "am studying",
-        "drinks",
-        "don't understand",
-        "are visiting",
-        "seems"
+        "estoy estudiando",
+        "bebidas",
+        "no entiendo",
+        "estan de visita",
+        "parece"
       ]
     }
   ],
   "quiz": [
     {
-      "question": "Which sentence is correct?",
+      "question": "¿Qué oración es correcta?",
       "options": [
-        "I am knowing the answer.",
-        "I know the answer.",
-        "I am knowing the answer right now.",
-        "I do know the answer at the moment."
+        "Estoy sabiendo la respuesta.",
+        "Sé la respuesta.",
+        "Estoy sabiendo la respuesta ahora mismo.",
+        "Sé la respuesta en este momento."
       ],
       "correct": 1,
-      "explanation": "'Know' is a stative verb and doesn't take the continuous form."
+      "explanation": "'Know' es un verbo estativo y no toma la forma continua."
     },
     {
-      "question": "'She is always losing her keys.' This use of Present Continuous expresses:",
+      "question": "\"Siempre pierde las llaves\". Este uso del Presente Continuo expresa:",
       "options": [
-        "A habit",
-        "An annoying repeated behavior",
-        "A scheduled future event",
-        "A permanent fact"
+        "un habito",
+        "Un comportamiento molesto y repetido.",
+        "Un evento futuro programado",
+        "Un hecho permanente"
       ],
       "correct": 1,
-      "explanation": "Present Continuous + always expresses an annoying or surprising repeated behavior — often with an emotional tone."
+      "explanation": "Presente Continuo + siempre expresa un comportamiento repetido molesto o sorprendente, a menudo con un tono emocional."
     }
   ]
 }

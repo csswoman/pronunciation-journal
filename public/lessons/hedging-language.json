@@ -2,39 +2,39 @@
   "slug": "hedging-language",
   "sections": [
     {
-      "heading": "Why hedge?",
-      "body": "Hedging is not weakness — it's intellectual honesty and rhetorical strategy. Absolute claims are easy to disprove. Hedged claims are more defensible. In academic and professional English, strong claims without hedging signal overconfidence or naivety."
+      "heading": "¿Por qué cubrirse?",
+      "body": "La cobertura no es debilidad: es honestidad intelectual y estrategia retórica. Las afirmaciones absolutas son fáciles de refutar. Los créditos cubiertos son más defendibles. En inglés académico y profesional, afirmaciones fuertes sin cobertura indican exceso de confianza o ingenuidad."
     },
     {
-      "heading": "Modal hedges",
-      "body": "Modals for hedging: may, might, could, should. 'This may suggest...', 'The results could indicate...', 'There might be a connection...' Note: 'should' in academic writing sometimes means 'logically ought to be the case'."
+      "heading": "Coberturas modales",
+      "body": "Modalidades de cobertura: may, might, might, debería. 'Esto puede sugerir...', 'Los resultados podrían indicar...', 'Podría haber una conexión...' Nota: 'debería' en los escritos académicos a veces significa 'lógicamente debería ser así'."
     },
     {
-      "heading": "Lexical hedges",
-      "body": "Verbs: suggest, indicate, appear, seem, tend to, point to. Adjectives/adverbs: possible, probable, likely, relatively, generally, broadly, approximately. Phrases: 'it is worth noting that', 'the evidence tends to suggest'."
+      "heading": "Coberturas léxicas",
+      "body": "Verbos: sugerir, indicar, aparecer, parecer, tender a, señalar. Adjetivos/adverbios: posible, probable, probable, relativamente, en general, en sentido amplio, aproximadamente. Frases: 'vale la pena señalar que', 'la evidencia tiende a sugerir'."
     }
   ],
   "examples": [
     {
       "english": "This suggests a link between X and Y.",
-      "note": "'Suggests' — not 'proves'"
+      "note": "'Sugiere', no 'prueba'"
     },
     {
       "english": "It seems likely that the trend will continue.",
-      "note": "'Seems' + 'likely' — double hedge"
+      "note": "'Parece' + 'probable' - doble cobertura"
     },
     {
       "english": "The data tend to indicate a correlation.",
-      "note": "'Tend to indicate' — not 'show'"
+      "note": "'Tiende a indicar', no a 'mostrar'"
     },
     {
       "english": "Approximately 60% of participants...",
-      "note": "'Approximately' — not '60%' with false precision"
+      "note": "'Aproximadamente', no '60%' con precisión falsa"
     }
   ],
   "exercises": [
     {
-      "instruction": "Soften each claim using hedging language.",
+      "instruction": "Suavice cada reclamación utilizando lenguaje de cobertura.",
       "items": [
         "Climate change causes more extreme weather.",
         "Social media makes teenagers depressed.",
@@ -42,24 +42,24 @@
         "People who exercise live longer."
       ],
       "answers": [
-        "Climate change may contribute to more extreme weather.",
-        "Social media might be linked to increased depression in teenagers.",
-        "The new policy could help reduce crime.",
-        "Evidence suggests that people who exercise tend to live longer."
+        "El cambio climático puede contribuir a un clima más extremo.",
+        "Las redes sociales podrían estar relacionadas con una mayor depresión en los adolescentes.",
+        "La nueva política podría ayudar a reducir la delincuencia.",
+        "La evidencia sugiere que las personas que hacen ejercicio tienden a vivir más tiempo."
       ]
     }
   ],
   "quiz": [
     {
-      "question": "Which sentence uses the STRONGEST hedge?",
+      "question": "¿Qué frase utiliza la cobertura MÁS FUERTE?",
       "options": [
-        "This proves a link.",
-        "This suggests a link.",
-        "This may suggest a possible link.",
-        "This indicates a link."
+        "Esto prueba un vínculo.",
+        "Esto sugiere un vínculo.",
+        "Esto puede sugerir un posible vínculo.",
+        "Esto indica un vínculo."
       ],
       "correct": 2,
-      "explanation": "'May suggest a possible link' contains multiple hedges — modal 'may' + verb 'suggest' + adjective 'possible'. It's the most cautious formulation."
+      "explanation": "'Puede sugerir un posible vínculo' contiene múltiples coberturas: modal 'puede' + verbo 'sugerir' + adjetivo 'posible'. Es la formulación más cautelosa."
     }
   ]
 }

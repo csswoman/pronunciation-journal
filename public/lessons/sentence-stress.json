@@ -2,58 +2,58 @@
   "slug": "sentence-stress",
   "sections": [
     {
-      "heading": "Content words vs. function words",
-      "body": "In natural English, content words (nouns, main verbs, adjectives, adverbs) are stressed. Function words (articles, prepositions, pronouns, auxiliary verbs, conjunctions) are unstressed and often reduced. This creates the characteristic rhythm of English."
+      "heading": "Palabras de contenido versus palabras funcionales",
+      "body": "En inglés natural, las palabras de contenido (sustantivos, verbos principales, adjetivos, adverbios) están acentuadas. Las palabras funcionales (artículos, preposiciones, pronombres, verbos auxiliares, conjunciones) no están acentuadas y, a menudo, están reducidas. Esto crea el ritmo característico del inglés."
     },
     {
-      "heading": "Contrastive stress",
-      "body": "When you want to contrast or correct something, you shift stress deliberately: 'I said I LIKE him, not that I LOVE him.' The stressed word is the one that carries the contrast. This is one of the most expressive tools in spoken English."
+      "heading": "estrés contrastante",
+      "body": "Cuando quieres contrastar o corregir algo, cambias el estrés deliberadamente: \"Dije que me gusta, no que lo amo\". La palabra tónica es la que lleva el contraste. Esta es una de las herramientas más expresivas del inglés hablado."
     }
   ],
   "examples": [
     {
       "english": "I didn't say SHE stole the money.",
-      "note": "Implies: someone else did"
+      "note": "Implica: alguien más lo hizo"
     },
     {
       "english": "I didn't say she STOLE the money.",
-      "note": "Implies: she did something else with it"
+      "note": "Implica: ella hizo algo más con eso."
     },
     {
       "english": "I didn't SAY she stole the money.",
-      "note": "Implies: I wrote it / implied it"
+      "note": "Implica: lo escribí / lo insinué"
     },
     {
       "english": "I DIDN'T say she stole the money.",
-      "note": "Implies: someone else said it"
+      "note": "Implica: alguien más lo dijo"
     }
   ],
   "exercises": [
     {
-      "instruction": "Underline the word you'd stress to convey the meaning in parentheses.",
+      "instruction": "Subraya la palabra que enfatizarías para transmitir el significado entre paréntesis.",
       "items": [
         "He drives a red car. (not a blue one)",
         "She plays piano. (not guitar)",
         "I want coffee. (not tea)"
       ],
       "answers": [
-        "He drives a RED car.",
-        "She plays PIANO.",
-        "I want COFFEE."
+        "Conduce un coche ROJO.",
+        "Ella toca el PIANO.",
+        "Quiero CAFÉ."
       ]
     }
   ],
   "quiz": [
     {
-      "question": "In stress-timed English, which words are typically unstressed?",
+      "question": "En inglés con acentuación, ¿qué palabras suelen estar átonas?",
       "options": [
-        "Nouns and adjectives",
-        "Main verbs and adverbs",
-        "Prepositions and articles",
-        "All words equally"
+        "Sustantivos y adjetivos",
+        "Verbos y adverbios principales",
+        "Preposiciones y artículos",
+        "todas las palabras por igual"
       ],
       "correct": 2,
-      "explanation": "Function words (prepositions, articles, pronouns, auxiliaries) are typically unstressed and reduced in natural speech."
+      "explanation": "Las palabras funcionales (preposiciones, artículos, pronombres, auxiliares) suelen estar átonas y reducidas en el habla natural."
     }
   ]
 }

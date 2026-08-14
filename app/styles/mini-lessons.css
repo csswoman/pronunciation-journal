@@ -191,12 +191,16 @@
   margin-top: var(--space-1);
 }
 
-/* Reading column: no card shell — proximity + measure create structure */
+/* Reading surface keeps long-form content distinct from the page canvas. */
 .mini-lessons__article-main {
   min-width: 0;
   display: flex;
   flex-direction: column;
   gap: var(--space-8);
+  padding: var(--layout-card-pad);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  background: var(--surface-raised);
 }
 
 /* Anchor navigation gets a calm, short landing cue. */
@@ -319,36 +323,10 @@
   line-height: 1.35;
 }
 
-/* Mobile: TOC before reading; hide “next” (footer already covers it) */
+/* Mobile: the footer preserves lesson navigation without delaying the reading. */
 @media (max-width: 767px) {
-  .mini-lessons--article .page-dashboard:has(> .page-dashboard__rail) {
-    display: flex;
-    flex-direction: column;
-  }
-
   .mini-lessons--article .page-dashboard__rail {
-    order: -1;
-    position: static;
-    padding: var(--space-3) 0;
-    border-bottom: 1px solid var(--border-subtle);
-  }
-
-  .mini-lessons__contents-list {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-1);
-  }
-
-  .mini-lessons__aside-divider,
-  .mini-lessons__lesson-nav {
     display: none;
-  }
-}
-
-@media (max-width: 640px) {
-  .mini-lessons__contents-list {
-    display: flex;
-    flex-direction: column;
   }
 }
 

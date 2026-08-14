@@ -4,21 +4,21 @@
   "level": "intermediate",
   "category": "pronunciation",
   "duration": 5,
-  "title": "Rising vs. falling intonation",
-  "subtitle": "Pronunciation of the day",
-  "body": "Intonation patterns signal whether you're asking, concluding, or leaving something open. Getting it wrong can make you sound rude.",
+  "title": "Entonación ascendente versus descendente",
+  "subtitle": "Pronunciación del día",
+  "body": "Los patrones de entonación indican si estás preguntando, concluyendo o dejando algo abierto. Hacerlo mal puede hacerte parecer grosero.",
   "examples": [
     {
       "word": "Yes/No questions → rising ↗",
-      "translation": "'Are you coming?'"
+      "translation": "'¿Vienes?'"
     },
     {
       "word": "Wh- questions → falling ↘",
-      "translation": "'Where are you going?'"
+      "translation": "'¿Adónde vas?'"
     },
     {
       "word": "Lists → rising until last item ↘",
-      "translation": "'Coffee, tea, or water?'"
+      "translation": "'¿Café, té o agua?'"
     }
   ],
   "href": "/mini-lessons/intonation-questions"

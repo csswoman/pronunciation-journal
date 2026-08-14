@@ -2,16 +2,16 @@
   "slug": "advanced-idioms",
   "sections": [
     {
-      "heading": "What makes an idiom 'advanced'?",
-      "body": "Advanced idioms are less frequent than basics, more metaphorically opaque (harder to guess from the parts), and more contextually restricted. They tend to appear in journalism, literature, and professional conversation — not everyday small talk."
+      "heading": "¿Qué hace que un modismo sea \"avanzado\"?",
+      "body": "Los modismos avanzados son menos frecuentes que los básicos, más metafóricamente opacos (más difíciles de adivinar a partir de las partes) y más restringidos contextualmente. Suelen aparecer en el periodismo, la literatura y las conversaciones profesionales, no en las conversaciones cotidianas."
     },
     {
-      "heading": "Risk and decision idioms",
-      "body": "'Bite the bullet' — endure something painful or difficult. 'Throw caution to the wind' — take a risk by ignoring warnings. 'Hedge your bets' — cover multiple possibilities to reduce risk. 'Be on the fence' — be undecided."
+      "heading": "Modismos de riesgo y decisión",
+      "body": "'Morder la bala': soportar algo doloroso o difícil. \"Deje la precaución al viento\": corra el riesgo de ignorar las advertencias. 'Cubra sus apuestas': cubra múltiples posibilidades para reducir el riesgo. 'Esté indeciso', esté indeciso."
     },
     {
-      "heading": "Communication and truth idioms",
-      "body": "'Beat around the bush' — avoid getting to the point. 'Call a spade a spade' — say things directly without softening. 'Read between the lines' — perceive hidden meaning. 'Take something with a grain of salt' — be skeptical."
+      "heading": "Modismos de comunicación y verdad.",
+      "body": "'Andarse por las ramas': evitar ir al grano. 'Llama a las cosas por su nombre': di las cosas directamente sin suavizarte. 'Leer entre líneas': percibir el significado oculto. \"Toma algo con cautela\", sé escéptico."
     }
   ],
   "examples": [
@@ -34,7 +34,7 @@
   ],
   "exercises": [
     {
-      "instruction": "Match the idiom to its use in context.",
+      "instruction": "Relaciona el modismo con su uso en contexto.",
       "items": [
         "The consultant recommended hedging our bets.",
         "The article was biased — take it with a grain of salt.",
@@ -42,24 +42,24 @@
         "Let's call a spade a spade: the project failed."
       ],
       "answers": [
-        "hedging our bets = keeping several options open to reduce risk",
-        "take it with a grain of salt = be skeptical, don't take it literally",
-        "read between the lines = infer the unstated meaning",
-        "call a spade a spade = describe it bluntly and honestly"
+        "cubrir nuestras apuestas = mantener varias opciones abiertas para reducir el riesgo",
+        "Tómalo con cautela = sé escéptico, no lo tomes literalmente",
+        "leer entre líneas = inferir el significado no declarado",
+        "llamar a las cosas por su nombre = describirlo sin rodeos y honestamente"
       ]
     }
   ],
   "quiz": [
     {
-      "question": "'Take something with a grain of salt' means:",
+      "question": "'Tomar algo con cautela' significa:",
       "options": [
-        "Accept something completely",
-        "Add salt to food",
-        "Be skeptical or not take something too seriously",
-        "Offer something generously"
+        "Aceptar algo por completo",
+        "Agregar sal a la comida",
+        "Sea escéptico o no se tome algo demasiado en serio",
+        "Ofrecer algo generosamente"
       ],
       "correct": 2,
-      "explanation": "To take something with a grain of salt means to be skeptical — to not accept it as fully true or reliable."
+      "explanation": "Tomar algo con cautela significa ser escéptico: no aceptarlo como completamente verdadero o confiable."
     }
   ]
 }

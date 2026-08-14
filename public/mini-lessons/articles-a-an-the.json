@@ -4,9 +4,9 @@
   "level": "basic",
   "category": "grammar",
   "duration": 5,
-  "title": "A, An, The — when to use each",
-  "subtitle": "Grammar of the day",
-  "body": "Use 'a/an' when introducing something for the first time or when it's one of many. Use 'the' when both speaker and listener know which one you mean.",
+  "title": "A, An, The: cuándo usar cada uno",
+  "subtitle": "Gramática del día",
+  "body": "Utilice 'a/an' cuando presente algo por primera vez o cuando sea uno de muchos. Utilice 'the' cuando tanto el hablante como el oyente sepan a cuál se refiere.",
   "examples": [
     {
       "word": "I saw a dog. The dog was huge.",
@@ -14,7 +14,7 @@
     },
     {
       "word": "She's a doctor.",
-      "translation": "profesión — no usamos 'the'"
+      "translation": "profesión — no usamos 'el'"
     }
   ],
   "href": "/mini-lessons/articles-a-an-the"

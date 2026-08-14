@@ -2,39 +2,39 @@
   "slug": "cleft-sentences",
   "sections": [
     {
-      "heading": "What cleft sentences do",
-      "body": "Cleft sentences split a simple sentence into two clauses to throw emphasis onto one element. They answer the implied question: 'Which one? / What exactly? / Who specifically?' They're especially useful in writing and in speech when you need to correct a misunderstanding."
+      "heading": "¿Qué hacen las oraciones hendidas?",
+      "body": "Las oraciones divididas dividen una oración simple en dos cláusulas para enfatizar un elemento. Responden a la pregunta implícita: '¿Cuál? / ¿Qué exactamente? / ¿Quién específicamente?' Son especialmente útiles al escribir y al hablar cuando es necesario corregir un malentendido."
     },
     {
-      "heading": "It-clefts",
-      "body": "Structure: It + be + focused element + relative clause. 'Maria called.' → 'It was Maria who called.' (emphasizes Maria, not someone else). 'It's the design that needs changing, not the content.'"
+      "heading": "Se hende",
+      "body": "Estructura: It + be + elemento enfocado + cláusula relativa. \"María llamó.\" → 'Fue María quien llamó.' (destaca María, no otra persona). \"Lo que hay que cambiar es el diseño, no el contenido\"."
     },
     {
-      "heading": "Wh-clefts (pseudo-clefts)",
-      "body": "Structure: What + clause + be + focused element. 'What I need is more time.' 'What surprised me was her reaction.' Often used to introduce or conclude a key point formally."
+      "heading": "Hendiduras Wh (pseudohendiduras)",
+      "body": "Estructura: What + cláusula + be + elemento enfocado. \"Lo que necesito es más tiempo\". \"Lo que me sorprendió fue su reacción\". A menudo se utiliza para presentar o concluir formalmente un punto clave."
     }
   ],
   "examples": [
     {
       "english": "It was the manager who approved it.",
-      "note": "It-cleft: emphasizes the manager"
+      "note": "It-hendidura: enfatiza el gerente"
     },
     {
       "english": "It's the deadline that worries me.",
-      "note": "It-cleft: clarifies what specifically"
+      "note": "It-cleft: aclara qué es específicamente"
     },
     {
       "english": "What I want is a clear explanation.",
-      "note": "Wh-cleft: emphatic subject"
+      "note": "Wh-hendidura: tema enfático"
     },
     {
       "english": "What she did was remarkable.",
-      "note": "Wh-cleft: emphasizes the action"
+      "note": "Wh-hendidura: enfatiza la acción."
     }
   ],
   "exercises": [
     {
-      "instruction": "Rewrite using a cleft sentence to emphasize the underlined element.",
+      "instruction": "Vuelva a escribir usando una oración dividida para enfatizar el elemento subrayado.",
       "items": [
         "She appreciated the honesty.",
         "He failed because of poor planning.",
@@ -42,24 +42,24 @@
         "I need your full attention right now."
       ],
       "answers": [
-        "What she appreciated was the honesty. / It was the honesty that she appreciated.",
-        "It was because of poor planning that he failed.",
-        "It was the noise that woke me up. / What woke me up was the noise.",
-        "What I need right now is your full attention."
+        "Lo que ella apreciaba era la honestidad. / Era la honestidad lo que ella apreciaba.",
+        "Fue por una mala planificación que fracasó.",
+        "Fue el ruido lo que me despertó. / Lo que me despertó fue el ruido.",
+        "Lo que necesito ahora es toda tu atención."
       ]
     }
   ],
   "quiz": [
     {
-      "question": "'What I enjoy most is the process.' This is a:",
+      "question": "\"Lo que más disfruto es el proceso.\" Este es un:",
       "options": [
-        "It-cleft",
-        "Wh-cleft (pseudo-cleft)",
-        "Non-defining relative clause",
-        "Reported speech structure"
+        "hendidura",
+        "Wh-hendidura (pseudo-hendidura)",
+        "Cláusula relativa no definitoria",
+        "Estructura del discurso indirecto"
       ],
       "correct": 1,
-      "explanation": "Wh-clefts start with 'What + clause + be + focused element'. It-clefts start with 'It + be + focused element + relative clause'."
+      "explanation": "Las hendiduras wh comienzan con 'Qué + cláusula + ser + elemento enfocado'. Las hendiduras de it comienzan con 'It + be + elemento enfocado + cláusula relativa'."
     }
   ]
 }

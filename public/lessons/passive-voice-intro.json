@@ -2,39 +2,39 @@
   "slug": "passive-voice-intro",
   "sections": [
     {
-      "heading": "When to use passive",
-      "body": "Use passive voice when: (1) the action is more important than the agent, (2) the agent is unknown or obvious, (3) you want to avoid mentioning the agent (tactful or formal writing)."
+      "heading": "Cuando usar pasivo",
+      "body": "Utilice la voz pasiva cuando: (1) la acción es más importante que el agente, (2) el agente es desconocido u obvio, (3) desea evitar mencionar al agente (escritura formal o con tacto)."
     },
     {
-      "heading": "How to form it",
-      "body": "Subject + be (conjugated) + past participle. The tense of 'be' determines the tense: 'is written' (present simple passive), 'was written' (past simple passive), 'has been written' (present perfect passive)."
+      "heading": "como formarlo",
+      "body": "Sujeto + be (conjugado) + participio pasado. El tiempo de 'ser' determina el tiempo: 'está escrito' (presente pasivo simple), 'fue escrito' (pasado simple pasivo), 'ha sido escrito' (presente pasivo perfecto)."
     },
     {
-      "heading": "By-phrase",
-      "body": "Add 'by + agent' only when the agent is new information worth mentioning. 'The Mona Lisa was painted by Leonardo da Vinci.' — here the agent matters. 'My bike was stolen.' — no agent because it's unknown."
+      "heading": "Por frase",
+      "body": "Agregue 'por + agente' solo cuando el agente tenga información nueva que valga la pena mencionar. 'La Mona Lisa fue pintada por Leonardo da Vinci.' — Aquí el agente importa. \"Me robaron la bicicleta.\" — ningún agente porque es desconocido."
     }
   ],
   "examples": [
     {
       "english": "The contract was signed yesterday.",
-      "note": "Agent unknown or irrelevant"
+      "note": "Agente desconocido o irrelevante"
     },
     {
       "english": "English is spoken in over 50 countries.",
-      "note": "Agent obvious"
+      "note": "Agente obvio"
     },
     {
       "english": "The company has been sold.",
-      "note": "Present perfect passive"
+      "note": "Presente perfecto pasivo"
     },
     {
       "english": "She was awarded the Nobel Prize.",
-      "note": "Agent could be added: '...by the committee'"
+      "note": "Se podría agregar agente: '...por el comité'"
     }
   ],
   "exercises": [
     {
-      "instruction": "Rewrite in passive voice.",
+      "instruction": "Reescribe en voz pasiva.",
       "items": [
         "Someone broke the window.",
         "They manufacture these cars in Germany.",
@@ -42,24 +42,24 @@
         "People speak French in Quebec."
       ],
       "answers": [
-        "The window was broken.",
-        "These cars are manufactured in Germany.",
-        "The results will be announced.",
-        "French is spoken in Quebec."
+        "La ventana estaba rota.",
+        "Estos coches se fabrican en Alemania.",
+        "Los resultados serán anunciados.",
+        "En Quebec se habla francés."
       ]
     }
   ],
   "quiz": [
     {
-      "question": "When should you NOT include 'by + agent' in a passive sentence?",
+      "question": "¿Cuándo NO deberías incluir 'por + agente' en una oración pasiva?",
       "options": [
-        "When the agent is famous",
-        "When the agent is unknown or obvious",
-        "Always — passive never uses 'by'",
-        "When the sentence is in present tense"
+        "Cuando el agente es famoso",
+        "Cuando el agente es desconocido u obvio",
+        "Siempre: el pasivo nunca usa 'por'",
+        "Cuando la oración está en tiempo presente."
       ],
       "correct": 1,
-      "explanation": "Add 'by + agent' only when the agent provides meaningful new information. Omit it when the agent is unknown or obvious."
+      "explanation": "Agregue 'por + agente' solo cuando el agente proporcione nueva información significativa. Omitirlo cuando el agente sea desconocido u obvio."
     }
   ]
 }

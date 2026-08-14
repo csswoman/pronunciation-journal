@@ -4,9 +4,9 @@
   "level": "basic",
   "category": "pronunciation",
   "duration": 5,
-  "title": "Word stress: which syllable is louder?",
-  "subtitle": "Pronunciation of the day",
-  "body": "English is a stress-timed language. Getting word stress wrong can make you harder to understand, even if every sound is correct.",
+  "title": "Acento de la palabra: ¿qué sílaba suena más fuerte?",
+  "subtitle": "Pronunciación del día",
+  "body": "El inglés es un idioma que genera estrés. Equivocarse con el acento de las palabras puede hacer que sea más difícil entenderle, incluso si todos los sonidos son correctos.",
   "examples": [
     {
       "word": "PHOtograph · phoTOgraphy · photoGRAPHic",
@@ -14,7 +14,7 @@
     },
     {
       "word": "PREsent (n.) · preSENT (v.)",
-      "translation": "mismo spelling, diferente significado"
+      "translation": "misma ortografía, diferente significado"
     }
   ],
   "href": "/mini-lessons/word-stress-basics"

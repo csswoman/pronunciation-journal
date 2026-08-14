@@ -4,17 +4,17 @@
   "level": "intermediate",
   "category": "grammar",
   "duration": 6,
-  "title": "Reported speech: backshifting tenses",
-  "subtitle": "Grammar of the day",
-  "body": "When reporting what someone said, verbs shift one tense back in time. This is called backshifting.",
+  "title": "Discurso indirecto: tiempos verbales hacia atrás",
+  "subtitle": "Gramática del día",
+  "body": "Al informar lo que alguien dijo, los verbos retroceden un tiempo en el tiempo. Esto se llama retroceso.",
   "examples": [
     {
       "word": "'I am tired.' → She said she was tired.",
-      "translation": "am → was"
+      "translation": "soy → era"
     },
     {
       "word": "'I will call you.' → He said he would call me.",
-      "translation": "will → would"
+      "translation": "voluntad → haría"
     }
   ],
   "href": "/mini-lessons/reported-speech"

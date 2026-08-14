@@ -4,9 +4,9 @@
   "level": "advanced",
   "category": "pronunciation",
   "duration": 7,
-  "title": "Phonemic pairs that confuse advanced learners",
-  "subtitle": "Pronunciation of the day",
-  "body": "Even advanced speakers struggle with these minimal pairs. The problem isn't individual sounds — it's perception and muscle memory.",
+  "title": "Pares fonémicos que confunden a los estudiantes avanzados",
+  "subtitle": "Pronunciación del día",
+  "body": "Incluso los hablantes avanzados tienen dificultades con estos pares mínimos. El problema no son los sonidos individuales, sino la percepción y la memoria muscular.",
   "examples": [
     {
       "word": "collar / caller",
@@ -15,7 +15,7 @@
     {
       "word": "cot / caught",
       "ipa": "/kɒt/ · /kɔːt/",
-      "translation": "merger en algunos dialectos americanos"
+      "translation": "fusión en algunos dialectos americanos"
     }
   ],
   "href": "/mini-lessons/phonemic-awareness-advanced"

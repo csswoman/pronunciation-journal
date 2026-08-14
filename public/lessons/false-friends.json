@@ -2,16 +2,16 @@
   "slug": "false-friends",
   "sections": [
     {
-      "heading": "What are false friends?",
-      "body": "False friends (or false cognates) are words in two languages that look or sound similar but have different meanings. Spanish and English share many Latin roots, which means there are hundreds of false friends waiting to trip you up."
+      "heading": "¿Qué son los falsos amigos?",
+      "body": "Los falsos amigos (o falsos cognados) son palabras en dos idiomas que parecen o suenan similares pero tienen significados diferentes. El español y el inglés comparten muchas raíces latinas, lo que significa que hay cientos de falsos amigos esperando para hacerte tropezar."
     },
     {
-      "heading": "The most embarrassing ones",
-      "body": "'Embarrassed' does not mean embarazada (pregnant) — it means ashamed or awkward. 'Actually' does not mean actualmente (currently/nowadays) — it means in fact / in reality. 'Eventually' does not mean eventualmente (possibly) — it means in the end / sooner or later."
+      "heading": "Los más vergonzosos",
+      "body": "'Avergonzada' no significa embarazada (embarazada), significa avergonzada o incómoda. 'En realidad' no significa actualmente (actualmente/hoy en día), significa de hecho/en realidad. 'Eventualmente' no significa eventualmente (posiblemente), significa al final / tarde o temprano."
     },
     {
-      "heading": "More common false friends",
-      "body": "'Library' = biblioteca (not librería). 'Sensible' = sensato/a (not sensible). 'Sympathetic' = compasivo/a (not simpático/a). 'Lecture' = clase magistral / conferencia (not lectura). 'Success' = éxito (not suceso)."
+      "heading": "Amigos falsos más comunes",
+      "body": "'Biblioteca' = biblioteca (no librería). 'Sensible' = sensato/a (no sensato). 'Sympathetic' = compasivo/a (no simpático/a). 'Lecture' = clase magistral / conferencia (no lectura). 'Éxito' = éxito (no suceso)."
     }
   ],
   "examples": [
@@ -29,12 +29,12 @@
     },
     {
       "english": "He's a sensible person.",
-      "translation": "Es una persona sensata — NOT 'sensible'"
+      "translation": "Es una persona sensata - NO 'sensible'"
     }
   ],
   "exercises": [
     {
-      "instruction": "Translate these sentences, avoiding false friends.",
+      "instruction": "Traduce estas frases, evitando falsos amigos.",
       "items": [
         "The conference was a great success.",
         "I attend a lecture every Monday.",
@@ -42,24 +42,24 @@
         "He eventually admitted his mistake."
       ],
       "answers": [
-        "La conferencia fue un gran éxito. ('success' = éxito, no 'suceso')",
-        "Asisto a una clase magistral cada lunes. ('attend' = asistir; 'lecture' = clase, no 'lectura')",
+        "La conferencia fue un gran éxito. ('éxito' = éxito, no 'éxito')",
+        "Asiste a una clase magistral cada lunes. ('attend' = asistir; 'lecture' = clase, no 'lectura')",
         "Por fin se presentó — parecía muy agradable. ('introduce' = presentar; 'sympathetic' = comprensiva, no 'simpática')",
-        "Al final admitió su error. ('eventually' = al final, no 'eventualmente')"
+        "Al final admitió su error. ('eventualmente' = al final, no 'eventualmente')"
       ]
     }
   ],
   "quiz": [
     {
-      "question": "'Eventually' in English means:",
+      "question": "'Eventualmente' en inglés significa:",
       "options": [
-        "Sometimes / possibly",
-        "Currently / nowadays",
-        "In the end / sooner or later",
-        "Actually / in reality"
+        "A veces / posiblemente",
+        "Actualmente / hoy en día",
+        "Al final / tarde o temprano",
+        "En realidad / en realidad"
       ],
       "correct": 2,
-      "explanation": "'Eventually' means 'in the end' or 'after a long time'. It does NOT mean 'possibly' like Spanish 'eventualmente'."
+      "explanation": "\"Eventualmente\" significa \"al final\" o \"después de mucho tiempo\". NO significa \"posiblemente\" como \"eventualmente\" en español."
     }
   ]
 }

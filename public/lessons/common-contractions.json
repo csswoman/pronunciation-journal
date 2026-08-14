@@ -2,20 +2,20 @@
   "slug": "common-contractions",
   "sections": [
     {
-      "heading": "Why contractions matter",
-      "body": "Contractions aren't informal slang — they're the natural default in spoken English and most written English outside formal documents. Avoiding them makes you sound stiff and unnaturally precise, which can actually make you harder to understand because listeners expect the contracted rhythm."
+      "heading": "Por qué son importantes las contracciones",
+      "body": "Las contracciones no son jerga informal: son el valor predeterminado natural en el inglés hablado y en la mayoría del inglés escrito fuera de los documentos formales. Evitarlos te hace sonar rígido y anormalmente preciso, lo que en realidad puede hacer que sea más difícil entenderte porque los oyentes esperan el ritmo contratado."
     },
     {
-      "heading": "Negative contractions",
-      "body": "Negative contractions are especially important because they change the rhythm of the sentence significantly. 'I do not know' sounds formal or emphatic. 'I don't know' is neutral. Both are correct — but only one sounds natural in casual speech."
+      "heading": "Contracciones negativas",
+      "body": "Las contracciones negativas son especialmente importantes porque cambian significativamente el ritmo de la oración. \"No lo sé\" suena formal o enfático. \"No lo sé\" es neutral. Ambos son correctos, pero sólo uno suena natural en un discurso informal."
     },
     {
-      "heading": "Weak forms and contractions together",
-      "body": "Contractions often combine with the weak (unstressed) forms of auxiliary verbs. In fast speech, 'I would have known' becomes 'I'd've known' /aɪdəv noʊn/. These double contractions are common in speech even if rarely written."
+      "heading": "Formas débiles y contracciones juntas.",
+      "body": "Las contracciones a menudo se combinan con las formas débiles (átonas) de los verbos auxiliares. En un habla rápida, \"lo habría sabido\" se convierte en \"lo habría sabido\" /aɪdəv noʊn/. Estas contracciones dobles son comunes en el habla, aunque rara vez se escriben."
     },
     {
-      "heading": "When NOT to contract",
-      "body": "Avoid contractions in formal writing (academic papers, legal documents, official letters). Also avoid them when you want to add emphasis: 'No, I am NOT going' — the stress falls on 'am' and 'not', which a contraction would eliminate."
+      "heading": "Cuando NO contratar",
+      "body": "Evite las contracciones en escritos formales (trabajos académicos, documentos legales, cartas oficiales). Evítelos también cuando quiera añadir énfasis: \"No, NO voy a ir\"; el énfasis recae en \"soy\" y \"no\", lo que una contracción eliminaría."
     }
   ],
   "examples": [
@@ -26,7 +26,7 @@
     {
       "english": "they are → they're",
       "ipa": "/ðɛr/",
-      "note": "Often confused with 'there' and 'their'"
+      "note": "A menudo se confunde con \"allí\" y \"su\""
     },
     {
       "english": "would not → wouldn't",
@@ -35,7 +35,7 @@
     {
       "english": "I would have → I'd've",
       "ipa": "/ˈaɪdəv/",
-      "note": "Double contraction — common in speech"
+      "note": "Doble contracción: común en el habla."
     },
     {
       "english": "let us → let's",
@@ -44,7 +44,7 @@
   ],
   "exercises": [
     {
-      "instruction": "Rewrite each sentence using contractions where possible.",
+      "instruction": "Vuelve a escribir cada oración usando contracciones cuando sea posible.",
       "items": [
         "I am not sure what you are talking about.",
         "She would not have done it if she had known.",
@@ -52,35 +52,35 @@
         "It is not as difficult as it looks."
       ],
       "answers": [
-        "I'm not sure what you're talking about.",
-        "She wouldn't have done it if she'd known.",
-        "They're going to be late, aren't they?",
-        "It's not as difficult as it looks."
+        "No estoy seguro de qué estás hablando.",
+        "Ella no lo habría hecho si lo hubiera sabido.",
+        "Van a llegar tarde, ¿no?",
+        "No es tan difícil como parece."
       ]
     }
   ],
   "quiz": [
     {
-      "question": "Which contraction is grammatically incorrect?",
+      "question": "¿Qué contracción es gramaticalmente incorrecta?",
       "options": [
-        "she's",
-        "they're",
-        "amn't",
-        "we've"
+        "ella es",
+        "ellos son",
+        "no lo soy",
+        "hemos"
       ],
       "correct": 2,
-      "explanation": "'Amn't' exists in some dialects (Scottish, Irish English) but is not standard. The standard form is 'aren't I' in questions, or simply avoid the contraction."
+      "explanation": "'Amn't' existe en algunos dialectos (escocés, inglés irlandés) pero no es estándar. La forma estándar es \"¿no soy yo?\" en las preguntas, o simplemente evitar la contracción."
     },
     {
-      "question": "When should you AVOID contractions?",
+      "question": "¿Cuándo se deben EVITAR las contracciones?",
       "options": [
-        "In casual conversation with friends",
-        "In text messages",
-        "In a formal academic essay",
-        "When speaking to someone you just met"
+        "En una conversación informal con amigos.",
+        "en mensajes de texto",
+        "En un ensayo académico formal.",
+        "Cuando hablas con alguien que acabas de conocer"
       ],
       "correct": 2,
-      "explanation": "Formal academic writing generally avoids contractions to maintain a professional, objective tone."
+      "explanation": "La escritura académica formal generalmente evita las contracciones para mantener un tono profesional y objetivo."
     }
   ]
 }

@@ -2,43 +2,43 @@
   "slug": "basic-listening-reductions",
   "sections": [
     {
-      "heading": "Why fast English sounds different",
-      "body": "The English you hear in conversation is not the English you read. Native speakers apply a set of systematic reductions to unstressed and frequent words, making speech faster and more rhythmic. These aren't mistakes — they're features of natural spoken English."
+      "heading": "Por qué el inglés rápido suena diferente",
+      "body": "El inglés que escuchas en una conversación no es el inglés que lees. Los hablantes nativos aplican una serie de reducciones sistemáticas a palabras átonas y frecuentes, haciendo que el habla sea más rápida y rítmica. Estos no son errores: son características del inglés hablado de forma natural."
     },
     {
-      "heading": "The most common reductions",
-      "body": "'Want to' → 'wanna'. 'Going to' → 'gonna'. 'Have to' → 'hafta'. 'Don't know' → 'dunno'. 'Kind of' → 'kinda'. 'Out of' → 'outta'. 'Them' → 'em'. 'Him' → \"'im\". These are not informal — they happen automatically in normal speech."
+      "heading": "Las reducciones más comunes",
+      "body": "'Quiero' → 'quiero'. 'Indo a' → 'voy a'. 'Tengo que' → 'hafta'. 'No sé' → 'no sé'. 'Más o menos' → 'más o menos'. 'Fuera de' → 'fuera'. 'Ellos' → 'ellos'. 'Él' → \"'él\". Estos no son informales: ocurren automáticamente en el habla normal."
     },
     {
-      "heading": "Strategy for learners",
-      "body": "You don't need to produce these reductions — but you must be able to hear and decode them. Practice by listening to authentic audio (podcasts, YouTube) and pausing to identify what was actually said. Shadow the speaker to train your ear and mouth together."
+      "heading": "Estrategia para estudiantes",
+      "body": "No es necesario que produzcas estas reducciones, pero debes poder escucharlas y decodificarlas. Practique escuchando audio auténtico (podcasts, YouTube) y haciendo pausas para identificar lo que realmente se dijo. Sigue al orador para entrenar tu oído y tu boca juntos."
     }
   ],
   "examples": [
     {
       "english": "What are you doing?",
       "ipa": "/wʌd͡ʒə ˈduːɪŋ/",
-      "note": "whadja doing?"
+      "note": "¿Qué estás haciendo?"
     },
     {
       "english": "I don't know",
       "ipa": "/aɪ ˈdoʊnə/",
-      "note": "I dunno"
+      "note": "no se"
     },
     {
       "english": "I'm going to eat",
       "ipa": "/aɪm ˈɡʌnə iːt/",
-      "note": "gonna"
+      "note": "ir a"
     },
     {
       "english": "Give it to me",
       "ipa": "/ɡɪvɪtə miː/",
-      "note": "All words link together"
+      "note": "Todas las palabras se unen"
     }
   ],
   "exercises": [
     {
-      "instruction": "Write the full, careful pronunciation of each reduced form.",
+      "instruction": "Escribe la pronunciación completa y cuidadosa de cada forma reducida.",
       "items": [
         "wanna",
         "hafta",
@@ -47,25 +47,25 @@
         "outta"
       ],
       "answers": [
-        "want to",
-        "have to",
-        "kind of",
-        "going to",
-        "out of"
+        "quiero",
+        "tengo que",
+        "un poco",
+        "ir a",
+        "fuera de"
       ]
     }
   ],
   "quiz": [
     {
-      "question": "Why do native speakers use reductions?",
+      "question": "¿Por qué los hablantes nativos utilizan reducciones?",
       "options": [
-        "To be rude or lazy",
-        "Because they don't know the full forms",
-        "Because English is stress-timed and reductions create natural rhythm",
-        "To confuse learners"
+        "Ser grosero o vago",
+        "Porque no conocen los formularios completos.",
+        "Porque el inglés es estresante y las reducciones crean un ritmo natural.",
+        "Para confundir a los estudiantes"
       ],
       "correct": 2,
-      "explanation": "Reductions are a natural feature of English rhythm. Stress-timed language compresses unstressed syllables — reductions are the result."
+      "explanation": "Las reducciones son una característica natural del ritmo inglés. El lenguaje con acentuación comprime las sílabas átonas y el resultado son reducciones."
     }
   ]
 }

@@ -2,16 +2,16 @@
   "slug": "register-formal-informal",
   "sections": [
     {
-      "heading": "What is register?",
-      "body": "Register is the variety of language suited to a particular social situation. English has a wider range of register variation than most languages — from deeply informal slang to highly formal legal and academic prose. C1 speakers switch fluently between them."
+      "heading": "¿Qué es registrarse?",
+      "body": "Registro es la variedad de lengua adecuada a una situación social particular. El inglés tiene una gama más amplia de variación de registros que la mayoría de los idiomas, desde una jerga profundamente informal hasta una prosa legal y académica altamente formal. Los altavoces C1 cambian con fluidez entre ellos."
     },
     {
-      "heading": "Markers of formal register",
-      "body": "Formal: longer words (often Latinate), passive voice, no contractions, impersonal constructions ('It is suggested that...'), complex sentence structure, hedging, precise vocabulary."
+      "heading": "Marcadores de registro formal",
+      "body": "Formal: palabras más largas (a menudo en latín), voz pasiva, sin contracciones, construcciones impersonales ('Se sugiere que...'), estructura de oración compleja, cobertura, vocabulario preciso."
     },
     {
-      "heading": "Markers of informal register",
-      "body": "Informal: shorter words (often Germanic), active voice, contractions, direct address, phrasal verbs instead of single verbs, fillers, ellipsis, colloquialisms."
+      "heading": "Marcadores de registro informal",
+      "body": "Informal: palabras más cortas (a menudo germánicas), voz activa, contracciones, dirección directa, verbos compuestos en lugar de verbos simples, muletillas, elipsis, coloquialismos."
     }
   ],
   "examples": [
@@ -21,20 +21,20 @@
     },
     {
       "english": "get in touch → contact",
-      "note": "Phrasal verb → single verb (more formal)"
+      "note": "Verbo compuesto → verbo único (más formal)"
     },
     {
       "english": "So → Therefore / Consequently",
-      "note": "Informal connector → formal connector"
+      "note": "Conector informal → conector formal"
     },
     {
       "english": "need → require",
-      "note": "Germanic → Latinate (more formal)"
+      "note": "Germánico → Latino (más formal)"
     }
   ],
   "exercises": [
     {
-      "instruction": "Rewrite each sentence in the register indicated.",
+      "instruction": "Reescribe cada oración en el registro indicado.",
       "items": [
         "I wanna ask you something. (formal)",
         "We request that you vacate the premises. (informal)",
@@ -42,24 +42,24 @@
         "We regret to inform you that your application was unsuccessful. (neutral)"
       ],
       "answers": [
-        "I would like to ask you something.",
-        "You need to move out.",
-        "Her employment has been terminated.",
-        "Unfortunately, your application wasn't successful."
+        "Me gustaría preguntarte algo.",
+        "Necesitas mudarte.",
+        "Su empleo ha sido despedido.",
+        "Desafortunadamente, su solicitud no fue exitosa."
       ]
     }
   ],
   "quiz": [
     {
-      "question": "Which of these is a marker of formal register?",
+      "question": "¿Cuál de estos es un marcador de registro formal?",
       "options": [
-        "Contractions",
-        "Phrasal verbs",
-        "Passive voice",
-        "Colloquialisms"
+        "Contracciones",
+        "Verbos compuestos",
+        "voz pasiva",
+        "Coloquialismos"
       ],
       "correct": 2,
-      "explanation": "Passive voice is associated with formal register because it creates distance, removes personal agency, and sounds more objective."
+      "explanation": "La voz pasiva se asocia con el registro formal porque crea distancia, elimina la agencia personal y suena más objetiva."
     }
   ]
 }

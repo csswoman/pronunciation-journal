@@ -2,49 +2,49 @@
   "slug": "articles-a-an-the",
   "sections": [
     {
-      "heading": "The three articles",
-      "body": "'A' and 'an' are indefinite articles — they refer to one unspecified thing from a group. 'The' is the definite article — it refers to something specific that both speaker and listener can identify. Spanish uses definite articles far more broadly; English omits them in many places."
+      "heading": "Los tres artículos",
+      "body": "'A' y 'an' son artículos indefinidos: se refieren a una cosa no especificada de un grupo. 'El' es el artículo definido: se refiere a algo específico que tanto el hablante como el oyente pueden identificar. El español utiliza artículos definidos de manera mucho más amplia; El inglés los omite en muchos lugares."
     },
     {
-      "heading": "A vs. An",
-      "body": "Use 'an' before a vowel *sound* (not just a vowel letter). The rule is phonetic. 'An hour' (silent H → vowel sound). 'A university' (starts with /juː/ → consonant sound). 'An MBA' (M is pronounced 'em' → vowel sound)."
+      "heading": "Una contra una",
+      "body": "Utilice 'an' antes de un *sonido* vocal (no solo una letra vocal). La regla es fonética. 'Una hora' (H muda → sonido vocálico). 'Una universidad' (empieza con /juː/ → sonido consonante). 'An MBA' (M se pronuncia 'em' → sonido vocálico)."
     },
     {
-      "heading": "When to omit the article",
-      "body": "No article before: plural nouns used generally ('Dogs are loyal'), uncountable nouns used generally ('Water is essential'), proper nouns ('She lives in Paris'), meals ('We had dinner'), languages ('She speaks French'), sports ('He plays tennis')."
+      "heading": "Cuando omitir el artículo",
+      "body": "Ningún artículo anterior: sustantivos plurales usados ​​generalmente ('Los perros son leales'), sustantivos incontables usados ​​generalmente ('El agua es esencial'), nombres propios ('Ella vive en París'), comidas ('Cenamos'), idiomas ('Ella habla francés'), deportes ('Él juega al tenis')."
     },
     {
-      "heading": "The for second mention and shared knowledge",
-      "body": "Once you've introduced something, refer to it with 'the'. Also use 'the' when context makes it clear which specific thing you mean — even if it's the first mention: 'Can you pass the salt?' works because there's only one salt on the table."
+      "heading": "La segunda mención y el conocimiento compartido.",
+      "body": "Una vez que haya introducido algo, consúltelo con \"el\". Utilice también 'el' cuando el contexto deje claro a qué se refiere, incluso si es la primera mención: '¿Puedes pasar la sal?' Funciona porque solo hay una sal en la mesa."
     }
   ],
   "examples": [
     {
       "english": "I saw a dog. The dog was huge.",
-      "note": "First mention → 'a'. Second mention → 'the'."
+      "note": "Primera mención → 'a'. Segunda mención → 'el'."
     },
     {
       "english": "She's a doctor.",
-      "note": "Profession: use 'a', not 'the'."
+      "note": "Profesión: utilice 'a', no 'the'."
     },
     {
       "english": "an hour",
       "ipa": "/ən ˈaʊr/",
-      "note": "Silent H → treat as vowel sound"
+      "note": "Silent H → tratar como sonido vocal"
     },
     {
       "english": "a European city",
       "ipa": "/ə jʊrəˈpiːən/",
-      "note": "'Eu' sounds like /j/ → use 'a'"
+      "note": "'Eu' suena como /j/ → usa 'a'"
     },
     {
       "english": "I love music.",
-      "note": "General uncountable → no article"
+      "note": "General incontable → sin artículo"
     }
   ],
   "exercises": [
     {
-      "instruction": "Fill in the blank with a, an, the, or — (no article).",
+      "instruction": "Complete el espacio en blanco con a, an, the o — (sin artículo).",
       "items": [
         "___ Eiffel Tower is in ___ Paris.",
         "She has ___ idea that could change everything.",
@@ -53,36 +53,36 @@
         "___ honesty is the best policy."
       ],
       "answers": [
-        "The / —",
-        "an",
+        "El / -",
+        "un",
         "—",
-        "an",
+        "un",
         "—"
       ]
     }
   ],
   "quiz": [
     {
-      "question": "Which sentence is correct?",
+      "question": "¿Qué oración es correcta?",
       "options": [
-        "She is the doctor.",
-        "She is a doctor.",
-        "She is doctor.",
-        "She is an doctor."
+        "Ella es la doctora.",
+        "Ella es doctora.",
+        "Ella es doctora.",
+        "Ella es doctora."
       ],
       "correct": 1,
-      "explanation": "Professions use the indefinite article 'a/an': 'She is a doctor.'"
+      "explanation": "Las profesiones utilizan el artículo indefinido 'a/an': 'Ella es médica'."
     },
     {
-      "question": "'___ MBA from Harvard is valuable.' Which article fits?",
+      "question": "'___ MBA de Harvard es valioso.' ¿Qué artículo encaja?",
       "options": [
         "A",
-        "An",
-        "The",
-        "No article"
+        "Un",
+        "El",
+        "Ningún artículo"
       ],
       "correct": 1,
-      "explanation": "'MBA' is pronounced 'em-bee-ay' — it starts with a vowel sound, so 'an' is correct."
+      "explanation": "'MBA' se pronuncia 'em-bee-ay'; comienza con un sonido vocálico, por lo que 'an' es correcto."
     }
   ]
 }

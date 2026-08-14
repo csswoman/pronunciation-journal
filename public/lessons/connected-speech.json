@@ -2,43 +2,43 @@
   "slug": "connected-speech",
   "sections": [
     {
-      "heading": "Linking",
-      "body": "When a word ends in a consonant and the next begins with a vowel, they link together as if part of the same word: 'an apple' → /ə ˈnæp.əl/, 'turn it off' → /ˈtɜr.nɪt ɑf/. This is the most frequent connected speech process."
+      "heading": "Enlace",
+      "body": "Cuando una palabra termina en consonante y la siguiente comienza con vocal, se unen como si fueran parte de la misma palabra: 'una manzana' → /ə ˈnæp.əl/, 'apágala' → /ˈtɜr.nɪt ɑf/. Este es el proceso de habla conectado más frecuente."
     },
     {
-      "heading": "Elision",
-      "body": "Elision is the disappearance of a sound. The most common: /t/ and /d/ between two consonants ('last night' → /læs naɪt/, 'next door' → /nɛks dɔr/), and the /h/ in unstressed pronouns ('tell him' → /ˈtɛl ɪm/)."
+      "heading": "Elisión",
+      "body": "La elisión es la desaparición de un sonido. Los más comunes: /t/ y /d/ entre dos consonantes ('anoche' → /læs naɪt/, 'al lado' → /nɛks dɔr/), y la /h/ en pronombres átonos ('dile' → /ˈtɛl ɪm/)."
     },
     {
-      "heading": "Assimilation",
-      "body": "Assimilation is when one sound changes to become more like an adjacent sound. 'Ten boys' → /ˈtem bɔɪz/ (n → m before a bilabial). 'That person' → /ˈðæp ˈpɜrsən/ (t → p before bilabial). This happens automatically in fast speech."
+      "heading": "Asimilación",
+      "body": "La asimilación es cuando un sonido cambia para parecerse más a un sonido adyacente. 'Diez niños' → /ˈtem bɔɪz/ (n → m antes de bilabial). 'Esa persona' → /ˈðæp ˈpɜrsən/ (t → p antes de bilabial). Esto sucede automáticamente al hablar rápido."
     }
   ],
   "examples": [
     {
       "english": "an apple",
       "ipa": "/ə ˈnæp.əl/",
-      "note": "Linking: n + vowel"
+      "note": "Vinculación: n + vocal"
     },
     {
       "english": "next day",
       "ipa": "/nɛks deɪ/",
-      "note": "Elision: /t/ disappears"
+      "note": "Elisión: /t/ desaparece"
     },
     {
       "english": "ten boys",
       "ipa": "/ˈtem bɔɪz/",
-      "note": "Assimilation: /n/ → /m/ before /b/"
+      "note": "Asimilación: /n/ → /m/ antes de /b/"
     },
     {
       "english": "give me",
       "ipa": "/ˈɡɪmi/",
-      "note": "Linking and reduction together"
+      "note": "Vinculación y reducción juntas"
     }
   ],
   "exercises": [
     {
-      "instruction": "Identify which process (linking, elision, or assimilation) applies to each phrase.",
+      "instruction": "Identifique qué proceso (vinculación, elisión o asimilación) se aplica a cada frase.",
       "items": [
         "in an hour",
         "good boy",
@@ -46,24 +46,24 @@
         "pick it up"
       ],
       "answers": [
-        "linking — in‿an‿hour (consonant joins the next vowel)",
-        "assimilation — /d/ becomes /b/ before /b/: 'goob boy'",
-        "elision — the /t/ drops: 'las(t) chance'",
-        "linking — pick‿it‿up"
+        "vinculación - en‿una‿hora (la consonante se une a la siguiente vocal)",
+        "asimilación - /d/ se convierte en /b/ antes de /b/: 'chico goob'",
+        "elision - las gotas /t/: 'las(t) chance'",
+        "vincular - recogerlo"
       ]
     }
   ],
   "quiz": [
     {
-      "question": "In 'that person', the /t/ at the end of 'that' changes to /p/ because:",
+      "question": "En 'esa persona', la /t/ al final de 'esa' cambia a /p/ porque:",
       "options": [
-        "The speaker is being lazy",
-        "Assimilation: the /t/ anticipates the bilabial /p/ that follows",
-        "Elision removes the sound entirely",
-        "Linking joins the two words"
+        "El hablante está siendo vago.",
+        "Asimilación: la /t/ anticipa la /p/ bilabial que sigue",
+        "Elision elimina el sonido por completo.",
+        "La vinculación une las dos palabras."
       ],
       "correct": 1,
-      "explanation": "This is anticipatory (regressive) assimilation — the place of articulation of /t/ shifts to match the following /p/."
+      "explanation": "Esta es una asimilación anticipatoria (regresiva): el lugar de articulación de /t/ cambia para coincidir con la siguiente /p/."
     }
   ]
 }

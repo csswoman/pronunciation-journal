@@ -2,39 +2,39 @@
   "slug": "modal-verbs-ability",
   "sections": [
     {
-      "heading": "Can — present ability",
-      "body": "'Can' expresses general ability in the present or future. It's also used for permission (informal) and possibility. It's the most versatile and common modal."
+      "heading": "Puede - capacidad actual",
+      "body": "'Can' expresa habilidad general en el presente o futuro. También se usa para permiso (informal) y posibilidad. Es el modal más versátil y común."
     },
     {
-      "heading": "Could — past ability and more",
-      "body": "'Could' expresses general ability in the past. Importantly, for a specific achievement in the past — something you managed to do on one particular occasion — use 'was/were able to', not 'could'. 'I could swim at age 5' (general). 'I was able to swim to the shore' (specific achievement)."
+      "heading": "Podría: capacidad pasada y más",
+      "body": "'Podría' expresa habilidad general en el pasado. Es importante destacar que, para un logro específico en el pasado (algo que lograste hacer en una ocasión particular), utiliza \"fue/fueron capaces de\", no \"pudieron\". 'Sabía nadar a los 5 años' (general). 'Pude nadar hasta la orilla' (logro específico)."
     },
     {
-      "heading": "Be able to — formal and all tenses",
-      "body": "'Be able to' can appear in any tense, making it more flexible than 'can' or 'could'. It's also more formal and is the only option after other modals: 'You might be able to get a refund.'"
+      "heading": "Ser capaz de - formal y todos los tiempos",
+      "body": "\"Be able to\" puede aparecer en cualquier tiempo, lo que lo hace más flexible que \"can\" o \"could\". También es más formal y es la única opción después de otras modalidades: \"Es posible que puedas obtener un reembolso\"."
     }
   ],
   "examples": [
     {
       "english": "I can speak three languages.",
-      "note": "General present ability"
+      "note": "Habilidad actual general"
     },
     {
       "english": "She could read at age 4.",
-      "note": "General past ability"
+      "note": "Habilidad pasada general"
     },
     {
       "english": "I was able to finish the race despite the injury.",
-      "note": "Specific past achievement — NOT 'could'"
+      "note": "Logro pasado específico: NO 'podría'"
     },
     {
       "english": "You might be able to catch an earlier train.",
-      "note": "After another modal → 'be able to'"
+      "note": "Después de otro modal → 'poder'"
     }
   ],
   "exercises": [
     {
-      "instruction": "Can, could, or was/were able to?",
+      "instruction": "¿Podemos, pudimos o pudimos?",
       "items": [
         "He ___ run very fast when he was young.",
         "After hours of trying, she ___ solve the puzzle.",
@@ -42,24 +42,24 @@
         "___ you swim before you took lessons?"
       ],
       "answers": [
-        "could",
-        "was able to",
-        "can",
-        "Could"
+        "podría",
+        "fue capaz de",
+        "poder",
+        "Podría"
       ]
     }
   ],
   "quiz": [
     {
-      "question": "Why is 'could' wrong in this sentence? 'The firefighters could rescue all the trapped people.'",
+      "question": "¿Por qué está mal \"podría\" en esta oración? \"Los bomberos pudieron rescatar a todas las personas atrapadas\".",
       "options": [
-        "'Could' can only refer to the future",
-        "'Could' is wrong in positive sentences about past achievement",
-        "'Could' can't follow 'the'",
-        "'Could' requires 'have'"
+        "'Podría' sólo puede referirse al futuro",
+        "'Podría' está mal en oraciones positivas sobre logros pasados",
+        "'Podría' no puede seguir a 'el'",
+        "'Podría' requiere 'tener'"
       ],
       "correct": 1,
-      "explanation": "For a specific past achievement, 'was/were able to' is correct. 'Could' implies general ability, not a one-time success."
+      "explanation": "Para un logro pasado específico, \"pudo/pudimos\" es correcto. \"Podría\" implica habilidad general, no un éxito puntual."
     }
   ]
 }

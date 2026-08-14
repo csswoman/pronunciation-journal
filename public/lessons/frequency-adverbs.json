@@ -2,35 +2,35 @@
   "slug": "frequency-adverbs",
   "sections": [
     {
-      "heading": "Position rules",
-      "body": "Adverbs of frequency go: after 'be' ('She is always late'), before the main verb ('I usually walk to work'), after the first auxiliary ('She has never been to Japan'). This is different from Spanish, where placement is more flexible."
+      "heading": "Reglas de posición",
+      "body": "Los adverbios de frecuencia van: después de 'be' ('Ella siempre llega tarde'), antes del verbo principal ('Normalmente camino al trabajo'), después del primer verbo auxiliar ('Ella nunca ha estado en Japón'). Esto es diferente al español, donde la colocación es más flexible."
     },
     {
-      "heading": "Meaning and nuance",
-      "body": "The scale: always (100%) → usually/generally (80–90%) → often/frequently (60–70%) → sometimes/occasionally (30–50%) → rarely/seldom (10–20%) → never (0%). 'Hardly ever' is close to 'rarely' and very natural in speech."
+      "heading": "Significado y matices",
+      "body": "La escala: siempre (100%) → habitualmente/generalmente (80–90%) → a menudo/frecuentemente (60–70%) → a veces/ocasionalmente (30–50%) → rara vez/rara vez (10–20%) → nunca (0%). \"Casi nunca\" se acerca a \"rara vez\" y es muy natural en el habla."
     }
   ],
   "examples": [
     {
       "english": "I always drink coffee in the morning.",
-      "note": "Before main verb"
+      "note": "Antes del verbo principal"
     },
     {
       "english": "She is usually on time.",
-      "note": "After 'be'"
+      "note": "Después de 'ser'"
     },
     {
       "english": "He has never visited Peru.",
-      "note": "After first auxiliary"
+      "note": "Después del primer auxiliar"
     },
     {
       "english": "I hardly ever watch TV.",
-      "note": "Natural conversational alternative to 'rarely'"
+      "note": "Alternativa conversacional natural a 'rara vez'"
     }
   ],
   "exercises": [
     {
-      "instruction": "Place the adverb in the correct position.",
+      "instruction": "Coloca el adverbio en la posición correcta.",
       "items": [
         "I go to the gym. (sometimes)",
         "She is late for meetings. (never)",
@@ -38,24 +38,24 @@
         "He takes the bus. (usually)"
       ],
       "answers": [
-        "I sometimes go to the gym.",
-        "She is never late for meetings.",
-        "They have rarely eaten sushi.",
-        "He usually takes the bus."
+        "A veces voy al gimnasio.",
+        "Ella nunca llega tarde a las reuniones.",
+        "Rara vez han comido sushi.",
+        "Suele coger el autobús."
       ]
     }
   ],
   "quiz": [
     {
-      "question": "Where does 'always' go in 'She takes a walk in the evening'?",
+      "question": "¿Dónde va \"siempre\" en \"Ella da un paseo por la noche\"?",
       "options": [
-        "Always she takes...",
-        "She always takes...",
-        "She takes always...",
-        "She takes a always walk..."
+        "Ella siempre toma...",
+        "Ella siempre toma...",
+        "Ella siempre toma...",
+        "Ella siempre camina..."
       ],
       "correct": 1,
-      "explanation": "Adverbs of frequency go before the main verb (and after the subject)."
+      "explanation": "Los adverbios de frecuencia van antes del verbo principal (y después del sujeto)."
     }
   ]
 }

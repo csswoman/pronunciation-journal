@@ -2,18 +2,18 @@
   "slug": "idioms-time",
   "sections": [
     {
-      "heading": "Why idioms about time?",
-      "body": "Time is one of the most common conceptual domains in any language. English has an unusually rich set of idioms for time — many come from sailing, agriculture, and the rhythms of pre-industrial life."
+      "heading": "¿Por qué modismos sobre el tiempo?",
+      "body": "El tiempo es uno de los dominios conceptuales más comunes en cualquier idioma. El inglés tiene un conjunto inusualmente rico de modismos para referirse al tiempo; muchos provienen de la navegación, la agricultura y los ritmos de la vida preindustrial."
     },
     {
-      "heading": "The most useful ones",
-      "body": "'In the nick of time' — just before it's too late. 'Once in a blue moon' — very rarely (blue moons are rare astronomical events). 'Against the clock' — rushing because of a deadline. 'Around the clock' — continuously, 24 hours. 'In no time (at all)' — very quickly."
+      "heading": "Los mas utiles",
+      "body": "\"En el último momento\", justo antes de que sea demasiado tarde. 'Una vez en una luna azul' — muy raramente (las lunas azules son eventos astronómicos raros). \"Contrarreloj\": apresurarse debido a una fecha límite. 'Las 24 horas': continuamente, las 24 horas. 'En poco tiempo (en absoluto)', muy rápidamente."
     }
   ],
   "examples": [
     {
       "english": "We caught the last train in the nick of time.",
-      "translation": "justo a tiempo — por muy poco"
+      "translation": "justo a tiempo - por muy poco"
     },
     {
       "english": "She calls her parents once in a blue moon.",
@@ -34,7 +34,7 @@
   ],
   "exercises": [
     {
-      "instruction": "Replace the underlined words with a time idiom.",
+      "instruction": "Reemplace las palabras subrayadas con un modismo temporal.",
       "items": [
         "She arrived just before the meeting started.",
         "He exercises very rarely.",
@@ -42,24 +42,24 @@
         "The servers run continuously."
       ],
       "answers": [
-        "in the nick of time",
-        "once in a blue moon",
-        "in no time / in record time",
-        "around the clock"
+        "justo a tiempo",
+        "una vez en una luna azul",
+        "en poco tiempo / en tiempo récord",
+        "todo el día"
       ]
     }
   ],
   "quiz": [
     {
-      "question": "'Once in a blue moon' means:",
+      "question": "'Érase en una luna azul' significa:",
       "options": [
-        "Every month",
-        "Every night",
-        "Very rarely",
-        "At midnight"
+        "Cada mes",
+        "Cada tarde",
+        "Muy raramente",
+        "a medianoche"
       ],
       "correct": 2,
-      "explanation": "A blue moon is a rare astronomical event — the idiom means something happens very infrequently."
+      "explanation": "Una luna azul es un evento astronómico poco común; el modismo significa que algo sucede con muy poca frecuencia."
     }
   ]
 }

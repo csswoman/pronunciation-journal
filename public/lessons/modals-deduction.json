@@ -2,35 +2,35 @@
   "slug": "modals-deduction",
   "sections": [
     {
-      "heading": "Degrees of certainty",
-      "body": "Must (95%+): logical conclusion from evidence. Might/may/could (30–60%): possibility, not certain. Can't/couldn't (near 0%): logical impossibility — contradicts evidence."
+      "heading": "Grados de certeza",
+      "body": "Debe (95%+): conclusión lógica a partir de la evidencia. Podría/puede/podría (30–60%): posibilidad, no segura. No puedo/no pude (cerca del 0%): imposibilidad lógica: contradice la evidencia."
     },
     {
-      "heading": "Past deduction",
-      "body": "Add 'have + past participle' for deduction about the past: 'She must have forgotten.' 'He might have left already.' 'That can't have been her — she was abroad.'"
+      "heading": "Deducción pasada",
+      "body": "Agregue \"tener + participio pasado\" para deducir sobre el pasado: \"Ella debe haberlo olvidado\". \"Es posible que ya se haya ido\". \"No puede haber sido ella; estaba en el extranjero\"."
     }
   ],
   "examples": [
     {
       "english": "She must be exhausted — she's been awake for 30 hours.",
-      "note": "Strong logical conclusion"
+      "note": "Fuerte conclusión lógica"
     },
     {
       "english": "He might be in a meeting.",
-      "note": "Possibility — you're not sure"
+      "note": "Posibilidad: no estás seguro"
     },
     {
       "english": "That can't be right — I checked the figures myself.",
-      "note": "Logical impossibility"
+      "note": "Imposibilidad lógica"
     },
     {
       "english": "She must have missed the train.",
-      "note": "Past deduction"
+      "note": "Deducción pasada"
     }
   ],
   "exercises": [
     {
-      "instruction": "Use must, might, or can't to react to each situation.",
+      "instruction": "Utilice must, might o can't para reaccionar ante cada situación.",
       "items": [
         "The light is on and music is playing. (someone is home)",
         "She's not answering her phone. (busy / asleep / out)",
@@ -38,24 +38,24 @@
         "She got 100% on every test. (very intelligent)"
       ],
       "answers": [
-        "Someone must be home.",
-        "She might be busy, asleep, or out.",
-        "He can't be 7 feet tall.",
-        "She must be very intelligent."
+        "Alguien debe estar en casa.",
+        "Podría estar ocupada, dormida o fuera.",
+        "No puede medir 7 pies de altura.",
+        "Debe ser muy inteligente."
       ]
     }
   ],
   "quiz": [
     {
-      "question": "'That can't be Tom — he moved to Australia.' 'Can't' here expresses:",
+      "question": "\"Ese no puede ser Tom; se mudó a Australia\". 'No puedo' aquí expresa:",
       "options": [
-        "Inability",
-        "Permission denied",
-        "Logical impossibility",
-        "A request"
+        "Incapacidad",
+        "Permiso denegado",
+        "Imposibilidad lógica",
+        "una solicitud"
       ],
       "correct": 2,
-      "explanation": "'Can't be' expresses logical impossibility based on evidence — equivalent to 'it's impossible that it is Tom'."
+      "explanation": "\"No puede ser\" expresa una imposibilidad lógica basada en evidencia, equivalente a \"es imposible que sea Tom\"."
     }
   ]
 }

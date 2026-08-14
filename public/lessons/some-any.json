@@ -2,39 +2,39 @@
   "slug": "some-any",
   "sections": [
     {
-      "heading": "The basic rule",
-      "body": "'Some' goes in affirmative sentences. 'Any' goes in negative sentences and most questions. This holds for both countable plurals and uncountable nouns."
+      "heading": "La regla básica",
+      "body": "'Algunos' va en oraciones afirmativas. 'Cualquiera' va en oraciones negativas y en la mayoría de las preguntas. Esto es válido tanto para plurales contables como para sustantivos incontables."
     },
     {
-      "heading": "Exceptions worth knowing",
-      "body": "Use 'some' in questions when you're making an offer or request — you expect the answer to be yes. 'Would you like some coffee?' / 'Could I have some help?' Using 'any' in these would sound cold or indifferent."
+      "heading": "Excepciones que vale la pena conocer",
+      "body": "Utilice \"algunos\" en las preguntas cuando haga una oferta o solicitud; espera que la respuesta sea sí. '¿Quieres un poco de café?' / '¿Me podrían ayudar?' Usar \"cualquiera\" en estos sonaría frío o indiferente."
     },
     {
-      "heading": "Any in affirmative sentences",
-      "body": "'Any' in a positive sentence means 'it doesn't matter which one': 'Take any seat you like.' 'Call me any time.' This use expresses unlimited choice, not just negation."
+      "heading": "Cualquiera en oraciones afirmativas",
+      "body": "\"Cualquiera\" en una frase positiva significa \"no importa cuál\": \"Toma asiento como quieras\". \"Llámame cuando quieras\". Este uso expresa elección ilimitada, no sólo negación."
     }
   ],
   "examples": [
     {
       "english": "I have some questions.",
-      "note": "Affirmative → some"
+      "note": "Afirmativo → algunos"
     },
     {
       "english": "I don't have any questions.",
-      "note": "Negative → any"
+      "note": "Negativo → cualquiera"
     },
     {
       "english": "Would you like some tea?",
-      "note": "Offer → some (expecting yes)"
+      "note": "Oferta → algo (esperando que sí)"
     },
     {
       "english": "Any student can join the club.",
-      "note": "Affirmative any = 'whichever'"
+      "note": "Afirmativo cualquiera = 'cualquiera'"
     }
   ],
   "exercises": [
     {
-      "instruction": "Choose some or any.",
+      "instruction": "Elija algunos o cualquiera.",
       "items": [
         "There aren't ___ tickets left.",
         "Can I have ___ water?",
@@ -42,24 +42,24 @@
         "Take ___ book from the shelf."
       ],
       "answers": [
-        "any",
-        "some",
-        "any",
-        "any"
+        "cualquier",
+        "alguno",
+        "cualquier",
+        "cualquier"
       ]
     }
   ],
   "quiz": [
     {
-      "question": "'Would you like ___ help?' — which word fits best?",
+      "question": "'¿Quieres ayuda de ___?' — ¿Qué palabra encaja mejor?",
       "options": [
-        "any",
-        "some",
-        "no",
-        "many"
+        "cualquier",
+        "alguno",
+        "No",
+        "muchos"
       ],
       "correct": 1,
-      "explanation": "Offers use 'some' because the speaker expects or hopes for a positive response."
+      "explanation": "Las ofertas utilizan \"algunos\" porque el hablante espera una respuesta positiva."
     }
   ]
 }

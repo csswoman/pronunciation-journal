@@ -2,12 +2,12 @@
   "slug": "basic-phrasal-verbs",
   "sections": [
     {
-      "heading": "What makes phrasal verbs hard",
-      "body": "Phrasal verbs combine a verb with one or two particles (prepositions or adverbs) to create a meaning that can't be predicted from the parts. 'Give up' has nothing to do with giving or with upward direction — it means 'stop trying'."
+      "heading": "¿Qué hace que los verbos compuestos sean difíciles?",
+      "body": "Los verbos compuestos combinan un verbo con una o dos partículas (preposiciones o adverbios) para crear un significado que no se puede predecir a partir de las partes. \"Renunciar\" no tiene nada que ver con dar o con una dirección ascendente; significa \"dejar de intentarlo\"."
     },
     {
-      "heading": "Separable vs. inseparable",
-      "body": "Separable phrasal verbs allow the object to go between the verb and particle: 'Turn off the TV' / 'Turn the TV off'. With pronouns, separation is obligatory: 'Turn it off' (not 'Turn off it'). Inseparable phrasal verbs keep the particle attached: 'run into someone' — never 'run someone into'."
+      "heading": "Separable versus inseparable",
+      "body": "Los verbos compuestos separables permiten que el objeto vaya entre el verbo y la partícula: 'Apaga la televisión' / 'Apaga la televisión'. Con los pronombres, la separación es obligatoria: 'Apágalo' (no 'Apágalo'). Los verbos compuestos inseparables mantienen la partícula unida: \"toparse con alguien\", nunca \"toparse con alguien\"."
     }
   ],
   "examples": [
@@ -25,7 +25,7 @@
     },
     {
       "english": "turn off / turn it off",
-      "translation": "apagar — separable"
+      "translation": "apagar - separable"
     },
     {
       "english": "run out of",
@@ -34,7 +34,7 @@
   ],
   "exercises": [
     {
-      "instruction": "Replace the underlined words with a phrasal verb from the lesson.",
+      "instruction": "Reemplace las palabras subrayadas con un verbo compuesto de la lección.",
       "items": [
         "I need to search for this word in the dictionary.",
         "She stopped trying after the third attempt.",
@@ -42,24 +42,24 @@
         "Can you switch off the light?"
       ],
       "answers": [
-        "look up",
-        "gave up",
-        "run out of",
-        "turn off"
+        "buscar",
+        "se rindió",
+        "quedarse sin",
+        "apagar"
       ]
     }
   ],
   "quiz": [
     {
-      "question": "Which sentence uses a phrasal verb correctly?",
+      "question": "¿Qué oración usa un verbo compuesto correctamente?",
       "options": [
-        "She gave the challenge up.",
-        "She gave up the challenge.",
-        "She gave up it.",
-        "She up gave the challenge."
+        "Ella abandonó el desafío.",
+        "Ella abandonó el desafío.",
+        "Ella lo abandonó.",
+        "Ella aceptó el desafío."
       ],
       "correct": 1,
-      "explanation": "'Give up' + noun object can go either side. But with a pronoun, you MUST separate: 'gave it up'."
+      "explanation": "'Ríndete' + objeto sustantivo puede ir en cualquier lado. Pero con un pronombre, DEBES separar: 'se rindió'."
     }
   ]
 }

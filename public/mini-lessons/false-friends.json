@@ -4,21 +4,21 @@
   "level": "intermediate",
   "category": "vocabulary",
   "duration": 5,
-  "title": "False friends: Spanish–English false cognates",
-  "subtitle": "Vocabulary of the day",
-  "body": "These words look like Spanish but mean something completely different in English — a reliable source of embarrassing mistakes.",
+  "title": "Falsos amigos: falsos cognados español-inglés",
+  "subtitle": "Vocabulario del día.",
+  "body": "Estas palabras parecen españolas pero significan algo completamente diferente en inglés: una fuente confiable de errores vergonzosos.",
   "examples": [
     {
       "word": "embarrassed ≠ embarazada",
-      "translation": "'embarrassed' = avergonzado/a"
+      "translation": "'avergonzado' = avergonzado/a"
     },
     {
       "word": "actually ≠ actualmente",
-      "translation": "'actually' = en realidad"
+      "translation": "'en realidad' = en realidad"
     },
     {
       "word": "library ≠ librería",
-      "translation": "'library' = biblioteca"
+      "translation": "'biblioteca' = biblioteca"
     }
   ],
   "href": "/mini-lessons/false-friends"

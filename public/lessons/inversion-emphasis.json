@@ -2,43 +2,43 @@
   "slug": "inversion-emphasis",
   "sections": [
     {
-      "heading": "What is inversion?",
-      "body": "Inversion places the auxiliary verb (or 'be') before the subject, creating emphasis and a formal or dramatic tone. It's triggered by negative or restrictive adverbials at the beginning of a sentence."
+      "heading": "¿Qué es la inversión?",
+      "body": "La inversión coloca el verbo auxiliar (o 'ser') antes del sujeto, creando énfasis y un tono formal o dramático. Se desencadena por adverbios negativos o restrictivos al comienzo de una oración."
     },
     {
-      "heading": "Common inversion triggers",
-      "body": "Never, rarely, seldom, hardly, scarcely, barely, no sooner, not only, not until, on no account, in no way, under no circumstances, little (= not much), only + time expression."
+      "heading": "Desencadenantes de inversión comunes",
+      "body": "Nunca, rara vez, rara vez, apenas, escasamente, apenas, apenas, no sólo, no hasta, de ninguna manera, de ninguna manera, bajo ninguna circunstancia, poco (= no mucho), solo + expresión de tiempo."
     },
     {
-      "heading": "Structure",
-      "body": "Trigger + auxiliary + subject + main verb. 'Never have I seen such courage.' 'Not only did she win, but she also broke the record.' 'Rarely does he make a mistake.' Compare normal order: 'He rarely makes a mistake.'"
+      "heading": "Estructura",
+      "body": "Desencadenante + auxiliar + sujeto + verbo principal. \"Nunca había visto tanto coraje\". \"No sólo ganó, sino que también batió el récord\". \"Rara vez comete un error\". Compárese con el orden normal: \"Rara vez comete un error\"."
     }
   ],
   "examples": [
     {
       "english": "Never have I seen such dedication.",
-      "note": "Normal: I have never seen..."
+      "note": "Normal: nunca he visto..."
     },
     {
       "english": "Not only did she win, she broke a world record.",
-      "note": "Not only... but also"
+      "note": "No sólo... sino también"
     },
     {
       "english": "Rarely does he lose his temper.",
-      "note": "Formal/literary tone"
+      "note": "Tono formal/literario"
     },
     {
       "english": "Only after the meeting did I understand the plan.",
-      "note": "Only + time expression"
+      "note": "Sólo + expresión de tiempo"
     },
     {
       "english": "Under no circumstances should you share this.",
-      "note": "Imperative-like with inversion"
+      "note": "Imperativo con inversión"
     }
   ],
   "exercises": [
     {
-      "instruction": "Rewrite using inversion for emphasis.",
+      "instruction": "Reescribe usando inversión para enfatizar.",
       "items": [
         "I have never heard such nonsense.",
         "She not only apologized but also sent flowers.",
@@ -46,24 +46,24 @@
         "You should under no circumstances open that file."
       ],
       "answers": [
-        "Never have I heard such nonsense.",
-        "Not only did she apologize, but she also sent flowers.",
-        "Barely had he arrived when the trouble started.",
-        "Under no circumstances should you open that file."
+        "Nunca había oído semejantes tonterías.",
+        "No sólo se disculpó, sino que también envió flores.",
+        "Apenas había llegado cuando comenzaron los problemas.",
+        "Bajo ninguna circunstancia debes abrir ese archivo."
       ]
     }
   ],
   "quiz": [
     {
-      "question": "Which sentence uses inversion correctly?",
+      "question": "¿Qué oración usa la inversión correctamente?",
       "options": [
-        "Never I have seen that.",
-        "Never have I seen that.",
-        "Never have seen I that.",
-        "Never that I have seen."
+        "Nunca he visto eso.",
+        "Nunca he visto eso.",
+        "Nunca he visto eso.",
+        "Nunca que lo haya visto."
       ],
       "correct": 1,
-      "explanation": "Inversion structure: negative trigger + auxiliary + subject + main verb: 'Never have I seen'."
+      "explanation": "Estructura de inversión: disparador negativo + auxiliar + sujeto + verbo principal: 'Nunca he visto'."
     }
   ]
 }

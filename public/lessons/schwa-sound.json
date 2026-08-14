@@ -2,52 +2,52 @@
   "slug": "schwa-sound",
   "sections": [
     {
-      "heading": "What is the schwa?",
-      "body": "The schwa /ə/ is the most common vowel sound in English — and also the most ignored. It's the lazy, neutral sound your mouth makes when a vowel is unstressed: somewhere between 'uh' and 'eh', produced with a relaxed jaw and tongue in the center of the mouth."
+      "heading": "¿Qué es la schwa?",
+      "body": "La schwa /ə/ es el sonido vocálico más común en inglés y también el más ignorado. Es el sonido perezoso y neutro que emite la boca cuando una vocal no está acentuada: en algún lugar entre 'uh' y 'eh', producido con la mandíbula y la lengua relajadas en el centro de la boca."
     },
     {
-      "heading": "Why it matters",
-      "body": "Spanish is a full-vowel language: every vowel sounds the way it's spelled. English is not. In English, unstressed vowels collapse into /ə/ regardless of how they're written. If you pronounce every vowel fully, you'll sound robotic — and harder to understand, not easier."
+      "heading": "Por qué es importante",
+      "body": "El español es un idioma de vocales completas: cada vocal suena como se escribe. El inglés no lo es. En inglés, las vocales átonas colapsan en /ə/ independientemente de cómo estén escritas. Si pronuncias cada vocal completamente, sonarás robótico y más difícil de entender, no más fácil."
     },
     {
-      "heading": "Where to find it",
-      "body": "The schwa appears in unstressed syllables of almost any word with two or more syllables. It also appears in function words (articles, prepositions, conjunctions) that aren't stressed in natural speech: 'a', 'the', 'to', 'of', 'and', 'but', 'for'."
+      "heading": "donde encontrarlo",
+      "body": "El schwa aparece en sílabas átonas de casi cualquier palabra con dos o más sílabas. También aparece en palabras funcionales (artículos, preposiciones, conjunciones) que no se acentúan en el habla natural: 'un', 'el', 'a', 'de', 'y', 'pero', 'para'."
     },
     {
-      "heading": "How to practice",
-      "body": "Take any multi-syllable word and say it out loud. Find the stressed syllable — it's the one you say louder and longer. Every other vowel? Try replacing it with /ə/ and listen. Chances are that's how native speakers say it."
+      "heading": "como practicar",
+      "body": "Tome cualquier palabra de varias sílabas y dígala en voz alta. Encuentra la sílaba acentuada: es la que dices más fuerte y por más tiempo. ¿Cualquier otra vocal? Intenta reemplazarlo con /ə/ y escucha. Lo más probable es que así lo digan los hablantes nativos."
     }
   ],
   "examples": [
     {
       "english": "banana",
       "ipa": "/bəˈnɑr.nə/",
-      "translation": "First and last 'a' are schwas — only the middle is stressed."
+      "translation": "La primera y la última 'a' son schwas; sólo se acentúa la mitad."
     },
     {
       "english": "about",
       "ipa": "/əˈbaʊt/",
-      "translation": "The 'a' at the start is a schwa."
+      "translation": "La 'a' al principio es una schwa."
     },
     {
       "english": "photograph",
       "ipa": "/ˈfoʊ.tə.ɡræf/",
-      "translation": "The 'o' in the middle collapses to /ə/."
+      "translation": "La 'o' en el medio colapsa en /ə/."
     },
     {
       "english": "the book",
       "ipa": "/ðə bʊk/",
-      "translation": "'The' before a consonant is always /ðə/."
+      "translation": "'The' antes de una consonante siempre es /ðə/."
     },
     {
       "english": "a cat",
       "ipa": "/ə kæt/",
-      "translation": "The article 'a' is always a schwa in natural speech."
+      "translation": "El artículo 'a' es siempre un schwa en el habla natural."
     }
   ],
   "exercises": [
     {
-      "instruction": "Find the schwa in each word. How many schwas does each word contain?",
+      "instruction": "Encuentra el schwa en cada palabra. ¿Cuántos schwas contiene cada palabra?",
       "items": [
         "family",
         "information",
@@ -57,14 +57,14 @@
       ],
       "answers": [
         "fam-uh-lee (2)",
-        "in-fuh-MAY-shun (2)",
+        "en-fuh-MAY-shun (2)",
         "COMF-tuh-bul (2)",
         "DIF-runt (1)",
-        "YES-tuh-day (1)"
+        "SÍ-tuh-día (1)"
       ]
     },
     {
-      "instruction": "Say these function words naturally in a sentence. Notice how 'of', 'to', 'and' reduce to /ə/, /tə/, /ən/.",
+      "instruction": "Di estas palabras funcionales de forma natural en una oración. Observe cómo 'de', 'a', 'y' se reducen a /ə/, /tə/, /ən/.",
       "items": [
         "a cup of tea",
         "I want to go",
@@ -72,38 +72,38 @@
         "out of the question"
       ],
       "answers": [
-        "/ə kʌp əv tiː/ — 'of' se reduce a /əv/ o /ə/",
-        "/aɪ ˈwɑnə ɡoʊ/ — 'to' se reduce a /tə/ (wanna)",
-        "/fɪʃ ən tʃɪps/ — 'and' se reduce a /ən/",
-        "/aʊt ə ðə ˈkwɛstʃən/ — 'of the' se reduce a /ə ðə/"
+        "/ə kʌp əv tiː/ — 'de' se reduce a /əv/ o /ə/",
+        "/aɪ ˈwɑnə ɡoʊ/ — 'to' se reduce a /tə/ (quiero)",
+        "/fɪʃ ən tʃɪps/ — 'y' se reduce a /ən/",
+        "/aʊt ə ðə ˈkwɛstʃən/ — 'del' se reduce a /ə ðə/"
       ]
     }
   ],
   "quiz": [
     {
-      "question": "Which syllable in 'banana' is NOT a schwa?",
+      "question": "¿Qué sílaba de 'plátano' NO es schwa?",
       "options": [
-        "The first 'a'",
-        "The second 'a' (stressed)",
-        "The third 'a'",
-        "None — all are schwas"
+        "La primera 'a'",
+        "La segunda 'a' (acentuada)",
+        "La tercera 'a'",
+        "Ninguno, todos son schwas"
       ],
       "correct": 1,
-      "explanation": "Only the stressed middle syllable /ˈnɑr/ is a full vowel. The first and last 'a' are both /ə/."
+      "explanation": "Sólo la sílaba media acentuada /ˈnɑr/ es una vocal completa. La primera y la última 'a' son ambas /ə/."
     },
     {
-      "question": "Why do native English speakers use the schwa so much?",
+      "question": "¿Por qué los hablantes nativos de inglés usan tanto el schwa?",
       "options": [
-        "They're being lazy and sloppy",
-        "English is stress-timed, so unstressed syllables naturally reduce",
-        "It's a regional accent feature",
-        "Only British speakers use it"
+        "Están siendo perezosos y descuidados.",
+        "El inglés tiene un tiempo de acentuación, por lo que las sílabas átonas se reducen naturalmente.",
+        "Es una característica de acento regional.",
+        "Sólo los hablantes británicos lo usan."
       ],
       "correct": 1,
-      "explanation": "English is a stress-timed language. Reducing unstressed syllables to /ə/ is a feature of the rhythm, not a mistake."
+      "explanation": "El inglés es un idioma que genera estrés. Reducir las sílabas átonas a /ə/ es una característica del ritmo, no un error."
     },
     {
-      "question": "How is 'the' pronounced before a consonant?",
+      "question": "¿Cómo se pronuncia 'the' delante de una consonante?",
       "options": [
         "/ðiː/",
         "/ðeɪ/",
@@ -111,7 +111,7 @@
         "/ðɪ/"
       ],
       "correct": 2,
-      "explanation": "'The' is /ðə/ before consonants and /ðɪ/ before vowels. The schwa form is far more common."
+      "explanation": "'The' es /ðə/ antes de consonantes y /ðɪ/ antes de vocales. La forma schwa es mucho más común."
     }
   ]
 }

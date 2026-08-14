@@ -4,9 +4,9 @@
   "level": "advanced",
   "category": "grammar",
   "duration": 7,
-  "title": "Inversion for emphasis",
-  "subtitle": "Grammar of the day",
-  "body": "Inversion — placing the auxiliary before the subject — creates strong emphasis and is common in formal writing and dramatic speech.",
+  "title": "Inversión para enfatizar",
+  "subtitle": "Gramática del día",
+  "body": "La inversión (colocar el auxiliar antes del sujeto) crea un fuerte énfasis y es común en la escritura formal y el discurso dramático.",
   "examples": [
     {
       "word": "Never have I seen such bravery.",
@@ -14,7 +14,7 @@
     },
     {
       "word": "Not only did she win, she broke a record.",
-      "translation": "'not only' al inicio"
+      "translation": "'no sólo' al inicio"
     },
     {
       "word": "Rarely does he make mistakes.",

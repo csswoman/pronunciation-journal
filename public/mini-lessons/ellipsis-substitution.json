@@ -4,17 +4,17 @@
   "level": "advanced",
   "category": "grammar",
   "duration": 6,
-  "title": "Ellipsis and substitution",
-  "subtitle": "Grammar of the day",
-  "body": "Native speakers omit predictable words (ellipsis) and replace repeated phrases with shorter ones (substitution) to avoid repetition.",
+  "title": "Elipsis y sustitución",
+  "subtitle": "Gramática del día",
+  "body": "Los hablantes nativos omiten palabras predecibles (elipsis) y reemplazan frases repetidas por otras más cortas (sustitución) para evitar la repetición.",
   "examples": [
     {
       "word": "'Can you come?' 'I might [be able to come].'",
-      "translation": "ellipsis — omisión"
+      "translation": "puntos suspensivos - omisión"
     },
     {
       "word": "'I want a coffee.' 'So do I.'",
-      "translation": "substitution con 'so'"
+      "translation": "sustitución con 'so'"
     }
   ],
   "href": "/mini-lessons/ellipsis-substitution"

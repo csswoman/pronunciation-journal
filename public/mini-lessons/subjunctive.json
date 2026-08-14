@@ -4,21 +4,21 @@
   "level": "advanced",
   "category": "grammar",
   "duration": 7,
-  "title": "The subjunctive in English",
-  "subtitle": "Grammar of the day",
-  "body": "The English subjunctive is subtle and mostly appears in formal writing. It uses the base form of the verb regardless of subject.",
+  "title": "El subjuntivo en inglés.",
+  "subtitle": "Gramática del día",
+  "body": "El subjuntivo en inglés es sutil y aparece principalmente en la escritura formal. Utiliza la forma base del verbo independientemente del sujeto.",
   "examples": [
     {
       "word": "I suggest that she be promoted.",
-      "translation": "formal — no 'is'"
+      "translation": "formal - sin 'es'"
     },
     {
       "word": "It's vital that he attend the meeting.",
-      "translation": "no 'attends'"
+      "translation": "no 'asiste'"
     },
     {
       "word": "If I were taller… (were, not was)",
-      "translation": "subjunctive en condicionales"
+      "translation": "subjuntivo en condicionales"
     }
   ],
   "href": "/mini-lessons/subjunctive"

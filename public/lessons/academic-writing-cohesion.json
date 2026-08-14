@@ -2,58 +2,58 @@
   "slug": "academic-writing-cohesion",
   "sections": [
     {
-      "heading": "Cohesion vs. coherence",
-      "body": "Coherence is about ideas making logical sense together. Cohesion is the linguistic glue — the specific words and structures that link sentences and paragraphs. You can have coherent ideas with poor cohesion (choppy, disconnected sentences), or good cohesion with incoherent ideas (linked but pointless)."
+      "heading": "Cohesión versus coherencia",
+      "body": "La coherencia se trata de que las ideas tengan sentido lógico juntas. La cohesión es el pegamento lingüístico: las palabras y estructuras específicas que vinculan oraciones y párrafos. Puedes tener ideas coherentes con poca cohesión (oraciones entrecortadas y desconectadas) o buena cohesión con ideas incoherentes (vinculadas pero sin sentido)."
     },
     {
-      "heading": "Lexical cohesion",
-      "body": "Lexical chains use related words across a text to maintain topic unity: 'climate → temperature → warming → heat → emissions'. Synonyms and near-synonyms reduce repetition while maintaining connection. Collocation patterns reinforce domain."
+      "heading": "cohesión léxica",
+      "body": "Las cadenas léxicas utilizan palabras relacionadas en un texto para mantener la unidad temática: 'clima → temperatura → calentamiento → calor → emisiones'. Los sinónimos y casi sinónimos reducen la repetición mientras mantienen la conexión. Los patrones de colocación refuerzan el dominio."
     },
     {
-      "heading": "Grammatical cohesion",
-      "body": "Reference: using pronouns and determiners to point back to earlier nouns ('this finding', 'such data', 'the aforementioned'). Conjunction: using connectors to show logical relationships. Substitution and ellipsis (as covered separately)."
+      "heading": "cohesión gramatical",
+      "body": "Referencia: usar pronombres y determinantes para señalar sustantivos anteriores ('este hallazgo', 'tales datos', 'lo antes mencionado'). Conjunción: uso de conectores para mostrar relaciones lógicas. Sustitución y elipsis (como se trata por separado)."
     }
   ],
   "examples": [
     {
       "english": "water → liquid → fluid → H₂O → hydration",
-      "note": "Lexical chain — keeps topic unified"
+      "note": "Cadena léxica: mantiene el tema unificado"
     },
     {
       "english": "'This approach... Such methods... These findings...'",
-      "note": "Anaphoric reference — points back"
+      "note": "Referencia anafórica: apunta hacia atrás"
     },
     {
       "english": "'The results were significant. Moreover, they were reproducible.'",
-      "note": "Additive conjunction"
+      "note": "Conjunción aditiva"
     }
   ],
   "exercises": [
     {
-      "instruction": "Identify the cohesive device in each pair.",
+      "instruction": "Identifique el dispositivo cohesivo en cada par.",
       "items": [
         "'She submitted the report. It was well-received.'",
         "'The experiment failed. Nevertheless, the team persisted.'",
         "'Water levels rose. Sea temperatures also increased.'"
       ],
       "answers": [
-        "'It' — anaphoric reference (points back to 'the report')",
-        "'Nevertheless' — contrastive conjunction",
-        "'also' — additive conjunction"
+        "'It' - referencia anafórica (señala 'el informe')",
+        "'Sin embargo' - conjunción contrastiva",
+        "'también' - conjunción aditiva"
       ]
     }
   ],
   "quiz": [
     {
-      "question": "'This suggests that...' — what cohesive device is 'this'?",
+      "question": "'Esto sugiere que...' - ¿Qué dispositivo cohesivo es 'esto'?",
       "options": [
-        "Conjunction",
-        "Lexical repetition",
-        "Anaphoric reference",
-        "Substitution"
+        "Conjunción",
+        "repetición léxica",
+        "Referencia anafórica",
+        "Sustitución"
       ],
       "correct": 2,
-      "explanation": "'This' is a demonstrative pronoun that points back (anaphorically) to previously mentioned content."
+      "explanation": "'Esto' es un pronombre demostrativo que apunta (anafóricamente) al contenido mencionado anteriormente."
     }
   ]
 }

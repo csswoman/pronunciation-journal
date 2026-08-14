@@ -2,38 +2,38 @@
   "slug": "phonemic-awareness-advanced",
   "sections": [
     {
-      "heading": "Beyond basics",
-      "body": "At advanced level, the phonemic challenge shifts from obvious errors (like TH sounds) to subtle distinctions that even intermediate learners collapse: vowel pairs in specific phonological environments, distinctions that vary by dialect, and perception vs. production gaps."
+      "heading": "Más allá de lo básico",
+      "body": "En el nivel avanzado, el desafío fonémico pasa de errores obvios (como los sonidos TH) a distinciones sutiles que incluso los estudiantes intermedios colapsan: pares de vocales en entornos fonológicos específicos, distinciones que varían según el dialecto y brechas de percepción versus producción."
     },
     {
-      "heading": "The cot/caught merger",
-      "body": "In many American English dialects, /ɑ/ (cot) and /ɔ/ (caught) have merged — speakers say them identically. In other dialects (some American, British), they remain distinct. Knowing this variation helps you understand different speakers."
+      "heading": "La fusión cuna/atrapado",
+      "body": "En muchos dialectos del inglés americano, /ɑ/ (cot) y /ɔ/ (caught) se han fusionado; los hablantes las dicen de manera idéntica. En otros dialectos (algunos estadounidenses y británicos), siguen siendo distintos. Conocer esta variación te ayuda a comprender a los diferentes hablantes."
     },
     {
-      "heading": "Perception first",
-      "body": "Research shows that you can't reliably produce a distinction you can't reliably perceive. Ear training — deliberately listening for minimal pairs and categorizing them — must come before production training. Apps like Sounds Right or minimal pair exercises are effective."
+      "heading": "La percepción primero",
+      "body": "Las investigaciones muestran que no se puede producir de manera confiable una distinción que no se puede percibir de manera confiable. El entrenamiento auditivo (escuchar deliberadamente los pares mínimos y categorizarlos) debe ir antes del entrenamiento de producción. Aplicaciones como Sounds Right o ejercicios en pareja mínima son efectivas."
     }
   ],
   "examples": [
     {
       "english": "collar / caller",
       "ipa": "/ˈkɑl.ər/ · /ˈkɔ.lər/",
-      "note": "Distinct unless you have the cot–caught merger"
+      "note": "Distinto a menos que tenga la fusión atrapada en el catre"
     },
     {
       "english": "cot / caught",
       "ipa": "/kɑt/ · /kɔt/",
-      "note": "Merged in much of American English"
+      "note": "Fusionado en gran parte del inglés americano"
     },
     {
       "english": "pin / pen",
       "ipa": "/pɪn/ · /pɛn/",
-      "note": "Merged in Southern American English"
+      "note": "Fusionado en inglés sudamericano"
     }
   ],
   "exercises": [
     {
-      "instruction": "For each pair, note: are they distinct in your target accent (British RP / General American)?",
+      "instruction": "Para cada par, tenga en cuenta: ¿son distintos en su acento objetivo (RP británico/americano general)?",
       "items": [
         "horse / hoarse",
         "marry / merry / Mary",
@@ -41,24 +41,24 @@
         "cot / caught"
       ],
       "answers": [
-        "Homophones in both RP and General American.",
-        "GA: the three usually merge; RP: three distinct vowels.",
-        "Identical for most speakers — the /ʍ/ distinction survives only in some accents.",
-        "RP: distinct (/ɒ/ vs /ɔː/); GA: merged for many speakers (cot–caught merger)."
+        "Homófonos tanto en RP como en General American.",
+        "GA: los tres suelen fusionarse; RP: tres vocales distintas.",
+        "Idéntico para la mayoría de los hablantes: la distinción /ʍ/ sobrevive sólo en algunos acentos.",
+        "RP: distinta (/ɒ/ vs /ɔː/); GA: fusionada para muchos oradores (fusión atrapada)."
       ]
     }
   ],
   "quiz": [
     {
-      "question": "Why is dialect awareness important for advanced pronunciation?",
+      "question": "¿Por qué es importante el conocimiento del dialecto para la pronunciación avanzada?",
       "options": [
-        "To eliminate all accents",
-        "To understand that distinctions vary by accent — what's a minimal pair in one dialect may not be in another",
-        "To sound like a native speaker from one specific region",
-        "To avoid regional vocabulary"
+        "Para eliminar todos los acentos.",
+        "Entender que las distinciones varían según el acento: lo que es un par mínimo en un dialecto puede no serlo en otro",
+        "Para sonar como un hablante nativo de una región específica",
+        "Para evitar el vocabulario regional"
       ],
       "correct": 1,
-      "explanation": "Sound distinctions are dialect-relative. Advanced learners need to understand variation, not just a single 'correct' system."
+      "explanation": "Las distinciones de sonido son relativas al dialecto. Los estudiantes avanzados necesitan comprender la variación, no sólo un único sistema \"correcto\"."
     }
   ]
 }
