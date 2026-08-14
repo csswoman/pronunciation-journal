@@ -7,7 +7,7 @@
 //   <DeckGrid>
 //     <DeckCard /> × N
 //   </DeckGrid>
-//   <DeckPagination />
+//   <ListPagination />
 // </DecksIndexClient>
 
 import { useState, useMemo, useEffect, useRef } from 'react'
@@ -15,7 +15,7 @@ import Link from 'next/link'
 import { BookOpen, Search } from "@/components/icons"
 import { cn } from '@/lib/cn'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
-import { DeckPagination } from '@/components/practice/decks/DeckPagination'
+import { ListPagination } from '@/components/ui/ListPagination'
 import type { DeckSummary, DeckLevel } from '@/lib/courses/grammar-deck/decks'
 
 interface Props {
@@ -111,12 +111,13 @@ export function DecksIndexClient({ decks }: Props) {
       ) : (
         <div ref={listRef} className="flex flex-col gap-4">
           <DeckGrid decks={paginated} />
-          <DeckPagination
+          <ListPagination
             currentPage={currentPage}
             totalPages={totalPages}
             totalItems={filtered.length}
             pageSize={pageSize}
             onPageChange={handlePageChange}
+            ariaLabel="Paginación de mazos"
           />
         </div>
       )}

@@ -1,31 +1,33 @@
 'use client'
 
 // Planned structure:
-// <DeckPagination>
+// <ListPagination>
 //   <PageStatus />
 //   <PagerActions>
 //     <PrevButton />
 //     <NextButton />
 //   </PagerActions>
-// </DeckPagination>
+// </ListPagination>
 
 import Button from '@/components/ui/Button'
 
-interface DeckPaginationProps {
+interface ListPaginationProps {
   currentPage: number
   totalPages: number
   totalItems: number
   pageSize: number
   onPageChange: (page: number) => void
+  ariaLabel?: string
 }
 
-export function DeckPagination({
+export function ListPagination({
   currentPage,
   totalPages,
   totalItems,
   pageSize,
   onPageChange,
-}: DeckPaginationProps) {
+  ariaLabel = 'Paginación',
+}: ListPaginationProps) {
   if (totalPages <= 1) return null
 
   const from = (currentPage - 1) * pageSize + 1
@@ -34,7 +36,7 @@ export function DeckPagination({
   return (
     <nav
       className="flex flex-col gap-3 border-t border-border-subtle pt-4 sm:flex-row sm:items-center sm:justify-between"
-      aria-label="Paginación de mazos"
+      aria-label={ariaLabel}
     >
       <p className="text-body-sm text-fg-muted tabular-nums">
         <span className="font-semibold text-fg">{from}–{to}</span>
