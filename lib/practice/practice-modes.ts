@@ -14,43 +14,43 @@ export interface PracticeMode {
 export const PRACTICE_MODES: readonly PracticeMode[] = [
   {
     id: 'sounds',
-    label: 'Sound Lab',
-    description: 'Pronunciation and minimal pairs',
+    label: 'Laboratorio de sonidos',
+    description: 'Pronunciación y pares mínimos',
     href: '/practice/sounds',
     icon: 'MicVocal',
   },
   {
     id: 'essential-words',
-    label: 'Essential Words',
-    description: 'High-frequency words with spaced repetition',
+    label: 'Palabras esenciales',
+    description: 'Más de 2500 palabras frecuentes, con repaso espaciado',
     href: '/practice/essential-words',
     icon: 'ListOrdered',
   },
   {
     id: 'decks',
-    label: 'Decks',
-    description: 'Your vocabulary decks',
+    label: 'Mazos',
+    description: 'Tus mazos de vocabulario',
     href: '/practice/decks',
     icon: 'Layers',
   },
   {
     id: 'review',
-    label: 'Review',
-    description: 'Words due for spaced repetition',
+    label: 'Repaso',
+    description: 'Palabras pendientes de repaso espaciado',
     href: '/practice/review',
     icon: 'RotateCcw',
   },
   {
     id: 'reader',
-    label: 'Reading',
-    description: 'Practice your recent words in context',
+    label: 'Lectura',
+    description: 'Practica tus palabras recientes en contexto',
     href: '/practice/reader',
     icon: 'BookOpen',
   },
   {
     id: 'courses',
     label: 'Ruta',
-    description: 'Continue a guided course',
+    description: 'Continúa un curso guiado',
     href: '/courses',
     icon: 'BookOpen',
   },
@@ -122,8 +122,8 @@ export function resolveRecommendedMode(input: ResolveInput): RecommendedResult {
       return {
         mode,
         reason: 'last-mode',
-        headline: `Continue ${mode.label}`,
-        subtext: 'Pick up where you left off.',
+        headline: `Continúa con ${mode.label}`,
+        subtext: 'Retoma donde lo dejaste.',
       }
     }
   }
@@ -131,7 +131,7 @@ export function resolveRecommendedMode(input: ResolveInput): RecommendedResult {
   return {
     mode: fallback,
     reason: 'fallback',
-    headline: 'Start with the essentials',
-    subtext: 'The 1000 most useful words.',
+    headline: 'Empieza por lo esencial',
+    subtext: 'Más de 2500 palabras de alta frecuencia.',
   }
 }

@@ -20,10 +20,10 @@ export default function SpeakWithCoachCard({ arc }: Props) {
     <div className="flex flex-col gap-3 rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised p-4">
       <div>
         <p className="font-body-sm font-semibold text-[var(--text-primary)]">
-          Speak it out loud
+          Practica en voz alta
         </p>
         <p className="font-caption text-[var(--text-tertiary)]">
-          Practice today&apos;s words in a real conversation with the coach.
+          Usa las palabras de hoy en una conversación real con el coach.
         </p>
       </div>
       <div className="flex flex-col gap-2 sm:flex-row">

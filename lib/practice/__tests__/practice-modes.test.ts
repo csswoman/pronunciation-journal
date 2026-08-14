@@ -51,6 +51,13 @@ describe('resolveRecommendedMode', () => {
     })
     expect(r.mode.id).toBe('essential-words')
     expect(r.reason).toBe('fallback')
+    expect(r.headline).toBe('Empieza por lo esencial')
+    expect(r.subtext).toContain('2500')
+  })
+
+  it('describes essential words as more than 2500 high-frequency items', () => {
+    const mode = PRACTICE_MODES.find((m) => m.id === 'essential-words')
+    expect(mode?.description).toContain('2500')
   })
 
   it('every mode has a unique id and a route', () => {
@@ -64,8 +71,8 @@ describe('resolveRecommendedMode', () => {
     expect(readerModes).toEqual([
       {
         id: 'reader',
-        label: 'Reading',
-        description: 'Practice your recent words in context',
+        label: 'Lectura',
+        description: 'Practica tus palabras recientes en contexto',
         href: '/practice/reader',
         icon: 'BookOpen',
       },
