@@ -11,6 +11,7 @@ import { useOKLCHTheme } from "@/hooks/useOKLCHTheme";
 import { useUISoundsStore } from "@/lib/stores/uiSoundsStore";
 import { CEFR_LEVELS, type CefrLevel } from "@/lib/essential-words/types";
 import { Moon, RotateCcw, Sun, Target, Volume2 } from "@/components/icons";
+import ContentLevelSelector from "@/components/ui/ContentLevelSelector";
 
 export function ThemeControls({ className }: { className?: string } = {}) {
   const { hue, setHue, resetHue, mode, toggleMode, mounted } = useOKLCHTheme();
@@ -124,24 +125,12 @@ export function StudyLevelControls({
         <Target size={15} className="text-fg-subtle" aria-hidden />
         <p className="font-kicker text-fg-muted">Tu nivel</p>
       </div>
-      <div className="grid grid-cols-5 gap-1" role="group" aria-label="Nivel de estudio">
-        {CEFR_LEVELS.map((item) => (
-          <button
-            key={item}
-            type="button"
-            onClick={() => onChange(item)}
-            aria-pressed={level === item}
-            className={cn(
-              "focus-ring min-h-9 rounded-sm font-label transition-colors",
-              level === item
-                ? "bg-primary text-on-primary"
-                : "bg-surface-sunken text-fg-muted hover:text-fg",
-            )}
-          >
-            {item}
-          </button>
-        ))}
-      </div>
+      <ContentLevelSelector
+        levels={CEFR_LEVELS}
+        value={level}
+        onChange={onChange}
+        ariaLabel="Nivel de estudio"
+      />
       {footer}
     </section>
   );
