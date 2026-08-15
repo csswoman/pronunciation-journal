@@ -29,6 +29,8 @@ export function TrainerControls({
   onNextRound,
   onRestart,
   onNextContrast,
+  isSlow,
+  onToggleSlow,
   embedded = false,
 }: {
   quizTarget: Side | null;
@@ -44,6 +46,8 @@ export function TrainerControls({
   onNextRound: () => void;
   onRestart: () => void;
   onNextContrast?: () => void;
+  isSlow?: boolean;
+  onToggleSlow?: () => void;
   embedded?: boolean;
 }) {
   if (isDone) {
@@ -85,6 +89,20 @@ export function TrainerControls({
           <Play size={13} fill="currentColor" aria-hidden />
           {embedded ? "Escuchar ambos" : "Escuchar ambas"}
         </button>
+        {onToggleSlow ? (
+          <button
+            type="button"
+            onClick={onToggleSlow}
+            className={cn(
+              "ipa-chart__btn ipa-chart__btn--ghost",
+              isSlow && "text-primary font-bold bg-primary-soft border border-primary/30",
+            )}
+            title={isSlow ? "Velocidad lenta activa (0.75x)" : "Cambiar a velocidad lenta"}
+            aria-label={isSlow ? "Velocidad lenta activa" : "Cambiar a velocidad lenta"}
+          >
+            <span>🐢 {isSlow ? "0.75x" : "1.0x"}</span>
+          </button>
+        ) : null}
         <div className="flex items-center gap-1.5">
           <button
             type="button"

@@ -31,9 +31,13 @@ export function MinimalPairsRunner({
   embedded = false,
   onExit,
 }: MinimalPairsRunnerProps) {
-  const phoneme = initialPhoneme ? canonicalizeSoundIpa(initialPhoneme) : null;
   const contrastIndex = findMinimalPairContrastIndex(initialPhoneme, initialContrastId);
   const contrast = contrastIndex === null ? null : MINIMAL_PAIR_CONTRASTS[contrastIndex];
+  const phoneme = initialPhoneme
+    ? canonicalizeSoundIpa(initialPhoneme)
+    : contrast
+      ? contrast.phonemeA
+      : null;
   const pairs = useMemo(
     () => {
       if (contrast) {
@@ -54,6 +58,7 @@ export function MinimalPairsRunner({
   const [playingSide, setPlayingSide] = useState<Side | null>(null);
   const [score, setScore] = useState({ correct: 0, wrong: 0 });
   const [isDone, setIsDone] = useState(false);
+  const [isSlow, setIsSlow] = useState(false);
   const lastPlayedRef = useRef<Side | null>(null);
   const quizActionsRef = useRef<HTMLDivElement>(null);
 
@@ -67,8 +72,8 @@ export function MinimalPairsRunner({
   }, []);
 
   const speakWord = useCallback((word: string, onEnd?: () => void) => {
-    speakText(word, { onEnd });
-  }, []);
+    speakText(word, { rate: isSlow ? 0.7 : 0.95, onEnd });
+  }, [isSlow]);
 
   const playSide = useCallback((side: Side) => {
     if (!pair) return;
@@ -260,6 +265,8 @@ export function MinimalPairsRunner({
           onStartQuiz={handleStartQuiz}
           onNextRound={() => goToNextPair(true)}
           onRestart={() => { setPairIdx(0); resetRound(); setScore({ correct: 0, wrong: 0 }); setIsDone(false); }}
+          isSlow={isSlow}
+          onToggleSlow={() => setIsSlow((prev) => !prev)}
           embedded={embedded}
         />
       </div>
