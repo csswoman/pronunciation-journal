@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { ArrowRight, Check } from "@/components/icons"
+import { ArrowRight, Check, ChevronDown } from "@/components/icons"
 import { DailyStepTitle } from './DailyStepTitle'
 import { DailyThreadStrip } from './DailyThreadStrip'
 import type { DailyStepStatus } from '@/hooks/useDailyPlan'
@@ -228,10 +228,11 @@ export default function DailyStepList({
       {collapseFutureSteps && !showAllCompact && hiddenCount > 0 ? (
         <button
           type="button"
-          className="focus-ring min-h-11 self-center px-3 font-body-sm font-semibold text-fg underline-offset-2 hover:underline"
+          className="focus-ring inline-flex min-h-11 items-center gap-1.5 self-center rounded-md border border-border-default bg-surface-raised px-3 font-body-sm font-semibold text-fg transition-colors hover:bg-surface-sunken active:scale-[0.96]"
           onClick={() => setShowAllCompact(true)}
         >
-          Ver {hiddenCount} más
+          Ver {hiddenCount} {hiddenCount === 1 ? 'paso más' : 'pasos más'}
+          <ChevronDown size={16} aria-hidden />
         </button>
       ) : null}
       {threadHints.length > 0 ? <DailyThreadStrip hints={threadHints} embedded /> : null}

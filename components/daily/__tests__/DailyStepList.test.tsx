@@ -98,7 +98,7 @@ describe('DailyStepList (collapseFutureSteps=true)', () => {
     // Remaining 2 steps hidden behind the toggle
     expect(screen.queryByText('Estudia teoría')).not.toBeInTheDocument()
     expect(screen.queryByText('Irregular past tense')).not.toBeInTheDocument()
-    expect(screen.getByText('Ver 2 más')).toBeInTheDocument()
+    expect(screen.getByText('Ver 2 pasos más')).toBeInTheDocument()
   })
 
   it('reveals the remaining compact steps when the toggle is clicked', async () => {
@@ -119,7 +119,7 @@ describe('DailyStepList (collapseFutureSteps=true)', () => {
     )
 
     expect(screen.queryByText('Estudia teoría')).not.toBeInTheDocument()
-    await userEvent.click(screen.getByText('Ver 1 más'))
+    await userEvent.click(screen.getByText('Ver 1 paso más'))
     expect(screen.getByText('Estudia teoría')).toBeInTheDocument()
     expect(screen.queryByText(/Ver \d+ más/)).not.toBeInTheDocument()
   })
@@ -171,6 +171,6 @@ describe('DailyStepList (collapseFutureSteps=true)', () => {
     expect(screen.getByText('Práctica de sonido')).toBeInTheDocument()
     expect(screen.getByText('Estudia teoría')).toBeInTheDocument()
     expect(screen.queryByText('Irregular past tense')).not.toBeInTheDocument()
-    expect(screen.getByText('Ver 1 más')).toBeInTheDocument()
+    expect(screen.getByText('Ver 1 paso más')).toBeInTheDocument()
   })
 })

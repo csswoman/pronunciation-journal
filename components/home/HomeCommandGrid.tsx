@@ -104,10 +104,7 @@ export default function HomeCommandGrid({
   const showPlanExtras = planSettled && !planEmpty;
   const showPostPlan = showPlanExtras && allDone;
 
-  const guestHasProgress =
-    isGuest && (placementState.hasMeaningfulProgress || allDone);
   const showGuestSaveStrip = isGuest && planSettled && !showActivation;
-  const guestSaveVariant = guestHasProgress ? "emphasized" : "default";
 
   return (
     <div className="home-command-grid">
@@ -127,12 +124,6 @@ export default function HomeCommandGrid({
             showPronunciationLink={needsPronunciation}
             showGuestSaveInline={isGuest}
           />
-        </div>
-      ) : null}
-
-      {showGuestSaveStrip ? (
-        <div className="home-command-review">
-          <GuestSaveProgressBanner variant={guestSaveVariant} />
         </div>
       ) : null}
 
@@ -166,6 +157,8 @@ export default function HomeCommandGrid({
           />
         </div>
 
+        {showGuestSaveStrip ? <GuestSaveProgressBanner variant="footer" /> : null}
+
         {showPostPlan ? (
           <section
             aria-label="Plan completo"
@@ -179,10 +172,10 @@ export default function HomeCommandGrid({
       </div>
 
       <aside className="home-command-aside" aria-label="Práctica sugerida">
-        {planSettled ? <HomeJournalCard /> : null}
-        {showPlanExtras && !allDone ? <HomeSpeakPrompt arc={arc} /> : null}
         <WeakSoundCard weakestPhoneme={weakestPhoneme} />
+        {showPlanExtras && !allDone ? <HomeSpeakPrompt arc={arc} /> : null}
         {showPlanExtras ? <EssentialWordsProgressCard /> : null}
+        {planSettled ? <HomeJournalCard /> : null}
         {showPlacementAside ? <HomePlacementPrompt compact /> : null}
         {showPronunciationAside ? <HomePronunciationPrompt compact /> : null}
       </aside>

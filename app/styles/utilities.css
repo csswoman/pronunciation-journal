@@ -474,6 +474,15 @@
   background-color: var(--surface-raised);
   padding: var(--layout-card-pad);
 }
+
+.home-sidebar-card--compact {
+  gap: var(--layout-stack-tight);
+  padding-block: var(--layout-card-pad-compact);
+}
+
+.home-sidebar-card--priority {
+  border-color: var(--border-default);
+}
 /* Practice actions: in-flow on larger screens, thumb-reachable on phones. */
 .practice-action-bar__spacer {
   display: none;

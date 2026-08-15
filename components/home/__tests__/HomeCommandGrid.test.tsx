@@ -305,3 +305,28 @@ describe("HomeCommandGrid pronunciation diagnostic visibility", () => {
     expect(screen.getByRole("heading", { name: "Evalúa tu pronunciación" })).toBeInTheDocument();
   });
 });
+
+describe("HomeCommandGrid guest save prompt", () => {
+  it("places saving progress below the plan as a quiet footer", async () => {
+    dailyCardState.empty = false;
+    dailyCardState.settled = true;
+    authMock.useAuth.mockReturnValue({
+      user: { id: "guest-1", is_anonymous: true },
+      session: null,
+      loading: false,
+      supabaseEnabled: true,
+      signOutUser: vi.fn(async () => undefined),
+    });
+
+    await renderSettledGrid({
+      placementState: { hasPlacement: true, hasMeaningfulProgress: true },
+      pronunciationDiagnosticState: { hasPronunciationDiagnostic: true },
+    });
+
+    const savePrompt = screen.getByLabelText("Guardar progreso");
+    const plan = screen.getByText("Daily plan");
+    expect(savePrompt).toHaveAttribute("data-variant", "footer");
+    expect(savePrompt.closest(".home-command-review")).toBeNull();
+    expect(plan.compareDocumentPosition(savePrompt) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+});

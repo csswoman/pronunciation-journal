@@ -58,8 +58,8 @@ export default function HomeJournalCard() {
   let href = '/journal'
 
   if (!lastEntry) {
-    title = 'Todavía no hay entradas'
-    body = 'Cuando escribas, verás aquí la de hoy.'
+    title = 'Escribe una entrada breve hoy'
+    body = ''
     cta = 'Abrir diario'
   } else if (wroteToday) {
     title = 'Entrada de hoy'
@@ -78,11 +78,13 @@ export default function HomeJournalCard() {
   return (
     <Link
       href={href}
-      className="home-sidebar-card focus-ring group flex flex-col gap-2 transition-colors hover:bg-surface-sunken"
+      className={`home-sidebar-card focus-ring group flex flex-col gap-2 transition-colors hover:bg-surface-sunken${!lastEntry ? ' home-sidebar-card--compact' : ''}`}
     >
       <span className="font-label text-fg">Diario</span>
       <span className="font-body-sm text-pretty text-fg">{title}</span>
-      <span className="font-caption line-clamp-2 text-pretty text-fg-muted">{body}</span>
+      {body ? (
+        <span className="font-caption line-clamp-2 text-pretty text-fg-muted">{body}</span>
+      ) : null}
       <span className="mt-auto inline-flex min-h-10 items-center gap-1.5 font-body-sm text-fg-muted group-hover:text-fg group-hover:underline">
         {cta} <ArrowRight size={16} aria-hidden />
       </span>

@@ -27,4 +27,14 @@ describe("GuestSaveProgressBanner", () => {
       "/login?intent=save",
     );
   });
+
+  it("renders a quiet footer prompt without competing account buttons", () => {
+    render(<GuestSaveProgressBanner variant="footer" />);
+    expect(screen.getByText(/Quieres conservar lo de hoy/i)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Crea una cuenta/i })).toHaveAttribute(
+      "href",
+      "/login?intent=save&mode=register",
+    );
+    expect(screen.queryByRole("link", { name: "Crear cuenta" })).not.toBeInTheDocument();
+  });
 });
