@@ -6,6 +6,7 @@
 //   <ListenModelButton />      — reproducir modelo (speak)
 //   <RecognitionMicButton />   — useSpeechRecognition → transcript
 //   <PronunciationFeedback />  — chips de fonema cuando hay resultado
+//   <SelfPlaybackAudioBar />   — reproducir modelo vs voz del usuario
 //   <FallbackShadowing />      — cuando SpeechRecognition no disponible
 // </SpeakScoredExercise>
 
@@ -18,6 +19,7 @@ import { defaultEvaluationEngine } from '@/lib/exercises/evaluation'
 import { getEvaluationWordResults } from '@/lib/exercises/evaluation/word-results'
 import { getFeedbackMessage, calculateXP } from '@/lib/pronunciation/scoring'
 import PronunciationFeedback from '@/components/lesson/PronunciationFeedback'
+import { SelfPlaybackAudioBar } from '@/components/pronunciation/SelfPlaybackAudioBar'
 import Button from '@/components/ui/Button'
 import { ListenButton } from '@/components/ui/ListenButton'
 import { cn } from '@/lib/cn'
@@ -42,15 +44,7 @@ interface ScoredResult {
   transcript: string
 }
 
-/**
- * Explains why this attempt has no score, for the shared unscored-fallback UI.
- * 'unsupported' — the browser has no SpeechRecognition API at all.
- * 'unavailable' — recognition is supported but failed (e.g. Brave blocks the
- *                  network speech service) or the evaluator itself rejected.
- */
 type UnscoredReason = 'unsupported' | 'browser' | 'unavailable'
-
-// ── WordDisplay ──────────────────────────────────────────────────────────────
 
 function WordDisplay({ word, ipa, onListen }: { word?: string; ipa: string; onListen: () => void }) {
   return (
@@ -67,10 +61,6 @@ function WordDisplay({ word, ipa, onListen }: { word?: string; ipa: string; onLi
     </div>
   )
 }
-
-// ── ShadowingFallback ────────────────────────────────────────────────────────
-// Used when live speech recognition is unavailable (e.g. Brave blocks Google's
-// speech service). No automatic scoring — listen and repeat, then continue.
 
 function ShadowingFallback({
   word,
@@ -98,24 +88,34 @@ function ShadowingFallback({
   )
 }
 
-// ── Main component ───────────────────────────────────────────────────────────
-
 export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
   const { user } = useAuth()
-  const { status, result: speechResult, errorCode, isSupported, start, stop, reset } = useSpeechRecognition()
+  const {
+    status,
+    result: speechResult,
+    userAudioUrl,
+    errorCode,
+    isSupported,
+    start,
+    stop,
+    reset,
+  } = useSpeechRecognition()
+
   const [scored, setScored] = useState<ScoredResult | null>(null)
   const [isScoring, setIsScoring] = useState(false)
   const [evalFailed, setEvalFailed] = useState(false)
   const submitted = useRef(false)
 
-
-  // Score when transcript arrives
   useEffect(() => {
-    if (!isSupported || status !== 'done' || !speechResult || isScoring || scored || evalFailed) return
-    const target = exercise.targetWord ?? ''
+    if (!isSupported || status !== 'done' || !speechResult || isScoring || scored || evalFailed) {
+      return
+    }
+
+    const target = exercise.targetWord
     if (!target) return
 
     setIsScoring(true)
+
     defaultEvaluationEngine
       .evaluate({
         exercise: { domain: 'pronunciation', mode: 'speak' },
@@ -132,16 +132,15 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
         })
         if (user?.id) {
           const feedback = feedbackFromScoringResult({
-            accuracy: evalResult.score ?? 0, transcript: speechResult.transcript, wordResults,
+            accuracy: evalResult.score ?? 0,
+            transcript: speechResult.transcript,
+            wordResults,
             evaluatorVersion: 'lesson-stt-v1',
           })
           void persistPronunciationFeedbackEvidence(user.id, feedback).catch(() => undefined)
         }
       })
       .catch(() => {
-        // Evaluation errored (e.g. evaluator threw) — this is an honest
-        // 'failed' SpokenAttempt outcome, not a silent 0%. Fall through to
-        // the unscored shadowing UI instead of leaving the learner stuck.
         setEvalFailed(true)
       })
       .finally(() => setIsScoring(false))
@@ -159,8 +158,6 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
     reset()
   }, [reset])
 
-  // Shadowing fallback completes the exercise honestly unscored: never a
-  // correct answer, never a score, so it can't affect accuracy/SRS/mastery.
   const handleShadowingDone = useCallback(() => {
     if (submitted.current) return
     submitted.current = true
@@ -170,7 +167,6 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
   const isListening = status === 'listening'
   const isDone = status === 'done'
   const isError = status === 'error'
-  // Browsers like Brave block Google's speech service → fall back to shadowing.
   const isNetworkShadowing = isError && errorCode === 'network'
   const isShadowing = !isSupported || isNetworkShadowing || evalFailed
   const shadowingReason: UnscoredReason = !isSupported
@@ -181,9 +177,7 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
 
   return (
     <div className="layout-stack-loose items-center w-full">
-      <h2
-        className="m-0 text-center text-h4 text-fg"
-      >
+      <h2 className="m-0 text-center text-h4 text-fg">
         Di la palabra
       </h2>
 
@@ -235,7 +229,7 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
         </p>
       )}
 
-      {/* Rich feedback */}
+      {/* Rich feedback + Self-monitoring audio loop */}
       {scored && (
         <>
           <PronunciationFeedback
@@ -245,6 +239,12 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
             xpEarned={calculateXP(scored.score)}
             transcript={scored.transcript}
           />
+
+          <SelfPlaybackAudioBar
+            targetWord={exercise.targetWord}
+            userAudioUrl={userAudioUrl}
+          />
+
           <RemediationSequence
             onListen={() => exercise.targetWord && speak(exercise.targetWord)}
             onSlow={() => {
@@ -255,6 +255,7 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
             }}
             onRetry={handleRetry}
           />
+
           <PracticeActionBar>
             <Button variant="secondary" size="lg" fullWidth onClick={handleRetry}>Intentar de nuevo</Button>
             <PracticeContinueButton onClick={handleContinue} />
