@@ -33,6 +33,8 @@ export function TrainerControls({
   onToggleSlow,
   isAutoLoop,
   onToggleAutoLoop,
+  streak,
+  bestStreak,
   embedded = false,
 }: {
   quizTarget: Side | null;
@@ -52,6 +54,8 @@ export function TrainerControls({
   onToggleSlow?: () => void;
   isAutoLoop?: boolean;
   onToggleAutoLoop?: () => void;
+  streak?: number;
+  bestStreak?: number;
   embedded?: boolean;
 }) {
   if (isDone) {
@@ -64,6 +68,11 @@ export function TrainerControls({
         {accuracy !== null ? (
           <p className="ipa-chart__done-score">
             Precisión: <strong>{accuracy}%</strong>
+          </p>
+        ) : null}
+        {bestStreak && bestStreak >= 2 ? (
+          <p className="ipa-chart__done-score text-caption font-semibold text-amber-600 dark:text-amber-400">
+            🔥 Mejor racha consecutiva: <strong>{bestStreak}</strong> aciertos
           </p>
         ) : null}
         <div className="ipa-chart__done-actions">
@@ -175,6 +184,12 @@ export function TrainerControls({
                 <p className="text-body-sm font-medium text-fg">
                   {verdict === "correct" ? "¡Correcto!" : `Era «${correctWord}».`}
                 </p>
+                {verdict === "correct" && streak && streak >= 2 ? (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/15 border border-amber-500/30 px-2.5 py-0.5 text-xs font-bold text-amber-600 dark:text-amber-400 animate-pulse">
+                    <span>🔥</span>
+                    <span>Racha: {streak}</span>
+                  </span>
+                ) : null}
               </div>
               <div className="flex items-center gap-1.5">
                 <button type="button" onClick={onNextRound} className="ipa-chart__btn ipa-chart__btn--primary">

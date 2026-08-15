@@ -57,6 +57,8 @@ export function MinimalPairsRunner({
   const [guessed, setGuessed] = useState<Side | null>(null);
   const [playingSide, setPlayingSide] = useState<Side | null>(null);
   const [score, setScore] = useState({ correct: 0, wrong: 0 });
+  const [streak, setStreak] = useState(0);
+  const [bestStreak, setBestStreak] = useState(0);
   const [isDone, setIsDone] = useState(false);
   const [isSlow, setIsSlow] = useState(false);
   const [isAutoLoop, setIsAutoLoop] = useState(false);
@@ -149,6 +151,15 @@ export function MinimalPairsRunner({
       correct: current.correct + Number(correct),
       wrong: current.wrong + Number(!correct),
     }));
+    if (correct) {
+      setStreak((s) => {
+        const next = s + 1;
+        setBestStreak((b) => Math.max(b, next));
+        return next;
+      });
+    } else {
+      setStreak(0);
+    }
   }, [quizTarget, verdict]);
 
   const goToNextPair = useCallback((startQuiz = false) => {
@@ -291,11 +302,20 @@ export function MinimalPairsRunner({
           onReplayClue={handleReplayClue}
           onStartQuiz={handleStartQuiz}
           onNextRound={() => goToNextPair(true)}
-          onRestart={() => { setPairIdx(0); resetRound(); setScore({ correct: 0, wrong: 0 }); setIsDone(false); }}
+          onRestart={() => {
+            setPairIdx(0);
+            resetRound();
+            setScore({ correct: 0, wrong: 0 });
+            setStreak(0);
+            setBestStreak(0);
+            setIsDone(false);
+          }}
           isSlow={isSlow}
           onToggleSlow={() => setIsSlow((prev) => !prev)}
           isAutoLoop={isAutoLoop}
           onToggleAutoLoop={() => setIsAutoLoop((prev) => !prev)}
+          streak={streak}
+          bestStreak={bestStreak}
           embedded={embedded}
         />
       </div>
