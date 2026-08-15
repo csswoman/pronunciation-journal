@@ -36,13 +36,13 @@ const STAGE_TITLES_SHORT: Record<PathStageId, string> = {
 /** Canonical target order per stage — single source for grouping. */
 const STAGE_TARGET_IDS: Record<PathStageId, readonly PronunciationTargetId[]> = {
   sounds: [
-    contrastTargetId('/b/', '/v/'),
-    contrastTargetId('/iː/', '/ɪ/'),
-    contrastTargetId('/æ/', '/ʌ/'),
     contrastTargetId('/θ/', '/ð/'),
+    contrastTargetId('/iː/', '/ɪ/'),
+    phonemeTargetId('/ə/'),
+    contrastTargetId('/b/', '/v/'),
+    contrastTargetId('/æ/', '/ʌ/'),
     contrastTargetId('/s/', '/z/'),
     contrastTargetId('/ʃ/', '/tʃ/'),
-    phonemeTargetId('/ə/'),
     phonemeTargetId('/ɹ/'),
   ],
   'word-stress': [targetId('prosody.word-stress')],

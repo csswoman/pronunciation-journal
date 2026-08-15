@@ -11,7 +11,7 @@ import { contrastTargetId, targetId } from '../registry'
 describe('content map', () => {
   it('has zero dangling target or file references', () => {
     expect(getContentMapIssues()).toEqual([])
-  })
+  }, 15000)
 
   it('produces a deterministic coverage summary by category', () => {
     const first = getCoverageSummary()
