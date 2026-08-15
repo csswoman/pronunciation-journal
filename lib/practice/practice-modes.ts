@@ -54,6 +54,20 @@ export const PRACTICE_MODES: readonly PracticeMode[] = [
     href: '/courses',
     icon: 'BookOpen',
   },
+  {
+    id: 'intonation',
+    label: 'Gráficas de entonación',
+    description: 'Curvas de tono en preguntas y oraciones',
+    href: '/practice/intonation',
+    icon: 'Waves',
+  },
+  {
+    id: 'connected-speech',
+    label: 'Habla conectada',
+    description: 'Enlaces de palabras, Flap T y formas débiles',
+    href: '/practice/connected-speech',
+    icon: 'Sparkles',
+  },
 ] as const
 
 const FALLBACK_MODE_ID = 'essential-words'
