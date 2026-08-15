@@ -7,7 +7,6 @@ import { useWritingHintsPreference } from '@/hooks/useWritingHintsPreference'
 import type { JournalFeedback } from '@/lib/journal/correction'
 import type { ResolvedSeedWord, SelectedGrammarNote } from '@/lib/journal/scaffold-resolver'
 import type { JournalEntryRecord } from '@/lib/journal/types'
-import type { WritingScaffold } from '@/lib/journal/writing-scaffold'
 import { JournalSupportRail } from './JournalSupportRail'
 import { JournalHistoryList } from './JournalHistoryList'
 import { JournalWorkspace } from './JournalWorkspace'
@@ -18,7 +17,6 @@ interface JournalPageClientProps {
   promptText: string
   cefrLevel: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2'
   targetLength: number
-  structure: WritingScaffold['structure']
   subtitle: string
   resolvedVocabulary: ResolvedSeedWord[]
   selectedGrammarNote: SelectedGrammarNote | null
@@ -31,7 +29,6 @@ export function JournalPageClient({
   promptText,
   cefrLevel,
   targetLength,
-  structure,
   subtitle,
   resolvedVocabulary,
   selectedGrammarNote,
@@ -78,7 +75,6 @@ export function JournalPageClient({
         <JournalWorkspace
           entry={entry}
           targetLength={targetLength}
-          structure={structure}
           hintsEnabled={hintsEnabled}
           onHintsEnabledChange={setHintsEnabled}
           onDraftChange={handleDraftChange}

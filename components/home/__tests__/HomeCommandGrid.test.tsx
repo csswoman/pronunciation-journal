@@ -82,6 +82,9 @@ vi.mock("@/components/home/WeakSoundCard", () => ({ default: () => null }));
 vi.mock("@/components/home/HomeWordOfDayCard", () => ({
   default: () => <div>Palabra del día</div>,
 }));
+vi.mock("@/components/home/HomeChunkOfDayCard", () => ({
+  default: () => <div>Chunk del día</div>,
+}));
 vi.mock("@/components/home/HomeSpeakPrompt", () => ({
   default: () => <div>Speak prompt</div>,
 }));
@@ -311,7 +314,7 @@ describe("HomeCommandGrid guest save prompt", () => {
     dailyCardState.empty = false;
     dailyCardState.settled = true;
     authMock.useAuth.mockReturnValue({
-      user: { id: "guest-1", is_anonymous: true },
+      user: { id: "guest-1", is_anonymous: true } as unknown as import("@supabase/supabase-js").User,
       session: null,
       loading: false,
       supabaseEnabled: true,

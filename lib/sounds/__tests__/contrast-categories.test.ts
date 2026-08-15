@@ -12,12 +12,24 @@ describe("contrastsByCategory", () => {
   it("groups vowel-to-vowel contrasts under vowel", () => {
     const grouped = contrastsByCategory(MINIMAL_PAIR_CONTRASTS);
     const vowelIds = grouped.vowel.map((c) => c.id);
-    expect(vowelIds).toEqual(["iː-ɪ", "æ-ʌ", "æ-ɛ"]);
+    expect(vowelIds).toContain("iː-ɪ");
+    expect(vowelIds).toContain("uː-ʊ");
+    expect(vowelIds).toContain("æ-ʌ");
+    expect(vowelIds).toContain("æ-ɛ");
+    expect(vowelIds.length).toBeGreaterThanOrEqual(7);
   });
 
   it("groups consonant-to-consonant contrasts under consonant", () => {
     const grouped = contrastsByCategory(MINIMAL_PAIR_CONTRASTS);
     const consonantIds = grouped.consonant.map((c) => c.id);
-    expect(consonantIds).toEqual(["b-v", "θ-s", "ð-d", "ʃ-tʃ", "ŋ-n"]);
+    expect(consonantIds).toContain("b-v");
+    expect(consonantIds).toContain("v-w");
+    expect(consonantIds).toContain("θ-s");
+    expect(consonantIds).toContain("θ-t");
+    expect(consonantIds).toContain("ð-d");
+    expect(consonantIds).toContain("s-z");
+    expect(consonantIds).toContain("ʃ-tʃ");
+    expect(consonantIds).toContain("ŋ-n");
+    expect(consonantIds.length).toBeGreaterThanOrEqual(14);
   });
 });

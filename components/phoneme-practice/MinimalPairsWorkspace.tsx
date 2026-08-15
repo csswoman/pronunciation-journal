@@ -9,6 +9,7 @@ import {
   DEFAULT_CONTRAST_CATEGORY,
   type ContrastCategory,
 } from "@/lib/sounds/contrast-categories";
+import { ContrastMouthComparison } from "./ContrastMouthComparison";
 
 const CATEGORY_LABELS: Record<ContrastCategory, string> = {
   vowel: "Vocales",
@@ -97,8 +98,12 @@ export default function MinimalPairsWorkspace() {
             })}
           </div>
         </div>
-
       </div>
+
+      <ContrastMouthComparison
+        phonemeA={activeContrast.phonemeA}
+        phonemeB={activeContrast.phonemeB}
+      />
 
       <MinimalPairsRunner
         key={activeContrast.id}

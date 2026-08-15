@@ -16,14 +16,12 @@ import { useEffect, useRef } from 'react'
 import { useJournalEntry } from '@/hooks/useJournalEntry'
 import type { JournalFeedback } from '@/lib/journal/correction'
 import type { JournalEntryRecord } from '@/lib/journal/types'
-import type { WritingScaffold } from '@/lib/journal/writing-scaffold'
 import { JournalEditor } from './JournalEditor'
 import { JournalFeedbackView } from './JournalFeedbackView'
 
 interface JournalWorkspaceProps {
   entry: JournalEntryRecord
   targetLength?: number
-  structure?: WritingScaffold['structure']
   hintsEnabled: boolean
   onHintsEnabledChange: (enabled: boolean) => void
   onDraftChange?: (draft: JournalDraftState) => void
@@ -40,7 +38,6 @@ export interface JournalDraftState {
 export function JournalWorkspace({
   entry,
   targetLength = 60,
-  structure = DEFAULT_STRUCTURE,
   hintsEnabled,
   onHintsEnabledChange,
   onDraftChange,
@@ -105,7 +102,6 @@ export function JournalWorkspace({
           saveState={journal.saveState}
           wordCount={wordCount}
           targetLength={targetLength}
-          structure={structure}
           hintsEnabled={hintsEnabled}
           onHintsEnabledChange={onHintsEnabledChange}
           disabled={journal.status !== 'draft' || journal.correcting}
@@ -118,12 +114,12 @@ export function JournalWorkspace({
       )}
 
       {journal.status === 'draft' && (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2" aria-live="polite">
           <Button
-            variant={meetsTarget ? 'primary' : 'secondary'}
+            variant={journal.canSubmit ? (meetsTarget ? 'primary' : 'secondary') : 'secondary'}
             size="md"
             fullWidth
-            className="min-h-11"
+            className="min-h-11 disabled:border-border-subtle disabled:bg-surface-sunken disabled:text-fg-subtle disabled:opacity-70 disabled:shadow-none"
             disabled={!journal.canSubmit || journal.correcting}
             isLoading={journal.correcting}
             onClick={() => void journal.submit()}
@@ -135,7 +131,9 @@ export function JournalWorkspace({
                 : 'Guardar sin conexión'}
           </Button>
           {showEmptyHints && (
-            <p className="font-body-sm text-fg-muted">Escribe al menos una frase para activar la revisión.</p>
+            <p className="rounded-[var(--radius-sm)] bg-surface-sunken px-3 py-2 font-body-sm text-fg-muted">
+              Escribe al menos una frase para activar la revisión.
+            </p>
           )}
           {!journal.isOnline && journal.canSubmit && (
             <p role="status" className="font-body-sm text-fg-muted">
@@ -201,9 +199,3 @@ export function JournalWorkspace({
     </section>
   )
 }
-
-const DEFAULT_STRUCTURE: WritingScaffold['structure'] = [
-  { label: 'Empieza', hint: 'Di dónde o cuándo ocurrió.' },
-  { label: 'Desarrolla', hint: 'Añade uno o dos detalles concretos.' },
-  { label: 'Cierra', hint: 'Explica qué pensaste o sentiste.' },
-]

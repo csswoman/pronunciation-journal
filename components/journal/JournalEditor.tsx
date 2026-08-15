@@ -4,7 +4,6 @@ import { useId, type KeyboardEvent } from 'react'
 import { cn } from '@/lib/cn'
 import { Checkbox } from '@/components/ui/Checkbox'
 import type { SaveState } from '@/hooks/useJournalEntry'
-import type { WritingScaffold } from '@/lib/journal/writing-scaffold'
 
 interface JournalEditorProps {
   content: string
@@ -12,7 +11,6 @@ interface JournalEditorProps {
   saveState: SaveState
   wordCount: number
   targetLength: number
-  structure: WritingScaffold['structure']
   hintsEnabled: boolean
   onHintsEnabledChange: (enabled: boolean) => void
   disabled?: boolean
@@ -33,7 +31,6 @@ export function JournalEditor({
   saveState,
   wordCount,
   targetLength,
-  structure,
   hintsEnabled,
   onHintsEnabledChange,
   disabled,
@@ -43,9 +40,6 @@ export function JournalEditor({
   const statusId = useId()
   const hasContent = content.trim().length > 0
   const showStatus = saveState !== 'saved' || hasContent
-  const writingPlaceholder = structure
-    .map((item, index) => `${index + 1}. ${item.label}: ${item.hint}`)
-    .join('\n')
 
   function handleKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
     if (!onSubmitShortcut) return
@@ -67,25 +61,30 @@ export function JournalEditor({
           label="Mostrar pistas mientras escribo"
         />
       </div>
-      <textarea
-        id={fieldId}
-        value={content}
-        onChange={(e) => onChange(e.target.value)}
-        onKeyDown={handleKeyDown}
-        disabled={disabled}
-        rows={10}
-        lang="en"
-        spellCheck
-        aria-describedby={showStatus ? statusId : undefined}
-        placeholder={hasContent ? '' : writingPlaceholder}
-        className={cn(
-          'w-full resize-y rounded-[var(--radius-lg)] border border-border-strong bg-surface-base p-4 text-base text-fg placeholder:text-fg-placeholder',
-          'transition-colors duration-150 focus-ring disabled:cursor-not-allowed disabled:opacity-60',
-        )}
-      />
-      <p className="font-body-sm tabular-nums text-fg-muted" aria-live="polite">
-        {wordCount} / {targetLength} palabras
-      </p>
+      <div className="overflow-hidden rounded-[var(--radius-lg)] border border-border-strong bg-surface-base">
+        <textarea
+          id={fieldId}
+          value={content}
+          onChange={(e) => onChange(e.target.value)}
+          onKeyDown={handleKeyDown}
+          disabled={disabled}
+          rows={10}
+          lang="en"
+          spellCheck
+          aria-describedby={showStatus ? statusId : undefined}
+          placeholder={hasContent ? '' : 'Empieza a escribir…'}
+          className={cn(
+            'w-full resize-y bg-transparent p-4 text-base text-fg placeholder:text-fg-placeholder focus:outline-none',
+            'disabled:cursor-not-allowed disabled:opacity-60',
+          )}
+        />
+        <div className="flex items-center justify-between border-t border-border-subtle px-4 py-2">
+          <span className="font-body-xs text-fg-subtle">Meta de hoy</span>
+          <p className="font-body-sm tabular-nums text-fg-muted" aria-live="polite">
+            {wordCount} / {targetLength} palabras
+          </p>
+        </div>
+      </div>
       {showStatus && (
         <p
           id={statusId}

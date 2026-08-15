@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft, Target } from "@/components/icons";
+import { ArrowLeft } from "@/components/icons";
 import type { GrammarDeckMeta } from "@/lib/courses/grammar-deck/types";
 
 interface GrammarDeckHeaderProps {
@@ -33,12 +33,6 @@ export default function GrammarDeckHeader({
           {meta.title}
           {meta.titleEmphasis && <em> {meta.titleEmphasis}</em>}
         </h1>
-        {meta.goal && (
-          <p className="grammar-deck__goal">
-            <Target size={13} strokeWidth={2.25} aria-hidden />
-            <span>{meta.goal}</span>
-          </p>
-        )}
       </div>
       <div className="grammar-deck__meta">
         <span className="grammar-deck__count">

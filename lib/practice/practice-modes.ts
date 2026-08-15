@@ -68,6 +68,13 @@ export const PRACTICE_MODES: readonly PracticeMode[] = [
     href: '/practice/connected-speech',
     icon: 'Sparkles',
   },
+  {
+    id: 'word-search',
+    label: 'Búsqueda de palabras',
+    description: 'Sopa de letras y deducción de vocabulario por pistas',
+    href: '/practice/word-search',
+    icon: 'Search',
+  },
 ] as const
 
 const FALLBACK_MODE_ID = 'essential-words'

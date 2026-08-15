@@ -1,0 +1,140 @@
+{
+  "meta": {
+    "eyebrow": "Chunks · Discourse Markers",
+    "title": "Marcadores",
+    "titleEmphasis": "del discurso y conectores",
+    "goal": "Estructura tus argumentos, conecta oraciones y guía a tu interlocutor a través de tus ideas con la soltura de un orador experimentado."
+  },
+  "related": [
+    { "slug": "chunk-sentence-frames", "label": "Plantillas de oraciones" },
+    { "slug": "chunk-language-functions", "label": "Funciones comunicativas con tacto" }
+  ],
+  "cards": [
+    {
+      "id": "dsm-abrir",
+      "tag": "Iniciar y añadir",
+      "title": "Abrir puntos y acumular argumentos",
+      "lede": "Conectores para comenzar una presentación o sumar datos de peso.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "To start off with...", "value": "Para comenzar... · To start off with, let's review the requirements.", "highlights": ["To start off with"] },
+            { "key": "On top of that...", "value": "Por si fuera poco / Encima de eso... · On top of that, it saves 30% bandwidth.", "highlights": ["On top of that"] },
+            { "key": "Not to mention...", "value": "Por no hablar de / Sin mencionar... · Not to mention the security improvements.", "highlights": ["Not to mention"] },
+            { "key": "Furthermore / Moreover...", "value": "Asimismo / Además (registro formal).", "highlights": ["Furthermore", "Moreover"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dsm-concesion",
+      "tag": "Concesión y contraste",
+      "title": "Concesión y matices",
+      "lede": "Reconoce un punto antes de introducir un contraargumento.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Having said that...", "value": "Habiendo dicho eso / No obstante... · The library is fast. Having said that, docs are poor.", "highlights": ["Having said that"] },
+            { "key": "That being said...", "value": "Dicho esto... · It's a great tool. That being said, it takes time to learn.", "highlights": ["That being said"] },
+            { "key": "Even so...", "value": "Aun así... · It was raining heavily; even so, we went for a run.", "highlights": ["Even so"] },
+            { "key": "On the other hand...", "value": "Por otra parte / Por otro lado... · On the other hand, maintenance is cheaper.", "highlights": ["On the other hand"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Marcador pro:",
+        "body": "\"Having said that\" y \"That being said\" son los conectores favoritos de ingenieros y líderes de producto en Silicon Valley."
+      }
+    },
+    {
+      "id": "dsm-honestidad",
+      "tag": "Franqueza",
+      "title": "Honestidad y franqueza",
+      "lede": "Expresa tu opinión sincera sin rodeos pero con cortesía.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "To be frank / honest...", "value": "Para ser sincero... · To be honest, I think we should rewrite this.", "highlights": ["To be honest", "To be frank"] },
+            { "key": "To tell you the truth...", "value": "A decir verdad... · To tell you the truth, I hadn't thought about that.", "highlights": ["To tell you the truth"] },
+            { "key": "As a matter of fact...", "value": "De hecho / En realidad... · As a matter of fact, I already fixed that bug.", "highlights": ["As a matter of fact"] },
+            { "key": "Frankly speaking...", "value": "Francamente hablando...", "highlights": ["Frankly speaking"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dsm-reformulacion",
+      "tag": "Reformulación",
+      "title": "Reformular y simplificar",
+      "lede": "Vuelve a explicar un concepto complejo con palabras más sencillas.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "In other words...", "value": "En otras palabras... · In other words, we need to ship by Friday.", "highlights": ["In other words"] },
+            { "key": "What I'm trying to say is...", "value": "Lo que intento decir es... · What I'm trying to say is that we need more tests.", "highlights": ["What I'm trying to say is"] },
+            { "key": "Put simply...", "value": "Dicho de forma sencilla... · Put simply, it just works.", "highlights": ["Put simply"] },
+            { "key": "That is to say...", "value": "Es decir / O sea...", "highlights": ["That is to say"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dsm-conclusion",
+      "tag": "Conclusión",
+      "title": "Resumir y cerrar ideas",
+      "lede": "Llega a la conclusión final con autoridad y claridad.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "At the end of the day...", "value": "Al fin y al cabo / Al final del día... · At the end of the day, user experience matters most.", "highlights": ["At the end of the day"] },
+            { "key": "All in all...", "value": "En resumidas cuentas / Tomando todo en cuenta · All in all, the launch was a success.", "highlights": ["All in all"] },
+            { "key": "To sum up...", "value": "Para resumir... · To sum up, we have three main action items.", "highlights": ["To sum up"] },
+            { "key": "When all is said and done...", "value": "Cuando todo está dicho y hecho / En última instancia...", "highlights": ["When all is said and done"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dsm-temas",
+      "tag": "Transición de temas",
+      "title": "Cambiar o retomar temas",
+      "lede": "Mueve la conversación o retoma un hilo tras una interrupción.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Speaking of which...", "value": "Hablando de eso... · Speaking of which, where is the document?", "highlights": ["Speaking of which"] },
+            { "key": "As I was saying...", "value": "Como iba diciendo... · As I was saying, we should check the logs.", "highlights": ["As I was saying"] },
+            { "key": "Anyway / Anyhow...", "value": "En fin / Como sea... · Anyway, let's focus on the demo.", "highlights": ["Anyway"] },
+            { "key": "Moving on to...", "value": "Pasando al siguiente punto... · Moving on to the next topic.", "highlights": ["Moving on to"] }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "¿Qué conector significa 'Habiendo dicho esto / No obstante' para introducir un matiz?",
+      "options": ["That being said / Having said that", "Talking this now", "Saying the words"],
+      "answer": 0,
+      "explain": "'That being said' y 'Having said that' son los conectores concesivos más usados en inglés oral formal y semiformal."
+    },
+    {
+      "q": "¿Qué expresión equivale a 'Al fin y al cabo / Lo que verdaderamente importa es...'?",
+      "options": ["At the end of the day...", "In the hour of the night...", "When the sun goes down..."],
+      "answer": 0,
+      "explain": "'At the end of the day' es la frase idiomática universal para resumir la conclusión esencial."
+    },
+    {
+      "q": "Si te interrumpieron y quieres retomar el hilo diciendo 'Como iba diciendo...', usas:",
+      "options": ["As I was saying...", "Like my mouth was talking...", "Continuing my throat..."],
+      "answer": 0,
+      "explain": "'As I was saying...' retoma de forma natural el hilo discursivo previo a una interrupción."
+    }
+  ]
+}

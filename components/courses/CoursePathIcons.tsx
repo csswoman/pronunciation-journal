@@ -87,6 +87,7 @@ export function CoursePathElectiveSpineIcon({
   const props = { size: 22, strokeWidth: 1.75, className: cn(iconClass, className), "aria-hidden": true as const };
   if (icon === "laptop") return <Laptop {...props} />;
   if (icon === "mic") return <MicVocal {...props} />;
+  if (icon === "message") return <MessageCircle {...props} />;
   return <Briefcase {...props} />;
 }
 

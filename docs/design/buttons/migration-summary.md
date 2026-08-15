@@ -1,3 +1,10 @@
+# Historial: resumen de migración de Button
+
+> Documento conservado como contexto de una migración anterior. La fuente de
+> verdad actual es [`components/ui/Button.tsx`](../../../components/ui/Button.tsx)
+> y [guide.md](guide.md); no sigas sus rutas, tareas pendientes ni nombres de
+> tokens históricos.
+
 # Button Component Migration Summary
 
 ## ✅ Completed

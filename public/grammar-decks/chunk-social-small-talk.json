@@ -1,0 +1,140 @@
+{
+  "meta": {
+    "eyebrow": "Chunks · Social & Small Talk",
+    "title": "Small Talk y",
+    "titleEmphasis": "conexión social",
+    "goal": "Rompe el hielo, mantén conversaciones amenas con compañeros o desconocidos y despídete con calidez y naturalidad."
+  },
+  "related": [
+    { "slug": "chunk-vida-cotidiana", "label": "Chunks para la vida cotidiana" },
+    { "slug": "chunk-language-functions", "label": "Funciones comunicativas con tacto" }
+  ],
+  "cards": [
+    {
+      "id": "soc-icebreakers",
+      "tag": "Romper el hielo",
+      "title": "Inicios de conversación casual",
+      "lede": "Frases para iniciar una charla antes de una reunión o en eventos sociales.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "How's your week going?", "value": "¿Cómo va tu semana? · How's your week going so far?", "highlights": ["How's your week going"] },
+            { "key": "Long time no see!", "value": "¡Tanto tiempo sin verte! / ¡Cuánto tiempo!", "highlights": ["Long time no see"] },
+            { "key": "Small world!", "value": "¡El mundo es un pañuelo! (al coincidir inesperadamente).", "highlights": ["Small world"] },
+            { "key": "Lovely weather we're having", "value": "Qué buen clima hace (el clásico comodín británico/americano).", "highlights": ["Lovely weather"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "soc-interes",
+      "tag": "Escucha activa",
+      "title": "Mostrar interés genuino",
+      "lede": "Evita responder con monosílabos; muestra entusiasmo por lo que te cuentan.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "How did that go?", "value": "¿Y cómo te fue con eso? · How did your job interview go?", "highlights": ["How did that go"] },
+            { "key": "That sounds amazing!", "value": "¡Eso suena increíble / maravilloso!", "highlights": ["sounds amazing"] },
+            { "key": "What was that like?", "value": "¿Cómo fue esa experiencia? / ¿Qué se sintió?", "highlights": ["What was that like"] },
+            { "key": "You must be thrilled!", "value": "¡Debes de estar contentísimo/a!", "highlights": ["must be thrilled"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Pregunta de oro:",
+        "body": "\"What was that like?\" es la mejor pregunta abierta para invitar a alguien a compartir su experiencia sin presionar."
+      }
+    },
+    {
+      "id": "soc-transiciones",
+      "tag": "Transiciones",
+      "title": "Cambiar de tema suavemente",
+      "lede": "Conecta una idea con otra sin dar saltos bruscos en la charla.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "By the way...", "value": "Por cierto / A propósito... · By the way, did you see the email?", "highlights": ["By the way"] },
+            { "key": "Speaking of which...", "value": "Hablando de eso... · Speaking of which, are you going to the conference?", "highlights": ["Speaking of which"] },
+            { "key": "That reminds me of...", "value": "Eso me recuerda a... · That reminds me of a project I did last year.", "highlights": ["reminds me of"] },
+            { "key": "Before I forget...", "value": "Antes de que se me olvide... · Before I forget, here is the link.", "highlights": ["Before I forget"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "soc-empatia",
+      "tag": "Empatía",
+      "title": "Validar y empatizar",
+      "lede": "Haz sentir escuchada a la otra persona cuando comparta un problema.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "I know what you mean", "value": "Sé exactamente a qué te refieres / Te entiendo.", "highlights": ["know what you mean"] },
+            { "key": "That must have been tough", "value": "Debió haber sido difícil / pesado.", "highlights": ["must have been tough"] },
+            { "key": "Totally understandable", "value": "Completamente comprensible.", "highlights": ["Totally understandable"] },
+            { "key": "I feel you", "value": "Te entiendo / Me pongo en tu lugar (informal y cercano).", "highlights": ["feel you"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "soc-opiniones",
+      "tag": "Preguntar planes",
+      "title": "Preguntar por planes e intereses",
+      "lede": "Temas universales para mantener una conversación agradable.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Any plans for the weekend?", "value": "¿Algún plan para el fin de semana?", "highlights": ["plans for the weekend"] },
+            { "key": "What do you reckon?", "value": "¿Qué piensas / cómo lo ves tú? (común en UK y Australia).", "highlights": ["What do you reckon"] },
+            { "key": "Have you checked out...?", "value": "¿Has visto / probado [X]? · Have you checked out that new café?", "highlights": ["checked out"] },
+            { "key": "Up to anything fun lately?", "value": "¿Haciendo algo divertido últimamente?", "highlights": ["Up to anything fun"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "soc-despedida",
+      "tag": "Cierres sociales",
+      "title": "Despedidas amables y elegantes",
+      "lede": "Termina una charla sin que parezca que estás huyendo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "It was great running into you!", "value": "¡Qué gusto haberme cruzado contigo!", "highlights": ["great running into you"] },
+            { "key": "I don't want to take up any more of your time", "value": "No quiero quitarte más tiempo · I'll let you get back to work.", "highlights": ["take up any more of your time"] },
+            { "key": "Let's catch up soon!", "value": "¡Pongámonos al día pronto!", "highlights": ["catch up soon"] },
+            { "key": "Have a safe trip / flight!", "value": "¡Buen viaje / buen vuelo!", "highlights": ["safe trip"] }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "¿Qué frase usarías para romper el hielo amablemente con un colega que no ves hace meses?",
+      "options": ["Long time no see! How's your week going?", "Why are you here? Talk to me now.", "Your absence was very long in duration."],
+      "answer": 0,
+      "explain": "'Long time no see! How's your week going?' es la combinación clásica y cordial de reencuentro."
+    },
+    {
+      "q": "¿Cómo cambias de tema conectándolo con lo que tu compañero acaba de mencionar?",
+      "options": ["Speaking of which, did you see the news?", "I will erase what you said and say news.", "Now I speak my topic."],
+      "answer": 0,
+      "explain": "'Speaking of which...' permite hilar una idea con el tema precedente de forma fluida."
+    },
+    {
+      "q": "¿Cuál es la forma más elegante de cerrar una conversación casual sin sonar grosero?",
+      "options": ["I don't want to take up any more of your time, let's catch up soon!", "I am bored of this talk, goodbye.", "My time with you is over now."],
+      "answer": 0,
+      "explain": "'I don't want to take up your time' muestra consideración por el tiempo de la otra persona."
+    }
+  ]
+}

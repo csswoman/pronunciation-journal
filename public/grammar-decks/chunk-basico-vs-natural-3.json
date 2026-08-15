@@ -1,0 +1,146 @@
+{
+  "meta": {
+    "eyebrow": "Inglés natural · Vol. 3",
+    "title": "Básico vs",
+    "titleEmphasis": "natural: Trabajo y Tiempo",
+    "goal": "Aprende a comunicarte en reuniones laborales, hablar de tu esfuerzo técnico y manejar plazos y horarios con fluidez nativa."
+  },
+  "related": [
+    { "slug": "chunk-basico-vs-natural-2", "label": "Básico vs natural: Decisiones y Contacto" },
+    { "slug": "chunk-basico-vs-natural-4", "label": "Básico vs natural: Dinero y Retos" }
+  ],
+  "cards": [
+    {
+      "id": "bvn3-reuniones",
+      "tag": "Reuniones de trabajo",
+      "title": "Arrancar y cerrar juntas",
+      "lede": "Frases para gestionar el tiempo en llamadas y reuniones ágiles.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "Let us begin the work meeting now." },
+            { "variant": "good", "text": "Let's kick things off / Let's get down to business.", "note": "dinámico y asertivo" },
+            { "variant": "bad", "text": "The meeting is finished now, goodbye." },
+            { "variant": "good", "text": "Let's wrap this up / Let's call it a day.", "note": "cierre profesional" }
+          ]
+        },
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Take this offline", "value": "Tratar un tema técnico fuera de la reunión · Let's take this offline after standup.", "highlights": ["take this offline"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bvn3-trabajo",
+      "tag": "Carga y progreso",
+      "title": "Progreso y esfuerzo",
+      "lede": "Explica tu volumen de trabajo sin decir solo 'I have a lot of work'.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "+ I finished my task", "value": "++ I wrapped it up / It's off my plate", "highlights": ["wrapped it up", "off my plate"] },
+            { "key": "+ I'm working hard", "value": "++ I'm grinding / Putting in the hours", "highlights": ["grinding", "Putting in the hours"] },
+            { "key": "+ I have too much work", "value": "++ I'm snowed under / I have a lot on my plate", "highlights": ["snowed under", "on my plate"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bvn3-tech",
+      "tag": "Ingeniería y calidad",
+      "title": "Código y funcionamiento",
+      "lede": "Términos estándar en equipos de software modernos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "+ You did a very good job", "value": "++ You knocked it out of the park / Nailed it!", "highlights": ["knocked it out of the park"] },
+            { "key": "+ The internal code does this", "value": "++ Under the hood, it handles...", "highlights": ["Under the hood"] },
+            { "key": "+ We must fix the small problems", "value": "++ We need to iron out the kinks", "highlights": ["iron out the kinks"] },
+            { "key": "+ Everything functions correctly", "value": "++ It's running smoothly / Like clockwork", "highlights": ["running smoothly", "Like clockwork"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bvn3-frecuencia",
+      "tag": "Frecuencia y rapidez",
+      "title": "De vez en cuando o casi nunca",
+      "lede": "Deja de abusar de 'sometimes' y 'rarely'; usa modismos de frecuencia.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "I eat sushi sometimes." },
+            { "variant": "good", "text": "I eat sushi from time to time / every now and then.", "note": "ritmo fluido" },
+            { "variant": "bad", "text": "I rarely go to the gym." },
+            { "variant": "good", "text": "I go to the gym once in a blue moon.", "note": "expresión icónica" }
+          ]
+        },
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "+ Immediately", "value": "++ Right away / In no time / On the spot", "highlights": ["Right away", "In no time"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bvn3-puntualidad",
+      "tag": "Retrasos y apuro",
+      "title": "Puntualidad y prisas",
+      "lede": "Comunica si vas tarde o si te queda poco tiempo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "+ I am late for the meeting", "value": "++ I'm running behind schedule / pressed for time", "highlights": ["behind schedule", "pressed for time"] },
+            { "key": "+ Do you have free time now?", "value": "++ Do you have a minute to spare?", "highlights": ["minute to spare"] },
+            { "key": "+ I have zero time left", "value": "++ I'm running out of time / Time's running short", "highlights": ["running out of time"] },
+            { "key": "+ We have extra time", "value": "++ We've got time to kill / No rush", "highlights": ["time to kill", "No rush"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bvn3-futuro",
+      "tag": "Plazos y posponer",
+      "title": "Posponer y plazos futuros",
+      "lede": "Maneja reprogramaciones y el impacto a largo plazo de tus proyectos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "+ Let's postpone the meeting", "value": "++ Let's push it back / Take a rain check", "highlights": ["push it back", "rain check"] },
+            { "key": "+ In the distant future", "value": "++ Down the road / In the long run", "highlights": ["Down the road", "In the long run"] },
+            { "key": "+ At the last possible second", "value": "++ In the nick of time / At the eleventh hour", "highlights": ["In the nick of time", "eleventh hour"] }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "¿Cómo dices de forma profesional 'Tengo demasiado trabajo encima y estoy desbordado'?",
+      "options": ["I'm snowed under with work right now.", "I am drowned in pieces of paper.", "Work is killing my spirit completely."],
+      "answer": 0,
+      "explain": "'Snowed under' y 'I have a lot on my plate' son las metáforas laborales estándar para carga excesiva."
+    },
+    {
+      "q": "¿Qué significa 'once in a blue moon'?",
+      "options": ["Casi nunca / Muy rara vez.", "Cuando hay luna llena en el cielo.", "Todos los lunes por la mañana."],
+      "answer": 0,
+      "explain": "'Once in a blue moon' se refiere a la rara ocurrencia de una segunda luna llena en un mes, indicando algo sumamente infrecuente."
+    },
+    {
+      "q": "¿Qué frase usarías para posponer un café con un amigo para otra ocasión?",
+      "options": ["Can I take a rain check on that coffee?", "Cancel the rain and buy the coffee.", "I reject your liquid invitation."],
+      "answer": 0,
+      "explain": "'Take a rain check' significa posponer amistosamente una invitación para una fecha posterior."
+    }
+  ]
+}

@@ -1,0 +1,151 @@
+{
+  "meta": {
+    "eyebrow": "Chunks · UX/UI Design",
+    "title": "Chunks de diseño",
+    "titleEmphasis": "UX y UI",
+    "goal": "Discute flujos de usuario, diseño de interacción, accesibilidad, jerarquía visual y tokens de diseño con precisión y empatía."
+  },
+  "related": [
+    { "slug": "chunk-programacion", "label": "Chunks de programación" },
+    { "slug": "chunk-daily-standup", "label": "Daily standup en inglés" }
+  ],
+  "cards": [
+    {
+      "id": "cux-flujos",
+      "tag": "UX y flujos",
+      "title": "Analizar la experiencia del usuario",
+      "lede": "Explica la usabilidad y la fricción sin sonar subjetivo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "From a user perspective...", "value": "Desde la perspectiva del usuario... · From a user perspective, this step feels redundant.", "highlights": ["user perspective"] },
+            { "key": "This creates unnecessary friction", "value": "Esto crea fricción innecesaria en el flujo.", "highlights": ["unnecessary friction"] },
+            { "key": "It reduces cognitive load", "value": "Reduce la carga cognitiva del usuario.", "highlights": ["cognitive load"] },
+            { "key": "The user journey is straightforward", "value": "El recorrido del usuario es directo y claro.", "highlights": ["user journey", "straightforward"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Vocabulario clave:",
+        "body": "\"Cognitive load\" (carga mental que requiere procesar la pantalla) y \"friction\" (cualquier obstáculo en el camino) son conceptos clave en reuniones de producto."
+      }
+    },
+    {
+      "id": "cux-jerarquia",
+      "tag": "UI y jerarquía visual",
+      "title": "Espaciado y balance visual",
+      "lede": "Comenta el peso visual, espaciado y tipografía con términos exactos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "The visual hierarchy is slightly off", "value": "La jerarquía visual está un poco desbalanceada.", "highlights": ["visual hierarchy", "slightly off"] },
+            { "key": "Let's give it more breathing room", "value": "Démosle más espacio / aire (espacio en blanco).", "highlights": ["breathing room"] },
+            { "key": "Make the primary CTA pop more", "value": "Haz que el botón principal (Call To Action) resalte más.", "highlights": ["CTA", "pop more"] },
+            { "key": "Align this with the grid", "value": "Alinea esto con la cuadrícula base.", "highlights": ["Align this with"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cux-estados",
+      "tag": "Micro-interacciones y estados",
+      "title": "Manejar todos los estados de la UI",
+      "lede": "Asegúrate de que no falten estados vacíos, cargas ni transiciones.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "We need an empty state for...", "value": "Necesitamos un estado vacío cuando... · We need an empty state for when there are no saved items.", "highlights": ["empty state"] },
+            { "key": "Let's add a subtle hover effect", "value": "Agreguemos un efecto hover sutil.", "highlights": ["subtle hover effect"] },
+            { "key": "The skeleton loader feels jerky", "value": "El skeleton de carga se siente tosco / poco fluido.", "highlights": ["skeleton loader", "jerky"] },
+            { "key": "How should this transition feel?", "value": "¿Cómo debería sentirse esta transición / animación?", "highlights": ["transition feel"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cux-a11y",
+      "tag": "Accesibilidad y responsive",
+      "title": "A11y y comportamiento móvil",
+      "lede": "Garantiza que el diseño funcione para todos los dispositivos y usuarios.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Is the contrast ratio accessible?", "value": "¿El ratio de contraste cumple accesibilidad (WCAG)?", "highlights": ["contrast ratio", "accessible"] },
+            { "key": "The tap target is too small", "value": "El área táctil es muy pequeña en pantallas móviles.", "highlights": ["tap target", "too small"] },
+            { "key": "Is this keyboard navigable?", "value": "¿Se puede navegar esto usando solo el teclado?", "highlights": ["keyboard navigable"] },
+            { "key": "It breaks on smaller viewports", "value": "Se rompe / desborda en pantallas pequeñas.", "highlights": ["breaks on smaller viewports"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cux-feedback",
+      "tag": "Critique & Feedback",
+      "title": "Dar feedback constructivo de diseño",
+      "lede": "Haz observaciones sin sonar descalificador ni autoritario.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "I don't like this color." },
+            { "variant": "good", "text": "I wonder if this color provides enough contrast against the background?", "note": "centrado en el usuario" },
+            { "variant": "bad", "text": "This design is ugly." },
+            { "variant": "good", "text": "I love the clean direction, but could we explore another option for the hero section?", "note": "aprecia y propone iterar" }
+          ]
+        },
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "What problem are we trying to solve?", "value": "¿Qué problema estamos tratando de resolver aquí?", "highlights": ["problem are we trying to solve"] },
+            { "key": "Let's validate this with users", "value": "Validemos esto con usuarios reales antes de decidir.", "highlights": ["validate this with users"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cux-tokens",
+      "tag": "Design Systems",
+      "title": "Consistencia y Design Tokens",
+      "lede": "Conecta el lenguaje del diseñador con el del desarrollador.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Let's stick to our design tokens", "value": "Apeguémonos a nuestros tokens de diseño (colores, espaciados, fuentes).", "highlights": ["design tokens"] },
+            { "key": "Is there an existing component for this?", "value": "¿Existe ya un componente para esto en nuestro sistema?", "highlights": ["existing component"] },
+            { "key": "To keep the UI consistent...", "value": "Para mantener la interfaz coherente a lo largo de la app...", "highlights": ["keep the UI consistent"] },
+            { "key": "Let's update the Figma specs", "value": "Actualicemos las especificaciones en Figma.", "highlights": ["Figma specs"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Término pro:",
+        "body": "\"Design tokens\" son las variables atómicas (color, radio, espaciado) que garantizan que el código y el diseño en Figma hablen exactamente el mismo idioma."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "¿Qué frase usarías para pedir que un elemento tenga más espacio en blanco alrededor?",
+      "options": ["Let's give it more breathing room.", "Make more white air inside.", "Put distance to the rectangle."],
+      "answer": 0,
+      "explain": "'Give it more breathing room' es la metáfora estándar en diseño de interfaces para aumentar el whitespace."
+    },
+    {
+      "q": "¿Cómo preguntas si un botón o formulario se puede usar sin ratón?",
+      "options": ["Is this keyboard navigable?", "Does this walk with the keyboard?", "Can keys push this button?"],
+      "answer": 0,
+      "explain": "'Keyboard navigable' es el término técnico de accesibilidad (A11y) para navegación por teclado."
+    },
+    {
+      "q": "¿Cuál es la forma más profesional de enfocar una duda en una sesión de diseño?",
+      "options": ["What problem are we trying to solve here?", "This is ugly, delete everything.", "My opinion is that I hate this."],
+      "answer": 0,
+      "explain": "'What problem are we trying to solve?' reorienta la discusión hacia las necesidades del usuario y los objetivos del producto."
+    }
+  ]
+}

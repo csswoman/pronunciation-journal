@@ -1,0 +1,145 @@
+{
+  "meta": {
+    "eyebrow": "Chunks · Phrasal Verbs",
+    "title": "Phrasal Verbs",
+    "titleEmphasis": "de uso diario",
+    "goal": "Domina los verbos compuestos inseparables y de tres palabras más frecuentes en reuniones y charlas casuales."
+  },
+  "related": [
+    { "slug": "chunk-collocations", "label": "Colocaciones naturales" },
+    { "slug": "chunk-idioms", "label": "Modismos y expresiones idiomáticas" }
+  ],
+  "cards": [
+    {
+      "id": "phr-ideas",
+      "tag": "Idear y resolver",
+      "title": "Crear y solucionar problemas",
+      "lede": "Verbos indispensables para explicar cómo se resolvió una tarea o de dónde salió una idea.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Come up with", "value": "Idear / Ocurrirse una solución · She came up with a great workaround.", "highlights": ["came up with"] },
+            { "key": "Figure out", "value": "Descifrar / Resolver tras pensar · I finally figured out the bug.", "highlights": ["figured out"] },
+            { "key": "Sort out", "value": "Organizar / Arreglar un lío · Let's sort out the permissions.", "highlights": ["sort out"] },
+            { "key": "Work out", "value": "Funcionar bien / Resolverse favorablemente · Everything worked out in the end.", "highlights": ["worked out"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Diferencia sutil:",
+        "body": "\"Figure out\" implica un esfuerzo mental de deducción; \"Come up with\" implica creatividad para proponer una idea nueva."
+      }
+    },
+    {
+      "id": "phr-encuentros",
+      "tag": "Relaciones y encuentros",
+      "title": "Encontrarse y llevarse bien",
+      "lede": "Expresiones para hablar de personas con las que te cruzas o trabajas.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Run into / Bump into", "value": "Encontrarse por casualidad · I ran into an old coworker at the coffee shop.", "highlights": ["ran into", "Bump into"] },
+            { "key": "Get along with", "value": "Llevarse bien con alguien · I get along really well with my team.", "highlights": ["get along with"] },
+            { "key": "Look up to", "value": "Admirar y respetar a alguien · I've always looked up to her leadership.", "highlights": ["looked up to"] },
+            { "key": "Fall out with", "value": "Pelearse / distanciarte de alguien · They fell out over project scope.", "highlights": ["fell out with"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phr-comienzo-cierre",
+      "tag": "Inicio y finalización",
+      "title": "Arrancar, posponer y cancelar",
+      "lede": "Controla el ciclo de vida de eventos, proyectos y llamadas.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Call off", "value": "Cancelar un evento o reunión · They had to call off the demo.", "highlights": ["call off"] },
+            { "key": "Put off", "value": "Posponer para después · Don't put off fixing security bugs.", "highlights": ["put off"] },
+            { "key": "Wrap up", "value": "Concluir / Cerrar · Let's wrap up this standup.", "highlights": ["wrap up"] },
+            { "key": "Wind down", "value": "Desacelerar / Terminar el día con calma · I like to wind down with a book.", "highlights": ["wind down"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phr-continuidad",
+      "tag": "Continuidad y ritmo",
+      "title": "Mantener el ritmo y aguantar",
+      "lede": "Cómo hablar de seguir adelante o estar a la par con los demás.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Carry on", "value": "Continuar / Seguir haciendo algo · Sorry for the interruption, please carry on.", "highlights": ["carry on"] },
+            { "key": "Keep up with", "value": "Mantener el ritmo de / estar al día · It's hard to keep up with all JS frameworks.", "highlights": ["keep up with"] },
+            { "key": "Hold off on", "value": "Esperar antes de actuar / posponer · Let's hold off on deploying until morning.", "highlights": ["hold off on"] },
+            { "key": "Stick with", "value": "Perseverar / Continuar con algo · Stick with it, you're doing great!", "highlights": ["Stick with"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phr-revelacion",
+      "tag": "Descubrimientos",
+      "title": "Mencionar y descubrir hechos",
+      "lede": "Phrasal verbs para aportar datos a una conversación.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Turn out", "value": "Resultar ser (inesperado) · It turns out the API key was expired.", "highlights": ["turns out"] },
+            { "key": "Find out", "value": "Enterarse / Descubrir información · How did you find out about this bug?", "highlights": ["find out"] },
+            { "key": "Bring up", "value": "Sacar un tema a relucir · I want to bring up the performance issue.", "highlights": ["bring up"] },
+            { "key": "Point out", "value": "Señalar / Resaltar un detalle · Thanks for pointing that out in the PR.", "highlights": ["pointing that out"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Sonido:",
+        "body": "\"Turn out\" se enlaza como /tɜrn aʊt/ (tur-nout) y \"point out\" como /pɔɪnt aʊt/ (poin-taut)."
+      }
+    },
+    {
+      "id": "phr-tres-palabras",
+      "tag": "Verbos de 3 palabras",
+      "title": "Phrasal verbs de tres palabras",
+      "lede": "Estructuras fijas de alta frecuencia que nunca se separan.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Look forward to (+ing)", "value": "Tener muchas ganas de · I look forward to working with you.", "highlights": ["look forward to"] },
+            { "key": "Run out of", "value": "Quedarse sin existencias · We ran out of memory on the server.", "highlights": ["ran out of"] },
+            { "key": "Cut down on", "value": "Reducir el consumo de algo · We need to cut down on bundle size.", "highlights": ["cut down on"] },
+            { "key": "Get rid of", "value": "Deshacerse de / eliminar · Let's get rid of legacy code.", "highlights": ["get rid of"] },
+            { "key": "Put up with", "value": "Tolerar / aguantar una molestia · I can't put up with this noise.", "highlights": ["put up with"] }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "¿Qué phrasal verb significa 'ocurrírsele una idea o solución'?",
+      "options": ["Come up with", "Put up with", "Look down on"],
+      "answer": 0,
+      "explain": "'Come up with' significa idear o proponer una solución o hipótesis."
+    },
+    {
+      "q": "Si cancelan una reunión, ¿qué phrasal verb se usa?",
+      "options": ["They called off the meeting.", "They put off the meeting.", "They turned off the meeting."],
+      "answer": 0,
+      "explain": "'Call off' significa cancelar definitivamente; 'put off' significa solo posponerla."
+    },
+    {
+      "q": "¿Cuál es la forma correcta de decir que tienes muchas ganas de conocer a alguien?",
+      "options": ["I look forward to meeting you.", "I look forward to meet you.", "I look forward for meet you."],
+      "answer": 0,
+      "explain": "Después de 'look forward to', el verbo siempre lleva terminación -ing porque 'to' es una preposición."
+    }
+  ]
+}

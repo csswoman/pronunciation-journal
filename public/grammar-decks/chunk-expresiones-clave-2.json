@@ -1,0 +1,141 @@
+{
+  "meta": {
+    "eyebrow": "Chunks · Expresiones clave",
+    "title": "Expresiones clave",
+    "titleEmphasis": "del día a día (Parte 2)",
+    "goal": "Aprende qué decir cuando te quedas en blanco, cuando un plan sale al revés, cómo hablar de costumbres y evitar confusiones comunes."
+  },
+  "related": [
+    { "slug": "chunk-expresiones-clave-1", "label": "Expresiones clave del día a día (Parte 1)" },
+    { "slug": "chunk-collocations", "label": "Colocaciones naturales" }
+  ],
+  "cards": [
+    {
+      "id": "ck2-mente",
+      "tag": "Mente y concentración",
+      "title": "Quedarse en blanco y distraerse",
+      "lede": "Frases para esos momentos en que tu cerebro se desconecta temporalmente.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "To go blank", "value": "Quedarse en blanco · In the middle of the interview, my mind just went blank. /ɡəʊ blæŋk/", "highlights": ["went blank"] },
+            { "key": "To space out", "value": "Estar en las nubes / quedarse distraído · Sorry, I spaced out for a second. /speɪs aʊt/", "highlights": ["spaced out"] },
+            { "key": "To slip one's mind", "value": "Pasársele algo a alguien por alto / olvidársele · I'm so sorry, it completely slipped my mind.", "highlights": ["slipped my mind"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Sonido natural:",
+        "body": "\"My mind went blank\" se dice con la 'd' de mind atenuada y acento en 'blank'."
+      }
+    },
+    {
+      "id": "ck2-planes-reves",
+      "tag": "Imprevistos y reveses",
+      "title": "Planes que salen al revés",
+      "lede": "Cómo describir cuando algo no salió como esperabas o alguien te dejó plantado.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "To backfire", "value": "Salir el tiro por la culata · Their marketing plan backfired completely. /ˌbækˈfaɪər/", "highlights": ["backfired"] },
+            { "key": "To stand someone up", "value": "Dejar plantado a alguien · He didn't show up; he stood me up! /stænd ʌp/", "highlights": ["stood me up"] },
+            { "key": "To go south", "value": "Irse todo al carajo / torcerse · That's when things started going south.", "highlights": ["going south"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ck2-costumbres-duracion",
+      "tag": "Hábitos y duración",
+      "title": "Costumbres y tiempo que tarda algo",
+      "lede": "Dos estructuras donde los hispanohablantes suelen cometer errores gramaticales.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "I am accustomed to wake up early.", "note": "antinatural" },
+            { "variant": "good", "text": "I'm used to waking up early.", "note": "be used to + -ing: estar acostumbrado" },
+            { "variant": "bad", "text": "I delay 20 minutes to arrive.", "note": "traducción literal de 'demorar'" },
+            { "variant": "good", "text": "It takes me 20 minutes to get there.", "note": "It takes [tiempo] to [verbo]" }
+          ]
+        },
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "To feel like (doing)", "value": "Tener ganas de (hacer algo) · I feel like having pizza tonight. /fiːl laɪk/", "highlights": ["feel like"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ck2-inminencia-conexion",
+      "tag": "Inminencia y relevancia",
+      "title": "A punto de ocurrir y relación",
+      "lede": "Comunica inmediatez o aclara que un tema no tiene nada que ver con otro.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "To be about to", "value": "Estar a punto de · I was just about to call you when you messaged me.", "highlights": ["about to"] },
+            { "key": "Have nothing to do with", "value": "No tener nada que ver con · That bug has nothing to do with the UI.", "highlights": ["nothing to do with"] },
+            { "key": "To be on the same page", "value": "Estar en la misma página / sintonía · Let's make sure we're all on the same page.", "highlights": ["on the same page"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ck2-deseos-remedios",
+      "tag": "Deseos y límites",
+      "title": "Cruzar los dedos y no haber de otra",
+      "lede": "Expresiones para manifestar buenos deseos o aceptar la realidad.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Keep one's fingers crossed", "value": "Cruzar los dedos / esperar suerte · I'm keeping my fingers crossed for your demo.", "highlights": ["fingers crossed"] },
+            { "key": "There's no way around it", "value": "No hay de otra / No hay forma de evitarlo · It's annoying, but there's no way around it.", "highlights": ["no way around it"] },
+            { "key": "Bite the bullet", "value": "Hacer de tripas corazón y actuar · We just have to bite the bullet and do it.", "highlights": ["bite the bullet"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ck2-errores-vista-gorda",
+      "tag": "Meteduras de pata",
+      "title": "Meter la pata y hacer la vista gorda",
+      "lede": "Modismos indispensables para situaciones sociales y profesionales delicadas.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Put one's foot in one's mouth", "value": "Meter la pata al hablar · I really put my foot in my mouth during the meeting.", "highlights": ["foot in my mouth"] },
+            { "key": "To turn a blind eye", "value": "Hacer la vista gorda / ignorar a propósito · You can't just turn a blind eye to security flaws.", "highlights": ["turn a blind eye"] },
+            { "key": "To clear the air", "value": "Aclarar las cosas / disipar malentendidos · Let's have a chat to clear the air.", "highlights": ["clear the air"] }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "¿Qué significa si dices 'Their secret plan backfired'?",
+      "options": ["Su plan les salió el tiro por la culata (tuvo el efecto contrario al deseado).", "Su plan funcionó a la perfección.", "Su plan fue disparado con un arma."],
+      "answer": 0,
+      "explain": "'To backfire' significa que una acción o plan produjo un resultado adverso e inesperado contra quien lo ejecutó."
+    },
+    {
+      "q": "¿Cómo dices 'Tardo media hora en llegar al trabajo' correctamente?",
+      "options": ["It takes me half an hour to get to work.", "I delay thirty minutes to arrive work.", "My time takes thirty minutes walking."],
+      "answer": 0,
+      "explain": "La estructura obligada en inglés para duración es 'It takes [persona] [tiempo] to [verbo]'."
+    },
+    {
+      "q": "¿Qué significa 'to put one's foot in one's mouth'?",
+      "options": ["Decir algo vergonzoso o imprudente (meter la pata al hablar).", "Ponerse el zapato al revés.", "Hacer gimnasia en la oficina."],
+      "answer": 0,
+      "explain": "'Put your foot in your mouth' es la metáfora idiomática para decir algo inoportuno o indiscreto sin querer."
+    }
+  ]
+}

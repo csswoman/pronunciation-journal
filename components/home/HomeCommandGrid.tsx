@@ -18,6 +18,7 @@ import HomeReviewBanner from "@/components/home/HomeReviewBanner";
 import EssentialWordsProgressCard from "@/components/home/EssentialWordsProgressCard";
 import WeakSoundCard from "@/components/home/WeakSoundCard";
 import HomeWordOfDayCard from "@/components/home/HomeWordOfDayCard";
+import HomeChunkOfDayCard from "@/components/home/HomeChunkOfDayCard";
 import HomeJournalCard from "@/components/home/HomeJournalCard";
 import HomeSpeakPrompt from "@/components/home/HomeSpeakPrompt";
 import HomePlanDone from "@/components/home/HomePlanDone";
@@ -168,7 +169,12 @@ export default function HomeCommandGrid({
           </section>
         ) : null}
 
-        {showPlanExtras ? <HomeWordOfDayCard /> : null}
+        {showPlanExtras ? (
+          <>
+            <HomeWordOfDayCard />
+            <HomeChunkOfDayCard />
+          </>
+        ) : null}
       </div>
 
       <aside className="home-command-aside" aria-label="Práctica sugerida">

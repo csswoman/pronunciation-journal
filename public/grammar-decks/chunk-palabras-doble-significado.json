@@ -1,0 +1,148 @@
+{
+  "meta": {
+    "eyebrow": "Chunks · Doble significado",
+    "title": "Palabras con",
+    "titleEmphasis": "doble significado",
+    "goal": "Aprende el significado coloquial y real de verbos cotidianos como take, call, buy, head o make para interpretarlos con soltura en el habla diaria."
+  },
+  "related": [
+    { "slug": "chunk-expresiones-multiuso", "label": "Verbos con usos figurados" },
+    { "slug": "chunk-vida-cotidiana", "label": "Chunks para la vida cotidiana" }
+  ],
+  "cards": [
+    {
+      "id": "cds-take-call",
+      "tag": "Opinión y decisiones",
+      "title": "Take y Call",
+      "lede": "Palabras que aprendiste como 'tomar' o 'llamar' pero que en el día a día significan tu criterio o tu decisión.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Take = opinión / postura", "value": "What's your take on this? · ¿Cuál es tu opinión / postura sobre esto?", "highlights": ["take on"] },
+            { "key": "Call = decisión", "value": "It's your call · Es tu decisión / Tú decides.", "highlights": ["your call"] },
+            { "key": "Tough call", "value": "Decisión difícil · It was a tough call, but we had to do it.", "highlights": ["Tough call"] },
+            { "key": "Good call", "value": "Buena decisión / Bien pensado · Good call ordering food early!", "highlights": ["Good call"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Uso diario:",
+        "body": "En reuniones o charlas de amigos, en vez de preguntar \"What is your opinion?\", casi siempre escucharás \"What's your take?\"."
+      }
+    },
+    {
+      "id": "cds-head-make",
+      "tag": "Movimiento y llegada",
+      "title": "Head y Make",
+      "lede": "'Head' no es solo cabeza y 'Make' no es solo fabricar: ambos expresan desplazamientos e itinerarios.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Head = dirigirse / salir", "value": "I'm heading out now · Ya salgo / Me voy yendo.", "highlights": ["heading out"] },
+            { "key": "Where are you headed?", "value": "¿Hacia dónde vas? / ¿A dónde te diriges?", "highlights": ["Where are you headed"] },
+            { "key": "Make it = llegar / asistir", "value": "I won't make it to the meeting · No voy a alcanzar a llegar a la reunión.", "highlights": ["won't make it"] },
+            { "key": "Can you make it?", "value": "¿Puedes venir / alcanzas a llegar? · Can you make it by 7 PM?", "highlights": ["Can you make it"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cds-buy-sell",
+      "tag": "Creencia y convicción",
+      "title": "Buy y Sell",
+      "lede": "El lenguaje de compra y venta se usa constantemente para hablar de confianza y persuasión.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Buy = creer una historia", "value": "I don't buy it · No me lo creo / No me trago esa excusa.", "highlights": ["don't buy it"] },
+            { "key": "Sold on = convencido de algo", "value": "I'm totally sold on this idea · Me encanta la idea / Estoy convencidísimo.", "highlights": ["sold on"] },
+            { "key": "Not sold yet", "value": "Aún no me termina de convencer · I'm not sold on the new UI yet.", "highlights": ["not sold on"] },
+            { "key": "Hard sell", "value": "Insistencia forzada / presión para convencerte.", "highlights": ["Hard sell"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Sonido:",
+        "body": "\"I don't buy it\" se enlaza como /aɪ doʊnt ˈbaɪ ɪt/, con una t final suave o 'glottal stop'."
+      }
+    },
+    {
+      "id": "cds-pass-stick",
+      "tag": "Rechazo cortés y constancia",
+      "title": "Pass y Stick",
+      "lede": "Formas muy elegantes de decir 'paso de esto' o 'nos quedamos con esta opción'.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Pass = declinar educadamente", "value": "I think I'll pass this time · Paso por esta vez, gracias.", "highlights": ["I'll pass"] },
+            { "key": "Stick to = apegarse al plan", "value": "Let's stick to the original plan · Apeguémonos al plan original.", "highlights": ["stick to"] },
+            { "key": "Stick with it", "value": "Sigue adelante / No te rindas · English is hard, but stick with it!", "highlights": ["Stick with it"] },
+            { "key": "Stick out", "value": "Sobresalir / resaltar · That detail really sticks out.", "highlights": ["sticks out"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cds-figure-tell",
+      "tag": "Deducción y sentidos",
+      "title": "Figure y Tell",
+      "lede": "Dos verbos que sustituyen a 'suponer' y 'distinguir con la vista o el oído'.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Figure = suponer / calcular", "value": "I figure we have 15 minutes · Calculo/Supongo que tenemos 15 min.", "highlights": ["I figure"] },
+            { "key": "Figure out = descifrar / resolver", "value": "Let's figure it out · Vamos a resolverlo / averiguarlo.", "highlights": ["figure it out"] },
+            { "key": "Tell = notar / distinguir", "value": "You can tell he's excited · Se nota que está emocionado.", "highlights": ["You can tell"] },
+            { "key": "I can't tell", "value": "No noto la diferencia · I can't tell which one is better.", "highlights": ["can't tell"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Expresión curiosa:",
+        "body": "\"Go figure!\" es el equivalente en inglés a \"¡Quién lo hubiera dicho!\" o \"Cosas de la vida\"."
+      }
+    },
+    {
+      "id": "cds-work-run",
+      "tag": "Horarios y estado",
+      "title": "Work y Run",
+      "lede": "No todo es 'trabajar' ni 'correr': estos verbos definen conveniencia y situaciones en marcha.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Work = servir / quedar bien", "value": "Does 4 PM work for you? · ¿Te queda bien / te sirve a las 4 PM?", "highlights": ["work for you"] },
+            { "key": "That works for me", "value": "Por mí perfecto / Me viene bien.", "highlights": ["works for me"] },
+            { "key": "Run late", "value": "Ir con retraso · I'm running a few minutes late.", "highlights": ["running a few minutes late"] },
+            { "key": "Run out of", "value": "Quedarse sin algo · We're running out of time / coffee.", "highlights": ["running out of"] }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "¿Qué significa si tu compañero te dice 'What's your take on this design?'?",
+      "options": ["¿Cuál es tu opinión sobre este diseño?", "¿Quieres tomar una foto de este diseño?", "¿Puedes robarte este diseño?"],
+      "answer": 0,
+      "explain": "'Take' en este contexto significa postura, punto de vista u opinión."
+    },
+    {
+      "q": "Si te invitan a cenar pero estás cansado y no puedes ir, ¿qué dices?",
+      "options": ["Sorry, I won't make it tonight.", "Sorry, I won't fabricate tonight.", "I am not making the body to dinner."],
+      "answer": 0,
+      "explain": "'I won't make it' significa que no alcanzarás a llegar o no podrás asistir."
+    },
+    {
+      "q": "¿Qué significa la frase 'I don't buy that excuse'?",
+      "options": ["No me creo esa excusa.", "No voy a pagar por esa excusa.", "Esa excusa está muy cara."],
+      "answer": 0,
+      "explain": "'Buy' en sentido figurado significa creer o aceptar como cierta una historia."
+    }
+  ]
+}

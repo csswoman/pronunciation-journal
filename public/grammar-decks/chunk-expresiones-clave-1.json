@@ -1,0 +1,145 @@
+{
+  "meta": {
+    "eyebrow": "Chunks · Expresiones clave",
+    "title": "Expresiones clave",
+    "titleEmphasis": "del día a día (Parte 1)",
+    "goal": "Domina frases fijas indispensables para expresar confianza, acuerdos, refranes cotidianos y aprovechar el tiempo sin traducir literalmente."
+  },
+  "related": [
+    { "slug": "chunk-expresiones-clave-2", "label": "Expresiones clave del día a día (Parte 2)" },
+    { "slug": "chunk-vida-cotidiana", "label": "Chunks para la vida cotidiana" }
+  ],
+  "cards": [
+    {
+      "id": "ck1-confianza",
+      "tag": "Confianza y relaciones",
+      "title": "Contar con otros y lealtad",
+      "lede": "Estructuras fijas para hablar de apoyo incondicional y amistad.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Count on (someone)", "value": "Contar con alguien · You can count on me anytime. /kaʊnt ɒn/", "highlights": ["count on"] },
+            { "key": "Through thick and thin", "value": "En las buenas y en las malas · We are friends through thick and thin. /θruː θɪk ənd θɪn/", "highlights": ["thick and thin"] },
+            { "key": "Get along with", "value": "Llevarse bien con alguien · I get along really well with my boss. /ɡet əˈlɒŋ wɪð/", "highlights": ["get along with"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Sonido:",
+        "body": "\"Count on me\" se une fluidamente como /kaʊn-tɒn-mi/ sin pausas intermedias."
+      }
+    },
+    {
+      "id": "ck1-aciertos",
+      "tag": "Certeza y memoria",
+      "title": "Tener razón y darse cuenta",
+      "lede": "Verbos clave para reconocer la verdad y recordar cosas.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "To be right", "value": "Tener razón · She is right about this. /tuː biː raɪt/", "highlights": ["is right"] },
+            { "key": "To realize", "value": "Darse cuenta (no confundir con 'realizar') · I didn't realize you were here. /ˈrɪəlaɪz/", "highlights": ["realize"] },
+            { "key": "To ring a bell", "value": "Sonar familiar / sonarme de algo · That name rings a bell. /rɪŋ ə bel/", "highlights": ["rings a bell"] },
+            { "key": "To make sense", "value": "Tener sentido / ser lógico · Does that explanation make sense?", "highlights": ["make sense"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ck1-salud-ayuda",
+      "tag": "Peticiones y salud",
+      "title": "Quiero que me ayudes y trámites",
+      "lede": "Atención especial a la estructura 'I want you to...', uno de los errores más comunes de hispanohablantes.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "I want that you help me.", "note": "traducción literal incorrecta" },
+            { "variant": "good", "text": "I want you to help me with this. /aɪ wɒnt juː tuː help miː/", "note": "estructura correcta: want + persona + to + verbo" }
+          ]
+        },
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "To be discharged", "value": "Dar de alta médica · I was discharged from the hospital today. /dɪsˈtʃɑːrdʒd/", "highlights": ["discharged"] },
+            { "key": "Just in case", "value": "Por si las moscas / por si acaso · Take a jacket, just in case. /dʒʌst ɪn keɪs/", "highlights": ["just in case"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ck1-refranes",
+      "tag": "Refranes y advertencias",
+      "title": "Sabiduría popular",
+      "lede": "Dichos que todo hablante nativo reconoce y utiliza.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Where there's a will...", "value": "El que quiere, puede · Where there's a will, there's a way. /weər ðeəz ə wɪl/", "highlights": ["Where there's a will"] },
+            { "key": "What goes around...", "value": "El que la hace la paga / Cosechas lo que siembras · What goes around, comes around. /wɒt ɡəʊz əˈraʊnd/", "highlights": ["What goes around"] },
+            { "key": "God forbid", "value": "Ni Dios lo quiera · God forbid that happens to anyone. /ɡɒd fəˈbɪd/", "highlights": ["God forbid"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ck1-preferencias",
+      "tag": "Preferencias y anhelos",
+      "title": "Me da igual y desear algo",
+      "lede": "Frases para manifestar indiferencia cortés, anhelos o evitar falsas esperanzas.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "I don't mind", "value": "Me da igual / No me molesta · I don't mind what we eat tonight. /aɪ dəʊnt maɪnd/", "highlights": ["don't mind"] },
+            { "key": "To get one's hopes up", "value": "Hacerse ilusiones · Don't get your hopes up too early. /ɡet jɔːr həʊps ʌp/", "highlights": ["get your hopes up"] },
+            { "key": "I wish I could", "value": "Ojalá pudiera · I wish I could go to the party with you. /aɪ wɪʃ aɪ kʊd/", "highlights": ["I wish I could"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Cortesía:",
+        "body": "\"I don't mind\" es amable y abierto (\"me viene bien cualquier opción\"), mientras que \"I don't care\" suele sonar grosero (\"no me importa en lo absoluto\")."
+      }
+    },
+    {
+      "id": "ck1-tiempo-valor",
+      "tag": "Tiempo y valor",
+      "title": "Aprovechar y valer la pena",
+      "lede": "Evalúa el tiempo y el impacto a largo plazo de tus decisiones.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "To make the most of", "value": "Aprovechar al máximo · Let's make the most of our time here. /meɪk ðə məʊst əv/", "highlights": ["make the most of"] },
+            { "key": "In the long run", "value": "A largo plazo · Learning English pays off in the long run. /ɪn ðə lɒŋ rʌn/", "highlights": ["In the long run"] },
+            { "key": "To be worth it", "value": "Valer la pena · It's difficult at first, but it's totally worth it. /biː wɜːθ ɪt/", "highlights": ["worth it"] }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "¿Cómo se dice correctamente en inglés 'Quiero que ellos vengan'?",
+      "options": ["I want them to come.", "I want that they come.", "I want they coming."],
+      "answer": 0,
+      "explain": "En inglés se utiliza el patrón 'want + persona + to + verbo': I want them to come."
+    },
+    {
+      "q": "¿Qué significa si escuchas el dicho 'Where there's a will, there's a way'?",
+      "options": ["El que quiere, puede (quien tiene voluntad encuentra el camino).", "Donde hay un testamento hay una carretera.", "El dinero lo compra todo."],
+      "answer": 0,
+      "explain": "'Will' aquí significa fuerza de voluntad, dando origen al refrán 'el que persevera alcanza'."
+    },
+    {
+      "q": "¿Qué frase usarías para decir 'No te hagas falsas ilusiones'?",
+      "options": ["Don't get your hopes up.", "Don't make illusions in your head.", "Stop hoping the sky."],
+      "answer": 0,
+      "explain": "'To get one's hopes up' es el modismo exacto para ilusionarse con algo incierto."
+    }
+  ]
+}

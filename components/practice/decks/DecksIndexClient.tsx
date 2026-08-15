@@ -35,10 +35,11 @@ const LEVEL_LABELS: Record<DeckLevel, string> = {
   biz: 'Business',
   tech: 'Tech',
   cs: 'Connected Speech',
+  chunks: 'Chunks',
   other: 'Other',
 }
 
-const ALL_LEVELS: DeckLevel[] = ['a1', 'a2', 'b1', 'b2', 'c1', 'biz', 'tech', 'cs']
+const ALL_LEVELS: DeckLevel[] = ['a1', 'a2', 'b1', 'b2', 'c1', 'biz', 'tech', 'cs', 'chunks']
 
 export function DecksIndexClient({ decks }: Props) {
   const [activeLevel, setActiveLevel] = useState<DeckLevel | 'all'>('all')

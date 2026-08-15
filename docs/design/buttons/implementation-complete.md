@@ -1,3 +1,9 @@
+# Historial: migración inicial del botón
+
+> Esta nota registra una migración completada el 28 de mayo de 2026. No es una
+> especificación actual ni una lista de tareas. Consulta [guide.md](guide.md)
+> para la API y las reglas vigentes.
+
 # ✅ Button Component Refactor — Implementation Complete
 
 **Date:** 2026-05-28
