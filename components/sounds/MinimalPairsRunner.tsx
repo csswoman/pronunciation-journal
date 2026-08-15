@@ -59,8 +59,10 @@ export function MinimalPairsRunner({
   const [score, setScore] = useState({ correct: 0, wrong: 0 });
   const [isDone, setIsDone] = useState(false);
   const [isSlow, setIsSlow] = useState(false);
+  const [isAutoLoop, setIsAutoLoop] = useState(false);
   const lastPlayedRef = useRef<Side | null>(null);
   const quizActionsRef = useRef<HTMLDivElement>(null);
+  const loopTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const pair = pairs[pairIdx];
 
@@ -74,6 +76,31 @@ export function MinimalPairsRunner({
   const speakWord = useCallback((word: string, onEnd?: () => void) => {
     speakText(word, { rate: isSlow ? 0.7 : 0.95, onEnd });
   }, [isSlow]);
+
+  // Hands-Free Auto-Play Loop Effect
+  useEffect(() => {
+    if (!isAutoLoop || isDone || !pair) {
+      if (loopTimeoutRef.current) clearTimeout(loopTimeoutRef.current);
+      return;
+    }
+
+    setPlayingSide("A");
+    speakWord(pair.wordA, () => {
+      loopTimeoutRef.current = setTimeout(() => {
+        setPlayingSide("B");
+        speakWord(pair.wordB, () => {
+          setPlayingSide(null);
+          loopTimeoutRef.current = setTimeout(() => {
+            setPairIdx((prev) => (prev < pairs.length - 1 ? prev + 1 : 0));
+          }, 1800);
+        });
+      }, 700);
+    });
+
+    return () => {
+      if (loopTimeoutRef.current) clearTimeout(loopTimeoutRef.current);
+    };
+  }, [isAutoLoop, pairIdx, isDone, pair, speakWord, pairs.length]);
 
   const playSide = useCallback((side: Side) => {
     if (!pair) return;
@@ -267,6 +294,8 @@ export function MinimalPairsRunner({
           onRestart={() => { setPairIdx(0); resetRound(); setScore({ correct: 0, wrong: 0 }); setIsDone(false); }}
           isSlow={isSlow}
           onToggleSlow={() => setIsSlow((prev) => !prev)}
+          isAutoLoop={isAutoLoop}
+          onToggleAutoLoop={() => setIsAutoLoop((prev) => !prev)}
           embedded={embedded}
         />
       </div>

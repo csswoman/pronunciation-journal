@@ -14,7 +14,11 @@ export function cancelSpeech(): void {
 }
 
 export function speakText(text: string, options: SpeakTextOptions = {}): void {
-  if (typeof window === "undefined" || !window.speechSynthesis) {
+  if (
+    typeof window === "undefined" ||
+    !window.speechSynthesis ||
+    typeof SpeechSynthesisUtterance === "undefined"
+  ) {
     options.onEnd?.();
     return;
   }

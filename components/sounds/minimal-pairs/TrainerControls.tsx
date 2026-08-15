@@ -31,6 +31,8 @@ export function TrainerControls({
   onNextContrast,
   isSlow,
   onToggleSlow,
+  isAutoLoop,
+  onToggleAutoLoop,
   embedded = false,
 }: {
   quizTarget: Side | null;
@@ -48,6 +50,8 @@ export function TrainerControls({
   onNextContrast?: () => void;
   isSlow?: boolean;
   onToggleSlow?: () => void;
+  isAutoLoop?: boolean;
+  onToggleAutoLoop?: () => void;
   embedded?: boolean;
 }) {
   if (isDone) {
@@ -101,6 +105,20 @@ export function TrainerControls({
             aria-label={isSlow ? "Velocidad lenta activa" : "Cambiar a velocidad lenta"}
           >
             <span>🐢 {isSlow ? "0.75x" : "1.0x"}</span>
+          </button>
+        ) : null}
+        {onToggleAutoLoop ? (
+          <button
+            type="button"
+            onClick={onToggleAutoLoop}
+            className={cn(
+              "ipa-chart__btn ipa-chart__btn--ghost",
+              isAutoLoop && "text-primary font-bold bg-primary-soft border border-primary/30 animate-pulse",
+            )}
+            title={isAutoLoop ? "Pausar reproducción continua" : "Activar modo escucha continua manos libres"}
+            aria-label={isAutoLoop ? "Pausar reproducción continua" : "Activar modo escucha continua"}
+          >
+            <span>{isAutoLoop ? "⏸ Pausar" : "📻 Continuo"}</span>
           </button>
         ) : null}
         <div className="flex items-center gap-1.5">
