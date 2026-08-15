@@ -47,13 +47,13 @@ export default function AuthPanel() {
                 <div className="flex flex-col gap-2">
                   <h1 className="text-h3 font-bold text-balance text-fg">
                     {isSave
-                      ? "Guarda tu progreso"
+                      ? "No pierdas tu racha"
                       : "Empieza a practicar sin registrarte"}
                   </h1>
                   <p className="text-body-sm text-pretty text-fg-muted max-w-[42ch]">
                     {isSave
                       ? auth.upgradingGuest
-                        ? "Convierte esta sesión en una cuenta. Conservas el mismo progreso."
+                        ? "Guarda esta sesión en una cuenta. Conservas tu progreso y puedes retomarlo desde cualquier dispositivo."
                         : "Crea una cuenta o inicia sesión para no perder lo que practiques."
                       : "Entra al escritorio, prueba una sesión y crea una cuenta solo cuando quieras guardar."}
                   </p>
@@ -145,7 +145,7 @@ export default function AuthPanel() {
                     submitLabel="Iniciar sesión"
                     googleLabel={
                       auth.upgradingGuest && isSave
-                        ? "Vincular Google"
+                        ? "Guardar con Google"
                         : "Continuar con Google"
                     }
                   />
@@ -167,7 +167,7 @@ export default function AuthPanel() {
                     }
                     googleLabel={
                       auth.upgradingGuest && isSave
-                        ? "Vincular Google"
+                        ? "Guardar con Google"
                         : "Continuar con Google"
                     }
                   />

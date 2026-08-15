@@ -28,7 +28,7 @@ export function AuthTabs({ mode, onModeChange }: AuthTabsProps) {
             aria-selected={active}
             onClick={() => onModeChange(value)}
             className={[
-              "flex-1 py-2 px-3 rounded-lg text-body-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface-sunken",
+              "relative flex-1 py-2 px-3 rounded-lg text-body-sm font-medium transition-[background-color,color,box-shadow,transform] duration-200 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface-sunken",
               active
                 ? "bg-[var(--cta-bg)] text-[var(--cta-fg)] shadow-sm"
                 : "text-fg-muted hover:text-fg",

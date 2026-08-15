@@ -14,11 +14,15 @@ describe("ChromeMicTip", () => {
     window.localStorage.clear();
   });
 
-  it("shows the login tip with Chrome guidance", () => {
+  it("keeps the login tip compact and reveals Chrome guidance on request", async () => {
+    const user = userEvent.setup();
     render(<ChromeMicTip variant="login" />);
     const tip = screen.getByRole("note");
-    expect(tip).toHaveAccessibleName(/Mejor con Google Chrome/i);
+    expect(tip).toHaveAccessibleName(/Compatibilidad del micrófono/i);
     expect(tip).toHaveTextContent(/Google Chrome/i);
+    expect(tip).not.toHaveTextContent(/Brave/i);
+
+    await user.click(screen.getByRole("button", { name: "Ver más" }));
     expect(tip).toHaveTextContent(/Brave/i);
     expect(tip).toHaveTextContent(/Opera/i);
     expect(tip).toHaveTextContent(/Edge/i);
