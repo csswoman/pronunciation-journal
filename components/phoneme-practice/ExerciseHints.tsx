@@ -11,6 +11,7 @@
 import { useState } from 'react'
 import { IPA_EXTRA } from '@/lib/pronunciation/ipa-data'
 import { PhonemePlayButton } from '@/components/phoneme-practice/PhonemePlayButton'
+import { ArticulationMouthGuide } from '@/components/pronunciation/ArticulationMouthGuide'
 import Button from '@/components/ui/Button'
 import { playUiCue } from '@/lib/ui-sounds/cues'
 import { cn } from '@/lib/cn'
@@ -37,7 +38,7 @@ export function ExerciseHints({ ipa, targetWord, onRetry, onContinue, voice }: P
   const hasMoreHints = level < MAX_LEVEL
 
   return (
-    <div className="phoneme-hints">
+    <div className="phoneme-hints flex flex-col gap-3">
       <LevelDots level={level} />
       <HintContent
         level={level}
@@ -58,7 +59,7 @@ export function ExerciseHints({ ipa, targetWord, onRetry, onContinue, voice }: P
         Reintentar
       </Button>
 
-      <div className="phoneme-hints__secondary">
+      <div className="phoneme-hints__secondary flex items-center justify-between pt-1">
         {hasMoreHints ? (
           <button
             type="button"
@@ -66,13 +67,13 @@ export function ExerciseHints({ ipa, targetWord, onRetry, onContinue, voice }: P
               playUiCue('reveal')
               setLevel((l) => (l + 1) as HintLevel)
             }}
-            className="phoneme-hints__ghost"
+            className="phoneme-hints__ghost text-body-sm font-medium text-primary hover:underline"
           >
-            Ver pista
+            Ver más pistas ({level + 1}/{MAX_LEVEL + 1})
           </button>
         ) : (
-          <span className="phoneme-hints__ghost phoneme-hints__ghost--muted" aria-hidden>
-            Pistas vistas
+          <span className="phoneme-hints__ghost phoneme-hints__ghost--muted font-caption text-fg-muted" aria-hidden>
+            Todas las pistas vistas
           </span>
         )}
         <button
@@ -81,7 +82,7 @@ export function ExerciseHints({ ipa, targetWord, onRetry, onContinue, voice }: P
             playUiCue('soft')
             onContinue()
           }}
-          className="phoneme-hints__ghost"
+          className="phoneme-hints__ghost text-body-sm font-medium text-fg-muted hover:text-fg"
         >
           Seguir
         </button>
@@ -93,13 +94,16 @@ export function ExerciseHints({ ipa, targetWord, onRetry, onContinue, voice }: P
 function LevelDots({ level }: { level: HintLevel }) {
   return (
     <div
-      className="phoneme-hints__dots"
+      className="phoneme-hints__dots flex items-center gap-1.5 justify-center py-1"
       aria-label={`Pista ${level + 1} de ${MAX_LEVEL + 1}`}
     >
       {([0, 1, 2] as HintLevel[]).map((l) => (
         <span
           key={l}
-          className={cn( 'phoneme-hints__dot', l <= level && 'phoneme-hints__dot--on', )}
+          className={cn(
+            'h-2 w-2 rounded-full transition-colors',
+            l <= level ? 'bg-primary' : 'bg-border-default',
+          )}
         />
       ))}
     </div>
@@ -121,8 +125,8 @@ function HintContent({
 }) {
   if (level === 0) {
     return (
-      <div className="phoneme-hints__block">
-        <p className="phoneme-hints__label">Escucha de nuevo</p>
+      <div className="phoneme-hints__block flex flex-col items-center gap-2 rounded-xl border border-border-default bg-surface-raised p-4">
+        <p className="font-caption font-semibold uppercase tracking-wider text-fg-muted">Escucha de nuevo</p>
         <PhonemePlayButton
           ariaLabel={`Escuchar ${targetWord ?? ipa}`}
           word={targetWord}
@@ -139,24 +143,30 @@ function HintContent({
     const bare = ipa.replace(/[/[\]]/g, '').trim()
     const tips = extra?.articulationEs ?? extra?.articulation ?? []
     return (
-      <div className="phoneme-hints__block">
-        <p className="phoneme-hints__label">Cómo se produce</p>
-        <p className="phoneme-hints__ipa">{bare}</p>
+      <div className="phoneme-hints__block flex flex-col gap-3">
+        <ArticulationMouthGuide symbolOrIpa={ipa} compact />
         {tips.length > 0 && (
-          <ul className="phoneme-hints__tips">
-            {tips.slice(0, 2).map((tip) => (
-              <li key={tip}>{tip}</li>
-            ))}
-          </ul>
+          <div className="rounded-lg border border-border-subtle bg-surface-raised p-3">
+            <p className="font-caption font-semibold uppercase tracking-wider text-fg-muted mb-1">
+              Pasos para /<span className="font-ipa">{bare}</span>/
+            </p>
+            <ul className="flex flex-col gap-1.5 text-body-sm text-fg-muted list-disc pl-4">
+              {tips.map((tip) => (
+                <li key={tip}>{tip}</li>
+              ))}
+            </ul>
+          </div>
         )}
       </div>
     )
   }
 
   return (
-    <div className="phoneme-hints__block">
-      <p className="phoneme-hints__label">Consejo para hispanohablantes</p>
-      <p className="phoneme-hints__body">
+    <div className="phoneme-hints__block flex flex-col gap-2 rounded-xl border border-border-default bg-surface-raised p-4">
+      <p className="font-caption font-semibold uppercase tracking-wider text-warning">
+        💡 Consejo para hispanohablantes
+      </p>
+      <p className="text-body text-fg text-pretty">
         {extra?.spanishTip ?? 'Sin consejo disponible para este sonido.'}
       </p>
     </div>

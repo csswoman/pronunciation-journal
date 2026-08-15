@@ -1,15 +1,19 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+// Planned structure:
+// <IPAChart>
+//   <IPACategoryTabs />
+//   <DiphthongGrid | IPAMatrix />
+//   <SoundDetail />
+//   <SpanishSpeakersGrid />
+//   <PracticeWithAICTA />
+// </IPAChart>
+
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { useAuth } from "@/components/auth/AuthProvider";
 
-import { IPA_AUDIO_MAP, SOUNDS_BASE_URL } from "@/lib/pronunciation/ipa-audio";
-import { cancelSpeech, speakText } from "@/lib/speech/synthesis";
-import {
-  getExploredSymbolsToday,
-  markPhonemeExplored,
-} from "@/lib/db";
+import { getExploredSymbolsToday, markPhonemeExplored } from "@/lib/db";
 import { PHONEMES, PHONEME_MATRIX, type PhonemeData } from "./data";
 import IPACategoryTabs from "./IPACategoryTabs";
 import IPAMatrix from "./IPAMatrix";
@@ -19,6 +23,7 @@ import PracticeWithAICTA from "./PracticeWithAICTA";
 import { SoundDetail } from "@/components/sounds/SoundDetail";
 import { practiceHrefForIpa } from "@/lib/sound-lab/lesson-lookup";
 import type { Lesson } from "@/lib/types";
+import { useIpaChartAudio } from "./useIpaChartAudio";
 
 type MatrixCategory = "vowel" | "consonant" | "diphthong";
 
@@ -31,24 +36,12 @@ export default function IPAChart({ lessons = [] }: IPAChartProps) {
   const { user } = useAuth();
   const [activeCategory, setActiveCategory] = useState<MatrixCategory>("vowel");
   const [selectedPhoneme, setSelectedPhoneme] = useState<PhonemeData>(
-    () => PHONEMES.find((p) => p.type === "vowel") ?? PHONEMES[0]
+    () => PHONEMES.find((p) => p.type === "vowel") ?? PHONEMES[0],
   );
-  const [playingSymbol, setPlayingSymbol] = useState<string | null>(null);
-  const [audioError, setAudioError] = useState<string | null>(null);
-  const currentAudioRef = useRef<HTMLAudioElement | null>(null);
+  const { playingSymbol, audioError, setAudioError, playSound, toggleSound } = useIpaChartAudio();
 
   const exploredArray = useLiveQuery(() => getExploredSymbolsToday(user?.id), [user?.id], [] as string[]);
-  const exploredSymbols = useMemo(
-    () => new Set(exploredArray ?? []),
-    [exploredArray]
-  );
-
-  useEffect(() => {
-    return () => {
-      currentAudioRef.current?.pause();
-      cancelSpeech();
-    };
-  }, []);
+  const exploredSymbols = useMemo(() => new Set(exploredArray ?? []), [exploredArray]);
 
   const phonemesByCategory = useMemo(
     () => ({
@@ -56,7 +49,7 @@ export default function IPAChart({ lessons = [] }: IPAChartProps) {
       consonant: PHONEMES.filter((p) => p.type === "consonant"),
       diphthong: PHONEMES.filter((p) => p.type === "diphthong"),
     }),
-    []
+    [],
   );
 
   const currentPhonemes = phonemesByCategory[activeCategory];
@@ -67,82 +60,16 @@ export default function IPAChart({ lessons = [] }: IPAChartProps) {
       consonant: phonemesByCategory.consonant.length,
       diphthong: phonemesByCategory.diphthong.length,
     }),
-    [phonemesByCategory]
-  );
-
-  const stopSound = useCallback(() => {
-    currentAudioRef.current?.pause();
-    currentAudioRef.current = null;
-    cancelSpeech();
-    setPlayingSymbol(null);
-    setAudioError(null);
-  }, []);
-
-  const playSound = useCallback((rawSymbol: string, example?: string) => {
-    const fileName = IPA_AUDIO_MAP[rawSymbol] ?? IPA_AUDIO_MAP[rawSymbol[0]];
-    stopSound();
-    setAudioError(null);
-
-    if (!fileName) {
-      if (!example) {
-        setAudioError("No se pudo reproducir este sonido.");
-        return;
-      }
-      setPlayingSymbol(rawSymbol);
-      speakText(example, {
-        onEnd: () => setPlayingSymbol(null),
-        onError: () => setAudioError("No se pudo reproducir este sonido."),
-      });
-      return;
-    }
-
-    try {
-      setPlayingSymbol(rawSymbol);
-      const audio = new Audio(`${SOUNDS_BASE_URL}/${fileName}`);
-      currentAudioRef.current = audio;
-      audio.onended = () => {
-        if (example) {
-          speakText(example, { onEnd: () => setPlayingSymbol(null) });
-        } else {
-          setPlayingSymbol(null);
-        }
-      };
-      audio.onerror = () => {
-        setPlayingSymbol(null);
-        setAudioError("No se pudo reproducir este sonido.");
-      };
-      audio.play().catch((err) => {
-        if (err.name !== "AbortError" && err.name !== "NotAllowedError") {
-          console.error(`Playback failed for ${rawSymbol}:`, err);
-        }
-        setPlayingSymbol(null);
-        setAudioError("No se pudo reproducir este sonido.");
-      });
-    } catch {
-      setPlayingSymbol(null);
-      setAudioError("No se pudo reproducir este sonido.");
-    }
-  }, [stopSound]);
-
-  const toggleSound = useCallback(
-    (rawSymbol: string, example?: string) => {
-      if (playingSymbol === rawSymbol) {
-        stopSound();
-        return;
-      }
-      playSound(rawSymbol, example);
-    },
-    [playSound, playingSymbol, stopSound],
+    [phonemesByCategory],
   );
 
   useEffect(() => {
     setAudioError(null);
-  }, [selectedPhoneme.rawSymbol]);
+  }, [selectedPhoneme.rawSymbol, setAudioError]);
 
   const spokenWordFor = useCallback(
-    (phoneme: PhonemeData) =>
-      PHONEME_MATRIX[phoneme.symbol]?.keyword ?? phoneme.examples[0],
-    []
+    (phoneme: PhonemeData) => PHONEME_MATRIX[phoneme.symbol]?.keyword ?? phoneme.examples[0],
+    [],
   );
 
   const handleSelect = useCallback(
@@ -151,7 +78,7 @@ export default function IPAChart({ lessons = [] }: IPAChartProps) {
       void markPhonemeExplored(phoneme.symbol, user?.id);
       playSound(phoneme.rawSymbol, spokenWordFor(phoneme));
     },
-    [playSound, spokenWordFor, user?.id]
+    [playSound, spokenWordFor, user?.id],
   );
 
   const handleSelectFromAnywhere = useCallback(
@@ -161,7 +88,7 @@ export default function IPAChart({ lessons = [] }: IPAChartProps) {
       }
       handleSelect(phoneme);
     },
-    [activeCategory, handleSelect]
+    [activeCategory, handleSelect],
   );
 
   const handleCategoryChange = useCallback(
@@ -170,7 +97,7 @@ export default function IPAChart({ lessons = [] }: IPAChartProps) {
       const first = phonemesByCategory[category][0];
       if (first) setSelectedPhoneme(first);
     },
-    [phonemesByCategory]
+    [phonemesByCategory],
   );
 
   const navigate = useCallback(
@@ -180,7 +107,7 @@ export default function IPAChart({ lessons = [] }: IPAChartProps) {
       const nextIdx = (idx + delta + currentPhonemes.length) % currentPhonemes.length;
       handleSelect(currentPhonemes[nextIdx]);
     },
-    [currentPhonemes, selectedPhoneme, handleSelect]
+    [currentPhonemes, selectedPhoneme, handleSelect],
   );
 
   useEffect(() => {
@@ -207,11 +134,7 @@ export default function IPAChart({ lessons = [] }: IPAChartProps) {
 
   return (
     <div className="ipa-chart animate-fadeIn">
-      <IPACategoryTabs
-        active={activeCategory}
-        onChange={handleCategoryChange}
-        counts={counts}
-      />
+      <IPACategoryTabs active={activeCategory} onChange={handleCategoryChange} counts={counts} />
 
       <div className="ipa-chart__main">
         <div key={activeCategory} className="animate-fadeIn">
@@ -261,4 +184,3 @@ export default function IPAChart({ lessons = [] }: IPAChartProps) {
     </div>
   );
 }
-

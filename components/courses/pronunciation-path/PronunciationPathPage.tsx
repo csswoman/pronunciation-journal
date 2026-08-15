@@ -2,10 +2,9 @@
 
 // Planned structure:
 // <PronunciationPathPage>
-//   <PageHeader />
 //   <PronunciationPathNextAction | PronunciationPathLoadingCard />
 //   <PronunciationPathStageNav />
-//   <PronunciationPathActiveUnit /> // only when exploring ≠ recommendation
+//   <PronunciationPathActiveUnit />
 //   <PronunciationPathExplore />
 // </PronunciationPathPage>
 
@@ -17,7 +16,6 @@ import {
   buildPronunciationPathCurriculum,
   getPathUnit,
   listPathUnitsInOrder,
-  PATH_STAGE_ORDER,
   pickUnitForStage,
 } from '@/lib/pronunciation/path/curriculum'
 import {
@@ -26,13 +24,19 @@ import {
 } from '@/lib/pronunciation/path/load-evidence'
 import { recommendNextPathAction } from '@/lib/pronunciation/path/recommend'
 import { targetIdToPronunciationPathRoute } from '@/lib/pronunciation/path/routes'
-import type { PathStageId, PathUnit } from '@/lib/pronunciation/path/types'
+import type { PathStageId } from '@/lib/pronunciation/path/types'
 import { deriveUnitLearningState, showNeedsEvidenceBadge } from '@/lib/pronunciation/path/unit-state'
 import { PronunciationPathActiveUnit } from './PronunciationPathActiveUnit'
 import { PronunciationPathExplore } from './PronunciationPathExplore'
 import { PronunciationPathLoadingCard } from './PronunciationPathLoadingCard'
 import { PronunciationPathNextAction } from './PronunciationPathNextAction'
 import { PronunciationPathStageNav } from './PronunciationPathStageNav'
+import {
+  ctaLabelForHref,
+  EMPTY_EVIDENCE,
+  hrefForUnit,
+  resolveStageId,
+} from './pronunciation-path-page-helpers'
 
 interface PronunciationPathPageProps {
   userId?: string
@@ -44,39 +48,6 @@ interface PronunciationPathPageProps {
   evidenceOverride?: PathEvidenceBundle
 }
 
-function resolveStageId(raw: string | undefined): PathStageId | null {
-  if (!raw) return null
-  if ((PATH_STAGE_ORDER as readonly string[]).includes(raw)) return raw as PathStageId
-  const asIndex = Number(raw)
-  if (Number.isInteger(asIndex) && asIndex >= 1 && asIndex <= PATH_STAGE_ORDER.length) {
-    return PATH_STAGE_ORDER[asIndex - 1]!
-  }
-  return null
-}
-
-function hrefForUnit(unit: PathUnit | null): string {
-  if (!unit) return '/courses/pronunciation'
-  return (
-    unit.practiceHref ??
-    contentHrefForRefs(unit.contentRefs) ??
-    targetIdToPronunciationPathRoute(unit.targetId)
-  )
-}
-
-function ctaLabelForHref(href: string, hasTarget: boolean): string {
-  if (!hasTarget) return 'Ver etapas'
-  if (href.startsWith('/practice/sounds')) return 'Practicar en Sound Lab'
-  if (href.startsWith('/mini-lessons')) return 'Abrir lección'
-  return 'Abrir esta etapa'
-}
-
-const EMPTY_EVIDENCE: PathEvidenceBundle = {
-  completedContentKeys: new Set(),
-  spokenAttempts: [],
-  diagnosticPriorityIds: [],
-  diagnosticByTargetId: new Map(),
-}
-
 export function PronunciationPathPage({
   userId,
   initialTargetId,
@@ -86,11 +57,11 @@ export function PronunciationPathPage({
 }: PronunciationPathPageProps) {
   const curriculum = useMemo(() => buildPronunciationPathCurriculum(), [])
   const [evidence, setEvidence] = useState<PathEvidenceBundle>(
-    evidenceOverride ?? EMPTY_EVIDENCE
+    evidenceOverride ?? EMPTY_EVIDENCE,
   )
   const [evidenceReady, setEvidenceReady] = useState(Boolean(evidenceOverride))
   const [selectedStageId, setSelectedStageId] = useState<PathStageId | null>(() =>
-    resolveStageId(initialStage)
+    resolveStageId(initialStage),
   )
 
   useEffect(() => {
@@ -124,14 +95,14 @@ export function PronunciationPathPage({
     window.history.pushState(
       null,
       '',
-      `${window.location.pathname}?${params.toString()}`
+      `${window.location.pathname}?${params.toString()}`,
     )
   }, [])
 
   useEffect(() => {
     const onPopState = () => {
       setSelectedStageId(
-        resolveStageId(new URLSearchParams(window.location.search).get('stage') ?? undefined)
+        resolveStageId(new URLSearchParams(window.location.search).get('stage') ?? undefined),
       )
     }
     window.addEventListener('popstate', onPopState)
@@ -149,7 +120,7 @@ export function PronunciationPathPage({
           completedContentKeys: evidence.completedContentKeys,
           spokenAttempts: evidence.spokenAttempts,
           diagnosticScored: diagnostic?.measurement.kind === 'scored',
-        })
+        }),
       )
     }
     return map
@@ -161,7 +132,7 @@ export function PronunciationPathPage({
         unitStates,
         diagnosticPriorityIds: evidence.diagnosticPriorityIds,
       }),
-    [unitStates, evidence.diagnosticPriorityIds]
+    [unitStates, evidence.diagnosticPriorityIds],
   )
 
   const stageFromParam = selectedStageId
@@ -179,7 +150,7 @@ export function PronunciationPathPage({
   const activeStageId = activeUnit.stageId
   const activeState = unitStates.get(activeUnit.targetId) ?? 'not_started'
   const needsEvidence = showNeedsEvidenceBadge(
-    evidence.diagnosticByTargetId.get(activeUnit.targetId)
+    evidence.diagnosticByTargetId.get(activeUnit.targetId),
   )
 
   const nextHref = hrefForUnit(recommendedUnit)

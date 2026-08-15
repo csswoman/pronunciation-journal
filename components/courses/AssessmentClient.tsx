@@ -6,33 +6,21 @@ import {
   ASSESSMENT_LEVEL_ORDER,
   groupQuestionsByLevel,
   levelPassed,
-  scoreAssessment,
   type AssessmentQuestion,
   type AssessmentResult,
 } from "@/lib/courses/assessment";
 import type { AssessmentConcept, ConceptSelfRating } from "@/lib/courses/concept-profile";
 import type { CefrLevelId } from "@/lib/courses/types";
-import { persistAssessmentConceptProfile } from "@/lib/courses/assessment-profile";
-import {
-  AssessmentCoverage,
-  AssessmentErrorState,
-  AssessmentFooter,
-  AssessmentHeader,
-  AssessmentInventory,
-  AssessmentLevelPrompt,
-  AssessmentQuestionView,
-  AssessmentResultView,
-} from "./AssessmentViews";
+import { AssessmentErrorState, AssessmentResultView } from "./AssessmentViews";
+import { AssessmentClientShell } from "./AssessmentClientShell";
 import { useAssessmentFlow } from "./useAssessmentFlow";
-
-function isConcreteCefrLevel(value: CefrLevelId | "unsure" | "full" | null): value is CefrLevelId {
-  return value !== null && value !== "unsure" && value !== "full";
-}
-
-function reportedLevelIsAbove(sectionLevel: CefrLevelId, reported: CefrLevelId | "unsure" | "full" | null): boolean {
-  if (!isConcreteCefrLevel(reported)) return false;
-  return ASSESSMENT_LEVEL_ORDER.indexOf(reported) > ASSESSMENT_LEVEL_ORDER.indexOf(sectionLevel);
-}
+import {
+  assessmentFooterCopy,
+  buildAssessmentResult,
+  persistLocalAssessmentCache,
+  reportedLevelIsAbove,
+  saveAssessmentLevel,
+} from "./assessment-client-helpers";
 
 interface AssessmentClientProps {
   mode: "placement" | "checkpoint";
@@ -43,7 +31,14 @@ interface AssessmentClientProps {
   initialLevel?: CefrLevelId | null;
 }
 
-export default function AssessmentClient({ mode, questions, concepts = [], checkpointLabel, userId, initialLevel }: AssessmentClientProps) {
+export default function AssessmentClient({
+  mode,
+  questions,
+  concepts = [],
+  checkpointLabel,
+  userId,
+  initialLevel,
+}: AssessmentClientProps) {
   useHideMobileNavDuringSession();
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [selfRatings, setSelfRatings] = useState<Record<string, ConceptSelfRating>>({});
@@ -51,75 +46,48 @@ export default function AssessmentClient({ mode, questions, concepts = [], check
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState(false);
   const sections = groupQuestionsByLevel(questions);
-  const {
-    sectionIndex,
-    placementStartIndex,
-    questionIndex,
-    placementStep,
-    selfReportedLevel,
-    setSelfReportedLevel,
-    startPlacement,
-    startQuestions,
-    goToNextSection,
-    goBackToInventory,
-    goToPreviousQuestion,
-    goToNextQuestion,
-  } = useAssessmentFlow({ mode, sections, initialLevel });
-  const section = sections[sectionIndex];
+  const flow = useAssessmentFlow({ mode, sections, initialLevel });
+  const section = sections[flow.sectionIndex];
   const sectionConcepts = section
     ? concepts.filter((concept) => concept.level === section.level)
     : [];
-  const showingInventory = mode === "placement" && placementStep === "inventory";
-  const showingLevelPrompt = mode === "placement" && placementStep === "level";
+  const showingInventory = mode === "placement" && flow.placementStep === "inventory";
+  const showingLevelPrompt = mode === "placement" && flow.placementStep === "level";
   const visibleQuestions = mode === "placement" ? section?.questions ?? [] : questions;
-  const answered = visibleQuestions.filter((question) => answers[question.id] !== undefined).length;
-  const currentQuestion = visibleQuestions[questionIndex];
+  const answered = visibleQuestions.filter((q) => answers[q.id] !== undefined).length;
+  const currentQuestion = visibleQuestions[flow.questionIndex];
   const currentQuestionAnswered = currentQuestion ? answers[currentQuestion.id] !== undefined : false;
-  const ratedConcepts = sectionConcepts.filter((concept) => selfRatings[concept.lessonSlug] !== undefined).length;
+  const ratedConcepts = sectionConcepts.filter(
+    (c) => selfRatings[c.lessonSlug] !== undefined,
+  ).length;
   const progressValue = showingInventory ? ratedConcepts : showingLevelPrompt ? 0 : answered;
-  const progressTotal = showingInventory ? sectionConcepts.length : showingLevelPrompt ? 1 : visibleQuestions.length;
-  const placementLevels = ASSESSMENT_LEVEL_ORDER;
-
-  async function saveLevel(nextResult: AssessmentResult) {
-    setSaving(true);
-    setSaveError(false);
-    try {
-      const evaluatedLevel = mode === "checkpoint"
-        ? questions[0]?.level ?? null
-        : nextResult.evaluatedLevels?.reduce<CefrLevelId | null>((highest, level) => {
-          if (!highest) return level;
-          return ASSESSMENT_LEVEL_ORDER.indexOf(level) > ASSESSMENT_LEVEL_ORDER.indexOf(highest) ? level : highest;
-        }, null) ?? null;
-      const [response] = await Promise.all([
-        fetch("/api/assessment/results", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ mode, evaluatedLevel, result: nextResult }),
-        }),
-        persistAssessmentConceptProfile(userId!, nextResult.conceptSignals, nextResult.assignedLevel),
-      ]);
-      if (!response.ok) throw new Error("Failed to persist assessment result");
-    } catch {
-      setSaveError(true);
-    } finally {
-      setSaving(false);
-    }
-  }
+  const progressTotal = showingInventory
+    ? sectionConcepts.length
+    : showingLevelPrompt
+      ? 1
+      : visibleQuestions.length;
 
   function completeAssessment(attemptedQuestions: AssessmentQuestion[]) {
-    const checkpointLevel = questions[0]?.level;
-    const assessedConcepts = concepts.filter((concept) => selfRatings[concept.lessonSlug] !== undefined);
-    const nextResult = scoreAssessment(
-      attemptedQuestions, answers, mode, checkpointLevel, assessedConcepts, selfRatings,
-    );
+    const nextResult = buildAssessmentResult({
+      mode,
+      questions,
+      attemptedQuestions,
+      answers,
+      concepts,
+      selfRatings,
+    });
     setResult(nextResult);
     if (attemptedQuestions.length > 0) {
-      window.localStorage.setItem(
-        `assessment:${userId ?? "guest"}:${mode}:${checkpointLabel ?? "placement"}`,
-        JSON.stringify({ ...nextResult, completedAt: new Date().toISOString() }),
-      );
+      persistLocalAssessmentCache({ userId, mode, checkpointLabel, nextResult });
       if (userId) {
-        void saveLevel(nextResult);
+        void saveAssessmentLevel({
+          mode,
+          questions,
+          userId,
+          nextResult,
+          setSaving,
+          setSaveError,
+        });
       }
     }
   }
@@ -129,126 +97,138 @@ export default function AssessmentClient({ mode, questions, concepts = [], check
       completeAssessment(questions);
       return;
     }
-
     const passed = levelPassed(section.level, section.questions, answers);
-    const isLast = sectionIndex === sections.length - 1;
-    if ((passed || selfReportedLevel === "full") && !isLast) {
-      goToNextSection();
+    const isLast = flow.sectionIndex === sections.length - 1;
+    if ((passed || flow.selfReportedLevel === "full") && !isLast) {
+      flow.goToNextSection();
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
-
-    completeAssessment(sections.slice(placementStartIndex, sectionIndex + 1).flatMap((item) => item.questions));
+    completeAssessment(
+      sections
+        .slice(flow.placementStartIndex, flow.sectionIndex + 1)
+        .flatMap((item) => item.questions),
+    );
   }
 
   function handleBack() {
-    if (questionIndex > 0) {
-      goToPreviousQuestion();
-    } else if (mode === "placement") {
-      goBackToInventory();
-    }
+    if (flow.questionIndex > 0) flow.goToPreviousQuestion();
+    else if (mode === "placement") flow.goBackToInventory();
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function handlePrimary() {
     if (showingLevelPrompt) {
-      startPlacement();
+      flow.startPlacement();
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
     if (showingInventory) {
-      const allCurrentConceptsUnknown = sectionConcepts.length > 0
-        && sectionConcepts.every((concept) => selfRatings[concept.lessonSlug] === "unknown");
-      // Claimed a higher level than this anchor section: verify with questions
-      // instead of ending as a beginner plan-only result.
-      if (allCurrentConceptsUnknown && !reportedLevelIsAbove(section.level, selfReportedLevel)) {
-        completeAssessment(sections.slice(placementStartIndex, sectionIndex).flatMap((item) => item.questions));
+      const allUnknown =
+        sectionConcepts.length > 0 &&
+        sectionConcepts.every((c) => selfRatings[c.lessonSlug] === "unknown");
+      if (allUnknown && !reportedLevelIsAbove(section.level, flow.selfReportedLevel)) {
+        completeAssessment(
+          sections
+            .slice(flow.placementStartIndex, flow.sectionIndex)
+            .flatMap((item) => item.questions),
+        );
         window.scrollTo({ top: 0, behavior: "smooth" });
         return;
       }
-      startQuestions();
+      flow.startQuestions();
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
-    if (questionIndex < visibleQuestions.length - 1) {
-      goToNextQuestion();
+    if (flow.questionIndex < visibleQuestions.length - 1) {
+      flow.goToNextQuestion();
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
     finishSection();
   }
 
-  const footerStatus = showingLevelPrompt
-    ? selfReportedLevel ? "Referencia seleccionada." : "Elige una opción para continuar."
-    : showingInventory && ratedConcepts !== sectionConcepts.length
-    ? `Faltan ${sectionConcepts.length - ratedConcepts} temas.`
-    : undefined;
-  const primaryLabel = showingLevelPrompt
-    ? "Empezar prueba"
-    : showingInventory
-    ? "Comprobar con preguntas"
-    : questionIndex < visibleQuestions.length - 1
-    ? "Siguiente pregunta"
-    : mode === "placement" && sectionIndex < sections.length - 1 && (levelPassed(section.level, section.questions, answers) || selfReportedLevel === "full")
-    ? `Seguir con ${sections[sectionIndex + 1]?.level.toUpperCase()}`
-    : "Ver resultado";
+  const { footerStatus, primaryLabel } = assessmentFooterCopy({
+    showingLevelPrompt,
+    showingInventory,
+    selfReportedLevel: flow.selfReportedLevel,
+    ratedConcepts,
+    sectionConceptsLength: sectionConcepts.length,
+    questionIndex: flow.questionIndex,
+    visibleQuestionsLength: visibleQuestions.length,
+    mode,
+    sectionIndex: flow.sectionIndex,
+    sectionsLength: sections.length,
+    sectionLevel: section?.level ?? "a1",
+    sectionQuestions: section?.questions ?? [],
+    answers,
+    nextSectionLevel: sections[flow.sectionIndex + 1]?.level,
+  });
 
   if (result) {
-    return <AssessmentResultView mode={mode} result={result} userId={userId} saving={saving} saveError={saveError} onRetry={() => void saveLevel(result)} />;
+    return (
+      <AssessmentResultView
+        mode={mode}
+        result={result}
+        userId={userId}
+        saving={saving}
+        saveError={saveError}
+        onRetry={() => {
+          if (!userId) return;
+          void saveAssessmentLevel({
+            mode,
+            questions,
+            userId,
+            nextResult: result,
+            setSaving,
+            setSaveError,
+          });
+        }}
+      />
+    );
   }
 
-  if (!section) {
-    return <AssessmentErrorState />;
-  }
+  if (!section) return <AssessmentErrorState />;
 
   return (
-    <div className={showingLevelPrompt ? "assessment-page assessment-page--prompt" : "assessment-page"}>
-      <div className="assessment-shell">
-        <AssessmentHeader
-          mode={mode}
-          userId={userId}
-          checkpointLabel={checkpointLabel}
-          sectionLevel={section.level}
-          showingLevelPrompt={showingLevelPrompt}
-          showingInventory={showingInventory}
-          progressValue={progressValue}
-          progressTotal={progressTotal}
-        />
-
-        <div className={mode === "placement" && !showingLevelPrompt ? "assessment-stage" : "assessment-stage assessment-stage--single"}>
-          <div className="assessment-main">
-        {showingLevelPrompt ? (
-          <AssessmentLevelPrompt value={selfReportedLevel} onChange={setSelfReportedLevel} />
-        ) : showingInventory ? (
-          <AssessmentInventory
-            concepts={sectionConcepts}
-            selfRatings={selfRatings}
-            onRate={(lessonSlug, value) => setSelfRatings((current) => ({ ...current, [lessonSlug]: value }))}
-          />
-        ) : (
-          <AssessmentQuestionView
-            question={currentQuestion}
-            index={questionIndex}
-            answer={currentQuestion ? answers[currentQuestion.id] : undefined}
-            onAnswer={(optionIndex) => currentQuestion && setAnswers((current) => ({ ...current, [currentQuestion.id]: optionIndex }))}
-          />
-        )}
-
-        <AssessmentFooter
-          status={footerStatus}
-          showBack={!showingLevelPrompt && !showingInventory}
-          backLabel={questionIndex > 0 ? "Anterior" : "Volver a temas"}
-          primaryLabel={primaryLabel}
-          primaryDisabled={showingLevelPrompt ? selfReportedLevel === null : showingInventory ? ratedConcepts !== sectionConcepts.length : !currentQuestionAnswered}
-          onBack={handleBack}
-          onPrimary={handlePrimary}
-        />
-          </div>
-          {mode === "placement" && !showingLevelPrompt && (
-            <AssessmentCoverage levels={placementLevels} placementStartIndex={placementStartIndex} sectionIndex={sectionIndex} />
-          )}
-        </div>
-      </div>
-    </div>
+    <AssessmentClientShell
+      chrome={{
+        mode,
+        userId,
+        checkpointLabel,
+        sectionLevel: section.level,
+        showingLevelPrompt,
+        showingInventory,
+        progressValue,
+        progressTotal,
+      }}
+      prompt={{
+        selfReportedLevel: flow.selfReportedLevel,
+        setSelfReportedLevel: flow.setSelfReportedLevel,
+        sectionConcepts,
+        selfRatings,
+        setSelfRatings,
+        currentQuestion,
+        questionIndex: flow.questionIndex,
+        answers,
+        setAnswers,
+      }}
+      footer={{
+        status: footerStatus,
+        primaryLabel,
+        primaryDisabled: showingLevelPrompt
+          ? flow.selfReportedLevel === null
+          : showingInventory
+            ? ratedConcepts !== sectionConcepts.length
+            : !currentQuestionAnswered,
+        onBack: handleBack,
+        onPrimary: handlePrimary,
+      }}
+      coverage={{
+        placementLevels: [...ASSESSMENT_LEVEL_ORDER],
+        placementStartIndex: flow.placementStartIndex,
+        sectionIndex: flow.sectionIndex,
+      }}
+    />
   );
 }

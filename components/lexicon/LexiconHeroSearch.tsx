@@ -2,32 +2,14 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Search, Volume2 } from "@/components/icons";
+import { Search } from "@/components/icons";
 import { useLexiconIndex } from "@/hooks/useLexiconIndex";
 import { useAudioPlayback } from "@/hooks/useAudioPlayback";
-import Button from "@/components/ui/Button";
 import type { LexiconSearchHit } from "@/lib/lexicon/types";
-import { formatIpaDisplay } from "@/lib/lexicon/format-ipa";
-
-const RECENT_KEY = "ej-lexicon-recent";
-const MAX_RECENT = 4;
-
-function loadRecent(): string[] {
-  if (typeof window === "undefined") return [];
-  try {
-    const raw = localStorage.getItem(RECENT_KEY);
-    return raw ? (JSON.parse(raw) as string[]) : [];
-  } catch {
-    return [];
-  }
-}
-
-function saveRecent(word: string) {
-  const prev = loadRecent().filter((w) => w.toLowerCase() !== word.toLowerCase());
-  const next = [word, ...prev].slice(0, MAX_RECENT);
-  localStorage.setItem(RECENT_KEY, JSON.stringify(next));
-  return next;
-}
+import { loadLexiconRecent, saveLexiconRecent } from "./lexicon-recent";
+import { LexiconSearchResults } from "./LexiconSearchResults";
+import { LexiconQuickChips } from "./LexiconQuickChips";
+import { LexiconWordDetail } from "./LexiconWordDetail";
 
 interface LexiconHeroSearchProps {
   recentWords?: string[];
@@ -52,7 +34,7 @@ export function LexiconHeroSearch({
   const { index } = useLexiconIndex();
 
   useEffect(() => {
-    setRecentStored(loadRecent());
+    setRecentStored(loadLexiconRecent());
   }, []);
 
   useEffect(() => {
@@ -81,7 +63,7 @@ export function LexiconHeroSearch({
     setQuery(hit.word);
     setSelected(hit);
     setResultsOpen(false);
-    setRecentStored(saveRecent(hit.word));
+    setRecentStored(saveLexiconRecent(hit.word));
   }, []);
 
   const openCategory = useCallback(
@@ -170,133 +152,28 @@ export function LexiconHeroSearch({
           </span>
         </div>
 
-        <div
-          id="lexicon-search-results"
-          className={`words-lexicon__results${resultsOpen ? " is-open" : ""}`}
-          aria-label="Search results"
-        >
-          {matches.length === 0 && query.trim() ? (
-            <p className="words-lexicon__nores">
-              No encontramos &ldquo;{query.trim()}&rdquo;. Prueba otra escritura o un término más general.
-            </p>
-          ) : (
-            matches.map((hit, index) => (
-              <button
-                key={hit.id}
-                type="button"
-                className={`words-lexicon__res${focusedIndex === index ? " is-focused" : ""}`}
-                aria-selected={focusedIndex === index}
-                onClick={() => pick(hit)}
-              >
-                <span className="words-lexicon__res-word">{hit.word}</span>
-                {hit.ipa ? (
-                  <span className="words-lexicon__res-pos font-ipa text-primary">
-                    {formatIpaDisplay(hit.ipa)}
-                  </span>
-                ) : (
-                  <span className="words-lexicon__res-pos">{hit.pos}</span>
-                )}
-                <span className="words-lexicon__res-cat">{hit.categoryName}</span>
-                {hit.translation ? (
-                  <span className="words-lexicon__res-def words-lexicon__res-def--translation">
-                    {hit.translation}
-                  </span>
-                ) : null}
-                <span className="words-lexicon__res-def">{hit.definition}</span>
-              </button>
-            ))
-          )}
-        </div>
+        <LexiconSearchResults
+          open={resultsOpen}
+          query={query}
+          matches={matches}
+          focusedIndex={focusedIndex}
+          onPick={pick}
+        />
       </div>
 
-      {(recentWords.length > 0 || dueWords.length > 0) && (
-        <div className="words-lexicon__quick">
-          {recentWords.length > 0 && (
-            <>
-              <span className="words-lexicon__quick-lbl">Recientes:</span>
-              {recentWords.map((w) => (
-                <button
-                  key={`recent:${w}`}
-                  type="button"
-                  className="words-lexicon__qchip"
-                  onClick={() => chipPick(w)}
-                >
-                  {w}
-                </button>
-              ))}
-            </>
-          )}
-          {dueWords.length > 0 && (
-            <>
-              <span className="words-lexicon__quick-lbl words-lexicon__quick-lbl--spaced">
-                Para repasar:
-              </span>
-              {dueWords.map((w) => (
-                <button
-                  key={`due:${w}`}
-                  type="button"
-                  className="words-lexicon__qchip is-due"
-                  onClick={() => chipPick(w)}
-                >
-                  {w}
-                </button>
-              ))}
-            </>
-          )}
-        </div>
-      )}
+      <LexiconQuickChips
+        recentWords={recentWords}
+        dueWords={dueWords}
+        onChipPick={chipPick}
+      />
 
       {selected && (
-        <div
-          className="words-lexicon__worddetail is-open"
-          role="region"
-          aria-label="Word detail"
-          aria-live="polite"
-          aria-atomic="true"
-        >
-          <div className="words-lexicon__wd-top">
-            <span className="words-lexicon__wd-w">{selected.word}</span>
-            {selected.ipa ? (
-              <span className="words-lexicon__wd-pos font-ipa">{formatIpaDisplay(selected.ipa)}</span>
-            ) : (
-              <span className="words-lexicon__wd-pos">{selected.pos}</span>
-            )}
-            <span className="words-lexicon__wd-cat">{selected.categoryName}</span>
-            {selected.ipa && (
-              <span
-                className="words-lexicon__wd-cat"
-                title="International Phonetic Alphabet — shows how to pronounce the word"
-              >
-                IPA
-              </span>
-            )}
-          </div>
-          {selected.translation ? (
-            <p className="words-lexicon__wd-translation">{selected.translation}</p>
-          ) : null}
-          <p className="words-lexicon__wd-def">{selected.definition}</p>
-          <div className="words-lexicon__wd-btns">
-            <Button
-              size="sm"
-              icon={<Volume2 size={15} />}
-              onClick={() => void play("normal")}
-            >
-              Hear it
-            </Button>
-            {onAddWord ? (
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => onAddWord(selected.word)}
-              >
-                Add to my words
-              </Button>
-            ) : null}
-            <Button variant="ghost" size="sm" onClick={() => openCategory(selected)}>
-              Open category
-            </Button>
-          </div>
-        </div>
+        <LexiconWordDetail
+          selected={selected}
+          onPlay={() => void play("normal")}
+          onAddWord={onAddWord}
+          onOpenCategory={openCategory}
+        />
       )}
     </div>
   );

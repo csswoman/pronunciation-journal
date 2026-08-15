@@ -3,26 +3,18 @@
 // Planned structure:
 // <GrammarStudyDeck>
 //   <GrammarDeckHeader />
-//   <QuizStep />             (quiz phase)
-//   <DeckDoneScreen />       (done phase)
-//   <PracticeSession />      (practice phase — embedded, no overlay)
-//   <DeckCarousel />         (cards phase)
+//   <GrammarStudyDeckBody />
 // </GrammarStudyDeck>
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { recordLessonComplete, recordLessonQuizAttempt } from "@/lib/practice/queries";
-import { getCurrentUser } from "@/lib/auth/session";
-import PracticeSession from "@/components/practice/PracticeSession";
+import { recordLessonComplete } from "@/lib/practice/queries";
 import type { PracticeExercise } from "@/lib/practice/types";
 import type { CefrLevel } from "@/lib/essential-words/types";
 import { buildCoursePracticeSession } from "@/lib/courses/practice/build-session";
 import type { GrammarRelatedLink, GrammarStudyDeckData } from "@/lib/courses/grammar-deck/types";
 import type { CoursePathTrackId } from "@/lib/courses/types";
 import GrammarDeckHeader from "./GrammarDeckHeader";
-import QuizStep from "./QuizStep";
-import { DeckDoneScreen } from "./DeckDoneScreen";
-import { DeckCarousel } from "./DeckCarousel";
-import { theoryTopicForDeck } from "@/lib/learning-loop/theory-targets";
+import { GrammarStudyDeckBody, retryLessonCompletion } from "./GrammarStudyDeckBody";
 
 interface GrammarStudyDeckProps {
   deck: GrammarStudyDeckData;
@@ -60,7 +52,6 @@ export default function GrammarStudyDeck({
   const [phase, setPhase] = useState<"cards" | "quiz" | "done" | "practice">("cards");
   const [quizScore, setQuizScore] = useState<{ correct: number; total: number } | null>(null);
 
-  // Sentence practice state
   const [practiceExercises, setPracticeExercises] = useState<PracticeExercise[] | null>(null);
   const [practiceLoading, setPracticeLoading] = useState(false);
   const [practiceError, setPracticeError] = useState(false);
@@ -84,12 +75,11 @@ export default function GrammarStudyDeck({
       setDirection(target >= index ? "next" : "prev");
       setIndex(Math.min(Math.max(target, 0), total - 1));
     },
-    [index, total]
+    [index, total],
   );
 
   const goNext = useCallback(() => {
     setDirection("next");
-    // Advancing counts the current card as reviewed.
     setReviewed((prev) => new Set(prev).add(deck.cards[index].id));
     if (index < total - 1) {
       setIndex((i) => i + 1);
@@ -115,9 +105,9 @@ export default function GrammarStudyDeck({
     setPracticeLoading(true);
     setPracticeError(false);
     try {
-      const resolvedSlug = (deckSlug ?? lessonId) ?? '';
-      if (!resolvedSlug) console.warn('[GrammarStudyDeck] deckSlug missing — practice session may be empty');
-      const level: CefrLevel = cefrLevel ?? 'A1';
+      const resolvedSlug = (deckSlug ?? lessonId) ?? "";
+      if (!resolvedSlug) console.warn("[GrammarStudyDeck] deckSlug missing — practice session may be empty");
+      const level: CefrLevel = cefrLevel ?? "A1";
       const exercises = await buildCoursePracticeSession({ deckSlug: resolvedSlug, cefrLevel: level });
       if (exercises.length > 0) {
         setPracticeExercises(exercises);
@@ -132,7 +122,6 @@ export default function GrammarStudyDeck({
     }
   }, [deck.meta, lessonId, deckSlug, cefrLevel, practiceLoading]);
 
-  // Keyboard navigation while studying.
   useEffect(() => {
     if (phase !== "cards") return;
     const onKey = (e: KeyboardEvent) => {
@@ -143,7 +132,6 @@ export default function GrammarStudyDeck({
     return () => window.removeEventListener("keydown", onKey);
   }, [phase, goNext, goPrev]);
 
-  // Persist completion once the deck is finished.
   useEffect(() => {
     if (finished && levelId && lessonId) {
       setCompletionError(false);
@@ -170,94 +158,45 @@ export default function GrammarStudyDeck({
           subtitle={courseTitle ? deck.meta.eyebrow : undefined}
         />
 
-        {phase === "practice" && practiceExercises ? (
-          <div className="grammar-deck__practice-shell">
-            <PracticeSession
-              context="courses"
-              exercises={practiceExercises}
-              sessionLength={practiceExercises.length}
-              sessionLabel="Practica esta lección"
-              onSessionComplete={() => { setPracticeExercises(null); setPhase("done"); }}
-              onExit={() => { setPracticeExercises(null); setPhase("done"); }}
-            />
-          </div>
-        ) : phase === "quiz" && deck.quiz ? (
-          <QuizStep
-            questions={deck.quiz}
-            onDone={(correct, totalQ, pickedAnswers, answerTimesMs) => {
-              setQuizScore({ correct, total: totalQ });
-              const evidenceLessonSlug = lessonId ?? deckSlug;
-              if (evidenceLessonSlug && deckSlug) {
-                void getCurrentUser().then((user) => {
-                  if (!user || !deck.quiz) return;
-                  return recordLessonQuizAttempt(
-                    user.id,
-                    deck.quiz.map((question, index) => {
-                      const selectedIndex = pickedAnswers[index];
-                      return {
-                        questionId: `${lessonId}:quiz:${index + 1}`,
-                        courseSlug: levelId ?? "decks",
-                        lessonSlug: evidenceLessonSlug,
-                        question: question.q,
-                        selectedAnswer: selectedIndex == null ? "" : question.options[selectedIndex] ?? "",
-                        correctAnswer: question.options[question.answer] ?? "",
-                        isCorrect: selectedIndex === question.answer,
-                        timeMs: answerTimesMs[index] ?? 0,
-                        topic: deck.topicId ?? theoryTopicForDeck(deckSlug),
-                      };
-                    }),
-                  );
-                }).catch(() => undefined);
-              }
+        <GrammarStudyDeckBody
+          deck={deck}
+          phase={phase}
+          practiceExercises={practiceExercises}
+          identity={{
+            courseTitle,
+            lessonId,
+            deckSlug,
+            levelId,
+            backHref,
+            backLabel,
+            relatedLinks,
+          }}
+          doneState={{
+            reviewedCount,
+            quizScore,
+            practiceLoading,
+            practiceError,
+            completionError,
+          }}
+          carousel={{ index, direction, reviewed, isLast }}
+          handlers={{
+            onPracticeExit: () => {
+              setPracticeExercises(null);
               setPhase("done");
-            }}
-          />
-        ) : finished ? (
-          <>
-            {completionError && (
-              <div role="alert" className="mb-4 flex items-center justify-between gap-3 rounded-xl border border-error bg-error-soft px-4 py-3 text-body-sm text-error">
-                <span>No se pudo guardar la finalización de la lección.</span>
-                <button
-                  type="button"
-                  className="font-semibold underline underline-offset-2"
-                  onClick={() => {
-                    if (!levelId || !lessonId) return;
-                    setCompletionError(false);
-                    void recordLessonComplete(levelId, lessonId).catch(() => setCompletionError(true));
-                  }}
-                >
-                  Reintentar
-                </button>
-              </div>
-            )}
-            <DeckDoneScreen
-              deck={deck}
-              courseTitle={courseTitle}
-              lessonId={lessonId}
-              backHref={backHref}
-              backLabel={backLabel}
-              reviewedCount={reviewedCount}
-              quizScore={quizScore}
-              practiceLoading={practiceLoading}
-              practiceError={practiceError}
-              relatedLinks={relatedLinks}
-              onStartSentencePractice={handleStartSentencePractice}
-              onRestart={restart}
-            />
-          </>
-        ) : (
-          <DeckCarousel
-            cards={deck.cards}
-            index={index}
-            direction={direction}
-            reviewed={reviewed}
-            isLast={isLast}
-            onPrev={goPrev}
-            onNext={goNext}
-            onGoTo={goTo}
-            onToggleReviewed={toggleReviewed}
-          />
-        )}
+            },
+            onQuizDone: (correct, totalQ) => {
+              setQuizScore({ correct, total: totalQ });
+              setPhase("done");
+            },
+            onRetryCompletion: () => retryLessonCompletion(levelId, lessonId, setCompletionError),
+            onStartSentencePractice: handleStartSentencePractice,
+            onRestart: restart,
+            onPrev: goPrev,
+            onNext: goNext,
+            onGoTo: goTo,
+            onToggleReviewed: toggleReviewed,
+          }}
+        />
       </div>
     </div>
   );

@@ -2,14 +2,13 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
-import { Headphones, Play } from "@/components/icons";
+import { Play } from "@/components/icons";
 import PageLayout from "@/components/layout/PageLayout";
 import PageHeader from "@/components/layout/PageHeader";
-import { SoundDetail } from "@/components/sounds/SoundDetail";
 import MinimalPairsWorkspace from "./MinimalPairsWorkspace";
 import { PronunciationPathPage } from "@/components/courses/pronunciation-path/PronunciationPathPage";
 import { SoundLabFilterRow } from "./SoundLabFilterRow";
+import { EarAndVoiceHero } from "./EarAndVoiceHero";
 import { SoundLabLessonGrid } from "./SoundLabLessonGrid";
 import type { LessonSection } from "./SoundLabLessonGrid";
 import { useSoundLabData } from "@/hooks/useSoundLabData";
@@ -20,56 +19,21 @@ import { useDialogFocus } from "@/hooks/useDialogFocus";
 import { useSoundLabWorkspace } from "@/hooks/useSoundLabWorkspace";
 import { SoundsWorkspaceTabs } from "./SoundsWorkspaceTabs";
 import { IPAReferenceDialog } from "./IPAReferenceDialog";
+import { SoundLabFocusBanner } from "./SoundLabFocusBanner";
+import { SoundLabDetailDialog } from "./SoundLabDetailDialog";
+import {
+  ALL_GROUP_SECTIONS,
+  continueCtaLabel,
+  headerStatsLine,
+  lessonMatchesSearch,
+  matchesDifficultyChip,
+  matchesFocus,
+  resolveGroupId,
+} from "./sound-lab-page-helpers";
 import {
   CANONICAL_SOUND_COUNT,
   getCanonicalSound,
 } from "@/lib/sounds/inventory";
-
-const ALL_GROUP_SECTIONS = [
-  { id: "vowel", title: "Vocales" },
-  { id: "diphthong", title: "Diptongos" },
-  { id: "consonant", title: "Consonantes" },
-] as const;
-
-function getLessonSectionId(lesson: Lesson): string {
-  return getCanonicalSound(ipaFromLessonTitle(lesson.title) ?? "")?.type ?? "consonant";
-}
-
-function matchesDifficultyChip(lesson: Lesson, chip: SoundLabChip): boolean {
-  if (chip === "all") return true;
-  return lesson.difficulty === chip;
-}
-
-function resolveGroupId(lesson: Lesson): string {
-  return getLessonSectionId(lesson);
-}
-
-function headerStatsLine(inProgressCount: number, totalCount: number): string {
-  if (inProgressCount > 0) {
-    return `${inProgressCount} de ${totalCount} sonidos en curso`;
-  }
-  if (totalCount === 1) {
-    return "1 sonido listo para practicar";
-  }
-  return `${totalCount} sonidos listos para practicar`;
-}
-
-function continueCtaLabel(lesson: Lesson | null): string {
-  const ipa = lesson ? ipaFromLessonTitle(lesson.title) : null;
-  if (ipa) return `Continuar ${ipa}`;
-  return "Continuar lección";
-}
-
-/** True when a lesson teaches any of the focused IPA symbols (from a course handoff). */
-function matchesFocus(lesson: Lesson, tokens: string[]): boolean {
-  if (tokens.length === 0) return false;
-  const title = lesson.title.toLowerCase();
-  return tokens.some((t) => {
-    const tok = t.toLowerCase();
-    if (title.includes(tok)) return true;
-    return lesson.words?.some((w) => w.ipa?.toLowerCase().includes(tok)) ?? false;
-  });
-}
 
 interface SoundLabPageProps {
   userId?: string;
@@ -126,18 +90,7 @@ export default function SoundLabPage({ userId }: SoundLabPageProps) {
     const q = search.trim().toLowerCase();
     return allLessons.filter((lesson) => {
       if (!matchesDifficultyChip(lesson, activeChip)) return false;
-      if (!q) return true;
-      if (lesson.title.toLowerCase().includes(q)) return true;
-      if (lesson.description.toLowerCase().includes(q)) return true;
-      const ipa = lesson.title.match(/^\/+([^/]+)\/+/)?.[1]?.toLowerCase();
-      if (ipa && ipa.includes(q.replaceAll("/", ""))) return true;
-      return (
-        lesson.words?.some((w) => {
-          if (w.word?.toLowerCase().includes(q)) return true;
-          if (w.ipa?.toLowerCase().includes(q)) return true;
-          return false;
-        }) ?? false
-      );
+      return lessonMatchesSearch(lesson, q);
     });
   }, [allLessons, activeChip, search]);
 
@@ -216,47 +169,31 @@ export default function SoundLabPage({ userId }: SoundLabPageProps) {
         />
 
         {isSoundsView ? (
-          <SoundLabFilterRow
-            activeChip={activeChip}
-            search={search}
-            resultCount={filtered.length}
-            onChipChange={setActiveChip}
-            onSearchChange={setSearch}
-            onClearFilters={handleClearFilters}
-          />
+          <>
+            <EarAndVoiceHero
+              onSelectMinimalPairs={(contrastId) => {
+                if (contrastId) {
+                  router.push(`/practice/sounds?tab=minimal-pairs&contrast=${encodeURIComponent(contrastId)}`);
+                } else {
+                  selectTab("minimal-pairs");
+                }
+              }}
+              onOpenIPA={openIPA}
+            />
+            <SoundLabFilterRow
+              activeChip={activeChip}
+              search={search}
+              resultCount={filtered.length}
+              onChipChange={setActiveChip}
+              onSearchChange={setSearch}
+              onClearFilters={handleClearFilters}
+            />
+          </>
         ) : null}
 
-        {isSoundsView && focusTokens.length > 0 && (
-          <div
-            className="sound-lab__focus-banner flex flex-wrap items-center gap-2 rounded-xl border px-4 py-3"
-            role="status"
-          >
-            <Headphones size={14} className="sound-lab__focus-banner-icon shrink-0" aria-hidden />
-            <span className="min-w-0 flex-1 text-body-sm text-fg-muted">
-              Enfoque:{" "}
-              <span className="sound-lab__focus-tokens font-ipa">{focusTokens.join(" · ")}</span>
-              {!focusSection && (
-                <span className="text-fg-muted">
-                  . Aún no hay lecciones que coincidan.
-                </span>
-              )}
-            </span>
-            {focusSection?.lessons[0]?.href ? (
-              <Link
-                href={focusSection.lessons[0].href}
-                className="inline-flex min-h-9 shrink-0 items-center rounded-md bg-cta-bg px-3 text-caption font-semibold text-cta-fg"
-              >
-                Abrir este sonido
-              </Link>
-            ) : null}
-            <Link
-              href="/practice/sounds"
-              className="sound-lab__focus-banner-link shrink-0 text-caption hover:underline"
-            >
-              Ver todos
-            </Link>
-          </div>
-        )}
+        {isSoundsView && focusTokens.length > 0 ? (
+          <SoundLabFocusBanner focusTokens={focusTokens} focusSection={focusSection} />
+        ) : null}
       </header>
 
       {isMinimalPairsView ? (
@@ -279,36 +216,17 @@ export default function SoundLabPage({ userId }: SoundLabPageProps) {
       )}
 
       {isSoundsView && selectedLesson && selectedPhoneme ? (
-        <div
-          className="sound-lab__detail-backdrop"
-          role="presentation"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget) setSelectedLesson(null);
-          }}
-        >
-          <div
-            ref={detailDialogRef}
-            className="sound-lab__detail-dialog"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="sound-detail-dialog-title"
-            tabIndex={-1}
-          >
-            <SoundDetail
-              phoneme={selectedPhoneme}
-              titleId="sound-detail-dialog-title"
-              lesson={selectedLesson}
-              progressPct={selectedProgress ?? 0}
-              isWeak={selectedProgress !== undefined && selectedProgress < 60}
-              isContinuing={selectedLesson.id === heroLesson.lesson?.id}
-              practiceHref={selectedLesson.href ?? "/practice/sounds"}
-              onPractice={() => router.push(selectedLesson.href ?? "/practice/sounds")}
-              onClose={closeDetail}
-              descriptionId="sound-detail-dialog-description"
-              className="sound-lab__detail-sheet"
-            />
-          </div>
-        </div>
+        <SoundLabDetailDialog
+          dialogRef={detailDialogRef}
+          phoneme={selectedPhoneme}
+          lesson={selectedLesson}
+          progressPct={selectedProgress ?? 0}
+          isWeak={selectedProgress !== undefined && selectedProgress < 60}
+          isContinuing={selectedLesson.id === heroLesson.lesson?.id}
+          practiceHref={selectedLesson.href ?? "/practice/sounds"}
+          onPractice={() => router.push(selectedLesson.href ?? "/practice/sounds")}
+          onClose={closeDetail}
+        />
       ) : null}
 
       <IPAReferenceDialog open={isIPAOpen} onClose={closeIPA} lessons={allLessons} />

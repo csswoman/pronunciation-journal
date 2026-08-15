@@ -2,8 +2,15 @@
 
 import { useId, useState } from "react";
 import { ChevronDown, ChevronUp } from "@/components/icons";
+import { ArticulationMouthGuide } from "@/components/pronunciation/ArticulationMouthGuide";
 
-export function SoundArticulation({ articulation }: { articulation: string[] }) {
+export function SoundArticulation({
+  articulation,
+  symbol,
+}: {
+  articulation: string[];
+  symbol?: string;
+}) {
   const [expanded, setExpanded] = useState(false);
   const contentId = useId();
   const headingId = useId();
@@ -29,13 +36,16 @@ export function SoundArticulation({ articulation }: { articulation: string[] }) 
         </span>
         </button>
       </div>
-      <div id={contentId} className="ipa-chart__howto" hidden={!expanded}>
-        {articulation.map((tip, index) => (
-          <div key={`${tip}-${index}`} className="ipa-chart__howto-step">
-            <span className="ipa-chart__howto-n">{index + 1}</span>
-            <span>{tip}</span>
-          </div>
-        ))}
+      <div id={contentId} className="ipa-chart__howto flex flex-col gap-3" hidden={!expanded}>
+        {symbol ? <ArticulationMouthGuide symbolOrIpa={symbol} compact /> : null}
+        <div className="flex flex-col gap-2">
+          {articulation.map((tip, index) => (
+            <div key={`${tip}-${index}`} className="ipa-chart__howto-step">
+              <span className="ipa-chart__howto-n">{index + 1}</span>
+              <span>{tip}</span>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
