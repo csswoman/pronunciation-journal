@@ -1,6 +1,7 @@
 "use client";
 
 import { Check, Play, Square, X } from "@/components/icons";
+import { PhoneticWordHighlight } from "@/components/pronunciation/PhoneticWordHighlight";
 import { cn } from "@/lib/cn";
 
 type Verdict = "correct" | "wrong" | null;
@@ -48,7 +49,9 @@ export function WordCard({
     >
       <span className="ipa-chart__mpcard-lab">{compact || workspace ? side : `Opción ${side}`}</span>
       <span className="ipa-chart__mpcard-sym">{symbol}</span>
-      <span className="ipa-chart__mpcard-word">{word}</span>
+      <span className="ipa-chart__mpcard-word">
+        <PhoneticWordHighlight word={word} phonemeOrIpa={symbol} />
+      </span>
       <span className="ipa-chart__mpcard-play" aria-hidden>
         {isPlaying ? (
           <Square size={14} fill="currentColor" />

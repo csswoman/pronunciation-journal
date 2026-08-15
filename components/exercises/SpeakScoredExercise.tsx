@@ -46,12 +46,14 @@ interface ScoredResult {
 
 type UnscoredReason = 'unsupported' | 'browser' | 'unavailable'
 
+import { PhoneticWordHighlight } from '@/components/pronunciation/PhoneticWordHighlight'
+
 function WordDisplay({ word, ipa, onListen }: { word?: string; ipa: string; onListen: () => void }) {
   return (
     <div className="flex flex-col items-center gap-1">
       <div className="flex items-center gap-3">
         <div className="text-display-word font-bold text-fg tracking-tight">
-          {word ?? '—'}
+          {word ? <PhoneticWordHighlight word={word} phonemeOrIpa={ipa} /> : '—'}
         </div>
         <ListenButton iconOnly onPlay={onListen} aria-label="Escuchar" />
       </div>
