@@ -53,6 +53,9 @@ export const CONTENT_MAP: readonly ContentMapEntry[] = [
   { targetId: targetId('connected.linking'), kind: 'grammar_deck', slug: 'cs-linking' },
   { targetId: targetId('connected.elision'), kind: 'grammar_deck', slug: 'cs-elision' },
   { targetId: targetId('connected.assimilation'), kind: 'grammar_deck', slug: 'cs-assimilation' },
+  { targetId: targetId('segmental.phoneme./ɹ/'), kind: 'grammar_deck', slug: 'a1-sonido-r-americano' },
+  { targetId: contrastTargetId('/æ/', '/ʌ/'), kind: 'grammar_deck', slug: 'a1-vocales-ae-ua' },
+  { targetId: targetId('segmental.phoneme./ə/'), kind: 'grammar_deck', slug: 'a1-pronunciacion-basica' },
 ]
 
 /**

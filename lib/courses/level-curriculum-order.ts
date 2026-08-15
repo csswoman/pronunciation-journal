@@ -1,5 +1,5 @@
 import type { CourseInput } from "./buildCurriculum";
-import { phonemeTargetId } from "@/lib/pronunciation/targets/registry";
+import { phonemeTargetId, contrastTargetId } from "@/lib/pronunciation/targets/registry";
 import { patternsForLevel } from "./grammar-patterns";
 
 type LessonDef = CourseInput & { g: string };
@@ -32,8 +32,8 @@ const LESSON_BY_SLUG: Record<string, Omit<CourseInput, "g">> = {
   "a1-contables-incontables": { t: "Contables e incontables", p: 1 },
   "a1-preferencias-habilidades": { t: "Lo que te gusta y lo que sabes hacer", p: 1 },
   "a1-pronunciacion-basica": { t: "Primeros sonidos", p: 1, s: true, pt: [phonemeTargetId("/ə/")] },
-  "a1-sonido-r-americano": { t: "La erre americana /ɹ/", p: 1, s: true },
-  "a1-vocales-ae-ua": { t: "Vocales /æ/ y /ʌ/", p: 1, s: true },
+  "a1-sonido-r-americano": { t: "La erre americana /ɹ/", p: 1, s: true, pt: [phonemeTargetId("/ɹ/")] },
+  "a1-vocales-ae-ua": { t: "Vocales /æ/ y /ʌ/", p: 1, s: true, pt: [contrastTargetId("/æ/", "/ʌ/")] },
   "a1-alfabeto-deletreo": { t: "Deletrear con confianza", p: 0 },
   "a1-ingles-telefonico": { t: "Una llamada corta", p: 0 },
   "a1-fechas-horas-descripciones": { t: "Fechas, horas y adjetivos", p: 0 },

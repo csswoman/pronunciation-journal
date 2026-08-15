@@ -144,11 +144,70 @@ const CONNECTED_ASSIMILATION: PronunciationTarget = {
   masteryEligible: false,
 }
 
+const BV_CONTRAST: PronunciationTarget = {
+  id: contrastTargetId('/b/', '/v/'),
+  category: 'segmental.contrast',
+  label: 'Bilabial/labiodental contrast (b/v)',
+  recommendedCefr: 'A1',
+  prerequisites: [],
+  evidenceCapabilities: ['perception', 'controlled_production', 'stt_intelligibility'],
+  masteryEligible: true,
+  contrastPair: ['/b/', '/v/'],
+}
+
+const CAT_CUT_CONTRAST: PronunciationTarget = {
+  id: contrastTargetId('/æ/', '/ʌ/'),
+  category: 'segmental.contrast',
+  label: 'Open vowel contrast (æ/ʌ)',
+  recommendedCefr: 'A1',
+  prerequisites: [],
+  evidenceCapabilities: ['perception', 'controlled_production', 'stt_intelligibility'],
+  masteryEligible: true,
+  contrastPair: ['/æ/', '/ʌ/'],
+}
+
+const SZ_CONTRAST: PronunciationTarget = {
+  id: contrastTargetId('/s/', '/z/'),
+  category: 'segmental.contrast',
+  label: 'Voiceless/voiced alveolar sibilant (s/z)',
+  recommendedCefr: 'A2',
+  prerequisites: [],
+  evidenceCapabilities: ['perception', 'controlled_production', 'stt_intelligibility'],
+  masteryEligible: true,
+  contrastPair: ['/s/', '/z/'],
+}
+
+const SH_CH_CONTRAST: PronunciationTarget = {
+  id: contrastTargetId('/ʃ/', '/tʃ/'),
+  category: 'segmental.contrast',
+  label: 'Fricative vs affricate contrast (ʃ/tʃ)',
+  recommendedCefr: 'A2',
+  prerequisites: [],
+  evidenceCapabilities: ['perception', 'controlled_production', 'stt_intelligibility'],
+  masteryEligible: true,
+  contrastPair: ['/ʃ/', '/tʃ/'],
+}
+
+const AMERICAN_R_PHONEME: PronunciationTarget = {
+  id: phonemeTargetId('/ɹ/'),
+  category: 'segmental.phoneme',
+  label: 'American retroflex/bunched R (ɹ)',
+  recommendedCefr: 'A1',
+  prerequisites: [],
+  evidenceCapabilities: ['perception', 'controlled_production', 'stt_intelligibility'],
+  masteryEligible: true,
+}
+
 /** Frozen registry keyed by target id. Add new targets here only. */
 export const PRONUNCIATION_TARGETS: Readonly<Record<string, PronunciationTarget>> = Object.freeze({
   [TH_CONTRAST.id]: TH_CONTRAST,
   [SHEEP_SHIP_CONTRAST.id]: SHEEP_SHIP_CONTRAST,
+  [BV_CONTRAST.id]: BV_CONTRAST,
+  [CAT_CUT_CONTRAST.id]: CAT_CUT_CONTRAST,
+  [SZ_CONTRAST.id]: SZ_CONTRAST,
+  [SH_CH_CONTRAST.id]: SH_CH_CONTRAST,
   [SCHWA_PHONEME.id]: SCHWA_PHONEME,
+  [AMERICAN_R_PHONEME.id]: AMERICAN_R_PHONEME,
   [WORD_STRESS.id]: WORD_STRESS,
   [SENTENCE_STRESS.id]: SENTENCE_STRESS,
   [RHYTHM.id]: RHYTHM,

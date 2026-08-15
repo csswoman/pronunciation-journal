@@ -6,6 +6,7 @@
     "goal": "Ya puedes pronunciar la R americana sin que suene a R española o francesa."
   },
   "sounds": ["ɹ"],
+  "pronunciationTargetIds": ["segmental.phoneme./ɹ/"],
   "quiz": [
     {
       "q": "¿Dónde va la lengua para pronunciar la /ɹ/ americana?",
