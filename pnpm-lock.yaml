@@ -13,6 +13,11 @@ overrides:
   js-yaml@4: 4.3.1
   nanoid@3: 3.3.17
   sharp: 0.35.3
+  '@supabase/auth-js': 2.108.2
+  '@supabase/functions-js': 2.108.2
+  '@supabase/postgrest-js': 2.108.2
+  '@supabase/realtime-js': 2.108.2
+  '@supabase/storage-js': 2.108.2
 
 patchedDependencies:
   minimatch@3.1.5: 21774738d46fb68ef99ab55905183b7955bf5e6514f3de72dfa81257c601da30
