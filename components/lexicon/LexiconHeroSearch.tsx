@@ -85,6 +85,9 @@ export function LexiconHeroSearch({
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      // The shell owns Cmd/Ctrl+K. Its document listener prevents this event
+      // before it bubbles here, avoiding two search surfaces opening at once.
+      if (e.defaultPrevented) return;
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
         inputRef.current?.focus();

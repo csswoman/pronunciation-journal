@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import { PanelLeftClose, PanelLeftOpen } from "@/components/icons";
@@ -7,10 +7,17 @@ import { NavSection, NavLink, coreNav, practiceNav, exploreNav } from "../theme/
 
 import { SidebarContext } from "../theme/sidebar/SidebarContext";
 import { isNavActive } from "@/lib/navigation/is-nav-active";
+import { SearchTrigger } from "@/components/search/SearchTrigger";
+import { useSearchShortcut } from "@/lib/search/useSearchShortcut";
 
 const SidebarFooter = dynamic(() => import("./SidebarFooter"), {
   loading: () => <div className="h-14 shrink-0 border-t border-border-subtle" aria-hidden />,
 });
+
+const SearchModal = dynamic(
+  () => import("@/components/search/SearchModal").then((module) => module.SearchModal),
+  { ssr: false },
+);
 
 interface SidebarProps {
   className?: string;
@@ -19,6 +26,11 @@ interface SidebarProps {
 export default function Sidebar({ className = "" }: SidebarProps) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const openSearch = useCallback(() => setIsSearchOpen(true), []);
+  const toggleSearch = useCallback(() => setIsSearchOpen((current) => !current), []);
+  const closeSearch = useCallback(() => setIsSearchOpen(false), []);
+  useSearchShortcut(toggleSearch);
 
   useEffect(() => {
     const saved = localStorage.getItem("sidebar-collapsed");
@@ -60,6 +72,8 @@ export default function Sidebar({ className = "" }: SidebarProps) {
           </button>
         </div>
 
+        {!collapsed ? <div className="shrink-0 px-3 pb-3"><SearchTrigger onOpen={openSearch} /></div> : null}
+
         {/* Navigation scrolls; footer stays visible */}
         <nav className={`sidebar-scrollbar min-h-0 flex-1 overflow-y-auto ${collapsed ? "px-1.5" : "px-3"} pb-4 space-y-0.5`}>
           <div className="space-y-0.5">
@@ -73,6 +87,7 @@ export default function Sidebar({ className = "" }: SidebarProps) {
         </nav>
 
         <SidebarFooter />
+        <SearchModal open={isSearchOpen} onClose={closeSearch} />
       </aside>
     </SidebarContext.Provider>
   );
