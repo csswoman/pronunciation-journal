@@ -63,6 +63,8 @@ export interface CoursePathLesson {
   /** Canonical theory owner shared with the deck and equivalent mini-lessons. */
   topicId?: string;
   priority: LessonPriority;
+  /** Short thematic heading shown inside a broad course unit. */
+  group?: string;
   /** Part of the broad curriculum (p === 0), shown after priority block */
   isOptional: boolean;
   /** Connects to Sound Lab (pronunciation / audio). @deprecated kept for compatibility — prefer `pronunciationTargetIds`. */

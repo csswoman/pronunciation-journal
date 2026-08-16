@@ -11,6 +11,8 @@ import { theoryTopicForDeck } from "@/lib/learning-loop/theory-targets";
 export interface CourseInput {
   t: string;
   p: LessonPriority;
+  /** Optional thematic grouping inside an otherwise broad unit. */
+  group?: string;
   s?: boolean;
   /** Stable grammar-deck slug → `public/grammar-decks/<g>.json`. Independent of `number`. */
   g?: string;
@@ -31,6 +33,7 @@ function toLesson(
     slug: course.g,
     topicId: course.g ? theoryTopicForDeck(course.g) : undefined,
     priority: course.p,
+    group: course.group,
     isOptional: course.p === 0,
     soundLab: course.s,
     pronunciationTargetIds: course.pt,

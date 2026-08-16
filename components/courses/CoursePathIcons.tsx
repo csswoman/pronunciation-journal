@@ -5,6 +5,7 @@ import {
   Laptop,
   Briefcase,
   Circle,
+  Check,
   Minus,
   Utensils,
   User,
@@ -127,17 +128,18 @@ export function CoursePathLegendIconDisplay({
 }
 
 export function CoursePathLessonStateDot({
-  available,
-  done,
+  state,
 }: {
-  available?: boolean;
-  done?: boolean;
+  state: "done" | "current" | "available" | "locked";
 }) {
-  if (done) {
-    return <Circle size={10} className={iconClass} strokeWidth={2} fill="currentColor" aria-hidden />;
+  if (state === "done") {
+    return <Check size={14} className={iconClass} strokeWidth={2.5} aria-hidden />;
   }
-  if (available) {
-    return <Circle size={10} className={iconClass} strokeWidth={2} aria-hidden />;
+  if (state === "current") {
+    return <Circle size={8} className={iconClass} strokeWidth={0} fill="currentColor" aria-hidden />;
   }
-  return <Minus size={10} className={iconClass} strokeWidth={2} aria-hidden />;
+  if (state === "available") {
+    return <Circle size={14} className={iconClass} strokeWidth={1.8} aria-hidden />;
+  }
+  return <Minus size={14} className={iconClass} strokeWidth={2} aria-hidden />;
 }

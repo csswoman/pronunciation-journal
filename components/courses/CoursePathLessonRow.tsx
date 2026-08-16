@@ -23,9 +23,9 @@ export default function CoursePathLessonRow({ lesson, levelId }: CoursePathLesso
       <div
         className="course-path__st"
         role="img"
-        aria-label={lesson.state === "done" ? "Completada" : lesson.state === "current" ? "Siguiente lección" : "Disponible"}
+        aria-label={lesson.state === "done" ? "Completada" : lesson.state === "current" ? "En progreso: siguiente lección" : "Pendiente"}
       >
-        <CoursePathLessonStateDot available={lesson.state !== "done"} done={lesson.state === "done"} />
+        <CoursePathLessonStateDot state={lesson.state} />
       </div>
       <Link href={href} className="course-path__lt course-path__lt--link" title={lesson.title}>
         {lesson.title}

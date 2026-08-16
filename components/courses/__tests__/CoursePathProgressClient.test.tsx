@@ -77,6 +77,31 @@ describe("CoursePathProgressClient", () => {
     });
   });
 
+  it("keeps thematic sections collapsible and moves completed lessons into the final disclosure", async () => {
+    bulkGet.mockResolvedValue([
+      { lessonSlug: "1" },
+      { lessonSlug: "2" },
+      null,
+      null,
+      null,
+      null,
+    ]);
+
+    render(<CoursePathProgressClient level={COURSE_PATH_CURRICULUM.levels[0]} />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Completadas")).toBeInTheDocument();
+    });
+
+    const completedGroup = screen.getByText("Completadas").closest("details.course-path__lesson-group");
+    const coreUnit = completedGroup?.closest("details.course-path__unit");
+    const groups = coreUnit?.querySelectorAll("details.course-path__lesson-group");
+
+    expect(groups?.length).toBeGreaterThan(1);
+    expect(groups?.[groups.length - 1]).toBe(completedGroup);
+    expect(completedGroup).not.toHaveAttribute("open");
+  });
+
   it("keeps the curriculum visible with an actionable error when progress cannot load", async () => {
     bulkGet.mockRejectedValue(new Error("IndexedDB unavailable"));
 
