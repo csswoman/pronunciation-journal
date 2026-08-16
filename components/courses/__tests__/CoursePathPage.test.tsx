@@ -3,6 +3,12 @@ import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import CoursePathPage from "../CoursePathPage";
 
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({
+    push: vi.fn(),
+  }),
+}));
+
 vi.mock("next/link", () => ({
   default: ({ href, children, ...props }: React.ComponentProps<"a">) => <a href={String(href)} {...props}>{children}</a>,
 }));
@@ -19,16 +25,20 @@ describe("CoursePathPage", () => {
   it("defaults to A1 when no level is provided", () => {
     render(<CoursePathPage />);
 
+    expect(screen.getByRole("heading", { name: "Cursos" })).toBeInTheDocument();
+    expect(screen.getByText("Aprender")).toBeInTheDocument();
     expect(screen.getByText("Fundamentos A1")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "A1" })).toHaveAttribute("href", "/courses");
+    expect(screen.getAllByRole("link", { name: "A1" })[0]).toHaveAttribute("href", "/courses");
+    expect(screen.getByText("Nivel actual")).toBeInTheDocument();
+    expect(document.querySelector(".course-path__level-picker-mobile")).not.toHaveAttribute("open");
   });
 
   it("selects the requested CEFR level", () => {
     render(<CoursePathPage levelParam="b1" />);
 
     expect(screen.getByText("Inglés en acción B1")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "B1" })).toHaveAttribute("aria-current", "page");
-    expect(screen.getByRole("link", { name: "B1" })).toHaveAttribute("href", "/courses?level=b1");
+    expect(screen.getAllByRole("link", { name: "B1" })[0]).toHaveAttribute("aria-current", "page");
+    expect(screen.getAllByRole("link", { name: "B1" })[0]).toHaveAttribute("href", "/courses?level=b1");
   });
 
   it("falls back to A1 for an invalid level", () => {
@@ -49,8 +59,8 @@ describe("CoursePathPage", () => {
     render(<CoursePathPage />);
 
     expect(screen.queryByRole("heading", { name: "Ruta" })).not.toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Prueba de nivel" })).toHaveAttribute("href", "/assessment");
-    expect(screen.getByRole("link", { name: "Comprobar nivel" })).toHaveAttribute(
+    expect(screen.getAllByRole("link", { name: "Prueba de nivel" })[0]).toHaveAttribute("href", "/assessment");
+    expect(screen.getAllByRole("link", { name: "Comprobar nivel" })[0]).toHaveAttribute(
       "href",
       "/assessment?mode=checkpoint&level=a1",
     );
@@ -72,7 +82,7 @@ describe("CoursePathPage", () => {
     render(<CoursePathPage levelParam="b1" />);
 
     expect(screen.getByText("Inglés en acción B1")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "C1" })).toHaveAttribute(
+    expect(screen.getAllByRole("link", { name: "C1" })[0]).toHaveAttribute(
       "href",
       "/courses?level=c1",
     );
