@@ -65,7 +65,7 @@ export function SrsVaultRow({ entry }: SrsVaultRowProps) {
   const isBusy = loadingAction !== null
 
   return (
-    <div className="flex flex-col gap-3 border-b border-border-subtle py-4 last:border-b-0">
+    <div className="flex flex-col gap-3 border-b border-border-subtle py-4 last:border-b-0 md:grid md:grid-cols-[minmax(0,1fr)_auto] md:items-center md:gap-x-6">
       <div className="flex flex-col gap-1">
         <div className="flex flex-wrap items-baseline gap-2">
           <span className="text-base font-semibold text-fg">{entry.word}</span>
@@ -80,9 +80,9 @@ export function SrsVaultRow({ entry }: SrsVaultRowProps) {
       </div>
 
       {status === 'snoozed' && (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 md:flex-row md:items-center">
           <label className="flex flex-col gap-1">
-            <span className="text-tiny font-medium text-fg-subtle">Pausar por</span>
+            <span className="sr-only">Pausar por</span>
             <select
               value={snoozeDays}
               disabled={isBusy}
@@ -91,7 +91,7 @@ export function SrsVaultRow({ entry }: SrsVaultRowProps) {
                 setSnoozeDays(days)
                 void runAction('snooze', () => snoozeEssentialWord(entry.word, days, user?.id))
               }}
-              className="rounded-lg border border-border-default bg-surface-sunken px-3 py-2 text-body-sm text-fg focus-ring disabled:opacity-50"
+              className="rounded-md border border-border-default bg-surface-sunken px-3 py-2 text-body-sm text-fg focus-ring disabled:opacity-50"
             >
               {SNOOZE_DAYS.map((days) => (
                 <option key={days} value={days}>

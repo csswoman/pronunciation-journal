@@ -50,6 +50,7 @@ vi.mock('@/components/auth/AuthProvider', () => ({
 }))
 
 import { SrsVault } from '../SrsVault'
+import { SrsVaultTrigger } from '../SrsVaultTrigger'
 
 describe('SrsVault', () => {
   beforeEach(() => {
@@ -72,6 +73,11 @@ describe('SrsVault', () => {
   it('shows trigger text with vault count', () => {
     render(<SrsVault />)
     expect(screen.getByRole('button', { name: 'Baúl · 2 palabras' })).toBeInTheDocument()
+  })
+
+  it('keeps the vault available when it is empty', () => {
+    render(<SrsVaultTrigger count={0} onOpen={vi.fn()} />)
+    expect(screen.getByRole('button', { name: 'Baúl' })).toBeInTheDocument()
   })
 
   it('opens the modal when trigger is clicked', async () => {
