@@ -2,6 +2,19 @@ import { describe, it, expect } from 'vitest'
 import { resolveRecommendedMode, PRACTICE_MODES } from '../practice-modes'
 
 describe('resolveRecommendedMode', () => {
+  it('prioritizes due review over every other recommendation', () => {
+    const r = resolveRecommendedMode({
+      fromDaily: true,
+      arc: { soundIpa: 'æ', topicLabel: null, sessionWords: [] },
+      lastModeId: 'decks',
+      dueCount: 3,
+    })
+
+    expect(r.mode.id).toBe('review')
+    expect(r.reason).toBe('due-review')
+    expect(r.headline).toContain('3 palabras pendientes')
+  })
+
   it('from daily with a sound → sound lab, with custom copy', () => {
     const r = resolveRecommendedMode({
       fromDaily: true,

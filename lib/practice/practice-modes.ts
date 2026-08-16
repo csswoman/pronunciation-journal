@@ -15,7 +15,7 @@ export const PRACTICE_MODES: readonly PracticeMode[] = [
   {
     id: 'sounds',
     label: 'Laboratorio de sonidos',
-    description: 'Pronunciación y pares mínimos',
+    description: 'Distingue sonidos parecidos (pares mínimos)',
     href: '/practice/sounds',
     icon: 'MicVocal',
   },
@@ -28,7 +28,7 @@ export const PRACTICE_MODES: readonly PracticeMode[] = [
   },
   {
     id: 'decks',
-    label: 'Mazos',
+    label: 'Tus mazos',
     description: 'Tus mazos de vocabulario',
     href: '/practice/decks',
     icon: 'Layers',
@@ -56,15 +56,15 @@ export const PRACTICE_MODES: readonly PracticeMode[] = [
   },
   {
     id: 'intonation',
-    label: 'Gráficas de entonación',
-    description: 'Curvas de tono en preguntas y oraciones',
+    label: 'Entonación',
+    description: 'Observa cómo cambia el tono en preguntas y oraciones',
     href: '/practice/intonation',
     icon: 'Waves',
   },
   {
     id: 'connected-speech',
     label: 'Habla conectada',
-    description: 'Enlaces de palabras, Flap T y formas débiles',
+    description: 'Une palabras al hablar, como en una conversación real',
     href: '/practice/connected-speech',
     icon: 'Sparkles',
   },
@@ -80,6 +80,7 @@ export const PRACTICE_MODES: readonly PracticeMode[] = [
 const FALLBACK_MODE_ID = 'essential-words'
 
 export type RecommendationReason =
+  | 'due-review'
   | 'daily-sound'
   | 'daily-words'
   | 'last-mode'
@@ -101,6 +102,7 @@ export interface ResolveInput {
   fromDaily: boolean
   arc: ArcLike | undefined
   lastModeId: string | null
+  dueCount?: number | null
 }
 
 function modeById(id: string): PracticeMode | undefined {
@@ -116,6 +118,16 @@ function modeById(id: string): PracticeMode | undefined {
  */
 export function resolveRecommendedMode(input: ResolveInput): RecommendedResult {
   const fallback = modeById(FALLBACK_MODE_ID)!
+
+  if (input.dueCount && input.dueCount > 0) {
+    const mode = modeById('review')!
+    return {
+      mode,
+      reason: 'due-review',
+      headline: `Tienes ${input.dueCount} ${input.dueCount === 1 ? 'palabra pendiente' : 'palabras pendientes'} de repaso`,
+      subtext: 'Atiéndelas antes de empezar una práctica nueva.',
+    }
+  }
 
   if (input.fromDaily && input.arc?.soundIpa) {
     const mode = modeById('sounds')!

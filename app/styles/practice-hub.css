@@ -1,0 +1,25 @@
+.practice-hub {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.practice-hub__suggestion {
+  max-width: var(--layout-session-max);
+}
+
+.practice-hub__modes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
+}
+
+@media (min-width: 768px) {
+  .practice-hub {
+    gap: var(--space-10);
+  }
+
+  .practice-hub__modes {
+    gap: var(--space-12);
+  }
+}

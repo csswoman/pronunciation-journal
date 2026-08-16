@@ -10,11 +10,11 @@ export default function PracticeHubHeader({ fromDaily }: Props) {
   return (
     <PageHeader
       variant="compact"
-      title={fromDaily ? 'Buen trabajo — sigue así' : 'Práctica libre'}
+      title={fromDaily ? 'Buen trabajo. Sigue así' : 'Elige una práctica'}
       subtitle={
         fromDaily
           ? 'Terminaste el plan de hoy. Elige qué reforzar ahora.'
-          : 'Elige qué quieres reforzar.'
+          : 'Todos los modos están disponibles. La sugerencia es solo un punto de partida.'
       }
     />
   )
