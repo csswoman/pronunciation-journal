@@ -72,7 +72,7 @@ export function SpeakReviewCard({
   const submitted = useRef(false)
   const startedAtRef = useRef(Date.now())
 
-  const { sentence } = selectSentence(entry, repetitions)
+  const { sentence, sentence_ipa } = selectSentence(entry, repetitions)
 
   useEffect(() => {
     submitted.current = false
@@ -200,9 +200,9 @@ export function SpeakReviewCard({
         <p className="m-0 text-center text-body-lg font-medium leading-relaxed text-balance text-fg">
           {displayEnglishText(sentence)}
         </p>
-        {entry.sentence_ipa && (
+        {sentence_ipa && (
           <p className="ipa m-0 max-w-[36ch] text-center text-body-lg leading-relaxed text-fg-muted">
-            {entry.sentence_ipa}
+            {sentence_ipa}
           </p>
         )}
       </div>
