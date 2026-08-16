@@ -696,9 +696,53 @@
   font-size: var(--text-size-body);
   line-height: 1.6;
   color: var(--text-secondary);
-  white-space: pre-wrap;
   max-width: 65ch;
   text-wrap: pretty;
+}
+
+.mini-lessons__section-body > :first-child {
+  margin-top: 0;
+}
+
+.mini-lessons__section-body > :last-child {
+  margin-bottom: 0;
+}
+
+.mini-lessons__section-body p,
+.mini-lessons__section-body ul,
+.mini-lessons__section-body ol {
+  margin: 0;
+}
+
+.mini-lessons__section-body > * + * {
+  margin-top: var(--space-3);
+}
+
+.mini-lessons__section-body ul,
+.mini-lessons__section-body ol {
+  padding-left: var(--space-5);
+}
+
+.mini-lessons__section-body li + li {
+  margin-top: var(--space-1);
+}
+
+.mini-lessons__section-body strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.mini-lessons__section-body a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.mini-lessons__section-body a:focus-visible {
+  outline: 2px solid var(--focus-ring, var(--primary));
+  outline-offset: 2px;
+  border-radius: var(--radius-xs);
 }
 
 .mini-lessons__examples,

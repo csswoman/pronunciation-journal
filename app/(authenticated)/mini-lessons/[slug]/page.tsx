@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import ReactMarkdown from "react-markdown";
 import PageLayout from "@/components/layout/PageLayout";
 import PageHeader from "@/components/layout/PageHeader";
 import {
@@ -103,7 +104,9 @@ export default async function MiniLessonDetailPage({ params }: MiniLessonPagePro
               className="mini-lessons__section"
             >
               <h2 className="mini-lessons__section-title">{section.heading}</h2>
-              <p className="mini-lessons__section-body">{section.body}</p>
+              <div className="mini-lessons__section-body">
+                <ReactMarkdown>{section.body}</ReactMarkdown>
+              </div>
             </section>
           ))}
 
