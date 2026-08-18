@@ -4,7 +4,7 @@ This document records the project's performance boundaries, measurement
 baseline, and architectural rules. Implementation work is tracked separately
 in [`plans/README.md`](../../plans/README.md).
 
-Last measured: 2026-07-03 at commit `51515e0` (post roadmap 032 Fase 2).
+Last measured: 2026-08-18 at commit `eb033385` (bundle budget re-baseline).
 
 ## Baseline
 
@@ -22,14 +22,14 @@ Verification baseline:
 - Tests: 151 files, 925 tests, all passing
 - Bundle analysis: `pnpm analyze:bundle` → `bundle-summary.json` (CI enforces `pnpm analyze:bundle:check`)
 
-### Client JavaScript (Turbopack build, re-baselined 2026-07-23)
+### Client JavaScript (Turbopack build, re-baselined 2026-08-18)
 
 Metrics from `scripts/analyze-bundle.mjs` (gzip via Node zlib, same machine as build):
 
 | Metric | Raw | Gzip |
 |---|---:|---:|
-| Root main entry (`build-manifest.json` root + polyfills) | 556 KB | 168 KB |
-| Eager `static/chunks/*.js` (82 files) | 4,231 KB | 1,275 KB |
+| Root main entry (`build-manifest.json` root + polyfills) | 555 KB | 168 KB |
+| Eager `static/chunks/*.js` (111 files) | 5,209 KB | 1,531 KB |
 | Deferred chunks (excluded from budget) | 3,832 KB | 939 KB |
 
 `allChunksGzipKB` counts **eagerly-loaded chunks only**. Chunks that exist solely
@@ -43,17 +43,18 @@ It is detected by content probe (Turbopack chunk names are content-hashed). If t
 probe stops matching, `analyze-bundle.mjs` fails CI rather than silently counting
 the dictionary against the budget — update the probe in that case.
 
-> The previous `allChunksGzipKB` budget of 1,868 KB was measured against a total
-> that *included* the lazy dictionary, so it was ~940 KB looser than it looked.
-> The 1,275 KB baseline is not a reduction in shipped code — it is the same app
-> measured correctly.
+> July 23, 2026: the previous 1,868 KB budget included the lazy dictionary, so
+> it was ~940 KB looser than it looked. Correcting the measurement produced a
+> 1,275 KB eager baseline (82 chunks). August 18, 2026: that eager total grew to
+> 1,531 KB (111 chunks) after essential-words, global search, and curriculum
+> work; the dictionary remains deferred.
 
 CI budgets (`scripts/bundle-budget.json`, +10% tolerance):
 
 | Metric | Budget gzip |
 |---|---:|
 | `rootMainGzipKB` | 168 KB |
-| `allChunksGzipKB` | 1,275 KB |
+| `allChunksGzipKB` | 1,531 KB |
 
 Historical route-level gzip totals (pre-Turbopack baseline, 2026-06-21) remain
 below for trend comparison only — re-measure per-route after adding route-level
@@ -170,3 +171,5 @@ A performance PR should satisfy all applicable checks:
 | 2026-06-21 | `WORKTREE` | Server-render `/courses` level selection and keep the full curriculum out of client references | `/courses` now renders per-request because `?level=` is server-selected; the generated `/courses` client manifest no longer contains `lib/courses/curriculum`; build verification passed on Node 26.3.1 (project target remains Node 24.x) |
 | 2026-06-21 | local | Cache parsed lexicon datasets in the server process | Cold `/words` model reads each of the 10 JSON files once; warm reads perform no additional filesystem reads; no latency percentage claimed |
 | 2026-06-21 | local | Bound phoneme session datasets to target + confusable sounds | Sound practice no longer calls `getAllWords()`; session words are fetched with `sound_id IN (...)` and grouped in one pass; review/daily plans batch multi-sound minimal-pair reads and assemble per-sound datasets without nested `allSounds.map(...allWords.filter(...))` |
+| 2026-07-23 | `83b0e7d0` | Exclude lazy CMUdict from `allChunksGzipKB` | Eager total 1,275 KB gzip (82 chunks); deferred dictionary 939 KB gzip |
+| 2026-08-18 | `eb033385` | Re-baseline after feature growth (essential-words, search, curriculum) | Eager total 1,531 KB gzip (111 chunks); root main still 168 KB gzip; CMUdict still deferred |

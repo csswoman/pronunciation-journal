@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 /* eslint-disable max-lines -- session integration coverage keeps its full fixture locally */
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { act, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import type { EssentialWord } from '@/lib/essential-words/types'
@@ -29,43 +29,74 @@ vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: vi.fn(), replace: vi.fn(), back: vi.fn(), refresh: vi.fn() }),
 }))
 
-const dbMocks = vi.hoisted(() => ({
-  sessionDrafts: new Map<string, unknown>(),
-  getEssentialWordsSrsEntries: vi.fn(async (): Promise<SRSData[]> => []),
-  getEssentialWordsIntroducedToday: vi.fn(async (): Promise<string[]> => []),
-  getEssentialWordProgressForUser: vi.fn(async () => []),
-  saveEssentialWordProgress: vi.fn(async () => undefined),
-  archiveEssentialWordProgress: vi.fn(async () => undefined),
-  recordEssentialWordIntroduction: vi.fn(async () => undefined),
-  snoozeEssentialWord: vi.fn(async () => undefined),
-  masterEssentialWord: vi.fn(async () => undefined),
-  getSRSData: vi.fn(async () => undefined),
-  saveSRSData: vi.fn(async () => undefined),
-  saveAttempt: vi.fn(async () => undefined),
-  updateDailyProgress: vi.fn(async () => undefined),
-  updateUserStats: vi.fn(async () => undefined),
-  migrateArchivedSrsRows: vi.fn(async () => undefined),
-}))
-vi.mock('@/lib/db', () => ({
-  db: {
-    srsData: {
-      put: dbMocks.saveSRSData,
-      // The session loader also reads the non-mutating tomorrow count through
-      // Dexie's collection API. Keep this fixture aligned with its contract.
-      filter: () => ({ toArray: async () => [] }),
+const dbMocks = vi.hoisted(() => {
+  const emptyWhere = () => ({
+    equals: () => ({ toArray: async () => [] }),
+    between: () => ({ toArray: async () => [] }),
+  })
+  const txTable = () => ({
+    put: async () => undefined,
+    bulkPut: async () => undefined,
+    bulkAdd: async () => undefined,
+    toArray: async () => [],
+  })
+  return {
+    emptyWhere,
+    txTable,
+    sessionDrafts: new Map<string, unknown>(),
+    getEssentialWordsSrsEntries: vi.fn(async (): Promise<SRSData[]> => []),
+    getEssentialWordsIntroducedToday: vi.fn(async (): Promise<string[]> => []),
+    getEssentialWordProgressForUser: vi.fn(async () => []),
+    saveEssentialWordProgress: vi.fn(async () => undefined),
+    archiveEssentialWordProgress: vi.fn(async () => undefined),
+    recordEssentialWordIntroduction: vi.fn(async () => undefined),
+    snoozeEssentialWord: vi.fn(async () => undefined),
+    masterEssentialWord: vi.fn(async () => undefined),
+    getSRSData: vi.fn(async () => undefined),
+    saveSRSData: vi.fn(async () => undefined),
+    saveAttempt: vi.fn(async () => undefined),
+    updateDailyProgress: vi.fn(async () => undefined),
+    updateUserStats: vi.fn(async () => undefined),
+    migrateArchivedSrsRows: vi.fn(async () => undefined),
+  }
+})
+vi.mock('@/lib/db', () => {
+  const { emptyWhere, txTable, ...dbExports } = dbMocks
+  return {
+    db: {
+      srsData: {
+        put: dbMocks.saveSRSData,
+        get: async () => undefined,
+        // The session loader also reads the non-mutating tomorrow count through
+        // Dexie's collection API. Keep this fixture aligned with its contract.
+        filter: () => ({ toArray: async () => [] }),
+      },
+      essentialWordSessionDrafts: {
+        get: vi.fn(async (userId: string) => dbMocks.sessionDrafts.get(userId)),
+        put: vi.fn(async (draft: { userId: string }) => {
+          dbMocks.sessionDrafts.set(draft.userId, draft)
+        }),
+        delete: vi.fn(async (userId: string) => {
+          dbMocks.sessionDrafts.delete(userId)
+        }),
+      },
+      // recordLegacySkillAttempt reads/writes the skill-model tables even when
+      // SKILL_MODEL_MODE=off. Keep a Dexie-shaped stub so Continue does not
+      // log "[essential-words] legacy skill evidence failed".
+      learningItems: { where: emptyWhere },
+      attemptLogs: { where: emptyWhere },
+      srsReviewEvents: { where: emptyWhere },
+      syncOutbox: { where: emptyWhere },
+      transaction: async (...args: unknown[]) => {
+        const fn = args[args.length - 1] as (tx: {
+          table: () => ReturnType<typeof txTable>
+        }) => Promise<unknown>
+        return fn({ table: txTable })
+      },
     },
-    essentialWordSessionDrafts: {
-      get: vi.fn(async (userId: string) => dbMocks.sessionDrafts.get(userId)),
-      put: vi.fn(async (draft: { userId: string }) => {
-        dbMocks.sessionDrafts.set(draft.userId, draft)
-      }),
-      delete: vi.fn(async (userId: string) => {
-        dbMocks.sessionDrafts.delete(userId)
-      }),
-    },
-  },
-  ...dbMocks,
-}))
+    ...dbExports,
+  }
+})
 
 const authMocks = vi.hoisted(() => ({
   user: null as { id: string } | null,
@@ -106,6 +137,7 @@ vi.mock('@/lib/progress/activity-hub', () => ({
 
 vi.mock('@/lib/sync/sync-manager', () => ({
   flushOutbox: syncMocks.flushOutbox,
+  enqueue: vi.fn(async () => undefined),
 }))
 
 vi.mock('@/hooks/useSpeechInput', () => ({
@@ -128,6 +160,8 @@ async function clickEmpezar() {
   await user.click(await screen.findByRole('button', { name: 'Empezar' }))
 }
 
+let consoleError: ReturnType<typeof vi.spyOn>
+
 beforeEach(() => {
   vi.clearAllMocks()
   vi.stubEnv('NEXT_PUBLIC_SKILL_MODEL_MODE', 'off')
@@ -143,6 +177,15 @@ beforeEach(() => {
   dbMocks.getEssentialWordsSrsEntries.mockResolvedValue([])
   dbMocks.getEssentialWordsIntroducedToday.mockResolvedValue([])
   dbMocks.saveSRSData.mockResolvedValue(undefined)
+  consoleError = vi.spyOn(console, 'error')
+})
+
+afterEach(() => {
+  const skillEvidenceFailures = consoleError.mock.calls.filter(([message]) =>
+    String(message).includes('legacy skill evidence failed'),
+  )
+  consoleError.mockRestore()
+  expect(skillEvidenceFailures).toEqual([])
 })
 
 describe('EssentialWordsSession', () => {
