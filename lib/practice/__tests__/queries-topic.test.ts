@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
-const { enqueueMock, topicSrsMock, wordBankSrsMock, fragmentSrsMock, transactionMock, syncOutboxFirstMock, syncOutboxWhereMock } = vi.hoisted(() => {
+const { enqueueMock, topicSrsMock, wordBankSrsMock, fragmentSrsMock, transactionMock, syncOutboxWhereMock } = vi.hoisted(() => {
   const syncOutboxFirstMock = vi.fn(async () => undefined)
   const syncOutboxWhereMock = vi.fn(() => ({
     equals: vi.fn(() => ({

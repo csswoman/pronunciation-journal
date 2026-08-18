@@ -188,7 +188,8 @@ async function attemptRemoteEntry(entry: SyncOutboxEntry): Promise<RemoteEntryRe
     // database whose PostgREST schema cache does not expose `diagnostic` yet.
     // Preserve the local diagnostic, but let the immutable attempt itself land.
     if (isMissingAttemptDiagnosticColumn(entry, message, code)) {
-      const { diagnostic: _diagnostic, ...legacyPayload } = entry.payload as Record<string, unknown>
+      const legacyPayload = { ...(entry.payload as Record<string, unknown>) }
+      delete legacyPayload.diagnostic
       console.warn('[sync-manager] attempt_logs.diagnostic unavailable; synced attempt without diagnostic', {
         entryId: entry.id,
         code,

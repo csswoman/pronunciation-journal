@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Volume2, Mic, Play, Pause } from "@/components/icons";
+import { Volume2, Mic, Pause } from "@/components/icons";
 import { speak } from "@/lib/phoneme-practice/tts";
 import { cn } from "@/lib/cn";
 

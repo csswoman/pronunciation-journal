@@ -21,7 +21,8 @@ interface Props {
   fallbackRatio?: number
 }
 
-export function LevelProgressBreakdown({ fallbackRatio: _fallbackRatio }: Props) {
+export function LevelProgressBreakdown({ fallbackRatio }: Props) {
+  void fallbackRatio
   const { user } = useAuth()
   const [words, setWords] = useState<LevelTallyWord[] | null>(null)
 

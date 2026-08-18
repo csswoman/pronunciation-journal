@@ -1,9 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { Volume2 } from "@/components/icons"
 import { cn } from '@/lib/cn'
-import Button from '@/components/ui/Button'
 import type { ReaderPassage } from '@/lib/practice/reader/types'
 import { recordReaderExposure } from '@/lib/practice/reader/exposure'
 import { tokenizePassage } from './passage-tokens'

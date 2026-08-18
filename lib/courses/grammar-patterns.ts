@@ -1,5 +1,3 @@
-import type { CefrLevelId } from "./types";
-
 /** One micro-pattern in the grammar spine (reference taxonomy). */
 export interface GrammarPattern {
   id: string;

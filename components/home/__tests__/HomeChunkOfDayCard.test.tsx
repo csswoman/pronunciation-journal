@@ -28,6 +28,7 @@ describe("HomeChunkOfDayCard", () => {
     expect(shuffleButton).toBeInTheDocument();
 
     const initialWord = container.querySelector(".text-display-word")?.textContent;
+    expect(initialWord).toBeTruthy();
     
     fireEvent.click(shuffleButton);
 

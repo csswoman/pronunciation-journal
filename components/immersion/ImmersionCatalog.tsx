@@ -3,9 +3,9 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Play, Timer } from '@/components/icons';
+import { ArrowRight, Timer } from '@/components/icons';
 import Badge from '@/components/ui/Badge';
-import type { ImmersionLesson, ImmersionLevel, ImmersionTopic } from '@/lib/immersion/types';
+import type { ImmersionLesson, ImmersionTopic } from '@/lib/immersion/types';
 
 interface ImmersionCatalogProps {
   lessons: ImmersionLesson[];

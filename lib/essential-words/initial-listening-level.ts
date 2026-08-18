@@ -32,6 +32,7 @@ export function retireInitialListeningLevel(
 ): LearningItem {
   if (item.skill !== "listening" || !item.initialListeningLevel) return item;
   if (realListeningAttemptCount(attempts) < DICTATION_DIAGNOSTIC_CONFIG.initialListeningLevel.realListeningAttemptsToRetire) return item;
-  const { initialListeningLevel: _initialListeningLevel, ...withoutEstimate } = item;
+  const withoutEstimate = { ...item };
+  delete withoutEstimate.initialListeningLevel;
   return withoutEstimate as LearningItem;
 }

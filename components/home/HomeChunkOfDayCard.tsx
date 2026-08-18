@@ -17,7 +17,7 @@ function saveLabel(state: SaveState): string {
 }
 
 export default function HomeChunkOfDayCard() {
-  const { chunk, loading, isShuffled, shuffle } = useChunkOfDay();
+  const { chunk, loading, shuffle } = useChunkOfDay();
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const [isRotating, setIsRotating] = useState(false);
 

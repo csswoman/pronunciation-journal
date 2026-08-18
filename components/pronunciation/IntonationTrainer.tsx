@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { INTONATION_PATTERNS, type IntonationSentence } from "@/lib/speech/intonation-patterns";
+import { INTONATION_PATTERNS } from "@/lib/speech/intonation-patterns";
 import {
   extractPitchTrack,
   evaluateIntonationContour,

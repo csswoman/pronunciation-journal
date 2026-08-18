@@ -83,9 +83,9 @@ const limit = limitArg >= 0 ? Number(args[limitArg + 1]) : all ? Infinity : 3;
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-function hasSpanishAnswers(lesson: any): boolean {
+function hasSpanishAnswers(lesson: { exercises?: Array<{ answers?: string[] }> }): boolean {
   if (!lesson.exercises || lesson.exercises.length === 0) return false;
-  return lesson.exercises.some((ex: any) => {
+  return lesson.exercises.some((ex) => {
     const answers = ex.answers || [];
     return answers.some((ans: string) => {
       const lower = ans.toLowerCase();
@@ -98,7 +98,17 @@ function hasSpanishAnswers(lesson: any): boolean {
   });
 }
 
-async function callGeminiWithRetry(ai: any, prompt: string, retries = 5): Promise<any> {
+type GeminiClient = {
+  models: {
+    generateContent: (params: {
+      model: string;
+      contents: string;
+      config: { responseMimeType: string };
+    }) => Promise<unknown>;
+  };
+};
+
+async function callGeminiWithRetry(ai: GeminiClient, prompt: string, retries = 5): Promise<unknown> {
   for (let i = 0; i < retries; i++) {
     try {
       const res = await ai.models.generateContent({
@@ -109,13 +119,14 @@ async function callGeminiWithRetry(ai: any, prompt: string, retries = 5): Promis
         },
       });
       return res;
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const errorObj = err as { status?: number; statusCode?: number; message?: string };
       const isRateLimit =
-        err.status === 429 ||
-        err.statusCode === 429 ||
-        String(err.message).toLowerCase().includes("quota") ||
-        String(err.message).toLowerCase().includes("rate limit") ||
-        String(err.message).toLowerCase().includes("exhausted");
+        errorObj.status === 429 ||
+        errorObj.statusCode === 429 ||
+        String(errorObj.message).toLowerCase().includes("quota") ||
+        String(errorObj.message).toLowerCase().includes("rate limit") ||
+        String(errorObj.message).toLowerCase().includes("exhausted");
 
       if (isRateLimit && i < retries - 1) {
         const delay = 60000 + i * 30000;
@@ -128,7 +139,7 @@ async function callGeminiWithRetry(ai: any, prompt: string, retries = 5): Promis
   }
 }
 
-async function processLesson(ai: any, slug: string) {
+async function processLesson(ai: GeminiClient, slug: string) {
   const lessonPath = path.join(LESSONS_DIR, `${slug}.json`);
   const miniPath = path.join(MINI_LESSONS_DIR, `${slug}.json`);
 
@@ -270,8 +281,9 @@ async function main() {
     try {
       await processLesson(ai, slug);
       successCount++;
-    } catch (error: any) {
-      console.error(`Failed to process slug "${slug}":`, error.message || error);
+    } catch (error: unknown) {
+      const err = error as Error;
+      console.error(`Failed to process slug "${slug}":`, err.message || error);
       failCount++;
     }
   }

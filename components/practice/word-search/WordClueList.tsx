@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import type { WordSearchItem, WordSearchMode } from '@/lib/exercises/word-search/types'
-import { Check, Eye, HelpCircle } from '@/components/icons'
+import { Check, Eye } from '@/components/icons'
 import { ListenButton } from '@/components/ui/ListenButton'
 import { speakText } from '@/lib/speech/synthesis'
 

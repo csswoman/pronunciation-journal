@@ -110,8 +110,9 @@ function joinSpanishList(items: string[]): string {
 
 export function buildPerformanceRows(
   bySlug: SessionResult['bySlug'],
-  _options?: { soundMode?: boolean },
+  options?: { soundMode?: boolean },
 ): PerformanceRow[] {
+  void options?.soundMode
   const buckets = new Map<SessionFacet, { correct: number; total: number }>()
 
   for (const [slug, stats] of Object.entries(bySlug)) {

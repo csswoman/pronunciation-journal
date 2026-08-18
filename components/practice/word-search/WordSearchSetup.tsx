@@ -23,9 +23,7 @@ import {
   Sparkles,
   BookOpen,
   Layers,
-  Search,
   Loader2,
-  FolderInput,
   Volume2,
 } from '@/components/icons'
 

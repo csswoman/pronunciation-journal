@@ -2,7 +2,6 @@ import { buildLevel } from "./buildCurriculum";
 import { a1CourseInputs, a2CourseInputs, b1CourseInputs, b2CourseInputs, c1CourseInputs } from "./level-curriculum-order";
 import type { CefrLevelId, CoursePathCurriculum } from "./types";
 import {
-  phonemeTargetId,
   targetId,
 } from "@/lib/pronunciation/targets/registry";
 

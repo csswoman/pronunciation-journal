@@ -1,7 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import { Sparkles, Headphones, Timer, Volume2 } from '@/components/icons';
+import { Sparkles, Timer } from '@/components/icons';
 import Badge from '@/components/ui/Badge';
 
 export type DailyRoutinePreset = 'salas-60' | 'standard-30' | 'express-15';
