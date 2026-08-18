@@ -173,6 +173,7 @@ export default async function MiniLessonDetailPage({ params }: MiniLessonPagePro
                   key={idx}
                   instruction={exercise.instruction}
                   items={exercise.items}
+                  answers={exercise.answers}
                 />
               ))}
             </section>
