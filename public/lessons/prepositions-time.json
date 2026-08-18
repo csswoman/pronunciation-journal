@@ -30,7 +30,7 @@
   ],
   "exercises": [
     {
-      "instruction": "Complete con in, on, at o — (sin preposición).",
+      "instruction": "Fill in each blank with the correct preposition of time: 'at', 'on', or 'in'.",
       "items": [
         "___ the weekend",
         "___ Friday morning",
@@ -40,12 +40,12 @@
         "___ noon"
       ],
       "answers": [
-        "at/on (ambos usados ​​regionalmente)",
-        "en",
-        "en",
-        "en",
-        "—",
-        "en"
+        "at/on (both used regionally)",
+        "on",
+        "in",
+        "on",
+        "— (no preposition)",
+        "at"
       ]
     }
   ],

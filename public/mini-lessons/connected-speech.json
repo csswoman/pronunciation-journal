@@ -4,22 +4,23 @@
   "level": "intermediate",
   "category": "pronunciation",
   "duration": 6,
-  "title": "Discurso conectado: vinculación, elisión, asimilación.",
-  "subtitle": "Pronunciación del día",
-  "body": "Las palabras en una oración no suenan aisladas: fluyen juntas. Tres procesos dan forma a cómo suena realmente el inglés nativo.",
+  "title": "Maestría en el Discurso Conectado: Linking, Elision y Assimilation",
+  "subtitle": "Claves para una pronunciación fluida",
+  "body": "Para sonar verdaderamente natural en inglés, es esencial comprender cómo las palabras se conectan y transforman cuando hablamos. ¡No es que las palabras suenen aisladas! El 'connected speech' agrupa tres procesos fonéticos clave que hacen que el inglés fluya de manera auténtica.",
   "examples": [
     {
-      "word": "linking: 'an apple' → /ə ˈnæp.əl/",
-      "translation": "consonante + vocal se unen"
+      "word": "Linking: 'an apple' → /ə ˈnæp.əl/",
+      "translation": "Consonante + vocal se unen"
     },
     {
-      "word": "elision: 'next day' → /nɛks deɪ/",
-      "translation": "sonido desaparece"
+      "word": "Elision: 'next day' → /nɛks deɪ/",
+      "translation": "Un sonido desaparece"
     },
     {
-      "word": "assimilation: 'ten boys' → /ˈtem bɔɪz/",
+      "word": "Assimilation: 'ten boys' → /ˈtem bɔɪz/",
       "translation": "/n/ se convierte en /m/"
     }
   ],
+  "tip": "¡Un buen ejercicio es escuchar a hablantes nativos, imitar la forma en que conectan las palabras e intentar identificar estos fenómenos en sus conversaciones diarias o en canciones y películas!",
   "href": "/mini-lessons/connected-speech"
 }

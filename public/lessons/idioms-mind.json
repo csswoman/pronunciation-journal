@@ -1,0 +1,82 @@
+{
+  "slug": "idioms-mind",
+  "sections": [
+    {
+      "heading": "'Mind' más allá de la mente",
+      "body": "En español solemos traducir 'mind' directamente como 'mente'. Pero en la práctica, sirve como verbo y sustantivo en estructuras muy comunes para pedir decisiones, indicar advertencias o cambiar de opinión."
+    },
+    {
+      "heading": "Las expresiones clave con 'Mind'",
+      "body": "'Never mind' desestima un tema ('olvídalo, no importa'). 'Make up your mind' apremia a alguien a decidirse. 'Keep in mind' introduce un recordatorio o advertencia importante. 'Change your mind' describe cambiar una elección previa. 'Out of your mind' se usa para dudar de la cordura de alguien de manera coloquial. 'Blow your mind' describe algo sumamente impresionante."
+    }
+  ],
+  "examples": [
+    {
+      "english": "Oh, you forgot the keys? Never mind, I have a spare set.",
+      "translation": "oh, ¿olvidaste las llaves? no importa, tengo un juego de repuesto"
+    },
+    {
+      "english": "We need to go now, so please make up your mind.",
+      "translation": "tenemos que irnos ya, así que por favor decídete"
+    },
+    {
+      "english": "Keep in mind that the banks are closed on Sundays.",
+      "translation": "ten en cuenta que los bancos están cerrados los domingos"
+    },
+    {
+      "english": "If you change your mind, give me a call.",
+      "translation": "si cambias de opinión, llámame"
+    },
+    {
+      "english": "Are you out of your mind? That is a terrible idea!",
+      "translation": "¿estás loco? ¡esa es una idea terrible!"
+    },
+    {
+      "english": "The view from the top will blow your mind.",
+      "translation": "la vista desde la cima te volará la cabeza"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Completa la frase con el modismo adecuado utilizando 'mind'.",
+      "items": [
+        "I can't choose between these two shirts; I need to make ___.",
+        "If you ever go to Canada, keep ___ that it gets very cold.",
+        "I was going to buy the tickets, but I changed ___.",
+        "Are you out of ___? That is extremely dangerous!",
+        "The graphics in this new game will blow ___."
+      ],
+      "answers": [
+        "up my mind",
+        "in mind",
+        "my mind",
+        "your mind",
+        "your mind"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "¿Qué le estás pidiendo a alguien si le dices 'Make up your mind'?",
+      "options": [
+        "Que abra su mente a nuevas ideas.",
+        "Que tome una decisión de una vez por todas.",
+        "Que se cuide la cabeza.",
+        "Que cambie de opinión."
+      ],
+      "correct": 1,
+      "explanation": "'Make up your mind' es una frase común para decir 'decídete'."
+    },
+    {
+      "question": "¿Qué significa 'never mind'?",
+      "options": [
+        "Nunca pienses en el futuro.",
+        "Ten cuidado con lo que dices.",
+        "Olvídalo / no tiene importancia.",
+        "No cambies de parecer."
+      ],
+      "correct": 2,
+      "explanation": "'Never mind' se usa coloquialmente para descartar un asunto o restar importancia a algo."
+    }
+  ]
+}

@@ -34,18 +34,18 @@
   ],
   "exercises": [
     {
-      "instruction": "Completa con segundo condicional.",
+      "instruction": "Complete each second conditional sentence with the correct verb forms.",
       "items": [
         "If I ___ (be) you, I ___ (tell) him the truth.",
-        "She ___ (travel) more if she ___ (have) money.",
+        "She ___ (travel) more if she ___ (have) more money.",
         "If he ___ (study) medicine, he ___ (become) a doctor.",
         "What ___ you ___ (do) if you ___ (lose) your job?"
       ],
       "answers": [
-        "fueron / dirían",
-        "viajaría/habría",
-        "se habría convertido / habría estudiado",
-        "harías / perderías"
+        "were / would tell",
+        "would travel / had",
+        "studied / would become",
+        "would you do / lost"
       ]
     }
   ],

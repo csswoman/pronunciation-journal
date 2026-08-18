@@ -46,18 +46,18 @@
   ],
   "exercises": [
     {
-      "instruction": "Conecta las dos oraciones usando y, pero, entonces o porque.",
+      "instruction": "Choose the correct linking word to complete each sentence.",
       "items": [
-        "I was hungry. I made a sandwich.",
-        "She likes jazz. She doesn't like classical music.",
-        "He forgot his wallet. He couldn't pay.",
-        "We left early. We wanted to avoid traffic."
+        "I was tired, ___ I went to bed early. (so / although)",
+        "___ it was raining, we went for a walk. (Although / Because)",
+        "She studied hard ___ she passed the exam. (but / and)",
+        "He didn't call ___ he forgot. (because / however)"
       ],
       "answers": [
-        "Tenía hambre y me hice un sándwich.",
-        "Le gusta el jazz pero no le gusta la música clásica.",
-        "Se le olvidó la cartera y no pudo pagar.",
-        "Salimos temprano porque queríamos evitar el tráfico."
+        "so",
+        "Although",
+        "and",
+        "because"
       ]
     }
   ],

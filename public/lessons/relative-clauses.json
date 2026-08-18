@@ -30,7 +30,7 @@
   ],
   "exercises": [
     {
-      "instruction": "Agregue comas si la cláusula no es definitoria. Escriba 'D' o 'ND'.",
+      "instruction": "Identify each relative clause as defining (D) or non-defining (ND), adding commas where required.",
       "items": [
         "The house where I grew up has been demolished.",
         "My father who is a doctor works at the local hospital.",
@@ -38,10 +38,10 @@
         "Lima which is the capital of Peru is a fascinating city."
       ],
       "answers": [
-        "D - sin comas",
-        "ND — 'Mi padre, que es médico, trabaja en el hospital local'.",
-        "D - sin comas",
-        "ND — 'Lima, que es la capital del Perú, es una ciudad fascinante'."
+        "D — no commas needed.",
+        "ND — 'My father, who is a doctor, works at the local hospital.'",
+        "D — no commas needed.",
+        "ND — 'Lima, which is the capital of Peru, is a fascinating city.'"
       ]
     }
   ],

@@ -30,18 +30,18 @@
   ],
   "exercises": [
     {
-      "instruction": "Utilice must, might o can't para reaccionar ante cada situación.",
+      "instruction": "Rewrite each sentence using a modal verb of deduction (must, might, can't/couldn't) with the correct level of certainty.",
       "items": [
-        "The light is on and music is playing. (someone is home)",
-        "She's not answering her phone. (busy / asleep / out)",
-        "He says he's 7 feet tall. (impossible / unlikely)",
-        "She got 100% on every test. (very intelligent)"
+        "I'm certain he is at home — his car is in the driveway. (present)",
+        "It's impossible that she finished already — she just started. (present)",
+        "Perhaps they missed the train. (past)",
+        "I'm sure the package was delivered — here's the tracking confirmation. (past)"
       ],
       "answers": [
-        "Alguien debe estar en casa.",
-        "Podría estar ocupada, dormida o fuera.",
-        "No puede medir 7 pies de altura.",
-        "Debe ser muy inteligente."
+        "He must be at home — his car is in the driveway.",
+        "She can't have finished already — she just started.",
+        "They might have / may have missed the train.",
+        "The package must have been delivered — here's the tracking confirmation."
       ]
     }
   ],

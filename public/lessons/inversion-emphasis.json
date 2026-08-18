@@ -2,43 +2,43 @@
   "slug": "inversion-emphasis",
   "sections": [
     {
-      "heading": "¿Qué es la inversión?",
-      "body": "La inversión coloca el verbo auxiliar (o 'ser') antes del sujeto, creando énfasis y un tono formal o dramático. Se desencadena por adverbios negativos o restrictivos al comienzo de una oración."
+      "heading": "¿Qué es la inversión (Inversion)?",
+      "body": "La inversión gramatical, en inglés conocida como 'inversion', consiste en cambiar el orden habitual de las palabras en una oración, colocando el verbo auxiliar (o el verbo 'to be') *antes* del sujeto. Esto se hace para crear énfasis, darle un tono más formal o dramático a la expresión, o en ciertas estructuras gramaticales. A menudo, se activa cuando la oración comienza con adverbios negativos o restrictivos."
     },
     {
-      "heading": "Desencadenantes de inversión comunes",
-      "body": "Nunca, rara vez, rara vez, apenas, escasamente, apenas, apenas, no sólo, no hasta, de ninguna manera, de ninguna manera, bajo ninguna circunstancia, poco (= no mucho), solo + expresión de tiempo."
+      "heading": "Desencadenantes Comunes de la Inversión",
+      "body": "Algunos de los adverbios o frases que suelen causar inversión cuando se colocan al principio de la oración son: *Never, Rarely, Seldom, Hardly, Scarcely, Barely, No sooner, Not only, Not until, In no way, By no means, Under no circumstances, Little* (con el significado de 'no mucho'), y *Only + expresión de tiempo* (ej. *Only after, Only when, Only then*)."
     },
     {
-      "heading": "Estructura",
-      "body": "Desencadenante + auxiliar + sujeto + verbo principal. \"Nunca había visto tanto coraje\". \"No sólo ganó, sino que también batió el récord\". \"Rara vez comete un error\". Compárese con el orden normal: \"Rara vez comete un error\"."
+      "heading": "Estructura de la Inversión",
+      "body": "La estructura general es: **Desencadenante + Verbo auxiliar + Sujeto + Verbo principal (si aplica)**. \n\nPor ejemplo:\n*   'Never **had I seen** such courage.' (Nunca había visto tanto coraje.)\n*   'Not only **did she win**, but she also broke the record.' (No sólo ganó, sino que también batió el récord.)\n*   'Rarely **does he make** a mistake.' (Rara vez comete un error.)\n\nCompáralo con el orden normal: 'He rarely makes a mistake.' (Él rara vez comete un error.)"
     }
   ],
   "examples": [
     {
       "english": "Never have I seen such dedication.",
-      "note": "Normal: nunca he visto..."
+      "translation": "Nunca he visto tanta dedicación. (Normal: I have never seen...)"
     },
     {
       "english": "Not only did she win, she broke a world record.",
-      "note": "No sólo... sino también"
+      "translation": "No sólo ganó, sino que rompió un récord mundial. (Enfatiza dos hechos sorprendentes)"
     },
     {
       "english": "Rarely does he lose his temper.",
-      "note": "Tono formal/literario"
+      "translation": "Rara vez pierde los estribos. (Tono formal o literario)"
     },
     {
       "english": "Only after the meeting did I understand the plan.",
-      "note": "Sólo + expresión de tiempo"
+      "translation": "Sólo después de la reunión entendí el plan. (Inversión con 'Only' + frase temporal)"
     },
     {
       "english": "Under no circumstances should you share this.",
-      "note": "Imperativo con inversión"
+      "translation": "Bajo ninguna circunstancia debes compartir esto. (Enfatiza una prohibición fuerte)"
     }
   ],
   "exercises": [
     {
-      "instruction": "Reescribe usando inversión para enfatizar.",
+      "instruction": "Reescribe las oraciones usando inversión para dar énfasis. Asegúrate de que tus respuestas estén en inglés.",
       "items": [
         "I have never heard such nonsense.",
         "She not only apologized but also sent flowers.",
@@ -46,24 +46,35 @@
         "You should under no circumstances open that file."
       ],
       "answers": [
-        "Nunca había oído semejantes tonterías.",
-        "No sólo se disculpó, sino que también envió flores.",
-        "Apenas había llegado cuando comenzaron los problemas.",
-        "Bajo ninguna circunstancia debes abrir ese archivo."
+        "Never have I heard such nonsense.",
+        "Not only did she apologize but she also sent flowers.",
+        "Barely had he arrived when the trouble started.",
+        "Under no circumstances should you open that file."
       ]
     }
   ],
   "quiz": [
     {
-      "question": "¿Qué oración usa la inversión correctamente?",
+      "question": "¿Cuál de las siguientes oraciones usa la inversión correctamente para enfatizar?",
       "options": [
-        "Nunca he visto eso.",
-        "Nunca he visto eso.",
-        "Nunca he visto eso.",
-        "Nunca que lo haya visto."
+        "Never I have seen such a beautiful sunset.",
+        "Never have I seen such a beautiful sunset.",
+        "I have never seen such a beautiful sunset.",
+        "Such a beautiful sunset never I have seen."
       ],
       "correct": 1,
-      "explanation": "Estructura de inversión: disparador negativo + auxiliar + sujeto + verbo principal: 'Nunca he visto'."
+      "explanation": "La inversión correcta requiere que el adverbio negativo ('Never') vaya seguido del verbo auxiliar ('have'), luego el sujeto ('I') y finalmente el verbo principal ('seen')."
+    },
+    {
+      "question": "¿Qué opción completa la oración usando la inversión correctamente: '___ did he realize his mistake'?",
+      "options": [
+        "Only then",
+        "Then only",
+        "He only then",
+        "Only he then"
+      ],
+      "correct": 0,
+      "explanation": "Cuando 'Only' + una expresión de tiempo (como 'Only then') inicia la oración, se requiere inversión: 'Only then did he realize...'."
     }
   ]
 }

@@ -34,18 +34,18 @@
   ],
   "exercises": [
     {
-      "instruction": "¿Podemos, pudimos o pudimos?",
+      "instruction": "Complete each sentence with 'can', 'could', 'be able to', or 'manage to' in the correct form.",
       "items": [
-        "He ___ run very fast when he was young.",
-        "After hours of trying, she ___ solve the puzzle.",
-        "I ___ help you tomorrow if you need.",
-        "___ you swim before you took lessons?"
+        "When I was five, I ___ (swim) across the pool.",
+        "She ___ (not / speak) French when she started the job, but she learned quickly.",
+        "After years of practice, he ___ finally ___ (play) the piece perfectly.",
+        "___ you ___ (help) me with this report tomorrow?"
       ],
       "answers": [
-        "podría",
-        "fue capaz de",
-        "poder",
-        "Podría"
+        "could swim",
+        "couldn't speak / wasn't able to speak",
+        "was finally able to play / finally managed to play",
+        "Can you help / Will you be able to help"
       ]
     }
   ],

@@ -1,0 +1,114 @@
+{
+  "slug": "the-add-on-strategy",
+  "sections": [
+    {
+      "heading": "El concepto central: Árboles vs. Trenes",
+      "body": "El lingüista Scott Thornbury demostró que los hablantes nativos bajo presión conversacional no construyen estructuras gramaticales jerárquicas complejas ('árboles'). En su lugar, construyen **'trenes'**: lanzan una idea corta y completa a la vez, y la enganchan a la siguiente usando conectores coordinantes simples mientras van hablando."
+    },
+    {
+      "heading": "Por qué el 'Árbol' te congela en medio de una frase",
+      "body": "En una conversación real tienes aproximadamente **2 segundos** para responder. Al usar una estructura en árbol con conjunciones subordinadas como *'Although...'* o *'Despite...'*, tu cerebro contrae una **deuda gramatical** que debe resolver antes de terminar la frase. Mientras intentas calcular la estructura mentalmente, la ventana conversacional se cierra y te bloqueas. No te trabas porque tu inglés sea deficiente, sino por intentar hablar con la sintaxis del inglés escrito."
+    },
+    {
+      "heading": "El motor de los 4 conectores",
+      "body": "La estrategia Add-On se impulsa con 4 conectores coordinantes que cubren todas las direcciones posibles de una conversación:\n• **AND** (Añade información): Conecta una idea en la misma dirección.\n• **BUT** (Contrasta): Introduce un resultado opuesto o sorprendente.\n• **SO** (Muestra resultado/efecto): Conecta una causa con su consecuencia inmediata.\n• **BECAUSE** (Explica la razón): Señala el motivo por el cual algo sucedió."
+    },
+    {
+      "heading": "La Regla Mnemotécnica: Comprar tiempo cognitivo",
+      "body": "Cuando estás hablando y no sabes qué decir a continuación, **uno de estos cuatro conectores siempre encaja**. Al pronunciar 'and', 'but', 'so' o 'because', le compras a tu cerebro los milisegundos necesarios para formular el siguiente vagón sin romper el ritmo del habla."
+    },
+    {
+      "heading": "La Fórmula Híbrida según tu nivel (CEFR)",
+      "body": "A medida que ganas soltura, puedes combinar trenes con pequeñas ramas subordinadas:\n• **A2 – B1**: Usa únicamente trenes. Enfócate en mantener la cadena activa con and, but, so, because sin detenerte.\n• **B2**: Inserta pequeñas frases subordinadas como 'pasajeros' dentro del vagón (ejemplo: *'I went for a walk — even though it was raining — but I felt great'*).\n• **C1 – C2**: Alterna libremente entre árboles y trenes según la carga cognitiva y formalidad del momento."
+    },
+    {
+      "heading": "La Rutina Diaria de 5 Minutos",
+      "body": "La fluidez se entrena en momentos cotidianos sin audiencia ni preparación:\n1. **Elige un momento**: Una caminata, lavando los platos o esperando el transporte.\n2. **Punto de inicio real**: Toma un evento que te haya pasado hoy (los hechos reales producen lenguaje genuino).\n3. **Lanza el primer vagón**: Di una oración corta y completa en voz alta sin planear la siguiente.\n4. **Encadena sin detenerte**: Usa los 4 conectores para unir ideas. La regla de oro: *avanzar siempre es infinitamente mejor que detenerse a corregir un error*.\n5. **Sostén 5 minutos**: No importa si el tema cambia o se vuelve absurdo; estás entrenando velocidad de formulación, no oratoria."
+    }
+  ],
+  "examples": [
+    {
+      "english": "Although I wasn't sure about it, I decided to try it anyway.",
+      "note": "Árbol (escrito): Compromete al cerebro con 'Although' antes de saber el desenlace."
+    },
+    {
+      "english": "I wasn't sure about it, but I tried it anyway, and it worked.",
+      "note": "Tren (hablado): Cada idea aterriza de forma independiente antes de planear la siguiente."
+    },
+    {
+      "english": "I had a really long day at work, so I was exhausted, but I still went to the gym.",
+      "note": "Encadenamiento con SO (efecto) + BUT (contraste)."
+    },
+    {
+      "english": "The coffee shop was closed, so we found another one, and we stayed for two hours.",
+      "note": "Encadenamiento con SO (resultado) + AND (adición)."
+    },
+    {
+      "english": "I’ve been going for walks in the morning — even though I’m not an early bird — but something shifted, and now I love it.",
+      "note": "Fórmula Híbrida (B2+): Tren base con inserción subordinada como pasajero."
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Decide whether each sentence uses a TREE structure (complex, subordinated) or TRAIN structure (linear, chained). Write TREE or TRAIN and explain briefly.",
+      "items": [
+        "1. Although I was tired, I decided to stay at the party because my friends were there.",
+        "2. I was tired, but I stayed, and I'm glad I did.",
+        "3. Despite waking up late, I managed to get to the meeting on time.",
+        "4. I woke up late, so I was rushing, but I got there on time."
+      ],
+      "answers": [
+        "1. TREE — 'Although' subordinates the main clause.",
+        "2. TRAIN — Three independent ideas linked with 'but' and 'and'.",
+        "3. TREE — 'Despite' requires a complex structure before the main verb.",
+        "4. TRAIN — Linear chaining with 'so' and 'but'."
+      ]
+    },
+    {
+      "instruction": "Reconstruye el Árbol como Tren usando and, but, so, because:",
+      "items": [
+        "Tree: Even though the film had terrible reviews, I enjoyed it.",
+        "Tree: Because my internet stopped working, I missed the first part of the call."
+      ],
+      "answers": [
+        "Train: The film had terrible reviews, but I enjoyed it.",
+        "Train: My internet stopped working, so I missed the first part of the call."
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "¿Por qué las oraciones que empiezan con 'Although' o 'Despite' aumentan el riesgo de bloquearse al hablar?",
+      "options": [
+        "Porque esas palabras son difíciles de pronunciar en inglés.",
+        "Porque obligan al cerebro a planificar toda la estructura y resolver la subordinación antes de terminar la frase.",
+        "Porque son palabras exclusivas del inglés británico formal.",
+        "Porque no tienen traducción directa al español."
+      ],
+      "correct": 1,
+      "explanation": "Las conjunciones subordinantes crean una 'deuda gramatical': abren una cláusula dependiente que exige ser cerrada con una cláusula principal, saturando la memoria de trabajo bajo la presión de 2 segundos."
+    },
+    {
+      "question": "¿Cuál es la función del conector 'SO' en la estrategia Add-On?",
+      "options": [
+        "Añadir información complementaria en la misma línea.",
+        "Introducir un giro inesperado o contraste.",
+        "Conectar una causa con su consecuencia o resultado inmediato.",
+        "Dar tiempo para pausar sin decir nada."
+      ],
+      "correct": 2,
+      "explanation": "'SO' expresa resultado o consecuencia ('I was tired, so I went home'). Para contraste se usa 'BUT', para adición 'AND', y para motivo 'BECAUSE'."
+    },
+    {
+      "question": "En la rutina diaria de 5 minutos, ¿cuál es la regla de oro si cometes un pequeño error gramatical?",
+      "options": [
+        "Detenerte de inmediato y reiniciar la oración desde el principio.",
+        "Avanzar siempre con el siguiente conector sin volver atrás para autocorregirte.",
+        "Buscar la regla gramatical en un diccionario antes de continuar.",
+        "Traducir la frase al español para verificarla."
+      ],
+      "correct": 1,
+      "explanation": "El objetivo de la rutina es entrenar la velocidad de formulación continua (forward movement). Detenerse a reparar errores destruye el flujo conversacional."
+    }
+  ]
+}

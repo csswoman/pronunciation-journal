@@ -1,0 +1,259 @@
+{
+  "meta": {
+    "eyebrow": "Falsos Cognados · Trabajo y Negocios",
+    "title": "Falsos amigos en",
+    "titleEmphasis": "el trabajo y oficina",
+    "goal": "Domina los 6 falsos amigos más traicioneros del ámbito profesional para redactar correos, CVs y comunicarte con precisión."
+  },
+  "related": [
+    { "slug": "ff-esenciales-a1-a2", "label": "Falsos amigos esenciales" },
+    { "slug": "ff-comunicacion-argumentacion", "label": "Falsos amigos en comunicación" }
+  ],
+  "quiz": [
+    {
+      "q": "Estás enviando tu currículum para una vacante de empleo. ¿Cómo lo llamas en inglés americano?",
+      "options": [
+        "My summary",
+        "My resume",
+        "My application notice",
+        "My career policy"
+      ],
+      "answer": 1,
+      "explain": "\"Resume\" (o CV) es el documento con tu historial laboral. \"Summary\" es un resumen o síntesis de un texto."
+    },
+    {
+      "q": "Dos empresas en negociación ceden parte de sus pretensiones para llegar a un acuerdo mutuo. ¿Qué lograron?",
+      "options": [
+        "A compromise",
+        "A compromise notice",
+        "An obligation rule",
+        "A sensible career"
+      ],
+      "answer": 0,
+      "explain": "\"Compromise\" significa ceder mutuamente o llegar a un término medio. Para decir \"compromiso de lealtad o cita\", se usa \"commitment\" o \"appointment\"."
+    },
+    {
+      "q": "El departamento de recursos humanos publicó una normativa interna de la empresa. ¿Qué publicaron?",
+      "options": [
+        "A new police",
+        "A new policy",
+        "A new resume",
+        "A new contest"
+      ],
+      "answer": 1,
+      "explain": "\"Policy\" significa política, normativa o póliza de seguro. \"Police\" es la policía (cuerpo de seguridad)."
+    }
+  ],
+  "cards": [
+    {
+      "id": "ff-resume-summary",
+      "tag": "resume / summary",
+      "title": "Resume vs Summary",
+      "lede": "Enviar un «resumen» no es lo mismo que enviar tu hoja de vida profesional.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "resume (currículum / hoja de vida)",
+              "rule": "Documento laboral que lista tu experiencia, habilidades y educación.",
+              "examples": [
+                "Please attach your updated resume to the application email.",
+                "I revised my resume before applying for the tech job.",
+                "Her resume highlights over ten years in project management."
+              ]
+            },
+            {
+              "label": "summary (resumen / síntesis)",
+              "rule": "Versión abreviada de un informe, reunión, libro o presentación.",
+              "examples": [
+                "Can you provide an executive summary of the quarterly report?",
+                "In summary, our customer retention grew by 15%.",
+                "He gave a brief summary of the key meeting points."
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Doble función:",
+        "body": "El verbo «to resume» (pronunciado /rɪˈzjuːm/ o /rɪˈzuːm/) significa «reanudar» (ej: «Let's resume our meeting after lunch»)."
+      }
+    },
+    {
+      "id": "ff-compromise-commitment",
+      "tag": "compromise / commitment",
+      "title": "Compromise vs Commitment",
+      "lede": "En español «compromiso» es una promesa u obligación. En inglés «compromise» implica ceder en algo.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "compromise (acuerdo mutuo / ceder)",
+              "rule": "Llegar a un punto medio donde ambas partes renuncian a algo para ponerse de acuerdo.",
+              "examples": [
+                "After hours of negotiation, we reached a fair compromise.",
+                "Both teams had to compromise on the delivery deadline.",
+                "Never compromise on product security."
+              ]
+            },
+            {
+              "label": "commitment (compromiso / dedicación)",
+              "rule": "Obligación firme, promesa o dedicación constante hacia una meta o persona.",
+              "examples": [
+                "She showed a strong commitment to the project.",
+                "I have a prior commitment this evening and cannot attend.",
+                "Our team made a long-term commitment to quality."
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "En negociaciones:",
+        "body": "«We made a compromise» = ambos cedimos para acordar. «We made a commitment» = asumimos una obligación formal."
+      }
+    },
+    {
+      "id": "ff-application-appliance",
+      "tag": "application / appliance",
+      "title": "Application vs Appliance",
+      "lede": "Ambos provienen de raíces similares, pero uno es para trámites/software y el otro para electrodomésticos.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "application (solicitud / app / postulación)",
+              "rule": "Formulario para solicitar empleo o visa; también programa de software.",
+              "examples": [
+                "Submit your job application through the portal.",
+                "We received over 50 applications for this role.",
+                "This web application runs very smoothly."
+              ]
+            },
+            {
+              "label": "appliance (electrodoméstico / aparato)",
+              "rule": "Aparato eléctrico del hogar o cocina (refrigerador, lavadora, microondas).",
+              "examples": [
+                "Modern household appliances consume less energy.",
+                "The kitchen comes equipped with stainless steel appliances.",
+                "Turn off kitchen appliances before leaving the office."
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Verbo clave:",
+        "body": "«To apply for a job» = postularse / solicitar un empleo. «To apply a patch/update» = aplicar un parche técnico."
+      }
+    },
+    {
+      "id": "ff-policy-police",
+      "tag": "policy / police",
+      "title": "Policy vs Police",
+      "lede": "Una sola letra cambia de una regla corporativa a las autoridades de orden público.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "policy (política / normativa / póliza)",
+              "rule": "Conjunto de normas o directrices de una empresa, gobierno o contrato de seguro.",
+              "examples": [
+                "Company policy forbids sharing passwords.",
+                "What is your refund and return policy?",
+                "She purchased a comprehensive insurance policy."
+              ]
+            },
+            {
+              "label": "police (policía)",
+              "rule": "Cuerpo o miembros de la fuerza de seguridad pública.",
+              "examples": [
+                "Call the police immediately if you see a break-in.",
+                "The police are investigating the incident.",
+                "Two police officers arrived at the building."
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Gramática:",
+        "body": "«The police» es siempre un sustantivo plural en inglés («The police are investigating...», nunca «is»)."
+      }
+    },
+    {
+      "id": "ff-notice-news",
+      "tag": "notice / news",
+      "title": "Notice vs News",
+      "lede": "«Notice» no significa «noticias» de los medios, sino aviso formal o la acción de percatarse.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "notice (aviso / notificación / notar)",
+              "rule": "Cartel informativo, preaviso laboral o darse cuenta visual/mental de algo.",
+              "examples": [
+                "He gave two weeks' notice before leaving his position.",
+                "Please read the safety notice posted on the bulletin board.",
+                "Did you notice any error in the spreadsheet?"
+              ]
+            },
+            {
+              "label": "news (noticias / novedades)",
+              "rule": "Información reciente transmitida por medios o novedades personales.",
+              "examples": [
+                "Have you heard the good news about our promotion?",
+                "The news is broadcast live every evening at 8 PM.",
+                "I have exciting news to share with the team."
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Frase clave:",
+        "body": "«Give notice» = dar preaviso de renuncia. «On short notice» = con muy poco tiempo de antelación."
+      }
+    },
+    {
+      "id": "ff-success-event",
+      "tag": "success / event",
+      "title": "Success vs Event",
+      "lede": "«Suceso» en español es cualquier acontecimiento. En inglés «success» es únicamente tener éxito o triunfo.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "success (éxito / logro positivo)",
+              "rule": "Logro satisfactorio de una meta, proyecto o negocio.",
+              "examples": [
+                "The product launch was a massive commercial success.",
+                "Hard work is the foundation of long-term success.",
+                "We wish you every success in your new venture."
+              ]
+            },
+            {
+              "label": "event / occurrence (suceso / acontecimiento)",
+              "rule": "Cualquier hecho que ocurre, evento planificado o incidente imprevisto.",
+              "examples": [
+                "The annual company networking event is next Friday.",
+                "A strange occurrence was reported near the warehouse.",
+                "In the event of a system failure, activate the backup."
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Familia de palabras:",
+        "body": "«Successful» = exitoso. «To succeed» = tener éxito o suceder/relevar a alguien en un cargo («succeed as CEO»)."
+      }
+    }
+  ]
+}

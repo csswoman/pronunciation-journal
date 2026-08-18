@@ -34,7 +34,7 @@
   ],
   "exercises": [
     {
-      "instruction": "¿Presente perfecto o pasado simple?",
+      "instruction": "Complete each sentence with the present perfect or simple past form of the verb in brackets.",
       "items": [
         "I ___ (never / try) sushi. Do you recommend it?",
         "We ___ (meet) at a conference in 2021.",
@@ -42,10 +42,10 @@
         "___ you ever ___ (be) to Ireland?"
       ],
       "answers": [
-        "nunca lo he intentado",
-        "conoció",
-        "acaba de terminar",
-        "¿alguna vez has estado"
+        "have never tried",
+        "met",
+        "has just finished",
+        "Have you ever been"
       ]
     }
   ],

@@ -34,16 +34,16 @@
   ],
   "exercises": [
     {
-      "instruction": "Completar con tercer condicional o condicional mixto.",
+      "instruction": "Complete each third conditional sentence with the correct verb forms.",
       "items": [
         "If she ___ (tell) me earlier, I ___ (help) her.",
         "If I ___ (be) braver, I ___ (ask) him out last year.",
         "He ___ (not / miss) the flight if he ___ (leave) on time."
       ],
       "answers": [
-        "hubiera dicho / hubiera ayudado",
-        "fueron / habrían preguntado",
-        "no hubiera faltado / se hubiera ido"
+        "had told / would have helped",
+        "had been / would have asked",
+        "wouldn't have missed / had left"
       ]
     }
   ],

@@ -4,21 +4,21 @@
   "level": "basic",
   "category": "vocabulary",
   "duration": 5,
-  "title": "5 verbos compuestos esenciales",
-  "subtitle": "Vocabulario del día.",
-  "body": "Los verbos compuestos son combinaciones de verbo + partícula que significan algo diferente de las palabras literales. Estos 5 aparecen todos los días.",
+  "title": "Phrasal Verbs Básicos: ¡Imprescindibles en Inglés!",
+  "subtitle": "Domina 5 verbos compuestos esenciales para el día a día.",
+  "body": "Los 'phrasal verbs' son combinaciones de un verbo con una o más partículas (preposiciones/adverbios) que tienen un significado único. Son fundamentales en el inglés cotidiano. Aquí te presentamos 5 que te ayudarán a sonar más natural.",
   "examples": [
     {
       "word": "give up",
-      "translation": "rendirse"
+      "translation": "rendirse / dejar de intentar"
     },
     {
       "word": "find out",
-      "translation": "descubrir"
+      "translation": "descubrir / enterarse"
     },
     {
       "word": "look up",
-      "translation": "buscar (en diccionario/internet)"
+      "translation": "buscar (información en fuente)"
     },
     {
       "word": "turn off",
@@ -26,8 +26,9 @@
     },
     {
       "word": "run out of",
-      "translation": "quedarse sin algo"
+      "translation": "quedarse sin"
     }
   ],
+  "tip": "¡Practica con frases completas! No intentes memorizarlos individualmente. Por ejemplo, en lugar de solo 'give up', piensa 'Don't give up on your dreams!' (¡No te rindas con tus sueños!).",
   "href": "/mini-lessons/basic-phrasal-verbs"
 }

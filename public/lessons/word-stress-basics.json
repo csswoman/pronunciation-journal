@@ -2,47 +2,47 @@
   "slug": "word-stress-basics",
   "sections": [
     {
-      "heading": "¿Qué es el acento de la palabra?",
-      "body": "La acentuación de la palabra es el énfasis que se pone en una sílaba de una palabra de varias sílabas. La sílaba acentuada es más fuerte, más larga y tiene un tono ligeramente más alto que las demás. En inglés, la colocación del acento es impredecible basándose únicamente en la ortografía: es necesario aprenderlo palabra por palabra o reconociendo patrones."
+      "heading": "What is word stress?",
+      "body": "Word stress is the emphasis placed on one syllable in a multi-syllable word. The stressed syllable is louder, longer, and slightly higher in pitch than the others. In English, stress placement is not predictable from spelling alone — you need to learn it word by word or by recognising patterns."
     },
     {
-      "heading": "Por qué es importante la ubicación del estrés",
-      "body": "El acento mal colocado es una de las principales causas de malentendidos en inglés, incluso cuando todos los sonidos son correctos. 'DESIERTO' (tierra seca) versus 'desSERT' (curso dulce) se entienden de manera diferente no porque las vocales sean diferentes, sino porque el acento lo es."
+      "heading": "Why stress placement matters",
+      "body": "Misplaced stress is one of the leading causes of misunderstanding in English, even when all the sounds are correct. 'DEsert' (dry land) versus 'desSERT' (sweet course) are understood differently not because the vowels differ, but because the stress does."
     },
     {
-      "heading": "Cambio de estrés con sufijos",
-      "body": "Agregar ciertos sufijos hace que el acento cambie: -tion, -sion, -ity, -ic empujan el acento a la sílaba inmediatamente anterior a ellos. FOTOGRAFÍA → FOTOGRAFÍA → FOTOGRAFÍA → FOTÓGRAFO. Aprender estos patrones ahorra tiempo."
+      "heading": "Stress shift with suffixes",
+      "body": "Adding certain suffixes shifts the stress: -tion, -sion, -ity, -ic push the stress to the syllable immediately before them. PHOtograph → phoTOgraphy → photoGRAPHic. Learning these patterns saves time."
     },
     {
-      "heading": "Pares de sustantivo versus verbo",
-      "body": "Muchas palabras de dos sílabas en inglés usan acento para distinguir los sustantivos de los verbos. Los sustantivos suelen acentuarse en la primera sílaba; verbos en el segundo. GRABAR (n.) / grabar (v.). PROtest (n.) / proTEST (v.). PERMISO (n.) / PERMISO (v.)."
+      "heading": "Noun versus verb stress pairs",
+      "body": "Many two-syllable words in English use stress to distinguish nouns from verbs. Nouns are usually stressed on the first syllable; verbs on the second. RECord (n.) / reCORD (v.). PROtest (n.) / proTEST (v.). PERmit (n.) / perMIT (v.)."
     }
   ],
   "examples": [
     {
       "english": "PHOtograph / phoTOgraphy / photoGRAPHic",
-      "note": "El acento cambia con cada sufijo"
+      "note": "Stress shifts with each suffix"
     },
     {
       "english": "PREsent (n.) / preSENT (v.)",
-      "note": "Par de acentuación de sustantivo versus verbo"
+      "note": "Noun vs verb stress pair"
     },
     {
       "english": "OBject (n.) / obJECT (v.)",
-      "note": "Mismo patrón"
+      "note": "Same pattern"
     },
     {
       "english": "INcrease (n.) / inCREASE (v.)",
-      "note": "Mismo patrón"
+      "note": "Same pattern"
     },
     {
       "english": "naTION / naTIONal / naTIONality",
-      "note": "La -idad hace retroceder el estrés."
+      "note": "The -ity suffix pulls stress back."
     }
   ],
   "exercises": [
     {
-      "instruction": "Marque la sílaba acentuada en cada palabra (escriba la sílaba acentuada en MAYÚSCULAS).",
+      "instruction": "Write the stressed syllable in UPPERCASE for each word.",
       "items": [
         "information",
         "comfortable",
@@ -51,25 +51,25 @@
         "opportunity"
       ],
       "answers": [
-        "información",
-        "Cómodo",
-        "Necesario",
-        "economía",
-        "oportunidad"
+        "in-for-MA-tion",
+        "COMF-ta-ble",
+        "NEC-es-sar-y",
+        "e-CON-o-my",
+        "op-por-TU-ni-ty"
       ]
     }
   ],
   "quiz": [
     {
-      "question": "En la oración \"Necesito registrar el registro\", las dos palabras \"registro\" son:",
+      "question": "In the sentence 'I need to reCORD the RECord', the two 'record' words are:",
       "options": [
-        "Ambos sustantivos",
-        "Ambos verbos",
-        "Primero un verbo, luego un sustantivo",
-        "Primero un sustantivo, luego un verbo"
+        "Both nouns",
+        "Both verbs",
+        "First a verb, then a noun",
+        "First a noun, then a verb"
       ],
       "correct": 2,
-      "explanation": "'Grabar' es el verbo (énfasis en la segunda sílaba). 'The RECord' es el sustantivo (énfasis en la primera sílaba)."
+      "explanation": "'reCORD' is the verb (stress on the second syllable). 'The RECord' is the noun (stress on the first syllable)."
     }
   ]
 }

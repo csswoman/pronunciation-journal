@@ -4,18 +4,23 @@
   "level": "intermediate",
   "category": "grammar",
   "duration": 6,
-  "title": "Discurso indirecto: tiempos verbales hacia atrás",
+  "title": "Discurso Indirecto: El 'Backshift' (Retroceso Verbal)",
   "subtitle": "Gramática del día",
-  "body": "Al informar lo que alguien dijo, los verbos retroceden un tiempo en el tiempo. Esto se llama retroceso.",
+  "body": "Cuando reportamos lo que alguien dijo (discurso indirecto), no solo repetimos sus palabras, sino que ajustamos los tiempos verbales, los pronombres y las expresiones de tiempo y lugar para reflejar que la información fue dicha en el pasado. Este ajuste de los tiempos verbales se conoce como 'backshift' o retroceso verbal.",
   "examples": [
     {
       "word": "'I am tired.' → She said she was tired.",
-      "translation": "soy → era"
+      "translation": "'Estoy cansada.' → Ella dijo que estaba cansada."
     },
     {
       "word": "'I will call you.' → He said he would call me.",
-      "translation": "voluntad → haría"
+      "translation": "'Te llamaré.' → Él dijo que me llamaría."
+    },
+    {
+      "word": "'I saw him yesterday.' → She said she had seen him the day before.",
+      "translation": "'Lo vi ayer.' → Ella dijo que lo había visto el día anterior."
     }
   ],
+  "tip": "Recuerda que los verbos en tiempo pasado (como 'said', 'told', 'asked') son una señal clara de que necesitarás aplicar el 'backshift' y ajustar los pronombres y expresiones de tiempo.",
   "href": "/mini-lessons/reported-speech"
 }

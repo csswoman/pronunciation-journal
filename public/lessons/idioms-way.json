@@ -1,0 +1,94 @@
+{
+  "slug": "idioms-way",
+  "sections": [
+    {
+      "heading": "La versatilidad de 'Way'",
+      "body": "En español, a menudo traducimos 'way' literalmente como 'camino' o 'vía'. Sin embargo, en el inglés conversacional, esta palabra es increíblemente versátil. ¡Prepárate para usarla para estructurar tus ideas, expresar incredulidad o simplemente indicar que estás en movimiento!"
+    },
+    {
+      "heading": "Las expresiones esenciales con 'Way'",
+      "body": "Estas son algunas de las expresiones más esenciales con 'way' que te harán sonar como un nativo: 'By the way' es tu comodín para cambiar de tema con fluidez o añadir un comentario adicional. Si estás 'On my way', significa que estás activamente en camino hacia un destino. 'In a way' te permite matizar una afirmación, añadiendo un toque de perspectiva. Para rechazar algo de forma rotunda o expresar una incredulidad total, 'No way' es tu mejor opción (¡es como decir '¡Imposible!'!). Cuando necesitas despejar un espacio o apartar a alguien, 'Out of the way' es la frase perfecta. Y si estás harto de discutir, puedes ceder con un 'Have it your way', ¡indicando que la otra persona puede hacer las cosas a su manera!"
+    }
+  ],
+  "examples": [
+    {
+      "english": "By the way, did you call your sister?",
+      "ipa": "/baɪ ðə weɪ/",
+      "translation": "Por cierto, ¿llamaste a tu hermana?",
+      "note": "Se usa para introducir un nuevo tema o un comentario adicional."
+    },
+    {
+      "english": "I'm on my way to the office.",
+      "ipa": "/aɪm ɒn maɪ weɪ/",
+      "translation": "Estoy de camino a la oficina.",
+      "note": "Indica que estás en tránsito hacia un lugar."
+    },
+    {
+      "english": "In a way, it's better that we lost the match.",
+      "ipa": "/ɪn ə weɪ/",
+      "translation": "En cierto sentido, es mejor que hayamos perdido el partido.",
+      "note": "Sugiere que algo es cierto o válido hasta cierto punto."
+    },
+    {
+      "english": "No way! That can't be true.",
+      "ipa": "/nəʊ weɪ/",
+      "translation": "¡Ni hablar! / ¡Imposible! Eso no puede ser verdad.",
+      "note": "Expresa incredulidad fuerte o un rechazo rotundo."
+    },
+    {
+      "english": "Please move your shoes out of the way.",
+      "ipa": "/aʊt əv ðə weɪ/",
+      "translation": "Por favor, quita tus zapatos del medio.",
+      "note": "Significa 'fuera del camino' o 'apartado'."
+    },
+    {
+      "english": "Fine, have it your way.",
+      "ipa": "/hæv ɪt jɔːr weɪ/",
+      "translation": "Está bien, hazlo a tu manera.",
+      "note": "Se usa para terminar una discusión, cediendo al otro."
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Completa la frase con el modismo adecuado utilizando 'way'.",
+      "items": [
+        "___, did you remember to buy the milk?",
+        "Don't wait for me, I am on ___.",
+        "There is ___ I am going to apologize to him.",
+        "___, I think she was right about the budget.",
+        "Please move your bicycle out ___."
+      ],
+      "answers": [
+        "By the way",
+        "my way",
+        "no way",
+        "In a way",
+        "of the way"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Si alguien dice 'No way!', ¿qué está expresando?",
+      "options": [
+        "Direcciones para llegar a un lugar.",
+        "Incredulidad absoluta o rechazo rotundo.",
+        "Que está perdido en la calle.",
+        "Que quiere que hagas las cosas a tu manera."
+      ],
+      "correct": 1,
+      "explanation": "'No way' se usa para decir '¡de ninguna manera!' o '¡imposible!'."
+    },
+    {
+      "question": "¿Qué significa 'have it your way'?",
+      "options": [
+        "Pedir comida a domicilio.",
+        "Hacer las cosas juntos.",
+        "Ceder resignadamente para que la otra persona haga lo que quiera.",
+        "Elegir un camino largo."
+      ],
+      "correct": 2,
+      "explanation": "'Have it your way' significa 'como quieras' o 'hazlo a tu manera', generalmente usado al terminar una discusión sin llegar a un acuerdo mutuo."
+    }
+  ]
+}

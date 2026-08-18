@@ -3,29 +3,29 @@
   "sections": [
     {
       "heading": "Cohesión versus coherencia",
-      "body": "La coherencia se trata de que las ideas tengan sentido lógico juntas. La cohesión es el pegamento lingüístico: las palabras y estructuras específicas que vinculan oraciones y párrafos. Puedes tener ideas coherentes con poca cohesión (oraciones entrecortadas y desconectadas) o buena cohesión con ideas incoherentes (vinculadas pero sin sentido)."
+      "body": "La **coherencia** se refiere a la lógica y el sentido global de tus ideas. La **cohesión**, en cambio, es el 'pegamento lingüístico': las palabras y estructuras específicas que conectan oraciones y párrafos. Puedes tener ideas coherentes con poca cohesión (oraciones que suenan entrecortadas y desconectadas) o buena cohesión con ideas incoherentes (bien conectadas, pero sin un significado claro o lógico)."
     },
     {
-      "heading": "cohesión léxica",
-      "body": "Las cadenas léxicas utilizan palabras relacionadas en un texto para mantener la unidad temática: 'clima → temperatura → calentamiento → calor → emisiones'. Los sinónimos y casi sinónimos reducen la repetición mientras mantienen la conexión. Los patrones de colocación refuerzan el dominio."
+      "heading": "Cohesión léxica",
+      "body": "La cohesión léxica se logra usando cadenas de palabras relacionadas a lo largo del texto, lo que mantiene la unidad temática. Por ejemplo: 'clima → temperatura → calentamiento → calor → emisiones'. El uso de sinónimos o cuasi-sinónimos es clave para evitar repeticiones y, a la vez, mantener la conexión temática. Dominar los patrones de colocación de palabras también refuerza esta cohesión."
     },
     {
-      "heading": "cohesión gramatical",
-      "body": "Referencia: usar pronombres y determinantes para señalar sustantivos anteriores ('este hallazgo', 'tales datos', 'lo antes mencionado'). Conjunción: uso de conectores para mostrar relaciones lógicas. Sustitución y elipsis (como se trata por separado)."
+      "heading": "Cohesión gramatical",
+      "body": "La cohesión gramatical incluye varios mecanismos: **Referencia**: el uso de pronombres y determinantes para señalar sustantivos o ideas mencionadas previamente (ej. 'este hallazgo', 'tales datos', 'lo antes mencionado'). **Conjunción**: el uso de conectores o marcadores discursivos para establecer relaciones lógicas entre oraciones o ideas (ej. 'sin embargo', 'además', 'por lo tanto'). La **sustitución** y la **elipsis** también son formas de cohesión gramatical, aunque se abordan en lecciones separadas."
     }
   ],
   "examples": [
     {
       "english": "water → liquid → fluid → H₂O → hydration",
-      "note": "Cadena léxica: mantiene el tema unificado"
+      "note": "Cadena léxica: unifica el tema al conectar palabras relacionadas semánticamente."
     },
     {
       "english": "'This approach... Such methods... These findings...'",
-      "note": "Referencia anafórica: apunta hacia atrás"
+      "note": "Referencia anafórica: pronombres y determinantes que remiten a elementos ya mencionados."
     },
     {
       "english": "'The results were significant. Moreover, they were reproducible.'",
-      "note": "Conjunción aditiva"
+      "note": "Conjunción aditiva: 'Moreover' añade información, conectando dos ideas."
     }
   ],
   "exercises": [
@@ -37,9 +37,9 @@
         "'Water levels rose. Sea temperatures also increased.'"
       ],
       "answers": [
-        "'It' - referencia anafórica (señala 'el informe')",
-        "'Sin embargo' - conjunción contrastiva",
-        "'también' - conjunción aditiva"
+        "It",
+        "Nevertheless",
+        "also"
       ]
     }
   ],
@@ -48,12 +48,23 @@
       "question": "'Esto sugiere que...' - ¿Qué dispositivo cohesivo es 'esto'?",
       "options": [
         "Conjunción",
-        "repetición léxica",
+        "Repetición léxica",
         "Referencia anafórica",
         "Sustitución"
       ],
       "correct": 2,
       "explanation": "'Esto' es un pronombre demostrativo que apunta (anafóricamente) al contenido mencionado anteriormente."
+    },
+    {
+      "question": "En la frase 'El estudio reveló datos importantes; por consiguiente, se requiere más investigación', ¿qué tipo de dispositivo cohesivo es 'por consiguiente'?",
+      "options": [
+        "Referencia",
+        "Sustitución",
+        "Conjunción",
+        "Elipsis"
+      ],
+      "correct": 2,
+      "explanation": "'Por consiguiente' es un conector que indica una relación de causa-efecto o consecuencia, siendo un tipo de conjunción."
     }
   ]
 }

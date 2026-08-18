@@ -2,39 +2,48 @@
   "slug": "reported-speech",
   "sections": [
     {
-      "heading": "retroceso",
-      "body": "Cuando informas lo que alguien dijo, cambias los verbos un tiempo atrás: presente simple → pasado simple, presente continuo → pasado continuo, pasado simple → pasado perfecto, voluntad → haría, puede → podría, puede → podría."
+      "heading": "El 'Backshift' (Retroceso Verbal)",
+      "body": "Cuando reportamos lo que alguien dijo (discurso indirecto), generalmente necesitamos 'retroceder' el tiempo verbal un paso en el pasado. Esto se conoce como 'backshift' o retroceso verbal. Algunos cambios comunes son:\n\n*   **Presente Simple** → **Pasado Simple**\n*   **Presente Continuo** → **Pasado Continuo**\n*   **Pasado Simple** → **Pasado Perfecto**\n*   **Presente Perfecto** → **Pasado Perfecto**\n*   **'Will'** → **'Would'**\n*   **'Can'** → **'Could'**\n*   **'May'** → **'Might'**\n*   **'Must'** → **'Had to'**"
     },
     {
-      "heading": "Otros cambios",
-      "body": "Los pronombres cambian para adaptarse a la nueva perspectiva. Las expresiones de tiempo y lugar a menudo cambian: ahora → entonces, hoy → ese día, ayer → anteayer, aquí → allí, esto → aquello."
+      "heading": "Otros cambios importantes",
+      "body": "Además del retroceso verbal, es crucial ajustar los pronombres y las expresiones de tiempo y lugar para que reflejen la nueva perspectiva de la persona que reporta. Por ejemplo:\n\n*   **Pronombres:** 'I' → 'he/she', 'my' → 'his/her', 'we' → 'they', etc.\n*   **Expresiones de tiempo:**\n    *   'Now' → 'then'\n    *   'Today' → 'that day'\n    *   'Yesterday' → 'the day before' / 'the previous day'\n    *   'Tomorrow' → 'the next day' / 'the following day'\n    *   'Last week' → 'the week before' / 'the previous week'\n*   **Expresiones de lugar:**\n    *   'Here' → 'there'\n    *   'This' → 'that'\n    *   'These' → 'those'"
     },
     {
-      "heading": "Cuándo NO hacer marcha atrás",
-      "body": "No retroceda si la afirmación sigue siendo cierta en el momento de escribir el informe: \"Dijo que vive en Madrid\" (sigue siendo cierta ahora). Además, las afirmaciones sobre verdades generales o hechos científicos no necesitan retroceder."
+      "heading": "Cuándo NO aplicar el 'Backshift'",
+      "body": "Hay situaciones en las que el retroceso verbal no es necesario o incluso incorrecto:\n\n1.  **Verdades Permanentes o Hechos Actuales:** Si lo que se reporta sigue siendo cierto en el momento de reportarlo, el tiempo verbal puede permanecer igual. Por ejemplo: 'She said she **lives** in Madrid' (si todavía vive allí).\n2.  **Verdades Generales o Hechos Científicos:** Las afirmaciones universales o los hechos no cambian. Por ejemplo: 'He said that the Earth **is** round.'\n3.  **Con verbos modales específicos:** Con 'would', 'could', 'might', 'should', 'ought to', no se realiza retroceso ya que ya están en forma pasada o condicional."
     }
   ],
   "examples": [
     {
       "english": "'I am tired.' → She said she was tired.",
-      "note": "soy → era"
+      "translation": "'Estoy cansada.' → Ella dijo que estaba cansada.",
+      "note": "El Presente Simple ('am') cambia a Pasado Simple ('was')."
     },
     {
       "english": "'I will call you.' → He said he would call me.",
-      "note": "voluntad → haría"
+      "translation": "'Te llamaré.' → Él dijo que me llamaría.",
+      "note": "'Will' cambia a 'would'."
     },
     {
       "english": "'I've finished.' → She said she had finished.",
-      "note": "presente perfecto → pasado perfecto"
+      "translation": "'He terminado.' → Ella dijo que había terminado.",
+      "note": "El Presente Perfecto ('have finished') cambia a Pasado Perfecto ('had finished')."
     },
     {
       "english": "'I can help.' → He said he could help.",
-      "note": "puede → podría"
+      "translation": "'Puedo ayudar.' → Él dijo que podía ayudar.",
+      "note": "'Can' cambia a 'could'."
+    },
+    {
+      "english": "'I saw him here yesterday.' → She said she had seen him there the day before.",
+      "translation": "'Lo vi aquí ayer.' → Ella dijo que lo había visto allí el día anterior.",
+      "note": "Pasado Simple ('saw') cambia a Pasado Perfecto ('had seen'). 'Here' cambia a 'there' y 'yesterday' a 'the day before'."
     }
   ],
   "exercises": [
     {
-      "instruction": "Informe cada oración usando 'dijo'.",
+      "instruction": "Reporta cada oración usando 'dijo' (said).",
       "items": [
         "'I'm leaving tomorrow.' (she)",
         "'We have already eaten.' (they)",
@@ -42,24 +51,35 @@
         "'I can't find my keys.' (she)"
       ],
       "answers": [
-        "Dijo que se marcharía al día siguiente.",
-        "Dijeron que ya habían comido.",
-        "Dijo que se reuniría conmigo al mediodía.",
-        "Dijo que no podía encontrar sus llaves."
+        "She said she was leaving the next day.",
+        "They said they had already eaten.",
+        "He said he would meet me at noon.",
+        "She said she couldn't find her keys."
       ]
     }
   ],
   "quiz": [
     {
-      "question": "Usted informa: \"Dijo: \"Trabajo en Google\". ¿Qué es correcto?",
+      "question": "Estás reportando: \"Él dijo: 'Trabajo en Google'\". ¿Cuál es la forma correcta de reportarlo, asumiendo que ya no trabaja allí o que la situación no es actual?",
       "options": [
-        "Dijo que trabaja en Google.",
-        "Dijo que trabajaba en Google.",
-        "Dijo que ha trabajado en Google.",
-        "Dijo que trabajo en Google."
+        "Él dijo que trabaja en Google.",
+        "Él dijo que trabajaba en Google.",
+        "Él dijo que ha trabajado en Google.",
+        "Él dijo que trabajo en Google."
       ],
       "correct": 1,
-      "explanation": "Retroceso: funciona → funcionó. (A menos que Google sea claramente su empleador actual y usted informe que sigue siendo cierto)."
+      "explanation": "El Presente Simple ('trabajo') retrocede a Pasado Simple ('trabajaba'). Es importante notar que si la persona todavía trabaja en Google al momento de reportar, la opción 'Él dijo que trabaja en Google' también sería correcta (ver sección 'Cuándo NO aplicar el Backshift'). Sin embargo, sin más contexto, la regla general de retroceso se aplica."
+    },
+    {
+      "question": "Transforma la siguiente frase a discurso indirecto: \"She told me: 'I will call you tomorrow.'\"",
+      "options": [
+        "She told me that she would call me the next day.",
+        "She told me that she will call me tomorrow.",
+        "She told me that she would call me tomorrow.",
+        "She told me that I would call her the next day."
+      ],
+      "correct": 0,
+      "explanation": "El 'will' del discurso directo cambia a 'would' en el discurso indirecto. Además, la expresión de tiempo 'tomorrow' debe cambiar a 'the next day' o 'the following day' para reflejar el cambio de perspectiva."
     }
   ]
 }

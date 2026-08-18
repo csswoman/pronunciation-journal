@@ -38,7 +38,7 @@
   ],
   "exercises": [
     {
-      "instruction": "Combina las oraciones usando una cláusula de participio.",
+      "instruction": "Combine each pair of sentences into one using a participial clause.",
       "items": [
         "She had finished her work. She left the office.",
         "The report was written in English. It was difficult to translate.",
@@ -46,10 +46,10 @@
         "After she had waited for an hour, she left."
       ],
       "answers": [
-        "Habiendo terminado su trabajo, salió de la oficina.",
-        "El informe, escrito en inglés, fue difícil de traducir.",
-        "Sin saber la respuesta, se quedó callado.",
-        "Después de esperar una hora, se fue."
+        "Having finished her work, she left the office.",
+        "Written in English, the report was difficult to translate.",
+        "Not knowing the answer, he stayed quiet.",
+        "Having waited for an hour, she left."
       ]
     }
   ],

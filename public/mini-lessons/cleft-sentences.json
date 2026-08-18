@@ -4,18 +4,19 @@
   "level": "advanced",
   "category": "grammar",
   "duration": 7,
-  "title": "Oraciones hendidas para concentrarse",
+  "title": "Oraciones Hendidas (Cleft Sentences): La Gramática del Énfasis",
   "subtitle": "Gramática del día",
-  "body": "Las oraciones divididas dividen una oración simple para resaltar un elemento. 'Fue X que...' y 'Lo que quiero es...' son los dos tipos principales.",
+  "body": "Las 'cleft sentences' (oraciones hendidas) son estructuras gramaticales avanzadas que nos permiten poner énfasis en una parte específica de una oración. Dividen una idea simple en dos cláusulas para destacar lo que es más importante. Los dos tipos principales son las 'It-clefts' ('It was X that...') y las 'Wh-clefts' ('What I want is...').",
   "examples": [
     {
       "word": "It was Maria who called.",
-      "translation": "énfasis en María, no en otra persona"
+      "translation": "Fue María quien llamó. (Énfasis en 'Maria')"
     },
     {
       "word": "What I need is more time.",
-      "translation": "énfasis en 'más tiempo'"
+      "translation": "Lo que necesito es más tiempo. (Énfasis en 'more time')"
     }
   ],
+  "tip": "Al usar 'cleft sentences', piensa en qué elemento de la oración quieres que el oyente o lector preste más atención. Esa será la parte que coloques inmediatamente después de 'It is/was' o al final de la cláusula 'What...is/was'.",
   "href": "/mini-lessons/cleft-sentences"
 }

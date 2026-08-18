@@ -34,7 +34,7 @@
   ],
   "exercises": [
     {
-      "instruction": "Reescribe cada oración en el registro indicado.",
+      "instruction": "Rewrite each sentence in the register indicated in brackets.",
       "items": [
         "I wanna ask you something. (formal)",
         "We request that you vacate the premises. (informal)",
@@ -42,10 +42,10 @@
         "We regret to inform you that your application was unsuccessful. (neutral)"
       ],
       "answers": [
-        "Me gustaría preguntarte algo.",
-        "Necesitas mudarte.",
-        "Su empleo ha sido despedido.",
-        "Desafortunadamente, su solicitud no fue exitosa."
+        "I would like to ask you something.",
+        "You need to leave / move out.",
+        "Her employment has been terminated.",
+        "Unfortunately, your application was not successful."
       ]
     }
   ],

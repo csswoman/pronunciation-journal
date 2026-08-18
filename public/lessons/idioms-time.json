@@ -3,63 +3,86 @@
   "sections": [
     {
       "heading": "¿Por qué modismos sobre el tiempo?",
-      "body": "El tiempo es uno de los dominios conceptuales más comunes en cualquier idioma. El inglés tiene un conjunto inusualmente rico de modismos para referirse al tiempo; muchos provienen de la navegación, la agricultura y los ritmos de la vida preindustrial."
+      "body": "El tiempo es uno de los dominios conceptuales más comunes. El inglés tiene un conjunto rico de modismos para referirse al tiempo en un sentido no literal (velocidad, frecuencia, importancia o experiencias)."
     },
     {
-      "heading": "Los mas utiles",
-      "body": "\"En el último momento\", justo antes de que sea demasiado tarde. 'Una vez en una luna azul' — muy raramente (las lunas azules son eventos astronómicos raros). \"Contrarreloj\": apresurarse debido a una fecha límite. 'Las 24 horas': continuamente, las 24 horas. 'En poco tiempo (en absoluto)', muy rápidamente."
+      "heading": "Modismos de tiempo indispensables",
+      "body": "'From time to time' significa 'de vez en cuando'. 'In no time' se usa para algo extremadamente rápido. 'Any time now' expresa inminencia. 'Have a good time' es una colocación típica para pasarlo bien. 'Screw up big time' es un modismo coloquial para cometer un error enorme. 'Before your time' se refiere a sucesos anteriores a tu nacimiento o época."
     }
   ],
   "examples": [
     {
       "english": "We caught the last train in the nick of time.",
-      "translation": "justo a tiempo - por muy poco"
+      "translation": "justo a tiempo / a las justas"
     },
     {
-      "english": "She calls her parents once in a blue moon.",
-      "translation": "muy raramente"
+      "english": "She visits us from time to time.",
+      "translation": "de vez en cuando"
     },
     {
-      "english": "The team was working against the clock.",
-      "translation": "corriendo contra el tiempo"
+      "english": "I'll finish this report in no time.",
+      "translation": "en un momento / de inmediato"
     },
     {
-      "english": "The hospital is staffed around the clock.",
-      "translation": "las 24 horas"
+      "english": "The bus should be arriving any time now.",
+      "translation": "en cualquier momento / pronto"
     },
     {
-      "english": "Don't worry, I'll finish it in no time.",
-      "translation": "en un momento / muy rápido"
+      "english": "Have a good time at the party!",
+      "translation": "¡pásala bien en la fiesta!"
+    },
+    {
+      "english": "I screwed up big time on my presentation.",
+      "translation": "la recagué a lo grande en mi presentación"
+    },
+    {
+      "english": "That old cinema closed down before your time.",
+      "translation": "ese viejo cine cerró antes de que nacieras"
     }
   ],
   "exercises": [
     {
-      "instruction": "Reemplace las palabras subrayadas con un modismo temporal.",
+      "instruction": "Completa la frase con el modismo de tiempo adecuado en inglés.",
       "items": [
-        "She arrived just before the meeting started.",
-        "He exercises very rarely.",
-        "They finished the report very quickly.",
-        "The servers run continuously."
+        "Don't worry about the project; I will finish it in ___.",
+        "We need to leave soon; the taxi should be here any ___.",
+        "I don't go to the gym often, just from ___.",
+        "I really screwed ___ on my math exam.",
+        "Did you have ___ at the concert last night?",
+        "That museum was built way before ___."
       ],
       "answers": [
-        "justo a tiempo",
-        "una vez en una luna azul",
-        "en poco tiempo / en tiempo récord",
-        "todo el día"
+        "no time",
+        "time now",
+        "time to time",
+        "up big time",
+        "a good time",
+        "your time"
       ]
     }
   ],
   "quiz": [
     {
-      "question": "'Érase en una luna azul' significa:",
+      "question": "Si alguien dice 'I will be there in no time', significa que:",
       "options": [
-        "Cada mes",
-        "Cada tarde",
-        "Muy raramente",
-        "a medianoche"
+        "Llegará tarde.",
+        "No tiene tiempo para ir.",
+        "Llegará muy rápido / de inmediato.",
+        "No sabe a qué hora llegará."
       ],
       "correct": 2,
-      "explanation": "Una luna azul es un evento astronómico poco común; el modismo significa que algo sucede con muy poca frecuencia."
+      "explanation": "'In no time' significa muy rápido o de inmediato."
+    },
+    {
+      "question": "¿Cuál es el significado de 'screw up big time'?",
+      "options": [
+        "Hacer un gran trabajo.",
+        "Cometer un error enorme / recagarla.",
+        "Llegar a tiempo a una cita.",
+        "Resolver un problema difícil."
+      ],
+      "correct": 1,
+      "explanation": "'Screw up big time' significa cometer un error muy grave o arruinar algo completamente."
     }
   ]
 }

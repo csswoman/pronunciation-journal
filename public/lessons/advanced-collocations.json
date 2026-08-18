@@ -2,39 +2,53 @@
   "slug": "advanced-collocations",
   "sections": [
     {
-      "heading": "La distinción central",
-      "body": "'Levantar' es un verbo transitivo: siempre necesita un objeto. Algo o alguien plantea algo más. 'Rise' es intransitivo: nunca requiere un objeto. Las cosas surgen por sí solas."
+      "heading": "La distinción clave: 'Raise' vs. 'Rise'",
+      "body": "'Raise' es un verbo transitivo: siempre necesita un objeto directo. Algo o alguien 'raise' (eleva, sube, aumenta) algo más. Por ejemplo, 'raise your hand' (levantar la mano). 'Rise' es intransitivo: nunca requiere un objeto directo. Las cosas 'rise' (se elevan, suben, aumentan) por sí solas. Por ejemplo, 'the sun rises' (el sol sale)."
     },
     {
-      "heading": "Levantar colocaciones",
-      "body": "Plantear una pregunta, crear conciencia, recaudar fondos, plantear inquietudes, plantear una objeción, alzar la voz, elevar el listón, criar a un niño, formar un ejército, aumentar los precios (si alguien lo está haciendo deliberadamente)."
+      "heading": "Colocaciones comunes con 'Raise'",
+      "body": "Aquí tienes algunas expresiones habituales con 'raise': 'raise a question' (hacer una pregunta), 'raise awareness' (crear conciencia/sensibilizar), 'raise funds' (recaudar fondos), 'raise concerns' (expresar preocupaciones), 'raise an objection' (presentar una objeción), 'raise your voice' (alzar la voz), 'raise the bar' (subir el listón/el nivel), 'raise a child' (criar un hijo), 'raise an army' (formar un ejército), 'raise prices' (aumentar los precios, si un agente los sube deliberadamente)."
     },
     {
-      "heading": "Aumento de colocaciones",
-      "body": "Los precios suben, las temperaturas suben, sale el sol, el nivel del mar sube, aumenta el crimen, aumentan las expectativas, él saltó a la fama, ella ascendió de rango, los costos aumentan (si suben naturalmente/sin un agente)."
+      "heading": "Colocaciones comunes con 'Rise'",
+      "body": "Y estas son algunas expresiones frecuentes con 'rise': 'prices rise' (los precios suben), 'temperatures rise' (las temperaturas suben), 'the sun rises' (el sol sale), 'sea levels rise' (el nivel del mar sube), 'crime rises' (el crimen aumenta), 'expectations rise' (las expectativas aumentan), 'he rose to fame' (saltó a la fama), 'she rose through the ranks' (ascendió de rango), 'costs rise' (los costos aumentan, si suben naturalmente o sin un agente externo)."
     }
   ],
   "examples": [
     {
       "english": "The government raised taxes.",
-      "note": "Levantar + objeto (transitivo)"
+      "ipa": "/reɪzd/",
+      "translation": "El gobierno subió los impuestos.",
+      "note": "'Raise' es transitivo: necesita un objeto directo (taxes)."
     },
     {
       "english": "Taxes rose by 3%.",
-      "note": "Rise - sin objeto (intransitivo)"
+      "ipa": "/roʊz/",
+      "translation": "Los impuestos subieron un 3%.",
+      "note": "'Rise' es intransitivo: no necesita un objeto directo."
     },
     {
       "english": "She raised a valid point.",
-      "note": "Transitivo - elevar + objeto"
+      "ipa": "/reɪzd/",
+      "translation": "Ella planteó un punto válido.",
+      "note": "'Raise' (planteó) con objeto directo (a valid point)."
     },
     {
       "english": "He rose to become CEO.",
-      "note": "Intransitivo: sin objeto"
+      "ipa": "/roʊz/",
+      "translation": "Él ascendió hasta convertirse en CEO.",
+      "note": "'Rise' (ascendió) sin objeto directo."
+    },
+    {
+      "english": "We need to raise awareness.",
+      "ipa": "/reɪz/",
+      "translation": "Necesitamos crear conciencia.",
+      "note": "'Raise' (crear) con objeto directo (awareness)."
     }
   ],
   "exercises": [
     {
-      "instruction": "¿Subir o subir (en la forma correcta)?",
+      "instruction": "Completa las siguientes oraciones con la forma correcta de 'raise' o 'rise'.",
       "items": [
         "The board ___ salaries last year.",
         "Temperatures ___ sharply in summer.",
@@ -43,25 +57,36 @@
         "They hope to ___ awareness about climate change."
       ],
       "answers": [
-        "aumentó",
-        "elevar",
-        "aumentó",
-        "rosa",
-        "aumentar"
+        "raised",
+        "rise",
+        "raised",
+        "rose",
+        "raise"
       ]
     }
   ],
   "quiz": [
     {
-      "question": "¿Qué oración es gramaticalmente correcta?",
+      "question": "¿Cuál de las siguientes oraciones utiliza 'raise' o 'rise' correctamente?",
       "options": [
-        "El sol sale todas las mañanas.",
-        "Levantaron la bandera.",
-        "Ella expresó sus preocupaciones en la reunión.",
-        "Los precios han aumentado dramáticamente."
+        "The sun raises every morning.",
+        "They raised the flag by themselves.",
+        "She raised her concerns at the meeting.",
+        "The sea levels are raising."
       ],
       "correct": 2,
-      "explanation": "'Plantear sus preocupaciones' - transitivo con objeto. 'Salió el sol', 'izaron la bandera', 'han subido los precios'."
+      "explanation": "La opción 'She raised her concerns at the meeting' es correcta porque 'raise concerns' es una colocación común y 'raise' es transitivo, con 'concerns' como objeto. Las demás son incorrectas: el sol 'rises' (intransitivo), la bandera se 'raised' por alguien (pero la frase 'by themselves' implicaría 'rise' si fuera sin agente, lo cual es incorrecto aquí), y los niveles del mar 'rise' (intransitivo)."
+    },
+    {
+      "question": "Selecciona la palabra correcta para completar la oración: 'The hot air balloon began to ___ slowly into the sky.'",
+      "options": [
+        "raise",
+        "raises",
+        "rose",
+        "rise"
+      ],
+      "correct": 3,
+      "explanation": "El globo aerostático sube por sí solo, sin un agente externo que lo 'eleve'. Por lo tanto, se usa el verbo intransitivo 'rise' en su forma infinitiva 'rise' después de 'to'."
     }
   ]
 }

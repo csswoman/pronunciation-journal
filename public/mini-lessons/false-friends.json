@@ -4,22 +4,23 @@
   "level": "intermediate",
   "category": "vocabulary",
   "duration": 5,
-  "title": "Falsos amigos: falsos cognados español-inglés",
-  "subtitle": "Vocabulario del día.",
-  "body": "Estas palabras parecen españolas pero significan algo completamente diferente en inglés: una fuente confiable de errores vergonzosos.",
+  "title": "Falsos Amigos: ¡Evita trampas en inglés!",
+  "subtitle": "Palabras que engañan y cómo usarlas bien.",
+  "body": "Aprende a identificar y evitar esas palabras que se parecen mucho al español, pero que en inglés significan algo completamente diferente. ¡Te salvarás de muchos malentendidos vergonzosos!",
   "examples": [
     {
-      "word": "embarrassed ≠ embarazada",
-      "translation": "'avergonzado' = avergonzado/a"
+      "word": "embarrassed [ɪmˈbærəst] ≠ embarazada",
+      "translation": "Significa 'avergonzado/a' (no 'pregnant')."
     },
     {
-      "word": "actually ≠ actualmente",
-      "translation": "'en realidad' = en realidad"
+      "word": "actually [ˈæktʃuəli] ≠ actualmente",
+      "translation": "Significa 'de hecho/en realidad' (no 'currently')."
     },
     {
-      "word": "library ≠ librería",
-      "translation": "'biblioteca' = biblioteca"
+      "word": "sensible [ˈsɛnsəbəl] ≠ sensible",
+      "translation": "Significa 'sensato/a' (no 'sensitive')."
     }
   ],
+  "tip": "Un buen truco es aprender los falsos amigos en pares (ej. embarrassed = avergonzado, pregnant = embarazada) para fijar el significado correcto en tu mente.",
   "href": "/mini-lessons/false-friends"
 }

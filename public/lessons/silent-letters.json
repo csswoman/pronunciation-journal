@@ -48,7 +48,7 @@
   ],
   "exercises": [
     {
-      "instruction": "Tacha las letras mudas de cada palabra.",
+      "instruction": "Identify the silent letter(s) in each word.",
       "items": [
         "knight",
         "wrap",
@@ -60,14 +60,14 @@
         "Wednesday"
       ],
       "answers": [
-        "caballero",
-        "envoltura",
-        "gnomo",
-        "cordero",
-        "honesto",
-        "hija",
-        "extranjero",
-        "Miércoles"
+        "k",
+        "w",
+        "g",
+        "b",
+        "h",
+        "gh",
+        "g",
+        "d"
       ]
     }
   ],

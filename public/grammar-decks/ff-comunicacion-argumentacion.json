@@ -1,0 +1,259 @@
+{
+  "meta": {
+    "eyebrow": "Falsos Cognados · Comunicación y Academia",
+    "title": "Falsos amigos en",
+    "titleEmphasis": "comunicación y estudio",
+    "goal": "Distingue con precisión términos de estudio, debates, opiniones y relaciones interpersonales que confunden a niveles intermedios y avanzados."
+  },
+  "related": [
+    { "slug": "ff-esenciales-a1-a2", "label": "Falsos amigos esenciales" },
+    { "slug": "ff-trabajo-negocios", "label": "Falsos amigos en el trabajo" }
+  ],
+  "quiz": [
+    {
+      "q": "El profesor está dando una clase magistral universitaria ante 100 alumnos. ¿A qué asisten?",
+      "options": [
+        "A reading session",
+        "A university lecture",
+        "A book career",
+        "An eventual argument"
+      ],
+      "answer": 1,
+      "explain": "\"Lecture\" es una clase magistral o conferencia académica. Una lectura o texto para leer es \"reading\"."
+    },
+    {
+      "q": "Un amigo está pasando por un momento difícil y otra persona muestra empatía y compasión sincera. ¿Cómo describes a esa persona?",
+      "options": [
+        "She is very sympathetic.",
+        "She is very sympathy friendly.",
+        "She is very sensible major.",
+        "She is very casual."
+      ],
+      "answer": 0,
+      "explain": "\"Sympathetic\" significa comprensivo/a, compasivo/a o empático/a. Para decir \"simpático/agradable\" se usa \"nice\", \"friendly\" o \"likeable\"."
+    },
+    {
+      "q": "Después de investigar durante semanas, el científico finalmente se dio cuenta de cuál era el error. ¿Qué verbo expresa \"darse cuenta\"?",
+      "options": [
+        "He realized the mistake.",
+        "He carried out the mistake.",
+        "He performed the mistake.",
+        "He actualized the mistake."
+      ],
+      "answer": 0,
+      "explain": "\"Realize\" significa darse cuenta o comprender. Para decir \"realizar/llevar a cabo una tarea\" se usa \"carry out\", \"conduct\", \"make\" o \"perform\"."
+    }
+  ],
+  "cards": [
+    {
+      "id": "ff-lecture-reading",
+      "tag": "lecture / reading",
+      "title": "Lecture vs Reading",
+      "lede": "En la universidad o conferencias, «lecture» no es lo que lees, sino la charla expositiva del profesor.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "lecture (clase magistral / conferencia)",
+              "rule": "Exposición oral educativa impartida por un experto ante un público o aula.",
+              "examples": [
+                "The biology professor delivered a fascinating guest lecture.",
+                "Students must attend at least eight lectures per semester.",
+                "He gave me a lecture on punctuality after I arrived late."
+              ]
+            },
+            {
+              "label": "reading / text (lectura / texto)",
+              "rule": "Actividad de leer libros o artículos asignados para estudiar.",
+              "examples": [
+                "Complete the assigned chapter readings before tomorrow's seminar.",
+                "Reading in English every day boosts your passive vocabulary.",
+                "The syllabus contains a curated list of required readings."
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Uso coloquial:",
+        "body": "«Give someone a lecture» también se usa en sentido figurado para «echarle una bronca/sermón» a alguien por su conducta."
+      }
+    },
+    {
+      "id": "ff-career-degree",
+      "tag": "career / degree",
+      "title": "Career vs Degree",
+      "lede": "¿Qué estudiaste frente a qué trabajas? En inglés, la carrera universitaria se llama «degree» o «major».",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "career (trayectoria profesional)",
+              "rule": "La suma total de tu experiencia, puestos y progresión laboral a lo largo de los años.",
+              "examples": [
+                "She built an outstanding career in international law.",
+                "A career change in your thirties is increasingly common.",
+                "He dedicated his entire professional career to cancer research."
+              ]
+            },
+            {
+              "label": "degree / major (carrera universitaria)",
+              "rule": "El título académico universitario o la especialidad que cursas en la universidad.",
+              "examples": [
+                "I graduated with a bachelor's degree in computer engineering.",
+                "What is your college major? Mine is economics.",
+                "She is currently studying for a master's degree in design."
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "¿Cómo preguntar?:",
+        "body": "Para preguntar «¿Qué carrera estudiaste?», di: «What did you study in college?» o «What was your major?», nunca «What career did you do?»."
+      }
+    },
+    {
+      "id": "ff-argument-plot",
+      "tag": "argument / plot",
+      "title": "Argument vs Plot",
+      "lede": "Un «argument» en inglés suele ser un choque verbal o una postura lógica, no el hilo de una película.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "argument (discusión / razonamiento lógico)",
+              "rule": "Discusión acalorada entre personas o razonamiento formal que respalda una tesis.",
+              "examples": [
+                "They had a heated argument about household finances.",
+                "His presentation presented several compelling logical arguments.",
+                "Let's resolve this dispute calmly without an angry argument."
+              ]
+            },
+            {
+              "label": "plot / storyline (argumento de película/libro)",
+              "rule": "La trama narrativa, historia o secuencia de sucesos en una obra de ficción.",
+              "examples": [
+                "The movie had an unexpected plot twist at the very end.",
+                "The storyline of this novel revolves around espionage.",
+                "I found the plot of the series rather slow and predictable."
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Verbo clave:",
+        "body": "«To argue with someone» = discutir / pelear verbalmente con alguien. «To make an argument» = plantear un argumento o tesis."
+      }
+    },
+    {
+      "id": "ff-eventual-occasional",
+      "tag": "eventual / occasional",
+      "title": "Eventual vs Occasional",
+      "lede": "«Eventual» en inglés no significa algo casual o fortuito, sino el desenlace final e inevitable con el tiempo.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "eventual (final / a largo plazo / inevitable)",
+              "rule": "Resultado que ocurrirá tarde o temprano tras un proceso continuo.",
+              "examples": [
+                "Persistent training led to her eventual victory in the championship.",
+                "The eventual goal of the project is global carbon neutrality.",
+                "He eventually admitted that his initial theory had flaws."
+              ]
+            },
+            {
+              "label": "occasional / sporadic (eventual / esporádico)",
+              "rule": "Hecho que sucede de vez en cuando, de manera casual o sin periodicidad fija.",
+              "examples": [
+                "We experience occasional power outages during heavy thunderstorms.",
+                "She enjoys an occasional glass of red wine on weekends.",
+                "He takes sporadic freelance assignments outside his regular job."
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "El adverbio «eventually»:",
+        "body": "«Eventually» significa «al final / tarde o temprano / con el tiempo» (ej: «You will eventually master English»)."
+      }
+    },
+    {
+      "id": "ff-realize-carry-out",
+      "tag": "realize / carry out",
+      "title": "Realize vs Carry Out",
+      "lede": "«Realize» es un proceso mental (darse cuenta), no la ejecución física de una tarea o sueño.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "realize (darse cuenta / comprender)",
+              "rule": "Llegar a ser consciente de un hecho o verdad de forma repentina o reflexiva.",
+              "examples": [
+                "I suddenly realized that I had forgotten my keys inside.",
+                "Did you realize how much impact your words had on the team?",
+                "She didn't realize that the meeting time had changed."
+              ]
+            },
+            {
+              "label": "carry out / perform / make (realizar / ejecutar)",
+              "rule": "Llevar a cabo un experimento, realizar una compra o ejecutar una labor.",
+              "examples": [
+                "The medical lab will carry out clinical trials next month.",
+                "Surgeons performed the delicate operation with great skill.",
+                "We made several improvements to the onboarding flow."
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Excepción formal:",
+        "body": "En contextos muy elevados existe «realize a dream/potential» (hacer realidad un sueño), pero para actividades cotidianas usa «carry out» o «do/make»."
+      }
+    },
+    {
+      "id": "ff-sympathetic-friendly",
+      "tag": "sympathetic / friendly",
+      "title": "Sympathetic vs Friendly",
+      "lede": "«Sympathetic» no describe a alguien gracioso o simpático, sino a alguien compasivo y empático ante el dolor ajeno.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "sympathetic (compasivo / empático)",
+              "rule": "Mostrar comprensión, consuelo y apoyo ante las dificultades o dolor de otra persona.",
+              "examples": [
+                "My manager was very sympathetic when my flight was cancelled.",
+                "She listened with a sympathetic ear and offered comforting words.",
+                "The doctor took a kind and sympathetic approach to patient care."
+              ]
+            },
+            {
+              "label": "friendly / nice / likeable (simpático / agradable)",
+              "rule": "Persona amigable, de trato cordial, alegre, simpática o con don de gentes.",
+              "examples": [
+                "Our new neighbor is exceptionally warm and friendly.",
+                "He is a very likeable person who gets along with everyone.",
+                "The hotel staff was courteous and genuinely nice."
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Regla de oro:",
+        "body": "Si alguien es divertido y agradable: «He is nice / friendly». Si alguien te apoya en un momento triste: «He is very sympathetic»."
+      }
+    }
+  ]
+}

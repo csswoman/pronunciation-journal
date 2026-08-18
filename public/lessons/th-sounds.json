@@ -47,7 +47,7 @@
   ],
   "exercises": [
     {
-      "instruction": "Clasifica estas palabras en /θ/ (sorda) o /ð/ (sonora).",
+      "instruction": "Write whether each word contains the voiced /ð/ or voiceless /θ/ sound.",
       "items": [
         "though",
         "thunder",
@@ -59,14 +59,14 @@
         "with"
       ],
       "answers": [
-        "/ð/ expresado",
-        "/θ/ sin voz",
-        "/θ/ sin voz",
-        "/ð/ expresado",
-        "/θ/ sin voz",
-        "/ð/ expresado",
-        "/θ/ sin voz",
-        "/θ/ sin voz (también /ð/ según el acento)"
+        "/ð/ voiced",
+        "/θ/ voiceless",
+        "/θ/ voiceless",
+        "/ð/ voiced",
+        "/θ/ voiceless",
+        "/ð/ voiced",
+        "/θ/ voiceless",
+        "/θ/ voiceless (also /ð/ in some accents)"
       ]
     }
   ],

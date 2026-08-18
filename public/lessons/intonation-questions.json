@@ -34,20 +34,18 @@
   ],
   "exercises": [
     {
-      "instruction": "Marque cada uno con ↗ (ascendente) o ↘ (descendente).",
+      "instruction": "State whether the intonation rises (↗) or falls (↘) for each question type.",
       "items": [
-        "What time does it start?",
-        "Is this seat taken?",
-        "Who called?",
-        "Did you enjoy the film?",
-        "How do you spell that?"
+        "Are you coming to the party? (yes/no question)",
+        "Where do you live? (wh- question)",
+        "You've met him before, haven't you? (tag question, expecting confirmation)",
+        "It's cold today, isn't it? (tag question, genuine uncertainty)"
       ],
       "answers": [
-        "↘ (pregunta)",
-        "↗ (pregunta sí/no)",
-        "↘ (pregunta)",
-        "↗ (pregunta sí/no)",
-        "↘ (pregunta)"
+        "↗ Rising — yes/no questions typically end with rising intonation.",
+        "↘ Falling — wh- questions typically end with falling intonation.",
+        "↘ Falling — when the speaker is fairly sure and seeking confirmation.",
+        "↗ Rising — when the speaker is genuinely uncertain."
       ]
     }
   ],

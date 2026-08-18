@@ -34,18 +34,18 @@
   ],
   "exercises": [
     {
-      "instruction": "Suavice cada reclamación utilizando lenguaje de cobertura.",
+      "instruction": "Rewrite each statement using hedging language to make it less absolute.",
       "items": [
-        "Climate change causes more extreme weather.",
-        "Social media makes teenagers depressed.",
-        "The new policy will reduce crime.",
-        "People who exercise live longer."
+        "This is the best solution.",
+        "The new policy will fail.",
+        "Everyone agrees with this approach.",
+        "The results prove our hypothesis."
       ],
       "answers": [
-        "El cambio climático puede contribuir a un clima más extremo.",
-        "Las redes sociales podrían estar relacionadas con una mayor depresión en los adolescentes.",
-        "La nueva política podría ayudar a reducir la delincuencia.",
-        "La evidencia sugiere que las personas que hacen ejercicio tienden a vivir más tiempo."
+        "This seems to be / appears to be one of the better solutions.",
+        "The new policy might / could fail.",
+        "It seems that most people tend to agree with this approach.",
+        "The results seem to suggest / tend to support our hypothesis."
       ]
     }
   ],

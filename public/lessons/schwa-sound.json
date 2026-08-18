@@ -47,7 +47,7 @@
   ],
   "exercises": [
     {
-      "instruction": "Encuentra el schwa en cada palabra. ¿Cuántos schwas contiene cada palabra?",
+      "instruction": "Mark the schwa sound(s) in each word. Write the syllable count and which syllable(s) contain /ə/.",
       "items": [
         "family",
         "information",
@@ -56,15 +56,15 @@
         "yesterday"
       ],
       "answers": [
-        "fam-uh-lee (2)",
-        "en-fuh-MAY-shun (2)",
-        "COMF-tuh-bul (2)",
-        "DIF-runt (1)",
-        "SÍ-tuh-día (1)"
+        "FAM-uh-lee — 3 syllables, 2nd syllable",
+        "in-fuh-MAY-shun — 4 syllables, 2nd syllable",
+        "COMF-tuh-bul — 3 syllables, 2nd syllable",
+        "DIF-runt — 2 syllables, 2nd syllable",
+        "YES-tuh-day — 3 syllables, 2nd syllable"
       ]
     },
     {
-      "instruction": "Di estas palabras funcionales de forma natural en una oración. Observe cómo 'de', 'a', 'y' se reducen a /ə/, /tə/, /ən/.",
+      "instruction": "Transcribe each phrase using phonemic script, showing how function words reduce to /ə/.",
       "items": [
         "a cup of tea",
         "I want to go",
@@ -72,10 +72,10 @@
         "out of the question"
       ],
       "answers": [
-        "/ə kʌp əv tiː/ — 'de' se reduce a /əv/ o /ə/",
-        "/aɪ ˈwɑnə ɡoʊ/ — 'to' se reduce a /tə/ (quiero)",
-        "/fɪʃ ən tʃɪps/ — 'y' se reduce a /ən/",
-        "/aʊt ə ðə ˈkwɛstʃən/ — 'del' se reduce a /ə ðə/"
+        "/ə kʌp əv tiː/ — 'of' reduces to /əv/ or /ə/",
+        "/aɪ ˈwɒntə ɡəʊ/ — 'to' reduces to /tə/",
+        "/fɪʃ ən tʃɪps/ — 'and' reduces to /ən/",
+        "/aʊt ə ðə ˈkwɛstʃən/ — 'of' reduces to /ə ðə/"
       ]
     }
   ],

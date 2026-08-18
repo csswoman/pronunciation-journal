@@ -42,7 +42,7 @@
   ],
   "exercises": [
     {
-      "instruction": "Agrega la etiqueta de pregunta correcta a cada oración.",
+      "instruction": "Complete each sentence with the correct question tag.",
       "items": [
         "You can drive, ___?",
         "She didn't call, ___?",
@@ -51,11 +51,11 @@
         "Let's start, ___?"
       ],
       "answers": [
-        "¿No puedes?",
-        "ella hizo",
-        "¿No lo han hecho?",
-        "es",
-        "Debemos"
+        "can't you?",
+        "did she?",
+        "haven't they?",
+        "is it?",
+        "shall we?"
       ]
     }
   ],

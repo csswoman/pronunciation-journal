@@ -5,12 +5,12 @@
   "category": "idioms",
   "duration": 6,
   "title": "Modismos que suenan nativos en C1",
-  "subtitle": "Modismos del día",
-  "body": "Estos modismos son menos comunes que los básicos, pero indican que un hablante es genuinamente fluido: aparecen en el periodismo, la literatura y las conversaciones.",
+  "subtitle": "Modismos avanzados",
+  "body": "Estos modismos son menos comunes que los básicos, pero su uso indica un dominio avanzado del inglés. Suelen encontrarse en el periodismo, la literatura y las conversaciones profesionales, añadiendo matices y sofisticación a la comunicación.",
   "examples": [
     {
       "word": "to bite the bullet",
-      "translation": "aguantar algo dificil"
+      "translation": "aguantar algo difícil"
     },
     {
       "word": "to throw caution to the wind",
@@ -21,5 +21,6 @@
       "translation": "estar indeciso"
     }
   ],
+  "tip": "Para dominar estos modismos, no solo memorices el significado, sino también el contexto en el que se usan. Intenta identificarlos en noticias o lecturas avanzadas.",
   "href": "/mini-lessons/advanced-idioms"
 }

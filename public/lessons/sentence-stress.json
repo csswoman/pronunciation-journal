@@ -30,16 +30,16 @@
   ],
   "exercises": [
     {
-      "instruction": "Subraya la palabra que enfatizarías para transmitir el significado entre paréntesis.",
+      "instruction": "Underline or write the word that carries the strongest stress in each sentence, given the context in brackets.",
       "items": [
         "He drives a red car. (not a blue one)",
         "She plays piano. (not guitar)",
         "I want coffee. (not tea)"
       ],
       "answers": [
-        "Conduce un coche ROJO.",
-        "Ella toca el PIANO.",
-        "Quiero CAFÉ."
+        "He drives a RED car.",
+        "She plays PIANO.",
+        "I want COFFEE."
       ]
     }
   ],

@@ -38,7 +38,7 @@
   ],
   "exercises": [
     {
-      "instruction": "Revise cada oración para hacerla más vívida o enérgica.",
+      "instruction": "Revise each sentence to remove nominalisation or passive voice and make it more direct and active.",
       "items": [
         "She made the decision to leave the company.",
         "He walked in a slow and careful manner.",
@@ -46,10 +46,10 @@
         "The report was written by the committee."
       ],
       "answers": [
-        "Modelo: Decidió dejar la empresa.",
-        "Modelo: Entró sigilosamente.",
-        "Modelo: El equipo estaba lleno de emoción.",
-        "Modelo: El comité redactó el informe."
+        "Model: She decided to leave the company.",
+        "Model: He walked slowly and carefully.",
+        "Model: The team felt excited.",
+        "Model: The committee wrote the report."
       ]
     }
   ],

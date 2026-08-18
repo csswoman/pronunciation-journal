@@ -35,7 +35,7 @@
   ],
   "exercises": [
     {
-      "instruction": "Escribe el pasado simple de cada verbo.",
+      "instruction": "Write the simple past form of each irregular verb.",
       "items": [
         "fly",
         "break",
@@ -47,14 +47,14 @@
         "bite"
       ],
       "answers": [
-        "voló",
-        "en bancarrota",
-        "robó",
-        "se congeló",
-        "eligió",
-        "habló",
-        "escondido",
-        "poco"
+        "flew",
+        "broke",
+        "stole",
+        "froze",
+        "chose",
+        "spoke",
+        "hid",
+        "bit"
       ]
     }
   ],

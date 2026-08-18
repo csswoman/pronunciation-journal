@@ -33,7 +33,7 @@
   ],
   "exercises": [
     {
-      "instruction": "Para cada par, tenga en cuenta: ¿son distintos en su acento objetivo (RP británico/americano general)?",
+      "instruction": "For each pair or set, describe whether the words are homophones (sound identical) or have distinct pronunciations in General American (GA) and/or Received Pronunciation (RP).",
       "items": [
         "horse / hoarse",
         "marry / merry / Mary",
@@ -41,10 +41,10 @@
         "cot / caught"
       ],
       "answers": [
-        "Homófonos tanto en RP como en General American.",
-        "GA: los tres suelen fusionarse; RP: tres vocales distintas.",
-        "Idéntico para la mayoría de los hablantes: la distinción /ʍ/ sobrevive sólo en algunos acentos.",
-        "RP: distinta (/ɒ/ vs /ɔː/); GA: fusionada para muchos oradores (fusión atrapada)."
+        "Homophones in both RP and General American.",
+        "GA: all three typically merge; RP: three distinct vowels.",
+        "Identical for most speakers; the /ʍ/ distinction survives only in some accents.",
+        "RP: distinct (/ɒ/ vs /ɔː/); GA: merged for many speakers (cot-caught merger)."
       ]
     }
   ],

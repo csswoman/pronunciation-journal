@@ -42,7 +42,7 @@
   ],
   "exercises": [
     {
-      "instruction": "Elija la forma correcta: Presente simple o Presente continuo.",
+      "instruction": "Complete each sentence with the correct form of the verb in brackets (present simple or present continuous).",
       "items": [
         "I ___ (study) Japanese right now.",
         "She ___ (drink) coffee every morning.",
@@ -51,11 +51,11 @@
         "He ___ (seem) tired lately."
       ],
       "answers": [
-        "estoy estudiando",
-        "bebidas",
-        "no entiendo",
-        "estan de visita",
-        "parece"
+        "am studying",
+        "drinks",
+        "don't understand",
+        "are visiting",
+        "seems"
       ]
     }
   ],

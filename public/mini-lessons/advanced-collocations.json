@@ -6,16 +6,17 @@
   "duration": 6,
   "title": "Colocaciones con 'raise' y 'rise'",
   "subtitle": "Colocaciones del día",
-  "body": "'Raise' es transitivo: necesita un objeto. 'Rise' es intransitivo: nunca requiere un objeto. Esta distinción hace tropezar a los estudiantes avanzados.",
+  "body": "'Raise' es un verbo transitivo que siempre requiere un objeto directo. 'Rise', por otro lado, es intransitivo y nunca lleva un objeto. ¡Dominar esta distinción es clave para estudiantes avanzados!",
   "examples": [
     {
       "word": "raise a question · raise awareness · raise funds",
-      "translation": "levantar + objeto"
+      "translation": "hacer una pregunta · crear conciencia · recaudar fondos (transitivo)"
     },
     {
       "word": "prices rise · temperatures rise · he rose to fame",
-      "translation": "levantarse - pecado objeto"
+      "translation": "los precios suben · las temperaturas suben · saltó a la fama (intransitivo)"
     }
   ],
+  "tip": "Un truco para recordar: si puedes reemplazarlo con 'lift' (levantar físicamente o mover hacia arriba), usa 'raise'. Si puedes reemplazarlo con 'go up' (subir por sí mismo), usa 'rise'.",
   "href": "/mini-lessons/advanced-collocations"
 }

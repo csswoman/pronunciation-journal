@@ -2,43 +2,53 @@
   "slug": "get-collocations",
   "sections": [
     {
-      "heading": "'Obtener' como convertirse",
-      "body": "'Get' + adjetivo significa convertirse en: cansarse, enfadarse, mejorar, empeorar, casarse, vestirse, perderse, quedarse estancado. Esto es extremadamente común y más natural que \"become\" en inglés hablado."
+      "heading": "'Get' as become",
+      "body": "'Get' + adjective means to become: get tired, get angry, get better, get worse, get married, get dressed, get lost, get stuck. This is extremely common and more natural than 'become' in spoken English."
     },
     {
-      "heading": "'Obtener' como obtener/recibir",
-      "body": "'Obtener' + sustantivo puede significar recibir u obtener: recibir una llamada, recibir un mensaje, obtener un aumento, conseguir un trabajo, entender el punto, obtener un título, obtener permiso."
+      "heading": "'Get' as obtain/receive",
+      "body": "'Get' + noun can mean to receive or obtain: get a call, get a message, get a raise, get a job, get the point, get a degree, get permission."
     },
     {
-      "heading": "'Obtener' como llegar/alcanzar",
-      "body": "'Obtener' + lugar o 'llegar a' + lugar significa llegar: '¿Cuándo llegaste a casa?' \"Llegué tarde a la oficina.\" \"Llega temprano.\""
+      "heading": "'Get' as arrive/reach",
+      "body": "'Get' + place or 'get to' + place means to arrive: 'When did you get home?' 'I got to the office late.' 'Get here early.'"
     }
   ],
   "examples": [
     {
       "english": "I'm getting tired.",
-      "translation": "me estoy cansando"
+      "ipa": "/aɪm ˈɡɛtɪŋ taɪərd/",
+      "translation": "I'm becoming tired.",
+      "note": "'Get' + adjective = become"
     },
     {
       "english": "She got a promotion last month.",
-      "translation": "recibió / consiguió"
+      "ipa": "/ʃiː ɡɒt ə prəˈmoʊʃən/",
+      "translation": "She received a promotion last month.",
+      "note": "'Get' + noun = receive/obtain"
     },
     {
       "english": "What time did you get home?",
-      "translation": "llegaste a casa"
+      "ipa": "/wɒt taɪm dɪd juː ɡɛt hoʊm/",
+      "translation": "What time did you arrive home?",
+      "note": "'Get' + place = arrive"
     },
     {
       "english": "I don't get it.",
-      "translation": "no lo entiendo"
+      "ipa": "/aɪ doʊnt ɡɛt ɪt/",
+      "translation": "I don't understand it.",
+      "note": "'Get it' = understand"
     },
     {
       "english": "Get well soon.",
-      "translation": "expresión fija: mejórate pronto"
+      "ipa": "/ɡɛt wɛl suːn/",
+      "translation": "Fixed expression: recover quickly.",
+      "note": "Fixed expression used when someone is ill."
     }
   ],
   "exercises": [
     {
-      "instruction": "Reemplace la palabra subrayada con la forma correcta de \"obtener\".",
+      "instruction": "Replace the underlined word with the correct form of 'get'.",
       "items": [
         "She became very angry.",
         "I received your email.",
@@ -46,24 +56,35 @@
         "I don't understand the joke."
       ],
       "answers": [
-        "consiguió",
-        "consiguió",
-        "consiguió",
-        "conseguir"
+        "She got very angry.",
+        "I got your email.",
+        "He got home late.",
+        "I don't get the joke."
       ]
     }
   ],
   "quiz": [
     {
-      "question": "'Obtener' + adjetivo significa más estrechamente:",
+      "question": "What does 'get' + adjective most closely mean?",
       "options": [
-        "tener",
-        "convertirse en",
-        "dar",
-        "encontrar"
+        "to have",
+        "to become",
+        "to give",
+        "to find"
       ],
       "correct": 1,
-      "explanation": "'Obtener' + adjetivo describe una transición a un nuevo estado; significa 'convertirse'."
+      "explanation": "'Get' + adjective describes a transition to a new state; it means 'to become'."
+    },
+    {
+      "question": "Which sentence uses 'get' to mean 'arrive'?",
+      "options": [
+        "I got a letter.",
+        "She gets tired easily.",
+        "We got to the airport on time.",
+        "He got angry."
+      ],
+      "correct": 2,
+      "explanation": "'Get to' + place means to arrive at a destination."
     }
   ]
 }

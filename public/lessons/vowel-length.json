@@ -30,7 +30,7 @@
   ],
   "exercises": [
     {
-      "instruction": "Escuche (o diga en voz alta) e identifique: /ɪ/ corta o /iː/? larga.",
+      "instruction": "Write the phonemic symbol and describe whether each word has a short or long vowel sound.",
       "items": [
         "live (verb)",
         "leave",
@@ -40,12 +40,12 @@
         "heat"
       ],
       "answers": [
-        "/ɪ/ corta (en vivo)",
-        "/iː/ larga (dejar)",
-        "/ɪ/ corta (picazón)",
-        "/iː/ larga (cada uno)",
-        "/ɪ/ corta (golpear)",
-        "/iː/ larga (calor)"
+        "/ɪ/ short (live)",
+        "/iː/ long (leave)",
+        "/ɪ/ short (itch)",
+        "/iː/ long (each)",
+        "/ɪ/ short (hit)",
+        "/iː/ long (heat)"
       ]
     }
   ],

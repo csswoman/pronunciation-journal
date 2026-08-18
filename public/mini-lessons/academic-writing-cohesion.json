@@ -4,18 +4,19 @@
   "level": "advanced",
   "category": "writing",
   "duration": 8,
-  "title": "Dispositivos de cohesión en la escritura académica.",
-  "subtitle": "Escritura del dia",
+  "title": "Dispositivos de cohesión en la escritura académica",
+  "subtitle": "Consejo clave para una escritura efectiva",
   "body": "La cohesión es la forma en que las oraciones y los párrafos se conectan para formar un texto unificado. Es la diferencia entre una lista de ideas y un argumento.",
   "examples": [
     {
       "word": "lexical chains: water → liquid → fluid → hydration",
-      "translation": "variación semántica"
+      "translation": "cadenas léxicas"
     },
     {
       "word": "reference: 'this phenomenon' / 'such findings'",
       "translation": "referencia anafórica"
     }
   ],
+  "tip": "Usa sinónimos y pronombres con inteligencia para evitar repeticiones y mantener un flujo natural en tu texto.",
   "href": "/mini-lessons/academic-writing-cohesion"
 }

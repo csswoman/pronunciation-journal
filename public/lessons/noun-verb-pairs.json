@@ -34,18 +34,18 @@
   ],
   "exercises": [
     {
-      "instruction": "Utilice cada palabra como sustantivo y verbo en dos oraciones.",
+      "instruction": "Use the word in brackets as either a noun (n.) or a verb (v.) as indicated. Write a sentence.",
       "items": [
-        "email",
-        "water",
-        "book",
-        "police"
+        "___ (permit — n.) You need a ___ to park here.",
+        "___ (permit — v.) The rules do not ___ smoking inside.",
+        "___ (record — n.) She broke the world ___.",
+        "___ (record — v.) The band will ___ a new album next month."
       ],
       "answers": [
-        "Modelo: Recibí un correo electrónico. (n.) / Te enviaré el archivo por correo electrónico. (v.)",
-        "Modelo: Un vaso de agua. (n.) / Riego las plantas a diario. (v.)",
-        "Modelo: Estoy leyendo un libro. (n.) / Deberías reservar una mesa. (v.)",
-        "Modelo: Llegó la policía. (n.) / Voluntarios vigilan el parque por la noche. (v.)"
+        "You need a permit to park here.",
+        "The rules do not permit smoking inside.",
+        "She broke the world record.",
+        "The band will record a new album next month."
       ]
     }
   ],

@@ -3,33 +3,37 @@
   "sections": [
     {
       "heading": "¿Qué hacen los marcadores del discurso?",
-      "body": "Los marcadores del discurso organizan el lenguaje hablado y escrito. Señalan lo que viene después: un contraste, un ejemplo, una conclusión, un nuevo punto, una aclaración. Usarlos te hace parecer fluido y coherente en lugar de vacilar."
+      "body": "Los marcadores del discurso son palabras o frases que nos ayudan a organizar lo que decimos o escribimos. Actúan como señales, indicando al oyente o lector qué tipo de información viene a continuación: un contraste, un ejemplo, una conclusión, un nuevo punto o una aclaración. Usarlos te hará sonar más fluido, coherente y natural en inglés, evitando pausas incómodas o un discurso entrecortado."
     },
     {
-      "heading": "Por contraste y concesión",
-      "body": "'Habiendo dicho eso' / 'Dicho eso': reconozca un punto y luego introduzca una calificación. \"Aun así\", a pesar de lo que se acaba de decir. 'Sea como sea': formal, aceptar un punto pero no permitir que cambie su argumento."
+      "heading": "Para contraste y concesión",
+      "body": "Para introducir un contraste o una concesión, usamos marcadores como: \n\n*   **'Having said that' / 'That said'**: Se usan para reconocer un punto que acabas de mencionar, pero luego introducir una idea que lo califica o lo contradice. Es como decir 'sí, eso es cierto, PERO...' \n*   **'Even so'**: Significa 'a pesar de lo que se acaba de decir' o 'aun así'. Se usa para mostrar que algo sigue siendo cierto o válido, incluso después de considerar lo anterior. \n*   **'Be that as it may'**: Es una expresión más formal. La utilizamos para aceptar un hecho o una situación, pero sin permitir que cambie o invalide nuestro argumento principal. Es decir, 'sea como fuere, mi punto sigue siendo válido'."
     },
     {
       "heading": "Para agregar y enfatizar",
-      "body": "'De hecho': introduce un hecho sorprendente o contundente que lo respalda. \"Ahora que lo pienso\", algo que acaba de recordar o darse cuenta. 'Sin mencionar' — añade un poderoso punto extra."
+      "body": "Para añadir información, dar más énfasis o introducir una idea que acabas de recordar: \n\n*   **'As a matter of fact' / 'In fact'**: Introduce un hecho sorprendente o una pieza de información que refuerza o clarifica lo que se dijo antes. A menudo se usa para corregir una suposición o añadir un detalle inesperado. \n*   **'Come to think of it'**: Se usa cuando de repente recuerdas o te das cuenta de algo relevante para la conversación. \n*   **'Not to mention'**: Lo usamos para añadir un punto adicional, a menudo más fuerte o importante, a lo que ya se ha dicho, intensificando el argumento o la descripción."
     }
   ],
   "examples": [
     {
       "english": "The project was difficult. Having said that, the results were impressive.",
-      "note": "Introduce una calificación"
+      "translation": "El proyecto fue difícil. Habiendo dicho eso, los resultados fueron impresionantes.",
+      "note": "Introduce una calificación o contraste"
     },
     {
       "english": "As a matter of fact, I've been here three times.",
-      "note": "Introduce un sorprendente detalle de apoyo."
+      "translation": "De hecho, he estado aquí tres veces.",
+      "note": "Introduce un detalle sorprendente o de apoyo."
     },
     {
       "english": "Come to think of it, I left my keys inside.",
-      "note": "algo que acabo de recordar"
+      "translation": "Ahora que lo pienso, dejé mis llaves dentro.",
+      "note": "Algo que acabo de recordar o darme cuenta."
     },
     {
       "english": "The food was excellent, not to mention the service.",
-      "note": "Agrega énfasis adicional"
+      "translation": "La comida fue excelente, sin mencionar el servicio.",
+      "note": "Agrega énfasis adicional a un punto."
     }
   ],
   "exercises": [
@@ -41,23 +45,34 @@
         "She's experienced. ___, she's also brilliant under pressure."
       ],
       "answers": [
-        "Sin embargo / Aún así",
-        "Dicho esto / Sin embargo",
-        "Es más / Además"
+        "Having said that",
+        "Even so",
+        "Not to mention"
       ]
     }
   ],
   "quiz": [
     {
-      "question": "'Dicho esto' se utiliza para:",
+      "question": "¿Para qué se usa el marcador 'That said' o 'Having said that'?",
       "options": [
-        "Introducir un punto de apoyo",
-        "Introducir un contraste o calificación después de reconocer algo.",
-        "cambiar de tema",
-        "Resumir lo dicho"
+        "Para introducir un hecho sorprendente.",
+        "Para agregar un punto adicional de igual importancia.",
+        "Para reconocer un punto y luego introducir una calificación o contraste.",
+        "Para resumir las ideas principales."
       ],
-      "correct": 1,
-      "explanation": "'Dicho esto' reconoce el punto anterior pero luego introduce algo que lo matiza o lo contrasta."
+      "correct": 2,
+      "explanation": "'That said' o 'Having said that' son marcadores del discurso que utilizamos para reconocer lo que se acaba de mencionar, pero inmediatamente después introducir una idea que lo matiza, lo contrasta o lo califica."
+    },
+    {
+      "question": "En la frase: 'The party was fun, ___ the music was terrible', ¿cuál marcador del discurso encaja mejor para indicar una concesión?",
+      "options": [
+        "As a matter of fact",
+        "Not to mention",
+        "Come to think of it",
+        "Even so"
+      ],
+      "correct": 3,
+      "explanation": "'Even so' se utiliza para introducir una concesión, indicando que a pesar de lo anterior (que la fiesta fue divertida), hay un aspecto negativo (la música fue terrible). 'Having said that' o 'That said' también podrían funcionar aquí."
     }
   ]
 }

@@ -1,0 +1,228 @@
+{
+  "meta": {
+    "eyebrow": "Speaking · Fluidez Oral",
+    "title": "The Add-On Strategy",
+    "titleEmphasis": "Trees vs. Trains",
+    "goal": "Aprende a encadenar ideas en tiempo real con 4 conectores simples y elimina los bloqueos mentales al hablar."
+  },
+  "related": [
+    { "slug": "chunk-discourse-markers", "label": "Marcadores del discurso" },
+    { "slug": "a1-conjunciones-basicas", "label": "Conjunciones básicas" }
+  ],
+  "cards": [
+    {
+      "id": "addon-concept",
+      "tag": "Idea Central",
+      "title": "La forma de las oraciones: Árbol vs. Tren",
+      "lede": "Los hablantes fluidos no construyen estructuras arbóreas complejas bajo presión: construyen trenes de ideas lineales.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "The Tree (Inglés Escrito)",
+              "rule": "Estructura jerárquica. Abre deudas gramaticales (Although, Despite) que debes resolver antes de hablar.",
+              "examples": [
+                "Although I wasn't sure about it, I decided to try it anyway.",
+                "Despite waking up late, I managed to get there on time."
+              ]
+            },
+            {
+              "label": "The Train (Inglés Hablado)",
+              "rule": "Estructura lineal. Cada idea es completa y se engancha a la siguiente con un conector simple sobre la marcha.",
+              "examples": [
+                "I wasn't sure about it, but I tried it anyway, and it worked.",
+                "I woke up late, so I was rushing, but I got there on time."
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Regla de los 2 segundos:",
+        "body": "Bajo presión conversacional, tu cerebro solo tiene ~2s para responder. Construir un árbol satura la memoria y produce el bloqueo; construir un tren te mantiene en movimiento."
+      }
+    },
+    {
+      "id": "addon-connectors",
+      "tag": "Los 4 Conectores",
+      "title": "Tu motor para el inglés hablado",
+      "lede": "Cuatro conectores coordinantes que cubren todas las direcciones conversacionales posibles y compran tiempo al cerebro.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "AND (Añadir)",
+              "value": "Suma información en la misma dirección · 'I tried the café, and it was great.'",
+              "highlights": ["AND"]
+            },
+            {
+              "key": "BUT (Contrastar)",
+              "value": "Introduce un resultado opuesto o sorpresa · 'It looked expensive, but it was worth it.'",
+              "highlights": ["BUT"]
+            },
+            {
+              "key": "SO (Resultado)",
+              "value": "Conecta una causa con su consecuencia · 'I was tired, so I went home early.'",
+              "highlights": ["SO"]
+            },
+            {
+              "key": "BECAUSE (Razón)",
+              "value": "Explica el porqué de la acción anterior · 'I stayed in because the weather was bad.'",
+              "highlights": ["BECAUSE"]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Regla mnemotécnica:",
+        "body": "Cuando no sepas qué decir a continuación, uno de estos cuatro siempre encaja. Pronunciar el conector compra a tu cerebro el tiempo necesario para la siguiente idea."
+      }
+    },
+    {
+      "id": "addon-technique",
+      "tag": "Técnica Oral",
+      "title": "Add Two Cars (Encadenamiento en 4 segundos)",
+      "lede": "Toma una frase inicial y añade exactamente 2 vagones más usando los 4 conectores sin planificar de antemano.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "Although I had a long day at work, I went to the supermarket because I needed groceries.",
+              "note": "Rígido: Estructura subordinada que exige planificar el desenlace antes del inicio."
+            },
+            {
+              "variant": "good",
+              "text": "I had a long day at work, so I was exhausted, but I still went to the supermarket.",
+              "note": "Fluido: Tres vagones autónomos encadenados con SO y BUT."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "addon-routine",
+      "tag": "Rutina Diaria",
+      "title": "Los 5 Pasos para la Rutina de 5 Minutos",
+      "lede": "Entrena tu velocidad de formulación en cualquier momento libre del día sin necesidad de interlocutor.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Elige un momento",
+              "value": "Caminando, lavando platos o esperando el transporte. Solo necesitas 5 minutos.",
+              "highlights": ["1. Elige un momento"]
+            },
+            {
+              "key": "2. Punto real de inicio",
+              "value": "Parte de un hecho real que te haya pasado hoy. Lo real produce lenguaje genuino.",
+              "highlights": ["2. Punto real de inicio"]
+            },
+            {
+              "key": "3. Lanza el 1er vagón",
+              "value": "Di una oración corta y completa en voz alta sin pensar en la siguiente.",
+              "highlights": ["3. Lanza el 1er vagón"]
+            },
+            {
+              "key": "4. Engancha sin frenar",
+              "value": "Usa and, but, so, because para añadir el siguiente vagón en cuanto llegue la idea.",
+              "highlights": ["4. Engancha sin frenar"]
+            },
+            {
+              "key": "5. Sostén 5 minutos",
+              "value": "Avanza siempre. El tema puede derivar o cambiar; entrenas velocidad, no oratoria.",
+              "highlights": ["5. Sostén 5 minutos"]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Regla de oro:",
+        "body": "Avanzar continuamente es infinitamente mejor que detenerte a corregir un pequeño tropiezo. Mantén el tren en marcha."
+      }
+    },
+    {
+      "id": "addon-hybrid",
+      "tag": "Fórmula Híbrida",
+      "title": "Mezclar Árboles y Trenes (B2 – C1)",
+      "lede": "A medida que ganas confianza, inserta pequeñas ramas subordinadas dentro de los vagones del tren.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "A2 – B1 (Trenes puros)",
+              "value": "Usa solo and, but, so, because. El único objetivo es no detenerte.",
+              "highlights": ["A2 – B1"]
+            },
+            {
+              "key": "B2 (Inserciones cortas)",
+              "value": "Inserta frases como 'even though' o 'although' dentro de la cadena como pasajeros.",
+              "highlights": ["B2"]
+            },
+            {
+              "key": "C1 – C2 (Alternancia libre)",
+              "value": "Elige árboles o trenes según la carga cognitiva del momento.",
+              "highlights": ["C1 – C2"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "addon-criteria",
+      "tag": "Criterios de Evaluación",
+      "title": "La matriz de auto-evaluación de fluidez",
+      "lede": "Al terminar cada turno de práctica oral, revisa estos tres puntos clave.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Chain Length",
+              "value": "¿Produjiste al menos 3 vagones de ideas conectados sin detenerte?",
+              "highlights": ["Chain Length"]
+            },
+            {
+              "key": "2. Connector Variety",
+              "value": "¿Usaste más de un conector diferente (ej. but + and) en la cadena?",
+              "highlights": ["Connector Variety"]
+            },
+            {
+              "key": "3. Forward Movement",
+              "value": "¿Avanzaste continuamente sin volver atrás a corregir pequeños errores?",
+              "highlights": ["Forward Movement"]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo de fluidez:",
+        "body": "Si los tres criterios son afirmativos, tu tren funcionó con éxito. Repite la misma situación al día siguiente buscando una cadena más larga."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "¿Qué conector introduce un resultado o consecuencia en una cadena?",
+      "options": ["SO", "BUT", "BECAUSE", "AND"],
+      "answer": 0,
+      "explain": "'SO' conecta una causa con su consecuencia directa ('I missed the bus, so I took a taxi')."
+    },
+    {
+      "q": "¿Cuál es la principal ventaja de construir 'trenes' al hablar en inglés?",
+      "options": [
+        "Permite que cada idea aterrice de forma independiente sin saturar la memoria de trabajo.",
+        "Obliga a memorizar todas las conjunciones subordinadas.",
+        "Hace que el inglés suene idéntico al de un ensayo académico escrito.",
+        "Reduce el vocabulario necesario a solo 10 palabras."
+      ],
+      "answer": 0,
+      "explain": "Los trenes permiten hablar en tiempo real sin tener que planificar toda la estructura sintáctica antes de empezar."
+    }
+  ]
+}

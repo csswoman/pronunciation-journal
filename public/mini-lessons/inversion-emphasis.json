@@ -4,22 +4,23 @@
   "level": "advanced",
   "category": "grammar",
   "duration": 7,
-  "title": "Inversión para enfatizar",
-  "subtitle": "Gramática del día",
-  "body": "La inversión (colocar el auxiliar antes del sujeto) crea un fuerte énfasis y es común en la escritura formal y el discurso dramático.",
+  "title": "Inversión para Enfatizar (Inversion for Emphasis)",
+  "subtitle": "Gramática Avanzada en Uso",
+  "body": "La inversión gramatical ('inversion') ocurre cuando el verbo auxiliar (o 'to be') se coloca *antes* del sujeto. Esta estructura se utiliza para añadir un énfasis dramático, formal o para expresar una restricción, especialmente cuando la oración comienza con ciertos adverbios negativos o restrictivos.",
   "examples": [
     {
       "word": "Never have I seen such bravery.",
-      "translation": "negativo al inicio → inversión"
+      "translation": "Nunca había visto tanta valentía. (Adverbio negativo al inicio)"
     },
     {
       "word": "Not only did she win, she broke a record.",
-      "translation": "'no sólo' al inicio"
+      "translation": "No sólo ganó, sino que rompió un récord. (Enfatiza dos acciones)"
     },
     {
       "word": "Rarely does he make mistakes.",
-      "translation": "adverbio negativo al inicio"
+      "translation": "Rara vez comete errores. (Tono formal/literario)"
     }
   ],
+  "tip": "Recuerda que la inversión es común en contextos formales o literarios, y ayuda a sonar más nativo y sofisticado al expresar énfasis.",
   "href": "/mini-lessons/inversion-emphasis"
 }
