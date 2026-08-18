@@ -89,6 +89,7 @@ export function CoursePathElectiveSpineIcon({
   if (icon === "laptop") return <Laptop {...props} />;
   if (icon === "mic") return <MicVocal {...props} />;
   if (icon === "message") return <MessageCircle {...props} />;
+  if (icon === "book") return <BookOpen {...props} />;
   return <Briefcase {...props} />;
 }
 

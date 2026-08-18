@@ -34,7 +34,8 @@ describe('MissionLibrary category filter', () => {
   })
 
   it('shows an empty filter state when the category has no missions', () => {
-    render(<MissionLibrary missions={listMissions()} onSelect={vi.fn()} />)
+    const missions = listMissions().filter((mission) => mission.category !== 'social')
+    render(<MissionLibrary missions={missions} onSelect={vi.fn()} />)
 
     fireEvent.click(screen.getByRole('button', { name: /^social$/i }))
 

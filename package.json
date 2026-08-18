@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "cross-env NODE_OPTIONS=--max-old-space-size=4096 next dev --webpack",
     "content-index:generate": "tsx scripts/generate-content-index.ts",
+    "sync:engvid": "tsx scripts/sync-engvid-lessons.ts",
     "prebuild": "pnpm content-index:generate",
     "build": "npm run lint:design-tokens && next build",
     "start": "next start",

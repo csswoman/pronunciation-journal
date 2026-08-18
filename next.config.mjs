@@ -44,6 +44,7 @@ const nextConfig = {
               "base-uri 'self'",
               "frame-ancestors 'none'",
               "form-action 'self'",
+              "frame-src 'self' https://www.youtube-nocookie.com https://www.youtube.com",
               "img-src 'self' https: data:",
               "media-src 'self' https: data:",
               // 'unsafe-eval' is required in dev for React Fast Refresh (HMR).
@@ -108,6 +109,14 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "prod-files-secure.s3.us-west-2.amazonaws.com",
+      },
+      {
+        protocol: "https",
+        hostname: "img.youtube.com",
+      },
+      {
+        protocol: "https",
+        hostname: "i.ytimg.com",
       },
     ],
   },

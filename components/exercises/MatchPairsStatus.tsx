@@ -1,12 +1,12 @@
 'use client'
 
 export const MATCH_DOT_COLORS = [
-  'oklch(0.65 0.18 25)',
-  'oklch(0.65 0.18 250)',
-  'oklch(0.65 0.18 310)',
-  'oklch(0.65 0.16 145)',
-  'oklch(0.70 0.18 55)',
-  'oklch(0.65 0.16 185)',
+  'var(--match-pair-dot-1)',
+  'var(--match-pair-dot-2)',
+  'var(--match-pair-dot-3)',
+  'var(--match-pair-dot-4)',
+  'var(--match-pair-dot-5)',
+  'var(--match-pair-dot-6)',
 ]
 
 export function MatchPairsStatus({
