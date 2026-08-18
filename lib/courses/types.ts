@@ -2,9 +2,14 @@ import type { PronunciationTargetId } from "@/lib/pronunciation/targets/types";
 
 export type CefrLevelId = "a1" | "a2" | "b1" | "b2" | "c1";
 
-export type ElectiveTrackId = "purposes" | "business" | "connected-speech" | "chunks";
+export type ElectiveTrackId =
+  | "purposes"
+  | "business"
+  | "connected-speech"
+  | "chunks"
+  | "false-friends";
 
-export type ElectiveSpineIcon = "laptop" | "briefcase" | "mic" | "message";
+export type ElectiveSpineIcon = "laptop" | "briefcase" | "mic" | "message" | "book";
 
 export type CoursePathTrackId = CefrLevelId | ElectiveTrackId;
 

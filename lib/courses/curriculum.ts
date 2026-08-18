@@ -405,11 +405,26 @@ export const COURSE_PATH_CURRICULUM: CoursePathCurriculum = {
         { t: "Funciones comunicativas con tacto", p: 2, g: "chunk-language-functions" },
         { t: "Plantillas de oraciones (Sentence Frames)", p: 2, g: "chunk-sentence-frames" },
         { t: "Marcadores del discurso y conectores", p: 2, g: "chunk-discourse-markers" },
+        { t: "The Add-On Strategy: Fluidez sin bloqueos", p: 2, g: "the-add-on-strategy" },
         { t: "Chunks de programación", p: 2, g: "chunk-programacion" },
         { t: "Daily standup en inglés", p: 2, g: "chunk-daily-standup" },
         { t: "Chunks de diseño UX y UI", p: 1, g: "chunk-ux-ui" },
       ],
       { isElective: true, spineIcon: "message" }
+    ),
+    buildLevel(
+      "false-friends",
+      "FF",
+      "Falsos amigos",
+      "No te confundas",
+      "8 h",
+      [
+        { t: "Falsos amigos esenciales (A1-A2)", p: 2, g: "ff-esenciales-a1-a2" },
+        { t: "Falsos amigos en la vida cotidiana", p: 2, g: "ff-vida-cotidiana" },
+        { t: "Falsos amigos en el trabajo y negocios", p: 1, g: "ff-trabajo-negocios" },
+        { t: "Comunicación y argumentación", p: 1, g: "ff-comunicacion-argumentacion" },
+      ],
+      { isElective: true, spineIcon: "book" }
     ),
   ],
   legend: [

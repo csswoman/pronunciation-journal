@@ -261,6 +261,37 @@ If they are too technical or use unexplained acronyms, ask them to clarify.
 Start by saying you'd like to understand the technical proposal before the next sprint planning.
 `.trim(),
   },
+  {
+    id: 'fluency.add_on_trains',
+    category: 'social',
+    recommendedCefr: 'B1',
+    context: 'A casual conversation with a friendly conversation partner practicing the Add-On Strategy (Trees vs Trains).',
+    communicativeGoal: 'Encadenar ideas de forma fluida usando conectores coordinantes (and, but, so, because) sin bloquearte ni detenerte a corregir.',
+    role: { model: 'fluency coach & friend', student: 'storyteller' },
+    opening: "Hey! How has your week been going? Tell me what happened recently.",
+    maxTurns: 6,
+    requiredIntents: [
+      { id: 'chained_multiple_ideas', label: 'Encadenaste al menos 3 ideas conectadas (vagones) en tu turno.' },
+      { id: 'used_variety_connectors', label: 'Usaste conectores como and, but, so o because para comprar tiempo y avanzar.' },
+      { id: 'maintained_forward_flow', label: 'Mantuviste el flujo hacia adelante sin reiniciar la frase.' },
+    ],
+    targets: [
+      { targetId: targetId('prosody.sentence-stress'), phrase: 'I was really busy, but I made time for a walk.' },
+      { targetId: targetId('prosody.rhythm'), phrase: 'The weather was great, so we stayed outside.' },
+    ],
+    transferVariant: {
+      context: 'Telling a colleague about a weekend trip or an unexpected daily situation.',
+      opening: 'Did you get up to anything interesting over the weekend?',
+    },
+    roleInstructions: `
+You are a friendly, encouraging English fluency partner trained in Scott Thornbury's "Add-On Strategy".
+Your goal is to help the student practice building "trains" instead of "trees" (linear chaining of ideas with and, but, so, because).
+Stay in character. Ask open-ended questions about their day, recent decisions, or small adventures.
+If the student builds a nice train of ideas connected by and/but/so/because, praise their momentum: "Great flow! You connected those ideas really naturally."
+If they hesitate or try to build an overly complex subordinate tree sentence, gently encourage: "Keep it going with 'and', 'but', or 'so' — don't worry about making it perfect, just add the next car!"
+Start by asking them casually about their week or recent events.
+`.trim(),
+  },
 ]
 
 export const MISSION_REGISTRY: Readonly<Record<string, OralMission>> = Object.freeze(

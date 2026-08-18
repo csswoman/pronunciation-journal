@@ -124,7 +124,7 @@ export function getDecksForTarget(targetId: string): DeckSoundRef[] {
   return refs;
 }
 
-export type DeckLevel = 'a1' | 'a2' | 'b1' | 'b2' | 'c1' | 'biz' | 'tech' | 'cs' | 'chunks' | 'other'
+export type DeckLevel = 'a1' | 'a2' | 'b1' | 'b2' | 'c1' | 'biz' | 'tech' | 'cs' | 'chunks' | 'false-friends' | 'other'
 
 export interface DeckSummary {
   slug: string
@@ -146,6 +146,7 @@ function slugToLevel(slug: string): DeckLevel {
   if (slug.startsWith('tech-')) return 'tech'
   if (slug.startsWith('cs-')) return 'cs'
   if (slug.startsWith('chunk-') || slug.startsWith('chunks-')) return 'chunks'
+  if (slug.startsWith('ff-') || slug.startsWith('false-friends')) return 'false-friends'
   return 'other'
 }
 

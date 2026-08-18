@@ -19,6 +19,7 @@ import { normalizeFalseFriendsLevel } from '@/lib/false-friends/data'
 import { buildConnectedSpeechStep, buildFalseFriendsStep, buildReaderStep, buildSentenceBuilderStep } from './async-step-builders'
 import { getEffectiveFocus } from '@/lib/learning-focus/effective-focus'
 import { buildStudyDeckStep } from './study-deck'
+import { isOptionalLinkStep } from './step-completion'
 import { DAILY_PLAN_STEP_COUNT, WORD_REVIEW_WORD_COUNT } from './constants'
 import {
   fetchAllPracticedSounds,
@@ -51,6 +52,10 @@ export type ReviewPlan = {
   totalExercises: number
   /** true si no hay nada pendiente de repasar hoy. */
   nothingDue: boolean
+}
+
+function shouldKeepNonExerciseStep(step: DailyStep): boolean {
+  return step.kind === 'word_intro' || step.kind === 'mission' || step.kind === 'reader' || isOptionalLinkStep(step)
 }
 
 export async function buildReviewPlan(userId: string): Promise<ReviewPlan> {
@@ -110,7 +115,7 @@ export async function buildReviewPlan(userId: string): Promise<ReviewPlan> {
       return true
     })
     return { ...step, exercises }
-  }).filter(step => step.exercises.length > 0 || step.kind === 'word_intro' || step.kind === 'journal_entry' || step.kind === 'concept' || step.kind === 'mission')
+  }).filter((step) => step.exercises.length > 0 || shouldKeepNonExerciseStep(step))
 
   const totalExercises = dedupedSteps.reduce((sum, s) => sum + s.exercises.length, 0)
 
@@ -353,8 +358,11 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     }
     if (step.kind === 'word_intro') return (step.featuredWords ?? []).map((word) => `exposure:word:${word}`)
     if (step.kind === 'word_review') return step.exercises.map((exercise) => `word-meaning:${exercise.sourceRef?.id ?? exercise.contentId}`)
-    if (step.kind === 'context_practice' || step.kind === 'reader') {
+    if (step.kind === 'context_practice') {
       return step.exercises.map((exercise) => `word-context:${exercise.sourceRef?.id ?? exercise.contentId}`)
+    }
+    if (step.kind === 'reader') {
+      return step.readerPassage ? [`reader:${step.readerPassage.id}`] : [step.id]
     }
     if (step.kind === 'study_deck' || step.kind === 'concept') return [step.id]
     return step.exercises.length > 0 ? step.exercises.map((exercise) => exercise.contentId) : [step.id]
@@ -396,7 +404,7 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
       return true
     })
     return { ...step, exercises }
-  }).filter(step => step.exercises.length > 0 || step.kind === 'word_intro' || step.kind === 'journal_entry' || step.kind === 'concept' || step.kind === 'mission')
+  })
 
   // Session arc: narrative framing reusing data the plan already computed.
   // Topics live on generic exercise payloads (payload.data.topic).

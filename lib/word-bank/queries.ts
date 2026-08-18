@@ -343,3 +343,18 @@ export async function getWordBankEntriesByIds(ids: string[]): Promise<WordBankEn
   return (data ?? []) as WordBankEntry[];
 }
 
+export async function countWordsDueForReviewClient(userId: string): Promise<number> {
+  const supabase = getSupabaseBrowserClient();
+  const today = new Date().toISOString();
+  const { count, error } = await supabase
+    .from(TABLE)
+    .select("*", { count: "exact", head: true })
+    .eq("user_id", userId)
+    .eq("status", "ready")
+    .or(`and(srs_status.neq.new,next_review_at.lte.${today}),verification_due_at.lte.${today}`);
+
+  if (error) return 0;
+  return count ?? 0;
+}
+
+

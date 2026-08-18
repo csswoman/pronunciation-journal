@@ -14,7 +14,10 @@ export function parseCoursePathTrackId(value: string | undefined): CoursePathTra
     value === "b2" ||
     value === "c1" ||
     value === "purposes" ||
-    value === "business"
+    value === "business" ||
+    value === "connected-speech" ||
+    value === "chunks" ||
+    value === "false-friends"
   ) {
     return value;
   }
