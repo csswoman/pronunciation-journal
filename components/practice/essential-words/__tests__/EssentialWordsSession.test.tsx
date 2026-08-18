@@ -181,8 +181,8 @@ beforeEach(() => {
 })
 
 afterEach(() => {
-  const skillEvidenceFailures = consoleError.mock.calls.filter(([message]) =>
-    String(message).includes('legacy skill evidence failed'),
+  const skillEvidenceFailures = consoleError.mock.calls.filter((call: unknown[]) =>
+    String(call[0]).includes('legacy skill evidence failed'),
   )
   consoleError.mockRestore()
   expect(skillEvidenceFailures).toEqual([])
