@@ -6,20 +6,23 @@ describe('getSemanticContentKey', () => {
   it('handles phoneme exercises', () => {
     const ex: PracticeExercise = {
       id: 'ex1',
-      slug: 'minimal_pairs',
-      exerciseTypeId: 1,
-      contentId: '1:minimal_pairs:ship:sheep',
+      slug: 'minimal_pair',
+      exerciseTypeId: 3,
+      contentId: '1:minimal_pair:ship:sheep',
       context: 'daily',
       payload: {
         kind: 'phoneme',
         ipa: 'ɪ',
         targetWord: 'ship',
-        options: [{ id: 'ship', text: 'ship' }, { id: 'sheep', text: 'sheep' }],
+        options: [
+          { id: 'ship', label: 'ship', isCorrect: true },
+          { id: 'sheep', label: 'sheep', isCorrect: false },
+        ],
         correctIds: ['ship'],
         stimuli: [],
       },
     }
-    expect(getSemanticContentKey(ex)).toBe('phoneme:minimal_pairs:ship')
+    expect(getSemanticContentKey(ex)).toBe('phoneme:minimal_pair:ship')
   })
 
   it('handles generic sentence exercises', () => {
