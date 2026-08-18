@@ -9,11 +9,68 @@ export function dayOfYear(now = new Date()): number {
   return Math.floor((now.getTime() - start.getTime()) / 86_400_000)
 }
 
+export function getSemanticContentKey(ex: PracticeExercise): string {
+  // Ejercicios de fonema: deduplicar por slug + palabra objetivo
+  if (ex.payload.kind === 'phoneme') {
+    return `phoneme:${ex.slug}:${ex.payload.targetWord ?? ''}`
+  }
+
+  // Ejercicios genéricos: deduplicar por contenido textual normalizado
+  if (ex.payload.kind === 'generic' && ex.payload.data) {
+    const data = ex.payload.data
+    let rawText = ''
+    if ('sentence' in data && typeof data.sentence === 'string') {
+      rawText = data.sentence
+    } else if ('phrase' in data && typeof data.phrase === 'string') {
+      rawText = data.phrase
+    } else if ('sourceSentence' in data && typeof data.sourceSentence === 'string') {
+      rawText = data.sourceSentence
+    } else if ('sourceEs' in data && typeof data.sourceEs === 'string') {
+      rawText = data.sourceEs
+    } else if ('question' in data && typeof data.question === 'string') {
+      rawText = data.question
+    } else if ('taskPrompt' in data && typeof data.taskPrompt === 'string') {
+      rawText = `${data.taskPrompt}|${(data as { targetItem?: string }).targetItem ?? ''}`
+    }
+
+    if (rawText) {
+      let answer = ''
+      if ('answer' in data && typeof data.answer === 'string') {
+        answer = data.answer
+      } else if ('correctSentence' in data && typeof data.correctSentence === 'string') {
+        answer = data.correctSentence
+      }
+
+      // Reemplazar la barra de espacio en blanco '___' con la respuesta para que fill_blank
+      // y sentence_dictation de la misma oración coincidan semánticamente.
+      if (rawText.includes('___') && answer) {
+        rawText = rawText.replace('___', answer)
+      }
+
+      // Devolver la oración normalizada: todo minúsculas, quitando puntuación y espacios extras.
+      return `generic:${rawText.toLowerCase().replace(/[^a-z0-9]/g, '')}`
+    }
+
+    // Para emparejamiento (match_pairs), deduplicar en base a las parejas a emparejar ordenadas
+    if ('pairs' in data && Array.isArray(data.pairs)) {
+      const pairKeys = data.pairs
+        .map((p: { left: string; right: string }) => `${p.left}:${p.right}`)
+        .sort()
+        .join(',')
+      return `match_pairs:${pairKeys.toLowerCase().replace(/[^a-z0-9:,]/g, '')}`
+    }
+  }
+
+  // Fallback si no hay estructura genérica reconocida
+  return ex.contentId
+}
+
 export function dedupeByContentId(exercises: PracticeExercise[]): PracticeExercise[] {
   const seen = new Set<string>()
   return exercises.filter((ex) => {
-    if (seen.has(ex.contentId)) return false
-    seen.add(ex.contentId)
+    const key = getSemanticContentKey(ex)
+    if (seen.has(key)) return false
+    seen.add(key)
     return true
   })
 }

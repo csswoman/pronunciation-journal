@@ -4,20 +4,21 @@
   "level": "basic",
   "category": "listening",
   "duration": 5,
-  "title": "Why you can't understand fast English",
-  "subtitle": "Listening of the day",
-  "body": "Native speakers reduce, link, and swallow sounds in speech. The written word looks nothing like what's actually said.",
+  "title": "¿Por qué no puedes entender inglés rápido?",
+  "subtitle": "Clave para una Escucha Fluida",
+  "body": "Los hablantes nativos reducen, unen y a veces omiten sonidos al hablar. La forma escrita de una palabra a menudo difiere de cómo se pronuncia realmente en una conversación natural.",
   "examples": [
     {
       "word": "'What are you doing?' sounds like →",
       "ipa": "/wʌd͡ʒə ˈduːɪŋ/",
-      "translation": "whadja doing?"
+      "translation": "¿Qué estás haciendo?"
     },
     {
       "word": "'I don't know' sounds like →",
-      "ipa": "/aɪ doʊnə/",
-      "translation": "I dunno"
+      "ipa": "/aɪ ˈdoʊnə/",
+      "translation": "No sé."
     }
   ],
+  "tip": "Para mejorar tu comprensión auditiva, concéntrate en los sonidos y el ritmo del inglés hablado, no solo en las palabras individuales.",
   "href": "/mini-lessons/basic-listening-reductions"
 }

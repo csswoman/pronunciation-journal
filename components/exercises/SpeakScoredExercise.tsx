@@ -2,25 +2,22 @@
 
 // Planned structure:
 // <SpeakScoredExercise>
-//   <WordDisplay />            — palabra + IPA
-//   <ListenModelButton />      — reproducir modelo (speak)
-//   <RecognitionMicButton />   — useSpeechRecognition → transcript
-//   <PronunciationFeedback />  — chips de fonema cuando hay resultado
-//   <FallbackShadowing />      — cuando SpeechRecognition no disponible
+//   <WordDisplay />
+//   <SpeakMicButton />
+//   <PronunciationFeedback />
+//   <SelfPlaybackAudioBar />
+//   <ShadowingFallback />
 // </SpeakScoredExercise>
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Mic, MicOff } from "@/components/icons"
 import { speak } from '@/lib/phoneme-practice/tts'
 import { useSpeechRecognition } from '@/hooks/useSpeechRecognition'
-import { BROWSER_BLOCKS_SCORING_ES } from '@/lib/speech/browser-support-message'
 import { defaultEvaluationEngine } from '@/lib/exercises/evaluation'
 import { getEvaluationWordResults } from '@/lib/exercises/evaluation/word-results'
 import { getFeedbackMessage, calculateXP } from '@/lib/pronunciation/scoring'
 import PronunciationFeedback from '@/components/lesson/PronunciationFeedback'
+import { SelfPlaybackAudioBar } from '@/components/pronunciation/SelfPlaybackAudioBar'
 import Button from '@/components/ui/Button'
-import { ListenButton } from '@/components/ui/ListenButton'
-import { cn } from '@/lib/cn'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { feedbackFromScoringResult } from '@/lib/pronunciation/feedback/from-scoring'
 import { persistPronunciationFeedbackEvidence } from '@/lib/pronunciation/feedback/persistence'
@@ -29,6 +26,12 @@ import { PracticeActionBar, PracticeContinueButton } from '@/components/practice
 import type { Exercise } from '@/lib/phoneme-practice/types'
 import type { WordResult } from '@/lib/types'
 import type { PracticeSubmitHandler } from '@/lib/practice/types'
+import {
+  ShadowingFallback,
+  SpeakMicButton,
+  WordDisplay,
+  type UnscoredReason,
+} from './SpeakScoredParts'
 
 interface Props {
   exercise: Exercise
@@ -42,80 +45,34 @@ interface ScoredResult {
   transcript: string
 }
 
-/**
- * Explains why this attempt has no score, for the shared unscored-fallback UI.
- * 'unsupported' — the browser has no SpeechRecognition API at all.
- * 'unavailable' — recognition is supported but failed (e.g. Brave blocks the
- *                  network speech service) or the evaluator itself rejected.
- */
-type UnscoredReason = 'unsupported' | 'browser' | 'unavailable'
-
-// ── WordDisplay ──────────────────────────────────────────────────────────────
-
-function WordDisplay({ word, ipa, onListen }: { word?: string; ipa: string; onListen: () => void }) {
-  return (
-    <div className="flex flex-col items-center gap-1">
-      <div className="flex items-center gap-3">
-        <div className="text-display-word font-bold text-fg tracking-tight">
-          {word ?? '—'}
-        </div>
-        <ListenButton iconOnly onPlay={onListen} aria-label="Escuchar" />
-      </div>
-      <div className="ipa text-fg-muted">
-        {ipa}
-      </div>
-    </div>
-  )
-}
-
-// ── ShadowingFallback ────────────────────────────────────────────────────────
-// Used when live speech recognition is unavailable (e.g. Brave blocks Google's
-// speech service). No automatic scoring — listen and repeat, then continue.
-
-function ShadowingFallback({
-  word,
-  reason,
-  onContinue,
-}: {
-  word?: string
-  reason: UnscoredReason
-  onContinue: () => void
-}) {
-  return (
-    <div className="flex flex-col items-center gap-4">
-      <p className="text-caption text-fg-muted text-center max-w-xs m-0">
-        {reason === 'unsupported'
-          ? 'Tu navegador no admite puntuación por voz. Escucha el modelo y repite la palabra; este intento no recibirá puntuación.'
-          : reason === 'browser'
-            ? BROWSER_BLOCKS_SCORING_ES
-            : 'La puntuación por voz no está disponible ahora. Escucha el modelo y repite la palabra; este intento no recibirá puntuación.'}
-      </p>
-      <ListenButton onPlay={() => word && speak(word)} label="Escuchar" />
-      <PracticeActionBar>
-        <PracticeContinueButton onClick={onContinue}>Continuar sin puntuación</PracticeContinueButton>
-      </PracticeActionBar>
-    </div>
-  )
-}
-
-// ── Main component ───────────────────────────────────────────────────────────
-
 export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
   const { user } = useAuth()
-  const { status, result: speechResult, errorCode, isSupported, start, stop, reset } = useSpeechRecognition()
+  const {
+    status,
+    result: speechResult,
+    userAudioUrl,
+    errorCode,
+    isSupported,
+    start,
+    stop,
+    reset,
+  } = useSpeechRecognition()
+
   const [scored, setScored] = useState<ScoredResult | null>(null)
   const [isScoring, setIsScoring] = useState(false)
   const [evalFailed, setEvalFailed] = useState(false)
   const submitted = useRef(false)
 
-
-  // Score when transcript arrives
   useEffect(() => {
-    if (!isSupported || status !== 'done' || !speechResult || isScoring || scored || evalFailed) return
-    const target = exercise.targetWord ?? ''
+    if (!isSupported || status !== 'done' || !speechResult || isScoring || scored || evalFailed) {
+      return
+    }
+
+    const target = exercise.targetWord
     if (!target) return
 
     setIsScoring(true)
+
     defaultEvaluationEngine
       .evaluate({
         exercise: { domain: 'pronunciation', mode: 'speak' },
@@ -132,16 +89,15 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
         })
         if (user?.id) {
           const feedback = feedbackFromScoringResult({
-            accuracy: evalResult.score ?? 0, transcript: speechResult.transcript, wordResults,
+            accuracy: evalResult.score ?? 0,
+            transcript: speechResult.transcript,
+            wordResults,
             evaluatorVersion: 'lesson-stt-v1',
           })
           void persistPronunciationFeedbackEvidence(user.id, feedback).catch(() => undefined)
         }
       })
       .catch(() => {
-        // Evaluation errored (e.g. evaluator threw) — this is an honest
-        // 'failed' SpokenAttempt outcome, not a silent 0%. Fall through to
-        // the unscored shadowing UI instead of leaving the learner stuck.
         setEvalFailed(true)
       })
       .finally(() => setIsScoring(false))
@@ -159,8 +115,6 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
     reset()
   }, [reset])
 
-  // Shadowing fallback completes the exercise honestly unscored: never a
-  // correct answer, never a score, so it can't affect accuracy/SRS/mastery.
   const handleShadowingDone = useCallback(() => {
     if (submitted.current) return
     submitted.current = true
@@ -170,7 +124,6 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
   const isListening = status === 'listening'
   const isDone = status === 'done'
   const isError = status === 'error'
-  // Browsers like Brave block Google's speech service → fall back to shadowing.
   const isNetworkShadowing = isError && errorCode === 'network'
   const isShadowing = !isSupported || isNetworkShadowing || evalFailed
   const shadowingReason: UnscoredReason = !isSupported
@@ -181,11 +134,7 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
 
   return (
     <div className="layout-stack-loose items-center w-full">
-      <h2
-        className="m-0 text-center text-h4 text-fg"
-      >
-        Di la palabra
-      </h2>
+      <h2 className="m-0 text-center text-h4 text-fg">Di la palabra</h2>
 
       <WordDisplay
         word={exercise.targetWord}
@@ -193,35 +142,19 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
         onListen={() => exercise.targetWord && speak(exercise.targetWord)}
       />
 
-      {/* Mic button — hidden once scored or when shadowing */}
       {!scored && !isShadowing && (
-        <div className="flex flex-col items-center gap-3">
-          <button
-            type="button"
-            onClick={isListening ? stop : start}
-            disabled={isDone || isScoring}
-            aria-label={isListening ? 'Detener grabación' : 'Grabar mi voz'}
-            className={cn(
-              'w-20 h-20 rounded-full border-none flex items-center justify-center cursor-pointer transition-all text-on-primary focus-ring disabled:opacity-40',
-              isListening
-                ? 'bg-error shadow-[0_0_0_14px_color-mix(in_oklch,var(--error)_18%,transparent)]'
-                : 'bg-primary shadow-[0_4px_16px_color-mix(in_oklch,var(--primary)_35%,transparent)]',
-            )}
-          >
-            {isListening ? <MicOff size={28} /> : <Mic size={28} />}
-          </button>
-          <p className="text-caption text-fg-subtle tracking-wider m-0">
-            {isListening ? 'Escuchando… toca para parar' : isScoring ? 'Analizando…' : 'Toca para hablar'}
-          </p>
-        </div>
+        <SpeakMicButton
+          isListening={isListening}
+          isDone={isDone}
+          isScoring={isScoring}
+          onToggle={isListening ? stop : start}
+        />
       )}
 
-      {/* Shadowing fallback — unsupported browser, network block, or eval failure */}
       {isShadowing && !scored && (
         <ShadowingFallback word={exercise.targetWord} reason={shadowingReason} onContinue={handleShadowingDone} />
       )}
 
-      {/* Error state (recoverable errors) */}
       {isError && !isShadowing && !scored && (
         <p className="text-caption text-fg-muted text-center m-0">
           {errorCode === 'not-allowed'
@@ -235,7 +168,6 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
         </p>
       )}
 
-      {/* Rich feedback */}
       {scored && (
         <>
           <PronunciationFeedback
@@ -245,6 +177,12 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
             xpEarned={calculateXP(scored.score)}
             transcript={scored.transcript}
           />
+
+          <SelfPlaybackAudioBar
+            targetWord={exercise.targetWord}
+            userAudioUrl={userAudioUrl}
+          />
+
           <RemediationSequence
             onListen={() => exercise.targetWord && speak(exercise.targetWord)}
             onSlow={() => {
@@ -255,6 +193,7 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
             }}
             onRetry={handleRetry}
           />
+
           <PracticeActionBar>
             <Button variant="secondary" size="lg" fullWidth onClick={handleRetry}>Intentar de nuevo</Button>
             <PracticeContinueButton onClick={handleContinue} />

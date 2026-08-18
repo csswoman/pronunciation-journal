@@ -1,0 +1,147 @@
+{
+  "meta": {
+    "eyebrow": "Chunks · Language Functions",
+    "title": "Funciones",
+    "titleEmphasis": "comunicativas con tacto",
+    "goal": "Aprende a pedir favores, rechazar invitaciones, disculparte, sugerir y clarificar con diplomacia y asertividad."
+  },
+  "related": [
+    { "slug": "chunk-social-small-talk", "label": "Social & Small Talk" },
+    { "slug": "chunk-sentence-frames", "label": "Plantillas de oraciones" }
+  ],
+  "cards": [
+    {
+      "id": "fun-pedir",
+      "tag": "Favores y permisos",
+      "title": "Pedir favores y permisos",
+      "lede": "Evita imperativos como 'Give me' o 'Help me'; usa estructuras atenuadas.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "Can you review my code now?", "note": "muy directo" },
+            { "variant": "good", "text": "I was wondering if you could take a look at my code?", "note": "atenuado y cortés" },
+            { "variant": "bad", "text": "I want to open the door.", "note": "suena demandante" },
+            { "variant": "good", "text": "Would you mind if I opened the door?", "note": "pide permiso con elegancia" }
+          ]
+        },
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Is it alright if I...?", "value": "¿Está bien si...? · Is it alright if I join the call 5 minutes late?", "highlights": ["Is it alright if I"] },
+            { "key": "Could you do me a favor?", "value": "¿Podrías hacerme un favor?", "highlights": ["do me a favor"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fun-rechazar",
+      "tag": "Rechazar con tacto",
+      "title": "Decir que 'no' diplomáticamente",
+      "lede": "Rechaza tareas o invitaciones sin sonar cortante ni crear fricción.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "I'd love to, but I'm tied up", "value": "Me encantaría, pero estoy atado/a de manos con pendientes.", "highlights": ["I'm tied up"] },
+            { "key": "I'm afraid I won't be able to...", "value": "Me temo que no podré... · I'm afraid I won't be able to attend.", "highlights": ["I'm afraid I won't be able to"] },
+            { "key": "I'll have to pass this time", "value": "Tendré que pasar por esta vez, gracias.", "highlights": ["pass this time"] },
+            { "key": "As much as I'd like to...", "value": "Por mucho que me gustaría... · As much as I'd like to help, my plate is full.", "highlights": ["As much as I'd like to"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fun-disculpas",
+      "tag": "Disculpas y errores",
+      "title": "Disculparse con madurez",
+      "lede": "Asume la responsabilidad sin sonar derrotista.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "I owe you an apology", "value": "Te debo una disculpa · I owe you an apology for the delay.", "highlights": ["owe you an apology"] },
+            { "key": "My apologies for the oversight", "value": "Mis disculpas por el descuido / la omisión.", "highlights": ["oversight"] },
+            { "key": "I take full responsibility", "value": "Asumo toda la responsabilidad de lo ocurrido.", "highlights": ["take full responsibility"] },
+            { "key": "It won't happen again", "value": "No volverá a ocurrir · I'll make sure it won't happen again.", "highlights": ["won't happen again"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fun-sugerir",
+      "tag": "Proponer y sugerir",
+      "title": "Sugerir soluciones",
+      "lede": "Haz recomendaciones que inviten al consenso en lugar de imponer.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Why don't we try...?", "value": "¿Por qué no probamos...? · Why don't we try caching the query first?", "highlights": ["Why don't we try"] },
+            { "key": "How about we...?", "value": "¿Qué tal si...? · How about we split this into two components?", "highlights": ["How about we"] },
+            { "key": "It might be worth considering...", "value": "Valdría la pena considerar... · It might be worth considering Tailwind v4.", "highlights": ["worth considering"] },
+            { "key": "We could always...", "value": "Siempre podemos (como alternativa)... · We could always fall back to the old API.", "highlights": ["could always"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fun-clarificar",
+      "tag": "Clarificación",
+      "title": "Pedir clarificación sin pena",
+      "lede": "Asegúrate de haber entendido exactamente qué se espera de ti.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Could you elaborate on that?", "value": "¿Podrías detallar o profundizar más en ese punto?", "highlights": ["elaborate on that"] },
+            { "key": "Just to make sure I understood...", "value": "Solo para asegurarme de haber entendido bien...", "highlights": ["make sure I understood"] },
+            { "key": "What exactly do you mean by...?", "value": "¿A qué te refieres exactamente con...?", "highlights": ["do you mean by"] },
+            { "key": "Correct me if I'm wrong, but...", "value": "Corrígeme si me equivoco, pero...", "highlights": ["Correct me if I'm wrong"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fun-interrumpir",
+      "tag": "Intervenciones",
+      "title": "Interrumpir educadamente",
+      "lede": "Entra a la conversación en videollamadas o reuniones sin parecer grosero.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Sorry to cut in, but...", "value": "Perdón por interrumpir, pero... · Sorry to cut in, but we're running out of time.", "highlights": ["cut in"] },
+            { "key": "May I add a quick point?", "value": "¿Puedo agregar un punto rápido aquí?", "highlights": ["add a quick point"] },
+            { "key": "If I could just say something...", "value": "Si pudiera decir una cosa breve aquí...", "highlights": ["just say something"] },
+            { "key": "Before we move on...", "value": "Antes de pasar al siguiente tema...", "highlights": ["Before we move on"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Sonido:",
+        "body": "\"Sorry to cut in\" se pronuncia suave /kʌt ɪn/ con una flap T suave."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "¿Qué frase es la más cortés para pedir permiso de abrir una ventana o retirarte antes?",
+      "options": ["Would you mind if I left early?", "I decide to leave early now.", "Permit me leaving."],
+      "answer": 0,
+      "explain": "'Would you mind if I [past verb]?' es una de las fórmulas más educadas y elegantes en inglés."
+    },
+    {
+      "q": "¿Cómo rechazas una invitación cuando tienes mucho trabajo acumulado?",
+      "options": ["I'd love to, but I'm completely tied up with deadlines.", "No, my head hates that plan.", "I reject you for working."],
+      "answer": 0,
+      "explain": "'I'm tied up' indica que estás ocupado/a con compromisos ineludibles."
+    },
+    {
+      "q": "¿Cómo pides que alguien profundice más sobre un punto en una reunión técnica?",
+      "options": ["Could you elaborate on that?", "Speak more words please.", "Say the big story now."],
+      "answer": 0,
+      "explain": "'Elaborate on [something]' es el verbo estándar en inglés profesional para pedir mayor detalle."
+    }
+  ]
+}

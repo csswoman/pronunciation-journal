@@ -1,0 +1,144 @@
+{
+  "meta": {
+    "eyebrow": "Inglés natural · Vol. 4",
+    "title": "Básico vs",
+    "titleEmphasis": "natural: Dinero y Retos",
+    "goal": "Habla de presupuestos, compras, gastos y cómo afrontar problemas difíciles con el vocabulario exacto de la calle."
+  },
+  "related": [
+    { "slug": "chunk-basico-vs-natural-3", "label": "Básico vs natural: Trabajo y Tiempo" },
+    { "slug": "chunk-basico-vs-natural-5", "label": "Básico vs natural: Reacciones y Cierres" }
+  ],
+  "cards": [
+    {
+      "id": "bvn4-precios",
+      "tag": "Precios y gangas",
+      "title": "Caro o regalado",
+      "lede": "Evita quedarte solo en 'very expensive' o 'very cheap'.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "This phone is very expensive." },
+            { "variant": "good", "text": "This phone costs an arm and a leg / It's a rip-off!", "note": "expresivo y coloquial" },
+            { "variant": "bad", "text": "This shirt was very cheap." },
+            { "variant": "good", "text": "This shirt was a steal / dirt cheap!", "note": "auténtica ganga" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bvn4-pagos",
+      "tag": "Pagar y presupuestos",
+      "title": "Pagar la cuenta",
+      "lede": "Frases para invitar, dividir cuentas o hablar de estar corto de dinero.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "+ I don't have money right now", "value": "++ I'm broke / I'm on a tight budget", "highlights": ["broke", "tight budget"] },
+            { "key": "+ I will pay for everyone", "value": "++ It's on me / My treat", "highlights": ["on me", "My treat"] },
+            { "key": "+ Let's split the bill 50/50", "value": "++ Let's go Dutch / Split it down the middle", "highlights": ["go Dutch", "Split it down the middle"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Cultura:",
+        "body": "\"Let's go Dutch\" significa que cada persona paga exactamente lo que consumió."
+      }
+    },
+    {
+      "id": "bvn4-ahorro",
+      "tag": "Gastar y ahorrar",
+      "title": "Desperdiciar y ahorrar",
+      "lede": "Metáforas financieras que se usan a diario.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "+ Waste money on useless things", "value": "++ Throw money down the drain", "highlights": ["money down the drain"] },
+            { "key": "+ Save every small coin", "value": "++ Pinch pennies / Cut corners", "highlights": ["Pinch pennies", "Cut corners"] },
+            { "key": "+ It's free from the restaurant", "value": "++ It's on the house", "highlights": ["on the house"] },
+            { "key": "+ Not worth the price", "value": "++ Overpriced / Not worth a dime", "highlights": ["Not worth a dime"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bvn4-problemas",
+      "tag": "Dificultades y crisis",
+      "title": "Problemas graves",
+      "lede": "Describe situaciones críticas sin rodeos.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "This task is very difficult." },
+            { "variant": "good", "text": "This is an uphill battle / It's tough.", "note": "esfuerzo titánico" },
+            { "variant": "bad", "text": "Everything went wrong with the deploy." },
+            { "variant": "good", "text": "Things went south with the deploy / It blew up in our face.", "note": "desastre inesperado" }
+          ]
+        },
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "In hot water / in a jam", "value": "Estar en aprietos graves · The manager found out, we're in hot water.", "highlights": ["in hot water", "in a jam"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bvn4-resiliencia",
+      "tag": "Aguante y superación",
+      "title": "Resiliencia y empezar de cero",
+      "lede": "Frases para animar a otros o afrontar momentos difíciles.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "+ Don't give up now", "value": "++ Hang in there / Stick with it!", "highlights": ["Hang in there", "Stick with it"] },
+            { "key": "+ Accept the hard consequence", "value": "++ Bite the bullet / Face the music", "highlights": ["Bite the bullet", "Face the music"] },
+            { "key": "+ Start again from zero", "value": "++ Back to the drawing board / Back to square one", "highlights": ["drawing board", "square one"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bvn4-estrategia",
+      "tag": "Estrategia y límites",
+      "title": "Estrategia y el límite final",
+      "lede": "Modismos indispensables para negociaciones y toma de decisiones.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "+ Solve two problems at once", "value": "++ Kill two birds with one stone", "highlights": ["Kill two birds with one stone"] },
+            { "key": "+ The last problem that broke it", "value": "++ The straw that broke the camel's back", "highlights": ["straw that broke the camel's back"] },
+            { "key": "+ Don't take big risks", "value": "++ Play it safe / Watch your step", "highlights": ["Play it safe"] },
+            { "key": "+ Has good and bad sides", "value": "++ It's a double-edged sword", "highlights": ["double-edged sword"] }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "¿Qué significa si el camarero te trae un postre y dice 'It's on the house'?",
+      "options": ["Es cortesía de la casa / gratis.", "El postre está encima del tejado.", "Tienes que pagarlo en la entrada."],
+      "answer": 0,
+      "explain": "'On the house' significa que el establecimiento invita y no te lo cobrarán."
+    },
+    {
+      "q": "Si un proyecto falló y tienen que volver a diseñarlo desde cero, dicen:",
+      "options": ["Back to the drawing board!", "Draw a new house now!", "The board is broken!"],
+      "answer": 0,
+      "explain": "'Back to the drawing board' se refiere a volver a la mesa de dibujo para empezar de cero."
+    },
+    {
+      "q": "¿Qué expresión equivale a 'la gota que derramó el vaso' en inglés?",
+      "options": ["The straw that broke the camel's back.", "The drop that spilled the glass.", "The water that killed the cup."],
+      "answer": 0,
+      "explain": "'The straw that broke the camel's back' es la metáfora inglesa exacta para el detonante final."
+    }
+  ]
+}

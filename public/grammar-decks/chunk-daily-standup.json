@@ -1,0 +1,148 @@
+{
+  "meta": {
+    "eyebrow": "Chunks · Daily Standup",
+    "title": "Tu Daily Standup",
+    "titleEmphasis": "en inglés",
+    "goal": "Estructura tu actualización ágil en menos de un minuto: qué cerraste ayer, en qué te enfocas hoy, tus bloqueos y la sincronización con el equipo."
+  },
+  "related": [
+    { "slug": "chunk-programacion", "label": "Chunks de programación" },
+    { "slug": "biz-conversaciones-trabajo", "label": "Conversaciones en la oficina" }
+  ],
+  "cards": [
+    {
+      "id": "cds-ayer",
+      "tag": "Qué hiciste ayer",
+      "title": "Reportar tareas completadas",
+      "lede": "Usa verbos de acción naturales en pasado para resumir tu progreso sin dar listas interminables.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Yesterday I wrapped up...", "value": "Ayer terminé / cerré... · Yesterday I wrapped up the checkout flow.", "highlights": ["wrapped up"] },
+            { "key": "I spent most of yesterday on...", "value": "Dediqué casi todo el día de ayer a... · I spent most of yesterday on database indexing.", "highlights": ["spent most of yesterday on"] },
+            { "key": "I managed to fix the issue with...", "value": "Logré solucionar el problema de... · I managed to fix the auth redirect bug.", "highlights": ["managed to fix"] },
+            { "key": "I put up a PR for...", "value": "Subí / abrí un PR para... · I put up a PR for the new dark mode toggle.", "highlights": ["put up a PR"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Phrasal verb clave:",
+        "body": "\"Wrap up\" significa terminar y cerrar completamente una tarea antes de pasar a la siguiente."
+      }
+    },
+    {
+      "id": "cds-hoy",
+      "tag": "Planes para hoy",
+      "title": "Definir tu foco del día",
+      "lede": "Di claramente en qué vas a poner tu energía hoy.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Today I'm planning to tackle...", "value": "Hoy planeo abordar / entrarle a... · Today I'm planning to tackle the user settings page.", "highlights": ["planning to tackle"] },
+            { "key": "I'm going to focus on...", "value": "Me voy a enfocar en... · I'm going to focus on writing unit tests.", "highlights": ["focus on"] },
+            { "key": "My main priority today is...", "value": "Mi prioridad principal hoy es... · My main priority today is getting the deployment green.", "highlights": ["main priority today is"] },
+            { "key": "I'll be pairing with [Name] on...", "value": "Estaré haciendo pair programming con [Nombre] en...", "highlights": ["pairing with"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cds-blockers",
+      "tag": "Bloqueos (Blockers)",
+      "title": "Levantar la mano a tiempo",
+      "lede": "Reporta obstáculos con precisión para que el equipo o tu manager puedan destrabarte.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "I'm currently blocked by...", "value": "Actualmente estoy bloqueado/a por... · I'm currently blocked by the missing API keys.", "highlights": ["blocked by"] },
+            { "key": "I'm waiting on...", "value": "Estoy a la espera de... · I'm waiting on backend feedback before proceeding.", "highlights": ["waiting on"] },
+            { "key": "I got stuck on...", "value": "Me quedé atascado/a con... · I got stuck on the state migration logic.", "highlights": ["got stuck on"] },
+            { "key": "No blockers on my end", "value": "No tengo bloqueos por mi parte · Everything is smooth, no blockers on my end.", "highlights": ["No blockers on my end"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cds-sync",
+      "tag": "Sincronización rápida",
+      "title": "Pedir u ofrecer ayuda",
+      "lede": "Mueve las discusiones largas fuera de la reunión diaria sin perder el ritmo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Let's take this offline", "value": "Veámoslo aparte / fuera del standup · Let's take this offline after the meeting.", "highlights": ["take this offline"] },
+            { "key": "Do you have 5 minutes after standup?", "value": "¿Tienes 5 minutos después del standup para revisar esto?", "highlights": ["after standup"] },
+            { "key": "I can give you a hand with that", "value": "Te puedo dar una mano con eso.", "highlights": ["give you a hand"] },
+            { "key": "Let's sync up on Slack", "value": "Sincronicémonos por Slack / hablemos por chat.", "highlights": ["sync up"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Cultura ágil:",
+        "body": "\"Take it offline\" es la frase estándar de oro en Silicon Valley y empresas remotas para evitar alargar el standup."
+      }
+    },
+    {
+      "id": "cds-reviews",
+      "tag": "Solicitar Code Reviews",
+      "title": "Pedir que revisen tu trabajo",
+      "lede": "Recuerda a tus compañeros de forma amigable que tu código necesita aprobación.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Could someone take a look at PR #...?", "value": "¿Alguien podría echarle un ojo al PR #...?", "highlights": ["take a look at"] },
+            { "key": "I need a second pair of eyes on...", "value": "Necesito que alguien más le eche un vistazo a...", "highlights": ["second pair of eyes"] },
+            { "key": "It's ready for review", "value": "Ya está listo para revisión · PR 402 is up and ready for review.", "highlights": ["ready for review"] },
+            { "key": "Just waiting for CI to pass", "value": "Solo esperando a que pasen las pruebas de integración continua.", "highlights": ["waiting for CI to pass"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cds-cierre",
+      "tag": "Cerrar y pasar la palabra",
+      "title": "Entregar el turno con soltura",
+      "lede": "Termina tu turno con naturalidad y pasa la palabra al siguiente compañero.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "That's it for me, passing it over to [Name]", "value": "Eso es todo de mi parte, le paso la palabra a [Nombre].", "highlights": ["passing it over to"] },
+            { "key": "Over to you, [Name]!", "value": "¡Te toca, [Nombre]! / ¡Adelante, [Nombre]!", "highlights": ["Over to you"] },
+            { "key": "Nothing else from my side", "value": "Nada más de mi parte · No blockers, nothing else from my side.", "highlights": ["Nothing else from my side"] },
+            { "key": "Back to you, [Name]", "value": "Te regreso la palabra, [Nombre].", "highlights": ["Back to you"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Sonido:",
+        "body": "\"Passing it over to...\" se enlaza como /pæsɪŋ ɪɾ ˈoʊvər tu/ sin cortes entre las palabras."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "¿Qué frase resume perfectamente que ayer terminaste una tarea?",
+      "options": ["Yesterday I wrapped up the navigation bug.", "Yesterday I closed with package the navigation bug.", "I made the finish of the bug yesterday."],
+      "answer": 0,
+      "explain": "'Yesterday I wrapped up...' es el modismo cotidiano para decir que concluiste una tarea."
+    },
+    {
+      "q": "Si un tema técnico es muy largo para el standup, ¿qué dices para verlo después?",
+      "options": ["Let's take this offline.", "Let's throw this to the street.", "Cancel this conversation right now."],
+      "answer": 0,
+      "explain": "'Let's take this offline' significa tratar el tema en privado fuera de la reunión grupal."
+    },
+    {
+      "q": "¿Cómo le pasas el turno a tu compañera Sarah al terminar tu reporte?",
+      "options": ["That's it from me, passing it over to Sarah.", "I am finished, speak now Sarah.", "My speech is dead, Sarah you."],
+      "answer": 0,
+      "explain": "'That's it from me, passing it over to [Name]' es la fórmula estándar y educada para ceder la palabra."
+    }
+  ]
+}

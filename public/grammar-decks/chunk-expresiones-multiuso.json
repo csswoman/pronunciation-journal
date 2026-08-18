@@ -1,0 +1,144 @@
+{
+  "meta": {
+    "eyebrow": "Chunks · Verbos multiuso",
+    "title": "Verbos con",
+    "titleEmphasis": "usos figurados",
+    "goal": "Multiplica tu vocabulario con verbos sencillos como land, nail, drop, beat o pull que adquieren significados poderosos en conversaciones profesionales y casuales."
+  },
+  "related": [
+    { "slug": "chunk-palabras-doble-significado", "label": "Palabras con doble significado" },
+    { "slug": "chunk-programacion", "label": "Chunks de programación" }
+  ],
+  "cards": [
+    {
+      "id": "cem-land-nail",
+      "tag": "Éxito y precisión",
+      "title": "Land y Nail",
+      "lede": "'Aterrizar' y 'clavar' son los verbos predilectos para hablar de conseguir grandes metas o hacer algo perfecto.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Land = conseguir un logro", "value": "She landed the remote job · Consiguió el trabajo remoto.", "highlights": ["landed the"] },
+            { "key": "Land a client", "value": "Cerrar / conseguir un cliente nuevo · We just landed a big client.", "highlights": ["landed a big client"] },
+            { "key": "Nail it = hacerlo perfecto", "value": "You nailed the presentation! · ¡Bordaste / clavaste la presentación!", "highlights": ["nailed"] },
+            { "key": "Hit the nail on the head", "value": "Dar en el clavo / Acertar exactamente con la explicación.", "highlights": ["nail on the head"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Celebración natural:",
+        "body": "Cuando alguien hace un gran trabajo en una reunión o demo, dile \"You nailed it!\" en lugar de solo \"Good job\"."
+      }
+    },
+    {
+      "id": "cem-pull-beat",
+      "tag": "Hazañas y comparación",
+      "title": "Pull off y Beat",
+      "lede": "Usa estos verbos para expresar que lograste algo contra todo pronóstico o que nada se compara con algo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Pull off = lograr algo difícil", "value": "How did you pull that off? · ¿Cómo lograste sacar adelante eso?", "highlights": ["pull that off"] },
+            { "key": "Nothing beats...", "value": "Nada supera a... · Nothing beats a fresh cup of coffee.", "highlights": ["Nothing beats"] },
+            { "key": "You beat me to it!", "value": "¡Te me adelantaste! / ¡Me ganaste de mano!", "highlights": ["beat me to it"] },
+            { "key": "Can't be beaten", "value": "No tiene rival / Es inmejorable · That offer can't be beaten.", "highlights": ["can't be beaten"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cem-drop-kill",
+      "tag": "Lanzamientos y cancelaciones",
+      "title": "Drop y Kill",
+      "lede": "En tecnología y cultura diaria, estos verbos hablan de estrenar novedades o de destacar con maestría.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Drop = lanzar / publicar", "value": "They just dropped a major update · Acaban de lanzar una gran actualización.", "highlights": ["just dropped"] },
+            { "key": "Drop the topic", "value": "Dejar el tema / Cambiar de tema · Let's drop it for now.", "highlights": ["drop it"] },
+            { "key": "Killing it = arrasar / triunfar", "value": "You're killing it today! · ¡La estás rompiendo hoy!", "highlights": ["killing it"] },
+            { "key": "Kill a process", "value": "Finalizar / cancelar un proceso o tarea de golpe.", "highlights": ["Kill"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cem-touch-catch",
+      "tag": "Sincronización y detalles",
+      "title": "Touch base y Catch",
+      "lede": "Estructuras para ponerte en contacto rápido y entender lo que no está a la vista.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Touch base = sincronizar brevemente", "value": "Let's touch base next week · Pongámonos al día / Sincronicemos la próxima semana.", "highlights": ["touch base"] },
+            { "key": "Didn't catch that", "value": "No alcancé a oír / entender · Sorry, I didn't catch what you said.", "highlights": ["didn't catch"] },
+            { "key": "What's the catch?", "value": "¿Dónde está la trampa? / ¿Cuál es la condición oculta?", "highlights": ["What's the catch"] },
+            { "key": "Catch up", "value": "Ponerse al día con alguien · Let's catch up over lunch.", "highlights": ["catch up"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Sonido:",
+        "body": "\"Touch base\" se pronuncia fluido como /tʌtʃ beɪs/ sin separar ambas palabras."
+      }
+    },
+    {
+      "id": "cem-drive-hold",
+      "tag": "Impulso y pausas",
+      "title": "Drive y Hold",
+      "lede": "Manejar no es solo conducir un auto, y sostener no es solo agarrar un objeto con la mano.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Drive = motivar / originar", "value": "What drives this metric? · ¿Qué impulsa o causa esta métrica?", "highlights": ["drives this"] },
+            { "key": "Drive someone crazy", "value": "Volver loco / desesperar a alguien · This bug is driving me crazy!", "highlights": ["driving me crazy"] },
+            { "key": "Hold on a sec", "value": "Espera un segundo · Hold on, let me check the logs.", "highlights": ["Hold on"] },
+            { "key": "Hold off on...", "value": "Posponer / aguantar antes de hacer algo · Let's hold off on deploying.", "highlights": ["hold off on"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cem-hit-wrap",
+      "tag": "Comienzo y cierre",
+      "title": "Hit y Wrap up",
+      "lede": "Frases dinámicas para iniciar una marcha o cerrar un ciclo de trabajo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Hit the road", "value": "Ponerse en marcha / salir de viaje · Time to hit the road.", "highlights": ["hit the road"] },
+            { "key": "Hit me up", "value": "Escríbeme / mándame mensaje · Hit me up whenever you're ready.", "highlights": ["Hit me up"] },
+            { "key": "Wrap this up", "value": "Concluir / terminar esto · Let's wrap this up before 5 PM.", "highlights": ["wrap this up"] },
+            { "key": "Call it a day", "value": "Dar por terminada la jornada · It's getting late, let's call it a day.", "highlights": ["call it a day"] }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "¿Qué significa si tu colega te dice 'You nailed that demo!'?",
+      "options": ["¡Hiciste la demo de forma impecable!", "¡Rompiste la pantalla de la demo con un clavo!", "No entendiste nada de la demo."],
+      "answer": 0,
+      "explain": "'You nailed it' es el modismo coloquial para felicitar a alguien por un trabajo perfecto."
+    },
+    {
+      "q": "¿Cómo propones terminar la jornada laboral y dejar de trabajar por hoy?",
+      "options": ["Let's call it a day.", "Let's call the day on the phone.", "The day is killed now."],
+      "answer": 0,
+      "explain": "'Call it a day' es la frase clásica en el trabajo para dar por concluida la jornada."
+    },
+    {
+      "q": "¿Qué significa 'What's the catch?' cuando alguien te ofrece algo demasiado bueno?",
+      "options": ["¿Cuál es el truco o la trampa oculta?", "¿A qué velocidad viaja la pelota?", "¿Dónde compraste ese anzuelo?"],
+      "answer": 0,
+      "explain": "'The catch' se refiere a la letra pequeña o condición desventajosa oculta en una oferta."
+    }
+  ]
+}

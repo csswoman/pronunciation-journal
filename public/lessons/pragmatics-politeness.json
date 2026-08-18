@@ -2,62 +2,62 @@
   "slug": "pragmatics-politeness",
   "sections": [
     {
-      "heading": "What is pragmatics?",
-      "body": "Pragmatics is the study of how context shapes meaning — what speakers imply, presuppose, and perform with language beyond its literal meaning. At advanced level, understanding pragmatics separates fluent speakers from truly proficient ones."
+      "heading": "¿Qué es la pragmática?",
+      "body": "La pragmática es el estudio de cómo el contexto da forma al significado: lo que los hablantes implican, presuponen y realizan con el lenguaje más allá de su significado literal. En el nivel avanzado, comprender la pragmática separa a los hablantes fluidos de los verdaderamente competentes."
     },
     {
-      "heading": "Indirectness in English",
-      "body": "English speakers (particularly British English) rely heavily on indirectness to be polite, face-saving, or diplomatic. A direct refusal ('No, I won't do that') can seem rude. An indirect one ('I'm not sure I'll have time for that') conveys the same message more tactfully."
+      "heading": "Indireccionalidad en inglés",
+      "body": "Los angloparlantes (particularmente el inglés británico) dependen en gran medida de la direccionalidad para ser educados, salvar las apariencias o diplomáticos. Una negativa directa (“No, no haré eso”) puede parecer de mala educación. Una indirecta ('No estoy seguro de tener tiempo para eso') transmite el mismo mensaje con más tacto."
     },
     {
-      "heading": "Implicature",
-      "body": "Grice's maxims describe how we imply things beyond our words. 'Can you pass the salt?' is literally a yes/no question about ability — but pragmatically it's a request. 'The food was edible' implies it wasn't good (otherwise you'd say 'delicious')."
+      "heading": "Implicatura",
+      "body": "Las máximas de Grice describen cómo damos a entender cosas más allá de nuestras palabras. '¿Puedes pasar la sal?' Es literalmente una pregunta de sí o no sobre la capacidad, pero pragmáticamente es una solicitud. \"La comida era comestible\" implica que no era buena (de lo contrario, dirías \"deliciosa\")."
     }
   ],
   "examples": [
     {
       "english": "'It's a bit warm in here...'",
-      "note": "Implies: please open a window / turn on the AC"
+      "note": "Implica: abra una ventana / encienda el aire acondicionado."
     },
     {
       "english": "'That's an interesting idea.'",
-      "note": "Often implies: I have reservations about this"
+      "note": "A menudo implica: tengo reservas sobre esto."
     },
     {
       "english": "'I'm sure you did your best.'",
-      "note": "Can imply: the result wasn't great"
+      "note": "Puede implicar: el resultado no fue excelente"
     },
     {
       "english": "'We should catch up sometime.'",
-      "note": "May be a social formula, not a real plan"
+      "note": "Puede ser una fórmula social, no un plan real"
     }
   ],
   "exercises": [
     {
-      "instruction": "What does each utterance imply in context? Write a more direct version.",
+      "instruction": "Explain the implied meaning (implicature) of each statement in context.",
       "items": [
         "'I might be able to make it.' (to an invitation)",
         "'Your first draft shows real effort.' (on written work)",
         "'This neighborhood has changed a lot.' (said by a longtime resident)"
       ],
       "answers": [
-        "Implica duda o rechazo suave — directo: 'I probably can't come.'",
-        "Implica que necesita mucho trabajo — directo: 'This draft needs major revision.'",
-        "Suele implicar queja o nostalgia — directo: 'I don't like how this neighborhood has changed.'"
+        "Implies doubt or a soft refusal — direct meaning: 'I probably can't come.'",
+        "Implies it needs much more work — direct meaning: 'This draft needs major revision.'",
+        "Often implies complaint or nostalgia — direct meaning: 'I don't like how this neighborhood has changed.'"
       ]
     }
   ],
   "quiz": [
     {
-      "question": "Someone says 'I don't disagree with you.' This most likely means:",
+      "question": "Alguien dice: 'No estoy en desacuerdo contigo'. Lo más probable es que esto signifique:",
       "options": [
-        "Complete agreement",
-        "Partial agreement or reluctant agreement",
-        "Strong disagreement",
-        "No opinion"
+        "Acuerdo completo",
+        "Acuerdo parcial o acuerdo renuente",
+        "Fuerte desacuerdo",
+        "Sin opinión"
       ],
       "correct": 1,
-      "explanation": "Double negation ('don't disagree') implies reluctant or partial agreement — the speaker doesn't want to fully commit."
+      "explanation": "La doble negación (\"no estar en desacuerdo\") implica un acuerdo parcial o reacio: el hablante no quiere comprometerse completamente."
     }
   ]
 }

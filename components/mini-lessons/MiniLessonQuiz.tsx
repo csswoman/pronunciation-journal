@@ -129,7 +129,7 @@ export default function MiniLessonQuiz({ questions, slug }: Props) {
 
                 const letter = String.fromCharCode(65 + oIdx);
                 const ariaLabel = isAnswered && isCorrect
-                  ? `${letter} ${option} — correct answer`
+                  ? `${letter} ${option} — respuesta correcta`
                   : `${letter} ${option}`;
 
                 return (
@@ -155,7 +155,7 @@ export default function MiniLessonQuiz({ questions, slug }: Props) {
             {isAnswered && (
               <div className="mini-lessons__quiz-answer">
                 <p>
-                  <strong>Answer: {String.fromCharCode(65 + q.correct)}</strong>
+                  <strong>Respuesta: {String.fromCharCode(65 + q.correct)}</strong>
                 </p>
                 <p>{q.explanation}</p>
               </div>
@@ -169,7 +169,7 @@ export default function MiniLessonQuiz({ questions, slug }: Props) {
           role="status"
           className={cn("mini-lessons__quiz-score", scoreClass(correctCount, questions.length))}
         >
-          {correctCount} / {questions.length} correct
+          {correctCount} / {questions.length} correctas
         </div>
       )}
     </div>

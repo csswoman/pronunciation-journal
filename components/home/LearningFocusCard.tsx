@@ -13,6 +13,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/components/auth/AuthProvider'
 import LearningFocusTopicsSheet from '@/components/home/LearningFocusTopicsSheet'
+import ContentLevelSelector from '@/components/ui/ContentLevelSelector'
 import { cn } from '@/lib/cn'
 import { toFocusLevel } from '@/lib/learning-focus/cefr'
 import { getEffectiveFocus } from '@/lib/learning-focus/effective-focus'
@@ -71,14 +72,18 @@ export default function LearningFocusCard({
     let cancelled = false
 
     async function load() {
-      const [loaded, claimed] = await Promise.all([
-        loadLearningFocus(user!.id),
-        listClaimedTheoryTopics(user!.id),
-      ])
-      const refreshed = await refreshSuggestedFocus(user!.id, deriveInput)
-      if (cancelled) return
-      setFocus(refreshed ?? loaded)
-      setClaimedSlugs(new Set(claimed.map((item) => item.lessonSlug)))
+      try {
+        const [loaded, claimed] = await Promise.all([
+          loadLearningFocus(user!.id),
+          listClaimedTheoryTopics(user!.id),
+        ])
+        const refreshed = await refreshSuggestedFocus(user!.id, deriveInput)
+        if (cancelled) return
+        setFocus(refreshed ?? loaded)
+        setClaimedSlugs(new Set(claimed.map((item) => item.lessonSlug)))
+      } catch {
+        // IndexedDB may still be recovering from Chrome UnknownError on open.
+      }
     }
 
     void load()
@@ -172,26 +177,14 @@ export default function LearningFocusCard({
         <span className="font-semibold text-fg">{LEVEL_LABELS[activeLevel]}</span>
       </p>
 
-      <div className="grid grid-cols-5 gap-1" role="group" aria-label="Nivel de foco">
-        {FOCUS_LEVELS.map((level) => (
-          <button
-            key={level}
-            type="button"
-            aria-pressed={activeLevel === level}
-            aria-label={LEVEL_LABELS[level]}
-            disabled={busy}
-            onClick={() => void handlePinLevel(level)}
-            className={cn(
-              'focus-ring min-h-9 rounded-sm font-label transition-colors disabled:opacity-60',
-              activeLevel === level
-                ? 'bg-primary text-on-primary'
-                : 'bg-surface-sunken text-fg-muted hover:text-fg',
-            )}
-          >
-            {LEVEL_LABELS[level]}
-          </button>
-        ))}
-      </div>
+      <ContentLevelSelector
+        levels={FOCUS_LEVELS}
+        value={activeLevel}
+        onChange={(level) => void handlePinLevel(level)}
+        ariaLabel="Nivel de foco"
+        getLabel={(level) => LEVEL_LABELS[level]}
+        disabled={busy}
+      />
 
       <button
         type="button"

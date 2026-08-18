@@ -43,6 +43,7 @@ import {
   IconConfetti,
   IconCornerDownLeft,
   IconDeviceLaptop,
+  IconDotsVertical,
   IconDumbbell,
   IconEar,
   IconEye,
@@ -199,6 +200,7 @@ export const MicVocal = createIcon(IconMicrophone2, "MicVocal");
 export const Minimize2 = createIcon(IconArrowsMinimize, "Minimize2");
 export const Minus = createIcon(IconMinus, "Minus");
 export const Moon = createIcon(IconMoon, "Moon");
+export const MoreVertical = createIcon(IconDotsVertical, "MoreVertical");
 export const PanelLeftClose = createIcon(IconLayoutSidebarLeftCollapse, "PanelLeftClose");
 export const PanelLeftOpen = createIcon(IconLayoutSidebarLeftExpand, "PanelLeftOpen");
 export const PartyPopper = createIcon(IconConfetti, "PartyPopper");

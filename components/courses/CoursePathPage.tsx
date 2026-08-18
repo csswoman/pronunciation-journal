@@ -1,8 +1,10 @@
 import Link from "next/link";
-import { ArrowRight, MicVocal } from "@/components/icons";
+import { ArrowRight, ChevronDown, MicVocal } from "@/components/icons";
 import CoursePathAutoLevelSync from "@/components/courses/CoursePathAutoLevelSync";
 import CoursePathLevelPanel from "@/components/courses/CoursePathLevelPanel";
 import CoursePathRealLife from "@/components/courses/CoursePathRealLife";
+import CoursePathSearch from "@/components/courses/CoursePathSearch";
+import PageHeader from "@/components/layout/PageHeader";
 import PageLayout from "@/components/layout/PageLayout";
 import { COURSE_PATH_CURRICULUM } from "@/lib/courses/curriculum";
 import { parseCefrLevelId } from "@/lib/courses/curriculumIndex";
@@ -37,6 +39,11 @@ export default function CoursePathPage({ levelParam }: CoursePathPageProps) {
         }))}
       />
       <PageLayout archetype="catalog">
+        <PageHeader
+          kicker="Aprender"
+          title="Cursos"
+          subtitle="Lecciones de pronunciación, gramática, vocabulario y más, organizadas por nivel para que avances a tu ritmo."
+        />
         <div className="course-path__wrap course-path__wrap--shell">
           <div className="course-path__desktop-layout">
             <main className="course-path__main">
@@ -57,7 +64,7 @@ export default function CoursePathPage({ levelParam }: CoursePathPageProps) {
                     </Link>
                   </div>
                 </div>
-                <nav className="course-path__spine" aria-label="Niveles del curso">
+                <nav className="course-path__spine course-path__spine--desktop" aria-label="Niveles del curso">
                   {COURSE_PATH_CURRICULUM.levels.map((level) => {
                     const isActive = level.id === selectedLevelId;
                     const href = level.id === DEFAULT_LEVEL ? "/courses" : `/courses?level=${level.id}`;
@@ -74,6 +81,47 @@ export default function CoursePathPage({ levelParam }: CoursePathPageProps) {
                     );
                   })}
                 </nav>
+
+                <details className="course-path__level-picker-mobile">
+                  <summary className="course-path__level-picker-mobile-summary">
+                    <span className="course-path__level-picker-mobile-label">Nivel actual</span>
+                    <strong className="course-path__level-picker-mobile-current">
+                      {selectedLevel.spineLabel}
+                    </strong>
+                    <span className="course-path__level-picker-mobile-change">Cambiar</span>
+                    <ChevronDown size={16} aria-hidden />
+                  </summary>
+                  <div className="course-path__level-picker-mobile-content">
+                    <nav className="course-path__spine course-path__spine--mobile" aria-label="Cambiar nivel">
+                      {COURSE_PATH_CURRICULUM.levels.map((level) => {
+                        const isActive = level.id === selectedLevelId;
+                        const href = level.id === DEFAULT_LEVEL ? "/courses" : `/courses?level=${level.id}`;
+
+                        return (
+                          <Link
+                            key={level.id}
+                            href={href}
+                            aria-current={isActive ? "page" : undefined}
+                            className={cn("course-path__level", isActive && "course-path__level--on")}
+                          >
+                            <div className="course-path__level-lv">{level.spineLabel}</div>
+                          </Link>
+                        );
+                      })}
+                    </nav>
+                    <div className="course-path__level-picker-mobile-actions">
+                      <Link href="/assessment" className="course-path__text-link">
+                        Prueba de nivel
+                      </Link>
+                      <Link
+                        href={`/assessment?mode=checkpoint&level=${selectedLevelId}`}
+                        className="course-path__text-link"
+                      >
+                        Comprobar nivel
+                      </Link>
+                    </div>
+                  </div>
+                </details>
               </section>
 
               <section
@@ -89,6 +137,8 @@ export default function CoursePathPage({ levelParam }: CoursePathPageProps) {
             </main>
 
             <aside className="course-path__aside" aria-label="Contexto del nivel">
+              <CoursePathSearch />
+
               {selectedLevel.realLife && selectedLevel.realLife.length > 0 && (
                 <CoursePathRealLife scenarios={selectedLevel.realLife} />
               )}

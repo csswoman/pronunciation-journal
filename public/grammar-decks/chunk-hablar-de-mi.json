@@ -1,0 +1,151 @@
+{
+  "meta": {
+    "eyebrow": "Chunks · Presentación personal",
+    "title": "Hablar de mí con",
+    "titleEmphasis": "soltura",
+    "goal": "Explica tu rol, tus pasiones, tu historia profesional y tus preferencias personales con estructuras que suenan naturales."
+  },
+  "related": [
+    { "slug": "chunk-vida-cotidiana", "label": "Chunks para la vida cotidiana" },
+    { "slug": "chunk-programacion", "label": "Chunks de programación" }
+  ],
+  "cards": [
+    {
+      "id": "chm-presentacion",
+      "tag": "Rol y ubicación",
+      "title": "Presentarte y situarte",
+      "lede": "Di a qué te dedicas y dónde estás sin traducir 'yo tengo la profesión de...'.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "I'm currently working as a...", "value": "Actualmente trabajo como... · I'm currently working as a frontend developer.", "highlights": ["working as a"] },
+            { "key": "I'm based in...", "value": "Vivo / Resido en... · I'm based in Mexico City.", "highlights": ["based in"] },
+            { "key": "I've been doing this for...", "value": "Llevo haciendo esto... · I've been doing this for about three years.", "highlights": ["been doing this for"] },
+            { "key": "My background is in...", "value": "Mi experiencia previa es en... · My background is in graphic design.", "highlights": ["background is in"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Detalle natural:",
+        "body": "Decir \"I'm based in [city]\" suena mucho más moderno y profesional que \"I live in [city]\" en charlas de networking o trabajo remoto."
+      }
+    },
+    {
+      "id": "chm-intereses",
+      "tag": "Intereses y pasiones",
+      "title": "Hablar de lo que te apasiona",
+      "lede": "Supera el simple 'I like' con frases idiomáticas para expresar entusiasmo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "I'm really into...", "value": "Me gusta muchísimo / Me apasiona... · I'm really into UI design and typography.", "highlights": ["really into"] },
+            { "key": "What I enjoy most is...", "value": "Lo que más disfruto es... · What I enjoy most is solving complex user problems.", "highlights": ["What I enjoy most is"] },
+            { "key": "I find it fascinating to...", "value": "Me parece fascinante... · I find it fascinating to see how users interact with our app.", "highlights": ["find it fascinating"] },
+            { "key": "I'm passionate about...", "value": "Me apasiona... · I'm passionate about building accessible web apps.", "highlights": ["passionate about"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chm-trayectoria",
+      "tag": "Tu camino y evolución",
+      "title": "Contar cómo llegaste hasta aquí",
+      "lede": "Conecta los pasos de tu carrera o aprendizaje sin perderte en detalles gramaticales.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "I started out doing...", "value": "Empecé haciendo... · I started out doing manual testing.", "highlights": ["started out doing"] },
+            { "key": "I ended up moving into...", "value": "Terminé pasando a... · I ended up moving into software engineering.", "highlights": ["ended up moving into"] },
+            { "key": "Over the past few years, I've...", "value": "En los últimos años he... · Over the past few years, I've focused on React.", "highlights": ["Over the past few years"] },
+            { "key": "That's how I got into...", "value": "Así fue como me metí a... · That's how I got into web design.", "highlights": ["how I got into"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chm-fortalezas",
+      "tag": "Fortalezas y habilidades",
+      "title": "Describir en qué eres bueno/a",
+      "lede": "Habla de tus habilidades con seguridad pero con humildad profesional.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "I am the best programmer in my team.", "note": "arrogante y poco creíble" },
+            { "variant": "good", "text": "I'm pretty good at breaking down complex tasks.", "note": "humilde y contundente" },
+            { "variant": "bad", "text": "I know everything about CSS.", "note": "exagerado" },
+            { "variant": "good", "text": "I feel most confident when working on UI layouts.", "note": "específico y profesional" }
+          ]
+        },
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "My main strength is...", "value": "Mi principal fortaleza es... · My main strength is attention to detail.", "highlights": ["main strength is"] },
+            { "key": "I'm always eager to learn...", "value": "Siempre tengo ganas de aprender... · I'm always eager to learn new technologies.", "highlights": ["eager to learn"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chm-preferencias",
+      "tag": "Estilo de trabajo",
+      "title": "Explicar cómo trabajas mejor",
+      "lede": "Comunica tus preferencias de comunicación, colaboración o concentración.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "I tend to prefer...", "value": "Suelo preferir... · I tend to prefer asynchronous communication.", "highlights": ["tend to prefer"] },
+            { "key": "I do my best work when...", "value": "Doy mi mejor trabajo cuando... · I do my best work when requirements are clear.", "highlights": ["do my best work when"] },
+            { "key": "I value... over...", "value": "Valoro [X] por encima de [Y] · I value clean code over quick hacks.", "highlights": ["value", "over"] },
+            { "key": "I'm a big fan of...", "value": "Soy muy partidario/a de... · I'm a big fan of component-driven development.", "highlights": ["big fan of"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chm-metas",
+      "tag": "Metas y futuro",
+      "title": "Compartir tus próximos pasos",
+      "lede": "Expresa lo que quieres lograr a corto y largo plazo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "I'm aiming to improve my...", "value": "Tengo como meta mejorar mi... · I'm aiming to improve my spoken English.", "highlights": ["aiming to improve"] },
+            { "key": "In the long run, I'd like to...", "value": "A largo plazo, me gustaría... · In the long run, I'd like to lead a product team.", "highlights": ["In the long run"] },
+            { "key": "I'm really looking forward to...", "value": "Tengo muchas ganas de... · I'm really looking forward to launching this project.", "highlights": ["looking forward to"] },
+            { "key": "My next big milestone is...", "value": "Mi próximo gran hito es... · My next big milestone is landing a remote role.", "highlights": ["next big milestone"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Regla gramatical clave:",
+        "body": "Recuerda: después de \"looking forward to\", el verbo siempre va en -ing (e.g. \"looking forward to meeting you\")."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "¿Cómo expresas de forma natural a qué te dedicas actualmente?",
+      "options": ["I'm currently working as a software developer.", "I have the job of software developer now.", "My person is a software developer."],
+      "answer": 0,
+      "explain": "'I'm currently working as a...' es la fórmula estándar y fluida para indicar tu puesto actual."
+    },
+    {
+      "q": "¿Cuál es la forma correcta de decir qué te apasiona?",
+      "options": ["I'm really into frontend development.", "I'm really into frontend development to do.", "I make enthusiasm for frontend."],
+      "answer": 0,
+      "explain": "'I'm really into [algo]' es una estructura coloquial y natural que denota auténtico interés."
+    },
+    {
+      "q": "Si quieres decir cómo trabajas mejor, ¿qué frase es la más apropiada?",
+      "options": ["I do my best work when I have quiet focus time.", "My best work is doing when I am silent.", "I make top works in silence."],
+      "answer": 0,
+      "explain": "'I do my best work when...' permite comunicar condiciones de trabajo de manera profesional."
+    }
+  ]
+}

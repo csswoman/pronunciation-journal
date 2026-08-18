@@ -1,0 +1,259 @@
+{
+  "meta": {
+    "eyebrow": "Falsos Cognados · Nivel A1-A2",
+    "title": "Falsos amigos",
+    "titleEmphasis": "esenciales",
+    "goal": "Distingue y utiliza correctamente los 6 pares de falsos cognados más comunes del inglés cotidiano para evitar malentendidos básicos."
+  },
+  "related": [
+    { "slug": "ff-trabajo-negocios", "label": "Falsos amigos en el trabajo" },
+    { "slug": "ff-vida-cotidiana", "label": "Falsos amigos en la vida diaria" }
+  ],
+  "quiz": [
+    {
+      "q": "Quieres decir que actualmente estás viviendo en Madrid. ¿Cuál es la opción correcta?",
+      "options": [
+        "I currently live in Madrid.",
+        "I actually live in Madrid.",
+        "I presently am live in Madrid.",
+        "I actual live in Madrid."
+      ],
+      "answer": 0,
+      "explain": "\"Currently\" significa actualmente (en este periodo de tiempo). \"Actually\" significa \"en realidad\" o \"de hecho\"."
+    },
+    {
+      "q": "Alguien sintió mucha vergüenza al equivocarse de nombre. ¿Cómo lo expresa?",
+      "options": [
+        "I was so pregnant!",
+        "I was so embarrassed!",
+        "I was so shameful pregnant!",
+        "I was so actualized!"
+      ],
+      "answer": 1,
+      "explain": "\"Embarrassed\" significa avergonzado/a o apenado/a. \"Pregnant\" significa embarazada."
+    },
+    {
+      "q": "Necesitas comprar un libro nuevo en una tienda. ¿A dónde vas?",
+      "options": [
+        "To the library",
+        "To the bookstore",
+        "To the assist center",
+        "To the reading room"
+      ],
+      "answer": 1,
+      "explain": "\"Bookstore\" es la tienda donde compras libros (librería). \"Library\" es la biblioteca donde tomas libros prestados."
+    }
+  ],
+  "cards": [
+    {
+      "id": "ff-actually-currently",
+      "tag": "actually / currently",
+      "title": "Actually vs Currently",
+      "lede": "El clásico error del hispanohablante: «actually» suena a «actualmente», pero su significado es totalmente distinto.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "actually (en realidad)",
+              "rule": "Úsalo para corregir un malentendido, aclarar un hecho o decir «de hecho / la verdad es que».",
+              "examples": [
+                "Actually, I'm not from Spain; I'm from Mexico.",
+                "It looks hard, but it's actually very simple.",
+                "Did you know he's actually a doctor?"
+              ]
+            },
+            {
+              "label": "currently (actualmente)",
+              "rule": "Úsalo para hablar de algo que ocurre en el tiempo presente («hoy en día / en este momento»).",
+              "examples": [
+                "She is currently working from home.",
+                "We are currently out of stock.",
+                "Currently, prices are rising."
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Regla mnemotécnica:",
+        "body": "Asocia «actually» con «en el acto de la verdad / in fact». Si quieres decir «ahora mismo», di «right now» o «currently»."
+      }
+    },
+    {
+      "id": "ff-embarrassed-pregnant",
+      "tag": "embarrassed / pregnant",
+      "title": "Embarrassed vs Pregnant",
+      "lede": "Uno de los falsos amigos más famosos y con mayor riesgo de causar situaciones cómicas o incómodas.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "embarrassed (avergonzado/a)",
+              "rule": "Sentimiento de timidez, bochorno o pena social por una equivocación o descuido.",
+              "examples": [
+                "I was so embarrassed when I tripped on the stairs.",
+                "Don't be embarrassed to ask questions.",
+                "He felt embarrassed about his accent."
+              ]
+            },
+            {
+              "label": "pregnant (embarazada)",
+              "rule": "Estado biológico de gestación de un bebé.",
+              "examples": [
+                "My sister is six months pregnant.",
+                "She announced that she was pregnant.",
+                "Is pregnant exercise safe?"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Cuidado:",
+        "body": "Nunca digas «I am embarrassed» para anunciar un embarazo. Di siempre: «I am pregnant» o «We are expecting a baby»."
+      }
+    },
+    {
+      "id": "ff-sensible-sensitive",
+      "tag": "sensible / sensitive",
+      "title": "Sensible vs Sensitive",
+      "lede": "Dos adjetivos que intercambian sus significados con respecto al español: la lógica frente a las emociones.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "sensible (sensato / razonable)",
+              "rule": "Persona o decisión basada en el buen juicio, la prudencia y la sensatez.",
+              "examples": [
+                "That sounds like a sensible decision.",
+                "Wear sensible shoes for the long hike.",
+                "She gave me some very sensible advice."
+              ]
+            },
+            {
+              "label": "sensitive (sensible / delicado)",
+              "rule": "Alguien o algo que se afecta fácilmente con emociones, críticas, tacto o luz.",
+              "examples": [
+                "He has very sensitive skin.",
+                "Be gentle with him; he's feeling sensitive today.",
+                "This is sensitive information."
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Truco:",
+        "body": "«Sense» = sentido común -> sensible = sensato. «Sensation» = emoción / estímulo -> sensitive = sensible."
+      }
+    },
+    {
+      "id": "ff-library-bookstore",
+      "tag": "library / bookstore",
+      "title": "Library vs Bookstore",
+      "lede": "¿Prestar o comprar libros? Los dos lugares son distintos en inglés y no debes confundir sus nombres.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "library (biblioteca)",
+              "rule": "Lugar público o institucional donde pides libros prestados para leer o estudiar en silencio.",
+              "examples": [
+                "I borrow three books from the library every month.",
+                "The university library is open 24 hours.",
+                "Silence in the library, please."
+              ]
+            },
+            {
+              "label": "bookstore / bookshop (librería)",
+              "rule": "Tienda comercial donde compras y pagas por los libros que te llevas a casa.",
+              "examples": [
+                "I bought this novel at a local bookstore.",
+                "There is a great bookstore on the corner.",
+                "She works as a manager at the bookstore."
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "En inglés británico:",
+        "body": "En Reino Unido es muy común decir «bookshop» en lugar de «bookstore». Ambos se refieren a la tienda de compra."
+      }
+    },
+    {
+      "id": "ff-attend-assist",
+      "tag": "attend / assist",
+      "title": "Attend vs Assist",
+      "lede": "Dos verbos que suelen generar confusiones en eventos, reuniones y solicitudes de ayuda.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "attend (asistir / acudir)",
+              "rule": "Estar presente en un evento, clase, conferencia, concierto o reunión.",
+              "examples": [
+                "Over 200 people attended the conference.",
+                "Will you attend the meeting tomorrow morning?",
+                "She attends university classes every Monday."
+              ]
+            },
+            {
+              "label": "assist (ayudar / colaborar)",
+              "rule": "Dar una mano o prestar auxilio / soporte técnico o personal a alguien.",
+              "examples": [
+                "How can I assist you today, sir?",
+                "The nurse assisted the doctor during surgery.",
+                "The software assists users in writing emails."
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Atención:",
+        "body": "Para decir «asistí a la reunión», di «I attended the meeting». Si dices «I assisted the meeting», significa que ayudaste a organizar la reunión."
+      }
+    },
+    {
+      "id": "ff-pretend-intend",
+      "tag": "pretend / intend",
+      "title": "Pretend vs Intend",
+      "lede": "«Pretender» en español expresa intención, pero «pretend» en inglés expresa ficción o teatro.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "pretend (fingir / simular)",
+              "rule": "Actuar como si algo fuera real cuando no lo es, o jugar a simular.",
+              "examples": [
+                "The children pretended to be astronauts.",
+                "Don't pretend that you didn't hear me.",
+                "She pretended to be asleep when he came in."
+              ]
+            },
+            {
+              "label": "intend (tener la intención / pretender)",
+              "rule": "Tener el plan o propósito de realizar una acción.",
+              "examples": [
+                "I intend to finish the report by Friday.",
+                "What do you intend to do about this problem?",
+                "We didn't intend to offend anyone."
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "En la conversación diaria:",
+        "body": "También puedes usar «plan to» o «mean to» como alternativas más naturales para «intend» («I didn't mean to do that» = no pretendía hacer eso)."
+      }
+    }
+  ]
+}

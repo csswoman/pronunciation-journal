@@ -5,13 +5,14 @@ import { persistLearningState } from '@/lib/ai-practice/queries'
 import type { UserLearningState } from '@/lib/ai-practice/learning-state'
 import { mergeConceptSignals } from '@/lib/courses/assessment-profile'
 import type { AssessmentConcept, ConceptSignal } from '@/lib/courses/concept-profile'
-import { db } from '@/lib/db'
+import { db, ensureDbReady } from '@/lib/db'
 import { buildTheoryClaimSignal } from './claims'
 import { deriveSuggestedFocus, type DeriveSuggestedFocusInput } from './derive-suggested-focus'
 import { getEffectiveFocus } from './effective-focus'
 import type { FocusLevel, FocusThread, LearningFocus } from './types'
 
 async function readState(userId: string): Promise<UserLearningState> {
+  await ensureDbReady()
   const local = await db.learningState.get(userId)
   return local?.state ?? (await getUserLearningState(userId))
 }

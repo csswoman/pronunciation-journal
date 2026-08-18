@@ -4,18 +4,23 @@
   "level": "advanced",
   "category": "listening",
   "duration": 8,
-  "title": "How to follow complex spoken discourse",
-  "subtitle": "Listening of the day",
-  "body": "At advanced level, the challenge isn't words — it's tracking the argument structure across a long audio. These strategies help.",
+  "title": "Cómo seguir un discurso hablado complejo",
+  "subtitle": "Técnicas de escucha avanzada",
+  "body": "En el nivel avanzado, el desafío no son las palabras, sino rastrear la estructura del argumento a lo largo de una conversación o presentación extensa. Estas estrategias te ayudarán.",
   "examples": [
     {
       "word": "'On the one hand… on the other…'",
-      "translation": "señal de contraste que viene"
+      "translation": "señala un contraste inminente"
     },
     {
       "word": "'What I'm really trying to say is…'",
-      "translation": "señal de resumen / clarificación"
+      "translation": "señala un resumen o aclaración"
+    },
+    {
+      "word": "'Having said that...'",
+      "translation": "señala una matización o restricción"
     }
   ],
+  "tip": "No intentes entender cada palabra. Concéntrate en las frases clave que señalan la dirección del argumento para captar la idea principal.",
   "href": "/mini-lessons/discourse-analysis"
 }

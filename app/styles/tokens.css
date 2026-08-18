@@ -100,6 +100,14 @@
   --color-stage-pairs:     var(--stage-pairs);
   --color-stage-dictation: var(--stage-dictation);
 
+  /* ── Match pairs connection dots ─────────────────────────────────────── */
+  --match-pair-dot-1: oklch(0.65 0.18 25);
+  --match-pair-dot-2: oklch(0.65 0.18 250);
+  --match-pair-dot-3: oklch(0.65 0.18 310);
+  --match-pair-dot-4: oklch(0.65 0.16 145);
+  --match-pair-dot-5: oklch(0.70 0.18 55);
+  --match-pair-dot-6: oklch(0.65 0.16 185);
+
   /* ── 4. Surfaces — semantic elevation names ──────────────────────────── */
   --surface-base:    var(--bg);                   /* page background */
   --surface-raised:  var(--bg-secondary);         /* cards, panels, sidebars */
@@ -208,8 +216,6 @@
   --font-ui:        var(--font-sans);
   --font-heading:   var(--font-sans);
   --font-phoneme:   var(--font-ipa);
-  --font-editorial: var(--font-sans);
-  --font-display:   var(--font-sans), system-ui, sans-serif;
 
   /* Size ramp — mobile defaults */
   --text-size-h1: 1.5rem;          /* 24px — rare display / streak heroes */

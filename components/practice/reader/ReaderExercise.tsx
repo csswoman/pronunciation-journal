@@ -1,18 +1,12 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { Volume2 } from "@/components/icons"
 import { cn } from '@/lib/cn'
-import Button from '@/components/ui/Button'
 import type { ReaderPassage } from '@/lib/practice/reader/types'
 import { recordReaderExposure } from '@/lib/practice/reader/exposure'
 import { tokenizePassage } from './passage-tokens'
 import { WordSavePopover } from './WordSavePopover'
-
-// Planned structure:
-// <ReaderExercise>
-//   <passage text + listen button>
-//   <comprehension options>
+import { ShadowingController } from './ShadowingController'
 
 interface ReaderExerciseProps {
   passage: ReaderPassage
@@ -28,12 +22,6 @@ export function ReaderExercise({ passage, online, onComplete }: ReaderExercisePr
   const [openToken, setOpenToken] = useState<number | null>(null)
   const question = passage.questions[0]
   const tokens = useMemo(() => tokenizePassage(passage.passage), [passage.passage])
-
-  function speak() {
-    const u = new SpeechSynthesisUtterance(passage.passage)
-    u.lang = 'en-US'
-    window.speechSynthesis.speak(u) // on-demand, never saved
-  }
 
   async function choose(index: number) {
     if (answered || saving) return
@@ -58,9 +46,12 @@ export function ReaderExercise({ passage, online, onComplete }: ReaderExercisePr
 
   return (
     <div className={cn('flex flex-col layout-stack-loose', openToken === null ? '' : 'pb-64')}>
+      {/* Shadowing & Audio Player Controller */}
+      <ShadowingController passageText={passage.passage} online={online} />
+
       <div className="flex flex-col gap-3">
-        <p className="text-body-sm text-fg-muted">Toca cualquier palabra para ver su significado.</p>
-        <div className="text-body-lg leading-relaxed text-fg">
+        <p className="text-body-sm text-fg-muted">Toca cualquier palabra para ver su significado y guardarla a tu banco.</p>
+        <div className="text-body-lg leading-relaxed text-fg rounded-card border border-border-default bg-surface-sunken p-4 sm:p-5">
           {tokens.map((token, index) => {
             if (token.kind !== 'word') return <span key={index}>{token.value}</span>
 
@@ -80,16 +71,6 @@ export function ReaderExercise({ passage, online, onComplete }: ReaderExercisePr
               : <span key={`${token.value}-${index}`}>{popover}</span>
           })}
         </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={speak}
-          disabled={!online}
-          aria-label="Escuchar"
-          className="self-start"
-        >
-          <Volume2 className="size-4" /> Escuchar
-        </Button>
       </div>
 
       <div className="flex flex-col gap-3">

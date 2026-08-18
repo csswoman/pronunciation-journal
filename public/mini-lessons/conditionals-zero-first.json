@@ -4,18 +4,19 @@
   "level": "intermediate",
   "category": "grammar",
   "duration": 6,
-  "title": "Zero & First Conditionals",
-  "subtitle": "Grammar of the day",
-  "body": "Zero conditional is for universal truths. First conditional is for real, likely future situations.",
+  "title": "Condicionales Cero y Primero",
+  "subtitle": "Gramática del día",
+  "body": "Descubre cómo usar el Condicional Cero para hechos innegables y el Primer Condicional para hablar de posibilidades reales en el futuro.",
   "examples": [
     {
       "word": "If you heat water to 100°C, it boils.",
-      "translation": "zero conditional — verdad científica"
+      "translation": "Condicional Cero: describe un hecho científico."
     },
     {
       "word": "If it rains, I'll stay home.",
-      "translation": "first conditional — situación probable"
+      "translation": "Primer Condicional: una situación probable en el futuro."
     }
   ],
+  "tip": "Recuerda que en el condicional cero 'if' a menudo puede ser 'when', y en el primer condicional la cláusula principal puede usar otros modales (como 'can', 'might', 'should') o un imperativo para variar el significado.",
   "href": "/mini-lessons/conditionals-zero-first"
 }

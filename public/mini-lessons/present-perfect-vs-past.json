@@ -4,9 +4,9 @@
   "level": "intermediate",
   "category": "grammar",
   "duration": 6,
-  "title": "Present Perfect vs. Simple Past",
-  "subtitle": "Grammar of the day",
-  "body": "This is one of the most common mistakes Spanish speakers make. The key is whether the time is specified or still relevant to now.",
+  "title": "Presente perfecto versus pasado simple",
+  "subtitle": "Gramática del día",
+  "body": "Este es uno de los errores más comunes que cometen los hispanohablantes. La clave es si el tiempo está especificado o si sigue siendo relevante hasta el momento.",
   "examples": [
     {
       "word": "I've seen that movie.",
@@ -14,9 +14,9 @@
     },
     {
       "word": "I saw that movie last Friday.",
-      "translation": "tiempo específico → past simple"
+      "translation": "tiempo específico → pasado simple"
     }
   ],
-  "tip": "If you can answer 'when?', use Simple Past. If 'when?' is irrelevant, use Present Perfect.",
+  "tip": "Si puedes responder \"¿cuándo?\", utiliza el pasado simple. Si '¿cuándo?' es irrelevante, use Presente Perfecto.",
   "href": "/mini-lessons/present-perfect-vs-past"
 }

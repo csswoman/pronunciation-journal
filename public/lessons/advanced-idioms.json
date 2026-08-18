@@ -2,39 +2,43 @@
   "slug": "advanced-idioms",
   "sections": [
     {
-      "heading": "What makes an idiom 'advanced'?",
-      "body": "Advanced idioms are less frequent than basics, more metaphorically opaque (harder to guess from the parts), and more contextually restricted. They tend to appear in journalism, literature, and professional conversation — not everyday small talk."
+      "heading": "¿Qué hace que un modismo sea \"avanzado\"?",
+      "body": "Los modismos avanzados son menos comunes que los básicos, más opacos en su significado literal (es decir, es más difícil adivinar su sentido a partir de sus palabras individuales) y su uso está más restringido a ciertos contextos. A menudo aparecen en el periodismo, la literatura y las conversaciones profesionales, en lugar de en el habla cotidiana."
     },
     {
-      "heading": "Risk and decision idioms",
-      "body": "'Bite the bullet' — endure something painful or difficult. 'Throw caution to the wind' — take a risk by ignoring warnings. 'Hedge your bets' — cover multiple possibilities to reduce risk. 'Be on the fence' — be undecided."
+      "heading": "Modismos de riesgo y decisión",
+      "body": "En inglés, existen muchos modismos relacionados con el riesgo y la toma de decisiones. Por ejemplo, 'to bite the bullet' significa enfrentar una situación dolorosa o difícil con valentía. 'To throw caution to the wind' implica arriesgarse e ignorar las advertencias. 'To hedge one's bets' se refiere a tomar precauciones o cubrir varias opciones para reducir el riesgo. Finalmente, 'to be on the fence' describe la situación de estar indeciso o no tomar partido."
     },
     {
-      "heading": "Communication and truth idioms",
-      "body": "'Beat around the bush' — avoid getting to the point. 'Call a spade a spade' — say things directly without softening. 'Read between the lines' — perceive hidden meaning. 'Take something with a grain of salt' — be skeptical."
+      "heading": "Modismos de comunicación y verdad",
+      "body": "Estos modismos giran en torno a cómo nos comunicamos y la forma en que expresamos o percibimos la verdad. 'To beat around the bush' significa evitar el tema principal o no ir al grano. 'To call a spade a spade' es hablar con franqueza y sin rodeos, diciendo las cosas tal como son. 'To read between the lines' implica inferir un significado no explícito o captar lo que no se dice directamente. Y 'to take something with a grain of salt' significa ser escéptico y no creer algo completamente."
     }
   ],
   "examples": [
     {
       "english": "She bit the bullet and had the surgery.",
-      "translation": "aguantó / se armó de valor"
+      "translation": "Ella se armó de valor y se sometió a la cirugía.",
+      "note": "Este modismo significa enfrentar una situación difícil con coraje."
     },
     {
       "english": "He threw caution to the wind and quit his job.",
-      "translation": "se arriesgó sin precaución"
+      "translation": "Él se arriesgó sin precaución y renunció a su trabajo.",
+      "note": "Implica actuar sin preocuparse por los riesgos o consecuencias."
     },
     {
       "english": "I'm still on the fence about the proposal.",
-      "translation": "indeciso/a"
+      "translation": "Todavía estoy indeciso/a con respecto a la propuesta.",
+      "note": "Significa no haber tomado una decisión aún, estar dudando."
     },
     {
       "english": "Stop beating around the bush — just say it.",
-      "translation": "andarse con rodeos"
+      "translation": "Deja de andarte con rodeos, solo dilo.",
+      "note": "Este modismo se usa cuando alguien evita ir directo al punto."
     }
   ],
   "exercises": [
     {
-      "instruction": "Match the idiom to its use in context.",
+      "instruction": "Relaciona el modismo con su uso en contexto.",
       "items": [
         "The consultant recommended hedging our bets.",
         "The article was biased — take it with a grain of salt.",
@@ -42,24 +46,35 @@
         "Let's call a spade a spade: the project failed."
       ],
       "answers": [
-        "hedging our bets = keeping several options open to reduce risk",
+        "hedge our bets = keeping multiple options open to reduce risk",
         "take it with a grain of salt = be skeptical, don't take it literally",
-        "read between the lines = infer the unstated meaning",
-        "call a spade a spade = describe it bluntly and honestly"
+        "read between the lines = infer unstated meaning",
+        "call a spade a spade = describe it frankly and honestly"
       ]
     }
   ],
   "quiz": [
     {
-      "question": "'Take something with a grain of salt' means:",
+      "question": "'Tomar algo con cautela' significa:",
       "options": [
-        "Accept something completely",
-        "Add salt to food",
-        "Be skeptical or not take something too seriously",
-        "Offer something generously"
+        "Aceptar algo por completo",
+        "Agregar sal a la comida",
+        "Ser escéptico o no tomar algo demasiado en serio",
+        "Ofrecer algo generosamente"
       ],
       "correct": 2,
-      "explanation": "To take something with a grain of salt means to be skeptical — to not accept it as fully true or reliable."
+      "explanation": "Tomar algo con cautela significa ser escéptico: no aceptarlo como completamente verdadero o confiable."
+    },
+    {
+      "question": "Si alguien 'throws caution to the wind', ¿qué está haciendo?",
+      "options": [
+        "Actuando con mucha prudencia",
+        "Ignorando los riesgos y actuando impulsivamente",
+        "Tomando una decisión cuidadosa",
+        "Evitando un conflicto"
+      ],
+      "correct": 1,
+      "explanation": "El modismo 'to throw caution to the wind' significa actuar de forma arriesgada o imprudente, ignorando las advertencias o las posibles consecuencias."
     }
   ]
 }

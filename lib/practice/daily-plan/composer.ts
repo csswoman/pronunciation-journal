@@ -19,6 +19,7 @@ import { normalizeFalseFriendsLevel } from '@/lib/false-friends/data'
 import { buildConnectedSpeechStep, buildFalseFriendsStep, buildReaderStep, buildSentenceBuilderStep } from './async-step-builders'
 import { getEffectiveFocus } from '@/lib/learning-focus/effective-focus'
 import { buildStudyDeckStep } from './study-deck'
+import { isOptionalLinkStep } from './step-completion'
 import { DAILY_PLAN_STEP_COUNT, WORD_REVIEW_WORD_COUNT } from './constants'
 import {
   fetchAllPracticedSounds,
@@ -31,7 +32,7 @@ import {
 } from './fetchers'
 import { isBrowserOnline } from './online'
 import { fetchReaderTargetRows } from './reader-targets'
-import { dayOfYear, pickSeedSound } from './selectors'
+import { dayOfYear, pickSeedSound, getSemanticContentKey } from './selectors'
 import { biasWordsBySound } from './sound-word-bridge'
 import { selectDailyReviewWords } from './saved-priority'
 import { candidate, selectDailyCandidates } from './policy'
@@ -51,6 +52,10 @@ export type ReviewPlan = {
   totalExercises: number
   /** true si no hay nada pendiente de repasar hoy. */
   nothingDue: boolean
+}
+
+function shouldKeepNonExerciseStep(step: DailyStep): boolean {
+  return step.kind === 'word_intro' || step.kind === 'mission' || step.kind === 'reader' || isOptionalLinkStep(step)
 }
 
 export async function buildReviewPlan(userId: string): Promise<ReviewPlan> {
@@ -100,12 +105,24 @@ export async function buildReviewPlan(userId: string): Promise<ReviewPlan> {
     if (focus) steps.push({ ...focus, id: `review_sound:${targetSound.id}`, kind: 'phoneme_focus' })
   }
 
-  const totalExercises = steps.reduce((sum, s) => sum + s.exercises.length, 0)
+  // Deduplicar ejercicios cruzados a lo largo de todos los pasos
+  const seenContent = new Set<string>()
+  const dedupedSteps = steps.map(step => {
+    const exercises = step.exercises.filter((ex) => {
+      const key = getSemanticContentKey(ex)
+      if (seenContent.has(key)) return false
+      seenContent.add(key)
+      return true
+    })
+    return { ...step, exercises }
+  }).filter((step) => step.exercises.length > 0 || shouldKeepNonExerciseStep(step))
+
+  const totalExercises = dedupedSteps.reduce((sum, s) => sum + s.exercises.length, 0)
 
   return {
-    steps,
+    steps: dedupedSteps,
     totalExercises,
-    nothingDue: steps.length === 0,
+    nothingDue: dedupedSteps.length === 0,
   }
 }
 
@@ -341,8 +358,11 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     }
     if (step.kind === 'word_intro') return (step.featuredWords ?? []).map((word) => `exposure:word:${word}`)
     if (step.kind === 'word_review') return step.exercises.map((exercise) => `word-meaning:${exercise.sourceRef?.id ?? exercise.contentId}`)
-    if (step.kind === 'context_practice' || step.kind === 'reader') {
+    if (step.kind === 'context_practice') {
       return step.exercises.map((exercise) => `word-context:${exercise.sourceRef?.id ?? exercise.contentId}`)
+    }
+    if (step.kind === 'reader') {
+      return step.readerPassage ? [`reader:${step.readerPassage.id}`] : [step.id]
     }
     if (step.kind === 'study_deck' || step.kind === 'concept') return [step.id]
     return step.exercises.length > 0 ? step.exercises.map((exercise) => exercise.contentId) : [step.id]
@@ -374,9 +394,21 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     finalSteps = [...finalSteps, buildJournalDailyStep()]
   }
 
+  // Deduplicar ejercicios cruzados a lo largo de todos los pasos seleccionados
+  const seenContent = new Set<string>()
+  const dedupedFinalSteps = finalSteps.map(step => {
+    const exercises = step.exercises.filter((ex) => {
+      const key = getSemanticContentKey(ex)
+      if (seenContent.has(key)) return false
+      seenContent.add(key)
+      return true
+    })
+    return { ...step, exercises }
+  })
+
   // Session arc: narrative framing reusing data the plan already computed.
   // Topics live on generic exercise payloads (payload.data.topic).
-  const arcTopics = finalSteps.flatMap((s) =>
+  const arcTopics = dedupedFinalSteps.flatMap((s) =>
     s.exercises.map((e) => (e.payload.kind === 'generic' ? e.payload.data.topic : undefined)),
   )
   // Session words come from the day's review words (authoritative, readable text).
@@ -389,10 +421,10 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     sessionWords,
   }
 
-  const totalExercises = finalSteps.reduce((sum, s) => sum + s.exercises.length, 0)
+  const totalExercises = dedupedFinalSteps.reduce((sum, s) => sum + s.exercises.length, 0)
 
   return {
-    steps: finalSteps,
+    steps: dedupedFinalSteps,
     totalExercises,
     isNewUser: !hasWordBank && !hasProgress,
     arc,

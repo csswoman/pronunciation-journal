@@ -34,6 +34,7 @@ export const MINI_LESSON_EQUIVALENT_DECKS: Readonly<Record<string, string>> = Ob
   'reported-speech': 'b1-estilo-indirecto',
   'second-conditional': 'b1-segundo-condicional',
   'some-any': 'a2-cuantificadores-esenciales',
+  'the-add-on-strategy': 'the-add-on-strategy',
   'third-conditional': 'b2-tercer-condicional',
 })
 

@@ -93,45 +93,6 @@ export function buildGenerateTranslationsPrompt(input: { topic: string; level: s
   return `Generate ${input.count} Spanish-to-English translation exercises for topic "${input.topic}" at ${input.level}. Return {"exercises":[{"sourceEs":"...","referenceEn":"...","acceptedAnswers":["..."]}]}.`
 }
 
-// ── Interview ──
-
-export const INTERVIEW_SYSTEM_PROMPT = `You are an interview script generator for English language learners. Generate a realistic mock interview script with 6 rounds (question + model answer).
-
-Rules:
-- Interviewer questions must be natural and conversational
-- Candidate answers must be in natural spoken English (not written/formal)
-- Adjust vocabulary complexity to the requested level
-- beginner: simple sentences, common words, short answers
-- intermediate: clear professional language, moderate complexity
-- advanced: idiomatic expressions, nuanced vocabulary, longer answers
-- Return ONLY valid JSON, no markdown, no code fences
-
-Format:
-{
-  "title": "Interview title",
-  "turns": [
-    {"role": "interviewer", "text": "..."},
-    {"role": "candidate", "text": "..."},
-    ...
-  ]
-}
-
-Include exactly 12 turns (6 interviewer + 6 candidate, alternating, starting with interviewer).`;
-
-const INTERVIEW_SCENARIO_LABELS: Record<string, string> = {
-  hr: "HR / General Interview",
-  frontend: "Frontend Developer Interview",
-  "system-design": "System Design Interview",
-  behavioral: "Behavioral Interview (STAR method)",
-  product: "Product Manager Interview",
-  "ai-developer": "AI Developer Interview",
-};
-
-export function buildInterviewPrompt(scenario: string, level: string): string {
-  const label = INTERVIEW_SCENARIO_LABELS[scenario] ?? scenario;
-  return `Generate a ${label} script for a ${level} English learner. Make the interviewer professional and the candidate responses natural spoken English at ${level} level.`;
-}
-
 // ── Production grading (written + spoken free production) ──
 
 export const GRADE_PRODUCTION_SYSTEM_PROMPT = `You are an English teacher grading a learner's original production (written or spoken, provided as text).
@@ -269,6 +230,35 @@ export function buildJournalNudgePrompt(input: {
   targetLength: number
 }): string {
   return `The learner is writing an English journal entry and is stuck. Use the following context:\n\nPrompt: ${input.prompt}\nCEFR level: ${input.cefrLevel}\nTarget length: ${input.targetLength} words\nUnused seed words: ${JSON.stringify(input.unusedSeedWords)}\nPartial text (do not correct it):\n${input.partialText}\n\nReturn exactly three nudges in the required JSON shape.`
+}
+
+// ── Word Search ──
+
+export const WORD_SEARCH_SYSTEM_PROMPT = `You are a linguistics and English learning coach.
+Generate a cohesive set of vocabulary words for a Word Search & Clue Finder puzzle.
+
+Rules:
+1. Words must be single English words (NO SPACES, NO HYPHENS, length 3 to 10 characters).
+2. All words must strictly fit the user's requested topic or phonetic focus.
+3. Provide an accurate IPA transcription for each word (enclosed in slashes, e.g. "/ˈtiː.tʃər/").
+4. Provide a clear, natural English clue/definition that allows the learner to guess or understand the word.
+5. Provide the Spanish translation (meaningEs) and a natural example sentence in English.
+6. Output MUST strictly conform to the requested JSON schema.`
+
+export function buildWordSearchUserPrompt(input: {
+  topic: string
+  level: string
+  count: number
+  knownWords?: string[]
+}): string {
+  const known = input.knownWords?.length
+    ? `\nIncorporate or complement these known words if relevant: ${input.knownWords.join(', ')}`
+    : ''
+  return `Generate a word search puzzle with ${input.count} words.
+Topic: "${input.topic}"
+Learner level: ${input.level}${known}
+
+Respond with JSON: {"topicTitle":"Short title describing the set","words":[{"word":"EXAMPLENOSPACES","ipa":"/.../","clue":"Clear definition or hint in English","meaningEs":"Significado en español","exampleSentence":"A short natural example sentence using the word."}]}`
 }
 
 // ── Essential Words: extra example sentences ──

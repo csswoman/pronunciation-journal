@@ -178,7 +178,7 @@ export function SoundDetail({
 
       <div className="ipa-chart__panel-body sound-detail__body">
         {safeProgress !== undefined ? <SoundProgress progress={safeProgress} /> : null}
-        <SoundArticulation key={phoneme.symbol} articulation={articulation} />
+        <SoundArticulation key={phoneme.symbol} articulation={articulation} symbol={phoneme.symbol} />
         <SoundExamples
           examples={examples}
           speaking={speaking}

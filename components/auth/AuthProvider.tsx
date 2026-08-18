@@ -75,8 +75,16 @@ export default function AuthProvider({
       return;
     }
 
-    const supabase = getSupabaseBrowserClient();
-    const cleanupSyncListeners = initSyncListeners(user?.id ?? null);
+    // Resolve the client per call site — never close over a long-lived instance.
+    // After HMR / dep repair, a captured client can keep disposed webpack bindings
+    // and throw opaque errors like `reading 'M_ID'` on every `.from()`.
+    let cancelled = false;
+    let cleanupSyncListeners = () => {};
+    void import("@/lib/db").then(async ({ ensureDbReady }) => {
+      await ensureDbReady().catch(() => {});
+      if (cancelled) return;
+      cleanupSyncListeners = initSyncListeners(user?.id ?? null);
+    });
     const hydrateCEFR = async (userId: string) => {
       try {
         const { claimGuestPlacement } = await import("@/lib/courses/guest-assessment");
@@ -86,7 +94,7 @@ export default function AuthProvider({
         await claimGuestPlacement(userId);
         await claimGuestPronunciationDiagnostic(userId);
 
-        const { data } = await supabase
+        const { data } = await getSupabaseBrowserClient()
           .from("user_profiles" as never)
           .select("cefr_level")
           .eq("id", userId)
@@ -149,6 +157,7 @@ export default function AuthProvider({
       return { session: data.session, didBootstrap: true };
     };
 
+    const supabase = getSupabaseBrowserClient();
     supabase.auth.getSession().then(async ({ data: { session: s } }) => {
       const hadUser = Boolean(s?.user);
       const { session: resolved, didBootstrap } = hadUser
@@ -171,6 +180,7 @@ export default function AuthProvider({
     });
 
     return () => {
+      cancelled = true;
       cleanupSyncListeners();
       subscription.unsubscribe();
     };

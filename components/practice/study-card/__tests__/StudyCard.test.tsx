@@ -1,8 +1,12 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { StudyCard } from "../StudyCard";
 import type { StudyCardModel } from "@/lib/practice/study-card/model";
+
+vi.mock("@/lib/auth/session", () => ({
+  getAccessToken: vi.fn().mockResolvedValue("mock-token"),
+}));
 
 const full: StudyCardModel = {
   word: "ephemeral",
@@ -198,4 +202,46 @@ describe("StudyCard", () => {
     expect(screen.getByText('Aquí no va “the”.')).toBeInTheDocument()
     expect(screen.getByText('Cómo suena').closest('details')).not.toHaveAttribute('open')
   })
+
+  it("does not render options menu if wordId is missing or word is essential", () => {
+    const essentialModel: StudyCardModel = { word: "the", wordId: "1", isEssential: true };
+    const { rerender } = render(<StudyCard model={essentialModel} onContinue={() => {}} onListen={() => {}} />);
+    expect(screen.queryByRole("button", { name: /más opciones/i })).not.toBeInTheDocument();
+
+    const noIdModel: StudyCardModel = { word: "custom", isEssential: false };
+    rerender(<StudyCard model={noIdModel} onContinue={() => {}} onListen={() => {}} />);
+    expect(screen.queryByRole("button", { name: /más opciones/i })).not.toBeInTheDocument();
+  });
+
+  it("renders options menu, opens it and fires enrichment API on click", async () => {
+    const mockModel: StudyCardModel = { word: "custom", wordId: "uuid-123", isEssential: false };
+    const mockFetch = vi.spyOn(global, "fetch").mockResolvedValue({
+      ok: true,
+      json: async () => ({ word: { id: "uuid-123", text: "custom" } }),
+    } as Response);
+
+    render(<StudyCard model={mockModel} onContinue={() => {}} onListen={() => {}} />);
+
+    const moreBtn = screen.getByRole("button", { name: /más opciones/i });
+    expect(moreBtn).toBeInTheDocument();
+
+    fireEvent.click(moreBtn);
+
+    const enrichBtn = screen.getByRole("button", { name: /enriquecer con ia/i });
+    expect(enrichBtn).toBeInTheDocument();
+
+    fireEvent.click(enrichBtn);
+
+    await waitFor(() => {
+      expect(mockFetch).toHaveBeenCalledWith(
+        "/api/words",
+        expect.objectContaining({
+          method: "POST",
+          body: JSON.stringify({ id: "uuid-123", text: "custom" }),
+        })
+      );
+    });
+
+    mockFetch.mockRestore();
+  });
 });

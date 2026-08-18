@@ -1,0 +1,135 @@
+{
+  "meta": {
+    "eyebrow": "Chunks · Sentence Frames",
+    "title": "Plantillas de",
+    "titleEmphasis": "oraciones (Sentence Frames)",
+    "goal": "Usa estructuras fijas donde solo cambias una palabra para expresar ideas complejas con fluidez y sin traducir mentalmente."
+  },
+  "related": [
+    { "slug": "chunk-discourse-markers", "label": "Marcadores del discurso y conectores" },
+    { "slug": "chunk-language-functions", "label": "Funciones comunicativas con tacto" }
+  ],
+  "cards": [
+    {
+      "id": "frm-contraste",
+      "tag": "Contraste y matices",
+      "title": "Aclarar y contrastar ideas",
+      "lede": "Estructuras para explicar la verdadera razón detrás de una decisión.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "It's not that [A], it's just that [B]", "value": "No es que [A], es simplemente que [B] · It's not that I don't like it, it's just that it's too expensive.", "highlights": ["It's not that", "it's just that"] },
+            { "key": "The thing is that...", "value": "La cosa / El detalle es que... · The thing is that we don't have enough data yet.", "highlights": ["The thing is that"] },
+            { "key": "Rather than [doing A], I'd prefer [B]", "value": "En lugar de [A], preferiría [B] · Rather than rewriting it, let's patch it.", "highlights": ["Rather than"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Estructura estrella:",
+        "body": "\"It's not that..., it's just that...\" te permite suavizar cualquier objeción sin que la otra persona se sienta atacada."
+      }
+    },
+    {
+      "id": "frm-alcance",
+      "tag": "Alcance y temas",
+      "title": "Delimitar tu conocimiento",
+      "lede": "Fórmulas para hablar con rigor sobre lo que sabes o acotar un tema.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "As far as I know...", "value": "Hasta donde sé... · As far as I know, the server is running fine.", "highlights": ["As far as I know"] },
+            { "key": "When it comes to [noun/verb-ing]...", "value": "En lo que respecta a... · When it comes to performance, Next.js is great.", "highlights": ["When it comes to"] },
+            { "key": "In terms of [X]...", "value": "En términos de... · In terms of UX, this modal is too crowded.", "highlights": ["In terms of"] },
+            { "key": "To the best of my knowledge...", "value": "Que yo sepa / Según mi conocimiento...", "highlights": ["To the best of my knowledge"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "frm-tiempo",
+      "tag": "Proporción y secuencias",
+      "title": "Causa, efecto y proporción",
+      "lede": "Estructuras que conectan el paso del tiempo o la intensidad de dos variables.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "The more [A], the more [B]", "value": "Cuanto más [A], más [B] · The more you practice, the more confident you get.", "highlights": ["The more", "the more"] },
+            { "key": "There's no point in [verb-ing]...", "value": "No tiene sentido [hacer algo] · There's no point in rushing without a plan.", "highlights": ["There's no point in"] },
+            { "key": "By the time [X], [Y] had already...", "value": "Para cuando ocurrió [X], ya había pasado [Y] · By the time we arrived, it had started.", "highlights": ["By the time"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "frm-hipotesis",
+      "tag": "Hipótesis avanzadas",
+      "title": "Condicionales e hipótesis",
+      "lede": "Expresa escenarios hipotéticos con estructuras de nivel C1.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "If it weren't for [X], I wouldn't...", "value": "Si no fuera por [X], yo no... · If it weren't for your help, I wouldn't have finished.", "highlights": ["If it weren't for"] },
+            { "key": "Even if we [X], we still need to [Y]", "value": "Incluso si hacemos [X], todavía necesitamos [Y].", "highlights": ["Even if", "still need to"] },
+            { "key": "Had I known that, I would have...", "value": "De haberlo sabido, habría... · Had I known, I would have warned you.", "highlights": ["Had I known"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "frm-enfasis",
+      "tag": "Estructuras de énfasis",
+      "title": "Dar peso e impacto a tus ideas",
+      "lede": "Dirige la atención de tu oyente hacia el punto más importante.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "What surprises me the most is...", "value": "Lo que más me sorprende es... · What surprises me the most is the speed.", "highlights": ["What surprises me"] },
+            { "key": "Not only [A], but also [B]", "value": "No solo [A], sino también [B] · Not only is it faster, but also cheaper.", "highlights": ["Not only", "but also"] },
+            { "key": "It wasn't until [X] that I realized...", "value": "No fue sino hasta [X] que me di cuenta de...", "highlights": ["It wasn't until"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "frm-duda",
+      "tag": "Especulación y cautela",
+      "title": "Especular con precaución",
+      "lede": "Plantea probabilidades sin comprometerte al 100%.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "There's a good chance that...", "value": "Hay muchas probabilidades de que... · There's a good chance that it will pass CI.", "highlights": ["There's a good chance"] },
+            { "key": "It looks as though...", "value": "Parece como si... · It looks as though the database timed out.", "highlights": ["It looks as though"] },
+            { "key": "For all I know...", "value": "Por lo que yo sé / tal vez... · For all I know, they might approve it today.", "highlights": ["For all I know"] }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "¿Cómo dices 'Cuanto más practicas, más fácil se vuelve' con una plantilla de oración?",
+      "options": ["The more you practice, the easier it gets.", "How much you practice, so easy it is.", "More practice is more easy."],
+      "answer": 0,
+      "explain": "'The more... the more/easier...' es la estructura comparativa correlativa por excelencia."
+    },
+    {
+      "q": "¿Qué frase usarías para decir 'Hasta donde tengo conocimiento, no hay errores'?",
+      "options": ["To the best of my knowledge, there are no bugs.", "To the head of my brain, bugs are zero.", "My knowledge says no errors."],
+      "answer": 0,
+      "explain": "'To the best of my knowledge' delimita tu respuesta a lo que sabes con certeza."
+    },
+    {
+      "q": "¿Cómo expresas que no tiene sentido preocuparse por algo inevitable?",
+      "options": ["There's no point in worrying about it.", "There is no point of the worry.", "Worrying has no pencil point."],
+      "answer": 0,
+      "explain": "'There's no point in [verb-ing]' significa que una acción carece de utilidad o sentido."
+    }
+  ]
+}

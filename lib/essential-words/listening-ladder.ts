@@ -59,6 +59,7 @@ export function deriveListeningLadderLevel(
   attempts: readonly AttemptLog[],
   now: Date,
 ): ListeningLadderState {
+  void now;
   const listeningAttempts = attempts
     .filter(isListeningAttempt)
     .slice()

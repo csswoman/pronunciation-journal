@@ -85,4 +85,15 @@ describe("A1–C1 curriculum order", () => {
     expect(slugs.indexOf("c1-comparativos-dobles")).toBe(1);
   });
 
+  it.each(["a1", "a2", "b1", "b2", "c1"] as const)(
+    "gives every %s lesson a thematic reading group",
+    (level) => {
+      const entry = COURSE_PATH_CURRICULUM.levels.find((item) => item.id === level);
+      const lessons = entry?.units.flatMap((unit) => unit.lessons) ?? [];
+
+      expect(lessons.every((lesson) => Boolean(lesson.group))).toBe(true);
+      expect(new Set(lessons.map((lesson) => lesson.group)).size).toBeGreaterThan(1);
+    },
+  );
+
 });

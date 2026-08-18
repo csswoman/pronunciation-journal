@@ -40,4 +40,33 @@ describe("ensureDbReady", () => {
     expect(del).toHaveBeenCalledOnce();
     expect(open).toHaveBeenCalledTimes(3);
   });
+
+  it("retries Chrome UnknownError / DatabaseClosedError without deleting the database", async () => {
+    const closed = Object.assign(
+      new Error("UnknownError Internal error.\n UnknownError: Internal error."),
+      { name: "DatabaseClosedError" },
+    );
+    const open = vi.spyOn(db, "open");
+    open
+      .mockRejectedValueOnce(closed)
+      .mockRejectedValueOnce(closed)
+      .mockResolvedValueOnce(db);
+    const del = vi.spyOn(db, "delete");
+
+    await expect(ensureDbReady()).resolves.toBeUndefined();
+    expect(del).not.toHaveBeenCalled();
+    expect(open).toHaveBeenCalledTimes(3);
+  });
+
+  it("treats a recovered connection as ready when open() rejects but isOpen() is true", async () => {
+    const closed = Object.assign(new Error("UnknownError Internal error."), {
+      name: "DatabaseClosedError",
+    });
+    vi.spyOn(db, "open").mockRejectedValue(closed);
+    vi.spyOn(db, "isOpen").mockReturnValueOnce(false).mockReturnValue(true);
+    const del = vi.spyOn(db, "delete");
+
+    await expect(ensureDbReady()).resolves.toBeUndefined();
+    expect(del).not.toHaveBeenCalled();
+  });
 });

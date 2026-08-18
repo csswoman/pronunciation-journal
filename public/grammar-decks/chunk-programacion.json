@@ -1,0 +1,148 @@
+{
+  "meta": {
+    "eyebrow": "Chunks · Tech & Code",
+    "title": "Chunks de",
+    "titleEmphasis": "programación",
+    "goal": "Explica arquitectura, decisiones técnicas, lógica de funciones y problemas de rendimiento usando los modismos reales de la ingeniería de software."
+  },
+  "related": [
+    { "slug": "chunk-daily-standup", "label": "Daily standup en inglés" },
+    { "slug": "chunk-ux-ui", "label": "Chunks de diseño UX y UI" },
+    { "slug": "tech-ingles-programadores", "label": "Inglés para programadores" }
+  ],
+  "cards": [
+    {
+      "id": "cpr-funcionamiento",
+      "tag": "Explicar código",
+      "title": "Cómo funciona un módulo",
+      "lede": "Describe el flujo de datos y el propósito de tu código de forma concisa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Under the hood, this...", "value": "Por debajo / internamente, esto... · Under the hood, this hook manages local storage sync.", "highlights": ["Under the hood"] },
+            { "key": "It takes in... and returns...", "value": "Recibe [X] y retorna [Y] · It takes in the raw payload and returns typed entities.", "highlights": ["takes in", "returns"] },
+            { "key": "This handles the edge case where...", "value": "Esto maneja el caso borde en que... · This handles the edge case where the network drops.", "highlights": ["handles the edge case"] },
+            { "key": "It's responsible for...", "value": "Es responsable de... · This service is responsible for auth tokens.", "highlights": ["responsible for"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Expresión estrella:",
+        "body": "\"Under the hood\" (literalmente 'bajo el capó') es la frase más usada por programadores nativos para hablar de implementación interna."
+      }
+    },
+    {
+      "id": "cpr-arquitectura",
+      "tag": "Refactor y arquitectura",
+      "title": "Decisiones de diseño técnico",
+      "lede": "Propón cambios estructurales sin rodeos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "We should decouple this from...", "value": "Deberíamos desacoplar esto de... · We should decouple the UI from the API layer.", "highlights": ["decouple this from"] },
+            { "key": "Let's break this down into...", "value": "Dividamos esto en... · Let's break this down into smaller sub-components.", "highlights": ["break this down into"] },
+            { "key": "To keep things DRY / maintainable...", "value": "Para mantenerlo mantenible... · To keep things DRY, let's extract a custom hook.", "highlights": ["keep things DRY"] },
+            { "key": "This is becoming a bottleneck", "value": "Esto se está convirtiendo en un cuello de botella.", "highlights": ["becoming a bottleneck"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cpr-debugging",
+      "tag": "Bugs y depuración",
+      "title": "Diagnosticar problemas",
+      "lede": "Explica la causa raíz de un fallo sin titubear.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "The issue stems from...", "value": "El problema proviene de... · The issue stems from an unhandled null value.", "highlights": ["issue stems from"] },
+            { "key": "It fails silently when...", "value": "Falla silenciosamente cuando... · It fails silently when the token expires.", "highlights": ["fails silently"] },
+            { "key": "It triggers a race condition", "value": "Dispara una condición de carrera.", "highlights": ["race condition"] },
+            { "key": "We need to reproduce this locally", "value": "Necesitamos reproducir esto en local.", "highlights": ["reproduce this locally"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cpr-apis",
+      "tag": "APIs y estado",
+      "title": "Conectar servicios y datos",
+      "lede": "Habla de llamadas de red, estado global y persistencia.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "It relies heavily on...", "value": "Depende en gran medida de... · It relies heavily on the Supabase real-time client.", "highlights": ["relies heavily on"] },
+            { "key": "We're hitting the endpoint...", "value": "Estamos llamando al endpoint... · We're hitting the endpoint on every keystroke.", "highlights": ["hitting the endpoint"] },
+            { "key": "Let's mock this response", "value": "Simulemos esta respuesta (en tests o dev).", "highlights": ["mock this response"] },
+            { "key": "It's out of sync with...", "value": "Está desincronizado con... · The UI state is out of sync with the database.", "highlights": ["out of sync with"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cpr-reviews",
+      "tag": "Code review & PRs",
+      "title": "Hacer sugerencias en PRs",
+      "lede": "Usa un tono colaborativo y asertivo en las revisiones de código.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "This function is too big. Rewrite it." },
+            { "variant": "good", "text": "How about we extract this logic into a helper function?", "note": "sugerencia constructiva" },
+            { "variant": "bad", "text": "Why did you use any?" },
+            { "variant": "good", "text": "Would it make sense to define an explicit interface here?", "note": "invita a la reflexión" }
+          ]
+        },
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Non-blocking nit:", "value": "Comentario menor no bloqueante · Non-blocking nit: typo in the comment.", "highlights": ["Non-blocking nit"] },
+            { "key": "LGTM, ready to ship!", "value": "Looks Good To Me, ¡listo para salir a prod!", "highlights": ["LGTM", "ready to ship"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cpr-performance",
+      "tag": "Rendimiento y escala",
+      "title": "Optimización y velocidad",
+      "lede": "Argumenta mejoras de rendimiento con métricas y conceptos claros.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "It prevents unnecessary re-renders", "value": "Evita renderizados innecesarios.", "highlights": ["prevents unnecessary re-renders"] },
+            { "key": "It cuts down on bundle size", "value": "Reduce el tamaño del paquete/bundle.", "highlights": ["cuts down on bundle size"] },
+            { "key": "Let's cache this query", "value": "Guardemos esta consulta en caché · Let's cache this query in Redis.", "highlights": ["cache this query"] },
+            { "key": "We're hitting rate limits", "value": "Estamos alcanzando los límites de peticiones permitidas.", "highlights": ["hitting rate limits"] }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "¿Qué expresión describe cómo funciona algo internamente en software?",
+      "options": ["Under the hood, it uses WebSockets.", "Under the carpet, it uses WebSockets.", "Inside the motor, it uses WebSockets."],
+      "answer": 0,
+      "explain": "'Under the hood' es el modismo estándar en la industria tech para referirse a la lógica interna."
+    },
+    {
+      "q": "¿Cómo sugieres educadamente en un PR dividir una función?",
+      "options": ["How about we break this down into smaller helpers?", "Your function is bad, change it now.", "I force you to split the code."],
+      "answer": 0,
+      "explain": "'How about we break this down into...?' es la forma profesional y colaborativa de proponer un refactor."
+    },
+    {
+      "q": "Si un bug ocurre porque dos peticiones compiten entre sí en orden impredecible, dices:",
+      "options": ["It's causing a race condition.", "It's running a fast problem.", "The queries are fighting."],
+      "answer": 0,
+      "explain": "'Race condition' (condición de carrera) es el término técnico universal para este problema de concurrencia."
+    }
+  ]
+}

@@ -2,39 +2,39 @@
   "slug": "collocations-make-do",
   "sections": [
     {
-      "heading": "The rough rule",
-      "body": "'Make' tends to involve creating, producing, or causing something to come into existence. 'Do' tends to involve activities, tasks, and processes — things you perform or carry out."
+      "heading": "La regla aproximada",
+      "body": "\"Hacer\" tiende a implicar crear, producir o hacer que algo llegue a existir. 'Hacer' tiende a involucrar actividades, tareas y procesos: cosas que usted realiza o lleva a cabo."
     },
     {
-      "heading": "Make collocations",
-      "body": "make a decision, make a mistake, make money, make a suggestion, make progress, make an effort, make a phone call, make a reservation, make friends, make sense, make a noise, make an excuse."
+      "heading": "hacer colocaciones",
+      "body": "tomar una decisión, cometer un error, ganar dinero, hacer una sugerencia, progresar, hacer un esfuerzo, hacer una llamada telefónica, hacer una reserva, hacer amigos, tener sentido, hacer ruido, poner una excusa."
     },
     {
-      "heading": "Do collocations",
-      "body": "do homework, do research, do your best, do exercise, do the dishes, do someone a favor, do damage, do business, do your hair, do a course, do well/badly, do without."
+      "heading": "hacer colocaciones",
+      "body": "hacer la tarea, investigar, hacer lo mejor que puedas, hacer ejercicio, lavar los platos, hacerle un favor a alguien, hacer daño, hacer negocios, peinarte, hacer un curso, hacerlo bien/mal, prescindir."
     }
   ],
   "examples": [
     {
       "english": "She made an important decision.",
-      "note": "Not 'did a decision'"
+      "note": "No 'tomé una decisión'"
     },
     {
       "english": "He does research at a university.",
-      "note": "Not 'makes research'"
+      "note": "No 'hace investigación'"
     },
     {
       "english": "You made a mistake.",
-      "note": "Not 'did a mistake'"
+      "note": "No 'cometí un error'"
     },
     {
       "english": "I'll do my best.",
-      "note": "Fixed expression with 'do'"
+      "note": "Expresión fija con 'do'"
     }
   ],
   "exercises": [
     {
-      "instruction": "Make or do?",
+      "instruction": "¿Hacer o hacer?",
       "items": [
         "___ a suggestion",
         "___ the laundry",
@@ -44,26 +44,26 @@
         "___ exercise"
       ],
       "answers": [
-        "make",
-        "do",
-        "make",
-        "do",
-        "make",
-        "do"
+        "hacer",
+        "hacer",
+        "hacer",
+        "hacer",
+        "hacer",
+        "hacer"
       ]
     }
   ],
   "quiz": [
     {
-      "question": "Which sentence is correct?",
+      "question": "¿Qué oración es correcta?",
       "options": [
-        "I did a mistake.",
-        "I made a mistake.",
-        "I made the dishes.",
-        "I did a suggestion."
+        "Cometí un error.",
+        "Cometí un error.",
+        "Yo hice los platos.",
+        "Hice una sugerencia."
       ],
       "correct": 1,
-      "explanation": "'Make a mistake' is a fixed collocation. 'Do' is used with 'the dishes' and 'do' activities."
+      "explanation": "'Cometer un error' es una colocación fija. \"Hacer\" se utiliza con las actividades \"los platos\" y \"hacer\"."
     }
   ]
 }

@@ -2,66 +2,64 @@
   "slug": "intonation-questions",
   "sections": [
     {
-      "heading": "Rising intonation ↗",
-      "body": "Rising intonation signals that something is open, unfinished, or invites a response. Yes/No questions rise at the end because the speaker doesn't know the answer. Also used in lists (except the final item) and in question tags when genuinely asking."
+      "heading": "Entonación ascendente ↗",
+      "body": "La entonación ascendente indica que algo está abierto, inacabado o invita a una respuesta. Las preguntas de Sí/No surgen al final porque el hablante no sabe la respuesta. También se usa en listas (excepto el elemento final) y en etiquetas de preguntas cuando se pregunta genuinamente."
     },
     {
-      "heading": "Falling intonation ↘",
-      "body": "Falling intonation signals completion, certainty, or conclusion. Wh- questions (who, what, where, when, why, how) fall — the speaker expects information, not just yes/no. Statements also fall when the speaker is confident."
+      "heading": "Entonación descendente ↘",
+      "body": "La entonación descendente indica finalización, certeza o conclusión. Las preguntas W (quién, qué, dónde, cuándo, por qué, cómo) caen: el hablante espera información, no solo sí o no. Las declaraciones también caen cuando el hablante tiene confianza."
     },
     {
-      "heading": "Intonation and attitude",
-      "body": "The same words with different intonation can convey very different attitudes. A flat or falling 'really?' sounds skeptical or uninterested. A rising 'really?' sounds surprised and engaged. Intonation carries enormous pragmatic weight in English."
+      "heading": "Entonación y actitud.",
+      "body": "Las mismas palabras con diferente entonación pueden transmitir actitudes muy diferentes. Un piso o una caída '¿en serio?' Suena escéptico o desinteresado. Un creciente '¿en serio?' Suena sorprendido y comprometido. La entonación tiene un enorme peso pragmático en inglés."
     }
   ],
   "examples": [
     {
       "english": "Are you coming? ↗",
-      "note": "Yes/no question — rising"
+      "note": "Sí/no pregunta - en aumento"
     },
     {
       "english": "Where are you going? ↘",
-      "note": "Wh- question — falling"
+      "note": "Pregunta: caer"
     },
     {
       "english": "Coffee, tea, ↗ or water? ↘",
-      "note": "List: rise on each item, fall on last"
+      "note": "Lista: subir en cada elemento, caer en el último"
     },
     {
       "english": "It's cold today, isn't it? ↘",
-      "note": "Tag question confirming — falling"
+      "note": "Pregunta de etiqueta confirmando - cayendo"
     }
   ],
   "exercises": [
     {
-      "instruction": "Mark each with ↗ (rising) or ↘ (falling).",
+      "instruction": "State whether the intonation rises (↗) or falls (↘) for each question type.",
       "items": [
-        "What time does it start?",
-        "Is this seat taken?",
-        "Who called?",
-        "Did you enjoy the film?",
-        "How do you spell that?"
+        "Are you coming to the party? (yes/no question)",
+        "Where do you live? (wh- question)",
+        "You've met him before, haven't you? (tag question, expecting confirmation)",
+        "It's cold today, isn't it? (tag question, genuine uncertainty)"
       ],
       "answers": [
-        "↘ (wh-question)",
-        "↗ (yes/no question)",
-        "↘ (wh-question)",
-        "↗ (yes/no question)",
-        "↘ (wh-question)"
+        "↗ Rising — yes/no questions typically end with rising intonation.",
+        "↘ Falling — wh- questions typically end with falling intonation.",
+        "↘ Falling — when the speaker is fairly sure and seeking confirmation.",
+        "↗ Rising — when the speaker is genuinely uncertain."
       ]
     }
   ],
   "quiz": [
     {
-      "question": "A rising intonation on a question tag means:",
+      "question": "Una entonación ascendente en una etiqueta de interrogación significa:",
       "options": [
-        "You're certain of the answer",
-        "You're genuinely asking and not sure of the answer",
-        "You're being sarcastic",
-        "You're annoyed"
+        "Estás seguro de la respuesta.",
+        "Estás preguntando genuinamente y no estás seguro de la respuesta.",
+        "estas siendo sarcástico",
+        "estas molesto"
       ],
       "correct": 1,
-      "explanation": "Rising intonation on a question tag signals genuine uncertainty — you really want confirmation."
+      "explanation": "La entonación ascendente en una etiqueta de interrogación indica una incertidumbre genuina: realmente desea confirmación."
     }
   ]
 }

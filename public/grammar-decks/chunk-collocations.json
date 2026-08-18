@@ -1,0 +1,157 @@
+{
+  "meta": {
+    "eyebrow": "Chunks · Collocations",
+    "title": "Colocaciones",
+    "titleEmphasis": "naturales en inglés",
+    "goal": "Aprende qué combinaciones de palabras van juntas de forma natural con Make, Do, Take, Have y Pay para no traducir literalmente del español."
+  },
+  "related": [
+    { "slug": "chunk-phrasal-verbs", "label": "Phrasal Verbs de uso diario" },
+    { "slug": "chunk-sentence-frames", "label": "Plantillas de oraciones" }
+  ],
+  "cards": [
+    {
+      "id": "col-make-do",
+      "tag": "Make vs. Do",
+      "title": "Colocaciones con Make y Do",
+      "lede": "En español decimos 'hacer', pero en inglés cada verbo tiene parejas fijas e innegociables.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Make a decision", "value": "Tomar una decisión (nunca *take a decision*) · Let's make a decision today.", "highlights": ["Make a decision"] },
+            { "key": "Make a mistake", "value": "Cometer un error · Everyone makes mistakes.", "highlights": ["Make a mistake"] },
+            { "key": "Make progress", "value": "Avanzar / Progresar · We are making good progress.", "highlights": ["making good progress"] },
+            { "key": "Do business", "value": "Hacer negocios · It's a pleasure to do business with you.", "highlights": ["do business"] },
+            { "key": "Do someone a favor", "value": "Hacer un favor a alguien · Could you do me a favor?", "highlights": ["do me a favor"] },
+            { "key": "Do your best", "value": "Dar lo mejor de ti · Just do your best.", "highlights": ["do your best"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Regla nemotécnica:",
+        "body": "\"Make\" suele asociarse a crear, producir o decidir. \"Do\" se asocia a acciones, tareas, deberes o favores."
+      }
+    },
+    {
+      "id": "col-take-have",
+      "tag": "Take vs. Have",
+      "title": "Colocaciones con Take y Have",
+      "lede": "Acciones cotidianas que se expresan mediante bloques verbales naturales.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Take a risk / chance", "value": "Arriesgarse / Tomar un riesgo · We need to take a calculated risk.", "highlights": ["take a risk"] },
+            { "key": "Take into account", "value": "Tomar en cuenta / considerar · Take user feedback into account.", "highlights": ["Take into account"] },
+            { "key": "Take a break", "value": "Tomar un descanso · Let's take a 5-minute break.", "highlights": ["take a break"] },
+            { "key": "Have a look", "value": "Echar un vistazo · Can you have a look at this PR?", "highlights": ["have a look"] },
+            { "key": "Have a word with", "value": "Cruzar unas palabras / hablar con alguien · Can I have a quick word with you?", "highlights": ["have a word"] },
+            { "key": "Have second thoughts", "value": "Tener dudas de una decisión previa.", "highlights": ["second thoughts"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "col-pay-give",
+      "tag": "Pay vs. Give",
+      "title": "Colocaciones con Pay y Give",
+      "lede": "'Pay' no solo es pagar dinero y 'Give' crea fórmulas de cortesía.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Pay attention", "value": "Prestar atención · Please pay close attention to this step.", "highlights": ["Pay attention"] },
+            { "key": "Pay a compliment", "value": "Hacer un cumplido / halagar a alguien.", "highlights": ["Pay a compliment"] },
+            { "key": "Pay a visit", "value": "Hacer una visita · I'll pay them a visit tomorrow.", "highlights": ["pay a visit"] },
+            { "key": "Give a hand", "value": "Dar una mano / ayudar · Could you give me a hand?", "highlights": ["give me a hand"] },
+            { "key": "Give it a shot", "value": "Intentarlo / darle una oportunidad · Let's give it a shot.", "highlights": ["Give it a shot"] },
+            { "key": "Give someone a ride", "value": "Llevar a alguien en auto · I can give you a ride home.", "highlights": ["give you a ride"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "col-adverb-adj",
+      "tag": "Adverbio + Adjetivo",
+      "title": "Intensificadores elegantes",
+      "lede": "Combina adverbios precisos con adjetivos en vez de decir 'very' para todo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Deeply concerned", "value": "Profundamente preocupado · We are deeply concerned about latency.", "highlights": ["Deeply concerned"] },
+            { "key": "Highly likely", "value": "Muy probable (casi seguro) · It's highly likely to pass tests.", "highlights": ["Highly likely"] },
+            { "key": "Fully aware", "value": "Totalmente consciente · I'm fully aware of the trade-offs.", "highlights": ["Fully aware"] },
+            { "key": "Utterly exhausted", "value": "Completamente agotado/a · After the launch, I was utterly exhausted.", "highlights": ["Utterly exhausted"] },
+            { "key": "Perfectly clear", "value": "Totalmente claro · Is the requirement perfectly clear?", "highlights": ["Perfectly clear"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "col-adj-noun",
+      "tag": "Adjetivo + Sustantivo",
+      "title": "Parejas descriptivas obligadas",
+      "lede": "Adjetivos que los nativos emparejan naturalmente con ciertos sustantivos.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "Strong rain", "note": "antinatural" },
+            { "variant": "good", "text": "Heavy rain / Heavy traffic", "note": "colocación correcta" },
+            { "variant": "bad", "text": "Quick coffee", "note": "no describe intensidad" },
+            { "variant": "good", "text": "Strong coffee", "note": "café cargado / fuerte" },
+            { "variant": "bad", "text": "Fast look", "note": "calco del español" },
+            { "variant": "good", "text": "Quick glance / Quick look", "note": "mirada rápida" }
+          ]
+        },
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Rough estimate", "value": "Estimación aproximada · Just give me a rough estimate.", "highlights": ["Rough estimate"] },
+            { "key": "High priority", "value": "Alta prioridad · This bug is high priority.", "highlights": ["High priority"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "col-verb-noun",
+      "tag": "Verbo + Sustantivo",
+      "title": "Acciones de alto nivel profesional",
+      "lede": "Verbos que elevan de inmediato la calidad de tu inglés en debates y reportes.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Bear in mind", "value": "Tener en mente / presente · Bear in mind that mobile users are the majority.", "highlights": ["Bear in mind"] },
+            { "key": "Raise a question / concern", "value": "Plantear una duda o inquietud · I'd like to raise a concern.", "highlights": ["Raise a question"] },
+            { "key": "Meet a deadline", "value": "Cumplir con un plazo de entrega · We worked hard to meet the deadline.", "highlights": ["meet the deadline"] },
+            { "key": "Draw a conclusion", "value": "Llegar a una conclusión · It's too early to draw conclusions.", "highlights": ["draw a conclusion"] },
+            { "key": "Cast doubt on", "value": "Poner en duda · The new data casts doubt on our theory.", "highlights": ["casts doubt on"] }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "¿Cómo se dice correctamente 'tomar una decisión' en inglés?",
+      "options": ["Make a decision", "Take a decision", "Do a decision"],
+      "answer": 0,
+      "explain": "La colocación natural en inglés es 'make a decision' (nunca 'take')."
+    },
+    {
+      "q": "¿Qué expresión describe lluvia torrencial o tráfico pesado?",
+      "options": ["Heavy rain / Heavy traffic", "Strong rain / Hard traffic", "Big rain / Tall traffic"],
+      "answer": 0,
+      "explain": "En inglés se utiliza el adjetivo 'heavy' para lluvia densa y tráfico congestionado."
+    },
+    {
+      "q": "¿Qué significa 'bear in mind that...' en una conversación técnica?",
+      "options": ["Ten presente / considera que...", "Dibuja un oso pensando en...", "Olvida por completo que..."],
+      "answer": 0,
+      "explain": "'Bear in mind' es una colocación formal para pedir que se tome en consideración un hecho importante."
+    }
+  ]
+}

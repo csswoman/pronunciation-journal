@@ -2,52 +2,52 @@
   "slug": "th-sounds",
   "sections": [
     {
-      "heading": "Two sounds, one spelling",
-      "body": "The letters 'th' represent two distinct phonemes in English: the voiceless /θ/ (as in 'think') and the voiced /ð/ (as in 'this'). Both require the same mouth position — tongue near or between the upper and lower front teeth — but only /ð/ involves vocal cord vibration."
+      "heading": "Dos sonidos, una ortografía",
+      "body": "Las letras 'th' representan dos fonemas distintos en inglés: el sordo /θ/ (como en 'think') y el sonoro /ð/ (como en 'this'). Ambos requieren la misma posición de la boca (lengua cerca o entre los dientes frontales superiores e inferiores), pero solo /ð/ implica vibración de las cuerdas vocales."
     },
     {
-      "heading": "How to produce them",
-      "body": "Place the tip of your tongue lightly against the back of your upper front teeth (interdental position). For /θ/: push air out without voicing — like a sustained 's' but with the tongue forward. For /ð/: add voicing — you should feel vibration in your throat and tongue."
+      "heading": "como producirlos",
+      "body": "Coloque la punta de la lengua ligeramente contra la parte posterior de los dientes frontales superiores (posición interdental). Para /θ/: expulsa el aire sin expresarlo, como una 's' sostenida pero con la lengua hacia adelante. Para /ð/: agregue voz: debe sentir vibraciones en la garganta y la lengua."
     },
     {
-      "heading": "Which words use which?",
-      "body": "**Voiceless /θ/:** think, thank, through, three, throw, tooth, bath, math, cloth, both, truth. **Voiced /ð/:** this, that, the, these, those, there, then, though, with, bathe, breathe, smooth. A useful shortcut: most function words (the, this, that, they, them, their, there, then, though) use voiced /ð/."
+      "heading": "¿Qué palabras usan cuál?",
+      "body": "**Sin voz /θ/:** pensar, agradecer, a través de, tres, tirar, diente, baño, matemáticas, tela, ambos, verdad. **Expresado /ð/:** esto, aquello, el, estos, aquellos, allí, entonces, aunque, con, bañarse, respirar, suavizar. Un atajo útil: la mayoría de las palabras funcionales (aunque el, esto, aquello, ellos, ellos, allí, entonces) usan /ð/ sonora."
     },
     {
-      "heading": "Common substitutions and why they cause problems",
-      "body": "Spanish speakers often substitute /t/ or /d/ for the TH sounds, producing 'tink' for 'think' or 'dis' for 'this'. These are intelligible but noticeable. The substitution of /f/ or /v/ (common in some English dialects: 'fink', 'bruvver') also exists natively but may not be the target for learners."
+      "heading": "Sustituciones comunes y por qué causan problemas",
+      "body": "Los hispanohablantes a menudo sustituyen /t/ o /d/ por los sonidos TH, produciendo 'tink' por 'think' o 'dis' por 'this'. Estos son inteligibles pero perceptibles. La sustitución de /f/ o /v/ (común en algunos dialectos ingleses: 'fink', 'bruvver') también existe de forma nativa, pero puede no ser el objetivo de los estudiantes."
     }
   ],
   "examples": [
     {
       "english": "think / this",
       "ipa": "/θɪŋk/ · /ðɪs/",
-      "note": "Minimal pair for the two TH sounds"
+      "note": "Par mínimo para los dos sonidos TH"
     },
     {
       "english": "bath / bathe",
       "ipa": "/bæθ/ · /beɪð/",
-      "note": "Noun vs. verb — voiceless vs. voiced"
+      "note": "Sustantivo versus verbo: sordo versus sonoro"
     },
     {
       "english": "teeth / teethe",
       "ipa": "/tiːθ/ · /tiːð/",
-      "note": "Same pattern: noun voiceless, verb voiced"
+      "note": "Mismo patrón: sustantivo sordo, verbo sonoro"
     },
     {
       "english": "three",
       "ipa": "/θriː/",
-      "note": "Voiceless — content word"
+      "note": "Sin voz: palabra de contenido"
     },
     {
       "english": "the",
       "ipa": "/ðə/",
-      "note": "Voiced — function word"
+      "note": "Expresado - palabra funcional"
     }
   ],
   "exercises": [
     {
-      "instruction": "Sort these words into /θ/ (voiceless) or /ð/ (voiced).",
+      "instruction": "Write whether each word contains the voiced /ð/ or voiceless /θ/ sound.",
       "items": [
         "though",
         "thunder",
@@ -66,32 +66,32 @@
         "/θ/ voiceless",
         "/ð/ voiced",
         "/θ/ voiceless",
-        "/θ/ voiceless (también /ð/ según el acento)"
+        "/θ/ voiceless (also /ð/ in some accents)"
       ]
     }
   ],
   "quiz": [
     {
-      "question": "The /ð/ sound is called 'voiced' because:",
+      "question": "El sonido /ð/ se llama 'sonoro' porque:",
       "options": [
-        "It's louder than /θ/",
-        "Your vocal cords vibrate when producing it",
-        "It appears more often in English",
-        "It's used in content words"
+        "Es más fuerte que /θ/",
+        "Tus cuerdas vocales vibran al producirlo.",
+        "Aparece más a menudo en inglés.",
+        "Se usa en palabras de contenido."
       ],
       "correct": 1,
-      "explanation": "'Voiced' means the vocal cords vibrate. You can test this by placing a finger on your throat — you'll feel vibration for /ð/ but not for /θ/."
+      "explanation": "\"Sonoro\" significa que las cuerdas vocales vibran. Puedes probar esto colocando un dedo en tu garganta; sentirás la vibración de /ð/ pero no de /θ/."
     },
     {
-      "question": "Which group of words almost always uses voiced /ð/?",
+      "question": "¿Qué grupo de palabras casi siempre usa /ð/? sonora?",
       "options": [
-        "Nouns and adjectives",
-        "Function words (the, this, that, they)",
-        "Words ending in -th",
-        "Words starting with thr-"
+        "Sustantivos y adjetivos",
+        "Palabras funcionales (el, esto, aquello, ellos)",
+        "Palabras terminadas en -th",
+        "Palabras comenzando con thr-"
       ],
       "correct": 1,
-      "explanation": "Function words like 'the', 'this', 'that', 'they', 'them', 'there' consistently use voiced /ð/."
+      "explanation": "Las palabras funcionales como 'el', 'esto', 'aquello', 'ellos', 'ellos', 'allí' usan consistentemente /ð/ sonora."
     }
   ]
 }

@@ -2,13 +2,8 @@
 
 // Planned structure:
 // <MatchPairsExercise>
-//   <MatchPairsHint />
-//   <MatchPairsProgress />
-//   <PairsBoard>
-//     <LeftColumn />   — term cards with color dot
-//     <SVG lines />    — connector curves
-//     <RightColumn />  — definition cards with matching dot
-//   </PairsBoard>
+//   <MatchPairsStatus />
+//   <MatchPairsBoard />
 //   <CheckButton />
 // </MatchPairsExercise>
 
@@ -24,6 +19,7 @@ import {
   type MatchConnection,
   type MatchResult,
 } from './MatchPairsBoard'
+import { MATCH_DOT_COLORS, MatchPairsStatus } from './MatchPairsStatus'
 
 interface Props {
   exercise: MatchPairsExerciseType
@@ -34,15 +30,6 @@ interface Props {
     extras?: { feedback?: ReturnType<typeof buildPedagogicalFeedback> },
   ) => void
 }
-
-const DOT_COLORS = [
-  'oklch(0.65 0.18 25)',
-  'oklch(0.65 0.18 250)',
-  'oklch(0.65 0.18 310)',
-  'oklch(0.65 0.16 145)',
-  'oklch(0.70 0.18 55)',
-  'oklch(0.65 0.16 185)',
-]
 
 const useIsoLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect
 
@@ -69,7 +56,7 @@ export function MatchPairsExercise({ exercise, onResult }: Props) {
   const matchedCount = Object.keys(matches).length
   const totalCount = exercise.pairs.length
   const pairColor = (leftId: string) =>
-    DOT_COLORS[exercise.pairs.findIndex((p) => p.id === leftId) % DOT_COLORS.length]
+    MATCH_DOT_COLORS[exercise.pairs.findIndex((p) => p.id === leftId) % MATCH_DOT_COLORS.length]
 
   const unmatch = (leftId: string) =>
     setMatches((prev) => {
@@ -207,24 +194,13 @@ export function MatchPairsExercise({ exercise, onResult }: Props) {
 
   return (
     <div className="mx-auto flex w-full max-w-xl flex-col items-center gap-3 sm:gap-4">
-      {!submitted && (
-        <p className="m-0 w-full text-pretty text-center text-body-sm leading-snug text-fg-muted sm:text-body-sm">
-          Relaciona cada término con su definición. Las definiciones están mezcladas.
-        </p>
-      )}
-
-      {!submitted && (matchedCount > 0 || selectedTerm || armedDefinition) && (
-        <p
-          className="m-0 animate-state-in text-center text-caption font-medium tabular-nums text-fg-subtle"
-          aria-live="polite"
-        >
-          {selectedTerm
-            ? `Ahora elige la definición de “${selectedTerm}”`
-            : armedDefinition
-              ? 'Ahora elige el término que coincide'
-              : `${matchedCount} de ${totalCount} emparejados`}
-        </p>
-      )}
+      <MatchPairsStatus
+        submitted={submitted}
+        matchedCount={matchedCount}
+        totalCount={totalCount}
+        selectedTerm={selectedTerm}
+        armedDefinition={armedDefinition}
+      />
 
       <MatchPairsBoard
         pairs={exercise.pairs}

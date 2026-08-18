@@ -7,6 +7,7 @@
 // </ChromeMicTip>
 
 import { useEffect, useState } from "react";
+import { Info } from "@/components/icons";
 import { cn } from "@/lib/cn";
 import { isWebSpeechReliable } from "@/lib/speech/adapters/webSpeechAdapter";
 import {
@@ -37,6 +38,7 @@ export default function ChromeMicTip({
   className,
 }: ChromeMicTipProps) {
   const [visible, setVisible] = useState(variant === "login");
+  const [detailsOpen, setDetailsOpen] = useState(false);
 
   useEffect(() => {
     if (variant === "login") {
@@ -56,21 +58,32 @@ export default function ChromeMicTip({
     return (
       <aside
         className={cn(
-          "flex flex-col gap-2 rounded-lg border border-border-subtle bg-surface-sunken px-4 py-4",
+          "flex items-start gap-2.5 text-caption text-fg-muted",
           className,
         )}
         role="note"
-        aria-labelledby="chrome-mic-login-title"
+        aria-label="Compatibilidad del micrófono"
       >
-        <p
-          id="chrome-mic-login-title"
-          className="font-label font-semibold text-balance text-fg"
-        >
-          {CHROME_MIC_BANNER_TITLE_ES}
-        </p>
-        <p className="font-body-sm max-w-[60ch] text-pretty text-fg-muted">
-          {CHROME_MIC_TIP_ES}
-        </p>
+        <Info className="mt-0.5 size-4 shrink-0 text-fg-subtle" aria-hidden="true" />
+        <div className="min-w-0">
+          <p>
+            La práctica con micrófono funciona mejor en Google Chrome.{" "}
+            <button
+              type="button"
+              aria-expanded={detailsOpen}
+              aria-controls="chrome-mic-login-details"
+              onClick={() => setDetailsOpen((open) => !open)}
+              className="font-medium text-fg underline decoration-border-strong underline-offset-2 transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            >
+              {detailsOpen ? "Ver menos" : "Ver más"}
+            </button>
+          </p>
+          {detailsOpen ? (
+            <p id="chrome-mic-login-details" className="mt-2 max-w-[60ch] text-pretty">
+              {CHROME_MIC_TIP_ES}
+            </p>
+          ) : null}
+        </div>
       </aside>
     );
   }

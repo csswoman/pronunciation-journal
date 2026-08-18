@@ -37,8 +37,9 @@ export async function proxy(request: NextRequest) {
     }
   );
 
-  // Refreshes the session token — do not remove this call
-  await supabase.auth.getUser();
+  // Validates JWT / refreshes when needed (local JWKS when asymmetric keys).
+  // Prefer getClaims over getUser — getUser always hits the Auth API and adds TTFB.
+  await supabase.auth.getClaims();
 
   return supabaseResponse;
 }

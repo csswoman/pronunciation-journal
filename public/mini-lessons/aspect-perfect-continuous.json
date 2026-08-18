@@ -4,9 +4,9 @@
   "level": "intermediate",
   "category": "grammar",
   "duration": 6,
-  "title": "Present Perfect Continuous",
-  "subtitle": "Grammar of the day",
-  "body": "Use this tense for actions that started in the past and are still ongoing — especially when you want to emphasize the duration or a visible result.",
+  "title": "Presente perfecto continuo",
+  "subtitle": "Gramática del día",
+  "body": "Usa este tiempo verbal para hablar de acciones que comenzaron en el pasado y que continúan hasta el presente, o que acaban de terminar y sus efectos son visibles ahora. Es perfecto para enfatizar la duración de una actividad o un resultado reciente.",
   "examples": [
     {
       "word": "I've been studying for 3 hours.",
@@ -17,5 +17,6 @@
       "translation": "resultado visible — ojos rojos"
     }
   ],
+  "tip": "Recuerda que con verbos de estado (state verbs) como 'know', 'love', 'understand', etc., generalmente NO usamos el Presente Perfecto Continuo, sino el Presente Perfecto Simple. Por ejemplo: 'I have known him for ten years', no 'I have been knowing him'.",
   "href": "/mini-lessons/aspect-perfect-continuous"
 }

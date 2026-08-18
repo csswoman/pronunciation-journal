@@ -4,21 +4,37 @@
   "level": "intermediate",
   "category": "idioms",
   "duration": 5,
-  "title": "Time idioms every intermediate speaker should know",
-  "subtitle": "Idioms of the day",
-  "body": "These idioms about time appear constantly in everyday speech, podcasts, and writing.",
+  "title": "Modismos de tiempo que todo hablante intermedio debería saber",
+  "subtitle": "Modismos del día",
+  "body": "Estos modismos sobre el tiempo aparecen constantemente en el habla, los podcasts y los escritos cotidianos.",
   "examples": [
     {
+      "word": "from time to time",
+      "translation": "de vez en cuando"
+    },
+    {
+      "word": "in no time",
+      "translation": "ya mismo / de inmediato"
+    },
+    {
+      "word": "any time now",
+      "translation": "en cualquier momento / pronto"
+    },
+    {
+      "word": "have a good time",
+      "translation": "pasarla bien"
+    },
+    {
+      "word": "screw up big time",
+      "translation": "recagarla"
+    },
+    {
+      "word": "before your time",
+      "translation": "antes de que nacieras / antes de tu época"
+    },
+    {
       "word": "in the nick of time",
-      "translation": "justo a tiempo"
-    },
-    {
-      "word": "once in a blue moon",
-      "translation": "muy raramente"
-    },
-    {
-      "word": "against the clock",
-      "translation": "con prisa, con el tiempo encima"
+      "translation": "justo a tiempo / a las justas"
     }
   ],
   "href": "/mini-lessons/idioms-time"

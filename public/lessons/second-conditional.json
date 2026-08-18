@@ -2,64 +2,64 @@
   "slug": "second-conditional",
   "sections": [
     {
-      "heading": "Structure and meaning",
-      "body": "If + past simple, would + infinitive. The second conditional describes unreal or unlikely situations in the present or future. The past tense in the if-clause doesn't refer to the past — it creates 'distance' from reality."
+      "heading": "Estructura y significado",
+      "body": "Si + pasado simple, sería + infinitivo. El segundo condicional describe situaciones irreales o improbables en el presente o futuro. El tiempo pasado en la cláusula si no se refiere al pasado: crea una \"distancia\" de la realidad."
     },
     {
-      "heading": "Were, not was",
-      "body": "In formal English and in careful speech, use 'were' for all persons in second conditional if-clauses: 'If I were you...', 'If she were here...', 'If it were possible...'. 'Was' is increasingly accepted informally, but 'were' is the safe choice."
+      "heading": "fueron, no fueron",
+      "body": "En inglés formal y en un habla cuidadosa, use 'were' para todas las personas en las cláusulas condicionales segundas si: 'If I was you...', 'If she we are here...', 'If it was possible...'. \"Fue\" se acepta cada vez más de manera informal, pero \"fueron\" es la opción segura."
     },
     {
-      "heading": "Giving advice",
-      "body": "'If I were you, I would...' is the standard structure for advice. It's extremely common and useful in both professional and personal contexts."
+      "heading": "dando consejos",
+      "body": "'Si yo fuera tú, haría...' es la estructura estándar para un consejo. Es extremadamente común y útil tanto en contextos profesionales como personales."
     }
   ],
   "examples": [
     {
       "english": "If I had more time, I'd learn the piano.",
-      "note": "Unreal present — I don't have more time"
+      "note": "Presente irreal: no tengo más tiempo"
     },
     {
       "english": "If she were taller, she could be a model.",
-      "note": "Formal 'were' for all persons"
+      "note": "'We' formal para todas las personas"
     },
     {
       "english": "If I were you, I'd apologize immediately.",
-      "note": "Advice formula"
+      "note": "Fórmula de asesoramiento"
     },
     {
       "english": "What would you do if you won the lottery?",
-      "note": "Unlikely hypothetical"
+      "note": "Improbable hipotético"
     }
   ],
   "exercises": [
     {
-      "instruction": "Complete with second conditional.",
+      "instruction": "Complete each second conditional sentence with the correct verb forms.",
       "items": [
         "If I ___ (be) you, I ___ (tell) him the truth.",
-        "She ___ (travel) more if she ___ (have) money.",
+        "She ___ (travel) more if she ___ (have) more money.",
         "If he ___ (study) medicine, he ___ (become) a doctor.",
         "What ___ you ___ (do) if you ___ (lose) your job?"
       ],
       "answers": [
         "were / would tell",
         "would travel / had",
-        "would have become / had studied",
+        "studied / would become",
         "would you do / lost"
       ]
     }
   ],
   "quiz": [
     {
-      "question": "The second conditional describes:",
+      "question": "El segundo condicional describe:",
       "options": [
-        "Real, likely future situations",
-        "Unreal or hypothetical present/future situations",
-        "Past regrets",
-        "Permanent universal truths"
+        "Situaciones futuras reales y probables",
+        "Situaciones presentes/futuras irreales o hipotéticas",
+        "arrepentimientos pasados",
+        "Verdades universales permanentes"
       ],
       "correct": 1,
-      "explanation": "Second conditional = imaginary or unlikely present/future. The past form in the if-clause signals distance from reality."
+      "explanation": "Segundo condicional = presente/futuro imaginario o improbable. La forma pasada en la cláusula si indica distancia de la realidad."
     }
   ]
 }

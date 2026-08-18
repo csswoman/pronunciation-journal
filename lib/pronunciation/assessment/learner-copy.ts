@@ -37,6 +37,36 @@ const LEARNER_COPY_BY_ID: Readonly<Record<string, LearnerTargetCopy>> = Object.f
     ipaHint: 'ɪ / iː',
     speakCue: 'This sheep is on the ship',
   },
+  [contrastTargetId('/b/', '/v/')]: {
+    title: 'B vs V en inglés',
+    ipaHint: 'b / v',
+    speakCue: 'very big berry',
+    plainHint: 'En inglés la V se pronuncia mordiendo el labio inferior con los dientes.',
+  },
+  [contrastTargetId('/æ/', '/ʌ/')]: {
+    title: 'cat vs cut',
+    ipaHint: 'æ / ʌ',
+    speakCue: 'The cat cut the rope',
+    plainHint: '/æ/ es una sonrisa abierta; /ʌ/ es una vocal corta y relajada.',
+  },
+  [contrastTargetId('/s/', '/z/')]: {
+    title: 'S sorda vs Z sonora',
+    ipaHint: 's / z',
+    speakCue: 'The price and the prize',
+    plainHint: 'La Z vibra en la garganta como el zumbido de una abeja.',
+  },
+  [contrastTargetId('/ʃ/', '/tʃ/')]: {
+    title: 'sh vs ch',
+    ipaHint: 'ʃ / tʃ',
+    speakCue: 'Share the chair',
+    plainHint: '/ʃ/ es suave continuo (shh); /tʃ/ es seco y explosivo (ch).',
+  },
+  [phonemeTargetId('/ɹ/')]: {
+    title: 'La R americana',
+    ipaHint: 'ɹ',
+    speakCue: 'red bird',
+    plainHint: 'La punta de la lengua se curva hacia atrás sin tocar el paladar.',
+  },
   [phonemeTargetId('/ə/')]: {
     title: 'La vocal relajada',
     ipaHint: 'ə',

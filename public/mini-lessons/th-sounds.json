@@ -4,24 +4,24 @@
   "level": "basic",
   "category": "pronunciation",
   "duration": 5,
-  "title": "Voiced vs. voiceless /θ/ and /ð/",
-  "subtitle": "Pronunciation of the day",
-  "body": "English has two 'th' sounds. Both require the tongue between or just behind the teeth — the difference is whether you vibrate your vocal cords.",
+  "title": "/θ/ y /ð/ sonoros o sordos",
+  "subtitle": "Pronunciación del día",
+  "body": "El inglés tiene dos sonidos 'th'. Ambos requieren la lengua entre o justo detrás de los dientes; la diferencia es si haces vibrar las cuerdas vocales.",
   "examples": [
     {
       "word": "think",
       "ipa": "/θɪŋk/",
-      "translation": "voiceless — sin vibración"
+      "translation": "sin voz — sin vibración"
     },
     {
       "word": "this",
       "ipa": "/ðɪs/",
-      "translation": "voiced — con vibración"
+      "translation": "expresado — con vibración"
     },
     {
       "word": "bath / bathe",
       "ipa": "/bæθ/ · /beɪð/",
-      "translation": "par mínimo"
+      "translation": "mínimo"
     }
   ],
   "href": "/mini-lessons/th-sounds"

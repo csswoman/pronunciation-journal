@@ -585,34 +585,47 @@ function isFatalIndexedDbSchemaError(error: unknown): boolean {
   return name === "UpgradeError" || /changing primary key/i.test(message);
 }
 
+const OPEN_ATTEMPTS = 3;
 let dbReadyPromise: Promise<void> | null = null;
+
+async function openWithRecovery(): Promise<void> {
+  let lastError: unknown;
+
+  for (let attempt = 1; attempt <= OPEN_ATTEMPTS; attempt++) {
+    if (db.isOpen()) return;
+    try {
+      await db.open();
+      return;
+    } catch (error) {
+      lastError = error;
+      // Dexie's Chrome UnknownError workaround may close+reopen underneath
+      // the rejected open(); the connection can already be usable.
+      if (db.isOpen()) return;
+      if (isFatalIndexedDbSchemaError(error) && attempt >= 2) break;
+    }
+  }
+
+  if (isFatalIndexedDbSchemaError(lastError)) {
+    console.warn("[db] Recreating pronunciation-journal after fatal IndexedDB error", lastError);
+    await db.delete();
+    await db.open();
+    return;
+  }
+  throw lastError;
+}
 
 /**
  * Open IndexedDB, recreating it when a prior schema upgrade left the
  * connection closed (e.g. Dexie UpgradeError on primary-key changes).
- * Safe to call repeatedly; concurrent callers share one in-flight promise.
+ * Also retries Chrome's transient UnknownError-on-open (Dexie then surfaces
+ * DatabaseClosedError to in-flight queries). Concurrent callers share one
+ * in-flight promise.
  */
 export function ensureDbReady(): Promise<void> {
   if (typeof indexedDB === "undefined") return Promise.resolve();
-  if (db.isOpen()) return Promise.resolve();
+  if (db.isOpen() && !dbReadyPromise) return Promise.resolve();
   if (!dbReadyPromise) {
-    dbReadyPromise = (async () => {
-      try {
-        await db.open();
-      } catch (firstError) {
-        try {
-          // A failed upgrade closes the instance; retry once with current schema.
-          await db.open();
-        } catch (retryError) {
-          if (!isFatalIndexedDbSchemaError(firstError) && !isFatalIndexedDbSchemaError(retryError)) {
-            throw retryError;
-          }
-          console.warn("[db] Recreating pronunciation-journal after fatal IndexedDB error", retryError);
-          await db.delete();
-          await db.open();
-        }
-      }
-    })().finally(() => {
+    dbReadyPromise = openWithRecovery().finally(() => {
       dbReadyPromise = null;
     });
   }

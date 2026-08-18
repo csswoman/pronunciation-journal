@@ -4,20 +4,29 @@
   "level": "basic",
   "category": "grammar",
   "duration": 4,
-  "title": "Adverbs of frequency",
-  "subtitle": "Grammar of the day",
-  "body": "These adverbs tell how often something happens. Their position in the sentence is fixed — a common mistake for Spanish speakers.",
+  "title": "Adverbios de frecuencia",
+  "subtitle": "Gramática del día",
+  "body": "Los adverbios de frecuencia nos dicen cada cuánto tiempo ocurre algo. Su posición en la oración inglesa es clave y a menudo un punto de confusión para los hispanohablantes, ¡pero es fácil de dominar conociendo las reglas básicas!",
   "examples": [
     {
       "word": "I always drink coffee. ✓",
-      "translation": "va después del sujeto, antes del verbo"
+      "translation": "va después del sujeto, antes del verbo principal"
     },
     {
       "word": "I drink always coffee. ✗"
     },
     {
-      "word": "always → usually → often → sometimes → rarely → never"
+      "word": "She is usually on time. ✓",
+      "translation": "va después del verbo 'to be'"
+    },
+    {
+      "word": "She usually is on time. ✗"
+    },
+    {
+      "word": "always → usually → often → sometimes → rarely → never",
+      "translation": "La escala de frecuencia"
     }
   ],
+  "tip": "Recuerda la regla general: *antes del verbo principal*, pero *después del verbo 'to be'*. ¡Es la clave para no fallar en la posición!",
   "href": "/mini-lessons/frequency-adverbs"
 }

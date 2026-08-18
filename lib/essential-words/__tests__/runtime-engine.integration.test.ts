@@ -323,8 +323,13 @@ describe("runtime skill happy path", () => {
     });
     const [onAttempt] = await db.attemptLogs.where("userId").equals(USER).toArray();
 
-    expect(offAttempt.observations.map(({ observedAt, ...observation }) => observation))
-      .toEqual(onAttempt.observations.map(({ observedAt, ...observation }) => observation));
+    expect(offAttempt.observations.map(({ observedAt, ...observation }) => {
+      void observedAt;
+      return observation;
+    })).toEqual(onAttempt.observations.map(({ observedAt, ...observation }) => {
+      void observedAt;
+      return observation;
+    }));
   });
 
   it("un dictado vacío no acredita production", async () => {

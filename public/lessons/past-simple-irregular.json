@@ -2,40 +2,40 @@
   "slug": "past-simple-irregular",
   "sections": [
     {
-      "heading": "Why irregular verbs exist",
-      "body": "Most English irregular past tense forms are descendants of Old English and Germanic strong verbs, which changed their internal vowel to mark tense (called ablaut). Regular '-ed' endings came later and became the default for new verbs. Irregular verbs survive because they're the most commonly used."
+      "heading": "Por qué existen los verbos irregulares",
+      "body": "La mayoría de las formas de tiempo pasado irregular en inglés son descendientes de los verbos fuertes del inglés antiguo y del germánico, que cambiaron su vocal interna para marcar el tiempo (llamado ablaut). Las terminaciones regulares '-ed' llegaron más tarde y se convirtieron en las predeterminadas para los nuevos verbos. Los verbos irregulares sobreviven porque son los más utilizados."
     },
     {
-      "heading": "The main patterns",
-      "body": "**Vowel change (ablaut):** sing/sang/sung, drink/drank/drunk, swim/swam/swum. **-ought group:** buy/bought, think/thought, bring/brought, catch/caught, teach/taught. **Same form all three:** put/put/put, cut/cut/cut, hit/hit/hit, let/let/let. **Totally unpredictable:** go/went (from a different Old English word), be/was/were/been."
+      "heading": "Los patrones principales",
+      "body": "**Cambio de vocal (ablaut):** cantar/cantar/cantar, beber/beber/borracho, nadar/nadar/nadar. **-grupo debería:** comprar/comprar, pensar/pensar, traer/traer, atrapar/captar, enseñar/enseñar. **De la misma forma los tres:** poner/poner/poner, cortar/cortar/cortar, golpear/golpear/golpear, dejar/dejar/dejar. **Totalmente impredecible:** go/went (de una palabra diferente en inglés antiguo), be/was/were/been."
     },
     {
-      "heading": "The top 20 you must know",
-      "body": "be, have, do, go, say, get, make, know, think, take, come, see, want, look, use, find, give, tell, become, show — all irregular. These 20 verbs account for a huge proportion of all English usage."
+      "heading": "El top 20 que debes conocer",
+      "body": "ser, tener, hacer, ir, decir, obtener, hacer, conocer, pensar, tomar, venir, ver, querer, mirar, usar, encontrar, dar, contar, convertirse, mostrar, todo irregular. Estos 20 verbos representan una enorme proporción de todo el uso del inglés."
     }
   ],
   "examples": [
     {
       "english": "go → went",
-      "note": "Suppletion — completely different root"
+      "note": "Suplemento: raíz completamente diferente"
     },
     {
       "english": "buy → bought",
       "ipa": "/baɪ/ → /bɔt/",
-      "note": "-ought group"
+      "note": "-debería grupo"
     },
     {
       "english": "sing → sang → sung",
-      "note": "Ablaut — vowel change pattern"
+      "note": "Ablaut - patrón de cambio de vocales"
     },
     {
       "english": "put → put → put",
-      "note": "Same form in all three"
+      "note": "Misma forma en los tres."
     }
   ],
   "exercises": [
     {
-      "instruction": "Write the simple past of each verb.",
+      "instruction": "Write the simple past form of each irregular verb.",
       "items": [
         "fly",
         "break",
@@ -60,15 +60,15 @@
   ],
   "quiz": [
     {
-      "question": "Which verb follows the same vowel-change pattern as 'sing/sang/sung'?",
+      "question": "¿Qué verbo sigue el mismo patrón de cambio de vocales que 'sing/sang/sung'?",
       "options": [
-        "buy",
-        "ring",
-        "put",
-        "tell"
+        "comprar",
+        "anillo",
+        "poner",
+        "decir"
       ],
       "correct": 1,
-      "explanation": "'Ring/rang/rung' follows the exact same ablaut pattern as 'sing/sang/sung'."
+      "explanation": "'Ring/rang/rung' sigue exactamente el mismo patrón ablaut que 'sing/sang/sung'."
     }
   ]
 }

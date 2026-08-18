@@ -4,9 +4,9 @@
   "level": "basic",
   "category": "speaking",
   "duration": 5,
-  "title": "Question tags: isn't it? didn't you?",
-  "subtitle": "Speaking of the day",
-  "body": "Question tags are mini questions added to the end of a statement to confirm or check information. They're extremely common in British English.",
+  "title": "Etiquetas de preguntas: ¿no es así? ¿no?",
+  "subtitle": "hablando del dia",
+  "body": "Las etiquetas de pregunta son minipreguntas que se agregan al final de una declaración para confirmar o verificar información. Son extremadamente comunes en el inglés británico.",
   "examples": [
     {
       "word": "It's cold, isn't it?",
@@ -17,6 +17,6 @@
       "translation": "confirmar algo negativo"
     }
   ],
-  "tip": "Positive statement → negative tag. Negative statement → positive tag.",
+  "tip": "Declaración positiva → etiqueta negativa. Declaración negativa → etiqueta positiva.",
   "href": "/mini-lessons/question-tags"
 }

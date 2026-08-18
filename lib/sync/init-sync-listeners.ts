@@ -28,15 +28,20 @@ async function drainAndReschedule(userId: string): Promise<void> {
   clearRetryTimer()
   if (typeof navigator !== 'undefined' && navigator.onLine === false) return
 
-  await flushOutbox(userId)
+  try {
+    await flushOutbox(userId)
 
-  if (typeof navigator !== 'undefined' && navigator.onLine === false) return
+    if (typeof navigator !== 'undefined' && navigator.onLine === false) return
 
-  const nextRetryAt = await getEarliestPendingRetryAt(userId)
-  if (!nextRetryAt) return
+    const nextRetryAt = await getEarliestPendingRetryAt(userId)
+    if (!nextRetryAt) return
 
-  const delayMs = Math.max(0, new Date(nextRetryAt).getTime() - Date.now())
-  retryTimer = setTimeout(() => { void drainAndReschedule(userId) }, delayMs)
+    const delayMs = Math.max(0, new Date(nextRetryAt).getTime() - Date.now())
+    retryTimer = setTimeout(() => { void drainAndReschedule(userId) }, delayMs)
+  } catch {
+    // Chrome may close IndexedDB during UnknownError recovery; the next
+    // `online` event or AuthProvider remount will drain again.
+  }
 }
 
 /**

@@ -34,7 +34,8 @@ describe('SessionReadyHero', () => {
     expect(screen.getByText(/unos \d+ min/)).toBeInTheDocument()
     expect(screen.getByText('3 palabras nuevas · 4 repasos')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Recomendada · 15' })).toHaveAttribute('aria-pressed', 'true')
-    expect(screen.getByRole('button', { name: 'Sesión recomendada' })).toBeInTheDocument()
+    expect(screen.getByLabelText('Ruta')).toHaveValue('')
+    expect(screen.getByRole('option', { name: 'Por frecuencia' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Empezar' })).toBeInTheDocument()
   })
 
@@ -80,6 +81,19 @@ describe('SessionReadyHero', () => {
     expect(onSessionSizeChange).toHaveBeenCalledWith('long')
   })
 
+  it('uses the frequency route and lets the learner choose a focused route', async () => {
+    const user = userEvent.setup()
+    const onRouteChange = vi.fn()
+    render(<SessionReadyHero {...heroProps} activeRouteId="verbs-b1" onRouteChange={onRouteChange} />)
+
+    const routePicker = screen.getByLabelText('Ruta')
+    await user.selectOptions(routePicker, '')
+    expect(onRouteChange).toHaveBeenCalledWith(null)
+
+    await user.selectOptions(routePicker, 'nouns-b2')
+    expect(onRouteChange).toHaveBeenLastCalledWith('nouns-b2')
+  })
+
   it('keeps the hero mounted and disables start while rebuilding the preview', () => {
     render(<SessionReadyHero {...heroProps} previewLoading />)
 
@@ -87,7 +101,7 @@ describe('SessionReadyHero', () => {
     expect(screen.getByRole('status')).toHaveTextContent('Actualizando sesión')
     expect(screen.getByRole('button', { name: 'Actualizando…' })).toBeDisabled()
     expect(screen.getByRole('button', { name: 'Corta · 5' })).toBeEnabled()
-    expect(screen.getByRole('button', { name: 'Sesión recomendada' })).toBeEnabled()
+    expect(screen.getByLabelText('Ruta')).toBeEnabled()
   })
 
   it('freezes route and size but lets the learner discard a resumed session', async () => {
@@ -96,7 +110,7 @@ describe('SessionReadyHero', () => {
     render(<SessionReadyHero {...heroProps} isResume onDiscard={onDiscard} />)
 
     expect(screen.getByRole('button', { name: 'Corta · 5' })).toBeDisabled()
-    expect(screen.getByRole('button', { name: 'Sesión recomendada' })).toBeDisabled()
+    expect(screen.getByLabelText('Ruta')).toBeDisabled()
     await user.click(screen.getByRole('button', { name: 'Descartar sesión' }))
     expect(onDiscard).toHaveBeenCalledOnce()
   })

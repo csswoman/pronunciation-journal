@@ -2,76 +2,76 @@
   "slug": "linking-words-basic",
   "sections": [
     {
-      "heading": "Why linking words matter",
-      "body": "Without connectors, ideas sit next to each other with no clear relationship. Linking words show the reader how ideas connect — whether one causes another, contrasts with it, or adds to it."
+      "heading": "Por qué es importante vincular palabras",
+      "body": "Sin conectores, las ideas se ubican una al lado de la otra sin una relación clara. Las palabras de enlace muestran al lector cómo se conectan las ideas: ya sea que una cause otra, la contraste o la complemente."
     },
     {
-      "heading": "And — addition",
-      "body": "'And' adds information of equal weight. It joins clauses, phrases, and single words. Don't start every sentence with 'and' in formal writing, but it's natural and effective in speech."
+      "heading": "Y - adición",
+      "body": "'Y' añade información de igual peso. Une cláusulas, frases y palabras sueltas. No empieces cada oración con 'y' en la escritura formal, pero es natural y efectivo en el habla."
     },
     {
-      "heading": "But — contrast",
-      "body": "'But' introduces a contrast or unexpected result. It's the most common adversative connector in English. 'However' is its formal equivalent when starting a sentence."
+      "heading": "Pero - contraste",
+      "body": "'Pero' introduce un contraste o un resultado inesperado. Es el conector adversativo más común en inglés. 'Sin embargo' es su equivalente formal al iniciar una frase."
     },
     {
-      "heading": "So — result",
-      "body": "'So' introduces a result or consequence. 'Therefore' and 'as a result' are its formal equivalents. Note: 'so' in conversation often functions as a discourse marker too."
+      "heading": "Entonces - resultado",
+      "body": "'Entonces' introduce un resultado o consecuencia. \"Por lo tanto\" y \"como resultado\" son sus equivalentes formales. Nota: 'así' en una conversación a menudo también funciona como un marcador del discurso."
     },
     {
-      "heading": "Because — reason",
-      "body": "'Because' introduces the reason for something. It answers 'why?' It must connect two clauses. 'Because of' is followed by a noun phrase: 'because of the rain' (not 'because the rain')."
+      "heading": "Porque - razón",
+      "body": "'Porque' introduce la razón de algo. Responde '¿por qué?' Debe conectar dos cláusulas. \"Porque de\" va seguido de una frase nominal: \"por la lluvia\" (no \"por la lluvia\")."
     }
   ],
   "examples": [
     {
       "english": "I was tired, but I finished the report.",
-      "note": "Contrast — unexpected result"
+      "note": "Contraste: resultado inesperado"
     },
     {
       "english": "It rained, so we cancelled the trip.",
-      "note": "Result"
+      "note": "Resultado"
     },
     {
       "english": "She studied hard because she wanted to pass.",
-      "note": "Reason"
+      "note": "Razón"
     },
     {
       "english": "I like tea and coffee.",
-      "note": "Addition of equal items"
+      "note": "Suma de elementos iguales"
     },
     {
       "english": "We stayed in because of the weather.",
-      "note": "'Because of' + noun phrase"
+      "note": "'Porque de' + frase nominal"
     }
   ],
   "exercises": [
     {
-      "instruction": "Connect the two sentences using and, but, so, or because.",
+      "instruction": "Choose the correct linking word to complete each sentence.",
       "items": [
-        "I was hungry. I made a sandwich.",
-        "She likes jazz. She doesn't like classical music.",
-        "He forgot his wallet. He couldn't pay.",
-        "We left early. We wanted to avoid traffic."
+        "I was tired, ___ I went to bed early. (so / although)",
+        "___ it was raining, we went for a walk. (Although / Because)",
+        "She studied hard ___ she passed the exam. (but / and)",
+        "He didn't call ___ he forgot. (because / however)"
       ],
       "answers": [
-        "I was hungry, so I made a sandwich.",
-        "She likes jazz but she doesn't like classical music.",
-        "He forgot his wallet, so he couldn't pay.",
-        "We left early because we wanted to avoid traffic."
+        "so",
+        "Although",
+        "and",
+        "because"
       ]
     }
   ],
   "quiz": [
     {
-      "question": "Which sentence uses 'because' correctly?",
+      "question": "¿Qué oración usa 'porque' correctamente?",
       "options": [
-        "I stayed home because of I was sick.",
-        "I stayed home because the rain.",
-        "I stayed home because I was sick.",
-        "I stayed home because of I felt ill."
+        "Me quedé en casa porque estaba enferma.",
+        "Me quedé en casa por la lluvia.",
+        "Me quedé en casa porque estaba enferma.",
+        "Me quedé en casa porque me sentía mal."
       ],
       "correct": 2,
-      "explanation": "'Because' is followed by a full clause (subject + verb). 'Because of' is followed by a noun phrase."
+      "explanation": "'Porque' va seguido de una cláusula completa (sujeto + verbo). 'Because of' va seguido de una frase nominal."
     }
   ]
 }

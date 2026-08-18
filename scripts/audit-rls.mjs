@@ -54,8 +54,19 @@ function readSqlFiles(dir) {
     .map((file) => path.join(dir, file));
 }
 
-function findCreatedTables(sql) {
-  return [...sql.matchAll(/create\s+table\s+(?:if\s+not\s+exists\s+)?([^\s(]+)\s*\(/gi)].map((match) => match[1]);
+function normalizeRelationName(tableName) {
+  return tableName.replaceAll('"', "").replace(/,$/, "").replace(/^public\./i, "");
+}
+
+function findTableEvents(sql) {
+  const events = [];
+  for (const match of sql.matchAll(/create\s+table\s+(?:if\s+not\s+exists\s+)?([^\s(]+)\s*\(/gi)) {
+    events.push({ type: "create", rawName: match[1], index: match.index ?? 0 });
+  }
+  for (const match of sql.matchAll(/drop\s+table\s+(?:if\s+exists\s+)?([^\s;]+)/gi)) {
+    events.push({ type: "drop", rawName: match[1], index: match.index ?? 0 });
+  }
+  return events.sort((a, b) => a.index - b.index);
 }
 
 function hasRlsEnabled(sql, tableName) {
@@ -72,17 +83,24 @@ function hasPolicy(sql, tableName) {
 }
 
 /**
- * Tables covered by a cross-user isolation case in scripts/rls-integration.mjs.
- * That script only exercises the live DB against .from("<table>") calls, so we
- * detect coverage by scanning it for those calls rather than hand-maintaining
- * a second list here.
+ * Tables covered by a cross-user isolation case in scripts/rls-integration*.mjs.
+ * Those scripts exercise the live DB against .from("<table>") calls, so we
+ * detect coverage by scanning them rather than hand-maintaining a second list.
  */
 function readIntegrationTestedTables() {
-  const integrationFile = path.join(process.cwd(), "scripts", "rls-integration.mjs");
-  if (!fs.existsSync(integrationFile)) return new Set();
-  const source = fs.readFileSync(integrationFile, "utf8");
-  const tables = [...source.matchAll(/\.from\(["']([^"']+)["']\)/g)].map((m) => m[1]);
-  return new Set(tables);
+  const scriptsDir = path.join(process.cwd(), "scripts");
+  if (!fs.existsSync(scriptsDir)) return new Set();
+  const files = fs
+    .readdirSync(scriptsDir)
+    .filter((file) => file.startsWith("rls-integration") && file.endsWith(".mjs"));
+  const tables = new Set();
+  for (const file of files) {
+    const source = fs.readFileSync(path.join(scriptsDir, file), "utf8");
+    for (const match of source.matchAll(/\.from\(["']([^"']+)["']\)/g)) {
+      tables.add(normalizeRelationName(match[1]));
+    }
+  }
+  return tables;
 }
 
 const issues = [];
@@ -93,13 +111,18 @@ for (const file of readSqlFiles(MIGRATIONS_DIR)) {
   if (ALLOWED_LEGACY_FILES.has(relative)) continue;
 
   const sql = fs.readFileSync(file, "utf8");
-  const tables = findCreatedTables(sql);
 
-  for (const tableName of tables) {
+  for (const event of findTableEvents(sql)) {
+    const tableName = event.rawName;
+    const normalized = normalizeRelationName(tableName);
+    if (event.type === "drop") {
+      rlsEnabledTables.delete(normalized);
+      continue;
+    }
     if (!hasRlsEnabled(sql, tableName)) {
       issues.push(`${relative}: missing ENABLE ROW LEVEL SECURITY for ${tableName}`);
     } else {
-      rlsEnabledTables.add(tableName.replace(/^public\./, ""));
+      rlsEnabledTables.add(normalized);
     }
     if (!hasPolicy(sql, tableName)) {
       issues.push(`${relative}: missing CREATE POLICY for ${tableName}`);
@@ -115,9 +138,9 @@ if (issues.length > 0) {
   process.exit(1);
 }
 
-// Warning only: tables with RLS but no cross-user isolation test in
-// scripts/rls-integration.mjs. Doesn't block CI — that script needs a live
-// Supabase project and isn't run there — but nudges every new table to add
+// Warning only: live tables with RLS but no .from("<table>") case in
+// scripts/rls-integration*.mjs. Dropped tables are ignored. Doesn't block CI —
+// the runner needs a live Supabase project — but nudges every new table to add
 // its case when someone runs `pnpm test:rls:integration` locally.
 const integrationTestedTables = readIntegrationTestedTables();
 const untestedTables = [...rlsEnabledTables].filter((t) => !integrationTestedTables.has(t));

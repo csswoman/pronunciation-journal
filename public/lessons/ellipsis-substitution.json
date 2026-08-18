@@ -2,39 +2,39 @@
   "slug": "ellipsis-substitution",
   "sections": [
     {
-      "heading": "Ellipsis — omitting what's recoverable",
-      "body": "Ellipsis removes words that can be understood from context, making speech and writing more fluent. It's extremely common in dialogue. The omitted words can always be mentally restored: 'Are you coming?' '[I'm] coming [right now].'"
+      "heading": "Elipsis: omitiendo lo que es recuperable",
+      "body": "La elipsis elimina palabras que pueden inferirse del contexto, haciendo el habla y la escritura más fluidos y naturales. Es extremadamente común en el diálogo. Las palabras omitidas siempre pueden recuperarse mentalmente: '¿Vienes?' '[Estoy] viniendo [ahora mismo]'."
     },
     {
-      "heading": "Substitution — replacing with a shorter form",
-      "body": "Substitution replaces a word or phrase with a pro-form (one, so, do so, not, such). 'Would you like a coffee?' 'I'd love one.' [one = a coffee]. 'Will she come?' 'I think so.' [so = she will come]."
+      "heading": "Sustitución: reemplazar con una forma más corta",
+      "body": "La sustitución reemplaza una palabra o frase con una proforma (una palabra que toma el lugar de otra), como 'one', 'so', 'do so', 'not' o 'such'. Por ejemplo: '¿Quieres un café?' 'Me encantaría one.' ['one' = un café]. '¿Ella vendrá?' 'Creo que so.' ['so' = ella vendrá]."
     },
     {
-      "heading": "So and not as substitutes",
-      "body": "'I think so / I hope so / I'm afraid so' use 'so' to substitute a whole proposition. 'I think not / I hope not / I'm afraid not' use 'not' for the negative. These are fixed, natural patterns."
+      "heading": "'So' y 'not' como sustitutos",
+      "body": "'I think so/I hope so/I'm afraid so' utiliza 'so' para sustituir una proposición completa. 'I think not/I hope not/I'm afraid not' utiliza 'not' para la negación. Estos son patrones fijos y naturales."
     }
   ],
   "examples": [
     {
       "english": "'Can you drive?' 'I might [be able to].'",
-      "note": "Ellipsis: omit recoverable words"
+      "note": "Elipsis: se omiten palabras recuperables."
     },
     {
       "english": "'I want a biscuit.' 'Take one.'",
-      "note": "Substitution: one = a biscuit"
+      "note": "Sustitución: 'one' reemplaza a 'a biscuit'."
     },
     {
       "english": "'Is she coming?' 'I think so.'",
-      "note": "so = she is coming"
+      "note": "Sustitución: 'so' reemplaza a 'she is coming'."
     },
     {
       "english": "'Was it difficult?' 'Very [difficult].'",
-      "note": "Ellipsis after degree adverb"
+      "note": "Elipsis después de un adverbio de grado."
     }
   ],
   "exercises": [
     {
-      "instruction": "Identify: ellipsis (E) or substitution (S)?",
+      "instruction": "Identificar si es Elipsis (E) o Sustitución (S).",
       "items": [
         "'Do you like jazz?' 'I do.'",
         "'Is it going to rain?' 'I hope not.'",
@@ -42,24 +42,35 @@
         "'I need a pen.' 'Here's one.'"
       ],
       "answers": [
-        "E — 'I do [like jazz]' (verb phrase omitted)",
-        "S — 'not' substitutes 'that it's going to rain'",
-        "E — 'ready' omitted after 'almost'",
-        "S — 'one' substitutes 'a pen'"
+        "S",
+        "S",
+        "E",
+        "S"
       ]
     }
   ],
   "quiz": [
     {
-      "question": "'Will they agree?' 'I think so.' What does 'so' replace?",
+      "question": "'¿Estarán de acuerdo?' 'Creo que so.' ¿Qué reemplaza \"so\"?",
       "options": [
-        "'they'",
-        "'will agree'",
-        "the whole proposition 'they will agree'",
-        "'I think'"
+        "'ellos'",
+        "'estarán de acuerdo'",
+        "toda la proposición 'ellos estarán de acuerdo'",
+        "'Creo'"
       ],
       "correct": 2,
-      "explanation": "'So' substitutes the entire proposition — it means 'I think [that they will agree]'."
+      "explanation": "\"So\" sustituye la proposición completa: significa \"Creo [que estarán de acuerdo]\"."
+    },
+    {
+      "question": "En la frase: 'I can't sing, but she can.', ¿qué tipo de fenómeno lingüístico ocurre con 'can'?",
+      "options": [
+        "Elipsis de 'sing'",
+        "Sustitución de 'sing'",
+        "Repetición",
+        "Ninguna de las anteriores"
+      ],
+      "correct": 0,
+      "explanation": "En este caso, 'can' omite el verbo 'sing', por lo tanto, es una elipsis. Sería 'but she can [sing]'."
     }
   ]
 }

@@ -10,13 +10,15 @@
 // </HomeCommandGrid>
 
 import { useCallback, useState } from "react";
+import dynamic from "next/dynamic";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { isAnonymousUser } from "@/lib/auth/is-anonymous";
-import HomeDailyCard, { type HomePlanStatus } from "@/components/home/HomeDailyCard";
+import type { HomePlanStatus } from "@/components/home/HomeDailyCard";
 import HomeReviewBanner from "@/components/home/HomeReviewBanner";
 import EssentialWordsProgressCard from "@/components/home/EssentialWordsProgressCard";
 import WeakSoundCard from "@/components/home/WeakSoundCard";
 import HomeWordOfDayCard from "@/components/home/HomeWordOfDayCard";
+import HomeChunkOfDayCard from "@/components/home/HomeChunkOfDayCard";
 import HomeJournalCard from "@/components/home/HomeJournalCard";
 import HomeSpeakPrompt from "@/components/home/HomeSpeakPrompt";
 import HomePlanDone from "@/components/home/HomePlanDone";
@@ -24,12 +26,28 @@ import HomePlacementPrompt from "@/components/home/HomePlacementPrompt";
 import HomePronunciationPrompt from "@/components/home/HomePronunciationPrompt";
 import HomeActivationStrip from "@/components/home/HomeActivationStrip";
 import GuestSaveProgressBanner from "@/components/home/GuestSaveProgressBanner";
-import LearningFocusCard from "@/components/home/LearningFocusCard";
 import type { ConceptLesson } from "@/hooks/useDailyPlan";
 import type { WeakestPhonemeHome } from "@/lib/home/constants";
 import type { HomePlacementState } from "@/lib/home/placement-state";
 import type { HomePronunciationDiagnosticState } from "@/lib/home/pronunciation-diagnostic-state";
 import type { SessionArc } from "@/lib/practice/types";
+
+// Daily plan pulls buildDailyPlan + sync — keep it out of the initial page chunk.
+const HomeDailyCard = dynamic(() => import("@/components/home/HomeDailyCard"), {
+  loading: () => (
+    <div
+      className="h-40 animate-pulse rounded-2xl bg-surface-sunken"
+      aria-busy="true"
+      aria-label="Cargando plan diario"
+    />
+  ),
+});
+
+const LearningFocusCard = dynamic(() => import("@/components/home/LearningFocusCard"), {
+  loading: () => (
+    <div className="h-24 animate-pulse rounded-2xl bg-surface-sunken" aria-hidden />
+  ),
+});
 
 interface HomeCommandGridProps {
   conceptLesson: ConceptLesson | null;
@@ -87,10 +105,7 @@ export default function HomeCommandGrid({
   const showPlanExtras = planSettled && !planEmpty;
   const showPostPlan = showPlanExtras && allDone;
 
-  const guestHasProgress =
-    isGuest && (placementState.hasMeaningfulProgress || allDone);
   const showGuestSaveStrip = isGuest && planSettled && !showActivation;
-  const guestSaveVariant = guestHasProgress ? "emphasized" : "default";
 
   return (
     <div className="home-command-grid">
@@ -110,12 +125,6 @@ export default function HomeCommandGrid({
             showPronunciationLink={needsPronunciation}
             showGuestSaveInline={isGuest}
           />
-        </div>
-      ) : null}
-
-      {showGuestSaveStrip ? (
-        <div className="home-command-review">
-          <GuestSaveProgressBanner variant={guestSaveVariant} />
         </div>
       ) : null}
 
@@ -149,6 +158,8 @@ export default function HomeCommandGrid({
           />
         </div>
 
+        {showGuestSaveStrip ? <GuestSaveProgressBanner variant="footer" /> : null}
+
         {showPostPlan ? (
           <section
             aria-label="Plan completo"
@@ -158,14 +169,19 @@ export default function HomeCommandGrid({
           </section>
         ) : null}
 
-        {showPlanExtras ? <HomeWordOfDayCard /> : null}
+        {showPlanExtras ? (
+          <>
+            <HomeWordOfDayCard />
+            <HomeChunkOfDayCard />
+          </>
+        ) : null}
       </div>
 
       <aside className="home-command-aside" aria-label="Práctica sugerida">
-        {planSettled ? <HomeJournalCard /> : null}
-        {showPlanExtras && !allDone ? <HomeSpeakPrompt arc={arc} /> : null}
         <WeakSoundCard weakestPhoneme={weakestPhoneme} />
+        {showPlanExtras && !allDone ? <HomeSpeakPrompt arc={arc} /> : null}
         {showPlanExtras ? <EssentialWordsProgressCard /> : null}
+        {planSettled ? <HomeJournalCard /> : null}
         {showPlacementAside ? <HomePlacementPrompt compact /> : null}
         {showPronunciationAside ? <HomePronunciationPrompt compact /> : null}
       </aside>

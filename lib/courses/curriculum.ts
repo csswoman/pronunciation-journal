@@ -2,7 +2,6 @@ import { buildLevel } from "./buildCurriculum";
 import { a1CourseInputs, a2CourseInputs, b1CourseInputs, b2CourseInputs, c1CourseInputs } from "./level-curriculum-order";
 import type { CefrLevelId, CoursePathCurriculum } from "./types";
 import {
-  phonemeTargetId,
   targetId,
 } from "@/lib/pronunciation/targets/registry";
 
@@ -379,6 +378,52 @@ export const COURSE_PATH_CURRICULUM: CoursePathCurriculum = {
         { t: "Asimilación: doncha, didja", p: 1, s: true, g: "cs-assimilation", pt: [targetId("connected.assimilation")] },
       ],
       { isElective: true, spineIcon: "mic" }
+    ),
+    buildLevel(
+      "chunks",
+      "Chunks",
+      "Conversación",
+      "Frases hechas y fluidez",
+      "26 h",
+      [
+        { t: "Chunks para la vida cotidiana", p: 2, g: "chunk-vida-cotidiana" },
+        { t: "Hablar de mí con soltura", p: 2, g: "chunk-hablar-de-mi" },
+        { t: "Palabras con doble significado", p: 2, g: "chunk-palabras-doble-significado" },
+        { t: "Verbos con usos figurados", p: 1, g: "chunk-expresiones-multiuso" },
+        { t: "Expresiones clave del día a día (1)", p: 2, g: "chunk-expresiones-clave-1" },
+        { t: "Expresiones clave del día a día (2)", p: 2, g: "chunk-expresiones-clave-2" },
+        { t: "Básico vs natural: Ánimo y Opiniones", p: 2, g: "chunk-basico-vs-natural-1" },
+        { t: "Básico vs natural: Decisiones y Contacto", p: 2, g: "chunk-basico-vs-natural-2" },
+        { t: "Básico vs natural: Trabajo y Tiempo", p: 2, g: "chunk-basico-vs-natural-3" },
+        { t: "Básico vs natural: Dinero y Retos", p: 2, g: "chunk-basico-vs-natural-4" },
+        { t: "Básico vs natural: Reacciones y Cierres", p: 2, g: "chunk-basico-vs-natural-5" },
+        { t: "Colocaciones naturales (Collocations)", p: 2, g: "chunk-collocations" },
+        { t: "Phrasal Verbs de uso diario", p: 2, g: "chunk-phrasal-verbs" },
+        { t: "Modismos y expresiones idiomáticas (Idioms)", p: 2, g: "chunk-idioms" },
+        { t: "Social & Small Talk", p: 2, g: "chunk-social-small-talk" },
+        { t: "Funciones comunicativas con tacto", p: 2, g: "chunk-language-functions" },
+        { t: "Plantillas de oraciones (Sentence Frames)", p: 2, g: "chunk-sentence-frames" },
+        { t: "Marcadores del discurso y conectores", p: 2, g: "chunk-discourse-markers" },
+        { t: "The Add-On Strategy: Fluidez sin bloqueos", p: 2, g: "the-add-on-strategy" },
+        { t: "Chunks de programación", p: 2, g: "chunk-programacion" },
+        { t: "Daily standup en inglés", p: 2, g: "chunk-daily-standup" },
+        { t: "Chunks de diseño UX y UI", p: 1, g: "chunk-ux-ui" },
+      ],
+      { isElective: true, spineIcon: "message" }
+    ),
+    buildLevel(
+      "false-friends",
+      "FF",
+      "Falsos amigos",
+      "No te confundas",
+      "8 h",
+      [
+        { t: "Falsos amigos esenciales (A1-A2)", p: 2, g: "ff-esenciales-a1-a2" },
+        { t: "Falsos amigos en la vida cotidiana", p: 2, g: "ff-vida-cotidiana" },
+        { t: "Falsos amigos en el trabajo y negocios", p: 1, g: "ff-trabajo-negocios" },
+        { t: "Comunicación y argumentación", p: 1, g: "ff-comunicacion-argumentacion" },
+      ],
+      { isElective: true, spineIcon: "book" }
     ),
   ],
   legend: [

@@ -1,6 +1,8 @@
 import type { ScoringResult, WordResult } from "../types";
 import { analyzePhonemes } from "./phonemes";
 
+export { calculateXP } from "./xp";
+
 const MAX_SCORE_CACHE_ENTRIES = 300;
 const scoreCache = new Map<string, ScoringResult>();
 
@@ -228,14 +230,6 @@ function levenshtein(a: string, b: string): number {
 /**
  * Calculate XP earned based on accuracy.
  */
-export function calculateXP(accuracy: number): number {
-  if (accuracy >= 95) return 15;
-  if (accuracy >= 80) return 10;
-  if (accuracy >= 60) return 5;
-  if (accuracy >= 40) return 2;
-  return 1;
-}
-
 /**
  * Get a feedback message based on accuracy and threshold (difficulty).
  * Hard mode (threshold >= 85) raises the bar for each tier.

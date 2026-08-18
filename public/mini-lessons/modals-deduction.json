@@ -4,9 +4,9 @@
   "level": "intermediate",
   "category": "grammar",
   "duration": 6,
-  "title": "Modals for deduction: must, might, can't",
-  "subtitle": "Grammar of the day",
-  "body": "These modals express how certain you are about something in the present. They're essential for natural-sounding speculation.",
+  "title": "Modales para la deducción: debe, podría, no puede",
+  "subtitle": "Gramática del día",
+  "body": "Estos modales expresan cuán seguro estás acerca de algo en el presente. Son esenciales para una especulación que suene natural.",
   "examples": [
     {
       "word": "She must be exhausted.",
@@ -18,7 +18,7 @@
     },
     {
       "word": "That can't be right.",
-      "translation": "imposible — contradice la evidencia"
+      "translation": "imposible - contradice la evidencia"
     }
   ],
   "href": "/mini-lessons/modals-deduction"

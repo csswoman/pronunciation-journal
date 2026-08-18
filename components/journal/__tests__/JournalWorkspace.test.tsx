@@ -75,25 +75,18 @@ describe('JournalWorkspace starter insertion', () => {
     expect(screen.queryByText('¿Qué pasa después?')).not.toBeInTheDocument()
   })
 
-  it('puts the numbered structure in the empty textarea placeholder', () => {
+  it('keeps the empty editor focused with a short placeholder and connected disabled help', () => {
     render(
       <JournalWorkspace
         entry={entry}
         targetLength={60}
-        structure={[
-          { label: 'Dónde', hint: 'Di dónde ocurrió.' },
-          { label: 'Qué pasó', hint: 'Cuenta el detalle.' },
-          { label: 'Qué sentiste', hint: 'Cierra con tu reacción.' },
-        ]}
         hintsEnabled
         onHintsEnabledChange={vi.fn()}
       />,
     )
 
-    expect(screen.getByRole('textbox')).toHaveAttribute(
-      'placeholder',
-      '1. Dónde: Di dónde ocurrió.\n2. Qué pasó: Cuenta el detalle.\n3. Qué sentiste: Cierra con tu reacción.',
-    )
+    expect(screen.getByRole('textbox')).toHaveAttribute('placeholder', 'Empieza a escribir…')
+    expect(screen.getByRole('button', { name: 'Revisar mi texto' })).toBeDisabled()
     expect(screen.getByText('Escribe al menos una frase para activar la revisión.')).toBeInTheDocument()
   })
 

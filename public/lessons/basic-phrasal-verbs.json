@@ -2,39 +2,49 @@
   "slug": "basic-phrasal-verbs",
   "sections": [
     {
-      "heading": "What makes phrasal verbs hard",
-      "body": "Phrasal verbs combine a verb with one or two particles (prepositions or adverbs) to create a meaning that can't be predicted from the parts. 'Give up' has nothing to do with giving or with upward direction — it means 'stop trying'."
+      "heading": "Los Phrasal Verbs: ¿Por qué son un desafío?",
+      "body": "Los 'phrasal verbs' (verbos compuestos) combinan un verbo con una o dos partículas (preposiciones o adverbios), creando un significado que a menudo no se puede deducir de las palabras individuales. Por ejemplo, 'give up' (rendirse/dejar de intentar) no tiene relación literal con 'dar' o 'arriba', sino que significa 'cesar el esfuerzo' o 'abandonar'."
     },
     {
-      "heading": "Separable vs. inseparable",
-      "body": "Separable phrasal verbs allow the object to go between the verb and particle: 'Turn off the TV' / 'Turn the TV off'. With pronouns, separation is obligatory: 'Turn it off' (not 'Turn off it'). Inseparable phrasal verbs keep the particle attached: 'run into someone' — never 'run someone into'."
+      "heading": "Separables vs. Inseparables: La Clave de la Posición",
+      "body": "Los 'phrasal verbs' separables permiten que el objeto directo se coloque entre el verbo y la partícula, o después de la partícula. Por ejemplo: 'Turn off the TV' o 'Turn the TV off'. Sin embargo, cuando el objeto es un pronombre, la separación es OBLIGATORIA: 'Turn it off' (¡nunca 'Turn off it'!). Los 'phrasal verbs' inseparables, por otro lado, siempre mantienen el verbo y la partícula juntos, independientemente del objeto. Por ejemplo: 'run into someone' (encontrarse con alguien por casualidad), ¡nunca 'run someone into'!"
     }
   ],
   "examples": [
     {
       "english": "give up",
-      "translation": "rendirse / dejar de intentar"
+      "ipa": "",
+      "translation": "rendirse / dejar de intentar",
+      "note": "Separable si el objeto es un sustantivo, pero a menudo intransitivo (ej. 'Don't give up!')."
     },
     {
       "english": "find out",
-      "translation": "descubrir / enterarse de"
+      "ipa": "",
+      "translation": "descubrir / enterarse de",
+      "note": "Separable. Con pronombre, se separa: 'find it out'."
     },
     {
       "english": "look up",
-      "translation": "buscar (en diccionario o internet)"
+      "ipa": "",
+      "translation": "buscar (información en diccionario o internet)",
+      "note": "Separable. Con pronombre, se separa: 'look it up'."
     },
     {
       "english": "turn off / turn it off",
-      "translation": "apagar — separable"
+      "ipa": "",
+      "translation": "apagar",
+      "note": "Separable. Con un pronombre, la separación es obligatoria."
     },
     {
       "english": "run out of",
-      "translation": "quedarse sin algo — inseparable"
+      "ipa": "",
+      "translation": "quedarse sin algo",
+      "note": "Inseparable. Siempre mantienen la preposición unida al verbo."
     }
   ],
   "exercises": [
     {
-      "instruction": "Replace the underlined words with a phrasal verb from the lesson.",
+      "instruction": "Reemplace las palabras subrayadas con un verbo compuesto adecuado de la lección. Asegúrate de usar la forma correcta.",
       "items": [
         "I need to search for this word in the dictionary.",
         "She stopped trying after the third attempt.",
@@ -51,15 +61,26 @@
   ],
   "quiz": [
     {
-      "question": "Which sentence uses a phrasal verb correctly?",
+      "question": "¿Cuál de las siguientes oraciones usa correctamente el 'phrasal verb' 'turn off' con un pronombre?",
       "options": [
-        "She gave the challenge up.",
-        "She gave up the challenge.",
-        "She gave up it.",
-        "She up gave the challenge."
+        "Turn off it.",
+        "Turn it off.",
+        "Turn off the TV it.",
+        "It turn off."
       ],
       "correct": 1,
-      "explanation": "'Give up' + noun object can go either side. But with a pronoun, you MUST separate: 'gave it up'."
+      "explanation": "Cuando el objeto de un 'phrasal verb' separable es un pronombre (como 'it', 'them', 'him', 'her'), este SIEMPRE debe ir entre el verbo y la partícula. Por lo tanto, 'Turn it off' es la única opción correcta."
+    },
+    {
+      "question": "Si dices 'I don't want to give up now', ¿qué estás expresando?",
+      "options": [
+        "No quiero entregar algo.",
+        "No quiero parar de intentar.",
+        "No quiero dar nada.",
+        "No quiero subir de nivel."
+      ],
+      "correct": 1,
+      "explanation": "El 'phrasal verb' 'give up' significa 'rendirse' o 'dejar de intentar'. Por lo tanto, la oración expresa que la persona desea continuar con su esfuerzo."
     }
   ]
 }

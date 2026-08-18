@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 
 const lexiconMount = vi.fn();
+const trackingMount = vi.fn();
 const refresh = vi.fn();
 let mockMode: string | null = null;
 
@@ -24,6 +25,13 @@ vi.mock("@/components/words/tabs/LexiconTabRuntime", () => ({
   default: () => {
     lexiconMount();
     return <div data-testid="lexicon-runtime">Lexicon</div>;
+  },
+}));
+
+vi.mock("@/components/tracking/TrackingClient", () => ({
+  default: () => {
+    trackingMount();
+    return <div data-testid="tracking-runtime">Tracking</div>;
   },
 }));
 
@@ -58,6 +66,7 @@ const props = {
 describe("WordsClient", () => {
   beforeEach(() => {
     lexiconMount.mockClear();
+    trackingMount.mockClear();
     refresh.mockClear();
     mockMode = null;
   });
@@ -69,11 +78,11 @@ describe("WordsClient", () => {
     expect(lexiconMount).toHaveBeenCalled();
   });
 
-  it("keeps Mis palabras as a direct link to tracking", async () => {
+  it("renders Guardadas tab linking to /dictionary?mode=saved", async () => {
     render(<WordsClient {...props} />);
 
-    await waitFor(() => expect(screen.getByRole("link", { name: /Mis palabras/i })).toBeInTheDocument());
-    expect(screen.getByRole("link", { name: /Mis palabras/i })).toHaveAttribute("href", "/tracking");
+    await waitFor(() => expect(screen.getByRole("link", { name: /Guardadas/i })).toBeInTheDocument());
+    expect(screen.getByRole("link", { name: /Guardadas/i })).toHaveAttribute("href", "/dictionary?mode=saved");
   });
 
   it("uses the same runtime for learn mode", async () => {
@@ -84,6 +93,14 @@ describe("WordsClient", () => {
     expect(lexiconMount).toHaveBeenCalled();
   });
 
+  it("mounts tracking runtime when mode is saved", async () => {
+    mockMode = "saved";
+    render(<WordsClient {...props} />);
+
+    await waitFor(() => expect(screen.getByTestId("tracking-runtime")).toBeInTheDocument());
+    expect(trackingMount).toHaveBeenCalled();
+  });
+
   it("shows a recoverable progress error", () => {
     render(<WordsClient {...props} progressUnavailable />);
 
@@ -92,3 +109,4 @@ describe("WordsClient", () => {
     expect(refresh).toHaveBeenCalledTimes(1);
   });
 });
+

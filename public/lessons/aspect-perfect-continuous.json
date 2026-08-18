@@ -2,39 +2,47 @@
   "slug": "aspect-perfect-continuous",
   "sections": [
     {
-      "heading": "Form",
-      "body": "Have/has + been + verb-ing. This tense combines the Present Perfect (connection to now) with the Continuous (ongoing process), emphasizing the duration or the recent activity that produced a visible result."
+      "heading": "Forma",
+      "body": "Se forma con 'have/has + been + el verbo principal en -ing'. Este tiempo verbal combina la idea del Presente Perfecto (una conexión con el presente) con la del Presente Continuo (una acción en desarrollo), poniendo énfasis en la duración de una acción o en una actividad reciente que ha generado un resultado observable en el presente."
     },
     {
-      "heading": "Duration vs. result",
-      "body": "'I've been running' can emphasize how long you've been doing it ('for 2 hours') or explain a visible result ('I'm sweaty and out of breath'). Both meanings coexist in the same form."
+      "heading": "Duración versus resultado",
+      "body": "La frase 'He estado corriendo' (I've been running) puede enfatizar tanto la duración de la actividad ('durante 2 horas') como explicar un resultado visible en el presente ('Estoy sudando y sin aliento'). Ambos matices coexisten y se expresan de la misma manera."
     },
     {
-      "heading": "Vs. Present Perfect Simple",
-      "body": "Simple ('I've read 50 pages') emphasizes what has been accomplished — a result or quantity. Continuous ('I've been reading') emphasizes the ongoing activity. With 'for' and 'since', both can work — but Continuous often feels more natural for ongoing activities."
+      "heading": "vs. Presente perfecto simple",
+      "body": "El Presente Perfecto Simple ('I have read 50 pages') enfatiza lo que se ha completado: un resultado o una cantidad específica. El Presente Perfecto Continuo ('I have been reading') pone el foco en la actividad en sí, destacando que está en curso o acaba de terminar. Al usar 'for' (por/durante) o 'since' (desde), ambos tiempos pueden ser válidos, pero el Continuo a menudo suena más natural para acciones que aún están en desarrollo."
     }
   ],
   "examples": [
     {
       "english": "I've been studying for three hours.",
-      "note": "Duration emphasized"
+      "ipa": "",
+      "translation": "He estado estudiando durante tres horas.",
+      "note": "Énfasis en la duración de la actividad."
     },
     {
       "english": "She's been crying — her eyes are red.",
-      "note": "Visible result of recent activity"
+      "ipa": "",
+      "translation": "Ella ha estado llorando; sus ojos están rojos.",
+      "note": "Resultado visible de una actividad reciente."
     },
     {
       "english": "They've been arguing all morning.",
-      "note": "Ongoing, irritating activity"
+      "ipa": "",
+      "translation": "Ellos han estado discutiendo toda la mañana.",
+      "note": "Actividad continua que puede ser percibida como molesta."
     },
     {
       "english": "How long have you been waiting?",
-      "note": "Duration question — always Continuous"
+      "ipa": "",
+      "translation": "¿Cuánto tiempo llevas esperando?",
+      "note": "Pregunta sobre la duración de una acción, siempre en continuo."
     }
   ],
   "exercises": [
     {
-      "instruction": "Present Perfect Simple or Continuous?",
+      "instruction": "¿Presente perfecto simple o continuo?",
       "items": [
         "I ___ (write) 5 emails today. (completed quantity)",
         "She ___ (learn) Japanese for two years. (ongoing)",
@@ -45,21 +53,32 @@
         "have written",
         "has been learning",
         "has been working",
-        "have you read"
+        "have / read"
       ]
     }
   ],
   "quiz": [
     {
-      "question": "'I've been cooking.' What does this sentence emphasize?",
+      "question": "\"He estado cocinando.\" ¿Qué enfatiza esta frase?",
       "options": [
-        "The number of dishes cooked",
-        "The completed result",
-        "The ongoing activity and/or its duration",
-        "A general ability"
+        "El número de platos cocinados.",
+        "El resultado completo de la acción.",
+        "La actividad en curso y/o su duración.",
+        "Una habilidad culinaria general."
       ],
       "correct": 2,
-      "explanation": "Present Perfect Continuous emphasizes the activity as ongoing or recently completed, often with a visible result or duration in focus."
+      "explanation": "El Presente Perfecto Continuo se utiliza para enfatizar la actividad en sí misma, su duración, o una acción reciente que ha generado un resultado observable en el presente."
+    },
+    {
+      "question": "¿Cuál de estas frases usa correctamente el Presente Perfecto Continuo para enfatizar un *resultado visible* en el presente?",
+      "options": [
+        "I have read five books this month.",
+        "She has been writing a novel for a year.",
+        "He's tired because he has been running.",
+        "They have traveled to many countries."
+      ],
+      "correct": 2,
+      "explanation": "El Presente Perfecto Continuo es ideal para mostrar que una actividad reciente (correr) ha provocado un resultado visible en el presente (estar cansado)."
     }
   ]
 }

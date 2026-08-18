@@ -2,39 +2,39 @@
   "slug": "third-conditional",
   "sections": [
     {
-      "heading": "Third conditional structure",
-      "body": "If + past perfect, would have + past participle. This structure describes imaginary situations in the past — things that didn't happen, and their hypothetical consequences. It's the tense of regret and retrospective speculation."
+      "heading": "Tercera estructura condicional",
+      "body": "Si + pasado perfecto, tendría + participio pasado. Esta estructura describe situaciones imaginarias del pasado: cosas que no sucedieron y sus consecuencias hipotéticas. Es el tiempo de arrepentimiento y especulación retrospectiva."
     },
     {
-      "heading": "Mixed conditionals",
-      "body": "Mixed conditionals combine time frames. Past → present: 'If I had studied medicine (past unreal), I would be a doctor now (present).' Present → past: 'If I were more careful (present unreal state), I wouldn't have made that mistake (past consequence).'"
+      "heading": "Condicionales mixtos",
+      "body": "Los condicionales mixtos combinan marcos de tiempo. Pasado → presente: 'Si hubiera estudiado medicina (pasado irreal), ahora sería médico (presente)'. Presente → pasado: 'Si hubiera sido más cuidadoso (estado irreal presente), no habría cometido ese error (consecuencia pasada)'."
     },
     {
-      "heading": "Contracted and reduced forms",
-      "body": "In natural speech, third conditionals are heavily contracted: 'If I'd known, I'd've told you' /aɪd noʊn, aɪdəv/. The double contraction 'I'd've' is extremely common in speech even if rarely written."
+      "heading": "Formas contraídas y reducidas",
+      "body": "En el habla natural, los terceros condicionales están muy contraídos: 'Si lo hubiera sabido, te lo habría dicho' /aɪd noʊn, aɪdəv/. La doble contracción 'I'd've' es extremadamente común en el habla, aunque rara vez se escribe."
     }
   ],
   "examples": [
     {
       "english": "If she had studied, she would have passed.",
-      "note": "Past unreal — she didn't study"
+      "note": "Pasado irreal: ella no estudió"
     },
     {
       "english": "If I hadn't slept, I'd be exhausted now.",
-      "note": "Mixed: past condition → present result"
+      "note": "Mixto: condición pasada → resultado presente"
     },
     {
       "english": "If I were more organized, I wouldn't have lost that file.",
-      "note": "Mixed: present state → past consequence"
+      "note": "Mixto: estado presente → consecuencia pasada"
     },
     {
       "english": "I'd've come if I'd known.",
-      "note": "Natural contracted speech form"
+      "note": "Forma de habla natural contraída"
     }
   ],
   "exercises": [
     {
-      "instruction": "Complete with third conditional or mixed conditional.",
+      "instruction": "Complete each third conditional sentence with the correct verb forms.",
       "items": [
         "If she ___ (tell) me earlier, I ___ (help) her.",
         "If I ___ (be) braver, I ___ (ask) him out last year.",
@@ -42,22 +42,22 @@
       ],
       "answers": [
         "had told / would have helped",
-        "were / would have asked",
-        "would not have missed / had left"
+        "had been / would have asked",
+        "wouldn't have missed / had left"
       ]
     }
   ],
   "quiz": [
     {
-      "question": "'If I had taken that job, I would be living in Tokyo now.' This is:",
+      "question": "\"Si hubiera aceptado ese trabajo, ahora estaría viviendo en Tokio\". Esto es:",
       "options": [
-        "First conditional",
-        "Second conditional",
-        "Third conditional",
-        "A mixed conditional"
+        "Primer condicional",
+        "Segundo condicional",
+        "Tercer condicional",
+        "Un condicional mixto"
       ],
       "correct": 3,
-      "explanation": "Past condition (had taken) + present result (would be living) = mixed conditional."
+      "explanation": "Condición pasada (había tomado) + resultado presente (estaría vivo) = condicional mixto."
     }
   ]
 }

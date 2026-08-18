@@ -37,7 +37,7 @@ describe('HomeJournalCard', () => {
     // useLiveQuery mock runs sync — return [] directly
     listEntries.mockImplementation(() => [])
     render(<HomeJournalCard />)
-    expect(screen.getByText('Todavía no hay entradas')).toBeInTheDocument()
+    expect(screen.getByText('Escribe una entrada breve hoy')).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /abrir diario/i })).toHaveAttribute(
       'href',
       '/journal',

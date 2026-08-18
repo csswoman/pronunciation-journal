@@ -9,28 +9,19 @@
 // </SpeakReviewCard>
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Mic, MicOff, Loader2 } from '@/components/icons'
 import { speak } from '@/lib/phoneme-practice/tts'
-import { PillButton } from '@/components/ui/PillButton'
 import { ListenButton } from '@/components/ui/ListenButton'
 import { useSpeechInput } from '@/hooks/useSpeechInput'
 import { useSharedMicStream } from '@/hooks/useSharedMicStream'
 import { defaultEvaluationEngine } from '@/lib/exercises/evaluation'
 import { getEvaluationWordResults } from '@/lib/exercises/evaluation/word-results'
 import { getFeedbackMessage } from '@/lib/pronunciation/scoring'
-import { PhonemeFeedbackTable } from '@/components/lesson/PhonemeFeedbackTable'
-import { SelfGradeBar } from './SelfGradeBar'
-import { QuietSpeakFeedback } from './QuietSpeakFeedback'
-import { InlineFeedback } from '@/components/practice/session/InlineFeedback'
-import {
-  PracticeActionBar,
-  PracticeContinueButton,
-  PracticeExerciseCard,
-} from '@/components/practice/session/PracticeActionBar'
+import { PracticeExerciseCard } from '@/components/practice/session/PracticeActionBar'
 import { SpeakSkipActions } from './SpeakSkipActions'
+import { SpeakMicPanel } from './SpeakMicPanel'
+import { SpeakScoredPanel } from './SpeakScoredPanel'
 import { micErrorMessage } from './mic-error-message'
 import { playUiCue } from '@/lib/ui-sounds/cues'
-import { cn } from '@/lib/cn'
 import { selectSentence } from '@/lib/essential-words/sentence-variants'
 import { displayEnglishText } from '@/lib/essential-words/word-display'
 import { buildSpeakOutcome } from './useSpeakOutcome'
@@ -81,7 +72,7 @@ export function SpeakReviewCard({
   const submitted = useRef(false)
   const startedAtRef = useRef(Date.now())
 
-  const { sentence } = selectSentence(entry, repetitions)
+  const { sentence, sentence_ipa } = selectSentence(entry, repetitions)
 
   useEffect(() => {
     submitted.current = false
@@ -209,95 +200,39 @@ export function SpeakReviewCard({
         <p className="m-0 text-center text-body-lg font-medium leading-relaxed text-balance text-fg">
           {displayEnglishText(sentence)}
         </p>
-        {entry.sentence_ipa && (
+        {sentence_ipa && (
           <p className="ipa m-0 max-w-[36ch] text-center text-body-lg leading-relaxed text-fg-muted">
-            {entry.sentence_ipa}
+            {sentence_ipa}
           </p>
         )}
       </div>
 
       <ListenButton onPlay={() => speak(sentence, { rate: 0.95 })} label="Escuchar modelo" />
 
-      {useFallback ? (
-        <div className="flex w-full flex-col items-center gap-2">
-          <p className="m-0 text-caption text-fg-subtle">
-            Micrófono no disponible en este navegador — practica en voz alta y califícate:
-          </p>
-          <SelfGradeBar onGrade={handleSelfGrade} />
-          {submitError && <p className="m-0 text-center text-caption text-error">{submitError}</p>}
-        </div>
-      ) : !scored ? (
-        <div className="flex flex-col items-center gap-2">
-          <PillButton
-            type="button"
-            variant="primary"
-            onClick={() => void handleMicToggle()}
-            disabled={isProcessing}
-            aria-label={isListening ? 'Detener grabación' : 'Grabar mi voz'}
-            className={cn( 'h-16 w-16 p-0', isListening && 'bg-error hover:bg-error', )}
-          >
-            {isProcessing ? (
-              <Loader2 size={24} className="animate-spin" />
-            ) : isListening ? (
-              <MicOff size={24} />
-            ) : (
-              <Mic size={24} />
-            )}
-          </PillButton>
-          <p className="m-0 text-caption text-fg-subtle">
-            {isListening
-              ? 'Escuchando… toca para parar'
-              : isProcessing
-                ? 'Analizando…'
-                : 'Toca para hablar'}
-          </p>
-          {isError && (
-            <p className="m-0 max-w-xs text-center text-caption text-error">
-              {micErrorMessage(errorDetail)}{' '}
-              <button
-                type="button"
-                onClick={handleRetry}
-                className="cursor-pointer border-none bg-transparent font-[inherit] text-caption text-error underline focus-ring"
-              >
-                Reintentar
-              </button>
-            </p>
-          )}
-        </div>
+      {!scored ? (
+        <SpeakMicPanel
+          useFallback={useFallback}
+          isListening={isListening}
+          isProcessing={isProcessing}
+          isError={isError}
+          errorDetail={errorDetail ?? null}
+          submitError={submitError}
+          onMicToggle={() => void handleMicToggle()}
+          onSelfGrade={handleSelfGrade}
+          onRetry={handleRetry}
+        />
       ) : (
-        <div className="flex w-full flex-col items-center gap-4">
-          <InlineFeedback isCorrect={scored.score >= 70} />
-          {feedback && (
-            <QuietSpeakFeedback accuracy={scored.score} message={feedback.message} />
-          )}
-          <PracticeActionBar>
-            <PillButton variant="outline" size="md" className="w-full" onClick={handleRetry}>
-              Intentar de nuevo
-            </PillButton>
-            <PracticeContinueButton
-              onClick={handleContinue}
-              disabled={isSubmitting}
-              isLoading={isSubmitting}
-              shortcutLabel="Enter"
-            >
-              Guardar y ver la siguiente
-            </PracticeContinueButton>
-          </PracticeActionBar>
-          {scored.wordResults.some((word) => word.phonemes?.alignment?.length) && (
-            <div className="flex w-full flex-col items-center gap-3">
-              <button
-                type="button"
-                aria-expanded={showSoundDetail}
-                onClick={() => setShowSoundDetail((visible) => !visible)}
-                className="rounded-md px-2 py-1 text-caption font-semibold text-primary transition-colors hover:bg-primary-soft focus-ring"
-              >
-                {showSoundDetail ? 'Ocultar detalle de sonidos' : 'Ver detalle de sonidos'}
-              </button>
-              {showSoundDetail && <PhonemeFeedbackTable wordResults={scored.wordResults} />}
-            </div>
-          )}
-          {submitError && <p className="m-0 text-center text-caption text-error">{submitError}</p>}
-        </div>
+        <SpeakScoredPanel
+          score={scored.score}
+          feedbackMessage={feedback?.message ?? null}
+          wordResults={scored.wordResults}
+          showSoundDetail={showSoundDetail}
+          isSubmitting={isSubmitting}
+          submitError={submitError}
+          onToggleSoundDetail={() => setShowSoundDetail((visible) => !visible)}
+          onRetry={handleRetry}
+          onContinue={handleContinue}
+        />
       )}
 
       <SpeakSkipActions

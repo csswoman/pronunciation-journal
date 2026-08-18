@@ -124,7 +124,7 @@ export function getDecksForTarget(targetId: string): DeckSoundRef[] {
   return refs;
 }
 
-export type DeckLevel = 'a1' | 'a2' | 'b1' | 'b2' | 'c1' | 'biz' | 'tech' | 'cs' | 'other'
+export type DeckLevel = 'a1' | 'a2' | 'b1' | 'b2' | 'c1' | 'biz' | 'tech' | 'cs' | 'chunks' | 'false-friends' | 'other'
 
 export interface DeckSummary {
   slug: string
@@ -145,13 +145,11 @@ function slugToLevel(slug: string): DeckLevel {
   if (slug.startsWith('biz-')) return 'biz'
   if (slug.startsWith('tech-')) return 'tech'
   if (slug.startsWith('cs-')) return 'cs'
+  if (slug.startsWith('chunk-') || slug.startsWith('chunks-')) return 'chunks'
+  if (slug.startsWith('ff-') || slug.startsWith('false-friends')) return 'false-friends'
   return 'other'
 }
 
-/**
- * List all deck summaries for the index page.
- * Reads only meta + card count — does NOT validate full schema for speed.
- */
 export function listAllDecks(): DeckSummary[] {
   let files: string[]
   try {

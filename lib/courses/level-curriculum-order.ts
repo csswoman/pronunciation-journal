@@ -1,5 +1,5 @@
 import type { CourseInput } from "./buildCurriculum";
-import { phonemeTargetId } from "@/lib/pronunciation/targets/registry";
+import { phonemeTargetId, contrastTargetId } from "@/lib/pronunciation/targets/registry";
 import { patternsForLevel } from "./grammar-patterns";
 
 type LessonDef = CourseInput & { g: string };
@@ -32,8 +32,8 @@ const LESSON_BY_SLUG: Record<string, Omit<CourseInput, "g">> = {
   "a1-contables-incontables": { t: "Contables e incontables", p: 1 },
   "a1-preferencias-habilidades": { t: "Lo que te gusta y lo que sabes hacer", p: 1 },
   "a1-pronunciacion-basica": { t: "Primeros sonidos", p: 1, s: true, pt: [phonemeTargetId("/ə/")] },
-  "a1-sonido-r-americano": { t: "La erre americana /ɹ/", p: 1, s: true },
-  "a1-vocales-ae-ua": { t: "Vocales /æ/ y /ʌ/", p: 1, s: true },
+  "a1-sonido-r-americano": { t: "La erre americana /ɹ/", p: 1, s: true, pt: [phonemeTargetId("/ɹ/")] },
+  "a1-vocales-ae-ua": { t: "Vocales /æ/ y /ʌ/", p: 1, s: true, pt: [contrastTargetId("/æ/", "/ʌ/")] },
   "a1-alfabeto-deletreo": { t: "Deletrear con confianza", p: 0 },
   "a1-ingles-telefonico": { t: "Una llamada corta", p: 0 },
   "a1-fechas-horas-descripciones": { t: "Fechas, horas y adjetivos", p: 0 },
@@ -251,6 +251,16 @@ const A1_OPTIONAL = [
   "a1-audio-ingles-viajes",
 ] as const;
 
+/** Adds consecutive reader-facing sections while keeping the authored lesson order intact. */
+function withThematicGroups(courses: CourseInput[], starts: ReadonlyArray<readonly [string, string]>): CourseInput[] {
+  const labels = new Map(starts);
+  let group = starts[0]?.[1];
+  return courses.map((course) => {
+    if (course.g) group = labels.get(course.g) ?? group;
+    return { ...course, group };
+  });
+}
+
 /** Extra essentials interleaved after anchors (not in the pattern spine). */
 const A2_INSERTIONS: ReadonlyArray<{ anchor: string; insert: readonly string[] }> = [
   { anchor: "a2-when-while-pasado", insert: ["a2-used-to"] },
@@ -404,7 +414,21 @@ export function a1CourseInputs(): CourseInput[] {
     { anchor: "a1-posesivos", insert: A1_AFTER_POSESSIVES },
     A1_PRONUNCIATION,
   );
-  return [...essentialSlugs.map((slug) => lesson(slug, 1)), ...A1_OPTIONAL.map((slug) => lesson(slug))];
+  return withThematicGroups(
+    [...essentialSlugs.map((slug) => lesson(slug, 1)), ...A1_OPTIONAL.map((slug) => lesson(slug))],
+    [
+      ["a1-estrategias-aprender-ingles", "Cómo empezar"],
+      ["a1-pronombres-sujeto", "Gramática base"],
+      ["a1-presente-simple", "Presente simple y preguntas"],
+      ["a1-can-capacidad-permiso", "Acciones y vida diaria"],
+      ["a1-pronunciacion-basica", "Pronunciación inicial"],
+      ["a1-alfabeto-deletreo", "Fundamentos prácticos"],
+      ["a1-ingles-telefonico", "Comunicación cotidiana"],
+      ["a1-fechas-horas-descripciones", "Vocabulario y escritura"],
+      ["a1-practico-familia", "Situaciones cotidianas"],
+      ["a1-audio-preposiciones", "Escucha guiada"],
+    ],
+  );
 }
 
 function a2EssentialSlugs(): string[] {
@@ -417,28 +441,95 @@ function a2EssentialSlugs(): string[] {
 
 /** Essential + optional lessons for A2 in pedagogical order. */
 export function a2CourseInputs(): CourseInput[] {
-  return [
-    ...a2EssentialSlugs().map((slug) => lesson(slug, 1)),
-    ...A2_OPTIONAL.map((slug) => lesson(slug)),
-  ];
+  return withThematicGroups(
+    [...a2EssentialSlugs().map((slug) => lesson(slug, 1)), ...A2_OPTIONAL.map((slug) => lesson(slug))],
+    [
+      ["a2-pasado-to-be", "Pasado, presente perfecto y futuro"],
+      ["a2-descripciones-comparaciones", "Describir y precisar"],
+      ["a2-obligacion-prohibicion", "Reglas, consejos y preguntas"],
+      ["a2-conjunciones-verbos", "Conectar ideas y usar verbos"],
+      ["a1-audio-preposiciones", "Escucha guiada"],
+      ["a2-pronombres-reflexivos", "Referencias y precisión"],
+      ["a2-audio-aventura-ciudad", "Escucha guiada"],
+      ["a2-so-such", "Matices y cuantificadores"],
+      ["a2-propuestas-permisos", "Proponer y pedir permiso"],
+      ["a2-practico-compras", "Situaciones cotidianas"],
+    ],
+  );
 }
 
 /** Essential + optional lessons for B1 in pedagogical order. */
 export function b1CourseInputs(): CourseInput[] {
   const essentialSlugs = mergePatternSpine("b1", [], undefined, B1_SUFFIX);
-  return [...essentialSlugs.map((slug) => lesson(slug, 1)), ...B1_OPTIONAL.map((slug) => lesson(slug))];
+  return withThematicGroups(
+    [...essentialSlugs.map((slug) => lesson(slug, 1)), ...B1_OPTIONAL.map((slug) => lesson(slug))],
+    [
+      ["b1-articulos-superlativos-cero", "Comparar y describir"],
+      ["b1-primer-condicional-pasado-continuo", "Tiempos y situaciones hipotéticas"],
+      ["b1-gerundios-infinitivos", "Estructuras verbales"],
+      ["b1-conectores-discurso", "Conectar ideas y argumentar"],
+      ["b1-modales-deduccion", "Opinión, certeza y consejos"],
+      ["b1-pasado-perfecto", "Experiencias y narración"],
+      ["b1-cuantificadores", "Precisión y referencias"],
+      ["b1-segundo-condicional", "Hipótesis y deseos"],
+      ["b1-both-either-neither", "Elección y causación"],
+      ["b1-habitos-pasados", "Hábitos y preferencias"],
+      ["b1-audio-misterios-sin-resolver", "Escucha guiada"],
+      ["b1-expresiones-tiempo-cantidad", "Vocabulario para la vida real"],
+      ["b1-estrategias-escucha", "Comprensión y conversación"],
+      ["b1-practico-viajes-negocios", "Situaciones cotidianas"],
+    ],
+  );
 }
 
 /** Essential + optional lessons for B2 in pedagogical order. */
 export function b2CourseInputs(): CourseInput[] {
   const essentialSlugs = mergePatternSpine("b2", B2_PREFIX, undefined, B2_SUFFIX);
-  return [...essentialSlugs.map((slug) => lesson(slug, 1)), ...B2_OPTIONAL.map((slug) => lesson(slug))];
+  return withThematicGroups(
+    [...essentialSlugs.map((slug) => lesson(slug, 1)), ...B2_OPTIONAL.map((slug) => lesson(slug))],
+    [
+      ["b2-ingles-practico-conversacional", "Comunicación fluida"],
+      ["b2-pasado-perfecto-frases-adverbiales", "Tiempos y relaciones entre ideas"],
+      ["b2-conectores-avanzados", "Estructuras para enfatizar"],
+      ["b2-futuro-perfecto-continuo", "Tiempo, aspecto e hipótesis"],
+      ["b2-relativas-no-definitorias", "Oraciones complejas y voz pasiva"],
+      ["b2-modales-pasado", "Deducción, resultado y arrepentimiento"],
+      ["b2-verbo-objeto-gerundio", "Elección verbal y precisión"],
+      ["b2-formacion-palabras-colocaciones", "Vocabulario y registro"],
+      ["b2-audio-atrapados-tecnologia", "Escucha guiada"],
+      ["b2-audio-origen-idioma", "Escucha guiada"],
+      ["b2-narracion-integrada", "Narrar y expresarte con soltura"],
+      ["b2-vocabulario-expresiones-intermedio", "Vocabulario y escritura"],
+    ],
+  );
 }
 
 /** Essential + optional lessons for C1 in pedagogical order. */
 export function c1CourseInputs(): CourseInput[] {
   const essentialSlugs = uniquePatternSlugs("c1");
-  return [...essentialSlugs.map((slug) => lesson(slug, 1)), ...C1_OPTIONAL.map((slug) => lesson(slug))];
+  return withThematicGroups(
+    [...essentialSlugs.map((slug) => lesson(slug, 1)), ...C1_OPTIONAL.map((slug) => lesson(slug))],
+    [
+      ["c1-cohesion-discurso", "Cohesión y estructura del discurso"],
+      ["c1-futuro-en-pasado", "Tiempo, modalidad y matiz"],
+      ["c1-nominalizacion", "Precisión gramatical avanzada"],
+      ["c2-elipsis-sustitucion-avanzada", "Recursos avanzados de expresión"],
+      ["c1-conectores-contracciones-informales", "Naturalidad y pronunciación"],
+      ["c1-lenguaje-coloquial-habitual", "Conversación, registro y cortesía"],
+      ["c1-argumentos-discusiones", "Comunicación profesional"],
+      ["c1-precision-lexica", "Precisión léxica y escritura"],
+      ["c1-pragmatica-tono", "Intención, tono y perspectiva"],
+      ["c1-sintesis-multiples-fuentes", "Pensamiento crítico y síntesis"],
+      ["c1-prosodia-thought-groups-foco-nuclear", "Pronunciación y presencia"],
+      ["c1-informes-propuestas-resumenes-ejecutivos", "Escritura profesional"],
+      ["c1-humor-ironia", "Matices culturales y expresivos"],
+      ["c1-vocabulario-expresiones-avanzado", "Vocabulario y estilo propio"],
+      ["c1-plus-connotacion-prosodia-semantica", "Recursos retóricos avanzados"],
+      ["c1-plus-lectura-critica-evidencia", "Lectura crítica y edición"],
+      ["c1-plus-mediacion-conflictos", "Mediación y negociación"],
+      ["c1-plus-produccion-espontanea-extensa", "Producción espontánea"],
+    ],
+  );
 }
 
 /** Deck slugs for essential lessons only — used by order tests. */

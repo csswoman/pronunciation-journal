@@ -99,7 +99,7 @@ describe('DailyChecklist (checklist surface)', () => {
     render(<DailyChecklist conceptLesson={null} />)
     expect(screen.getByRole('heading', { name: 'Plan diario' })).toBeInTheDocument()
     expect(screen.getByLabelText('Plan de hoy')).toBeInTheDocument()
-    expect(screen.getByText(/Ver \d+ más/)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Ver \d+ pasos? más/i })).toBeInTheDocument()
   })
 
   it('shows recommended practice card when arc is present', () => {

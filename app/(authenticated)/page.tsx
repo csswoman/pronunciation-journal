@@ -1,7 +1,9 @@
 export const dynamic = "force-dynamic";
 
+import { Suspense } from "react";
 import PageLayout from "@/components/layout/PageLayout";
 import HomeLayout from "@/components/home/HomeLayout";
+import HomePageSkeleton from "@/components/home/HomePageSkeleton";
 import { getSupabaseServerUserId } from "@/lib/supabase/session";
 import { getVocabularyProgressSeed } from "@/lib/vocabulary/server-progress";
 import { getHomeMiniLessons } from "@/lib/content/lessons";
@@ -35,9 +37,21 @@ async function settled<T>(promise: Promise<T>, fallback: T, label: string): Prom
   }
 }
 
-export default async function HomePage() {
-  const userId = await getSupabaseServerUserId();
+/**
+ * Sync shell: AppShell + fallback flush before home data finishes.
+ * Cuts document TTFB vs awaiting all Supabase reads in the page root.
+ */
+export default function HomePage() {
+  return (
+    <PageLayout archetype="dashboard">
+      <Suspense fallback={<HomePageSkeleton />}>
+        <HomePageContent />
+      </Suspense>
+    </PageLayout>
+  );
+}
 
+async function HomePageContent() {
   const emptyQueue: ReviewQueueSummary = { total: 0, newAvailable: 0, sources: [], preview: [] };
   const emptyLessons = { primary: null, secondary: null } as {
     primary: MiniLesson | null;
@@ -51,6 +65,17 @@ export default async function HomePage() {
     hasPronunciationDiagnostic: true,
   };
 
+  // Start user-independent I/O before auth resolves (avoid userId waterfall).
+  const userIdPromise = getSupabaseServerUserId();
+  const lessonsPromise = settled(getHomeMiniLessons(), emptyLessons, "mini lessons");
+  const vocabularyPromise = settled(
+    getVocabularyProgressSeed(),
+    null as VocabularyProgressSeed | null,
+    "vocabulary",
+  );
+
+  const userId = await userIdPromise;
+
   const [
     queue,
     homeLessons,
@@ -63,13 +88,13 @@ export default async function HomePage() {
     pronunciationDiagnosticState,
   ] = await Promise.all([
     settled(getReviewQueueSummary(userId), emptyQueue, "review queue"),
-    settled(getHomeMiniLessons(), emptyLessons, "mini lessons"),
+    lessonsPromise,
     settled(
       userId ? getDailyStreak(userId) : Promise.resolve(undefined),
       undefined as DailyStreakResult | undefined,
       "streak",
     ),
-    settled(getVocabularyProgressSeed(), null as VocabularyProgressSeed | null, "vocabulary"),
+    vocabularyPromise,
     settled(
       userId ? getTodayPracticeGoal(userId) : Promise.resolve(null),
       null as DailyGoalProgress | null,
@@ -108,21 +133,19 @@ export default async function HomePage() {
     : null;
 
   return (
-    <PageLayout archetype="dashboard">
-      <HomeLayout
-        streak={streak}
-        profileLevel={profileLevel}
-        wordsDueCount={queue.sources.find((s) => s.id === "vocabulary")?.count ?? 0}
-        soundsDueCount={queue.sources.find((s) => s.id === "sounds")?.count ?? 0}
-        conceptLesson={conceptLesson}
-        dailyGoal={goal}
-        weakestPhoneme={weakSound}
-        vocabularyProgress={vocabulary}
-        todaysLesson={homeLessons.primary}
-        secondaryLesson={homeLessons.secondary}
-        placementState={placementState}
-        pronunciationDiagnosticState={pronunciationDiagnosticState}
-      />
-    </PageLayout>
+    <HomeLayout
+      streak={streak}
+      profileLevel={profileLevel}
+      wordsDueCount={queue.sources.find((s) => s.id === "vocabulary")?.count ?? 0}
+      soundsDueCount={queue.sources.find((s) => s.id === "sounds")?.count ?? 0}
+      conceptLesson={conceptLesson}
+      dailyGoal={goal}
+      weakestPhoneme={weakSound}
+      vocabularyProgress={vocabulary}
+      todaysLesson={homeLessons.primary}
+      secondaryLesson={homeLessons.secondary}
+      placementState={placementState}
+      pronunciationDiagnosticState={pronunciationDiagnosticState}
+    />
   );
 }

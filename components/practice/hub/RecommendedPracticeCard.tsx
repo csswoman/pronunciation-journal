@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowRight, MicVocal, ListOrdered, Layers, RotateCcw, BookOpen } from "@/components/icons"
+import { ArrowRight, MicVocal, ListOrdered, Layers, RotateCcw, BookOpen, Waves, Sparkles, Search } from "@/components/icons"
 import type { ElementType } from 'react'
 import { setLastPracticeMode } from '@/lib/db'
 import type { RecommendedResult } from '@/lib/practice/practice-modes'
@@ -15,6 +15,9 @@ export const MODE_ICONS: Record<string, ElementType> = {
   Layers,
   RotateCcw,
   BookOpen,
+  Waves,
+  Sparkles,
+  Search,
 }
 
 interface Props {

@@ -2,43 +2,47 @@
   "slug": "connected-speech",
   "sections": [
     {
-      "heading": "Linking",
-      "body": "When a word ends in a consonant and the next begins with a vowel, they link together as if part of the same word: 'an apple' → /ə ˈnæp.əl/, 'turn it off' → /ˈtɜr.nɪt ɑf/. This is the most frequent connected speech process."
+      "heading": "Enlace (Linking)",
+      "body": "El 'linking' o 'enlace' ocurre cuando la última letra de una palabra es una consonante y la primera letra de la siguiente palabra es una vocal. ¡Se unen como si fueran una sola palabra! Es uno de los fenómenos de 'connected speech' más comunes y fundamentales para sonar más natural en inglés. Por ejemplo: 'an apple' (una manzana) se pronuncia /ə ˈnæp.əl/ y 'turn it off' (apágala) suena como /ˈtɜr.nɪt ɑf/."
     },
     {
-      "heading": "Elision",
-      "body": "Elision is the disappearance of a sound. The most common: /t/ and /d/ between two consonants ('last night' → /læs naɪt/, 'next door' → /nɛks dɔr/), and the /h/ in unstressed pronouns ('tell him' → /ˈtɛl ɪm/)."
+      "heading": "Elisión (Elision)",
+      "body": "La 'elisión' es la desaparición de un sonido o sílaba completa, generalmente para simplificar la pronunciación cuando se habla rápido. Los casos más comunes incluyen la omisión de los sonidos /t/ y /d/ cuando están entre dos consonantes (por ejemplo, 'last night' suena como /læs naɪt/ y 'next door' como /nɛks dɔr/). También es muy común la elisión de la /h/ en pronombres átonos como 'him', 'her', 'his', 'them' cuando no están al inicio de una frase, por ejemplo: 'tell him' suena /ˈtɛl ɪm/."
     },
     {
-      "heading": "Assimilation",
-      "body": "Assimilation is when one sound changes to become more like an adjacent sound. 'Ten boys' → /ˈtem bɔɪz/ (n → m before a bilabial). 'That person' → /ˈðæp ˈpɜrsən/ (t → p before bilabial). This happens automatically in fast speech."
+      "heading": "Asimilación (Assimilation)",
+      "body": "La 'asimilación' es un fenómeno fonético donde un sonido cambia para volverse más similar a un sonido adyacente, facilitando así la transición. Esto es especialmente notorio cuando se habla inglés con fluidez. Por ejemplo: 'ten boys' (diez niños) no suena como /tɛn bɔɪz/, sino más bien como /ˈtem bɔɪz/, ya que la /n/ se convierte en /m/ antes del sonido bilabial /b/. Otro ejemplo es 'that person' (esa persona), donde la /t/ puede cambiar a /p/ antes de la /p/ bilabial, sonando como /ˈðæp ˈpɜrsən/."
     }
   ],
   "examples": [
     {
       "english": "an apple",
       "ipa": "/ə ˈnæp.əl/",
-      "note": "Linking: n + vowel"
+      "translation": "una manzana",
+      "note": "Vinculación: la /n/ se une a la vocal de 'apple'."
     },
     {
       "english": "next day",
       "ipa": "/nɛks deɪ/",
-      "note": "Elision: /t/ disappears"
+      "translation": "día siguiente",
+      "note": "Elisión: la /t/ de 'next' desaparece entre las consonantes /ks/ y /d/."
     },
     {
       "english": "ten boys",
       "ipa": "/ˈtem bɔɪz/",
-      "note": "Assimilation: /n/ → /m/ before /b/"
+      "translation": "diez niños",
+      "note": "Asimilación: la /n/ de 'ten' se convierte en /m/ antes de la /b/ bilabial de 'boys'."
     },
     {
       "english": "give me",
       "ipa": "/ˈɡɪmi/",
-      "note": "Linking and reduction together"
+      "translation": "dame",
+      "note": "Reducción y vinculación: la /v/ y la /e/ se unen y la palabra se reduce a dos sílabas."
     }
   ],
   "exercises": [
     {
-      "instruction": "Identify which process (linking, elision, or assimilation) applies to each phrase.",
+      "instruction": "Identifique qué proceso de 'connected speech' (Linking, Elision o Assimilation) se aplica predominantemente a cada frase.",
       "items": [
         "in an hour",
         "good boy",
@@ -46,24 +50,35 @@
         "pick it up"
       ],
       "answers": [
-        "linking — in‿an‿hour (consonant joins the next vowel)",
-        "assimilation — /d/ becomes /b/ before /b/: 'goob boy'",
-        "elision — the /t/ drops: 'las(t) chance'",
-        "linking — pick‿it‿up"
+        "Linking",
+        "Assimilation",
+        "Elision",
+        "Linking"
       ]
     }
   ],
   "quiz": [
     {
-      "question": "In 'that person', the /t/ at the end of 'that' changes to /p/ because:",
+      "question": "En la frase 'that person', la /t/ al final de 'that' cambia su sonido a /p/. ¿Qué fenómeno de 'connected speech' explica esto?",
       "options": [
-        "The speaker is being lazy",
-        "Assimilation: the /t/ anticipates the bilabial /p/ that follows",
-        "Elision removes the sound entirely",
-        "Linking joins the two words"
+        "Linking: la /t/ se une a la /p/.",
+        "Assimilation: la /t/ anticipa el lugar de articulación de la /p/ bilabial siguiente.",
+        "Elision: la /t/ se elimina por completo.",
+        "Reducción: la palabra 'that' se acorta."
       ],
       "correct": 1,
-      "explanation": "This is anticipatory (regressive) assimilation — the place of articulation of /t/ shifts to match the following /p/."
+      "explanation": "Esta es una asimilación anticipatoria (regresiva): el lugar de articulación de la /t/ cambia para coincidir con la siguiente /p/, lo que facilita la pronunciación rápida."
+    },
+    {
+      "question": "¿Cuál de las siguientes frases es un ejemplo claro de 'Elision' (elisión de sonidos)?",
+      "options": [
+        "She bought it.",
+        "He must be home.",
+        "Tell him.",
+        "Go away."
+      ],
+      "correct": 2,
+      "explanation": "En 'Tell him', la 'h' del pronombre 'him' se elide (desaparece) cuando no está al inicio de la frase, resultando en un sonido similar a 'tell-im' (/ˈtɛl ɪm/). En las otras opciones, los fenómenos son distintos o no hay elisión evidente."
     }
   ]
 }

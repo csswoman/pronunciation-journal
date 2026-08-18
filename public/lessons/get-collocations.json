@@ -7,33 +7,43 @@
     },
     {
       "heading": "'Get' as obtain/receive",
-      "body": "'Get' + noun can mean receive or obtain: get a call, get a message, get a raise, get a job, get the point, get a degree, get permission."
+      "body": "'Get' + noun can mean to receive or obtain: get a call, get a message, get a raise, get a job, get the point, get a degree, get permission."
     },
     {
       "heading": "'Get' as arrive/reach",
-      "body": "'Get' + place or 'get to' + place means arrive: 'When did you get home?' 'I got to the office late.' 'Get there early.'"
+      "body": "'Get' + place or 'get to' + place means to arrive: 'When did you get home?' 'I got to the office late.' 'Get here early.'"
     }
   ],
   "examples": [
     {
       "english": "I'm getting tired.",
-      "translation": "me estoy cansando"
+      "ipa": "/aɪm ˈɡɛtɪŋ taɪərd/",
+      "translation": "I'm becoming tired.",
+      "note": "'Get' + adjective = become"
     },
     {
       "english": "She got a promotion last month.",
-      "translation": "recibió / consiguió"
+      "ipa": "/ʃiː ɡɒt ə prəˈmoʊʃən/",
+      "translation": "She received a promotion last month.",
+      "note": "'Get' + noun = receive/obtain"
     },
     {
       "english": "What time did you get home?",
-      "translation": "llegaste a casa"
+      "ipa": "/wɒt taɪm dɪd juː ɡɛt hoʊm/",
+      "translation": "What time did you arrive home?",
+      "note": "'Get' + place = arrive"
     },
     {
       "english": "I don't get it.",
-      "translation": "no lo entiendo"
+      "ipa": "/aɪ doʊnt ɡɛt ɪt/",
+      "translation": "I don't understand it.",
+      "note": "'Get it' = understand"
     },
     {
       "english": "Get well soon.",
-      "translation": "expresión fija: mejórate pronto"
+      "ipa": "/ɡɛt wɛl suːn/",
+      "translation": "Fixed expression: recover quickly.",
+      "note": "Fixed expression used when someone is ill."
     }
   ],
   "exercises": [
@@ -46,16 +56,16 @@
         "I don't understand the joke."
       ],
       "answers": [
-        "got",
-        "got",
-        "got",
-        "get"
+        "She got very angry.",
+        "I got your email.",
+        "He got home late.",
+        "I don't get the joke."
       ]
     }
   ],
   "quiz": [
     {
-      "question": "'Get' + adjective most closely means:",
+      "question": "What does 'get' + adjective most closely mean?",
       "options": [
         "to have",
         "to become",
@@ -63,7 +73,18 @@
         "to find"
       ],
       "correct": 1,
-      "explanation": "'Get' + adjective describes a transition into a new state — it means 'become'."
+      "explanation": "'Get' + adjective describes a transition to a new state; it means 'to become'."
+    },
+    {
+      "question": "Which sentence uses 'get' to mean 'arrive'?",
+      "options": [
+        "I got a letter.",
+        "She gets tired easily.",
+        "We got to the airport on time.",
+        "He got angry."
+      ],
+      "correct": 2,
+      "explanation": "'Get to' + place means to arrive at a destination."
     }
   ]
 }

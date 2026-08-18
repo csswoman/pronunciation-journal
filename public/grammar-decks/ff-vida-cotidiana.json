@@ -1,0 +1,259 @@
+{
+  "meta": {
+    "eyebrow": "Falsos Cognados · Vida Cotidiana",
+    "title": "Falsos amigos en",
+    "titleEmphasis": "la vida cotidiana",
+    "goal": "Aprende a diferenciar palabras de compras, materiales, hogar e higiene que parecen una cosa en español pero significan otra."
+  },
+  "related": [
+    { "slug": "ff-esenciales-a1-a2", "label": "Falsos amigos esenciales" },
+    { "slug": "ff-comunicacion-argumentacion", "label": "Falsos amigos en comunicación" }
+  ],
+  "quiz": [
+    {
+      "q": "Vas a comprar tela de algodón para confeccionar una camisa. ¿Qué palabra buscas?",
+      "options": [
+        "Cotton factory",
+        "Cotton fabric",
+        "Cotton carpet",
+        "Cotton preservative"
+      ],
+      "answer": 1,
+      "explain": "\"Fabric\" es tela o tejido. \"Factory\" es una fábrica o planta industrial donde se manufacturan productos."
+    },
+    {
+      "q": "Estás en el supermercado y buscas productos sin aditivos químicos para conservar la comida. ¿Qué término aparece en la etiqueta?",
+      "options": [
+        "No preservatives",
+        "No condoms",
+        "No fabrics",
+        "No carpets"
+      ],
+      "answer": 0,
+      "explain": "\"Preservative\" es un conservante alimentario. El preservativo profiláctico en inglés se llama \"condom\"."
+    },
+    {
+      "q": "Quieres lavarte las manos con una barra de jabón. ¿Qué necesitas?",
+      "options": [
+        "A bar of soup",
+        "A bar of soap",
+        "A piece of grocery",
+        "A soft carpet"
+      ],
+      "answer": 1,
+      "explain": "\"Soap\" (/soʊp/) es jabón. \"Soup\" (/suːp/) es la sopa que se come caliente con cuchara."
+    }
+  ],
+  "cards": [
+    {
+      "id": "ff-fabric-factory",
+      "tag": "fabric / factory",
+      "title": "Fabric vs Factory",
+      "lede": "Dos palabras parecidas pero con escalas completamente distintas: la tela frente al edificio industrial.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "fabric (tela / tejido)",
+              "rule": "Material textil confeccionado para ropa, cortinas, tapicería o sábanas.",
+              "examples": [
+                "This sofa is upholstered in durable linen fabric.",
+                "Natural fabrics like silk and wool feel softer on skin.",
+                "The tailor recommended a water-resistant fabric."
+              ]
+            },
+            {
+              "label": "factory (fábrica / planta)",
+              "rule": "Edificio o complejo donde se fabrican bienes en serie mediante maquinaria.",
+              "examples": [
+                "The car factory employs over 2,000 local workers.",
+                "Production moved to a newly automated factory.",
+                "Safety regulations are strictly enforced in the factory."
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Asociación visual:",
+        "body": "«Fabric» = fibra / textil. «Factory» = factoría / fábrica de manufactura masiva."
+      }
+    },
+    {
+      "id": "ff-carpet-folder",
+      "tag": "carpet / folder",
+      "title": "Carpet vs Folder",
+      "lede": "Cuidado con guardar papeles en la «carpeta»: en inglés carpet es lo que pisas en el suelo.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "carpet (alfombra / moqueta)",
+              "rule": "Revestimiento textil grueso que cubre el suelo de una habitación.",
+              "examples": [
+                "Please vacuum the living room carpet this afternoon.",
+                "The red carpet was rolled out for the movie premiere.",
+                "We installed a soft wool carpet in the bedroom."
+              ]
+            },
+            {
+              "label": "folder / binder (carpeta de oficina)",
+              "rule": "Cubierta de cartón o plástico para archivar hojas; también carpeta digital.",
+              "examples": [
+                "Save all your invoices in this digital folder.",
+                "She put the signed contracts inside a green folder.",
+                "Create a new folder on your desktop for project files."
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Diferencia de tamaño:",
+        "body": "«Rug» es una alfombra pequeña o tapete suelto. «Carpet» cubre toda la habitación de pared a pared."
+      }
+    },
+    {
+      "id": "ff-grocery-grease",
+      "tag": "grocery / grease",
+      "title": "Grocery vs Grease",
+      "lede": "«Grocery» no tiene ninguna relación con groserías ni grasa: es donde compras la comida del hogar.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "grocery / groceries (comestibles / súper)",
+              "rule": "Alimentos y productos de despensa comprados en la tienda de alimentación.",
+              "examples": [
+                "I need to stop by the grocery store to buy milk and eggs.",
+                "We unpack the groceries as soon as we arrive home.",
+                "Grocery delivery has become very popular in big cities."
+              ]
+            },
+            {
+              "label": "grease / fat / rudeness (grasa o grosería)",
+              "rule": "Materia aceitosa/grasa (grease) o falta de cortesía/mala educación (rudeness).",
+              "examples": [
+                "Use dish soap to cut through tough cooking grease.",
+                "His rudeness during dinner shocked all the guests.",
+                "The mechanic had black motor grease on his hands."
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Uso diario:",
+        "body": "«Do the grocery shopping» o «Buy groceries» es la forma natural en inglés de decir «hacer la compra del súper»."
+      }
+    },
+    {
+      "id": "ff-preservative-condom",
+      "tag": "preservative / condom",
+      "title": "Preservative vs Condom",
+      "lede": "Uno de los errores más bochornosos al hablar de alimentos e ingredientes en el supermercado.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "preservative (conservante alimentario)",
+              "rule": "Sustancia química añadida a los alimentos o cosméticos para evitar que se descompongan.",
+              "examples": [
+                "This artisanal jam contains no artificial preservatives.",
+                "Salt and sugar are traditional natural food preservatives.",
+                "Consumers often prefer products with zero added preservatives."
+              ]
+            },
+            {
+              "label": "condom / contraceptive (preservativo profiláctico)",
+              "rule": "Método anticonceptivo y de protección en la salud reproductiva.",
+              "examples": [
+                "Pharmacies sell various approved brands of condoms.",
+                "Condoms prevent sexually transmitted infections.",
+                "Free condoms are provided at local health clinics."
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Precaución al comer:",
+        "body": "Nunca digas en un restaurante «Does this soup have condoms?». Di siempre: «Does this soup contain artificial preservatives?»."
+      }
+    },
+    {
+      "id": "ff-soap-soup",
+      "tag": "soap / soup",
+      "title": "Soap vs Soup",
+      "lede": "Dos palabras parecidas en ortografía pero con vocales y funciones totalmente distintas.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "soap (/soʊp/ - jabón)",
+              "rule": "Producto de limpieza para lavar manos, cuerpo, ropa o platos.",
+              "examples": [
+                "Wash your hands with warm water and antibacterial soap.",
+                "She bought lavender scented liquid soap.",
+                "Is there any dish soap left near the kitchen sink?"
+              ]
+            },
+            {
+              "label": "soup (/suːp/ - sopa)",
+              "rule": "Plato caliente o caldo con verduras, carne, fideos o legumbres.",
+              "examples": [
+                "A hot bowl of chicken soup is comforting on cold days.",
+                "What is the soup of the day at this restaurant?",
+                "Tomato soup with grilled cheese is a classic combination."
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Pronunciación:",
+        "body": "«Soap» tiene la vocal abierta /oʊ/ (como «hope»). «Soup» tiene la vocal larga /uː/ (como «group» o «food»)."
+      }
+    },
+    {
+      "id": "ff-contest-answer",
+      "tag": "contest / answer",
+      "title": "Contest vs Answer",
+      "lede": "«Contestar» al teléfono o una pregunta no es «contest», sino «answer» o «reply».",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "contest (concurso / competencia / impugnar)",
+              "rule": "Certamen con participantes que compiten por un premio, o disputar legalmente una decisión.",
+              "examples": [
+                "She won first prize in the annual photography contest.",
+                "The lawyer decided to contest the court's final ruling.",
+                "Enter our online contest to win two round-trip tickets."
+              ]
+            },
+            {
+              "label": "answer / reply / respond (responder / contestar)",
+              "rule": "Dar respuesta a una pregunta, atender una llamada o responder un mensaje.",
+              "examples": [
+                "Could you please answer the phone while I cook?",
+                "She didn't reply to my WhatsApp message until midnight.",
+                "He answered every question on the exam correctly."
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Llamadas telefónicas:",
+        "body": "Siempre di «answer the phone» o «pick up the phone», nunca «contest the call»."
+      }
+    }
+  ]
+}

@@ -4,9 +4,9 @@
   "level": "advanced",
   "category": "writing",
   "duration": 8,
-  "title": "Developing your voice in English",
-  "subtitle": "Writing of the day",
-  "body": "Fluency is more than accuracy. Voice is the consistent set of choices — rhythm, diction, sentence length — that make your writing recognizably yours.",
+  "title": "Desarrollando tu voz en inglés",
+  "subtitle": "Escritura del dia",
+  "body": "La fluidez es más que precisión. La voz es el conjunto constante de opciones (ritmo, dicción, longitud de la oración) que hacen que tu escritura sea reconocible como tuya.",
   "examples": [
     {
       "word": "short sentences create urgency.",
@@ -17,6 +17,6 @@
       "translation": "elaboración"
     }
   ],
-  "tip": "Read one paragraph aloud. Does it sound like you? That's the test.",
+  "tip": "Lea un párrafo en voz alta. ¿Te suena? Esa es la prueba.",
   "href": "/mini-lessons/style-voice"
 }

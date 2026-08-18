@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight } from "@/components/icons";
+import { ArrowRight, ChevronRight } from "@/components/icons";
 import { useEffect, useMemo, useState } from "react";
 import CoursePathLessonRow from "@/components/courses/CoursePathLessonRow";
 import CoursePracticeSuggestions from "@/components/courses/CoursePracticeSuggestions";
@@ -12,11 +12,63 @@ import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth/session";
 import { deriveLevelView, lessonProgressKey } from "@/lib/courses/progress";
 import { cn } from "@/lib/cn";
-import type { CoursePathLevel } from "@/lib/courses/types";
+import type { CoursePathLesson, CoursePathLevel, LessonProgressState } from "@/lib/courses/types";
 
 interface CoursePathProgressClientProps {
   level: CoursePathLevel;
   compactHead?: boolean;
+}
+
+type LessonWithState = CoursePathLesson & { state: LessonProgressState };
+
+interface LessonGroupProps {
+  id: string;
+  title: string;
+  lessons: LessonWithState[];
+  levelId: CoursePathLevel["id"];
+  open: boolean;
+  onToggle: (id: string, open: boolean) => void;
+  completed?: boolean;
+}
+
+function LessonGroup({ id, title, lessons, levelId, open, onToggle, completed }: LessonGroupProps) {
+  const currentLesson = lessons.find((lesson) => lesson.state === "current");
+
+  return (
+    <details
+      className={cn("course-path__lesson-group", completed && "course-path__lesson-group--completed")}
+      open={open}
+      onToggle={(event) => onToggle(id, event.currentTarget.open)}
+    >
+      <summary className="course-path__lesson-group-summary">
+        <span className="course-path__lesson-group-heading">
+          <span className="course-path__lesson-group-title">{title}</span>
+          <span className="course-path__lesson-group-meta">
+            {currentLesson ? "Aquí vas" : `${lessons.length} ${lessons.length === 1 ? "lección" : "lecciones"}`}
+          </span>
+        </span>
+        <ChevronRight className="course-path__lesson-group-chevron" size={16} aria-hidden />
+      </summary>
+      <div className="course-path__lesson-group-body">
+        {lessons.map((lesson) => (
+          <CoursePathLessonRow key={lesson.id} lesson={lesson} levelId={levelId} />
+        ))}
+      </div>
+    </details>
+  );
+}
+
+function groupPendingLessons(lessons: LessonWithState[]): Array<{ group: string; lessons: LessonWithState[] }> {
+  return lessons.reduce<Array<{ group: string; lessons: LessonWithState[] }>>((groups, lesson) => {
+    const group = lesson.group ?? "Contenido del curso";
+    const lastGroup = groups.at(-1);
+    if (lastGroup?.group === group) {
+      lastGroup.lessons.push(lesson);
+    } else {
+      groups.push({ group, lessons: [lesson] });
+    }
+    return groups;
+  }, []);
 }
 
 async function getOptionalUserId(): Promise<string | null> {
@@ -37,6 +89,28 @@ export default function CoursePathProgressClient({ level, compactHead }: CourseP
   const [completedIds, setCompletedIds] = useState<Set<string> | null>(null);
   const [loadError, setLoadError] = useState(false);
   const [retryKey, setRetryKey] = useState(0);
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    try {
+      const saved = window.localStorage.getItem(`course-path:groups:${level.id}`);
+      setExpandedGroups(saved ? JSON.parse(saved) as Record<string, boolean> : {});
+    } catch {
+      setExpandedGroups({});
+    }
+  }, [level.id]);
+
+  const handleGroupToggle = (id: string, open: boolean) => {
+    setExpandedGroups((previous) => {
+      const next = { ...previous, [id]: open };
+      try {
+        window.localStorage.setItem(`course-path:groups:${level.id}`, JSON.stringify(next));
+      } catch {
+        // The route remains usable if storage is unavailable.
+      }
+      return next;
+    });
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -156,10 +230,13 @@ export default function CoursePathProgressClient({ level, compactHead }: CourseP
                 <div
                   className="course-path__ring"
                   style={{ "--p": progressPercent } as React.CSSProperties}
-                  role="img"
-                  aria-label={`${progressPercent}% completada`}
+                  role="progressbar"
+                  aria-label={`${unit.unit.title}: ${completedCount} de ${unit.unit.lessons.length} lecciones completadas`}
+                  aria-valuemin={0}
+                  aria-valuemax={unit.unit.lessons.length}
+                  aria-valuenow={completedCount}
                 >
-                  <div className="course-path__ring-inner" aria-hidden>{progressPercent}%</div>
+                  <div className="course-path__ring-inner" aria-hidden>{completedCount}/{unit.unit.lessons.length}</div>
                 </div>
                 <div className="course-path__uinfo">
                   <div className="course-path__un">{unit.unit.label}</div>
@@ -175,9 +252,41 @@ export default function CoursePathProgressClient({ level, compactHead }: CourseP
 
               <div className="course-path__lessons" role="region" aria-label={unit.unit.title}>
                 <div>
-                  {unit.lessons.map((lesson) => (
-                    <CoursePathLessonRow key={lesson.id} lesson={lesson} levelId={level.id} />
-                  ))}
+                  {groupPendingLessons(
+                    unit.lessons.filter((lesson) => {
+                      const isDuplicatedStart = completedIds.size === 0 && lesson.id === firstLesson?.id;
+                      return lesson.state !== "done" && !isDuplicatedStart;
+                    }),
+                  ).map(({ group, lessons }, index) => {
+                    const id = `${unit.unit.id}-${group}-${index}`;
+                    const hasCurrentLesson = lessons.some((lesson) => lesson.state === "current");
+                    return (
+                      <LessonGroup
+                        key={id}
+                        id={id}
+                        title={group}
+                        lessons={lessons}
+                        levelId={level.id}
+                        open={expandedGroups[id] ?? (hasCurrentLesson || (completedIds.size === 0 && index === 0))}
+                        onToggle={handleGroupToggle}
+                      />
+                    );
+                  })}
+                  {unit.lessons.some((lesson) => lesson.state === "done") && (() => {
+                    const id = `${unit.unit.id}-completed`;
+                    const lessons = unit.lessons.filter((lesson) => lesson.state === "done");
+                    return (
+                      <LessonGroup
+                        id={id}
+                        title="Completadas"
+                        lessons={lessons}
+                        levelId={level.id}
+                        open={expandedGroups[id] ?? false}
+                        onToggle={handleGroupToggle}
+                        completed
+                      />
+                    );
+                  })()}
                 </div>
               </div>
             </details>

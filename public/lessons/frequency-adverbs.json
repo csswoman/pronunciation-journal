@@ -2,35 +2,43 @@
   "slug": "frequency-adverbs",
   "sections": [
     {
-      "heading": "Position rules",
-      "body": "Adverbs of frequency go: after 'be' ('She is always late'), before the main verb ('I usually walk to work'), after the first auxiliary ('She has never been to Japan'). This is different from Spanish, where placement is more flexible."
+      "heading": "La posición de los adverbios de frecuencia",
+      "body": "Los adverbios de frecuencia nos indican con qué regularidad ocurre una acción. Su posición en la oración es bastante específica en inglés, a diferencia del español donde somos más flexibles. Generalmente, se colocan de la siguiente manera:\n\n1.  **Después del verbo 'to be'**: Si el verbo principal es 'to be' (am, is, are, was, were), el adverbio va *después* de él. (Ej: 'She **is always** late.')\n2.  **Antes del verbo principal**: Si no es el verbo 'to be', el adverbio va *antes* del verbo principal. (Ej: 'I **usually walk** to work.')\n3.  **Después del primer verbo auxiliar**: En oraciones con verbos compuestos (como el presente perfecto o verbos modales), el adverbio va *después* del primer auxiliar. (Ej: 'He **has never** been to Japan.')"
     },
     {
-      "heading": "Meaning and nuance",
-      "body": "The scale: always (100%) → usually/generally (80–90%) → often/frequently (60–70%) → sometimes/occasionally (30–50%) → rarely/seldom (10–20%) → never (0%). 'Hardly ever' is close to 'rarely' and very natural in speech."
+      "heading": "La escala de frecuencia y sus matices",
+      "body": "Podemos visualizar los adverbios de frecuencia en una escala, desde lo que ocurre siempre hasta lo que nunca sucede:\n\n*   **Always** (Siempre - 100%)\n*   **Usually / Generally** (Habitualmente / Generalmente - 80-90%)\n*   **Often / Frequently** (A menudo / Frecuentemente - 60-70%)\n*   **Sometimes / Occasionally** (A veces / Ocasionalmente - 30-50%)\n*   **Rarely / Seldom / Hardly ever** (Rara vez / Casi nunca - 10-20%)\n*   **Never** (Nunca - 0%)\n\n'Hardly ever' y 'scarcely ever' son muy comunes en el habla coloquial para expresar 'casi nunca', y suenan muy naturales."
     }
   ],
   "examples": [
     {
       "english": "I always drink coffee in the morning.",
-      "note": "Before main verb"
+      "ipa": "/aɪ ˈɔːlweɪz drɪŋk ˈkɒfi ɪn ðə ˈmɔːrnɪŋ/",
+      "translation": "Siempre tomo café por la mañana.",
+      "note": "Adverbio antes del verbo principal 'drink'."
     },
     {
       "english": "She is usually on time.",
-      "note": "After 'be'"
+      "ipa": "/ʃi ɪz ˈjuːʒuəli ɒn taɪm/",
+      "translation": "Ella suele ser puntual.",
+      "note": "Adverbio después del verbo 'to be' ('is')."
     },
     {
       "english": "He has never visited Peru.",
-      "note": "After first auxiliary"
+      "ipa": "/hi hæz ˈnevər ˈvɪzɪtɪd ˈpɛruː/",
+      "translation": "Él nunca ha visitado Perú.",
+      "note": "Adverbio después del primer auxiliar ('has')."
     },
     {
       "english": "I hardly ever watch TV.",
-      "note": "Natural conversational alternative to 'rarely'"
+      "ipa": "/aɪ ˈhɑːrdli ˈevər wɒtʃ ˌtiːˈviː/",
+      "translation": "Casi nunca veo televisión.",
+      "note": "Una forma natural de decir 'casi nunca' o 'rara vez'."
     }
   ],
   "exercises": [
     {
-      "instruction": "Place the adverb in the correct position.",
+      "instruction": "Coloca el adverbio en la posición correcta.",
       "items": [
         "I go to the gym. (sometimes)",
         "She is late for meetings. (never)",
@@ -47,15 +55,26 @@
   ],
   "quiz": [
     {
-      "question": "Where does 'always' go in 'She takes a walk in the evening'?",
+      "question": "¿Cuál es la posición correcta para el adverbio 'always' en la frase 'She walks at night'?",
       "options": [
-        "Always she takes...",
-        "She always takes...",
-        "She takes always...",
-        "She takes a always walk..."
+        "She walks always at night.",
+        "She always walks at night.",
+        "Always she walks at night.",
+        "She walks at night always."
       ],
       "correct": 1,
-      "explanation": "Adverbs of frequency go before the main verb (and after the subject)."
+      "explanation": "El adverbio 'always' (siempre) se coloca antes del verbo principal 'walks'."
+    },
+    {
+      "question": "¿En cuál de estas oraciones el adverbio de frecuencia 'usually' está correctamente posicionado?",
+      "options": [
+        "They usually are busy on Mondays.",
+        "They are usually busy on Mondays.",
+        "Usually they are busy on Mondays.",
+        "They are busy usually on Mondays."
+      ],
+      "correct": 1,
+      "explanation": "Cuando se usa el verbo 'to be', el adverbio de frecuencia se coloca después de 'am', 'is' o 'are'. Por lo tanto, 'They are usually busy' es correcto."
     }
   ]
 }

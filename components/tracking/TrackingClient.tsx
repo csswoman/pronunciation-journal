@@ -63,7 +63,11 @@ function TrackingCard({ source, onEditWord, onDeleteWord }: { source: TrackingRe
   return item.href ? <Link href={item.href} className="tracking-item">{content}</Link> : <div className="tracking-item">{content}</div>;
 }
 
-export default function TrackingClient() {
+interface TrackingClientProps {
+  embed?: boolean;
+}
+
+export default function TrackingClient({ embed = false }: TrackingClientProps) {
   const router = useRouter();
   const { reviewSources, loading, userId, addWord, removeWord, updateWord } = useTracking();
   const [filter, setFilter] = useState<"all" | TrackedKind>("all");
@@ -135,30 +139,43 @@ export default function TrackingClient() {
 
   const canReview = availableReviewCount > 0;
 
-  return <PageLayout archetype="catalog"><PageHeader kicker="Tracking" title="Mi inglés" />
-    <div className="tracking-workspace">
-      <aside className="tracking-capture" aria-label="Guardar contenido nuevo">
-        <div className="flex items-start gap-3">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-primary-soft text-primary"><BookmarkPlus size={19} aria-hidden /></span>
-          <div>
-            <h2 className="text-h4 text-fg">Añadir a mi lista</h2>
+  const content = (
+    <>
+      <div className="tracking-workspace">
+        <aside className="tracking-capture" aria-label="Guardar contenido nuevo">
+          <div className="flex items-start gap-3">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-primary-soft text-primary"><BookmarkPlus size={19} aria-hidden /></span>
+            <div>
+              <h2 className="text-h4 text-fg">Añadir a mi lista</h2>
+            </div>
           </div>
-        </div>
-        <div className="tracking-capture__actions">
-          <Button fullWidth onClick={() => setShowWordModal(true)} icon={<Plus size={16} aria-hidden />}>Guardar palabra</Button>
-          <Button fullWidth variant="secondary" onClick={() => setShowPhraseModal(true)} icon={<FileText size={16} aria-hidden />}>Guardar frase</Button>
-        </div>
-        <p className="mt-[var(--layout-stack)] text-caption text-fg-subtle"><kbd className="rounded-sm border border-border-subtle bg-surface-sunken px-1 font-mono text-fg">N</kbd> abre una palabra.</p>
-      </aside>
-      <main className="tracking-workspace__content min-w-0">
-        {reviewError ? <p role="alert" className="mb-[var(--layout-stack)] text-body-sm text-error">{reviewError}</p> : null}
-        <div className="tracking-toolbar"><div className="flex flex-wrap gap-2" aria-label="Filtrar contenido guardado">{FILTERS.map(({ id, label }) => <button key={id} type="button" onClick={() => setFilter(id)} aria-pressed={filter === id} className={filter === id ? "rounded-full bg-primary px-3 py-1.5 text-body-sm font-medium text-on-primary" : "rounded-full border border-border-subtle bg-surface-raised px-3 py-1.5 text-body-sm font-medium text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg"}>{label}</button>)}</div>{canReview ? <Button onClick={() => void startReview()} disabled={startingReview} icon={<Play size={15} aria-hidden />}>{startingReview ? "Preparando…" : "Repasar"}</Button> : null}</div>
-        {loading ? <p className="text-body-sm text-fg-muted">Cargando contenido guardado…</p> : visibleSources.length ? <div className="tracking-list">{visibleSources.map((source) => <TrackingCard key={`${source.item.kind}:${source.item.id}`} source={source} onEditWord={setEditingWord} onDeleteWord={setDeletingWord} />)}</div> : <TrackingEmptyState filter={filter} />}
-      </main>
-    </div>
-    <QuickAddModal open={showWordModal} onClose={() => setShowWordModal(false)} onSubmit={addWord} contextLabel="TRACKING" />
-    <PhraseCaptureModal open={showPhraseModal} value={phrase} onChange={setPhrase} context={phraseContext} onContextChange={setPhraseContext} onClose={closePhraseModal} onSubmit={() => void addPhrase()} />
-    <EditWordModal word={editingWord} onClose={() => setEditingWord(null)} onSubmit={updateWord} />
-    <DeleteWordDialog word={deletingWord} onClose={() => setDeletingWord(null)} onConfirm={removeWord} />
-  </PageLayout>;
+          <div className="tracking-capture__actions">
+            <Button fullWidth onClick={() => setShowWordModal(true)} icon={<Plus size={16} aria-hidden />}>Guardar palabra</Button>
+            <Button fullWidth variant="secondary" onClick={() => setShowPhraseModal(true)} icon={<FileText size={16} aria-hidden />}>Guardar frase</Button>
+          </div>
+          <p className="mt-[var(--layout-stack)] text-caption text-fg-subtle"><kbd className="rounded-sm border border-border-subtle bg-surface-sunken px-1 font-mono text-fg">N</kbd> abre una palabra.</p>
+        </aside>
+        <main className="tracking-workspace__content min-w-0">
+          {reviewError ? <p role="alert" className="mb-[var(--layout-stack)] text-body-sm text-error">{reviewError}</p> : null}
+          <div className="tracking-toolbar"><div className="flex flex-wrap gap-2" aria-label="Filtrar contenido guardado">{FILTERS.map(({ id, label }) => <button key={id} type="button" onClick={() => setFilter(id)} aria-pressed={filter === id} className={filter === id ? "rounded-full bg-primary px-3 py-1.5 text-body-sm font-medium text-on-primary" : "rounded-full border border-border-subtle bg-surface-raised px-3 py-1.5 text-body-sm font-medium text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg"}>{label}</button>)}</div>{canReview ? <Button onClick={() => void startReview()} disabled={startingReview} icon={<Play size={15} aria-hidden />}>{startingReview ? "Preparando…" : "Repasar"}</Button> : null}</div>
+          {loading ? <p className="text-body-sm text-fg-muted">Cargando contenido guardado…</p> : visibleSources.length ? <div className="tracking-list">{visibleSources.map((source) => <TrackingCard key={`${source.item.kind}:${source.item.id}`} source={source} onEditWord={setEditingWord} onDeleteWord={setDeletingWord} />)}</div> : <TrackingEmptyState filter={filter} />}
+        </main>
+      </div>
+      <QuickAddModal open={showWordModal} onClose={() => setShowWordModal(false)} onSubmit={addWord} contextLabel="TRACKING" />
+      <PhraseCaptureModal open={showPhraseModal} value={phrase} onChange={setPhrase} context={phraseContext} onContextChange={setPhraseContext} onClose={closePhraseModal} onSubmit={() => void addPhrase()} />
+      <EditWordModal word={editingWord} onClose={() => setEditingWord(null)} onSubmit={updateWord} />
+      <DeleteWordDialog word={deletingWord} onClose={() => setDeletingWord(null)} onConfirm={removeWord} />
+    </>
+  );
+
+  if (embed) {
+    return content;
+  }
+
+  return (
+    <PageLayout archetype="catalog">
+      <PageHeader kicker="Tracking" title="Mi inglés" />
+      {content}
+    </PageLayout>
+  );
 }

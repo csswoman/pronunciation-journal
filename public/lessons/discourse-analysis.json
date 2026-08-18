@@ -2,39 +2,39 @@
   "slug": "discourse-analysis",
   "sections": [
     {
-      "heading": "The challenge of complex spoken discourse",
-      "body": "At advanced level, listening difficulty is rarely about individual words — it's about tracking the macro-structure: what is the speaker's main point, how are they building their argument, where are the pivots, what is implied vs. stated?"
+      "heading": "El desafío del discurso hablado complejo",
+      "body": "En el nivel avanzado, la dificultad para escuchar rara vez se centra en palabras individuales. Se trata más bien de rastrear la macroestructura: ¿cuál es el punto principal del hablante, cómo construye su argumento, dónde están los puntos clave, qué está implícito y qué se afirma explícitamente?"
     },
     {
-      "heading": "Signpost language",
-      "body": "Speakers signal their discourse structure explicitly. 'On the one hand... on the other' = contrast coming. 'What I'm really trying to say is...' = simplification/summary. 'Having said that...' = qualification. 'Let me step back...' = perspective shift. These are the structural 'headers' of spoken argument."
+      "heading": "Idioma de señalización",
+      "body": "Los hablantes señalan explícitamente la estructura de su discurso. Por ejemplo, 'Por un lado... por el otro...' señala un contraste inminente. 'Lo que realmente estoy tratando de decir es...' indica una simplificación o resumen. 'Dicho esto...' introduce una matización o restricción. 'Déjame dar un paso atrás...' señala un cambio de perspectiva. Estas son las 'señales' estructurales que guían la argumentación oral."
     },
     {
-      "heading": "Active listening strategies",
-      "body": "Top-down processing: use your knowledge of the topic to predict what's coming. Bottom-up: focus on key stressed words and discourse markers. Selective attention: don't try to catch every word — identify the main point and the structure."
+      "heading": "Estrategias de escucha activa",
+      "body": "Procesamiento de arriba hacia abajo: utilice su conocimiento del tema para predecir lo que vendrá. De abajo hacia arriba: concéntrese en palabras clave acentuadas y marcadores del discurso. Atención selectiva: no intente captar cada palabra; identifique el punto principal y la estructura general."
     }
   ],
   "examples": [
     {
       "english": "'What I'm really trying to say is...'",
-      "note": "Signal: rephrasing/clarification of the core point"
+      "translation": "Señal: reformulación/aclaración del punto central"
     },
     {
       "english": "'That said...' / 'Having said that...'",
-      "note": "Signal: a qualification is coming"
+      "translation": "Señal: introduce una matización o restricción"
     },
     {
       "english": "'To put it another way...'",
-      "note": "Signal: a reformulation for clarity"
+      "translation": "Señal: una reformulación para mayor claridad"
     },
     {
       "english": "'The bottom line is...'",
-      "note": "Signal: conclusion / most important point"
+      "translation": "Señal: conclusión / punto más importante"
     }
   ],
   "exercises": [
     {
-      "instruction": "What discourse function does each phrase signal?",
+      "instruction": "¿Qué función discursiva señala cada frase?",
       "items": [
         "'Let me give you an example...'",
         "'To return to my earlier point...'",
@@ -42,24 +42,35 @@
         "'In other words...'"
       ],
       "answers": [
-        "Exemplification — introducing an example",
-        "Resumption — returning to an earlier point",
-        "Transition — moving to the main argument",
-        "Reformulation — restating more simply"
+        "Signal: Introducing an example",
+        "Signal: Returning to a previous point",
+        "Signal: Transitioning to the main argument",
+        "Signal: Restating for clarity"
       ]
     }
   ],
   "quiz": [
     {
-      "question": "When a speaker says 'The bottom line is...', what are they signaling?",
+      "question": "Cuando un orador dice 'La conclusión es...', ¿qué está señalando?",
       "options": [
-        "A financial topic",
-        "An introductory remark",
-        "The most important conclusion or key point",
-        "A transition to a new topic"
+        "Un tema financiero",
+        "Un comentario introductorio",
+        "La conclusión o punto clave más importante.",
+        "Una transición a un nuevo tema."
       ],
       "correct": 2,
-      "explanation": "'The bottom line is' signals the speaker is about to state the most essential point — their core conclusion."
+      "explanation": "La frase 'La conclusión es' indica que el hablante está a punto de exponer el punto más esencial: su conclusión central."
+    },
+    {
+      "question": "Si un hablante dice 'Déjame dar un paso atrás...', ¿cuál es su intención?",
+      "options": [
+        "Quiere terminar la conversación rápidamente.",
+        "Desea cambiar de perspectiva o revisar algo dicho anteriormente.",
+        "Está pidiendo un descanso.",
+        "Se está disculpando por un error."
+      ],
+      "correct": 1,
+      "explanation": "La frase 'Déjame dar un paso atrás...' se usa para indicar que el hablante quiere revisar o reconsiderar un punto anterior, o cambiar su enfoque."
     }
   ]
 }

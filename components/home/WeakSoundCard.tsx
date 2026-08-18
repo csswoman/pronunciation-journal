@@ -66,9 +66,9 @@ export default function WeakSoundCard({ weakestPhoneme = null }: WeakSoundCardPr
   return (
     <Link
       href="/practice/sounds"
-      className="home-sidebar-card focus-ring group flex flex-col gap-3 transition-colors hover:bg-surface-sunken"
+      className="home-sidebar-card home-sidebar-card--priority focus-ring group flex flex-col gap-3 transition-colors hover:bg-surface-sunken"
     >
-      <span className="font-label text-fg">Pronunciación</span>
+      <span className="text-h4 font-semibold text-fg">Pronunciación</span>
       <div className="flex items-start gap-3">
         <span className="font-ipa shrink-0 text-display-ipa font-bold leading-none text-fg">
           {formatIpaDisplay(weakestPhoneme!.ipa)}

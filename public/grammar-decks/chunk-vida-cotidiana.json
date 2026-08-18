@@ -1,0 +1,155 @@
+{
+  "meta": {
+    "eyebrow": "Chunks · Conversación cotidiana",
+    "title": "Chunks para la",
+    "titleEmphasis": "vida cotidiana",
+    "goal": "Comunícate en situaciones del día a día (cafeterías, tiendas, planes y favores) usando bloques de frases hechas sin traducir palabra por palabra."
+  },
+  "related": [
+    { "slug": "chunk-hablar-de-mi", "label": "Hablar de mí con soltura" },
+    { "slug": "a1-vocabulario-expresiones-basicas", "label": "Expresiones básicas A1" }
+  ],
+  "cards": [
+    {
+      "id": "cvc-pedir",
+      "tag": "Cafeterías y tiendas",
+      "title": "Ordenar y comprar sin rodeos",
+      "lede": "En lugar de traducir 'quiero ordenar...', los nativos usan fórmulas cortas y educadas.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Can I get a...?", "value": "¿Me das / Me pones un...? · Can I get an iced latte, please?", "highlights": ["Can I get a"] },
+            { "key": "To go / For here", "value": "Para llevar / Para tomar aquí · To go, please.", "highlights": ["To go", "For here"] },
+            { "key": "I'll take the...", "value": "Me llevo el/la... · I'll take the chocolate muffin.", "highlights": ["I'll take the"] },
+            { "key": "Keep the change", "value": "Quédese con el cambio · Here you go, keep the change.", "highlights": ["Keep the change"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Sonido natural:",
+        "body": "\"Can I get a\" suele sonar ligado como /kənaɪˈɡɛɾə/ (Can-I-gedda)."
+      }
+    },
+    {
+      "id": "cvc-favores",
+      "tag": "Cortesía y favores",
+      "title": "Pedir ayuda con tacto",
+      "lede": "Usa estas estructuras para sonar educado sin sonar excesivamente formal ni seco.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "Help me with this bag.", "note": "demasiado imperativo" },
+            { "variant": "good", "text": "Could you give me a hand with this?", "note": "natural y cortés" },
+            { "variant": "bad", "text": "I want to open the window.", "note": "suena brusco" },
+            { "variant": "good", "text": "Do you mind if I open the window?", "note": "pide permiso con suavidad" }
+          ]
+        },
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "I was wondering if...", "value": "Me preguntaba si... · I was wondering if you could help me.", "highlights": ["I was wondering if"] },
+            { "key": "Is it okay if I...?", "value": "¿Está bien si...? · Is it okay if I leave this here?", "highlights": ["Is it okay if I"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cvc-imprevistos",
+      "tag": "Tiempo e imprevistos",
+      "title": "Explicar retrasos y cambios",
+      "lede": "Frases fijas para avisar cuando algo se sale del plan sin dar explicaciones enredadas.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "I'm running a bit late", "value": "Voy un poco tarde · Sorry, I'm running a bit late.", "highlights": ["running a bit late"] },
+            { "key": "Something came up", "value": "Surgió algo · Something came up at the last minute.", "highlights": ["Something came up"] },
+            { "key": "Sorry to keep you waiting", "value": "Perdón por hacerte esperar.", "highlights": ["keep you waiting"] },
+            { "key": "Could we reschedule for...?", "value": "¿Podríamos reagendar para...? · Could we reschedule for tomorrow?", "highlights": ["reschedule for"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cvc-reacciones",
+      "tag": "Reacciones en charla",
+      "title": "Mantener la conversación viva",
+      "lede": "Evita quedarte en silencio; usa estos 'fillers' y reacciones para mostrar escucha activa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "That makes total sense", "value": "Tiene todo el sentido / Te entiendo perfectamente.", "highlights": ["makes total sense"] },
+            { "key": "I know what you mean", "value": "Sé exactamente a qué te refieres.", "highlights": ["know what you mean"] },
+            { "key": "No way!", "value": "¡No puede ser! / ¡No me digas!", "highlights": ["No way"] },
+            { "key": "You've got to be kidding me!", "value": "¡Tienes que estar bromeando!", "highlights": ["kidding me"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Clave conversacional:",
+        "body": "Los hablantes nativos usan \"That makes sense\" continuamente para validar lo que el otro dice antes de responder."
+      }
+    },
+    {
+      "id": "cvc-planes",
+      "tag": "Hacer planes",
+      "title": "Proponer y acordar salidas",
+      "lede": "Pregunta qué hace el otro y ponte de acuerdo en segundos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "What are you up to?", "value": "¿Qué estás haciendo? / ¿En qué andas?", "highlights": ["What are you up to"] },
+            { "key": "Are you free this weekend?", "value": "¿Estás libre este fin de semana?", "highlights": ["Are you free"] },
+            { "key": "It's up to you", "value": "Depende de ti / Lo que tú decidas.", "highlights": ["up to you"] },
+            { "key": "Sounds like a plan!", "value": "¡Me parece un excelente plan! / ¡Hecho!", "highlights": ["Sounds like a plan"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cvc-despedidas",
+      "tag": "Despedidas naturales",
+      "title": "Cerrar una charla casual",
+      "lede": "Despídete como un nativo sin usar el formal y distante 'goodbye'.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "I've gotta run / head out", "value": "Me tengo que ir / Tengo que salir ya.", "highlights": ["gotta run", "head out"] },
+            { "key": "Catch you later!", "value": "¡Nos vemos luego!", "highlights": ["Catch you later"] },
+            { "key": "Have a good one!", "value": "¡Que te vaya bien! (sirve para día, tarde o noche)", "highlights": ["Have a good one"] },
+            { "key": "Take care!", "value": "¡Cuídate!", "highlights": ["Take care"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Pronunciación:",
+        "body": "\"I've gotta run\" suena comprimido como /aɪv ˈɡɑɾə rʌn/ (I've godda run)."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "¿Qué frase dices en una cafetería para pedir un café de forma natural?",
+      "options": ["Can I get a large cappuccino, please?", "I demand a large cappuccino.", "Give me a large cappuccino fast."],
+      "answer": 0,
+      "explain": "'Can I get a...?' es la fórmula más común y natural en inglés cotidiano para pedir alimentos o bebidas."
+    },
+    {
+      "q": "Si llegas 10 minutos tarde a una cita con un amigo, ¿cuál es el chunk ideal?",
+      "options": ["I am arriving with extra minutes.", "Sorry, I'm running a bit late!", "My time was cancelled."],
+      "answer": 1,
+      "explain": "'I'm running a bit late' es la expresión estándar para avisar que estás atrasado/a."
+    },
+    {
+      "q": "¿Cómo respondes cuando tu amigo propone un plan y estás totalmente de acuerdo?",
+      "options": ["Sounds like a plan!", "The plan is audible.", "I agree your proposition."],
+      "answer": 0,
+      "explain": "'Sounds like a plan!' expresa entusiasmo y acuerdo inmediato ante una propuesta."
+    }
+  ]
+}

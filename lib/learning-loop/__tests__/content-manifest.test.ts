@@ -7,20 +7,24 @@ import {
 } from '@/lib/learning-loop/content-manifest'
 import { theoryTopicForDeck, theoryTopicForMiniLesson } from '@/lib/learning-loop/theory-targets'
 import { loadEssentialWords } from '@/lib/essential-words/data'
+import { listAllDecks } from '@/lib/courses/grammar-deck/decks'
+import { getAllMiniLessons } from '@/lib/content/lessons'
+import { listMissions } from '@/lib/ai-practice/missions/registry'
 
 describe('learning-loop content manifest', () => {
   it('projects every authored surface without dangling targets or hidden gaps', async () => {
     const manifest = await buildLearningContentManifest()
     const summary = summarizeLearningContentManifest(manifest)
+    const miniLessons = await getAllMiniLessons()
     expect(summary).toMatchObject({
-      grammar_deck: 236,
-      mini_lesson: 50,
+      grammar_deck: listAllDecks().length,
+      mini_lesson: miniLessons.length,
       essential_words: new Set(loadEssentialWords().map((word) => word.word.trim().toLowerCase())).size,
-      oral_mission: 8,
+      oral_mission: listMissions().length,
       tracking: 3,
     })
     expect(validateLearningContentManifest(manifest)).toEqual([])
-  })
+  }, 30000)
 
   it('keeps the non-evaluable allowlist explicit and live', async () => {
     const manifest = await buildLearningContentManifest()

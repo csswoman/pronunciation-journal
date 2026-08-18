@@ -2,39 +2,39 @@
   "slug": "present-perfect-vs-past",
   "sections": [
     {
-      "heading": "The Spanish interference problem",
-      "body": "Spanish uses preterite for both functions. 'He visto esa película' can mean both 'I saw that film' (specific past event) and 'I have seen that film' (life experience). English separates these into two tenses with strict rules."
+      "heading": "El problema de la interferencia española",
+      "body": "El español usa pretérito para ambas funciones. 'He visto esa película' puede significar tanto 'Vi esa película' (evento pasado específico) como 'He visto esa película' (experiencia de vida). El inglés los separa en dos tiempos con reglas estrictas."
     },
     {
-      "heading": "Present Perfect: connection to now",
-      "body": "Use Present Perfect when the time of the action is unspecified, irrelevant, or still connected to the present. Three main uses: experience ('I've been to Japan'), recent past with present result ('She's broken her arm'), and continuing situations ('I've worked here for 5 years')."
+      "heading": "Presente perfecto: conexión con el ahora",
+      "body": "Utilice el presente perfecto cuando el momento de la acción no esté especificado, sea irrelevante o aún esté conectado con el presente. Tres usos principales: experiencia ('He estado en Japón'), pasado reciente con resultado presente ('Se ha roto el brazo') y situaciones continuas ('He trabajado aquí durante 5 años')."
     },
     {
-      "heading": "Past Simple: completed in the past",
-      "body": "Use Past Simple when the action is complete and the time is specified or implied to be a finished period: 'yesterday', 'last week', 'in 2019', 'when I was a child', 'after dinner'."
+      "heading": "Pasado simple: completado en el pasado",
+      "body": "Utilice el pasado simple cuando la acción esté completa y se especifique o implique que la hora es un período terminado: \"ayer\", \"la semana pasada\", \"en 2019\", \"cuando era niño\", \"después de la cena\"."
     }
   ],
   "examples": [
     {
       "english": "I've seen that film.",
-      "note": "Experience — when is irrelevant"
+      "note": "Experiencia: cuando es irrelevante"
     },
     {
       "english": "I saw that film last Friday.",
-      "note": "Specific time → Past Simple"
+      "note": "Tiempo específico → Pasado simple"
     },
     {
       "english": "She's lost her keys.",
-      "note": "Recent past with present result: she still doesn't have them"
+      "note": "Pasado reciente con resultado presente: todavía no los tiene"
     },
     {
       "english": "She lost her keys yesterday.",
-      "note": "Specific time → Past Simple"
+      "note": "Tiempo específico → Pasado simple"
     }
   ],
   "exercises": [
     {
-      "instruction": "Present Perfect or Simple Past?",
+      "instruction": "Complete each sentence with the present perfect or simple past form of the verb in brackets.",
       "items": [
         "I ___ (never / try) sushi. Do you recommend it?",
         "We ___ (meet) at a conference in 2021.",
@@ -51,15 +51,15 @@
   ],
   "quiz": [
     {
-      "question": "Which sentence is correct?",
+      "question": "¿Qué oración es correcta?",
       "options": [
-        "Did you ever eat fugu?",
-        "Have you ever eaten fugu?",
-        "Have you ever ate fugu?",
-        "Did you eat ever fugu?"
+        "¿Alguna vez comiste fugu?",
+        "¿Alguna vez has comido fugu?",
+        "¿Alguna vez has comido fugu?",
+        "¿Comiste alguna vez fugu?"
       ],
       "correct": 1,
-      "explanation": "'Ever' in a general life-experience question uses Present Perfect: 'Have you ever eaten...?'"
+      "explanation": "'Alguna vez' en una pregunta general sobre experiencias de vida utiliza el presente perfecto: '¿Alguna vez has comido...?'"
     }
   ]
 }

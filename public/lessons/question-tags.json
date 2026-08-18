@@ -2,47 +2,47 @@
   "slug": "question-tags",
   "sections": [
     {
-      "heading": "What are question tags?",
-      "body": "Question tags are short question forms appended to the end of a statement. They invite the listener to confirm or agree. They're extremely common in spoken British English and appear in all varieties of English."
+      "heading": "¿Qué son las etiquetas de pregunta?",
+      "body": "Las etiquetas de preguntas son formularios de preguntas breves que se añaden al final de una declaración. Invitan al oyente a confirmar o aceptar. Son extremadamente comunes en el inglés británico hablado y aparecen en todas las variedades de inglés."
     },
     {
-      "heading": "The main rule",
-      "body": "Positive statement → negative tag. Negative statement → positive tag. The tag uses the same auxiliary verb as the main clause. If there's no auxiliary, use do/does/did."
+      "heading": "La regla principal",
+      "body": "Declaración positiva → etiqueta negativa. Declaración negativa → etiqueta positiva. La etiqueta utiliza el mismo verbo auxiliar que la cláusula principal. Si no hay ningún auxiliar, utilice do/does/did."
     },
     {
-      "heading": "Intonation matters",
-      "body": "Rising intonation on the tag ↗ means you're genuinely asking — you're not sure of the answer. Falling intonation ↘ means you're almost certain and just confirming, or inviting agreement. This is a crucial distinction."
+      "heading": "La entonación importa",
+      "body": "La entonación ascendente en la etiqueta ↗ significa que estás preguntando genuinamente, no estás seguro de la respuesta. La entonación descendente ↘ significa que estás casi seguro y solo confirmas o invitas a llegar a un acuerdo. Esta es una distinción crucial."
     },
     {
-      "heading": "Tricky cases",
-      "body": "'I am right, aren't I?' — not 'amn't I' (non-standard) or 'am I not?' (very formal). 'Let's go, shall we?' — 'shall' is the tag for 'let's'. 'This is Tom, isn't it?' — use 'it' for introductions with 'this'."
+      "heading": "Casos complicados",
+      "body": "'Tengo razón, ¿no?' — no '¿no lo soy?' (no estándar) o '¿no lo soy?' (muy formal). 'Vamos, ¿de acuerdo?' — 'deberá' es la etiqueta para 'vamos'. 'Este es Tom, ¿no?' — utilice 'it' para presentaciones con 'this'."
     }
   ],
   "examples": [
     {
       "english": "It's cold today, isn't it?",
-      "note": "Positive → negative tag. Confirming."
+      "note": "Etiqueta positiva → negativa. Confirmando."
     },
     {
       "english": "You haven't met her, have you?",
-      "note": "Negative → positive tag."
+      "note": "Etiqueta negativa → positiva."
     },
     {
       "english": "She works here, doesn't she?",
-      "note": "No auxiliary → use 'do' in tag."
+      "note": "Sin auxiliar → use 'do' en la etiqueta."
     },
     {
       "english": "Let's take a break, shall we?",
-      "note": "Special case: 'let's' → 'shall we'"
+      "note": "Caso especial: 'vamos' → 'vamos'"
     },
     {
       "english": "I'm late, aren't I?",
-      "note": "Special case: 'am' → 'aren't'"
+      "note": "Caso especial: 'soy' → 'no son'"
     }
   ],
   "exercises": [
     {
-      "instruction": "Add the correct question tag to each sentence.",
+      "instruction": "Complete each sentence with the correct question tag.",
       "items": [
         "You can drive, ___?",
         "She didn't call, ___?",
@@ -51,25 +51,25 @@
         "Let's start, ___?"
       ],
       "answers": [
-        "can't you",
-        "did she",
-        "haven't they",
-        "is it",
-        "shall we"
+        "can't you?",
+        "did she?",
+        "haven't they?",
+        "is it?",
+        "shall we?"
       ]
     }
   ],
   "quiz": [
     {
-      "question": "What's the correct tag for 'I am your neighbor, ___'?",
+      "question": "¿Cuál es la etiqueta correcta para 'Soy tu vecino, ___'?",
       "options": [
-        "am I not?",
-        "aren't I?",
-        "isn't I?",
-        "amn't I?"
+        "¿No lo soy?",
+        "¿no?",
+        "¿no es así?",
+        "¿no lo soy?"
       ],
       "correct": 1,
-      "explanation": "'Aren't I?' is the standard question tag for 'I am' in British English."
+      "explanation": "'¿No es así?' es la etiqueta de pregunta estándar para 'I am' en inglés británico."
     }
   ]
 }

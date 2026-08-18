@@ -23,6 +23,7 @@ import { selectSentence } from '@/lib/essential-words/sentence-variants'
 import type { AttemptOutcome } from '@/lib/essential-words/attempt-grade'
 import type { EssentialWord } from '@/lib/essential-words/types'
 import { displayEnglishWord, displayEnglishText } from '@/lib/essential-words/word-display'
+import { formatIpaDisplay } from '@/lib/lexicon/format-ipa'
 import { ExercisePhaseLabel } from './ExercisePhaseLabel'
 import { InlineFeedback } from '@/components/practice/session/InlineFeedback'
 import { useEnterToContinue } from '@/hooks/useEnterToContinue'
@@ -81,7 +82,7 @@ export function WeakFormCard({ entry, levelLabel, repetitions = 0, onAttempt, on
           {displayEnglishWord(entry.word, { pos: entry.pos })}
         </p>
         <p className="ipa m-0 text-body text-fg-muted">
-          fuerte /{entry.ipa_strong}/ · débil /{entry.ipa_weak}/
+          fuerte {formatIpaDisplay(entry.ipa_strong)} · débil {formatIpaDisplay(entry.ipa_weak)}
         </p>
       </div>
 

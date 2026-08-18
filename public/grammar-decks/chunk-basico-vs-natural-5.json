@@ -1,0 +1,138 @@
+{
+  "meta": {
+    "eyebrow": "Inglés natural · Vol. 5",
+    "title": "Básico vs",
+    "titleEmphasis": "natural: Reacciones y Cierres",
+    "goal": "Reacciona con emoción, asombro y cortesía, y aprende a despedirte con la soltura y calidez de un nativo."
+  },
+  "related": [
+    { "slug": "chunk-basico-vs-natural-4", "label": "Básico vs natural: Dinero y Retos" },
+    { "slug": "chunk-vida-cotidiana", "label": "Chunks para la vida cotidiana" }
+  ],
+  "cards": [
+    {
+      "id": "bvn5-sorpresa",
+      "tag": "Asombro e impacto",
+      "title": "Sorpresa e incredulidad",
+      "lede": "Reacciona ante noticias impactantes sin quedarte mudo.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "I do not believe what you are telling me!" },
+            { "variant": "good", "text": "No way! / You've gotta be kidding me!", "note": "reacción espontánea" },
+            { "variant": "bad", "text": "That idea was very surprising to me." },
+            { "variant": "good", "text": "It totally blew my mind / I was blown away!", "note": "impacto total" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bvn5-calma",
+      "tag": "Tranquilidad y suerte",
+      "title": "Calma y buenos deseos",
+      "lede": "Desea éxito o quita presión con modismos auténticos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "+ Don't worry about it at all", "value": "++ Don't sweat it / No sweat!", "highlights": ["Don't sweat it", "No sweat"] },
+            { "key": "+ Good luck on your exam/demo", "value": "++ Break a leg! / Fingers crossed!", "highlights": ["Break a leg", "Fingers crossed"] },
+            { "key": "+ It is totally obvious", "value": "++ It goes without saying / No-brainer", "highlights": ["goes without saying"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Origen curioso:",
+        "body": "\"Break a leg!\" proviene del teatro, donde desear buena suerte directamente se consideraba de mala suerte."
+      }
+    },
+    {
+      "id": "bvn5-intensidad",
+      "tag": "Intensidad y calidad",
+      "title": "Hype y calidad máxima",
+      "lede": "Expresa motivación y describe cosas de máxima categoría.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "+ Tell me the summary fast", "value": "++ Give me the rundown / Give it to me straight", "highlights": ["rundown", "straight"] },
+            { "key": "+ I'm very excited for tomorrow", "value": "++ I'm so hyped / I'm pumped!", "highlights": ["hyped", "pumped"] },
+            { "key": "+ It happened by chance", "value": "++ It was a fluke / By sheer luck", "highlights": ["fluke", "sheer luck"] },
+            { "key": "+ It's the highest quality", "value": "++ It's top-notch / Hands down the best", "highlights": ["top-notch", "Hands down"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bvn5-despedidas",
+      "tag": "Despedidas cotidianas",
+      "title": "Despedirse con estilo",
+      "lede": "Termina una llamada o salida casual con naturalidad.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "I must go home now, goodbye." },
+            { "variant": "good", "text": "I've gotta bounce / I've gotta head out.", "note": "salida dinámica" },
+            { "variant": "bad", "text": "Goodbye and have a nice tomorrow." },
+            { "variant": "good", "text": "Have a good one! / Take care!", "note": "cálido y universal" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bvn5-cortesia",
+      "tag": "Agradecimientos y favores",
+      "title": "Agradecer y escuchar",
+      "lede": "Muestra gratitud genuina y atención completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "+ Thank you very much", "value": "++ I really appreciate it / I owe you one!", "highlights": ["really appreciate it", "owe you one"] },
+            { "key": "+ You are welcome", "value": "++ Any time! / Don't mention it! / No worries!", "highlights": ["Any time", "No worries"] },
+            { "key": "+ I am listening to you", "value": "++ I'm all ears!", "highlights": ["all ears"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bvn5-accion",
+      "tag": "Prisa y acción",
+      "title": "Apurarse y pasar a la acción",
+      "lede": "Frases para ponerle ritmo al momento o calmar la prisa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "+ Hurry up!", "value": "++ Step on it! / Shake a leg! / Chop-chop!", "highlights": ["Step on it", "Shake a leg"] },
+            { "key": "+ Wait a minute!", "value": "++ Hold your horses! / Hang on a sec!", "highlights": ["Hold your horses"] },
+            { "key": "+ Let's try to do it", "value": "++ Let's go for it! / Let's make it happen!", "highlights": ["make it happen"] },
+            { "key": "+ Hope for good things", "value": "++ Hope for the best, prepare for the worst", "highlights": ["Hope for the best"] }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "¿Qué significa si un amigo te dice 'I owe you one!' después de que le hiciste un favor?",
+      "options": ["¡Te debo una (favor por favor)! ", "Te debo un dólar en efectivo.", "Solo me queda un amigo."],
+      "answer": 0,
+      "explain": "'I owe you one' es la expresión estándar de gratitud para reconocer que devolverás el favor."
+    },
+    {
+      "q": "Si estás listo para escuchar con toda tu atención lo que alguien te va a contar, dices:",
+      "options": ["I'm all ears!", "My ears are large!", "I have two heads listening."],
+      "answer": 0,
+      "explain": "'I'm all ears' significa que tienes toda tu atención y escucha puesta en la persona."
+    },
+    {
+      "q": "¿Cómo dices '¡Tengo que irme ya!' de forma coloquial antes de salir?",
+      "options": ["I've gotta bounce!", "I have to jump with a ball.", "The house is running."],
+      "answer": 0,
+      "explain": "'I've gotta bounce' es una expresión informal muy popular que significa marcharse o retirarse."
+    }
+  ]
+}

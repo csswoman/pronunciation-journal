@@ -97,7 +97,6 @@ const RAW_COLOR_ALLOWLIST = new Set([
   "components/auth/AuthMobileIdentity.tsx",
   "components/auth/AuthPanel.tsx",
   "components/exercises/MatchPairsExercise.tsx",
-  "components/interview/InterviewResults.tsx",
   "components/layout/BottomNavMenu.tsx",
   "components/lexicon/LessonGrid.tsx",
   "components/phoneme-practice/SoundGrid.tsx",

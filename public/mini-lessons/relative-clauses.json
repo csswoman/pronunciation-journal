@@ -4,17 +4,17 @@
   "level": "intermediate",
   "category": "grammar",
   "duration": 6,
-  "title": "Defining vs. non-defining relative clauses",
-  "subtitle": "Grammar of the day",
-  "body": "Both use who/which/that, but non-defining clauses add extra info that can be removed — shown by commas.",
+  "title": "Cláusulas relativas definitorias versus no definitorias",
+  "subtitle": "Gramática del día",
+  "body": "Ambos usan quién/cuál/aquello, pero las cláusulas no definitorias añaden información adicional que se puede eliminar (se muestra mediante comas).",
   "examples": [
     {
       "word": "The book that changed my life is long.",
-      "translation": "defining — sin comas, necesaria"
+      "translation": "definiendo — sin comas, necesario"
     },
     {
       "word": "My sister, who lives in London, is visiting.",
-      "translation": "non-defining — con comas, extra info"
+      "translation": "no definitorio - con comas, información adicional"
     }
   ],
   "href": "/mini-lessons/relative-clauses"

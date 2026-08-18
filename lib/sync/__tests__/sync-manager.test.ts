@@ -45,6 +45,7 @@ vi.mock('@/lib/db', () => ({
     },
     transaction: (...args: unknown[]) => mocks.mockDbTransaction(...args),
   },
+  ensureDbReady: () => Promise.resolve(),
 }))
 
 // Mock Dexie static (used for Dexie.minKey / Dexie.maxKey)

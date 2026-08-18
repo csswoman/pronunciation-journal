@@ -1,146 +1,45 @@
-# Button Quick Reference
+# Button: referencia rápida
 
-## 8 Variantes
+API actual: [`components/ui/Button.tsx`](../../../components/ui/Button.tsx).
+Guía completa: [guide.md](guide.md).
 
-```
-primary    → Ink CTA (main action)
-secondary  → Raised surface + border (subordinate)
-soft       → Primary-soft bg (contextual)
-ghost      → Transparent (tertiary)
-success    → Green (positive action)
-warning    → Amber (caution)
-error      → Red (destructive)
-info       → Blue (informational)
-```
+## Variante
 
-## 3 Tamaños
-
-```
-sm  →  h-8  (inline, tags)
-md  →  h-10 (default, forms)
-lg  →  h-12 (hero, prominent)
+```text
+primary  → CTA de una zona
+secondary → alternativa subordinada
+soft     → acción contextual
+ghost    → acción terciaria
+success / warning / error / info → significado semántico real
 ```
 
-## Usage Cheat Sheet
+## Tamaño
 
-### Primary CTA
+```text
+sm → compacto (32px visual / 44px táctil)
+md → por defecto (40px)
+lg → destacado (48px)
+```
+
+## Uso
+
 ```tsx
-<Button variant="primary" size="md" icon={<Play />}>
-  Start Practice
-</Button>
+<Button variant="primary" icon={<Play />}>Empezar práctica</Button>
+<Button variant="secondary">Cancelar</Button>
+<Button variant="soft" icon={<Bookmark />}>Guardar para después</Button>
+<Button variant="ghost" size="icon" aria-label="Cerrar" icon={<X />} />
+<Button variant="error" icon={<Trash2 />}>Eliminar</Button>
 ```
 
-### Cancel / Skip
-```tsx
-<Button variant="secondary">
-  Cancel
-</Button>
-```
+## Props
 
-### Confirm action
-```tsx
-<Button variant="soft" icon={<Check />}>
-  Confirm
-</Button>
-```
+| Prop | Por defecto | Nota |
+| --- | --- | --- |
+| `variant` | `primary` | Ocho variantes canónicas. |
+| `size` | `md` | También hay tamaños de icono por compatibilidad. |
+| `icon` / `iconPosition` | — / `left` | Icono opcional a izquierda o derecha. |
+| `fullWidth` | `false` | Ocupa el ancho disponible. |
+| `isLoading` | `false` | Muestra carga y deshabilita. |
 
-### Dismiss / Subtle
-```tsx
-<Button variant="ghost">
-  Dismiss
-</Button>
-```
-
-### Positive (Done / Accept)
-```tsx
-<Button variant="success" icon={<Check />}>
-  Complete
-</Button>
-```
-
-### Needs attention
-```tsx
-<Button variant="warning" icon={<AlertCircle />}>
-  Confirm delete
-</Button>
-```
-
-### Destructive
-```tsx
-<Button variant="error" icon={<Trash2 />}>
-  Delete
-</Button>
-```
-
-### Info / Learn more
-```tsx
-<Button variant="info" icon={<Info />}>
-  Learn more
-</Button>
-```
-
-### Loading
-```tsx
-<Button isLoading icon={<Loader />}>
-  Saving...
-</Button>
-```
-
-### Full width (modal, form)
-```tsx
-<Button fullWidth variant="primary">
-  Submit
-</Button>
-```
-
-### Icon on right
-```tsx
-<Button icon={<ChevronRight />} iconPosition="right">
-  Next step
-</Button>
-```
-
-## All Props
-
-| Prop | Type | Default | Notes |
-|------|------|---------|-------|
-| variant | string | "primary" | See 8 variants above |
-| size | string | "md" | sm, md, lg |
-| icon | ReactNode | — | Lucide icon, SVG, etc. |
-| iconPosition | string | "left" | left or right |
-| fullWidth | boolean | false | 100% width |
-| isLoading | boolean | false | Spins icon + disables |
-| disabled | boolean | false | Native button disabled |
-
-Plus all standard HTML button attributes (onClick, type, className, etc.)
-
-## Design Token Mapping
-
-```
-primary        → --cta-bg + --cta-fg (dark ink)
-secondary      → --surface-raised + border
-soft           → --primary-soft + --primary
-ghost          → transparent + --fg-secondary
-success        → --success + white
-warning        → --warning + white
-error          → --error + white
-info           → --info + white
-```
-
-The source tokens live in `app/styles/tokens.css`; Tailwind mappings live in
-`app/styles/theme.css`.
-
-## Quick Styling Notes
-
-- ✅ Shadows: only on hover/active
-- ✅ Transitions: 150ms ease-out-quart
-- ✅ No nested buttons
-- ✅ Give icon-only controls an accessible name; otherwise pair icon + text
-- ✅ Min hit area: 32px tall (44px+ recommended)
-- ✅ Focus ring always visible
-
-## Showcase
-
-See all variants visually in `/components/ui/ButtonShowcase.tsx`.
-
-Import and render in a dev page to preview.
+`outline`, `danger` y `ghost-danger` son alias legacy: no los uses en código
+nuevo. Un botón sin texto visible necesita `aria-label`.

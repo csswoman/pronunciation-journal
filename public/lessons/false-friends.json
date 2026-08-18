@@ -2,64 +2,100 @@
   "slug": "false-friends",
   "sections": [
     {
-      "heading": "What are false friends?",
-      "body": "False friends (or false cognates) are words in two languages that look or sound similar but have different meanings. Spanish and English share many Latin roots, which means there are hundreds of false friends waiting to trip you up."
+      "heading": "¿Qué son los falsos amigos?",
+      "body": "Los falsos amigos (o falsos cognados) son palabras en dos idiomas que se parecen en su forma o sonido, pero que tienen significados completamente diferentes. El español y el inglés comparten muchas raíces latinas, lo que significa que hay cientos de falsos amigos que pueden llevar a confusiones divertidas... ¡o vergonzosas!"
     },
     {
-      "heading": "The most embarrassing ones",
-      "body": "'Embarrassed' does not mean embarazada (pregnant) — it means ashamed or awkward. 'Actually' does not mean actualmente (currently/nowadays) — it means in fact / in reality. 'Eventually' does not mean eventualmente (possibly) — it means in the end / sooner or later."
+      "heading": "Los más embarazosos (¡no 'embarazados'!)",
+      "body": "¡Cuidado con estos! La palabra inglesa 'embarrassed' [ɪmˈbærəst] significa 'avergonzado/a' o 'incómodo/a', ¡NO 'embarazada' (que se dice 'pregnant')! 'Actually' [ˈæktʃuəli] se traduce como 'de hecho' o 'en realidad', no como 'actualmente' (que es 'currently' o 'nowadays'). Y 'eventually' [ɪˈvɛntʃuəli] significa 'al final' o 'tarde o temprano', no 'posiblemente' (que se diría 'possibly' o 'eventually' en español)."
     },
     {
-      "heading": "More common false friends",
-      "body": "'Library' = biblioteca (not librería). 'Sensible' = sensato/a (not sensible). 'Sympathetic' = compasivo/a (not simpático/a). 'Lecture' = clase magistral / conferencia (not lectura). 'Success' = éxito (not suceso)."
+      "heading": "Más falsos amigos comunes",
+      "body": "Aquí tienes otros ejemplos clave para evitar confusiones: 'Library' [ˈlaɪbrəri] es 'biblioteca', no 'librería' (que es 'bookstore'). 'Sensible' [ˈsɛnsəbəl] significa 'sensato/a' o 'razonable', no 'sensible' (que se dice 'sensitive'). 'Sympathetic' [ˌsɪmpəˈθɛtɪk] se usa para 'compasivo/a' o 'solidario/a', no para 'simpático/a' (que se dice 'friendly' o 'nice'). Y 'lecture' [ˈlɛktʃər] es una 'clase magistral' o 'conferencia', no 'lectura' (que es 'reading')."
     }
   ],
   "examples": [
     {
       "english": "I was so embarrassed.",
-      "translation": "Estaba muy avergonzada — NOT 'embarazada'"
+      "ipa": "[ɪmˈbærəst]",
+      "translation": "Estaba muy avergonzado/a.",
+      "note": "Recuerda: 'embarrassed' es avergonzado/a, no embarazada (pregnant)."
     },
     {
       "english": "Actually, I agree with you.",
-      "translation": "En realidad / De hecho — NOT 'actualmente'"
+      "ipa": "[ˈæktʃuəli]",
+      "translation": "De hecho, estoy de acuerdo contigo.",
+      "note": "No significa 'actualmente' (currently/nowadays)."
     },
     {
       "english": "She was very sympathetic.",
-      "translation": "Era muy comprensiva / compasiva — NOT 'simpática'"
+      "ipa": "[ˌsɪmpəˈθɛtɪk]",
+      "translation": "Ella fue muy compasiva/solidaria.",
+      "note": "No la confundas con 'simpática' (friendly/nice)."
     },
     {
       "english": "He's a sensible person.",
-      "translation": "Es una persona sensata — NOT 'sensible'"
+      "ipa": "[ˈsɛnsəbəl]",
+      "translation": "Es una persona sensata.",
+      "note": "No significa 'sensible' (sensitive)."
+    },
+    {
+      "english": "I need to go to the library.",
+      "ipa": "[ˈlaɪbrəri]",
+      "translation": "Necesito ir a la biblioteca.",
+      "note": "No es una 'librería' (bookstore)."
     }
   ],
   "exercises": [
     {
-      "instruction": "Translate these sentences, avoiding false friends.",
+      "instruction": "Traduce estas frases al inglés, prestando especial atención a los falsos amigos para usar la palabra correcta.",
       "items": [
-        "The conference was a great success.",
-        "I attend a lecture every Monday.",
-        "She finally introduced herself — she seemed quite sympathetic.",
-        "He eventually admitted his mistake."
+        "La conferencia fue un gran éxito.",
+        "Asisto a una clase magistral todos los lunes.",
+        "Ella finalmente se presentó; parecía muy comprensiva.",
+        "Él finalmente admitió su error."
       ],
       "answers": [
-        "La conferencia fue un gran éxito. ('success' = éxito, no 'suceso')",
-        "Asisto a una clase magistral cada lunes. ('attend' = asistir; 'lecture' = clase, no 'lectura')",
-        "Por fin se presentó — parecía muy agradable. ('introduce' = presentar; 'sympathetic' = comprensiva, no 'simpática')",
-        "Al final admitió su error. ('eventually' = al final, no 'eventualmente')"
+        "The conference was a great success.",
+        "I attend a lecture every Monday.",
+        "She finally introduced herself; she seemed quite sympathetic.",
+        "He eventually admitted his mistake."
       ]
     }
   ],
   "quiz": [
     {
-      "question": "'Eventually' in English means:",
+      "question": "'Eventualmente' en inglés significa:",
       "options": [
-        "Sometimes / possibly",
-        "Currently / nowadays",
-        "In the end / sooner or later",
-        "Actually / in reality"
+        "A veces / posiblemente",
+        "Actualmente / hoy en día",
+        "Al final / tarde o temprano",
+        "En realidad / de hecho"
       ],
       "correct": 2,
-      "explanation": "'Eventually' means 'in the end' or 'after a long time'. It does NOT mean 'possibly' like Spanish 'eventualmente'."
+      "explanation": "La palabra 'eventually' en inglés significa 'al final' o 'después de un tiempo'. No la confundas con el 'eventualmente' en español, que a menudo significa 'posiblemente' o 'a veces'."
+    },
+    {
+      "question": "Si alguien dice 'I'm embarrassed', ¿qué siente?",
+      "options": [
+        "Está embarazada",
+        "Está avergonzado/a",
+        "Está molesto/a",
+        "Está confundido/a"
+      ],
+      "correct": 1,
+      "explanation": "Un clásico falso amigo: 'embarrassed' significa 'avergonzado/a', mientras que 'embarazada' en inglés es 'pregnant'."
+    },
+    {
+      "question": "¿Cuál de estas palabras NO es un falso amigo común entre español e inglés?",
+      "options": [
+        "Sensible",
+        "Actually",
+        "Success",
+        "Important"
+      ],
+      "correct": 3,
+      "explanation": "'Sensible', 'actually' y 'success' son falsos amigos que pueden causar confusión. 'Important' es un cognado verdadero y generalmente significa lo mismo en ambos idiomas."
     }
   ]
 }

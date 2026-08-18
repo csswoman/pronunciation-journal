@@ -1,0 +1,139 @@
+{
+  "meta": {
+    "eyebrow": "Chunks · Idioms",
+    "title": "Modismos y",
+    "titleEmphasis": "expresiones idiomáticas",
+    "goal": "Incorpora modismos esenciales que transforman tu inglés de plano a expresivo y natural."
+  },
+  "related": [
+    { "slug": "chunk-phrasal-verbs", "label": "Phrasal Verbs de uso diario" },
+    { "slug": "chunk-social-small-talk", "label": "Social & Small Talk" }
+  ],
+  "cards": [
+    {
+      "id": "idm-esfuerzo",
+      "tag": "Decisión y esfuerzo",
+      "title": "Afrontar retos y decisiones",
+      "lede": "Metáforas sobre la valentía, la prisa y dar el máximo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Bite the bullet", "value": "Afrontar una situación desagradable con valentía · Let's bite the bullet and refactor now.", "highlights": ["Bite the bullet"] },
+            { "key": "Jump the gun", "value": "Adelantarse precipitadamente · Don't jump the gun before testing.", "highlights": ["Jump the gun"] },
+            { "key": "Go the extra mile", "value": "Dar un esfuerzo extra / dar el 110% · She always goes the extra mile for users.", "highlights": ["goes the extra mile"] },
+            { "key": "Throw in the towel", "value": "Tirar la toalla / rendirse · It's tough, but don't throw in the towel.", "highlights": ["throw in the towel"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "idm-comunicacion",
+      "tag": "Comunicación y secretos",
+      "title": "Hablar claro y acuerdos",
+      "lede": "Idioms para describir la comunicación interpersonal.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "See eye to eye", "value": "Estar en total acuerdo · We don't always see eye to eye, but we respect each other.", "highlights": ["see eye to eye"] },
+            { "key": "Beat around the bush", "value": "Andarse con rodeos · Stop beating around the bush and tell me.", "highlights": ["beating around the bush"] },
+            { "key": "Spill the beans", "value": "Revelar un secreto o sorpresa · Who spilled the beans about the launch?", "highlights": ["spilled the beans"] },
+            { "key": "Hear on the grapevine", "value": "Enterarse por rumores de pasillo · I heard on the grapevine that we're hiring.", "highlights": ["heard on the grapevine"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "idm-acierto",
+      "tag": "Aciertos y sorpresas",
+      "title": "Dar en el clavo y ventajas ocultas",
+      "lede": "Frases figuradas para reconocer ideas brillantes o cosas que salieron bien por sorpresa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Hit the nail on the head", "value": "Dar exactamente en el clavo · Your diagnosis hit the nail on the head.", "highlights": ["hit the nail on the head"] },
+            { "key": "A blessing in disguise", "value": "Un mal que por bien no vino · Losing that client was a blessing in disguise.", "highlights": ["blessing in disguise"] },
+            { "key": "The straw that broke the camel's back", "value": "La gota que colmó el vaso · That bug was the straw that broke the camel's back.", "highlights": ["straw that broke the camel's back"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "idm-situaciones",
+      "tag": "Riesgos y atajos",
+      "title": "Atajos y situaciones difíciles",
+      "lede": "Habla de calidad, dificultades y respuestas espontáneas.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Cut corners", "value": "Ahorrar tiempo o dinero descuidando calidad · Never cut corners on security.", "highlights": ["Cut corners"] },
+            { "key": "In hot water", "value": "Estar en problemas serios · We'll be in hot water if the build fails.", "highlights": ["in hot water"] },
+            { "key": "Off the top of my head", "value": "De memoria / a bote pronto · Off the top of my head, I'd say 500 users.", "highlights": ["Off the top of my head"] },
+            { "key": "A piece of cake", "value": "Pan comido / facilísimo · Building that button was a piece of cake.", "highlights": ["piece of cake"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "idm-costos",
+      "tag": "Costos y eventos raros",
+      "title": "Precios y ocasiones únicas",
+      "lede": "Modismos muy extendidos en la cultura popular.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Cost an arm and a leg", "value": "Costar un ojo de la cara · That server instance costs an arm and a leg.", "highlights": ["costs an arm and a leg"] },
+            { "key": "Once in a blue moon", "value": "Muy de vez en cuando / casi nunca · That error happens once in a blue moon.", "highlights": ["once in a blue moon"] },
+            { "key": "Break a leg!", "value": "¡Mucha suerte! (en presentaciones o eventos) · You'll do great, break a leg!", "highlights": ["Break a leg"] },
+            { "key": "Rain on someone's parade", "value": "Arruinar la fiesta o entusiasmo a alguien.", "highlights": ["Rain on"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "idm-balance",
+      "tag": "Criterio y escepticismo",
+      "title": "Pensamiento crítico",
+      "lede": "Frases para matizar argumentos y no tomar todo al pie de la letra.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Take with a grain of salt", "value": "Tomar con reservas / no creer al 100% · Take early benchmarks with a grain of salt.", "highlights": ["grain of salt"] },
+            { "key": "Play devil's advocate", "value": "Hacer de abogado del diablo (para probar una idea).", "highlights": ["devil's advocate"] },
+            { "key": "Leave no stone unturned", "value": "No dejar piedra sin remover / investigar todo a fondo.", "highlights": ["no stone unturned"] },
+            { "key": "Judge a book by its cover", "value": "Juzgar por las apariencias · Don't judge a book by its cover.", "highlights": ["judge a book"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Sonido:",
+        "body": "\"Take it with a grain of salt\" se liga /ɡreɪn əv ˈsɔlt/ con ritmo acentual en grain y salt."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "¿Qué significa 'to bite the bullet'?",
+      "options": ["Afrontar una situación difícil con decisión.", "Morder una bala de verdad en la guerra.", "Comer algo duro y peligroso."],
+      "answer": 0,
+      "explain": "'Bite the bullet' significa armarse de valor y hacer algo desagradable pero necesario."
+    },
+    {
+      "q": "Si das una cifra aproximada 'de memoria sin mirar los datos', dices:",
+      "options": ["Off the top of my head...", "From the skin of my skull...", "Out of my hair..."],
+      "answer": 0,
+      "explain": "'Off the top of my head' indica que hablas de memoria inmediata sin haber verificado."
+    },
+    {
+      "q": "¿Qué significa 'to take something with a grain of salt'?",
+      "options": ["Tomar la información con cautela y no creerla al 100%.", "Echarle sal a la comida antes de probarla.", "Comprar sal en el supermercado."],
+      "answer": 0,
+      "explain": "'Take with a grain of salt' aconseja ser escéptico y prudente ante una afirmación."
+    }
+  ]
+}

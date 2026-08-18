@@ -6,6 +6,7 @@
     "goal": "Ya puedes distinguir los sonidos del inglés que no existen en español y marcar las consonantes finales."
   },
   "sounds": ["ɪ", "iː", "θ", "ð", "v", "ə"],
+  "pronunciationTargetIds": ["segmental.phoneme./ə/"],
   "quiz": [
     {
       "q": "¿Cómo suena la 'th' en 'this' y 'the'?",

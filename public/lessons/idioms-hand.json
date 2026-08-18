@@ -1,0 +1,82 @@
+{
+  "slug": "idioms-hand",
+  "sections": [
+    {
+      "heading": "Las manos en el inglés hablado",
+      "body": "El sustantivo 'hand' es clave en inglés para referirse a la asistencia, la proximidad física, la elaboración de productos o el control de eventos."
+    },
+    {
+      "heading": "Las expresiones clave con 'Hand'",
+      "body": "'On the one hand... on the other hand' sirve para balancear dos argumentos opuestos. 'Give a hand' es pedir o dar ayuda en una tarea física. 'By hand' significa de forma artesanal o manual. 'In good hands' brinda tranquilidad sobre el cuidado de algo. 'At hand' indica cercanía física o temporal. 'Get out of hand' describe una situación caótica fuera de control."
+    }
+  ],
+  "examples": [
+    {
+      "english": "On the one hand, I want to travel; on the other hand, I need to save money.",
+      "translation": "por un lado, quiero viajar; por el otro lado, necesito ahorrar dinero"
+    },
+    {
+      "english": "Knitting this blanket by hand took three weeks.",
+      "translation": "tejer esta manta a mano tomó tres semanas"
+    },
+    {
+      "english": "Can you give me a hand with this heavy table?",
+      "translation": "¿me puedes echar una mano con esta mesa pesada?"
+    },
+    {
+      "english": "Don't worry about the kids; they are in good hands with the babysitter.",
+      "translation": "no te preocupes por los niños; están en buenas manos con la niñera"
+    },
+    {
+      "english": "Keep your notebook at hand during the class.",
+      "translation": "ten tu libreta a la mano durante la clase"
+    },
+    {
+      "english": "The protest got out of hand and became violent.",
+      "translation": "la protesta se salió de las manos / se descontroló"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Completa la frase con el modismo adecuado utilizando 'hand'.",
+      "items": [
+        "The party got ___ and the neighbors called the police.",
+        "This beautiful sweater was knitted ___.",
+        "Could you give me ___ with this heavy box?",
+        "Don't worry, the doctor is excellent; you are in ___.",
+        "Always keep a dictionary ___ when reading."
+      ],
+      "answers": [
+        "out of hand",
+        "by hand",
+        "a hand",
+        "good hands",
+        "at hand"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "¿Qué significa que una situación 'got out of hand'?",
+      "options": [
+        "Que se resolvió con éxito.",
+        "Que se hizo de forma completamente manual.",
+        "Que se salió de control y se volvió caótica.",
+        "Que quedó en manos expertas."
+      ],
+      "correct": 2,
+      "explanation": "'Get out of hand' significa salirse de control o de las manos."
+    },
+    {
+      "question": "¿Qué significa 'give a hand'?",
+      "options": [
+        "Aplaudir un buen trabajo.",
+        "Ofrecer o pedir ayuda física/asistencia.",
+        "Saludar a alguien formalmente.",
+        "Entregar un objeto con cuidado."
+      ],
+      "correct": 1,
+      "explanation": "'Give a hand' (o 'lend a hand') se usa comúnmente para ofrecer o pedir ayuda."
+    }
+  ]
+}

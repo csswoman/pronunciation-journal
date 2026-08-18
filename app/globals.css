@@ -5,15 +5,8 @@
 @import "./styles/utilities.css";
 @import "./styles/animations.css";
 @import "./styles/components.css";
-@import "./styles/sound-lab.css";
-@import "./styles/sound-detail.css";
-@import "./styles/phoneme-practice.css";
-@import "./styles/course-path.css";
-@import "./styles/grammar-deck.css";
-@import "./styles/words-lexicon.css";
-@import "./styles/lexicon-area.css";
-@import "./styles/ipa-chart.css";
-@import "./styles/mini-lessons.css";
-@import "./styles/tracking.css";
+
+/* Feature CSS lives in route layouts — keeps root layout.css off the LCP path.
+   See: practice, courses, mini-lessons, words, lexicon, ipa, tracking layouts. */
 
 @custom-variant dark (&:where(.dark, .dark *));

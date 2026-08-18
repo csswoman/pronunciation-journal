@@ -4,22 +4,23 @@
   "level": "intermediate",
   "category": "grammar",
   "duration": 6,
-  "title": "The passive voice — when and why",
-  "subtitle": "Grammar of the day",
-  "body": "Use passive when the action is more important than who did it, or when the agent is unknown or obvious.",
+  "title": "La voz pasiva: cuándo y por qué",
+  "subtitle": "Gramática del día",
+  "body": "La voz pasiva se usa cuando la acción es más importante que la persona que la realiza, o cuando el agente es desconocido, irrelevante u obvio. Se enfoca en lo que se hizo, no en quién lo hizo.",
   "examples": [
     {
       "word": "The report was written by Ana.",
-      "translation": "pasiva con agente"
+      "translation": "El informe fue escrito por Ana."
     },
     {
       "word": "My phone was stolen.",
-      "translation": "agente desconocido"
+      "translation": "Mi teléfono fue robado."
     },
     {
       "word": "English is spoken worldwide.",
-      "translation": "agente obvio"
+      "translation": "El inglés se habla en todo el mundo."
     }
   ],
+  "tip": "Recuerda que el tiempo verbal en la voz pasiva está determinado por la conjugación del verbo 'to be'.",
   "href": "/mini-lessons/passive-voice-intro"
 }

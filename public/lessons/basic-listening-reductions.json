@@ -2,43 +2,43 @@
   "slug": "basic-listening-reductions",
   "sections": [
     {
-      "heading": "Why fast English sounds different",
-      "body": "The English you hear in conversation is not the English you read. Native speakers apply a set of systematic reductions to unstressed and frequent words, making speech faster and more rhythmic. These aren't mistakes — they're features of natural spoken English."
+      "heading": "Por qué el inglés rápido suena diferente",
+      "body": "El inglés que escuchas en una conversación no es el inglés que lees. Los hablantes nativos aplican una serie de reducciones sistemáticas a palabras no acentuadas y de uso frecuente, haciendo que el habla sea más fluida y rítmica. Estas reducciones no son errores; son características naturales del inglés hablado."
     },
     {
-      "heading": "The most common reductions",
-      "body": "'Want to' → 'wanna'. 'Going to' → 'gonna'. 'Have to' → 'hafta'. 'Don't know' → 'dunno'. 'Kind of' → 'kinda'. 'Out of' → 'outta'. 'Them' → 'em'. 'Him' → \"'im\". These are not informal — they happen automatically in normal speech."
+      "heading": "Las reducciones más comunes",
+      "body": "Algunas de las reducciones más comunes incluyen: 'want to' → 'wanna', 'going to' → 'gonna', 'have to' → 'hafta', 'kind of' → 'kinda', 'out of' → 'outta'. Estas formas no son informales en el habla cotidiana; ocurren de manera automática en la conversación normal."
     },
     {
-      "heading": "Strategy for learners",
-      "body": "You don't need to produce these reductions — but you must be able to hear and decode them. Practice by listening to authentic audio (podcasts, YouTube) and pausing to identify what was actually said. Shadow the speaker to train your ear and mouth together."
+      "heading": "Estrategia para estudiantes",
+      "body": "No es esencial que produzcas estas reducciones, pero es crucial que puedas reconocerlas y entenderlas al escuchar. Practica escuchando material auténtico (podcasts, YouTube) y haciendo pausas para identificar lo que realmente se dijo. Imita al hablante para entrenar tu oído y tu capacidad de pronunciación simultáneamente."
     }
   ],
   "examples": [
     {
       "english": "What are you doing?",
       "ipa": "/wʌd͡ʒə ˈduːɪŋ/",
-      "note": "whadja doing?"
+      "translation": "¿Qué estás haciendo?"
     },
     {
       "english": "I don't know",
       "ipa": "/aɪ ˈdoʊnə/",
-      "note": "I dunno"
+      "translation": "No sé."
     },
     {
       "english": "I'm going to eat",
       "ipa": "/aɪm ˈɡʌnə iːt/",
-      "note": "gonna"
+      "translation": "Voy a comer."
     },
     {
       "english": "Give it to me",
       "ipa": "/ɡɪvɪtə miː/",
-      "note": "All words link together"
+      "translation": "Dámelo. (Todas las palabras se unen)"
     }
   ],
   "exercises": [
     {
-      "instruction": "Write the full, careful pronunciation of each reduced form.",
+      "instruction": "Escribe la pronunciación completa y cuidadosa de cada forma reducida.",
       "items": [
         "wanna",
         "hafta",
@@ -57,15 +57,26 @@
   ],
   "quiz": [
     {
-      "question": "Why do native speakers use reductions?",
+      "question": "¿Por qué los hablantes nativos utilizan reducciones?",
       "options": [
-        "To be rude or lazy",
-        "Because they don't know the full forms",
-        "Because English is stress-timed and reductions create natural rhythm",
-        "To confuse learners"
+        "Para ser groseros o vagos.",
+        "Porque no conocen las formas completas de las palabras.",
+        "Porque el inglés es un idioma con acentuación rítmica y las reducciones crean un flujo natural.",
+        "Para confundir a los estudiantes de inglés."
       ],
       "correct": 2,
-      "explanation": "Reductions are a natural feature of English rhythm. Stress-timed language compresses unstressed syllables — reductions are the result."
+      "explanation": "Las reducciones son una característica inherente al ritmo del inglés. Como idioma con acentuación rítmica, comprime las sílabas átonas, dando lugar a estas reducciones naturales."
+    },
+    {
+      "question": "¿Cuál es la forma completa de la reducción 'gonna'?",
+      "options": [
+        "Go to",
+        "Going to",
+        "Gone to",
+        "Go on"
+      ],
+      "correct": 1,
+      "explanation": "'Gonna' es la reducción común de 'going to', utilizada para expresar intenciones futuras."
     }
   ]
 }

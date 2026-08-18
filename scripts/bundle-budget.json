@@ -2,7 +2,7 @@
   "tolerancePct": 10,
   "limitsKb": {
     "rootMainGzipKB": 168,
-    "allChunksGzipKB": 1275
+    "allChunksGzipKB": 1531
   },
-  "notes": "Re-baselined 2026-07-23. `allChunksGzipKB` now counts only eagerly-loaded chunks; chunks behind `await import()` (currently cmu-pronouncing-dictionary, ~940KB gzip) are reported as `deferredChunksGzipKB` and excluded. The previous 1868 limit was set against a total that included that lazy chunk, so it was ~940KB looser than it appeared. CI allows +10% growth before failing."
+  "notes": "Re-baselined 2026-08-18 at eb033385. `allChunksGzipKB` still excludes the lazy CMUdict chunk (~939KB gzip, reported as `deferredChunksGzipKB`). The previous 1275 limit was the July 23 total (82 chunks); the app grew to 111 chunks / 1531KB gzip after essential-words, global search, curriculum expansion, and related practice UI. CI allows +10% growth before failing."
 }

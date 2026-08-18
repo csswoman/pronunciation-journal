@@ -21,7 +21,7 @@ export interface PageHeaderProps {
   /** Trailing controls in the title row (e.g. vault, settings). */
   actions?: ReactNode;
   illustration?: ReactNode;
-  variant?: "default" | "compact" | "hero-compact";
+  variant?: "default" | "compact";
   progress?: number;
   lessonTitle?: string;
   phonemeLabel?: string;

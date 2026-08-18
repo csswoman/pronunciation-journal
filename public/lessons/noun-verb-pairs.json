@@ -2,64 +2,64 @@
   "slug": "noun-verb-pairs",
   "sections": [
     {
-      "heading": "Conversion in English",
-      "body": "English allows many words to shift grammatical category without any change in form. This process — called conversion or zero derivation — is more common in English than in most languages. When a noun becomes a verb, it typically gains the meaning 'to act as a [noun]' or 'to use a [noun]'."
+      "heading": "Conversión en inglés",
+      "body": "El inglés permite que muchas palabras cambien de categoría gramatical sin ningún cambio de forma. Este proceso, llamado conversión o derivación cero, es más común en inglés que en la mayoría de los idiomas. Cuando un sustantivo se convierte en verbo, normalmente adquiere el significado de \"actuar como [sustantivo]\" o \"usar un [sustantivo]\"."
     },
     {
-      "heading": "Stress as the signal",
-      "body": "For two-syllable noun/verb pairs, stress is the only phonetic signal. REcord (noun) / reCORD (verb). PROtest / proTEST. PERmit / perMIT. PROgress / proGRESS. REfund / reFUND."
+      "heading": "El estrés como señal",
+      "body": "Para pares de sustantivo/verbo de dos sílabas, el acento es la única señal fonética. GRABAR (sustantivo) / grabar (verbo). PROTEST / proTEST. PERMISO / PERMISO. PROGRESO / PROGRESO. REEMBOLSO / REEMBOLSO."
     }
   ],
   "examples": [
     {
       "english": "a REcord (n.) / to reCORD (v.)",
-      "note": "Stress shift signals the category"
+      "note": "El cambio de estrés señala la categoría."
     },
     {
       "english": "to email someone",
-      "note": "Noun 'email' converted to verb"
+      "note": "Sustantivo 'correo electrónico' convertido en verbo"
     },
     {
       "english": "to Google something",
-      "note": "Proper noun → verb"
+      "note": "Nombre propio → verbo"
     },
     {
       "english": "to text someone",
-      "note": "Noun → verb — now standard"
+      "note": "Sustantivo → verbo - ahora estándar"
     },
     {
       "english": "to shortlist candidates",
-      "note": "Compound noun → verb"
+      "note": "Sustantivo compuesto → verbo"
     }
   ],
   "exercises": [
     {
-      "instruction": "Use each word as both a noun and a verb in two sentences.",
+      "instruction": "Use the word in brackets as either a noun (n.) or a verb (v.) as indicated. Write a sentence.",
       "items": [
-        "email",
-        "water",
-        "book",
-        "police"
+        "___ (permit — n.) You need a ___ to park here.",
+        "___ (permit — v.) The rules do not ___ smoking inside.",
+        "___ (record — n.) She broke the world ___.",
+        "___ (record — v.) The band will ___ a new album next month."
       ],
       "answers": [
-        "Modelo: I got an email. (n.) / I'll email you the file. (v.)",
-        "Modelo: A glass of water. (n.) / I water the plants daily. (v.)",
-        "Modelo: I'm reading a book. (n.) / You should book a table. (v.)",
-        "Modelo: The police arrived. (n.) / Volunteers police the park at night. (v.)"
+        "You need a permit to park here.",
+        "The rules do not permit smoking inside.",
+        "She broke the world record.",
+        "The band will record a new album next month."
       ]
     }
   ],
   "quiz": [
     {
-      "question": "In 'We need to progress faster', 'progress' is:",
+      "question": "En 'Necesitamos progresar más rápido', 'progreso' es:",
       "options": [
-        "A noun stressed on the first syllable",
-        "A verb stressed on the second syllable",
-        "An adjective",
-        "An adverb"
+        "Un sustantivo acentuado en la primera sílaba.",
+        "Un verbo acentuado en la segunda sílaba.",
+        "un adjetivo",
+        "un adverbio"
       ],
       "correct": 1,
-      "explanation": "When 'progress' is a verb, stress falls on the second syllable: proGRESS."
+      "explanation": "Cuando 'progreso' es un verbo, el acento recae en la segunda sílaba: progreso."
     }
   ]
 }

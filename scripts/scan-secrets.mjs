@@ -73,7 +73,11 @@ function lineNumberFor(content, index) {
 const findings = [];
 
 for (const file of trackedFiles().filter(shouldScan)) {
-  const content = fs.readFileSync(path.join(ROOT, file), "utf8");
+  const fullPath = path.join(ROOT, file);
+  // git ls-files includes index entries for unstaged deletions.
+  if (!fs.existsSync(fullPath)) continue;
+
+  const content = fs.readFileSync(fullPath, "utf8");
 
   for (const match of content.matchAll(SECRET_ASSIGNMENT)) {
     const [, name, value] = match;

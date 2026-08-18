@@ -1,9 +1,21 @@
 "use client";
 
-import Link from "next/link";
-import { useMemo, useState } from "react";
+// Planned structure:
+// <MiniLessonsBrowser>
+//   <PageHeader />
+//   <Filters />
+//   <Results>
+//     <MiniLessonCard /> × N
+//     <ListPagination />
+//   </Results>
+// </MiniLessonsBrowser>
+
+import { useEffect, useMemo, useRef, useState } from "react";
 import PageHeader from "@/components/layout/PageHeader";
+import { MiniLessonCard } from "@/components/mini-lessons/MiniLessonCard";
+import { ListPagination } from "@/components/ui/ListPagination";
 import { cn } from "@/lib/cn";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import {
   LESSON_LEVELS,
   LESSON_CATEGORIES,
@@ -19,17 +31,42 @@ import {
 const levels: LessonLevel[] = [...LESSON_LEVELS];
 const categories: LessonCategory[] = [...LESSON_CATEGORIES];
 
+/** Desktop fills 2×6 grid rows; mobile stacks taller cards — paginate sooner. */
+const PAGE_SIZE_DESKTOP = 12;
+const PAGE_SIZE_MOBILE = 8;
+
 export default function MiniLessonsBrowser({ lessons }: { lessons: MiniLesson[] }) {
   const [selectedLevel, setSelectedLevel] = useState<LessonLevel | "all">("all");
   const [selectedCategory, setSelectedCategory] = useState<LessonCategory | "all">("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [layoutReady, setLayoutReady] = useState(false);
+  const listRef = useRef<HTMLDivElement>(null);
 
-  const filteredLessons = lessons.filter(
-    (lesson) =>
-      (selectedLevel === "all" || lesson.level === selectedLevel) &&
-      (selectedCategory === "all" || lesson.category === selectedCategory)
+  const isWide = useMediaQuery("(min-width: 700px)");
+  // SSR + first paint use desktop size to avoid hydration mismatch; mobile size after mount.
+  const pageSize = layoutReady && !isWide ? PAGE_SIZE_MOBILE : PAGE_SIZE_DESKTOP;
+
+  useEffect(() => {
+    setLayoutReady(true);
+  }, []);
+
+  const filteredLessons = useMemo(
+    () =>
+      lessons.filter(
+        (lesson) =>
+          (selectedLevel === "all" || lesson.level === selectedLevel) &&
+          (selectedCategory === "all" || lesson.category === selectedCategory),
+      ),
+    [lessons, selectedLevel, selectedCategory],
   );
 
   const hasActiveFilters = selectedLevel !== "all" || selectedCategory !== "all";
+  const totalPages = Math.max(1, Math.ceil(filteredLessons.length / pageSize));
+
+  const paginatedLessons = useMemo(() => {
+    const start = (currentPage - 1) * pageSize;
+    return filteredLessons.slice(start, start + pageSize);
+  }, [filteredLessons, currentPage, pageSize]);
 
   const levelCounts = useMemo(() => {
     const counts: Record<string, number> = { all: lessons.length };
@@ -43,9 +80,26 @@ export default function MiniLessonsBrowser({ lessons }: { lessons: MiniLesson[] 
     return counts;
   }, [lessons]);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedLevel, selectedCategory]);
+
+  useEffect(() => {
+    setCurrentPage((page) => Math.min(page, totalPages));
+  }, [totalPages]);
+
   function clearFilters() {
     setSelectedLevel("all");
     setSelectedCategory("all");
+  }
+
+  function handlePageChange(page: number) {
+    setCurrentPage(page);
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    listRef.current?.scrollIntoView({
+      behavior: reduceMotion ? "auto" : "smooth",
+      block: "start",
+    });
   }
 
   return (
@@ -158,50 +212,34 @@ export default function MiniLessonsBrowser({ lessons }: { lessons: MiniLesson[] 
               )}
             </div>
 
-            <div className="mini-lessons__grid">
-              {filteredLessons.map((lesson) => (
-                <Link
-                  key={lesson.id}
-                  href={`/mini-lessons/${lesson.slug}`}
-                  className="mini-lessons__card"
+            {filteredLessons.length === 0 ? (
+              <p className="mini-lessons__empty">
+                No hay lecciones con estos filtros.{" "}
+                <button
+                  type="button"
+                  className="mini-lessons__toolbar-reset"
+                  onClick={clearFilters}
                 >
-                  <div className="mini-lessons__card-top">
-                    <div className="mini-lessons__card-meta">
-                      <span className="mini-lessons__pill mini-lessons__pill--level">
-                        {MINI_LESSON_LEVEL_LABELS[lesson.level]}
-                      </span>
-                      <span className="mini-lessons__pill mini-lessons__pill--category">
-                        {MINI_LESSON_CATEGORY_LABELS[lesson.category]}
-                      </span>
-                    </div>
-                    <span className="mini-lessons__card-duration">{lesson.duration} min</span>
-                  </div>
-
-                  <h2 className="mini-lessons__card-title">{lesson.title}</h2>
-                  <p className="mini-lessons__card-body">{lesson.body}</p>
-
-                  <div className="mini-lessons__card-foot">
-                    <span>{lesson.subtitle}</span>
-                    <span className="mini-lessons__card-arrow" aria-hidden>
-                      →
-                    </span>
-                  </div>
-                </Link>
-              ))}
-
-              {filteredLessons.length === 0 && (
-                <p className="mini-lessons__empty">
-                  No hay lecciones con estos filtros.{" "}
-                  <button
-                    type="button"
-                    className="mini-lessons__toolbar-reset"
-                    onClick={clearFilters}
-                  >
-                    Ver todas
-                  </button>
-                </p>
-              )}
-            </div>
+                  Ver todas
+                </button>
+              </p>
+            ) : (
+              <div ref={listRef} className="flex flex-col gap-4">
+                <div className="mini-lessons__grid">
+                  {paginatedLessons.map((lesson) => (
+                    <MiniLessonCard key={lesson.id} lesson={lesson} />
+                  ))}
+                </div>
+                <ListPagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  totalItems={filteredLessons.length}
+                  pageSize={pageSize}
+                  onPageChange={handlePageChange}
+                  ariaLabel="Paginación de lecciones"
+                />
+              </div>
+            )}
           </section>
         </div>
       </div>

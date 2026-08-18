@@ -39,7 +39,7 @@ export function AuthInput({
   const masked = isPasswordField && !showPassword;
 
   const baseClass =
-    "w-full bg-surface-sunken rounded-lg text-fg text-base px-4 py-3 outline-none transition-all placeholder:text-fg-subtle focus:bg-surface-raised focus-visible:ring-2 focus-visible:ring-offset-2 pr-10";
+    "w-full bg-surface-sunken rounded-lg text-fg text-base px-4 py-3 outline-none transition-all placeholder:text-fg-subtle focus:bg-surface-raised focus-visible:ring-2 focus-visible:ring-offset-2 pr-14";
   const borderClass = error
     ? "border border-error focus:border-error focus-visible:ring-error"
     : "border border-border-subtle focus:border-primary focus-visible:ring-primary";
@@ -104,7 +104,7 @@ export function AuthInput({
           <button
             type="button"
             onClick={() => setShowPassword((v) => !v)}
-            className="absolute right-4 top-1/2 -translate-y-1/2 p-1 rounded-md transition-all text-fg-subtle hover:text-fg-muted"
+            className="absolute right-1 top-1/2 grid size-11 -translate-y-1/2 place-items-center rounded-md text-fg-subtle transition-colors hover:bg-surface-raised hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             aria-label={showPassword ? "Hide password" : "Show password"}
           >
             {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}

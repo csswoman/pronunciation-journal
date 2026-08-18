@@ -22,6 +22,7 @@ import Button from '@/components/ui/Button'
 import { PracticeActionBar, PracticeContinueButton, PracticeExerciseCard } from '@/components/practice/session/PracticeActionBar'
 import { cn } from '@/lib/cn'
 import { displayEnglishWord } from '@/lib/essential-words/word-display'
+import { formatIpaDisplay } from '@/lib/lexicon/format-ipa'
 import { ArchiveConfirmAction } from '@/components/practice/study-card/ArchiveConfirmAction'
 import type { AttemptOutcome } from '@/lib/essential-words/attempt-grade'
 import type { EssentialWord } from '@/lib/essential-words/types'
@@ -141,7 +142,7 @@ export function RecognizeAudioCard({ entry, distractors, levelLabel, onAttempt, 
                 {optionState === 'correct' ? <Check size={20} /> : optionState === 'incorrect' ? <X size={20} /> : <kbd className="rounded-xs border border-border-subtle bg-surface-sunken px-1.5 py-0.5 font-mono text-caption tabular-nums text-fg-subtle">{index + 1}</kbd>}
               </span>
               <span className="min-w-0 flex-1">{displayEnglishWord(option.word)}</span>
-              {chosen && <span className="shrink-0 font-ipa text-body-sm text-fg-muted">/{option.ipa_strong}/</span>}
+              {chosen && <span className="shrink-0 font-ipa text-body-sm text-fg-muted">{formatIpaDisplay(option.ipa_strong)}</span>}
             </button>
           )
         })}

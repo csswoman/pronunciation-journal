@@ -4,17 +4,17 @@
   "level": "advanced",
   "category": "grammar",
   "duration": 7,
-  "title": "Third Conditional & mixed conditionals",
-  "subtitle": "Grammar of the day",
-  "body": "Third conditional expresses regret about the past. Mixed conditionals combine time frames — a mark of truly fluent English.",
+  "title": "Tercer condicional y condicionales mixtos",
+  "subtitle": "Gramática del día",
+  "body": "El tercer condicional expresa arrepentimiento por el pasado. Los condicionales mixtos combinan períodos de tiempo, una señal de inglés verdaderamente fluido.",
   "examples": [
     {
       "word": "If I had studied, I would have passed.",
-      "translation": "past unreal — arrepentimiento"
+      "translation": "pasado irreal — arrepentimiento"
     },
     {
       "word": "If I had slept, I wouldn't be tired now.",
-      "translation": "mixed: pasado → presente"
+      "translation": "mixto: pasado → presente"
     }
   ],
   "href": "/mini-lessons/third-conditional"

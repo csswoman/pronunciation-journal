@@ -159,8 +159,6 @@
 .dot-info    { background: var(--info); }
 
 /* ── Typography helpers ──────────────────────────────────────────────────── */
-.font-display  { font-family: var(--font-sans), system-ui, sans-serif; }
-.font-editorial { font-family: var(--font-sans), system-ui, sans-serif; }
 .font-phoneme  { font-family: var(--font-mono-var), monospace; }
 .font-h1       { font: var(--font-h1); letter-spacing: var(--text-tracking-h1); }
 .font-h2       { font: var(--font-h2); letter-spacing: var(--text-tracking-h2); }
@@ -475,6 +473,15 @@
   border: 1px solid var(--border-subtle);
   background-color: var(--surface-raised);
   padding: var(--layout-card-pad);
+}
+
+.home-sidebar-card--compact {
+  gap: var(--layout-stack-tight);
+  padding-block: var(--layout-card-pad-compact);
+}
+
+.home-sidebar-card--priority {
+  border-color: var(--border-default);
 }
 /* Practice actions: in-flow on larger screens, thumb-reachable on phones. */
 .practice-action-bar__spacer {

@@ -7,8 +7,8 @@ import type { DailyStep } from '@/lib/practice/types'
  */
 export const JOURNAL_STEP_CADENCE_DAYS = 1
 
-export function shouldOfferJournalStep(_dayOfYear: number): boolean {
-  return true
+export function shouldOfferJournalStep(dayOfYear: number): boolean {
+  return dayOfYear >= 0
 }
 
 /**

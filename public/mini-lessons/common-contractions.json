@@ -4,22 +4,26 @@
   "level": "basic",
   "category": "speaking",
   "duration": 4,
-  "title": "Contractions: sound more natural instantly",
-  "subtitle": "Speaking of the day",
-  "body": "Native speakers almost always use contractions in spoken English. Avoiding them makes you sound stiff or overly formal.",
+  "title": "Contracciones: suenan más naturales al instante",
+  "subtitle": "Para sonar más natural",
+  "body": "Los hablantes nativos casi siempre utilizan contracciones en inglés hablado. Evitarlas te hace parecer rígido o demasiado formal.",
   "examples": [
     {
       "word": "I am → I'm",
-      "ipa": "/aɪm/"
+      "ipa": "/aɪm/",
+      "translation": "Yo soy / estoy → Soy / estoy"
     },
     {
       "word": "do not → don't",
-      "ipa": "/doʊnt/"
+      "ipa": "/doʊnt/",
+      "translation": "No hacer / No (auxiliar) → No hacer / No"
     },
     {
       "word": "they are → they're",
-      "ipa": "/ðɛr/"
+      "ipa": "/ðɛr/",
+      "translation": "Ellos son / están → Son / están"
     }
   ],
+  "tip": "Consejo: Practica escuchando y repitiendo contracciones en conversaciones reales, películas o canciones para familiarizarte con su sonido natural. ¡No temas usarlas!",
   "href": "/mini-lessons/common-contractions"
 }

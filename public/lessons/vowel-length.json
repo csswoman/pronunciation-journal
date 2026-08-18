@@ -2,12 +2,12 @@
   "slug": "vowel-length",
   "sections": [
     {
-      "heading": "Vowel length as a phoneme",
-      "body": "In English, vowel length — how long you hold a vowel sound — is phonemically meaningful. Changing the length changes the word. This is different from Spanish, where vowel length isn't distinctive."
+      "heading": "La longitud de la vocal como fonema",
+      "body": "En inglés, la longitud de las vocales (cuánto tiempo se mantiene un sonido vocálico) tiene significado fonémico. Cambiar la longitud cambia la palabra. Esto es diferente del español, donde la longitud de las vocales no es distintiva."
     },
     {
-      "heading": "The key pairs",
-      "body": "The most important pairs: /ɪ/ (short) vs. /iː/ (long): ship/sheep, bit/beat, fit/feet, filled/field. /ʊ/ (short) vs. /uː/ (long): full/fool, pull/pool, look/Luke."
+      "heading": "Los pares de claves",
+      "body": "Los pares más importantes: /ɪ/ (corto) vs. /iː/ (largo): barco/oveja, bocado/golpe, ajuste/pies, lleno/campo. /ʊ/ (corto) vs. /uː/ (largo): completo/tonto, tirar/piscina, mirar/Lucas."
     }
   ],
   "examples": [
@@ -30,7 +30,7 @@
   ],
   "exercises": [
     {
-      "instruction": "Listen (or say aloud) and identify: short /ɪ/ or long /iː/?",
+      "instruction": "Write the phonemic symbol and describe whether each word has a short or long vowel sound.",
       "items": [
         "live (verb)",
         "leave",
@@ -40,26 +40,26 @@
         "heat"
       ],
       "answers": [
-        "/ɪ/ corta (live)",
-        "/iː/ larga (leave)",
-        "/ɪ/ corta (itch)",
-        "/iː/ larga (each)",
-        "/ɪ/ corta (hit)",
-        "/iː/ larga (heat)"
+        "/ɪ/ short (live)",
+        "/iː/ long (leave)",
+        "/ɪ/ short (itch)",
+        "/iː/ long (each)",
+        "/ɪ/ short (hit)",
+        "/iː/ long (heat)"
       ]
     }
   ],
   "quiz": [
     {
-      "question": "Which pair are minimal pairs (same except for vowel length)?",
+      "question": "¿Qué pares son pares mínimos (iguales excepto por la longitud de las vocales)?",
       "options": [
-        "ship / chip",
-        "bit / bite",
-        "sheep / ship",
-        "fill / file"
+        "barco / chip",
+        "poco / mordisco",
+        "oveja / barco",
+        "llenar/archivar"
       ],
       "correct": 2,
-      "explanation": "'Sheep' /ʃiːp/ and 'ship' /ʃɪp/ differ only in vowel length — a minimal pair."
+      "explanation": "'Oveja' /ʃiːp/ y 'barco' /ʃɪp/ difieren sólo en la longitud de las vocales: un par mínimo."
     }
   ]
 }

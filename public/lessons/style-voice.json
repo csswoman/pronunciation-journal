@@ -2,43 +2,43 @@
   "slug": "style-voice",
   "sections": [
     {
-      "heading": "What is voice?",
-      "body": "Voice is the consistent set of stylistic choices that makes writing recognizably yours: sentence rhythm, the vocabulary you gravitate toward, the way you structure arguments, your relationship with the reader. It's distinct from grammar — you can be grammatically flawless and still have no voice."
+      "heading": "¿Qué es la voz?",
+      "body": "La voz es el conjunto constante de elecciones estilísticas que hacen que la escritura sea reconocible como tuya: el ritmo de la oración, el vocabulario hacia el que gravitas, la forma en que estructuras los argumentos, tu relación con el lector. Es distinto de la gramática: puedes tener una gramática impecable y aun así no tener voz."
     },
     {
-      "heading": "Rhythm and sentence length",
-      "body": "Sentence length creates rhythm. Short sentences have impact. They stop the reader. Longer sentences, by contrast, can carry the reader across ideas with a more flowing, deliberate pace, subordinating detail and expanding the space a thought occupies. Varying length is more powerful than either alone."
+      "heading": "Ritmo y duración de la frase.",
+      "body": "La longitud de la oración crea ritmo. Las frases cortas tienen impacto. Detienen al lector. Las oraciones más largas, por el contrario, pueden llevar al lector a través de ideas con un ritmo más fluido y deliberado, subordinando los detalles y ampliando el espacio que ocupa un pensamiento. Variar la longitud es más poderoso que cualquiera de los dos por separado."
     },
     {
-      "heading": "Diction — choosing words",
-      "body": "Every word choice is a voice decision. 'He walked quickly' vs. 'he strode' vs. 'he rushed'. Precision in verbs creates a more vivid and specific voice. Avoiding nominalization ('make a decision' → 'decide') creates energy. Preferring Anglo-Saxon words over Latinate ones often creates warmth."
+      "heading": "Dicción: elegir palabras",
+      "body": "Cada elección de palabra es una decisión de voz. 'Caminó rápidamente' versus 'caminó a grandes zancadas' versus 'se apresuró'. La precisión de los verbos crea una voz más vívida y específica. Evitar la nominalización (“tomar una decisión” → “decidir”) genera energía. Preferir las palabras anglosajonas a las latinas a menudo genera calidez."
     },
     {
-      "heading": "Developing your voice in a second language",
-      "body": "Voice in L2 takes longer to develop than accuracy because it requires confidence — the willingness to be deliberately stylistic, not just correct. Read English writers you admire. Notice what they do. Imitate them consciously. Then break away."
+      "heading": "Desarrollando tu voz en un segundo idioma",
+      "body": "La voz en L2 tarda más en desarrollarse que la precisión porque requiere confianza: la voluntad de ser deliberadamente estilístico, no sólo correcto. Lee escritores ingleses que admires. Observe lo que hacen. Imítalos conscientemente. Entonces aléjate."
     }
   ],
   "examples": [
     {
       "english": "Short sentences create urgency.",
-      "note": "Impact through brevity"
+      "note": "Impacto a través de la brevedad"
     },
     {
       "english": "Longer sentences, by contrast, allow ideas to unfold at a more deliberate pace.",
-      "note": "Elaboration through extension"
+      "note": "Elaboración a través de la extensión."
     },
     {
       "english": "'decide' > 'make a decision'",
-      "note": "Prefer verbs over nominalized phrases"
+      "note": "Prefiere los verbos a las frases nominalizadas"
     },
     {
       "english": "'strode' vs. 'walked quickly'",
-      "note": "Precise verbs vs. verb + adverb"
+      "note": "Verbos precisos versus verbo + adverbio"
     }
   ],
   "exercises": [
     {
-      "instruction": "Revise each sentence to make it more vivid or energetic.",
+      "instruction": "Revise each sentence to remove nominalisation or passive voice and make it more direct and active.",
       "items": [
         "She made the decision to leave the company.",
         "He walked in a slow and careful manner.",
@@ -46,24 +46,24 @@
         "The report was written by the committee."
       ],
       "answers": [
-        "Modelo: She decided to leave the company.",
-        "Modelo: He crept in.",
-        "Modelo: The team buzzed with excitement.",
-        "Modelo: The committee wrote the report."
+        "Model: She decided to leave the company.",
+        "Model: He walked slowly and carefully.",
+        "Model: The team felt excited.",
+        "Model: The committee wrote the report."
       ]
     }
   ],
   "quiz": [
     {
-      "question": "What distinguishes 'voice' from 'grammar'?",
+      "question": "¿Qué distingue la \"voz\" de la \"gramática\"?",
       "options": [
-        "Voice is only about vocabulary; grammar is about structure",
-        "Voice refers to passive/active constructions only",
-        "Voice is the consistent stylistic identity of a writer — it's about choices, not correctness",
-        "Voice is less important than grammar for advanced writers"
+        "La voz se trata sólo de vocabulario; la gramática se trata de estructura",
+        "La voz se refiere únicamente a construcciones pasivas/activas.",
+        "La voz es la identidad estilística constante de un escritor: se trata de elecciones, no de corrección.",
+        "La voz es menos importante que la gramática para los escritores avanzados"
       ],
       "correct": 2,
-      "explanation": "Voice is the sum of deliberate stylistic choices that make writing recognizably belong to one writer. Grammar is a prerequisite — but voice is what makes writing memorable."
+      "explanation": "La voz es la suma de elecciones estilísticas deliberadas que hacen reconocible que la escritura pertenezca a un escritor. La gramática es un requisito previo, pero la voz es lo que hace que la escritura sea memorable."
     }
   ]
 }

@@ -7,7 +7,7 @@
 import Link from "next/link";
 import { cn } from "@/lib/cn";
 
-export type GuestSaveProgressVariant = "inline" | "default" | "emphasized";
+export type GuestSaveProgressVariant = "inline" | "footer" | "default" | "emphasized";
 
 interface GuestSaveProgressBannerProps {
   variant?: GuestSaveProgressVariant;
@@ -46,6 +46,34 @@ export default function GuestSaveProgressBanner({
         </Link>{" "}
         para guardar el progreso.
       </p>
+    );
+  }
+
+  if (variant === "footer") {
+    return (
+      <section
+        className={cn(
+          "flex flex-wrap items-center gap-x-2 gap-y-1 rounded-lg border border-border-subtle bg-surface-raised px-3 py-2.5 font-body-sm text-fg-muted",
+          className,
+        )}
+        aria-label="Guardar progreso"
+        data-variant="footer"
+      >
+        <span>¿Quieres conservar lo de hoy?</span>
+        <Link
+          href="/login?intent=save&mode=register"
+          className="focus-ring font-medium text-fg underline-offset-2 hover:underline"
+        >
+          Crea una cuenta
+        </Link>
+        <span aria-hidden>o</span>
+        <Link
+          href="/login?intent=save"
+          className="focus-ring font-medium text-fg underline-offset-2 hover:underline"
+        >
+          inicia sesión
+        </Link>
+      </section>
     );
   }
 

@@ -1,0 +1,152 @@
+{
+  "meta": {
+    "eyebrow": "Inglés natural · Vol. 1",
+    "title": "Básico vs",
+    "titleEmphasis": "natural: Ánimo y Opiniones",
+    "goal": "Pasa del inglés formal de libro al habla coloquial para expresar cómo te sientes, tus niveles de energía y tus opiniones."
+  },
+  "related": [
+    { "slug": "chunk-basico-vs-natural-2", "label": "Básico vs natural: Decisiones y Contacto" },
+    { "slug": "chunk-palabras-doble-significado", "label": "Palabras con doble significado" }
+  ],
+  "cards": [
+    {
+      "id": "bvn1-salud",
+      "tag": "Salud y fatiga",
+      "title": "Cómo te sientes físicamente",
+      "lede": "Sustituye 'I am sick' o 'I am very tired' por los modismos de cabecera de los nativos.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "I'm feeling a little sick.", "note": "de libro de texto" },
+            { "variant": "good", "text": "I'm feeling under the weather.", "note": "mucho más natural y común" },
+            { "variant": "bad", "text": "I am very tired from work.", "note": "básico" },
+            { "variant": "good", "text": "I'm totally beat / I'm completely drained.", "note": "expresa fatiga real" }
+          ]
+        },
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "I'm swamped", "value": "Estoy tapado de trabajo · I'm swamped with meetings today.", "highlights": ["swamped"] },
+            { "key": "Take it easy", "value": "Tómalo con calma / Relájate · Take it easy, no need to rush.", "highlights": ["Take it easy"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bvn1-emociones",
+      "tag": "Emociones intensas",
+      "title": "Felicidad, hambre y enojo",
+      "lede": "Evita repetir 'very' todo el tiempo; usa expresiones que transmiten intensidad.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "I am very happy with the results." },
+            { "variant": "good", "text": "I'm thrilled / I'm over the moon with the results!", "note": "entusiasmo auténtico" },
+            { "variant": "bad", "text": "I am very hungry right now." },
+            { "variant": "good", "text": "I'm starving / I'm famished!", "note": "hambre voraz" }
+          ]
+        },
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Butterflies in my stomach", "value": "Nervios antes de un evento · I have butterflies in my stomach.", "highlights": ["Butterflies in my stomach"] },
+            { "key": "I'm pissed off / fuming", "value": "Estoy furioso / muy molesto.", "highlights": ["pissed off", "fuming"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bvn1-descanso",
+      "tag": "Desconexión y sueño",
+      "title": "Irse a dormir y relajarse",
+      "lede": "Decir 'I go to bed' suena infantil; en adultos se usan estos giros.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "+ I'm going to sleep", "value": "++ I'm gonna hit the sack / hit the hay", "highlights": ["hit the sack", "hit the hay"] },
+            { "key": "+ I'm relaxing after work", "value": "++ I'm unwinding / taking a breather", "highlights": ["unwinding", "taking a breather"] },
+            { "key": "+ I need to rest a minute", "value": "++ I need to catch my breath", "highlights": ["catch my breath"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Sonido:",
+        "body": "\"Hit the sack\" se pronuncia fluido /hɪt ðə ˈsæk/ con la 't' ligada."
+      }
+    },
+    {
+      "id": "bvn1-acuerdo",
+      "tag": "Acuerdo y desacuerdo",
+      "title": "Estar o no en la misma sintonía",
+      "lede": "Muestra sintonía o desacuerdo diplomático en conversaciones y juntas.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "I agree with your idea.", "note": "simple" },
+            { "variant": "good", "text": "I'm with you on that / I couldn't agree more.", "note": "apoyo contundente" },
+            { "variant": "bad", "text": "I don't agree with you.", "note": "suena cortante" },
+            { "variant": "good", "text": "I'm not on board with that / I beg to differ.", "note": "elegante y profesional" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bvn1-opiniones",
+      "tag": "Pedir y dar opiniones",
+      "title": "Tu postura sobre un tema",
+      "lede": "Cómo intervenir en un debate sin decir solo 'In my opinion...'.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "+ What is your opinion?", "value": "++ What's your take on this?", "highlights": ["What's your take"] },
+            { "key": "+ In my opinion...", "value": "++ From my perspective / If you ask me...", "highlights": ["From my perspective"] },
+            { "key": "+ You are correct", "value": "++ You nailed it / Spot on!", "highlights": ["nailed it", "Spot on"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bvn1-perspectiva",
+      "tag": "Evaluar argumentos",
+      "title": "Creer, dudar y restar importancia",
+      "lede": "Fórmulas para reaccionar ante lo que otros dicen.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "+ I don't believe that story", "value": "++ I don't buy it", "highlights": ["don't buy it"] },
+            { "key": "+ It is logical", "value": "++ It adds up / Fair enough", "highlights": ["adds up", "Fair enough"] },
+            { "key": "+ It's not important", "value": "++ It's no big deal / No sweat", "highlights": ["no big deal", "No sweat"] },
+            { "key": "+ I'm undecided", "value": "++ I'm on the fence", "highlights": ["on the fence"] }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "¿Qué frase suena más natural para decir que te sientes indispuesto o resfriado?",
+      "options": ["I'm feeling under the weather.", "I have sickness in my body.", "The clouds are in my health."],
+      "answer": 0,
+      "explain": "'Feeling under the weather' es el modismo por excelencia para decir que no te sientes al 100% de salud."
+    },
+    {
+      "q": "¿Cómo dices de forma avanzada 'Estoy totalmente de acuerdo contigo'?",
+      "options": ["I'm with you on that.", "I am approving your mind.", "My agreement is complete."],
+      "answer": 0,
+      "explain": "'I'm with you on that' y 'I couldn't agree more' expresan acuerdo de manera nativa."
+    },
+    {
+      "q": "¿Qué significa la expresión 'I'm on the fence'?",
+      "options": ["Estoy indeciso sobre dos opciones.", "Estoy subido en una cerca de madera.", "Estoy viendo a mis vecinos."],
+      "answer": 0,
+      "explain": "'On the fence' describe estar indeciso entre dos alternativas sin tomar partido aún."
+    }
+  ]
+}

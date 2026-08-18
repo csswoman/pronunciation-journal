@@ -29,6 +29,12 @@ export function TrainerControls({
   onNextRound,
   onRestart,
   onNextContrast,
+  isSlow,
+  onToggleSlow,
+  isAutoLoop,
+  onToggleAutoLoop,
+  streak,
+  bestStreak,
   embedded = false,
 }: {
   quizTarget: Side | null;
@@ -44,6 +50,12 @@ export function TrainerControls({
   onNextRound: () => void;
   onRestart: () => void;
   onNextContrast?: () => void;
+  isSlow?: boolean;
+  onToggleSlow?: () => void;
+  isAutoLoop?: boolean;
+  onToggleAutoLoop?: () => void;
+  streak?: number;
+  bestStreak?: number;
   embedded?: boolean;
 }) {
   if (isDone) {
@@ -56,6 +68,11 @@ export function TrainerControls({
         {accuracy !== null ? (
           <p className="ipa-chart__done-score">
             Precisión: <strong>{accuracy}%</strong>
+          </p>
+        ) : null}
+        {bestStreak && bestStreak >= 2 ? (
+          <p className="ipa-chart__done-score text-caption font-semibold text-amber-600 dark:text-amber-400">
+            🔥 Mejor racha consecutiva: <strong>{bestStreak}</strong> aciertos
           </p>
         ) : null}
         <div className="ipa-chart__done-actions">
@@ -85,6 +102,34 @@ export function TrainerControls({
           <Play size={13} fill="currentColor" aria-hidden />
           {embedded ? "Escuchar ambos" : "Escuchar ambas"}
         </button>
+        {onToggleSlow ? (
+          <button
+            type="button"
+            onClick={onToggleSlow}
+            className={cn(
+              "ipa-chart__btn ipa-chart__btn--ghost",
+              isSlow && "text-primary font-bold bg-primary-soft border border-primary/30",
+            )}
+            title={isSlow ? "Velocidad lenta activa (0.75x)" : "Cambiar a velocidad lenta"}
+            aria-label={isSlow ? "Velocidad lenta activa" : "Cambiar a velocidad lenta"}
+          >
+            <span>🐢 {isSlow ? "0.75x" : "1.0x"}</span>
+          </button>
+        ) : null}
+        {onToggleAutoLoop ? (
+          <button
+            type="button"
+            onClick={onToggleAutoLoop}
+            className={cn(
+              "ipa-chart__btn ipa-chart__btn--ghost",
+              isAutoLoop && "text-primary font-bold bg-primary-soft border border-primary/30 animate-pulse",
+            )}
+            title={isAutoLoop ? "Pausar reproducción continua" : "Activar modo escucha continua manos libres"}
+            aria-label={isAutoLoop ? "Pausar reproducción continua" : "Activar modo escucha continua"}
+          >
+            <span>{isAutoLoop ? "⏸ Pausar" : "📻 Continuo"}</span>
+          </button>
+        ) : null}
         <div className="flex items-center gap-1.5">
           <button
             type="button"
@@ -139,6 +184,12 @@ export function TrainerControls({
                 <p className="text-body-sm font-medium text-fg">
                   {verdict === "correct" ? "¡Correcto!" : `Era «${correctWord}».`}
                 </p>
+                {verdict === "correct" && streak && streak >= 2 ? (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/15 border border-amber-500/30 px-2.5 py-0.5 text-xs font-bold text-amber-600 dark:text-amber-400 animate-pulse">
+                    <span>🔥</span>
+                    <span>Racha: {streak}</span>
+                  </span>
+                ) : null}
               </div>
               <div className="flex items-center gap-1.5">
                 <button type="button" onClick={onNextRound} className="ipa-chart__btn ipa-chart__btn--primary">

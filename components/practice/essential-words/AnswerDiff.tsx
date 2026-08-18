@@ -9,7 +9,7 @@
 import { explanationFor } from '@/lib/essential-words/word-explanations'
 import { displayEnglishWord } from '@/lib/essential-words/word-display'
 import type { DictationFeedback } from '@/lib/essential-words/dictation-feedback'
-import { AlertCircle, Check, Ear, GitCompareArrows, X } from '@/components/icons'
+import { AlertCircle, Check, Ear, X } from '@/components/icons'
 
 interface DictationProps {
   feedback: DictationFeedback

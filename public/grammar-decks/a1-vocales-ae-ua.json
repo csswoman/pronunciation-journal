@@ -5,6 +5,7 @@
     "goal": "Ya puedes distinguir y producir las vocales /æ/ de cat y /ʌ/ de cut."
   },
   "sounds": ["æ", "ʌ"],
+  "pronunciationTargetIds": ["segmental.contrast./æ/|/ʌ/"],
   "quiz": [
     {
       "q": "¿Qué sonido tiene la palabra 'man'?",

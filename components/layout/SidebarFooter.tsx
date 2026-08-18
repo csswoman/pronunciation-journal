@@ -42,7 +42,7 @@ export default function SidebarFooter() {
   const isGuest = isAnonymousUser(user);
   const level = isGuest ? guestLevel : preferences?.cefr_level ?? "A1";
   const displayName = isGuest
-    ? "Explorando sin cuenta"
+    ? "Modo invitado"
     : preferences?.full_name || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Mi perfil";
   const avatarUrl = user?.user_metadata?.avatar_url as string | undefined;
   const initials = isGuest

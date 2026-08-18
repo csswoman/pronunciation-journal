@@ -2,9 +2,14 @@ import type { PronunciationTargetId } from "@/lib/pronunciation/targets/types";
 
 export type CefrLevelId = "a1" | "a2" | "b1" | "b2" | "c1";
 
-export type ElectiveTrackId = "purposes" | "business" | "connected-speech";
+export type ElectiveTrackId =
+  | "purposes"
+  | "business"
+  | "connected-speech"
+  | "chunks"
+  | "false-friends";
 
-export type ElectiveSpineIcon = "laptop" | "briefcase" | "mic";
+export type ElectiveSpineIcon = "laptop" | "briefcase" | "mic" | "message" | "book";
 
 export type CoursePathTrackId = CefrLevelId | ElectiveTrackId;
 
@@ -63,6 +68,8 @@ export interface CoursePathLesson {
   /** Canonical theory owner shared with the deck and equivalent mini-lessons. */
   topicId?: string;
   priority: LessonPriority;
+  /** Short thematic heading shown inside a broad course unit. */
+  group?: string;
   /** Part of the broad curriculum (p === 0), shown after priority block */
   isOptional: boolean;
   /** Connects to Sound Lab (pronunciation / audio). @deprecated kept for compatibility — prefer `pronunciationTargetIds`. */

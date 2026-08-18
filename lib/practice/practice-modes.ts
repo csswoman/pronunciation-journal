@@ -14,51 +14,73 @@ export interface PracticeMode {
 export const PRACTICE_MODES: readonly PracticeMode[] = [
   {
     id: 'sounds',
-    label: 'Sound Lab',
-    description: 'Pronunciation and minimal pairs',
+    label: 'Laboratorio de sonidos',
+    description: 'Distingue sonidos parecidos (pares mínimos)',
     href: '/practice/sounds',
     icon: 'MicVocal',
   },
   {
     id: 'essential-words',
-    label: 'Essential Words',
-    description: 'High-frequency words with spaced repetition',
+    label: 'Palabras esenciales',
+    description: 'Más de 2500 palabras frecuentes, con repaso espaciado',
     href: '/practice/essential-words',
     icon: 'ListOrdered',
   },
   {
     id: 'decks',
-    label: 'Decks',
-    description: 'Your vocabulary decks',
+    label: 'Tus mazos',
+    description: 'Tus mazos de vocabulario',
     href: '/practice/decks',
     icon: 'Layers',
   },
   {
     id: 'review',
-    label: 'Review',
-    description: 'Words due for spaced repetition',
+    label: 'Repaso',
+    description: 'Palabras pendientes de repaso espaciado',
     href: '/practice/review',
     icon: 'RotateCcw',
   },
   {
     id: 'reader',
-    label: 'Reading',
-    description: 'Practice your recent words in context',
+    label: 'Lectura',
+    description: 'Practica tus palabras recientes en contexto',
     href: '/practice/reader',
     icon: 'BookOpen',
   },
   {
     id: 'courses',
     label: 'Ruta',
-    description: 'Continue a guided course',
+    description: 'Continúa un curso guiado',
     href: '/courses',
     icon: 'BookOpen',
+  },
+  {
+    id: 'intonation',
+    label: 'Entonación',
+    description: 'Observa cómo cambia el tono en preguntas y oraciones',
+    href: '/practice/intonation',
+    icon: 'Waves',
+  },
+  {
+    id: 'connected-speech',
+    label: 'Habla conectada',
+    description: 'Une palabras al hablar, como en una conversación real',
+    href: '/practice/connected-speech',
+    icon: 'Sparkles',
+  },
+  {
+    id: 'word-search',
+    label: 'Búsqueda de palabras',
+    description: 'Sopa de letras y deducción de vocabulario por pistas',
+    href: '/practice/word-search',
+    icon: 'Search',
   },
 ] as const
 
 const FALLBACK_MODE_ID = 'essential-words'
 
 export type RecommendationReason =
+  | 'due-review'
   | 'daily-sound'
   | 'daily-words'
   | 'last-mode'
@@ -80,6 +102,7 @@ export interface ResolveInput {
   fromDaily: boolean
   arc: ArcLike | undefined
   lastModeId: string | null
+  dueCount?: number | null
 }
 
 function modeById(id: string): PracticeMode | undefined {
@@ -95,6 +118,16 @@ function modeById(id: string): PracticeMode | undefined {
  */
 export function resolveRecommendedMode(input: ResolveInput): RecommendedResult {
   const fallback = modeById(FALLBACK_MODE_ID)!
+
+  if (input.dueCount && input.dueCount > 0) {
+    const mode = modeById('review')!
+    return {
+      mode,
+      reason: 'due-review',
+      headline: `Tienes ${input.dueCount} ${input.dueCount === 1 ? 'palabra pendiente' : 'palabras pendientes'} de repaso`,
+      subtext: 'Atiéndelas antes de empezar una práctica nueva.',
+    }
+  }
 
   if (input.fromDaily && input.arc?.soundIpa) {
     const mode = modeById('sounds')!
@@ -122,8 +155,8 @@ export function resolveRecommendedMode(input: ResolveInput): RecommendedResult {
       return {
         mode,
         reason: 'last-mode',
-        headline: `Continue ${mode.label}`,
-        subtext: 'Pick up where you left off.',
+        headline: `Continúa con ${mode.label}`,
+        subtext: 'Retoma donde lo dejaste.',
       }
     }
   }
@@ -131,7 +164,7 @@ export function resolveRecommendedMode(input: ResolveInput): RecommendedResult {
   return {
     mode: fallback,
     reason: 'fallback',
-    headline: 'Start with the essentials',
-    subtext: 'The 1000 most useful words.',
+    headline: 'Empieza por lo esencial',
+    subtext: 'Más de 2500 palabras de alta frecuencia.',
   }
 }

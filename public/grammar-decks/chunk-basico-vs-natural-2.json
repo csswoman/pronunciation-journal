@@ -1,0 +1,144 @@
+{
+  "meta": {
+    "eyebrow": "Inglés natural · Vol. 2",
+    "title": "Básico vs",
+    "titleEmphasis": "natural: Decisiones y Contacto",
+    "goal": "Domina las frases fijas que usan los hablantes nativos para decidir, dudar, ponerse en contacto y pedir información."
+  },
+  "related": [
+    { "slug": "chunk-basico-vs-natural-1", "label": "Básico vs natural: Ánimo y Opiniones" },
+    { "slug": "chunk-basico-vs-natural-3", "label": "Básico vs natural: Trabajo y Tiempo" }
+  ],
+  "cards": [
+    {
+      "id": "bvn2-decisiones",
+      "tag": "Decisiones y dudas",
+      "title": "Tomar decisiones",
+      "lede": "Sustituye 'I want to decide' o 'You choose' por expresiones auténticas.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "I can't decide what to eat.", "note": "básico" },
+            { "variant": "good", "text": "I can't make up my mind what to eat.", "note": "expresión idiomática natural" },
+            { "variant": "bad", "text": "You can choose the movie.", "note": "plano" },
+            { "variant": "good", "text": "It's your call / It's up to you.", "note": "común en el habla diaria" }
+          ]
+        },
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Having second thoughts", "value": "Dudar de una decisión previa · I'm having second thoughts about buying this.", "highlights": ["having second thoughts"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bvn2-dudas",
+      "tag": "Incertidumbre y errores",
+      "title": "No saber y admitir errores",
+      "lede": "Di 'no sé' o 'fue mi error' con naturalidad y carisma.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "+ I don't know at all", "value": "++ Beats me / I have no clue", "highlights": ["Beats me", "have no clue"] },
+            { "key": "+ Let's decide tomorrow", "value": "++ Let's sleep on it", "highlights": ["sleep on it"] },
+            { "key": "+ I made a big mistake", "value": "++ I messed up / My bad / I screwed up", "highlights": ["messed up", "My bad"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Detalle conversacional:",
+        "body": "\"Beats me!\" (literalmente 'me gana/me supera') es la forma más espontánea y desenfadada de decir \"ni idea\"."
+      }
+    },
+    {
+      "id": "bvn2-certeza",
+      "tag": "Opciones y facilidad",
+      "title": "Certeza y facilidad",
+      "lede": "Cómo decir que algo es seguro, facilísimo o una oportunidad abierta.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "+ Choose any of them", "value": "++ Take your pick", "highlights": ["Take your pick"] },
+            { "key": "+ I will try to do it", "value": "++ I'll give it a shot / give it a whirl", "highlights": ["give it a shot"] },
+            { "key": "+ It is 100% sure", "value": "++ It's set in stone / It's a sure bet", "highlights": ["set in stone"] },
+            { "key": "+ It's very easy / obvious", "value": "++ It's a piece of cake / It's a no-brainer", "highlights": ["piece of cake", "no-brainer"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bvn2-contacto",
+      "tag": "Mensajes y llamadas",
+      "title": "Ponerse en contacto",
+      "lede": "Formas de pedir que te escriban o de sincronizar que no suenan a libro de 1990.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "Call me later on the telephone." },
+            { "variant": "good", "text": "Hit me up / Give me a shout later.", "note": "moderno y habitual" },
+            { "variant": "bad", "text": "We will talk again next week." },
+            { "variant": "good", "text": "Let's touch base next week / Catch you later.", "note": "profesional y ágil" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bvn2-informacion",
+      "tag": "Compartir novedades",
+      "title": "Pedir que te pongan al día",
+      "lede": "Giros para enterarte de lo que pasa en tu equipo o con tus amigos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "+ Keep telling me news", "value": "++ Keep me in the loop / Keep me posted", "highlights": ["in the loop", "posted"] },
+            { "key": "+ Tell me the whole secret", "value": "++ Spill the beans / Fill me in", "highlights": ["Spill the beans", "Fill me in"] },
+            { "key": "+ Explain it to me step by step", "value": "++ Walk me through it", "highlights": ["Walk me through it"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bvn2-directo",
+      "tag": "Hablar claro y directo",
+      "title": "Ir al grano y ser discretos",
+      "lede": "Evita rodeos y pide claridad de forma educada o confidencial.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "+ Don't tell anyone", "value": "++ Keep it on the down-low / My lips are sealed", "highlights": ["down-low", "lips are sealed"] },
+            { "key": "+ I didn't hear you", "value": "++ Sorry, I didn't catch that / Come again?", "highlights": ["didn't catch that"] },
+            { "key": "+ Stop beating around", "value": "++ Cut to the chase / Don't beat around the bush", "highlights": ["Cut to the chase"] },
+            { "key": "+ I will contact you later", "value": "++ I'll get back to you / I'll reach out", "highlights": ["get back to you"] }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "¿Qué significa si tu jefe o amigo te dice 'Keep me in the loop'?",
+      "options": ["Manténme informado de los avances.", "Enciérrame en un círculo.", "No me digas nada del proyecto."],
+      "answer": 0,
+      "explain": "'Keep in the loop' significa mantener a alguien informado y dentro de la cadena de comunicación."
+    },
+    {
+      "q": "¿Cómo dices 'No te andes con rodeos y ve al grano' en inglés natural?",
+      "options": ["Cut to the chase!", "Cut the grass fast!", "Chase the running minutes!"],
+      "answer": 0,
+      "explain": "'Cut to the chase' proviene del cine (saltar a la escena de acción) y significa ir directo a lo esencial."
+    },
+    {
+      "q": "Si quieres decir 'Le daré una oportunidad / voy a probar suerte', dices:",
+      "options": ["I'll give it a shot.", "I'll shoot the problem.", "I try by violence."],
+      "answer": 0,
+      "explain": "'Give it a shot' es la expresión estándar para intentar o probar algo nuevo."
+    }
+  ]
+}

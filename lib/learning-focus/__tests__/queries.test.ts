@@ -13,6 +13,7 @@ vi.mock('@/lib/ai-practice/load-state', () => ({
 
 vi.mock('@/lib/db', () => ({
   db: { learningState: { get: vi.fn() } },
+  ensureDbReady: vi.fn().mockResolvedValue(undefined),
 }))
 
 import { db } from '@/lib/db'

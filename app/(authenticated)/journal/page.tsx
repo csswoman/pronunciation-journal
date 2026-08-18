@@ -26,7 +26,6 @@ export default async function JournalPage() {
       promptText={prompt.text}
       cefrLevel={prompt.cefr_min}
       targetLength={prompt.target_length}
-      structure={scaffold.structure}
       subtitle={new Intl.DateTimeFormat('es-PE', {
         dateStyle: 'full',
         timeZone: 'America/Lima',

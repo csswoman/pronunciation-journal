@@ -4,9 +4,9 @@
   "level": "advanced",
   "category": "idioms",
   "duration": 6,
-  "title": "Idioms that sound native at C1",
-  "subtitle": "Idioms of the day",
-  "body": "These idioms are less common than basics but mark a speaker as genuinely fluent — they appear in journalism, literature, and conversation.",
+  "title": "Modismos que suenan nativos en C1",
+  "subtitle": "Modismos avanzados",
+  "body": "Estos modismos son menos comunes que los básicos, pero su uso indica un dominio avanzado del inglés. Suelen encontrarse en el periodismo, la literatura y las conversaciones profesionales, añadiendo matices y sofisticación a la comunicación.",
   "examples": [
     {
       "word": "to bite the bullet",
@@ -21,5 +21,6 @@
       "translation": "estar indeciso"
     }
   ],
+  "tip": "Para dominar estos modismos, no solo memorices el significado, sino también el contexto en el que se usan. Intenta identificarlos en noticias o lecturas avanzadas.",
   "href": "/mini-lessons/advanced-idioms"
 }

@@ -2,39 +2,43 @@
   "slug": "cleft-sentences",
   "sections": [
     {
-      "heading": "What cleft sentences do",
-      "body": "Cleft sentences split a simple sentence into two clauses to throw emphasis onto one element. They answer the implied question: 'Which one? / What exactly? / Who specifically?' They're especially useful in writing and in speech when you need to correct a misunderstanding."
+      "heading": "¿Qué hacen las oraciones hendidas?",
+      "body": "Las oraciones hendidas (cleft sentences) son una herramienta gramatical poderosa que nos permite destacar o enfatizar una parte específica de una oración. Dividen una oración simple en dos cláusulas para poner el foco en un elemento en particular. Responden a preguntas implícitas como: '¿Qué fue exactamente?', '¿Quién fue el que...?', '¿Cuándo ocurrió realmente?'. Son muy útiles tanto en la escritura como en el habla, especialmente cuando queremos corregir un malentendido o resaltar información clave."
     },
     {
-      "heading": "It-clefts",
-      "body": "Structure: It + be + focused element + relative clause. 'Maria called.' → 'It was Maria who called.' (emphasizes Maria, not someone else). 'It's the design that needs changing, not the content.'"
+      "heading": "Oraciones hendidas con 'It' (It-clefts)",
+      "body": "Las oraciones hendidas con 'It' (It-clefts) son las más comunes y se usan para enfatizar personas, cosas, tiempos o lugares. \n\n**Estructura:** `It + verbo 'to be' + elemento enfocado + cláusula relativa (who/which/that)`. \n\n*Ejemplo:* Si la oración base es 'Maria called.', y queremos enfatizar a María, decimos: 'It was Maria who called.' (Fue María quien llamó).\n\n*Otro ejemplo:* 'I need your help.' → 'It's your help that I need.' (Es tu ayuda lo que necesito). Aquí destacamos 'your help'."
     },
     {
-      "heading": "Wh-clefts (pseudo-clefts)",
-      "body": "Structure: What + clause + be + focused element. 'What I need is more time.' 'What surprised me was her reaction.' Often used to introduce or conclude a key point formally."
+      "heading": "Oraciones hendidas con 'Wh-' (Wh-clefts o pseudo-clefts)",
+      "body": "Las oraciones hendidas con 'Wh-' (Wh-clefts o pseudo-clefts) suelen comenzar con un pronombre 'wh-' (como 'what', 'where', 'when', 'why', 'who', aunque 'what' es el más frecuente). Son muy útiles para presentar o resumir un punto clave. \n\n**Estructura:** `What + cláusula + verbo 'to be' + elemento enfocado`. \n\n*Ejemplo:* Si queremos enfatizar 'más tiempo', decimos: 'What I need is more time.' (Lo que necesito es más tiempo).\n\n*Otro ejemplo:* 'Her reaction surprised me.' → 'What surprised me was her reaction.' (Lo que me sorprendió fue su reacción). Aquí el foco está en 'su reacción'."
     }
   ],
   "examples": [
     {
       "english": "It was the manager who approved it.",
-      "note": "It-cleft: emphasizes the manager"
+      "translation": "Fue el gerente quien lo aprobó.",
+      "note": "Énfasis en 'the manager'."
     },
     {
       "english": "It's the deadline that worries me.",
-      "note": "It-cleft: clarifies what specifically"
+      "translation": "Es la fecha límite lo que me preocupa.",
+      "note": "Énfasis en 'the deadline'."
     },
     {
       "english": "What I want is a clear explanation.",
-      "note": "Wh-cleft: emphatic subject"
+      "translation": "Lo que quiero es una explicación clara.",
+      "note": "Énfasis en 'a clear explanation'."
     },
     {
       "english": "What she did was remarkable.",
-      "note": "Wh-cleft: emphasizes the action"
+      "translation": "Lo que ella hizo fue notable.",
+      "note": "Énfasis en la acción realizada ('what she did')."
     }
   ],
   "exercises": [
     {
-      "instruction": "Rewrite using a cleft sentence to emphasize the underlined element.",
+      "instruction": "Vuelve a escribir cada oración usando una 'cleft sentence' para enfatizar la información clave.",
       "items": [
         "She appreciated the honesty.",
         "He failed because of poor planning.",
@@ -42,24 +46,35 @@
         "I need your full attention right now."
       ],
       "answers": [
-        "What she appreciated was the honesty. / It was the honesty that she appreciated.",
+        "It was the honesty that she appreciated.",
         "It was because of poor planning that he failed.",
-        "It was the noise that woke me up. / What woke me up was the noise.",
+        "It was the noise that woke me up.",
         "What I need right now is your full attention."
       ]
     }
   ],
   "quiz": [
     {
-      "question": "'What I enjoy most is the process.' This is a:",
+      "question": "\"Lo que más disfruto es el proceso.\" Este es un:",
       "options": [
-        "It-cleft",
-        "Wh-cleft (pseudo-cleft)",
-        "Non-defining relative clause",
-        "Reported speech structure"
+        "hendidura (It-cleft)",
+        "Wh-hendidura (pseudo-hendidura)",
+        "Cláusula relativa no definitoria",
+        "Estructura del discurso indirecto"
       ],
       "correct": 1,
-      "explanation": "Wh-clefts start with 'What + clause + be + focused element'. It-clefts start with 'It + be + focused element + relative clause'."
+      "explanation": "La oración 'Lo que más disfruto es el proceso' es un ejemplo claro de una 'Wh-cleft sentence' (también conocida como pseudo-hendidura), ya que comienza con 'What' y enfatiza el elemento final 'el proceso'."
+    },
+    {
+      "question": "Para enfatizar que 'María fue quien encontró la solución', ¿cuál de las siguientes 'cleft sentences' es correcta?",
+      "options": [
+        "What Maria found was the solution.",
+        "It was Maria who found the solution.",
+        "The solution was found by Maria.",
+        "It found Maria the solution."
+      ],
+      "correct": 1,
+      "explanation": "La opción correcta es 'It was Maria who found the solution.' Esta es una 'It-cleft sentence' y pone el énfasis directamente en 'Maria', que es lo que busca la pregunta."
     }
   ]
 }
