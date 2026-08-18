@@ -34,7 +34,7 @@ const passage: ReaderPassage = {
 
 beforeEach(() => {
   // jsdom has no speechSynthesis; stub it so speak() never throws.
-  vi.stubGlobal('speechSynthesis', { speak: vi.fn() })
+  vi.stubGlobal('speechSynthesis', { speak: vi.fn(), cancel: vi.fn() })
   vi.stubGlobal('SpeechSynthesisUtterance', class { lang = '' })
   vi.mocked(previewWord).mockResolvedValue({
     enrichment: {
@@ -54,7 +54,7 @@ describe('ReaderExercise', () => {
   it('renders the passage text and the question', () => {
     const { container } = render(<ReaderExercise passage={passage} online onComplete={vi.fn()} />)
     expect(container.querySelector('.text-body-lg')?.textContent).toBe('The cat went home.')
-    expect(screen.getByText('Toca cualquier palabra para ver su significado.')).toBeInTheDocument()
+    expect(screen.getByText('Toca cualquier palabra para ver su significado y guardarla a tu banco.')).toBeInTheDocument()
     expect(screen.getByText('Where did the cat go?')).toBeInTheDocument()
   })
 
@@ -90,7 +90,7 @@ describe('ReaderExercise', () => {
 
   it('disables the listen button when offline', () => {
     render(<ReaderExercise passage={passage} online={false} onComplete={vi.fn()} />)
-    expect(screen.getByRole('button', { name: /escuchar/i })).toBeDisabled()
+    expect(screen.getByRole('button', { name: /iniciar shadowing/i })).toBeDisabled()
   })
 
   it('offers to save a passage word and keeps its sentence as context', async () => {
