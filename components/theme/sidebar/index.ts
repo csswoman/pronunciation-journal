@@ -5,4 +5,5 @@ export { NavLink } from "./NavLink";
 export type { NavItem } from "./NavLink";
 export { NavSection } from "./NavSection";
 export type { NavSectionType } from "./NavSection";
-export { coreNav, practiceNav, exploreNav } from "./navConfig";
+export { todayNav, coreNav, practiceNav, exploreNav, progressNav } from "./navConfig";
+

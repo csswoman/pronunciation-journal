@@ -1,45 +1,49 @@
 import {
   Home,
-  MicVocal,
-  BookOpen,
-  TrendingUp,
-  LibraryBig,
-  BookMarked,
-  Layers,
-  ListOrdered,
-  RotateCcw,
-  Bookmark,
   FileText,
+  Target,
+  BookOpen,
+  BookMarked,
+  LibraryBig,
+  TrendingUp,
 } from "@/components/icons";
 import { NavSectionType } from "./NavSection";
 
-export const coreNav: NavSectionType = {
-  label: "",
+/** Group 1: Hoy - daily entry point & journal */
+export const todayNav: NavSectionType = {
+  label: "Hoy",
   items: [
     { name: "Inicio", href: "/", icon: Home },
     { name: "Diario", href: "/journal", icon: FileText },
   ],
 };
 
-/** Practice + review destinations — the daily work surface. */
+/** Alias for backwards compatibility */
+export const coreNav = todayNav;
+
+/** Group 2: Práctica - single entry point to free practice hub */
 export const practiceNav: NavSectionType = {
   label: "Práctica",
   items: [
-    { name: "Laboratorio de sonidos", href: "/practice/sounds", icon: MicVocal },
-    { name: "Palabras esenciales", href: "/practice/essential-words", icon: ListOrdered },
-    { name: "Mazos", href: "/practice/decks", icon: Layers },
-    { name: "Repaso", href: "/practice/review", icon: RotateCcw },
+    { name: "Práctica libre", href: "/practice", icon: Target },
   ],
 };
 
-/** Courses, reference, and tracking — browse and look back. */
+/** Group 3: Explorar - courses, mini lessons & dictionary */
 export const exploreNav: NavSectionType = {
   label: "Explorar",
   items: [
     { name: "Ruta", href: "/courses", icon: BookOpen },
     { name: "Mini lecciones", href: "/mini-lessons", icon: BookMarked },
     { name: "Diccionario", href: "/dictionary", icon: LibraryBig },
-    { name: "Guardado", href: "/tracking", icon: Bookmark },
+  ],
+};
+
+/** Group 4: Progreso - learning progress and tracking */
+export const progressNav: NavSectionType = {
+  label: "",
+  items: [
     { name: "Progreso", href: "/progress", icon: TrendingUp },
   ],
 };
+

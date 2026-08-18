@@ -18,4 +18,18 @@ describe('isNavActive', () => {
     expect(isNavActive('/courses/pronunciation', '/courses')).toBe(false)
     expect(isNavActive('/courses', '/courses/pronunciation')).toBe(false)
   })
+
+  it('activates Práctica on /practice and its subpaths', () => {
+    expect(isNavActive('/practice', '/practice')).toBe(true)
+    expect(isNavActive('/practice/sounds', '/practice')).toBe(true)
+    expect(isNavActive('/practice/decks', '/practice')).toBe(true)
+    expect(isNavActive('/practice/review', '/practice')).toBe(true)
+  })
+
+  it('activates Diccionario on /dictionary and /tracking', () => {
+    expect(isNavActive('/dictionary', '/dictionary')).toBe(true)
+    expect(isNavActive('/dictionary?mode=saved', '/dictionary')).toBe(true)
+    expect(isNavActive('/tracking', '/dictionary')).toBe(true)
+  })
 })
+
