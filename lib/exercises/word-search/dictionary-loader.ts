@@ -1,3 +1,4 @@
+import lexiconIndex from '../../../public/lexicon/index.json'
 import type { WordSearchItem, WordSearchMode, WordSearchPuzzle } from './types'
 import { createWordSearchPuzzle } from './grid-generator'
 
@@ -10,80 +11,8 @@ export interface DictionaryCategorySummary {
   total: number
 }
 
-export const DICTIONARY_CATEGORIES: DictionaryCategorySummary[] = [
-  {
-    id: 'frontend-dev',
-    name: 'Frontend Dev',
-    domain: 'engineering',
-    color: '#65A87A',
-    icon: '⌥',
-    total: 81,
-  },
-  {
-    id: 'backend-infra',
-    name: 'Backend & Infra',
-    domain: 'engineering',
-    color: '#D97706',
-    icon: '⬡',
-    total: 72,
-  },
-  {
-    id: 'artificial-intelligence',
-    name: 'Artificial Intelligence',
-    domain: 'engineering',
-    color: '#A855F7',
-    icon: '◎',
-    total: 82,
-  },
-  {
-    id: 'data-science',
-    name: 'Data Science',
-    domain: 'engineering',
-    color: '#EAB308',
-    icon: '◉',
-    total: 82,
-  },
-  {
-    id: 'ux-design',
-    name: 'UX / UI Design',
-    domain: 'design',
-    color: '#6B9FC4',
-    icon: '✦',
-    total: 81,
-  },
-  {
-    id: 'design-systems',
-    name: 'Design Systems',
-    domain: 'design',
-    color: '#9B8EC4',
-    icon: '◻',
-    total: 72,
-  },
-  {
-    id: 'personal-interview',
-    name: 'Personal Interview',
-    domain: 'professional',
-    color: '#EC4899',
-    icon: '🎤',
-    total: 79,
-  },
-  {
-    id: 'professional',
-    name: 'Professional English',
-    domain: 'professional',
-    color: '#C4846B',
-    icon: '◈',
-    total: 83,
-  },
-  {
-    id: 'technical-writing',
-    name: 'Technical Writing',
-    domain: 'professional',
-    color: '#5BA8A0',
-    icon: '∂',
-    total: 63,
-  },
-]
+export const DICTIONARY_CATEGORIES: DictionaryCategorySummary[] =
+  lexiconIndex as DictionaryCategorySummary[]
 
 interface RawLexiconWord {
   id: string

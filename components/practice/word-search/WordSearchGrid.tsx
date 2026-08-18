@@ -112,7 +112,7 @@ export default function WordSearchGrid({
     >
       <div
         ref={gridRef}
-        className="grid gap-1.5 p-3 sm:p-4 rounded-xl bg-surface-raised border border-border-subtle shadow-sm transition-all"
+        className="grid gap-1 rounded-lg border border-border-subtle bg-surface-sunken p-2 transition-all sm:p-3"
         style={{
           gridTemplateColumns: `repeat(${size}, minmax(0, 1fr))`,
           touchAction: 'none',
@@ -128,7 +128,7 @@ export default function WordSearchGrid({
             const isActive = activeWordCoordSet.has(key)
 
             let cellStyle =
-              'bg-surface-base text-fg hover:bg-surface-sunken border border-border-subtle'
+              'bg-surface-raised text-fg hover:bg-surface-base'
 
             if (isSelected) {
               cellStyle =
@@ -138,7 +138,7 @@ export default function WordSearchGrid({
                 'bg-primary-soft text-primary font-bold ring-2 ring-primary/40 animate-pulse'
             } else if (isFound) {
               cellStyle =
-                'bg-success-soft text-success font-bold border-success/30'
+                'bg-success-soft text-success font-bold'
             }
 
             return (
@@ -149,7 +149,7 @@ export default function WordSearchGrid({
                 data-cell-col={cIdx}
                 onPointerDown={(e) => handlePointerDown(rIdx, cIdx, e)}
                 className={`
-                  aspect-square flex items-center justify-center rounded-lg text-sm sm:text-base md:text-lg font-mono font-bold
+                  aspect-square flex items-center justify-center rounded-sm text-sm sm:text-base md:text-lg font-mono font-bold
                   transition-colors cursor-pointer select-none
                   ${cellStyle}
                 `}

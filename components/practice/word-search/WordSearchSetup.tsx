@@ -171,32 +171,33 @@ export default function WordSearchSetup({ onStartPuzzle }: Props) {
   }
 
   return (
-    <div className="flex flex-col gap-6 w-full max-w-xl mx-auto">
+    <div className="flex w-full flex-col gap-layout-section-gap">
       {/* Mode selection */}
-      <div className="flex flex-col gap-2">
-        <label className="font-kicker text-fg-muted uppercase tracking-wider text-xs">
+      <section className="flex flex-col gap-layout-stack-tight" aria-labelledby="word-search-mode-label">
+        <p id="word-search-mode-label" className="font-kicker text-fg-muted">
           Modalidad de juego
-        </label>
+        </p>
         <div className="grid grid-cols-2 gap-3">
           <button
             type="button"
             onClick={() => setMode('clues')}
+            aria-pressed={mode === 'clues'}
             className={`
-              p-4 rounded-xl border text-left transition-all cursor-pointer flex flex-col gap-1.5
+              flex min-h-28 flex-col gap-2 rounded-lg border p-layout-card-pad text-left transition-all cursor-pointer
               ${
                 mode === 'clues'
-                  ? 'bg-primary-soft/30 border-primary shadow-sm ring-1 ring-primary/40'
-                  : 'bg-surface-raised border-border-subtle hover:bg-surface-sunken'
+                  ? 'border-primary bg-primary-soft ring-1 ring-primary/30'
+                  : 'border-border-subtle bg-surface-raised hover:border-border-strong hover:bg-surface-sunken'
               }
             `}
           >
             <div className="flex items-center gap-2">
-              <span className="font-semibold text-sm text-fg">Modo Pistas</span>
-              <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-primary text-on-primary font-bold">
+              <span className="text-label font-semibold text-fg">Modo Pistas</span>
+                <span className="rounded-sm bg-primary px-1.5 py-0.5 font-mono text-tiny font-bold text-on-primary">
                 Recomendado
               </span>
             </div>
-            <p className="text-xs text-fg-muted leading-relaxed">
+            <p className="text-body-sm text-fg-muted">
               Deduce las palabras a partir de su significado o fonética antes de encontrarlas.
             </p>
           </button>
@@ -204,132 +205,141 @@ export default function WordSearchSetup({ onStartPuzzle }: Props) {
           <button
             type="button"
             onClick={() => setMode('classic')}
+            aria-pressed={mode === 'classic'}
             className={`
-              p-4 rounded-xl border text-left transition-all cursor-pointer flex flex-col gap-1.5
+              flex min-h-28 flex-col gap-2 rounded-lg border p-layout-card-pad text-left transition-all cursor-pointer
               ${
                 mode === 'classic'
-                  ? 'bg-primary-soft/30 border-primary shadow-sm ring-1 ring-primary/40'
-                  : 'bg-surface-raised border-border-subtle hover:bg-surface-sunken'
+                  ? 'border-primary bg-primary-soft ring-1 ring-primary/30'
+                  : 'border-border-subtle bg-surface-raised hover:border-border-strong hover:bg-surface-sunken'
               }
             `}
           >
-            <span className="font-semibold text-sm text-fg">Sopa Clásica</span>
-            <p className="text-xs text-fg-muted leading-relaxed">
+            <span className="text-label font-semibold text-fg">Sopa Clásica</span>
+            <p className="text-body-sm text-fg-muted">
               Búsqueda visual directa con la lista de palabras y su IPA visible.
             </p>
           </button>
         </div>
-      </div>
+      </section>
 
       {/* Source selection */}
-      <div className="flex flex-col gap-3">
-        <label className="font-kicker text-fg-muted uppercase tracking-wider text-xs">
+      <section className="flex flex-col gap-layout-stack" aria-labelledby="word-search-source-label">
+        <div>
+          <p id="word-search-source-label" className="font-kicker text-fg-muted">
           Origen del vocabulario
-        </label>
+          </p>
+        </div>
 
         {/* Source Tabs */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 rounded-xl p-1 bg-surface-sunken border border-border-subtle gap-1">
+        <div className="grid grid-cols-2 gap-1 rounded-lg border border-border-subtle bg-surface-sunken p-1">
           <button
             type="button"
             onClick={() => setSource('dictionary')}
+            aria-pressed={source === 'dictionary'}
             className={`
-              py-2 px-2.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center justify-center gap-1.5
+              flex min-h-14 items-center justify-center gap-2 rounded-md px-3 py-2 text-body-sm font-semibold transition-all cursor-pointer
               ${
                 source === 'dictionary'
-                  ? 'bg-surface-raised text-fg shadow-sm'
-                  : 'text-fg-muted hover:text-fg'
+                  ? 'bg-primary text-on-primary'
+                  : 'text-fg-muted hover:bg-surface-raised hover:text-fg'
               }
             `}
           >
-            <BookOpen className="w-3.5 h-3.5 text-primary" />
+            <BookOpen className="h-4 w-4" />
             <span>Diccionario</span>
           </button>
 
           <button
             type="button"
             onClick={() => setSource('word_bank')}
+            aria-pressed={source === 'word_bank'}
             className={`
-              py-2 px-2.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center justify-center gap-1.5
+              flex min-h-14 items-center justify-center gap-2 rounded-md px-3 py-2 text-body-sm font-semibold transition-all cursor-pointer
               ${
                 source === 'word_bank'
-                  ? 'bg-surface-raised text-fg shadow-sm'
-                  : 'text-fg-muted hover:text-fg'
+                  ? 'bg-primary text-on-primary'
+                  : 'text-fg-muted hover:bg-surface-raised hover:text-fg'
               }
             `}
           >
-            <Layers className="w-3.5 h-3.5" />
+            <Layers className="h-4 w-4" />
             <span>Mis Palabras ({myWords.length})</span>
           </button>
 
           <button
             type="button"
             onClick={() => setSource('curated')}
+            aria-pressed={source === 'curated'}
             className={`
-              py-2 px-2.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center justify-center gap-1.5
+              flex min-h-14 items-center justify-center gap-2 rounded-md px-3 py-2 text-body-sm font-semibold transition-all cursor-pointer
               ${
                 source === 'curated'
-                  ? 'bg-surface-raised text-fg shadow-sm'
-                  : 'text-fg-muted hover:text-fg'
+                  ? 'bg-primary text-on-primary'
+                  : 'text-fg-muted hover:bg-surface-raised hover:text-fg'
               }
             `}
           >
-            <Volume2 className="w-3.5 h-3.5" />
+            <Volume2 className="h-4 w-4" />
             <span>Fonética</span>
           </button>
 
           <button
             type="button"
             onClick={() => setSource('gemini')}
+            aria-pressed={source === 'gemini'}
             className={`
-              py-2 px-2.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center justify-center gap-1.5
+              flex min-h-14 items-center justify-center gap-2 rounded-md px-3 py-2 text-body-sm font-semibold transition-all cursor-pointer
               ${
                 source === 'gemini'
-                  ? 'bg-surface-raised text-fg shadow-sm'
-                  : 'text-fg-muted hover:text-fg'
+                  ? 'bg-primary text-on-primary'
+                  : 'text-fg-muted hover:bg-surface-raised hover:text-fg'
               }
             `}
           >
-            <Sparkles className="w-3.5 h-3.5 text-primary" />
+            <Sparkles className="h-4 w-4" />
             <span>Crear IA</span>
           </button>
         </div>
 
         {/* Tab content 1: Dictionary / Lexicon Areas */}
         {source === 'dictionary' && (
-          <div className="flex flex-col gap-2.5">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div className="flex flex-col gap-layout-stack">
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
               {DICTIONARY_CATEGORIES.map((cat) => {
                 const isSelected = selectedDictId === cat.id
                 return (
-                  <div
+                  <button
+                    type="button"
                     key={cat.id}
                     onClick={() => setSelectedDictId(cat.id)}
                     className={`
-                      p-3 rounded-xl border transition-all cursor-pointer flex items-center justify-between gap-2.5
+                      flex min-h-16 items-center gap-3 rounded-md border p-3 text-left transition-all cursor-pointer
                       ${
                         isSelected
-                          ? 'bg-primary-soft/20 border-primary ring-1 ring-primary/30'
-                          : 'bg-surface-raised border-border-subtle hover:bg-surface-sunken'
+                          ? 'border-primary bg-primary-soft ring-1 ring-primary/30'
+                          : 'border-border-subtle bg-surface-raised hover:border-border-strong hover:bg-surface-sunken'
                       }
                     `}
+                    aria-pressed={isSelected}
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
                       <span
-                        className="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold shrink-0 bg-surface-sunken border border-border-subtle"
+                        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-sm border border-border-subtle bg-surface-sunken text-label font-bold"
                         style={{ color: cat.color }}
                       >
                         {cat.icon}
                       </span>
                       <div className="flex flex-col min-w-0">
-                        <span className="font-semibold text-xs text-fg truncate">
+                        <span className="text-label font-semibold text-fg truncate">
                           {cat.name}
                         </span>
-                        <span className="text-[11px] text-fg-muted">
+                        <span className="text-caption text-fg-muted">
                           {cat.total} palabras
                         </span>
                       </div>
                     </div>
-                  </div>
+                  </button>
                 )
               })}
             </div>
@@ -340,10 +350,11 @@ export default function WordSearchSetup({ onStartPuzzle }: Props) {
               </div>
             )}
 
-            <div className="pt-2">
+            <div className="flex flex-col gap-3 border-t border-border-subtle pt-layout-stack sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-body-sm text-fg-muted">Seis palabras, pistas en español y pronunciación al encontrarlas.</p>
               <Button
                 variant="primary"
-                className="w-full"
+                className="w-full shrink-0 sm:w-auto"
                 disabled={isLoadingDict}
                 onClick={() => handleStartDictionary(selectedDictId)}
               >
@@ -353,7 +364,7 @@ export default function WordSearchSetup({ onStartPuzzle }: Props) {
                     <span>Cargando área...</span>
                   </div>
                 ) : (
-                  <span>Jugar con esta área del Diccionario</span>
+                  <span>Empezar búsqueda</span>
                 )}
               </Button>
             </div>
@@ -362,7 +373,7 @@ export default function WordSearchSetup({ onStartPuzzle }: Props) {
 
         {/* Tab content 2: Curated Phonetic Presets */}
         {source === 'curated' && (
-          <div className="flex flex-col gap-2.5">
+          <div className="flex flex-col gap-layout-stack">
             {WORD_SEARCH_PRESETS.map((preset) => {
               const isSelected = selectedPresetId === preset.id
               return (
@@ -370,7 +381,7 @@ export default function WordSearchSetup({ onStartPuzzle }: Props) {
                   key={preset.id}
                   onClick={() => setSelectedPresetId(preset.id)}
                   className={`
-                    p-3.5 rounded-xl border transition-all cursor-pointer flex items-start justify-between gap-3
+                    flex items-start justify-between gap-3 rounded-lg border p-layout-card-pad transition-all cursor-pointer
                     ${
                       isSelected
                         ? 'bg-primary-soft/20 border-primary ring-1 ring-primary/30'
@@ -379,14 +390,14 @@ export default function WordSearchSetup({ onStartPuzzle }: Props) {
                   `}
                 >
                   <div className="flex flex-col gap-1 min-w-0">
-                    <span className="font-semibold text-sm text-fg">
+                    <span className="text-label font-semibold text-fg">
                       {preset.title}
                     </span>
-                    <p className="text-xs text-fg-muted leading-relaxed">
+                    <p className="text-body-sm text-fg-muted">
                       {preset.description}
                     </p>
                   </div>
-                  <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-surface-sunken text-fg-subtle border border-border-subtle shrink-0">
+                  <span className="shrink-0 rounded-sm border border-border-subtle bg-surface-sunken px-2 py-1 font-mono text-caption text-fg-subtle">
                     {preset.level}
                   </span>
                 </div>
@@ -407,18 +418,18 @@ export default function WordSearchSetup({ onStartPuzzle }: Props) {
 
         {/* Tab content 3: Word Bank */}
         {source === 'word_bank' && (
-          <div className="flex flex-col gap-4 p-4 rounded-xl bg-surface-raised border border-border-subtle">
+          <div className="flex flex-col gap-layout-stack-loose rounded-lg border border-border-subtle bg-surface-raised p-layout-card-pad">
             <div className="flex flex-col gap-1">
-              <h4 className="text-sm font-semibold text-fg">
+              <h4 className="text-label font-semibold text-fg">
                 Vocabulario de tu cuaderno
               </h4>
-              <p className="text-xs text-fg-muted leading-relaxed">
+              <p className="text-body-sm text-fg-muted">
                 Generaremos una cuadrícula personalizada con las palabras que has ido guardando y practicando en tus sesiones.
               </p>
             </div>
 
             {isLoadingWords ? (
-              <div className="flex items-center justify-center py-6 text-fg-muted text-xs gap-2">
+              <div className="flex items-center justify-center gap-2 py-6 text-body-sm text-fg-muted">
                 <Loader2 className="w-4 h-4 animate-spin text-primary" />
                 <span>Cargando tus palabras...</span>
               </div>
@@ -428,13 +439,13 @@ export default function WordSearchSetup({ onStartPuzzle }: Props) {
                   {myWords.slice(0, 15).map((w) => (
                     <span
                       key={w.id}
-                      className="text-xs px-2 py-0.5 rounded-md bg-surface-raised border border-border-subtle text-fg-muted"
+                    className="rounded-sm border border-border-subtle bg-surface-raised px-2 py-1 text-caption text-fg-muted"
                     >
                       {w.text}
                     </span>
                   ))}
                   {myWords.length > 15 && (
-                    <span className="text-xs px-2 py-0.5 text-fg-subtle">
+                    <span className="px-2 py-1 text-caption text-fg-subtle">
                       +{myWords.length - 15} más
                     </span>
                   )}
@@ -450,7 +461,7 @@ export default function WordSearchSetup({ onStartPuzzle }: Props) {
               </div>
             ) : (
               <div className="flex flex-col gap-3 py-2">
-                <p className="text-xs text-fg-muted">
+                <p className="text-body-sm text-fg-muted">
                   Tienes pocas palabras guardadas en tu banco (mínimo 3). Puedes usar una de las áreas del diccionario o generar un reto con IA.
                 </p>
                 <Button
@@ -467,15 +478,15 @@ export default function WordSearchSetup({ onStartPuzzle }: Props) {
 
         {/* Tab content 4: Gemini AI */}
         {source === 'gemini' && (
-          <div className="flex flex-col gap-4 p-4 rounded-xl bg-surface-raised border border-border-subtle">
+          <div className="flex flex-col gap-layout-stack-loose rounded-lg border border-border-subtle bg-surface-raised p-layout-card-pad">
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4 text-primary" />
-                <h4 className="text-sm font-semibold text-fg">
+                <Sparkles className="h-4 w-4 text-primary" />
+                <h4 className="text-label font-semibold text-fg">
                   Generar reto personalizado con Gemini
                 </h4>
               </div>
-              <p className="text-xs text-fg-muted leading-relaxed">
+              <p className="text-body-sm text-fg-muted">
                 Escribe cualquier tema o área de interés y la IA creará una sopa de letras con pistas y fonética.
               </p>
             </div>
@@ -489,7 +500,7 @@ export default function WordSearchSetup({ onStartPuzzle }: Props) {
               />
 
               <div className="flex flex-col gap-1">
-                <label className="text-xs font-semibold text-fg">Nivel</label>
+                <label className="text-label font-semibold text-fg">Nivel</label>
                 <div className="flex gap-2">
                   {(['beginner', 'intermediate', 'advanced'] as const).map((lvl) => (
                     <button
@@ -497,7 +508,7 @@ export default function WordSearchSetup({ onStartPuzzle }: Props) {
                       type="button"
                       onClick={() => setCustomLevel(lvl)}
                       className={`
-                        flex-1 py-1.5 rounded-lg text-xs font-semibold border transition-all cursor-pointer capitalize
+                        min-h-11 flex-1 rounded-md border px-2 py-1.5 text-body-sm font-semibold transition-all cursor-pointer capitalize
                         ${
                           customLevel === lvl
                             ? 'bg-primary-soft text-primary border-primary'
@@ -531,14 +542,14 @@ export default function WordSearchSetup({ onStartPuzzle }: Props) {
                 ) : (
                   <div className="flex items-center justify-center gap-2">
                     <Sparkles className="w-4 h-4" />
-                    <span>Crear Sopa con Gemini</span>
+                    <span>Crear sopa con Gemini</span>
                   </div>
                 )}
               </Button>
             </div>
           </div>
         )}
-      </div>
+      </section>
     </div>
   )
 }

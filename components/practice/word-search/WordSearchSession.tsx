@@ -218,8 +218,8 @@ export default function WordSearchSession() {
         </div>
       ) : (
         /* Main game board + clues area */
-        <div className="flex flex-col lg:flex-row items-start gap-6 w-full">
-          <div className="flex-1 w-full flex justify-center">
+        <div className="grid w-full items-start gap-layout-section-gap lg:grid-cols-[minmax(0,1.25fr)_minmax(17rem,0.75fr)]">
+          <div className="flex w-full justify-center">
             <WordSearchGrid
               grid={puzzle.grid}
               placements={puzzle.placements}
@@ -229,7 +229,7 @@ export default function WordSearchSession() {
             />
           </div>
 
-          <div className="flex-1 w-full">
+          <div className="w-full">
             <WordClueList
               items={itemsWithFoundState}
               mode={puzzle.mode}

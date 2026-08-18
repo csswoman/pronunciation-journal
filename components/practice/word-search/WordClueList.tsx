@@ -39,15 +39,15 @@ export default function WordClueList({
   return (
     <div className="flex flex-col gap-3 w-full">
       <div className="flex items-center justify-between px-1">
-        <span className="font-kicker text-fg-muted uppercase tracking-wider text-xs">
+        <span className="font-kicker text-fg-muted">
           {mode === 'classic' ? 'Palabras a buscar' : 'Pistas por descifrar'}
         </span>
-        <span className="text-xs font-mono font-medium px-2 py-0.5 rounded-full bg-surface-sunken text-fg-muted border border-border-subtle">
+        <span className="rounded-full border border-border-subtle bg-surface-sunken px-2.5 py-1 font-mono text-caption font-medium text-fg-muted">
           {foundCount} / {items.length} encontradas
         </span>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+      <div className="grid grid-cols-1 gap-2.5">
         {items.map((item, index) => {
           const isFound = item.found
           const isInspected = activeWordId === item.id
@@ -62,7 +62,7 @@ export default function WordClueList({
                 }
               }}
               className={`
-                p-3 rounded-xl border transition-all flex flex-col justify-between gap-2
+                flex flex-col justify-between gap-layout-stack-tight rounded-lg border p-layout-card-pad transition-all
                 ${
                   isFound
                     ? isInspected
@@ -90,14 +90,14 @@ export default function WordClueList({
                   {mode === 'classic' ? (
                     <div className="flex flex-col min-w-0">
                       <span
-                        className={`font-semibold text-sm truncate ${
+                        className={`text-label font-semibold truncate ${
                           isFound ? 'text-fg line-through opacity-80' : 'text-fg'
                         }`}
                       >
                         {item.displayWord}
                       </span>
                       {item.ipa && (
-                        <span className="font-ipa text-xs text-fg-muted">
+                        <span className="font-ipa text-caption text-fg-muted">
                           {item.ipa}
                         </span>
                       )}
@@ -106,19 +106,19 @@ export default function WordClueList({
                     <div className="flex flex-col min-w-0">
                       {isFound ? (
                         <div className="flex items-center gap-2">
-                          <span className="font-semibold text-sm text-fg">
+                          <span className="text-label font-semibold text-fg">
                             {item.displayWord}
                           </span>
                           {item.ipa && (
-                            <span className="font-ipa text-xs text-fg-muted">
+                            <span className="font-ipa text-caption text-fg-muted">
                               {item.ipa}
                             </span>
                           )}
                         </div>
                       ) : (
-                        <span className="font-mono text-xs tracking-widest text-fg-muted">
+                        <span className="font-mono text-caption tracking-widest text-fg-muted">
                           {item.word.split('').map(() => '•').join(' ')}{' '}
-                          <span className="text-[10px] text-fg-subtle">
+                          <span className="text-caption text-fg-subtle">
                             ({item.word.length} letras)
                           </span>
                         </span>
@@ -135,7 +135,7 @@ export default function WordClueList({
               </div>
 
               {/* Clue / Definition */}
-              <div className="text-xs text-fg-muted leading-relaxed">
+              <div className="text-body-sm text-fg-muted">
                 {mode === 'clues' && !isFound ? (
                   <div className="flex flex-col gap-1.5">
                     <p className="line-clamp-2 italic">
@@ -143,21 +143,21 @@ export default function WordClueList({
                     </p>
                     <div className="flex items-center justify-between pt-1">
                       {isHintRevealed ? (
-                        <span className="text-[11px] font-ipa text-primary bg-primary-soft/50 px-2 py-0.5 rounded-md">
+                        <span className="rounded-md bg-primary-soft/50 px-2 py-0.5 font-ipa text-caption text-primary">
                           {item.ipa ? `Sonido: ${item.ipa}` : `Comienza con: ${item.word[0]}`}
                         </span>
                       ) : (
                         <button
                           type="button"
                           onClick={(e) => toggleHint(item.id, e)}
-                          className="text-[11px] inline-flex items-center gap-1 text-fg-subtle hover:text-primary transition-colors cursor-pointer"
+                          className="inline-flex items-center gap-1 text-caption text-fg-subtle hover:text-primary transition-colors cursor-pointer"
                         >
                           <Eye className="w-3 h-3" />
                           <span>Ver pista fonética</span>
                         </button>
                       )}
                       {item.meaningEs && isHintRevealed && (
-                        <span className="text-[11px] text-fg-subtle">
+                        <span className="text-caption text-fg-subtle">
                           {item.meaningEs}
                         </span>
                       )}
@@ -166,12 +166,12 @@ export default function WordClueList({
                 ) : (
                   <div className="flex flex-col gap-1">
                     {item.meaningEs && (
-                      <p className="text-xs font-medium text-fg-muted">
+                      <p className="text-body-sm font-medium text-fg-muted">
                         {item.meaningEs}
                       </p>
                     )}
                     {isFound && item.exampleSentence && (
-                      <p className="text-[11px] text-fg-subtle italic line-clamp-2">
+                      <p className="text-caption text-fg-subtle italic line-clamp-2">
                         &ldquo;{item.exampleSentence}&rdquo;
                       </p>
                     )}
