@@ -12,6 +12,8 @@ import DailyStepSession from './DailyStepSession'
 import SessionOpeningBanner from './SessionOpeningBanner'
 import SessionRecapCard from './SessionRecapCard'
 import DailyPlanCard from './DailyPlanCard'
+import { RoutinePresetSelector, type DailyRoutinePreset } from './RoutinePresetSelector'
+import { ImmersionLogCard } from './ImmersionLogCard'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { useDailyPlan, type ConceptLesson, type DailyStep } from '@/hooks/useDailyPlan'
 import { fetchDueTomorrowCount } from '@/lib/review/client-queries'
@@ -73,6 +75,8 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
   const [view, setView] = useState<View>({ mode: 'checklist' })
   const [sessionKey, setSessionKey] = useState(0)
   const [dueTomorrow, setDueTomorrow] = useState<number | null>(null)
+  const [routinePreset, setRoutinePreset] = useState<DailyRoutinePreset>('salas-60')
+  const [silentPeriod, setSilentPeriod] = useState(false)
   // Prevents double-triggering the initialStepId auto-start.
   const autoStartedRef = useRef(false)
 
@@ -182,18 +186,37 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
         }
       />
 
-      {status === 'ready' ? <SessionOpeningBanner arc={plan?.arc} /> : null}
+      {status === 'ready' ? (
+        <div className="flex flex-col gap-4">
+          <SessionOpeningBanner arc={plan?.arc} />
 
-      <DailyPlanCard
-        status={status}
-        steps={steps}
-        getStepStatus={getStepStatus}
-        completedCount={completedCount}
-        allDone={allDone}
-        onStartStep={handleStartStep}
-        onRetry={() => void load()}
-        collapseFutureSteps
-      />
+          {/* Routine Preset Selector */}
+          <RoutinePresetSelector
+            currentPreset={routinePreset}
+            onSelectPreset={setRoutinePreset}
+            silentPeriodMode={silentPeriod}
+            onToggleSilentPeriod={setSilentPeriod}
+          />
+        </div>
+      ) : null}
+
+      <div className="mt-4">
+        <DailyPlanCard
+          status={status}
+          steps={steps}
+          getStepStatus={getStepStatus}
+          completedCount={completedCount}
+          allDone={allDone}
+          onStartStep={handleStartStep}
+          onRetry={() => void load()}
+          collapseFutureSteps
+        />
+      </div>
+
+      {/* External Immersion Logger */}
+      <div className="mt-[var(--layout-section-gap)]">
+        <ImmersionLogCard />
+      </div>
 
       {recommendation ? (
         <div className="mt-[var(--layout-section-gap)]">
