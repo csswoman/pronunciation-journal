@@ -40,6 +40,10 @@ export interface StudyCardModel {
   srsBadge?: string;
   /** Rich, authored-and-validated teaching content for Core 1000 entries. */
   study?: StudyCardStudy;
+  /** Database ID in Supabase word_bank (only for custom/user vocabulary entries). */
+  wordId?: string;
+  /** Flag for words belonging to the static essential-words list. */
+  isEssential?: boolean;
 }
 
 export interface StudyCardStudy {
@@ -177,6 +181,7 @@ export function essentialWordToStudyCard(entry: EssentialWord): StudyCardModel {
     chips: [`#${entry.rank} más frecuente`, essentialWordPosLabel(entry.pos)],
     levelBadge: entry.cefr_level,
     study: studyCardStudy(entry),
+    isEssential: true,
   };
 }
 
@@ -194,6 +199,8 @@ export function wordBankEntryToStudyCard(entry: WordBankEntry): StudyCardModel {
     chips: essentialMetadata
       ? [`#${essentialMetadata.rank} más frecuente`, essentialWordPosLabel(essentialMetadata.pos)]
       : undefined,
+    wordId: entry.id,
+    isEssential: !!essentialMetadata,
     // word_bank has no weak-form or sentence-IPA data.
   };
 }

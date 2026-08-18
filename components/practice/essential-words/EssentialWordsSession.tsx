@@ -96,10 +96,10 @@ export function EssentialWordsSession({ initialStreak = 0 }: { initialStreak?: n
 
   if (phase === 'loading') {
     return (
-      <SessionShell>
-        {pageHeader}
-        {sessionToolbar}
-        <SessionSurface className="flex min-h-[calc(100dvh-16rem)] flex-col items-center justify-center gap-space-6">
+        <SessionShell>
+          {pageHeader}
+          {sessionToolbar}
+          <SessionSurface className="flex min-h-[calc(100dvh-16rem)] flex-col items-center justify-center gap-space-6">
           <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">
             {selectionLabel}
           </p>

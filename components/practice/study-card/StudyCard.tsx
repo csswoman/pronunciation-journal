@@ -7,6 +7,9 @@
 //   <PracticeActionBar /> — Continuar + omit / archive
 // </StudyCard>
 
+import { useState } from 'react'
+import { MoreVertical, Sparkles, Loader2 } from '@/components/icons'
+import { getAccessToken } from '@/lib/auth/session'
 import { PracticeActionBar, PracticeContinueButton } from '@/components/practice/session/PracticeActionBar'
 import { ArchiveConfirmAction } from './ArchiveConfirmAction'
 import { StudyCardBody } from './StudyCardBody'
@@ -51,6 +54,90 @@ export function StudyCard({
   onArchive,
 }: Props) {
   const immersive = variant === 'immersive'
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [enrichStatus, setEnrichStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+
+  const showMenu = !!model.wordId && !model.isEssential
+
+  const handleEnrich = async () => {
+    if (!model.wordId || enrichStatus === 'loading') return
+    setEnrichStatus('loading')
+    try {
+      const accessToken = await getAccessToken()
+      const res = await fetch('/api/words', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          id: model.wordId,
+          text: model.word,
+        }),
+      })
+
+      if (!res.ok) {
+        throw new Error('Failed to request enrichment')
+      }
+
+      setEnrichStatus('success')
+      setMenuOpen(false)
+      setTimeout(() => setEnrichStatus('idle'), 3000)
+    } catch {
+      setEnrichStatus('error')
+      setTimeout(() => setEnrichStatus('idle'), 3000)
+    }
+  }
+
+  const menuMarkup = showMenu ? (
+    <>
+      <button
+        type="button"
+        onClick={() => setMenuOpen(!menuOpen)}
+        className="absolute top-3 right-3 text-fg-muted hover:text-fg rounded-lg p-1.5 transition-colors focus-ring cursor-pointer z-10"
+        aria-label="Más opciones"
+        aria-expanded={menuOpen}
+      >
+        <MoreVertical size={16} />
+      </button>
+
+      {menuOpen && (
+        <>
+          <div className="fixed inset-0 z-20" onClick={() => setMenuOpen(false)} />
+          <div className="absolute right-3 top-11 z-30 w-48 rounded-lg border border-border-default bg-surface-raised py-1 shadow-lg animate-in fade-in slide-in-from-top-1 duration-100 text-left">
+            <button
+              type="button"
+              onClick={handleEnrich}
+              disabled={enrichStatus === 'loading'}
+              className="flex w-full items-center gap-2 px-3.5 py-2.5 text-left text-body-sm text-fg hover:bg-surface-sunken disabled:opacity-50 cursor-pointer"
+            >
+              {enrichStatus === 'loading' ? (
+                <Loader2 size={14} className="animate-spin text-primary shrink-0" />
+              ) : (
+                <Sparkles size={14} className="text-primary shrink-0" />
+              )}
+              {enrichStatus === 'loading' ? 'Encolando...' : 'Enriquecer con IA'}
+            </button>
+          </div>
+        </>
+      )}
+    </>
+  ) : null
+
+  const feedbackMarkup = (
+    <>
+      {enrichStatus === 'success' && (
+        <div className="absolute top-3 left-1/2 -translate-x-1/2 z-30 rounded-full bg-success-soft px-3 py-1 text-tiny font-medium text-success border border-[var(--success)]/20 animate-in fade-in slide-in-from-top-1 duration-200">
+          Encolado para enriquecer con IA ✨
+        </div>
+      )}
+      {enrichStatus === 'error' && (
+        <div className="absolute top-3 left-1/2 -translate-x-1/2 z-30 rounded-full bg-error-soft px-3 py-1 text-tiny font-medium text-error border border-[var(--error)]/20 animate-in fade-in slide-in-from-top-1 duration-200">
+          Error al solicitar enriquecimiento ❌
+        </div>
+      )}
+    </>
+  )
 
   const body = (
     <>
@@ -67,9 +154,15 @@ export function StudyCard({
   return (
     <div className={cn('flex w-full flex-col items-center', immersive ? 'gap-layout-stack' : 'gap-[var(--layout-stack-loose)]')}>
       {immersive ? (
-        body
+        <div className="relative flex w-full flex-col items-center">
+          {menuMarkup}
+          {feedbackMarkup}
+          {body}
+        </div>
       ) : (
-        <div className="flex w-full max-w-md flex-col items-center gap-[var(--layout-stack)] rounded-lg border border-border-subtle bg-surface-raised layout-card-pad sm:gap-[var(--space-5)]">
+        <div className="relative flex w-full max-w-md flex-col items-center gap-[var(--layout-stack)] rounded-lg border border-border-subtle bg-surface-raised layout-card-pad sm:gap-[var(--space-5)]">
+          {menuMarkup}
+          {feedbackMarkup}
           <div className="flex flex-col items-center gap-[var(--layout-stack-tight)]">
             {body}
           </div>
