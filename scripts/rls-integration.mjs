@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
+import { cleanupAdditionalRlsRows, runAdditionalRlsCases } from "./rls-integration-cases.mjs";
 
 const envPath = path.join(process.cwd(), ".env.local");
 
@@ -101,6 +102,7 @@ async function createTempUser(label) {
 }
 
 async function cleanup(users) {
+  await cleanupAdditionalRlsRows(admin, users);
   for (const user of users) {
     const wordIds =
       (await admin.from("word_bank").select("id").eq("user_id", user.id)).data?.map((row) => row.id) ?? [];
@@ -122,7 +124,7 @@ async function cleanup(users) {
 async function insertSingle(client, table, row, label) {
   const result = await client.from(table).insert(row).select().single();
   assertNoError(result, label);
-  assert(result.data?.id || table.includes("_cache") || table === "word_bank_decks", `${label}: missing returned data`);
+  assert(result.data, `${label}: missing returned data`);
   return result.data;
 }
 
@@ -299,6 +301,17 @@ async function run() {
       .eq("id", pronunciationAssessmentA.id);
     assertNoError(aReadsAfterDelete, "user A reads own pronunciation assessment after delete");
     assert(aReadsAfterDelete.data.length === 0, "user A's pronunciation_assessments row survived its own delete");
+
+    await runAdditionalRlsCases({
+      userA,
+      userB,
+      admin,
+      wordA,
+      insertSingle,
+      assert,
+      assertNoError,
+      assertHasError,
+    });
 
     console.log("RLS integration checks passed.");
   } finally {

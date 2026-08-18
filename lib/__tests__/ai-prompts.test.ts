@@ -3,6 +3,7 @@ import {
   buildDeckSuggestUserPrompt,
   buildPhrasesUserPrompt,
   buildSentenceReorderUserPrompt,
+  buildWordSearchUserPrompt,
 } from "@/lib/ai-prompts";
 
 describe("ai-prompts user builders", () => {
@@ -18,6 +19,19 @@ describe("ai-prompts user builders", () => {
     expect(prompt).toContain("Generate 5 English sentences");
     expect(prompt).toContain('"travel"');
     expect(prompt).toContain("B1");
+  });
+
+  it("buildWordSearchUserPrompt embeds topic, level, count, and known words", () => {
+    const prompt = buildWordSearchUserPrompt({
+      topic: "kitchen",
+      level: "beginner",
+      count: 6,
+      knownWords: ["knife", "spoon"],
+    });
+    expect(prompt).toContain("Generate a word search puzzle with 6 words");
+    expect(prompt).toContain('"kitchen"');
+    expect(prompt).toContain("beginner");
+    expect(prompt).toContain("knife, spoon");
   });
 
   it("buildDeckSuggestUserPrompt excludes existing deck words", () => {

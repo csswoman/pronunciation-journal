@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { requireSameOrigin, requireUser, rateLimit, validateBody } from '@/lib/api/guards'
 import { callGeminiJson, parseGeminiJson } from '@/lib/gemini/json-route'
+import { buildWordSearchUserPrompt, WORD_SEARCH_SYSTEM_PROMPT } from '@/lib/ai-prompts'
 
 const WordSearchRequestSchema = z.object({
   topic: z.string().min(1).max(150),
@@ -23,17 +24,6 @@ const WordSearchResponseSchema = z.object({
   words: z.array(WordSearchItemSchema).min(3).max(10),
 })
 
-const WORD_SEARCH_SYSTEM_PROMPT = `You are a linguistics and English learning coach.
-Generate a cohesive set of vocabulary words for a Word Search & Clue Finder puzzle.
-
-Rules:
-1. Words must be single English words (NO SPACES, NO HYPHENS, length 3 to 10 characters).
-2. All words must strictly fit the user's requested topic or phonetic focus.
-3. Provide an accurate IPA transcription for each word (enclosed in slashes, e.g. "/ˈtiː.tʃər/").
-4. Provide a clear, natural English clue/definition that allows the learner to guess or understand the word.
-5. Provide the Spanish translation (meaningEs) and a natural example sentence in English.
-6. Output MUST strictly conform to the requested JSON schema.`
-
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const originError = requireSameOrigin(request)
   if (originError) return originError
@@ -42,11 +32,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (authError) return authError as NextResponse
 
   const { limited, error: rateLimitError } = await rateLimit(
-    `/api/practice/word-search:${user.id}`,
+    `/api/gemini/word-search:${user.id}`,
     {
       max: 12,
       windowMs: 60_000,
-      meta: { endpoint: '/api/practice/word-search', userId: user.id },
+      meta: { endpoint: '/api/gemini/word-search', userId: user.id },
     }
   )
   if (limited) return rateLimitError as NextResponse
@@ -57,30 +47,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   )
   if (validationError) return validationError as NextResponse
 
-  const userPrompt = `Generate a word search puzzle with ${body.count} words.
-Topic: "${body.topic}"
-Learner level: ${body.level}
-${body.knownWords && body.knownWords.length > 0 ? `Incorporate or complement these known words if relevant: ${body.knownWords.join(', ')}` : ''}
-
-Respond with JSON:
-{
-  "topicTitle": "Short title describing the set",
-  "words": [
-    {
-      "word": "EXAMPLENOSPACES",
-      "ipa": "/.../",
-      "clue": "Clear definition or hint in English",
-      "meaningEs": "Significado en español",
-      "exampleSentence": "A short natural example sentence using the word."
-    }
-  ]
-}`
-
   const { data: parsed, response } = await callGeminiJson({
-    endpoint: '/api/practice/word-search',
+    endpoint: '/api/gemini/word-search',
     userId: user.id,
     params: {
-      contents: userPrompt,
+      contents: buildWordSearchUserPrompt(body),
       config: {
         systemInstruction: WORD_SEARCH_SYSTEM_PROMPT,
         responseMimeType: 'application/json',

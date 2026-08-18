@@ -232,6 +232,35 @@ export function buildJournalNudgePrompt(input: {
   return `The learner is writing an English journal entry and is stuck. Use the following context:\n\nPrompt: ${input.prompt}\nCEFR level: ${input.cefrLevel}\nTarget length: ${input.targetLength} words\nUnused seed words: ${JSON.stringify(input.unusedSeedWords)}\nPartial text (do not correct it):\n${input.partialText}\n\nReturn exactly three nudges in the required JSON shape.`
 }
 
+// ── Word Search ──
+
+export const WORD_SEARCH_SYSTEM_PROMPT = `You are a linguistics and English learning coach.
+Generate a cohesive set of vocabulary words for a Word Search & Clue Finder puzzle.
+
+Rules:
+1. Words must be single English words (NO SPACES, NO HYPHENS, length 3 to 10 characters).
+2. All words must strictly fit the user's requested topic or phonetic focus.
+3. Provide an accurate IPA transcription for each word (enclosed in slashes, e.g. "/ˈtiː.tʃər/").
+4. Provide a clear, natural English clue/definition that allows the learner to guess or understand the word.
+5. Provide the Spanish translation (meaningEs) and a natural example sentence in English.
+6. Output MUST strictly conform to the requested JSON schema.`
+
+export function buildWordSearchUserPrompt(input: {
+  topic: string
+  level: string
+  count: number
+  knownWords?: string[]
+}): string {
+  const known = input.knownWords?.length
+    ? `\nIncorporate or complement these known words if relevant: ${input.knownWords.join(', ')}`
+    : ''
+  return `Generate a word search puzzle with ${input.count} words.
+Topic: "${input.topic}"
+Learner level: ${input.level}${known}
+
+Respond with JSON: {"topicTitle":"Short title describing the set","words":[{"word":"EXAMPLENOSPACES","ipa":"/.../","clue":"Clear definition or hint in English","meaningEs":"Significado en español","exampleSentence":"A short natural example sentence using the word."}]}`
+}
+
 // ── Essential Words: extra example sentences ──
 
 /**

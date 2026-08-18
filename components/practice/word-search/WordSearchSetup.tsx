@@ -124,7 +124,7 @@ export default function WordSearchSetup({ onStartPuzzle }: Props) {
     setAiError(null)
 
     try {
-      const res = await fetch('/api/practice/word-search', {
+      const res = await fetch('/api/gemini/word-search', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
