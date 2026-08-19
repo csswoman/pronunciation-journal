@@ -188,6 +188,7 @@
   --layout-rail-max: 22rem;
 
   /* ── 10. Border radius scale ─────────────────────────────────────────── */
+  --radius-xs:   4px;
   --radius-sm:   8px;
   --radius-md:   12px;
   --radius-lg:   16px;

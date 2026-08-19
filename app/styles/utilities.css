@@ -8,23 +8,25 @@
 }
 
 /* ── Buttons ─────────────────────────────────────────────────────────────── */
+/* Prefer <Button variant="primary|secondary">. These classes remain for
+   markup that has not migrated yet and must match the component recipes. */
 .btn-primary {
   background-color: var(--cta-bg);
   color: var(--cta-fg);
-  transition: background-color 0.2s ease;
+  transition: background-color 150ms var(--ease-out-quart, ease-out);
 }
 .btn-primary:hover    { background-color: var(--cta-bg-hover); }
 .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .btn-secondary {
-  background: transparent;
-  color: var(--cta-outline-color);
-  border: 1px solid var(--cta-outline-border);
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+  background-color: var(--surface-raised);
+  color: var(--text-primary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  transition: background-color 150ms var(--ease-out-quart, ease-out);
 }
 .btn-secondary:hover {
-  background-color: var(--cta-outline-bg-hover);
-  border-color: var(--primary); /* intentional: full-hue border on hover, stronger than the tinted resting border */
+  background-color: var(--surface-sunken);
 }
 .btn-secondary:disabled { opacity: 0.5; cursor: not-allowed; }
 
@@ -159,7 +161,7 @@
 .dot-info    { background: var(--info); }
 
 /* ── Typography helpers ──────────────────────────────────────────────────── */
-.font-phoneme  { font-family: var(--font-mono-var), monospace; }
+.font-phoneme  { font-family: var(--font-ipa), sans-serif; }
 .font-h1       { font: var(--font-h1); letter-spacing: var(--text-tracking-h1); }
 .font-h2       { font: var(--font-h2); letter-spacing: var(--text-tracking-h2); }
 .font-h3       { font: var(--font-h3); letter-spacing: var(--text-tracking-h3); }

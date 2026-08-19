@@ -28,7 +28,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variantStyles: Record<ButtonVariant, string> = {
-  // CTA button: dark ink on parchment (primary interactive affordance)
+  // Chrome CTA: ink on parchment. Session advance uses PillButton primary (hue fill).
   primary: cn(
     "bg-cta-bg text-cta-fg",
     "hover:bg-cta-bg-hover hover:text-cta-fg shadow-none",

@@ -124,13 +124,16 @@ These never change with user hue. Convey meaning, not identity.
 .text-accent-complement    → var(--accent-complement)
 ```
 
-### Legacy (still valid)
+### Legacy CSS (prefer components)
+
 ```
-.btn-primary / .btn-secondary / .btn-soft
-.badge-primary / .badge-secondary / .badge-accent
-.accent-button / .accent-bg / .accent-text / .accent-border / .accent-ring
-.card / .card-dark / .input-themed
+.btn-primary     → same recipe as Button primary (--cta-bg)
+.btn-secondary   → same recipe as Button secondary (raised + border)
+.btn-soft / .accent-button / .card / .input-themed
 ```
+
+New UI should use `components/ui/Button` and `components/layout/Card`. Do not
+introduce a third outline “secondary”.
 
 ---
 

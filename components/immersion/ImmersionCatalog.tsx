@@ -118,7 +118,11 @@ export function ImmersionCatalog({ lessons }: ImmersionCatalogProps) {
 
                 {/* Level Badge */}
                 <div className="absolute top-2.5 left-2.5">
-                  <Badge label={lesson.level} color={lesson.level.startsWith('A') ? 'emerald' : 'sky'} size="sm" />
+                  <Badge
+                    label={lesson.level}
+                    variant={lesson.level.startsWith("A") ? "default" : "neutral"}
+                    size="sm"
+                  />
                 </div>
               </div>
 

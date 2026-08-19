@@ -20,7 +20,7 @@ export default function Card({
   ...rest
 }: CardProps) {
   const baseClasses =
-    "rounded-lg border border-border-subtle bg-surface-raised [transition:all_var(--transition-base,200ms_ease)]";
+    "rounded-md border border-border-subtle bg-surface-raised [transition:all_var(--transition-base,200ms_ease)]";
 
   const variantMap = {
     default: "layout-card-pad",

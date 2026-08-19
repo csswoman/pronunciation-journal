@@ -298,7 +298,9 @@ Three background levels create the structural hierarchy without shadows:
 
 The standard `<Button>` (`components/ui/Button.tsx`) covers form, dialog, and toolbar actions at `rounded-sm`/`rounded-md`. Two pill-shaped siblings handle the lighter in-session affordances:
 
-- **`PillButton`** (`components/ui/PillButton.tsx`): fully-rounded action button for practice/session flows. Variants `primary` (filled CTA, advance the session), `outline` (bordered quiet secondary), `quiet` (text-only, lowest emphasis, e.g. archive/dismiss). Sizes `sm`/`md`. Flat at rest, focus-ring and `ease-out-quart` color transition built in. Reach for this, not a hand-rolled `<button className="rounded-full …">`, inside a session.
+**Two primary fills, one rule.** Chrome and hubs use ink-on-parchment (`Button` `primary` → `--cta-bg` / `--cta-fg`) so the action contrasts on any `--hue`. Inside a practice session, advance uses hue fill (`PillButton` `primary` → `--primary` / `--on-primary`) so the control belongs to the learner's theme without competing with the page CTA.
+
+- **`PillButton`** (`components/ui/PillButton.tsx`): fully-rounded action button for practice/session flows. Variants `primary` (hue-filled CTA, advance the session), `outline` (bordered quiet secondary), `quiet` (text-only, lowest emphasis, e.g. archive/dismiss). Sizes `sm`/`md`. Flat at rest, focus-ring and `ease-out-quart` color transition built in. Reach for this, not a hand-rolled `<button className="rounded-full …">`, inside a session.
 - **`ListenButton`** (`components/ui/ListenButton.tsx`): audio-playback affordance built on `PillButton`. `Volume2` icon + optional label (`labeled`, default) or a compact `iconOnly` round control for tight rows. Auto-disables where speech synthesis is unavailable, so callers don't repeat the TTS guard. Use for every "play the model" control.
 
 ### Chips / Tags
@@ -401,7 +403,7 @@ AppShell → PageLayout → PageHeader → Content
 
 The IPA phoneme card is the most distinctive component in the system. It surfaces a phoneme symbol, its description, and audio/practice affordances.
 
-- **Symbol:** DM Mono, large (clamp 2.5rem–4rem), bold. The phoneme is the hero via size, not a serif.
+- **Symbol:** Andika via `font-ipa`, large (`text-ipa-hero` / display IPA). The phoneme is the hero via size, not a serif or a second family.
 - **Background:** Surface-raised with a subtle primary-soft bleed at one edge (not a stripe; a wash).
 - **Stage accent:** When inside a minimal-pairs context, the card uses the stage-pairs amber as its wash; inside dictation, stage-dictation teal.
 - **Actions:** Ghost buttons for audio playback; primary button for practice entry.

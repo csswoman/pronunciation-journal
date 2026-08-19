@@ -13,7 +13,7 @@ usa `Anchor`.
 
 | Variante | Cuándo usarla |
 | --- | --- |
-| `primary` | La acción principal de una zona. Usa `--cta-bg` y `--cta-fg`. |
+| `primary` | La acción principal de una zona de chrome o hub. Usa `--cta-bg` y `--cta-fg` (tinta sobre pergamino). |
 | `secondary` | Alternativa subordinada, con superficie elevada y borde. |
 | `soft` | Acción contextual con `--primary-soft`; no sirve como decoración. |
 | `ghost` | Acción terciaria en listas, cabeceras o grupos compactos. |
@@ -86,8 +86,9 @@ introduzcas en código nuevo.
 
 - `focus-ring` proporciona el foco visible.
 - `isLoading` deshabilita el botón y muestra el indicador de carga.
-- `primary` consume `--cta-bg` / `--cta-fg`; `secondary` usa las superficies
-  y bordes semánticos; `soft` usa `--primary-soft` / `--primary`.
+- `primary` consume `--cta-bg` / `--cta-fg` en chrome y hubs. El avance dentro de una sesión usa `PillButton` `primary` (`--primary` / `--on-primary`).
+- `secondary` usa superficie raised y borde; no es un outline de CTA. Las clases `.btn-secondary` deben coincidir con esta receta; el trabajo nuevo usa el componente.
+- `soft` usa `--primary-soft` / `--primary`.
 - `success`, `warning`, `error` e `info` consumen los tokens semánticos fijos.
 - Los cambios de estado duran 150ms y las sombras aparecen como respuesta a
   interacción, no como decoración permanente.

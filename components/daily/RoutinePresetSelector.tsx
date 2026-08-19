@@ -94,7 +94,7 @@ export function RoutinePresetSelector({
               <div className="flex flex-col gap-1.5">
                 <div className="flex items-center justify-between gap-1">
                   <span className="font-semibold text-fg text-body-sm">{p.title}</span>
-                  {p.badge && <Badge label={p.badge} color="sky" size="sm" />}
+                  {p.badge && <Badge label={p.badge} variant="default" size="sm" />}
                 </div>
 
                 <div className="flex items-center gap-1 font-mono text-tiny font-medium text-primary">

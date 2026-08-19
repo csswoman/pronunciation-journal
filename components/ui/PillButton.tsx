@@ -4,9 +4,12 @@ import { cn } from '@/lib/cn'
 /**
  * Pill-shaped action button used throughout practice/session flows.
  *
- * Distinct from the standard `<Button>`: that one is `rounded-sm`/`rounded-md`
- * for forms and dialogs; `PillButton` is `rounded-full` for the lightweight,
- * in-session affordances (Practicar, Continuar, Escuchar, Ya la sé).
+ * Distinct from the standard `<Button>`:
+ *  - `Button` `primary` is ink-on-parchment (`--cta-bg` / `--cta-fg`) for chrome,
+ *    forms, and hub CTAs.
+ *  - `PillButton` `primary` is hue fill (`bg-primary`) for in-session advance.
+ *  - `Button` uses `rounded-sm`/`rounded-md`; this control is `rounded-full`
+ *    for lightweight session affordances (Practicar, Continuar, Escuchar).
  *
  * Variants:
  *  - primary: filled CTA (advance the session)
