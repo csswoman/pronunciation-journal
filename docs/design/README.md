@@ -25,20 +25,25 @@ actualiza la guía; no cambies el token o el componente para hacerla coincidir.
 - Conserva el tema personal: usa tokens semánticos y verifica en claro, oscuro
   y con un `--hue` distinto. No fijes un color de marca en un componente.
 - Conserva las familias existentes: DM Sans para UI, DM Mono para kickers y
-  notación técnica, y Andika mediante `font-ipa` para IPA.
+  notación técnica, y Andika mediante `font-ipa` / `.font-phoneme` para IPA.
 - Mantén el shell canónico: `AppShell → PageLayout → PageHeader → contenido`.
   El arquetipo `dashboard`, `catalog` o `session` determina el ancho y la
   estructura de la ruta.
+- El CTA de chrome es tinta (`--cta-bg`). El avance de sesión es hue fill
+  (`PillButton` `primary`). `Button` `secondary` es raised + borde, no outline.
 - El color primario expresa interacción; éxito, advertencia, error e
-  información usan semántica fija y además texto o icono.
+  información usan semántica fija y además texto o icono. `Badge` no admite
+  paletas Tailwind.
 - Las superficies están planas en reposo. La elevación y el movimiento
   comunican interacción, no decoración.
+- Radios vivos: `--radius-xs` 4px, inputs `--radius-sm`, cards `--radius-md`.
 
 ## Mapa de referencias
 
 | Necesidad | Referencia |
 | --- | --- |
 | Lenguaje, proporción y checklist visual | [visual-language.md](visual-language.md) |
+| Primitivas y APIs actuales | [primitives.md](primitives.md) |
 | Tema dinámico y capas de tokens | [THEME_SYSTEM.md](../../THEME_SYSTEM.md) |
 | Botones | [buttons/guide.md](buttons/guide.md) |
 | Enlaces de texto | [anchors/guide.md](anchors/guide.md) |

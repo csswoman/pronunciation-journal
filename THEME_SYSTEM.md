@@ -82,10 +82,11 @@ These never change with user hue. Convey meaning, not identity.
 
 | UI Element | Token |
 |-----------|-------|
-| Main CTA (`Button` primary) | `--cta-bg` + `--cta-fg` |
+| Main CTA (`Button` primary, chrome/hubs) | `--cta-bg` + `--cta-fg` |
 | Main CTA hover | `--cta-bg-hover` |
-| Brand-colored inline CTA | `--primary` + `--on-primary` |
-| Soft badge / pill | `--primary-soft` (`--primary-100`) |
+| Session advance (`PillButton` primary) | `--primary` + `--on-primary` |
+| Soft badge / selected chip | `--primary-soft` / `--badge-primary-*` |
+| Badge variants | `default` (theme) or fixed `success` / `warning` / `error` / `info` / `neutral` |
 | Informational progress bars | `--primary` or `--accent`, never a hero metric |
 | Completed state | `--success` |
 | Streak / energy | `--warning` when it conveys a real state |
