@@ -2,8 +2,10 @@ import { describe, expect, it } from "vitest";
 import {
   currentLevelStatus,
   displayLevelProgress,
+  frontierLevelProgress,
   levelMilestoneMessage,
   levelProgressBarSegments,
+  levelSlideCaption,
   tallyLevelProgress,
   type LevelProgress,
 } from "../level-progress";
@@ -50,7 +52,39 @@ describe("currentLevelStatus / displayLevelProgress", () => {
   ];
 
   it("names the level where the learner is parked", () => {
+    expect(frontierLevelProgress(rows)).toEqual({
+      level: "A1",
+      learned: 2,
+      total: 740,
+    });
     expect(currentLevelStatus(rows)).toBe("Vas por A1 · 2 de 740");
+  });
+
+  it("returns the last level when every level is complete", () => {
+    const done: LevelProgress[] = [
+      { level: "A1", learned: 2, total: 2 },
+      { level: "A2", learned: 1, total: 1 },
+      { level: "B1", learned: 0, total: 0 },
+      { level: "B2", learned: 0, total: 0 },
+      { level: "C1", learned: 0, total: 0 },
+    ];
+    expect(frontierLevelProgress(done)).toEqual({
+      level: "A2",
+      learned: 1,
+      total: 1,
+    });
+  });
+
+  it("names slide captions without repeating the fraction", () => {
+    expect(levelSlideCaption({ level: "C1", learned: 0, total: 137 })).toBe(
+      "Sin empezar",
+    );
+    expect(levelSlideCaption({ level: "A1", learned: 5, total: 740 })).toBe(
+      "Te faltan 735 palabras",
+    );
+    expect(levelSlideCaption({ level: "A2", learned: 645, total: 645 })).toBe(
+      "Completado",
+    );
   });
 
   it("keeps the frontier and collapses the unstarted streak", () => {

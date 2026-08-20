@@ -485,6 +485,156 @@
 .home-sidebar-card--priority {
   border-color: var(--border-default);
 }
+
+/* Essential Words home card — CEFR level slider + outline mark */
+.ew-progress-card {
+  --ew-outline: color-mix(in oklch, var(--primary) 58%, transparent);
+  --ew-ink-soft: color-mix(in oklch, var(--primary) 42%, var(--text-primary));
+  position: relative;
+  overflow: hidden;
+  min-height: 13rem;
+  border-color: color-mix(in oklch, var(--primary) 18%, var(--border-subtle));
+  background-color: color-mix(
+    in oklch,
+    var(--primary-soft) 72%,
+    var(--surface-raised)
+  );
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease;
+}
+
+.ew-progress-card:hover,
+.ew-progress-card:focus-within {
+  background-color: color-mix(
+    in oklch,
+    var(--primary-soft) 88%,
+    var(--surface-raised)
+  );
+}
+
+.ew-progress-card__face {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  min-height: 11.5rem;
+  align-items: center;
+  padding-inline-end: 42%;
+}
+
+.ew-progress-card__copy {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.ew-progress-card__fraction {
+  display: flex;
+  align-items: baseline;
+  gap: 0;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.ew-progress-card__learned {
+  font-size: var(--text-size-display-ipa);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+}
+
+.ew-progress-card__total {
+  font-size: var(--text-size-display-ipa);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--ew-ink-soft);
+}
+
+.ew-progress-card__meta {
+  font-size: var(--text-size-caption);
+  line-height: var(--text-leading-caption, 1.4);
+  color: var(--ew-ink-soft);
+}
+
+.ew-progress-card__level {
+  position: absolute;
+  top: 50%;
+  right: 6%;
+  z-index: 0;
+  font-size: 6.75rem;
+  font-weight: 700;
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  color: transparent;
+  pointer-events: none;
+  user-select: none;
+  transform: translateY(-52%);
+}
+
+.ew-progress-card__level::after {
+  content: attr(data-outline);
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: var(--ew-outline);
+}
+
+.ew-progress-card__nav {
+  position: absolute;
+  inset-block: 0;
+  inset-inline: var(--space-1);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+
+.ew-progress-card:hover .ew-progress-card__nav,
+.ew-progress-card:focus-within .ew-progress-card__nav {
+  opacity: 1;
+}
+
+.ew-progress-card__nav-btn {
+  display: inline-flex;
+  height: 2.75rem;
+  width: 2.75rem;
+  pointer-events: auto;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-subtle);
+  background-color: color-mix(in oklch, var(--surface-raised) 88%, transparent);
+  color: var(--text-secondary);
+  transition:
+    background-color 150ms ease,
+    color 150ms ease;
+}
+
+.ew-progress-card__nav-btn:hover {
+  background-color: var(--surface-raised);
+  color: var(--text-primary);
+}
+
+@media (hover: none) {
+  .ew-progress-card__nav {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ew-progress-card,
+  .ew-progress-card__nav,
+  .ew-progress-card__nav-btn {
+    transition: none;
+  }
+}
+
 /* Practice actions: in-flow on larger screens, thumb-reachable on phones. */
 .practice-action-bar__spacer {
   display: none;

@@ -2,7 +2,7 @@
  * Generates public/essential-words/level-index.json — a slim projection of the Core
  * 1000 dataset carrying only what per-CEFR-level progress needs.
  *
- * The home card (components/home/LevelProgressBreakdown.tsx) used to fetch the
+ * The home card (components/home/EssentialWordsProgressCard.tsx) used to fetch the
  * full dataset (~932KB) to render five progress bars, but tallyLevelProgress
  * reads just `word` and `cefr_level` — 2 of 10 fields. This projection is ~45KB.
  *

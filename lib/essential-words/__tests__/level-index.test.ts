@@ -1,6 +1,6 @@
 // CI gate: public/essential-words/level-index.json must stay in sync with the
 // words-*.json chunks it is derived from. Without this, editing a chunk would
-// silently leave the home progress card (LevelProgressBreakdown) showing stale
+// silently leave the home progress card (EssentialWordsProgressCard) showing stale
 // per-level totals — the index is fetched instead of the full dataset.
 //
 // Regenerate with: node scripts/essential-words/generate-level-index.mjs

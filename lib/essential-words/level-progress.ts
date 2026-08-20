@@ -83,6 +83,14 @@ export function levelProgressBarSegments(
   });
 }
 
+/** Short slide caption — never repeats the learned/total fraction. */
+export function levelSlideCaption(row: LevelProgress): string {
+  if (row.learned <= 0) return "Sin empezar";
+  if (row.learned >= row.total) return "Completado";
+  const remaining = row.total - row.learned;
+  return remaining === 1 ? "Te falta 1 palabra" : `Te faltan ${remaining} palabras`;
+}
+
 /** Milestone copy for the learner's current CEFR frontier. */
 export function levelMilestoneMessage(rows: readonly LevelProgress[]): string | null {
   const withContent = rows.filter((row) => row.total > 0);
@@ -100,11 +108,21 @@ export function levelMilestoneMessage(rows: readonly LevelProgress[]): string | 
 }
 
 /** First incomplete level — where the learner is parked. */
-export function currentLevelStatus(rows: readonly LevelProgress[]): string | null {
+export function frontierLevelProgress(
+  rows: readonly LevelProgress[],
+): LevelProgress | null {
   const withContent = rows.filter((row) => row.total > 0);
   if (withContent.length === 0) return null;
-  const current =
-    withContent.find((row) => row.learned < row.total) ?? withContent[withContent.length - 1];
+  return (
+    withContent.find((row) => row.learned < row.total) ??
+    withContent[withContent.length - 1]
+  );
+}
+
+/** Human-readable status for the frontier level. */
+export function currentLevelStatus(rows: readonly LevelProgress[]): string | null {
+  const current = frontierLevelProgress(rows);
+  if (!current) return null;
   return `Vas por ${current.level} · ${current.learned} de ${current.total}`;
 }
 
