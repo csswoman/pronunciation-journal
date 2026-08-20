@@ -17,6 +17,7 @@ import {
 import InterestsEditor from "@/components/profile/InterestsEditor";
 import type { CefrLevel } from "@/lib/essential-words/types";
 import type { Interest } from "@/lib/users/interests";
+import type { FocusLevel } from "@/lib/learning-focus/types";
 
 const controlClass = "border-t-0 px-5 py-4";
 
@@ -25,6 +26,8 @@ interface Props {
   onLevelChange: (next: CefrLevel) => void;
   interests?: readonly Interest[];
   onInterestsSave?: (interests: Interest[]) => Promise<void>;
+  topicsLevel?: FocusLevel;
+  onTopicsOpen?: () => void;
   hint?: string;
 }
 
@@ -33,6 +36,8 @@ export default function ProfilePreferencesPanel({
   onLevelChange,
   interests,
   onInterestsSave,
+  topicsLevel,
+  onTopicsOpen,
   hint = "Esto ajusta recomendaciones. Tu progreso se conserva; puedes seguir explorando cualquier contenido.",
 }: Props) {
   return (
@@ -68,6 +73,23 @@ export default function ProfilePreferencesPanel({
             </div>
           }
         />
+        {topicsLevel && onTopicsOpen ? (
+          <div className="px-5 py-4">
+            <div className="layout-stack-tight">
+              <h3 className="font-kicker text-fg-muted m-0">Temas que ya sé</h3>
+              <p className="font-caption text-fg-muted m-0">
+                Marca los temas de {topicsLevel.toUpperCase()} que ya dominas para ajustar tu ruta.
+              </p>
+              <button
+                type="button"
+                onClick={onTopicsOpen}
+                className="focus-ring mt-1 min-h-10 w-fit rounded-md border border-border-default px-3 font-label text-fg hover:bg-surface-sunken"
+              >
+                Editar temas
+              </button>
+            </div>
+          </div>
+        ) : null}
         {onInterestsSave && interests != null && (
           <div className="px-5 py-4">
             <InterestsEditor interests={interests} onSave={onInterestsSave} bare />

@@ -12,7 +12,7 @@
 //   </PageLayout>
 // </ProfileSettings>
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useUserPreferences } from "@/hooks/useUserPreferences";
 import { useAuth } from "@/components/auth/AuthProvider";
@@ -25,6 +25,13 @@ import ProfilePreferencesPanel from "@/components/profile/ProfilePreferencesPane
 import { isAnonymousUser } from "@/lib/auth/is-anonymous";
 import { readGuestStudyLevel, saveGuestStudyLevel } from "@/lib/preferences/guest-study-level";
 import type { CefrLevel } from "@/lib/essential-words/types";
+import type { AssessmentConcept } from "@/lib/courses/concept-profile";
+import type { FocusLevel } from "@/lib/learning-focus/types";
+import LearningFocusTopicsSheet from "@/components/home/LearningFocusTopicsSheet";
+import {
+  claimTheoryTopics,
+  listClaimedTheoryTopics,
+} from "@/lib/learning-focus/queries";
 import { cn } from "@/lib/cn";
 
 function Toast({ message, type }: { message: string; type: "success" | "error" }) {
@@ -58,10 +65,19 @@ export default function ProfileSettings() {
   const isGuest = isAnonymousUser(user);
   const [guestLevel, setGuestLevel] = useState<CefrLevel>("A1");
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+  const [topicsOpen, setTopicsOpen] = useState(false);
+  const [claimedSlugs, setClaimedSlugs] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (isGuest) setGuestLevel(readGuestStudyLevel());
   }, [isGuest]);
+
+  useEffect(() => {
+    if (!user?.id) return;
+    void listClaimedTheoryTopics(user.id).then((claimed) => {
+      setClaimedSlugs(new Set(claimed.map((item) => item.lessonSlug)));
+    });
+  }, [user?.id]);
 
   const displayName =
     preferences?.full_name ||
@@ -96,6 +112,18 @@ export default function ProfileSettings() {
     await updateCefrLevel(next);
     showToast("Nivel de estudio actualizado");
   };
+
+  const handleTopicsClaim = useCallback(
+    async (concepts: AssessmentConcept[]) => {
+      if (!user?.id) return;
+      await claimTheoryTopics(user.id, concepts);
+      const claimed = await listClaimedTheoryTopics(user.id);
+      setClaimedSlugs(new Set(claimed.map((item) => item.lessonSlug)));
+    },
+    [user?.id],
+  );
+
+  const topicsLevel = level.toLowerCase() as FocusLevel;
 
   const header = (
     <PageHeader
@@ -144,7 +172,16 @@ export default function ProfileSettings() {
           <ProfilePreferencesPanel
             level={level}
             onLevelChange={(next) => void handleLevelChange(next)}
+            topicsLevel={topicsLevel}
+            onTopicsOpen={() => setTopicsOpen(true)}
             hint="Tema y nivel locales. Crea una cuenta para no perder el progreso de práctica."
+          />
+          <LearningFocusTopicsSheet
+            open={topicsOpen}
+            level={topicsLevel}
+            claimedSlugs={claimedSlugs}
+            onClose={() => setTopicsOpen(false)}
+            onClaim={handleTopicsClaim}
           />
         </div>
       </PageLayout>
@@ -187,12 +224,22 @@ export default function ProfileSettings() {
         <ProfilePreferencesPanel
           level={level}
           onLevelChange={(next) => void handleLevelChange(next)}
+          topicsLevel={topicsLevel}
+          onTopicsOpen={() => setTopicsOpen(true)}
           interests={preferences?.interests ?? []}
           onInterestsSave={async (next) => {
             await updateInterests(next);
             showToast("Intereses guardados");
           }}
           hint="Esto ajusta recomendaciones. Tu progreso se conserva; puedes seguir explorando cualquier contenido."
+        />
+
+        <LearningFocusTopicsSheet
+          open={topicsOpen}
+          level={topicsLevel}
+          claimedSlugs={claimedSlugs}
+          onClose={() => setTopicsOpen(false)}
+          onClaim={handleTopicsClaim}
         />
 
         <section aria-labelledby="profile-account-title" className="layout-stack-loose">
