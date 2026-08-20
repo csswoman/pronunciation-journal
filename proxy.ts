@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
+import { shouldForwardRootOAuthToCallback } from "@/lib/auth/oauth-identity";
 
 export async function proxy(request: NextRequest) {
   if (!isSupabaseConfigured()) {
@@ -9,8 +10,12 @@ export async function proxy(request: NextRequest) {
 
   // Some hosted OAuth configurations use the Supabase Site URL (`/`) as the
   // final redirect, even when the client asks for `/auth/callback`. Forward
-  // the authorization code before the authenticated layout can discard it.
-  if (request.nextUrl.pathname === "/" && request.nextUrl.searchParams.has("code")) {
+  // the authorization code (and identity-link errors) before the authenticated
+  // layout can discard them.
+  if (
+    request.nextUrl.pathname === "/" &&
+    shouldForwardRootOAuthToCallback(request.nextUrl.searchParams)
+  ) {
     const callbackUrl = request.nextUrl.clone();
     callbackUrl.pathname = "/auth/callback";
     return NextResponse.redirect(callbackUrl);

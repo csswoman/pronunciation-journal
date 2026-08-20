@@ -17,6 +17,7 @@ import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { signInAsGuest } from "@/lib/supabase/auth-actions";
 import { useLoadingWords } from "@/hooks/useLoadingWords";
 import { initSyncListeners } from "@/lib/sync/init-sync-listeners";
+import { useOAuthIdentityRecovery } from "@/components/auth/useOAuthIdentityRecovery";
 
 export type AuthContextValue = {
   user: User | null;
@@ -68,6 +69,8 @@ export default function AuthProvider({
     const supabase = getSupabaseBrowserClient();
     await supabase.auth.signOut();
   }, [supabaseEnabled, user?.id]);
+
+  useOAuthIdentityRecovery();
 
   useEffect(() => {
     if (!supabaseEnabled) {
