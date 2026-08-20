@@ -144,14 +144,17 @@ export default function LearningFocusCard({
   return (
     <section
       aria-label="Tu foco de aprendizaje"
-      className="flex flex-col gap-3 rounded-xl border border-border-subtle bg-surface-raised px-4 py-4"
+      className="flex flex-col gap-2.5 rounded-xl border border-border-subtle bg-surface-raised px-4 py-3.5"
     >
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <h2 className="font-label text-fg">Tu foco</h2>
+          <h2 className="font-label text-fg">Tu foco:</h2>
+          <span className="font-label font-semibold text-fg">
+            Nivel {LEVEL_LABELS[activeLevel]}
+          </span>
           <span
             className={cn(
-              'rounded-sm px-2 py-0.5 text-tiny font-medium',
+              'rounded-sm px-2 py-0.5 text-caption font-medium',
               effective.pinned
                 ? 'bg-primary-soft text-primary'
                 : 'bg-surface-sunken text-fg-muted',
@@ -160,22 +163,28 @@ export default function LearningFocusCard({
             {statusLabel}
           </span>
         </div>
-        {effective.pinned ? (
+
+        <div className="flex items-center gap-3">
+          {effective.pinned ? (
+            <button
+              type="button"
+              onClick={() => void handleRelease()}
+              disabled={busy}
+              className="focus-ring text-body-sm text-fg-muted underline-offset-2 transition-colors hover:text-fg hover:underline disabled:opacity-60"
+            >
+              Soltar
+            </button>
+          ) : null}
+
           <button
             type="button"
-            onClick={() => void handleRelease()}
-            disabled={busy}
-            className="focus-ring text-body-sm text-fg-muted underline-offset-2 transition-colors hover:text-fg hover:underline disabled:opacity-60"
+            onClick={() => setSheetOpen(true)}
+            className="focus-ring text-body-sm text-fg-muted underline-offset-2 transition-colors hover:text-fg hover:underline"
           >
-            Soltar
+            Temas que ya sé
           </button>
-        ) : null}
+        </div>
       </div>
-
-      <p className="text-body-sm text-fg-muted">
-        Priorizamos contenido de{' '}
-        <span className="font-semibold text-fg">{LEVEL_LABELS[activeLevel]}</span>
-      </p>
 
       <ContentLevelSelector
         levels={FOCUS_LEVELS}
@@ -185,14 +194,6 @@ export default function LearningFocusCard({
         getLabel={(level) => LEVEL_LABELS[level]}
         disabled={busy}
       />
-
-      <button
-        type="button"
-        onClick={() => setSheetOpen(true)}
-        className="focus-ring self-start text-body-sm text-fg-muted underline-offset-2 transition-colors hover:text-fg hover:underline"
-      >
-        Temas que ya sé
-      </button>
 
       {showProfileHint ? (
         <p className="text-caption text-fg-muted">
