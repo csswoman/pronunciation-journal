@@ -10,4 +10,10 @@ describe("THEME_INIT_SCRIPT", () => {
     // Must not depend on next/script loaders — layout embeds this as raw <script>.
     expect(THEME_INIT_SCRIPT).not.toContain("beforeInteractive");
   });
+
+  it("seeds split-complementary accent hues before paint", () => {
+    expect(THEME_INIT_SCRIPT).toContain("--hue-accent-1");
+    expect(THEME_INIT_SCRIPT).toContain("--hue-accent-2");
+    expect(THEME_INIT_SCRIPT).toContain("--chroma-boost-accent-1");
+  });
 });

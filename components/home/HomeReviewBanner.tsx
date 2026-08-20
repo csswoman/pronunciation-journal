@@ -29,7 +29,7 @@ function primaryTarget(wordsDueCount: number, soundsDueCount: number): {
 
 /**
  * Full-width strip above the plan grid — never nested inside the daily card.
- * One primary CTA; optional secondary when both queues have due items.
+ * When review is due it owns the single solid hue-base CTA for the view.
  */
 export default function HomeReviewBanner({
   wordsDueCount = 0,
@@ -60,7 +60,7 @@ export default function HomeReviewBanner({
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <Link
           href={href}
-          className="focus-ring inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-md bg-primary px-4 font-label text-on-primary transition-colors hover:bg-primary-hover"
+          className="focus-ring inline-flex min-h-10 shrink-0 items-center gap-1.5 rounded-md bg-primary px-5 font-label text-on-primary transition-colors hover:bg-primary-hover"
         >
           {label}
           <ArrowRight size={16} aria-hidden />

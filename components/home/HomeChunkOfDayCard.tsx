@@ -1,5 +1,12 @@
 "use client";
 
+// Planned structure:
+// <HomeChunkOfDayCard>
+//   header: title + category chip + shuffle/heart
+//   quote block (phrase + IPA) — accent-1 only on this inset
+//   meaning + example + tip
+// </HomeChunkOfDayCard>
+
 import { useEffect, useState } from "react";
 import { Heart, RefreshCw } from "@/components/icons";
 import { formatIpaDisplay } from "@/lib/lexicon/format-ipa";
@@ -16,6 +23,7 @@ function saveLabel(state: SaveState): string {
   return "Guardar en Tracking";
 }
 
+/** Phrase focus — accent wraps the quote, not the whole card. */
 export default function HomeChunkOfDayCard() {
   const { chunk, loading, shuffle } = useChunkOfDay();
   const [saveState, setSaveState] = useState<SaveState>("idle");
@@ -51,30 +59,29 @@ export default function HomeChunkOfDayCard() {
 
   return (
     <div
-      className="home-sidebar-card flex flex-col gap-2.5"
+      className="home-sidebar-card flex flex-col gap-3"
       aria-busy={loading || undefined}
       aria-labelledby="chunk-of-day-heading"
     >
-      {/* Header row: Kicker + Category + Actions */}
       <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <span id="chunk-of-day-heading" className="font-label text-fg">
+        <div className="flex min-w-0 flex-wrap items-center gap-2">
+          <span id="chunk-of-day-heading" className="font-kicker text-fg-subtle">
             Chunk del día
           </span>
           {chunk?.category ? (
-            <span className="rounded-full bg-surface-sunken px-2 py-0.5 font-mono-code text-[11px] font-medium text-fg-muted">
+            <span className="rounded-full border border-border-subtle bg-surface-sunken px-2 py-0.5 font-mono-code text-[11px] font-medium text-fg-muted">
               {chunk.category}
             </span>
           ) : null}
         </div>
 
-        <div className="flex items-center gap-1">
-          {/* Shuffle / Otro chunk button */}
-          <div className="group relative shrink-0">
+        <div className="flex shrink-0 items-center gap-1">
+          <div className="group relative">
             <button
               type="button"
               onClick={handleShuffle}
               aria-label="Sacar otro chunk"
+              aria-describedby="chunk-shuffle-tooltip"
               className="focus-ring inline-flex min-h-8 min-w-8 items-center justify-center rounded-sm text-fg-muted transition-colors hover:text-fg"
             >
               <RefreshCw
@@ -82,12 +89,13 @@ export default function HomeChunkOfDayCard() {
                 strokeWidth={2}
                 className={cn(
                   "transition-transform duration-300",
-                  isRotating && "rotate-180"
+                  isRotating && "rotate-180",
                 )}
                 aria-hidden
               />
             </button>
             <span
+              id="chunk-shuffle-tooltip"
               role="tooltip"
               className="pointer-events-none absolute bottom-full right-0 z-10 mb-1.5 whitespace-nowrap rounded-sm border border-border-default bg-surface-raised px-2 py-1 text-caption font-medium text-fg opacity-0 shadow-md transition-opacity group-hover:opacity-100 group-focus-within:opacity-100"
             >
@@ -95,19 +103,19 @@ export default function HomeChunkOfDayCard() {
             </span>
           </div>
 
-          {/* Favorite / Tracking button */}
-          <div className="group relative shrink-0">
+          <div className="group relative">
             <button
               type="button"
               onClick={() => void handleSave()}
               disabled={saveState === "saving" || saveState === "saved"}
               aria-label={label}
+              aria-describedby="chunk-save-tooltip"
               className={cn(
                 "focus-ring inline-flex min-h-8 min-w-8 items-center justify-center rounded-sm transition-colors",
                 saveState === "saved"
                   ? "text-error"
                   : "text-fg-muted hover:text-fg",
-                saveState === "error" && "text-error"
+                saveState === "error" && "text-error",
               )}
             >
               <Heart
@@ -117,6 +125,7 @@ export default function HomeChunkOfDayCard() {
               />
             </button>
             <span
+              id="chunk-save-tooltip"
               role="tooltip"
               className="pointer-events-none absolute bottom-full right-0 z-10 mb-1.5 whitespace-nowrap rounded-sm border border-border-default bg-surface-raised px-2 py-1 text-caption font-medium text-fg opacity-0 shadow-md transition-opacity group-hover:opacity-100 group-focus-within:opacity-100"
             >
@@ -126,55 +135,44 @@ export default function HomeChunkOfDayCard() {
         </div>
       </div>
 
-      {/* Loading Skeleton */}
       {loading && (
         <div className="flex flex-col gap-2 py-1" aria-hidden>
-          <div className="h-6 w-36 animate-pulse rounded bg-surface-sunken" />
-          <div className="h-4 w-24 animate-pulse rounded bg-surface-sunken" />
-          <div className="h-4 w-full animate-pulse rounded bg-surface-sunken" />
+          <div className="h-16 w-full animate-pulse rounded-md bg-surface-sunken" />
+          <div className="h-4 w-3/4 animate-pulse rounded bg-surface-sunken" />
         </div>
       )}
 
-      {/* Chunk Content */}
       {chunk && !loading && (
-        <div className="animate-state-in flex flex-col gap-2" key={chunk.id}>
-          {/* Main expression */}
-          <p className="text-display-word min-w-0 font-semibold leading-tight text-fg tracking-tight">
-            {chunk.chunk}
-          </p>
+        <div className="animate-state-in flex flex-col gap-3" key={chunk.id}>
+          <div className="home-chunk-quote">
+            <p className="home-chunk-quote__phrase">{chunk.chunk}</p>
+            {chunk.ipa ? (
+              <p
+                className="mt-1.5 font-ipa text-body-sm leading-snug text-fg-muted"
+                lang="en-fonipa"
+              >
+                {formatIpaDisplay(chunk.ipa)}
+              </p>
+            ) : null}
+          </div>
 
-          {/* IPA Transcription */}
-          {chunk.ipa ? (
-            <p
-              className="font-ipa text-body-lg leading-snug text-fg-muted"
-              lang="en-fonipa"
-            >
-              {formatIpaDisplay(chunk.ipa)}
-            </p>
-          ) : null}
+          <p className="font-body-sm text-pretty text-fg">{chunk.meaning}</p>
 
-          {/* Meaning / Translation in Spanish */}
-          <p className="font-body-sm text-pretty text-fg-muted">
-            {chunk.meaning}
-          </p>
-
-          {/* Example Box */}
           {chunk.example ? (
-            <div className="mt-0.5 rounded-md border-l-2 border-primary bg-surface-sunken/40 px-3 py-2">
-              <p className="font-body-sm italic text-fg">
+            <div className="flex flex-col gap-0.5">
+              <p className="font-body-sm italic text-fg-muted">
                 “{chunk.example}”
               </p>
               {chunk.example_translation ? (
-                <p className="mt-0.5 font-caption text-fg-muted">
+                <p className="font-caption text-fg-subtle">
                   {chunk.example_translation}
                 </p>
               ) : null}
             </div>
           ) : null}
 
-          {/* Optional Tip */}
           {chunk.tip ? (
-            <p className="font-caption text-fg-muted/85">
+            <p className="font-caption text-fg-muted">
               <span className="font-medium text-fg">Tip:</span> {chunk.tip}
             </p>
           ) : null}

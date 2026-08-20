@@ -1,13 +1,14 @@
 // Planned structure:
 // <HomeActivationStrip>
 //   title + why-it-matters
-//   primary → Sound Lab · secondary → courses
+//   secondary path → Sound Lab · quieter → courses
 //   optional quiet assessment links
 //   optional guest save inline
 // </HomeActivationStrip>
 
 import Link from "next/link";
 import { ArrowRight } from "@/components/icons";
+import Button from "@/components/ui/Button";
 import GuestSaveProgressBanner from "@/components/home/GuestSaveProgressBanner";
 
 interface HomeActivationStripProps {
@@ -19,7 +20,7 @@ interface HomeActivationStripProps {
 
 /**
  * First-visit empty plan — one path to value (practice), not a dual assessment wall.
- * Assessments stay optional text links.
+ * Assessments stay optional text links. Solid hue CTA lives on "Empieza aquí" when a plan exists.
  */
 export default function HomeActivationStrip({
   showPlacementLink = false,
@@ -47,18 +48,22 @@ export default function HomeActivationStrip({
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-        <Link
-          href="/practice/sounds"
-          className="focus-ring inline-flex min-h-11 shrink-0 items-center justify-center gap-1.5 rounded-md bg-primary px-4 font-label text-on-primary transition-colors hover:bg-primary-hover"
-        >
-          Abrir laboratorio
-          <ArrowRight size={16} aria-hidden />
+        <Link href="/practice/sounds" className="shrink-0">
+          <Button
+            variant="secondary"
+            size="md"
+            icon={<ArrowRight size={16} aria-hidden />}
+            iconPosition="right"
+          >
+            Abrir laboratorio
+          </Button>
         </Link>
         <Link
           href="/courses"
-          className="focus-ring inline-flex min-h-11 shrink-0 items-center justify-center gap-1.5 rounded-md border border-border-default bg-transparent px-4 font-label text-fg transition-colors hover:bg-surface-sunken"
+          className="focus-ring inline-flex min-h-10 items-center gap-1.5 font-body-sm font-medium text-fg-muted underline-offset-2 transition-colors hover:text-fg hover:underline"
         >
           Explorar cursos
+          <ArrowRight size={16} aria-hidden />
         </Link>
       </div>
 

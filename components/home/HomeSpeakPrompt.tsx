@@ -1,9 +1,9 @@
 'use client'
 
 // Planned structure:
-// <HomeSpeakPrompt> — heading + Conversa | Misión oral (both secondary weight)
+// <HomeSpeakPrompt> — heading + Conversa | Misión oral (text+arrow, not solid)
 
-import { MessageCircle, Mic } from '@/components/icons'
+import { ArrowRight, MessageCircle, Mic } from '@/components/icons'
 import { useAICoachStore } from '@/lib/stores/aiCoachStore'
 import { buildCoachPrefill } from '@/lib/ai-practice/coach-prefill'
 import type { SessionArc } from '@/lib/practice/types'
@@ -28,23 +28,33 @@ export default function HomeSpeakPrompt({ arc }: Props) {
             : 'Habla con el coach sobre lo que practicaste hoy.'}
         </p>
       </div>
-      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+      <div className="flex flex-col gap-1">
         <button
           type="button"
+          className="focus-ring group inline-flex min-h-10 items-center gap-2 rounded-sm font-body-sm font-medium text-fg-muted transition-colors hover:text-fg"
           onClick={() => openCoach({ tab: 'chat', prefill })}
-          className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-border-default bg-transparent px-3 font-label text-fg transition-colors hover:bg-surface-sunken"
         >
           <MessageCircle size={16} aria-hidden />
           Conversa
+          <ArrowRight
+            size={16}
+            className="transition-transform duration-150 group-hover:translate-x-0.5"
+            aria-hidden
+          />
         </button>
         <button
           type="button"
-          onClick={() => openCoach({ tab: 'missions', prefill })}
+          className="focus-ring group inline-flex min-h-10 items-center gap-2 rounded-sm font-body-sm font-medium text-fg-muted transition-colors hover:text-fg"
           title="Un reto corto con micrófono: el coach te da un objetivo y te escucha."
-          className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-border-default bg-transparent px-3 font-label text-fg transition-colors hover:bg-surface-sunken"
+          onClick={() => openCoach({ tab: 'missions', prefill })}
         >
           <Mic size={16} aria-hidden />
           Misión oral
+          <ArrowRight
+            size={16}
+            className="transition-transform duration-150 group-hover:translate-x-0.5"
+            aria-hidden
+          />
         </button>
       </div>
     </div>

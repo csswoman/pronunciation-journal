@@ -25,10 +25,9 @@ una fórmula que deba medirse en píxeles ni un permiso para añadir color.
 | Acentos de actividad | Puntual | `stage-pairs` y `stage-dictation`, solo dentro de la práctica a la que pertenecen. |
 
 - Consume siempre tokens semánticos o utilidades Tailwind mapeadas a ellos. Nunca derives un color a partir de un número de hue local.
-- `--hue` y `.dark` cambian el tema completo. Ningún ejemplo, mockup o componente puede asumir que el color inicial será violeta.
-- El color primario no rellena paneles grandes ni decora el fondo. En Home, la prioridad se expresa con posición, texto y contraste antes que con saturación.
-- Dos recetas de primary, una regla: chrome y hubs usan tinta (`Button` `primary` → `--cta-bg`). El avance dentro de una sesión usa el hue (`PillButton` `primary` → `--primary`).
-- El progreso puede usar una barra compacta con el color del tema. El resultado correcto, una advertencia o un error usan colores semánticos fijos, acompañados de texto o icono.
+- `--hue` / `--hue-base` y `.dark` cambian el tema completo. Los acentos split-complementary (`--accent-1` +150°, `--accent-2` +210°) se derivan del slider; en Home: editorial = accent-1 (solo en el foco: marca de palabra o bloque de frase), progreso = accent-2, un CTA sólido = primary.
+- El color primario no rellena paneles grandes ni decora el fondo. En Home, la prioridad se expresa con posición, texto y contraste; no tiñas tarjetas enteras con accent-1.- Dos recetas de primary, una regla: chrome fuera de Home puede usar tinta (`Button` `primary` → `--cta-bg`). En Home, el único relleno sólido de la vista usa hue (`--primary`). El avance dentro de una sesión usa el hue (`PillButton` `primary` → `--primary`).
+- El progreso del plan en Home usa `--accent-2`. El resultado correcto en ejercicios sigue con colores semánticos fijos, acompañados de texto o icono.
 - `Badge` solo admite variantes semánticas (`default`, `success`, `info`, `warning`, `error`, `neutral`). No hay paleta Tailwind (`sky`, `violet`, `emerald`).
 
 ## Border radius: una escala con significado

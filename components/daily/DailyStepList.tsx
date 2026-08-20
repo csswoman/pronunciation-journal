@@ -174,7 +174,7 @@ export default function DailyStepList({
                 </p>
               </div>
               {done ? (
-                <span className="animate-state-in inline-flex shrink-0 items-center gap-1 rounded-md bg-success-soft px-2.5 py-1 font-caption font-semibold text-success">
+                <span className="animate-state-in inline-flex shrink-0 items-center gap-1 rounded-md bg-accent-2-soft px-2.5 py-1 font-caption font-semibold text-accent-2">
                   <Check size={16} aria-hidden />
                   Hecho
                 </span>
@@ -184,7 +184,7 @@ export default function DailyStepList({
                     Empieza aquí
                   </span>
                 ) : (
-                  <span className="inline-flex shrink-0 items-center rounded-md bg-cta-bg px-2.5 py-1 font-caption font-semibold text-cta-fg">
+                  <span className="inline-flex shrink-0 items-center rounded-md bg-primary px-2.5 py-1 font-caption font-semibold text-on-primary">
                     Empieza aquí
                   </span>
                 )

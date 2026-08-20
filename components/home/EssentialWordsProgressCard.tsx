@@ -114,7 +114,7 @@ export default function EssentialWordsProgressCard() {
     return (
       <Link
         href="/practice/essential-words"
-        className="home-sidebar-card focus-ring group flex flex-col gap-2 transition-colors hover:bg-surface-sunken"
+        className="home-sidebar-card home-sidebar-card--featured focus-ring group flex flex-col gap-2 transition-colors hover:bg-surface-sunken"
       >
         <span className="font-label text-fg">Vocabulario</span>
         <span className="font-body-sm text-pretty text-fg-muted">
@@ -126,7 +126,7 @@ export default function EssentialWordsProgressCard() {
         <span
           className={cn(
             'mt-auto inline-flex min-h-10 items-center gap-1.5 font-body-sm font-medium',
-            'text-primary group-hover:underline',
+            'text-fg-muted group-hover:text-fg group-hover:underline',
           )}
         >
           {emptyCta} <ArrowRight size={16} aria-hidden />
@@ -153,7 +153,7 @@ export default function EssentialWordsProgressCard() {
 
   return (
     <div
-      className="home-sidebar-card ew-progress-card group"
+      className="home-sidebar-card home-sidebar-card--featured ew-progress-card group"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocusCapture={() => setPaused(true)}
@@ -168,6 +168,11 @@ export default function EssentialWordsProgressCard() {
           <span className="font-label text-fg">Vocabulario</span>
           {active ? (
             <>
+              <p className="font-body-sm font-semibold text-fg">
+                {active.learned >= active.total
+                  ? `Completado: ${active.level}`
+                  : `Repasando: ${active.level}`}
+              </p>
               <p className="ew-progress-card__fraction" aria-live="polite">
                 <span className="ew-progress-card__learned">
                   {active.learned}/
@@ -184,12 +189,7 @@ export default function EssentialWordsProgressCard() {
 
           <Link
             href="/practice/essential-words"
-            className={cn(
-              'focus-ring relative z-[1] mt-1 inline-flex min-h-10 w-fit items-center gap-1.5 rounded-sm font-body-sm font-medium',
-              early
-                ? 'text-primary hover:underline'
-                : 'text-fg hover:underline',
-            )}
+            className="focus-ring relative z-[1] mt-1 inline-flex min-h-10 w-fit items-center gap-1.5 rounded-sm font-body-sm font-medium text-fg-muted hover:text-fg hover:underline"
             aria-label={
               active
                 ? `${ctaLabel}: ${active.learned} de ${active.total} palabras`

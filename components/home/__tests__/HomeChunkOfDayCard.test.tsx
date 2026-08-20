@@ -11,13 +11,11 @@ describe("HomeChunkOfDayCard", () => {
   it("renders the chunk of the day with title, IPA and meaning", () => {
     const { container } = render(<HomeChunkOfDayCard />);
     expect(screen.getByText("Chunk del día")).toBeInTheDocument();
-    
-    // Check that an IPA tag with font-ipa is present
+
     const ipaElement = container.querySelector(".font-ipa");
     expect(ipaElement).toBeInTheDocument();
 
-    // Check that chunk word display is present
-    const wordElement = container.querySelector(".text-display-word");
+    const wordElement = container.querySelector(".home-chunk-quote__phrase");
     expect(wordElement).toBeInTheDocument();
     expect(wordElement?.textContent?.trim()).toBeTruthy();
   });
@@ -27,9 +25,11 @@ describe("HomeChunkOfDayCard", () => {
     const shuffleButton = screen.getByRole("button", { name: "Sacar otro chunk" });
     expect(shuffleButton).toBeInTheDocument();
 
-    const initialWord = container.querySelector(".text-display-word")?.textContent;
+    const initialWord = container.querySelector(
+      ".home-chunk-quote__phrase",
+    )?.textContent;
     expect(initialWord).toBeTruthy();
-    
+
     fireEvent.click(shuffleButton);
 
     await waitFor(() => {

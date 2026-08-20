@@ -205,9 +205,10 @@ The palette is neutral-first with a dynamic primary scale. Every surface carries
 **Token-to-utility mapping.** In code, reference the Tailwind v4 utilities generated from `app/styles/theme.css`, never raw `var(--…)` arbitrary values. The foreground tokens map: `text-primary` → `text-fg`, `text-secondary` → `text-fg-muted`, `text-tertiary` → `text-fg-subtle` (the `fg-` prefix avoids clashing with Tailwind's `text-base` font-size utility). Primary foreground on a filled button is `text-on-primary`, not `text-white`. Surfaces, borders, and primary use their literal names (`bg-surface-raised`, `border-border-subtle`, `bg-primary`).
 
 ### Primary
-- **Adaptive primary** (`--primary`): The single interactive identity color. Its value is resolved from the active `--hue` and light/dark mode. Use it on colored CTAs, focus rings, active nav items, selected chips, and compact progress.
+- **Adaptive primary** (`--primary`): The single interactive identity color. Its value is resolved from the active `--hue` / `--hue-base` and light/dark mode. Use it on colored CTAs, focus rings, active nav items, selected chips, and the single solid Home CTA (`Empieza aquí` or review-due).
 - **Primary Soft** (`--primary-soft`): Theme-resolved background for soft button variants, selected states, and quiet hover fills. Never use it as decoration.
-
+- **Accent-1** (`--accent-1`, +150°): Editorial highlight on Home (Palabra / Chunk del día washes and word ink).
+- **Accent-2** (`--accent-2`, +210°): Progress texture on Home (plan segments, Hecho, streak celebration). Does not replace fixed `--success` for exercise correctness.
 ### Secondary
 - **Warm Amber** (`oklch(0.74 0.14 55)`): The stage-pairs accent. Applied to the minimal-pairs practice stage. Fixed; does not shift with `--hue`.
 - **Coastal Teal** (`oklch(0.73 0.12 185)`): The stage-dictation accent. Applied to dictation practice stages. Fixed.

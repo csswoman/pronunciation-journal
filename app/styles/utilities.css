@@ -464,6 +464,12 @@
   gap: var(--layout-stack-loose);
 }
 
+.home-command-below-plan {
+  display: flex;
+  flex-direction: column;
+  gap: var(--layout-stack);
+}
+
 .home-command-aside {
   display: flex;
   flex-direction: column;
@@ -486,22 +492,70 @@
   border-color: var(--border-default);
 }
 
+/* Editorial content — color on the focal mark only, never a full-card wash */
+.home-editorial-mark {
+  display: inline-block;
+  max-width: 100%;
+  border-radius: var(--radius-sm);
+  background-color: color-mix(
+    in oklch,
+    var(--accent-1-soft) 70%,
+    transparent
+  );
+  padding-inline: 0.35em;
+  padding-block: 0.1em;
+  color: color-mix(in oklch, var(--accent-1) 42%, var(--text-primary));
+  font-size: var(--text-size-display-ipa);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+.home-chunk-quote {
+  border-radius: var(--radius-md);
+  border: 1px solid color-mix(in oklch, var(--accent-1) 16%, var(--border-subtle));
+  background-color: color-mix(
+    in oklch,
+    var(--accent-1-soft) 45%,
+    var(--surface-sunken)
+  );
+  padding: var(--space-3) var(--space-4);
+}
+
+.home-chunk-quote__phrase {
+  color: var(--text-primary);
+  font-size: var(--text-size-h4);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+
+/* Vocab progress — featured metric in the aside */
+.home-sidebar-card--featured {
+  border-color: color-mix(in oklch, var(--primary) 28%, var(--border-subtle));
+  box-shadow: var(--shadow-sm);
+}
+
 /* Essential Words home card — CEFR level slider + outline mark */
 .ew-progress-card {
   --ew-outline: color-mix(in oklch, var(--primary) 58%, transparent);
   --ew-ink-soft: color-mix(in oklch, var(--primary) 42%, var(--text-primary));
   position: relative;
   overflow: hidden;
-  min-height: 13rem;
-  border-color: color-mix(in oklch, var(--primary) 18%, var(--border-subtle));
+  min-height: 14rem;
+  border-color: color-mix(in oklch, var(--primary) 28%, var(--border-subtle));
   background-color: color-mix(
     in oklch,
-    var(--primary-soft) 72%,
+    var(--primary-soft) 80%,
     var(--surface-raised)
   );
+  box-shadow: var(--shadow-sm);
   transition:
     background-color 200ms ease,
-    border-color 200ms ease;
+    border-color 200ms ease,
+    box-shadow 200ms ease;
 }
 
 .ew-progress-card:hover,

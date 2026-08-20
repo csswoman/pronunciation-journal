@@ -59,13 +59,18 @@ export default function HomePlanDone({ stepCount, arc, streak = null }: Props) {
   return (
     <div className="animate-state-in flex flex-col gap-5">
       <div className="flex flex-col items-center gap-3 text-center">
-        <div className="animate-step-done grid h-12 w-12 place-items-center rounded-full bg-success-soft text-success">
+        <div className="animate-step-done grid h-12 w-12 place-items-center rounded-full bg-accent-2-soft text-accent-2">
           <Flame size={24} aria-hidden />
         </div>
         <p className="font-label font-semibold text-fg">¡Plan completo!</p>
         <p className="font-body-sm max-w-xs text-pretty text-fg-muted">
           Terminaste los {stepCount} pasos de hoy.
-          {streakText ? ` · ${streakText}` : ''}
+          {streakText ? (
+            <>
+              {" · "}
+              <span className="font-medium text-accent-2">{streakText}</span>
+            </>
+          ) : null}
         </p>
       </div>
 

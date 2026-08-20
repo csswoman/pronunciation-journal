@@ -2,11 +2,9 @@
 
 // Planned structure:
 // <HomeCommandGrid>
-//   review strip
-//   activation / placement / pronunciation
-//   guest save progress (when not inline under activation)
-//   main: plan + word-of-day  OR  HomePlanDone when practice complete
-//   aside: journal · speak · pronunciation · vocab
+//   review / activation (fold owners only)
+//   main: focus + plan (+ done) · setup reminders only below plan
+//   aside: word · chunk · vocab · pronunciation · speak · journal
 // </HomeCommandGrid>
 
 import { useCallback, useState } from "react";
@@ -36,7 +34,7 @@ import type { SessionArc } from "@/lib/practice/types";
 const HomeDailyCard = dynamic(() => import("@/components/home/HomeDailyCard"), {
   loading: () => (
     <div
-      className="h-40 animate-pulse rounded-2xl bg-surface-sunken"
+      className="h-44 animate-pulse rounded-xl border border-border-default bg-daily-card"
       aria-busy="true"
       aria-label="Cargando plan diario"
     />
@@ -45,7 +43,7 @@ const HomeDailyCard = dynamic(() => import("@/components/home/HomeDailyCard"), {
 
 const LearningFocusCard = dynamic(() => import("@/components/home/LearningFocusCard"), {
   loading: () => (
-    <div className="h-24 animate-pulse rounded-2xl bg-surface-sunken" aria-hidden />
+    <div className="h-20 animate-pulse rounded-xl border border-border-subtle bg-surface-raised" aria-hidden />
   ),
 });
 
@@ -95,17 +93,17 @@ export default function HomeCommandGrid({
   const needsPlacement = !placementState.hasPlacement;
   const needsPronunciation = !pronunciationDiagnosticState.hasPronunciationDiagnostic;
   const showActivation = planSettled && !reviewDue && planEmpty && isNewLearner;
-  const setupOwnsFold = planSettled && !reviewDue && planEmpty && !showActivation;
-  const showPlacementBanner = needsPlacement && setupOwnsFold;
-  const showPronunciationBanner = needsPronunciation && setupOwnsFold;
-  const showPlacementAside =
-    planSettled && needsPlacement && !showPlacementBanner && !showActivation;
-  const showPronunciationAside =
-    planSettled && needsPronunciation && !showPronunciationBanner && !showActivation;
+  // Setup is optional — below the plan, never competing with editorial or practice.
+  const showPlacementBelow =
+    planSettled && needsPlacement && !showActivation;
+  const showPronunciationBelow =
+    planSettled && needsPronunciation && !showActivation;
   const showPlanExtras = planSettled && !planEmpty;
   const showPostPlan = showPlanExtras && allDone;
+  const showDailyEditorial = planSettled;
 
   const showGuestSaveStrip = isGuest && planSettled && !showActivation;
+  const showSetupBelow = showPlacementBelow || showPronunciationBelow;
 
   return (
     <div className="home-command-grid">
@@ -125,18 +123,6 @@ export default function HomeCommandGrid({
             showPronunciationLink={needsPronunciation}
             showGuestSaveInline={isGuest}
           />
-        </div>
-      ) : null}
-
-      {showPlacementBanner ? (
-        <div className="home-command-review">
-          <HomePlacementPrompt />
-        </div>
-      ) : null}
-
-      {showPronunciationBanner ? (
-        <div className="home-command-review">
-          <HomePronunciationPrompt demoteCta={showPlacementBanner} />
         </div>
       ) : null}
 
@@ -169,21 +155,25 @@ export default function HomeCommandGrid({
           </section>
         ) : null}
 
-        {showPlanExtras ? (
+        {showSetupBelow ? (
+          <div className="home-command-below-plan" aria-label="Ajustes opcionales">
+            {showPlacementBelow ? <HomePlacementPrompt compact /> : null}
+            {showPronunciationBelow ? <HomePronunciationPrompt compact /> : null}
+          </div>
+        ) : null}
+      </div>
+
+      <aside className="home-command-aside" aria-label="Práctica sugerida">
+        {showDailyEditorial ? (
           <>
             <HomeWordOfDayCard />
             <HomeChunkOfDayCard />
           </>
         ) : null}
-      </div>
-
-      <aside className="home-command-aside" aria-label="Práctica sugerida">
+        {showPlanExtras ? <EssentialWordsProgressCard /> : null}
         <WeakSoundCard weakestPhoneme={weakestPhoneme} />
         {showPlanExtras && !allDone ? <HomeSpeakPrompt arc={arc} /> : null}
-        {showPlanExtras ? <EssentialWordsProgressCard /> : null}
         {planSettled ? <HomeJournalCard /> : null}
-        {showPlacementAside ? <HomePlacementPrompt compact /> : null}
-        {showPronunciationAside ? <HomePronunciationPrompt compact /> : null}
       </aside>
     </div>
   );
