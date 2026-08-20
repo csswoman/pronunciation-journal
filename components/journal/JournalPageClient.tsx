@@ -8,7 +8,7 @@ import type { JournalFeedback } from '@/lib/journal/correction'
 import type { ResolvedSeedWord, SelectedGrammarNote } from '@/lib/journal/scaffold-resolver'
 import type { JournalEntryRecord } from '@/lib/journal/types'
 import { JournalSupportRail } from './JournalSupportRail'
-import { JournalHistoryList } from './JournalHistoryList'
+import { JournalRecentDaysBar } from './JournalRecentDaysBar'
 import { JournalWorkspace } from './JournalWorkspace'
 
 interface JournalPageClientProps {
@@ -72,6 +72,7 @@ export function JournalPageClient({
     >
       <PageHeader title="Diario" subtitle={subtitle} />
       <div className="layout-stack-loose">
+        <JournalRecentDaysBar userId={entry.userId} todayDate={entry.entryDate} />
         <JournalWorkspace
           entry={entry}
           targetLength={targetLength}
@@ -82,7 +83,6 @@ export function JournalPageClient({
           onStarterRequestHandled={clearStarterRequest}
           onCorrection={handleCorrection}
         />
-        <JournalHistoryList userId={entry.userId} excludeDate={entry.entryDate} />
       </div>
     </PageLayout>
   )

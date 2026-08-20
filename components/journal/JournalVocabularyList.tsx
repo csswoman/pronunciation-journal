@@ -49,17 +49,32 @@ export function JournalVocabularyList({
               type="button"
               aria-expanded={expanded}
               onClick={() => toggleWord(word)}
-              className="focus-ring flex min-h-11 w-full items-center gap-2 text-left font-body-sm"
+              className={cn(
+                'focus-ring flex min-h-11 w-full items-center gap-2 rounded-[var(--radius-sm)] px-2 text-left font-body-sm transition-colors',
+                isUsed && 'bg-success-soft/30',
+              )}
             >
-              <span className="flex size-5 shrink-0 items-center justify-center text-fg-muted" aria-hidden>
-                {isOwned || isUsed ? <Check size={14} strokeWidth={2.5} /> : null}
+              <span
+                className={cn(
+                  'flex size-5 shrink-0 items-center justify-center rounded-full text-fg-muted',
+                  isUsed && 'bg-success text-on-primary',
+                  !isUsed && isOwned && 'bg-primary-soft text-primary',
+                )}
+                aria-hidden
+              >
+                {isOwned || isUsed ? <Check size={12} strokeWidth={3} /> : null}
               </span>
-              <span className={cn('min-w-0 flex-1 truncate', isOwned ? 'font-medium text-fg' : 'text-fg')}>
+              <span className={cn('min-w-0 flex-1 truncate', isOwned || isUsed ? 'font-medium text-fg' : 'text-fg')}>
                 {word.text} <span className="text-fg-muted">· {word.translation}</span>
               </span>
+              {isUsed && (
+                <span className="shrink-0 rounded-full bg-success-soft px-1.5 py-0.5 font-body-xs font-semibold text-success">
+                  Usada
+                </span>
+              )}
               <ChevronDown
                 size={14}
-                className={cn('shrink-0 text-fg-subtle', expanded && 'rotate-180')}
+                className={cn('shrink-0 text-fg-subtle transition-transform', expanded && 'rotate-180')}
                 aria-hidden
               />
               <span className="sr-only">
@@ -67,9 +82,9 @@ export function JournalVocabularyList({
               </span>
             </button>
             {expanded ? (
-              <div className="ml-7 pb-2 pr-5 font-body-xs text-fg-muted">
-                <p className="font-ipa text-caption text-fg-subtle">{word.ipa}</p>
-                <p className="mt-1">{word.example}</p>
+              <div className="ml-9 pb-2 pr-5 font-body-xs text-fg-muted">
+                <p className="font-ipa text-caption text-primary">{word.ipa}</p>
+                <p className="mt-1 leading-normal">{word.example}</p>
               </div>
             ) : null}
           </li>

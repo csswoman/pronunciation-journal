@@ -24,11 +24,19 @@ export function JournalFeedbackView({
 }: JournalFeedbackViewProps) {
   return (
     <div className="flex flex-col gap-5">
-      <section aria-labelledby="journal-corrected" className="flex flex-col gap-2">
-        <h2 id="journal-corrected" className="font-h4 font-semibold text-fg">
-          Una versión más natural
-        </h2>
-        <p className="whitespace-pre-wrap rounded-[var(--radius-lg)] border border-border-subtle bg-surface-raised p-4 text-base text-fg">
+      <section
+        aria-labelledby="journal-corrected"
+        className="flex flex-col gap-2 rounded-[var(--radius-lg)] border border-border-subtle bg-surface-base p-4 shadow-sm"
+      >
+        <div className="flex items-center justify-between">
+          <h2 id="journal-corrected" className="font-h4 font-semibold text-fg">
+            Una versión más natural
+          </h2>
+          <span className="rounded-full bg-success-soft px-2.5 py-0.5 font-body-xs font-semibold text-success">
+            Revisión completada
+          </span>
+        </div>
+        <p className="whitespace-pre-wrap font-body text-base leading-relaxed text-fg">
           {correctedContent}
         </p>
       </section>
@@ -61,14 +69,14 @@ export function JournalFeedbackView({
           <ul className="flex flex-col gap-2">
             {feedback.errors.map((error, index) => (
               <li key={`${error.quote}-${index}`}>
-                <details className="group rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised">
+                <details className="group rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised transition-colors">
                   <summary className="focus-ring flex cursor-pointer list-none items-center gap-2 px-3 py-2.5 font-body-sm text-fg">
                     <ChevronDown
                       size={14}
                       className="shrink-0 text-fg-subtle transition-transform duration-150 group-open:rotate-180"
                       aria-hidden
                     />
-                    <span className="rounded-full bg-surface-sunken px-2 py-0.5 font-body-xs text-fg-muted">
+                    <span className="rounded-full bg-surface-sunken px-2 py-0.5 font-body-xs font-medium text-primary">
                       {journalErrorTypeLabel(error.type)}
                     </span>
                     <span className="min-w-0 flex-1 truncate">
@@ -86,7 +94,6 @@ export function JournalFeedbackView({
           </ul>
         </section>
       )}
-
     </div>
   )
 }

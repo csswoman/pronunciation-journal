@@ -84,9 +84,17 @@ export function JournalWorkspace({
   }, [journal.feedback, journal.status, onCorrection])
 
   return (
-    <section className="flex w-full flex-col layout-section-gap rounded-[var(--radius-lg)] border border-border-subtle bg-surface-raised layout-card-pad">
-      <section aria-labelledby="journal-prompt" className="flex flex-col gap-2">
-        <p className="font-body-sm text-fg-muted">Pregunta de hoy</p>
+    <section className="flex w-full flex-col layout-section-gap rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised layout-card-pad">
+      <section
+        aria-labelledby="journal-prompt"
+        className="flex flex-col gap-2 rounded-[var(--radius-md)] border border-border-subtle bg-surface-base/80 p-4 transition-colors"
+      >
+        <div className="flex items-center justify-between">
+          <span className="font-kicker text-primary">Pregunta de hoy</span>
+          <span className="font-body-xs text-fg-muted">
+            Meta: {targetLength} palabras
+          </span>
+        </div>
         <h2
           id="journal-prompt"
           className="text-wrap font-h3 font-semibold text-fg text-balance"
