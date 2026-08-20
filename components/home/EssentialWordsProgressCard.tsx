@@ -2,7 +2,7 @@
 
 // Planned structure:
 // <EssentialWordsProgressCard>
-//   loading | empty CTA |
+//   loading |
 //   <LevelSlider>
 //     centered copy stack (title + fraction + meta + CTA)
 //     decorative outline mark (data-outline + text-stroke)
@@ -25,7 +25,6 @@ import {
   type LevelTallyWord,
 } from '@/lib/essential-words/level-progress'
 import { useAuth } from '@/components/auth/AuthProvider'
-import { cn } from '@/lib/cn'
 
 /** Below this, promote a stronger CTA — early-route signal, not a nav tile. */
 const EARLY_PROGRESS_THRESHOLD = 50
@@ -108,32 +107,6 @@ export default function EssentialWordsProgressCard() {
   }
 
   const early = learned < EARLY_PROGRESS_THRESHOLD
-  const emptyCta = 'Empezar palabras esenciales'
-
-  if (learned === 0) {
-    return (
-      <Link
-        href="/practice/essential-words"
-        className="home-sidebar-card home-sidebar-card--featured focus-ring group flex flex-col gap-2 transition-colors hover:bg-surface-sunken"
-      >
-        <span className="font-label text-fg">Vocabulario</span>
-        <span className="font-body-sm text-pretty text-fg-muted">
-          Palabras esenciales
-        </span>
-        <span className="font-body-sm text-pretty text-fg-muted line-clamp-2">
-          Las palabras más frecuentes del inglés, en un mazo progresivo.
-        </span>
-        <span
-          className={cn(
-            'mt-auto inline-flex min-h-10 items-center gap-1.5 font-body-sm font-medium',
-            'text-fg-muted group-hover:text-fg group-hover:underline',
-          )}
-        >
-          {emptyCta} <ArrowRight size={16} aria-hidden />
-        </span>
-      </Link>
-    )
-  }
 
   const active =
     levels.length > 0
