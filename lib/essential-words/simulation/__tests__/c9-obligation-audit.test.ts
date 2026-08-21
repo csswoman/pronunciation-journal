@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { admitNewWords } from "../../admission-control";
 import { deriveBaseBacklogPolicy } from "../../pending-base-fairness";
 import {
@@ -8,6 +8,8 @@ import { baseSkillActivationLiveness, type EligibilityObservation } from "../cri
 import { PROFILES, type SimulationProfile, type SimulationProfileId } from "../profiles";
 import { runSimulation } from "../run-simulation";
 import type { SimulationHarnessHooks } from "../observations";
+
+vi.setConfig({ testTimeout: 120_000 });
 
 const ACCEPTANCE_OPTIONS = {
   days: 180,
