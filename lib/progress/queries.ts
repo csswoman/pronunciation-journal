@@ -114,6 +114,14 @@ export const RECENT_ACTIVITY_SESSION_LIMIT = 15
 export const SKILL_PROFILE_CONTRAST_LIMIT = 40
 /** Rolling window (days) for completion heatmap and fluency answer history. */
 export const PROGRESS_ANSWER_WINDOW_DAYS = 30
+/**
+ * Rolling window (days) for exercise_payload evidence pulled into
+ * projections' "latest evidence per target" list. projectProgress only
+ * ever keeps the single most-recent fact per target, so a target drops
+ * out of the list only if its sole evidence predates this window — at
+ * which point treating it as not-yet-evidenced is reasonable, not a bug.
+ */
+export const PROGRESS_PROJECTION_EVIDENCE_WINDOW_DAYS = 180
 
 /** How many qualifying practice days in a window of N days (any context). */
 export async function getDailyCompletionStats(userId: string): Promise<DailyCompletionStats> {
