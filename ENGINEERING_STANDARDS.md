@@ -34,10 +34,13 @@ Complemento operativo de `CLAUDE.md`.
 
 ### Feature folders (inventario)
 
-`admin`, `ai-coach`, `ai-practice`, `api`, `auth`, `content`, `core-1000`, `courses`,
-`daily`, `db`, `decks`, `exercises`, `home`, `images`, `ipa`, `lexicon`, `notion`,
-`phoneme-practice`, `practice`, `progress`, `pronunciation`, `sound-lab`, `sounds`,
-`speech`, `srs`, `stores`, `supabase`, `sync`, `users`, `word-bank`.
+`ai-coach`, `ai-practice`, `api`, `auth`, `chunk-of-day`, `content`, `courses`,
+`daily`, `db`, `decks`, `degradation`, `essential-words`, `exercises`,
+`false-friends`, `gemini`, `home`, `images`, `immersion`, `ipa`, `journal`,
+`learning-focus`, `learning-loop`, `lexicon`, `navigation`, `phoneme-practice`,
+`practice`, `preferences`, `progress`, `pronunciation`, `review`, `search`,
+`security`, `sound-lab`, `sounds`, `speech`, `srs`, `stores`, `supabase`, `sync`,
+`theme`, `tracking`, `ui-sounds`, `users`, `vocabulary`, `word-bank`, `word-of-day`.
 
 ---
 
@@ -46,10 +49,14 @@ Complemento operativo de `CLAUDE.md`.
 Módulos activos (`lib/*/queries.ts`):
 
 ```text
-users/          decks/          sounds/         word-bank/
-progress/       home/           practice/       phoneme-practice/
-ai-practice/
+ai-practice/    courses/        decks/          essential-words/
+home/           journal/        learning-focus/ phoneme-practice/
+practice/       progress/       sounds/         tracking/
+users/          word-bank/
 ```
+
+`lib/word-bank/` tiene además `server-queries.ts` (server-side) y `srs-queries.ts`;
+ambos cuentan como query layer para la regla D de ESLint (`lib/**/*queries*.ts`).
 
 Excepciones de infra (no son query modules de dominio):
 
@@ -83,6 +90,8 @@ lib/practice/exercise-renderer/
   generic-registry.tsx      clave: GenericExercise.type
   phoneme-registry.tsx      clave: ExerciseType
   legacy-bridge.ts          único cast fonema → Exercise legacy
+  hints.ts                  pistas por tipo de ejercicio
+  UnsupportedExercise.tsx   fallback cuando no hay entrada en el registry
 
 lib/exercises/eligibility.ts   assessWordBankEntry — contrato único lemma/contexto/pool
 lib/exercises/generation.ts      GenerationResult<T> + SkippedEntry (fill-blank hoy)
@@ -95,16 +104,20 @@ components/practice/session/
 
 Al añadir un tipo: entrada en registry + adapter en `lib/practice/adapters.ts` si aplica. **No** condicionales en `ExerciseRenderer`.
 
-Antes de filtrar filas en un generador nuevo, usar `assessWordBankEntry(entry, mode)` — no duplicar reglas de lemma, contexto o pool en el generador. Gates CI: `pnpm validate:core1000` (contenido) y `pnpm validate:core1000-generators` (generabilidad por modo).
+Antes de filtrar filas en un generador nuevo, usar `assessWordBankEntry(entry, mode)` — no duplicar reglas de lemma, contexto o pool en el generador. Gates CI: `pnpm validate:essential-words` (contenido) y `pnpm validate:essential-words-generators` (generabilidad por modo).
 
 ### Daily plan
 
+Núcleo del módulo (`lib/practice/daily-plan/` tiene más archivos de apoyo):
+
 ```text
-lib/practice/daily-plan/
-  composer.ts       buildDailyPlan
-  fetchers.ts       delega al query layer
-  step-builders.ts  ensamblaje puro
-  selectors.ts      selección pura
+composer.ts             buildDailyPlan — orquesta
+fetchers.ts             delega al query layer
+step-builders.ts        ensamblaje puro
+async-step-builders.ts  ensamblaje con I/O
+selectors.ts            selección pura
+policy.ts               reglas de composición del plan
+step-completion.ts      estado de avance por paso
 ```
 
 ### AI tools registry
@@ -146,14 +159,13 @@ Actualizar **este doc**, el header de `eslint.config.mjs` y la allowlist en el m
 | Archivo | Regla relajada | Motivo |
 |---------|----------------|--------|
 | `components/auth/AuthProvider.tsx` | Supabase client permitido | Infra auth |
-| `lib/supabase/types.ts` | max-lines off | Generado |
-| `lib/pronunciation/ipa-data.ts` | max-lines off | Dataset estático |
-| `lib/courses/curriculum.ts` | max-lines off | Dataset estático |
 | `lib/db/lessons.ts` | Supabase client permitido | TODO: mover a un módulo `queries.ts` |
 | `lib/exercises/generators/reorder-from-fragments.ts` | Supabase client permitido | TODO: mover a un módulo `queries.ts` |
 | `lib/ai-practice/load-state.ts` | Supabase client permitido | TODO: mover a un módulo `queries.ts` |
 | `lib/api/guards.ts` | Supabase client permitido | Infra de auth de requests server-side (construye su propio admin/token client) |
 | `lib/**/*queries*.ts`, `lib/**/realtime.ts`, `lib/auth/**`, `lib/sync/**`, `lib/supabase/**`, `lib/decks/study-source.ts`, `lib/review/build-failed-exercises.ts` | Regla `lib/**` no aplica | Query layer / infra sancionada |
+
+Excepciones de `max-lines` → sección **Tamaño de archivos** más abajo.
 
 ### Solo convención (review, no ESLint)
 
@@ -180,18 +192,22 @@ Los scripts bloqueantes usan allowlists explícitas al tope del archivo (`RAW_CO
 
 ## Tamaño de archivos — allowlist ESLint
 
-Archivos exentos del warning `max-lines` (300):
+Fuente de verdad: `MAX_LINES_ALLOWLIST` en `eslint.config.mjs`. No dupliques la
+lista aquí — churnea con cada split y se desincroniza.
 
-```text
-lib/supabase/types.ts
-lib/pronunciation/ipa-data.ts
-lib/courses/curriculum.ts
-```
+Categorías de exención (todas requieren justificación al añadir):
 
-Archivos actuales por encima del límite (warnings esperados hasta split):
+| Categoría | Ejemplos | Justificación |
+|---|---|---|
+| Generados | `lib/supabase/types.ts` | Salida de tooling, no se edita a mano |
+| Datasets estáticos | `lib/pronunciation/ipa-data.ts`, `lib/courses/curriculum.ts`, `lib/sounds/minimal-pairs.ts` | Datos, no lógica; dividir no aporta |
+| Registries | `lib/ai-practice/tools/registry.ts`, `lib/pronunciation/targets/registry.ts` | Crecen por entrada; la longitud es la señal correcta |
+| Scripts | `scripts/**` | No se despliegan |
+| Tests | `lib/**/__tests__/*.test.ts` | Cobertura exhaustiva por caso |
+| Deuda pendiente de split | `lib/db/index.ts`, `lib/phoneme-practice/exercises.ts`, `lib/practice/daily-plan/composer.ts`, `lib/sync/sync-manager.ts` | Módulos cohesivos a la espera de extracción |
 
-- `lib/db/index.ts`
-- `lib/phoneme-practice/exercises.ts`
+La última categoría es deuda real, no una exención permanente: al tocar uno de esos
+archivos, considera extraer antes de añadir.
 
 ---
 
@@ -202,7 +218,14 @@ Al cambiar reglas arquitectónicas:
 | Cambio | Actualizar |
 |--------|------------|
 | Regla dura / styling / componentes | `CLAUDE.md` |
+| Flujo de trabajo del agente / contrato de diseño | `AGENTS.md` |
 | Patrón, inventario, ESLint | este doc + `eslint.config.mjs` |
 | Nueva excepción ESLint | los tres |
 
-Última revisión: 2026-06-16 — eligibility contract (`assessWordBankEntry`), gates `validate:core1000-generators`.
+Los inventarios de este doc (feature folders, query layer) se desincronizan con
+facilidad. Al añadir una carpeta en `lib/` o un `queries.ts`, actualízalos en el
+mismo PR — o verifícalos con `ls lib/` y `ls lib/*/queries.ts`.
+
+Última revisión: 2026-08-21 — sincronización de inventarios con el código
+(`core-1000` → `essential-words`, query layer 9 → 14 módulos, allowlist `max-lines`
+delegada a `eslint.config.mjs`).
