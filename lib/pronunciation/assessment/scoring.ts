@@ -20,7 +20,6 @@ import type { DiagnosticPromptSelection } from './prompt-selection'
 import { mustAbstainFromProductionScore } from './scoring-guards'
 import { WORD_STRESS_PERCEPTION_EVALUATOR_VERSION } from './word-stress-perception'
 import {
-  isProsodyOnlyTargetId,
   type EvaluatorKind,
   type Measurement,
   type TargetResult,
@@ -110,10 +109,9 @@ export function scorePerceptionPrompt(
     })
   }
 
-  // Until an audio discrimination item is authored, prosody perception stays
-  // a self-report. Word stress now has a real listen-and-choose item, so it
-  // is objective perception evidence — never a claim about spoken accuracy.
-  if (isProsodyOnlyTargetId(selection.targetId) && selection.targetId !== 'prosody.word-stress') {
+  // Only word-stress currently has an authored audio discrimination test with forced-choice scoring.
+  // All other perceptual targets without audio stimuli are learner self-reports (comfort checks).
+  if (selection.targetId !== 'prosody.word-stress') {
     return {
       ...buildResult({
         targetId: selection.targetId,
@@ -132,10 +130,7 @@ export function scorePerceptionPrompt(
       signalType: 'perception',
       measurement: { kind: 'scored', score: answer.score ?? (answer.correct ? 100 : 0) },
       evaluatorKind: 'perception_forced_choice',
-      evaluatorVersion:
-        selection.targetId === 'prosody.word-stress'
-          ? WORD_STRESS_PERCEPTION_EVALUATOR_VERSION
-          : 'perception-forced-choice-v1',
+      evaluatorVersion: WORD_STRESS_PERCEPTION_EVALUATOR_VERSION,
     }),
     ...(answer.perceptionItemCount !== undefined
       ? { perceptionItemCount: answer.perceptionItemCount }

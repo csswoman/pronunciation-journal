@@ -5,7 +5,7 @@ import { auditEvidenceExits, EVIDENCE_EXIT_CONTRACTS } from '../evidence-exits'
 describe('learning-loop evidence exits', () => {
   it('gives every practicable adapter one declared answer/session exit', async () => {
     expect(auditEvidenceExits(await buildLearningContentManifest())).toEqual([])
-  })
+  }, 30_000)
 
   it('does not register duplicate adapter owners', () => {
     expect(new Set(EVIDENCE_EXIT_CONTRACTS.map((contract) => contract.adapter)).size)

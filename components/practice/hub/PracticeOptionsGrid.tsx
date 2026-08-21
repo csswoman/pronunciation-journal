@@ -16,7 +16,6 @@ import {
   ArrowRight,
   MessageCircle,
   Mic,
-  Volume2,
   CheckCircle2,
   Play,
   RefreshCw,

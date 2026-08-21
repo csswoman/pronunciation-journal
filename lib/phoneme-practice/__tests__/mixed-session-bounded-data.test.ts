@@ -231,4 +231,45 @@ describe('phoneme mixed sessions with bounded datasets', () => {
     // Mastered contrasts don't need more scheduled production in this mix.
     expect(speakWordExercises).toHaveLength(0)
   })
+
+  it('single-sound exercises (identify, pick_word, dictation) do not carry fake contrastId', () => {
+    const target = sound(1, '/ɪ/')
+    const contrast = sound(2, '/iː/')
+    const targetWords = [word(1, 1, 'ship'), word(2, 1, 'sit'), word(3, 1, 'live')]
+    const allWordsBySoundId = new Map([
+      [1, targetWords],
+      [2, [word(4, 2, 'sheep')]],
+    ])
+    const contrastProgress: UserContrastProgress[] = [
+      {
+        id: 'p1',
+        user_id: 'u1',
+        contrast_id: '/iː/|/ɪ/',
+        ease_factor: 2.5,
+        interval_days: 1,
+        next_review: null,
+        last_seen: new Date().toISOString(),
+        total_attempts: 4,
+        correct_answers: 3,
+        streak: 2,
+        mastery_pct: 40,
+      },
+    ]
+
+    const session = buildAdaptiveSession(
+      target, targetWords, [target, contrast], allWordsBySoundId, [],
+      { contrastProgress },
+    )
+
+    const singleSoundExercises = session.filter(
+      (item) => item.kind === 'phoneme' && ['identify', 'pick_word', 'dictation'].includes(item.data.type),
+    )
+
+    expect(singleSoundExercises.length).toBeGreaterThan(0)
+    for (const ex of singleSoundExercises) {
+      if (ex.kind === 'phoneme') {
+        expect(ex.data.contrastId).toBeUndefined()
+      }
+    }
+  })
 })

@@ -100,18 +100,25 @@ export function useSessionState(config: PracticeConfig) {
     async (
       isCorrect: boolean,
       userAnswer: string,
-      extras?: { score?: number; feedback?: import('@/lib/practice/types').PedagogicalFeedback },
+      extras?: import('@/lib/practice/types').PracticeSubmitExtras,
     ) => {
       const current = exercises[currentIndex]
       if (!current || phase !== 'exercising' || submittingRef.current) return
       submittingRef.current = true
+      const totalInteractionMs = Date.now() - startTimeRef.current
+      const responseTimeMs = extras?.responseTimeMs ?? totalInteractionMs
+
       const result = buildExerciseResult({
         current,
         isCorrect,
         userAnswer,
-        timeMs: Date.now() - startTimeRef.current,
+        timeMs: responseTimeMs,
         context,
-        extras,
+        extras: {
+          ...extras,
+          responseTimeMs,
+          totalInteractionMs,
+        },
       })
       if (user) {
         try {
@@ -121,9 +128,11 @@ export function useSessionState(config: PracticeConfig) {
           setProgressSaveStatus('error')
         }
       }
-      if (result.sourceRef?.source === 'core1k') {
+      const isAnswered = result.status === 'answered' || (result.status === undefined && result.userAnswer !== 'skip')
+      if (result.sourceRef?.source === 'core1k' && isAnswered) {
         const word = result.sourceRef.id.replace(/^c1k:/, '')
-        void gradeEssentialWord(word, result.isCorrect ? 4 : 2, {}, user?.id).catch((err) => {
+        const gradeVal = result.isCorrect ? (result.firstTryFailed ? 3 : 4) : 2
+        void gradeEssentialWord(word, gradeVal, {}, user?.id).catch((err) => {
           console.error('[PracticeSession] gradeEssentialWord failed', err)
         })
       }

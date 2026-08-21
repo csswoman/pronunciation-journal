@@ -6,27 +6,27 @@ import { ExitConfirmSheet } from '../ExitConfirmSheet'
 describe('ExitConfirmSheet', () => {
   it('renders when open', () => {
     render(<ExitConfirmSheet open onConfirm={vi.fn()} onCancel={vi.fn()} />)
-    expect(screen.getByText('Quit this session?')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /end session/i })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /keep practicing/i })).toBeInTheDocument()
+    expect(screen.getByText('¿Salir de esta sesión?')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /terminar sesión/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /seguir practicando/i })).toBeInTheDocument()
   })
 
   it('does not render when closed', () => {
     render(<ExitConfirmSheet open={false} onConfirm={vi.fn()} onCancel={vi.fn()} />)
-    expect(screen.queryByText('Quit this session?')).not.toBeInTheDocument()
+    expect(screen.queryByText('¿Salir de esta sesión?')).not.toBeInTheDocument()
   })
 
   it('calls onConfirm when End session is clicked', () => {
     const onConfirm = vi.fn()
     render(<ExitConfirmSheet open onConfirm={onConfirm} onCancel={vi.fn()} />)
-    fireEvent.click(screen.getByRole('button', { name: /end session/i }))
+    fireEvent.click(screen.getByRole('button', { name: /terminar sesión/i }))
     expect(onConfirm).toHaveBeenCalledOnce()
   })
 
   it('calls onCancel when Keep practicing is clicked', () => {
     const onCancel = vi.fn()
     render(<ExitConfirmSheet open onConfirm={vi.fn()} onCancel={onCancel} />)
-    fireEvent.click(screen.getByRole('button', { name: /keep practicing/i }))
+    fireEvent.click(screen.getByRole('button', { name: /seguir practicando/i }))
     expect(onCancel).toHaveBeenCalled()
   })
 

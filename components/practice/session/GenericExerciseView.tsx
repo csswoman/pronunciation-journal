@@ -29,11 +29,15 @@ export function GenericExerciseView({ exercise, onSubmit, focusUi = false }: Pro
   const [result, setResult] = useState<ExerciseResult | null>(null)
   const [hintCount, setHintCount] = useState(0)
   const [retryKey, setRetryKey] = useState(0)
+  const [firstTryFailed, setFirstTryFailed] = useState(false)
+  const [firstResponseTimeMs, setFirstResponseTimeMs] = useState<number | null>(null)
 
   useEffect(() => {
     setResult(null)
     setHintCount(0)
     setRetryKey(0)
+    setFirstTryFailed(false)
+    setFirstResponseTimeMs(null)
   }, [exercise.id])
 
   function handleResult(
@@ -42,9 +46,22 @@ export function GenericExerciseView({ exercise, onSubmit, focusUi = false }: Pro
     timeMs: number,
     extras?: PracticeSubmitExtras,
   ) {
+    if (firstResponseTimeMs === null) {
+      setFirstResponseTimeMs(timeMs)
+    }
+    const hadPriorFailure = firstTryFailed || !isCorrect
+
     if (isProduction) {
-      onSubmit(isCorrect, userAnswer, extras)
+      onSubmit(isCorrect, userAnswer, {
+        ...extras,
+        status: extras?.status ?? 'answered',
+        responseTimeMs: firstResponseTimeMs ?? timeMs,
+        firstTryFailed: hadPriorFailure,
+      })
       return
+    }
+    if (!isCorrect) {
+      setFirstTryFailed(true)
     }
     setResult({ isCorrect, userAnswer, timeMs, score: extras?.score, feedback: extras?.feedback })
   }
@@ -54,19 +71,24 @@ export function GenericExerciseView({ exercise, onSubmit, focusUi = false }: Pro
     onSubmit(
       result.isCorrect,
       result.userAnswer,
-      result.score != null || result.feedback
-        ? { score: result.score, feedback: result.feedback }
-        : undefined,
+      {
+        score: result.score,
+        feedback: result.feedback,
+        status: 'answered',
+        responseTimeMs: firstResponseTimeMs ?? result.timeMs,
+        firstTryFailed: firstTryFailed || !result.isCorrect,
+      },
     )
   }
 
   function handleRetry() {
+    setFirstTryFailed(true)
     setResult(null)
     setRetryKey((key) => key + 1)
   }
 
   function handleSkip() {
-    onSubmit(false, 'skip')
+    onSubmit(false, 'skip', { status: 'skipped' })
   }
 
   function handleHint() {

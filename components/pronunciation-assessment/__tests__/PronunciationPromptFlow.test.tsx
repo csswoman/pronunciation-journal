@@ -192,7 +192,11 @@ describe('PronunciationPromptFlow', () => {
     await waitFor(() => {
       expect(onComplete).toHaveBeenCalledTimes(1)
     })
-    expect(onComplete.mock.calls[0][0][0].measurement).toEqual({ kind: 'scored', score: 0 })
+    expect(onComplete.mock.calls[0][0][0]).toMatchObject({
+      signalType: 'self_report',
+      measurement: { kind: 'not_measured', abstentionReason: 'no_evaluator_available' },
+      confidence: 0.4,
+    })
   })
 
   it('hides production prompts when mic/STT cannot evaluate and auto-skips them', async () => {

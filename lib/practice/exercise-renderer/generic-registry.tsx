@@ -1,3 +1,4 @@
+
 import type { ReactNode } from 'react'
 import { MatchPairsExercise } from '@/components/exercises/MatchPairsExercise'
 import { FillBlankExercise } from '@/components/exercises/FillBlankExercise'
@@ -29,9 +30,15 @@ import type {
   TranslationEsEnExercise as TranslationEsEnExerciseType,
   CsShadowPhraseExercise as CsShadowPhraseExerciseType,
 } from '@/lib/exercises/types'
-import type { PedagogicalFeedback } from '@/lib/practice/types'
+import type { PedagogicalFeedback, PracticeResultStatus } from '@/lib/practice/types'
 
-export type GenericRenderExtras = { score?: number; feedback?: PedagogicalFeedback }
+export type GenericRenderExtras = {
+  score?: number
+  feedback?: PedagogicalFeedback
+  resultStatus?: PracticeResultStatus
+  responseTimeMs?: number
+  firstTryFailed?: boolean
+}
 
 export type GenericRenderContext = {
   onResult: (

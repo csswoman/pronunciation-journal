@@ -77,6 +77,7 @@ export function CsShadowPhraseExercise({ exercise, onResult }: Props) {
     submitted.current = true
     onResult(scoring.isCorrect, scoring.transcript, Date.now() - startMs.current, {
       score: scoring.accuracy,
+      resultStatus: 'answered',
     })
   }, [scoring, onResult])
 
@@ -92,8 +93,10 @@ export function CsShadowPhraseExercise({ exercise, onResult }: Props) {
   const handleShadowingDone = useCallback(() => {
     if (submitted.current) return
     submitted.current = true
-    onResult(false, '', Date.now() - startMs.current)
-  }, [onResult])
+    onResult(false, '', Date.now() - startMs.current, {
+      resultStatus: evalFailed ? 'evaluator_failed' : 'unscored',
+    })
+  }, [onResult, evalFailed])
 
   const isListening = status === 'listening'
   const isDone = status === 'done'

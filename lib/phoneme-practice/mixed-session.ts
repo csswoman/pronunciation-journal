@@ -142,80 +142,91 @@ export function buildAdaptiveSession(
   const canUseAbx = isB1OrAbove(userLevel)
   const focusProgress = focusContrastId ? progressMap.get(focusContrastId) : undefined
 
-  const stamp = (data: Exercise): Exercise =>
+  const stampContrast = (data: Exercise): Exercise =>
     focusContrastId ? { ...data, contrastId: focusContrastId } : data
+  const stage1: MixedExercise[] = []
+  const stage2: MixedExercise[] = []
+  const stage3: MixedExercise[] = []
+  const stage4: MixedExercise[] = []
+  const stage5: MixedExercise[] = []
 
-  const ex: MixedExercise[] = []
-
-  /**
-   * Add a generated exercise unless it declined.
-   *
-   * Generators return empty `options` when the deck cannot support a valid
-   * trial (no contrast words, a single target word, a degenerate pair). Those
-   * must be dropped here: the renderers show whatever they are given, so an
-   * empty exercise becomes an unanswerable card with silent audio.
-   */
-  const add = (data: Exercise) => {
+  const addStage1 = (data: Exercise, isContrast = false) => {
     if (data.options.length === 0) return
-    ex.push({ kind: 'phoneme', data: stamp(data) })
+    stage1.push({ kind: 'phoneme', data: isContrast ? stampContrast(data) : data })
   }
 
+  const addStage2 = (data: Exercise, isContrast = false) => {
+    if (data.options.length === 0) return
+    stage2.push({ kind: 'phoneme', data: isContrast ? stampContrast(data) : data })
+  }
+
+  // ── Stage 1: Discrimination & Contrast Perception (identify / abx, ax_same_different, odd_one_out) ──
   if (canUseAbx) {
-    // B1+: 2 ABX in place of 2 identify
+    // B1+: 2 ABX in place of 2 identify (contrast exercise)
     for (let i = 0; i < 2; i++) {
-      add(generateAbx(sound, targetWords, allSounds, allWordsBySoundId, pairs))
+      addStage1(generateAbx(sound, targetWords, allSounds, allWordsBySoundId, pairs), true)
     }
   } else {
-    // A1/A2: 2 identify
+    // A1/A2: 2 identify (single-sound exercise)
     for (let i = 0; i < 2; i++) {
-      add(generateIdentify(sound, targetWords, allSounds, allWordsBySoundId))
+      addStage1(generateIdentify(sound, targetWords, allSounds, allWordsBySoundId), false)
     }
   }
 
-  // AX same/different × 2
+  // AX same/different × 2 (contrast exercise)
   for (let i = 0; i < 2; i++) {
-    add(generateAxSameDifferent(sound, targetWords, allSounds, allWordsBySoundId))
+    addStage1(generateAxSameDifferent(sound, targetWords, allSounds, allWordsBySoundId), true)
   }
 
-  // odd_one_out × 1
-  add(generateOddOneOut(sound, targetWords, allSounds, allWordsBySoundId))
+  // odd_one_out × 1 (contrast exercise)
+  addStage1(generateOddOneOut(sound, targetWords, allSounds, allWordsBySoundId), true)
 
-  // pick_word × 1
-  add(generatePickWord(sound, targetWords, allSounds, allWordsBySoundId))
+  // ── Stage 2: Lexical Association & Minimal Pair Recognition ──
+  // pick_word × 1 (single-sound exercise)
+  addStage2(generatePickWord(sound, targetWords, allSounds, allWordsBySoundId), false)
 
-  // minimal_pair × 1 (fallback pick_word if no pairs)
+  // minimal_pair × 1 (contrast exercise, fallback pick_word if no pairs)
   const mp = generateMinimalPair(sound, pairs)
-  add(mp.options.length > 0 ? mp : generatePickWord(sound, targetWords, allSounds, allWordsBySoundId))
-
-  // dictation × 1 — listening of the target sound; attribute to focus contrast
-  // when known. Dictation carries no options, so it bypasses the `add` guard.
-  const dictation = generateDictation(sound, targetWords)
-  if (dictation.targetWord) ex.push({ kind: 'phoneme', data: stamp(dictation) })
-
-  // Production: word, then a short carrier-phrase production — only once
-  // there is prior evidence for the focus contrast (never first for a
-  // brand-new contrast) and it isn't mastered yet. Word comes before phrase
-  // per the target learning loop (word production precedes phrase production).
-  if (focusContrastId && focusProgress && !isContrastMastered(focusProgress)) {
-    // Production exercises carry no options; a missing targetWord means there
-    // is nothing to say, so skip rather than render an empty prompt.
-    const speakWord = generateSpeakWord(sound, targetWords, { maxLevel: userLevel })
-    if (speakWord.targetWord) ex.push({ kind: 'phoneme', data: stamp(speakWord) })
-    const speakPhrase = generateSpeakPhrase(sound, targetWords, { maxLevel: userLevel })
-    if (speakPhrase.targetWord) ex.push({ kind: 'phoneme', data: stamp(speakPhrase) })
+  if (mp.options.length > 0) {
+    addStage2(mp, true)
+  } else {
+    addStage2(generatePickWord(sound, targetWords, allSounds, allWordsBySoundId), false)
   }
 
+  // ── Stage 3: Listening / Dictation ──
+  // dictation × 1 — listening of the target sound (single-sound drill)
+  const dictation = generateDictation(sound, targetWords)
+  if (dictation.targetWord) stage3.push({ kind: 'phoneme', data: dictation })
+
+  // ── Stage 4: Production (Ordered: Word then Phrase) ──
+  // Production: word, then a short carrier-phrase production — scheduled
+  // specifically when prior evidence for the focus contrast exists.
+  if (focusContrastId && focusProgress && !isContrastMastered(focusProgress)) {
+    const speakWord = generateSpeakWord(sound, targetWords, { maxLevel: userLevel })
+    if (speakWord.targetWord) stage4.push({ kind: 'phoneme', data: stampContrast(speakWord) })
+    const speakPhrase = generateSpeakPhrase(sound, targetWords, { maxLevel: userLevel })
+    if (speakPhrase.targetWord) stage4.push({ kind: 'phoneme', data: stampContrast(speakPhrase) })
+  }
+
+  // ── Stage 5: Consolidation & Transfer ──
   // Optional aggregate vocabulary retrieval plus a sound-specific example drill.
   // The matching pairs come from Essential Words (or another vocabulary source),
   // never from the Sound Lab word → IPA dataset.
   const matchGroups = opts.matchPairWords
     ? generateMatchPairsFromWordBank(opts.matchPairWords, 1)
     : []
-  if (matchGroups.length > 0) ex.push({ kind: 'match_pairs', data: matchGroups[0] })
+  if (matchGroups.length > 0) stage5.push({ kind: 'match_pairs', data: matchGroups[0] })
   const reorder = generateReorderFromSoundExample(sound)
-  if (reorder) ex.push({ kind: 'reorder_words', data: reorder })
+  if (reorder) stage5.push({ kind: 'reorder_words', data: reorder })
 
-  return shuffle(ex)
+  // Shuffle within each stage to preserve pedagogical staging (Perception -> Lexicon -> Dictation -> Production -> Transfer)
+  return [
+    ...shuffle(stage1),
+    ...shuffle(stage2),
+    ...shuffle(stage3),
+    ...stage4,
+    ...shuffle(stage5),
+  ]
 }
 
 /**
