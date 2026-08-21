@@ -39,10 +39,10 @@ function Toast({ message, type }: { message: string; type: "success" | "error" }
     <div
       role="status"
       className={cn(
-        "flex items-center gap-2 rounded-md border px-4 py-3 font-caption font-medium shadow-md",
+        "flex items-center gap-2 rounded-md border px-4 py-3 font-caption font-medium shadow-sm transition-all",
         type === "success"
-          ? "border-[var(--success)] bg-success text-success"
-          : "border-[var(--error)] bg-error text-error",
+          ? "border-border-subtle bg-success-soft text-success"
+          : "border-border-subtle bg-error-soft text-error",
       )}
     >
       {message}
@@ -125,6 +125,7 @@ export default function ProfileSettings() {
 
   const topicsLevel = level.toLowerCase() as FocusLevel;
 
+
   const header = (
     <PageHeader
       kicker="Cuenta"
@@ -136,7 +137,7 @@ export default function ProfileSettings() {
   if (loading) {
     return (
       <PageLayout archetype="catalog">
-        <div className="flex w-full max-w-xl flex-col gap-8">
+        <div className="flex w-full max-w-3xl flex-col gap-8 pb-24 md:pb-0">
           {header}
           <div className="flex items-center gap-3 text-fg-muted">
             <div className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
@@ -150,20 +151,20 @@ export default function ProfileSettings() {
   if (isGuest) {
     return (
       <PageLayout archetype="catalog">
-        <div className="flex w-full max-w-xl flex-col gap-8">
+        <div className="flex w-full max-w-3xl flex-col gap-8 pb-24 md:pb-0">
           {header}
           {toast && <Toast message={toast.message} type={toast.type} />}
 
           <div className="flex flex-col gap-3 rounded-xl border border-border-subtle bg-surface-raised px-5 py-5 sm:flex-row sm:items-center sm:justify-between">
             <div className="layout-stack-tight min-w-0">
-              <p className="font-label text-fg m-0">Estás explorando sin cuenta</p>
-              <p className="font-caption text-fg-muted m-0">
-                Puedes ajustar tema, sonidos y nivel. Crea una cuenta para conservar el progreso.
+              <p className="m-0 font-label text-fg">Estás explorando sin cuenta</p>
+              <p className="m-0 font-caption text-fg-muted">
+                Puedes ajustar tu nivel y preferencias de aprendizaje. Crea una cuenta para conservar el progreso.
               </p>
             </div>
             <Link
               href="/login?intent=save&mode=register"
-              className="focus-ring btn-primary inline-flex shrink-0 items-center justify-center rounded-md px-5 py-2.5 font-label"
+              className="focus-ring inline-flex shrink-0 items-center justify-center rounded-md bg-cta-bg px-5 py-2.5 font-label text-cta-fg transition-colors hover:bg-cta-bg-hover"
             >
               Guardar progreso
             </Link>
@@ -174,7 +175,7 @@ export default function ProfileSettings() {
             onLevelChange={(next) => void handleLevelChange(next)}
             topicsLevel={topicsLevel}
             onTopicsOpen={() => setTopicsOpen(true)}
-            hint="Tema y nivel locales. Crea una cuenta para no perder el progreso de práctica."
+            hint="Tu nivel y temas conocidos se guardan en este dispositivo. Crea una cuenta para no perder el progreso de práctica."
           />
           <LearningFocusTopicsSheet
             open={topicsOpen}
@@ -190,82 +191,89 @@ export default function ProfileSettings() {
 
   return (
     <PageLayout archetype="catalog">
-      <div className="flex w-full max-w-xl flex-col gap-10">
+      <div className="flex w-full max-w-5xl flex-col gap-10 pb-24 md:pb-0">
         {header}
         {toast && <Toast message={toast.message} type={toast.type} />}
 
-        <section aria-labelledby="profile-identity-title" className="layout-stack-loose">
-          <h2 id="profile-identity-title" className="sr-only">
-            Identidad
-          </h2>
-          <div className="layout-stack rounded-xl border border-border-subtle bg-surface-raised p-5">
-            <ProfileAvatarCard
-              avatarUrl={preferences?.avatar_url}
-              initials={initials}
-              displayName={displayName}
-              email={user?.email}
-              onAvatarUpdate={async (file) => {
-                await updateAvatar(file);
-                showToast("Foto de perfil actualizada");
+        <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_18rem]">
+          <div className="layout-stack-loose min-w-0">
+            <section aria-labelledby="profile-identity-title" className="layout-stack-loose">
+              <h2 id="profile-identity-title" className="sr-only">
+                Identidad
+              </h2>
+              <div className="layout-stack rounded-xl border border-border-subtle bg-surface-raised p-5">
+                <ProfileAvatarCard
+                  avatarUrl={preferences?.avatar_url}
+                  initials={initials}
+                  displayName={displayName}
+                  email={user?.email}
+                  onAvatarUpdate={async (file) => {
+                    await updateAvatar(file);
+                    showToast("Foto de perfil actualizada");
+                  }}
+                />
+                <div className="border-t border-border-subtle pt-4">
+                  <ProfileNameCard
+                    currentName={preferences?.full_name || ""}
+                    onSave={async (name) => {
+                      await updateFullName(name);
+                      showToast("Nombre actualizado");
+                    }}
+                  />
+                </div>
+              </div>
+            </section>
+
+            <ProfilePreferencesPanel
+              level={level}
+              onLevelChange={(next) => void handleLevelChange(next)}
+              topicsLevel={topicsLevel}
+              onTopicsOpen={() => setTopicsOpen(true)}
+              interests={preferences?.interests ?? []}
+              onInterestsSave={async (next) => {
+                await updateInterests(next);
+                showToast("Intereses guardados");
               }}
+              hint="Personaliza tu experiencia y las recomendaciones. Tu progreso se conserva aunque cambies estas opciones."
             />
-            <div className="border-t border-border-subtle pt-4">
-              <ProfileNameCard
-                currentName={preferences?.full_name || ""}
-                onSave={async (name) => {
-                  await updateFullName(name);
-                  showToast("Nombre actualizado");
-                }}
-              />
+
+            <LearningFocusTopicsSheet
+              open={topicsOpen}
+              level={topicsLevel}
+              claimedSlugs={claimedSlugs}
+              onClose={() => setTopicsOpen(false)}
+              onClaim={handleTopicsClaim}
+            />
+          </div>
+
+          <section
+            aria-labelledby="profile-account-title"
+            className="layout-stack-loose lg:sticky lg:top-6"
+          >
+            <div className="layout-stack-tight px-0.5">
+              <h2 id="profile-account-title" className="m-0 font-label text-fg">
+                Cuenta y seguridad
+              </h2>
+              <p className="m-0 font-caption text-fg-muted">
+                Cambios poco frecuentes de acceso e identidad.
+              </p>
             </div>
-          </div>
-        </section>
-
-        <ProfilePreferencesPanel
-          level={level}
-          onLevelChange={(next) => void handleLevelChange(next)}
-          topicsLevel={topicsLevel}
-          onTopicsOpen={() => setTopicsOpen(true)}
-          interests={preferences?.interests ?? []}
-          onInterestsSave={async (next) => {
-            await updateInterests(next);
-            showToast("Intereses guardados");
-          }}
-          hint="Esto ajusta recomendaciones. Tu progreso se conserva; puedes seguir explorando cualquier contenido."
-        />
-
-        <LearningFocusTopicsSheet
-          open={topicsOpen}
-          level={topicsLevel}
-          claimedSlugs={claimedSlugs}
-          onClose={() => setTopicsOpen(false)}
-          onClaim={handleTopicsClaim}
-        />
-
-        <section aria-labelledby="profile-account-title" className="layout-stack-loose">
-          <div className="layout-stack-tight px-0.5">
-            <h2 id="profile-account-title" className="font-label text-fg m-0">
-              Cuenta
-            </h2>
-            <p className="font-caption text-fg-muted m-0">Datos de acceso y seguridad.</p>
-          </div>
-          <div className="overflow-hidden rounded-xl border border-border-subtle bg-surface-raised divide-y divide-border-subtle">
-            <div className="px-5 py-4">
-              <div className="flex items-center justify-between gap-3">
+            <div className="divide-y divide-border-subtle border-y border-border-subtle">
+              <div className="flex items-center justify-between gap-3 py-4">
                 <span className="font-caption text-fg-muted">Correo</span>
                 <span className="truncate font-caption font-medium text-fg">{user?.email}</span>
               </div>
+              <div className="py-4">
+                <ProfilePasswordCard
+                  onSave={async (password) => {
+                    await updatePassword(password);
+                    showToast("Contraseña actualizada");
+                  }}
+                />
+              </div>
             </div>
-            <div className="px-5 py-4">
-              <ProfilePasswordCard
-                onSave={async (password) => {
-                  await updatePassword(password);
-                  showToast("Contraseña actualizada");
-                }}
-              />
-            </div>
-          </div>
-        </section>
+          </section>
+        </div>
       </div>
     </PageLayout>
   );
