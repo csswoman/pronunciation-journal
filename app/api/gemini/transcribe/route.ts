@@ -1,7 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { requireSameOrigin, requireUser, rateLimit, validateBody, publicErrorResponse } from "@/lib/api/guards";
+import { requireSameOrigin, requireUser, checkLayeredRateLimit, validateBody, publicErrorResponse } from "@/lib/api/guards";
 import { buildTranscriptionPrompt } from "@/lib/ai-prompts";
 import { getErrorStatus, shouldTryNextModel, FALLBACK_MODELS } from "@/lib/gemini/fallback";
 import { withGeminiTimeout } from "@/lib/gemini/client";
@@ -107,11 +107,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const { user, error: authError } = await requireUser(request);
   if (authError) return authError as NextResponse;
 
-  // 2. Rate limit — tighter for transcription (costs more per call)
-  const { limited, error: rateLimitError } = await rateLimit(`/api/gemini/transcribe:${user.id}`, {
-    max: 20,
-    windowMs: 60_000,
-    meta: { endpoint: "/api/gemini/transcribe", userId: user.id },
+  // 2. Layered rate limit — tighter for transcription (costs more per call)
+  const { limited, error: rateLimitError } = await checkLayeredRateLimit({
+    request,
+    user,
+    endpoint: "/api/gemini/transcribe",
+    maxPermanent: 20,
+    maxAnonymous: 3,
   });
   if (limited) return rateLimitError as NextResponse;
 

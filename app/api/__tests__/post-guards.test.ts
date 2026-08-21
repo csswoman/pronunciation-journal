@@ -47,7 +47,11 @@ describe("POST API guard coverage", () => {
       if (!SAME_ORIGIN_EXEMPTIONS.has(rel) && !source.includes("requireSameOrigin(")) {
         issues.push("same-origin");
       }
-      if (!source.includes("rateLimit(")) {
+      if (rel.startsWith("app/api/gemini/")) {
+        if (!source.includes("checkLayeredRateLimit(")) {
+          issues.push("layered-rate-limit");
+        }
+      } else if (!source.includes("rateLimit(") && !source.includes("checkLayeredRateLimit(")) {
         issues.push("rate-limit");
       }
 

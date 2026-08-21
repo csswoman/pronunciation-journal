@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { requireSameOrigin, requireUser, rateLimit, validateBody } from '@/lib/api/guards'
+import { requireSameOrigin, requireUser, checkLayeredRateLimit, validateBody } from '@/lib/api/guards'
 import { callGeminiJson, parseGeminiJson } from '@/lib/gemini/json-route'
 import {
   buildJournalNudgePrompt,
@@ -17,10 +17,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const { user, error } = await requireUser(request)
   if (error) return error as NextResponse
 
-  const limited = await rateLimit(`/api/gemini/journal-nudge:${user.id}`, {
-    max: 10,
-    windowMs: 60_000,
-    meta: { endpoint: '/api/gemini/journal-nudge', userId: user.id },
+  const limited = await checkLayeredRateLimit({
+    request,
+    user,
+    endpoint: '/api/gemini/journal-nudge',
+    maxPermanent: 10,
+    maxAnonymous: 3,
   })
   if (limited.limited) return limited.error as NextResponse
 

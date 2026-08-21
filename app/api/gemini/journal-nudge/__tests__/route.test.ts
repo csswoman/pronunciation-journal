@@ -11,6 +11,7 @@ const mocks = vi.hoisted(() => ({
 vi.mock('@/lib/api/guards', () => ({
   requireSameOrigin: mocks.requireSameOrigin,
   requireUser: mocks.requireUser,
+  checkLayeredRateLimit: mocks.rateLimit,
   rateLimit: mocks.rateLimit,
   validateBody: mocks.validateBody,
 }))

@@ -115,7 +115,6 @@ export async function streamWithFallback(
   abortSignal: AbortSignal,
   limits: StreamLimitOverrides = {}
 ): Promise<void> {
-  let lastError: unknown;
   let bytesStreamed = 0;
   let chunksStreamed = 0;
   let closed = false;
@@ -188,13 +187,11 @@ export async function streamWithFallback(
       return;
     } catch (err: unknown) {
       if (abortSignal.aborted || isAbortError(err)) { safeClose(); return; }
-      lastError = err;
-      console.warn("[stream] model failed", { model, message: String((err as { message?: unknown })?.message) });
       if (!shouldTryNextModel(err)) break;
     }
   }
 
-  safeEnqueue({ type: "error", message: String((lastError as { message?: unknown })?.message ?? "All models failed") });
+  safeEnqueue({ type: "error", message: "AI response failed. Please try again." });
   safeClose();
 }
 

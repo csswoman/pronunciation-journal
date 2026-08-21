@@ -11,8 +11,6 @@ const withSerwist = withSerwistInit({
   ],
 });
 
-const isDev = process.env.NODE_ENV === "development";
-
 /**
  * Next injects `polyfill-module` for all browsers. Those polyfills target
  * browsers older than Next 16's supported set; alias them out so modern
@@ -37,23 +35,6 @@ const nextConfig = {
       {
         source: "/:path*",
         headers: [
-          {
-            key: "Content-Security-Policy",
-            value: [
-              "default-src 'self'",
-              "base-uri 'self'",
-              "frame-ancestors 'none'",
-              "form-action 'self'",
-              "frame-src 'self' https://www.youtube-nocookie.com https://www.youtube.com",
-              "img-src 'self' https: data:",
-              "media-src 'self' https: data:",
-              // 'unsafe-eval' is required in dev for React Fast Refresh (HMR).
-              // It is intentionally excluded from production builds.
-              `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
-              "style-src 'self' 'unsafe-inline'",
-              "connect-src 'self' https:",
-            ].join("; "),
-          },
           { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
           { key: "Cross-Origin-Resource-Policy", value: "same-origin" },
           { key: "Origin-Agent-Cluster", value: "?1" },

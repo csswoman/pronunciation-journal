@@ -53,6 +53,7 @@ export async function cleanupAdditionalRlsRows(admin, users) {
     await admin.from("pronunciation_feedback_evidence").delete().eq("user_id", user.id);
     await admin.from("essential_word_contrast_observations").delete().eq("user_id", user.id);
     await admin.from("essential_word_blank_quality").delete().eq("user_id", user.id);
+    await admin.from("user_roles").delete().eq("user_id", user.id);
   }
 }
 
@@ -186,4 +187,26 @@ export async function runAdditionalRlsCases(ctx) {
     window_start: new Date().toISOString(),
   });
   assertHasError(rateWrite, "authenticated user can write rate_limits");
+
+  // user_roles: strictly inaccessible to authenticated clients
+  assertInaccessible(
+    await userA.client.from("user_roles").select("role").eq("user_id", userA.id),
+    "authenticated user can read user_roles"
+  );
+  const userRoleWrite = await userA.client.from("user_roles").insert({
+    user_id: userA.id,
+    role: "admin",
+  });
+  assertHasError(userRoleWrite, "authenticated user can write user_roles");
+
+  // user_profiles role escalation prevention: updating role must fail or be neutralised
+  const profileEscalationUpdate = await userA.client
+    .from("user_profiles")
+    .update({ role: "admin" })
+    .eq("id", userA.id);
+  // Either column grant rejection error, or trigger neutralisation
+  if (!profileEscalationUpdate.error) {
+    const adminCheck = await admin.from("user_profiles").select("role").eq("id", userA.id).single();
+    assert(adminCheck.data?.role !== "admin", "user profile escalated role to admin on update");
+  }
 }
