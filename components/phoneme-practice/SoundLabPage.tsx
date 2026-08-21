@@ -5,8 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Play } from "@/components/icons";
 import PageLayout from "@/components/layout/PageLayout";
 import PageHeader from "@/components/layout/PageHeader";
-import MinimalPairsWorkspace from "./MinimalPairsWorkspace";
-import { PronunciationPathPage } from "@/components/courses/pronunciation-path/PronunciationPathPage";
+import dynamic from "next/dynamic";
 import { SoundLabFilterRow } from "./SoundLabFilterRow";
 import { EarAndVoiceHero } from "./EarAndVoiceHero";
 import { SoundLabLessonGrid } from "./SoundLabLessonGrid";
@@ -18,9 +17,20 @@ import { ipaFromLessonTitle } from "@/lib/sound-lab/display";
 import { useDialogFocus } from "@/hooks/useDialogFocus";
 import { useSoundLabWorkspace } from "@/hooks/useSoundLabWorkspace";
 import { SoundsWorkspaceTabs } from "./SoundsWorkspaceTabs";
-import { IPAReferenceDialog } from "./IPAReferenceDialog";
 import { SoundLabFocusBanner } from "./SoundLabFocusBanner";
 import { SoundLabDetailDialog } from "./SoundLabDetailDialog";
+
+const MinimalPairsWorkspace = dynamic(() => import("./MinimalPairsWorkspace"), {
+  loading: () => <div className="p-8 text-center text-fg-muted font-caption">Cargando pares mínimos…</div>,
+});
+const PronunciationPathPage = dynamic(
+  () => import("@/components/courses/pronunciation-path/PronunciationPathPage").then((m) => m.PronunciationPathPage),
+  { loading: () => <div className="p-8 text-center text-fg-muted font-caption">Cargando ruta de pronunciación…</div> },
+);
+const IPAReferenceDialog = dynamic(
+  () => import("./IPAReferenceDialog").then((m) => m.IPAReferenceDialog),
+  { ssr: false },
+);
 import {
   ALL_GROUP_SECTIONS,
   continueCtaLabel,
@@ -229,7 +239,7 @@ export default function SoundLabPage({ userId }: SoundLabPageProps) {
         />
       ) : null}
 
-      <IPAReferenceDialog open={isIPAOpen} onClose={closeIPA} lessons={allLessons} />
+      {isIPAOpen && <IPAReferenceDialog open={isIPAOpen} onClose={closeIPA} lessons={allLessons} />}
     </PageLayout>
   );
 }

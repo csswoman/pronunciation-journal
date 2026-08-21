@@ -108,12 +108,19 @@ export interface ProgressPageData {
 
 // ── Queries ───────────────────────────────────────────────────────────────────
 
+/** Cap for the /progress recent-session strip — older sessions are truncated. */
+export const RECENT_ACTIVITY_SESSION_LIMIT = 15
+/** Cap for contrast rows pulled into the skill-profile phoneme strip. */
+export const SKILL_PROFILE_CONTRAST_LIMIT = 40
+/** Rolling window (days) for completion heatmap and fluency answer history. */
+export const PROGRESS_ANSWER_WINDOW_DAYS = 30
+
 /** How many qualifying practice days in a window of N days (any context). */
-async function getDailyCompletionStats(userId: string): Promise<DailyCompletionStats> {
+export async function getDailyCompletionStats(userId: string): Promise<DailyCompletionStats> {
   const supabase = await createSupabaseServerClient()
 
   const since30 = new Date()
-  since30.setDate(since30.getDate() - 30)
+  since30.setDate(since30.getDate() - PROGRESS_ANSWER_WINDOW_DAYS)
 
   const { data } = await supabase
     .from('answer_history')
@@ -166,7 +173,7 @@ async function getDailyCompletionStats(userId: string): Promise<DailyCompletionS
   }
 }
 
-async function getWeeklySummaryStats(userId: string): Promise<WeeklySummaryStats> {
+export async function getWeeklySummaryStats(userId: string): Promise<WeeklySummaryStats> {
   const supabase = await createSupabaseServerClient()
   const since7 = startOfRollingWindow(7)
 
@@ -189,7 +196,7 @@ async function getWeeklySummaryStats(userId: string): Promise<WeeklySummaryStats
   }
 }
 
-async function getAccuracyStats(userId: string): Promise<AccuracyStats> {
+export async function getAccuracyStats(userId: string): Promise<AccuracyStats> {
   const supabase = await createSupabaseServerClient()
 
   const since7 = new Date()
@@ -221,7 +228,7 @@ async function getAccuracyStats(userId: string): Promise<AccuracyStats> {
   }
 }
 
-async function getSkillProfileData(userId: string): Promise<SkillProfileData> {
+export async function getSkillProfileData(userId: string): Promise<SkillProfileData> {
   const supabase = await createSupabaseServerClient()
 
   const [wordBankResult, phonemeResult, core1000Result, lessonsResult] = await Promise.all([
@@ -237,7 +244,7 @@ async function getSkillProfileData(userId: string): Promise<SkillProfileData> {
       .eq('user_id', userId)
       .gt('total_attempts', 0)
       .order('total_attempts', { ascending: false })
-      .limit(40),
+      .limit(SKILL_PROFILE_CONTRAST_LIMIT),
 
     supabase
       .from('answer_history')
@@ -299,7 +306,7 @@ async function getSkillProfileData(userId: string): Promise<SkillProfileData> {
   }
 }
 
-async function getCoachInsights(userId: string): Promise<CoachInsights> {
+export async function getCoachInsights(userId: string): Promise<CoachInsights> {
   try {
     const supabase = await createSupabaseServerClient()
     const [{ data }, { data: profile }] = await Promise.all([
@@ -329,10 +336,10 @@ async function getCoachInsights(userId: string): Promise<CoachInsights> {
   }
 }
 
-async function getFluencyProfile(userId: string, skillProfile: SkillProfileData): Promise<FluencyProfileData> {
+export async function getFluencyProfile(userId: string, skillProfile: SkillProfileData): Promise<FluencyProfileData> {
   const supabase = await createSupabaseServerClient()
   const since30 = new Date()
-  since30.setDate(since30.getDate() - 30)
+  since30.setDate(since30.getDate() - PROGRESS_ANSWER_WINDOW_DAYS)
   const since14 = new Date()
   since14.setDate(since14.getDate() - 14)
   const since7 = new Date()
@@ -409,7 +416,7 @@ async function getFluencyProfile(userId: string, skillProfile: SkillProfileData)
   return { scores, comparisonLabel }
 }
 
-async function getRecentActivitySessions(userId: string): Promise<ActivitySessionSummary[]> {
+export async function getRecentActivitySessions(userId: string): Promise<ActivitySessionSummary[]> {
   try {
     const supabase = await createSupabaseServerClient()
     const { data, error } = await supabase
@@ -419,7 +426,7 @@ async function getRecentActivitySessions(userId: string): Promise<ActivitySessio
       )
       .eq('user_id', userId)
       .order('completed_at', { ascending: false })
-      .limit(15)
+      .limit(RECENT_ACTIVITY_SESSION_LIMIT)
 
     if (error) throw error
 
@@ -484,7 +491,7 @@ function attributedAnswerFacts(rows: Array<{
   })
 }
 
-async function getProgressProjections(userId: string): Promise<ProgressProjections> {
+export async function getProgressProjections(userId: string): Promise<ProgressProjections> {
   const supabase = await createSupabaseServerClient()
   const [sessions, completions, answers] = await Promise.all([
     supabase.from('activity_sessions')

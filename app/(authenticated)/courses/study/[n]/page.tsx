@@ -5,6 +5,7 @@ import { getDeckForLesson, getDerivedRelated } from "@/lib/courses/grammar-deck/
 import { getLessonByNumber, parseCoursePathTrackId } from "@/lib/courses/curriculumIndex";
 import type { CefrLevel } from "@/lib/essential-words/types";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { getSupabaseServerUser } from "@/lib/supabase/session";
 
 interface PageProps {
   params: Promise<{ n: string }>;
@@ -33,8 +34,8 @@ export default async function CourseStudyPage({ params, searchParams }: PageProp
   }
 
   const CEFR_TRACKS = ["a1", "a2", "b1", "b2", "c1"] as const;
+  const user = await getSupabaseServerUser();
   const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
   const { data: profile } = user
     ? await supabase.from("user_profiles").select("cefr_level").eq("id", user.id).maybeSingle()
     : { data: null };

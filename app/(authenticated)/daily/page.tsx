@@ -3,7 +3,7 @@ export const dynamic = 'force-dynamic'
 import DailyChecklist, { type ConceptLesson } from '@/components/daily/DailyChecklist'
 import { getTodaysMiniLesson } from '@/lib/content/lessons'
 import { getDailyStreak } from '@/lib/daily/streak'
-import { createSupabaseServerClient } from '@/lib/supabase/server'
+import { getSupabaseServerUser } from '@/lib/supabase/session'
 
 export default async function DailyPage({
   searchParams,
@@ -25,8 +25,7 @@ export default async function DailyPage({
 
   let streak: number | null = null
   try {
-    const supabase = await createSupabaseServerClient()
-    const { data: { user } } = await supabase.auth.getUser()
+    const user = await getSupabaseServerUser()
     if (user) {
       const result = await getDailyStreak(user.id)
       streak = result.currentStreak

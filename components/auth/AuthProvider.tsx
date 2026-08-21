@@ -18,6 +18,7 @@ import { signInAsGuest } from "@/lib/supabase/auth-actions";
 import { useLoadingWords } from "@/hooks/useLoadingWords";
 import { initSyncListeners } from "@/lib/sync/init-sync-listeners";
 import { useOAuthIdentityRecovery } from "@/components/auth/useOAuthIdentityRecovery";
+import { clearClientCachesOnLogout } from "@/lib/auth/cache-cleanup";
 
 export type AuthContextValue = {
   user: User | null;
@@ -64,6 +65,7 @@ export default function AuthProvider({
       const { flushOutbox } = await import("@/lib/sync/sync-manager");
       await flushOutbox(user.id).catch(() => {});
     }
+    await clearClientCachesOnLogout();
     // Allow a fresh anonymous bootstrap after sign-out (explore-first).
     guestBootstrapTried.current = false;
     const supabase = getSupabaseBrowserClient();
@@ -72,79 +74,92 @@ export default function AuthProvider({
 
   useOAuthIdentityRecovery();
 
+  const currentUserIdRef = useRef<string | null>(initialUser?.id ?? null);
+  useEffect(() => {
+    currentUserIdRef.current = user?.id ?? null;
+  }, [user?.id]);
+
   useEffect(() => {
     if (!supabaseEnabled) {
       setLoading(false);
       return;
     }
 
-    // Resolve the client per call site — never close over a long-lived instance.
-    // After HMR / dep repair, a captured client can keep disposed webpack bindings
-    // and throw opaque errors like `reading 'M_ID'` on every `.from()`.
     let cancelled = false;
     let cleanupSyncListeners = () => {};
+    const hydrationPromises = new Map<string, Promise<void>>();
+
     void import("@/lib/db").then(async ({ ensureDbReady }) => {
       await ensureDbReady().catch(() => {});
       if (cancelled) return;
-      cleanupSyncListeners = initSyncListeners(user?.id ?? null);
+      cleanupSyncListeners = initSyncListeners(currentUserIdRef.current);
     });
+
     const hydrateCEFR = async (userId: string) => {
-      try {
-        const { claimGuestPlacement } = await import("@/lib/courses/guest-assessment");
-        const { claimGuestPronunciationDiagnostic } = await import(
-          "@/lib/pronunciation/assessment/guest-transfer"
-        );
-        await claimGuestPlacement(userId);
-        await claimGuestPronunciationDiagnostic(userId);
+      if (hydrationPromises.has(userId)) return hydrationPromises.get(userId)!;
+      const promise = (async () => {
+        try {
+          const { claimGuestPlacement } = await import("@/lib/courses/guest-assessment");
+          const { claimGuestPronunciationDiagnostic } = await import(
+            "@/lib/pronunciation/assessment/guest-transfer"
+          );
+          await claimGuestPlacement(userId);
+          await claimGuestPronunciationDiagnostic(userId);
 
-        const { data } = await getSupabaseBrowserClient()
-          .from("user_profiles" as never)
-          .select("cefr_level")
-          .eq("id", userId)
-          .maybeSingle();
-        const profile = data as { cefr_level?: string } | null;
+          const { data } = await getSupabaseBrowserClient()
+            .from("user_profiles" as never)
+            .select("cefr_level")
+            .eq("id", userId)
+            .maybeSingle();
+          const profile = data as { cefr_level?: string } | null;
 
-        const [
-          { db, ensureDbReady },
-          { getUserLearningState },
-          { hydrateFromRemote },
-          { normalizeCEFR },
-          { hydrateLessonCompletions },
-        ] = await Promise.all([
-          import("@/lib/db"),
-          import("@/lib/ai-practice/load-state"),
-          import("@/lib/ai-practice/queries"),
-          import("@/lib/exercises/cefr"),
-          import("@/lib/courses/queries"),
-        ]);
+          const [
+            { db, ensureDbReady },
+            { getUserLearningState },
+            { hydrateFromRemote },
+            { normalizeCEFR },
+            { hydrateLessonCompletions },
+          ] = await Promise.all([
+            import("@/lib/db"),
+            import("@/lib/ai-practice/load-state"),
+            import("@/lib/ai-practice/queries"),
+            import("@/lib/exercises/cefr"),
+            import("@/lib/courses/queries"),
+          ]);
 
-        await ensureDbReady();
-        await hydrateFromRemote(userId);
-        await hydrateLessonCompletions(userId);
-        if (!profile?.cefr_level) return;
+          await ensureDbReady();
+          await hydrateFromRemote(userId);
+          await hydrateLessonCompletions(userId);
+          if (!profile?.cefr_level) return;
 
-        const nextLevel = normalizeCEFR(profile.cefr_level);
-        const existing = await db.learningState.get(userId);
-        if (existing) {
+          const nextLevel = normalizeCEFR(profile.cefr_level);
+          const existing = await db.learningState.get(userId);
+          if (existing) {
+            await db.learningState.put({
+              ...existing,
+              state: {
+                ...existing.state,
+                level: { ...existing.state.level, cefrEstimate: nextLevel },
+              },
+              updatedAt: new Date().toISOString(),
+            });
+            return;
+          }
+          const base = await getUserLearningState(userId);
           await db.learningState.put({
-            ...existing,
-            state: {
-              ...existing.state,
-              level: { ...existing.state.level, cefrEstimate: nextLevel },
-            },
+            userId,
+            state: { ...base, level: { ...base.level, cefrEstimate: nextLevel } },
             updatedAt: new Date().toISOString(),
           });
-          return;
+        } catch {
+          /* hydration is best-effort */
         }
-        const base = await getUserLearningState(userId);
-        await db.learningState.put({
-          userId,
-          state: { ...base, level: { ...base.level, cefrEstimate: nextLevel } },
-          updatedAt: new Date().toISOString(),
-        });
-      } catch {
-        /* hydration is best-effort */
-      }
+      })().finally(() => {
+        hydrationPromises.delete(userId);
+      });
+
+      hydrationPromises.set(userId, promise);
+      return promise;
     };
 
     const bootstrapGuestIfNeeded = async (current: Session | null) => {
@@ -166,9 +181,11 @@ export default function AuthProvider({
       const { session: resolved, didBootstrap } = hadUser
         ? { session: s, didBootstrap: false }
         : await bootstrapGuestIfNeeded(s);
+      const nextUserId = resolved?.user?.id ?? null;
+      currentUserIdRef.current = nextUserId;
       setSession(resolved);
       setUser(resolved?.user ?? null);
-      if (resolved?.user?.id) void hydrateCEFR(resolved.user.id);
+      if (nextUserId) void hydrateCEFR(nextUserId);
       setLoading(false);
       // Re-run RSC loaders now that the anonymous cookie exists.
       if (didBootstrap) router.refresh();
@@ -176,10 +193,22 @@ export default function AuthProvider({
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, s) => {
+    } = supabase.auth.onAuthStateChange((event, s) => {
+      const nextUserId = s?.user?.id ?? null;
+      const userIdChanged = nextUserId !== currentUserIdRef.current;
+      currentUserIdRef.current = nextUserId;
       setSession(s);
       setUser(s?.user ?? null);
-      if (s?.user?.id) void hydrateCEFR(s.user.id);
+
+      if (userIdChanged) {
+        cleanupSyncListeners();
+        cleanupSyncListeners = initSyncListeners(nextUserId);
+      }
+
+      // Avoid re-running full remote hydration on background events when user hasn't changed
+      if (nextUserId && userIdChanged) {
+        void hydrateCEFR(nextUserId);
+      }
     });
 
     return () => {
@@ -187,7 +216,7 @@ export default function AuthProvider({
       cleanupSyncListeners();
       subscription.unsubscribe();
     };
-  }, [initialUser, router, supabaseEnabled, user?.id]);
+  }, [initialUser, router, supabaseEnabled]);
 
   const value = useMemo<AuthContextValue>(
     () => ({
