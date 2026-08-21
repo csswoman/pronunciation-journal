@@ -23,12 +23,12 @@ export default function HomePronunciationPrompt({
 
   if (compact) {
     return (
-      <section className="home-sidebar-card flex flex-col gap-2" aria-labelledby="pronunciation-prompt-compact-title">
+      <section className="home-sidebar-card home-sidebar-card--compact flex h-full flex-col gap-1.5" aria-labelledby="pronunciation-prompt-compact-title">
         <span className="font-kicker text-fg-subtle">Diagnóstico oral</span>
         <h2 id="pronunciation-prompt-compact-title" className="font-label text-fg">
           Evalúa tu pronunciación
         </h2>
-        <p className="font-body-sm text-fg-muted">
+        <p className="font-caption line-clamp-2 text-fg-muted">
           Graba tu voz para ver qué sonidos necesitas reforzar.
         </p>
         {cta}

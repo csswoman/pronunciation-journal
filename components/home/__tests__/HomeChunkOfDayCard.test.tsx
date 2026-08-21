@@ -36,4 +36,24 @@ describe("HomeChunkOfDayCard", () => {
       expect(screen.getByText("Chunk del día")).toBeInTheDocument();
     });
   });
+
+  it("toggles content language between ES (meaning) and EN (example)", () => {
+    render(<HomeChunkOfDayCard />);
+    const esButton = screen.getByRole("button", { name: "ES" });
+    const enButton = screen.getByRole("button", { name: "EN" });
+
+    expect(esButton).toHaveAttribute("aria-pressed", "true");
+    expect(enButton).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByText("Significado")).toBeInTheDocument();
+
+    fireEvent.click(enButton);
+
+    expect(enButton).toHaveAttribute("aria-pressed", "true");
+    expect(esButton).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByText("Ejemplo")).toBeInTheDocument();
+
+    fireEvent.click(esButton);
+    expect(esButton).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByText("Significado")).toBeInTheDocument();
+  });
 });

@@ -3,8 +3,9 @@
 // Planned structure:
 // <HomeCommandGrid>
 //   review / activation (fold owners only)
-//   main: focus + plan (+ done) · setup reminders only below plan
-//   aside: word · chunk · vocab · pronunciation · speak · journal
+//   main: focus + plan (+ done)
+//         below: [ruta | diagnóstico] · speak · journal
+//   aside: word · chunk · vocab · pronunciation lab
 // </HomeCommandGrid>
 
 import { useCallback, useState } from "react";
@@ -88,22 +89,21 @@ export default function HomeCommandGrid({
   }, []);
 
   const reviewDue = wordsDueCount + soundsDueCount > 0;
-  const showReviewBanner = reviewDue && planSettled && !reviewIsEntry;
+  const showReviewBanner = reviewDue && (!planSettled || !reviewIsEntry);
   const isNewLearner = !placementState.hasMeaningfulProgress;
   const needsPlacement = !placementState.hasPlacement;
   const needsPronunciation = !pronunciationDiagnosticState.hasPronunciationDiagnostic;
   const showActivation = planSettled && !reviewDue && planEmpty && isNewLearner;
-  // Setup is optional — below the plan, never competing with editorial or practice.
   const showPlacementBelow =
     planSettled && needsPlacement && !showActivation;
   const showPronunciationBelow =
     planSettled && needsPronunciation && !showActivation;
   const showPlanExtras = planSettled && !planEmpty;
   const showPostPlan = showPlanExtras && allDone;
-  const showDailyEditorial = planSettled;
+  const showSpeakBelow = showPlanExtras && !allDone;
 
   const showGuestSaveStrip = isGuest && planSettled && !showActivation;
-  const showSetupBelow = showPlacementBelow || showPronunciationBelow;
+  const showSetupPair = showPlacementBelow || showPronunciationBelow;
 
   return (
     <div className="home-command-grid">
@@ -155,25 +155,35 @@ export default function HomeCommandGrid({
           </section>
         ) : null}
 
-        {showSetupBelow ? (
-          <div className="home-command-below-plan" aria-label="Ajustes opcionales">
-            {showPlacementBelow ? <HomePlacementPrompt compact /> : null}
-            {showPronunciationBelow ? <HomePronunciationPrompt compact /> : null}
-          </div>
-        ) : null}
+        <div className="home-command-below-plan">
+          {showSetupPair ? (
+            <div
+              className="home-command-setup-pair"
+              aria-label="Ajustes opcionales"
+            >
+              {showPlacementBelow ? <HomePlacementPrompt compact /> : null}
+              {showPronunciationBelow ? (
+                <HomePronunciationPrompt compact />
+              ) : null}
+            </div>
+          ) : null}
+          {planSettled ? (
+            <div
+              className="home-command-setup-pair"
+              aria-label="Hablar y escribir"
+            >
+              {showSpeakBelow ? <HomeSpeakPrompt arc={arc} /> : null}
+              <HomeJournalCard />
+            </div>
+          ) : null}
+        </div>
       </div>
 
-      <aside className="home-command-aside" aria-label="Práctica sugerida">
-        {showDailyEditorial ? (
-          <>
-            <HomeWordOfDayCard />
-            <HomeChunkOfDayCard />
-          </>
-        ) : null}
-        {showPlanExtras ? <EssentialWordsProgressCard /> : null}
+      <aside className="home-command-aside flex flex-col gap-4" aria-label="Práctica sugerida">
+        <HomeWordOfDayCard profileLevel={profileLevel} />
+        <HomeChunkOfDayCard />
+        <EssentialWordsProgressCard />
         <WeakSoundCard weakestPhoneme={weakestPhoneme} />
-        {showPlanExtras && !allDone ? <HomeSpeakPrompt arc={arc} /> : null}
-        {planSettled ? <HomeJournalCard /> : null}
       </aside>
     </div>
   );

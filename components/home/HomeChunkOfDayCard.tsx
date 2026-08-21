@@ -29,6 +29,8 @@ export default function HomeChunkOfDayCard() {
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const [isRotating, setIsRotating] = useState(false);
 
+  const [lang, setLang] = useState<"es" | "en">("es");
+
   useEffect(() => {
     setSaveState("idle");
   }, [chunk?.id]);
@@ -156,20 +158,55 @@ export default function HomeChunkOfDayCard() {
             ) : null}
           </div>
 
-          <p className="font-body-sm text-pretty text-fg">{chunk.meaning}</p>
+          <div className="flex flex-col gap-1.5">
+            {chunk.example ? (
+              <div className="flex items-center justify-between gap-2">
+                <span className="font-kicker text-fg-subtle">
+                  {lang === "es" ? "Significado" : "Ejemplo"}
+                </span>
+                <div
+                  className="inline-flex rounded-full border border-border-subtle bg-surface-sunken p-0.5"
+                  role="group"
+                  aria-label="Idioma"
+                >
+                  <button
+                    type="button"
+                    onClick={() => setLang("es")}
+                    aria-pressed={lang === "es"}
+                    className={cn(
+                      "focus-ring rounded-full px-2 py-0.5 font-mono-code text-[11px] font-medium transition-colors",
+                      lang === "es"
+                        ? "bg-surface-raised text-fg shadow-xs"
+                        : "text-fg-muted hover:text-fg",
+                    )}
+                  >
+                    ES
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setLang("en")}
+                    aria-pressed={lang === "en"}
+                    className={cn(
+                      "focus-ring rounded-full px-2 py-0.5 font-mono-code text-[11px] font-medium transition-colors",
+                      lang === "en"
+                        ? "bg-surface-raised text-fg shadow-xs"
+                        : "text-fg-muted hover:text-fg",
+                    )}
+                  >
+                    EN
+                  </button>
+                </div>
+              </div>
+            ) : null}
 
-          {chunk.example ? (
-            <div className="flex flex-col gap-0.5">
+            {lang === "es" || !chunk.example ? (
+              <p className="font-body-sm text-pretty text-fg">{chunk.meaning}</p>
+            ) : (
               <p className="font-body-sm italic text-fg-muted">
                 “{chunk.example}”
               </p>
-              {chunk.example_translation ? (
-                <p className="font-caption text-fg-subtle">
-                  {chunk.example_translation}
-                </p>
-              ) : null}
-            </div>
-          ) : null}
+            )}
+          </div>
 
           {chunk.tip ? (
             <p className="font-caption text-fg-muted">
