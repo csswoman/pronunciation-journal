@@ -3,63 +3,64 @@
   "sections": [
     {
       "heading": "Estructura y significado",
-      "body": "Si + pasado simple, sería + infinitivo. El segundo condicional describe situaciones irreales o improbables en el presente o futuro. El tiempo pasado en la cláusula si no se refiere al pasado: crea una \"distancia\" de la realidad."
+      "body": "El segundo condicional se forma con: **If + Past Simple, would + forma base**. Describe situaciones hipotéticas, irreales o muy improbables en el presente o futuro. El tiempo pasado en la cláusula con 'if' no indica tiempo cronológico pasado, sino distancia con respecto a la realidad."
     },
     {
-      "heading": "fueron, no fueron",
-      "body": "En inglés formal y en un habla cuidadosa, use 'were' para todas las personas en las cláusulas condicionales segundas si: 'If I was you...', 'If she we are here...', 'If it was possible...'. \"Fue\" se acepta cada vez más de manera informal, pero \"fueron\" es la opción segura."
+      "heading": "Uso de 'were' para todas las personas",
+      "body": "En inglés formal y estándar, se utiliza **'were'** (subjuntivo) en lugar de 'was' para todas las personas: *'If I were you...', 'If she were here...'*. En el habla informal coloquial 'was' es frecuente, pero 'were' es la forma recomendada y evaluada."
     },
     {
-      "heading": "dando consejos",
-      "body": "'Si yo fuera tú, haría...' es la estructura estándar para un consejo. Es extremadamente común y útil tanto en contextos profesionales como personales."
+      "heading": "Fórmula para dar consejos",
+      "body": "La expresión *'If I were you, I would [verbo]...'* ('Si yo fuera tú, yo...') es la fórmula estándar más cortés y común en inglés para dar recomendaciones tanto en contextos personales como laborales."
     }
   ],
   "examples": [
     {
-      "english": "If I had more time, I'd learn the piano.",
-      "note": "Presente irreal: no tengo más tiempo"
+      "english": "If I had more time, I would learn the piano.",
+      "note": "Situación hipotética en el presente (no tengo tiempo)."
     },
     {
       "english": "If she were taller, she could be a model.",
-      "note": "'We' formal para todas las personas"
+      "note": "'Were' formal para tercera persona singular."
     },
     {
       "english": "If I were you, I'd apologize immediately.",
-      "note": "Fórmula de asesoramiento"
+      "note": "Estructura típica para aconsejar a alguien."
     },
     {
       "english": "What would you do if you won the lottery?",
-      "note": "Improbable hipotético"
+      "note": "Pregunta sobre un escenario improbable."
     }
   ],
   "exercises": [
     {
-      "instruction": "Complete each second conditional sentence with the correct verb forms.",
+      "instruction": "Completa cada oración en segundo condicional con las formas verbales adecuadas.",
+      "type": "closed_blank",
       "items": [
         "If I ___ (be) you, I ___ (tell) him the truth.",
         "She ___ (travel) more if she ___ (have) more money.",
         "If he ___ (study) medicine, he ___ (become) a doctor.",
-        "What ___ you ___ (do) if you ___ (lose) your job?"
+        "What would you do if you ___ (lose) your job?"
       ],
       "answers": [
-        "were / would tell",
-        "would travel / had",
-        "studied / would become",
-        "would you do / lost"
+        ["were", "would tell"],
+        ["would travel", "had"],
+        ["studied", "would become"],
+        "lost"
       ]
     }
   ],
   "quiz": [
     {
-      "question": "El segundo condicional describe:",
+      "question": "¿Cuál de las siguientes oraciones es un segundo condicional gramaticalmente correcto?",
       "options": [
-        "Situaciones futuras reales y probables",
-        "Situaciones presentes/futuras irreales o hipotéticas",
-        "arrepentimientos pasados",
-        "Verdades universales permanentes"
+        "If I will win the lottery, I would buy a house.",
+        "If I won the lottery, I would buy a house.",
+        "If I win the lottery, I would bought a house.",
+        "If I would win the lottery, I bought a house."
       ],
       "correct": 1,
-      "explanation": "Segundo condicional = presente/futuro imaginario o improbable. La forma pasada en la cláusula si indica distancia de la realidad."
+      "explanation": "El segundo condicional requiere pasado simple en la cláusula con 'if' ('won') y 'would + infinitivo' en la cláusula principal ('would buy')."
     }
   ]
 }

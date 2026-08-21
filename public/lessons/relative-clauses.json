@@ -2,60 +2,61 @@
   "slug": "relative-clauses",
   "sections": [
     {
-      "heading": "Definición de cláusulas relativas",
-      "body": "Una cláusula relativa definitoria identifica a qué persona o cosa te refieres. Sin él, la frase pierde su significado o se vuelve demasiado vaga. Sin comas. Puede usar \"eso\" en lugar de \"quién/cuál\". El pronombre relativo se puede omitir si es el objeto: 'El libro (que) compré fue excelente'."
+      "heading": "Cláusulas relativas especificativas (Defining)",
+      "body": "Una cláusula relativa especificativa o definitoria (*defining relative clause*) aporta información esencial para identificar con precisión de qué persona o cosa se habla. **No lleva comas**. En este tipo de cláusulas se puede sustituir 'who' o 'which' por **'that'**, y el pronombre relativo puede omitirse si funciona como objeto (*'The book (that) I bought is great'*)."
     },
     {
-      "heading": "Cláusulas relativas no definitorias",
-      "body": "Una cláusula relativa no definitoria agrega información adicional no esencial sobre un sustantivo ya identificado. Utilice siempre comas. No se puede usar \"eso\". No se puede omitir el pronombre relativo. \"Mi hermana, que vive en Londres, está de visita\". – elimine la cláusula y la oración seguirá teniendo sentido."
+      "heading": "Cláusulas relativas explicativas (Non-defining)",
+      "body": "Una cláusula relativa explicativa (*non-defining relative clause*) añade información complementaria y no esencial sobre un sustantivo que ya ha sido identificado. **Siempre va entre comas**, **nunca usa 'that'** (solo *who, which, whose, where*) y el pronombre relativo **nunca puede omitirse** (*'My father, who is a doctor, lives in Lima'*)."
     }
   ],
   "examples": [
     {
       "english": "The woman who called is my manager.",
-      "note": "Definición: nos dice qué mujer"
+      "note": "Especificativa (defining): aclara exactamente qué mujer llamó; sin comas."
     },
     {
       "english": "My manager, who called earlier, wants to meet.",
-      "note": "No definitorio: gerente ya identificado"
+      "note": "Explicativa (non-defining): información extra sobre el sujeto; va entre comas."
     },
     {
       "english": "The film (that) I recommended was great.",
-      "note": "Pronombre relativo de objeto: se puede omitir"
+      "note": "Pronombre relativo en posición de objeto: se puede omitir."
     },
     {
       "english": "Shakespeare, whose plays are still performed, was born in 1564.",
-      "note": "No definitorio con 'cuyo'"
+      "note": "Explicativa con el posesivo 'whose'."
     }
   ],
   "exercises": [
     {
-      "instruction": "Identify each relative clause as defining (D) or non-defining (ND), adding commas where required.",
+      "instruction": "Indica si cada cláusula es especificativa (D) o explicativa (ND).",
+      "type": "closed_blank",
       "items": [
-        "The house where I grew up has been demolished.",
-        "My father who is a doctor works at the local hospital.",
-        "The report that you submitted had several errors.",
-        "Lima which is the capital of Peru is a fascinating city."
+        "The house where I grew up has been demolished. ___ (D / ND)",
+        "My father, who is a doctor, works at the local hospital. ___ (D / ND)",
+        "The report that you submitted had several errors. ___ (D / ND)",
+        "Lima, which is the capital of Peru, is a fascinating city. ___ (D / ND)"
       ],
       "answers": [
-        "D — no commas needed.",
-        "ND — 'My father, who is a doctor, works at the local hospital.'",
-        "D — no commas needed.",
-        "ND — 'Lima, which is the capital of Peru, is a fascinating city.'"
+        ["D", "defining"],
+        ["ND", "non-defining"],
+        ["D", "defining"],
+        ["ND", "non-defining"]
       ]
     }
   ],
   "quiz": [
     {
-      "question": "¿Qué oración utiliza correctamente una cláusula relativa no definitoria?",
+      "question": "Which of the following sentences correctly uses a non-defining relative clause?",
       "options": [
-        "El auto que es rojo es mío.",
-        "Mi coche, que es rojo, es mío.",
-        "Mi auto que es rojo es mío.",
-        "El auto, que es rojo, es mío."
+        "My car that is red is parked outside.",
+        "My car, which is red, is parked outside.",
+        "My car which is red is parked outside.",
+        "My car, that is red, is parked outside."
       ],
       "correct": 1,
-      "explanation": "Cláusulas no definitorias: se requieren comas, \"cuál\" no \"eso\", el pronombre no se puede omitir."
+      "explanation": "Non-defining relative clauses provide extra non-essential information and must be enclosed in commas and use 'which' (never 'that')."
     }
   ]
 }

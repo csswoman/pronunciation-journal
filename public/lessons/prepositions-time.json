@@ -2,35 +2,36 @@
   "slug": "prepositions-time",
   "sections": [
     {
-      "heading": "La regla del tamaño",
-      "body": "Piense en las referencias temporales como contenedores de diferentes tamaños. 'In' contiene los contenedores más grandes: años, meses, estaciones, décadas, siglos, partes del día. 'On' contiene contenedores medianos: días y fechas. 'At' contiene los contenedores más pequeños y precisos: tiempos de reloj y puntos fijos."
+      "heading": "La pirámide del tiempo: In, On, At",
+      "body": "Una forma intuitiva de recordar las preposiciones temporales es pensar en una pirámide invertida: **IN** abarca los periodos más amplios (siglos, décadas, años, meses, estaciones y partes del día). **ON** cubre días concretos y fechas específicas. **AT** se reserva para las horas precisas y momentos exactos."
     },
     {
-      "heading": "Expresiones fijas",
-      "body": "Algunas expresiones de tiempo no llevan preposición alguna: la semana pasada, el año que viene, esta mañana, ayer, hoy, mañana, todos los días. No agregue 'on' o 'in' antes de estos: un error muy común."
+      "heading": "Expresiones fijas y cuándo omitir la preposición",
+      "body": "No se utiliza preposición antes de palabras como *last, next, this, every* (*'next Friday'*, *'last night'*, *'every morning'*). Nota regional: en inglés británico se dice *'at the weekend'* mientras que en inglés americano es habitual *'on the weekend'*."
     }
   ],
   "examples": [
     {
       "english": "in 2024 · in March · in the morning · in spring",
-      "note": "Periodos"
+      "note": "Periodos amplios (años, meses, partes del día)."
     },
     {
       "english": "on Monday · on 15 March · on my birthday",
-      "note": "Días y fechas"
+      "note": "Días específicos y fechas del calendario."
     },
     {
-      "english": "at 3pm · at midnight · at noon · at night",
-      "note": "Horarios y puntos fijos"
+      "english": "at 3:00 PM · at midnight · at noon · at night",
+      "note": "Horas exactas y momentos específicos."
     },
     {
       "english": "I'll see you next Friday.",
-      "note": "Sin preposición antes de 'siguiente'"
+      "note": "Sin preposición antes de 'next', 'last', 'this'."
     }
   ],
   "exercises": [
     {
-      "instruction": "Fill in each blank with the correct preposition of time: 'at', 'on', or 'in'.",
+      "instruction": "Completa cada espacio con la preposición correcta ('at', 'on', 'in') o '-' si no lleva preposición.",
+      "type": "closed_blank",
       "items": [
         "___ the weekend",
         "___ Friday morning",
@@ -40,26 +41,26 @@
         "___ noon"
       ],
       "answers": [
-        "at/on (both used regionally)",
+        ["at", "on"],
         "on",
         "in",
         "on",
-        "— (no preposition)",
+        ["-", "—", "none", "no preposition"],
         "at"
       ]
     }
   ],
   "quiz": [
     {
-      "question": "¿Cuál es correcto?",
+      "question": "¿Cuál de las siguientes oraciones es correcta para indicar una fecha de nacimiento?",
       "options": [
-        "Nací el 15 de marzo.",
-        "Nací el 15 de marzo.",
-        "Nací el 15 de marzo.",
-        "Nací el 15 de marzo."
+        "I was born in March 15th.",
+        "I was born on March 15th.",
+        "I was born at March 15th.",
+        "I was born by March 15th."
       ],
       "correct": 1,
-      "explanation": "Las fechas específicas utilizan \"on\"."
+      "explanation": "Las fechas específicas del calendario que incluyen el día del mes siempre van acompañadas de la preposición 'on'."
     }
   ]
 }

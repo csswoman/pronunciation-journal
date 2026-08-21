@@ -2,39 +2,40 @@
   "slug": "collocations-make-do",
   "sections": [
     {
-      "heading": "La regla aproximada",
-      "body": "\"Hacer\" tiende a implicar crear, producir o hacer que algo llegue a existir. 'Hacer' tiende a involucrar actividades, tareas y procesos: cosas que usted realiza o lleva a cabo."
+      "heading": "La regla general: Make vs. Do",
+      "body": "Tanto 'make' como 'do' se traducen como 'hacer' en español, pero en inglés siguen colocaciones fijas: **'Make'** suele referirse a crear, producir, construir o generar algo nuevo (un resultado o decisión). **'Do'** suele asociarse con actividades, tareas, rutinas, obligaciones y procesos de trabajo."
     },
     {
-      "heading": "hacer colocaciones",
-      "body": "tomar una decisión, cometer un error, ganar dinero, hacer una sugerencia, progresar, hacer un esfuerzo, hacer una llamada telefónica, hacer una reserva, hacer amigos, tener sentido, hacer ruido, poner una excusa."
+      "heading": "Colocaciones frecuentes con Make",
+      "body": "*Make a decision, make a mistake, make money, make a suggestion, make progress, make an effort, make a phone call, make a reservation, make friends, make an excuse, make sense*."
     },
     {
-      "heading": "hacer colocaciones",
-      "body": "hacer la tarea, investigar, hacer lo mejor que puedas, hacer ejercicio, lavar los platos, hacerle un favor a alguien, hacer daño, hacer negocios, peinarte, hacer un curso, hacerlo bien/mal, prescindir."
+      "heading": "Colocaciones frecuentes con Do",
+      "body": "*Do homework, do research, do your best, do exercise, do the dishes, do someone a favor, do business, do damage, do a course, do well/badly*."
     }
   ],
   "examples": [
     {
       "english": "She made an important decision.",
-      "note": "No 'tomé una decisión'"
+      "note": "Decisión → se usa 'make'."
     },
     {
-      "english": "He does research at a university.",
-      "note": "No 'hace investigación'"
+      "english": "He does scientific research at the university.",
+      "note": "Investigación / trabajo de estudio → se usa 'do'."
     },
     {
-      "english": "You made a mistake.",
-      "note": "No 'cometí un error'"
+      "english": "We made a few minor mistakes.",
+      "note": "Errores → siempre 'make a mistake'."
     },
     {
-      "english": "I'll do my best.",
-      "note": "Expresión fija con 'do'"
+      "english": "I will do my best to help you.",
+      "note": "Expresión fija: 'do one's best'."
     }
   ],
   "exercises": [
     {
-      "instruction": "¿Hacer o hacer?",
+      "instruction": "Completa cada colocación con 'make' o 'do'.",
+      "type": "closed_blank",
       "items": [
         "___ a suggestion",
         "___ the laundry",
@@ -44,26 +45,26 @@
         "___ exercise"
       ],
       "answers": [
-        "hacer",
-        "hacer",
-        "hacer",
-        "hacer",
-        "hacer",
-        "hacer"
+        "make",
+        "do",
+        "make",
+        "do",
+        "make",
+        "do"
       ]
     }
   ],
   "quiz": [
     {
-      "question": "¿Qué oración es correcta?",
+      "question": "Which of the following sentences uses 'make' or 'do' correctly?",
       "options": [
-        "Cometí un error.",
-        "Cometí un error.",
-        "Yo hice los platos.",
-        "Hice una sugerencia."
+        "I did a big mistake on the exam.",
+        "I made a big mistake on the exam.",
+        "I made the dishes after dinner.",
+        "Can you make me a favor?"
       ],
       "correct": 1,
-      "explanation": "'Cometer un error' es una colocación fija. \"Hacer\" se utiliza con las actividades \"los platos\" y \"hacer\"."
+      "explanation": "'Make a mistake' is a fixed collocation. In English you 'do the dishes' and 'do someone a favor'."
     }
   ]
 }

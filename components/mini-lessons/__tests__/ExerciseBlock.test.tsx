@@ -81,4 +81,48 @@ describe('ExerciseBlock (Interactive)', () => {
     expect(inputs[0]).not.toBeDisabled();
     expect(inputs[0]).toHaveValue('');
   });
+
+  it('supports multi-blank items with distinct accepted alternatives per blank', () => {
+    const propsMultiBlank = {
+      instruction: 'Fill in with correct prepositions:',
+      type: 'closed_blank' as const,
+      items: ['We arrived ___ the airport ___ Monday.'],
+      answers: [[{ accepted: ['at', 'in'] }, { accepted: ['on'] }]],
+    };
+
+    render(<ExerciseBlock {...propsMultiBlank} />);
+    const inputs = screen.getAllByRole('textbox');
+    expect(inputs).toHaveLength(2);
+
+    // Provide one of the valid alternatives for blank 1 ('in') and blank 2 ('on')
+    fireEvent.change(inputs[0], { target: { value: 'in' } });
+    fireEvent.change(inputs[1], { target: { value: 'on' } });
+
+    const verifyBtn = screen.getByRole('button', { name: /Verificar/i });
+    fireEvent.click(verifyBtn);
+
+    expect(screen.getByText(/Puntuación: 2 de 2 correctas/i)).toBeInTheDocument();
+  });
+
+  it('allows self-checking open responses when learner uses equivalent phrasing', () => {
+    const propsOpen = {
+      instruction: 'Paraphrase using a modal:',
+      type: 'open_response' as const,
+      items: [{ prompt: 'It is possible that it will rain.', sampleAnswer: 'It might rain.' }],
+    };
+
+    render(<ExerciseBlock {...propsOpen} />);
+    const input = screen.getByPlaceholderText('Escribe tu respuesta...');
+    fireEvent.change(input, { target: { value: 'It may rain today' } });
+
+    const verifyBtn = screen.getByRole('button', { name: /Verificar/i });
+    fireEvent.click(verifyBtn);
+
+    expect(screen.getByText(/Puntuación: 0 de 1 correctas/i)).toBeInTheDocument();
+    const selfCheckBtn = screen.getByRole('button', { name: /Sí, es equivalente/i });
+    expect(selfCheckBtn).toBeInTheDocument();
+
+    fireEvent.click(selfCheckBtn);
+    expect(screen.getByText(/Puntuación: 1 de 1 correctas/i)).toBeInTheDocument();
+  });
 });
