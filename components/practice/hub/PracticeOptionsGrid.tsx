@@ -129,6 +129,8 @@ export default function PracticeOptionsGrid({
 }: PracticeOptionsGridProps) {
   const openCoach = useAICoachStore((s) => s.openCoach)
   const prefill = buildCoachPrefill(arc)
+  const hasDueReviews = dueCount !== null && dueCount > 0
+  const reviewStatusKnown = dueCount !== null
 
   // Interactive Micro-Practice State (Quick Sound Check)
   const [selectedCategory, setSelectedCategory] = useState<SoundCategory>('all')
@@ -191,7 +193,7 @@ export default function PracticeOptionsGrid({
       {/* ─── TOP SECTION: 2-COLUMN BALANCED HERO BENTO ────────────────────────── */}
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
         {/* COLUMNA IZQUIERDA: Laboratorio de Sonidos + Micro-práctica Ligera */}
-        <div className="group/hero flex flex-col justify-between gap-5 rounded-2xl border border-primary/25 bg-gradient-to-b from-primary/10 via-surface-raised to-surface-raised p-6 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-md lg:col-span-6">
+        <div className="group/hero flex flex-col gap-5 rounded-2xl border border-primary/25 bg-gradient-to-b from-primary/10 via-surface-raised to-surface-raised p-6 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-md lg:col-span-6 lg:self-start">
           <div className="flex flex-col gap-3.5">
             {/* Header con Kicker y Categorías */}
             <div className="flex flex-wrap items-center justify-between gap-2">
@@ -370,7 +372,8 @@ export default function PracticeOptionsGrid({
         </div>
 
         {/* COLUMNA DERECHA: Palabras Esenciales & Sistema de Repaso SRS */}
-        <div className="group/srs flex flex-col justify-between gap-5 rounded-2xl border border-border-subtle bg-surface-raised p-6 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-border-default hover:shadow-md lg:col-span-6">
+        <div className="flex flex-col gap-5 lg:col-span-6">
+        <div className="group/srs flex flex-col justify-between gap-5 rounded-2xl border border-border-subtle bg-surface-raised p-5 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-border-default hover:shadow-md">
           <div className="flex flex-col gap-4">
             {/* Header con Kicker y Estado Live */}
             <div className="flex items-center justify-between gap-2">
@@ -380,149 +383,89 @@ export default function PracticeOptionsGrid({
                 </span>
                 <span className="font-kicker text-fg-subtle">Vocabulario</span>
               </div>
-              {dueCount !== null && dueCount > 0 ? (
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-warning/30 bg-warning-soft px-2.5 py-0.5 text-caption font-semibold text-warning animate-pulse">
+              {hasDueReviews ? (
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-warning/30 bg-warning-soft px-2.5 py-1 text-caption font-semibold text-warning">
                   <span className="h-1.5 w-1.5 rounded-full bg-warning" />
-                  <span>{dueCount} pendientes</span>
+                  <span>{dueCount} por repasar</span>
                 </span>
-              ) : (
-                <span className="inline-flex items-center gap-1 rounded-full bg-success-soft px-2.5 py-0.5 text-caption font-medium text-success">
+              ) : reviewStatusKnown ? (
+                <span className="inline-flex items-center gap-1 rounded-full bg-success-soft px-2.5 py-1 text-caption font-medium text-success">
                   <CheckCircle2 size={13} aria-hidden />
                   Al día
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1 rounded-full border border-border-subtle bg-surface-sunken px-2.5 py-1 text-caption font-medium text-fg-muted">
+                  Comprobando estado…
                 </span>
               )}
             </div>
 
             <div className="flex flex-col gap-1">
-              <Link
-                href="/practice/essential-words"
-                onClick={() => void setLastPracticeMode('essential-words')}
-                className="focus-ring group/title flex items-center justify-between gap-2 rounded-sm"
-              >
-                <h2 className="text-h3 font-bold text-fg transition-colors group-hover/title:text-primary">
-                  Palabras esenciales
-                </h2>
-                <ArrowRight
-                  size={18}
-                  className="text-fg-subtle transition-transform duration-200 group-hover/title:translate-x-1 group-hover/title:text-primary"
-                  aria-hidden
-                />
-              </Link>
+              <h2 className="text-h3 font-bold text-fg">Palabras esenciales</h2>
               <p className="text-body-sm text-fg-muted text-pretty">
                 Aprende y consolida las 1000 palabras de mayor frecuencia con un algoritmo de repetición espaciada.
               </p>
             </div>
 
-            {/* Panel de Retención de Memoria (Llena el espacio armónicamente) */}
-            <div className="flex flex-col gap-3 rounded-xl border border-border-default bg-surface-base p-4 shadow-xs">
-              <div className="flex items-center justify-between text-caption text-fg-subtle">
-                <span className="font-mono text-tiny font-semibold uppercase">Retención a largo plazo</span>
-                <span className="font-medium text-fg">Nivel general A1 - B2</span>
+            {/* Estado accionable del repaso; no representa una métrica de dominio. */}
+            <div className="flex flex-col gap-3 border-y border-border-subtle py-4">
+              <div className="flex items-center justify-between gap-3 text-caption text-fg-subtle">
+                <span className="font-kicker">Repaso espaciado</span>
+                <span className="text-right font-medium text-fg">Ajustado a tus respuestas</span>
               </div>
 
               <div className="flex items-baseline justify-between">
                 <span className="text-body-sm font-semibold text-fg">
-                  {dueCount !== null && dueCount > 0 ? 'Palabras listas para repasar' : 'Memoria al día'}
+                  {hasDueReviews
+                    ? 'Tu siguiente acción'
+                    : reviewStatusKnown
+                      ? 'No hay repasos pendientes'
+                      : 'Cargando tus repasos'}
                 </span>
-                <span className="font-mono text-body-sm font-bold text-primary">
-                  {dueCount !== null && dueCount > 0 ? `${dueCount} palabras` : '100%'}
+                <span className="font-mono text-body-sm font-bold text-fg-muted">
+                  {hasDueReviews ? `${dueCount} palabras` : reviewStatusKnown ? 'Listo' : '—'}
                 </span>
               </div>
 
-              <div className="h-2.5 w-full overflow-hidden rounded-full bg-surface-sunken">
-                <div
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                {/* Acción primaria: trabajar lo que ya está listo. */}
+                <Link
+                  href="/practice/review"
+                  onClick={() => void setLastPracticeMode('review')}
                   className={cn(
-                    'h-full rounded-full transition-all duration-500 ease-out',
-                    dueCount && dueCount > 0 ? 'bg-warning w-3/5' : 'bg-success w-full',
+                    'focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 py-3 font-label font-semibold transition-[background-color,box-shadow,transform] duration-200 active:scale-[0.96]',
+                    hasDueReviews
+                      ? 'bg-fg text-surface-base shadow-sm hover:bg-fg/90 hover:shadow-md'
+                      : 'border border-border-default bg-surface-sunken text-fg hover:bg-surface-raised hover:shadow-xs',
                   )}
-                />
+                >
+                  <RotateCcw size={16} aria-hidden />
+                  <span>{hasDueReviews ? 'Empezar repaso' : 'Abrir repaso'}</span>
+                  {hasDueReviews ? (
+                    <span className="rounded-full bg-surface-base/20 px-2 py-0.5 font-mono text-tiny">
+                      {dueCount}
+                    </span>
+                  ) : null}
+                </Link>
+
+                {/* Acción secundaria: consultar el catálogo, sin duplicar el título. */}
+                <Link
+                  href="/practice/essential-words"
+                  onClick={() => void setLastPracticeMode('essential-words')}
+                  className="focus-ring group/vocab inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-border-default bg-surface-base px-4 py-3 font-label font-semibold text-fg transition-[background-color,box-shadow,transform] duration-200 hover:bg-surface-sunken hover:shadow-xs active:scale-[0.96]"
+                >
+                  <span>Explorar catálogo</span>
+                  <ArrowRight size={16} className="text-primary transition-transform duration-150 group-hover/vocab:translate-x-0.5" aria-hidden />
+                </Link>
               </div>
-
-              {/* Botón de Repaso directo */}
-              <Link
-                href="/practice/review"
-                onClick={() => void setLastPracticeMode('review')}
-                className={cn(
-                  'focus-ring mt-1 inline-flex items-center justify-center gap-2 rounded-xl py-3 font-label font-semibold transition-all duration-200 shadow-xs active:scale-[0.98]',
-                  dueCount && dueCount > 0
-                    ? 'border border-warning/40 bg-warning text-surface-base hover:bg-warning/90 hover:shadow-sm'
-                    : 'border border-border-default bg-surface-sunken text-fg hover:bg-surface-raised',
-                )}
-              >
-                <RotateCcw size={16} aria-hidden />
-                <span>Repaso</span>
-                {dueCount && dueCount > 0 ? (
-                  <span className="rounded-full bg-surface-base/20 px-2 py-0.5 font-mono text-tiny">
-                    {dueCount}
-                  </span>
-                ) : null}
-              </Link>
             </div>
-          </div>
-
-          <div className="pt-2">
-            <Link
-              href="/practice/essential-words"
-              onClick={() => void setLastPracticeMode('essential-words')}
-              className="focus-ring group/vocab inline-flex w-full items-center justify-center gap-2 rounded-xl border border-border-default bg-surface-base px-4 py-3 font-label font-semibold text-fg transition-all duration-200 hover:bg-surface-sunken hover:shadow-xs active:scale-[0.99]"
-            >
-              <span>Ver las 1000 palabras</span>
-              <ArrowRight size={16} className="text-primary transition-transform duration-150 group-hover/vocab:translate-x-0.5" aria-hidden />
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      {/* ─── MIDDLE SECTION: INTERACTIVE PRACTICE MODES (2 COLUMNS) ─────────── */}
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-        {/* Inmersión & Speaking (Video con Nativos) */}
-        <div className="group flex flex-col justify-between gap-4 rounded-2xl border border-border-subtle bg-surface-raised p-5 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:bg-surface-sunken/40 hover:shadow-md">
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center justify-between gap-2">
-              <span className="font-kicker text-fg-subtle">Contexto y lectura</span>
-              <span className="inline-flex items-center gap-1 rounded-md bg-primary-soft px-2.5 py-0.5 font-caption text-caption font-medium text-primary">
-                <Clapperboard size={13} aria-hidden />
-                Video & Audio
-              </span>
-            </div>
-
-            <Link
-              href="/practice/immersion"
-              onClick={() => void setLastPracticeMode('immersion')}
-              className="focus-ring group/title flex items-center gap-3 rounded-sm"
-            >
-              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[var(--hue-icon-bg)] text-primary transition-transform duration-200 group-hover/title:scale-105">
-                <Clapperboard size={22} aria-hidden />
-              </span>
-              <div className="min-w-0">
-                <h3 className="text-h4 font-bold text-fg transition-colors group-hover/title:text-primary">
-                  Inmersión & Speaking
-                </h3>
-                <span className="font-caption text-caption text-fg-subtle">Lecciones con nativos</span>
-              </div>
-            </Link>
-
-            <p className="text-body-sm text-fg-muted text-pretty">
-              Lecciones en video con profesores nativos, modo shadowing sincronizado y minería de frases reales.
-            </p>
-          </div>
-
-          <div className="pt-2">
-            <Link
-              href="/practice/immersion"
-              onClick={() => void setLastPracticeMode('immersion')}
-              className="focus-ring group/imm inline-flex w-full items-center justify-between rounded-xl border border-border-default bg-surface-base px-4 py-2.5 font-label font-semibold text-fg transition-all duration-200 hover:border-primary/40 hover:bg-surface-sunken active:scale-[0.99]"
-            >
-              <span>Ver lecciones en video</span>
-              <ArrowRight size={16} className="text-primary transition-transform duration-150 group-hover/imm:translate-x-0.5" aria-hidden />
-            </Link>
           </div>
         </div>
 
-        {/* Coach de Conversación (Speaking con IA) */}
+        {/* Coach ocupa el espacio inferior de la columna derecha del bento. */}
         <div
           data-testid="speak-with-coach"
-          className="group/coach flex flex-col justify-between gap-4 rounded-2xl border border-border-subtle bg-surface-raised p-5 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-md"
+          className="group/coach flex flex-col justify-between gap-3 rounded-2xl border border-border-subtle bg-surface-raised p-5 shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-primary/40 hover:shadow-sm"
         >
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between gap-2">
@@ -534,7 +477,7 @@ export default function PracticeOptionsGrid({
             </div>
 
             <div className="flex items-center gap-3">
-              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[var(--hue-icon-bg)] text-primary transition-transform duration-200 group-hover/coach:scale-105">
+              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[var(--hue-icon-bg)] text-primary">
                 <Mic size={22} aria-hidden />
               </span>
               <div className="min-w-0">
@@ -568,26 +511,63 @@ export default function PracticeOptionsGrid({
             </button>
           </div>
         </div>
+        </div>
       </div>
 
-      {/* ─── BOTTOM SECTION: INTEGRATED SPECIALIZED TOOLS (2x3 BALANCED GRID) ──── */}
-      <section aria-labelledby="specialized-practice-heading" className="flex flex-col gap-3.5 pt-2">
-        <div className="flex items-baseline justify-between px-1">
-          <div className="flex flex-col gap-0.5">
-            <span className="font-kicker text-fg-subtle">Herramientas y profundización</span>
-            <h2 id="specialized-practice-heading" className="text-h3 font-bold text-fg">
-              Más formas de practicar
-            </h2>
+      {/* ─── PRACTICE OPTIONS: GUIDED + SPECIALIZED ──────────────────────────── */}
+      <section aria-labelledby="practice-options-heading" className="flex flex-col gap-5 pt-2">
+        <div className="flex flex-col gap-0.5 px-1">
+          <span className="font-kicker text-fg-subtle">Elige tu siguiente foco</span>
+          <h2 id="practice-options-heading" className="text-h3 font-bold text-fg">
+            Más formas de practicar
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Inmersión & Speaking (Video con Nativos) */}
+        <div className="group flex flex-col gap-4 rounded-2xl border border-border-subtle bg-surface-raised p-5 shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-primary/40 hover:bg-surface-sunken hover:shadow-sm lg:col-span-2">
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center justify-between gap-2">
+              <span className="font-kicker text-fg-subtle">Video y shadowing</span>
+              <span className="inline-flex items-center gap-1 rounded-md bg-primary-soft px-2.5 py-0.5 font-caption text-caption font-medium text-primary">
+                <Clapperboard size={13} aria-hidden />
+                Video & Audio
+              </span>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[var(--hue-icon-bg)] text-primary transition-transform duration-200 group-hover:scale-105">
+                <Clapperboard size={22} aria-hidden />
+              </span>
+              <div className="min-w-0">
+                <h3 className="text-h4 font-bold text-fg">Inmersión & Speaking</h3>
+                <span className="font-caption text-caption text-fg-subtle">Lecciones con nativos</span>
+              </div>
+            </div>
+
+            <p className="text-body-sm text-fg-muted text-pretty">
+              Video, shadowing sincronizado y frases reales con profesores nativos.
+            </p>
+          </div>
+
+          <div className="pt-1">
+            <Link
+              href="/practice/immersion"
+              onClick={() => void setLastPracticeMode('immersion')}
+              className="focus-ring group/imm inline-flex w-full items-center justify-between rounded-xl border border-border-default bg-surface-base px-4 py-2.5 font-label font-semibold text-fg transition-all duration-200 hover:border-primary/40 hover:bg-surface-sunken active:scale-[0.99]"
+            >
+              <span>Ver lecciones en video</span>
+              <ArrowRight size={16} className="text-primary transition-transform duration-150 group-hover/imm:translate-x-0.5" aria-hidden />
+            </Link>
           </div>
         </div>
 
-        {/* 6 Tarjetas Balanceadas en Grid de 2 o 3 Columnas con transiciones lift */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Herramientas especializadas dentro de la misma cuadrícula de destinos. */}
           {/* Habla conectada */}
           <Link
             href="/practice/connected-speech"
             onClick={() => void setLastPracticeMode('connected-speech')}
-            className="focus-ring group flex flex-col justify-between gap-3 rounded-2xl border border-border-subtle bg-surface-raised p-5 shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-primary/40 hover:bg-surface-sunken hover:shadow-sm"
+            className="focus-ring group flex flex-col justify-between gap-3 rounded-2xl border border-border-subtle bg-surface-raised p-5 shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-primary/40 hover:bg-surface-sunken hover:shadow-sm lg:col-start-3 lg:row-start-1"
           >
             <div className="flex items-start justify-between gap-2">
               <span className="grid h-10 w-10 place-items-center rounded-xl bg-surface-sunken text-fg-muted transition-all duration-200 group-hover:bg-[var(--hue-icon-bg)] group-hover:text-primary group-hover:scale-105">
@@ -618,7 +598,7 @@ export default function PracticeOptionsGrid({
           <Link
             href="/practice/intonation"
             onClick={() => void setLastPracticeMode('intonation')}
-            className="focus-ring group flex flex-col justify-between gap-3 rounded-2xl border border-border-subtle bg-surface-raised p-5 shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-primary/40 hover:bg-surface-sunken hover:shadow-sm"
+            className="focus-ring group flex flex-col justify-between gap-3 rounded-2xl border border-border-subtle bg-surface-raised p-5 shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-primary/40 hover:bg-surface-sunken hover:shadow-sm lg:col-start-4 lg:row-start-1"
           >
             <div className="flex items-start justify-between gap-2">
               <span className="grid h-10 w-10 place-items-center rounded-xl bg-surface-sunken text-fg-muted transition-all duration-200 group-hover:bg-[var(--hue-icon-bg)] group-hover:text-primary group-hover:scale-105">
@@ -649,7 +629,7 @@ export default function PracticeOptionsGrid({
           <Link
             href="/practice/reader"
             onClick={() => void setLastPracticeMode('reader')}
-            className="focus-ring group flex flex-col justify-between gap-3 rounded-2xl border border-border-subtle bg-surface-raised p-5 shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-primary/40 hover:bg-surface-sunken hover:shadow-sm"
+            className="focus-ring group flex flex-col justify-between gap-3 rounded-2xl border border-border-subtle bg-surface-raised p-5 shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-primary/40 hover:bg-surface-sunken hover:shadow-sm lg:col-start-3 lg:row-start-2"
           >
             <div className="flex items-start justify-between gap-2">
               <span className="grid h-10 w-10 place-items-center rounded-xl bg-surface-sunken text-fg-muted transition-all duration-200 group-hover:bg-[var(--hue-icon-bg)] group-hover:text-primary group-hover:scale-105">
@@ -680,7 +660,7 @@ export default function PracticeOptionsGrid({
           <Link
             href="/practice/decks"
             onClick={() => void setLastPracticeMode('decks')}
-            className="focus-ring group flex flex-col justify-between gap-3 rounded-2xl border border-border-subtle bg-surface-raised p-5 shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-primary/40 hover:bg-surface-sunken hover:shadow-sm"
+            className="focus-ring group flex flex-col justify-between gap-3 rounded-2xl border border-border-subtle bg-surface-raised p-5 shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-primary/40 hover:bg-surface-sunken hover:shadow-sm lg:col-start-4 lg:row-start-2"
           >
             <div className="flex items-start justify-between gap-2">
               <span className="grid h-10 w-10 place-items-center rounded-xl bg-surface-sunken text-fg-muted transition-all duration-200 group-hover:bg-[var(--hue-icon-bg)] group-hover:text-primary group-hover:scale-105">
@@ -711,7 +691,7 @@ export default function PracticeOptionsGrid({
           <Link
             href="/courses"
             onClick={() => void setLastPracticeMode('courses')}
-            className="focus-ring group flex flex-col justify-between gap-3 rounded-2xl border border-border-subtle bg-surface-raised p-5 shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-primary/40 hover:bg-surface-sunken hover:shadow-sm"
+            className="focus-ring group flex flex-col justify-between gap-3 rounded-2xl border border-border-subtle bg-surface-raised p-5 shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-primary/40 hover:bg-surface-sunken hover:shadow-sm lg:col-span-2 lg:col-start-1 lg:row-start-2"
           >
             <div className="flex items-start justify-between gap-2">
               <span className="grid h-10 w-10 place-items-center rounded-lg bg-surface-sunken text-fg-muted transition-all duration-200 group-hover:bg-[var(--hue-icon-bg)] group-hover:text-primary group-hover:scale-105">
@@ -742,7 +722,7 @@ export default function PracticeOptionsGrid({
           <Link
             href="/practice/word-search"
             onClick={() => void setLastPracticeMode('word-search')}
-            className="focus-ring group flex flex-col justify-between gap-3 rounded-2xl border border-border-subtle bg-surface-raised p-5 shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-primary/40 hover:bg-surface-sunken hover:shadow-sm"
+            className="focus-ring group flex flex-col justify-between gap-3 rounded-2xl border border-border-subtle bg-surface-raised p-5 shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-primary/40 hover:bg-surface-sunken hover:shadow-sm lg:col-span-4 lg:col-start-1 lg:row-start-3"
           >
             <div className="flex items-start justify-between gap-2">
               <span className="grid h-10 w-10 place-items-center rounded-lg bg-surface-sunken text-fg-muted transition-all duration-200 group-hover:bg-[var(--hue-icon-bg)] group-hover:text-primary group-hover:scale-105">
