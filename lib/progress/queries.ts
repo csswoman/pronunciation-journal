@@ -501,43 +501,41 @@ function attributedAnswerFacts(rows: Array<{
 
 export async function getProgressProjections(userId: string): Promise<ProgressProjections> {
   const supabase = await createSupabaseServerClient()
-  const [sessions, completions, answers] = await Promise.all([
-    supabase.from('activity_sessions')
-      .select('id, exercises_total, duration_ms, completed_at')
-      .eq('user_id', userId),
-    supabase.from('lesson_completions')
-      .select('id, completed_at, source')
-      .eq('user_id', userId),
+  const sinceEvidenceWindow = new Date()
+  sinceEvidenceWindow.setDate(sinceEvidenceWindow.getDate() - PROGRESS_PROJECTION_EVIDENCE_WINDOW_DAYS)
+
+  const [activityTotals, completionTotal, answers] = await Promise.all([
+    supabase.rpc('get_activity_totals'),
+    supabase.rpc('get_lesson_completion_total'),
     supabase.from('answer_history')
       .select('id, is_correct, answered_at, exercise_payload')
       .eq('user_id', userId)
+      .gte('answered_at', sinceEvidenceWindow.toISOString())
       .not('answered_at', 'is', null),
   ])
 
-  const facts: ProgressFact[] = [
-    ...(sessions.data ?? []).map((row) => ({
-      id: row.id,
-      signal: 'objective_evidence' as const,
-      occurredAt: row.completed_at,
-      exercises: row.exercises_total,
-      durationMs: row.duration_ms,
-      provenance: 'activity_sessions',
-    })),
-    ...(completions.data ?? []).map((row) => ({
-      id: row.id,
-      signal: 'completion' as const,
-      occurredAt: row.completed_at,
-      provenance: row.source,
-    })),
-    ...attributedAnswerFacts((answers.data ?? []) as Array<{
-      id: string
-      is_correct: boolean
-      answered_at: string | null
-      exercise_payload: unknown
-    }>),
-  ]
+  if (activityTotals.error) console.error('getProgressProjections: get_activity_totals failed', activityTotals.error)
+  if (completionTotal.error) console.error('getProgressProjections: get_lesson_completion_total failed', completionTotal.error)
+  if (answers.error) console.error('getProgressProjections: answer_history query failed', answers.error)
 
-  return projectProgress(facts)
+  const row = activityTotals.data?.[0]
+
+  const evidenceFacts = attributedAnswerFacts((answers.data ?? []) as Array<{
+    id: string
+    is_correct: boolean
+    answered_at: string | null
+    exercise_payload: unknown
+  }>)
+
+  return projectProgress(evidenceFacts, {
+    activity: {
+      sessions: row?.sessions ?? 0,
+      exercises: row?.exercises ?? 0,
+      durationMs: row?.duration_ms ?? 0,
+      activeDays: row?.active_days ?? 0,
+    },
+    completedCount: completionTotal.data ?? 0,
+  })
 }
 
 export async function getProgressPageData(userId: string): Promise<ProgressPageData> {
