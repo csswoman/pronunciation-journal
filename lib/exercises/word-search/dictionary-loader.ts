@@ -1,6 +1,11 @@
 import lexiconIndex from '../../../public/lexicon/index.json'
 import type { WordSearchItem, WordSearchMode, WordSearchPuzzle } from './types'
-import { createWordSearchPuzzle } from './grid-generator'
+import {
+  createWordSearchPuzzle,
+  MAX_WORD_SEARCH_LENGTH,
+  MIN_WORD_SEARCH_ITEMS,
+  sanitizeWord,
+} from './grid-generator'
 
 export interface DictionaryCategorySummary {
   id: string
@@ -13,6 +18,17 @@ export interface DictionaryCategorySummary {
 
 export const DICTIONARY_CATEGORIES: DictionaryCategorySummary[] =
   lexiconIndex as DictionaryCategorySummary[]
+
+function shuffledCopy<T>(items: T[]): T[] {
+  const shuffled = [...items]
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1))
+    const current = shuffled[index]
+    shuffled[index] = shuffled[swapIndex]
+    shuffled[swapIndex] = current
+  }
+  return shuffled
+}
 
 interface RawLexiconWord {
   id: string
@@ -32,9 +48,10 @@ export async function loadDictionaryPuzzle(
   mode: WordSearchMode,
   count = 6
 ): Promise<WordSearchPuzzle> {
-  const category =
-    DICTIONARY_CATEGORIES.find((c) => c.id === categoryId) ||
-    DICTIONARY_CATEGORIES[0]
+  const category = DICTIONARY_CATEGORIES.find((c) => c.id === categoryId)
+  if (!category) {
+    throw new Error('El área del diccionario seleccionada no existe.')
+  }
 
   const response = await fetch(`/api/dictionary/${category.id}`)
   if (!response.ok) {
@@ -44,18 +61,24 @@ export async function loadDictionaryPuzzle(
   const data = await response.json()
   const rawWords = (data.words ?? []) as RawLexiconWord[]
 
-  // Filter single words suitable for a word search grid (3 to 10 chars, no spaces/hyphens)
+  // Keep only single answers that can fit the supported grid.
   const validWords = rawWords.filter(
-    (w) =>
-      w.word &&
-      w.word.trim().length >= 3 &&
-      w.word.trim().length <= 10 &&
-      !w.word.includes(' ') &&
-      !w.word.includes('-')
+    (entry) => {
+      const clean = sanitizeWord(entry.word ?? '')
+      return (
+        clean.length >= 3 &&
+        clean.length <= MAX_WORD_SEARCH_LENGTH &&
+        !entry.word.includes(' ') &&
+        !entry.word.includes('-')
+      )
+    },
   )
 
-  // Shuffle and pick `count` words
-  const shuffled = [...validWords].sort(() => Math.random() - 0.5).slice(0, count)
+  if (validWords.length < MIN_WORD_SEARCH_ITEMS) {
+    throw new Error(`El área ${category.name} no tiene suficientes palabras para jugar.`)
+  }
+
+  const shuffled = shuffledCopy(validWords).slice(0, count)
 
   const items: Array<Omit<WordSearchItem, 'found' | 'foundAt'>> = shuffled.map(
     (w, idx) => ({

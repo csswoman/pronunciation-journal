@@ -3,31 +3,17 @@ import type { WordSearchItem, WordSearchThemePreset } from './types'
 export const WORD_SEARCH_PRESETS: WordSearchThemePreset[] = [
   {
     id: 'silent-letters',
-    title: 'Silent Letters',
+    title: 'Letras mudas',
     description: 'Palabras con letras que se escriben pero no se pronuncian (K, B, W, L, H)',
     topicPrompt: 'Common English words with silent letters (like knight, debt, salmon, doubt, honest, thumb, write, castle)',
     level: 'intermediate',
   },
   {
-    id: 'minimal-pairs-vowels',
-    title: 'Vocalic Contrasts (/iː/ vs /ɪ/)',
-    description: 'Palabras clave para contrastar vocales largas y cortas',
-    topicPrompt: 'English words practicing vowel sounds contrast like sheep/ship, beat/bit, sleep/slip, reach/rich, leave/live',
-    level: 'beginner',
-  },
-  {
     id: 'workplace-tech',
-    title: 'Workplace & Tech',
+    title: 'Trabajo y tecnología',
     description: 'Términos de trabajo, reuniones y tecnología cotidiana',
     topicPrompt: 'Useful modern workplace and tech collaboration vocabulary: feedback, deadline, deploy, schedule, remote, update',
     level: 'intermediate',
-  },
-  {
-    id: 'daily-essentials',
-    title: 'Daily Essentials',
-    description: 'Vocabulario esencial y cotidiano de alta frecuencia',
-    topicPrompt: 'Everyday high frequency essential English words: morning, coffee, journey, kitchen, window, friend, listen',
-    level: 'beginner',
   },
 ]
 

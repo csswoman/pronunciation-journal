@@ -76,4 +76,29 @@ describe('WordSearch Grid Generator', () => {
       expect(reverseMatch).toBe(placement.wordId)
     }
   })
+
+  it('deduplicates answers after normalization', () => {
+    const puzzle = createWordSearchPuzzle([
+      { id: '1', word: 'café', displayWord: 'café', clue: 'A drink' },
+      { id: '2', word: 'CAFE', displayWord: 'cafe', clue: 'The same answer' },
+      { id: '3', word: 'BREAD', displayWord: 'bread', clue: 'Baked food' },
+      { id: '4', word: 'SPOON', displayWord: 'spoon', clue: 'A utensil' },
+      { id: '5', word: 'PLATE', displayWord: 'plate', clue: 'A dish' },
+    ])
+
+    expect(puzzle.items.map((item) => item.word)).toEqual(
+      expect.arrayContaining(['CAFE', 'BREAD', 'SPOON', 'PLATE']),
+    )
+    expect(puzzle.items.filter((item) => item.word === 'CAFE')).toHaveLength(1)
+  })
+
+  it('rejects word sets that cannot create a meaningful puzzle', () => {
+    expect(() =>
+      createWordSearchPuzzle([
+        { id: '1', word: 'same', displayWord: 'same', clue: 'First clue' },
+        { id: '2', word: 'SAME', displayWord: 'same', clue: 'Duplicate clue' },
+        { id: '3', word: 'THISWORDISTOOLONG', displayWord: 'long', clue: 'Too long' },
+      ]),
+    ).toThrow('Se necesitan al menos 3 palabras distintas')
+  })
 })
