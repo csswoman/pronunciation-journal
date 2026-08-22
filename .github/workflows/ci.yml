@@ -22,9 +22,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: pnpm/action-setup@a3252b78d470290f8eab01612bc3224b904859c5 # v4.0.0
+      - uses: pnpm/action-setup@0c17529a66aca453f9227af23103ed11469b1e47 # v4.0.0
 
-      - uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832e0b1 # v4.0.3
+      - uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
         with:
           node-version: "24"
           cache: "pnpm"
@@ -48,7 +48,7 @@ jobs:
         name: Run tests with coverage
 
       - name: Upload coverage report
-        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb99baeddf # v4.4.0
+        uses: actions/upload-artifact@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         if: always()
         with:
           name: coverage-report
@@ -85,9 +85,9 @@ jobs:
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-      - uses: pnpm/action-setup@a3252b78d470290f8eab01612bc3224b904859c5 # v4.0.0
+      - uses: pnpm/action-setup@0c17529a66aca453f9227af23103ed11469b1e47 # v4.0.0
 
-      - uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832e0b1 # v4.0.3
+      - uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
         with:
           node-version: "24"
           cache: "pnpm"
@@ -110,9 +110,9 @@ jobs:
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-      - uses: pnpm/action-setup@a3252b78d470290f8eab01612bc3224b904859c5 # v4.0.0
+      - uses: pnpm/action-setup@0c17529a66aca453f9227af23103ed11469b1e47 # v4.0.0
 
-      - uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832e0b1 # v4.0.3
+      - uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
         with:
           node-version: "24"
           cache: "pnpm"
@@ -139,14 +139,14 @@ jobs:
         run: pnpm analyze:bundle:check
 
       - name: Upload bundle summary
-        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb99baeddf # v4.4.0
+        uses: actions/upload-artifact@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           name: bundle-summary
           path: bundle-summary.json
           retention-days: 14
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb99baeddf # v4.4.0
+        uses: actions/upload-artifact@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           name: nextjs-build
           path: .next/
@@ -161,9 +161,9 @@ jobs:
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-      - uses: pnpm/action-setup@a3252b78d470290f8eab01612bc3224b904859c5 # v4.0.0
+      - uses: pnpm/action-setup@0c17529a66aca453f9227af23103ed11469b1e47 # v4.0.0
 
-      - uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832e0b1 # v4.0.3
+      - uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
         with:
           node-version: "24"
           cache: "pnpm"
