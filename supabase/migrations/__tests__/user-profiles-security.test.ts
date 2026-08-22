@@ -83,3 +83,40 @@ describe("Storage bucket policy migration audit", () => {
     expect(sql).toMatch(/allowed_mime_types/);
   });
 });
+
+describe("Progress projection aggregate RPC migration audit", () => {
+  const migrationsDir = path.join(process.cwd(), "supabase", "migrations");
+
+  it("defines get_activity_totals and get_lesson_completion_total scoped to auth.uid, invoker-mode, NULL-safe", () => {
+    const aggregatesMigration = fs
+      .readdirSync(migrationsDir)
+      .find((f) => f.includes("progress_projection_aggregates"));
+    expect(aggregatesMigration).toBeDefined();
+
+    const sql = fs.readFileSync(path.join(migrationsDir, aggregatesMigration!), "utf8");
+
+    // Both functions exist
+    expect(sql).toMatch(/create\s+or\s+replace\s+function\s+public\.get_activity_totals/i);
+    expect(sql).toMatch(/create\s+or\s+replace\s+function\s+public\.get_lesson_completion_total/i);
+
+    // Both scope by (select auth.uid()) — not a client-supplied user_id parameter
+    expect(sql).toMatch(/where\s+user_id\s*=\s*\(select\s+auth\.uid\(\)\)/i);
+    const authUidScopeCount = (sql.match(/\(select\s+auth\.uid\(\)\)/gi) ?? []).length;
+    expect(authUidScopeCount).toBe(2);
+
+    // Neither function is marked security definer (invoker-mode, the Postgres default)
+    expect(sql).not.toMatch(/security\s+definer/i);
+
+    // Both sum() calls are NULL-safe on zero rows
+    expect(sql).toMatch(/coalesce\(\s*sum\(exercises_total\)\s*,\s*0\s*\)/i);
+    expect(sql).toMatch(/coalesce\(\s*sum\(duration_ms\)\s*,\s*0\s*\)/i);
+
+    // Both functions are granted to authenticated
+    expect(sql).toMatch(
+      /grant\s+execute\s+on\s+function\s+public\.get_activity_totals\(\)\s+to\s+authenticated/i,
+    );
+    expect(sql).toMatch(
+      /grant\s+execute\s+on\s+function\s+public\.get_lesson_completion_total\(\)\s+to\s+authenticated/i,
+    );
+  });
+});

@@ -1336,6 +1336,16 @@ export type Database = {
           retry_after_seconds: number
         }[]
       }
+      get_activity_totals: {
+        Args: never
+        Returns: {
+          active_days: number
+          duration_ms: number
+          exercises: number
+          sessions: number
+        }[]
+      }
+      get_lesson_completion_total: { Args: never; Returns: number }
       is_valid_interest_list: { Args: { value: Json }; Returns: boolean }
       text_fragments_within_limit: { Args: never; Returns: boolean }
     }
