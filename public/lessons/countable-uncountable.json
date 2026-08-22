@@ -2,91 +2,88 @@
   "slug": "countable-uncountable",
   "sections": [
     {
-      "heading": "La distinción central",
-      "body": "Los sustantivos contables se pueden contar como unidades individuales y tienen formas singulares y plurales: una manzana, dos manzanas. Los sustantivos incontables (también llamados sustantivos masivos) se refieren a cosas vistas como una masa o concepto continuo; no tienen plural natural y toman verbos en singular."
+      "heading": "La distinción esencial",
+      "body": "Los sustantivos contables (*countable nouns*) representan entidades individuales que se pueden enumerar y poseen formas singular y plural (*an apple, two apples*). Los sustantivos incontables (*uncountable nouns*) representan masas continuas, materiales o conceptos abstractos; no tienen forma plural en inglés y concuerdan con verbos en singular (*water, information, advice*)."
     },
     {
-      "heading": "Sustantivos incontables comunes que sorprenden a los alumnos",
-      "body": "Muchos sustantivos que tienen equivalentes naturales en español son incontables en inglés: consejo (no 'consejos'), información (no 'informaciones'), muebles (no 'muebles'), equipaje, tarea, investigación, noticias, clima, tráfico, dinero, tiempo, trabajo, conocimiento."
+      "heading": "Sustantivos incontables que confunden a hispanohablantes",
+      "body": "Muchos sustantivos que son contables en español son estrictamente incontables en inglés: **advice** (nunca 'an advice' ni 'advices'), **information** (nunca 'informations'), **furniture** (nunca 'furnitures'), **luggage / baggage**, **homework**, **news**, **weather**, **traffic**, **knowledge**."
     },
     {
-      "heading": "Cuantificadores",
-      "body": "Utilice diferentes cuantificadores según el estado del recuento. Contables: muchos, pocos, unos cuantos, un número de, varios. Incontable: mucho, poco, poco, mucho, una cantidad de. Ambos: algunos, algunos, muchos, muchos, la mayoría."
+      "heading": "Cuantificadores adecuados",
+      "body": "Solo para contables: *many, few, a few, several, a number of*. Solo para incontables: *much, little, a little, an amount of*. Válidos para ambos: *some, any, a lot of, plenty of, most*."
     },
     {
-      "heading": "Hacer contables los sustantivos incontables",
-      "body": "Puedes hacer contable un sustantivo incontable añadiendo un contenedor o unidad: \"un consejo\", \"un dato\", \"dos muebles\", \"tres maletas\", \"un poco de investigación\". Así los cuantifican los hablantes nativos."
+      "heading": "Partitivos y unidades de medida",
+      "body": "Para contar sustantivos incontables se recurre a palabras partitivas: *a piece of advice* (un consejo), *a piece of furniture* (un mueble), *two items of luggage* (dos piezas de equipaje), *a bottle of water* (una botella de agua)."
     }
   ],
   "examples": [
     {
       "english": "Can you give me some advice?",
-      "note": "No es 'un consejo' ni 'algunos consejos'"
+      "note": "No se dice 'an advice' ni 'some advices'."
     },
     {
-      "english": "I need more information.",
-      "note": "No 'más información'"
+      "english": "I need more information about the course.",
+      "note": "'Information' nunca se pluraliza."
     },
     {
-      "english": "a piece of furniture",
-      "note": "La palabra contenedora la hace contable"
+      "english": "We bought two pieces of furniture.",
+      "note": "'Furniture' se cuantifica con 'pieces of'."
     },
     {
-      "english": "two loaves of bread",
-      "note": "'Loaves' es el contenedor del 'pan'"
-    },
-    {
-      "english": "There's a lot of traffic today.",
-      "note": "El 'tráfico' es incontable"
+      "english": "There's a lot of traffic on the highway today.",
+      "note": "'Traffic' es incontable y lleva verbo en singular."
     }
   ],
   "exercises": [
     {
-      "instruction": "¿Son estos sustantivos contables (C) o incontables (U)? Luego úsalos en una oración corta.",
+      "instruction": "Clasifica cada sustantivo como contable (C) o incontable (U).",
+      "type": "closed_blank",
       "items": [
-        "luggage",
-        "suitcase",
-        "knowledge",
-        "fact",
-        "weather",
-        "cloud",
-        "homework",
-        "assignment"
+        "luggage ___ (C / U)",
+        "suitcase ___ (C / U)",
+        "knowledge ___ (C / U)",
+        "fact ___ (C / U)",
+        "weather ___ (C / U)",
+        "cloud ___ (C / U)",
+        "homework ___ (C / U)",
+        "assignment ___ (C / U)"
       ],
       "answers": [
-        "U (incontable)",
-        "C (contable)",
-        "U (incontable)",
-        "C (contable)",
-        "U (incontable)",
-        "C (contable)",
-        "U (incontable)",
-        "C (contable)"
+        ["U", "uncountable", "incontable"],
+        ["C", "countable", "contable"],
+        ["U", "uncountable", "incontable"],
+        ["C", "countable", "contable"],
+        ["U", "uncountable", "incontable"],
+        ["C", "countable", "contable"],
+        ["U", "uncountable", "incontable"],
+        ["C", "countable", "contable"]
       ]
     }
   ],
   "quiz": [
     {
-      "question": "¿Qué oración es correcta?",
+      "question": "Which sentence is grammatically correct in English?",
       "options": [
-        "Ella me dio un buen consejo.",
-        "Ella me dio algunos buenos consejos.",
-        "Ella me dio un buen consejo.",
-        "Ella me dio buenos consejos."
+        "She gave me a good advice.",
+        "She gave me some good advices.",
+        "She gave me a piece of good advice.",
+        "She gave me many advices."
       ],
       "correct": 2,
-      "explanation": "Los 'consejos' son incontables. Para referirse a un elemento, utilice \"un consejo\"."
+      "explanation": "'Advice' is an uncountable noun. To refer to a single recommendation, use 'a piece of advice' or 'some advice'."
     },
     {
-      "question": "¿Qué cuantificador se puede utilizar TANTO con sustantivos contables como incontables?",
+      "question": "Which quantifier can be used with BOTH countable and uncountable nouns?",
       "options": [
-        "muchos",
-        "pocos",
-        "mucho",
-        "varios"
+        "many",
+        "few",
+        "a lot of",
+        "several"
       ],
       "correct": 2,
-      "explanation": "'Mucha' funciona con ambos: 'muchas manzanas' (C) y 'mucha agua' (U)."
+      "explanation": "'A lot of' works with both countable nouns ('a lot of books') and uncountable nouns ('a lot of water')."
     }
   ]
 }

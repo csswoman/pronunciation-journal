@@ -32,7 +32,11 @@ export function ImmersionLessonDetailClient({ lesson }: ImmersionLessonDetailCli
         </Link>
 
         <div className="flex items-center gap-2">
-          <Badge label={`Nivel ${lesson.level}`} color={lesson.level.startsWith('A') ? 'emerald' : 'sky'} size="sm" />
+          <Badge
+            label={`Nivel ${lesson.level}`}
+            variant={lesson.level.startsWith("A") ? "default" : "neutral"}
+            size="sm"
+          />
           <span className="inline-flex items-center gap-1 rounded-full bg-surface-sunken px-2.5 py-0.5 text-tiny font-mono text-fg-muted">
             <Timer className="size-3" />
             <span>{lesson.durationMinutes} min</span>

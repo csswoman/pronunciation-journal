@@ -48,9 +48,6 @@ export async function loadEssentialWordsQueue(
   const now = new Date();
   const { entries: srsEntries, activatedWordIds } = await prepareEssentialWordsSrsEntries(now, userId);
 
-  // Essential Words owns a complete three-word session (15 actions). Reviews
-  // take priority and new words fill what remains; today's Daily Plan quota
-  // never reduces this practice queue.
   const items = buildSessionQueue({
     words,
     srsEntries,
@@ -65,8 +62,6 @@ export async function loadEssentialWordsQueue(
   }));
   const seenIds = new Set(srsEntries.map((entry) => entry.wordId));
 
-  // When a filter is active, scope the "learned x/total" line to that subset so
-  // the deck line matches what the user is actually practising.
   const hasFilter = (levels && levels.length > 0) || (pos && pos.length > 0);
   const scopedWords = words.filter((w) => matchesFilter(w, levels, pos));
   const scopedIds = new Set(scopedWords.map((w) => essentialWordId(w.word)));

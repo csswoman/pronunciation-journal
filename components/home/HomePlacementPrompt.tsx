@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { ArrowRight } from "@/components/icons";
-import { cn } from "@/lib/cn";
 
 interface HomePlacementPromptProps {
   compact?: boolean;
@@ -12,23 +11,27 @@ export default function HomePlacementPrompt({
   compact = false,
   demoteCta = false,
 }: HomePlacementPromptProps) {
+  const cta = (
+    <Link
+      href="/assessment"
+      className="focus-ring inline-flex min-h-10 items-center gap-1.5 font-body-sm text-fg-muted underline-offset-2 transition-colors hover:text-fg hover:underline"
+    >
+      Hacer prueba de nivel
+      <ArrowRight size={16} aria-hidden />
+    </Link>
+  );
+
   if (compact) {
     return (
-      <section className="home-sidebar-card flex flex-col gap-2" aria-labelledby="placement-prompt-compact-title">
+      <section className="home-sidebar-card home-sidebar-card--compact flex h-full flex-col gap-1.5" aria-labelledby="placement-prompt-compact-title">
         <span className="font-kicker text-fg-subtle">Ajusta tu ruta</span>
         <h2 id="placement-prompt-compact-title" className="font-label text-fg">
           Afina tu nivel
         </h2>
-        <p className="font-body-sm text-fg-muted">
+        <p className="font-caption line-clamp-2 text-fg-muted">
           Comprueba qué temas ya dominas para ordenar mejor tu plan.
         </p>
-        <Link
-          href="/assessment"
-          className="focus-ring inline-flex min-h-10 items-center gap-1.5 font-body-sm text-fg-muted underline-offset-2 transition-colors hover:text-fg hover:underline"
-        >
-          Hacer prueba de nivel
-          <ArrowRight size={16} aria-hidden />
-        </Link>
+        {cta}
       </section>
     );
   }
@@ -46,18 +49,9 @@ export default function HomePlacementPrompt({
           Unas preguntas cortas para ordenar mejor lo de hoy.
         </p>
       </div>
-      <Link
-        href="/assessment"
-        className={cn(
-          "focus-ring inline-flex min-h-11 shrink-0 items-center justify-center gap-1.5 rounded-md px-4 font-label transition-colors",
-          demoteCta
-            ? "text-fg-muted underline-offset-2 hover:text-fg hover:underline"
-            : "bg-primary text-on-primary hover:bg-primary-hover",
-        )}
-      >
-        Hacer prueba de nivel
-        <ArrowRight size={16} aria-hidden />
-      </Link>
+      {demoteCta ? cta : (
+        <div className="shrink-0">{cta}</div>
+      )}
     </section>
   );
 }

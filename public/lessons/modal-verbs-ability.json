@@ -2,64 +2,65 @@
   "slug": "modal-verbs-ability",
   "sections": [
     {
-      "heading": "Puede - capacidad actual",
-      "body": "'Can' expresa habilidad general en el presente o futuro. También se usa para permiso (informal) y posibilidad. Es el modal más versátil y común."
+      "heading": "Can: Habilidad en el presente",
+      "body": "**'Can'** expresa habilidad general en el presente o futuro inmediato (*'I can swim'*). También se utiliza para permisos informales y posibilidad."
     },
     {
-      "heading": "Podría: capacidad pasada y más",
-      "body": "'Podría' expresa habilidad general en el pasado. Es importante destacar que, para un logro específico en el pasado (algo que lograste hacer en una ocasión particular), utiliza \"fue/fueron capaces de\", no \"pudieron\". 'Sabía nadar a los 5 años' (general). 'Pude nadar hasta la orilla' (logro específico)."
+      "heading": "Could vs. Was/Were able to: Habilidad en el pasado",
+      "body": "**'Could'** expresa una habilidad general que se poseía en el pasado (*'I could run fast when I was young'*). Sin embargo, para un **logro específico en una ocasión puntual**, se debe usar **'was/were able to'** o **'managed to'**, no 'could' (*'The firefighters were able to rescue everyone'*)."
     },
     {
-      "heading": "Ser capaz de - formal y todos los tiempos",
-      "body": "\"Be able to\" puede aparecer en cualquier tiempo, lo que lo hace más flexible que \"can\" o \"could\". También es más formal y es la única opción después de otras modalidades: \"Es posible que puedas obtener un reembolso\"."
+      "heading": "Be able to: Flexibilidad en todos los tiempos",
+      "body": "**'Be able to'** no es un verbo modal defectivo, por lo que puede conjugarse en cualquier tiempo verbal (futuro con *will*, presente perfecto con *have been able to*, infinitivo tras otros modales como *might be able to*)."
     }
   ],
   "examples": [
     {
       "english": "I can speak three languages.",
-      "note": "Habilidad actual general"
+      "note": "Habilidad general presente."
     },
     {
-      "english": "She could read at age 4.",
-      "note": "Habilidad pasada general"
+      "english": "She could read when she was four years old.",
+      "note": "Habilidad general en el pasado."
     },
     {
-      "english": "I was able to finish the race despite the injury.",
-      "note": "Logro pasado específico: NO 'podría'"
+      "english": "I was able to finish the marathon despite the heavy rain.",
+      "note": "Logro específico puntual en el pasado (no 'could finish')."
     },
     {
       "english": "You might be able to catch an earlier train.",
-      "note": "Después de otro modal → 'poder'"
+      "note": "Uso tras otro verbo modal ('might')."
     }
   ],
   "exercises": [
     {
-      "instruction": "Complete each sentence with 'can', 'could', 'be able to', or 'manage to' in the correct form.",
+      "instruction": "Completa cada oración con la forma correcta de 'can', 'could' o 'be able to'.",
+      "type": "closed_blank",
       "items": [
-        "When I was five, I ___ (swim) across the pool.",
-        "She ___ (not / speak) French when she started the job, but she learned quickly.",
-        "After years of practice, he ___ finally ___ (play) the piece perfectly.",
-        "___ you ___ (help) me with this report tomorrow?"
+        "When I was five, I ___ (can / swim) across the pool.",
+        "She ___ (not / can / speak) French when she started the job.",
+        "Despite the traffic, we ___ (arrive) on time for the meeting.",
+        "Will you ___ (can / help) me with this report tomorrow?"
       ],
       "answers": [
         "could swim",
-        "couldn't speak / wasn't able to speak",
-        "was finally able to play / finally managed to play",
-        "Can you help / Will you be able to help"
+        ["couldn't speak", "could not speak", "was not able to speak", "wasn't able to speak"],
+        ["were able to arrive", "managed to arrive"],
+        "be able to help"
       ]
     }
   ],
   "quiz": [
     {
-      "question": "¿Por qué está mal \"podría\" en esta oración? \"Los bomberos pudieron rescatar a todas las personas atrapadas\".",
+      "question": "Why is 'could' incorrect in: 'The firefighters ___ rescue everyone from the burning building yesterday'?",
       "options": [
-        "'Podría' sólo puede referirse al futuro",
-        "'Podría' está mal en oraciones positivas sobre logros pasados",
-        "'Podría' no puede seguir a 'el'",
-        "'Podría' requiere 'tener'"
+        "'Could' can only refer to future events.",
+        "'Could' cannot be used for a specific single achievement in past affirmative sentences; 'were able to' is required.",
+        "'Could' cannot be used with plural subjects.",
+        "'Could' requires the auxiliary 'have' in all past sentences."
       ],
       "correct": 1,
-      "explanation": "Para un logro pasado específico, \"pudo/pudimos\" es correcto. \"Podría\" implica habilidad general, no un éxito puntual."
+      "explanation": "For a specific past achievement in a single situation, affirmative sentences require 'was/were able to' or 'managed to', not 'could'."
     }
   ]
 }

@@ -32,7 +32,7 @@ export interface BuildQueueOptions {
 
 /** True when `levels` is unset/empty (no filter) or the entry's level is included. */
 export function matchesLevels(
-  entry: EssentialWord,
+  entry: Pick<EssentialWord, "cefr_level">,
   levels?: readonly CefrLevel[] | null,
 ): boolean {
   if (!levels || levels.length === 0) return true;
@@ -41,7 +41,7 @@ export function matchesLevels(
 
 /** True when `pos` is unset/empty (no filter) or the entry's part of speech is included. */
 export function matchesPos(
-  entry: EssentialWord,
+  entry: Pick<EssentialWord, "pos">,
   pos?: readonly EssentialWordPos[] | null,
 ): boolean {
   if (!pos || pos.length === 0) return true;
@@ -50,7 +50,7 @@ export function matchesPos(
 
 /** Combined level + pos predicate — the shape a "themed route" filters on. */
 export function matchesFilter(
-  entry: EssentialWord,
+  entry: Pick<EssentialWord, "cefr_level" | "pos">,
   levels?: readonly CefrLevel[] | null,
   pos?: readonly EssentialWordPos[] | null,
 ): boolean {

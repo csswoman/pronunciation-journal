@@ -22,10 +22,10 @@ export function ExitConfirmSheet({
   open,
   onConfirm,
   onCancel,
-  title = 'Quit this session?',
-  description = "You'll lose your progress in this session.",
-  confirmLabel = 'End session',
-  cancelLabel = 'Keep practicing',
+  title = '¿Salir de esta sesión?',
+  description = 'Se guardará el progreso completado hasta ahora.',
+  confirmLabel = 'Terminar sesión',
+  cancelLabel = 'Seguir practicando',
 }: ExitConfirmSheetProps) {
   const firstButtonRef = useRef<HTMLButtonElement>(null)
 
@@ -51,7 +51,7 @@ export function ExitConfirmSheet({
       {/* Blur backdrop */}
       <button
         type="button"
-        aria-label="Dismiss"
+        aria-label="Cerrar diálogo"
         onClick={onCancel}
         className="absolute inset-0 bg-page-bg/60 backdrop-blur-md cursor-default w-full h-full"
       />

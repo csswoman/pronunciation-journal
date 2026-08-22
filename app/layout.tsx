@@ -5,7 +5,7 @@ import { THEME_INIT_SCRIPT } from "@/lib/theme/theme-init-script";
 
 // Body + UI + headings — DM Sans
 const dmSans = DM_Sans({
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700"],
   subsets: ["latin", "latin-ext"],
   variable: "--font-sans",
 });
@@ -25,6 +25,12 @@ const andika = Andika({
   display: "swap",
 });
 
+/**
+ * Root layout stays free of next/headers dynamic APIs so routes that can
+ * be static or CDN-cached are not forced dynamic by a per-request CSP nonce.
+ * The theme boot script is authorized via a sha256 hash in `proxy.ts` CSP
+ * (see Next.js CSP guide: nonce-based CSP requires dynamic rendering).
+ */
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -50,7 +56,8 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="PronJournal" />
-        {/* Raw blocking script (not next/script): runs while HTML parses, before paint. */}
+        {/* Raw blocking script (not next/script): runs while HTML parses, before paint.
+            Authorized by script-src sha256 hash in proxy CSP — not a layout nonce. */}
         <script
           id="theme-init"
           dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }}

@@ -4,16 +4,13 @@ import { GuestBanner } from "@/components/layout/stats/GuestBanner";
 import GuestSaveProgressBanner from "@/components/home/GuestSaveProgressBanner";
 import { ReviewHubClient } from "@/components/practice/review/ReviewHubClient";
 import { isAnonymousUser } from "@/lib/auth/is-anonymous";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { getSupabaseServerUser } from "@/lib/supabase/session";
 import { getReviewHubSummary } from "@/lib/review/server-queries";
 
 export const metadata = { title: "Review Hub" };
 
 export default async function PracticeReviewPage() {
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getSupabaseServerUser();
 
   const summary = user ? await getReviewHubSummary(user.id) : null;
 

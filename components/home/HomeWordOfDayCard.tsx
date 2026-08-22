@@ -3,8 +3,8 @@
 // Planned structure:
 // <HomeWordOfDayCard>
 //   kicker
-//   word row: SyllableWord + heart → word_bank favorite (/tracking)
-//   IPA + definition + example
+//   word mark (accent-1 highlight on the word only) + heart
+//   IPA + definition + example line
 // </HomeWordOfDayCard>
 
 import { useEffect, useState } from "react";
@@ -29,25 +29,32 @@ function saveLabel(state: SaveState): string {
   return "Guardar en Tracking";
 }
 
-/** Preview-only — no listen/shuffle micro-session on home. */
-export default function HomeWordOfDayCard() {
+interface HomeWordOfDayCardProps {
+  profileLevel?: string | null;
+}
+
+/** Single-word focus — accent lives on the word mark, not the card shell. */
+export default function HomeWordOfDayCard({ profileLevel = null }: HomeWordOfDayCardProps) {
   const { user } = useAuth();
-  const [level, setLevel] = useState<string | undefined>(undefined);
+  const [level, setLevel] = useState<string | undefined>(
+    profileLevel ? profileLevel.toLowerCase() : undefined
+  );
   const [saveState, setSaveState] = useState<SaveState>("idle");
 
   useEffect(() => {
+    if (profileLevel) return;
     let cancelled = false;
     const isGuest = isAnonymousUser(user);
     const storedLevel = isGuest
       ? Promise.resolve(readGuestStudyLevel())
-      : readStoredCefrLevel(user!.id);
+      : (user?.id ? readStoredCefrLevel(user.id) : Promise.resolve(null));
     void storedLevel.then((l) => {
       if (!cancelled && l) setLevel(l.toLowerCase());
     });
     return () => {
       cancelled = true;
     };
-  }, [user]);
+  }, [user, profileLevel]);
 
   const { word, loading, error, refresh } = useWordOfDay(level);
 
@@ -59,7 +66,6 @@ export default function HomeWordOfDayCard() {
     if (!word || saveState === "saving" || saveState === "saved") return;
     setSaveState("saving");
     try {
-      // /tracking lists favorite word_bank rows — create then mark favorite.
       const entry = await quickAddWord({
         text: word.word,
         context: word.example_sentence || word.definition || null,
@@ -76,14 +82,14 @@ export default function HomeWordOfDayCard() {
 
   return (
     <div
-      className="home-sidebar-card flex flex-col gap-2"
+      className="home-sidebar-card flex flex-col gap-3"
       aria-busy={loading || undefined}
     >
-      <span className="font-label text-fg">Palabra del día</span>
+      <span className="font-kicker text-fg-subtle">Palabra del día</span>
 
       {loading && (
         <div className="flex flex-col gap-2 py-1" aria-hidden>
-          <div className="h-7 w-28 animate-pulse rounded bg-surface-sunken" />
+          <div className="h-9 w-32 animate-pulse rounded-sm bg-surface-sunken" />
           <div className="h-4 w-20 animate-pulse rounded bg-surface-sunken" />
           <div className="h-4 w-full animate-pulse rounded bg-surface-sunken" />
         </div>
@@ -99,17 +105,18 @@ export default function HomeWordOfDayCard() {
       )}
 
       {word && !loading && (
-        <div className="animate-state-in flex flex-col gap-2" key={word.word}>
-          <div className="flex items-center gap-2">
-            <p className="text-display-word min-w-0 font-semibold leading-tight text-fg">
+        <div className="animate-state-in flex flex-col gap-2.5" key={word.word}>
+          <div className="flex items-start gap-2">
+            <p className="home-editorial-mark min-w-0">
               <SyllableWord word={word.word} />
             </p>
-            <div className="group relative shrink-0">
+            <div className="group relative shrink-0 pt-0.5">
               <button
                 type="button"
                 onClick={() => void handleSave()}
                 disabled={saveState === "saving" || saveState === "saved"}
                 aria-label={label}
+                aria-describedby="word-save-tooltip"
                 className={cn(
                   "focus-ring inline-flex min-h-10 min-w-10 items-center justify-center rounded-sm transition-colors",
                   saveState === "saved"
@@ -125,6 +132,7 @@ export default function HomeWordOfDayCard() {
                 />
               </button>
               <span
+                id="word-save-tooltip"
                 role="tooltip"
                 className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1.5 -translate-x-1/2 whitespace-nowrap rounded-sm border border-border-default bg-surface-raised px-2 py-1 text-caption font-medium text-fg opacity-0 shadow-md transition-opacity group-hover:opacity-100 group-focus-within:opacity-100"
               >
@@ -138,12 +146,12 @@ export default function HomeWordOfDayCard() {
             </p>
           ) : null}
           {word.definition ? (
-            <p className="font-body-sm text-pretty text-fg-muted">
+            <p className="max-w-[42ch] font-body-sm text-pretty text-fg-muted">
               {word.definition}
             </p>
           ) : null}
           {word.example_sentence ? (
-            <p className="mt-1 pl-1 font-body-sm text-pretty italic text-fg">
+            <p className="border-t border-border-subtle pt-2.5 font-body-sm text-pretty italic text-fg">
               “{word.example_sentence}”
             </p>
           ) : null}

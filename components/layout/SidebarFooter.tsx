@@ -7,7 +7,6 @@
 //     <PanelHeader />
 //     <ThemeControls />
 //     <SoundControls />
-//     <StudyLevelControls />
 //     <AccountAction />
 //   </QuickSettingsPanel>
 // </SidebarFooter>
@@ -20,27 +19,22 @@ import { cn } from "@/lib/cn";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useUserPreferences } from "@/hooks/useUserPreferences";
 import { isAnonymousUser } from "@/lib/auth/is-anonymous";
-import { type CefrLevel } from "@/lib/essential-words/types";
-import { readGuestStudyLevel, saveGuestStudyLevel } from "@/lib/preferences/guest-study-level";
 import { LogIn, LogOut, Settings2 } from "@/components/icons";
 import { useSidebar } from "@/components/theme/sidebar/SidebarContext";
 import {
   SoundControls,
-  StudyLevelControls,
   ThemeControls,
 } from "@/components/layout/QuickSettingsControls";
 
 export default function SidebarFooter() {
   const router = useRouter();
   const { user, signOutUser } = useAuth();
-  const { preferences, updateCefrLevel } = useUserPreferences();
+  const { preferences } = useUserPreferences();
   const { collapsed } = useSidebar();
   const [open, setOpen] = useState(false);
-  const [guestLevel, setGuestLevel] = useState<CefrLevel>("A1");
   const footerRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const isGuest = isAnonymousUser(user);
-  const level = isGuest ? guestLevel : preferences?.cefr_level ?? "A1";
   const displayName = isGuest
     ? "Modo invitado"
     : preferences?.full_name || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Mi perfil";
@@ -53,10 +47,6 @@ export default function SidebarFooter() {
         .map((word: string) => word[0])
         .join("")
         .toUpperCase();
-
-  useEffect(() => {
-    setGuestLevel(readGuestStudyLevel());
-  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -78,15 +68,6 @@ export default function SidebarFooter() {
       document.removeEventListener("pointerdown", onPointerDown);
     };
   }, [open]);
-
-  const setLevel = async (next: CefrLevel) => {
-    if (isGuest) {
-      saveGuestStudyLevel(next);
-      setGuestLevel(next);
-      return;
-    }
-    await updateCefrLevel(next);
-  };
 
   const signOut = async () => {
     setOpen(false);
@@ -149,7 +130,6 @@ export default function SidebarFooter() {
 
             <ThemeControls />
             <SoundControls />
-            <StudyLevelControls level={level} onChange={(next) => void setLevel(next)} />
 
             <div className="border-t border-border-subtle pt-2">
               {isGuest ? (

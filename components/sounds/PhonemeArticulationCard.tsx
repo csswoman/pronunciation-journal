@@ -28,7 +28,7 @@ export function PhonemeArticulationCard({ guide }: PhonemeArticulationCardProps)
 
         <Badge
           label={guide.voiced ? 'Vocal Cords: ON' : 'Vocal Cords: OFF'}
-          color={guide.voiced ? 'emerald' : 'sky'}
+          variant={guide.voiced ? "success" : "neutral"}
           size="sm"
         />
       </div>

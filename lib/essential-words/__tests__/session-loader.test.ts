@@ -5,8 +5,10 @@ import { getEssentialWordsIntroducedToday, getEssentialWordsSrsEntries } from "@
 import { getEssentialWordsDueTomorrowCount } from "../due-tomorrow";
 import type { SRSData } from "@/lib/types";
 
-vi.mock("../client", () => ({
-  fetchEssentialWords: vi.fn(async () => [
+import type { EssentialWord } from "../types";
+
+vi.mock("../client", () => {
+  const mockWords: EssentialWord[] = [
     {
       rank: 1,
       word: "test",
@@ -15,8 +17,29 @@ vi.mock("../client", () => ({
       example_sentence: "This is a test.",
       cefr_level: "A1",
     },
-  ]),
-}))
+  ];
+  const fetchEssentialWords = vi.fn(async () => mockWords);
+  return {
+    fetchEssentialWords,
+    fetchCatalogIndex: vi.fn(async () => {
+      const words = await fetchEssentialWords();
+      return words.map((w) => ({
+        rank: w.rank,
+        word: w.word,
+        pos: w.pos,
+        cefr_level: w.cefr_level,
+        chunk: Math.ceil(w.rank / 100),
+        ipa_strong: w.ipa_strong,
+        ipa_weak: w.ipa_weak,
+      }));
+    }),
+    fetchChunks: vi.fn(async () => {
+      const words = await fetchEssentialWords();
+      return new Map(words.map((w) => [w.word, w]));
+    }),
+    fetchChunk: vi.fn(async () => await fetchEssentialWords()),
+  };
+});
 
 vi.mock("@/lib/db", () => ({
   db: {
@@ -26,11 +49,11 @@ vi.mock("@/lib/db", () => ({
   },
   getEssentialWordsSrsEntries: vi.fn(async () => []),
   getEssentialWordsIntroducedToday: vi.fn(async () => []),
-}))
+}));
 
 vi.mock("../due-tomorrow", () => ({
   getEssentialWordsDueTomorrowCount: vi.fn(async () => 0),
-}))
+}));
 
 describe("loadEssentialWordsQueue", () => {
   beforeEach(() => {

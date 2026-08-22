@@ -1,10 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-import { getBrowserSession } from "@/lib/supabase/auth-actions";
+import { getBrowserSession, signInWithGoogle } from "@/lib/supabase/auth-actions";
 import { isAnonymousUser } from "@/lib/auth/is-anonymous";
+import {
+  GOOGLE_OAUTH_RESUME_PARAM,
+  GOOGLE_OAUTH_RESUME_VALUE,
+} from "@/lib/auth/oauth-identity";
+import { publicAuthErrorMessage } from "@/lib/auth/password-policy";
 import { createAuthPanelHandlers } from "@/components/auth/auth-panel-handlers";
 import {
   resolveInitialMode,
@@ -30,6 +35,7 @@ export function useAuthPanelController() {
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
   const [upgradingGuest, setUpgradingGuest] = useState(false);
+  const googleResumeStarted = useRef(false);
 
   useEffect(() => {
     if (searchParams.get("message") === "password-updated") {
@@ -49,6 +55,31 @@ export function useAuthPanelController() {
       cancelled = true;
     };
   }, []);
+
+  // After guest→Google link fails because the identity already belongs to a
+  // permanent account, the callback sends us here to finish as a normal sign-in.
+  useEffect(() => {
+    if (searchParams.get(GOOGLE_OAUTH_RESUME_PARAM) !== GOOGLE_OAUTH_RESUME_VALUE) {
+      return;
+    }
+    if (googleResumeStarted.current) return;
+    googleResumeStarted.current = true;
+
+    router.replace(intent === "save" ? "/login?intent=save" : "/login");
+    setError(null);
+    setMessage(null);
+    setPending(true);
+
+    void (async () => {
+      const { error: err } = await signInWithGoogle();
+      if (err) {
+        console.error("[auth] google resume sign in failed", err);
+        setError(publicAuthErrorMessage());
+        setPending(false);
+      }
+      // On success the browser navigates to Google; leave pending true.
+    })();
+  }, [intent, router, searchParams]);
 
   const clearFeedback = () => {
     setError(null);

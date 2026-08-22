@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { requireSameOrigin, requireUser, rateLimit, validateBody } from '@/lib/api/guards'
+import { requireSameOrigin, requireUser, checkLayeredRateLimit, validateBody } from '@/lib/api/guards'
 import { callGeminiJson, parseGeminiJson } from '@/lib/gemini/json-route'
 import { buildWordSearchUserPrompt, WORD_SEARCH_SYSTEM_PROMPT } from '@/lib/ai-prompts'
 
@@ -31,14 +31,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const { user, error: authError } = await requireUser(request)
   if (authError) return authError as NextResponse
 
-  const { limited, error: rateLimitError } = await rateLimit(
-    `/api/gemini/word-search:${user.id}`,
-    {
-      max: 12,
-      windowMs: 60_000,
-      meta: { endpoint: '/api/gemini/word-search', userId: user.id },
-    }
-  )
+  const { limited, error: rateLimitError } = await checkLayeredRateLimit({
+    request,
+    user,
+    endpoint: '/api/gemini/word-search',
+    maxPermanent: 12,
+    maxAnonymous: 3,
+  })
   if (limited) return rateLimitError as NextResponse
 
   const { data: body, error: validationError } = await validateBody(

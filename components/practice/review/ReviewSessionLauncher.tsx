@@ -1,7 +1,13 @@
-'use client'
-
-import PracticeSession from '@/components/practice/PracticeSession'
+import dynamic from 'next/dynamic'
 import type { ReviewSessionPhase } from '@/hooks/useReviewSession'
+
+const PracticeSession = dynamic(() => import('@/components/practice/PracticeSession'), {
+  loading: () => (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-surface-base text-fg-muted font-caption">
+      Cargando sesión…
+    </div>
+  ),
+})
 
 interface Props {
   state: ReviewSessionPhase

@@ -25,9 +25,10 @@ una fórmula que deba medirse en píxeles ni un permiso para añadir color.
 | Acentos de actividad | Puntual | `stage-pairs` y `stage-dictation`, solo dentro de la práctica a la que pertenecen. |
 
 - Consume siempre tokens semánticos o utilidades Tailwind mapeadas a ellos. Nunca derives un color a partir de un número de hue local.
-- `--hue` y `.dark` cambian el tema completo. Ningún ejemplo, mockup o componente puede asumir que el color inicial será violeta.
-- El color primario no rellena paneles grandes ni decora el fondo. En Home, la prioridad se expresa con posición, texto y contraste antes que con saturación.
-- El progreso puede usar una barra compacta con el color del tema. El resultado correcto, una advertencia o un error usan colores semánticos fijos, acompañados de texto o icono.
+- `--hue` / `--hue-base` y `.dark` cambian el tema completo. Los acentos split-complementary (`--accent-1` +150°, `--accent-2` +210°) se derivan del slider; en Home: editorial = accent-1 (solo en el foco: marca de palabra o bloque de frase), progreso = accent-2, un CTA sólido = primary.
+- El color primario no rellena paneles grandes ni decora el fondo. En Home, la prioridad se expresa con posición, texto y contraste; no tiñas tarjetas enteras con accent-1.- Dos recetas de primary, una regla: chrome fuera de Home puede usar tinta (`Button` `primary` → `--cta-bg`). En Home, el único relleno sólido de la vista usa hue (`--primary`). El avance dentro de una sesión usa el hue (`PillButton` `primary` → `--primary`).
+- El progreso del plan en Home usa `--accent-2`. El resultado correcto en ejercicios sigue con colores semánticos fijos, acompañados de texto o icono.
+- `Badge` solo admite variantes semánticas (`default`, `success`, `info`, `warning`, `error`, `neutral`). No hay paleta Tailwind (`sky`, `violet`, `emerald`).
 
 ## Border radius: una escala con significado
 
@@ -38,7 +39,7 @@ arbitrarios.
 |---|---|---|
 | `--radius-xs` (4px) | Microelementos internos, si una pieza realmente necesita una esquina visible. | Tarjetas, botones o campos. |
 | `--radius-sm` (8px) | Inputs, selección de navegación, botones pequeños. | Convertirlo en el radio universal. |
-| `--radius-md` (12px) | Botones estándar, tarjetas interactivas y bloques de tarea. Es el radio de trabajo. | Mezclarlo con un radio distinto dentro del mismo control. |
+| `--radius-md` (12px) | Botones `md`/`lg`, `layout/Card`, badges `md`. Es el radio de trabajo. | Mezclarlo con un radio distinto dentro del mismo control. |
 | `--radius-lg` (16px) | Contenedores de sesión, bloques de aprendizaje con más presencia. | Apilar varios contenedores grandes. |
 | `--radius-xl` (20px) | Tarjetas compactas del aside y superficies que deben sentirse como una pieza tranquila. | Cada tarjeta de una cuadrícula. |
 | `--radius-2xl` y superiores | Overlay, diálogo o una pieza excepcional que se eleva de verdad. | Decoración rutinaria. |
@@ -60,7 +61,7 @@ La personalidad tipográfica proviene de tres voces con tareas separadas:
 |---|---|---|
 | DM Sans | Lectura, navegación, títulos y acciones. | Cercana y clara. |
 | DM Mono | Kickers, notación técnica y pequeños metadatos. | Precisión y curiosidad. |
-| Andika (`font-ipa`) | IPA y transcripción fonética. | El detalle propio del aprendizaje de pronunciación. |
+| Andika (`font-ipa`, `.font-phoneme`) | IPA y transcripción fonética. | El detalle propio del aprendizaje de pronunciación. |
 
 - Un fonema puede crecer hasta ser el foco de una tarjeta. No necesita una serif ornamental ni un color de marca para llamar la atención.
 - Los kickers solo clasifican. Deben ser breves y no reemplazan un título comprensible.

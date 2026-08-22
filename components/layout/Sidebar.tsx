@@ -83,7 +83,7 @@ export default function Sidebar({ className = "" }: SidebarProps) {
         </nav>
 
         <SidebarFooter />
-        <SearchModal open={isSearchOpen} onClose={closeSearch} />
+        {isSearchOpen && <SearchModal open={isSearchOpen} onClose={closeSearch} />}
       </aside>
     </SidebarContext.Provider>
   );

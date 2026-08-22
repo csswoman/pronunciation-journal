@@ -1,5 +1,21 @@
 'use client'
 
+// Planned structure:
+// <JournalEditor>
+//   <EditorToolbar>
+//     <PageLabel />
+//     <HintsToggle />
+//   </EditorToolbar>
+//   <EditorPaperSheet>
+//     <TextArea />
+//     <EditorFooter>
+//       <ProgressBar />
+//       <WordCounter />
+//     </EditorFooter>
+//   </EditorPaperSheet>
+//   <SaveStatus />
+// </JournalEditor>
+
 import { useId, type KeyboardEvent } from 'react'
 import { cn } from '@/lib/cn'
 import { Checkbox } from '@/components/ui/Checkbox'
@@ -24,7 +40,7 @@ const SAVE_COPY: Record<SaveState, string> = {
   error: 'No se pudo guardar. Sigue escribiendo para reintentarlo.',
 }
 
-/** Presentational autosave textarea. Lifecycle lives in useJournalEntry. */
+/** Presentational autosave textarea designed like a personal journal page. */
 export function JournalEditor({
   content,
   onChange,
@@ -40,6 +56,8 @@ export function JournalEditor({
   const statusId = useId()
   const hasContent = content.trim().length > 0
   const showStatus = saveState !== 'saved' || hasContent
+  const meetsTarget = wordCount >= targetLength
+  const progressPercent = Math.min(100, Math.max(0, Math.round((wordCount / targetLength) * 100)))
 
   function handleKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
     if (!onSubmitShortcut) return
@@ -50,9 +68,9 @@ export function JournalEditor({
   }
 
   return (
-    <div className="flex max-w-[68ch] flex-col gap-2">
+    <div className="flex w-full flex-col gap-3">
       <div className="flex items-center justify-between">
-        <label htmlFor={fieldId} className="font-body-sm font-medium text-fg-muted">
+        <label htmlFor={fieldId} className="font-kicker text-fg-subtle">
           Tu página de hoy
         </label>
         <Checkbox
@@ -61,41 +79,89 @@ export function JournalEditor({
           label="Mostrar pistas mientras escribo"
         />
       </div>
-      <div className="overflow-hidden rounded-[var(--radius-lg)] border border-border-strong bg-surface-base">
+
+      <div className="group relative overflow-hidden rounded-[var(--radius-lg)] border border-border-strong bg-surface-base shadow-sm transition-all focus-within:border-primary focus-within:ring-1 focus-within:ring-primary/20">
         <textarea
           id={fieldId}
           value={content}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={handleKeyDown}
           disabled={disabled}
-          rows={10}
+          rows={11}
           lang="en"
           spellCheck
           aria-describedby={showStatus ? statusId : undefined}
           placeholder={hasContent ? '' : 'Empieza a escribir…'}
           className={cn(
-            'w-full resize-y bg-transparent p-4 text-base text-fg placeholder:text-fg-placeholder focus:outline-none',
+            'w-full resize-y bg-transparent p-5 font-body text-base leading-relaxed text-fg placeholder:text-fg-placeholder focus:outline-none',
             'disabled:cursor-not-allowed disabled:opacity-60',
           )}
         />
-        <div className="flex items-center justify-between border-t border-border-subtle px-4 py-2">
-          <span className="font-body-xs text-fg-subtle">Meta de hoy</span>
-          <p className="font-body-sm tabular-nums text-fg-muted" aria-live="polite">
-            {wordCount} / {targetLength} palabras
-          </p>
+
+        {/* Word progress track & footer */}
+        <div className="border-t border-border-subtle bg-surface-sunken/40 px-4 py-2.5">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <span className="font-body-xs font-medium text-fg-subtle">Meta de hoy</span>
+              {meetsTarget ? (
+                <span className="inline-flex items-center gap-1 rounded-full bg-success-soft px-2 py-0.5 font-body-xs font-semibold text-success">
+                  Meta alcanzada
+                </span>
+              ) : null}
+            </div>
+            <p className="font-body-sm tabular-nums text-fg-muted" aria-live="polite">
+              {wordCount} / {targetLength} palabras
+            </p>
+          </div>
+
+          {/* Dynamic visual progress bar */}
+          <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-surface-sunken">
+            <div
+              className={cn(
+                'h-full transition-all duration-300 ease-out',
+                meetsTarget ? 'bg-success' : 'bg-primary',
+              )}
+              style={{ width: `${progressPercent}%` }}
+              role="progressbar"
+              aria-valuenow={wordCount}
+              aria-valuemin={0}
+              aria-valuemax={targetLength}
+              aria-label="Progreso de palabras"
+            />
+          </div>
         </div>
       </div>
+
       {showStatus && (
-        <p
+        <div
           id={statusId}
           role={saveState === 'error' ? 'alert' : 'status'}
-          className={cn('font-body-sm', saveState === 'error' ? 'text-error' : 'text-fg-muted')}
+          className="flex items-center justify-between gap-2 px-1 font-body-sm"
         >
-          {SAVE_COPY[saveState]}
+          <div className="flex items-center gap-2">
+            <span
+              className={cn(
+                'h-1.5 w-1.5 rounded-full shrink-0',
+                saveState === 'saved' && 'bg-success',
+                saveState === 'pending' && 'bg-warning animate-pulse',
+                saveState === 'error' && 'bg-error',
+              )}
+              aria-hidden
+            />
+            <span className={cn(saveState === 'error' ? 'text-error' : 'text-fg-muted')}>
+              {SAVE_COPY[saveState]}
+            </span>
+          </div>
+
           {onSubmitShortcut && saveState === 'saved' && hasContent ? (
-            <span className="text-fg-subtle"> · Ctrl/⌘+Enter para revisar</span>
+            <span className="hidden items-center gap-1 text-fg-subtle sm:inline-flex">
+              <kbd className="rounded border border-border-subtle bg-surface-sunken px-1.5 py-0.5 font-mono text-caption text-fg-muted">
+                Ctrl/⌘+Enter
+              </kbd>{' '}
+              para revisar
+            </span>
           ) : null}
-        </p>
+        </div>
       )}
     </div>
   )

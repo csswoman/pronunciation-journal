@@ -34,4 +34,30 @@ describe('Dictionary Loader for Word Search', () => {
     expect(puzzle.items.length).toBeGreaterThanOrEqual(4)
     expect(puzzle.grid.length).toBe(puzzle.size)
   })
+
+  it('rejects an unknown category instead of silently changing the topic', async () => {
+    const fetchMock = vi.fn()
+    global.fetch = fetchMock as unknown as typeof fetch
+
+    await expect(loadDictionaryPuzzle('missing-area', 'clues', 6)).rejects.toThrow(
+      'El área del diccionario seleccionada no existe.',
+    )
+    expect(fetchMock).not.toHaveBeenCalled()
+  })
+
+  it('reports categories without enough playable words', async () => {
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        words: [
+          { id: '1', word: 'a', definition: 'Too short' },
+          { id: '2', word: 'two words', definition: 'Not a single answer' },
+        ],
+      }),
+    }) as unknown as typeof fetch
+
+    await expect(
+      loadDictionaryPuzzle('frontend-dev', 'classic', 6),
+    ).rejects.toThrow('no tiene suficientes palabras')
+  })
 })

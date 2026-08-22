@@ -1,8 +1,7 @@
 'use client'
 
-import React, { useEffect } from 'react'
 import type { WordSearchItem } from '@/lib/exercises/word-search/types'
-import { Sparkles, X } from '@/components/icons'
+import { CheckCircle2, X } from '@/components/icons'
 import { ListenButton } from '@/components/ui/ListenButton'
 import { speakText } from '@/lib/speech/synthesis'
 
@@ -12,62 +11,52 @@ interface Props {
 }
 
 export default function WordFoundBanner({ item, onDismiss }: Props) {
-  useEffect(() => {
-    if (!item) return
-    const timer = setTimeout(() => {
-      onDismiss()
-    }, 6000)
-    return () => clearTimeout(timer)
-  }, [item, onDismiss])
-
   if (!item) return null
 
   return (
-    <div
-      role="alert"
-      className="w-full rounded-xl bg-success-soft border border-success/30 p-3.5 shadow-sm transition-all animate-in fade-in slide-in-from-top-2 duration-200"
+    <aside
+      aria-label="Palabra encontrada"
+      className="animate-state-in flex w-full items-start gap-3 rounded-lg border border-success/30 bg-success-soft p-3"
     >
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex items-start gap-2.5 min-w-0">
-          <div className="p-1 rounded-lg bg-success text-on-primary shrink-0 mt-0.5">
-            <Sparkles className="w-4 h-4" />
-          </div>
-          <div className="flex flex-col min-w-0">
-            <div className="flex items-baseline gap-2 flex-wrap">
-              <span className="font-bold text-base text-fg">
-                {item.displayWord}
-              </span>
-              {item.ipa && (
-                <span className="font-ipa text-sm text-fg-muted font-medium">
-                  {item.ipa}
-                </span>
-              )}
-              {item.meaningEs && (
-                <span className="text-xs text-fg-muted">
-                  — {item.meaningEs}
-                </span>
-              )}
-            </div>
-            {item.exampleSentence && (
-              <p className="text-xs text-fg-muted mt-1 italic leading-relaxed">
-                &ldquo;{item.exampleSentence}&rdquo;
-              </p>
-            )}
-          </div>
-        </div>
+      <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-success text-on-primary">
+        <CheckCircle2 className="h-4 w-4" aria-hidden />
+      </span>
 
-        <div className="flex items-center gap-1.5 shrink-0">
-          <ListenButton onPlay={() => speakText(item.displayWord)} />
-          <button
-            type="button"
-            onClick={onDismiss}
-            className="p-1 rounded-md text-fg-subtle hover:text-fg hover:bg-surface-sunken transition-colors cursor-pointer"
-            aria-label="Cerrar aviso"
-          >
-            <X className="w-4 h-4" />
-          </button>
+      <div className="min-w-0 flex-1">
+        <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+          <span className="text-label font-bold text-fg" lang="en">
+            {item.displayWord}
+          </span>
+          {item.ipa ? (
+            <span className="font-ipa text-caption text-fg-muted">{item.ipa}</span>
+          ) : null}
+          {item.meaningEs ? (
+            <span className="text-caption text-fg-muted">— {item.meaningEs}</span>
+          ) : null}
         </div>
+        {item.exampleSentence ? (
+          <p lang="en" className="mt-1 max-w-prose text-pretty text-caption italic text-fg-muted">
+            “{item.exampleSentence}”
+          </p>
+        ) : null}
       </div>
-    </div>
+
+      <div className="flex shrink-0 items-center gap-1">
+        <ListenButton
+          iconOnly
+          className="min-h-11 min-w-11"
+          aria-label={`Escuchar ${item.displayWord}`}
+          onPlay={() => speakText(item.displayWord)}
+        />
+        <button
+          type="button"
+          onClick={onDismiss}
+          className="focus-ring inline-flex min-h-11 min-w-11 items-center justify-center rounded-full text-fg-subtle transition-[background-color,color,transform] duration-150 ease-out-quart hover:bg-surface-raised hover:text-fg active:scale-[0.96] motion-reduce:transform-none"
+          aria-label="Cerrar detalle de la palabra"
+        >
+          <X className="h-4 w-4" aria-hidden />
+        </button>
+      </div>
+    </aside>
   )
 }

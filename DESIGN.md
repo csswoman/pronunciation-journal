@@ -153,6 +153,25 @@ components:
     textColor: "{colors.primary}"
     rounded: "{rounded.full}"
     padding: "4px 12px"
+  card:
+    backgroundColor: "{colors.surface-raised}"
+    rounded: "{rounded.md}"
+    padding: "16px"
+  input:
+    backgroundColor: "{colors.surface-sunken}"
+    textColor: "{colors.text-primary}"
+    rounded: "{rounded.sm}"
+    padding: "8px 12px"
+  button-pill-primary:
+    backgroundColor: "{colors.primary}"
+    textColor: "var(--on-primary)"
+    rounded: "{rounded.full}"
+    padding: "8px 20px"
+  badge-default:
+    backgroundColor: "var(--badge-primary-bg)"
+    textColor: "{colors.primary}"
+    rounded: "{rounded.full}"
+    padding: "2px 8px"
 ---
 
 # Design System: English Journal
@@ -186,9 +205,10 @@ The palette is neutral-first with a dynamic primary scale. Every surface carries
 **Token-to-utility mapping.** In code, reference the Tailwind v4 utilities generated from `app/styles/theme.css`, never raw `var(--…)` arbitrary values. The foreground tokens map: `text-primary` → `text-fg`, `text-secondary` → `text-fg-muted`, `text-tertiary` → `text-fg-subtle` (the `fg-` prefix avoids clashing with Tailwind's `text-base` font-size utility). Primary foreground on a filled button is `text-on-primary`, not `text-white`. Surfaces, borders, and primary use their literal names (`bg-surface-raised`, `border-border-subtle`, `bg-primary`).
 
 ### Primary
-- **Adaptive primary** (`--primary`): The single interactive identity color. Its value is resolved from the active `--hue` and light/dark mode. Use it on colored CTAs, focus rings, active nav items, selected chips, and compact progress.
+- **Adaptive primary** (`--primary`): The single interactive identity color. Its value is resolved from the active `--hue` / `--hue-base` and light/dark mode. Use it on colored CTAs, focus rings, active nav items, selected chips, and the single solid Home CTA (`Empieza aquí` or review-due).
 - **Primary Soft** (`--primary-soft`): Theme-resolved background for soft button variants, selected states, and quiet hover fills. Never use it as decoration.
-
+- **Accent-1** (`--accent-1`, +150°): Editorial highlight on Home (Palabra / Chunk del día washes and word ink).
+- **Accent-2** (`--accent-2`, +210°): Progress texture on Home (plan segments, Hecho, streak celebration). Does not replace fixed `--success` for exercise correctness.
 ### Secondary
 - **Warm Amber** (`oklch(0.74 0.14 55)`): The stage-pairs accent. Applied to the minimal-pairs practice stage. Fixed; does not shift with `--hue`.
 - **Coastal Teal** (`oklch(0.73 0.12 185)`): The stage-dictation accent. Applied to dictation practice stages. Fixed.
@@ -298,28 +318,30 @@ Three background levels create the structural hierarchy without shadows:
 
 The standard `<Button>` (`components/ui/Button.tsx`) covers form, dialog, and toolbar actions at `rounded-sm`/`rounded-md`. Two pill-shaped siblings handle the lighter in-session affordances:
 
-- **`PillButton`** (`components/ui/PillButton.tsx`): fully-rounded action button for practice/session flows. Variants `primary` (filled CTA, advance the session), `outline` (bordered quiet secondary), `quiet` (text-only, lowest emphasis, e.g. archive/dismiss). Sizes `sm`/`md`. Flat at rest, focus-ring and `ease-out-quart` color transition built in. Reach for this, not a hand-rolled `<button className="rounded-full …">`, inside a session.
+**Two primary fills, one rule.** Chrome and hubs use ink-on-parchment (`Button` `primary` → `--cta-bg` / `--cta-fg`) so the action contrasts on any `--hue`. Inside a practice session, advance uses hue fill (`PillButton` `primary` → `--primary` / `--on-primary`) so the control belongs to the learner's theme without competing with the page CTA.
+
+- **`PillButton`** (`components/ui/PillButton.tsx`): fully-rounded action button for practice/session flows. Variants `primary` (hue-filled CTA, advance the session), `outline` (bordered quiet secondary), `quiet` (text-only, lowest emphasis, e.g. archive/dismiss). Sizes `sm`/`md`. Flat at rest, focus-ring and `ease-out-quart` color transition built in. Reach for this, not a hand-rolled `<button className="rounded-full …">`, inside a session.
 - **`ListenButton`** (`components/ui/ListenButton.tsx`): audio-playback affordance built on `PillButton`. `Volume2` icon + optional label (`labeled`, default) or a compact `iconOnly` round control for tight rows. Auto-disables where speech synthesis is unavailable, so callers don't repeat the TTS guard. Use for every "play the model" control.
 
-### Chips / Tags
+### Chips / Tags / Badge
 
-- **Style:** Pill-shaped (`--radius-full`), subtle border, small padding (4px 12px).
-- **Default state:** Surface-raised background, text-secondary text, subtle border.
-- **Selected state:** Primary-soft background, primary text, no border needed.
-- **Word feedback chips:** Use semantic colors exclusively (success/warning/error). Never primary.
+- **Style:** Pill-shaped (`--radius-full`) for filters and small badges; `Badge` size `md` uses `--radius-md`.
+- **Component:** `components/ui/Badge` — variants `default` | `success` | `info` | `warning` | `error` | `neutral`. No Tailwind palette (`sky`, `violet`, `emerald`).
+- **Default / selected chips:** Surface-raised + text-secondary; selected uses `--primary-soft` + `--primary`.
+- **Word feedback chips:** Semantic colors only (success/warning/error). Never primary.
 
 ### Cards / Containers
 
-- **Corner Style:** 12px (`--radius-md`) for standard cards; 16px (`--radius-lg`) for hero-sized content.
+- **Corner Style:** 12px (`--radius-md`, `rounded-md`) on `components/layout/Card`. 16px (`--radius-lg`) only for a true session/hero container, not the default card.
 - **Background:** Surface-raised (Lifted Paper). Never surface-base (would disappear).
 - **Shadow Strategy:** Ambient at rest (`--shadow-sm`). Lifted on hover (`--shadow-md`) for interactive cards. Static content cards: no shadow.
 - **Border:** Subtle border (`--border-subtle`) on cards that sit directly on surface-base. No border when cards sit inside a panel with its own background.
-- **Internal Padding:** 16–24px (`--space-4` to `--space-6`). Vary by content density.
+- **Internal Padding:** `--layout-card-pad` (16px mobile / 20px md+). Compact variant uses `--layout-card-pad-compact`.
 - **Nested cards are prohibited.** A card inside a card has failed to decompose the design.
 
 ### Inputs / Fields
 
-- **Style:** Sunken background (surface-sunken), standard border (`--border-default`), 8px radius (`--radius-sm`).
+- **Style:** Sunken background (surface-sunken), standard border (`--border-default`), 8px radius (`--radius-sm`, `rounded-sm`) on `Input`, `Select`, and `AuthInput`.
 - **Focus:** Border shifts to primary (`--border-focus`), shadow becomes Lifted with primary tint. No glow rings.
 - **Error:** Border shifts to error red (`--error-border`), helper text in error color.
 - **Disabled:** fg-disabled text, border-subtle, cursor not-allowed. No background change.
@@ -340,7 +362,7 @@ Home is the clearest expression of the product language. It is a command center 
 Greeting + quiet retention
 Review due (only when actionable)
 Plan of today                       Suggested practice
-Mini lessons                        Pronunciation / Core 1000 / word
+Mini lessons                        Pronunciation / Essential Words / word
 ```
 
 - Start with a concise, personal greeting. Show retention only when there is a non-zero useful signal; never manufacture empty stats.
@@ -379,7 +401,7 @@ AppShell → PageLayout → PageHeader → Content
 
 **CTAs**
 
-- One solid primary action per view/zone. Secondary = outline / ghost / soft.
+- One solid primary action per view/zone. Chrome secondary is raised + border (`Button` `secondary`). Quieter actions use ghost or soft. Session advance uses `PillButton`, not a second ink CTA.
 - Do not repeat the same primary on sibling cards.
 - Review, when due, outranks starting a fresh plan. Otherwise, the plan owns the primary action.
 - Prefer direct Spanish verbs that name the destination: `Repasar palabras`, `Abrir laboratorio`, `Explorar cursos`. Do not use vague labels such as `Continuar` when the destination can be named.
@@ -401,7 +423,7 @@ AppShell → PageLayout → PageHeader → Content
 
 The IPA phoneme card is the most distinctive component in the system. It surfaces a phoneme symbol, its description, and audio/practice affordances.
 
-- **Symbol:** DM Mono, large (clamp 2.5rem–4rem), bold. The phoneme is the hero via size, not a serif.
+- **Symbol:** Andika via `font-ipa`, large (`text-ipa-hero` / display IPA). The phoneme is the hero via size, not a serif or a second family.
 - **Background:** Surface-raised with a subtle primary-soft bleed at one edge (not a stripe; a wash).
 - **Stage accent:** When inside a minimal-pairs context, the card uses the stage-pairs amber as its wash; inside dictation, stage-dictation teal.
 - **Actions:** Ghost buttons for audio playback; primary button for practice entry.
@@ -421,11 +443,11 @@ The IPA phoneme card is the most distinctive component in the system. It surface
 - **Do** reserve the primary color for interactive affordances only: buttons, links, active nav items, focus rings, selected chips.
 - **Do** use semantic colors (success/warning/error/info) for all correctness and feedback signals. These are fixed and must not shift with `--hue`.
 - **Do** vary spacing for rhythm. Sections that breathe differently feel intentional; uniform padding feels like a template.
-- **Do** use Andika via `font-ipa` for IPA glyphs and phonetic blocks. Presence comes via size/weight — never a decorative serif.
+- **Do** use Andika via `font-ipa` / `.font-phoneme` for IPA glyphs and phonetic blocks. Presence comes via size/weight — never a decorative serif or DM Mono.
 - **Do** use the canonical Page Layout Pattern (`AppShell` → `PageLayout` → `PageHeader` → content) on authenticated sidebar routes, including sessions (compact header).
 - **Do** keep UI chrome copy in Spanish; reserve English for learning content.
 - **Do** include `prefers-reduced-motion` media queries for any animation longer than 100ms.
-- **Do** use DM Sans with latin-ext subset for all IPA and phonetic text. Never let it fall back to system fonts.
+- **Do** keep latin-ext coverage on UI fonts. IPA must render in Andika (`font-ipa`), never a system fallback or a decorative serif.
 - **Do** pair color feedback with an icon or label. Color alone must never be the only signal for correctness.
 
 ### Don't:
@@ -438,7 +460,8 @@ The IPA phoneme card is the most distinctive component in the system. It surface
 - **Don't** wrap an entire page in a single card and then nest more cards inside.
 - **Don't** hide AppShell or invent a chrome-less mode for practice sessions.
 - **Don't** rebuild page headers per route (`PageIntro`, hero eyebrows, custom title fonts) outside the `PageHeader` contract.
-- **Don't** load or use Fraunces (or any decorative serif) — the product is DM Sans + DM Mono only.
+- **Don't** load or use Fraunces (or any decorative serif). The product is DM Sans, DM Mono for kickers, and Andika for IPA.
+- **Don't** invent a second `secondary` (outline CTA) or a Tailwind palette on `Badge`. Use `Button` `secondary` and semantic badge variants.
 - **Don't** use modal dialogs as a first response to user actions. Exhaust inline patterns, progressive disclosure, and side panels before reaching for a modal.
 - **Don't** use hero-metric layouts (big number, small label, gradient accent) for any scoring or progress surface. Progress is felt through texture, not counted in a SaaS dashboard widget.
 - **Don't** hardcode colors in components. All color values must reference design tokens via `var(--token-name)` or Tailwind utility classes that map to tokens.

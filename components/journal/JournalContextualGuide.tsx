@@ -205,8 +205,12 @@ export function JournalContextualGuide({
           }
         >
           <p className="font-body-sm text-fg-muted">{selectedGrammarNote.rule}</p>
-          <p className="mt-2 font-body-sm text-fg">✓ {selectedGrammarNote.exampleCorrect}</p>
-          <p className="font-body-sm text-fg-muted">✕ {selectedGrammarNote.exampleWrong}</p>
+          <p className="mt-2 font-body-sm text-fg">
+            <span className="font-semibold text-success">✓</span> {selectedGrammarNote.exampleCorrect}
+          </p>
+          <p className="font-body-sm text-fg-muted">
+            <span className="font-semibold text-error">✕</span> {selectedGrammarNote.exampleWrong}
+          </p>
         </JournalRailSection>
       ) : null}
     </div>

@@ -5,6 +5,7 @@ import {
   resolveThemeMode,
   type ThemeMode,
 } from "@/lib/theme/resolve-theme-mode";
+import { applySplitComplementaryVars } from "@/lib/theme/split-complementary";
 
 const DEFAULT_HUE = 250;
 const STORAGE_HUE_KEY = "theme-hue";
@@ -27,7 +28,7 @@ function notify() {
 }
 
 function applyHue(newHue: number) {
-  document.documentElement.style.setProperty("--hue", newHue.toString());
+  applySplitComplementaryVars(document.documentElement, newHue);
 }
 
 function applyMode(newMode: ThemeMode) {
@@ -44,9 +45,9 @@ function initOnce() {
     const parsed = parseInt(savedHue, 10);
     if (!isNaN(parsed)) {
       _hue = parsed;
-      applyHue(_hue);
     }
   }
+  applyHue(_hue);
 
   _mode = resolveThemeMode(
     localStorage.getItem(STORAGE_MODE_KEY),

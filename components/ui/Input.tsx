@@ -38,7 +38,7 @@ export default function Input({
         placeholder={placeholder}
         aria-describedby={errorId}
         aria-invalid={error ? true : undefined}
-        className="px-3 py-2 rounded-lg text-body-sm border border-border-default bg-surface-sunken text-fg focus-ring"
+        className="px-3 py-2 rounded-sm text-body-sm border border-border-default bg-surface-sunken text-fg focus-ring"
       />
       {error && (
         <div id={errorId} className="flex items-center gap-1.5 text-caption text-error">

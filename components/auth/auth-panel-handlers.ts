@@ -10,6 +10,7 @@ import {
   upgradeGuestWithEmail,
 } from "@/lib/supabase/auth-actions";
 import { publicAuthErrorMessage, validatePasswordPolicy } from "@/lib/auth/password-policy";
+import { isIdentityAlreadyExistsError } from "@/lib/auth/oauth-identity";
 import type { AuthPanelIntent, AuthPanelMode } from "@/components/auth/auth-panel-types";
 
 type AuthRouter = {
@@ -150,6 +151,23 @@ export function createAuthPanelHandlers(deps: AuthPanelHandlersDeps) {
       if (upgradingGuest && intent === "save") {
         const { error: err } = await linkGoogleIdentity();
         if (err) {
+          if (
+            isIdentityAlreadyExistsError({
+              message: err.message,
+              errorCode: "code" in err ? String(err.code) : null,
+            })
+          ) {
+            // Google already belongs to a permanent account — sign into that
+            // account instead of leaving the guest stuck on a link error.
+            const { error: signInErr } = await signInWithGoogle();
+            if (signInErr) {
+              console.error("[auth] google sign in after link conflict failed", signInErr);
+              setError(publicAuthErrorMessage());
+              return;
+            }
+            router.refresh();
+            return;
+          }
           console.error("[auth] google link failed", err);
           setError(publicAuthErrorMessage());
           return;

@@ -72,9 +72,12 @@ import {
   recordLessonComplete,
   recordLessonIncomplete,
   recordLessonQuizAttempt,
+  savePracticeAnswer,
   savePracticeSession,
+  QUARANTINED_LESSON_SLUGS,
 } from '../queries'
-import type { SessionResult } from '../types'
+import type { PracticeAnswer, SessionResult } from '../types'
+import { wordBankId } from '../attribution'
 
 // ── A. isLessonQuizPassed ─────────────────────────────────────────────────
 
@@ -373,5 +376,92 @@ describe('savePracticeSession', () => {
     expect(consoleSpy).toHaveBeenCalled()
     expect(mocks.mockEnqueue).toHaveBeenCalledTimes(1) // Called once, error caught
     consoleSpy.mockRestore()
+  })
+
+  it('skipped answer saves with grade null and does not enqueue word_bank SRS update', async () => {
+    const answer: PracticeAnswer = {
+      exerciseId: 'ex-skip',
+      slug: 'pick_word',
+      exerciseTypeId: 1,
+      isCorrect: false,
+      userAnswer: 'skip',
+      status: 'skipped',
+      timeMs: 500,
+      contentId: 'wb-1',
+      context: 'practice',
+      sourceRef: { source: 'word_bank', id: '11111111-1111-4111-8111-111111111111' },
+      attribution: {
+        srsEligible: true,
+        outcomes: [
+          {
+            target: { namespace: 'word_bank', id: wordBankId('11111111-1111-4111-8111-111111111111') },
+            modality: 'meaning_recall',
+            correct: false,
+          },
+        ],
+      },
+    }
+
+    await savePracticeAnswer('user-1', answer)
+
+    // Only answer_history upsert is enqueued, no srs_update enqueue
+    expect(mocks.mockEnqueue).toHaveBeenCalledTimes(1)
+    expect(mocks.mockEnqueue).toHaveBeenCalledWith(
+      'user-1',
+      'answer_history',
+      'upsert',
+      expect.objectContaining({
+        grade: null,
+        user_answer: 'skip',
+      }),
+      undefined,
+      'id',
+    )
+  })
+
+  it('quarantined lessons in recordLessonQuizAttempt do not save answers to answer_history', async () => {
+    QUARANTINED_LESSON_SLUGS.add('corrupt-test-lesson')
+    try {
+      const answers = [
+        {
+          questionId: 'q1',
+          courseSlug: 'grammar-foundations',
+          lessonSlug: 'corrupt-test-lesson',
+          question: 'Sample question',
+          selectedAnswer: 'bad_answer',
+          correctAnswer: 'good_answer',
+          isCorrect: false,
+          timeMs: 2000,
+        },
+      ]
+
+      mocks.mockBuildSessionResult.mockReturnValue({
+        results: [
+          {
+            exerciseId: 'q1',
+            slug: 'multiple_choice',
+            exerciseTypeId: 17,
+            isCorrect: false,
+            userAnswer: 'bad_answer',
+            timeMs: 2000,
+            status: 'unscored',
+            contentId: 'grammar-foundations:corrupt-test-lesson:q1',
+            context: 'courses',
+            exercisePayload: {},
+            completedAt: new Date(),
+          },
+        ],
+        accuracy: 0,
+        totalTimeMs: 2000,
+        bySlug: {},
+      })
+
+      const result = await recordLessonQuizAttempt('user-1', answers)
+      expect(result.passed).toBe(false)
+      // No enqueue of answer_history for quarantined lesson
+      expect(mocks.mockEnqueue).not.toHaveBeenCalled()
+    } finally {
+      QUARANTINED_LESSON_SLUGS.delete('corrupt-test-lesson')
+    }
   })
 })

@@ -11,13 +11,11 @@ describe("HomeChunkOfDayCard", () => {
   it("renders the chunk of the day with title, IPA and meaning", () => {
     const { container } = render(<HomeChunkOfDayCard />);
     expect(screen.getByText("Chunk del día")).toBeInTheDocument();
-    
-    // Check that an IPA tag with font-ipa is present
+
     const ipaElement = container.querySelector(".font-ipa");
     expect(ipaElement).toBeInTheDocument();
 
-    // Check that chunk word display is present
-    const wordElement = container.querySelector(".text-display-word");
+    const wordElement = container.querySelector(".home-chunk-quote__phrase");
     expect(wordElement).toBeInTheDocument();
     expect(wordElement?.textContent?.trim()).toBeTruthy();
   });
@@ -27,13 +25,35 @@ describe("HomeChunkOfDayCard", () => {
     const shuffleButton = screen.getByRole("button", { name: "Sacar otro chunk" });
     expect(shuffleButton).toBeInTheDocument();
 
-    const initialWord = container.querySelector(".text-display-word")?.textContent;
+    const initialWord = container.querySelector(
+      ".home-chunk-quote__phrase",
+    )?.textContent;
     expect(initialWord).toBeTruthy();
-    
+
     fireEvent.click(shuffleButton);
 
     await waitFor(() => {
       expect(screen.getByText("Chunk del día")).toBeInTheDocument();
     });
+  });
+
+  it("toggles content language between ES (meaning) and EN (example)", () => {
+    render(<HomeChunkOfDayCard />);
+    const esButton = screen.getByRole("button", { name: "ES" });
+    const enButton = screen.getByRole("button", { name: "EN" });
+
+    expect(esButton).toHaveAttribute("aria-pressed", "true");
+    expect(enButton).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByText("Significado")).toBeInTheDocument();
+
+    fireEvent.click(enButton);
+
+    expect(enButton).toHaveAttribute("aria-pressed", "true");
+    expect(esButton).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByText("Ejemplo")).toBeInTheDocument();
+
+    fireEvent.click(esButton);
+    expect(esButton).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByText("Significado")).toBeInTheDocument();
   });
 });

@@ -3,61 +3,62 @@
   "sections": [
     {
       "heading": "¿Por qué el inglés tiene letras mudas?",
-      "body": "La ortografía inglesa se fijó en gran medida en el siglo XV, pero la pronunciación siguió evolucionando. Las letras mudas son reliquias: sonidos que alguna vez se pronunciaron pero que desaparecieron durante siglos de cambios de idioma."
+      "body": "La ortografía inglesa se fijó en gran medida en el siglo XV tras la introducción de la imprenta, pero la pronunciación continuó evolucionando. Muchas letras mudas son reliquias históricas de sonidos que antes se pronunciaban pero desaparecieron con el tiempo."
     },
     {
       "heading": "Patrones comunes de letras mudas",
-      "body": "**Silent K:** siempre antes de 'n' al comienzo de una palabra (saber, cuchillo, arrodillarse, tocar). **W silenciosa:** antes de 'r' al comienzo de una palabra (escribir, incorrecto, envolver, muñeca). **G silenciosa:** antes de 'n' al principio o al final (mosquito, roe, signo, extranjero). **Silencio B:** después de 'm' al final (bomba, peine, cordero, pulgar). **Silent H:** en muchas palabras comunes (hora, honesto, heredero, fantasma)."
+      "body": "**K muda:** antes de 'n' al inicio (*know, knife, knee, knock*). **W muda:** antes de 'r' al inicio (*write, wrong, wrap, wrist*). **G muda:** antes de 'n' al inicio o final (*gnome, gnaw, sign, foreign*). **B muda:** tras 'm' al final de palabra (*bomb, comb, lamb, thumb*). **H muda:** en palabras frecuentes (*hour, honest, heir, ghost*)."
     },
     {
-      "heading": "Letras silenciosas en el medio.",
-      "body": "Muchas palabras comunes tienen letras mudas en el medio que hacen tropezar incluso a los estudiantes avanzados: 'miércoles' /ˈwɛnzdeɪ/, 'febrero' /ˈfɛbruɛri/ → a menudo /ˈfɛbjuɛri/, 'cómodo' /ˈkʌmftəbəl/, 'vegetal' /ˈvɛdʒtəbəl/."
+      "heading": "Letras mudas intermedias frecuentes",
+      "body": "En palabras de uso cotidiano se omiten consonantes intermedias que desafían incluso a estudiantes avanzados: *Wednesday* /ˈwɛnzdeɪ/, *comfortable* /ˈkʌmftərbəl/, *vegetable* /ˈvɛdʒtəbəl/, *castle* /ˈkæsəl/."
     }
   ],
   "examples": [
     {
       "english": "knife",
       "ipa": "/naɪf/",
-      "translation": "k esta en silencio"
+      "note": "La 'k' inicial es muda."
     },
     {
       "english": "island",
       "ipa": "/ˈaɪlənd/",
-      "translation": "S está en silencio"
+      "note": "La 's' intermedia no se pronuncia."
     },
     {
       "english": "castle",
       "ipa": "/ˈkæsəl/",
-      "translation": "T está en silencio"
+      "note": "La 't' es muda (no se dice /kæstəl/)."
     },
     {
       "english": "receipt",
       "ipa": "/rɪˈsiːt/",
-      "translation": "P está en silencio"
+      "note": "La 'p' es completamente muda."
     },
     {
       "english": "psychology",
-      "ipa": "/saɪˈkɑlədʒi/",
-      "translation": "P está en silencio"
+      "ipa": "/saɪˈkɑːlədʒi/",
+      "note": "La 'p' inicial no se pronuncia."
     },
     {
       "english": "subtle",
       "ipa": "/ˈsʌtəl/",
-      "translation": "B está en silencio"
+      "note": "La 'b' es muda."
     }
   ],
   "exercises": [
     {
-      "instruction": "Identify the silent letter(s) in each word.",
+      "instruction": "Escribe la letra muda (o letras mudas) presente en cada una de estas palabras.",
+      "type": "closed_blank",
       "items": [
-        "knight",
-        "wrap",
-        "gnome",
-        "lamb",
-        "honest",
-        "daughter",
-        "foreign",
-        "Wednesday"
+        "___ (silent letter in: knight)",
+        "___ (silent letter in: wrap)",
+        "___ (silent letter in: gnome)",
+        "___ (silent letter in: lamb)",
+        "___ (silent letter in: honest)",
+        "___ (silent letters in: daughter)",
+        "___ (silent letter in: foreign)",
+        "___ (silent letter in: Wednesday)"
       ],
       "answers": [
         "k",
@@ -73,26 +74,26 @@
   ],
   "quiz": [
     {
-      "question": "¿Qué palabra tiene una 'p' muda?",
+      "question": "¿Cuál de las siguientes palabras tiene una 'p' muda?",
       "options": [
-        "girar",
-        "neumonía",
-        "más",
-        "al"
+        "spin",
+        "pneumonia",
+        "plate",
+        "happy"
       ],
       "correct": 1,
-      "explanation": "'neumonía' se pronuncia /njuːˈmoʊniə/; la P es completamente silenciosa."
+      "explanation": "En 'pneumonia' (/njuːˈmoʊniə/), la letra 'p' inicial es muda y no se pronuncia."
     },
     {
-      "question": "La palabra \"castillo\" se pronuncia:",
+      "question": "¿Cuál es la transcripción fonética correcta de 'castle'?",
       "options": [
         "/ˈkæstəl/",
         "/ˈkæsəl/",
-        "/ˈkæsl/",
-        "/ˈkæsl/"
+        "/ˈkeɪsəl/",
+        "/ˈkæstli/"
       ],
       "correct": 1,
-      "explanation": "La T en 'castillo' es muda: /ˈkæsəl/ (inglés británico)."
+      "explanation": "La 't' en 'castle' es muda, por lo que se pronuncia /ˈkæsəl/."
     }
   ]
 }

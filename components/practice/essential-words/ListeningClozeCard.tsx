@@ -97,7 +97,7 @@ export function ListeningClozeCard({
         ? [{ habilidad: 'listening', veredicto: 'acierto' }, { habilidad: 'production', veredicto: 'acierto' }]
         : hasSpelling
           ? [{ habilidad: 'listening', veredicto: 'acierto' }, { habilidad: 'production', veredicto: 'fallo' }]
-          : [],
+          : [{ habilidad: 'listening', veredicto: 'fallo' }],
       listeningTier: tier,
       focusContrastId,
       guessBlankKeys: words.filter((word) => word.categoria === 'guess').map((word) => ({

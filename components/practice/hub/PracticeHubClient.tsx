@@ -9,10 +9,7 @@ import { countWordsDueForReviewClient } from '@/lib/word-bank/queries'
 import { resolveRecommendedMode, type RecommendedResult } from '@/lib/practice/practice-modes'
 import PracticeHubHeader from './PracticeHubHeader'
 import RecommendedPracticeCard from './RecommendedPracticeCard'
-import VocabularySection from './VocabularySection'
-import PronunciationSection from './PronunciationSection'
-import ContextReadingSection from './ContextReadingSection'
-import SpeakWithCoachCard from '@/components/ai-coach/SpeakWithCoachCard'
+import PracticeOptionsGrid from './PracticeOptionsGrid'
 
 interface Props {
   fromDaily: boolean
@@ -70,7 +67,7 @@ export default function PracticeHubClient({ fromDaily }: Props) {
   return (
     <PageLayout archetype="catalog" className="practice-hub">
       <PracticeHubHeader fromDaily={fromDaily} />
-      <>
+      <div className="flex flex-col gap-6">
         <section className="practice-hub__suggestion layout-stack-tight" aria-labelledby="practice-suggestion-title">
           <p id="practice-suggestion-title" className="font-kicker text-fg-subtle">
             Sugerencia para ti
@@ -82,13 +79,9 @@ export default function PracticeHubClient({ fromDaily }: Props) {
             </p>
           )}
         </section>
-        <div className="practice-hub__modes">
-          <VocabularySection dueCount={dueCount} />
-          <PronunciationSection />
-          <ContextReadingSection />
-          <SpeakWithCoachCard arc={arc} />
-        </div>
-      </>
+
+        <PracticeOptionsGrid dueCount={dueCount} arc={arc} />
+      </div>
     </PageLayout>
   )
 }

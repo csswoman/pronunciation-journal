@@ -2,64 +2,61 @@
   "slug": "noun-verb-pairs",
   "sections": [
     {
-      "heading": "Conversión en inglés",
-      "body": "El inglés permite que muchas palabras cambien de categoría gramatical sin ningún cambio de forma. Este proceso, llamado conversión o derivación cero, es más común en inglés que en la mayoría de los idiomas. Cuando un sustantivo se convierte en verbo, normalmente adquiere el significado de \"actuar como [sustantivo]\" o \"usar un [sustantivo]\"."
+      "heading": "Conversión y cambio de acento en inglés",
+      "body": "En inglés, muchas palabras de dos sílabas funcionan tanto como sustantivos como verbos con la misma ortografía. La distinción principal suele ser la posición del acento tónico (word stress): los sustantivos suelen acentuarse en la primera sílaba y los verbos en la segunda."
     },
     {
-      "heading": "El estrés como señal",
-      "body": "Para pares de sustantivo/verbo de dos sílabas, el acento es la única señal fonética. GRABAR (sustantivo) / grabar (verbo). PROTEST / proTEST. PERMISO / PERMISO. PROGRESO / PROGRESO. REEMBOLSO / REEMBOLSO."
+      "heading": "El acento prosódico como diferenciador",
+      "body": "Observa el patrón típico: **REcord** (sustantivo: disco/registro) vs. **reCORD** (verbo: grabar); **PERmit** (permiso) vs. **perMIT** (permitir); **PROgress** (progreso) vs. **proGRESS** (progresar); **REfund** (reembolso) vs. **reFUND** (reembolsar)."
     }
   ],
   "examples": [
     {
-      "english": "a REcord (n.) / to reCORD (v.)",
-      "note": "El cambio de estrés señala la categoría."
+      "english": "a REcord (n.) /ˈrɛkərd/ — to reCORD (v.) /rɪˈkɔːrd/",
+      "note": "El cambio de sílaba tónica distingue la categoría gramatical."
     },
     {
-      "english": "to email someone",
-      "note": "Sustantivo 'correo electrónico' convertido en verbo"
+      "english": "a PERmit (n.) /ˈpɜːrmɪt/ — to perMIT (v.) /pərˈmɪt/",
+      "note": "Sustantivo acentuado en la primera sílaba; verbo en la segunda."
     },
     {
-      "english": "to Google something",
-      "note": "Nombre propio → verbo"
+      "english": "PROgress (n.) /ˈprɑːɡrɛs/ — to proGRESS (v.) /prəˈɡrɛs/",
+      "note": "La vocal también cambia a schwa /ə/ en la sílaba no acentuada."
     },
     {
-      "english": "to text someone",
-      "note": "Sustantivo → verbo - ahora estándar"
-    },
-    {
-      "english": "to shortlist candidates",
-      "note": "Sustantivo compuesto → verbo"
+      "english": "to email someone / to text someone",
+      "note": "Conversión directa (sustantivo usado como verbo)."
     }
   ],
   "exercises": [
     {
-      "instruction": "Use the word in brackets as either a noun (n.) or a verb (v.) as indicated. Write a sentence.",
+      "instruction": "Completa cada oración con la palabra indicada (como sustantivo o verbo).",
+      "type": "closed_blank",
       "items": [
-        "___ (permit — n.) You need a ___ to park here.",
-        "___ (permit — v.) The rules do not ___ smoking inside.",
-        "___ (record — n.) She broke the world ___.",
-        "___ (record — v.) The band will ___ a new album next month."
+        "You need a ___ (permit) to park in this area.",
+        "The museum does not ___ (permit) photography inside.",
+        "She set a new world ___ (record) in the 100-meter sprint.",
+        "The band plans to ___ (record) their next album in London."
       ],
       "answers": [
-        "You need a permit to park here.",
-        "The rules do not permit smoking inside.",
-        "She broke the world record.",
-        "The band will record a new album next month."
+        "permit",
+        "permit",
+        "record",
+        "record"
       ]
     }
   ],
   "quiz": [
     {
-      "question": "En 'Necesitamos progresar más rápido', 'progreso' es:",
+      "question": "In the sentence 'We need to progress faster', the word 'progress' is:",
       "options": [
-        "Un sustantivo acentuado en la primera sílaba.",
-        "Un verbo acentuado en la segunda sílaba.",
-        "un adjetivo",
-        "un adverbio"
+        "A noun stressed on the first syllable (PRO-gress)",
+        "A verb stressed on the second syllable (pro-GRESS)",
+        "An adjective stressed on the first syllable",
+        "An adverb"
       ],
       "correct": 1,
-      "explanation": "Cuando 'progreso' es un verbo, el acento recae en la segunda sílaba: progreso."
+      "explanation": "When 'progress' functions as a verb, the stress falls on the second syllable: to pro-GRESS /prəˈɡrɛs/."
     }
   ]
 }

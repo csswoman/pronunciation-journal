@@ -40,7 +40,7 @@ export default function Select({
           onChange={(e) => onChange(e.target.value)}
           aria-invalid={!!error}
           aria-describedby={error ? `${selectId}-error` : undefined}
-          className={`w-full px-3 py-2 rounded-lg text-body-sm border bg-surface-sunken text-fg focus:outline-none focus:ring-2 transition-all ${borderClass} ${error ? "pr-10" : ""}`}
+          className={`w-full px-3 py-2 rounded-sm text-body-sm border bg-surface-sunken text-fg focus:outline-none focus:ring-2 transition-all ${borderClass} ${error ? "pr-10" : ""}`}
         >
           {options.map((o) => (
             <option key={o.value} value={o.value}>

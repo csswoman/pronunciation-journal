@@ -108,12 +108,27 @@ export interface ProgressPageData {
 
 // ── Queries ───────────────────────────────────────────────────────────────────
 
+/** Cap for the /progress recent-session strip — older sessions are truncated. */
+export const RECENT_ACTIVITY_SESSION_LIMIT = 15
+/** Cap for contrast rows pulled into the skill-profile phoneme strip. */
+export const SKILL_PROFILE_CONTRAST_LIMIT = 40
+/** Rolling window (days) for completion heatmap and fluency answer history. */
+export const PROGRESS_ANSWER_WINDOW_DAYS = 30
+/**
+ * Rolling window (days) for exercise_payload evidence pulled into
+ * projections' "latest evidence per target" list. projectProgress only
+ * ever keeps the single most-recent fact per target, so a target drops
+ * out of the list only if its sole evidence predates this window — at
+ * which point treating it as not-yet-evidenced is reasonable, not a bug.
+ */
+export const PROGRESS_PROJECTION_EVIDENCE_WINDOW_DAYS = 180
+
 /** How many qualifying practice days in a window of N days (any context). */
-async function getDailyCompletionStats(userId: string): Promise<DailyCompletionStats> {
+export async function getDailyCompletionStats(userId: string): Promise<DailyCompletionStats> {
   const supabase = await createSupabaseServerClient()
 
   const since30 = new Date()
-  since30.setDate(since30.getDate() - 30)
+  since30.setDate(since30.getDate() - PROGRESS_ANSWER_WINDOW_DAYS)
 
   const { data } = await supabase
     .from('answer_history')
@@ -166,7 +181,7 @@ async function getDailyCompletionStats(userId: string): Promise<DailyCompletionS
   }
 }
 
-async function getWeeklySummaryStats(userId: string): Promise<WeeklySummaryStats> {
+export async function getWeeklySummaryStats(userId: string): Promise<WeeklySummaryStats> {
   const supabase = await createSupabaseServerClient()
   const since7 = startOfRollingWindow(7)
 
@@ -189,7 +204,7 @@ async function getWeeklySummaryStats(userId: string): Promise<WeeklySummaryStats
   }
 }
 
-async function getAccuracyStats(userId: string): Promise<AccuracyStats> {
+export async function getAccuracyStats(userId: string): Promise<AccuracyStats> {
   const supabase = await createSupabaseServerClient()
 
   const since7 = new Date()
@@ -221,7 +236,7 @@ async function getAccuracyStats(userId: string): Promise<AccuracyStats> {
   }
 }
 
-async function getSkillProfileData(userId: string): Promise<SkillProfileData> {
+export async function getSkillProfileData(userId: string): Promise<SkillProfileData> {
   const supabase = await createSupabaseServerClient()
 
   const [wordBankResult, phonemeResult, core1000Result, lessonsResult] = await Promise.all([
@@ -237,7 +252,7 @@ async function getSkillProfileData(userId: string): Promise<SkillProfileData> {
       .eq('user_id', userId)
       .gt('total_attempts', 0)
       .order('total_attempts', { ascending: false })
-      .limit(40),
+      .limit(SKILL_PROFILE_CONTRAST_LIMIT),
 
     supabase
       .from('answer_history')
@@ -299,7 +314,7 @@ async function getSkillProfileData(userId: string): Promise<SkillProfileData> {
   }
 }
 
-async function getCoachInsights(userId: string): Promise<CoachInsights> {
+export async function getCoachInsights(userId: string): Promise<CoachInsights> {
   try {
     const supabase = await createSupabaseServerClient()
     const [{ data }, { data: profile }] = await Promise.all([
@@ -329,10 +344,10 @@ async function getCoachInsights(userId: string): Promise<CoachInsights> {
   }
 }
 
-async function getFluencyProfile(userId: string, skillProfile: SkillProfileData): Promise<FluencyProfileData> {
+export async function getFluencyProfile(userId: string, skillProfile: SkillProfileData): Promise<FluencyProfileData> {
   const supabase = await createSupabaseServerClient()
   const since30 = new Date()
-  since30.setDate(since30.getDate() - 30)
+  since30.setDate(since30.getDate() - PROGRESS_ANSWER_WINDOW_DAYS)
   const since14 = new Date()
   since14.setDate(since14.getDate() - 14)
   const since7 = new Date()
@@ -409,7 +424,7 @@ async function getFluencyProfile(userId: string, skillProfile: SkillProfileData)
   return { scores, comparisonLabel }
 }
 
-async function getRecentActivitySessions(userId: string): Promise<ActivitySessionSummary[]> {
+export async function getRecentActivitySessions(userId: string): Promise<ActivitySessionSummary[]> {
   try {
     const supabase = await createSupabaseServerClient()
     const { data, error } = await supabase
@@ -419,7 +434,7 @@ async function getRecentActivitySessions(userId: string): Promise<ActivitySessio
       )
       .eq('user_id', userId)
       .order('completed_at', { ascending: false })
-      .limit(15)
+      .limit(RECENT_ACTIVITY_SESSION_LIMIT)
 
     if (error) throw error
 
@@ -484,45 +499,43 @@ function attributedAnswerFacts(rows: Array<{
   })
 }
 
-async function getProgressProjections(userId: string): Promise<ProgressProjections> {
+export async function getProgressProjections(userId: string): Promise<ProgressProjections> {
   const supabase = await createSupabaseServerClient()
-  const [sessions, completions, answers] = await Promise.all([
-    supabase.from('activity_sessions')
-      .select('id, exercises_total, duration_ms, completed_at')
-      .eq('user_id', userId),
-    supabase.from('lesson_completions')
-      .select('id, completed_at, source')
-      .eq('user_id', userId),
+  const sinceEvidenceWindow = new Date()
+  sinceEvidenceWindow.setDate(sinceEvidenceWindow.getDate() - PROGRESS_PROJECTION_EVIDENCE_WINDOW_DAYS)
+
+  const [activityTotals, completionTotal, answers] = await Promise.all([
+    supabase.rpc('get_activity_totals'),
+    supabase.rpc('get_lesson_completion_total'),
     supabase.from('answer_history')
       .select('id, is_correct, answered_at, exercise_payload')
       .eq('user_id', userId)
+      .gte('answered_at', sinceEvidenceWindow.toISOString())
       .not('answered_at', 'is', null),
   ])
 
-  const facts: ProgressFact[] = [
-    ...(sessions.data ?? []).map((row) => ({
-      id: row.id,
-      signal: 'objective_evidence' as const,
-      occurredAt: row.completed_at,
-      exercises: row.exercises_total,
-      durationMs: row.duration_ms,
-      provenance: 'activity_sessions',
-    })),
-    ...(completions.data ?? []).map((row) => ({
-      id: row.id,
-      signal: 'completion' as const,
-      occurredAt: row.completed_at,
-      provenance: row.source,
-    })),
-    ...attributedAnswerFacts((answers.data ?? []) as Array<{
-      id: string
-      is_correct: boolean
-      answered_at: string | null
-      exercise_payload: unknown
-    }>),
-  ]
+  if (activityTotals.error) console.error('getProgressProjections: get_activity_totals failed', activityTotals.error)
+  if (completionTotal.error) console.error('getProgressProjections: get_lesson_completion_total failed', completionTotal.error)
+  if (answers.error) console.error('getProgressProjections: answer_history query failed', answers.error)
 
-  return projectProgress(facts)
+  const row = activityTotals.data?.[0]
+
+  const evidenceFacts = attributedAnswerFacts((answers.data ?? []) as Array<{
+    id: string
+    is_correct: boolean
+    answered_at: string | null
+    exercise_payload: unknown
+  }>)
+
+  return projectProgress(evidenceFacts, {
+    activity: {
+      sessions: row?.sessions ?? 0,
+      exercises: row?.exercises ?? 0,
+      durationMs: row?.duration_ms ?? 0,
+      activeDays: row?.active_days ?? 0,
+    },
+    completedCount: completionTotal.data ?? 0,
+  })
 }
 
 export async function getProgressPageData(userId: string): Promise<ProgressPageData> {

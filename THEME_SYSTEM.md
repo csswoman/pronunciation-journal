@@ -2,44 +2,55 @@
 
 ## Architecture
 
-3-layer system. Each layer has a different role:
+4-layer system. Each layer has a different role:
 
 ```
-1. Primary Scale  — dynamic hue, full 50–800 range (brand identity)
-2. Neutral System — near-neutral, hue-aware surfaces (layout structure)
-3. Semantic Colors — fixed hues, independent of user hue (feedback)
+1. Primary Scale      — hue-base (user slider), full 50–800 range (brand identity)
+2. Split accents      — accent-1 (+150°) editorial · accent-2 (+210°) progress
+3. Neutral System     — near-neutral, hue-aware surfaces (layout structure)
+4. Semantic Colors    — fixed hues for correctness feedback (independent of --hue)
 ```
 
 ---
 
 ## Layer 1: Primary Scale (Dynamic Identity)
 
-A full scale derived from the single `--hue` variable (0–360). Hue persists in `localStorage` as `theme-hue`.
+A full scale derived from the single `--hue` variable (0–360), aliased as `--hue-base`. Hue persists in `localStorage` as `theme-hue`.
+
+Muddy mustard / yellow-green bands (≈55–110°) raise `--chroma-boost-base` and a small `--l-shift-base` via `useOKLCHTheme` / `THEME_INIT_SCRIPT` so mid tones do not look lodoso.
 
 ```css
---primary-50  → oklch(0.97 0.02 var(--hue))   /* lightest tint */
---primary-100 → oklch(0.93 0.04 var(--hue))
---primary-200 → oklch(0.88 0.06 var(--hue))
---primary-300 → oklch(0.80 0.10 var(--hue))
---primary-400 → oklch(0.72 0.13 var(--hue))
---primary-500 → oklch(0.65 0.15 var(--hue))   /* light-mode intermediate */
---primary-600 → oklch(0.58 0.16 var(--hue))   /* --primary-hover */
---primary-700 → oklch(0.50 0.17 var(--hue))
---primary-800 → oklch(0.42 0.15 var(--hue))   /* darkest */
+--hue-base: var(--hue);
+--primary-50  → oklch(… chroma×boost  var(--hue-base))
+…
+--primary-800 → …
 ```
 
 `--primary` is an alias, not a fixed step: light mode maps it to
 `--primary-700`; dark mode maps it to `--primary-500`. Consume the alias (or a
 semantic utility generated from it), never a numbered step, in product UI.
 
-**Accent variations** (derived from hue):
+---
 
-| Token | Formula | Use |
-|-------|---------|-----|
-| `--accent-analog-1` | `hue + 20` | Reserved accent token; do not introduce it decoratively |
-| `--accent-analog-2` | `hue - 20` | Reserved accent token; do not introduce it decoratively |
-| `--accent-complement` | `hue + 180` | Reserved accent token; do not introduce it decoratively |
-| `--gradient-primary` | 135deg, hue → hue+30 | Legacy token; gradients are not part of the current UI language |
+## Layer 1b: Split-complementary accents
+
+| Token | Formula | Role on Home |
+|-------|---------|--------------|
+| `--hue-accent-1` | `hueBase + 150` (mod 360) | Editorial content (Palabra / Chunk del día) |
+| `--hue-accent-2` | `hueBase + 210` (mod 360) | Progress / success texture (plan bar, Hecho, streak) |
+
+Each accent has a full 50–800 scale (`--accent-1-*`, `--accent-2-*`) plus aliases `--accent-1`, `--accent-1-soft`, `--accent-2`, `--accent-2-soft`.
+
+**Home role mapping**
+
+| UI | Token |
+|----|-------|
+| Nav activa, marca, un CTA sólido por vista (`Empieza aquí` / review due) | `--primary` (hue-base) |
+| Cards editoriales | `--accent-1-soft` wash + `--accent-1` ink on the highlighted word |
+| Barra Plan de hoy, badge Hecho, streak en plan done | `--accent-2` |
+| Correctness in exercises | fixed `--success` / `--error` (unchanged) |
+
+Legacy near-analog tokens (`--accent-analog-*`, `--accent-complement`) remain for older utilities; prefer the split-complementary scales for new UI.
 
 ---
 
@@ -82,15 +93,16 @@ These never change with user hue. Convey meaning, not identity.
 
 | UI Element | Token |
 |-----------|-------|
-| Main CTA (`Button` primary) | `--cta-bg` + `--cta-fg` |
-| Main CTA hover | `--cta-bg-hover` |
-| Brand-colored inline CTA | `--primary` + `--on-primary` |
-| Soft badge / pill | `--primary-soft` (`--primary-100`) |
-| Informational progress bars | `--primary` or `--accent`, never a hero metric |
-| Completed state | `--success` |
-| Streak / energy | `--warning` when it conveys a real state |
+| Home solid CTA (`Empieza aquí`, review due) | `--primary` + `--on-primary` |
+| Chrome CTA elsewhere (`Button` primary) | `--cta-bg` + `--cta-fg` (ink — still valid outside Home) |
+| Session advance (`PillButton` primary) | `--primary` + `--on-primary` |
+| Soft badge / selected chip | `--primary-soft` / `--badge-primary-*` |
+| Badge variants | `default` (theme) or fixed `success` / `warning` / `error` / `info` / `neutral` |
+| Home plan progress segments | `--accent-2` |
+| Exercise correctness | `--success` / `--error` (fixed) |
+| Streak / plan-done celebration on Home | `--accent-2` |
+| Editorial word/chunk | `--accent-1` on the word mark or phrase quote only — never a full-card wash |
 | Errors, wrong answers | `--error` |
-| AI features | `--accent-analog-1` |
 | Disabled | neutral (`--text-tertiary`) |
 | Focus ring | `--focus-ring` |
 
@@ -124,13 +136,16 @@ These never change with user hue. Convey meaning, not identity.
 .text-accent-complement    → var(--accent-complement)
 ```
 
-### Legacy (still valid)
+### Legacy CSS (prefer components)
+
 ```
-.btn-primary / .btn-secondary / .btn-soft
-.badge-primary / .badge-secondary / .badge-accent
-.accent-button / .accent-bg / .accent-text / .accent-border / .accent-ring
-.card / .card-dark / .input-themed
+.btn-primary     → same recipe as Button primary (--cta-bg)
+.btn-secondary   → same recipe as Button secondary (raised + border)
+.btn-soft / .accent-button / .card / .input-themed
 ```
+
+New UI should use `components/ui/Button` and `components/layout/Card`. Do not
+introduce a third outline “secondary”.
 
 ---
 

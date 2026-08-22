@@ -5,6 +5,8 @@ import type { ZodSchema } from "zod";
 import type { Database } from "@/lib/supabase/types";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { tryGetSupabaseAdminClient } from "@/lib/supabase/service-role";
+import { logServerError, redactForLog, type RedactedError } from "@/lib/api/logging";
+export { checkLayeredRateLimit, isAnonymousUser, getClientIp, hashIp } from "@/lib/api/rate-limit";
 
 // ---------------------------------------------------------------------------
 // Shared secure response headers
@@ -222,7 +224,21 @@ async function consumeDatabaseRateLimit(
   meta?: Record<string, unknown>
 ): Promise<RateLimitRpcResult | null> {
   const supabase = tryGetSupabaseAdminClient();
+  const isProd = process.env.NODE_ENV === "production" && process.env.VITEST !== "true";
+  const endpoint =
+    typeof meta?.endpoint === "string" ? meta.endpoint : "rate-limit";
+
   if (!supabase) {
+    if (isProd) {
+      logServerError("Rate limit unavailable", new Error("Missing database client"), {
+        endpoint,
+        operation: "consume",
+      });
+      return {
+        allowed: false,
+        retry_after_seconds: 60,
+      };
+    }
     return null;
   }
 
@@ -233,7 +249,11 @@ async function consumeDatabaseRateLimit(
   });
 
   if (error) {
-    console.error("[rate-limit] database check failed", { key, ...meta, error });
+    // Never log the raw rate-limit key (may embed user UUIDs).
+    logServerError("Rate limit database check failed", error, {
+      endpoint,
+      operation: "consume",
+    });
     return {
       allowed: false,
       retry_after_seconds: 60,
@@ -242,7 +262,11 @@ async function consumeDatabaseRateLimit(
 
   const row = Array.isArray(data) ? data[0] : data;
   if (!isRateLimitRpcResult(row)) {
-    console.error("[rate-limit] database check returned invalid payload", { key, ...meta });
+    logServerError(
+      "Rate limit database check returned invalid payload",
+      new Error("Invalid rate limit RPC payload"),
+      { endpoint, operation: "consume" },
+    );
     return {
       allowed: false,
       retry_after_seconds: 60,
@@ -283,7 +307,7 @@ function consumeMemoryRateLimit(
 }
 
 function buildRateLimitResult(
-  key: string,
+  _key: string,
   max: number,
   allowed: boolean,
   retryAfter: number,
@@ -294,13 +318,14 @@ function buildRateLimitResult(
     return { limited: false, error: null };
   }
 
-  console.warn("[rate-limit] exceeded", {
-    key,
-    count,
-    max,
-    retryAfterSeconds: retryAfter,
-    ...meta,
-  });
+  const endpoint =
+    typeof meta?.endpoint === "string" ? meta.endpoint : "rate-limit";
+  logServerError(
+    "Rate limit exceeded",
+    new Error(`quota exceeded max=${max} count=${count ?? "n/a"} retry=${retryAfter}`),
+    { endpoint, operation: "exceeded", status: 429 },
+    "warn",
+  );
   return {
     limited: true,
     error: NextResponse.json(
@@ -367,49 +392,12 @@ export async function validateBody<T>(
 }
 
 // ---------------------------------------------------------------------------
-// redactError — safe server-side error logger
+// redactError — safe server-side error logger using centralized redactor
 // ---------------------------------------------------------------------------
 
-interface RedactedError {
-  type: string;
-  message: string;
-  status?: number;
-}
-
-const BASE64_PATTERN = /[A-Za-z0-9+/]{100,}={0,2}/g;
-const MAX_MESSAGE_LENGTH = 200;
-
-/**
- * Strips PII-bearing fields from an error before logging.
- *
- * SDK errors from Gemini/Supabase can embed request bodies (which may contain
- * audio base64 data, prompts with user words, or transcript text) in their
- * serialised form. This helper:
- *   1. Extracts only the safe scalar fields (type, message, status).
- *   2. Removes long base64 sequences from the message.
- *   3. Truncates the message to avoid accidental data dumps.
- *
- * Use instead of `console.error("label:", err)` in any route that handles
- * audio, transcription, or other user-generated content.
- */
 export function redactError(err: unknown): RedactedError {
   if (!err || typeof err !== "object") {
-    return { type: "UnknownError", message: String(err).slice(0, MAX_MESSAGE_LENGTH) };
+    return { type: "UnknownError", message: String(err).slice(0, 200) };
   }
-
-  const e = err as Record<string, unknown>;
-  const type = typeof e["name"] === "string" ? e["name"] : err?.constructor?.name ?? "Error";
-  const rawMessage = typeof e["message"] === "string" ? e["message"] : "";
-  const status =
-    typeof e["status"] === "number"
-      ? e["status"]
-      : typeof e["statusCode"] === "number"
-        ? e["statusCode"]
-        : undefined;
-
-  const safeMessage = rawMessage
-    .replace(BASE64_PATTERN, "[redacted-base64]")
-    .slice(0, MAX_MESSAGE_LENGTH);
-
-  return { type, message: safeMessage, ...(status !== undefined ? { status } : {}) };
+  return redactForLog(err);
 }

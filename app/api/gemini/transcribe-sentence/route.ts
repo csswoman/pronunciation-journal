@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { requireSameOrigin, requireUser, rateLimit, validateBody, publicErrorResponse } from "@/lib/api/guards";
+import { requireSameOrigin, requireUser, checkLayeredRateLimit, validateBody, publicErrorResponse } from "@/lib/api/guards";
 import { callWithFallback, getErrorStatus } from "@/lib/gemini/client";
 import { logServerError } from "@/lib/api/logging";
 import { buildTranscriptionCacheKey, createTranscriptionCache } from "@/lib/gemini/transcription-cache";
@@ -60,10 +60,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const { user, error: authError } = await requireUser(request);
   if (authError) return authError as NextResponse;
 
-  const { limited, error: rateLimitError } = await rateLimit(`/api/gemini/transcribe-sentence:${user.id}`, {
-    max: 20,
-    windowMs: 60_000,
-    meta: { endpoint: "/api/gemini/transcribe-sentence", userId: user.id },
+  const { limited, error: rateLimitError } = await checkLayeredRateLimit({
+    request,
+    user,
+    endpoint: "/api/gemini/transcribe-sentence",
+    maxPermanent: 20,
+    maxAnonymous: 3,
   });
   if (limited) return rateLimitError as NextResponse;
 

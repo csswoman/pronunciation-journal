@@ -1,4 +1,5 @@
 import { SoundLabLessonCard } from "./SoundLabLessonCard";
+import Button from "@/components/ui/Button";
 import type { Lesson } from "@/lib/types";
 import { ipaFromLessonTitle } from "@/lib/sound-lab/display";
 
@@ -66,13 +67,9 @@ export function SoundLabLessonGrid({
           Ningún sonido coincide con este filtro.
         </p>
         {onClearFilters && (
-          <button
-            type="button"
-            onClick={onClearFilters}
-            className="btn-secondary"
-          >
+          <Button type="button" variant="secondary" size="sm" onClick={onClearFilters}>
             Limpiar filtros
-          </button>
+          </Button>
         )}
       </div>
     );

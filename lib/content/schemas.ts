@@ -57,10 +57,34 @@ const LessonExampleSchema = z.object({
   note: z.string().optional(),
 });
 
+export const LESSON_EXERCISE_TYPES = [
+  "closed_blank",
+  "multiple_choice",
+  "open_response",
+  "self_check",
+] as const;
+
+export const LessonExerciseTypeSchema = z.enum(LESSON_EXERCISE_TYPES);
+
+const BlankSchema = z.object({
+  accepted: z.array(z.string()).min(1),
+  hint: z.string().optional(),
+});
+
+const StructuredItemSchema = z.object({
+  prompt: z.string(),
+  blanks: z.array(BlankSchema).optional(),
+  options: z.array(z.string()).optional(),
+  correct: z.number().int().optional(),
+  sampleAnswer: z.string().optional(),
+  explanation: z.string().optional(),
+});
+
 const LessonExerciseSchema = z.object({
   instruction: z.string(),
-  items: z.array(z.string()),
-  answers: z.array(z.string()).optional(),
+  type: LessonExerciseTypeSchema.optional(),
+  items: z.array(z.union([z.string(), StructuredItemSchema])),
+  answers: z.array(z.union([z.string(), z.array(z.string()), z.array(BlankSchema)])).optional(),
 });
 
 const QuizQuestionSchema = z.object({

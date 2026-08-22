@@ -7,37 +7,79 @@
   --sidebar-width: 256px;
   --hue: 250;
 
+  /* Split-complementary: base + editorial (+150) + progress (+210).
+     Boosts are seeded by useOKLCHTheme / THEME_INIT_SCRIPT for muddy hues. */
+  --hue-base: var(--hue);
+  --hue-accent-1: calc(var(--hue) + 150);
+  --hue-accent-2: calc(var(--hue) + 210);
+  --chroma-boost-base: 1;
+  --chroma-boost-accent-1: 1;
+  --chroma-boost-accent-2: 1;
+  --l-shift-base: 0;
+  --l-shift-accent-1: 0;
+  --l-shift-accent-2: 0;
+
   /* Motion — exponential ease-out curves (no bounce) */
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 
-  /* ── 1. Primary Scale (dynamic identity) ─────────────────────────────── */
-  --primary-50:  oklch(0.97 0.02 var(--hue));
-  --primary-100: oklch(0.93 0.04 var(--hue));
-  --primary-200: oklch(0.88 0.06 var(--hue));
-  --primary-300: oklch(0.80 0.10 var(--hue));
-  --primary-400: oklch(0.72 0.13 var(--hue));
-  --primary-500: oklch(0.65 0.15 var(--hue));
-  --primary-600: oklch(0.58 0.16 var(--hue));
-  --primary-700: oklch(0.50 0.17 var(--hue));
-  --primary-800: oklch(0.42 0.15 var(--hue));
+  /* ── 1. Primary Scale (dynamic identity = hue-base) ───────────────────── */
+  --primary-50:  oklch(calc(0.97 + var(--l-shift-base)) calc(0.02 * var(--chroma-boost-base)) var(--hue-base));
+  --primary-100: oklch(calc(0.93 + var(--l-shift-base)) calc(0.04 * var(--chroma-boost-base)) var(--hue-base));
+  --primary-200: oklch(calc(0.88 + var(--l-shift-base)) calc(0.06 * var(--chroma-boost-base)) var(--hue-base));
+  --primary-300: oklch(calc(0.80 + var(--l-shift-base)) calc(0.10 * var(--chroma-boost-base)) var(--hue-base));
+  --primary-400: oklch(calc(0.72 + var(--l-shift-base)) calc(0.13 * var(--chroma-boost-base)) var(--hue-base));
+  --primary-500: oklch(calc(0.65 + var(--l-shift-base)) calc(0.15 * var(--chroma-boost-base)) var(--hue-base));
+  --primary-600: oklch(calc(0.58 + var(--l-shift-base)) calc(0.16 * var(--chroma-boost-base)) var(--hue-base));
+  --primary-700: oklch(calc(0.50 + var(--l-shift-base)) calc(0.17 * var(--chroma-boost-base)) var(--hue-base));
+  --primary-800: oklch(calc(0.42 + var(--l-shift-base)) calc(0.15 * var(--chroma-boost-base)) var(--hue-base));
 
   /* Main aliases */
   --primary:            var(--primary-700);
   --primary-hover:      var(--primary-800);
-  --primary-active:     oklch(0.45 0.16 var(--hue));
+  --primary-active:     oklch(calc(0.45 + var(--l-shift-base)) calc(0.16 * var(--chroma-boost-base)) var(--hue-base));
   --primary-soft:       var(--primary-50);
   --primary-foreground: oklch(1 0 0);
   --on-primary:         oklch(1 0 0);
-  --focus-ring:         oklch(0.75 0.12 var(--hue) / 0.4);
+  --focus-ring:         oklch(0.75 0.12 var(--hue-base) / 0.4);
 
-  /* Accent variations */
-  --accent-analog-1:   oklch(0.70 0.14 calc(var(--hue) + 20));
-  --accent-analog-2:   oklch(0.70 0.14 calc(var(--hue) - 20));
-  --accent-complement: oklch(0.70 0.14 calc(var(--hue) + 180));
+  /* ── 1b. Accent-1 scale (editorial / content highlight, +150°) ───────── */
+  --accent-1-50:  oklch(calc(0.97 + var(--l-shift-accent-1)) calc(0.02 * var(--chroma-boost-accent-1)) var(--hue-accent-1));
+  --accent-1-100: oklch(calc(0.93 + var(--l-shift-accent-1)) calc(0.04 * var(--chroma-boost-accent-1)) var(--hue-accent-1));
+  --accent-1-200: oklch(calc(0.88 + var(--l-shift-accent-1)) calc(0.06 * var(--chroma-boost-accent-1)) var(--hue-accent-1));
+  --accent-1-300: oklch(calc(0.80 + var(--l-shift-accent-1)) calc(0.10 * var(--chroma-boost-accent-1)) var(--hue-accent-1));
+  --accent-1-400: oklch(calc(0.72 + var(--l-shift-accent-1)) calc(0.13 * var(--chroma-boost-accent-1)) var(--hue-accent-1));
+  --accent-1-500: oklch(calc(0.65 + var(--l-shift-accent-1)) calc(0.15 * var(--chroma-boost-accent-1)) var(--hue-accent-1));
+  --accent-1-600: oklch(calc(0.58 + var(--l-shift-accent-1)) calc(0.16 * var(--chroma-boost-accent-1)) var(--hue-accent-1));
+  --accent-1-700: oklch(calc(0.50 + var(--l-shift-accent-1)) calc(0.17 * var(--chroma-boost-accent-1)) var(--hue-accent-1));
+  --accent-1-800: oklch(calc(0.42 + var(--l-shift-accent-1)) calc(0.15 * var(--chroma-boost-accent-1)) var(--hue-accent-1));
+  --accent-1:       var(--accent-1-700);
+  --accent-1-hover: var(--accent-1-800);
+  --accent-1-soft:  var(--accent-1-50);
+  --on-accent-1:    oklch(1 0 0);
+
+  /* ── 1c. Accent-2 scale (progress / success states, +210°) ───────────── */
+  --accent-2-50:  oklch(calc(0.97 + var(--l-shift-accent-2)) calc(0.02 * var(--chroma-boost-accent-2)) var(--hue-accent-2));
+  --accent-2-100: oklch(calc(0.93 + var(--l-shift-accent-2)) calc(0.04 * var(--chroma-boost-accent-2)) var(--hue-accent-2));
+  --accent-2-200: oklch(calc(0.88 + var(--l-shift-accent-2)) calc(0.06 * var(--chroma-boost-accent-2)) var(--hue-accent-2));
+  --accent-2-300: oklch(calc(0.80 + var(--l-shift-accent-2)) calc(0.10 * var(--chroma-boost-accent-2)) var(--hue-accent-2));
+  --accent-2-400: oklch(calc(0.72 + var(--l-shift-accent-2)) calc(0.13 * var(--chroma-boost-accent-2)) var(--hue-accent-2));
+  --accent-2-500: oklch(calc(0.65 + var(--l-shift-accent-2)) calc(0.15 * var(--chroma-boost-accent-2)) var(--hue-accent-2));
+  --accent-2-600: oklch(calc(0.58 + var(--l-shift-accent-2)) calc(0.16 * var(--chroma-boost-accent-2)) var(--hue-accent-2));
+  --accent-2-700: oklch(calc(0.50 + var(--l-shift-accent-2)) calc(0.17 * var(--chroma-boost-accent-2)) var(--hue-accent-2));
+  --accent-2-800: oklch(calc(0.42 + var(--l-shift-accent-2)) calc(0.15 * var(--chroma-boost-accent-2)) var(--hue-accent-2));
+  --accent-2:       var(--accent-2-700);
+  --accent-2-hover: var(--accent-2-800);
+  --accent-2-soft:  var(--accent-2-50);
+  --on-accent-2:    oklch(1 0 0);
+
+  /* Legacy near-analog accents (kept for older utilities) */
+  --accent-analog-1:   oklch(0.70 0.14 calc(var(--hue-base) + 20));
+  --accent-analog-2:   oklch(0.70 0.14 calc(var(--hue-base) - 20));
+  --accent-complement: oklch(0.70 0.14 calc(var(--hue-base) + 180));
 
   /* Gradient */
-  --gradient-primary: linear-gradient(135deg, oklch(0.70 0.15 var(--hue)), oklch(0.65 0.15 calc(var(--hue) + 30)));
+  --gradient-primary: linear-gradient(135deg, oklch(0.70 0.15 var(--hue-base)), oklch(0.65 0.15 calc(var(--hue-base) + 30)));
 
   /* ── 2. Neutral System ───────────────────────────────────────────────── */
   /* Near-neutral surfaces: identity comes from actions, not a colored canvas. */
@@ -188,6 +230,7 @@
   --layout-rail-max: 22rem;
 
   /* ── 10. Border radius scale ─────────────────────────────────────────── */
+  --radius-xs:   4px;
   --radius-sm:   8px;
   --radius-md:   12px;
   --radius-lg:   16px;
@@ -387,31 +430,61 @@
 .dark {
   color-scheme: dark;
   /* Primary scale — adapted lightness for dark backgrounds */
-  --primary-50:  oklch(0.18 0.03 var(--hue));
-  --primary-100: oklch(0.22 0.05 var(--hue));
-  --primary-200: oklch(0.28 0.07 var(--hue));
-  --primary-300: oklch(0.35 0.09 var(--hue));
-  --primary-400: oklch(0.55 0.13 var(--hue));
-  --primary-500: oklch(0.70 0.14 var(--hue));
-  --primary-600: oklch(0.63 0.15 var(--hue));
-  --primary-700: oklch(0.55 0.16 var(--hue));
-  --primary-800: oklch(0.46 0.14 var(--hue));
+  --primary-50:  oklch(calc(0.18 + var(--l-shift-base)) calc(0.03 * var(--chroma-boost-base)) var(--hue-base));
+  --primary-100: oklch(calc(0.22 + var(--l-shift-base)) calc(0.05 * var(--chroma-boost-base)) var(--hue-base));
+  --primary-200: oklch(calc(0.28 + var(--l-shift-base)) calc(0.07 * var(--chroma-boost-base)) var(--hue-base));
+  --primary-300: oklch(calc(0.35 + var(--l-shift-base)) calc(0.09 * var(--chroma-boost-base)) var(--hue-base));
+  --primary-400: oklch(calc(0.55 + var(--l-shift-base)) calc(0.13 * var(--chroma-boost-base)) var(--hue-base));
+  --primary-500: oklch(calc(0.70 + var(--l-shift-base)) calc(0.14 * var(--chroma-boost-base)) var(--hue-base));
+  --primary-600: oklch(calc(0.63 + var(--l-shift-base)) calc(0.15 * var(--chroma-boost-base)) var(--hue-base));
+  --primary-700: oklch(calc(0.55 + var(--l-shift-base)) calc(0.16 * var(--chroma-boost-base)) var(--hue-base));
+  --primary-800: oklch(calc(0.46 + var(--l-shift-base)) calc(0.14 * var(--chroma-boost-base)) var(--hue-base));
 
   --primary:            var(--primary-500);
-  --primary-hover:      oklch(0.63 0.15 var(--hue));
-  --primary-active:     oklch(0.58 0.16 var(--hue));
+  --primary-hover:      oklch(calc(0.63 + var(--l-shift-base)) calc(0.15 * var(--chroma-boost-base)) var(--hue-base));
+  --primary-active:     oklch(calc(0.58 + var(--l-shift-base)) calc(0.16 * var(--chroma-boost-base)) var(--hue-base));
   --primary-soft:       var(--primary-100);
   --primary-foreground: oklch(0.10 0 0);
   --on-primary:         oklch(0.10 0 0);
-  --focus-ring:         oklch(0.75 0.12 var(--hue) / 0.35);
+  --focus-ring:         oklch(0.75 0.12 var(--hue-base) / 0.35);
 
-  /* Accent variations */
-  --accent-analog-1:   oklch(0.72 0.14 calc(var(--hue) + 20));
-  --accent-analog-2:   oklch(0.72 0.14 calc(var(--hue) - 20));
-  --accent-complement: oklch(0.72 0.14 calc(var(--hue) + 180));
+  /* Accent-1 dark */
+  --accent-1-50:  oklch(calc(0.18 + var(--l-shift-accent-1)) calc(0.03 * var(--chroma-boost-accent-1)) var(--hue-accent-1));
+  --accent-1-100: oklch(calc(0.22 + var(--l-shift-accent-1)) calc(0.05 * var(--chroma-boost-accent-1)) var(--hue-accent-1));
+  --accent-1-200: oklch(calc(0.28 + var(--l-shift-accent-1)) calc(0.07 * var(--chroma-boost-accent-1)) var(--hue-accent-1));
+  --accent-1-300: oklch(calc(0.35 + var(--l-shift-accent-1)) calc(0.09 * var(--chroma-boost-accent-1)) var(--hue-accent-1));
+  --accent-1-400: oklch(calc(0.55 + var(--l-shift-accent-1)) calc(0.13 * var(--chroma-boost-accent-1)) var(--hue-accent-1));
+  --accent-1-500: oklch(calc(0.70 + var(--l-shift-accent-1)) calc(0.14 * var(--chroma-boost-accent-1)) var(--hue-accent-1));
+  --accent-1-600: oklch(calc(0.63 + var(--l-shift-accent-1)) calc(0.15 * var(--chroma-boost-accent-1)) var(--hue-accent-1));
+  --accent-1-700: oklch(calc(0.55 + var(--l-shift-accent-1)) calc(0.16 * var(--chroma-boost-accent-1)) var(--hue-accent-1));
+  --accent-1-800: oklch(calc(0.46 + var(--l-shift-accent-1)) calc(0.14 * var(--chroma-boost-accent-1)) var(--hue-accent-1));
+  --accent-1:       var(--accent-1-500);
+  --accent-1-hover: var(--accent-1-600);
+  --accent-1-soft:  var(--accent-1-100);
+  --on-accent-1:    oklch(0.10 0 0);
+
+  /* Accent-2 dark */
+  --accent-2-50:  oklch(calc(0.18 + var(--l-shift-accent-2)) calc(0.03 * var(--chroma-boost-accent-2)) var(--hue-accent-2));
+  --accent-2-100: oklch(calc(0.22 + var(--l-shift-accent-2)) calc(0.05 * var(--chroma-boost-accent-2)) var(--hue-accent-2));
+  --accent-2-200: oklch(calc(0.28 + var(--l-shift-accent-2)) calc(0.07 * var(--chroma-boost-accent-2)) var(--hue-accent-2));
+  --accent-2-300: oklch(calc(0.35 + var(--l-shift-accent-2)) calc(0.09 * var(--chroma-boost-accent-2)) var(--hue-accent-2));
+  --accent-2-400: oklch(calc(0.55 + var(--l-shift-accent-2)) calc(0.13 * var(--chroma-boost-accent-2)) var(--hue-accent-2));
+  --accent-2-500: oklch(calc(0.70 + var(--l-shift-accent-2)) calc(0.14 * var(--chroma-boost-accent-2)) var(--hue-accent-2));
+  --accent-2-600: oklch(calc(0.63 + var(--l-shift-accent-2)) calc(0.15 * var(--chroma-boost-accent-2)) var(--hue-accent-2));
+  --accent-2-700: oklch(calc(0.55 + var(--l-shift-accent-2)) calc(0.16 * var(--chroma-boost-accent-2)) var(--hue-accent-2));
+  --accent-2-800: oklch(calc(0.46 + var(--l-shift-accent-2)) calc(0.14 * var(--chroma-boost-accent-2)) var(--hue-accent-2));
+  --accent-2:       var(--accent-2-500);
+  --accent-2-hover: var(--accent-2-600);
+  --accent-2-soft:  var(--accent-2-100);
+  --on-accent-2:    oklch(0.10 0 0);
+
+  /* Legacy near-analog accents */
+  --accent-analog-1:   oklch(0.72 0.14 calc(var(--hue-base) + 20));
+  --accent-analog-2:   oklch(0.72 0.14 calc(var(--hue-base) - 20));
+  --accent-complement: oklch(0.72 0.14 calc(var(--hue-base) + 180));
 
   /* Gradient */
-  --gradient-primary: linear-gradient(135deg, oklch(0.72 0.15 var(--hue)), oklch(0.67 0.15 calc(var(--hue) + 30)));
+  --gradient-primary: linear-gradient(135deg, oklch(0.72 0.15 var(--hue-base)), oklch(0.67 0.15 calc(var(--hue-base) + 30)));
 
   /* Neutral system — near-zero chroma keeps dark surfaces clean */
   --bg:           oklch(0.120 0.003 var(--hue));

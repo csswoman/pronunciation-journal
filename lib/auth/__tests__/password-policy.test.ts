@@ -1,23 +1,36 @@
 import { describe, expect, it } from "vitest";
 import {
-  PASSWORD_POLICY_MESSAGE,
-  publicAuthErrorMessage,
+  MIN_PASSWORD_LENGTH,
   validatePasswordPolicy,
-} from "@/lib/auth/password-policy";
+  publicAuthErrorMessage,
+} from "../password-policy";
 
-describe("password policy", () => {
-  it("accepts passwords with length, uppercase, lowercase, and number", () => {
-    expect(validatePasswordPolicy("StrongPass1")).toBeNull();
+describe("Password Policy Validation", () => {
+  it("enforces minimum length of 10 characters", () => {
+    expect(MIN_PASSWORD_LENGTH).toBe(10);
+    expect(validatePasswordPolicy("Ab1!")).not.toBeNull();
+    expect(validatePasswordPolicy("Short1Aa")).not.toBeNull(); // 8 chars -> reject
+    expect(validatePasswordPolicy("Short1Aabb")).toBeNull(); // 10 chars -> valid
   });
 
-  it("rejects weak passwords with the public policy message", () => {
-    expect(validatePasswordPolicy("short1A")).toBe(PASSWORD_POLICY_MESSAGE);
-    expect(validatePasswordPolicy("lowercaseonly1")).toBe(PASSWORD_POLICY_MESSAGE);
-    expect(validatePasswordPolicy("UPPERCASEONLY1")).toBe(PASSWORD_POLICY_MESSAGE);
-    expect(validatePasswordPolicy("NoNumberHere")).toBe(PASSWORD_POLICY_MESSAGE);
+  it("requires uppercase letter", () => {
+    expect(validatePasswordPolicy("nouppercase123")).not.toBeNull();
+    expect(validatePasswordPolicy("ValidUppercase123")).toBeNull();
   });
 
-  it("uses a non-provider-specific public auth error", () => {
-    expect(publicAuthErrorMessage()).not.toMatch(/supabase|database|provider|stack/i);
+  it("requires lowercase letter", () => {
+    expect(validatePasswordPolicy("NOLOWERCASE123")).not.toBeNull();
+    expect(validatePasswordPolicy("Haslowercase123")).toBeNull();
+  });
+
+  it("requires a numeric digit", () => {
+    expect(validatePasswordPolicy("NoNumbersHereA")).not.toBeNull();
+    expect(validatePasswordPolicy("HasNumbers123A")).toBeNull();
+  });
+
+  it("returns generic public error message on auth errors", () => {
+    expect(publicAuthErrorMessage()).toBe(
+      "We could not complete that request. Check your details and try again.",
+    );
   });
 });

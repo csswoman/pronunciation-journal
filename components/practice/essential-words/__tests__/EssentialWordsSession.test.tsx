@@ -17,13 +17,32 @@ const WORDS: EssentialWord[] = [
   },
 ]
 
-const coreWordClientMocks = vi.hoisted(() => ({
-  fetchEssentialWords: vi.fn(async () => WORDS),
-}))
+const coreWordClientMocks = vi.hoisted(() => {
+  const toWordId = (word: string) => `essential_words:${word.toLowerCase()}`;
+  const mocks = {
+    fetchEssentialWords: vi.fn(async () => WORDS),
+    fetchCatalogIndex: vi.fn(async () => {
+      const words = await mocks.fetchEssentialWords();
+      return words.map((w) => ({
+        rank: w.rank,
+        word: w.word,
+        pos: w.pos,
+        cefr_level: w.cefr_level,
+        chunk: Math.ceil(w.rank / 100),
+        ipa_strong: w.ipa_strong,
+        ipa_weak: w.ipa_weak,
+      }));
+    }),
+    fetchChunks: vi.fn(async () => {
+      const words = await mocks.fetchEssentialWords();
+      return new Map(words.map((w) => [toWordId(w.word), w]));
+    }),
+    fetchChunk: vi.fn(async () => await mocks.fetchEssentialWords()),
+  };
+  return mocks;
+});
 
-vi.mock('@/lib/essential-words/client', () => ({
-  fetchEssentialWords: coreWordClientMocks.fetchEssentialWords,
-}))
+vi.mock('@/lib/essential-words/client', () => coreWordClientMocks)
 
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: vi.fn(), replace: vi.fn(), back: vi.fn(), refresh: vi.fn() }),

@@ -4,7 +4,7 @@ import {
   GENERATE_READER_SYSTEM_PROMPT,
   buildGenerateReaderUserPrompt,
 } from "@/lib/ai-prompts";
-import { requireSameOrigin, requireUser, rateLimit, validateBody } from "@/lib/api/guards";
+import { requireSameOrigin, requireUser, checkLayeredRateLimit, validateBody } from "@/lib/api/guards";
 import { shouldTryNextModel as defaultShouldRetry } from "@/lib/gemini/client";
 import { callGeminiJson, parseGeminiJson } from "@/lib/gemini/json-route";
 import { passageEmbedsTargets } from "@/lib/practice/reader/refinement";
@@ -55,10 +55,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const { user, error: authError } = await requireUser(request);
   if (authError) return authError as NextResponse;
 
-  const { limited, error: rateLimitError } = await rateLimit(`/api/gemini/generate-reader:${user.id}`, {
-    max: 20,
-    windowMs: 60_000,
-    meta: { endpoint: "/api/gemini/generate-reader", userId: user.id },
+  const { limited, error: rateLimitError } = await checkLayeredRateLimit({
+    request,
+    user,
+    endpoint: "/api/gemini/generate-reader",
+    maxPermanent: 20,
+    maxAnonymous: 3,
   });
   if (limited) return rateLimitError as NextResponse;
 

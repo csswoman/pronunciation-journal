@@ -62,7 +62,7 @@ describe('ExerciseShell', () => {
     expect(onContinue).toHaveBeenCalledOnce()
   })
 
-  it('auto-continues a correct result without detailed feedback', () => {
+  it('does not auto-continue by default without autoAdvanceMs', () => {
     vi.useFakeTimers()
     const onContinue = vi.fn()
     render(
@@ -72,18 +72,35 @@ describe('ExerciseShell', () => {
         result={{ isCorrect: true, userAnswer: 'hello', timeMs: 500 }}
       />
     )
-    act(() => { vi.advanceTimersByTime(900) })
-    expect(onContinue).toHaveBeenCalledOnce()
+    act(() => { vi.advanceTimersByTime(2000) })
+    expect(onContinue).not.toHaveBeenCalled()
     vi.useRealTimers()
   })
 
-  it('does not auto-continue a wrong result with explanation', () => {
+  it('auto-continues when autoAdvanceMs is explicitly configured', () => {
     vi.useFakeTimers()
     const onContinue = vi.fn()
     render(
       <ExerciseShell
         {...baseProps}
         onContinue={onContinue}
+        autoAdvanceMs={900}
+        result={{ isCorrect: true, userAnswer: 'hello', timeMs: 500 }}
+      />
+    )
+    act(() => { vi.advanceTimersByTime(900) })
+    expect(onContinue).toHaveBeenCalledOnce()
+    vi.useRealTimers()
+  })
+
+  it('does not auto-continue a wrong result with explanation even with autoAdvanceMs', () => {
+    vi.useFakeTimers()
+    const onContinue = vi.fn()
+    render(
+      <ExerciseShell
+        {...baseProps}
+        onContinue={onContinue}
+        autoAdvanceMs={900}
         result={{
           isCorrect: false,
           userAnswer: 'wrong',

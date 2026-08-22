@@ -39,7 +39,7 @@ export function AuthInput({
   const masked = isPasswordField && !showPassword;
 
   const baseClass =
-    "w-full bg-surface-sunken rounded-lg text-fg text-base px-4 py-3 outline-none transition-all placeholder:text-fg-subtle focus:bg-surface-raised focus-visible:ring-2 focus-visible:ring-offset-2 pr-14";
+    "w-full bg-surface-sunken rounded-sm text-fg text-base px-4 py-3 outline-none transition-all placeholder:text-fg-subtle focus:bg-surface-raised focus-visible:ring-2 focus-visible:ring-offset-2 pr-14";
   const borderClass = error
     ? "border border-error focus:border-error focus-visible:ring-error"
     : "border border-border-subtle focus:border-primary focus-visible:ring-primary";

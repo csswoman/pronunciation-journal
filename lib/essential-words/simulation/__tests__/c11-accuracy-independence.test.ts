@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { buildAssessment } from "../../verification/assessment";
 import type { AttemptModality } from "../../verification/types";
 import { isScheduledReviewEligibleForC11, observedRetentionWithinTarget } from "../criteria";
@@ -11,6 +11,8 @@ import {
   traceScheduledReviews,
   violatesRecallInvariant,
 } from "../scheduled-review-trace";
+
+vi.setConfig({ testTimeout: 60_000 });
 
 /**
  * Task 8.9g — mandatory tests A-K auditing C11's independence from

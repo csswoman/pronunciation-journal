@@ -221,6 +221,51 @@ describe("HomeCommandGrid placement visibility", () => {
     expect(screen.getByRole("heading", { name: "Afina tu nivel" })).toBeInTheDocument();
   });
 
+  it("places daily editorial in the aside and setup pair below the plan", async () => {
+    dailyCardState.empty = false;
+    dailyCardState.settled = true;
+    await renderSettledGrid({
+      placementState: { hasPlacement: false, hasMeaningfulProgress: true },
+      pronunciationDiagnosticState: { hasPronunciationDiagnostic: false },
+    });
+
+    const word = screen.getByText("Palabra del día");
+    const chunk = screen.getByText("Chunk del día");
+    const setup = screen.getByRole("heading", { name: "Afina tu nivel" });
+    const pronunciation = screen.getByRole("heading", {
+      name: "Evalúa tu pronunciación",
+    });
+    const plan = screen.getByText("Daily plan");
+
+    expect(word.closest(".home-command-aside")).toBeTruthy();
+    expect(chunk.closest(".home-command-aside")).toBeTruthy();
+    expect(setup.closest(".home-command-setup-pair")).toBeTruthy();
+    expect(pronunciation.closest(".home-command-setup-pair")).toBeTruthy();
+    expect(
+      plan.compareDocumentPosition(setup) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+  });
+
+  it("places speak and journal as a pair below the setup pair", async () => {
+    dailyCardState.empty = false;
+    dailyCardState.settled = true;
+    await renderSettledGrid({
+      placementState: { hasPlacement: false, hasMeaningfulProgress: true },
+      pronunciationDiagnosticState: { hasPronunciationDiagnostic: false },
+    });
+
+    const setup = screen.getByRole("heading", { name: "Afina tu nivel" });
+    const speak = screen.getByText("Speak prompt");
+    const journal = screen.getByText("Diario card");
+    const pair = speak.closest(".home-command-setup-pair");
+
+    expect(pair).toBeTruthy();
+    expect(journal.closest(".home-command-setup-pair")).toBe(pair);
+    expect(
+      setup.compareDocumentPosition(speak) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+  });
+
   it("hides every placement prompt after completion", async () => {
     dailyCardState.empty = false;
     dailyCardState.settled = true;

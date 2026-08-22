@@ -57,11 +57,24 @@ export async function updateDisplayName(userId: string, fullName: string): Promi
   if (authError) throw authError;
 }
 
+const ALLOWED_AVATAR_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
+const ALLOWED_AVATAR_EXTENSIONS = new Set(["jpg", "jpeg", "png", "webp"]);
+
 /** Uploads avatar to storage and persists the public URL in auth metadata. */
 export async function updateAvatar(userId: string, file: File): Promise<string> {
   const supabase = getSupabaseBrowserClient();
-  const fileExt = file.name.split(".").pop();
-  const filePath = `${userId}-${Date.now()}.${fileExt}`;
+  const rawExt = file.name.split(".").pop()?.toLowerCase() ?? "";
+  const fileExt = ALLOWED_AVATAR_EXTENSIONS.has(rawExt) ? rawExt : "jpg";
+
+  if (!ALLOWED_AVATAR_TYPES.has(file.type)) {
+    throw new Error("Invalid file type. Only JPEG, PNG, and WebP images are allowed.");
+  }
+
+  if (file.size > 2 * 1024 * 1024) {
+    throw new Error("Avatar image must be under 2 MB.");
+  }
+
+  const filePath = `${userId}/${Date.now()}.${fileExt}`;
 
   const { error: uploadError } = await supabase.storage
     .from("avatars")

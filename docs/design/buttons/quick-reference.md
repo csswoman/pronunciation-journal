@@ -6,8 +6,8 @@ Guía completa: [guide.md](guide.md).
 ## Variante
 
 ```text
-primary  → CTA de una zona
-secondary → alternativa subordinada
+primary  → CTA de chrome/hub (tinta --cta-bg). En sesión usa PillButton.
+secondary → alternativa subordinada (raised + borde)
 soft     → acción contextual
 ghost    → acción terciaria
 success / warning / error / info → significado semántico real

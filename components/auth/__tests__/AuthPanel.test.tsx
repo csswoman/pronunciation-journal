@@ -181,6 +181,59 @@ describe("AuthPanel", { timeout: 15_000 }, () => {
     expect(replace).toHaveBeenCalledWith("/");
   });
 
+  it("falls back to Google sign-in when guest linking hits an existing identity", async () => {
+    searchParams = new URLSearchParams("intent=save&mode=register");
+    authActions.getBrowserSession.mockResolvedValue({
+      data: {
+        session: {
+          user: { id: "anon-1", is_anonymous: true },
+        },
+      },
+    });
+    authActions.linkGoogleIdentity.mockResolvedValue({
+      data: { provider: "google", url: null },
+      error: {
+        message: "Identity is already linked to another user",
+        code: "identity_already_exists",
+      },
+    });
+    authActions.signInWithGoogle.mockResolvedValue({
+      data: { provider: "google", url: "https://accounts.google.com" },
+      error: null,
+    });
+
+    render(<AuthPanel />);
+
+    await waitFor(() =>
+      expect(
+        screen.getByRole("button", { name: "Guardar con Google" }),
+      ).toBeInTheDocument(),
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Guardar con Google" }));
+
+    await waitFor(() => {
+      expect(authActions.linkGoogleIdentity).toHaveBeenCalled();
+      expect(authActions.signInWithGoogle).toHaveBeenCalled();
+    });
+    expect(screen.queryByText(/We could not complete that request/i)).not.toBeInTheDocument();
+  });
+
+  it("auto-resumes Google sign-in when oauth_resume=google is present", async () => {
+    searchParams = new URLSearchParams("intent=save&oauth_resume=google");
+    authActions.signInWithGoogle.mockResolvedValue({
+      data: { provider: "google", url: "https://accounts.google.com" },
+      error: null,
+    });
+
+    render(<AuthPanel />);
+
+    await waitFor(() => {
+      expect(authActions.signInWithGoogle).toHaveBeenCalled();
+    });
+    expect(replace).toHaveBeenCalledWith("/login?intent=save");
+  });
+
   it("blocks weak recovery passwords before calling Supabase", async () => {
     searchParams = new URLSearchParams("mode=recovery");
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 import { useUISounds } from "@/hooks/useUISounds";
 import { isLessonComplete } from "@/lib/db";
@@ -20,6 +20,16 @@ interface QuizQuestion {
 interface Props {
   questions: QuizQuestion[];
   slug: string;
+  shuffleOptions?: boolean;
+}
+
+function shuffleArray<T>(arr: T[]): T[] {
+  const result = [...arr];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
 }
 
 async function getOptionalUserId(): Promise<string | null> {
@@ -38,25 +48,40 @@ function scoreClass(correct: number, total: number): string {
   return "mini-lessons__quiz-score--low";
 }
 
-export default function MiniLessonQuiz({ questions, slug }: Props) {
+export default function MiniLessonQuiz({ questions, slug, shuffleOptions = false }: Props) {
   const [selected, setSelected] = useState<Record<number, number>>({});
   const [answerTimesMs, setAnswerTimesMs] = useState<Record<number, number>>({});
   const completionRecorded = useRef(false);
   const startedAt = useRef(Date.now());
   const { playTap, playCorrect, playWrong } = useUISounds();
 
+  // Stabilize questions and options per quiz attempt
+  const displayQuestions = useMemo(() => {
+    if (!shuffleOptions) return questions;
+    return questions.map((q) => {
+      const correctText = q.options[q.correct];
+      const shuffled = shuffleArray(q.options);
+      const newCorrectIndex = shuffled.indexOf(correctText);
+      return {
+        ...q,
+        options: shuffled,
+        correct: newCorrectIndex >= 0 ? newCorrectIndex : q.correct,
+      };
+    });
+  }, [questions, shuffleOptions]);
+
   function choose(questionIdx: number, optionIdx: number) {
     if (selected[questionIdx] !== undefined) return;
     playTap();
-    const isCorrect = optionIdx === questions[questionIdx].correct;
+    const isCorrect = optionIdx === displayQuestions[questionIdx].correct;
     setSelected((prev) => ({ ...prev, [questionIdx]: optionIdx }));
     setAnswerTimesMs((prev) => ({ ...prev, [questionIdx]: Date.now() - startedAt.current }));
     if (isCorrect) playCorrect(); else playWrong();
   }
 
   const answeredCount = Object.keys(selected).length;
-  const allAnswered = answeredCount === questions.length;
-  const correctCount = questions.filter(
+  const allAnswered = answeredCount === displayQuestions.length;
+  const correctCount = displayQuestions.filter(
     (q, i) => selected[i] === q.correct
   ).length;
 
@@ -70,7 +95,7 @@ export default function MiniLessonQuiz({ questions, slug }: Props) {
       try {
         await recordLessonQuizAttempt(
           userId,
-          questions.map((q, index) => {
+          displayQuestions.map((q, index) => {
             const selectedIndex = selected[index];
             const selectedAnswer = selectedIndex == null ? "" : q.options[selectedIndex] ?? "";
             return {
@@ -100,11 +125,11 @@ export default function MiniLessonQuiz({ questions, slug }: Props) {
         completionRecorded.current = false;
       }
     })();
-  }, [allAnswered, answerTimesMs, questions, selected, slug]);
+  }, [allAnswered, answerTimesMs, displayQuestions, selected, slug]);
 
   return (
     <div className="mini-lessons__quiz">
-      {questions.map((q, qIdx) => {
+      {displayQuestions.map((q, qIdx) => {
         const chosen = selected[qIdx];
         const isAnswered = chosen !== undefined;
 
@@ -167,9 +192,9 @@ export default function MiniLessonQuiz({ questions, slug }: Props) {
       {allAnswered && (
         <div
           role="status"
-          className={cn("mini-lessons__quiz-score", scoreClass(correctCount, questions.length))}
+          className={cn("mini-lessons__quiz-score", scoreClass(correctCount, displayQuestions.length))}
         >
-          {correctCount} / {questions.length} correctas
+          {correctCount} / {displayQuestions.length} correctas
         </div>
       )}
     </div>

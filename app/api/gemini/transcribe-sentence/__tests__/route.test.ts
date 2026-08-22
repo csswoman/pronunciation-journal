@@ -9,6 +9,7 @@ const mocks = vi.hoisted(() => ({
 vi.mock('@/lib/api/guards', () => ({
   requireSameOrigin: () => null,
   requireUser: async () => ({ user: { id: 'u1' }, error: null }),
+  checkLayeredRateLimit: () => ({ limited: false, error: null }),
   rateLimit: () => ({ limited: false, error: null }),
   validateBody: mocks.validateBody,
   publicErrorResponse: (status: number, message: string) =>

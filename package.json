@@ -6,7 +6,8 @@
     "dev": "cross-env NODE_OPTIONS=--max-old-space-size=4096 next dev --webpack",
     "content-index:generate": "tsx scripts/generate-content-index.ts",
     "sync:engvid": "tsx scripts/sync-engvid-lessons.ts",
-    "prebuild": "pnpm content-index:generate",
+    "essential-words:catalog-index": "node scripts/essential-words/generate-catalog-index.mjs",
+    "prebuild": "pnpm content-index:generate && pnpm essential-words:level-index && pnpm essential-words:catalog-index",
     "build": "npm run lint:design-tokens && next build",
     "start": "next start",
     "lint": "eslint .",
@@ -37,6 +38,7 @@
     "audit:learning-loop": "tsx scripts/audit-learning-loop.mjs",
     "analyze:bundle": "node scripts/analyze-bundle.mjs",
     "analyze:bundle:check": "node scripts/analyze-bundle.mjs --check",
+    "measure:performance": "node scripts/measure-performance.mjs",
     "lexicon:enrich": "node scripts/enrich-lexicon.mjs --all"
   },
   "dependencies": {

@@ -25,7 +25,7 @@
   --color-surface-tooltip: var(--surface-tooltip);
   --color-surface-code:    var(--surface-code);
 
-  /* ── Primary (dynamic — driven by --hue at runtime) ───────────────────── */
+  /* ── Primary (dynamic — driven by --hue / --hue-base at runtime) ─────── */
   --color-primary:       var(--primary);
   --color-primary-soft:  var(--primary-soft);
   --color-primary-hover: var(--primary-hover);
@@ -34,6 +34,16 @@
   --color-primary-100:   var(--primary-100);
   --color-primary-200:   var(--primary-200);
   --color-primary-300:   var(--primary-300);
+
+  /* Split-complementary accents */
+  --color-accent-1:       var(--accent-1);
+  --color-accent-1-soft:  var(--accent-1-soft);
+  --color-accent-1-hover: var(--accent-1-hover);
+  --color-on-accent-1:    var(--on-accent-1);
+  --color-accent-2:       var(--accent-2);
+  --color-accent-2-soft:  var(--accent-2-soft);
+  --color-accent-2-hover: var(--accent-2-hover);
+  --color-on-accent-2:    var(--on-accent-2);
 
   /* ── Foreground / text ─────────────────────────────────────────────────── */
   /* Named fg-* to avoid clashing with Tailwind's text-base font-size utility */

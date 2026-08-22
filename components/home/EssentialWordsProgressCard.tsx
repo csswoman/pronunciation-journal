@@ -2,40 +2,101 @@
 
 // Planned structure:
 // <EssentialWordsProgressCard>
-//   title + empty copy OR level progress + state-aware CTA
+//   loading |
+//   <LevelSlider>
+//     centered copy stack (title + fraction + meta + CTA)
+//     decorative outline mark (data-outline + text-stroke)
+//     prev/next (visible on hover / focus / touch)
+//   </LevelSlider>
 // </EssentialWordsProgressCard>
 
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { ArrowRight } from '@/components/icons'
+import { ArrowRight, ChevronLeft, ChevronRight } from '@/components/icons'
 import { db, ensureDbReady } from '@/lib/db'
 import { ESSENTIAL_WORD_PREFIX } from '@/lib/essential-words/types'
+import { fetchLevelIndex } from '@/lib/essential-words/level-index-client'
+import {
+  frontierLevelProgress,
+  levelSlideCaption,
+  tallyLevelProgress,
+  type LevelProgress,
+  type LevelTallyWord,
+} from '@/lib/essential-words/level-progress'
 import { useAuth } from '@/components/auth/AuthProvider'
-import { LevelProgressBreakdown } from './LevelProgressBreakdown'
-import { cn } from '@/lib/cn'
 
-const ESSENTIAL_WORD_TARGET = 2800
 /** Below this, promote a stronger CTA — early-route signal, not a nav tile. */
 const EARLY_PROGRESS_THRESHOLD = 50
+const SLIDE_MS = 4500
 
 export default function EssentialWordsProgressCard() {
   const { user } = useAuth()
-  const learned = useLiveQuery(
+  const [words, setWords] = useState<LevelTallyWord[] | null>(null)
+  const [slideIndex, setSlideIndex] = useState(0)
+  const [paused, setPaused] = useState(false)
+  const [frontierSeeded, setFrontierSeeded] = useState(false)
+
+  const learnedIds = useLiveQuery(
     async () => {
       try {
         await ensureDbReady()
-        if (!user?.id) return 0
+        if (!user?.id) return [] as string[]
         return db.srsData
-          .filter((e) => e.userId === user.id && e.wordId.startsWith(ESSENTIAL_WORD_PREFIX))
-          .count()
+          .filter(
+            (e) =>
+              e.userId === user.id && e.wordId.startsWith(ESSENTIAL_WORD_PREFIX),
+          )
+          .primaryKeys()
       } catch {
-        return 0
+        return [] as string[]
       }
     },
     [user?.id],
   )
 
-  if (learned === undefined) {
+  useEffect(() => {
+    let cancelled = false
+    fetchLevelIndex()
+      .then((w) => {
+        if (!cancelled) setWords(w)
+      })
+      .catch(() => {
+        /* wait for data */
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  const learned = learnedIds?.length ?? 0
+  const rows: LevelProgress[] | null = words && learnedIds
+    ? tallyLevelProgress(words, new Set(learnedIds as string[]))
+    : null
+  const levels = rows?.filter((row) => row.total > 0) ?? []
+  const frontier = rows ? frontierLevelProgress(rows) : null
+
+  useEffect(() => {
+    if (frontierSeeded || !frontier || !rows) return
+    const withContent = rows.filter((row) => row.total > 0)
+    const i = withContent.findIndex((row) => row.level === frontier.level)
+    setSlideIndex(i >= 0 ? i : 0)
+    setFrontierSeeded(true)
+  }, [frontier, frontierSeeded, rows])
+
+  useEffect(() => {
+    if (paused || levels.length < 2) return
+    if (typeof window !== 'undefined') {
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)')
+      if (reduce.matches) return
+    }
+    const id = window.setInterval(() => {
+      setSlideIndex((i) => (i + 1) % levels.length)
+    }, SLIDE_MS)
+    return () => window.clearInterval(id)
+  }, [levels.length, paused])
+
+  if (learnedIds === undefined) {
     return (
       <div className="home-sidebar-card flex flex-col gap-2" aria-hidden>
         <div className="h-3 w-16 animate-pulse rounded bg-surface-sunken" />
@@ -46,56 +107,103 @@ export default function EssentialWordsProgressCard() {
   }
 
   const early = learned < EARLY_PROGRESS_THRESHOLD
-  const ctaLabel =
-    learned === 0
-      ? 'Empezar palabras esenciales'
-      : early
-        ? 'Seguir palabras esenciales'
-        : 'Abrir palabras esenciales'
 
-  if (learned === 0) {
-    return (
-      <Link
-        href="/practice/essential-words"
-        className="home-sidebar-card focus-ring group flex flex-col gap-2 transition-colors hover:bg-surface-sunken"
-      >
-        <span className="font-label text-fg">Vocabulario</span>
-        <span className="font-body-sm text-pretty text-fg-muted">Palabras esenciales</span>
-        <span className="font-body-sm text-pretty text-fg-muted line-clamp-2">
-          Las palabras más frecuentes del inglés, en un mazo progresivo.
-        </span>
-        <span
-          className={cn(
-            'mt-auto inline-flex min-h-10 items-center gap-1.5 font-body-sm font-medium',
-            'text-primary group-hover:underline',
-          )}
-        >
-          {ctaLabel} <ArrowRight size={16} aria-hidden />
-        </span>
-      </Link>
-    )
+  const active =
+    levels.length > 0
+      ? levels[Math.min(slideIndex, levels.length - 1)]
+      : frontier
+  const canSlide = levels.length > 1
+  const ctaLabel = active
+    ? early
+      ? `Seguir en ${active.level}`
+      : `Practicar ${active.level}`
+    : 'Abrir palabras esenciales'
+
+  const go = (delta: number) => {
+    if (!canSlide) return
+    setSlideIndex((i) => (i + delta + levels.length) % levels.length)
   }
 
-  const ratio = Math.min(1, learned / ESSENTIAL_WORD_TARGET)
-
   return (
-    <Link
-      href="/practice/essential-words"
-      className="home-sidebar-card focus-ring group flex flex-col gap-2 transition-colors hover:bg-surface-sunken"
+    <div
+      className="home-sidebar-card home-sidebar-card--featured ew-progress-card group"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocusCapture={() => setPaused(true)}
+      onBlurCapture={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+          setPaused(false)
+        }
+      }}
     >
-      <span className="font-label text-fg">Vocabulario</span>
-      <span className="font-body-sm text-pretty text-fg-muted">Palabras esenciales</span>
-      <LevelProgressBreakdown fallbackRatio={ratio} />
-      <span
-        className={cn(
-          'mt-auto inline-flex min-h-10 items-center gap-1.5 font-body-sm',
-          early
-            ? 'font-medium text-primary group-hover:underline'
-            : 'text-fg-muted group-hover:text-fg group-hover:underline',
-        )}
-      >
-        {ctaLabel} <ArrowRight size={16} aria-hidden />
-      </span>
-    </Link>
+      <div className="ew-progress-card__face">
+        <div className="ew-progress-card__copy">
+          <span className="font-label text-fg">Vocabulario</span>
+          {active ? (
+            <>
+              <p className="font-body-sm font-semibold text-fg">
+                {active.learned >= active.total
+                  ? `Completado: ${active.level}`
+                  : `Repasando: ${active.level}`}
+              </p>
+              <p className="ew-progress-card__fraction" aria-live="polite">
+                <span className="ew-progress-card__learned">
+                  {active.learned}/
+                </span>
+                <span className="ew-progress-card__total">{active.total}</span>
+              </p>
+              <p className="ew-progress-card__meta">
+                {levelSlideCaption(active)}
+              </p>
+            </>
+          ) : (
+            <p className="font-body-sm text-fg-muted">Cargando progreso…</p>
+          )}
+
+          <Link
+            href="/practice/essential-words"
+            className="focus-ring relative z-[1] mt-1 inline-flex min-h-10 w-fit items-center gap-1.5 rounded-sm font-body-sm font-medium text-fg-muted hover:text-fg hover:underline"
+            aria-label={
+              active
+                ? `${ctaLabel}: ${active.learned} de ${active.total} palabras`
+                : ctaLabel
+            }
+          >
+            {ctaLabel} <ArrowRight size={16} aria-hidden />
+          </Link>
+        </div>
+      </div>
+
+      {active ? (
+        <span
+          className="ew-progress-card__level"
+          data-outline={active.level}
+          aria-hidden
+        >
+          {active.level}
+        </span>
+      ) : null}
+
+      {canSlide ? (
+        <div className="ew-progress-card__nav">
+          <button
+            type="button"
+            className="ew-progress-card__nav-btn focus-ring"
+            aria-label="Nivel anterior"
+            onClick={() => go(-1)}
+          >
+            <ChevronLeft size={18} aria-hidden />
+          </button>
+          <button
+            type="button"
+            className="ew-progress-card__nav-btn focus-ring"
+            aria-label="Nivel siguiente"
+            onClick={() => go(1)}
+          >
+            <ChevronRight size={18} aria-hidden />
+          </button>
+        </div>
+      ) : null}
+    </div>
   )
 }

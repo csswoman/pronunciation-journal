@@ -8,23 +8,25 @@
 }
 
 /* ── Buttons ─────────────────────────────────────────────────────────────── */
+/* Prefer <Button variant="primary|secondary">. These classes remain for
+   markup that has not migrated yet and must match the component recipes. */
 .btn-primary {
   background-color: var(--cta-bg);
   color: var(--cta-fg);
-  transition: background-color 0.2s ease;
+  transition: background-color 150ms var(--ease-out-quart, ease-out);
 }
 .btn-primary:hover    { background-color: var(--cta-bg-hover); }
 .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .btn-secondary {
-  background: transparent;
-  color: var(--cta-outline-color);
-  border: 1px solid var(--cta-outline-border);
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+  background-color: var(--surface-raised);
+  color: var(--text-primary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  transition: background-color 150ms var(--ease-out-quart, ease-out);
 }
 .btn-secondary:hover {
-  background-color: var(--cta-outline-bg-hover);
-  border-color: var(--primary); /* intentional: full-hue border on hover, stronger than the tinted resting border */
+  background-color: var(--surface-sunken);
 }
 .btn-secondary:disabled { opacity: 0.5; cursor: not-allowed; }
 
@@ -159,7 +161,7 @@
 .dot-info    { background: var(--info); }
 
 /* ── Typography helpers ──────────────────────────────────────────────────── */
-.font-phoneme  { font-family: var(--font-mono-var), monospace; }
+.font-phoneme  { font-family: var(--font-ipa), sans-serif; }
 .font-h1       { font: var(--font-h1); letter-spacing: var(--text-tracking-h1); }
 .font-h2       { font: var(--font-h2); letter-spacing: var(--text-tracking-h2); }
 .font-h3       { font: var(--font-h3); letter-spacing: var(--text-tracking-h3); }
@@ -462,6 +464,30 @@
   gap: var(--layout-stack-loose);
 }
 
+.home-command-below-plan {
+  display: flex;
+  flex-direction: column;
+  gap: var(--layout-stack);
+}
+
+.home-command-setup-pair {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--layout-stack);
+}
+
+@media (min-width: 640px) {
+  .home-command-setup-pair {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+  }
+
+  .home-command-setup-pair > * {
+    min-width: 0;
+    height: 100%;
+  }
+}
+
 .home-command-aside {
   display: flex;
   flex-direction: column;
@@ -483,6 +509,204 @@
 .home-sidebar-card--priority {
   border-color: var(--border-default);
 }
+
+/* Editorial content — color on the focal mark only, never a full-card wash */
+.home-editorial-mark {
+  display: inline-block;
+  max-width: 100%;
+  border-radius: var(--radius-sm);
+  background-color: color-mix(
+    in oklch,
+    var(--accent-1-soft) 70%,
+    transparent
+  );
+  padding-inline: 0.35em;
+  padding-block: 0.1em;
+  color: color-mix(in oklch, var(--accent-1) 42%, var(--text-primary));
+  font-size: var(--text-size-display-ipa);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+.home-chunk-quote {
+  border-radius: var(--radius-md);
+  border: 1px solid color-mix(in oklch, var(--accent-1) 16%, var(--border-subtle));
+  background-color: color-mix(
+    in oklch,
+    var(--accent-1-soft) 45%,
+    var(--surface-sunken)
+  );
+  padding: var(--space-3) var(--space-4);
+}
+
+.home-chunk-quote__phrase {
+  color: var(--text-primary);
+  font-size: var(--text-size-h4);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+
+/* Vocab progress — featured metric in the aside */
+.home-sidebar-card--featured {
+  border-color: color-mix(in oklch, var(--primary) 28%, var(--border-subtle));
+  box-shadow: var(--shadow-sm);
+}
+
+/* Essential Words home card — CEFR level slider + outline mark */
+.ew-progress-card {
+  --ew-outline: color-mix(in oklch, var(--primary) 58%, transparent);
+  --ew-ink-soft: color-mix(in oklch, var(--primary) 42%, var(--text-primary));
+  position: relative;
+  overflow: hidden;
+  min-height: 14rem;
+  border-color: color-mix(in oklch, var(--primary) 28%, var(--border-subtle));
+  background-color: color-mix(
+    in oklch,
+    var(--primary-soft) 80%,
+    var(--surface-raised)
+  );
+  box-shadow: var(--shadow-sm);
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.ew-progress-card:hover,
+.ew-progress-card:focus-within {
+  background-color: color-mix(
+    in oklch,
+    var(--primary-soft) 88%,
+    var(--surface-raised)
+  );
+}
+
+.ew-progress-card__face {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  min-height: 11.5rem;
+  align-items: center;
+  padding-inline-end: 42%;
+}
+
+.ew-progress-card__copy {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.ew-progress-card__fraction {
+  display: flex;
+  align-items: baseline;
+  gap: 0;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.ew-progress-card__learned {
+  font-size: var(--text-size-display-ipa);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+}
+
+.ew-progress-card__total {
+  font-size: var(--text-size-display-ipa);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--ew-ink-soft);
+}
+
+.ew-progress-card__meta {
+  font-size: var(--text-size-caption);
+  line-height: var(--text-leading-caption, 1.4);
+  color: var(--ew-ink-soft);
+}
+
+.ew-progress-card__level {
+  position: absolute;
+  top: 50%;
+  right: 6%;
+  z-index: 0;
+  font-size: 6.75rem;
+  font-weight: 700;
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  color: transparent;
+  pointer-events: none;
+  user-select: none;
+  transform: translateY(-52%);
+}
+
+.ew-progress-card__level::after {
+  content: attr(data-outline);
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: var(--ew-outline);
+}
+
+.ew-progress-card__nav {
+  position: absolute;
+  inset-block: 0;
+  inset-inline: var(--space-1);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+
+.ew-progress-card:hover .ew-progress-card__nav,
+.ew-progress-card:focus-within .ew-progress-card__nav {
+  opacity: 1;
+}
+
+.ew-progress-card__nav-btn {
+  display: inline-flex;
+  height: 2.75rem;
+  width: 2.75rem;
+  pointer-events: auto;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-subtle);
+  background-color: color-mix(in oklch, var(--surface-raised) 88%, transparent);
+  color: var(--text-secondary);
+  transition:
+    background-color 150ms ease,
+    color 150ms ease;
+}
+
+.ew-progress-card__nav-btn:hover {
+  background-color: var(--surface-raised);
+  color: var(--text-primary);
+}
+
+@media (hover: none) {
+  .ew-progress-card__nav {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ew-progress-card,
+  .ew-progress-card__nav,
+  .ew-progress-card__nav-btn {
+    transition: none;
+  }
+}
+
 /* Practice actions: in-flow on larger screens, thumb-reachable on phones. */
 .practice-action-bar__spacer {
   display: none;
