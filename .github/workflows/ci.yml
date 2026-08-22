@@ -48,7 +48,7 @@ jobs:
         name: Run tests with coverage
 
       - name: Upload coverage report
-        uses: actions/upload-artifact@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4.4.0
         if: always()
         with:
           name: coverage-report
@@ -139,14 +139,14 @@ jobs:
         run: pnpm analyze:bundle:check
 
       - name: Upload bundle summary
-        uses: actions/upload-artifact@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4.4.0
         with:
           name: bundle-summary
           path: bundle-summary.json
           retention-days: 14
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4.4.0
         with:
           name: nextjs-build
           path: .next/
