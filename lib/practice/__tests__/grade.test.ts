@@ -93,9 +93,28 @@ describe('answerToGrade', () => {
     )
   })
 
-  describe('score on non speak_word slug is ignored', () => {
-    it('pick_word with score=10 + correct + fast → 5 (not 0)', () => {
-      expect(answerToGrade(input({ slug: 'pick_word', score: 10, isCorrect: true, timeMs: 100 }))).toBe(5)
+  describe('discriminated status and retry behavior', () => {
+    it('skipped status returns null grade', () => {
+      expect(answerToGrade({ ...input({ isCorrect: false }), status: 'skipped' })).toBeNull()
+      expect(answerToGrade({ ...input({ isCorrect: false }), userAnswer: 'skip' })).toBeNull()
+    })
+
+    it('unscored or evaluator_failed returns null grade', () => {
+      expect(answerToGrade({ ...input({ isCorrect: false }), status: 'unscored' })).toBeNull()
+      expect(answerToGrade({ ...input({ isCorrect: false }), status: 'evaluator_failed' })).toBeNull()
+    })
+
+    it('firstTryFailed=true grades as Again (1) even when final attempt is correct and fast', () => {
+      expect(answerToGrade({ ...input({ isCorrect: true, timeMs: 100 }), firstTryFailed: true })).toBe(1)
+    })
+
+    it('uses responseTimeMs over timeMs for speed rating when available', () => {
+      expect(
+        answerToGrade({
+          ...input({ isCorrect: true, timeMs: 60_000 }),
+          responseTimeMs: 2000,
+        }),
+      ).toBe(5)
     })
   })
 })

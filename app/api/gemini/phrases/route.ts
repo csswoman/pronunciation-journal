@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { requireSameOrigin, requireUser, rateLimit, validateBody, SECURE_HEADERS } from "@/lib/api/guards";
+import { requireSameOrigin, requireUser, checkLayeredRateLimit, validateBody, SECURE_HEADERS } from "@/lib/api/guards";
 import { parseGeminiJson, respondWithGeminiJson } from "@/lib/gemini/json-route";
 import { buildPhrasesUserPrompt, PRONUNCIATION_PHRASES_SYSTEM_PROMPT } from "@/lib/ai-prompts";
 
@@ -23,10 +23,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const { user, error: authError } = await requireUser(request);
   if (authError) return authError as NextResponse;
 
-  const { limited, error: rateLimitError } = await rateLimit(`/api/gemini/phrases:${user.id}`, {
-    max: 10,
-    windowMs: 60_000,
-    meta: { endpoint: "/api/gemini/phrases", userId: user.id },
+  const { limited, error: rateLimitError } = await checkLayeredRateLimit({
+    request,
+    user,
+    endpoint: "/api/gemini/phrases",
+    maxPermanent: 10,
+    maxAnonymous: 3,
   });
   if (limited) return rateLimitError as NextResponse;
 

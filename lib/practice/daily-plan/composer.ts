@@ -14,6 +14,7 @@ import { mergeReviewWords } from '@/lib/review/merge-words'
 import { dominantTopicLabel } from '@/lib/practice/topic-labels'
 import type { DailyPlan, DailyStep, SessionArc } from '@/lib/practice/types'
 import type { Sound } from '@/lib/phoneme-practice/types'
+import type { WordBankEntry } from '@/lib/word-bank/types'
 import { buildJournalDailyStep, shouldOfferJournalStep } from '@/lib/journal/daily-step'
 import { normalizeFalseFriendsLevel } from '@/lib/false-friends/data'
 import { buildConnectedSpeechStep, buildFalseFriendsStep, buildReaderStep, buildSentenceBuilderStep } from './async-step-builders'
@@ -58,15 +59,24 @@ function shouldKeepNonExerciseStep(step: DailyStep): boolean {
   return step.kind === 'word_intro' || step.kind === 'mission' || step.kind === 'reader' || isOptionalLinkStep(step)
 }
 
-export async function buildReviewPlan(userId: string): Promise<ReviewPlan> {
+export interface BuildReviewPlanOptions {
+  dueWords?: WordBankEntry[]
+  dueSounds?: Sound[]
+  essentialMatchWords?: WordBankEntry[]
+}
+
+export async function buildReviewPlan(
+  userId: string,
+  options?: BuildReviewPlanOptions,
+): Promise<ReviewPlan> {
   const reviewContext = 'review' as const
 
   const [failedItems, weakWords, reviewWords, dueSounds, essentialMatchWords] = await Promise.all([
     fetchRecentFailedSentences(userId, 5),
     fetchWeakWords(userId, WORD_REVIEW_WORD_COUNT),
-    fetchDueReviewWords(userId, WORD_REVIEW_WORD_COUNT),
-    fetchDueSounds(userId),
-    fetchEssentialWordsForDay(dayOfYear(), 4),
+    options?.dueWords ?? fetchDueReviewWords(userId, WORD_REVIEW_WORD_COUNT),
+    options?.dueSounds ?? fetchDueSounds(userId),
+    options?.essentialMatchWords ?? fetchEssentialWordsForDay(dayOfYear(), 4),
   ])
 
   const mergedWords = mergeReviewWords(weakWords, reviewWords, WORD_REVIEW_WORD_COUNT)
@@ -127,12 +137,35 @@ export async function buildReviewPlan(userId: string): Promise<ReviewPlan> {
 }
 
 export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
-  const allSounds = await getAllSounds()
+  const readCompletedLessons = async () => {
+    const store = db.completedLessons as typeof db.completedLessons & {
+      toArray?: () => Promise<Array<{ key: string; userId?: string; courseSlug?: string; lessonSlug?: string }>>
+    }
+    if (typeof store.where === 'function') {
+      return store.where('userId').equals(userId).toArray()
+    }
+    return (await store.toArray?.() ?? []).filter((lesson) => lesson.userId === userId)
+  }
 
-  const [newWords, dueWords, savedOrFamiliarWords] = await Promise.all([
+  // Sounds catalog + word/sound queues + local learning state are independent — fetch in parallel.
+  const [
+    allSounds,
+    newWords,
+    dueWords,
+    savedOrFamiliarWords,
+    dueSounds,
+    weakest,
+    localLearningState,
+    completedLessons,
+  ] = await Promise.all([
+    getAllSounds(),
     fetchNewWords(userId, WORD_REVIEW_WORD_COUNT),
     fetchDueReviewWords(userId, WORD_REVIEW_WORD_COUNT),
     fetchSavedOrFamiliarWords(userId, WORD_REVIEW_WORD_COUNT),
+    fetchDueSounds(userId),
+    fetchWeakestSoundProgress(userId),
+    db.learningState.get(userId).catch(() => null),
+    readCompletedLessons().catch(() => []),
   ])
   const dailyWordSelection = selectDailyReviewWords({
     newWords,
@@ -150,21 +183,6 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     ? await fetchEssentialWordsForDay(dayOfYear(), 4)
     : reviewWords.slice(0, 4)
 
-  const readCompletedLessons = async () => {
-    const store = db.completedLessons as typeof db.completedLessons & {
-      toArray?: () => Promise<Array<{ key: string; userId?: string; courseSlug?: string; lessonSlug?: string }>>
-    }
-    if (typeof store.where === 'function') {
-      return store.where('userId').equals(userId).toArray()
-    }
-    return (await store.toArray?.() ?? []).filter((lesson) => lesson.userId === userId)
-  }
-
-  const [weakest, localLearningState, completedLessons] = await Promise.all([
-    fetchWeakestSoundProgress(userId),
-    db.learningState.get(userId).catch(() => null),
-    readCompletedLessons().catch(() => []),
-  ])
   const aiState = localLearningState?.state ?? null
   const hasProgress = weakest != null
   const activeLevel = localLearningState?.state.level.cefrEstimate.toLowerCase() as import('@/lib/courses/types').CefrLevelId | undefined
@@ -276,12 +294,10 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
   let steps: DailyStep[] = [...allSteps, ...reviewSteps]
 
   // When SRS items are due, prepend top review-hub steps so the daily plan surfaces them first.
-  const hasDueSrs =
-    dueWords.length > 0 ||
-    (await fetchDueSounds(userId)).length > 0
+  const hasDueSrs = dueWords.length > 0 || dueSounds.length > 0
 
   if (hasDueSrs) {
-    const hubPlan = await buildReviewPlan(userId)
+    const hubPlan = await buildReviewPlan(userId, { dueWords, dueSounds, essentialMatchWords })
     const hubPriority = hubPlan.steps.slice(0, 2)
     const usedIds = new Set(steps.map((s) => s.id))
     const toPrepend = hubPriority.filter((s) => !usedIds.has(s.id))

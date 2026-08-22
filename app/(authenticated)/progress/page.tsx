@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { getSupabaseServerUser } from "@/lib/supabase/session";
 import { getProgressPageData } from "@/lib/progress/queries";
 import { isAnonymousUser } from "@/lib/auth/is-anonymous";
 import { cn } from "@/lib/cn";
@@ -25,10 +25,7 @@ const progressHeader = (
 );
 
 export default async function ProgressPage() {
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getSupabaseServerUser();
 
   if (!user) {
     return (

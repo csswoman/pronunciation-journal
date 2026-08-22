@@ -21,6 +21,7 @@ vi.mock('@google/genai', () => ({
 vi.mock('@/lib/api/guards', () => ({
   requireSameOrigin: () => null,
   requireUser: async () => ({ user: { id: 'u1' }, error: null }),
+  checkLayeredRateLimit: () => ({ limited: false, error: null }),
   rateLimit: () => ({ limited: false, error: null }),
   validateBody: mocks.validateBody,
   SECURE_HEADERS: { 'Cache-Control': 'no-store' },

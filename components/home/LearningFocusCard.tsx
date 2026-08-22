@@ -3,31 +3,18 @@
 // Planned structure:
 // <LearningFocusCard>
 //   <header /> — title + status badge
-//   <level chips />
-//   <actions /> — release, topics sheet trigger
+//   <actions /> — release, profile link
 //   <profile hint />
-//   <LearningFocusTopicsSheet />
 // </LearningFocusCard>
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/components/auth/AuthProvider'
-import LearningFocusTopicsSheet from '@/components/home/LearningFocusTopicsSheet'
-import ContentLevelSelector from '@/components/ui/ContentLevelSelector'
 import { cn } from '@/lib/cn'
 import { toFocusLevel } from '@/lib/learning-focus/cefr'
 import { getEffectiveFocus } from '@/lib/learning-focus/effective-focus'
-import {
-  claimTheoryTopics,
-  listClaimedTheoryTopics,
-  loadLearningFocus,
-  pinFocus,
-  refreshSuggestedFocus,
-  releaseFocusPin,
-} from '@/lib/learning-focus/queries'
+import { loadLearningFocus, refreshSuggestedFocus, releaseFocusPin } from '@/lib/learning-focus/queries'
 import type { FocusLevel, LearningFocus } from '@/lib/learning-focus/types'
-
-const FOCUS_LEVELS: FocusLevel[] = ['a1', 'a2', 'b1', 'b2', 'c1']
 
 const LEVEL_LABELS: Record<FocusLevel, string> = {
   a1: 'A1',
@@ -53,8 +40,6 @@ export default function LearningFocusCard({
   const { user } = useAuth()
 
   const [focus, setFocus] = useState<LearningFocus | null>(null)
-  const [claimedSlugs, setClaimedSlugs] = useState<Set<string>>(new Set())
-  const [sheetOpen, setSheetOpen] = useState(false)
   const [busy, setBusy] = useState(false)
 
   const deriveInput = useMemo(
@@ -73,14 +58,10 @@ export default function LearningFocusCard({
 
     async function load() {
       try {
-        const [loaded, claimed] = await Promise.all([
-          loadLearningFocus(user!.id),
-          listClaimedTheoryTopics(user!.id),
-        ])
+        const loaded = await loadLearningFocus(user!.id)
         const refreshed = await refreshSuggestedFocus(user!.id, deriveInput)
         if (cancelled) return
         setFocus(refreshed ?? loaded)
-        setClaimedSlugs(new Set(claimed.map((item) => item.lessonSlug)))
       } catch {
         // IndexedDB may still be recovering from Chrome UnknownError on open.
       }
@@ -101,20 +82,6 @@ export default function LearningFocusCard({
   const showProfileHint =
     effective != null && profileFocusLevel != null && profileFocusLevel !== effective.level
 
-  const handlePinLevel = useCallback(
-    async (level: FocusLevel) => {
-      if (!user?.id || busy) return
-      setBusy(true)
-      try {
-        const next = await pinFocus(user.id, { level, thread: null })
-        setFocus(next)
-      } finally {
-        setBusy(false)
-      }
-    },
-    [busy, user?.id],
-  )
-
   const handleRelease = useCallback(async () => {
     if (!user?.id || busy) return
     setBusy(true)
@@ -125,16 +92,6 @@ export default function LearningFocusCard({
       setBusy(false)
     }
   }, [busy, deriveInput, user?.id])
-
-  const handleClaim = useCallback(
-    async (concepts: Parameters<typeof claimTheoryTopics>[1]) => {
-      if (!user?.id) return
-      await claimTheoryTopics(user.id, concepts)
-      const claimed = await listClaimedTheoryTopics(user.id)
-      setClaimedSlugs(new Set(claimed.map((item) => item.lessonSlug)))
-    },
-    [user?.id],
-  )
 
   if (!user?.id || !effective) return null
 
@@ -176,24 +133,14 @@ export default function LearningFocusCard({
             </button>
           ) : null}
 
-          <button
-            type="button"
-            onClick={() => setSheetOpen(true)}
+          <Link
+            href="/profile"
             className="focus-ring text-body-sm text-fg-muted underline-offset-2 transition-colors hover:text-fg hover:underline"
           >
-            Temas que ya sé
-          </button>
+            Editar en perfil
+          </Link>
         </div>
       </div>
-
-      <ContentLevelSelector
-        levels={FOCUS_LEVELS}
-        value={activeLevel}
-        onChange={(level) => void handlePinLevel(level)}
-        ariaLabel="Nivel de foco"
-        getLabel={(level) => LEVEL_LABELS[level]}
-        disabled={busy}
-      />
 
       {showProfileHint ? (
         <p className="text-caption text-fg-muted">
@@ -204,13 +151,6 @@ export default function LearningFocusCard({
         </p>
       ) : null}
 
-      <LearningFocusTopicsSheet
-        open={sheetOpen}
-        level={activeLevel}
-        claimedSlugs={claimedSlugs}
-        onClose={() => setSheetOpen(false)}
-        onClaim={handleClaim}
-      />
     </section>
   )
 }

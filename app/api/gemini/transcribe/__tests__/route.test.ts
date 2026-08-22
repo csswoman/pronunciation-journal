@@ -16,6 +16,7 @@ vi.mock("@google/genai", () => ({
 vi.mock("@/lib/api/guards", () => ({
   requireSameOrigin: () => null,
   requireUser: (...args: unknown[]) => mocks.requireUser(...args),
+  checkLayeredRateLimit: () => ({ limited: false, error: null }),
   rateLimit: () => ({ limited: false, error: null }),
   validateBody: (...args: unknown[]) => mocks.validateBody(...args),
 }));

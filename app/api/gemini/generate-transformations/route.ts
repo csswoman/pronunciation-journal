@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { GENERATE_TRANSFORMATIONS_SYSTEM_PROMPT, buildGenerateTransformationsPrompt } from '@/lib/ai-prompts'
-import { requireSameOrigin, requireUser, rateLimit, validateBody } from '@/lib/api/guards'
+import { requireSameOrigin, requireUser, checkLayeredRateLimit, validateBody } from '@/lib/api/guards'
 import { parseGeminiJson, respondWithGeminiJson } from '@/lib/gemini/json-route'
 
 const RequestSchema = z.object({ topic: z.string().trim().min(2).max(120), level: z.string().min(2).max(4), count: z.number().int().min(1).max(5).default(3) }).strict()
@@ -12,7 +12,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (originError) return originError
   const { user, error: authError } = await requireUser(request)
   if (authError) return authError as NextResponse
-  const { limited, error: rateLimitError } = await rateLimit(`/api/gemini/generate-transformations:${user.id}`, { max: 10, windowMs: 60_000, meta: { endpoint: '/api/gemini/generate-transformations', userId: user.id } })
+  const { limited, error: rateLimitError } = await checkLayeredRateLimit({ request, user, endpoint: '/api/gemini/generate-transformations', maxPermanent: 10, maxAnonymous: 3 })
   if (limited) return rateLimitError as NextResponse
   const { data, error } = await validateBody(request, RequestSchema)
   if (error) return error as NextResponse

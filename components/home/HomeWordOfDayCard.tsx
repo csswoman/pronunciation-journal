@@ -29,25 +29,32 @@ function saveLabel(state: SaveState): string {
   return "Guardar en Tracking";
 }
 
+interface HomeWordOfDayCardProps {
+  profileLevel?: string | null;
+}
+
 /** Single-word focus — accent lives on the word mark, not the card shell. */
-export default function HomeWordOfDayCard() {
+export default function HomeWordOfDayCard({ profileLevel = null }: HomeWordOfDayCardProps) {
   const { user } = useAuth();
-  const [level, setLevel] = useState<string | undefined>(undefined);
+  const [level, setLevel] = useState<string | undefined>(
+    profileLevel ? profileLevel.toLowerCase() : undefined
+  );
   const [saveState, setSaveState] = useState<SaveState>("idle");
 
   useEffect(() => {
+    if (profileLevel) return;
     let cancelled = false;
     const isGuest = isAnonymousUser(user);
     const storedLevel = isGuest
       ? Promise.resolve(readGuestStudyLevel())
-      : readStoredCefrLevel(user!.id);
+      : (user?.id ? readStoredCefrLevel(user.id) : Promise.resolve(null));
     void storedLevel.then((l) => {
       if (!cancelled && l) setLevel(l.toLowerCase());
     });
     return () => {
       cancelled = true;
     };
-  }, [user]);
+  }, [user, profileLevel]);
 
   const { word, loading, error, refresh } = useWordOfDay(level);
 

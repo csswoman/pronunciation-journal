@@ -1,7 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 import { NextRequest } from "next/server";
 import { z } from "zod";
-import { requireSameOrigin, requireUser, rateLimit, validateBody, SECURE_HEADERS, publicErrorResponse } from "@/lib/api/guards";
+import { requireSameOrigin, requireUser, checkLayeredRateLimit, validateBody, SECURE_HEADERS, publicErrorResponse } from "@/lib/api/guards";
 import { type PromptKey } from "@/lib/api/prompts";
 import { detectIntent, intentToToolConfig } from "@/lib/ai-practice/intent-detection";
 import { buildSystemPrompt, extractLastTopicFromWire, lastUserVoiceMetadataFromWire } from "@/lib/ai-practice/wire";
@@ -72,9 +72,13 @@ export async function POST(request: NextRequest): Promise<Response> {
   const { user, error: authError, accessToken } = await requireUser(request);
   if (authError) return authError;
 
-  // 2. Rate limit — 15 req/min per user, keyed per endpoint so routes are independent
-  const { limited, error: rateLimitError } = await rateLimit(`/api/gemini:${user.id}`, {
-    meta: { endpoint: "/api/gemini", userId: user.id },
+  // 2. Multi-layered rate limit — IP + user + global budget
+  const { limited, error: rateLimitError } = await checkLayeredRateLimit({
+    request,
+    user,
+    endpoint: "/api/gemini",
+    maxPermanent: 15,
+    maxAnonymous: 3,
   });
   if (limited) return rateLimitError;
 
@@ -138,7 +142,12 @@ export async function POST(request: NextRequest): Promise<Response> {
             timeoutController.signal
           )
             .catch((err) => {
-              controller.enqueue(encodeChunk({ type: "error", message: String(err?.message ?? "Stream error") }));
+              logServerError("Gemini chat stream failed", err, {
+                endpoint: "/api/gemini",
+                operation: "stream",
+                userId: user.id,
+              });
+              controller.enqueue(encodeChunk({ type: "error", message: "AI response failed. Please try again." }));
               controller.close();
             })
             .finally(() => clearTimeout(timeoutId));

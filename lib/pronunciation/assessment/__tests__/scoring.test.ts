@@ -140,32 +140,25 @@ describe('scoreProductionPrompt — segmental/connected-speech targets', () => {
 })
 
 describe('scorePerceptionPrompt', () => {
-  it('a correct answer scores as perception, never self_report, never via SpokenAttempt', () => {
+  it('a non-audio prompt scores as self_report with not_measured, never fake objective perception', () => {
     const result = scorePerceptionPrompt({ targetId: TH_CONTRAST, stage: 'perception' }, { correct: true })
 
-    expect(result.signalType).toBe('perception')
-    expect(result.signalType).not.toBe('self_report')
-    expect(result.measurement).toEqual({ kind: 'scored', score: 100 })
-    expect(result.evaluatorKind).toBe('perception_forced_choice')
+    expect(result.signalType).toBe('self_report')
+    expect(result.measurement).toEqual({ kind: 'not_measured', abstentionReason: 'no_evaluator_available' })
+    expect(result.evaluatorKind).toBeNull()
     expect(TargetResultSchema.safeParse(result).success).toBe(true)
   })
 
-  it('a scored perception result gets confidence 0.6, not 0.8 (regression: must key off signalType, not evaluatorKind)', () => {
-    const result = scorePerceptionPrompt({ targetId: TH_CONTRAST, stage: 'perception' }, { correct: true })
+  it('a self_report perception result gets low confidence (0.15/0.4)', () => {
+    const resultCorrect = scorePerceptionPrompt({ targetId: TH_CONTRAST, stage: 'perception' }, { correct: true })
+    const resultIncorrect = scorePerceptionPrompt({ targetId: TH_CONTRAST, stage: 'perception' }, { correct: false })
 
-    expect(result.confidence).toBe(0.6)
-    expect(TargetResultSchema.safeParse(result).success).toBe(true)
+    expect(resultCorrect.confidence).toBe(0.15)
+    expect(resultIncorrect.confidence).toBe(0.4)
+    expect(TargetResultSchema.safeParse(resultCorrect).success).toBe(true)
   })
 
-  it('an incorrect answer scores 0, still perception', () => {
-    const result = scorePerceptionPrompt({ targetId: TH_CONTRAST, stage: 'perception' }, { correct: false })
-
-    expect(result.signalType).toBe('perception')
-    expect(result.measurement).toEqual({ kind: 'scored', score: 0 })
-    expect(TargetResultSchema.safeParse(result).success).toBe(true)
-  })
-
-  it('a missing answer yields not_measured', () => {
+  it('a missing answer yields not_measured with skipped_by_user', () => {
     const result = scorePerceptionPrompt({ targetId: TH_CONTRAST, stage: 'perception' }, null)
 
     expect(result.measurement).toEqual({ kind: 'not_measured', abstentionReason: 'skipped_by_user' })
@@ -173,17 +166,16 @@ describe('scorePerceptionPrompt', () => {
     expect(TargetResultSchema.safeParse(result).success).toBe(true)
   })
 
-  it('word-stress listening perception is objective evidence, not a production claim', () => {
+  it('word-stress listening perception with audio is objective evidence, not a self report', () => {
     const result = scorePerceptionPrompt(
       { targetId: targetId('prosody.word-stress'), stage: 'perception' },
       { correct: true }
     )
 
-    expect(result.measurement).toEqual({ kind: 'scored', score: 100 })
     expect(result.signalType).toBe('perception')
-    expect(result.evaluatorKind).toBe('perception_forced_choice')
-    expect(result.status).toBe('strength')
+    expect(result.measurement).toEqual({ kind: 'scored', score: 100 })
     expect(result.confidence).toBe(0.6)
+    expect(result.evaluatorKind).toBe('perception_forced_choice')
     expect(TargetResultSchema.safeParse(result).success).toBe(true)
   })
 

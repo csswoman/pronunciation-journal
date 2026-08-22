@@ -2,39 +2,40 @@
   "slug": "present-perfect-vs-past",
   "sections": [
     {
-      "heading": "El problema de la interferencia española",
-      "body": "El español usa pretérito para ambas funciones. 'He visto esa película' puede significar tanto 'Vi esa película' (evento pasado específico) como 'He visto esa película' (experiencia de vida). El inglés los separa en dos tiempos con reglas estrictas."
+      "heading": "La diferencia fundamental entre ambos tiempos",
+      "body": "En español, a menudo se usa el pretérito o el pretérito perfecto de forma flexible. En inglés, la regla es estricta: el **Past Simple** se usa cuando el tiempo está **cerrado y finalizado** (*yesterday, in 2021, two days ago*). El **Present Perfect** se usa cuando la acción conecta con el **presente** (experiencias vitales sin fecha exacta, resultados presentes o periodos aún abiertos como *this week*)."
     },
     {
-      "heading": "Presente perfecto: conexión con el ahora",
-      "body": "Utilice el presente perfecto cuando el momento de la acción no esté especificado, sea irrelevante o aún esté conectado con el presente. Tres usos principales: experiencia ('He estado en Japón'), pasado reciente con resultado presente ('Se ha roto el brazo') y situaciones continuas ('He trabajado aquí durante 5 años')."
+      "heading": "Present Perfect: Conexión con el presente",
+      "body": "Tiene tres usos principales: 1) Experiencias de vida (*'I have visited Japan'*). 2) Acciones recientes con resultado visible ahora (*'She has lost her keys'*). 3) Situaciones que comenzaron en el pasado y continúan en el presente (*'I have lived here for five years'*)."
     },
     {
-      "heading": "Pasado simple: completado en el pasado",
-      "body": "Utilice el pasado simple cuando la acción esté completa y se especifique o implique que la hora es un período terminado: \"ayer\", \"la semana pasada\", \"en 2019\", \"cuando era niño\", \"después de la cena\"."
+      "heading": "Past Simple: Momento específico terminado",
+      "body": "Requiere un marco temporal concluido (*'I saw that movie last night'*, *'We met in 2019'*). Si especificas *cuándo* ocurrió la acción en el pasado, siempre debes usar Past Simple."
     }
   ],
   "examples": [
     {
       "english": "I've seen that film.",
-      "note": "Experiencia: cuando es irrelevante"
+      "note": "Experiencia vital general (no importa cuándo se vio)."
     },
     {
       "english": "I saw that film last Friday.",
-      "note": "Tiempo específico → Pasado simple"
+      "note": "Momento específico terminado ('last Friday') → Past Simple."
     },
     {
       "english": "She's lost her keys.",
-      "note": "Pasado reciente con resultado presente: todavía no los tiene"
+      "note": "Resultado en el presente: todavía no puede entrar."
     },
     {
-      "english": "She lost her keys yesterday.",
-      "note": "Tiempo específico → Pasado simple"
+      "english": "She lost her keys yesterday, but found them today.",
+      "note": "Evento en tiempo concluido ('yesterday')."
     }
   ],
   "exercises": [
     {
-      "instruction": "Complete each sentence with the present perfect or simple past form of the verb in brackets.",
+      "instruction": "Completa cada oración con la forma correcta de Past Simple o Present Perfect.",
+      "type": "closed_blank",
       "items": [
         "I ___ (never / try) sushi. Do you recommend it?",
         "We ___ (meet) at a conference in 2021.",
@@ -42,24 +43,24 @@
         "___ you ever ___ (be) to Ireland?"
       ],
       "answers": [
-        "have never tried",
+        ["have never tried", "'ve never tried"],
         "met",
-        "has just finished",
-        "Have you ever been"
+        ["has just finished", "'s just finished"],
+        ["Have", "been"]
       ]
     }
   ],
   "quiz": [
     {
-      "question": "¿Qué oración es correcta?",
+      "question": "Which sentence correctly asks about life experience in English?",
       "options": [
-        "¿Alguna vez comiste fugu?",
-        "¿Alguna vez has comido fugu?",
-        "¿Alguna vez has comido fugu?",
-        "¿Comiste alguna vez fugu?"
+        "Did you ever eat fugu in your life?",
+        "Have you ever eaten fugu?",
+        "Did you ever eaten fugu?",
+        "Were you ever eating fugu?"
       ],
       "correct": 1,
-      "explanation": "'Alguna vez' en una pregunta general sobre experiencias de vida utiliza el presente perfecto: '¿Alguna vez has comido...?'"
+      "explanation": "When asking about general life experiences without mentioning a specific finished time, English uses the Present Perfect ('Have you ever eaten...?')."
     }
   ]
 }

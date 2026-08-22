@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { cleanup, render, screen } from '@testing-library/react'
+import { cleanup, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 const speechMocks = vi.hoisted(() => ({
@@ -79,7 +79,9 @@ describe('PronunciationProductionPrompt', () => {
 
     await userEvent.click(screen.getByRole('button', { name: /continuar/i }))
 
-    expect(onAttempt).toHaveBeenCalledTimes(1)
+    await waitFor(() => {
+      expect(onAttempt).toHaveBeenCalledTimes(1)
+    })
     expect(onAttempt.mock.calls[0][0].transcript).toBe('about the idea')
     expect(onAttempt.mock.calls[0][0].outcome).toBe('scored')
   })

@@ -470,6 +470,24 @@
   gap: var(--layout-stack);
 }
 
+.home-command-setup-pair {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--layout-stack);
+}
+
+@media (min-width: 640px) {
+  .home-command-setup-pair {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+  }
+
+  .home-command-setup-pair > * {
+    min-width: 0;
+    height: 100%;
+  }
+}
+
 .home-command-aside {
   display: flex;
   flex-direction: column;

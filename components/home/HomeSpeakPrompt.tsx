@@ -19,7 +19,7 @@ export default function HomeSpeakPrompt({ arc }: Props) {
   const hasWords = (arc?.sessionWords?.length ?? 0) > 0
 
   return (
-    <div className="flex flex-col gap-3 rounded-xl border border-border-subtle bg-surface-raised p-4">
+    <div className="flex h-full flex-col gap-3 rounded-xl border border-border-subtle bg-surface-raised p-4">
       <div>
         <p className="font-label text-fg">Practica en voz alta</p>
         <p className="font-caption mt-0.5 text-pretty text-fg-muted">

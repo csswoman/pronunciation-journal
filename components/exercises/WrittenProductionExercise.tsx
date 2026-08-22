@@ -118,12 +118,24 @@ export function WrittenProductionExercise({ exercise, onResult, onSkip }: Props)
     startMs.current = Date.now()
   }, [])
 
+  const handleSelfCheck = useCallback(() => {
+    if (!text.trim() || submitted.current) return
+    submitted.current = true
+    onResult(true, text.trim(), Date.now() - startMs.current, {
+      resultStatus: 'unscored',
+      feedback: {
+        immediate: 'Respuesta completada mediante autoevaluación.',
+        expectedAnswer: exercise.exampleSentence,
+      },
+    })
+  }, [text, onResult, exercise.exampleSentence])
+
   return (
     <div className="flex w-full flex-col justify-start gap-3" aria-busy={grading || undefined}>
       <ProductionTaskHeader exercise={exercise} title="Escribe tu oración" />
 
       {!online && !grade && (
-        <OfflineBanner message="Sin conexión. Conéctate para enviar tu oración y recibir feedback." />
+        <OfflineBanner message="Sin conexión. Conéctate para enviar tu oración o autoevalúate con la solución." />
       )}
 
       {!grade && (
@@ -170,6 +182,16 @@ export function WrittenProductionExercise({ exercise, onResult, onSkip }: Props)
             >
               {grading ? 'Corrigiendo…' : 'Enviar'}
             </Button>
+            {(!online || error) && text.trim() && (
+              <Button
+                variant="secondary"
+                size="md"
+                fullWidth
+                onClick={handleSelfCheck}
+              >
+                Autoevaluar con ejemplo
+              </Button>
+            )}
             {onSkip && (
               <button
                 type="button"
@@ -204,7 +226,7 @@ function OfflineBanner({ message }: { message: string }) {
   return (
     <p
       role="status"
-      className="m-0 rounded-[var(--radius-md)] border border-warning-border bg-warning-soft px-3 py-2 text-body-sm text-warning"
+      className="m-0 rounded-[var(--radius-sm)] border border-warning-border bg-warning-soft px-3 py-2 text-caption text-warning"
     >
       {message}
     </p>

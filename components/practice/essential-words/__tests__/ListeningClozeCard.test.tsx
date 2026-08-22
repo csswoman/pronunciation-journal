@@ -61,7 +61,7 @@ describe('ListeningClozeCard', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Comprobar' }))
     expect(onAttempt).toHaveBeenCalledWith(expect.objectContaining({
       errorDominante: 'guess',
-      evidencia: [],
+      evidencia: [{ habilidad: 'listening', veredicto: 'fallo' }],
     }))
   })
 })

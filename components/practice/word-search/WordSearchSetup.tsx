@@ -1,6 +1,11 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import {
+  useEffect,
+  useState,
+  type KeyboardEvent,
+  type ReactNode,
+} from 'react'
 import type {
   WordSearchMode,
   WordSearchPuzzle,
@@ -14,16 +19,25 @@ import {
   DICTIONARY_CATEGORIES,
   loadDictionaryPuzzle,
 } from '@/lib/exercises/word-search/dictionary-loader'
-import { createWordSearchPuzzle } from '@/lib/exercises/word-search/grid-generator'
+import {
+  createWordSearchPuzzle,
+  MAX_WORD_SEARCH_LENGTH,
+  MIN_WORD_SEARCH_ITEMS,
+  sanitizeWord,
+} from '@/lib/exercises/word-search/grid-generator'
 import { getMyWords } from '@/lib/word-bank/queries'
 import type { WordBankEntry } from '@/lib/word-bank/types'
+import { useAuth } from '@/components/auth/AuthProvider'
+import { isAnonymousUser } from '@/lib/auth/is-anonymous'
 import Button from '@/components/ui/Button'
+import Badge from '@/components/ui/Badge'
 import Input from '@/components/ui/Input'
 import {
-  Sparkles,
   BookOpen,
+  Check,
   Layers,
   Loader2,
+  Sparkles,
   Volume2,
 } from '@/components/icons'
 
@@ -31,91 +45,235 @@ interface Props {
   onStartPuzzle: (puzzle: WordSearchPuzzle) => void
 }
 
+interface SourceTabProps {
+  source: WordSearchSource
+  activeSource: WordSearchSource
+  label: string
+  icon: ReactNode
+  onSelect: (source: WordSearchSource) => void
+  ariaLabel?: string
+}
+
+const LEVEL_LABELS = {
+  beginner: 'Básico',
+  intermediate: 'Intermedio',
+  advanced: 'Avanzado',
+} as const
+
+const SOURCE_ORDER: WordSearchSource[] = [
+  'dictionary',
+  'word_bank',
+  'curated',
+  'gemini',
+]
+
+function randomSample<T>(items: T[], count: number): T[] {
+  const sampled = [...items]
+  for (let index = sampled.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1))
+    const current = sampled[index]
+    sampled[index] = sampled[swapIndex]
+    sampled[swapIndex] = current
+  }
+  return sampled.slice(0, count)
+}
+
+function SourceTab({
+  source,
+  activeSource,
+  label,
+  icon,
+  onSelect,
+  ariaLabel,
+}: SourceTabProps) {
+  const isSelected = source === activeSource
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
+    const currentIndex = SOURCE_ORDER.indexOf(source)
+    let nextSource: WordSearchSource | undefined
+
+    if (event.key === 'ArrowRight') {
+      nextSource = SOURCE_ORDER[(currentIndex + 1) % SOURCE_ORDER.length]
+    } else if (event.key === 'ArrowLeft') {
+      nextSource = SOURCE_ORDER[
+        (currentIndex - 1 + SOURCE_ORDER.length) % SOURCE_ORDER.length
+      ]
+    } else if (event.key === 'Home') {
+      nextSource = SOURCE_ORDER[0]
+    } else if (event.key === 'End') {
+      nextSource = SOURCE_ORDER[SOURCE_ORDER.length - 1]
+    }
+
+    if (!nextSource) return
+    event.preventDefault()
+    onSelect(nextSource)
+    window.requestAnimationFrame(() => {
+      document.getElementById(`word-search-tab-${nextSource}`)?.focus()
+    })
+  }
+
+  return (
+    <button
+      type="button"
+      id={`word-search-tab-${source}`}
+      role="tab"
+      aria-selected={isSelected}
+      aria-controls={`word-search-panel-${source}`}
+      aria-label={ariaLabel}
+      tabIndex={isSelected ? 0 : -1}
+      onClick={() => onSelect(source)}
+      onKeyDown={handleKeyDown}
+      className={`focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-2 py-2 text-caption font-semibold transition-[background-color,color,transform] duration-150 ease-out-quart active:scale-[0.96] motion-reduce:transform-none sm:px-3 sm:text-body-sm ${
+        isSelected
+          ? 'bg-primary-soft text-primary'
+          : 'text-fg-muted hover:bg-surface-raised hover:text-fg'
+      }`}
+    >
+      <span aria-hidden>{icon}</span>
+      <span>{label}</span>
+    </button>
+  )
+}
+
 export default function WordSearchSetup({ onStartPuzzle }: Props) {
+  const { user } = useAuth()
+  const isGuest = isAnonymousUser(user)
   const [mode, setMode] = useState<WordSearchMode>('clues')
   const [source, setSource] = useState<WordSearchSource>('dictionary')
-  const [selectedDictId, setSelectedDictId] = useState<string>('frontend-dev')
-  const [selectedPresetId, setSelectedPresetId] = useState<string>('silent-letters')
-  const [customTopic, setCustomTopic] = useState<string>('')
-  const [customLevel, setCustomLevel] = useState<'beginner' | 'intermediate' | 'advanced'>('intermediate')
+  const [selectedDictId, setSelectedDictId] = useState('frontend-dev')
+  const [selectedPresetId, setSelectedPresetId] = useState('silent-letters')
+  const [customTopic, setCustomTopic] = useState('')
+  const [customLevel, setCustomLevel] = useState<
+    'beginner' | 'intermediate' | 'advanced'
+  >('intermediate')
 
   const [myWords, setMyWords] = useState<WordBankEntry[]>([])
-  const [isLoadingWords, setIsLoadingWords] = useState<boolean>(true)
-  const [isLoadingDict, setIsLoadingDict] = useState<boolean>(false)
-  const [isGeneratingAi, setIsGeneratingAi] = useState<boolean>(false)
+  const [isLoadingWords, setIsLoadingWords] = useState(!isGuest)
+  const [isLoadingDict, setIsLoadingDict] = useState(false)
+  const [isGeneratingAi, setIsGeneratingAi] = useState(false)
   const [aiError, setAiError] = useState<string | null>(null)
   const [dictError, setDictError] = useState<string | null>(null)
+  const [curatedError, setCuratedError] = useState<string | null>(null)
+  const [wordBankError, setWordBankError] = useState<string | null>(null)
 
   useEffect(() => {
+    if (isGuest) {
+      setMyWords([])
+      setIsLoadingWords(false)
+      return
+    }
+
     let cancelled = false
+    setIsLoadingWords(true)
+
     async function loadWords() {
       try {
         const words = await getMyWords()
         if (!cancelled) {
-          setMyWords(words.filter((w) => w.text && w.text.trim().length >= 3 && !w.text.includes(' ')))
+          setMyWords(
+            words.filter((entry) => {
+              const clean = sanitizeWord(entry.text)
+              return (
+                clean.length >= 3 &&
+                clean.length <= MAX_WORD_SEARCH_LENGTH &&
+                !entry.text.includes(' ') &&
+                !entry.text.includes('-')
+              )
+            }),
+          )
         }
       } catch {
-        // Fallback for unauthenticated/offline
+        if (!cancelled) {
+          setMyWords([])
+          setWordBankError('No pudimos cargar tu cuaderno en este momento.')
+        }
       } finally {
         if (!cancelled) setIsLoadingWords(false)
       }
     }
+
     void loadWords()
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [isGuest, user?.id])
 
-  const handleStartDictionary = async (dictId: string) => {
+  const selectedDictionary =
+    DICTIONARY_CATEGORIES.find((category) => category.id === selectedDictId) ??
+    DICTIONARY_CATEGORIES[0]
+
+  const handleStartDictionary = async () => {
     setIsLoadingDict(true)
     setDictError(null)
     try {
-      const puzzle = await loadDictionaryPuzzle(dictId, mode, 6)
+      const puzzle = await loadDictionaryPuzzle(selectedDictId, mode, 6)
       onStartPuzzle(puzzle)
-    } catch (err: unknown) {
-      setDictError(err instanceof Error ? err.message : 'Error al cargar diccionario')
+    } catch (error: unknown) {
+      setDictError(
+        error instanceof Error ? error.message : 'No se pudo crear el tablero.',
+      )
     } finally {
       setIsLoadingDict(false)
     }
   }
 
-  const handleStartCurated = (presetId: string) => {
-    const preset = WORD_SEARCH_PRESETS.find((p) => p.id === presetId) || WORD_SEARCH_PRESETS[0]
-    const rawItems = CURATED_PUZZLE_ITEMS[preset.id] || CURATED_PUZZLE_ITEMS['silent-letters']
+  const handleStartCurated = () => {
+    setCuratedError(null)
+    const preset = WORD_SEARCH_PRESETS.find((item) => item.id === selectedPresetId)
+    const rawItems = preset ? CURATED_PUZZLE_ITEMS[preset.id] : undefined
 
-    const puzzle = createWordSearchPuzzle(rawItems, {
-      title: preset.title,
-      topic: preset.description,
-      source: 'curated',
-      mode,
-    })
+    if (!preset || !rawItems?.length) {
+      setCuratedError('Este tema todavía no tiene contenido preparado.')
+      return
+    }
 
-    onStartPuzzle(puzzle)
+    try {
+      onStartPuzzle(
+        createWordSearchPuzzle(rawItems, {
+          title: preset.title,
+          topic: preset.description,
+          source: 'curated',
+          mode,
+        }),
+      )
+    } catch (error: unknown) {
+      setCuratedError(
+        error instanceof Error ? error.message : 'No se pudo crear el tablero.',
+      )
+    }
   }
 
   const handleStartMyWords = () => {
-    if (myWords.length === 0) return
+    setWordBankError(null)
+    if (myWords.length < MIN_WORD_SEARCH_ITEMS) return
 
-    // Shuffle and pick 5 to 7 words
-    const shuffled = [...myWords].sort(() => Math.random() - 0.5).slice(0, 6)
-    const items = shuffled.map((w, idx) => ({
-      id: `my-${w.id || idx}`,
-      word: w.text,
-      displayWord: w.text,
-      ipa: w.ipa,
-      clue: w.meaning || w.translation || `Palabra de tu vocabulario: ${w.text}`,
-      meaningEs: w.translation || w.meaning,
-      exampleSentence: w.example,
+    const items = randomSample(myWords, 6).map((entry, index) => ({
+      id: `my-${entry.id || index}`,
+      word: entry.text,
+      displayWord: entry.text,
+      ipa: entry.ipa,
+      clue:
+        entry.meaning ||
+        entry.translation ||
+        `Palabra de tu cuaderno: ${entry.text}`,
+      meaningEs: entry.translation || entry.meaning,
+      exampleSentence: entry.example,
     }))
 
-    const puzzle = createWordSearchPuzzle(items, {
-      title: 'Mis Palabras Guardadas',
-      topic: 'Vocabulario de tu banco personal',
-      source: 'word_bank',
-      mode,
-    })
-
-    onStartPuzzle(puzzle)
+    try {
+      onStartPuzzle(
+        createWordSearchPuzzle(items, {
+          title: 'Mis palabras',
+          topic: 'Vocabulario de tu cuaderno personal',
+          source: 'word_bank',
+          mode,
+        }),
+      )
+    } catch (error: unknown) {
+      setWordBankError(
+        error instanceof Error ? error.message : 'No se pudo crear el tablero.',
+      )
+    }
   }
 
   const handleStartGemini = async () => {
@@ -124,429 +282,364 @@ export default function WordSearchSetup({ onStartPuzzle }: Props) {
     setAiError(null)
 
     try {
-      const res = await fetch('/api/gemini/word-search', {
+      const response = await fetch('/api/gemini/word-search', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           topic,
           level: customLevel,
           count: 6,
-          knownWords: myWords.slice(0, 10).map((w) => w.text),
+          knownWords: myWords.slice(0, 10).map((entry) => entry.text),
         }),
       })
 
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}))
-        throw new Error(data.error || `Error ${res.status}`)
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}))
+        throw new Error(data.error || `Error ${response.status}`)
       }
 
-      const data = await res.json()
-      const items = data.words.map((w: { word: string; ipa?: string; clue: string; meaningEs: string; exampleSentence: string }, idx: number) => ({
-        id: `ai-${idx}`,
-        word: w.word,
-        displayWord: w.word.toLowerCase(),
-        ipa: w.ipa,
-        clue: w.clue,
-        meaningEs: w.meaningEs,
-        exampleSentence: w.exampleSentence,
-      }))
+      const data = await response.json()
+      const items = data.words.map(
+        (
+          word: {
+            word: string
+            ipa?: string
+            clue: string
+            meaningEs: string
+            exampleSentence: string
+          },
+          index: number,
+        ) => ({
+          id: `ai-${index}`,
+          word: word.word,
+          displayWord: word.word.toLowerCase(),
+          ipa: word.ipa,
+          clue: word.clue,
+          meaningEs: word.meaningEs,
+          exampleSentence: word.exampleSentence,
+        }),
+      )
 
-      const puzzle = createWordSearchPuzzle(items, {
-        title: data.topicTitle || topic,
-        topic,
-        source: 'gemini',
-        mode,
-      })
-
-      onStartPuzzle(puzzle)
-    } catch (err: unknown) {
+      onStartPuzzle(
+        createWordSearchPuzzle(items, {
+          title: data.topicTitle || topic,
+          topic,
+          source: 'gemini',
+          mode,
+        }),
+      )
+    } catch (error: unknown) {
       setAiError(
-        err instanceof Error ? err.message : 'No se pudo conectar con la IA'
+        error instanceof Error ? error.message : 'No se pudo conectar con la IA.',
       )
     } finally {
       setIsGeneratingAi(false)
     }
   }
 
+  const panelProps = (panelSource: WordSearchSource) => ({
+    id: `word-search-panel-${panelSource}`,
+    role: 'tabpanel' as const,
+    'aria-labelledby': `word-search-tab-${panelSource}`,
+    tabIndex: 0,
+  })
+
   return (
     <div className="flex w-full flex-col gap-layout-section-gap">
-      {/* Mode selection */}
-      <section className="flex flex-col gap-layout-stack-tight" aria-labelledby="word-search-mode-label">
-        <p id="word-search-mode-label" className="font-kicker text-fg-muted">
-          Modalidad de juego
+      <fieldset className="flex flex-col gap-layout-stack-tight">
+        <legend className="font-kicker text-fg-muted">1. Cómo jugar</legend>
+        <p className="text-pretty text-body-sm text-fg-muted">
+          Puedes buscar las respuestas directamente o deducirlas antes con una pista.
         </p>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <button
             type="button"
             onClick={() => setMode('clues')}
             aria-pressed={mode === 'clues'}
-            className={`
-              flex min-h-28 flex-col gap-2 rounded-lg border p-layout-card-pad text-left transition-all cursor-pointer
-              ${
-                mode === 'clues'
-                  ? 'border-primary bg-primary-soft ring-1 ring-primary/30'
-                  : 'border-border-subtle bg-surface-raised hover:border-border-strong hover:bg-surface-sunken'
-              }
-            `}
+            className={`focus-ring flex min-h-28 flex-col gap-3 rounded-lg border p-layout-card-pad text-left transition-[background-color,border-color,box-shadow,transform] duration-150 ease-out-quart active:scale-[0.96] motion-reduce:transform-none ${
+              mode === 'clues'
+                ? 'border-primary bg-primary-soft'
+                : 'border-border-subtle bg-surface-raised hover:border-border-default hover:bg-surface-sunken'
+            }`}
           >
-            <div className="flex items-center gap-2">
-              <span className="text-label font-semibold text-fg">Modo Pistas</span>
-                <span className="rounded-sm bg-primary px-1.5 py-0.5 font-mono text-tiny font-bold text-on-primary">
-                Recomendado
-              </span>
-            </div>
-            <p className="text-body-sm text-fg-muted">
-              Deduce las palabras a partir de su significado o fonética antes de encontrarlas.
-            </p>
+            <span className="flex w-full items-center justify-between gap-2">
+              <span className="text-label font-semibold text-fg">Con pistas</span>
+              <Badge label="Recomendado" />
+            </span>
+            <span className="text-pretty text-body-sm text-fg-muted">
+              Descifra cada palabra por su definición o sonido antes de encontrarla.
+            </span>
           </button>
 
           <button
             type="button"
             onClick={() => setMode('classic')}
             aria-pressed={mode === 'classic'}
-            className={`
-              flex min-h-28 flex-col gap-2 rounded-lg border p-layout-card-pad text-left transition-all cursor-pointer
-              ${
-                mode === 'classic'
-                  ? 'border-primary bg-primary-soft ring-1 ring-primary/30'
-                  : 'border-border-subtle bg-surface-raised hover:border-border-strong hover:bg-surface-sunken'
-              }
-            `}
+            className={`focus-ring flex min-h-28 flex-col gap-3 rounded-lg border p-layout-card-pad text-left transition-[background-color,border-color,box-shadow,transform] duration-150 ease-out-quart active:scale-[0.96] motion-reduce:transform-none ${
+              mode === 'classic'
+                ? 'border-primary bg-primary-soft'
+                : 'border-border-subtle bg-surface-raised hover:border-border-default hover:bg-surface-sunken'
+            }`}
           >
-            <span className="text-label font-semibold text-fg">Sopa Clásica</span>
-            <p className="text-body-sm text-fg-muted">
-              Búsqueda visual directa con la lista de palabras y su IPA visible.
-            </p>
+            <span className="flex w-full items-center justify-between gap-2">
+              <span className="text-label font-semibold text-fg">Lista visible</span>
+              {mode === 'classic' ? (
+                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-on-primary">
+                  <Check className="h-3.5 w-3.5" aria-hidden />
+                </span>
+              ) : null}
+            </span>
+            <span className="text-pretty text-body-sm text-fg-muted">
+              Mira las palabras y su IPA mientras entrenas el reconocimiento ortográfico.
+            </span>
           </button>
         </div>
-      </section>
+      </fieldset>
 
-      {/* Source selection */}
       <section className="flex flex-col gap-layout-stack" aria-labelledby="word-search-source-label">
-        <div>
-          <p id="word-search-source-label" className="font-kicker text-fg-muted">
-          Origen del vocabulario
+        <div className="flex flex-col gap-1">
+          <h2 id="word-search-source-label" className="font-kicker text-fg-muted">
+            2. Elige el vocabulario
+          </h2>
+          <p className="text-pretty text-body-sm text-fg-muted">
+            Cada partida usa seis palabras y genera un tablero nuevo.
           </p>
         </div>
 
-        {/* Source Tabs */}
-        <div className="grid grid-cols-2 gap-1 rounded-lg border border-border-subtle bg-surface-sunken p-1">
-          <button
-            type="button"
-            onClick={() => setSource('dictionary')}
-            aria-pressed={source === 'dictionary'}
-            className={`
-              flex min-h-14 items-center justify-center gap-2 rounded-md px-3 py-2 text-body-sm font-semibold transition-all cursor-pointer
-              ${
-                source === 'dictionary'
-                  ? 'bg-primary text-on-primary'
-                  : 'text-fg-muted hover:bg-surface-raised hover:text-fg'
-              }
-            `}
-          >
-            <BookOpen className="h-4 w-4" />
-            <span>Diccionario</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setSource('word_bank')}
-            aria-pressed={source === 'word_bank'}
-            className={`
-              flex min-h-14 items-center justify-center gap-2 rounded-md px-3 py-2 text-body-sm font-semibold transition-all cursor-pointer
-              ${
-                source === 'word_bank'
-                  ? 'bg-primary text-on-primary'
-                  : 'text-fg-muted hover:bg-surface-raised hover:text-fg'
-              }
-            `}
-          >
-            <Layers className="h-4 w-4" />
-            <span>Mis Palabras ({myWords.length})</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setSource('curated')}
-            aria-pressed={source === 'curated'}
-            className={`
-              flex min-h-14 items-center justify-center gap-2 rounded-md px-3 py-2 text-body-sm font-semibold transition-all cursor-pointer
-              ${
-                source === 'curated'
-                  ? 'bg-primary text-on-primary'
-                  : 'text-fg-muted hover:bg-surface-raised hover:text-fg'
-              }
-            `}
-          >
-            <Volume2 className="h-4 w-4" />
-            <span>Fonética</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setSource('gemini')}
-            aria-pressed={source === 'gemini'}
-            className={`
-              flex min-h-14 items-center justify-center gap-2 rounded-md px-3 py-2 text-body-sm font-semibold transition-all cursor-pointer
-              ${
-                source === 'gemini'
-                  ? 'bg-primary text-on-primary'
-                  : 'text-fg-muted hover:bg-surface-raised hover:text-fg'
-              }
-            `}
-          >
-            <Sparkles className="h-4 w-4" />
-            <span>Crear IA</span>
-          </button>
+        <div
+          role="tablist"
+          aria-label="Origen del vocabulario"
+          className="grid grid-cols-2 gap-1 rounded-lg border border-border-subtle bg-surface-sunken p-1 sm:grid-cols-4"
+        >
+          <SourceTab
+            source="dictionary"
+            activeSource={source}
+            label="Diccionario"
+            icon={<BookOpen className="h-4 w-4" />}
+            onSelect={setSource}
+          />
+          <SourceTab
+            source="word_bank"
+            activeSource={source}
+            label="Mis palabras"
+            icon={<Layers className="h-4 w-4" />}
+            onSelect={setSource}
+            ariaLabel={`Mis palabras, ${myWords.length} disponibles`}
+          />
+          <SourceTab
+            source="curated"
+            activeSource={source}
+            label="Fonética"
+            icon={<Volume2 className="h-4 w-4" />}
+            onSelect={setSource}
+          />
+          <SourceTab
+            source="gemini"
+            activeSource={source}
+            label="Con IA"
+            icon={<Sparkles className="h-4 w-4" />}
+            onSelect={setSource}
+          />
         </div>
 
-        {/* Tab content 1: Dictionary / Lexicon Areas */}
-        {source === 'dictionary' && (
-          <div className="flex flex-col gap-layout-stack">
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-              {DICTIONARY_CATEGORIES.map((cat) => {
-                const isSelected = selectedDictId === cat.id
+        {source === 'dictionary' ? (
+          <div
+            {...panelProps('dictionary')}
+            className="flex flex-col gap-layout-stack rounded-lg border border-border-subtle bg-surface-raised p-layout-card-pad focus:outline-none"
+          >
+            <div className="grid gap-layout-stack sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
+              <div className="flex min-w-0 flex-col gap-1.5">
+                <label htmlFor="word-search-dictionary" className="text-label font-semibold text-fg">
+                  Área del diccionario
+                </label>
+                <select
+                  id="word-search-dictionary"
+                  value={selectedDictId}
+                  onChange={(event) => setSelectedDictId(event.target.value)}
+                  className="focus-ring min-h-12 w-full rounded-sm border border-border-default bg-surface-sunken px-3 py-2 text-body-md text-fg transition-colors sm:text-body-sm"
+                >
+                  {DICTIONARY_CATEGORIES.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.name} · {category.total} palabras
+                    </option>
+                  ))}
+                </select>
+                <p className="text-pretty text-caption text-fg-muted">
+                  Se elegirán 6 de {selectedDictionary?.total ?? 0} palabras. Las definiciones se mantienen en inglés para reforzar comprensión.
+                </p>
+              </div>
+              <Button
+                variant="primary"
+                className="w-full sm:w-auto"
+                isLoading={isLoadingDict}
+                onClick={() => void handleStartDictionary()}
+              >
+                {isLoadingDict ? 'Creando tablero…' : 'Crear tablero'}
+              </Button>
+            </div>
+            {dictError ? (
+              <p role="alert" className="rounded-md border border-error/20 bg-error-soft p-3 text-body-sm text-error">
+                {dictError}
+              </p>
+            ) : null}
+          </div>
+        ) : null}
+
+        {source === 'curated' ? (
+          <div
+            {...panelProps('curated')}
+            className="flex flex-col gap-layout-stack focus:outline-none"
+          >
+            <div className="grid gap-3 sm:grid-cols-2" role="radiogroup" aria-label="Tema fonético">
+              {WORD_SEARCH_PRESETS.map((preset) => {
+                const isSelected = selectedPresetId === preset.id
                 return (
                   <button
+                    key={preset.id}
                     type="button"
-                    key={cat.id}
-                    onClick={() => setSelectedDictId(cat.id)}
-                    className={`
-                      flex min-h-16 items-center gap-3 rounded-md border p-3 text-left transition-all cursor-pointer
-                      ${
-                        isSelected
-                          ? 'border-primary bg-primary-soft ring-1 ring-primary/30'
-                          : 'border-border-subtle bg-surface-raised hover:border-border-strong hover:bg-surface-sunken'
-                      }
-                    `}
-                    aria-pressed={isSelected}
+                    role="radio"
+                    aria-checked={isSelected}
+                    onClick={() => setSelectedPresetId(preset.id)}
+                    className={`focus-ring flex min-h-28 flex-col gap-2 rounded-lg border p-layout-card-pad text-left transition-[background-color,border-color,transform] duration-150 ease-out-quart active:scale-[0.96] motion-reduce:transform-none ${
+                      isSelected
+                        ? 'border-primary bg-primary-soft'
+                        : 'border-border-subtle bg-surface-raised hover:border-border-default hover:bg-surface-sunken'
+                    }`}
                   >
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <span
-                        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-sm border border-border-subtle bg-surface-sunken text-label font-bold"
-                        style={{ color: cat.color }}
-                      >
-                        {cat.icon}
-                      </span>
-                      <div className="flex flex-col min-w-0">
-                        <span className="text-label font-semibold text-fg truncate">
-                          {cat.name}
-                        </span>
-                        <span className="text-caption text-fg-muted">
-                          {cat.total} palabras
-                        </span>
-                      </div>
-                    </div>
+                    <span className="flex w-full items-start justify-between gap-3">
+                      <span className="text-label font-semibold text-fg">{preset.title}</span>
+                      <Badge label={LEVEL_LABELS[preset.level]} variant="neutral" />
+                    </span>
+                    <span className="text-pretty text-body-sm text-fg-muted">
+                      {preset.description}
+                    </span>
                   </button>
                 )
               })}
             </div>
-
-            {dictError && (
-              <div className="p-3 rounded-lg bg-error-soft text-error text-xs border border-error/20">
-                {dictError}
-              </div>
-            )}
-
-            <div className="flex flex-col gap-3 border-t border-border-subtle pt-layout-stack sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-body-sm text-fg-muted">Seis palabras, pistas en español y pronunciación al encontrarlas.</p>
-              <Button
-                variant="primary"
-                className="w-full shrink-0 sm:w-auto"
-                disabled={isLoadingDict}
-                onClick={() => handleStartDictionary(selectedDictId)}
-              >
-                {isLoadingDict ? (
-                  <div className="flex items-center justify-center gap-2">
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Cargando área...</span>
-                  </div>
-                ) : (
-                  <span>Empezar búsqueda</span>
-                )}
-              </Button>
-            </div>
+            {curatedError ? (
+              <p role="alert" className="rounded-md border border-error/20 bg-error-soft p-3 text-body-sm text-error">
+                {curatedError}
+              </p>
+            ) : null}
+            <Button variant="primary" className="w-full sm:self-end sm:w-auto" onClick={handleStartCurated}>
+              Crear tablero fonético
+            </Button>
           </div>
-        )}
+        ) : null}
 
-        {/* Tab content 2: Curated Phonetic Presets */}
-        {source === 'curated' && (
-          <div className="flex flex-col gap-layout-stack">
-            {WORD_SEARCH_PRESETS.map((preset) => {
-              const isSelected = selectedPresetId === preset.id
-              return (
-                <div
-                  key={preset.id}
-                  onClick={() => setSelectedPresetId(preset.id)}
-                  className={`
-                    flex items-start justify-between gap-3 rounded-lg border p-layout-card-pad transition-all cursor-pointer
-                    ${
-                      isSelected
-                        ? 'bg-primary-soft/20 border-primary ring-1 ring-primary/30'
-                        : 'bg-surface-raised border-border-subtle hover:bg-surface-sunken'
-                    }
-                  `}
-                >
-                  <div className="flex flex-col gap-1 min-w-0">
-                    <span className="text-label font-semibold text-fg">
-                      {preset.title}
-                    </span>
-                    <p className="text-body-sm text-fg-muted">
-                      {preset.description}
-                    </p>
-                  </div>
-                  <span className="shrink-0 rounded-sm border border-border-subtle bg-surface-sunken px-2 py-1 font-mono text-caption text-fg-subtle">
-                    {preset.level}
-                  </span>
-                </div>
-              )
-            })}
-
-            <div className="pt-2">
-              <Button
-                variant="primary"
-                className="w-full"
-                onClick={() => handleStartCurated(selectedPresetId)}
-              >
-                Comenzar Búsqueda
-              </Button>
-            </div>
-          </div>
-        )}
-
-        {/* Tab content 3: Word Bank */}
-        {source === 'word_bank' && (
-          <div className="flex flex-col gap-layout-stack-loose rounded-lg border border-border-subtle bg-surface-raised p-layout-card-pad">
+        {source === 'word_bank' ? (
+          <div
+            {...panelProps('word_bank')}
+            className="flex flex-col gap-layout-stack rounded-lg border border-border-subtle bg-surface-raised p-layout-card-pad focus:outline-none"
+            aria-busy={isLoadingWords || undefined}
+          >
             <div className="flex flex-col gap-1">
-              <h4 className="text-label font-semibold text-fg">
-                Vocabulario de tu cuaderno
-              </h4>
-              <p className="text-body-sm text-fg-muted">
-                Generaremos una cuadrícula personalizada con las palabras que has ido guardando y practicando en tus sesiones.
+              <h3 className="text-h4 text-fg">Tu cuaderno</h3>
+              <p className="max-w-prose text-pretty text-body-sm text-fg-muted">
+                Practica las palabras que guardaste en otras partes de English Journal.
               </p>
             </div>
 
             {isLoadingWords ? (
-              <div className="flex items-center justify-center gap-2 py-6 text-body-sm text-fg-muted">
-                <Loader2 className="w-4 h-4 animate-spin text-primary" />
-                <span>Cargando tus palabras...</span>
+              <div className="flex min-h-24 items-center justify-center gap-2 text-body-sm text-fg-muted" role="status">
+                <Loader2 className="h-4 w-4 animate-spin text-primary" aria-hidden />
+                <span>Cargando tus palabras…</span>
               </div>
-            ) : myWords.length >= 3 ? (
-              <div className="flex flex-col gap-3">
-                <div className="flex flex-wrap gap-1.5 max-h-28 overflow-y-auto p-2 rounded-lg bg-surface-sunken border border-border-subtle">
-                  {myWords.slice(0, 15).map((w) => (
-                    <span
-                      key={w.id}
-                    className="rounded-sm border border-border-subtle bg-surface-raised px-2 py-1 text-caption text-fg-muted"
-                    >
-                      {w.text}
+            ) : myWords.length >= MIN_WORD_SEARCH_ITEMS ? (
+              <>
+                <div className="flex max-h-28 flex-wrap gap-1.5 overflow-y-auto rounded-md bg-surface-sunken p-2">
+                  {myWords.slice(0, 15).map((entry) => (
+                    <span key={entry.id} className="rounded-sm bg-surface-raised px-2 py-1 text-caption text-fg-muted">
+                      {entry.text}
                     </span>
                   ))}
-                  {myWords.length > 15 && (
+                  {myWords.length > 15 ? (
                     <span className="px-2 py-1 text-caption text-fg-subtle">
                       +{myWords.length - 15} más
                     </span>
-                  )}
+                  ) : null}
                 </div>
-
-                <Button
-                  variant="primary"
-                  className="w-full"
-                  onClick={handleStartMyWords}
-                >
-                  Jugar con mis palabras
+                <Button variant="primary" className="w-full sm:self-end sm:w-auto" onClick={handleStartMyWords}>
+                  Crear con mis palabras
                 </Button>
-              </div>
+              </>
             ) : (
-              <div className="flex flex-col gap-3 py-2">
-                <p className="text-body-sm text-fg-muted">
-                  Tienes pocas palabras guardadas en tu banco (mínimo 3). Puedes usar una de las áreas del diccionario o generar un reto con IA.
+              <div className="flex flex-col items-start gap-3 rounded-md bg-surface-sunken p-3">
+                <p className="text-pretty text-body-sm text-fg-muted">
+                  Aún no hay {MIN_WORD_SEARCH_ITEMS} palabras aptas para crear una partida. Puedes empezar con el diccionario.
                 </p>
-                <Button
-                  variant="secondary"
-                  className="w-full"
-                  onClick={() => setSource('dictionary')}
-                >
-                  Ver áreas del Diccionario
+                <Button variant="secondary" onClick={() => setSource('dictionary')}>
+                  Usar el diccionario
                 </Button>
               </div>
             )}
-          </div>
-        )}
 
-        {/* Tab content 4: Gemini AI */}
-        {source === 'gemini' && (
-          <div className="flex flex-col gap-layout-stack-loose rounded-lg border border-border-subtle bg-surface-raised p-layout-card-pad">
+            {wordBankError ? (
+              <p role="alert" className="rounded-md border border-error/20 bg-error-soft p-3 text-body-sm text-error">
+                {wordBankError}
+              </p>
+            ) : null}
+          </div>
+        ) : null}
+
+        {source === 'gemini' ? (
+          <div
+            {...panelProps('gemini')}
+            className="flex flex-col gap-layout-stack rounded-lg border border-border-subtle bg-surface-raised p-layout-card-pad focus:outline-none"
+          >
             <div className="flex flex-col gap-1">
-              <div className="flex items-center gap-1.5">
-                <Sparkles className="h-4 w-4 text-primary" />
-                <h4 className="text-label font-semibold text-fg">
-                  Generar reto personalizado con Gemini
-                </h4>
-              </div>
-              <p className="text-body-sm text-fg-muted">
-                Escribe cualquier tema o área de interés y la IA creará una sopa de letras con pistas y fonética.
+              <h3 className="text-h4 text-fg">Reto personalizado</h3>
+              <p className="max-w-prose text-pretty text-body-sm text-fg-muted">
+                Describe un contexto y Gemini preparará seis palabras con pistas, significado e IPA cuando esté disponible.
               </p>
             </div>
 
-            <div className="flex flex-col gap-3">
-              <Input
-                label="Tema o contexto"
-                value={customTopic}
-                onChange={(val) => setCustomTopic(val)}
-                placeholder="ej. Entrevistas de trabajo, En el restaurante, Silent K..."
-              />
+            <Input
+              label="Tema o contexto"
+              value={customTopic}
+              onChange={setCustomTopic}
+              placeholder="Ej.: entrevistas de trabajo o pedir en un restaurante"
+            />
 
-              <div className="flex flex-col gap-1">
-                <label className="text-label font-semibold text-fg">Nivel</label>
-                <div className="flex gap-2">
-                  {(['beginner', 'intermediate', 'advanced'] as const).map((lvl) => (
-                    <button
-                      key={lvl}
-                      type="button"
-                      onClick={() => setCustomLevel(lvl)}
-                      className={`
-                        min-h-11 flex-1 rounded-md border px-2 py-1.5 text-body-sm font-semibold transition-all cursor-pointer capitalize
-                        ${
-                          customLevel === lvl
-                            ? 'bg-primary-soft text-primary border-primary'
-                            : 'bg-surface-sunken text-fg-muted border-border-subtle hover:text-fg'
-                        }
-                      `}
-                    >
-                      {lvl === 'beginner' ? 'Básico' : lvl === 'intermediate' ? 'Intermedio' : 'Avanzado'}
-                    </button>
-                  ))}
-                </div>
+            <fieldset className="flex flex-col gap-1.5">
+              <legend className="text-label font-semibold text-fg">Nivel del vocabulario</legend>
+              <div className="grid grid-cols-3 gap-2" role="radiogroup">
+                {(['beginner', 'intermediate', 'advanced'] as const).map((level) => (
+                  <button
+                    key={level}
+                    type="button"
+                    role="radio"
+                    aria-checked={customLevel === level}
+                    onClick={() => setCustomLevel(level)}
+                    className={`focus-ring min-h-11 rounded-md border px-2 py-1.5 text-caption font-semibold transition-[background-color,border-color,color,transform] duration-150 ease-out-quart active:scale-[0.96] motion-reduce:transform-none sm:text-body-sm ${
+                      customLevel === level
+                        ? 'border-primary bg-primary-soft text-primary'
+                        : 'border-border-subtle bg-surface-sunken text-fg-muted hover:text-fg'
+                    }`}
+                  >
+                    {LEVEL_LABELS[level]}
+                  </button>
+                ))}
               </div>
+            </fieldset>
 
-              {aiError && (
-                <div className="p-3 rounded-lg bg-error-soft text-error text-xs border border-error/20">
-                  {aiError}
-                </div>
-              )}
+            {aiError ? (
+              <p role="alert" className="rounded-md border border-error/20 bg-error-soft p-3 text-body-sm text-error">
+                {aiError}
+              </p>
+            ) : null}
 
-              <Button
-                variant="primary"
-                className="w-full mt-1"
-                disabled={isGeneratingAi}
-                onClick={handleStartGemini}
-              >
-                {isGeneratingAi ? (
-                  <div className="flex items-center justify-center gap-2">
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Generando sopa con IA...</span>
-                  </div>
-                ) : (
-                  <div className="flex items-center justify-center gap-2">
-                    <Sparkles className="w-4 h-4" />
-                    <span>Crear sopa con Gemini</span>
-                  </div>
-                )}
-              </Button>
-            </div>
+            <Button
+              variant="primary"
+              className="w-full sm:self-end sm:w-auto"
+              isLoading={isGeneratingAi}
+              onClick={() => void handleStartGemini()}
+            >
+              {isGeneratingAi ? 'Preparando reto…' : 'Crear con Gemini'}
+            </Button>
           </div>
-        )}
+        ) : null}
       </section>
     </div>
   )

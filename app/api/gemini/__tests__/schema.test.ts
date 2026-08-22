@@ -7,6 +7,7 @@ vi.mock("@/lib/ai-practice/server-state", () => ({
 vi.mock("@/lib/api/guards", () => ({
   requireSameOrigin: () => null,
   requireUser: async () => ({ user: { id: "u1" }, error: null, accessToken: null }),
+  checkLayeredRateLimit: () => ({ limited: false, error: null }),
   rateLimit: () => ({ limited: false, error: null }),
   validateBody: vi.fn(),
   SECURE_HEADERS: { "Cache-Control": "no-store" },

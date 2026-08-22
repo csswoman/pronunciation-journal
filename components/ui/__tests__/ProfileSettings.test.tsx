@@ -38,9 +38,15 @@ vi.mock("@/hooks/useOKLCHTheme", () => ({
   }),
 }));
 
+vi.mock("@/lib/learning-focus/queries", () => ({
+  claimTheoryTopics: vi.fn().mockResolvedValue(undefined),
+  listClaimedTheoryTopics: vi.fn().mockResolvedValue([]),
+}));
+
 vi.mock("@/components/profile/ProfileAvatarCard", () => ({ default: () => <div>Avatar</div> }));
 vi.mock("@/components/profile/ProfileNameCard", () => ({ default: () => <div>Name</div> }));
 vi.mock("@/components/profile/ProfilePasswordCard", () => ({ default: () => <div>Password</div> }));
+
 
 describe("ProfileSettings", () => {
   it("shows and updates the persisted CEFR level", async () => {
@@ -53,11 +59,13 @@ describe("ProfileSettings", () => {
     await waitFor(() => expect(updateCefrLevel).toHaveBeenCalledWith("B1"));
   });
 
-  it("orders preferences with theme before study level", () => {
+  it("places learning preferences before account controls", () => {
     render(<ProfileSettings />);
 
-    const theme = screen.getByLabelText("Color del tema");
+    const learning = screen.getByRole("heading", { name: "Cómo quieres aprender" });
     const levelGroup = screen.getByRole("group", { name: "Nivel de estudio" });
-    expect(theme.compareDocumentPosition(levelGroup) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    const account = screen.getByRole("heading", { name: "Cuenta y seguridad" });
+    expect(learning.compareDocumentPosition(levelGroup) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(levelGroup.compareDocumentPosition(account) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 });

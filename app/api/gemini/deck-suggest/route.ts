@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { requireSameOrigin, requireUser, rateLimit, validateBody } from "@/lib/api/guards";
+import { requireSameOrigin, requireUser, checkLayeredRateLimit, validateBody } from "@/lib/api/guards";
 import { createSupabaseServerClient as createClient } from "@/lib/supabase/server";
 import { getSupabaseAdminClient } from "@/lib/supabase/admin";
 import { buildDeckSuggestUserPrompt, DECK_SUGGEST_SYSTEM_PROMPT } from "@/lib/ai-prompts";
@@ -60,10 +60,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const { user, error: authError } = await requireUser(request);
   if (authError) return authError as NextResponse;
 
-  const { limited, error: rateLimitError } = await rateLimit(`/api/gemini/deck-suggest:${user.id}`, {
-    max: 10,
-    windowMs: 60_000,
-    meta: { endpoint: "/api/gemini/deck-suggest", userId: user.id },
+  const { limited, error: rateLimitError } = await checkLayeredRateLimit({
+    request,
+    user,
+    endpoint: "/api/gemini/deck-suggest",
+    maxPermanent: 10,
+    maxAnonymous: 3,
   });
   if (limited) return rateLimitError as NextResponse;
 

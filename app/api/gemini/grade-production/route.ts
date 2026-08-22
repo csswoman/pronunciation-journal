@@ -4,7 +4,7 @@ import {
   GRADE_PRODUCTION_SYSTEM_PROMPT,
   buildGradeProductionUserPrompt,
 } from "@/lib/ai-prompts";
-import { requireSameOrigin, requireUser, rateLimit, validateBody } from "@/lib/api/guards";
+import { requireSameOrigin, requireUser, checkLayeredRateLimit, validateBody } from "@/lib/api/guards";
 import { parseGeminiJson, respondWithGeminiJson } from "@/lib/gemini/json-route";
 import type { ProductionGradeResult } from "@/lib/exercises/production-grade";
 
@@ -38,10 +38,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const { user, error: authError } = await requireUser(request);
   if (authError) return authError as NextResponse;
 
-  const { limited, error: rateLimitError } = await rateLimit(`/api/gemini/grade-production:${user.id}`, {
-    max: 30,
-    windowMs: 60_000,
-    meta: { endpoint: "/api/gemini/grade-production", userId: user.id },
+  const { limited, error: rateLimitError } = await checkLayeredRateLimit({
+    request,
+    user,
+    endpoint: "/api/gemini/grade-production",
+    maxPermanent: 30,
+    maxAnonymous: 3,
   });
   if (limited) return rateLimitError as NextResponse;
 

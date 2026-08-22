@@ -46,6 +46,8 @@ interface ExerciseShellProps {
   children: React.ReactNode
   hintSlot?: React.ReactNode
   surface?: 'flat' | 'raised'
+  /** Optional timer to auto-advance in ms. Defaults to null so the user controls pace. */
+  autoAdvanceMs?: number | null
 }
 
 export function ExerciseShell({
@@ -60,6 +62,7 @@ export function ExerciseShell({
   children,
   hintSlot,
   surface = 'flat',
+  autoAdvanceMs = null,
 }: ExerciseShellProps) {
   const done = result !== null
   const hasDetailedFeedback = !!result?.feedback && Boolean(
@@ -72,15 +75,22 @@ export function ExerciseShell({
 
   useEffect(() => {
     if (!done) return
-    if (!result?.isCorrect && hasDetailedFeedback) return
-    if (hasDetailedFeedback) return
-    const timer = setTimeout(onContinue, 900)
+    let timer: ReturnType<typeof setTimeout> | undefined
+    if (autoAdvanceMs && autoAdvanceMs > 0 && !hasDetailedFeedback) {
+      timer = setTimeout(onContinue, autoAdvanceMs)
+    }
     function handleKey(e: KeyboardEvent) {
-      if (e.key === 'Enter') { clearTimeout(timer); onContinue() }
+      if (e.key === 'Enter') {
+        if (timer) clearTimeout(timer)
+        onContinue()
+      }
     }
     window.addEventListener('keydown', handleKey)
-    return () => { clearTimeout(timer); window.removeEventListener('keydown', handleKey) }
-  }, [done, hasDetailedFeedback, onContinue, result?.isCorrect])
+    return () => {
+      if (timer) clearTimeout(timer)
+      window.removeEventListener('keydown', handleKey)
+    }
+  }, [done, hasDetailedFeedback, onContinue, autoAdvanceMs])
 
   const content = (
     <>

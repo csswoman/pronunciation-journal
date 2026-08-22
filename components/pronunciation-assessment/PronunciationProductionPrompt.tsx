@@ -16,6 +16,7 @@ import { useSpeechRecognition } from '@/hooks/useSpeechRecognition'
 import { getLearnerTargetCopy } from '@/lib/pronunciation/assessment/learner-copy'
 import type { SpokenAttempt } from '@/lib/pronunciation/spoken-attempt'
 import type { DiagnosticPromptSelection } from '@/lib/pronunciation/assessment/prompt-selection'
+import { scorePronunciation } from '@/lib/pronunciation/scoring'
 import {
   HeardConfirmation,
   ProductionPromptCopy,
@@ -91,19 +92,48 @@ export function PronunciationProductionPrompt({
     submit(buildAttempt(userId, targetText, selection.targetId, '', 0, 'skipped'))
   }
 
-  function confirmHeard() {
+  async function confirmHeard() {
     if (!result || confirmed) return
     setConfirmed(true)
-    submit(
-      buildAttempt(
-        userId,
-        targetText,
-        selection.targetId,
-        result.transcript,
-        result.confidence * 100,
-        result.transcript.trim().length > 0 ? 'scored' : 'failed',
-      ),
-    )
+    const transcript = result.transcript.trim()
+    if (transcript.length === 0) {
+      submit(
+        buildAttempt(
+          userId,
+          targetText,
+          selection.targetId,
+          transcript,
+          0,
+          'failed',
+        ),
+      )
+      return
+    }
+
+    try {
+      const scoringResult = await scorePronunciation(transcript, targetText, 70, true)
+      submit(
+        buildAttempt(
+          userId,
+          targetText,
+          selection.targetId,
+          transcript,
+          scoringResult.accuracy,
+          'scored',
+        ),
+      )
+    } catch {
+      submit(
+        buildAttempt(
+          userId,
+          targetText,
+          selection.targetId,
+          transcript,
+          0,
+          'failed',
+        ),
+      )
+    }
   }
 
   function retryRecording() {

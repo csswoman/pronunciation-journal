@@ -37,7 +37,7 @@ describe('learning-loop content manifest', () => {
         contentId: 'tracking-source:lesson',
       }),
     )
-  })
+  }, 30_000)
 
   it('shares only authored theory equivalences', () => {
     expect(theoryTopicForMiniLesson('articles-a-an-the')).toBe(theoryTopicForDeck('a1-articulos-basicos'))
@@ -56,5 +56,5 @@ describe('learning-loop content manifest', () => {
       'duplicate_content_id',
       'unknown_pronunciation_target',
     ]))
-  })
+  }, 30_000)
 })

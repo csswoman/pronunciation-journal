@@ -11,7 +11,7 @@ interface Props {
 const WAVE_HEIGHTS = [30, 50, 70, 45, 80, 60, 35, 55, 75, 40, 65, 90, 50, 30, 70, 45, 60, 35, 55, 80, 50, 40, 65, 30];
 
 export default function RecordingControls({ isRecording, onMicClick, onSkip }: Props) {
-  const hint = isRecording ? "Recording… tap to stop" : "Tap to record";
+  const hint = isRecording ? "Grabando… pulsa para detener" : "Pulsa para grabar";
 
   return (
     <div className="shrink-0 flex flex-col items-center gap-3 pt-4 pb-[var(--layout-section-gap)] relative">
@@ -48,7 +48,7 @@ export default function RecordingControls({ isRecording, onMicClick, onSkip }: P
       <div className="relative flex items-center justify-center w-full">
         <button
           onClick={onMicClick}
-          aria-label={isRecording ? "Stop recording" : "Start recording"}
+          aria-label={isRecording ? "Detener grabación" : "Iniciar grabación"}
           className="w-[72px] h-[72px] rounded-full flex items-center justify-center border-none cursor-pointer transition-all duration-200 active:scale-95 hover:scale-[1.04]"
           style={{
             backgroundColor: isRecording ? "var(--error)" : "var(--primary)",
@@ -64,13 +64,13 @@ export default function RecordingControls({ isRecording, onMicClick, onSkip }: P
         <div className="absolute right-8 group">
           <button
             onClick={onSkip}
-            aria-label="Skip phrase"
+            aria-label="Omitir frase"
             className="w-9 h-9 rounded-full flex items-center justify-center border cursor-pointer transition-all duration-150 hover:translate-x-0.5 bg-[var(--btn-regular-bg)] border-[var(--line-divider)] text-[var(--text-tertiary)]"
           >
             <ChevronRight size={16} />
           </button>
           <div className="pointer-events-none absolute bottom-full right-0 mb-1.5 px-2 py-1 rounded-md text-xxs font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity bg-[var(--tooltip-bg)] text-white/80">
-            Skip
+            Omitir
           </div>
         </div>
       </div>

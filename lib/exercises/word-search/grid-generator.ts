@@ -10,6 +10,9 @@ import type {
 // Common English letter frequency distribution for natural grid fill
 const LETTER_WEIGHTS = 'EEEEEEEEAAAAAIIIIIROOOONNNNTTTTSSSSLLLLCCCCUUUUDDDDPIIMHHGGBBFFYYWWKVXZJQ'
 
+export const MIN_WORD_SEARCH_ITEMS = 3
+export const MAX_WORD_SEARCH_LENGTH = 12
+
 // 8 standard directions: [dRow, dCol]
 const STANDARD_DIRECTIONS: [number, number][] = [
   [0, 1], // Horizontal right
@@ -158,11 +161,18 @@ export function createWordSearchPuzzle(
     forcedSize,
   } = options
 
-  // 1. Sanitize items and filter out invalid/empty words
+  // 1. Sanitize items and remove invalid or duplicate answers. Two clues for
+  // the same visible word make a puzzle impossible to reason about.
   const validItems: WordSearchItem[] = []
+  const seenWords = new Set<string>()
   for (const item of items) {
     const clean = sanitizeWord(item.word)
-    if (clean.length >= 2) {
+    if (
+      clean.length >= 2 &&
+      clean.length <= MAX_WORD_SEARCH_LENGTH &&
+      !seenWords.has(clean)
+    ) {
+      seenWords.add(clean)
       validItems.push({
         ...item,
         word: clean,
@@ -170,6 +180,12 @@ export function createWordSearchPuzzle(
         found: false,
       })
     }
+  }
+
+  if (validItems.length < MIN_WORD_SEARCH_ITEMS) {
+    throw new Error(
+      `Se necesitan al menos ${MIN_WORD_SEARCH_ITEMS} palabras distintas de hasta ${MAX_WORD_SEARCH_LENGTH} letras.`,
+    )
   }
 
   // 2. Determine grid size
@@ -198,6 +214,10 @@ export function createWordSearchPuzzle(
 
   // Filter items to only those successfully placed on the grid
   const finalItems = validItems.filter((item) => placedWordIds.has(item.id))
+
+  if (finalItems.length < MIN_WORD_SEARCH_ITEMS) {
+    throw new Error('No se pudo crear un tablero jugable con estas palabras.')
+  }
 
   // 5. Fill empty cells with weighted random letters
   const finalizedGrid: string[][] = grid.map((row) =>

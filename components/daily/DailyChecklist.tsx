@@ -6,10 +6,14 @@ import { useRouter } from 'next/navigation'
 import { Sparkles } from '@/components/icons'
 import PageLayout from '@/components/layout/PageLayout'
 import PageHeader from '@/components/layout/PageHeader'
+import dynamic from 'next/dynamic'
 import RecommendedPracticeCard from '@/components/practice/hub/RecommendedPracticeCard'
 import { resolveRecommendedMode } from '@/lib/practice/practice-modes'
-import DailyStepSession from './DailyStepSession'
 import SessionOpeningBanner from './SessionOpeningBanner'
+
+const DailyStepSession = dynamic(() => import('./DailyStepSession'), {
+  loading: () => <div className="p-8 text-center text-fg-muted font-caption">Cargando sesión…</div>,
+})
 import SessionRecapCard from './SessionRecapCard'
 import DailyPlanCard from './DailyPlanCard'
 import { RoutinePresetSelector, type DailyRoutinePreset } from './RoutinePresetSelector'
@@ -197,6 +201,11 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
             silentPeriodMode={silentPeriod}
             onToggleSilentPeriod={setSilentPeriod}
           />
+        </div>
+      ) : status === 'loading' ? (
+        <div className="flex flex-col gap-4" aria-hidden>
+          <div className="h-[76px] rounded-[var(--radius-lg)] border border-border-subtle bg-surface-subtle animate-pulse" />
+          <div className="h-10 rounded-[var(--radius-md)] border border-border-subtle bg-surface-subtle animate-pulse" />
         </div>
       ) : null}
 

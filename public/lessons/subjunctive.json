@@ -3,63 +3,64 @@
   "sections": [
     {
       "heading": "¿Qué es el subjuntivo en inglés?",
-      "body": "El subjuntivo en inglés utiliza la forma base del verbo (infinitivo sin 'to') independientemente del sujeto y el tiempo. Es más visible cuando contrasta con una forma que normalmente se esperaría: \"Es vital que asista\" (no \"asista\")."
+      "body": "El subjuntivo en inglés utiliza la forma base del verbo (infinitivo sin 'to') para todas las personas, independientemente del sujeto y el tiempo. Se utiliza para expresar mandatos, sugerencias o requerimientos formales: 'It is vital that he attend the meeting' (no 'attends')."
     },
     {
-      "heading": "cuando aparece",
-      "body": "Después de verbos de demanda/sugerencia/recomendación + eso: insistir, sugerir, recomendar, exigir, solicitar, proponer, preguntar, exigir, instar. Después de adjetivos de importancia o necesidad + eso: vital, esencial, importante, necesario, crítico, imperativo."
+      "heading": "Verbos y adjetivos que lo activan",
+      "body": "Aparece tras verbos de orden, sugerencia o demanda seguidos de 'that': *insist, suggest, recommend, demand, request, propose, require, urge*. También tras adjetivos de necesidad e importancia: *vital, essential, important, necessary, crucial, imperative* ('It is essential that she be informed')."
     },
     {
-      "heading": "fueron-subjuntivo",
-      "body": "En oraciones condicionales que expresan situaciones hipotéticas o contrarias a los hechos, el inglés formal usa 'were' para todas las personas: 'If I was you...', 'If she we are here...', 'Were I in your position...'. Este es el subjuntivo, también llamado pasado de subjuntivo."
+      "heading": "El subjuntivo con 'were' (Were-Subjunctive)",
+      "body": "En situaciones hipotéticas o contrarias a la realidad (como en el segundo condicional), el inglés formal usa 'were' para todas las personas gramaticales: 'If I were you...', 'If she were here...', 'I wish it were true'."
     }
   ],
   "examples": [
     {
       "english": "I suggest that she be promoted.",
-      "note": "No es 'es': forma base después de 'sugerir'"
+      "note": "Forma base 'be' tras 'suggest that', no 'is'."
     },
     {
       "english": "It is vital that he attend the meeting.",
-      "note": "No 'asiste'"
+      "note": "Forma base 'attend', no 'attends'."
     },
     {
       "english": "They demanded that the report be submitted immediately.",
-      "note": "Subjuntivo pasivo"
+      "note": "Subjuntivo en voz pasiva ('be submitted')."
     },
     {
-      "english": "If I were taller, I'd play basketball.",
-      "note": "Fueron-subjuntivo en condición"
+      "english": "If I were taller, I would play basketball.",
+      "note": "Uso formal de 'were' con sujeto 'I'."
     }
   ],
   "exercises": [
     {
-      "instruction": "Corrige la forma verbal si es necesario.",
+      "instruction": "Completa cada oración con la forma correcta del verbo en subjuntivo.",
+      "type": "closed_blank",
       "items": [
-        "It's essential that every student submits the form.",
-        "I recommend that he takes the earlier flight.",
-        "If I was you, I'd reconsider.",
-        "The committee insisted that she is present."
+        "It's essential that every student ___ (submit) the form.",
+        "I recommend that he ___ (take) the earlier flight.",
+        "If I ___ (be) you, I would reconsider.",
+        "The committee insisted that she ___ (be) present."
       ],
       "answers": [
-        "entregar",
-        "llevar",
-        "eran",
-        "estar"
+        "submit",
+        "take",
+        "were",
+        "be"
       ]
     }
   ],
   "quiz": [
     {
-      "question": "¿Qué oración usa correctamente el subjuntivo?",
+      "question": "¿Cuál de las siguientes oraciones utiliza correctamente el subjuntivo en inglés?",
       "options": [
-        "Ella insistió en que se fuera.",
-        "Ella insistió en que se fuera.",
-        "Ella insistió en que se va.",
-        "Ella insistió en que se fuera."
+        "She insisted that he leaves immediately.",
+        "She insisted that he leave immediately.",
+        "She insisted that he is leaving immediately.",
+        "She insisted that he left immediately."
       ],
       "correct": 1,
-      "explanation": "Después de \"insistir en eso\", el subjuntivo requiere la forma base: \"dejar\", no \"dejar\"."
+      "explanation": "Tras 'insist that', el inglés formal requiere la forma base del verbo ('leave'), sin 's' de tercera persona."
     }
   ]
 }

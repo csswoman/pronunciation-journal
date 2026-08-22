@@ -1,6 +1,5 @@
 import type {
   ExerciseResult,
-  PedagogicalFeedback,
   PracticeExercise,
 } from '@/lib/practice/types'
 import { ATTRIBUTION_VERSION } from '@/lib/practice/attribution'
@@ -25,10 +24,12 @@ export function buildExerciseResult(params: {
   userAnswer: string
   timeMs: number
   context: ExerciseResult['context']
-  extras?: { score?: number; feedback?: PedagogicalFeedback }
+  extras?: import('@/lib/practice/types').PracticeSubmitExtras
 }): ExerciseResult {
   const { current, isCorrect, userAnswer, timeMs, context, extras } = params
   const attribution = resolveAnswerAttribution(current, isCorrect, extras?.score)
+  const status = extras?.status ?? (userAnswer === 'skip' ? 'skipped' : 'answered')
+  const responseTimeMs = extras?.responseTimeMs ?? timeMs
 
   return {
     exerciseId: current.id,
@@ -36,7 +37,11 @@ export function buildExerciseResult(params: {
     exerciseTypeId: current.exerciseTypeId,
     isCorrect,
     userAnswer,
-    timeMs,
+    timeMs: responseTimeMs,
+    status,
+    responseTimeMs,
+    totalInteractionMs: extras?.totalInteractionMs,
+    firstTryFailed: extras?.firstTryFailed,
     score: extras?.score,
     feedback: extras?.feedback,
     contentId: current.contentId,
@@ -54,6 +59,8 @@ export function buildExerciseResult(params: {
             options: current.payload.options,
             targetWord: current.payload.targetWord,
             contrastId: current.contrastId,
+            status,
+            firstTryFailed: extras?.firstTryFailed,
           }
         : {
             type: current.slug,
@@ -63,6 +70,8 @@ export function buildExerciseResult(params: {
             expectedAnswer: extras?.feedback?.expectedAnswer,
             hintUsed: extras?.feedback?.category?.includes('hint_used') || undefined,
             nextAction: extras?.feedback?.nextAction,
+            status,
+            firstTryFailed: extras?.firstTryFailed,
           },
     completedAt: new Date(),
   }

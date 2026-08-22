@@ -20,9 +20,9 @@ export function ThemeControls({ className }: { className?: string } = {}) {
   return (
     <section className={cn("border-t border-border-subtle py-3", className)}>
       <div className="mb-2 flex items-center justify-between gap-2">
-        <p className="font-kicker text-fg-muted">Tema</p>
+        <p className="font-kicker text-fg-muted">Color del tema</p>
         <span className="text-tiny tabular-nums text-fg-subtle" aria-hidden>
-          {hue}°
+          {hue === 250 ? "Predeterminado" : "Personalizado"}
         </span>
       </div>
       <div className="flex items-center gap-2">
@@ -39,6 +39,7 @@ export function ThemeControls({ className }: { className?: string } = {}) {
           type="button"
           onClick={resetHue}
           aria-label="Restablecer color del tema"
+          title="Restablecer color del tema"
           className="focus-ring grid size-8 place-items-center rounded-sm text-fg-muted hover:bg-surface-sunken"
         >
           <RotateCcw size={15} aria-hidden />
@@ -47,6 +48,7 @@ export function ThemeControls({ className }: { className?: string } = {}) {
           type="button"
           onClick={toggleMode}
           aria-label={mode === "dark" ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
+          title={mode === "dark" ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
           className="focus-ring grid size-8 place-items-center rounded-sm text-fg-muted hover:bg-surface-sunken"
         >
           {mode === "dark" ? <Sun size={16} aria-hidden /> : <Moon size={16} aria-hidden />}
@@ -66,9 +68,9 @@ export function SoundControls({ className }: { className?: string } = {}) {
   return (
     <section className={cn("border-t border-border-subtle py-3", className)}>
       <div className="mb-2 flex items-center justify-between gap-2">
-        <span className="flex items-center gap-2 font-kicker text-fg-muted">
-          <Volume2 size={15} aria-hidden />
-          Sonidos
+          <span className="flex items-center gap-2 font-kicker text-fg-muted">
+            <Volume2 size={15} aria-hidden />
+            Sonidos de la app
         </span>
         <button
           type="button"

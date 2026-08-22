@@ -32,6 +32,11 @@ function supabase() {
 
 export const LESSON_QUIZ_PASS_THRESHOLD = 0.7
 
+export const QUARANTINED_LESSON_SLUGS = new Set<string>([
+  // All previously corrupt lessons (subjunctive, silent-letters, noun-verb-pairs, second-conditional,
+  // question-tags, prepositions-time, modal-verbs-ability, relative-clauses) have been repaired.
+])
+
 export function isLessonQuizPassed(correct: number, total: number): boolean {
   return total > 0 && correct / total >= LESSON_QUIZ_PASS_THRESHOLD
 }
@@ -81,27 +86,6 @@ export async function recordLessonIncomplete(
   })
 }
 
-/**
- * Persist a single PracticeAnswer to `answer_history`, plus any word/topic/
- * fragment SRS rating it implies — all in ONE Dexie transaction so a crash
- * between writes can never leave the answer recorded with its rating(s)
- * lost, or vice versa (plan 061 step 3). Mirrors the transactional pattern
- * used by `recordLessonComplete` above and `saveTrackedItem` in
- * lib/tracking/queries.ts.
- *
- * Coexists with `saveAnswers()` in lib/phoneme-practice/queries.ts —
- * that function continues to serve the current Sound Lab flow. This one
- * is the entry point for the unified Practice Engine and also writes the
- * new `context` and `content_id` columns added in
- * supabase/migrations/20260519120000_practice_engine.sql.
- *
- * "No valid target identity" (plan text): a topic-less exercise is normal,
- * not an error — `normalizedTopic` is simply falsy and the topic-rating
- * write is skipped, same as before this step. word_bank's target identity
- * (sourceRef.id) is required by PracticeAnswer's type whenever
- * sourceRef.source === 'word_bank', so there is no "guessed row" case to
- * guard there; this function never invents/reads a target id.
- */
 export async function savePracticeAnswer(
   userId: string,
   answer: PracticeAnswer,
@@ -131,20 +115,29 @@ export async function savePracticeAnswer(
     ? (answer.attributionVersion ?? ATTRIBUTION_VERSION)
     : undefined
   const exercisePayload = mergeAttributionIntoPayload(
-    answer.exercisePayload,
+    {
+      ...(answer.exercisePayload && typeof answer.exercisePayload === 'object' ? answer.exercisePayload : {}),
+      ...(answer.status ? { status: answer.status } : {}),
+      ...(answer.responseTimeMs != null ? { responseTimeMs: answer.responseTimeMs } : {}),
+      ...(answer.totalInteractionMs != null ? { totalInteractionMs: answer.totalInteractionMs } : {}),
+      ...(answer.firstTryFailed != null ? { firstTryFailed: answer.firstTryFailed } : {}),
+    },
     attribution,
     attributionVersion,
   )
+
+  const grade = answerToGrade(answer)
+  const isAnswered = (answer.status === 'answered' || (answer.status === undefined && answer.userAnswer !== 'skip')) && grade !== null
 
   const row = {
     id: answer.attemptId ?? crypto.randomUUID(),
     user_id: userId,
     sound_id: answer.soundId ?? null,
     exercise_type_id: answer.exerciseTypeId,
-    is_correct: answer.isCorrect,
+    is_correct: isAnswered ? answer.isCorrect : false,
     user_answer: answer.userAnswer ?? null,
     target_word: targetWord,
-    time_ms: answer.timeMs,
+    time_ms: answer.responseTimeMs ?? answer.timeMs,
     exercise_payload: (Object.keys(exercisePayload).length > 0
       ? exercisePayload
       : null) as Json | null,
@@ -153,7 +146,6 @@ export async function savePracticeAnswer(
     topic: normalizedTopic,
   }
 
-  const grade = answerToGrade(answer)
   const rowWithGrade = { ...row, grade }
 
   await db.transaction('rw', [db.syncOutbox, db.srsRatingEvents, db.srsData], async () => {
@@ -165,8 +157,8 @@ export async function savePracticeAnswer(
       await enqueue(userId, 'answer_history', 'upsert', rowWithGrade as Record<string, unknown>, undefined, 'id')
     }
 
-    // Plan 062: explicit non-SRS attribution blocks entity updates.
-    const allowSrs = attribution?.srsEligible !== false
+    // Explicit non-SRS attribution, non-answered status (skips, evaluator failures), or null grade blocks SRS updates.
+    const allowSrs = attribution?.srsEligible !== false && isAnswered && grade !== null
     const wordBankOutcome = attribution?.srsEligible === true
       ? attribution.outcomes.find(
           (outcome) => outcome.target.namespace === 'word_bank'
@@ -226,6 +218,8 @@ export async function recordLessonQuizAttempt(
   answers: LessonQuizAnswerInput[],
 ): Promise<{ passed: boolean; correct: number; total: number }> {
   const completedAt = new Date()
+  const isQuarantined = answers[0]?.lessonSlug ? QUARANTINED_LESSON_SLUGS.has(answers[0].lessonSlug) : false
+
   const results: ExerciseResult[] = answers.map((answer) => ({
     exerciseId: answer.questionId,
     slug: 'multiple_choice',
@@ -233,18 +227,22 @@ export async function recordLessonQuizAttempt(
     isCorrect: answer.isCorrect,
     userAnswer: answer.selectedAnswer,
     timeMs: answer.timeMs,
+    status: isQuarantined ? 'unscored' : 'answered',
     contentId: `${answer.courseSlug}:${answer.lessonSlug}:${answer.questionId}`,
     context: 'courses',
     exercisePayload: {
       question: answer.question,
       correctAnswer: answer.correctAnswer,
       lessonSlug: answer.lessonSlug,
+      quarantined: isQuarantined ? true : undefined,
     },
     topic: answer.topic,
     completedAt,
   }))
 
-  await Promise.all(results.map((result) => savePracticeAnswer(userId, result)))
+  if (!isQuarantined) {
+    await Promise.all(results.map((result) => savePracticeAnswer(userId, result)))
+  }
 
   const sessionResult = buildSessionResult(results)
   await recordActivitySession(userId, {
@@ -253,7 +251,7 @@ export async function recordLessonQuizAttempt(
     metadata: {
       lessonSlug: answers[0]?.lessonSlug,
       dailyTargetId: answers[0] ? `${answers[0].courseSlug}:${answers[0].lessonSlug}` : undefined,
-      quizPassed: isLessonQuizPassed(sessionResult.results.filter((r) => r.isCorrect).length, sessionResult.results.length),
+      quizPassed: isQuarantined ? false : isLessonQuizPassed(sessionResult.results.filter((r) => r.isCorrect).length, sessionResult.results.length),
     },
   })
 

@@ -41,12 +41,12 @@ describe('PracticeHubClient', () => {
 
     expect(screen.getByText('Vocabulario')).toBeInTheDocument()
     expect(screen.getByText('Pronunciación')).toBeInTheDocument()
-    expect(screen.getByText('Contexto y lectura')).toBeInTheDocument()
+    expect(screen.getByText('Más formas de practicar')).toBeInTheDocument()
     expect(screen.queryByText('Juegos')).not.toBeInTheDocument()
 
     expect(screen.getByText('Palabras esenciales')).toBeInTheDocument()
     expect(screen.getByText('Tus mazos')).toBeInTheDocument()
-    expect(screen.getByText('Repaso')).toBeInTheDocument()
+    expect(screen.getByText('Empezar repaso')).toBeInTheDocument()
     expect(screen.getByText('Laboratorio de sonidos')).toBeInTheDocument()
     expect(screen.getByText('Habla conectada')).toBeInTheDocument()
     expect(screen.getByText('Entonación')).toBeInTheDocument()

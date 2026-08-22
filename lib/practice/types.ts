@@ -132,6 +132,8 @@ export type PracticeExercise = {
   sourceRef?: ExerciseSourceRef
 }
 
+export type PracticeResultStatus = 'answered' | 'skipped' | 'unscored' | 'evaluator_failed'
+
 export type PracticeAnswer = {
   /** Stable caller-provided identity makes retries idempotent in answer_history. */
   attemptId?: string
@@ -142,6 +144,14 @@ export type PracticeAnswer = {
   isCorrect: boolean
   userAnswer?: string
   timeMs: number
+  /** Discriminates genuine attempts from skips, unscored exposure or technical failures. */
+  status?: PracticeResultStatus
+  /** Latency until the first user response (used for time-sensitive grading). */
+  responseTimeMs?: number
+  /** Total elapsed time on the exercise including feedback reading and retries (for analytics). */
+  totalInteractionMs?: number
+  /** True if the user failed their first try before retrying and succeeding. */
+  firstTryFailed?: boolean
   /** 0-100, currently used by speak_word. */
   score?: number
   feedback?: PedagogicalFeedback
@@ -278,6 +288,10 @@ export type PedagogicalFeedback = {
 export type PracticeSubmitExtras = {
   score?: number
   feedback?: PedagogicalFeedback
+  status?: PracticeResultStatus
+  responseTimeMs?: number
+  totalInteractionMs?: number
+  firstTryFailed?: boolean
 }
 
 export type PracticeConfig = {
