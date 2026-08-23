@@ -1,12 +1,13 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ArrowRight, Check, ChevronDown } from "@/components/icons"
 import { DailyStepTitle } from './DailyStepTitle'
 import { DailyThreadStrip } from './DailyThreadStrip'
 import type { DailyStepStatus } from '@/hooks/useDailyPlan'
 import type { DailyStep } from '@/lib/practice/types'
 import { cn } from '@/lib/cn'
+import { playUiCue } from '@/lib/ui-sounds/cues'
 import Link from 'next/link'
 import {
   localizeDailyStepSubtitle,
@@ -53,6 +54,17 @@ export default function DailyStepList({
   const threadHints = collectPlanHints(steps)
   const [activeId, setActiveId] = useState<string | null>(inProgressStepId)
   const [showAllCompact, setShowAllCompact] = useState(false)
+  const seenDoneIds = useRef<Set<string> | null>(null)
+  if (seenDoneIds.current === null) {
+    seenDoneIds.current = new Set(
+      steps
+        .filter((s) => {
+          const st = getStepStatus(s.id)
+          return st === 'done' || st === 'resolved'
+        })
+        .map((s) => s.id),
+    )
+  }
 
   useEffect(() => {
     setActiveId(inProgressStepId ?? readInProgressStepId())
@@ -86,6 +98,24 @@ export default function DailyStepList({
     return true
   }
 
+  const currentDoneIds = new Set(
+    steps
+      .filter((s) => {
+        const st = getStepStatus(s.id)
+        return st === 'done' || st === 'resolved'
+      })
+      .map((s) => s.id),
+  )
+  const newlyDoneIds = [...currentDoneIds].filter((id) => !seenDoneIds.current!.has(id))
+
+  useEffect(() => {
+    if (newlyDoneIds.length > 0) {
+      playUiCue('toggle')
+    }
+    seenDoneIds.current = currentDoneIds
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [steps, getStepStatus])
+
   return (
     <div className="flex w-full flex-col gap-3">
       <ol className="flex w-full flex-col gap-2.5">
@@ -98,6 +128,7 @@ export default function DailyStepList({
             !activeId && i === entryIndex && status !== 'done' && status !== 'resolved'
           const visual = rowVisual(status, isInProgress, isEntry)
           const done = visual === 'done'
+          const justCompleted = done && newlyDoneIds.includes(step.id)
           const isEntryOrCurrent = visual === 'entry' || visual === 'current'
           const compact = isCompactRow(isEntryOrCurrent)
           const hidden = isHiddenRow(status, isEntryOrCurrent)
@@ -114,9 +145,9 @@ export default function DailyStepList({
             visual === 'entry' &&
               (demoteEntryHighlight
                 ? 'border border-border-default bg-surface-raised hover:border-border-default'
-                : 'border border-primary bg-primary-wash'),
+                : 'border border-primary bg-primary text-on-primary'),
             visual === 'current' &&
-              'border border-primary bg-primary-wash',
+              'border border-primary bg-primary text-on-primary',
             visual === 'pending' &&
               'border border-transparent bg-transparent hover:bg-surface-sunken/70',
             visual === 'done' &&
@@ -158,14 +189,17 @@ export default function DailyStepList({
                 <DailyStepTitle
                   title={localizeDailyStepTitle(step.title)}
                   ipa={step.ipa}
-                  index={i}
                   muted={done}
                   emphasize={isEntryOrCurrent && !demoteEntryHighlight}
                 />
                 <p
                   className={cn(
                     'mt-0.5 truncate font-body-sm',
-                    done ? 'text-fg-subtle' : 'text-fg-muted',
+                    done
+                      ? 'text-fg-subtle'
+                      : isEntryOrCurrent
+                        ? 'text-on-primary/80'
+                        : 'text-fg-muted',
                   )}
                 >
                   {[localizedSubtitle, stepMeta(step)]
@@ -174,7 +208,12 @@ export default function DailyStepList({
                 </p>
               </div>
               {done ? (
-                <span className="animate-state-in inline-flex shrink-0 items-center gap-1 rounded-md bg-accent-2-soft px-2.5 py-1 font-caption font-semibold text-accent-2">
+                <span
+                  className={cn(
+                    "animate-state-in inline-flex shrink-0 items-center gap-1 rounded-md bg-accent-2-soft px-2.5 py-1 font-caption font-semibold text-accent-2",
+                    justCompleted && "success-pulse",
+                  )}
+                >
                   <Check size={16} aria-hidden />
                   Hecho
                 </span>
@@ -184,12 +223,12 @@ export default function DailyStepList({
                     Empieza aquí
                   </span>
                 ) : (
-                  <span className="inline-flex shrink-0 items-center rounded-md bg-primary px-2.5 py-1 font-caption font-semibold text-on-primary">
+                  <span className="inline-flex shrink-0 items-center rounded-md bg-surface-raised px-2.5 py-1 font-caption font-semibold text-fg">
                     Empieza aquí
                   </span>
                 )
               ) : visual === 'current' ? (
-                <span className="inline-flex shrink-0 items-center rounded-md bg-primary px-2.5 py-1 font-caption font-semibold text-on-primary">
+                <span className="inline-flex shrink-0 items-center rounded-md bg-surface-raised px-2.5 py-1 font-caption font-semibold text-fg">
                   En curso
                 </span>
               ) : (
