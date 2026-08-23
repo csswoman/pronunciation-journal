@@ -9,6 +9,8 @@ import PronunciationBadge from "@/components/vocabulary/PronunciationBadge";
 import { WordStrengthBars } from "@/components/vocabulary/words/WordStrengthBars";
 import { WordCardProcessing, WordCardFailed } from "@/components/vocabulary/words/WordCardVariants";
 import { getWordStrength } from "@/lib/word-bank/strength";
+import { playUiCue } from "@/lib/ui-sounds/cues";
+import { useRetrigger } from "@/hooks/useRetrigger";
 
 interface WordCardProps {
   word: WordBankEntry;
@@ -22,6 +24,7 @@ interface WordCardProps {
 
 export function WordCard({ word, onRetry, onDelete, selected, onSelect, isFavorite, onToggleFavorite }: WordCardProps) {
   const { play } = useAudioPlayback(word.audio_url, word.text);
+  const { ref: heartRef, trigger: popHeart } = useRetrigger<HTMLButtonElement>("animate-heart-pop");
 
   if (word.status === "processing") {
     return <WordCardProcessing text={word.text} wordId={word.id} onRetry={onRetry} onDelete={onDelete} />;
@@ -99,7 +102,16 @@ export function WordCard({ word, onRetry, onDelete, selected, onSelect, isFavori
         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity ml-auto">
           {onToggleFavorite && (
             <button
-              onClick={e => { e.stopPropagation(); onToggleFavorite(); }}
+              ref={heartRef}
+              onClick={e => {
+                e.stopPropagation();
+                const willBecomeFavorite = !isFavorite;
+                onToggleFavorite();
+                if (willBecomeFavorite) {
+                  popHeart();
+                  playUiCue("save");
+                }
+              }}
               aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
               className={`p-1.5 rounded-full transition-colors ${ isFavorite ? "text-error hover:text-error/70" : "text-fg-muted hover:text-fg" }`}
             >
