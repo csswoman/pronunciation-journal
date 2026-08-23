@@ -29,6 +29,29 @@ const nextConfig = {
     resolveAlias: Object.fromEntries(
       nextPolyfillModuleIds.map((id) => [id, emptyNextPolyfill]),
     ),
+    rules: {
+      // All illustrations are downloaded from unDraw with accent color
+      // #17B8A6 selected on their site (undraw.co) — this is NOT unDraw's
+      // default purple. SVGR's replaceAttrValues below only swaps this
+      // exact hex for currentColor, so a future illustration downloaded
+      // with a different accent color will silently ignore the theme
+      // (no error — it just keeps its baked-in fill). If that happens,
+      // either re-download with #17B8A6 selected, or add the new hex here.
+      "*.svg": {
+        loaders: [
+          {
+            loader: "@svgr/webpack",
+            options: {
+              titleProp: false,
+              replaceAttrValues: {
+                "#17B8A6": "currentColor",
+              },
+            },
+          },
+        ],
+        as: "*.js",
+      },
+    },
   },
   async headers() {
     return [
