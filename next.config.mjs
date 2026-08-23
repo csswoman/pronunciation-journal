@@ -69,6 +69,22 @@ const nextConfig = {
           },
         ],
       },
+      {
+        // Next's manifest.ts file-convention loader hardcodes
+        // `max-age=0, must-revalidate` on the generated route, forcing a
+        // revalidation round-trip on every navigation even though the
+        // content only changes at build time. Lighthouse flagged this
+        // request sitting on the critical path (network-dependency-tree
+        // audit). Override with a long-lived cache since a new deploy
+        // ships a new build and busts any stale client copy anyway.
+        source: "/manifest.webmanifest",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=3600, stale-while-revalidate=86400",
+          },
+        ],
+      },
     ];
   },
   async redirects() {
