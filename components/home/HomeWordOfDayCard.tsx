@@ -3,7 +3,7 @@
 // Planned structure:
 // <HomeWordOfDayCard>
 //   kicker
-//   word mark (accent-1 highlight on the word only) + heart
+//   word mark (neutral text) + heart — card left border + IPA in --c-vocabulario
 //   IPA + definition + example line
 // </HomeWordOfDayCard>
 
@@ -33,7 +33,7 @@ interface HomeWordOfDayCardProps {
   profileLevel?: string | null;
 }
 
-/** Single-word focus — accent lives on the word mark, not the card shell. */
+/** Single-word focus — accent lives on the left border/IPA, not the word mark. */
 export default function HomeWordOfDayCard({ profileLevel = null }: HomeWordOfDayCardProps) {
   const { user } = useAuth();
   const [level, setLevel] = useState<string | undefined>(
@@ -82,10 +82,10 @@ export default function HomeWordOfDayCard({ profileLevel = null }: HomeWordOfDay
 
   return (
     <div
-      className="home-sidebar-card flex flex-col gap-3"
+      className="home-sidebar-card home-sidebar-card--vocabulario flex flex-col gap-3"
       aria-busy={loading || undefined}
     >
-      <span className="font-kicker text-fg-subtle">Palabra del día</span>
+      <span className="font-kicker text-vocabulario">Palabra del día</span>
 
       {loading && (
         <div className="flex flex-col gap-2 py-1" aria-hidden>
@@ -141,7 +141,7 @@ export default function HomeWordOfDayCard({ profileLevel = null }: HomeWordOfDay
             </div>
           </div>
           {word.ipa ? (
-            <p className="font-ipa text-body-lg leading-snug text-fg-muted">
+            <p className="font-ipa text-body-lg leading-snug text-vocabulario">
               {formatIpaDisplay(word.ipa)}
             </p>
           ) : null}

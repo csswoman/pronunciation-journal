@@ -3,7 +3,7 @@
 // Planned structure:
 // <HomeChunkOfDayCard>
 //   header: title + category chip + shuffle/heart
-//   quote block (phrase + IPA) — accent-1 only on this inset
+//   quote block (phrase + IPA) — card left border + IPA in --c-chunks
 //   meaning + example + tip
 // </HomeChunkOfDayCard>
 
@@ -23,7 +23,7 @@ function saveLabel(state: SaveState): string {
   return "Guardar en Tracking";
 }
 
-/** Phrase focus — accent wraps the quote, not the whole card. */
+/** Phrase focus — accent lives on the left border/IPA, not a wash. */
 export default function HomeChunkOfDayCard() {
   const { chunk, loading, shuffle } = useChunkOfDay();
   const [saveState, setSaveState] = useState<SaveState>("idle");
@@ -61,13 +61,13 @@ export default function HomeChunkOfDayCard() {
 
   return (
     <div
-      className="home-sidebar-card flex flex-col gap-3"
+      className="home-sidebar-card home-sidebar-card--chunks flex flex-col gap-3"
       aria-busy={loading || undefined}
       aria-labelledby="chunk-of-day-heading"
     >
       <div className="flex items-center justify-between gap-2">
         <div className="flex min-w-0 flex-wrap items-center gap-2">
-          <span id="chunk-of-day-heading" className="font-kicker text-fg-subtle">
+          <span id="chunk-of-day-heading" className="font-kicker text-chunks">
             Chunk del día
           </span>
           {chunk?.category ? (
@@ -138,9 +138,16 @@ export default function HomeChunkOfDayCard() {
       </div>
 
       {loading && (
-        <div className="flex flex-col gap-2 py-1" aria-hidden>
-          <div className="h-16 w-full animate-pulse rounded-md bg-surface-sunken" />
-          <div className="h-4 w-3/4 animate-pulse rounded bg-surface-sunken" />
+        <div className="flex flex-col gap-3" aria-hidden>
+          <div className="flex flex-col gap-1.5">
+            <div className="h-6 w-3/4 animate-pulse rounded-md bg-surface-sunken" />
+            <div className="mt-1.5 h-4 w-1/2 animate-pulse rounded bg-surface-sunken" />
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <div className="h-3.5 w-20 animate-pulse rounded bg-surface-sunken" />
+            <div className="h-4 w-full animate-pulse rounded bg-surface-sunken" />
+            <div className="h-4 w-2/3 animate-pulse rounded bg-surface-sunken" />
+          </div>
         </div>
       )}
 
@@ -150,7 +157,7 @@ export default function HomeChunkOfDayCard() {
             <p className="home-chunk-quote__phrase">{chunk.chunk}</p>
             {chunk.ipa ? (
               <p
-                className="mt-1.5 font-ipa text-body-sm leading-snug text-fg-muted"
+                className="mt-1.5 font-ipa text-body-sm leading-snug text-chunks"
                 lang="en-fonipa"
               >
                 {formatIpaDisplay(chunk.ipa)}
