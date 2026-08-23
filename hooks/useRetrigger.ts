@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 
 /**
  * Imperatively re-triggers a CSS animation class on an element.
@@ -22,4 +22,34 @@ export function useRetrigger<T extends HTMLElement>(animationClass: string) {
   }, [animationClass])
 
   return { ref, trigger }
+}
+
+/**
+ * Re-triggers a CSS animation class whenever `value` strictly increases
+ * compared to its previous render — never on first mount, never on a
+ * decrease or no-op change. Use for counters where only "went up" should
+ * celebrate (e.g. a streak count).
+ */
+export function useRetriggerOnIncrease<T extends HTMLElement>(
+  value: number,
+  animationClass: string,
+) {
+  const ref = useRef<T | null>(null)
+  const prevValue = useRef<number | null>(null)
+
+  useEffect(() => {
+    const el = ref.current
+    const previous = prevValue.current
+    prevValue.current = value
+
+    if (!el) return
+    if (previous === null) return
+    if (value <= previous) return
+
+    el.classList.remove(animationClass)
+    void el.offsetWidth
+    el.classList.add(animationClass)
+  }, [value, animationClass])
+
+  return ref
 }
