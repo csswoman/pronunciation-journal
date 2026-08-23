@@ -33,23 +33,6 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes drift1 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33%       { transform: translate(60px, 80px) scale(1.1); }
-  66%       { transform: translate(-20px, 120px) scale(0.95); }
-}
-
-@keyframes drift2 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33%       { transform: translate(-50px, 60px) scale(1.08); }
-  66%       { transform: translate(20px, -40px) scale(1.15); }
-}
-
-@keyframes drift3 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50%       { transform: translate(80px, -50px) scale(1.2); }
-}
-
 @keyframes waveBar {
   0%   { transform: scaleY(0.35); }
   100% { transform: scaleY(1); }
@@ -95,6 +78,68 @@
   to   { opacity: 1; transform: translateY(0); filter: blur(0); }
 }
 
+/* ── 6 Standard Motion Patterns ─────────────────────────────────────────── */
+
+/* 1. nav-indicator: animated pill tracking active tab/route */
+.nav-indicator {
+  position: absolute;
+  transition: transform 220ms var(--ease-out-expo), width 220ms var(--ease-out-expo), height 220ms var(--ease-out-expo);
+  will-change: transform, width, height;
+  pointer-events: none;
+}
+
+/* 2. list-stagger: sequential entrance with capped stagger delay (max 8 items = 280ms) */
+@keyframes list-stagger-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.list-stagger {
+  animation: list-stagger-in 240ms var(--ease-out-expo) both;
+  animation-delay: calc(min(var(--stagger-index, 0), 8) * 35ms);
+  will-change: opacity, transform;
+}
+
+/* 3. panel-reveal: formalizes fade-in zoom-in-95 combo */
+@keyframes panel-reveal-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.panel-reveal {
+  animation: panel-reveal-in 150ms var(--ease-out-expo) both;
+  transform-origin: top center;
+  will-change: opacity, transform;
+}
+
+/* 4. press-feedback: tactile pointer feedback on interactive controls */
+.press-feedback {
+  transition: transform 100ms var(--ease-out-expo);
+  will-change: transform;
+}
+.press-feedback:active {
+  transform: scale(0.97);
+}
+
+/* 5. success-pulse: subtle glow ring on positive outcomes */
+@keyframes success-glow {
+  0%   { box-shadow: 0 0 0 0 oklch(0.7 0.15 var(--hue-base) / 0.4); }
+  50%  { box-shadow: 0 0 0 8px oklch(0.7 0.15 var(--hue-base) / 0); }
+  100% { box-shadow: 0 0 0 0 oklch(0.7 0.15 var(--hue-base) / 0); }
+}
+.success-pulse {
+  animation: success-glow 400ms var(--ease-out-quart) both;
+}
+
+/* 6. notification-bounce: gentle vertical bounce for badges/counters */
+@keyframes notif-bounce {
+  0%   { transform: translateY(0); }
+  40%  { transform: translateY(-3px); }
+  75%  { transform: translateY(1px); }
+  100% { transform: translateY(0); }
+}
+.notification-bounce {
+  animation: notif-bounce 320ms var(--ease-out-quart) both;
+}
+
 /* ── Animation utility classes ───────────────────────────────────────────── */
 .animate-fadeIn       { animation: fadeIn 0.4s ease-out; will-change: opacity, transform; }
 .animate-stat-rise    { animation: statRise 0.6s ease-out both; transform-origin: bottom center; will-change: opacity, transform; }
@@ -109,41 +154,13 @@
 .animate-state-in     { animation: state-in 0.22s var(--ease-out-expo) both; will-change: opacity, transform; }
 .animate-step-done    { animation: step-done 0.2s var(--ease-out-expo) both; will-change: transform, opacity; }
 
-/* Progress fills — transform-based, not width */
 .progress-fill {
   transform-origin: left;
   transition: transform 250ms var(--ease-out-expo);
 }
 
-/* SVG ring stroke — goal progress */
 .transition-ring {
   transition: stroke-dashoffset 600ms var(--ease-out-expo);
-}
-
-/* ── Respect prefers-reduced-motion for animations >100ms ──────────────── */
-@media (prefers-reduced-motion: reduce) {
-  .animate-fadeIn,
-  .animate-stat-rise,
-  .animate-progress-ring,
-  .animate-float-soft,
-  .animate-grid-in,
-  .animate-weak-pulse,
-  .animate-mic-breathe,
-  .animate-mic-ring,
-  .animate-message-in,
-  .animate-state-in,
-  .animate-step-done {
-    animation: none !important;
-  }
-
-  .progress-fill,
-  .transition-ring {
-    transition: none !important;
-  }
-
-  .animate-accuracy-pop {
-    animation: none !important;
-  }
 }
 
 @keyframes accuracy-pop {
@@ -151,77 +168,89 @@
   60%  { transform: scale(1.06); }
   100% { transform: scale(1);    opacity: 1; }
 }
-
 .animate-accuracy-pop {
   animation: accuracy-pop 0.4s var(--ease-out-quart) both;
 }
 
-/* ── Home page entrance animations ──────────────────────────────────────── */
+@keyframes heart-pop {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.32); }
+  65%  { transform: scale(0.94); }
+  100% { transform: scale(1); }
+}
+.animate-heart-pop {
+  animation: heart-pop var(--dur-celebrate) var(--ease-spring);
+  will-change: transform;
+}
 
-/* Soft lift-in: used for streak pill, section headers, IPA symbol, action tiles */
 @keyframes home-in {
   from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-
-/* Scale-in: used for the phoneme symbol in retention card */
-@keyframes symbol-in {
-  from { opacity: 0; transform: scale(0.88); }
-  to   { opacity: 1; transform: scale(1); }
-}
-
-/* Progress bar mount: start collapsed, fill to current value */
-@keyframes bar-mount {
-  from { transform: scaleX(0); }
-}
-
 .animate-home-in {
   animation: home-in 0.28s var(--ease-out-expo) both;
   will-change: opacity, transform;
 }
-
-/* Stagger delays for sequenced entrances (e.g. action tile rows) */
 .animate-home-in-d1 { animation-delay: 60ms; }
 .animate-home-in-d2 { animation-delay: 110ms; }
 .animate-home-in-d3 { animation-delay: 160ms; }
 
+@keyframes symbol-in {
+  from { opacity: 0; transform: scale(0.88); }
+  to   { opacity: 1; transform: scale(1); }
+}
 .animate-symbol-in {
   animation: symbol-in 0.32s var(--ease-out-expo) both;
   will-change: opacity, transform;
 }
 
-/* Progress bar: fill animates in from zero on mount */
+@keyframes bar-mount {
+  from { transform: scaleX(0); }
+}
 .progress-fill-mount {
   transform-origin: left;
   animation: bar-mount 500ms var(--ease-out-expo) both;
   animation-delay: 120ms;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .animate-home-in,
-  .animate-symbol-in,
-  .progress-fill-mount {
-    animation: none !important;
-  }
-}
-
-@keyframes phoneme-ring {
-  0%   { transform: scale(0.92); opacity: 0.7; }
-  60%  { transform: scale(1.08); opacity: 0; }
-  100% { transform: scale(1.08); opacity: 0; }
-}
-
 @keyframes loadingSlide {
   0%   { transform: translateX(-100%); }
   100% { transform: translateX(350%); }
 }
-
 .animate-loading-slide {
   animation: loadingSlide 2s linear infinite;
 }
 
+/* ── Respect prefers-reduced-motion ──────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
+  .nav-indicator,
+  .press-feedback,
+  .progress-fill,
+  .transition-ring {
+    transition: none !important;
+  }
+
+  .list-stagger,
+  .panel-reveal,
+  .success-pulse,
+  .notification-bounce,
+  .animate-fadeIn,
+  .animate-stat-rise,
+  .animate-progress-ring,
+  .animate-float-soft,
+  .animate-grid-in,
+  .animate-heart-pop,
+  .animate-weak-pulse,
+  .animate-mic-breathe,
+  .animate-mic-ring,
+  .animate-message-in,
+  .animate-state-in,
+  .animate-step-done,
+  .animate-accuracy-pop,
+  .animate-home-in,
+  .animate-symbol-in,
+  .progress-fill-mount,
   .animate-loading-slide {
-    animation: none;
+    animation: none !important;
   }
 }
