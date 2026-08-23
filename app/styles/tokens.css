@@ -22,6 +22,8 @@
   /* Motion — exponential ease-out curves (no bounce) */
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-celebrate: 420ms;
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 
   /* ── 1. Primary Scale (dynamic identity = hue-base) ───────────────────── */
   --primary-50:  oklch(calc(0.97 + var(--l-shift-base)) calc(0.02 * var(--chroma-boost-base)) var(--hue-base));
