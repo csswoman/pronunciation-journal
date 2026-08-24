@@ -1,5 +1,6 @@
 import type { CEFRLevel } from '@/lib/exercises/cefr'
 import type { PronunciationTargetId } from '@/lib/pronunciation/targets/types'
+import type { SpeechConstraint } from '@/lib/exercises/speech-constraints'
 import type { ExerciseType as CanonicalExerciseType } from './taxonomy'
 
 // ── Source references ──────────────────────────────────────────────────────
@@ -184,6 +185,11 @@ interface BaseProductionExercise extends BaseGenericExercise {
   targetIpa?: string
   /** Optional model sentence (hint only, not copied). */
   exampleSentence?: string
+  /**
+   * Communicative constraint the learner must satisfy (tense or function).
+   * Optional so legacy persisted exercises still typecheck.
+   */
+  constraint?: SpeechConstraint
 }
 
 export interface WrittenProductionExercise extends BaseProductionExercise {
