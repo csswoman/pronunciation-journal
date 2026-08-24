@@ -1,8 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { NextRequest } from "next/server";
-import { z } from "zod";
 import { requireSameOrigin, requireUser, checkLayeredRateLimit, validateBody, SECURE_HEADERS, publicErrorResponse } from "@/lib/api/guards";
-import { type PromptKey } from "@/lib/api/prompts";
 import { detectIntent, intentToToolConfig } from "@/lib/ai-practice/intent-detection";
 import { buildSystemPrompt, extractLastTopicFromWire, lastUserVoiceMetadataFromWire } from "@/lib/ai-practice/wire";
 import { getMission } from "@/lib/ai-practice/missions/registry";
@@ -17,48 +15,7 @@ import {
 } from "@/lib/gemini/chat-route";
 import { logServerError } from "@/lib/api/logging";
 
-// ---------------------------------------------------------------------------
-// Request schema — all strings bounded, unknown keys rejected
-// ---------------------------------------------------------------------------
-
-const MessagePartSchema = z.object({
-  text: z.string().max(8_000).optional(),
-  functionCall: z.object({
-    name: z.string().max(100),
-    args: z.record(z.string(), z.unknown()),
-  }).strict().optional(),
-  functionResponse: z.object({
-    name: z.string().max(100),
-    response: z.record(z.string(), z.unknown()),
-  }).strict().optional(),
-}).strict();
-
-const VoiceMetadataSchema = z.object({
-  transcript: z.literal(true),
-  scored: z.boolean(),
-}).strict();
-
-const MessageSchema = z.object({
-  role: z.enum(["user", "model", "tool"]),
-  content: z.string().max(8_000).optional(),
-  parts: z.array(MessagePartSchema).max(20).optional(),
-  toolCallId: z.string().max(200).optional(),
-  name: z.string().max(100).optional(),
-  result: z.unknown().optional(),
-  voice: VoiceMetadataSchema.optional(),
-}).strict();
-
-export const GeminiRequestSchema = z.object({
-  messages: z.array(MessageSchema).min(1).max(100),
-  /**
-   * Named key resolved to a server-defined system prompt.
-   * Closed enum — any value outside this list is rejected with 400.
-   * The client cannot supply raw prompt text.
-   */
-  promptKey: z.enum(["default"] satisfies [PromptKey, ...PromptKey[]]).optional().default("default"),
-  missionId: z.string().min(1).max(120).optional(),
-  stream: z.boolean().optional().default(false),
-}).strict();
+import { GeminiRequestSchema } from "./schema";
 
 // ---------------------------------------------------------------------------
 // Route handler

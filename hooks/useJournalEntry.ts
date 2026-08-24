@@ -74,12 +74,27 @@ export function useJournalEntry(initial: JournalEntryRecord): UseJournalEntry {
   // Hydrate from the local (possibly newer) copy so reload never loses a draft.
   useEffect(() => {
     void getLocalJournalEntry(initial.userId, initial.entryDate).then((existing) => {
-      if (!existing || hasLocalEdits.current) return
+      if (hasLocalEdits.current) return
+      if (!existing) {
+        if (initial.content) {
+          void saveJournalEntry(initial)
+        }
+        return
+      }
+      // If DB has an empty draft but initial has guided starter content, prefer initial
+      if (!existing.content.trim() && initial.content.trim()) {
+        const withInitial = { ...existing, content: initial.content }
+        setEntry(withInitial)
+        setContent(initial.content)
+        contentRef.current = initial.content
+        void saveJournalEntry(withInitial)
+        return
+      }
       setEntry(existing)
       setContent(existing.content)
       contentRef.current = existing.content
     })
-  }, [initial.entryDate, initial.userId])
+  }, [initial.entryDate, initial.userId, initial.content])
 
   const persist = useCallback(async (patch: Partial<JournalEntryRecord>) => {
     const next: JournalEntryRecord = {
@@ -170,11 +185,14 @@ export function useJournalEntry(initial: JournalEntryRecord): UseJournalEntry {
     if (isOnline) await requestCorrection()
   }, [isOnline, persist, requestCorrection])
 
-  // Lets a user back out of a submitted-but-uncorrected entry (e.g. submitted
-  // by accident, or stuck offline with no way to request correction) without
-  // losing their text.
+  // Lets a user back out of a submitted-but-uncorrected entry, or reopen an
+  // already-corrected one, without losing text. Feedback from a prior
+  // correction is kept on the record (not cleared) so it's still visible in
+  // history after the user resumes writing — only the in-progress editor
+  // hides it while status is 'draft'.
   const resumeDraft = useCallback(async () => {
-    if (entryRef.current.status !== 'submitted' || correctingRef.current) return
+    const status = entryRef.current.status
+    if ((status !== 'submitted' && status !== 'corrected') || correctingRef.current) return
     setCorrectionError(null)
     await persist({ status: 'draft' })
   }, [persist])
@@ -182,7 +200,8 @@ export function useJournalEntry(initial: JournalEntryRecord): UseJournalEntry {
   const feedback = parseJournalFeedback(entry.feedback)
   const canSubmit = entry.status === 'draft' && content.trim().length > 0
   const canCorrect = entry.status === 'submitted' && isOnline
-  const canResumeDraft = entry.status === 'submitted' && !correcting
+  const canResumeDraft =
+    (entry.status === 'submitted' || entry.status === 'corrected') && !correcting
 
   return {
     content,

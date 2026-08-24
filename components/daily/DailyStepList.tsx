@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { ArrowRight, Check, ChevronDown } from "@/components/icons"
 import { DailyStepTitle } from './DailyStepTitle'
 import { DailyThreadStrip } from './DailyThreadStrip'
@@ -15,7 +15,9 @@ import {
 } from '@/lib/daily/localize-step-copy'
 import {
   collectPlanHints,
+  MAX_VISIBLE_COMPACT_PENDING,
   readInProgressStepId,
+  revealStaggerByStepId,
   rowVisual,
   stepMeta,
 } from './daily-step-list-helpers'
@@ -78,7 +80,6 @@ export default function DailyStepList({
   // When collapsing: the entry/current step stays expanded; done steps and
   // the first 2 pending steps beyond entry render compact; anything past
   // that is hidden behind the "Ver N más" toggle until showAllCompact.
-  const MAX_VISIBLE_COMPACT_PENDING = 2
   let visiblePendingCompactBudget = MAX_VISIBLE_COMPACT_PENDING
   let hiddenCount = 0
   const isCompactRow = (isEntryOrCurrent: boolean): boolean => {
@@ -97,6 +98,12 @@ export default function DailyStepList({
     hiddenCount += 1
     return true
   }
+  const revealStagger = revealStaggerByStepId(steps, getStepStatus, {
+    collapseFutureSteps,
+    showAllCompact,
+    entryIndex,
+    activeId,
+  })
 
   const currentDoneIds = new Set(
     steps
@@ -113,7 +120,6 @@ export default function DailyStepList({
       playUiCue('toggle')
     }
     seenDoneIds.current = currentDoneIds
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [steps, getStepStatus])
 
   return (
@@ -132,12 +138,22 @@ export default function DailyStepList({
           const isEntryOrCurrent = visual === 'entry' || visual === 'current'
           const compact = isCompactRow(isEntryOrCurrent)
           const hidden = isHiddenRow(status, isEntryOrCurrent)
+          const staggerIndex = revealStagger.get(step.id)
           const isReadingStep = step.kind === 'concept' || step.kind === 'study_deck'
           const cardCount = step.studyCards?.length ?? 0
           const hasReader = !!step.readerPassage
           const isStartable = step.exercises.length > 0 || cardCount > 0 || hasReader || Boolean(step.missionLaunch)
 
           if (hidden) return null
+
+          const rowClass = cn(
+            'min-w-0',
+            staggerIndex !== undefined && 'list-stagger',
+          )
+          const rowStyle =
+            staggerIndex !== undefined
+              ? ({ '--stagger-index': staggerIndex } as CSSProperties)
+              : undefined
 
           const cardClass = cn(
             'home-card-lift focus-ring group flex w-full min-h-11 flex-col gap-2 rounded-[var(--radius-md)] text-left',
@@ -242,7 +258,7 @@ export default function DailyStepList({
 
           if (isReadingStep && step.href) {
             return (
-              <li key={step.id} className="min-w-0">
+              <li key={step.id} className={rowClass} style={rowStyle}>
                 <Link href={step.href} className={cardClass}>
                   {inner}
                 </Link>
@@ -251,7 +267,7 @@ export default function DailyStepList({
           }
 
           return (
-            <li key={step.id} className="min-w-0">
+            <li key={step.id} className={rowClass} style={rowStyle}>
               <button
                 type="button"
                 className={cardClass}
@@ -267,8 +283,11 @@ export default function DailyStepList({
       {collapseFutureSteps && !showAllCompact && hiddenCount > 0 ? (
         <button
           type="button"
-          className="focus-ring inline-flex min-h-11 items-center gap-1.5 self-center rounded-md border border-border-default bg-surface-raised px-3 font-body-sm font-semibold text-fg transition-colors hover:bg-surface-sunken active:scale-[0.96]"
-          onClick={() => setShowAllCompact(true)}
+          className="press-feedback focus-ring inline-flex min-h-11 items-center gap-1.5 self-center rounded-md border border-border-default bg-surface-raised px-3 font-body-sm font-semibold text-fg transition-colors hover:bg-surface-sunken"
+          onClick={() => {
+            playUiCue('nav-open')
+            setShowAllCompact(true)
+          }}
         >
           Ver {hiddenCount} {hiddenCount === 1 ? 'paso más' : 'pasos más'}
           <ChevronDown size={16} aria-hidden />

@@ -12,3 +12,6 @@ export const JOURNAL_STATUS_CLASS: Record<JournalStatus, string> = {
   submitted: 'bg-warning-soft text-warning',
   corrected: 'bg-success-soft text-success',
 }
+
+/** Reassurance appended after a failed correction, shared across every surface that shows it. */
+export const JOURNAL_CORRECTION_RETRY_HINT = 'Puedes intentarlo de nuevo.'

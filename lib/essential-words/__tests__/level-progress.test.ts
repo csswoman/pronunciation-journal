@@ -77,13 +77,16 @@ describe("currentLevelStatus / displayLevelProgress", () => {
 
   it("names slide captions without repeating the fraction", () => {
     expect(levelSlideCaption({ level: "C1", learned: 0, total: 137 })).toBe(
-      "Sin empezar",
+      "Las más frecuentes primero",
     );
     expect(levelSlideCaption({ level: "A1", learned: 5, total: 740 })).toBe(
-      "Te faltan 735 palabras",
+      "735 por conocer",
+    );
+    expect(levelSlideCaption({ level: "A1", learned: 739, total: 740 })).toBe(
+      "Queda 1 para cerrar el nivel",
     );
     expect(levelSlideCaption({ level: "A2", learned: 645, total: 645 })).toBe(
-      "Completado",
+      "Nivel cerrado",
     );
   });
 

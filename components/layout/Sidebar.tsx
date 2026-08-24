@@ -9,6 +9,7 @@ import { SidebarContext } from "../theme/sidebar/SidebarContext";
 import { isNavActive } from "@/lib/navigation/is-nav-active";
 import { SearchTrigger } from "@/components/search/SearchTrigger";
 import { useSearchShortcut } from "@/lib/search/useSearchShortcut";
+import { playUiCue } from "@/lib/ui-sounds/cues";
 
 const SidebarFooter = dynamic(() => import("./SidebarFooter"), {
   loading: () => <div className="h-14 shrink-0 border-t border-border-subtle" aria-hidden />,
@@ -39,8 +40,10 @@ export default function Sidebar({ className = "" }: SidebarProps) {
 
   const toggle = () => {
     setCollapsed((prev) => {
-      localStorage.setItem("sidebar-collapsed", String(!prev));
-      return !prev;
+      const next = !prev;
+      playUiCue(next ? "nav-close" : "nav-open");
+      localStorage.setItem("sidebar-collapsed", String(next));
+      return next;
     });
   };
 
@@ -65,7 +68,7 @@ export default function Sidebar({ className = "" }: SidebarProps) {
           )}
           <button
             onClick={toggle}
-            className="p-1.5 rounded-lg transition-colors hover:bg-[var(--btn-plain-bg-hover)] text-fg-subtle hover:text-fg flex-shrink-0"
+            className="press-feedback p-1.5 rounded-lg transition-colors hover:bg-[var(--btn-plain-bg-hover)] text-fg-subtle hover:text-fg flex-shrink-0"
             title={collapsed ? "Expandir barra" : "Contraer barra"}
           >
             {collapsed ? <PanelLeftOpen className="w-4 h-4" /> : <PanelLeftClose className="w-4 h-4" />}

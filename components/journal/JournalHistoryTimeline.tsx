@@ -12,13 +12,16 @@ interface JournalHistoryTimelineProps {
 
 /** Nearby-entry navigation for the focused history view. */
 export function JournalHistoryTimeline({ entries, selectedDate }: JournalHistoryTimelineProps) {
-  if (entries.length === 0) return null
+  // Una sola página no necesita navegación lateral — evita una tira vacía
+  // que apunte solo a sí misma.
+  if (entries.length <= 1) return null
 
   return (
     <nav aria-label="Historial de páginas" className="flex min-w-0 flex-col gap-2">
       <p className="font-body-sm text-fg-muted">Otras páginas</p>
-      <div className="-mx-1 flex min-w-0 gap-2 overflow-x-auto px-1 pb-2">
-        {entries.map((entry) => {
+      <div className="relative min-w-0">
+        <div className="-mx-1 flex min-w-0 gap-2 overflow-x-auto px-1 pb-2">
+          {entries.map((entry) => {
           const selected = entry.entryDate === selectedDate
           return (
             <Link
@@ -34,7 +37,14 @@ export function JournalHistoryTimeline({ entries, selectedDate }: JournalHistory
               )}
             >
               <span className="font-body-sm font-semibold">{formatShortDate(entry.entryDate)}</span>
-              <span className="mt-0.5 flex items-center gap-1.5 font-body-xs text-fg-muted">
+              <span
+                className={cn(
+                  'mt-0.5 flex items-center gap-1.5 font-body-xs',
+                  // El fondo primary-soft del estado seleccionado no da suficiente
+                  // contraste con fg-muted; usa fg completo (atenuado por opacidad) ahí.
+                  selected ? 'text-fg/80' : 'text-fg-muted',
+                )}
+              >
                 <span
                   className={cn( 'inline-block h-1.5 w-1.5 rounded-full', entry.status === 'corrected' && 'bg-success', entry.status === 'submitted' && 'bg-warning', entry.status === 'draft' && 'bg-fg-subtle', )}
                   aria-hidden
@@ -43,7 +53,12 @@ export function JournalHistoryTimeline({ entries, selectedDate }: JournalHistory
               </span>
             </Link>
           )
-        })}
+          })}
+        </div>
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-linear-to-l from-bg to-transparent"
+        />
       </div>
     </nav>
   )

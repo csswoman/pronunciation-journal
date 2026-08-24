@@ -17,13 +17,13 @@ import { cn } from "@/lib/cn";
 type SaveState = "idle" | "saving" | "saved" | "error";
 
 function saveLabel(state: SaveState): string {
-  if (state === "saved") return "En Tracking";
+  if (state === "saved") return "Guardada";
   if (state === "saving") return "Guardando…";
   if (state === "error") return "No se pudo guardar · reintentar";
-  return "Guardar en Tracking";
+  return "Guardar frase";
 }
 
-/** Phrase focus — accent lives on the left border/IPA, not a wash. */
+/** Phrase focus — IPA carries domain color; card stays neutral. */
 export default function HomeChunkOfDayCard() {
   const { chunk, loading, shuffle } = useChunkOfDay();
   const [saveState, setSaveState] = useState<SaveState>("idle");
@@ -61,14 +61,14 @@ export default function HomeChunkOfDayCard() {
 
   return (
     <div
-      className="home-sidebar-card home-sidebar-card--chunks flex flex-col gap-3"
+      className="home-sidebar-card flex flex-col gap-3"
       aria-busy={loading || undefined}
       aria-labelledby="chunk-of-day-heading"
     >
       <div className="flex items-center justify-between gap-2">
         <div className="flex min-w-0 flex-wrap items-center gap-2">
-          <span id="chunk-of-day-heading" className="font-kicker text-chunks">
-            Chunk del día
+          <span id="chunk-of-day-heading" className="font-label text-fg">
+            Frase del día
           </span>
           {chunk?.category ? (
             <span className="rounded-full border border-border-subtle bg-surface-sunken px-2 py-0.5 font-mono-code text-[11px] font-medium text-fg-muted">
@@ -82,7 +82,7 @@ export default function HomeChunkOfDayCard() {
             <button
               type="button"
               onClick={handleShuffle}
-              aria-label="Sacar otro chunk"
+              aria-label="Sacar otra frase"
               aria-describedby="chunk-shuffle-tooltip"
               className="focus-ring inline-flex min-h-8 min-w-8 items-center justify-center rounded-sm text-fg-muted transition-colors hover:text-fg"
             >
@@ -101,7 +101,7 @@ export default function HomeChunkOfDayCard() {
               role="tooltip"
               className="pointer-events-none absolute bottom-full right-0 z-10 mb-1.5 whitespace-nowrap rounded-sm border border-border-default bg-surface-raised px-2 py-1 text-caption font-medium text-fg opacity-0 shadow-md transition-opacity group-hover:opacity-100 group-focus-within:opacity-100"
             >
-              Ver otro chunk
+              Ver otra frase
             </span>
           </div>
 
@@ -168,7 +168,10 @@ export default function HomeChunkOfDayCard() {
           <div className="flex flex-col gap-1.5">
             {chunk.example ? (
               <div className="flex items-center justify-between gap-2">
-                <span className="font-kicker text-fg-subtle">
+                <span
+                  key={`lang-label-${lang}`}
+                  className="animate-state-in font-caption font-medium text-fg-muted"
+                >
                   {lang === "es" ? "Significado" : "Ejemplo"}
                 </span>
                 <div
@@ -181,7 +184,7 @@ export default function HomeChunkOfDayCard() {
                     onClick={() => setLang("es")}
                     aria-pressed={lang === "es"}
                     className={cn(
-                      "focus-ring rounded-full px-2 py-0.5 font-mono-code text-[11px] font-medium transition-colors",
+                      "press-feedback focus-ring rounded-full px-2 py-0.5 font-mono-code text-[11px] font-medium transition-colors",
                       lang === "es"
                         ? "bg-surface-raised text-fg shadow-xs"
                         : "text-fg-muted hover:text-fg",
@@ -194,7 +197,7 @@ export default function HomeChunkOfDayCard() {
                     onClick={() => setLang("en")}
                     aria-pressed={lang === "en"}
                     className={cn(
-                      "focus-ring rounded-full px-2 py-0.5 font-mono-code text-[11px] font-medium transition-colors",
+                      "press-feedback focus-ring rounded-full px-2 py-0.5 font-mono-code text-[11px] font-medium transition-colors",
                       lang === "en"
                         ? "bg-surface-raised text-fg shadow-xs"
                         : "text-fg-muted hover:text-fg",
@@ -207,9 +210,17 @@ export default function HomeChunkOfDayCard() {
             ) : null}
 
             {lang === "es" || !chunk.example ? (
-              <p className="font-body-sm text-pretty text-fg">{chunk.meaning}</p>
+              <p
+                key={`lang-body-${lang}`}
+                className="animate-state-in font-body-sm text-pretty text-fg"
+              >
+                {chunk.meaning}
+              </p>
             ) : (
-              <p className="font-body-sm italic text-fg-muted">
+              <p
+                key={`lang-body-${lang}`}
+                className="animate-state-in font-body-sm italic text-fg-muted"
+              >
                 “{chunk.example}”
               </p>
             )}

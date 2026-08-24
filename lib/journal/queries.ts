@@ -5,7 +5,15 @@ import type { JournalEntryRecord } from './types'
 export async function saveJournalEntry(entry: JournalEntryRecord) {
   await db.transaction('rw', [db.journalEntries, db.syncOutbox], async () => {
     await db.journalEntries.put(entry)
-    await enqueue(entry.userId, 'journal_entries', 'upsert', { id: entry.id, user_id: entry.userId, entry_date: entry.entryDate, prompt: entry.prompt, prompt_topic: entry.promptTopic ?? null, content: entry.content, status: entry.status, corrected_content: entry.correctedContent ?? null, feedback: entry.feedback ?? null, updated_at: entry.updatedAt }, undefined, 'id')
+    await enqueue(entry.userId, 'journal_entries', 'upsert', { id: entry.id, user_id: entry.userId, entry_date: entry.entryDate, prompt: entry.prompt, prompt_topic: entry.promptTopic ?? null, entry_mode: entry.entryMode ?? 'blank', content: entry.content, status: entry.status, corrected_content: entry.correctedContent ?? null, feedback: entry.feedback ?? null, updated_at: entry.updatedAt }, undefined, 'id')
+  })
+}
+
+/** Deletes a journal entry locally and enqueues the matching Supabase delete. */
+export async function deleteJournalEntry(entry: JournalEntryRecord): Promise<void> {
+  await db.transaction('rw', [db.journalEntries, db.syncOutbox], async () => {
+    await db.journalEntries.delete(entry.id)
+    await enqueue(entry.userId, 'journal_entries', 'delete', {}, { id: entry.id })
   })
 }
 

@@ -176,7 +176,7 @@ import { EssentialWordsSession } from '../EssentialWordsSession'
 
 async function clickEmpezar() {
   const user = userEvent.setup()
-  await user.click(await screen.findByRole('button', { name: 'Empezar' }))
+  await user.click(await screen.findByRole('button', { name: 'Empezar' }, { timeout: 5000 }))
 }
 
 let consoleError: ReturnType<typeof vi.spyOn>

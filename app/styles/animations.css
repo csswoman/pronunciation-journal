@@ -105,7 +105,7 @@
   to   { opacity: 1; transform: scale(1); }
 }
 .panel-reveal {
-  animation: panel-reveal-in 150ms var(--ease-out-expo) both;
+  animation: panel-reveal-in var(--dur-fast) var(--ease-out) both;
   transform-origin: top center;
   will-change: opacity, transform;
 }
@@ -126,7 +126,7 @@
   100% { box-shadow: 0 0 0 0 oklch(0.7 0.15 var(--hue-base) / 0); }
 }
 .success-pulse {
-  animation: success-glow 400ms var(--ease-out-quart) both;
+  animation: success-glow var(--dur-celebrate) var(--ease-out-quart) both;
 }
 
 /* 6. notification-bounce: gentle vertical bounce for badges/counters */
@@ -136,8 +136,10 @@
   75%  { transform: translateY(1px); }
   100% { transform: translateY(0); }
 }
-.notification-bounce {
-  animation: notif-bounce 320ms var(--ease-out-quart) both;
+.notification-bounce,
+.animate-notification-bounce {
+  animation: notif-bounce var(--dur-base) var(--ease-out-quart) both;
+  will-change: transform;
 }
 
 /* ── Animation utility classes ───────────────────────────────────────────── */
@@ -234,6 +236,7 @@
   .panel-reveal,
   .success-pulse,
   .notification-bounce,
+  .animate-notification-bounce,
   .animate-fadeIn,
   .animate-stat-rise,
   .animate-progress-ring,

@@ -5,6 +5,8 @@ import { BookOpen, FileText, Layers, MicVocal, Moon, RotateCcw, Sun, User } from
 import { useEffect } from "react";
 import { cn } from "@/lib/cn";
 import { useOKLCHTheme } from "@/hooks/useOKLCHTheme";
+import { HUE_PRESETS, matchesHuePreset, swatchColor } from "@/lib/theme/hue-presets";
+import { playUiCue } from "@/lib/ui-sounds/cues";
 
 const navItems = [
   { name: "Diario", href: "/journal", icon: FileText },
@@ -13,17 +15,6 @@ const navItems = [
   { name: "Laboratorio de sonidos", href: "/practice/sounds", icon: MicVocal },
   { name: "Ruta", href: "/courses", icon: BookOpen },
   { name: "Perfil", href: "/profile", icon: User },
-] as const;
-
-const HUE_PRESETS = [
-  { label: "Violet", hue: 250 },
-  { label: "Blue", hue: 220 },
-  { label: "Teal", hue: 185 },
-  { label: "Green", hue: 145 },
-  { label: "Amber", hue: 70 },
-  { label: "Rose", hue: 15 },
-  { label: "Pink", hue: 340 },
-  { label: "Purple", hue: 290 },
 ] as const;
 
 interface BottomNavMenuProps {
@@ -35,9 +26,16 @@ interface BottomNavMenuProps {
 export default function BottomNavMenu({ open, onClose, isActive }: BottomNavMenuProps) {
   const { hue, setHue, mode, toggleMode, mounted } = useOKLCHTheme();
 
+  const handleDismiss = () => {
+    playUiCue("nav-close");
+    onClose();
+  };
+
   useEffect(() => {
     if (!open) return;
-    const onKeyDown = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") handleDismiss();
+    };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [open, onClose]);
@@ -50,7 +48,7 @@ export default function BottomNavMenu({ open, onClose, isActive }: BottomNavMenu
         className="fixed inset-0 z-40 bg-(--bg-body)/40 backdrop-blur-sm motion-reduce:backdrop-blur-none"
         role="presentation"
         aria-hidden="true"
-        onClick={onClose}
+        onClick={handleDismiss}
       />
       <div
         id="bottom-nav-menu"
@@ -58,9 +56,9 @@ export default function BottomNavMenu({ open, onClose, isActive }: BottomNavMenu
         aria-modal="true"
         aria-label="Más navegación"
         className={cn(
-          "fixed left-4 right-4 z-50 overflow-hidden",
+          "panel-reveal fixed left-4 right-4 z-50 overflow-hidden",
           "rounded-xl border border-(--line-divider) bg-(--surface-translucent) shadow-xl backdrop-blur-md",
-          "motion-reduce:backdrop-blur-none motion-reduce:animate-none animate-grid-in",
+          "motion-reduce:backdrop-blur-none motion-reduce:animate-none",
           "bottom-[calc(4.75rem+env(safe-area-inset-bottom))]",
         )}
       >
@@ -74,9 +72,12 @@ export default function BottomNavMenu({ open, onClose, isActive }: BottomNavMenu
                 <Link
                   key={item.href}
                   href={item.href}
-                  onClick={onClose}
+                  onClick={() => {
+                    if (!active) playUiCue("nav-switch");
+                    onClose();
+                  }}
                   className={cn(
-                    "flex min-h-11 items-center gap-2.5 rounded-md px-3 py-2.5 text-body-sm font-medium",
+                    "press-feedback flex min-h-11 items-center gap-2.5 rounded-md px-3 py-2.5 text-body-sm font-medium",
                     "transition-colors duration-(--transition-fast)",
                     "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
                     active
@@ -104,21 +105,24 @@ export default function BottomNavMenu({ open, onClose, isActive }: BottomNavMenu
           {/* Hue swatches */}
           <div className="flex items-center gap-0.5 flex-1">
             {HUE_PRESETS.map((preset) => {
-              const isSelected = mounted && Math.abs(hue - preset.hue) < 10;
+              const isSelected = mounted && matchesHuePreset(hue, preset);
               return (
                 <button
-                  key={preset.hue}
+                  key={preset.label}
                   type="button"
-                  onClick={() => setHue(preset.hue)}
+                  onClick={() => {
+                    playUiCue("tap");
+                    setHue(preset.hue);
+                  }}
                   aria-label={preset.label}
                   aria-pressed={isSelected}
-                  className={cn( "flex flex-1 items-center justify-center h-10", "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary", )}
+                  className={cn( "press-feedback flex flex-1 items-center justify-center h-10", "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary", )}
                 >
                   <span
                     className={cn( "block rounded-full transition-[transform,outline-color] duration-150", isSelected ? "h-5 w-5 scale-125 outline-2 outline-offset-2" : "h-4 w-4 hover:scale-110", )}
                     style={{
-                      backgroundColor: `oklch(0.65 0.15 ${preset.hue})`,
-                      outlineColor: isSelected ? `oklch(0.65 0.15 ${preset.hue})` : undefined,
+                      backgroundColor: swatchColor(preset),
+                      outlineColor: isSelected ? swatchColor(preset) : undefined,
                     }}
                   />
                 </button>
@@ -130,10 +134,13 @@ export default function BottomNavMenu({ open, onClose, isActive }: BottomNavMenu
           {mounted && (
             <button
               type="button"
-              onClick={toggleMode}
+              onClick={() => {
+                playUiCue("toggle");
+                toggleMode();
+              }}
               aria-label={mode === "dark" ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
               className={cn(
-                "shrink-0 flex h-8 w-8 items-center justify-center rounded-sm",
+                "press-feedback shrink-0 flex h-8 w-8 items-center justify-center rounded-sm",
                 "border border-border-subtle bg-surface-sunken",
                 "text-fg-muted hover:text-fg hover:border-border-default",
                 "transition-colors duration-(--transition-fast)",

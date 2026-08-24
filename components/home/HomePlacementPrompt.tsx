@@ -23,8 +23,7 @@ export default function HomePlacementPrompt({
 
   if (compact) {
     return (
-      <section className="home-sidebar-card home-sidebar-card--compact flex h-full flex-col gap-1.5" aria-labelledby="placement-prompt-compact-title">
-        <span className="font-kicker text-fg-subtle">Ajusta tu ruta</span>
+      <section className="flex h-full flex-col gap-1.5 rounded-xl border border-border-subtle bg-surface-raised px-4 py-3" aria-labelledby="placement-prompt-compact-title">
         <h2 id="placement-prompt-compact-title" className="font-label text-fg">
           Afina tu nivel
         </h2>

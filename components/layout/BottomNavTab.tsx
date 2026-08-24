@@ -3,6 +3,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
+import { playUiCue } from "@/lib/ui-sounds/cues";
 
 interface BottomNavTabProps {
   name: string;
@@ -16,7 +17,7 @@ interface BottomNavTabProps {
 
 const tabClass = (active: boolean) =>
   cn(
-    "relative flex min-h-11 min-w-[3.25rem] flex-col items-center justify-end gap-0.5 rounded-[var(--radius-sm)] px-2 pb-1 pt-1.5",
+    "press-feedback relative flex min-h-11 min-w-[3.25rem] flex-col items-center justify-end gap-0.5 rounded-[var(--radius-sm)] px-2 pb-1 pt-1.5",
     "text-xxs font-medium leading-tight tracking-wide",
     "transition-colors duration-[var(--transition-fast)]",
     "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary)]",
@@ -49,14 +50,22 @@ export default function BottomNavTab({
     </>
   );
 
+  const handleClick = () => {
+    if (!active && href) {
+      playUiCue("nav-switch");
+    }
+    if (onClick) {
+      onClick();
+    }
+  };
+
   if (href) {
     return (
       <Link
         href={href}
+        onClick={handleClick}
         className={tabClass(active)}
         aria-current={active ? "page" : undefined}
-        data-cuelume-hover="tick"
-        data-cuelume-press="press"
       >
         {content}
       </Link>
@@ -66,12 +75,11 @@ export default function BottomNavTab({
   return (
     <button
       type="button"
-      onClick={onClick}
+      onClick={handleClick}
       className={tabClass(active)}
       aria-expanded={ariaExpanded}
       aria-controls={ariaControls}
       aria-haspopup={ariaControls ? "dialog" : undefined}
-      data-cuelume-toggle="toggle"
     >
       {content}
     </button>

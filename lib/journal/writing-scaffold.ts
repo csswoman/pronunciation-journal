@@ -35,18 +35,30 @@ const fallback = (promptId: string): WritingScaffold => ({
   prompt_id: promptId,
   cefr_level: 'A1',
   structure: [
-    { label: 'Empieza', hint: 'Di dónde o cuándo ocurrió.' },
-    { label: 'Desarrolla', hint: 'Añade uno o dos detalles concretos.' },
-    { label: 'Cierra', hint: 'Explica qué pensaste o sentiste.' },
+    { label: 'Empieza', hint: 'Presenta el tema o lo que ocurrió.' },
+    { label: 'Desarrolla', hint: 'Añade detalles, explicaciones o sensaciones.' },
+    { label: 'Cierra', hint: 'Concluye con tu opinión o lo que aprendiste.' },
   ],
   sentence_starters: [
-    { en: 'Today, I...', es: 'Hoy, yo...' },
-    { en: 'One detail I remember is...', es: 'Un detalle que recuerdo es...' },
-    { en: 'It made me feel...', es: 'Me hizo sentir...' },
+    { en: 'Today, I want to share that...', es: 'Hoy quiero compartir que...' },
+    { en: 'One important thing is...', es: 'Una cosa importante es...' },
+    { en: 'In my experience, I noticed...', es: 'En mi experiencia, noté...' },
+    { en: 'Looking back, I feel...', es: 'Mirando hacia atrás, siento...' },
   ],
-  seed_vocabulary: [],
-  relevant_topics: [],
-  grammar_notes: [],
+  seed_vocabulary: [
+    { text: 'notice', translation: 'notar', ipa: '/ˈnoʊtɪs/', example: 'I noticed a positive change today.' },
+    { text: 'experience', translation: 'experiencia', ipa: '/ɪkˈspɪriəns/', example: 'It was a valuable experience for me.' },
+    { text: 'because', translation: 'porque', ipa: '/bɪˈkəz/', example: 'I wrote this because it matters.' },
+    { text: 'however', translation: 'sin embargo', ipa: '/haʊˈevər/', example: 'However, I learned something new.' },
+    { text: 'finally', translation: 'finalmente', ipa: '/ˈfaɪnəli/', example: 'Finally, I reached my goal.' },
+    { text: 'realize', translation: 'darse cuenta', ipa: '/ˈriːəlaɪz/', example: 'I realized how much I improved.' },
+  ],
+  relevant_topics: ['grammar:subject omission', 'grammar:present simple', 'grammar:past simple', 'grammar:articles'],
+  grammar_notes: [
+    { topic_id: 'grammar:subject omission', rule: 'En inglés el sujeto siempre se escribe (I, it, they, we).', example_correct: 'It is a good day.', example_wrong: 'Is a good day.' },
+    { topic_id: 'grammar:past simple', rule: 'Usa pasado simple para acciones y reflexiones de ayer o antes.', example_correct: 'I talked to my friend.', example_wrong: 'I talk to my friend yesterday.' },
+    { topic_id: 'grammar:present simple', rule: 'En presente con he, she o it añade -s al verbo.', example_correct: 'She enjoys writing.', example_wrong: 'She enjoy writing.' },
+  ],
 })
 
 /**

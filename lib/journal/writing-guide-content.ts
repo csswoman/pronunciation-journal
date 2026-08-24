@@ -46,15 +46,27 @@ export const VERB_TENSE_GUIDE: VerbTenseGroup[] = [
 
 export const USEFUL_PHRASES_GUIDE: UsefulPhraseGroup[] = [
   {
-    purpose: 'Contar algo que pasó',
-    phrases: ['Yesterday I...', 'Last week I...', 'This morning I...', 'A few days ago...'],
+    purpose: 'Contar algo que pasó (Pasado)',
+    phrases: ['Yesterday I...', 'This morning I had the chance to...', 'A few days ago I noticed...', 'Last weekend I decided to...'],
   },
   {
-    purpose: 'Dar tu opinión',
-    phrases: ['I think that...', 'In my opinion...', 'I feel like...', 'I believe...'],
+    purpose: 'Dar tu opinión y puntos de vista',
+    phrases: ['In my opinion...', 'I personally believe that...', 'From my perspective...', 'It seems to me that...'],
   },
   {
-    purpose: 'Conectar ideas',
-    phrases: ['because', 'however', 'and then', 'so', 'but', 'also'],
+    purpose: 'Contrastar ideas (Sin embargo / Aunque)',
+    phrases: ['However, ...', 'Even though...', 'On the other hand, ...', 'Although it was difficult, ...'],
+  },
+  {
+    purpose: 'Causa y efecto (Porque / Por eso)',
+    phrases: ['Because of this, ...', 'As a result, ...', 'For that reason, ...', 'Since I wanted to improve, ...'],
+  },
+  {
+    purpose: 'Dar ejemplos y detalles',
+    phrases: ['For example, ...', 'For instance, ...', 'Such as...', 'In particular, ...'],
+  },
+  {
+    purpose: 'Concluir o reflexionar',
+    phrases: ['Looking back, ...', 'All in all, ...', 'What I learned is that...', 'In the end, ...'],
   },
 ]

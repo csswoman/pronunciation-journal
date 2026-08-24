@@ -65,9 +65,9 @@ describe('JournalWorkspace starter insertion', () => {
       />,
     )
 
-    await waitFor(() => expect(screen.getByText('7 / 60 palabras')).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText('7 / 60')).toBeInTheDocument())
 
-    expect(screen.getByRole('button', { name: 'Revisar mi texto' })).toBeEnabled()
+    expect(screen.getByRole('button', { name: 'Revisar' })).toBeEnabled()
     const textarea = screen.getByRole('textbox')
     expect(textarea).toHaveValue('The place where I feel calm is')
     expect(textarea).toHaveAttribute('lang', 'en')
@@ -75,7 +75,7 @@ describe('JournalWorkspace starter insertion', () => {
     expect(screen.queryByText('¿Qué pasa después?')).not.toBeInTheDocument()
   })
 
-  it('keeps the empty editor focused with a short placeholder and connected disabled help', () => {
+  it('keeps the empty editor focused with a short placeholder and no disabled banner', () => {
     render(
       <JournalWorkspace
         entry={entry}
@@ -86,8 +86,8 @@ describe('JournalWorkspace starter insertion', () => {
     )
 
     expect(screen.getByRole('textbox')).toHaveAttribute('placeholder', 'Empieza a escribir…')
-    expect(screen.getByRole('button', { name: 'Revisar mi texto' })).toBeDisabled()
-    expect(screen.getByText('Escribe al menos una frase para activar la revisión.')).toBeInTheDocument()
+    // El botón Revisar no se muestra deshabilitado con banner cuando está vacío
+    expect(screen.queryByRole('button', { name: 'Revisar' })).not.toBeInTheDocument()
   })
 
   it('updates the same count path when the learner types manually', async () => {
@@ -101,7 +101,7 @@ describe('JournalWorkspace starter insertion', () => {
     )
     fireEvent.change(screen.getByRole('textbox'), { target: { value: 'I write today' } })
 
-    await waitFor(() => expect(screen.getByText('3 / 60 palabras')).toBeInTheDocument())
-    expect(screen.getByRole('button', { name: 'Revisar mi texto' })).toBeEnabled()
+    await waitFor(() => expect(screen.getByText('3 / 60')).toBeInTheDocument())
+    expect(screen.getByRole('button', { name: 'Revisar' })).toBeEnabled()
   })
 })

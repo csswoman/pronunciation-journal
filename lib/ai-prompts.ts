@@ -207,9 +207,37 @@ export function buildGenerateReaderUserPrompt(input: {
 
 const JOURNAL_TOPIC_IDS = JOURNAL_TOPIC_CATALOG.map(({ id }) => id).join(', ')
 
-export const JOURNAL_CORRECTION_SYSTEM_PROMPT = `You are an English teacher for Spanish speakers. Return JSON only with correctedContent, errors (max 8 items with quote, correction, type, explanationEs, topic), and newWords (max 8 strings). Keep explanations concise in Spanish. Every errors[].topic must be one of these stable IDs: ${JOURNAL_TOPIC_IDS}.`
+export const JOURNAL_CORRECTION_SYSTEM_PROMPT = `You are a supportive, expert English teacher reviewing a journal entry written by a Spanish-speaking English learner.
+
+Your goal is to provide constructive, clear feedback that encourages writing and teaches natural English without being overwhelming.
+
+Return ONLY valid JSON (no markdown, no code fences) with this exact schema:
+{
+  "correctedContent": string,
+  "errors": [
+    {
+      "quote": string,
+      "correction": string,
+      "type": string,
+      "explanationEs": string,
+      "topic": string
+    }
+  ],
+  "newWords": string[]
+}
+
+Rules:
+1. "correctedContent": Produce a natural, idiomatic, and polished version in clear English. Preserve the learner's original meaning, voice, and ideas. Do not turn a casual reflection into stiff academic prose.
+2. "errors": Highlight the most impactful mistakes or unnatural phrasings (max 8 items). If the text is already solid, return an empty array or just 1-2 subtle improvements.
+   - "quote": The exact fragment from the learner's text.
+   - "correction": The corrected or more natural phrasing.
+   - "type": One of: "grammar", "vocabulary", "spelling", "naturalness", "preposition", "word-order".
+   - "explanationEs": A friendly, concise explanation in Spanish (1-2 sentences) explaining WHY, focusing on typical Spanish-to-English interferences (e.g., subject omission, prepositions, false friends, tense agreement).
+   - "topic": MUST be exactly one of these allowed topic IDs: ${JOURNAL_TOPIC_IDS}. Never invent new topic IDs.
+3. "newWords": Suggest 2 to 5 useful, natural vocabulary words or collocations (lowercase dictionary form) that fit the topic or elevate the learner's entry. Max 8 items.`
+
 export function buildJournalCorrectionPrompt(content: string, interests: readonly string[] = []): string {
-  return `Correct this learner journal entry. Use only these stable topic IDs in errors[].topic; never invent another value: ${JOURNAL_TOPIC_IDS}.${interestsClause(interests)}\n\n${content}`
+  return `Please review and correct the following learner journal entry. Ensure every error[].topic strictly matches one of the canonical topic IDs: ${JOURNAL_TOPIC_IDS}.${interestsClause(interests)}\n\nLearner Entry:\n"""\n${content}\n"""`
 }
 
 export const JOURNAL_NUDGE_SYSTEM_PROMPT = `You help a Spanish-speaking English learner continue a journal entry when they are stuck. Return ONLY valid JSON with exactly three nudges: { "nudges": [{ "en": "...", "es": "..." }, { "en": "...", "es": "..." }, { "en": "...", "es": "..." }] }.

@@ -85,10 +85,12 @@ export function levelProgressBarSegments(
 
 /** Short slide caption — never repeats the learned/total fraction. */
 export function levelSlideCaption(row: LevelProgress): string {
-  if (row.learned <= 0) return "Sin empezar";
-  if (row.learned >= row.total) return "Completado";
+  if (row.learned <= 0) return "Las más frecuentes primero";
+  if (row.learned >= row.total) return "Nivel cerrado";
   const remaining = row.total - row.learned;
-  return remaining === 1 ? "Te falta 1 palabra" : `Te faltan ${remaining} palabras`;
+  return remaining === 1
+    ? "Queda 1 para cerrar el nivel"
+    : `${remaining} por conocer`;
 }
 
 /** Milestone copy for the learner's current CEFR frontier. */

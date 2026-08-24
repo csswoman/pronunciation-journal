@@ -1,139 +1,92 @@
 /**
- * Louder-by-default cue engine for exercise feedback.
+ * Louder-by-default cue engine with voice management and anti-click policies.
  *
- * cuelume ships a subtle, fixed `masterGain` per recipe (~0.4–0.55) and
- * exposes no volume control, which makes the exercise feedback (correct /
- * wrong / tap) too quiet on many devices. We synthesize the same curated
- * recipes here on our own shared `AudioContext` so a single `VOLUME`
- * multiplier can lift every imperative cue without clipping.
- *
- * Only the imperative product cues live here. Ambient `data-cuelume-*`
- * button sounds stay on cuelume's `bind()` on purpose (they should remain
- * subtle).
+ * Implements:
+ * - 1 voice = 1 full cue (regardless of number of layers).
+ * - Per-cue throttle (~100ms) to prevent audio clutter on rapid triggers.
+ * - Global concurrency limit of 3 voices with oldest-voice stealing.
+ * - Soft fade ramp (~10ms) and scheduled node termination on stealing/cleanup.
+ * - Fail-soft behavior for blocked or unavailable Web Audio contexts.
  */
 import { useUISoundsStore, MAX_VOLUME_MULTIPLIER } from '@/lib/stores/uiSoundsStore'
+import { getAudioContext, resetAudioContextForTests } from './context'
+import { RECIPES, type CueSound } from './recipes'
+import type { NoiseLayer, Recipe, Shimmer, ToneLayer } from './types'
 
-/** Live loudness multiplier from the user's sound preference (0–MAX). */
-function currentVolume(): number {
-  return useUISoundsStore.getState().volume * MAX_VOLUME_MULTIPLIER
-}
+export { RECIPES, type CueSound }
 
 const SOURCE_STOP_PADDING = 0.05
 const CLEANUP_MARGIN = 0.05
 const INAUDIBLE_GAIN = 0.001
+const THROTTLE_MS = 100
+const MAX_CONCURRENT_VOICES = 3
+const FADE_OUT_DURATION = 0.01 // 10ms anti-click ramp
 
-interface ToneLayer {
-  kind: 'tone'
-  waveform: OscillatorType
-  frequency: number
-  attack: number
-  decay: number
-  peak: number
-  offset?: number
-  detune?: number
-  glideTo?: number
-  glideTime?: number
+function currentVolume(): number {
+  return useUISoundsStore.getState().volume * MAX_VOLUME_MULTIPLIER
 }
 
-interface NoiseLayer {
-  kind: 'noise'
-  filterType: BiquadFilterType
-  filterFrequency: number
-  filterQ?: number
-  attack: number
-  decay: number
-  peak: number
-  offset?: number
+interface ActiveVoice {
+  id: number
+  masterGain: GainNode
+  stopTime: number
+  timer: ReturnType<typeof setTimeout>
+  nodes: AudioNode[]
 }
 
-type Layer = ToneLayer | NoiseLayer
+let enabled = true
+let nextVoiceId = 1
+const activeVoices: ActiveVoice[] = []
+const lastTriggerTimes = new Map<string, number>()
 
-interface Shimmer {
-  delay: number
-  feedback: number
-  wet: number
-  lowpass: number
+export function setEngineEnabled(value: boolean): void {
+  enabled = value
 }
 
-interface Recipe {
-  masterGain: number
-  layers: Layer[]
-  shimmer?: Shimmer
+export function resetEngineStateForTests(): void {
+  resetAudioContextForTests()
+  enabled = true
+  nextVoiceId = 1
+  activeVoices.length = 0
+  lastTriggerTimes.clear()
 }
 
-/** Curated subset used by product UI (mirrors cuelume recipes). */
-const RECIPES = {
-  chime: {
-    masterGain: 0.5,
-    layers: [
-      { kind: 'tone', waveform: 'sine', frequency: 1046.5, attack: 0.006, decay: 0.22, peak: 0.09 },
-      { kind: 'tone', waveform: 'sine', frequency: 1568, offset: 0.09, attack: 0.006, decay: 0.26, peak: 0.08 },
-    ],
-    shimmer: { delay: 0.12, feedback: 0.25, wet: 0.18, lowpass: 4000 },
-  },
-  sparkle: {
-    masterGain: 0.5,
-    layers: [
-      { kind: 'tone', waveform: 'sine', frequency: 1760, offset: 0, attack: 0.003, decay: 0.09, peak: 0.045 },
-      { kind: 'tone', waveform: 'sine', frequency: 2217, offset: 0.045, attack: 0.003, decay: 0.09, peak: 0.04 },
-      { kind: 'tone', waveform: 'sine', frequency: 2637, offset: 0.09, attack: 0.003, decay: 0.1, peak: 0.038 },
-      { kind: 'tone', waveform: 'sine', frequency: 3520, offset: 0.135, attack: 0.003, decay: 0.12, peak: 0.032 },
-    ],
-    shimmer: { delay: 0.07, feedback: 0.35, wet: 0.22, lowpass: 6000 },
-  },
-  droplet: {
-    masterGain: 0.55,
-    layers: [
-      { kind: 'tone', waveform: 'sine', frequency: 1200, glideTo: 550, glideTime: 0.14, attack: 0.004, decay: 0.2, peak: 0.075 },
-    ],
-    shimmer: { delay: 0.09, feedback: 0.2, wet: 0.15, lowpass: 3000 },
-  },
-  bloom: {
-    masterGain: 0.5,
-    layers: [
-      { kind: 'tone', waveform: 'sine', frequency: 528, attack: 0.06, decay: 0.32, peak: 0.06 },
-      { kind: 'tone', waveform: 'sine', frequency: 528, detune: 12, attack: 0.06, decay: 0.34, peak: 0.05 },
-    ],
-    shimmer: { delay: 0.15, feedback: 0.2, wet: 0.12, lowpass: 2500 },
-  },
-  whisper: {
-    masterGain: 0.5,
-    layers: [
-      { kind: 'noise', filterType: 'lowpass', filterFrequency: 1200, filterQ: 0.7, attack: 0.04, decay: 0.16, peak: 0.05 },
-    ],
-  },
-  tick: {
-    masterGain: 0.4,
-    layers: [
-      { kind: 'noise', filterType: 'bandpass', filterFrequency: 5400, filterQ: 1.8, attack: 0.001, decay: 0.018, peak: 0.14 },
-      { kind: 'tone', waveform: 'sine', frequency: 2600, attack: 0.001, decay: 0.012, peak: 0.018 },
-    ],
-  },
-  press: {
-    masterGain: 0.4,
-    layers: [
-      { kind: 'noise', filterType: 'bandpass', filterFrequency: 1700, filterQ: 1.4, attack: 0.001, decay: 0.02, peak: 0.13 },
-    ],
-  },
-  release: {
-    masterGain: 0.4,
-    layers: [
-      { kind: 'noise', filterType: 'bandpass', filterFrequency: 4600, filterQ: 1.8, attack: 0.001, decay: 0.016, peak: 0.12 },
-      { kind: 'tone', waveform: 'sine', frequency: 3200, offset: 0.006, attack: 0.001, decay: 0.05, peak: 0.02 },
-    ],
-  },
-  toggle: {
-    masterGain: 0.4,
-    layers: [
-      { kind: 'noise', filterType: 'bandpass', filterFrequency: 2200, filterQ: 1.6, attack: 0.001, decay: 0.016, peak: 0.12 },
-      { kind: 'noise', filterType: 'bandpass', filterFrequency: 3800, filterQ: 1.6, offset: 0.024, attack: 0.001, decay: 0.02, peak: 0.1 },
-    ],
-  },
-} as const satisfies Record<string, Recipe>
+export function getActiveVoiceCountForTests(): number {
+  return activeVoices.length
+}
 
-export type CueSound = keyof typeof RECIPES
+function stopVoiceSoftly(context: AudioContext, voice: ActiveVoice): void {
+  clearTimeout(voice.timer)
+  const now = context.currentTime
+  try {
+    voice.masterGain.gain.cancelScheduledValues(now)
+    voice.masterGain.gain.setValueAtTime(voice.masterGain.gain.value, now)
+    voice.masterGain.gain.linearRampToValueAtTime(0.0001, now + FADE_OUT_DURATION)
+  } catch {}
 
-function renderTone(context: AudioContext, destination: AudioNode, layer: ToneLayer, startTime: number): void {
+  // Stop scheduled sources to prevent future offset notes from firing
+  for (const node of voice.nodes) {
+    if ('stop' in node && typeof (node as AudioScheduledSourceNode).stop === 'function') {
+      try {
+        ;(node as AudioScheduledSourceNode).stop(now + FADE_OUT_DURATION)
+      } catch {}
+    }
+  }
+
+  setTimeout(() => {
+    try {
+      voice.masterGain.disconnect()
+      for (const node of voice.nodes) node.disconnect()
+    } catch {}
+  }, (FADE_OUT_DURATION + 0.005) * 1000)
+}
+
+function renderTone(
+  context: AudioContext,
+  destination: AudioNode,
+  layer: ToneLayer,
+  startTime: number,
+): AudioNode[] {
   const oscillator = context.createOscillator()
   oscillator.type = layer.waveform
   oscillator.frequency.setValueAtTime(layer.frequency, startTime)
@@ -149,9 +102,15 @@ function renderTone(context: AudioContext, destination: AudioNode, layer: ToneLa
   oscillator.connect(gain).connect(destination)
   oscillator.start(startTime)
   oscillator.stop(startTime + layer.attack + layer.decay + SOURCE_STOP_PADDING)
+  return [oscillator, gain]
 }
 
-function renderNoise(context: AudioContext, destination: AudioNode, layer: NoiseLayer, startTime: number): void {
+function renderNoise(
+  context: AudioContext,
+  destination: AudioNode,
+  layer: NoiseLayer,
+  startTime: number,
+): AudioNode[] {
   const duration = layer.attack + layer.decay + SOURCE_STOP_PADDING
   const length = Math.max(1, Math.floor(duration * context.sampleRate))
   const buffer = context.createBuffer(1, length, context.sampleRate)
@@ -170,9 +129,15 @@ function renderNoise(context: AudioContext, destination: AudioNode, layer: Noise
   source.connect(filter).connect(gain).connect(destination)
   source.start(startTime)
   source.stop(startTime + duration)
+  return [source, filter, gain]
 }
 
-function attachShimmer(context: AudioContext, source: AudioNode, destination: AudioNode, shimmer: Shimmer): AudioNode[] {
+function attachShimmer(
+  context: AudioContext,
+  source: AudioNode,
+  destination: AudioNode,
+  shimmer: Shimmer,
+): AudioNode[] {
   const delay = context.createDelay(1)
   delay.delayTime.value = shimmer.delay
   const feedbackFilter = context.createBiquadFilter()
@@ -192,7 +157,7 @@ function attachShimmer(context: AudioContext, source: AudioNode, destination: Au
 }
 
 function sourceEnd(recipe: Recipe): number {
-  return Math.max(...recipe.layers.map((layer) => (layer.offset ?? 0) + layer.attack + layer.decay + SOURCE_STOP_PADDING))
+  return Math.max(...recipe.layers.map((l) => (l.offset ?? 0) + l.attack + l.decay + SOURCE_STOP_PADDING))
 }
 
 function shimmerTail(shimmer: Shimmer | undefined): number {
@@ -203,59 +168,68 @@ function shimmerTail(shimmer: Shimmer | undefined): number {
 
 function renderRecipe(context: AudioContext, recipe: Recipe): void {
   const now = context.currentTime
+  for (let i = activeVoices.length - 1; i >= 0; i--) {
+    if (activeVoices[i].stopTime <= now) {
+      activeVoices.splice(i, 1)
+    }
+  }
+
+  while (activeVoices.length >= MAX_CONCURRENT_VOICES) {
+    const oldest = activeVoices.shift()
+    if (oldest) stopVoiceSoftly(context, oldest)
+  }
+
   const master = context.createGain()
   master.gain.value = recipe.masterGain * currentVolume()
   master.connect(context.destination)
+
   const shimmerNodes = recipe.shimmer
     ? attachShimmer(context, master, context.destination, recipe.shimmer)
     : []
+
+  const renderedNodes: AudioNode[] = [...shimmerNodes]
   for (const layer of recipe.layers) {
     const startTime = now + (layer.offset ?? 0)
-    if (layer.kind === 'tone') renderTone(context, master, layer, startTime)
-    else renderNoise(context, master, layer, startTime)
+    const nodes = layer.kind === 'tone'
+      ? renderTone(context, master, layer, startTime)
+      : renderNoise(context, master, layer, startTime)
+    renderedNodes.push(...nodes)
   }
-  const cleanupAfterMs = (sourceEnd(recipe) + shimmerTail(recipe.shimmer) + CLEANUP_MARGIN) * 1000
-  setTimeout(() => {
-    master.disconnect()
-    for (const node of shimmerNodes) node.disconnect()
-  }, cleanupAfterMs)
+
+  const totalDuration = sourceEnd(recipe) + shimmerTail(recipe.shimmer) + CLEANUP_MARGIN
+  const voiceId = nextVoiceId++
+  const timer = setTimeout(() => {
+    try {
+      master.disconnect()
+      for (const node of renderedNodes) node.disconnect()
+    } catch {}
+    const idx = activeVoices.findIndex((v) => v.id === voiceId)
+    if (idx !== -1) activeVoices.splice(idx, 1)
+  }, totalDuration * 1000)
+
+  activeVoices.push({
+    id: voiceId,
+    masterGain: master,
+    stopTime: now + totalDuration,
+    timer,
+    nodes: renderedNodes,
+  })
 }
 
-let sharedContext: AudioContext | null = null
-let enabled = true
-
-/** Enables or disables future playback (mirrors app + a11y prefs). */
-export function setEngineEnabled(value: boolean): void {
-  enabled = value
-}
-
-function getAudioContext(): AudioContext | null {
-  if (sharedContext) return sharedContext
-  if (typeof window === 'undefined') return null
-  // Safari exposes webkitAudioContext; typed here to avoid `any`.
-  const Ctor =
-    window.AudioContext ??
-    (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
-  if (!Ctor) return null
-  try {
-    sharedContext = new Ctor()
-  } catch {
-    return null
-  }
-  return sharedContext
-}
-
-/**
- * Plays a curated cue immediately at the boosted app volume. Lazily creates
- * the shared context, resumes it after a user gesture, and no-ops when Web
- * Audio is unavailable or playback is disabled.
- */
 export function playCue(sound: CueSound): void {
   if (!enabled) return
   if (typeof navigator !== 'undefined' && navigator.userActivation?.hasBeenActive === false) return
+
+  const nowMs = Date.now()
+  const lastTime = lastTriggerTimes.get(sound) ?? 0
+  if (nowMs - lastTime < THROTTLE_MS) return
+  lastTriggerTimes.set(sound, nowMs)
+
   const context = getAudioContext()
   if (!context) return
   const recipe = RECIPES[sound]
+  if (!recipe) return
+
   if (context.state === 'running') {
     renderRecipe(context, recipe)
     return
@@ -267,7 +241,5 @@ export function playCue(sound: CueSound): void {
       },
       () => {},
     )
-  } catch {
-    // Some browsers throw synchronously when audio is blocked.
-  }
+  } catch {}
 }

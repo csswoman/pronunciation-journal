@@ -35,10 +35,9 @@ beforeEach(() => {
 })
 
 describe('/journal query budget', () => {
-  it('uses one word_bank query and one topic_srs query per server render', async () => {
+  it('uses zero server queries per server render', async () => {
     await JournalPage()
 
-    expect(mocks.from).toHaveBeenCalledTimes(2)
-    expect(mocks.from.mock.calls.map(([table]) => table)).toEqual(['word_bank', 'topic_srs'])
+    expect(mocks.from).toHaveBeenCalledTimes(0)
   })
 })

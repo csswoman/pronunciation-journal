@@ -511,7 +511,7 @@
 }
 
 /* Editorial content — word mark carries no fill; text-primary only.
-   Color identity lives on the card's left border + IPA/label, not here. */
+   Domain color lives on IPA/labels via .text-vocabulario / .text-chunks. */
 .home-editorial-mark {
   display: inline-block;
   max-width: 100%;
@@ -537,20 +537,7 @@
   text-wrap: balance;
 }
 
-/* Semantic left-border accents — the only color a content-type card carries.
-   Composed with home-sidebar-card. Text/icon color via matching .text-* utility. */
-.home-sidebar-card--vocabulario {
-  border-left: 3px solid var(--c-vocabulario);
-}
-
-.home-sidebar-card--chunks {
-  border-left: 3px solid var(--c-chunks);
-}
-
-.home-sidebar-card--pronunciacion {
-  border-left: 3px solid var(--c-pronunciacion);
-}
-
+/* Domain ink for labels/IPA — no side-stripe accents (absolute ban). */
 .text-vocabulario   { color: var(--c-vocabulario); }
 .text-chunks        { color: var(--c-chunks); }
 .text-pronunciacion { color: var(--c-pronunciacion); }
@@ -560,17 +547,21 @@
   background-color: color-mix(in oklch, var(--c-racha) 16%, var(--bg-tertiary) 84%);
 }
 
-/* Vocab progress — featured metric in the aside; theme accent, not a fixed hue */
+.bg-vocabulario-soft {
+  background-color: color-mix(in oklch, var(--c-vocabulario) 16%, var(--bg-tertiary) 84%);
+}
+
+/* Vocab progress — featured in the aside via elevation, not a side stripe. */
 .home-sidebar-card--featured {
   border-color: var(--border-subtle);
-  border-left: 3px solid var(--primary);
   box-shadow: var(--shadow-sm);
 }
 
-/* Essential Words home card — CEFR level slider + outline mark */
+/* Essential Words home card — CEFR outline mark is the differentiator.
+   --c-vocabulario is scoped to: outline stroke, progress fill, and CTA. */
 .ew-progress-card {
-  --ew-outline: color-mix(in oklch, var(--primary) 15%, transparent);
-  --ew-ink-soft: color-mix(in oklch, var(--primary) 42%, var(--text-primary));
+  --ew-mark-fill: color-mix(in oklch, var(--text-primary) 9%, transparent);
+  --ew-mark-stroke: color-mix(in oklch, var(--c-vocabulario) 88%, transparent);
   position: relative;
   overflow: hidden;
   min-height: 14rem;
@@ -582,9 +573,16 @@
     box-shadow 200ms ease;
 }
 
+.dark .ew-progress-card {
+  --ew-mark-fill: color-mix(in oklch, var(--text-primary) 14%, transparent);
+  --ew-mark-stroke: var(--c-vocabulario);
+}
+
 .ew-progress-card:hover,
 .ew-progress-card:focus-within {
-  background-color: var(--surface-sunken);
+  background-color: var(--surface-raised);
+  border-color: var(--border-default);
+  box-shadow: var(--shadow-md);
 }
 
 .ew-progress-card__face {
@@ -619,16 +617,48 @@
 }
 
 .ew-progress-card__total {
-  font-size: var(--text-size-ew-fraction);
+  font-size: calc(var(--text-size-ew-fraction) * 0.6);
   font-weight: 600;
-  letter-spacing: -0.03em;
-  color: var(--ew-ink-soft);
+  letter-spacing: -0.02em;
+  color: var(--text-tertiary);
+}
+
+.ew-progress-card__bar {
+  height: 6px;
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--radius-full, 9999px);
+  background-color: var(--surface-sunken);
+}
+
+.ew-progress-card__bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background-color: var(--c-vocabulario);
+  transition: width 300ms ease;
 }
 
 .ew-progress-card__meta {
   font-size: var(--text-size-caption);
   line-height: var(--text-leading-caption, 1.4);
-  color: var(--ew-ink-soft);
+  color: var(--text-secondary);
+}
+
+.ew-progress-card__cta {
+  color: color-mix(in oklch, var(--c-vocabulario) 70%, black);
+}
+
+.dark .ew-progress-card__cta {
+  color: var(--c-vocabulario);
+}
+
+.ew-progress-card__cta:hover {
+  color: color-mix(in oklch, var(--c-vocabulario) 55%, black);
+}
+
+.dark .ew-progress-card__cta:hover {
+  color: color-mix(in oklch, var(--c-vocabulario) 85%, white);
 }
 
 .ew-progress-card__level {
@@ -636,24 +666,25 @@
   top: 50%;
   right: 6%;
   z-index: 0;
+  font-family: var(--font-mono-var), monospace;
   font-size: 6.75rem;
-  font-weight: 700;
+  font-weight: 500;
   line-height: 0.85;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.02em;
   color: transparent;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 0.028em var(--ew-mark-stroke);
+  paint-order: stroke fill;
   pointer-events: none;
   user-select: none;
   transform: translateY(-52%);
 }
 
-.ew-progress-card__level::after {
-  content: attr(data-outline);
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  -webkit-text-fill-color: transparent;
-  -webkit-text-stroke-width: 2px;
-  -webkit-text-stroke-color: var(--ew-outline);
+@supports not (-webkit-text-stroke: 1px red) {
+  .ew-progress-card__level {
+    color: var(--ew-mark-fill);
+    -webkit-text-fill-color: var(--ew-mark-fill);
+  }
 }
 
 .ew-progress-card__nav {

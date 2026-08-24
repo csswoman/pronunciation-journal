@@ -19,10 +19,14 @@
   --l-shift-accent-1: 0;
   --l-shift-accent-2: 0;
 
-  /* Motion — exponential ease-out curves (no bounce) */
-  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  /* Motion — durations + easing (one shared scale; no per-component magic) */
+  --dur-fast: 150ms;
+  --dur-base: 250ms;
   --dur-celebrate: 420ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-expo: var(--ease-out);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  /* Overshoot — the only spring magic number in the system */
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 
   /* ── 1. Primary Scale (dynamic identity = hue-base) ───────────────────── */
@@ -93,8 +97,8 @@
   --text-tertiary:    oklch(0.49 0.005 var(--hue));
   --text-disabled:    oklch(0.75 0.002 var(--hue));
   --text-placeholder: oklch(0.75 0.002 var(--hue));
-  --border:       oklch(0.875 0 0);
-  --border-hover: oklch(0.770 0 0);
+  --border:       oklch(0.875 0.007 var(--hue));
+  --border-hover: oklch(0.770 0.010 var(--hue));
 
   /* ── 3. Semantic Colors (fixed, independent of hue) ──────────────────── */
   --success:         oklch(0.70 0.16 145);
@@ -159,9 +163,9 @@
   --card-bg:          var(--surface-raised);     /* alias for surface-raised */
 
   /* ── 5. Borders — semantic strength names ────────────────────────────── */
-  --border-subtle:  oklch(0.895 0.002 var(--hue)); /* dividers, faint separators */
+  --border-subtle:  oklch(0.895 0.004 var(--hue)); /* dividers, faint separators */
   --border-default: var(--border);        /* standard card/input borders */
-  --border-strong:  oklch(0.720 0 0);     /* emphasized borders, active states */
+  --border-strong:  oklch(0.720 0.010 var(--hue));     /* emphasized borders, active states */
   --border-focus:   var(--primary);       /* focus outlines */
 
   /* ── 6. Scoring / Accuracy aliases ──────────────────────────────────── */
@@ -493,8 +497,8 @@
   --text-tertiary:    oklch(0.56 0.003 var(--hue));
   --text-disabled:    oklch(0.38 0.003 var(--hue));
   --text-placeholder: oklch(0.38 0.003 var(--hue));
-  --border:       oklch(0.275 0 0);
-  --border-hover: oklch(0.375 0 0);
+  --border:       oklch(0.275 0.007 var(--hue));
+  --border-hover: oklch(0.375 0.010 var(--hue));
 
   /* Semantic colors — slightly brighter in dark mode */
   --success:         oklch(0.74 0.16 145);
@@ -547,9 +551,9 @@
   --surface-code:    oklch(0.10 0.003 var(--hue));
 
   /* ── Borders — dark overrides ────────────────────────────────────────── */
-  --border-subtle:  oklch(0.220 0 0);
+  --border-subtle:  oklch(0.220 0.006 var(--hue));
   --border-default: var(--border);
-  --border-strong:  oklch(0.440 0 0);
+  --border-strong:  oklch(0.440 0.010 var(--hue));
   --border-focus:   var(--primary);
 
   /* ── Structure aliases ───────────────────────────────────────────────── */

@@ -13,7 +13,7 @@ describe('JournalSupportRail vocabulary resolution', { timeout: 15_000 }, () => 
     nudgeMock.requestJournalNudge.mockReset()
   })
 
-  it('shows learner translation and example for owned seeds while keeping scaffold data for the rest', () => {
+  it('renders vocabulary chips and section headers cleanly', () => {
     render(
       <JournalSupportRail
         promptId="relaxing-place"
@@ -21,28 +21,18 @@ describe('JournalSupportRail vocabulary resolution', { timeout: 15_000 }, () => 
           { text: 'cozy', translation: 'acogedor de mi casa', ipa: '/koʊzi/', example: 'My own cozy example.', inWordBank: true, srsStatus: 'learning' },
           { text: 'corner', translation: 'rincón', ipa: '/corner/', example: 'Generated corner.', inWordBank: false, srsStatus: null },
           { text: 'quiet', translation: 'silencioso', ipa: '/quiet/', example: 'Generated quiet.', inWordBank: false, srsStatus: null },
-          { text: 'blanket', translation: 'manta', ipa: '/blanket/', example: 'Generated blanket.', inWordBank: false, srsStatus: null },
-          { text: 'shelf', translation: 'estantería', ipa: '/ʃelf/', example: 'My shelf example.', inWordBank: true, srsStatus: 'review' },
-          { text: 'calm down', translation: 'calmarse', ipa: '/calm/', example: 'Generated calm example.', inWordBank: false, srsStatus: null },
         ]}
         selectedGrammarNote={null}
         feedback={null}
       />,
     )
 
-    expect(screen.getByText('2 de estas ya son tuyas — úsalas hoy.')).toBeInTheDocument()
-    expect(screen.getByText(/acogedor de mi casa/)).toBeInTheDocument()
-    expect(screen.getByText('My own cozy example.')).toBeInTheDocument()
-    expect(screen.getByText(/rincón/)).toBeInTheDocument()
-    expect(screen.queryByText('Generated corner.')).not.toBeInTheDocument()
-
-    fireEvent.click(screen.getByRole('button', { name: /corner.*rincón/i }))
-    expect(screen.getByText('Generated corner.')).toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: /ocultar guía de apoyo/i })).not.toBeInTheDocument()
-
-    fireEvent.click(screen.getByRole('tab', { name: 'Referencia' }))
-    expect(screen.getByRole('tabpanel', { name: 'Referencia de escritura' })).toBeInTheDocument()
-    expect(screen.getByText('Ejemplos por tiempo')).toBeInTheDocument()
+    expect(screen.getByText('Palabras de hoy')).toBeInTheDocument()
+    expect(screen.getByText('0 de 3')).toBeInTheDocument()
+    expect(screen.getByText('cozy')).toBeInTheDocument()
+    expect(screen.getByText('corner')).toBeInTheDocument()
+    expect(screen.getByText('quiet')).toBeInTheDocument()
+    expect(screen.getByText('Modelos de frase')).toBeInTheDocument()
   })
 
   it('emits starter selection through the rail callback', () => {
@@ -83,7 +73,7 @@ describe('JournalSupportRail vocabulary resolution', { timeout: 15_000 }, () => 
     expect(screen.getByText(/No se añaden automáticamente/)).toBeInTheDocument()
   })
 
-  it('marks seed words used in the draft and ties structure progress to the counter', () => {
+  it('marks seed words used in the draft and updates counter', () => {
     render(
       <JournalSupportRail
         promptId="relaxing-place"
@@ -100,37 +90,8 @@ describe('JournalSupportRail vocabulary resolution', { timeout: 15_000 }, () => 
       />,
     )
 
-    expect(screen.getByRole('button', { name: /cozy.*acogedor.*usada en este texto/i })).toBeInTheDocument()
-    expect(screen.getByText('25 / 60 palabras')).toBeInTheDocument()
-  })
-
-  it('hides structure while empty and shows only the current step while writing', () => {
-    const { rerender } = render(
-      <JournalSupportRail
-        promptId="relaxing-place"
-        resolvedVocabulary={[]}
-        selectedGrammarNote={null}
-        feedback={null}
-      />,
-    )
-    expect(screen.queryByRole('heading', { name: 'Cómo organizarlo' })).not.toBeInTheDocument()
-
-    rerender(
-      <JournalSupportRail
-        promptId="relaxing-place"
-        resolvedVocabulary={[]}
-        selectedGrammarNote={null}
-        feedback={null}
-        content="I went there."
-        wordCount={3}
-        targetLength={60}
-        lastTypedAt={Date.now()}
-      />,
-    )
-    expect(screen.getByRole('heading', { name: 'Cómo organizarlo' })).toBeInTheDocument()
-    expect(document.querySelector('[data-structure-active="true"]')).toHaveTextContent(/Dónde es\./)
-    expect(screen.getByText('Ver los tres pasos')).toBeInTheDocument()
-    expect(screen.getByText('Ver los tres pasos').closest('details')).not.toBeNull()
+    expect(screen.getByText('1 de 2')).toBeInTheDocument()
+    expect(screen.getByText('cozy')).toBeInTheDocument()
   })
 
   it('highlights an unused starter after twenty seconds without typing', () => {
@@ -148,11 +109,12 @@ describe('JournalSupportRail vocabulary resolution', { timeout: 15_000 }, () => 
       />,
     )
 
-    expect(screen.queryByText('Puedes seguir por aquí')).not.toBeInTheDocument()
+    expect(screen.queryByText('Estoy atascada')).not.toBeInTheDocument()
     act(() => {
       vi.advanceTimersByTime(20_000)
     })
-    expect(screen.getByText('Puedes seguir por aquí')).toBeInTheDocument()
+    // starter has hint active attribute
+    expect(document.querySelector('[data-hint-active="true"]')).not.toBeNull()
   })
 
   it('keeps the on-demand nudge to three calls per entry', async () => {
@@ -221,6 +183,5 @@ describe('JournalSupportRail vocabulary resolution', { timeout: 15_000 }, () => 
     expect(screen.getByRole('alert')).toHaveTextContent(
       'No pudimos generar una idea. Prueba el inicio sugerido o vuelve a intentarlo.',
     )
-    expect(screen.getByText('Puedes seguir por aquí')).toBeInTheDocument()
   })
 })

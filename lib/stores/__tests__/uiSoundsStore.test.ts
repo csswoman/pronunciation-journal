@@ -3,26 +3,45 @@ import { useUISoundsStore } from '../uiSoundsStore'
 
 describe('uiSoundsStore', () => {
   beforeEach(() => {
-    useUISoundsStore.setState({ soundEnabled: true, volume: 0.85 })
+    useUISoundsStore.setState({
+      soundPreference: 'exercise',
+      soundEnabled: true,
+      volume: 0.85,
+    })
   })
 
-  it('defaults soundEnabled to true', () => {
+  it('defaults soundPreference to exercise for safety and continuity', () => {
+    expect(useUISoundsStore.getState().soundPreference).toBe('exercise')
     expect(useUISoundsStore.getState().soundEnabled).toBe(true)
   })
 
-  it('toggles soundEnabled', () => {
-    useUISoundsStore.getState().setSoundEnabled(false)
+  it('updates soundPreference correctly', () => {
+    useUISoundsStore.getState().setSoundPreference('ui')
+    expect(useUISoundsStore.getState().soundPreference).toBe('ui')
+    expect(useUISoundsStore.getState().soundEnabled).toBe(true)
+
+    useUISoundsStore.getState().setSoundPreference('off')
+    expect(useUISoundsStore.getState().soundPreference).toBe('off')
     expect(useUISoundsStore.getState().soundEnabled).toBe(false)
   })
 
-  it('sets volume', () => {
-    useUISoundsStore.getState().setVolume(0.5)
-    expect(useUISoundsStore.getState().volume).toBe(0.5)
+  it('supports legacy setSoundEnabled bridge', () => {
+    useUISoundsStore.getState().setSoundEnabled(false)
+    expect(useUISoundsStore.getState().soundPreference).toBe('off')
+    expect(useUISoundsStore.getState().soundEnabled).toBe(false)
+
+    useUISoundsStore.getState().setSoundEnabled(true)
+    expect(useUISoundsStore.getState().soundPreference).toBe('exercise')
+    expect(useUISoundsStore.getState().soundEnabled).toBe(true)
   })
 
-  it('clamps volume to the 0–1 range', () => {
+  it('sets and clamps volume to the 0–1 range', () => {
+    useUISoundsStore.getState().setVolume(0.5)
+    expect(useUISoundsStore.getState().volume).toBe(0.5)
+
     useUISoundsStore.getState().setVolume(2)
     expect(useUISoundsStore.getState().volume).toBe(1)
+
     useUISoundsStore.getState().setVolume(-1)
     expect(useUISoundsStore.getState().volume).toBe(0)
   })

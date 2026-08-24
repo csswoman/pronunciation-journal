@@ -3,7 +3,12 @@ import { useEffect, useState, createElement, type ComponentType } from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
-const dailyCardState = vi.hoisted(() => ({ empty: false, settled: true }));
+const dailyCardState = vi.hoisted(() => ({
+  empty: false,
+  settled: true,
+  allDone: false,
+  reviewIsEntry: false,
+}));
 const authMock = vi.hoisted(() => ({
   useAuth: vi.fn(() => ({
     user: { id: "user-1" },
@@ -63,9 +68,9 @@ vi.mock("@/components/home/HomeDailyCard", () => ({
       onPlanStatusChange?.({
         empty: dailyCardState.empty,
         settled: dailyCardState.settled,
-        reviewIsEntry: false,
+        reviewIsEntry: dailyCardState.reviewIsEntry,
         conceptSlug: null,
-        allDone: false,
+        allDone: dailyCardState.allDone,
         arc: undefined,
         stepCount: 5,
       });
@@ -73,9 +78,8 @@ vi.mock("@/components/home/HomeDailyCard", () => ({
     return <div>Daily plan</div>;
   },
 }));
-vi.mock("@/components/home/HomeReviewBanner", () => ({ default: () => null }));
-vi.mock("@/components/home/HomeJournalCard", () => ({
-  default: () => <div>Diario card</div>,
+vi.mock("@/components/home/HomeReviewBanner", () => ({
+  default: () => <div>Review banner</div>,
 }));
 vi.mock("@/components/home/EssentialWordsProgressCard", () => ({ default: () => null }));
 vi.mock("@/components/home/WeakSoundCard", () => ({ default: () => null }));
@@ -83,13 +87,17 @@ vi.mock("@/components/home/HomeWordOfDayCard", () => ({
   default: () => <div>Palabra del día</div>,
 }));
 vi.mock("@/components/home/HomeChunkOfDayCard", () => ({
-  default: () => <div>Chunk del día</div>,
+  default: () => <div>Frase del día</div>,
 }));
-vi.mock("@/components/home/HomeSpeakPrompt", () => ({
-  default: () => <div>Speak prompt</div>,
+vi.mock("@/components/home/HomePlanDone", () => ({
+  default: () => <div>Plan done</div>,
 }));
-vi.mock("@/components/home/LearningFocusCard", () => ({
-  default: () => null,
+vi.mock("@/components/home/GuestSaveProgressBanner", () => ({
+  default: ({ variant }: { variant?: string }) => (
+    <div aria-label="Guardar progreso" data-variant={variant ?? "footer"}>
+      Guardar progreso
+    </div>
+  ),
 }));
 
 import HomeCommandGrid from "@/components/home/HomeCommandGrid";
@@ -104,38 +112,26 @@ async function renderSettledGrid(
     Partial<typeof baseProps>,
 ) {
   render(<HomeCommandGrid {...baseProps} {...props} />);
-  // Wait for dynamic HomeDailyCard mock to mount and report plan status.
   await waitFor(() => {
     expect(screen.getByText("Daily plan")).toBeInTheDocument();
   });
-  // Parent state updates from onPlanStatusChange need a second commit.
-  if (dailyCardState.settled) {
-    await waitFor(() => {
-      expect(screen.getByText("Diario card")).toBeInTheDocument();
-    });
-  }
 }
 
-describe("HomeCommandGrid journal and lessons", () => {
-  it("shows the journal card when the plan is settled and never a loose learn row", async () => {
+describe("HomeCommandGrid main column", () => {
+  it("shows the phrase-of-the-day card in the main column, below the plan", async () => {
     dailyCardState.empty = false;
     dailyCardState.settled = true;
+    dailyCardState.allDone = false;
     await renderSettledGrid({
       placementState: { hasPlacement: true, hasMeaningfulProgress: true },
       pronunciationDiagnosticState: { hasPronunciationDiagnostic: true },
     });
-    expect(screen.getByText("Diario card")).toBeInTheDocument();
-    expect(screen.queryByText(/mini lección/i)).not.toBeInTheDocument();
-  });
 
-  it("hides the journal card while the plan is still loading", async () => {
-    dailyCardState.empty = false;
-    dailyCardState.settled = false;
-    await renderSettledGrid({
-      placementState: { hasPlacement: true, hasMeaningfulProgress: true },
-      pronunciationDiagnosticState: { hasPronunciationDiagnostic: true },
-    });
-    expect(screen.queryByText("Diario card")).not.toBeInTheDocument();
+    const plan = screen.getByText("Daily plan");
+    const phrase = screen.getByText("Frase del día");
+    expect(phrase.closest(".home-command-main")).toBeTruthy();
+    expect(phrase.closest(".home-command-aside")).toBeFalsy();
+    expect(plan.compareDocumentPosition(phrase) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 });
 
@@ -143,221 +139,224 @@ describe("HomeCommandGrid first-visit activation", () => {
   it("shows one activation strip when the plan is empty for a new learner", async () => {
     dailyCardState.empty = true;
     dailyCardState.settled = true;
-    await renderSettledGrid({
-      placementState: { hasPlacement: false, hasMeaningfulProgress: false },
-      pronunciationDiagnosticState: { hasPronunciationDiagnostic: false },
+    dailyCardState.allDone = false;
+    render(
+      <HomeCommandGrid
+        {...baseProps}
+        placementState={{ hasPlacement: false, hasMeaningfulProgress: false }}
+        pronunciationDiagnosticState={{ hasPronunciationDiagnostic: false }}
+      />,
+    );
+    await waitFor(() => {
+      expect(screen.getByRole("heading", { name: /Una práctica ahora/i })).toBeInTheDocument();
     });
-
-    expect(
-      screen.getByRole("heading", { name: /Una práctica ahora/i }),
-    ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Abrir laboratorio/i })).toHaveAttribute(
       "href",
       "/practice/sounds",
     );
-    expect(
-      screen.queryByRole("heading", { name: "Empieza el plan desde tu nivel" }),
-    ).not.toBeInTheDocument();
   });
 
   it("keeps assessment links optional inside activation", async () => {
     dailyCardState.empty = true;
     dailyCardState.settled = true;
-    await renderSettledGrid({
-      placementState: { hasPlacement: false, hasMeaningfulProgress: false },
-      pronunciationDiagnosticState: { hasPronunciationDiagnostic: false },
-    });
-
-    expect(screen.getByRole("link", { name: /prueba de nivel/i })).toHaveAttribute(
-      "href",
-      "/assessment",
+    dailyCardState.allDone = false;
+    render(
+      <HomeCommandGrid
+        {...baseProps}
+        placementState={{ hasPlacement: false, hasMeaningfulProgress: false }}
+        pronunciationDiagnosticState={{ hasPronunciationDiagnostic: false }}
+      />,
     );
+    await waitFor(() => {
+      expect(screen.getByRole("link", { name: /prueba de nivel/i })).toBeInTheDocument();
+    });
     expect(screen.getByRole("link", { name: /diagnóstico oral/i })).toHaveAttribute(
       "href",
       "/assessment/pronunciation",
     );
   });
 
-  it("does not show activation or aside setup while the plan is still loading", async () => {
+  it("does not show activation or setup while the plan is still loading", async () => {
     dailyCardState.empty = false;
     dailyCardState.settled = false;
-    await renderSettledGrid({
-      placementState: { hasPlacement: false, hasMeaningfulProgress: false },
-      pronunciationDiagnosticState: { hasPronunciationDiagnostic: false },
+    dailyCardState.allDone = false;
+    render(
+      <HomeCommandGrid
+        {...baseProps}
+        placementState={{ hasPlacement: false, hasMeaningfulProgress: false }}
+        pronunciationDiagnosticState={{ hasPronunciationDiagnostic: false }}
+      />,
+    );
+    await waitFor(() => {
+      expect(screen.getByText("Daily plan")).toBeInTheDocument();
     });
-
     expect(
       screen.queryByRole("heading", { name: /Una práctica ahora/i }),
     ).not.toBeInTheDocument();
-    expect(screen.queryByText("Ajusta tu ruta")).not.toBeInTheDocument();
-    expect(screen.queryByText("Diagnóstico oral")).not.toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Afina tu nivel" })).not.toBeInTheDocument();
   });
 });
 
 describe("HomeCommandGrid placement visibility", () => {
-  it("keeps setup quiet in the aside when the plan already owns the fold", async () => {
+  it("uses a quiet route link when the plan owns the fold", async () => {
     dailyCardState.empty = false;
     dailyCardState.settled = true;
-    await renderSettledGrid({
-      placementState: { hasPlacement: false, hasMeaningfulProgress: false },
-      pronunciationDiagnosticState: { hasPronunciationDiagnostic: true },
+    dailyCardState.allDone = false;
+    render(
+      <HomeCommandGrid
+        {...baseProps}
+        placementState={{ hasPlacement: false, hasMeaningfulProgress: false }}
+        pronunciationDiagnosticState={{ hasPronunciationDiagnostic: true }}
+      />,
+    );
+    await waitFor(() => {
+      expect(screen.getByRole("link", { name: /prueba de nivel/i })).toBeInTheDocument();
     });
-
-    expect(screen.getByRole("heading", { name: "Afina tu nivel" })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Afina tu nivel" })).not.toBeInTheDocument();
     expect(
       screen.queryByRole("heading", { name: /Una práctica ahora/i }),
     ).not.toBeInTheDocument();
   });
 
-  it("shows the compact reminder after meaningful practice", async () => {
+  it("shows editorial in the aside and defers setup cards during an active plan", async () => {
     dailyCardState.empty = false;
     dailyCardState.settled = true;
-    await renderSettledGrid({
-      placementState: { hasPlacement: false, hasMeaningfulProgress: true },
-      pronunciationDiagnosticState: { hasPronunciationDiagnostic: true },
+    dailyCardState.allDone = false;
+    render(
+      <HomeCommandGrid
+        {...baseProps}
+        placementState={{ hasPlacement: false, hasMeaningfulProgress: true }}
+        pronunciationDiagnosticState={{ hasPronunciationDiagnostic: false }}
+      />,
+    );
+    await waitFor(() => {
+      expect(screen.getByText("Daily plan")).toBeInTheDocument();
     });
-
-    expect(screen.getByText("Palabra del día")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Afina tu nivel" })).toBeInTheDocument();
-  });
-
-  it("places daily editorial in the aside and setup pair below the plan", async () => {
-    dailyCardState.empty = false;
-    dailyCardState.settled = true;
-    await renderSettledGrid({
-      placementState: { hasPlacement: false, hasMeaningfulProgress: true },
-      pronunciationDiagnosticState: { hasPronunciationDiagnostic: false },
+    await waitFor(() => {
+      expect(screen.getByRole("link", { name: /prueba de nivel/i })).toBeInTheDocument();
     });
-
     const word = screen.getByText("Palabra del día");
-    const chunk = screen.getByText("Chunk del día");
-    const setup = screen.getByRole("heading", { name: "Afina tu nivel" });
-    const pronunciation = screen.getByRole("heading", {
-      name: "Evalúa tu pronunciación",
-    });
-    const plan = screen.getByText("Daily plan");
-
     expect(word.closest(".home-command-aside")).toBeTruthy();
-    expect(chunk.closest(".home-command-aside")).toBeTruthy();
-    expect(setup.closest(".home-command-setup-pair")).toBeTruthy();
-    expect(pronunciation.closest(".home-command-setup-pair")).toBeTruthy();
-    expect(
-      plan.compareDocumentPosition(setup) & Node.DOCUMENT_POSITION_FOLLOWING,
-    ).toBeTruthy();
+    expect(screen.queryByRole("heading", { name: "Afina tu nivel" })).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /diagnóstico oral/i })).toBeInTheDocument();
   });
 
-  it("places speak and journal as a pair below the setup pair", async () => {
+  it("shows setup cards after the plan is complete", async () => {
     dailyCardState.empty = false;
     dailyCardState.settled = true;
-    await renderSettledGrid({
-      placementState: { hasPlacement: false, hasMeaningfulProgress: true },
-      pronunciationDiagnosticState: { hasPronunciationDiagnostic: false },
+    dailyCardState.allDone = true;
+    render(
+      <HomeCommandGrid
+        {...baseProps}
+        placementState={{ hasPlacement: false, hasMeaningfulProgress: true }}
+        pronunciationDiagnosticState={{ hasPronunciationDiagnostic: false }}
+      />,
+    );
+    await waitFor(() => {
+      expect(screen.getByRole("heading", { name: "Afina tu nivel" })).toBeInTheDocument();
     });
-
-    const setup = screen.getByRole("heading", { name: "Afina tu nivel" });
-    const speak = screen.getByText("Speak prompt");
-    const journal = screen.getByText("Diario card");
-    const pair = speak.closest(".home-command-setup-pair");
-
-    expect(pair).toBeTruthy();
-    expect(journal.closest(".home-command-setup-pair")).toBe(pair);
-    expect(
-      setup.compareDocumentPosition(speak) & Node.DOCUMENT_POSITION_FOLLOWING,
-    ).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Evalúa tu pronunciación" })).toBeInTheDocument();
+    expect(screen.getByText("Plan done")).toBeInTheDocument();
   });
 
   it("hides every placement prompt after completion", async () => {
     dailyCardState.empty = false;
     dailyCardState.settled = true;
+    dailyCardState.allDone = false;
     await renderSettledGrid({
       placementState: { hasPlacement: true, hasMeaningfulProgress: true },
       pronunciationDiagnosticState: { hasPronunciationDiagnostic: true },
     });
 
-    expect(screen.queryByText("Ajusta tu ruta")).not.toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Afina tu nivel" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /^prueba de nivel$/i })).not.toBeInTheDocument();
   });
 });
 
 describe("HomeCommandGrid pronunciation diagnostic visibility", () => {
-  it("shows both setups as quiet aside cards when the plan owns the fold", async () => {
+  it("shows both setup cards only after the plan is done", async () => {
     dailyCardState.empty = false;
     dailyCardState.settled = true;
-    await renderSettledGrid({
-      placementState: { hasPlacement: false, hasMeaningfulProgress: false },
-      pronunciationDiagnosticState: { hasPronunciationDiagnostic: false },
+    dailyCardState.allDone = true;
+    render(
+      <HomeCommandGrid
+        {...baseProps}
+        placementState={{ hasPlacement: false, hasMeaningfulProgress: false }}
+        pronunciationDiagnosticState={{ hasPronunciationDiagnostic: false }}
+      />,
+    );
+    await waitFor(() => {
+      expect(screen.getByRole("heading", { name: "Afina tu nivel" })).toBeInTheDocument();
     });
-
-    expect(screen.getByRole("heading", { name: "Afina tu nivel" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Evalúa tu pronunciación" })).toBeInTheDocument();
   });
 
-  it("keeps setup CTAs soft when they sit beside an active plan", async () => {
+  it("keeps setup CTAs soft when they appear after the plan", async () => {
     dailyCardState.empty = false;
     dailyCardState.settled = true;
-    await renderSettledGrid({
-      placementState: { hasPlacement: false, hasMeaningfulProgress: false },
-      pronunciationDiagnosticState: { hasPronunciationDiagnostic: false },
+    dailyCardState.allDone = true;
+    render(
+      <HomeCommandGrid
+        {...baseProps}
+        placementState={{ hasPlacement: false, hasMeaningfulProgress: false }}
+        pronunciationDiagnosticState={{ hasPronunciationDiagnostic: false }}
+      />,
+    );
+    await waitFor(() => {
+      expect(screen.getByRole("link", { name: /Hacer prueba de nivel/i })).toBeInTheDocument();
     });
-
     const placementCta = screen.getByRole("link", { name: /Hacer prueba de nivel/i });
     const pronunciationCta = screen.getByRole("link", { name: /Hacer diagnóstico oral/i });
     expect(placementCta.className).not.toMatch(/\bbg-primary\b/);
     expect(pronunciationCta.className).not.toMatch(/\bbg-primary\b/);
   });
 
-  it("shows only the CEFR prompt when CEFR is done but pronunciation diagnostic is not", async () => {
+  it("hides both prompts when CEFR and pronunciation diagnostic are complete", async () => {
     dailyCardState.empty = false;
     dailyCardState.settled = true;
+    dailyCardState.allDone = true;
     await renderSettledGrid({
       placementState: { hasPlacement: true, hasMeaningfulProgress: true },
-      pronunciationDiagnosticState: { hasPronunciationDiagnostic: false },
-    });
-
-    expect(screen.getByRole("heading", { name: "Evalúa tu pronunciación" })).toBeInTheDocument();
-  });
-
-  it("shows only the pronunciation prompt when pronunciation diagnostic is done but CEFR is not", async () => {
-    dailyCardState.empty = false;
-    dailyCardState.settled = true;
-    await renderSettledGrid({
-      placementState: { hasPlacement: false, hasMeaningfulProgress: false },
       pronunciationDiagnosticState: { hasPronunciationDiagnostic: true },
     });
 
-    expect(screen.getByRole("heading", { name: "Afina tu nivel" })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Afina tu nivel" })).not.toBeInTheDocument();
     expect(
       screen.queryByRole("heading", { name: "Evalúa tu pronunciación" }),
     ).not.toBeInTheDocument();
   });
-
-  it("hides both prompts when CEFR placement and pronunciation diagnostic are both complete", async () => {
-    dailyCardState.empty = false;
-    dailyCardState.settled = true;
-    await renderSettledGrid({
-      placementState: { hasPlacement: true, hasMeaningfulProgress: true },
-      pronunciationDiagnosticState: { hasPronunciationDiagnostic: true },
-    });
-
-    expect(screen.queryByText("Ajusta tu ruta")).not.toBeInTheDocument();
-    expect(screen.queryByText("Diagnóstico oral")).not.toBeInTheDocument();
-  });
-
-  it("never treats a default CEFR placement flag as pronunciation diagnostic completion", async () => {
-    dailyCardState.empty = false;
-    dailyCardState.settled = true;
-    await renderSettledGrid({
-      placementState: { hasPlacement: true, hasMeaningfulProgress: true },
-      pronunciationDiagnosticState: { hasPronunciationDiagnostic: false },
-    });
-
-    expect(screen.getByRole("heading", { name: "Evalúa tu pronunciación" })).toBeInTheDocument();
-  });
 });
 
 describe("HomeCommandGrid guest save prompt", () => {
-  it("places saving progress below the plan as a quiet footer", async () => {
+  it("defers the guest save strip until the new learner finishes the plan", async () => {
     dailyCardState.empty = false;
     dailyCardState.settled = true;
+    dailyCardState.allDone = false;
+    authMock.useAuth.mockReturnValue({
+      user: { id: "guest-1", is_anonymous: true } as unknown as import("@supabase/supabase-js").User,
+      session: null,
+      loading: false,
+      supabaseEnabled: true,
+      signOutUser: vi.fn(async () => undefined),
+    });
+
+    render(
+      <HomeCommandGrid
+        {...baseProps}
+        placementState={{ hasPlacement: true, hasMeaningfulProgress: false }}
+        pronunciationDiagnosticState={{ hasPronunciationDiagnostic: true }}
+      />,
+    );
+    await waitFor(() => {
+      expect(screen.getByText("Daily plan")).toBeInTheDocument();
+    });
+    expect(screen.queryByLabelText("Guardar progreso")).not.toBeInTheDocument();
+  });
+
+  it("places saving progress below the plan for returning guests", async () => {
+    dailyCardState.empty = false;
+    dailyCardState.settled = true;
+    dailyCardState.allDone = false;
     authMock.useAuth.mockReturnValue({
       user: { id: "guest-1", is_anonymous: true } as unknown as import("@supabase/supabase-js").User,
       session: null,
@@ -371,10 +370,52 @@ describe("HomeCommandGrid guest save prompt", () => {
       pronunciationDiagnosticState: { hasPronunciationDiagnostic: true },
     });
 
-    const savePrompt = screen.getByLabelText("Guardar progreso");
+    const savePrompt = await screen.findByLabelText("Guardar progreso");
     const plan = screen.getByText("Daily plan");
     expect(savePrompt).toHaveAttribute("data-variant", "footer");
-    expect(savePrompt.closest(".home-command-review")).toBeNull();
     expect(plan.compareDocumentPosition(savePrompt) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+});
+
+describe("HomeCommandGrid review banner", () => {
+  const dueProps = {
+    wordsDueCount: 22,
+    soundsDueCount: 3,
+    placementState: { hasPlacement: true, hasMeaningfulProgress: true },
+    pronunciationDiagnosticState: { hasPronunciationDiagnostic: true },
+  };
+
+  it("does not show the review banner while the plan is still loading", async () => {
+    dailyCardState.empty = false;
+    dailyCardState.settled = false;
+    dailyCardState.allDone = false;
+    dailyCardState.reviewIsEntry = false;
+    render(<HomeCommandGrid {...baseProps} {...dueProps} />);
+    await waitFor(() => {
+      expect(screen.getByText("Daily plan")).toBeInTheDocument();
+    });
+    expect(screen.queryByText("Review banner")).not.toBeInTheDocument();
+  });
+
+  it("shows the review banner after settle when review is not the plan entry", async () => {
+    dailyCardState.empty = false;
+    dailyCardState.settled = true;
+    dailyCardState.allDone = false;
+    dailyCardState.reviewIsEntry = false;
+    await renderSettledGrid(dueProps);
+    await waitFor(() => {
+      expect(screen.getByText("Review banner")).toBeInTheDocument();
+    });
+  });
+
+  it("hides the review banner after settle when review is already the plan entry", async () => {
+    dailyCardState.empty = false;
+    dailyCardState.settled = true;
+    dailyCardState.allDone = false;
+    dailyCardState.reviewIsEntry = true;
+    await renderSettledGrid(dueProps);
+    await waitFor(() => {
+      expect(screen.queryByText("Review banner")).not.toBeInTheDocument();
+    });
   });
 });
