@@ -42,7 +42,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     request,
     user,
     endpoint: "/api/gemini/grade-production",
-    maxPermanent: 30,
+    // Free spoken/written production is the highest-volume graded exercise:
+    // a session now runs a dozen items rather than one. Raised for a
+    // single-owner deployment so a fast session never hits a 429 mid-flow.
+    // maxAnonymous stays low on purpose — guests must not be able to burn
+    // the Gemini quota. Window is 60s (see lib/api/rate-limit.ts).
+    maxPermanent: 120,
     maxAnonymous: 3,
   });
   if (limited) return rateLimitError as NextResponse;
