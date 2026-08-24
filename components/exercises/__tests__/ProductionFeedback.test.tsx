@@ -12,6 +12,7 @@ describe('ProductionFeedback', () => {
           correct: false,
           usedTarget: false,
           grammaticallyCorrect: false,
+          constraintMet: true,
           score: 0,
           feedback: 'Try using the target phrase in a sentence.',
         }}

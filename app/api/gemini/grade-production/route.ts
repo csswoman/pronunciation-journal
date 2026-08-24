@@ -15,12 +15,14 @@ const GradeProductionSchema = z.object({
   production: z.string().min(1).max(2000),
   modality: z.enum(["written", "spoken"]),
   level: z.enum(["A1", "A2", "B1", "B2", "C1", "C2"]).optional(),
+  constraintCheck: z.string().max(400).optional(),
 }).strict();
 
 const GradeResponseSchema = z.object({
   correct: z.boolean(),
   usedTarget: z.boolean(),
   grammaticallyCorrect: z.boolean(),
+  constraintMet: z.boolean().optional(),
   feedback: z.string().max(2000),
   corrections: z.string().max(2000).optional(),
   score: z.number().min(0).max(100),
@@ -28,7 +30,15 @@ const GradeResponseSchema = z.object({
 
 function parseGradeJson(raw: string): ProductionGradeResult {
   const parsed = parseGeminiJson(raw, (json) => GradeResponseSchema.parse(json));
-  return { ...parsed, score: Math.round(parsed.score) };
+  const constraintMet = parsed.constraintMet ?? true;
+  return {
+    ...parsed,
+    constraintMet,
+    // Defend the invariant in code: never report `correct` when the
+    // constraint was missed, even if the model says otherwise.
+    correct: parsed.correct && constraintMet,
+    score: Math.round(parsed.score),
+  };
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
