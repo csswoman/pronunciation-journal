@@ -56,7 +56,7 @@ const SLUG_FACET: Record<ExerciseSlug, SessionFacet> = {
   sentence_context: 'vocabulary',
   multiple_choice: 'reading',
   reader: 'reading',
-  written_production: 'reading',
+  written_production: 'write',
   spoken_production: 'speak',
   error_correction: 'grammar',
   conjugation_blank: 'grammar',

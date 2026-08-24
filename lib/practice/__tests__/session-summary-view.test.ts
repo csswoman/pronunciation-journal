@@ -127,3 +127,18 @@ describe('buildSessionInsight', () => {
     expect(buildSessionInsight(result)).toBe('Hoy conviene reforzar escuchar.')
   })
 })
+
+describe('written_production facet', () => {
+  it('counts free written production as writing, not reading', () => {
+    const rows = buildPerformanceRows({
+      written_production: { correct: 2, total: 3 },
+    } as SessionResult['bySlug'])
+
+    expect(rows.map((r) => r.facet)).toEqual(['write'])
+    expect(rows[0]).toMatchObject({ correct: 2, total: 3, label: 'Escribir' })
+  })
+
+  it('labels a written_production exercise as writing', () => {
+    expect(formatExerciseLabel('written_production', null)).toBe('Escribir')
+  })
+})
