@@ -29,6 +29,29 @@ const nextConfig = {
     resolveAlias: Object.fromEntries(
       nextPolyfillModuleIds.map((id) => [id, emptyNextPolyfill]),
     ),
+    rules: {
+      // All illustrations are downloaded from unDraw with accent color
+      // #17B8A6 selected on their site (undraw.co) — this is NOT unDraw's
+      // default purple. SVGR's replaceAttrValues below only swaps this
+      // exact hex for currentColor, so a future illustration downloaded
+      // with a different accent color will silently ignore the theme
+      // (no error — it just keeps its baked-in fill). If that happens,
+      // either re-download with #17B8A6 selected, or add the new hex here.
+      "*.svg": {
+        loaders: [
+          {
+            loader: "@svgr/webpack",
+            options: {
+              titleProp: false,
+              replaceAttrValues: {
+                "#17B8A6": "currentColor",
+              },
+            },
+          },
+        ],
+        as: "*.js",
+      },
+    },
   },
   async headers() {
     return [
@@ -43,6 +66,22 @@ const nextConfig = {
             // Pronunciation and spoken-production flows require same-origin
             // microphone capture. Keep camera and geolocation disabled.
             value: "camera=(), microphone=(self), geolocation=()",
+          },
+        ],
+      },
+      {
+        // Next's manifest.ts file-convention loader hardcodes
+        // `max-age=0, must-revalidate` on the generated route, forcing a
+        // revalidation round-trip on every navigation even though the
+        // content only changes at build time. Lighthouse flagged this
+        // request sitting on the critical path (network-dependency-tree
+        // audit). Override with a long-lived cache since a new deploy
+        // ships a new build and busts any stale client copy anyway.
+        source: "/manifest.webmanifest",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=3600, stale-while-revalidate=86400",
           },
         ],
       },

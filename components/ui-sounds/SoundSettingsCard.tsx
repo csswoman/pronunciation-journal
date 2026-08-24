@@ -1,65 +1,92 @@
-"use client";
+'use client'
 
 // Planned structure:
 // <SoundSettingsCard>
-//   <SoundEnableToggle />   — enable/disable app sounds
-//   <SoundVolumeSlider />   — 0–100% loudness, previews on change
+//   <SoundPreferenceSelector /> — off | exercise | ui | all
+//   <SoundVolumeSlider />       — 0–100% loudness, previews on change
 // </SoundSettingsCard>
 
-import { useUISoundsStore } from "@/lib/stores/uiSoundsStore";
-import { playUiCue } from "@/lib/ui-sounds/cues";
-import { cn } from "@/lib/cn";
+import { useUISoundsStore, type SoundPreference } from '@/lib/stores/uiSoundsStore'
+import { playUiCue } from '@/lib/ui-sounds/cues'
+import { cn } from '@/lib/cn'
 
-function SoundEnableToggle() {
-  const soundEnabled = useUISoundsStore((s) => s.soundEnabled);
-  const setSoundEnabled = useUISoundsStore((s) => s.setSoundEnabled);
+const PREFERENCE_OPTIONS: Array<{ value: SoundPreference; label: string; description: string }> = [
+  { value: 'off', label: 'Silencio', description: 'Sin efectos de sonido' },
+  { value: 'exercise', label: 'Ejercicios', description: 'Aciertos, fallos y opciones' },
+  { value: 'ui', label: 'Interfaz', description: 'Navegación, paneles y botones' },
+  { value: 'all', label: 'Todos', description: 'Ejercicios y sistema completo' },
+]
 
-  const handleToggle = () => {
-    const next = !soundEnabled;
-    setSoundEnabled(next);
-    if (next) playUiCue("correct");
-  };
+function SoundPreferenceSelector() {
+  const soundPreference = useUISoundsStore((s) => s.soundPreference)
+  const setSoundPreference = useUISoundsStore((s) => s.setSoundPreference)
+
+  const handleSelect = (val: SoundPreference) => {
+    setSoundPreference(val)
+    if (val === 'exercise' || val === 'all') {
+      playUiCue('correct')
+    } else if (val === 'ui') {
+      playUiCue('nav-switch')
+    }
+  }
 
   return (
-    <div className="flex items-center justify-between gap-4">
+    <div className="space-y-3">
       <div>
-        <p className="text-body-sm font-medium text-fg">Sonidos de la app</p>
-        <p className="text-caption text-fg-muted">Feedback de aciertos, errores y toques.</p>
+        <p className="text-body-sm font-medium text-fg">Preferencia de audio</p>
+        <p className="text-caption text-fg-muted">Selecciona dónde quieres escuchar retroalimentación acústica.</p>
       </div>
-      <button
-        type="button"
-        role="switch"
-        aria-checked={soundEnabled}
-        aria-label="Activar sonidos de la app"
-        onClick={handleToggle}
-        className={cn(
-          "relative h-6 w-11 shrink-0 rounded-full transition-colors",
-          soundEnabled ? "bg-[var(--primary)]" : "bg-[var(--bg-tertiary)]",
-        )}
-      >
-        <span
-          className={cn(
-            "absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-[var(--on-primary)] shadow transition-transform",
-            soundEnabled && "translate-x-5",
-          )}
-        />
-      </button>
+
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+        {PREFERENCE_OPTIONS.map((opt) => {
+          const isSelected = soundPreference === opt.value
+          return (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => handleSelect(opt.value)}
+              className={cn(
+                'flex flex-col items-start rounded-xl border p-3 text-left transition-all',
+                isSelected
+                  ? 'border-[var(--primary)] bg-[var(--primary-soft)] text-fg shadow-sm'
+                  : 'border-[var(--border)] bg-[var(--bg-primary)] text-fg-muted hover:border-[var(--primary)]/40 hover:text-fg'
+              )}
+            >
+              <span className={cn('text-xs font-semibold', isSelected && 'text-[var(--primary)]')}>
+                {opt.label}
+              </span>
+              <span className="mt-1 text-[11px] leading-tight text-fg-subtle">
+                {opt.description}
+              </span>
+            </button>
+          )
+        })}
+      </div>
     </div>
-  );
+  )
 }
 
 function SoundVolumeSlider() {
-  const soundEnabled = useUISoundsStore((s) => s.soundEnabled);
-  const volume = useUISoundsStore((s) => s.volume);
-  const setVolume = useUISoundsStore((s) => s.setVolume);
+  const soundPreference = useUISoundsStore((s) => s.soundPreference)
+  const volume = useUISoundsStore((s) => s.volume)
+  const setVolume = useUISoundsStore((s) => s.setVolume)
 
-  const percent = Math.round(volume * 100);
+  const isMuted = soundPreference === 'off'
+  const percent = Math.round(volume * 100)
+
+  const playPreview = () => {
+    if (soundPreference === 'exercise' || soundPreference === 'all') {
+      playUiCue('correct')
+    } else if (soundPreference === 'ui') {
+      playUiCue('nav-switch')
+    }
+  }
 
   return (
-    <div className={cn("space-y-2", !soundEnabled && "opacity-50")}>
+    <div className={cn('space-y-2', isMuted && 'opacity-50 pointer-events-none')}>
       <div className="flex items-center justify-between">
         <label htmlFor="sound-volume" className="text-body-sm font-medium text-fg">
-          Volumen
+          Volumen maestro
         </label>
         <span className="text-caption font-semibold tabular-nums text-fg-muted">{percent}%</span>
       </div>
@@ -70,20 +97,20 @@ function SoundVolumeSlider() {
         max={100}
         step={5}
         value={percent}
-        disabled={!soundEnabled}
+        disabled={isMuted}
         onChange={(e) => setVolume(Number(e.target.value) / 100)}
-        onPointerUp={() => soundEnabled && playUiCue("correct")}
-        onKeyUp={() => soundEnabled && playUiCue("correct")}
+        onPointerUp={playPreview}
+        onKeyUp={playPreview}
         className="w-full accent-[var(--primary)]"
       />
     </div>
-  );
+  )
 }
 
-/** Device-level sound preferences (enable + volume), persisted locally. */
+/** Device-level sound preferences with fine granularity (off | exercise | ui | all). */
 export default function SoundSettingsCard() {
   return (
-    <div className="space-y-4 rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
+    <div className="space-y-5 rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
       <div className="flex items-center gap-2">
         <svg className="w-4 h-4 text-fg-subtle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
@@ -95,10 +122,10 @@ export default function SoundSettingsCard() {
         </svg>
         <span className="text-caption font-semibold uppercase tracking-widest text-fg-subtle">Sonido</span>
       </div>
-      <SoundEnableToggle />
+      <SoundPreferenceSelector />
       <div className="border-t border-[var(--border)] pt-4">
         <SoundVolumeSlider />
       </div>
     </div>
-  );
+  )
 }

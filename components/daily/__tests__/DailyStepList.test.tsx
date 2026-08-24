@@ -1,8 +1,17 @@
 // @vitest-environment jsdom
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import DailyStepList from '../DailyStepList'
 import type { DailyStep, DailyStepStatus } from '@/hooks/useDailyPlan'
+
+const playUiCue = vi.fn()
+vi.mock('@/lib/ui-sounds/cues', () => ({
+  playUiCue: (...args: unknown[]) => playUiCue(...args),
+}))
+
+beforeEach(() => {
+  playUiCue.mockClear()
+})
 
 function makeStep(overrides: Partial<DailyStep> = {}): DailyStep {
   return {
@@ -109,7 +118,7 @@ describe('DailyStepList (collapseFutureSteps=true)', () => {
       makeStep({ id: 's3', title: 'Práctica de sonido', estMinutes: 8 }),
       makeStep({ id: 's4', title: 'Estudia teoría', estMinutes: 5 }),
     ]
-    render(
+    const { container } = render(
       <DailyStepList
         steps={steps}
         getStepStatus={statusMap({})}
@@ -120,8 +129,17 @@ describe('DailyStepList (collapseFutureSteps=true)', () => {
 
     expect(screen.queryByText('Estudia teoría')).not.toBeInTheDocument()
     await userEvent.click(screen.getByText('Ver 1 paso más'))
+    expect(playUiCue).toHaveBeenCalledWith('nav-open')
     expect(screen.getByText('Estudia teoría')).toBeInTheDocument()
     expect(screen.queryByText(/Ver \d+ más/)).not.toBeInTheDocument()
+
+    const revealed = screen.getByText('Estudia teoría').closest('li')
+    expect(revealed?.classList.contains('list-stagger')).toBe(true)
+    expect(revealed?.style.getPropertyValue('--stagger-index')).toBe('0')
+    // Previously visible compact rows stay un-staggered
+    const alreadyVisible = screen.getByText('Lectura').closest('li')
+    expect(alreadyVisible?.classList.contains('list-stagger')).toBe(false)
+    expect(container.querySelectorAll('.list-stagger')).toHaveLength(1)
   })
 
   it('does not show the toggle when there are 2 or fewer pending steps beyond the current one', () => {
@@ -172,5 +190,45 @@ describe('DailyStepList (collapseFutureSteps=true)', () => {
     expect(screen.getByText('Estudia teoría')).toBeInTheDocument()
     expect(screen.queryByText('Irregular past tense')).not.toBeInTheDocument()
     expect(screen.getByText('Ver 1 paso más')).toBeInTheDocument()
+  })
+})
+
+describe('DailyStepList step-complete tick', () => {
+  it('applies success-pulse and plays the toggle cue when a step transitions to done', () => {
+    const steps = [makeStep({ id: 's1' })]
+    const { rerender } = render(
+      <DailyStepList
+        steps={steps}
+        getStepStatus={statusMap({})}
+        onStartStep={vi.fn()}
+      />,
+    )
+
+    expect(screen.queryByText('Hecho')).not.toBeInTheDocument()
+
+    rerender(
+      <DailyStepList
+        steps={steps}
+        getStepStatus={statusMap({ s1: 'done' })}
+        onStartStep={vi.fn()}
+      />,
+    )
+
+    const badge = screen.getByText('Hecho').closest('span')
+    expect(badge?.classList.contains('success-pulse')).toBe(true)
+    expect(playUiCue).toHaveBeenCalledWith('toggle')
+  })
+
+  it('does not play the toggle cue on initial mount for already-done steps', () => {
+    const steps = [makeStep({ id: 's1' })]
+    render(
+      <DailyStepList
+        steps={steps}
+        getStepStatus={statusMap({ s1: 'done' })}
+        onStartStep={vi.fn()}
+      />,
+    )
+
+    expect(playUiCue).not.toHaveBeenCalled()
   })
 })

@@ -21,6 +21,7 @@ import { useUserPreferences } from "@/hooks/useUserPreferences";
 import { isAnonymousUser } from "@/lib/auth/is-anonymous";
 import { LogIn, LogOut, Settings2 } from "@/components/icons";
 import { useSidebar } from "@/components/theme/sidebar/SidebarContext";
+import { playUiCue } from "@/lib/ui-sounds/cues";
 import {
   SoundControls,
   ThemeControls,
@@ -48,17 +49,22 @@ export default function SidebarFooter() {
         .join("")
         .toUpperCase();
 
+  const handleClose = () => {
+    playUiCue("nav-close");
+    setOpen(false);
+  };
+
   useEffect(() => {
     if (!open) return;
 
     function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") setOpen(false);
+      if (event.key === "Escape") handleClose();
     }
 
     function onPointerDown(event: PointerEvent) {
       const target = event.target as Node;
       if (panelRef.current?.contains(target) || footerRef.current?.contains(target)) return;
-      setOpen(false);
+      handleClose();
     }
 
     document.addEventListener("keydown", onKeyDown);
@@ -70,6 +76,7 @@ export default function SidebarFooter() {
   }, [open]);
 
   const signOut = async () => {
+    playUiCue("wrong");
     setOpen(false);
     await signOutUser();
     router.push("/");
@@ -79,12 +86,15 @@ export default function SidebarFooter() {
     <div ref={footerRef} className="relative flex-shrink-0 border-t border-border-subtle px-3 pb-3 pt-2">
       <button
         type="button"
-        onClick={() => setOpen((value) => !value)}
+        onClick={() => {
+          playUiCue(open ? "nav-close" : "nav-open");
+          setOpen((value) => !value);
+        }}
         aria-expanded={open}
         aria-haspopup="dialog"
         aria-label={isGuest ? "Abrir ajustes rápidos" : `Ajustes de ${displayName}`}
         className={cn(
-          "focus-ring flex h-10 items-center rounded-md text-left transition-colors",
+          "focus-ring press-feedback flex h-10 items-center rounded-md text-left transition-colors",
           collapsed ? "mx-auto w-10 justify-center" : "w-full gap-2.5 px-2.5",
           open ? "bg-surface-sunken" : "hover:bg-surface-raised",
         )}
@@ -103,7 +113,7 @@ export default function SidebarFooter() {
             ref={panelRef}
             role="dialog"
             aria-label="Ajustes rápidos"
-            className="fixed bottom-3 left-[calc(var(--sidebar-width)+0.75rem)] z-50 w-[min(22rem,calc(100vw-1.5rem))] rounded-xl border border-border-subtle bg-surface-raised p-3 shadow-xl animate-in fade-in zoom-in-95 duration-150"
+            className="panel-reveal fixed bottom-3 left-[calc(var(--sidebar-width)+0.75rem)] z-50 w-[min(23rem,calc(100vw-1.5rem))] rounded-xl border border-border-subtle bg-surface-raised p-4 shadow-xl"
           >
             <div className="mb-1 flex items-start justify-between gap-3 px-1 pb-2">
               <div>
@@ -118,10 +128,11 @@ export default function SidebarFooter() {
                 <button
                   type="button"
                   onClick={() => {
+                    playUiCue("tap");
                     setOpen(false);
                     router.push("/profile");
                   }}
-                  className="focus-ring shrink-0 rounded-sm px-2 py-1 font-caption text-primary hover:bg-primary-soft"
+                  className="focus-ring press-feedback shrink-0 rounded-sm px-2 py-1 font-caption text-primary transition-colors hover:bg-primary-soft"
                 >
                   Ver perfil
                 </button>
@@ -137,10 +148,11 @@ export default function SidebarFooter() {
                   <button
                     type="button"
                     onClick={() => {
+                      playUiCue("tap");
                       setOpen(false);
                       router.push("/login?intent=save&mode=register");
                     }}
-                    className="focus-ring flex min-h-10 w-full items-center gap-2 rounded-sm px-2 text-left font-label text-primary hover:bg-primary-soft"
+                    className="focus-ring press-feedback flex min-h-10 w-full items-center gap-2 rounded-sm px-2 text-left font-label text-primary transition-colors hover:bg-primary-soft"
                   >
                     <LogIn size={16} aria-hidden />
                     Guardar progreso
@@ -148,10 +160,11 @@ export default function SidebarFooter() {
                   <button
                     type="button"
                     onClick={() => {
+                      playUiCue("tap");
                       setOpen(false);
                       router.push("/login?intent=save");
                     }}
-                    className="focus-ring flex min-h-10 w-full items-center gap-2 rounded-sm px-2 text-left font-label text-fg-muted hover:bg-surface-sunken hover:text-fg"
+                    className="focus-ring press-feedback flex min-h-10 w-full items-center gap-2 rounded-sm px-2 text-left font-label text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg"
                   >
                     Iniciar sesión
                   </button>
@@ -160,9 +173,13 @@ export default function SidebarFooter() {
                 <button
                   type="button"
                   onClick={signOut}
-                  className="focus-ring flex min-h-10 w-full items-center gap-2 rounded-sm px-2 text-left font-label text-fg-muted hover:bg-surface-sunken hover:text-fg"
+                  className="focus-ring press-feedback group flex min-h-10 w-full items-center gap-2 rounded-sm px-2 text-left font-label text-error-value transition-all duration-150 ease-out hover:bg-error-soft hover:pl-2.5"
                 >
-                  <LogOut size={16} aria-hidden />
+                  <LogOut
+                    size={16}
+                    aria-hidden
+                    className="shrink-0 transition-transform duration-150 ease-out group-hover:-translate-x-0.5"
+                  />
                   Cerrar sesión
                 </button>
               )}

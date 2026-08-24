@@ -78,7 +78,7 @@ export default function HomeJournalCard() {
   return (
     <Link
       href={href}
-      className={`home-sidebar-card focus-ring group flex h-full flex-col gap-2 transition-colors hover:bg-surface-sunken${!lastEntry ? ' home-sidebar-card--compact' : ''}`}
+      className="focus-ring group flex h-full flex-col gap-2 rounded-xl border border-border-subtle bg-surface-raised p-4 transition-colors hover:bg-surface-sunken"
     >
       <span className="font-label text-fg">Diario</span>
       <span className="font-body-sm text-pretty text-fg">{title}</span>

@@ -1,10 +1,15 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { Check, ChevronDown } from '@/components/icons'
+import { Check } from '@/components/icons'
 import { cn } from '@/lib/cn'
 import type { ResolvedSeedWord } from '@/lib/journal/scaffold-resolver'
 import { normalizeHintTokens } from '@/lib/journal/writing-hints/seed-progress'
+
+// Planned structure:
+// <JournalVocabularyList>
+//   <header: label + counter />
+//   <chip-grid />
+// </JournalVocabularyList>
 
 export function JournalVocabularyList({
   words,
@@ -13,84 +18,50 @@ export function JournalVocabularyList({
   words: ResolvedSeedWord[]
   usedKeys: Set<string>
 }) {
-  const ownedKeys = new Set(words.filter((word) => word.inWordBank).map((word) => wordKey(word.text)))
-  const [expandedWords, setExpandedWords] = useState<Set<string>>(() => new Set(ownedKeys))
-
-  useEffect(() => {
-    setExpandedWords(new Set(ownedKeys))
-  }, [words])
-
-  function toggleWord(word: ResolvedSeedWord) {
-    const key = wordKey(word.text)
-    setExpandedWords((current) => {
-      const next = new Set(current)
-      if (next.has(key)) next.delete(key)
-      else next.add(key)
-      return next
-    })
-  }
+  const usedCount = words.filter((w) => usedKeys.has(wordKey(w.text))).length
 
   return (
-    <ul className="mt-3 flex flex-col divide-y divide-border-subtle">
-      {words.map((word) => {
-        const key = wordKey(word.text)
-        const expanded = expandedWords.has(key)
-        const isOwned = word.inWordBank
-        const isUsed = usedKeys.has(key)
-        const status = [
-          isOwned ? 'ya está en tu vocabulario' : null,
-          isUsed ? 'usada en este texto' : null,
-        ]
-          .filter(Boolean)
-          .join(' · ')
-        return (
-          <li key={word.text} className="py-1">
-            <button
-              type="button"
-              aria-expanded={expanded}
-              onClick={() => toggleWord(word)}
-              className={cn(
-                'focus-ring flex min-h-11 w-full items-center gap-2 rounded-[var(--radius-sm)] px-2 text-left font-body-sm transition-colors',
-                isUsed && 'bg-success-soft/30',
-              )}
-            >
+    <div className="flex flex-col gap-2.5">
+      <div className="flex items-baseline justify-between">
+        <span className="font-body-sm font-semibold text-fg">Palabras de hoy</span>
+        <span className="font-body-xs text-fg-muted">
+          {usedCount} de {words.length}
+        </span>
+      </div>
+
+      <ul className="flex flex-wrap gap-2" aria-label="Vocabulario objetivo">
+        {words.map((word) => {
+          const key = wordKey(word.text)
+          const isUsed = usedKeys.has(key)
+          const isOwned = word.inWordBank
+          return (
+            <li key={word.text}>
               <span
+                title={`${word.translation} — ${word.example}`}
                 className={cn(
-                  'flex size-5 shrink-0 items-center justify-center rounded-full text-fg-muted',
-                  isUsed && 'bg-success text-on-primary',
-                  !isUsed && isOwned && 'bg-primary-soft text-primary',
+                  'inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-body-sm transition-colors',
+                  isUsed
+                    ? 'bg-primary text-on-primary'
+                    : isOwned
+                      ? 'border border-primary/30 bg-primary-soft/50 text-fg'
+                      : 'border border-border-default bg-surface-sunken text-fg',
                 )}
-                aria-hidden
               >
-                {isOwned || isUsed ? <Check size={12} strokeWidth={3} /> : null}
+                {isUsed && (
+                  <Check
+                    size={11}
+                    strokeWidth={3}
+                    className="shrink-0"
+                    aria-hidden
+                  />
+                )}
+                {word.text}
               </span>
-              <span className={cn('min-w-0 flex-1 truncate', isOwned || isUsed ? 'font-medium text-fg' : 'text-fg')}>
-                {word.text} <span className="text-fg-muted">· {word.translation}</span>
-              </span>
-              {isUsed && (
-                <span className="shrink-0 rounded-full bg-success-soft px-1.5 py-0.5 font-body-xs font-semibold text-success">
-                  Usada
-                </span>
-              )}
-              <ChevronDown
-                size={14}
-                className={cn('shrink-0 text-fg-subtle transition-transform', expanded && 'rotate-180')}
-                aria-hidden
-              />
-              <span className="sr-only">
-                {status ? `, ${status}` : ''}. {expanded ? 'Ocultar detalles' : 'Mostrar detalles'}
-              </span>
-            </button>
-            {expanded ? (
-              <div className="ml-9 pb-2 pr-5 font-body-xs text-fg-muted">
-                <p className="font-ipa text-caption text-primary">{word.ipa}</p>
-                <p className="mt-1 leading-normal">{word.example}</p>
-              </div>
-            ) : null}
-          </li>
-        )
-      })}
-    </ul>
+            </li>
+          )
+        })}
+      </ul>
+    </div>
   )
 }
 

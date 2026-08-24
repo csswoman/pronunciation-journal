@@ -46,7 +46,7 @@ export default function HomeLayout({
   const currentStreak = streak?.currentStreak ?? 0;
 
   return (
-    <div className="home-layout home-layout-shell">
+    <div className="home-layout home-layout-shell max-w-220 mx-auto">
       <div className="home-layout-sections flex flex-col">
         <HomePageHeader
           streak={streak}

@@ -99,16 +99,34 @@ export default function DailyPlanCard({
         </div>
 
         {(status === 'loading' || status === 'idle') && (
-          <div className="flex flex-col gap-2.5">
-            {(['w-4/5', 'w-3/4', 'w-11/12', 'w-2/3', 'w-5/6'] as const).map((widthClass, i) => (
-              <div key={i} className="flex items-center gap-3">
-                <div className="h-3 w-6 shrink-0 animate-pulse rounded bg-surface-sunken" />
-                <div className={`h-4 animate-pulse rounded-md bg-surface-sunken ${widthClass}`} />
+          <div className="flex flex-col gap-5" aria-hidden>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-baseline justify-between gap-3">
+                <div className="h-5 w-28 animate-pulse rounded-md bg-surface-sunken" />
+                <div className="h-4 w-24 animate-pulse rounded-md bg-surface-sunken" />
               </div>
-            ))}
-            <p className="font-body-sm mt-2 animate-pulse text-center text-fg-muted">
-              Preparando tu plan…
-            </p>
+              <div className="flex min-w-0 flex-1 gap-1">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <div key={i} className="h-2.5 min-w-0 flex-1 animate-pulse rounded-full bg-surface-sunken" />
+                ))}
+              </div>
+            </div>
+            <div className="flex flex-col gap-2.5">
+              {(['w-4/5', 'w-3/4', 'w-11/12', 'w-2/3', 'w-5/6'] as const).map((widthClass, i) => (
+                <div
+                  key={i}
+                  className="flex min-h-11 w-full flex-col gap-2 rounded-[var(--radius-md)] border border-transparent px-3.5 py-3.5"
+                >
+                  <div className="flex w-full items-center gap-3">
+                    <div className="min-w-0 flex-1">
+                      <div className={`h-4 animate-pulse rounded-md bg-surface-sunken ${widthClass}`} />
+                      <div className="mt-2 h-3 w-1/2 animate-pulse rounded bg-surface-sunken" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <p className="sr-only">Preparando tu plan…</p>
           </div>
         )}
 

@@ -23,8 +23,7 @@ export default function HomePronunciationPrompt({
 
   if (compact) {
     return (
-      <section className="home-sidebar-card home-sidebar-card--compact flex h-full flex-col gap-1.5" aria-labelledby="pronunciation-prompt-compact-title">
-        <span className="font-kicker text-fg-subtle">Diagnóstico oral</span>
+      <section className="flex h-full flex-col gap-1.5 rounded-xl border border-border-subtle bg-surface-raised px-4 py-3" aria-labelledby="pronunciation-prompt-compact-title">
         <h2 id="pronunciation-prompt-compact-title" className="font-label text-fg">
           Evalúa tu pronunciación
         </h2>

@@ -14,7 +14,7 @@ vi.mock("@/lib/api/guards", () => ({
   publicErrorResponse: (status: number, message: string) => Response.json({ error: message }, { status }),
 }));
 
-import { GeminiRequestSchema } from "../route";
+import { GeminiRequestSchema } from "../schema";
 
 function baseRequest(voice?: unknown, missionId?: string) {
   return {

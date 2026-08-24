@@ -3,7 +3,7 @@
 // Planned structure:
 // <HomeWordOfDayCard>
 //   kicker
-//   word mark (accent-1 highlight on the word only) + heart
+//   word mark (neutral text) + heart — card left border + IPA in --c-vocabulario
 //   IPA + definition + example line
 // </HomeWordOfDayCard>
 
@@ -19,27 +19,30 @@ import { readGuestStudyLevel } from "@/lib/preferences/guest-study-level";
 import { formatIpaDisplay } from "@/lib/lexicon/format-ipa";
 import { cn } from "@/lib/cn";
 import { quickAddWord, toggleFavorite } from "@/lib/word-bank/queries";
+import { playUiCue } from "@/lib/ui-sounds/cues";
+import { useRetrigger } from "@/hooks/useRetrigger";
 
 type SaveState = "idle" | "saving" | "saved" | "error";
 
 function saveLabel(state: SaveState): string {
-  if (state === "saved") return "En Tracking";
+  if (state === "saved") return "Guardada";
   if (state === "saving") return "Guardando…";
   if (state === "error") return "No se pudo guardar · reintentar";
-  return "Guardar en Tracking";
+  return "Guardar palabra";
 }
 
 interface HomeWordOfDayCardProps {
   profileLevel?: string | null;
 }
 
-/** Single-word focus — accent lives on the word mark, not the card shell. */
+/** Single-word focus — IPA carries domain color; card stays neutral. */
 export default function HomeWordOfDayCard({ profileLevel = null }: HomeWordOfDayCardProps) {
   const { user } = useAuth();
   const [level, setLevel] = useState<string | undefined>(
     profileLevel ? profileLevel.toLowerCase() : undefined
   );
   const [saveState, setSaveState] = useState<SaveState>("idle");
+  const { ref: heartRef, trigger: popHeart } = useRetrigger<HTMLButtonElement>("animate-heart-pop");
 
   useEffect(() => {
     if (profileLevel) return;
@@ -61,6 +64,12 @@ export default function HomeWordOfDayCard({ profileLevel = null }: HomeWordOfDay
   useEffect(() => {
     setSaveState("idle");
   }, [word?.word]);
+
+  useEffect(() => {
+    if (saveState !== "saved") return;
+    popHeart();
+    playUiCue("save");
+  }, [saveState, popHeart]);
 
   async function handleSave() {
     if (!word || saveState === "saving" || saveState === "saved") return;
@@ -85,7 +94,7 @@ export default function HomeWordOfDayCard({ profileLevel = null }: HomeWordOfDay
       className="home-sidebar-card flex flex-col gap-3"
       aria-busy={loading || undefined}
     >
-      <span className="font-kicker text-fg-subtle">Palabra del día</span>
+      <span className="font-label text-fg">Palabra del día</span>
 
       {loading && (
         <div className="flex flex-col gap-2 py-1" aria-hidden>
@@ -106,12 +115,13 @@ export default function HomeWordOfDayCard({ profileLevel = null }: HomeWordOfDay
 
       {word && !loading && (
         <div className="animate-state-in flex flex-col gap-2.5" key={word.word}>
-          <div className="flex items-start gap-2">
+          <div className="flex items-center gap-2">
             <p className="home-editorial-mark min-w-0">
               <SyllableWord word={word.word} />
             </p>
-            <div className="group relative shrink-0 pt-0.5">
+            <div className="group relative shrink-0">
               <button
+                ref={heartRef}
                 type="button"
                 onClick={() => void handleSave()}
                 disabled={saveState === "saving" || saveState === "saved"}
@@ -126,7 +136,7 @@ export default function HomeWordOfDayCard({ profileLevel = null }: HomeWordOfDay
                 )}
               >
                 <Heart
-                  size={18}
+                  size={22}
                   fill={saveState === "saved" ? "currentColor" : "none"}
                   aria-hidden
                 />
@@ -141,7 +151,7 @@ export default function HomeWordOfDayCard({ profileLevel = null }: HomeWordOfDay
             </div>
           </div>
           {word.ipa ? (
-            <p className="font-ipa text-body-lg leading-snug text-fg-muted">
+            <p className="-mt-1.5 font-ipa text-body-lg leading-snug text-vocabulario">
               {formatIpaDisplay(word.ipa)}
             </p>
           ) : null}

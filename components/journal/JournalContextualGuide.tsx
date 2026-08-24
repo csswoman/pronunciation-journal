@@ -1,5 +1,13 @@
 'use client'
 
+// Planned structure:
+// <JournalContextualGuide>
+//   <JournalVocabularyList />         — siempre visible, chips
+//   <section "Sigue con" />           — starters + nudge + pista de estructura inline
+//   <details "Modelos de frase" />    — colapsado, VerbTensesGuide + UsefulPhrasesGuide
+//   <details "Ojo con esto" />        — colapsado, badge cuando hay nota
+// </JournalContextualGuide>
+
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { ChevronDown } from '@/components/icons'
 import { writingScaffoldFor } from '@/lib/journal/writing-scaffold'
@@ -13,17 +21,10 @@ import {
   seedWordIsUsed,
 } from '@/lib/journal/writing-hints/seed-progress'
 import { JournalNudgePanel } from './JournalNudgePanel'
-import { JournalRailSection } from './JournalRailSection'
 import { JournalStarterList } from './JournalStarterList'
 import { JournalVocabularyList } from './JournalVocabularyList'
-
-// Planned structure:
-// <JournalContextualGuide>
-//   <vocabulary section />
-//   <JournalRailSection starters + JournalNudgePanel />
-//   <JournalRailSection structure />
-//   <JournalRailSection grammar note />
-// </JournalContextualGuide>
+import { VerbTensesGuide } from './VerbTensesGuide'
+import { UsefulPhrasesGuide } from './UsefulPhrasesGuide'
 
 export interface JournalContextualGuideProps {
   promptId: string
@@ -92,7 +93,8 @@ export function JournalContextualGuide({
           content,
         )
       : -1
-  const ownedCount = resolvedVocabulary.filter((word) => word.inWordBank).length
+
+  const starterLabel = content.trim().length > 0 ? 'Sigue con' : 'Empieza así'
 
   async function requestNudge() {
     if (
@@ -130,89 +132,95 @@ export function JournalContextualGuide({
 
   return (
     <div className="flex flex-col gap-5">
-      {resolvedVocabulary.length > 0 ? (
-        <section className="rounded-[var(--radius-md)] bg-surface-base px-3 py-4">
-          <h3 className="font-body-sm font-semibold text-fg">Vocabulario para usar</h3>
-          {ownedCount > 0 ? (
-            <p className="mt-1 font-body-sm text-fg-muted">
-              {ownedCount} de estas ya son tuyas — úsalas hoy.
-            </p>
-          ) : null}
-          <JournalVocabularyList words={resolvedVocabulary} usedKeys={usedKeys} />
-        </section>
-      ) : null}
+      {/* ── Palabras de hoy ─ chips con estado ── */}
+      {resolvedVocabulary.length > 0 && (
+        <JournalVocabularyList words={resolvedVocabulary} usedKeys={usedKeys} />
+      )}
 
-      <JournalRailSection heading="Empieza así" collapsible>
-        <JournalStarterList
-          starters={scaffold.sentence_starters}
-          activeIndex={starterIndex}
-          onSelectStarter={onStarterSelect}
-        />
-        {isStuck && starterIndex >= 0 && promptText.trim() ? (
-          <JournalNudgePanel
-            calls={nudgeCalls}
-            nudges={nudges}
-            requesting={requestingNudge}
-            errorMessage={nudgeError}
-            onRequest={() => void requestNudge()}
+      {/* ── Sigue con / Empieza así ── */}
+      <section className="border-t border-border-subtle pt-5 first:border-t-0 first:pt-0">
+        <h3 className="font-body-sm font-semibold text-fg">{starterLabel}</h3>
+
+        {/* Pista de estructura inline cuando ya hay texto */}
+        {hintsEnabled && wordCount > 0 && scaffold.structure[structureIndex] && (
+          <p className="mb-2 mt-1.5 font-body-xs text-fg-muted">
+            <span className="font-medium text-fg">
+              {scaffold.structure[structureIndex].label}.
+            </span>{' '}
+            {scaffold.structure[structureIndex].hint}
+          </p>
+        )}
+
+        <div className="mt-3">
+          <JournalStarterList
+            starters={scaffold.sentence_starters}
+            activeIndex={starterIndex}
+            onSelectStarter={onStarterSelect}
+            vocabWords={resolvedVocabulary.map((w) => w.text)}
           />
-        ) : null}
-      </JournalRailSection>
-
-      {hintsEnabled && wordCount > 0 ? (
-        <JournalRailSection heading="Cómo organizarlo">
-          {scaffold.structure[structureIndex] ? (
-            <div
-              data-structure-active="true"
-              className="rounded-[var(--radius-sm)] bg-primary-soft px-3 py-2 font-body-sm text-fg"
-            >
-              <span className="font-medium">{scaffold.structure[structureIndex].label}.</span>{' '}
-              {scaffold.structure[structureIndex].hint}
-              <span className="mt-1 block font-body-xs font-medium text-fg-muted">
-                {wordCount} / {targetLength} palabras
-              </span>
-            </div>
+          {isStuck && starterIndex >= 0 && promptText.trim() ? (
+            <JournalNudgePanel
+              calls={nudgeCalls}
+              nudges={nudges}
+              requesting={requestingNudge}
+              errorMessage={nudgeError}
+              onRequest={() => void requestNudge()}
+            />
           ) : null}
-          <details className="group mt-3 rounded-[var(--radius-sm)] border border-border-subtle">
-            <summary className="focus-ring flex min-h-11 cursor-pointer list-none items-center gap-2 px-3 font-body-sm font-medium text-fg">
-              <ChevronDown
-                size={14}
-                className="shrink-0 text-fg-subtle transition-transform duration-150 group-open:rotate-180"
-                aria-hidden
-              />
-              Ver los tres pasos
-            </summary>
-            <ol className="flex flex-col gap-2 border-t border-border-subtle px-3 py-3">
-              {scaffold.structure.map((item) => (
-                <li key={item.label} className="font-body-sm text-fg-muted">
-                  <span className="font-medium text-fg">{item.label}.</span> {item.hint}
-                </li>
-              ))}
-            </ol>
-          </details>
-        </JournalRailSection>
-      ) : null}
+        </div>
+      </section>
 
-      {selectedGrammarNote ? (
-        <JournalRailSection
-          collapsible
-          heading={
-            selectedGrammarNote.dueState === 'due'
+      {/* ── Modelos de frase ─ colapsado ── */}
+      <details className="group border-t border-border-subtle pt-4">
+        <summary className="focus-ring flex cursor-pointer list-none items-center gap-2 font-body-sm font-semibold text-fg">
+          <ChevronDown
+            size={14}
+            className="shrink-0 text-fg-subtle transition-transform duration-150 group-open:rotate-180"
+            aria-hidden
+          />
+          Modelos de frase
+        </summary>
+        <div className="mt-4 flex flex-col gap-6 pb-1">
+          <VerbTensesGuide />
+          <UsefulPhrasesGuide onSelectPhrase={onStarterSelect} />
+        </div>
+      </details>
+
+      {/* ── Ojo con esto ─ colapsado con badge ── */}
+      {selectedGrammarNote && (
+        <details className="group border-t border-border-subtle pt-4">
+          <summary className="focus-ring flex cursor-pointer list-none items-center gap-2 font-body-sm font-semibold text-fg">
+            <ChevronDown
+              size={14}
+              className="shrink-0 text-fg-subtle transition-transform duration-150 group-open:rotate-180"
+              aria-hidden
+            />
+            {selectedGrammarNote.dueState === 'due'
               ? 'Te toca repasar esto'
               : selectedGrammarNote.dueState === 'scheduled'
                 ? 'Ya lo has visto'
-                : 'Ojo con esto'
-          }
-        >
-          <p className="font-body-sm text-fg-muted">{selectedGrammarNote.rule}</p>
-          <p className="mt-2 font-body-sm text-fg">
-            <span className="font-semibold text-success">✓</span> {selectedGrammarNote.exampleCorrect}
-          </p>
-          <p className="font-body-sm text-fg-muted">
-            <span className="font-semibold text-error">✕</span> {selectedGrammarNote.exampleWrong}
-          </p>
-        </JournalRailSection>
-      ) : null}
+                : 'Ojo con esto'}
+            {/* badge numérico */}
+            <span
+              className="ml-auto flex size-5 items-center justify-center rounded-full bg-warning text-caption font-semibold text-on-primary"
+              aria-label="1 nota gramatical"
+            >
+              1
+            </span>
+          </summary>
+          <div className="mt-3 flex flex-col gap-2 pb-1">
+            <p className="font-body-sm text-fg-muted">{selectedGrammarNote.rule}</p>
+            <p className="font-body-sm text-fg">
+              <span className="font-semibold text-success">✓</span>{' '}
+              {selectedGrammarNote.exampleCorrect}
+            </p>
+            <p className="font-body-sm text-fg-muted">
+              <span className="font-semibold text-error">✕</span>{' '}
+              {selectedGrammarNote.exampleWrong}
+            </p>
+          </div>
+        </details>
+      )}
     </div>
   )
 }

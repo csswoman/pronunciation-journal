@@ -6,6 +6,7 @@
 // </HomePageHeader>
 
 import PageHeader from "@/components/layout/PageHeader";
+import StreakChip from "@/components/home/StreakChip";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useUserPreferences } from "@/hooks/useUserPreferences";
 import { isPermanentUser } from "@/lib/auth/is-anonymous";
@@ -29,19 +30,11 @@ function getGreeting(): "Buenos días" | "Buenas tardes" | "Buenas noches" {
 }
 
 function buildSubtitle(
-  current: number,
   wordsMastered: number,
   week: number,
-  hasProgress: boolean,
   isNewLearner: boolean,
 ): string | undefined {
   const parts: string[] = [];
-
-  if (current > 0) {
-    parts.push(current === 1 ? "Racha: 1 día" : `Racha: ${current} días`);
-  } else if (hasProgress) {
-    parts.push("Racha: 0 — completa el plan para empezar");
-  }
 
   if (wordsMastered > 0) {
     parts.push(
@@ -60,7 +53,7 @@ function buildSubtitle(
   return undefined;
 }
 
-/** Canonical home header — streak lives in the subtitle with a number. */
+/** Canonical home header — streak renders as a chip in the title row. */
 export default function HomePageHeader({
   streak,
   wordsMastered = 0,
@@ -79,10 +72,15 @@ export default function HomePageHeader({
   const current = streak?.currentStreak ?? 0;
   const week = weekMinutes ?? dailyGoal?.weekMinutes ?? 0;
   const greeting = getGreeting();
-  const hasProgress = !isNewLearner || wordsMastered > 0 || week > 0;
 
   const title = userName ? `${greeting}, ${userName}` : greeting;
-  const subtitle = buildSubtitle(current, wordsMastered, week, hasProgress, isNewLearner);
+  const subtitle = buildSubtitle(wordsMastered, week, isNewLearner);
 
-  return <PageHeader title={title} subtitle={subtitle} />;
+  return (
+    <PageHeader
+      title={title}
+      subtitle={subtitle}
+      actions={current > 0 ? <StreakChip days={current} /> : undefined}
+    />
+  );
 }

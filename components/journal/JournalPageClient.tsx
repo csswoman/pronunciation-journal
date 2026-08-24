@@ -1,6 +1,8 @@
 'use client'
 
 import { useCallback, useState } from 'react'
+import Link from 'next/link'
+import { ArrowLeft } from '@/components/icons'
 import PageHeader from '@/components/layout/PageHeader'
 import PageLayout from '@/components/layout/PageLayout'
 import { useWritingHintsPreference } from '@/hooks/useWritingHintsPreference'
@@ -35,7 +37,8 @@ export function JournalPageClient({
 }: JournalPageClientProps) {
   const [feedback, setFeedback] = useState<JournalFeedback | null>(null)
   const { enabled: hintsEnabled, setEnabled: setHintsEnabled } = useWritingHintsPreference()
-  const [draft, setDraft] = useState({ content: entry.content, wordCount: 0 })
+  const initialWordCount = entry.content.trim() ? entry.content.trim().split(/\s+/).length : 0
+  const [draft, setDraft] = useState({ content: entry.content, wordCount: initialWordCount })
   const [lastTypedAt, setLastTypedAt] = useState<number | null>(null)
   const [starterRequest, setStarterRequest] = useState<string | null>(null)
   const handleDraftChange = useCallback((next: { content: string; wordCount: number }) => {
@@ -70,6 +73,13 @@ export function JournalPageClient({
       }
       railLabel="Guía de escritura"
     >
+      <Link
+        href="/journal"
+        className="focus-ring inline-flex min-h-11 w-fit items-center gap-2 font-body-sm font-medium text-fg-muted transition-colors hover:text-fg"
+      >
+        <ArrowLeft size={16} aria-hidden />
+        Volver al cuaderno
+      </Link>
       <PageHeader title="Diario" subtitle={subtitle} />
       <div className="layout-stack-loose">
         <JournalRecentDaysBar userId={entry.userId} todayDate={entry.entryDate} />
@@ -82,6 +92,7 @@ export function JournalPageClient({
           starterRequest={starterRequest}
           onStarterRequestHandled={clearStarterRequest}
           onCorrection={handleCorrection}
+          vocabWords={resolvedVocabulary.map((w) => w.text)}
         />
       </div>
     </PageLayout>

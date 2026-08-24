@@ -12,16 +12,25 @@ vi.mock('@/hooks/useUserPreferences', () => ({
 }))
 
 vi.mock('@/components/layout/PageHeader', () => ({
-  default: ({ title, subtitle }: { title: string; subtitle?: string }) => (
+  default: ({
+    title,
+    subtitle,
+    actions,
+  }: {
+    title: string
+    subtitle?: string
+    actions?: React.ReactNode
+  }) => (
     <header>
       <h1>{title}</h1>
       {subtitle ? <p>{subtitle}</p> : null}
+      {actions}
     </header>
   ),
 }))
 
 describe('HomePageHeader streak copy', () => {
-  it('puts a numbered streak in the subtitle', () => {
+  it('shows the streak as a chip alongside the subtitle', () => {
     render(
       <HomePageHeader
         streak={{ currentStreak: 4, maxStreak: 4, completedToday: true }}
@@ -29,11 +38,11 @@ describe('HomePageHeader streak copy', () => {
         isNewLearner={false}
       />,
     )
-    expect(screen.getByText(/racha: 4 días/i)).toBeInTheDocument()
+    expect(screen.getByText(/4 días/i)).toBeInTheDocument()
     expect(screen.getByText(/2 palabras dominadas/i)).toBeInTheDocument()
   })
 
-  it('shows racha 0 with a concrete next action when there is progress', () => {
+  it('shows no streak chip and falls back to progress copy when streak is 0', () => {
     render(
       <HomePageHeader
         streak={{ currentStreak: 0, maxStreak: 0, completedToday: false }}
@@ -41,8 +50,9 @@ describe('HomePageHeader streak copy', () => {
         isNewLearner={false}
       />,
     )
-    expect(screen.getByText(/racha: 0/i)).toBeInTheDocument()
-    expect(screen.getByText(/completa el plan/i)).toBeInTheDocument()
+    expect(screen.queryByText(/^0 días$/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/^1 día$/i)).not.toBeInTheDocument()
+    expect(screen.getByText(/12 palabras dominadas/i)).toBeInTheDocument()
   })
 
   it('keeps first-visit orientation when there is no retention signal', () => {

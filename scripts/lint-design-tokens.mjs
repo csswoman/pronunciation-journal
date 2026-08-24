@@ -108,6 +108,7 @@ const RAW_COLOR_ALLOWLIST = new Set([
   "components/vocabulary/decks/study-utils.ts",
   "lib/lexicon/categories.ts",
   "lib/lexicon/domains.ts",
+  "lib/theme/hue-presets.ts",
 ]);
 
 /**

@@ -7,6 +7,7 @@ import AICoachTrigger from "@/components/ai-coach/AICoachTrigger";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { cn } from "@/lib/cn";
 import { isNavActive } from "@/lib/navigation/is-nav-active";
+import { playUiCue } from "@/lib/ui-sounds/cues";
 import BottomNavMenu from "./BottomNavMenu";
 import BottomNavTab from "./BottomNavTab";
 
@@ -30,8 +31,17 @@ export default function BottomNav({ className = "" }: BottomNavProps) {
     [pathname],
   );
 
-  const closeMenu = useCallback(() => setShowMenu(false), []);
-  const toggleMenu = useCallback(() => setShowMenu((open) => !open), []);
+  const closeMenu = useCallback(() => {
+    setShowMenu(false);
+  }, []);
+
+  const toggleMenu = useCallback(() => {
+    setShowMenu((open) => {
+      const next = !open;
+      playUiCue(next ? "nav-open" : "nav-close");
+      return next;
+    });
+  }, []);
 
   const [home, practice, courses] = primaryTabs;
 

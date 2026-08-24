@@ -10,7 +10,7 @@ describe("HomeChunkOfDayCard", () => {
 
   it("renders the chunk of the day with title, IPA and meaning", () => {
     const { container } = render(<HomeChunkOfDayCard />);
-    expect(screen.getByText("Chunk del día")).toBeInTheDocument();
+    expect(screen.getByText("Frase del día")).toBeInTheDocument();
 
     const ipaElement = container.querySelector(".font-ipa");
     expect(ipaElement).toBeInTheDocument();
@@ -22,7 +22,7 @@ describe("HomeChunkOfDayCard", () => {
 
   it("changes the chunk when clicking the shuffle button", async () => {
     const { container } = render(<HomeChunkOfDayCard />);
-    const shuffleButton = screen.getByRole("button", { name: "Sacar otro chunk" });
+    const shuffleButton = screen.getByRole("button", { name: "Sacar otra frase" });
     expect(shuffleButton).toBeInTheDocument();
 
     const initialWord = container.querySelector(
@@ -33,7 +33,7 @@ describe("HomeChunkOfDayCard", () => {
     fireEvent.click(shuffleButton);
 
     await waitFor(() => {
-      expect(screen.getByText("Chunk del día")).toBeInTheDocument();
+      expect(screen.getByText("Frase del día")).toBeInTheDocument();
     });
   });
 
@@ -51,9 +51,17 @@ describe("HomeChunkOfDayCard", () => {
     expect(enButton).toHaveAttribute("aria-pressed", "true");
     expect(esButton).toHaveAttribute("aria-pressed", "false");
     expect(screen.getByText("Ejemplo")).toBeInTheDocument();
+    expect(screen.getByText("Ejemplo").classList.contains("animate-state-in")).toBe(
+      true,
+    );
+    const example = screen.getByText(/^“/);
+    expect(example.classList.contains("animate-state-in")).toBe(true);
 
     fireEvent.click(esButton);
     expect(esButton).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByText("Significado")).toBeInTheDocument();
+    expect(
+      screen.getByText("Significado").classList.contains("animate-state-in"),
+    ).toBe(true);
   });
 });

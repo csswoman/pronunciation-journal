@@ -19,9 +19,15 @@
   --l-shift-accent-1: 0;
   --l-shift-accent-2: 0;
 
-  /* Motion — exponential ease-out curves (no bounce) */
+  /* Motion — durations + easing (one shared scale; no per-component magic) */
+  --dur-fast: 150ms;
+  --dur-base: 250ms;
+  --dur-celebrate: 420ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-expo: var(--ease-out);
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  /* Overshoot — the only spring magic number in the system */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 
   /* ── 1. Primary Scale (dynamic identity = hue-base) ───────────────────── */
   --primary-50:  oklch(calc(0.97 + var(--l-shift-base)) calc(0.02 * var(--chroma-boost-base)) var(--hue-base));
@@ -37,7 +43,6 @@
   /* Main aliases */
   --primary:            var(--primary-700);
   --primary-hover:      var(--primary-800);
-  --primary-active:     oklch(calc(0.45 + var(--l-shift-base)) calc(0.16 * var(--chroma-boost-base)) var(--hue-base));
   --primary-soft:       var(--primary-50);
   --primary-foreground: oklch(1 0 0);
   --on-primary:         oklch(1 0 0);
@@ -92,8 +97,8 @@
   --text-tertiary:    oklch(0.49 0.005 var(--hue));
   --text-disabled:    oklch(0.75 0.002 var(--hue));
   --text-placeholder: oklch(0.75 0.002 var(--hue));
-  --border:       oklch(0.875 0 0);
-  --border-hover: oklch(0.770 0 0);
+  --border:       oklch(0.875 0.007 var(--hue));
+  --border-hover: oklch(0.770 0.010 var(--hue));
 
   /* ── 3. Semantic Colors (fixed, independent of hue) ──────────────────── */
   --success:         oklch(0.70 0.16 145);
@@ -137,10 +142,7 @@
   --admonitions-color-important-soft: oklch(0.92 0.05 310); /* purple soft bg */
 
   /* ── Stage accent colors ─────────────────────────────────────────────── */
-  --stage-pairs:           oklch(0.74 0.14 55);   /* warm orange, phoneme pairs stage */
-  --stage-dictation:       oklch(0.73 0.12 185);  /* teal, dictation stage */
-  --color-stage-pairs:     var(--stage-pairs);
-  --color-stage-dictation: var(--stage-dictation);
+  --stage-pairs: oklch(0.74 0.14 55); /* warm orange, phoneme pairs stage */
 
   /* ── Match pairs connection dots ─────────────────────────────────────── */
   --match-pair-dot-1: oklch(0.65 0.18 25);
@@ -161,9 +163,9 @@
   --card-bg:          var(--surface-raised);     /* alias for surface-raised */
 
   /* ── 5. Borders — semantic strength names ────────────────────────────── */
-  --border-subtle:  oklch(0.895 0.002 var(--hue)); /* dividers, faint separators */
+  --border-subtle:  oklch(0.895 0.004 var(--hue)); /* dividers, faint separators */
   --border-default: var(--border);        /* standard card/input borders */
-  --border-strong:  oklch(0.720 0 0);     /* emphasized borders, active states */
+  --border-strong:  oklch(0.720 0.010 var(--hue));     /* emphasized borders, active states */
   --border-focus:   var(--primary);       /* focus outlines */
 
   /* ── 6. Scoring / Accuracy aliases ──────────────────────────────────── */
@@ -258,7 +260,6 @@
      Ratio ≈ 1.125–1.2 between steps. Prefer text-h* / font-* utilities. */
   --font-ui:        var(--font-sans);
   --font-heading:   var(--font-sans);
-  --font-phoneme:   var(--font-ipa);
 
   /* Size ramp — mobile defaults */
   --text-size-h1: 1.5rem;          /* 24px — rare display / streak heroes */
@@ -276,6 +277,7 @@
   --text-size-display-word: 1.5rem;
   --text-size-display-ipa: 1.75rem;
   --text-size-ipa-hero: 3rem;
+  --text-size-ew-fraction: 2.25rem;   /* 36px — featured progress card metric */
 
   /* Leading / weight / tracking (shared across breakpoints) */
   --text-leading-h1: 1.2;
@@ -323,14 +325,12 @@
   /* ── 12. Transitions ─────────────────────────────────────────────────── */
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
 
   /* ── 13. Shadows ─────────────────────────────────────────────────────── */
   --shadow-sm:       0 1px 2px   oklch(0 0 0 / 0.05);
   --shadow-md:       0 4px 6px   oklch(0 0 0 / 0.07);
   --shadow-lg:       0 10px 15px oklch(0 0 0 / 0.10);
   --shadow-xl:       0 20px 25px oklch(0 0 0 / 0.10);
-  --shadow-panel:    -4px 0 24px color-mix(in oklch, var(--fg) 6%, transparent);
 
   /* ── 14. Color selection bar ─────────────────────────────────────────── */
   --color-selection-bar: linear-gradient(to right,
@@ -349,27 +349,21 @@
   --title-active:    var(--primary);
   --btn-content:     var(--text-primary);
   --selection-bg:    var(--primary-soft);
-  --btn-plain-bg:    var(--bg-secondary); /* fix: referenced in markdown.css */
 
   /* ── Button component tokens ─────────────────────────────────────────── */
   --btn-regular-bg:        var(--bg-secondary);
   --btn-regular-bg-hover:  var(--bg-tertiary);
   --btn-regular-bg-active: var(--border);
   --btn-plain-bg-hover:    var(--bg-secondary);
-  --btn-soft-bg:           color-mix(in oklch, var(--primary) 15%, var(--bg-secondary));
-  --btn-soft-bg-hover:     color-mix(in oklch, var(--primary) 25%, var(--bg-secondary));
 
   /* ── Backward compatibility aliases ──────────────────────────────────── */
   --secondary:            var(--primary);
-  --secondary-hover:      var(--primary-hover);
   --secondary-soft:       var(--primary-soft);
   --color-accent:         var(--primary);
-  --color-accent-soft:    var(--primary-soft);
   --color-accent-hover:   var(--primary-hover);
   --color-text-on-accent: oklch(1 0 0);
   --color-text-primary:   var(--text-primary);
   --color-text-secondary: var(--text-secondary);
-  --accent-text:          oklch(1 0 0);
 
   /* ── Focus / ring helpers ────────────────────────────────────────────── */
   --focus-color:  color-mix(in oklch, var(--primary) 35%, transparent);
@@ -380,14 +374,21 @@
   --cta-bg:              var(--text-primary);
   --cta-fg:              var(--bg);
   --cta-bg-hover:        oklch(0.26 0.008 var(--hue));
-  --cta-outline-border:  color-mix(in oklch, var(--primary) 28%, transparent);
-  --cta-outline-color:   var(--primary);
-  --cta-outline-bg-hover: color-mix(in oklch, var(--primary) 6%, transparent);
 
   /* ── Decorative hue helpers ──────────────────────────────────────────── */
   --hue-icon-bg: color-mix(in oklch, var(--primary) 12%, transparent);
-  --hue-blob:    color-mix(in oklch, var(--primary) 7%, transparent);
-  --hue-bar:     var(--primary);
+
+  /* Fixed-lightness swatches (theme-color pickers) always render mid-tone —
+     the checkmark on top stays white in both light and dark mode. */
+  --on-swatch: oklch(1 0 0);
+
+  /* ── Content-type semantic colors (fixed hues, independent of --hue) ───
+     Text / icon / left-border only — never a card fill. See --primary for
+     the one theme-tied accent (Vocabulario progress card). */
+  --c-vocabulario:   oklch(0.55 0.19 358);
+  --c-chunks:        oklch(0.52 0.15 163);
+  --c-pronunciacion: oklch(0.55 0.15 228);
+  --c-racha:         oklch(0.60 0.15 72);
 }
 
 /* Desktop type + layout bump. Matches Tailwind `md` / `lg`. */
@@ -407,6 +408,7 @@
     --text-size-display-word: 1.75rem;
     --text-size-display-ipa: 2.25rem;
     --text-size-ipa-hero: 4rem;
+    --text-size-ew-fraction: 2.75rem; /* 44px */
 
     --layout-page-inline: var(--space-6);
     --layout-page-block: var(--space-6);
@@ -442,7 +444,6 @@
 
   --primary:            var(--primary-500);
   --primary-hover:      oklch(calc(0.63 + var(--l-shift-base)) calc(0.15 * var(--chroma-boost-base)) var(--hue-base));
-  --primary-active:     oklch(calc(0.58 + var(--l-shift-base)) calc(0.16 * var(--chroma-boost-base)) var(--hue-base));
   --primary-soft:       var(--primary-100);
   --primary-foreground: oklch(0.10 0 0);
   --on-primary:         oklch(0.10 0 0);
@@ -496,8 +497,8 @@
   --text-tertiary:    oklch(0.56 0.003 var(--hue));
   --text-disabled:    oklch(0.38 0.003 var(--hue));
   --text-placeholder: oklch(0.38 0.003 var(--hue));
-  --border:       oklch(0.275 0 0);
-  --border-hover: oklch(0.375 0 0);
+  --border:       oklch(0.275 0.007 var(--hue));
+  --border-hover: oklch(0.375 0.010 var(--hue));
 
   /* Semantic colors — slightly brighter in dark mode */
   --success:         oklch(0.74 0.16 145);
@@ -550,9 +551,9 @@
   --surface-code:    oklch(0.10 0.003 var(--hue));
 
   /* ── Borders — dark overrides ────────────────────────────────────────── */
-  --border-subtle:  oklch(0.220 0 0);
+  --border-subtle:  oklch(0.220 0.006 var(--hue));
   --border-default: var(--border);
-  --border-strong:  oklch(0.440 0 0);
+  --border-strong:  oklch(0.440 0.010 var(--hue));
   --border-focus:   var(--primary);
 
   /* ── Structure aliases ───────────────────────────────────────────────── */
@@ -565,27 +566,21 @@
   --title-active:    var(--primary);
   --btn-content:     var(--text-primary);
   --selection-bg:    var(--primary-soft);
-  --btn-plain-bg:    var(--bg-tertiary);
 
   /* ── Button component tokens ─────────────────────────────────────────── */
   --btn-regular-bg:        var(--bg-secondary);
   --btn-regular-bg-hover:  var(--bg-tertiary);
   --btn-regular-bg-active: var(--border);
   --btn-plain-bg-hover:    var(--bg-tertiary);
-  --btn-soft-bg:           color-mix(in oklch, var(--primary) 15%, var(--bg-secondary));
-  --btn-soft-bg-hover:     color-mix(in oklch, var(--primary) 25%, var(--bg-secondary));
 
   /* ── Backward compatibility aliases ──────────────────────────────────── */
   --secondary:            var(--primary);
-  --secondary-hover:      var(--primary-hover);
   --secondary-soft:       var(--primary-soft);
   --color-accent:         var(--primary);
-  --color-accent-soft:    var(--primary-soft);
   --color-accent-hover:   var(--primary-hover);
   --color-text-on-accent: oklch(0.12 0 0);
   --color-text-primary:   var(--text-primary);
   --color-text-secondary: var(--text-secondary);
-  --accent-text:          oklch(0.12 0 0);
 
   /* ── Focus / ring helpers ────────────────────────────────────────────── */
   --focus-color:   color-mix(in oklch, var(--primary) 35%, transparent);
@@ -594,4 +589,10 @@
 
   /* ── CTA dark overrides ─────────────────────────────────────────────── */
   --cta-bg-hover: oklch(0.88 0.004 var(--hue));
+
+  /* ── Content-type semantic colors — dark (brighter for contrast) ─────── */
+  --c-vocabulario:   oklch(0.70 0.19 358);
+  --c-chunks:        oklch(0.78 0.17 163);
+  --c-pronunciacion: oklch(0.74 0.14 228);
+  --c-racha:         oklch(0.80 0.16 72);
 }

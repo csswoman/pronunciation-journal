@@ -26,11 +26,10 @@ describe('SuggestedWords', () => {
     fireEvent.click(screen.getByRole('button', { name: /commute/i }))
 
     await waitFor(() => {
-      expect(quickAddWord).toHaveBeenCalledTimes(1)
+      expect(screen.getByRole('button', { name: /commute/i })).toHaveAttribute('aria-pressed', 'true')
     })
+    expect(quickAddWord).toHaveBeenCalledTimes(1)
     expect(quickAddWord).toHaveBeenCalledWith({ text: 'commute', source: 'manual' })
-    // Marked as pressed/added and not re-clickable.
-    expect(screen.getByRole('button', { name: /commute/i })).toHaveAttribute('aria-pressed', 'true')
   })
 
   it('shows the next review returned by word_bank after opt-in', async () => {

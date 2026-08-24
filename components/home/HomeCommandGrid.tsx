@@ -3,13 +3,13 @@
 // Planned structure:
 // <HomeCommandGrid>
 //   review / activation (fold owners only)
-//   main: focus + plan (+ done)
-//         below: [ruta | diagnóstico] · speak · journal
-//   aside: word · chunk · vocab · pronunciation lab
+//   main: plan (+ done) · quiet route link · phrase of the day
+//   aside: pronunciation · word · vocab
 // </HomeCommandGrid>
 
 import { useCallback, useState } from "react";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { isAnonymousUser } from "@/lib/auth/is-anonymous";
 import type { HomePlanStatus } from "@/components/home/HomeDailyCard";
@@ -18,8 +18,6 @@ import EssentialWordsProgressCard from "@/components/home/EssentialWordsProgress
 import WeakSoundCard from "@/components/home/WeakSoundCard";
 import HomeWordOfDayCard from "@/components/home/HomeWordOfDayCard";
 import HomeChunkOfDayCard from "@/components/home/HomeChunkOfDayCard";
-import HomeJournalCard from "@/components/home/HomeJournalCard";
-import HomeSpeakPrompt from "@/components/home/HomeSpeakPrompt";
 import HomePlanDone from "@/components/home/HomePlanDone";
 import HomePlacementPrompt from "@/components/home/HomePlacementPrompt";
 import HomePronunciationPrompt from "@/components/home/HomePronunciationPrompt";
@@ -39,12 +37,6 @@ const HomeDailyCard = dynamic(() => import("@/components/home/HomeDailyCard"), {
       aria-busy="true"
       aria-label="Cargando plan diario"
     />
-  ),
-});
-
-const LearningFocusCard = dynamic(() => import("@/components/home/LearningFocusCard"), {
-  loading: () => (
-    <div className="h-20 animate-pulse rounded-xl border border-border-subtle bg-surface-raised" aria-hidden />
   ),
 });
 
@@ -89,21 +81,25 @@ export default function HomeCommandGrid({
   }, []);
 
   const reviewDue = wordsDueCount + soundsDueCount > 0;
-  const showReviewBanner = reviewDue && (!planSettled || !reviewIsEntry);
+  const showReviewBanner = reviewDue && planSettled && !reviewIsEntry;
   const isNewLearner = !placementState.hasMeaningfulProgress;
   const needsPlacement = !placementState.hasPlacement;
   const needsPronunciation = !pronunciationDiagnosticState.hasPronunciationDiagnostic;
   const showActivation = planSettled && !reviewDue && planEmpty && isNewLearner;
-  const showPlacementBelow =
-    planSettled && needsPlacement && !showActivation;
-  const showPronunciationBelow =
-    planSettled && needsPronunciation && !showActivation;
   const showPlanExtras = planSettled && !planEmpty;
   const showPostPlan = showPlanExtras && allDone;
-  const showSpeakBelow = showPlanExtras && !allDone;
+  /** Active incomplete plan owns the fold — defer assessments / speak / guest save. */
+  const activePlanSession = showPlanExtras && !allDone;
 
-  const showGuestSaveStrip = isGuest && planSettled && !showActivation;
-  const showSetupPair = showPlacementBelow || showPronunciationBelow;
+  const showSetupPair =
+    planSettled &&
+    !showActivation &&
+    !activePlanSession &&
+    (needsPlacement || needsPronunciation);
+  const showQuietRouteLink =
+    activePlanSession && (needsPlacement || needsPronunciation);
+  const showGuestSaveStrip =
+    isGuest && planSettled && !showActivation && (allDone || !isNewLearner);
 
   return (
     <div className="home-command-grid">
@@ -127,13 +123,6 @@ export default function HomeCommandGrid({
       ) : null}
 
       <div className="home-command-main">
-        <LearningFocusCard
-          profileLevel={profileLevel}
-          routeLevel={null}
-          recentTheoryLessonSlug={null}
-          weakSoundKey={weakestPhoneme?.ipa ?? null}
-        />
-
         <div className={showPostPlan ? "hidden" : "contents"}>
           <HomeDailyCard
             conceptLesson={conceptLesson}
@@ -156,34 +145,47 @@ export default function HomeCommandGrid({
         ) : null}
 
         <div className="home-command-below-plan">
+          {showQuietRouteLink ? (
+            <p className="font-body-sm text-pretty text-fg-muted">
+              Si quieres afinar la ruta primero:{" "}
+              {needsPlacement ? (
+                <Link
+                  href="/assessment"
+                  className="focus-ring font-medium text-fg underline-offset-2 hover:underline"
+                >
+                  prueba de nivel
+                </Link>
+              ) : null}
+              {needsPlacement && needsPronunciation ? " · " : null}
+              {needsPronunciation ? (
+                <Link
+                  href="/assessment/pronunciation"
+                  className="focus-ring font-medium text-fg underline-offset-2 hover:underline"
+                >
+                  diagnóstico oral
+                </Link>
+              ) : null}
+            </p>
+          ) : null}
+
           {showSetupPair ? (
             <div
               className="home-command-setup-pair"
               aria-label="Ajustes opcionales"
             >
-              {showPlacementBelow ? <HomePlacementPrompt compact /> : null}
-              {showPronunciationBelow ? (
-                <HomePronunciationPrompt compact />
-              ) : null}
+              {needsPlacement ? <HomePlacementPrompt compact /> : null}
+              {needsPronunciation ? <HomePronunciationPrompt compact /> : null}
             </div>
           ) : null}
-          {planSettled ? (
-            <div
-              className="home-command-setup-pair"
-              aria-label="Hablar y escribir"
-            >
-              {showSpeakBelow ? <HomeSpeakPrompt arc={arc} /> : null}
-              <HomeJournalCard />
-            </div>
-          ) : null}
+
+          <HomeChunkOfDayCard />
         </div>
       </div>
 
       <aside className="home-command-aside flex flex-col gap-4" aria-label="Práctica sugerida">
-        <HomeWordOfDayCard profileLevel={profileLevel} />
-        <HomeChunkOfDayCard />
-        <EssentialWordsProgressCard />
         <WeakSoundCard weakestPhoneme={weakestPhoneme} />
+        <HomeWordOfDayCard profileLevel={profileLevel} />
+        <EssentialWordsProgressCard profileLevel={profileLevel} />
       </aside>
     </div>
   );

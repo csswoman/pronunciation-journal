@@ -1,12 +1,13 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { ArrowRight, Check, ChevronDown } from "@/components/icons"
 import { DailyStepTitle } from './DailyStepTitle'
 import { DailyThreadStrip } from './DailyThreadStrip'
 import type { DailyStepStatus } from '@/hooks/useDailyPlan'
 import type { DailyStep } from '@/lib/practice/types'
 import { cn } from '@/lib/cn'
+import { playUiCue } from '@/lib/ui-sounds/cues'
 import Link from 'next/link'
 import {
   localizeDailyStepSubtitle,
@@ -14,7 +15,9 @@ import {
 } from '@/lib/daily/localize-step-copy'
 import {
   collectPlanHints,
+  MAX_VISIBLE_COMPACT_PENDING,
   readInProgressStepId,
+  revealStaggerByStepId,
   rowVisual,
   stepMeta,
 } from './daily-step-list-helpers'
@@ -53,6 +56,17 @@ export default function DailyStepList({
   const threadHints = collectPlanHints(steps)
   const [activeId, setActiveId] = useState<string | null>(inProgressStepId)
   const [showAllCompact, setShowAllCompact] = useState(false)
+  const seenDoneIds = useRef<Set<string> | null>(null)
+  if (seenDoneIds.current === null) {
+    seenDoneIds.current = new Set(
+      steps
+        .filter((s) => {
+          const st = getStepStatus(s.id)
+          return st === 'done' || st === 'resolved'
+        })
+        .map((s) => s.id),
+    )
+  }
 
   useEffect(() => {
     setActiveId(inProgressStepId ?? readInProgressStepId())
@@ -66,7 +80,6 @@ export default function DailyStepList({
   // When collapsing: the entry/current step stays expanded; done steps and
   // the first 2 pending steps beyond entry render compact; anything past
   // that is hidden behind the "Ver N más" toggle until showAllCompact.
-  const MAX_VISIBLE_COMPACT_PENDING = 2
   let visiblePendingCompactBudget = MAX_VISIBLE_COMPACT_PENDING
   let hiddenCount = 0
   const isCompactRow = (isEntryOrCurrent: boolean): boolean => {
@@ -85,6 +98,29 @@ export default function DailyStepList({
     hiddenCount += 1
     return true
   }
+  const revealStagger = revealStaggerByStepId(steps, getStepStatus, {
+    collapseFutureSteps,
+    showAllCompact,
+    entryIndex,
+    activeId,
+  })
+
+  const currentDoneIds = new Set(
+    steps
+      .filter((s) => {
+        const st = getStepStatus(s.id)
+        return st === 'done' || st === 'resolved'
+      })
+      .map((s) => s.id),
+  )
+  const newlyDoneIds = [...currentDoneIds].filter((id) => !seenDoneIds.current!.has(id))
+
+  useEffect(() => {
+    if (newlyDoneIds.length > 0) {
+      playUiCue('toggle')
+    }
+    seenDoneIds.current = currentDoneIds
+  }, [steps, getStepStatus])
 
   return (
     <div className="flex w-full flex-col gap-3">
@@ -98,9 +134,11 @@ export default function DailyStepList({
             !activeId && i === entryIndex && status !== 'done' && status !== 'resolved'
           const visual = rowVisual(status, isInProgress, isEntry)
           const done = visual === 'done'
+          const justCompleted = done && newlyDoneIds.includes(step.id)
           const isEntryOrCurrent = visual === 'entry' || visual === 'current'
           const compact = isCompactRow(isEntryOrCurrent)
           const hidden = isHiddenRow(status, isEntryOrCurrent)
+          const staggerIndex = revealStagger.get(step.id)
           const isReadingStep = step.kind === 'concept' || step.kind === 'study_deck'
           const cardCount = step.studyCards?.length ?? 0
           const hasReader = !!step.readerPassage
@@ -108,15 +146,24 @@ export default function DailyStepList({
 
           if (hidden) return null
 
+          const rowClass = cn(
+            'min-w-0',
+            staggerIndex !== undefined && 'list-stagger',
+          )
+          const rowStyle =
+            staggerIndex !== undefined
+              ? ({ '--stagger-index': staggerIndex } as CSSProperties)
+              : undefined
+
           const cardClass = cn(
             'home-card-lift focus-ring group flex w-full min-h-11 flex-col gap-2 rounded-[var(--radius-md)] text-left',
             compact ? 'px-3 py-2.5' : 'px-3.5 py-3.5',
             visual === 'entry' &&
               (demoteEntryHighlight
                 ? 'border border-border-default bg-surface-raised hover:border-border-default'
-                : 'border border-primary bg-primary-wash'),
+                : 'border border-primary bg-primary text-on-primary'),
             visual === 'current' &&
-              'border border-primary bg-primary-wash',
+              'border border-primary bg-primary text-on-primary',
             visual === 'pending' &&
               'border border-transparent bg-transparent hover:bg-surface-sunken/70',
             visual === 'done' &&
@@ -158,14 +205,17 @@ export default function DailyStepList({
                 <DailyStepTitle
                   title={localizeDailyStepTitle(step.title)}
                   ipa={step.ipa}
-                  index={i}
                   muted={done}
                   emphasize={isEntryOrCurrent && !demoteEntryHighlight}
                 />
                 <p
                   className={cn(
                     'mt-0.5 truncate font-body-sm',
-                    done ? 'text-fg-subtle' : 'text-fg-muted',
+                    done
+                      ? 'text-fg-subtle'
+                      : isEntryOrCurrent
+                        ? 'text-on-primary/80'
+                        : 'text-fg-muted',
                   )}
                 >
                   {[localizedSubtitle, stepMeta(step)]
@@ -174,7 +224,12 @@ export default function DailyStepList({
                 </p>
               </div>
               {done ? (
-                <span className="animate-state-in inline-flex shrink-0 items-center gap-1 rounded-md bg-accent-2-soft px-2.5 py-1 font-caption font-semibold text-accent-2">
+                <span
+                  className={cn(
+                    "animate-state-in inline-flex shrink-0 items-center gap-1 rounded-md bg-accent-2-soft px-2.5 py-1 font-caption font-semibold text-accent-2",
+                    justCompleted && "success-pulse",
+                  )}
+                >
                   <Check size={16} aria-hidden />
                   Hecho
                 </span>
@@ -184,12 +239,12 @@ export default function DailyStepList({
                     Empieza aquí
                   </span>
                 ) : (
-                  <span className="inline-flex shrink-0 items-center rounded-md bg-primary px-2.5 py-1 font-caption font-semibold text-on-primary">
+                  <span className="inline-flex shrink-0 items-center rounded-md bg-surface-raised px-2.5 py-1 font-caption font-semibold text-fg">
                     Empieza aquí
                   </span>
                 )
               ) : visual === 'current' ? (
-                <span className="inline-flex shrink-0 items-center rounded-md bg-primary px-2.5 py-1 font-caption font-semibold text-on-primary">
+                <span className="inline-flex shrink-0 items-center rounded-md bg-surface-raised px-2.5 py-1 font-caption font-semibold text-fg">
                   En curso
                 </span>
               ) : (
@@ -203,7 +258,7 @@ export default function DailyStepList({
 
           if (isReadingStep && step.href) {
             return (
-              <li key={step.id} className="min-w-0">
+              <li key={step.id} className={rowClass} style={rowStyle}>
                 <Link href={step.href} className={cardClass}>
                   {inner}
                 </Link>
@@ -212,7 +267,7 @@ export default function DailyStepList({
           }
 
           return (
-            <li key={step.id} className="min-w-0">
+            <li key={step.id} className={rowClass} style={rowStyle}>
               <button
                 type="button"
                 className={cardClass}
@@ -228,8 +283,11 @@ export default function DailyStepList({
       {collapseFutureSteps && !showAllCompact && hiddenCount > 0 ? (
         <button
           type="button"
-          className="focus-ring inline-flex min-h-11 items-center gap-1.5 self-center rounded-md border border-border-default bg-surface-raised px-3 font-body-sm font-semibold text-fg transition-colors hover:bg-surface-sunken active:scale-[0.96]"
-          onClick={() => setShowAllCompact(true)}
+          className="press-feedback focus-ring inline-flex min-h-11 items-center gap-1.5 self-center rounded-md border border-border-default bg-surface-raised px-3 font-body-sm font-semibold text-fg transition-colors hover:bg-surface-sunken"
+          onClick={() => {
+            playUiCue('nav-open')
+            setShowAllCompact(true)
+          }}
         >
           Ver {hiddenCount} {hiddenCount === 1 ? 'paso más' : 'pasos más'}
           <ChevronDown size={16} aria-hidden />

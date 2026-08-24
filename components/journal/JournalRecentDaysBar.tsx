@@ -25,20 +25,23 @@ export function JournalRecentDaysBar({ userId, todayDate }: JournalRecentDaysBar
   const entries = useLiveQuery(() => listLocalJournalEntries(userId, 7), [userId])
   const pastEntries = (entries ?? []).filter((entry) => entry.entryDate !== todayDate)
 
+  // Primera página: fila compacta sin card border
+  if (pastEntries.length === 0) {
+    return (
+      <p
+        aria-label="Páginas recientes del diario"
+        className="font-body-xs text-fg-muted"
+      >
+        Tu primera página
+      </p>
+    )
+  }
+
   return (
     <nav
       aria-label="Páginas recientes del diario"
       className="flex flex-col gap-2 rounded-[var(--radius-lg)] border border-border-subtle bg-surface-raised/60 px-4 py-3"
     >
-      <div className="flex items-center justify-between">
-        <span className="font-kicker text-fg-subtle">Hojear libreta</span>
-        <span className="font-body-xs text-fg-muted">
-          {pastEntries.length > 0
-            ? `${pastEntries.length} ${pastEntries.length === 1 ? 'página anterior' : 'páginas anteriores'}`
-            : 'Tu primera página'}
-        </span>
-      </div>
-
       <div className="-mx-1 flex items-center gap-2 overflow-x-auto px-1 py-0.5">
         {/* Today's active day indicator */}
         <div

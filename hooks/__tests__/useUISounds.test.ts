@@ -18,7 +18,6 @@ vi.mock('@/lib/ui-sounds/engine', () => ({
 
 beforeEach(() => {
   playCue.mockClear()
-  vi.stubGlobal('matchMedia', vi.fn(() => ({ matches: false })))
   const memory = new Map<string, string>()
   vi.stubGlobal('localStorage', {
     getItem: (key: string) => memory.get(key) ?? null,
@@ -36,7 +35,7 @@ beforeEach(() => {
       return memory.size
     },
   })
-  useUISoundsStore.setState({ soundEnabled: true })
+  useUISoundsStore.setState({ soundPreference: 'exercise', soundEnabled: true })
 })
 
 describe('useUISounds', () => {
@@ -71,8 +70,8 @@ describe('useUISounds', () => {
     expect(playCue).toHaveBeenCalledWith('droplet')
   })
 
-  it('does not play when soundEnabled is false', () => {
-    useUISoundsStore.setState({ soundEnabled: false })
+  it('does not play when soundPreference is off', () => {
+    useUISoundsStore.setState({ soundPreference: 'off', soundEnabled: false })
     const { result } = renderHook(() => useUISounds())
     act(() => {
       result.current.playTap()
@@ -80,12 +79,12 @@ describe('useUISounds', () => {
     expect(playCue).not.toHaveBeenCalled()
   })
 
-  it('does not play when prefers-reduced-motion is active', () => {
+  it('plays sounds independently of prefers-reduced-motion setting', () => {
     vi.stubGlobal('matchMedia', vi.fn(() => ({ matches: true })))
     const { result } = renderHook(() => useUISounds())
     act(() => {
       result.current.playTap()
     })
-    expect(playCue).not.toHaveBeenCalled()
+    expect(playCue).toHaveBeenCalledWith('tick')
   })
 })

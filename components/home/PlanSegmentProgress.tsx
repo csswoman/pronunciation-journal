@@ -37,7 +37,7 @@ export function PlanSegmentProgress({
             key={id}
             className={cn(
               'h-2.5 min-w-0 flex-1 rounded-full transition-colors duration-200 motion-reduce:transition-none',
-              done ? 'bg-accent-2' : 'bg-border-default',
+              done ? 'bg-primary' : 'bg-surface-sunken',
             )}
             aria-hidden
           />
