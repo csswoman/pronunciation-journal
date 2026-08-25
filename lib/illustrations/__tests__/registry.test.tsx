@@ -14,6 +14,9 @@ vi.mock("@/components/illustrations/empty-vocabulario.svg", () => ({
 vi.mock("@/components/illustrations/empty-tracking.svg", () => ({
   default: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
 }));
+vi.mock("@/components/illustrations/state-completado.svg", () => ({
+  default: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
+}));
 
 describe("ILLUSTRATIONS registry", () => {
   it("renders an svg element for every declared key", async () => {

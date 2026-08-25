@@ -4,6 +4,7 @@ import Button from "@/components/ui/Button";
 import { H2 } from "@/components/ui/Typography";
 import { WordCarousel } from "@/components/practice/session/WordCarousel";
 import { useLoadingWords } from "@/hooks/useLoadingWords";
+import { ILLUSTRATIONS } from "@/lib/illustrations/registry";
 
 interface StudyEmptyStatesProps {
   phase: "loading" | "studying" | "done";
@@ -11,6 +12,8 @@ interface StudyEmptyStatesProps {
   queueLength: number;
   onClose: () => void;
 }
+
+const Illustration = ILLUSTRATIONS.stateCompletado;
 
 const centeredOverlay = (children: React.ReactNode) => (
   <div className="flex flex-col min-h-[calc(100vh-10rem)] items-center justify-center p-4">
@@ -39,7 +42,9 @@ export function StudyEmptyStates({
           borderColor: "var(--line-divider)",
         }}
       >
-        <div className="text-h1">🎉</div>
+        <div className="mx-auto w-full max-w-24 text-primary" aria-hidden="true">
+          <Illustration />
+        </div>
         <H2 className="text-h4">All caught up!</H2>
         <p className="text-body-sm text-fg-muted">
           No cards due in <strong>{deckName}</strong>.
