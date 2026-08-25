@@ -6,9 +6,11 @@
 
 import HomePageHeader from "@/components/home/HomePageHeader";
 import HomeCommandGrid from "@/components/home/HomeCommandGrid";
+import HomePrimaryAction from "@/components/home/HomePrimaryAction";
 import type { DailyStreakResult } from "@/lib/daily/streak-core";
 import type { ConceptLesson } from "@/hooks/useDailyPlan";
 import type { DailyGoalProgress, WeakestPhonemeHome } from "@/lib/home/constants";
+import type { PrimaryAction } from "@/lib/home/primary-action";
 import type { VocabularyProgressSeed } from "@/lib/vocabulary/server-progress";
 import type { MiniLesson } from "@/lib/content/schemas";
 import type { HomePlacementState } from "@/lib/home/placement-state";
@@ -28,6 +30,7 @@ interface HomeLayoutProps {
   secondaryLesson?: MiniLesson | null;
   placementState: HomePlacementState;
   pronunciationDiagnosticState: HomePronunciationDiagnosticState;
+  primaryAction: PrimaryAction;
 }
 
 export default function HomeLayout({
@@ -41,6 +44,7 @@ export default function HomeLayout({
   vocabularyProgress = null,
   placementState,
   pronunciationDiagnosticState,
+  primaryAction,
 }: HomeLayoutProps) {
   const isNewLearner = !placementState.hasMeaningfulProgress;
   const currentStreak = streak?.currentStreak ?? 0;
@@ -55,6 +59,7 @@ export default function HomeLayout({
           dailyGoal={dailyGoal}
           isNewLearner={isNewLearner}
         />
+        <HomePrimaryAction action={primaryAction} />
         <HomeCommandGrid
           conceptLesson={conceptLesson}
           profileLevel={profileLevel}

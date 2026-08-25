@@ -23,6 +23,7 @@ import type { MiniLesson } from "@/lib/content/schemas";
 import type { DailyStreakResult } from "@/lib/daily/streak-core";
 import type { DailyGoalProgress, WeakestPhonemeHome, ReviewQueueSummary } from "@/lib/home/constants";
 import type { VocabularyProgressSeed } from "@/lib/vocabulary/server-progress";
+import { resolvePrimaryAction } from "@/lib/home/primary-action";
 
 /** Isolate each fetch so one failure does not blank the whole home. */
 async function settled<T>(promise: Promise<T>, fallback: T, label: string): Promise<T> {
@@ -132,12 +133,29 @@ async function HomePageContent() {
       }
     : null;
 
+  const wordsDueCount = queue.sources.find((s) => s.id === "vocabulary")?.count ?? 0;
+  const soundsDueCount = queue.sources.find((s) => s.id === "sounds")?.count ?? 0;
+
+  // The daily plan itself is composed client-side, so there is no server-side
+  // "done today" flag yet. minutesDone >= goalMinutes is used as a proxy;
+  // if this ever desyncs from the client's own plan-completion state, fix it
+  // with a real server-side daily-completion flag — not by moving the plan
+  // calculation back to the client.
+  const planDoneToday = goal !== null && goal.minutesDone >= goal.goalMinutes;
+
+  const primaryAction = resolvePrimaryAction({
+    hasPlacement: placementState.hasPlacement,
+    planDoneToday,
+    dueCount: wordsDueCount + soundsDueCount,
+    estimatedMinutes: 12,
+  });
+
   return (
     <HomeLayout
       streak={streak}
       profileLevel={profileLevel}
-      wordsDueCount={queue.sources.find((s) => s.id === "vocabulary")?.count ?? 0}
-      soundsDueCount={queue.sources.find((s) => s.id === "sounds")?.count ?? 0}
+      wordsDueCount={wordsDueCount}
+      soundsDueCount={soundsDueCount}
       conceptLesson={conceptLesson}
       dailyGoal={goal}
       weakestPhoneme={weakSound}
@@ -146,6 +164,7 @@ async function HomePageContent() {
       secondaryLesson={homeLessons.secondary}
       placementState={placementState}
       pronunciationDiagnosticState={pronunciationDiagnosticState}
+      primaryAction={primaryAction}
     />
   );
 }
