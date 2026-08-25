@@ -439,25 +439,6 @@
   gap: var(--layout-section-gap);
 }
 
-@media (min-width: 768px) {
-  .home-command-grid {
-    /* Balanced columns — plan+learn left, compact aside right */
-    grid-template-columns: minmax(0, 1fr) minmax(17rem, 22rem);
-    align-items: start;
-    column-gap: var(--layout-section-gap);
-    row-gap: var(--layout-section-gap);
-  }
-
-  .home-command-review {
-    grid-column: 1 / -1;
-  }
-
-  .home-command-aside {
-    position: sticky;
-    top: var(--layout-stack-loose);
-  }
-}
-
 .home-command-main {
   display: flex;
   flex-direction: column;
