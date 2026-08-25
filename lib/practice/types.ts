@@ -206,6 +206,7 @@ export type DailyStepKind =
 export type DailySelectionReason =
   | 'due'
   | 'verification_due'
+  | 'grammar_slot'
   | 'recent_error'
   | 'weak_target'
   | 'route_next'

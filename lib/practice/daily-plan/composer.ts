@@ -20,6 +20,7 @@ import { normalizeFalseFriendsLevel } from '@/lib/false-friends/data'
 import { buildConnectedSpeechStep, buildFalseFriendsStep, buildReaderStep, buildSentenceBuilderStep } from './async-step-builders'
 import { getEffectiveFocus } from '@/lib/learning-focus/effective-focus'
 import { buildStudyDeckStep } from './study-deck'
+import { buildGrammarFocusStep } from './grammar-focus'
 import { isOptionalLinkStep } from './step-completion'
 import { DAILY_PLAN_STEP_COUNT, WORD_REVIEW_WORD_COUNT } from './constants'
 import {
@@ -47,6 +48,9 @@ import {
   buildWordIntroStep,
   buildWordReviewStep,
 } from './step-builders'
+
+/** Deck used when the learner has no weak-topic evidence yet (B1 baseline). */
+const DEFAULT_GRAMMAR_DECK = 'a2-presente-perfecto-experiencias'
 
 export type ReviewPlan = {
   steps: DailyStep[]
@@ -241,6 +245,14 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
   const weakTopics = aiState?.grammar.weakTopics ?? []
   const weakDeckSlug = deckSlugForWeakTopics(weakTopics)
   const weakTopic = weakTopics.find((t) => t.errorRate > 0.4 && t.sampleCount >= 3)?.topic
+
+  // Grammar gets a reserved slot: previously it only appeared when both
+  // connected speech and false friends failed to build, so most days shipped
+  // no grammar practice at all.
+  const grammarStep = await buildGrammarFocusStep(
+    weakDeckSlug ?? DEFAULT_GRAMMAR_DECK,
+    reviewWords,
+  )
   const sentenceSource = weakDeckSlug ?? (dayOfYear() % 2 === 0 ? 'lesson' : 'grammar-deck')
 
   const allSteps = [...newSteps]
@@ -384,6 +396,7 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     return step.exercises.length > 0 ? step.exercises.map((exercise) => exercise.contentId) : [step.id]
   }
   const reasonForStep = (step: DailyStep) => {
+    if (step.kind === 'grammar_focus') return 'grammar_slot' as const
     if (step.id.startsWith('review_') || (hasDueSrs && step.kind === 'word_review')) return 'due' as const
     if (step.id.includes('failed') || step.kind === 'sentence_builder' && weakTopic) return 'recent_error' as const
     if (hasProgress && ['phoneme_focus', 'minimal_pairs', 'listening'].includes(step.kind)) return 'weak_target' as const
@@ -391,7 +404,12 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     if (step.kind === 'word_review' && dailyWordSelection.savedOrFamiliarIds.size > 0) return 'saved_intent' as const
     return 'variety' as const
   }
-  const candidates = [...steps, ...(studyDeckStep ? [studyDeckStep] : []), ...(missionStep ? [missionStep] : [])]
+  const candidates = [
+    ...steps,
+    ...(grammarStep ? [grammarStep] : []),
+    ...(studyDeckStep ? [studyDeckStep] : []),
+    ...(missionStep ? [missionStep] : []),
+  ]
     .map((step) => candidate(step, {
       reason: reasonForStep(step),
       targetRefs: targetRefsForStep(step),
