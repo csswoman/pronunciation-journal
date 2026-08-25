@@ -7,6 +7,7 @@
 //   <DailyReaderStep />     — si reader: lectura con comprehensible input
 //   <DailyThreadStrip />    — hilo solo fuera de la práctica activa
 //   <PhonemeLessonIntro />  — si phoneme_focus + ipa conocido + no iniciado
+//   <GrammarRuleCard />     — si grammar_focus + grammarRule: regla antes de practicar
 //   <PracticeSession />     — ejercicios del paso (sesión sagrada: sin hints ni chrome extra)
 // </DailyStepSession>
 
@@ -16,6 +17,7 @@ import { useHideMobileNavDuringSession } from '@/hooks/useHideMobileNavDuringSes
 import { PhonemeLessonIntro } from '@/components/phoneme-practice/PhonemeLessonIntro'
 import { WordIntroStep } from '@/components/daily/WordIntroStep'
 import { FalseFriendsIntroStep } from '@/components/daily/FalseFriendsIntroStep'
+import { GrammarRuleCard } from '@/components/daily/GrammarRuleCard'
 import { DailyReaderStep } from '@/components/daily/DailyReaderStep'
 import { DailyThreadStrip } from '@/components/daily/DailyThreadStrip'
 import { getThreadHintsForStep } from '@/lib/practice/daily-plan/step-thread'
@@ -52,7 +54,10 @@ export default function DailyStepSession({
   const showFalseFriendsIntro =
     step.kind === 'false_friends' && (step.falseFriends?.length ?? 0) > 0
 
-  const [started, setStarted] = useState(!showable && !showFalseFriendsIntro)
+  const showGrammarIntro =
+    step.kind === 'grammar_focus' && !!step.grammarRule
+
+  const [started, setStarted] = useState(!showable && !showFalseFriendsIntro && !showGrammarIntro)
 
   if (step.kind === 'word_intro') {
     return (
@@ -82,6 +87,20 @@ export default function DailyStepSession({
         <FalseFriendsIntroStep
           pairs={step.falseFriends ?? []}
           onComplete={() => setStarted(true)}
+        />
+      </div>
+    )
+  }
+
+  // Rule before drill: show the grammar rule once, then fall through to the
+  // exercises in the same step.
+  if (!started && showGrammarIntro && step.grammarRule) {
+    return (
+      <div className="mx-auto flex max-w-prose flex-col gap-4 layout-card-pad pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] lg:pb-[var(--layout-section-gap)]">
+        {threadHints.length > 0 ? <DailyThreadStrip hints={threadHints} /> : null}
+        <GrammarRuleCard
+          rule={step.grammarRule}
+          onContinue={() => setStarted(true)}
         />
       </div>
     )
