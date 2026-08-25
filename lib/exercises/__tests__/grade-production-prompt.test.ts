@@ -10,7 +10,7 @@ describe('GRADE_PRODUCTION_SYSTEM_PROMPT', () => {
   })
 
   it('requires constraintMet for a correct verdict', () => {
-    expect(GRADE_PRODUCTION_SYSTEM_PROMPT).toMatch(/correct.*constraintMet/s)
+    expect(GRADE_PRODUCTION_SYSTEM_PROMPT).toMatch(/correct[\s\S]*constraintMet/)
   })
 
   it('declares constraintMet in the JSON shape', () => {
