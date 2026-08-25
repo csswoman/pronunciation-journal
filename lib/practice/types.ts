@@ -201,6 +201,7 @@ export type DailyStepKind =
   | 'study_deck'       // lección de la ruta, elegida desde el progreso del usuario
   | 'reader'           // comprehensible-input: párrafo i+1 que recicla vocab reciente
   | 'mission'          // transferencia oral con target/source/step exactos
+  | 'grammar_focus'    // regla + producción restringida desde un mazo de gramática
 
 export type DailySelectionReason =
   | 'due'
@@ -247,6 +248,14 @@ export type DailyStep = {
   missionLaunch?: MissionLaunch
   /** Unscored shadowing phrases played before the step's first free production. */
   warmupPhrases?: WarmupShadowPhrase[]
+  /** Solo para 'grammar_focus': regla mostrada antes de los ejercicios de producción del paso. */
+  grammarRule?: {
+    deckSlug: string
+    title: string
+    goal: string
+    /** Dos o tres filas `key: value` tomadas del bloque de reglas del mazo. */
+    rows: Array<{ key: string; value: string }>
+  }
 }
 
 /** Narrative framing metadata for a daily session (opening banner + closing recap). */
