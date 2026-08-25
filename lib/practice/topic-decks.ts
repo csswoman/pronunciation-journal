@@ -65,7 +65,7 @@ export const TOPIC_DECK_MAP: Array<{ keyword: string; deckSlug: string }> = [
   { keyword: 'interview',          deckSlug: 'biz-entrevistas-trabajo' },
   { keyword: 'finance',            deckSlug: 'b1-finanzas-personales' },
   { keyword: 'tech',               deckSlug: 'tech-ingles-programadores' },
-  { keyword: 'ai',                 deckSlug: 'tech-ingles-inteligencia-artificial' },
+  { keyword: 'artificial intelligence', deckSlug: 'tech-ingles-inteligencia-artificial' },
   { keyword: 'code review',        deckSlug: 'biz-code-review' },
   { keyword: 'pull request',       deckSlug: 'biz-code-review' },
   { keyword: 'standup',            deckSlug: 'biz-code-review' },

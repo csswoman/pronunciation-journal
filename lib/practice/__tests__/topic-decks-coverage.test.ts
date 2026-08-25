@@ -41,6 +41,10 @@ describe('TOPIC_DECK_MAP coverage', () => {
     const keywords = TOPIC_DECK_MAP.map((e) => e.keyword)
     expect(new Set(keywords).size).toBe(keywords.length)
   })
+
+  it('resolves more specific keywords before the generic ones they contain', () => {
+    expect(deckSlugForTopic('present perfect continuous')).toBe('b1-presente-perfecto-continuo')
+  })
 })
 
 describe('weak topic thresholds', () => {
@@ -49,7 +53,7 @@ describe('weak topic thresholds', () => {
     expect(WEAK_TOPIC_MIN_SAMPLES).toBeLessThanOrEqual(2)
   })
 
-  it('selects a deck for a topic failed twice out of three', () => {
+  it('selects a deck for a topic with 2 samples at 0.3 error rate', () => {
     const slug = deckSlugForWeakTopics([
       { topic: 'present perfect', errorRate: 0.3, sampleCount: 2 },
     ])
