@@ -1,41 +1,59 @@
 # Sistema mantenible de ilustraciones (empty states) — Diseño
 
-Fecha: 2026-08-24
+Fecha: 2026-08-24 (revisado)
 
 ## Contexto
 
-La app se ve visualmente vacía. El usuario quiere ilustrarla con iconos hand-drawn
-de Koboyo (búsqueda vía MCP server, ya conectado en config local del proyecto)
-para reforzar la identidad de "app de palabras" y ayudar a la memoria visual.
+La app se ve visualmente vacía. El usuario quiere ilustrarla con iconos
+hand-drawn de Koboyo (búsqueda vía MCP server, ya conectado en config local
+del proyecto) para reforzar la identidad de "app de palabras" y ayudar a la
+memoria visual.
 
-El proyecto ya tiene los cimientos de un sistema de ilustraciones, pero sin
-terminar de cablear:
+**Decisión:** las ilustraciones vienen exclusivamente de Koboyo. Los 8 SVGs
+que existían antes en `components/illustrations/` fueron borrados por el
+usuario — no se reutilizan ni sirven de referencia. Se parte de la carpeta
+vacía.
 
-- `components/illustrations/*.svg` — 8 SVGs ya creados (`empty-vocabulario`,
-  `empty-diario`, `empty-lecciones`, `empty-pronunciacion`, `empty-ruta`,
-  `empty-conversacion`, `onboarding-bienvenida`, `state-completado`).
-  Solo **1 de 8** (`empty-vocabulario`) está conectado a un componente real
-  (`WordsEmptyState.tsx`).
-- `illustrations/` (raíz) — 18 SVGs sueltos, estilo editorial/decorativo, sin
-  consumidores en el código todavía. Fuera de alcance de este diseño.
+Lo que ya existe en el proyecto y sí se reutiliza:
+
 - `components/EmptyState.tsx` — componente genérico ya existente
   (`illustration: ReactNode`, `title`, `description`, `action`). Es el
   contrato que ya funciona; no se toca su interfaz.
 - SVGR (`@svgr/webpack`) ya configurado — un `.svg` importado se usa
   directamente como componente React.
+- `illustrations/` (raíz) — 18 SVGs sueltos, estilo editorial/decorativo, sin
+  consumidores en el código. Fuera de alcance de este diseño; no se tocan.
 
 ## Objetivo
 
-1. Cablear los 7 SVGs de `components/illustrations/` que no están conectados
-   a sus empty states reales, usando siempre `EmptyState` como wrapper.
+1. Para cada sección de la app con un empty state relevante, buscar en
+   Koboyo (vía MCP) una ilustración hand-drawn adecuada, guardarla en
+   `components/illustrations/`, y cablearla usando siempre `EmptyState`
+   como wrapper.
 2. Introducir un registro central (`lib/illustrations/registry.ts`) que
    mapee una clave semántica de sección → componente SVG, para que agregar
-   ilustraciones nuevas (vía Koboyo u otra fuente) en el futuro sea un cambio
-   de una sola línea en un solo archivo, no imports dispersos por todo el
-   código.
+   ilustraciones nuevas en el futuro sea un cambio de una sola línea en un
+   solo archivo, no imports dispersos por todo el código.
 
-No incluye: traer iconos nuevos de Koboyo todavía, ilustrar vocabulario
-palabra-por-palabra, ni tocar `illustrations/` (raíz).
+No incluye: ilustrar vocabulario palabra-por-palabra (fase futura, fuera de
+este diseño), ni tocar `illustrations/` (raíz).
+
+## Flujo de trabajo por icono
+
+Para cada clave del mapeo (ver abajo):
+
+1. Buscar en Koboyo por palabra clave relacionada al concepto de la sección
+   (ej. "empty notebook", "no results", "book stack", "microphone").
+2. Elegir el resultado que mejor calce visualmente con el resto (estilo
+   hand-drawn, línea simple — coherente entre sí).
+3. Guardar el SVG en `components/illustrations/<nombre-semantico>.svg`.
+4. Agregar la entrada correspondiente a `lib/illustrations/registry.ts`.
+5. Cablear (o crear, si no existe) el empty state del componente destino
+   usando `EmptyState` + la clave del registry.
+
+Este flujo nunca toca el runtime de producción de forma directa — Koboyo
+solo se usa como fuente de assets en tiempo de desarrollo. La app en
+producción solo importa SVGs ya guardados en el repo.
 
 ## Registro central
 
@@ -44,10 +62,10 @@ palabra-por-palabra, ni tocar `illustrations/` (raíz).
 ```ts
 import type { ComponentType, SVGProps } from "react";
 import EmptyVocabulario from "@/components/illustrations/empty-vocabulario.svg";
-import EmptyDiario from "@/components/illustrations/empty-diario.svg";
+import EmptyJournal from "@/components/illustrations/empty-journal.svg";
 import EmptyLecciones from "@/components/illustrations/empty-lecciones.svg";
 import EmptyPronunciacion from "@/components/illustrations/empty-pronunciacion.svg";
-import EmptyRuta from "@/components/illustrations/empty-ruta.svg";
+import EmptyTracking from "@/components/illustrations/empty-tracking.svg";
 import EmptyConversacion from "@/components/illustrations/empty-conversacion.svg";
 import OnboardingBienvenida from "@/components/illustrations/onboarding-bienvenida.svg";
 import StateCompletado from "@/components/illustrations/state-completado.svg";
@@ -64,10 +82,10 @@ export type IllustrationKey =
 
 export const ILLUSTRATIONS: Record<IllustrationKey, ComponentType<SVGProps<SVGSVGElement>>> = {
   emptyVocabulario: EmptyVocabulario,
-  emptyJournal: EmptyDiario,
+  emptyJournal: EmptyJournal,
   emptyLecciones: EmptyLecciones,
   emptyPronunciacion: EmptyPronunciacion,
-  emptyTracking: EmptyRuta,
+  emptyTracking: EmptyTracking,
   emptyConversacion: EmptyConversacion,
   onboardingBienvenida: OnboardingBienvenida,
   stateCompletado: StateCompletado,
@@ -88,28 +106,34 @@ Este patrón sigue la misma forma que `generic-registry.tsx`
 (`lib/practice/exercise-renderer/`): objeto tipado, clave por dominio,
 componente resuelto por lookup en vez de importado ad-hoc.
 
-**Regla hacia adelante:** cualquier ilustración nueva (de Koboyo o cualquier
-fuente) se agrega como archivo en `components/illustrations/` + una entrada
-nueva en este registry. Nunca se importa un `.svg` directamente en un
-componente de feature — siempre se pasa por el registry. Esto es lo que
-hace el sistema auditable cuando crezca a decenas/cientos de iconos.
+**Regla hacia adelante:** cualquier ilustración nueva se agrega como archivo
+en `components/illustrations/` + una entrada nueva en este registry. Nunca
+se importa un `.svg` directamente en un componente de feature — siempre se
+pasa por el registry. Esto es lo que hace el sistema auditable cuando crezca
+a decenas/cientos de iconos.
 
-## Mapeo sección → clave (Fase 1)
+**Nota de implementación:** el `IllustrationKey` union arranca vacío o con
+solo las claves que efectivamente se cablean en la primera pasada. No se
+declaran claves para SVGs que aún no existen — TypeScript exige que el
+`Record` esté completo, así que cada clave se agrega en el mismo cambio que
+trae su SVG. El registry crece incrementalmente, icono por icono.
 
-| Clave | SVG existente | Componente destino | Estado |
+## Mapeo sección → clave (punto de partida)
+
+| Clave | Concepto a buscar en Koboyo | Componente destino | Estado |
 |---|---|---|---|
-| `emptyVocabulario` | `empty-vocabulario.svg` | `WordsEmptyState.tsx` | Ya conectado — migrar a leer del registry en vez de import directo (consistencia) |
-| `emptyJournal` | `empty-diario.svg` | Empty state de journal (a ubicar/crear en `components/journal/`) | Por conectar |
-| `emptyLecciones` | `empty-lecciones.svg` | Empty state de `/courses` (a ubicar/crear en `components/courses/`) | Por conectar |
-| `emptyPronunciacion` | `empty-pronunciacion.svg` | Empty state de pronunciación (a ubicar/crear en `components/pronunciation/`) | Por conectar |
-| `emptyTracking` | `empty-ruta.svg` | `TrackingEmptyState.tsx` | Por conectar (reescribir con `EmptyState` en vez de markup custom) |
-| `emptyConversacion` | `empty-conversacion.svg` | `ChatEmptyState.tsx` (AI coach) | Por conectar — usar solo si aplica sin pelear con el hero del `LiquidOrb` ya existente; si el layout actual no tiene un slot de "vacío" tradicional, se deja documentado y se omite sin bloquear el resto |
-| `onboardingBienvenida` | `onboarding-bienvenida.svg` | Primer login / onboarding (a localizar) | Por conectar |
-| `stateCompletado` | `state-completado.svg` | `StudyEmptyStates.tsx` (fase `"done"`, reemplaza el emoji 🎉 actual) | Por conectar |
+| `emptyVocabulario` | vocabulario / lista de palabras vacía | `WordsEmptyState.tsx` | Ya usa `EmptyState`, hoy con un import directo — migrar a leer del registry |
+| `emptyJournal` | notebook / diario vacío | Empty state de journal (a ubicar/crear en `components/journal/`) | Por buscar y conectar |
+| `emptyLecciones` | libro / estantería / ruta de aprendizaje | Empty state de `/courses` (a ubicar/crear en `components/courses/`) | Por buscar y conectar |
+| `emptyPronunciacion` | micrófono / ondas de sonido | Empty state de pronunciación (a ubicar/crear en `components/pronunciation/`) | Por buscar y conectar |
+| `emptyTracking` | lista de seguimiento vacía | `TrackingEmptyState.tsx` | Por buscar y conectar (reescribir con `EmptyState` en vez de markup custom) |
+| `emptyConversacion` | burbuja de chat / conversación | `ChatEmptyState.tsx` (AI coach) | Por buscar — usar solo si aplica sin pelear con el hero del `LiquidOrb` ya existente; si no hay slot natural, se documenta como omitido |
+| `onboardingBienvenida` | bienvenida / saludo | Primer login / onboarding (a localizar) | Por buscar y conectar |
+| `stateCompletado` | trofeo / check / celebración | `StudyEmptyStates.tsx` (fase `"done"`, reemplaza el emoji 🎉 actual) | Por buscar y conectar |
 
-**Nota de implementación:** para las filas marcadas "a ubicar/crear", el
-plan de implementación debe primero confirmar si ya existe un empty state
-real en journal/courses/pronunciation (puede estar inline dentro de otro
+**Nota:** para las filas marcadas "a ubicar/crear", el plan de
+implementación debe primero confirmar si ya existe un empty state real en
+journal/courses/pronunciation (puede estar inline dentro de otro
 componente) antes de crear uno nuevo. Si no existe ningún punto de
 inserción natural, se documenta como omitido en vez de forzar un empty
 state artificial.
@@ -123,6 +147,9 @@ state artificial.
 - El registry no valida en runtime que la clave exista (TypeScript ya lo
   garantiza vía `Record<IllustrationKey, ...>` — si falta una entrada, no
   compila).
+- Consistencia visual entre iconos: como todos vienen de Koboyo, preferir
+  el mismo estilo (ej. "Original" hand-drawn) para los ocho, en vez de
+  mezclar estilos (Original / Cartoon / Solid) entre secciones distintas.
 
 ## Testing
 
@@ -134,7 +161,6 @@ state artificial.
 
 ## Fase 2 (fuera de este plan, futuro)
 
-Con el sistema base funcionando, se usa Koboyo MCP para buscar iconos
-nuevos por palabra clave, guardarlos en `components/illustrations/`, y
-agregar la entrada correspondiente al registry — sin tocar el runtime de
-producción ni la arquitectura ya establecida aquí.
+Con el sistema base funcionando, se repite el mismo flujo Koboyo →
+`components/illustrations/` → registry para ilustrar vocabulario por
+categoría semántica y otras superficies que se identifiquen más adelante.
