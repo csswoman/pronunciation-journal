@@ -95,6 +95,7 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
           production: transcript,
           modality: 'spoken',
           level: exercise.level,
+          constraintCheck: exercise.constraint?.checkEn,
         })
         setGrade(result)
       } catch (err) {

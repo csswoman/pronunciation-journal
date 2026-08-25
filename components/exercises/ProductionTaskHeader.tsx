@@ -14,6 +14,9 @@ interface Props {
 export function ProductionTaskHeader({ exercise, title }: Props) {
   return (
     <div className="flex w-full flex-col gap-3">
+      {exercise.constraint && (
+        <span className="badge-accent self-start">{exercise.constraint.label}</span>
+      )}
       <p className="m-0 text-h3 text-balance text-fg">
         {title}
       </p>
