@@ -18,6 +18,7 @@ import {
   LISTENING_EXERCISE_COUNT,
   MINIMAL_PAIRS_EXERCISE_COUNT,
   PHONEME_FOCUS_EXERCISE_COUNT,
+  SPOKEN_PRODUCTION_PER_SESSION,
   WORD_INTRO_MAX_CARDS,
 } from './constants'
 import { dedupeByContentId, toWordEntry } from './selectors'
@@ -68,7 +69,7 @@ export function buildWordReviewStep(
   const reorders = generateReorderWordsFromWordBank(words, 1)
   const matchPairs = generateMatchPairsFromWordBank(words, 1)
   const writtenProduction = generateWrittenProductionFromWordBank(words, 1)
-  const spokenProduction = generateSpokenProductionFromWordBank(words, 1)
+  const spokenProduction = generateSpokenProductionFromWordBank(words, SPOKEN_PRODUCTION_PER_SESSION)
 
   const exercises = dedupeByContentId([
     ...fillBlanks.map((ex) => fromGenericExercise(ex, context)),

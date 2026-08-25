@@ -11,5 +11,10 @@ export const LISTENING_EXERCISE_COUNT = 3
 export const SENTENCE_BUILDER_EXERCISE_COUNT = 5
 export const FALSE_FRIENDS_EXERCISE_COUNT = 4
 
+/** Producciones habladas por sesión — el foco central de esta iteración. */
+export const SPOKEN_PRODUCTION_PER_SESSION = 12
+/** Frases de shadowing (calentamiento) antes de producción libre. */
+export const WARMUP_PHRASE_COUNT = 4
+
 /** Tope de palabras nuevas presentadas (noticing) por sesión — carga cognitiva. */
 export const WORD_INTRO_MAX_CARDS = 5
