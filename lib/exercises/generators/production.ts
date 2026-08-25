@@ -86,6 +86,11 @@ export function generateSpokenProductionFromWordBank(
   count: number,
   preferredConstraintIds: readonly string[] = [],
 ): GenerationResult<SpokenProductionExercise> {
+  // Always empty: eligibility is pre-filtered into `usable` above and this
+  // mode has no pool-dependent branch in assessWordBankEntry, so nothing
+  // can newly fail once an entry has passed. Kept for GenerationResult shape
+  // parity with the other generators — revisit if eligibility ever depends
+  // on the chosen pool for this mode.
   const skipped: SkippedEntry[] = []
   const usable = entries.filter((entry) => {
     const { eligible } = assessWordBankEntry(entry, 'spoken_production')
