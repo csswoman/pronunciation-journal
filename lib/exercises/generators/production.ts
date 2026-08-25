@@ -92,22 +92,23 @@ export function generateSpokenProductionFromWordBank(
     return eligible
   })
 
+  if (usable.length === 0) {
+    return { exercises: [], skipped }
+  }
+
   const exercises: SpokenProductionExercise[] = []
-  const chosen = pick(usable, count)
 
-  // Seed from the batch so a session is stable but different day to day.
-  const seed = chosen.map((e) => e.id).join('|')
-  const constraints = selectConstraints(seed, chosen.length, preferredConstraintIds)
+  // Seed from the full eligible pool so a session is stable but different day to day.
+  const seed = usable.map((e) => e.id).join('|')
+  const constraints = selectConstraints(seed, count, preferredConstraintIds)
 
-  chosen.forEach((entry, index) => {
-    const assessment = assessWordBankEntry(entry, 'spoken_production')
-    if (!assessment.eligible) {
-      skipped.push(toSkipped(entry, assessment.reasons))
-      return
-    }
-
-    // Cycle the constraint list when the batch is larger than the catalogue.
-    const constraint = constraints[index % constraints.length]!
+  // The pool feeding this generator is capped upstream (WORD_REVIEW_WORD_COUNT),
+  // so reaching the session volume target requires repeating words — each
+  // repeat paired with a different constraint. Cycle both lists independently
+  // so word/constraint pairings stagger instead of colliding in lockstep.
+  for (let i = 0; i < count; i++) {
+    const entry = usable[i % usable.length]!
+    const constraint = constraints[i % constraints.length]!
 
     exercises.push({
       id: exerciseId('spoken_production', entry.id, constraint.id),
@@ -117,7 +118,7 @@ export function generateSpokenProductionFromWordBank(
       constraint,
       ...baseFields(entry),
     })
-  })
+  }
 
   return { exercises, skipped }
 }

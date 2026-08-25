@@ -49,4 +49,20 @@ describe('generateSpokenProductionFromWordBank with constraints', () => {
     const { exercises } = generateSpokenProductionFromWordBank(entries, 12)
     expect(exercises).toHaveLength(12)
   })
+
+  it('reaches the full count by repeating words with different constraints when the pool is small', () => {
+    const entries = Array.from({ length: 6 }, (_, i) => entry(String(i), `word${i}`))
+    const { exercises } = generateSpokenProductionFromWordBank(entries, 12)
+    expect(exercises).toHaveLength(12)
+
+    // No two exercises should be the exact same (word, constraint) pair.
+    const ids = exercises.map((e) => e.id)
+    expect(new Set(ids).size).toBe(exercises.length)
+
+    // Every generated exercise still uses a word from the eligible pool.
+    const validWords = new Set(entries.map((e) => e.text))
+    for (const ex of exercises) {
+      expect(validWords.has(ex.targetItem)).toBe(true)
+    }
+  })
 })
