@@ -13,6 +13,7 @@ import type { FalseFriendIntro, StudyCardModel } from '@/lib/practice/study-card
 import type { ReaderPassage } from '@/lib/practice/reader/types'
 import type { MissionLaunch } from '@/lib/ai-practice/missions/launch'
 import type { ExerciseErrorCode } from '@/lib/exercises/error-taxonomy'
+import type { WarmupShadowPhrase } from '@/lib/exercises/generators/warmup'
 
 // Slugs mapped from `exercise_types` rows in Supabase.
 // Keep in sync with supabase/migrations/20260329230300_seed_exercise_types.sql.
@@ -244,6 +245,8 @@ export type DailyStep = {
   selection?: DailySelectionMetadata
   /** Exact oral handoff for mission steps. */
   missionLaunch?: MissionLaunch
+  /** Unscored shadowing phrases played before the step's first free production. */
+  warmupPhrases?: WarmupShadowPhrase[]
 }
 
 /** Narrative framing metadata for a daily session (opening banner + closing recap). */

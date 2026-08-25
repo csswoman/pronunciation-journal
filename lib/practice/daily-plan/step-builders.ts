@@ -7,6 +7,7 @@ import {
   generateWrittenProductionFromWordBank,
 } from '@/lib/exercises/generators/production'
 import { generateSentenceContextExercises } from '@/lib/lexicon/exercises'
+import { generateWarmupShadowPhrases } from '@/lib/exercises/generators/warmup'
 import { generateMinimalPair, generateDictation } from '@/lib/phoneme-practice/exercises'
 import { buildMixedSession, type MixedExercise } from '@/lib/phoneme-practice/mixed-session'
 import { fromGenericExercise, fromMixedExercise } from '@/lib/practice/adapters'
@@ -19,6 +20,7 @@ import {
   MINIMAL_PAIRS_EXERCISE_COUNT,
   PHONEME_FOCUS_EXERCISE_COUNT,
   SPOKEN_PRODUCTION_PER_SESSION,
+  WARMUP_PHRASE_COUNT,
   WORD_INTRO_MAX_CARDS,
 } from './constants'
 import { dedupeByContentId, toWordEntry } from './selectors'
@@ -99,6 +101,7 @@ export function buildWordReviewStep(
     exercises,
     featuredWords: words.map((w) => w.text),
     estMinutes: Math.max(2, Math.round(exercises.length * 1.1)),
+    warmupPhrases: generateWarmupShadowPhrases(words, WARMUP_PHRASE_COUNT),
   }
 }
 
