@@ -122,14 +122,14 @@ trae su SVG. El registry crece incrementalmente, icono por icono.
 
 | Clave | Concepto a buscar en Koboyo | Componente destino | Estado |
 |---|---|---|---|
-| `emptyVocabulario` | vocabulario / lista de palabras vacía | `WordsEmptyState.tsx` | Ya usa `EmptyState`, hoy con un import directo — migrar a leer del registry |
-| `emptyJournal` | notebook / diario vacío | Empty state de journal (a ubicar/crear en `components/journal/`) | Por buscar y conectar |
-| `emptyLecciones` | libro / estantería / ruta de aprendizaje | Empty state de `/courses` (a ubicar/crear en `components/courses/`) | Por buscar y conectar |
-| `emptyPronunciacion` | micrófono / ondas de sonido | Empty state de pronunciación (a ubicar/crear en `components/pronunciation/`) | Por buscar y conectar |
-| `emptyTracking` | lista de seguimiento vacía | `TrackingEmptyState.tsx` | Por buscar y conectar (reescribir con `EmptyState` en vez de markup custom) |
-| `emptyConversacion` | burbuja de chat / conversación | `ChatEmptyState.tsx` (AI coach) | Por buscar — usar solo si aplica sin pelear con el hero del `LiquidOrb` ya existente; si no hay slot natural, se documenta como omitido |
-| `onboardingBienvenida` | bienvenida / saludo | Primer login / onboarding (a localizar) | Por buscar y conectar |
-| `stateCompletado` | trofeo / check / celebración | `StudyEmptyStates.tsx` (fase `"done"`, reemplaza el emoji 🎉 actual) | Por buscar y conectar |
+| `emptyVocabulario` | vocabulario / lista de palabras vacía | `WordsEmptyState.tsx` | Conectado (`WordsEmptyState.tsx`) |
+| `emptyJournal` | notebook / diario vacío | Empty state de journal (a ubicar/crear en `components/journal/`) | Omitido — `JournalHistoryTimeline.tsx` retorna `null` a propósito para ≤1 entradas ("una sola página no necesita navegación lateral"), y `journal/page.tsx` siempre renderiza `JournalNotebookClient` (superficie de escritura), nunca un estado vacío. No hay punto de inserción natural. |
+| `emptyLecciones` | libro / estantería / ruta de aprendizaje | Empty state de `/courses` (a ubicar/crear en `components/courses/`) | Omitido — `CoursePathPage.tsx` se alimenta de `COURSE_PATH_CURRICULUM.levels`, un objeto estático siempre poblado por diseño. No existe (ni tiene sentido) una rama de cero lecciones. |
+| `emptyPronunciacion` | micrófono / ondas de sonido | Empty state de pronunciación (a ubicar/crear en `components/pronunciation/`) | Omitido — `app/(authenticated)/courses/pronunciation/page.tsx` es un redirect puro a `/practice/sounds`, no renderiza nada propio; no hay superficie donde colocar una ilustración. |
+| `emptyTracking` | lista de seguimiento vacía | `TrackingEmptyState.tsx` | Conectado (`TrackingEmptyState.tsx`) |
+| `emptyConversacion` | burbuja de chat / conversación | `ChatEmptyState.tsx` (AI coach) | Omitido — `ChatEmptyState.tsx` ya es el empty state completo de AI coach, construido alrededor del hero `LiquidOrb`. Agregar una segunda ilustración compite visualmente con el orb, que ya es el visual completo del estado vacío; se documenta como omitido según el edge case ya previsto en este spec. |
+| `onboardingBienvenida` | bienvenida / saludo | Primer login / onboarding (a localizar) | Omitido — la única UI de primera sesión encontrada es `HomeFirstSessionHint.tsx`, un banner inline compacto y descartable (una línea de texto + botón de cerrar), no una pantalla de bienvenida ilustrada. Una ilustración Koboyo quedaría sobredimensionada ahí. No existe una pantalla de onboarding real donde insertarla. |
+| `stateCompletado` | trofeo / check / celebración | `StudyEmptyStates.tsx` (fase `"done"`, reemplaza el emoji 🎉 actual) | Conectado (`StudyEmptyStates.tsx`) |
 
 **Nota:** para las filas marcadas "a ubicar/crear", el plan de
 implementación debe primero confirmar si ya existe un empty state real en
