@@ -20,6 +20,10 @@ describe('constraintIdForDeck', () => {
     expect(constraintIdForDeck('a1-alfabeto-deletreo')).toBeNull()
   })
 
+  it('prioritizes the more specific comparativ fragment over planes-futuros', () => {
+    expect(constraintIdForDeck('b1-comparativos-planes-futuros')).toBe('comparison')
+  })
+
   it('only ever names constraints that exist', () => {
     const decks = [
       'a2-experiencias-pasadas-planes',
