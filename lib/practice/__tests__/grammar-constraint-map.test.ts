@@ -20,6 +20,17 @@ describe('constraintIdForDeck', () => {
     expect(constraintIdForDeck('a1-alfabeto-deletreo')).toBeNull()
   })
 
+  it('maps the gerunds/infinitives deck to the opinion constraint', () => {
+    expect(constraintIdForDeck('b1-gerundios-infinitivos')).toBe('opinion_connector')
+  })
+
+  it('leaves passive voice, reported speech, relative clauses, and phrasal verbs unmapped', () => {
+    expect(constraintIdForDeck('b1-voz-pasiva-consejos')).toBeNull()
+    expect(constraintIdForDeck('b1-estilo-indirecto')).toBeNull()
+    expect(constraintIdForDeck('b1-pronombres-clausulas-relativas')).toBeNull()
+    expect(constraintIdForDeck('b1-phrasal-verbs-tipos')).toBeNull()
+  })
+
   it('prioritizes the more specific comparativ fragment over planes-futuros', () => {
     expect(constraintIdForDeck('b1-comparativos-planes-futuros')).toBe('comparison')
   })
