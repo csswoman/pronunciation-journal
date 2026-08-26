@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Sparkles } from '@/components/icons'
+import Button from '@/components/ui/Button'
 import PageLayout from '@/components/layout/PageLayout'
 import PageHeader from '@/components/layout/PageHeader'
 import dynamic from 'next/dynamic'
@@ -15,13 +16,11 @@ const DailyStepSession = dynamic(() => import('./DailyStepSession'), {
   loading: () => <div className="p-8 text-center text-fg-muted font-caption">Cargando sesión…</div>,
 })
 import SessionRecapCard from './SessionRecapCard'
-import DailyPlanCard from './DailyPlanCard'
 import { RoutinePresetSelector, type DailyRoutinePreset } from './RoutinePresetSelector'
 import { ImmersionLogCard } from './ImmersionLogCard'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { useDailyPlan, type ConceptLesson, type DailyStep } from '@/hooks/useDailyPlan'
 import { fetchDueTomorrowCount } from '@/lib/review/client-queries'
-import { useAICoachStore } from '@/lib/stores/aiCoachStore'
 
 export type { ConceptLesson }
 
@@ -37,12 +36,6 @@ function readStepStorage(): { stepId: string; exerciseIndex: number } | null {
   } catch {
     return null
   }
-}
-
-function writeStepStorage(stepId: string, exerciseIndex: number): void {
-  try {
-    sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ stepId, exerciseIndex }))
-  } catch { /* quota errors: ignore */ }
 }
 
 function clearStepStorage(): void {
@@ -70,8 +63,7 @@ type View =
 export default function DailyChecklist({ conceptLesson, initialStepId, streak = null }: DailyChecklistProps) {
   const router = useRouter()
   const { user } = useAuth()
-  const openCoach = useAICoachStore((state) => state.openCoach)
-  const { plan, status, steps, getStepStatus, completedCount, allDone, load, markDone, celebrate } = useDailyPlan({
+  const { plan, status, steps, getStepStatus, allDone, load, markDone, celebrate } = useDailyPlan({
     conceptLesson,
     autoLoad: true,
   })
@@ -84,17 +76,24 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
   // Prevents double-triggering the initialStepId auto-start.
   const autoStartedRef = useRef(false)
 
-  // Auto-start: when plan is ready and we have a step from the URL.
+  // Auto-start: when plan is ready, jump straight into a step — the one from the
+  // URL if present, otherwise the next actionable step. The full checklist lives
+  // on Home; /daily is the session surface, not a second copy of the list.
   useEffect(() => {
-    if (status !== 'ready' || !initialStepId || autoStartedRef.current) return
-    const step = steps.find((s) => s.id === initialStepId)
+    if (status !== 'ready' || autoStartedRef.current) return
+    const targetId = initialStepId ?? steps.find((s) => {
+      const st = getStepStatus(s.id)
+      return st !== 'done' && st !== 'resolved'
+    })?.id
+    if (!targetId) return
+    const step = steps.find((s) => s.id === targetId)
     if (!step || step.kind === 'concept' || step.kind === 'study_deck' || step.kind === 'mission') return
     autoStartedRef.current = true
     const stored = readStepStorage()
-    const exerciseIndex = stored?.stepId === initialStepId ? (stored.exerciseIndex ?? 0) : 0
+    const exerciseIndex = stored?.stepId === targetId ? (stored.exerciseIndex ?? 0) : 0
     setSessionKey((k) => k + 1)
     setView({ mode: 'step', step, exerciseIndex })
-  }, [status, steps, initialStepId])
+  }, [status, steps, initialStepId, getStepStatus])
 
   // Celebrate once when all steps are complete, and load the "due tomorrow" count.
   useEffect(() => {
@@ -108,18 +107,6 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
       }
     }
   }, [allDone, view.mode, celebrate, user])
-
-  const handleStartStep = useCallback((step: DailyStep) => {
-    if (step.kind === 'concept' || step.kind === 'study_deck') return
-    if (step.kind === 'mission' && step.missionLaunch) {
-      openCoach({ tab: 'missions', mission: { ...step.missionLaunch, launchId: crypto.randomUUID() } })
-      return
-    }
-    writeStepStorage(step.id, 0)
-    setSessionKey((k) => k + 1)
-    setView({ mode: 'step', step, exerciseIndex: 0 })
-    router.replace(`/daily?step=${step.id}`)
-  }, [openCoach, router])
 
   const handleComplete = useCallback(async (stepId: string) => {
     clearStepStorage()
@@ -178,14 +165,14 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
       <PageHeader
         variant="compact"
         kicker="Hoy"
-        title="Plan diario"
+        title="Sesión diaria"
         subtitle={
-          status === 'ready' && steps.length > 0
-            ? completedCount === 0
-              ? `Completa ${steps.length} pasos para mantener tu racha.`
-              : `${completedCount} de ${steps.length} hechos · sigue para mantener tu racha.`
-            : status === 'ready'
-              ? 'Tu plan se arma con cursos y sonidos.'
+          status === 'ready'
+            ? steps.length > 0
+              ? 'Preparando el siguiente paso…'
+              : 'Tu plan se arma con cursos y sonidos.'
+            : status === 'error'
+              ? 'No se pudo preparar tu plan.'
               : 'Preparando tu plan…'
         }
       />
@@ -209,18 +196,42 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
         </div>
       ) : null}
 
-      <div className="mt-4">
-        <DailyPlanCard
-          status={status}
-          steps={steps}
-          getStepStatus={getStepStatus}
-          completedCount={completedCount}
-          allDone={allDone}
-          onStartStep={handleStartStep}
-          onRetry={() => void load()}
-          collapseFutureSteps
-        />
-      </div>
+      {status === 'ready' && steps.length === 0 && !allDone ? (
+        <div className="mt-4 flex flex-col items-center gap-3 rounded-xl border border-border-default bg-daily-card px-[var(--layout-card-pad)] py-[var(--layout-section-gap)] text-center">
+          <p className="font-body-sm text-fg-muted">
+            Se arma cuando empiezas un curso o practicas sonidos.
+          </p>
+          <Link
+            href="/courses"
+            className="focus-ring inline-flex min-h-11 items-center gap-1.5 rounded-md px-2 font-caption font-medium text-primary"
+          >
+            Explorar cursos
+          </Link>
+        </div>
+      ) : null}
+
+      {status === 'ready' && steps.length > 0 ? (
+        <div className="mt-4 flex flex-col items-center gap-2 rounded-xl border border-border-default bg-daily-card px-[var(--layout-card-pad)] py-[var(--layout-section-gap)] text-center">
+          <p className="font-body-sm text-fg-muted">
+            El siguiente paso necesita elegirse desde el plan de Inicio.
+          </p>
+          <Link
+            href="/"
+            className="focus-ring inline-flex min-h-11 items-center gap-1.5 rounded-md px-2 font-caption font-medium text-primary"
+          >
+            Ver plan del día
+          </Link>
+        </div>
+      ) : null}
+
+      {status === 'error' ? (
+        <div className="mt-4 flex flex-col items-center gap-3 rounded-xl border border-border-default bg-daily-card px-[var(--layout-card-pad)] py-[var(--layout-section-gap)] text-center">
+          <p className="font-body-sm text-error">No se pudo preparar tu plan.</p>
+          <Button type="button" variant="primary" size="md" onClick={() => void load()}>
+            Reintentar
+          </Button>
+        </div>
+      ) : null}
 
       {/* External Immersion Logger */}
       <div className="mt-[var(--layout-section-gap)]">

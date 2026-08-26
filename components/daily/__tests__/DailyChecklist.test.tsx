@@ -95,32 +95,36 @@ describe('DailyChecklist (checklist surface)', () => {
     mockState.plan = { arc: mockState.arc }
   })
 
-  it('keeps page title and renders Home-style plan card (collapsed)', () => {
+  it('auto-starts DailyStepSession for the next actionable step — no duplicate checklist', async () => {
     render(<DailyChecklist conceptLesson={null} />)
-    expect(screen.getByRole('heading', { name: 'Plan diario' })).toBeInTheDocument()
-    expect(screen.getByLabelText('Plan de hoy')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Ver \d+ pasos? más/i })).toBeInTheDocument()
+    expect(await screen.findByText('Step session')).toBeInTheDocument()
+    expect(screen.queryByLabelText('Plan de hoy')).not.toBeInTheDocument()
   })
 
-  it('shows recommended practice card when arc is present', () => {
-    render(<DailyChecklist conceptLesson={null} />)
-    expect(screen.getByText(/Sigue con \/h\//)).toBeInTheDocument()
+  it('auto-starts the step named by initialStepId over the default entry step', async () => {
+    render(<DailyChecklist conceptLesson={null} initialStepId="s3" />)
+    expect(await screen.findByText('Step session')).toBeInTheDocument()
   })
 
-  it('hides recommended practice card when arc is missing', () => {
-    mockState.arc = undefined
-    mockState.plan = { arc: undefined }
-    render(<DailyChecklist conceptLesson={null} />)
-    expect(screen.queryByText(/Sigue con/)).not.toBeInTheDocument()
-    expect(screen.getByText(/¿Práctica libre\?/)).toBeInTheDocument()
-  })
-
-  it('enters DailyStepSession when starting the entry step', async () => {
-    const { default: userEvent } = await import('@testing-library/user-event')
-    const user = userEvent.setup()
+  it('falls back to a pointer to Home when the entry step cannot auto-start (concept/study_deck)', () => {
+    mockState.steps = [makeStep({ id: 's1', kind: 'concept', title: 'Teoría' })]
     render(<DailyChecklist conceptLesson={null} />)
     expect(screen.queryByText('Step session')).not.toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: /Empieza aquí/i }))
-    expect(screen.getByText('Step session')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Sesión diaria' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /Ver plan del día/i })).toHaveAttribute('href', '/')
+  })
+
+  it('shows an empty-plan pointer to courses when there are no steps', () => {
+    mockState.steps = []
+    render(<DailyChecklist conceptLesson={null} />)
+    expect(screen.queryByText('Step session')).not.toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /Explorar cursos/i })).toHaveAttribute('href', '/courses')
+  })
+
+  it('shows a retry action on error', () => {
+    mockState.status = 'error'
+    render(<DailyChecklist conceptLesson={null} />)
+    expect(screen.getByText('No se pudo preparar tu plan.')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Reintentar' })).toBeInTheDocument()
   })
 })

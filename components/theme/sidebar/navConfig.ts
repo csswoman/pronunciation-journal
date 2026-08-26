@@ -6,6 +6,7 @@ import {
   BookMarked,
   LibraryBig,
   TrendingUp,
+  CalendarCheck,
 } from "@/components/icons";
 import { NavSectionType } from "./NavSection";
 
@@ -14,6 +15,7 @@ export const todayNav: NavSectionType = {
   label: "Hoy",
   items: [
     { name: "Inicio", href: "/", icon: Home },
+    { name: "Plan diario", href: "/daily", icon: CalendarCheck },
     { name: "Diario", href: "/journal", icon: FileText },
   ],
 };
