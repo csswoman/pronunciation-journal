@@ -30,7 +30,7 @@ function createContentSecurityPolicy(nonce: string): string {
     // Styles: keep 'unsafe-inline' — runtime style attributes and CSS tooling still need it.
     // A style nonce alone would ignore unsafe-inline in modern browsers and break them.
     "style-src 'self' 'unsafe-inline'",
-    "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://generativelanguage.googleapis.com https://accounts.google.com",
+    "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://generativelanguage.googleapis.com https://accounts.google.com https://api.dictionaryapi.dev",
   ].join("; ");
 }
 
