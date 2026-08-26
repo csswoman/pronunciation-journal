@@ -3,7 +3,7 @@
 //   <ActionLink />   — label + optional sublabel
 // </HomePrimaryAction>
 
-import Anchor from "@/components/ui/Anchor";
+import Link from "next/link";
 import { cn } from "@/lib/cn";
 import type { PrimaryAction } from "@/lib/home/primary-action";
 
@@ -21,14 +21,13 @@ export default function HomePrimaryAction({ action }: Props) {
 
   return (
     <section aria-label="Acción principal" className="flex flex-col gap-2">
-      <Anchor
+      <Link
         href={action.href}
-        color="unstyled"
         className={cn(
-          "flex w-full flex-col items-center justify-center gap-1 rounded-xl px-6 text-center no-underline",
+          "focus-ring flex w-full flex-col items-center justify-center gap-1 rounded-xl px-6 text-center transition-colors",
           isPrimary
-            ? "min-h-24 bg-cta-bg text-cta-fg hover:bg-cta-bg-hover"
-            : "min-h-16 border border-border-default bg-surface-raised text-fg hover:bg-surface-sunken",
+            ? "bg-cta-bg py-[var(--layout-card-pad)] text-cta-fg hover:bg-cta-bg-hover"
+            : "border border-border-default bg-surface-raised py-[var(--layout-stack-loose)] text-fg hover:bg-surface-sunken",
         )}
       >
         <span className={cn("font-semibold", isPrimary ? "text-body-lg" : "text-body-sm")}>
@@ -37,7 +36,7 @@ export default function HomePrimaryAction({ action }: Props) {
         {action.sublabel && (
           <span className="text-body-sm opacity-80">{action.sublabel}</span>
         )}
-      </Anchor>
+      </Link>
     </section>
   );
 }

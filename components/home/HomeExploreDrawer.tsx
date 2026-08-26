@@ -18,7 +18,7 @@ interface Props {
  */
 export default function HomeExploreDrawer({ children }: Props) {
   return (
-    <details className="group mt-6 border-t border-border-subtle pt-4">
+    <details className="group mt-[var(--layout-section-gap)] border-t border-border-subtle pt-[var(--layout-stack-loose)]">
       <summary className="focus-ring cursor-pointer list-none font-body-sm font-medium text-fg-muted marker:content-none hover:text-fg">
         Explorar
         <span aria-hidden="true" className="ml-1 inline-block transition-transform group-open:rotate-90">
