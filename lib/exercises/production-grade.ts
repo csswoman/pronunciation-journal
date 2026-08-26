@@ -1,6 +1,7 @@
 /** Shared shape for AI production grading (client + server). */
 
 import type { CEFRLevel } from './cefr'
+import type { ErrorPatternId } from './error-patterns'
 
 export interface ProductionGradeResult {
   /** Overall pass: target used correctly and grammar acceptable. */
@@ -14,6 +15,11 @@ export interface ProductionGradeResult {
    * function). True when no constraint was requested.
    */
   constraintMet: boolean
+  /**
+   * Structured label for the main error, when the response was not correct.
+   * Drives scheduled recurrence — see lib/practice/error-recurrence.ts.
+   */
+  errorPattern?: ErrorPatternId
   /** Actionable feedback (1–3 sentences). */
   feedback: string
   /** Corrected version when applicable. */

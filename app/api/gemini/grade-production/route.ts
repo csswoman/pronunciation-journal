@@ -7,6 +7,7 @@ import {
 import { requireSameOrigin, requireUser, checkLayeredRateLimit, validateBody } from "@/lib/api/guards";
 import { parseGeminiJson, respondWithGeminiJson } from "@/lib/gemini/json-route";
 import type { ProductionGradeResult } from "@/lib/exercises/production-grade";
+import { isErrorPatternId } from "@/lib/exercises/error-patterns";
 
 const GradeProductionSchema = z.object({
   targetItem: z.string().min(1).max(100),
@@ -25,18 +26,23 @@ const GradeResponseSchema = z.object({
   constraintMet: z.boolean().optional(),
   feedback: z.string().max(2000),
   corrections: z.string().max(2000).optional(),
+  errorPattern: z.string().max(64).optional(),
   score: z.number().min(0).max(100),
 }).strict();
 
 function parseGradeJson(raw: string): ProductionGradeResult {
   const parsed = parseGeminiJson(raw, (json) => GradeResponseSchema.parse(json));
   const constraintMet = parsed.constraintMet ?? true;
+  const correct = parsed.correct && constraintMet;
   return {
     ...parsed,
     constraintMet,
-    // Defend the invariant in code: never report `correct` when the
-    // constraint was missed, even if the model says otherwise.
-    correct: parsed.correct && constraintMet,
+    correct,
+    // Discard hallucinated labels rather than letting them pollute the
+    // learner's recurrence queue. Also drop it entirely when the answer
+    // was correct — there is no error to schedule.
+    errorPattern:
+      !correct && isErrorPatternId(parsed.errorPattern) ? parsed.errorPattern : undefined,
     score: Math.round(parsed.score),
   };
 }

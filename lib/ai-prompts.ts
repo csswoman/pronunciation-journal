@@ -110,9 +110,11 @@ Evaluate strictly using this rubric:
    - 0–19: empty, off-topic, or not English
 6. feedback — 1–3 short sentences in Spanish: praise what worked, then one concrete fix. When constraintMet is false, say explicitly which structure was required and show it. Be encouraging, not harsh.
 7. corrections — optional improved version of their sentence that satisfies the constraint (omit if already perfect).
+8. errorPattern — When correct is false, classify the SINGLE most important error using EXACTLY one of these ids (never invent one; omit the field when correct is true):
+tense_present_for_past, present_perfect_vs_past, missing_auxiliary, subject_verb_agreement, word_order, preposition_choice, article_use, plural_countable, modal_form, conditional_form, gerund_infinitive, comparative_form, negation_form, question_form, vocabulary_choice, spelling
 
 Return ONLY valid JSON, no markdown:
-{"correct":boolean,"usedTarget":boolean,"grammaticallyCorrect":boolean,"constraintMet":boolean,"feedback":"...","corrections":"...","score":number}`;
+{"correct":boolean,"usedTarget":boolean,"grammaticallyCorrect":boolean,"constraintMet":boolean,"feedback":"...","corrections":"...","errorPattern":"...","score":number}`;
 
 export function buildGradeProductionUserPrompt(input: {
   targetItem: string
