@@ -106,6 +106,7 @@ const RAW_COLOR_ALLOWLIST = new Set([
   "components/vocabulary/decks/CreateDeckModal.tsx",
   "components/vocabulary/decks/EditDeckModal.tsx",
   "components/vocabulary/decks/study-utils.ts",
+  "lib/ai-coach/liquid-orb-seed.ts",
   "lib/lexicon/categories.ts",
   "lib/lexicon/domains.ts",
   "lib/theme/hue-presets.ts",

@@ -60,8 +60,8 @@ function AIBubble({
 
   return (
     <div className="group/msg flex max-w-[min(88%,36rem)] items-end justify-start gap-2.5">
-      <div className="flex size-7 shrink-0 items-end">
-        {showAvatar ? <AIAvatar /> : <span className="block size-7" aria-hidden />}
+      <div className="flex size-8 shrink-0 items-end">
+        {showAvatar ? <AIAvatar /> : <span className="block size-8" aria-hidden />}
       </div>
 
       <div className="flex min-w-0 flex-1 flex-col gap-2">
