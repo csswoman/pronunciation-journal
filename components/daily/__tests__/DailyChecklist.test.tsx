@@ -1,12 +1,12 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import type { DailyStep } from '@/hooks/useDailyPlan'
+import type { DailyPlanStatus, DailyStep } from '@/hooks/useDailyPlan'
 
 type MockArc = { soundIpa: string; topicLabel: string; sessionWords: string[] }
 
 const mockState = vi.hoisted(() => ({
-  status: 'ready' as const,
+  status: 'ready' as DailyPlanStatus,
   steps: [] as DailyStep[],
   allDone: false,
   completedCount: 0,

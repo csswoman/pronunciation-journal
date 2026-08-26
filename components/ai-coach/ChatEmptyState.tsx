@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import {
   MessageCircle,
   CheckCheck,
@@ -11,7 +10,6 @@ import {
   BriefcaseBusiness,
   AlignLeft,
   Mic,
-  Sparkles,
 } from "@/components/icons";
 import { AI_COACH_EMPTY_STATE_PROMPTS } from "@/lib/ai-prompts";
 import { cn } from "@/lib/cn";
@@ -87,8 +85,6 @@ interface ChatEmptyStateProps {
 }
 
 export default function ChatEmptyState({ onSendMessage }: ChatEmptyStateProps) {
-  const [orbActive, setOrbActive] = useState(false);
-
   return (
     <div className="@container relative flex min-h-full flex-1 flex-col justify-center chat-bg">
       <div className="blob blob-1" />
@@ -100,24 +96,7 @@ export default function ChatEmptyState({ onSendMessage }: ChatEmptyStateProps) {
         {/* Hero — orb hero prominente */}
         <header className="mb-5 flex flex-col items-center gap-3 text-center @[22rem]:mb-6">
           <div className="relative flex size-24 shrink-0 items-center justify-center">
-            <LiquidOrb
-              size={96}
-              intensity="idle"
-              onSupportChange={setOrbActive}
-            />
-            {!orbActive && (
-              <div
-                className="relative flex size-12 shrink-0 items-center justify-center rounded-xl"
-                style={{
-                  background: "var(--gradient-primary)",
-                  boxShadow:
-                    "0 8px 24px -8px color-mix(in oklch, var(--primary) 45%, transparent)",
-                }}
-              >
-                <Sparkles size={20} strokeWidth={1.75} className="text-on-primary" aria-hidden />
-                <span className="pointer-events-none absolute inset-0 rounded-[inherit] shadow-[inset_0_1px_0_0_rgb(255_255_255_/_0.25)]" />
-              </div>
-            )}
+            <LiquidOrb size={96} intensity="idle" />
           </div>
           <div className="layout-stack-tight max-w-prose">
             <h2 className="m-0 text-balance text-h3 text-fg">

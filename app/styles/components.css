@@ -236,6 +236,35 @@
   animation: drift2 26s ease-in-out infinite reverse;
 }
 
+/* ── Static Liquid Orb ───────────────────────────────────────────────────── */
+.static-liquid-orb {
+  position: relative;
+  border-radius: 9999px;
+  overflow: hidden;
+  user-select: none;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 35% 26%, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 34%),
+    radial-gradient(circle at 74% 30%, #FF91D8 0%, transparent 48%),
+    radial-gradient(circle at 26% 72%, #6EF2CF 0%, transparent 52%),
+    radial-gradient(circle at 72% 76%, #756BFF 0%, transparent 56%),
+    radial-gradient(circle at 45% 50%, #FFF6E8 0%, transparent 58%),
+    linear-gradient(135deg, #756BFF 0%, #FF91D8 36%, #6EF2CF 72%, #CDE5FF 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.45),
+    inset 0 2px 10px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -6px 14px 0 rgba(117, 107, 255, 0.35);
+}
+
+.static-liquid-orb::after {
+  content: '';
+  position: absolute;
+  inset: 1.5px;
+  border-radius: 9999px;
+  background: radial-gradient(ellipse at 42% 16%, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 45%);
+  pointer-events: none;
+}
+
 /* ── Auth image crossfade ────────────────────────────────────────────────── */
 .auth-image-fade {
   transition: opacity 1200ms var(--ease-out-expo);

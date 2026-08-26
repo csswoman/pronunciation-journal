@@ -13,13 +13,17 @@ describe("LiquidOrb and WebGPU fallbacks", () => {
   });
 
   describe("when WebGPU is not supported (default jsdom)", () => {
-    it("renders null for LiquidOrb without crashing", () => {
+    it("renders fallback static orb for LiquidOrb without crashing", () => {
       const onSupportChange = vi.fn();
       const { container } = render(
         <LiquidOrb size={44} intensity="idle" onSupportChange={onSupportChange} />,
       );
 
-      expect(container.firstChild).toBeNull();
+      expect(container.firstChild).toBeDefined();
+      const staticOrb = screen.getByRole("img", { name: "Liquid Orb AI Coach" });
+      expect(staticOrb).toBeDefined();
+      expect(staticOrb.style.width).toBe("44px");
+      expect(staticOrb.style.height).toBe("44px");
       expect(onSupportChange).toHaveBeenCalledWith(false);
     });
 
@@ -96,15 +100,15 @@ describe("LiquidOrb and WebGPU fallbacks", () => {
 
     it("initializes canvas and notifies support change", async () => {
       const onSupportChange = vi.fn();
-      render(<LiquidOrb size={48} intensity="active" onSupportChange={onSupportChange} />);
+      const { container } = render(
+        <LiquidOrb size={48} intensity="active" onSupportChange={onSupportChange} />,
+      );
 
       await waitFor(() => {
         expect(onSupportChange).toHaveBeenCalledWith(true);
       });
 
-      const canvas = screen.getByRole("img", {
-        name: "Liquid Orb AI Coach",
-      }) as HTMLCanvasElement;
+      const canvas = container.querySelector("canvas") as HTMLCanvasElement;
       expect(canvas).toBeDefined();
       expect(canvas.style.width).toBe("48px");
       expect(canvas.style.height).toBe("48px");
