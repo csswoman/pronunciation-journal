@@ -1,5 +1,6 @@
 import type { EvaluationResult } from '@/lib/exercises/design'
 import type { ProductionGradeResult } from '@/lib/exercises/production-grade'
+import { describeErrorPattern } from '@/lib/exercises/error-patterns'
 import type {
   FillBlankExercise,
   GenericExercise,
@@ -94,10 +95,14 @@ export function pedagogicalFeedbackFromEvaluation(result: EvaluationResult): Ped
 export function pedagogicalFeedbackFromProductionGrade(
   result: ProductionGradeResult,
 ): PedagogicalFeedback {
+  const patternTip = result.errorPattern
+    ? `Patrón a vigilar: ${describeErrorPattern(result.errorPattern)}.`
+    : undefined
   return {
     immediate: result.correct ? '¡Buen trabajo!' : 'Revisa el feedback antes de continuar.',
     explanation: result.feedback,
     correction: result.corrections,
+    tip: patternTip,
     category: result.correct
       ? 'production_correct'
       : result.usedTarget

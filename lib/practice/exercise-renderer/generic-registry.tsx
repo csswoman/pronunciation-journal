@@ -31,6 +31,7 @@ import type {
   CsShadowPhraseExercise as CsShadowPhraseExerciseType,
 } from '@/lib/exercises/types'
 import type { PedagogicalFeedback, PracticeResultStatus } from '@/lib/practice/types'
+import type { ErrorPatternId } from '@/lib/exercises/error-patterns'
 
 export type GenericRenderExtras = {
   score?: number
@@ -38,6 +39,10 @@ export type GenericRenderExtras = {
   resultStatus?: PracticeResultStatus
   responseTimeMs?: number
   firstTryFailed?: boolean
+  /** Structured error label from AI grading, when the answer was wrong. */
+  errorPattern?: ErrorPatternId
+  /** Pattern this exercise was scheduled to rehearse, when applicable. */
+  rehearsedPattern?: ErrorPatternId
 }
 
 export type GenericRenderContext = {

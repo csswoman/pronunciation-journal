@@ -17,6 +17,7 @@ import {
   ProductionGradeError,
 } from '@/lib/exercises/grade-production-client'
 import { pedagogicalFeedbackFromProductionGrade } from '@/lib/exercises/feedback'
+import { rehearsedPatternForConstraint } from '@/lib/exercises/error-patterns'
 import type { ProductionGradeResult } from '@/lib/exercises/production-grade'
 import type { SpokenProductionExercise as SpokenProductionExerciseType } from '@/lib/exercises/types'
 import type { GenericRenderExtras } from '@/lib/practice/exercise-renderer/generic-registry'
@@ -128,8 +129,12 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
     onResult(grade.correct, transcript, Date.now() - startMs.current, {
       score: grade.score,
       feedback: pedagogicalFeedbackFromProductionGrade(grade),
+      errorPattern: grade.errorPattern,
+      rehearsedPattern: exercise.constraint?.id
+        ? (rehearsedPatternForConstraint(exercise.constraint.id) ?? undefined)
+        : undefined,
     })
-  }, [grade, speechResult, onResult])
+  }, [grade, speechResult, exercise.constraint, onResult])
 
   const handleRetry = useCallback(() => {
     submitted.current = false
