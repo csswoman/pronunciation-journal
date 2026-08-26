@@ -121,7 +121,9 @@ export function fromGenericExercise(
   context: PracticeContext,
 ): PracticeExercise {
   const slug = GENERIC_TYPE_TO_SLUG[ex.type]
-  const payload: GenericPayload = { kind: 'generic', data: ex }
+  const constraintId = 'constraint' in ex && ex.constraint?.id ? ex.constraint.id : undefined
+  const data = constraintId ? { ...ex, constraintId } : ex
+  const payload: GenericPayload = { kind: 'generic', data }
   const contentId = ex.id
   return {
     id: deterministicId(slug, contentId, payload),

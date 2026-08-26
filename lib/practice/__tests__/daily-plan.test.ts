@@ -64,6 +64,7 @@ vi.mock('@/lib/db', () => ({
     learningState: { get: vi.fn().mockResolvedValue(null) },
     completedLessons: { toArray: vi.fn().mockResolvedValue([]) },
   },
+  getSRSData: vi.fn().mockResolvedValue(null),
 }))
 
 vi.mock('@/lib/exercises/generators/connected-speech', () => ({
@@ -176,22 +177,26 @@ describe('buildDailyPlan', () => {
     ))
   })
 
-  it('usuario nuevo (sin word_bank ni progreso): 5 pasos del seed, sin lanzar error', async () => {
+  it('usuario nuevo (sin word_bank ni progreso): respeta el tope de pronunciación sin lanzar error', async () => {
     const plan = await buildDailyPlan('user-1')
 
-    expect(plan.steps).toHaveLength(DAILY_PLAN_STEP_COUNT)
     expect(plan.isNewUser).toBe(true)
     // Sin word_bank no debe haber paso de repaso de palabras.
     expect(plan.steps.some((s) => s.kind === 'word_review')).toBe(false)
     expect(plan.steps.some((s) => s.kind === 'reader')).toBe(false)
     expect(vi.mocked(buildReaderStep)).not.toHaveBeenCalled()
-    // El catálogo garantiza ≥5 ejercicios 'daily' para sostener el streak.
-    expect(allExercises(plan).length).toBeGreaterThanOrEqual(5)
+    const pronunciation = plan.steps.filter((s) =>
+      ['phoneme_focus', 'minimal_pairs', 'listening', 'connected_speech'].includes(s.kind),
+    )
+    expect(pronunciation.length).toBeLessThanOrEqual(1)
   })
 
-  it('garantiza DAILY_PLAN_STEP_COUNT pasos cuando hay seed', async () => {
+  it('respeta el tope de pronunciación cuando hay seed', async () => {
     const plan = await buildDailyPlan('user-1')
-    expect(plan.steps).toHaveLength(DAILY_PLAN_STEP_COUNT)
+    const pronunciation = plan.steps.filter((s) =>
+      ['phoneme_focus', 'minimal_pairs', 'listening', 'connected_speech'].includes(s.kind),
+    )
+    expect(pronunciation.length).toBeLessThanOrEqual(1)
   })
 
   it('populates arc with the primary sound IPA and session words', async () => {
@@ -268,9 +273,12 @@ describe('buildDailyPlan', () => {
     expect(plan.isNewUser).toBe(false)
   })
 
-  it('nunca queda por debajo de 5 pasos aunque el word_bank esté vacío', async () => {
+  it('respeta el tope de pronunciación aunque el word_bank esté vacío', async () => {
     const plan = await buildDailyPlan('user-1')
-    expect(plan.steps.length).toBe(DAILY_PLAN_STEP_COUNT)
+    const pronunciation = plan.steps.filter((s) =>
+      ['phoneme_focus', 'minimal_pairs', 'listening', 'connected_speech'].includes(s.kind),
+    )
+    expect(pronunciation.length).toBeLessThanOrEqual(1)
   })
 
   it('context_practice aparece cuando hay palabras con oraciones de ejemplo', async () => {
@@ -322,7 +330,6 @@ describe('buildDailyPlan', () => {
 
     const plan = await buildDailyPlan('user-1')
     expect(plan.steps.some((s) => s.kind === 'context_practice')).toBe(false)
-    expect(plan.steps).toHaveLength(DAILY_PLAN_STEP_COUNT)
   })
 
   it('batches session datasets for review sounds', async () => {
