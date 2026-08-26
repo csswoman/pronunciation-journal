@@ -2,6 +2,13 @@ import type { ExerciseResult } from "./types";
 import type { CEFRLevel } from "@/lib/exercises/cefr";
 import type { ConceptSignal } from "@/lib/courses/concept-profile";
 import type { LearningFocus } from "@/lib/learning-focus/types";
+import {
+  EMPTY_RECURRENCE_QUEUE,
+  markPatternRehearsed,
+  recordErrorPattern,
+  type ErrorRecurrenceQueue,
+} from "@/lib/practice/error-recurrence";
+import type { ErrorPatternId } from "@/lib/exercises/error-patterns";
 
 export interface UserLearningState {
   userId: string;
@@ -55,6 +62,9 @@ export interface UserLearningState {
   }>;
 
   focus?: LearningFocus | null;
+
+  /** Scheduled re-exposure for production error patterns. */
+  errorRecurrence: ErrorRecurrenceQueue;
 }
 
 export function compactState(s: UserLearningState): string {
@@ -248,5 +258,44 @@ export function createEmptyState(userId: string, deviceId: string): UserLearning
     theory: { concepts: [] },
     pronunciation: { averageAccuracy: 0, strugglingSounds: [] },
     lastSessions: [],
+    errorRecurrence: EMPTY_RECURRENCE_QUEUE,
+  };
+}
+
+export interface ProductionGradeEvent {
+  correct: boolean;
+  /** Pattern the grader identified, when the answer was wrong. */
+  errorPattern?: ErrorPatternId;
+  /** Pattern this exercise was rehearsing, when it came from the queue. */
+  rehearsedPattern?: ErrorPatternId;
+}
+
+/**
+ * Fold an AI production grade into the learner's state.
+ *
+ * This is the step that was missing: the grader already identified the
+ * mistake, but nothing consumed it, so the same error could recur forever
+ * without ever being rescheduled.
+ */
+export function applyProductionGrade(
+  state: UserLearningState,
+  event: ProductionGradeEvent,
+  now: number = Date.now(),
+): UserLearningState {
+  // Older persisted rows predate this field.
+  let queue: ErrorRecurrenceQueue = state.errorRecurrence ?? EMPTY_RECURRENCE_QUEUE;
+
+  if (event.rehearsedPattern) {
+    queue = markPatternRehearsed(queue, event.rehearsedPattern, event.correct, now);
+  }
+
+  if (!event.correct && event.errorPattern) {
+    queue = recordErrorPattern(queue, event.errorPattern, now);
+  }
+
+  return {
+    ...state,
+    updatedAt: new Date(now).toISOString(),
+    errorRecurrence: queue,
   };
 }
