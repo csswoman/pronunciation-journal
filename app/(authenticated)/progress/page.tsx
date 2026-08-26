@@ -11,10 +11,12 @@ import { StreakCard } from "@/components/progress/StreakCard";
 import { DailyCompletionRate } from "@/components/progress/DailyCompletionRate";
 import { AccuracyTrend } from "@/components/progress/AccuracyTrend";
 import { FluencyRadarCard } from "@/components/progress/FluencyRadarCard";
+import { CanSayNowCard } from "@/components/progress/CanSayNowCard";
 import { SkillProfileCard } from "@/components/progress/SkillProfileCard";
 import { ThisWeekCard } from "@/components/progress/ThisWeekCard";
 import { ActivityHistoryCard } from "@/components/progress/ActivityHistoryCard";
 import { ProgressProjectionCards } from "@/components/progress/ProgressProjectionCards";
+import { buildCanSayNow } from "@/lib/progress/can-say-now";
 
 const progressHeader = (
   <PageHeader
@@ -72,6 +74,7 @@ export default async function ProgressPage() {
         scores={data.fluencyProfile.scores}
         comparisonLabel={data.fluencyProfile.comparisonLabel}
       />
+      <CanSayNowCard data={buildCanSayNow({ attempts: data.canSayAttempts })} />
       <SkillProfileCard data={data.skillProfile} coach={data.coachInsights} />
       <ActivityHistoryCard sessions={data.recentSessions} />
     </PageLayout>
