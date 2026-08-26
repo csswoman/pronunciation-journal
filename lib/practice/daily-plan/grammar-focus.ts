@@ -80,6 +80,7 @@ export async function buildGrammarFocusStep(
   deckSlug: string | null,
   words: WordBankEntry[],
   context: PracticeContext = 'daily',
+  repairConstraints: readonly string[] = [],
 ): Promise<DailyStep | null> {
   if (!deckSlug || words.length === 0) return null
 
@@ -87,10 +88,15 @@ export async function buildGrammarFocusStep(
   if (!rule) return null
 
   const constraintId = constraintIdForDeck(deckSlug)
+  // Due repairs come first: a scheduled error outranks the day's deck topic.
+  const preferred = [
+    ...repairConstraints,
+    ...(constraintId ? [constraintId] : []),
+  ]
   const { exercises: generated } = generateSpokenProductionFromWordBank(
     words,
     GRAMMAR_PRODUCTION_COUNT,
-    constraintId ? [constraintId] : [],
+    preferred,
   )
 
   const exercises = dedupeByContentId(
