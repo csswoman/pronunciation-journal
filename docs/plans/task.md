@@ -1,9 +1,9 @@
 | Task | Status | Description |
 |---|---|---|
-| Fase 0: Medición fidedigna y baseline | Done | Script de medición reproducible en build de producción y reporte de línea base |
-| Fase 1: Essential Words | Pending | Índice compacto build-time generado; pendiente completar conexión de carga granular en runtime-engine/session-loader |
-| Fase 2: Auth y Daily Plan | Done | Bootstrap único, dedupe in-flight, evitar re-hidrataciones remotas (userIdChanged) y optimizar composición del plan |
-| Fase 3: Carga diferida y code splitting | Done | SearchModal diferido, SoundLab modular y carga compacta, Daily/Review session runners diferidos |
-| Fase 4: Servidor y Progress | Done | Reutilizar server user en layout/pages y queries separadas originales restauradas para /progress |
-| Fase 5: CLS, Fuentes y Base de Datos | Done | Eliminar CLS en /daily, afinar preloads/fuentes y migración SQL corregida (sin índices duplicados, DROP POLICY exactos) |
-| Verificación final e informe de resultados | Pending | Pendiente generar performance-after.json fidedigno con sesión iniciada y suite completa |
+| Task 1: Taxonomía de patrones de error | Done | Crear error-patterns.ts y tests unitarios |
+| Task 2: El corrector devuelve la etiqueta | Done | Extender production-grade, ai-prompts, route.ts y tests |
+| Task 3: Cola de reincidencia | Done | Crear error-recurrence.ts puro y tests unitarios |
+| Task 4: Persistir cola en estado de aprendizaje | Done | Extender UserLearningState, applyProductionGrade y tests |
+| Task 5: Registrar error desde el ejercicio | Done | Conectar SpokenProductionExercise, feedback y registry |
+| Task 6: Sembrar plan con patrones vencidos | Done | Conectar composer.ts, grammar-focus.ts y tests |
+| Task 7: Verificación completa | Done | Suite completa (type-check, lint, audit, tests: 626 files, 3770 tests passing) |

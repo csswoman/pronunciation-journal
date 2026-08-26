@@ -43,7 +43,7 @@ Este plan ataca eso, no un supuesto caos de 23 tarjetas.
 - Create: `lib/home/primary-action.ts`
 - Test: `lib/home/__tests__/primary-action.test.ts`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Create `lib/home/__tests__/primary-action.test.ts`:
 
@@ -105,12 +105,12 @@ describe('resolvePrimaryAction', () => {
 })
 ```
 
-- [ ] **Step 2: Run the test and confirm it fails**
+- [x] **Step 2: Run the test and confirm it fails**
 
 Run: `npx vitest run lib/home/__tests__/primary-action.test.ts`
 Expected: FAIL — module not found.
 
-- [ ] **Step 3: Write the implementation**
+- [x] **Step 3: Write the implementation**
 
 Create `lib/home/primary-action.ts`:
 
@@ -171,12 +171,12 @@ export function resolvePrimaryAction(input: PrimaryActionInput): PrimaryAction {
 }
 ```
 
-- [ ] **Step 4: Run the test and confirm it passes**
+- [x] **Step 4: Run the test and confirm it passes**
 
 Run: `npx vitest run lib/home/__tests__/primary-action.test.ts`
 Expected: PASS — 8 tests.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add lib/home/primary-action.ts lib/home/__tests__/primary-action.test.ts
@@ -190,7 +190,7 @@ git commit -m "feat(home): resolve a single primary action for the home screen"
 **Files:**
 - Create: `components/home/HomePrimaryAction.tsx`
 
-- [ ] **Step 1: Check the Button/Anchor conventions**
+- [x] **Step 1: Check the Button/Anchor conventions**
 
 This project has a `Button` with 8 token-driven variants and an `Anchor` for `<a>` links (see memory: "Anchor Component"). Since this navigates, it must be a link, not a button.
 
@@ -198,7 +198,7 @@ Run: `sed -n '1,40p' components/ui/Anchor.tsx`
 
 Note the exact variant names it accepts — use one of those below rather than inventing classes.
 
-- [ ] **Step 2: Write the component**
+- [x] **Step 2: Write the component**
 
 Create `components/home/HomePrimaryAction.tsx`:
 
@@ -252,12 +252,12 @@ Run: `grep -n "variant" components/ui/Anchor.tsx | head -20 && grep -rn "text-ti
 
 Substitute the project's real names where they differ. Do not hardcode colors — tokens only.
 
-- [ ] **Step 3: Type check**
+- [x] **Step 3: Type check**
 
 Run: `npx tsc --noEmit`
 Expected: exit 0.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add components/home/HomePrimaryAction.tsx
@@ -272,7 +272,7 @@ git commit -m "feat(home): add the single primary action button"
 - Create: `components/home/HomeExploreDrawer.tsx`
 - Test: `components/home/__tests__/home-explore-drawer.test.tsx`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Create `components/home/__tests__/home-explore-drawer.test.tsx`:
 
@@ -303,12 +303,12 @@ describe('HomeExploreDrawer', () => {
 })
 ```
 
-- [ ] **Step 2: Run the test and confirm it fails**
+- [x] **Step 2: Run the test and confirm it fails**
 
 Run: `npx vitest run components/home/__tests__/home-explore-drawer.test.tsx`
 Expected: FAIL — module not found.
 
-- [ ] **Step 3: Write the component**
+- [x] **Step 3: Write the component**
 
 Create `components/home/HomeExploreDrawer.tsx`:
 
@@ -351,12 +351,12 @@ Verify the token classes exist:
 
 Run: `grep -rn "border-border-subtle\|text-fg-muted\|focus-ring" components/home/ | head -3`
 
-- [ ] **Step 4: Run the test and confirm it passes**
+- [x] **Step 4: Run the test and confirm it passes**
 
 Run: `npx vitest run components/home/__tests__/home-explore-drawer.test.tsx`
 Expected: PASS — 3 tests.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add components/home/HomeExploreDrawer.tsx components/home/__tests__/home-explore-drawer.test.tsx
@@ -370,7 +370,7 @@ git commit -m "feat(home): add collapsible explore drawer"
 **Files:**
 - Modify: `components/home/HomeCommandGrid.tsx:180-190` (the `<aside>` block)
 
-- [ ] **Step 1: Move the aside inside the drawer**
+- [x] **Step 1: Move the aside inside the drawer**
 
 In `components/home/HomeCommandGrid.tsx`, add the import:
 
@@ -400,7 +400,7 @@ with:
       </HomeExploreDrawer>
 ```
 
-- [ ] **Step 2: Move the phrase-of-the-day card too**
+- [x] **Step 2: Move the phrase-of-the-day card too**
 
 Still in `HomeCommandGrid.tsx`, inside `home-command-below-plan`, remove this line:
 
@@ -410,7 +410,7 @@ Still in `HomeCommandGrid.tsx`, inside `home-command-below-plan`, remove this li
 
 and add `<HomeChunkOfDayCard />` as the first child inside the `HomeExploreDrawer` you just created, above the suggested-practice group.
 
-- [ ] **Step 3: Check the grid CSS still holds**
+- [x] **Step 3: Check the grid CSS still holds**
 
 `home-command-aside` was a grid area. Removing it may leave an empty column.
 
@@ -418,12 +418,12 @@ Run: `grep -n "home-command-aside\|home-command-grid" app/globals.css app/styles
 
 If `home-command-grid` declares `grid-template-areas` or `grid-template-columns` with an aside column, update it to a single column — the aside no longer exists as a grid child. Keep the change token-driven and inside the stylesheet, not inline.
 
-- [ ] **Step 4: Verify**
+- [x] **Step 4: Verify**
 
 Run: `npx tsc --noEmit && npx next lint --dir components/home && npx vitest run components/home/__tests__/`
 Expected: exit 0 and PASS. Existing home tests asserting the aside's presence should be updated to look for it inside the drawer, not deleted.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add components/home/HomeCommandGrid.tsx app/globals.css
@@ -438,7 +438,7 @@ git commit -m "refactor(home): collapse secondary cards into the explore drawer"
 - Modify: `app/(authenticated)/page.tsx`
 - Modify: `components/home/HomeLayout.tsx`
 
-- [ ] **Step 1: Compute the action in the page**
+- [x] **Step 1: Compute the action in the page**
 
 In `app/(authenticated)/page.tsx`, inside `HomePageContent` after the `Promise.all` destructuring, add:
 
@@ -476,7 +476,7 @@ Then pass it down:
       primaryAction={primaryAction}
 ```
 
-- [ ] **Step 2: Render it first in the layout**
+- [x] **Step 2: Render it first in the layout**
 
 In `components/home/HomeLayout.tsx`, add to `HomeLayoutProps`:
 
@@ -497,12 +497,12 @@ Destructure `primaryAction` in the component signature, and render it immediatel
         <HomePrimaryAction action={primaryAction} />
 ```
 
-- [ ] **Step 3: Verify**
+- [x] **Step 3: Verify**
 
 Run: `npx tsc --noEmit && npx next lint`
 Expected: exit 0.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add "app/(authenticated)/page.tsx" components/home/HomeLayout.tsx
@@ -513,12 +513,12 @@ git commit -m "feat(home): render the primary action server-side above the grid"
 
 ## Task 6: Verificación completa
 
-- [ ] **Step 1: Full suite**
+- [x] **Step 1: Full suite**
 
 Run: `npx vitest run && npx tsc --noEmit && npx next lint`
 Expected: all green, exit 0.
 
-- [ ] **Step 2: Manual check, including the slow-network case**
+- [x] **Step 2: Manual check, including the slow-network case**
 
 Run `pnpm dev`, open `/`, and confirm:
 - A single large button is visible **on first paint**, before the daily card resolves.
@@ -527,7 +527,7 @@ Run `pnpm dev`, open `/`, and confirm:
 - In DevTools throttled to Slow 3G, the primary action still paints immediately — this is the specific failure the plan exists to fix.
 - On mobile width, nothing overflows horizontally.
 
-- [ ] **Step 3: Commit fixes**
+- [x] **Step 3: Commit fixes**
 
 ```bash
 git add -A
