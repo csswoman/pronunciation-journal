@@ -18,10 +18,10 @@ interface Props {
  */
 export default function HomeExploreDrawer({ children }: Props) {
   return (
-    <details className="group mt-[var(--layout-section-gap)] border-t border-border-subtle pt-[var(--layout-stack-loose)]">
+    <details className="group/drawer mt-[var(--layout-section-gap)] border-t border-border-subtle pt-[var(--layout-stack-loose)]">
       <summary className="focus-ring cursor-pointer list-none font-body-sm font-medium text-fg-muted marker:content-none hover:text-fg">
         Explorar
-        <span aria-hidden="true" className="ml-1 inline-block transition-transform group-open:rotate-90">
+        <span aria-hidden="true" className="ml-1 inline-block transition-transform group-open/drawer:rotate-90">
           ›
         </span>
       </summary>

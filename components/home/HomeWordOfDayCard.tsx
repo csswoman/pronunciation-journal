@@ -119,7 +119,7 @@ export default function HomeWordOfDayCard({ profileLevel = null }: HomeWordOfDay
             <p className="home-editorial-mark min-w-0">
               <SyllableWord word={word.word} />
             </p>
-            <div className="group relative shrink-0">
+            <div className="group/tooltip relative shrink-0">
               <button
                 ref={heartRef}
                 type="button"
@@ -144,7 +144,7 @@ export default function HomeWordOfDayCard({ profileLevel = null }: HomeWordOfDay
               <span
                 id="word-save-tooltip"
                 role="tooltip"
-                className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1.5 -translate-x-1/2 whitespace-nowrap rounded-sm border border-border-default bg-surface-raised px-2 py-1 text-caption font-medium text-fg opacity-0 shadow-md transition-opacity group-hover:opacity-100 group-focus-within:opacity-100"
+                className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1.5 -translate-x-1/2 whitespace-nowrap rounded-sm border border-border-default bg-surface-raised px-2 py-1 text-caption font-medium text-fg opacity-0 shadow-md transition-opacity group-hover/tooltip:opacity-100 group-focus-within/tooltip:opacity-100"
               >
                 {label}
               </span>

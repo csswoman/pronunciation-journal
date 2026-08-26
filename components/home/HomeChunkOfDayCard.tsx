@@ -78,7 +78,7 @@ export default function HomeChunkOfDayCard() {
         </div>
 
         <div className="flex shrink-0 items-center gap-1">
-          <div className="group relative">
+          <div className="group/tooltip relative">
             <button
               type="button"
               onClick={handleShuffle}
@@ -99,13 +99,13 @@ export default function HomeChunkOfDayCard() {
             <span
               id="chunk-shuffle-tooltip"
               role="tooltip"
-              className="pointer-events-none absolute bottom-full right-0 z-10 mb-1.5 whitespace-nowrap rounded-sm border border-border-default bg-surface-raised px-2 py-1 text-caption font-medium text-fg opacity-0 shadow-md transition-opacity group-hover:opacity-100 group-focus-within:opacity-100"
+              className="pointer-events-none absolute bottom-full right-0 z-10 mb-1.5 whitespace-nowrap rounded-sm border border-border-default bg-surface-raised px-2 py-1 text-caption font-medium text-fg opacity-0 shadow-md transition-opacity group-hover/tooltip:opacity-100 group-focus-within/tooltip:opacity-100"
             >
               Ver otra frase
             </span>
           </div>
 
-          <div className="group relative">
+          <div className="group/tooltip relative">
             <button
               type="button"
               onClick={() => void handleSave()}
@@ -129,7 +129,7 @@ export default function HomeChunkOfDayCard() {
             <span
               id="chunk-save-tooltip"
               role="tooltip"
-              className="pointer-events-none absolute bottom-full right-0 z-10 mb-1.5 whitespace-nowrap rounded-sm border border-border-default bg-surface-raised px-2 py-1 text-caption font-medium text-fg opacity-0 shadow-md transition-opacity group-hover:opacity-100 group-focus-within:opacity-100"
+              className="pointer-events-none absolute bottom-full right-0 z-10 mb-1.5 whitespace-nowrap rounded-sm border border-border-default bg-surface-raised px-2 py-1 text-caption font-medium text-fg opacity-0 shadow-md transition-opacity group-hover/tooltip:opacity-100 group-focus-within/tooltip:opacity-100"
             >
               {label}
             </span>
