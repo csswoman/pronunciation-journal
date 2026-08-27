@@ -21,10 +21,23 @@ import { usePanelResize } from "./usePanelResize";
 import { AICoachHeader, ConversationHistoryPanel } from "./AICoachPanelParts";
 import { MissionWorkspace } from "./missions/MissionWorkspace";
 import type { MissionLaunch } from '@/lib/ai-practice/missions/launch'
+import { getMission } from '@/lib/ai-practice/missions/registry'
+import { isScriptedMission } from '@/lib/ai-practice/missions/types'
 
 export const PANEL_WIDTH = 380;
 
 const QUOTA_WARN_THRESHOLD = 18;
+
+/**
+ * La pestana donde se practica una mision depende de como se practica:
+ * con guion se habla (Misiones), conversacional se escribe (Chat).
+ * Si el id no existe, Chat es el destino seguro: siempre sabe renderizar.
+ */
+function tabForMission(missionId: string): TabId {
+  const mission = getMission(missionId);
+  if (!mission) return "chat";
+  return isScriptedMission(mission) ? "missions" : "chat";
+}
 
 export default function AICoachPanel() {
   const { user } = useAuth();
@@ -60,7 +73,7 @@ export default function AICoachPanel() {
       if (launch.prefill) setInputPrefill(launch.prefill);
       if (launch.mission) {
         setMissionLaunch(launch.mission);
-        setActiveTab('missions');
+        setActiveTab(tabForMission(launch.mission.missionId));
         void changeMode(`mission:${launch.mission.missionId}`);
       }
       consumeLaunch();
@@ -70,7 +83,7 @@ export default function AICoachPanel() {
   }, [isOpen, launch, consumeLaunch, changeMode]);
 
   useEffect(() => {
-    if (activeMissionId) setActiveTab("missions");
+    if (activeMissionId) setActiveTab(tabForMission(activeMissionId));
   }, [activeMissionId]);
 
   useEffect(() => {
@@ -113,7 +126,20 @@ export default function AICoachPanel() {
         <>
           {/* Chat tab — kept mounted to preserve PracticeSession state */}
           <div className={`flex-1 flex flex-col min-h-0 overflow-hidden${activeTab !== "chat" ? " hidden" : ""}`}>
-            {!hasMessages
+            {activeMissionId && tabForMission(activeMissionId) === "chat"
+              ? <MissionWorkspace
+                  missionId={activeMissionId}
+                  launch={missionLaunch?.missionId === activeMissionId ? missionLaunch : null}
+                  setMissionIntentHandler={setMissionIntentHandler}
+                  messages={messages}
+                  isStreaming={isStreaming}
+                  isDisabled={quotaExhausted}
+                  onSendMessage={sendMessage}
+                  onSaveWord={openSaveWordModal}
+                  onToolAnswer={answerToolCall}
+                  onExitMission={() => { void changeMode("chat"); setActiveTab("chat"); }}
+                />
+              : !hasMessages
               ? <AICoachHome activeTab="chat" onSendMessage={sendMessage} onSelectMission={(missionId) => { void changeMode(`mission:${missionId}`); }} isStreaming={isStreaming} prefill={inputPrefill} onPrefillConsumed={() => setInputPrefill(undefined)} />
               : <>
                   <div className="flex-1 overflow-y-auto" aria-live="polite" aria-label="Chat messages">
@@ -144,7 +170,7 @@ export default function AICoachPanel() {
 
           {/* Missions tab — kept mounted */}
           <div className={`flex flex-1 flex-col min-h-0 overflow-hidden${activeTab !== "missions" ? " hidden" : ""}`}>
-            {activeMissionId
+            {activeMissionId && tabForMission(activeMissionId) === "missions"
               ? <MissionWorkspace
                   missionId={activeMissionId}
                   launch={missionLaunch?.missionId === activeMissionId ? missionLaunch : null}
