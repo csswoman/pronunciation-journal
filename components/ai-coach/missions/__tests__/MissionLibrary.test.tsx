@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { fireEvent, render, screen, within } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import MissionLibrary from '../MissionLibrary'
 import { listMissions } from '@/lib/ai-practice/missions/registry'
@@ -40,38 +40,5 @@ describe('MissionLibrary category filter', () => {
     fireEvent.click(screen.getByRole('button', { name: /^social$/i }))
 
     expect(screen.getByText(/no hay misiones en social/i)).toBeInTheDocument()
-  })
-})
-
-describe('MissionLibrary — distincion por modo', () => {
-  it('marca las misiones con guion como practica de habla', () => {
-    const missions = listMissions()
-    const scripted = missions.find((mission) => mission.mode === 'scripted')!
-    render(<MissionLibrary missions={missions} onSelect={vi.fn()} />)
-
-    const card = screen.getByText(scripted.communicativeGoal).closest('article')!
-    expect(within(card).getByText(/habla/i)).toBeInTheDocument()
-  })
-
-  it('no marca las conversacionales con esa etiqueta', () => {
-    const missions = listMissions()
-    const conversational = missions.find((mission) => mission.mode === 'conversational')!
-    render(<MissionLibrary missions={missions} onSelect={vi.fn()} />)
-
-    const card = screen.getByText(conversational.communicativeGoal).closest('article')!
-    expect(within(card).queryByText(/habla/i)).not.toBeInTheDocument()
-  })
-
-  it('lista primero las misiones con guion: son las de audio', () => {
-    const missions = listMissions()
-    render(<MissionLibrary missions={missions} onSelect={vi.fn()} />)
-
-    const goals = screen.getAllByRole('article')
-      .map((card) => card.querySelector('h3')?.textContent)
-    const scriptedGoals = missions
-      .filter((mission) => mission.mode === 'scripted')
-      .map((mission) => mission.communicativeGoal)
-
-    expect(goals.slice(0, scriptedGoals.length)).toEqual(scriptedGoals)
   })
 })

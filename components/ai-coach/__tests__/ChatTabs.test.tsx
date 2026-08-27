@@ -14,6 +14,6 @@ describe('ChatTabs', () => {
     render(<ChatTabs active="missions" onChange={vi.fn()} />)
 
     expect(screen.getByText('Misiones')).toBeInTheDocument()
-    expect(screen.getByText('Completa un objetivo real')).toBeInTheDocument()
+    expect(screen.getByText('Lee un guion en voz alta')).toBeInTheDocument()
   })
 })

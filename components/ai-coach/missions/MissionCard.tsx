@@ -1,7 +1,7 @@
 'use client'
 
 import { PillButton } from '@/components/ui/PillButton'
-import { isScriptedMission, type OralMission } from '@/lib/ai-practice/missions/types'
+import type { OralMission } from '@/lib/ai-practice/missions/types'
 import { MISSION_CATEGORY_LABELS } from './mission-category-labels'
 
 // Planned structure:
@@ -22,14 +22,6 @@ export function MissionCard({ mission, onSelect }: MissionCardProps) {
         <p className="m-0 font-kicker text-fg-subtle">
           {MISSION_CATEGORY_LABELS[mission.category]} · {mission.recommendedCefr.toUpperCase()}
         </p>
-        {isScriptedMission(mission) && (
-          // Las dos clases de mision se practican distinto: una se habla
-          // siguiendo un guion, la otra se escribe. Sin esta marca, las
-          // tarjetas son indistinguibles y se empieza la que no se queria.
-          <span className="rounded-full bg-primary-soft px-2 py-0.5 font-kicker text-primary">
-            Habla
-          </span>
-        )}
       </div>
 
       <div className="layout-stack-tight min-w-0 flex-1">
