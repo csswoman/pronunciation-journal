@@ -1,5 +1,6 @@
 import type { ComponentType } from 'react'
-import type { MissionMode, OralMission } from './types'
+import type { MissionMode } from './types'
+
 
 export interface MissionRunnerEntry {
   mode: MissionMode
@@ -7,8 +8,9 @@ export interface MissionRunnerEntry {
   label: string
   /** Carga diferida del componente runner. */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  load: () => Promise<{ default: ComponentType<{ mission: any }> }>
+  load: () => Promise<{ default: ComponentType<any> }>
 }
+
 
 /**
  * Registry de runners por modo.

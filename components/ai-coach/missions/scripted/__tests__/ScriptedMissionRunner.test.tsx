@@ -1,11 +1,17 @@
 // @vitest-environment jsdom
+import 'fake-indexeddb/auto'
 import { describe, expect, it, vi } from 'vitest'
+
 import { render, screen, fireEvent } from '@testing-library/react'
 import ScriptedMissionRunner from '../ScriptedMissionRunner'
 import type { ScriptedMission } from '@/lib/ai-practice/missions/types'
 
 vi.mock('@/lib/phoneme-practice/tts', () => ({ speak: vi.fn() }))
+vi.mock('@/components/auth/AuthProvider', () => ({
+  useAuth: () => ({ user: { id: 'test-user' } }),
+}))
 vi.mock('@/hooks/useSpeechRecognition', () => ({
+
   useSpeechRecognition: () => ({
     status: 'idle', result: null, userAudioUrl: null, errorCode: null,
     isSupported: true, start: vi.fn(), stop: vi.fn(), reset: vi.fn(),

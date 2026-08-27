@@ -6,7 +6,8 @@
 //   <LearnerLine />      (turno del estudiante)
 //   <ScriptedResult />   (puntuación final)
 
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { useAuth } from '@/components/auth/AuthProvider'
 import {
   advanceLine,
   createScriptState,
@@ -14,6 +15,10 @@ import {
   type ScriptState,
 } from '@/lib/ai-practice/missions/scripted/script-state'
 import { scoreScriptSession, type LineScore } from '@/lib/ai-practice/missions/scripted/scoring'
+import {
+  getPreviousBestScore,
+  persistScriptedSession,
+} from '@/lib/ai-practice/missions/scripted/persistence'
 import { CoachLine } from './CoachLine'
 import { LearnerLine, type LineAttemptResult } from './LearnerLine'
 import { ScriptedResult } from './ScriptedResult'
@@ -32,7 +37,6 @@ function toLineScore(lineId: string, wordResults: WordResult[]): LineScore {
   for (const word of wordResults) {
     const alignment = word.phonemes?.alignment
     if (!alignment?.length) {
-      // Sin datos de fonema, cae a binario por palabra.
       totalPhonemes += 1
       if (word.status === 'correct') correctPhonemes += 1
       continue
@@ -45,9 +49,25 @@ function toLineScore(lineId: string, wordResults: WordResult[]): LineScore {
 }
 
 export default function ScriptedMissionRunner({ mission }: Props) {
+  const { user } = useAuth()
+  const startedAtRef = useRef<string>(new Date().toISOString())
+  const hasPersistedRef = useRef(false)
+
   const [state, setState] = useState<ScriptState>(() =>
     createScriptState(mission.id, mission.script))
   const [lineScores, setLineScores] = useState<LineScore[]>([])
+  const [previousBest, setPreviousBest] = useState<number | null>(null)
+
+  useEffect(() => {
+    if (!user?.id) return
+    let active = true
+    void getPreviousBestScore(user.id, mission.id).then((best) => {
+      if (active) setPreviousBest(best)
+    })
+    return () => {
+      active = false
+    }
+  }, [user?.id, mission.id])
 
   const handleLineComplete = useCallback(
     (result: LineAttemptResult | null) => {
@@ -63,9 +83,24 @@ export default function ScriptedMissionRunner({ mission }: Props) {
   const handleCoachContinue = useCallback(() => setState(advanceLine(state)), [state])
 
   const line = currentLine(state)
+  const isCompleted = state.status === 'completed' || !line
 
-  if (state.status === 'completed' || !line) {
-    return <ScriptedResult mission={mission} sessionScore={scoreScriptSession(lineScores)} />
+  useEffect(() => {
+    if (!isCompleted || hasPersistedRef.current || !user?.id) return
+    hasPersistedRef.current = true
+    const sessionScore = scoreScriptSession(lineScores)
+    void persistScriptedSession(user.id, mission, sessionScore, startedAtRef.current)
+  }, [isCompleted, user?.id, mission, lineScores])
+
+  if (isCompleted) {
+    const sessionScore = scoreScriptSession(lineScores)
+    return (
+      <ScriptedResult
+        mission={mission}
+        sessionScore={sessionScore}
+        previousBest={previousBest}
+      />
+    )
   }
 
   return line.speaker === 'coach'

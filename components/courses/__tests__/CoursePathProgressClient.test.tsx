@@ -113,4 +113,61 @@ describe("CoursePathProgressClient", () => {
       expect(screen.getByText("Empieza aquí")).toBeInTheDocument();
     });
   });
+
+  it("displays 3 distinct visual states for unit rows (completed, partial, unstarted)", async () => {
+    const mockLevel: (typeof COURSE_PATH_CURRICULUM.levels)[number] = {
+      id: "a1",
+      spineLabel: "A1",
+      spineSubtitle: "Empezar",
+      title: "Fundamentos A1",
+      hours: "20 h",
+      units: [
+        {
+          id: "u1",
+          label: "Unidad 1",
+          title: "Unidad 1",
+          lessons: [
+            { id: "1", number: 1, title: "Lección 1", priority: 1, isOptional: false },
+          ],
+        },
+        {
+          id: "u2",
+          label: "Unidad 2",
+          title: "Unidad 2",
+          lessons: [
+            { id: "2", number: 2, title: "Lección 2", priority: 1, isOptional: false },
+            { id: "3", number: 3, title: "Lección 3", priority: 1, isOptional: false },
+          ],
+        },
+        {
+          id: "u3",
+          label: "Unidad 3",
+          title: "Unidad 3",
+          lessons: [
+            { id: "4", number: 4, title: "Lección 4", priority: 1, isOptional: false },
+          ],
+        },
+      ],
+    };
+
+    bulkGet.mockResolvedValue([
+      { lessonSlug: "1" },
+      { lessonSlug: "2" },
+      null,
+      null,
+    ]);
+
+    render(<CoursePathProgressClient level={mockLevel} />);
+
+
+    await waitFor(() => {
+      // Completed unit state
+      expect(screen.getByText(/· completada/i)).toBeInTheDocument();
+      // Partial unit state
+      expect(screen.getByText(/· \d+ de \d+/i)).toBeInTheDocument();
+      // Unstarted unit state
+      expect(screen.getAllByText(/· sin empezar/i).length).toBeGreaterThan(0);
+    });
+  });
 });
+
