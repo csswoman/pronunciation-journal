@@ -9,6 +9,8 @@
 // </ProductionFeedback>
 
 import { useMemo } from 'react'
+import { ListenButton } from '@/components/ui/ListenButton'
+import { speak } from '@/lib/phoneme-practice/tts'
 import { cn } from '@/lib/cn'
 import type { ProductionGradeResult } from '@/lib/exercises/production-grade'
 
@@ -36,13 +38,22 @@ export function ProductionFeedback({ grade, transcript, userSentence }: Props) {
       />
 
       {!needsTranscriptReview && (
-        <CriteriaChips usedTarget={grade.usedTarget} grammaticallyCorrect={grade.grammaticallyCorrect} />
+        <CriteriaChips
+          usedTarget={grade.usedTarget}
+          grammaticallyCorrect={grade.grammaticallyCorrect}
+          constraintMet={grade.constraintMet}
+        />
       )}
 
       {needsTranscriptReview && transcript && (
-        <p className="m-0 text-body-sm text-fg-muted italic">
-          Entendimos: &ldquo;{transcript}&rdquo;
-        </p>
+        <div className="flex flex-col gap-1 rounded-[var(--radius-md)] border border-warning-border/40 bg-warning-soft/30 p-3 sm:p-3.5">
+          <span className="text-caption font-medium text-fg-muted">
+            Entendimos:
+          </span>
+          <p className="m-0 text-body-md italic text-fg">
+            &ldquo;{transcript}&rdquo;
+          </p>
+        </div>
       )}
 
       {!needsTranscriptReview && (originalText || grade.corrections) && (
@@ -64,9 +75,16 @@ export function ProductionFeedback({ grade, transcript, userSentence }: Props) {
 
           {grade.corrections && (
             <div className={cn('flex flex-col gap-1', originalText && 'border-t border-border-subtle pt-2.5')}>
-              <span className="text-caption font-semibold text-success">
-                Versión sugerida
-              </span>
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-caption font-semibold text-success">
+                  Versión sugerida
+                </span>
+                <ListenButton
+                  iconOnly
+                  onPlay={() => speak(grade.corrections!)}
+                  aria-label="Escuchar versión sugerida"
+                />
+              </div>
               <p className="m-0 text-body-md leading-relaxed text-fg text-pretty">
                 {diff ? (
                   <HighlightedSentence tokens={diff.modifiedDiff} type="corrected" />
@@ -230,14 +248,19 @@ function StatusBanner({
 function CriteriaChips({
   usedTarget,
   grammaticallyCorrect,
+  constraintMet,
 }: {
   usedTarget: boolean
   grammaticallyCorrect: boolean
+  constraintMet?: boolean
 }) {
   return (
     <div className="flex flex-wrap gap-2" aria-label="Criterios de evaluación">
       <CriterionChip label="Palabra objetivo" ok={usedTarget} />
       <CriterionChip label="Gramática" ok={grammaticallyCorrect} />
+      {constraintMet !== undefined && (
+        <CriterionChip label="Restricción requerida" ok={constraintMet} />
+      )}
     </div>
   )
 }
