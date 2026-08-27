@@ -55,5 +55,5 @@ export function useTracking() {
 
   const items = useMemo(() => reviewSources.map((source) => source.item), [reviewSources]);
 
-  return { items, reviewSources, loading: wordsLoading, userId: user?.id ?? null, addWord, removeWord, updateWord };
+  return { items, reviewSources, words, loading: wordsLoading, userId: user?.id ?? null, addWord, removeWord, updateWord };
 }
