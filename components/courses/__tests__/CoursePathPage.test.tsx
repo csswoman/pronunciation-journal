@@ -13,6 +13,18 @@ vi.mock("next/link", () => ({
   default: ({ href, children, ...props }: React.ComponentProps<"a">) => <a href={String(href)} {...props}>{children}</a>,
 }));
 
+vi.mock("@/lib/db", () => ({
+  db: {
+    completedLessons: {
+      bulkGet: vi.fn().mockResolvedValue([]),
+    },
+  },
+}));
+
+vi.mock("@/lib/auth/session", () => ({
+  getCurrentUser: async () => ({ id: "user-123" }),
+}));
+
 vi.mock("../CoursePathAutoLevelSync", () => ({
   default: () => null,
 }));
@@ -28,7 +40,7 @@ describe("CoursePathPage", () => {
     expect(screen.getByRole("heading", { name: "Cursos" })).toBeInTheDocument();
     expect(screen.getByText("Aprender")).toBeInTheDocument();
     expect(screen.getByText("Fundamentos A1")).toBeInTheDocument();
-    expect(screen.getAllByRole("link", { name: "A1" })[0]).toHaveAttribute("href", "/courses");
+    expect(screen.getAllByRole("link", { name: /A1/i })[0]).toHaveAttribute("href", "/courses");
     expect(screen.getByText("Nivel actual")).toBeInTheDocument();
     expect(document.querySelector(".course-path__level-picker-mobile")).not.toHaveAttribute("open");
   });
@@ -37,8 +49,8 @@ describe("CoursePathPage", () => {
     render(<CoursePathPage levelParam="b1" />);
 
     expect(screen.getByText("Inglés en acción B1")).toBeInTheDocument();
-    expect(screen.getAllByRole("link", { name: "B1" })[0]).toHaveAttribute("aria-current", "page");
-    expect(screen.getAllByRole("link", { name: "B1" })[0]).toHaveAttribute("href", "/courses?level=b1");
+    expect(screen.getAllByRole("link", { name: /B1/i })[0]).toHaveAttribute("aria-current", "page");
+    expect(screen.getAllByRole("link", { name: /B1/i })[0]).toHaveAttribute("href", "/courses?level=b1");
   });
 
   it("falls back to A1 for an invalid level", () => {
@@ -82,7 +94,7 @@ describe("CoursePathPage", () => {
     render(<CoursePathPage levelParam="b1" />);
 
     expect(screen.getByText("Inglés en acción B1")).toBeInTheDocument();
-    expect(screen.getAllByRole("link", { name: "C1" })[0]).toHaveAttribute(
+    expect(screen.getAllByRole("link", { name: /C1/i })[0]).toHaveAttribute(
       "href",
       "/courses?level=c1",
     );

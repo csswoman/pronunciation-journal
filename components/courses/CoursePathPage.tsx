@@ -1,7 +1,18 @@
+/*
+ * Planned subcomponents:
+ * - CoursePathPage (root course catalog layout)
+ *   - CoursePathAutoLevelSync (background level router)
+ *   - PageHeader (Aprender / Cursos title block)
+ *   - CoursePathLevelPicker (CEFR level tabs with progress bars and counts)
+ *   - CoursePathLevelPanel (units and electives)
+ *   - CoursePathSearch & Aside (search, real-life scenarios, pronunciation link)
+ */
+
 import Link from "next/link";
-import { ArrowRight, ChevronDown, MicVocal } from "@/components/icons";
+import { ArrowRight, MicVocal } from "@/components/icons";
 import CoursePathAutoLevelSync from "@/components/courses/CoursePathAutoLevelSync";
 import CoursePathLevelPanel from "@/components/courses/CoursePathLevelPanel";
+import CoursePathLevelPicker from "@/components/courses/CoursePathLevelPicker";
 import CoursePathRealLife from "@/components/courses/CoursePathRealLife";
 import CoursePathSearch from "@/components/courses/CoursePathSearch";
 import PageHeader from "@/components/layout/PageHeader";
@@ -9,7 +20,6 @@ import PageLayout from "@/components/layout/PageLayout";
 import { COURSE_PATH_CURRICULUM } from "@/lib/courses/curriculum";
 import { parseCefrLevelId } from "@/lib/courses/curriculumIndex";
 import type { CefrLevelId } from "@/lib/courses/types";
-import { cn } from "@/lib/cn";
 
 const DEFAULT_LEVEL: CefrLevelId = "a1";
 
@@ -26,7 +36,7 @@ export default function CoursePathPage({ levelParam }: CoursePathPageProps) {
     COURSE_PATH_CURRICULUM.levels[0];
   const selectedLevelLessonCount = selectedLevel.units.reduce(
     (total, unit) => total + unit.lessons.length,
-    0,
+    0
   );
 
   return (
@@ -47,82 +57,10 @@ export default function CoursePathPage({ levelParam }: CoursePathPageProps) {
         <div className="course-path__wrap course-path__wrap--shell">
           <div className="course-path__desktop-layout">
             <main className="course-path__main">
-              <section className="course-path__level-picker" aria-labelledby="course-level-picker-title">
-                <div className="course-path__level-picker-head">
-                  <h2 id="course-level-picker-title" className="course-path__level-picker-title">
-                    Nivel
-                  </h2>
-                  <div className="course-path__level-picker-actions">
-                    <Link href="/assessment" className="course-path__text-link">
-                      Prueba de nivel
-                    </Link>
-                    <Link
-                      href={`/assessment?mode=checkpoint&level=${selectedLevelId}`}
-                      className="course-path__text-link"
-                    >
-                      Comprobar nivel
-                    </Link>
-                  </div>
-                </div>
-                <nav className="course-path__spine course-path__spine--desktop" aria-label="Niveles del curso">
-                  {COURSE_PATH_CURRICULUM.levels.map((level) => {
-                    const isActive = level.id === selectedLevelId;
-                    const href = level.id === DEFAULT_LEVEL ? "/courses" : `/courses?level=${level.id}`;
-
-                    return (
-                      <Link
-                        key={level.id}
-                        href={href}
-                        aria-current={isActive ? "page" : undefined}
-                        className={cn("course-path__level", isActive && "course-path__level--on")}
-                      >
-                        <div className="course-path__level-lv">{level.spineLabel}</div>
-                      </Link>
-                    );
-                  })}
-                </nav>
-
-                <details className="course-path__level-picker-mobile">
-                  <summary className="course-path__level-picker-mobile-summary">
-                    <span className="course-path__level-picker-mobile-label">Nivel actual</span>
-                    <strong className="course-path__level-picker-mobile-current">
-                      {selectedLevel.spineLabel}
-                    </strong>
-                    <span className="course-path__level-picker-mobile-change">Cambiar</span>
-                    <ChevronDown size={16} aria-hidden />
-                  </summary>
-                  <div className="course-path__level-picker-mobile-content">
-                    <nav className="course-path__spine course-path__spine--mobile" aria-label="Cambiar nivel">
-                      {COURSE_PATH_CURRICULUM.levels.map((level) => {
-                        const isActive = level.id === selectedLevelId;
-                        const href = level.id === DEFAULT_LEVEL ? "/courses" : `/courses?level=${level.id}`;
-
-                        return (
-                          <Link
-                            key={level.id}
-                            href={href}
-                            aria-current={isActive ? "page" : undefined}
-                            className={cn("course-path__level", isActive && "course-path__level--on")}
-                          >
-                            <div className="course-path__level-lv">{level.spineLabel}</div>
-                          </Link>
-                        );
-                      })}
-                    </nav>
-                    <div className="course-path__level-picker-mobile-actions">
-                      <Link href="/assessment" className="course-path__text-link">
-                        Prueba de nivel
-                      </Link>
-                      <Link
-                        href={`/assessment?mode=checkpoint&level=${selectedLevelId}`}
-                        className="course-path__text-link"
-                      >
-                        Comprobar nivel
-                      </Link>
-                    </div>
-                  </div>
-                </details>
-              </section>
+              <CoursePathLevelPicker
+                levels={COURSE_PATH_CURRICULUM.levels}
+                selectedLevelId={selectedLevelId}
+              />
 
               <section
                 id={`course-level-${selectedLevel.id}`}

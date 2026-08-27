@@ -41,23 +41,23 @@ export default function CoursePathRealLife({ scenarios }: CoursePathRealLifeProp
   return (
     <section className="course-path__irl" aria-labelledby="course-path-irl-title">
       <header className="course-path__irl-head">
-        <div className="course-path__irl-intro">
+        <div className="course-path__irl-head-top">
           <p className="course-path__irl-kicker">En contexto</p>
-          <h3 id="course-path-irl-title" className="course-path__irl-title">
-            Situaciones reales
-          </h3>
-          <p className="course-path__irl-sub">
-            Frases listas para usar este nivel en una conversación.
-          </p>
+          {hasMultiple ? (
+            <span
+              className="course-path__irl-counter"
+              aria-label={`${activeIndex + 1} de ${scenarios.length}`}
+            >
+              {activeIndex + 1}/{scenarios.length}
+            </span>
+          ) : null}
         </div>
-        {hasMultiple ? (
-          <span
-            className="course-path__irl-counter"
-            aria-label={`${activeIndex + 1} de ${scenarios.length}`}
-          >
-            {activeIndex + 1}/{scenarios.length}
-          </span>
-        ) : null}
+        <h3 id="course-path-irl-title" className="course-path__irl-title">
+          Situaciones reales
+        </h3>
+        <p className="course-path__irl-sub">
+          Frases listas para usar este nivel en una conversación.
+        </p>
       </header>
 
       <div className="course-path__irl-stage" aria-live="polite">
