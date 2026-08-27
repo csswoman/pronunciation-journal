@@ -1,13 +1,15 @@
 import { describe, it, expect } from "vitest";
 import { buildMissionPrompt } from "../missions/prompts";
 import { getMission } from "../missions/registry";
+import type { ConversationalMission } from "../missions/types";
 import { BASE_TUTOR_PROMPT } from "../prompts";
 
 const MISSION_IDS = ["roleplay.interview", "roleplay.cafe", "roleplay.airport", "roleplay.doctor", "roleplay.store"] as const;
 
 function buildPrompt(missionId: typeof MISSION_IDS[number], compact?: string) {
-  return buildMissionPrompt(getMission(missionId)!, compact);
+  return buildMissionPrompt(getMission(missionId) as ConversationalMission, compact);
 }
+
 
 describe("buildMissionPrompt", () => {
   it.each(MISSION_IDS)("includes BASE_TUTOR_PROMPT for mission %s", (missionId) => {

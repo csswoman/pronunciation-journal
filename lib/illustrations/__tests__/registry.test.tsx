@@ -1,30 +1,34 @@
 // @vitest-environment jsdom
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { render } from "@testing-library/react";
+import { ILLUSTRATIONS, getIllustration } from "@/lib/illustrations/registry";
 
-// Vitest has no SVGR transform configured (SVGR only runs through Next's
-// webpack/turbopack loader — see next.config.mjs), so `.svg` imports resolve
-// to raw asset URLs here instead of components. Mock each registered `.svg`
-// module to a real functional SVG component so this test still exercises
-// the registry's actual wiring (key -> import -> component) and would catch
-// a broken import path or a registry entry that isn't a component.
-vi.mock("@/components/illustrations/empty-vocabulario.svg", () => ({
-  default: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
-}));
-vi.mock("@/components/illustrations/empty-tracking.svg", () => ({
-  default: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
-}));
-vi.mock("@/components/illustrations/state-completado.svg", () => ({
-  default: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
-}));
+// `.svg` imports resolve to a functional SVG component via the `svgr-stub`
+// plugin in vitest.config.ts (SVGR itself only runs through Next's loader).
+// That keeps this test exercising the registry's real wiring — key -> import
+// -> component — so a broken import path or a non-component entry still fails,
+// without needing a `vi.mock` per icon as the koboyo set grows.
 
 describe("ILLUSTRATIONS registry", () => {
-  it("renders an svg element for every declared key", async () => {
-    const { ILLUSTRATIONS } = await import("@/lib/illustrations/registry");
+  it("renders an svg element for every declared key via getIllustration", () => {
     for (const key of Object.keys(ILLUSTRATIONS) as (keyof typeof ILLUSTRATIONS)[]) {
-      const Illustration = ILLUSTRATIONS[key];
-      const { container } = render(<Illustration />);
+      const Illustration = getIllustration(key);
+      const { container } = render(<Illustration /> as React.ReactElement);
+      expect(container.querySelector("svg")).not.toBeNull();
+    }
+  });
+
+  it("falls back to the placeholder when a key has no bespoke art", () => {
+    const entries = Object.entries(ILLUSTRATIONS) as [
+      keyof typeof ILLUSTRATIONS,
+      unknown,
+    ][];
+    for (const [key, value] of entries) {
+      if (value !== null) continue;
+      const Fallback = getIllustration(key);
+      const { container } = render(<Fallback /> as React.ReactElement);
       expect(container.querySelector("svg")).not.toBeNull();
     }
   });
 });
+

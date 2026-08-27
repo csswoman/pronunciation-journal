@@ -8,6 +8,7 @@ import {
   missionIdFromLegacyMode,
   validateMissionRegistry,
 } from '../registry'
+import { isScriptedMission, isConversationalMission } from '../types'
 
 describe('oral mission registry', () => {
   it('contains eight unique, target-backed missions', () => {
@@ -20,15 +21,18 @@ describe('oral mission registry', () => {
     for (const mission of missions) {
       expect(mission.context).toBeTruthy()
       expect(mission.communicativeGoal).toBeTruthy()
-      expect(mission.opening).toBeTruthy()
       expect(mission.targets.length).toBeGreaterThanOrEqual(2)
       expect(mission.targets.length).toBeLessThanOrEqual(3)
-      expect(mission.requiredIntents.length).toBeGreaterThan(0)
+      if (isConversationalMission(mission)) {
+        expect(mission.opening).toBeTruthy()
+        expect(mission.requiredIntents.length).toBeGreaterThan(0)
+      }
       for (const target of mission.targets) {
         expect(getTarget(target.targetId).ok).toBe(true)
         expect(target.phrase).toBeTruthy()
       }
     }
+
   })
 
   it.each(LEGACY_ROLEPLAY_SCENARIOS)('round-trips legacy mode roleplay:%s', (scenario) => {
@@ -44,5 +48,19 @@ describe('oral mission registry', () => {
   it('rejects unknown mission ids without a fallback', () => {
     expect(getMission('roleplay.unknown')).toBeNull()
     expect(missionIdFromLegacyMode('roleplay:unknown')).toBeNull()
+  })
+})
+
+describe('mission mode discriminant', () => {
+  it('marca todas las misiones autoradas como conversacionales', () => {
+    const missions = listMissions()
+    expect(missions.length).toBeGreaterThan(0)
+    expect(missions.every(isConversationalMission)).toBe(true)
+  })
+
+  it('los type guards son mutuamente excluyentes', () => {
+    for (const mission of listMissions()) {
+      expect(isScriptedMission(mission)).toBe(false)
+    }
   })
 })

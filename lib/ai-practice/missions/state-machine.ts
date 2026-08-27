@@ -2,7 +2,7 @@ import { contrastIdToTargetId, getTarget } from '@/lib/pronunciation/targets/reg
 import type { SpokenAttempt } from '@/lib/pronunciation/spoken-attempt'
 import { prioritizeFeedbackTarget } from '@/lib/pronunciation/feedback/prioritize'
 import type { FeedbackPriority } from '@/lib/pronunciation/feedback/types'
-import type { OralMission } from './types'
+import type { ConversationalMission } from './types'
 
 export type MissionPhase = 'briefing' | 'active' | 'correction' | 'transfer' | 'result'
 export type MissionStatus = 'in_progress' | 'completed' | 'cancelled' | 'provider_error'
@@ -56,7 +56,7 @@ function completeAtResult(state: MissionState): MissionState {
   return { ...state, phase: 'result', status: 'completed' }
 }
 
-function advanceTurn(state: MissionState, mission: OralMission): MissionState {
+function advanceTurn(state: MissionState, mission: ConversationalMission): MissionState {
   const next = { ...state, turnCount: state.turnCount + 1 }
   return next.turnCount >= mission.maxTurns ? completeAtResult(next) : next
 }
@@ -68,7 +68,8 @@ function canonicalTargetForAttempt(attempt: SpokenAttempt): string | null {
   ].find((candidate) => candidate && getTarget(candidate).ok) ?? null
 }
 
-function priorityForAttempt(attempt: SpokenAttempt, mission: OralMission): FeedbackPriority | null {
+function priorityForAttempt(attempt: SpokenAttempt, mission: ConversationalMission): FeedbackPriority | null {
+
   if (attempt.outcome !== 'scored') return null
 
   const canonicalAttemptTarget = canonicalTargetForAttempt(attempt)
@@ -89,8 +90,9 @@ function priorityForAttempt(attempt: SpokenAttempt, mission: OralMission): Feedb
 export function missionReducer(
   state: MissionState,
   event: MissionEvent,
-  mission: OralMission,
+  mission: ConversationalMission,
 ): MissionState {
+
   if (state.missionId !== mission.id) return state
 
   if (event.type === 'resume') {

@@ -1,10 +1,11 @@
 'use client'
 
-import type { OralMission } from '@/lib/ai-practice/missions/types'
+import type { ConversationalMission } from '@/lib/ai-practice/missions/types'
 
 interface MissionBriefingProps {
-  mission: OralMission
+  mission: ConversationalMission
 }
+
 
 export function MissionBriefing({ mission }: MissionBriefingProps) {
   return (

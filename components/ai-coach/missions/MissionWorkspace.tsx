@@ -8,6 +8,7 @@ import { useSpeechInput } from '@/hooks/useSpeechInput'
 import { scorePronunciation } from '@/lib/pronunciation/scoring'
 import type { AIMessage, ExerciseResult, VoiceMetadata } from '@/lib/ai-practice/types'
 import { getMission } from '@/lib/ai-practice/missions/registry'
+import { isConversationalMission } from '@/lib/ai-practice/missions/types'
 import { deriveMissionOutcome } from '@/lib/ai-practice/missions/outcome'
 import { persistMissionSession } from '@/lib/ai-practice/missions/persistence'
 import {
@@ -46,10 +47,12 @@ export function MissionWorkspace({
   onToolAnswer,
 }: MissionWorkspaceProps) {
   const { user } = useAuth()
-  const mission = getMission(missionId)
+  const rawMission = getMission(missionId)
+  const mission = rawMission && isConversationalMission(rawMission) ? rawMission : null
   const [state, setState] = useState<MissionState | null>(() => (
     mission ? createMissionState(mission.id) : null
   ))
+
   const persistedSessionRef = useRef<string | null>(null)
   const { getStream, release } = useSharedMicStream()
   const submitTransferAttempt = useCallback((transcript: string) => {
