@@ -49,11 +49,11 @@ export function CoachLine({ line, onContinue }: Props) {
   }, [line.id, handleListen])
 
   return (
-    <div className="flex flex-col gap-3 rounded-xl border border-border-default bg-surface-raised p-4">
+    <div className="flex flex-col gap-2">
       <span className="font-caption text-xs font-semibold uppercase tracking-wider text-fg-muted">
         Coach
       </span>
-      <p className="text-body text-fg">{line.text}</p>
+      <p className="m-0 text-body text-fg">{line.text}</p>
       <div className="flex items-center gap-2">
         <Button variant="secondary" onClick={handleListen} disabled={isPlaying}>
           {isPlaying ? 'Reproduciendo…' : 'Repetir'}

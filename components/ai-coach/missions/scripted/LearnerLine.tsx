@@ -4,7 +4,7 @@
 // <LearnerLine>
 //   <TargetText />
 //   <SpeakMicButton />
-//   <SyllableBreakdown />        (feedback por sílaba)
+//   <SpokenLineFeedback />       (la frase en color, palabra a palabra)
 //   <SyllableRemediation />      (fonema culpable)
 //   <SelfPlaybackAudioBar />     (comparación IA vs tú)
 //   <RetryAndContinue />
@@ -14,7 +14,7 @@ import { useSpeechRecognition } from '@/hooks/useSpeechRecognition'
 import { defaultEvaluationEngine } from '@/lib/exercises/evaluation'
 import { getEvaluationWordResults } from '@/lib/exercises/evaluation/word-results'
 import { useSyllableFeedback } from '@/hooks/useSyllableFeedback'
-import { SyllableBreakdown } from '@/components/pronunciation-feedback/SyllableBreakdown'
+import { SpokenLineFeedback } from '@/components/pronunciation-feedback/SpokenLineFeedback'
 import { SyllableRemediation } from '@/components/pronunciation-feedback/SyllableRemediation'
 import { buildRemediation } from '@/lib/pronunciation/syllable-remediation'
 import { SelfPlaybackAudioBar } from '@/components/pronunciation/SelfPlaybackAudioBar'
@@ -27,6 +27,12 @@ export interface LineAttemptResult {
   score: number
   transcript: string
   wordResults: WordResult[]
+}
+
+function feedbackHeadline(score: number): string {
+  if (score >= 90) return 'Muy bien'
+  if (score >= 70) return 'Casi: fíjate en lo marcado'
+  return 'Repite fijándote en lo marcado'
 }
 
 interface Props {
@@ -62,6 +68,15 @@ export function LearnerLine({ line, onLineComplete }: Props) {
       .finally(() => setIsScoring(false))
   }, [status, speechResult, isScoring, attempt, line.text])
 
+  // El primer fonema culpable de toda la linea, en orden de lectura.
+  const remediation = (() => {
+    for (const word of attempt?.wordResults ?? []) {
+      const culprit = syllableMap.get(word.expected)?.find((s) => s.culprit)?.culprit
+      if (culprit) return buildRemediation(culprit)
+    }
+    return null
+  })()
+
   const handleRetry = useCallback(() => {
     setAttempt(null)
     reset()
@@ -81,11 +96,13 @@ export function LearnerLine({ line, onLineComplete }: Props) {
   }
 
   return (
-    <div className="flex flex-col gap-3 rounded-xl border border-border-strong p-4">
+    <div className="flex flex-col gap-2">
       <span className="font-caption text-xs font-semibold uppercase tracking-wider text-fg-muted">
         Tu turno
       </span>
-      <p className="text-body text-fg">{line.text}</p>
+      {/* Antes del intento se lee lo que hay que decir; despues, esa misma
+          frase reaparece coloreada y repetirla aqui seria duplicarla. */}
+      {!attempt && <p className="m-0 text-body text-fg">{line.text}</p>}
 
       {!attempt && (
         <Button variant="primary" onClick={start} disabled={status === 'listening' || isScoring}>
@@ -96,22 +113,16 @@ export function LearnerLine({ line, onLineComplete }: Props) {
       {attempt && (
         <>
           <div className="flex flex-col gap-2">
-            {attempt.wordResults.map((word, index) => {
-              const syllables = syllableMap.get(word.expected)
-              if (!syllables) {
-                return <span key={index} className="text-body text-fg-muted">{word.expected}</span>
-              }
-              // Una sola tarjeta articulatoria por palabra: la de la primera
-              // sílaba fallada. Volcar una por cada fallo sería ruido.
-              const culprit = syllables.find((s) => s.culprit !== null)?.culprit ?? null
-              const remediation = culprit ? buildRemediation(culprit) : null
-              return (
-                <div key={index} className="flex flex-col gap-2">
-                  <SyllableBreakdown syllables={syllables} />
-                  {remediation && <SyllableRemediation remediation={remediation} />}
-                </div>
-              )
-            })}
+            <SpokenLineFeedback
+              wordResults={attempt.wordResults}
+              syllableMap={syllableMap}
+            />
+            <p className="m-0 text-body-sm text-fg-muted">
+              {attempt.score}% · {feedbackHeadline(attempt.score)}
+            </p>
+            {/* Una sola tarjeta articulatoria por linea: la del primer fonema
+                culpable. Volcar una por cada fallo seria ruido. */}
+            {remediation && <SyllableRemediation remediation={remediation} />}
           </div>
 
           <SelfPlaybackAudioBar targetWord={line.text} userAudioUrl={userAudioUrl} />

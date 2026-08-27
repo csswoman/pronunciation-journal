@@ -112,7 +112,9 @@ export default function ScriptedMissionRunner({ mission }: Props) {
   // dialogo — justo lo contrario de lo que la mision necesita.
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <div className="min-h-0 flex-1 overflow-y-auto px-3 pt-3 [scrollbar-width:thin]">
+      {/* `justify-end` pega el historial al turno activo: al principio hay
+          una o dos lineas y estirarlas dejaba media pantalla en blanco. */}
+      <div className="flex min-h-0 flex-1 flex-col justify-end overflow-y-auto px-3 pt-3 [scrollbar-width:thin]">
         <ScriptTranscript script={state.script} currentIndex={state.currentIndex} />
       </div>
       <div className="shrink-0 border-t border-border-subtle bg-surface-base p-3">
