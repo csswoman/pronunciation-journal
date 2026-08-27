@@ -49,7 +49,6 @@ export function buildPedagogicalFeedback(
         immediate: isCorrect ? 'Esa opción encaja en la oración.' : 'Lee la oración completa y vuelve a revisar el significado.',
         expectedAnswer: exercise.answer,
         correction: exercise.fullSentence,
-        explanation: exercise.definition,
         category: isCorrect ? 'sentence_context_correct' : 'sentence_context_meaning',
         errorCode: isCorrect ? 'correct' : emptyAnswer ? 'empty_answer' : 'meaning_choice',
         canRetry: !isCorrect,
