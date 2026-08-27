@@ -17,10 +17,10 @@ interface Props {
 }
 
 const WORD_CLASS: Record<WordStatus, string> = {
-  correct: 'border-transparent text-fg-muted',
-  incorrect: 'border-[var(--error)] text-fg font-semibold',
-  missing: 'border-[var(--admonitions-color-warning)] text-fg-subtle italic',
-  extra: 'border-[var(--admonitions-color-warning)] text-fg-subtle line-through',
+  correct: 'border-[var(--success)] text-[var(--success)]',
+  incorrect: 'border-[var(--error)] text-[var(--error)] font-semibold',
+  missing: 'border-[var(--warning)] text-[var(--warning)] italic',
+  extra: 'border-[var(--warning)] text-[var(--warning)] line-through',
 }
 
 const WORD_LABEL: Record<WordStatus, string> = {

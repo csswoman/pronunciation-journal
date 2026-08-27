@@ -14,9 +14,9 @@ interface Props {
 }
 
 const STATUS_CLASS: Record<SyllableStatus, string> = {
-  correct: 'border-transparent text-fg-muted',
-  warning: 'border-[var(--admonitions-color-warning)] text-fg',
-  error: 'border-[var(--error)] text-fg font-semibold',
+  correct: 'border-[var(--success)] text-[var(--success)]',
+  warning: 'border-[var(--warning)] text-[var(--warning)]',
+  error: 'border-[var(--error)] text-[var(--error)] font-semibold',
 }
 
 const STATUS_LABEL: Record<SyllableStatus, string> = {

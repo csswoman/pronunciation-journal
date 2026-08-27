@@ -10,6 +10,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { speak } from '@/lib/phoneme-practice/tts'
 import { resolveModelAudio } from '@/lib/speech/model-audio'
 import Button from '@/components/ui/Button'
+import { ArrowRight, Volume2 } from '@/components/icons'
 import type { ScriptLine } from '@/lib/ai-practice/missions/types'
 
 interface Props {
@@ -49,16 +50,32 @@ export function CoachLine({ line, onContinue }: Props) {
   }, [line.id, handleListen])
 
   return (
-    <div className="flex flex-col gap-2">
-      <span className="font-caption text-xs font-semibold uppercase tracking-wider text-fg-muted">
+    // Misma forma que el historial: el turno activo es la burbuja del coach
+    // con sus controles, no una tarjeta distinta.
+    <div className="flex flex-col items-start gap-1.5">
+      <span className="text-xxs font-medium uppercase tracking-wider text-fg-subtle">
         Coach
       </span>
-      <p className="m-0 text-body text-fg">{line.text}</p>
-      <div className="flex items-center gap-2">
-        <Button variant="secondary" onClick={handleListen} disabled={isPlaying}>
+      <p className="m-0 max-w-[85%] rounded-xl bg-surface-raised px-3 py-2 text-body text-fg-muted">
+        {line.text}
+      </p>
+      <div className="flex items-center gap-2 pt-1">
+        <Button
+          variant="ghost"
+          size="sm"
+          icon={<Volume2 size={16} aria-hidden />}
+          onClick={handleListen}
+          disabled={isPlaying}
+        >
           {isPlaying ? 'Reproduciendo…' : 'Repetir'}
         </Button>
-        <Button variant="primary" onClick={onContinue}>
+        <Button
+          variant="primary"
+          size="sm"
+          icon={<ArrowRight size={16} aria-hidden />}
+          iconPosition="right"
+          onClick={onContinue}
+        >
           Continuar
         </Button>
       </div>

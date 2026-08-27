@@ -21,3 +21,12 @@ describe('SyllableBreakdown', () => {
     expect(screen.getByLabelText(/hap.*mal/i)).toBeInTheDocument()
   })
 })
+
+describe('SyllableBreakdown — color', () => {
+  it('pinta en verde la silaba correcta', () => {
+    render(<SyllableBreakdown syllables={[
+      { text: 'cof', phonemes: [], status: 'correct', culprit: null },
+    ]} />)
+    expect(screen.getByLabelText('cof: bien').className).toContain('success')
+  })
+})

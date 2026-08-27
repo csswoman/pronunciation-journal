@@ -58,3 +58,17 @@ describe('SpokenLineFeedback', () => {
     expect(screen.getByLabelText('comfortable: mal')).toBeInTheDocument()
   })
 })
+
+describe('SpokenLineFeedback — color', () => {
+  it('pinta en verde lo que se dijo bien', () => {
+    render(<SpokenLineFeedback wordResults={words} syllableMap={syllableMap} />)
+
+    // Neutro no basta: sin verde, un acierto no se lee como acierto.
+    expect(screen.getByLabelText('I: bien').className).toContain('success')
+  })
+
+  it('pinta en rojo lo que se dijo mal', () => {
+    render(<SpokenLineFeedback wordResults={words} syllableMap={syllableMap} />)
+    expect(screen.getByLabelText('like: mal').className).toContain('error')
+  })
+})
