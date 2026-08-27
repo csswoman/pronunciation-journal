@@ -87,6 +87,7 @@ export interface MissionRegistryIssue {
     | 'duplicate_id'
     | 'invalid_target'
     | 'invalid_target_count'
+    | 'invalid_script'
     | 'invalid_intent'
     | 'duplicate_intent'
     | 'invalid_cefr'

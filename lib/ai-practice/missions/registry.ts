@@ -1,5 +1,6 @@
 import { contrastTargetId, getTarget, phonemeTargetId, targetId } from '@/lib/pronunciation/targets/registry'
-import { isConversationalMission, type MissionRegistryIssue, type OralMission, type LegacyRoleplayScenario } from './types'
+import { isConversationalMission, isScriptedMission, type MissionRegistryIssue, type OralMission, type LegacyRoleplayScenario } from './types'
+import { SCRIPTED_MISSIONS } from './scripted/catalog'
 
 export const LEGACY_ROLEPLAY_SCENARIOS = [
   'interview',
@@ -303,12 +304,18 @@ Start by asking them casually about their week or recent events.
   },
 ]
 
+/**
+ * Las misiones con guion viven en su propio catalogo pero comparten registry:
+ * `getMission` es el unico punto de entrada, y el runner se elige por `mode`.
+ */
+const ALL_MISSIONS: readonly OralMission[] = [...MISSIONS, ...SCRIPTED_MISSIONS]
+
 export const MISSION_REGISTRY: Readonly<Record<string, OralMission>> = Object.freeze(
-  Object.fromEntries(MISSIONS.map((mission) => [mission.id, mission])) as Record<string, OralMission>,
+  Object.fromEntries(ALL_MISSIONS.map((mission) => [mission.id, mission])) as Record<string, OralMission>,
 )
 
 export function listMissions(): readonly OralMission[] {
-  return MISSIONS
+  return ALL_MISSIONS
 }
 
 export function getMission(missionId: string): OralMission | null {
@@ -337,20 +344,22 @@ export function validateMissionRegistry(): MissionRegistryIssue[] {
   const seen = new Set<string>()
   const allowedCefr = new Set(['A1', 'A2', 'B1', 'B2', 'C1', 'C2'])
 
-  for (const mission of MISSIONS) {
+  for (const mission of ALL_MISSIONS) {
     if (seen.has(mission.id)) {
       issues.push({ missionId: mission.id, code: 'duplicate_id', detail: 'duplicate mission id' })
     }
     seen.add(mission.id)
 
-    if (mission.targets.length < 2 || mission.targets.length > 3) {
-      issues.push({ missionId: mission.id, code: 'invalid_target_count', detail: 'missions must have 2–3 targets' })
-    }
     if (!allowedCefr.has(mission.recommendedCefr)) {
       issues.push({ missionId: mission.id, code: 'invalid_cefr', detail: `unsupported CEFR level ${mission.recommendedCefr}` })
     }
 
     if (isConversationalMission(mission)) {
+      // Solo el roleplay exige targets: son los que guian su bucle de correccion.
+      // El guion puntua por alineacion de fonemas, asi que ahi son opcionales.
+      if (mission.targets.length < 2 || mission.targets.length > 3) {
+        issues.push({ missionId: mission.id, code: 'invalid_target_count', detail: 'conversational missions must have 2–3 targets' })
+      }
       if (!Number.isInteger(mission.maxTurns) || mission.maxTurns < 1) {
         issues.push({ missionId: mission.id, code: 'invalid_max_turns', detail: 'maxTurns must be a positive integer' })
       }
@@ -364,6 +373,25 @@ export function validateMissionRegistry(): MissionRegistryIssue[] {
           issues.push({ missionId: mission.id, code: 'duplicate_intent', detail: `duplicate intent ${intent.id}` })
         }
         intentIds.add(intent.id)
+      }
+    }
+
+    if (isScriptedMission(mission)) {
+      if (mission.script.length === 0) {
+        issues.push({ missionId: mission.id, code: 'invalid_script', detail: 'scripted missions require at least one line' })
+      }
+      if (!mission.script.some((line) => line.speaker === 'learner')) {
+        issues.push({ missionId: mission.id, code: 'invalid_script', detail: 'scripted missions require a learner line' })
+      }
+      const lineIds = new Set<string>()
+      for (const line of mission.script) {
+        if (lineIds.has(line.id)) {
+          issues.push({ missionId: mission.id, code: 'invalid_script', detail: `duplicate script line ${line.id}` })
+        }
+        lineIds.add(line.id)
+        if (!line.text.trim()) {
+          issues.push({ missionId: mission.id, code: 'invalid_script', detail: `empty script line ${line.id}` })
+        }
       }
     }
 

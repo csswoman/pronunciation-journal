@@ -2,6 +2,7 @@
 
 // Planned structure:
 // <ScriptedMissionRunner>
+//   <ScriptTranscript /> (dialogo recorrido, solo lectura)
 //   <CoachLine />        (turno del coach)
 //   <LearnerLine />      (turno del estudiante)
 //   <ScriptedResult />   (puntuación final)
@@ -20,6 +21,7 @@ import {
   persistScriptedSession,
 } from '@/lib/ai-practice/missions/scripted/persistence'
 import { CoachLine } from './CoachLine'
+import { ScriptTranscript } from './ScriptTranscript'
 import { LearnerLine, type LineAttemptResult } from './LearnerLine'
 import { ScriptedResult } from './ScriptedResult'
 import type { ScriptedMission } from '@/lib/ai-practice/missions/types'
@@ -103,7 +105,12 @@ export default function ScriptedMissionRunner({ mission }: Props) {
     )
   }
 
-  return line.speaker === 'coach'
-    ? <CoachLine line={line} onContinue={handleCoachContinue} />
-    : <LearnerLine line={line} onLineComplete={handleLineComplete} />
+  return (
+    <div className="flex flex-col gap-3">
+      <ScriptTranscript script={state.script} currentIndex={state.currentIndex} />
+      {line.speaker === 'coach'
+        ? <CoachLine line={line} onContinue={handleCoachContinue} />
+        : <LearnerLine line={line} onLineComplete={handleLineComplete} />}
+    </div>
+  )
 }

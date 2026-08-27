@@ -9,6 +9,7 @@ import {
   validateMissionRegistry,
 } from '../registry'
 import { isScriptedMission, isConversationalMission } from '../types'
+import { SCRIPTED_MISSIONS } from '../scripted/catalog'
 
 describe('oral mission registry', () => {
   it('contains eight unique, target-backed missions', () => {
@@ -21,11 +22,18 @@ describe('oral mission registry', () => {
     for (const mission of missions) {
       expect(mission.context).toBeTruthy()
       expect(mission.communicativeGoal).toBeTruthy()
-      expect(mission.targets.length).toBeGreaterThanOrEqual(2)
-      expect(mission.targets.length).toBeLessThanOrEqual(3)
       if (isConversationalMission(mission)) {
+        // Los targets guian el bucle de correccion del roleplay, asi que ahi son obligatorios.
+        expect(mission.targets.length).toBeGreaterThanOrEqual(2)
+        expect(mission.targets.length).toBeLessThanOrEqual(3)
         expect(mission.opening).toBeTruthy()
         expect(mission.requiredIntents.length).toBeGreaterThan(0)
+      }
+      if (isScriptedMission(mission)) {
+        // El guion puntua por alineacion de fonemas, no por targets autorados:
+        // los targets son pistas opcionales por linea.
+        expect(mission.script.length).toBeGreaterThan(0)
+        expect(mission.script.some((line) => line.speaker === 'learner')).toBe(true)
       }
       for (const target of mission.targets) {
         expect(getTarget(target.targetId).ok).toBe(true)
@@ -52,15 +60,23 @@ describe('oral mission registry', () => {
 })
 
 describe('mission mode discriminant', () => {
-  it('marca todas las misiones autoradas como conversacionales', () => {
+  it('expone ambos modos en el registry', () => {
     const missions = listMissions()
-    expect(missions.length).toBeGreaterThan(0)
-    expect(missions.every(isConversationalMission)).toBe(true)
+    expect(missions.some(isConversationalMission)).toBe(true)
+    expect(missions.some(isScriptedMission)).toBe(true)
   })
 
   it('los type guards son mutuamente excluyentes', () => {
     for (const mission of listMissions()) {
-      expect(isScriptedMission(mission)).toBe(false)
+      expect(isScriptedMission(mission)).toBe(!isConversationalMission(mission))
+    }
+  })
+
+  it('registra el catalogo con guion y lo hace alcanzable por id', () => {
+    for (const scripted of SCRIPTED_MISSIONS) {
+      const found = getMission(scripted.id)
+      expect(found).not.toBeNull()
+      expect(found && isScriptedMission(found)).toBe(true)
     }
   })
 })

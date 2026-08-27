@@ -28,7 +28,12 @@ vi.mock('@/components/auth/AuthProvider', () => ({
 
 vi.mock('@/lib/ai-coach/pronunciation', () => ({ speakPhrase }))
 vi.mock('@/lib/pronunciation/scoring', () => ({ scorePronunciation }))
-vi.mock('../../ChatView', () => ({ default: () => null }))
+vi.mock('../../ChatView', () => ({ default: () => <output data-testid="chat-view" /> }))
+vi.mock('../scripted/ScriptedMissionRunner', () => ({
+  default: ({ mission }: { mission: { id: string } }) => (
+    <output data-testid="scripted-runner">{mission.id}</output>
+  ),
+}))
 vi.mock('../../CustomPromptPanel', () => ({
   default: ({ onSubmit }: { onSubmit: (text: string, options?: { voice?: { transcript: true; scored: boolean } }) => void }) => (
     <>
@@ -92,5 +97,30 @@ describe('MissionWorkspace', () => {
     await waitFor(() => expect(screen.getByTestId('mission-phase')).toHaveTextContent('correction'))
 
     expect(scorePronunciation).toHaveBeenCalledTimes(2)
+  })
+})
+
+describe('MissionWorkspace — despacho por modo', () => {
+  it('monta el runner con guion para una mision scripted', async () => {
+    render(<MissionWorkspace missionId="scripted.cafe.order" setMissionIntentHandler={vi.fn()} {...props} />)
+
+    await waitFor(() =>
+      expect(screen.getByTestId('scripted-runner')).toHaveTextContent('scripted.cafe.order'))
+  })
+
+  it('no ofrece entrada de texto en una mision con guion', async () => {
+    render(<MissionWorkspace missionId="scripted.cafe.order" setMissionIntentHandler={vi.fn()} {...props} />)
+
+    await waitFor(() => expect(screen.getByTestId('scripted-runner')).toBeInTheDocument())
+    // El bug original: el guion caia al chat libre y lo escrito se enviaba como turno.
+    expect(screen.queryByRole('button', { name: 'Enviar texto' })).not.toBeInTheDocument()
+    expect(screen.queryByTestId('chat-view')).not.toBeInTheDocument()
+  })
+
+  it('mantiene intacto el camino conversacional', () => {
+    render(<MissionWorkspace missionId="roleplay.cafe" setMissionIntentHandler={vi.fn()} {...props} />)
+
+    expect(screen.queryByTestId('scripted-runner')).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Enviar texto' })).toBeInTheDocument()
   })
 })

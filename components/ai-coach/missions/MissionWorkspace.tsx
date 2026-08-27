@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { speakPhrase } from '@/lib/ai-coach/pronunciation'
 import { useSharedMicStream } from '@/hooks/useSharedMicStream'
@@ -8,7 +8,8 @@ import { useSpeechInput } from '@/hooks/useSpeechInput'
 import { scorePronunciation } from '@/lib/pronunciation/scoring'
 import type { AIMessage, ExerciseResult, VoiceMetadata } from '@/lib/ai-practice/types'
 import { getMission } from '@/lib/ai-practice/missions/registry'
-import { isConversationalMission } from '@/lib/ai-practice/missions/types'
+import { isConversationalMission, isScriptedMission } from '@/lib/ai-practice/missions/types'
+import { getRunnerFor } from '@/lib/ai-practice/missions/runner-registry'
 import { deriveMissionOutcome } from '@/lib/ai-practice/missions/outcome'
 import { persistMissionSession } from '@/lib/ai-practice/missions/persistence'
 import {
@@ -21,6 +22,12 @@ import MissionResult from './MissionResult'
 import ChatView from '../ChatView'
 import CustomPromptPanel from '../CustomPromptPanel'
 import type { MissionLaunch } from '@/lib/ai-practice/missions/launch'
+
+/**
+ * El runner con guion se elige por `mode` a traves del registry, no con un
+ * `if` aqui: anadir un modo nuevo sin runner es un error de compilacion.
+ */
+const ScriptedRunner = lazy(getRunnerFor('scripted').load)
 
 interface MissionWorkspaceProps {
   missionId: string
@@ -48,6 +55,7 @@ export function MissionWorkspace({
 }: MissionWorkspaceProps) {
   const { user } = useAuth()
   const rawMission = getMission(missionId)
+  const scriptedMission = rawMission && isScriptedMission(rawMission) ? rawMission : null
   const mission = rawMission && isConversationalMission(rawMission) ? rawMission : null
   const [state, setState] = useState<MissionState | null>(() => (
     mission ? createMissionState(mission.id) : null
@@ -155,6 +163,18 @@ export function MissionWorkspace({
     persistedSessionRef.current = sessionKey
     void persistMissionSession(user.id, mission, state, outcome, launch).catch(() => undefined)
   }, [launch, mission, outcome, state, user?.id])
+
+  // El guion ocupa el panel entero: se practica hablando, sin caja de texto.
+  // El dialogo recorrido se lee dentro del propio runner (`ScriptTranscript`).
+  if (scriptedMission) {
+    return (
+      <div className="flex h-full min-h-0 flex-col overflow-y-auto p-3">
+        <Suspense fallback={null}>
+          <ScriptedRunner mission={scriptedMission} />
+        </Suspense>
+      </div>
+    )
+  }
 
   if (!mission || !state) return null
 
