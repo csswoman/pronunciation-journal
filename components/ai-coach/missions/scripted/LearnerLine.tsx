@@ -69,11 +69,27 @@ export function LearnerLine({ line, onLineComplete }: Props) {
       .finally(() => setIsScoring(false))
   }, [status, speechResult, isScoring, attempt, line.text])
 
-  // El primer fonema culpable de toda la linea, en orden de lectura.
+  // El primer fonema fallado de toda la linea, en orden de lectura.
+  //
+  // Se busca en dos pasadas: primero el culpable que localizo el desglose
+  // silabico, y si ninguna palabra tuvo mapeo fiable, directamente el primer
+  // fonema fallado del alignment. Antes solo existia la primera pasada, asi
+  // que una linea sin silabas fiables se quedaba coloreada pero sin explicar
+  // por que estaba mal — que es justo lo que hay que decirle a quien practica.
   const remediation = (() => {
     for (const word of attempt?.wordResults ?? []) {
       const culprit = syllableMap.get(word.expected)?.find((s) => s.culprit)?.culprit
-      if (culprit) return buildRemediation(culprit)
+      if (culprit) {
+        const built = buildRemediation(culprit)
+        if (built) return built
+      }
+    }
+    for (const word of attempt?.wordResults ?? []) {
+      const failed = word.phonemes?.alignment?.find((p) => p.status !== 'correct')
+      if (failed) {
+        const built = buildRemediation(failed)
+        if (built) return built
+      }
     }
     return null
   })()

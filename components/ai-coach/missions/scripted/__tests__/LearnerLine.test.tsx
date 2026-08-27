@@ -17,16 +17,16 @@ vi.mock('@/hooks/useSpeechRecognition', () => ({
   }),
 }))
 
+const evaluation = {
+  score: 60,
+  wordResults: [
+    { expected: 'I', got: 'I', status: 'correct' },
+    { expected: 'would', got: 'wood', status: 'incorrect' },
+  ] as unknown[],
+}
+
 vi.mock('@/lib/exercises/evaluation', () => ({
-  defaultEvaluationEngine: {
-    evaluate: async () => ({
-      score: 60,
-      wordResults: [
-        { expected: 'I', got: 'I', status: 'correct' },
-        { expected: 'would', got: 'wood', status: 'incorrect' },
-      ],
-    }),
-  },
+  defaultEvaluationEngine: { evaluate: async () => evaluation },
 }))
 vi.mock('@/lib/exercises/evaluation/word-results', () => ({
   getEvaluationWordResults: (result: { wordResults: unknown[] }) => result.wordResults,
@@ -69,5 +69,38 @@ describe('LearnerLine — feedback despues de hablar', () => {
     render(<LearnerLine line={line} onLineComplete={vi.fn()} />)
 
     expect(await screen.findByText(/60%/)).toBeInTheDocument()
+  })
+})
+
+describe('LearnerLine — explica por que esta mal', () => {
+  afterEach(() => {
+    speechState.status = 'idle'
+    speechState.result = null
+    evaluation.wordResults = [
+      { expected: 'I', got: 'I', status: 'correct' },
+      { expected: 'would', got: 'wood', status: 'incorrect' },
+    ]
+  })
+
+  it('muestra la remediacion del fonema fallado aunque no haya silabas', async () => {
+    // El bug: sin mapeo silabico fiable no habia culprit, y la linea se
+    // quedaba coloreada pero muda sobre el motivo del fallo.
+    evaluation.wordResults = [{
+      expected: 'yes', got: 'jes', status: 'correct',
+      phonemes: {
+        expected: [], got: [], tip: null,
+        alignment: [
+          { phoneme: 'Y', status: 'incorrect', got: 'JH' },
+          { phoneme: 'EH', status: 'correct' },
+          { phoneme: 'S', status: 'correct' },
+        ],
+      },
+    }]
+    speechState.status = 'done'
+    speechState.result = { transcript: 'jes' }
+
+    render(<LearnerLine line={line} onLineComplete={vi.fn()} />)
+
+    expect(await screen.findByText(/\/j\/|\/y\//i)).toBeInTheDocument()
   })
 })
