@@ -1,4 +1,5 @@
 import type { CEFRLevel } from '@/lib/exercises/cefr'
+import type { LearnerContext } from '@/lib/ai-coach/learner-context'
 import { JOURNAL_TOPIC_CATALOG } from '@/lib/journal/topic-catalog'
 
 // ── Transcription ──
@@ -328,4 +329,53 @@ ${list}
 
 Responde SOLO con JSON válido, sin texto alrededor, con esta forma exacta:
 {"words":{"<palabra>":["oración 1","oración 2"]}}`;
+}
+
+// ── Scripted Speaking Mission Generation ──
+
+interface ScriptGenerationInput {
+  topic: string
+  context: LearnerContext
+}
+
+/**
+ * Prompt para generar un diálogo con guión.
+ *
+ * El vocabulario en repaso se siembra a propósito: obliga a PRODUCIR palabras
+ * que hoy solo se reconocen pasivamente, que es donde más gente se atasca.
+ */
+export function buildScriptGenerationPrompt({
+  topic,
+  context,
+}: ScriptGenerationInput): string {
+  const lines = [
+    `Write a short English dialogue for a Spanish-speaking learner at CEFR level ${context.cefr}.`,
+    `Topic: ${topic}.`,
+    '',
+    'Rules:',
+    '- Exactly 6 to 8 turns, alternating between "coach" and "learner".',
+    '- The dialogue MUST start with the coach.',
+    `- Keep vocabulary and grammar at ${context.cefr} level.`,
+    '- Learner lines must be natural to say out loud, 4 to 12 words each.',
+  ]
+
+  if (context.srsDueWords.length > 0) {
+    lines.push(
+      `- Work these words into the LEARNER lines naturally: ${context.srsDueWords.slice(0, 6).join(', ')}.`,
+    )
+  }
+
+  if (context.weakTargets.length > 0) {
+    lines.push(
+      `- Give the learner chances to practise these sounds: ${context.weakTargets.slice(0, 3).join(', ')}.`,
+    )
+  }
+
+  lines.push(
+    '',
+    'Return JSON only, with this shape:',
+    '{"script":[{"speaker":"coach","text":"..."},{"speaker":"learner","text":"..."}]}',
+  )
+
+  return lines.join('\n')
 }
