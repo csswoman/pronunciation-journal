@@ -24,24 +24,24 @@ export function MatchPairsStatus({
 }) {
   if (submitted) return null
 
-  return (
-    <>
-      <p className="m-0 w-full text-pretty text-center text-body-sm leading-snug text-fg-muted sm:text-body-sm">
-        Relaciona cada término con su definición. Las definiciones están mezcladas.
-      </p>
+  const message = selectedTerm
+    ? `Ahora elige la pareja de “${selectedTerm}”`
+    : armedDefinition
+      ? 'Ahora elige el término que coincide'
+      : matchedCount > 0
+        ? `${matchedCount} de ${totalCount} emparejados`
+        : null
 
-      {(matchedCount > 0 || selectedTerm || armedDefinition) && (
-        <p
-          className="m-0 animate-state-in text-center text-caption font-medium tabular-nums text-fg-subtle"
-          aria-live="polite"
-        >
-          {selectedTerm
-            ? `Ahora elige la definición de “${selectedTerm}”`
-            : armedDefinition
-              ? 'Ahora elige el término que coincide'
-              : `${matchedCount} de ${totalCount} emparejados`}
-        </p>
-      )}
-    </>
+  if (!message) return null
+
+  return (
+    <div className="flex h-5 items-center justify-center">
+      <p
+        className="m-0 animate-state-in text-center text-caption font-medium tabular-nums text-fg-subtle"
+        aria-live="polite"
+      >
+        {message}
+      </p>
+    </div>
   )
 }

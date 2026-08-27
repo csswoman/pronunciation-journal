@@ -52,7 +52,12 @@ const GENERIC_FIXTURES: Record<
     sentence: 'I ___ apples every morning.',
     answer: 'eat',
     options: ['eat', 'ate', 'eating', 'eats'],
-    hint: 'consume food',
+    hint: 'Acción habitual o rutina en presente simple con el sujeto "I".',
+    hints: {
+      level1: 'Pista contextual: Acción habitual ("every morning") con sujeto "I" en presente simple.',
+      level2: 'Forma verbal: Con "I" en presente simple se utiliza la forma base sin cambios.',
+      level3: 'Traducción: "Yo como manzanas todas las mañanas."',
+    },
   },
   sentence_dictation: {
     id: 'test-sentence_dictation',

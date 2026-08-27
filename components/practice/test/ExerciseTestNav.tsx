@@ -1,5 +1,15 @@
 'use client'
 
+// Planned structure:
+// <ExerciseTestNav>
+//   <StepControls />
+//   <ModeToggle />
+//   <DomainGroups>
+//     <DomainHeader />
+//     <ExerciseItemList />
+//   </DomainGroups>
+// </ExerciseTestNav>
+
 import { ChevronLeft, ChevronRight, Columns2, Play } from "@/components/icons"
 import Button from '@/components/ui/Button'
 import { cn } from '@/lib/cn'
@@ -63,8 +73,10 @@ export function ExerciseTestNav({
           type="button"
           onClick={() => onViewModeChange('single')}
           className={cn(
-            'flex min-h-11 flex-1 items-center justify-center gap-1 rounded-sm px-2 py-2 text-caption font-medium transition-colors focus-ring',
-            viewMode === 'single' ? 'bg-surface-raised text-fg shadow-sm' : 'text-fg-muted',
+            'flex min-h-9 flex-1 items-center justify-center gap-1.5 rounded-sm px-2 py-1.5 text-caption font-medium transition-colors focus-ring',
+            viewMode === 'single'
+              ? 'bg-surface-raised text-fg shadow-2xs font-semibold'
+              : 'text-fg-muted hover:text-fg',
           )}
         >
           <Play size={12} aria-hidden />
@@ -75,8 +87,10 @@ export function ExerciseTestNav({
           onClick={() => onViewModeChange('split')}
           disabled={!canSplit}
           className={cn(
-            'flex min-h-11 flex-1 items-center justify-center gap-1 rounded-sm px-2 py-2 text-caption font-medium transition-colors focus-ring',
-            viewMode === 'split' ? 'bg-surface-raised text-fg shadow-sm' : 'text-fg-muted',
+            'flex min-h-9 flex-1 items-center justify-center gap-1.5 rounded-sm px-2 py-1.5 text-caption font-medium transition-colors focus-ring',
+            viewMode === 'split'
+              ? 'bg-surface-raised text-fg shadow-2xs font-semibold'
+              : 'text-fg-muted hover:text-fg',
             !canSplit && 'cursor-not-allowed opacity-50',
           )}
         >
@@ -86,11 +100,16 @@ export function ExerciseTestNav({
       </div>
 
       {grouped.map(({ domain, items }) => (
-        <div key={domain} className="flex flex-col gap-1">
-          <p className="px-1 font-kicker text-fg-subtle">
-            {DOMAIN_LABELS[domain]}
-          </p>
-          <ul className="flex flex-col gap-0.5">
+        <div key={domain} className="flex flex-col gap-1 pt-1">
+          <div className="flex items-center justify-between px-1">
+            <span className="font-kicker text-fg-subtle">
+              {DOMAIN_LABELS[domain]}
+            </span>
+            <span className="font-mono text-tiny text-fg-subtle">
+              {items.length}
+            </span>
+          </div>
+          <ul className="flex flex-col gap-1">
             {items.map((entry) => {
               const active = entry.id === activeEntryId
               return (
@@ -99,14 +118,18 @@ export function ExerciseTestNav({
                     type="button"
                     onClick={() => onSelect(entry, viewMode)}
                     className={cn(
-                      'flex min-h-11 w-full flex-col justify-center rounded-md px-3 py-2.5 text-left transition-colors focus-ring',
+                      'group/item flex w-full flex-col justify-center rounded-md px-3 py-2 text-left transition-all duration-150 focus-ring',
                       active
-                        ? 'bg-primary/10 text-fg ring-1 ring-primary/30'
+                        ? 'bg-primary-soft text-primary ring-1 ring-primary/40 font-medium'
                         : 'text-fg-secondary hover:bg-surface-sunken hover:text-fg',
                     )}
                   >
-                    <span className="truncate text-body-sm font-medium">{entry.label}</span>
-                    <span className="truncate font-mono text-xxs text-fg-muted">{entry.slug}</span>
+                    <span className={cn('truncate text-body-sm font-medium', active && 'text-primary')}>
+                      {entry.label}
+                    </span>
+                    <span className={cn('truncate font-mono text-tiny text-fg-subtle', active && 'text-primary/70')}>
+                      {entry.slug}
+                    </span>
                   </button>
                 </li>
               )

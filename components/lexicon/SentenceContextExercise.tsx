@@ -173,17 +173,17 @@ function OptionGrid({ options, answer, selected, done, onSelect }: OptionGridPro
             disabled={done}
             aria-pressed={isSelected}
             className={cn(
-              'w-full flex items-center justify-between rounded-(--radius-lg) border px-4 py-3.5 text-body-sm font-medium text-left min-h-13 transition-all duration-150',
+              'w-full flex items-center justify-between rounded-lg border px-4 py-3.5 text-body-sm font-medium text-left min-h-13 transition-all duration-150',
               !done && !isSelected && 'border-border-default bg-surface-raised text-fg hover:border-border-strong cursor-pointer',
-              !done && isSelected && 'border-primary bg-primary-soft text-primary cursor-pointer',
-              done && isCorrectOption && 'border-success-border bg-success-soft text-success cursor-default',
+              !done && isSelected && 'border-primary bg-primary-soft text-primary cursor-pointer font-semibold',
+              done && isCorrectOption && 'border-success-border bg-success-soft text-success cursor-default font-semibold',
               done && isSelected && !isCorrectOption && 'border-error-border bg-error-soft text-error cursor-default',
               done && !isCorrectOption && !isSelected && 'border-border-subtle bg-surface-raised text-fg-subtle opacity-50 cursor-default',
             )}
           >
             <span>{opt.word}</span>
             {done && isCorrectOption && (
-              <span className="text-success text-base leading-none">✓</span>
+              <span className="text-success text-base leading-none" aria-hidden>✓</span>
             )}
           </button>
         )
@@ -199,13 +199,13 @@ function ConfirmBar({ disabled, onConfirm }: { disabled: boolean; onConfirm: () 
       onClick={onConfirm}
       disabled={disabled}
       className={cn(
-        'w-full rounded-full py-3.5 text-body-sm font-semibold transition-all duration-150',
+        'w-full rounded-md py-3 text-body-sm font-semibold transition-all duration-150 focus-ring',
         disabled
-          ? 'bg-surface-raised text-fg-subtle cursor-not-allowed'
-          : 'bg-(--cta-bg) text-(--cta-fg) cursor-pointer hover:opacity-90 active:scale-[0.99]',
+          ? 'bg-surface-raised text-fg-subtle cursor-not-allowed border border-border-subtle'
+          : 'bg-primary text-on-primary cursor-pointer hover:opacity-90 active:scale-[0.99] shadow-xs',
       )}
     >
-      Check
+      Comprobar
     </button>
   )
 }

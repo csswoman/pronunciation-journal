@@ -2,7 +2,6 @@
 
 // Planned structure:
 // <MatchPairsExercise>
-//   <MatchPairsStatus />
 //   <MatchPairsBoard />
 //   <CheckButton />
 // </MatchPairsExercise>
@@ -19,7 +18,7 @@ import {
   type MatchConnection,
   type MatchResult,
 } from './MatchPairsBoard'
-import { MATCH_DOT_COLORS, MatchPairsStatus } from './MatchPairsStatus'
+import { MATCH_DOT_COLORS } from './match-pairs-board-helpers'
 
 interface Props {
   exercise: MatchPairsExerciseType
@@ -53,8 +52,6 @@ export function MatchPairsExercise({ exercise, onResult }: Props) {
   const { playTap, playCorrect, playWrong } = useUISounds()
 
   const matchedRightIds = new Set(Object.values(matches))
-  const matchedCount = Object.keys(matches).length
-  const totalCount = exercise.pairs.length
   const pairColor = (leftId: string) =>
     MATCH_DOT_COLORS[exercise.pairs.findIndex((p) => p.id === leftId) % MATCH_DOT_COLORS.length]
 
@@ -187,21 +184,8 @@ export function MatchPairsExercise({ exercise, onResult }: Props) {
   }, [recomputeConnections])
 
   const allMatched = exercise.pairs.every((p) => matches[p.id])
-  const selectedTerm = selectedLeft
-    ? exercise.pairs.find((pair) => pair.id === selectedLeft)?.left
-    : null
-  const armedDefinition = armedRight ? rightItems.find((item) => item.id === armedRight)?.label : null
-
   return (
-    <div className="mx-auto flex w-full max-w-xl flex-col items-center gap-3 sm:gap-4">
-      <MatchPairsStatus
-        submitted={submitted}
-        matchedCount={matchedCount}
-        totalCount={totalCount}
-        selectedTerm={selectedTerm}
-        armedDefinition={armedDefinition}
-      />
-
+    <div className="flex w-full flex-col gap-6">
       <MatchPairsBoard
         pairs={exercise.pairs}
         rightItems={rightItems}
@@ -228,7 +212,6 @@ export function MatchPairsExercise({ exercise, onResult }: Props) {
           disabled={!allMatched}
           data-cuelume-press="press"
           data-cuelume-release="release"
-          className="max-w-xl"
         >
           Comprobar
         </Button>

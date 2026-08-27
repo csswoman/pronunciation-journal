@@ -1,6 +1,23 @@
 'use client'
 
+// Planned structure:
+// <PhonemeFocusShell>
+//   <TopChrome>
+//     <ExitButton />
+//     <ProgressBar />
+//     <StepCounter />
+//   </TopChrome>
+//   <CenterStage>
+//     <SessionCard>
+//       {children}
+//       <FeedbackBanner />
+//     </SessionCard>
+//   </CenterStage>
+//   {footer}
+// </PhonemeFocusShell>
+
 import type { ReactNode } from 'react'
+import { X, Check } from '@/components/icons'
 import { cn } from '@/lib/cn'
 import Button from '@/components/ui/Button'
 
@@ -11,11 +28,14 @@ export type PhonemeFocusFeedback = {
 }
 
 interface Props {
-  /** IPA symbol shown in the top bar (e.g. /iː/). Pass undefined for non-IPA sessions. */
+  /** IPA symbol shown in the top bar if needed (deprecated in favor of card kicker). */
   badge?: string
-  /** Session name shown below the topbar (e.g. "Repaso de palabras"). */
+  /** Session name shown below the topbar if needed. */
   sessionName?: string
   progressPct: number
+  stepCurrent?: number
+  stepTotal?: number
+  progressLabel?: string
   onExit: () => void
   children: ReactNode
   feedback?: PhonemeFocusFeedback | null
@@ -23,72 +43,98 @@ interface Props {
 }
 
 export function PhonemeFocusShell({
-  badge,
-  sessionName,
   progressPct,
+  stepCurrent,
+  stepTotal,
+  progressLabel,
   onExit,
   children,
   feedback,
   footer,
 }: Props) {
+  const current = stepCurrent ?? Math.max(1, Math.round((progressPct / 100) * (stepTotal ?? 1)))
+  const total = stepTotal ?? 1
+  const pct = Math.min(100, Math.max(0, Math.round(progressPct)))
+
   return (
-    <div className="phoneme-focus">
-      <div className="phoneme-focus__phone">
-          <div className="phoneme-focus__topbar">
-            <button
-              type="button"
-              className="phoneme-focus__exit"
-              onClick={onExit}
-              aria-label="Salir de la práctica"
-            >
-              ✕
-            </button>
-            <div
-              className="phoneme-focus__progress"
-              role="progressbar"
-              aria-valuenow={progressPct}
-              aria-valuemin={0}
-              aria-valuemax={100}
-              aria-label="Progreso de la sesión"
-            >
-              <span style={{ width: `${progressPct}%` }} />
-            </div>
-            {badge && (
-              <span className="phoneme-focus__badge">{badge}</span>
-            )}
-          </div>
+    <div className="relative mx-auto flex min-h-[calc(100dvh-6rem)] w-full max-w-layout-session-max flex-col gap-layout-stack px-4 py-4 sm:py-6">
+      {/* Top Chrome matching Essential Words */}
+      <header className="flex w-full items-center gap-3">
+        <button
+          type="button"
+          onClick={onExit}
+          aria-label="Salir de la práctica"
+          className="flex size-10 shrink-0 items-center justify-center rounded-full text-fg-subtle transition-colors duration-150 ease-out-quart focus-ring hover:bg-surface-raised hover:text-fg-muted cursor-pointer"
+        >
+          <X size={16} aria-hidden />
+        </button>
 
-          {sessionName && (
-            <div className="phoneme-focus__session-title">
-              <span className="phoneme-focus__session-label">Practicando</span>
-              <span className={cn( 'phoneme-focus__session-name', badge && 'phoneme-focus__session-name--ipa', )}>
-                {sessionName}
-              </span>
-            </div>
-          )}
+        <div
+          role="progressbar"
+          aria-valuenow={current}
+          aria-valuemin={0}
+          aria-valuemax={total}
+          aria-label={progressLabel ?? `Paso ${current} de ${total}`}
+          className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-surface-sunken"
+        >
+          <div
+            className="h-full rounded-full bg-primary transition-[width] duration-300 ease-out-quart"
+            style={{ width: `${pct}%` }}
+          />
+        </div>
 
-          <div className="phoneme-focus__stage">{children}</div>
+        <span className="shrink-0 font-caption tabular-nums text-fg-muted">
+          {current} / {total}
+        </span>
+      </header>
+
+      {/* Main Center Stage with Card Container */}
+      <main className="flex flex-1 flex-col items-center justify-center w-full">
+        <div className="flex w-full flex-col rounded-2xl border border-border-subtle bg-surface-raised p-6 sm:p-8 shadow-xs gap-6">
+          {children}
 
           {feedback && (
             <div
-              className={cn( 'phoneme-focus__footer', feedback.isCorrect ? 'phoneme-focus__footer--ok' : 'phoneme-focus__footer--bad', )}
+              className={cn(
+                'flex items-center justify-between gap-4 rounded-xl border p-4 transition-all',
+                feedback.isCorrect
+                  ? 'border-success-border bg-success-soft text-success'
+                  : 'border-error-border bg-error-soft text-error',
+              )}
               role="status"
               aria-live="polite"
             >
-              <div className="phoneme-focus__fb">
-                <span className="phoneme-focus__fb-icon" aria-hidden>
-                  {feedback.isCorrect ? '✓' : '✕'}
-                </span>
-                <div className="phoneme-focus__fb-text">
-                  <b>{feedback.isCorrect ? '¡Correcto!' : 'No exactamente'}</b>
-                  {feedback.subtitle && <span>{feedback.subtitle}</span>}
+              <div className="flex items-center gap-3">
+                <div
+                  className={cn(
+                    'flex size-8 shrink-0 items-center justify-center rounded-full',
+                    feedback.isCorrect
+                      ? 'bg-success/20 text-success'
+                      : 'bg-error/20 text-error',
+                  )}
+                >
+                  {feedback.isCorrect ? (
+                    <Check size={16} aria-hidden />
+                  ) : (
+                    <X size={16} aria-hidden />
+                  )}
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-body-sm font-semibold">
+                    {feedback.isCorrect ? '¡Correcto!' : 'No exactamente'}
+                  </span>
+                  {feedback.subtitle && (
+                    <span className="text-caption text-fg-muted">
+                      {feedback.subtitle}
+                    </span>
+                  )}
                 </div>
               </div>
+
               {feedback.onContinue && (
                 <Button
-                  variant={feedback.isCorrect ? 'success' : 'error'}
+                  variant={feedback.isCorrect ? 'primary' : 'secondary'}
                   size="md"
-                  className="shrink-0"
                   onClick={feedback.onContinue}
                 >
                   Continuar
@@ -96,9 +142,10 @@ export function PhonemeFocusShell({
               )}
             </div>
           )}
-
-          {footer}
         </div>
+      </main>
+
+      {footer}
     </div>
   )
 }

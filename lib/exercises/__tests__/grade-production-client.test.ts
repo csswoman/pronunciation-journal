@@ -1,7 +1,6 @@
 // @vitest-environment jsdom
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { AI_UNAVAILABLE_MESSAGE } from '@/lib/degradation/messages'
-import { gradeProduction, ProductionGradeError } from '@/lib/exercises/grade-production-client'
+import { gradeProduction, ProductionGradeError, PRODUCTION_AI_UNAVAILABLE_MESSAGE } from '@/lib/exercises/grade-production-client'
 import type { GradeProductionInput } from '@/lib/exercises/production-grade'
 
 const input: GradeProductionInput = {
@@ -30,7 +29,7 @@ describe('gradeProduction', () => {
     await expect(gradeProduction(input)).rejects.toMatchObject({
       name: 'ProductionGradeError',
       code: 'server',
-      message: AI_UNAVAILABLE_MESSAGE,
+      message: PRODUCTION_AI_UNAVAILABLE_MESSAGE,
     } satisfies Partial<ProductionGradeError>)
   })
 

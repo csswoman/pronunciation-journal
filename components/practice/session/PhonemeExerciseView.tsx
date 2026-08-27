@@ -1,5 +1,11 @@
 'use client'
 
+// Planned structure:
+// <PhonemeExerciseView>
+//   {phonemeNode}
+//   <SkipButton />
+// </PhonemeExerciseView>
+
 import type {
   PhonemePayload,
   PracticeExercise,
@@ -41,16 +47,16 @@ export function PhonemeExerciseView({
   })
 
   return (
-    <div className={focusUi ? 'phoneme-focus__session' : 'flex flex-col gap-4'}>
+    <div className="flex w-full flex-col gap-4">
       {phonemeNode ?? <UnsupportedExercise slug={slug} onSkip={handleSkip} />}
       {showSkip && (
         <button
           type="button"
           onClick={handleSkip}
           aria-label="Omitir este ejercicio"
-          className="self-center py-1.5 text-body-sm font-medium text-fg-subtle transition-colors hover:text-fg-secondary"
+          className="self-center py-2 text-body-sm font-medium text-fg-subtle transition-colors hover:text-fg cursor-pointer focus-ring rounded-md px-3"
         >
-          Omitir este
+          Omitir este ejercicio
         </button>
       )}
     </div>

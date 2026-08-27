@@ -16,6 +16,9 @@ export class ProductionGradeError extends Error {
   }
 }
 
+export const PRODUCTION_AI_UNAVAILABLE_MESSAGE =
+  'El servicio de corrección con IA no está disponible en este momento. Puedes autoevaluar tu oración con el ejemplo o intentarlo de nuevo más tarde.'
+
 /** Client-side call to /api/gemini/grade-production. Requires network. */
 export async function gradeProduction(
   input: GradeProductionInput,
@@ -36,7 +39,7 @@ export async function gradeProduction(
     })
   } catch {
     throw new ProductionGradeError(
-      publicAiErrorMessage(),
+      publicAiErrorMessage(undefined, '', PRODUCTION_AI_UNAVAILABLE_MESSAGE),
       'network',
     )
   }
@@ -44,7 +47,7 @@ export async function gradeProduction(
   if (!res.ok) {
     const body = (await res.json().catch(() => null)) as { error?: string } | null
     throw new ProductionGradeError(
-      publicAiErrorMessage(res.status, body?.error),
+      publicAiErrorMessage(res.status, body?.error, PRODUCTION_AI_UNAVAILABLE_MESSAGE),
       'server',
     )
   }

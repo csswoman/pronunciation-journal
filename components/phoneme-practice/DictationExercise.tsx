@@ -1,5 +1,14 @@
 'use client'
 
+// Planned structure:
+// <DictationExercise>
+//   <PhonemeExercisePrompt />
+//   <PhonemePlayButton />
+//   <AnswerInput />
+//   <FeedbackMessage />
+//   <PhonemeConfirmButton />
+// </DictationExercise>
+
 import { useEffect, useRef, useState } from 'react'
 import type { Exercise } from '@/lib/phoneme-practice/types'
 import { PhonemeConfirmButton } from '@/components/phoneme-practice/PhonemeConfirmButton'
@@ -50,42 +59,53 @@ export function DictationExercise({ exercise, onSubmit, voice }: Props) {
 
   const canCheck = value.trim().length > 0 && !submitted
 
+  const rawIpa = exercise.ipa?.replace(/^\/+|\/+$/g, '')
+  const ipaDisplay = rawIpa ? `/${rawIpa}/` : undefined
+
   return (
-    <div className="phoneme-focus__exercise">
+    <div className="flex w-full flex-col gap-6">
       <PhonemeExercisePrompt
         centered
         title="Escucha y escribe la palabra"
+        kicker={ipaDisplay ? `Sonido ${ipaDisplay} · Dictado fonético` : 'Dictado fonético'}
+        hint="Escribe exactamente la palabra que escuchas"
       />
 
-      <PhonemePlayButton
-        ariaLabel={exercise.targetWord ? `Escuchar ${exercise.targetWord}` : 'Escuchar audio'}
-        word={exercise.targetWord}
-        voice={voice}
-      />
+      <div className="flex justify-center py-2">
+        <PhonemePlayButton
+          ariaLabel={exercise.targetWord ? `Escuchar ${exercise.targetWord}` : 'Escuchar audio'}
+          word={exercise.targetWord}
+          voice={voice}
+          size="lg"
+        />
+      </div>
 
-      <input
-        ref={inputRef}
-        type="text"
-        value={value}
-        onChange={(e) => !submitted && setValue(e.target.value)}
-        onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
-        placeholder="Escribe aquí…"
-        aria-label="Tu respuesta"
-        aria-invalid={submitted && !isCorrect}
-        className={cn(
-          'w-full rounded-xl border border-border-default bg-surface-raised px-4 py-3 text-base text-(--fg-primary)',
-          'outline-none transition-all duration-150',
-          'placeholder:text-(--fg-disabled)',
-          'focus:border-primary focus:shadow-[0_0_0_3px_color-mix(in_oklch,var(--primary)_18%,transparent)]',
-          submitted && isCorrect && 'border-success-border bg-success-soft text-success pf-reveal-ok',
-          submitted && !isCorrect && 'border-error-border bg-error-soft text-error pf-reveal-bad',
-        )}
-      />
+      <div className="flex flex-col gap-2">
+        <label htmlFor="dictation-input" className="text-body-sm font-medium text-fg-muted">
+          Tu respuesta
+        </label>
+        <input
+          id="dictation-input"
+          ref={inputRef}
+          type="text"
+          value={value}
+          onChange={(e) => !submitted && setValue(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
+          placeholder="Escribe la palabra aquí…"
+          aria-label="Tu respuesta"
+          aria-invalid={submitted && !isCorrect}
+          className={cn(
+            'min-h-13 w-full rounded-xl border border-border-default bg-surface-sunken/60 px-4 py-3 text-body-lg text-fg placeholder:text-fg-subtle focus-ring transition-all',
+            submitted && isCorrect && 'border-success-border bg-success-soft text-success pf-reveal-ok font-semibold',
+            submitted && !isCorrect && 'border-error-border bg-error-soft text-error pf-reveal-bad font-semibold',
+          )}
+        />
+      </div>
 
       {submitted && !isCorrect && (
-        <p className="m-0 text-center text-body-sm text-(--fg-secondary)">
-          Respuesta: <strong className="text-(--fg-primary)">{exercise.targetWord}</strong>
-        </p>
+        <div className="rounded-xl border border-border-default bg-surface-sunken p-4 text-center text-body-md text-fg-muted">
+          Palabra correcta: <strong className="font-semibold text-fg">{exercise.targetWord}</strong>
+        </div>
       )}
 
       {!submitted && (

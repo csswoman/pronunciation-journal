@@ -214,13 +214,26 @@ function matchPairsFeedback(
   correctPairCount?: number,
   totalPairCount = exercise.pairs.length,
 ): PedagogicalFeedback {
-  const expected = exercise.pairs.map((pair) => `${pair.left} = ${pair.right}`).join('; ')
-  const countLine = correctPairCount == null ? undefined : `${correctPairCount} de ${totalPairCount} pares correctos.`
+  const isPhoneme =
+    exercise.exerciseType?.variant === 'phoneme' ||
+    exercise.pairs.some((p) => p.right.startsWith('/') && p.right.endsWith('/'))
+
+  const expected = exercise.pairs.map((pair) => `${pair.left} → ${pair.right}`).join(' · ')
+  const countLine =
+    correctPairCount == null
+      ? undefined
+      : correctPairCount === 0
+        ? `0 de ${totalPairCount} pares correctos.`
+        : `${correctPairCount} de ${totalPairCount} pares correctos.`
+
   return {
-    immediate: isCorrect ? 'Todos los pares coinciden.' : countLine ?? 'Revisa algunos pares.',
-    explanation: isCorrect ? undefined : 'Relaciona cada elemento con el significado, sonido o forma que le corresponde.',
+    immediate: isCorrect ? 'Todos los pares coinciden correctamente.' : countLine ?? 'Revisa las parejas.',
+    explanation: isCorrect
+      ? undefined
+      : isPhoneme
+        ? 'Presta atención a la diferencia de pronunciación y símbolos fonéticos de cada palabra.'
+        : undefined,
     expectedAnswer: expected,
-    tip: 'Empieza por el par más fácil y usa el descarte para resolver los demás.',
     category: isCorrect ? 'match_pairs_correct' : 'match_pairs_mapping',
     errorCode: isCorrect ? 'correct' : 'pair_mapping',
     canRetry: !isCorrect,

@@ -2,6 +2,7 @@
 
 // Planned structure:
 // <ExerciseTestSidebar>
+//   <SidebarHeader />
 //   <ExerciseTestControls />
 //   <ExerciseTestNav />
 // </ExerciseTestSidebar>
@@ -75,7 +76,7 @@ export function ExerciseTestSidebar(props: Props) {
           <button
             type="button"
             onClick={onExitOverlay}
-            className="flex items-center gap-1 rounded-[var(--radius-md)] px-2 py-1.5 text-caption font-medium text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg"
+            className="flex items-center gap-1 rounded-md px-2.5 py-1.5 text-caption font-medium text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg focus-ring"
           >
             <X size={14} aria-hidden />
             Cerrar

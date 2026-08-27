@@ -1,6 +1,14 @@
 'use client'
 
-import { Columns2, Layers } from "@/components/icons"
+// Planned structure:
+// <ExerciseTestControls>
+//   <ContextSelectorA />
+//   <ContextSelectorB />
+//   <ContextInfo />
+//   <ActionButtons />
+// </ExerciseTestControls>
+
+import { Columns2, Layers, Sparkles } from "@/components/icons"
 import Button from '@/components/ui/Button'
 import { cn } from '@/lib/cn'
 import { CONTEXT_LABELS } from '@/components/practice/test/constants'
@@ -31,11 +39,11 @@ export function ExerciseTestControls({
   onOpenEssentialWords,
 }: Props) {
   return (
-    <section className="flex flex-col gap-layout-stack-loose rounded-lg border border-border-subtle bg-surface-raised layout-card-pad">
+    <section className="flex flex-col gap-4 rounded-lg border border-border-subtle bg-surface-raised p-4">
       <div className="flex flex-col gap-2">
-        <p className="font-kicker text-fg-muted">
-          Panel A
-        </p>
+        <span className="font-kicker text-fg-subtle">
+          Panel A (Principal)
+        </span>
         <div className="flex flex-wrap gap-1.5">
           {FOCUS_UI_CONTEXTS.map((value) => (
             <button
@@ -43,9 +51,9 @@ export function ExerciseTestControls({
               type="button"
               onClick={() => onContextChange(value)}
               className={cn(
-                'min-h-11 rounded-full px-3 py-2 text-caption font-medium transition-colors focus-ring',
+                'min-h-8 rounded-full px-2.5 py-1 text-caption font-medium transition-colors focus-ring',
                 context === value
-                  ? 'bg-primary text-white'
+                  ? 'bg-primary text-on-primary font-semibold shadow-xs'
                   : 'bg-surface-sunken text-fg-secondary hover:text-fg',
               )}
             >
@@ -56,9 +64,9 @@ export function ExerciseTestControls({
       </div>
 
       <div className="flex flex-col gap-2">
-        <p className="font-kicker text-fg-muted">
-          Panel B
-        </p>
+        <span className="font-kicker text-fg-subtle">
+          Panel B (Comparación)
+        </span>
         <div className="flex flex-wrap gap-1.5">
           {FOCUS_UI_CONTEXTS.map((value) => (
             <button
@@ -66,9 +74,9 @@ export function ExerciseTestControls({
               type="button"
               onClick={() => onCompareContextChange(value)}
               className={cn(
-                'min-h-11 rounded-full px-3 py-2 text-caption font-medium transition-colors focus-ring',
+                'min-h-8 rounded-full px-2.5 py-1 text-caption font-medium transition-colors focus-ring',
                 compareContext === value
-                  ? 'bg-primary text-white'
+                  ? 'bg-primary text-on-primary font-semibold shadow-xs'
                   : 'bg-surface-sunken text-fg-secondary hover:text-fg',
               )}
             >
@@ -95,10 +103,11 @@ export function ExerciseTestControls({
           type="button"
           variant="primary"
           size="sm"
+          icon={<Sparkles size={14} />}
           onClick={onOpenEssentialWords}
           fullWidth
         >
-          Abrir Palabras esenciales
+          Palabras esenciales
         </Button>
         <Button
           type="button"

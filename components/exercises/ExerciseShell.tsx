@@ -132,13 +132,13 @@ function ShellHeader({
     <div className="flex w-full items-start justify-between gap-4">
       <div className="flex max-w-[65ch] flex-col gap-2">
         {eyebrow && (
-          <span className="font-kicker text-accent">
+          <span className="font-mono text-tiny tracking-wider text-fg-subtle uppercase font-semibold">
             {eyebrow}
           </span>
         )}
-        <p className="text-h3 text-balance text-fg">
+        <h2 className="text-h3 font-bold text-balance text-fg leading-tight sm:text-h2">
           {title}
-        </p>
+        </h2>
         {description && (
           <p className="text-body-sm leading-relaxed text-pretty text-fg-muted">
             {description}
@@ -159,7 +159,7 @@ function SkipButton({ onSkip }: { onSkip: () => void }) {
     <button
       type="button"
       onClick={onSkip}
-      className="min-h-11 w-full cursor-pointer rounded-md px-3 py-2 text-center text-body-sm font-medium text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg focus-ring"
+      className="self-center py-2 text-center text-body-sm font-medium text-fg-subtle transition-colors hover:text-fg focus-ring rounded-md px-3 cursor-pointer"
     >
       Omitir este ejercicio
     </button>
@@ -168,7 +168,7 @@ function SkipButton({ onSkip }: { onSkip: () => void }) {
 
 function HintChip({ word, meaning }: { word: string; meaning?: string }) {
   return (
-    <div className="flex items-center gap-2 rounded-[var(--radius-md)] bg-surface-sunken px-3 py-2 text-body-sm">
+    <div className="flex items-center gap-2 rounded-md bg-surface-sunken px-3 py-2 text-body-sm">
       <span className="font-semibold text-fg">{word}</span>
       {meaning && (
         <>
@@ -184,8 +184,17 @@ function FeedbackBanner({ result }: { result: ExerciseResult }) {
   const { isCorrect, feedback } = result
   const status = feedback?.immediate ?? (isCorrect ? '¡Muy bien!' : 'Aún no. Sigue intentándolo.')
   const expected = feedback?.correction ?? feedback?.expectedAnswer
+  const isIpa = expected ? expected.includes('/') : false
+
   return (
-    <div className={cn( 'flex flex-col gap-3 rounded-md border px-4 py-4 text-body-sm', isCorrect ? 'bg-success-soft border-success-border text-success' : 'bg-error-soft border-error-border text-error', )}>
+    <div
+      className={cn(
+        'flex flex-col gap-3 rounded-lg border px-4 py-4 text-body-sm transition-all',
+        isCorrect
+          ? 'border-success-border bg-success-soft text-success'
+          : 'border-error-border bg-error-soft text-error',
+      )}
+    >
       <p className="flex items-center gap-2.5 font-semibold">
         <span aria-hidden>{isCorrect ? '✓' : '✗'}</span>
         <span>{status}</span>
@@ -193,19 +202,19 @@ function FeedbackBanner({ result }: { result: ExerciseResult }) {
       {feedback?.explanation && (
         <p className="leading-relaxed text-fg">{feedback.explanation}</p>
       )}
-      {expected && (
+      {!isCorrect && expected && (
         <p className="leading-relaxed text-fg">
           <span className="font-semibold">Respuesta esperada: </span>
-          <span>{expected}</span>
+          <span className={cn(isIpa && 'font-ipa font-medium')}>{expected}</span>
         </p>
       )}
-      {feedback?.tip && (
+      {!isCorrect && feedback?.tip && (
         <p className="leading-relaxed text-fg-muted">
           <span className="font-semibold text-fg">Pista: </span>
           <span>{feedback.tip}</span>
         </p>
       )}
-      {feedback?.example && feedback.example !== expected && (
+      {!isCorrect && feedback?.example && feedback.example !== expected && (
         <p className="leading-relaxed text-fg-muted">
           <span className="font-semibold text-fg">Ejemplo: </span>
           <span>{feedback.example}</span>

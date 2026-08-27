@@ -137,17 +137,22 @@ export default function PracticeSession(config: PracticeConfig) {
     if (focusUi && (shellBadge || displayBadge)) {
       return (
         <PhonemeFocusShell
-          badge={shellBadge}
           progressPct={100}
+          stepCurrent={exercises.length}
+          stepTotal={exercises.length}
           onExit={() => onExit?.(sessionResult)}
         >
-          <div className="phoneme-focus__summary">{summary}</div>
+          {summary}
         </PhonemeFocusShell>
       )
     }
     return (
-      <div className="mx-auto w-full max-w-md layout-card-pad pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] lg:pb-[var(--layout-section-gap)]">
-        {summary}
+      <div className="relative mx-auto flex min-h-[calc(100dvh-6rem)] w-full max-w-layout-session-max flex-col gap-layout-stack px-4 py-4 sm:py-6">
+        <main className="flex flex-1 flex-col items-center justify-center w-full">
+          <div className="flex w-full flex-col rounded-2xl border border-border-subtle bg-surface-raised p-6 sm:p-8 shadow-xs gap-6">
+            {summary}
+          </div>
+        </main>
       </div>
     )
   }

@@ -1,11 +1,21 @@
 'use client'
 
+// Planned structure:
+// <MinimalPairExercise>
+//   <PhonemeExercisePrompt />
+//   <PhonemePlayButton />
+//   <OptionsGrid />
+//   <PhonemeConfirmButton />
+//   <FeedbackNote />
+// </MinimalPairExercise>
+
 import { useState } from 'react'
 import type { Exercise } from '@/lib/phoneme-practice/types'
 import { PhonemeConfirmButton } from '@/components/phoneme-practice/PhonemeConfirmButton'
 import { PhonemeExercisePrompt } from '@/components/phoneme-practice/PhonemeExercisePrompt'
 import { PhonemePlayButton } from '@/components/phoneme-practice/PhonemePlayButton'
 import { playUiCue } from '@/lib/ui-sounds/cues'
+import { cn } from '@/lib/cn'
 
 interface Props {
   exercise: Exercise
@@ -32,17 +42,6 @@ export function MinimalPairExercise({ exercise, onSubmit, focusUi = false, voice
     onSubmit(isCorrect, label)
   }
 
-  function pairClass(id: string): string {
-    const isCorrect = exercise.correctIds.includes(id)
-    if (submitted) {
-      if (isCorrect) return 'pf-pair-opt pf-opt--correct pf-opt--reveal'
-      if (selected === id) return 'pf-pair-opt pf-opt--wrong pf-opt--reveal'
-      return 'pf-pair-opt pf-opt--dim'
-    }
-    if (selected === id) return 'pf-pair-opt pf-opt--sel'
-    return 'pf-pair-opt'
-  }
-
   const canConfirm = Boolean(selected) && !submitted
   const correctOption = exercise.options.find((option) =>
     exercise.correctIds.includes(option.id),
@@ -51,41 +50,74 @@ export function MinimalPairExercise({ exercise, onSubmit, focusUi = false, voice
   const selectedIsCorrect = selected ? exercise.correctIds.includes(selected) : false
   const playWord = exercise.targetWord ?? correctOption?.label ?? ''
 
+  const rawIpa = exercise.ipa?.replace(/^\/+|\/+$/g, '')
+  const ipaDisplay = rawIpa ? `/${rawIpa}/` : undefined
+
   return (
-    <div className="phoneme-focus__exercise">
+    <div className="flex w-full flex-col gap-6">
       <PhonemeExercisePrompt
         centered
-        title="Escucha y elige la palabra"
-        kicker={exercise.ipa ? `Sonido ${exercise.ipa}` : undefined}
+        title="Escucha el audio y elige la palabra"
+        kicker={ipaDisplay ? `Sonido ${ipaDisplay} · Pares mínimos` : 'Pares mínimos'}
+        hint="Identifica cuál de las dos palabras fue pronunciada"
       />
 
       {playWord && (
-        <PhonemePlayButton
-          ariaLabel={`Escuchar ${playWord}`}
-          word={playWord}
-          voice={voice}
-        />
+        <div className="flex justify-center py-2">
+          <PhonemePlayButton
+            ariaLabel={`Escuchar ${playWord}`}
+            word={playWord}
+            voice={voice}
+            size="lg"
+          />
+        </div>
       )}
 
       <div
         role="radiogroup"
         aria-label={`Palabra con ${exercise.ipa}`}
-        className="pf-options pf-options--grid"
+        className="grid w-full grid-cols-2 gap-3.5"
       >
-        {exercise.options.map((opt) => (
-          <button
-            key={opt.id}
-            type="button"
-            role="radio"
-            aria-checked={selected === opt.id}
-            aria-label={`Seleccionar ${opt.label}`}
-            aria-disabled={submitted}
-            onClick={() => handleSelect(opt.id)}
-            className={pairClass(opt.id)}
-          >
-            {opt.label}
-          </button>
-        ))}
+        {exercise.options.map((opt) => {
+          const isCorrect = exercise.correctIds.includes(opt.id)
+          const isSelected = selected === opt.id
+
+          return (
+            <button
+              key={opt.id}
+              type="button"
+              role="radio"
+              aria-checked={isSelected}
+              aria-label={`Seleccionar ${opt.label}`}
+              disabled={submitted}
+              onClick={() => handleSelect(opt.id)}
+              className={cn(
+                'group flex min-h-14 cursor-pointer items-center justify-center gap-3 rounded-xl border-2 p-4 transition-all duration-150 select-none text-center focus-ring',
+                !submitted && !isSelected && 'border-border-default bg-surface-sunken/40 hover:border-primary/50 hover:bg-surface-sunken text-fg',
+                !submitted && isSelected && 'border-primary bg-primary-soft text-primary shadow-xs font-semibold ring-1 ring-primary/30',
+                submitted && isCorrect && 'border-success-border bg-success-soft text-success pf-reveal-ok font-semibold',
+                submitted && isSelected && !isCorrect && 'border-error-border bg-error-soft text-error pf-reveal-bad font-semibold',
+                submitted && !isSelected && !isCorrect && 'border-border-subtle bg-surface-raised/40 text-fg-subtle opacity-40 cursor-default',
+              )}
+            >
+              <div
+                className={cn(
+                  'flex size-5 shrink-0 items-center justify-center rounded-full border transition-colors',
+                  !isSelected && 'border-border-strong bg-surface-base',
+                  isSelected && !submitted && 'border-primary bg-primary text-on-primary',
+                  submitted && isCorrect && 'border-success bg-success text-on-primary',
+                  submitted && isSelected && !isCorrect && 'border-error bg-error text-on-primary',
+                )}
+                aria-hidden
+              >
+                {isSelected && (
+                  <div className="size-2 rounded-full bg-current" />
+                )}
+              </div>
+              <span className="text-body-lg font-semibold">{opt.label}</span>
+            </button>
+          )
+        })}
       </div>
 
       {!submitted && (
@@ -96,20 +128,20 @@ export function MinimalPairExercise({ exercise, onSubmit, focusUi = false, voice
         <div
           role="status"
           aria-live="polite"
-          className={[
-            'w-full rounded-xl border px-4 py-3 text-body-sm',
+          className={cn(
+            'flex flex-col gap-1 rounded-xl border px-4 py-3.5 text-body-sm',
             selectedIsCorrect
-              ? 'border-success/30 bg-success-soft text-success'
-              : 'border-error/30 bg-error-soft text-error',
-          ].join(' ')}
+              ? 'border-success-border bg-success-soft text-success'
+              : 'border-error-border bg-error-soft text-error',
+          )}
         >
-          <p className="m-0 font-semibold">
-            {selectedIsCorrect ? '¡Correcto!' : `La respuesta es “${correctOption.label}”.`}
+          <p className="font-semibold">
+            {selectedIsCorrect ? '¡Correcto!' : `La respuesta correcta es “${correctOption.label}”.`}
           </p>
           {exercise.ipa && (
-            <p className="mt-1 mb-0 text-(--fg-primary)">
+            <p className="text-fg-secondary">
               <strong>{correctOption.label}</strong> contiene el sonido{' '}
-              <strong>{exercise.ipa}</strong>.
+              <strong className="font-mono text-primary">{exercise.ipa}</strong>.
               {selectedOption && !selectedIsCorrect
                 ? ` “${selectedOption.label}” usa un sonido diferente.`
                 : ''}
@@ -119,7 +151,7 @@ export function MinimalPairExercise({ exercise, onSubmit, focusUi = false, voice
       )}
 
       {submitted && correctOption && focusUi && !selectedIsCorrect && (
-        <p className="m-0 max-w-[40ch] text-center text-body-sm text-fg-secondary" role="status">
+        <p className="m-0 text-center text-body-sm text-fg-muted" role="status">
           <strong>{correctOption.label}</strong> lleva {exercise.ipa}.
           {selectedOption ? ` “${selectedOption.label}” suena distinto.` : ''}
         </p>

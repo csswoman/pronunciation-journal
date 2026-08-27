@@ -11,32 +11,47 @@ interface Props {
   title: string
 }
 
+// Planned structure:
+// <ProductionTaskHeader>
+//   <ConstraintBadge /> (optional)
+//   <TaskTitle />
+//   <TaskPrompt />
+//   <TargetItemCard>
+//     <WordRow>
+//       <TargetWord />
+//       <ListenButton />
+//     </WordRow>
+//     <Meaning />
+//   </TargetItemCard>
+// </ProductionTaskHeader>
+
 export function ProductionTaskHeader({ exercise, title }: Props) {
   return (
     <div className="flex w-full flex-col gap-3">
       {exercise.constraint && (
         <span className="badge-accent self-start">{exercise.constraint.label}</span>
       )}
-      <p className="m-0 text-h3 text-balance text-fg">
+      <h2 className="m-0 text-h3 font-bold text-balance text-fg leading-tight sm:text-h2">
         {title}
-      </p>
-      <p className="m-0 max-w-[70ch] text-body-md leading-snug text-pretty text-fg">
+      </h2>
+      <p className="m-0 max-w-[65ch] text-body-sm sm:text-body-md leading-relaxed text-pretty text-fg-muted">
         {exercise.taskPrompt}
       </p>
-      <div className="flex min-w-0 flex-col gap-2 rounded-[var(--radius-md)] bg-surface-raised p-3">
-        <div className="flex min-w-0 items-center justify-between gap-3">
-          <span className="min-w-0 text-h4 font-semibold text-fg">{exercise.targetItem}</span>
+      <div className="flex min-w-0 flex-col gap-2.5 rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised/70 p-4">
+        <div className="flex min-w-0 items-center gap-3">
+          <span className="min-w-0 text-h3 sm:text-h2 font-bold text-fg tracking-tight">
+            {exercise.targetItem}
+          </span>
           <ListenButton
             iconOnly
-            className="h-11 w-11"
             onPlay={() => speak(exercise.targetItem)}
             aria-label={`Escuchar ${exercise.targetItem}`}
           />
         </div>
         {exercise.targetMeaning && (
           <p className="m-0 text-body-sm leading-relaxed text-fg-muted text-pretty">
-            <span className="font-medium text-fg">Significado: </span>
-            {exercise.targetMeaning}
+            <span className="font-medium text-fg-secondary">Significado: </span>
+            <span className="italic">{exercise.targetMeaning}</span>
           </p>
         )}
       </div>
