@@ -1,10 +1,10 @@
 "use client";
 
 import EmptyState from "@/components/EmptyState";
-import { ILLUSTRATIONS } from "@/lib/illustrations/registry";
+import { getIllustration } from "@/lib/illustrations/registry";
 import Button from "@/components/ui/Button";
 
-const Illustration = ILLUSTRATIONS.emptyVocabulario;
+const Illustration = getIllustration("emptyVocabulario");
 
 export function WordsEmptyState({ onAdd }: { onAdd: () => void }) {
   return (

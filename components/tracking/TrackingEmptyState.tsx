@@ -3,13 +3,13 @@
 import Link from "next/link";
 import { Plus } from "@/components/icons";
 import EmptyState from "@/components/EmptyState";
-import { ILLUSTRATIONS } from "@/lib/illustrations/registry";
+import { getIllustration } from "@/lib/illustrations/registry";
 
 interface Props {
   filter: "all" | "word" | "phrase" | "lesson";
 }
 
-const Illustration = ILLUSTRATIONS.emptyTracking;
+const Illustration = getIllustration("emptyTracking");
 
 export function TrackingEmptyState({ filter }: Props) {
   const isWords = filter === "word";
