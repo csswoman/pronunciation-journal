@@ -1,5 +1,5 @@
 import { contrastTargetId, getTarget, phonemeTargetId, targetId } from '@/lib/pronunciation/targets/registry'
-import { isConversationalMission, isScriptedMission, type MissionRegistryIssue, type OralMission, type LegacyRoleplayScenario } from './types'
+import { isConversationalMission, isScriptedMission, type ConversationalMission, type MissionRegistryIssue, type OralMission, type ScriptedMission, type LegacyRoleplayScenario } from './types'
 import { SCRIPTED_MISSIONS } from './scripted/catalog'
 
 export const LEGACY_ROLEPLAY_SCENARIOS = [
@@ -316,6 +316,19 @@ export const MISSION_REGISTRY: Readonly<Record<string, OralMission>> = Object.fr
 
 export function listMissions(): readonly OralMission[] {
   return ALL_MISSIONS
+}
+
+/**
+ * Las dos clases de mision se practican de forma distinta y viven en
+ * pestanas distintas: con guion se habla, conversacional se escribe.
+ * El filtrado vive aqui y no en la UI para que exista una sola fuente.
+ */
+export function listScriptedMissions(): readonly ScriptedMission[] {
+  return ALL_MISSIONS.filter(isScriptedMission)
+}
+
+export function listConversationalMissions(): readonly ConversationalMission[] {
+  return ALL_MISSIONS.filter(isConversationalMission)
 }
 
 export function getMission(missionId: string): OralMission | null {

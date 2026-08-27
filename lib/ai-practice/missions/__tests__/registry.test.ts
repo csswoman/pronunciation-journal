@@ -5,6 +5,8 @@ import {
   getMission,
   legacyModeForMission,
   listMissions,
+  listScriptedMissions,
+  listConversationalMissions,
   missionIdFromLegacyMode,
   validateMissionRegistry,
 } from '../registry'
@@ -78,5 +80,26 @@ describe('mission mode discriminant', () => {
       expect(found).not.toBeNull()
       expect(found && isScriptedMission(found)).toBe(true)
     }
+  })
+})
+
+describe('selectores por modo', () => {
+  it('listScriptedMissions solo devuelve misiones con guion, y al menos una', () => {
+    const scripted = listScriptedMissions()
+    expect(scripted.length).toBeGreaterThan(0)
+    expect(scripted.every((mission) => mission.mode === 'scripted')).toBe(true)
+  })
+
+  it('listConversationalMissions solo devuelve conversacionales, y al menos una', () => {
+    const conversational = listConversationalMissions()
+    expect(conversational.length).toBeGreaterThan(0)
+    expect(conversational.every((mission) => mission.mode === 'conversational')).toBe(true)
+  })
+
+  it('las dos listas juntas cubren el catalogo entero sin solaparse', () => {
+    // Si alguien anade un tercer modo, esta asercion falla y obliga a
+    // decidir en que pestana vive — que es exactamente lo que queremos.
+    const total = listScriptedMissions().length + listConversationalMissions().length
+    expect(total).toBe(listMissions().length)
   })
 })
