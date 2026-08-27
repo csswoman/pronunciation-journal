@@ -160,7 +160,16 @@ export const GENERIC_REGISTRY: GenericRegistry = {
     ),
   },
   error_correction: { title: 'Corrige la oración', render: (exercise: ErrorCorrectionExerciseType, { onResult }) => <ErrorCorrectionExercise exercise={exercise} onResult={onResult} /> },
-  conjugation_blank: { title: 'Completa el verbo', render: (exercise: ConjugationBlankExerciseType, { onResult }) => <ConjugationBlankExercise exercise={exercise} onResult={onResult} /> },
+  conjugation_blank: {
+    title: 'Completa el verbo',
+    render: (exercise: ConjugationBlankExerciseType, { onResult, hintCount }) => (
+      <ConjugationBlankExercise
+        exercise={exercise}
+        onResult={onResult}
+        hintCount={hintCount ?? 0}
+      />
+    ),
+  },
   sentence_transformation: { title: 'Transforma la oración', noHint: true, render: (exercise: SentenceTransformationExerciseType, { onResult, onSkip }) => <SentenceTransformationExercise exercise={exercise} onResult={onResult} onSkip={onSkip} /> },
   translation_es_en: { title: 'Traduce al inglés', noHint: true, render: (exercise: TranslationEsEnExerciseType, { onResult }) => <TranslationEsEnExercise exercise={exercise} onResult={onResult} /> },
   cs_shadow_phrase: {

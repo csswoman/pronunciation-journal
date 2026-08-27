@@ -25,6 +25,7 @@ function publicSpeechErrorMessage(err: unknown, fallback: string): string {
 interface UseSpeechInputOptions {
   prefer?: SpeechInputPreference;
   getStream?: () => Promise<MediaStream>;
+  endpoint?: string;
   adapter?: SpeechInputAdapter;
   onResult?: (result: SpeechInputResult) => void;
   onError?: (error: Error) => void;
@@ -44,6 +45,7 @@ interface UseSpeechInputReturn {
 export function useSpeechInput({
   prefer = 'auto',
   getStream,
+  endpoint,
   adapter: externalAdapter,
   onResult,
   onError,
@@ -63,7 +65,7 @@ export function useSpeechInput({
 
     if (prefer === 'gemini' || usingGeminiFallback) {
       if (!getStream) throw new Error('useSpeechInput: getStream required for gemini adapter');
-      return new GeminiAdapter(getStream);
+      return new GeminiAdapter(getStream, endpoint);
     }
 
     if (prefer === 'web-speech') {
@@ -76,8 +78,8 @@ export function useSpeechInput({
     const web = new WebSpeechAdapter();
     if (web.isSupported() && isWebSpeechReliable()) return web;
     if (!getStream) throw new Error('useSpeechInput: getStream required when WebSpeech is unavailable');
-    return new GeminiAdapter(getStream);
-  }, [externalAdapter, prefer, usingGeminiFallback, getStream]);
+    return new GeminiAdapter(getStream, endpoint);
+  }, [externalAdapter, prefer, usingGeminiFallback, getStream, endpoint]);
 
   const adapterRef = useRef<SpeechInputAdapter>(adapter);
   adapterRef.current = adapter;
@@ -101,7 +103,7 @@ export function useSpeechInput({
       // Google's key, so every attempt fails with "network"). Retry once
       // immediately with Gemini instead of surfacing a dead-end error.
       if (canFallbackToGemini && !usingGeminiFallback && WEB_SPEECH_UNUSABLE_ERRORS.has(message)) {
-        const gemini = new GeminiAdapter(getStream!);
+        const gemini = new GeminiAdapter(getStream!, endpoint);
         adapterRef.current = gemini;
         setUsingGeminiFallback(true);
         try {
@@ -124,7 +126,7 @@ export function useSpeechInput({
       setState('error');
       onError?.(e);
     }
-  }, [isSupported, canFallbackToGemini, usingGeminiFallback, getStream, onError]);
+  }, [isSupported, canFallbackToGemini, usingGeminiFallback, getStream, endpoint, onError]);
 
   const stop = useCallback(async () => {
     if (state !== 'listening') return;

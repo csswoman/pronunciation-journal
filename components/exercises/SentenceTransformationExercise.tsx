@@ -14,6 +14,7 @@ import { useRef, useState } from 'react'
 import Button from '@/components/ui/Button'
 import { gradeProduction, ProductionGradeError } from '@/lib/exercises/grade-production-client'
 import { pedagogicalFeedbackFromProductionGrade } from '@/lib/exercises/feedback'
+import { isExactTransformation } from '@/lib/exercises/transformations'
 import type { SentenceTransformationExercise as Exercise } from '@/lib/exercises/types'
 import type { GenericRenderExtras } from '@/lib/practice/exercise-renderer/generic-registry'
 
@@ -33,22 +34,54 @@ export function SentenceTransformationExercise({
 
   async function submit() {
     const production = answer.trim()
-    if (!production || grading || !navigator.onLine) {
-      if (!navigator.onLine) setError('Necesitas conexión para corregir esta transformación.')
-      return
+    if (!production || grading) return
+
+    if (isExactTransformation(exercise, production)) {
+      return onResult(true, production, Date.now() - startedAt.current, {
+        score: 100,
+        feedback: {
+          immediate: '¡Correcto!',
+          expectedAnswer: exercise.referenceAnswer,
+          errorCode: 'correct',
+          canRetry: false,
+          nextAction: 'continue',
+        },
+      })
     }
+
+    if (!navigator.onLine) {
+      if (exercise.referenceAnswer) {
+        return setError(`Sin conexión. Respuesta de referencia: ${exercise.referenceAnswer}`)
+      }
+      return setError('Necesitas conexión para corregir esta transformación.')
+    }
+
     setGrading(true)
     setError(null)
     try {
+      const targetItem = exercise.referenceAnswer ?? exercise.instruction
+      const taskPrompt = exercise.referenceAnswer
+        ? `Transform the original sentence according to the instruction. Original sentence: "${exercise.sourceSentence}". Instruction: "${exercise.instruction}". Reference solution: "${exercise.referenceAnswer}".`
+        : `Transform the original sentence according to the instruction. Original sentence: "${exercise.sourceSentence}". Instruction: "${exercise.instruction}".`
+
       const grade = await gradeProduction({
-        targetItem: exercise.instruction,
-        taskPrompt: `Transform this sentence. Source: ${exercise.sourceSentence}. Instruction: ${exercise.instruction}`,
+        targetItem,
+        taskPrompt,
         production,
         modality: 'written',
       })
+
+      const feedback = pedagogicalFeedbackFromProductionGrade(grade)
+      if (exercise.referenceAnswer) {
+        feedback.expectedAnswer = exercise.referenceAnswer
+        if (!grade.correct) {
+          feedback.correction = exercise.referenceAnswer
+        }
+      }
+
       onResult(grade.correct, production, Date.now() - startedAt.current, {
         score: grade.score,
-        feedback: pedagogicalFeedbackFromProductionGrade(grade),
+        feedback,
       })
     } catch (cause) {
       setError(cause instanceof ProductionGradeError ? cause.message : 'No se pudo corregir. Inténtalo de nuevo.')
@@ -76,6 +109,12 @@ export function SentenceTransformationExercise({
           id="transformation-instruction"
           value={answer}
           onChange={(event) => setAnswer(event.target.value)}
+          onKeyDown={(event) => {
+            if ((event.metaKey || event.ctrlKey || event.key === 'Enter') && !event.shiftKey && answer.trim() && !grading) {
+              event.preventDefault()
+              void submit()
+            }
+          }}
           rows={3}
           disabled={grading}
           placeholder="Escribe la nueva oración…"

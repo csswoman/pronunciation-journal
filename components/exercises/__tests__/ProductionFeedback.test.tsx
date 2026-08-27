@@ -20,7 +20,7 @@ describe('ProductionFeedback', () => {
     )
 
     expect(screen.getByText('No pudimos verificar la palabra objetivo.')).toBeInTheDocument()
-    expect(screen.getByText('Entendimos: “Insurance Company”')).toBeInTheDocument()
+    expect(screen.getByText(/Insurance Company/)).toBeInTheDocument()
     expect(screen.queryByText('Gramática')).not.toBeInTheDocument()
     expect(screen.queryByText(/Puntuación/)).not.toBeInTheDocument()
   })

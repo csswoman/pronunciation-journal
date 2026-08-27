@@ -59,7 +59,14 @@ export function buildPedagogicalFeedback(
     case 'conjugation_blank':
       return { immediate: isCorrect ? 'Correcto.' : 'Revisa la forma verbal.', expectedAnswer: exercise.answer, tip: exercise.hint, errorCode: isCorrect ? 'correct' : 'form_error', canRetry: !isCorrect, nextAction: isCorrect ? 'continue' : 'retry' }
     case 'sentence_transformation':
-      return { immediate: isCorrect ? 'Correcto.' : 'Revisa el feedback antes de continuar.', expectedAnswer: exercise.referenceAnswer, errorCode: isCorrect ? 'correct' : 'unknown', canRetry: !isCorrect, nextAction: isCorrect ? 'continue' : 'retry' }
+      return {
+        immediate: isCorrect ? 'Correcto.' : 'Revisa el feedback antes de continuar.',
+        expectedAnswer: exercise.referenceAnswer,
+        correction: exercise.referenceAnswer,
+        errorCode: isCorrect ? 'correct' : 'unknown',
+        canRetry: !isCorrect,
+        nextAction: isCorrect ? 'continue' : 'retry',
+      }
     case 'translation_es_en':
       return { immediate: isCorrect ? 'Correcto.' : 'Compara tu traducción con la referencia.', expectedAnswer: exercise.referenceEn, correction: exercise.referenceEn, errorCode: isCorrect ? 'correct' : 'meaning_choice', canRetry: !isCorrect, nextAction: isCorrect ? 'continue' : 'retry' }
     case 'cs_shadow_phrase':
