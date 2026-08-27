@@ -2,38 +2,45 @@
   "meta": {
     "eyebrow": "A1 · Conectores",
     "title": "Conjunciones",
-    "titleEmphasis": "and, but, or",
-    "goal": "Ya puedes unir ideas con and, but y or en frases simples."
+    "titleEmphasis": "and, but, or, so",
+    "goal": "Ya puedes unir ideas con and, but, or y so en frases simples y naturales."
   },
   "cards": [
     {
       "id": "a1-conjunciones-basicas-concept",
       "tag": "Idea central",
-      "title": "Conjunciones: qué expresa",
-      "lede": "Ya puedes unir ideas con and, but y or en frases simples.",
+      "title": "Conjunciones básicas: qué expresa cada una",
+      "lede": "Las conjunciones unen palabras u oraciones completas para dar fluidez a tu inglés.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
               "key": "and",
-              "value": "suma · tea and coffee",
+              "value": "suma o adición · I like tea and coffee.",
               "highlights": [
                 "and"
               ]
             },
             {
               "key": "but",
-              "value": "contraste · cheap but good",
+              "value": "contraste · It is cheap, but it is good.",
               "highlights": [
                 "but"
               ]
             },
             {
               "key": "or",
-              "value": "opción · tea or coffee?",
+              "value": "opción o alternativa · Do you want tea or coffee?",
               "highlights": [
                 "or"
+              ]
+            },
+            {
+              "key": "so",
+              "value": "resultado o consecuencia · I was tired, so I went to sleep.",
+              "highlights": [
+                "so"
               ]
             }
           ]
@@ -41,38 +48,32 @@
       ],
       "tip": {
         "label": "Objetivo:",
-        "body": "reconocer el patrón y usarlo en frases propias."
+        "body": "reconocer el conector adecuado según quieras sumar, contrastar, elegir o dar un resultado."
       }
     },
     {
       "id": "a1-conjunciones-basicas-form",
-      "tag": "Forma",
+      "tag": "Forma y puntuación",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Cuando unes dos oraciones independientes con sujeto y verbo, coloca una coma antes de la conjunción.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "and",
-              "value": "suma · tea and coffee",
-              "highlights": [
-                "and"
-              ]
+              "key": "cláusula + , + but + cláusula",
+              "value": "She studied, but she did not pass.",
+              "highlights": [", but"]
             },
             {
-              "key": "but",
-              "value": "contraste · cheap but good",
-              "highlights": [
-                "but"
-              ]
+              "key": "cláusula + , + so + cláusula",
+              "value": "It was raining, so we stayed home.",
+              "highlights": [", so"]
             },
             {
-              "key": "or",
-              "value": "opción · tea or coffee?",
-              "highlights": [
-                "or"
-              ]
+              "key": "palabra + and / or + palabra",
+              "value": "apples and oranges (sin coma entre dos palabras simples)",
+              "highlights": ["and", "or"]
             }
           ]
         }
@@ -82,22 +83,26 @@
       "id": "a1-conjunciones-basicas-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo prestando atención al conector y la puntuación.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "tea and coffee"
+              "key": "Adición",
+              "value": "He plays guitar and sings in a band."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "cheap but good"
+              "key": "Contraste",
+              "value": "I wanted to go out, but it was too cold."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "tea or coffee?"
+              "key": "Alternativa",
+              "value": "We can watch a movie, or we can play a game."
+            },
+            {
+              "key": "Resultado",
+              "value": "The shop was closed, so we went to the supermarket."
             }
           ]
         }
@@ -107,23 +112,23 @@
       "id": "a1-conjunciones-basicas-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara cómo cambia el sentido según la conjunción que elijas.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "and",
-              "rule": "suma · tea and coffee",
+              "label": "but (contraste)",
+              "rule": "opone dos ideas",
               "examples": [
-                "tea and coffee"
+                "I like the car, but it is too expensive."
               ]
             },
             {
-              "label": "but",
-              "rule": "contraste · cheap but good",
+              "label": "so (resultado)",
+              "rule": "consecuencia de la primera idea",
               "examples": [
-                "cheap but good"
+                "The car was too expensive, so I did not buy it."
               ]
             }
           ]
@@ -146,7 +151,16 @@
             {
               "variant": "good",
               "text": "I like tea, but I prefer coffee.",
-              "note": "no combines but con and"
+              "note": "no combines 'and' con 'but' en la misma oración"
+            },
+            {
+              "variant": "bad",
+              "text": "I was hungry, because I made a sandwich."
+            },
+            {
+              "variant": "good",
+              "text": "I was hungry, so I made a sandwich.",
+              "note": "hacer el sándwich es el resultado ('so'), no la causa"
             }
           ]
         }
@@ -163,26 +177,26 @@
           "rows": [
             {
               "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "value": "¿Suma (and), contraste (but), opción (or) o resultado (so)?"
             },
             {
               "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "value": "Revisa si estás uniendo palabras simples o dos cláusulas completas."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "3. Puntuación",
+              "value": "Coloca coma antes de 'but' y 'so' al unir oraciones completas."
             },
             {
               "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "value": "Lee la frase completa en voz alta."
             }
           ]
         }
       ],
       "tip": {
         "label": "Práctica:",
-        "body": "escribe una frase personal con el patrón."
+        "body": "escribe una frase personal con cada una de las 4 conjunciones."
       }
     }
   ],
@@ -194,7 +208,25 @@
         "but"
       ],
       "answer": 0,
-      "explain": "Opción → or."
+      "explain": "Para ofrecer una opción o alternativa entre dos elementos se usa 'or'."
+    },
+    {
+      "q": "I was very tired, ___ I finished the report on time.",
+      "options": [
+        "so",
+        "but"
+      ],
+      "answer": 1,
+      "explain": "'But' introduce el contraste entre estar cansado y aun así haber terminado el informe."
+    },
+    {
+      "q": "It was raining heavily, ___ we decided to stay at home.",
+      "options": [
+        "so",
+        "or"
+      ],
+      "answer": 0,
+      "explain": "'So' introduce la consecuencia o resultado lógico de que estuviera lloviendo."
     }
   ]
 }

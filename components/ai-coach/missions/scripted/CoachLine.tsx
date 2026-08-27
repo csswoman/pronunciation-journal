@@ -95,18 +95,23 @@ export function CoachLine({ line, onContinue }: Props) {
   }, [line.id, handleListen])
 
   return (
-    // Misma forma que el historial: el turno activo es la burbuja del coach
-    // con sus controles, no una tarjeta distinta.
-    <div className="flex flex-col items-start gap-1.5">
-      <span className="text-xxs font-medium uppercase tracking-wider text-fg-subtle">
-        Coach
-      </span>
-      <p className="m-0 max-w-[85%] rounded-xl bg-surface-raised px-3 py-2 text-body text-fg-muted">
+    <div className="flex flex-col items-start gap-2 animate-message-in">
+      <div className="flex items-center gap-2">
+        <span className="text-xxs font-semibold uppercase tracking-wider text-fg-subtle">
+          Coach
+        </span>
+        {isPlaying && (
+          <span className="inline-flex items-center gap-1 rounded-full bg-primary-soft px-2 py-0.5 text-xxs font-medium text-primary">
+            <Volume2 size={12} aria-hidden /> Hablando…
+          </span>
+        )}
+      </div>
+      <div className="m-0 max-w-[88%] rounded-lg border border-border-subtle bg-surface-raised/95 px-4 py-3 text-body-md text-fg shadow-xs">
         <SpokenLine text={line.text} activeIndex={highlight.activeIndex} />
-      </p>
-      <div className="flex items-center gap-2 pt-1">
+      </div>
+      <div className="flex items-center gap-2.5 pt-1.5">
         <Button
-          variant="ghost"
+          variant="secondary"
           size="sm"
           icon={<Volume2 size={16} aria-hidden />}
           onClick={handleListen}

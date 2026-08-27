@@ -113,57 +113,49 @@ export function LearnerLine({ line, onLineComplete }: Props) {
   }
 
   return (
-    // Burbuja alineada a la derecha, como el turno del estudiante en el
-    // historial: lo que cambia es que esta lleva microfono y feedback.
-    <div className="flex flex-col items-end gap-1.5">
-      <span className="text-xxs font-medium uppercase tracking-wider text-fg-subtle">
+    <div className="flex flex-col items-end gap-2 animate-message-in">
+      <span className="text-xxs font-semibold uppercase tracking-wider text-fg-subtle">
         Tu turno
       </span>
 
-      {/* Antes del intento se lee lo que hay que decir; despues, esa misma
-          frase reaparece coloreada y repetirla aqui seria duplicarla. */}
       {!attempt && (
-        <>
-          <p className="m-0 max-w-[85%] rounded-xl bg-primary-soft px-3 py-2 text-body text-fg">
+        <div className="flex flex-col items-end gap-2.5 w-full max-w-[88%]">
+          <p className="m-0 w-full rounded-lg border border-primary-subtle bg-primary-soft/95 px-4 py-3 text-body-md font-medium text-fg shadow-xs">
             {line.text}
           </p>
           <Button
             variant="primary"
             size="sm"
-            className="mt-1"
+            className="mt-0.5"
             icon={<Mic size={16} aria-hidden />}
             onClick={start}
             disabled={status === 'listening' || isScoring}
           >
             {status === 'listening' ? 'Escuchando…' : 'Hablar'}
           </Button>
-        </>
+        </div>
       )}
 
       {attempt && (
         <>
-          <div className="flex w-full max-w-[85%] flex-col gap-2 rounded-xl bg-primary-soft px-3 py-2">
+          <div className="flex w-full max-w-[88%] flex-col gap-2.5 rounded-lg border border-border-subtle bg-primary-soft/95 px-4 py-3 shadow-xs">
             <SpokenLineFeedback
               wordResults={attempt.wordResults}
               syllableMap={syllableMap}
             />
-            <p className="m-0 text-body-sm text-fg-muted">
+            <p className="m-0 text-caption font-medium text-fg-muted">
               {attempt.score}% · {feedbackHeadline(attempt.score)}
             </p>
-            {/* Una sola tarjeta articulatoria por linea: la del primer fonema
-                culpable. Volcar una por cada fallo seria ruido. */}
             {remediation && <SyllableRemediation remediation={remediation} />}
           </div>
 
-          <div className="w-full max-w-[85%]">
+          <div className="w-full max-w-[88%]">
             <SelfPlaybackAudioBar targetWord={line.text} userAudioUrl={userAudioUrl} />
           </div>
 
-          {/* Repetir es la accion secundaria y Continuar la que avanza: los
-              iconos y el peso los separan de un vistazo. */}
-          <div className="flex items-center gap-2 pt-1">
+          <div className="flex items-center gap-2.5 pt-1.5">
             <Button
-              variant="ghost"
+              variant="secondary"
               size="sm"
               icon={<RotateCcw size={16} aria-hidden />}
               onClick={handleRetry}

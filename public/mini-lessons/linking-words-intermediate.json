@@ -1,0 +1,26 @@
+{
+  "id": 55,
+  "slug": "linking-words-intermediate",
+  "level": "intermediate",
+  "category": "writing",
+  "duration": 6,
+  "title": "Conectores intermedios: Contraste, Causa y Adición",
+  "subtitle": "Escritura y debate profesional",
+  "body": "Domina conectores clave para redacción formal y presentaciones: although vs. despite, due to vs. therefore, y furthermore. Aprende su sintaxis y reglas de puntuación.",
+  "examples": [
+    {
+      "word": "Although it rained, we enjoyed the trip.",
+      "translation": "contraste con cláusula completa"
+    },
+    {
+      "word": "Despite the rain, we enjoyed the trip.",
+      "translation": "contraste con sustantivo / gerundio"
+    },
+    {
+      "word": "Sales fell; consequently, we adapted.",
+      "translation": "resultado formal con punto y coma"
+    }
+  ],
+  "tip": "Nunca digas 'despite of' (es un error común). Usa 'despite + sustantivo' o 'in spite of + sustantivo'.",
+  "href": "/mini-lessons/linking-words-intermediate"
+}

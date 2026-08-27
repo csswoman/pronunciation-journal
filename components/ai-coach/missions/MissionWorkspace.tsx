@@ -19,9 +19,20 @@ import {
 } from '@/lib/ai-practice/missions/state-machine'
 import MissionRunner from './MissionRunner'
 import MissionResult from './MissionResult'
+import { MissionHeader } from './MissionHeader'
 import ChatView from '../ChatView'
 import CustomPromptPanel from '../CustomPromptPanel'
 import type { MissionLaunch } from '@/lib/ai-practice/missions/launch'
+
+// Planned structure:
+// <MissionWorkspace>
+//   <MissionHeader />
+//   <MissionStage>
+//     <MissionRunner />
+//     <ChatView />
+//   </MissionStage>
+//   <CustomPromptPanel />
+// </MissionWorkspace>
 
 /**
  * El runner con guion se elige por `mode` a traves del registry, no con un
@@ -202,17 +213,34 @@ export function MissionWorkspace({
   }
 
   return (
-    <div className="flex h-full min-h-0 flex-col">
+    <div className="relative flex h-full min-h-0 flex-col overflow-hidden chat-bg">
+      <div className="blob blob-1" />
+      <div className="blob blob-2" />
+      <div className="blob blob-3" />
+      <div className="blob blob-4" />
+
+      {!outcome && (
+        <MissionHeader
+          mission={mission}
+          turnCount={state.turnCount}
+          maxTurns={mission.maxTurns}
+          onExit={onExitMission}
+        />
+      )}
       <div
         role="region"
         aria-label="Conversación de la misión"
         tabIndex={0}
-        className="flex-1 min-h-0 overflow-y-auto"
+        className="relative z-10 flex-1 min-h-0 overflow-y-auto pt-3 pb-8"
       >
-        <div className="p-3">
-          {outcome
-            ? <MissionResult outcome={outcome} onReviewCta={() => window.location.assign('/tracking/review')} />
-            : <MissionRunner
+        {outcome ? (
+          <div className="p-4">
+            <MissionResult outcome={outcome} onReviewCta={() => window.location.assign('/tracking/review')} />
+          </div>
+        ) : (
+          <>
+            <div className="p-3 pb-0">
+              <MissionRunner
                 mission={mission}
                 state={state}
                 onListen={() => speakPhrase(correctionPhrase)}
@@ -220,23 +248,26 @@ export function MissionWorkspace({
                 onRetry={() => setState((current) => current ? missionReducer(current, { type: 'retry_correction' }, mission) : current)}
                 onTransfer={handleTransfer}
                 isTransferRecording={isTransferRecording}
-              />}
-        </div>
-        {!outcome && <ChatView
-          messages={messages}
-          isStreaming={isStreaming}
-          onSaveWord={onSaveWord}
-          onSuggestionClick={(text) => handleMissionSubmit(text)}
-          onToolAnswer={onToolAnswer}
-          onNext={() => handleMissionSubmit('next')}
-        />}
+              />
+            </div>
+            <ChatView
+              align="top"
+              messages={messages}
+              isStreaming={isStreaming}
+              onSaveWord={onSaveWord}
+              onSuggestionClick={(text) => handleMissionSubmit(text)}
+              onToolAnswer={onToolAnswer}
+              onNext={() => handleMissionSubmit('next')}
+            />
+          </>
+        )}
       </div>
       {!outcome && (
-        <div className="shrink-0 border-t border-border-subtle bg-surface-base px-3 pb-3 pt-1">
+        <div className="relative z-10 shrink-0 border-t border-border-subtle/70 bg-surface-base/85 backdrop-blur-md px-3 pb-3 pt-1">
           <CustomPromptPanel
             onSubmit={handleMissionSubmit}
             isDisabled={isStreaming || isDisabled}
-            placeholder="Responde a la misión…"
+            placeholder={`Responde como ${mission.role.student}…`}
           />
         </div>
       )}

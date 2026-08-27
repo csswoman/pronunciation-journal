@@ -36,5 +36,5 @@ export function getPageContext(pathname: string): PageContext {
       ...universal,
     ]};
   }
-  return { label: "AI Coach", chips: universal };
+  return { label: "", chips: universal };
 }

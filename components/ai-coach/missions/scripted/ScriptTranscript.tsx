@@ -27,28 +27,28 @@ export function ScriptTranscript({ script, currentIndex }: Props) {
   return (
     <ol
       aria-label="Diálogo hasta ahora"
-      className="flex flex-col gap-2 list-none p-0 m-0"
+      className="flex flex-col gap-3.5 list-none p-0 m-0"
     >
       {past.map((line) => {
         const isCoach = line.speaker === 'coach'
         return (
           <li
             key={line.id}
-            className={cn('flex flex-col gap-0.5', isCoach ? 'items-start' : 'items-end')}
+            className={cn('flex flex-col gap-1.5', isCoach ? 'items-start' : 'items-end')}
           >
-            <span className="text-xxs font-medium uppercase tracking-wider text-fg-subtle">
+            <span className="text-xxs font-semibold uppercase tracking-wider text-fg-subtle">
               {isCoach ? 'Coach' : 'Tú'}
             </span>
-            <p
+            <div
               className={cn(
-                'max-w-[85%] rounded-xl px-3 py-2 text-caption',
+                'max-w-[88%] rounded-lg px-4 py-2.5 text-body-sm shadow-xs',
                 isCoach
-                  ? 'bg-surface-raised text-fg-muted'
-                  : 'bg-primary-soft text-fg',
+                  ? 'border border-border-subtle/80 bg-surface-raised/90 text-fg-muted'
+                  : 'bg-primary-soft/90 text-fg',
               )}
             >
               {line.text}
-            </p>
+            </div>
           </li>
         )
       })}

@@ -3,19 +3,24 @@
   "slug": "linking-words-basic",
   "level": "basic",
   "category": "writing",
-  "duration": 4,
-  "title": "Palabras de enlace: y, pero, entonces, porque",
-  "subtitle": "Escritura del dia",
-  "body": "Estos cuatro conectores son la columna vertebral de las oraciones básicas en inglés. Saber cuándo utilizar cada uno evita las corridas y la escritura entrecortada.",
+  "duration": 5,
+  "title": "Palabras de enlace: and, but, so, because",
+  "subtitle": "Escritura esencial",
+  "body": "Estos conectores son la columna vertebral de las oraciones en inglés. Aprende a articular adición, contraste, consecuencia y causa con la puntuación adecuada.",
   "examples": [
     {
       "word": "I was tired, but I finished the task.",
-      "translation": "contrastar"
+      "translation": "contraste con coma"
     },
     {
       "word": "It rained, so we stayed inside.",
-      "translation": "resultado"
+      "translation": "consecuencia / resultado"
+    },
+    {
+      "word": "We stayed home because of the storm.",
+      "translation": "causa con sustantivo"
     }
   ],
+  "tip": "Recuerda: 'because' va con sujeto + verbo ('because it rained'), mientras que 'because of' va con sustantivo ('because of the rain').",
   "href": "/mini-lessons/linking-words-basic"
 }
