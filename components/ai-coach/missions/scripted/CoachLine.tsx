@@ -3,10 +3,10 @@
 // Planned structure:
 // <CoachLine>
 //   <LineText />
-//   <ListenButton />
+//   <ReplayButton />
 //   <ContinueButton />
 
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { speak } from '@/lib/phoneme-practice/tts'
 import { resolveModelAudio } from '@/lib/speech/model-audio'
 import Button from '@/components/ui/Button'
@@ -19,6 +19,7 @@ interface Props {
 
 export function CoachLine({ line, onContinue }: Props) {
   const [isPlaying, setIsPlaying] = useState(false)
+  const autoplayedRef = useRef<string | null>(null)
 
   const handleListen = useCallback(() => {
     const source = resolveModelAudio(line)
@@ -38,6 +39,15 @@ export function CoachLine({ line, onContinue }: Props) {
     void audio.play().catch(() => speak(line.text, () => setIsPlaying(false)))
   }, [line])
 
+  // El coach habla solo al llegar su turno: la mision es escuchar y responder,
+  // no pulsar un boton para que empiece. `autoplayedRef` la ata al id de la
+  // linea, asi que un re-render no la repite pero avanzar de turno si.
+  useEffect(() => {
+    if (autoplayedRef.current === line.id) return
+    autoplayedRef.current = line.id
+    handleListen()
+  }, [line.id, handleListen])
+
   return (
     <div className="flex flex-col gap-3 rounded-xl border border-border-default bg-surface-raised p-4">
       <span className="font-caption text-xs font-semibold uppercase tracking-wider text-fg-muted">
@@ -46,7 +56,7 @@ export function CoachLine({ line, onContinue }: Props) {
       <p className="text-body text-fg">{line.text}</p>
       <div className="flex items-center gap-2">
         <Button variant="secondary" onClick={handleListen} disabled={isPlaying}>
-          {isPlaying ? 'Reproduciendo…' : 'Escuchar'}
+          {isPlaying ? 'Reproduciendo…' : 'Repetir'}
         </Button>
         <Button variant="primary" onClick={onContinue}>
           Continuar

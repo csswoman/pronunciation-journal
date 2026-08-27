@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import type { MissionCategory, OralMission } from '@/lib/ai-practice/missions/types'
+import { isScriptedMission, type MissionCategory, type OralMission } from '@/lib/ai-practice/missions/types'
 import { MissionCategoryFilter } from './MissionCategoryFilter'
 import { MissionCard } from './MissionCard'
 import { MISSION_CATEGORY_LABELS } from './mission-category-labels'
@@ -19,9 +19,13 @@ interface MissionLibraryProps {
 
 export default function MissionLibrary({ missions, onSelect }: MissionLibraryProps) {
   const [category, setCategory] = useState<MissionCategory | 'all'>('all')
-  const filteredMissions = category === 'all'
+  const visibleMissions = category === 'all'
     ? missions
     : missions.filter((mission) => mission.category === category)
+  // Las de guion primero: son las de audio, y al final de una lista larga
+  // pasaban desapercibidas.
+  const filteredMissions = [...visibleMissions].sort((a, b) =>
+    Number(isScriptedMission(b)) - Number(isScriptedMission(a)))
 
   if (missions.length === 0) {
     return (

@@ -168,7 +168,7 @@ export function MissionWorkspace({
   // El dialogo recorrido se lee dentro del propio runner (`ScriptTranscript`).
   if (scriptedMission) {
     return (
-      <div className="flex h-full min-h-0 flex-col overflow-y-auto p-3">
+      <div className="flex h-full min-h-0 flex-col">
         <Suspense fallback={null}>
           <ScriptedRunner mission={scriptedMission} />
         </Suspense>

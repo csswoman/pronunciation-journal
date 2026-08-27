@@ -97,20 +97,29 @@ export default function ScriptedMissionRunner({ mission }: Props) {
   if (isCompleted) {
     const sessionScore = scoreScriptSession(lineScores)
     return (
-      <ScriptedResult
-        mission={mission}
-        sessionScore={sessionScore}
-        previousBest={previousBest}
-      />
+      <div className="min-h-0 flex-1 overflow-y-auto p-3">
+        <ScriptedResult
+          mission={mission}
+          sessionScore={sessionScore}
+          previousBest={previousBest}
+        />
+      </div>
     )
   }
 
+  // El historial hace scroll; el turno activo queda fijo abajo. Si scrollaran
+  // juntos, la linea que toca decir se saldria de pantalla segun crece el
+  // dialogo — justo lo contrario de lo que la mision necesita.
   return (
-    <div className="flex flex-col gap-3">
-      <ScriptTranscript script={state.script} currentIndex={state.currentIndex} />
-      {line.speaker === 'coach'
-        ? <CoachLine line={line} onContinue={handleCoachContinue} />
-        : <LearnerLine line={line} onLineComplete={handleLineComplete} />}
+    <div className="flex h-full min-h-0 flex-col">
+      <div className="min-h-0 flex-1 overflow-y-auto px-3 pt-3 [scrollbar-width:thin]">
+        <ScriptTranscript script={state.script} currentIndex={state.currentIndex} />
+      </div>
+      <div className="shrink-0 border-t border-border-subtle bg-surface-base p-3">
+        {line.speaker === 'coach'
+          ? <CoachLine line={line} onContinue={handleCoachContinue} />
+          : <LearnerLine line={line} onLineComplete={handleLineComplete} />}
+      </div>
     </div>
   )
 }
