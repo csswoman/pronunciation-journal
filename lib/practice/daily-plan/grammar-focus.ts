@@ -100,7 +100,14 @@ export async function buildGrammarFocusStep(
   )
 
   const exercises = dedupeByContentId(
-    generated.map((ex) => fromGenericExercise(ex, context)),
+    generated.map((ex) => {
+      const exWithLesson = {
+        ...ex,
+        lessonSlug: deckSlug,
+        sourceRef: { source: 'grammar_deck' as const, id: deckSlug },
+      }
+      return fromGenericExercise(exWithLesson, context)
+    }),
   )
   if (exercises.length === 0) return null
 

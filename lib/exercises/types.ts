@@ -5,7 +5,7 @@ import type { ExerciseType as CanonicalExerciseType } from './taxonomy'
 
 // ── Source references ──────────────────────────────────────────────────────
 
-export type ExerciseSource = 'words' | 'text_fragments' | 'word_bank' | 'core1k' | 'lexicon' | 'false_friends' | 'tracked_items'
+export type ExerciseSource = 'words' | 'text_fragments' | 'word_bank' | 'core1k' | 'lexicon' | 'false_friends' | 'tracked_items' | 'grammar_deck'
 
 export interface ExerciseSourceRef {
   source: ExerciseSource
@@ -40,6 +40,8 @@ interface BaseGenericExercise {
   level?: CEFRLevel
   /** Concept label this exercise teaches (e.g. "grammar:present simple"). The SRS boundary canonicalizes legacy underscores. Absent for word/phoneme-sourced exercises. */
   topic?: string
+  /** Course/deck lesson slug associated with this exercise */
+  lessonSlug?: string
 }
 
 // Fill in the blank ──────────────────────────────────────────────────────────

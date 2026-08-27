@@ -74,6 +74,27 @@ describe('buildGrammarFocusStep', () => {
     expect(data.constraint?.id).toBe('second_conditional')
   })
 
+  it('prioritizes repairConstraints over the deck constraint', async () => {
+    const step = await buildGrammarFocusStep(
+      'b1-segundo-condicional',
+      words,
+      'daily',
+      ['past_simple_narrative'],
+    )
+    expect(step).not.toBeNull()
+    const first = step!.exercises.find((ex) => ex.payload.kind === 'generic')
+    expect(first).toBeDefined()
+    const data = (first!.payload as { data: { constraint?: { id: string } } }).data
+    expect(data.constraint?.id).toBe('past_simple_narrative')
+  })
+
+  it('falls back gracefully when deck has no spoken constraint (e.g. passive voice)', async () => {
+    const step = await buildGrammarFocusStep('b1-voz-pasiva-consejos', words)
+    expect(step).not.toBeNull()
+    expect(step!.kind).toBe('grammar_focus')
+    expect(step!.exercises.length).toBeGreaterThan(0)
+  })
+
   it('survives an unknown deck slug without throwing', async () => {
     await expect(buildGrammarFocusStep('does-not-exist', words)).resolves.toBeNull()
   })

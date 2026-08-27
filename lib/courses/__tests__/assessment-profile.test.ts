@@ -53,6 +53,64 @@ describe('assessment concept profile', () => {
     ])
   })
 
+  it('preserves manual signal over an assessment that has no real question evidence', () => {
+    const manualSignal: ConceptSignal = {
+      lessonSlug: 'conditionals',
+      level: 'b1',
+      title: 'Conditionals',
+      selfRating: 'unknown',
+      status: 'review',
+      correct: 0,
+      total: 0,
+      assessedAt: '2026-08-20T10:00:00.000Z',
+      source: 'manual',
+    }
+    const assessmentSignalWithoutQuestions: ConceptSignal = {
+      lessonSlug: 'conditionals',
+      level: 'b1',
+      title: 'Conditionals',
+      selfRating: 'confident',
+      status: 'mastered',
+      correct: 0,
+      total: 0,
+      assessedAt: '2026-08-20T12:00:00.000Z',
+      source: 'assessment',
+    }
+
+    const merged = mergeConceptSignals([manualSignal], [assessmentSignalWithoutQuestions])
+    expect(merged[0].status).toBe('review')
+    expect(merged[0].source).toBe('manual')
+  })
+
+  it('lets real quiz evidence override a manual signal', () => {
+    const manualSignal: ConceptSignal = {
+      lessonSlug: 'conditionals',
+      level: 'b1',
+      title: 'Conditionals',
+      selfRating: 'unknown',
+      status: 'review',
+      correct: 0,
+      total: 0,
+      assessedAt: '2026-08-20T10:00:00.000Z',
+      source: 'manual',
+    }
+    const quizEvidenceSignal: ConceptSignal = {
+      lessonSlug: 'conditionals',
+      level: 'b1',
+      title: 'Conditionals',
+      selfRating: 'confident',
+      status: 'mastered',
+      correct: 3,
+      total: 3,
+      assessedAt: '2026-08-20T12:00:00.000Z',
+      source: 'assessment',
+    }
+
+    const merged = mergeConceptSignals([manualSignal], [quizEvidenceSignal])
+    expect(merged[0].status).toBe('mastered')
+    expect(merged[0].correct).toBe(3)
+  })
+
   it('persists theory separately through the learning-state outbox path', async () => {
     const state = createEmptyState('u1', 'device-1')
     state.grammar.weakTopics = [{

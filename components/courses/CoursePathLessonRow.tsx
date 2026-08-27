@@ -5,7 +5,17 @@ import {
   CoursePathLessonStateDot,
   CoursePathSoundLabLink,
 } from "@/components/courses/CoursePathIcons";
+import { TrackingSaveButton } from "@/components/tracking/TrackingSaveButton";
 import type { CoursePathLesson, CoursePathTrackId, LessonProgressState } from "@/lib/courses/types";
+
+// Planned structure:
+// <CoursePathLessonRow>
+//   <StateDot />
+//   <LessonTitleLink />
+//   <SoundLabLink? />
+//   <TrackingHeartButton? />
+//   <StartButton? />
+// </CoursePathLessonRow>
 
 interface CoursePathLessonRowProps {
   lesson: CoursePathLesson & { state: LessonProgressState };
@@ -31,6 +41,14 @@ export default function CoursePathLessonRow({ lesson, levelId }: CoursePathLesso
         {lesson.title}
       </Link>
       {lesson.soundLab && <CoursePathSoundLabLink />}
+      {lesson.slug && (
+        <TrackingSaveButton
+          kind="lesson"
+          reference={lesson.slug}
+          title={lesson.title}
+          variant="heart"
+        />
+      )}
       {lesson.state === "current" && (
         <Link href={href} className="course-path__lk">
           Empezar lección

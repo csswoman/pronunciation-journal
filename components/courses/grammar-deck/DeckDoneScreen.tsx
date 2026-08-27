@@ -11,12 +11,14 @@
 
 import Link from "next/link";
 import { Check, RotateCcw, ArrowRight, BookOpen, LayoutList } from "@/components/icons";
+import ConceptFeedbackSelector from "@/components/courses/ConceptFeedbackSelector";
 import type { GrammarStudyDeckData } from "@/lib/courses/grammar-deck/types";
 
 interface DeckDoneScreenProps {
   deck: GrammarStudyDeckData;
   courseTitle?: string;
   lessonId?: string;
+  deckSlug?: string;
   backHref?: string;
   backLabel?: string;
   reviewedCount: number;
@@ -33,6 +35,7 @@ export function DeckDoneScreen({
   deck,
   courseTitle,
   lessonId,
+  deckSlug,
   backHref,
   backLabel = "Volver",
   quizScore,
@@ -43,6 +46,8 @@ export function DeckDoneScreen({
   onRestart,
 }: DeckDoneScreenProps) {
   const related = relatedLinks ?? deck.related;
+  const targetSlug = deckSlug ?? lessonId;
+
   return (
     <section className="grammar-deck__done" aria-live="polite">
       <div className="grammar-deck__done-intro">
@@ -53,6 +58,14 @@ export function DeckDoneScreen({
         {courseTitle && <p className="grammar-deck__done-sub">{courseTitle}</p>}
         {deck.meta.goal && <p className="grammar-deck__done-goal">{deck.meta.goal}</p>}
       </div>
+
+      {targetSlug && (
+        <ConceptFeedbackSelector
+          lessonSlug={targetSlug}
+          title={deck.meta.title}
+          className="my-1 w-full max-w-md self-center"
+        />
+      )}
 
       {quizScore && (
         <p className="grammar-deck__done-score">

@@ -8,6 +8,7 @@
 // </GrammarRuleCard>
 
 import { PracticeActionBar, PracticeContinueButton } from '@/components/practice/session/PracticeActionBar'
+import ConceptFeedbackSelector from '@/components/courses/ConceptFeedbackSelector'
 import type { DailyStep } from '@/lib/practice/types'
 
 interface Props {
@@ -36,6 +37,13 @@ export function GrammarRuleCard({ rule, onContinue }: Props) {
           </div>
         ))}
       </dl>
+
+      <ConceptFeedbackSelector
+        lessonSlug={rule.deckSlug}
+        title={rule.title}
+        className="w-full"
+        compact
+      />
 
       <PracticeActionBar>
         <PracticeContinueButton onClick={onContinue}>Practicar</PracticeContinueButton>

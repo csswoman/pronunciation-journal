@@ -161,6 +161,7 @@ export function GrammarStudyDeckBody({
           deck={deck}
           courseTitle={courseTitle}
           lessonId={lessonId}
+          deckSlug={deckSlug}
           backHref={backHref}
           backLabel={backLabel}
           reviewedCount={reviewedCount}

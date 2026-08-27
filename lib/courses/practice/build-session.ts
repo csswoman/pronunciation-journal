@@ -33,9 +33,14 @@ export async function buildCoursePracticeSession({
   const fragmentExercises = await (async () => {
     try {
       const fragments = await fetchFragmentsForDeck(deckSlug, 30)
-      return generateMixedFromFragments(fragments, FRAGMENT_SLOTS).map((ex) =>
-        fromGenericExercise(ex, 'courses'),
-      )
+      return generateMixedFromFragments(fragments, FRAGMENT_SLOTS).map((ex) => {
+        const exWithLesson = {
+          ...ex,
+          lessonSlug: deckSlug,
+          sourceRef: { source: 'grammar_deck' as const, id: deckSlug },
+        }
+        return fromGenericExercise(exWithLesson, 'courses')
+      })
     } catch {
       return []
     }

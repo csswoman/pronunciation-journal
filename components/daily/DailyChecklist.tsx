@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Sparkles } from '@/components/icons'
+import { GraduationCap, Sparkles } from '@/components/icons'
 import Button from '@/components/ui/Button'
 import PageLayout from '@/components/layout/PageLayout'
 import PageHeader from '@/components/layout/PageHeader'
@@ -194,7 +194,14 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
         </div>
       ) : null}
 
-      <div className="mt-[var(--layout-section-gap)] flex flex-col items-center text-center">
+      <div className="mt-[var(--layout-section-gap)] flex flex-col items-center gap-2 text-center">
+        <Link
+          href="/courses"
+          className="focus-ring inline-flex min-h-11 items-center gap-1.5 rounded-md px-2 font-caption font-medium text-fg-muted transition-colors hover:text-primary"
+        >
+          <GraduationCap size={14} className="text-primary" aria-hidden />
+          Ver cursos y teoría
+        </Link>
         <Link
           href="/practice"
           className="focus-ring inline-flex min-h-11 items-center gap-1.5 rounded-md px-2 font-caption font-medium text-fg-muted transition-colors hover:text-primary"

@@ -92,6 +92,51 @@ describe("compactState", () => {
     expect(out).toContain("past_simple");
     expect(out).not.toContain("conditionals");
   });
+
+  it("includes theory in review when present", () => {
+    const s = makeState({
+      theory: {
+        concepts: [
+          {
+            lessonSlug: "present-perfect",
+            level: "a2",
+            title: "Present Perfect",
+            selfRating: "familiar",
+            status: "review",
+            correct: 1,
+            total: 3,
+            assessedAt: new Date().toISOString(),
+          },
+        ],
+      },
+    });
+
+    const out = compactState(s);
+    expect(out).toContain("Theory in review: Present Perfect");
+  });
+
+  it("includes active focus topic when set", () => {
+    const s = makeState({
+      focus: {
+        level: "a2",
+        updatedAt: new Date().toISOString(),
+        thread: {
+          kind: "theory",
+          topicId: "passive-voice",
+        },
+        pinned: true,
+        source: "manual",
+        suggested: {
+          level: "a2",
+          thread: null,
+          source: "profile",
+        },
+      },
+    });
+
+    const out = compactState(s);
+    expect(out).toContain("Active focus topic: passive-voice");
+  });
 });
 
 // ─── applyExerciseResult ─────────────────────────────────────────────────────

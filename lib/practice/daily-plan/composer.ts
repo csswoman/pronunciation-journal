@@ -19,7 +19,7 @@ import { buildJournalDailyStep, shouldOfferJournalStep } from '@/lib/journal/dai
 import { normalizeFalseFriendsLevel } from '@/lib/false-friends/data'
 import { buildConnectedSpeechStep, buildFalseFriendsStep, buildReaderStep, buildSentenceBuilderStep } from './async-step-builders'
 import { getEffectiveFocus } from '@/lib/learning-focus/effective-focus'
-import { buildStudyDeckStep } from './study-deck'
+import { buildStudyDeckStep, selectStudyDeckTarget } from './study-deck'
 import { buildGrammarFocusStep } from './grammar-focus'
 import { shouldOfferMission } from './mission-cadence'
 import { isOptionalLinkStep } from './step-completion'
@@ -262,21 +262,31 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     localLearningState?.state.level.cefrEstimate,
   )
 
+  const studyDeckActiveLevel = aiState?.focus
+    ? getEffectiveFocus(aiState.focus).level
+    : activeLevel
+  const studyDeckTarget = selectStudyDeckTarget(
+    completedLessonIds,
+    studyDeckActiveLevel,
+    aiState?.theory?.concepts,
+  )
+  const lessonDeckSlug = studyDeckTarget?.lesson.slug ?? null
+
   const weakTopics = aiState?.grammar.weakTopics ?? []
   const weakDeckSlug = deckSlugForWeakTopics(weakTopics)
   const weakTopic = weakTopics.find((t) => t.errorRate > 0.4 && t.sampleCount >= 3)?.topic
   const repairConstraints = constraintIdsForDuePatterns(aiState?.errorRecurrence)
 
-  // Grammar gets a reserved slot: previously it only appeared when both
-  // connected speech and false friends failed to build, so most days shipped
-  // no grammar practice at all.
+  // Grammar gets a reserved slot: seeded by the lesson of the day (Piezas 3 & 4),
+  // falling back to weak topics or the default deck if the lesson has no slug.
+  const grammarDeckSlug = lessonDeckSlug ?? weakDeckSlug ?? DEFAULT_GRAMMAR_DECK
   const grammarStep = await buildGrammarFocusStep(
-    weakDeckSlug ?? DEFAULT_GRAMMAR_DECK,
+    grammarDeckSlug,
     reviewWords,
     'daily',
     repairConstraints,
   )
-  const sentenceSource = weakDeckSlug ?? (dayOfYear() % 2 === 0 ? 'lesson' : 'grammar-deck')
+  const sentenceSource = lessonDeckSlug ?? weakDeckSlug ?? (dayOfYear() % 2 === 0 ? 'lesson' : 'grammar-deck')
 
   const allSteps = [...newSteps]
 
@@ -318,9 +328,6 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     }
   }
 
-  const studyDeckActiveLevel = aiState?.focus
-    ? getEffectiveFocus(aiState.focus).level
-    : activeLevel
   const studyDeckStep = buildStudyDeckStep(
     completedLessonIds,
     studyDeckActiveLevel,

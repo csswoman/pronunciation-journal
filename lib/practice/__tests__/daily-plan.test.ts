@@ -77,6 +77,14 @@ vi.mock('@/lib/exercises/generators/reorder-from-fragments', () => ({
   generateReorderFromFragments: vi.fn().mockReturnValue([]),
 }))
 
+vi.mock('@/lib/practice/daily-plan/selectors', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/lib/practice/daily-plan/selectors')>()
+  return {
+    ...actual,
+    dayOfYear: vi.fn().mockReturnValue(2),
+  }
+})
+
 vi.mock('@/lib/exercises/generators/reorder-ai', () => ({
   generateReorderAI: vi.fn().mockResolvedValue([]),
 }))

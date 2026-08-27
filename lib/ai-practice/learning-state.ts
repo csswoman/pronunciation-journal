@@ -80,8 +80,17 @@ export function compactState(s: UserLearningState): string {
 
   const topSounds = s.pronunciation.strugglingSounds.slice(0, 2).map(p => p.ipa);
 
+  const reviewConcepts = (s.theory?.concepts ?? [])
+    .filter(c => c.status === "review")
+    .slice(0, 3)
+    .map(c => c.title || c.lessonSlug);
+
+  const activeFocus = s.focus?.thread?.kind === "theory" ? s.focus.thread.topicId : null;
+
   return [
     `Student: ${s.level.cefrEstimate}, conf ${s.level.confidence.toFixed(1)}`,
+    activeFocus ? `Active focus topic: ${activeFocus}` : null,
+    reviewConcepts.length ? `Theory in review: ${reviewConcepts.join(", ")}` : null,
     topGrammar.length ? `Weak grammar: ${topGrammar.join(", ")}` : null,
     topSounds.length ? `Weak sounds: ${topSounds.join(", ")}` : null,
     `Recently covered: ${s.lastSessions.slice(0, 2).map(x => x.topic).join(", ") || "none"} — reinforce if still weak, prefer new topics`,

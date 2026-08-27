@@ -24,26 +24,42 @@ export const WORD_INTRO_MAX_CARDS = 5
 /**
  * Pronunciation steps allowed per session.
  *
- * The pronunciation work in this app is good, but it was taking two or three
- * of five slots while grammar took none. An imperfect accent with fluent
- * sentences communicates; a perfect accent with freezes does not.
+ * We allow at most 2 pronunciation steps per session, split into two separate
+ * buckets (1 perception + 1 production):
+ * - Perception: minimal_pairs, listening (max 1)
+ * - Production: phoneme_focus, connected_speech (max 1)
+ *
+ * This ensures perception and production do not starve each other, aligning with
+ * the focus on hearing and replicating sounds.
  */
-export const MAX_PRONUNCIATION_STEPS = 1
+export const MAX_PERCEPTION_STEPS = 1
+export const MAX_PRODUCTION_STEPS = 1
+export const MAX_PRONUNCIATION_STEPS = 2
 
-const PRONUNCIATION_KINDS: readonly DailyStep['kind'][] = [
-  'phoneme_focus',
+export const PERCEPTION_KINDS: readonly DailyStep['kind'][] = [
   'minimal_pairs',
   'listening',
+]
+
+export const PRODUCTION_KINDS: readonly DailyStep['kind'][] = [
+  'phoneme_focus',
   'connected_speech',
 ]
 
-/** Keep at most MAX_PRONUNCIATION_STEPS pronunciation steps, order preserved. */
+/** Keep at most 1 perception and 1 production pronunciation step, order preserved. */
 export function capPronunciationSteps(steps: DailyStep[]): DailyStep[] {
-  let seen = 0
+  let perceptionCount = 0
+  let productionCount = 0
   return steps.filter((step) => {
-    if (!PRONUNCIATION_KINDS.includes(step.kind)) return true
-    seen += 1
-    return seen <= MAX_PRONUNCIATION_STEPS
+    if (PERCEPTION_KINDS.includes(step.kind)) {
+      perceptionCount += 1
+      return perceptionCount <= MAX_PERCEPTION_STEPS
+    }
+    if (PRODUCTION_KINDS.includes(step.kind)) {
+      productionCount += 1
+      return productionCount <= MAX_PRODUCTION_STEPS
+    }
+    return true
   })
 }
 

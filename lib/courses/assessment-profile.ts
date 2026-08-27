@@ -15,7 +15,27 @@ export function mergeConceptSignals(
 
   for (const signal of incoming) {
     const previous = byLesson.get(signal.lessonSlug);
-    if (!previous || signal.assessedAt >= previous.assessedAt) {
+    if (!previous) {
+      byLesson.set(signal.lessonSlug, signal);
+      continue;
+    }
+
+    // Manual signal incoming always wins
+    if (signal.source === "manual") {
+      byLesson.set(signal.lessonSlug, signal);
+      continue;
+    }
+
+    // If previous was manual, it is preserved unless incoming has real quiz/exercise evidence (total > 0)
+    if (previous.source === "manual") {
+      const hasRealEvidence = signal.total > 0;
+      if (hasRealEvidence && signal.assessedAt >= previous.assessedAt) {
+        byLesson.set(signal.lessonSlug, signal);
+      }
+      continue;
+    }
+
+    if (signal.assessedAt >= previous.assessedAt) {
       byLesson.set(signal.lessonSlug, signal);
     }
   }
@@ -42,6 +62,26 @@ export async function persistAssessmentConceptProfile(
     userId,
     updatedAt,
     level: { ...base.level, cefrEstimate: assignedLevel },
+    theory: {
+      concepts: mergeConceptSignals(base.theory?.concepts ?? [], conceptSignals),
+    },
+  };
+
+  await persistLearningState(userId, next);
+  return next;
+}
+
+export async function updateConceptSignalsWithEvidence(
+  userId: string,
+  conceptSignals: readonly ConceptSignal[],
+): Promise<UserLearningState> {
+  const local = await db.learningState.get(userId);
+  const base = local?.state ?? await getUserLearningState(userId);
+  const updatedAt = new Date().toISOString();
+  const next: UserLearningState = {
+    ...base,
+    userId,
+    updatedAt,
     theory: {
       concepts: mergeConceptSignals(base.theory?.concepts ?? [], conceptSignals),
     },

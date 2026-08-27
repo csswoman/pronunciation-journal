@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowLeft } from "@/components/icons";
+import { TrackingSaveButton } from "@/components/tracking/TrackingSaveButton";
 import type { GrammarDeckMeta } from "@/lib/courses/grammar-deck/types";
 
 interface GrammarDeckHeaderProps {
@@ -9,6 +10,7 @@ interface GrammarDeckHeaderProps {
   backHref?: string;
   backLabel?: string;
   subtitle?: string;
+  lessonSlug?: string;
 }
 
 export default function GrammarDeckHeader({
@@ -18,6 +20,7 @@ export default function GrammarDeckHeader({
   backHref = "/courses",
   backLabel = "Ruta",
   subtitle,
+  lessonSlug,
 }: GrammarDeckHeaderProps) {
   const pct = totalCount === 0 ? 0 : Math.round((reviewedCount / totalCount) * 100);
 
@@ -29,10 +32,20 @@ export default function GrammarDeckHeader({
       </Link>
       <div className="grammar-deck__identity">
         <span className="grammar-deck__eyebrow">{subtitle ?? meta.eyebrow}</span>
-        <h1 className="grammar-deck__title">
-          {meta.title}
-          {meta.titleEmphasis && <em> {meta.titleEmphasis}</em>}
-        </h1>
+        <div className="flex items-center gap-2">
+          <h1 className="grammar-deck__title">
+            {meta.title}
+            {meta.titleEmphasis && <em> {meta.titleEmphasis}</em>}
+          </h1>
+          {lessonSlug && (
+            <TrackingSaveButton
+              kind="lesson"
+              reference={lessonSlug}
+              title={meta.title}
+              variant="heart"
+            />
+          )}
+        </div>
       </div>
       <div className="grammar-deck__meta">
         <span className="grammar-deck__count">

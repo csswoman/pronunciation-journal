@@ -156,6 +156,7 @@ export default function GrammarStudyDeck({
           backHref={backHref}
           backLabel={backLabel}
           subtitle={courseTitle ? deck.meta.eyebrow : undefined}
+          lessonSlug={deckSlug ?? lessonId}
         />
 
         <GrammarStudyDeckBody
