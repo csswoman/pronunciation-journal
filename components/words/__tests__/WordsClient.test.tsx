@@ -4,7 +4,6 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 
 const lexiconMount = vi.fn();
-const trackingMount = vi.fn();
 const refresh = vi.fn();
 let mockMode: string | null = null;
 
@@ -25,13 +24,6 @@ vi.mock("@/components/words/tabs/LexiconTabRuntime", () => ({
   default: () => {
     lexiconMount();
     return <div data-testid="lexicon-runtime">Lexicon</div>;
-  },
-}));
-
-vi.mock("@/components/tracking/TrackingClient", () => ({
-  default: () => {
-    trackingMount();
-    return <div data-testid="tracking-runtime">Tracking</div>;
   },
 }));
 
@@ -66,7 +58,6 @@ const props = {
 describe("WordsClient", () => {
   beforeEach(() => {
     lexiconMount.mockClear();
-    trackingMount.mockClear();
     refresh.mockClear();
     mockMode = null;
   });
@@ -78,11 +69,11 @@ describe("WordsClient", () => {
     expect(lexiconMount).toHaveBeenCalled();
   });
 
-  it("renders Guardadas tab linking to /dictionary?mode=saved", async () => {
+  it("does not render a Guardadas tab in the topbar", async () => {
     render(<WordsClient {...props} />);
 
-    await waitFor(() => expect(screen.getByRole("link", { name: /Guardadas/i })).toBeInTheDocument());
-    expect(screen.getByRole("link", { name: /Guardadas/i })).toHaveAttribute("href", "/dictionary?mode=saved");
+    await waitFor(() => expect(screen.getByTestId("lexicon-runtime")).toBeInTheDocument());
+    expect(screen.queryByRole("link", { name: /Guardadas/i })).not.toBeInTheDocument();
   });
 
   it("uses the same runtime for learn mode", async () => {
@@ -93,12 +84,12 @@ describe("WordsClient", () => {
     expect(lexiconMount).toHaveBeenCalled();
   });
 
-  it("mounts tracking runtime when mode is saved", async () => {
+  it("falls back to the vocabulary runtime for an unknown mode", async () => {
     mockMode = "saved";
     render(<WordsClient {...props} />);
 
-    await waitFor(() => expect(screen.getByTestId("tracking-runtime")).toBeInTheDocument());
-    expect(trackingMount).toHaveBeenCalled();
+    await waitFor(() => expect(screen.getByTestId("lexicon-runtime")).toBeInTheDocument());
+    expect(lexiconMount).toHaveBeenCalled();
   });
 
   it("shows a recoverable progress error", () => {

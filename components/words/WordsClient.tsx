@@ -12,10 +12,6 @@ const LexiconTabRuntime = dynamic(() => import("./tabs/LexiconTabRuntime"), {
   loading: () => <WordsRuntimeSkeleton />,
 });
 
-const TrackingClient = dynamic(() => import("@/components/tracking/TrackingClient"), {
-  loading: () => <WordsRuntimeSkeleton />,
-});
-
 interface WordsClientProps {
   lexiconLessons: LessonViewModel[];
   lexiconLearned: number;
@@ -56,8 +52,7 @@ export function WordsClient({
   const router = useRouter();
   const searchParams = useSearchParams();
   const rawMode = searchParams.get("mode");
-  const activeMode: WordsMode =
-    rawMode === "saved" ? "saved" : rawMode === "learn" ? "learn" : "dictionary";
+  const activeMode: WordsMode = rawMode === "learn" ? "learn" : "dictionary";
 
   return (
     <PageLayout archetype="catalog">
@@ -83,23 +78,17 @@ export function WordsClient({
           </div>
         ) : null}
 
-        {activeMode === "saved" ? (
-          <div className="pt-4">
-            <TrackingClient embed />
-          </div>
-        ) : (
-          <LexiconTabRuntime
-            lexiconLessons={lexiconLessons}
-            lexiconLearned={lexiconLearned}
-            lexiconInProgress={lexiconInProgress}
-            lexiconTotal={lexiconTotal}
-            lexiconPercent={lexiconPercent}
-            dueForReview={dueForReview}
-            dueWordLabels={dueWordLabels}
-            progressUnavailable={progressUnavailable}
-            mode={activeMode}
-          />
-        )}
+        <LexiconTabRuntime
+          lexiconLessons={lexiconLessons}
+          lexiconLearned={lexiconLearned}
+          lexiconInProgress={lexiconInProgress}
+          lexiconTotal={lexiconTotal}
+          lexiconPercent={lexiconPercent}
+          dueForReview={dueForReview}
+          dueWordLabels={dueWordLabels}
+          progressUnavailable={progressUnavailable}
+          mode={activeMode}
+        />
 
       </div>
     </PageLayout>

@@ -6,7 +6,7 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { useWords } from "@/hooks/useWords";
 import { getUserDecksFull, type DeckListItem } from "@/lib/decks/queries";
 import { publicDataErrorMessage } from "@/lib/degradation/messages";
-import { toggleFavorite } from "@/lib/word-bank/queries";
+import { DuplicateWordError, toggleFavorite } from "@/lib/word-bank/queries";
 import {
   loadAddToExistingDeckModal,
   loadCreateDeckFromWordsModal,
@@ -155,7 +155,10 @@ export function useMyWordsTabRuntime(options: {
     }) => {
       try {
         await addWord(input);
-      } catch {
+      } catch (cause) {
+        // The modal renders its own "you already have this word" notice, so a
+        // duplicate must reach it rather than collapse into the generic banner.
+        if (cause instanceof DuplicateWordError) throw cause;
         setWordActionError(publicDataErrorMessage());
       }
     },

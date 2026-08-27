@@ -85,6 +85,32 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ word, jobId }, { status: 200, headers: SECURE_HEADERS });
   }
 
+  // One row per word per user: a repeat quick-add must edit the existing entry,
+  // not create a second copy. Matched case-insensitively so "Resilient" and
+  // "resilient" are the same word.
+  const { data: duplicate, error: duplicateErr } = await userClient
+    .from("word_bank")
+    .select("id, text")
+    .eq("user_id", user.id)
+    .ilike("text", text)
+    .maybeSingle();
+
+  if (duplicateErr) {
+    logServerError("Word duplicate lookup failed", duplicateErr, {
+      endpoint: "/api/words",
+      operation: "duplicateLookup",
+      userId: user.id,
+    });
+    return publicErrorResponse(500, "Failed to create word");
+  }
+
+  if (duplicate) {
+    return NextResponse.json(
+      { error: "Word already saved", code: "duplicate_word", wordId: duplicate.id, text: duplicate.text },
+      { status: 409, headers: SECURE_HEADERS }
+    );
+  }
+
   // Create new word.
   const { data: word, error: insertErr } = await userClient
     .from("word_bank")

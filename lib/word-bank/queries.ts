@@ -16,6 +16,17 @@ export async function getMyWords(): Promise<WordBankEntry[]> {
   return (data ?? []) as WordBankEntry[];
 }
 
+/**
+ * Thrown when the user already has this word saved. Carries the existing row's
+ * id so the caller can offer to edit it instead of creating a duplicate.
+ */
+export class DuplicateWordError extends Error {
+  constructor(readonly wordId: string, readonly text: string) {
+    super(`Word already saved: ${text}`);
+    this.name = "DuplicateWordError";
+  }
+}
+
 /** Quick-add: POST to API which creates the row + queues async enrichment. */
 export async function quickAddWord(input: {
   text: string;
@@ -44,6 +55,9 @@ export async function quickAddWord(input: {
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({ error: "Request failed" }));
+    if (res.status === 409 && err.code === "duplicate_word") {
+      throw new DuplicateWordError(err.wordId as string, err.text as string);
+    }
     throw new Error(err.error ?? `HTTP ${res.status}`);
   }
 
