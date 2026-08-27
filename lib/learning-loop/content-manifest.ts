@@ -141,15 +141,37 @@ function pronunciationEntries(): LearningContentManifestEntry[] {
 }
 
 function missionEntries(): LearningContentManifestEntry[] {
-  return listMissions().map((mission) => ({
-    contentId: `mission:${mission.id}`,
-    surface: 'oral_mission',
-    title: mission.communicativeGoal,
-    signals: ['objective_evidence', 'transfer'],
-    targetRefs: pronunciationRefs(mission.targets.map((target) => target.targetId)),
-    practice: { status: 'objective', adapter: 'oral_mission_launch' },
-    owners: ['pronunciation', 'activity_sessions'],
-  }))
+  return listMissions().map((mission) => {
+    const targetRefs = pronunciationRefs(mission.targets.map((target) => target.targetId))
+    // El modelo de misión permite guiones sin `targets` (puntúan por alineación
+    // de fonemas del guion, no contra un objetivo). Sin objetivo no hay a qué
+    // atribuir el progreso de pronunciación: la práctica sigue existiendo pero
+    // solo alimenta la sesión de actividad.
+    if (targetRefs.length === 0) {
+      return {
+        contentId: `mission:${mission.id}`,
+        surface: 'oral_mission' as const,
+        title: mission.communicativeGoal,
+        signals: ['objective_evidence'] as const,
+        targetRefs,
+        practice: {
+          status: 'activity_only' as const,
+          adapter: 'oral_mission_launch',
+          reason: 'Scripted mission with no pronunciation target; grades the script but has nothing to attribute progress to.',
+        },
+        owners: ['activity_sessions'] as const,
+      }
+    }
+    return {
+      contentId: `mission:${mission.id}`,
+      surface: 'oral_mission' as const,
+      title: mission.communicativeGoal,
+      signals: ['objective_evidence', 'transfer'] as const,
+      targetRefs,
+      practice: { status: 'objective' as const, adapter: 'oral_mission_launch' },
+      owners: ['pronunciation', 'activity_sessions'] as const,
+    }
+  })
 }
 
 function trackingEntries(): LearningContentManifestEntry[] {
