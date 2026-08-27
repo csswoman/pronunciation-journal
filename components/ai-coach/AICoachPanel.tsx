@@ -155,6 +155,7 @@ export default function AICoachPanel() {
                   onSendMessage={sendMessage}
                   onSaveWord={openSaveWordModal}
                   onToolAnswer={answerToolCall}
+                  onExitMission={() => { void changeMode("chat"); setActiveTab("missions"); }}
                 />
               : <AICoachHome activeTab="missions" onSendMessage={sendMessage} onSelectMission={(missionId) => { void changeMode(`mission:${missionId}`); }} isStreaming={isStreaming} prefill={inputPrefill} onPrefillConsumed={() => setInputPrefill(undefined)} />}
           </div>

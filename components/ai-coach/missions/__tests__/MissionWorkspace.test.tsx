@@ -30,8 +30,11 @@ vi.mock('@/lib/ai-coach/pronunciation', () => ({ speakPhrase }))
 vi.mock('@/lib/pronunciation/scoring', () => ({ scorePronunciation }))
 vi.mock('../../ChatView', () => ({ default: () => <output data-testid="chat-view" /> }))
 vi.mock('../scripted/ScriptedMissionRunner', () => ({
-  default: ({ mission }: { mission: { id: string } }) => (
-    <output data-testid="scripted-runner">{mission.id}</output>
+  default: ({ mission, onExit }: { mission: { id: string }; onExit: () => void }) => (
+    <>
+      <output data-testid="scripted-runner">{mission.id}</output>
+      <button type="button" onClick={onExit}>Salir</button>
+    </>
   ),
 }))
 vi.mock('../../CustomPromptPanel', () => ({
@@ -122,5 +125,21 @@ describe('MissionWorkspace — despacho por modo', () => {
 
     expect(screen.queryByTestId('scripted-runner')).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Enviar texto' })).toBeInTheDocument()
+  })
+})
+
+describe('MissionWorkspace — salida de la mision con guion', () => {
+  it('propaga la salida para que el panel limpie la mision activa', async () => {
+    const onExitMission = vi.fn()
+    render(<MissionWorkspace
+      missionId="scripted.cafe.order"
+      setMissionIntentHandler={vi.fn()}
+      onExitMission={onExitMission}
+      {...props}
+    />)
+
+    await waitFor(() => expect(screen.getByTestId('scripted-runner')).toBeInTheDocument())
+    fireEvent.click(screen.getByRole('button', { name: 'Salir' }))
+    expect(onExitMission).toHaveBeenCalledOnce()
   })
 })

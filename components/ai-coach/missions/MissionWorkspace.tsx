@@ -39,6 +39,8 @@ interface MissionWorkspaceProps {
   onSendMessage: (text: string, options?: { voice?: VoiceMetadata }) => Promise<void>
   onSaveWord: (word: string, context: string) => void
   onToolAnswer: (callId: string, result: ExerciseResult) => void
+  /** Limpia la misión activa y devuelve a la biblioteca. */
+  onExitMission?: () => void
 }
 
 /** Owns mission reducer state so the streaming transport remains state-free. */
@@ -52,6 +54,7 @@ export function MissionWorkspace({
   onSendMessage,
   onSaveWord,
   onToolAnswer,
+  onExitMission,
 }: MissionWorkspaceProps) {
   const { user } = useAuth()
   const rawMission = getMission(missionId)
@@ -170,7 +173,7 @@ export function MissionWorkspace({
     return (
       <div className="flex h-full min-h-0 flex-col">
         <Suspense fallback={null}>
-          <ScriptedRunner mission={scriptedMission} />
+          <ScriptedRunner mission={scriptedMission} onExit={onExitMission ?? (() => undefined)} />
         </Suspense>
       </div>
     )

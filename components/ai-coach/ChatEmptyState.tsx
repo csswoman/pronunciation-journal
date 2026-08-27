@@ -15,6 +15,7 @@ import { AI_COACH_EMPTY_STATE_PROMPTS } from "@/lib/ai-prompts";
 import { cn } from "@/lib/cn";
 import LiquidOrb from "./LiquidOrb";
 
+
 // Planned structure:
 // <ChatEmptyState>
 //   <EmptyHero />
@@ -99,7 +100,7 @@ export default function ChatEmptyState({ onSendMessage }: ChatEmptyStateProps) {
             <LiquidOrb size={96} intensity="idle" />
           </div>
           <div className="layout-stack-tight max-w-prose">
-            <h2 className="m-0 text-balance text-h3 text-fg">
+            <h2 className="m-0 flex items-center justify-center gap-2 text-balance text-h3 text-fg">
               Let&apos;s practice together.
             </h2>
             <p className="m-0 text-pretty text-caption leading-relaxed text-fg-muted">

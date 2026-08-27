@@ -30,12 +30,12 @@ const mission: ScriptedMission = {
 
 describe('ScriptedMissionRunner', () => {
   it('empieza por la línea del coach', () => {
-    render(<ScriptedMissionRunner mission={mission} />)
+    render(<ScriptedMissionRunner mission={mission} onExit={vi.fn()} />)
     expect(screen.getByText('What can I get you?')).toBeInTheDocument()
   })
 
   it('avanza al turno del estudiante', () => {
-    render(<ScriptedMissionRunner mission={mission} />)
+    render(<ScriptedMissionRunner mission={mission} onExit={vi.fn()} />)
     fireEvent.click(screen.getByRole('button', { name: /continuar/i }))
     expect(screen.getByText('A coffee, please.')).toBeInTheDocument()
   })

@@ -29,6 +29,8 @@ import type { WordResult } from '@/lib/types'
 
 interface Props {
   mission: ScriptedMission
+  /** Sale de la misión y vuelve a la biblioteca. */
+  onExit: () => void
 }
 
 /** Cuenta fonemas acertados de una línea, para la puntuación ponderada. */
@@ -50,7 +52,7 @@ function toLineScore(lineId: string, wordResults: WordResult[]): LineScore {
   return { lineId, correctPhonemes, totalPhonemes }
 }
 
-export default function ScriptedMissionRunner({ mission }: Props) {
+export default function ScriptedMissionRunner({ mission, onExit }: Props) {
   const { user } = useAuth()
   const startedAtRef = useRef<string>(new Date().toISOString())
   const hasPersistedRef = useRef(false)
@@ -84,6 +86,15 @@ export default function ScriptedMissionRunner({ mission }: Props) {
 
   const handleCoachContinue = useCallback(() => setState(advanceLine(state)), [state])
 
+  // Repetir arranca un guión limpio, pero conserva `previousBest`: la gracia
+  // de reintentar es ver si superas tu marca.
+  const handleRetry = useCallback(() => {
+    hasPersistedRef.current = false
+    startedAtRef.current = new Date().toISOString()
+    setLineScores([])
+    setState(createScriptState(mission.id, mission.script))
+  }, [mission])
+
   const line = currentLine(state)
   const isCompleted = state.status === 'completed' || !line
 
@@ -102,6 +113,8 @@ export default function ScriptedMissionRunner({ mission }: Props) {
           mission={mission}
           sessionScore={sessionScore}
           previousBest={previousBest}
+          onRetry={handleRetry}
+          onExit={onExit}
         />
       </div>
     )
