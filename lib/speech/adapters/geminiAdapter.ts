@@ -7,6 +7,8 @@ export class GeminiAdapter implements SpeechInputAdapter {
   private recorder: MediaRecorder | null = null;
   private chunks: Blob[] = [];
   private mimeType: string = 'audio/webm';
+  private aborted = false;
+  private inFlight: AbortController | null = null;
 
   constructor(
     private getStream: () => Promise<MediaStream>,
@@ -27,6 +29,7 @@ export class GeminiAdapter implements SpeechInputAdapter {
       ? 'audio/mp4'
       : 'audio/wav';
 
+    this.aborted = false;
     this.recorder = new MediaRecorder(stream, { mimeType: this.mimeType });
     this.recorder.ondataavailable = (e) => {
       if (e.data.size > 0) this.chunks.push(e.data);
@@ -39,21 +42,36 @@ export class GeminiAdapter implements SpeechInputAdapter {
       if (!this.recorder) return reject(new Error('Recorder not started'));
 
       this.recorder.onstop = async () => {
+        // abort() stops the recorder, which fires this handler — bail before
+        // spending a transcription request the caller no longer wants.
+        if (this.aborted) {
+          return reject(new Error(publicAiErrorMessage(undefined, 'cancelled')));
+        }
         try {
           const blob = new Blob(this.chunks, { type: this.mimeType });
           const audioDataUrl = await blobToBase64(blob);
 
           const controller = new AbortController();
-          const timeoutId = window.setTimeout(() => controller.abort(), 10000);
+          this.inFlight = controller;
+          // Gemini transcription runs a fallback chain (flash-lite → flash →
+          // latest) server-side, so allow a generous budget before giving up.
+          const timeoutId = window.setTimeout(
+            () => controller.abort(new DOMException('Transcription timed out', 'TimeoutError')),
+            30000
+          );
 
-          const res = await fetch(this.endpoint, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            signal: controller.signal,
-            body: JSON.stringify({ audioDataUrl }),
-          });
-
-          window.clearTimeout(timeoutId);
+          let res: Response;
+          try {
+            res = await fetch(this.endpoint, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              signal: controller.signal,
+              body: JSON.stringify({ audioDataUrl }),
+            });
+          } finally {
+            window.clearTimeout(timeoutId);
+            this.inFlight = null;
+          }
 
           if (!res.ok) {
             const d = await res.json().catch(() => ({}));
@@ -68,11 +86,26 @@ export class GeminiAdapter implements SpeechInputAdapter {
             source: 'gemini',
           });
         } catch (err) {
-          console.warn('[GeminiAdapter] transcription failed:', err);
-          // Network/abort/server errors are reported; the hook maps them to a
+          // A caller-driven abort() (user cancelled) is not a failure — bail
+          // quietly. Only our own timeout carries the TimeoutError name.
+          if (err instanceof DOMException && err.name === 'AbortError') {
+            return reject(new Error(publicAiErrorMessage(undefined, 'cancelled')));
+          }
+
+          const timedOut = err instanceof DOMException && err.name === 'TimeoutError';
+          console.warn(
+            `[GeminiAdapter] transcription ${timedOut ? 'timed out' : 'failed'}:`,
+            err
+          );
+          // Network/timeout/server errors are reported; the hook maps them to a
           // visible message. (An OK response with an empty transcript — i.e.
           // unintelligible audio — resolves above as transcript: '' instead.)
-          reject(new Error(publicAiErrorMessage(undefined, err instanceof Error ? err.message : '')));
+          const reason = timedOut
+            ? 'timeout'
+            : err instanceof Error
+            ? err.message
+            : '';
+          reject(new Error(publicAiErrorMessage(undefined, reason)));
         }
       };
 
@@ -81,7 +114,14 @@ export class GeminiAdapter implements SpeechInputAdapter {
   }
 
   abort(): void {
-    this.recorder?.stop();
+    this.aborted = true;
+    this.inFlight?.abort();
+    this.inFlight = null;
+    try {
+      this.recorder?.stop();
+    } catch {
+      // recorder may already be inactive
+    }
     this.recorder = null;
     this.chunks = [];
   }
