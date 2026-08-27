@@ -10,6 +10,8 @@ import {
   PhonemeChips,
   buildDetailedTip,
 } from "./PronunciationFeedbackChips";
+import { useSyllableFeedback } from "@/hooks/useSyllableFeedback";
+import { SyllableBreakdown } from "@/components/pronunciation-feedback/SyllableBreakdown";
 
 interface PronunciationFeedbackProps {
   wordResults: WordResult[];
@@ -49,6 +51,7 @@ export default function PronunciationFeedback({
     ? getLearnerTargetCopy(actionableFeedback.priority.targetId)
     : null;
   const feedbackCopyEnabled = isActionablePronunciationFeedbackCopyEnabled();
+  const syllableMap = useSyllableFeedback(wordResults);
 
   return (
     <div className="w-full animate-fadeIn space-y-5">
@@ -136,7 +139,11 @@ export default function PronunciationFeedback({
                   )}
                 </div>
 
-                {hasPhonemes && <PhonemeChips alignment={result.phonemes!.alignment} />}
+                {syllableMap.get(result.expected) ? (
+                  <SyllableBreakdown syllables={syllableMap.get(result.expected)!} />
+                ) : (
+                  hasPhonemes && <PhonemeChips alignment={result.phonemes!.alignment} />
+                )}
 
                 {tip && (
                   <p className="text-caption mt-2 leading-relaxed text-fg-muted">💡 {tip}</p>
