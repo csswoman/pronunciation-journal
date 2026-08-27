@@ -1,4 +1,8 @@
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
 import withSerwistInit from "@serwist/next";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const withSerwist = withSerwistInit({
   swSrc: "app/sw.ts",
@@ -30,22 +34,15 @@ const nextConfig = {
       nextPolyfillModuleIds.map((id) => [id, emptyNextPolyfill]),
     ),
     rules: {
-      // All illustrations are downloaded from unDraw with accent color
-      // #17B8A6 selected on their site (undraw.co) — this is NOT unDraw's
-      // default purple. SVGR's replaceAttrValues below only swaps this
-      // exact hex for currentColor, so a future illustration downloaded
-      // with a different accent color will silently ignore the theme
-      // (no error — it just keeps its baked-in fill). If that happens,
-      // either re-download with #17B8A6 selected, or add the new hex here.
+      // Illustrations come from the koboyo library (koboyo.com/icons), which
+      // ships every icon monochrome with fill="currentColor" already — so
+      // SVGR only needs to wrap them as components, with no color rewriting.
       "*.svg": {
         loaders: [
           {
             loader: "@svgr/webpack",
             options: {
               titleProp: false,
-              replaceAttrValues: {
-                "#17B8A6": "currentColor",
-              },
             },
           },
         ],
@@ -146,6 +143,43 @@ const nextConfig = {
       ...config.resolve.alias,
       ...Object.fromEntries(nextPolyfillModuleIds.map((id) => [id, false])),
     };
+    // Keep `*.svg` imports as React components under webpack too — the
+    // turbopack.rules entry above only applies to the turbopack pipeline,
+    // so without this an `import X from "*.svg"` yields an object (not a
+    // component) and rendering it throws "Element type is invalid".
+    // Next ships its own `*.svg` asset rule; scope it to `?url` imports and
+    // hand everything else to SVGR, otherwise the asset loader wins and the
+    // import resolves to an object instead of a component.
+    // Next's app-router metadata loader owns `app/icon.svg` /
+    // `app/apple-icon.svg` — never route those through SVGR. Only our own
+    // illustration imports under `components/illustrations` become React
+    // components; everything else keeps Next's default handling.
+    const illustrationsDir = join(__dirname, "components", "illustrations");
+    for (const rule of config.module.rules) {
+      if (!rule || typeof rule !== "object" || !Array.isArray(rule.oneOf)) continue;
+      for (const one of rule.oneOf) {
+        if (one?.test instanceof RegExp && one.test.test(".svg")) {
+          one.exclude = Array.isArray(one.exclude)
+            ? [...one.exclude, illustrationsDir]
+            : one.exclude
+              ? [one.exclude, illustrationsDir]
+              : [illustrationsDir];
+        }
+      }
+    }
+    config.module.rules.unshift({
+      test: /\.svg$/i,
+      issuer: /\.[jt]sx?$/,
+      include: [illustrationsDir],
+      use: [
+        {
+          loader: "@svgr/webpack",
+          options: {
+            titleProp: false,
+          },
+        },
+      ],
+    });
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,

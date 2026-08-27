@@ -26,10 +26,16 @@ describe('isNavActive', () => {
     expect(isNavActive('/practice/review', '/practice')).toBe(true)
   })
 
-  it('activates Diccionario on /dictionary and /tracking', () => {
+  it('activates Diccionario only on /dictionary, not /tracking', () => {
     expect(isNavActive('/dictionary', '/dictionary')).toBe(true)
     expect(isNavActive('/dictionary?mode=saved', '/dictionary')).toBe(true)
-    expect(isNavActive('/tracking', '/dictionary')).toBe(true)
+    expect(isNavActive('/tracking', '/dictionary')).toBe(false)
+  })
+
+  it('activates Guardadas on /tracking and /tracking/review', () => {
+    expect(isNavActive('/tracking', '/tracking')).toBe(true)
+    expect(isNavActive('/tracking/review', '/tracking')).toBe(true)
+    expect(isNavActive('/progress', '/tracking')).toBe(false)
   })
 })
 

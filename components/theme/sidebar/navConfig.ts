@@ -46,6 +46,7 @@ export const progressNav: NavSectionType = {
   label: "",
   items: [
     { name: "Progreso", href: "/progress", icon: TrendingUp },
+    { name: "Guardadas", href: "/tracking", icon: BookMarked },
   ],
 };
 

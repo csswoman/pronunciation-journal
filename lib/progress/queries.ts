@@ -597,3 +597,24 @@ export async function getProgressPageData(userId: string): Promise<ProgressPageD
     canSayAttempts,
   }
 }
+
+export interface SkillProfileSnapshot {
+  cefr: string | null
+  weakestPhonemes: WeakestPhoneme[]
+}
+
+export async function loadSkillProfile(userId: string): Promise<SkillProfileSnapshot | null> {
+  try {
+    const [insights, skillData] = await Promise.all([
+      getCoachInsights(userId),
+      getSkillProfileData(userId),
+    ])
+    const rawCefr = insights.cefrEstimate || insights.profileLevel
+    return {
+      cefr: rawCefr,
+      weakestPhonemes: skillData.weakestPhonemes,
+    }
+  } catch {
+    return null
+  }
+}

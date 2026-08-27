@@ -130,6 +130,7 @@ async function HomePageContent() {
         slug: homeLessons.primary.slug,
         title: homeLessons.primary.title,
         subtitle: homeLessons.primary.subtitle,
+        body: homeLessons.primary.body,
       }
     : null;
 

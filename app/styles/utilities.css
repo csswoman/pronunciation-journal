@@ -538,6 +538,22 @@
   box-shadow: var(--shadow-sm);
 }
 
+/* koboyo illustrations are decorative/communicative art, never functional
+   icons — they never sit inline with text at icon scale. This utility tucks
+   one into a card corner as a large, faded watermark. Pair with `relative`
+   + `overflow-hidden` on the card itself. */
+.home-illustration-watermark {
+  position: absolute;
+  top: var(--space-1);
+  right: var(--space-1);
+  z-index: 0;
+  height: 6.5rem;
+  width: auto;
+  opacity: 0.28;
+  pointer-events: none;
+  user-select: none;
+}
+
 /* Essential Words home card — CEFR outline mark is the differentiator.
    --c-vocabulario is scoped to: outline stroke, progress fill, and CTA. */
 .ew-progress-card {
