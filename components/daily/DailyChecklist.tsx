@@ -16,7 +16,8 @@ const DailyStepSession = dynamic(() => import('./DailyStepSession'), {
   loading: () => <div className="p-8 text-center text-fg-muted font-caption">Cargando sesión…</div>,
 })
 import SessionRecapCard from './SessionRecapCard'
-import { RoutinePresetSelector, type DailyRoutinePreset } from './RoutinePresetSelector'
+import DailyLessonCard from './DailyLessonCard'
+import StudyTipDisclosure from './StudyTipDisclosure'
 import { ImmersionLogCard } from './ImmersionLogCard'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { useDailyPlan, type ConceptLesson, type DailyStep } from '@/hooks/useDailyPlan'
@@ -63,7 +64,7 @@ type View =
 export default function DailyChecklist({ conceptLesson, initialStepId, streak = null }: DailyChecklistProps) {
   const router = useRouter()
   const { user } = useAuth()
-  const { plan, status, steps, getStepStatus, allDone, load, markDone, celebrate } = useDailyPlan({
+  const { plan, status, steps, allDone, load, markDone, celebrate } = useDailyPlan({
     conceptLesson,
     autoLoad: true,
   })
@@ -71,29 +72,21 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
   const [view, setView] = useState<View>({ mode: 'checklist' })
   const [sessionKey, setSessionKey] = useState(0)
   const [dueTomorrow, setDueTomorrow] = useState<number | null>(null)
-  const [routinePreset, setRoutinePreset] = useState<DailyRoutinePreset>('salas-60')
-  const [silentPeriod, setSilentPeriod] = useState(false)
-  // Prevents double-triggering the initialStepId auto-start.
+  // Prevents double-triggering the initialStepId open-on-load (e.g. from a
+  // notification link with ?step=). Doesn't auto-start anything else — the
+  // learner picks a step from the checklist.
   const autoStartedRef = useRef(false)
 
-  // Auto-start: when plan is ready, jump straight into a step — the one from the
-  // URL if present, otherwise the next actionable step. The full checklist lives
-  // on Home; /daily is the session surface, not a second copy of the list.
   useEffect(() => {
-    if (status !== 'ready' || autoStartedRef.current) return
-    const targetId = initialStepId ?? steps.find((s) => {
-      const st = getStepStatus(s.id)
-      return st !== 'done' && st !== 'resolved'
-    })?.id
-    if (!targetId) return
-    const step = steps.find((s) => s.id === targetId)
+    if (status !== 'ready' || autoStartedRef.current || !initialStepId) return
+    const step = steps.find((s) => s.id === initialStepId)
     if (!step || step.kind === 'concept' || step.kind === 'study_deck' || step.kind === 'mission') return
     autoStartedRef.current = true
     const stored = readStepStorage()
-    const exerciseIndex = stored?.stepId === targetId ? (stored.exerciseIndex ?? 0) : 0
+    const exerciseIndex = stored?.stepId === initialStepId ? (stored.exerciseIndex ?? 0) : 0
     setSessionKey((k) => k + 1)
     setView({ mode: 'step', step, exerciseIndex })
-  }, [status, steps, initialStepId, getStepStatus])
+  }, [status, steps, initialStepId])
 
   // Celebrate once when all steps are complete, and load the "due tomorrow" count.
   useEffect(() => {
@@ -159,72 +152,26 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
     )
   }
 
-  // ── Render: checklist ──────────────────────────────────────────────────────
+  // ── Render: hub sin paso activo ────────────────────────────────────────────
+  // El plan de pasos SRS vive en Home. /daily es una superficie opcional y
+  // complementaria: la lección del día (principal), una sugerencia de rutina,
+  // el log de inmersión y práctica extra. Nada aquí es obligatorio.
   return (
     <PageLayout archetype="session">
       <PageHeader
         variant="compact"
         kicker="Hoy"
         title="Sesión diaria"
-        subtitle={
-          status === 'ready'
-            ? steps.length > 0
-              ? 'Preparando el siguiente paso…'
-              : 'Tu plan se arma con cursos y sonidos.'
-            : status === 'error'
-              ? 'No se pudo preparar tu plan.'
-              : 'Preparando tu plan…'
-        }
+        subtitle="La lección de hoy y práctica extra opcional"
       />
 
       {status === 'ready' ? (
         <div className="flex flex-col gap-4">
           <SessionOpeningBanner arc={plan?.arc} />
-
-          {/* Routine Preset Selector */}
-          <RoutinePresetSelector
-            currentPreset={routinePreset}
-            onSelectPreset={setRoutinePreset}
-            silentPeriodMode={silentPeriod}
-            onToggleSilentPeriod={setSilentPeriod}
-          />
+          <DailyLessonCard lesson={conceptLesson} />
+          <StudyTipDisclosure />
         </div>
-      ) : status === 'loading' ? (
-        <div className="flex flex-col gap-4" aria-hidden>
-          <div className="h-[76px] rounded-[var(--radius-lg)] border border-border-subtle bg-surface-subtle animate-pulse" />
-          <div className="h-10 rounded-[var(--radius-md)] border border-border-subtle bg-surface-subtle animate-pulse" />
-        </div>
-      ) : null}
-
-      {status === 'ready' && steps.length === 0 && !allDone ? (
-        <div className="mt-4 flex flex-col items-center gap-3 rounded-xl border border-border-default bg-daily-card px-[var(--layout-card-pad)] py-[var(--layout-section-gap)] text-center">
-          <p className="font-body-sm text-fg-muted">
-            Se arma cuando empiezas un curso o practicas sonidos.
-          </p>
-          <Link
-            href="/courses"
-            className="focus-ring inline-flex min-h-11 items-center gap-1.5 rounded-md px-2 font-caption font-medium text-primary"
-          >
-            Explorar cursos
-          </Link>
-        </div>
-      ) : null}
-
-      {status === 'ready' && steps.length > 0 ? (
-        <div className="mt-4 flex flex-col items-center gap-2 rounded-xl border border-border-default bg-daily-card px-[var(--layout-card-pad)] py-[var(--layout-section-gap)] text-center">
-          <p className="font-body-sm text-fg-muted">
-            El siguiente paso necesita elegirse desde el plan de Inicio.
-          </p>
-          <Link
-            href="/"
-            className="focus-ring inline-flex min-h-11 items-center gap-1.5 rounded-md px-2 font-caption font-medium text-primary"
-          >
-            Ver plan del día
-          </Link>
-        </div>
-      ) : null}
-
-      {status === 'error' ? (
+      ) : status === 'error' ? (
         <div className="mt-4 flex flex-col items-center gap-3 rounded-xl border border-border-default bg-daily-card px-[var(--layout-card-pad)] py-[var(--layout-section-gap)] text-center">
           <p className="font-body-sm text-error">No se pudo preparar tu plan.</p>
           <Button type="button" variant="primary" size="md" onClick={() => void load()}>
@@ -241,7 +188,7 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
       {recommendation ? (
         <div className="mt-[var(--layout-section-gap)]">
           <p className="font-kicker mb-[var(--layout-stack-tight)] text-fg-muted">
-            Después del plan
+            Ejercicios extra de hoy
           </p>
           <RecommendedPracticeCard recommendation={recommendation} />
         </div>

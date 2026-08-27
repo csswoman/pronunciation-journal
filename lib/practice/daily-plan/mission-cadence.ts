@@ -17,3 +17,18 @@ export function shouldOfferMission(
   if (!hasSpeechRecognition) return false
   return MISSION_DAYS_OF_WEEK.includes(dayOfWeek)
 }
+
+/**
+ * Martes y jueves, alternando con los días de conversación libre (L/M/V).
+ * Repartirlos evita que una misma sesión traiga dos ejercicios orales largos.
+ */
+export const SCRIPTED_MISSION_DAYS: readonly number[] = [2, 4]
+
+export function shouldOfferScriptedMission(
+  dayOfWeek: number,
+  hasSpeechRecognition: boolean,
+): boolean {
+  if (!hasSpeechRecognition) return false
+  return SCRIPTED_MISSION_DAYS.includes(dayOfWeek)
+}
+

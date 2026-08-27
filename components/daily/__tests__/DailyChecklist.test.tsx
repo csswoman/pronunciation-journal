@@ -56,6 +56,24 @@ vi.mock('../SessionOpeningBanner', () => ({
   default: () => <div>Opening banner</div>,
 }))
 
+vi.mock('../DailyLessonCard', () => ({
+  default: ({ lesson }: { lesson: { title: string } | null }) => (
+    <div>{lesson ? `Lesson: ${lesson.title}` : 'No lesson'}</div>
+  ),
+}))
+
+vi.mock('../StudyTipDisclosure', () => ({
+  default: () => <div>Study tip</div>,
+}))
+
+vi.mock('../ImmersionLogCard', () => ({
+  ImmersionLogCard: () => <div>Immersion log</div>,
+}))
+
+vi.mock('@/components/practice/hub/RecommendedPracticeCard', () => ({
+  default: () => <div>Recommended practice</div>,
+}))
+
 vi.mock('@/components/layout/PageLayout', () => ({
   default: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }))
@@ -95,30 +113,46 @@ describe('DailyChecklist (checklist surface)', () => {
     mockState.plan = { arc: mockState.arc }
   })
 
-  it('auto-starts DailyStepSession for the next actionable step — no duplicate checklist', async () => {
-    render(<DailyChecklist conceptLesson={null} />)
-    expect(await screen.findByText('Step session')).toBeInTheDocument()
-    expect(screen.queryByLabelText('Plan de hoy')).not.toBeInTheDocument()
+  const lesson = {
+    slug: 'weak-forms',
+    title: 'Formas débiles',
+    subtitle: 'Cómo suenan de verdad',
+    body: 'Texto corto.',
+  }
+
+  it('shows the session hub by default — no auto-start into a step session', async () => {
+    render(<DailyChecklist conceptLesson={lesson} />)
+    expect(screen.queryByText('Step session')).not.toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Sesión diaria' })).toBeInTheDocument()
+    expect(await screen.findByText('Lesson: Formas débiles')).toBeInTheDocument()
+    expect(screen.getByText('Study tip')).toBeInTheDocument()
   })
 
-  it('auto-starts the step named by initialStepId over the default entry step', async () => {
+  it('no longer shows the routine preset selector or the "plan is on Home" card', () => {
+    render(<DailyChecklist conceptLesson={lesson} />)
+    expect(screen.queryByText(/Estructura de tu Sesión de Hoy/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/Modo Silencioso/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/Tu plan de pasos está en Inicio/i)).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /Ver plan del día/i })).not.toBeInTheDocument()
+  })
+
+  it('auto-starts the step named by initialStepId (e.g. from a notification link)', async () => {
     render(<DailyChecklist conceptLesson={null} initialStepId="s3" />)
     expect(await screen.findByText('Step session')).toBeInTheDocument()
   })
 
-  it('falls back to a pointer to Home when the entry step cannot auto-start (concept/study_deck)', () => {
+  it('shows the hub when the entry step cannot auto-start (concept/study_deck)', () => {
     mockState.steps = [makeStep({ id: 's1', kind: 'concept', title: 'Teoría' })]
     render(<DailyChecklist conceptLesson={null} />)
     expect(screen.queryByText('Step session')).not.toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Sesión diaria' })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /Ver plan del día/i })).toHaveAttribute('href', '/')
   })
 
-  it('shows an empty-plan pointer to courses when there are no steps', () => {
+  it('shows the empty lesson state when there is no lesson today', () => {
     mockState.steps = []
     render(<DailyChecklist conceptLesson={null} />)
     expect(screen.queryByText('Step session')).not.toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /Explorar cursos/i })).toHaveAttribute('href', '/courses')
+    expect(screen.getByText('No lesson')).toBeInTheDocument()
   })
 
   it('shows a retry action on error', () => {

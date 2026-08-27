@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import {
   shouldOfferMission,
   MISSION_DAYS_OF_WEEK,
+  shouldOfferScriptedMission,
 } from '@/lib/practice/daily-plan/mission-cadence'
 
 describe('shouldOfferMission', () => {
@@ -37,3 +38,21 @@ describe('shouldOfferMission', () => {
     }
   })
 })
+
+describe('shouldOfferScriptedMission', () => {
+  it('ofrece guión en martes y jueves', () => {
+    expect(shouldOfferScriptedMission(2, true)).toBe(true)
+    expect(shouldOfferScriptedMission(4, true)).toBe(true)
+  })
+
+  it('no compite con los días de conversación libre', () => {
+    expect(shouldOfferScriptedMission(1, true)).toBe(false)
+    expect(shouldOfferScriptedMission(3, true)).toBe(false)
+    expect(shouldOfferScriptedMission(5, true)).toBe(false)
+  })
+
+  it('no ofrece nada sin reconocimiento de voz', () => {
+    expect(shouldOfferScriptedMission(2, false)).toBe(false)
+  })
+})
+
