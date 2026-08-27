@@ -31,7 +31,8 @@ const mission: ScriptedMission = {
 describe('ScriptedMissionRunner', () => {
   it('empieza por la línea del coach', () => {
     render(<ScriptedMissionRunner mission={mission} onExit={vi.fn()} />)
-    expect(screen.getByText('What can I get you?')).toBeInTheDocument()
+    // SpokenLine parte el texto en spans por palabra: se comprueba la frase entera.
+    expect(screen.getByTestId('spoken-script-line')).toHaveTextContent('What can I get you?')
   })
 
   it('avanza al turno del estudiante', () => {

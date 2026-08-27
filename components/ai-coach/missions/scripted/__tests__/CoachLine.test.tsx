@@ -9,17 +9,23 @@ vi.mock('@/lib/phoneme-practice/tts', () => ({ speak: (...args: unknown[]) => sp
 
 const line: ScriptLine = { id: 'l1', speaker: 'coach', text: 'How are you?' }
 
+/** El texto ya no es un solo nodo: SpokenLine lo parte en spans por palabra. */
+function endSpeech() {
+  const opts = speak.mock.calls[0]?.[1] as { onEnd?: () => void } | undefined
+  act(() => opts?.onEnd?.())
+}
+
 describe('CoachLine', () => {
   beforeEach(() => speak.mockClear())
 
   it('muestra el texto de la línea', () => {
     render(<CoachLine line={line} onContinue={vi.fn()} />)
-    expect(screen.getByText('How are you?')).toBeInTheDocument()
+    expect(screen.getByTestId('spoken-script-line')).toHaveTextContent('How are you?')
   })
 
   it('reproduce la línea al pulsar repetir', () => {
     render(<CoachLine line={line} onContinue={vi.fn()} />)
-    act(() => speak.mock.calls[0]?.[1]?.())
+    endSpeech()
     speak.mockClear()
     fireEvent.click(screen.getByRole('button', { name: /repetir/i }))
     expect(speak).toHaveBeenCalled()
@@ -31,10 +37,17 @@ describe('CoachLine', () => {
     expect(speak).toHaveBeenCalledWith('How are you?', expect.anything())
   })
 
+  it('resalta la primera palabra en cuanto el coach empieza a hablar', () => {
+    render(<CoachLine line={line} onContinue={vi.fn()} />)
+    // El autoplay ya arranco la locucion al montar.
+    const first = screen.getByText(line.text.split(' ')[0] as string)
+    expect(first).toHaveAttribute('data-active', 'true')
+  })
+
   it('permite volver a reproducir despues del autoplay', () => {
     render(<CoachLine line={line} onContinue={vi.fn()} />)
     // El autoplay deja el boton deshabilitado hasta que la voz termina.
-    act(() => speak.mock.calls[0]?.[1]?.())
+    endSpeech()
     speak.mockClear()
     fireEvent.click(screen.getByRole('button', { name: /repetir/i }))
     expect(speak).toHaveBeenCalledOnce()
