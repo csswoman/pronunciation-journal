@@ -6,7 +6,7 @@ import type { UserLearningState } from '@/lib/ai-practice/learning-state'
 import { mergeConceptSignals } from '@/lib/courses/assessment-profile'
 import type { AssessmentConcept, ConceptSignal } from '@/lib/courses/concept-profile'
 import { db, ensureDbReady } from '@/lib/db'
-import { buildTheoryClaimSignal } from './claims'
+import { buildManualConceptSignal, buildTheoryClaimSignal, type ManualSignalOption } from './claims'
 import { deriveSuggestedFocus, type DeriveSuggestedFocusInput } from './derive-suggested-focus'
 import { getEffectiveFocus } from './effective-focus'
 import type { FocusLevel, FocusThread, LearningFocus } from './types'
@@ -161,6 +161,26 @@ export async function listClaimedTheoryTopics(userId: string): Promise<ConceptSi
   return (state.theory?.concepts ?? []).filter(
     (c) => c.selfRating === 'familiar' || c.selfRating === 'confident' || c.status === 'review',
   )
+}
+
+export async function saveManualConceptSignal(
+  userId: string,
+  concept: Pick<AssessmentConcept, 'lessonSlug' | 'level' | 'title'>,
+  option: ManualSignalOption,
+): Promise<void> {
+  const nowIso = new Date().toISOString()
+  const signal = buildManualConceptSignal(concept, option, nowIso)
+  const state = await readState(userId)
+  const existing = state.theory?.concepts ?? []
+  const next: UserLearningState = {
+    ...state,
+    userId,
+    updatedAt: nowIso,
+    theory: {
+      concepts: mergeConceptSignals(existing, [signal]),
+    },
+  }
+  await persistLearningState(userId, next)
 }
 
 export async function getEffectiveFocusForUser(userId: string) {

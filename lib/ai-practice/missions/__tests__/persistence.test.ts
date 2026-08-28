@@ -7,9 +7,11 @@ import { persistMissionSession } from '../persistence'
 import { createMissionState, missionReducer } from '../state-machine'
 import { deriveMissionOutcome } from '../outcome'
 import { getMission } from '../registry'
+import type { ConversationalMission } from '../types'
 import { parseMissionLaunch } from '../launch'
 
-const mission = getMission('roleplay.cafe')!
+const mission = getMission('roleplay.cafe') as ConversationalMission
+
 
 vi.mock('@/lib/pronunciation/feedback/persistence', () => ({
   persistPronunciationFeedbackEvidence: vi.fn(async () => true),

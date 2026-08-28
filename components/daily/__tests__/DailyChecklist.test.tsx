@@ -1,12 +1,12 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import type { DailyStep } from '@/hooks/useDailyPlan'
+import type { DailyPlanStatus, DailyStep } from '@/hooks/useDailyPlan'
 
 type MockArc = { soundIpa: string; topicLabel: string; sessionWords: string[] }
 
 const mockState = vi.hoisted(() => ({
-  status: 'ready' as const,
+  status: 'ready' as DailyPlanStatus,
   steps: [] as DailyStep[],
   allDone: false,
   completedCount: 0,
@@ -56,6 +56,24 @@ vi.mock('../SessionOpeningBanner', () => ({
   default: () => <div>Opening banner</div>,
 }))
 
+vi.mock('../DailyLessonCard', () => ({
+  default: ({ lesson }: { lesson: { title: string } | null }) => (
+    <div>{lesson ? `Lesson: ${lesson.title}` : 'No lesson'}</div>
+  ),
+}))
+
+vi.mock('../StudyTipDisclosure', () => ({
+  default: () => <div>Study tip</div>,
+}))
+
+vi.mock('../ImmersionLogCard', () => ({
+  ImmersionLogCard: () => <div>Immersion log</div>,
+}))
+
+vi.mock('@/components/practice/hub/RecommendedPracticeCard', () => ({
+  default: () => <div>Recommended practice</div>,
+}))
+
 vi.mock('@/components/layout/PageLayout', () => ({
   default: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }))
@@ -95,32 +113,52 @@ describe('DailyChecklist (checklist surface)', () => {
     mockState.plan = { arc: mockState.arc }
   })
 
-  it('keeps page title and renders Home-style plan card (collapsed)', () => {
-    render(<DailyChecklist conceptLesson={null} />)
-    expect(screen.getByRole('heading', { name: 'Plan diario' })).toBeInTheDocument()
-    expect(screen.getByLabelText('Plan de hoy')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Ver \d+ pasos? más/i })).toBeInTheDocument()
+  const lesson = {
+    slug: 'weak-forms',
+    title: 'Formas débiles',
+    subtitle: 'Cómo suenan de verdad',
+    body: 'Texto corto.',
+  }
+
+  it('shows the session hub by default — no auto-start into a step session', async () => {
+    render(<DailyChecklist conceptLesson={lesson} />)
+    expect(screen.queryByText('Step session')).not.toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Sesión diaria' })).toBeInTheDocument()
+    expect(await screen.findByText('Lesson: Formas débiles')).toBeInTheDocument()
+    expect(screen.getByText('Study tip')).toBeInTheDocument()
   })
 
-  it('shows recommended practice card when arc is present', () => {
-    render(<DailyChecklist conceptLesson={null} />)
-    expect(screen.getByText(/Sigue con \/h\//)).toBeInTheDocument()
+  it('no longer shows the routine preset selector or the "plan is on Home" card', () => {
+    render(<DailyChecklist conceptLesson={lesson} />)
+    expect(screen.queryByText(/Estructura de tu Sesión de Hoy/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/Modo Silencioso/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/Tu plan de pasos está en Inicio/i)).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /Ver plan del día/i })).not.toBeInTheDocument()
   })
 
-  it('hides recommended practice card when arc is missing', () => {
-    mockState.arc = undefined
-    mockState.plan = { arc: undefined }
-    render(<DailyChecklist conceptLesson={null} />)
-    expect(screen.queryByText(/Sigue con/)).not.toBeInTheDocument()
-    expect(screen.getByText(/¿Práctica libre\?/)).toBeInTheDocument()
+  it('auto-starts the step named by initialStepId (e.g. from a notification link)', async () => {
+    render(<DailyChecklist conceptLesson={null} initialStepId="s3" />)
+    expect(await screen.findByText('Step session')).toBeInTheDocument()
   })
 
-  it('enters DailyStepSession when starting the entry step', async () => {
-    const { default: userEvent } = await import('@testing-library/user-event')
-    const user = userEvent.setup()
+  it('shows the hub when the entry step cannot auto-start (concept/study_deck)', () => {
+    mockState.steps = [makeStep({ id: 's1', kind: 'concept', title: 'Teoría' })]
     render(<DailyChecklist conceptLesson={null} />)
     expect(screen.queryByText('Step session')).not.toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: /Empieza aquí/i }))
-    expect(screen.getByText('Step session')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Sesión diaria' })).toBeInTheDocument()
+  })
+
+  it('shows the empty lesson state when there is no lesson today', () => {
+    mockState.steps = []
+    render(<DailyChecklist conceptLesson={null} />)
+    expect(screen.queryByText('Step session')).not.toBeInTheDocument()
+    expect(screen.getByText('No lesson')).toBeInTheDocument()
+  })
+
+  it('shows a retry action on error', () => {
+    mockState.status = 'error'
+    render(<DailyChecklist conceptLesson={null} />)
+    expect(screen.getByText('No se pudo preparar tu plan.')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Reintentar' })).toBeInTheDocument()
   })
 })

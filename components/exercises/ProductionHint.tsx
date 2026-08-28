@@ -48,7 +48,7 @@ export function ProductionHint({ exampleSentence, exerciseId }: Props) {
         “{exampleSentence}”
       </p>
       <p className="m-0 text-caption text-fg-subtle">
-        Úsala como referencia — escribe la tuya con tus propias palabras.
+        Úsala como referencia — crea la tuya con tus propias palabras.
       </p>
     </div>
   )

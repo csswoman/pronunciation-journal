@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { speakPhrase } from '@/lib/ai-coach/pronunciation'
 import { useSharedMicStream } from '@/hooks/useSharedMicStream'
@@ -8,6 +8,8 @@ import { useSpeechInput } from '@/hooks/useSpeechInput'
 import { scorePronunciation } from '@/lib/pronunciation/scoring'
 import type { AIMessage, ExerciseResult, VoiceMetadata } from '@/lib/ai-practice/types'
 import { getMission } from '@/lib/ai-practice/missions/registry'
+import { isConversationalMission, isScriptedMission } from '@/lib/ai-practice/missions/types'
+import { getRunnerFor } from '@/lib/ai-practice/missions/runner-registry'
 import { deriveMissionOutcome } from '@/lib/ai-practice/missions/outcome'
 import { persistMissionSession } from '@/lib/ai-practice/missions/persistence'
 import {
@@ -17,9 +19,26 @@ import {
 } from '@/lib/ai-practice/missions/state-machine'
 import MissionRunner from './MissionRunner'
 import MissionResult from './MissionResult'
+import { MissionHeader } from './MissionHeader'
 import ChatView from '../ChatView'
 import CustomPromptPanel from '../CustomPromptPanel'
 import type { MissionLaunch } from '@/lib/ai-practice/missions/launch'
+
+// Planned structure:
+// <MissionWorkspace>
+//   <MissionHeader />
+//   <MissionStage>
+//     <MissionRunner />
+//     <ChatView />
+//   </MissionStage>
+//   <CustomPromptPanel />
+// </MissionWorkspace>
+
+/**
+ * El runner con guion se elige por `mode` a traves del registry, no con un
+ * `if` aqui: anadir un modo nuevo sin runner es un error de compilacion.
+ */
+const ScriptedRunner = lazy(getRunnerFor('scripted').load)
 
 interface MissionWorkspaceProps {
   missionId: string
@@ -31,6 +50,8 @@ interface MissionWorkspaceProps {
   onSendMessage: (text: string, options?: { voice?: VoiceMetadata }) => Promise<void>
   onSaveWord: (word: string, context: string) => void
   onToolAnswer: (callId: string, result: ExerciseResult) => void
+  /** Limpia la misión activa y devuelve a la biblioteca. */
+  onExitMission?: () => void
 }
 
 /** Owns mission reducer state so the streaming transport remains state-free. */
@@ -44,12 +65,16 @@ export function MissionWorkspace({
   onSendMessage,
   onSaveWord,
   onToolAnswer,
+  onExitMission,
 }: MissionWorkspaceProps) {
   const { user } = useAuth()
-  const mission = getMission(missionId)
+  const rawMission = getMission(missionId)
+  const scriptedMission = rawMission && isScriptedMission(rawMission) ? rawMission : null
+  const mission = rawMission && isConversationalMission(rawMission) ? rawMission : null
   const [state, setState] = useState<MissionState | null>(() => (
     mission ? createMissionState(mission.id) : null
   ))
+
   const persistedSessionRef = useRef<string | null>(null)
   const { getStream, release } = useSharedMicStream()
   const submitTransferAttempt = useCallback((transcript: string) => {
@@ -153,6 +178,18 @@ export function MissionWorkspace({
     void persistMissionSession(user.id, mission, state, outcome, launch).catch(() => undefined)
   }, [launch, mission, outcome, state, user?.id])
 
+  // El guion ocupa el panel entero: se practica hablando, sin caja de texto.
+  // El dialogo recorrido se lee dentro del propio runner (`ScriptTranscript`).
+  if (scriptedMission) {
+    return (
+      <div className="flex h-full min-h-0 flex-col">
+        <Suspense fallback={null}>
+          <ScriptedRunner mission={scriptedMission} onExit={onExitMission ?? (() => undefined)} />
+        </Suspense>
+      </div>
+    )
+  }
+
   if (!mission || !state) return null
 
   const isTransferRecording = speechState === 'listening'
@@ -176,17 +213,34 @@ export function MissionWorkspace({
   }
 
   return (
-    <div className="flex h-full min-h-0 flex-col">
+    <div className="relative flex h-full min-h-0 flex-col overflow-hidden chat-bg">
+      <div className="blob blob-1" />
+      <div className="blob blob-2" />
+      <div className="blob blob-3" />
+      <div className="blob blob-4" />
+
+      {!outcome && (
+        <MissionHeader
+          mission={mission}
+          turnCount={state.turnCount}
+          maxTurns={mission.maxTurns}
+          onExit={onExitMission}
+        />
+      )}
       <div
         role="region"
         aria-label="Conversación de la misión"
         tabIndex={0}
-        className="flex-1 min-h-0 overflow-y-auto"
+        className="relative z-10 flex-1 min-h-0 overflow-y-auto pt-3 pb-8"
       >
-        <div className="p-3">
-          {outcome
-            ? <MissionResult outcome={outcome} onReviewCta={() => window.location.assign('/tracking/review')} />
-            : <MissionRunner
+        {outcome ? (
+          <div className="p-4">
+            <MissionResult outcome={outcome} onReviewCta={() => window.location.assign('/tracking/review')} />
+          </div>
+        ) : (
+          <>
+            <div className="p-3 pb-0">
+              <MissionRunner
                 mission={mission}
                 state={state}
                 onListen={() => speakPhrase(correctionPhrase)}
@@ -194,23 +248,26 @@ export function MissionWorkspace({
                 onRetry={() => setState((current) => current ? missionReducer(current, { type: 'retry_correction' }, mission) : current)}
                 onTransfer={handleTransfer}
                 isTransferRecording={isTransferRecording}
-              />}
-        </div>
-        {!outcome && <ChatView
-          messages={messages}
-          isStreaming={isStreaming}
-          onSaveWord={onSaveWord}
-          onSuggestionClick={(text) => handleMissionSubmit(text)}
-          onToolAnswer={onToolAnswer}
-          onNext={() => handleMissionSubmit('next')}
-        />}
+              />
+            </div>
+            <ChatView
+              align="top"
+              messages={messages}
+              isStreaming={isStreaming}
+              onSaveWord={onSaveWord}
+              onSuggestionClick={(text) => handleMissionSubmit(text)}
+              onToolAnswer={onToolAnswer}
+              onNext={() => handleMissionSubmit('next')}
+            />
+          </>
+        )}
       </div>
       {!outcome && (
-        <div className="shrink-0 border-t border-border-subtle bg-surface-base px-3 pb-3 pt-1">
+        <div className="relative z-10 shrink-0 border-t border-border-subtle/70 bg-surface-base/85 backdrop-blur-md px-3 pb-3 pt-1">
           <CustomPromptPanel
             onSubmit={handleMissionSubmit}
             isDisabled={isStreaming || isDisabled}
-            placeholder="Responde a la misión…"
+            placeholder={`Responde como ${mission.role.student}…`}
           />
         </div>
       )}

@@ -46,7 +46,7 @@
 }
 
 .tracking-item > :last-child {
-  padding-top: 0.125rem;
+  padding-top: 0;
 }
 
 a.tracking-item {

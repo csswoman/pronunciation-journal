@@ -1,8 +1,8 @@
 // Planned structure:
 // <CoursePathRealLifeCard>
 //   <header (icon badge + title)>
-//   <phrases list>
-//   <vocab list>
+//   <phrases section>
+//   <vocab box (sunken panel with 2-col dl)>
 // </CoursePathRealLifeCard>
 
 import { CoursePathRealLifeIcon } from "@/components/courses/CoursePathIcons";
@@ -22,7 +22,7 @@ export default function CoursePathRealLifeCard({ scenario }: CoursePathRealLifeC
         <h4 className="course-path__irl-card-title">{scenario.title}</h4>
       </header>
 
-      <section className="course-path__irl-card-block" aria-labelledby={`${scenario.id}-phrases`}>
+      <section className="course-path__irl-phrases-block" aria-labelledby={`${scenario.id}-phrases`}>
         <h5 id={`${scenario.id}-phrases`} className="course-path__irl-card-label">
           Frases
         </h5>
@@ -38,15 +38,15 @@ export default function CoursePathRealLifeCard({ scenario }: CoursePathRealLifeC
         </ul>
       </section>
 
-      <section className="course-path__irl-card-block" aria-labelledby={`${scenario.id}-vocab`}>
+      <section className="course-path__irl-vocab-box" aria-labelledby={`${scenario.id}-vocab`}>
         <h5 id={`${scenario.id}-vocab`} className="course-path__irl-card-label">
           Vocabulario
         </h5>
         <dl className="course-path__irl-vocab">
           {scenario.vocab.map((item) => (
             <div key={item.word} className="course-path__irl-vocab-item">
-              <dt>{item.word}</dt>
-              <dd>{item.meaning}</dd>
+              <dt className="course-path__irl-vocab-term">{item.word}</dt>
+              <dd className="course-path__irl-vocab-def">{item.meaning}</dd>
             </div>
           ))}
         </dl>

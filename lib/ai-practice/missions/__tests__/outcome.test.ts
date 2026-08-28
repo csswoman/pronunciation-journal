@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import { getMission } from '../registry'
+import type { ConversationalMission } from '../types'
 import { createMissionState, missionReducer } from '../state-machine'
 import { deriveMissionOutcome } from '../outcome'
 import type { SpokenAttempt } from '@/lib/pronunciation/spoken-attempt'
 
-const mission = getMission('roleplay.cafe')!
+const mission = getMission('roleplay.cafe') as ConversationalMission
+
 
 function attempt(overrides: Partial<SpokenAttempt> = {}): SpokenAttempt {
   return {

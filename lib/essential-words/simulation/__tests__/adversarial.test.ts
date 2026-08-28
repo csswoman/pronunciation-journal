@@ -33,12 +33,17 @@ const cases: Array<{
 ];
 
 describe("motores adversariales", () => {
+  // Cada caso corre una simulación de 180 días sobre 300 palabras. En un
+  // worker de CI con contención, algunas mutaciones (p. ej. perfect-retention)
+  // se acercan o superan el timeout por defecto de vitest (5000ms) sin que
+  // haya ningún bug: ver adversarial.test.ts:56-72 para el mismo ajuste en
+  // ignore-placement.
   it.each(cases)("$mutation falla uno de $expected", ({ mutation, profile, expected }) => {
     const result = runAdversarialSimulation(mutation, PROFILES[profile], options);
     const failures = failedCriterionNumbers(result);
 
     expect(expected.some((criterion) => failures.includes(criterion))).toBe(true);
-  });
+  }, 15_000);
 
   it("never-usage falla la dinámica no trivial", () => {
     const result = runAdversarialSimulation(

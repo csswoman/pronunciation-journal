@@ -52,7 +52,8 @@ describe("Sidebar component", () => {
 
     // Group 1: Hoy
     expect(screen.getByRole("link", { name: /Inicio/i })).toHaveAttribute("href", "/");
-    expect(screen.getByRole("link", { name: /Diario/i })).toHaveAttribute("href", "/journal");
+    expect(screen.getByRole("link", { name: /^Diario$/i })).toHaveAttribute("href", "/journal");
+    expect(screen.getByRole("link", { name: /Plan diario/i })).toHaveAttribute("href", "/daily");
 
     // Group 2: Práctica
     expect(screen.getByRole("link", { name: /Práctica libre/i })).toHaveAttribute("href", "/practice");
@@ -64,12 +65,12 @@ describe("Sidebar component", () => {
 
     // Group 4: Progreso
     expect(screen.getByRole("link", { name: /Progreso/i })).toHaveAttribute("href", "/progress");
+    expect(screen.getByRole("link", { name: /Guardadas/i })).toHaveAttribute("href", "/tracking");
 
     // Removed direct sidebar items
     expect(screen.queryByRole("link", { name: /Laboratorio de sonidos/i })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /Palabras esenciales/i })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /Mazos/i })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /Repaso/i })).not.toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: /Guardado/i })).not.toBeInTheDocument();
   });
 });

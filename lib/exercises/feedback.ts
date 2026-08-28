@@ -1,5 +1,6 @@
 import type { EvaluationResult } from '@/lib/exercises/design'
 import type { ProductionGradeResult } from '@/lib/exercises/production-grade'
+import { describeErrorPattern } from '@/lib/exercises/error-patterns'
 import type {
   FillBlankExercise,
   GenericExercise,
@@ -48,7 +49,6 @@ export function buildPedagogicalFeedback(
         immediate: isCorrect ? 'Esa opción encaja en la oración.' : 'Lee la oración completa y vuelve a revisar el significado.',
         expectedAnswer: exercise.answer,
         correction: exercise.fullSentence,
-        explanation: exercise.definition,
         category: isCorrect ? 'sentence_context_correct' : 'sentence_context_meaning',
         errorCode: isCorrect ? 'correct' : emptyAnswer ? 'empty_answer' : 'meaning_choice',
         canRetry: !isCorrect,
@@ -59,7 +59,14 @@ export function buildPedagogicalFeedback(
     case 'conjugation_blank':
       return { immediate: isCorrect ? 'Correcto.' : 'Revisa la forma verbal.', expectedAnswer: exercise.answer, tip: exercise.hint, errorCode: isCorrect ? 'correct' : 'form_error', canRetry: !isCorrect, nextAction: isCorrect ? 'continue' : 'retry' }
     case 'sentence_transformation':
-      return { immediate: isCorrect ? 'Correcto.' : 'Revisa el feedback antes de continuar.', expectedAnswer: exercise.referenceAnswer, errorCode: isCorrect ? 'correct' : 'unknown', canRetry: !isCorrect, nextAction: isCorrect ? 'continue' : 'retry' }
+      return {
+        immediate: isCorrect ? 'Correcto.' : 'Revisa el feedback antes de continuar.',
+        expectedAnswer: exercise.referenceAnswer,
+        correction: exercise.referenceAnswer,
+        errorCode: isCorrect ? 'correct' : 'unknown',
+        canRetry: !isCorrect,
+        nextAction: isCorrect ? 'continue' : 'retry',
+      }
     case 'translation_es_en':
       return { immediate: isCorrect ? 'Correcto.' : 'Compara tu traducción con la referencia.', expectedAnswer: exercise.referenceEn, correction: exercise.referenceEn, errorCode: isCorrect ? 'correct' : 'meaning_choice', canRetry: !isCorrect, nextAction: isCorrect ? 'continue' : 'retry' }
     case 'cs_shadow_phrase':
@@ -94,10 +101,14 @@ export function pedagogicalFeedbackFromEvaluation(result: EvaluationResult): Ped
 export function pedagogicalFeedbackFromProductionGrade(
   result: ProductionGradeResult,
 ): PedagogicalFeedback {
+  const patternTip = result.errorPattern
+    ? `Patrón a vigilar: ${describeErrorPattern(result.errorPattern)}.`
+    : undefined
   return {
     immediate: result.correct ? '¡Buen trabajo!' : 'Revisa el feedback antes de continuar.',
     explanation: result.feedback,
     correction: result.corrections,
+    tip: patternTip,
     category: result.correct
       ? 'production_correct'
       : result.usedTarget
@@ -209,13 +220,26 @@ function matchPairsFeedback(
   correctPairCount?: number,
   totalPairCount = exercise.pairs.length,
 ): PedagogicalFeedback {
-  const expected = exercise.pairs.map((pair) => `${pair.left} = ${pair.right}`).join('; ')
-  const countLine = correctPairCount == null ? undefined : `${correctPairCount} de ${totalPairCount} pares correctos.`
+  const isPhoneme =
+    exercise.exerciseType?.variant === 'phoneme' ||
+    exercise.pairs.some((p) => p.right.startsWith('/') && p.right.endsWith('/'))
+
+  const expected = exercise.pairs.map((pair) => `${pair.left} → ${pair.right}`).join(' · ')
+  const countLine =
+    correctPairCount == null
+      ? undefined
+      : correctPairCount === 0
+        ? `0 de ${totalPairCount} pares correctos.`
+        : `${correctPairCount} de ${totalPairCount} pares correctos.`
+
   return {
-    immediate: isCorrect ? 'Todos los pares coinciden.' : countLine ?? 'Revisa algunos pares.',
-    explanation: isCorrect ? undefined : 'Relaciona cada elemento con el significado, sonido o forma que le corresponde.',
+    immediate: isCorrect ? 'Todos los pares coinciden correctamente.' : countLine ?? 'Revisa las parejas.',
+    explanation: isCorrect
+      ? undefined
+      : isPhoneme
+        ? 'Presta atención a la diferencia de pronunciación y símbolos fonéticos de cada palabra.'
+        : undefined,
     expectedAnswer: expected,
-    tip: 'Empieza por el par más fácil y usa el descarte para resolver los demás.',
     category: isCorrect ? 'match_pairs_correct' : 'match_pairs_mapping',
     errorCode: isCorrect ? 'correct' : 'pair_mapping',
     canRetry: !isCorrect,

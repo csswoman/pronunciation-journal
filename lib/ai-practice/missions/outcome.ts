@@ -3,7 +3,7 @@ import type { FeedbackOutcome } from '@/lib/pronunciation/feedback/types'
 import { contrastIdToTargetId, getTarget } from '@/lib/pronunciation/targets/registry'
 import type { PronunciationTargetId } from '@/lib/pronunciation/targets/types'
 import type { SpokenAttempt, SpokenAttemptOutcome } from '@/lib/pronunciation/spoken-attempt'
-import type { OralMission } from './types'
+import type { ConversationalMission } from './types'
 import type { MissionState } from './state-machine'
 
 export interface MissionOutcome {
@@ -23,8 +23,9 @@ export interface MissionOutcome {
 
 function canonicalMissionTarget(
   attempt: SpokenAttempt,
-  mission: OralMission,
+  mission: ConversationalMission,
 ): PronunciationTargetId | null {
+
   const candidates = [
     attempt.targetId,
     attempt.contrastId ? contrastIdToTargetId(attempt.contrastId) : undefined,
@@ -47,7 +48,8 @@ function normalizedScore(attempt: SpokenAttempt): number {
  * achievement is set membership only; transcript/score data cannot satisfy
  * an intent, and intent data cannot inflate oral evidence.
  */
-export function deriveMissionOutcome(state: MissionState, mission: OralMission): MissionOutcome {
+export function deriveMissionOutcome(state: MissionState, mission: ConversationalMission): MissionOutcome {
+
   const targetEvidence = new Map<string, { targetId: PronunciationTargetId; outcome: FeedbackOutcome }>()
   const previousByTarget = new Map<string, ReturnType<typeof buildPronunciationFeedback>>()
   const unscoredReasons: SpokenAttemptOutcome[] = []

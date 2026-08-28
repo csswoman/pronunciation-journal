@@ -45,9 +45,8 @@ describe('HomeWordOfDayCard favorite heart', () => {
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: 'Guardada' })).toBeInTheDocument()
+      expect(playUiCue).toHaveBeenCalledWith('save')
+      expect(button.classList.contains('animate-heart-pop')).toBe(true)
     })
-
-    expect(playUiCue).toHaveBeenCalledWith('save')
-    expect(button.classList.contains('animate-heart-pop')).toBe(true)
   })
 })

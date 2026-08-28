@@ -10,6 +10,7 @@ import {
 } from '@/lib/exercises/eligibility'
 import type { GenerationResult, SkippedEntry } from '@/lib/exercises/generation'
 import { exerciseId, pick } from '@/lib/exercises/utils'
+import { selectConstraints } from '@/lib/exercises/speech-constraints'
 
 /**
  * Free production exercises are online-only (AI grading via /api/gemini/grade-production).
@@ -20,12 +21,6 @@ const WRITTEN_PROMPTS = [
   (word: string) => `Use "${word}" in an original sentence.`,
   (word: string) => `Write a sentence that shows you understand "${word}".`,
   (word: string) => `Make your own sentence with the word "${word}".`,
-] as const
-
-const SPOKEN_PROMPTS = [
-  (word: string) => `Di una oración usando "${word}".`,
-  (word: string) => `Responde en voz alta e incluye "${word}" en una oración propia.`,
-  (word: string) => `Crea y di una oración que contenga "${word}".`,
 ] as const
 
 function promptIndex(entryId: string, modulo: number): number {
@@ -89,28 +84,43 @@ export function generateWrittenProductionFromWordBank(
 export function generateSpokenProductionFromWordBank(
   entries: WordBankEntry[],
   count: number,
+  preferredConstraintIds: readonly string[] = [],
 ): GenerationResult<SpokenProductionExercise> {
+  // Always empty: eligibility is pre-filtered into `usable` above and this
+  // mode has no pool-dependent branch in assessWordBankEntry, so nothing
+  // can newly fail once an entry has passed. Kept for GenerationResult shape
+  // parity with the other generators — revisit if eligibility ever depends
+  // on the chosen pool for this mode.
   const skipped: SkippedEntry[] = []
   const usable = entries.filter((entry) => {
     const { eligible } = assessWordBankEntry(entry, 'spoken_production')
     return eligible
   })
 
+  if (usable.length === 0) {
+    return { exercises: [], skipped }
+  }
+
   const exercises: SpokenProductionExercise[] = []
 
-  for (const entry of pick(usable, count)) {
-    const assessment = assessWordBankEntry(entry, 'spoken_production')
-    if (!assessment.eligible) {
-      skipped.push(toSkipped(entry, assessment.reasons))
-      continue
-    }
+  // Seed from the full eligible pool so a session is stable but different day to day.
+  const seed = usable.map((e) => e.id).join('|')
+  const constraints = selectConstraints(seed, count, preferredConstraintIds)
 
-    const idx = promptIndex(entry.id, SPOKEN_PROMPTS.length)
+  // The pool feeding this generator is capped upstream (WORD_REVIEW_WORD_COUNT),
+  // so reaching the session volume target requires repeating words — each
+  // repeat paired with a different constraint. Cycle both lists independently
+  // so word/constraint pairings stagger instead of colliding in lockstep.
+  for (let i = 0; i < count; i++) {
+    const entry = usable[i % usable.length]!
+    const constraint = constraints[i % constraints.length]!
+
     exercises.push({
-      id: exerciseId('spoken_production', entry.id, entry.text),
+      id: exerciseId('spoken_production', entry.id, constraint.id),
       type: 'spoken_production',
       exerciseType: { domain: 'vocabulary', mode: 'speak', variant: 'sentence' },
-      taskPrompt: SPOKEN_PROMPTS[idx](entry.text),
+      taskPrompt: constraint.promptEs(entry.text),
+      constraint,
       ...baseFields(entry),
     })
   }

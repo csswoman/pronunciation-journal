@@ -12,6 +12,7 @@ import { useWordBankProcessingPoll } from "@/hooks/word-bank/useWordBankProcessi
 import { useWordBankRealtime } from "@/hooks/word-bank/useWordBankRealtime";
 import {
   deleteWord as apiDeleteWord,
+  DuplicateWordError,
   getMyWords,
   quickAddWord as apiQuickAddWord,
   updateWordDetails as apiUpdateWordDetails,
@@ -112,10 +113,14 @@ export function useWords(): UseWordsState {
         });
 
         processingSinceRef.current.set(real.id, Date.now());
-      } catch {
+      } catch (cause) {
         // Roll back optimistic insert on failure.
         pendingAddRef.current.delete(pendingKey);
         setWords((prev) => prev.filter((word) => word.id !== tempId));
+        // A duplicate is not a failure the user should see as an error — the
+        // caller turns it into an "edit the one you have" offer, so it must
+        // survive with its wordId intact.
+        if (cause instanceof DuplicateWordError) throw cause;
         throw new Error(publicDataErrorMessage());
       }
     },

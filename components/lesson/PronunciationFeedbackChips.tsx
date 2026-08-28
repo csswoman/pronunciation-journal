@@ -3,53 +3,85 @@
 // Planned structure:
 // <PhonemeChip />
 // <PhonemeChips />
+// getPhonemeErrorDescription()
 // buildDetailedTip()
 
 import type { WordResult, PhonemeAlignment } from '@/lib/types'
 import { playIpaSound } from '@/lib/pronunciation/ipa-audio'
+import { cn } from '@/lib/cn'
 
-export function PhonemeChip({ p }: { p: PhonemeAlignment }) {
+interface PhonemeChipProps {
+  p: PhonemeAlignment
+  size?: 'sm' | 'md'
+  onSelect?: (p: PhonemeAlignment) => void
+  interactive?: boolean
+}
+
+export function getPhonemeErrorDescription(p: PhonemeAlignment): string {
+  const display = p.ipa ?? p.phoneme.toLowerCase()
+  if (p.status === 'missing') {
+    return `Falta el sonido /${display}/ (no se detectó en la pronunciación)`
+  }
+  if (p.status === 'incorrect') {
+    const heard = p.gotIpa ?? p.got ?? '?'
+    return `Se esperaba /${display}/ pero se reconoció /${heard}/`
+  }
+  return `Sonido /${display}/ correcto`
+}
+
+export function PhonemeChip({
+  p,
+  size = 'sm',
+  onSelect,
+  interactive = true,
+}: PhonemeChipProps) {
   const display = p.ipa ?? p.phoneme.toLowerCase()
   const isProblematic = p.status === 'incorrect' || p.status === 'missing'
 
-  let bg = 'color-mix(in srgb, var(--admonitions-color-tip) 20%, transparent)'
-  let border = 'var(--admonitions-color-tip)'
-  let color = 'var(--admonitions-color-tip)'
-
-  if (p.status === 'missing') {
-    bg = 'transparent'
-    border = 'var(--admonitions-color-warning)'
-    color = 'var(--admonitions-color-warning)'
-  } else if (p.status === 'incorrect') {
-    bg = 'color-mix(in srgb, var(--admonitions-color-caution) 20%, transparent)'
-    border = 'var(--admonitions-color-caution)'
-    color = 'var(--admonitions-color-caution)'
-  }
-
   const label =
     p.status === 'incorrect'
-      ? `Escuchar el modelo /${display}/; el texto reconocido fue /${p.gotIpa ?? p.got}/`
+      ? `Escuchar modelo /${display}/; reconocido /${p.gotIpa ?? p.got ?? '?'}/`
       : p.status === 'missing'
-        ? `Escuchar el modelo /${display}/; no apareció en el texto reconocido`
-        : `Escuchar el modelo /${display}/`
+        ? `Escuchar modelo /${display}/; no apareció en la pronunciación`
+        : `Escuchar modelo /${display}/`
+
+  const statusClasses =
+    p.status === 'missing'
+      ? 'bg-warning-soft/40 text-warning border-warning/60 line-through'
+      : p.status === 'incorrect'
+        ? 'bg-error-soft/40 text-error border-error/60'
+        : 'bg-success-soft/30 text-success border-success/40'
+
+  const sizeClasses =
+    size === 'sm'
+      ? 'h-6 px-1.5 text-caption font-ipa'
+      : 'h-8 px-2 text-body-sm font-ipa'
 
   return (
     <button
       type="button"
-      onClick={() => p.ipa && playIpaSound(p.ipa)}
-      aria-label={label}
-      className="inline-flex min-h-11 min-w-11 items-center justify-center gap-0.5 rounded-sm border px-2 py-1 font-ipa text-body-sm transition-colors focus-ring"
-      style={{
-        backgroundColor: bg,
-        borderColor: border,
-        color,
-        textDecoration: p.status === 'missing' ? 'line-through' : 'none',
-        cursor: 'pointer',
+      onClick={(e) => {
+        e.stopPropagation()
+        if (p.ipa) playIpaSound(p.ipa)
+        onSelect?.(p)
       }}
+      aria-label={label}
+      disabled={!interactive}
+      className={cn(
+        'inline-flex items-center justify-center gap-0.5 rounded-sm border transition-colors focus-ring',
+        sizeClasses,
+        statusClasses,
+        interactive && 'cursor-pointer hover:opacity-90 active:scale-95'
+      )}
     >
       /{display}/
       {isProblematic && (
-        <svg className="ml-0.5 w-2.5 h-2.5 opacity-50" viewBox="0 0 24 24" fill="currentColor">
+        <svg
+          className="ml-0.5 h-2.5 w-2.5 shrink-0 opacity-70"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          aria-hidden="true"
+        >
           <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z" />
         </svg>
       )}
@@ -57,12 +89,25 @@ export function PhonemeChip({ p }: { p: PhonemeAlignment }) {
   )
 }
 
-export function PhonemeChips({ alignment }: { alignment: PhonemeAlignment[] }) {
+export function PhonemeChips({
+  alignment,
+  size = 'sm',
+  onSelectPhoneme,
+}: {
+  alignment: PhonemeAlignment[]
+  size?: 'sm' | 'md'
+  onSelectPhoneme?: (p: PhonemeAlignment) => void
+}) {
   if (alignment.length === 0) return null
   return (
-    <div className="flex flex-wrap gap-1 mt-2">
+    <div className="inline-flex flex-wrap items-center gap-1">
       {alignment.map((p, i) => (
-        <PhonemeChip key={i} p={p} />
+        <PhonemeChip
+          key={i}
+          p={p}
+          size={size}
+          onSelect={onSelectPhoneme}
+        />
       ))}
     </div>
   )

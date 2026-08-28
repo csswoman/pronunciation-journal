@@ -24,6 +24,7 @@ import { startOfRollingWindow, sumWeeklyExercises } from '@/lib/progress/windows
 import { deriveWordProgressSignal } from '@/lib/word-bank/progress-state'
 import { projectProgress, type ProgressFact, type ProgressProjections } from './projections'
 import type { EvidenceAttribution } from '@/lib/practice/attribution'
+import type { CanSayAttempt } from './can-say-now'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -104,6 +105,7 @@ export interface ProgressPageData {
   coachInsights: CoachInsights
   recentSessions: ActivitySessionSummary[]
   projections: ProgressProjections
+  canSayAttempts: CanSayAttempt[]
 }
 
 // ── Queries ───────────────────────────────────────────────────────────────────
@@ -538,8 +540,36 @@ export async function getProgressProjections(userId: string): Promise<ProgressPr
   })
 }
 
+export async function getCanSayNowAttempts(userId: string): Promise<CanSayAttempt[]> {
+  const supabase = await createSupabaseServerClient()
+  const since = new Date(Date.now() - 30 * 86_400_000).toISOString()
+
+  const { data, error } = await supabase
+    .from('answer_history')
+    .select('is_correct, user_answer, answered_at, exercise_payload')
+    .eq('user_id', userId)
+    .eq('exercise_type_id', 16) // spoken_production — see EXERCISE_TYPE_IDS
+    .gte('answered_at', since)
+    .order('answered_at', { ascending: false })
+    .limit(500)
+
+  if (error || !data) return []
+
+  return data.flatMap((row) => {
+    const payload = row.exercise_payload as { constraintId?: unknown } | null
+    const constraintId = typeof payload?.constraintId === 'string' ? payload.constraintId : null
+    if (!constraintId) return []
+    return [{
+      constraintId,
+      isCorrect: Boolean(row.is_correct),
+      answeredAt: String(row.answered_at),
+      sentence: typeof row.user_answer === 'string' ? row.user_answer : undefined,
+    }]
+  })
+}
+
 export async function getProgressPageData(userId: string): Promise<ProgressPageData> {
-  const [streak, dailyCompletion, accuracy, skillProfile, weeklySummary, coachInsights, recentSessions, projections] =
+  const [streak, dailyCompletion, accuracy, skillProfile, weeklySummary, coachInsights, recentSessions, projections, canSayAttempts] =
     await Promise.all([
       getDailyStreak(userId),
       getDailyCompletionStats(userId),
@@ -549,6 +579,7 @@ export async function getProgressPageData(userId: string): Promise<ProgressPageD
       getCoachInsights(userId),
       getRecentActivitySessions(userId),
       getProgressProjections(userId),
+      getCanSayNowAttempts(userId),
     ])
 
   const fluencyProfile = await getFluencyProfile(userId, skillProfile)
@@ -563,5 +594,27 @@ export async function getProgressPageData(userId: string): Promise<ProgressPageD
     coachInsights,
     recentSessions,
     projections,
+    canSayAttempts,
+  }
+}
+
+export interface SkillProfileSnapshot {
+  cefr: string | null
+  weakestPhonemes: WeakestPhoneme[]
+}
+
+export async function loadSkillProfile(userId: string): Promise<SkillProfileSnapshot | null> {
+  try {
+    const [insights, skillData] = await Promise.all([
+      getCoachInsights(userId),
+      getSkillProfileData(userId),
+    ])
+    const rawCefr = insights.cefrEstimate || insights.profileLevel
+    return {
+      cefr: rawCefr,
+      weakestPhonemes: skillData.weakestPhonemes,
+    }
+  } catch {
+    return null
   }
 }

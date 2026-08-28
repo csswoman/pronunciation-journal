@@ -23,6 +23,40 @@ describe("compactState", () => {
     expect(out).toMatch(/Student: B2, conf 0\.8/);
   });
 
+  it("surfaces need_help concepts distinctly from ordinary review", () => {
+    const s = makeState({
+      theory: {
+        concepts: [
+          {
+            lessonSlug: "present-perfect",
+            level: "b1",
+            title: "Present perfect",
+            selfRating: "unknown",
+            status: "review",
+            correct: 0,
+            total: 0,
+            assessedAt: new Date().toISOString(),
+            source: "manual",
+          },
+          {
+            lessonSlug: "reported-speech",
+            level: "b1",
+            title: "Reported speech",
+            selfRating: "familiar",
+            status: "review",
+            correct: 2,
+            total: 3,
+            assessedAt: new Date().toISOString(),
+            source: "exercise",
+          },
+        ],
+      },
+    });
+    const out = compactState(s);
+    expect(out).toMatch(/Asked for help: Present perfect/);
+    expect(out).not.toMatch(/Asked for help: Reported speech/);
+  });
+
   it("omits Weak grammar line when no weak topics", () => {
     const out = compactState(makeState());
     expect(out).not.toMatch(/Weak grammar/);
@@ -91,6 +125,51 @@ describe("compactState", () => {
     expect(out).toContain("articles");
     expect(out).toContain("past_simple");
     expect(out).not.toContain("conditionals");
+  });
+
+  it("includes theory in review when present", () => {
+    const s = makeState({
+      theory: {
+        concepts: [
+          {
+            lessonSlug: "present-perfect",
+            level: "a2",
+            title: "Present Perfect",
+            selfRating: "familiar",
+            status: "review",
+            correct: 1,
+            total: 3,
+            assessedAt: new Date().toISOString(),
+          },
+        ],
+      },
+    });
+
+    const out = compactState(s);
+    expect(out).toContain("Theory in review: Present Perfect");
+  });
+
+  it("includes active focus topic when set", () => {
+    const s = makeState({
+      focus: {
+        level: "a2",
+        updatedAt: new Date().toISOString(),
+        thread: {
+          kind: "theory",
+          topicId: "passive-voice",
+        },
+        pinned: true,
+        source: "manual",
+        suggested: {
+          level: "a2",
+          thread: null,
+          source: "profile",
+        },
+      },
+    });
+
+    const out = compactState(s);
+    expect(out).toContain("Active focus topic: passive-voice");
   });
 });
 

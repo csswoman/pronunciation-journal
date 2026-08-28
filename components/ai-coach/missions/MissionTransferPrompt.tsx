@@ -1,13 +1,14 @@
 'use client'
 
-import type { OralMission } from '@/lib/ai-practice/missions/types'
+import type { ConversationalMission } from '@/lib/ai-practice/missions/types'
 import { PillButton } from '@/components/ui/PillButton'
 
 interface MissionTransferPromptProps {
-  mission: OralMission
+  mission: ConversationalMission
   isRecording: boolean
   onTransfer: () => void
 }
+
 
 export function MissionTransferPrompt({ mission, isRecording, onTransfer }: MissionTransferPromptProps) {
   return (

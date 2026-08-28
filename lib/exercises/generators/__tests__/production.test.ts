@@ -55,7 +55,7 @@ describe('generateSpokenProductionFromWordBank', () => {
     const { exercises } = generateSpokenProductionFromWordBank([entry()], 1)
     expect(exercises).toHaveLength(1)
     expect(exercises[0].type).toBe('spoken_production')
-    expect(exercises[0].taskPrompt).toMatch(/Di|Responde|Crea/)
+    expect(exercises[0].taskPrompt).toContain('achieve')
     expect(exercises[0].taskPrompt).not.toMatch(/Say|Speak|aloud/)
   })
 })

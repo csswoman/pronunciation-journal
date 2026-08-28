@@ -15,6 +15,18 @@ import { migrateArchivedRow } from "../srs/migrate-archived";
 import { patchActivateNow, patchMaster, patchSnooze } from "../srs/status";
 import type { JournalEntryRecord } from '../journal/types';
 import type { TrackingReviewQueue } from '../tracking/review-queue';
+import type { ScriptedMission } from '../ai-practice/missions/types';
+
+export interface GeneratedScriptRecord {
+  id: string;
+  userId: string;
+  /** La misión completa, lista para ejecutar sin volver a llamar a la API. */
+  mission: ScriptedMission;
+  /** Tema que pidió el usuario, para poder buscarlo después. */
+  topic: string;
+  createdAt: string;
+}
+
 
 /**
  * Active in-progress practice session, persisted so the user can resume
@@ -345,6 +357,8 @@ class PronunciationDB extends Dexie {
   learningItems!: Table<LearningItemRecord, string>;
   attemptLogs!: Table<AttemptLogRecord, string>;
   srsReviewEvents!: Table<SrsReviewEventRecord, string>;
+  generatedScripts!: Table<GeneratedScriptRecord, string>;
+
 
   constructor() {
     super("pronunciation-journal");
@@ -570,6 +584,11 @@ class PronunciationDB extends Dexie {
     this.version(32).stores({
       essentialWordSessionDrafts: 'userId, updatedAt, sessionId',
     });
+    // v33: Gemini-generated scripts table
+    this.version(33).stores({
+      generatedScripts: 'id, userId, [userId+createdAt], createdAt',
+    });
+
 
     this.pronunciationMastery = this.table("pronunciationMasteryV2") as Table<PronunciationMasteryRecord, string>;
     this.pronunciationCoachState = this.table("pronunciationCoachStateV2") as Table<PronunciationCoachStateRecord, string>;

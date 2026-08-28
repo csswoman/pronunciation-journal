@@ -1,14 +1,23 @@
 import { describe, expect, it, vi } from 'vitest'
-import { buildSessionTelemetry, recordDailyStepCompletion } from '@/lib/progress/activity-hub'
+import {
+  buildSessionTelemetry,
+  recordActivitySession,
+  recordDailyStepCompletion,
+} from '@/lib/progress/activity-hub'
 import { buildSessionResult } from '@/lib/practice/session-result'
 import type { ExerciseResult } from '@/lib/practice/types'
 
-const { enqueueMock } = vi.hoisted(() => ({
+const { enqueueMock, updateConceptSignalsWithEvidenceMock } = vi.hoisted(() => ({
   enqueueMock: vi.fn(),
+  updateConceptSignalsWithEvidenceMock: vi.fn().mockResolvedValue({}),
 }))
 
 vi.mock('@/lib/sync/sync-manager', () => ({
   enqueue: enqueueMock,
+}))
+
+vi.mock('@/lib/courses/assessment-profile', () => ({
+  updateConceptSignalsWithEvidence: updateConceptSignalsWithEvidenceMock,
 }))
 
 describe('buildSessionTelemetry', () => {
@@ -103,6 +112,140 @@ describe('recordDailyStepCompletion', () => {
       }),
       undefined,
       'id',
+    )
+  })
+})
+
+describe('recordActivitySession concept signals (Pieza 7)', () => {
+  it('aggregates lesson exercises and updates ConceptSignal with review status on failures', async () => {
+    enqueueMock.mockResolvedValue(1)
+    const completedAt = new Date('2026-08-27T12:00:00Z')
+    const results: ExerciseResult[] = [
+      {
+        exerciseId: 'ex-1',
+        slug: 'spoken_production',
+        exerciseTypeId: 20,
+        isCorrect: false,
+        timeMs: 1200,
+        contentId: 'c1',
+        context: 'daily',
+        completedAt,
+        sourceRef: { source: 'grammar_deck', id: 'present-perfect' },
+      },
+      {
+        exerciseId: 'ex-2',
+        slug: 'spoken_production',
+        exerciseTypeId: 20,
+        isCorrect: false,
+        timeMs: 1200,
+        contentId: 'c2',
+        context: 'daily',
+        completedAt,
+        sourceRef: { source: 'grammar_deck', id: 'present-perfect' },
+      },
+      {
+        exerciseId: 'ex-3',
+        slug: 'spoken_production',
+        exerciseTypeId: 20,
+        isCorrect: true,
+        timeMs: 1200,
+        contentId: 'c3',
+        context: 'daily',
+        completedAt,
+        sourceRef: { source: 'grammar_deck', id: 'present-perfect' },
+      },
+    ]
+
+    await recordActivitySession('user-1', {
+      practiceContext: 'daily',
+      sessionResult: buildSessionResult(results),
+    })
+
+    expect(updateConceptSignalsWithEvidenceMock).toHaveBeenCalledWith(
+      'user-1',
+      expect.arrayContaining([
+        expect.objectContaining({
+          lessonSlug: 'present-perfect',
+          status: 'review',
+          correct: 1,
+          total: 3,
+          source: 'exercise',
+        }),
+      ]),
+    )
+  })
+
+  it('updates ConceptSignal with mastered status on 100% success', async () => {
+    enqueueMock.mockResolvedValue(1)
+    const completedAt = new Date('2026-08-27T12:00:00Z')
+    const results: ExerciseResult[] = [
+      {
+        exerciseId: 'ex-1',
+        slug: 'spoken_production',
+        exerciseTypeId: 20,
+        isCorrect: true,
+        timeMs: 1200,
+        contentId: 'c1',
+        context: 'daily',
+        completedAt,
+        sourceRef: { source: 'grammar_deck', id: 'present-simple' },
+      },
+    ]
+
+    await recordActivitySession('user-1', {
+      practiceContext: 'daily',
+      sessionResult: buildSessionResult(results),
+    })
+
+    expect(updateConceptSignalsWithEvidenceMock).toHaveBeenCalledWith(
+      'user-1',
+      expect.arrayContaining([
+        expect.objectContaining({
+          lessonSlug: 'present-simple',
+          status: 'mastered',
+          correct: 1,
+          total: 1,
+          source: 'exercise',
+        }),
+      ]),
+    )
+  })
+})
+
+describe('concept evidence metadata', () => {
+  it('resolves level and title from the curriculum instead of hardcoding a1', async () => {
+    enqueueMock.mockResolvedValue(1)
+    updateConceptSignalsWithEvidenceMock.mockClear()
+    const completedAt = new Date('2026-08-27T12:00:00Z')
+    const results: ExerciseResult[] = [
+      {
+        exerciseId: 'ex-1',
+        slug: 'spoken_production',
+        exerciseTypeId: 20,
+        isCorrect: true,
+        timeMs: 1200,
+        contentId: 'c1',
+        context: 'daily',
+        completedAt,
+        sourceRef: { source: 'grammar_deck', id: 'b1-futuro-continuo' },
+      },
+    ]
+
+    await recordActivitySession('user-1', {
+      practiceContext: 'daily',
+      sessionResult: buildSessionResult(results),
+    })
+
+    expect(updateConceptSignalsWithEvidenceMock).toHaveBeenCalledWith(
+      'user-1',
+      expect.arrayContaining([
+        expect.objectContaining({
+          lessonSlug: 'b1-futuro-continuo',
+          level: 'b1',
+          title: 'Futuro continuo (will be + -ing)',
+          source: 'exercise',
+        }),
+      ]),
     )
   })
 })

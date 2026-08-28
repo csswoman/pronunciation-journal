@@ -36,7 +36,7 @@ export function ImmersionLogCard({ onLogImmersion }: ImmersionLogCardProps) {
             Registrar Inmersión Externa (Input Libre)
           </h3>
         </div>
-        <span className="text-tiny text-fg-muted">Krashen & Salas</span>
+        <span className="text-tiny text-fg-muted">Krashen</span>
       </div>
 
       <p className="text-tiny text-fg-muted">

@@ -1,5 +1,6 @@
 import React from "react";
 import { cn } from "@/lib/cn";
+import PlaceholderIllustration from "@/components/illustrations/PlaceholderIllustration";
 
 // Planned structure:
 // <EmptyState>
@@ -10,7 +11,7 @@ import { cn } from "@/lib/cn";
 // </EmptyState>
 
 interface EmptyStateProps {
-  illustration: React.ReactNode;
+  illustration?: React.ReactNode;
   title: string;
   description?: string;
   action?: React.ReactNode;
@@ -31,8 +32,16 @@ export default function EmptyState({
         className
       )}
     >
-      <div className="w-full max-w-50 text-primary" aria-hidden="true">
-        {illustration}
+      {/*
+        koboyo illustrations are hand-drawn, not a fixed grid — extents differ
+        per icon and under 4% are square. Constrain height only and let width
+        follow, or the drawing distorts. See lib/illustrations/registry.ts.
+      */}
+      <div
+        className="flex h-30 items-center justify-center text-primary [&>svg]:h-full [&>svg]:w-auto"
+        aria-hidden="true"
+      >
+        {illustration ?? <PlaceholderIllustration className="h-full w-auto" />}
       </div>
 
       <div className="flex flex-col gap-1.5">

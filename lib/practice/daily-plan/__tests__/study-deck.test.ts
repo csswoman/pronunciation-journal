@@ -1,7 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import { COURSE_PATH_CURRICULUM } from '@/lib/courses/curriculum'
 import { lessonProgressKey } from '@/lib/courses/progress'
-import { buildStudyDeckStep, selectStudyDeckTarget } from '../study-deck'
+import {
+  buildStudyDeckStep,
+  selectStudyDeckTarget,
+  shouldOfferStudyDeck,
+  shouldForceNewLesson,
+} from '../study-deck'
 import type { ConceptSignal } from '@/lib/courses/concept-profile'
 
 function signal(
@@ -46,24 +51,35 @@ describe('study-deck daily step', () => {
     expect(target?.lesson.number).toBe(1)
   })
 
-  it('builds a link to the complete route viewer without exercises', () => {
-    const step = buildStudyDeckStep(new Set(), 'a1')
+  it('builds a link to the complete route viewer on theory days (even days)', () => {
+    expect(shouldOfferStudyDeck(2)).toBe(true)
+    expect(shouldOfferStudyDeck(1)).toBe(false)
 
-    expect(step).toMatchObject({
+    const stepEven = buildStudyDeckStep(new Set(), 'a1', undefined, 2)
+    expect(stepEven).toMatchObject({
       kind: 'study_deck',
       exercises: [],
       href: '/courses/study/1?level=a1',
     })
+
+    const stepOdd = buildStudyDeckStep(new Set(), 'a1', undefined, 1)
+    expect(stepOdd).toBeNull()
   })
 
   it('prioritizes review before learn across the active and later levels', () => {
     const a1Lesson = COURSE_PATH_CURRICULUM.levels[0].units[0].lessons[2]
     const b1Lesson = COURSE_PATH_CURRICULUM.levels[2].units[0].lessons[1]
 
-    const target = selectStudyDeckTarget(new Set(), 'a1', [
-      signal(a1Lesson.slug!, 'a1', 'learn'),
-      signal(b1Lesson.slug!, 'b1', 'review'),
-    ])
+    // Day 1: not a new-lesson-cadence day, so review is allowed to win.
+    const target = selectStudyDeckTarget(
+      new Set(),
+      'a1',
+      [
+        signal(a1Lesson.slug!, 'a1', 'learn'),
+        signal(b1Lesson.slug!, 'b1', 'review'),
+      ],
+      1,
+    )
 
     expect(target).toMatchObject({ level: { id: 'b1' }, lesson: { slug: b1Lesson.slug } })
   })
@@ -130,7 +146,49 @@ describe('study-deck daily step', () => {
         verificationDueAt: past,
       },
     ]
-    const target = selectStudyDeckTarget(new Set(), 'a1', concepts)
+    const target = selectStudyDeckTarget(new Set(), 'a1', concepts, 1)
     expect(target?.lesson.slug).toBe('a1-adverbios-frecuencia')
+  })
+
+  it('forces a new lesson every 3 days even when review concepts are pending', () => {
+    expect(shouldForceNewLesson(3, 2)).toBe(true)
+    expect(shouldForceNewLesson(6, 1)).toBe(true)
+    expect(shouldForceNewLesson(1, 2)).toBe(false)
+    expect(shouldForceNewLesson(2, 2)).toBe(false)
+
+    const a1 = COURSE_PATH_CURRICULUM.levels[0]
+    const [first, second] = a1.units[0].lessons
+    const concepts = [
+      signal(first.slug!, 'a1', 'review'),
+      signal(second.slug!, 'a1', 'learn'),
+    ]
+
+    // Day 1 (not multiple of 3): review takes precedence
+    const targetDay1 = selectStudyDeckTarget(new Set(), 'a1', concepts, 1)
+    expect(targetDay1?.lesson.id).toBe(first.id)
+
+    // Day 3 (multiple of 3): forces new lesson (learn)
+    const targetDay3 = selectStudyDeckTarget(new Set(), 'a1', concepts, 3)
+    expect(targetDay3?.lesson.id).toBe(second.id)
+  })
+
+  it('forces a new lesson when accumulated pending reviews exceed threshold', () => {
+    expect(shouldForceNewLesson(1, 5)).toBe(true)
+    expect(shouldForceNewLesson(1, 6)).toBe(true)
+
+    const a1 = COURSE_PATH_CURRICULUM.levels[0]
+    const [first, second] = a1.units[0].lessons
+    const concepts = [
+      signal(first.slug!, 'a1', 'review'),
+      signal('other-1', 'a1', 'review'),
+      signal('other-2', 'a1', 'review'),
+      signal('other-3', 'a1', 'review'),
+      signal('other-4', 'a1', 'review'),
+      signal(second.slug!, 'a1', 'learn'),
+    ]
+
+    // On day 1, with 5 reviews, force new lesson
+    const target = selectStudyDeckTarget(new Set(), 'a1', concepts, 1)
+    expect(target?.lesson.id).toBe(second.id)
   })
 })

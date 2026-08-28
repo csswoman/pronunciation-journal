@@ -28,12 +28,32 @@ describe('buildWordReviewStep integration', () => {
     const entries = sampleCoreEntries()
     expect(entries.length).toBeGreaterThanOrEqual(10)
 
-    const step = buildWordReviewStep(entries)
+    const step = buildWordReviewStep(entries, 'daily')
     expect(step).not.toBeNull()
     expect(step!.kind).toBe('word_review')
-    // fill_blank(2) + dictation(2) minimum when examples exist; reorder adds more.
-    expect(step!.exercises.length).toBeGreaterThanOrEqual(4)
+    expect(step!.exercises.length).toBeGreaterThanOrEqual(3)
     expect(step!.exercises.some((e) => e.slug === 'fill_blank')).toBe(true)
+    // B3: match_pairs and sentence_dictation are excluded from the daily plan
+    expect(step!.exercises.some((e) => e.slug === 'sentence_dictation')).toBe(false)
+    expect(step!.exercises.some((e) => e.slug === 'match_pairs')).toBe(false)
+
+    // Free practice context includes them
+    const freeStep = buildWordReviewStep(entries, 'practice')
+    expect(freeStep!.exercises.some((e) => e.slug === 'sentence_dictation')).toBe(true)
+    expect(freeStep!.exercises.some((e) => e.slug === 'match_pairs')).toBe(true)
+  })
+
+  it('B7: guarantees a Rodeo (circumlocution) and a spoken tense-transform slot in spoken production', () => {
+    const entries = sampleCoreEntries()
+    const step = buildWordReviewStep(entries, 'daily')
+    expect(step).not.toBeNull()
+
+    const spokenExercises = step!.exercises.filter((e) => e.slug === 'spoken_production')
+    const constraintIds = spokenExercises.map(
+      (e) => (e.payload as { kind: 'generic'; data: { constraintId?: string } }).data.constraintId,
+    )
+    expect(constraintIds).toContain('rodeo_circumlocution')
+    expect(constraintIds).toContain('spoken_verb_transform')
   })
 
   it(`fill_blank generatability on ranks ${CORE_SAMPLE_MIN_RANK}–${CORE_SAMPLE_MAX_RANK} is ≥ ${MIN_FILL_BLANK_GENERATABILITY * 100}%`, () => {

@@ -118,9 +118,10 @@ export function GenericExerciseView({ exercise, onSubmit, focusUi = false }: Pro
       type="button"
       onClick={handleHint}
       aria-label="Mostrar pista"
-      className="flex h-8 w-8 items-center justify-center rounded-full border border-border-default bg-surface-raised text-fg-subtle transition-all duration-150 hover:border-border-strong hover:text-fg-muted cursor-pointer"
+      title="Mostrar pista"
+      className="flex h-10 w-10 items-center justify-center rounded-full border border-border-default bg-surface-raised text-fg-muted transition-all duration-150 hover:border-primary/40 hover:bg-surface-sunken hover:text-primary active:scale-95 focus-ring cursor-pointer shadow-xs"
     >
-      <Lightbulb size={14} aria-hidden />
+      <Lightbulb size={20} aria-hidden />
     </button>
   ) : null
 
@@ -129,14 +130,13 @@ export function GenericExerciseView({ exercise, onSubmit, focusUi = false }: Pro
       <ExerciseShell
         title={getGenericTitle(data.type)}
         eyebrow={topicDisplayLabel(data.topic) ?? undefined}
-        description={data.type === 'sentence_dictation' ? 'Escucha el audio y escribe exactamente lo que oyes. Puedes reproducirlo las veces que necesites.' : undefined}
         hint={getGenericHint(data)}
         result={result}
         onContinue={handleContinue}
         onRetry={handleRetry}
         onSkip={handleSkip}
         hintSlot={hintSlot}
-        surface={focusUi ? 'flat' : 'raised'}
+        surface="flat"
       >
         <div key={retryKey}>
           {content ?? <UnsupportedExercise slug={slug} onSkip={handleSkip} />}

@@ -5,8 +5,10 @@ import userEvent from '@testing-library/user-event'
 import MissionRunner from '../MissionRunner'
 import { createMissionState } from '@/lib/ai-practice/missions/state-machine'
 import { getMission } from '@/lib/ai-practice/missions/registry'
+import type { ConversationalMission } from '@/lib/ai-practice/missions/types'
 
-const mission = getMission('roleplay.cafe')!
+const mission = getMission('roleplay.cafe') as ConversationalMission
+
 
 describe('MissionRunner', () => {
   it('shows the briefing context and opening during briefing', () => {

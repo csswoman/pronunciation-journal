@@ -2,6 +2,13 @@ import type { ExerciseResult } from "./types";
 import type { CEFRLevel } from "@/lib/exercises/cefr";
 import type { ConceptSignal } from "@/lib/courses/concept-profile";
 import type { LearningFocus } from "@/lib/learning-focus/types";
+import {
+  EMPTY_RECURRENCE_QUEUE,
+  markPatternRehearsed,
+  recordErrorPattern,
+  type ErrorRecurrenceQueue,
+} from "@/lib/practice/error-recurrence";
+import type { ErrorPatternId } from "@/lib/exercises/error-patterns";
 
 export interface UserLearningState {
   userId: string;
@@ -55,6 +62,9 @@ export interface UserLearningState {
   }>;
 
   focus?: LearningFocus | null;
+
+  /** Scheduled re-exposure for production error patterns. */
+  errorRecurrence: ErrorRecurrenceQueue;
 }
 
 export function compactState(s: UserLearningState): string {
@@ -70,8 +80,28 @@ export function compactState(s: UserLearningState): string {
 
   const topSounds = s.pronunciation.strugglingSounds.slice(0, 2).map(p => p.ipa);
 
+  const theoryConcepts = s.theory?.concepts ?? [];
+
+  // "need_help" claims (selfRating "unknown" + source "manual") are the
+  // learner explicitly asking for more repetition — surface them separately
+  // so the coach treats them as a request, not just background review.
+  const helpConcepts = theoryConcepts
+    .filter(c => c.status === "review" && c.selfRating === "unknown" && c.source === "manual")
+    .slice(0, 3)
+    .map(c => c.title || c.lessonSlug);
+
+  const reviewConcepts = theoryConcepts
+    .filter(c => c.status === "review" && !(c.selfRating === "unknown" && c.source === "manual"))
+    .slice(0, 3)
+    .map(c => c.title || c.lessonSlug);
+
+  const activeFocus = s.focus?.thread?.kind === "theory" ? s.focus.thread.topicId : null;
+
   return [
     `Student: ${s.level.cefrEstimate}, conf ${s.level.confidence.toFixed(1)}`,
+    activeFocus ? `Active focus topic: ${activeFocus}` : null,
+    helpConcepts.length ? `Asked for help: ${helpConcepts.join(", ")}` : null,
+    reviewConcepts.length ? `Theory in review: ${reviewConcepts.join(", ")}` : null,
     topGrammar.length ? `Weak grammar: ${topGrammar.join(", ")}` : null,
     topSounds.length ? `Weak sounds: ${topSounds.join(", ")}` : null,
     `Recently covered: ${s.lastSessions.slice(0, 2).map(x => x.topic).join(", ") || "none"} — reinforce if still weak, prefer new topics`,
@@ -248,5 +278,44 @@ export function createEmptyState(userId: string, deviceId: string): UserLearning
     theory: { concepts: [] },
     pronunciation: { averageAccuracy: 0, strugglingSounds: [] },
     lastSessions: [],
+    errorRecurrence: EMPTY_RECURRENCE_QUEUE,
+  };
+}
+
+export interface ProductionGradeEvent {
+  correct: boolean;
+  /** Pattern the grader identified, when the answer was wrong. */
+  errorPattern?: ErrorPatternId;
+  /** Pattern this exercise was rehearsing, when it came from the queue. */
+  rehearsedPattern?: ErrorPatternId;
+}
+
+/**
+ * Fold an AI production grade into the learner's state.
+ *
+ * This is the step that was missing: the grader already identified the
+ * mistake, but nothing consumed it, so the same error could recur forever
+ * without ever being rescheduled.
+ */
+export function applyProductionGrade(
+  state: UserLearningState,
+  event: ProductionGradeEvent,
+  now: number = Date.now(),
+): UserLearningState {
+  // Older persisted rows predate this field.
+  let queue: ErrorRecurrenceQueue = state.errorRecurrence ?? EMPTY_RECURRENCE_QUEUE;
+
+  if (event.rehearsedPattern) {
+    queue = markPatternRehearsed(queue, event.rehearsedPattern, event.correct, now);
+  }
+
+  if (!event.correct && event.errorPattern) {
+    queue = recordErrorPattern(queue, event.errorPattern, now);
+  }
+
+  return {
+    ...state,
+    updatedAt: new Date(now).toISOString(),
+    errorRecurrence: queue,
   };
 }

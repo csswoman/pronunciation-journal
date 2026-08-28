@@ -2,7 +2,11 @@
 
 // Planned structure:
 // <ExerciseTestHub>
-//   <main /> — exercise viewport
+//   <main>
+//     <ExerciseTestOverlay />
+//     <EssentialWordsPreview />
+//     <ExerciseTestCatalog />
+//   </main>
 //   <ExerciseTestSidebar />
 // </ExerciseTestHub>
 
@@ -13,6 +17,7 @@ import {
   type ExerciseTestOverlayState,
 } from '@/components/practice/test/ExerciseTestOverlay'
 import { ExerciseTestSidebar } from '@/components/practice/test/ExerciseTestSidebar'
+import { ExerciseTestCatalog } from '@/components/practice/test/ExerciseTestCatalog'
 import { EssentialWordsSession } from '@/components/practice/essential-words/EssentialWordsSession'
 import { WordStudyCard } from '@/components/practice/essential-words/WordStudyCard'
 import { DOMAIN_ORDER } from '@/components/practice/test/constants'
@@ -184,20 +189,15 @@ export function ExerciseTestHub() {
             ) : <EssentialWordsSession key="test-essential-words" />}
           </div>
         ) : !overlayOpen ? (
-          <div className="flex h-full flex-col justify-center px-layout-page-inline py-layout-section-gap lg:px-10">
-            <header className="flex max-w-[65ch] flex-col gap-layout-stack">
-              <span className="font-kicker text-fg-subtle">
-                Solo desarrollo
-              </span>
-              <h1 className="text-h2 font-semibold text-balance text-fg">
-                Galería de ejercicios
-              </h1>
-              <p className="text-body-md leading-relaxed text-pretty text-fg-muted">
-                Elige un ejercicio en el panel de la derecha. Usa{' '}
-                <span className="font-medium text-fg-secondary">Rotar</span> para cambiar sin cerrar la
-                sesión.
-              </p>
-            </header>
+          <div className="min-h-dvh overflow-y-auto">
+            <ExerciseTestCatalog
+              grouped={grouped}
+              activeEntryId={activeEntryId}
+              canSplit={canSplit}
+              onSelect={openEntry}
+              onLaunchAll={launchAll}
+              onOpenEssentialWords={openEssentialWords}
+            />
           </div>
         ) : null}
       </div>

@@ -102,7 +102,7 @@ export function CoursePathRealLifeIcon({
   size?: number;
   className?: string;
 }) {
-  const Icon = REAL_LIFE_ICONS[icon];
+  const Icon = REAL_LIFE_ICONS[icon] ?? Utensils;
   return (
     <Icon
       size={size}

@@ -28,6 +28,8 @@ export function speak(
         onStart?: () => void
         onEnd?: () => void
         onError?: () => void
+        /** Posicion en caracteres de la palabra que empieza a sonar. */
+        onBoundary?: (charIndex: number) => void
       }
     | (() => void),
 ): SpeechSynthesisUtterance | null {
@@ -46,6 +48,11 @@ export function speak(
   utt.onstart = options.onStart ?? null
   utt.onend = options.onEnd ?? null
   utt.onerror = options.onError ?? null
+  // No todos los motores emiten `boundary` (Firefox es irregular). Quien
+  // lo consuma debe funcionar igual si nunca llega.
+  utt.onboundary = options.onBoundary
+    ? (event) => options.onBoundary?.(event.charIndex)
+    : null
   window.speechSynthesis.speak(utt)
   return utt
 }

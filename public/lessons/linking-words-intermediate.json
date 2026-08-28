@@ -1,0 +1,125 @@
+{
+  "slug": "linking-words-intermediate",
+  "sections": [
+    {
+      "heading": "Conectores intermedios y transición formal",
+      "body": "En niveles intermedios y avanzados (B1-B2), enriquecer tu repertorio de conectores te permite estructurar argumentos complejos, ensayos y conversaciones profesionales con fluidez y precisión."
+    },
+    {
+      "heading": "Contraste y Concesión: Although vs. Despite",
+      "body": "Para expresar contraste o concesión:\n\n*   **'Although' / 'Even though'**: Van seguidos de una cláusula completa con sujeto y verbo (*'Although the weather was bad, they went for a hike'*).\n*   **'Despite' / 'In spite of'**: Van siempre seguidos de un sustantivo, pronombre o verbo en forma *-ing* (*'Despite the rain, they went out'* / *'Despite being tired, she finished'*). **Nunca** digas *'despite of'*."
+    },
+    {
+      "heading": "Causa formal y Resultado: Due to vs. Therefore",
+      "body": "Para causa y efecto:\n\n*   **'Due to' / 'Owing to' / 'Because of'**: Introducen la causa seguida de un sustantivo (*'The delay was due to technical issues'*).\n*   **'Therefore' / 'Consequently' / 'As a result'**: Conectores adverbiales que introducen la consecuencia lógica de lo anterior (*'Sales dropped significantly; consequently, we revised our budget'*)."
+    },
+    {
+      "heading": "Adición formal: Furthermore, Moreover & In addition",
+      "body": "Para sumar argumentos en redacción formal o presentaciones:\n\n*   **'Furthermore' / 'Moreover'**: Añaden un punto adicional que refuerza el argumento previo (*'The method is highly accurate. Furthermore, it saves considerable time'*).\n*   **'In addition (to)'**: Puede iniciar una oración con coma (*'In addition, we tested...'*), o actuar como preposición (*'In addition to her salary, she gets bonuses'*)."
+    },
+    {
+      "heading": "Regla clave de puntuación con conectores adverbiales",
+      "body": "Palabras como *However*, *Therefore*, *Furthermore* y *Consequently* son **adverbios de enlace**. Al iniciar una oración, van seguidos de una **coma**: *'However, the results were positive.'* Si unen dos cláusulas independientes dentro de una misma oración, se usa un **punto y coma** antes y una coma después: *'The project was challenging; however, we delivered on time.'*"
+    }
+  ],
+  "examples": [
+    {
+      "english": "Although the team faced unexpected challenges, they completed the project ahead of schedule.",
+      "translation": "Aunque el equipo enfrentó desafíos inesperados, completaron el proyecto antes de lo programado.",
+      "note": "'Although' seguido de sujeto + verbo."
+    },
+    {
+      "english": "Despite having limited resources, the startup launched a successful product.",
+      "translation": "A pesar de tener recursos limitados, la startup lanzó un producto exitoso.",
+      "note": "'Despite' seguido de gerundio (-ing)."
+    },
+    {
+      "english": "The flight was delayed due to severe turbulence over the Atlantic.",
+      "translation": "El vuelo se retrasó debido a una fuerte turbulencia sobre el Atlántico.",
+      "note": "'Due to' introduciendo un sintagma nominal de causa."
+    },
+    {
+      "english": "The company increased production; consequently, profits rose by 25%.",
+      "translation": "La empresa aumentó la producción; por consiguiente, las ganancias subieron un 25%.",
+      "note": "'Consequently' precedido de punto y coma y seguido de coma."
+    },
+    {
+      "english": "The new software is intuitive. Moreover, it integrates seamlessly with our current tools.",
+      "translation": "El nuevo software es intuitivo. Además, se integra perfectamente con nuestras herramientas actuales.",
+      "note": "'Moreover' añadiendo un argumento adicional al inicio de oración con coma."
+    },
+    {
+      "english": "In spite of the heavy traffic, we arrived at the conference on time.",
+      "translation": "A pesar del tráfico pesado, llegamos a la conferencia a tiempo.",
+      "note": "'In spite of' (tres palabras) seguido de sustantivo."
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Selecciona o escribe el conector adecuado para cada oración.",
+      "type": "closed_blank",
+      "items": [
+        "___ being exhausted from work, Maria went to the gym. (Although / Despite)",
+        "The economy is slowing down; ___, consumer confidence remains strong. (however / despite)",
+        "___ it was raining hard, we decided to walk to the museum. (Although / In spite of)",
+        "The train was cancelled ___ a mechanical breakdown. (due to / although)",
+        "The product is high quality. ___, it comes with a lifetime warranty. (Furthermore / Whereas)",
+        "He didn't study for the exam; ___, he failed the course. (consequently / because)"
+      ],
+      "answers": [
+        "Despite",
+        "however",
+        "Although",
+        "due to",
+        "Furthermore",
+        "consequently"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Which sentence has correct grammar when expressing contrast?",
+      "options": [
+        "Despite of the rain, we went to the beach.",
+        "Although it was raining, but we went to the beach.",
+        "Despite the rain, we went to the beach.",
+        "In spite the rain, we went to the beach."
+      ],
+      "correct": 2,
+      "explanation": "'Despite' is never followed by 'of' ('despite the rain' is correct). 'In spite' must include 'of' ('in spite of the rain'), and 'although' must not be combined with 'but'."
+    },
+    {
+      "question": "Choose the correctly punctuated sentence using an adverbial connector:",
+      "options": [
+        "The plan had flaws; however, we decided to proceed.",
+        "The plan had flaws, however we decided to proceed.",
+        "The plan had flaws however, we decided to proceed.",
+        "The plan had flaws, however, we decided to proceed."
+      ],
+      "correct": 0,
+      "explanation": "When connecting two independent clauses with 'however', standard punctuation requires a semicolon before 'however' and a comma after it ('; however,')."
+    },
+    {
+      "question": "Complete the sentence: 'The concert was cancelled ___ the singer's sudden illness.'",
+      "options": [
+        "because",
+        "due to",
+        "therefore",
+        "although"
+      ],
+      "correct": 1,
+      "explanation": "'The singer's sudden illness' is a noun phrase without a clause verb, so 'due to' (or 'because of') is correct."
+    },
+    {
+      "question": "Which connector is best suited for formal writing to add a reinforcing point?",
+      "options": [
+        "Besides that",
+        "Furthermore",
+        "And also",
+        "Plus"
+      ],
+      "correct": 1,
+      "explanation": "'Furthermore' (and 'Moreover') are the standard formal linking words for adding reinforcing arguments in academic and professional writing."
+    }
+  ]
+}

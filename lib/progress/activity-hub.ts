@@ -12,6 +12,9 @@ import {
   type SkillTag,
 } from '@/lib/progress/activity-types'
 import { skillsForSlug } from '@/lib/progress/skill-matrix'
+import { updateConceptSignalsWithEvidence } from '@/lib/courses/assessment-profile'
+import { findStudyByDeckSlug, parseCefrLevelId } from '@/lib/courses/curriculumIndex'
+import type { ConceptSignal } from '@/lib/courses/concept-profile'
 import type { DailyStep, PracticeContext, SessionResult } from '@/lib/practice/types'
 import type { PracticeAnswer } from '@/lib/practice/types'
 
@@ -178,6 +181,59 @@ export async function recordActivitySession(
     )
   } catch (err) {
     console.error('[activity-hub] enqueue activity_sessions failed', err)
+  }
+
+  // Aggregate lesson exercise evidence for concept signals (Pieza 7)
+  const lessonStats = new Map<string, { correct: number; total: number }>()
+
+  if (input.metadata?.lessonSlug) {
+    const correct = sessionResult.results.filter((r) => r.isCorrect).length
+    const total = sessionResult.results.length
+    if (total > 0) {
+      lessonStats.set(input.metadata.lessonSlug, { correct, total })
+    }
+  }
+
+  for (const r of sessionResult.results) {
+    const payload = r.exercisePayload as Record<string, unknown> | undefined
+    const slugFromPayload = (payload?.lessonSlug as string | undefined) ?? (payload?.deckSlug as string | undefined)
+    const slugFromSourceRef = r.sourceRef?.source === 'grammar_deck' ? r.sourceRef.id : undefined
+    const slug = slugFromPayload ?? slugFromSourceRef
+    if (slug) {
+      const curr = lessonStats.get(slug) ?? { correct: 0, total: 0 }
+      curr.total += 1
+      if (r.isCorrect) curr.correct += 1
+      lessonStats.set(slug, curr)
+    }
+  }
+
+  if (lessonStats.size > 0) {
+    const nowIso = new Date().toISOString()
+    const signals: ConceptSignal[] = []
+    for (const [lessonSlug, stats] of lessonStats.entries()) {
+      if (stats.total === 0) continue
+      const passed = stats.correct / stats.total >= 0.8
+      // Resolve real CEFR level and human title; falling back to the slug keeps
+      // evidence flowing for decks that are not part of the course curriculum.
+      const study = findStudyByDeckSlug(lessonSlug)
+      signals.push({
+        lessonSlug,
+        // Elective tracks (business, chunks…) are not CEFR levels: fall back to a1.
+        level: parseCefrLevelId(study?.trackId) ?? 'a1',
+        title: study?.lesson.title ?? lessonSlug,
+        selfRating: passed ? 'confident' : 'familiar',
+        status: passed ? 'mastered' : 'review',
+        correct: stats.correct,
+        total: stats.total,
+        assessedAt: nowIso,
+        source: 'exercise',
+      })
+    }
+    if (signals.length > 0) {
+      void updateConceptSignalsWithEvidence(userId, signals).catch((err) => {
+        console.error('[activity-hub] updateConceptSignalsWithEvidence failed', err)
+      })
+    }
   }
 
   return { reconciledStepIds }

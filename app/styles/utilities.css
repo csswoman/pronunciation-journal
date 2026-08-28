@@ -439,25 +439,6 @@
   gap: var(--layout-section-gap);
 }
 
-@media (min-width: 768px) {
-  .home-command-grid {
-    /* Balanced columns — plan+learn left, compact aside right */
-    grid-template-columns: minmax(0, 1fr) minmax(17rem, 22rem);
-    align-items: start;
-    column-gap: var(--layout-section-gap);
-    row-gap: var(--layout-section-gap);
-  }
-
-  .home-command-review {
-    grid-column: 1 / -1;
-  }
-
-  .home-command-aside {
-    position: sticky;
-    top: var(--layout-stack-loose);
-  }
-}
-
 .home-command-main {
   display: flex;
   flex-direction: column;
@@ -555,6 +536,22 @@
 .home-sidebar-card--featured {
   border-color: var(--border-subtle);
   box-shadow: var(--shadow-sm);
+}
+
+/* koboyo illustrations are decorative/communicative art, never functional
+   icons — they never sit inline with text at icon scale. This utility tucks
+   one into a card corner as a large, faded watermark. Pair with `relative`
+   + `overflow-hidden` on the card itself. */
+.home-illustration-watermark {
+  position: absolute;
+  top: var(--space-1);
+  right: var(--space-1);
+  z-index: 0;
+  height: 6.5rem;
+  width: auto;
+  opacity: 0.28;
+  pointer-events: none;
+  user-select: none;
 }
 
 /* Essential Words home card — CEFR outline mark is the differentiator.

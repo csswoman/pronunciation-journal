@@ -34,14 +34,25 @@ function buildUserClientMock({
   wordResult,
   deckResult,
   linkResult,
+  duplicateResult,
 }: {
   wordResult: { data: unknown; error: unknown };
   deckResult?: { data: unknown; error: unknown };
   linkResult?: { error: unknown };
+  duplicateResult?: { data: unknown; error: unknown };
 }) {
   const wordSingle = vi.fn().mockResolvedValue(wordResult);
   const wordSelect = vi.fn().mockReturnValue({ single: wordSingle });
   const wordInsert = vi.fn().mockReturnValue({ select: wordSelect });
+
+  // Duplicate pre-check: select().eq(user).ilike(text).maybeSingle().
+  // Defaults to "no existing word" so insert-path tests are unaffected.
+  const duplicateMaybeSingle = vi
+    .fn()
+    .mockResolvedValue(duplicateResult ?? { data: null, error: null });
+  const duplicateIlike = vi.fn().mockReturnValue({ maybeSingle: duplicateMaybeSingle });
+  const duplicateEq = vi.fn().mockReturnValue({ ilike: duplicateIlike });
+  const duplicateSelect = vi.fn().mockReturnValue({ eq: duplicateEq });
 
   const deckSingle = vi.fn().mockResolvedValue(deckResult ?? { data: { id: 'deck-1' }, error: null });
   const deckEqUser = vi.fn().mockReturnValue({ single: deckSingle });
@@ -52,7 +63,7 @@ function buildUserClientMock({
   const linkFrom = vi.fn().mockReturnValue({ insert: linkInsert });
 
   const from = vi.fn((table: string) => {
-    if (table === 'word_bank') return { insert: wordInsert };
+    if (table === 'word_bank') return { insert: wordInsert, select: duplicateSelect };
     if (table === 'decks') return { select: deckSelect };
     if (table === 'word_bank_decks') return { insert: linkInsert };
     return {};
@@ -62,6 +73,9 @@ function buildUserClientMock({
     from,
     wordInsert,
     wordSingle,
+    duplicateSelect,
+    duplicateIlike,
+    duplicateMaybeSingle,
     deckSelect,
     deckEqId,
     deckEqUser,
@@ -69,6 +83,17 @@ function buildUserClientMock({
     linkInsert,
     linkFrom,
   };
+}
+
+/** Duplicate pre-check stub that reports the user has no such word yet. */
+function noDuplicateSelect() {
+  return vi.fn().mockReturnValue({
+    eq: vi.fn().mockReturnValue({
+      ilike: vi.fn().mockReturnValue({
+        maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null }),
+      }),
+    }),
+  })
 }
 
 describe('POST /api/words', () => {
@@ -153,7 +178,7 @@ describe('POST /api/words', () => {
             single: vi.fn().mockResolvedValue({ data: fakeWord, error: null }),
           }),
         })
-    const userClientMock = { from: vi.fn().mockReturnValue({ insert }) }
+    const userClientMock = { from: vi.fn().mockReturnValue({ insert, select: noDuplicateSelect() }) }
 
     mockCreateUserScopedClient.mockReturnValue(userClientMock as never)
 
@@ -175,13 +200,36 @@ describe('POST /api/words', () => {
 
   it('stores reader as the source only for a new word', async () => {
     const insert = vi.fn().mockReturnValue({ select: vi.fn().mockReturnValue({ single: vi.fn().mockResolvedValue({ data: { id: 'word-1' }, error: null }) }) })
-    const userClientMock = { from: vi.fn().mockReturnValue({ insert }) }
+    const userClientMock = { from: vi.fn().mockReturnValue({ insert, select: noDuplicateSelect() }) }
     mockRequireUser.mockResolvedValue({ user: { id: 'user-123' } as never, error: null, accessToken: 'good-token' })
     mockValidateBody.mockResolvedValue({ data: { text: 'reader', source: 'reader' }, error: null })
     mockCreateUserScopedClient.mockReturnValue(userClientMock as never)
     const res = await POST(new NextRequest('http://localhost/api/words', { method: 'POST' }))
     expect(res.status).toBe(201)
     expect(insert).toHaveBeenCalledWith(expect.objectContaining({ source: 'reader' }))
+  })
+
+  it('returns 409 with the existing word id instead of saving a duplicate', async () => {
+    mockRequireUser.mockResolvedValue({
+      user: { id: 'user-123' } as never,
+      error: null,
+      accessToken: 'good-token',
+    })
+    mockValidateBody.mockResolvedValue({ data: { text: 'Resilient', source: 'manual' }, error: null })
+    const userClientMock = buildUserClientMock({
+      wordResult: { data: null, error: null },
+      duplicateResult: { data: { id: 'word-existing', text: 'resilient' }, error: null },
+    })
+    mockCreateUserScopedClient.mockReturnValue(userClientMock as never)
+
+    const res = await POST(new NextRequest('http://localhost/api/words', { method: 'POST' }))
+
+    expect(res.status).toBe(409)
+    const body = await res.json()
+    expect(body).toMatchObject({ code: 'duplicate_word', wordId: 'word-existing', text: 'resilient' })
+    expect(userClientMock.wordInsert).not.toHaveBeenCalled()
+    // Case-insensitive: "Resilient" must match the stored "resilient".
+    expect(userClientMock.duplicateIlike).toHaveBeenCalledWith('text', 'Resilient')
   })
 
   it('returns 404 when a provided deckId does not belong to the user', async () => {

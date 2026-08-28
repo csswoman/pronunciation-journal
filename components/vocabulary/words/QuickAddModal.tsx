@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { X, Sparkles, CornerDownLeft } from "@/components/icons";
+import { X, Sparkles, CornerDownLeft, Pencil } from "@/components/icons";
 import Button from "@/components/ui/Button";
 import { cn } from "@/lib/cn";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { getUserDecks, type DeckSummary } from "@/lib/decks/queries";
+import { DuplicateWordError } from "@/lib/word-bank/queries";
 import { DeckSelector } from "./DeckSelector";
 import { QuickAddSuccessState } from "./QuickAddSuccessState";
 
@@ -15,15 +16,21 @@ export interface QuickAddModalProps {
   onSubmit: (input: { text: string; context?: string | null; deckId?: string | null }) => Promise<void> | void;
   initialText?: string;
   contextLabel?: string;
+  /**
+   * Called when the word is already saved and the user chooses to edit the
+   * existing entry instead. Omit it to only warn without offering the jump.
+   */
+  onEditExisting?: (wordId: string) => void;
 }
 
-export function QuickAddModal({ open, onClose, onSubmit, initialText = "", contextLabel = "VOCABULARIO" }: QuickAddModalProps) {
+export function QuickAddModal({ open, onClose, onSubmit, initialText = "", contextLabel = "VOCABULARIO", onEditExisting }: QuickAddModalProps) {
   const { user } = useAuth();
   const [text, setText] = useState("");
   const [context, setContext] = useState("");
   const [success, setSuccess] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [duplicate, setDuplicate] = useState<{ wordId: string; text: string } | null>(null);
   const [decks, setDecks] = useState<DeckSummary[]>([]);
   const [selectedDeckId, setSelectedDeckId] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -42,6 +49,7 @@ export function QuickAddModal({ open, onClose, onSubmit, initialText = "", conte
     setSuccess(false);
     setIsSaving(false);
     setSaveError(null);
+    setDuplicate(null);
     const t = setTimeout(() => inputRef.current?.focus(), 30);
     return () => clearTimeout(t);
   }, [open, initialText]);
@@ -55,15 +63,20 @@ export function QuickAddModal({ open, onClose, onSubmit, initialText = "", conte
 
   const handleSubmit = async () => {
     const trimmed = text.trim();
-    if (!trimmed || isSaving) return;
+    if (!trimmed || isSaving || duplicate) return;
     setIsSaving(true);
     setSaveError(null);
+    setDuplicate(null);
     try {
       await onSubmit({ text: trimmed, context: context.trim() || null, deckId: selectedDeckId });
       setSuccess(true);
       setTimeout(() => { onClose(); setSuccess(false); }, 1500);
-    } catch {
-      setSaveError("No pudimos guardar la palabra. Inténtalo de nuevo.");
+    } catch (cause) {
+      if (cause instanceof DuplicateWordError) {
+        setDuplicate({ wordId: cause.wordId, text: cause.text });
+      } else {
+        setSaveError("No pudimos guardar la palabra. Inténtalo de nuevo.");
+      }
     } finally {
       setIsSaving(false);
     }
@@ -168,10 +181,11 @@ export function QuickAddModal({ open, onClose, onSubmit, initialText = "", conte
                 <input
                   ref={inputRef}
                   value={text}
-                  onChange={e => setText(e.target.value)}
+                  onChange={e => { setText(e.target.value); setDuplicate(null); }}
                   onKeyDown={e => {
                     if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); void handleSubmit(); }
                   }}
+                  aria-invalid={duplicate ? true : undefined}
                   placeholder="Por ejemplo: resilient"
                   className={cn(
                   "w-full rounded-[var(--radius-sm)] border border-border-default",
@@ -206,6 +220,24 @@ export function QuickAddModal({ open, onClose, onSubmit, initialText = "", conte
                 />
               </div>
               <p className="-mt-2 text-caption text-fg-subtle">Pulsa Enter para guardar rápido.</p>
+              {duplicate ? (
+                <div role="alert" className="-mt-2 flex flex-col gap-2 rounded-[var(--radius-sm)] border border-border-default bg-surface-sunken p-3 sm:flex-row sm:items-center sm:justify-between">
+                  <p className="text-body-sm text-fg">
+                    Ya tienes <span className="font-semibold">{duplicate.text}</span> en tu lista.
+                  </p>
+                  {onEditExisting ? (
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      icon={<Pencil size={13} />}
+                      className="shrink-0"
+                      onClick={() => onEditExisting(duplicate.wordId)}
+                    >
+                      Editar la que ya tienes
+                    </Button>
+                  ) : null}
+                </div>
+              ) : null}
               {saveError ? <p role="alert" className="-mt-2 text-body-sm text-error">{saveError}</p> : null}
             </div>
 
@@ -213,7 +245,7 @@ export function QuickAddModal({ open, onClose, onSubmit, initialText = "", conte
               <DeckSelector decks={decks} selectedId={selectedDeckId} onChange={setSelectedDeckId} />
               <Button
                 onClick={() => void handleSubmit()}
-                disabled={!text.trim() || isSaving}
+                disabled={!text.trim() || isSaving || Boolean(duplicate)}
                 isLoading={isSaving}
                 icon={<CornerDownLeft size={13} />}
                 iconPosition="right"

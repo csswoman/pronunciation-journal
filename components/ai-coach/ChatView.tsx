@@ -21,6 +21,8 @@ interface ChatViewProps {
   onSuggestionClick: (text: string) => void;
   onToolAnswer: (callId: string, result: ExerciseResult) => void;
   onNext: () => void;
+  align?: "bottom" | "top";
+  className?: string;
 }
 
 export default function ChatView({
@@ -30,6 +32,8 @@ export default function ChatView({
   onSuggestionClick,
   onToolAnswer,
   onNext,
+  align = "bottom",
+  className,
 }: ChatViewProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const thinkingStartRef = useRef<number | null>(null);
@@ -82,10 +86,17 @@ export default function ChatView({
 
   const lastVisible = visibleMessages[visibleMessages.length - 1];
   const indicatorVisible = showIndicator && lastVisible?.role !== "model";
+  const isTop = align === "top";
 
   return (
-    <div className="chat-messages-container flex h-full min-h-0 flex-col justify-end py-3">
-      <div className="mt-auto flex w-full flex-col px-3 @[22rem]:px-4">
+    <div
+      className={cn(
+        "chat-messages-container flex min-h-0 flex-col py-3",
+        isTop ? "justify-start" : "h-full justify-end",
+        className,
+      )}
+    >
+      <div className={cn("flex w-full flex-col px-3 @[22rem]:px-4", !isTop && "mt-auto")}>
         {visibleMessages.map((msg, i) => (
           <div
             key={i}

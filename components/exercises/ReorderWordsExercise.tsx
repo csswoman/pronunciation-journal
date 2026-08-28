@@ -1,5 +1,12 @@
 'use client'
 
+// Planned structure:
+// <ReorderWordsExercise>
+//   <AnswerSlots />  — dashed drop zone where selected chips appear
+//   <WordBank />     — tray of available word chips
+//   <CheckButton />  — full-width primary CTA
+// </ReorderWordsExercise>
+
 import { useState, useEffect, useRef } from 'react'
 import { cn } from '@/lib/cn'
 import Button from '@/components/ui/Button'
@@ -24,7 +31,7 @@ function makeChips(tokens: string[]): Chip[] {
   return tokens.map((word, i) => ({ key: `${word}-${i}`, word }))
 }
 
-export function ReorderWordsExercise({ exercise, onResult, focusUi = false }: Props) {
+export function ReorderWordsExercise({ exercise, onResult }: Props) {
   const [bank, setBank] = useState<Chip[]>(() => makeChips(exercise.tokens))
   const [answer, setAnswer] = useState<Chip[]>([])
   const [state, setState] = useState<AnswerState>('idle')
@@ -65,77 +72,46 @@ export function ReorderWordsExercise({ exercise, onResult, focusUi = false }: Pr
   const canCheck =
     state === 'idle' && answer.length === exercise.tokens.length && bank.length === 0
 
-  if (focusUi) {
-    return (
-      <div className="phoneme-focus__exercise">
-
-        <div
-          className={cn('pf-order-answer', answer.length === 0 && 'pf-order-answer--empty')}
-          aria-label="Tu respuesta"
-        >
-          {answer.map((chip) => (
-            <button
-              key={chip.key}
-              type="button"
-              disabled={state !== 'idle'}
-              onClick={() => moveToBank(chip)}
-              className="pf-order-chip pf-order-chip--placed"
-            >
-              {chip.word}
-            </button>
-          ))}
-        </div>
-
-        <div className="pf-order-tray" aria-label="Palabras disponibles">
-          {bank.map((chip) => (
-            <button
-              key={chip.key}
-              type="button"
-              disabled={state !== 'idle'}
-              onClick={() => moveToAnswer(chip)}
-              className="pf-order-chip"
-            >
-              {chip.word}
-            </button>
-          ))}
-        </div>
-
-        {state === 'idle' && (
-          <Button
-            variant="primary"
-            size="lg"
-            fullWidth
-            onClick={handleCheck}
-            disabled={!canCheck}
-          >
-            Comprobar
-          </Button>
-        )}
-
-        {state !== 'idle' && (
-          <p className="pf-answer-note">
-            Orden correcto: <strong>{exercise.sentence}</strong>
-          </p>
-        )}
-      </div>
-    )
-  }
-
   return (
-    <div className="flex w-full flex-col gap-3">
+    <div className="flex w-full flex-col gap-6">
+      {/* Answer Slots Area */}
       <div
-        className={cn( 'min-h-13 flex flex-wrap gap-2 rounded-xl border-[1.5px] border-dashed p-3 transition-colors', answer.length === 0 ? 'border-border-subtle' : 'border-primary', )}
+        className={cn(
+          'min-h-20 flex flex-wrap items-center gap-2.5 rounded-2xl border-2 border-dashed p-4 transition-all',
+          answer.length === 0 ? 'border-border-default bg-surface-sunken/30 justify-center' : 'border-primary bg-primary-soft/20',
+        )}
         aria-label="Tu respuesta"
       >
-        {answer.map((chip) => (
-          <WordChip key={chip.key} chip={chip} variant="placed" done={state !== 'idle'} onClick={moveToBank} />
-        ))}
+        {answer.length === 0 ? (
+          <span className="text-body-sm text-fg-subtle">
+            Toca las palabras de abajo para colocarlas aquí en orden
+          </span>
+        ) : (
+          answer.map((chip) => (
+            <WordChip
+              key={chip.key}
+              chip={chip}
+              variant="placed"
+              done={state !== 'idle'}
+              onClick={moveToBank}
+            />
+          ))
+        )}
       </div>
-      <div className="flex flex-wrap gap-2 py-1" aria-label="Palabras disponibles">
+
+      {/* Available Word Bank Tray */}
+      <div className="flex flex-wrap items-center justify-center gap-2.5 py-2" aria-label="Palabras disponibles">
         {bank.map((chip) => (
-          <WordChip key={chip.key} chip={chip} variant="bank" done={state !== 'idle'} onClick={moveToAnswer} />
+          <WordChip
+            key={chip.key}
+            chip={chip}
+            variant="bank"
+            done={state !== 'idle'}
+            onClick={moveToAnswer}
+          />
         ))}
       </div>
+
       {state === 'idle' && (
         <Button
           variant="primary"
@@ -143,10 +119,15 @@ export function ReorderWordsExercise({ exercise, onResult, focusUi = false }: Pr
           fullWidth
           onClick={handleCheck}
           disabled={!canCheck}
-          className="mt-3"
         >
           Comprobar
         </Button>
+      )}
+
+      {state !== 'idle' && (
+        <div className="rounded-xl border border-border-default bg-surface-sunken p-4 text-center text-body-md text-fg-muted">
+          Orden correcto: <strong className="font-semibold text-fg">{exercise.sentence}</strong>
+        </div>
       )}
     </div>
   )
@@ -165,10 +146,14 @@ function WordChip({ chip, variant, done, onClick }: ChipProps) {
       type="button"
       onClick={() => onClick(chip)}
       disabled={done}
-      className={cn( 'rounded-full border px-3 py-1.5 text-body-sm font-medium transition-all duration-150', !done && variant === 'bank' && 'bg-surface-raised border-border-default text-fg hover:border-primary hover:bg-primary-soft cursor-pointer', !done && variant === 'placed' && 'bg-primary-soft border-primary text-primary hover:border-error hover:bg-error-soft hover:text-error cursor-pointer', done && 'cursor-default opacity-80 border-border-subtle bg-surface-raised text-fg-muted', )}
+      className={cn(
+        'rounded-xl border px-4 py-2.5 text-body-md font-medium transition-all duration-150 select-none focus-ring',
+        !done && variant === 'bank' && 'bg-surface-sunken/60 border-border-default text-fg hover:border-primary/60 hover:bg-surface-sunken cursor-pointer active:scale-95 shadow-xs',
+        !done && variant === 'placed' && 'bg-primary text-on-primary border-primary hover:bg-error hover:border-error cursor-pointer active:scale-95 shadow-xs font-semibold',
+        done && 'cursor-default opacity-70 border-border-subtle bg-surface-sunken text-fg-muted',
+      )}
     >
       {chip.word}
     </button>
   )
 }
-

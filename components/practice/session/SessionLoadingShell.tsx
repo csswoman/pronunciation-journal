@@ -25,8 +25,9 @@ export function SessionLoadingShell({ focusUi, displayBadge, onExit }: SessionLo
   if (focusUi && displayBadge) {
     return (
       <PhonemeFocusShell
-        badge={displayBadge}
         progressPct={0}
+        stepCurrent={1}
+        stepTotal={1}
         onExit={onExit}
       >
         <WordCarousel words={words} />
@@ -35,8 +36,10 @@ export function SessionLoadingShell({ focusUi, displayBadge, onExit }: SessionLo
   }
 
   return (
-    <div className="w-full max-w-md mx-auto">
-      <WordCarousel words={words} />
+    <div className="relative mx-auto flex min-h-[calc(100dvh-6rem)] w-full max-w-layout-session-max flex-col items-center justify-center px-4 py-8">
+      <div className="flex w-full flex-col items-center justify-center rounded-2xl border border-border-subtle bg-surface-raised p-8 shadow-xs">
+        <WordCarousel words={words} />
+      </div>
     </div>
   )
 }

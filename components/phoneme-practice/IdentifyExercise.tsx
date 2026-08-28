@@ -1,5 +1,13 @@
 'use client'
 
+// Planned structure:
+// <IdentifyExercise>
+//   <PhonemeExercisePrompt />
+//   <PhonemePlayButton />
+//   <OptionsGrid />
+//   <PhonemeConfirmButton />
+// </IdentifyExercise>
+
 import { useState } from 'react'
 import type { Exercise } from '@/lib/phoneme-practice/types'
 import { PhonemeConfirmButton } from '@/components/phoneme-practice/PhonemeConfirmButton'
@@ -31,72 +39,71 @@ export function IdentifyExercise({ exercise, onSubmit, voice }: Props) {
     onSubmit(exercise.correctIds.includes(selected), selected)
   }
 
-  function optClass(id: string) {
-    const isCorrect = exercise.correctIds.includes(id)
-    if (submitted) {
-      if (isCorrect) return 'correct'
-      if (selected === id) return 'wrong'
-      return 'dim'
-    }
-    if (selected === id) return 'selected'
-    return 'default'
-  }
-
-  const optStyles: Record<string, string> = {
-    correct: 'bg-success-soft border-success-border text-success ring-2 ring-success/30',
-    wrong: 'bg-error-soft border-error-border text-error ring-2 ring-error/30',
-    dim: 'bg-surface-raised border-border-subtle text-(--fg-primary) opacity-40',
-    selected: 'bg-surface-raised border-primary text-primary ring-2 ring-primary/20',
-    default:
-      'bg-surface-raised border-border-default text-(--fg-primary) hover:border-primary/50 hover:-translate-y-px hover:shadow-sm',
-  }
+  const rawIpa = exercise.ipa?.replace(/^\/+|\/+$/g, '')
+  const ipaDisplay = rawIpa ? `/${rawIpa}/` : undefined
 
   return (
-    <div className="phoneme-focus__exercise">
+    <div className="flex w-full flex-col gap-6">
       <PhonemeExercisePrompt
         centered
-        title="Escucha y decide"
-        kicker={exercise.ipa ? `¿Lleva el sonido ${exercise.ipa}?` : undefined}
+        title="Escucha el audio y decide"
+        kicker={ipaDisplay ? `Sonido ${ipaDisplay} · Identificación` : 'Identificación'}
+        hint={`¿La palabra pronunciada contiene el sonido ${ipaDisplay ?? exercise.ipa ?? ''}?`}
       />
 
-      <PhonemePlayButton
-        ariaLabel={
-          exercise.targetWord
-            ? `Escuchar ${exercise.targetWord}`
-            : 'Escuchar palabra'
-        }
-        word={exercise.targetWord}
-        voice={voice}
-      />
+      <div className="flex justify-center py-2">
+        <PhonemePlayButton
+          ariaLabel={
+            exercise.targetWord
+              ? `Escuchar ${exercise.targetWord}`
+              : 'Escuchar palabra'
+          }
+          word={exercise.targetWord}
+          voice={voice}
+          size="lg"
+        />
+      </div>
 
       <div
         role="radiogroup"
         aria-label="¿Contiene el sonido?"
-        className="grid w-full grid-cols-2 gap-3"
+        className="grid w-full grid-cols-2 gap-3.5"
       >
-        {exercise.options.map((opt) => (
-          <button
-            key={opt.id}
-            type="button"
-            role="radio"
-            aria-checked={selected === opt.id}
-            aria-disabled={submitted}
-            onClick={() => handleSelect(opt.id)}
-            className={cn(
-              'cursor-pointer rounded-xl border px-3 py-4 text-body-sm font-semibold transition-all duration-150',
-              optStyles[optClass(opt.id)],
-              submitted &&
-                exercise.correctIds.includes(opt.id) &&
-                'pf-reveal-ok',
-              submitted &&
-                selected === opt.id &&
-                !exercise.correctIds.includes(opt.id) &&
-                'pf-reveal-bad',
-            )}
-          >
-            {opt.label}
-          </button>
-        ))}
+        {exercise.options.map((opt) => {
+          const isCorrect = exercise.correctIds.includes(opt.id)
+          const isSelected = selected === opt.id
+
+          return (
+            <div
+              key={opt.id}
+              onClick={() => handleSelect(opt.id)}
+              className={cn(
+                'group flex min-h-14 cursor-pointer items-center justify-center gap-3 rounded-xl border-2 p-4 transition-all duration-150 select-none',
+                !submitted && !isSelected && 'border-border-default bg-surface-sunken/40 hover:border-primary/50 hover:bg-surface-sunken text-fg',
+                !submitted && isSelected && 'border-primary bg-primary-soft text-primary shadow-xs font-semibold ring-1 ring-primary/30',
+                submitted && isCorrect && 'border-success-border bg-success-soft text-success pf-reveal-ok font-semibold',
+                submitted && isSelected && !isCorrect && 'border-error-border bg-error-soft text-error pf-reveal-bad font-semibold',
+                submitted && !isSelected && !isCorrect && 'border-border-subtle bg-surface-raised/40 text-fg-subtle opacity-40 cursor-default',
+              )}
+            >
+              <div
+                className={cn(
+                  'flex size-5 shrink-0 items-center justify-center rounded-full border transition-colors',
+                  !isSelected && 'border-border-strong bg-surface-base',
+                  isSelected && !submitted && 'border-primary bg-primary text-on-primary',
+                  submitted && isCorrect && 'border-success bg-success text-on-primary',
+                  submitted && isSelected && !isCorrect && 'border-error bg-error text-on-primary',
+                )}
+                aria-hidden
+              >
+                {isSelected && (
+                  <div className="size-2 rounded-full bg-current" />
+                )}
+              </div>
+              <span className="text-body-lg font-semibold">{opt.label}</span>
+            </div>
+          )
+        })}
       </div>
 
       {!submitted && (

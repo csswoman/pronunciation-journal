@@ -21,6 +21,9 @@ import { cn } from "@/lib/cn";
 import { quickAddWord, toggleFavorite } from "@/lib/word-bank/queries";
 import { playUiCue } from "@/lib/ui-sounds/cues";
 import { useRetrigger } from "@/hooks/useRetrigger";
+import { getIllustration } from "@/lib/illustrations/registry";
+
+const DomainIcon = getIllustration("domainDictionary");
 
 type SaveState = "idle" | "saving" | "saved" | "error";
 
@@ -91,13 +94,17 @@ export default function HomeWordOfDayCard({ profileLevel = null }: HomeWordOfDay
 
   return (
     <div
-      className="home-sidebar-card flex flex-col gap-3"
+      className="home-sidebar-card relative flex flex-col gap-3 overflow-hidden"
       aria-busy={loading || undefined}
     >
-      <span className="font-label text-fg">Palabra del día</span>
+      <DomainIcon
+        className="home-illustration-watermark text-vocabulario"
+        aria-hidden="true"
+      />
+      <span className="relative z-1 font-label text-fg">Palabra del día</span>
 
       {loading && (
-        <div className="flex flex-col gap-2 py-1" aria-hidden>
+        <div className="relative z-1 flex flex-col gap-2 py-1" aria-hidden>
           <div className="h-9 w-32 animate-pulse rounded-sm bg-surface-sunken" />
           <div className="h-4 w-20 animate-pulse rounded bg-surface-sunken" />
           <div className="h-4 w-full animate-pulse rounded bg-surface-sunken" />
@@ -105,7 +112,7 @@ export default function HomeWordOfDayCard({ profileLevel = null }: HomeWordOfDay
       )}
 
       {error && !word && !loading && (
-        <div className="animate-state-in flex flex-col items-start gap-2 py-1">
+        <div className="animate-state-in relative z-1 flex flex-col items-start gap-2 py-1">
           <p className="font-body-sm text-error">No se pudo cargar la palabra.</p>
           <Button type="button" variant="ghost" size="md" onClick={() => refresh()}>
             Reintentar
@@ -114,12 +121,12 @@ export default function HomeWordOfDayCard({ profileLevel = null }: HomeWordOfDay
       )}
 
       {word && !loading && (
-        <div className="animate-state-in flex flex-col gap-2.5" key={word.word}>
+        <div className="animate-state-in relative z-1 flex flex-col gap-2.5" key={word.word}>
           <div className="flex items-center gap-2">
             <p className="home-editorial-mark min-w-0">
               <SyllableWord word={word.word} />
             </p>
-            <div className="group relative shrink-0">
+            <div className="group/tooltip relative shrink-0">
               <button
                 ref={heartRef}
                 type="button"
@@ -144,7 +151,7 @@ export default function HomeWordOfDayCard({ profileLevel = null }: HomeWordOfDay
               <span
                 id="word-save-tooltip"
                 role="tooltip"
-                className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1.5 -translate-x-1/2 whitespace-nowrap rounded-sm border border-border-default bg-surface-raised px-2 py-1 text-caption font-medium text-fg opacity-0 shadow-md transition-opacity group-hover:opacity-100 group-focus-within:opacity-100"
+                className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1.5 -translate-x-1/2 whitespace-nowrap rounded-sm border border-border-default bg-surface-raised px-2 py-1 text-caption font-medium text-fg opacity-0 shadow-md transition-opacity group-hover/tooltip:opacity-100 group-focus-within/tooltip:opacity-100"
               >
                 {label}
               </span>

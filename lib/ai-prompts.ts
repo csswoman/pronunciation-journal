@@ -1,4 +1,5 @@
 import type { CEFRLevel } from '@/lib/exercises/cefr'
+import type { LearnerContext } from '@/lib/ai-coach/learner-context'
 import { JOURNAL_TOPIC_CATALOG } from '@/lib/journal/topic-catalog'
 
 // ── Transcription ──
@@ -100,18 +101,21 @@ export const GRADE_PRODUCTION_SYSTEM_PROMPT = `You are an English teacher gradin
 Evaluate strictly using this rubric:
 1. usedTarget — Did the learner use the target item with correct meaning and an acceptable form (minor spelling typos in spoken transcripts are OK)?
 2. grammaticallyCorrect — Is the production a grammatical English sentence/response appropriate for the learner's CEFR level (stated below; default A2–B2)? Judge leniently for lower levels; minor slips OK; broken structure = false.
-3. correct — true ONLY when both usedTarget and grammaticallyCorrect are true.
-4. score — integer 0–100:
-   - 90–100: target used naturally, grammar solid
-   - 70–89: target used correctly, small grammar/word issues
-   - 50–69: target attempted but wrong form/meaning OR weak grammar
+3. constraintMet — If a "Required constraint" is stated below, did the response satisfy it? This is the learner's growth edge: a grammatical sentence that ignores the required tense or function is NOT acceptable, however fluent it sounds. When no constraint is stated, set this to true.
+4. correct — true ONLY when usedTarget AND grammaticallyCorrect AND constraintMet are all true.
+5. score — integer 0–100:
+   - 90–100: constraint satisfied, target used naturally, grammar solid
+   - 70–89: constraint satisfied, small grammar/word issues
+   - 50–69: constraint missed but sentence otherwise fine, OR constraint met with weak grammar
    - 20–49: target missing or largely incorrect
    - 0–19: empty, off-topic, or not English
-5. feedback — 1–3 short sentences: praise what worked, then one concrete fix. Be encouraging, not harsh.
-6. corrections — optional improved version of their sentence (omit if already perfect).
+6. feedback — 1–3 short sentences in Spanish: praise what worked, then one concrete fix. When constraintMet is false, say explicitly which structure was required and show it. Be encouraging, not harsh.
+7. corrections — optional improved version of their sentence that satisfies the constraint (omit if already perfect).
+8. errorPattern — When correct is false, classify the SINGLE most important error using EXACTLY one of these ids (never invent one; omit the field when correct is true):
+tense_present_for_past, present_perfect_vs_past, missing_auxiliary, subject_verb_agreement, word_order, preposition_choice, article_use, plural_countable, modal_form, conditional_form, gerund_infinitive, comparative_form, negation_form, question_form, vocabulary_choice, spelling
 
 Return ONLY valid JSON, no markdown:
-{"correct":boolean,"usedTarget":boolean,"grammaticallyCorrect":boolean,"feedback":"...","corrections":"...","score":number}`;
+{"correct":boolean,"usedTarget":boolean,"grammaticallyCorrect":boolean,"constraintMet":boolean,"feedback":"...","corrections":"...","errorPattern":"...","score":number}`;
 
 export function buildGradeProductionUserPrompt(input: {
   targetItem: string
@@ -120,14 +124,18 @@ export function buildGradeProductionUserPrompt(input: {
   production: string
   modality: 'written' | 'spoken'
   level?: CEFRLevel
+  constraintCheck?: string
 }): string {
   const meaningLine = input.targetMeaning
     ? `\nTarget meaning: ${input.targetMeaning}`
     : '';
   const levelLine = input.level ? `\nLearner CEFR level: ${input.level}` : '';
+  const constraintLine = input.constraintCheck
+    ? `\nRequired constraint: ${input.constraintCheck}`
+    : '';
   return `Task shown to the learner: ${input.taskPrompt}
 Target item: "${input.targetItem}"${meaningLine}
-Modality: ${input.modality}${levelLine}
+Modality: ${input.modality}${levelLine}${constraintLine}
 
 Learner production:
 """
@@ -321,4 +329,53 @@ ${list}
 
 Responde SOLO con JSON válido, sin texto alrededor, con esta forma exacta:
 {"words":{"<palabra>":["oración 1","oración 2"]}}`;
+}
+
+// ── Scripted Speaking Mission Generation ──
+
+interface ScriptGenerationInput {
+  topic: string
+  context: LearnerContext
+}
+
+/**
+ * Prompt para generar un diálogo con guión.
+ *
+ * El vocabulario en repaso se siembra a propósito: obliga a PRODUCIR palabras
+ * que hoy solo se reconocen pasivamente, que es donde más gente se atasca.
+ */
+export function buildScriptGenerationPrompt({
+  topic,
+  context,
+}: ScriptGenerationInput): string {
+  const lines = [
+    `Write a short English dialogue for a Spanish-speaking learner at CEFR level ${context.cefr}.`,
+    `Topic: ${topic}.`,
+    '',
+    'Rules:',
+    '- Exactly 6 to 8 turns, alternating between "coach" and "learner".',
+    '- The dialogue MUST start with the coach.',
+    `- Keep vocabulary and grammar at ${context.cefr} level.`,
+    '- Learner lines must be natural to say out loud, 4 to 12 words each.',
+  ]
+
+  if (context.srsDueWords.length > 0) {
+    lines.push(
+      `- Work these words into the LEARNER lines naturally: ${context.srsDueWords.slice(0, 6).join(', ')}.`,
+    )
+  }
+
+  if (context.weakTargets.length > 0) {
+    lines.push(
+      `- Give the learner chances to practise these sounds: ${context.weakTargets.slice(0, 3).join(', ')}.`,
+    )
+  }
+
+  lines.push(
+    '',
+    'Return JSON only, with this shape:',
+    '{"script":[{"speaker":"coach","text":"..."},{"speaker":"learner","text":"..."}]}',
+  )
+
+  return lines.join('\n')
 }

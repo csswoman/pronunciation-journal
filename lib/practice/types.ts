@@ -13,6 +13,7 @@ import type { FalseFriendIntro, StudyCardModel } from '@/lib/practice/study-card
 import type { ReaderPassage } from '@/lib/practice/reader/types'
 import type { MissionLaunch } from '@/lib/ai-practice/missions/launch'
 import type { ExerciseErrorCode } from '@/lib/exercises/error-taxonomy'
+import type { WarmupShadowPhrase } from '@/lib/exercises/generators/warmup'
 
 // Slugs mapped from `exercise_types` rows in Supabase.
 // Keep in sync with supabase/migrations/20260329230300_seed_exercise_types.sql.
@@ -200,10 +201,12 @@ export type DailyStepKind =
   | 'study_deck'       // lección de la ruta, elegida desde el progreso del usuario
   | 'reader'           // comprehensible-input: párrafo i+1 que recicla vocab reciente
   | 'mission'          // transferencia oral con target/source/step exactos
+  | 'grammar_focus'    // regla + producción restringida desde un mazo de gramática
 
 export type DailySelectionReason =
   | 'due'
   | 'verification_due'
+  | 'grammar_slot'
   | 'recent_error'
   | 'weak_target'
   | 'route_next'
@@ -244,6 +247,16 @@ export type DailyStep = {
   selection?: DailySelectionMetadata
   /** Exact oral handoff for mission steps. */
   missionLaunch?: MissionLaunch
+  /** Unscored shadowing phrases played before the step's first free production. */
+  warmupPhrases?: WarmupShadowPhrase[]
+  /** Solo para 'grammar_focus': regla mostrada antes de los ejercicios de producción del paso. */
+  grammarRule?: {
+    deckSlug: string
+    title: string
+    goal: string
+    /** Dos o tres filas `key: value` tomadas del bloque de reglas del mazo. */
+    rows: Array<{ key: string; value: string }>
+  }
 }
 
 /** Narrative framing metadata for a daily session (opening banner + closing recap). */

@@ -7,11 +7,14 @@ import type {
 const REASON_PRIORITY: Record<DailySelectionReason, number> = {
   due: 0,
   verification_due: 0,
-  recent_error: 1,
-  weak_target: 1,
-  route_next: 2,
-  saved_intent: 3,
-  variety: 4,
+  // The grammar slot outranks everything except genuinely due SRS work:
+  // its whole purpose is to stop phonetics from silently evicting grammar.
+  grammar_slot: 1,
+  recent_error: 2,
+  weak_target: 2,
+  route_next: 3,
+  saved_intent: 4,
+  variety: 5,
 }
 
 export interface DailyPlanCandidate {

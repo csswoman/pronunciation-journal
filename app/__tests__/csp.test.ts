@@ -53,9 +53,9 @@ describe("Content-Security-Policy Configuration", () => {
     expect(proxyContent).not.toMatch(/script-src[^`]*unsafe-inline/);
   });
 
-  it("restricts connect-src to required origins (self, supabase, google)", () => {
+  it("restricts connect-src to the required app and dictionary origins", () => {
     expect(proxyContent).toContain(
-      "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://generativelanguage.googleapis.com https://accounts.google.com",
+      "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://generativelanguage.googleapis.com https://accounts.google.com https://api.dictionaryapi.dev",
     );
   });
 

@@ -9,6 +9,7 @@
 
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import { ProductionTaskHeader } from '@/components/exercises/ProductionTaskHeader'
+import { useEnterToContinue } from '@/hooks/useEnterToContinue'
 import { useSharedMicStream } from '@/hooks/useSharedMicStream'
 import { useSpeechInput } from '@/hooks/useSpeechInput'
 import {
@@ -17,6 +18,7 @@ import {
   ProductionGradeError,
 } from '@/lib/exercises/grade-production-client'
 import { pedagogicalFeedbackFromProductionGrade } from '@/lib/exercises/feedback'
+import { rehearsedPatternForConstraint } from '@/lib/exercises/error-patterns'
 import type { ProductionGradeResult } from '@/lib/exercises/production-grade'
 import type { SpokenProductionExercise as SpokenProductionExerciseType } from '@/lib/exercises/types'
 import type { GenericRenderExtras } from '@/lib/practice/exercise-renderer/generic-registry'
@@ -46,7 +48,11 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
     start,
     stop,
     reset,
-  } = useSpeechInput({ prefer: 'gemini', getStream })
+  } = useSpeechInput({
+    prefer: 'auto',
+    getStream,
+    endpoint: '/api/gemini/transcribe-sentence',
+  })
   const [grading, setGrading] = useState(false)
   const [grade, setGrade] = useState<ProductionGradeResult | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -95,6 +101,7 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
           production: transcript,
           modality: 'spoken',
           level: exercise.level,
+          constraintCheck: exercise.constraint?.checkEn,
         })
         setGrade(result)
       } catch (err) {
@@ -127,16 +134,45 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
     onResult(grade.correct, transcript, Date.now() - startMs.current, {
       score: grade.score,
       feedback: pedagogicalFeedbackFromProductionGrade(grade),
+      errorPattern: grade.errorPattern,
+      rehearsedPattern: exercise.constraint?.id
+        ? (rehearsedPatternForConstraint(exercise.constraint.id) ?? undefined)
+        : undefined,
     })
-  }, [grade, speechResult, onResult])
+  }, [grade, speechResult, exercise.constraint, onResult])
 
   const handleRetry = useCallback(() => {
     submitted.current = false
     setGrade(null)
     setError(null)
     reset()
+    release()
     startMs.current = Date.now()
-  }, [reset])
+  }, [reset, release])
+
+  const handleToggleMic = useCallback(async () => {
+    if (speechState === 'listening') {
+      setError(null)
+      await stop()
+      return
+    }
+    setError(null)
+    reset()
+    try {
+      await getStream()
+      await start()
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'not-allowed'
+      setError(
+        msg === 'not-allowed'
+          ? 'Se denegó el acceso al micrófono. Habilita los permisos.'
+          : 'No se pudo acceder al micrófono.',
+      )
+      release()
+    }
+  }, [speechState, stop, reset, getStream, start, release])
+
+  useEnterToContinue(Boolean(grade && !grading), handleContinue)
 
   if (!isSupported) {
     return (
@@ -152,7 +188,7 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
 
   return (
     <div
-      className="flex w-full flex-col items-stretch justify-start gap-3"
+      className="flex w-full flex-col items-stretch justify-start gap-4"
       aria-busy={grading || undefined}
     >
       <ProductionTaskHeader exercise={exercise} title="Di tu oración" />
@@ -169,7 +205,7 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
           speechError={speechError}
           error={error}
           errorId={errorId}
-          onToggleMic={isListening ? stop : start}
+          onToggleMic={handleToggleMic}
           onRetry={handleRetry}
           onSkip={onSkip}
         />

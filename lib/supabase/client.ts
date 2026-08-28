@@ -15,19 +15,25 @@ export function resetSupabaseBrowserClient(): void {
   browserClient = null;
 }
 
-// Webpack HMR (Next `next dev --webpack`): clear our cache when this module is
-// replaced so the next call builds a fresh client against live imports.
-const hot =
-  typeof import.meta !== "undefined"
-    ? (
-        import.meta as ImportMeta & {
-          webpackHot?: { dispose: (cb: () => void) => void };
-        }
-      ).webpackHot
-    : undefined;
-hot?.dispose(() => {
-  resetSupabaseBrowserClient();
-});
+// Must be a direct `import.meta.webpackHot` member access. Webpack's parser
+// does not rewrite `(import.meta as T).webpackHot` and compiled it to
+// `undefined`, so dispose never ran.
+if (import.meta.webpackHot) {
+  import.meta.webpackHot.dispose(() => {
+    resetSupabaseBrowserClient();
+  });
+}
+
+function createFreshBrowserClient(): SupabaseClient<Database> {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !key) {
+    throw new Error("Faltan NEXT_PUBLIC_SUPABASE_URL o NEXT_PUBLIC_SUPABASE_ANON_KEY.");
+  }
+  return createBrowserClient<Database>(url, key, {
+    isSingleton: false,
+  });
+}
 
 /**
  * Cliente Supabase solo para el navegador (componentes "use client").
@@ -35,20 +41,16 @@ hot?.dispose(() => {
  *
  * `isSingleton: false` — @supabase/ssr also caches globally; we own the
  * cache here so HMR dispose can actually drop the instance.
+ *
+ * Always reuse one instance in this module. Creating a client per call
+ * spawns multiple GoTrueClient objects on the same auth storage key.
  */
 export function getSupabaseBrowserClient(): SupabaseClient<Database> {
   if (typeof window === "undefined") {
     throw new Error("getSupabaseBrowserClient solo puede usarse en el cliente.");
   }
   if (!browserClient) {
-    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-    if (!url || !key) {
-      throw new Error("Faltan NEXT_PUBLIC_SUPABASE_URL o NEXT_PUBLIC_SUPABASE_ANON_KEY.");
-    }
-    browserClient = createBrowserClient<Database>(url, key, {
-      isSingleton: false,
-    });
+    browserClient = createFreshBrowserClient();
   }
   return browserClient;
 }

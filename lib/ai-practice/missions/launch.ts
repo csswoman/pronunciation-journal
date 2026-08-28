@@ -1,4 +1,5 @@
 import { getMission, listMissions } from './registry'
+import { isConversationalMission, type ConversationalMission } from './types'
 import { getTarget } from '@/lib/pronunciation/targets/registry'
 import type { PronunciationTargetId } from '@/lib/pronunciation/targets/types'
 import type { MissionOutcome } from './outcome'
@@ -64,10 +65,18 @@ export function parseMissionLaunch(input: {
   }
 }
 
-/** Deterministic authored mission handoff for a canonical target. */
-export function missionForTarget(targetId: string) {
+/**
+ * Deterministic authored mission handoff for a canonical target.
+ *
+ * Solo conversacionales: el daily plan y el pronunciation path lanzan esto
+ * esperando el bucle de chat con correccion. Una mision con guion comparte
+ * targets pero se practica hablando, y caeria en un runner que esos
+ * consumidores no saben manejar.
+ */
+export function missionForTarget(targetId: string): ConversationalMission | null {
   if (!getTarget(targetId).ok) return null
-  return listMissions().find((mission) =>
+  return listMissions().find((mission): mission is ConversationalMission =>
+    isConversationalMission(mission) &&
     mission.targets.some((target) => target.targetId === targetId),
   ) ?? null
 }

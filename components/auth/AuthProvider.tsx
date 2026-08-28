@@ -43,6 +43,10 @@ export function useAuth(): AuthContextValue {
   return ctx;
 }
 
+export function useAuthOptional(): AuthContextValue | null {
+  return useContext(AuthContext);
+}
+
 export default function AuthProvider({
   initialUser = null,
   children,

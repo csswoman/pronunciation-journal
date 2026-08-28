@@ -6,26 +6,30 @@
       "body": "Los conectores lógicos (*linking words*) articulan el flujo de las ideas en una conversación o texto, indicando si una idea complementa a otra, la contradice, o explica su causa o consecuencia."
     },
     {
-      "heading": "And: Adición",
-      "body": "**'And'** une dos elementos o proposiciones de igual peso o jerarquía (*'I like coffee and tea'*)."
+      "heading": "And & Or: Adición y Opción",
+      "body": "**'And'** une dos elementos o proposiciones de igual peso (*'I like coffee and tea'*). **'Or'** se utiliza para presentar alternativas o posibilidades (*'Do you want tea or coffee?'*)."
     },
     {
       "heading": "But: Contraste",
-      "body": "**'But'** introduce un contraste, matiz o resultado inesperado (*'I was tired, but I finished the report'*). En contextos formales escritos se usa *However* con puntuación adecuada."
+      "body": "**'But'** introduce un contraste, matiz o resultado inesperado (*'I was tired, but I finished the report'*). Cuando une dos oraciones completas independientes, suele llevar una coma antes de *but*."
     },
     {
       "heading": "So: Consecuencia y resultado",
-      "body": "**'So'** conecta una causa con su efecto o resultado (*'It was raining, so we stayed home'*)."
+      "body": "**'So'** conecta una causa con su efecto o resultado directo (*'It was raining, so we stayed home'*). Equivale a 'por lo tanto' o 'así que' en español."
     },
     {
-      "heading": "Because vs. Because of: Motivo o razón",
-      "body": "**'Because'** introduce una subordinada con sujeto y verbo (*'She studied hard because she wanted to pass'*). En contraste, **'because of'** siempre va seguido de un sustantivo o sintagma nominal (*'We cancelled the game because of the rain'*)."
+      "heading": "Because vs. Because of: Causa o motivo",
+      "body": "**'Because'** introduce una subordinada con sujeto y verbo (*'She studied hard because she wanted to pass'*). En contraste, **'because of'** es una preposición compuesta que siempre va seguida de un sustantivo, pronombre o sintagma nominal (*'We cancelled the game because of the rain'*)."
+    },
+    {
+      "heading": "Regla de puntuación: La coma con conjunciones",
+      "body": "Cuando unes dos cláusulas independientes completas (cada una con su propio sujeto y verbo) usando *and*, *but*, *or* o *so*, coloca una **coma antes del conector**: *'She loves reading, but her brother prefers movies.'*"
     }
   ],
   "examples": [
     {
       "english": "I was tired, but I finished the report.",
-      "note": "Contraste con 'but'."
+      "note": "Contraste con coma antes de 'but'."
     },
     {
       "english": "It rained heavily, so we cancelled the outdoor trip.",
@@ -38,6 +42,10 @@
     {
       "english": "The flight was delayed because of the dense fog.",
       "note": "'Because of' seguido de sintagma nominal."
+    },
+    {
+      "english": "Do you want to eat at home, or should we order food?",
+      "note": "'Or' ofreciendo una alternativa entre dos cláusulas."
     }
   ],
   "exercises": [
@@ -47,13 +55,21 @@
       "items": [
         "I was tired, ___ I went to bed early. (so / although)",
         "___ it was raining, we went for a long walk. (Although / Because)",
-        "She studied hard ___ she passed the exam with top marks. (but / and)",
-        "He didn't call ___ he forgot his phone at work. (because / however)"
+        "She studied hard ___ she passed the exam with top marks. (and / but)",
+        "He didn't call ___ he forgot his phone at work. (because / however)",
+        "We couldn't play tennis ___ the heavy rain. (because / because of)",
+        "He wanted to buy the laptop, ___ it was too expensive. (but / so)",
+        "Would you like to pay in cash ___ by credit card? (or / and)",
+        "She wore a warm coat ___ it was freezing outside. (because / so)"
       ],
       "answers": [
         "so",
         "Although",
         "and",
+        "because",
+        "because of",
+        "but",
+        "or",
         "because"
       ]
     }
@@ -69,6 +85,39 @@
       ],
       "correct": 2,
       "explanation": "'Because' must be followed by a full clause with subject and verb ('it was raining'). 'Because of' is followed only by a noun phrase ('because of the rain')."
+    },
+    {
+      "question": "Choose the sentence with correct punctuation and conjunction usage:",
+      "options": [
+        "I love swimming, but my sister prefers running.",
+        "I love swimming, and but my sister prefers running.",
+        "I love swimming but, my sister prefers running.",
+        "I love swimming, because my sister prefers running."
+      ],
+      "correct": 0,
+      "explanation": "When joining two independent clauses with 'but', the comma goes directly before the coordinating conjunction, without combining 'and' and 'but'."
+    },
+    {
+      "question": "Which connector best completes the result: 'The traffic was terrible, ___ we arrived late.'?",
+      "options": [
+        "because",
+        "so",
+        "although",
+        "or"
+      ],
+      "correct": 1,
+      "explanation": "'So' introduces the consequence or result of the first clause ('traffic was terrible' -> 'so we arrived late')."
+    },
+    {
+      "question": "Complete correctly: 'The concert was cancelled ___ the storm.'",
+      "options": [
+        "because",
+        "because of",
+        "so",
+        "although"
+      ],
+      "correct": 1,
+      "explanation": "'The storm' is a noun phrase without a verb, so 'because of' is required instead of 'because'."
     }
   ]
 }

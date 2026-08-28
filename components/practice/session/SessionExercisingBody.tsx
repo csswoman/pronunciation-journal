@@ -2,20 +2,20 @@
 
 // Planned structure:
 // <SessionExercisingBody>
-//   <PhonemeFocusShell>    (when focusUi mode)
-//     <SessionProgress />
+//   <PhonemeFocusShell>    (handles top chrome + card surface for focus sessions)
 //     <ExerciseRenderer />
-//     <InlineFeedback />   (via PhonemeFocusShell feedback prop)
-//     <ExerciseHints />    (via PhonemeFocusShell footer prop, hints phase)
+//     <ExerciseHints />
 //   </PhonemeFocusShell>
-//   plain layout           (otherwise, same children without shell)
+//   <PlainSessionShell>    (same top chrome + card surface for generic sessions)
+//     <ExerciseRenderer />
+//   </PlainSessionShell>
 // </SessionExercisingBody>
 
 import { useState } from 'react'
+import { X } from '@/components/icons'
 import { PhonemeFocusShell } from '@/components/phoneme-practice/PhonemeFocusShell'
 import { ExerciseHints } from '@/components/phoneme-practice/ExerciseHints'
 import { ExerciseRenderer } from './ExerciseRenderer'
-import { SessionProgress } from './SessionProgress'
 import { InlineFeedback } from './InlineFeedback'
 import { ExitConfirmSheet } from '@/components/exercises/ExitConfirmSheet'
 import type React from 'react'
@@ -74,10 +74,10 @@ export function SessionExercisingBody({ state, handlers, lessonFooter }: Session
 
   const [showExitConfirm, setShowExitConfirm] = useState(false)
 
+  const isGenericExercise = current?.payload.kind === 'generic'
+
   const sessionBody = (
     <>
-      {!focusUi && <SessionProgress current={currentIndex} total={totalExercises} />}
-
       {current && (phase === 'exercising' || phase === 'feedback' || phase === 'hints') && (
         <ExerciseRenderer
           key={`${current.id}-${retryKey}`}
@@ -105,62 +105,92 @@ export function SessionExercisingBody({ state, handlers, lessonFooter }: Session
     </>
   )
 
-  const shellBadge =
-    current?.payload.kind === 'phoneme' && current.payload.ipa.trim()
-      ? current.payload.ipa
-      : undefined
-  const isGenericExercise = current?.payload.kind === 'generic'
-  // Generic exercises show their own title inside ExerciseShell; phoneme sessions without IPA badge show the session name
-  const shellSessionName = !shellBadge && !isGenericExercise ? displayBadge || undefined : undefined
+  const stepCurrent = currentIndex + 1
+  const stepTotal = Math.max(totalExercises, 1)
 
   if (focusUi && displayBadge) {
     return (
-      <>
-        <PhonemeFocusShell
-          badge={shellBadge}
-          sessionName={shellSessionName}
-          progressPct={progressPct}
-          onExit={() => setShowExitConfirm(true)}
-          feedback={
-            phase === 'feedback' && lastFeedback !== null && !isGenericExercise
-              ? {
-                  isCorrect: lastFeedback,
-                  subtitle: lastFeedback ? 'Siguiente ejercicio…' : undefined,
-                }
-              : null
-          }
-          footer={
-            <>
-              {phase === 'hints' && current?.payload.kind === 'phoneme' && (
-                <div className="phoneme-focus__hints-panel">
-                  <ExerciseHints
-                    ipa={current.payload.ipa}
-                    targetWord={current.payload.targetWord}
-                    onRetry={onRetry}
-                    onContinue={onHintContinue}
-                    voice={currentVoice}
-                  />
-                </div>
-              )}
-              {lessonFooter}
-              <ExitConfirmSheet
-                open={showExitConfirm}
-                onConfirm={() => { setShowExitConfirm(false); onExit(buildPartialResult(results)) }}
-                onCancel={() => setShowExitConfirm(false)}
-                backdrop={false}
-              />
-            </>
-          }
-        >
-          {sessionBody}
-        </PhonemeFocusShell>
-      </>
+      <PhonemeFocusShell
+        progressPct={progressPct}
+        stepCurrent={stepCurrent}
+        stepTotal={stepTotal}
+        onExit={() => setShowExitConfirm(true)}
+        feedback={
+          phase === 'feedback' && lastFeedback !== null && !isGenericExercise
+            ? {
+                isCorrect: lastFeedback,
+                subtitle: lastFeedback ? 'Siguiente ejercicio…' : undefined,
+              }
+            : null
+        }
+        footer={
+          <>
+            {phase === 'hints' && current?.payload.kind === 'phoneme' && (
+              <div className="w-full">
+                <ExerciseHints
+                  ipa={current.payload.ipa}
+                  targetWord={current.payload.targetWord}
+                  onRetry={onRetry}
+                  onContinue={onHintContinue}
+                  voice={currentVoice}
+                />
+              </div>
+            )}
+            {lessonFooter}
+            <ExitConfirmSheet
+              open={showExitConfirm}
+              onConfirm={() => { setShowExitConfirm(false); onExit(buildPartialResult(results)) }}
+              onCancel={() => setShowExitConfirm(false)}
+              backdrop={false}
+            />
+          </>
+        }
+      >
+        {sessionBody}
+      </PhonemeFocusShell>
     )
   }
 
   return (
-    <div className="relative mx-auto flex w-full max-w-md flex-col justify-start gap-4 px-4 pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] pt-4 lg:pb-[var(--layout-section-gap)]">
-      {sessionBody}
+    <div className="relative mx-auto flex min-h-[calc(100dvh-6rem)] w-full max-w-layout-session-max flex-col gap-layout-stack px-4 py-4 sm:py-6">
+      {/* Top Chrome matching Essential Words */}
+      <header className="flex w-full items-center gap-3">
+        <button
+          type="button"
+          onClick={() => setShowExitConfirm(true)}
+          aria-label="Salir de la práctica"
+          className="flex size-10 shrink-0 items-center justify-center rounded-full text-fg-subtle transition-colors duration-150 ease-out-quart focus-ring hover:bg-surface-raised hover:text-fg-muted cursor-pointer"
+        >
+          <X size={16} aria-hidden />
+        </button>
+
+        <div
+          role="progressbar"
+          aria-valuenow={stepCurrent}
+          aria-valuemin={0}
+          aria-valuemax={stepTotal}
+          aria-label={`Paso ${stepCurrent} de ${stepTotal}`}
+          className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-surface-sunken"
+        >
+          <div
+            className="h-full rounded-full bg-primary transition-[width] duration-300 ease-out-quart"
+            style={{ width: `${progressPct}%` }}
+          />
+        </div>
+
+        <span className="shrink-0 font-caption tabular-nums text-fg-muted">
+          {stepCurrent} / {stepTotal}
+        </span>
+      </header>
+
+      {/* Main Center Stage with Card Container */}
+      <main className="flex flex-1 flex-col items-center justify-center w-full">
+        <div className="flex w-full flex-col rounded-2xl border border-border-subtle bg-surface-raised p-6 sm:p-8 shadow-xs gap-6">
+          {sessionBody}
+        </div>
+      </main>
+
+      {lessonFooter}
       <ExitConfirmSheet
         open={showExitConfirm}
         onConfirm={() => { setShowExitConfirm(false); onExit(buildPartialResult(results)) }}

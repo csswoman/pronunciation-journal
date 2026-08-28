@@ -22,6 +22,7 @@ export const MINI_LESSON_EQUIVALENT_DECKS: Readonly<Record<string, string>> = Ob
   'hedging-language': 'c1-hedging-matices',
   'inversion-emphasis': 'b2-inversion-enfasis',
   'linking-words-basic': 'a1-conjunciones-basicas',
+  'linking-words-intermediate': 'b2-conectores-avanzados',
   'modal-verbs-ability': 'a1-can-capacidad-permiso',
   'modals-deduction': 'b1-modales-deduccion',
   'participle-clauses': 'b2-clausulas-participio',

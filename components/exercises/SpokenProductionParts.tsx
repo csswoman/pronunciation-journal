@@ -47,67 +47,74 @@ export function SpokenProductionControls({
   onRetry: () => void
   onSkip?: () => void
 }) {
+  const hasError = isMicError || Boolean(error)
+  const errorMessage = speechError === 'not-allowed'
+    ? 'Se denegó el acceso al micrófono. Concede permisos en tu navegador.'
+    : speechError === 'no-speech'
+      ? 'No se detectó voz. Habla más cerca del micrófono y con claridad.'
+      : (error ?? 'No se pudo transcribir tu respuesta. Toca el micrófono para intentar de nuevo.')
+
   return (
-    <>
+    <div className="flex w-full flex-col gap-3">
       {!online && (
         <p
           role="status"
-          className="m-0 w-full rounded-[var(--radius-md)] border border-warning-border bg-warning-soft px-3 py-2 text-body-sm text-warning"
+          className="m-0 w-full rounded-[var(--radius-md)] border border-warning-border bg-warning-soft px-3.5 py-2.5 text-body-sm text-warning"
         >
-          Sin conexión. Conéctate para grabar y corregir tu respuesta.
+          Sin conexión. Conéctate a internet para grabar y corregir tu respuesta.
         </p>
       )}
 
-      {!isMicError && (
-        <div className="flex flex-col items-center gap-2 py-2">
-          <button
-            type="button"
-            onClick={onToggleMic}
-            disabled={isDone || grading || !online}
-            aria-label={isListening ? 'Detener grabación' : 'Grabar mi voz'}
-            className={cn(
-              'flex h-20 w-20 items-center justify-center rounded-full border-none text-on-primary transition-all focus-ring disabled:opacity-40 cursor-pointer',
-              isListening
-                ? 'bg-error shadow-[0_0_0_14px_color-mix(in_oklch,var(--error)_18%,transparent)]'
-                : 'bg-primary shadow-[0_4px_16px_color-mix(in_oklch,var(--primary)_35%,transparent)]',
-            )}
-          >
-            {isListening ? <MicOff size={28} /> : <Mic size={28} />}
-          </button>
-          <p className="m-0 text-body-sm text-fg-subtle">
+      <div className="flex flex-col items-center justify-center gap-3 rounded-[var(--radius-lg)] border border-border-subtle bg-surface-raised/50 px-4 py-6 text-center sm:py-8">
+        <button
+          type="button"
+          onClick={hasError && !isListening ? onRetry : onToggleMic}
+          disabled={isDone || grading || !online}
+          aria-label={isListening ? 'Detener grabación' : 'Grabar mi voz'}
+          className={cn(
+            'flex h-20 w-20 items-center justify-center rounded-full border-none transition-all duration-200 focus-ring disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer',
+            isListening && 'bg-error text-on-primary animate-pulse shadow-[0_0_0_12px_color-mix(in_oklch,var(--error)_20%,transparent)]',
+            grading && 'bg-primary/80 text-on-primary animate-pulse shadow-[0_0_0_8px_color-mix(in_oklch,var(--primary)_20%,transparent)]',
+            !isListening && !grading && (hasError
+              ? 'border-2 border-warning-border bg-warning-soft text-warning hover:bg-warning-soft/80'
+              : 'bg-primary text-on-primary hover:bg-primary-hover shadow-[0_4px_16px_color-mix(in_oklch,var(--primary)_30%,transparent)] active:scale-95'
+            ),
+          )}
+        >
+          {isListening ? <MicOff size={32} /> : <Mic size={32} />}
+        </button>
+
+        <div className="flex flex-col items-center gap-0.5">
+          <p className="m-0 text-body-md font-semibold text-fg">
             {isListening
-              ? 'Escuchando… toca para parar'
+              ? 'Escuchando… habla en voz alta'
               : grading
-                ? 'Corrigiendo…'
-                : 'Toca para hablar'}
+                ? 'Analizando tu respuesta…'
+                : hasError
+                  ? 'Toca para reintentar'
+                  : 'Toca para hablar'}
+          </p>
+          <p className="m-0 text-caption text-fg-muted">
+            {isListening
+              ? 'Toca el botón cuando termines tu oración'
+              : grading
+                ? 'Comprobando pronunciación, gramática y tiempo verbal'
+                : 'Di tu oración en inglés con claridad'}
           </p>
         </div>
-      )}
 
-      {isMicError && (
-        <p className="m-0 text-center text-body-sm text-fg-muted" role="alert">
-          {speechError === 'not-allowed'
-            ? 'Se denegó el acceso al micrófono.'
-            : speechError === 'no-speech'
-              ? 'No se detectó voz. Toca el micrófono y habla con claridad.'
-              : 'No se pudo transcribir tu respuesta. Inténtalo de nuevo.'}{' '}
-          <button
-            type="button"
-            onClick={onRetry}
-            className="min-h-11 cursor-pointer border-none bg-transparent px-1 text-body-sm text-fg-muted underline focus-ring"
+        {hasError && (
+          <div
+            id={errorId}
+            role="alert"
+            className="mt-1 flex max-w-[50ch] flex-col items-center gap-1 rounded-[var(--radius-md)] border border-warning-border/50 bg-warning-soft/50 px-3.5 py-2 text-center text-body-sm text-warning"
           >
-            Reintentar
-          </button>
-        </p>
-      )}
+            <span>{errorMessage}</span>
+          </div>
+        )}
+      </div>
 
       <ProductionHint exampleSentence={exampleSentence} exerciseId={exerciseId} />
-
-      {error && (
-        <p id={errorId} role="alert" className="m-0 text-body-sm text-error">
-          {error}
-        </p>
-      )}
 
       {onSkip && (
         <button
@@ -120,7 +127,7 @@ export function SpokenProductionControls({
           Omitir este
         </button>
       )}
-    </>
+    </div>
   )
 }
 
@@ -139,7 +146,7 @@ export function SpokenProductionFeedbackActions({
     <>
       <ProductionFeedback grade={grade} transcript={transcript} />
       <PracticeActionBar>
-        {grade.usedTarget ? (
+        {grade.correct ? (
           <>
             <Button variant="secondary" size="lg" fullWidth onClick={onRetry}>
               Intentar de nuevo

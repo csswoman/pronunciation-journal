@@ -1,46 +1,46 @@
 {
   "meta": {
     "eyebrow": "B1 · Organizar ideas",
-    "title": "Organizar ideas",
+    "title": "Organizar ideas:",
     "titleEmphasis": "conectores del discurso",
-    "goal": "Ya puedes usar conectores del discurso en ejemplos claros y adecuados al contexto."
+    "goal": "Ya puedes usar conectores del discurso en ejemplos claros y adecuados al contexto formal e informal."
   },
   "cards": [
     {
       "id": "b1-conectores-discurso-concept",
       "tag": "Idea central",
-      "title": "Organizar ideas: qué expresa",
+      "title": "Organizar ideas: qué expresa cada grupo",
       "lede": "Esta lección te ayuda a usar conectores del discurso con precisión y sin traducir palabra por palabra.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "adición",
-              "value": "also, in addition, moreover",
+              "key": "Adición",
+              "value": "also, in addition, moreover (suman información a un argumento)",
               "highlights": [
-                "adición"
+                "also", "in addition", "moreover"
               ]
             },
             {
-              "key": "contraste",
-              "value": "however, although, whereas",
+              "key": "Contraste",
+              "value": "however, although, whereas (marcan oposición o límite)",
               "highlights": [
-                "contraste"
+                "however", "although", "whereas"
               ]
             },
             {
-              "key": "causa y resultado",
-              "value": "because, therefore, as a result",
+              "key": "Causa y resultado",
+              "value": "because, therefore, as a result (indican motivo o consecuencia)",
               "highlights": [
-                "causa y resultado"
+                "because", "therefore", "as a result"
               ]
             },
             {
-              "key": "ejemplificación",
-              "value": "for example, for instance",
+              "key": "Ejemplificación",
+              "value": "for example, for instance (introducen casos concretos)",
               "highlights": [
-                "ejemplificación"
+                "for example", "for instance"
               ]
             }
           ]
@@ -48,29 +48,32 @@
       ],
       "tip": {
         "label": "Objetivo:",
-        "body": "reconocer la intención y elegir correctamente conectores del discurso en situaciones reales."
+        "body": "reconocer la intención comunicativa y elegir el conector adecuado con su puntuación correcta."
       }
     },
     {
       "id": "b1-conectores-discurso-form",
-      "tag": "Forma",
+      "tag": "Forma y puntuación",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la posición de los conectores y el uso de comas y puntos y coma.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "adición",
-              "value": "also, in addition, moreover"
+              "key": "Inicio de oración con coma",
+              "value": "However, the results were not conclusive.",
+              "highlights": ["However,"]
             },
             {
-              "key": "contraste",
-              "value": "however, although, whereas"
+              "key": "Punto y coma + coma",
+              "value": "The cost was high; therefore, we cancelled the order.",
+              "highlights": ["; therefore,"]
             },
             {
-              "key": "causa y resultado",
-              "value": "because, therefore, as a result"
+              "key": "Subordinación con Although",
+              "value": "Although it rained heavily, we enjoyed our hike.",
+              "highlights": ["Although", ","]
             }
           ]
         }
@@ -86,16 +89,20 @@
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "It was expensive; however, I bought it."
+              "key": "Contraste (However)",
+              "value": "The car was expensive; however, it was extremely reliable."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "Although it rained, we went out."
+              "key": "Concesión (Although)",
+              "value": "Although she was tired, she attended the entire conference."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "Therefore, we changed the plan."
+              "key": "Resultado (Therefore)",
+              "value": "He did not submit the document; therefore, his application was rejected."
+            },
+            {
+              "key": "Adición (In addition)",
+              "value": "The hotel offers free breakfast. In addition, there is a complimentary gym."
             }
           ]
         }
@@ -105,23 +112,25 @@
       "id": "b1-conectores-discurso-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende de la intención, la cantidad, el tiempo o el registro.",
+      "lede": "Compara conectores de contraste frente a conectores de adición y resultado.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "adición",
-              "rule": "also, in addition, moreover",
+              "label": "Contraste (however / although)",
+              "rule": "opone dos realidades o matiza",
               "examples": [
-                "It was expensive; however, I bought it."
+                "Although the test was hard, he passed.",
+                "The test was hard; however, he passed."
               ]
             },
             {
-              "label": "contraste",
-              "rule": "however, although, whereas",
+              "label": "Resultado (therefore / as a result)",
+              "rule": "muestra la consecuencia directa",
               "examples": [
-                "Although it rained, we went out."
+                "He studied hard; therefore, he passed.",
+                "He did not study; as a result, he failed."
               ]
             }
           ]
@@ -144,7 +153,16 @@
             {
               "variant": "good",
               "text": "Although it was late, we stayed.",
-              "note": "forma recomendada"
+              "note": "nunca combines 'Although' con 'but' en la misma oración"
+            },
+            {
+              "variant": "bad",
+              "text": "The food was delicious, however it was cold."
+            },
+            {
+              "variant": "good",
+              "text": "The food was delicious; however, it was cold.",
+              "note": "usa ';' antes de 'however' y ',' después si unes dos oraciones completas"
             }
           ]
         }
@@ -161,15 +179,15 @@
           "rows": [
             {
               "key": "1. Intención",
-              "value": "¿Qué quieres expresar exactamente?"
+              "value": "¿Quieres contrastar (however), sumar (in addition) o dar un resultado (therefore)?"
             },
             {
               "key": "2. Estructura",
-              "value": "Elige la forma adecuada de conectores del discurso."
+              "value": "¿Es una subordinada (although + cláusula) o un adverbio de transición (however,)?"
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, verbo, número y tiempo."
+              "key": "3. Puntuación",
+              "value": "Revisa comas al inicio de oración y punto y coma al unir cláusulas independientes."
             },
             {
               "key": "4. Naturalidad",
@@ -186,31 +204,48 @@
   ],
   "quiz": [
     {
-      "q": "Choose a contrast connector.",
+      "q": "Choose the best contrast connector for: 'Sales increased; ___, profits declined due to high costs.'",
       "options": [
         "therefore",
-        "however"
+        "however",
+        "in addition",
+        "furthermore"
       ],
       "answer": 1,
-      "explain": "La respuesta correcta aplica la regla central de conectores del discurso."
+      "explain": "'However' introduce el contraste entre que las ventas subieran pero las ganancias cayeran."
     },
     {
-      "q": "¿Cuál de estas frases es correcta?",
+      "q": "¿Cuál de estas frases tiene la puntuación y gramática correctas?",
       "options": [
         "Although it was late, but we stayed.",
-        "Although it was late, we stayed."
+        "Although it was late, we stayed.",
+        "Although it was late we stayed, but.",
+        "Although it was late so we stayed."
       ],
       "answer": 1,
-      "explain": "La segunda opción usa la estructura y el orden correctos."
+      "explain": "Con 'Although' al inicio, se separa la cláusula subordinada con una coma sin añadir 'but' ni 'so'."
     },
     {
-      "q": "¿Qué conviene revisar al usar conectores del discurso?",
+      "q": "Complete the result: 'The flight was cancelled; ___, we had to book a hotel.'",
       "options": [
-        "La intención, la estructura y el contexto.",
-        "Solo la traducción literal al español."
+        "therefore",
+        "although",
+        "however",
+        "despite"
       ],
       "answer": 0,
-      "explain": "Una frase natural depende del significado, la forma y el contexto, no de traducir palabra por palabra."
+      "explain": "'Therefore' indica la consecuencia directa de la cancelación del vuelo."
+    },
+    {
+      "q": "¿Cuál es la puntuación estándar al usar 'however' entre dos oraciones independientes?",
+      "options": [
+        "; however,",
+        ", however",
+        "however,",
+        "; however;"
+      ],
+      "answer": 0,
+      "explain": "La regla estándar en redacción formal es usar punto y coma antes y coma después ('; however,')."
     }
   ]
 }

@@ -14,6 +14,7 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { isAnonymousUser } from "@/lib/auth/is-anonymous";
 import type { HomePlanStatus } from "@/components/home/HomeDailyCard";
 import HomeReviewBanner from "@/components/home/HomeReviewBanner";
+import HomeExploreDrawer from "@/components/home/HomeExploreDrawer";
 import EssentialWordsProgressCard from "@/components/home/EssentialWordsProgressCard";
 import WeakSoundCard from "@/components/home/WeakSoundCard";
 import HomeWordOfDayCard from "@/components/home/HomeWordOfDayCard";
@@ -178,15 +179,17 @@ export default function HomeCommandGrid({
             </div>
           ) : null}
 
-          <HomeChunkOfDayCard />
         </div>
       </div>
 
-      <aside className="home-command-aside flex flex-col gap-4" aria-label="Práctica sugerida">
-        <WeakSoundCard weakestPhoneme={weakestPhoneme} />
-        <HomeWordOfDayCard profileLevel={profileLevel} />
-        <EssentialWordsProgressCard profileLevel={profileLevel} />
-      </aside>
+      <HomeExploreDrawer>
+        <HomeChunkOfDayCard />
+        <div className="flex flex-col gap-4" aria-label="Práctica sugerida">
+          <WeakSoundCard weakestPhoneme={weakestPhoneme} />
+          <HomeWordOfDayCard profileLevel={profileLevel} />
+          <EssentialWordsProgressCard profileLevel={profileLevel} />
+        </div>
+      </HomeExploreDrawer>
     </div>
   );
 }

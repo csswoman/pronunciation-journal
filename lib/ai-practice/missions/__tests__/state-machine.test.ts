@@ -5,9 +5,11 @@ import {
   missionReducer,
   type MissionState,
 } from '../state-machine'
+import type { ConversationalMission } from '../types'
 import type { SpokenAttempt } from '@/lib/pronunciation/spoken-attempt'
 
-const mission = getMission('roleplay.cafe')!
+const mission = getMission('roleplay.cafe') as ConversationalMission
+
 
 function attempt(overrides: Partial<SpokenAttempt> = {}): SpokenAttempt {
   return {

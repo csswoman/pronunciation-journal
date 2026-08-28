@@ -4,6 +4,8 @@ export type ConceptSelfRating = "unknown" | "familiar" | "confident";
 
 export type ConceptStatus = "mastered" | "review" | "learn";
 
+export type ConceptSignalSource = "manual" | "assessment" | "exercise";
+
 export interface AssessmentConcept {
   lessonSlug: string;
   level: CefrLevelId;
@@ -22,6 +24,7 @@ export interface ConceptSignal {
   assessedAt: string;
   /** When set, Daily study_deck ignores this review signal until due. */
   verificationDueAt?: string;
+  source?: ConceptSignalSource;
 }
 
 export function deriveConceptSignal(

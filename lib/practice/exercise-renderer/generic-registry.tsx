@@ -31,6 +31,7 @@ import type {
   CsShadowPhraseExercise as CsShadowPhraseExerciseType,
 } from '@/lib/exercises/types'
 import type { PedagogicalFeedback, PracticeResultStatus } from '@/lib/practice/types'
+import type { ErrorPatternId } from '@/lib/exercises/error-patterns'
 
 export type GenericRenderExtras = {
   score?: number
@@ -38,6 +39,10 @@ export type GenericRenderExtras = {
   resultStatus?: PracticeResultStatus
   responseTimeMs?: number
   firstTryFailed?: boolean
+  /** Structured error label from AI grading, when the answer was wrong. */
+  errorPattern?: ErrorPatternId
+  /** Pattern this exercise was scheduled to rehearse, when applicable. */
+  rehearsedPattern?: ErrorPatternId
 }
 
 export type GenericRenderContext = {
@@ -155,8 +160,23 @@ export const GENERIC_REGISTRY: GenericRegistry = {
     ),
   },
   error_correction: { title: 'Corrige la oración', render: (exercise: ErrorCorrectionExerciseType, { onResult }) => <ErrorCorrectionExercise exercise={exercise} onResult={onResult} /> },
-  conjugation_blank: { title: 'Completa el verbo', render: (exercise: ConjugationBlankExerciseType, { onResult }) => <ConjugationBlankExercise exercise={exercise} onResult={onResult} /> },
-  sentence_transformation: { title: 'Transforma la oración', noHint: true, render: (exercise: SentenceTransformationExerciseType, { onResult, onSkip }) => <SentenceTransformationExercise exercise={exercise} onResult={onResult} onSkip={onSkip} /> },
+  conjugation_blank: {
+    title: 'Completa el verbo',
+    render: (exercise: ConjugationBlankExerciseType, { onResult, hintCount }) => (
+      <ConjugationBlankExercise
+        exercise={exercise}
+        onResult={onResult}
+        hintCount={hintCount ?? 0}
+      />
+    ),
+  },
+  sentence_transformation: {
+    title: 'Transforma la oración',
+    noHint: true,
+    render: (exercise: SentenceTransformationExerciseType, { onResult }) => (
+      <SentenceTransformationExercise exercise={exercise} onResult={onResult} />
+    ),
+  },
   translation_es_en: { title: 'Traduce al inglés', noHint: true, render: (exercise: TranslationEsEnExerciseType, { onResult }) => <TranslationEsEnExercise exercise={exercise} onResult={onResult} /> },
   cs_shadow_phrase: {
     title: 'Imita la frase',

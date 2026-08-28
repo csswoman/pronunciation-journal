@@ -1,7 +1,7 @@
 'use client'
 
 import type { MissionState } from '@/lib/ai-practice/missions/state-machine'
-import type { OralMission } from '@/lib/ai-practice/missions/types'
+import type { ConversationalMission } from '@/lib/ai-practice/missions/types'
 import { MissionBriefing } from './MissionBriefing'
 import { MissionConversation } from './MissionConversation'
 import { MissionTransferPrompt } from './MissionTransferPrompt'
@@ -13,7 +13,8 @@ import { MissionTransferPrompt } from './MissionTransferPrompt'
 //   <MissionTransferPrompt />
 
 interface MissionRunnerProps {
-  mission: OralMission
+  mission: ConversationalMission
+
   state: MissionState
   onListen: () => void
   onSlow: () => void

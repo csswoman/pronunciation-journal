@@ -65,6 +65,11 @@ export function buildExerciseResult(params: {
         : {
             type: current.slug,
             contentId: current.contentId,
+            constraintId:
+              current.payload.kind === 'generic'
+                ? ((current.payload.data as { constraintId?: string; constraint?: { id?: string } }).constraintId ??
+                   (current.payload.data as { constraintId?: string; constraint?: { id?: string } }).constraint?.id)
+                : undefined,
             feedbackCategory: extras?.feedback?.category,
             errorCode: extras?.feedback?.errorCode,
             expectedAnswer: extras?.feedback?.expectedAnswer,

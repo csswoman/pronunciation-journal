@@ -1,16 +1,15 @@
 "use client";
 
-import { BookMarked, BookOpen } from "@/components/icons";
+import { BookOpen } from "@/components/icons";
 import Link from "next/link";
 
-export type WordsMode = "dictionary" | "learn" | "saved";
+export type WordsMode = "dictionary" | "learn";
 /** Retained for the legacy runtime behind the server-side /tracking redirect. */
 export type WordsTabId = "lexicon" | "my-words";
 
 const TABS: { id: WordsMode; label: string; icon: typeof BookOpen }[] = [
   { id: "dictionary", label: "Diccionario", icon: BookOpen },
   { id: "learn", label: "Aprender", icon: BookOpen },
-  { id: "saved", label: "Guardadas", icon: BookMarked },
 ];
 
 interface WordsTopbarProps {
@@ -27,12 +26,7 @@ export function WordsTopbar({
       <nav className="words-lexicon__seg flex gap-1 p-1 rounded-full" aria-label="Secciones de vocabulario">
         {TABS.map(({ id, label, icon: Icon }) => {
           const isActive = activeMode === id;
-          const href =
-            id === "learn"
-              ? "/dictionary?mode=learn"
-              : id === "saved"
-              ? "/dictionary?mode=saved"
-              : "/dictionary";
+          const href = id === "learn" ? "/dictionary?mode=learn" : "/dictionary";
           return (
             <Link
               key={id}
@@ -50,4 +44,3 @@ export function WordsTopbar({
     </div>
   );
 }
-

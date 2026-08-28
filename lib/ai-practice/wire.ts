@@ -4,6 +4,7 @@ import { compactState, selectNextExerciseTopic, type UserLearningState } from ".
 import { isExerciseTool } from "./tools/registry";
 import { buildMissionPrompt } from "./missions/prompts";
 import { getMission } from "./missions/registry";
+import { isConversationalMission } from "./missions/types";
 
 /** Returns the topic of the most recently answered exercise in the message list. */
 export function extractLastTopic(messages: AIMessage[]): string | undefined {
@@ -27,7 +28,7 @@ export function buildSystemPrompt(
   const voiceSuffix = voiceScored ? `\n\n${VOICE_TURN_INSTRUCTION}` : "";
 
   const mission = missionId ? getMission(missionId) : null;
-  if (mission) {
+  if (mission && isConversationalMission(mission)) {
     const missionPrompt = buildMissionPrompt(
       mission,
       learningState ? compactState(learningState) : undefined,
@@ -71,6 +72,7 @@ type WireMessage = {
 };
 
 /** Wire-shape counterpart to `extractLastTopic`: reads `topic` off the most
+
  * recent `tool` message's result, matching how `messagesToWire` serializes
  * answered exercise results. */
 export function extractLastTopicFromWire(messages: WireMessage[]): string | undefined {

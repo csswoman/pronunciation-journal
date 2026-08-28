@@ -30,6 +30,9 @@ function scoreOf(signal: PronunciationFeedbackSignal): number | null {
 function summaryFor(signal: PronunciationFeedbackSignal, hasPriority: boolean): string {
   if (signal.kind === 'unscored') return 'No pudimos evaluar este intento. Prueba a grabarlo otra vez.'
   if (signal.kind === 'stt_intelligibility') {
+    if (signal.recognizedPercent !== null && signal.recognizedPercent >= 85) {
+      return 'Se entendió la frase con claridad. ¡Excelente pronunciación!'
+    }
     return hasPriority
       ? 'Comparamos el texto que entendió el reconocimiento de voz y elegimos un foco para repetir.'
       : 'El reconocimiento de voz entendió parte de la frase. Necesitamos otro intento para señalar un foco fiable.'

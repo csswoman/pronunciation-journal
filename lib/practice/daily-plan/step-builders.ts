@@ -1,3 +1,4 @@
+import { isExerciseAvailableOnSurface } from '@/lib/exercises/capabilities'
 import { generateFillBlankFromWordBank } from '@/lib/exercises/generators/fill-blank'
 import { generateSentenceDictationFromWordBank } from '@/lib/exercises/generators/sentence-dictation'
 import { generateReorderWordsFromWordBank } from '@/lib/exercises/generators/reorder-words'
@@ -7,6 +8,7 @@ import {
   generateWrittenProductionFromWordBank,
 } from '@/lib/exercises/generators/production'
 import { generateSentenceContextExercises } from '@/lib/lexicon/exercises'
+import { generateWarmupShadowPhrases } from '@/lib/exercises/generators/warmup'
 import { generateMinimalPair, generateDictation } from '@/lib/phoneme-practice/exercises'
 import { buildMixedSession, type MixedExercise } from '@/lib/phoneme-practice/mixed-session'
 import { fromGenericExercise, fromMixedExercise } from '@/lib/practice/adapters'
@@ -18,6 +20,8 @@ import {
   LISTENING_EXERCISE_COUNT,
   MINIMAL_PAIRS_EXERCISE_COUNT,
   PHONEME_FOCUS_EXERCISE_COUNT,
+  SPOKEN_PRODUCTION_PER_SESSION,
+  WARMUP_PHRASE_COUNT,
   WORD_INTRO_MAX_CARDS,
 } from './constants'
 import { dedupeByContentId, toWordEntry } from './selectors'
@@ -56,6 +60,8 @@ export function buildWordReviewStep(
 ): DailyStep | null {
   if (words.length === 0) return null
 
+  const targetSurface = context === 'daily' ? 'daily_plan' : 'free_practice'
+
   const { exercises: fillBlanks, skipped: fillBlankSkipped } = generateFillBlankFromWordBank(words, 2)
   if (
     process.env.NODE_ENV === 'development' &&
@@ -64,11 +70,27 @@ export function buildWordReviewStep(
   ) {
     console.debug('[word_review] fill_blank skipped entries', fillBlankSkipped)
   }
-  const dictations = generateSentenceDictationFromWordBank(words, 2)
-  const reorders = generateReorderWordsFromWordBank(words, 1)
-  const matchPairs = generateMatchPairsFromWordBank(words, 1)
-  const writtenProduction = generateWrittenProductionFromWordBank(words, 1)
-  const spokenProduction = generateSpokenProductionFromWordBank(words, 1)
+  const dictations = isExerciseAvailableOnSurface('sentence_dictation', targetSurface)
+    ? generateSentenceDictationFromWordBank(words, 2)
+    : []
+  const reorders = isExerciseAvailableOnSurface('reorder_words', targetSurface)
+    ? generateReorderWordsFromWordBank(words, 1)
+    : []
+  const matchPairs = isExerciseAvailableOnSurface('match_pairs', targetSurface)
+    ? generateMatchPairsFromWordBank(words, 1)
+    : []
+  const writtenProduction = isExerciseAvailableOnSurface('written_production', targetSurface)
+    ? generateWrittenProductionFromWordBank(words, 1)
+    : { exercises: [] }
+  // Guarantee one Rodeo (circumlocution) and one spoken tense-transform slot
+  // per session — otherwise these two constraints only show up by random
+  // rotation and a learner could go weeks without ever seeing them.
+  const spokenProduction = isExerciseAvailableOnSurface('spoken_production', targetSurface)
+    ? generateSpokenProductionFromWordBank(words, SPOKEN_PRODUCTION_PER_SESSION, [
+        'rodeo_circumlocution',
+        'spoken_verb_transform',
+      ])
+    : { exercises: [] }
 
   const exercises = dedupeByContentId([
     ...fillBlanks.map((ex) => fromGenericExercise(ex, context)),
@@ -98,6 +120,7 @@ export function buildWordReviewStep(
     exercises,
     featuredWords: words.map((w) => w.text),
     estMinutes: Math.max(2, Math.round(exercises.length * 1.1)),
+    warmupPhrases: generateWarmupShadowPhrases(words, WARMUP_PHRASE_COUNT),
   }
 }
 

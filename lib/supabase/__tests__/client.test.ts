@@ -67,4 +67,14 @@ describe("getSupabaseBrowserClient", () => {
     expect(third).not.toBe(first);
     expect(createBrowserClient).toHaveBeenCalledTimes(2);
   });
+
+  it("still reuses one client in development to avoid duplicate GoTrueClient instances", async () => {
+    process.env = { ...process.env, NODE_ENV: "development" };
+    const { getSupabaseBrowserClient } = await import("../client");
+
+    const first = getSupabaseBrowserClient();
+    const second = getSupabaseBrowserClient();
+    expect(second).toBe(first);
+    expect(createBrowserClient).toHaveBeenCalledTimes(1);
+  });
 });

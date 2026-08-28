@@ -2,6 +2,10 @@
 
 // Planned structure:
 // <CsShadowPhraseExercise>
+'use client'
+
+// Planned structure:
+// <CsShadowPhraseExercise>
 //   <PhraseHeader />        — phrase + Listen button
 //   <MicButton />           — useSpeechRecognition → transcript
 //   <ShadowingFallback />   — unsupported/failed recognition → honest unscored continue
@@ -21,7 +25,6 @@ import { cn } from '@/lib/cn'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { feedbackFromScoringResult } from '@/lib/pronunciation/feedback/from-scoring'
 import { persistPronunciationFeedbackEvidence } from '@/lib/pronunciation/feedback/persistence'
-import { RemediationSequence } from '@/components/pronunciation-feedback/RemediationSequence'
 import { PracticeActionBar, PracticeContinueButton } from '@/components/practice/session/PracticeActionBar'
 import type { ScoringResult } from '@/lib/types'
 import type { CsShadowPhraseExercise as CsShadowPhraseExerciseType } from '@/lib/exercises/types'
@@ -180,15 +183,6 @@ export function CsShadowPhraseExercise({ exercise, onResult }: Props) {
             feedback={getFeedbackMessage(scoring.accuracy)}
             xpEarned={calculateXP(scoring.accuracy)}
             transcript={scoring.transcript}
-          />
-          <RemediationSequence
-            onListen={() => speak(exercise.phrase)}
-            onSlow={() => {
-              const utterance = new SpeechSynthesisUtterance(exercise.phrase)
-              utterance.rate = 0.6
-              window.speechSynthesis.speak(utterance)
-            }}
-            onRetry={handleRetry}
           />
           <PracticeActionBar>
             <Button variant="secondary" size="lg" fullWidth onClick={handleRetry}>Intentar de nuevo</Button>

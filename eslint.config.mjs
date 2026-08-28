@@ -26,6 +26,7 @@ import tseslint from "typescript-eslint";
 
 /** Static data / generated files exempt from max-lines (see above). */
 const MAX_LINES_ALLOWLIST = [
+  "lib/ai-prompts.ts",
   "lib/supabase/types.ts",
   "lib/pronunciation/ipa-data.ts",
   "lib/courses/curriculum.ts",

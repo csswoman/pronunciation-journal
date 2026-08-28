@@ -6,7 +6,7 @@ import { MISSION_CATEGORY_LABELS } from './mission-category-labels'
 
 // Planned structure:
 // <MissionCard>
-//   <MissionMeta /> — category + CEFR
+//   <MissionMeta /> — category + CEFR + modo
 //   <MissionBody /> — goal + context
 //   <MissionAction /> — start CTA
 
@@ -18,9 +18,11 @@ interface MissionCardProps {
 export function MissionCard({ mission, onSelect }: MissionCardProps) {
   return (
     <article className="layout-card-pad flex flex-col gap-3 rounded-md border border-border-subtle bg-surface-raised">
-      <p className="m-0 font-kicker text-fg-subtle">
-        {MISSION_CATEGORY_LABELS[mission.category]} · {mission.recommendedCefr.toUpperCase()}
-      </p>
+      <div className="flex flex-wrap items-center gap-2">
+        <p className="m-0 font-kicker text-fg-subtle">
+          {MISSION_CATEGORY_LABELS[mission.category]} · {mission.recommendedCefr.toUpperCase()}
+        </p>
+      </div>
 
       <div className="layout-stack-tight min-w-0 flex-1">
         <h3 className="m-0 text-balance text-label font-semibold text-fg">

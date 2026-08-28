@@ -6,6 +6,7 @@ import {
   type MissionLaunchSource,
 } from '../launch'
 import type { MissionOutcome } from '../outcome'
+import { contrastTargetId } from '@/lib/pronunciation/targets/registry'
 
 const TARGET = 'segmental.phoneme./ə/'
 
@@ -42,6 +43,16 @@ describe('canonical mission launches', () => {
   it('finds only authored target-to-mission links', () => {
     expect(missionForTarget(TARGET)?.id).toBe('roleplay.airport')
     expect(missionForTarget('missing.target')).toBeNull()
+  })
+
+  it('never hands a scripted mission to target-based launchers', () => {
+    // `scripted.interview.intro` declara el mismo target de contraste que las
+    // conversacionales. Los consumidores (daily plan, pronunciation path)
+    // esperan el flujo de chat, asi que aqui solo pueden salir conversacionales.
+    const SHARED_TARGET = contrastTargetId('/iː/', '/ɪ/')
+    const found = missionForTarget(SHARED_TARGET)
+    expect(found).not.toBeNull()
+    expect(found?.mode).toBe('conversational')
   })
 })
 

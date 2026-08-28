@@ -1,6 +1,6 @@
 import { BASE_TUTOR_PROMPT } from '@/lib/ai-practice/prompts'
 import type { compactState } from '@/lib/ai-practice/learning-state'
-import type { OralMission } from './types'
+import type { ConversationalMission } from './types'
 
 export interface MissionPromptState {
   phase?: string
@@ -15,10 +15,11 @@ export interface MissionPromptState {
  * that decides whether that report counts as evidence.
  */
 export function buildMissionPrompt(
-  mission: OralMission,
+  mission: ConversationalMission,
   compact?: ReturnType<typeof compactState>,
   state?: MissionPromptState,
 ): string {
+
   const intentLines = mission.requiredIntents
     .map((intent) => `- ${intent.id}: ${intent.label}`)
     .join('\n')

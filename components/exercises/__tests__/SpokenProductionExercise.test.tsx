@@ -36,7 +36,7 @@ const exercise = {
 }
 
 describe('SpokenProductionExercise', () => {
-  it('uses Gemini transcription and prioritizes retry when the target was not recognized', async () => {
+  it('uses speech input with sentence endpoint and prioritizes retry when the target was not recognized', async () => {
     speechInputMocks.useSpeechInput.mockReturnValue({
       state: 'done',
       result: { transcript: 'Insurance Company', source: 'gemini' },
@@ -50,6 +50,7 @@ describe('SpokenProductionExercise', () => {
       correct: false,
       usedTarget: false,
       grammaticallyCorrect: false,
+      constraintMet: true,
       score: 0,
       feedback: 'Try using the target phrase in a sentence.',
     })
@@ -63,8 +64,43 @@ describe('SpokenProductionExercise', () => {
       }))
     })
 
-    expect(speechInputMocks.useSpeechInput).toHaveBeenCalledWith(expect.objectContaining({ prefer: 'gemini' }))
+    expect(speechInputMocks.useSpeechInput).toHaveBeenCalledWith(
+      expect.objectContaining({
+        prefer: 'auto',
+        endpoint: '/api/gemini/transcribe-sentence',
+      }),
+    )
     expect(screen.getByRole('button', { name: 'Intentar de nuevo' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Continuar de todos modos' })).toBeInTheDocument()
+  })
+
+  it('renders mic controls and keeps them accessible during listening and errors', () => {
+    speechInputMocks.useSpeechInput.mockReturnValue({
+      state: 'listening',
+      result: null,
+      error: null,
+      isSupported: true,
+      start: vi.fn(),
+      stop: vi.fn(),
+      reset: vi.fn(),
+    })
+
+    const { rerender } = render(<SpokenProductionExercise exercise={exercise} onResult={vi.fn()} />)
+    expect(screen.getByRole('button', { name: 'Detener grabación' })).toBeInTheDocument()
+    expect(screen.getByText(/Escuchando… habla en voz alta/i)).toBeInTheDocument()
+
+    speechInputMocks.useSpeechInput.mockReturnValue({
+      state: 'error',
+      result: null,
+      error: 'no-speech',
+      isSupported: true,
+      start: vi.fn(),
+      stop: vi.fn(),
+      reset: vi.fn(),
+    })
+
+    rerender(<SpokenProductionExercise exercise={exercise} onResult={vi.fn()} />)
+    expect(screen.getByRole('button', { name: 'Grabar mi voz' })).toBeInTheDocument()
+    expect(screen.getByText(/No se detectó voz/i)).toBeInTheDocument()
   })
 })

@@ -70,6 +70,12 @@ export const UNMAPPED_AUDIT: readonly UnmappedAuditEntry[] = [
       'Discourse connectors (however, therefore) — not phonetic linking across word boundaries. Name collision with connected.linking; do not map.',
   },
   {
+    slug: 'linking-words-intermediate',
+    kind: 'public_lesson',
+    reason:
+      'Discourse connectors (although, despite, furthermore) — not phonetic linking across word boundaries. Name collision with connected.linking; do not map.',
+  },
+  {
     slug: 'phonemic-awareness-advanced',
     kind: 'public_lesson',
     reason:

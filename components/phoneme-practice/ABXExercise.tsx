@@ -3,14 +3,14 @@
 // Planned structure:
 // <ABXExercise>
 //   <PhonemeExercisePrompt />
-//   <ReferenceRow /> — A / B
-//   <XCard />
-//   <ChoiceRow />
-//   <PhonemeConfirmButton />
+//   <ReferencesGrid />       — Sound 1 and Sound 2 reference cards
+//   <TargetStimulusCard />   — Sound 3 (the unknown stimulus X)
+//   <ChoiceGrid />           — Option A or Option B selection buttons with radio dots
+//   <PhonemeConfirmButton /> — Check answer CTA
 // </ABXExercise>
 
 import { useState } from 'react'
-import { Play } from '@/components/icons'
+import { Volume2 } from '@/components/icons'
 import { cn } from '@/lib/cn'
 import { speak } from '@/lib/phoneme-practice/tts'
 import type { Exercise } from '@/lib/phoneme-practice/types'
@@ -47,80 +47,105 @@ export function ABXExercise({ exercise, onSubmit, voice }: Props) {
     onSubmit(exercise.correctIds.includes(selected), selected)
   }
 
+  const rawIpa = exercise.ipa?.replace(/^\/+|\/+$/g, '')
+  const ipaDisplay = rawIpa ? `/${rawIpa}/` : undefined
+
   return (
-    <div className="phoneme-focus__exercise">
+    <div className="flex w-full flex-col gap-6">
       <PhonemeExercisePrompt
         centered
-        title={
-          <>
-            ¿El tercero suena más como el primero o el segundo?
-          </>
-        }
-        kicker={exercise.ipa ? `Sonido ${exercise.ipa}` : undefined}
-        hint="Escucha los tres y elige"
+        title="¿El tercer sonido suena más como el 1 o el 2?"
+        kicker={ipaDisplay ? `Sonido ${ipaDisplay} · Discriminación auditiva` : 'Discriminación auditiva'}
+        hint="Escucha los 3 audios y elige a cuál referencia se asemeja la incógnita"
       />
 
-      <div className="grid w-full grid-cols-2 gap-3">
+      {/* References 1 and 2 */}
+      <div className="grid w-full grid-cols-2 gap-3.5">
         {[stimA, stimB].map((stim, i) => {
-          const label = i === 0 ? '1' : '2'
+          const num = i === 0 ? '1' : '2'
           return stim ? (
-            <div
-              key={label}
-              className="flex flex-col items-center gap-3 rounded-xl border border-border-default bg-surface-raised px-4 py-5"
+            <button
+              key={num}
+              type="button"
+              onClick={() => handlePlay(i)}
+              className="flex cursor-pointer flex-col items-center gap-2.5 rounded-xl border border-border-default bg-surface-sunken/50 p-4 transition-all duration-150 hover:bg-surface-sunken hover:border-primary/50 focus-ring select-none"
             >
-              <span className="text-body-sm font-semibold text-fg-subtle">{label}</span>
-              <button
-                type="button"
-                onClick={() => handlePlay(i)}
-                aria-label={`Escuchar ${label}`}
-                className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-border-default bg-surface-base text-fg-secondary transition-all duration-150 hover:border-primary hover:text-primary hover:shadow-sm active:scale-95"
-              >
-                <Play size={16} fill="currentColor" />
-              </button>
-              {stim.ipa && (
-                <span className="font-mono text-body-sm text-fg-secondary">{stim.ipa}</span>
+              <span className="font-mono text-tiny font-bold uppercase tracking-wider text-fg-subtle">
+                Referencia {num}
+              </span>
+              <div className="flex size-11 items-center justify-center rounded-full border border-border-default bg-surface-raised text-fg transition-all duration-150 group-hover:text-primary">
+                <Volume2 size={20} aria-hidden />
+              </div>
+              {stim.ipa ? (
+                <span className="font-ipa text-body-lg font-semibold text-fg">
+                  {stim.ipa}
+                </span>
+              ) : (
+                <span className="text-caption text-fg-muted">Escuchar</span>
               )}
-            </div>
+            </button>
           ) : null
         })}
       </div>
 
+      {/* Unknown Target Stimulus (3 / X) */}
       {stimX && (
-        <div className="flex w-full flex-col items-center gap-3 rounded-xl border-2 border-primary bg-primary/5 px-4 py-5">
-          <span className="text-body-sm font-semibold text-primary">3 — ¿cuál es?</span>
-          <button
-            type="button"
-            onClick={() => handlePlay(2)}
-            aria-label="Escuchar el tercero"
-            className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border-2 border-primary bg-surface-raised text-primary transition-all duration-150 hover:bg-primary hover:text-white hover:shadow-md active:scale-95"
-          >
-            <Play size={18} fill="currentColor" />
-          </button>
-          <span className="font-mono text-body-sm text-primary/70">?</span>
-        </div>
+        <button
+          type="button"
+          onClick={() => handlePlay(2)}
+          className="flex w-full cursor-pointer flex-col items-center gap-2.5 rounded-xl border border-primary/40 bg-primary-soft/40 p-5 transition-all duration-150 hover:bg-primary-soft/60 hover:border-primary focus-ring select-none"
+        >
+          <span className="font-mono text-tiny font-bold uppercase tracking-wider text-primary">
+            3 · Sonido incógnita
+          </span>
+          <div className="flex size-12 items-center justify-center rounded-full border-2 border-primary bg-primary text-on-primary shadow-sm transition-transform duration-150 active:scale-95">
+            <Volume2 size={22} aria-hidden />
+          </div>
+          <span className="text-caption font-medium text-fg-muted">
+            Toca para escuchar el audio 3
+          </span>
+        </button>
       )}
 
+      {/* Options Selection Grid */}
       <div
         role="radiogroup"
-        aria-label="Elige 1 o 2"
-        className="grid w-full grid-cols-2 gap-3"
+        aria-label="Elige opción 1 o 2"
+        className="grid w-full grid-cols-2 gap-3.5"
       >
         {exercise.options.map((opt) => {
           const isCorrect = exercise.correctIds.includes(opt.id)
           const isSelected = selected === opt.id
 
           return (
-            <button
+            <div
               key={opt.id}
-              type="button"
-              role="radio"
-              aria-checked={isSelected}
-              aria-disabled={submitted}
               onClick={() => handleSelect(opt.id)}
-              className={cn( 'cursor-pointer rounded-xl border-2 py-3 text-body-sm font-semibold transition-all duration-150', !submitted && !isSelected && 'border-border-default bg-surface-raised text-fg-secondary hover:border-primary hover:text-primary', !submitted && isSelected && 'border-primary bg-primary/8 text-primary', submitted && isCorrect && 'border-success bg-success/10 text-success pf-reveal-ok', submitted && isSelected && !isCorrect && 'border-error bg-error/10 text-error pf-reveal-bad', submitted && !isSelected && !isCorrect && 'border-border-subtle text-fg-disabled opacity-50', )}
+              className={cn(
+                'group flex min-h-14 cursor-pointer items-center justify-center gap-3 rounded-xl border-2 p-4 transition-all duration-150 select-none',
+                !submitted && !isSelected && 'border-border-default bg-surface-sunken/40 hover:border-primary/50 hover:bg-surface-sunken text-fg',
+                !submitted && isSelected && 'border-primary bg-primary-soft text-primary shadow-xs font-semibold ring-1 ring-primary/30',
+                submitted && isCorrect && 'border-success-border bg-success-soft text-success pf-reveal-ok font-semibold',
+                submitted && isSelected && !isCorrect && 'border-error-border bg-error-soft text-error pf-reveal-bad font-semibold',
+                submitted && !isSelected && !isCorrect && 'border-border-subtle bg-surface-raised/40 text-fg-subtle opacity-40 cursor-default',
+              )}
             >
-              {opt.label}
-            </button>
+              <div
+                className={cn(
+                  'flex size-5 shrink-0 items-center justify-center rounded-full border transition-colors',
+                  !isSelected && 'border-border-strong bg-surface-base',
+                  isSelected && !submitted && 'border-primary bg-primary text-on-primary',
+                  submitted && isCorrect && 'border-success bg-success text-on-primary',
+                  submitted && isSelected && !isCorrect && 'border-error bg-error text-on-primary',
+                )}
+                aria-hidden
+              >
+                {isSelected && (
+                  <div className="size-2 rounded-full bg-current" />
+                )}
+              </div>
+              <span className="text-body-lg font-semibold">{opt.label}</span>
+            </div>
           )
         })}
       </div>

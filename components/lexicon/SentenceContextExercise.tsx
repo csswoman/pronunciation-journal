@@ -2,188 +2,224 @@
 
 // Planned structure:
 // <SentenceContextExercise>
-//   <AudioButton />      — centered large play button
-//   <SentencePrompt />   — full sentence with blank as dashes below audio
-//   <OptionGrid />       — clean border buttons, checkmark on correct
-//   <ConfirmBar />       — shown after selection, before confirm
+//   <SentencePromptCard>
+//     <AudioTrigger />     — clean listen button for context sentence
+//     <SentenceDisplay />  — sentence with dynamic blank and animated reveal
+//   </SentencePromptCard>
+//   <OptionGrid>           — 4 options with keyboard shortcuts and check/x reveal
+//     <OptionButton />
+//   </OptionGrid>
+//   <DefinitionCard />     — word definition revealed on answer
+// </SentenceContextExercise>
 
 import { useState, useRef, useEffect, useCallback } from 'react'
+import { Check, X, BookOpen } from '@/components/icons'
 import { cn } from '@/lib/cn'
 import type { SentenceContextExercise as SentenceContextExerciseType, SentenceContextOption } from '@/lib/exercises/types'
+import { buildPedagogicalFeedback } from '@/lib/exercises/feedback'
+import { useUISounds } from '@/hooks/useUISounds'
+import { ListenButton } from '@/components/ui/ListenButton'
 
 interface Props {
   exercise: SentenceContextExerciseType
-  onResult: (isCorrect: boolean, userAnswer: string, timeMs: number) => void
+  onResult: (
+    isCorrect: boolean,
+    userAnswer: string,
+    timeMs: number,
+    extras?: { feedback?: ReturnType<typeof buildPedagogicalFeedback> },
+  ) => void
 }
 
-type Phase = 'selecting' | 'confirmed'
+type AnswerState = 'idle' | 'correct' | 'wrong'
 
 export function SentenceContextExercise({ exercise, onResult }: Props) {
-  const [selected, setSelected] = useState<string | null>(null)
-  const [phase, setPhase] = useState<Phase>('selecting')
+  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [state, setState] = useState<AnswerState>('idle')
   const [isPlaying, setIsPlaying] = useState(false)
-  const audioRef = useRef<HTMLAudioElement | null>(null)
   const startMs = useRef(Date.now())
+  const { playTap, playCorrect, playWrong } = useUISounds()
 
   useEffect(() => {
-    setSelected(null)
-    setPhase('selecting')
+    setSelectedId(null)
+    setState('idle')
     setIsPlaying(false)
     startMs.current = Date.now()
-    if (audioRef.current) { audioRef.current.pause(); audioRef.current = null }
     window.speechSynthesis?.cancel()
   }, [exercise.id])
 
+  useEffect(() => () => window.speechSynthesis?.cancel(), [])
+
   const handlePlay = useCallback(() => {
-    if (isPlaying) return
-    if (typeof window !== 'undefined' && window.speechSynthesis) {
-      const utterance = new SpeechSynthesisUtterance(exercise.fullSentence)
-      utterance.lang = 'en-US'
-      utterance.rate = 0.9
-      utterance.onstart = () => setIsPlaying(true)
-      utterance.onend = () => setIsPlaying(false)
-      utterance.onerror = () => setIsPlaying(false)
-      window.speechSynthesis.speak(utterance)
-    }
+    if (isPlaying || typeof window === 'undefined' || !('speechSynthesis' in window) || typeof SpeechSynthesisUtterance === 'undefined') return
+    window.speechSynthesis.cancel()
+    const utterance = new SpeechSynthesisUtterance(exercise.fullSentence)
+    utterance.lang = 'en-US'
+    utterance.rate = 0.9
+    utterance.onstart = () => setIsPlaying(true)
+    utterance.onend = () => setIsPlaying(false)
+    utterance.onerror = () => setIsPlaying(false)
+    window.speechSynthesis.speak(utterance)
   }, [exercise.fullSentence, isPlaying])
 
-  function handleSelect(optionId: string) {
-    if (phase !== 'selecting') return
-    setSelected(optionId === selected ? null : optionId)
-  }
+  const handlePick = useCallback((opt: SentenceContextOption) => {
+    if (state !== 'idle') return
+    playTap()
+    const isCorrect = opt.word === exercise.answer
+    setSelectedId(opt.id)
+    setState(isCorrect ? 'correct' : 'wrong')
+    if (isCorrect) playCorrect(); else playWrong()
 
-  function handleConfirm() {
-    if (!selected || phase !== 'selecting') return
-    const selectedOption = exercise.options.find((o) => o.id === selected)
-    const correct = selectedOption?.word === exercise.answer
-    setPhase('confirmed')
-    onResult(correct, selectedOption?.word ?? '', Date.now() - startMs.current)
-  }
+    onResult(isCorrect, opt.word, Date.now() - startMs.current, {
+      feedback: buildPedagogicalFeedback(exercise, isCorrect, opt.word),
+    })
+  }, [state, exercise, onResult, playTap, playCorrect, playWrong])
 
-  const done = phase === 'confirmed'
+  useEffect(() => {
+    function handleKey(e: KeyboardEvent) {
+      if (state !== 'idle') return
+      const idx = parseInt(e.key, 10) - 1
+      if (idx >= 0 && idx < exercise.options.length) handlePick(exercise.options[idx])
+    }
+    window.addEventListener('keydown', handleKey)
+    return () => window.removeEventListener('keydown', handleKey)
+  }, [state, exercise.options, handlePick])
+
+  const selectedOption = exercise.options.find((o) => o.id === selectedId)
 
   return (
-    <div className="flex w-full flex-col gap-4">
-      <AudioButton isPlaying={isPlaying} onPlay={handlePlay} />
-      <SentencePrompt sentence={exercise.sentence} />
+    <div className="flex w-full flex-col gap-5">
+      <SentencePromptCard
+        sentence={exercise.sentence}
+        answer={exercise.answer}
+        selectedWord={selectedOption?.word ?? null}
+        answerState={state}
+        isPlaying={isPlaying}
+        onPlayAudio={handlePlay}
+      />
       <OptionGrid
         options={exercise.options}
         answer={exercise.answer}
-        selected={selected}
-        done={done}
-        onSelect={handleSelect}
+        selectedId={selectedId}
+        answerState={state}
+        onPick={handlePick}
       />
-      {!done && (
-        <ConfirmBar disabled={!selected} onConfirm={handleConfirm} />
+      {state !== 'idle' && exercise.definition && (
+        <DefinitionCard word={exercise.answer} definition={exercise.definition} />
       )}
     </div>
   )
 }
 
-function AudioButton({ isPlaying, onPlay }: { isPlaying: boolean; onPlay: () => void }) {
+function SentencePromptCard({
+  sentence,
+  answer,
+  selectedWord,
+  answerState,
+  isPlaying,
+  onPlayAudio,
+}: {
+  sentence: string
+  answer: string
+  selectedWord: string | null
+  answerState: AnswerState
+  isPlaying: boolean
+  onPlayAudio: () => void
+}) {
+  const done = answerState !== 'idle'
+  const isCorrect = answerState === 'correct'
+  const charCount = Math.max(3, answer.length)
+  const parts = sentence.split('___')
+
   return (
-    <div className="flex justify-center py-2">
-      <button
-        type="button"
-        onClick={onPlay}
-        disabled={isPlaying}
-        aria-label={isPlaying ? 'Playing sentence' : 'Play sentence'}
-        className={cn( 'flex h-14 w-14 items-center justify-center rounded-full border transition-all duration-200', isPlaying ? 'cursor-wait border-border-default bg-surface-raised text-fg-subtle' : 'cursor-pointer border-border-default bg-surface-raised text-fg hover:border-border-strong hover:scale-105 active:scale-95', )}
-      >
-        {isPlaying ? <SoundWaveIcon /> : <SpeakerIcon />}
-      </button>
+    <div className="flex flex-col items-center gap-4 rounded-xl border border-border-default bg-surface-sunken/40 p-5 text-center shadow-xs sm:p-6">
+      <ListenButton
+        onPlay={onPlayAudio}
+        label={isPlaying ? 'Reproduciendo...' : 'Escuchar oración'}
+        aria-label={isPlaying ? 'Reproduciendo oración completa' : 'Escuchar oración completa'}
+        aria-pressed={isPlaying}
+      />
+
+      <p className="text-h3 font-medium leading-relaxed text-fg sm:text-h2">
+        {parts[0]?.trimEnd()}
+        <span
+          className={cn(
+            'relative inline-flex items-center justify-center mx-1.5 px-3 py-0.5 rounded-lg border transition-all duration-200 align-baseline',
+            !done && 'border-dashed border-border-strong/80 bg-surface-base/60 text-transparent select-none shadow-2xs',
+            done && isCorrect && 'border-success-border bg-success-soft text-success font-bold shadow-2xs',
+            done && !isCorrect && 'border-error-border bg-error-soft text-error font-bold shadow-2xs',
+          )}
+          style={{ minWidth: `max(4.5rem, calc(${charCount * 0.75}em + 1.5rem))` }}
+        >
+          {done ? (
+            <span className="animate-in fade-in zoom-in-95 duration-200" aria-live="polite">
+              {selectedWord}
+            </span>
+          ) : (
+            <span className="font-mono text-body-sm text-fg-subtle/40 tracking-widest" aria-hidden>&nbsp;</span>
+          )}
+        </span>
+        {parts[1]?.trimStart()}
+      </p>
     </div>
   )
 }
 
-function SpeakerIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-      <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
-      <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-    </svg>
-  )
-}
-
-function SoundWaveIcon() {
-  return (
-    <svg width="22" height="18" viewBox="0 0 24 20" fill="currentColor" aria-hidden>
-      <rect x="0" y="7" width="3" height="6" rx="1.5" opacity="0.5">
-        <animate attributeName="height" values="6;12;6" dur="0.8s" repeatCount="indefinite" />
-        <animate attributeName="y" values="7;4;7" dur="0.8s" repeatCount="indefinite" />
-      </rect>
-      <rect x="5.25" y="4" width="3" height="12" rx="1.5">
-        <animate attributeName="height" values="12;6;12" dur="0.8s" repeatCount="indefinite" begin="0.15s" />
-        <animate attributeName="y" values="4;7;4" dur="0.8s" repeatCount="indefinite" begin="0.15s" />
-      </rect>
-      <rect x="10.5" y="1" width="3" height="18" rx="1.5">
-        <animate attributeName="height" values="18;10;18" dur="0.8s" repeatCount="indefinite" begin="0.05s" />
-        <animate attributeName="y" values="1;5;1" dur="0.8s" repeatCount="indefinite" begin="0.05s" />
-      </rect>
-      <rect x="15.75" y="4" width="3" height="12" rx="1.5">
-        <animate attributeName="height" values="12;6;12" dur="0.8s" repeatCount="indefinite" begin="0.2s" />
-        <animate attributeName="y" values="4;7;4" dur="0.8s" repeatCount="indefinite" begin="0.2s" />
-      </rect>
-      <rect x="21" y="7" width="3" height="6" rx="1.5" opacity="0.5">
-        <animate attributeName="height" values="6;12;6" dur="0.8s" repeatCount="indefinite" begin="0.1s" />
-        <animate attributeName="y" values="7;4;7" dur="0.8s" repeatCount="indefinite" begin="0.1s" />
-      </rect>
-    </svg>
-  )
-}
-
-function SentencePrompt({ sentence }: { sentence: string }) {
-  const parts = sentence.split('___')
-  const wordCount = 4
-
-  return (
-    <p className="text-center text-body-lg leading-relaxed text-fg">
-      {parts[0]}
-      <span className="inline-flex items-end gap-0.75 mx-1.5 pb-0.5 align-baseline">
-        {Array.from({ length: wordCount }).map((_, i) => (
-          <span key={i} className="inline-block h-px w-3.5 bg-border-strong" />
-        ))}
-      </span>
-      {parts[1]?.trimStart()}
-    </p>
-  )
-}
-
-interface OptionGridProps {
+function OptionGrid({
+  options,
+  answer,
+  selectedId,
+  answerState,
+  onPick,
+}: {
   options: SentenceContextOption[]
   answer: string
-  selected: string | null
-  done: boolean
-  onSelect: (id: string) => void
-}
+  selectedId: string | null
+  answerState: AnswerState
+  onPick: (opt: SentenceContextOption) => void
+}) {
+  const done = answerState !== 'idle'
 
-function OptionGrid({ options, answer, selected, done, onSelect }: OptionGridProps) {
   return (
-    <div className="flex flex-col gap-2">
-      {options.map((opt) => {
-        const isSelected = opt.id === selected
-        const isCorrectOption = opt.word === answer
+    <div className="flex flex-col gap-2.5">
+      {options.map((opt, idx) => {
+        const isSelected = opt.id === selectedId
+        const isAnswer = opt.word === answer
 
         return (
           <button
             key={opt.id}
             type="button"
-            onClick={() => onSelect(opt.id)}
+            onClick={() => onPick(opt)}
             disabled={done}
-            aria-pressed={isSelected}
+            aria-label={`${idx + 1}. ${opt.word}`}
             className={cn(
-              'w-full flex items-center justify-between rounded-(--radius-lg) border px-4 py-3.5 text-body-sm font-medium text-left min-h-13 transition-all duration-150',
-              !done && !isSelected && 'border-border-default bg-surface-raised text-fg hover:border-border-strong cursor-pointer',
-              !done && isSelected && 'border-primary bg-primary-soft text-primary cursor-pointer',
-              done && isCorrectOption && 'border-success-border bg-success-soft text-success cursor-default',
-              done && isSelected && !isCorrectOption && 'border-error-border bg-error-soft text-error cursor-default',
-              done && !isCorrectOption && !isSelected && 'border-border-subtle bg-surface-raised text-fg-subtle opacity-50 cursor-default',
+              'group flex w-full min-h-13.5 items-center justify-between rounded-xl border p-4 transition-all duration-150 select-none text-left focus-ring',
+              !done && 'border-border-default bg-surface-sunken/40 hover:border-primary/50 hover:bg-surface-sunken text-fg cursor-pointer active:scale-[0.99]',
+              done && isAnswer && 'border-success-border bg-success-soft text-success pf-reveal-ok font-semibold cursor-default',
+              done && isSelected && !isAnswer && 'border-error-border bg-error-soft text-error pf-reveal-bad font-semibold cursor-default',
+              done && !isAnswer && !isSelected && 'border-border-subtle bg-surface-raised/40 text-fg-subtle opacity-40 cursor-default',
             )}
           >
-            <span>{opt.word}</span>
-            {done && isCorrectOption && (
-              <span className="text-success text-base leading-none">✓</span>
+            <div className="flex items-center gap-3.5">
+              <span
+                className={cn(
+                  'flex size-5 shrink-0 items-center justify-center rounded-md font-mono text-tiny font-semibold transition-colors',
+                  !done && 'border border-border-strong bg-surface-base text-fg-muted group-hover:border-primary/60 group-hover:text-primary',
+                  done && isAnswer && 'border border-success bg-success-soft text-success',
+                  done && isSelected && !isAnswer && 'border border-error bg-error-soft text-error',
+                  done && !isAnswer && !isSelected && 'border border-border-subtle bg-surface-base text-fg-subtle opacity-60',
+                )}
+                aria-hidden
+              >
+                {idx + 1}
+              </span>
+              <span className="text-body-md font-medium">{opt.word}</span>
+            </div>
+
+            {done && (
+              <div className="shrink-0">
+                {isAnswer ? <Check size={20} className="text-success" /> : isSelected ? <X size={20} className="text-error" /> : null}
+              </div>
             )}
           </button>
         )
@@ -192,20 +228,19 @@ function OptionGrid({ options, answer, selected, done, onSelect }: OptionGridPro
   )
 }
 
-function ConfirmBar({ disabled, onConfirm }: { disabled: boolean; onConfirm: () => void }) {
+function DefinitionCard({ word, definition }: { word: string; definition: string }) {
   return (
-    <button
-      type="button"
-      onClick={onConfirm}
-      disabled={disabled}
-      className={cn(
-        'w-full rounded-full py-3.5 text-body-sm font-semibold transition-all duration-150',
-        disabled
-          ? 'bg-surface-raised text-fg-subtle cursor-not-allowed'
-          : 'bg-(--cta-bg) text-(--cta-fg) cursor-pointer hover:opacity-90 active:scale-[0.99]',
-      )}
-    >
-      Check
-    </button>
+    <div className="flex items-start gap-3.5 rounded-xl border border-border-subtle bg-surface-sunken/80 p-4 text-left shadow-xs animate-in fade-in slide-in-from-top-1 duration-200">
+      <div className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg border border-primary/20 bg-primary-soft text-primary">
+        <BookOpen size={18} aria-hidden />
+      </div>
+      <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+        <span className="font-mono text-tiny font-semibold tracking-wider text-fg-muted uppercase">
+          Definición · <strong className="text-fg">{word}</strong>
+        </span>
+        <p className="text-body-sm leading-relaxed text-fg">{definition}</p>
+      </div>
+    </div>
   )
 }
+

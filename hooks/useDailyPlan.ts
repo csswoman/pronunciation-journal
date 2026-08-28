@@ -23,6 +23,9 @@ export interface ConceptLesson {
   slug: string
   title: string
   subtitle: string
+  /** Short markdown body (MiniLesson.body). Used only by DailyLessonCard;
+   *  applyPlan's 'concept' step ignores it. */
+  body: string
 }
 
 export type DailyPlanStatus = 'idle' | 'loading' | 'ready' | 'error'

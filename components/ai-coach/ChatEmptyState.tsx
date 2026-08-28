@@ -10,10 +10,11 @@ import {
   BriefcaseBusiness,
   AlignLeft,
   Mic,
-  Sparkles,
 } from "@/components/icons";
 import { AI_COACH_EMPTY_STATE_PROMPTS } from "@/lib/ai-prompts";
 import { cn } from "@/lib/cn";
+import LiquidOrb from "./LiquidOrb";
+
 
 // Planned structure:
 // <ChatEmptyState>
@@ -93,21 +94,13 @@ export default function ChatEmptyState({ onSendMessage }: ChatEmptyStateProps) {
       <div className="blob blob-4" />
 
       <div className="relative z-10 mx-auto flex w-full max-w-md flex-col px-3 py-6 @[22rem]:px-4 @[22rem]:py-8">
-        {/* Hero — compact so modes enter the first viewport */}
-        <header className="mb-5 flex flex-col items-center gap-2.5 text-center @[22rem]:mb-6">
-          <div
-            className="relative flex size-11 shrink-0 items-center justify-center rounded-lg @[22rem]:size-12 @[22rem]:rounded-xl"
-            style={{
-              background: "var(--gradient-primary)",
-              boxShadow:
-                "0 8px 24px -8px color-mix(in oklch, var(--primary) 45%, transparent)",
-            }}
-          >
-            <Sparkles size={20} strokeWidth={1.75} className="text-on-primary" aria-hidden />
-            <span className="pointer-events-none absolute inset-0 rounded-[inherit] shadow-[inset_0_1px_0_0_rgb(255_255_255_/_0.25)]" />
+        {/* Hero — orb hero prominente */}
+        <header className="mb-5 flex flex-col items-center gap-3 text-center @[22rem]:mb-6">
+          <div className="relative flex size-24 shrink-0 items-center justify-center">
+            <LiquidOrb size={96} intensity="idle" />
           </div>
           <div className="layout-stack-tight max-w-prose">
-            <h2 className="m-0 text-balance text-h3 text-fg">
+            <h2 className="m-0 flex items-center justify-center gap-2 text-balance text-h3 text-fg">
               Let&apos;s practice together.
             </h2>
             <p className="m-0 text-pretty text-caption leading-relaxed text-fg-muted">
@@ -124,11 +117,11 @@ export default function ChatEmptyState({ onSendMessage }: ChatEmptyStateProps) {
               type="button"
               onClick={() => onSendMessage(prompt)}
               className={cn(
-                "group layout-card-pad-compact flex w-full min-h-11 items-center gap-3 rounded-md",
-                "border border-border-subtle bg-surface-raised text-left cursor-pointer",
+                "group layout-card-pad-compact flex min-h-11 w-full cursor-pointer items-center gap-3 rounded-md",
+                "border border-border-subtle bg-surface-raised text-left",
                 "transition-[border-color,background-color,transform] duration-150 ease-out",
                 "hover:border-border-default hover:bg-surface-base",
-                "active:scale-[0.99] focus-ring motion-reduce:transition-none motion-reduce:active:scale-100",
+                "focus-ring active:scale-[0.99] motion-reduce:transition-none motion-reduce:active:scale-100",
               )}
             >
               <span

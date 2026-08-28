@@ -1,5 +1,6 @@
 import { contrastTargetId, getTarget, phonemeTargetId, targetId } from '@/lib/pronunciation/targets/registry'
-import type { MissionRegistryIssue, OralMission, LegacyRoleplayScenario } from './types'
+import { isConversationalMission, isScriptedMission, type ConversationalMission, type MissionRegistryIssue, type OralMission, type ScriptedMission, type LegacyRoleplayScenario } from './types'
+import { SCRIPTED_MISSIONS } from './scripted/catalog'
 
 export const LEGACY_ROLEPLAY_SCENARIOS = [
   'interview',
@@ -29,6 +30,7 @@ const SCHWA_TARGET = phonemeTargetId('/ə/')
 const MISSIONS: readonly OralMission[] = [
   {
     id: 'roleplay.interview',
+    mode: 'conversational',
     category: 'interview',
     recommendedCefr: 'B1',
     context: 'A job interview for a role the learner wants.',
@@ -55,6 +57,7 @@ Start by welcoming the candidate and asking them to introduce themselves.
   },
   {
     id: 'roleplay.cafe',
+    mode: 'conversational',
     category: 'service',
     recommendedCefr: 'A2',
     context: 'A busy coffee shop in an English-speaking city.',
@@ -84,6 +87,7 @@ Start by greeting the customer.
   },
   {
     id: 'roleplay.airport',
+    mode: 'conversational',
     category: 'service',
     recommendedCefr: 'A2',
     context: 'An international airport check-in desk.',
@@ -115,6 +119,7 @@ Start by calling the next passenger.
   },
   {
     id: 'roleplay.doctor',
+    mode: 'conversational',
     category: 'service',
     recommendedCefr: 'A2',
     context: 'A friendly general-practice clinic in an English-speaking city.',
@@ -144,6 +149,7 @@ Start by calling the patient in and asking what brings them in today.
   },
   {
     id: 'roleplay.store',
+    mode: 'conversational',
     category: 'service',
     recommendedCefr: 'A2',
     context: 'A clothing store where the learner is looking for something to buy.',
@@ -173,6 +179,7 @@ Start by greeting the customer as they walk in.
   },
   {
     id: 'roleplay.code_review',
+    mode: 'conversational',
     category: 'workplace',
     recommendedCefr: 'B1',
     context: 'A code review on a pull request submitted by the learner.',
@@ -203,6 +210,7 @@ Start by greeting the student and saying you've reviewed their PR and have a few
   },
   {
     id: 'roleplay.standup',
+    mode: 'conversational',
     category: 'workplace',
     recommendedCefr: 'B1',
     context: 'A daily standup meeting with the learner’s development team.',
@@ -233,6 +241,7 @@ Start by kicking off the standup meeting.
   },
   {
     id: 'roleplay.tech_design',
+    mode: 'conversational',
     category: 'workplace',
     recommendedCefr: 'B2',
     context: 'A product manager wants to understand a technical design decision.',
@@ -263,6 +272,7 @@ Start by saying you'd like to understand the technical proposal before the next 
   },
   {
     id: 'fluency.add_on_trains',
+    mode: 'conversational',
     category: 'social',
     recommendedCefr: 'B1',
     context: 'A casual conversation with a friendly conversation partner practicing the Add-On Strategy (Trees vs Trains).',
@@ -294,12 +304,31 @@ Start by asking them casually about their week or recent events.
   },
 ]
 
+/**
+ * Las misiones con guion viven en su propio catalogo pero comparten registry:
+ * `getMission` es el unico punto de entrada, y el runner se elige por `mode`.
+ */
+const ALL_MISSIONS: readonly OralMission[] = [...MISSIONS, ...SCRIPTED_MISSIONS]
+
 export const MISSION_REGISTRY: Readonly<Record<string, OralMission>> = Object.freeze(
-  Object.fromEntries(MISSIONS.map((mission) => [mission.id, mission])) as Record<string, OralMission>,
+  Object.fromEntries(ALL_MISSIONS.map((mission) => [mission.id, mission])) as Record<string, OralMission>,
 )
 
 export function listMissions(): readonly OralMission[] {
-  return MISSIONS
+  return ALL_MISSIONS
+}
+
+/**
+ * Las dos clases de mision se practican de forma distinta y viven en
+ * pestanas distintas: con guion se habla, conversacional se escribe.
+ * El filtrado vive aqui y no en la UI para que exista una sola fuente.
+ */
+export function listScriptedMissions(): readonly ScriptedMission[] {
+  return ALL_MISSIONS.filter(isScriptedMission)
+}
+
+export function listConversationalMissions(): readonly ConversationalMission[] {
+  return ALL_MISSIONS.filter(isConversationalMission)
 }
 
 export function getMission(missionId: string): OralMission | null {
@@ -328,31 +357,55 @@ export function validateMissionRegistry(): MissionRegistryIssue[] {
   const seen = new Set<string>()
   const allowedCefr = new Set(['A1', 'A2', 'B1', 'B2', 'C1', 'C2'])
 
-  for (const mission of MISSIONS) {
+  for (const mission of ALL_MISSIONS) {
     if (seen.has(mission.id)) {
       issues.push({ missionId: mission.id, code: 'duplicate_id', detail: 'duplicate mission id' })
     }
     seen.add(mission.id)
 
-    if (mission.targets.length < 2 || mission.targets.length > 3) {
-      issues.push({ missionId: mission.id, code: 'invalid_target_count', detail: 'missions must have 2–3 targets' })
-    }
     if (!allowedCefr.has(mission.recommendedCefr)) {
       issues.push({ missionId: mission.id, code: 'invalid_cefr', detail: `unsupported CEFR level ${mission.recommendedCefr}` })
     }
-    if (!Number.isInteger(mission.maxTurns) || mission.maxTurns < 1) {
-      issues.push({ missionId: mission.id, code: 'invalid_max_turns', detail: 'maxTurns must be a positive integer' })
+
+    if (isConversationalMission(mission)) {
+      // Solo el roleplay exige targets: son los que guian su bucle de correccion.
+      // El guion puntua por alineacion de fonemas, asi que ahi son opcionales.
+      if (mission.targets.length < 2 || mission.targets.length > 3) {
+        issues.push({ missionId: mission.id, code: 'invalid_target_count', detail: 'conversational missions must have 2–3 targets' })
+      }
+      if (!Number.isInteger(mission.maxTurns) || mission.maxTurns < 1) {
+        issues.push({ missionId: mission.id, code: 'invalid_max_turns', detail: 'maxTurns must be a positive integer' })
+      }
+
+      const intentIds = new Set<string>()
+      for (const intent of mission.requiredIntents) {
+        if (!intent.id.trim() || !intent.label.trim()) {
+          issues.push({ missionId: mission.id, code: 'invalid_intent', detail: 'intent ids and labels are required' })
+        }
+        if (intentIds.has(intent.id)) {
+          issues.push({ missionId: mission.id, code: 'duplicate_intent', detail: `duplicate intent ${intent.id}` })
+        }
+        intentIds.add(intent.id)
+      }
     }
 
-    const intentIds = new Set<string>()
-    for (const intent of mission.requiredIntents) {
-      if (!intent.id.trim() || !intent.label.trim()) {
-        issues.push({ missionId: mission.id, code: 'invalid_intent', detail: 'intent ids and labels are required' })
+    if (isScriptedMission(mission)) {
+      if (mission.script.length === 0) {
+        issues.push({ missionId: mission.id, code: 'invalid_script', detail: 'scripted missions require at least one line' })
       }
-      if (intentIds.has(intent.id)) {
-        issues.push({ missionId: mission.id, code: 'duplicate_intent', detail: `duplicate intent ${intent.id}` })
+      if (!mission.script.some((line) => line.speaker === 'learner')) {
+        issues.push({ missionId: mission.id, code: 'invalid_script', detail: 'scripted missions require a learner line' })
       }
-      intentIds.add(intent.id)
+      const lineIds = new Set<string>()
+      for (const line of mission.script) {
+        if (lineIds.has(line.id)) {
+          issues.push({ missionId: mission.id, code: 'invalid_script', detail: `duplicate script line ${line.id}` })
+        }
+        lineIds.add(line.id)
+        if (!line.text.trim()) {
+          issues.push({ missionId: mission.id, code: 'invalid_script', detail: `empty script line ${line.id}` })
+        }
+      }
     }
 
     for (const target of mission.targets) {
@@ -364,3 +417,4 @@ export function validateMissionRegistry(): MissionRegistryIssue[] {
 
   return issues
 }
+

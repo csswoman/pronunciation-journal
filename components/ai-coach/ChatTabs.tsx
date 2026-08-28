@@ -10,8 +10,8 @@ import { cn } from "@/lib/cn";
 // </ChatTabs>
 
 export const TABS = [
-  { id: "chat", label: "Chat", desc: "Pregunta lo que necesites", icon: MessageCircle },
-  { id: "missions", label: "Misiones", desc: "Completa un objetivo real", icon: BriefcaseBusiness },
+  { id: "chat", label: "Chat", desc: "Pregunta o practica escribiendo", icon: MessageCircle },
+  { id: "missions", label: "Misiones", desc: "Lee un guion en voz alta", icon: BriefcaseBusiness },
   { id: "pronunciation", label: "Pronunciación", desc: "Practica un sonido concreto", icon: Mic },
 ] as const;
 

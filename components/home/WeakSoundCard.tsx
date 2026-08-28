@@ -6,7 +6,10 @@
 
 import Link from "next/link";
 import { ArrowRight } from "@/components/icons";
+import { getIllustration } from "@/lib/illustrations/registry";
 import type { WeakestPhonemeHome } from "@/lib/home/constants";
+
+const DomainIcon = getIllustration("domainListening");
 
 interface WeakSoundCardProps {
   weakestPhoneme?: WeakestPhonemeHome | null;
@@ -45,16 +48,20 @@ export default function WeakSoundCard({ weakestPhoneme = null }: WeakSoundCardPr
     return (
       <Link
         href="/practice/sounds"
-        className="home-sidebar-card focus-ring group flex flex-col gap-2 transition-colors hover:bg-surface-sunken"
+        className="home-sidebar-card focus-ring group relative flex flex-col gap-2 overflow-hidden transition-colors hover:bg-surface-sunken"
       >
-        <span className="font-label text-fg">Pronunciación</span>
-        <span className="font-body-sm text-pretty text-fg-muted">
+        <DomainIcon
+          className="home-illustration-watermark text-pronunciacion"
+          aria-hidden="true"
+        />
+        <span className="relative z-1 font-label text-fg">Pronunciación</span>
+        <span className="relative z-1 font-body-sm text-pretty text-fg-muted">
           Laboratorio de sonidos
         </span>
-        <span className="font-body-sm text-pretty text-fg-muted">
+        <span className="relative z-1 font-body-sm text-pretty text-fg-muted">
           Contrastes, pares mínimos y práctica guiada para afinar el oído.
         </span>
-        <span className="mt-auto inline-flex min-h-10 items-center gap-1.5 font-body-sm text-fg-muted group-hover:text-fg group-hover:underline">
+        <span className="relative z-1 mt-auto inline-flex min-h-10 items-center gap-1.5 font-body-sm text-fg-muted group-hover:text-fg group-hover:underline">
           Abrir laboratorio <ArrowRight size={16} aria-hidden />
         </span>
       </Link>
@@ -66,10 +73,14 @@ export default function WeakSoundCard({ weakestPhoneme = null }: WeakSoundCardPr
   return (
     <Link
       href="/practice/sounds"
-      className="home-sidebar-card focus-ring group flex flex-col gap-3 transition-colors hover:bg-surface-sunken"
+      className="home-sidebar-card focus-ring group relative flex flex-col gap-3 overflow-hidden transition-colors hover:bg-surface-sunken"
     >
-      <span className="font-label text-fg">Pronunciación</span>
-      <div className="flex items-start gap-3">
+      <DomainIcon
+        className="home-illustration-watermark text-pronunciacion"
+        aria-hidden="true"
+      />
+      <span className="relative z-1 font-label text-fg">Pronunciación</span>
+      <div className="relative z-1 flex items-start gap-3">
         <span className="font-ipa shrink-0 text-display-ipa font-bold leading-none text-pronunciacion">
           {formatIpaDisplay(weakestPhoneme!.ipa)}
         </span>
@@ -84,7 +95,7 @@ export default function WeakSoundCard({ weakestPhoneme = null }: WeakSoundCardPr
           </p>
         </div>
       </div>
-      <span className="inline-flex min-h-10 items-center gap-1.5 font-body-sm text-fg-muted group-hover:text-fg group-hover:underline">
+      <span className="relative z-1 inline-flex min-h-10 items-center gap-1.5 font-body-sm text-fg-muted group-hover:text-fg group-hover:underline">
         Practica este sonido <ArrowRight size={16} aria-hidden />
       </span>
     </Link>

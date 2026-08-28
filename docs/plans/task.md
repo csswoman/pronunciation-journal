@@ -1,9 +1,19 @@
 | Task | Status | Description |
 |---|---|---|
-| Fase 0: Medición fidedigna y baseline | Done | Script de medición reproducible en build de producción y reporte de línea base |
-| Fase 1: Essential Words | Pending | Índice compacto build-time generado; pendiente completar conexión de carga granular en runtime-engine/session-loader |
-| Fase 2: Auth y Daily Plan | Done | Bootstrap único, dedupe in-flight, evitar re-hidrataciones remotas (userIdChanged) y optimizar composición del plan |
-| Fase 3: Carga diferida y code splitting | Done | SearchModal diferido, SoundLab modular y carga compacta, Daily/Review session runners diferidos |
-| Fase 4: Servidor y Progress | Done | Reutilizar server user en layout/pages y queries separadas originales restauradas para /progress |
-| Fase 5: CLS, Fuentes y Base de Datos | Done | Eliminar CLS en /daily, afinar preloads/fuentes y migración SQL corregida (sin índices duplicados, DROP POLICY exactos) |
-| Verificación final e informe de resultados | Pending | Pendiente generar performance-after.json fidedigno con sesión iniciada y suite completa |
+| B1 | Done | Selector de adaptador de voz según capacidad (WebSpeech vs Gemini fallback unificado) |
+| B2 | Done | Mecanismo surfaces en capabilities.ts (ortogonal a status, validador y selector) |
+| B3 | Done | Reparto diaria / práctica libre (match_pairs, sentence_dictation solo free_practice, multiple_choice solo diagnostic) |
+| B4 | Done | Feedback inmediato y visible en pasos 1 y 2 de la diaria (minimal pairs y comparación audio) |
+| B5 | Done | Reorganizar el hub de práctica libre en 4 puertas (Sonidos, Palabras, Leer y escuchar, Jugar) |
+| B6 | Done | Plaza rotativa en el paso 5 de la diaria (mission-cadence rotativo) |
+| B7 | Done | Nuevos ejercicios Fase 1: Rodeo (circumlocución) y Transformación hablada |
+| B10 | Done | Modificaciones a ejercicios existentes (reorder_words tiempo/longitud, fill_blank sin palabra, MC max 3) |
+| B11 | Done | Contexto de aprendizaje para la IA (coach recibe lección hoy, CEFR, dudas) |
+| B8 | Done | Nuevos ejercicios Fase 2: Narración en pasado y Respuesta sin preparación |
+| B9 | Done | Ejercicio de conectores / Justificación con rúbrica estrecha |
+| B12 | Done | Dificultad por nivel CEFR en generadores |
+| B13 | Done | Reto semanal de habla acumulativo |
+| B14 | Done | Mapa visual de conocimiento / progreso por nivel |
+
+
+

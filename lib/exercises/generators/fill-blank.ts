@@ -50,6 +50,10 @@ export function generateFillBlankFromWordBank(
     }
 
     const firstLetter = entry.text.charAt(0).toUpperCase()
+    const translationHint = entry.translation ? `Traducción: "${entry.translation}"` : undefined
+    const letterHint = `Empieza con "${firstLetter}" (${entry.text.length} letras)`
+    const meaningHint = entry.meaning ? `Definición: ${entry.meaning}` : undefined
+
     exercises.push({
       id: exerciseId('fill_blank', entry.id, entry.text),
       type: 'fill_blank',
@@ -60,11 +64,11 @@ export function generateFillBlankFromWordBank(
       sentence,
       answer: entry.text,
       options,
-      hint: entry.meaning ?? undefined,
+      hint: translationHint ?? meaningHint ?? letterHint,
       hints: {
-        level1: `Starts with "${firstLetter}"`,
-        level2: entry.meaning ?? `The word is: ${entry.text}`,
-        level3: entry.translation ?? undefined,
+        level1: translationHint ?? letterHint,
+        level2: meaningHint ?? letterHint,
+        level3: `La palabra es: "${entry.text}"`,
       },
     })
   }

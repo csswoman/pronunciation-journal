@@ -3,12 +3,11 @@
 // Planned structure:
 // <WrittenProductionExercise>
 //   <ProductionTaskHeader />
+//   <OfflineBanner />
 //   <SentenceField />
 //   <ProductionHint />
-//   <OfflineBanner />
 //   <ErrorAlert />
-//   <PrimaryActions />
-//   <SkipLink />
+//   <ActionButtons />
 //   <ProductionFeedback />
 //   <FeedbackActions />
 // </WrittenProductionExercise>
@@ -130,31 +129,46 @@ export function WrittenProductionExercise({ exercise, onResult, onSkip }: Props)
     })
   }, [text, onResult, exercise.exampleSentence])
 
+  const wordCount = text.trim().split(/\s+/).filter(Boolean).length
+
   return (
-    <div className="flex w-full flex-col justify-start gap-3" aria-busy={grading || undefined}>
+    <div className="flex w-full flex-col justify-start gap-5 sm:gap-6" aria-busy={grading || undefined}>
       <ProductionTaskHeader exercise={exercise} title="Escribe tu oración" />
 
       {!online && !grade && (
-        <OfflineBanner message="Sin conexión. Conéctate para enviar tu oración o autoevalúate con la solución." />
+        <OfflineBanner message="Sin conexión. Puedes autoevaluar tu oración con la solución de ejemplo." />
       )}
 
       {!grade && (
-        <>
+        <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
-            <label htmlFor={fieldId} className="text-body-sm font-medium text-fg-muted">
-              Tu oración
-            </label>
+            <div className="flex items-center justify-between">
+              <label htmlFor={fieldId} className="text-body-sm font-semibold text-fg">
+                Tu oración
+              </label>
+              {wordCount > 0 && (
+                <span className="font-mono text-tiny text-fg-subtle">
+                  {wordCount} {wordCount === 1 ? 'palabra' : 'palabras'}
+                </span>
+              )}
+            </div>
             <textarea
               id={fieldId}
               value={text}
               onChange={(e) => setText(e.target.value)}
+              onKeyDown={(e) => {
+                if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && text.trim() && !grading) {
+                  e.preventDefault()
+                  void handleSubmit()
+                }
+              }}
               disabled={grading}
               rows={4}
-              placeholder="Escribe tu oración aquí…"
+              placeholder="Escribe tu oración en inglés aquí…"
               aria-invalid={error ? true : undefined}
               aria-describedby={error ? errorId : undefined}
               className={cn(
-                'w-full min-h-28 resize-none rounded-[var(--radius-sm)] border border-border-default bg-surface-sunken px-3 py-3 text-base text-fg placeholder:text-fg-placeholder',
+                'w-full min-h-28 resize-none rounded-[var(--radius-sm)] border border-border-default bg-surface-sunken px-4 py-3 text-body-md text-fg placeholder:text-fg-placeholder focus-ring',
                 'transition-colors duration-150 ease-out-quart disabled:cursor-not-allowed disabled:opacity-50',
                 error && 'border-error-border',
               )}
@@ -167,12 +181,18 @@ export function WrittenProductionExercise({ exercise, onResult, onSkip }: Props)
           />
 
           {error && (
-            <p id={errorId} role="alert" className="m-0 text-body-sm text-error">
-              {error}
-            </p>
+            <div
+              id={errorId}
+              role="alert"
+              className="flex flex-col gap-1.5 rounded-[var(--radius-md)] border border-error-border bg-error-soft p-3.5 text-body-sm text-error"
+            >
+              <p className="m-0 leading-relaxed font-medium">
+                {error}
+              </p>
+            </div>
           )}
 
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2.5 pt-1">
             <Button
               variant="primary"
               size="lg"
@@ -198,25 +218,25 @@ export function WrittenProductionExercise({ exercise, onResult, onSkip }: Props)
                 onClick={onSkip}
                 disabled={grading}
                 aria-label="Omitir este ejercicio"
-                className="min-h-11 cursor-pointer self-center border-none bg-transparent px-4 text-body-sm font-medium text-fg-subtle transition-colors hover:text-fg-muted focus-ring disabled:cursor-not-allowed disabled:opacity-40"
+                className="min-h-11 cursor-pointer self-center border-none bg-transparent px-4 text-body-sm font-medium text-fg-subtle transition-colors hover:text-fg-muted focus-ring rounded-md disabled:cursor-not-allowed disabled:opacity-40"
               >
-                Omitir este
+                Omitir este ejercicio
               </button>
             )}
           </div>
-        </>
+        </div>
       )}
 
       {grade && (
-        <>
-          <ProductionFeedback grade={grade} />
+        <div className="flex flex-col gap-4">
+          <ProductionFeedback grade={grade} userSentence={text.trim()} />
           <PracticeActionBar>
             <Button variant="secondary" size="lg" fullWidth onClick={handleRetry}>
               Intentar de nuevo
             </Button>
             <PracticeContinueButton onClick={handleContinue} />
           </PracticeActionBar>
-        </>
+        </div>
       )}
     </div>
   )
@@ -224,11 +244,12 @@ export function WrittenProductionExercise({ exercise, onResult, onSkip }: Props)
 
 function OfflineBanner({ message }: { message: string }) {
   return (
-    <p
+    <div
       role="status"
-      className="m-0 rounded-[var(--radius-sm)] border border-warning-border bg-warning-soft px-3 py-2 text-caption text-warning"
+      className="flex items-center gap-2 rounded-[var(--radius-md)] border border-warning-border bg-warning-soft px-3.5 py-2.5 text-caption font-medium text-warning"
     >
-      {message}
-    </p>
+      <span aria-hidden>⚠</span>
+      <p className="m-0 leading-relaxed">{message}</p>
+    </div>
   )
 }

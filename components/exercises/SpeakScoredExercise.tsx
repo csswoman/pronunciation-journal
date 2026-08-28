@@ -21,7 +21,6 @@ import Button from '@/components/ui/Button'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { feedbackFromScoringResult } from '@/lib/pronunciation/feedback/from-scoring'
 import { persistPronunciationFeedbackEvidence } from '@/lib/pronunciation/feedback/persistence'
-import { RemediationSequence } from '@/components/pronunciation-feedback/RemediationSequence'
 import { PracticeActionBar, PracticeContinueButton } from '@/components/practice/session/PracticeActionBar'
 import type { Exercise } from '@/lib/phoneme-practice/types'
 import type { WordResult } from '@/lib/types'
@@ -181,17 +180,6 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
           <SelfPlaybackAudioBar
             targetWord={exercise.targetWord}
             userAudioUrl={userAudioUrl}
-          />
-
-          <RemediationSequence
-            onListen={() => exercise.targetWord && speak(exercise.targetWord)}
-            onSlow={() => {
-              if (!exercise.targetWord) return
-              const utterance = new SpeechSynthesisUtterance(exercise.targetWord)
-              utterance.rate = 0.6
-              window.speechSynthesis.speak(utterance)
-            }}
-            onRetry={handleRetry}
           />
 
           <PracticeActionBar>

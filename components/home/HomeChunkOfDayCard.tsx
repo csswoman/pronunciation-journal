@@ -13,6 +13,9 @@ import { formatIpaDisplay } from "@/lib/lexicon/format-ipa";
 import { useChunkOfDay } from "@/hooks/useChunkOfDay";
 import { quickAddWord, toggleFavorite } from "@/lib/word-bank/queries";
 import { cn } from "@/lib/cn";
+import { getIllustration } from "@/lib/illustrations/registry";
+
+const DomainIcon = getIllustration("domainWriting");
 
 type SaveState = "idle" | "saving" | "saved" | "error";
 
@@ -61,11 +64,15 @@ export default function HomeChunkOfDayCard() {
 
   return (
     <div
-      className="home-sidebar-card flex flex-col gap-3"
+      className="home-sidebar-card relative flex flex-col gap-3 overflow-hidden"
       aria-busy={loading || undefined}
       aria-labelledby="chunk-of-day-heading"
     >
-      <div className="flex items-center justify-between gap-2">
+      <DomainIcon
+        className="home-illustration-watermark text-chunks"
+        aria-hidden="true"
+      />
+      <div className="relative z-1 flex items-center justify-between gap-2">
         <div className="flex min-w-0 flex-wrap items-center gap-2">
           <span id="chunk-of-day-heading" className="font-label text-fg">
             Frase del día
@@ -78,7 +85,7 @@ export default function HomeChunkOfDayCard() {
         </div>
 
         <div className="flex shrink-0 items-center gap-1">
-          <div className="group relative">
+          <div className="group/tooltip relative">
             <button
               type="button"
               onClick={handleShuffle}
@@ -99,13 +106,13 @@ export default function HomeChunkOfDayCard() {
             <span
               id="chunk-shuffle-tooltip"
               role="tooltip"
-              className="pointer-events-none absolute bottom-full right-0 z-10 mb-1.5 whitespace-nowrap rounded-sm border border-border-default bg-surface-raised px-2 py-1 text-caption font-medium text-fg opacity-0 shadow-md transition-opacity group-hover:opacity-100 group-focus-within:opacity-100"
+              className="pointer-events-none absolute bottom-full right-0 z-10 mb-1.5 whitespace-nowrap rounded-sm border border-border-default bg-surface-raised px-2 py-1 text-caption font-medium text-fg opacity-0 shadow-md transition-opacity group-hover/tooltip:opacity-100 group-focus-within/tooltip:opacity-100"
             >
               Ver otra frase
             </span>
           </div>
 
-          <div className="group relative">
+          <div className="group/tooltip relative">
             <button
               type="button"
               onClick={() => void handleSave()}
@@ -129,7 +136,7 @@ export default function HomeChunkOfDayCard() {
             <span
               id="chunk-save-tooltip"
               role="tooltip"
-              className="pointer-events-none absolute bottom-full right-0 z-10 mb-1.5 whitespace-nowrap rounded-sm border border-border-default bg-surface-raised px-2 py-1 text-caption font-medium text-fg opacity-0 shadow-md transition-opacity group-hover:opacity-100 group-focus-within:opacity-100"
+              className="pointer-events-none absolute bottom-full right-0 z-10 mb-1.5 whitespace-nowrap rounded-sm border border-border-default bg-surface-raised px-2 py-1 text-caption font-medium text-fg opacity-0 shadow-md transition-opacity group-hover/tooltip:opacity-100 group-focus-within/tooltip:opacity-100"
             >
               {label}
             </span>
@@ -138,7 +145,7 @@ export default function HomeChunkOfDayCard() {
       </div>
 
       {loading && (
-        <div className="flex flex-col gap-3" aria-hidden>
+        <div className="relative z-1 flex flex-col gap-3" aria-hidden>
           <div className="flex flex-col gap-1.5">
             <div className="h-6 w-3/4 animate-pulse rounded-md bg-surface-sunken" />
             <div className="mt-1.5 h-4 w-1/2 animate-pulse rounded bg-surface-sunken" />
@@ -152,7 +159,7 @@ export default function HomeChunkOfDayCard() {
       )}
 
       {chunk && !loading && (
-        <div className="animate-state-in flex flex-col gap-3" key={chunk.id}>
+        <div className="animate-state-in relative z-1 flex flex-col gap-3" key={chunk.id}>
           <div className="home-chunk-quote">
             <p className="home-chunk-quote__phrase">{chunk.chunk}</p>
             {chunk.ipa ? (

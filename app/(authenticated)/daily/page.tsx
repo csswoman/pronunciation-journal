@@ -17,7 +17,12 @@ export default async function DailyPage({
   try {
     const lesson = await getTodaysMiniLesson()
     if (lesson) {
-      conceptLesson = { slug: lesson.slug, title: lesson.title, subtitle: lesson.subtitle }
+      conceptLesson = {
+        slug: lesson.slug,
+        title: lesson.title,
+        subtitle: lesson.subtitle,
+        body: lesson.body,
+      }
     }
   } catch {
     conceptLesson = null
