@@ -53,7 +53,7 @@ export async function loadDictionaryPuzzle(
     throw new Error('El área del diccionario seleccionada no existe.')
   }
 
-  const response = await fetch(`/api/dictionary/${category.id}`)
+  const response = await fetch(`/api/lexicon/${category.id}`)
   if (!response.ok) {
     throw new Error(`No se pudo cargar el diccionario de ${category.name}`)
   }

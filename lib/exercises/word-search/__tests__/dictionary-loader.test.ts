@@ -29,7 +29,7 @@ describe('Dictionary Loader for Word Search', () => {
 
     const puzzle = await loadDictionaryPuzzle('frontend-dev', 'clues', 6)
 
-    expect(global.fetch).toHaveBeenCalledWith('/api/dictionary/frontend-dev')
+    expect(global.fetch).toHaveBeenCalledWith('/api/lexicon/frontend-dev')
     expect(puzzle.source).toBe('dictionary')
     expect(puzzle.items.length).toBeGreaterThanOrEqual(4)
     expect(puzzle.grid.length).toBe(puzzle.size)

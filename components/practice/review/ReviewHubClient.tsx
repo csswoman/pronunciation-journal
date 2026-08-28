@@ -156,7 +156,7 @@ export function ReviewHubClient({ summary }: Props) {
           </ul>
           {counts.dueWords > 0 ? (
             <Link
-              href="/dictionary"
+              href="/words"
               className="font-caption text-primary transition-opacity hover:opacity-80"
               data-cuelume-hover="tick"
             >

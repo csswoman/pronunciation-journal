@@ -26,7 +26,7 @@ export function WordsTopbar({
       <nav className="words-lexicon__seg flex gap-1 p-1 rounded-full" aria-label="Secciones de vocabulario">
         {TABS.map(({ id, label, icon: Icon }) => {
           const isActive = activeMode === id;
-          const href = id === "learn" ? "/dictionary?mode=learn" : "/dictionary";
+          const href = id === "learn" ? "/words?mode=learn" : "/words";
           return (
             <Link
               key={id}

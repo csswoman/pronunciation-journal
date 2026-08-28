@@ -15,7 +15,7 @@ const labels: Record<ContentType, string> = {
 };
 
 const suggestions = [
-  { title: "Diccionario", description: "Explora vocabulario por tema.", path: "/dictionary" },
+  { title: "Diccionario", description: "Explora vocabulario por tema.", path: "/words" },
   { title: "Mini lecciones", description: "Una explicación breve para hoy.", path: "/mini-lessons" },
   { title: "Laboratorio de sonidos", description: "Escucha y practica sonidos.", path: "/practice/sounds" },
   { title: "Ruta de aprendizaje", description: "Continúa desde tu nivel.", path: "/courses" },

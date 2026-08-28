@@ -88,12 +88,11 @@ const nextConfig = {
     return [
       // Legacy PWA start_url; home lives at `/` (route group, not `/home`).
       { source: "/home", destination: "/", permanent: true },
-      { source: "/words", destination: "/dictionary", permanent: true },
-      { source: "/lexicon", destination: "/dictionary", permanent: true },
-      { source: "/lexicon/:id", destination: "/dictionary/:id", permanent: true },
+      { source: "/dictionary", destination: "/words", permanent: true },
+      { source: "/dictionary/:id", destination: "/lexicon/:id", permanent: true },
       {
-        source: "/lexicon/:id/practice",
-        destination: "/dictionary/:id/practice",
+        source: "/dictionary/:id/practice",
+        destination: "/lexicon/:id/practice",
         permanent: true,
       },
       { source: "/courses/mini-lessons", destination: "/mini-lessons", permanent: true },

@@ -37,7 +37,7 @@ export const exploreNav: NavSectionType = {
   items: [
     { name: "Ruta", href: "/courses", icon: BookOpen },
     { name: "Mini lecciones", href: "/mini-lessons", icon: BookMarked },
-    { name: "Diccionario", href: "/dictionary", icon: LibraryBig },
+    { name: "Diccionario", href: "/words", icon: LibraryBig },
   ],
 };
 

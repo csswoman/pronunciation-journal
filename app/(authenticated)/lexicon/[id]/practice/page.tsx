@@ -43,7 +43,7 @@ export default function LexiconPracticePage() {
 
   useEffect(() => {
     if (flowPhase === 'done') {
-      router.push(`/dictionary/${categoryId}`)
+      router.push(`/lexicon/${categoryId}`)
     }
   }, [flowPhase, categoryId, router])
 
@@ -52,7 +52,7 @@ export default function LexiconPracticePage() {
       <div className="flex items-center justify-between px-10 pt-6 pb-4">
         <button
           type="button"
-          onClick={() => { clear(); router.push(`/dictionary/${categoryId}`) }}
+          onClick={() => { clear(); router.push(`/lexicon/${categoryId}`) }}
           className="border-none bg-transparent p-1 text-h4 leading-none text-fg-subtle"
         >
           ←
@@ -104,7 +104,7 @@ export default function LexiconPracticePage() {
           <LexiconReviewSummary
             ratings={ratings}
             onStartExercises={() => setFlowPhase('practice')}
-            onFinish={() => { clear(); router.push(`/dictionary/${categoryId}`) }}
+            onFinish={() => { clear(); router.push(`/lexicon/${categoryId}`) }}
           />
         </main>
       </PageLayout>
@@ -123,7 +123,7 @@ export default function LexiconPracticePage() {
       onSessionComplete: handleSessionComplete,
       onExit: () => {
         clear()
-        router.push(`/dictionary/${categoryId}`)
+        router.push(`/lexicon/${categoryId}`)
       },
     }
 
