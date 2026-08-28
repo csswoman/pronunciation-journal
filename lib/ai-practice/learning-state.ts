@@ -2,6 +2,7 @@ import type { ExerciseResult } from "./types";
 import type { CEFRLevel } from "@/lib/exercises/cefr";
 import type { ConceptSignal } from "@/lib/courses/concept-profile";
 import type { LearningFocus } from "@/lib/learning-focus/types";
+import type { DomainProfile } from "@/lib/lexicon/domain-profile";
 import {
   EMPTY_RECURRENCE_QUEUE,
   markPatternRehearsed,
@@ -65,6 +66,9 @@ export interface UserLearningState {
 
   /** Scheduled re-exposure for production error patterns. */
   errorRecurrence: ErrorRecurrenceQueue;
+
+  /** Areas of interest derived from the lexicon word_bank. Empty/absent = no signal. */
+  domainProfile?: DomainProfile | null;
 }
 
 export function compactState(s: UserLearningState): string {
@@ -97,6 +101,8 @@ export function compactState(s: UserLearningState): string {
 
   const activeFocus = s.focus?.thread?.kind === "theory" ? s.focus.thread.topicId : null;
 
+  const topDomains = (s.domainProfile?.domains ?? []).slice(0, 3).map(d => d.label);
+
   return [
     `Student: ${s.level.cefrEstimate}, conf ${s.level.confidence.toFixed(1)}`,
     activeFocus ? `Active focus topic: ${activeFocus}` : null,
@@ -104,6 +110,7 @@ export function compactState(s: UserLearningState): string {
     reviewConcepts.length ? `Theory in review: ${reviewConcepts.join(", ")}` : null,
     topGrammar.length ? `Weak grammar: ${topGrammar.join(", ")}` : null,
     topSounds.length ? `Weak sounds: ${topSounds.join(", ")}` : null,
+    topDomains.length ? `Works in: ${topDomains.join(", ")} — prefer examples from these areas` : null,
     `Recently covered: ${s.lastSessions.slice(0, 2).map(x => x.topic).join(", ") || "none"} — reinforce if still weak, prefer new topics`,
   ]
     .filter(Boolean)
@@ -279,6 +286,7 @@ export function createEmptyState(userId: string, deviceId: string): UserLearning
     pronunciation: { averageAccuracy: 0, strugglingSounds: [] },
     lastSessions: [],
     errorRecurrence: EMPTY_RECURRENCE_QUEUE,
+    domainProfile: null,
   };
 }
 

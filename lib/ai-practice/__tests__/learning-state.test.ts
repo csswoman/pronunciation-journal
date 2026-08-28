@@ -171,6 +171,43 @@ describe("compactState", () => {
     const out = compactState(s);
     expect(out).toContain("Active focus topic: passive-voice");
   });
+
+  it("includes top domains when a domain profile is present", () => {
+    const s = makeState({
+      domainProfile: {
+        domains: [
+          { id: "engineering", label: "Engineering", wordCount: 12 },
+          { id: "design", label: "Design", wordCount: 3 },
+        ],
+        categories: [],
+      },
+    });
+    const out = compactState(s);
+    expect(out).toContain("Works in: Engineering, Design — prefer examples from these areas");
+  });
+
+  it("omits the domain line when there is no domain profile", () => {
+    const s = makeState({ domainProfile: null });
+    const out = compactState(s);
+    expect(out).not.toContain("Works in:");
+  });
+
+  it("caps the domain line at 3 domains", () => {
+    const s = makeState({
+      domainProfile: {
+        domains: [
+          { id: "engineering", label: "Engineering", wordCount: 12 },
+          { id: "design", label: "Design", wordCount: 8 },
+          { id: "professional", label: "Professional", wordCount: 5 },
+          { id: "leisure", label: "Leisure & life", wordCount: 1 },
+        ],
+        categories: [],
+      },
+    });
+    const out = compactState(s);
+    const line = out.split("\n").find((l) => l.startsWith("Works in:"));
+    expect(line).toBe("Works in: Engineering, Design, Professional — prefer examples from these areas");
+  });
 });
 
 // ─── applyExerciseResult ─────────────────────────────────────────────────────

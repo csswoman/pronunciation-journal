@@ -57,7 +57,7 @@ let trFixed = 0;
 const samples = { ipa: [], translation: [] };
 
 for (const f of fs.readdirSync(DIR)) {
-  if (f === 'index.json' || !f.endsWith('.json')) continue;
+  if (f === 'index.json' || f === 'word-index.json' || !f.endsWith('.json')) continue;
   const p = path.join(DIR, f);
   const words = JSON.parse(fs.readFileSync(p, 'utf8'));
   let touched = false;

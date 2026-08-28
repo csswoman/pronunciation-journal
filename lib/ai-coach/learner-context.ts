@@ -12,6 +12,8 @@ export interface LearnerContext {
   strugglingWords: string[]
   /** Vocabulario en repaso, para que el guión lo obligue a producirlo. */
   srsDueWords: string[]
+  /** Dominios del léxico donde el usuario guarda palabras, más frecuente primero. */
+  domains: string[]
 }
 
 export function emptyLearnerContext(): LearnerContext {
@@ -21,6 +23,7 @@ export function emptyLearnerContext(): LearnerContext {
     weakTargets: [],
     strugglingWords: [],
     srsDueWords: [],
+    domains: [],
   }
 }
 
@@ -34,17 +37,27 @@ export function emptyLearnerContext(): LearnerContext {
 export async function buildLearnerContext(userId: string): Promise<LearnerContext> {
   const base = emptyLearnerContext()
 
-  try {
-    const { loadSkillProfile } = await import('@/lib/progress/queries')
-    const profile = await loadSkillProfile(userId)
-    if (!profile) return base
+  const [profileResult, domainsResult] = await Promise.allSettled([
+    (async () => {
+      const { loadSkillProfile } = await import('@/lib/progress/queries')
+      return loadSkillProfile(userId)
+    })(),
+    (async () => {
+      const { deriveDomainProfile } = await import('@/lib/lexicon/domain-profile')
+      const { getWordCategoryIndex } = await import('@/lib/lexicon/categories')
+      const { getWordBankSourceRefsServer } = await import('@/lib/word-bank/server-queries')
+      const entries = await getWordBankSourceRefsServer(userId)
+      return deriveDomainProfile(entries, getWordCategoryIndex())
+    })(),
+  ])
 
-    return {
-      ...base,
-      cefr: profile.cefr ? normalizeCEFR(profile.cefr) : DEFAULT_CEFR,
-      weakTargets: [],
-    }
-  } catch {
-    return base
+  const profile = profileResult.status === 'fulfilled' ? profileResult.value : null
+  const domainProfile = domainsResult.status === 'fulfilled' ? domainsResult.value : null
+
+  return {
+    ...base,
+    cefr: profile?.cefr ? normalizeCEFR(profile.cefr) : DEFAULT_CEFR,
+    weakTargets: [],
+    domains: (domainProfile?.domains ?? []).slice(0, 3).map((d) => d.label),
   }
 }
