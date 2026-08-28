@@ -4,6 +4,8 @@ import { coreWordToWordBankEntry } from '@/lib/essential-words/client-fetch'
 import { assessWordBankEntry } from '@/lib/exercises/eligibility'
 import { generateFillBlankFromWordBank } from '@/lib/exercises/generators/fill-blank'
 import { buildWordReviewStep } from '@/lib/practice/daily-plan/step-builders'
+import { makeLexiconWordBankEntry, makeWordBankEntry } from '@/lib/exercises/__tests__/fixtures/word-bank-entry'
+import type { WordCategoryIndex } from '@/lib/lexicon/domain-profile'
 
 /** Ranks 60–79: mix of inflected examples post–Plan 017 without function words. */
 const CORE_SAMPLE_MIN_RANK = 60
@@ -67,6 +69,76 @@ describe('buildWordReviewStep integration', () => {
     const rate = exercises.length / eligible.length
 
     expect(rate).toBeGreaterThanOrEqual(MIN_FILL_BLANK_GENERATABILITY)
+  })
+
+  describe('study mode (plan 077 phase 3)', () => {
+    // Enough entries that fill_blank/dictation/etc. still generate normally —
+    // the assertions below only care whether *production* exercises
+    // (written/spoken) reference the receptive word.
+    const wordIndex: WordCategoryIndex = new Map([
+      ['receptive-term', ['artificial-intelligence']], // engineering -> receptive
+      ['productive-term', ['professional']], // professional -> productive
+    ])
+
+    function poolWithTargets() {
+      const filler = Array.from({ length: 10 }, (_, i) =>
+        makeWordBankEntry({ id: `filler-${i}`, text: `filler${i}` }),
+      )
+      const receptive = makeLexiconWordBankEntry({
+        id: 'receptive-1',
+        text: 'ReceptiveTerm',
+        source_ref: 'receptive-term',
+      })
+      const productive = makeLexiconWordBankEntry({
+        id: 'productive-1',
+        text: 'ProductiveTerm',
+        source_ref: 'productive-term',
+      })
+      return { filler, receptive, productive }
+    }
+
+    function productionSourceIds(step: ReturnType<typeof buildWordReviewStep>): string[] {
+      return step!.exercises
+        .filter((e) => e.slug === 'spoken_production' || e.slug === 'written_production')
+        .map((e) => {
+          const data = (e.payload as { kind: 'generic'; data: { sourceRef?: { id?: string } } }).data
+          return data.sourceRef?.id ?? ''
+        })
+    }
+
+    it('excludes a receptive-category word from production exercises when a wordIndex is given', () => {
+      const { filler, receptive, productive } = poolWithTargets()
+      const step = buildWordReviewStep([...filler, receptive, productive], 'daily', undefined, wordIndex)
+      expect(step).not.toBeNull()
+
+      const ids = productionSourceIds(step)
+      expect(ids).not.toContain(receptive.id)
+    })
+
+    it('keeps a productive-category word eligible for production exercises', () => {
+      const { filler, receptive, productive } = poolWithTargets()
+      const step = buildWordReviewStep([...filler, receptive, productive], 'daily', undefined, wordIndex)
+      expect(step).not.toBeNull()
+
+      const ids = productionSourceIds(step)
+      expect(ids).toContain(productive.id)
+    })
+
+    it('does not filter production eligibility when no wordIndex is passed (backward compatible)', () => {
+      const { filler, receptive, productive } = poolWithTargets()
+      const step = buildWordReviewStep([...filler, receptive, productive], 'daily')
+      expect(step).not.toBeNull()
+
+      const ids = productionSourceIds(step)
+      expect(ids).toContain(receptive.id)
+    })
+
+    it('still generates a word_review step (recognition exercises unaffected by study mode)', () => {
+      const { filler, receptive, productive } = poolWithTargets()
+      const step = buildWordReviewStep([...filler, receptive, productive], 'daily', undefined, wordIndex)
+      expect(step).not.toBeNull()
+      expect(step!.exercises.length).toBeGreaterThan(0)
+    })
   })
 })
 

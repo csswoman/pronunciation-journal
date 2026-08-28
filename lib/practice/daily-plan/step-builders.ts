@@ -16,6 +16,7 @@ import type { DailyStep, PracticeContext, PracticeExercise } from '@/lib/practic
 import type { MinimalPair, Sound, SoundWord } from '@/lib/phoneme-practice/types'
 import type { WordBankEntry } from '@/lib/word-bank/types'
 import { wordBankEntryToStudyCard } from '@/lib/practice/study-card/model'
+import type { WordCategoryIndex } from '@/lib/lexicon/domain-profile'
 import {
   LISTENING_EXERCISE_COUNT,
   MINIMAL_PAIRS_EXERCISE_COUNT,
@@ -24,7 +25,7 @@ import {
   WARMUP_PHRASE_COUNT,
   WORD_INTRO_MAX_CARDS,
 } from './constants'
-import { dedupeByContentId, toWordEntry } from './selectors'
+import { dedupeByContentId, filterByStudyMode, toWordEntry } from './selectors'
 
 /**
  * Paso de presentación (noticing): muestra palabras nuevas (forma + significado
@@ -57,10 +58,19 @@ export function buildWordReviewStep(
   words: WordBankEntry[],
   context: PracticeContext = 'daily',
   savedOrFamiliarIds?: ReadonlySet<string>,
+  wordIndex?: WordCategoryIndex,
 ): DailyStep | null {
   if (words.length === 0) return null
 
   const targetSurface = context === 'daily' ? 'daily_plan' : 'free_practice'
+
+  // Receptive/productive split (plan 077 phase 3): technical-referential
+  // vocabulary (engineering, design) is for recognition, not spoken/written
+  // recall. Only the production generators are restricted — recognition
+  // exercises (fill_blank, dictation, reorder, match_pairs) stay on the
+  // full pool, unaffected by study mode. No wordIndex means no opinion:
+  // everything stays eligible, same as before this split existed.
+  const productionWords = wordIndex ? filterByStudyMode(words, wordIndex, 'productive') : words
 
   const { exercises: fillBlanks, skipped: fillBlankSkipped } = generateFillBlankFromWordBank(words, 2)
   if (
@@ -80,13 +90,13 @@ export function buildWordReviewStep(
     ? generateMatchPairsFromWordBank(words, 1)
     : []
   const writtenProduction = isExerciseAvailableOnSurface('written_production', targetSurface)
-    ? generateWrittenProductionFromWordBank(words, 1)
+    ? generateWrittenProductionFromWordBank(productionWords, 1)
     : { exercises: [] }
   // Guarantee one Rodeo (circumlocution) and one spoken tense-transform slot
   // per session — otherwise these two constraints only show up by random
   // rotation and a learner could go weeks without ever seeing them.
   const spokenProduction = isExerciseAvailableOnSurface('spoken_production', targetSurface)
-    ? generateSpokenProductionFromWordBank(words, SPOKEN_PRODUCTION_PER_SESSION, [
+    ? generateSpokenProductionFromWordBank(productionWords, SPOKEN_PRODUCTION_PER_SESSION, [
         'rodeo_circumlocution',
         'spoken_verb_transform',
       ])

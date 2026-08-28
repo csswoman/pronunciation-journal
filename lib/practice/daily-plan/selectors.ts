@@ -2,6 +2,8 @@ import type { WordEntry } from '@/lib/lexicon/types'
 import type { PracticeExercise } from '@/lib/practice/types'
 import type { Sound } from '@/lib/phoneme-practice/types'
 import type { WordBankEntry } from '@/lib/word-bank/types'
+import { resolveStudyMode, type WordCategoryIndex } from '@/lib/lexicon/domain-profile'
+import type { StudyMode } from '@/lib/lexicon/domains'
 
 /** Día del año (1-366) usado para rotar la selección de contenido por día. */
 export function dayOfYear(now = new Date()): number {
@@ -84,6 +86,30 @@ export function pickSeedSound(allSounds: Sound[], offset: number, excludeId?: nu
   if (pool.length === 0) return null
   const ranked = [...pool].sort((a, b) => (a.difficulty ?? 9) - (b.difficulty ?? 9))
   return ranked[(dayOfYear() + offset) % ranked.length]
+}
+
+/**
+ * Splits word_bank entries by whether their lexicon category is receptive
+ * (technical/referential vocabulary — recognition, no spoken production) or
+ * productive (workplace/interview vocabulary — eligible for active recall).
+ *
+ * Only entries sourced from the lexicon catalog (source === "lexicon") are
+ * classified; everything else (manual adds, reader-sourced words, core1k)
+ * has no category to resolve and is treated as productive — unchanged from
+ * pre-split behavior, since those were always eligible for production.
+ *
+ * See plans/077-dictionary-domain-profile.md phase 3.
+ */
+export function filterByStudyMode(
+  words: WordBankEntry[],
+  wordIndex: WordCategoryIndex,
+  mode: StudyMode,
+): WordBankEntry[] {
+  return words.filter((w) => {
+    if (w.source !== 'lexicon' || !w.source_ref) return mode === 'productive'
+    const resolved = resolveStudyMode(w.source_ref, wordIndex)
+    return (resolved ?? 'productive') === mode
+  })
 }
 
 /** Adapts WordBankEntry to the WordEntry shape expected by generateSentenceContextExercises. */

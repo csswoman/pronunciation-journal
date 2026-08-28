@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { dedupeByContentId, getSemanticContentKey } from '../selectors'
+import { dedupeByContentId, filterByStudyMode, getSemanticContentKey } from '../selectors'
 import type { PracticeExercise } from '@/lib/practice/types'
+import { makeLexiconWordBankEntry, makeWordBankEntry } from '@/lib/exercises/__tests__/fixtures/word-bank-entry'
+import type { WordCategoryIndex } from '@/lib/lexicon/domain-profile'
 
 describe('getSemanticContentKey', () => {
   it('handles phoneme exercises', () => {
@@ -155,5 +157,51 @@ describe('dedupeByContentId', () => {
     expect(deduped).toHaveLength(2)
     expect(deduped[0].id).toBe(ex1.id)
     expect(deduped[1].id).toBe(ex3.id)
+  })
+})
+
+describe('filterByStudyMode', () => {
+  const wordIndex: WordCategoryIndex = new Map([
+    ['backpropagation', ['artificial-intelligence']], // engineering -> receptive
+    ['affordance', ['ux-design']], // design -> receptive
+    ['salary-negotiation', ['professional']], // professional -> productive
+    ['multi-domain-word', ['backend-infra', 'professional']], // mixed -> productive wins
+  ])
+
+  it('keeps only receptive-category lexicon words in "receptive" mode', () => {
+    const words = [
+      makeLexiconWordBankEntry({ id: 'w1', source_ref: 'backpropagation' }),
+      makeLexiconWordBankEntry({ id: 'w2', source_ref: 'salary-negotiation' }),
+    ]
+    const result = filterByStudyMode(words, wordIndex, 'receptive')
+    expect(result.map((w) => w.id)).toEqual(['w1'])
+  })
+
+  it('keeps only productive-category lexicon words in "productive" mode', () => {
+    const words = [
+      makeLexiconWordBankEntry({ id: 'w1', source_ref: 'backpropagation' }),
+      makeLexiconWordBankEntry({ id: 'w2', source_ref: 'salary-negotiation' }),
+    ]
+    const result = filterByStudyMode(words, wordIndex, 'productive')
+    expect(result.map((w) => w.id)).toEqual(['w2'])
+  })
+
+  it('treats a word spanning a receptive and a productive category as productive', () => {
+    const words = [makeLexiconWordBankEntry({ id: 'w1', source_ref: 'multi-domain-word' })]
+    expect(filterByStudyMode(words, wordIndex, 'productive').map((w) => w.id)).toEqual(['w1'])
+    expect(filterByStudyMode(words, wordIndex, 'receptive')).toEqual([])
+  })
+
+  it('treats non-lexicon words (manual, reader, core1k) as productive regardless of mode', () => {
+    const manual = makeWordBankEntry({ id: 'm1', source: 'manual', source_ref: null })
+    const reader = makeWordBankEntry({ id: 'r1', source: 'reader', source_ref: null })
+    expect(filterByStudyMode([manual, reader], wordIndex, 'productive').map((w) => w.id)).toEqual(['m1', 'r1'])
+    expect(filterByStudyMode([manual, reader], wordIndex, 'receptive')).toEqual([])
+  })
+
+  it('treats a lexicon word whose source_ref does not resolve in the index as productive', () => {
+    const words = [makeLexiconWordBankEntry({ id: 'w1', source_ref: 'unknown-word-id' })]
+    expect(filterByStudyMode(words, wordIndex, 'productive').map((w) => w.id)).toEqual(['w1'])
+    expect(filterByStudyMode(words, wordIndex, 'receptive')).toEqual([])
   })
 })

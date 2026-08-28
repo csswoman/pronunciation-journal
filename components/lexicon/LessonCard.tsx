@@ -1,12 +1,19 @@
 // Planned structure:
 // <LessonCard>
-//   <CardInitial />  — color-tinted first-letter block
-//   <CardBody />     — title + word count
-//   <CardProgress /> — linear bar + percentage
-//   <CardTags />     — tag chips
+//   <CardInitial />    — color-tinted first-letter block
+//   <CardBody />       — title + word count
+//   <StudyModeBadge />  — "Reconocer" vs "Producir" signal
+//   <CardProgress />   — linear bar + percentage
+//   <CardTags />       — tag chips
 // </LessonCard>
 
 import { cn } from "@/lib/cn";
+import type { StudyMode } from "@/lib/lexicon/types";
+
+const STUDY_MODE_LABEL: Record<StudyMode, string> = {
+  receptive: "Reconocer",
+  productive: "Producir",
+};
 
 interface LessonCardProps {
   id: string;
@@ -16,6 +23,7 @@ interface LessonCardProps {
   totalWords: number;
   progress: number;
   tags: string[];
+  studyMode?: StudyMode;
   onClick?: (id: string) => void;
   compact?: boolean;
 }
@@ -26,6 +34,7 @@ export function LessonCard({
   wordsCompleted,
   totalWords,
   progress,
+  studyMode,
   onClick,
   compact = false,
 }: LessonCardProps) {
@@ -43,6 +52,7 @@ export function LessonCard({
           <span className="words-lexicon__lesson-row-title">{title}</span>
           <span className="words-lexicon__lesson-row-meta">
             {totalWords} palabras · {progress}% aprendido
+            {studyMode ? ` · ${STUDY_MODE_LABEL[studyMode]}` : null}
           </span>
         </span>
         <span className="words-lexicon__lesson-row-arrow" aria-hidden>→</span>
@@ -65,7 +75,14 @@ export function LessonCard({
           {title.charAt(0)}
         </div>
         <div className="min-w-0">
-          <h3 className="text-label text-fg leading-snug truncate">{title}</h3>
+          <div className="flex items-center gap-2">
+            <h3 className="text-label text-fg leading-snug truncate">{title}</h3>
+            {studyMode ? (
+              <span className="shrink-0 rounded-full bg-surface-sunken px-2 py-0.5 text-tiny font-medium text-fg-subtle">
+                {STUDY_MODE_LABEL[studyMode]}
+              </span>
+            ) : null}
+          </div>
           <p className="text-caption text-fg-muted mt-1">
             {wordsCompleted} / {totalWords} palabras
           </p>

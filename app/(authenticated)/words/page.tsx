@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { getWordsPageLexicon } from "@/lib/lexicon/categories";
+import { studyModeForCategory } from "@/lib/lexicon/domains";
 import {
   countWordsDueForReview,
   getLexiconProgressByCategory,
@@ -51,6 +52,7 @@ async function WordsContent() {
       wordsReviewing: reviewing,
       progress,
       tags: previewTags.get(cat.id) ?? [],
+      studyMode: studyModeForCategory(cat.id),
     };
   });
 

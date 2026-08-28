@@ -1,4 +1,6 @@
-import type { CategoryMeta, LessonViewModel, LexiconDomainId } from "./types";
+import type { CategoryMeta, LessonViewModel, LexiconDomainId, StudyMode } from "./types";
+
+export type { StudyMode };
 
 export interface LexiconDomain {
   id: LexiconDomainId;
@@ -7,6 +9,13 @@ export interface LexiconDomain {
   color: string;
   icon: string;
   categoryIds: string[];
+  /**
+   * Technical/referential vocabulary (engineering, design) is receptive:
+   * the value is recognition at reading speed, not collocation. Workplace
+   * production vocabulary (interviews, writing) is productive: it demands
+   * active recall. See plans/077-dictionary-domain-profile.md phase 3.
+   */
+  studyMode: StudyMode;
 }
 
 export const LEXICON_DOMAINS: LexiconDomain[] = [
@@ -22,6 +31,7 @@ export const LEXICON_DOMAINS: LexiconDomain[] = [
       "data-science",
       "frontend-dev",
     ],
+    studyMode: "receptive",
   },
   {
     id: "design",
@@ -30,6 +40,7 @@ export const LEXICON_DOMAINS: LexiconDomain[] = [
     color: "#6B9FC4",
     icon: "✦",
     categoryIds: ["ux-design", "design-systems"],
+    studyMode: "receptive",
   },
   {
     id: "professional",
@@ -38,6 +49,7 @@ export const LEXICON_DOMAINS: LexiconDomain[] = [
     color: "#C4846B",
     icon: "◈",
     categoryIds: ["professional", "technical-writing", "personal-interview"],
+    studyMode: "productive",
   },
   {
     id: "leisure",
@@ -46,12 +58,19 @@ export const LEXICON_DOMAINS: LexiconDomain[] = [
     color: "#65A87A",
     icon: "☼",
     categoryIds: [],
+    studyMode: "productive",
   },
 ];
 
 export function domainForCategory(categoryId: string): LexiconDomainId {
   const found = LEXICON_DOMAINS.find((d) => d.categoryIds.includes(categoryId));
   return found?.id ?? "professional";
+}
+
+/** Defaults to "productive" — the same fallback domainForCategory uses ("professional"). */
+export function studyModeForCategory(categoryId: string): StudyMode {
+  const found = LEXICON_DOMAINS.find((d) => d.categoryIds.includes(categoryId));
+  return found?.studyMode ?? "productive";
 }
 
 export function groupLessonsByDomain(

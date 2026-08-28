@@ -36,6 +36,7 @@ import {
 import { isBrowserOnline } from './online'
 import { fetchReaderTargetRows } from './reader-targets'
 import { dayOfYear, pickSeedSound, getSemanticContentKey } from './selectors'
+import { getWordCategoryIndex } from '@/lib/lexicon/word-index-client'
 import { biasWordsBySound } from './sound-word-bridge'
 import { selectDailyReviewWords } from './saved-priority'
 import { candidate, selectDailyCandidates } from './policy'
@@ -95,12 +96,13 @@ export async function buildReviewPlan(
 ): Promise<ReviewPlan> {
   const reviewContext = 'review' as const
 
-  const [failedItems, weakWords, reviewWords, dueSounds, essentialMatchWords] = await Promise.all([
+  const [failedItems, weakWords, reviewWords, dueSounds, essentialMatchWords, wordIndex] = await Promise.all([
     fetchRecentFailedSentences(userId, 5),
     fetchWeakWords(userId, WORD_REVIEW_WORD_COUNT),
     options?.dueWords ?? fetchDueReviewWords(userId, WORD_REVIEW_WORD_COUNT),
     options?.dueSounds ?? fetchDueSounds(userId),
     options?.essentialMatchWords ?? fetchEssentialWordsForDay(dayOfYear(), 4),
+    getWordCategoryIndex(),
   ])
 
   const mergedWords = mergeReviewWords(weakWords, reviewWords, WORD_REVIEW_WORD_COUNT)
@@ -110,7 +112,7 @@ export async function buildReviewPlan(
   const failedStep = await buildFailedSentencesMixStep(failedItems, reviewContext)
   if (failedStep) steps.push(failedStep)
 
-  const wordStep = buildWordReviewStep(mergedWords, reviewContext)
+  const wordStep = buildWordReviewStep(mergedWords, reviewContext, undefined, wordIndex)
   if (wordStep) steps.push(wordStep)
 
   const contextStep = buildContextPracticeStep(mergedWords, reviewContext)
@@ -181,6 +183,7 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     weakest,
     localLearningState,
     completedLessons,
+    wordIndex,
   ] = await Promise.all([
     getAllSounds(),
     fetchNewWords(userId, WORD_REVIEW_WORD_COUNT),
@@ -190,6 +193,7 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     fetchWeakestSoundProgress(userId),
     db.learningState.get(userId).catch(() => null),
     readCompletedLessons().catch(() => []),
+    getWordCategoryIndex(),
   ])
   const dailyWordSelection = selectDailyReviewWords({
     newWords,
@@ -312,7 +316,7 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
   const wordIntro = buildWordIntroStep(reviewWords)
   if (wordIntro) reviewSteps.push(wordIntro)
 
-  const wordReview = buildWordReviewStep(reviewWords, 'daily', dailyWordSelection.savedOrFamiliarIds)
+  const wordReview = buildWordReviewStep(reviewWords, 'daily', dailyWordSelection.savedOrFamiliarIds, wordIndex)
   if (wordReview) reviewSteps.push(wordReview)
 
   const contextPractice = buildContextPracticeStep(reviewWords)
