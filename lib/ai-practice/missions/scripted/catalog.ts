@@ -1,10 +1,9 @@
-import { contrastTargetId } from '@/lib/pronunciation/targets/registry'
+import { contrastTargetId, phonemeTargetId } from '@/lib/pronunciation/targets/registry'
 import type { ScriptedMission } from '../types'
 
 /**
- * Guiones autorados. Sin `modelAudio` por ahora: el pipeline de audio
- * pregenerado es trabajo aparte, y `resolveModelAudio` cae limpiamente en
- * síntesis mientras tanto. Al añadir los OGG, basta con rellenar el campo.
+ * Guiones autorados para práctica hablada turno por turno. Sin `modelAudio` por ahora:
+ * el pipeline de audio pregenerado cae limpiamente en síntesis de voz.
  */
 export const SCRIPTED_MISSIONS: readonly ScriptedMission[] = [
   {
@@ -15,7 +14,7 @@ export const SCRIPTED_MISSIONS: readonly ScriptedMission[] = [
     recommendedCefr: 'A2',
     context: 'Pides algo de beber en una cafetería.',
     communicativeGoal: 'Pedir una bebida y responder a las preguntas del camarero.',
-    targets: [],
+    targets: [{ targetId: contrastTargetId('/iː/', '/ɪ/'), phrase: 'coffee please' }],
     script: [
       { id: 'cafe-1', speaker: 'coach', text: 'Hi there! What can I get for you today?' },
       { id: 'cafe-2', speaker: 'learner', text: "I'd like a large coffee, please." },
@@ -26,23 +25,46 @@ export const SCRIPTED_MISSIONS: readonly ScriptedMission[] = [
     ],
   },
   {
+    id: 'scripted.service.transit_directions',
+    mode: 'scripted',
+    origin: 'authored',
+    category: 'service',
+    recommendedCefr: 'A2',
+    context: 'Preguntando en una estación cómo llegar al centro de la ciudad.',
+    communicativeGoal: 'Pedir indicaciones para tomar el transporte público correcto.',
+    targets: [
+      { targetId: contrastTargetId('/θ/', '/ð/'), phrase: 'thank you' },
+      { targetId: phonemeTargetId('/ə/'), phrase: 'about twenty minutes' },
+    ],
+    script: [
+      { id: 'trans-1', speaker: 'coach', text: 'Excuse me, do you need help finding your platform?' },
+      { id: 'trans-2', speaker: 'learner', text: 'Yes, please. Which train goes downtown?' },
+      { id: 'trans-3', speaker: 'coach', text: 'Take the blue line on platform two. It leaves in five minutes.' },
+      { id: 'trans-4', speaker: 'learner', text: 'Do I need to change trains along the way?' },
+      { id: 'trans-5', speaker: 'coach', text: 'No, it is a direct line. It takes about twenty minutes.' },
+      { id: 'trans-6', speaker: 'learner', text: 'Thank you so much for your help!' },
+    ],
+  },
+  {
     id: 'scripted.interview.intro',
     mode: 'scripted',
     origin: 'authored',
     category: 'interview',
     recommendedCefr: 'B1',
-    context: 'Los primeros minutos de una entrevista de trabajo.',
+    context: 'Los primeros minutos de una entrevista de trabajo como desarrollador.',
     communicativeGoal: 'Presentarte y explicar por qué te interesa el puesto.',
     targets: [{ targetId: contrastTargetId('/iː/', '/ɪ/'), phrase: 'this team' }],
     script: [
       { id: 'int-1', speaker: 'coach', text: 'Thanks for coming in. Tell me a little about yourself.' },
       {
-        id: 'int-2', speaker: 'learner',
+        id: 'int-2',
+        speaker: 'learner',
         text: "I'm a software developer with three years of experience.",
       },
       { id: 'int-3', speaker: 'coach', text: 'What interests you about this position?' },
       {
-        id: 'int-4', speaker: 'learner',
+        id: 'int-4',
+        speaker: 'learner',
         text: 'I really like the problems this team is solving.',
         targetId: contrastTargetId('/iː/', '/ɪ/'),
       },
@@ -50,4 +72,192 @@ export const SCRIPTED_MISSIONS: readonly ScriptedMission[] = [
       { id: 'int-6', speaker: 'learner', text: 'I learn quickly and I ask good questions.' },
     ],
   },
+  {
+    id: 'scripted.interview.frontend_perf',
+    mode: 'scripted',
+    origin: 'authored',
+    category: 'interview',
+    recommendedCefr: 'B2',
+    context: 'Pregunta técnica sobre optimización de rendimiento y arquitectura frontend.',
+    communicativeGoal: 'Explicar cómo identificar y resolver problemas de rendimiento en una app web.',
+    targets: [
+      { targetId: contrastTargetId('/iː/', '/ɪ/'), phrase: 'code splitting' },
+      { targetId: phonemeTargetId('/ə/'), phrase: 'performance' },
+    ],
+    script: [
+      { id: 'front-1', speaker: 'coach', text: 'Could you walk me through how you optimize web performance on the frontend?' },
+      { id: 'front-2', speaker: 'learner', text: 'First, I analyze the bundle size and identify slow component renders.' },
+      { id: 'front-3', speaker: 'coach', text: 'What specific techniques do you typically use to fix them?' },
+      {
+        id: 'front-4',
+        speaker: 'learner',
+        text: 'I implement code splitting, lazy loading, and memoize expensive calculations.',
+        targetId: contrastTargetId('/iː/', '/ɪ/'),
+      },
+      { id: 'front-5', speaker: 'coach', text: 'How do you measure the impact of those changes?' },
+      { id: 'front-6', speaker: 'learner', text: 'We monitor Core Web Vitals and saw a forty percent drop in load time.' },
+    ],
+  },
+  {
+    id: 'scripted.interview.backend_debug',
+    mode: 'scripted',
+    origin: 'authored',
+    category: 'interview',
+    recommendedCefr: 'B2',
+    context: 'Pregunta técnica sobre diagnóstico de cuellos de botella y bases de datos en el backend.',
+    communicativeGoal: 'Explicar cómo resolver consultas lentas y proteger la estabilidad de la API.',
+    targets: [
+      { targetId: contrastTargetId('/θ/', '/ð/'), phrase: 'healthy' },
+      { targetId: contrastTargetId('/s/', '/z/'), phrase: 'stress tests' },
+    ],
+    script: [
+      { id: 'back-1', speaker: 'coach', text: 'How do you handle a sudden database bottleneck under high traffic?' },
+      { id: 'back-2', speaker: 'learner', text: 'I check the slow query logs and inspect the execution plans first.' },
+      { id: 'back-3', speaker: 'coach', text: 'And if a query is taking too long to complete?' },
+      { id: 'back-4', speaker: 'learner', text: 'I add composite indexes and introduce a Redis cache layer for read-heavy endpoints.' },
+      { id: 'back-5', speaker: 'coach', text: 'What precautions do you take before pushing the migration?' },
+      {
+        id: 'back-6',
+        speaker: 'learner',
+        text: 'We run stress tests in staging to ensure connection pools stay healthy.',
+        targetId: contrastTargetId('/θ/', '/ð/'),
+      },
+    ],
+  },
+  {
+    id: 'scripted.interview.fullstack_feature',
+    mode: 'scripted',
+    origin: 'authored',
+    category: 'interview',
+    recommendedCefr: 'B2',
+    context: 'Explicando el desarrollo end-to-end de una funcionalidad completa como Full Stack developer.',
+    communicativeGoal: 'Describir la integración de esquema de base de datos, API REST y componentes de UI.',
+    targets: [
+      { targetId: contrastTargetId('/æ/', '/ʌ/'), phrase: 'instant feedback' },
+      { targetId: contrastTargetId('/b/', '/v/'), phrase: 'validate payloads' },
+    ],
+    script: [
+      { id: 'fs-1', speaker: 'coach', text: 'Can you describe how you build a feature from database to user interface?' },
+      { id: 'fs-2', speaker: 'learner', text: 'I start by designing the schema and drafting the REST API contract.' },
+      { id: 'fs-3', speaker: 'coach', text: 'How do you handle validation and error states across layers?' },
+      {
+        id: 'fs-4',
+        speaker: 'learner',
+        text: 'We validate payloads on both client and server with clear error responses.',
+        targetId: contrastTargetId('/b/', '/v/'),
+      },
+      { id: 'fs-5', speaker: 'coach', text: 'How do you ensure the UI stays responsive while fetching data?' },
+      {
+        id: 'fs-6',
+        speaker: 'learner',
+        text: 'I use optimistic updates and skeleton loaders so users get instant feedback.',
+        targetId: contrastTargetId('/æ/', '/ʌ/'),
+      },
+    ],
+  },
+  {
+    id: 'scripted.interview.project_demo',
+    mode: 'scripted',
+    origin: 'authored',
+    category: 'interview',
+    recommendedCefr: 'B1',
+    context: 'Presentación concisa de tu proyecto de programación ante un reclutador técnico.',
+    communicativeGoal: 'Explicar el propósito de tu proyecto, su arquitectura y retos técnicos superados.',
+    targets: [
+      { targetId: contrastTargetId('/iː/', '/ɪ/'), phrase: 'real-time' },
+      { targetId: phonemeTargetId('/ə/'), phrase: 'productivity' },
+    ],
+    script: [
+      { id: 'proj-1', speaker: 'coach', text: 'Tell me about a personal project you are particularly proud of.' },
+      {
+        id: 'proj-2',
+        speaker: 'learner',
+        text: 'I built a real-time productivity app using Next.js and Supabase.',
+        targetId: contrastTargetId('/iː/', '/ɪ/'),
+      },
+      { id: 'proj-3', speaker: 'coach', text: 'What was the most challenging technical part to implement?' },
+      { id: 'proj-4', speaker: 'learner', text: 'Managing offline sync with conflict resolution was quite challenging.' },
+      { id: 'proj-5', speaker: 'coach', text: 'If you had more time, what would you add next?' },
+      { id: 'proj-6', speaker: 'learner', text: 'I would add automated end-to-end tests and internationalization support.' },
+    ],
+  },
+  {
+    id: 'scripted.interview.star_disagreement',
+    mode: 'scripted',
+    origin: 'authored',
+    category: 'interview',
+    recommendedCefr: 'B2',
+    context: 'Pregunta de comportamiento (STAR) sobre la resolución constructiva de un desacuerdo técnico.',
+    communicativeGoal: 'Explicar cómo tomaste una decisión con datos, benchmarking y colaboración.',
+    targets: [
+      { targetId: contrastTargetId('/θ/', '/ð/'), phrase: 'three weeks' },
+      { targetId: contrastTargetId('/ʃ/', '/tʃ/'), phrase: 'benchmarks showed' },
+    ],
+    script: [
+      { id: 'star-1', speaker: 'coach', text: 'Tell me about a time you disagreed with a colleague on a technical decision.' },
+      { id: 'star-2', speaker: 'learner', text: 'A teammate wanted to rewrite a working service in a new framework.' },
+      { id: 'star-3', speaker: 'coach', text: 'How did you address the situation without causing friction?' },
+      { id: 'star-4', speaker: 'learner', text: 'I proposed building a small prototype to benchmark performance and development time.' },
+      { id: 'star-5', speaker: 'coach', text: 'What was the final outcome?' },
+      {
+        id: 'star-6',
+        speaker: 'learner',
+        text: 'The benchmarks showed our current stack was sufficient, saving three weeks of work.',
+        targetId: contrastTargetId('/θ/', '/ð/'),
+      },
+    ],
+  },
+  {
+    id: 'scripted.interview.strengths_goals',
+    mode: 'scripted',
+    origin: 'authored',
+    category: 'interview',
+    recommendedCefr: 'B1',
+    context: 'Pregunta de entrevista sobre visión profesional, objetivos de crecimiento y aprendizaje.',
+    communicativeGoal: 'Expresar tus fortalezas técnicas, curiosidad y metas a medio plazo.',
+    targets: [
+      { targetId: contrastTargetId('/iː/', '/ɪ/'), phrase: 'deepen my skills' },
+      { targetId: phonemeTargetId('/ɹ/'), phrase: 'thoroughly' },
+    ],
+    script: [
+      { id: 'goal-1', speaker: 'coach', text: 'Where do you see yourself growing over the next two years?' },
+      { id: 'goal-2', speaker: 'learner', text: 'I want to deepen my system design skills and mentor junior engineers.' },
+      { id: 'goal-3', speaker: 'coach', text: 'Why do you think our company is the right place for that?' },
+      { id: 'goal-4', speaker: 'learner', text: 'Your engineering culture values code quality and collaborative ownership.' },
+      { id: 'goal-5', speaker: 'coach', text: 'What is your strategy when learning an unfamiliar technology?' },
+      {
+        id: 'goal-6',
+        speaker: 'learner',
+        text: 'I build small proof-of-concept projects and read official documentation thoroughly.',
+        targetId: phonemeTargetId('/ɹ/'),
+      },
+    ],
+  },
+  {
+    id: 'scripted.social.coffee_break',
+    mode: 'scripted',
+    origin: 'authored',
+    category: 'social',
+    recommendedCefr: 'B1',
+    context: 'Charla informal virtual o coffee break con un compañero de equipo antes de una reunión.',
+    communicativeGoal: 'Hacer conversación informal (small talk) sobre el fin de semana y trabajo remoto.',
+    targets: [
+      { targetId: contrastTargetId('/æ/', '/ʌ/'), phrase: 'catch up' },
+      { targetId: phonemeTargetId('/ə/'), phrase: 'relaxing' },
+    ],
+    script: [
+      { id: 'cof-1', speaker: 'coach', text: 'Hey! How was your weekend? Did you do anything fun?' },
+      { id: 'cof-2', speaker: 'learner', text: 'It was relaxing! I went hiking in the mountains and tried a new recipe.' },
+      { id: 'cof-3', speaker: 'coach', text: 'That sounds awesome. Are you working from home today?' },
+      { id: 'cof-4', speaker: 'learner', text: 'Yes, I am. I usually prefer working from home on Mondays.' },
+      { id: 'cof-5', speaker: 'coach', text: 'Nice! Let me know if you want to grab a virtual coffee later.' },
+      {
+        id: 'cof-6',
+        speaker: 'learner',
+        text: "Sounds great, let's catch up right after the daily standup.",
+        targetId: contrastTargetId('/æ/', '/ʌ/'),
+      },
+    ],
+  },
 ]
+
