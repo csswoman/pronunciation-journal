@@ -211,3 +211,41 @@ describe('recordActivitySession concept signals (Pieza 7)', () => {
     )
   })
 })
+
+describe('concept evidence metadata', () => {
+  it('resolves level and title from the curriculum instead of hardcoding a1', async () => {
+    enqueueMock.mockResolvedValue(1)
+    updateConceptSignalsWithEvidenceMock.mockClear()
+    const completedAt = new Date('2026-08-27T12:00:00Z')
+    const results: ExerciseResult[] = [
+      {
+        exerciseId: 'ex-1',
+        slug: 'spoken_production',
+        exerciseTypeId: 20,
+        isCorrect: true,
+        timeMs: 1200,
+        contentId: 'c1',
+        context: 'daily',
+        completedAt,
+        sourceRef: { source: 'grammar_deck', id: 'b1-futuro-continuo' },
+      },
+    ]
+
+    await recordActivitySession('user-1', {
+      practiceContext: 'daily',
+      sessionResult: buildSessionResult(results),
+    })
+
+    expect(updateConceptSignalsWithEvidenceMock).toHaveBeenCalledWith(
+      'user-1',
+      expect.arrayContaining([
+        expect.objectContaining({
+          lessonSlug: 'b1-futuro-continuo',
+          level: 'b1',
+          title: 'Futuro continuo (will be + -ing)',
+          source: 'exercise',
+        }),
+      ]),
+    )
+  })
+})

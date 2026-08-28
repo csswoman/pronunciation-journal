@@ -13,6 +13,7 @@ import {
 } from '@/lib/progress/activity-types'
 import { skillsForSlug } from '@/lib/progress/skill-matrix'
 import { updateConceptSignalsWithEvidence } from '@/lib/courses/assessment-profile'
+import { findStudyByDeckSlug, parseCefrLevelId } from '@/lib/courses/curriculumIndex'
 import type { ConceptSignal } from '@/lib/courses/concept-profile'
 import type { DailyStep, PracticeContext, SessionResult } from '@/lib/practice/types'
 import type { PracticeAnswer } from '@/lib/practice/types'
@@ -212,10 +213,14 @@ export async function recordActivitySession(
     for (const [lessonSlug, stats] of lessonStats.entries()) {
       if (stats.total === 0) continue
       const passed = stats.correct / stats.total >= 0.8
+      // Resolve real CEFR level and human title; falling back to the slug keeps
+      // evidence flowing for decks that are not part of the course curriculum.
+      const study = findStudyByDeckSlug(lessonSlug)
       signals.push({
         lessonSlug,
-        level: 'a1',
-        title: lessonSlug,
+        // Elective tracks (business, chunks…) are not CEFR levels: fall back to a1.
+        level: parseCefrLevelId(study?.trackId) ?? 'a1',
+        title: study?.lesson.title ?? lessonSlug,
         selfRating: passed ? 'confident' : 'familiar',
         status: passed ? 'mastered' : 'review',
         correct: stats.correct,
