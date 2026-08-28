@@ -82,8 +82,14 @@ export function buildWordReviewStep(
   const writtenProduction = isExerciseAvailableOnSurface('written_production', targetSurface)
     ? generateWrittenProductionFromWordBank(words, 1)
     : { exercises: [] }
+  // Guarantee one Rodeo (circumlocution) and one spoken tense-transform slot
+  // per session — otherwise these two constraints only show up by random
+  // rotation and a learner could go weeks without ever seeing them.
   const spokenProduction = isExerciseAvailableOnSurface('spoken_production', targetSurface)
-    ? generateSpokenProductionFromWordBank(words, SPOKEN_PRODUCTION_PER_SESSION)
+    ? generateSpokenProductionFromWordBank(words, SPOKEN_PRODUCTION_PER_SESSION, [
+        'rodeo_circumlocution',
+        'spoken_verb_transform',
+      ])
     : { exercises: [] }
 
   const exercises = dedupeByContentId([

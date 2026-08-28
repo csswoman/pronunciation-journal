@@ -43,6 +43,19 @@ describe('buildWordReviewStep integration', () => {
     expect(freeStep!.exercises.some((e) => e.slug === 'match_pairs')).toBe(true)
   })
 
+  it('B7: guarantees a Rodeo (circumlocution) and a spoken tense-transform slot in spoken production', () => {
+    const entries = sampleCoreEntries()
+    const step = buildWordReviewStep(entries, 'daily')
+    expect(step).not.toBeNull()
+
+    const spokenExercises = step!.exercises.filter((e) => e.slug === 'spoken_production')
+    const constraintIds = spokenExercises.map(
+      (e) => (e.payload as { kind: 'generic'; data: { constraintId?: string } }).data.constraintId,
+    )
+    expect(constraintIds).toContain('rodeo_circumlocution')
+    expect(constraintIds).toContain('spoken_verb_transform')
+  })
+
   it(`fill_blank generatability on ranks ${CORE_SAMPLE_MIN_RANK}–${CORE_SAMPLE_MAX_RANK} is ≥ ${MIN_FILL_BLANK_GENERATABILITY * 100}%`, () => {
     const entries = sampleCoreEntries()
     const eligible = entries.filter(
