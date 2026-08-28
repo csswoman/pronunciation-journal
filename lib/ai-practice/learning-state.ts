@@ -80,8 +80,18 @@ export function compactState(s: UserLearningState): string {
 
   const topSounds = s.pronunciation.strugglingSounds.slice(0, 2).map(p => p.ipa);
 
-  const reviewConcepts = (s.theory?.concepts ?? [])
-    .filter(c => c.status === "review")
+  const theoryConcepts = s.theory?.concepts ?? [];
+
+  // "need_help" claims (selfRating "unknown" + source "manual") are the
+  // learner explicitly asking for more repetition — surface them separately
+  // so the coach treats them as a request, not just background review.
+  const helpConcepts = theoryConcepts
+    .filter(c => c.status === "review" && c.selfRating === "unknown" && c.source === "manual")
+    .slice(0, 3)
+    .map(c => c.title || c.lessonSlug);
+
+  const reviewConcepts = theoryConcepts
+    .filter(c => c.status === "review" && !(c.selfRating === "unknown" && c.source === "manual"))
     .slice(0, 3)
     .map(c => c.title || c.lessonSlug);
 
@@ -90,6 +100,7 @@ export function compactState(s: UserLearningState): string {
   return [
     `Student: ${s.level.cefrEstimate}, conf ${s.level.confidence.toFixed(1)}`,
     activeFocus ? `Active focus topic: ${activeFocus}` : null,
+    helpConcepts.length ? `Asked for help: ${helpConcepts.join(", ")}` : null,
     reviewConcepts.length ? `Theory in review: ${reviewConcepts.join(", ")}` : null,
     topGrammar.length ? `Weak grammar: ${topGrammar.join(", ")}` : null,
     topSounds.length ? `Weak sounds: ${topSounds.join(", ")}` : null,

@@ -23,6 +23,40 @@ describe("compactState", () => {
     expect(out).toMatch(/Student: B2, conf 0\.8/);
   });
 
+  it("surfaces need_help concepts distinctly from ordinary review", () => {
+    const s = makeState({
+      theory: {
+        concepts: [
+          {
+            lessonSlug: "present-perfect",
+            level: "b1",
+            title: "Present perfect",
+            selfRating: "unknown",
+            status: "review",
+            correct: 0,
+            total: 0,
+            assessedAt: new Date().toISOString(),
+            source: "manual",
+          },
+          {
+            lessonSlug: "reported-speech",
+            level: "b1",
+            title: "Reported speech",
+            selfRating: "familiar",
+            status: "review",
+            correct: 2,
+            total: 3,
+            assessedAt: new Date().toISOString(),
+            source: "exercise",
+          },
+        ],
+      },
+    });
+    const out = compactState(s);
+    expect(out).toMatch(/Asked for help: Present perfect/);
+    expect(out).not.toMatch(/Asked for help: Reported speech/);
+  });
+
   it("omits Weak grammar line when no weak topics", () => {
     const out = compactState(makeState());
     expect(out).not.toMatch(/Weak grammar/);
