@@ -57,14 +57,11 @@ export function WordsClient({
   return (
     <PageLayout archetype="catalog">
       <div className="words-lexicon">
-        <div className="words-lexicon__page-head">
-          <PageHeader
-            kicker="Tu diccionario"
-            title="Dictionary"
-            className="!pb-0"
-          />
-          <WordsTopbar activeMode={activeMode} lexiconCount={lexiconTotal} />
-        </div>
+        <PageHeader
+          title="Diccionario"
+          subtitle={`${lexiconTotal} términos · ${lexiconLessons.length} categorías`}
+          actions={<WordsTopbar activeMode={activeMode} lexiconCount={lexiconTotal} />}
+        />
 
         {progressUnavailable ? (
           <div className="words-lexicon__data-alert" role="status">

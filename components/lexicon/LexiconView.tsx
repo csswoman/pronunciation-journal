@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { LexiconHeroSearch } from "@/components/lexicon/LexiconHeroSearch";
@@ -61,81 +61,47 @@ export function LexiconView({
     return (untouched.length > 0 ? untouched : fallback).slice(0, 3);
   }, [lessons, nextLesson?.id]);
 
-  const [collapsedDomains, setCollapsedDomains] = useState<Set<string>>(new Set());
-
-  const toggleDomain = (id: string) => {
-    setCollapsedDomains(prev => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id); else next.add(id);
-      return next;
-    });
-  };
-
   return (
     <>
       {mode === "dictionary" ? (
-        <div className="words-lexicon__dictionary-layout">
-          <section className="words-lexicon__dictionary-main" aria-labelledby="words-dictionary-title">
-            <div className="words-lexicon__sechead">
-              <div>
-                <p className="words-lexicon__sechead-kicker">Diccionario</p>
-                <h2 id="words-dictionary-title">Busca una palabra</h2>
-                <p>Definición, pronunciación y ejemplos.</p>
-              </div>
-            </div>
-            <LexiconHeroSearch
-              recentWords={recentWords}
-              dueWords={dueWordLabels}
-              onAddWord={onAddWord}
-            />
-          </section>
-          <aside className="words-lexicon__practice-aside" aria-label="Práctica de vocabulario">
-            <LexiconTodayPanel
-              dueForReview={dueForReview}
-              nextLesson={nextLesson}
-              progressUnavailable={progressUnavailable}
-            />
-            {nextLesson ? (
-              <p className="words-lexicon__practice-aside-hint">
-                Recomendado: <strong>{nextLesson.title}</strong>
-              </p>
-            ) : null}
-          </aside>
-          <section className="words-lexicon__dictionary-categories" aria-labelledby="words-categories-title">
-            <div className="words-lexicon__sechead words-lexicon__sechead--spaced">
-              <h2 id="words-categories-title">Todas las categorías</h2>
-            </div>
+        <div className="words-lexicon__dictionary-flow space-y-6 pt-2">
+          <LexiconTodayPanel
+            dueForReview={dueForReview}
+            nextLesson={nextLesson}
+            dueWordLabels={dueWordLabels}
+            progressUnavailable={progressUnavailable}
+          />
+
+          <LexiconHeroSearch
+            recentWords={recentWords}
+            dueWords={dueWordLabels}
+            onAddWord={onAddWord}
+          />
+
+          <section className="words-lexicon__dictionary-categories space-y-8 pt-2" aria-label="Categorías de vocabulario">
             {LEXICON_DOMAINS.map((domain) => {
               const group = domainGroups.find((g) => g.domain.id === domain.id);
               if (!group || group.lessons.length === 0) return null;
 
               return (
-                <div key={domain.id} className="words-lexicon__domain-group">
-                  <button
-                    type="button"
-                    className="words-lexicon__domain-head"
-                    onClick={() => toggleDomain(domain.id)}
-                    aria-expanded={!collapsedDomains.has(domain.id)}
-                  >
-                    <h3 className="words-lexicon__domain-name">{domain.name}</h3>
-                    <span className="words-lexicon__domain-count">
-                      {group.lessons.length} {group.lessons.length === 1 ? "categoría" : "categorías"}
-                    </span>
-                    <span
-                      className="words-lexicon__domain-chevron"
-                      aria-hidden
-                      style={{ transform: collapsedDomains.has(domain.id) ? "rotate(-90deg)" : "rotate(0deg)", transition: "transform 150ms ease-out" }}
-                    >
-                      ›
-                    </span>
-                  </button>
-                  {!collapsedDomains.has(domain.id) ? (
-                    <LessonGrid
-                      lessons={group.lessons}
-                      onLessonClick={(id) => router.push(`/lexicon/${id}`)}
-                      compact
-                    />
-                  ) : null}
+                <div key={domain.id} className="words-lexicon__domain-group space-y-4">
+                  <div className="flex flex-wrap items-center justify-between gap-3 pb-2 border-b border-border-subtle/40">
+                    <div className="flex items-center gap-3">
+                      <h3 className="text-h3 font-bold text-fg">{domain.name}</h3>
+                      <span className="rounded-full bg-primary-soft/80 text-primary border border-primary/20 px-2.5 py-0.5 text-xs font-semibold">
+                        {domain.studyMode === "receptive" ? "Reconocer" : "Producir"}
+                      </span>
+                    </div>
+                    <p className="text-caption sm:text-body-sm text-fg-muted max-w-md text-right">
+                      {domain.description}
+                    </p>
+                  </div>
+                  <LessonGrid
+                    lessons={group.lessons}
+                    nextLessonId={nextLesson?.id}
+                    onLessonClick={(id) => router.push(`/lexicon/${id}`)}
+                    compact
+                  />
                 </div>
               );
             })}

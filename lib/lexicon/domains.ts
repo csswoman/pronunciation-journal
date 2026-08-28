@@ -21,8 +21,8 @@ export interface LexiconDomain {
 export const LEXICON_DOMAINS: LexiconDomain[] = [
   {
     id: "engineering",
-    name: "Engineering",
-    description: "AI, backend, data, and frontend vocabulary.",
+    name: "Ingeniería",
+    description: "Entenderlas al leer documentación o escuchar una reunión.",
     color: "#D97706",
     icon: "⬡",
     categoryIds: [
@@ -35,8 +35,8 @@ export const LEXICON_DOMAINS: LexiconDomain[] = [
   },
   {
     id: "design",
-    name: "Design",
-    description: "UX, UI, and design-systems language.",
+    name: "Diseño",
+    description: "Lenguaje de UX, UI y sistemas de diseño.",
     color: "#6B9FC4",
     icon: "✦",
     categoryIds: ["ux-design", "design-systems"],
@@ -44,8 +44,8 @@ export const LEXICON_DOMAINS: LexiconDomain[] = [
   },
   {
     id: "professional",
-    name: "Professional",
-    description: "Workplace English, interviews, and technical writing.",
+    name: "Profesional",
+    description: "Inglés laboral, entrevistas y redacción técnica.",
     color: "#C4846B",
     icon: "◈",
     categoryIds: ["professional", "technical-writing", "personal-interview"],
@@ -53,8 +53,8 @@ export const LEXICON_DOMAINS: LexiconDomain[] = [
   },
   {
     id: "leisure",
-    name: "Leisure & life",
-    description: "Travel, hobbies, and everyday topics — more coming soon.",
+    name: "Ocio y vida",
+    description: "Viajes, aficiones y temas cotidianos.",
     color: "#65A87A",
     icon: "☼",
     categoryIds: [],
