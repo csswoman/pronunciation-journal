@@ -2,7 +2,7 @@
   "tolerancePct": 10,
   "limitsKb": {
     "rootMainGzipKB": 168,
-    "allChunksGzipKB": 1531
+    "allChunksGzipKB": 1780
   },
-  "notes": "Re-baselined 2026-08-18 at eb033385. `allChunksGzipKB` still excludes the lazy CMUdict chunk (~939KB gzip, reported as `deferredChunksGzipKB`). The previous 1275 limit was the July 23 total (82 chunks); the app grew to 111 chunks / 1531KB gzip after essential-words, global search, curriculum expansion, and related practice UI. CI allows +10% growth before failing."
+  "notes": "Re-baselined 2026-08-28 at 50d84b83. `allChunksGzipKB` still excludes the lazy CMUdict chunk (~939KB gzip, reported as `deferredChunksGzipKB`). History: 1275 = July 23 total (82 chunks); 1531 = Aug 18 (~111 chunks) after essential-words, global search, curriculum expansion; 1780 = Aug 28 (136 chunks, ~1773KB gzip measured) after the WebGPU coach orb, scripted mission runner + catalog, syllable-level pronunciation scoring, journal notebook rebuild + UI sounds engine, SVGR illustration system, error-pattern taxonomy, and daily-plan grammar steps. Biggest single eager chunks are Zod v4 (~63KB, 12 pages) and the inlined global search index (~65KB). CI allows +10% growth before failing. If this keeps climbing, lazy-load the search index behind SearchModal's open."
 }
