@@ -717,24 +717,24 @@ export default function PracticeOptionsGrid({
             </div>
           </Link>
 
-          {/* Buscar una palabra */}
+          {/* Diccionario */}
           <Link
-            href="/practice/word-search"
-            onClick={() => void setLastPracticeMode('word-search')}
-            className="focus-ring group flex flex-col justify-between gap-3 rounded-2xl border border-border-subtle bg-surface-raised p-5 shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-primary/40 hover:bg-surface-sunken hover:shadow-sm lg:col-span-4 lg:col-start-1 lg:row-start-3"
+            href="/dictionary"
+            onClick={() => void setLastPracticeMode('words')}
+            className="focus-ring group flex flex-col justify-between gap-3 rounded-2xl border border-border-subtle bg-surface-raised p-5 shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-primary/40 hover:bg-surface-sunken hover:shadow-sm lg:col-span-2 lg:col-start-1 lg:row-start-3"
           >
             <div className="flex items-start justify-between gap-2">
-              <span className="grid h-10 w-10 place-items-center rounded-lg bg-surface-sunken text-fg-muted transition-all duration-200 group-hover:bg-[var(--hue-icon-bg)] group-hover:text-primary group-hover:scale-105">
+              <span className="grid h-10 w-10 place-items-center rounded-xl bg-surface-sunken text-fg-muted transition-all duration-200 group-hover:bg-[var(--hue-icon-bg)] group-hover:text-primary group-hover:scale-105">
                 <Search size={20} aria-hidden />
               </span>
               <span className="rounded-md bg-surface-sunken px-2 py-0.5 text-tiny font-medium text-fg-muted">
-                Diccionario
+                Palabras
               </span>
             </div>
             <div className="flex flex-col gap-1">
               <div className="flex items-center justify-between">
                 <span className="font-label font-bold text-fg transition-colors group-hover:text-primary">
-                  Buscar una palabra
+                  Diccionario
                 </span>
                 <ArrowRight
                   size={15}
@@ -743,7 +743,38 @@ export default function PracticeOptionsGrid({
                 />
               </div>
               <p className="font-caption text-fg-muted">
-                Búsqueda rápida, fonética y pistas de uso contextual.
+                Búsqueda rápida, fonética, definiciones y frases de ejemplo.
+              </p>
+            </div>
+          </Link>
+
+          {/* Pares mínimos */}
+          <Link
+            href="/practice/minimal-pairs"
+            onClick={() => void setLastPracticeMode('minimal-pairs')}
+            className="focus-ring group flex flex-col justify-between gap-3 rounded-2xl border border-border-subtle bg-surface-raised p-5 shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-primary/40 hover:bg-surface-sunken hover:shadow-sm lg:col-span-2 lg:col-start-3 lg:row-start-3"
+          >
+            <div className="flex items-start justify-between gap-2">
+              <span className="grid h-10 w-10 place-items-center rounded-xl bg-surface-sunken text-fg-muted transition-all duration-200 group-hover:bg-[var(--hue-icon-bg)] group-hover:text-primary group-hover:scale-105">
+                <MicVocal size={20} aria-hidden />
+              </span>
+              <span className="rounded-md bg-surface-sunken px-2 py-0.5 text-tiny font-medium text-fg-muted">
+                Sonidos
+              </span>
+            </div>
+            <div className="flex flex-col gap-1">
+              <div className="flex items-center justify-between">
+                <span className="font-label font-bold text-fg transition-colors group-hover:text-primary">
+                  Pares mínimos
+                </span>
+                <ArrowRight
+                  size={15}
+                  className="text-fg-subtle transition-transform duration-150 group-hover:translate-x-1 group-hover:text-primary"
+                  aria-hidden
+                />
+              </div>
+              <p className="font-caption text-fg-muted">
+                Entrena la discriminación entre sonidos que se confunden fácilmente.
               </p>
             </div>
           </Link>

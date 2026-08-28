@@ -1,3 +1,4 @@
+import { isExerciseAvailableOnSurface } from '@/lib/exercises/capabilities'
 import { generateConnectedSpeechExercises } from '@/lib/exercises/generators/connected-speech'
 import { generateFalseFriendExercises } from '@/lib/exercises/generators/false-friends'
 import { fetchTextFragments, generateReorderFromFragments } from '@/lib/exercises/generators/reorder-from-fragments'
@@ -22,8 +23,8 @@ export async function buildConnectedSpeechStep(): Promise<DailyStep | null> {
   if (!result) return null
 
   const exercises = dedupeByContentId([
-    ...result.quiz.map((ex) => fromGenericExercise(ex, 'daily')),
-    ...result.dictation.map((ex) => fromGenericExercise(ex, 'daily')),
+    ...(isExerciseAvailableOnSurface('multiple_choice', 'daily_plan') ? result.quiz.map((ex) => fromGenericExercise(ex, 'daily')) : []),
+    ...(isExerciseAvailableOnSurface('sentence_dictation', 'daily_plan') ? result.dictation.map((ex) => fromGenericExercise(ex, 'daily')) : []),
     ...result.shadowPhrase.map((ex) => fromGenericExercise(ex, 'daily')),
   ])
   if (exercises.length === 0) return null

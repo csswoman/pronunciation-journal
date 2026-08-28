@@ -1,3 +1,5 @@
+export type SpeechInputPreference = 'web-speech' | 'gemini' | 'auto';
+
 export interface SpeechInputResult {
   transcript: string;
   confidence?: number;
@@ -11,3 +13,4 @@ export interface SpeechInputAdapter {
   stop(): Promise<SpeechInputResult>;
   abort(): void;
 }
+

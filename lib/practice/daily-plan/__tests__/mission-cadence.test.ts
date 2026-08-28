@@ -3,6 +3,7 @@ import {
   shouldOfferMission,
   MISSION_DAYS_OF_WEEK,
   shouldOfferScriptedMission,
+  getRotatingSlotKind,
 } from '@/lib/practice/daily-plan/mission-cadence'
 
 describe('shouldOfferMission', () => {
@@ -55,4 +56,17 @@ describe('shouldOfferScriptedMission', () => {
     expect(shouldOfferScriptedMission(2, false)).toBe(false)
   })
 })
+
+describe('getRotatingSlotKind', () => {
+  it('rotates across all days of the week consistently', () => {
+    expect(getRotatingSlotKind(1)).toBe('mission') // Monday
+    expect(getRotatingSlotKind(2)).toBe('reader')  // Tuesday
+    expect(getRotatingSlotKind(3)).toBe('mission') // Wednesday
+    expect(getRotatingSlotKind(4)).toBe('reader')  // Thursday
+    expect(getRotatingSlotKind(5)).toBe('mission') // Friday
+    expect(getRotatingSlotKind(6)).toBe('sentence_builder') // Saturday
+    expect(getRotatingSlotKind(0)).toBe('review')  // Sunday
+  })
+})
+
 

@@ -31,7 +31,7 @@ interface LessonItem {
 }
 
 export function LevelConceptsProgressCard() {
-  let user = null;
+  let user: { id: string } | null = null;
   try {
     user = useAuth()?.user ?? null;
   } catch {

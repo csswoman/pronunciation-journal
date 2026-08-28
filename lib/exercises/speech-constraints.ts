@@ -21,6 +21,10 @@ export type SpeechConstraintId =
   | 'negative_experience'
   | 'question_form'
   | 'quantity_frequency'
+  | 'rodeo_circumlocution'
+  | 'spoken_verb_transform'
+  | 'past_chain_narrative'
+  | 'rapid_response'
 
 export interface SpeechConstraint {
   id: SpeechConstraintId
@@ -104,6 +108,30 @@ export const SPEECH_CONSTRAINTS: readonly SpeechConstraint[] = [
     label: 'Frecuencia',
     promptEs: (w) => `Di CON QUÉ FRECUENCIA o CUÁNTO usas "${w}". Usa un adverbio de frecuencia o cuantificador.`,
     checkEn: 'The response must contain a frequency adverb (usually, rarely, twice a week...) or a quantifier (a lot of, a few...).',
+  },
+  {
+    id: 'rodeo_circumlocution',
+    label: 'Rodeo',
+    promptEs: (w) => `Describe qué es o para qué sirve "${w}" SIN decir la palabra "${w}". Usa frases como "It is a thing that..." o "You use it when...".`,
+    checkEn: 'The response must describe the target concept without pronouncing the exact target word. It must use circumlocution such as relative clauses or purpose descriptions (e.g. "It is a thing that...", "A person who...", "It refers to...").',
+  },
+  {
+    id: 'spoken_verb_transform',
+    label: 'Transformación',
+    promptEs: (w) => `Transforma una acción con "${w}" al PASADO o al FUTURO y dila en voz alta.`,
+    checkEn: 'The response must successfully transform a baseline verb action into past simple, past continuous, or future with correct morphology.',
+  },
+  {
+    id: 'past_chain_narrative',
+    label: 'Narración',
+    promptEs: (w) => `Cuenta una micro-secuencia de 2 o 3 frases en PASADO sobre "${w}". Mantén el tiempo verbal continuo.`,
+    checkEn: 'The response must contain a narrative of at least 2 sentences consistently using past tenses without dropping back to present.',
+  },
+  {
+    id: 'rapid_response',
+    label: 'Respuesta rápida',
+    promptEs: (w) => `Tienes 5 segundos para pensar y responde de forma fluida: ¿Cómo usarías o experimentarías "${w}" en una situación real?`,
+    checkEn: 'The response must provide a spontaneous English answer addressing the prompt with continuous speech and intelligible syntax.',
   },
 ]
 

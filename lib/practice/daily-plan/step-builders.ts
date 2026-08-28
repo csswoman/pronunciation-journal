@@ -1,3 +1,4 @@
+import { isExerciseAvailableOnSurface } from '@/lib/exercises/capabilities'
 import { generateFillBlankFromWordBank } from '@/lib/exercises/generators/fill-blank'
 import { generateSentenceDictationFromWordBank } from '@/lib/exercises/generators/sentence-dictation'
 import { generateReorderWordsFromWordBank } from '@/lib/exercises/generators/reorder-words'
@@ -59,6 +60,8 @@ export function buildWordReviewStep(
 ): DailyStep | null {
   if (words.length === 0) return null
 
+  const targetSurface = context === 'daily' ? 'daily_plan' : 'free_practice'
+
   const { exercises: fillBlanks, skipped: fillBlankSkipped } = generateFillBlankFromWordBank(words, 2)
   if (
     process.env.NODE_ENV === 'development' &&
@@ -67,11 +70,21 @@ export function buildWordReviewStep(
   ) {
     console.debug('[word_review] fill_blank skipped entries', fillBlankSkipped)
   }
-  const dictations = generateSentenceDictationFromWordBank(words, 2)
-  const reorders = generateReorderWordsFromWordBank(words, 1)
-  const matchPairs = generateMatchPairsFromWordBank(words, 1)
-  const writtenProduction = generateWrittenProductionFromWordBank(words, 1)
-  const spokenProduction = generateSpokenProductionFromWordBank(words, SPOKEN_PRODUCTION_PER_SESSION)
+  const dictations = isExerciseAvailableOnSurface('sentence_dictation', targetSurface)
+    ? generateSentenceDictationFromWordBank(words, 2)
+    : []
+  const reorders = isExerciseAvailableOnSurface('reorder_words', targetSurface)
+    ? generateReorderWordsFromWordBank(words, 1)
+    : []
+  const matchPairs = isExerciseAvailableOnSurface('match_pairs', targetSurface)
+    ? generateMatchPairsFromWordBank(words, 1)
+    : []
+  const writtenProduction = isExerciseAvailableOnSurface('written_production', targetSurface)
+    ? generateWrittenProductionFromWordBank(words, 1)
+    : { exercises: [] }
+  const spokenProduction = isExerciseAvailableOnSurface('spoken_production', targetSurface)
+    ? generateSpokenProductionFromWordBank(words, SPOKEN_PRODUCTION_PER_SESSION)
+    : { exercises: [] }
 
   const exercises = dedupeByContentId([
     ...fillBlanks.map((ex) => fromGenericExercise(ex, context)),

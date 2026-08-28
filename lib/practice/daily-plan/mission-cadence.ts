@@ -32,3 +32,21 @@ export function shouldOfferScriptedMission(
   return SCRIPTED_MISSION_DAYS.includes(dayOfWeek)
 }
 
+export type RotatingSlotType = 'mission' | 'reader' | 'sentence_builder' | 'review'
+
+/**
+ * Rota el 5º paso de la diaria entre misión, reader, constructor/habla conectada y repaso,
+ * garantizando variedad a lo largo de la semana sin que dos días se sientan idénticos.
+ */
+export function getRotatingSlotKind(dayOfWeek: number): RotatingSlotType {
+  // Lunes (1), Miércoles (3), Viernes (5): Misión oral
+  if (MISSION_DAYS_OF_WEEK.includes(dayOfWeek)) return 'mission'
+  // Martes (2), Jueves (4): Lectura en contexto (Reader)
+  if (SCRIPTED_MISSION_DAYS.includes(dayOfWeek)) return 'reader'
+  // Sábado (6): Construcción de oraciones y patrones
+  if (dayOfWeek === 6) return 'sentence_builder'
+  // Domingo (0): Repaso consolidado
+  return 'review'
+}
+
+

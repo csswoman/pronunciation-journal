@@ -6,6 +6,7 @@ import type {
 } from '@/lib/exercises/types'
 import { fromGenericExercise, fromMixedExercise } from '@/lib/practice/adapters'
 import type { ExerciseSlug, PracticeContext, PracticeExercise } from '@/lib/practice/types'
+import { constraintById } from '@/lib/exercises/speech-constraints'
 
 const SOURCE = { source: 'word_bank' as const, id: 'test-gallery' }
 const SOUND_ID = 42
@@ -294,6 +295,125 @@ const PHONEME_LABELS: Record<keyof typeof PHONEME_FIXTURES, string> = {
   abx: 'ABX',
 }
 
+const NEW_EXERCISE_FIXTURES: TestGalleryEntry[] = [
+  {
+    id: 'spoken-rodeo',
+    slug: 'spoken_production',
+    label: 'Rodeo (Circumlocución)',
+    domain: 'vocabulary',
+    build: (context) => {
+      const c = constraintById('rodeo_circumlocution')
+      return adaptGeneric(
+        {
+          id: 'test-spoken-rodeo',
+          type: 'spoken_production',
+          sourceRef: SOURCE,
+          taskPrompt: c
+            ? c.promptEs('umbrella')
+            : 'Describe qué es o para qué sirve "umbrella" SIN decir la palabra "umbrella".',
+          targetItem: 'umbrella',
+          targetMeaning: 'an object that protects you from rain',
+          constraint: c ?? undefined,
+        },
+        context,
+      )
+    },
+  },
+  {
+    id: 'spoken-transform',
+    slug: 'spoken_production',
+    label: 'Transformación hablada',
+    domain: 'grammar',
+    build: (context) => {
+      const c = constraintById('spoken_verb_transform')
+      return adaptGeneric(
+        {
+          id: 'test-spoken-transform',
+          type: 'spoken_production',
+          sourceRef: SOURCE,
+          taskPrompt: c
+            ? c.promptEs('drive')
+            : 'Transforma una acción con "drive" al PASADO y dila en voz alta.',
+          targetItem: 'drive',
+          targetMeaning: 'to operate a vehicle',
+          exampleSentence: 'I drove to the station yesterday.',
+          constraint: c ?? undefined,
+        },
+        context,
+      )
+    },
+  },
+  {
+    id: 'spoken-narrative',
+    slug: 'spoken_production',
+    label: 'Narración en pasado encadenada',
+    domain: 'grammar',
+    build: (context) => {
+      const c = constraintById('past_chain_narrative')
+      return adaptGeneric(
+        {
+          id: 'test-spoken-narrative',
+          type: 'spoken_production',
+          sourceRef: SOURCE,
+          taskPrompt: c
+            ? c.promptEs('vacation')
+            : 'Cuenta una micro-secuencia de 2 o 3 frases en PASADO sobre "vacation".',
+          targetItem: 'vacation',
+          targetMeaning: 'time spent away from work or home',
+          constraint: c ?? undefined,
+        },
+        context,
+      )
+    },
+  },
+  {
+    id: 'spoken-rapid-response',
+    slug: 'spoken_production',
+    label: 'Respuesta sin preparación',
+    domain: 'vocabulary',
+    build: (context) => {
+      const c = constraintById('rapid_response')
+      return adaptGeneric(
+        {
+          id: 'test-spoken-rapid',
+          type: 'spoken_production',
+          sourceRef: SOURCE,
+          taskPrompt: c
+            ? c.promptEs('technology')
+            : 'Tienes 5 segundos para pensar y responde de forma fluida sobre "technology".',
+          targetItem: 'technology',
+          targetMeaning: 'practical application of science in daily life',
+          constraint: c ?? undefined,
+        },
+        context,
+      )
+    },
+  },
+  {
+    id: 'spoken-justification',
+    slug: 'spoken_production',
+    label: 'Justificación con conectores',
+    domain: 'grammar',
+    build: (context) => {
+      const c = constraintById('opinion_connector')
+      return adaptGeneric(
+        {
+          id: 'test-spoken-justification',
+          type: 'spoken_production',
+          sourceRef: SOURCE,
+          taskPrompt: c
+            ? c.promptEs('remote work')
+            : 'Da tu OPINIÓN sobre "remote work" y justifícala con "because", "so" o "although".',
+          targetItem: 'remote work',
+          targetMeaning: 'working from home rather than in an office',
+          constraint: c ?? undefined,
+        },
+        context,
+      )
+    },
+  },
+]
+
 export const TEST_GALLERY_ENTRIES: TestGalleryEntry[] = [
   ...Object.entries(GENERIC_FIXTURES).map(([slug, exercise]) => ({
     id: `generic-${slug}`,
@@ -302,6 +422,7 @@ export const TEST_GALLERY_ENTRIES: TestGalleryEntry[] = [
     domain: (slug === 'multiple_choice' ? 'grammar' : 'vocabulary') as TestGalleryDomain,
     build: (context: PracticeContext) => adaptGeneric(exercise, context),
   })),
+  ...NEW_EXERCISE_FIXTURES,
   ...Object.entries(PHONEME_FIXTURES).map(([slug, exercise]) => ({
     id: `phoneme-${slug}`,
     slug: slug as ExerciseSlug,

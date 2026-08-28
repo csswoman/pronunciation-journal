@@ -35,7 +35,7 @@ export default function ConceptFeedbackSelector({
   className,
   compact = false,
 }: ConceptFeedbackSelectorProps) {
-  let user = null;
+  let user: { id: string } | null = null;
   try {
     user = useAuth()?.user ?? null;
   } catch {

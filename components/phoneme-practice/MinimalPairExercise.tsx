@@ -150,6 +150,27 @@ export function MinimalPairExercise({ exercise, onSubmit, focusUi = false, voice
         </div>
       )}
 
+      {submitted && (
+        <div className="flex flex-col items-center justify-center gap-2 rounded-xl border border-border-default bg-surface-raised/60 p-3">
+          <span className="text-caption font-semibold text-fg-muted uppercase tracking-wider">
+            Compara ambos sonidos
+          </span>
+          <div className="flex items-center gap-4">
+            {exercise.options.map((opt) => (
+              <div key={`compare-${opt.id}`} className="flex flex-col items-center gap-1">
+                <PhonemePlayButton
+                  ariaLabel={`Escuchar ${opt.label}`}
+                  word={opt.label}
+                  voice={voice}
+                  size="md"
+                />
+                <span className="text-body-xs font-medium text-fg">{opt.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {submitted && correctOption && focusUi && !selectedIsCorrect && (
         <p className="m-0 text-center text-body-sm text-fg-muted" role="status">
           <strong>{correctOption.label}</strong> lleva {exercise.ipa}.

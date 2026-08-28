@@ -249,7 +249,7 @@ describe('buildDailyPlan', () => {
     expect(plan.isNewUser).toBe(false)
   })
 
-  it('word_review incluye un ejercicio match_pairs cuando hay ≥4 palabras', async () => {
+  it('word_review en plan diario excluye match_pairs e incluye fill_blank (B3)', async () => {
     const words = Array.from({ length: 6 }, (_, i) =>
       makeLexiconWordBankEntry({ id: `w-${i}`, text: `word${i}`, example: fillBlankExampleSentence(`word${i}`) }),
     )
@@ -258,7 +258,9 @@ describe('buildDailyPlan', () => {
     const plan = await buildDailyPlan('user-1')
     const reviewStep = plan.steps.find((s) => s.kind === 'word_review')
     expect(reviewStep).toBeDefined()
-    expect(reviewStep!.exercises.some((e) => e.slug === 'match_pairs')).toBe(true)
+    // B3: match_pairs is reserved for free practice and excluded from daily plan
+    expect(reviewStep!.exercises.some((e) => e.slug === 'match_pairs')).toBe(false)
+    expect(reviewStep!.exercises.some((e) => e.slug === 'fill_blank')).toBe(true)
   })
 
   it('el paso de fonema usa el sonido más débil cuando hay progreso', async () => {
