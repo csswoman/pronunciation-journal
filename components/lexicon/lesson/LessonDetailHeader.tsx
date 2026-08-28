@@ -1,27 +1,37 @@
 "use client";
 
 import Link from "next/link";
+import PageHeader from "@/components/layout/PageHeader";
+
 interface LessonDetailHeaderProps {
   title: string;
   blurb: string;
 }
 
+/**
+ * LessonDetailHeader - Cabecera de lección/tema del diccionario.
+ *
+ * Sub-componentes:
+ * - Link (Navegación de miga de pan al Diccionario)
+ * - PageHeader (Cabecera canónica con Kicker, Título y Subtítulo)
+ */
 export function LessonDetailHeader({
   title,
   blurb,
 }: LessonDetailHeaderProps) {
   return (
-    <header className="lexicon-area__head">
-      <nav className="lexicon-area__crumb" aria-label="Ruta de navegación">
-        <Link href="/words">Diccionario</Link>
-        <span className="lexicon-area__crumb-separator" aria-hidden>/</span>
-        <span aria-current="page">{title}</span>
+    <div className="flex flex-col gap-2 mb-6">
+      <nav className="flex items-center gap-1.5 font-mono text-tiny text-fg-subtle" aria-label="Ruta de navegación">
+        <Link href="/words" className="hover:text-fg-muted transition-colors">Diccionario</Link>
+        <span aria-hidden>/</span>
+        <span aria-current="page" className="text-fg-muted">{title}</span>
       </nav>
-
-      <div className="lexicon-area__head-copy">
-        <h1 className="lexicon-area__title">{title}</h1>
-        <p className="lexicon-area__sub">{blurb}</p>
-      </div>
-    </header>
+      <PageHeader
+        kicker="TEMA DEL DICCIONARIO"
+        title={title}
+        subtitle={blurb}
+      />
+    </div>
   );
 }
+

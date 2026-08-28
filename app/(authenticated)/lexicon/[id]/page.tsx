@@ -1,4 +1,3 @@
-import type { CSSProperties } from "react";
 import { notFound } from "next/navigation";
 import PageLayout from "@/components/layout/PageLayout";
 import Section from "@/components/layout/Section";
@@ -46,22 +45,15 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ i
     difficulty: w.difficulty,
   }));
 
-  const lexiconCatColor = category.color;
-
   return (
     <PageLayout archetype="catalog">
-      <div
-        className="lexicon-area"
-        style={{ "--lexicon-cat": lexiconCatColor } as CSSProperties}
-      >
+      <div className="lexicon-area">
         <Section spacing="lg">
-          <LessonDetailActions
-            title={category.name}
-            blurb={getCategoryBlurb(id)}
-          />
           <WordBrowserClient
             words={words}
             categoryId={id}
+            categoryTitle={category.name}
+            blurb={getCategoryBlurb(id)}
             wordBankMapEntries={Array.from(wordBankDetailsMap.entries()).map(
               ([k, v]) => [k, { id: v.id, isFavorite: v.isFavorite }] as [string, { id: string; isFavorite: boolean }]
             )}
