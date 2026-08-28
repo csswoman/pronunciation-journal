@@ -37,6 +37,12 @@ export const PRACTICE_CATEGORIES: Record<string, PracticeCategory> = {
     kicker: "Práctica rápida",
     description: "Modos ágiles y lúdicos para reforzar tus reflejos en inglés",
   },
+  reference: {
+    id: "reference",
+    title: "Consulta",
+    kicker: "Herramientas de referencia",
+    description: "Búsqueda libre, fuera del flujo de ejercicios",
+  },
 } as const
 
 export const PRACTICE_GAMES: readonly PracticeGame[] = [
