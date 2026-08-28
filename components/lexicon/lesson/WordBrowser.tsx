@@ -168,7 +168,7 @@ export function WordBrowser({
             </div>
 
             <div className="shrink-0 self-stretch md:self-auto">
-              <Link href={`/lexicon/${categoryId}/practice`} className="inline-block w-full md:w-auto">
+              <Link href={`/words/${categoryId}/practice`} className="inline-block w-full md:w-auto">
                 <button
                   type="button"
                   className="w-full md:w-auto px-6 py-3 bg-white text-primary font-semibold text-body-sm rounded-full shadow-md hover:bg-surface-raised transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
@@ -224,9 +224,6 @@ export function WordBrowser({
       <div className="lexicon-area__detail-layout">
         {/* Columna principal de resultados */}
         <div className="lexicon-area__results flex flex-col gap-4">
-          <p className="text-body-sm text-fg-subtle" aria-live="polite">
-            {enriched.length} {enriched.length === 1 ? "palabra" : "palabras"} {status === "all" ? "en este tema" : "con este filtro"}
-          </p>
 
           <WordGrid
             words={enriched}
@@ -234,21 +231,10 @@ export function WordBrowser({
             groupByLetter={sort === "alpha"}
             onMarkLearned={handleMarkLearned}
           />
-
-          <div className="flex justify-center pt-8">
-            <PillButton
-              variant="outline"
-              size="sm"
-              icon={<ArrowUp className="w-4 h-4" />}
-              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            >
-              Volver arriba
-            </PillButton>
-          </div>
         </div>
 
         {/* Sidebar conciso fijos con búsqueda y filtros */}
-        <aside className="lexicon-area__sidebar p-5 bg-surface-raised border border-border-subtle rounded-md sticky top-6">
+        <aside className="lexicon-area__sidebar p-5 bg-surface-raised border border-border-subtle rounded-md sticky top-6 flex flex-col gap-4">
           <WordFiltersBar
             variant="sidebar"
             status={status}
@@ -261,6 +247,25 @@ export function WordBrowser({
             onViewChange={setView}
             onSearchChange={setSearch}
           />
+
+          <div className="pt-3 border-t border-border-subtle flex justify-center">
+            <PillButton
+              variant="outline"
+              size="sm"
+              icon={<ArrowUp className="w-4 h-4" />}
+              onClick={() => {
+                const mainEl = document.getElementById("main-content");
+                if (mainEl) {
+                  mainEl.scrollTo({ top: 0, behavior: "smooth" });
+                } else {
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }
+              }}
+              className="w-full justify-center"
+            >
+              Volver arriba
+            </PillButton>
+          </div>
         </aside>
       </div>
     </div>

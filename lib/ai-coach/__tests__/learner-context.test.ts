@@ -60,7 +60,7 @@ describe('buildLearnerContext', () => {
       new Map([['backpropagation', ['artificial-intelligence']]]),
     )
     const context = await buildLearnerContext('user-a')
-    expect(context.domains).toEqual(['Engineering'])
+    expect(context.domains).toEqual(['Ingeniería'])
   })
 
   it('no propaga un fallo al derivar dominios', async () => {

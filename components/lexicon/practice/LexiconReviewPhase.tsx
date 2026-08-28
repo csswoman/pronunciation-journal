@@ -2,7 +2,7 @@
 
 // Planned structure:
 // <LexiconReviewPhase>
-//   <LexiconFlashcard />   — one card at a time
+//   <LexiconFlashcard />   — one card at a time with undo support
 // </LexiconReviewPhase>
 
 import { useState } from 'react'
@@ -57,12 +57,18 @@ export function LexiconReviewPhase({ entries, posMap, userId, onComplete }: Lexi
     }
   }
 
+  function handleUndo() {
+    if (index === 0 || ratings.length === 0 || busy) return
+    setRatings((prev) => prev.slice(0, -1))
+    setIndex((i) => Math.max(0, i - 1))
+  }
+
   const current = entries[index]
   if (!current) return null
 
   return (
-    <main className="flex w-full items-center justify-center px-[var(--layout-page-inline)] py-[var(--layout-page-block)]">
-      <div className="flex w-full max-w-md flex-col gap-3">
+    <main className="flex w-full items-center justify-center px-[var(--layout-page-inline)] pt-8 sm:pt-12 pb-16">
+      <div className="flex w-full max-w-2xl flex-col gap-6">
         {saveError && (
           <p role="alert" className="rounded-lg border border-error bg-error-soft px-3 py-2 text-body-sm text-error">
             {saveError}
@@ -71,12 +77,16 @@ export function LexiconReviewPhase({ entries, posMap, userId, onComplete }: Lexi
         <LexiconFlashcard
           key={current.id}
           word={current.text}
+          ipa={current.ipa ?? undefined}
           partOfSpeech={posMap?.get(current.source_ref ?? '') || undefined}
           definition={current.meaning ?? ''}
           example={current.example}
           translation={current.translation ?? undefined}
           cardNumber={index + 1}
           totalCards={entries.length}
+          canUndo={index > 0}
+          disabled={busy}
+          onUndo={handleUndo}
           onRate={handleRate}
         />
       </div>

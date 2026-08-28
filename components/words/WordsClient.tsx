@@ -54,12 +54,17 @@ export function WordsClient({
   const rawMode = searchParams.get("mode");
   const activeMode: WordsMode = rawMode === "learn" ? "learn" : "dictionary";
 
+  const pageTitle = activeMode === "learn" ? "Mazos de Aprendizaje" : "Diccionario";
+  const pageSubtitle = activeMode === "learn"
+    ? `${lexiconTotal} tarjetas · ${lexiconLessons.length} mazos Anki`
+    : `${lexiconTotal} términos · ${lexiconLessons.length} categorías`;
+
   return (
     <PageLayout archetype="catalog">
       <div className="words-lexicon">
         <PageHeader
-          title="Diccionario"
-          subtitle={`${lexiconTotal} términos · ${lexiconLessons.length} categorías`}
+          title={pageTitle}
+          subtitle={pageSubtitle}
           actions={<WordsTopbar activeMode={activeMode} lexiconCount={lexiconTotal} />}
         />
 

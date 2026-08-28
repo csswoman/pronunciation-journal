@@ -22,7 +22,7 @@ export function LexiconTodayPanel({
     : hasReview
     ? "/practice/review"
     : nextLesson
-    ? `/lexicon/${nextLesson.id}/practice`
+    ? `/words/${nextLesson.id}/practice`
     : "/words";
 
   const title = progressUnavailable

@@ -1,7 +1,5 @@
 "use client";
 
-import Link from "next/link";
-
 interface LexiconProgressStripProps {
   percent: number;
   learned: number;
@@ -15,7 +13,6 @@ export function LexiconProgressStrip({
   learned,
   inProgress,
   notStarted,
-  dueForReview = 0,
 }: LexiconProgressStripProps) {
   const total = learned + inProgress + notStarted;
   const learnedPct = total > 0 ? (learned / total) * 100 : 0;
@@ -23,35 +20,43 @@ export function LexiconProgressStrip({
 
   if (total === 0) {
     return (
-      <div className="words-lexicon__strip flex items-center gap-2 text-fg-muted">
-        <span className="words-lexicon__strip-pct">0%</span>
-        <span>Start exploring to track your progress here.</span>
+      <div className="flex items-center gap-3 p-4 rounded-xl border border-border-subtle bg-surface-raised/60 text-fg-muted text-body-sm">
+        <span className="font-mono text-caption text-primary font-bold">0%</span>
+        <span>Explora los mazos Anki a continuación para registrar tu progreso.</span>
       </div>
     );
   }
 
   return (
-    <div className="words-lexicon__strip flex flex-wrap items-center gap-3">
-      <div
-        className="words-lexicon__segbar"
-        role="progressbar"
-        aria-valuenow={percent}
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-label="Dictionary progress"
-      >
-        <i className="words-lexicon__segbar-learned" style={{ width: `${learnedPct}%` }} />
-        <i className="words-lexicon__segbar-progress" style={{ width: `${progressPct}%`, left: `${learnedPct}%` }} />
+    <div className="flex flex-wrap items-center justify-between gap-4 p-4 sm:p-5 rounded-2xl border border-border-subtle/70 bg-surface-raised/70 shadow-xs">
+      <div className="flex items-center gap-3 flex-1 min-w-[260px]">
+        <span className="font-mono text-caption text-primary font-bold shrink-0">{percent}%</span>
+        <div
+          className="words-lexicon__segbar flex-1 h-2 rounded-full bg-surface-sunken overflow-hidden relative"
+          role="progressbar"
+          aria-valuenow={percent}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label="Progreso en el diccionario"
+        >
+          <i className="words-lexicon__segbar-learned block h-full bg-primary transition-all duration-300" style={{ width: `${learnedPct}%` }} />
+          <i className="words-lexicon__segbar-progress block h-full bg-primary-soft absolute top-0 transition-all duration-300" style={{ width: `${progressPct}%`, left: `${learnedPct}%` }} />
+        </div>
       </div>
-      <span className="words-lexicon__strip-summary">
-        <b>{learned.toLocaleString()}</b> learned
-        {inProgress > 0 ? <> · <b>{inProgress.toLocaleString()}</b> in progress</> : null}
-      </span>
-      {dueForReview > 0 && (
-        <Link href="/practice/review" className="words-lexicon__strip-pill px-3 py-1">
-          ↻ {dueForReview} to review
-        </Link>
-      )}
+
+      <div className="flex items-center gap-3 text-body-sm text-fg-muted">
+        <span>
+          <strong className="text-fg font-semibold">{learned.toLocaleString()}</strong> dominadas
+        </span>
+        {inProgress > 0 && (
+          <>
+            <span className="text-fg-subtle">•</span>
+            <span>
+              <strong className="text-fg font-semibold">{inProgress.toLocaleString()}</strong> en curso
+            </span>
+          </>
+        )}
+      </div>
     </div>
   );
 }

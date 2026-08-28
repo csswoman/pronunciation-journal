@@ -42,7 +42,7 @@ describe("deriveDomainProfile", () => {
     ]);
     // Both categories are in the "engineering" domain — counts roll up together.
     expect(profile.domains).toEqual([
-      { id: "engineering", label: "Engineering", wordCount: 2 },
+      { id: "engineering", label: "Ingeniería", wordCount: 2 },
     ]);
   });
 

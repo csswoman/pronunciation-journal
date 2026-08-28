@@ -1,5 +1,7 @@
 import { WordCard } from "./WordCard";
 import type { WordCardProps } from "./WordCard";
+import EmptyState from "@/components/EmptyState";
+import { getIllustration } from "@/lib/illustrations/registry";
 
 export interface Word extends Omit<WordCardProps, "onMarkLearned" | "view"> {
   id: string;
@@ -16,6 +18,8 @@ interface WordGridProps {
   groupByLetter?: boolean;
   onMarkLearned?: (wordId: string) => void;
 }
+
+const EmptySearchIllustration = getIllustration("emptySearch");
 
 function partitionWordsByLetter(words: Word[]): Map<string, Word[]> {
   const map = new Map<string, Word[]>();
@@ -54,9 +58,22 @@ function WordCards({
   );
 }
 
+/**
+ * WordGrid - Rejilla de tarjetas de palabras con soporte para agrupación alfabética y estado vacío.
+ *
+ * Sub-componentes:
+ * - WordCard (Tarjeta de palabra individual)
+ * - EmptyState (Estado vacío con ilustración al no encontrar palabras)
+ */
 export function WordGrid({ words, view, groupByLetter = true, onMarkLearned }: WordGridProps) {
   if (words.length === 0) {
-    return <p className="lexicon-area__empty">No words match this filter.</p>;
+    return (
+      <EmptyState
+        illustration={<EmptySearchIllustration />}
+        title="No se encontraron palabras"
+        description="No hay palabras que coincidan con este filtro o término de búsqueda."
+      />
+    );
   }
 
   const gridClass = `lexicon-area__grid${view === "list" ? " lexicon-area__grid--list" : ""}`;
