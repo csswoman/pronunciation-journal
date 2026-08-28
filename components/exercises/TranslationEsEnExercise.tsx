@@ -25,13 +25,15 @@ export function TranslationEsEnExercise({
 }) {
   const [answer, setAnswer] = useState('')
   const [loading, setLoading] = useState(false)
+  const [done, setDone] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const startedAt = useRef(Date.now())
 
   async function submit() {
     const text = answer.trim()
-    if (!text || loading) return
+    if (!text || loading || done) return
     if (isExactTranslation(exercise, text)) {
+      setDone(true)
       return onResult(true, text, Date.now() - startedAt.current, { score: 100 })
     }
     if (!navigator.onLine) {
@@ -46,6 +48,7 @@ export function TranslationEsEnExercise({
         production: text,
         modality: 'written',
       })
+      setDone(true)
       onResult(grade.correct, text, Date.now() - startedAt.current, {
         score: grade.score,
         feedback: pedagogicalFeedbackFromProductionGrade(grade),
@@ -76,9 +79,16 @@ export function TranslationEsEnExercise({
           id="translation-input"
           value={answer}
           onChange={(e) => setAnswer(e.target.value)}
+          onKeyDown={(event) => {
+            if ((event.metaKey || event.ctrlKey || event.key === 'Enter') && !event.shiftKey && answer.trim() && !loading && !done) {
+              event.preventDefault()
+              void submit()
+            }
+          }}
           rows={3}
+          disabled={loading || done}
           placeholder="Tradúcelo al inglés…"
-          className="w-full resize-none rounded-xl border border-border-default bg-surface-sunken/60 px-4 py-3 text-body-lg leading-relaxed text-fg focus-ring placeholder:text-fg-subtle"
+          className="w-full resize-none rounded-xl border border-border-default bg-surface-sunken/60 px-4 py-3 text-body-lg leading-relaxed text-fg focus-ring placeholder:text-fg-subtle disabled:opacity-60 disabled:cursor-not-allowed"
         />
       </div>
 
@@ -88,15 +98,17 @@ export function TranslationEsEnExercise({
         </p>
       ) : null}
 
-      <Button
-        variant="primary"
-        size="lg"
-        fullWidth
-        disabled={!answer.trim() || loading}
-        onClick={() => void submit()}
-      >
-        {loading ? 'Corrigiendo…' : 'Comprobar'}
-      </Button>
+      {!done && (
+        <Button
+          variant="primary"
+          size="lg"
+          fullWidth
+          disabled={!answer.trim() || loading}
+          onClick={() => void submit()}
+        >
+          {loading ? 'Corrigiendo…' : 'Comprobar'}
+        </Button>
+      )}
     </div>
   )
 }

@@ -11,6 +11,7 @@ interface Props {
   syllables: SyllableResult[]
   onSelect?: (index: number) => void
   selectedIndex?: number | null
+  size?: 'sm' | 'md'
 }
 
 const STATUS_CLASS: Record<SyllableStatus, string> = {
@@ -25,9 +26,16 @@ const STATUS_LABEL: Record<SyllableStatus, string> = {
   error: 'mal',
 }
 
-export function SyllableBreakdown({ syllables, onSelect, selectedIndex }: Props) {
+export function SyllableBreakdown({
+  syllables,
+  onSelect,
+  selectedIndex,
+  size = 'sm',
+}: Props) {
+  const sizeClass = size === 'sm' ? 'px-1 py-0 text-caption' : 'px-1 py-0.5 text-body'
+
   return (
-    <div className="flex flex-wrap items-center gap-1">
+    <div className="inline-flex flex-wrap items-center gap-1">
       {syllables.map((syllable, index) => {
         const interactive = syllable.status !== 'correct' && Boolean(onSelect)
         const label = `${syllable.text}: ${STATUS_LABEL[syllable.status]}`
@@ -37,7 +45,7 @@ export function SyllableBreakdown({ syllables, onSelect, selectedIndex }: Props)
             <span
               key={index}
               aria-label={label}
-              className={cn('rounded-md border-b-2 px-1 py-0.5 text-body', STATUS_CLASS[syllable.status])}
+              className={cn('rounded-md border-b-2', sizeClass, STATUS_CLASS[syllable.status])}
             >
               {syllable.text}
             </span>
@@ -50,9 +58,13 @@ export function SyllableBreakdown({ syllables, onSelect, selectedIndex }: Props)
             type="button"
             aria-label={label}
             aria-pressed={selectedIndex === index}
-            onClick={() => onSelect?.(index)}
+            onClick={(e) => {
+              e.stopPropagation()
+              onSelect?.(index)
+            }}
             className={cn(
-              'rounded-md border-b-2 px-1 py-0.5 text-body transition-colors hover:bg-surface-raised',
+              'rounded-md border-b-2 transition-colors hover:bg-surface-raised cursor-pointer focus-ring',
+              sizeClass,
               STATUS_CLASS[syllable.status],
             )}
           >

@@ -34,7 +34,7 @@ describe('SentenceTransformationExercise', () => {
   })
 
   it('renders source sentence and instruction', () => {
-    render(<SentenceTransformationExercise exercise={exercise} onResult={vi.fn()} onSkip={vi.fn()} />)
+    render(<SentenceTransformationExercise exercise={exercise} onResult={vi.fn()} />)
 
     expect(screen.getByText('Oración original')).toBeInTheDocument()
     expect(screen.getByText('She is too tired to work.')).toBeInTheDocument()
@@ -42,7 +42,7 @@ describe('SentenceTransformationExercise', () => {
     expect(screen.getByPlaceholderText('Escribe la nueva oración…')).toBeInTheDocument()
   })
 
-  it('immediately validates exact match without calling gradeProduction', () => {
+  it('immediately validates exact match without calling gradeProduction and hides submit button', () => {
     const onResult = vi.fn()
     render(<SentenceTransformationExercise exercise={exercise} onResult={onResult} />)
 
@@ -65,6 +65,9 @@ describe('SentenceTransformationExercise', () => {
         }),
       }),
     )
+
+    expect(screen.queryByRole('button', { name: 'Comprobar' })).not.toBeInTheDocument()
+    expect(textarea).toBeDisabled()
   })
 
   it('calls gradeProduction with referenceAnswer and returns referenceAnswer in feedback on error', async () => {
@@ -93,6 +96,7 @@ describe('SentenceTransformationExercise', () => {
           targetItem: 'She is not well enough to work.',
           production: 'she is tired enough to work',
           modality: 'written',
+          constraintCheck: 'Rewrite using enough.',
         }),
       )
     })
@@ -104,11 +108,15 @@ describe('SentenceTransformationExercise', () => {
       expect.objectContaining({
         score: 40,
         feedback: expect.objectContaining({
+          immediate: 'Revisa la transformación.',
           expectedAnswer: 'She is not well enough to work.',
           correction: 'She is not well enough to work.',
         }),
       }),
     )
+
+    expect(screen.queryByRole('button', { name: 'Comprobar' })).not.toBeInTheDocument()
+    expect(textarea).toBeDisabled()
   })
 
   it('shows error when offline and not matching reference answer', () => {
@@ -125,14 +133,6 @@ describe('SentenceTransformationExercise', () => {
 
     expect(screen.getByRole('alert')).toHaveTextContent('Sin conexión. Respuesta de referencia: She is not well enough to work.')
     expect(onResult).not.toHaveBeenCalled()
-  })
-
-  it('calls onSkip when clicking skip button', () => {
-    const onSkip = vi.fn()
-    render(<SentenceTransformationExercise exercise={exercise} onResult={vi.fn()} onSkip={onSkip} />)
-
-    const skipBtn = screen.getByRole('button', { name: 'Omitir este ejercicio' })
-    fireEvent.click(skipBtn)
-    expect(onSkip).toHaveBeenCalledTimes(1)
+    expect(screen.getByRole('button', { name: 'Comprobar' })).toBeInTheDocument()
   })
 })

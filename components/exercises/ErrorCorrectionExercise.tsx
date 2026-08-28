@@ -71,16 +71,18 @@ export function ErrorCorrectionExercise({
         />
       </div>
 
-      <Button
-        type="button"
-        variant="primary"
-        size="lg"
-        fullWidth
-        onClick={submit}
-        disabled={done || !answer.trim()}
-      >
-        Comprobar
-      </Button>
+      {!done && (
+        <Button
+          type="button"
+          variant="primary"
+          size="lg"
+          fullWidth
+          onClick={submit}
+          disabled={!answer.trim()}
+        >
+          Comprobar
+        </Button>
+      )}
     </div>
   )
 }
