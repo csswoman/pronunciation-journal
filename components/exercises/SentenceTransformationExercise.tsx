@@ -7,7 +7,6 @@
 //   <AnswerField />
 //   <ErrorAlert />
 //   <SubmitButton />
-//   <SkipButton />
 // </SentenceTransformationExercise>
 
 import { useRef, useState } from 'react'
@@ -21,22 +20,22 @@ import type { GenericRenderExtras } from '@/lib/practice/exercise-renderer/gener
 export function SentenceTransformationExercise({
   exercise,
   onResult,
-  onSkip,
 }: {
   exercise: Exercise
   onResult: (correct: boolean, answer: string, timeMs: number, extras?: GenericRenderExtras) => void
-  onSkip?: () => void
 }) {
   const [answer, setAnswer] = useState('')
   const [grading, setGrading] = useState(false)
+  const [done, setDone] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const startedAt = useRef(Date.now())
 
   async function submit() {
     const production = answer.trim()
-    if (!production || grading) return
+    if (!production || grading || done) return
 
     if (isExactTransformation(exercise, production)) {
+      setDone(true)
       return onResult(true, production, Date.now() - startedAt.current, {
         score: 100,
         feedback: {
@@ -69,9 +68,11 @@ export function SentenceTransformationExercise({
         taskPrompt,
         production,
         modality: 'written',
+        constraintCheck: exercise.instruction,
       })
 
       const feedback = pedagogicalFeedbackFromProductionGrade(grade)
+      feedback.immediate = grade.correct ? '¡Correcto!' : 'Revisa la transformación.'
       if (exercise.referenceAnswer) {
         feedback.expectedAnswer = exercise.referenceAnswer
         if (!grade.correct) {
@@ -79,6 +80,7 @@ export function SentenceTransformationExercise({
         }
       }
 
+      setDone(true)
       onResult(grade.correct, production, Date.now() - startedAt.current, {
         score: grade.score,
         feedback,
@@ -110,15 +112,15 @@ export function SentenceTransformationExercise({
           value={answer}
           onChange={(event) => setAnswer(event.target.value)}
           onKeyDown={(event) => {
-            if ((event.metaKey || event.ctrlKey || event.key === 'Enter') && !event.shiftKey && answer.trim() && !grading) {
+            if ((event.metaKey || event.ctrlKey || event.key === 'Enter') && !event.shiftKey && answer.trim() && !grading && !done) {
               event.preventDefault()
               void submit()
             }
           }}
           rows={3}
-          disabled={grading}
+          disabled={grading || done}
           placeholder="Escribe la nueva oración…"
-          className="w-full resize-none rounded-xl border border-border-default bg-surface-sunken/60 px-4 py-3 text-body-lg leading-relaxed text-fg focus-ring placeholder:text-fg-subtle"
+          className="w-full resize-none rounded-xl border border-border-default bg-surface-sunken/60 px-4 py-3 text-body-lg leading-relaxed text-fg focus-ring placeholder:text-fg-subtle disabled:opacity-60 disabled:cursor-not-allowed"
         />
       </div>
 
@@ -128,25 +130,17 @@ export function SentenceTransformationExercise({
         </p>
       ) : null}
 
-      <Button
-        variant="primary"
-        size="lg"
-        fullWidth
-        onClick={() => void submit()}
-        disabled={!answer.trim() || grading}
-      >
-        {grading ? 'Corrigiendo…' : 'Comprobar'}
-      </Button>
-
-      {onSkip ? (
-        <button
-          type="button"
-          onClick={onSkip}
-          className="self-center py-2 text-center text-body-sm font-medium text-fg-subtle transition-colors hover:text-fg focus-ring rounded-md px-3 cursor-pointer"
+      {!done && (
+        <Button
+          variant="primary"
+          size="lg"
+          fullWidth
+          onClick={() => void submit()}
+          disabled={!answer.trim() || grading}
         >
-          Omitir este ejercicio
-        </button>
-      ) : null}
+          {grading ? 'Corrigiendo…' : 'Comprobar'}
+        </Button>
+      )}
     </div>
   )
 }

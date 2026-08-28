@@ -17,7 +17,7 @@ vi.mock('@/lib/ai-practice/queries', () => ({
   persistLearningState: mocks.persistLearningState,
 }))
 
-import { mergeConceptSignals, persistAssessmentConceptProfile } from '../assessment-profile'
+import { mergeConceptSignals, persistAssessmentConceptProfile, updateConceptSignalsWithEvidence } from '../assessment-profile'
 import { createEmptyState } from '@/lib/ai-practice/learning-state'
 
 function concept(lessonSlug: string, assessedAt: string, status: ConceptSignal['status']): ConceptSignal {
@@ -129,5 +129,23 @@ describe('assessment concept profile', () => {
     expect(result.grammar).toEqual(state.grammar)
     expect(mocks.persistLearningState).toHaveBeenCalledWith('u1', result)
     expect(mocks.getUserLearningState).not.toHaveBeenCalled()
+  })
+
+  it('records evidence sessions into lastSessions so the coach knows what was studied today', async () => {
+    const state = createEmptyState('u1', 'device-1')
+    mocks.get.mockResolvedValue({ userId: 'u1', state, updatedAt: state.updatedAt })
+    const incoming = concept('present-perfect', '2026-08-27T12:00:00.000Z', 'review')
+    incoming.source = 'exercise'
+    incoming.correct = 2
+    incoming.total = 3
+
+    const result = await updateConceptSignalsWithEvidence('u1', [incoming])
+
+    expect(result.lastSessions[0]).toEqual({
+      topic: 'present-perfect',
+      endedAt: '2026-08-27T12:00:00.000Z',
+      exercisesCompleted: 3,
+      correctRate: 2 / 3,
+    })
   })
 })

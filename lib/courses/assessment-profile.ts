@@ -78,6 +78,18 @@ export async function updateConceptSignalsWithEvidence(
   const local = await db.learningState.get(userId);
   const base = local?.state ?? await getUserLearningState(userId);
   const updatedAt = new Date().toISOString();
+
+  // Real evidence (source: 'exercise') doubles as "what was studied today" —
+  // manual claims don't, since asking for help isn't a completed session.
+  const newSessions = conceptSignals
+    .filter((s) => s.source === 'exercise' && s.total > 0)
+    .map((s) => ({
+      topic: s.title || s.lessonSlug,
+      endedAt: s.assessedAt,
+      exercisesCompleted: s.total,
+      correctRate: s.correct / s.total,
+    }));
+
   const next: UserLearningState = {
     ...base,
     userId,
@@ -85,6 +97,7 @@ export async function updateConceptSignalsWithEvidence(
     theory: {
       concepts: mergeConceptSignals(base.theory?.concepts ?? [], conceptSignals),
     },
+    lastSessions: [...newSessions, ...base.lastSessions].slice(0, 10),
   };
 
   await persistLearningState(userId, next);

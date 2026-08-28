@@ -170,7 +170,13 @@ export const GENERIC_REGISTRY: GenericRegistry = {
       />
     ),
   },
-  sentence_transformation: { title: 'Transforma la oración', noHint: true, render: (exercise: SentenceTransformationExerciseType, { onResult, onSkip }) => <SentenceTransformationExercise exercise={exercise} onResult={onResult} onSkip={onSkip} /> },
+  sentence_transformation: {
+    title: 'Transforma la oración',
+    noHint: true,
+    render: (exercise: SentenceTransformationExerciseType, { onResult }) => (
+      <SentenceTransformationExercise exercise={exercise} onResult={onResult} />
+    ),
+  },
   translation_es_en: { title: 'Traduce al inglés', noHint: true, render: (exercise: TranslationEsEnExerciseType, { onResult }) => <TranslationEsEnExercise exercise={exercise} onResult={onResult} /> },
   cs_shadow_phrase: {
     title: 'Imita la frase',
