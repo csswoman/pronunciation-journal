@@ -80,7 +80,8 @@
       "documentation",
       "structure"
     ],
-    "exampleSentence": "Put the security warning in a callout so it stands out from the rest of the text."
+    "exampleSentence": "Put the security warning in a callout so it stands out from the rest of the text.",
+    "ipa": "/kɔlaʊt/"
   },
   {
     "id": "changelog-entry",
@@ -93,7 +94,8 @@
       "versioning",
       "process"
     ],
-    "exampleSentence": "Every changelog entry should say what changed and why the user should care."
+    "exampleSentence": "Every changelog entry should say what changed and why the user should care.",
+    "ipa": "/tʃeɪndʒlɔɡ ɛntɹiː/"
   },
   {
     "id": "code-comment",
@@ -134,7 +136,7 @@
       "style",
       "localization"
     ],
-    "ipa": "/kəˈləʊkwi.əˌlɪzəm/",
+    "ipa": "/kʌloʊkwiʌlɪzʌm/",
     "exampleSentence": "Avoid colloquialisms in docs that will be translated or read by non-native speakers."
   },
   {
@@ -148,7 +150,8 @@
       "style",
       "fundamentals"
     ],
-    "exampleSentence": "Conciseness means cutting every word that doesn't add information for the reader."
+    "exampleSentence": "Conciseness means cutting every word that doesn't add information for the reader.",
+    "ipa": "/kʌnsaɪsnʌs/"
   },
   {
     "id": "content-type",
@@ -175,7 +178,8 @@
       "navigation",
       "structure"
     ],
-    "exampleSentence": "Add a cross-reference to the authentication guide at the start of this section."
+    "exampleSentence": "Add a cross-reference to the authentication guide at the start of this section.",
+    "ipa": "/kɹɔsɹɛfɜrʌns/"
   },
   {
     "id": "deprecation-notice",
@@ -188,7 +192,8 @@
       "api",
       "versioning"
     ],
-    "exampleSentence": "Add a deprecation notice to warn users before removing the old endpoint."
+    "exampleSentence": "Add a deprecation notice to warn users before removing the old endpoint.",
+    "ipa": "/dɛpɹʌkeɪʃʌn noʊtʌs/"
   },
   {
     "id": "diataxis",
@@ -201,7 +206,8 @@
       "frameworks",
       "structure"
     ],
-    "exampleSentence": "We restructured the docs using the Diátaxis framework to separate tutorials from references."
+    "exampleSentence": "We restructured the docs using the Diátaxis framework to separate tutorials from references.",
+    "ipa": "/daɪætæksʌs/"
   },
   {
     "id": "disambiguation",
@@ -214,7 +220,8 @@
       "terminology",
       "clarity"
     ],
-    "exampleSentence": "A disambiguation note clarifies which definition of model applies in this context."
+    "exampleSentence": "A disambiguation note clarifies which definition of model applies in this context.",
+    "ipa": "/dɪsæmbɪɡjuːeɪʃʌn/"
   },
   {
     "id": "docstring",
@@ -227,7 +234,8 @@
       "documentation",
       "code"
     ],
-    "exampleSentence": "A docstring at the top of the function explains the parameters and return type."
+    "exampleSentence": "A docstring at the top of the function explains the parameters and return type.",
+    "ipa": "/dɑkstɹɪŋ/"
   },
   {
     "id": "docs-as-code",
@@ -240,7 +248,8 @@
       "process",
       "tooling"
     ],
-    "exampleSentence": "Docs-as-code means every change to the docs goes through a pull request review."
+    "exampleSentence": "Docs-as-code means every change to the docs goes through a pull request review.",
+    "ipa": "/dɑksæzkoʊd/"
   },
   {
     "id": "edge-case-doc",
@@ -281,7 +290,8 @@
       "content-type",
       "diataxis"
     ],
-    "exampleSentence": "An explainer helps readers understand why JWT authentication works the way it does."
+    "exampleSentence": "An explainer helps readers understand why JWT authentication works the way it does.",
+    "ipa": "/ɛkspleɪnɜr/"
   },
   {
     "id": "frontmatter",
@@ -322,7 +332,8 @@
       "content-type",
       "diataxis"
     ],
-    "exampleSentence": "A how-to guide walks you through setting up authentication in your app."
+    "exampleSentence": "A how-to guide walks you through setting up authentication in your app.",
+    "ipa": "/haʊtuː ɡaɪd/"
   },
   {
     "id": "imperative-mood",
@@ -377,7 +388,8 @@
       "documentation",
       "javascript"
     ],
-    "exampleSentence": "JSDoc comments on exported functions are picked up automatically by the IDE."
+    "exampleSentence": "JSDoc comments on exported functions are picked up automatically by the IDE.",
+    "ipa": "/dʒeɪɛsdɑk/"
   },
   {
     "id": "knowledge-base",
@@ -446,7 +458,8 @@
       "react",
       "tooling"
     ],
-    "exampleSentence": "MDX lets us embed a live code playground directly inside the documentation page."
+    "exampleSentence": "MDX lets us embed a live code playground directly inside the documentation page.",
+    "ipa": "/ɛmdiːɛks/"
   },
   {
     "id": "microcopy",
@@ -459,7 +472,8 @@
       "ui",
       "content"
     ],
-    "exampleSentence": "Good microcopy on the error message tells users exactly how to fix the problem."
+    "exampleSentence": "Good microcopy on the error message tells users exactly how to fix the problem.",
+    "ipa": "/maɪkɹoʊkɑpiː/"
   },
   {
     "id": "navigational-label",
@@ -500,7 +514,8 @@
       "onboarding",
       "strategy"
     ],
-    "exampleSentence": "Strong onboarding documentation gets new users to their first success in minutes."
+    "exampleSentence": "Strong onboarding documentation gets new users to their first success in minutes.",
+    "ipa": "/ɑnbɔɹdɪŋ dɑkjʌmɛnteɪʃʌn/"
   },
   {
     "id": "openapi",
@@ -513,7 +528,8 @@
       "documentation",
       "tooling"
     ],
-    "exampleSentence": "The OpenAPI spec is the single source of truth for all our API endpoints."
+    "exampleSentence": "The OpenAPI spec is the single source of truth for all our API endpoints.",
+    "ipa": "/oʊpʌneɪpiːaɪ/"
   },
   {
     "id": "passive-voice",
@@ -596,7 +612,8 @@
       "git",
       "fundamentals"
     ],
-    "exampleSentence": "The README is the first thing a new contributor reads, so keep it focused."
+    "exampleSentence": "The README is the first thing a new contributor reads, so keep it focused.",
+    "ipa": "/ɹiːdmiː/"
   },
   {
     "id": "release-notes",
@@ -623,7 +640,8 @@
       "documentation",
       "operations"
     ],
-    "exampleSentence": "Follow the runbook step by step when you get paged for this kind of incident."
+    "exampleSentence": "Follow the runbook step by step when you get paged for this kind of incident.",
+    "ipa": "/ɹʌnbʊk/"
   },
   {
     "id": "scannability-doc",
@@ -636,7 +654,8 @@
       "layout",
       "fundamentals"
     ],
-    "exampleSentence": "Scannability improves when you use short paragraphs, headings, and bold key terms."
+    "exampleSentence": "Scannability improves when you use short paragraphs, headings, and bold key terms.",
+    "ipa": "/skænʌbɪlʌtiː/"
   },
   {
     "id": "single-sourcing",
@@ -747,7 +766,8 @@
       "abbreviations",
       "navigation"
     ],
-    "exampleSentence": "The TOC is auto-generated from headings so it stays up to date automatically."
+    "exampleSentence": "The TOC is auto-generated from headings so it stays up to date automatically.",
+    "ipa": "/tiːoʊsiː/"
   },
   {
     "id": "tone-of-voice",
@@ -788,7 +808,8 @@
       "content",
       "design"
     ],
-    "exampleSentence": "Good UX writing on the empty state tells users exactly what to do next."
+    "exampleSentence": "Good UX writing on the empty state tells users exactly what to do next.",
+    "ipa": "/juːɛks ɹaɪtɪŋ/"
   },
   {
     "id": "versioned-docs",
@@ -801,7 +822,8 @@
       "versioning",
       "strategy"
     ],
-    "exampleSentence": "Versioned documentation lets users of older releases find the right information."
+    "exampleSentence": "Versioned documentation lets users of older releases find the right information.",
+    "ipa": "/vɜrʒʌnd dɑkjʌmɛnteɪʃʌn/"
   },
   {
     "id": "voice",
@@ -860,4 +882,3 @@
     "exampleSentence": "Word economy means every sentence earns its place on the page."
   }
 ]
-

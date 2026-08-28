@@ -11,7 +11,8 @@
       "patterns"
     ],
     "ipa": "/æbstɹækʃʌn/",
-    "exampleSentence": "The abstraction hides the fetch logic so components don't need to know the URL."
+    "exampleSentence": "The abstraction hides the fetch logic so components don't need to know the URL.",
+    "translation": "Abstracción de software"
   },
   {
     "id": "api",
@@ -25,7 +26,8 @@
       "integration"
     ],
     "ipa": "/eɪpiːaɪ/",
-    "exampleSentence": "The frontend talks to the API to get data instead of hitting the database directly."
+    "exampleSentence": "The frontend talks to the API to get data instead of hitting the database directly.",
+    "translation": "API, interfaz de programación"
   },
   {
     "id": "async",
@@ -39,7 +41,8 @@
       "performance"
     ],
     "ipa": "/eɪsɪŋkɹʌnʌs/",
-    "exampleSentence": "Fetching user data is asynchronous so the UI doesn't freeze while waiting."
+    "exampleSentence": "Fetching user data is asynchronous so the UI doesn't freeze while waiting.",
+    "translation": "Asíncrono, no bloqueante"
   },
   {
     "id": "bundle",
@@ -53,7 +56,8 @@
       "performance"
     ],
     "ipa": "/bʌndʌl/",
-    "exampleSentence": "The production bundle is about half the size of the development one."
+    "exampleSentence": "The production bundle is about half the size of the development one.",
+    "translation": "Paquete, bundle"
   },
   {
     "id": "bundler",
@@ -66,7 +70,9 @@
       "build",
       "webpack"
     ],
-    "exampleSentence": "The bundler compiles TypeScript, resolves imports, and outputs a single JS file."
+    "exampleSentence": "The bundler compiles TypeScript, resolves imports, and outputs a single JS file.",
+    "ipa": "/bʌndlɜr/",
+    "translation": "Empaquetador de módulos"
   },
   {
     "id": "cache",
@@ -80,7 +86,8 @@
       "browser"
     ],
     "ipa": "/kæʃ/",
-    "exampleSentence": "The request goes through a cache so the same data isn't fetched twice."
+    "exampleSentence": "The request goes through a cache so the same data isn't fetched twice.",
+    "translation": "Memoria caché"
   },
   {
     "id": "callback",
@@ -94,7 +101,8 @@
       "fundamentals"
     ],
     "ipa": "/kɔlbæk/",
-    "exampleSentence": "Pass a callback to the button so it knows what to do when clicked."
+    "exampleSentence": "Pass a callback to the button so it knows what to do when clicked.",
+    "translation": "Función de callback"
   },
   {
     "id": "cdn",
@@ -107,7 +115,9 @@
       "infrastructure",
       "deployment"
     ],
-    "exampleSentence": "Static assets are served from a CDN so they load fast anywhere in the world."
+    "exampleSentence": "Static assets are served from a CDN so they load fast anywhere in the world.",
+    "ipa": "/siːdiːɛn/",
+    "translation": "CDN, red de distribución"
   },
   {
     "id": "client-side",
@@ -120,7 +130,9 @@
       "rendering",
       "architecture"
     ],
-    "exampleSentence": "Form validation runs client-side first so users get instant feedback."
+    "exampleSentence": "Form validation runs client-side first so users get instant feedback.",
+    "ipa": "/klaɪʌntsaɪd/",
+    "translation": "Lado del cliente"
   },
   {
     "id": "closure",
@@ -134,7 +146,8 @@
       "advanced"
     ],
     "ipa": "/kloʊʒɜr/",
-    "exampleSentence": "The event handler closes over the count variable from the outer function."
+    "exampleSentence": "The event handler closes over the count variable from the outer function.",
+    "translation": "Clausura, closure"
   },
   {
     "id": "code-splitting",
@@ -148,7 +161,8 @@
       "lazy-loading"
     ],
     "ipa": "/koʊd splɪtɪŋ/",
-    "exampleSentence": "Code splitting cut the initial bundle size by forty percent."
+    "exampleSentence": "Code splitting cut the initial bundle size by forty percent.",
+    "translation": "División de código"
   },
   {
     "id": "component",
@@ -162,7 +176,8 @@
       "architecture"
     ],
     "ipa": "/kʌmpoʊnʌnt/",
-    "exampleSentence": "Each component owns its own state, styles, and behavior."
+    "exampleSentence": "Each component owns its own state, styles, and behavior.",
+    "translation": "Componente de interfaz"
   },
   {
     "id": "controlled-component",
@@ -176,7 +191,8 @@
       "state"
     ],
     "ipa": "/kʌntɹoʊld kʌmpoʊnʌnt/",
-    "exampleSentence": "A controlled component gives you full control over what the input displays."
+    "exampleSentence": "A controlled component gives you full control over what the input displays.",
+    "translation": "Componente controlado"
   },
   {
     "id": "cors",
@@ -190,7 +206,8 @@
       "api"
     ],
     "ipa": "/kɔɹ/",
-    "exampleSentence": "The browser blocked the request because of a CORS policy on the server."
+    "exampleSentence": "The browser blocked the request because of a CORS policy on the server.",
+    "translation": "CORS, acceso cruzado"
   },
   {
     "id": "css-cascade",
@@ -204,7 +221,8 @@
       "specificity"
     ],
     "ipa": "/kæskeɪd/",
-    "exampleSentence": "Understanding the cascade explains why your styles are sometimes overridden."
+    "exampleSentence": "Understanding the cascade explains why your styles are sometimes overridden.",
+    "translation": "Cascada de estilos CSS"
   },
   {
     "id": "custom-hook",
@@ -218,7 +236,8 @@
       "reusability"
     ],
     "ipa": "/kʌstʌm hʊk/",
-    "exampleSentence": "We wrote a custom hook to encapsulate the fetch-and-retry logic."
+    "exampleSentence": "We wrote a custom hook to encapsulate the fetch-and-retry logic.",
+    "translation": "Hook personalizado"
   },
   {
     "id": "debounce",
@@ -231,7 +250,9 @@
       "javascript",
       "events"
     ],
-    "exampleSentence": "Debounce the search input so it only fires after the user stops typing."
+    "exampleSentence": "Debounce the search input so it only fires after the user stops typing.",
+    "ipa": "/diːbaʊns/",
+    "translation": "Debounce, antirrebote"
   },
   {
     "id": "declarative",
@@ -245,7 +266,8 @@
       "fundamentals"
     ],
     "ipa": "/dɪklɛɹʌtɪv/",
-    "exampleSentence": "React is declarative — you describe what the UI should look like, not how to build it."
+    "exampleSentence": "React is declarative — you describe what the UI should look like, not how to build it.",
+    "translation": "Programación declarativa"
   },
   {
     "id": "dependency-array",
@@ -259,7 +281,8 @@
       "performance"
     ],
     "ipa": "/dɪpɛndʌnsiː ɜreɪ/",
-    "exampleSentence": "Add the user ID to the dependency array so the effect re-runs on change."
+    "exampleSentence": "Add the user ID to the dependency array so the effect re-runs on change.",
+    "translation": "Arreglo de dependencias"
   },
   {
     "id": "derived-state",
@@ -273,7 +296,8 @@
       "architecture"
     ],
     "ipa": "/dɜraɪvd steɪt/",
-    "exampleSentence": "The total price is derived state — compute it from the cart items, don't store it."
+    "exampleSentence": "The total price is derived state — compute it from the cart items, don't store it.",
+    "translation": "Estado derivado"
   },
   {
     "id": "dom",
@@ -287,7 +311,8 @@
       "javascript"
     ],
     "ipa": "/dɑm/",
-    "exampleSentence": "React updates the DOM efficiently by comparing the virtual tree first."
+    "exampleSentence": "React updates the DOM efficiently by comparing the virtual tree first.",
+    "translation": "DOM, modelo del documento"
   },
   {
     "id": "dry",
@@ -301,7 +326,8 @@
       "fundamentals"
     ],
     "ipa": "/dɹaɪ/",
-    "exampleSentence": "Extract that logic into a shared helper to keep the code DRY."
+    "exampleSentence": "Extract that logic into a shared helper to keep the code DRY.",
+    "translation": "Principio DRY"
   },
   {
     "id": "dynamic-import",
@@ -315,7 +341,8 @@
       "lazy-loading"
     ],
     "ipa": "/daɪnæmɪk ɪmpɔɹt/",
-    "exampleSentence": "A dynamic import loads the chart library only when the user opens that tab."
+    "exampleSentence": "A dynamic import loads the chart library only when the user opens that tab.",
+    "translation": "Importación dinámica"
   },
   {
     "id": "end-to-end-test",
@@ -328,7 +355,9 @@
       "quality",
       "automation"
     ],
-    "exampleSentence": "The end-to-end test simulates a real user completing the checkout flow."
+    "exampleSentence": "The end-to-end test simulates a real user completing the checkout flow.",
+    "ipa": "/ɛndtuːɛnd tɛst/",
+    "translation": "Prueba de extremo a extremo"
   },
   {
     "id": "event-delegation",
@@ -342,7 +371,8 @@
       "performance"
     ],
     "ipa": "/ɪvɛnt dɛlʌɡeɪʃʌn/",
-    "exampleSentence": "Event delegation handles all list item clicks from a single parent listener."
+    "exampleSentence": "Event delegation handles all list item clicks from a single parent listener.",
+    "translation": "Delegación de eventos"
   },
   {
     "id": "event-loop",
@@ -356,7 +386,8 @@
       "async"
     ],
     "ipa": "/ɪvɛnt luːp/",
-    "exampleSentence": "The event loop is why you can't block JavaScript with a long synchronous task."
+    "exampleSentence": "The event loop is why you can't block JavaScript with a long synchronous task.",
+    "translation": "Bucle de eventos"
   },
   {
     "id": "fallback",
@@ -370,7 +401,8 @@
       "patterns"
     ],
     "ipa": "/fɔlbæk/",
-    "exampleSentence": "Show a fallback skeleton while the data is still loading."
+    "exampleSentence": "Show a fallback skeleton while the data is still loading.",
+    "translation": "Alternativa de respaldo"
   },
   {
     "id": "feature-flag",
@@ -384,7 +416,8 @@
       "experimentation"
     ],
     "ipa": "/fiːtʃɜr flæɡ/",
-    "exampleSentence": "The new checkout is behind a feature flag so we can enable it gradually."
+    "exampleSentence": "The new checkout is behind a feature flag so we can enable it gradually.",
+    "translation": "Bandera de funcionalidad"
   },
   {
     "id": "forking",
@@ -398,7 +431,8 @@
       "open-source"
     ],
     "ipa": "/fɔɹkɪŋ/",
-    "exampleSentence": "Fork the repo and open a pull request from your own branch."
+    "exampleSentence": "Fork the repo and open a pull request from your own branch.",
+    "translation": "Bifurcación, fork"
   },
   {
     "id": "generic-type",
@@ -412,7 +446,8 @@
       "advanced"
     ],
     "ipa": "/dʒʌnɛɹɪk taɪp/",
-    "exampleSentence": "A generic type lets the same hook work with strings, numbers, or objects."
+    "exampleSentence": "A generic type lets the same hook work with strings, numbers, or objects.",
+    "translation": "Tipo genérico"
   },
   {
     "id": "hot-reload",
@@ -426,7 +461,8 @@
       "development"
     ],
     "ipa": "/hɑt ɹiːloʊd/",
-    "exampleSentence": "Hot reload applies style changes instantly without losing the component state."
+    "exampleSentence": "Hot reload applies style changes instantly without losing the component state.",
+    "translation": "Recarga en caliente"
   },
   {
     "id": "hydration",
@@ -440,7 +476,8 @@
       "rendering"
     ],
     "ipa": "/haɪdɹeɪʃʌn/",
-    "exampleSentence": "Hydration errors happen when the server HTML doesn't match the client render."
+    "exampleSentence": "Hydration errors happen when the server HTML doesn't match the client render.",
+    "translation": "Hidratación en cliente"
   },
   {
     "id": "idempotent",
@@ -453,7 +490,9 @@
       "fundamentals",
       "advanced"
     ],
-    "exampleSentence": "The initialize function is idempotent — calling it twice has no extra effect."
+    "exampleSentence": "The initialize function is idempotent — calling it twice has no extra effect.",
+    "ipa": "/aɪdɛmpoʊtʌnt/",
+    "translation": "Idempotente"
   },
   {
     "id": "immutability",
@@ -466,7 +505,9 @@
       "javascript",
       "patterns"
     ],
-    "exampleSentence": "Immutability makes state changes predictable and easy to trace in React."
+    "exampleSentence": "Immutability makes state changes predictable and easy to trace in React.",
+    "ipa": "/ɪmjuːtʌbɪlʌtiː/",
+    "translation": "Inmutabilidad de datos"
   },
   {
     "id": "intersection-observer",
@@ -480,7 +521,8 @@
       "performance"
     ],
     "ipa": "/ɪntɜrsɛkʃʌn ʌbzɜrvɜr/",
-    "exampleSentence": "Intersection Observer triggers the animation when the section enters the viewport."
+    "exampleSentence": "Intersection Observer triggers the animation when the section enters the viewport.",
+    "translation": "Intersection Observer"
   },
   {
     "id": "lazy-loading",
@@ -494,7 +536,8 @@
       "images"
     ],
     "ipa": "/leɪziː loʊdɪŋ/",
-    "exampleSentence": "Lazy loading images below the fold cut page weight by thirty percent."
+    "exampleSentence": "Lazy loading images below the fold cut page weight by thirty percent.",
+    "translation": "Carga diferida"
   },
   {
     "id": "lifting-state",
@@ -508,7 +551,8 @@
       "architecture"
     ],
     "ipa": "/lɪftɪŋ steɪt/",
-    "exampleSentence": "Lifting state to the parent let both sibling components read the same value."
+    "exampleSentence": "Lifting state to the parent let both sibling components read the same value.",
+    "translation": "Elevación de estado"
   },
   {
     "id": "linting",
@@ -521,7 +565,9 @@
       "quality",
       "dx"
     ],
-    "exampleSentence": "Linting catches unused imports and missing dependency arrays before code review."
+    "exampleSentence": "Linting catches unused imports and missing dependency arrays before code review.",
+    "ipa": "/lɪntɪŋ/",
+    "translation": "Análisis estático, linting"
   },
   {
     "id": "media-query",
@@ -535,7 +581,8 @@
       "fundamentals"
     ],
     "ipa": "/miːdiːʌ kwiːɹiː/",
-    "exampleSentence": "A media query hides the sidebar on screens narrower than seven hundred pixels."
+    "exampleSentence": "A media query hides the sidebar on screens narrower than seven hundred pixels.",
+    "translation": "Media query, regla de medios"
   },
   {
     "id": "memoization",
@@ -548,7 +595,9 @@
       "react",
       "javascript"
     ],
-    "exampleSentence": "Memoization prevents the expensive sort from running on every re-render."
+    "exampleSentence": "Memoization prevents the expensive sort from running on every re-render.",
+    "ipa": "/mɛmoʊʌzeɪʃʌn/",
+    "translation": "Memorización de cálculos"
   },
   {
     "id": "middleware",
@@ -561,7 +610,9 @@
       "patterns",
       "state"
     ],
-    "exampleSentence": "The router middleware checks authentication before rendering protected pages."
+    "exampleSentence": "The router middleware checks authentication before rendering protected pages.",
+    "ipa": "/mɪdʌlwɛɹ/",
+    "translation": "Middleware, intermediario"
   },
   {
     "id": "mock",
@@ -574,7 +625,8 @@
       "fundamentals"
     ],
     "ipa": "/mɑk/",
-    "exampleSentence": "Use a mock for the API in unit tests so they don't hit the real network."
+    "exampleSentence": "Use a mock for the API in unit tests so they don't hit the real network.",
+    "translation": "Simulación, mock"
   },
   {
     "id": "monorepo",
@@ -587,7 +639,9 @@
       "tooling",
       "collaboration"
     ],
-    "exampleSentence": "All our packages live in a monorepo so teams can share components easily."
+    "exampleSentence": "All our packages live in a monorepo so teams can share components easily.",
+    "ipa": "/mɑnoʊɹiːpoʊ/",
+    "translation": "Monorepositorio"
   },
   {
     "id": "mutation",
@@ -601,7 +655,8 @@
       "fundamentals"
     ],
     "ipa": "/mjuːteɪʃʌn/",
-    "exampleSentence": "Avoid direct mutation of state — always return a new object in a reducer."
+    "exampleSentence": "Avoid direct mutation of state — always return a new object in a reducer.",
+    "translation": "Mutación directa de datos"
   },
   {
     "id": "nullish-coalescing",
@@ -614,7 +669,9 @@
       "operators",
       "syntax"
     ],
-    "exampleSentence": "Use nullish coalescing to fall back to a default only when the value is null."
+    "exampleSentence": "Use nullish coalescing to fall back to a default only when the value is null.",
+    "ipa": "/nʌlɪʃ koʊʌlɛsɪŋ/",
+    "translation": "Coalescencia nula"
   },
   {
     "id": "optional-chaining",
@@ -628,7 +685,8 @@
       "operators"
     ],
     "ipa": "/ɑpʃʌnʌl tʃeɪnɪŋ/",
-    "exampleSentence": "Optional chaining safely reads user?.profile?.avatar without crashing."
+    "exampleSentence": "Optional chaining safely reads user?.profile?.avatar without crashing.",
+    "translation": "Encadenamiento opcional"
   },
   {
     "id": "pagination",
@@ -642,7 +700,8 @@
       "performance"
     ],
     "ipa": "/pædʒʌneɪʃʌn/",
-    "exampleSentence": "Pagination keeps the list fast by loading only twenty items at a time."
+    "exampleSentence": "Pagination keeps the list fast by loading only twenty items at a time.",
+    "translation": "Paginación de datos"
   },
   {
     "id": "polyfill",
@@ -655,7 +714,9 @@
       "compatibility",
       "javascript"
     ],
-    "exampleSentence": "A polyfill adds the missing method so older browsers can run the same code."
+    "exampleSentence": "A polyfill adds the missing method so older browsers can run the same code.",
+    "ipa": "/pɑlifɪl/",
+    "translation": "Polyfill, retrocompatibilidad"
   },
   {
     "id": "portals",
@@ -669,7 +730,8 @@
       "advanced"
     ],
     "ipa": "/pɔɹtʌl/",
-    "exampleSentence": "A portal renders the modal at the body level so it escapes any overflow: hidden."
+    "exampleSentence": "A portal renders the modal at the body level so it escapes any overflow: hidden.",
+    "translation": "Portales en React"
   },
   {
     "id": "prop-drilling",
@@ -683,7 +745,8 @@
       "anti-patterns"
     ],
     "ipa": "/pɹɑp dɹɪlɪŋ/",
-    "exampleSentence": "Prop drilling five levels deep is a sign you should use context instead."
+    "exampleSentence": "Prop drilling five levels deep is a sign you should use context instead.",
+    "translation": "Paso excesivo de props"
   },
   {
     "id": "pure-function",
@@ -697,7 +760,8 @@
       "fundamentals"
     ],
     "ipa": "/pjʊɹ fʌŋkʃʌn/",
-    "exampleSentence": "A pure function with the same inputs always returns exactly the same output."
+    "exampleSentence": "A pure function with the same inputs always returns exactly the same output.",
+    "translation": "Función pura"
   },
   {
     "id": "race-condition",
@@ -711,7 +775,8 @@
       "advanced"
     ],
     "ipa": "/ɹeɪs kʌndɪʃʌn/",
-    "exampleSentence": "A race condition caused the older response to overwrite the newer one."
+    "exampleSentence": "A race condition caused the older response to overwrite the newer one.",
+    "translation": "Condición de carrera"
   },
   {
     "id": "reconciliation",
@@ -725,7 +790,8 @@
       "advanced"
     ],
     "ipa": "/ɹɛkʌnsɪliːeɪʃʌn/",
-    "exampleSentence": "React's reconciliation algorithm figures out the minimum DOM changes needed."
+    "exampleSentence": "React's reconciliation algorithm figures out the minimum DOM changes needed.",
+    "translation": "Reconciliación en React"
   },
   {
     "id": "refactoring",
@@ -738,7 +804,9 @@
       "quality",
       "fundamentals"
     ],
-    "exampleSentence": "We spent the sprint refactoring the form logic without changing any behavior."
+    "exampleSentence": "We spent the sprint refactoring the form logic without changing any behavior.",
+    "ipa": "/ɹiːfæktɜrɪŋ/",
+    "translation": "Refactorización de código"
   },
   {
     "id": "render-prop",
@@ -752,7 +820,8 @@
       "advanced"
     ],
     "ipa": "/ɹɛndɜr pɹɑp/",
-    "exampleSentence": "The render prop pattern shares tooltip logic without imposing any specific UI."
+    "exampleSentence": "The render prop pattern shares tooltip logic without imposing any specific UI.",
+    "translation": "Prop de renderizado"
   },
   {
     "id": "rerender",
@@ -765,7 +834,9 @@
       "performance",
       "fundamentals"
     ],
-    "exampleSentence": "Unnecessary re-renders were making the list feel sluggish on slow devices."
+    "exampleSentence": "Unnecessary re-renders were making the list feel sluggish on slow devices.",
+    "ipa": "/ɹiːɹɛndɜr/",
+    "translation": "Rerenderizado, re-render"
   },
   {
     "id": "rest-spread",
@@ -779,7 +850,8 @@
       "fundamentals"
     ],
     "ipa": "/ɹɛst spɹɛd/",
-    "exampleSentence": "Use the spread operator to merge the default props with the passed ones."
+    "exampleSentence": "Use the spread operator to merge the default props with the passed ones.",
+    "translation": "Operadores rest y spread"
   },
   {
     "id": "scope",
@@ -793,7 +865,8 @@
       "variables"
     ],
     "ipa": "/skoʊp/",
-    "exampleSentence": "The variable is out of scope because it was declared inside the if block."
+    "exampleSentence": "The variable is out of scope because it was declared inside the if block.",
+    "translation": "Ámbito, alcance de variable"
   },
   {
     "id": "serialization",
@@ -806,7 +879,9 @@
       "api",
       "javascript"
     ],
-    "exampleSentence": "Serialization converts the state object into a JSON string for storage."
+    "exampleSentence": "Serialization converts the state object into a JSON string for storage.",
+    "ipa": "/sɪɹiːʌlɪzeɪʃʌn/",
+    "translation": "Serialización de datos"
   },
   {
     "id": "server-side-rendering",
@@ -819,7 +894,9 @@
       "nextjs",
       "performance"
     ],
-    "exampleSentence": "Server-side rendering improves the first contentful paint on slow connections."
+    "exampleSentence": "Server-side rendering improves the first contentful paint on slow connections.",
+    "ipa": "/sɜrvɜrsaɪd ɹɛndɜrɪŋ/",
+    "translation": "Renderizado en servidor"
   },
   {
     "id": "side-effect",
@@ -833,7 +910,8 @@
       "fundamentals"
     ],
     "ipa": "/saɪd ɪfɛkt/",
-    "exampleSentence": "Put the fetch call inside useEffect so the side effect runs after render."
+    "exampleSentence": "Put the fetch call inside useEffect so the side effect runs after render.",
+    "translation": "Efecto secundario"
   },
   {
     "id": "single-source-of-truth",
@@ -847,7 +925,8 @@
       "patterns"
     ],
     "ipa": "/sɪŋɡʌl sɔɹs ʌv tɹuːθ/",
-    "exampleSentence": "A single source of truth means the cart total is never out of sync."
+    "exampleSentence": "A single source of truth means the cart total is never out of sync.",
+    "translation": "Fuente única de verdad"
   },
   {
     "id": "specificity",
@@ -861,7 +940,8 @@
       "cascade"
     ],
     "ipa": "/spɛsʌfɪsʌtiː/",
-    "exampleSentence": "The inline style wins because it has the highest specificity score."
+    "exampleSentence": "The inline style wins because it has the highest specificity score.",
+    "translation": "Especificidad de selectores"
   },
   {
     "id": "static-site-generation",
@@ -875,7 +955,8 @@
       "performance"
     ],
     "ipa": "/stætɪk saɪt dʒɛnɜreɪʃʌn/",
-    "exampleSentence": "Static site generation pre-renders the blog so it loads without a server."
+    "exampleSentence": "Static site generation pre-renders the blog so it loads without a server.",
+    "translation": "Generación de sitio estático"
   },
   {
     "id": "storybook",
@@ -889,7 +970,8 @@
       "documentation"
     ],
     "ipa": "/stɔɹiːbʊk/",
-    "exampleSentence": "Open Storybook to see every button variant in isolation before using it."
+    "exampleSentence": "Open Storybook to see every button variant in isolation before using it.",
+    "translation": "Storybook"
   },
   {
     "id": "strict-mode",
@@ -903,7 +985,8 @@
       "development"
     ],
     "ipa": "/stɹɪkt moʊd/",
-    "exampleSentence": "Strict mode exposed a side effect in our effect that only ran once before."
+    "exampleSentence": "Strict mode exposed a side effect in our effect that only ran once before.",
+    "translation": "Modo estricto"
   },
   {
     "id": "throttle",
@@ -917,7 +1000,8 @@
       "events"
     ],
     "ipa": "/θɹɑtʌl/",
-    "exampleSentence": "Throttle the scroll handler so it runs at most once every hundred milliseconds."
+    "exampleSentence": "Throttle the scroll handler so it runs at most once every hundred milliseconds.",
+    "translation": "Limitación de frecuencia"
   },
   {
     "id": "tree-shaking",
@@ -931,7 +1015,8 @@
       "tooling"
     ],
     "ipa": "/tɹiː ʃeɪkɪŋ/",
-    "exampleSentence": "Tree shaking removed the unused utility functions from the final bundle."
+    "exampleSentence": "Tree shaking removed the unused utility functions from the final bundle.",
+    "translation": "Eliminación de código muerto"
   },
   {
     "id": "type-narrowing",
@@ -945,7 +1030,8 @@
       "advanced"
     ],
     "ipa": "/taɪp nɛɹoʊɪŋ/",
-    "exampleSentence": "Type narrowing inside the if block tells TypeScript the value is definitely a string."
+    "exampleSentence": "Type narrowing inside the if block tells TypeScript the value is definitely a string.",
+    "translation": "Estrechamiento de tipos"
   },
   {
     "id": "union-type",
@@ -959,7 +1045,8 @@
       "fundamentals"
     ],
     "ipa": "/juːnjʌn taɪp/",
-    "exampleSentence": "A union type lets the prop accept either a string or a number."
+    "exampleSentence": "A union type lets the prop accept either a string or a number.",
+    "translation": "Tipo unión"
   },
   {
     "id": "uncontrolled-component",
@@ -973,7 +1060,8 @@
       "dom"
     ],
     "ipa": "/ʌnkʌntɹoʊld kʌmpoʊnʌnt/",
-    "exampleSentence": "An uncontrolled component reads its value from the DOM via a ref."
+    "exampleSentence": "An uncontrolled component reads its value from the DOM via a ref.",
+    "translation": "Componente no controlado"
   },
   {
     "id": "virtual-dom",
@@ -987,7 +1075,8 @@
       "fundamentals"
     ],
     "ipa": "/vɜrtʃuːʌl dɑm/",
-    "exampleSentence": "The virtual DOM lets React batch updates and touch the real DOM as little as possible."
+    "exampleSentence": "The virtual DOM lets React batch updates and touch the real DOM as little as possible.",
+    "translation": "DOM virtual"
   },
   {
     "id": "waterfall",
@@ -1001,7 +1090,8 @@
       "anti-patterns"
     ],
     "ipa": "/wɔtɜrfɔl/",
-    "exampleSentence": "A request waterfall was adding two seconds to the page load time."
+    "exampleSentence": "A request waterfall was adding two seconds to the page load time.",
+    "translation": "Cascada de peticiones"
   },
   {
     "id": "web-vitals",
@@ -1015,7 +1105,8 @@
       "seo"
     ],
     "ipa": "/wɛb vaɪtʌl/",
-    "exampleSentence": "We improved our Web Vitals score by lazy loading images and reducing layout shift."
+    "exampleSentence": "We improved our Web Vitals score by lazy loading images and reducing layout shift.",
+    "translation": "Métricas Web Vitals"
   },
   {
     "id": "zustand",
@@ -1028,7 +1119,9 @@
       "react",
       "libraries"
     ],
-    "exampleSentence": "We switched to Zustand because the store is much simpler to set up than Redux."
+    "exampleSentence": "We switched to Zustand because the store is much simpler to set up than Redux.",
+    "ipa": "/zuːstænd/",
+    "translation": "Zustand"
   },
   {
     "id": "compound-component",
@@ -1042,7 +1135,8 @@
       "advanced"
     ],
     "ipa": "/kɑmpaʊnd kʌmpoʊnʌnt/",
-    "exampleSentence": "A compound component like Tabs shares state between Tab and Panel internally."
+    "exampleSentence": "A compound component like Tabs shares state between Tab and Panel internally.",
+    "translation": "Componente compuesto"
   },
   {
     "id": "context-api",
@@ -1056,7 +1150,8 @@
       "fundamentals"
     ],
     "ipa": "/kɑntɛkst eɪpiːaɪ/",
-    "exampleSentence": "The Context API passes the theme down without threading it through every component."
+    "exampleSentence": "The Context API passes the theme down without threading it through every component.",
+    "translation": "API de contexto de React"
   },
   {
     "id": "error-boundary",
@@ -1070,7 +1165,8 @@
       "patterns"
     ],
     "ipa": "/ɛɹɜr baʊndɜriː/",
-    "exampleSentence": "An error boundary catches the crash and shows a friendly message instead."
+    "exampleSentence": "An error boundary catches the crash and shows a friendly message instead.",
+    "translation": "Límite de errores"
   },
   {
     "id": "stale-closure",
@@ -1084,7 +1180,8 @@
       "hooks"
     ],
     "ipa": "/steɪl kloʊʒɜr/",
-    "exampleSentence": "A stale closure inside the timer was reading the count value from the first render."
+    "exampleSentence": "A stale closure inside the timer was reading the count value from the first render.",
+    "translation": "Clausura obsoleta"
   },
   {
     "id": "accessibility-tree",
@@ -1098,7 +1195,8 @@
       "semantics"
     ],
     "ipa": "/æksɛsʌbɪlɪtiː tɹiː/",
-    "exampleSentence": "The accessibility tree showed the button had no accessible name."
+    "exampleSentence": "The accessibility tree showed the button had no accessible name.",
+    "translation": "Árbol de accesibilidad"
   },
   {
     "id": "semantic-html",
@@ -1112,7 +1210,7 @@
       "fundamentals"
     ],
     "ipa": "/sɪmæntɪk eɪtʃtiːɛmɛl/",
-    "exampleSentence": "Use semantic HTML so screen readers and search engines understand the content."
+    "exampleSentence": "Use semantic HTML so screen readers and search engines understand the content.",
+    "translation": "HTML semántico"
   }
 ]
-

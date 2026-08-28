@@ -56,7 +56,8 @@
       "patterns"
     ],
     "translation": "Reintentos con espera exponencial",
-    "exampleSentence": "The client uses exponential backoff to avoid hammering a slow API."
+    "exampleSentence": "The client uses exponential backoff to avoid hammering a slow API.",
+    "ipa": "/ɛkspʌnɛnʃʌl bækɔf/"
   },
   {
     "id": "cache-invalidation",
@@ -100,7 +101,8 @@
       "systems"
     ],
     "translation": "Concurrencia de tareas",
-    "exampleSentence": "The server handles concurrency with a worker thread pool."
+    "exampleSentence": "The server handles concurrency with a worker thread pool.",
+    "ipa": "/kʌnkɜrʌnsiː/"
   },
   {
     "id": "connection-pooling",
@@ -264,7 +266,8 @@
       "protocol"
     ],
     "translation": "Lenguaje de consulta GraphQL",
-    "exampleSentence": "GraphQL lets the client ask for exactly the fields it needs."
+    "exampleSentence": "GraphQL lets the client ask for exactly the fields it needs.",
+    "ipa": "/ɡɹæfkjuːɛl/"
   },
   {
     "id": "horizontal-scaling",
@@ -308,7 +311,8 @@
       "patterns"
     ],
     "translation": "Clave de idempotencia",
-    "exampleSentence": "Send an idempotency key so retries don't create duplicate charges."
+    "exampleSentence": "Send an idempotency key so retries don't create duplicate charges.",
+    "ipa": "/aɪdɛmpoʊtʌnsiː kiː/"
   },
   {
     "id": "index",
@@ -337,7 +341,8 @@
       "kubernetes"
     ],
     "translation": "Ingreso de tráfico",
-    "exampleSentence": "The ingress controller routes traffic to the correct service by hostname."
+    "exampleSentence": "The ingress controller routes traffic to the correct service by hostname.",
+    "ipa": "/ɪnɡɹɛs/"
   },
   {
     "id": "integration-test",
@@ -366,7 +371,8 @@
       "supabase"
     ],
     "translation": "Token web JWT",
-    "exampleSentence": "The client stores the JWT and sends it in every request header."
+    "exampleSentence": "The client stores the JWT and sends it in every request header.",
+    "ipa": "/dʒeɪdʌbʌljuːtiː/"
   },
   {
     "id": "latency",
@@ -380,7 +386,7 @@
       "fundamentals"
     ],
     "ipa": "/leɪtʌnsiː/",
-    "translation": "retraso",
+    "translation": "Retraso",
     "exampleSentence": "High latency in the checkout flow was causing users to abandon their carts."
   },
   {
@@ -395,7 +401,7 @@
       "networking"
     ],
     "ipa": "/loʊd bælʌnsɜr/",
-    "translation": "balanceador de carga",
+    "translation": "Balanceador de carga",
     "exampleSentence": "The load balancer distributes traffic evenly across all four servers."
   },
   {
@@ -410,7 +416,7 @@
       "fundamentals"
     ],
     "ipa": "/lɔɡɪŋ/",
-    "translation": "registro de eventos",
+    "translation": "Registro de eventos",
     "exampleSentence": "Add structured logging so we can filter errors by user ID in production."
   },
   {
@@ -425,7 +431,7 @@
       "distributed"
     ],
     "ipa": "/mɛsʌdʒ kjuː/",
-    "translation": "cola de mensajes",
+    "translation": "Cola de mensajes",
     "exampleSentence": "Email notifications go through a message queue so they don't slow the API."
   },
   {
@@ -439,8 +445,9 @@
       "patterns",
       "distributed"
     ],
-    "translation": "microservicio",
-    "exampleSentence": "The billing microservice can be deployed independently from the rest."
+    "translation": "Microservicio",
+    "exampleSentence": "The billing microservice can be deployed independently from the rest.",
+    "ipa": "/maɪkɹoʊsɜrvʌs/"
   },
   {
     "id": "middleware-server",
@@ -453,8 +460,9 @@
       "api",
       "nextjs"
     ],
-    "translation": "servidor intermediario",
-    "exampleSentence": "Auth middleware checks the JWT before the request reaches any route handler."
+    "translation": "Servidor intermediario",
+    "exampleSentence": "Auth middleware checks the JWT before the request reaches any route handler.",
+    "ipa": "/mɪdʌlwɛɹ/"
   },
   {
     "id": "n-plus-one",
@@ -467,8 +475,9 @@
       "performance",
       "bugs"
     ],
-    "translation": "problema N+1",
-    "exampleSentence": "The N+1 problem was making the page load with dozens of extra queries."
+    "translation": "Problema N+1",
+    "exampleSentence": "The N+1 problem was making the page load with dozens of extra queries.",
+    "ipa": "/ɛn plʌs wʌn pɹɑblʌm/"
   },
   {
     "id": "normalization",
@@ -482,7 +491,7 @@
       "design"
     ],
     "ipa": "/nɔɹmʌlɪzeɪʃʌn/",
-    "translation": "normalización de base de datos",
+    "translation": "Normalización de base de datos",
     "exampleSentence": "Good normalization means each fact is stored in exactly one place."
   },
   {
@@ -496,8 +505,9 @@
       "security",
       "protocol"
     ],
-    "translation": "estándar de autorización",
-    "exampleSentence": "OAuth lets users sign in with Google without sharing their password."
+    "translation": "Estándar de autorización",
+    "exampleSentence": "OAuth lets users sign in with Google without sharing their password.",
+    "ipa": "/oʊɔθ/"
   },
   {
     "id": "observability",
@@ -510,8 +520,9 @@
       "monitoring",
       "fundamentals"
     ],
-    "translation": "observabilidad",
-    "exampleSentence": "Good observability means you can understand what's wrong from the outside."
+    "translation": "Observabilidad",
+    "exampleSentence": "Good observability means you can understand what's wrong from the outside.",
+    "ipa": "/ʌbzɜrvʌbɪlʌtiː/"
   },
   {
     "id": "optimistic-update",
@@ -525,7 +536,7 @@
       "api"
     ],
     "ipa": "/ɑptʌmɪstɪk ʌpdeɪt/",
-    "translation": "actualización optimista",
+    "translation": "Actualización optimista",
     "exampleSentence": "The like button uses an optimistic update so it feels instant."
   },
   {
@@ -539,8 +550,9 @@
       "tooling",
       "abstraction"
     ],
-    "translation": "mapeo objeto-relacional",
-    "exampleSentence": "The ORM generates the SQL so you can write queries in plain TypeScript."
+    "translation": "Mapeo objeto-relacional",
+    "exampleSentence": "The ORM generates the SQL so you can write queries in plain TypeScript.",
+    "ipa": "/oʊɑrɛm/"
   },
   {
     "id": "pagination-cursor",
@@ -553,8 +565,9 @@
       "database",
       "patterns"
     ],
-    "translation": "paginación por cursor",
-    "exampleSentence": "Cursor-based pagination gives stable results even when new rows are inserted."
+    "translation": "Paginación por cursor",
+    "exampleSentence": "Cursor-based pagination gives stable results even when new rows are inserted.",
+    "ipa": "/kɜrsɜrbeɪst pædʒʌneɪʃʌn/"
   },
   {
     "id": "payload",
@@ -568,7 +581,7 @@
       "fundamentals"
     ],
     "ipa": "/peɪloʊd/",
-    "translation": "carga útil",
+    "translation": "Carga útil",
     "exampleSentence": "The webhook payload contains the event type and the affected resource."
   },
   {
@@ -583,7 +596,7 @@
       "fundamentals"
     ],
     "ipa": "/pɹaɪmɛɹiː kiː/",
-    "translation": "clave primaria",
+    "translation": "Clave primaria",
     "exampleSentence": "Each row in the users table has a UUID as its primary key."
   },
   {
@@ -598,7 +611,7 @@
       "infrastructure"
     ],
     "ipa": "/pɹɑksiː/",
-    "translation": "servidor proxy",
+    "translation": "Servidor proxy",
     "exampleSentence": "The proxy forwards API requests and adds the auth header automatically."
   },
   {
@@ -613,7 +626,7 @@
       "database"
     ],
     "ipa": "/kwiːɹiː plæn/",
-    "translation": "plan de consulta",
+    "translation": "Plan de consulta",
     "exampleSentence": "Check the query plan to see why this join is doing a full table scan."
   },
   {
@@ -628,7 +641,7 @@
       "infrastructure"
     ],
     "ipa": "/ɹeɪt lɪmʌtɪŋ/",
-    "translation": "limitación de peticiones",
+    "translation": "Limitación de peticiones",
     "exampleSentence": "Rate limiting stops a single client from overwhelming the public API."
   },
   {
@@ -643,7 +656,7 @@
       "reliability"
     ],
     "ipa": "/ɹɛplʌkeɪʃʌn/",
-    "translation": "replicación de datos",
+    "translation": "Replicación de datos",
     "exampleSentence": "Database replication keeps a standby ready if the primary goes down."
   },
   {
@@ -658,7 +671,7 @@
       "protocol"
     ],
     "ipa": "/ɹɛst/",
-    "translation": "transferencia de estado representacional",
+    "translation": "Transferencia de estado representacional",
     "exampleSentence": "The mobile app communicates with the backend through a REST API."
   },
   {
@@ -673,7 +686,7 @@
       "reliability"
     ],
     "ipa": "/ɹoʊlbæk/",
-    "translation": "reversión",
+    "translation": "Reversión",
     "exampleSentence": "The bad deploy triggered an automatic rollback to the previous build."
   },
   {
@@ -687,8 +700,9 @@
       "postgresql",
       "security"
     ],
-    "translation": "seguridad a nivel de fila",
-    "exampleSentence": "Row-level security ensures users can only read their own data."
+    "translation": "Seguridad a nivel de fila",
+    "exampleSentence": "Row-level security ensures users can only read their own data.",
+    "ipa": "/ɹoʊlɛvʌl sʌkjʊɹʌtiː/"
   },
   {
     "id": "schema",
@@ -702,7 +716,7 @@
       "postgresql"
     ],
     "ipa": "/skiːmʌ/",
-    "translation": "esquema de base de datos",
+    "translation": "Esquema de base de datos",
     "exampleSentence": "The schema defines every table and column in the database."
   },
   {
@@ -716,8 +730,9 @@
       "cloud",
       "deployment"
     ],
-    "translation": "sin servidor",
-    "exampleSentence": "We moved the image resize logic to a serverless function to reduce cost."
+    "translation": "Sin servidor",
+    "exampleSentence": "We moved the image resize logic to a serverless function to reduce cost.",
+    "ipa": "/sɜrvɜrlʌs/"
   },
   {
     "id": "sharding",
@@ -730,8 +745,9 @@
       "scaling",
       "advanced"
     ],
-    "translation": "particionamiento de base de datos",
-    "exampleSentence": "Sharding split the users table across three machines by region."
+    "translation": "Particionamiento de base de datos",
+    "exampleSentence": "Sharding split the users table across three machines by region.",
+    "ipa": "/ʃɑrdɪŋ/"
   },
   {
     "id": "soft-delete",
@@ -745,7 +761,7 @@
       "data"
     ],
     "ipa": "/sɑft dɪliːt/",
-    "translation": "borrado lógico",
+    "translation": "Borrado lógico",
     "exampleSentence": "We use soft delete so deleted records can be recovered within thirty days."
   },
   {
@@ -760,7 +776,7 @@
       "vulnerabilities"
     ],
     "ipa": "/ɛskjuːɛl ɪndʒɛkʃʌn/",
-    "translation": "inyección SQL",
+    "translation": "Inyección SQL",
     "exampleSentence": "Parameterized queries are the main defense against SQL injection."
   },
   {
@@ -774,8 +790,9 @@
       "http",
       "protocol"
     ],
-    "translation": "eventos enviados por servidor",
-    "exampleSentence": "The dashboard uses SSE to push live metric updates to the browser."
+    "translation": "Eventos enviados por servidor",
+    "exampleSentence": "The dashboard uses SSE to push live metric updates to the browser.",
+    "ipa": "/ɛsɛsiː/"
   },
   {
     "id": "stateless",
@@ -789,7 +806,7 @@
       "fundamentals"
     ],
     "ipa": "/steɪtlɪs/",
-    "translation": "sin estado",
+    "translation": "Sin estado",
     "exampleSentence": "A stateless API is easier to scale because any server can handle any request."
   },
   {
@@ -804,7 +821,7 @@
       "cloud"
     ],
     "ipa": "/stɔɹʌdʒ bʌkʌt/",
-    "translation": "cubo de almacenamiento",
+    "translation": "Cubo de almacenamiento",
     "exampleSentence": "User avatars are stored in a private storage bucket and served via signed URL."
   },
   {
@@ -819,7 +836,7 @@
       "metrics"
     ],
     "ipa": "/θɹuːpʊt/",
-    "translation": "rendimiento",
+    "translation": "Rendimiento",
     "exampleSentence": "We increased throughput from two hundred to a thousand requests per second."
   },
   {
@@ -834,7 +851,7 @@
       "fundamentals"
     ],
     "ipa": "/tɹænzækʃʌn/",
-    "translation": "transacción",
+    "translation": "Transacción",
     "exampleSentence": "Wrap the balance update and the log entry in a single transaction."
   },
   {
@@ -848,8 +865,9 @@
       "networking",
       "fundamentals"
     ],
-    "translation": "tiempo de vida",
-    "exampleSentence": "Set a short TTL on the session token so it expires after one hour."
+    "translation": "Tiempo de vida",
+    "exampleSentence": "Set a short TTL on the session token so it expires after one hour.",
+    "ipa": "/tiːtiːɛl/"
   },
   {
     "id": "uuid",
@@ -862,8 +880,9 @@
       "fundamentals",
       "identifiers"
     ],
-    "translation": "identificador universalmente único",
-    "exampleSentence": "Generate a UUID for each new order so IDs are never sequential."
+    "translation": "Identificador universalmente único",
+    "exampleSentence": "Generate a UUID for each new order so IDs are never sequential.",
+    "ipa": "/juːjuːaɪdiː/"
   },
   {
     "id": "vertical-scaling",
@@ -877,7 +896,7 @@
       "performance"
     ],
     "ipa": "/vɜrtɪkʌl skeɪlɪŋ/",
-    "translation": "escalado vertical",
+    "translation": "Escalado vertical",
     "exampleSentence": "Vertical scaling helped short-term, but horizontal scaling is the long-term solution."
   },
   {
@@ -891,8 +910,9 @@
       "integration",
       "events"
     ],
-    "translation": "webhook",
-    "exampleSentence": "The payment provider sends a webhook when a charge succeeds or fails."
+    "translation": "Webhook",
+    "exampleSentence": "The payment provider sends a webhook when a charge succeeds or fails.",
+    "ipa": "/wɛbhʊk/"
   },
   {
     "id": "websocket",
@@ -905,8 +925,9 @@
       "protocol",
       "networking"
     ],
-    "translation": "websocket",
-    "exampleSentence": "The chat feature uses a WebSocket so messages arrive in real time."
+    "translation": "Websocket",
+    "exampleSentence": "The chat feature uses a WebSocket so messages arrive in real time.",
+    "ipa": "/wɛbsɑkʌt/"
   },
   {
     "id": "zero-downtime-deploy",
@@ -919,8 +940,9 @@
       "deployment",
       "reliability"
     ],
-    "translation": "despliegue sin tiempo de inactividad",
-    "exampleSentence": "Zero-downtime deployment means users never see a service interruption during a release."
+    "translation": "Despliegue sin tiempo de inactividad",
+    "exampleSentence": "Zero-downtime deployment means users never see a service interruption during a release.",
+    "ipa": "/zɪɹoʊdaʊntaɪm dɪplɔɪmʌnt/"
   },
   {
     "id": "acid",
@@ -949,7 +971,7 @@
       "scheduling"
     ],
     "ipa": "/kɹɑn dʒɑb/",
-    "translation": "tarea programada",
+    "translation": "Tarea programada",
     "exampleSentence": "A cron job cleans up expired sessions every night at midnight."
   },
   {
@@ -964,7 +986,7 @@
       "patterns"
     ],
     "ipa": "/ɡɹeɪsfʌl dɛɡɹʌdeɪʃʌn/",
-    "translation": "degradación elegante",
+    "translation": "Degradación elegante",
     "exampleSentence": "Graceful degradation keeps the core experience working even when a service is down."
   },
   {
@@ -979,7 +1001,7 @@
       "reliability"
     ],
     "ipa": "/hɛlθ tʃɛk/",
-    "translation": "verificación de estado",
+    "translation": "Verificación de estado",
     "exampleSentence": "The load balancer removes any instance that fails the health check."
   },
   {
@@ -993,8 +1015,9 @@
       "reliability",
       "rest"
     ],
-    "translation": "solicitud idempotente",
-    "exampleSentence": "A DELETE request should be idempotent — running it twice gives the same result."
+    "translation": "Solicitud idempotente",
+    "exampleSentence": "A DELETE request should be idempotent — running it twice gives the same result.",
+    "ipa": "/aɪdɛmpoʊtʌnt ɹɪkwɛst/"
   },
   {
     "id": "materialized-view",
@@ -1008,7 +1031,7 @@
       "database"
     ],
     "ipa": "/mʌtɪɹiːʌlaɪzd vjuː/",
-    "translation": "vista materializada",
+    "translation": "Vista materializada",
     "exampleSentence": "The analytics dashboard reads from a materialized view to stay fast."
   },
   {
@@ -1023,7 +1046,7 @@
       "websocket"
     ],
     "ipa": "/ɹiːʌltaɪm sʌbskɹɪpʃʌn/",
-    "translation": "suscripción en tiempo real",
+    "translation": "Suscripción en tiempo real",
     "exampleSentence": "The notifications panel uses a realtime subscription to the database."
   },
   {
@@ -1038,7 +1061,7 @@
       "testing"
     ],
     "ipa": "/siːd/",
-    "translation": "semilla (datos iniciales)",
+    "translation": "Semilla (datos iniciales)",
     "exampleSentence": "Run the seed script to populate the local database before testing."
   },
   {
@@ -1052,8 +1075,8 @@
       "postgresql",
       "supabase"
     ],
-    "translation": "insertar o actualizar",
-    "exampleSentence": "An upsert inserts the row if it doesn't exist or updates it if it does."
+    "translation": "Insertar o actualizar",
+    "exampleSentence": "An upsert inserts the row if it doesn't exist or updates it if it does.",
+    "ipa": "/ʌpsɜrt/"
   }
 ]
-
