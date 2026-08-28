@@ -146,7 +146,7 @@ export function SpokenProductionFeedbackActions({
     <>
       <ProductionFeedback grade={grade} transcript={transcript} />
       <PracticeActionBar>
-        {grade.usedTarget ? (
+        {grade.correct ? (
           <>
             <Button variant="secondary" size="lg" fullWidth onClick={onRetry}>
               Intentar de nuevo

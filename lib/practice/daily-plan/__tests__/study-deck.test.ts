@@ -70,10 +70,16 @@ describe('study-deck daily step', () => {
     const a1Lesson = COURSE_PATH_CURRICULUM.levels[0].units[0].lessons[2]
     const b1Lesson = COURSE_PATH_CURRICULUM.levels[2].units[0].lessons[1]
 
-    const target = selectStudyDeckTarget(new Set(), 'a1', [
-      signal(a1Lesson.slug!, 'a1', 'learn'),
-      signal(b1Lesson.slug!, 'b1', 'review'),
-    ])
+    // Day 1: not a new-lesson-cadence day, so review is allowed to win.
+    const target = selectStudyDeckTarget(
+      new Set(),
+      'a1',
+      [
+        signal(a1Lesson.slug!, 'a1', 'learn'),
+        signal(b1Lesson.slug!, 'b1', 'review'),
+      ],
+      1,
+    )
 
     expect(target).toMatchObject({ level: { id: 'b1' }, lesson: { slug: b1Lesson.slug } })
   })
