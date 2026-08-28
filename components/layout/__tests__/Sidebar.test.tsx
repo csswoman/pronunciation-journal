@@ -61,7 +61,7 @@ describe("Sidebar component", () => {
     // Group 3: Explorar
     expect(screen.getByRole("link", { name: /Ruta/i })).toHaveAttribute("href", "/courses");
     expect(screen.getByRole("link", { name: /Mini lecciones/i })).toHaveAttribute("href", "/mini-lessons");
-    expect(screen.getByRole("link", { name: /Diccionario/i })).toHaveAttribute("href", "/dictionary");
+    expect(screen.getByRole("link", { name: /Diccionario/i })).toHaveAttribute("href", "/words");
 
     // Group 4: Progreso
     expect(screen.getByRole("link", { name: /Progreso/i })).toHaveAttribute("href", "/progress");

@@ -176,7 +176,8 @@
       "design-systems",
       "approach"
     ],
-    "exampleSentence": "We use a component-driven approach to keep the UI consistent and testable."
+    "exampleSentence": "We use a component-driven approach to keep the UI consistent and testable.",
+    "ipa": "/kʌmpoʊnʌntdɹɪvʌn/"
   },
   {
     "id": "consistency",
@@ -220,7 +221,8 @@
       "values",
       "creative"
     ],
-    "exampleSentence": "Creative problem-solving helped us ship the feature with half the usual budget."
+    "exampleSentence": "Creative problem-solving helped us ship the feature with half the usual budget.",
+    "ipa": "/kɹiːeɪtɪv pɹɑblʌmsɑlvɪŋ/"
   },
   {
     "id": "cross-disciplinary",
@@ -234,7 +236,8 @@
       "ux-engineer",
       "positioning"
     ],
-    "exampleSentence": "The role is cross-disciplinary, so you need both design and coding skills."
+    "exampleSentence": "The role is cross-disciplinary, so you need both design and coding skills.",
+    "ipa": "/kɹɔsdɪsʌplʌnɛɹiː/"
   },
   {
     "id": "decision-making",
@@ -323,7 +326,8 @@
       "identity",
       "quality"
     ],
-    "exampleSentence": "Being detail-oriented means I catch spacing issues before they go to QA."
+    "exampleSentence": "Being detail-oriented means I catch spacing issues before they go to QA.",
+    "ipa": "/diːteɪlɔɹiːɛntʌd/"
   },
   {
     "id": "document",
@@ -382,7 +386,8 @@
       "identity",
       "capabilities"
     ],
-    "exampleSentence": "I own the feature end-to-end, from the first sketch to the production deploy."
+    "exampleSentence": "I own the feature end-to-end, from the first sketch to the production deploy.",
+    "ipa": "/ɛndtuːɛnd/"
   },
   {
     "id": "engineer-mindset",
@@ -456,7 +461,8 @@
       "collaboration",
       "growth"
     ],
-    "exampleSentence": "I'm feedback-driven, so I actively ask for critique early and often."
+    "exampleSentence": "I'm feedback-driven, so I actively ask for critique early and often.",
+    "ipa": "/fiːdbækdɹɪvʌn/"
   },
   {
     "id": "figure-things-out",
@@ -530,7 +536,8 @@
       "work-style",
       "ux-engineer"
     ],
-    "exampleSentence": "I like to be hands-on and write code even in lead roles."
+    "exampleSentence": "I like to be hands-on and write code even in lead roles.",
+    "ipa": "/hændzɑn/"
   },
   {
     "id": "hats",
@@ -589,7 +596,8 @@
       "prioritization",
       "strategy"
     ],
-    "exampleSentence": "I'm impact-focused, so I always ask which feature will help users the most."
+    "exampleSentence": "I'm impact-focused, so I always ask which feature will help users the most.",
+    "ipa": "/ɪmpæktfoʊkʌst/"
   },
   {
     "id": "in-production",
@@ -693,7 +701,8 @@
       "values",
       "dev"
     ],
-    "exampleSentence": "I write maintainable code so the next person doesn't have to ask me questions."
+    "exampleSentence": "I write maintainable code so the next person doesn't have to ask me questions.",
+    "ipa": "/meɪnteɪnʌbʌl/"
   },
   {
     "id": "mentor",
@@ -722,7 +731,8 @@
       "process",
       "self-management"
     ],
-    "exampleSentence": "I stay milestone-driven so the team always knows what we're working toward."
+    "exampleSentence": "I stay milestone-driven so the team always knows what we're working toward.",
+    "ipa": "/maɪlstoʊndɹɪvʌn/"
   },
   {
     "id": "motivated-by",
@@ -871,7 +881,8 @@
       "work-style",
       "positioning"
     ],
-    "exampleSentence": "I'm remote-ready and have worked fully async with teams across three time zones."
+    "exampleSentence": "I'm remote-ready and have worked fully async with teams across three time zones.",
+    "ipa": "/ɹɪmoʊtɹɛdiː/"
   },
   {
     "id": "results",
@@ -900,7 +911,8 @@
       "identity",
       "remote"
     ],
-    "exampleSentence": "I'm self-directed and thrive when given a goal without a prescribed path."
+    "exampleSentence": "I'm self-directed and thrive when given a goal without a prescribed path.",
+    "ipa": "/sɛlfdɜrɛktʌd/"
   },
   {
     "id": "sharp",
@@ -1094,7 +1106,8 @@
       "ux",
       "fundamentals"
     ],
-    "exampleSentence": "Every technical decision I make goes through a user-centered filter first."
+    "exampleSentence": "Every technical decision I make goes through a user-centered filter first.",
+    "ipa": "/juːzɜrsɛntɜrd/"
   },
   {
     "id": "versatile",
@@ -1172,4 +1185,3 @@
     "exampleSentence": "Four years of experience in React doesn't tell the whole story — the depth does."
   }
 ]
-

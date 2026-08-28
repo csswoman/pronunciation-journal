@@ -1,14 +1,29 @@
 'use client'
 
+import Badge, { type BadgeVariant } from '@/components/ui/Badge'
 import { PillButton } from '@/components/ui/PillButton'
-import type { OralMission } from '@/lib/ai-practice/missions/types'
+import {
+  isConversationalMission,
+  isScriptedMission,
+  type MissionCategory,
+  type OralMission,
+} from '@/lib/ai-practice/missions/types'
 import { MISSION_CATEGORY_LABELS } from './mission-category-labels'
 
 // Planned structure:
 // <MissionCard>
-//   <MissionMeta /> — category + CEFR + modo
-//   <MissionBody /> — goal + context
-//   <MissionAction /> — start CTA
+//   <MissionMeta /> — category badge + CEFR badge + mode metadata
+//   <MissionBody /> — communicative goal + context description
+//   <MissionHighlights /> — roleplay parties or learner target count
+//   <MissionAction /> — start CTA button
+// </MissionCard>
+
+const CATEGORY_BADGE_VARIANTS: Record<MissionCategory, BadgeVariant> = {
+  interview: 'info',
+  workplace: 'success',
+  service: 'warning',
+  social: 'default',
+}
 
 interface MissionCardProps {
   mission: OralMission
@@ -16,14 +31,33 @@ interface MissionCardProps {
 }
 
 export function MissionCard({ mission, onSelect }: MissionCardProps) {
+  const isScripted = isScriptedMission(mission)
+  const isConversational = isConversationalMission(mission)
+
   return (
-    <article className="layout-card-pad flex flex-col gap-3 rounded-md border border-border-subtle bg-surface-raised">
-      <div className="flex flex-wrap items-center gap-2">
-        <p className="m-0 font-kicker text-fg-subtle">
-          {MISSION_CATEGORY_LABELS[mission.category]} · {mission.recommendedCefr.toUpperCase()}
-        </p>
+    <article className="layout-card-pad flex flex-col gap-3 rounded-md border border-border-subtle bg-surface-raised transition-colors hover:border-border">
+      {/* Meta Header */}
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap items-center gap-1.5">
+          <Badge
+            label={MISSION_CATEGORY_LABELS[mission.category]}
+            variant={CATEGORY_BADGE_VARIANTS[mission.category]}
+            size="sm"
+          />
+          <Badge
+            label={mission.recommendedCefr.toUpperCase()}
+            variant="neutral"
+            size="sm"
+          />
+        </div>
+        <span className="font-kicker text-fg-subtle">
+          {isScripted
+            ? `${mission.script.length} turnos`
+            : `${mission.maxTurns} turnos máx.`}
+        </span>
       </div>
 
+      {/* Goal & Context */}
       <div className="layout-stack-tight min-w-0 flex-1">
         <h3 className="m-0 text-balance text-label font-semibold text-fg">
           {mission.communicativeGoal}
@@ -33,6 +67,21 @@ export function MissionCard({ mission, onSelect }: MissionCardProps) {
         </p>
       </div>
 
+      {/* Highlights / Details */}
+      <div className="border-t border-border-subtle/60 pt-2 text-tiny text-fg-subtle">
+        {isConversational && (
+          <p className="m-0 truncate font-mono">
+            {mission.role.model} · {mission.role.student}
+          </p>
+        )}
+        {isScripted && (
+          <p className="m-0 truncate font-kicker">
+            {mission.script.filter((l) => l.speaker === 'learner').length} frases para hablar en voz alta
+          </p>
+        )}
+      </div>
+
+      {/* Action */}
       <div className="pt-1">
         <PillButton
           variant="primary"
@@ -46,3 +95,4 @@ export function MissionCard({ mission, onSelect }: MissionCardProps) {
     </article>
   )
 }
+

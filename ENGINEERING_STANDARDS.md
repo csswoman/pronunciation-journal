@@ -55,8 +55,9 @@ practice/       progress/       sounds/         tracking/
 users/          word-bank/
 ```
 
-`lib/word-bank/` tiene además `server-queries.ts` (server-side) y `srs-queries.ts`;
-ambos cuentan como query layer para la regla D de ESLint (`lib/**/*queries*.ts`).
+`lib/word-bank/` tiene además `server-queries.ts` (server-side), `srs-queries.ts`
+y `domain-queries.ts`; los tres cuentan como query layer para la regla D de
+ESLint (`lib/**/*queries*.ts`).
 
 Excepciones de infra (no son query modules de dominio):
 

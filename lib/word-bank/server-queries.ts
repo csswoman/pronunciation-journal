@@ -28,6 +28,23 @@ export async function getLexiconWordBankMap(
 }
 
 /**
+ * Server-only: returns { source, source_ref } for the user's lexicon-sourced
+ * word_bank rows. Input to lib/lexicon/domain-profile.ts's deriveDomainProfile.
+ */
+export async function getWordBankSourceRefsServer(
+  userId: string,
+): Promise<Array<{ source: string | null; source_ref: string | null }>> {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from(TABLE)
+    .select("source, source_ref")
+    .eq("user_id", userId)
+    .eq("source", "lexicon");
+  if (error) throw error;
+  return data ?? [];
+}
+
+/**
  * Server-only: returns a map of categoryId → { mastered, reviewing } counts.
  * categoryWordIds is a map of categoryId → array of lexicon word IDs.
  */

@@ -132,7 +132,7 @@ export function LexiconView({
                   {!collapsedDomains.has(domain.id) ? (
                     <LessonGrid
                       lessons={group.lessons}
-                      onLessonClick={(id) => router.push(`/dictionary/${id}`)}
+                      onLessonClick={(id) => router.push(`/lexicon/${id}`)}
                       compact
                     />
                   ) : null}
@@ -158,7 +158,7 @@ export function LexiconView({
           {inProgress.length > 0 ? (
             <LexiconContinueSection
               lessons={inProgress}
-              onLessonClick={(id) => router.push(`/dictionary/${id}/practice`)}
+              onLessonClick={(id) => router.push(`/lexicon/${id}/practice`)}
             />
           ) : null}
           <section className="words-lexicon__route-picker" aria-labelledby="words-route-picker-title">
@@ -168,11 +168,11 @@ export function LexiconView({
           <h2 id="words-route-picker-title">Elige un tema</h2>
           <p>Palabras nuevas en contexto.</p>
         </div>
-              <Link href="/dictionary" className="words-lexicon__text-link">Ver diccionario</Link>
+              <Link href="/words" className="words-lexicon__text-link">Ver diccionario</Link>
             </div>
             <LessonGrid
               lessons={suggestedLessons}
-              onLessonClick={(id) => router.push(`/dictionary/${id}/practice`)}
+              onLessonClick={(id) => router.push(`/lexicon/${id}/practice`)}
             />
           </section>
           <section className="words-lexicon__learn-next" aria-labelledby="words-learn-next-title">
@@ -180,7 +180,7 @@ export function LexiconView({
               <p className="words-lexicon__sechead-kicker">¿Buscas una palabra concreta?</p>
               <h2 id="words-learn-next-title">Busca en el diccionario</h2>
             </div>
-            <Link href="/dictionary" className="words-lexicon__secondary-cta">Abrir diccionario</Link>
+            <Link href="/words" className="words-lexicon__secondary-cta">Abrir diccionario</Link>
           </section>
         </>
       ) : null}

@@ -36,7 +36,6 @@ export default function SoundMicroQuiz({ category, resetKey }: Props) {
   useEffect(() => {
     setQuizIndex(0)
     setSelectedAnswer(null)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resetKey])
 
   const handlePlaySound = useCallback((word: string) => {

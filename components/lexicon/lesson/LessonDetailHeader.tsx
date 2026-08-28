@@ -13,7 +13,7 @@ export function LessonDetailHeader({
   return (
     <header className="lexicon-area__head">
       <nav className="lexicon-area__crumb" aria-label="Ruta de navegación">
-        <Link href="/dictionary">Diccionario</Link>
+        <Link href="/words">Diccionario</Link>
         <span className="lexicon-area__crumb-separator" aria-hidden>/</span>
         <span aria-current="page">{title}</span>
       </nav>

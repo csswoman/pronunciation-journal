@@ -19,7 +19,7 @@ describe("searchContent", () => {
 
   it("prioritizes learning content over Lexicon matches", () => {
     const sharedQuery: ContentItem[] = [
-      { id: "lexicon:grammar", type: "lexicon", title: "Grammar glossary", tags: ["gramática"], description: "Término del diccionario.", path: "/dictionary" },
+      { id: "lexicon:grammar", type: "lexicon", title: "Grammar glossary", tags: ["gramática"], description: "Término del diccionario.", path: "/words" },
       { id: "lesson:grammar", type: "lesson", title: "Gramática básica", tags: ["gramática"], description: "Mini lección.", path: "/mini-lessons/grammar" },
     ];
 

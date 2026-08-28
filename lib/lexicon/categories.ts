@@ -30,7 +30,7 @@ function getCategoryIds(): readonly string[] {
   if (!categoryIdsCache) {
     categoryIdsCache = fs
       .readdirSync(LEXICON_DIR)
-      .filter((file) => file.endsWith(".json") && file !== "index.json")
+      .filter((file) => file.endsWith(".json") && file !== "index.json" && file !== "word-index.json")
       .map((file) => path.basename(file, ".json"));
   }
   return categoryIdsCache;
@@ -71,6 +71,23 @@ export function getCategories(): CategoryMeta[] {
 
 export function getCategoryWords(categoryId: string): WordEntry[] {
   return getCachedCategoryWords(categoryId).slice();
+}
+
+/**
+ * Server-only word-id -> category-id[] index, for resolving
+ * word_bank.source_ref to a lexicon category (see lib/lexicon/domain-profile.ts).
+ * A word id can appear in more than one category — every occurrence is kept.
+ */
+export function getWordCategoryIndex(): ReadonlyMap<string, readonly string[]> {
+  const index = new Map<string, string[]>();
+  for (const id of getCategoryIds()) {
+    for (const word of getCachedCategoryWords(id)) {
+      const categoryIds = index.get(word.id);
+      if (categoryIds) categoryIds.push(id);
+      else index.set(word.id, [id]);
+    }
+  }
+  return index;
 }
 
 /** Tags to preview on the lesson card: N random word names. */

@@ -52,7 +52,8 @@
       "collaboration",
       "communication"
     ],
-    "exampleSentence": "Async communication works well for our team across four time zones."
+    "exampleSentence": "Async communication works well for our team across four time zones.",
+    "ipa": "/eɪsɪŋk kʌmjuːnʌkeɪʃʌn/"
   },
   {
     "id": "bandwidth",
@@ -79,7 +80,8 @@
       "anti-patterns",
       "process"
     ],
-    "exampleSentence": "We spent twenty minutes bike-shedding over the button label before someone called it."
+    "exampleSentence": "We spent twenty minutes bike-shedding over the button label before someone called it.",
+    "ipa": "/baɪkʃɛdɪŋ/"
   },
   {
     "id": "blocker",
@@ -134,7 +136,8 @@
       "stakeholders",
       "leadership"
     ],
-    "exampleSentence": "We need buy-in from the engineering lead before committing to this approach."
+    "exampleSentence": "We need buy-in from the engineering lead before committing to this approach.",
+    "ipa": "/baɪɪn/"
   },
   {
     "id": "cadence",
@@ -189,7 +192,8 @@
       "process",
       "versioning"
     ],
-    "exampleSentence": "Check the changelog before upgrading to see if any breaking changes were made."
+    "exampleSentence": "Check the changelog before upgrading to see if any breaking changes were made.",
+    "ipa": "/tʃeɪndʒlɔɡ/"
   },
   {
     "id": "clarity",
@@ -258,7 +262,8 @@
       "teams",
       "fundamentals"
     ],
-    "exampleSentence": "The feature required a cross-functional team of design, product, and engineering."
+    "exampleSentence": "The feature required a cross-functional team of design, product, and engineering.",
+    "ipa": "/kɹɔsfʌŋkʃʌnʌl/"
   },
   {
     "id": "deliverable",
@@ -327,7 +332,8 @@
       "testing",
       "culture"
     ],
-    "exampleSentence": "Dog-fooding the product internally helped us find ten bugs before launch."
+    "exampleSentence": "Dog-fooding the product internally helped us find ten bugs before launch.",
+    "ipa": "/dɔɡfuːdɪŋ/"
   },
   {
     "id": "escalate",
@@ -424,7 +430,8 @@
       "design",
       "communication"
     ],
-    "exampleSentence": "The dashboard needs to be glanceable so managers can check it in thirty seconds."
+    "exampleSentence": "The dashboard needs to be glanceable so managers can check it in thirty seconds.",
+    "ipa": "/ɡlænsʌbʌl/"
   },
   {
     "id": "granular",
@@ -465,7 +472,8 @@
       "design-systems",
       "anti-patterns"
     ],
-    "exampleSentence": "The hardcoded URL in the config broke everything when the server moved."
+    "exampleSentence": "The hardcoded URL in the config broke everything when the server moved.",
+    "ipa": "/hɑrdkoʊdʌd/"
   },
   {
     "id": "heads-up",
@@ -478,7 +486,8 @@
       "informal",
       "email"
     ],
-    "exampleSentence": "Just a heads-up — the deploy is happening at three today, not five."
+    "exampleSentence": "Just a heads-up — the deploy is happening at three today, not five.",
+    "ipa": "/hɛdzaʌp/"
   },
   {
     "id": "high-level",
@@ -491,7 +500,8 @@
       "planning",
       "fundamentals"
     ],
-    "exampleSentence": "Give me a high-level overview first; we can dig into the details later."
+    "exampleSentence": "Give me a high-level overview first; we can dig into the details later.",
+    "ipa": "/haɪlɛvʌl/"
   },
   {
     "id": "impact",
@@ -602,7 +612,8 @@
       "idioms",
       "prioritization"
     ],
-    "exampleSentence": "Let's tackle the low-hanging fruit first to show quick wins to the stakeholders."
+    "exampleSentence": "Let's tackle the low-hanging fruit first to show quick wins to the stakeholders.",
+    "ipa": "/loʊhæŋɪŋ fɹuːt/"
   },
   {
     "id": "milestone",
@@ -783,7 +794,8 @@
       "risk",
       "process"
     ],
-    "exampleSentence": "A pre-mortem helped us spot three risks we hadn't considered in the plan."
+    "exampleSentence": "A pre-mortem helped us spot three risks we hadn't considered in the plan.",
+    "ipa": "/pɹiːmɔɹtʌm/"
   },
   {
     "id": "pushback",
@@ -796,7 +808,8 @@
       "feedback",
       "collaboration"
     ],
-    "exampleSentence": "The engineering team gave pushback on the tight timeline for the migration."
+    "exampleSentence": "The engineering team gave pushback on the tight timeline for the migration.",
+    "ipa": "/pʊʃbæk/"
   },
   {
     "id": "rabbit-hole",
@@ -823,7 +836,8 @@
       "process",
       "teams"
     ],
-    "exampleSentence": "The new engineer will need about two weeks to fully ramp-up on the codebase."
+    "exampleSentence": "The new engineer will need about two weeks to fully ramp-up on the codebase.",
+    "ipa": "/ɹæmpʌp/"
   },
   {
     "id": "rationale",
@@ -948,7 +962,8 @@
       "stakeholders",
       "approval"
     ],
-    "exampleSentence": "We need sign-off from the security team before the data goes into production."
+    "exampleSentence": "We need sign-off from the security team before the data goes into production.",
+    "ipa": "/saɪnɔf/"
   },
   {
     "id": "spike",
@@ -1017,7 +1032,8 @@
       "meetings",
       "agile"
     ],
-    "exampleSentence": "Let's time-box this discussion to fifteen minutes and then make a decision."
+    "exampleSentence": "Let's time-box this discussion to fifteen minutes and then make a decision.",
+    "ipa": "/taɪmbɑks/"
   },
   {
     "id": "traction",
@@ -1086,7 +1102,8 @@
       "communication",
       "process"
     ],
-    "exampleSentence": "I'll unblock you as soon as I finish reviewing the PR — give me an hour."
+    "exampleSentence": "I'll unblock you as soon as I finish reviewing the PR — give me an hour.",
+    "ipa": "/ʌnblɑk/"
   },
   {
     "id": "verbosity",
@@ -1099,7 +1116,7 @@
       "communication",
       "code"
     ],
-    "ipa": "/vəˈbɒsəti/",
+    "ipa": "/vʌbɑsʌti/",
     "exampleSentence": "Cut the verbosity in the error message — users don't need the full stack trace."
   },
   {
@@ -1145,4 +1162,3 @@
     "exampleSentence": "I started yak shaving when I tried to update one package and ended up refactoring the config."
   }
 ]
-

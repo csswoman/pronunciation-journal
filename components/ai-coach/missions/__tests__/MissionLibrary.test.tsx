@@ -13,6 +13,17 @@ describe('MissionLibrary', () => {
     }
   })
 
+  it('calls onSelect when clicking start on a mission card', () => {
+    const onSelect = vi.fn()
+    const missions = listMissions()
+    render(<MissionLibrary missions={missions} onSelect={onSelect} />)
+
+    const buttons = screen.getAllByRole('button', { name: /empezar/i })
+    expect(buttons.length).toBe(missions.length)
+    fireEvent.click(buttons[0])
+    expect(onSelect).toHaveBeenCalledWith(missions[0].id)
+  })
+
   it('renders an empty state when the missions list is empty', () => {
     render(<MissionLibrary missions={[]} onSelect={vi.fn()} />)
 

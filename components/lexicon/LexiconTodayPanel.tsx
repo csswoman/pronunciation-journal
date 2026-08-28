@@ -11,12 +11,12 @@ interface LexiconTodayPanelProps {
 export function LexiconTodayPanel({ dueForReview, nextLesson, progressUnavailable = false }: LexiconTodayPanelProps) {
   const hasReview = dueForReview > 0;
   const href = progressUnavailable
-    ? "/dictionary"
+    ? "/words"
     : hasReview
     ? "/practice/review"
     : nextLesson
-    ? `/dictionary/${nextLesson.id}/practice`
-    : "/dictionary";
+    ? `/lexicon/${nextLesson.id}/practice`
+    : "/words";
   const title = progressUnavailable
     ? "Explora mientras cargamos tu progreso"
     : hasReview

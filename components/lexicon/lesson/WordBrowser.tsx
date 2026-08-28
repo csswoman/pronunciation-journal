@@ -161,15 +161,15 @@ export function WordBrowser({
             <span><i className="is-reviewing" />En repaso {statusCounts.reviewing}</span>
             <span><i />Nuevas {statusCounts.new}</span>
           </div>
-          <Link href={`/dictionary/${categoryId}/practice`} className="lexicon-area__practice-link">
+          <Link href={`/lexicon/${categoryId}/practice`} className="lexicon-area__practice-link">
             <Dumbbell size={16} aria-hidden /> Practicar este tema
           </Link>
         </section>
 
         <nav className="lexicon-area__side-nav" aria-label="Dictionary">
           <p className="lexicon-area__side-label">Dictionary</p>
-          <Link href="/dictionary"><BookOpen size={16} aria-hidden /> Explorar temas</Link>
-          <Link href="/dictionary?mode=learn"><Layers size={16} aria-hidden /> Plan de aprendizaje</Link>
+          <Link href="/words"><BookOpen size={16} aria-hidden /> Explorar temas</Link>
+          <Link href="/words?mode=learn"><Layers size={16} aria-hidden /> Plan de aprendizaje</Link>
           <Link href="/tracking"><BookMarked size={16} aria-hidden /> Palabras guardadas</Link>
         </nav>
 

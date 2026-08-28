@@ -21,7 +21,7 @@ export default function ReferenceSection() {
       description={category.description}
     >
       <Link
-        href="/dictionary"
+        href="/words"
         onClick={() => void setLastPracticeMode('dictionary')}
         className="flex shrink-0 w-[82vw] max-w-[280px] md:w-auto md:max-w-none snap-start flex-col justify-between gap-3 rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised/70 p-4 transition-colors hover:bg-surface-sunken focus-ring group"
       >

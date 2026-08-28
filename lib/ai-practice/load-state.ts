@@ -3,6 +3,9 @@
 import { getUserStats, getFavorites, getNeedsPracticeWords } from "@/lib/db";
 import { getAIWords } from "@/lib/db/ai";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { getWordBankSourceRefs } from "@/lib/word-bank/domain-queries";
+import { deriveDomainProfile, emptyDomainProfile } from "@/lib/lexicon/domain-profile";
+import { getWordCategoryIndex } from "@/lib/lexicon/word-index-client";
 import { createEmptyState, type UserLearningState } from "./learning-state";
 
 const CACHE_TTL_MS = 30_000;
@@ -55,19 +58,23 @@ async function buildUserLearningState(userId: string): Promise<UserLearningState
   const base = createEmptyState(userId, deviceId);
 
   try {
-    const [stats, favorites, practiceWords, aiWords, soundProgress] = await Promise.allSettled([
-      getUserStats(userId),
-      getFavorites(userId),
-      getNeedsPracticeWords(userId),
-      getAIWords(userId, 50),
-      fetchSoundProgress(userId),
-    ]);
+    const [stats, favorites, practiceWords, aiWords, soundProgress, domainProfile] =
+      await Promise.allSettled([
+        getUserStats(userId),
+        getFavorites(userId),
+        getNeedsPracticeWords(userId),
+        getAIWords(userId, 50),
+        fetchSoundProgress(userId),
+        fetchDomainProfile(userId),
+      ]);
 
     const resolvedStats = stats.status === "fulfilled" ? stats.value : null;
     const resolvedFavs = favorites.status === "fulfilled" ? favorites.value : [];
     const resolvedPractice = practiceWords.status === "fulfilled" ? practiceWords.value : [];
     const resolvedAIWords = aiWords.status === "fulfilled" ? aiWords.value : [];
     const resolvedSounds = soundProgress.status === "fulfilled" ? soundProgress.value : [];
+    const resolvedDomainProfile =
+      domainProfile.status === "fulfilled" ? domainProfile.value : emptyDomainProfile();
 
     const avgAccuracy = resolvedStats?.averageAccuracy ?? 0;
     const cefrEstimate = accuracyToCEFR(avgAccuracy);
@@ -109,10 +116,19 @@ async function buildUserLearningState(userId: string): Promise<UserLearningState
         averageAccuracy: avgAccuracy,
         strugglingSounds,
       },
+      domainProfile: resolvedDomainProfile,
     };
   } catch {
     return base;
   }
+}
+
+async function fetchDomainProfile(userId: string) {
+  const [entries, wordIndex] = await Promise.all([
+    getWordBankSourceRefs(userId),
+    getWordCategoryIndex(),
+  ]);
+  return deriveDomainProfile(entries, wordIndex);
 }
 
 async function fetchSoundProgress(userId: string) {

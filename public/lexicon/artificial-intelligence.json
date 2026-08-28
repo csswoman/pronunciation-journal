@@ -71,7 +71,8 @@
       "training"
     ],
     "translation": "Retropropagación del error",
-    "exampleSentence": "The network adjusts its weights during backpropagation after each batch."
+    "exampleSentence": "The network adjusts its weights during backpropagation after each batch.",
+    "ipa": "/bækpɹʌpʌɡeɪʃʌn/"
   },
   {
     "id": "baseline",
@@ -175,7 +176,8 @@
       "geometry"
     ],
     "translation": "Centroide, centro del clúster",
-    "exampleSentence": "Each cluster's centroid moves as new data points are assigned to it."
+    "exampleSentence": "Each cluster's centroid moves as new data points are assigned to it.",
+    "ipa": "/sɛntɹɔɪd/"
   },
   {
     "id": "class-imbalance",
@@ -279,7 +281,8 @@
       "methodology"
     ],
     "translation": "Validación cruzada",
-    "exampleSentence": "Use cross-validation instead of a single split to get a fairer score."
+    "exampleSentence": "Use cross-validation instead of a single split to get a fairer score.",
+    "ipa": "/kɹɔsvælʌdeɪʃʌn/"
   },
   {
     "id": "csv",
@@ -382,8 +385,9 @@
       "pandas",
       "data-structures"
     ],
-    "translation": "estructura de datos bidimensional",
-    "exampleSentence": "Load the CSV into a DataFrame and check the column types first."
+    "translation": "Estructura de datos bidimensional",
+    "exampleSentence": "Load the CSV into a DataFrame and check the column types first.",
+    "ipa": "/deɪtʌfɹeɪm/"
   },
   {
     "id": "decision-tree",
@@ -397,7 +401,7 @@
       "interpretability"
     ],
     "ipa": "/dɪsɪʒʌn tɹiː/",
-    "translation": "árbol de decisión",
+    "translation": "Árbol de decisión",
     "exampleSentence": "A decision tree is easy to explain to a non-technical audience."
   },
   {
@@ -412,7 +416,7 @@
       "advanced"
     ],
     "ipa": "/dɪmɛnʃʌnælʌtiː ɹʌdʌkʃʌn/",
-    "translation": "reducción de dimensionalidad",
+    "translation": "Reducción de dimensionalidad",
     "exampleSentence": "Dimensionality reduction helped us visualize the clusters in two dimensions."
   },
   {
@@ -427,7 +431,7 @@
       "probability"
     ],
     "ipa": "/dɪstɹʌbjuːʃʌn/",
-    "translation": "distribución de datos",
+    "translation": "Distribución de datos",
     "exampleSentence": "Plot the distribution of ages to check for unexpected outliers."
   },
   {
@@ -442,7 +446,7 @@
       "visualization"
     ],
     "ipa": "/iːdʌ/",
-    "translation": "análisis exploratorio de datos",
+    "translation": "Análisis exploratorio de datos",
     "exampleSentence": "She spent the first hour on EDA before writing a single line of model code."
   },
   {
@@ -457,7 +461,7 @@
       "ml"
     ],
     "ipa": "/ɛpʌk/",
-    "translation": "época de entrenamiento",
+    "translation": "Época de entrenamiento",
     "exampleSentence": "The model improved steadily for ten epochs and then started to overfit."
   },
   {
@@ -471,8 +475,9 @@
       "infrastructure",
       "process"
     ],
-    "translation": "extraer, transformar, cargar",
-    "exampleSentence": "The ETL job pulls data from three sources and loads it into the warehouse."
+    "translation": "Extraer, transformar, cargar",
+    "exampleSentence": "The ETL job pulls data from three sources and loads it into the warehouse.",
+    "ipa": "/iːtiːɛl/"
   },
   {
     "id": "evaluation-metric",
@@ -486,7 +491,7 @@
       "fundamentals"
     ],
     "ipa": "/ɪvæljuːeɪʃʌn mɛtɹɪk/",
-    "translation": "métrica de evaluación",
+    "translation": "Métrica de evaluación",
     "exampleSentence": "Choose the right evaluation metric before you build anything else."
   },
   {
@@ -500,8 +505,9 @@
       "classification",
       "metrics"
     ],
-    "translation": "puntuación F1",
-    "exampleSentence": "The F1 score was low because the model missed most of the rare cases."
+    "translation": "Puntuación F1",
+    "exampleSentence": "The F1 score was low because the model missed most of the rare cases.",
+    "ipa": "/ɛfwʌn skɔɹ/"
   },
   {
     "id": "feature",
@@ -515,7 +521,7 @@
       "data"
     ],
     "ipa": "/fiːtʃɜr/",
-    "translation": "característica, variable de entrada",
+    "translation": "Característica, variable de entrada",
     "exampleSentence": "Adding the day-of-week feature improved the model's accuracy by five percent."
   },
   {
@@ -530,7 +536,7 @@
       "process"
     ],
     "ipa": "/fiːtʃɜr ɛndʒʌnɪɹɪŋ/",
-    "translation": "ingeniería de características",
+    "translation": "Ingeniería de características",
     "exampleSentence": "Good feature engineering often matters more than choosing the right algorithm."
   },
   {
@@ -545,7 +551,7 @@
       "evaluation"
     ],
     "ipa": "/fiːtʃɜr ɪmpɔɹtʌns/",
-    "translation": "importancia de características",
+    "translation": "Importancia de características",
     "exampleSentence": "The feature importance chart showed that zip code was the top predictor."
   },
   {
@@ -560,7 +566,7 @@
       "ml"
     ],
     "ipa": "/ɡɹeɪdiːʌnt dɪsɛnt/",
-    "translation": "descenso de gradiente",
+    "translation": "Descenso de gradiente",
     "exampleSentence": "Gradient descent slowly nudges the weights toward a lower loss value."
   },
   {
@@ -575,7 +581,7 @@
       "fundamentals"
     ],
     "ipa": "/ɡɹaʊnd tɹuːθ/",
-    "translation": "verdad fundamental, datos reales",
+    "translation": "Verdad fundamental, datos reales",
     "exampleSentence": "We need reliable ground truth labels before training the classifier."
   },
   {
@@ -590,7 +596,7 @@
       "methodology"
     ],
     "ipa": "/hoʊldaʊt sɛt/",
-    "translation": "conjunto de retención",
+    "translation": "Conjunto de retención",
     "exampleSentence": "Never look at the holdout set until you are done tuning the model."
   },
   {
@@ -604,8 +610,9 @@
       "training",
       "tuning"
     ],
-    "translation": "hiperparámetro",
-    "exampleSentence": "Learning rate is the most important hyperparameter to tune first."
+    "translation": "Hiperparámetro",
+    "exampleSentence": "Learning rate is the most important hyperparameter to tune first.",
+    "ipa": "/haɪpɜrpɜræmʌtɜr/"
   },
   {
     "id": "hypothesis-testing",
@@ -619,7 +626,7 @@
       "fundamentals"
     ],
     "ipa": "/haɪpɑθʌsʌs tɛstɪŋ/",
-    "translation": "prueba de hipótesis",
+    "translation": "Prueba de hipótesis",
     "exampleSentence": "We ran hypothesis testing to confirm the new design improved click-through."
   },
   {
@@ -634,7 +641,7 @@
       "statistics"
     ],
     "ipa": "/ɪmpjʌteɪʃʌn/",
-    "translation": "imputación de datos",
+    "translation": "Imputación de datos",
     "exampleSentence": "She used median imputation to fill in the missing age values."
   },
   {
@@ -649,7 +656,7 @@
       "fundamentals"
     ],
     "ipa": "/ɪnfɜrʌns/",
-    "translation": "inferencia, predicción",
+    "translation": "Inferencia, predicción",
     "exampleSentence": "At inference time the model runs in under fifty milliseconds per request."
   },
   {
@@ -663,8 +670,9 @@
       "descriptive",
       "eda"
     ],
-    "translation": "rango intercuartílico",
-    "exampleSentence": "The interquartile range is less affected by outliers than the standard deviation."
+    "translation": "Rango intercuartílico",
+    "exampleSentence": "The interquartile range is less affected by outliers than the standard deviation.",
+    "ipa": "/ɪntɜrkwɔɹtaɪl ɹeɪndʒ/"
   },
   {
     "id": "label",
@@ -678,7 +686,7 @@
       "supervised"
     ],
     "ipa": "/leɪbʌl/",
-    "translation": "etiqueta, valor objetivo",
+    "translation": "Etiqueta, valor objetivo",
     "exampleSentence": "Each image needs a label before it can be used for supervised training."
   },
   {
@@ -693,7 +701,7 @@
       "hyperparameters"
     ],
     "ipa": "/lɜrnɪŋ ɹeɪt/",
-    "translation": "tasa de aprendizaje",
+    "translation": "Tasa de aprendizaje",
     "exampleSentence": "A learning rate that is too high can make the model diverge completely."
   },
   {
@@ -708,7 +716,7 @@
       "fundamentals"
     ],
     "ipa": "/lɔs fʌŋkʃʌn/",
-    "translation": "función de pérdida",
+    "translation": "Función de pérdida",
     "exampleSentence": "The loss function measures how far the model's predictions are from reality."
   },
   {
@@ -723,7 +731,7 @@
       "fundamentals"
     ],
     "ipa": "/miːdiːʌn/",
-    "translation": "mediana",
+    "translation": "Mediana",
     "exampleSentence": "Use the median instead of the mean when your data has outliers."
   },
   {
@@ -738,7 +746,7 @@
       "data"
     ],
     "ipa": "/mɪsɪŋ væljuː/",
-    "translation": "valor faltante",
+    "translation": "Valor faltante",
     "exampleSentence": "Every missing value in the dataset needs to be handled before modeling."
   },
   {
@@ -767,7 +775,8 @@
       "advanced"
     ],
     "translation": "Alta correlación entre variables",
-    "exampleSentence": "Multicollinearity between age and income was distorting the regression coefficients."
+    "exampleSentence": "Multicollinearity between age and income was distorting the regression coefficients.",
+    "ipa": "/mʌltikɑlɪniːɛɹʌtiː/"
   },
   {
     "id": "normal-distribution",
@@ -841,7 +850,8 @@
       "fundamentals"
     ],
     "translation": "Sobreajuste a datos de entrenamiento",
-    "exampleSentence": "The model scored perfectly on training data but was overfitting badly."
+    "exampleSentence": "The model scored perfectly on training data but was overfitting badly.",
+    "ipa": "/oʊvɜrfɪtɪŋ/"
   },
   {
     "id": "p-value",
@@ -855,7 +865,8 @@
       "fundamentals"
     ],
     "translation": "Valor p, probabilidad bajo H0",
-    "exampleSentence": "A p-value below 0.05 means the result is statistically significant."
+    "exampleSentence": "A p-value below 0.05 means the result is statistically significant.",
+    "ipa": "/piːvæljuː/"
   },
   {
     "id": "pandas",
@@ -899,7 +910,8 @@
       "automation"
     ],
     "translation": "Secuencia de pasos ML",
-    "exampleSentence": "The ML pipeline handles everything from cleaning to prediction automatically."
+    "exampleSentence": "The ML pipeline handles everything from cleaning to prediction automatically.",
+    "ipa": "/ɛmɛl paɪplaɪn/"
   },
   {
     "id": "precision",
@@ -943,7 +955,8 @@
       "fundamentals"
     ],
     "translation": "Preprocesamiento de datos",
-    "exampleSentence": "All the preprocessing steps are wrapped inside a single transformer."
+    "exampleSentence": "All the preprocessing steps are wrapped inside a single transformer.",
+    "ipa": "/pɹiːpɹɑsɛsɪŋ/"
   },
   {
     "id": "random-forest",
@@ -1002,7 +1015,8 @@
       "advanced"
     ],
     "translation": "Penalización de complejidad del modelo",
-    "exampleSentence": "Adding regularization reduced overfitting without losing much accuracy."
+    "exampleSentence": "Adding regularization reduced overfitting without losing much accuracy.",
+    "ipa": "/ɹɛɡjʌlɜrɪzeɪʃʌn/"
   },
   {
     "id": "sample",
@@ -1046,7 +1060,8 @@
       "eda"
     ],
     "translation": "Asimetría de la distribución",
-    "exampleSentence": "Positive skewness in the income data pulled the mean above the median."
+    "exampleSentence": "Positive skewness in the income data pulled the mean above the median.",
+    "ipa": "/skjuːnʌs/"
   },
   {
     "id": "split",
@@ -1060,7 +1075,8 @@
       "fundamentals"
     ],
     "translation": "División entrenamiento-prueba",
-    "exampleSentence": "An 80/20 train-test split is a reasonable starting point for most datasets."
+    "exampleSentence": "An 80/20 train-test split is a reasonable starting point for most datasets.",
+    "ipa": "/tɹeɪntɛst splɪt/"
   },
   {
     "id": "standard-deviation",
@@ -1119,7 +1135,7 @@
       "fundamentals"
     ],
     "ipa": "/tɹeɪnɪŋ deɪtʌ/",
-    "translation": "datos de entrenamiento",
+    "translation": "Datos de entrenamiento",
     "exampleSentence": "More training data usually helps, but quality matters more than quantity."
   },
   {
@@ -1133,8 +1149,9 @@
       "evaluation",
       "fundamentals"
     ],
-    "translation": "subajuste",
-    "exampleSentence": "A linear model on this data is underfitting — try something more flexible."
+    "translation": "Subajuste",
+    "exampleSentence": "A linear model on this data is underfitting — try something more flexible.",
+    "ipa": "/ʌndɜrfɪtɪŋ/"
   },
   {
     "id": "unsupervised-learning",
@@ -1148,7 +1165,7 @@
       "paradigm"
     ],
     "ipa": "/ʌnsuːpɜrvaɪzd lɜrnɪŋ/",
-    "translation": "aprendizaje no supervisado",
+    "translation": "Aprendizaje no supervisado",
     "exampleSentence": "Unsupervised learning found three customer segments we hadn't noticed before."
   },
   {
@@ -1163,7 +1180,7 @@
       "evaluation"
     ],
     "ipa": "/vɛɹiːʌns/",
-    "translation": "varianza",
+    "translation": "Varianza",
     "exampleSentence": "High variance in a model means small changes in data cause big changes in output."
   },
   {
@@ -1178,7 +1195,7 @@
       "fundamentals"
     ],
     "ipa": "/vɛktɜr/",
-    "translation": "vector",
+    "translation": "Vector",
     "exampleSentence": "Each word is represented as a vector of three hundred numbers in this model."
   },
   {
@@ -1193,7 +1210,7 @@
       "fundamentals"
     ],
     "ipa": "/deɪtʌ vɪʒwʌlʌzeɪʃʌn/",
-    "translation": "visualización de datos",
+    "translation": "Visualización de datos",
     "exampleSentence": "A good data visualization can reveal a trend that tables would hide."
   },
   {
@@ -1208,8 +1225,7 @@
       "fundamentals"
     ],
     "ipa": "/weɪt/",
-    "translation": "peso",
+    "translation": "Peso",
     "exampleSentence": "The model learned that recency has a higher weight than frequency."
   }
 ]
-

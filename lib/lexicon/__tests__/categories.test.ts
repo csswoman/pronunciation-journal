@@ -5,7 +5,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 const LEXICON_DIR = path.join(process.cwd(), "public", "lexicon");
 const categoryFileCount = fs
   .readdirSync(LEXICON_DIR)
-  .filter((file) => file.endsWith(".json") && file !== "index.json").length;
+  .filter((file) => file.endsWith(".json") && file !== "index.json" && file !== "word-index.json")
+  .length;
 
 describe("lexicon category cache", () => {
   beforeEach(() => {

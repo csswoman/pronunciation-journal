@@ -59,6 +59,24 @@ describe('oral mission registry', () => {
     expect(getMission('roleplay.unknown')).toBeNull()
     expect(missionIdFromLegacyMode('roleplay:unknown')).toBeNull()
   })
+
+  it('includes full-stack, frontend, backend and behavioral tech interview missions', () => {
+    const techMissionIds = [
+      'roleplay.interview.about_me',
+      'roleplay.interview.fullstack',
+      'roleplay.interview.frontend',
+      'roleplay.interview.backend',
+      'roleplay.interview.project',
+      'roleplay.interview.star_challenge',
+      'roleplay.interview.reverse_questions',
+    ]
+
+    for (const id of techMissionIds) {
+      const mission = getMission(id)
+      expect(mission).not.toBeNull()
+      expect(mission?.category).toBe('interview')
+    }
+  })
 })
 
 describe('mission mode discriminant', () => {
