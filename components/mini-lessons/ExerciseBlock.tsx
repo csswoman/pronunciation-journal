@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Button from "@/components/ui/Button";
 import { cn } from "@/lib/cn";
 
 export interface BlankDefinition {
@@ -391,20 +392,16 @@ export default function ExerciseBlock({
                   {Math.round(scorePct)}%)
                 </span>
               </div>
-              <button
-                type="button"
-                className="mini-lessons__btn mini-lessons__btn--ghost"
-                onClick={handleReset}
-              >
+              <Button variant="ghost" onClick={handleReset}>
                 Restablecer
-              </button>
+              </Button>
             </>
           ) : (
             <>
               <div />
-              <button type="button" className="mini-lessons__btn" onClick={handleVerify}>
+              <Button onClick={handleVerify}>
                 Verificar
-              </button>
+              </Button>
             </>
           )}
         </div>

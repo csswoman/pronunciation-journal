@@ -63,14 +63,7 @@ function LevelCardTab({
       )}
     >
       <div className="course-path__level-lv">{level.spineLabel}</div>
-      <div
-        className="course-path__level-progress"
-        role="progressbar"
-        aria-valuenow={completedCount}
-        aria-valuemin={0}
-        aria-valuemax={totalCount}
-        aria-hidden="true"
-      >
+      <div className="course-path__level-progress" aria-hidden="true">
         <div
           className="course-path__level-progress-bar"
           style={{ width: `${percent}%` }}
@@ -80,6 +73,27 @@ function LevelCardTab({
         {completedCount}/{totalCount}
       </div>
     </Link>
+  );
+}
+
+function AssessmentActions({ selectedLevelId }: { selectedLevelId: CefrLevelId }) {
+  return (
+    <>
+      <Link
+        href="/assessment"
+        className="course-path__text-link"
+        title="Evaluación diagnóstica inicial para ubicar tu nivel"
+      >
+        Test de ubicación
+      </Link>
+      <Link
+        href={`/assessment?mode=checkpoint&level=${selectedLevelId}`}
+        className="course-path__text-link"
+        title="Evaluación de salida del nivel seleccionado"
+      >
+        Checkpoint del nivel
+      </Link>
+    </>
   );
 }
 
@@ -148,15 +162,7 @@ export default function CoursePathLevelPicker({
           Nivel
         </h2>
         <div className="course-path__level-picker-actions">
-          <Link href="/assessment" className="course-path__text-link">
-            Prueba de nivel
-          </Link>
-          <Link
-            href={`/assessment?mode=checkpoint&level=${selectedLevelId}`}
-            className="course-path__text-link"
-          >
-            Comprobar nivel
-          </Link>
+          <AssessmentActions selectedLevelId={selectedLevelId} />
         </div>
       </div>
 
@@ -208,15 +214,7 @@ export default function CoursePathLevelPicker({
             })}
           </nav>
           <div className="course-path__level-picker-mobile-actions">
-            <Link href="/assessment" className="course-path__text-link">
-              Prueba de nivel
-            </Link>
-            <Link
-              href={`/assessment?mode=checkpoint&level=${selectedLevelId}`}
-              className="course-path__text-link"
-            >
-              Comprobar nivel
-            </Link>
+            <AssessmentActions selectedLevelId={selectedLevelId} />
           </div>
         </div>
       </details>

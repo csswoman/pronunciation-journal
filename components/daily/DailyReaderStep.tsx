@@ -15,6 +15,12 @@ interface DailyReaderStepProps {
   onComplete: () => void
 }
 
+// Planned structure:
+// <DailyReaderStep>
+//   DailyThreadStrip (context hints)
+//   ReaderExercise (passage practice)
+// </DailyReaderStep>
+
 export function DailyReaderStep({ passage, threadHints, onComplete }: DailyReaderStepProps) {
   useHideMobileNavDuringSession()
   const { user } = useAuth()
@@ -25,7 +31,7 @@ export function DailyReaderStep({ passage, threadHints, onComplete }: DailyReade
   }, [])
 
   return (
-    <div className="mx-auto flex max-w-prose flex-col gap-4 layout-card-pad pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] lg:pb-[var(--layout-section-gap)]">
+    <div className="mx-auto flex max-w-prose flex-col gap-4 p-[var(--layout-card-pad)] pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] lg:pb-[var(--layout-section-gap)]">
       {threadHints.length > 0 ? <DailyThreadStrip hints={threadHints} /> : null}
       <ReaderExercise
         passage={passage}

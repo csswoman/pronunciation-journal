@@ -46,6 +46,7 @@ export default function CoursePathLessonRow({ lesson, levelId }: CoursePathLesso
           kind="lesson"
           reference={lesson.slug}
           title={lesson.title}
+          payload={{ href }}
           variant="heart"
         />
       )}

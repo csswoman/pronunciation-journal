@@ -1,5 +1,14 @@
 'use client'
 
+// Planned structure:
+// <DailyChecklist>
+//   SessionOpeningBanner
+//   DailyLessonCard
+//   StudyTipDisclosure
+//   ImmersionLogCard
+//   RecommendedPracticeCard
+// </DailyChecklist>
+
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -73,7 +82,7 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
   const [sessionKey, setSessionKey] = useState(0)
   const [dueTomorrow, setDueTomorrow] = useState<number | null>(null)
   // Prevents double-triggering the initialStepId open-on-load (e.g. from a
-  // notification link with ?step=). Doesn't auto-start anything else — the
+  // notification link with ?step=). Doesn't auto-start anything else; the
   // learner picks a step from the checklist.
   const autoStartedRef = useRef(false)
 

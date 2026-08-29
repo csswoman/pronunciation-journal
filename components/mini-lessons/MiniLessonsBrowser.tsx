@@ -3,7 +3,11 @@
 // Planned structure:
 // <MiniLessonsBrowser>
 //   <PageHeader />
-//   <Filters />
+//   <SidebarFilters>
+//     <SearchBar />
+//     <LevelFilter />
+//     <CategoryFilter />
+//   </SidebarFilters>
 //   <Results>
 //     <MiniLessonCard /> × N
 //     <ListPagination />
@@ -31,36 +35,43 @@ import {
 const levels: LessonLevel[] = [...LESSON_LEVELS];
 const categories: LessonCategory[] = [...LESSON_CATEGORIES];
 
-/** Desktop fills 2×6 grid rows; mobile stacks taller cards — paginate sooner. */
 const PAGE_SIZE_DESKTOP = 12;
 const PAGE_SIZE_MOBILE = 8;
 
 export default function MiniLessonsBrowser({ lessons }: { lessons: MiniLesson[] }) {
   const [selectedLevel, setSelectedLevel] = useState<LessonLevel | "all">("all");
   const [selectedCategory, setSelectedCategory] = useState<LessonCategory | "all">("all");
+  const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [layoutReady, setLayoutReady] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
 
   const isWide = useMediaQuery("(min-width: 700px)");
-  // SSR + first paint use desktop size to avoid hydration mismatch; mobile size after mount.
   const pageSize = layoutReady && !isWide ? PAGE_SIZE_MOBILE : PAGE_SIZE_DESKTOP;
 
   useEffect(() => {
     setLayoutReady(true);
   }, []);
 
-  const filteredLessons = useMemo(
-    () =>
-      lessons.filter(
-        (lesson) =>
-          (selectedLevel === "all" || lesson.level === selectedLevel) &&
-          (selectedCategory === "all" || lesson.category === selectedCategory),
-      ),
-    [lessons, selectedLevel, selectedCategory],
-  );
+  const filteredLessons = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    return lessons.filter((lesson) => {
+      const matchesLevel = selectedLevel === "all" || lesson.level === selectedLevel;
+      const matchesCategory =
+        selectedCategory === "all" || lesson.category === selectedCategory;
+      const matchesSearch =
+        !q ||
+        lesson.title.toLowerCase().includes(q) ||
+        lesson.body.toLowerCase().includes(q) ||
+        lesson.subtitle.toLowerCase().includes(q) ||
+        MINI_LESSON_CATEGORY_LABELS[lesson.category].toLowerCase().includes(q);
 
-  const hasActiveFilters = selectedLevel !== "all" || selectedCategory !== "all";
+      return matchesLevel && matchesCategory && matchesSearch;
+    });
+  }, [lessons, selectedLevel, selectedCategory, searchQuery]);
+
+  const hasActiveFilters =
+    selectedLevel !== "all" || selectedCategory !== "all" || searchQuery.trim().length > 0;
   const totalPages = Math.max(1, Math.ceil(filteredLessons.length / pageSize));
 
   const paginatedLessons = useMemo(() => {
@@ -82,7 +93,7 @@ export default function MiniLessonsBrowser({ lessons }: { lessons: MiniLesson[] 
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [selectedLevel, selectedCategory]);
+  }, [selectedLevel, selectedCategory, searchQuery]);
 
   useEffect(() => {
     setCurrentPage((page) => Math.min(page, totalPages));
@@ -91,6 +102,7 @@ export default function MiniLessonsBrowser({ lessons }: { lessons: MiniLesson[] 
   function clearFilters() {
     setSelectedLevel("all");
     setSelectedCategory("all");
+    setSearchQuery("");
   }
 
   function handlePageChange(page: number) {
@@ -113,6 +125,20 @@ export default function MiniLessonsBrowser({ lessons }: { lessons: MiniLesson[] 
       <div className="mini-lessons__wrap mini-lessons__wrap--shell">
         <div className="mini-lessons__catalog">
           <aside className="mini-lessons__filters" aria-label="Filtrar lecciones">
+            <div className="mini-lessons__filter-group">
+              <span id="lesson-search-label" className="mini-lessons__filter-label">
+                Buscar
+              </span>
+              <input
+                type="search"
+                value={searchQuery}
+                aria-labelledby="lesson-search-label"
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Buscar lección..."
+                className="w-full px-3 py-1.5 text-body-sm rounded-sm bg-surface-sunken border border-border-default text-fg placeholder:text-fg-placeholder focus:border-primary focus:outline-none transition-colors"
+              />
+            </div>
+
             <div
               className="mini-lessons__filter-group"
               role="group"
@@ -199,7 +225,8 @@ export default function MiniLessonsBrowser({ lessons }: { lessons: MiniLesson[] 
           <section className="mini-lessons__results" aria-label="Lecciones disponibles">
             <div className="mini-lessons__results-header">
               <p className="mini-lessons__count" aria-live="polite">
-                {filteredLessons.length} {filteredLessons.length === 1 ? "lección" : "lecciones"}
+                {filteredLessons.length}{" "}
+                {filteredLessons.length === 1 ? "lección" : "lecciones"}
               </p>
               {hasActiveFilters && (
                 <button

@@ -13,15 +13,14 @@
  *   - CoursePracticeSuggestions (footer review suggestions)
  */
 
-import Link from "next/link";
-import { ArrowRight, ChevronRight } from "@/components/icons";
+import { ChevronRight } from "@/components/icons";
 import { useEffect, useMemo, useState } from "react";
+import CoursePathHeroBanner from "@/components/courses/CoursePathHeroBanner";
 import CoursePathLessonGroup, { type LessonWithState } from "@/components/courses/CoursePathLessonGroup";
 import CoursePathProgressRing, { type CoursePathRowProgressStatus } from "@/components/courses/CoursePathProgressRing";
 import CoursePracticeSuggestions from "@/components/courses/CoursePracticeSuggestions";
 import { WordCarousel } from "@/components/practice/session/WordCarousel";
 import { useLoadingWords } from "@/hooks/useLoadingWords";
-import { studyLessonPath } from "@/lib/courses/curriculumIndex";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth/session";
 import { deriveLevelView, lessonProgressKey } from "@/lib/courses/progress";
@@ -168,24 +167,12 @@ export default function CoursePathProgressClient({ level, compactHead }: CourseP
         {compactHead ? <h2>{derived.level.title}</h2> : <h1>{derived.level.title}</h1>}
       </div>
 
-      {completedIds.size === 0 && firstLesson && (
-        <Link href={studyLessonPath(level.id, firstLesson.number)} className="course-path__start-here">
-          <span className="course-path__start-label">Empieza aquí</span>
-          <span className="course-path__start-title">{firstLesson.title}</span>
-          <ArrowRight size={16} aria-hidden />
-        </Link>
-      )}
-
-      {completedIds.size > 0 && currentLesson && (
-        <Link href={studyLessonPath(level.id, currentLesson.number)} className="course-path__resume">
-          <span className="course-path__resume-body">
-            <span className="course-path__resume-label">Siguiente lección</span>
-            <span className="course-path__resume-title">{currentLesson.title}</span>
-          </span>
-          <span className="course-path__resume-action">Abrir lección</span>
-          <ArrowRight size={16} aria-hidden />
-        </Link>
-      )}
+      <CoursePathHeroBanner
+        levelId={level.id}
+        firstLesson={firstLesson}
+        currentLesson={currentLesson}
+        hasProgress={completedIds.size > 0}
+      />
 
       <div className="course-path__units" aria-label="Unidades del curso">
         {derived.units.map((unit) => {
@@ -250,7 +237,7 @@ export default function CoursePathProgressClient({ level, compactHead }: CourseP
                         title={group}
                         lessons={lessons}
                         levelId={level.id}
-                        open={expandedGroups[id] ?? (hasCurrentLesson || (completedIds.size === 0 && index === 0))}
+                        open={expandedGroups[id] ?? (hasCurrentLesson || index === 0)}
                         onToggle={handleGroupToggle}
                       />
                     );

@@ -70,8 +70,8 @@ describe("CoursePathProgressClient", () => {
     render(<CoursePathProgressClient level={COURSE_PATH_CURRICULUM.levels[0]} />);
 
     await waitFor(() => {
-      expect(screen.getByText("Siguiente lección")).toBeInTheDocument();
-      expect(screen.getByText("Abrir lección")).toBeInTheDocument();
+      expect(screen.getByText("Tu siguiente lección")).toBeInTheDocument();
+      expect(screen.getByText("Continuar lección")).toBeInTheDocument();
       expect(screen.getByText("Repasa lo que ya aprendiste")).toBeInTheDocument();
       expect(screen.queryByText("Tu lección actual")).not.toBeInTheDocument();
     });

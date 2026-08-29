@@ -1,8 +1,8 @@
 'use client'
 
 // Planned structure:
-// <FalseFriendsIntroStep>   — sequences the pair-presentation cards
-//   <FalseFriendCard />     — one pair at a time; the last card starts practice
+// <FalseFriendsIntroStep>: sequences the pair-presentation cards
+//   <FalseFriendCard />: one pair at a time; the last card starts practice
 // Presentation is non-evaluated (no answer_history); it precedes the exercises.
 
 import { useEffect, useState } from 'react'

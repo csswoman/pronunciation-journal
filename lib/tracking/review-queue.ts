@@ -8,6 +8,7 @@ import { isUuid } from '@/lib/review/content-ref'
 import type { TrackedItem, TrackingItem, TrackedKind } from './types'
 import { getTarget, targetId } from '@/lib/pronunciation/targets/registry'
 import type { PronunciationTargetId } from '@/lib/pronunciation/targets/types'
+import { resolveLessonHref } from '@/lib/courses/curriculumIndex'
 
 export type TrackingReviewSource =
   | { item: TrackingItem; word: WordBankEntry }
@@ -216,7 +217,7 @@ export function buildTrackingReviewQueue(
       skipped.push(skip(source, 'missing_lesson_ref', 'La lección guardada ya no tiene una referencia válida.'))
       continue
     }
-    items.push(queueItem(source.item, `/mini-lessons/${trackedItem.ref}`))
+    items.push(queueItem(source.item, source.item.href ?? resolveLessonHref(trackedItem.ref, trackedItem.payload)))
   }
 
   return { items, exercises, skipped, notices }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import Button from "@/components/ui/Button";
 import { isLessonComplete } from "@/lib/db";
 import { recordLessonComplete } from "@/lib/practice/queries";
 import { getCurrentUser } from "@/lib/auth/session";
@@ -26,11 +27,13 @@ export default function MiniLessonComplete({ slug }: Props) {
 
   useEffect(() => {
     let cancelled = false;
-    void getOptionalUserId().then((userId) => {
-      return userId ? isLessonComplete(userId, COURSE_SLUG, slug) : false;
-    }).then((value) => {
-      if (!cancelled) setCompleted((current) => current || Boolean(value));
-    });
+    void getOptionalUserId()
+      .then((userId) => {
+        return userId ? isLessonComplete(userId, COURSE_SLUG, slug) : false;
+      })
+      .then((value) => {
+        if (!cancelled) setCompleted((current) => current || Boolean(value));
+      });
     return () => {
       cancelled = true;
     };
@@ -56,20 +59,19 @@ export default function MiniLessonComplete({ slug }: Props) {
 
   if (completed) {
     return (
-      <p className="mini-lessons__complete-note" role="status">
-        Lesson marked as read
+      <p className="text-caption text-success font-medium" role="status">
+        ✓ Lección completada
       </p>
     );
   }
 
   return (
-    <button
-      type="button"
-      className="mini-lessons__btn"
+    <Button
+      variant="secondary"
       onClick={() => void handleMarkRead()}
       disabled={marking}
     >
-      {marking ? "Saving…" : "Mark as read"}
-    </button>
+      {marking ? "Guardando…" : "Marcar como leída"}
+    </Button>
   );
 }

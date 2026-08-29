@@ -39,6 +39,6 @@ describe('SessionRecapCard', () => {
 
   it('renders gracefully with no arc', () => {
     render(<SessionRecapCard arc={undefined} stepCount={5} dueTomorrow={null} streak={null} />)
-    expect(screen.getByText(/Daily complete/i)).toBeInTheDocument()
+    expect(screen.getByText(/Sesión diaria completada/i)).toBeInTheDocument()
   })
 })

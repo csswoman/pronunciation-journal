@@ -61,7 +61,7 @@ export default function DailyStepSession({
 
   if (step.kind === 'word_intro') {
     return (
-      <div className="mx-auto flex w-full flex-col gap-4 layout-card-pad pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] lg:pb-[var(--layout-section-gap)]">
+      <div className="mx-auto flex w-full flex-col gap-4 p-[var(--layout-card-pad)] pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] lg:pb-[var(--layout-section-gap)]">
         {threadHints.length > 0 ? <DailyThreadStrip hints={threadHints} /> : null}
         <WordIntroStep cards={step.studyCards ?? []} onComplete={onComplete} />
       </div>
@@ -82,7 +82,7 @@ export default function DailyStepSession({
   // exercises in the same step (unlike word_intro, which is a step of its own).
   if (!started && showFalseFriendsIntro) {
     return (
-      <div className="mx-auto flex max-w-prose flex-col gap-4 layout-card-pad pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] lg:pb-[var(--layout-section-gap)]">
+      <div className="mx-auto flex max-w-prose flex-col gap-4 p-[var(--layout-card-pad)] pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] lg:pb-[var(--layout-section-gap)]">
         {threadHints.length > 0 ? <DailyThreadStrip hints={threadHints} /> : null}
         <FalseFriendsIntroStep
           pairs={step.falseFriends ?? []}
@@ -96,7 +96,7 @@ export default function DailyStepSession({
   // exercises in the same step.
   if (!started && showGrammarIntro && step.grammarRule) {
     return (
-      <div className="mx-auto flex max-w-prose flex-col gap-4 layout-card-pad pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] lg:pb-[var(--layout-section-gap)]">
+      <div className="mx-auto flex max-w-prose flex-col gap-4 p-[var(--layout-card-pad)] pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] lg:pb-[var(--layout-section-gap)]">
         {threadHints.length > 0 ? <DailyThreadStrip hints={threadHints} /> : null}
         <GrammarRuleCard
           rule={step.grammarRule}

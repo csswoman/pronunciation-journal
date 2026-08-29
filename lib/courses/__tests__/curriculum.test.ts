@@ -52,4 +52,19 @@ describe("course curriculum coverage", () => {
     expect(advanced?.lessons.length).toBeGreaterThanOrEqual(20);
   });
 
+  it("resolves correct URLs for course lessons and mini-lessons using resolveLessonHref", async () => {
+    const { resolveLessonHref } = await import("../curriculumIndex");
+
+    // Course lesson slug
+    expect(resolveLessonHref("a2-descripciones-comparaciones")).toBe("/courses/study/10?level=a2");
+
+    // Explicit payload href override
+    expect(resolveLessonHref("a2-descripciones-comparaciones", { href: "/courses/study/10?level=a2&custom=1" })).toBe(
+      "/courses/study/10?level=a2&custom=1",
+    );
+
+    // Fallback mini-lesson slug
+    expect(resolveLessonHref("standalone-mini-lesson")).toBe("/mini-lessons/standalone-mini-lesson");
+  });
 });
+

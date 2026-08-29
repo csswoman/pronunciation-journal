@@ -1,5 +1,10 @@
 'use client'
 
+// Planned structure:
+// <DailyThreadStrip>
+//   heading + list of thread hint chips
+// </DailyThreadStrip>
+
 import { formatIpaDisplay } from '@/lib/lexicon/format-ipa'
 import type { StepThreadHint } from '@/lib/practice/daily-plan/step-thread'
 import { cn } from '@/lib/cn'
@@ -12,7 +17,7 @@ interface DailyThreadStripProps {
   embedded?: boolean
 }
 
-/** Words that reappear across today's plan — under Word review when embedded. */
+/** Words that reappear across today's plan: under Word review when embedded. */
 export function DailyThreadStrip({ hints, embedded = false }: DailyThreadStripProps) {
   if (hints.length === 0) return null
 

@@ -1,5 +1,10 @@
 'use client'
 
+// Planned structure:
+// <StepThreadHints>
+//   ul list of compact thread word chips
+// </StepThreadHints>
+
 import { formatIpaDisplay } from '@/lib/lexicon/format-ipa'
 import type { StepThreadHint } from '@/lib/practice/daily-plan/step-thread'
 
@@ -18,7 +23,7 @@ interface StepThreadHintsProps {
 /**
  * Compact chip list for thread words.
  * Prefer `DailyThreadStrip` in daily surfaces (checklist, intro, reader).
- * Kept for tests / ad-hoc callers — do not mount beside PhonemeFocusShell.
+ * Kept for tests / ad-hoc callers: do not mount beside PhonemeFocusShell.
  */
 export function StepThreadHints({ hints, className }: StepThreadHintsProps) {
   if (hints.length === 0) return null

@@ -7,6 +7,7 @@ import { hydrateTrackedItems, listTrackedItems } from "@/lib/tracking/queries";
 import type { TrackingItem } from "@/lib/tracking/types";
 import type { TrackingReviewSource } from "@/lib/tracking/review-queue";
 import { deriveWordProgressSignal, WORD_PROGRESS_LABELS } from "@/lib/word-bank/progress-state";
+import { resolveLessonHref } from "@/lib/courses/curriculumIndex";
 import { useWords } from "./useWords";
 
 export function useTracking() {
@@ -44,7 +45,7 @@ export function useTracking() {
         kind: trackedItem.kind,
         title: trackedItem.title ?? trackedItem.ref,
         description: typeof trackedItem.payload.context === "string" ? trackedItem.payload.context : null,
-        href: trackedItem.kind === "lesson" ? `/mini-lessons/${trackedItem.ref}` : undefined,
+        href: trackedItem.kind === "lesson" ? resolveLessonHref(trackedItem.ref, trackedItem.payload) : undefined,
         progressState: 'saved',
         progressLabel: WORD_PROGRESS_LABELS.saved,
       }

@@ -85,3 +85,20 @@ export function studyOrPracticeDeckHref(deckSlug: string): string {
   if (found) return studyLessonPath(found.trackId, found.lesson.number);
   return `/practice/decks/${deckSlug}`;
 }
+
+/**
+ * Resolves the destination URL for a saved lesson.
+ * Checks payload.href first, then checks if the slug belongs to a course lesson
+ * (/courses/study/:n?level=:trackId), falling back to /mini-lessons/:slug.
+ */
+export function resolveLessonHref(ref: string, payload?: Record<string, unknown>): string {
+  if (typeof payload?.href === "string" && payload.href.trim()) {
+    return payload.href.trim();
+  }
+  const study = findStudyByDeckSlug(ref);
+  if (study) {
+    return studyLessonPath(study.trackId, study.lesson.number);
+  }
+  return `/mini-lessons/${ref}`;
+}
+
