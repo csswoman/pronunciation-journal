@@ -1,5 +1,11 @@
 export type LexiconDomainId = "engineering" | "design" | "professional" | "leisure";
 
+/**
+ * Whether vocabulary in a domain is studied for recognition (receptive) or
+ * for active recall/production (productive). See lib/lexicon/domains.ts.
+ */
+export type StudyMode = "receptive" | "productive";
+
 export type CategoryMeta = {
   id: string;
   name: string;
@@ -35,6 +41,8 @@ export type LessonViewModel = {
   wordsReviewing: number;
   progress: number;
   tags: string[];
+  /** Recognition vs. active-recall vocabulary — see lib/lexicon/domains.ts. */
+  studyMode?: StudyMode;
 };
 
 export type LexiconSearchHit = {

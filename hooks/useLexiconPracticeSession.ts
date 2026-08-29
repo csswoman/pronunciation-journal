@@ -121,9 +121,19 @@ export function useLexiconPracticeSession(categoryId: string, userId: string | u
     // Restore persisted session before fetching.
     const saved = loadSession(categoryId)
     if (saved && saved.categoryId === categoryId) {
+      const wordsSlice = saved.sessionWordEntries ?? []
+      const wordMap = new Map(wordsSlice.map((w) => [w.id, w]))
+      const enrichedEntries = (saved.allEntries ?? []).map((e) => {
+        const w = e.source_ref ? wordMap.get(e.source_ref) : null
+        return {
+          ...e,
+          ipa: e.ipa ?? w?.ipa ?? null,
+          translation: e.translation ?? w?.translation ?? null,
+        }
+      })
       setLessonName(saved.lessonName)
-      setAllEntries(saved.allEntries)
-      setSessionWordEntries(saved.sessionWordEntries ?? [])
+      setAllEntries(enrichedEntries)
+      setSessionWordEntries(wordsSlice)
       setPosMap(new Map(saved.posMapEntries))
       setFlowPhaseRaw(saved.flowPhase)
       setRatingsRaw(saved.ratings)
@@ -152,15 +162,21 @@ export function useLexiconPracticeSession(categoryId: string, userId: string | u
       const newPosMap = new Map(words.map((w) => [w.id, w.pos ?? '']))
       const allMapped: WordBankEntry[] = words.map((w) => {
         const real = bySourceRef.get(w.id)
-        if (real) return real
+        if (real) {
+          return {
+            ...real,
+            ipa: real.ipa ?? w.ipa ?? null,
+            translation: real.translation ?? w.translation ?? null,
+          }
+        }
         return {
           id: `lexicon:${w.id}`, user_id: userId, text: w.word, meaning: w.definition,
           example: w.example ?? null, difficulty: w.difficulty ?? 0, source: 'lexicon',
-          source_ref: w.id, status: 'ready', srs_status: 'new', audio_url: null, ipa: null,
+          source_ref: w.id, status: 'ready', srs_status: 'new', audio_url: null, ipa: w.ipa ?? null,
           context: null, created_at: '', updated_at: '', ease_factor: 2.5, interval_days: 0,
           repetitions: 0, review_count: 0, last_reviewed_at: null, next_review_at: null,
           error_reason: null, has_audio: null, audio_fetch_attempts: 0, image_prompt: null,
-          synonyms: null, translation: null, is_favorite: false,
+          synonyms: null, translation: w.translation ?? null, is_favorite: false,
           familiarity_confidence: 0, familiarity_status: 'unknown',
           mastery_provenance: 'none', mastery_version: 1,
           objective_evidence_count: 0, verification_due_at: null,

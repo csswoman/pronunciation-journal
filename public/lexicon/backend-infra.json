@@ -10,8 +10,8 @@
       "api",
       "infrastructure"
     ],
-    "ipa": "/eɪpiːaɪ ɡeɪtweɪ/",
-    "translation": "Puerta de enlace API",
+    "ipa": "/ˌeɪ piː ˈaɪ ˈɡeɪtˌweɪ/",
+    "translation": "Gateway de API",
     "exampleSentence": "All requests pass through the API gateway before reaching any service."
   },
   {
@@ -25,8 +25,8 @@
       "fundamentals",
       "auth"
     ],
-    "ipa": "/ɔθɛntʌkeɪʃʌn/",
-    "translation": "Autenticación de usuario",
+    "ipa": "/ɑːˌθɛntɪˈkeɪʃən/",
+    "translation": "Autenticación",
     "exampleSentence": "Authentication checks who you are before letting you through the door."
   },
   {
@@ -40,8 +40,8 @@
       "fundamentals",
       "auth"
     ],
-    "ipa": "/ɔθɜrʌzeɪʃʌn/",
-    "translation": "Autorización de acceso",
+    "ipa": "/ˌɑːθərəˈzeɪʃən/",
+    "translation": "Autorización",
     "exampleSentence": "Authorization decides which resources each authenticated user can access."
   },
   {
@@ -55,9 +55,9 @@
       "networking",
       "patterns"
     ],
-    "translation": "Reintentos con espera exponencial",
+    "translation": "Backoff exponencial",
     "exampleSentence": "The client uses exponential backoff to avoid hammering a slow API.",
-    "ipa": "/ɛkspʌnɛnʃʌl bækɔf/"
+    "ipa": "/ˌɛkspəˈnɛnʃəl ˈbækˌɔːf/"
   },
   {
     "id": "cache-invalidation",
@@ -70,7 +70,7 @@
       "performance",
       "advanced"
     ],
-    "ipa": "/kæʃ ɪnvælʌdeɪʃʌn/",
+    "ipa": "/ˈkæʃ ɪnˌvælɪˈdeɪʃən/",
     "translation": "Invalidación de caché",
     "exampleSentence": "Cache invalidation is notoriously one of the hardest problems in computing."
   },
@@ -85,8 +85,8 @@
       "patterns",
       "distributed"
     ],
-    "ipa": "/sɜrkʌt bɹeɪkɜr/",
-    "translation": "Patrón interruptor",
+    "ipa": "/ˈsɜːrkɪt ˈbreɪkər/",
+    "translation": "Circuit breaker",
     "exampleSentence": "The circuit breaker tripped after the payment service failed three times."
   },
   {
@@ -100,9 +100,9 @@
       "fundamentals",
       "systems"
     ],
-    "translation": "Concurrencia de tareas",
+    "translation": "Concurrencia",
     "exampleSentence": "The server handles concurrency with a worker thread pool.",
-    "ipa": "/kʌnkɜrʌnsiː/"
+    "ipa": "/kənˈkɜːrənsi/"
   },
   {
     "id": "connection-pooling",
@@ -115,8 +115,8 @@
       "performance",
       "postgresql"
     ],
-    "ipa": "/kʌnɛkʃʌn puːlɪŋ/",
-    "translation": "Pool de conexiones DB",
+    "ipa": "/kəˈnɛkʃən ˈpuːlɪŋ/",
+    "translation": "Pool de conexiones",
     "exampleSentence": "Connection pooling cut database latency by reusing open connections."
   },
   {
@@ -130,7 +130,7 @@
       "http",
       "api"
     ],
-    "ipa": "/kɔɹ hɛdɜrz/",
+    "ipa": "/ˈkɔːrz ˈhɛdərz/",
     "translation": "Cabeceras CORS",
     "exampleSentence": "The browser blocked the request because the CORS headers were missing."
   },
@@ -145,8 +145,8 @@
       "database",
       "api"
     ],
-    "ipa": "/kɹʌd/",
-    "translation": "Operaciones CRUD",
+    "ipa": "/ˈkrʌd/",
+    "translation": "CRUD",
     "exampleSentence": "Most of this API is just CRUD on top of a simple database table."
   },
   {
@@ -160,8 +160,8 @@
       "supabase",
       "process"
     ],
-    "ipa": "/deɪtʌbeɪs maɪɡɹeɪʃʌn/",
-    "translation": "Migración de base de datos",
+    "ipa": "/ˈdeɪtəˌbeɪs maɪˈɡreɪʃən/",
+    "translation": "Migración de esquema",
     "exampleSentence": "Run the database migration before deploying the new version."
   },
   {
@@ -175,7 +175,7 @@
       "concurrency",
       "bugs"
     ],
-    "ipa": "/dɛdlɑk/",
+    "ipa": "/ˈdɛdˌlɑːk/",
     "translation": "Interbloqueo",
     "exampleSentence": "Two transactions caused a deadlock by locking the same rows in reverse order."
   },
@@ -190,8 +190,8 @@
       "devops",
       "process"
     ],
-    "ipa": "/dɪplɔɪ/",
-    "translation": "Desplegar aplicación",
+    "ipa": "/dɪˈplɔɪ/",
+    "translation": "Desplegar",
     "exampleSentence": "We deploy every Friday afternoon after the tests pass."
   },
   {
@@ -205,8 +205,8 @@
       "performance",
       "supabase"
     ],
-    "ipa": "/ɛdʒ fʌŋkʃʌn/",
-    "translation": "Función en el borde (edge)",
+    "ipa": "/ˈɛdʒ ˈfʌŋkʃən/",
+    "translation": "Función Edge",
     "exampleSentence": "The redirect logic runs as an edge function close to the user."
   },
   {
@@ -220,8 +220,8 @@
       "fundamentals",
       "rest"
     ],
-    "ipa": "/ɛndpɔɪnt/",
-    "translation": "Punto final (endpoint) API",
+    "ipa": "/ˈɛndˌpɔɪnt/",
+    "translation": "Endpoint",
     "exampleSentence": "Add a new endpoint for fetching the user's notification preferences."
   },
   {
@@ -235,7 +235,7 @@
       "devops",
       "fundamentals"
     ],
-    "ipa": "/ɪnvaɪɹʌnmʌnt vɛɹiːʌbʌl/",
+    "ipa": "/ɪnˈvaɪrənmənt ˈvɛriəbəl/",
     "translation": "Variable de entorno",
     "exampleSentence": "Never hardcode secrets — store them in an environment variable."
   },
@@ -250,7 +250,7 @@
       "postgresql",
       "fundamentals"
     ],
-    "ipa": "/fɔɹʌn kiː/",
+    "ipa": "/ˈfɔːrən ˈkiː/",
     "translation": "Clave foránea",
     "exampleSentence": "The orders table has a foreign key pointing to the users table."
   },
@@ -265,9 +265,9 @@
       "query",
       "protocol"
     ],
-    "translation": "Lenguaje de consulta GraphQL",
+    "translation": "GraphQL",
     "exampleSentence": "GraphQL lets the client ask for exactly the fields it needs.",
-    "ipa": "/ɡɹæfkjuːɛl/"
+    "ipa": "/ˌɡræf kjuː ˈɛl/"
   },
   {
     "id": "horizontal-scaling",
@@ -280,7 +280,7 @@
       "performance",
       "scaling"
     ],
-    "ipa": "/hɔɹʌzɑntʌl skeɪlɪŋ/",
+    "ipa": "/ˌhɔːrəˈzɑːntəl ˈskeɪlɪŋ/",
     "translation": "Escalado horizontal",
     "exampleSentence": "We handled the traffic spike by horizontal scaling to six instances."
   },
@@ -295,8 +295,8 @@
       "api",
       "fundamentals"
     ],
-    "ipa": "/eɪtʃtiːtiːpiː stætʌs koʊdz/",
-    "translation": "Códigos de estado HTTP",
+    "ipa": "/ˌeɪtʃ tiː tiː ˈpiː ˈstætəs ˈkoʊdz/",
+    "translation": "Códigos de estado",
     "exampleSentence": "Return a 404 status code when the requested resource doesn't exist."
   },
   {
@@ -312,7 +312,7 @@
     ],
     "translation": "Clave de idempotencia",
     "exampleSentence": "Send an idempotency key so retries don't create duplicate charges.",
-    "ipa": "/aɪdɛmpoʊtʌnsiː kiː/"
+    "ipa": "/ˌaɪdɛmˈpoʊtənsi ˈkiː/"
   },
   {
     "id": "index",
@@ -325,8 +325,8 @@
       "postgresql",
       "performance"
     ],
-    "ipa": "/ɪndɛks/",
-    "translation": "Índice de base de datos",
+    "ipa": "/ˈɪndɛks/",
+    "translation": "Índice",
     "exampleSentence": "Adding an index on the email column made lookups ten times faster."
   },
   {
@@ -340,9 +340,9 @@
       "infrastructure",
       "kubernetes"
     ],
-    "translation": "Ingreso de tráfico",
+    "translation": "Ingreso",
     "exampleSentence": "The ingress controller routes traffic to the correct service by hostname.",
-    "ipa": "/ɪnɡɹɛs/"
+    "ipa": "/ˈɪnˌɡrɛs/"
   },
   {
     "id": "integration-test",
@@ -355,7 +355,7 @@
       "quality",
       "fundamentals"
     ],
-    "ipa": "/ɪntʌɡɹeɪʃʌn tɛst/",
+    "ipa": "/ˌɪntəˈɡreɪʃən ˈtɛst/",
     "translation": "Prueba de integración",
     "exampleSentence": "The integration test checks that the API and database work together correctly."
   },
@@ -370,9 +370,9 @@
       "security",
       "supabase"
     ],
-    "translation": "Token web JWT",
+    "translation": "JWT",
     "exampleSentence": "The client stores the JWT and sends it in every request header.",
-    "ipa": "/dʒeɪdʌbʌljuːtiː/"
+    "ipa": "/ˌdʒeɪ dʌbəljuː ˈtiː/"
   },
   {
     "id": "latency",
@@ -385,8 +385,8 @@
       "networking",
       "fundamentals"
     ],
-    "ipa": "/leɪtʌnsiː/",
-    "translation": "Retraso",
+    "ipa": "/ˈleɪtənsi/",
+    "translation": "Latencia",
     "exampleSentence": "High latency in the checkout flow was causing users to abandon their carts."
   },
   {
@@ -400,7 +400,7 @@
       "scaling",
       "networking"
     ],
-    "ipa": "/loʊd bælʌnsɜr/",
+    "ipa": "/ˈloʊd ˈbælənsər/",
     "translation": "Balanceador de carga",
     "exampleSentence": "The load balancer distributes traffic evenly across all four servers."
   },
@@ -415,8 +415,8 @@
       "devops",
       "fundamentals"
     ],
-    "ipa": "/lɔɡɪŋ/",
-    "translation": "Registro de eventos",
+    "ipa": "/ˈlɑːɡɪŋ/",
+    "translation": "Logging",
     "exampleSentence": "Add structured logging so we can filter errors by user ID in production."
   },
   {
@@ -430,7 +430,7 @@
       "async",
       "distributed"
     ],
-    "ipa": "/mɛsʌdʒ kjuː/",
+    "ipa": "/ˈmɛsɪdʒ ˈkjuː/",
     "translation": "Cola de mensajes",
     "exampleSentence": "Email notifications go through a message queue so they don't slow the API."
   },
@@ -447,7 +447,7 @@
     ],
     "translation": "Microservicio",
     "exampleSentence": "The billing microservice can be deployed independently from the rest.",
-    "ipa": "/maɪkɹoʊsɜrvʌs/"
+    "ipa": "/ˈmaɪkroʊˌsɜːrvɪs/"
   },
   {
     "id": "middleware-server",
@@ -460,9 +460,9 @@
       "api",
       "nextjs"
     ],
-    "translation": "Servidor intermediario",
+    "translation": "Middleware",
     "exampleSentence": "Auth middleware checks the JWT before the request reaches any route handler.",
-    "ipa": "/mɪdʌlwɛɹ/"
+    "ipa": "/ˈmɪdəlˌwɛr/"
   },
   {
     "id": "n-plus-one",
@@ -477,7 +477,7 @@
     ],
     "translation": "Problema N+1",
     "exampleSentence": "The N+1 problem was making the page load with dozens of extra queries.",
-    "ipa": "/ɛn plʌs wʌn pɹɑblʌm/"
+    "ipa": "/ˌɛn plʌs ˈwʌn ˈprɑːbləm/"
   },
   {
     "id": "normalization",
@@ -490,8 +490,8 @@
       "postgresql",
       "design"
     ],
-    "ipa": "/nɔɹmʌlɪzeɪʃʌn/",
-    "translation": "Normalización de base de datos",
+    "ipa": "/ˌnɔːrmələˈzeɪʃən/",
+    "translation": "Normalización",
     "exampleSentence": "Good normalization means each fact is stored in exactly one place."
   },
   {
@@ -505,9 +505,9 @@
       "security",
       "protocol"
     ],
-    "translation": "Estándar de autorización",
+    "translation": "OAuth",
     "exampleSentence": "OAuth lets users sign in with Google without sharing their password.",
-    "ipa": "/oʊɔθ/"
+    "ipa": "/ˈoʊˌɑːθ/"
   },
   {
     "id": "observability",
@@ -522,7 +522,7 @@
     ],
     "translation": "Observabilidad",
     "exampleSentence": "Good observability means you can understand what's wrong from the outside.",
-    "ipa": "/ʌbzɜrvʌbɪlʌtiː/"
+    "ipa": "/əbˌzɜːrvəˈbɪlɪti/"
   },
   {
     "id": "optimistic-update",
@@ -535,7 +535,7 @@
       "patterns",
       "api"
     ],
-    "ipa": "/ɑptʌmɪstɪk ʌpdeɪt/",
+    "ipa": "/ˌɑːptɪˈmɪstɪk ˈʌpˌdeɪt/",
     "translation": "Actualización optimista",
     "exampleSentence": "The like button uses an optimistic update so it feels instant."
   },
@@ -550,9 +550,9 @@
       "tooling",
       "abstraction"
     ],
-    "translation": "Mapeo objeto-relacional",
+    "translation": "ORM",
     "exampleSentence": "The ORM generates the SQL so you can write queries in plain TypeScript.",
-    "ipa": "/oʊɑrɛm/"
+    "ipa": "/ˌoʊ ɑːr ˈɛm/"
   },
   {
     "id": "pagination-cursor",
@@ -567,7 +567,7 @@
     ],
     "translation": "Paginación por cursor",
     "exampleSentence": "Cursor-based pagination gives stable results even when new rows are inserted.",
-    "ipa": "/kɜrsɜrbeɪst pædʒʌneɪʃʌn/"
+    "ipa": "/ˈkɜːrsərˌbeɪst ˌpædʒɪˈneɪʃən/"
   },
   {
     "id": "payload",
@@ -580,7 +580,7 @@
       "http",
       "fundamentals"
     ],
-    "ipa": "/peɪloʊd/",
+    "ipa": "/ˈpeɪˌloʊd/",
     "translation": "Carga útil",
     "exampleSentence": "The webhook payload contains the event type and the affected resource."
   },
@@ -595,7 +595,7 @@
       "postgresql",
       "fundamentals"
     ],
-    "ipa": "/pɹaɪmɛɹiː kiː/",
+    "ipa": "/ˈpraɪmɛri ˈkiː/",
     "translation": "Clave primaria",
     "exampleSentence": "Each row in the users table has a UUID as its primary key."
   },
@@ -610,8 +610,8 @@
       "security",
       "infrastructure"
     ],
-    "ipa": "/pɹɑksiː/",
-    "translation": "Servidor proxy",
+    "ipa": "/ˈprɑːksi/",
+    "translation": "Proxy",
     "exampleSentence": "The proxy forwards API requests and adds the auth header automatically."
   },
   {
@@ -625,7 +625,7 @@
       "performance",
       "database"
     ],
-    "ipa": "/kwiːɹiː plæn/",
+    "ipa": "/ˈkwɪri ˈplæn/",
     "translation": "Plan de consulta",
     "exampleSentence": "Check the query plan to see why this join is doing a full table scan."
   },
@@ -640,8 +640,8 @@
       "security",
       "infrastructure"
     ],
-    "ipa": "/ɹeɪt lɪmʌtɪŋ/",
-    "translation": "Limitación de peticiones",
+    "ipa": "/ˈreɪt ˈlɪmɪtɪŋ/",
+    "translation": "Limitación de tasa",
     "exampleSentence": "Rate limiting stops a single client from overwhelming the public API."
   },
   {
@@ -655,8 +655,8 @@
       "infrastructure",
       "reliability"
     ],
-    "ipa": "/ɹɛplʌkeɪʃʌn/",
-    "translation": "Replicación de datos",
+    "ipa": "/ˌrɛplɪˈkeɪʃən/",
+    "translation": "Replicación",
     "exampleSentence": "Database replication keeps a standby ready if the primary goes down."
   },
   {
@@ -670,8 +670,8 @@
       "fundamentals",
       "protocol"
     ],
-    "ipa": "/ɹɛst/",
-    "translation": "Transferencia de estado representacional",
+    "ipa": "/ˈrɛst/",
+    "translation": "REST",
     "exampleSentence": "The mobile app communicates with the backend through a REST API."
   },
   {
@@ -685,8 +685,8 @@
       "devops",
       "reliability"
     ],
-    "ipa": "/ɹoʊlbæk/",
-    "translation": "Reversión",
+    "ipa": "/ˈroʊlˌbæk/",
+    "translation": "Rollback",
     "exampleSentence": "The bad deploy triggered an automatic rollback to the previous build."
   },
   {
@@ -700,9 +700,9 @@
       "postgresql",
       "security"
     ],
-    "translation": "Seguridad a nivel de fila",
+    "translation": "Seguridad por fila",
     "exampleSentence": "Row-level security ensures users can only read their own data.",
-    "ipa": "/ɹoʊlɛvʌl sʌkjʊɹʌtiː/"
+    "ipa": "/ˈroʊˌlɛvəl sɪˈkjʊrəti/"
   },
   {
     "id": "schema",
@@ -715,8 +715,8 @@
       "fundamentals",
       "postgresql"
     ],
-    "ipa": "/skiːmʌ/",
-    "translation": "Esquema de base de datos",
+    "ipa": "/ˈskiːmə/",
+    "translation": "Esquema",
     "exampleSentence": "The schema defines every table and column in the database."
   },
   {
@@ -730,9 +730,9 @@
       "cloud",
       "deployment"
     ],
-    "translation": "Sin servidor",
+    "translation": "Serverless",
     "exampleSentence": "We moved the image resize logic to a serverless function to reduce cost.",
-    "ipa": "/sɜrvɜrlʌs/"
+    "ipa": "/ˈsɜːrvərləs/"
   },
   {
     "id": "sharding",
@@ -745,9 +745,9 @@
       "scaling",
       "advanced"
     ],
-    "translation": "Particionamiento de base de datos",
+    "translation": "Sharding",
     "exampleSentence": "Sharding split the users table across three machines by region.",
-    "ipa": "/ʃɑrdɪŋ/"
+    "ipa": "/ˈʃɑːrdɪŋ/"
   },
   {
     "id": "soft-delete",
@@ -760,7 +760,7 @@
       "patterns",
       "data"
     ],
-    "ipa": "/sɑft dɪliːt/",
+    "ipa": "/ˈsɑːft dɪˈliːt/",
     "translation": "Borrado lógico",
     "exampleSentence": "We use soft delete so deleted records can be recovered within thirty days."
   },
@@ -775,7 +775,7 @@
       "database",
       "vulnerabilities"
     ],
-    "ipa": "/ɛskjuːɛl ɪndʒɛkʃʌn/",
+    "ipa": "/ˌɛs kjuː ˈɛl ɪnˈdʒɛkʃən/",
     "translation": "Inyección SQL",
     "exampleSentence": "Parameterized queries are the main defense against SQL injection."
   },
@@ -790,9 +790,9 @@
       "http",
       "protocol"
     ],
-    "translation": "Eventos enviados por servidor",
+    "translation": "SSE",
     "exampleSentence": "The dashboard uses SSE to push live metric updates to the browser.",
-    "ipa": "/ɛsɛsiː/"
+    "ipa": "/ˌɛs ɛs ˈiː/"
   },
   {
     "id": "stateless",
@@ -805,7 +805,7 @@
       "rest",
       "fundamentals"
     ],
-    "ipa": "/steɪtlɪs/",
+    "ipa": "/ˈsteɪtləs/",
     "translation": "Sin estado",
     "exampleSentence": "A stateless API is easier to scale because any server can handle any request."
   },
@@ -820,8 +820,8 @@
       "storage",
       "cloud"
     ],
-    "ipa": "/stɔɹʌdʒ bʌkʌt/",
-    "translation": "Cubo de almacenamiento",
+    "ipa": "/ˈstɔːrɪdʒ ˈbʌkɪt/",
+    "translation": "Bucket de almacenamiento",
     "exampleSentence": "User avatars are stored in a private storage bucket and served via signed URL."
   },
   {
@@ -835,8 +835,8 @@
       "fundamentals",
       "metrics"
     ],
-    "ipa": "/θɹuːpʊt/",
-    "translation": "Rendimiento",
+    "ipa": "/ˈθruːˌpʊt/",
+    "translation": "Throughput",
     "exampleSentence": "We increased throughput from two hundred to a thousand requests per second."
   },
   {
@@ -850,7 +850,7 @@
       "postgresql",
       "fundamentals"
     ],
-    "ipa": "/tɹænzækʃʌn/",
+    "ipa": "/trænˈzækʃən/",
     "translation": "Transacción",
     "exampleSentence": "Wrap the balance update and the log entry in a single transaction."
   },
@@ -865,9 +865,9 @@
       "networking",
       "fundamentals"
     ],
-    "translation": "Tiempo de vida",
+    "translation": "TTL",
     "exampleSentence": "Set a short TTL on the session token so it expires after one hour.",
-    "ipa": "/tiːtiːɛl/"
+    "ipa": "/ˌtiː tiː ˈɛl/"
   },
   {
     "id": "uuid",
@@ -880,9 +880,9 @@
       "fundamentals",
       "identifiers"
     ],
-    "translation": "Identificador universalmente único",
+    "translation": "UUID",
     "exampleSentence": "Generate a UUID for each new order so IDs are never sequential.",
-    "ipa": "/juːjuːaɪdiː/"
+    "ipa": "/ˌjuː juː aɪ ˈdiː/"
   },
   {
     "id": "vertical-scaling",
@@ -895,7 +895,7 @@
       "scaling",
       "performance"
     ],
-    "ipa": "/vɜrtɪkʌl skeɪlɪŋ/",
+    "ipa": "/ˈvɜːrtɪkəl ˈskeɪlɪŋ/",
     "translation": "Escalado vertical",
     "exampleSentence": "Vertical scaling helped short-term, but horizontal scaling is the long-term solution."
   },
@@ -912,7 +912,7 @@
     ],
     "translation": "Webhook",
     "exampleSentence": "The payment provider sends a webhook when a charge succeeds or fails.",
-    "ipa": "/wɛbhʊk/"
+    "ipa": "/ˈwɛbˌhʊk/"
   },
   {
     "id": "websocket",
@@ -925,9 +925,9 @@
       "protocol",
       "networking"
     ],
-    "translation": "Websocket",
+    "translation": "WebSocket",
     "exampleSentence": "The chat feature uses a WebSocket so messages arrive in real time.",
-    "ipa": "/wɛbsɑkʌt/"
+    "ipa": "/ˈwɛbˌsɑːkɪt/"
   },
   {
     "id": "zero-downtime-deploy",
@@ -940,9 +940,9 @@
       "deployment",
       "reliability"
     ],
-    "translation": "Despliegue sin tiempo de inactividad",
+    "translation": "Despliegue sin inactividad",
     "exampleSentence": "Zero-downtime deployment means users never see a service interruption during a release.",
-    "ipa": "/zɪɹoʊdaʊntaɪm dɪplɔɪmʌnt/"
+    "ipa": "/ˌzɪroʊˈdaʊnˌtaɪm dɪˈplɔɪmənt/"
   },
   {
     "id": "acid",
@@ -955,8 +955,8 @@
       "postgresql",
       "fundamentals"
     ],
-    "ipa": "/æsʌd/",
-    "translation": "ACID (transacciones) / propiedades ACID",
+    "ipa": "/ˈæsɪd/",
+    "translation": "Propiedades ACID",
     "exampleSentence": "ACID guarantees mean the database never leaves data in a broken state."
   },
   {
@@ -970,8 +970,8 @@
       "devops",
       "scheduling"
     ],
-    "ipa": "/kɹɑn dʒɑb/",
-    "translation": "Tarea programada",
+    "ipa": "/ˈkrɑːn ˈdʒɑːb/",
+    "translation": "Cron job",
     "exampleSentence": "A cron job cleans up expired sessions every night at midnight."
   },
   {
@@ -985,7 +985,7 @@
       "architecture",
       "patterns"
     ],
-    "ipa": "/ɡɹeɪsfʌl dɛɡɹʌdeɪʃʌn/",
+    "ipa": "/ˈɡreɪsfəl ˌdɛɡrəˈdeɪʃən/",
     "translation": "Degradación elegante",
     "exampleSentence": "Graceful degradation keeps the core experience working even when a service is down."
   },
@@ -1000,8 +1000,8 @@
       "monitoring",
       "reliability"
     ],
-    "ipa": "/hɛlθ tʃɛk/",
-    "translation": "Verificación de estado",
+    "ipa": "/ˈhɛlθ ˈtʃɛk/",
+    "translation": "Health check",
     "exampleSentence": "The load balancer removes any instance that fails the health check."
   },
   {
@@ -1017,7 +1017,7 @@
     ],
     "translation": "Solicitud idempotente",
     "exampleSentence": "A DELETE request should be idempotent — running it twice gives the same result.",
-    "ipa": "/aɪdɛmpoʊtʌnt ɹɪkwɛst/"
+    "ipa": "/aɪˈdɛmpoʊtənt rɪˈkwɛst/"
   },
   {
     "id": "materialized-view",
@@ -1030,7 +1030,7 @@
       "performance",
       "database"
     ],
-    "ipa": "/mʌtɪɹiːʌlaɪzd vjuː/",
+    "ipa": "/məˈtɪriəˌlaɪzd ˈvjuː/",
     "translation": "Vista materializada",
     "exampleSentence": "The analytics dashboard reads from a materialized view to stay fast."
   },
@@ -1045,8 +1045,8 @@
       "realtime",
       "websocket"
     ],
-    "ipa": "/ɹiːʌltaɪm sʌbskɹɪpʃʌn/",
-    "translation": "Suscripción en tiempo real",
+    "ipa": "/ˈriːəlˌtaɪm səbˈskrɪpʃən/",
+    "translation": "Suscripción en vivo",
     "exampleSentence": "The notifications panel uses a realtime subscription to the database."
   },
   {
@@ -1060,8 +1060,8 @@
       "development",
       "testing"
     ],
-    "ipa": "/siːd/",
-    "translation": "Semilla (datos iniciales)",
+    "ipa": "/ˈsiːd/",
+    "translation": "Datos semilla",
     "exampleSentence": "Run the seed script to populate the local database before testing."
   },
   {
@@ -1075,8 +1075,8 @@
       "postgresql",
       "supabase"
     ],
-    "translation": "Insertar o actualizar",
+    "translation": "Upsert",
     "exampleSentence": "An upsert inserts the row if it doesn't exist or updates it if it does.",
-    "ipa": "/ʌpsɜrt/"
+    "ipa": "/ˈʌpˌsɜːrt/"
   }
 ]

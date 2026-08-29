@@ -30,6 +30,17 @@ describe('buildTrackingReviewQueue', () => {
     expect(queue.skipped).toEqual([])
   })
 
+  it('resolves course lesson URLs correctly for course path lessons', () => {
+    const queue = buildTrackingReviewQueue([
+      {
+        item: { id: 'lesson-course', kind: 'lesson', title: 'Describir y comparar' },
+        trackedItem: tracked('lesson', 'a2-descripciones-comparaciones'),
+      },
+    ])
+
+    expect(queue.items[0]?.href).toBe('/courses/study/10?level=a2')
+  })
+
   it('keeps an unresolved personal phrase as activity-only shadowing', () => {
     const queue = buildTrackingReviewQueue([
       { item: { id: 'phrase-1', kind: 'phrase', title: 'I am going to call' }, trackedItem: tracked('phrase', 'i am going to call') },

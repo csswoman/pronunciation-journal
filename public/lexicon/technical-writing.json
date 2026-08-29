@@ -10,7 +10,8 @@
       "style",
       "fundamentals"
     ],
-    "ipa": "/æktɪv vɔɪs/",
+    "ipa": "/ˈæktɪv ˈvɔɪs/",
+    "translation": "Voz activa",
     "exampleSentence": "Use active voice to make every instruction clear and direct for the reader."
   },
   {
@@ -24,7 +25,8 @@
       "formatting",
       "structure"
     ],
-    "ipa": "/ædmʌnɪʃʌn/",
+    "ipa": "/ˌædməˈnɪʃən/",
+    "translation": "Admonición",
     "exampleSentence": "Add a warning admonition before the step that deletes user data."
   },
   {
@@ -38,7 +40,8 @@
       "html",
       "navigation"
     ],
-    "ipa": "/æŋkɜrɪŋ/",
+    "ipa": "/ˈæŋkərɪŋ/",
+    "translation": "Anclaje",
     "exampleSentence": "Anchoring the link to a specific section saves the reader from scrolling."
   },
   {
@@ -52,7 +55,8 @@
       "api",
       "reference"
     ],
-    "ipa": "/eɪpiːaɪ ɹɛfɜrʌns/",
+    "ipa": "/ˌeɪ piː ˈaɪ ˈrɛfərəns/",
+    "translation": "Referencia API",
     "exampleSentence": "The API reference lists every parameter, its type, and an example value."
   },
   {
@@ -66,7 +70,8 @@
       "strategy",
       "fundamentals"
     ],
-    "ipa": "/ɑdiːʌns ʌwɛɹnʌs/",
+    "ipa": "/ˈɑːdiəns əˈwɛrnəs/",
+    "translation": "Conciencia de audiencia",
     "exampleSentence": "Strong audience awareness means you don't explain git to senior engineers."
   },
   {
@@ -80,8 +85,9 @@
       "documentation",
       "structure"
     ],
-    "exampleSentence": "Put the security warning in a callout so it stands out from the rest of the text.",
-    "ipa": "/kɔlaʊt/"
+    "ipa": "/ˈkɑːlaʊt/",
+    "translation": "Callout",
+    "exampleSentence": "Put the security warning in a callout so it stands out from the rest of the text."
   },
   {
     "id": "changelog-entry",
@@ -94,8 +100,9 @@
       "versioning",
       "process"
     ],
-    "exampleSentence": "Every changelog entry should say what changed and why the user should care.",
-    "ipa": "/tʃeɪndʒlɔɡ ɛntɹiː/"
+    "ipa": "/ˈtʃeɪndʒlɑːɡ ˈɛntri/",
+    "translation": "Entrada de changelog",
+    "exampleSentence": "Every changelog entry should say what changed and why the user should care."
   },
   {
     "id": "code-comment",
@@ -108,7 +115,8 @@
       "documentation",
       "fundamentals"
     ],
-    "ipa": "/koʊd kɑmɛnt/",
+    "ipa": "/ˈkoʊd ˈkɑːmɛnt/",
+    "translation": "Comentario de código",
     "exampleSentence": "A good code comment explains the why, not the what — the code already shows the what."
   },
   {
@@ -122,7 +130,8 @@
       "formatting",
       "documentation"
     ],
-    "ipa": "/koʊd fɛns/",
+    "ipa": "/ˈkoʊd ˈfɛns/",
+    "translation": "Bloque de código",
     "exampleSentence": "Always use a code fence with a language tag so the syntax gets highlighted."
   },
   {
@@ -136,7 +145,8 @@
       "style",
       "localization"
     ],
-    "ipa": "/kʌloʊkwiʌlɪzʌm/",
+    "ipa": "/kəˈloʊkwiəlɪzəm/",
+    "translation": "Coloquialismo",
     "exampleSentence": "Avoid colloquialisms in docs that will be translated or read by non-native speakers."
   },
   {
@@ -150,8 +160,9 @@
       "style",
       "fundamentals"
     ],
-    "exampleSentence": "Conciseness means cutting every word that doesn't add information for the reader.",
-    "ipa": "/kʌnsaɪsnʌs/"
+    "ipa": "/kənˈsaɪsnəs/",
+    "translation": "Concisión",
+    "exampleSentence": "Conciseness means cutting every word that doesn't add information for the reader."
   },
   {
     "id": "content-type",
@@ -164,7 +175,8 @@
       "structure",
       "diataxis"
     ],
-    "ipa": "/kɑntɛnt taɪp/",
+    "ipa": "/ˈkɑːntɛnt ˌtaɪp/",
+    "translation": "Tipo de contenido",
     "exampleSentence": "Decide the content type before writing — is this a tutorial or a how-to guide?"
   },
   {
@@ -178,8 +190,9 @@
       "navigation",
       "structure"
     ],
-    "exampleSentence": "Add a cross-reference to the authentication guide at the start of this section.",
-    "ipa": "/kɹɔsɹɛfɜrʌns/"
+    "ipa": "/ˈkrɑːs ˈrɛfərəns/",
+    "translation": "Referencia cruzada",
+    "exampleSentence": "Add a cross-reference to the authentication guide at the start of this section."
   },
   {
     "id": "deprecation-notice",
@@ -192,8 +205,9 @@
       "api",
       "versioning"
     ],
-    "exampleSentence": "Add a deprecation notice to warn users before removing the old endpoint.",
-    "ipa": "/dɛpɹʌkeɪʃʌn noʊtʌs/"
+    "ipa": "/ˌdɛprəˈkeɪʃən ˈnoʊtɪs/",
+    "translation": "Aviso de obsolescencia",
+    "exampleSentence": "Add a deprecation notice to warn users before removing the old endpoint."
   },
   {
     "id": "diataxis",
@@ -206,8 +220,9 @@
       "frameworks",
       "structure"
     ],
-    "exampleSentence": "We restructured the docs using the Diátaxis framework to separate tutorials from references.",
-    "ipa": "/daɪætæksʌs/"
+    "ipa": "/daɪˈætæksɪs/",
+    "translation": "Diátaxis",
+    "exampleSentence": "We restructured the docs using the Diátaxis framework to separate tutorials from references."
   },
   {
     "id": "disambiguation",
@@ -220,8 +235,9 @@
       "terminology",
       "clarity"
     ],
-    "exampleSentence": "A disambiguation note clarifies which definition of model applies in this context.",
-    "ipa": "/dɪsæmbɪɡjuːeɪʃʌn/"
+    "ipa": "/ˌdɪsæmˌbɪɡjuˈeɪʃən/",
+    "translation": "Desambiguación",
+    "exampleSentence": "A disambiguation note clarifies which definition of model applies in this context."
   },
   {
     "id": "docstring",
@@ -234,8 +250,9 @@
       "documentation",
       "code"
     ],
-    "exampleSentence": "A docstring at the top of the function explains the parameters and return type.",
-    "ipa": "/dɑkstɹɪŋ/"
+    "ipa": "/ˈdɑːkstrɪŋ/",
+    "translation": "Docstring",
+    "exampleSentence": "A docstring at the top of the function explains the parameters and return type."
   },
   {
     "id": "docs-as-code",
@@ -248,8 +265,9 @@
       "process",
       "tooling"
     ],
-    "exampleSentence": "Docs-as-code means every change to the docs goes through a pull request review.",
-    "ipa": "/dɑksæzkoʊd/"
+    "ipa": "/ˌdɑːks æz ˈkoʊd/",
+    "translation": "Documentación como código",
+    "exampleSentence": "Docs-as-code means every change to the docs goes through a pull request review."
   },
   {
     "id": "edge-case-doc",
@@ -262,7 +280,8 @@
       "quality",
       "reference"
     ],
-    "ipa": "/ɛdʒ keɪs dɑkjʌmɛnteɪʃʌn/",
+    "ipa": "/ˈɛdʒ ˌkeɪs ˌdɑːkjəmɛnˈteɪʃən/",
+    "translation": "Documentación de casos límite",
     "exampleSentence": "Good edge case documentation tells users what the system does with empty inputs."
   },
   {
@@ -276,7 +295,8 @@
       "strategy",
       "maintenance"
     ],
-    "ipa": "/ɛvɜrɡɹiːn/",
+    "ipa": "/ˈɛvərɡriːn/",
+    "translation": "Atemporal",
     "exampleSentence": "Write evergreen content that stays accurate without needing constant updates."
   },
   {
@@ -290,8 +310,9 @@
       "content-type",
       "diataxis"
     ],
-    "exampleSentence": "An explainer helps readers understand why JWT authentication works the way it does.",
-    "ipa": "/ɛkspleɪnɜr/"
+    "ipa": "/ɪkˈspleɪnər/",
+    "translation": "Texto explicativo",
+    "exampleSentence": "An explainer helps readers understand why JWT authentication works the way it does."
   },
   {
     "id": "frontmatter",
@@ -304,7 +325,8 @@
       "tooling",
       "documentation"
     ],
-    "ipa": "/fɹʌnt mætɜr/",
+    "ipa": "/ˈfrʌnt ˌmætər/",
+    "translation": "Frontmatter",
     "exampleSentence": "The front matter at the top of the file sets the page title and description."
   },
   {
@@ -318,7 +340,8 @@
       "terminology",
       "reference"
     ],
-    "ipa": "/ɡlɔsɜriː/",
+    "ipa": "/ˈɡlɑːsəri/",
+    "translation": "Glosario",
     "exampleSentence": "Link unfamiliar terms to the glossary so readers can look them up immediately."
   },
   {
@@ -332,8 +355,9 @@
       "content-type",
       "diataxis"
     ],
-    "exampleSentence": "A how-to guide walks you through setting up authentication in your app.",
-    "ipa": "/haʊtuː ɡaɪd/"
+    "ipa": "/ˈhaʊtuː ˌɡaɪd/",
+    "translation": "Guía paso a paso",
+    "exampleSentence": "A how-to guide walks you through setting up authentication in your app."
   },
   {
     "id": "imperative-mood",
@@ -346,7 +370,8 @@
       "style",
       "tutorials"
     ],
-    "ipa": "/ɪmpɛɹʌtɪv muːd/",
+    "ipa": "/ɪmˈpɛrətɪv ˈmuːd/",
+    "translation": "Modo imperativo",
     "exampleSentence": "Use the imperative mood in steps: click, open, run, not you should click."
   },
   {
@@ -360,7 +385,8 @@
       "ia",
       "documentation"
     ],
-    "ipa": "/ɪnfɜrmeɪʃʌn sɛnt/",
+    "ipa": "/ˌɪnfərˈmeɪʃən ˌsɛnt/",
+    "translation": "Rastro de información",
     "exampleSentence": "Strong information scent means users can predict what's behind every link."
   },
   {
@@ -374,7 +400,8 @@
       "formatting",
       "fundamentals"
     ],
-    "ipa": "/ɪnlaɪn koʊd/",
+    "ipa": "/ˈɪnlaɪn ˈkoʊd/",
+    "translation": "Código en línea",
     "exampleSentence": "Format the variable name with inline code so it stands out from the surrounding text."
   },
   {
@@ -388,8 +415,9 @@
       "documentation",
       "javascript"
     ],
-    "exampleSentence": "JSDoc comments on exported functions are picked up automatically by the IDE.",
-    "ipa": "/dʒeɪɛsdɑk/"
+    "ipa": "/ˌdʒeɪ ˌɛs ˈdɑːk/",
+    "translation": "JSDoc",
+    "exampleSentence": "JSDoc comments on exported functions are picked up automatically by the IDE."
   },
   {
     "id": "knowledge-base",
@@ -402,7 +430,8 @@
       "support",
       "strategy"
     ],
-    "ipa": "/nɑlʌdʒ beɪs/",
+    "ipa": "/ˈnɑːlɪdʒ ˌbeɪs/",
+    "translation": "Base de conocimientos",
     "exampleSentence": "The knowledge base gets fifty percent of its traffic from search engines."
   },
   {
@@ -416,7 +445,8 @@
       "i18n",
       "strategy"
     ],
-    "ipa": "/loʊkʌlʌzeɪʃʌn/",
+    "ipa": "/ˌloʊkələˈzeɪʃən/",
+    "translation": "Localización",
     "exampleSentence": "Good localization adapts date formats and units, not just the language."
   },
   {
@@ -430,7 +460,8 @@
       "journalism",
       "style"
     ],
-    "ipa": "/liːd/",
+    "ipa": "/ˈliːd/",
+    "translation": "Entradilla",
     "exampleSentence": "Put the key information in the lede so skimmers get the point immediately."
   },
   {
@@ -444,7 +475,8 @@
       "fundamentals",
       "tooling"
     ],
-    "ipa": "/mɑɹkdaʊn/",
+    "ipa": "/ˈmɑːrkdaʊn/",
+    "translation": "Markdown",
     "exampleSentence": "All our documentation is written in Markdown and stored alongside the code."
   },
   {
@@ -458,8 +490,9 @@
       "react",
       "tooling"
     ],
-    "exampleSentence": "MDX lets us embed a live code playground directly inside the documentation page.",
-    "ipa": "/ɛmdiːɛks/"
+    "ipa": "/ˌɛm diː ˈɛks/",
+    "translation": "MDX",
+    "exampleSentence": "MDX lets us embed a live code playground directly inside the documentation page."
   },
   {
     "id": "microcopy",
@@ -472,8 +505,9 @@
       "ui",
       "content"
     ],
-    "exampleSentence": "Good microcopy on the error message tells users exactly how to fix the problem.",
-    "ipa": "/maɪkɹoʊkɑpiː/"
+    "ipa": "/ˈmaɪkroʊˌkɑːpi/",
+    "translation": "Microtexto",
+    "exampleSentence": "Good microcopy on the error message tells users exactly how to fix the problem."
   },
   {
     "id": "navigational-label",
@@ -486,7 +520,8 @@
       "ux-writing",
       "ia"
     ],
-    "ipa": "/nævʌɡeɪʃʌnʌl leɪbʌl/",
+    "ipa": "/ˌnævɪˈɡeɪʃənəl ˈleɪbəl/",
+    "translation": "Etiqueta de navegación",
     "exampleSentence": "A clear navigational label sets the right expectation before the user clicks."
   },
   {
@@ -500,7 +535,8 @@
       "anti-patterns",
       "clarity"
     ],
-    "ipa": "/naʊn paɪl/",
+    "ipa": "/ˈnaʊn ˌpaɪl/",
+    "translation": "Acumulación de sustantivos",
     "exampleSentence": "User account management interface settings page is a classic noun pile — rewrite it."
   },
   {
@@ -514,8 +550,9 @@
       "onboarding",
       "strategy"
     ],
-    "exampleSentence": "Strong onboarding documentation gets new users to their first success in minutes.",
-    "ipa": "/ɑnbɔɹdɪŋ dɑkjʌmɛnteɪʃʌn/"
+    "ipa": "/ˈɑːnbɔːrdɪŋ ˌdɑːkjəmɛnˈteɪʃən/",
+    "translation": "Documentación de onboarding",
+    "exampleSentence": "Strong onboarding documentation gets new users to their first success in minutes."
   },
   {
     "id": "openapi",
@@ -528,8 +565,9 @@
       "documentation",
       "tooling"
     ],
-    "exampleSentence": "The OpenAPI spec is the single source of truth for all our API endpoints.",
-    "ipa": "/oʊpʌneɪpiːaɪ/"
+    "ipa": "/ˌoʊpən ˌeɪ piː ˈaɪ/",
+    "translation": "OpenAPI",
+    "exampleSentence": "The OpenAPI spec is the single source of truth for all our API endpoints."
   },
   {
     "id": "passive-voice",
@@ -542,7 +580,8 @@
       "style",
       "fundamentals"
     ],
-    "ipa": "/pæsɪv vɔɪs/",
+    "ipa": "/ˈpæsɪv ˈvɔɪs/",
+    "translation": "Voz pasiva",
     "exampleSentence": "The form was submitted is passive voice — submitted the form is clearer."
   },
   {
@@ -556,7 +595,8 @@
       "fundamentals",
       "accessibility"
     ],
-    "ipa": "/pleɪn læŋɡwʌdʒ/",
+    "ipa": "/ˈpleɪn ˈlæŋɡwɪdʒ/",
+    "translation": "Lenguaje claro",
     "exampleSentence": "Plain language guidelines say to avoid words with shorter, clearer alternatives."
   },
   {
@@ -570,7 +610,8 @@
       "tutorials",
       "structure"
     ],
-    "ipa": "/pɹiːɹɛkwʌzʌt/",
+    "ipa": "/priːˈrɛkwəzɪt/",
+    "translation": "Prerrequisito",
     "exampleSentence": "List every prerequisite at the top so users don't get stuck halfway through."
   },
   {
@@ -584,7 +625,8 @@
       "structure",
       "strategy"
     ],
-    "ipa": "/pɹʌɡɹɛsɪv dɪskloʊʒɜr/",
+    "ipa": "/prəˈɡrɛsɪv dɪsˈkloʊʒər/",
+    "translation": "Revelación progresiva",
     "exampleSentence": "Progressive disclosure hides advanced options until the user is ready for them."
   },
   {
@@ -598,7 +640,8 @@
       "style",
       "fundamentals"
     ],
-    "ipa": "/pɹoʊz/",
+    "ipa": "/ˈproʊz/",
+    "translation": "Prosa",
     "exampleSentence": "A short paragraph of prose before the steps gives useful context without slowing readers down."
   },
   {
@@ -612,8 +655,9 @@
       "git",
       "fundamentals"
     ],
-    "exampleSentence": "The README is the first thing a new contributor reads, so keep it focused.",
-    "ipa": "/ɹiːdmiː/"
+    "ipa": "/ˈriːdmiː/",
+    "translation": "README",
+    "exampleSentence": "The README is the first thing a new contributor reads, so keep it focused."
   },
   {
     "id": "release-notes",
@@ -626,7 +670,8 @@
       "versioning",
       "communication"
     ],
-    "ipa": "/ɹiːliːs noʊts/",
+    "ipa": "/rɪˈliːs ˌnoʊts/",
+    "translation": "Notas de versión",
     "exampleSentence": "Release notes should highlight what changed for users, not for engineers."
   },
   {
@@ -640,8 +685,9 @@
       "documentation",
       "operations"
     ],
-    "exampleSentence": "Follow the runbook step by step when you get paged for this kind of incident.",
-    "ipa": "/ɹʌnbʊk/"
+    "ipa": "/ˈrʌnbʊk/",
+    "translation": "Runbook",
+    "exampleSentence": "Follow the runbook step by step when you get paged for this kind of incident."
   },
   {
     "id": "scannability-doc",
@@ -654,8 +700,9 @@
       "layout",
       "fundamentals"
     ],
-    "exampleSentence": "Scannability improves when you use short paragraphs, headings, and bold key terms.",
-    "ipa": "/skænʌbɪlʌtiː/"
+    "ipa": "/ˌskænəˈbɪləti/",
+    "translation": "Escaneabilidad",
+    "exampleSentence": "Scannability improves when you use short paragraphs, headings, and bold key terms."
   },
   {
     "id": "single-sourcing",
@@ -668,7 +715,8 @@
       "strategy",
       "efficiency"
     ],
-    "ipa": "/sɪŋɡʌl sɔɹsɪŋ/",
+    "ipa": "/ˈsɪŋɡəl ˈsɔːrsɪŋ/",
+    "translation": "Fuente única",
     "exampleSentence": "Single sourcing means you update the authentication guide once and it updates everywhere."
   },
   {
@@ -682,7 +730,8 @@
       "code",
       "examples"
     ],
-    "ipa": "/snɪpʌt/",
+    "ipa": "/ˈsnɪpɪt/",
+    "translation": "Snippet",
     "exampleSentence": "A good code snippet is short enough to copy and run without modification."
   },
   {
@@ -696,7 +745,8 @@
       "documentation",
       "planning"
     ],
-    "ipa": "/spɛk/",
+    "ipa": "/ˈspɛk/",
+    "translation": "Especificación",
     "exampleSentence": "Write the spec before the code so everyone agrees on what is being built."
   },
   {
@@ -710,7 +760,8 @@
       "governance",
       "documentation"
     ],
-    "ipa": "/staɪl ɡaɪd/",
+    "ipa": "/ˈstaɪl ˌɡaɪd/",
+    "translation": "Guía de estilo",
     "exampleSentence": "The style guide says to use second person and present tense throughout the docs."
   },
   {
@@ -724,7 +775,8 @@
       "navigation",
       "structure"
     ],
-    "ipa": "/teɪbʌl ʌv kɑntɛnts/",
+    "ipa": "/ˈteɪbəl əv ˈkɑːntɛnts/",
+    "translation": "Tabla de contenidos",
     "exampleSentence": "A table of contents at the top helps readers jump straight to what they need."
   },
   {
@@ -738,7 +790,8 @@
       "documentation",
       "fundamentals"
     ],
-    "ipa": "/tɛknɪkʌl ækjɜrʌsiː/",
+    "ipa": "/ˈtɛknɪkəl ˈækjərəsi/",
+    "translation": "Precisión técnica",
     "exampleSentence": "Technical accuracy means every code sample in the docs has been tested to work."
   },
   {
@@ -752,7 +805,8 @@
       "glossary",
       "fundamentals"
     ],
-    "ipa": "/tɜrmɪnɑlʌdʒiː/",
+    "ipa": "/ˌtɜːrməˈnɑːlədʒi/",
+    "translation": "Terminología",
     "exampleSentence": "Consistent terminology across the docs prevents confusion about the same concept."
   },
   {
@@ -766,8 +820,9 @@
       "abbreviations",
       "navigation"
     ],
-    "exampleSentence": "The TOC is auto-generated from headings so it stays up to date automatically.",
-    "ipa": "/tiːoʊsiː/"
+    "ipa": "/ˌtiː oʊ ˈsiː/",
+    "translation": "TOC",
+    "exampleSentence": "The TOC is auto-generated from headings so it stays up to date automatically."
   },
   {
     "id": "tone-of-voice",
@@ -780,7 +835,8 @@
       "brand",
       "style"
     ],
-    "ipa": "/toʊn ʌv vɔɪs/",
+    "ipa": "/ˈtoʊn əv ˈvɔɪs/",
+    "translation": "Tono de voz",
     "exampleSentence": "The tone of voice in error messages should be helpful, never condescending."
   },
   {
@@ -794,7 +850,8 @@
       "content-type",
       "diataxis"
     ],
-    "ipa": "/tuːtɔɹiːʌl/",
+    "ipa": "/tuːˈtɔːriəl/",
+    "translation": "Tutorial",
     "exampleSentence": "A tutorial guides a beginner from zero to a working example by the end."
   },
   {
@@ -808,8 +865,9 @@
       "content",
       "design"
     ],
-    "exampleSentence": "Good UX writing on the empty state tells users exactly what to do next.",
-    "ipa": "/juːɛks ɹaɪtɪŋ/"
+    "ipa": "/ˌjuː ˈɛks ˈraɪtɪŋ/",
+    "translation": "Redacción UX",
+    "exampleSentence": "Good UX writing on the empty state tells users exactly what to do next."
   },
   {
     "id": "versioned-docs",
@@ -822,8 +880,9 @@
       "versioning",
       "strategy"
     ],
-    "exampleSentence": "Versioned documentation lets users of older releases find the right information.",
-    "ipa": "/vɜrʒʌnd dɑkjʌmɛnteɪʃʌn/"
+    "ipa": "/ˈvɜːrʒənd ˌdɑːkjəmɛnˈteɪʃən/",
+    "translation": "Documentación versionada",
+    "exampleSentence": "Versioned documentation lets users of older releases find the right information."
   },
   {
     "id": "voice",
@@ -836,7 +895,8 @@
       "brand",
       "style"
     ],
-    "ipa": "/vɔɪs/",
+    "ipa": "/ˈvɔɪs/",
+    "translation": "Voz",
     "exampleSentence": "The product's voice is warm and direct, never robotic or overly formal."
   },
   {
@@ -850,7 +910,8 @@
       "process",
       "collaboration"
     ],
-    "ipa": "/wɔkθɹaʊ/",
+    "ipa": "/ˈwɑːkθruː/",
+    "translation": "Walkthrough",
     "exampleSentence": "The onboarding walkthrough shows new users the three most important features."
   },
   {
@@ -864,7 +925,8 @@
       "anti-patterns",
       "clarity"
     ],
-    "ipa": "/wiːzʌl wɜrd/",
+    "ipa": "/ˈwiːzəl ˌwɜːrd/",
+    "translation": "Palabra evasiva",
     "exampleSentence": "Remove the word simply — it's a weasel word that makes users feel bad when they struggle."
   },
   {
@@ -878,7 +940,8 @@
       "style",
       "fundamentals"
     ],
-    "ipa": "/wɜrd ɪkɑnʌmiː/",
+    "ipa": "/ˈwɜːrd ɪˈkɑːnəmi/",
+    "translation": "Economía del lenguaje",
     "exampleSentence": "Word economy means every sentence earns its place on the page."
   }
 ]

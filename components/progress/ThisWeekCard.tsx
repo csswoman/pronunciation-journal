@@ -13,21 +13,21 @@ export function ThisWeekCard({ stats }: Props) {
 
   return (
     <ProgressCard>
-      <ProgressCardHeader icon={<TrendingUp size={16} />} title="This week" />
+      <ProgressCardHeader icon={<TrendingUp size={16} />} title="Esta semana" />
 
       {hasData ? (
-        <div className="mt-2 grid grid-cols-2 gap-3.5 sm:grid-cols-3">
-          <WeekStat value={stats.exercises7} label="Exercises" />
-          <WeekStat value={stats.newWords7} label="New words" />
+        <div className="mt-1.5 grid grid-cols-2 gap-2">
+          <WeekStat value={stats.exercises7} label="Ejercicios" />
+          <WeekStat value={stats.newWords7} label="Palabras nuevas" />
           <WeekStat
             value={stats.exercises7 > 0 ? Math.round(stats.exercises7 / 7) : 0}
-            label="Avg / day"
-            className="col-span-2 sm:col-span-1"
+            label="Promedio / día"
+            className="col-span-2"
           />
         </div>
       ) : (
-        <p className="py-3 text-center text-body-sm text-fg-muted">
-          Practice this week to see your activity summary.
+        <p className="py-2 text-center text-body-sm text-fg-muted">
+          Practica esta semana para ver el resumen de tu actividad.
         </p>
       )}
     </ProgressCard>
@@ -46,14 +46,14 @@ function WeekStat({
   return (
     <div
       className={[
-        'rounded-[var(--radius-md)] border border-border-subtle bg-surface-sunken px-4 py-4 text-center',
+        'rounded-[var(--radius-md)] border border-border-subtle bg-surface-sunken px-3 py-2.5 text-center',
         className,
       ]
         .filter(Boolean)
         .join(' ')}
     >
       <b className="block text-h3 leading-none text-primary">{value}</b>
-      <span className="mt-1.5 block font-kicker text-fg-subtle">
+      <span className="mt-1 block font-kicker text-fg-subtle">
         {label}
       </span>
     </div>

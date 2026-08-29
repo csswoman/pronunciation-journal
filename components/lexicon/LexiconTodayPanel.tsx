@@ -1,59 +1,89 @@
 import Link from "next/link";
-import { ArrowRight } from "@/components/icons";
 import type { LessonViewModel } from "@/lib/lexicon/types";
 
 interface LexiconTodayPanelProps {
   dueForReview: number;
   nextLesson: LessonViewModel | null;
+  dueWordLabels?: string[];
   progressUnavailable?: boolean;
 }
 
-export function LexiconTodayPanel({ dueForReview, nextLesson, progressUnavailable = false }: LexiconTodayPanelProps) {
+export function LexiconTodayPanel({
+  dueForReview,
+  nextLesson,
+  dueWordLabels = [],
+  progressUnavailable = false,
+}: LexiconTodayPanelProps) {
   const hasReview = dueForReview > 0;
+  if (!hasReview && !nextLesson && !progressUnavailable) return null;
+
   const href = progressUnavailable
     ? "/words"
     : hasReview
     ? "/practice/review"
     : nextLesson
-    ? `/lexicon/${nextLesson.id}/practice`
+    ? `/words/${nextLesson.id}/practice`
     : "/words";
+
   const title = progressUnavailable
-    ? "Explora mientras cargamos tu progreso"
+    ? "Explora el diccionario mientras cargamos tu progreso"
     : hasReview
-    ? `Tienes ${dueForReview} ${dueForReview === 1 ? "palabra" : "palabras"} para repasar`
+    ? `${dueForReview} ${dueForReview === 1 ? "palabra te espera" : "palabras te esperan"} hoy`
     : nextLesson
-      ? nextLesson.progress > 0 ? `Continúa con ${nextLesson.title}` : `Empieza con ${nextLesson.title}`
-      : "Elige una categoría para empezar";
+    ? nextLesson.progress > 0
+      ? `Continúa con ${nextLesson.title}`
+      : `Empieza con ${nextLesson.title}`
+    : "Elige una categoría para empezar";
+
+  const estMinutes = Math.max(1, Math.ceil(dueForReview * 0.2));
   const description = progressUnavailable
-    ? "Puedes consultar el diccionario. Reintenta cuando quieras volver a ver tu avance."
+    ? "Puedes consultar cualquier término o buscar por tema."
     : hasReview
-    ? "Una revisión breve hoy ayuda a recordar mañana."
+    ? `Unos ${estMinutes} ${estMinutes === 1 ? "minuto" : "minutos"}. Las que falles vuelven mañana.`
     : nextLesson
-      ? `${nextLesson.wordsCompleted} de ${nextLesson.totalWords} palabras en esta ruta.`
-      : "Explora el léxico y elige un tema que quieras usar.";
-  const note = progressUnavailable
-    ? "Tu avance sigue a salvo."
+    ? `${nextLesson.wordsCompleted} de ${nextLesson.totalWords} palabras dominadas en esta ruta.`
+    : "Explora el léxico por categorías.";
+
+  const buttonLabel = progressUnavailable
+    ? "Abrir diccionario"
     : hasReview
-    ? "Cada repaso hace que la palabra dure un poco más."
-    : nextLesson?.progress
-      ? "Retomar también cuenta."
-      : nextLesson
-        ? "Tu primera sesión puede ser breve."
-        : "Empieza por una palabra que quieras usar.";
+    ? "Repasar ahora"
+    : "Empezar ruta";
+
+  const visibleChips = dueWordLabels.slice(0, 4);
+  const remainingCount = Math.max(0, dueForReview - visibleChips.length);
+
   return (
-    <section className="words-lexicon__today" aria-labelledby="words-today-title">
-      <div className="words-lexicon__today-main">
-        <div className="words-lexicon__today-copy">
-          <p className="words-lexicon__today-kicker">Para hoy</p>
-          <h2 id="words-today-title">{title}</h2>
-          <p>{description}</p>
-          <span className="words-lexicon__today-note">{note}</span>
+    <section className="words-lexicon__review-hero" aria-labelledby="words-today-title">
+      <div className="words-lexicon__review-hero-body space-y-3">
+        <div className="space-y-1">
+          <h2 id="words-today-title" className="words-lexicon__review-hero-title">
+            {title}
+          </h2>
+          <p className="words-lexicon__review-hero-sub">{description}</p>
         </div>
+
+        {hasReview && visibleChips.length > 0 ? (
+          <div className="words-lexicon__review-hero-chips flex flex-wrap items-center gap-2 pt-1">
+            {visibleChips.map((word) => (
+              <span key={word} className="words-lexicon__review-chip">
+                {word}
+              </span>
+            ))}
+            {remainingCount > 0 ? (
+              <span className="words-lexicon__review-chip words-lexicon__review-chip--more">
+                +{remainingCount}
+              </span>
+            ) : null}
+          </div>
+        ) : null}
       </div>
-      <Link href={href} className="words-lexicon__today-cta">
-        {progressUnavailable ? "Abrir diccionario" : hasReview ? "Repasar palabras" : nextLesson ? nextLesson.progress > 0 ? "Continuar ruta" : "Aprender palabras nuevas" : "Explorar palabras"}
-        <ArrowRight size={17} aria-hidden />
-      </Link>
+
+      <div className="words-lexicon__review-hero-action shrink-0">
+        <Link href={href} className="words-lexicon__review-hero-btn">
+          {buttonLabel}
+        </Link>
+      </div>
     </section>
   );
 }

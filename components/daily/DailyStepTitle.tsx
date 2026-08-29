@@ -1,3 +1,8 @@
+// Planned structure:
+// <DailyStepTitle>
+//   plainTitle + formatted IPA badge
+// </DailyStepTitle>
+
 import { formatIpaDisplay } from '@/lib/lexicon/format-ipa'
 import { cn } from '@/lib/cn'
 
@@ -5,9 +10,9 @@ interface DailyStepTitleProps {
   title: string
   /** When set, rendered as a styled IPA badge instead of raw title text. */
   ipa?: string
-  /** Recessed pending rows — secondary ink so the active step leads. */
+  /** Recessed pending rows: secondary ink so the active step leads. */
   muted?: boolean
-  /** Entry/current step — title takes the theme accent surface. */
+  /** Entry/current step: title takes the theme accent surface. */
   emphasize?: boolean
 }
 

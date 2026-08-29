@@ -69,4 +69,34 @@ export const USEFUL_PHRASES_GUIDE: UsefulPhraseGroup[] = [
     purpose: 'Concluir o reflexionar',
     phrases: ['Looking back, ...', 'All in all, ...', 'What I learned is that...', 'In the end, ...'],
   },
+  {
+    purpose: 'Daily Standup (Ayer, Hoy y Bloqueos)',
+    phrases: [
+      'Yesterday I focused on...',
+      'I wrapped up the PR for...',
+      'Today I will be working on...',
+      'Currently I am blocked by...',
+      'No blockers on my end, ready for review.',
+    ],
+  },
+  {
+    purpose: 'Programación y Decisiones Técnicas',
+    phrases: [
+      'Under the hood, this implementation...',
+      'There is a trade-off between...',
+      'To handle edge cases, we can...',
+      'It might be worth considering...',
+      'We noticed a performance bottleneck in...',
+    ],
+  },
+  {
+    purpose: 'Small Talk y Coordinación con Compañeros',
+    phrases: [
+      'How is your day going so far?',
+      'Let’s touch base after the sync.',
+      'Feel free to ping me on Slack whenever.',
+      'I’m totally with you on that point.',
+      'Just a quick heads-up before deploying...',
+    ],
+  },
 ]

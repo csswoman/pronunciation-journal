@@ -1,4 +1,4 @@
-import { LEXICON_DOMAINS, domainForCategory } from "./domains";
+import { LEXICON_DOMAINS, domainForCategory, studyModeForCategory, type StudyMode } from "./domains";
 import type { LexiconDomainId } from "./types";
 
 export interface DomainProfile {
@@ -61,4 +61,27 @@ export function deriveDomainProfile(
     .sort((a, b) => b.wordCount - a.wordCount);
 
   return { domains, categories };
+}
+
+/**
+ * Resolves a lexicon word id (word_bank.source_ref) to its study mode.
+ *
+ * A word appearing in more than one category (rare, e.g. "etl" in both
+ * backend-infra and data-science) is treated as productive if *any* of its
+ * categories is productive — the safer default when modes disagree, since
+ * skipping a production exercise costs less than silently forcing spoken
+ * production on receptive/technical vocabulary.
+ *
+ * Returns null when the id doesn't resolve (not lexicon-sourced, or the
+ * index doesn't have it) — callers should treat null as "no opinion",
+ * not as a specific mode.
+ */
+export function resolveStudyMode(
+  sourceRef: string,
+  wordIndex: WordCategoryIndex,
+): StudyMode | null {
+  const categoryIds = wordIndex.get(sourceRef);
+  if (!categoryIds || categoryIds.length === 0) return null;
+  const modes = categoryIds.map(studyModeForCategory);
+  return modes.includes("productive") ? "productive" : "receptive";
 }

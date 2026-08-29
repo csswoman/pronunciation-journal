@@ -1,5 +1,5 @@
 // Planned structure:
-// <StudyTipDisclosure>  — a native <details>, closed by default. No state,
+// <StudyTipDisclosure>: native <details>, closed by default. No state,
 //   no selection, no persistence. Pure static guidance.
 
 export default function StudyTipDisclosure() {
@@ -13,14 +13,14 @@ export default function StudyTipDisclosure() {
       </summary>
 
       <div className="mt-3 flex flex-col gap-2 text-body-sm text-fg-muted">
-        <p>Una rutina de referencia — no es obligatoria:</p>
+        <p>Una rutina de referencia (no es obligatoria):</p>
         <ul className="flex flex-col gap-1 pl-4">
           <li className="list-disc">~15 min de repaso espaciado (tu plan del día)</li>
           <li className="list-disc">
             ~15 min de lectura y <em>shadowing</em>
           </li>
           <li className="list-disc">
-            ~30 min de inmersión (video, podcast, serie) — regístrala abajo
+            ~30 min de inmersión (video, podcast, serie); regístrala abajo
           </li>
         </ul>
         <p>

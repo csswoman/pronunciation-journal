@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { deriveDomainProfile, emptyDomainProfile } from "../domain-profile";
+import { deriveDomainProfile, emptyDomainProfile, resolveStudyMode } from "../domain-profile";
 
 describe("deriveDomainProfile", () => {
   it("returns an empty profile for no entries", () => {
@@ -42,7 +42,7 @@ describe("deriveDomainProfile", () => {
     ]);
     // Both categories are in the "engineering" domain — counts roll up together.
     expect(profile.domains).toEqual([
-      { id: "engineering", label: "Engineering", wordCount: 2 },
+      { id: "engineering", label: "Ingeniería", wordCount: 2 },
     ]);
   });
 
@@ -78,5 +78,31 @@ describe("deriveDomainProfile", () => {
         new Map(),
       ),
     ).not.toThrow();
+  });
+});
+
+describe("resolveStudyMode", () => {
+  it("resolves a single-category word to its domain's study mode", () => {
+    const wordIndex = new Map([["backpropagation", ["artificial-intelligence"]]]);
+    expect(resolveStudyMode("backpropagation", wordIndex)).toBe("receptive");
+  });
+
+  it("resolves a productive-category word to productive", () => {
+    const wordIndex = new Map([["salary-negotiation", ["professional"]]]);
+    expect(resolveStudyMode("salary-negotiation", wordIndex)).toBe("productive");
+  });
+
+  it("returns productive when a word's categories disagree", () => {
+    const wordIndex = new Map([["etl", ["backend-infra", "professional"]]]);
+    expect(resolveStudyMode("etl", wordIndex)).toBe("productive");
+  });
+
+  it("returns receptive when all of a word's categories agree", () => {
+    const wordIndex = new Map([["etl", ["backend-infra", "data-science"]]]);
+    expect(resolveStudyMode("etl", wordIndex)).toBe("receptive");
+  });
+
+  it("returns null for a word id absent from the index", () => {
+    expect(resolveStudyMode("unknown-word", new Map())).toBeNull();
   });
 });

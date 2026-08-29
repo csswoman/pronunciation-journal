@@ -63,6 +63,7 @@ export default function CoursePathPage({ levelParam }: CoursePathPageProps) {
               />
 
               <section
+                key={selectedLevel.id}
                 id={`course-level-${selectedLevel.id}`}
                 className="course-path__panel-enter course-path__panel-enter--selected"
                 aria-label={`Curso: ${selectedLevel.title}`}
@@ -101,7 +102,7 @@ export default function CoursePathPage({ levelParam }: CoursePathPageProps) {
               </section>
 
               <section className="course-path__aside-section" aria-label="Pronunciación">
-                <p className="course-path__aside-kicker">Pronunciación</p>
+                <p className="font-kicker text-fg-subtle m-0">Pronunciación</p>
                 <Link href="/courses/pronunciation" className="course-path__aside-link">
                   <MicVocal size={16} aria-hidden />
                   Ruta de pronunciación

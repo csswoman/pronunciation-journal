@@ -1,7 +1,10 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { Volume2, Heart, Plus, Check } from "@/components/icons";
+import { Heart, Plus, Check } from "@/components/icons";
+import Badge, { type BadgeVariant } from "@/components/ui/Badge";
+import { ListenButton } from "@/components/ui/ListenButton";
+import { PillButton } from "@/components/ui/PillButton";
 import { speak } from "@/lib/phoneme-practice/tts";
 import { formatIpaDisplay } from "@/lib/lexicon/format-ipa";
 import { cn } from "@/lib/cn";
@@ -23,24 +26,35 @@ interface WordCardProps {
   onAddToMyWords?: () => void;
 }
 
-const STATUS_CONFIG = {
+const STATUS_CONFIG: Record<
+  "learned" | "reviewing" | "new",
+  { label: string; variant: BadgeVariant; stateColor: string }
+> = {
   learned: {
-    label: "Learned",
+    label: "Aprendida",
+    variant: "success",
     stateColor: "var(--success)",
-    strength: 5,
   },
   reviewing: {
-    label: "Reviewing",
+    label: "En repaso",
+    variant: "warning",
     stateColor: "var(--warning)",
-    strength: 3,
   },
   new: {
-    label: "New",
+    label: "Nueva",
+    variant: "neutral",
     stateColor: "var(--text-tertiary)",
-    strength: 0,
   },
-} as const;
+};
 
+/**
+ * WordCard - Tarjeta individual de palabra del diccionario.
+ *
+ * Sub-componentes:
+ * - ListenButton (Reproducción de pronunciación por síntesis TTS)
+ * - Badge (Estado semántico de aprendizaje: Aprendida, En repaso, Nueva)
+ * - PillButton (Acción de marcado de aprendizaje y controles de favoritos)
+ */
 export function WordCard({
   word,
   partOfSpeech,
@@ -59,93 +73,107 @@ export function WordCard({
 }: WordCardProps) {
   const cfg = STATUS_CONFIG[status];
   const isLearned = status === "learned";
-  const meterStrength = isLearned ? cfg.strength : Math.max(cfg.strength, difficulty);
   const cardStateColor = cfg.stateColor;
 
   return (
     <article
-      className={cn("lexicon-area__card", view === "list" && "lexicon-area__card--list")}
+      className={cn(
+        "bg-surface-raised border border-border-subtle rounded-md p-5 flex flex-col justify-between gap-4 transition-all duration-150 ease-out-quart hover:border-border-default hover:shadow-xs",
+        view === "list" && "md:flex-row md:items-center"
+      )}
       style={{ "--card-state": cardStateColor } as CSSProperties}
     >
-      <div className="lexicon-area__card-top">
-        <div>
-          <p className="lexicon-area__card-word">{word}</p>
-          {ipa ? (
-            <p className="lexicon-area__card-ipa font-ipa">{formatIpaDisplay(ipa)}</p>
-          ) : null}
-        </div>
-        <span className="lexicon-area__card-pos lexicon-area__card-pos--top">{partOfSpeech}</span>
-      </div>
-
-      <div className={cn(view === "list" && "lexicon-area__card-body")}>
-
-        {translation ? <p className="lexicon-area__card-trans">{translation}</p> : null}
-
-        <p className="lexicon-area__card-def">{definition}</p>
-
-        {example ? <p className="lexicon-area__card-example">&ldquo;{example}&rdquo;</p> : null}
-      </div>
-
-      <div className="lexicon-area__card-foot">
-        <div
-          className="lexicon-area__meter"
-          title={cfg.label}
-          aria-label={cfg.label}
-        >
-          {Array.from({ length: 5 }).map((_, i) => (
-            <i key={i} className={i < meterStrength ? "is-on" : undefined} />
-          ))}
-          <span className="lexicon-area__meter-label" aria-hidden>{cfg.label}</span>
+      <div className="flex flex-col gap-2.5 min-w-0 flex-1">
+        {/* Encabezado: Palabra + Categoría Gramatical + IPA */}
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex flex-col gap-0.5 min-w-0">
+            <h3 className="text-h4 font-bold text-fg tracking-tight truncate">{word}</h3>
+            {ipa ? (
+              <span className="font-ipa text-body-sm font-medium text-primary tracking-wide">
+                {formatIpaDisplay(ipa)}
+              </span>
+            ) : null}
+          </div>
+          <span className="text-caption italic text-fg-subtle shrink-0 pt-0.5">{partOfSpeech}</span>
         </div>
 
-        <div className="lexicon-area__acts">
-          <button
-            type="button"
-            className="lexicon-area__act"
-            onClick={() => {
-              const text = [word, definition, example ? `For example: ${example}` : ""]
-                .filter(Boolean)
-                .join(". ");
-              speak(text, { rate: 0.9 });
-            }}
-            aria-label={`Listen to ${word}`}
-          >
-            <Volume2 size={14} />
-          </button>
-
-          {onAddToMyWords ? (
-            <button
-              type="button"
-              className="lexicon-area__act"
-              onClick={isInMyWords ? undefined : onAddToMyWords}
-              disabled={isInMyWords}
-              aria-label={isInMyWords ? "Already in My Words" : "Add to My Words"}
-            >
-              {isInMyWords ? <Check size={14} /> : <Plus size={14} />}
-            </button>
+        {/* Contenido: Traducción en español + Definición en inglés + Oración de ejemplo */}
+        <div className="flex flex-col gap-1.5 pt-1 text-body-sm">
+          {translation ? (
+            <p className="font-semibold text-fg leading-snug">{translation}</p>
           ) : null}
-
-          {onToggleFavorite ? (
-            <button
-              type="button"
-              className={cn("lexicon-area__act", isFavorite && "is-fav")}
-              onClick={onToggleFavorite}
-              aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
-            >
-              <Heart size={14} fill={isFavorite ? "currentColor" : "none"} />
-            </button>
+          <p className="text-fg-muted leading-relaxed">{definition}</p>
+          {example ? (
+            <p className="text-caption italic text-fg-subtle bg-surface-sunken px-3 py-2 rounded-sm border-l-2 border-primary-soft mt-1">
+              &ldquo;{example}&rdquo;
+            </p>
           ) : null}
+        </div>
+      </div>
 
-          <button
-            type="button"
-            className={cn("lexicon-area__act", isLearned && "is-done")}
-            onClick={onMarkLearned}
-            disabled={!onMarkLearned || isLearned}
-            aria-label={isLearned ? "Marked as learned" : "Mark as learned"}
-            title={isLearned ? "Learned" : "Mark learned"}
-          >
-            <Check size={14} />
-          </button>
+      {/* Pie de tarjeta organizado en 2 niveles */}
+      <div className="flex flex-col gap-3 pt-3 border-t border-border-subtle shrink-0">
+        <div className="flex items-center justify-between gap-2">
+          <Badge variant={cfg.variant} label={cfg.label} dot={status !== "new"} />
+          <span className="text-tiny font-mono text-fg-subtle">
+            Dif: {difficulty}/5
+          </span>
+        </div>
+
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1.5">
+            <ListenButton
+              iconOnly
+              onPlay={() => {
+                const text = [word, definition, example ? `For example: ${example}` : ""]
+                  .filter(Boolean)
+                  .join(". ");
+                speak(text, { rate: 0.9 });
+              }}
+              aria-label={`Escuchar ${word}`}
+            />
+
+            {onToggleFavorite ? (
+              <button
+                type="button"
+                onClick={onToggleFavorite}
+                aria-label={isFavorite ? "Eliminar de favoritos" : "Agregar a favoritos"}
+                className={cn(
+                  "inline-flex shrink-0 items-center justify-center w-8 h-8 rounded-full border border-border-subtle bg-transparent text-fg-muted cursor-pointer transition-colors duration-150 ease-out-quart focus-ring hover:bg-surface-sunken",
+                  isFavorite && "text-error border-error-soft bg-error-soft"
+                )}
+              >
+                <Heart size={14} fill={isFavorite ? "currentColor" : "none"} />
+              </button>
+            ) : null}
+
+            {onAddToMyWords ? (
+              <button
+                type="button"
+                onClick={isInMyWords ? undefined : onAddToMyWords}
+                disabled={isInMyWords}
+                aria-label={isInMyWords ? "En mis palabras" : "Agregar a mis palabras"}
+                className={cn(
+                  "inline-flex shrink-0 items-center justify-center w-8 h-8 rounded-full border border-border-subtle bg-transparent text-fg-muted cursor-pointer transition-colors duration-150 ease-out-quart focus-ring hover:bg-surface-sunken disabled:opacity-40 disabled:cursor-not-allowed"
+                )}
+              >
+                {isInMyWords ? <Check size={14} /> : <Plus size={14} />}
+              </button>
+            ) : null}
+          </div>
+
+          {onMarkLearned ? (
+            <PillButton
+              variant={isLearned ? "quiet" : "outline"}
+              size="sm"
+              icon={<Check size={14} />}
+              onClick={onMarkLearned}
+              disabled={isLearned}
+              aria-label={isLearned ? "Marcada como aprendida" : "Marcar como aprendida"}
+            >
+              {isLearned ? "Aprendida" : "Marcar"}
+            </PillButton>
+          ) : null}
         </div>
       </div>
     </article>
@@ -153,3 +181,5 @@ export function WordCard({
 }
 
 export type { WordCardProps };
+
+

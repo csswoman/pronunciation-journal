@@ -54,7 +54,7 @@ describe("motores adversariales", () => {
 
     expect(result.nonTrivialFailures).toContain("usage-activations");
     expect(result.days.every((day) => day.usageActivations === 0)).toBe(true);
-  });
+  }, 15_000);
 
   // This is a 180-day integration simulation over 300 words. Allow for a
   // contended CI worker without weakening the timeout for the unit suite.

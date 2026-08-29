@@ -1,5 +1,12 @@
 'use client'
 
+// Planned structure:
+// <DailyStepList>
+//   ol list of steps
+//     step item (DailyStepTitle, status indicators, CTA buttons)
+//   DailyThreadStrip (optional plan hints)
+// </DailyStepList>
+
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { ArrowRight, Check, ChevronDown } from "@/components/icons"
 import { DailyStepTitle } from './DailyStepTitle'
@@ -129,7 +136,7 @@ export default function DailyStepList({
           const status = getStepStatus(step.id)
           const isInProgress =
             activeId === step.id && status !== 'done' && status !== 'resolved'
-          // Entry point only when nothing is mid-session — avoid false "en curso".
+          // Entry point only when nothing is mid-session: avoid false "en curso".
           const isEntry =
             !activeId && i === entryIndex && status !== 'done' && status !== 'resolved'
           const visual = rowVisual(status, isInProgress, isEntry)

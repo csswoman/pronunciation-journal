@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen } from "@/components/icons";
+import { BookOpen, GraduationCap } from "@/components/icons";
 import Link from "next/link";
 
 export type WordsMode = "dictionary" | "learn";
@@ -9,7 +9,7 @@ export type WordsTabId = "lexicon" | "my-words";
 
 const TABS: { id: WordsMode; label: string; icon: typeof BookOpen }[] = [
   { id: "dictionary", label: "Diccionario", icon: BookOpen },
-  { id: "learn", label: "Aprender", icon: BookOpen },
+  { id: "learn", label: "Aprender", icon: GraduationCap },
 ];
 
 interface WordsTopbarProps {
@@ -22,25 +22,23 @@ export function WordsTopbar({
   lexiconCount,
 }: WordsTopbarProps) {
   return (
-    <div className="words-lexicon__topbar flex flex-wrap items-center justify-end gap-3">
-      <nav className="words-lexicon__seg flex gap-1 p-1 rounded-full" aria-label="Secciones de vocabulario">
-        {TABS.map(({ id, label, icon: Icon }) => {
-          const isActive = activeMode === id;
-          const href = id === "learn" ? "/words?mode=learn" : "/words";
-          return (
-            <Link
-              key={id}
-              href={href}
-              aria-label={id === "dictionary" ? `${label} (${lexiconCount} palabras)` : label}
-              aria-current={isActive ? "page" : undefined}
-              className={`words-lexicon__seg-btn${isActive ? " is-active" : ""}`}
-            >
-              <Icon size={15} strokeWidth={isActive ? 2 : 1.6} aria-hidden />
-              {label}
-            </Link>
-          );
-        })}
-      </nav>
-    </div>
+    <nav className="words-lexicon__seg flex gap-1 p-1 rounded-full shrink-0" aria-label="Secciones de vocabulario">
+      {TABS.map(({ id, label, icon: Icon }) => {
+        const isActive = activeMode === id;
+        const href = id === "learn" ? "/words?mode=learn" : "/words";
+        return (
+          <Link
+            key={id}
+            href={href}
+            aria-label={id === "dictionary" ? `${label} (${lexiconCount} palabras)` : label}
+            aria-current={isActive ? "page" : undefined}
+            className={`words-lexicon__seg-btn${isActive ? " is-active" : ""}`}
+          >
+            <Icon size={15} strokeWidth={isActive ? 2 : 1.6} aria-hidden />
+            {label}
+          </Link>
+        );
+      })}
+    </nav>
   );
 }

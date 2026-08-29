@@ -11,8 +11,8 @@
       "fundamentals"
     ],
     "exampleSentence": "A raised button has the affordance of something that can be pressed.",
-    "ipa": "/ʌfɔɹdʌns/",
-    "translation": "Affordance, invitación de uso"
+    "ipa": "/əˈfɔːrdəns/",
+    "translation": "Affordance"
   },
   {
     "id": "anatomy",
@@ -24,9 +24,9 @@
       "components",
       "documentation"
     ],
-    "ipa": "/ʌnætʌmiː/",
+    "ipa": "/əˈnætəmi/",
     "exampleSentence": "The anatomy diagram breaks the card component into its labeled parts.",
-    "translation": "Anatomía de componente"
+    "translation": "Anatomía"
   },
   {
     "id": "annotation",
@@ -38,9 +38,9 @@
       "handoff",
       "documentation"
     ],
-    "ipa": "/ænʌteɪʃʌn/",
+    "ipa": "/ˌænəˈteɪʃən/",
     "exampleSentence": "Add an annotation to explain the hover state before sending the design to dev.",
-    "translation": "Anotación de diseño"
+    "translation": "Anotación"
   },
   {
     "id": "accessibility",
@@ -53,9 +53,9 @@
       "inclusion",
       "fundamentals"
     ],
-    "ipa": "/æksɛsʌbɪlɪtiː/",
+    "ipa": "/ækˌsɛsəˈbɪləti/",
     "exampleSentence": "Good accessibility means the product works for everyone, not just most people.",
-    "translation": "Accesibilidad digital"
+    "translation": "Accesibilidad"
   },
   {
     "id": "affordance-map",
@@ -69,7 +69,7 @@
       "audit"
     ],
     "exampleSentence": "An affordance map helped us find interactive elements that weren't obvious enough.",
-    "ipa": "/ʌfɔɹdʌns mæp/",
+    "ipa": "/əˈfɔːrdəns mæp/",
     "translation": "Mapa de affordance"
   },
   {
@@ -82,7 +82,7 @@
       "research",
       "information-architecture"
     ],
-    "ipa": "/kɑɹd sɔɹtɪŋ/",
+    "ipa": "/ˈkɑːrd ˌsɔːrtɪŋ/",
     "exampleSentence": "Card sorting showed that users grouped settings very differently than we expected.",
     "translation": "Clasificación de tarjetas"
   },
@@ -98,7 +98,7 @@
       "fundamentals"
     ],
     "exampleSentence": "Chunking the form into three steps made the process feel less overwhelming.",
-    "ipa": "/tʃʌŋkɪŋ/",
+    "ipa": "/ˈtʃʌŋkɪŋ/",
     "translation": "Agrupación en bloques"
   },
   {
@@ -112,7 +112,7 @@
       "psychology",
       "fundamentals"
     ],
-    "ipa": "/kɑɡnɪtɪv loʊd/",
+    "ipa": "/ˈkɑːɡnətɪv ˈloʊd/",
     "exampleSentence": "Every extra option on the screen adds to the user's cognitive load.",
     "translation": "Carga cognitiva"
   },
@@ -127,7 +127,7 @@
       "color",
       "wcag"
     ],
-    "ipa": "/kɑntɹæst ɹeɪʃiːoʊ/",
+    "ipa": "/ˈkɑːntræst ˈreɪʃioʊ/",
     "exampleSentence": "The contrast ratio between the text and background fails the WCAG AA standard.",
     "translation": "Relación de contraste"
   },
@@ -142,7 +142,7 @@
       "typography",
       "fundamentals"
     ],
-    "ipa": "/kɑntɛnt haɪɜrɑɹkiː/",
+    "ipa": "/ˈkɑːntɛnt ˈhaɪərɑːrki/",
     "exampleSentence": "A clear content hierarchy guides the eye from the headline to the call to action.",
     "translation": "Jerarquía de contenido"
   },
@@ -157,7 +157,7 @@
       "emotion",
       "testing"
     ],
-    "ipa": "/dɪzaɪɹʌbɪlɪtiː tɛstɪŋ/",
+    "ipa": "/dɪˌzaɪərəˈbɪləti ˈtɛstɪŋ/",
     "exampleSentence": "Desirability testing showed users found the dark theme more professional.",
     "translation": "Prueba de deseabilidad"
   },
@@ -172,7 +172,7 @@
       "systems",
       "quality"
     ],
-    "ipa": "/dɪzaɪn dɛt/",
+    "ipa": "/dɪˈzaɪn ˈdɛt/",
     "exampleSentence": "Years of design debt meant every page had a slightly different button style.",
     "translation": "Deuda de diseño"
   },
@@ -188,8 +188,8 @@
       "handoff"
     ],
     "exampleSentence": "A clean design handoff means engineers don't have to guess the spacing values.",
-    "ipa": "/dɪzaɪn hændɔf/",
-    "translation": "Entrega a desarrollo, handoff"
+    "ipa": "/dɪˈzaɪn ˈhændˌɔːf/",
+    "translation": "Handoff"
   },
   {
     "id": "design-critique",
@@ -202,7 +202,7 @@
       "collaboration",
       "feedback"
     ],
-    "ipa": "/dɪzaɪn kɹʌtiːk/",
+    "ipa": "/dɪˈzaɪn krɪˈtiːk/",
     "exampleSentence": "A good design critique focuses on the problem first, not the proposed solution.",
     "translation": "Crítica de diseño"
   },
@@ -218,8 +218,8 @@
       "fundamentals"
     ],
     "exampleSentence": "Low discoverability means users find the feature by accident, not by looking.",
-    "ipa": "/dɪskʌvɜrʌbɪlʌtiː/",
-    "translation": "Descubribilidad de funciones"
+    "ipa": "/dɪˌskʌvərəˈbɪləti/",
+    "translation": "Descubribilidad"
   },
   {
     "id": "edge-case",
@@ -232,9 +232,9 @@
       "process",
       "fundamentals"
     ],
-    "ipa": "/ɛdʒ keɪs/",
+    "ipa": "/ˈɛdʒ ˈkeɪs/",
     "exampleSentence": "What does the empty state look like? That's an important edge case to design.",
-    "translation": "Caso extremo, caso límite"
+    "translation": "Caso límite"
   },
   {
     "id": "empty-state",
@@ -246,7 +246,7 @@
       "ui-patterns",
       "onboarding"
     ],
-    "ipa": "/ɛmptiː steɪt/",
+    "ipa": "/ˈɛmpti ˈsteɪt/",
     "exampleSentence": "The empty state should explain what goes here and how to add the first item.",
     "translation": "Estado vacío"
   },
@@ -260,7 +260,7 @@
       "ui-patterns",
       "feedback"
     ],
-    "ipa": "/ɛɹɜr steɪt/",
+    "ipa": "/ˈɛrər ˈsteɪt/",
     "exampleSentence": "Every form field needs an error state that tells the user exactly what's wrong.",
     "translation": "Estado de error"
   },
@@ -274,9 +274,9 @@
       "prototyping",
       "process"
     ],
-    "ipa": "/fʌdɛlʌtiː/",
+    "ipa": "/fɪˈdɛləti/",
     "exampleSentence": "Start with low fidelity to explore ideas quickly before committing to details.",
-    "translation": "Fidelidad de prototipo"
+    "translation": "Fidelidad"
   },
   {
     "id": "fitts-law",
@@ -290,7 +290,7 @@
       "motor"
     ],
     "exampleSentence": "Fitts's law explains why the submit button should be large and close to the form.",
-    "ipa": "/fɪtsʌz lɔ/",
+    "ipa": "/ˈfɪtsɪz ˈlɔː/",
     "translation": "Ley de Fitts"
   },
   {
@@ -304,9 +304,9 @@
       "fundamentals",
       "navigation"
     ],
-    "ipa": "/floʊ/",
+    "ipa": "/ˈfloʊ/",
     "exampleSentence": "Map the flow from landing page to checkout before designing any single screen.",
-    "translation": "Flujo de usuario"
+    "translation": "Flujo"
   },
   {
     "id": "gestalt",
@@ -319,9 +319,9 @@
       "visual",
       "perception"
     ],
-    "ipa": "/ɡʌʃtælt/",
+    "ipa": "/ɡəˈʃtɑːlt/",
     "exampleSentence": "Gestalt principles explain why elements close together feel like they belong together.",
-    "translation": "Principios de Gestalt"
+    "translation": "Gestalt"
   },
   {
     "id": "ghost-button",
@@ -333,9 +333,9 @@
       "ui-patterns",
       "components"
     ],
-    "ipa": "/ɡoʊst bʌtʌn/",
+    "ipa": "/ˈɡoʊst ˌbʌtən/",
     "exampleSentence": "Use a ghost button for secondary actions so the primary action stands out more.",
-    "translation": "Botón transparente, secundario"
+    "translation": "Botón fantasma"
   },
   {
     "id": "golden-ratio",
@@ -348,7 +348,7 @@
       "layout",
       "proportion"
     ],
-    "ipa": "/ɡoʊldʌn ɹeɪʃiːoʊ/",
+    "ipa": "/ˈɡoʊldən ˈreɪʃioʊ/",
     "exampleSentence": "The golden ratio can guide proportions in a layout to feel naturally balanced.",
     "translation": "Proporción áurea"
   },
@@ -362,7 +362,7 @@
       "layout",
       "fundamentals"
     ],
-    "ipa": "/ɡɹɪd sɪstʌm/",
+    "ipa": "/ˈɡrɪd ˌsɪstəm/",
     "exampleSentence": "The twelve-column grid system keeps every layout consistent across the product.",
     "translation": "Sistema de cuadrícula"
   },
@@ -377,9 +377,9 @@
       "testing",
       "methods"
     ],
-    "ipa": "/ɡɜrɪlʌ tɛstɪŋ/",
+    "ipa": "/ɡəˈrɪlə ˈtɛstɪŋ/",
     "exampleSentence": "Guerrilla testing in a coffee shop gave us five insights in under an hour.",
-    "translation": "Prueba de guerrilla"
+    "translation": "Prueba guerrilla"
   },
   {
     "id": "heuristic",
@@ -392,9 +392,9 @@
       "fundamentals",
       "nielsen"
     ],
-    "ipa": "/hjʊɹɪstɪk/",
+    "ipa": "/hjʊˈrɪstɪk/",
     "exampleSentence": "Jakob Nielsen's ten heuristics are a good starting point for any UI review.",
-    "translation": "Heurística de usabilidad"
+    "translation": "Heurística"
   },
   {
     "id": "heuristic-evaluation",
@@ -407,7 +407,7 @@
       "research",
       "methods"
     ],
-    "ipa": "/hjʊɹɪstɪk ɪvæljuːeɪʃʌn/",
+    "ipa": "/hjʊˈrɪstɪk ɪˌvæljuˈeɪʃən/",
     "exampleSentence": "A heuristic evaluation found three serious usability problems before any user testing.",
     "translation": "Evaluación heurística"
   },
@@ -422,9 +422,9 @@
       "layout",
       "fundamentals"
     ],
-    "ipa": "/haɪɜrɑɹkiː/",
+    "ipa": "/ˈhaɪərɑːrki/",
     "exampleSentence": "Strong visual hierarchy draws the eye to the most important action on the page.",
-    "translation": "Jerarquía visual"
+    "translation": "Jerarquía"
   },
   {
     "id": "hotspot",
@@ -436,9 +436,9 @@
       "prototyping",
       "interaction"
     ],
-    "ipa": "/hɑtspɑt/",
+    "ipa": "/ˈhɑːtsˌpɑːt/",
     "exampleSentence": "Add a hotspot to the menu icon so testers can navigate in the prototype.",
-    "translation": "Zona interactiva, hotspot"
+    "translation": "Hotspot"
   },
   {
     "id": "information-architecture",
@@ -451,7 +451,7 @@
       "navigation",
       "fundamentals"
     ],
-    "ipa": "/ɪnfɜrmeɪʃʌn ɑɹkʌtɛktʃɜr/",
+    "ipa": "/ˌɪnfərˈmeɪʃən ˈɑːrkətɛktʃər/",
     "exampleSentence": "Poor information architecture was why users couldn't find their account settings.",
     "translation": "Arquitectura de información"
   },
@@ -465,7 +465,7 @@
       "fundamentals",
       "discipline"
     ],
-    "ipa": "/ɪntɜrækʃʌn dɪzaɪn/",
+    "ipa": "/ˌɪntərˈækʃən dɪˈzaɪn/",
     "exampleSentence": "Interaction design defines how the panel animates in and what triggers it.",
     "translation": "Diseño de interacción"
   },
@@ -479,7 +479,7 @@
       "process",
       "fundamentals"
     ],
-    "ipa": "/ɪtɜreɪtɪv dɪzaɪn/",
+    "ipa": "/ˈɪtərətɪv dɪˈzaɪn/",
     "exampleSentence": "Iterative design got us from a rough idea to a tested solution in two weeks.",
     "translation": "Diseño iterativo"
   },
@@ -494,9 +494,9 @@
       "research",
       "frameworks"
     ],
-    "ipa": "/dʒɑbz tuː biː dʌn/",
+    "ipa": "/ˈdʒɑːbz tə bi ˈdʌn/",
     "exampleSentence": "The jobs-to-be-done framework helped us see that users hire the app to save time.",
-    "translation": "Marco Jobs To Be Done"
+    "translation": "Jobs to be done"
   },
   {
     "id": "journey-map",
@@ -509,7 +509,7 @@
       "strategy",
       "documentation"
     ],
-    "ipa": "/dʒɜrniː mæp/",
+    "ipa": "/ˈdʒɜːrni ˌmæp/",
     "exampleSentence": "The journey map revealed a frustrating gap between signup and the first real value.",
     "translation": "Mapa de experiencia"
   },
@@ -525,7 +525,7 @@
       "fundamentals"
     ],
     "exampleSentence": "High learnability means users can do basic tasks correctly on their first try.",
-    "ipa": "/lɜrnʌbɪlʌtiː/",
+    "ipa": "/ˌlɜːrnəˈbɪləti/",
     "translation": "Facilidad de aprendizaje"
   },
   {
@@ -539,7 +539,7 @@
       "cognition",
       "fundamentals"
     ],
-    "ipa": "/mɛntʌl mɑdʌl/",
+    "ipa": "/ˈmɛntəl ˈmɑːdəl/",
     "exampleSentence": "Match the UI to the user's mental model of how folders and files should work.",
     "translation": "Modelo mental"
   },
@@ -555,7 +555,7 @@
       "detail"
     ],
     "exampleSentence": "A small microinteraction on the save button confirms the action without interrupting.",
-    "ipa": "/maɪkɹoʊɪntɜrækʃʌn/",
+    "ipa": "/ˌmaɪkroʊˌɪntərˈækʃən/",
     "translation": "Microinteracción"
   },
   {
@@ -568,9 +568,9 @@
       "ui-patterns",
       "components"
     ],
-    "ipa": "/moʊdʌl/",
+    "ipa": "/ˈmoʊdəl/",
     "exampleSentence": "Use a modal for destructive actions so the user must consciously confirm.",
-    "translation": "Ventana modal"
+    "translation": "Modal"
   },
   {
     "id": "mvp",
@@ -584,7 +584,7 @@
       "product"
     ],
     "exampleSentence": "The MVP had only three features but was enough to validate the core idea.",
-    "ipa": "/ɛmviːpiː/",
+    "ipa": "/ˌɛm viː ˈpiː/",
     "translation": "Producto mínimo viable"
   },
   {
@@ -597,7 +597,7 @@
       "navigation",
       "ui-patterns"
     ],
-    "ipa": "/nævʌɡeɪʃʌn pætɜrn/",
+    "ipa": "/ˌnævəˈɡeɪʃən ˈpætərn/",
     "exampleSentence": "A tab bar is the right navigation pattern for apps with four to five main sections.",
     "translation": "Patrón de navegación"
   },
@@ -613,8 +613,8 @@
       "first-use"
     ],
     "exampleSentence": "Smooth onboarding is the single biggest predictor of long-term retention.",
-    "ipa": "/ɑnbɔɹdɪŋ/",
-    "translation": "Onboarding, inducción"
+    "ipa": "/ˈɑːnˌbɔːrdɪŋ/",
+    "translation": "Onboarding"
   },
   {
     "id": "pain-point",
@@ -626,7 +626,7 @@
       "research",
       "fundamentals"
     ],
-    "ipa": "/peɪn pɔɪnt/",
+    "ipa": "/ˈpeɪn ˌpɔɪnt/",
     "exampleSentence": "The biggest pain point users described was having to re-enter the same data twice.",
     "translation": "Punto de dolor"
   },
@@ -641,7 +641,7 @@
       "methods",
       "collaboration"
     ],
-    "ipa": "/pɑɹtɪsʌpʌtɔɹiː dɪzaɪn/",
+    "ipa": "/pɑːrˌtɪsəpəˈtɔːri dɪˈzaɪn/",
     "exampleSentence": "Participatory design sessions gave users a voice in shaping the new dashboard.",
     "translation": "Diseño participativo"
   },
@@ -656,9 +656,9 @@
       "fundamentals",
       "strategy"
     ],
-    "ipa": "/pɜrsoʊnʌ/",
+    "ipa": "/pərˈsoʊnə/",
     "exampleSentence": "The primary persona is a project manager who checks the tool three times a day.",
-    "translation": "Arquetipo de usuario, persona"
+    "translation": "Persona"
   },
   {
     "id": "progressive-disclosure",
@@ -671,7 +671,7 @@
       "cognitive",
       "ui-patterns"
     ],
-    "ipa": "/pɹʌɡɹɛsɪv dɪskloʊʒɜr/",
+    "ipa": "/prəˈɡrɛsɪv dɪsˈkloʊʒər/",
     "exampleSentence": "Progressive disclosure hides advanced settings until the user asks for them.",
     "translation": "Divulgación progresiva"
   },
@@ -686,9 +686,9 @@
       "fundamentals",
       "testing"
     ],
-    "ipa": "/pɹoʊtʌtaɪp/",
+    "ipa": "/ˈproʊtəˌtaɪp/",
     "exampleSentence": "We built a clickable prototype before writing a single line of production code.",
-    "translation": "Prototipo interactivo"
+    "translation": "Prototipo"
   },
   {
     "id": "proximity",
@@ -701,9 +701,9 @@
       "visual",
       "layout"
     ],
-    "ipa": "/pɹɑksɪmʌtiː/",
+    "ipa": "/prɑːkˈsɪməti/",
     "exampleSentence": "Proximity groups the label and input so the relationship is immediately clear.",
-    "translation": "Principio de proximidad"
+    "translation": "Proximidad"
   },
   {
     "id": "red-route",
@@ -716,9 +716,9 @@
       "prioritization",
       "ux"
     ],
-    "ipa": "/ɹɛd ɹuːt/",
+    "ipa": "/ˈrɛd ˌruːt/",
     "exampleSentence": "The checkout is a red route — nothing should block or slow it down.",
-    "translation": "Ruta crítica de usuario"
+    "translation": "Ruta crítica"
   },
   {
     "id": "responsive-design",
@@ -731,9 +731,9 @@
       "fundamentals",
       "mobile"
     ],
-    "ipa": "/ɹɪspɑnsɪv dɪzaɪn/",
+    "ipa": "/rɪˈspɑːnsɪv dɪˈzaɪn/",
     "exampleSentence": "Responsive design means the layout adapts gracefully from desktop to phone.",
-    "translation": "Diseño adaptativo, responsive"
+    "translation": "Diseño responsive"
   },
   {
     "id": "scaffold",
@@ -746,9 +746,9 @@
       "patterns",
       "cognitive"
     ],
-    "ipa": "/skæfʌld/",
+    "ipa": "/ˈskæfəld/",
     "exampleSentence": "The scaffold guides new users until they're comfortable enough to explore on their own.",
-    "translation": "Guía temporal de interfaz"
+    "translation": "Andamiaje"
   },
   {
     "id": "scannability",
@@ -762,8 +762,8 @@
       "content"
     ],
     "exampleSentence": "Good scannability means users find what they're looking for without reading everything.",
-    "ipa": "/skænʌbɪlʌtiː/",
-    "translation": "Escaneabilidad visual"
+    "ipa": "/ˌskænəˈbɪləti/",
+    "translation": "Escaneabilidad"
   },
   {
     "id": "serviceability",
@@ -777,8 +777,8 @@
       "product"
     ],
     "exampleSentence": "High serviceability means the team can patch and update the product quickly.",
-    "ipa": "/sɜrvʌsʌbɪlʌtiː/",
-    "translation": "Facilidad de mantenimiento"
+    "ipa": "/ˌsɜːrvəsəˈbɪləti/",
+    "translation": "Mantenibilidad"
   },
   {
     "id": "signifier",
@@ -792,8 +792,8 @@
       "don-norman"
     ],
     "exampleSentence": "The underline on a link is a signifier telling users they can click it.",
-    "ipa": "/sɪɡnʌfaɪɜr/",
-    "translation": "Significante visual"
+    "ipa": "/ˈsɪɡnəˌfaɪər/",
+    "translation": "Significante"
   },
   {
     "id": "skeleton-screen",
@@ -806,9 +806,9 @@
       "loading",
       "performance"
     ],
-    "ipa": "/skɛlʌtʌn skɹiːn/",
+    "ipa": "/ˈskɛlətən ˌskriːn/",
     "exampleSentence": "A skeleton screen keeps the layout stable while the content is still loading.",
-    "translation": "Pantalla esqueleto, skeleton"
+    "translation": "Pantalla esqueleto"
   },
   {
     "id": "skeuomorphism",
@@ -822,7 +822,7 @@
       "history"
     ],
     "exampleSentence": "Skeuomorphism made the early iPhone apps look like real-world objects on purpose.",
-    "ipa": "/skjuːoʊmɔɹfɪzʌm/",
+    "ipa": "/ˈskjuːəˌmɔːrfɪzəm/",
     "translation": "Esqueumorfismo"
   },
   {
@@ -836,9 +836,9 @@
       "layout",
       "ui-patterns"
     ],
-    "ipa": "/stɪkiː ɛlʌmʌnt/",
+    "ipa": "/ˈstɪki ˈɛləmənt/",
     "exampleSentence": "The sticky element keeps the navigation bar visible as the user scrolls down.",
-    "translation": "Elemento fijo, sticky"
+    "translation": "Elemento sticky"
   },
   {
     "id": "task-flow",
@@ -851,7 +851,7 @@
       "ia",
       "fundamentals"
     ],
-    "ipa": "/tæsk floʊ/",
+    "ipa": "/ˈtæsk ˌfloʊ/",
     "exampleSentence": "Map the task flow for resetting a password before designing any single screen.",
     "translation": "Flujo de tarea"
   },
@@ -867,7 +867,7 @@
       "methods"
     ],
     "exampleSentence": "The think-aloud protocol revealed that users were confused by the icon's meaning.",
-    "ipa": "/θɪŋkʌlaʊd pɹoʊtʌkɑl/",
+    "ipa": "/ˈθɪŋk əˌlaʊd ˈproʊtəˌkɑːl/",
     "translation": "Pensamiento en voz alta"
   },
   {
@@ -881,9 +881,9 @@
       "feedback",
       "components"
     ],
-    "ipa": "/toʊst/",
+    "ipa": "/ˈtoʊst/",
     "exampleSentence": "A toast message in the corner confirms the file was saved without interrupting the user.",
-    "translation": "Notificación toast"
+    "translation": "Toast"
   },
   {
     "id": "tooltip",
@@ -897,8 +897,8 @@
       "feedback"
     ],
     "exampleSentence": "A tooltip explains what the icon button does when the user hovers over it.",
-    "ipa": "/tuːltɪp/",
-    "translation": "Información flotante, tooltip"
+    "ipa": "/ˈtuːlˌtɪp/",
+    "translation": "Tooltip"
   },
   {
     "id": "tree-testing",
@@ -911,9 +911,9 @@
       "ia",
       "navigation"
     ],
-    "ipa": "/tɹiː tɛstɪŋ/",
+    "ipa": "/ˈtriː ˌtɛstɪŋ/",
     "exampleSentence": "Tree testing showed that most users looked for billing under Account, not Settings.",
-    "translation": "Prueba de árbol de navegación"
+    "translation": "Prueba de árbol"
   },
   {
     "id": "usability-testing",
@@ -927,7 +927,7 @@
       "fundamentals"
     ],
     "exampleSentence": "Five sessions of usability testing surfaced the three most critical problems.",
-    "ipa": "/juːzʌbɪlʌtiː tɛstɪŋ/",
+    "ipa": "/ˌjuːzəˈbɪləti ˈtɛstɪŋ/",
     "translation": "Prueba de usabilidad"
   },
   {
@@ -941,7 +941,7 @@
       "interaction",
       "fundamentals"
     ],
-    "ipa": "/juːzɜr floʊ/",
+    "ipa": "/ˈjuːzər ˌfloʊ/",
     "exampleSentence": "The user flow diagram maps every path from signup to the first successful action.",
     "translation": "Flujo de usuario"
   },
@@ -956,7 +956,7 @@
       "agile",
       "product"
     ],
-    "ipa": "/juːzɜr stɔɹiː/",
+    "ipa": "/ˈjuːzər ˌstɔːri/",
     "exampleSentence": "Write a user story for each feature so the team knows who it's for and why.",
     "translation": "Historia de usuario"
   },
@@ -971,9 +971,9 @@
       "strategy",
       "value"
     ],
-    "ipa": "/juːtɪlʌtiː/",
+    "ipa": "/juːˈtɪləti/",
     "exampleSentence": "A feature with low utility that is hard to use will not survive the next redesign.",
-    "translation": "Utilidad de producto"
+    "translation": "Utilidad"
   },
   {
     "id": "validation",
@@ -986,9 +986,9 @@
       "feedback",
       "ui-patterns"
     ],
-    "ipa": "/vælʌdeɪʃʌn/",
+    "ipa": "/ˌvælɪˈdeɪʃən/",
     "exampleSentence": "Inline validation tells users about a problem before they submit the whole form.",
-    "translation": "Validación de entrada"
+    "translation": "Validación"
   },
   {
     "id": "visual-weight",
@@ -1001,7 +1001,7 @@
       "layout",
       "composition"
     ],
-    "ipa": "/vɪʒʌwʌl weɪt/",
+    "ipa": "/ˈvɪʒuəl ˈweɪt/",
     "exampleSentence": "The primary button has more visual weight than the secondary one to stand out.",
     "translation": "Peso visual"
   },
@@ -1017,7 +1017,7 @@
       "spatial"
     ],
     "exampleSentence": "Breadcrumbs are a classic wayfinding tool that shows users where they are.",
-    "ipa": "/weɪfaɪndɪŋ/",
+    "ipa": "/ˈweɪˌfaɪndɪŋ/",
     "translation": "Orientación espacial"
   },
   {
@@ -1032,8 +1032,8 @@
       "wcag"
     ],
     "exampleSentence": "Every color combination in the UI needs to pass the WCAG AA contrast ratio.",
-    "ipa": "/dʌbʌljuːsiːeɪdʒiː/",
-    "translation": "Pautas de accesibilidad WCAG"
+    "ipa": "/ˌdʌbəljuː siː eɪ ˈdʒiː/",
+    "translation": "WCAG"
   },
   {
     "id": "whitespace",
@@ -1047,7 +1047,7 @@
       "fundamentals"
     ],
     "exampleSentence": "More whitespace around the headline made the page feel cleaner and more focused.",
-    "ipa": "/waɪtspeɪs/",
+    "ipa": "/ˈwaɪtˌspeɪs/",
     "translation": "Espacio en blanco"
   },
   {
@@ -1062,8 +1062,8 @@
       "fundamentals"
     ],
     "exampleSentence": "A wireframe focuses on layout and content without getting distracted by color.",
-    "ipa": "/waɪɹfɹeɪm/",
-    "translation": "Esquema preliminar, wireframe"
+    "ipa": "/ˈwaɪərˌfreɪm/",
+    "translation": "Wireframe"
   },
   {
     "id": "wizard",
@@ -1076,9 +1076,9 @@
       "onboarding",
       "forms"
     ],
-    "ipa": "/wɪzɜrd/",
+    "ipa": "/ˈwɪzərd/",
     "exampleSentence": "A wizard breaks the complex account setup into six manageable steps.",
-    "translation": "Asistente paso a paso, wizard"
+    "translation": "Wizard"
   },
   {
     "id": "zero-state",
@@ -1091,9 +1091,9 @@
       "ui-patterns",
       "first-use"
     ],
-    "ipa": "/zɪɹoʊ steɪt/",
+    "ipa": "/ˈzɪroʊ ˈsteɪt/",
     "exampleSentence": "The zero state is the perfect moment to guide users to their first action.",
-    "translation": "Estado inicial sin datos"
+    "translation": "Estado cero"
   },
   {
     "id": "z-pattern",
@@ -1107,8 +1107,8 @@
       "layout"
     ],
     "exampleSentence": "The hero section uses a Z-pattern layout to lead the eye toward the CTA.",
-    "ipa": "/ziːpætɜrn/",
-    "translation": "Patrón de lectura en Z"
+    "ipa": "/ˈziːˌpætərn/",
+    "translation": "Patrón en Z"
   },
   {
     "id": "f-pattern",
@@ -1122,8 +1122,8 @@
       "research"
     ],
     "exampleSentence": "F-pattern reading means the most important content should sit on the left side.",
-    "ipa": "/ɛfpætɜrn/",
-    "translation": "Patrón de lectura en F"
+    "ipa": "/ˈɛfˌpætərn/",
+    "translation": "Patrón en F"
   },
   {
     "id": "above-the-fold",
@@ -1136,9 +1136,9 @@
       "strategy",
       "content"
     ],
-    "ipa": "/ʌbʌv ðʌ foʊld/",
+    "ipa": "/əˈbʌv ðə ˈfoʊld/",
     "exampleSentence": "Put the main call to action above the fold so it's visible without scrolling.",
-    "translation": "Parte superior visible"
+    "translation": "Sobre el pliegue"
   },
   {
     "id": "breadcrumb",
@@ -1151,9 +1151,9 @@
       "ui-patterns",
       "ia"
     ],
-    "ipa": "/bɹɛdkɹʌm/",
+    "ipa": "/ˈbrɛdˌkrʌm/",
     "exampleSentence": "A breadcrumb trail helps users navigate back from a deep page in the hierarchy.",
-    "translation": "Miga de pan, breadcrumb"
+    "translation": "Miga de pan"
   },
   {
     "id": "call-to-action",
@@ -1166,9 +1166,9 @@
       "conversion",
       "content"
     ],
-    "ipa": "/kɔl tuː ækʃʌn/",
+    "ipa": "/ˈkɔːl tə ˈækʃən/",
     "exampleSentence": "The call to action should be the most visually prominent element on the page.",
-    "translation": "Llamada a la acción, CTA"
+    "translation": "Llamada a la acción"
   },
   {
     "id": "dark-pattern",
@@ -1181,9 +1181,9 @@
       "patterns",
       "manipulation"
     ],
-    "ipa": "/dɑɹk pætɜrn/",
+    "ipa": "/ˈdɑːrk ˈpætərn/",
     "exampleSentence": "A pre-checked newsletter box is a common dark pattern in signup flows.",
-    "translation": "Patrón oscuro, engañoso"
+    "translation": "Patrón oscuro"
   },
   {
     "id": "feedback-loop",
@@ -1196,7 +1196,7 @@
       "systems",
       "fundamentals"
     ],
-    "ipa": "/fiːdbæk luːp/",
+    "ipa": "/ˈfiːdbæk ˌluːp/",
     "exampleSentence": "A short feedback loop between users and the team keeps the product on the right track.",
     "translation": "Bucle de retroalimentación"
   }

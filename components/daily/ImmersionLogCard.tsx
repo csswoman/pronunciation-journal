@@ -1,5 +1,15 @@
 'use client';
 
+// Planned structure:
+// <ImmersionLogCard>
+//   header (icon, title, category label)
+//   description
+//   mediaType buttons
+//   minutes selector
+//   notes input
+//   save button
+// </ImmersionLogCard>
+
 import { useState } from 'react';
 import { Clapperboard, Check, Timer } from '@/components/icons';
 import Button from '@/components/ui/Button';
@@ -36,7 +46,7 @@ export function ImmersionLogCard({ onLogImmersion }: ImmersionLogCardProps) {
             Registrar Inmersión Externa (Input Libre)
           </h3>
         </div>
-        <span className="text-tiny text-fg-muted">Krashen</span>
+        <span className="text-tiny text-fg-muted">Comprensión e inmersión</span>
       </div>
 
       <p className="text-tiny text-fg-muted">
@@ -77,7 +87,7 @@ export function ImmersionLogCard({ onLogImmersion }: ImmersionLogCardProps) {
             onClick={() => setMinutes(m)}
             className={`rounded px-2.5 py-1 font-mono text-tiny font-medium transition-colors focus-ring ${
               minutes === m
-                ? 'bg-primary text-white font-bold'
+                ? 'bg-primary text-on-primary font-bold'
                 : 'bg-surface-sunken text-fg-muted hover:bg-surface-raised border border-border-default'
             }`}
           >

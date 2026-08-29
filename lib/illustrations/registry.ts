@@ -23,6 +23,18 @@ import DomainDictionary from "@/components/illustrations/looking-up-word-diction
 import DomainProgress from "@/components/illustrations/staircase-growth.svg";
 import DomainTip from "@/components/illustrations/bulb.svg";
 
+// ── Lexicon categories (/words category cards) ──────────────────────────────
+import CategoryAi from "@/components/illustrations/ai-robot.svg";
+import CategoryBackend from "@/components/illustrations/backend.svg";
+import CategoryCloud from "@/components/illustrations/cloud.svg";
+import CategoryDataScience from "@/components/illustrations/data-science.svg";
+import CategoryFrontend from "@/components/illustrations/frontend.svg";
+import CategoryUxDesign from "@/components/illustrations/ux-design.svg";
+import CategoryDesignSystems from "@/components/illustrations/design-system.svg";
+import CategoryProfessional from "@/components/illustrations/professional-english.svg";
+import CategoryTechnicalWriting from "@/components/illustrations/tech-writing.svg";
+import CategoryPersonalInterview from "@/components/illustrations/portfolio.svg";
+
 export type IllustrationKey =
   // empty states
   | "emptyTracking"
@@ -42,7 +54,18 @@ export type IllustrationKey =
   | "domainWriting"
   | "domainDictionary"
   | "domainProgress"
-  | "domainTip";
+  | "domainTip"
+  // lexicon categories
+  | "categoryAi"
+  | "categoryBackend"
+  | "categoryCloud"
+  | "categoryDataScience"
+  | "categoryFrontend"
+  | "categoryUxDesign"
+  | "categoryDesignSystems"
+  | "categoryProfessional"
+  | "categoryTechnicalWriting"
+  | "categoryPersonalInterview";
 
 type IllustrationComponent = React.FC<React.SVGProps<SVGSVGElement>>;
 
@@ -76,6 +99,16 @@ export const ILLUSTRATIONS: Record<IllustrationKey, IllustrationComponent | null
   domainDictionary: DomainDictionary,
   domainProgress: DomainProgress,
   domainTip: DomainTip,
+  categoryAi: CategoryAi,
+  categoryBackend: CategoryBackend,
+  categoryCloud: CategoryCloud,
+  categoryDataScience: CategoryDataScience,
+  categoryFrontend: CategoryFrontend,
+  categoryUxDesign: CategoryUxDesign,
+  categoryDesignSystems: CategoryDesignSystems,
+  categoryProfessional: CategoryProfessional,
+  categoryTechnicalWriting: CategoryTechnicalWriting,
+  categoryPersonalInterview: CategoryPersonalInterview,
 };
 
 export function getIllustration(key: IllustrationKey): IllustrationComponent {

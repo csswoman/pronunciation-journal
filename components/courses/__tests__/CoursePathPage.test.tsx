@@ -71,8 +71,8 @@ describe("CoursePathPage", () => {
     render(<CoursePathPage />);
 
     expect(screen.queryByRole("heading", { name: "Ruta" })).not.toBeInTheDocument();
-    expect(screen.getAllByRole("link", { name: "Prueba de nivel" })[0]).toHaveAttribute("href", "/assessment");
-    expect(screen.getAllByRole("link", { name: "Comprobar nivel" })[0]).toHaveAttribute(
+    expect(screen.getAllByRole("link", { name: "Test de ubicación" })[0]).toHaveAttribute("href", "/assessment");
+    expect(screen.getAllByRole("link", { name: "Checkpoint del nivel" })[0]).toHaveAttribute(
       "href",
       "/assessment?mode=checkpoint&level=a1",
     );

@@ -24,15 +24,15 @@ beforeEach(() => {
 })
 
 describe('MiniLessonComplete', () => {
-  it('records completion when Mark as read is clicked', async () => {
+  it('records completion when Marcar como leída is clicked', async () => {
     render(<MiniLessonComplete slug="silent-letters" />)
 
-    fireEvent.click(screen.getByRole('button', { name: 'Mark as read' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Marcar como leída' }))
 
     await waitFor(() => {
       expect(recordLessonCompleteMock).toHaveBeenCalledWith('mini-lessons', 'silent-letters')
     })
-    expect(screen.getByRole('status')).toHaveTextContent('Lesson marked as read')
+    expect(screen.getByRole('status')).toHaveTextContent('Lección completada')
   })
 
   it('does not write again when already complete', async () => {
@@ -40,7 +40,7 @@ describe('MiniLessonComplete', () => {
     render(<MiniLessonComplete slug="silent-letters" />)
 
     await waitFor(() => {
-      expect(screen.getByRole('status')).toHaveTextContent('Lesson marked as read')
+      expect(screen.getByRole('status')).toHaveTextContent('Lección completada')
     })
 
     expect(recordLessonCompleteMock).not.toHaveBeenCalled()

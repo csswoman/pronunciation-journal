@@ -1,5 +1,10 @@
 export const dynamic = 'force-dynamic'
 
+// Planned structure:
+// <DailyPage>
+//   <DailyChecklist /> (loads todays lesson, streak, step query param)
+// </DailyPage>
+
 import DailyChecklist, { type ConceptLesson } from '@/components/daily/DailyChecklist'
 import { getTodaysMiniLesson } from '@/lib/content/lessons'
 import { getDailyStreak } from '@/lib/daily/streak'

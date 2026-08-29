@@ -1,19 +1,11 @@
-| Task | Status | Description |
-|---|---|---|
-| B1 | Done | Selector de adaptador de voz según capacidad (WebSpeech vs Gemini fallback unificado) |
-| B2 | Done | Mecanismo surfaces en capabilities.ts (ortogonal a status, validador y selector) |
-| B3 | Done | Reparto diaria / práctica libre (match_pairs, sentence_dictation solo free_practice, multiple_choice solo diagnostic) |
-| B4 | Done | Feedback inmediato y visible en pasos 1 y 2 de la diaria (minimal pairs y comparación audio) |
-| B5 | Done | Reorganizar el hub de práctica libre en 4 puertas (Sonidos, Palabras, Leer y escuchar, Jugar) |
-| B6 | Done | Plaza rotativa en el paso 5 de la diaria (mission-cadence rotativo) |
-| B7 | Done | Nuevos ejercicios Fase 1: Rodeo (circumlocución) y Transformación hablada |
-| B10 | Done | Modificaciones a ejercicios existentes (reorder_words tiempo/longitud, fill_blank sin palabra, MC max 3) |
-| B11 | Done | Contexto de aprendizaje para la IA (coach recibe lección hoy, CEFR, dudas) |
-| B8 | Done | Nuevos ejercicios Fase 2: Narración en pasado y Respuesta sin preparación |
-| B9 | Done | Ejercicio de conectores / Justificación con rúbrica estrecha |
-| B12 | Done | Dificultad por nivel CEFR en generadores |
-| B13 | Done | Reto semanal de habla acumulativo |
-| B14 | Done | Mapa visual de conocimiento / progreso por nivel |
-
-
-
+| Task | Status | Details |
+| --- | --- | --- |
+| 1. Fix ad-hoc CTA styles in `page.tsx` | Done | Replaced hand-rolled link CTA with canonical `Button` component |
+| 2. Refactor `ProgressCard.tsx` tokens & radii | Done | Updated radius to `rounded-lg` and fixed `bg-[var(--hue-icon-bg)]` to `bg-primary-soft` |
+| 3. Fix tokens & accessibility in `StreakCard.tsx` | Done | Replaced `--stage-pairs` with `--accent-2`, fixed shadow, added ARIA label for `WeekDots` |
+| 4. Fix touch targets & ARIA in `DailyCompletionRate.tsx` | Done | Increased range button touch targets (`min-h-[36px]`), added heatmap cell ARIA labels |
+| 5. Fix tokens & SVG ARIA in `AccuracyTrend.tsx` | Done | Replaced `--warning-deco` with `--warning`, added SVG `role="img"` and `aria-label` |
+| 6. Fix touch targets & tabs in `LevelConceptsProgressCard.tsx` | Done | Set level button targets to min 44px, connected tabs and tabpanels via `id` and `aria-controls` |
+| 7. Fix tokens in `SkillProfileCard.tsx` & `CanSayNowCard.tsx` | Done | Replaced `--warning-deco` with `--warning`, normalized card radii to `rounded-lg` |
+| 8. Remove `+XP` gamification in `ActivityHistoryCard.tsx` | Done | Removed `+{session.xpEarned} XP` text to eliminate Duolingo-style gamification |
+| 9. Verification & Audits | Done | All checks passed: `pnpm type-check`, `pnpm lint`, `pnpm lint:design-tokens`, `pnpm audit:hard-rules`, `pnpm test` (683 test files, 4068 tests) |

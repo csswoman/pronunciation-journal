@@ -100,6 +100,6 @@ describe('fluencyComparisonLabel', () => {
       reading: 20,
     }
     const cur = { ...prev, pronunciation: 50, vocabulary: 50 }
-    expect(fluencyComparisonLabel(cur, prev)).toBe('Improving this week')
+    expect(fluencyComparisonLabel(cur, prev)).toBe('Mejorando esta semana')
   })
 })

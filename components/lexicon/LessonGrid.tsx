@@ -6,14 +6,21 @@ interface LessonGridProps {
   loading?: boolean;
   onLessonClick?: (lessonId: string) => void;
   compact?: boolean;
+  nextLessonId?: string;
 }
 
-export function LessonGrid({ lessons, loading = false, onLessonClick, compact = false }: LessonGridProps) {
+export function LessonGrid({
+  lessons,
+  loading = false,
+  onLessonClick,
+  compact = false,
+  nextLessonId,
+}: LessonGridProps) {
   if (loading) {
     return (
-      <div className={compact ? "grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-3" : "grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"}>
-        {[...Array(6)].map((_, i) => (
-          <div key={i} className="h-64 rounded-lg bg-surface-raised animate-pulse" />
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        {[...Array(4)].map((_, i) => (
+          <div key={i} className="h-24 rounded-2xl bg-surface-raised animate-pulse border border-border-subtle" />
         ))}
       </div>
     );
@@ -21,18 +28,19 @@ export function LessonGrid({ lessons, loading = false, onLessonClick, compact = 
 
   if (lessons.length === 0) {
     return (
-      <div className="text-center py-12">
+      <div className="text-center py-8">
         <p className="text-fg-muted text-body-sm">Todavía no hay categorías aquí.</p>
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
       {lessons.map((lesson) => (
         <LessonCard
           key={lesson.id}
           {...lesson}
+          isNext={lesson.id === nextLessonId}
           onClick={onLessonClick}
           compact={compact}
         />

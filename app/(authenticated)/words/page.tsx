@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { getWordsPageLexicon } from "@/lib/lexicon/categories";
+import { studyModeForCategory } from "@/lib/lexicon/domains";
 import {
   countWordsDueForReview,
   getLexiconProgressByCategory,
@@ -8,6 +9,7 @@ import {
 } from "@/lib/word-bank/server-queries";
 import { getSupabaseServerUserId } from "@/lib/supabase/session";
 import { WordsClient } from "@/components/words/WordsClient";
+import PageLayout from "@/components/layout/PageLayout";
 import type { LessonViewModel } from "@/lib/lexicon/types";
 
 export const dynamic = "force-dynamic";
@@ -51,6 +53,7 @@ async function WordsContent() {
       wordsReviewing: reviewing,
       progress,
       tags: previewTags.get(cat.id) ?? [],
+      studyMode: studyModeForCategory(cat.id),
     };
   });
 
@@ -75,25 +78,33 @@ async function WordsContent() {
 
 function WordsSkeleton() {
   return (
-    <div className="words-lexicon p-4">
-      <div className="flex items-center justify-between mb-6">
-        <div className="shimmer h-8 w-32 rounded-lg bg-surface-sunken" />
-        <div className="shimmer h-9 w-48 rounded-full bg-surface-sunken" />
-      </div>
-      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_21rem]">
-        <div className="space-y-4">
-          <div className="shimmer h-6 w-64 rounded-md bg-surface-sunken" />
-          <div className="shimmer h-4 w-80 rounded-md bg-surface-sunken" />
-          <div className="shimmer h-14 w-full rounded-xl bg-surface-sunken" />
-          <div className="grid grid-cols-2 gap-4 pt-4">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="shimmer h-32 rounded-lg bg-surface-sunken" />
-            ))}
+    <PageLayout archetype="catalog">
+      <div className="words-lexicon space-y-6" aria-busy="true" aria-label="Cargando diccionario">
+        <div className="flex items-center justify-between pb-2">
+          <div className="space-y-2">
+            <div className="h-4 w-28 animate-pulse rounded bg-surface-sunken" />
+            <div className="h-8 w-44 animate-pulse rounded-md bg-surface-sunken" />
           </div>
+          <div className="h-10 w-52 animate-pulse rounded-full bg-surface-sunken" />
         </div>
-        <div className="shimmer h-56 rounded-lg bg-surface-sunken" />
+        <div className="words-lexicon__dictionary-layout mt-4">
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <div className="h-3 w-20 animate-pulse rounded bg-surface-sunken" />
+              <div className="h-7 w-56 animate-pulse rounded-md bg-surface-sunken" />
+              <div className="h-4 w-72 animate-pulse rounded bg-surface-sunken" />
+            </div>
+            <div className="h-14 w-full animate-pulse rounded-md border border-border-subtle bg-surface-raised" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="h-28 animate-pulse rounded-md border border-border-subtle bg-surface-raised" />
+              ))}
+            </div>
+          </div>
+          <div className="h-52 animate-pulse rounded-md border border-border-subtle bg-surface-raised" />
+        </div>
       </div>
-    </div>
+    </PageLayout>
   );
 }
 

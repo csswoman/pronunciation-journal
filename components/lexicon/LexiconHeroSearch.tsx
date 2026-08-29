@@ -19,7 +19,6 @@ interface LexiconHeroSearchProps {
 
 export function LexiconHeroSearch({
   recentWords: recentFallback = [],
-  dueWords = [],
   onAddWord,
 }: LexiconHeroSearchProps) {
   const router = useRouter();
@@ -68,7 +67,7 @@ export function LexiconHeroSearch({
 
   const openCategory = useCallback(
     (hit: LexiconSearchHit) => {
-      router.push(`/lexicon/${hit.categoryId}`);
+      router.push(`/words/${hit.categoryId}`);
     },
     [router]
   );
@@ -85,12 +84,22 @@ export function LexiconHeroSearch({
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      // The shell owns Cmd/Ctrl+K. Its document listener prevents this event
-      // before it bubbles here, avoiding two search surfaces opening at once.
-      if (e.defaultPrevented) return;
-      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+      const active = document.activeElement;
+      const isEditing =
+        active?.tagName === "INPUT" ||
+        active?.tagName === "TEXTAREA" ||
+        (active as HTMLElement)?.isContentEditable;
+
+      if (isEditing) return;
+
+      if (
+        e.key === "/" ||
+        e.code === "Slash" ||
+        ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k")
+      ) {
         e.preventDefault();
         inputRef.current?.focus();
+        inputRef.current?.select();
       }
     };
     window.addEventListener("keydown", onKey);
@@ -117,7 +126,7 @@ export function LexiconHeroSearch({
             ref={inputRef}
             type="search"
             className="words-lexicon__search-input"
-            placeholder="Ej.: understand, workflow, travel"
+            placeholder="Busca una palabra: definición, pronunciación y ejemplos"
             value={query}
             autoComplete="off"
             aria-label="Buscar palabras"
@@ -151,7 +160,7 @@ export function LexiconHeroSearch({
             }}
           />
           <span className="words-lexicon__search-kbd" aria-hidden>
-            {isMac ? "⌘K" : "Ctrl+K"}
+            {isMac ? "⌘K" : "Ctrl K"}
           </span>
         </div>
 
@@ -166,7 +175,7 @@ export function LexiconHeroSearch({
 
       <LexiconQuickChips
         recentWords={recentWords}
-        dueWords={dueWords}
+        dueWords={[]}
         onChipPick={chipPick}
       />
 

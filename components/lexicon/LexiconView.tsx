@@ -1,13 +1,14 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { LexiconHeroSearch } from "@/components/lexicon/LexiconHeroSearch";
 import { LexiconTodayPanel } from "@/components/lexicon/LexiconTodayPanel";
 import { LexiconProgressStrip } from "@/components/lexicon/LexiconProgressStrip";
 import { LexiconContinueSection } from "@/components/lexicon/LexiconContinueSection";
 import { LessonGrid } from "@/components/lexicon/LessonGrid";
+import { AnkiDeckGrid } from "@/components/lexicon/AnkiDeckGrid";
+import { LexiconInlinePractice } from "@/components/lexicon/practice/LexiconInlinePractice";
 import { groupLessonsByDomain, LEXICON_DOMAINS } from "@/lib/lexicon/domains";
 import type { LessonViewModel } from "@/lib/lexicon/types";
 import type { WordsMode } from "@/components/words/WordsTopbar";
@@ -40,6 +41,7 @@ export function LexiconView({
   mode = "dictionary",
 }: LexiconViewProps) {
   const router = useRouter();
+  const [activeDeckId, setActiveDeckId] = useState<string | null>(null);
   const notStarted = Math.max(0, lexiconTotal - lexiconLearned - lexiconInProgress);
 
   const inProgress = useMemo(() => {
@@ -55,87 +57,47 @@ export function LexiconView({
 
   const nextLesson = inProgress[0] ?? lessons.find((lesson) => lesson.progress === 0) ?? null;
 
-  const suggestedLessons = useMemo(() => {
-    const untouched = lessons.filter((lesson) => lesson.progress === 0 && lesson.id !== nextLesson?.id);
-    const fallback = lessons.filter((lesson) => lesson.id !== nextLesson?.id);
-    return (untouched.length > 0 ? untouched : fallback).slice(0, 3);
-  }, [lessons, nextLesson?.id]);
-
-  const [collapsedDomains, setCollapsedDomains] = useState<Set<string>>(new Set());
-
-  const toggleDomain = (id: string) => {
-    setCollapsedDomains(prev => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id); else next.add(id);
-      return next;
-    });
-  };
-
   return (
     <>
       {mode === "dictionary" ? (
-        <div className="words-lexicon__dictionary-layout">
-          <section className="words-lexicon__dictionary-main" aria-labelledby="words-dictionary-title">
-            <div className="words-lexicon__sechead">
-              <div>
-                <p className="words-lexicon__sechead-kicker">Diccionario</p>
-                <h2 id="words-dictionary-title">Busca una palabra</h2>
-                <p>Definición, pronunciación y ejemplos.</p>
-              </div>
-            </div>
-            <LexiconHeroSearch
-              recentWords={recentWords}
-              dueWords={dueWordLabels}
-              onAddWord={onAddWord}
-            />
-          </section>
-          <aside className="words-lexicon__practice-aside" aria-label="Práctica de vocabulario">
-            <LexiconTodayPanel
-              dueForReview={dueForReview}
-              nextLesson={nextLesson}
-              progressUnavailable={progressUnavailable}
-            />
-            {nextLesson ? (
-              <p className="words-lexicon__practice-aside-hint">
-                Recomendado: <strong>{nextLesson.title}</strong>
-              </p>
-            ) : null}
-          </aside>
-          <section className="words-lexicon__dictionary-categories" aria-labelledby="words-categories-title">
-            <div className="words-lexicon__sechead words-lexicon__sechead--spaced">
-              <h2 id="words-categories-title">Todas las categorías</h2>
-            </div>
+        <div className="words-lexicon__dictionary-flow space-y-6 pt-2">
+          <LexiconTodayPanel
+            dueForReview={dueForReview}
+            nextLesson={nextLesson}
+            dueWordLabels={dueWordLabels}
+            progressUnavailable={progressUnavailable}
+          />
+
+          <LexiconHeroSearch
+            recentWords={recentWords}
+            dueWords={dueWordLabels}
+            onAddWord={onAddWord}
+          />
+
+          <section className="words-lexicon__dictionary-categories space-y-8 pt-2" aria-label="Categorías de vocabulario">
             {LEXICON_DOMAINS.map((domain) => {
               const group = domainGroups.find((g) => g.domain.id === domain.id);
               if (!group || group.lessons.length === 0) return null;
 
               return (
-                <div key={domain.id} className="words-lexicon__domain-group">
-                  <button
-                    type="button"
-                    className="words-lexicon__domain-head"
-                    onClick={() => toggleDomain(domain.id)}
-                    aria-expanded={!collapsedDomains.has(domain.id)}
-                  >
-                    <h3 className="words-lexicon__domain-name">{domain.name}</h3>
-                    <span className="words-lexicon__domain-count">
-                      {group.lessons.length} {group.lessons.length === 1 ? "categoría" : "categorías"}
-                    </span>
-                    <span
-                      className="words-lexicon__domain-chevron"
-                      aria-hidden
-                      style={{ transform: collapsedDomains.has(domain.id) ? "rotate(-90deg)" : "rotate(0deg)", transition: "transform 150ms ease-out" }}
-                    >
-                      ›
-                    </span>
-                  </button>
-                  {!collapsedDomains.has(domain.id) ? (
-                    <LessonGrid
-                      lessons={group.lessons}
-                      onLessonClick={(id) => router.push(`/lexicon/${id}`)}
-                      compact
-                    />
-                  ) : null}
+                <div key={domain.id} className="words-lexicon__domain-group space-y-4">
+                  <div className="flex flex-wrap items-center justify-between gap-3 pb-2 border-b border-border-subtle/40">
+                    <div className="flex items-center gap-3">
+                      <h3 className="text-h3 font-bold text-fg">{domain.name}</h3>
+                      <span className="rounded-full bg-primary-soft/80 text-primary border border-primary/20 px-2.5 py-0.5 text-xs font-semibold">
+                        {domain.studyMode === "receptive" ? "Reconocer" : "Producir"}
+                      </span>
+                    </div>
+                    <p className="text-caption sm:text-body-sm text-fg-muted max-w-md text-right">
+                      {domain.description}
+                    </p>
+                  </div>
+                  <LessonGrid
+                    lessons={group.lessons}
+                    nextLessonId={nextLesson?.id}
+                    onLessonClick={(id) => router.push(`/words/${id}`)}
+                    compact
+                  />
                 </div>
               );
             })}
@@ -143,48 +105,74 @@ export function LexiconView({
         </div>
       ) : null}
 
-      {mode === "learn" && (lexiconLearned > 0 || lexiconInProgress > 0 || dueForReview > 0) ? (
-        <LexiconProgressStrip
-          percent={lexiconPercent}
-          learned={lexiconLearned}
-          inProgress={lexiconInProgress}
-          notStarted={notStarted}
-          dueForReview={dueForReview}
-        />
+      {mode === "learn" && activeDeckId !== null ? (
+        <div className="pt-2">
+          <LexiconInlinePractice
+            categoryId={activeDeckId}
+            onExit={() => setActiveDeckId(null)}
+          />
+        </div>
       ) : null}
 
-      {mode === "learn" ? (
-        <>
+      {mode === "learn" && activeDeckId === null ? (
+        <div className="words-lexicon__learn-flow space-y-8 pt-3">
+          {dueForReview > 0 && (
+            <div className="rounded-2xl border border-primary/30 bg-primary-soft/40 p-6 sm:p-7 flex flex-wrap items-center justify-between gap-6 shadow-xs">
+              <div className="space-y-1.5 flex-1 min-w-[280px]">
+                <div className="flex items-center gap-2">
+                  <span className="rounded-full bg-primary text-on-primary px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider">
+                    Repaso Anki Pendiente
+                  </span>
+                  <span className="text-caption font-mono text-fg-subtle">Sistema SRS</span>
+                </div>
+                <h3 className="text-h4 sm:text-h3 font-bold text-fg tracking-tight">
+                  Tienes {dueForReview} {dueForReview === 1 ? "palabra" : "palabras"} por repasar hoy
+                </h3>
+                <p className="text-body-sm text-fg-muted max-w-xl leading-relaxed">
+                  Refuerza tu memoria con tarjetas de repaso adaptativo combinando palabras de todos tus mazos.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setActiveDeckId(nextLesson?.id ?? "backend-infra")}
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-cta-bg text-cta-fg px-6 py-3.5 text-body-sm font-semibold hover:bg-cta-bg/90 active:scale-[0.98] transition-all shadow-sm focus-ring shrink-0"
+              >
+                <span>Iniciar repaso Anki mixto ({dueForReview})</span>
+                <span aria-hidden className="transition-transform group-hover:translate-x-0.5">→</span>
+              </button>
+            </div>
+          )}
+
+          <LexiconProgressStrip
+            percent={lexiconPercent}
+            learned={lexiconLearned}
+            inProgress={lexiconInProgress}
+            notStarted={notStarted}
+          />
+
           {inProgress.length > 0 ? (
             <LexiconContinueSection
               lessons={inProgress}
-              onLessonClick={(id) => router.push(`/lexicon/${id}/practice`)}
+              onLessonClick={(id) => setActiveDeckId(id)}
             />
           ) : null}
-          <section className="words-lexicon__route-picker" aria-labelledby="words-route-picker-title">
-            <div className="words-lexicon__sechead">
-        <div>
-                <p className="words-lexicon__sechead-kicker">Sigue aprendiendo</p>
-          <h2 id="words-route-picker-title">Elige un tema</h2>
-          <p>Palabras nuevas en contexto.</p>
-        </div>
-              <Link href="/words" className="words-lexicon__text-link">Ver diccionario</Link>
+
+          <section className="words-lexicon__anki-studio space-y-5 pt-1" aria-labelledby="words-anki-studio-title">
+            <div className="space-y-1 pb-3 border-b border-border-subtle/50">
+              <p className="font-kicker text-fg-subtle">MAZOS ANKI</p>
+              <h2 id="words-anki-studio-title" className="text-h3 sm:text-h3 font-bold text-fg tracking-tight">
+                Selecciona un mazo para practicar
+              </h2>
+              <p className="text-body-sm text-fg-muted">Explora tus mazos de vocabulario e inicia el repaso de tarjetas Anki directamente aquí.</p>
             </div>
-            <LessonGrid
-              lessons={suggestedLessons}
-              onLessonClick={(id) => router.push(`/lexicon/${id}/practice`)}
+
+            <AnkiDeckGrid
+              lessons={lessons}
+              onSelectDeck={(id) => setActiveDeckId(id)}
             />
           </section>
-          <section className="words-lexicon__learn-next" aria-labelledby="words-learn-next-title">
-            <div>
-              <p className="words-lexicon__sechead-kicker">¿Buscas una palabra concreta?</p>
-              <h2 id="words-learn-next-title">Busca en el diccionario</h2>
-            </div>
-            <Link href="/words" className="words-lexicon__secondary-cta">Abrir diccionario</Link>
-          </section>
-        </>
+        </div>
       ) : null}
-
     </>
   );
 }

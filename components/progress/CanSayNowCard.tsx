@@ -1,8 +1,4 @@
-// Planned structure:
-// <CanSayNowCard>
-//   <MasteredList />    — structures owned, with the learner's own sentence
-//   <InProgressList />  — structures appearing but not yet consolidated
-
+import Link from "next/link"
 import type { CanSayNow } from '@/lib/progress/can-say-now'
 
 interface Props {
@@ -15,7 +11,7 @@ export function CanSayNowCard({ data }: Props) {
   return (
     <section
       aria-labelledby="can-say-now-heading"
-      className="flex flex-col gap-4 rounded-xl border border-border-subtle bg-surface p-5"
+      className="flex flex-col gap-4 rounded-lg border border-border-subtle bg-surface-raised p-5"
     >
       <header className="flex flex-col gap-1">
         <h2 id="can-say-now-heading" className="text-h4 font-semibold text-fg">
@@ -63,6 +59,13 @@ export function CanSayNowCard({ data }: Props) {
           </ul>
         </div>
       )}
+
+      <Link
+        href="/daily"
+        className="mt-1 inline-flex min-h-[44px] items-center text-caption font-semibold text-primary transition-opacity hover:opacity-80 focus-ring"
+      >
+        Practicar producción oral →
+      </Link>
     </section>
   )
 }

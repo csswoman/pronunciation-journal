@@ -1,8 +1,8 @@
 'use client'
 
 // Planned structure:
-// <WordIntroStep>           — sequences the new-word presentation cards
-//   <StudyCard />           — one card at a time; Continuar advances
+// <WordIntroStep>: sequences the new-word presentation cards
+//   <StudyCard />: one card at a time; Continuar advances
 // Presentation is non-evaluated (no answer_history); it precedes word_review.
 
 import { useEffect, useState } from 'react'
@@ -40,9 +40,7 @@ export function WordIntroStep({ cards, onComplete }: Props) {
 
   return (
     <div className="flex min-h-[calc(100vh-10rem)] flex-col items-center justify-center px-4">
-      <div
-        className="flex w-full flex-col rounded-xl border border-border-subtle bg-daily-card px-[var(--layout-card-pad)] pb-[var(--layout-card-pad)] pt-5"
-      >
+      <div className="flex w-full flex-col">
         <StudyCard
           key={index}
           model={card}

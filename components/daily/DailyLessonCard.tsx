@@ -8,6 +8,7 @@
 import Link from 'next/link'
 import ReactMarkdown from 'react-markdown'
 import { ArrowRight, GraduationCap, MessageCircle } from '@/components/icons'
+import Button from '@/components/ui/Button'
 import EmptyState from '@/components/EmptyState'
 import { TrackingSaveButton } from '@/components/tracking/TrackingSaveButton'
 import { useAICoachStore } from '@/lib/stores/aiCoachStore'
@@ -55,26 +56,24 @@ export default function DailyLessonCard({ lesson }: DailyLessonCardProps) {
       </div>
 
       <footer className="flex flex-wrap items-center gap-2 border-t border-border-default/60 pt-3">
-        <Link
-          href={`/mini-lessons/${lesson.slug}`}
-          className="focus-ring inline-flex min-h-11 items-center gap-1.5 rounded-md bg-[var(--cta-bg)] px-4 text-body-sm font-semibold text-[var(--cta-fg)] transition-colors hover:bg-[var(--cta-bg-hover)]"
-        >
-          Ver lección completa
-          <ArrowRight size={14} aria-hidden />
+        <Link href={`/mini-lessons/${lesson.slug}`}>
+          <Button variant="primary" size="sm" icon={<ArrowRight size={14} />} iconPosition="right">
+            Ver lección completa
+          </Button>
         </Link>
 
         <TrackingSaveButton kind="lesson" reference={lesson.slug} title={lesson.title} />
 
-        <button
-          type="button"
+        <Button
+          variant="ghost"
+          size="sm"
+          icon={<MessageCircle size={14} />}
           onClick={() =>
             openCoach({ tab: 'chat', prefill: `Explícame más sobre "${lesson.title}"` })
           }
-          className="focus-ring inline-flex min-h-11 items-center gap-1.5 rounded-md px-3 text-body-sm font-medium text-fg-muted transition-colors hover:text-primary"
         >
-          <MessageCircle size={14} aria-hidden />
           Pregúntale al coach
-        </button>
+        </Button>
       </footer>
     </section>
   )

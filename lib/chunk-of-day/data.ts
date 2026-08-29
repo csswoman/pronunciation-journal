@@ -336,5 +336,142 @@ export const CHUNKS_OF_THE_DAY: ChunkItem[] = [
     example: "At the end of the day, our priority is delivering a delightful user experience.",
     example_translation: "Al fin y al cabo, nuestra prioridad es brindar una experiencia de usuario deleitante.",
     category: "Discourse Markers"
+  },
+  {
+    id: "wrap-up",
+    chunk: "Wrap up (a task / PR)",
+    ipa: "ræp ʌp",
+    meaning: "Terminar o rematar una tarea, feature o pull request",
+    example: "I'm about to wrap up this refactor and submit the PR for review.",
+    example_translation: "Estoy a punto de rematar esta refactorización y enviar el PR para revisión.",
+    category: "Daily & Agilidad",
+    tip: "Se pronuncia ligado: \"wrap-up\" /ræ.pʌp/."
+  },
+  {
+    id: "blocked-by",
+    chunk: "I'm currently blocked by...",
+    ipa: "aɪm ˈkɜːr.ənt.li blɒkt baɪ",
+    meaning: "Actualmente estoy bloqueado por... (en daily standup)",
+    example: "I'm currently blocked by the missing staging credentials.",
+    example_translation: "Actualmente estoy bloqueado por la falta de credenciales de staging.",
+    category: "Daily & Agilidad"
+  },
+  {
+    id: "no-blockers",
+    chunk: "No blockers on my end",
+    ipa: "noʊ ˈblɒk.ərz ɒn maɪ ɛnd",
+    meaning: "Por mi parte no tengo ningún bloqueo (frase clave en standups)",
+    example: "Everything is moving smoothly, no blockers on my end.",
+    example_translation: "Todo avanza sobre ruedas, no hay bloqueos de mi lado.",
+    category: "Daily & Agilidad"
+  },
+  {
+    id: "waiting-on",
+    chunk: "Waiting on (someone / feedback)",
+    ipa: "ˈweɪtɪŋ ɒn",
+    meaning: "Estar a la espera de la respuesta, aprobación o feedback de alguien",
+    example: "I'm just waiting on code review feedback before merging to main.",
+    example_translation: "Solo estoy esperando la retroalimentación del code review antes de fusionar a main.",
+    category: "Daily & Agilidad"
+  },
+  {
+    id: "pair-with",
+    chunk: "Pair with (someone)",
+    ipa: "pɛər wɪð",
+    meaning: "Hacer pair programming o resolver un problema en conjunto",
+    example: "I paired with Alex yesterday to debug the memory leak.",
+    example_translation: "Ayer hice pair programming con Alex para depurar la fuga de memoria.",
+    category: "Daily & Agilidad"
+  },
+  {
+    id: "trade-off",
+    chunk: "A trade-off between [X] and [Y]",
+    ipa: "ə ˈtreɪd.ɔːf bɪˈtwiːn",
+    meaning: "Un compromiso o balance entre dos opciones técnicas",
+    example: "There is always a trade-off between build-time caching and data freshness.",
+    example_translation: "Siempre hay un balance entre el almacenamiento en caché al compilar y la frescura de los datos.",
+    category: "Tecnología y código"
+  },
+  {
+    id: "edge-cases",
+    chunk: "Cover all the edge cases",
+    ipa: "ˈkʌv.ər ɔːl ði ɛdʒ ˈkeɪs.ɪz",
+    meaning: "Cubrir todos los casos límite / escenarios atípicos en el código",
+    example: "Make sure our unit tests cover all the edge cases for invalid user input.",
+    example_translation: "Asegúrate de que nuestras pruebas unitarias cubran todos los casos límite de entrada inválida de usuario.",
+    category: "Tecnología y código"
+  },
+  {
+    id: "out-of-the-box",
+    chunk: "Works out of the box",
+    ipa: "wɜːrks aʊt əv ðə bɒks",
+    meaning: "Funciona de serie / sin requerir configuración compleja",
+    example: "Next.js 16 provides automatic image optimization out of the box.",
+    example_translation: "Next.js 16 ofrece optimización automática de imágenes de serie.",
+    category: "Tecnología y código"
+  },
+  {
+    id: "single-source-of-truth",
+    chunk: "Single source of truth",
+    ipa: "ˈsɪŋ.ɡəl sɔːrs əv truːθ",
+    meaning: "Única fuente de verdad (en arquitectura de datos o estado)",
+    example: "Dexie acts as our single source of truth for all offline persisted state.",
+    example_translation: "Dexie actúa como nuestra única fuente de verdad para todo el estado persistido offline.",
+    category: "Tecnología y código"
+  },
+  {
+    id: "it-might-be-worth",
+    chunk: "It might be worth (doing...)",
+    ipa: "ɪt maɪt biː wɜːrθ",
+    meaning: "Podría valer la pena... (sugerencia suave y profesional en code reviews)",
+    example: "It might be worth extracting this validation logic into a custom hook.",
+    example_translation: "Podría valer la pena extraer esta lógica de validación a un hook personalizado.",
+    category: "Code Review & Feedback",
+    tip: "\"It might be worth + verbo-ing\" suena mucho más constructivo y colaborativo que decir \"You must change this\"."
+  },
+  {
+    id: "have-you-considered",
+    chunk: "Have you considered...?",
+    ipa: "hæv juː kənˈsɪd.ərd",
+    meaning: "¿Has considerado...? (forma diplomática de sugerir una alternativa técnica)",
+    example: "Have you considered using a database index to speed up that query?",
+    example_translation: "¿Has considerado usar un índice de base de datos para acelerar esa consulta?",
+    category: "Code Review & Feedback"
+  },
+  {
+    id: "good-catch",
+    chunk: "Good catch!",
+    ipa: "ɡʊd kætʃ",
+    meaning: "¡Bien visto! / ¡Qué buen ojo! (reconociendo un bug o detalle detectado por un compañero)",
+    example: "Good catch on that null pointer exception! I'll push a fix right away.",
+    example_translation: "¡Bien visto ese error de puntero nulo! Subiré el arreglo de inmediato.",
+    category: "Code Review & Feedback"
+  },
+  {
+    id: "hows-your-day-going",
+    chunk: "How's your day going so far?",
+    ipa: "haʊz jɔːr deɪ ˈɡoʊɪŋ soʊ fɑːr",
+    meaning: "¿Cómo va tu día hasta ahora? (apertura ideal para iniciar una llamada o sync)",
+    example: "Hey! How's your day going so far? Ready for the sprint demo?",
+    example_translation: "¡Hola! ¿Cómo va tu día hasta ahora? ¿Listo para la demo del sprint?",
+    category: "Social y trabajo"
+  },
+  {
+    id: "double-check",
+    chunk: "Let me double-check that",
+    ipa: "lɛt miː ˈdʌb.əl tʃɛk ðæt",
+    meaning: "Déjame verificarlo / revisarlo de nuevo para estar 100% seguro",
+    example: "Let me double-check the API response before I confirm the bug.",
+    example_translation: "Déjame verificar la respuesta de la API antes de confirmar el error.",
+    category: "Social y trabajo"
+  },
+  {
+    id: "quick-heads-up",
+    chunk: "Just a quick heads-up",
+    ipa: "dʒʌst ə kwɪk hɛdz ʌp",
+    meaning: "Solo un aviso rápido (para informar al equipo de un cambio o despliegue)",
+    example: "Just a quick heads-up: I'll be deploying the database migration in ten minutes.",
+    example_translation: "Solo un aviso rápido: estaré desplegando la migración de base de datos en diez minutos.",
+    category: "Social y trabajo"
   }
 ];
