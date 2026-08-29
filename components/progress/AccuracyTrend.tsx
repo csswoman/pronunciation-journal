@@ -1,7 +1,5 @@
 import { Target } from "@/components/icons"
-
 import type { AccuracyStats } from '@/lib/progress/queries'
-
 import { ProgressCard, ProgressCardHeader } from './ProgressCard'
 
 interface Props {
@@ -10,15 +8,15 @@ interface Props {
 
 function qualityLabel(accuracy: number): { text: string; className: string; strokeClass: string } {
   if (accuracy >= 85) {
-    return { text: 'Excellent', className: 'text-[var(--success)]', strokeClass: 'stroke-[var(--success)]' }
+    return { text: 'Excelente', className: 'text-[var(--success)]', strokeClass: 'stroke-[var(--success)]' }
   }
   if (accuracy >= 70) {
-    return { text: 'Good', className: 'text-[var(--primary)]', strokeClass: 'stroke-[var(--primary)]' }
+    return { text: 'Buena', className: 'text-[var(--primary)]', strokeClass: 'stroke-[var(--primary)]' }
   }
   if (accuracy >= 50) {
-    return { text: 'Improving', className: 'text-[var(--warning)]', strokeClass: 'stroke-[var(--warning)]' }
+    return { text: 'Mejorando', className: 'text-[var(--warning)]', strokeClass: 'stroke-[var(--warning)]' }
   }
-  return { text: 'Keep going', className: 'text-[var(--warning-deco)]', strokeClass: 'stroke-[var(--warning-deco)]' }
+  return { text: 'Sigue así', className: 'text-[var(--warning)]', strokeClass: 'stroke-[var(--warning)]' }
 }
 
 export function AccuracyTrend({ stats }: Props) {
@@ -31,11 +29,23 @@ export function AccuracyTrend({ stats }: Props) {
 
   return (
     <ProgressCard>
-      <ProgressCardHeader icon={<Target size={16} />} title="Accuracy · 7 days" />
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <ProgressCardHeader icon={<Target size={16} />} title="Precisión" />
+        <span className="shrink-0 font-kicker text-[11px] font-semibold text-fg-subtle">
+          ÚLTIMOS 7 DÍAS
+        </span>
+      </div>
 
-      <div className="mt-0.5 flex flex-col items-center">
+      <div className="mt-1 flex flex-col items-center">
         <div className="relative w-[180px]">
-          <svg width="100%" height="auto" viewBox="0 0 180 100" className="block">
+          <svg
+            width="100%"
+            height="auto"
+            viewBox="0 0 180 100"
+            className="block"
+            role="img"
+            aria-label={hasData ? `Precisión de ${stats.accuracy7}% (${quality?.text})` : "Sin datos de precisión"}
+          >
             <path
               d="M16 90 A74 74 0 0 1 164 90"
               fill="none"
@@ -65,10 +75,10 @@ export function AccuracyTrend({ stats }: Props) {
           </p>
         ) : null}
 
-        <p className="mt-2 text-caption text-fg-subtle">
+        <p className="mt-2 text-caption text-fg-subtle text-center">
           {hasData
-            ? `Based on ${stats.totalAnswers7.toLocaleString()} answer${stats.totalAnswers7 !== 1 ? 's' : ''} this week`
-            : 'No answers recorded in the last 7 days'}
+            ? `Basado en ${stats.totalAnswers7.toLocaleString()} respuesta${stats.totalAnswers7 !== 1 ? 's' : ''}`
+            : 'Sin respuestas registradas esta semana'}
         </p>
       </div>
     </ProgressCard>

@@ -90,21 +90,21 @@ export function LevelConceptsProgressCard() {
         : pending;
 
   return (
-    <section className="flex flex-col gap-4 rounded-xl border border-border-default bg-surface p-4 sm:p-6 shadow-sm">
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+    <section className="flex flex-col gap-4 rounded-lg border border-border-subtle bg-surface-raised p-4 sm:p-5">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <span className="font-kicker text-accent">Dominio por temas</span>
+          <span className="font-kicker font-semibold text-fg-subtle">Dominio por temas</span>
           <h2 className="text-h4 font-semibold text-fg">Gramática y Conceptos</h2>
         </div>
 
-        <div className="flex items-center gap-1 rounded-lg border border-border-subtle bg-surface-sunken p-1">
+        <div className="flex max-w-full items-center gap-1 overflow-x-auto no-scrollbar rounded-lg border border-border-subtle bg-surface-sunken p-1" role="group" aria-label="Seleccionar nivel CEFR">
           {COURSE_PATH_CURRICULUM.levels.map((lvl) => (
             <button
               key={lvl.id}
               type="button"
               onClick={() => setSelectedLevel(lvl.id)}
               className={cn(
-                "rounded px-2.5 py-1 font-caption font-semibold uppercase transition-colors",
+                "flex min-h-[44px] min-w-[44px] items-center justify-center rounded px-3 py-1.5 font-caption font-semibold uppercase transition-colors focus-ring",
                 selectedLevel === lvl.id
                   ? "bg-surface-raised text-fg shadow-xs"
                   : "text-fg-muted hover:text-fg",
@@ -131,14 +131,16 @@ export function LevelConceptsProgressCard() {
         </div>
       </div>
 
-      <div className="flex gap-2 border-b border-border-subtle pt-2" role="tablist">
+      <div className="flex gap-2 overflow-x-auto no-scrollbar border-b border-border-subtle pt-2" role="tablist" aria-label="Filtrar por estado de concepto">
         <button
           type="button"
           role="tab"
+          id="tab-mastered"
+          aria-controls="panel-concepts"
           aria-selected={activeTab === "mastered"}
           onClick={() => setActiveTab("mastered")}
           className={cn(
-            "flex items-center gap-1.5 border-b-2 px-3 py-2 text-body-sm font-medium transition-colors",
+            "flex min-h-[44px] shrink-0 items-center gap-1.5 border-b-2 px-3 py-2 text-body-sm font-medium whitespace-nowrap transition-colors focus-ring",
             activeTab === "mastered"
               ? "border-success text-success font-semibold"
               : "border-transparent text-fg-muted hover:text-fg",
@@ -151,10 +153,12 @@ export function LevelConceptsProgressCard() {
         <button
           type="button"
           role="tab"
+          id="tab-review"
+          aria-controls="panel-concepts"
           aria-selected={activeTab === "review"}
           onClick={() => setActiveTab("review")}
           className={cn(
-            "flex items-center gap-1.5 border-b-2 px-3 py-2 text-body-sm font-medium transition-colors",
+            "flex min-h-[44px] shrink-0 items-center gap-1.5 border-b-2 px-3 py-2 text-body-sm font-medium whitespace-nowrap transition-colors focus-ring",
             activeTab === "review"
               ? "border-warning text-warning font-semibold"
               : "border-transparent text-fg-muted hover:text-fg",
@@ -167,10 +171,12 @@ export function LevelConceptsProgressCard() {
         <button
           type="button"
           role="tab"
+          id="tab-pending"
+          aria-controls="panel-concepts"
           aria-selected={activeTab === "pending"}
           onClick={() => setActiveTab("pending")}
           className={cn(
-            "flex items-center gap-1.5 border-b-2 px-3 py-2 text-body-sm font-medium transition-colors",
+            "flex min-h-[44px] shrink-0 items-center gap-1.5 border-b-2 px-3 py-2 text-body-sm font-medium whitespace-nowrap transition-colors focus-ring",
             activeTab === "pending"
               ? "border-primary text-primary font-semibold"
               : "border-transparent text-fg-muted hover:text-fg",
@@ -181,7 +187,12 @@ export function LevelConceptsProgressCard() {
         </button>
       </div>
 
-      <div className="flex flex-col divide-y divide-border-subtle" role="tabpanel">
+      <div
+        id="panel-concepts"
+        role="tabpanel"
+        aria-labelledby={`tab-${activeTab}`}
+        className="flex flex-col divide-y divide-border-subtle"
+      >
         {currentList.length === 0 ? (
           <p className="py-6 text-center text-body-sm text-fg-muted">
             {activeTab === "mastered"
@@ -196,7 +207,7 @@ export function LevelConceptsProgressCard() {
               key={item.id}
               className="flex items-center justify-between gap-3 py-3 first:pt-1 last:pb-1"
             >
-              <div className="flex flex-col gap-0.5">
+              <div className="flex flex-col gap-0.5 min-w-0">
                 <span className="text-body-md font-medium text-fg">{item.title}</span>
                 {item.group && (
                   <span className="text-body-sm text-fg-muted line-clamp-1">
@@ -206,7 +217,7 @@ export function LevelConceptsProgressCard() {
               </div>
               <Link
                 href={`/courses/study/${item.slug}`}
-                className="focus-ring flex shrink-0 items-center gap-1 rounded-lg border border-border-default bg-surface px-2.5 py-1 text-body-sm font-medium text-fg hover:bg-surface-raised"
+                className="focus-ring flex min-h-[44px] shrink-0 items-center gap-1 rounded-lg border border-border-subtle bg-surface-sunken px-3 py-2 text-body-sm font-medium text-fg hover:bg-surface-raised transition-colors"
               >
                 <span>{item.status === "mastered" ? "Repasar" : "Estudiar"}</span>
                 <ChevronRight size={14} aria-hidden />

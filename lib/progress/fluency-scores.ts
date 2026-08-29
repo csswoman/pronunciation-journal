@@ -145,9 +145,9 @@ export function fluencyComparisonLabel(
   const prev = averageScore(previous)
   if (prev <= 0 && cur <= 0) return undefined
   const delta = cur - prev
-  if (delta >= 3) return 'Improving this week'
-  if (delta <= -3) return 'Needs focus'
-  return 'Stable this week'
+  if (delta >= 3) return 'Mejorando esta semana'
+  if (delta <= -3) return 'Enfoque necesario'
+  return 'Estable esta semana'
 }
 
 export function isFluencyProfileEmpty(scores: FluencyScores): boolean {

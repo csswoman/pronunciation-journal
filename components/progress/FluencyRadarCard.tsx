@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { Radar } from "@/components/icons"
 
 import { cn } from '@/lib/cn'
@@ -13,13 +14,13 @@ interface Props {
   comparisonLabel?: string
 }
 
-const SKILL_ORDER: { key: SkillKey; label: string; source: string }[] = [
-  { key: 'pronunciation', label: 'Pronunciación', source: 'Sound Lab · evidencia del evaluador' },
-  { key: 'grammar', label: 'Gramática', source: 'Respuestas evaluadas' },
-  { key: 'vocabulary', label: 'Vocabulario', source: 'Repaso y retención verificada' },
-  { key: 'listening', label: 'Escucha', source: 'Percepción y dictado' },
-  { key: 'speaking', label: 'Habla', source: 'Producción evaluada' },
-  { key: 'reading', label: 'Lectura', source: 'Comprensión evaluada' },
+const SKILL_ORDER: { key: SkillKey; label: string; source: string; href: string }[] = [
+  { key: 'pronunciation', label: 'Pronunciación', source: 'Sound Lab · evidencia del evaluador', href: '/practice' },
+  { key: 'grammar', label: 'Gramática', source: 'Respuestas evaluadas', href: '/practice/decks' },
+  { key: 'vocabulary', label: 'Vocabulario', source: 'Repaso y retención verificada', href: '/words' },
+  { key: 'listening', label: 'Escucha', source: 'Percepción y dictado', href: '/daily' },
+  { key: 'speaking', label: 'Habla', source: 'Producción evaluada', href: '/daily' },
+  { key: 'reading', label: 'Lectura', source: 'Comprensión evaluada', href: '/courses' },
 ]
 
 const SIZE = 380
@@ -121,39 +122,43 @@ function DimensionList({ scores }: { scores: FluencyScores }) {
         const isBest = val === max && max > 0
         const isWorst = val === min && min < max
         return (
-          <div
+          <Link
             key={s.key}
+            href={s.href}
             className={cn(
-              'flex items-center gap-3 rounded-[var(--radius-md)] border border-border-subtle bg-surface-sunken px-3 py-2.5',
+              'flex min-h-[44px] items-center gap-3 rounded-[var(--radius-md)] border border-border-subtle bg-surface-sunken px-3 py-2.5 transition-colors hover:bg-surface-raised focus-ring',
               isBest && 'border-[color-mix(in_oklch,var(--success)_40%,transparent)]',
               isWorst && 'border-[color-mix(in_oklch,var(--warning)_40%,transparent)]',
             )}
           >
             <div className="min-w-0 flex-1">
-              <div className="text-body-sm font-semibold text-fg">{s.label}</div>
+              <div className="text-body-sm font-semibold text-fg flex items-center gap-1.5">
+                <span>{s.label}</span>
+                <span className="text-caption font-normal text-fg-subtle opacity-70">→</span>
+              </div>
               <div className="text-tiny text-fg-subtle">{s.source}</div>
             </div>
             <div
-              className={cn( 'text-body-lg text-primary', isBest && 'text-success', isWorst && 'text-warning', )}
+              className={cn('text-body-lg font-semibold text-primary', isBest && 'text-success', isWorst && 'text-warning')}
             >
               {val}
             </div>
-          </div>
+          </Link>
         )
       })}
 
-      <div className="mt-1 flex gap-2.5">
+      <div className="mt-1 flex flex-col sm:flex-row gap-2.5">
         <div className="flex-1 rounded-[var(--radius-md)] bg-success-soft px-3 py-2.5 text-caption text-success">
           <b className="mb-0.5 block text-body-sm text-success-value">
             {best.label} {max}
           </b>
-          Your strongest area right now.
+          Tu área más fuerte en este momento.
         </div>
         <div className="flex-1 rounded-[var(--radius-md)] bg-warning-soft px-3 py-2.5 text-caption text-warning">
           <b className="mb-0.5 block text-body-sm text-warning-value">
             {worst.label} {min}
           </b>
-          Worth a focused practice session.
+          Recomendado para una práctica enfocada.
         </div>
       </div>
     </div>
@@ -210,8 +215,8 @@ export function FluencyRadarCard({ scores, comparisonLabel }: Props) {
       <div className="flex items-start justify-between gap-3">
         <ProgressCardHeader
           icon={<Radar size={16} />}
-          eyebrow="Práctica · 6 dimensiones"
-          title="Perfil de práctica"
+          eyebrow="6 dimensiones"
+          title="Balance de skills"
         />
         {!isEmpty && comparisonLabel ? (
           <span className="rounded-full border border-border-subtle bg-surface-sunken px-3 py-1 text-tiny font-semibold text-fg-muted">
@@ -224,19 +229,21 @@ export function FluencyRadarCard({ scores, comparisonLabel }: Props) {
         <div className="flex flex-col items-center gap-4 py-2 text-center">
           <EmptyRadar />
           <div className="flex max-w-[280px] flex-col gap-1">
-            <p className="text-body-sm font-semibold text-fg">No fluency data yet</p>
+            <p className="text-body-sm font-semibold text-fg">Sin datos de fluidez aún</p>
             <p className="text-caption text-fg-muted">
-              Complete exercises across pronunciation, grammar, vocabulary, listening,
-              speaking, and reading to unlock your profile.
+              Completa ejercicios en pronunciación, gramática, vocabulario, escucha,
+              habla y lectura para desbloquear tu perfil.
             </p>
           </div>
         </div>
       ) : (
-        <div className="grid items-center gap-5 lg:grid-cols-[1fr_300px]">
-          <div className="flex justify-center">
+        <div className="flex flex-col @[660px]:flex-row @[660px]:items-center gap-6">
+          <div className="flex shrink-0 justify-center mx-auto @[660px]:mx-0 w-full max-w-[320px]">
             <RadarChart scores={scores!} />
           </div>
-          <DimensionList scores={scores!} />
+          <div className="flex-1 min-w-0">
+            <DimensionList scores={scores!} />
+          </div>
         </div>
       )}
     </ProgressCard>

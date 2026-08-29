@@ -20,19 +20,19 @@ const STATUS_CONFIG: {
   label: string
   color: string
 }[] = [
-  { key: 'new', label: 'New', color: 'var(--border-subtle)' },
-  { key: 'learning', label: 'Learning', color: 'var(--warning-deco)' },
-  { key: 'review', label: 'Review', color: 'color-mix(in oklch, var(--primary) 75%, transparent)' },
-  { key: 'mastered', label: 'Mastered', color: 'var(--primary)' },
+  { key: 'new', label: 'Nuevas', color: 'var(--border-subtle)' },
+  { key: 'learning', label: 'En aprendizaje', color: 'var(--warning)' },
+  { key: 'review', label: 'En repaso', color: 'color-mix(in oklch, var(--primary) 75%, transparent)' },
+  { key: 'mastered', label: 'Dominadas', color: 'var(--primary)' },
 ]
 
 function SoundLabPanel({ phonemes }: { phonemes: SkillProfileData['weakestPhonemes'] }) {
   if (phonemes.length === 0) {
     return (
       <ProgressCard>
-        <ProgressCardHeader icon={<Volume2 size={16} />} eyebrow="Sound Lab" title="Lowest mastery" />
+        <ProgressCardHeader icon={<Volume2 size={16} />} eyebrow="Sound Lab" title="Sonidos a reforzar" />
         <p className="text-caption text-fg-muted">
-          Practice phoneme exercises to see your weakest sounds.
+          Practica ejercicios de fonemas para ver tus sonidos a reforzar.
         </p>
       </ProgressCard>
     )
@@ -40,7 +40,7 @@ function SoundLabPanel({ phonemes }: { phonemes: SkillProfileData['weakestPhonem
 
   return (
     <ProgressCard>
-      <ProgressCardHeader icon={<Volume2 size={16} />} eyebrow="Sound Lab" title="Lowest mastery" />
+      <ProgressCardHeader icon={<Volume2 size={16} />} eyebrow="Sound Lab" title="Sonidos a reforzar" />
       {phonemes.slice(0, 3).map((p) => (
         <ProgressStatBar
           key={p.ipa}
@@ -52,8 +52,8 @@ function SoundLabPanel({ phonemes }: { phonemes: SkillProfileData['weakestPhonem
           labelClassName="font-ipa text-primary"
         />
       ))}
-      <Link href="/practice" className="mt-3 text-caption font-medium text-primary transition-opacity hover:opacity-80">
-        Practice these sounds →
+      <Link href="/practice" className="mt-1 inline-flex min-h-[36px] items-center text-caption font-semibold text-primary transition-opacity hover:opacity-80 focus-ring">
+        Practicar estos sonidos →
       </Link>
     </ProgressCard>
   )
@@ -71,20 +71,15 @@ function LexiconPanel({
   const total = wordsByStatus.new + wordsByStatus.learning + wordsByStatus.review
     + wordsByStatus.mastered + (wordsByStatus.legacyMastered ?? 0)
   const mastered = wordsByStatus.mastered
-  const retention = total > 0 ? Math.round((mastered / total) * 100) : 0
+  const masteredPct = total > 0 ? Math.round((mastered / total) * 100) : 0
   const toReview = wordsByStatus.review + wordsByStatus.learning
-  const signalSummary = [
-    { label: 'saved', count: wordsByStatus.saved ?? 0 },
-    { label: 'familiar', count: wordsByStatus.familiar ?? 0 },
-    { label: 'verified', count: wordsByStatus.verified ?? 0 },
-    { label: 'needs verification', count: wordsByStatus.legacyMastered ?? 0 },
-  ].filter((signal) => signal.count > 0)
+  const needsVerification = wordsByStatus.legacyMastered ?? 0
 
   if (total === 0 && core1000Practiced === 0 && lessonsCompleted === 0) {
     return (
       <ProgressCard>
-        <ProgressCardHeader icon={<BookOpen size={16} />} eyebrow="Dictionary" title="Vocabulary" />
-        <p className="text-caption text-fg-muted">No words in your bank yet.</p>
+        <ProgressCardHeader icon={<BookOpen size={16} />} eyebrow="Diccionario" title="Vocabulario" />
+        <p className="text-caption text-fg-muted">Sin palabras en tu banco aún.</p>
       </ProgressCard>
     )
   }
@@ -93,12 +88,12 @@ function LexiconPanel({
 
   return (
     <ProgressCard>
-      <ProgressCardHeader icon={<BookOpen size={16} />} eyebrow="Dictionary" title="Vocabulary" />
+      <ProgressCardHeader icon={<BookOpen size={16} />} eyebrow="Diccionario" title="Vocabulario" />
       {total > 0 && (
         <>
           <div className="mt-1 flex gap-[var(--layout-stack-loose)]">
-            <ProgressBigNumber value={`${retention}%`} sub={`retention · ${mastered}/${total}`} />
-            <ProgressBigNumber value={toReview} sub="to review" tone={toReview > 0 ? 'warning' : 'primary'} />
+            <ProgressBigNumber value={`${masteredPct}%`} sub={`dominadas · ${mastered}/${total}`} />
+            <ProgressBigNumber value={toReview} sub="por repasar" tone={toReview > 0 ? 'warning' : 'primary'} />
           </div>
           <div className="mt-4 flex h-2.5 w-full overflow-hidden rounded-full bg-surface-sunken">
             {STATUS_CONFIG.map(({ key, color }) => {
@@ -112,9 +107,9 @@ function LexiconPanel({
             const pct = total > 0 ? Math.round((count / total) * 100) : 0
             return <ProgressStatBar key={key} label={label} value={pct} barColor={color} />
           })}
-          {signalSummary.length > 0 && (
-            <p className="mt-3 text-caption text-fg-muted">
-              {signalSummary.map(({ label, count }) => `${count} ${label}`).join(' · ')}
+          {needsVerification > 0 && (
+            <p className="mt-3 text-caption text-warning">
+              {needsVerification} marcadas como dominadas sin evidencia reciente — vuelve a repasarlas.
             </p>
           )}
         </>
@@ -122,15 +117,15 @@ function LexiconPanel({
       {(core1000Practiced > 0 || lessonsCompleted > 0) && (
         <div className="mt-3 flex gap-[var(--layout-stack-loose)] border-t border-[var(--line-divider)] pt-3">
           {core1000Practiced > 0 && (
-            <ProgressBigNumber value={core1000Practiced} sub="core words" />
+            <ProgressBigNumber value={core1000Practiced} sub="palabras clave" />
           )}
           {lessonsCompleted > 0 && (
-            <ProgressBigNumber value={lessonsCompleted} sub="lessons done" />
+            <ProgressBigNumber value={lessonsCompleted} sub="lecciones hechas" />
           )}
         </div>
       )}
-      <Link href="/words" className="mt-3 text-caption font-medium text-primary transition-opacity hover:opacity-80">
-        Open Dictionary →
+      <Link href="/words" className="mt-1 inline-flex min-h-[36px] items-center text-caption font-semibold text-primary transition-opacity hover:opacity-80 focus-ring">
+        Abrir diccionario →
       </Link>
     </ProgressCard>
   )
@@ -142,30 +137,34 @@ function CoachInsightsPanel({ coach }: { coach: CoachInsights }) {
   if (!hasData) {
     return (
       <ProgressCard>
-        <ProgressCardHeader icon={<BrainCircuit size={16} />} eyebrow="AI Coach" title="Grammar insights" />
+        <ProgressCardHeader icon={<BrainCircuit size={16} />} eyebrow="AI Coach" title="Diagnóstico de gramática" />
         <p className="text-caption text-fg-muted">
-          Chat with the AI Coach to build your grammar profile.
+          Chatea con el AI Coach para estructurar tu perfil de gramática.
         </p>
       </ProgressCard>
     )
   }
 
+  // Un solo nivel: el estimado por el coach manda; si no, el declarado en el perfil.
+  const level = coach.cefrEstimate ?? coach.profileLevel
+  const levelSub =
+    coach.cefrEstimate && coach.profileLevel && coach.cefrEstimate !== coach.profileLevel
+      ? `nivel estimado · perfil ${coach.profileLevel}`
+      : coach.cefrEstimate
+        ? 'nivel estimado'
+        : 'nivel actual'
+
   return (
     <ProgressCard>
-      <ProgressCardHeader icon={<BrainCircuit size={16} />} eyebrow="AI Coach" title="Grammar insights" />
-      {coach.profileLevel && (
+      <ProgressCardHeader icon={<BrainCircuit size={16} />} eyebrow="AI Coach" title="Diagnóstico de gramática" />
+      {level && (
         <div className="mt-1 mb-3">
-          <ProgressBigNumber value={coach.profileLevel} sub="current level" />
-        </div>
-      )}
-      {coach.cefrEstimate && (
-        <div className="mt-1 mb-3">
-          <ProgressBigNumber value={coach.cefrEstimate} sub="estimated level" />
+          <ProgressBigNumber value={level} sub={levelSub} />
         </div>
       )}
       {coach.weakTopics.length > 0 && (
         <div className="flex flex-col gap-1.5">
-          <p className="font-kicker font-medium text-fg-muted">Weak topics</p>
+          <p className="font-kicker font-medium text-fg-muted">Temas a reforzar</p>
           {coach.weakTopics.map((t) => (
             <ProgressStatBar
               key={t.topic}
@@ -176,8 +175,8 @@ function CoachInsightsPanel({ coach }: { coach: CoachInsights }) {
           ))}
         </div>
       )}
-      <Link href="/practice/decks" className="mt-3 text-caption font-medium text-primary transition-opacity hover:opacity-80">
-        Practice these topics →
+      <Link href="/practice/decks" className="mt-1 inline-flex min-h-[36px] items-center text-caption font-semibold text-primary transition-opacity hover:opacity-80 focus-ring">
+        Practicar estos temas →
       </Link>
     </ProgressCard>
   )
@@ -196,9 +195,9 @@ export function SkillProfileCard({ data, coach }: Props) {
   if (!hasAnyData) {
     return (
       <ProgressCard>
-        <p className="text-base font-medium text-fg">Skill profile</p>
+        <p className="text-base font-medium text-fg">Dónde enfocar</p>
         <p className="text-body-sm text-fg-muted">
-          Add words and practice phonemes to build your profile.
+          Añade palabras y practica fonemas para construir tu perfil.
         </p>
       </ProgressCard>
     )
@@ -206,8 +205,13 @@ export function SkillProfileCard({ data, coach }: Props) {
 
   return (
     <section className="flex flex-col gap-4">
-      <h2 className="text-base font-medium text-fg">Skill profile</h2>
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="flex flex-col gap-0.5">
+        <h2 className="text-base font-medium text-fg">Dónde enfocar</h2>
+        <p className="text-caption text-fg-muted">
+          El detalle de las tres dimensiones con más margen de mejora.
+        </p>
+      </div>
+      <div className="dashboard-grid-3">
         <SoundLabPanel phonemes={data.weakestPhonemes} />
         <LexiconPanel
           wordsByStatus={data.wordsByStatus}

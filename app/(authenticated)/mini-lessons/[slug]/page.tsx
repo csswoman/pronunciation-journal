@@ -57,9 +57,8 @@ export default async function MiniLessonDetailPage({ params }: MiniLessonPagePro
   ];
 
   return (
-    <article className="mini-lessons mini-lessons--article">
-      <PageLayout
-        archetype="dashboard"
+    <PageLayout
+      archetype="dashboard"
         banner={
           <header className="mini-lessons__article-intro">
             <Link href="/mini-lessons" className="mini-lessons__back">
@@ -206,8 +205,7 @@ export default async function MiniLessonDetailPage({ params }: MiniLessonPagePro
           )}
         </footer>
       </PageLayout>
-    </article>
-  );
+    );
 }
 
 export async function generateStaticParams() {

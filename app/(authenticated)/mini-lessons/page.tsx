@@ -5,10 +5,8 @@ import { getAllMiniLessons } from "@/lib/content/lessons";
 export default async function MiniLessonsPage() {
   const lessons = await getAllMiniLessons();
   return (
-    <div className="mini-lessons">
-      <PageLayout archetype="catalog">
-        <MiniLessonsBrowser lessons={lessons} />
-      </PageLayout>
-    </div>
+    <PageLayout archetype="catalog">
+      <MiniLessonsBrowser lessons={lessons} />
+    </PageLayout>
   );
 }

@@ -8,47 +8,13 @@ interface Props {
   streak: DailyStreakResult
 }
 
-function WeekDots({
-  streakDays,
-  completedToday,
-}: {
-  streakDays: number
-  completedToday: boolean
-}) {
-  const filled = Math.min(6, Math.max(0, streakDays - (completedToday ? 1 : 0)))
-
-  return (
-    <div className="mt-4 flex justify-center gap-1.5" aria-hidden>
-      {Array.from({ length: 7 }).map((_, i) => {
-        const isToday = i === 6
-        const isOn = !isToday && i < filled
-        return (
-          <span
-            key={i}
-            className={[
-              'h-3 w-3 rounded-xs',
-              isToday
-                ? completedToday
-                  ? 'bg-[var(--stage-pairs)]'
-                  : 'bg-primary shadow-[0_0_0_3px_var(--accent-dim)]'
-                : isOn
-                  ? 'bg-[var(--stage-pairs)]'
-                  : 'bg-surface-sunken',
-            ].join(' ')}
-          />
-        )
-      })}
-    </div>
-  )
-}
-
 function StreakValue({ value, label, accent }: { value: number; label: string; accent?: boolean }) {
   return (
     <div className="text-center">
       <div
         className={[
           'text-h1 leading-none',
-          accent ? 'text-[var(--stage-pairs)]' : 'text-fg',
+          accent ? 'text-[var(--accent-2)]' : 'text-fg',
         ].join(' ')}
       >
         {value}
@@ -65,15 +31,21 @@ export function StreakCard({ streak }: Props) {
 
   return (
     <ProgressCard>
-      <ProgressCardHeader icon={<Flame size={16} />} title="Daily streak" />
+      <ProgressCardHeader icon={<Flame size={16} />} title="Racha diaria" />
 
-      <div className="mt-1 flex items-center justify-around">
-        <StreakValue value={currentStreak} label="Current" accent />
+      <div className="mt-1 flex items-center justify-around gap-2 px-2">
+        <StreakValue value={currentStreak} label="Actual" accent />
         <div className="h-[46px] w-px bg-border-subtle" />
-        <StreakValue value={maxStreak} label="Best" />
+        <StreakValue value={maxStreak} label="Mejor" />
       </div>
 
-      <WeekDots streakDays={currentStreak} completedToday={completedToday} />
+      <p className="mt-1 text-center text-caption text-fg-muted">
+        {completedToday
+          ? 'Hoy ya cuenta. Vuelve mañana para sumar.'
+          : currentStreak > 0
+            ? 'Practica hoy para no perder la racha.'
+            : 'Completa el plan de hoy para empezar una racha.'}
+      </p>
     </ProgressCard>
   )
 }

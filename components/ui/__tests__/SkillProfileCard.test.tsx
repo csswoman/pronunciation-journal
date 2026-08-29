@@ -8,7 +8,7 @@ vi.mock("next/link", () => ({
 }));
 
 describe("SkillProfileCard", () => {
-  it("shows the persisted level separately from the coach estimate", () => {
+  it("shows a single level (coach estimate) with the profile level as context", () => {
     render(
       <SkillProfileCard
         data={{
@@ -26,9 +26,30 @@ describe("SkillProfileCard", () => {
       />,
     );
 
-    expect(screen.getByText("A2")).toBeInTheDocument();
-    expect(screen.getByText("current level")).toBeInTheDocument();
     expect(screen.getByText("B1")).toBeInTheDocument();
-    expect(screen.getByText("estimated level")).toBeInTheDocument();
+    expect(screen.getByText("nivel estimado · perfil A2")).toBeInTheDocument();
+    expect(screen.queryByText("nivel actual")).not.toBeInTheDocument();
+  });
+
+  it("falls back to the profile level when there is no coach estimate", () => {
+    render(
+      <SkillProfileCard
+        data={{
+          wordsByStatus: { new: 0, learning: 0, review: 0, mastered: 0 },
+          weakestPhonemes: [],
+          core1000Practiced: 0,
+          lessonsCompleted: 0,
+        }}
+        coach={{
+          weakTopics: [],
+          profileLevel: "A2",
+          cefrEstimate: null,
+          avgAccuracy: null,
+        }}
+      />,
+    );
+
+    expect(screen.getByText("A2")).toBeInTheDocument();
+    expect(screen.getByText("nivel actual")).toBeInTheDocument();
   });
 });
