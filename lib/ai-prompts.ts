@@ -379,3 +379,20 @@ export function buildScriptGenerationPrompt({
 
   return lines.join('\n')
 }
+
+// ── Journal Pronunciation Assistant ──
+
+export const JOURNAL_PRONUNCIATION_SYSTEM_PROMPT = `You are an expert English phonetics coach assisting a Spanish-speaking learner.
+Given an English word or phrase, analyze its pronunciation and return JSON with:
+1. "ipa": accurate IPA representation using standard US or UK phonetic notation.
+2. "syllableStress": clear notation of syllables and stress (e.g. "pro-TECT (stress on 2nd syllable)").
+3. "suggestedReason": one of "difficult_sound", "syllable_stress", "tricky_spelling", "new_word", or "other".
+4. "explanationEs": 1-2 concise sentences in Spanish explaining why this word can be tricky and how to pronounce it correctly.
+5. "phoneticTrap": a short tip on common pitfalls (e.g. "Don't confuse with recite").
+
+Return ONLY raw valid JSON with no markdown formatting or code blocks.`
+
+export function buildJournalPronunciationUserPrompt(wordOrPhrase: string): string {
+  return `Analyze this word/phrase for a Pronunciation Journal entry: "${wordOrPhrase}"`
+}
+

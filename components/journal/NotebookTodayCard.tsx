@@ -14,7 +14,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { FileText, Pencil } from '@/components/icons'
+import { FileText, Pencil, MicVocal } from '@/components/icons'
 import Badge from '@/components/ui/Badge'
 import Button from '@/components/ui/Button'
 import {
@@ -26,7 +26,7 @@ import { NotebookTopicSelector } from './NotebookTopicSelector'
 
 interface NotebookTodayCardProps {
   today: NotebookHome['today']
-  onSelectMode?: (mode: 'guided' | 'blank') => void
+  onSelectMode?: (mode: 'guided' | 'blank' | 'pronunciation') => void
   onTopicChange?: (topic: NotebookTopic) => void
   onShufflePrompt?: () => void
 }
@@ -60,7 +60,7 @@ export function NotebookTodayCard({
   }
 
   const promptId = currentPrompt.id || 'small-win'
-  // Reabrir el mismo editor con el que se escribió la entrada (guiado vs. blanco).
+  // Reabrir el mismo editor con el que se escribió la entrada (guiado vs. blanco vs. pronunciación).
   const resumeHref = `/journal/write?mode=${today.entryMode ?? 'blank'}&promptId=${encodeURIComponent(promptId)}&topic=${today.topic}`
 
   return (
@@ -107,11 +107,9 @@ export function NotebookTodayCard({
         </p>
       </div>
 
-      {/* ── Estado EMPTY: Dos tarjetas de entrada. La descripción secundaria
-          queda en baja intensidad hasta hover/focus, para no competir con
-          el label como primera decisión visible. ── */}
+      {/* ── Estado EMPTY: Tres tarjetas de entrada ── */}
       {today.status === 'empty' && (
-        <div className="mt-1 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+        <div className="mt-1 grid grid-cols-1 gap-2.5 sm:grid-cols-3">
           {/* Opción A: Completar frases */}
           <Link
             href={`/journal/write?mode=guided&promptId=${encodeURIComponent(promptId)}&topic=${selectedTopic}`}
@@ -132,7 +130,7 @@ export function NotebookTodayCard({
                   Completar frases
                 </span>
                 <span className="font-caption text-fg-muted leading-normal">
-                  La página empieza con una estructura y tú la terminas.
+                  Estructuras sugeridas para redactar hoy.
                 </span>
               </div>
             </div>
@@ -158,15 +156,40 @@ export function NotebookTodayCard({
                   {selectedTopic === 'free' ? 'Escribir libremente' : 'Página en blanco'}
                 </span>
                 <span className="font-caption text-fg-muted leading-normal">
-                  {selectedTopic === 'free'
-                    ? 'Redacta sobre cualquier tema con asistencia a tu ritmo.'
-                    : 'Escribes desde cero. Puedes pedir ideas cuando quieras.'}
+                  Redacta desde cero a tu propio ritmo.
+                </span>
+              </div>
+            </div>
+          </Link>
+
+          {/* Opción C: Diario de pronunciación */}
+          <Link
+            href={`/journal/write?mode=pronunciation&promptId=${encodeURIComponent(promptId)}&topic=${selectedTopic}`}
+            onClick={(e) => {
+              if (onSelectMode) {
+                e.preventDefault()
+                onSelectMode('pronunciation')
+              }
+            }}
+            className="focus-ring group flex flex-col justify-between gap-3 rounded-[var(--radius-sm)] border border-border-subtle bg-surface-sunken p-4 transition-colors hover:border-border-strong"
+          >
+            <div className="flex items-start gap-3">
+              <span className="mt-0.5 text-accent-1 transition-colors group-hover:text-fg">
+                <MicVocal size={18} aria-hidden />
+              </span>
+              <div className="flex flex-col gap-0.5">
+                <span className="font-body-sm font-medium text-fg">
+                  Diario de pronunciación
+                </span>
+                <span className="font-caption text-fg-muted leading-normal">
+                  Registra palabras y sonidos difíciles.
                 </span>
               </div>
             </div>
           </Link>
         </div>
       )}
+
 
       {/* ── Estado IN PROGRESS: Primera línea en serif + botones de acción ── */}
       {today.status === 'in_progress' && (
