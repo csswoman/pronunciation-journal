@@ -1,0 +1,207 @@
+{
+  "meta": {
+    "eyebrow": "Chunks · The 9-Verb Strategy",
+    "title": "La estrategia de los",
+    "titleEmphasis": "9 verbos ligeros",
+    "goal": "Domina los 9 light verbs esenciales (Make, Do, Take, Get, Have, Give, Put, Set, Go) y el protocolo Hear-Map-Fire para hablar con fluidez natural sin traducir."
+  },
+  "related": [
+    { "slug": "chunk-light-verbs-get-set-put-go", "label": "Light Verbs: Get, Set, Put y Go" },
+    { "slug": "chunk-collocations", "label": "Colocaciones naturales" },
+    { "slug": "c1-verbos-delexicales", "label": "Verbos delexicales (C1)" }
+  ],
+  "cards": [
+    {
+      "id": "vb9-overview",
+      "tag": "Idea central",
+      "title": "Por qué 9 verbos lo cambian todo",
+      "lede": "La investigación del corpus COBUILD demuestra que los nativos construyen la mayoría de sus ideas combinando 9 verbos clave con sustantivos y partículas, en vez de buscar palabras rebuscadas.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Grupo 1", "value": "Make (crear/resultado) · Do (actividad/ejecución)", "highlights": ["Make", "Do"] },
+            { "key": "Grupo 2", "value": "Take (acción intencional) · Get (cambio de estado/resultado)", "highlights": ["Take", "Get"] },
+            { "key": "Grupo 3", "value": "Have (experiencias) · Give (interacciones)", "highlights": ["Have", "Give"] },
+            { "key": "Grupo 4", "value": "Put (posición) · Set (condiciones) · Go (transición)", "highlights": ["Put", "Set", "Go"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Regla de oro:",
+        "body": "No memorices verbos aislados. Aprende el bloque completo (verbo + sustantivo/partícula)."
+      }
+    },
+    {
+      "id": "vb9-group1",
+      "tag": "Grupo 1: Make vs Do",
+      "title": "Resultados (Make) vs. Actividades (Do)",
+      "lede": "Make produce un resultado o creación tangible o abstracta; Do ejecuta una tarea, acción o actividad.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Make (Resultados y creación)",
+              "rule": "Produce un resultado nuevo o decisión",
+              "examples": [
+                "Make a decision",
+                "Make progress",
+                "Make an impression",
+                "Make a mistake"
+              ]
+            },
+            {
+              "label": "Do (Actividades y ejecución)",
+              "rule": "Ejecución de tareas, procesos o favores",
+              "examples": [
+                "Do research",
+                "Do business",
+                "Do your best",
+                "Do someone a favor"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Regla nemotécnica:",
+        "body": "Si al finalizar la acción generas algo que no existía o fijas una postura, usa Make."
+      }
+    },
+    {
+      "id": "vb9-group2",
+      "tag": "Grupo 2: Take vs Get",
+      "title": "Acción deliberada (Take) vs. Cambio de estado (Get)",
+      "lede": "Take expresa una acción proactiva bajo tu control; Get expresa un cambio de estado, transición o logro de un resultado.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Take (Acción deliberada)",
+              "rule": "Tomar la iniciativa con intención",
+              "examples": [
+                "Take a look",
+                "Take action",
+                "Take a risk",
+                "Take responsibility"
+              ]
+            },
+            {
+              "label": "Get (Cambio de estado / Resultado)",
+              "rule": "Transición de un estado a otro o conseguir",
+              "examples": [
+                "Get results",
+                "Get ready",
+                "Get started",
+                "Get things done"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "El poder de Get:",
+        "body": "Get es el verbo más versátil en inglés: úsalo siempre que algo pase de un estado inicial a uno nuevo."
+      }
+    },
+    {
+      "id": "vb9-group3",
+      "tag": "Grupo 3: Have vs Give",
+      "title": "Experiencia (Have) vs. Interacción (Give)",
+      "lede": "Have describe vivencias personales, eventos o estados internos; Give proyecta una acción o entrega hacia los demás.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Have (Experiencias)",
+              "rule": "Vivencias, eventos o estados propios",
+              "examples": [
+                "Have a conversation",
+                "Have an impact",
+                "Have a meeting",
+                "Have second thoughts"
+              ]
+            },
+            {
+              "label": "Give (Interacciones)",
+              "rule": "Acción orientada hacia otra persona",
+              "examples": [
+                "Give feedback",
+                "Give someone a hand",
+                "Give it a shot",
+                "Give advice"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vb9-group4",
+      "tag": "Grupo 4: Put, Set & Go",
+      "title": "Posición (Put), Condiciones (Set) y Transición (Go)",
+      "lede": "Put ubica ideas o elementos en perspectiva; Set establece reglas, metas y fechas; Go marca transiciones y desenlaces.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Put (Posición/Perspectiva)", "value": "put in perspective · put pressure on · put effort into", "highlights": ["put in perspective", "put pressure on", "put effort into"] },
+            { "key": "Set (Condiciones/Estándares)", "value": "set a date · set a deadline · set a goal · set the standard", "highlights": ["set a date", "set a deadline", "set a goal", "set the standard"] },
+            { "key": "Go (Transición/Movimiento)", "value": "go wrong · go smoothly · go over · go viral", "highlights": ["go wrong", "go smoothly", "go over", "go viral"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Diferencia sutil:",
+        "body": "Set define los límites previos (la meta, la fecha); Put aplica fuerza o perspectiva sobre algo existente."
+      }
+    },
+    {
+      "id": "vb9-hear-map-fire",
+      "tag": "El Protocolo",
+      "title": "El protocolo 'Hear, Map, Fire'",
+      "lede": "Tres pasos para mover cualquier colocación desde el reconocimiento pasivo hasta la producción oral automática.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "1. Hear (Escuchar)", "value": "Identifica el bloque verbal en contexto real o audio (TTS/conversación) sin traducirlo.", "highlights": ["Hear"] },
+            { "key": "2. Map (Mapear)", "value": "Asocia la frase a una situación comunicativa real de tu trabajo o rutina.", "highlights": ["Map"] },
+            { "key": "3. Fire (Disparar)", "value": "Pronuncia la frase completa en voz alta 3 veces seguidas para precargar la memoria muscular.", "highlights": ["Fire"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Por qué funciona:",
+        "body": "El paso 'Fire' entrena la boca para que el chunk salga como un solo bloque sonoro, sin vacilaciones mentales al hablar."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "¿Qué verbo es el más natural para expresar un cambio de estado o logro en 'We need to ___ results'?",
+      "options": ["get", "make", "take", "do"],
+      "answer": 0,
+      "explain": "'Get' es el verbo por excelencia para transiciones y obtención de resultados (get results)."
+    },
+    {
+      "q": "¿Cuál es la colocación correcta para establecer una fecha límite o un estándar de calidad?",
+      "options": ["Set a deadline / Set the standard", "Put a deadline / Put the standard", "Make a deadline / Make the standard"],
+      "answer": 0,
+      "explain": "'Set' se utiliza para fijar condiciones, límites, metas y estándares (set a goal, set a deadline)."
+    },
+    {
+      "q": "En el protocolo 'Hear, Map, Fire', ¿cuál es el objetivo central del paso 'Fire'?",
+      "options": [
+        "Repetir en voz alta para precargar la memoria muscular y ganar soltura instantánea",
+        "Traducir mentalmente cada palabra del bloque al español",
+        "Escribir las reglas de conjugación en una libreta"
+      ],
+      "answer": 0,
+      "explain": "'Fire' consiste en activar la pronunciación en voz alta para que la frase salga de forma automática en conversaciones reales."
+    }
+  ]
+}

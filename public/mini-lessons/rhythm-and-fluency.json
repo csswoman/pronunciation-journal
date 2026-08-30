@@ -1,0 +1,24 @@
+{
+  "id": 58,
+  "slug": "rhythm-and-fluency",
+  "level": "intermediate",
+  "category": "pronunciation",
+  "duration": 6,
+  "title": "El Secreto para Leer y Hablar más Rápido",
+  "subtitle": "Ritmo, Regla NAVA y Linking",
+  "body": "Aprende el ritmo del inglés mediante las palabras de contenido NAVA, la compresión en efecto acordeón y la unión de palabras (linking).",
+  "examples": [
+    {
+      "word": "called an Uber",
+      "ipa": "/kɑːld_ən_ˈuː.bɚ/",
+      "translation": "llamé a un Uber (enlace directo d + ə + n)"
+    },
+    {
+      "word": "loved it",
+      "ipa": "/lʌvd_ɪt/",
+      "translation": "me encantó (enlace d + ɪ)"
+    }
+  ],
+  "tip": "El inglés tiene tiempo acentuado (stress-timed). Acentúa solo las palabras NAVA y comprime las funcionales en medio.",
+  "href": "/mini-lessons/rhythm-and-fluency"
+}

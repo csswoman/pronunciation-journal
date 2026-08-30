@@ -1,0 +1,24 @@
+{
+  "id": 60,
+  "slug": "tongue-twisters-linking-practice",
+  "level": "advanced",
+  "category": "pronunciation",
+  "duration": 8,
+  "title": "Frases y Trabalenguas para Practicar",
+  "subtitle": "Entrenamiento de articulación y velocidad",
+  "body": "Pon a prueba tus músculos vocales con trabalenguas enfocados en la J vibrante, la diferencia B/V, la I corta/larga y frases con ritmo NAVA y linking.",
+  "examples": [
+    {
+      "word": "Jack and Jill enjoy juice in June.",
+      "ipa": "/dʒæk ən dʒɪl ɪnˈdʒɔɪ dʒuːs ɪn dʒuːn/",
+      "translation": "Práctica de la J vibrante /dʒ/"
+    },
+    {
+      "word": "Please sit on this seat.",
+      "ipa": "/pliːz sɪt ɒn ðɪs siːt/",
+      "translation": "Diferencia de I corta /ɪ/ e I larga /iː/"
+    }
+  ],
+  "tip": "Dilo lento primero, enfocándote en la articulación del sonido, y ve aumentando la velocidad progresivamente.",
+  "href": "/mini-lessons/tongue-twisters-linking-practice"
+}

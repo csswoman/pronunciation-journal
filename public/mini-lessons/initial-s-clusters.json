@@ -1,0 +1,29 @@
+{
+  "id": 63,
+  "slug": "initial-s-clusters",
+  "level": "intermediate",
+  "category": "pronunciation",
+  "duration": 5,
+  "title": "Veto de la 'E' Inicial en Grupos ST/SP/SK",
+  "subtitle": "Elimina la 'E' parásita al hablar",
+  "body": "Entrena tu boca para arrancar directamente en el sonido siseante /s/ en palabras como school, spanish y street, evitando el vicio de decir eschool o espanish.",
+  "examples": [
+    {
+      "word": "school",
+      "ipa": "/skuːl/",
+      "translation": "escuela (arrancar con /s/, no con /es/)"
+    },
+    {
+      "word": "spanish",
+      "ipa": "/ˈspæn.ɪʃ/",
+      "translation": "español (arrancar con /s/)"
+    },
+    {
+      "word": "street",
+      "ipa": "/striːt/",
+      "translation": "calle (arrancar con /s/)"
+    }
+  ],
+  "tip": "Imagina el siseo de una serpiente (sssss...) antes de pronunciar la palabra. Nunca abras la boca con el sonido vocal 'e'.",
+  "href": "/mini-lessons/initial-s-clusters"
+}

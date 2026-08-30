@@ -4,7 +4,7 @@ import { CHUNKS_OF_THE_DAY } from "../data";
 
 describe("getChunkOfDay", () => {
   it("has a valid collection of chunks with IPA and examples", () => {
-    expect(CHUNKS_OF_THE_DAY.length).toBeGreaterThanOrEqual(30);
+    expect(CHUNKS_OF_THE_DAY.length).toBeGreaterThanOrEqual(300);
     for (const chunk of CHUNKS_OF_THE_DAY) {
       expect(chunk.id).toBeTruthy();
       expect(chunk.chunk).toBeTruthy();

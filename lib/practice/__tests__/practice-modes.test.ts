@@ -12,7 +12,7 @@ describe('resolveRecommendedMode', () => {
 
     expect(r.mode.id).toBe('review')
     expect(r.reason).toBe('due-review')
-    expect(r.headline).toContain('3 palabras pendientes')
+    expect(r.headline).toContain('3 palabras esperan')
   })
 
   it('from daily with a sound → sound lab, with custom copy', () => {

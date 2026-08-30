@@ -1,0 +1,101 @@
+{
+  "slug": "rhythm-and-fluency",
+  "sections": [
+    {
+      "heading": "El secreto de la velocidad en inglés",
+      "body": "El truco principal para ganar velocidad no es hablar apresurado, sino entender qué palabras importan y cuáles no. El inglés tiene un ritmo marcado por impulsos de acento, como un metrónomo o el beat de una canción."
+    },
+    {
+      "heading": "La regla 'NAVA' (Palabras de Contenido)",
+      "body": "Para leer o hablar rápido, tu enfoque debe estar en las palabras importantes que transmiten significado primario:\n- **N**ouns (Sustantivos)\n- **A**djectives (Adjetivos)\n- **V**erbs (Verbos principales)\n- **A**dverbs (Adverbios)\nEstas palabras marcan los 'golpes' principales del ritmo de tu oración."
+    },
+    {
+      "heading": "Palabras sin peso vs. Preguntas",
+      "body": "- **El Verbo To Be NO es importante**: Aunque es un verbo, el verbo ser/estar no se acentúa en el ritmo de la oración. Por eso en inglés se usan tantas contracciones (*you're* en lugar de *you are*).\n- **Las palabras de pregunta SÍ importan**: Palabras como *What*, *Where*, *Who*, *When* siempre llevan el ritmo fuerte."
+    },
+    {
+      "heading": "El efecto 'Acordeón'",
+      "body": "Las palabras importantes (NAVA) deben caer en un ritmo constante. Todas las demás palabras (preposiciones, artículos, pronombres, auxiliares) no tienen peso: las tienes que 'comprimir' y decirlas rapidísimo en el espacio que queda entre las palabras importantes."
+    },
+    {
+      "heading": "Linking (Unir palabras)",
+      "body": "Para sonar natural, debes unir el sonido final de una palabra con el sonido inicial de la siguiente, especialmente si una termina en consonante y la otra empieza en vocal. Ejemplos: *I called_an_Uber* o *I loved_it*."
+    }
+  ],
+  "examples": [
+    {
+      "english": "I called an Uber",
+      "ipa": "/aɪ kɑːld_ən_ˈuː.bɚ/",
+      "translation": "Llamé a un Uber",
+      "note": "Linking: la 'd' final de 'called' se conecta suavemente a 'an' y luego a 'Uber'."
+    },
+    {
+      "english": "I loved it",
+      "ipa": "/aɪ lʌvd_ɪt/",
+      "translation": "Me encantó",
+      "note": "Linking: /d/ + /ɪ/ se pronuncian juntas como una sola palabra continuada."
+    },
+    {
+      "english": "She is a good doctor",
+      "ipa": "/ʃiz ə ɡʊd ˈdɒk.tɚ/",
+      "translation": "Ella es una buena doctora",
+      "note": "Solo 'good' (adjetivo) y 'doctor' (sustantivo) llevan acento rítmico."
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Identifica las palabras que pertenecen a la regla NAVA (las que marcan el golpe rítmico fuerte) en cada oración.",
+      "items": [
+        "I didn't want to be late for work so I called an Uber.",
+        "A gentle giant enjoys jumping near the jungle.",
+        "We visited the village after receiving a video.",
+        "Jack and Jill enjoy juice in June."
+      ],
+      "answers": [
+        "want, late, work, called, Uber",
+        "gentle, giant, enjoys, jumping, near, jungle",
+        "visited, village, receiving, video",
+        "Jack, Jill, enjoy, juice, June"
+      ]
+    },
+    {
+      "instruction": "Conecta los finales de consonante con las iniciales de vocal creando el enlace de 'Linking'.",
+      "items": [
+        "called + an + Uber",
+        "loved + it",
+        "check + up",
+        "sit + on + this"
+      ],
+      "answers": [
+        "called_an_Uber (/kɑːld_ən_uːbɚ/)",
+        "loved_it (/lʌvd_ɪt/)",
+        "check_up (/tʃek_ʌp/)",
+        "sit_on_this (/sɪt_ɒn_ðɪs/)"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "¿Qué tipo de palabras componen la regla NAVA y deben acentuarse en el ritmo?",
+      "options": [
+        "Nombres, Artículos, Verbos auxiliares, Adverbios",
+        "Sustantivos (Nouns), Adjetivos (Adjectives), Verbos principales (Verbs), Adverbios (Adverbs)",
+        "Preposiciones, Pronombres, Artículos, Conjunciones",
+        "Números, Verbo To Be, Artículos, Preposiciones"
+      ],
+      "correct": 1,
+      "explanation": "NAVA significa Nouns, Adjectives, Verbs y Adverbs. Son las palabras de contenido que marcan el ritmo del inglés."
+    },
+    {
+      "question": "¿Cómo se comporta el verbo 'To Be' en el ritmo de una frase en habla natural?",
+      "options": [
+        "Siempre recibe la mayor fuerza de voz de la oración",
+        "Se trata como una palabra de contenido NAVA",
+        "No lleva peso ni acento rítmico; por eso suele contraerse (ej. you're)",
+        "Se pronuncia alargando todas sus vocales"
+      ],
+      "correct": 2,
+      "explanation": "El verbo To Be es una palabra funcional (de estructura) y no lleva peso rítmico, tendiendo a reducirse o contraerse."
+    }
+  ]
+}

@@ -1,0 +1,107 @@
+{
+  "slug": "minimal-pairs-mastery",
+  "sections": [
+    {
+      "heading": "¿Qué es un Par Mínimo?",
+      "body": "Un **par mínimo** es un conjunto de dos palabras que se diferencian únicamente en un solo sonido fonético (un fonema). En inglés, como hay 44 fonemas y solo 26 letras, pequeños cambios fonéticos alteran completamente el significado de la palabra."
+    },
+    {
+      "heading": "Contraste 1: /ɪ/ (corta) vs. /iː/ (larga sonriente)",
+      "body": "- *ship* (/ʃɪp/ - barco) vs. *sheep* (/ʃiːp/ - oveja)\n- *bit* (/bɪt/ - pedazo) vs. *beat* (/biːt/ - ritmo/golpear)\n- *sit* (/sɪt/ - sentarse) vs. *seat* (/siːt/ - asiento)\n*(Recuerda: /ɪ/ es corta y relajada; /iː/ es tensa y alargada como sonriendo).* "
+    },
+    {
+      "heading": "Contraste 2: /æ/ (boca abierta) vs. /e/ (abierta media) vs. /ʌ/ (neutra)",
+      "body": "- *bat* (/bæt/ - murciélago) vs. *bet* (/bet/ - apostar)\n- *cat* (/kæt/ - gato) vs. *cut* (/kʌt/ - cortar)\n- *hat* (/hæt/ - sombrero) vs. *hut* (/hʌt/ - choza)"
+    },
+    {
+      "heading": "Contraste 3: /v/ (labiodental) vs. /w/ (semivocal labial)",
+      "body": "- *vet* (/vet/ - veterinario) vs. *wet* (/wet/ - mojado)\n- *very* (/ˈver.i/ - muy) vs. *wary* (/ˈwer.i/ - cauto)\n*(En /v/, los dientes superiores tocan el labio inferior; en /w/, redondeas los labios como para decir 'u').*"
+    },
+    {
+      "heading": "Contraste 4: /θ/ (TH sorda) vs. /s/ o /t/",
+      "body": "- *think* (/θɪŋk/ - pensar) vs. *sink* (/sɪŋk/ - hundir/fregadero)\n- *three* (/θriː/ - tres) vs. *tree* (/triː/ - árbol)\n*(Para /θ/, saca la punta de la lengua entre los dientes; no la retengas tras los dientes).* "
+    }
+  ],
+  "examples": [
+    {
+      "english": "ship vs sheep",
+      "ipa": "/ʃɪp/ vs /ʃiːp/",
+      "translation": "barco vs oveja",
+      "note": "/ɪ/ corta relajada vs /iː/ larga sonriente."
+    },
+    {
+      "english": "vet vs wet",
+      "ipa": "/vet/ vs /wet/",
+      "translation": "veterinario vs mojado",
+      "note": "/v/ labiodental con vibración vs /w/ redondeando labios."
+    },
+    {
+      "english": "think vs sink",
+      "ipa": "/θɪŋk/ vs /sɪŋk/",
+      "translation": "pensar vs hundirse / fregadero",
+      "note": "/θ/ requiere sacar la lengua entre los dientes."
+    },
+    {
+      "english": "cat vs cut",
+      "ipa": "/kæt/ vs /kʌt/",
+      "translation": "gato vs cortar",
+      "note": "/æt/ abre la mandíbula lateralmente; /ʌ/ es corta en el centro."
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Identifica cuál palabra corresponde a la definición fonética dada.",
+      "items": [
+        "Palabra con /iː/ larga tensa sonriente: ¿'sit' o 'seat'?",
+        "Palabra con /v/ labiodental: ¿'vet' o 'wet'?",
+        "Palabra con /θ/ sacando la lengua: ¿'think' o 'sink'?",
+        "Palabra con /ɪ/ corta relajada: ¿'ship' o 'sheep'?"
+      ],
+      "answers": [
+        "seat",
+        "vet",
+        "think",
+        "ship"
+      ]
+    },
+    {
+      "instruction": "Clasifica el punto de articulación para cada sonido de par mínimo.",
+      "items": [
+        "Sonido /v/ en 'very'",
+        "Sonido /w/ en 'wary'",
+        "Sonido /θ/ en 'three'",
+        "Sonido /t/ en 'tree'"
+      ],
+      "answers": [
+        "Dientes superiores en el labio inferior con vibración.",
+        "Labios redondeados sin contacto de dientes.",
+        "Punta de la lengua saliendo entre los dientes superiores e inferiores.",
+        "Lengua tocando el alvéolo superior (detrás de dientes superiores)."
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "¿Por qué es crucial entrenar con pares mínimos en pronunciación?",
+      "options": [
+        "Porque permite aprender listas largas de vocabulario sin contexto",
+        "Porque ayuda a afinar la discriminación auditiva y la posición exacta de los órganos de articulación en sonidos muy parecidos",
+        "Porque en inglés todas las palabras suenan exactamente igual",
+        "Únicamente para aprender gramática avanzada"
+      ],
+      "correct": 1,
+      "explanation": "Los pares mínimos entrenan al oído y a los músculos del habla para distinguir pequeños cambios fonéticos que alteran totalmente el significado."
+    },
+    {
+      "question": "¿Cuál es la diferencia física entre decir 'vet' (/vet/) y 'wet' (/wet/)?",
+      "options": [
+        "En 'vet' se juntan ambos labios de golpe, en 'wet' se abre la boca",
+        "En 'vet' los dientes superiores tocan el labio inferior con vibración; en 'wet' se redondean los labios sin contacto de dientes",
+        "Ambas palabras se pronuncian exactamente igual en inglés americano",
+        "En 'wet' se saca la lengua entre los dientes"
+      ],
+      "correct": 1,
+      "explanation": "'vet' usa el sonido fricativo labiodental /v/ (dientes en labio), mientras que 'wet' usa la semivocal /w/ (labios redondeados)."
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "id": 62,
+  "slug": "s-es-endings-rules",
+  "level": "basic",
+  "category": "pronunciation",
+  "duration": 5,
+  "title": "Las 3 Reglas de las Terminaciones -S / -ES",
+  "subtitle": "Plurales y 3ª Persona (/s/, /z/, /ɪz/)",
+  "body": "Domina las reglas fonéticas para pronunciar la -S o -ES final en plurales y tercera persona sin dudar entre /s/, /z/ o la sílaba extra /ɪz/.",
+  "examples": [
+    {
+      "word": "cats",
+      "ipa": "/kæts/",
+      "translation": "gatos (terminación /s/ sorda)"
+    },
+    {
+      "word": "dogs",
+      "ipa": "/dɔːɡz/",
+      "translation": "perros (terminación /z/ sonora)"
+    },
+    {
+      "word": "buses",
+      "ipa": "/ˈbʌs.ɪz/",
+      "translation": "autobuses (terminación /ɪz/ silábica)"
+    }
+  ],
+  "tip": "La terminación -es solo crea una sílaba nueva (/ɪz/) cuando la palabra original termina en un sonido sibilante (s, z, sh, ch, x).",
+  "href": "/mini-lessons/s-es-endings-rules"
+}

@@ -1,0 +1,310 @@
+{
+  "meta": {
+    "eyebrow": "Mazo Especial · 300 Prefabricated Phrases",
+    "title": "300 Chunks to Speak English",
+    "titleEmphasis": "From Day 1",
+    "goal": "Domina 300 bloques conversacionales esenciales en presente, pasado y futuro para hablar con fluidez natural sin traducir en tu cabeza."
+  },
+  "related": [
+    {
+      "slug": "chunk-vida-cotidiana",
+      "label": "Chunks para la vida cotidiana"
+    },
+    {
+      "slug": "chunk-social-small-talk",
+      "label": "Social & Small Talk"
+    },
+    {
+      "slug": "chunk-discourse-markers",
+      "label": "Conectores del discurso"
+    }
+  ],
+  "cards": [
+    {
+      "id": "chunk-300-card-1",
+      "tag": "Presente · Romper el hielo & Small Talk",
+      "title": "Iniciar conversaciones sin vacilar",
+      "lede": "Usa frases hechas en lugar de traducir palabra por palabra al saludar y hablar del clima.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Hey, how's it going?",
+              "value": "Hey, ¿cómo te va? · Hey, how's it going? Haven't seen you in a while!",
+              "highlights": [
+                "how's it going"
+              ]
+            },
+            {
+              "key": "Long time no see!",
+              "value": "¡Cuánto tiempo sin verte! · Long time no see! How have you been?",
+              "highlights": [
+                "Long time no see"
+              ]
+            },
+            {
+              "key": "Nice weather we're having, isn't it?",
+              "value": "Buen clima estamos teniendo, ¿verdad?",
+              "highlights": [
+                "Nice weather"
+              ]
+            },
+            {
+              "key": "Can't complain",
+              "value": "No me puedo quejar · Can't complain, things are going fine.",
+              "highlights": [
+                "Can't complain"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Tip Fonético:",
+        "body": "\"How's it going?\" suele sonar fluido como /haʊzɪt ˈɡoʊɪŋ/ conectando las palabras."
+      }
+    },
+    {
+      "id": "chunk-300-card-2",
+      "tag": "Presente · Opiniones & Acuerdos",
+      "title": "Expresar ideas y reaccionar",
+      "lede": "Estructuras clave para dar tu opinión, estar de acuerdo o disentir con educación.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "If you ask me,...",
+              "value": "Si me preguntas a mí... · If you ask me, the second option is much better.",
+              "highlights": [
+                "If you ask me"
+              ]
+            },
+            {
+              "key": "That makes sense",
+              "value": "Tiene sentido · That makes sense, thanks for explaining.",
+              "highlights": [
+                "makes sense"
+              ]
+            },
+            {
+              "key": "I totally agree",
+              "value": "Estoy totalmente de acuerdo.",
+              "highlights": [
+                "totally agree"
+              ]
+            },
+            {
+              "key": "I see your point, but...",
+              "value": "Entiendo tu punto, pero...",
+              "highlights": [
+                "see your point"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chunk-300-card-3",
+      "tag": "Presente · Ayuda & Trabajo",
+      "title": "Pedir favores y desenvolverse en el día a día",
+      "lede": "Frases de cortesía para ofrecer o pedir ayuda y hablar de tus tareas diarias.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Could you do me a favor?",
+              "value": "¿Me harías un favor? · Could you do me a favor and grab my bag?",
+              "highlights": [
+                "do me a favor"
+              ]
+            },
+            {
+              "key": "I'll take care of it",
+              "value": "Yo me encargo de ello · Don't worry, I'll take care of it.",
+              "highlights": [
+                "take care of it"
+              ]
+            },
+            {
+              "key": "I've got a lot on my plate",
+              "value": "Tengo mucho trabajo/pendientes.",
+              "highlights": [
+                "lot on my plate"
+              ]
+            },
+            {
+              "key": "I'm still getting the hang of it",
+              "value": "Todavía le estoy agarrando el truco.",
+              "highlights": [
+                "getting the hang of it"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chunk-300-card-4",
+      "tag": "Pasado · Historias & Experiencias",
+      "title": "Relatar anécdotas y eventos pasados",
+      "lede": "Conectores e inicios narrativos para contar lo que viviste con dinamismo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Have you ever been to...?",
+              "value": "¿Alguna vez has estado en...? · Have you ever been to Japan?",
+              "highlights": [
+                "Have you ever been"
+              ]
+            },
+            {
+              "key": "That reminds me of the time...",
+              "value": "Eso me recuerda la vez en que...",
+              "highlights": [
+                "reminds me of"
+              ]
+            },
+            {
+              "key": "Long story short,...",
+              "value": "En resumen / Para no hacer el cuento largo...",
+              "highlights": [
+                "Long story short"
+              ]
+            },
+            {
+              "key": "Out of nowhere,...",
+              "value": "De la nada... · Out of nowhere, it started pouring rain.",
+              "highlights": [
+                "Out of nowhere"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chunk-300-card-5",
+      "tag": "Pasado · Disculpas & Explicaciones",
+      "title": "Explicar contratiempos y disculparse",
+      "lede": "Maneja malentendidos y retrasos con empatía y naturalidad.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "I didn't mean to",
+              "value": "No fue mi intención · I didn't mean to interrupt you.",
+              "highlights": [
+                "didn't mean to"
+              ]
+            },
+            {
+              "key": "It slipped my mind",
+              "value": "Se me pasó de la mente · Sorry, it completely slipped my mind.",
+              "highlights": [
+                "slipped my mind"
+              ]
+            },
+            {
+              "key": "I lost track of time",
+              "value": "Perdí la noción del tiempo.",
+              "highlights": [
+                "lost track of time"
+              ]
+            },
+            {
+              "key": "Let me make it up to you",
+              "value": "Déjame compensártelo · Dinner's on me.",
+              "highlights": [
+                "make it up to you"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chunk-300-card-6",
+      "tag": "Futuro · Planes, Predicciones & Cierres",
+      "title": "Proyectar el futuro y cerrar charlas",
+      "lede": "Formula planes con otros, haz predicciones y despídete sutilmente.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "I'm looking forward to...",
+              "value": "Tengo muchas ganas de... · I'm looking forward to the weekend.",
+              "highlights": [
+                "looking forward to"
+              ]
+            },
+            {
+              "key": "Chances are,...",
+              "value": "Lo más probable es que... · Chances are, the meeting will be rescheduled.",
+              "highlights": [
+                "Chances are"
+              ]
+            },
+            {
+              "key": "Let's play it by ear",
+              "value": "Improvisemos sobre la marcha.",
+              "highlights": [
+                "play it by ear"
+              ]
+            },
+            {
+              "key": "Well, I should get going",
+              "value": "Bueno, debería irme marchando · It's getting late.",
+              "highlights": [
+                "should get going"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Clave de Cierre:",
+        "body": "\"Have a good one\" y \"Talk to you later\" son los cierres universales más usados por hablantes nativos."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "¿Qué frase dices para pedir disculpas por haber olvidado una cita de forma natural?",
+      "options": [
+        "I didn't mean to",
+        "Sorry, it completely slipped my mind!",
+        "My memory went out."
+      ],
+      "answer": 1,
+      "explain": "'It slipped my mind' es la expresión idiomática perfecta para decir que algo se te olvidó por completo."
+    },
+    {
+      "q": "Si quieres sugerir improvisar un plan sobre la marcha sin agendar hora fija, ¿qué dices?",
+      "options": [
+        "Let's play it by ear",
+        "Let's do music later",
+        "Plan without ears"
+      ],
+      "answer": 0,
+      "explain": "'Let me / Let's play it by ear' significa tomar decisiones a medida que suceden las cosas."
+    },
+    {
+      "q": "¿Cuál de estos chunks sirve para iniciar una conversación casual al reencontrarte con alguien?",
+      "options": [
+        "Long time no see!",
+        "Until next time",
+        "I will leave now"
+      ],
+      "answer": 0,
+      "explain": "'Long time no see!' significa '¡Cuánto tiempo sin verte!' y es una apertura cálida y espontánea."
+    }
+  ]
+}

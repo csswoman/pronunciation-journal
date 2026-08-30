@@ -1,0 +1,93 @@
+{
+  "slug": "pronunciation-fundamentals",
+  "sections": [
+    {
+      "heading": "Stress (El acento de palabra)",
+      "body": "En inglés, es crucial identificar cuál es la sílaba fuerte de una palabra. El 'stress' dicta cómo se van a pronunciar las vocales de las demás sílabas: la sílaba tónica se pronuncia con más fuerza, mayor duración y tono más alto."
+    },
+    {
+      "heading": "La Schwa (/ə/)",
+      "body": "Es la vocal más frecuente del inglés. Es un sonido muy relajado o 'vago' (suena como una 'uh' muy suave con la boca relajada). Regla de oro: La Schwa nunca va en la sílaba fuerte. Aparece en las sílabas débiles reemplazando a la vocal escrita (por ejemplo, en travel, banana y bacon, las vocales que no llevan el acento suenan como schwa)."
+    },
+    {
+      "heading": "Voiced vs. Voiceless (Con voz vs. Sin voz)",
+      "body": "Los sonidos consonánticos del inglés se dividen según la vibración de las cuerdas vocales:\n- **Voiced (Con voz)**: Hacen vibrar tus cuerdas vocales. Si te tocas la garganta, sientes la vibración (ej. M, N, L, Z, V).\n- **Voiceless (Sin voz)**: No hay vibración, es solo paso de aire (ej. S, SH, TH sorda, T, F)."
+    }
+  ],
+  "examples": [
+    {
+      "english": "banana",
+      "ipa": "/bəˈnɑː.nə/",
+      "translation": "plátano",
+      "note": "La primera y la última sílaba son débiles y llevan schwa /ə/."
+    },
+    {
+      "english": "bacon",
+      "ipa": "/ˈbeɪ.kən/",
+      "translation": "tocino",
+      "note": "La 'o' no se pronuncia como o, se reduce a schwa /ə/."
+    },
+    {
+      "english": "voice (V) vs fan (F)",
+      "ipa": "/vɔɪs/ vs /fæn/",
+      "translation": "vibración vs solo aire",
+      "note": "/v/ activa las cuerdas vocales, /f/ es puramente fricativa sorda."
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Identifica qué vocales se reducen a Schwa (/ə/) en las siguientes palabras.",
+      "items": [
+        "travel",
+        "banana",
+        "bacon",
+        "about"
+      ],
+      "answers": [
+        "La 'e' de la segunda sílaba (átona).",
+        "La primera 'a' y la última 'a' (átonas).",
+        "La 'o' de la segunda sílaba (átona).",
+        "La 'a' inicial (átona)."
+      ]
+    },
+    {
+      "instruction": "Clasifica cada consonante como Voiced (Con voz) o Voiceless (Sin voz).",
+      "items": [
+        "Z",
+        "S",
+        "V",
+        "F"
+      ],
+      "answers": [
+        "Voiced (hace vibrar las cuerdas vocales)",
+        "Voiceless (solo aire)",
+        "Voiced (hace vibrar las cuerdas vocales)",
+        "Voiceless (solo aire)"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "¿En cuál de las siguientes sílabas puede aparecer el sonido Schwa (/ə/)?",
+      "options": [
+        "En la sílaba tónica (fuerte)",
+        "Únicamente en sílabas átonas (débiles)",
+        "Solo al final de las palabras monosílabas",
+        "En cualquier sílaba acentuada"
+      ],
+      "correct": 1,
+      "explanation": "La regla de oro de la Schwa es que nunca aparece en la sílaba fuerte de la palabra."
+    },
+    {
+      "question": "¿Cómo puedes comprobar si una consonante es 'Voiced' (con voz)?",
+      "options": [
+        "Tocándote los labios al hablar",
+        "Tocándote la garganta para sentir la vibración de las cuerdas vocales",
+        "Escuchando si sale mucho aire de golpe",
+        "Comprobando si la boca está totalmente abierta"
+      ],
+      "correct": 1,
+      "explanation": "Los sonidos Voiced (como Z, V, M, N) producen una vibración física en las cuerdas vocales que puedes sentir al tocar tu garganta."
+    }
+  ]
+}

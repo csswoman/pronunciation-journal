@@ -1,0 +1,29 @@
+{
+  "id": 61,
+  "slug": "ed-past-tense-rules",
+  "level": "basic",
+  "category": "pronunciation",
+  "duration": 6,
+  "title": "Las 3 Reglas del Pasado -ED",
+  "subtitle": "Pronunciación correcta de verbos regulares",
+  "body": "Aprende a dominar las tres terminaciones fonéticas del pasado regular (-ED): /t/, /d/ e /ɪd/, acabando con la confusión de pronunciar siempre 'ed'.",
+  "examples": [
+    {
+      "word": "worked",
+      "ipa": "/wɜːkt/",
+      "translation": "trabajó (terminación /t/ sorda)"
+    },
+    {
+      "word": "played",
+      "ipa": "/pleɪd/",
+      "translation": "jugó (terminación /d/ sonora)"
+    },
+    {
+      "word": "wanted",
+      "ipa": "/ˈwɑːn.tɪd/",
+      "translation": "quería (terminación /ɪd/ silábica)"
+    }
+  ],
+  "tip": "Solo añade una extra sílaba (/ɪd/) cuando el verbo base termine en sonido T o D. En los demás casos, -ED no añade una nueva sílaba.",
+  "href": "/mini-lessons/ed-past-tense-rules"
+}

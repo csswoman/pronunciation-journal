@@ -1,0 +1,99 @@
+{
+  "slug": "pronunciation-golden-tips",
+  "sections": [
+    {
+      "heading": "La regla de los adjetivos terminados en '-OUS'",
+      "body": "Palabras como *dangerous*, *generous*, *obvious* **nunca** se pronuncian marcando la 'o' o la 'u' al final. Esa última sílaba es siempre una Schwa (el sonido vago neutro /əs/). Suena más bien como *danger-uhs*, *gener-uhs* o *obvi-uhs*."
+    },
+    {
+      "heading": "Usa canciones pop para practicar el oído",
+      "body": "Las canciones pop son excelentes para acostumbrar el oído al ritmo real y la fonética del inglés:\n- Presta atención a cómo los cantantes pronuncian la 'i' corta en la palabra *it* (ej. *Try it, write it, lick it, spit it*).\n- También son geniales para notar cómo comprimen las palabras sin importancia para mantener el ritmo (ej. Lady Gaga en *'I'd rather be dry but at least I'm alive'*)."
+    },
+    {
+      "heading": "El uso estratégico de Google y diccionarios",
+      "body": "Cuando busques la pronunciación de una palabra en Google (escribiendo *'palabra + pronunciation'*), empieza practicando con palabras cortas de dos sílabas para ver dónde cae la sílaba fuerte y dónde se esconde la schwa."
+    }
+  ],
+  "examples": [
+    {
+      "english": "dangerous",
+      "ipa": "/ˈdeɪn.dʒər.əs/",
+      "translation": "peligroso",
+      "note": "Final en /-əs/ (schwa), nunca /os/ ni /us/."
+    },
+    {
+      "english": "generous",
+      "ipa": "/ˈdʒen.ər.əs/",
+      "translation": "generoso",
+      "note": "Final en /-əs/ (schwa)."
+    },
+    {
+      "english": "obvious",
+      "ipa": "/ˈɑːb.vi.əs/",
+      "translation": "obvio",
+      "note": "Final en /-əs/ (schwa)."
+    },
+    {
+      "english": "Try it, write it",
+      "ipa": "/traɪ ɪt | raɪt ɪt/",
+      "translation": "Inténtalo, escríbelo",
+      "note": "Observa la pronunciación de la 'i' corta /ɪ/ muy relajada."
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Escribe la pronunciación aproximada del sufijo -ous para cada adjetivo.",
+      "items": [
+        "dangerous",
+        "generous",
+        "obvious",
+        "famous"
+      ],
+      "answers": [
+        "danger-uhs (con Schwa /-əs/)",
+        "gener-uhs (con Schwa /-əs/)",
+        "obvi-uhs (con Schwa /-əs/)",
+        "fame-uhs (con Schwa /-əs/)"
+      ]
+    },
+    {
+      "instruction": "Identifica qué fenómeno de pronunciación se practica mejor con cada estrategia.",
+      "items": [
+        "Escuchar canciones pop (ej. Lady Gaga)",
+        "Buscar 'word + pronunciation' en Google",
+        "Observar las vocales átonas en palabras de 2 sílabas",
+        "Practicar trabalenguas en voz alta"
+      ],
+      "answers": [
+        "Notar la compresión de palabras de función y la 'i' corta en contexto real.",
+        "Visualizar la sílaba tónica y escuchar la articulación nativa.",
+        "Descubrir qué vocal se convierte en Schwa /ə/.",
+        "Ganar agilidad y flexibilidad muscular en la mandíbula y lengua."
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "¿Cómo se pronuncia correctamente la terminación '-ous' en adjetivos como 'dangerous' u 'obvious'?",
+      "options": [
+        "Pronunciando claramente la 'o' y la 'u' como /ous/",
+        "Con un sonido de Schwa neutro y relajado /-əs/ (como -uhs)",
+        "Pronunciando únicamente una 'o' fuerte al final",
+        "Haciendo que la 'u' sea muda y marcando la 's' sola"
+      ],
+      "correct": 1,
+      "explanation": "En adjetivos terminados en -ous, la vocal átona colapsa en una Schwa, produciendo /-əs/ (uhs)."
+    },
+    {
+      "question": "¿Por qué las canciones pop son una excelente herramienta para practicar pronunciación?",
+      "options": [
+        "Porque en las canciones no se usan contracciones",
+        "Porque obligan a ver cómo los cantantes comprimen las palabras secundarias para encajar en el ritmo del beat",
+        "Porque los cantantes siempre pronuncian cada vocal de forma exagerada y lenta",
+        "Porque solo usan vocabulario de nivel C2"
+      ],
+      "correct": 1,
+      "explanation": "El ritmo musical de las canciones demuestra claramente el efecto acordeón y la compresión de palabras funcionales del inglés."
+    }
+  ]
+}

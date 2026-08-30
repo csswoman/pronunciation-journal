@@ -1,0 +1,173 @@
+{
+  "meta": {
+    "eyebrow": "Chunks · Light Verbs",
+    "title": "Light Verbs:",
+    "titleEmphasis": "Get, Set, Put y Go",
+    "goal": "Aprende a usar Get, Set, Put y Go para expresar cambios de estado, condiciones, posicionamiento y desenlaces naturales."
+  },
+  "related": [
+    { "slug": "chunk-the-9-verbs-strategy", "label": "La estrategia de los 9 verbos" },
+    { "slug": "chunk-collocations", "label": "Colocaciones naturales" },
+    { "slug": "b2-causativo", "label": "Estructuras causativas (Have/Get)" }
+  ],
+  "cards": [
+    {
+      "id": "lv-get",
+      "tag": "Get: Estado y Resultados",
+      "title": "Get: el motor del cambio de estado",
+      "lede": "Más allá de 'obtener', Get describe el paso de una situación a otra y la consecución de objetivos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Get results", "value": "Conseguir / alcanzar resultados · Focus on the actions that get results.", "highlights": ["get results"] },
+            { "key": "Get started", "value": "Empezar / ponerse en marcha · Let's get started on the sprint.", "highlights": ["get started"] },
+            { "key": "Get ready", "value": "Prepararse · Make sure you get ready before the demo.", "highlights": ["get ready"] },
+            { "key": "Get the point", "value": "Entender la idea central · I get your point, but consider this.", "highlights": ["get your point"] },
+            { "key": "Get in touch", "value": "Ponerse en contacto · I'll get in touch with the lead designer.", "highlights": ["get in touch"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Fórmula mental:",
+        "body": "Get + adjetivo = volverse / ponerse (get dark, get tired, get ready, get clear)."
+      }
+    },
+    {
+      "id": "lv-set",
+      "tag": "Set: Condiciones y Metas",
+      "title": "Set: establecer reglas, fechas y límites",
+      "lede": "Set se usa cuando fijas parámetros, estándares o puntos de referencia que otros deben seguir.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Set a goal / target", "value": "Fijar una meta · We need to set realistic goals.", "highlights": ["set realistic goals"] },
+            { "key": "Set a deadline / date", "value": "Establecer fecha límite · Let's set a deadline for Friday.", "highlights": ["set a deadline"] },
+            { "key": "Set the standard", "value": "Marcar el estándar · Their team sets the standard for quality.", "highlights": ["sets the standard"] },
+            { "key": "Set boundaries", "value": "Establecer límites sanos · It is vital to set clear boundaries.", "highlights": ["set clear boundaries"] },
+            { "key": "Set an example", "value": "Dar el ejemplo · Leaders must set a good example.", "highlights": ["set a good example"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Error a evitar:",
+        "body": "Nunca digas *put a deadline* ni *put a goal*. Para fijar condiciones y metas siempre se usa 'set'."
+      }
+    },
+    {
+      "id": "lv-put",
+      "tag": "Put: Posición y Perspectiva",
+      "title": "Put: ubicación de ideas, esfuerzo y presión",
+      "lede": "Put traslada su sentido físico de colocar cosas hacia el plano abstracto de actitudes e influencias.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Put in perspective", "value": "Poner en perspectiva · Let's put these numbers in perspective.", "highlights": ["put these numbers in perspective"] },
+            { "key": "Put pressure on", "value": "Ejercer presión sobre · Don't put too much pressure on the team.", "highlights": ["put too much pressure on"] },
+            { "key": "Put effort into", "value": "Invertir esfuerzo en algo · She put a lot of effort into this doc.", "highlights": ["put a lot of effort into"] },
+            { "key": "Put in place", "value": "Implementar / poner en marcha un sistema · New guidelines were put in place.", "highlights": ["put in place"] },
+            { "key": "Put at ease", "value": "Tranquilizar / hacer sentir cómodo · His calm voice put everyone at ease.", "highlights": ["put everyone at ease"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lv-go",
+      "tag": "Go: Transición y Desenlace",
+      "title": "Go: cómo evolucionan y terminan las situaciones",
+      "lede": "Go describe el rumbo y desenlace de procesos, estados mentales y situaciones imprevistas.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Go wrong", "value": "Salir mal / fallar · If anything goes wrong, revert the deployment.", "highlights": ["goes wrong"] },
+            { "key": "Go smoothly", "value": "Ir sobre ruedas / salir sin problemas · The migration went smoothly.", "highlights": ["went smoothly"] },
+            { "key": "Go blank", "value": "Quedarse en blanco · My mind went completely blank during the intro.", "highlights": ["went completely blank"] },
+            { "key": "Go unnoticed", "value": "Pasar desapercibido · The typo went unnoticed for weeks.", "highlights": ["went unnoticed"] },
+            { "key": "Go over", "value": "Repasar / revisar en detalle · Let's go over the agenda once more.", "highlights": ["go over the agenda"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Sonido natural:",
+        "body": "'Go over' se enlaza como /ɡoʊ ˈoʊvər/ sin cortar el aire entre ambas vocales."
+      }
+    },
+    {
+      "id": "lv-contrast-mistakes",
+      "tag": "Contraste y Errores",
+      "title": "Errores frecuentes del hispanohablante",
+      "lede": "El español tiende a traducir todo con 'hacer' o 'poner'. Compara con la colocación natural en inglés.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "We need to put a deadline.", "note": "fijar fecha/meta = set" },
+            { "variant": "good", "text": "We need to set a deadline.", "note": "set a deadline ✓" },
+            { "variant": "bad", "text": "I need to make ready for the call.", "note": "prepararse (cambio de estado) = get" },
+            { "variant": "good", "text": "I need to get ready for the call.", "note": "get ready ✓" },
+            { "variant": "bad", "text": "Everything made wrong in the release.", "note": "salir mal = go wrong" },
+            { "variant": "good", "text": "Everything went wrong in the release.", "note": "went wrong ✓" },
+            { "variant": "bad", "text": "He did a lot of effort in this.", "note": "invertir esfuerzo = put effort into" },
+            { "variant": "good", "text": "He put a lot of effort into this.", "note": "put effort into ✓" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lv-quick-reference",
+      "tag": "Referencia rápida",
+      "title": "Matriz de decisión en tiempo real",
+      "lede": "Usa esta regla rápida para elegir el verbo exacto antes de hablar.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "¿Quieres cambiar de estado?", "value": "Usa GET · get ready, get started, get results, get tired" },
+            { "key": "¿Quieres fijar reglas o metas?", "value": "Usa SET · set a goal, set a deadline, set the standard" },
+            { "key": "¿Quieres posicionar ideas o esfuerzo?", "value": "Usa PUT · put in perspective, put effort into, put pressure" },
+            { "key": "¿Quieres describir el desenlace?", "value": "Usa GO · go wrong, go smoothly, go blank, go over" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Entrenamiento oral:",
+        "body": "Aplica 'Fire': elige una frase de cada verbo y dila en voz alta 3 veces."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "¿Cuál es la colocación correcta para fijar objetivos trimestrales?",
+      "options": [
+        "Set quarterly goals",
+        "Put quarterly goals",
+        "Make quarterly goals"
+      ],
+      "answer": 0,
+      "explain": "'Set goals' es la colocación estándar en inglés profesional para fijar metas."
+    },
+    {
+      "q": "¿Cómo expresas que la presentación salió a la perfección y sin tropiezos?",
+      "options": [
+        "The presentation went smoothly.",
+        "The presentation made smoothly.",
+        "The presentation did smoothly."
+      ],
+      "answer": 0,
+      "explain": "'Go smoothly' (pasado 'went smoothly') significa salir sobre ruedas o desarrollarse sin inconvenientes."
+    },
+    {
+      "q": "¿Qué frase expresa correctamente que alguien invirtió mucha energía en un proyecto?",
+      "options": [
+        "She put a lot of effort into the project.",
+        "She made a lot of effort into the project.",
+        "She did a lot of effort to the project."
+      ],
+      "answer": 0,
+      "explain": "La colocación natural es 'put effort into something'."
+    }
+  ]
+}
