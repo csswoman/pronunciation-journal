@@ -12,15 +12,15 @@ import { checkWordMatch } from '@/lib/exercises/word-search/grid-generator'
 import { playUiCue } from '@/lib/ui-sounds/cues'
 import { useHideMobileNavDuringSession } from '@/hooks/useHideMobileNavDuringSession'
 import PageHeader from '@/components/layout/PageHeader'
-import Button from '@/components/ui/Button'
 import { PillButton } from '@/components/ui/PillButton'
+import { getWordColorTheme } from '@/lib/exercises/word-search/word-colors'
 import WordSearchSetup from './WordSearchSetup'
 import WordSearchGrid from './WordSearchGrid'
 import WordClueList from './WordClueList'
 import WordFoundBanner from './WordFoundBanner'
+import WordSearchCompletion from './WordSearchCompletion'
 import {
   ArrowLeft,
-  CheckCircle2,
   RotateCcw,
   Timer as TimerIcon,
   X,
@@ -163,6 +163,10 @@ export default function WordSearchSession() {
     (foundWordIds.size / Math.max(puzzle.items.length, 1)) * 100,
   )
   const modeLabel = puzzle.mode === 'classic' ? 'Lista visible' : 'Con pistas'
+  const lastFoundIndex = lastFoundItem
+    ? puzzle.items.findIndex((item) => item.id === lastFoundItem.id)
+    : -1
+  const lastFoundTheme = lastFoundIndex >= 0 ? getWordColorTheme(lastFoundIndex) : undefined
 
   return (
     <div
@@ -207,10 +211,10 @@ export default function WordSearchSession() {
         }
       />
 
-      <div className="flex flex-col gap-2" aria-label="Progreso de la partida">
+      <div className="flex flex-col gap-3 rounded-lg border border-border-subtle bg-surface-raised p-4 shadow-xs" aria-label="Progreso de la partida">
         <div className="flex items-center justify-between gap-3 text-caption text-fg-muted">
-          <span>{isCompleted ? 'Partida completada' : 'Palabras encontradas'}</span>
-          <span className="font-mono tabular-nums text-fg">
+          <span className="font-medium text-fg">{isCompleted ? 'Partida completada' : 'Palabras encontradas'}</span>
+          <span className="font-mono font-semibold tabular-nums text-fg">
             {foundWordIds.size} / {puzzle.items.length}
           </span>
         </div>
@@ -220,10 +224,12 @@ export default function WordSearchSession() {
           aria-valuemin={0}
           aria-valuemax={puzzle.items.length}
           aria-valuenow={foundWordIds.size}
-          className="h-1.5 overflow-hidden rounded-full bg-surface-sunken"
+          className="h-2 overflow-hidden rounded-full bg-surface-sunken"
         >
           <div
-            className="h-full rounded-full bg-success transition-[width] duration-200 ease-out-quart motion-reduce:transition-none"
+            className={`h-full rounded-full transition-[width] duration-300 ease-out-quart motion-reduce:transition-none ${
+              isCompleted ? 'bg-success' : 'bg-primary'
+            }`}
             style={{ width: `${progressPercent}%` }}
           />
         </div>
@@ -236,56 +242,19 @@ export default function WordSearchSession() {
       {!isCompleted ? (
         <WordFoundBanner
           item={lastFoundItem}
+          colorTheme={lastFoundTheme}
           onDismiss={() => setLastFoundItem(null)}
         />
       ) : null}
 
       {isCompleted ? (
-        <section className="flex flex-col items-center justify-center gap-layout-section-gap rounded-lg border border-success/30 bg-success-soft p-layout-card-pad text-center md:p-8">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-success text-on-primary">
-            <CheckCircle2 className="h-7 w-7" aria-hidden />
-          </div>
-
-          <div className="flex flex-col gap-layout-stack-tight">
-            <h2 className="text-balance text-h3 font-bold text-fg">
-              ¡Encontraste todas!
-            </h2>
-            <p className="max-w-md text-pretty text-body-sm text-fg-muted">
-              Completaste “{puzzle.title}” en{' '}
-              <span className="font-semibold tabular-nums text-fg">
-                {formatTime(elapsedSeconds)}
-              </span>
-              . Repasa las palabras que encontraste o vuelve a jugar el mismo tablero.
-            </p>
-          </div>
-
-          <div className="flex max-w-lg flex-wrap justify-center gap-2" aria-label="Palabras encontradas">
-            {puzzle.items.map((item) => (
-              <span
-                key={item.id}
-                className="rounded-sm bg-surface-raised px-2.5 py-1 text-caption font-medium text-fg"
-              >
-                {item.displayWord}
-                {item.ipa ? (
-                  <span className="ms-1 font-ipa text-caption text-fg-muted">
-                    {item.ipa}
-                  </span>
-                ) : null}
-              </span>
-            ))}
-          </div>
-
-          <div className="flex w-full flex-col-reverse gap-2 sm:w-auto sm:flex-row sm:gap-3">
-            <Button variant="secondary" onClick={() => handleStartPuzzle(puzzle)}>
-              <RotateCcw className="me-1.5 h-4 w-4" aria-hidden />
-              <span>Repetir tablero</span>
-            </Button>
-            <Button variant="primary" onClick={handleExitSession}>
-              <ArrowLeft className="me-1.5 h-4 w-4" aria-hidden />
-              <span>Elegir otro tema</span>
-            </Button>
-          </div>
-        </section>
+        <WordSearchCompletion
+          puzzle={puzzle}
+          elapsedSeconds={elapsedSeconds}
+          formatTime={formatTime}
+          onRepeat={() => handleStartPuzzle(puzzle)}
+          onExit={handleExitSession}
+        />
       ) : (
         <div className="grid w-full items-start gap-layout-section-gap lg:grid-cols-[minmax(22rem,32rem)_minmax(20rem,1fr)]">
           <div className="min-w-0 lg:sticky lg:top-6">

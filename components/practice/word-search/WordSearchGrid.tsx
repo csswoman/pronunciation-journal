@@ -15,6 +15,7 @@ import type {
   WordSelectionResult,
 } from '@/lib/exercises/word-search/types'
 import { getPathBetween } from '@/lib/exercises/word-search/grid-generator'
+import { getWordColorTheme } from '@/lib/exercises/word-search/word-colors'
 
 interface Props {
   grid: string[][]
@@ -63,15 +64,16 @@ export default function WordSearchGrid({
     }
   }, [])
 
-  const foundCellSet = useMemo(() => {
-    const cells = new Set<string>()
-    for (const placement of placements) {
-      if (!foundWordIds.has(placement.wordId)) continue
+  const foundCellMap = useMemo(() => {
+    const map = new Map<string, number>()
+    placements.forEach((placement, placementIndex) => {
+      if (!foundWordIds.has(placement.wordId)) return
       for (const coordinate of placement.path) {
-        cells.add(coordinateKey(coordinate))
+        const key = coordinateKey(coordinate)
+        map.set(key, placementIndex)
       }
-    }
-    return cells
+    })
+    return map
   }, [placements, foundWordIds])
 
   const activeWordCellSet = useMemo(() => {
@@ -290,7 +292,8 @@ export default function WordSearchGrid({
             {row.map((letter, colIndex) => {
               const coordinate = { row: rowIndex, col: colIndex }
               const key = coordinateKey(coordinate)
-              const isFound = foundCellSet.has(key)
+              const foundPlacementIndex = foundCellMap.get(key)
+              const isFound = foundPlacementIndex !== undefined
               const isSelected = selectedCellSet.has(key)
               const isActive = activeWordCellSet.has(key)
               const isFeedback = feedbackCellSet.has(key)
@@ -306,13 +309,14 @@ export default function WordSearchGrid({
                 cellStyle = 'bg-warning-soft text-warning ring-2 ring-warning/50'
               } else if (isSelected) {
                 state = 'selected'
-                cellStyle = 'bg-primary-soft text-primary ring-2 ring-primary/60'
+                cellStyle = 'bg-primary-soft text-primary ring-2 ring-primary/60 font-bold'
               } else if (isActive) {
                 state = 'active'
-                cellStyle = 'bg-primary-soft text-primary ring-2 ring-primary/40'
+                cellStyle = 'bg-primary-soft text-primary ring-2 ring-primary/40 font-bold'
               } else if (isFound) {
                 state = 'found'
-                cellStyle = 'bg-success-soft text-success'
+                const colorTheme = getWordColorTheme(foundPlacementIndex)
+                cellStyle = `${colorTheme.gridBg} ${colorTheme.gridText} ${colorTheme.gridRing}`
               }
 
               return (

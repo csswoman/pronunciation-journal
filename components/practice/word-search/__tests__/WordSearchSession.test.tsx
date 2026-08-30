@@ -117,6 +117,7 @@ describe('WordSearchSession', () => {
   })
 
   it('derives completion from the words actually selected', () => {
+    vi.stubGlobal('speechSynthesis', { speak: vi.fn(), cancel: vi.fn() })
     render(<WordSearchSession />)
     fireEvent.click(screen.getByRole('button', { name: 'Iniciar prueba' }))
 
@@ -125,8 +126,9 @@ describe('WordSearchSession', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Encontrar SUN' }))
 
     expect(
-      screen.getByRole('heading', { name: '¡Encontraste todas!' }),
+      screen.getByRole('heading', { name: /¡Encontraste todas/ }),
     ).toBeInTheDocument()
     expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '3')
+    expect(screen.getByRole('region', { name: 'Resultados de la partida' })).toBeInTheDocument()
   })
 })
