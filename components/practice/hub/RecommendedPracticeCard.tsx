@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowRight, MicVocal, ListOrdered, Layers, RotateCcw, BookOpen, Waves, Sparkles, Search } from "@/components/icons"
+import { MicVocal, ListOrdered, Layers, RotateCcw, BookOpen, Waves, Sparkles, Search } from "@/components/icons"
 import type { ElementType } from 'react'
 import { setLastPracticeMode } from '@/lib/db'
 import type { RecommendedResult } from '@/lib/practice/practice-modes'
@@ -25,28 +25,36 @@ interface Props {
 }
 
 export default function RecommendedPracticeCard({ recommendation }: Props) {
-  const { mode, headline, subtext } = recommendation
-  const Icon = MODE_ICONS[mode.icon] ?? MicVocal
+  const { mode, headline, subtext, reason } = recommendation
 
   return (
-    <Link
-      href={mode.href}
-      onClick={() => void setLastPracticeMode(mode.id)}
-      aria-label={`${headline}. ${subtext}`}
-      className="home-card-lift focus-ring group flex min-h-14 items-center gap-4 rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-4 transition-colors hover:border-primary"
-    >
-      <span className="icon-wrap-hue grid h-11 w-11 shrink-0 place-items-center rounded-[var(--radius-md)]">
-        <Icon size={22} aria-hidden />
-      </span>
-      <div className="min-w-0 flex-1">
-        <p className="font-label text-fg">{headline}</p>
+    <div className="group flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-5 shadow-xs transition-colors hover:border-border-strong sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-1 min-w-0 flex-1">
+        <span className="font-kicker text-fg-subtle uppercase tracking-wider text-tiny">
+          CONTINÚA DONDE LO DEJASTE
+        </span>
+        <h2 className="text-h3 font-bold text-fg">{headline}</h2>
         <p className="font-caption text-pretty text-fg-muted">{subtext}</p>
       </div>
-      <ArrowRight
-        size={18}
-        className="shrink-0 text-primary transition-transform duration-150 group-hover:translate-x-0.5"
-        aria-hidden
-      />
-    </Link>
+
+      <div className="flex items-center gap-2.5 shrink-0 pt-1 sm:pt-0">
+        <Link
+          href={mode.href}
+          onClick={() => void setLastPracticeMode(mode.id)}
+          className="focus-ring inline-flex min-h-10 items-center justify-center gap-2 rounded-[var(--radius-md)] bg-primary px-4 py-2 font-label font-semibold text-on-primary shadow-xs transition-all duration-150 hover:opacity-90 active:translate-y-[-1px]"
+        >
+          <span>Empezar repaso</span>
+        </Link>
+        {reason === 'due-review' && (
+          <Link
+            href="/practice/essential-words"
+            onClick={() => void setLastPracticeMode('essential-words')}
+            className="focus-ring inline-flex min-h-10 items-center justify-center gap-2 rounded-[var(--radius-md)] border border-border-default bg-surface-raised px-4 py-2 font-label font-semibold text-fg transition-all duration-150 hover:bg-surface-sunken active:translate-y-[-1px]"
+          >
+            <span>Ver cuáles</span>
+          </Link>
+        )}
+      </div>
+    </div>
   )
 }

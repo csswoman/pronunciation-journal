@@ -17,7 +17,6 @@ export default function PracticeCategoryLane({
   children,
   className = '',
 }: PracticeCategoryLaneProps) {
-  const optionCount = React.Children.count(children)
   return (
     <section className={`flex flex-col gap-3 ${className}`}>
       <div className="flex flex-col gap-0.5 px-0.5">
@@ -30,7 +29,6 @@ export default function PracticeCategoryLane({
         </div>
       </div>
 
-      <p className="px-0.5 font-caption text-fg-subtle md:hidden">Desliza para ver {optionCount} opciones</p>
       <div className="flex w-full gap-3 overflow-x-auto snap-x snap-mandatory pb-2 pt-0.5 scrollbar-none -mx-4 px-4 md:mx-0 md:grid md:grid-cols-2 md:overflow-visible md:px-0 md:pb-0 md:snap-none xl:grid-cols-3">
         {children}
       </div>
