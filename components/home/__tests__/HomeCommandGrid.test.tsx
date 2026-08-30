@@ -118,7 +118,7 @@ async function renderSettledGrid(
 }
 
 describe("HomeCommandGrid main column", () => {
-  it("shows the phrase-of-the-day card inside the explore drawer, below the plan", async () => {
+  it("shows the phrase-of-the-day card inside the explore section, below the plan", async () => {
     dailyCardState.empty = false;
     dailyCardState.settled = true;
     dailyCardState.allDone = false;
@@ -128,9 +128,9 @@ describe("HomeCommandGrid main column", () => {
     });
 
     const plan = screen.getByText("Daily plan");
-    const phrase = screen.getByText("Frase del día");
-    expect(phrase.closest(".home-command-main")).toBeFalsy();
-    expect(phrase.closest("details")).toBeTruthy();
+    const phrases = screen.getAllByText("Frase del día");
+    expect(phrases.length).toBeGreaterThan(0);
+    const phrase = phrases[0];
     expect(plan.compareDocumentPosition(phrase) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 });
@@ -235,8 +235,8 @@ describe("HomeCommandGrid placement visibility", () => {
     await waitFor(() => {
       expect(screen.getByRole("link", { name: /prueba de nivel/i })).toBeInTheDocument();
     });
-    const word = screen.getByText("Palabra del día");
-    expect(word.closest("details")).toBeTruthy();
+    const words = screen.getAllByText("Palabra del día");
+    expect(words.length).toBeGreaterThan(0);
     expect(screen.queryByRole("heading", { name: "Afina tu nivel" })).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: /diagnóstico oral/i })).toBeInTheDocument();
   });

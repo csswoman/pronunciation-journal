@@ -2,16 +2,24 @@
 
 // Planned structure:
 // <HomeChunkOfDayCard>
-//   header: title + category chip + shuffle/heart
-//   quote block (phrase + IPA) — card left border + IPA in --c-chunks
-//   meaning + example + tip
+//   header: "Frase del día" + category chip
+//   content:
+//     phrase title
+//     IPA line + speak button
+//     meaning in Spanish
+//     divider
+//     example quote in English
+//   footer:
+//     Guardar button + Otra button
 // </HomeChunkOfDayCard>
 
 import { useEffect, useState } from "react";
 import { Heart, RefreshCw } from "@/components/icons";
+import { ListenButton } from "@/components/ui/ListenButton";
 import { formatIpaDisplay } from "@/lib/lexicon/format-ipa";
 import { useChunkOfDay } from "@/hooks/useChunkOfDay";
 import { quickAddWord, toggleFavorite } from "@/lib/word-bank/queries";
+import { speakText } from "@/lib/speech/synthesis";
 import { cn } from "@/lib/cn";
 import { getIllustration } from "@/lib/illustrations/registry";
 
@@ -26,13 +34,11 @@ function saveLabel(state: SaveState): string {
   return "Guardar frase";
 }
 
-/** Phrase focus — IPA carries domain color; card stays neutral. */
+/** Phrase focus — IPA carries domain color; card matches editorial visual language. */
 export default function HomeChunkOfDayCard() {
   const { chunk, loading, shuffle } = useChunkOfDay();
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const [isRotating, setIsRotating] = useState(false);
-
-  const [lang, setLang] = useState<"es" | "en">("es");
 
   useEffect(() => {
     setSaveState("idle");
@@ -64,7 +70,7 @@ export default function HomeChunkOfDayCard() {
 
   return (
     <div
-      className="home-sidebar-card relative flex flex-col gap-3 overflow-hidden"
+      className="home-sidebar-card relative flex h-full flex-col justify-between gap-4 overflow-hidden rounded-xl border border-border-default bg-surface-raised p-5 shadow-sm motion-reduce:shadow-none"
       aria-busy={loading || undefined}
       aria-labelledby="chunk-of-day-heading"
     >
@@ -72,174 +78,112 @@ export default function HomeChunkOfDayCard() {
         className="home-illustration-watermark text-chunks"
         aria-hidden="true"
       />
+
+      {/* Header: Frase del día + Categoría */}
       <div className="relative z-1 flex items-center justify-between gap-2">
-        <div className="flex min-w-0 flex-wrap items-center gap-2">
-          <span id="chunk-of-day-heading" className="font-label text-fg">
-            Frase del día
+        <span id="chunk-of-day-heading" className="font-label text-caption text-fg-muted">
+          Frase del día
+        </span>
+        {chunk?.category ? (
+          <span className="rounded-full border border-border-subtle bg-surface-sunken px-2.5 py-0.5 font-kicker text-fg-muted">
+            {chunk.category}
           </span>
-          {chunk?.category ? (
-            <span className="rounded-full border border-border-subtle bg-surface-sunken px-2 py-0.5 font-mono-code text-[11px] font-medium text-fg-muted">
-              {chunk.category}
-            </span>
-          ) : null}
-        </div>
-
-        <div className="flex shrink-0 items-center gap-1">
-          <div className="group/tooltip relative">
-            <button
-              type="button"
-              onClick={handleShuffle}
-              aria-label="Sacar otra frase"
-              aria-describedby="chunk-shuffle-tooltip"
-              className="focus-ring inline-flex min-h-8 min-w-8 items-center justify-center rounded-sm text-fg-muted transition-colors hover:text-fg"
-            >
-              <RefreshCw
-                size={16}
-                strokeWidth={2}
-                className={cn(
-                  "transition-transform duration-300",
-                  isRotating && "rotate-180",
-                )}
-                aria-hidden
-              />
-            </button>
-            <span
-              id="chunk-shuffle-tooltip"
-              role="tooltip"
-              className="pointer-events-none absolute bottom-full right-0 z-10 mb-1.5 whitespace-nowrap rounded-sm border border-border-default bg-surface-raised px-2 py-1 text-caption font-medium text-fg opacity-0 shadow-md transition-opacity group-hover/tooltip:opacity-100 group-focus-within/tooltip:opacity-100"
-            >
-              Ver otra frase
-            </span>
-          </div>
-
-          <div className="group/tooltip relative">
-            <button
-              type="button"
-              onClick={() => void handleSave()}
-              disabled={saveState === "saving" || saveState === "saved"}
-              aria-label={label}
-              aria-describedby="chunk-save-tooltip"
-              className={cn(
-                "focus-ring inline-flex min-h-8 min-w-8 items-center justify-center rounded-sm transition-colors",
-                saveState === "saved"
-                  ? "text-error"
-                  : "text-fg-muted hover:text-fg",
-                saveState === "error" && "text-error",
-              )}
-            >
-              <Heart
-                size={16}
-                fill={saveState === "saved" ? "currentColor" : "none"}
-                aria-hidden
-              />
-            </button>
-            <span
-              id="chunk-save-tooltip"
-              role="tooltip"
-              className="pointer-events-none absolute bottom-full right-0 z-10 mb-1.5 whitespace-nowrap rounded-sm border border-border-default bg-surface-raised px-2 py-1 text-caption font-medium text-fg opacity-0 shadow-md transition-opacity group-hover/tooltip:opacity-100 group-focus-within/tooltip:opacity-100"
-            >
-              {label}
-            </span>
-          </div>
-        </div>
+        ) : null}
       </div>
 
       {loading && (
-        <div className="relative z-1 flex flex-col gap-3" aria-hidden>
-          <div className="flex flex-col gap-1.5">
-            <div className="h-6 w-3/4 animate-pulse rounded-md bg-surface-sunken" />
-            <div className="mt-1.5 h-4 w-1/2 animate-pulse rounded bg-surface-sunken" />
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <div className="h-3.5 w-20 animate-pulse rounded bg-surface-sunken" />
-            <div className="h-4 w-full animate-pulse rounded bg-surface-sunken" />
-            <div className="h-4 w-2/3 animate-pulse rounded bg-surface-sunken" />
-          </div>
+        <div className="relative z-1 flex flex-col gap-3 py-1" aria-hidden>
+          <div className="h-7 w-3/4 animate-pulse rounded bg-surface-sunken" />
+          <div className="h-4 w-1/3 animate-pulse rounded bg-surface-sunken" />
+          <div className="h-4 w-full animate-pulse rounded bg-surface-sunken" />
+          <div className="mt-2 h-4 w-5/6 animate-pulse rounded bg-surface-sunken" />
         </div>
       )}
 
       {chunk && !loading && (
-        <div className="animate-state-in relative z-1 flex flex-col gap-3" key={chunk.id}>
-          <div className="home-chunk-quote">
-            <p className="home-chunk-quote__phrase">{chunk.chunk}</p>
+        <div className="animate-state-in relative z-1 flex flex-col gap-2.5" key={chunk.id}>
+          {/* Título de la frase */}
+          <p className="font-heading text-h3 font-bold text-fg leading-tight">
+            {chunk.chunk}
+          </p>
+
+          {/* IPA + Botón de audio */}
+          <div className="flex items-center gap-2">
             {chunk.ipa ? (
-              <p
-                className="mt-1.5 font-ipa text-body-sm leading-snug text-chunks"
+              <span
+                className="font-ipa text-body-md font-medium text-chunks"
                 lang="en-fonipa"
               >
                 {formatIpaDisplay(chunk.ipa)}
-              </p>
+              </span>
             ) : null}
+            <ListenButton
+              iconOnly
+              aria-label="Escuchar pronunciación"
+              onPlay={() => speakText(chunk.chunk)}
+            />
           </div>
 
-          <div className="flex flex-col gap-1.5">
-            {chunk.example ? (
-              <div className="flex items-center justify-between gap-2">
-                <span
-                  key={`lang-label-${lang}`}
-                  className="animate-state-in font-caption font-medium text-fg-muted"
-                >
-                  {lang === "es" ? "Significado" : "Ejemplo"}
-                </span>
-                <div
-                  className="inline-flex rounded-full border border-border-subtle bg-surface-sunken p-0.5"
-                  role="group"
-                  aria-label="Idioma"
-                >
-                  <button
-                    type="button"
-                    onClick={() => setLang("es")}
-                    aria-pressed={lang === "es"}
-                    className={cn(
-                      "press-feedback focus-ring rounded-full px-2 py-0.5 font-mono-code text-[11px] font-medium transition-colors",
-                      lang === "es"
-                        ? "bg-surface-raised text-fg shadow-xs"
-                        : "text-fg-muted hover:text-fg",
-                    )}
-                  >
-                    ES
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setLang("en")}
-                    aria-pressed={lang === "en"}
-                    className={cn(
-                      "press-feedback focus-ring rounded-full px-2 py-0.5 font-mono-code text-[11px] font-medium transition-colors",
-                      lang === "en"
-                        ? "bg-surface-raised text-fg shadow-xs"
-                        : "text-fg-muted hover:text-fg",
-                    )}
-                  >
-                    EN
-                  </button>
-                </div>
-              </div>
-            ) : null}
+          {/* Significado en español */}
+          <p className="font-body-sm text-fg leading-normal">
+            {chunk.meaning}
+          </p>
 
-            {lang === "es" || !chunk.example ? (
-              <p
-                key={`lang-body-${lang}`}
-                className="animate-state-in font-body-sm text-pretty text-fg"
-              >
-                {chunk.meaning}
-              </p>
-            ) : (
-              <p
-                key={`lang-body-${lang}`}
-                className="animate-state-in font-body-sm italic text-fg-muted"
-              >
-                “{chunk.example}”
-              </p>
-            )}
-          </div>
+          {/* Divisor sutil */}
+          {chunk.example ? (
+            <div className="border-t border-border-subtle/50 my-1" />
+          ) : null}
 
-          {chunk.tip ? (
-            <p className="font-caption text-fg-muted">
-              <span className="font-medium text-fg">Tip:</span> {chunk.tip}
+          {/* Ejemplo en inglés */}
+          {chunk.example ? (
+            <p className="font-body-sm italic text-fg leading-relaxed">
+              “{chunk.example}”
             </p>
           ) : null}
         </div>
       )}
+
+      {/* Footer de acciones: Guardar + Otra */}
+      <div className="relative z-1 flex items-center gap-5 border-t border-border-subtle/40 pt-3">
+        <button
+          type="button"
+          onClick={() => void handleSave()}
+          disabled={saveState === "saving" || saveState === "saved"}
+          aria-label={label}
+          className={cn(
+            "focus-ring inline-flex items-center gap-1.5 font-body-sm transition-colors",
+            saveState === "saved"
+              ? "text-error font-medium"
+              : "text-fg-muted hover:text-fg",
+            saveState === "error" && "text-error"
+          )}
+        >
+          <Heart
+            size={16}
+            fill={saveState === "saved" ? "currentColor" : "none"}
+            className={saveState === "saved" ? "text-error" : ""}
+            aria-hidden
+          />
+          <span>{saveState === "saved" ? "Guardada" : "Guardar"}</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={handleShuffle}
+          aria-label="Ver otra frase"
+          className="focus-ring inline-flex items-center gap-1.5 font-body-sm text-fg-muted transition-colors hover:text-fg"
+        >
+          <RefreshCw
+            size={14}
+            className={cn(
+              "transition-transform duration-300",
+              isRotating && "rotate-180"
+            )}
+            aria-hidden
+          />
+          <span>Otra</span>
+        </button>
+      </div>
     </div>
   );
 }

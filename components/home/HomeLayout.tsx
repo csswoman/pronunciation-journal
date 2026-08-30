@@ -1,12 +1,9 @@
 // Planned structure:
 // <HomeLayout>
-//   <HomePageHeader />
-//   <HomeCommandGrid />  — review strip; plan | aside (journal + suggested)
+//   <HomeCommandGrid />
 // </HomeLayout>
 
-import HomePageHeader from "@/components/home/HomePageHeader";
 import HomeCommandGrid from "@/components/home/HomeCommandGrid";
-import HomePrimaryAction from "@/components/home/HomePrimaryAction";
 import type { DailyStreakResult } from "@/lib/daily/streak-core";
 import type { ConceptLesson } from "@/hooks/useDailyPlan";
 import type { DailyGoalProgress, WeakestPhonemeHome } from "@/lib/home/constants";
@@ -25,12 +22,12 @@ interface HomeLayoutProps {
   dailyGoal?: DailyGoalProgress | null;
   weakestPhoneme?: WeakestPhonemeHome | null;
   vocabularyProgress?: VocabularyProgressSeed | null;
-  /** Kept for page-server compatibility; lessons live only as plan steps. */
   todaysLesson?: MiniLesson | null;
   secondaryLesson?: MiniLesson | null;
   placementState: HomePlacementState;
   pronunciationDiagnosticState: HomePronunciationDiagnosticState;
   primaryAction: PrimaryAction;
+  previewWords?: Array<{ text: string }>;
 }
 
 export default function HomeLayout({
@@ -39,38 +36,28 @@ export default function HomeLayout({
   wordsDueCount = 0,
   soundsDueCount = 0,
   conceptLesson = null,
-  dailyGoal = null,
   weakestPhoneme = null,
-  vocabularyProgress = null,
   placementState,
   pronunciationDiagnosticState,
   primaryAction,
+  previewWords = [],
 }: HomeLayoutProps) {
-  const isNewLearner = !placementState.hasMeaningfulProgress;
   const currentStreak = streak?.currentStreak ?? 0;
 
   return (
-    <div className="home-layout home-layout-shell max-w-220 mx-auto">
-      <div className="home-layout-sections flex flex-col">
-        <HomePageHeader
-          streak={streak}
-          wordsMastered={vocabularyProgress?.wordBankMastered ?? 0}
-          weekMinutes={dailyGoal?.weekMinutes ?? 0}
-          dailyGoal={dailyGoal}
-          isNewLearner={isNewLearner}
-        />
-        <HomePrimaryAction action={primaryAction} />
-        <HomeCommandGrid
-          conceptLesson={conceptLesson}
-          profileLevel={profileLevel}
-          weakestPhoneme={weakestPhoneme}
-          wordsDueCount={wordsDueCount}
-          soundsDueCount={soundsDueCount}
-          streak={currentStreak}
-          placementState={placementState}
-          pronunciationDiagnosticState={pronunciationDiagnosticState}
-        />
-      </div>
+    <div className="w-full max-w-[1200px] mx-auto px-4 sm:px-6 pb-12">
+      <HomeCommandGrid
+        primaryAction={primaryAction}
+        conceptLesson={conceptLesson}
+        profileLevel={profileLevel}
+        weakestPhoneme={weakestPhoneme}
+        wordsDueCount={wordsDueCount}
+        soundsDueCount={soundsDueCount}
+        streak={currentStreak}
+        previewWords={previewWords}
+        placementState={placementState}
+        pronunciationDiagnosticState={pronunciationDiagnosticState}
+      />
     </div>
   );
 }
