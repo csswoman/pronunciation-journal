@@ -1,0 +1,97 @@
+{
+  "slug": "s-es-endings-rules",
+  "sections": [
+    {
+      "heading": "Por qué la 'S' final no siempre suena como 'S'",
+      "body": "Al igual que ocurre con el pasado -ed, la letra 's' o 'es' al final de sustantivos en plural o verbos en tercera persona tiene tres pronunciaciones posibles dependiendo del último sonido de la palabra base: **/s/**, **/z/** o **/ɪz/**."
+    },
+    {
+      "heading": "Regla 1: Sonido /s/ (Tras consonantes sordas)",
+      "body": "Si la palabra termina en un sonido consonántico sordo (/p/, /t/, /k/, /f/, /θ/), la 's' final suena como una **/s/** suave y pura:\n- *cat* → *cats* (/kæts/)\n- *book* → *books* (/bʊks/)\n- *stop* → *stops* (/stɑːps/)"
+    },
+    {
+      "heading": "Regla 2: Sonido /z/ (Tras consonantes sonoras y vocales)",
+      "body": "Si la palabra termina en un sonido sonoro (/b/, /d/, /g/, /l/, /m/, /n/, /r/, /v/ o cualquier vocal), la 's' final suena con vibración como una **/z/**:\n- *dog* → *dogs* (/dɔːɡz/)\n- *car* → *cars* (/kɑːrz/)\n- *play* → *plays* (/pleɪz/)"
+    },
+    {
+      "heading": "Regla 3: Sonido /ɪz/ (Tras sonidos sibilantes o de zumbido)",
+      "body": "Si la palabra termina en un sonido sibilante (/s/, /z/, /ʃ/, /tʃ/, /dʒ/), la terminación '-es' añade una sílaba extra pronunciándose **/ɪz/** (o /əz/):\n- *bus* → *buses* (/ˈbʌs.ɪz/)\n- *wash* → *washes* (/ˈwɑːʃ.ɪz/)\n- *watch* → *watches* (/ˈwɑːtʃ.ɪz/)\n- *box* → *boxes* (/ˈbɑːks.ɪz/)"
+    }
+  ],
+  "examples": [
+    {
+      "english": "cats",
+      "ipa": "/kæts/",
+      "translation": "gatos",
+      "note": "Sonido /s/ sordo (tras /t/)."
+    },
+    {
+      "english": "dogs",
+      "ipa": "/dɔːɡz/",
+      "translation": "perros",
+      "note": "Sonido /z/ sonoro con vibración (tras /ɡ/)."
+    },
+    {
+      "english": "changes",
+      "ipa": "/ˈtʃeɪn.dʒɪz/",
+      "translation": "cambios / cambia",
+      "note": "Sonido /ɪz/ que añade una sílaba adicional (tras /dʒ/)."
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Clasifica la pronunciación del sonido final -S / -ES para cada palabra.",
+      "items": [
+        "maps",
+        "keys",
+        "kisses",
+        "friends"
+      ],
+      "answers": [
+        "Sonido /s/ (tras p sorda)",
+        "Sonido /z/ (tras vocal sonora)",
+        "Sonido /ɪz/ (tras sibilante s)",
+        "Sonido /z/ (tras d sonora)"
+      ]
+    },
+    {
+      "instruction": "Indica si la terminación -ES añade una sílaba extra en las siguientes palabras.",
+      "items": [
+        "likes",
+        "places",
+        "teaches",
+        "makes"
+      ],
+      "answers": [
+        "No añade sílaba (/laɪks/)",
+        "Sí añade sílaba (/ˈpleɪ.sɪz/)",
+        "Sí añade sílaba (/ˈtiː.tʃɪz/)",
+        "No añade sílaba (/meɪks/)"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "¿En cuál de estas palabras la terminación '-s' o '-es' produce una sílaba adicional pronunciándose /ɪz/?",
+      "options": [
+        "books",
+        "buses",
+        "dogs",
+        "plays"
+      ],
+      "correct": 1,
+      "explanation": "'bus' termina en el sonido sibilante /s/, por lo que su plural 'buses' añade la sílaba /ɪz/ (/ˈbʌs.ɪz/)."
+    },
+    {
+      "question": "¿Cómo debe pronunciarse la 's' final en la palabra 'dogs'?",
+      "options": [
+        "Como una /s/ sorda simple",
+        "Como una /z/ sonora haciendo vibrar las cuerdas vocales (/dɔːɡz/)",
+        "Añadiendo una vocal como /es/",
+        "Como una sílaba extra /ɪz/"
+      ],
+      "correct": 1,
+      "explanation": "Como la consonante /ɡ/ es sonora, la 's' final se contagia de vibración y suena como /z/."
+    }
+  ]
+}

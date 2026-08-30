@@ -166,6 +166,7 @@ async function HomePageContent() {
       placementState={placementState}
       pronunciationDiagnosticState={pronunciationDiagnosticState}
       primaryAction={primaryAction}
+      previewWords={queue.preview}
     />
   );
 }

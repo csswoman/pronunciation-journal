@@ -2,9 +2,12 @@
 
 // Planned structure:
 // <HomeCommandGrid>
-//   review / activation (fold owners only)
-//   main: plan (+ done) · quiet route link · phrase of the day
-//   aside: pronunciation · word · vocab
+//   <TwoColumnGrid>
+//     <Col1: HomeDailyCard (Hero + Plan + CTA fusionados) />
+//     <Col2: HomeProgressSidebar (Tu progreso + Te tocan hoy) />
+//     <Col1: HomeChunkOfDayCard (Frase del día alineada) />
+//     <Col2: HomeWordOfDayCard (Palabra del día alineada) />
+//   </TwoColumnGrid>
 // </HomeCommandGrid>
 
 import { useCallback, useState } from "react";
@@ -13,21 +16,20 @@ import Link from "next/link";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { isAnonymousUser } from "@/lib/auth/is-anonymous";
 import type { HomePlanStatus } from "@/components/home/HomeDailyCard";
+import HomeProgressSidebar from "@/components/home/HomeProgressSidebar";
 import HomeReviewBanner from "@/components/home/HomeReviewBanner";
-import HomeExploreDrawer from "@/components/home/HomeExploreDrawer";
-import EssentialWordsProgressCard from "@/components/home/EssentialWordsProgressCard";
-import WeakSoundCard from "@/components/home/WeakSoundCard";
-import HomeWordOfDayCard from "@/components/home/HomeWordOfDayCard";
-import HomeChunkOfDayCard from "@/components/home/HomeChunkOfDayCard";
 import HomePlanDone from "@/components/home/HomePlanDone";
 import HomePlacementPrompt from "@/components/home/HomePlacementPrompt";
 import HomePronunciationPrompt from "@/components/home/HomePronunciationPrompt";
 import HomeActivationStrip from "@/components/home/HomeActivationStrip";
+import HomeWordOfDayCard from "@/components/home/HomeWordOfDayCard";
+import HomeChunkOfDayCard from "@/components/home/HomeChunkOfDayCard";
 import GuestSaveProgressBanner from "@/components/home/GuestSaveProgressBanner";
 import type { ConceptLesson } from "@/hooks/useDailyPlan";
 import type { WeakestPhonemeHome } from "@/lib/home/constants";
 import type { HomePlacementState } from "@/lib/home/placement-state";
 import type { HomePronunciationDiagnosticState } from "@/lib/home/pronunciation-diagnostic-state";
+import type { PrimaryAction } from "@/lib/home/primary-action";
 import type { SessionArc } from "@/lib/practice/types";
 
 // Daily plan pulls buildDailyPlan + sync — keep it out of the initial page chunk.
@@ -41,24 +43,34 @@ const HomeDailyCard = dynamic(() => import("@/components/home/HomeDailyCard"), {
   ),
 });
 
-interface HomeCommandGridProps {
+const DEFAULT_PRIMARY_ACTION: PrimaryAction = {
+  label: "Empezar · 12 min",
+  href: "/daily",
+  variant: "primary",
+};
+
+export interface HomeCommandGridProps {
+  primaryAction?: PrimaryAction;
   conceptLesson: ConceptLesson | null;
-  profileLevel: string | null;
+  profileLevel?: string | null;
   weakestPhoneme?: WeakestPhonemeHome | null;
   wordsDueCount?: number;
   soundsDueCount?: number;
   streak?: number | null;
+  previewWords?: Array<{ text: string }>;
   placementState: HomePlacementState;
   pronunciationDiagnosticState: HomePronunciationDiagnosticState;
 }
 
 export default function HomeCommandGrid({
+  primaryAction = DEFAULT_PRIMARY_ACTION,
   conceptLesson,
-  profileLevel,
+  profileLevel = null,
   weakestPhoneme = null,
   wordsDueCount = 0,
   soundsDueCount = 0,
   streak = null,
+  previewWords = [],
   placementState,
   pronunciationDiagnosticState,
 }: HomeCommandGridProps) {
@@ -89,7 +101,6 @@ export default function HomeCommandGrid({
   const showActivation = planSettled && !reviewDue && planEmpty && isNewLearner;
   const showPlanExtras = planSettled && !planEmpty;
   const showPostPlan = showPlanExtras && allDone;
-  /** Active incomplete plan owns the fold — defer assessments / speak / guest save. */
   const activePlanSession = showPlanExtras && !allDone;
 
   const showSetupPair =
@@ -103,49 +114,49 @@ export default function HomeCommandGrid({
     isGuest && planSettled && !showActivation && (allDone || !isNewLearner);
 
   return (
-    <div className="home-command-grid">
-      {showReviewBanner ? (
-        <div className="home-command-review">
-          <HomeReviewBanner
-            wordsDueCount={wordsDueCount}
-            soundsDueCount={soundsDueCount}
-          />
-        </div>
-      ) : null}
+    <div className="flex flex-col gap-6">
+      {/* Cuadrícula continua de 2 columnas (≥1024px) / 1 columna en móvil */}
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6 items-start">
+        {/* Fila 1 - Columna Principal: Tarjeta única Plan de hoy */}
+        <div className="flex flex-col gap-4 min-w-0">
+          {showReviewBanner ? (
+            <HomeReviewBanner
+              wordsDueCount={wordsDueCount}
+              soundsDueCount={soundsDueCount}
+            />
+          ) : null}
 
-      {showActivation ? (
-        <div className="home-command-review">
-          <HomeActivationStrip
-            showPlacementLink={needsPlacement}
-            showPronunciationLink={needsPronunciation}
-            showGuestSaveInline={isGuest}
-          />
-        </div>
-      ) : null}
+          {showActivation ? (
+            <HomeActivationStrip
+              showPlacementLink={needsPlacement}
+              showPronunciationLink={needsPronunciation}
+              showGuestSaveInline={isGuest}
+            />
+          ) : null}
 
-      <div className="home-command-main">
-        <div className={showPostPlan ? "hidden" : "contents"}>
-          <HomeDailyCard
-            conceptLesson={conceptLesson}
-            reviewDue={showReviewBanner}
-            isNewLearner={isNewLearner}
-            showFirstSessionHint={showPlanExtras && isNewLearner && !reviewDue}
-            onPlanStatusChange={onPlanStatusChange}
-          />
-        </div>
+          <div className={showPostPlan ? "hidden" : "contents"}>
+            <HomeDailyCard
+              conceptLesson={conceptLesson}
+              reviewDue={showReviewBanner}
+              isNewLearner={isNewLearner}
+              showFirstSessionHint={showPlanExtras && isNewLearner && !reviewDue}
+              onPlanStatusChange={onPlanStatusChange}
+              primaryAction={primaryAction}
+              weakestPhoneme={weakestPhoneme}
+            />
+          </div>
 
-        {showGuestSaveStrip ? <GuestSaveProgressBanner variant="footer" /> : null}
+          {showGuestSaveStrip ? <GuestSaveProgressBanner variant="footer" /> : null}
 
-        {showPostPlan ? (
-          <section
-            aria-label="Plan completo"
-            className="rounded-xl border border-border-subtle bg-daily-card px-[var(--layout-card-pad)] py-[var(--layout-card-pad)]"
-          >
-            <HomePlanDone stepCount={stepCount} arc={arc} streak={streak} />
-          </section>
-        ) : null}
+          {showPostPlan ? (
+            <section
+              aria-label="Plan completo"
+              className="rounded-xl border border-border-subtle bg-daily-card p-5"
+            >
+              <HomePlanDone stepCount={stepCount} arc={arc} streak={streak} />
+            </section>
+          ) : null}
 
-        <div className="home-command-below-plan">
           {showQuietRouteLink ? (
             <p className="font-body-sm text-pretty text-fg-muted">
               Si quieres afinar la ruta primero:{" "}
@@ -171,25 +182,30 @@ export default function HomeCommandGrid({
 
           {showSetupPair ? (
             <div
-              className="home-command-setup-pair"
+              className="grid grid-cols-1 sm:grid-cols-2 gap-3"
               aria-label="Ajustes opcionales"
             >
               {needsPlacement ? <HomePlacementPrompt compact /> : null}
               {needsPronunciation ? <HomePronunciationPrompt compact /> : null}
             </div>
           ) : null}
+        </div>
 
+        {/* Fila 1 - Columna Lateral: Tu progreso + Te tocan hoy */}
+        <HomeProgressSidebar
+          profileLevel={profileLevel}
+          streak={streak}
+          wordsDueCount={wordsDueCount}
+          soundsDueCount={soundsDueCount}
+          previewWords={previewWords}
+        />
+
+        {/* Fila 2 - Tarjetas editoriales del día en sub-grid equilibrada de 2 columnas */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:col-span-2">
+          <HomeChunkOfDayCard />
+          <HomeWordOfDayCard profileLevel={profileLevel} />
         </div>
       </div>
-
-      <HomeExploreDrawer>
-        <HomeChunkOfDayCard />
-        <div className="flex flex-col gap-4" aria-label="Práctica sugerida">
-          <WeakSoundCard weakestPhoneme={weakestPhoneme} />
-          <HomeWordOfDayCard profileLevel={profileLevel} />
-          <EssentialWordsProgressCard profileLevel={profileLevel} />
-        </div>
-      </HomeExploreDrawer>
     </div>
   );
 }

@@ -6,6 +6,7 @@ interface SoundLabWorkspace {
   activeTab: SoundsWorkspaceTab;
   isSoundsView: boolean;
   isMinimalPairsView: boolean;
+  isIntonationView: boolean;
   isPathView: boolean;
   isIPAOpen: boolean;
   selectTab: (tab: SoundsWorkspaceTab) => void;
@@ -20,9 +21,11 @@ export function useSoundLabWorkspace(): SoundLabWorkspace {
   const resolveTab = useCallback((tab: string | null): SoundsWorkspaceTab =>
     tab === "minimal-pairs"
       ? "minimal-pairs"
-      : tab === "path"
-        ? "path"
-        : "sounds", []);
+      : tab === "intonation"
+        ? "intonation"
+        : tab === "path"
+          ? "path"
+          : "sounds", []);
   const [activeTab, setActiveTab] = useState<SoundsWorkspaceTab>(() =>
     resolveTab(searchParams.get("tab")),
   );
@@ -53,6 +56,7 @@ export function useSoundLabWorkspace(): SoundLabWorkspace {
     activeTab,
     isSoundsView: activeTab === "sounds",
     isMinimalPairsView: activeTab === "minimal-pairs",
+    isIntonationView: activeTab === "intonation",
     isPathView: activeTab === "path",
     isIPAOpen,
     selectTab,

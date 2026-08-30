@@ -1,0 +1,113 @@
+{
+  "slug": "key-sounds-spanish-speakers",
+  "sections": [
+    {
+      "heading": "El sonido 'SH' vs. 'J/G'",
+      "body": "La 'SH' (como en *she*, *mash*, *option*) es puro aire (/ʃ/), sin voz en la garganta. En cambio, la 'J' o 'G' suave (como en *job*, *manager*, *budget*) suena como una 'CH' en español pero agregándole vibración en las cuerdas vocales (/dʒ/)."
+    },
+    {
+      "heading": "La 'B' explosiva vs. la 'V' corta",
+      "body": "- **B larga (/b/)**: Es un sonido explosivo o bilabial que se hace juntando ambos labios de golpe (*about*, *library*).\n- **V corta (/v/)**: Es un sonido de fricción labiodental. Se hace juntando el labio inferior con los dientes superiores (como si hicieras una 'F' pero con vibración en la garganta). Nunca cierres ambos labios (*very*, *visit*)."
+    },
+    {
+      "heading": "La 'I' larga (/iː/) vs. la 'I' corta (/ɪ/)",
+      "body": "- **Larga (/iː/)** (*beach*, *seat*, *eat*): Tienes que estirar la boca como si estuvieras sonriendo exageradamente.\n- **Corta (/ɪ/)** (*bitch*, *sit*, *it*): La boca va muy relajada y suena casi como una mezcla neutra entre una 'i' y una 'e'."
+    },
+    {
+      "heading": "La 'T' y la 'D' (Flap T/D y T inicial)",
+      "body": "- En inglés americano, si la T o la D están en medio de dos vocales, suenan como una 'R' suave en español (*water*, *soda*).\n- Al inicio de palabra, la 'T' debe sonar explosiva (aspirada, dejando salir aire como un platillo de batería). La 'D' inicial se hace igual que la T pero con vibración, sin colocar la lengua en los dientes como en español."
+    },
+    {
+      "heading": "El sonido 'TH' (Sacando la lengua)",
+      "body": "A diferencia de la 'D' en español, para hacer el sonido 'TH' (como en *they*, *those* o *math*, *bath*), tienes que sacar un poco la lengua entre los dientes. Si no lo haces, terminarás diciendo una 'D' o una 'T'."
+    }
+  ],
+  "examples": [
+    {
+      "english": "she vs job",
+      "ipa": "/ʃiː/ vs /dʒɒb/",
+      "translation": "ella (solo aire) vs trabajo (CH con vibración)",
+      "note": "/ʃ/ no hace vibrar la garganta; /dʒ/ sí la hace vibrar."
+    },
+    {
+      "english": "very vs berry",
+      "ipa": "/ˈver.i/ vs /ˈber.i/",
+      "translation": "muy vs baya",
+      "note": "/v/ coloca dientes superiores en el labio inferior; /b/ une ambos labios."
+    },
+    {
+      "english": "seat vs sit",
+      "ipa": "/siːt/ vs /sɪt/",
+      "translation": "asiento vs sentarse",
+      "note": "/iː/ es tensa y larga (sonrisa); /ɪ/ es relajada y corta."
+    },
+    {
+      "english": "water",
+      "ipa": "/ˈwɑː.t̬ɚ/",
+      "translation": "agua",
+      "note": "La 't' entre vocales se convierte en Flap T (suena como R suave)."
+    },
+    {
+      "english": "they / math",
+      "ipa": "/ðeɪ/ / /mæθ/",
+      "translation": "ellos / matemáticas",
+      "note": "Ambas requieren sacar la punta de la lengua entre los dientes."
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Indica cuál es el punto de articulación o técnica correcta para cada sonido.",
+      "items": [
+        "Sonido V (/v/)",
+        "Sonido TH (/θ/ o /ð/)",
+        "Flap T (/t̬/) en 'water'",
+        "I larga (/iː/)"
+      ],
+      "answers": [
+        "Dientes superiores tocando el labio inferior con vibración.",
+        "Sacar la punta de la lengua ligeramente entre los dientes.",
+        "Toque rápido de la lengua en el alvéolo entre dos vocales (suena como R suave).",
+        "Estirar la boca en forma de sonrisa exagerada y mantener la tensión."
+      ]
+    },
+    {
+      "instruction": "Diferencia los pares mínimos identificando la palabra que contiene el sonido indicado.",
+      "items": [
+        "¿Cuál palabra lleva /v/ labiodental: 'very' o 'berry'?",
+        "¿Cuál palabra lleva /iː/ tensa: 'beach' o 'bitch'?",
+        "¿Cuál palabra lleva /ʃ/ sin voz: 'she' o 'genre'?",
+        "¿Cuál palabra lleva /b/ explosiva bilabial: 'boy' o 'toy'?"
+      ],
+      "answers": [
+        "very",
+        "beach",
+        "she",
+        "boy"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "¿Cómo se produce el sonido 'V' corta (/v/) correctamente?",
+      "options": [
+        "Juntando ambos labios de golpe de forma explosiva",
+        "Colocando los dientes superiores sobre el labio inferior e imprimiendo vibración",
+        "Colocando la lengua entre los dientes",
+        "Sonriendo exageradamente con los labios cerrados"
+      ],
+      "correct": 1,
+      "explanation": "El sonido /v/ es un fricativo labiodental sonoro: dientes superiores sobre labio inferior con vibración en las cuerdas vocales."
+    },
+    {
+      "question": "¿Qué ocurre con la 'T' en la palabra 'water' en inglés americano estándar?",
+      "options": [
+        "Se pronuncia como una T muy explosiva",
+        "Se vuelve totalmente silenciosa",
+        "Suena como una 'R' suave en español (Flap T) al estar entre dos vocales",
+        "Se pronuncia sacando la lengua entre los dientes"
+      ],
+      "correct": 2,
+      "explanation": "La T entre dos vocales en inglés americano se convierte en un toque rápido (Flap T) similar a la R suave del español."
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 import PageLayout from '@/components/layout/PageLayout'
 import { JournalGuidedWrite } from '@/components/journal/JournalGuidedWrite'
+import { JournalPronunciationWrite } from '@/components/journal/JournalPronunciationWrite'
 import { JournalPageClient } from '@/components/journal/JournalPageClient'
 import { journalPromptForDate, journalPromptById } from '@/lib/journal/prompts'
 import { writingScaffoldFor } from '@/lib/journal/writing-scaffold'
@@ -27,21 +28,41 @@ export default async function JournalWritePage({
   ])
   const now = new Date().toISOString()
 
-  // El hook useJournalEntry rehidrata desde Dexie por [userId, entryDate], así
-  // que este `entry` solo aporta el valor inicial antes de esa hidratación —
-  // pero entryMode sí viaja tal cual, así que debe reflejar con qué modo se
-  // escribió/reabre la página de hoy (no siempre "blank").
+  const entryMode =
+    mode === 'pronunciation'
+      ? ('pronunciation' as const)
+      : mode === 'guided'
+        ? ('guided' as const)
+        : ('blank' as const)
+
   const entry = {
     id: crypto.randomUUID(),
     userId,
     entryDate,
     prompt: prompt.text,
     promptTopic: topic || 'daily',
-    entryMode: mode === 'guided' ? ('guided' as const) : ('blank' as const),
+    entryMode,
     content: '',
     status: 'draft' as const,
     createdAt: now,
     updatedAt: now,
+  }
+
+  // ── Modo Pronunciación ("Diario de Pronunciación") ──
+  if (mode === 'pronunciation') {
+    const topicKey = (topic as NotebookTopic) || 'daily'
+    const foundPrompt = TOPIC_PROMPTS[topicKey]?.find((p) => p.id === prompt.id)
+    const promptEs = foundPrompt?.es || prompt.text
+
+    return (
+      <PageLayout archetype="session">
+        <JournalPronunciationWrite
+          entry={entry}
+          promptEn={prompt.text}
+          promptEs={promptEs}
+        />
+      </PageLayout>
+    )
   }
 
   // ── Modo Guiado ("Completar frases") ──
@@ -70,6 +91,7 @@ export default async function JournalWritePage({
       </PageLayout>
     )
   }
+
 
   // ── Modo Página en Blanco (Editor completo con Guía de Escritura) ──
   return (

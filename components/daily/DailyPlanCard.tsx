@@ -34,6 +34,9 @@ export interface DailyPlanCardProps {
   demoteEntryHighlight?: boolean
   inProgressStepId?: string | null
   listPrefix?: ReactNode
+  greeting?: string | null
+  primaryAction?: { label: string; href: string; variant?: string } | null
+  hideThreadHints?: boolean
 }
 
 export default function DailyPlanCard({
@@ -50,6 +53,9 @@ export default function DailyPlanCard({
   demoteEntryHighlight = false,
   inProgressStepId: inProgressStepIdProp,
   listPrefix,
+  greeting = null,
+  primaryAction = null,
+  hideThreadHints = false,
 }: DailyPlanCardProps) {
   const [inProgressStepId, setInProgressStepId] = useState<string | null>(null)
 
@@ -75,20 +81,6 @@ export default function DailyPlanCard({
       return sum + (s.estMinutes || 0)
     }, 0)
   }, [steps, getStepStatus])
-
-  const progressLabel = useMemo(() => {
-    if (steps.length === 0) return ''
-    if (completedCount === 0) {
-      const parts = [`${steps.length} ${steps.length === 1 ? 'paso' : 'pasos'}`]
-      if (inProgressStepId) parts.push('en curso')
-      if (remainingMinutes > 0) parts.push(`${remainingMinutes} min`)
-      return parts.join(' · ')
-    }
-    const parts = [`${completedCount} de ${steps.length}`]
-    if (inProgressStepId) parts.push('en curso')
-    if (remainingMinutes > 0) parts.push(`${remainingMinutes} min restantes`)
-    return parts.join(' · ')
-  }, [steps.length, completedCount, inProgressStepId, remainingMinutes])
 
   return (
     <section aria-label="Plan de hoy">
@@ -177,21 +169,15 @@ export default function DailyPlanCard({
         ) : null}
 
         {status === 'ready' && !allDone && steps.length > 0 ? (
-          <div className="animate-state-in flex flex-col gap-5">
-            <div className="flex flex-col gap-2">
+          <div className="animate-state-in flex flex-col gap-4">
+            <div className="flex flex-col gap-2.5">
+              {greeting && (
+                <p className="font-body-sm text-fg-muted -mb-1">{greeting}</p>
+              )}
               <div className="flex items-baseline justify-between gap-3">
-                <h2 className="text-h4 shrink-0 text-fg">Plan de hoy</h2>
-                <span className="font-caption shrink-0 tabular-nums text-fg-muted">
-                  {completedCount > 0 ? (
-                    <>
-                      <span className="font-semibold text-primary">{completedCount}</span>
-                      {` de ${steps.length}`}
-                      {inProgressStepId ? ' · en curso' : ''}
-                      {remainingMinutes > 0 ? ` · ${remainingMinutes} min restantes` : ''}
-                    </>
-                  ) : (
-                    progressLabel
-                  )}
+                <h2 className="text-h3 font-bold text-fg">Plan de hoy</h2>
+                <span className="font-body-sm tabular-nums text-fg-muted">
+                  {steps.length} {steps.length === 1 ? 'paso' : 'pasos'} · {remainingMinutes > 0 ? remainingMinutes : 12} min
                 </span>
               </div>
               <PlanSegmentProgress
@@ -210,7 +196,16 @@ export default function DailyPlanCard({
               inProgressStepId={inProgressStepId}
               demoteEntryHighlight={demoteEntryHighlight}
               collapseFutureSteps={collapseFutureSteps}
+              hideThreadHints={hideThreadHints}
             />
+            {primaryAction && (
+              <Link
+                href={primaryAction.href}
+                className="mt-2 focus-ring flex w-full items-center justify-center rounded-xl bg-cta-bg py-3 px-6 text-center font-label text-body-sm font-semibold text-cta-fg shadow-sm transition-colors hover:bg-cta-bg-hover"
+              >
+                {primaryAction.label}
+              </Link>
+            )}
           </div>
         ) : null}
       </div>

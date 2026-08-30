@@ -14,7 +14,7 @@ export default function PracticeHubHeader({ fromDaily }: Props) {
       subtitle={
         fromDaily
           ? 'Terminaste el plan de hoy. Elige qué reforzar ahora.'
-          : 'Todos los modos están disponibles. La sugerencia es solo un punto de partida.'
+          : 'Práctica libre y guiada para entrenar tu inglés.'
       }
     />
   )

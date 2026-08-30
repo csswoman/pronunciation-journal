@@ -1,0 +1,24 @@
+{
+  "id": 56,
+  "slug": "pronunciation-fundamentals",
+  "level": "basic",
+  "category": "pronunciation",
+  "duration": 5,
+  "title": "Conceptos Fundamentales de Pronunciación",
+  "subtitle": "Stress, Schwa y Voces",
+  "body": "Aprende los tres pilares de la articulación en inglés: el acento de palabra (stress), la vocal neutra Schwa /ə/ y la diferencia entre sonidos con voz y sin voz.",
+  "examples": [
+    {
+      "word": "banana",
+      "ipa": "/bəˈnɑː.nə/",
+      "translation": "plátano (las vocales átonas son schwa)"
+    },
+    {
+      "word": "travel",
+      "ipa": "/ˈtræv.əl/",
+      "translation": "viajar (la 'e' colapsa en schwa)"
+    }
+  ],
+  "tip": "La Schwa nunca va en la sílaba fuerte; aparece en las sílabas débiles reemplazando la vocal escrita.",
+  "href": "/mini-lessons/pronunciation-fundamentals"
+}

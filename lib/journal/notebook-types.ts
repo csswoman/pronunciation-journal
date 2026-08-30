@@ -1,3 +1,5 @@
+import type { JournalEntryMode } from './types'
+
 export type NotebookTopic = 'daily' | 'opinion' | 'fiction' | 'situational' | 'vocab' | 'free'
 
 export interface PromptDefinition {
@@ -13,7 +15,7 @@ export interface NotebookHome {
     status: 'empty' | 'in_progress' | 'done'
     topic: NotebookTopic
     /** Modo con el que se escribió la entrada de hoy — decide qué editor reabrir. */
-    entryMode?: 'guided' | 'blank'
+    entryMode?: JournalEntryMode
     prompt: { id?: string; en: string; es: string }
     preview?: string
     sentences?: number

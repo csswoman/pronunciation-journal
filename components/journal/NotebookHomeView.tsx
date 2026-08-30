@@ -24,8 +24,9 @@ interface NotebookHomeViewProps {
     recentErrors: Array<{ quote: string; correction: string; type: string; explanationEs: string }>
     recentWords: string[]
   }
-  onSelectMode?: (mode: 'guided' | 'blank') => void
+  onSelectMode?: (mode: 'guided' | 'blank' | 'pronunciation') => void
 }
+
 
 export function NotebookHomeView({
   initialData = SAMPLE_NOTEBOOK_DATA,

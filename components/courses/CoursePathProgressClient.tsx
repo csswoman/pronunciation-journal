@@ -13,18 +13,16 @@
  *   - CoursePracticeSuggestions (footer review suggestions)
  */
 
-import { ChevronRight } from "@/components/icons";
+import { BookOpen, ChevronRight } from "@/components/icons";
 import { useEffect, useMemo, useState } from "react";
 import CoursePathHeroBanner from "@/components/courses/CoursePathHeroBanner";
 import CoursePathLessonGroup, { type LessonWithState } from "@/components/courses/CoursePathLessonGroup";
-import CoursePathProgressRing, { type CoursePathRowProgressStatus } from "@/components/courses/CoursePathProgressRing";
 import CoursePracticeSuggestions from "@/components/courses/CoursePracticeSuggestions";
 import { WordCarousel } from "@/components/practice/session/WordCarousel";
 import { useLoadingWords } from "@/hooks/useLoadingWords";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth/session";
 import { deriveLevelView, lessonProgressKey } from "@/lib/courses/progress";
-import { cn } from "@/lib/cn";
 import type { CoursePathLevel } from "@/lib/courses/types";
 
 interface CoursePathProgressClientProps {
@@ -165,6 +163,9 @@ export default function CoursePathProgressClient({ level, compactHead }: CourseP
 
       <div className={compactHead ? "course-path__head course-path__head--compact" : "course-path__head"}>
         {compactHead ? <h2>{derived.level.title}</h2> : <h1>{derived.level.title}</h1>}
+        {derived.level.description && (
+          <p className="course-path__head-subtitle">{derived.level.description}</p>
+        )}
       </div>
 
       <CoursePathHeroBanner
@@ -178,88 +179,92 @@ export default function CoursePathProgressClient({ level, compactHead }: CourseP
         {derived.units.map((unit) => {
           const totalCount = unit.unit.lessons.length;
           const completedCount = unit.lessons.filter((lesson) => lesson.state === "done").length;
-          const progressPercent = unit.progressPercent;
+          const isOptional = Boolean(unit.unit.isOptionalSection);
 
-          let rowStatus: CoursePathRowProgressStatus = "unstarted";
-          let metaText = `${totalCount} ${totalCount === 1 ? "lección" : "lecciones"} · sin empezar`;
+          if (isOptional) {
+            const optId = `${unit.unit.id}-optional-card`;
+            const optOpen = expandedGroups[optId] ?? false;
 
-          if (completedCount === totalCount && totalCount > 0) {
-            rowStatus = "done";
-            metaText = `${totalCount} ${totalCount === 1 ? "lección" : "lecciones"} · completada`;
-          } else if (completedCount > 0) {
-            rowStatus = "partial";
-            metaText = `${totalCount} ${totalCount === 1 ? "lección" : "lecciones"} · ${completedCount} de ${totalCount}`;
+            return (
+              <details
+                key={unit.unit.id}
+                className="course-path__optional-card"
+                open={optOpen}
+                onToggle={(e) => handleGroupToggle(optId, e.currentTarget.open)}
+              >
+                <summary className="course-path__optional-summary">
+                  <div className="course-path__optional-icon-box" aria-hidden="true">
+                    <BookOpen size={20} className="course-path__optional-icon" />
+                  </div>
+                  <div className="course-path__optional-heading">
+                    <span className="course-path__optional-title">{unit.unit.title}</span>
+                    <span className="course-path__optional-meta">
+                      {totalCount} {totalCount === 1 ? "lección" : "lecciones"} ·{" "}
+                      {completedCount === totalCount && totalCount > 0 ? "completado" : completedCount > 0 ? `${completedCount} de ${totalCount}` : "sin empezar"}{" "}
+                      <span className="course-path__optional-badge">OPCIONAL</span>
+                    </span>
+                  </div>
+                  <ChevronRight className="course-path__optional-chevron" size={16} aria-hidden />
+                </summary>
+
+                <div className="course-path__optional-body">
+                  {unit.lessons.map((lesson) => (
+                    <CoursePathLessonGroup
+                      key={`${unit.unit.id}-${lesson.id}`}
+                      id={`${unit.unit.id}-${lesson.id}`}
+                      title={lesson.title}
+                      lessons={[lesson]}
+                      levelId={level.id}
+                      open={false}
+                      onToggle={handleGroupToggle}
+                    />
+                  ))}
+                </div>
+              </details>
+            );
           }
 
-          return (
-            <details
-              key={unit.unit.id}
-              className={cn(
-                "course-path__unit",
-                rowStatus === "done" && "course-path__unit--done",
-                unit.unit.isOptionalSection && "course-path__unit--optional-block"
-              )}
-              open={unit.defaultOpen}
-            >
-              <summary className="course-path__urow">
-                <CoursePathProgressRing
-                  status={rowStatus}
-                  progressPercent={progressPercent}
-                  size={22}
-                  ariaLabel={`${unit.unit.title}: ${completedCount} de ${totalCount} lecciones completadas`}
-                />
-                <div className="course-path__uinfo">
-                  <div className="course-path__ut">{unit.unit.title}</div>
-                  <div className="course-path__um">
-                    <span>{metaText}</span>
-                    {unit.unit.isOptionalSection && (
-                      <span className="course-path__optional-tag">Opcional</span>
-                    )}
-                  </div>
-                </div>
-                <ChevronRight className="course-path__uicon-chevron" size={16} aria-hidden />
-              </summary>
+          // Core essential units card container
+          const pendingGroups = groupPendingLessons(
+            unit.lessons.filter((lesson) => {
+              const isDuplicatedStart = completedIds.size === 0 && lesson.id === firstLesson?.id;
+              return lesson.state !== "done" && !isDuplicatedStart;
+            })
+          );
 
-              <div className="course-path__lessons" role="region" aria-label={unit.unit.title}>
-                <div>
-                  {groupPendingLessons(
-                    unit.lessons.filter((lesson) => {
-                      const isDuplicatedStart = completedIds.size === 0 && lesson.id === firstLesson?.id;
-                      return lesson.state !== "done" && !isDuplicatedStart;
-                    })
-                  ).map(({ group, lessons }, index) => {
-                    const id = `${unit.unit.id}-${group}-${index}`;
-                    const hasCurrentLesson = lessons.some((lesson) => lesson.state === "current");
-                    return (
-                      <CoursePathLessonGroup
-                        key={id}
-                        id={id}
-                        title={group}
-                        lessons={lessons}
-                        levelId={level.id}
-                        open={expandedGroups[id] ?? (hasCurrentLesson || index === 0)}
-                        onToggle={handleGroupToggle}
-                      />
-                    );
-                  })}
-                  {unit.lessons.some((lesson) => lesson.state === "done") && (() => {
-                    const id = `${unit.unit.id}-completed`;
-                    const lessons = unit.lessons.filter((lesson) => lesson.state === "done");
-                    return (
-                      <CoursePathLessonGroup
-                        id={id}
-                        title="Completadas"
-                        lessons={lessons}
-                        levelId={level.id}
-                        open={expandedGroups[id] ?? false}
-                        onToggle={handleGroupToggle}
-                        completed
-                      />
-                    );
-                  })()}
-                </div>
-              </div>
-            </details>
+          return (
+            <div key={unit.unit.id} className="course-path__main-card">
+              {pendingGroups.map(({ group, lessons }, index) => {
+                const id = `${unit.unit.id}-${group}-${index}`;
+                const hasCurrentLesson = lessons.some((lesson) => lesson.state === "current");
+                return (
+                  <CoursePathLessonGroup
+                    key={id}
+                    id={id}
+                    title={group}
+                    lessons={lessons}
+                    levelId={level.id}
+                    open={expandedGroups[id] ?? (hasCurrentLesson || index === 0)}
+                    onToggle={handleGroupToggle}
+                  />
+                );
+              })}
+              {unit.lessons.some((lesson) => lesson.state === "done") && (() => {
+                const id = `${unit.unit.id}-completed`;
+                const lessons = unit.lessons.filter((lesson) => lesson.state === "done");
+                return (
+                  <CoursePathLessonGroup
+                    id={id}
+                    title="Completadas"
+                    lessons={lessons}
+                    levelId={level.id}
+                    open={expandedGroups[id] ?? false}
+                    onToggle={handleGroupToggle}
+                    completed
+                  />
+                );
+              })()}
+            </div>
           );
         })}
       </div>

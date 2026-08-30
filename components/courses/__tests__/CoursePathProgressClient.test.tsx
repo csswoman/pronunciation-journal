@@ -53,7 +53,7 @@ describe("CoursePathProgressClient", () => {
     render(<CoursePathProgressClient level={COURSE_PATH_CURRICULUM.levels[0]} />);
 
     await waitFor(() => {
-      expect(screen.getByText("Empieza aquí")).toBeInTheDocument();
+      expect(screen.getByText("EMPIEZA AQUÍ")).toBeInTheDocument();
     });
   });
 
@@ -70,7 +70,7 @@ describe("CoursePathProgressClient", () => {
     render(<CoursePathProgressClient level={COURSE_PATH_CURRICULUM.levels[0]} />);
 
     await waitFor(() => {
-      expect(screen.getByText("Tu siguiente lección")).toBeInTheDocument();
+      expect(screen.getByText("TU SIGUIENTE LECCIÓN")).toBeInTheDocument();
       expect(screen.getByText("Continuar lección")).toBeInTheDocument();
       expect(screen.getByText("Repasa lo que ya aprendiste")).toBeInTheDocument();
       expect(screen.queryByText("Tu lección actual")).not.toBeInTheDocument();
@@ -94,8 +94,8 @@ describe("CoursePathProgressClient", () => {
     });
 
     const completedGroup = screen.getByText("Completadas").closest("details.course-path__lesson-group");
-    const coreUnit = completedGroup?.closest("details.course-path__unit");
-    const groups = coreUnit?.querySelectorAll("details.course-path__lesson-group");
+    const coreCard = completedGroup?.closest(".course-path__main-card");
+    const groups = coreCard?.querySelectorAll("details.course-path__lesson-group");
 
     expect(groups?.length).toBeGreaterThan(1);
     expect(groups?.[groups.length - 1]).toBe(completedGroup);
@@ -110,7 +110,7 @@ describe("CoursePathProgressClient", () => {
     await waitFor(() => {
       expect(screen.getByRole("alert")).toHaveTextContent("No hemos podido leer tu progreso en este dispositivo");
       expect(screen.getByRole("button", { name: "Reintentar" })).toBeInTheDocument();
-      expect(screen.getByText("Empieza aquí")).toBeInTheDocument();
+      expect(screen.getByText("EMPIEZA AQUÍ")).toBeInTheDocument();
     });
   });
 
@@ -159,14 +159,13 @@ describe("CoursePathProgressClient", () => {
 
     render(<CoursePathProgressClient level={mockLevel} />);
 
-
     await waitFor(() => {
       // Completed unit state
-      expect(screen.getByText(/· completada/i)).toBeInTheDocument();
-      // Partial unit state
-      expect(screen.getByText(/· \d+ de \d+/i)).toBeInTheDocument();
+      expect(screen.getAllByText(/completado/i).length).toBeGreaterThan(0);
+      // Partial unit state (group in progress)
+      expect(screen.getAllByText(/completadas/i).length).toBeGreaterThan(0);
       // Unstarted unit state
-      expect(screen.getAllByText(/· sin empezar/i).length).toBeGreaterThan(0);
+      expect(screen.getAllByText(/sin empezar/i).length).toBeGreaterThan(0);
     });
   });
 });

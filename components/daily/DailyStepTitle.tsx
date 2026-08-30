@@ -12,8 +12,6 @@ interface DailyStepTitleProps {
   ipa?: string
   /** Recessed pending rows: secondary ink so the active step leads. */
   muted?: boolean
-  /** Entry/current step: title takes the theme accent surface. */
-  emphasize?: boolean
 }
 
 /** Step title, with IPA styled when the step has a phoneme focus. */
@@ -21,7 +19,6 @@ export function DailyStepTitle({
   title,
   ipa,
   muted = false,
-  emphasize = false,
 }: DailyStepTitleProps) {
   const formatted = ipa ? formatIpaDisplay(ipa) : ''
   let plainTitle = title
@@ -38,7 +35,7 @@ export function DailyStepTitle({
     <p
       className={cn(
         'flex min-w-0 items-center gap-2.5 text-label',
-        muted ? 'text-fg-muted' : emphasize ? 'text-on-primary' : 'text-fg',
+        muted ? 'text-fg-muted' : 'text-fg',
       )}
     >
       <span className="flex min-w-0 items-baseline gap-2 truncate">
@@ -47,7 +44,7 @@ export function DailyStepTitle({
           <span
             className={cn(
               'font-ipa shrink-0 text-body-md',
-              muted ? 'text-fg-muted' : emphasize ? 'text-on-primary' : 'text-primary',
+              muted ? 'text-fg-muted' : 'text-primary font-semibold',
             )}
           >
             {formatted}

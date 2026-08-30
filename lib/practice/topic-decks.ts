@@ -49,6 +49,17 @@ export const TOPIC_DECK_MAP: Array<{ keyword: string; deckSlug: string }> = [
   { keyword: 'question',           deckSlug: 'a1-preguntas-do-does' },
   { keyword: 'negative',           deckSlug: 'b1-preguntas-negativas-recomendaciones' },
 
+  // ── Collocations & Light Verbs ────────────────────────────────────────────
+  { keyword: 'light verb',         deckSlug: 'chunk-the-9-verbs-strategy' },
+  { keyword: '9-verb',             deckSlug: 'chunk-the-9-verbs-strategy' },
+  { keyword: '9 verb',             deckSlug: 'chunk-the-9-verbs-strategy' },
+  { keyword: 'delexical',          deckSlug: 'c1-verbos-delexicales' },
+  { keyword: 'get collocation',    deckSlug: 'chunk-light-verbs-get-set-put-go' },
+  { keyword: 'set collocation',    deckSlug: 'chunk-light-verbs-get-set-put-go' },
+  { keyword: 'put collocation',    deckSlug: 'chunk-light-verbs-get-set-put-go' },
+  { keyword: 'collocation',        deckSlug: 'chunk-collocations' },
+  { keyword: 'colocaci',           deckSlug: 'chunk-collocations' },
+
   // ── Word classes ──────────────────────────────────────────────────────────
   { keyword: 'article',            deckSlug: 'a1-articulos-basicos' },
   { keyword: 'pronoun',            deckSlug: 'a1-pronombres-objeto' },

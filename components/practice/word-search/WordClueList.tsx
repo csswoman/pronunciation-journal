@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import type { WordSearchItem, WordSearchMode } from '@/lib/exercises/word-search/types'
+import { getWordColorTheme } from '@/lib/exercises/word-search/word-colors'
 import { Check, Eye, EyeOff, Target } from '@/components/icons'
 import { ListenButton } from '@/components/ui/ListenButton'
 import { speakText } from '@/lib/speech/synthesis'
@@ -51,23 +52,24 @@ export default function WordClueList({
           const isInspected = activeWordId === item.id
           const isHintRevealed = revealedHints.has(item.id)
           const hintId = `word-search-hint-${item.id}`
+          const colorTheme = getWordColorTheme(index)
 
           return (
             <li
               key={item.id}
-              className={`flex flex-col gap-2.5 rounded-lg border p-3 transition-[background-color,border-color] duration-150 ease-out-quart ${
+              className={`flex flex-col gap-2.5 rounded-lg border p-3.5 transition-[background-color,border-color] duration-150 ease-out-quart ${
                 isInspected
-                  ? 'border-primary bg-primary-soft'
+                  ? 'border-primary bg-primary-soft ring-1 ring-primary/40'
                   : isFound
-                    ? 'border-success/30 bg-success-soft/20'
-                    : 'border-border-subtle bg-surface-raised'
+                    ? `${colorTheme.cardBorder} ${colorTheme.cardBg}`
+                    : 'border-border-subtle bg-surface-raised hover:border-border-default'
               }`}
             >
               <div className="flex items-start gap-2.5">
                 <span
                   className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full font-mono text-caption ${
                     isFound
-                      ? 'bg-success text-on-primary'
+                      ? `${colorTheme.iconBg}`
                       : 'border border-border-subtle bg-surface-sunken text-fg-subtle'
                   }`}
                   aria-hidden
@@ -80,7 +82,7 @@ export default function WordClueList({
                     <div className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5">
                       <span
                         className={`text-label font-semibold text-fg ${
-                          isFound && !isInspected ? 'line-through decoration-success/70' : ''
+                          isFound && !isInspected ? `line-through ${colorTheme.strikeColor}` : ''
                         }`}
                         lang="en"
                       >

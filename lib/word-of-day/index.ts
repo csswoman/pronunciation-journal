@@ -2,6 +2,7 @@ import {
   selectDictionarySense,
   type DictionaryMeaning,
 } from "@/lib/word-of-day/select-sense";
+import { FALLBACK_DEFINITIONS } from "@/lib/word-of-day/definitions-fallback";
 
 export {
   selectDictionarySense,
@@ -117,11 +118,13 @@ function pickWord(seed: string, pool: readonly string[]): string {
 }
 
 function buildFallbackWord(word: string): WordOfDay {
+  const fallback = FALLBACK_DEFINITIONS[word.toLowerCase()];
   return {
     word,
-    ipa: "",
-    definition: "Look this word up in a dictionary to learn its meaning.",
-    example_sentence: "",
+    ipa: fallback?.ipa ?? "",
+    part_of_speech: fallback?.part_of_speech,
+    definition: fallback?.definition ?? "Consulta esta palabra en el diario o diccionario para conocer su significado.",
+    example_sentence: fallback?.example_sentence ?? "",
     difficulty: getDifficulty(word),
   };
 }

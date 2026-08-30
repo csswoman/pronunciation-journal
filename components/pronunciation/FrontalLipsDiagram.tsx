@@ -17,11 +17,15 @@ import {
 //   <FrontalLipsTeethOnLip | … | FrontalLipsNeutral />
 // </FrontalLipsDiagram>
 
+import { cn } from "@/lib/cn";
+
 interface Props {
   guide: PhonemeArticulationGuide;
+  isAnimating?: boolean;
+  speed?: "normal" | "slow";
 }
 
-function LipShapeContent({ guide }: Props) {
+function LipShapeContent({ guide }: { guide: PhonemeArticulationGuide }) {
   switch (guide.lipShape) {
     case "teeth-on-lip":
       return <FrontalLipsTeethOnLip />;
@@ -30,7 +34,7 @@ function LipShapeContent({ guide }: Props) {
     case "rounded":
       return <FrontalLipsRounded guide={guide} />;
     case "spread":
-      return <FrontalLipsSpread />;
+      return <FrontalLipsSpread guide={guide} />;
     case "closed":
       return <FrontalLipsClosed />;
     default:
@@ -38,13 +42,14 @@ function LipShapeContent({ guide }: Props) {
   }
 }
 
-export function FrontalLipsDiagram({ guide }: Props) {
+// Sub-components: FrontalLipsDiagram SVG canvas, radialGradient defs, LipShapeContent router
+export function FrontalLipsDiagram({ guide, isAnimating = true, speed = "normal" }: Props) {
   const gradientId = useId();
 
   return (
     <svg
-      viewBox="0 0 180 110"
-      className="h-28 w-full max-w-[170px] overflow-visible select-none"
+      viewBox="0 0 200 120"
+      className="h-32 w-full max-w-[190px] overflow-visible select-none"
       aria-label={`Forma frontal de los labios para ${guide.symbol}`}
     >
       <defs>
@@ -53,7 +58,13 @@ export function FrontalLipsDiagram({ guide }: Props) {
           <stop offset="100%" stopColor="var(--surface-base)" />
         </radialGradient>
       </defs>
-      <LipShapeContent guide={guide} />
+      <g
+        className={cn(
+          isAnimating && (speed === "slow" ? "animate-mouth-breathe-slow" : "animate-mouth-breathe"),
+        )}
+      >
+        <LipShapeContent guide={guide} />
+      </g>
     </svg>
   );
 }

@@ -1,0 +1,99 @@
+{
+  "slug": "initial-s-clusters",
+  "sections": [
+    {
+      "heading": "Por qué añadimos una 'E' involuntaria al hablar",
+      "body": "En español no existe ninguna palabra que comience por el grupo consonántico de una 'S' seguida de otra consonante (como ST, SP, SK, SL, SM, SN). En nuestro idioma, todas esas palabras tienen una 'E' inicial (*España*, *escuela*, *estudiar*, *especial*). Por eso, el cerebro hispanohablante añade automáticamente una 'E' parásita antes de palabras inglesas como *school*, *spanish* o *student*."
+    },
+    {
+      "heading": "La regla de arranque directo (/s/ siseante)",
+      "body": "En inglés, la palabra comienza inmediatamente en el sonido fricativo **/s/** sorda (el siseo de una serpiente o el sonido para pedir silencio *sssss*). La boca no debe emitir ningún impulso vocálico antes de juntar los dientes superiores e inferiores."
+    },
+    {
+      "heading": "La 'Técnica de la Serpiente' para practicar",
+      "body": "Para desprogramar el reflejo de la 'E' inicial, practica exagerando el siseo inicial durante 2 segundos antes de pronunciar el resto de la palabra:\n- *sssss-chool* (/skuːl/)\n- *sssss-panish* (/ˈspæn.ɪʃ/)\n- *sssss-tudent* (/ˈstjuː.dənt/)\n- *sssss-pecial* (/ˈspeʃ.əl/)"
+    }
+  ],
+  "examples": [
+    {
+      "english": "school",
+      "ipa": "/skuːl/",
+      "translation": "escuela",
+      "note": "Empieza directamente en sssss, jamás 'eschool'."
+    },
+    {
+      "english": "Spanish",
+      "ipa": "/ˈspæn.ɪʃ/",
+      "translation": "español / idioma español",
+      "note": "Empieza directamente en sssss, jamás 'espanish'."
+    },
+    {
+      "english": "street",
+      "ipa": "/striːt/",
+      "translation": "calle",
+      "note": "Empieza directamente en sssss, jamás 'estreet'."
+    },
+    {
+      "english": "stop",
+      "ipa": "/stɑːp/",
+      "translation": "detener / parar",
+      "note": "Empieza directamente en sssss, jamás 'estop'."
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Identifica cuáles de las siguientes pronunciaciones son correctas (sin E inicial parásita) y cuáles son incorrectas.",
+      "items": [
+        "/es-kuːl/ para 'school'",
+        "/skuːl/ para 'school'",
+        "/es-pæn-ɪʃ/ para 'Spanish'",
+        "/spæn-ɪʃ/ para 'Spanish'"
+      ],
+      "answers": [
+        "Incorrecto (añade E inicial parásita)",
+        "Correcto (arranque siseante directo en /s/)",
+        "Incorrecto (añade E inicial parásita)",
+        "Correcto (arranque siseante directo en /s/)"
+      ]
+    },
+    {
+      "instruction": "Practica la Técnica de la Serpiente. Separa la S inicial siseante de la consonante de cada palabra.",
+      "items": [
+        "student",
+        "special",
+        "star",
+        "speak"
+      ],
+      "answers": [
+        "sssss-tudent",
+        "sssss-pecial",
+        "sssss-tar",
+        "sssss-peak"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "¿Por qué los hispanohablantes tienden a decir 'eschool' o 'espanish'?",
+      "options": [
+        "Porque en inglés británico se exige pronunciar la E inicial",
+        "Porque en español no existen palabras que empiecen con 'S + consonante', por lo que el cerebro transfiere la 'E' de palabras como 'escuela' o 'España'",
+        "Porque la 'S' siempre suena como vocal en inglés",
+        "Porque las consonantes ST y SP son silenciosas"
+      ],
+      "correct": 1,
+      "explanation": "Es una transferencia fonética involuntaria del español, donde toda S inicial de grupo consonántico lleva una 'e' (*escuela*, *estudio*)."
+    },
+    {
+      "question": "¿Cuál es la técnica adecuada para eliminar la 'E' inicial parásita?",
+      "options": [
+        "Abrir mucho la boca antes de empezar a hablar",
+        "Arrancar con un siseo prolongado /sssss/ directamente con los dientes juntos antes de unir la consonante",
+        "Sustituir la S por una Z",
+        "Pronunciar la S más suave al final de la palabra"
+      ],
+      "correct": 1,
+      "explanation": "La técnica de la serpiente (sssss-chool) fuerza a iniciar el sonido en la consonante fricativa /s/ evitando abrir la boca con una vocal."
+    }
+  ]
+}

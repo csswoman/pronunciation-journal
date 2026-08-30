@@ -59,6 +59,7 @@ const MAX_LINES_ALLOWLIST = [
   "components/practice/hub/PracticeOptionsGrid.tsx",
   "components/practice/word-search/WordSearchGrid.tsx",
   "scripts/essential-words/generate-chunks.mjs",
+  "scripts/build-300-chunks-dataset.mjs",
   "scripts/generate-grammar-pattern-decks.ts",
   "scripts/grammar-pattern-deck-specs-b1-b2.ts",
   "scripts/grammar-pattern-deck-specs-c1-c2.ts",

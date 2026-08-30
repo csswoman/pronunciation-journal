@@ -8,7 +8,7 @@ describe("ArticulationMouthGuide", () => {
     render(<ArticulationMouthGuide symbolOrIpa="/iː/" />);
     expect(screen.getByText("/iː/")).toBeInTheDocument();
     expect(screen.getByText(/i larga y tensa/i)).toBeInTheDocument();
-    expect(screen.getByText(/⚡ Con voz/i)).toBeInTheDocument();
+    expect(screen.getByText(/Con voz \(sonoro\)/i)).toBeInTheDocument();
     expect(screen.getAllByText(/Sonrisa amplia/i).length).toBeGreaterThanOrEqual(1);
   });
 

@@ -1,0 +1,24 @@
+{
+  "id": 59,
+  "slug": "pronunciation-golden-tips",
+  "level": "intermediate",
+  "category": "pronunciation",
+  "duration": 5,
+  "title": "Consejos Extra de Oro para la Pronunciación",
+  "subtitle": "Regla del sufijo -OUS y estrategias de práctica",
+  "body": "Descubre cómo pronunciar el sufijo -ous con Schwa, aprovecha la música pop para entrenar el oído y utiliza búsquedas fonéticas efectivas.",
+  "examples": [
+    {
+      "word": "dangerous",
+      "ipa": "/ˈdeɪn.dʒər.əs/",
+      "translation": "peligroso (suena como danger-uhs)"
+    },
+    {
+      "word": "obvious",
+      "ipa": "/ˈɑːb.vi.əs/",
+      "translation": "obvio (suena como obvi-uhs)"
+    }
+  ],
+  "tip": "Palabras terminadas en -ous nunca marcan 'o' ni 'u'; la última sílaba es siempre una Schwa /-əs/.",
+  "href": "/mini-lessons/pronunciation-golden-tips"
+}

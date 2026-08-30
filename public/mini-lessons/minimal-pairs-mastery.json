@@ -1,0 +1,24 @@
+{
+  "id": 64,
+  "slug": "minimal-pairs-mastery",
+  "level": "advanced",
+  "category": "pronunciation",
+  "duration": 7,
+  "title": "Maestría de Pares Mínimos",
+  "subtitle": "Entrenamiento de Discriminación Auditiva",
+  "body": "Entrena tu oído y articulación con las parejas de palabras que se diferencian por un solo sonido decisivo en inglés.",
+  "examples": [
+    {
+      "word": "ship vs sheep",
+      "ipa": "/ʃɪp/ vs /ʃiːp/",
+      "translation": "barco vs oveja (vocal corta vs larga)"
+    },
+    {
+      "word": "vet vs wet",
+      "ipa": "/vet/ vs /wet/",
+      "translation": "veterinario vs mojado (V fricativa vs W suave)"
+    }
+  ],
+  "tip": "Si cambias un solo fonema en un par mínimo, estás diciendo una palabra totalmente diferente. El entrenamiento de pares mínimos afina tu oído y pronunciación.",
+  "href": "/mini-lessons/minimal-pairs-mastery"
+}

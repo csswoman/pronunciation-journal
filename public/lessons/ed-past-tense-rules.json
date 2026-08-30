@@ -1,0 +1,97 @@
+{
+  "slug": "ed-past-tense-rules",
+  "sections": [
+    {
+      "heading": "El error clásico del pasado en inglés",
+      "body": "Los hispanohablantes suelen pronunciar la terminación '-ed' de los verbos en pasado leyendo literalmente las letras 'e' y 'd' (diciendo *work-ed* o *play-ed*). En inglés, la letra 'e' en '-ed' suele ser totalmente muda, salvo en una excepción específica."
+    },
+    {
+      "heading": "Regla 1: Sonido /t/ (Tras sonidos sin voz / Voiceless)",
+      "body": "Si el verbo base termina en un sonido sordo o sin voz (como /p/, /k/, /f/, /s/, /ʃ/, /tʃ/), la terminación '-ed' se pronuncia como una **/t/** seca y rápida, sin añadir sílaba extra:\n- *work* → *worked* (/wɜːkt/)\n- *stop* → *stopped* (/stɑːpt/)\n- *wash* → *washed* (/wɑːʃt/)"
+    },
+    {
+      "heading": "Regla 2: Sonido /d/ (Tras sonidos con voz / Voiced)",
+      "body": "Si el verbo base termina en un sonido sonoro o con voz (vocales, /b/, /g/, /v/, /z/, /m/, /n/, /l/, /r/), la terminación '-ed' se pronuncia como una **/d/** suave, sin añadir sílaba extra:\n- *play* → *played* (/pleɪd/)\n- *love* → *loved* (/lʌvd/)\n- *clean* → *cleaned* (/kliːnd/)"
+    },
+    {
+      "heading": "Regla 3: Sonido /ɪd/ (Tras sonido T o D)",
+      "body": "Únicamente si el verbo en su forma base ya termina en el sonido **/t/** o **/d/**, la terminación '-ed' crea una nueva sílaba pronunciándose **/ɪd/** (o /əd/):\n- *want* → *wanted* (/ˈwɑːn.tɪd/)\n- *need* → *needed* (/ˈniː.dɪd/)"
+    }
+  ],
+  "examples": [
+    {
+      "english": "worked",
+      "ipa": "/wɜːkt/",
+      "translation": "trabajó",
+      "note": "Terminación /t/ sorda (1 sola sílaba)."
+    },
+    {
+      "english": "loved",
+      "ipa": "/lʌvd/",
+      "translation": "amó / encantó",
+      "note": "Terminación /d/ sonora (1 sola sílaba)."
+    },
+    {
+      "english": "decided",
+      "ipa": "/dɪˈsaɪ.dɪd/",
+      "translation": "decidió",
+      "note": "Terminación /ɪd/ (añade 2ª sílaba porque 'decide' termina en /d/)."
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Clasifica la pronunciación de la terminación -ED para cada verbo en pasado.",
+      "items": [
+        "asked",
+        "lived",
+        "started",
+        "called"
+      ],
+      "answers": [
+        "Pronunciación /t/ (tras k sorda)",
+        "Pronunciación /d/ (tras v sonora)",
+        "Pronunciación /ɪd/ (tras t final)",
+        "Pronunciación /d/ (tras l sonora)"
+      ]
+    },
+    {
+      "instruction": "Indica cuántas sílabas tiene cada verbo en su forma de pasado.",
+      "items": [
+        "helped",
+        "visited",
+        "cooked",
+        "needed"
+      ],
+      "answers": [
+        "1 sílaba (/helpt/)",
+        "3 sílabas (/ˈvɪz.ɪ.tɪd/)",
+        "1 sílaba (/kʊkt/)",
+        "2 sílabas (/ˈniː.dɪd/)"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "¿En cuál de los siguientes casos la terminación '-ed' añade una nueva sílaba a la palabra?",
+      "options": [
+        "Cuando el verbo termina en sonido de vocal",
+        "Únicamente cuando el verbo base termina en sonido T (/t/) o D (/d/)",
+        "Siempre que el verbo tenga más de dos sílabas",
+        "Cuando la palabra es un adjetivo"
+      ],
+      "correct": 1,
+      "explanation": "La terminación -ed solo añade una sílaba extra (/ɪd/) cuando la raíz termina en T o D (ej. wanted, needed)."
+    },
+    {
+      "question": "¿Cómo se pronuncia correctamente el pasado del verbo 'work' (worked)?",
+      "options": [
+        "/wɜːrk-ed/ (dos sílabas marcadas)",
+        "/wɜːkt/ (una sola sílaba que termina en sonido T seco)",
+        "/wɜːkd/ (con sonido D explosivo al final)",
+        "/wɜːk-id/ (añadiendo id al final)"
+      ],
+      "correct": 1,
+      "explanation": "Puesto que 'work' termina en la consonante sorda /k/, 'worked' se pronuncia en una sola sílaba como /wɜːkt/."
+    }
+  ]
+}

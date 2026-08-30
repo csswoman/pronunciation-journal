@@ -1,0 +1,107 @@
+{
+  "slug": "tongue-twisters-linking-practice",
+  "sections": [
+    {
+      "heading": "Instrucciones de entrenamiento",
+      "body": "💡 **Consejo de práctica**: Dilo muy lento primero, enfocándote en la posición exacta de tu lengua, labios y garganta. Una vez que domines la articulación limpia, ve aumentando la velocidad progresivamente."
+    },
+    {
+      "heading": "Para practicar la 'J' con vibración (/dʒ/)",
+      "body": "- *'Jack and Jill enjoy juice in June.'*\n- *'A gentle giant enjoys jumping near the jungle.'*\n\n*(Recuerda: la J debe hacer vibrar tus cuerdas vocales, como si dijeras una CH con voz).* "
+    },
+    {
+      "heading": "Para diferenciar la B explosiva (/b/) y la V de fricción (/v/)",
+      "body": "- *'The bright brilliant boy bought a brand new bicycle.'* (Todos son bilabiales de golpe /b/).\n- *'We visited the village after receiving a video from a very nice woman named Vicky.'* (Todos son labiodentales /v/ con dientes en el labio inferior).\n- *'Justin Bieber bought a very big beaver.'* (Alterna entre B y V)."
+    },
+    {
+      "heading": "Para diferenciar la 'I' corta (/ɪ/) de la 'I' larga (/iː/)",
+      "body": "- *'Please sit on this seat.'* (*sit* = /sɪt/ corta, *seat* = /siːt/ larga sonriente).\n- *'He will leave the fish in the river.'* (*leave* = /liːv/ larga, *will/fish/in/river* = /ɪ/ corta)."
+    },
+    {
+      "heading": "Para practicar ritmo y linking (Acentúa solo las negritas)",
+      "body": "- *'I **kiss** for **fun** and it's **fun** to **kiss**.'*\n- *'I **went** to the **doc**tor for a **check**up.'*\n- *'I **did**n't **want** to be **late** for **work** so I **called** an **U**ber.'*"
+    }
+  ],
+  "examples": [
+    {
+      "english": "Jack and Jill enjoy juice in June.",
+      "ipa": "/dʒæk ən dʒɪl ɪnˈdʒɔɪ dʒuːs ɪn dʒuːn/",
+      "translation": "Jack y Jill disfrutan el juego en junio.",
+      "note": "Sonido /dʒ/ con vibración en las cuerdas vocales."
+    },
+    {
+      "english": "Justin Bieber bought a very big beaver.",
+      "ipa": "/ˈdʒʌs.tɪn ˈbiː.bɚ bɑːt ə ˈver.i bɪɡ ˈbiː.vɚ/",
+      "translation": "Justin Bieber compró un castor muy grande.",
+      "note": "Contraste entre B (/b/ bilabial) y V (/v/ labiodental)."
+    },
+    {
+      "english": "Please sit on this seat.",
+      "ipa": "/pliːz sɪt ɒn ðɪs siːt/",
+      "translation": "Por favor siéntate en este asiento.",
+      "note": "Contraste entre /iː/ tensa sonriente (seat) y /ɪ/ corta (sit)."
+    },
+    {
+      "english": "I called an Uber",
+      "ipa": "/aɪ kɑːld_ən_ˈuː.bɚ/",
+      "translation": "Llamé a un Uber",
+      "note": "Unión continua (linking) entre la consonante final y la vocal inicial."
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Analiza cada oración y selecciona el sonido principal que se practica en ella.",
+      "items": [
+        "A gentle giant enjoys jumping near the jungle.",
+        "The bright brilliant boy bought a brand new bicycle.",
+        "We visited the village after receiving a video.",
+        "He will leave the fish in the river."
+      ],
+      "answers": [
+        "Sonido J /dʒ/ con vibración.",
+        "Sonido B explosivo bilabial.",
+        "Sonido V fricativo labiodental.",
+        "Contraste entre I corta (/ɪ/) e I larga (/iː/)."
+      ]
+    },
+    {
+      "instruction": "En la frase 'I didn't want to be late for work so I called an Uber', indica cuáles son las palabras acentuadas según el ritmo NAVA.",
+      "items": [
+        "Verbos principales",
+        "Adjetivos",
+        "Sustantivos",
+        "Linking principal"
+      ],
+      "answers": [
+        "didn't, want, called",
+        "late",
+        "work, Uber",
+        "called_an_Uber"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "¿Cuál es la recomendación clave al practicar trabalenguas fonéticos en inglés?",
+      "options": [
+        "Decirlos lo más rápido posible desde el primer intento",
+        "Comenzar muy lento enfocándose en la articulación precisa y subir la velocidad gradualmente",
+        "Pronunciar todas las palabras con la misma intensidad sin importar la regla NAVA",
+        "Evitar hacer enlaces entre palabras para mantener la claridad"
+      ],
+      "correct": 1,
+      "explanation": "La memoria muscular requiere precisión articular lenta antes de aumentar la velocidad."
+    },
+    {
+      "question": "En la frase 'Please sit on this seat', ¿cuál es la diferencia de pronunciación entre 'sit' y 'seat'?",
+      "options": [
+        "Ambas se pronuncian exactamente igual",
+        "'sit' lleva una I corta relajada (/ɪ/) y 'seat' lleva una I larga tensa en forma de sonrisa (/iː/)",
+        "'sit' se pronuncia con la lengua entre los dientes y 'seat' con labios juntos",
+        "'sit' es más larga que 'seat'"
+      ],
+      "correct": 1,
+      "explanation": "'sit' utiliza la vocal /ɪ/ (corta y neutra), mientras que 'seat' utiliza /iː/ (larga, tensa y sonriente)."
+    }
+  ]
+}

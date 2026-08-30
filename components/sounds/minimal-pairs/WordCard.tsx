@@ -7,6 +7,7 @@ import { cn } from "@/lib/cn";
 type Verdict = "correct" | "wrong" | null;
 type Side = "A" | "B";
 
+// Sub-components: PhoneticWordHighlight, correct/wrong status badge, play/pause indicator
 export function WordCard({
   word,
   symbol,
@@ -61,7 +62,7 @@ export function WordCard({
       </span>
       {isCorrect ? (
         <span
-          className="absolute right-3 top-3 inline-flex h-6 w-6 items-center justify-center rounded-full bg-[var(--success)] text-[var(--on-success,white)] animate-chip-appear"
+          className="absolute right-3 top-3 inline-flex h-6 w-6 items-center justify-center rounded-full bg-success text-on-success animate-chip-appear"
           aria-label="Correcto"
         >
           <Check size={13} strokeWidth={3} />
@@ -69,7 +70,7 @@ export function WordCard({
       ) : null}
       {isWrong ? (
         <span
-          className="absolute right-3 top-3 inline-flex h-6 w-6 items-center justify-center rounded-full bg-[var(--error)] text-[var(--on-error,white)] animate-chip-appear"
+          className="absolute right-3 top-3 inline-flex h-6 w-6 items-center justify-center rounded-full bg-error text-on-error animate-chip-appear"
           aria-label="Incorrecto"
         >
           <X size={13} strokeWidth={3} />

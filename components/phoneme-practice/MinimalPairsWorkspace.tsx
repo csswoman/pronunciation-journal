@@ -16,6 +16,7 @@ const CATEGORY_LABELS: Record<ContrastCategory, string> = {
   consonant: "Consonantes",
 };
 
+// Sub-components: Category picker group, Contrast pair picker group, ContrastMouthComparison, MinimalPairsRunner
 export default function MinimalPairsWorkspace() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -54,7 +55,14 @@ export default function MinimalPairsWorkspace() {
   }
 
   return (
-    <section className="sound-lab__minimal-pairs" aria-label="Práctica de pares mínimos">
+    <section className="sound-lab__minimal-pairs space-y-4" aria-label="Práctica de pares mínimos">
+      <div className="flex flex-col gap-1">
+        <h2 className="text-h3 font-bold text-fg">Entrenamiento de pares mínimos</h2>
+        <p className="text-body-sm text-fg-muted">
+          Entrena tu oído para distinguir diferencias sutiles entre sonidos similares en inglés.
+        </p>
+      </div>
+
       <div className="sound-lab__contrast-selector">
         <div className="sound-lab__contrast-row">
           <div
@@ -90,9 +98,9 @@ export default function MinimalPairsWorkspace() {
                   aria-pressed={isActive}
                   onClick={() => selectContrast(contrast.id)}
                 >
-                  <span className="font-ipa">{contrast.phonemeA}</span>
-                  <span aria-hidden>vs</span>
-                  <span className="font-ipa">{contrast.phonemeB}</span>
+                  <span className="font-ipa text-body-sm font-semibold">{contrast.phonemeA}</span>
+                  <span className="text-fg-subtle font-caption opacity-60" aria-hidden>/</span>
+                  <span className="font-ipa text-body-sm font-semibold">{contrast.phonemeB}</span>
                 </button>
               );
             })}

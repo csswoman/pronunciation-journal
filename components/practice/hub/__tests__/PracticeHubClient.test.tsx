@@ -36,7 +36,7 @@ describe('PracticeHubClient', () => {
     render(<PracticeHubClient fromDaily={false} />)
 
     await waitFor(() => {
-      expect(screen.getByText('Tienes 5 palabras pendientes de repaso')).toBeInTheDocument()
+      expect(screen.getByText('5 palabras esperan repaso')).toBeInTheDocument()
     })
 
     // "Vocabulario" appears both as the hero SRS card's kicker and as the
@@ -53,11 +53,11 @@ describe('PracticeHubClient', () => {
     // corresponding *Section lane below. Both placements are intentional.
     expect(screen.getAllByText('Palabras esenciales').length).toBeGreaterThan(0)
     expect(screen.getByText('Tus mazos')).toBeInTheDocument()
-    expect(screen.getByText('Empezar repaso')).toBeInTheDocument()
+    expect(screen.getAllByText('Empezar repaso').length).toBeGreaterThan(0)
     expect(screen.getAllByText('Laboratorio de sonidos').length).toBeGreaterThan(0)
     expect(screen.getByText('Habla conectada')).toBeInTheDocument()
     expect(screen.getByText('Entonación')).toBeInTheDocument()
-    expect(screen.getByText('Pares mínimos')).toBeInTheDocument()
+    expect(screen.getByText('Serie de pares mínimos')).toBeInTheDocument()
     expect(screen.getByText('Lectura en contexto')).toBeInTheDocument()
     expect(screen.getByText('Ruta guiada')).toBeInTheDocument()
     expect(screen.getByText('Diccionario')).toBeInTheDocument()

@@ -68,10 +68,7 @@ export default function PracticeHubClient({ fromDaily }: Props) {
     <PageLayout archetype="catalog" className="practice-hub">
       <PracticeHubHeader fromDaily={fromDaily} />
       <div className="flex flex-col gap-6">
-        <section className="practice-hub__suggestion layout-stack-tight" aria-labelledby="practice-suggestion-title">
-          <p id="practice-suggestion-title" className="font-kicker text-fg-subtle">
-            Sugerencia para ti
-          </p>
+        <section className="practice-hub__suggestion layout-stack-tight">
           <RecommendedPracticeCard recommendation={recommendation} />
           {activityUnavailable && (
             <p role="status" className="font-caption text-fg-muted">

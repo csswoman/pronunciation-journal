@@ -7,7 +7,6 @@ import PageLayout from "@/components/layout/PageLayout";
 import PageHeader from "@/components/layout/PageHeader";
 import dynamic from "next/dynamic";
 import { SoundLabFilterRow } from "./SoundLabFilterRow";
-import { EarAndVoiceHero } from "./EarAndVoiceHero";
 import { SoundLabLessonGrid } from "./SoundLabLessonGrid";
 import type { LessonSection } from "./SoundLabLessonGrid";
 import { useSoundLabData } from "@/hooks/useSoundLabData";
@@ -23,6 +22,10 @@ import { SoundLabDetailDialog } from "./SoundLabDetailDialog";
 const MinimalPairsWorkspace = dynamic(() => import("./MinimalPairsWorkspace"), {
   loading: () => <div className="p-8 text-center text-fg-muted font-caption">Cargando pares mínimos…</div>,
 });
+const IntonationTrainer = dynamic(
+  () => import("@/components/pronunciation/IntonationTrainer").then((m) => m.IntonationTrainer),
+  { loading: () => <div className="p-8 text-center text-fg-muted font-caption">Cargando entonación…</div> },
+);
 const PronunciationPathPage = dynamic(
   () => import("@/components/courses/pronunciation-path/PronunciationPathPage").then((m) => m.PronunciationPathPage),
   { loading: () => <div className="p-8 text-center text-fg-muted font-caption">Cargando ruta de pronunciación…</div> },
@@ -59,6 +62,7 @@ export default function SoundLabPage({ userId }: SoundLabPageProps) {
     activeTab,
     isSoundsView,
     isMinimalPairsView,
+    isIntonationView,
     isPathView,
     isIPAOpen,
     selectTab,
@@ -179,26 +183,14 @@ export default function SoundLabPage({ userId }: SoundLabPageProps) {
         />
 
         {isSoundsView ? (
-          <>
-            <EarAndVoiceHero
-              onSelectMinimalPairs={(contrastId) => {
-                if (contrastId) {
-                  router.push(`/practice/sounds?tab=minimal-pairs&contrast=${encodeURIComponent(contrastId)}`);
-                } else {
-                  selectTab("minimal-pairs");
-                }
-              }}
-              onOpenIPA={openIPA}
-            />
-            <SoundLabFilterRow
-              activeChip={activeChip}
-              search={search}
-              resultCount={filtered.length}
-              onChipChange={setActiveChip}
-              onSearchChange={setSearch}
-              onClearFilters={handleClearFilters}
-            />
-          </>
+          <SoundLabFilterRow
+            activeChip={activeChip}
+            search={search}
+            resultCount={filtered.length}
+            onChipChange={setActiveChip}
+            onSearchChange={setSearch}
+            onClearFilters={handleClearFilters}
+          />
         ) : null}
 
         {isSoundsView && focusTokens.length > 0 ? (
@@ -208,6 +200,8 @@ export default function SoundLabPage({ userId }: SoundLabPageProps) {
 
       {isMinimalPairsView ? (
         <MinimalPairsWorkspace />
+      ) : isIntonationView ? (
+        <IntonationTrainer />
       ) : isPathView ? (
         <PronunciationPathPage
           userId={userId}

@@ -1,6 +1,6 @@
 import { LayoutGrid } from "@/components/icons";
 
-export type SoundsWorkspaceTab = "sounds" | "minimal-pairs" | "path";
+export type SoundsWorkspaceTab = "sounds" | "minimal-pairs" | "intonation" | "path";
 
 interface Props {
   activeTab: SoundsWorkspaceTab;
@@ -11,6 +11,7 @@ interface Props {
 const tabs: Array<{ id: SoundsWorkspaceTab; label: string }> = [
   { id: "sounds", label: "Ejercicios de sonido" },
   { id: "minimal-pairs", label: "Pares mínimos" },
+  { id: "intonation", label: "Entonación" },
   { id: "path", label: "Tu progreso" },
 ];
 

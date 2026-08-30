@@ -1,0 +1,24 @@
+{
+  "id": 57,
+  "slug": "key-sounds-spanish-speakers",
+  "level": "intermediate",
+  "category": "pronunciation",
+  "duration": 7,
+  "title": "Sonidos Clave para Hispanohablantes",
+  "subtitle": "Diferencias fonéticas críticas",
+  "body": "Domina los 5 contrastes de sonido que generan más confusión en hispanohablantes: SH vs J/G, B vs V, I larga vs I corta, T/D y el sonido TH.",
+  "examples": [
+    {
+      "word": "she vs job",
+      "ipa": "/ʃiː/ vs /dʒɒb/",
+      "translation": "ella (solo aire) vs trabajo (con vibración)"
+    },
+    {
+      "word": "very vs berry",
+      "ipa": "/ˈver.i/ vs /ˈber.i/",
+      "translation": "muy (dientes en labio) vs baya (ambos labios de golpe)"
+    }
+  ],
+  "tip": "Para el sonido TH (/θ/ o /ð/), saca un poco la lengua entre los dientes. Si no lo haces, sonarás como D o T.",
+  "href": "/mini-lessons/key-sounds-spanish-speakers"
+}

@@ -124,8 +124,8 @@ export function resolveRecommendedMode(input: ResolveInput): RecommendedResult {
     return {
       mode,
       reason: 'due-review',
-      headline: `Tienes ${input.dueCount} ${input.dueCount === 1 ? 'palabra pendiente' : 'palabras pendientes'} de repaso`,
-      subtext: 'Atiéndelas antes de empezar una práctica nueva.',
+      headline: `${input.dueCount} ${input.dueCount === 1 ? 'palabra espera' : 'palabras esperan'} repaso`,
+      subtext: 'Repasarlas hoy las mantiene en memoria a largo plazo · unos 5 min',
     }
   }
 

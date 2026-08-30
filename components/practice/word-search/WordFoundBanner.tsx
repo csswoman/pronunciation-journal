@@ -1,24 +1,30 @@
 'use client'
 
 import type { WordSearchItem } from '@/lib/exercises/word-search/types'
+import type { WordColorTheme } from '@/lib/exercises/word-search/word-colors'
 import { CheckCircle2, X } from '@/components/icons'
 import { ListenButton } from '@/components/ui/ListenButton'
 import { speakText } from '@/lib/speech/synthesis'
 
 interface Props {
   item: WordSearchItem | null
+  colorTheme?: WordColorTheme
   onDismiss: () => void
 }
 
-export default function WordFoundBanner({ item, onDismiss }: Props) {
+export default function WordFoundBanner({ item, colorTheme, onDismiss }: Props) {
   if (!item) return null
+
+  const cardBg = colorTheme?.cardBg ?? 'bg-surface-raised'
+  const cardBorder = colorTheme?.cardBorder ?? 'border-border-subtle'
+  const iconBg = colorTheme?.iconBg ?? 'bg-success text-on-primary'
 
   return (
     <aside
       aria-label="Palabra encontrada"
-      className="animate-state-in flex w-full items-start gap-3 rounded-lg border border-success/30 bg-success-soft p-3"
+      className={`animate-state-in flex w-full items-start gap-3 rounded-lg border ${cardBorder} ${cardBg} p-3.5 shadow-xs`}
     >
-      <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-success text-on-primary">
+      <span className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${iconBg}`}>
         <CheckCircle2 className="h-4 w-4" aria-hidden />
       </span>
 
