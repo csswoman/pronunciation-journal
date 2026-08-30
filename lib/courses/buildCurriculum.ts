@@ -4,6 +4,7 @@ import type {
   CoursePathUnit,
   ElectiveSpineIcon,
   LessonPriority,
+  LessonTag,
 } from "./types";
 import type { PronunciationTargetId } from "@/lib/pronunciation/targets/types";
 import { theoryTopicForDeck } from "@/lib/learning-loop/theory-targets";
@@ -13,6 +14,10 @@ export interface CourseInput {
   p: LessonPriority;
   /** Optional thematic grouping inside an otherwise broad unit. */
   group?: string;
+  subgroup?: string;
+  keywords?: string;
+  tag?: LessonTag;
+  duration?: string;
   s?: boolean;
   /** Stable grammar-deck slug → `public/grammar-decks/<g>.json`. Independent of `number`. */
   g?: string;
@@ -34,6 +39,10 @@ function toLesson(
     topicId: course.g ? theoryTopicForDeck(course.g) : undefined,
     priority: course.p,
     group: course.group,
+    subgroup: course.subgroup,
+    keywords: course.keywords,
+    tag: course.tag,
+    duration: course.duration,
     isOptional: course.p === 0,
     soundLab: course.s,
     pronunciationTargetIds: course.pt,
@@ -59,6 +68,7 @@ export function buildLevel(
   hours: string,
   courses: CourseInput[],
   opts?: {
+    description?: string;
     isElective?: boolean;
     spineIcon?: ElectiveSpineIcon;
     optionalLabel?: string;
@@ -97,6 +107,7 @@ export function buildLevel(
     spineLabel,
     spineSubtitle,
     title,
+    description: opts?.description,
     hours,
     units,
     isElective: opts?.isElective,

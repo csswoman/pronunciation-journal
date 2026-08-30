@@ -80,6 +80,6 @@ describe('DailyPlanCard', () => {
     )
     expect(screen.getByText('Plan de hoy')).toBeInTheDocument()
     expect(screen.getByText('Palabras nuevas')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Ver \d+ pasos? más/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /\+ \d+ pasos? más/i })).toBeInTheDocument()
   })
 })

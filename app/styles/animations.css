@@ -223,6 +223,57 @@
   animation: loadingSlide 2s linear infinite;
 }
 
+/* ── Articulation guide animations ────────────────────────────────────────── */
+@keyframes mouth-breathe {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.035); }
+}
+.animate-mouth-breathe {
+  animation: mouth-breathe 2.4s ease-in-out infinite;
+  transform-origin: center;
+  will-change: transform;
+}
+.animate-mouth-breathe-slow {
+  animation: mouth-breathe 4.8s ease-in-out infinite;
+  transform-origin: center;
+  will-change: transform;
+}
+
+@keyframes tongue-breathe {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-2px); }
+}
+.animate-tongue-breathe {
+  animation: tongue-breathe 2.2s ease-in-out infinite;
+  will-change: transform;
+}
+.animate-tongue-breathe-slow {
+  animation: tongue-breathe 4.4s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Articulation "hold": eases into the target posture and settles, instead of
+   pulsing forever. Reads as the mouth reaching the position, not breathing. */
+@keyframes articulation-settle {
+  0%   { transform: translateY(3px) scale(0.985); opacity: 0.55; }
+  60%  { transform: translateY(-1px) scale(1.008); opacity: 1; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+.animate-articulation-settle {
+  animation: articulation-settle 620ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  transform-origin: center;
+  will-change: transform, opacity;
+}
+
+/* Marks the panel whose articulatory dimension differs between the two sounds. */
+@keyframes contrast-flag {
+  0%, 100% { opacity: 0.55; }
+  50%      { opacity: 1; }
+}
+.animate-contrast-flag {
+  animation: contrast-flag 2.6s ease-in-out infinite;
+}
+
 /* ── Respect prefers-reduced-motion ──────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   .nav-indicator,
@@ -253,7 +304,13 @@
   .animate-home-in,
   .animate-symbol-in,
   .progress-fill-mount,
-  .animate-loading-slide {
+  .animate-loading-slide,
+  .animate-mouth-breathe,
+  .animate-mouth-breathe-slow,
+  .animate-tongue-breathe,
+  .animate-tongue-breathe-slow,
+  .animate-articulation-settle,
+  .animate-contrast-flag {
     animation: none !important;
   }
 }

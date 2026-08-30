@@ -14,7 +14,8 @@ export const COURSE_PATH_CURRICULUM: CoursePathCurriculum = {
         "Empezar",
         "Fundamentos A1",
         "20 h",
-        a1CourseInputs()
+        a1CourseInputs(),
+        { description: "Lo mínimo para sostener una conversación básica." }
       ),
       realLife: [
         {
@@ -77,7 +78,8 @@ export const COURSE_PATH_CURRICULUM: CoursePathCurriculum = {
         "Cotidiano",
         "Base sólida A2",
         "19 h",
-        a2CourseInputs()
+        a2CourseInputs(),
+        { description: "Vocabulario cotidiano y estructuras para desenvolverte en el día a día." }
       ),
       realLife: [
         {
@@ -140,7 +142,8 @@ export const COURSE_PATH_CURRICULUM: CoursePathCurriculum = {
         "Conversación",
         "Inglés en acción B1",
         "28 h",
-        b1CourseInputs()
+        b1CourseInputs(),
+        { description: "Gana soltura para expresar opiniones, contar historias y comunicarte en el trabajo." }
       ),
       realLife: [
         {
@@ -203,7 +206,8 @@ export const COURSE_PATH_CURRICULUM: CoursePathCurriculum = {
         "Fluidez",
         "Más natural B2",
         "21 h",
-        b2CourseInputs()
+        b2CourseInputs(),
+        { description: "Expresión natural, matices y fluidez para conversaciones avanzadas." }
       ),
       realLife: [
         {
@@ -267,7 +271,7 @@ export const COURSE_PATH_CURRICULUM: CoursePathCurriculum = {
         "Inglés con soltura C1",
         "38 h",
         c1CourseInputs(),
-        { optionalLabel: "C1+", optionalTitle: "Dominio avanzado" }
+        { optionalLabel: "C1+", optionalTitle: "Dominio avanzado", description: "Dominio preciso, recursos estilísticos y profesionalismo en cualquier contexto." }
       ),
       realLife: [
         {
@@ -398,6 +402,9 @@ export const COURSE_PATH_CURRICULUM: CoursePathCurriculum = {
         { t: "Básico vs natural: Dinero y Retos", p: 2, g: "chunk-basico-vs-natural-4" },
         { t: "Básico vs natural: Reacciones y Cierres", p: 2, g: "chunk-basico-vs-natural-5" },
         { t: "Colocaciones naturales (Collocations)", p: 2, g: "chunk-collocations" },
+        { t: "300 frases imprescindibles", p: 2, g: "chunk-300-english-from-day-1" },
+        { t: "La estrategia de los 9 verbos (Light Verbs)", p: 2, g: "chunk-the-9-verbs-strategy" },
+        { t: "Light Verbs: Get, Set, Put y Go", p: 2, g: "chunk-light-verbs-get-set-put-go" },
         { t: "Phrasal Verbs de uso diario", p: 2, g: "chunk-phrasal-verbs" },
         { t: "Modismos y expresiones idiomáticas (Idioms)", p: 2, g: "chunk-idioms" },
         { t: "Social & Small Talk", p: 2, g: "chunk-social-small-talk" },

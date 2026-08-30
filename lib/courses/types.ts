@@ -57,6 +57,8 @@ export type LessonProgressState = "done" | "current" | "locked" | "available";
 
 export type UnitProgressState = "active" | "done" | "locked";
 
+export type LessonTag = "CONCEPTO" | "PRÁCTICA" | "PRONUNCIACIÓN" | "REPASO";
+
 export interface CoursePathLesson {
   /** Stable key for progress (same as `number` as string) */
   id: string;
@@ -70,6 +72,14 @@ export interface CoursePathLesson {
   priority: LessonPriority;
   /** Short thematic heading shown inside a broad course unit. */
   group?: string;
+  /** Sub-category kicker heading inside a group block (e.g. PRONOMBRES Y ARTÍCULOS) */
+  subgroup?: string;
+  /** Key example words or phrases shown below lesson title */
+  keywords?: string;
+  /** Visual type tag badge */
+  tag?: LessonTag;
+  /** Estimated duration string (e.g. 5 min) */
+  duration?: string;
   /** Part of the broad curriculum (p === 0), shown after priority block */
   isOptional: boolean;
   /** Connects to Sound Lab (pronunciation / audio). @deprecated kept for compatibility — prefer `pronunciationTargetIds`. */
@@ -92,6 +102,7 @@ export interface CoursePathLevel {
   spineLabel: string;
   spineSubtitle: string;
   title: string;
+  description?: string;
   hours?: string;
   units: CoursePathUnit[];
   /** Shown below C1, not in the level spine */

@@ -1,5 +1,13 @@
+/*
+ * Planned subcomponents:
+ * - CoursePathHeroBanner (featured hero lesson banner)
+ *   - HeroIconBox (avatar / user icon container)
+ *   - HeroContent (kicker + lesson title)
+ *   - HeroAction (Comenzar lección -> link button)
+ */
+
 import Link from "next/link";
-import { ArrowRight } from "@/components/icons";
+import { ArrowRight, User } from "@/components/icons";
 import { studyLessonPath } from "@/lib/courses/curriculumIndex";
 import type { CoursePathLesson, CoursePathTrackId } from "@/lib/courses/types";
 
@@ -16,31 +24,26 @@ export default function CoursePathHeroBanner({
   currentLesson,
   hasProgress,
 }: CoursePathHeroBannerProps) {
-  if (!hasProgress && firstLesson) {
-    return (
-      <Link href={studyLessonPath(levelId, firstLesson.number)} className="course-path__resume">
-        <span className="course-path__resume-body">
-          <span className="course-path__resume-label font-kicker">Empieza aquí</span>
-          <span className="course-path__resume-title">{firstLesson.title}</span>
-        </span>
-        <span className="course-path__resume-action">Comenzar lección</span>
-        <ArrowRight size={16} aria-hidden />
-      </Link>
-    );
-  }
+  const lesson = hasProgress && currentLesson ? currentLesson : firstLesson;
+  if (!lesson) return null;
 
-  if (hasProgress && currentLesson) {
-    return (
-      <Link href={studyLessonPath(levelId, currentLesson.number)} className="course-path__resume">
-        <span className="course-path__resume-body">
-          <span className="course-path__resume-label font-kicker">Tu siguiente lección</span>
-          <span className="course-path__resume-title">{currentLesson.title}</span>
-        </span>
-        <span className="course-path__resume-action">Continuar lección</span>
-        <ArrowRight size={16} aria-hidden />
-      </Link>
-    );
-  }
+  const label = !hasProgress ? "EMPIEZA AQUÍ" : "TU SIGUIENTE LECCIÓN";
+  const actionText = !hasProgress ? "Comenzar lección" : "Continuar lección";
+  const href = studyLessonPath(levelId, lesson.number);
 
-  return null;
+  return (
+    <Link href={href} className="course-path__hero-banner">
+      <div className="course-path__hero-icon-box" aria-hidden="true">
+        <User size={22} className="course-path__hero-icon" />
+      </div>
+      <div className="course-path__hero-content">
+        <span className="course-path__hero-kicker">{label}</span>
+        <h2 className="course-path__hero-title">{lesson.title}</h2>
+      </div>
+      <div className="course-path__hero-action">
+        <span>{actionText}</span>
+        <ArrowRight size={16} aria-hidden />
+      </div>
+    </Link>
+  );
 }
