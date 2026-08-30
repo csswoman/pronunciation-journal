@@ -1,187 +1,206 @@
 import type { PhonemeArticulationGuide } from "@/lib/pronunciation/articulation-guide-data";
 
-// Planned structure:
-// <FrontalLipsTeethOnLip | TongueBetweenTeeth | Rounded | Spread | Closed | Neutral />
+// Sub-components: FrontalLipsRounded, FrontalLipsSpread, FrontalLipsNeutral
+export {
+  FrontalLipsTeethOnLip,
+  FrontalLipsTongueBetweenTeeth,
+  FrontalLipsClosed,
+} from "./FrontalLipsSpecialShapes";
 
 type GuideProps = { guide: PhonemeArticulationGuide };
 
-export function FrontalLipsTeethOnLip() {
-  return (
-    <g>
-      <path
-        d="M 25,44 C 55,30 75,34 90,38 C 105,34 125,30 155,44 C 125,50 105,46 90,46 C 75,46 55,50 25,44 Z"
-        className="fill-primary/25 stroke-primary"
-        strokeWidth="2.5"
-        strokeLinejoin="round"
-      />
-      <rect x="74" y="44" width="14" height="15" rx="2" className="fill-surface-raised stroke-fg shadow-sm" strokeWidth="1.5" />
-      <rect x="92" y="44" width="14" height="15" rx="2" className="fill-surface-raised stroke-fg shadow-sm" strokeWidth="1.5" />
-      <line x1="90" y1="44" x2="90" y2="59" className="stroke-border-default" strokeWidth="1" />
-      <path
-        d="M 30,55 C 60,54 75,56 90,56 C 105,56 120,54 150,55 C 135,80 105,82 90,82 C 75,82 45,80 30,55 Z"
-        className="fill-primary/35 stroke-primary"
-        strokeWidth="2.5"
-        strokeLinejoin="round"
-      />
-      <text x="90" y="98" textAnchor="middle" className="fill-primary font-mono text-[9px] font-bold">
-        Dientes sobre labio inferior
-      </text>
-    </g>
-  );
-}
-
-export function FrontalLipsTongueBetweenTeeth() {
-  return (
-    <g>
-      <path
-        d="M 25,36 C 55,24 75,28 90,32 C 105,28 125,24 155,36 C 125,42 105,38 90,38 C 75,38 55,42 25,36 Z"
-        className="fill-primary/25 stroke-primary"
-        strokeWidth="2.5"
-        strokeLinejoin="round"
-      />
-      <rect x="68" y="38" width="18" height="12" rx="2" className="fill-surface-raised stroke-fg" strokeWidth="1.5" />
-      <rect x="94" y="38" width="18" height="12" rx="2" className="fill-surface-raised stroke-fg" strokeWidth="1.5" />
-      <path
-        d="M 68,48 C 68,44 78,58 90,58 C 102,58 112,44 112,48 C 112,62 102,70 90,70 C 78,70 68,62 68,48 Z"
-        className="fill-warning-soft stroke-warning animate-pulse"
-        strokeWidth="2.5"
-      />
-      <line x1="90" y1="50" x2="90" y2="64" className="stroke-warning/60" strokeWidth="1.5" />
-      <rect x="70" y="58" width="16" height="10" rx="1.5" className="fill-surface-raised stroke-fg" strokeWidth="1.5" />
-      <rect x="94" y="58" width="16" height="10" rx="1.5" className="fill-surface-raised stroke-fg" strokeWidth="1.5" />
-      <path
-        d="M 30,62 C 60,60 75,64 90,64 C 105,64 120,60 150,62 C 135,84 105,86 90,86 C 75,86 45,84 30,62 Z"
-        className="fill-primary/25 stroke-primary"
-        strokeWidth="2.5"
-        strokeLinejoin="round"
-      />
-      <text x="90" y="100" textAnchor="middle" className="fill-warning font-mono text-[9px] font-bold">
-        Lengua asomando entre dientes
-      </text>
-    </g>
-  );
-}
-
 export function FrontalLipsRounded({ guide }: GuideProps) {
+  const isWide = guide.jawOpening === "wide";
   return (
     <g>
-      <ellipse cx="90" cy="54" rx="46" ry="34" className="fill-primary/25 stroke-primary" strokeWidth="2.5" />
+      {/* 1. Labios redondos proyectados en anillo */}
       <ellipse
-        cx="90"
-        cy="54"
-        rx={guide.jawOpening === "wide" ? "22" : "14"}
-        ry={guide.jawOpening === "wide" ? "20" : "12"}
-        className="fill-surface-sunken stroke-primary"
-        strokeWidth="2.5"
+        cx="100"
+        cy="56"
+        rx={isWide ? "48" : "40"}
+        ry={isWide ? "38" : "32"}
+        className="fill-primary-soft/80 stroke-primary"
+        strokeWidth="2.4"
       />
+
+      {/* 2. Orificio bucal circular interior */}
+      <ellipse
+        cx="100"
+        cy="56"
+        rx={isWide ? "24" : "15"}
+        ry={isWide ? "20" : "13"}
+        className="fill-surface-sunken stroke-primary"
+        strokeWidth="2.2"
+      />
+
+      {/* 3. Borde sutil de los incisivos asomando arriba */}
       <path
-        d={guide.jawOpening === "wide" ? "M 76,46 Q 90,48 104,46" : "M 80,48 Q 90,50 100,48"}
+        d={isWide ? "M 86,47 Q 100,50 114,47" : "M 91,49 Q 100,51 109,49"}
         fill="none"
         className="stroke-surface-raised"
-        strokeWidth="2.5"
+        strokeWidth="2"
         strokeLinecap="round"
       />
-      <text x="90" y="102" textAnchor="middle" className="fill-primary font-mono text-[9px] font-bold">
-        {guide.jawOpening === "wide" ? "Labios en 'O' abierta" : "Labios en 'U' redonda estrecha"}
+
+      {/* 4. Arrugas y pliegues naturales de labios fruncidos */}
+      <line x1="100" y1="20" x2="100" y2="28" className="stroke-primary/40" strokeWidth="1.2" strokeLinecap="round" />
+      <line x1="72" y1="28" x2="78" y2="34" className="stroke-primary/40" strokeWidth="1.2" strokeLinecap="round" />
+      <line x1="128" y1="28" x2="122" y2="34" className="stroke-primary/40" strokeWidth="1.2" strokeLinecap="round" />
+      <line x1="100" y1="92" x2="100" y2="84" className="stroke-primary/40" strokeWidth="1.2" strokeLinecap="round" />
+
+      <text x="100" y="106" textAnchor="middle" className="fill-fg-muted font-caption text-[11px] font-medium">
+        {isWide ? "Labios en 'O' abierta redondeada" : "Labios en 'U' fruncida y estrecha"}
       </text>
     </g>
   );
 }
 
-export function FrontalLipsSpread() {
-  return (
-    <g>
-      <path
-        d="M 16,50 C 48,28 72,32 90,36 C 108,32 132,28 164,50 C 132,50 108,44 90,44 C 72,44 48,50 16,50 Z"
-        className="fill-primary/25 stroke-primary"
-        strokeWidth="2.5"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M 26,50 C 50,46 72,44 90,44 C 108,44 130,46 154,50 C 130,62 108,64 90,64 C 72,64 50,62 26,50 Z"
-        className="fill-surface-sunken stroke-border-default"
-        strokeWidth="1.5"
-      />
-      <path
-        d="M 38,48 Q 90,44 142,48 L 140,54 Q 90,56 40,54 Z"
-        className="fill-surface-raised stroke-fg"
-        strokeWidth="1.5"
-      />
-      <path
-        d="M 44,55 Q 90,57 136,55 L 134,60 Q 90,63 46,60 Z"
-        className="fill-surface-raised stroke-fg"
-        strokeWidth="1"
-      />
-      <path
-        d="M 18,52 C 48,64 72,66 90,66 C 108,66 132,64 162,52 C 134,78 108,80 90,80 C 72,80 46,78 18,52 Z"
-        className="fill-primary/25 stroke-primary"
-        strokeWidth="2.5"
-        strokeLinejoin="round"
-      />
-      <text x="90" y="98" textAnchor="middle" className="fill-primary font-mono text-[9px] font-bold">
-        Sonrisa amplia y tensa
-      </text>
-    </g>
-  );
-}
+export function FrontalLipsSpread({ guide }: GuideProps) {
+  // Una vocal estirada y cerrada (/iː/) deja una rendija estrecha; una estirada
+  // y media (/eɪ/) abre más. Sin esto, "spread" y "neutral" se ven casi iguales.
+  const isNarrow = guide.jawOpening === "narrow";
+  const gap = isNarrow ? 5 : 11;
+  const upperTeethY = 56 - gap;
+  const lowerTeethY = 56 + gap;
 
-export function FrontalLipsClosed() {
   return (
     <g>
+      {/* 1. Cavidad oral profunda: rendija ancha y baja */}
+      <ellipse cx="100" cy="56" rx="60" ry={gap + 6} className="fill-surface-sunken" />
+
+      {/* 2. Dientes superiores alineados */}
       <path
-        d="M 25,48 C 55,34 75,38 90,42 C 105,38 125,34 155,48 C 125,52 105,50 90,50 C 75,50 55,52 25,48 Z"
-        className="fill-primary/25 stroke-primary"
-        strokeWidth="2.5"
+        d={`M 48,${upperTeethY - 6} L 52,${upperTeethY} Q 100,${upperTeethY + 2} 148,${upperTeethY} L 152,${upperTeethY - 6} Z`}
+        className="fill-surface-raised stroke-fg"
+        strokeWidth="1.4"
+      />
+      <line x1="76" y1={upperTeethY - 6} x2="77" y2={upperTeethY} className="stroke-border-strong" strokeWidth="1" />
+      <line x1="92" y1={upperTeethY - 6} x2="92" y2={upperTeethY + 1} className="stroke-border-strong" strokeWidth="1" />
+      <line x1="108" y1={upperTeethY - 6} x2="108" y2={upperTeethY + 1} className="stroke-border-strong" strokeWidth="1" />
+      <line x1="124" y1={upperTeethY - 6} x2="123" y2={upperTeethY} className="stroke-border-strong" strokeWidth="1" />
+
+      {/* 3. Dientes inferiores */}
+      <path
+        d={`M 54,${lowerTeethY} Q 100,${lowerTeethY - 2} 146,${lowerTeethY} L 144,${lowerTeethY + 5} Q 100,${lowerTeethY + 3} 56,${lowerTeethY + 5} Z`}
+        className="fill-surface-raised stroke-fg"
+        strokeWidth="1.2"
+      />
+      <line x1="84" y1={lowerTeethY - 1} x2="84" y2={lowerTeethY + 4} className="stroke-border-strong" strokeWidth="1" />
+      <line x1="100" y1={lowerTeethY - 1} x2="100" y2={lowerTeethY + 4} className="stroke-border-strong" strokeWidth="1" />
+      <line x1="116" y1={lowerTeethY - 1} x2="116" y2={lowerTeethY + 4} className="stroke-border-strong" strokeWidth="1" />
+
+      {/* 4. Labio superior estirado en sonrisa */}
+      <path
+        d={`M 22,50 C 52,28 78,32 94,36 C 100,37 106,37 112,36 C 128,32 154,28 178,50 C 150,52 126,${upperTeethY - 8} 106,${upperTeethY - 8} C 100,${upperTeethY - 8} 94,${upperTeethY - 8} 88,${upperTeethY - 8} C 68,${upperTeethY - 8} 44,52 22,50 Z`}
+        className="fill-primary-soft/70 stroke-primary"
+        strokeWidth="2.2"
         strokeLinejoin="round"
       />
+
+      {/* 5. Labio inferior estirado */}
       <path
-        d="M 22,50 Q 90,54 158,50"
-        fill="none"
-        className="stroke-primary"
-        strokeWidth="3.5"
-        strokeLinecap="round"
-      />
-      <path
-        d="M 28,52 C 58,52 75,54 90,54 C 105,54 122,52 152,52 C 135,74 105,76 90,76 C 75,76 45,74 28,52 Z"
-        className="fill-primary/25 stroke-primary"
-        strokeWidth="2.5"
+        d={`M 22,50 C 50,60 76,${lowerTeethY + 8} 100,${lowerTeethY + 8} C 124,${lowerTeethY + 8} 150,60 178,50 C 156,82 130,86 100,86 C 70,86 44,82 22,50 Z`}
+        className="fill-primary-soft/70 stroke-primary"
+        strokeWidth="2.2"
         strokeLinejoin="round"
       />
-      <text x="90" y="96" textAnchor="middle" className="fill-primary font-mono text-[9px] font-bold">
-        Labios sellados firmemente
+
+      {/* 6. Hoyuelos y tensión lateral de la sonrisa */}
+      <path d="M 18,46 Q 14,50 18,54" fill="none" className="stroke-primary/50" strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M 182,46 Q 186,50 182,54" fill="none" className="stroke-primary/50" strokeWidth="1.5" strokeLinecap="round" />
+
+      <text x="100" y="104" textAnchor="middle" className="fill-fg-muted font-caption text-[11px] font-medium">
+        {isNarrow ? "Sonrisa tensa y rendija estrecha" : "Sonrisa amplia y labios estirados"}
       </text>
     </g>
   );
 }
 
 export function FrontalLipsNeutral({ guide }: GuideProps) {
-  const wide = guide.jawOpening === "wide";
+  const isWide = guide.jawOpening === "wide";
+  const isNarrow = guide.jawOpening === "narrow";
+
   return (
     <g>
-      <path
-        d="M 25,40 C 55,26 75,30 90,34 C 105,30 125,26 155,40 C 125,46 105,42 90,42 C 75,42 55,46 25,40 Z"
-        className="fill-primary/25 stroke-primary"
-        strokeWidth="2.5"
-        strokeLinejoin="round"
-      />
+      {/* 1. Cavidad oral interna con profundidad */}
       <ellipse
-        cx="90"
-        cy={wide ? "56" : "50"}
-        rx="38"
-        ry={wide ? "24" : "14"}
-        className="fill-surface-sunken stroke-border-default"
+        cx="100"
+        cy="56"
+        rx={isWide ? "48" : isNarrow ? "36" : "42"}
+        ry={isWide ? "26" : isNarrow ? "12" : "18"}
+        className="fill-surface-sunken stroke-border-subtle"
         strokeWidth="1.5"
       />
-      <rect x="74" y="38" width="14" height="10" rx="1.5" className="fill-surface-raised stroke-fg" strokeWidth="1.2" />
-      <rect x="92" y="38" width="14" height="10" rx="1.5" className="fill-surface-raised stroke-fg" strokeWidth="1.2" />
+
+      {/* 2. Fila dental superior visible */}
       <path
-        d={`M 26,${wide ? "68" : "56"} C 56,${wide ? "66" : "54"} 75,${wide ? "68" : "56"} 90,${wide ? "68" : "56"} C 105,${wide ? "68" : "56"} 124,${wide ? "66" : "54"} 154,${wide ? "68" : "56"} C 135,${wide ? "92" : "78"} 105,${wide ? "94" : "80"} 90,${wide ? "94" : "80"} C 75,${wide ? "94" : "80"} 45,${wide ? "92" : "78"} 26,${wide ? "68" : "56"} Z`}
-        className="fill-primary/25 stroke-primary"
-        strokeWidth="2.5"
+        d={
+          isWide
+            ? "M 64,46 L 68,54 Q 100,56 132,54 L 136,46 Z"
+            : "M 68,48 L 70,53 Q 100,55 130,53 L 132,48 Z"
+        }
+        className="fill-surface-raised stroke-fg"
+        strokeWidth="1.2"
+      />
+      <line x1="84" y1="47" x2="84" y2="54" className="stroke-border-strong" strokeWidth="1" />
+      <line x1="100" y1="48" x2="100" y2="55" className="stroke-border-strong" strokeWidth="1" />
+      <line x1="116" y1="47" x2="116" y2="54" className="stroke-border-strong" strokeWidth="1" />
+
+      {/* 3. Lengua visible en el piso de la boca si la mandíbula está abierta */}
+      {isWide && (
+        <path
+          d="M 68,70 Q 100,60 132,70 Q 100,78 68,70 Z"
+          className="fill-primary/20 stroke-primary/30"
+          strokeWidth="1.2"
+        />
+      )}
+
+      {/* 4. Dientes inferiores asomando si es media/ancha */}
+      {!isNarrow && (
+        <path
+          d={
+            isWide
+              ? "M 72,70 Q 100,68 128,70 L 126,74 Q 100,72 74,74 Z"
+              : "M 74,62 Q 100,60 126,62 L 124,65 Q 100,63 76,65 Z"
+          }
+          className="fill-surface-raised stroke-fg"
+          strokeWidth="1"
+        />
+      )}
+
+      {/* 5. Labio superior neutro */}
+      <path
+        d="M 28,48 C 54,32 80,36 94,40 C 100,41 106,41 112,40 C 126,36 152,32 172,48 C 148,50 124,46 106,46 C 100,46 94,46 88,46 C 70,46 48,50 28,48 Z"
+        className="fill-primary-soft/75 stroke-primary"
+        strokeWidth="2.2"
         strokeLinejoin="round"
       />
-      <text x="90" y={wide ? "106" : "98"} textAnchor="middle" className="fill-fg-muted font-mono text-[9px] font-bold">
-        {wide ? "Mandíbula caída (Apertura amplia)" : "Apertura media relajada"}
+
+      {/* 6. Labio inferior neutro con apertura adaptada */}
+      <path
+        d={
+          isWide
+            ? "M 28,58 C 50,72 72,76 100,76 C 128,76 150,72 172,58 C 150,96 128,100 100,100 C 72,100 50,96 28,58 Z"
+            : isNarrow
+              ? "M 28,54 C 50,60 72,62 100,62 C 128,62 150,60 172,54 C 150,78 128,82 100,82 C 72,82 50,78 28,54 Z"
+              : "M 28,56 C 50,66 72,70 100,70 C 128,70 150,66 172,56 C 150,88 128,92 100,92 C 72,92 50,88 28,56 Z"
+        }
+        className="fill-primary-soft/75 stroke-primary"
+        strokeWidth="2.2"
+        strokeLinejoin="round"
+      />
+
+      <text
+        x="100"
+        y={isWide ? "114" : "102"}
+        textAnchor="middle"
+        className="fill-fg-muted font-caption text-[11px] font-medium"
+      >
+        {isWide
+          ? "Mandíbula caída (Apertura amplia)"
+          : isNarrow
+            ? "Apertura estrecha y relajada"
+            : "Apertura media relajada"}
       </text>
     </g>
   );

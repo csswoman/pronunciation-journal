@@ -3,10 +3,14 @@
 import {
   ArrowRight,
   Check,
+  Flame,
   HelpCircle,
+  Pause,
   Play,
+  Radio,
   RefreshCw,
   RotateCcw,
+  Timer,
   Trophy,
   X,
 } from "@/components/icons";
@@ -15,6 +19,7 @@ import { cn } from "@/lib/cn";
 type Verdict = "correct" | "wrong" | null;
 type Side = "A" | "B";
 
+// Sub-components: TrainerControls completion view, in-flight pair controls, quiz verdict bar
 export function TrainerControls({
   quizTarget,
   verdict,
@@ -71,8 +76,9 @@ export function TrainerControls({
           </p>
         ) : null}
         {bestStreak && bestStreak >= 2 ? (
-          <p className="ipa-chart__done-score text-caption font-semibold text-amber-600 dark:text-amber-400">
-            🔥 Mejor racha consecutiva: <strong>{bestStreak}</strong> aciertos
+          <p className="ipa-chart__done-score font-caption font-semibold text-warning flex items-center justify-center gap-1">
+            <Flame size={14} className="text-warning shrink-0" aria-hidden />
+            <span>Mejor racha consecutiva: <strong>{bestStreak}</strong> aciertos</span>
           </p>
         ) : null}
         <div className="ipa-chart__done-actions">
@@ -107,13 +113,14 @@ export function TrainerControls({
             type="button"
             onClick={onToggleSlow}
             className={cn(
-              "ipa-chart__btn ipa-chart__btn--ghost",
+              "ipa-chart__btn ipa-chart__btn--ghost flex items-center gap-1",
               isSlow && "text-primary font-bold bg-primary-soft border border-primary/30",
             )}
             title={isSlow ? "Velocidad lenta activa (0.75x)" : "Cambiar a velocidad lenta"}
             aria-label={isSlow ? "Velocidad lenta activa" : "Cambiar a velocidad lenta"}
           >
-            <span>🐢 {isSlow ? "0.75x" : "1.0x"}</span>
+            <Timer size={13} aria-hidden />
+            <span>{isSlow ? "0.75x" : "1.0x"}</span>
           </button>
         ) : null}
         {onToggleAutoLoop ? (
@@ -121,13 +128,14 @@ export function TrainerControls({
             type="button"
             onClick={onToggleAutoLoop}
             className={cn(
-              "ipa-chart__btn ipa-chart__btn--ghost",
+              "ipa-chart__btn ipa-chart__btn--ghost flex items-center gap-1",
               isAutoLoop && "text-primary font-bold bg-primary-soft border border-primary/30 animate-pulse",
             )}
             title={isAutoLoop ? "Pausar reproducción continua" : "Activar modo escucha continua manos libres"}
             aria-label={isAutoLoop ? "Pausar reproducción continua" : "Activar modo escucha continua"}
           >
-            <span>{isAutoLoop ? "⏸ Pausar" : "📻 Continuo"}</span>
+            {isAutoLoop ? <Pause size={13} aria-hidden /> : <Radio size={13} aria-hidden />}
+            <span>{isAutoLoop ? "Pausar" : "Continuo"}</span>
           </button>
         ) : null}
         <div className="flex items-center gap-1.5">
@@ -185,8 +193,8 @@ export function TrainerControls({
                   {verdict === "correct" ? "¡Correcto!" : `Era «${correctWord}».`}
                 </p>
                 {verdict === "correct" && streak && streak >= 2 ? (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/15 border border-amber-500/30 px-2.5 py-0.5 text-xs font-bold text-amber-600 dark:text-amber-400 animate-pulse">
-                    <span>🔥</span>
+                  <span className="inline-flex items-center gap-1 rounded-full bg-warning-soft border border-warning/30 px-2.5 py-0.5 text-caption font-bold text-warning animate-pulse">
+                    <Flame size={12} className="text-warning shrink-0" aria-hidden />
                     <span>Racha: {streak}</span>
                   </span>
                 ) : null}
