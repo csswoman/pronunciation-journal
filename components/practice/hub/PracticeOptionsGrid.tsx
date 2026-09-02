@@ -1,48 +1,73 @@
 'use client'
 
 // Planned structure:
-// <PracticeOptionsGrid>
-//   hero bento: <SoundQuizWidget /> + <VocabularyReviewCard /> + <CoachCallCard />
-//   <PronunciationSection />   Sonidos / puerta 1
-//   <VocabularySection />     Palabras / puerta 2
-//   <ContextReadingSection /> Leer y escuchar / puerta 3
-//   <GamesSection />          Jugar / puerta 4
-//   <ReferenceSection />      Diccionario, fuera de las 4 puertas por diseño
-// </PracticeOptionsGrid>
+// <PracticeOptionsGrid> — 4-row Bento Grid layout matching the reference mockup
+//   Row 1 (Hero Bento: 5 / 7 cols): RecommendedPracticeCard + SoundQuizWidget
+//   Row 2 (Vocabulary & Coach: 3 equal cols): VocabularyReviewCard + CoachCallCard + DecksCard
+//   Row 3 (Context & Course: 3 equal cols): ImmersionCard + ReaderCard + CourseCard
+//   Row 4 (Games & Reference: 8 / 4 cols): GamesSection + ReferenceSection
 
 import type { SessionArc } from '@/lib/practice/types'
+import type { RecommendedResult } from '@/lib/practice/practice-modes'
+import RecommendedPracticeCard from './RecommendedPracticeCard'
 import SoundQuizWidget from './SoundQuizWidget'
 import VocabularyReviewCard from './VocabularyReviewCard'
 import CoachCallCard from './CoachCallCard'
-import VocabularySection from './VocabularySection'
-import ContextReadingSection from './ContextReadingSection'
+import DecksCard from './DecksCard'
+import ImmersionCard from './ImmersionCard'
+import ReaderCard from './ReaderCard'
+import CourseCard from './CourseCard'
 import GamesSection from './GamesSection'
 import ReferenceSection from './ReferenceSection'
 
 interface PracticeOptionsGridProps {
+  recommendation: RecommendedResult
   dueCount: number | null
   arc?: SessionArc
 }
 
-export default function PracticeOptionsGrid({ dueCount, arc }: PracticeOptionsGridProps) {
+export default function PracticeOptionsGrid({
+  recommendation,
+  dueCount,
+  arc,
+}: PracticeOptionsGridProps) {
   return (
-    <div className="flex flex-col gap-6">
-      {/* ─── HERO: Laboratorio de Sonidos con ejercicios de habla + Vocabulario + Coach ── */}
+    <div className="flex flex-col gap-5">
+      {/* ─── FILA 1: Top Hero Bento (2 columnas: 5 / 7 cols) ─── */}
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
-        <div className="lg:col-span-7 lg:self-start">
-          <SoundQuizWidget />
+        <div className="lg:col-span-5">
+          <RecommendedPracticeCard recommendation={recommendation} />
         </div>
-        <div className="flex flex-col gap-5 lg:col-span-5">
-          <VocabularyReviewCard dueCount={dueCount} />
-          <CoachCallCard arc={arc} />
+        <div className="lg:col-span-7">
+          <SoundQuizWidget />
         </div>
       </div>
 
-      {/* ─── PUERTAS RESTANTES: el resto de la práctica libre, por categoría ────── */}
-      <VocabularySection />
-      <ContextReadingSection />
-      <GamesSection />
-      <ReferenceSection />
+      {/* ─── FILA 2: Vocabulario, Coach y Mazos (3 columnas iguales: 4 + 4 + 4 cols) ─── */}
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+        <VocabularyReviewCard dueCount={dueCount} />
+        <CoachCallCard arc={arc} />
+        <DecksCard />
+      </div>
+
+      {/* ─── FILA 3: Inmersión, Lectura en Contexto y Ruta Guiada (3 columnas iguales) ─── */}
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+        <ImmersionCard />
+        <ReaderCard />
+        <CourseCard />
+      </div>
+
+      {/* ─── FILA 4: Juegos de Vocabulario y Diccionario (2 columnas: 8 / 4 cols) ─── */}
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
+        <div className="lg:col-span-8">
+          <GamesSection />
+        </div>
+        <div className="lg:col-span-4">
+          <ReferenceSection />
+        </div>
+      </div>
     </div>
   )
 }
+
+

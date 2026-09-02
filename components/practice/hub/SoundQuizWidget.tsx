@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { MicVocal, Waves, Sparkles, Volume2, ArrowRight } from '@/components/icons'
+import { MicVocal, ArrowRight } from '@/components/icons'
 import { setLastPracticeMode } from '@/lib/db'
 import { cn } from '@/lib/cn'
 import SoundMicroQuiz, { type SoundCategory } from './SoundMicroQuiz'
@@ -32,10 +32,10 @@ export default function SoundQuizWidget() {
                   setResetKey((k) => k + 1)
                 }}
                 className={cn(
-                  'focus-ring rounded-full px-2.5 py-0.5 text-tiny font-medium transition-all duration-150',
+                  'focus-ring rounded-full px-2.5 py-0.5 text-tiny transition-all duration-150',
                   selectedCategory === cat
-                    ? 'bg-primary text-on-primary shadow-xs font-semibold'
-                    : 'text-fg-muted hover:text-fg hover:bg-surface-sunken',
+                    ? 'border border-border-strong bg-surface-raised font-semibold text-fg shadow-2xs'
+                    : 'border border-transparent text-fg-muted hover:text-fg hover:bg-surface-sunken',
                 )}
               >
                 {cat === 'all' ? 'Todos' : cat === 'vowels' ? 'Vocales' : 'Consonantes'}
@@ -65,82 +65,50 @@ export default function SoundQuizWidget() {
         </div>
 
         <SoundMicroQuiz category={selectedCategory} resetKey={resetKey} />
-      </div>
 
-      {/* Grouped speech / pronunciation exercise list */}
-      <div className="flex flex-col divide-y divide-border-subtle/60 border-t border-border-subtle/60 pt-2">
-        {/* Item 1: Serie de pares mínimos */}
-        <Link
-          href="/practice/minimal-pairs"
-          onClick={() => void setLastPracticeMode('minimal-pairs')}
-          className="group/item flex items-start gap-3.5 py-3.5 transition-colors hover:bg-surface-sunken/40 focus-ring rounded-[var(--radius-md)] px-2 -mx-2"
-        >
-          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[var(--radius-md)] bg-surface-sunken text-fg-subtle group-hover/item:text-primary transition-colors mt-0.5">
-            <Volume2 size={18} aria-hidden />
-          </span>
-          <div className="flex flex-col gap-0.5 min-w-0 flex-1">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="font-label font-semibold text-fg group-hover/item:text-primary transition-colors">
-                Serie de pares mínimos
-              </span>
-              <span className="font-caption text-tiny text-fg-subtle">
-                10 pares · 4 min
-              </span>
-            </div>
-            <p className="font-caption text-fg-muted">
-              La versión completa del reto de arriba, con tu historial de errores
-            </p>
-          </div>
-        </Link>
+        {/* 3 quick exercise items horizontal bar (bento mockup) */}
+        <div className="grid grid-cols-1 gap-2 pt-1 sm:grid-cols-3">
+          <Link
+            href="/practice/minimal-pairs"
+            onClick={() => void setLastPracticeMode('minimal-pairs')}
+            className="focus-ring group/item flex flex-col gap-0.5 rounded-lg border border-border-subtle bg-surface-sunken/60 p-2.5 transition-colors hover:border-border-default hover:bg-surface-raised"
+          >
+            <span className="font-label text-body-xs font-semibold text-fg group-hover/item:text-primary transition-colors">
+              Pares mínimos
+            </span>
+            <span className="font-caption text-[11px] text-fg-subtle">
+              10 pares · 4 min
+            </span>
+          </Link>
 
-        {/* Item 2: Entonación */}
-        <Link
-          href="/practice/intonation"
-          onClick={() => void setLastPracticeMode('intonation')}
-          className="group/item flex items-start gap-3.5 py-3.5 transition-colors hover:bg-surface-sunken/40 focus-ring rounded-[var(--radius-md)] px-2 -mx-2"
-        >
-          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[var(--radius-md)] bg-surface-sunken text-fg-subtle group-hover/item:text-primary transition-colors mt-0.5">
-            <Waves size={18} aria-hidden />
-          </span>
-          <div className="flex flex-col gap-0.5 min-w-0 flex-1">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="font-label font-semibold text-fg group-hover/item:text-primary transition-colors">
-                Entonación
-              </span>
-              <span className="font-caption text-tiny text-fg-subtle">
-                6 frases · 3 min
-              </span>
-            </div>
-            <p className="font-caption text-fg-muted">
-              Cómo cambia el tono entre preguntas y afirmaciones
-            </p>
-          </div>
-        </Link>
+          <Link
+            href="/practice/intonation"
+            onClick={() => void setLastPracticeMode('intonation')}
+            className="focus-ring group/item flex flex-col gap-0.5 rounded-lg border border-border-subtle bg-surface-sunken/60 p-2.5 transition-colors hover:border-border-default hover:bg-surface-raised"
+          >
+            <span className="font-label text-body-xs font-semibold text-fg group-hover/item:text-primary transition-colors">
+              Entonación
+            </span>
+            <span className="font-caption text-[11px] text-fg-subtle">
+              6 frases · 3 min
+            </span>
+          </Link>
 
-        {/* Item 3: Habla conectada */}
-        <Link
-          href="/practice/connected-speech"
-          onClick={() => void setLastPracticeMode('connected-speech')}
-          className="group/item flex items-start gap-3.5 py-3.5 transition-colors hover:bg-surface-sunken/40 focus-ring rounded-[var(--radius-md)] px-2 -mx-2"
-        >
-          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[var(--radius-md)] bg-surface-sunken text-fg-subtle group-hover/item:text-primary transition-colors mt-0.5">
-            <Sparkles size={18} aria-hidden />
-          </span>
-          <div className="flex flex-col gap-0.5 min-w-0 flex-1">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="font-label font-semibold text-fg group-hover/item:text-primary transition-colors">
-                Habla conectada
-              </span>
-              <span className="font-caption text-tiny text-fg-subtle">
-                8 frases · 3 min
-              </span>
-            </div>
-            <p className="font-caption text-fg-muted">
-              Une palabras al hablar, como en una conversación real
-            </p>
-          </div>
-        </Link>
+          <Link
+            href="/practice/connected-speech"
+            onClick={() => void setLastPracticeMode('connected-speech')}
+            className="focus-ring group/item flex flex-col gap-0.5 rounded-lg border border-border-subtle bg-surface-sunken/60 p-2.5 transition-colors hover:border-border-default hover:bg-surface-raised"
+          >
+            <span className="font-label text-body-xs font-semibold text-fg group-hover/item:text-primary transition-colors">
+              Habla conectada
+            </span>
+            <span className="font-caption text-[11px] text-fg-subtle">
+              8 frases · 3 min
+            </span>
+          </Link>
+        </div>
       </div>
     </div>
   )
 }
+

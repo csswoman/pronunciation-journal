@@ -67,17 +67,13 @@ export default function PracticeHubClient({ fromDaily }: Props) {
   return (
     <PageLayout archetype="catalog" className="practice-hub">
       <PracticeHubHeader fromDaily={fromDaily} />
-      <div className="flex flex-col gap-6">
-        <section className="practice-hub__suggestion layout-stack-tight">
-          <RecommendedPracticeCard recommendation={recommendation} />
-          {activityUnavailable && (
-            <p role="status" className="font-caption text-fg-muted">
-              No pudimos cargar tu actividad reciente. Aún puedes empezar esta práctica o elegir otra.
-            </p>
-          )}
-        </section>
-
-        <PracticeOptionsGrid dueCount={dueCount} arc={arc} />
+      <div className="flex flex-col gap-5">
+        {activityUnavailable && (
+          <p role="status" className="font-caption text-fg-muted">
+            No pudimos cargar tu actividad reciente. Aún puedes empezar esta práctica o elegir otra.
+          </p>
+        )}
+        <PracticeOptionsGrid recommendation={recommendation} dueCount={dueCount} arc={arc} />
       </div>
     </PageLayout>
   )

@@ -84,7 +84,7 @@ export default function SoundMicroQuiz({ category, resetKey }: Props) {
     <div className="mt-1 flex flex-col gap-3 rounded-xl border border-border-default bg-surface-base p-4 shadow-xs transition-all">
       <div className="flex items-center justify-between text-caption">
         <span className="font-mono text-tiny font-semibold uppercase text-fg-subtle">
-          Micro-reto: ¿Cuál de los dos suena?
+          Micro-reto: ¿Cuál escuchaste?
         </span>
         <button
           type="button"
