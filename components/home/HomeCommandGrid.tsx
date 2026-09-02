@@ -1,29 +1,21 @@
 "use client";
 
-// Planned structure:
-// <HomeCommandGrid>
-//   <TwoColumnGrid>
-//     <Col1: HomeDailyCard (Hero + Plan + CTA fusionados) />
-//     <Col2: HomeProgressSidebar (Tu progreso + Te tocan hoy) />
-//     <Col1: HomeChunkOfDayCard (Frase del día alineada) />
-//     <Col2: HomeWordOfDayCard (Palabra del día alineada) />
-//   </TwoColumnGrid>
-// </HomeCommandGrid>
-
 import { useCallback, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { isAnonymousUser } from "@/lib/auth/is-anonymous";
 import type { HomePlanStatus } from "@/components/home/HomeDailyCard";
-import HomeProgressSidebar from "@/components/home/HomeProgressSidebar";
+import HomeHeader from "@/components/home/HomeHeader";
+import HomeStatsRow from "@/components/home/HomeStatsRow";
+import HomeImmersionCard from "@/components/home/HomeImmersionCard";
+import HomeExtraExercisesAccordion from "@/components/home/HomeExtraExercisesAccordion";
+import HomeRightSidebar from "@/components/home/HomeRightSidebar";
 import HomeReviewBanner from "@/components/home/HomeReviewBanner";
 import HomePlanDone from "@/components/home/HomePlanDone";
 import HomePlacementPrompt from "@/components/home/HomePlacementPrompt";
 import HomePronunciationPrompt from "@/components/home/HomePronunciationPrompt";
 import HomeActivationStrip from "@/components/home/HomeActivationStrip";
-import HomeWordOfDayCard from "@/components/home/HomeWordOfDayCard";
-import HomeChunkOfDayCard from "@/components/home/HomeChunkOfDayCard";
 import GuestSaveProgressBanner from "@/components/home/GuestSaveProgressBanner";
 import type { ConceptLesson } from "@/hooks/useDailyPlan";
 import type { WeakestPhonemeHome } from "@/lib/home/constants";
@@ -32,7 +24,6 @@ import type { HomePronunciationDiagnosticState } from "@/lib/home/pronunciation-
 import type { PrimaryAction } from "@/lib/home/primary-action";
 import type { SessionArc } from "@/lib/practice/types";
 
-// Daily plan pulls buildDailyPlan + sync — keep it out of the initial page chunk.
 const HomeDailyCard = dynamic(() => import("@/components/home/HomeDailyCard"), {
   loading: () => (
     <div
@@ -115,10 +106,17 @@ export default function HomeCommandGrid({
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Cuadrícula continua de 2 columnas (≥1024px) / 1 columna en móvil */}
+      {/* Encabezado con racha y tiempo diario */}
+      <HomeHeader
+        streakDays={streak ?? 0}
+        minutesDone={0}
+        goalMinutes={24}
+      />
+
+      {/* Cuadrícula principal de 2 columnas */}
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6 items-start">
-        {/* Fila 1 - Columna Principal: Tarjeta única Plan de hoy */}
-        <div className="flex flex-col gap-4 min-w-0">
+        {/* Columna Principal (Izquierda) */}
+        <div className="flex flex-col gap-6 min-w-0">
           {showReviewBanner ? (
             <HomeReviewBanner
               wordsDueCount={wordsDueCount}
@@ -189,22 +187,28 @@ export default function HomeCommandGrid({
               {needsPronunciation ? <HomePronunciationPrompt compact /> : null}
             </div>
           ) : null}
+
+          {/* Tira de estadísticas (Palabras esenciales + En repaso) */}
+          <HomeStatsRow
+            profileLevel={profileLevel}
+            wordsDueCount={wordsDueCount}
+            soundsDueCount={soundsDueCount}
+          />
+
+          {/* Tarjeta de Registro de inmersión */}
+          <HomeImmersionCard />
+
+          {/* Acordeón de Ejercicios extra */}
+          <HomeExtraExercisesAccordion unlocked={allDone} />
         </div>
 
-        {/* Fila 1 - Columna Lateral: Tu progreso + Te tocan hoy */}
-        <HomeProgressSidebar
+        {/* Sidebar Derecho (Frase del día, Palabra del día, Te tocan hoy) */}
+        <HomeRightSidebar
           profileLevel={profileLevel}
-          streak={streak}
           wordsDueCount={wordsDueCount}
           soundsDueCount={soundsDueCount}
           previewWords={previewWords}
         />
-
-        {/* Fila 2 - Tarjetas editoriales del día en sub-grid equilibrada de 2 columnas */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:col-span-2">
-          <HomeChunkOfDayCard />
-          <HomeWordOfDayCard profileLevel={profileLevel} />
-        </div>
       </div>
     </div>
   );
