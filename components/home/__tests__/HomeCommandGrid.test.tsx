@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { useEffect, useState, createElement, type ComponentType } from "react";
 import { render, screen, waitFor } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const dailyCardState = vi.hoisted(() => ({
   empty: false,
@@ -18,6 +18,20 @@ const authMock = vi.hoisted(() => ({
     signOutUser: vi.fn(async () => undefined),
   })),
 }));
+
+beforeEach(() => {
+  dailyCardState.empty = false;
+  dailyCardState.settled = true;
+  dailyCardState.allDone = false;
+  dailyCardState.reviewIsEntry = false;
+  authMock.useAuth.mockReturnValue({
+    user: { id: "user-1" },
+    session: null,
+    loading: false,
+    supabaseEnabled: true,
+    signOutUser: vi.fn(async () => undefined),
+  });
+});
 
 vi.mock("next/dynamic", () => ({
   default: (
@@ -78,7 +92,13 @@ vi.mock("@/components/home/HomeDailyCard", () => ({
         arc: undefined,
         stepCount: 5,
       });
-    }, [onPlanStatusChange]);
+    }, [
+      onPlanStatusChange,
+      dailyCardState.empty,
+      dailyCardState.settled,
+      dailyCardState.reviewIsEntry,
+      dailyCardState.allDone,
+    ]);
     return (
       <div>
         {customPrefix}

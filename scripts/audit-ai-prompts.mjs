@@ -31,10 +31,6 @@ const GENAI_ALLOWLIST_PREFIXES = [
   "lib/word-bank/gemini.ts",
   "app/api/gemini/",
   "scripts/",
-  // TODO: move under app/api/gemini/* per CLAUDE.md ("All Gemini calls →
-  // /api/gemini/* only"). Otherwise compliant: prompt lives in
-  // lib/ai-prompts.ts, call goes through lib/gemini/client.ts.
-  "app/api/sentences/generate/route.ts",
 ];
 
 const GENAI_PATTERNS = [
