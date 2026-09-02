@@ -1,9 +1,8 @@
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
+import { db } from '@/lib/db'
 import { enqueue } from '@/lib/sync/sync-manager'
-import { canonicalizeContrastId } from './phoneme-similarity'
 import {
   canonicalizeSoundRow,
-  canonicalizeProgressRows,
   canonicalizeSoundRows,
   canonicalizeSoundWord,
 } from '@/lib/sounds/normalization'
@@ -21,9 +20,7 @@ import type {
   Sound,
   SoundWord,
   MinimalPair,
-  UserContrastProgress,
   SessionAnswer,
-  SRResult,
 } from './types'
 
 function supabase() {
@@ -44,22 +41,51 @@ async function getExerciseTypeId(slug: string): Promise<number> {
 }
 
 export async function getAllSounds(): Promise<Sound[]> {
-  const { data, error } = await supabase()
-    .from('sounds')
-    .select('id, ipa, example, category, type, difficulty')
-    .order('id')
-  if (error) throw error
-  return canonicalizeSoundRows(data as Sound[])
+  try {
+    const { data, error } = await supabase()
+      .from('sounds')
+      .select('id, ipa, example, category, type, difficulty')
+      .order('id')
+    if (error) throw error
+    const canonical = canonicalizeSoundRows(data as Sound[])
+    if (typeof indexedDB !== 'undefined') {
+      void db.cachedSounds.bulkPut(canonical.map(s => ({
+        id: s.id,
+        ipa: s.ipa,
+        example: s.example,
+        category: s.category,
+        type: s.type,
+        difficulty: s.difficulty,
+      }))).catch(() => {})
+    }
+    return canonical
+  } catch (err) {
+    if (typeof indexedDB !== 'undefined') {
+      const local = await db.cachedSounds.toArray().catch(() => [])
+      if (local.length > 0) {
+        return canonicalizeSoundRows(local)
+      }
+    }
+    throw err
+  }
 }
 
 export async function getSoundById(soundId: number): Promise<Sound> {
-  const { data, error } = await supabase()
-    .from('sounds')
-    .select('id, ipa, example, category, type, difficulty')
-    .eq('id', soundId)
-    .single()
-  if (error) throw error
-  return canonicalizeSoundRows([data as Sound])[0] ?? (data as Sound)
+  try {
+    const { data, error } = await supabase()
+      .from('sounds')
+      .select('id, ipa, example, category, type, difficulty')
+      .eq('id', soundId)
+      .single()
+    if (error) throw error
+    return canonicalizeSoundRows([data as Sound])[0] ?? (data as Sound)
+  } catch (err) {
+    if (typeof indexedDB !== 'undefined') {
+      const local = await db.cachedSounds.get(soundId).catch(() => undefined)
+      if (local) return canonicalizeSoundRows([local as Sound])[0] ?? (local as Sound)
+    }
+    throw err
+  }
 }
 
 export async function getWordsBySound(soundId: number): Promise<SoundWord[]> {
@@ -250,95 +276,12 @@ export async function getAnswerHistoryForSound(
 
 // ─── Contrast progress ────────────────────────────────────────────────────────
 
-export async function getAllContrastProgress(
-  userId: string
-): Promise<UserContrastProgress[]> {
-  const { data, error } = await supabase()
-    .from('user_contrast_progress')
-    .select('id, user_id, contrast_id, ease_factor, interval_days, next_review, last_seen, total_attempts, correct_answers, streak, mastery_pct, adaptive_score, observation_count')
-    .eq('user_id', userId)
-  if (error) throw error
-  return canonicalizeProgressRows(data as unknown as UserContrastProgress[])
-}
+export {
+  getAllContrastProgress,
+  getRetiredEssentialWordBlankKeys,
+  getContrastProgress,
+  updateContrastProgress,
+  getContrastsForToday,
+} from './contrast-queries'
 
-export async function getRetiredEssentialWordBlankKeys(): Promise<string[]> {
-  // Generated database types lag the just-applied migration.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await supabase().from('essential_word_blank_review_queue' as any)
-    .select('sentence_id, token_index').eq('status', 'retired_for_review')
-  if (error) throw error
-  return ((data ?? []) as unknown as Array<{ sentence_id: string; token_index: number }>).map((row) => `${row.sentence_id}:${row.token_index}`)
-}
-
-export async function getContrastProgress(
-  userId: string,
-  contrastId: string
-): Promise<UserContrastProgress | null> {
-  const canonicalContrastId = canonicalizeContrastId(contrastId)
-  const { data, error } = await supabase()
-    .from('user_contrast_progress')
-    .select('id, user_id, contrast_id, ease_factor, interval_days, next_review, last_seen, total_attempts, correct_answers, streak, mastery_pct')
-    .eq('user_id', userId)
-    .eq('contrast_id', canonicalContrastId)
-    .maybeSingle()
-  if (error) throw error
-  return data
-    ? canonicalizeProgressRows([data as UserContrastProgress])[0] ?? null
-    : null
-}
-
-/** Upserts the contrast row after a session. */
-export async function updateContrastProgress(
-  userId: string,
-  contrastId: string,
-  sessionCorrect: number,
-  sessionTotal: number,
-  sr: SRResult,
-  masteryPct: number,
-): Promise<void> {
-  const canonicalContrastId = canonicalizeContrastId(contrastId)
-  const current = await getContrastProgress(userId, canonicalContrastId)
-
-  const newTotal   = (current?.total_attempts  ?? 0) + sessionTotal
-  const newCorrect = (current?.correct_answers ?? 0) + sessionCorrect
-
-  await enqueue(
-    userId,
-    'user_contrast_progress',
-    'upsert',
-    {
-      user_id:         userId,
-      contrast_id:     canonicalContrastId,
-      total_attempts:  newTotal,
-      correct_answers: newCorrect,
-      streak:          sr.streak,
-      ease_factor:     sr.ease_factor,
-      interval_days:   sr.interval_days,
-      mastery_pct:     masteryPct,
-      last_seen:       new Date().toISOString(),
-      next_review:     sr.next_review.toISOString(),
-    },
-    { user_id: userId, contrast_id: canonicalContrastId },
-    'user_id,contrast_id',
-  )
-}
-
-/**
- * Returns contrasts due for review today (next_review <= now or null),
- * ordered by urgency.
- */
-export async function getContrastsForToday(
-  userId: string
-): Promise<UserContrastProgress[]> {
-  const now = new Date().toISOString()
-  const { data, error } = await supabase()
-    .from('user_contrast_progress')
-    .select('id, user_id, contrast_id, ease_factor, interval_days, next_review, last_seen, total_attempts, correct_answers, streak, mastery_pct')
-    .eq('user_id', userId)
-    .or(`next_review.lte.${now},next_review.is.null`)
-    .order('next_review', { ascending: true })
-    .limit(10)
-  if (error) throw error
-  return canonicalizeProgressRows(data as UserContrastProgress[])
-}
 
