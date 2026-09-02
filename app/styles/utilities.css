@@ -576,12 +576,12 @@
    + `overflow-hidden` on the card itself. */
 .home-illustration-watermark {
   position: absolute;
-  top: var(--space-1);
-  right: var(--space-1);
+  top: var(--space-3);
+  right: var(--space-3);
   z-index: 0;
-  height: 6.5rem;
+  height: 5.5rem;
   width: auto;
-  opacity: 0.28;
+  opacity: 0.16;
   pointer-events: none;
   user-select: none;
 }

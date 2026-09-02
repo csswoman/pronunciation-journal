@@ -51,6 +51,7 @@ const MAX_LINES_ALLOWLIST = [
   "lib/practice/__tests__/queries.test.ts",
   "lib/practice/daily-plan/composer.ts",
   "lib/pronunciation/articulation-guide-data.ts",
+  "lib/pronunciation/connected-speech-data.ts",
   "lib/pronunciation/targets/registry.ts",
   "lib/sounds/minimal-pairs.ts",
   "lib/sync/sync-manager.ts",
@@ -61,6 +62,8 @@ const MAX_LINES_ALLOWLIST = [
   "scripts/essential-words/generate-chunks.mjs",
   "scripts/build-300-chunks-dataset.mjs",
   "scripts/generate-grammar-pattern-decks.ts",
+  "scripts/grammar-pattern-deck-specs-a1.ts",
+  "scripts/grammar-pattern-deck-specs-a2.ts",
   "scripts/grammar-pattern-deck-specs-b1-b2.ts",
   "scripts/grammar-pattern-deck-specs-c1-c2.ts",
 ];

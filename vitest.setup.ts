@@ -2,7 +2,14 @@ import "@testing-library/jest-dom/vitest";
 import { afterEach } from "vitest";
 import { cleanup } from "@testing-library/react";
 
-// RTL cleanup only applies in jsdom; skip in node-environment suites.
+// Vitest 4 requires hooks to be registered at the top level of the setup
+// module (not inside a runtime conditional), or suite collection fails with
+// "Vitest failed to find the current suite" and no tests run. cleanup() is a
+// harmless no-op in node suites where nothing was rendered.
+afterEach(() => {
+  cleanup();
+});
+
 if (typeof window !== 'undefined') {
   // Node 22+ may expose an undefined localStorage unless --localstorage-file is set.
   // Zustand persist and other client stores need a working Storage API in jsdom.
@@ -53,9 +60,5 @@ if (typeof window !== 'undefined') {
       removeEventListener: () => {},
       dispatchEvent: () => false,
     }),
-  });
-
-  afterEach(() => {
-    cleanup();
   });
 }

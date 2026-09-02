@@ -587,8 +587,15 @@
   --accent-dim:    color-mix(in oklch, var(--primary) 14%, transparent);
   --accent-border: color-mix(in oklch, var(--primary) 30%, transparent);
 
-  /* ── CTA dark overrides ─────────────────────────────────────────────── */
-  --cta-bg-hover: oklch(0.88 0.004 var(--hue));
+  /* ── CTA dark overrides ─────────────────────────────────────────────────
+     In light mode the CTA is ink-on-parchment (near-black on the canvas) so
+     it always contrasts regardless of --hue. Inverting that in dark mode
+     produces a near-white slab that out-glares the content it supports, so
+     dark mode uses a hue-filled primary instead: the action still owns the
+     eye, but it belongs to the learner's theme rather than blinding them. */
+  --cta-bg:       var(--primary);
+  --cta-fg:       var(--on-primary);
+  --cta-bg-hover: var(--primary-hover);
 
   /* ── Content-type semantic colors — dark (brighter for contrast) ─────── */
   --c-vocabulario:   oklch(0.70 0.19 358);

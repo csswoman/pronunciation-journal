@@ -74,6 +74,7 @@ import {
   IconLogout,
   IconMail,
   IconMap,
+  IconMapPin,
   IconMenu2,
   IconMessageCircle,
   IconMoodSmile,
@@ -83,6 +84,7 @@ import {
   IconMinus,
   IconMoon,
   IconMovie,
+  IconPalette,
   IconPencil,
   IconPhotoPlus,
   IconPlane,
@@ -192,6 +194,7 @@ export const LogIn = createIcon(IconLogin, "LogIn");
 export const LogOut = createIcon(IconLogout, "LogOut");
 export const Mail = createIcon(IconMail, "Mail");
 export const Map = createIcon(IconMap, "Map");
+export const MapPin = createIcon(IconMapPin, "MapPin");
 export const Maximize2 = createIcon(IconArrowsMaximize, "Maximize2");
 export const Menu = createIcon(IconMenu2, "Menu");
 export const MessageCircle = createIcon(IconMessageCircle, "MessageCircle");
@@ -203,6 +206,7 @@ export const Minus = createIcon(IconMinus, "Minus");
 export const Moon = createIcon(IconMoon, "Moon");
 export const MoreVertical = createIcon(IconDotsVertical, "MoreVertical");
 export const Notebook = createIcon(IconNotebook, "Notebook");
+export const Palette = createIcon(IconPalette, "Palette");
 export const PanelLeftClose = createIcon(IconLayoutSidebarLeftCollapse, "PanelLeftClose");
 export const PanelLeftOpen = createIcon(IconLayoutSidebarLeftExpand, "PanelLeftOpen");
 export const PartyPopper = createIcon(IconConfetti, "PartyPopper");
