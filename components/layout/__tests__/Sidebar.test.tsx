@@ -47,15 +47,15 @@ describe("Sidebar component", () => {
 
     // Section headers
     expect(screen.getByText("Hoy")).toBeInTheDocument();
-    expect(screen.getByText("Práctica")).toBeInTheDocument();
-    expect(screen.getByText("Explorar")).toBeInTheDocument();
+    expect(screen.getByText("Aprender")).toBeInTheDocument();
+    expect(screen.getByText("Consultar")).toBeInTheDocument();
 
     // Group 1: Hoy
     expect(screen.getByRole("link", { name: /Inicio/i })).toHaveAttribute("href", "/");
-    expect(screen.getByRole("link", { name: /^Diario$/i })).toHaveAttribute("href", "/journal");
-    expect(screen.getByRole("link", { name: /Plan diario/i })).toHaveAttribute("href", "/daily");
+    expect(screen.getByRole("link", { name: /Mi diario/i })).toHaveAttribute("href", "/journal");
+    expect(screen.getByRole("link", { name: /Plan del día/i })).toHaveAttribute("href", "/daily");
 
-    // Group 2: Práctica
+    // Group 2: Aprender
     expect(screen.getByRole("link", { name: /Práctica libre/i })).toHaveAttribute("href", "/practice");
 
     // Group 3: Explorar

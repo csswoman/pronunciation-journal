@@ -14,7 +14,7 @@ export function SectionLabel({ label, isFirst = false }: SectionLabelProps) {
   }
 
   return (
-    <p className="px-3 pt-4 pb-1 mb-0 font-kicker text-fg-muted">
+    <p className="px-3 pt-3 pb-1 mb-0 font-kicker text-fg-subtle font-medium">
       {label}
     </p>
   );

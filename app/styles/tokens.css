@@ -88,17 +88,17 @@
 
   /* ── 2. Neutral System ───────────────────────────────────────────────── */
   /* Near-neutral surfaces: identity comes from actions, not a colored canvas. */
-  --bg:           oklch(0.965 0.003 var(--hue));
-  --bg-secondary: oklch(0.995 0.001 var(--hue));
-  --bg-tertiary:  oklch(0.940 0.005 var(--hue));
+  --bg:           oklch(0.968 0.004 var(--hue));
+  --bg-secondary: oklch(1 0 0);
+  --bg-tertiary:  oklch(0.978 0.004 var(--hue));
   --fg:               oklch(0.18 0.008 var(--hue));
   --text-primary:     oklch(0.18 0.008 var(--hue));
   --text-secondary:   oklch(0.40 0.006 var(--hue));
   --text-tertiary:    oklch(0.49 0.005 var(--hue));
   --text-disabled:    oklch(0.75 0.002 var(--hue));
   --text-placeholder: oklch(0.75 0.002 var(--hue));
-  --border:       oklch(0.875 0.007 var(--hue));
-  --border-hover: oklch(0.770 0.010 var(--hue));
+  --border:       oklch(0.918 0.008 var(--hue));
+  --border-hover: oklch(0.850 0.010 var(--hue));
 
   /* ── 3. Semantic Colors (fixed, independent of hue) ──────────────────── */
   --success:         oklch(0.70 0.16 145);
@@ -163,9 +163,9 @@
   --card-bg:          var(--surface-raised);     /* alias for surface-raised */
 
   /* ── 5. Borders — semantic strength names ────────────────────────────── */
-  --border-subtle:  oklch(0.895 0.004 var(--hue)); /* dividers, faint separators */
+  --border-subtle:  oklch(0.945 0.004 var(--hue)); /* dividers, faint separators */
   --border-default: var(--border);        /* standard card/input borders */
-  --border-strong:  oklch(0.720 0.010 var(--hue));     /* emphasized borders, active states */
+  --border-strong:  oklch(0.878 0.010 var(--hue));     /* emphasized borders, active states */
   --border-focus:   var(--primary);       /* focus outlines */
 
   /* ── 6. Scoring / Accuracy aliases ──────────────────────────────────── */

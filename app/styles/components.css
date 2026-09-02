@@ -300,3 +300,17 @@
 .accuracy-ring-progress {
   transition: stroke-dasharray 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+/* ── Notebook Lined Paper ────────────────────────────────────────────────── */
+.notebook-ruled-paper {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 35px,
+    var(--border-subtle) 35px,
+    var(--border-subtle) 36px
+  );
+  background-size: 100% 36px;
+  line-height: 36px;
+}
+

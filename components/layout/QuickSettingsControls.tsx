@@ -25,11 +25,19 @@ export function ThemeControls({ className }: { className?: string } = {}) {
   if (!mounted) return null;
 
   const activePreset = HUE_PRESETS.find((preset) => matchesHuePreset(hue, preset));
+  const activeLabel = activePreset
+    ? activePreset === DEFAULT_HUE_PRESET
+      ? `${activePreset.label} (predeterminado)`
+      : activePreset.label
+    : "Personalizado";
 
   return (
     <section className={cn("border-t border-border-subtle py-3", className)}>
-      <p className="mb-2.5 font-kicker text-fg-muted">Color del tema</p>
-      <div className="mb-1.5 flex flex-wrap gap-2">
+      <div className="mb-2.5 flex items-center justify-between">
+        <p className="font-kicker text-fg-subtle font-medium">COLOR DEL TEMA</p>
+        <span className="font-caption text-tiny text-primary font-semibold">{activeLabel}</span>
+      </div>
+      <div className="mb-3 grid grid-cols-3 justify-items-center gap-2 bg-surface-sunken/40 p-2 rounded-lg border border-border-subtle">
         {HUE_PRESETS.map((preset) => {
           const isSelected = matchesHuePreset(hue, preset);
           return (
@@ -42,7 +50,7 @@ export function ThemeControls({ className }: { className?: string } = {}) {
               title={preset.label}
               className={cn(
                 "focus-ring grid size-8 shrink-0 place-items-center rounded-full transition-transform",
-                isSelected ? "outline-2 outline-offset-2 outline-primary" : "hover:scale-110",
+                isSelected ? "outline-2 outline-offset-2 outline-primary scale-105" : "hover:scale-110 opacity-85 hover:opacity-100",
               )}
               style={{
                 backgroundColor: swatchColor(preset),
@@ -56,15 +64,8 @@ export function ThemeControls({ className }: { className?: string } = {}) {
           );
         })}
       </div>
-      <p className="font-caption text-fg-subtle">
-        {activePreset
-          ? activePreset === DEFAULT_HUE_PRESET
-            ? `${activePreset.label} · predeterminado`
-            : activePreset.label
-          : "Personalizado"}
-      </p>
 
-      <p className="mb-2 mt-3 font-kicker text-fg-muted">Apariencia</p>
+      <p className="mb-2 mt-3 font-kicker text-fg-subtle font-medium">Apariencia</p>
       <div className="grid grid-cols-3 gap-1 rounded-md bg-surface-sunken p-1">
         {APPEARANCE_OPTIONS.map(({ value, label, icon: Icon }) => {
           const isSelected = preference === value;
@@ -75,13 +76,13 @@ export function ThemeControls({ className }: { className?: string } = {}) {
               onClick={() => setPreference(value)}
               aria-pressed={isSelected}
               className={cn(
-                "focus-ring flex min-h-9 items-center justify-center gap-1.5 rounded-sm font-label transition-colors",
+                "focus-ring flex min-h-8 items-center justify-center gap-1.5 rounded-sm font-label text-caption transition-colors",
                 isSelected
-                  ? "bg-surface-raised text-fg shadow-sm"
-                  : "text-fg-muted hover:text-fg",
+                  ? "bg-surface-raised text-fg font-semibold shadow-xs"
+                  : "text-fg-subtle hover:text-fg",
               )}
             >
-              <Icon size={15} aria-hidden />
+              <Icon size={14} aria-hidden />
               {label}
             </button>
           );
@@ -100,9 +101,9 @@ export function SoundControls({ className }: { className?: string } = {}) {
   const isMuted = soundPreference === "off";
 
   return (
-    <section className={cn("border-t border-border-subtle py-3 space-y-2", className)}>
+    <section className={cn("border-t border-border-subtle py-3 space-y-2.5", className)}>
       <div className="flex items-center justify-between gap-2">
-        <span className="flex items-center gap-2 font-kicker text-fg-muted">
+        <span className="flex items-center gap-2 font-kicker text-fg-subtle font-medium">
           <Volume2 size={15} aria-hidden />
           Sonidos
         </span>
@@ -133,7 +134,12 @@ export function SoundControls({ className }: { className?: string } = {}) {
           })}
         </div>
       </div>
-      <div className={cn("flex items-center gap-3", isMuted && "opacity-50 pointer-events-none")}>
+      <div
+        className={cn(
+          "flex items-center gap-3 transition-opacity duration-150",
+          isMuted ? "opacity-35 pointer-events-none" : "opacity-100",
+        )}
+      >
         <input
           aria-label="Volumen de la app"
           type="range"
@@ -146,7 +152,7 @@ export function SoundControls({ className }: { className?: string } = {}) {
           className="sound-volume-slider min-w-0 flex-1"
           style={{ "--sound-volume": `${percent}%` } as CSSProperties}
         />
-        <span className="w-9 text-right text-tiny tabular-nums text-fg-muted">{percent}%</span>
+        <span className="w-9 text-right text-tiny tabular-nums text-fg-subtle font-mono">{percent}%</span>
       </div>
     </section>
   );

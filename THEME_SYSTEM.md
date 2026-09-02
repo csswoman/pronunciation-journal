@@ -60,15 +60,15 @@ Surfaces use very low chroma and inherit `--hue`; this keeps a user-selected the
 
 | Token | Light | Dark |
 |-------|-------|------|
-| `--bg` | `oklch(0.965 0.003 var(--hue))` | `oklch(0.120 0.003 var(--hue))` |
-| `--bg-secondary` | `oklch(0.995 0.001 var(--hue))` | `oklch(0.165 0.003 var(--hue))` |
-| `--bg-tertiary` | `oklch(0.940 0.005 var(--hue))` | `oklch(0.210 0.004 var(--hue))` |
+| `--bg` | `oklch(0.968 0.004 var(--hue))` | `oklch(0.120 0.003 var(--hue))` |
+| `--bg-secondary` | `oklch(1 0 0)` | `oklch(0.165 0.003 var(--hue))` |
+| `--bg-tertiary` | `oklch(0.978 0.004 var(--hue))` | `oklch(0.210 0.004 var(--hue))` |
 | `--fg` | `oklch(0.18 0.008 var(--hue))` | `oklch(0.95 0.003 var(--hue))` |
 | `--text-primary` | `oklch(0.18 0.008 var(--hue))` | `oklch(0.93 0.004 var(--hue))` |
 | `--text-secondary` | `oklch(0.40 0.006 var(--hue))` | `oklch(0.65 0.004 var(--hue))` |
 | `--text-tertiary` | `oklch(0.49 0.005 var(--hue))` | `oklch(0.56 0.003 var(--hue))` |
-| `--border` | `oklch(0.88 0 0)` | `oklch(0.28 0 0)` |
-| `--border-hover` | `oklch(0.78 0 0)` | `oklch(0.38 0 0)` |
+| `--border` | `oklch(0.918 0.008 var(--hue))` | `oklch(0.28 0 0)` |
+| `--border-hover` | `oklch(0.850 0.010 var(--hue))` | `oklch(0.38 0 0)` |
 
 ---
 
