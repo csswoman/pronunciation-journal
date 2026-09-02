@@ -35,6 +35,11 @@ import CategoryProfessional from "@/components/illustrations/professional-englis
 import CategoryTechnicalWriting from "@/components/illustrations/tech-writing.svg";
 import CategoryPersonalInterview from "@/components/illustrations/portfolio.svg";
 
+// ── Journal entry modes ──────────────────────────────────────────────────────
+import JournalPhraseBook from "@/components/illustrations/phrase-book.svg";
+import JournalBlankBoard from "@/components/illustrations/person-drawing-blank-board.svg";
+import JournalLanguageBook from "@/components/illustrations/language-phrase-book.svg";
+
 export type IllustrationKey =
   // empty states
   | "emptyTracking"
@@ -65,7 +70,11 @@ export type IllustrationKey =
   | "categoryDesignSystems"
   | "categoryProfessional"
   | "categoryTechnicalWriting"
-  | "categoryPersonalInterview";
+  | "categoryPersonalInterview"
+  // journal entry modes
+  | "journalPhraseBook"
+  | "journalBlankBoard"
+  | "journalLanguageBook";
 
 type IllustrationComponent = React.FC<React.SVGProps<SVGSVGElement>>;
 
@@ -109,6 +118,9 @@ export const ILLUSTRATIONS: Record<IllustrationKey, IllustrationComponent | null
   categoryProfessional: CategoryProfessional,
   categoryTechnicalWriting: CategoryTechnicalWriting,
   categoryPersonalInterview: CategoryPersonalInterview,
+  journalPhraseBook: JournalPhraseBook,
+  journalBlankBoard: JournalBlankBoard,
+  journalLanguageBook: JournalLanguageBook,
 };
 
 export function getIllustration(key: IllustrationKey): IllustrationComponent {

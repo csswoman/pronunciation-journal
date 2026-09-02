@@ -196,6 +196,22 @@ export const RECIPES = {
       { kind: 'tone', waveform: 'sine', frequency: 880, glideTo: 587.33, glideTime: 0.06, attack: 0.003, decay: 0.09, peak: 0.06 },
     ],
   },
+
+  // === Family: Mechanical Keyboard ===
+  'mech-key': {
+    masterGain: 0.18,
+    layers: [
+      { kind: 'noise', filterType: 'bandpass', filterFrequency: 3800, filterQ: 3.5, attack: 0.001, decay: 0.012, peak: 0.22 },
+      { kind: 'tone', waveform: 'triangle', frequency: 320, glideTo: 180, glideTime: 0.015, attack: 0.001, decay: 0.025, peak: 0.15 },
+    ],
+  },
+  'mech-space': {
+    masterGain: 0.22,
+    layers: [
+      { kind: 'noise', filterType: 'bandpass', filterFrequency: 2200, filterQ: 2.0, attack: 0.001, decay: 0.025, peak: 0.25 },
+      { kind: 'tone', waveform: 'triangle', frequency: 220, glideTo: 110, glideTime: 0.025, attack: 0.001, decay: 0.04, peak: 0.18 },
+    ],
+  },
 } as const satisfies Record<string, Recipe>
 
 export type CueSound = keyof typeof RECIPES

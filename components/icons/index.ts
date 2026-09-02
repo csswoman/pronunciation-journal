@@ -118,6 +118,7 @@ import {
   IconUser,
   IconVolume,
   IconWaveSine,
+  IconNotebook,
   IconX,
 } from "@tabler/icons-react";
 import { createIcon } from "./createIcon";
@@ -201,6 +202,7 @@ export const Minimize2 = createIcon(IconArrowsMinimize, "Minimize2");
 export const Minus = createIcon(IconMinus, "Minus");
 export const Moon = createIcon(IconMoon, "Moon");
 export const MoreVertical = createIcon(IconDotsVertical, "MoreVertical");
+export const Notebook = createIcon(IconNotebook, "Notebook");
 export const PanelLeftClose = createIcon(IconLayoutSidebarLeftCollapse, "PanelLeftClose");
 export const PanelLeftOpen = createIcon(IconLayoutSidebarLeftExpand, "PanelLeftOpen");
 export const PartyPopper = createIcon(IconConfetti, "PartyPopper");

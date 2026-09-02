@@ -45,6 +45,10 @@ export const UI_CUE_SOUNDS = {
   // Chat Interactions
   'message-send': 'message-send',
   'message-receive': 'message-receive',
+
+  // Mechanical Keyboard Cues
+  'mech-key': 'mech-key',
+  'mech-space': 'mech-space',
 } as const satisfies Record<string, CueSound>
 
 export type UiCue = keyof typeof UI_CUE_SOUNDS
@@ -77,6 +81,8 @@ export const CUE_CATEGORIES: Record<UiCue, CueCategory> = {
   'level-up': 'ui',
   'message-send': 'ui',
   'message-receive': 'ui',
+  'mech-key': 'ui',
+  'mech-space': 'ui',
 }
 
 const NAV_CUES = new Set<UiCue>(['nav-open', 'nav-close', 'nav-switch'])
