@@ -34,12 +34,12 @@ export function InstallBanner() {
         onClick={handleInstall}
         className="text-caption font-semibold text-primary hover:text-primary-hover transition-colors"
       >
-        Install the app
+        Instalar la app
       </button>
       <button
         onClick={() => setDismissed(true)}
         className="text-fg-subtle hover:text-fg transition-colors text-body-sm leading-none"
-        aria-label="Dismiss"
+        aria-label="Descartar"
       >
         ×
       </button>

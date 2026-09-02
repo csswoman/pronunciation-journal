@@ -10,9 +10,18 @@ export async function signInWithEmail(email: string, password: string) {
   return supabase.auth.signInWithPassword({ email, password });
 }
 
-export async function signUpWithEmail(email: string, password: string) {
+export async function signUpWithEmail(
+  email: string,
+  password: string,
+  fullName?: string,
+) {
   const supabase = getSupabaseBrowserClient();
-  return supabase.auth.signUp({ email, password });
+  const name = fullName?.trim();
+  return supabase.auth.signUp({
+    email,
+    password,
+    options: name ? { data: { full_name: name } } : undefined,
+  });
 }
 
 export async function signInAsGuest() {
@@ -21,9 +30,18 @@ export async function signInAsGuest() {
 }
 
 /** Convert an anonymous session into a permanent email account (same user id). */
-export async function upgradeGuestWithEmail(email: string, password: string) {
+export async function upgradeGuestWithEmail(
+  email: string,
+  password: string,
+  fullName?: string,
+) {
   const supabase = getSupabaseBrowserClient();
-  return supabase.auth.updateUser({ email, password });
+  const name = fullName?.trim();
+  return supabase.auth.updateUser({
+    email,
+    password,
+    ...(name ? { data: { full_name: name } } : {}),
+  });
 }
 
 export async function signInWithGoogle() {

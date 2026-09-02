@@ -89,7 +89,19 @@ export async function proxy(request: NextRequest) {
 
   // Validates JWT / refreshes when needed (local JWKS when asymmetric keys).
   // Prefer getClaims over getUser — getUser always hits the Auth API and adds TTFB.
-  await supabase.auth.getClaims();
+  try {
+    await supabase.auth.getClaims();
+  } catch (error) {
+    // A stale/rotated refresh token in the cookie makes Supabase throw
+    // `refresh_token_not_found`. That just means "no session" — drop the dead
+    // cookies so we stop retrying the same doomed refresh on every request.
+    const code = (error as { code?: string } | null)?.code;
+    if (code === "refresh_token_not_found" || code === "refresh_token_already_used") {
+      await supabase.auth.signOut({ scope: "local" }).catch(() => {});
+    } else {
+      console.error("[auth] proxy getClaims failed", error);
+    }
+  }
 
   return supabaseResponse;
 }

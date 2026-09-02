@@ -44,14 +44,29 @@ describe("AuthPanel", { timeout: 15_000 }, () => {
     });
   });
 
+  // First-time visitors see the guest CTA; the account form is folded behind
+  // "¿Ya tienes cuenta? Iniciar sesión". These tests exercise the login form,
+  // so they open it first.
+  const revealAccountForm = () => {
+    const link = screen.queryByRole("button", { name: "Entrar con mi cuenta" });
+    if (link) fireEvent.click(link);
+  };
+
   it("surfaces explore-first guest CTA on the default login view", () => {
     render(<AuthPanel />);
     expect(
-      screen.getByRole("button", { name: "Explorar sin cuenta" }),
+      screen.getByRole("button", { name: "Probar una sesión" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: /Empieza a practicar sin registrarte/i }),
+      screen.getByRole("heading", { name: /Empieza a practicar ahora/i }),
     ).toBeInTheDocument();
+  });
+
+  it("folds the account form behind a returning-user link for new visitors", () => {
+    render(<AuthPanel />);
+    expect(screen.queryByLabelText("Correo electrónico")).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Entrar con mi cuenta" }));
+    expect(screen.getByLabelText("Correo electrónico")).toBeInTheDocument();
   });
 
   it("shows a friendly message instead of provider login details", async () => {
@@ -61,6 +76,7 @@ describe("AuthPanel", { timeout: 15_000 }, () => {
     });
 
     render(<AuthPanel />);
+    revealAccountForm();
 
     fireEvent.change(screen.getByLabelText("Correo electrónico"), {
       target: { value: "user@example.com" },
@@ -81,6 +97,7 @@ describe("AuthPanel", { timeout: 15_000 }, () => {
     });
 
     render(<AuthPanel />);
+    revealAccountForm();
 
     fireEvent.change(screen.getByLabelText("Correo electrónico"), {
       target: { value: "unconfirmed@example.com" },
@@ -104,6 +121,7 @@ describe("AuthPanel", { timeout: 15_000 }, () => {
     });
 
     render(<AuthPanel />);
+    revealAccountForm();
 
     fireEvent.change(screen.getByLabelText("Correo electrónico"), {
       target: { value: "new@example.com" },
@@ -125,6 +143,7 @@ describe("AuthPanel", { timeout: 15_000 }, () => {
     });
 
     render(<AuthPanel />);
+    revealAccountForm();
 
     fireEvent.change(screen.getByLabelText("Correo electrónico"), {
       target: { value: "new@example.com" },
@@ -175,6 +194,7 @@ describe("AuthPanel", { timeout: 15_000 }, () => {
       expect(authActions.upgradeGuestWithEmail).toHaveBeenCalledWith(
         "keep@example.com",
         "StrongPass1",
+        "",
       );
     });
     expect(authActions.signUpWithEmail).not.toHaveBeenCalled();
@@ -206,17 +226,17 @@ describe("AuthPanel", { timeout: 15_000 }, () => {
 
     await waitFor(() =>
       expect(
-        screen.getByRole("button", { name: "Guardar con Google" }),
+        screen.getByRole("button", { name: "Guardar mi progreso con Google" }),
       ).toBeInTheDocument(),
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Guardar con Google" }));
+    fireEvent.click(screen.getByRole("button", { name: "Guardar mi progreso con Google" }));
 
     await waitFor(() => {
       expect(authActions.linkGoogleIdentity).toHaveBeenCalled();
       expect(authActions.signInWithGoogle).toHaveBeenCalled();
     });
-    expect(screen.queryByText(/We could not complete that request/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/No pudimos/i)).not.toBeInTheDocument();
   });
 
   it("auto-resumes Google sign-in when oauth_resume=google is present", async () => {

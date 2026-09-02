@@ -1,6 +1,7 @@
 import { createBrowserClient } from "@supabase/ssr";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "./types";
+import { createRememberMeStorage } from "@/lib/auth/remember-me";
 
 let browserClient: SupabaseClient<Database> | null = null;
 
@@ -32,6 +33,11 @@ function createFreshBrowserClient(): SupabaseClient<Database> {
   }
   return createBrowserClient<Database>(url, key, {
     isSingleton: false,
+    auth: {
+      // Honours the "Recordarme" checkbox: sessionStorage when unchecked, so
+      // the session ends with the tab instead of persisting on a shared device.
+      storage: createRememberMeStorage(),
+    },
   });
 }
 

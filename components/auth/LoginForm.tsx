@@ -54,7 +54,7 @@ export function LoginForm({
         <AuthInput
           type="password"
           label="Contraseña"
-          placeholder="········"
+          placeholder=""
           value={password}
           onChange={setPassword}
           required

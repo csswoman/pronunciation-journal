@@ -60,6 +60,9 @@ export default function AuthProvider({
   const [user, setUser] = useState<User | null>(initialUser);
   const [loading, setLoading] = useState(supabaseEnabled && !initialUser);
   const guestBootstrapTried = useRef(false);
+  // Once the user signs out explicitly, `initialUser` (server-rendered, and
+  // therefore still populated) must never resurrect the session on a re-render.
+  const signedOut = useRef(false);
 
   const signOutUser = useCallback(async () => {
     if (!supabaseEnabled) return;
@@ -72,6 +75,7 @@ export default function AuthProvider({
     await clearClientCachesOnLogout();
     // Allow a fresh anonymous bootstrap after sign-out (explore-first).
     guestBootstrapTried.current = false;
+    signedOut.current = true;
     const supabase = getSupabaseBrowserClient();
     await supabase.auth.signOut();
   }, [supabaseEnabled, user?.id]);
@@ -181,6 +185,8 @@ export default function AuthProvider({
 
     const supabase = getSupabaseBrowserClient();
     supabase.auth.getSession().then(async ({ data: { session: s } }) => {
+      // A sign-out landed while this was in flight — do not revive the session.
+      if (cancelled || signedOut.current) return;
       const hadUser = Boolean(s?.user);
       const { session: resolved, didBootstrap } = hadUser
         ? { session: s, didBootstrap: false }
@@ -198,6 +204,7 @@ export default function AuthProvider({
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, s) => {
+      if (event === "SIGNED_OUT") signedOut.current = true;
       const nextUserId = s?.user?.id ?? null;
       const userIdChanged = nextUserId !== currentUserIdRef.current;
       currentUserIdRef.current = nextUserId;
@@ -245,11 +252,14 @@ export default function AuthProvider({
     );
   }
 
-  // Stay on the loading screen while redirecting after a failed bootstrap.
+  // No user and not loading: sign-out, an expired session, or a failed guest
+  // bootstrap. Never park on the loading screen here — the bootstrap effect only
+  // runs on mount, so nothing would ever resolve it. SignedOutRedirect sends the
+  // user out of the authenticated tree instead.
   if (!user) {
     return (
       <AuthContext.Provider value={value}>
-        <AuthLoadingScreen />
+        <SignedOutRedirect />
       </AuthContext.Provider>
     );
   }
@@ -259,6 +269,18 @@ export default function AuthProvider({
       <div key={user.id}>{children}</div>
     </AuthContext.Provider>
   );
+}
+
+/**
+ * Renders the loading screen while pushing the user to explore-first login.
+ * Effect-based so the navigation happens after paint, never during render.
+ */
+function SignedOutRedirect() {
+  const router = useRouter();
+  useEffect(() => {
+    router.replace("/login?intent=explore");
+  }, [router]);
+  return <AuthLoadingScreen />;
 }
 
 function AuthLoadingScreen() {

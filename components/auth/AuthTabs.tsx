@@ -16,7 +16,7 @@ export function AuthTabs({ mode, onModeChange }: AuthTabsProps) {
   return (
     <div
       role="tablist"
-      className="flex mb-8 p-1 rounded-xl bg-surface-sunken gap-1"
+      className="flex mb-8 gap-6 border-b border-border-subtle"
     >
       {TABS.map(({ value, label }) => {
         const active = mode === value;
@@ -28,10 +28,10 @@ export function AuthTabs({ mode, onModeChange }: AuthTabsProps) {
             aria-selected={active}
             onClick={() => onModeChange(value)}
             className={[
-              "relative flex-1 py-2 px-3 rounded-lg text-body-sm font-medium transition-[background-color,color,box-shadow,transform] duration-200 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface-sunken",
+              "relative -mb-px border-b-2 pb-3 pt-1 text-body-sm font-medium transition-colors duration-200 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
               active
-                ? "bg-[var(--cta-bg)] text-[var(--cta-fg)] shadow-sm"
-                : "text-fg-muted hover:text-fg",
+                ? "border-fg text-fg"
+                : "border-transparent text-fg-muted hover:text-fg hover:border-border-strong",
             ].join(" ")}
           >
             {label}

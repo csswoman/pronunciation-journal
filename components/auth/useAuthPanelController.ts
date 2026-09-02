@@ -9,7 +9,15 @@ import {
   GOOGLE_OAUTH_RESUME_PARAM,
   GOOGLE_OAUTH_RESUME_VALUE,
 } from "@/lib/auth/oauth-identity";
-import { publicAuthErrorMessage } from "@/lib/auth/password-policy";
+import {
+  authCallbackErrorMessage,
+  oauthErrorMessage,
+  oauthUnavailableMessage,
+} from "@/lib/auth/password-policy";
+import {
+  getRememberMe,
+  setRememberMe as setRememberMe_persist,
+} from "@/lib/auth/remember-me";
 import { createAuthPanelHandlers } from "@/components/auth/auth-panel-handlers";
 import {
   resolveInitialMode,
@@ -30,12 +38,34 @@ export function useAuthPanelController() {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(true);
+  const [rememberMe, setRememberMeState] = useState(true);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
   const [upgradingGuest, setUpgradingGuest] = useState(false);
   const googleResumeStarted = useRef(false);
+
+  // Restore the stored preference on mount (client-only: avoids hydration drift).
+  useEffect(() => {
+    setRememberMeState(getRememberMe());
+  }, []);
+
+  // Persist immediately so the storage adapter sees it before any sign-in call.
+  const setRememberMe = (value: boolean) => {
+    setRememberMeState(value);
+    setRememberMe_persist(value);
+  };
+
+  useEffect(() => {
+    const callbackError = authCallbackErrorMessage(searchParams.get("auth_error"));
+    if (callbackError) {
+      setError(callbackError);
+      const next = new URLSearchParams(searchParams.toString());
+      next.delete("auth_error");
+      const qs = next.toString();
+      router.replace(qs ? `/login?${qs}` : "/login");
+    }
+  }, [router, searchParams]);
 
   useEffect(() => {
     if (searchParams.get("message") === "password-updated") {
@@ -71,13 +101,15 @@ export function useAuthPanelController() {
     setPending(true);
 
     void (async () => {
-      const { error: err } = await signInWithGoogle();
-      if (err) {
-        console.error("[auth] google resume sign in failed", err);
-        setError(publicAuthErrorMessage());
+      const { data, error: err } = await signInWithGoogle();
+      if (err || !data?.url) {
+        if (err) console.error("[auth] google resume sign in failed", err);
+        setError(err ? oauthErrorMessage() : oauthUnavailableMessage());
         setPending(false);
+        return;
       }
-      // On success the browser navigates to Google; leave pending true.
+      // Leave pending true: the browser is leaving for Google.
+      window.location.assign(data.url);
     })();
   }, [intent, router, searchParams]);
 
@@ -100,6 +132,7 @@ export function useAuthPanelController() {
     handleReset,
   } = createAuthPanelHandlers({
     email,
+    name,
     password,
     confirmPassword,
     upgradingGuest,

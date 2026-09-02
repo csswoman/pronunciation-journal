@@ -15,7 +15,7 @@ export function AuthGuestButton({
   onClick,
   pending,
   variant = "social",
-  label = "Explorar sin cuenta",
+  label = "Probar una sesión",
 }: AuthGuestButtonProps) {
   if (variant === "primary") {
     return (

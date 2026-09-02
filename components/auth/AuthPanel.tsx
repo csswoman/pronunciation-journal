@@ -1,25 +1,37 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { AuthTabs } from "@/components/auth/AuthTabs";
 import { AuthFeedback } from "@/components/auth/AuthFeedback";
 import { AuthMobileIdentity } from "@/components/auth/AuthMobileIdentity";
 import { AuthImagePanel } from "@/components/auth/AuthImagePanel";
-import { InstallBanner } from "@/components/auth/InstallBanner";
 import { AuthGuestButton } from "@/components/auth/AuthGuestButton";
 import { LoginForm } from "@/components/auth/LoginForm";
 import { RegisterForm } from "@/components/auth/RegisterForm";
 import { ResetForm } from "@/components/auth/ResetForm";
 import { RecoveryForm } from "@/components/auth/RecoveryForm";
 import { SocialDivider } from "@/components/auth/SocialDivider";
-import ChromeMicTip from "@/components/speech/ChromeMicTip";
+import { hasAuthedBefore } from "@/lib/auth/returning-visitor";
 import { useAuthPanelController } from "@/components/auth/useAuthPanelController";
 
 export default function AuthPanel() {
   const auth = useAuthPanelController();
   const isSave = auth.intent === "save";
-  const showExplorePrimary =
-    !isSave && (auth.mode === "login" || auth.mode === "register");
+  const isAccountMode = auth.mode === "login" || auth.mode === "register";
+  const showExplorePrimary = !isSave && isAccountMode;
+
+  // First-time visitors get the guest-first pitch with the account block folded
+  // away; anyone who has signed in here before lands straight on the form.
+  // Starts folded so SSR and the new-visitor case agree; the effect opens it.
+  const [accountOpen, setAccountOpen] = useState(false);
+  useEffect(() => {
+    if (hasAuthedBefore()) setAccountOpen(true);
+  }, []);
+  const revealAccount = () => {
+    setAccountOpen(true);
+    auth.clearFeedback();
+  };
 
   return (
     <div className="min-h-screen flex bg-surface-base">
@@ -30,35 +42,29 @@ export default function AuthPanel() {
 
         <div className="flex-1 px-[var(--layout-page-inline)] flex flex-col items-center justify-center py-[var(--layout-page-block)] lg:py-[var(--layout-page-block-end)]">
           <div className="w-full max-w-md">
-            <div className="hidden lg:flex items-start justify-between mb-8">
-              <div>
-                <p className="text-h4 text-fg font-semibold leading-none tracking-tight">
-                  English Journal
-                </p>
-                <p className="mt-1.5 text-body-sm text-fg-muted">
-                  Practica con intención.
-                </p>
-              </div>
-              <InstallBanner />
+            <div className="hidden lg:block mb-8">
+              <p className="text-h4 text-fg font-semibold leading-none tracking-tight">
+                English Journal
+              </p>
+              <p className="mt-1.5 text-body-sm text-fg-muted">
+                Pronunciación y vocabulario, sesión a sesión.
+              </p>
             </div>
 
             {showExplorePrimary || isSave ? (
-              <div className="mb-8 flex flex-col gap-5">
-                <div className="flex flex-col gap-2">
-                  <h1 className="text-h3 font-bold text-balance text-fg">
-                    {isSave
-                      ? "No pierdas tu racha"
-                      : "Empieza a practicar sin registrarte"}
-                  </h1>
-                  <p className="text-body-sm text-pretty text-fg-muted max-w-[42ch]">
-                    {isSave
-                      ? auth.upgradingGuest
-                        ? "Guarda esta sesión en una cuenta. Conservas tu progreso y puedes retomarlo desde cualquier dispositivo."
-                        : "Crea una cuenta o inicia sesión para no perder lo que practiques."
-                      : "Entra al escritorio, prueba una sesión y crea una cuenta solo cuando quieras guardar."}
-                  </p>
-                </div>
-                <ChromeMicTip variant="login" />
+              <div className="mb-8 flex flex-col gap-2">
+                <h1 className="text-h3 font-bold text-balance text-fg">
+                  {isSave
+                    ? "No pierdas tu racha"
+                    : "Empieza a practicar ahora"}
+                </h1>
+                <p className="text-body-sm text-pretty text-fg-muted max-w-[46ch]">
+                  {isSave
+                    ? auth.upgradingGuest
+                      ? "Guarda esta sesión en una cuenta. Conservas tu progreso y puedes retomarlo desde cualquier dispositivo."
+                      : "Crea una cuenta o inicia sesión para no perder lo que practiques."
+                    : "Prueba una sesión completa sin cuenta. Crea una cuando quieras guardar tu progreso."}
+                </p>
               </div>
             ) : null}
 
@@ -108,27 +114,39 @@ export default function AuthPanel() {
             ) : (
               <>
                 {showExplorePrimary ? (
-                  <div className="mb-8 flex flex-col gap-4">
+                  <div className="mb-8">
                     <AuthGuestButton
                       variant="primary"
                       onClick={auth.handleGuest}
                       pending={auth.pending}
                     />
-                    <SocialDivider />
-                    <p className="text-center text-caption text-fg-muted">
-                      ¿Quieres guardar el progreso? Usa una cuenta abajo.
-                    </p>
+                    {!accountOpen ? (
+                      <p className="mt-4 text-center text-body-sm text-fg-muted">
+                        ¿Ya tienes cuenta?{" "}
+                        <button
+                          type="button"
+                          onClick={revealAccount}
+                          className="font-medium text-primary underline-offset-2 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm"
+                        >
+                          Entrar con mi cuenta
+                        </button>
+                      </p>
+                    ) : null}
                   </div>
                 ) : null}
 
-                <AuthTabs
-                  mode={auth.mode === "register" ? "register" : "login"}
-                  onModeChange={(next) => {
-                    auth.setMode(next);
-                    auth.clearFeedback();
-                  }}
-                />
-                {auth.mode === "login" ? (
+                {!showExplorePrimary || accountOpen ? (
+                  <>
+                    {showExplorePrimary ? <SocialDivider /> : null}
+                    <div className={showExplorePrimary ? "mt-6" : undefined}>
+                      <AuthTabs
+                        mode={auth.mode === "register" ? "register" : "login"}
+                        onModeChange={(next) => {
+                          auth.setMode(next);
+                          auth.clearFeedback();
+                        }}
+                      />
+                      {auth.mode === "login" ? (
                   <LoginForm
                     email={auth.email}
                     setEmail={auth.setEmail}
@@ -144,8 +162,8 @@ export default function AuthPanel() {
                     showGuest={false}
                     submitLabel="Iniciar sesión"
                     googleLabel={
-                      auth.upgradingGuest && isSave
-                        ? "Guardar con Google"
+                      auth.upgradingGuest
+                        ? "Guardar mi progreso con Google"
                         : "Continuar con Google"
                     }
                   />
@@ -166,12 +184,15 @@ export default function AuthPanel() {
                       auth.upgradingGuest ? "Guardar con esta cuenta" : "Crear cuenta"
                     }
                     googleLabel={
-                      auth.upgradingGuest && isSave
-                        ? "Guardar con Google"
+                      auth.upgradingGuest
+                        ? "Guardar mi progreso con Google"
                         : "Continuar con Google"
                     }
                   />
-                )}
+                      )}
+                    </div>
+                  </>
+                ) : null}
               </>
             )}
 

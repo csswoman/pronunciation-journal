@@ -9,8 +9,14 @@ import {
   updatePassword,
   upgradeGuestWithEmail,
 } from "@/lib/supabase/auth-actions";
-import { publicAuthErrorMessage, validatePasswordPolicy } from "@/lib/auth/password-policy";
+import {
+  oauthErrorMessage,
+  oauthUnavailableMessage,
+  publicAuthErrorMessage,
+  validatePasswordPolicy,
+} from "@/lib/auth/password-policy";
 import { isIdentityAlreadyExistsError } from "@/lib/auth/oauth-identity";
+import { markAuthSeen } from "@/lib/auth/returning-visitor";
 import type { AuthPanelIntent, AuthPanelMode } from "@/components/auth/auth-panel-types";
 
 type AuthRouter = {
@@ -20,6 +26,7 @@ type AuthRouter = {
 
 export type AuthPanelHandlersDeps = {
   email: string;
+  name: string;
   password: string;
   confirmPassword: string;
   upgradingGuest: boolean;
@@ -38,6 +45,7 @@ export type AuthPanelHandlersDeps = {
 export function createAuthPanelHandlers(deps: AuthPanelHandlersDeps) {
   const {
     email,
+    name,
     password,
     confirmPassword,
     upgradingGuest,
@@ -84,6 +92,7 @@ export function createAuthPanelHandlers(deps: AuthPanelHandlersDeps) {
 
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
+    markAuthSeen();
     clearFeedback();
     setPending(true);
     try {
@@ -107,6 +116,7 @@ export function createAuthPanelHandlers(deps: AuthPanelHandlersDeps) {
 
   const handleRegister = async (event: React.FormEvent) => {
     event.preventDefault();
+    markAuthSeen();
     clearFeedback();
     setPending(true);
     try {
@@ -117,7 +127,11 @@ export function createAuthPanelHandlers(deps: AuthPanelHandlersDeps) {
       }
 
       if (upgradingGuest) {
-        const { data, error: err } = await upgradeGuestWithEmail(email.trim(), password);
+        const { data, error: err } = await upgradeGuestWithEmail(
+          email.trim(),
+          password,
+          name.trim(),
+        );
         if (err) {
           console.error("[auth] guest upgrade failed", err);
           setError(publicAuthErrorMessage());
@@ -132,7 +146,7 @@ export function createAuthPanelHandlers(deps: AuthPanelHandlersDeps) {
         }
       }
 
-      const { error: err } = await signUpWithEmail(email.trim(), password);
+      const { error: err } = await signUpWithEmail(email.trim(), password, name.trim());
       if (err) {
         console.error("[auth] sign up failed", err);
         setError(publicAuthErrorMessage());
@@ -145,11 +159,25 @@ export function createAuthPanelHandlers(deps: AuthPanelHandlersDeps) {
   };
 
   const handleGoogle = async () => {
+    markAuthSeen();
     clearFeedback();
     setPending(true);
+    let leavingForProvider = false;
+    // signInWithOAuth/linkIdentity return the provider URL under PKCE; nothing
+    // navigates unless we send the browser there ourselves.
+    const redirectToProvider = (url: string | null) => {
+      if (!url) {
+        // Supabase accepted the call but returned no provider URL — Google is
+        // almost certainly not configured for this project.
+        setError(oauthUnavailableMessage());
+        return;
+      }
+      leavingForProvider = true;
+      window.location.assign(url);
+    };
     try {
       if (upgradingGuest && intent === "save") {
-        const { error: err } = await linkGoogleIdentity();
+        const { data: linkData, error: err } = await linkGoogleIdentity();
         if (err) {
           if (
             isIdentityAlreadyExistsError({
@@ -159,31 +187,33 @@ export function createAuthPanelHandlers(deps: AuthPanelHandlersDeps) {
           ) {
             // Google already belongs to a permanent account — sign into that
             // account instead of leaving the guest stuck on a link error.
-            const { error: signInErr } = await signInWithGoogle();
+            const { data: signInData, error: signInErr } = await signInWithGoogle();
             if (signInErr) {
               console.error("[auth] google sign in after link conflict failed", signInErr);
-              setError(publicAuthErrorMessage());
+              setError(oauthErrorMessage());
               return;
             }
-            router.refresh();
+            redirectToProvider(signInData?.url ?? null);
             return;
           }
           console.error("[auth] google link failed", err);
-          setError(publicAuthErrorMessage());
+          setError(oauthErrorMessage());
           return;
         }
-        router.refresh();
+        redirectToProvider(linkData?.url ?? null);
         return;
       }
-      const { error: err } = await signInWithGoogle();
+      const { data, error: err } = await signInWithGoogle();
       if (err) {
         console.error("[auth] google sign in failed", err);
-        setError(publicAuthErrorMessage());
+        setError(oauthErrorMessage());
         return;
       }
-      router.refresh();
+      redirectToProvider(data?.url ?? null);
     } finally {
-      setPending(false);
+      // Keep the pending state while the browser leaves for the provider so the
+      // button never flips back to idle mid-navigation.
+      if (!leavingForProvider) setPending(false);
     }
   };
 

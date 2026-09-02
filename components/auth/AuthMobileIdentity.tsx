@@ -35,8 +35,8 @@ export function AuthMobileIdentity() {
         <p className="font-bold leading-tight text-white text-h2 tracking-[-0.02em]">
           English Journal
         </p>
-        <p className="mt-1 text-white/70 text-body-sm italic">
-          Practice with intention. Listen closely.
+        <p className="mt-1 text-white/70 text-body-sm">
+          Pronunciación y vocabulario, sesión a sesión.
         </p>
       </div>
     </div>
