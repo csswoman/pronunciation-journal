@@ -1,4 +1,5 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "B2 · Pasiva",
     "title": "Reportaje",
@@ -16,31 +17,32 @@
           "type": "rules",
           "rows": [
             {
-              "key": "It is said that",
-              "value": "It is said that he is rich.",
+              "key": "It + pasiva + that",
+              "value": "It is reported that the company is expanding. · Estructura impersonal",
               "highlights": [
-                "It is said that"
+                "It is reported that"
               ]
             },
             {
-              "key": "is said to",
-              "value": "He is said to be rich.",
+              "key": "Sujeto + pasiva + to + infinitivo",
+              "value": "The CEO is expected to resign tomorrow. · Enfoque en el sujeto",
               "highlights": [
-                "is said to be"
+                "is expected to"
               ]
             },
             {
-              "key": "Otros verbos",
-              "value": "is believed/reported/known to",
+              "key": "Pasado de la pasiva reportada",
+              "value": "He is believed to have left the country. · to have + participio",
               "highlights": [
+                "is believed to have"
+              ]
+            },
+            {
+              "key": "Verbos de reporte comunes",
+              "value": "say, believe, think, report, claim, consider, expect, rumor",
+              "highlights": [
+                "is said",
                 "is believed"
-              ]
-            },
-            {
-              "key": "Impersonal",
-              "value": "no se dice quién reporta",
-              "highlights": [
-                "It is"
               ]
             }
           ]
@@ -55,30 +57,37 @@
       "id": "b2-pasiva-reportada-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "It is said that",
-              "value": "It is said that he is rich.",
+              "key": "Estructura 1 (Impersonal)",
+              "value": "It + is/was + participio + that + oración · It is thought that the economy will recover.",
               "highlights": [
-                "It is said that"
+                "It is thought that"
               ]
             },
             {
-              "key": "is said to",
-              "value": "He is said to be rich.",
+              "key": "Estructura 2 (Sujeto + Presente)",
+              "value": "Sujeto + is/are + participio + to + infinitivo base · The painting is said to be authentic.",
               "highlights": [
                 "is said to be"
               ]
             },
             {
-              "key": "Otros verbos",
-              "value": "is believed/reported/known to",
+              "key": "Estructura 3 (Sujeto + Pasado previo)",
+              "value": "Sujeto + is/are + participio + to have + V3 · The suspect is reported to have escaped.",
               "highlights": [
-                "is believed"
+                "is reported to have"
+              ]
+            },
+            {
+              "key": "Negativa",
+              "value": "It is not expected that prices will fall. / He is not thought to be involved.",
+              "highlights": [
+                "is not thought to"
               ]
             }
           ]
@@ -89,26 +98,26 @@
       "id": "b2-pasiva-reportada-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "It is said that he is rich."
+              "key": "Noticias de prensa",
+              "value": "It is estimated that over ten thousand people attended the demonstration in Berlin."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "He is said to be rich."
+              "key": "Historia y arqueología",
+              "value": "The ancient fortress is believed to have been constructed during the 14th century."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "is believed/reported/known to"
+              "key": "Informes corporativos",
+              "value": "The tech giant is rumored to be developing a revolutionary artificial intelligence chip."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "no se dice quién reporta"
+              "key": "Comunicado oficial",
+              "value": "The government minister is expected to deliver a public address later this evening."
             }
           ]
         }
@@ -118,23 +127,25 @@
       "id": "b2-pasiva-reportada-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "It is said that",
-              "rule": "It is said that he is rich.",
+              "label": "Voz Activa (Sujeto activo impreciso)",
+              "rule": "Menciona a la gente o fuentes generales como sujeto de la oración.",
               "examples": [
-                "It is said that he is rich."
+                "People say that he earns millions.",
+                "Journalists report that the fire started at midnight."
               ]
             },
             {
-              "label": "is said to",
-              "rule": "He is said to be rich.",
+              "label": "Pasiva Reportada (Periodística / Formal)",
+              "rule": "Elimina el sujeto difuso y le da tono objetivo y periodístico al enunciado.",
               "examples": [
-                "He is said to be rich."
+                "He is said to earn millions.",
+                "The fire is reported to have started at midnight."
               ]
             }
           ]
@@ -145,19 +156,19 @@
       "id": "b2-pasiva-reportada-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "People say that he is rich."
+              "text": "People is said that the castle is haunted."
             },
             {
               "variant": "good",
-              "text": "He is said to be rich.",
-              "note": "estilo más formal e impersonal"
+              "text": "It is said that the castle is haunted. / The castle is said to be haunted.",
+              "note": "no mezcles la pasiva reportada con 'People'; usa la forma impersonal 'It is said that' o el sujeto 'The castle is said to'"
             }
           ]
         }
@@ -166,27 +177,27 @@
     {
       "id": "b2-pasiva-reportada-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "'It is said that...' no cambia el verbo",
+              "value": "La oración tras 'that' mantiene su estructura y tiempo normal."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "'Subject + is said to...' usa infinitivo",
+              "value": "Usa 'to be' para estados presentes y 'to have been' para eventos pasados."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "Ideal para textos formales",
+              "value": "Es la estructura preferida en noticias, investigación y redacción académica."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "Concordancia de sujeto",
+              "value": "Asegúrate de cambiar 'is' por 'are' si el sujeto es plural (They are said to be...)."
             }
           ]
         }
@@ -199,13 +210,34 @@
   ],
   "quiz": [
     {
-      "q": "The artist ___ to live abroad.",
+      "q": "The missing painting ___ to have been destroyed during the war.",
       "options": [
-        "is said",
-        "says"
+        "is believed",
+        "believes",
+        "is believing"
       ],
       "answer": 0,
-      "explain": "Reportaje pasivo → is said to."
+      "explain": "Estructura pasiva de reporte con sujeto de enfoque: 'Sujeto + is believed + to have + V3'."
+    },
+    {
+      "q": "___ is reported that negotiators have reached a preliminary peace agreement.",
+      "options": [
+        "It",
+        "There",
+        "What"
+      ],
+      "answer": 0,
+      "explain": "La estructura impersonal de reporte comienza con el pronombre neutro 'It' ('It is reported that...')."
+    },
+    {
+      "q": "The company's CEO is expected ___ his resignation later today.",
+      "options": [
+        "to announce",
+        "announcing",
+        "announce"
+      ],
+      "answer": 0,
+      "explain": "Tras 'is expected' se requiere el infinitivo con 'to' ('to announce')."
     }
   ]
 }

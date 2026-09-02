@@ -117,5 +117,25 @@
         }
       ]
     }
+  ],
+  "quiz": [
+    {
+      "q": "¿Cuál es la diferencia de registro entre 'find out' y 'ascertain'?",
+      "options": ["'find out' es informal/conversacional y 'ascertain' es formal/académico.", "'find out' es un sustantivo y 'ascertain' es un adjetivo.", "'ascertain' solo se usa en tiempo pasado y 'find out' en futuro.", "Ambas tienen exactamente el mismo registro y uso en contratos."],
+      "answer": 0,
+      "explain": "En nivel C1 se distingue entre verbos frasales cotidianos y verbos latinos precisos para la escritura formal."
+    },
+    {
+      "q": "Identifica el falso amigo avanzado en la frase: 'She is a very sensible person'.",
+      "options": ["Sensible significa sensata/juiciosa (sensible en español se traduce como sensitive).", "Sensible significa hipersensible o emocional.", "Sensible significa que se siente enferma.", "Sensible significa que carece de sentimientos."],
+      "answer": 0,
+      "explain": "'Sensible' es un falso amigo que se traduce por sensato o razonable. Sensible (emocional) es 'sensitive'."
+    },
+    {
+      "q": "Selecciona la colocación avanzada correcta para expresar gran preocupación:",
+      "options": ["deeply concerned", "highly concerned", "strongly concerned", "widely concerned"],
+      "answer": 0,
+      "explain": "'Deeply concerned' es la colocación adverbio + adjetivo natural en inglés."
+    }
   ]
 }

@@ -110,5 +110,25 @@
         "body": "termina con un mensaje claro y accionable; la última frase es la que más se recuerda."
       }
     }
+  ],
+  "quiz": [
+    {
+      "q": "¿Qué sucede con el orden de las palabras tras una expresión negativa enfática como 'Never' o 'Not only' al inicio de frase?",
+      "options": ["Se invierte el orden a Auxiliar + Sujeto + Verbo.", "Se mantiene el orden estándar de Sujeto + Verbo.", "Se requiere añadir la conjunción 'that' obligatoriamente.", "El verbo principal se coloca al final de la oración."],
+      "answer": 0,
+      "explain": "Las expresiones negativas al inicio causan inversión del auxiliar antes del sujeto ('Never have we faced...')."
+    },
+    {
+      "q": "¿Cuál es la función del 'signposting' en una presentación persuasiva?",
+      "options": ["Anunciar la estructura del discurso y guiar la atención de la audiencia.", "Contradecir los argumentos planteados por el público.", "Utilizar solo datos numéricos sin explicaciones verbales.", "Formular únicamente preguntas retóricas al final."],
+      "answer": 0,
+      "explain": "El 'signposting' (ej. 'Moving on to...', 'First and foremost') orienta a los oyentes sobre la organización del discurso."
+    },
+    {
+      "q": "Elige la llamada a la acción (Call to Action) más persuasiva para un cierre de presentación:",
+      "options": ["If we act now, we can secure market leadership.", "Well, that's all I had to say today.", "I think I finished, any questions?", "That is the end of my presentation."],
+      "answer": 0,
+      "explain": "Una llamada a la acción efectiva conecta una condición urgente ('If we act now') con un beneficio claro."
+    }
   ]
 }

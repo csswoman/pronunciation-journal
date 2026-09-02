@@ -1,47 +1,49 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "C2 · Registro",
     "title": "Cambio de",
     "titleEmphasis": "registro",
-    "goal": "Ya pasas de formal a informal (y viceversa) ajustando densidad, pasiva, nominalización y phrasal verbs."
+    "goal": "Alterna con fluidez entre registros formales (densidad nominal, pasivas) e informales (phrasal verbs, voz activa, elipsis)."
   },
   "cards": [
     {
       "id": "c2-cambio-registro-concept",
       "tag": "Idea central",
       "title": "Cambio de: qué expresa",
-      "lede": "Ya pasas de formal a informal (y viceversa) ajustando densidad, pasiva, nominalización y phrasal verbs.",
+      "lede": "Alterna con fluidez entre registros formales (densidad nominal, pasivas) e informales (phrasal verbs, voz activa, elipsis).",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Formal",
-              "value": "The implementation was delayed. · pasiva, nominalización",
+              "key": "Registro Formal (Académico/Legal)",
+              "value": "The unexpected termination of the contract resulted in financial litigation.",
               "highlights": [
-                "implementation"
+                "termination",
+                "resulted in litigation"
               ]
             },
             {
-              "key": "Informal",
-              "value": "They put off rolling it out. · phrasal, activa",
+              "key": "Registro Informal (Conversacional)",
+              "value": "They suddenly canceled the contract, so we had to sue them.",
               "highlights": [
-                "put off"
+                "canceled",
+                "sue them"
               ]
             },
             {
-              "key": "Variables",
-              "value": "densidad, contracciones, explicitud, evidencia",
+              "key": "Formal: Pasiva Impersonal",
+              "value": "It is recommended that procedures be adhered to rigorously.",
               "highlights": [
-                "formal",
-                "informal"
+                "It is recommended"
               ]
             },
             {
-              "key": "Propósito",
-              "value": "misma información, distinta relación con la audiencia",
+              "key": "Informal: Activa Directa",
+              "value": "Make sure you stick to the rules.",
               "highlights": [
-                "audience"
+                "stick to"
               ]
             }
           ]
@@ -56,31 +58,31 @@
       "id": "c2-cambio-registro-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Formal",
-              "value": "The implementation was delayed. · pasiva, nominalización",
+              "key": "Formal (Alta densidad nominal)",
+              "value": "Sustantivos complejos + verbos de origen latino · The implementation of reforms is vital.",
               "highlights": [
-                "implementation"
+                "implementation of reforms"
               ]
             },
             {
-              "key": "Informal",
-              "value": "They put off rolling it out. · phrasal, activa",
+              "key": "Informal (Basado en verbos)",
+              "value": "Verbos dinámicos + Phrasal verbs · Carrying out reforms is key.",
               "highlights": [
-                "put off"
+                "Carrying out"
               ]
             },
             {
-              "key": "Variables",
-              "value": "densidad, contracciones, explicitud, evidencia",
+              "key": "Ajuste de conectores",
+              "value": "Formal: 'Furthermore' / Informal: 'Plus' · Formal: 'Consequently' / Informal: 'So'.",
               "highlights": [
-                "formal",
-                "informal"
+                "Furthermore",
+                "Consequently"
               ]
             }
           ]
@@ -91,26 +93,26 @@
       "id": "c2-cambio-registro-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "pasiva, nominalización"
+              "key": "Email ejecutivo (Formal)",
+              "value": "Should you require further clarification, please do not hesitate to contact me."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "phrasal, activa"
+              "key": "Chat de trabajo (Informal)",
+              "value": "Let me know if you need anything else!"
             },
             {
-              "key": "Ejemplo 3",
-              "value": "densidad, contracciones, explicitud, evidencia"
+              "key": "Informe oficial (Formal)",
+              "value": "Subsequent to the investigation, corrective measures were introduced."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "misma información, distinta relación con la audiencia"
+              "key": "Reunión de equipo (Informal)",
+              "value": "After looking into it, we fixed the problems."
             }
           ]
         }
@@ -120,23 +122,23 @@
       "id": "c2-cambio-registro-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "Formal",
-              "rule": "The implementation was delayed. · pasiva, nominalización",
+              "label": "Registro Formal (Escrito / Corporativo)",
+              "rule": "Prioriza nominalizaciones, voz pasiva, conectores latinos y ausencia de contracciones",
               "examples": [
-                "pasiva, nominalización"
+                "Prior to departure, verification must be conducted."
               ]
             },
             {
-              "label": "Informal",
-              "rule": "They put off rolling it out. · phrasal, activa",
+              "label": "Registro Informal (Hablado / Coloquial)",
+              "rule": "Prioriza verbos simples, phrasals, contracciones, voz activa y conectores cortos",
               "examples": [
-                "phrasal, activa"
+                "Before you leave, check everything."
               ]
             }
           ]
@@ -147,19 +149,19 @@
       "id": "c2-cambio-registro-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "Hey, pursuant to our discussion…"
+              "text": "Hey Mr. Davis, pursuant to your email, we gonna check the numbers."
             },
             {
               "variant": "good",
-              "text": "As we discussed… / Following our chat…",
-              "note": "alinea registro con canal y relación"
+              "text": "Dear Mr. Davis, with reference to your email, we will verify the figures.",
+              "note": "Evita mezclar conectores ultra formales ('pursuant to') con jerga informal ('gonna')."
             }
           ]
         }
@@ -168,27 +170,27 @@
     {
       "id": "c2-cambio-registro-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "1. Nominalización vs. Verbo",
+              "value": "El registro formal convierte verbos en sustantivos ('decide' → 'make a decision')."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "2. Vocabulario germánico vs. latino",
+              "value": "Usa raíces latinas en formal ('investigate') y phrasals en informal ('look into')."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "3. Uso de contracciones",
+              "value": "Evita contracciones en correos y documentos oficiales ('cannot', 'do not')."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "4. Estructuras impersonales",
+              "value": "Sustituye 'you' o 'we' por estructuras pasivas o impersonales en textos formales."
             }
           ]
         }
@@ -201,13 +203,37 @@
   ],
   "quiz": [
     {
-      "q": "Which is more formal?",
+      "q": "Which version is most appropriate for a formal legal notice?",
       "options": [
-        "We need to look into it.",
-        "The matter requires investigation."
+        "Failure to comply with these terms will result in contract termination.",
+        "If you don't stick to these rules, we will break the contract.",
+        "If you fail these terms, we are gonna cancel the deal.",
+        "Not complying these terms makes the contract end."
       ],
-      "answer": 1,
-      "explain": "Nominalización + vocabulario latino = registro formal."
+      "answer": 0,
+      "explain": "La nominalización ('Failure to comply', 'contract termination') marca el registro formal correcto."
+    },
+    {
+      "q": "Select the informal equivalent of: 'The investigation was postponed due to inclement weather.'",
+      "options": [
+        "They put off the investigation because of the bad weather.",
+        "The inquiry was delayed on account of severe weather.",
+        "Owing to rain, the investigation was deferred.",
+        "The team postponed investigating due to weather conditions."
+      ],
+      "answer": 0,
+      "explain": "'Put off' y 'bad weather' reemplazan a 'postponed' e 'inclement weather' en registro informal."
+    },
+    {
+      "q": "¿Qué elemento es característico del registro formal en inglés?",
+      "options": [
+        "Uso de nominalizaciones y pasivas impersonales",
+        "Abundancia de phrasal verbs e interjecciones",
+        "Uso constante de contracciones y elipsis",
+        "Sustitución de sustantivos por pronombres genéricos"
+      ],
+      "answer": 0,
+      "explain": "La nominalización y la voz pasiva elevan la densidad formal del texto."
     }
   ]
 }

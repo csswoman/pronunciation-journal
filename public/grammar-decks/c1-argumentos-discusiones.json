@@ -116,5 +116,25 @@
         }
       ]
     }
+  ],
+  "quiz": [
+    {
+      "q": "¿Cuál es la forma más diplomática de conceder un punto menor antes de refutar la tesis principal?",
+      "options": ["While it's true that..., but...", "You are wrong because...", "I totally agree with you.", "Nobody believes that."],
+      "answer": 0,
+      "explain": "La estructura 'While it's true that..., [tesis principal]' permite conceder un aspecto secundario de forma diplomática."
+    },
+    {
+      "q": "Selecciona la expresión formal idónea para rebatir un argumento basándote en la falta de pruebas:",
+      "options": ["There's no evidence to support that claim.", "Come on, that's not fair.", "I don't buy that at all.", "You don't understand the issue."],
+      "answer": 0,
+      "explain": "'There's no evidence...' es una forma contundente en el fondo pero adecuada y respetuosa en debates formales."
+    },
+    {
+      "q": "¿Qué recurso retórico apela al consenso general de la audiencia?",
+      "options": ["We all know that...", "I'd argue that...", "That's not quite right.", "Who wouldn't want that?"],
+      "answer": 0,
+      "explain": "'We all know that...' apela directamente a las creencias o certezas compartidas por los oyentes."
+    }
   ]
 }

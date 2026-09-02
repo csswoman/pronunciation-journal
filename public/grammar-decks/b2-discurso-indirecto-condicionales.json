@@ -14,9 +14,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "present → past", "value": "\"I work\" → He said he worked", "highlights": ["worked"] },
-            { "key": "past → past perfect", "value": "\"I saw it\" → She said she had seen it", "highlights": ["had seen"] },
-            { "key": "will → would", "value": "\"I'll go\" → He said he would go", "highlights": ["would go"] }
+            {
+              "key": "present → past",
+              "value": "\"I work\" → He said he worked",
+              "highlights": [
+                "worked"
+              ]
+            },
+            {
+              "key": "past → past perfect",
+              "value": "\"I saw it\" → She said she had seen it",
+              "highlights": [
+                "had seen"
+              ]
+            },
+            {
+              "key": "will → would",
+              "value": "\"I'll go\" → He said he would go",
+              "highlights": [
+                "would go"
+              ]
+            }
           ]
         }
       ],
@@ -34,10 +52,24 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "bad", "text": "He asked where do I live." },
-            { "variant": "good", "text": "He asked where I lived.", "note": "sin do, orden de afirmación" },
-            { "variant": "bad", "text": "She asked am I ready." },
-            { "variant": "good", "text": "She asked if I was ready.", "note": "sí/no → if / whether" }
+            {
+              "variant": "bad",
+              "text": "He asked where do I live."
+            },
+            {
+              "variant": "good",
+              "text": "He asked where I lived.",
+              "note": "sin do, orden de afirmación"
+            },
+            {
+              "variant": "bad",
+              "text": "She asked am I ready."
+            },
+            {
+              "variant": "good",
+              "text": "She asked if I was ready.",
+              "note": "sí/no → if / whether"
+            }
           ]
         }
       ]
@@ -51,10 +83,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "offer to", "value": "ofrecerse a · He offered to help.", "highlights": ["offered to"] },
-            { "key": "suggest -ing", "value": "sugerir · She suggested leaving.", "highlights": ["suggested leaving"] },
-            { "key": "promise to", "value": "prometer · They promised to come.", "highlights": ["promised to"] },
-            { "key": "admit -ing", "value": "admitir · He admitted lying.", "highlights": ["admitted lying"] }
+            {
+              "key": "offer to",
+              "value": "ofrecerse a · He offered to help.",
+              "highlights": [
+                "offered to"
+              ]
+            },
+            {
+              "key": "suggest -ing",
+              "value": "sugerir · She suggested leaving.",
+              "highlights": [
+                "suggested leaving"
+              ]
+            },
+            {
+              "key": "promise to",
+              "value": "prometer · They promised to come.",
+              "highlights": [
+                "promised to"
+              ]
+            },
+            {
+              "key": "admit -ing",
+              "value": "admitir · He admitted lying.",
+              "highlights": [
+                "admitted lying"
+              ]
+            }
           ]
         }
       ]
@@ -63,15 +119,37 @@
       "id": "rs-second-cond",
       "tag": "Segundo condicional",
       "title": "Situaciones hipotéticas",
-      "titleItalic": ["would"],
+      "titleItalic": [
+        "would"
+      ],
       "lede": "Para lo improbable o imaginario: if + pasado simple, ... would + verbo.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
-            { "key": "Condición", "value": "If I had money...", "highlights": ["If I had"], "hint": "pasado, aunque sea hipótesis presente" },
-            { "key": "Resultado", "value": "...I would travel.", "highlights": ["would travel"] },
-            { "key": "Consejo", "value": "If I were you, I'd rest.", "highlights": ["If I were you"], "hint": "were para todas las personas" }
+            {
+              "key": "Condición",
+              "value": "If I had money...",
+              "highlights": [
+                "If I had"
+              ],
+              "hint": "pasado, aunque sea hipótesis presente"
+            },
+            {
+              "key": "Resultado",
+              "value": "...I would travel.",
+              "highlights": [
+                "would travel"
+              ]
+            },
+            {
+              "key": "Consejo",
+              "value": "If I were you, I'd rest.",
+              "highlights": [
+                "If I were you"
+              ],
+              "hint": "were para todas las personas"
+            }
           ]
         }
       ]
@@ -85,8 +163,21 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Condición", "value": "If I had studied...", "highlights": ["had studied"] },
-            { "key": "Resultado", "value": "...I would have passed.", "highlights": ["would have passed"], "hint": "pero no aprobé" }
+            {
+              "key": "Condición",
+              "value": "If I had studied...",
+              "highlights": [
+                "had studied"
+              ]
+            },
+            {
+              "key": "Resultado",
+              "value": "...I would have passed.",
+              "highlights": [
+                "would have passed"
+              ],
+              "hint": "pero no aprobé"
+            }
           ]
         }
       ],
@@ -107,21 +198,59 @@
             {
               "label": "1º (real)",
               "rule": "presente + will",
-              "examples": ["If it rains, I'll stay."]
+              "examples": [
+                "If it rains, I'll stay."
+              ]
             },
             {
               "label": "2º (improbable)",
               "rule": "pasado + would",
-              "examples": ["If I won, I'd travel."]
+              "examples": [
+                "If I won, I'd travel."
+              ]
             },
             {
               "label": "3º (imposible)",
               "rule": "had + would have",
-              "examples": ["If I'd known, I'd have gone."]
+              "examples": [
+                "If I'd known, I'd have gone."
+              ]
             }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Direct: \"If I have time, I will call you.\" Reported: He said that if he ___ time, he ___ call me.",
+      "options": [
+        "had / would",
+        "has / will",
+        "had had / would have"
+      ],
+      "answer": 0,
+      "explain": "Al pasar de primer condicional a estilo indirecto, 'have' cambia a 'had' y 'will' a 'would'."
+    },
+    {
+      "q": "Direct: \"If I were rich, I would travel.\" Reported: She said that if she ___ rich, she ___ travel.",
+      "options": [
+        "were / would",
+        "is / will",
+        "had been / would have"
+      ],
+      "answer": 0,
+      "explain": "El segundo condicional no cambia de tiempo verbal al pasarse a estilo indirecto."
+    },
+    {
+      "q": "Which verb is used when reported speech implies a command or instruction?",
+      "options": [
+        "told",
+        "said",
+        "explained"
+      ],
+      "answer": 0,
+      "explain": "'Told + objeto + to + infinitivo' se utiliza para transmitir órdenes o instrucciones indirectas."
     }
   ]
 }

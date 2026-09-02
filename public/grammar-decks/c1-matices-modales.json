@@ -1,47 +1,47 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "C1 · Modales",
     "title": "Matices",
     "titleEmphasis": "modales",
-    "goal": "Ya usas will/would para hábitos característicos y may/might en concesiones: That may be true, but…"
+    "goal": "Domina usos avanzados de auxiliares modales para expresar hábitos típicos (will/would) y concesiones/especulación (may/might)."
   },
   "cards": [
     {
       "id": "c1-matices-modales-concept",
       "tag": "Idea central",
       "title": "Matices: qué expresa",
-      "lede": "Ya usas will/would para hábitos característicos y may/might en concesiones: That may be true, but…",
+      "lede": "Domina usos avanzados de auxiliares modales para expresar hábitos típicos (will/would) y concesiones/especulación (may/might).",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "will (hábito)",
-              "value": "She will talk for hours. · tendencia irritante o típica",
+              "key": "Will (Tendencia / Hábito presente)",
+              "value": "She will spend hours analyzing spreadsheets without taking a break.",
               "highlights": [
-                "will talk"
+                "will spend"
               ]
             },
             {
-              "key": "would (pasado)",
-              "value": "He would always arrive late.",
+              "key": "Would (Hábito característico pasado)",
+              "value": "My old mentor would always double-check every figure.",
               "highlights": [
-                "would always"
+                "would always double-check"
               ]
             },
             {
-              "key": "may/might (concesión)",
-              "value": "That may be true, but the data suggests otherwise.",
+              "key": "May / Might (Concesión)",
+              "value": "The price may be steep, but the quality is undeniable.",
               "highlights": [
-                "may be true"
+                "may be"
               ]
             },
             {
-              "key": "Matiz",
-              "value": "no es futuro literal; es actitud del hablante",
+              "key": "Should (Expectativa / Deducción)",
+              "value": "The software update should solve the performance issues.",
               "highlights": [
-                "will",
-                "may"
+                "should solve"
               ]
             }
           ]
@@ -56,30 +56,30 @@
       "id": "c1-matices-modales-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "will (hábito)",
-              "value": "She will talk for hours. · tendencia irritante o típica",
+              "key": "Afirmativa (Tendencia)",
+              "value": "Sujeto + will/would + verbo base · He will insist on reviewing every line.",
               "highlights": [
-                "will talk"
+                "will insist"
               ]
             },
             {
-              "key": "would (pasado)",
-              "value": "He would always arrive late.",
+              "key": "Negativa (Concesión matizada)",
+              "value": "This option might not be cheap, but it offers full coverage.",
               "highlights": [
-                "would always"
+                "might not be"
               ]
             },
             {
-              "key": "may/might (concesión)",
-              "value": "That may be true, but the data suggests otherwise.",
+              "key": "Interrogativa (Deducción)",
+              "value": "Should the package arrive before Friday?",
               "highlights": [
-                "may be true"
+                "Should the package arrive"
               ]
             }
           ]
@@ -90,26 +90,26 @@
       "id": "c1-matices-modales-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "tendencia irritante o típica"
+              "key": "Observaciones de comportamiento",
+              "value": "Clients will often demand last-minute changes during the final phase."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "He would always arrive late."
+              "key": "Reminisciencia profesional",
+              "value": "In the early days of the start-up, we would work long into the night."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "That may be true, but the data suggests otherwise."
+              "key": "Análisis de propuestas",
+              "value": "That argument may hold true in theory, but in practice it fails."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "no es futuro literal; es actitud del hablante"
+              "key": "Proyecciones corporativas",
+              "value": "The revised strategy should generate positive returns by next quarter."
             }
           ]
         }
@@ -119,23 +119,23 @@
       "id": "c1-matices-modales-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "will (hábito)",
-              "rule": "She will talk for hours. · tendencia irritante o típica",
+              "label": "Will/Would (Hábito)",
+              "rule": "No indica futuro ni condicional, sino una conducta característica o patronal",
               "examples": [
-                "tendencia irritante o típica"
+                "He will sit there in silence for hours."
               ]
             },
             {
-              "label": "would (pasado)",
-              "rule": "He would always arrive late.",
+              "label": "May/Might (Concesión)",
+              "rule": "Admite la veracidad de un punto antes de presentar un contraste determinante",
               "examples": [
-                "He would always arrive late."
+                "It may sound risky, but it is necessary."
               ]
             }
           ]
@@ -146,19 +146,19 @@
       "id": "c1-matices-modales-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "She will to talk for hours."
+              "text": "She will to complain whenever we change the schedule."
             },
             {
               "variant": "good",
-              "text": "She will talk for hours.",
-              "note": "will + base, sin to"
+              "text": "She will complain whenever we change the schedule.",
+              "note": "Los modales como 'will' van seguidos de infinitivo sin 'to'."
             }
           ]
         }
@@ -167,27 +167,27 @@
     {
       "id": "c1-matices-modales-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "1. 'Will' característico",
+              "value": "Se enfatiza verbalmente para expresar irritación o patrones de conducta habituales."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "2. 'Would' de costumbre",
+              "value": "Equivale a 'used to' para acciones repetidas en el pasado (no para estados)."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "3. Concesión estratégica",
+              "value": "Usa 'may... but...' en debates para validar al interlocutor antes de rebatir."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "4. Expectativas lógicas",
+              "value": "'Should' expresa la suposición razonable de que algo ocurrirá según lo planeado."
             }
           ]
         }
@@ -200,13 +200,37 @@
   ],
   "quiz": [
     {
-      "q": "He ___ always forget his keys. (hábito pasado)",
+      "q": "During negotiations, buyers ___ often test your boundaries before making a real offer.",
       "options": [
-        "would",
-        "will"
+        "will",
+        "must to",
+        "ought",
+        "shall to"
       ],
       "answer": 0,
-      "explain": "Hábito pasado característico → would."
+      "explain": "'Will' se utiliza para señalar una tendencia o hábito característico del presente."
+    },
+    {
+      "q": "The initial investment ___ be substantial, but the long-term ROI justifies it.",
+      "options": [
+        "may",
+        "would",
+        "should to",
+        "had to"
+      ],
+      "answer": 0,
+      "explain": "'May' introduce una concesión (reconocer un hecho antes de matizarlo con 'but')."
+    },
+    {
+      "q": "¿Qué opción describe correctamente un comportamiento repetido en el pasado?",
+      "options": [
+        "When we worked together, he would always share his insights.",
+        "When we worked together, he will always share his insights.",
+        "When we worked together, he is used to share his insights.",
+        "When we worked together, he would to share his insights."
+      ],
+      "answer": 0,
+      "explain": "'Would' expresa hábitos recurrentes en el pasado."
     }
   ]
 }

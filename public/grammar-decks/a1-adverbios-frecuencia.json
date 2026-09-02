@@ -1,4 +1,5 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "A1 · Adverbios",
     "title": "Adverbios de",
@@ -16,22 +17,22 @@
           "type": "rules",
           "rows": [
             {
-              "key": "Orden",
-              "value": "always → usually → often → sometimes → never",
+              "key": "Frecuencia",
+              "value": "always (100%) → usually → often → sometimes → never (0%)",
               "highlights": [
                 "always"
               ]
             },
             {
-              "key": "Posición",
-              "value": "I always drink coffee. (después del sujeto)",
+              "key": "Verbo normal",
+              "value": "I always drink coffee. (antes del verbo)",
               "highlights": [
                 "always drink"
               ]
             },
             {
-              "key": "to be",
-              "value": "She is always late. (después del verbo be)",
+              "key": "Verbo To Be",
+              "value": "She is always late. (después de be)",
               "highlights": [
                 "is always"
               ]
@@ -48,30 +49,30 @@
       "id": "a1-adverbios-frecuencia-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Orden",
-              "value": "always → usually → often → sometimes → never",
+              "key": "Verbo ordinario",
+              "value": "Sujeto + Adverbio + Verbo",
               "highlights": [
-                "always"
+                "Adverbio + Verbo"
               ]
             },
             {
-              "key": "Posición",
-              "value": "I always drink coffee. (después del sujeto)",
+              "key": "Verbo To Be",
+              "value": "Sujeto + am/is/are + Adverbio",
               "highlights": [
-                "always drink"
+                "am/is/are + Adverbio"
               ]
             },
             {
-              "key": "to be",
-              "value": "She is always late. (después del verbo be)",
+              "key": "Sin doble negativo",
+              "value": "I never smoke. (sin don't)",
               "highlights": [
-                "is always"
+                "never"
               ]
             }
           ]
@@ -82,22 +83,26 @@
       "id": "a1-adverbios-frecuencia-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "always → usually → often → sometimes → never"
+              "key": "Rutina",
+              "value": "I usually wake up at 7:00 AM."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "I always drink coffee. (después del sujeto)"
+              "key": "Trabajo",
+              "value": "He is never late for meetings."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "She is always late. (después del verbo be)"
+              "key": "Pasatiempos",
+              "value": "We sometimes go to the cinema on Fridays."
+            },
+            {
+              "key": "Salud",
+              "value": "They always drink water after exercising."
             }
           ]
         }
@@ -107,23 +112,23 @@
       "id": "a1-adverbios-frecuencia-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "Orden",
-              "rule": "always → usually → often → sometimes → never",
+              "label": "Antes del verbo ordinario",
+              "rule": "Ubicación estándar para la mayoría de los verbos",
               "examples": [
-                "always → usually → often → sometimes → never"
+                "I always eat breakfast."
               ]
             },
             {
-              "label": "Posición",
-              "rule": "I always drink coffee. (después del sujeto)",
+              "label": "Después del verbo To Be",
+              "rule": "Ubicación especial obligatoria con am/is/are",
               "examples": [
-                "I always drink coffee. (después del sujeto)"
+                "I am always ready."
               ]
             }
           ]
@@ -134,7 +139,7 @@
       "id": "a1-adverbios-frecuencia-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
@@ -155,27 +160,27 @@
     {
       "id": "a1-adverbios-frecuencia-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "Escala",
+              "value": "Always (100%) > Usually (80%) > Often (60%) > Sometimes (40%) > Never (0%)"
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "Verbos ordinarios",
+              "value": "Colócalo ANTES del verbo (She often calls)"
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "Verbo To Be",
+              "value": "Colócalo DESPUÉS de am/is/are (He is always on time)"
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "Never",
+              "value": "'Never' ya es negativo, no añadas don't/doesn't"
             }
           ]
         }
@@ -188,13 +193,31 @@
   ],
   "quiz": [
     {
-      "q": "He is ___ late.",
+      "q": "Choose the correct sentence:",
       "options": [
-        "always",
-        "always is"
+        "She is always happy.",
+        "She always is happy."
       ],
       "answer": 0,
-      "explain": "Con to be: be + adverbio + complemento."
+      "explain": "Con el verbo 'to be', el adverbio de frecuencia va DESPUÉS ('is always')."
+    },
+    {
+      "q": "I ___ eat breakfast before going to work.",
+      "options": [
+        "usually",
+        "am usually"
+      ],
+      "answer": 0,
+      "explain": "Con verbos ordinarios ('eat'), el adverbio va antes del verbo."
+    },
+    {
+      "q": "¿Cuál oración contiene un doble negativo incorrecto?",
+      "options": [
+        "I don't never go there.",
+        "I never go there."
+      ],
+      "answer": 0,
+      "explain": "'Never' ya es negativo por sí mismo, no debe combinarse con 'don't'."
     }
   ]
 }

@@ -1,46 +1,47 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "C1 · Discurso",
     "title": "Marcadores",
     "titleEmphasis": "del discurso",
-    "goal": "Ya organizas argumentos complejos con marcadores avanzados: notwithstanding, in so far as, to put it another way."
+    "goal": "Estructura argumentos complejos y transiciones académicas usando marcadores avanzados (notwithstanding, in so far as, conversely)."
   },
   "cards": [
     {
       "id": "c1-marcadores-discurso-concept",
       "tag": "Idea central",
       "title": "Marcadores: qué expresa",
-      "lede": "Ya organizas argumentos complejos con marcadores avanzados: notwithstanding, in so far as, to put it another way.",
+      "lede": "Estructura argumentos complejos y transiciones académicas usando marcadores avanzados (notwithstanding, in so far as, conversely).",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Marco",
-              "value": "To put it another way, the risk remains.",
-              "highlights": [
-                "To put it another way"
-              ]
-            },
-            {
-              "key": "Concesión",
-              "value": "Notwithstanding this, we proceeded.",
+              "key": "Concesión formal",
+              "value": "Notwithstanding the economic downturn, investment remained high.",
               "highlights": [
                 "Notwithstanding"
               ]
             },
             {
-              "key": "Alcance",
-              "value": "In so far as I know, the data is accurate.",
+              "key": "Limitación / Alcance",
+              "value": "In so far as budget allows, we will expand the team.",
               "highlights": [
                 "In so far as"
               ]
             },
             {
-              "key": "Cierre",
-              "value": "It goes without saying that safety comes first.",
+              "key": "Reformulación",
+              "value": "To put it another way, we are shifting our focus to retention.",
               "highlights": [
-                "It goes without saying"
+                "To put it another way"
+              ]
+            },
+            {
+              "key": "Contraste directo",
+              "value": "Conversely, secondary markets demonstrated unexpected growth.",
+              "highlights": [
+                "Conversely"
               ]
             }
           ]
@@ -55,30 +56,30 @@
       "id": "c1-marcadores-discurso-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Marco",
-              "value": "To put it another way, the risk remains.",
-              "highlights": [
-                "To put it another way"
-              ]
-            },
-            {
-              "key": "Concesión",
-              "value": "Notwithstanding this, we proceeded.",
+              "key": "Afirmativa (Concesión)",
+              "value": "Marcador + sustantivo / cláusula, sujeto + verbo · Notwithstanding initial delays, the project succeeded.",
               "highlights": [
                 "Notwithstanding"
               ]
             },
             {
-              "key": "Alcance",
-              "value": "In so far as I know, the data is accurate.",
+              "key": "Afirmativa (Alcance)",
+              "value": "In so far as + sujeto + verbo, la consecuencia lógica procede.",
               "highlights": [
                 "In so far as"
+              ]
+            },
+            {
+              "key": "Afirmativa (Reformulación)",
+              "value": "Cláusula principal. Marcador de reformulación, síntesis aclaratoria.",
+              "highlights": [
+                "To put it another way"
               ]
             }
           ]
@@ -89,26 +90,26 @@
       "id": "c1-marcadores-discurso-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "To put it another way, the risk remains."
+              "key": "Ensayos y publicaciones",
+              "value": "Conversely, earlier studies suggested that the phenomenon was temporary."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "Notwithstanding this, we proceeded."
+              "key": "Informes de gestión",
+              "value": "In so far as we can ascertain from the data, the strategy is working."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "In so far as I know, the data is accurate."
+              "key": "Reuniones estratégicas",
+              "value": "To put it another way, failing to innovate will cost us market share."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "It goes without saying that safety comes first."
+              "key": "Debates formales",
+              "value": "Notwithstanding your objections, the board has approved the budget."
             }
           ]
         }
@@ -118,23 +119,25 @@
       "id": "c1-marcadores-discurso-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "Marco",
-              "rule": "To put it another way, the risk remains.",
+              "label": "Notwithstanding vs. Although",
+              "rule": "'Notwithstanding' es formal y admite sustantivos directos o cláusulas; 'Although' introduce cláusulas completas",
               "examples": [
-                "To put it another way, the risk remains."
+                "Notwithstanding the heavy rain...",
+                "Although it rained heavily..."
               ]
             },
             {
-              "label": "Concesión",
-              "rule": "Notwithstanding this, we proceeded.",
+              "label": "Conversely vs. However",
+              "rule": "'Conversely' señala una inversión opuesta o simétrica; 'However' introduce cualquier tipo de salvedad o matiz",
               "examples": [
-                "Notwithstanding this, we proceeded."
+                "Imports fell; conversely, exports rose.",
+                "The plan is solid. However, costs are high."
               ]
             }
           ]
@@ -145,19 +148,19 @@
       "id": "c1-marcadores-discurso-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "Notwithstanding this, but we continued."
+              "text": "Notwithstanding the failure, but we learned valuable lessons."
             },
             {
               "variant": "good",
-              "text": "Notwithstanding this, we continued.",
-              "note": "no mezcles con but"
+              "text": "Notwithstanding the failure, we learned valuable lessons.",
+              "note": "No combines 'notwithstanding' con 'but' en la misma oración."
             }
           ]
         }
@@ -166,27 +169,27 @@
     {
       "id": "c1-marcadores-discurso-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "1. Posición oracional",
+              "value": "La mayoría de marcadores avanzados se separan con coma al inicio de la oración."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "2. Registro formal",
+              "value": "Reserva 'notwithstanding' y 'conversely' para redacción profesional, académica o presentaciones."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "3. Evitar redundancias",
+              "value": "No uses dos conectores de concesión juntos (ej. 'Notwithstanding this, but...')."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "4. Claridad en la voz",
+              "value": "'To put it another way' simplifica conceptos complejos para la audiencia."
             }
           ]
         }
@@ -199,13 +202,37 @@
   ],
   "quiz": [
     {
-      "q": "___, the figures are still preliminary.",
+      "q": "___ the challenges in supply chain, sales exceeded expectations.",
       "options": [
-        "It goes without saying",
-        "In so far as"
+        "Notwithstanding",
+        "In order to",
+        "Unless",
+        "As long as"
       ],
       "answer": 0,
-      "explain": "Introduce algo obvio o acordado."
+      "explain": "'Notwithstanding' funciona como preposición formal equivalente a 'a pesar de'."
+    },
+    {
+      "q": "The first experiment failed; ___, the second trial produced outstanding results.",
+      "options": [
+        "conversely",
+        "whereas",
+        "in order that",
+        "so as to"
+      ],
+      "answer": 0,
+      "explain": "'Conversely' vincula dos resultados simétricamente opuestos."
+    },
+    {
+      "q": "¿Qué marcador expresa una reformulación explicativa para aclarar un punto previo?",
+      "options": [
+        "To put it another way",
+        "Notwithstanding this",
+        "In so far as",
+        "Conversely"
+      ],
+      "answer": 0,
+      "explain": "'To put it another way' se utiliza para refrasear o clarificar una idea."
     }
   ]
 }

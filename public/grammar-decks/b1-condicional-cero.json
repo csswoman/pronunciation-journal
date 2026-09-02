@@ -1,46 +1,47 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "B1 · Condicional cero",
     "title": "Condicional",
     "titleEmphasis": "cero",
-    "goal": "Ya expresas verdades generales y reglas con if + presente, presente."
+    "goal": "Ya expresas hechos científicos, verdades generales y reglas con if / when + presente simple."
   },
   "cards": [
     {
       "id": "b1-condicional-cero-concept",
       "tag": "Idea central",
       "title": "Condicional: qué expresa",
-      "lede": "Ya expresas verdades generales y reglas con if + presente, presente.",
+      "lede": "Ya expresas hechos científicos, verdades generales y reglas con if / when + presente simple.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Estructura",
-              "value": "if + presente, presente · If you heat ice, it melts.",
+              "key": "Causa y efecto constante",
+              "value": "If + presente simple, presente simple",
               "highlights": [
-                "If you heat"
+                "If"
               ]
             },
             {
-              "key": "Reglas",
-              "value": "scientific facts · general truths",
+              "key": "Verdades generales",
+              "value": "If you heat ice, it melts.",
               "highlights": [
                 "melts"
               ]
             },
             {
-              "key": "when",
-              "value": "When it rains, the streets get wet.",
+              "key": "Equivalencia con 'when'",
+              "value": "When it rains, the grass gets wet.",
               "highlights": [
                 "When"
               ]
             },
             {
-              "key": "unless",
-              "value": "unless = if not · a menos que",
+              "key": "Instrucciones y reglas",
+              "value": "If the alarm sounds, leave the building.",
               "highlights": [
-                "unless"
+                "If"
               ]
             }
           ]
@@ -55,30 +56,32 @@
       "id": "b1-condicional-cero-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Estructura",
-              "value": "if + presente, presente · If you heat ice, it melts.",
+              "key": "Afirmativa",
+              "value": "If/When + sujeto + presente, sujeto + presente · If you press this button, the light turns on.",
               "highlights": [
-                "If you heat"
+                "If you press",
+                "turns on"
               ]
             },
             {
-              "key": "Reglas",
-              "value": "scientific facts · general truths",
+              "key": "Negativa",
+              "value": "If + sujeto + don't/doesn't + verbo, sujeto + don't/doesn't + verbo · If you don't water plants, they die.",
               "highlights": [
-                "melts"
+                "don't water",
+                "die"
               ]
             },
             {
-              "key": "when",
-              "value": "When it rains, the streets get wet.",
+              "key": "Interrogativa",
+              "value": "What happens if + sujeto + presente simple? · What happens if you mix red and yellow?",
               "highlights": [
-                "When"
+                "What happens if"
               ]
             }
           ]
@@ -89,26 +92,26 @@
       "id": "b1-condicional-cero-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "If you heat ice, it melts."
+              "key": "Ciencia y cocina",
+              "value": "If you boil water long enough, it evaporates into steam."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "general truths"
+              "key": "Salud y cuerpo",
+              "value": "If people don't sleep well, they feel tired the next day."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "When it rains, the streets get wet."
+              "key": "Normas de tráfico",
+              "value": "If the traffic light is red, drivers must stop."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "a menos que"
+              "key": "Rutinas personales",
+              "value": "When I drink coffee late at night, I cannot sleep."
             }
           ]
         }
@@ -118,23 +121,23 @@
       "id": "b1-condicional-cero-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "Estructura",
-              "rule": "if + presente, presente · If you heat ice, it melts.",
+              "label": "Condicional Cero",
+              "rule": "Hechos siempre ciertos, leyes físicas o hábitos universales incontestables",
               "examples": [
-                "If you heat ice, it melts."
+                "If you drop a stone, it falls."
               ]
             },
             {
-              "label": "Reglas",
-              "rule": "scientific facts · general truths",
+              "label": "Primer Condicional",
+              "rule": "Una situación específica, particular y probable en el futuro",
               "examples": [
-                "general truths"
+                "If it rains tomorrow, we will stay home."
               ]
             }
           ]
@@ -145,19 +148,19 @@
       "id": "b1-condicional-cero-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "If you will heat ice, it melts."
+              "text": "If you will heat water to 100°C, it boils."
             },
             {
               "variant": "good",
-              "text": "If you heat ice, it melts.",
-              "note": "condicional cero: sin will tras if"
+              "text": "If you heat water to 100°C, it boils.",
+              "note": "en condicional cero no se usa 'will' tras 'if', solo presente simple"
             }
           ]
         }
@@ -166,27 +169,27 @@
     {
       "id": "b1-condicional-cero-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "Sin 'will' en condicional cero",
+              "value": "Ambas cláusulas utilizan presente simple."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "If = When",
+              "value": "Se pueden intercambiar libremente al hablar de verdades generales."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "Unless",
+              "value": "Significa 'if not' (a menos que). Ej: Unless it rains, plants wither."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "Uso de comas",
+              "value": "Pon coma solo cuando la cláusula con 'if' va al inicio de la oración."
             }
           ]
         }
@@ -199,13 +202,34 @@
   ],
   "quiz": [
     {
-      "q": "If water ___ to 100°C, it boils.",
+      "q": "If you touch a hot stove, you ___ yourself.",
       "options": [
-        "is heated",
-        "will be heated"
+        "burn",
+        "will burn",
+        "burned"
       ],
       "answer": 0,
-      "explain": "Verdad general → presente en ambas partes."
+      "explain": "Verdad general inmediata → presente simple en ambas oraciones."
+    },
+    {
+      "q": "When the sun goes down, it ___ dark.",
+      "options": [
+        "gets",
+        "will get",
+        "got"
+      ],
+      "answer": 0,
+      "explain": "Hecho natural constante: 'When + presente, presente'."
+    },
+    {
+      "q": "Ice melts if you ___ it out of the freezer.",
+      "options": [
+        "leave",
+        "will leave",
+        "left"
+      ],
+      "answer": 0,
+      "explain": "Cláusula con 'if' en condicional cero siempre requiere presente simple."
     }
   ]
 }

@@ -14,9 +14,28 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "give up", "value": "rendirse (no \"dar arriba\")", "highlights": ["give up"], "hint": "Don't give up!" },
-            { "key": "find out", "value": "averiguar · find out the truth", "highlights": ["find out"] },
-            { "key": "look after", "value": "cuidar · look after the kids", "highlights": ["look after"] }
+            {
+              "key": "give up",
+              "value": "rendirse (no \"dar arriba\")",
+              "highlights": [
+                "give up"
+              ],
+              "hint": "Don't give up!"
+            },
+            {
+              "key": "find out",
+              "value": "averiguar · find out the truth",
+              "highlights": [
+                "find out"
+              ]
+            },
+            {
+              "key": "look after",
+              "value": "cuidar · look after the kids",
+              "highlights": [
+                "look after"
+              ]
+            }
           ]
         }
       ],
@@ -34,10 +53,35 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "get up", "value": "levantarse", "highlights": ["get up"] },
-            { "key": "wake up", "value": "despertarse", "highlights": ["wake up"] },
-            { "key": "turn on / off", "value": "encender / apagar", "highlights": ["turn on", "off"] },
-            { "key": "run out of", "value": "quedarse sin · run out of milk", "highlights": ["run out of"] }
+            {
+              "key": "get up",
+              "value": "levantarse",
+              "highlights": [
+                "get up"
+              ]
+            },
+            {
+              "key": "wake up",
+              "value": "despertarse",
+              "highlights": [
+                "wake up"
+              ]
+            },
+            {
+              "key": "turn on / off",
+              "value": "encender / apagar",
+              "highlights": [
+                "turn on",
+                "off"
+              ]
+            },
+            {
+              "key": "run out of",
+              "value": "quedarse sin · run out of milk",
+              "highlights": [
+                "run out of"
+              ]
+            }
           ]
         }
       ]
@@ -51,9 +95,20 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "good", "text": "Turn off the light. / Turn the light off.", "note": "con sustantivo: las dos valen" },
-            { "variant": "bad", "text": "Turn off it." },
-            { "variant": "good", "text": "Turn it off.", "note": "con pronombre: SIEMPRE en medio" }
+            {
+              "variant": "good",
+              "text": "Turn off the light. / Turn the light off.",
+              "note": "con sustantivo: las dos valen"
+            },
+            {
+              "variant": "bad",
+              "text": "Turn off it."
+            },
+            {
+              "variant": "good",
+              "text": "Turn it off.",
+              "note": "con pronombre: SIEMPRE en medio"
+            }
           ]
         }
       ]
@@ -67,10 +122,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "carry out", "value": "llevar a cabo · carry out a plan", "highlights": ["carry out"] },
-            { "key": "set up", "value": "montar / configurar · set up a meeting", "highlights": ["set up"] },
-            { "key": "deal with", "value": "ocuparse de · deal with a problem", "highlights": ["deal with"] },
-            { "key": "follow up", "value": "dar seguimiento · follow up on the email", "highlights": ["follow up"] }
+            {
+              "key": "carry out",
+              "value": "llevar a cabo · carry out a plan",
+              "highlights": [
+                "carry out"
+              ]
+            },
+            {
+              "key": "set up",
+              "value": "montar / configurar · set up a meeting",
+              "highlights": [
+                "set up"
+              ]
+            },
+            {
+              "key": "deal with",
+              "value": "ocuparse de · deal with a problem",
+              "highlights": [
+                "deal with"
+              ]
+            },
+            {
+              "key": "follow up",
+              "value": "dar seguimiento · follow up on the email",
+              "highlights": [
+                "follow up"
+              ]
+            }
           ]
         }
       ]
@@ -84,10 +163,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "get on (a bus)", "value": "subirse · subir al transporte", "highlights": ["get on"] },
-            { "key": "get on with sb", "value": "llevarse bien con alguien", "highlights": ["get on with"] },
-            { "key": "get over", "value": "superar · get over an illness", "highlights": ["get over"] },
-            { "key": "get by", "value": "arreglárselas · get by on little money", "highlights": ["get by"] }
+            {
+              "key": "get on (a bus)",
+              "value": "subirse · subir al transporte",
+              "highlights": [
+                "get on"
+              ]
+            },
+            {
+              "key": "get on with sb",
+              "value": "llevarse bien con alguien",
+              "highlights": [
+                "get on with"
+              ]
+            },
+            {
+              "key": "get over",
+              "value": "superar · get over an illness",
+              "highlights": [
+                "get over"
+              ]
+            },
+            {
+              "key": "get by",
+              "value": "arreglárselas · get by on little money",
+              "highlights": [
+                "get by"
+              ]
+            }
           ]
         }
       ]
@@ -104,12 +207,20 @@
             {
               "label": "Informal",
               "rule": "phrasal verb",
-              "examples": ["find out", "put off", "go up"]
+              "examples": [
+                "find out",
+                "put off",
+                "go up"
+              ]
             },
             {
               "label": "Formal",
               "rule": "verbo de origen latino",
-              "examples": ["discover", "postpone", "increase"]
+              "examples": [
+                "discover",
+                "postpone",
+                "increase"
+              ]
             }
           ]
         }
@@ -118,6 +229,38 @@
         "label": "Consejo:",
         "body": "al hablar, usa phrasal verbs (suena nativo); en informes, el verbo formal."
       }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "What does \"to put off a meeting\" mean?",
+      "options": [
+        "To postpone or delay it",
+        "To cancel it permanently",
+        "To organize it immediately"
+      ],
+      "answer": 0,
+      "explain": "'Put off' significa posponer o aplazar un evento para una fecha posterior."
+    },
+    {
+      "q": "Which phrasal verb means to find something by chance?",
+      "options": [
+        "Come across",
+        "Take after",
+        "Give up"
+      ],
+      "answer": 0,
+      "explain": "'Come across' significa encontrarse con algo o alguien por casualidad."
+    },
+    {
+      "q": "I am really looking forward to ___ you next week.",
+      "options": [
+        "seeing",
+        "see",
+        "saw"
+      ],
+      "answer": 0,
+      "explain": "El phrasal verb 'look forward to' exige gerundio (-ing) tras la preposición 'to'."
     }
   ]
 }

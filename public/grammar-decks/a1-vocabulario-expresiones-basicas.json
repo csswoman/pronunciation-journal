@@ -14,9 +14,28 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Formal", "value": "Good morning · Good afternoon · Good evening", "highlights": ["Good morning"] },
-            { "key": "Informal", "value": "Hi · Hey · What's up?", "highlights": ["Hi", "Hey"] },
-            { "key": "Despedida", "value": "Goodbye · See you · Take care", "highlights": ["See you"] }
+            {
+              "key": "Formal",
+              "value": "Good morning · Good afternoon · Good evening",
+              "highlights": [
+                "Good morning"
+              ]
+            },
+            {
+              "key": "Informal",
+              "value": "Hi · Hey · What's up?",
+              "highlights": [
+                "Hi",
+                "Hey"
+              ]
+            },
+            {
+              "key": "Despedida",
+              "value": "Goodbye · See you · Take care",
+              "highlights": [
+                "See you"
+              ]
+            }
           ]
         }
       ],
@@ -29,15 +48,35 @@
       "id": "vb-howareyou",
       "tag": "Cómo estás",
       "title": "How are you?",
-      "titleItalic": ["How are you?"],
+      "titleItalic": [
+        "How are you?"
+      ],
       "lede": "La pregunta social por excelencia. La respuesta suele ser breve y se devuelve la pregunta.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
-            { "key": "Pregunta", "value": "How are you? · How's it going?", "highlights": ["How are you?"] },
-            { "key": "Bien", "value": "I'm fine, thanks. · Pretty good.", "highlights": ["I'm fine"] },
-            { "key": "Devolver", "value": "And you? · How about you?", "highlights": ["And you?"] }
+            {
+              "key": "Pregunta",
+              "value": "How are you? · How's it going?",
+              "highlights": [
+                "How are you?"
+              ]
+            },
+            {
+              "key": "Bien",
+              "value": "I'm fine, thanks. · Pretty good.",
+              "highlights": [
+                "I'm fine"
+              ]
+            },
+            {
+              "key": "Devolver",
+              "value": "And you? · How about you?",
+              "highlights": [
+                "And you?"
+              ]
+            }
           ]
         }
       ]
@@ -51,10 +90,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "please", "value": "Coffee, please. · Please sit down.", "highlights": ["please"] },
-            { "key": "thank you", "value": "Thanks · Thank you so much", "highlights": ["Thank you"] },
-            { "key": "responder", "value": "You're welcome · No problem", "highlights": ["You're welcome"] },
-            { "key": "sorry / excuse me", "value": "Sorry (disculpa) · Excuse me (permiso)", "highlights": ["Excuse me"] }
+            {
+              "key": "please",
+              "value": "Coffee, please. · Please sit down.",
+              "highlights": [
+                "please"
+              ]
+            },
+            {
+              "key": "thank you",
+              "value": "Thanks · Thank you so much",
+              "highlights": [
+                "Thank you"
+              ]
+            },
+            {
+              "key": "responder",
+              "value": "You're welcome · No problem",
+              "highlights": [
+                "You're welcome"
+              ]
+            },
+            {
+              "key": "sorry / excuse me",
+              "value": "Sorry (disculpa) · Excuse me (permiso)",
+              "highlights": [
+                "Excuse me"
+              ]
+            }
           ]
         }
       ],
@@ -72,9 +135,28 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Nombre", "value": "My name is Ana. · I'm Ana.", "highlights": ["My name is", "I'm"] },
-            { "key": "Origen", "value": "I'm from Mexico.", "highlights": ["I'm from"] },
-            { "key": "Gusto", "value": "Nice to meet you.", "highlights": ["Nice to meet you"] }
+            {
+              "key": "Nombre",
+              "value": "My name is Ana. · I'm Ana.",
+              "highlights": [
+                "My name is",
+                "I'm"
+              ]
+            },
+            {
+              "key": "Origen",
+              "value": "I'm from Mexico.",
+              "highlights": [
+                "I'm from"
+              ]
+            },
+            {
+              "key": "Gusto",
+              "value": "Nice to meet you.",
+              "highlights": [
+                "Nice to meet you"
+              ]
+            }
           ]
         }
       ]
@@ -88,10 +170,31 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "1–10", "value": "one, two, three... ten" },
-            { "key": "11–19", "value": "eleven, twelve, thirteen... (-teen)", "highlights": ["-teen"] },
-            { "key": "Decenas", "value": "twenty, thirty, forty... (-ty)", "highlights": ["-ty"] },
-            { "key": "Combinar", "value": "twenty-one, forty-five", "highlights": ["twenty-one"] }
+            {
+              "key": "1–10",
+              "value": "one, two, three... ten"
+            },
+            {
+              "key": "11–19",
+              "value": "eleven, twelve, thirteen... (-teen)",
+              "highlights": [
+                "-teen"
+              ]
+            },
+            {
+              "key": "Decenas",
+              "value": "twenty, thirty, forty... (-ty)",
+              "highlights": [
+                "-ty"
+              ]
+            },
+            {
+              "key": "Combinar",
+              "value": "twenty-one, forty-five",
+              "highlights": [
+                "twenty-one"
+              ]
+            }
           ]
         }
       ],
@@ -109,13 +212,58 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "good", "text": "Can you repeat that, please?", "note": "pedir que repitan" },
-            { "variant": "good", "text": "How do you say... in English?", "note": "preguntar una palabra" },
-            { "variant": "good", "text": "What does this mean?", "note": "pedir significado" },
-            { "variant": "good", "text": "I don't understand.", "note": "decir que no entiendes" }
+            {
+              "variant": "good",
+              "text": "Can you repeat that, please?",
+              "note": "pedir que repitan"
+            },
+            {
+              "variant": "good",
+              "text": "How do you say... in English?",
+              "note": "preguntar una palabra"
+            },
+            {
+              "variant": "good",
+              "text": "What does this mean?",
+              "note": "pedir significado"
+            },
+            {
+              "variant": "good",
+              "text": "I don't understand.",
+              "note": "decir que no entiendes"
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "What do you say when someone gives you a present?",
+      "options": [
+        "Thank you very much!",
+        "Nice to meet you."
+      ],
+      "answer": 0,
+      "explain": "'Thank you very much!' expresa agradecimiento al recibir un regalo."
+    },
+    {
+      "q": "What does 'Good night' mean?",
+      "options": [
+        "Despedida al ir a dormir o salir de noche.",
+        "Saludo de la mañana."
+      ],
+      "answer": 0,
+      "explain": "'Good night' se utiliza al despedirse por la noche o al ir a dormir."
+    },
+    {
+      "q": "If you need help in a store, you can say:",
+      "options": [
+        "Can you help me, please?",
+        "Good evening."
+      ],
+      "answer": 0,
+      "explain": "'Can you help me, please?' es la forma natural de solicitar asistencia."
     }
   ]
 }

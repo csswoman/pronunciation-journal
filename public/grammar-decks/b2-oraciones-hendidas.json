@@ -1,4 +1,5 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "B2 · Énfasis",
     "title": "Oraciones",
@@ -16,32 +17,35 @@
           "type": "rules",
           "rows": [
             {
-              "key": "It-cleft",
-              "value": "It was John who called.",
+              "key": "It-cleft (Enfoque en sujeto/objeto)",
+              "value": "It + be + elemento enfatizado + that/who · It was Sarah who solved the issue.",
               "highlights": [
-                "It was John who"
+                "It was",
+                "who"
               ]
             },
             {
-              "key": "What-cleft",
-              "value": "What I need is a break.",
+              "key": "What-cleft (Enfoque en acción/hecho)",
+              "value": "What + cláusula + be + elemento clave · What we need is more time.",
               "highlights": [
-                "What I need is"
+                "What",
+                "is"
               ]
             },
             {
-              "key": "Énfasis",
-              "value": "resalta sujeto, objeto o adverbio",
+              "key": "All-cleft (Enfoque exclusivo)",
+              "value": "All + cláusula + be + elemento · All I want is a clear explanation.",
               "highlights": [
-                "who",
-                "what"
+                "All",
+                "is"
               ]
             },
             {
-              "key": "All-cleft",
-              "value": "All I want is peace.",
+              "key": "Wh-cleft de lugar/tiempo",
+              "value": "Where/When + cláusula + be + complemento · Where he lives is in central London.",
               "highlights": [
-                "All I want"
+                "Where",
+                "is"
               ]
             }
           ]
@@ -56,31 +60,41 @@
       "id": "b2-oraciones-hendidas-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "It-cleft",
-              "value": "It was John who called.",
+              "key": "Afirmativa (It-cleft)",
+              "value": "It + is/was + sustantivo/persona + relative clause · It is quality that matters most.",
               "highlights": [
-                "It was John who"
+                "It is",
+                "that"
               ]
             },
             {
-              "key": "What-cleft",
-              "value": "What I need is a break.",
+              "key": "Afirmativa (What-cleft)",
+              "value": "What + sujeto + verbo + is/was + sustantivo/infinitivo · What I enjoy is solving complex puzzles.",
               "highlights": [
-                "What I need is"
+                "What",
+                "is"
               ]
             },
             {
-              "key": "Énfasis",
-              "value": "resalta sujeto, objeto o adverbio",
+              "key": "Negativa (It-cleft)",
+              "value": "It wasn't + persona/cosa + that/who... · It wasn't Mark who made the mistake.",
               "highlights": [
-                "who",
-                "what"
+                "It wasn't",
+                "who"
+              ]
+            },
+            {
+              "key": "Interrogativa (It-cleft)",
+              "value": "Was it + persona/cosa + that/who...? · Was it yesterday that the parcel arrived?",
+              "highlights": [
+                "Was it",
+                "that"
               ]
             }
           ]
@@ -91,26 +105,26 @@
       "id": "b2-oraciones-hendidas-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "It was John who called."
+              "key": "Resolviendo un malentendido",
+              "value": "It was David, not me, who sent the email with the wrong attachments."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "What I need is a break."
+              "key": "En el trabajo",
+              "value": "What we really need to focus on right now is improving customer retention."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "resalta sujeto, objeto o adverbio"
+              "key": "Conversación cotidiana",
+              "value": "All I am asking for is ten minutes of your undivided attention."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "All I want is peace."
+              "key": "Reclamación de servicio",
+              "value": "It was the lack of communication that disappointed us the most."
             }
           ]
         }
@@ -120,23 +134,25 @@
       "id": "b2-oraciones-hendidas-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "It-cleft",
-              "rule": "It was John who called.",
+              "label": "Oración Estándar (Sin énfasis)",
+              "rule": "Orden neutro S+V+O sin estructura enfática especial.",
               "examples": [
-                "It was John who called."
+                "Sarah solved the problem yesterday.",
+                "We need more time to finish."
               ]
             },
             {
-              "label": "What-cleft",
-              "rule": "What I need is a break.",
+              "label": "Oración Hendida / Cleft (Con énfasis)",
+              "rule": "Reorganiza la oración para poner el foco principal en un elemento clave.",
               "examples": [
-                "What I need is a break."
+                "It was Sarah who solved the problem.",
+                "What we need is more time."
               ]
             }
           ]
@@ -147,19 +163,19 @@
       "id": "b2-oraciones-hendidas-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "It was John called me."
+              "text": "It was John called the manager."
             },
             {
               "variant": "good",
-              "text": "It was John who called me.",
-              "note": "it-cleft necesita who/that"
+              "text": "It was John who called the manager.",
+              "note": "las oraciones it-cleft requieren el pronombre relativo 'who' o 'that' para conectar la cláusula"
             }
           ]
         }
@@ -168,27 +184,27 @@
     {
       "id": "b2-oraciones-hendidas-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "It-cleft usa 'that' o 'who'",
+              "value": "Usa 'who' para personas y 'that' para cosas, lugares o acciones."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "What-cleft usa el verbo 'be'",
+              "value": "Asegúrate de que el verbo 'be' concuerde con la información enfatizada."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "Uso de 'All'",
+              "value": "'All' equivale a 'the only thing' (All I need is rest = La única cosa que necesito)."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "No olvides la cláusula de relativo",
+              "value": "No puedes omitir 'who' o 'that' tras el elemento destacado en it-clefts."
             }
           ]
         }
@@ -201,13 +217,34 @@
   ],
   "quiz": [
     {
-      "q": "___ I can't stand is the noise.",
+      "q": "It was in 2020 ___ we opened our first office in Madrid.",
+      "options": [
+        "that",
+        "which",
+        "what"
+      ],
+      "answer": 0,
+      "explain": "En las it-clefts que enfatizan tiempo o lugar se utiliza la conjunción 'that'."
+    },
+    {
+      "q": "___ I appreciate most about this team is their dedication.",
       "options": [
         "What",
+        "Which",
         "That"
       ],
       "answer": 0,
-      "explain": "What-cleft: What + cláusula + is/was."
+      "explain": "Las pseudo-clefts o what-clefts comienzan con el pronombre relativo 'What'."
+    },
+    {
+      "q": "All she wants to do this weekend ___ relax at home.",
+      "options": [
+        "is",
+        "are",
+        "were"
+      ],
+      "answer": 0,
+      "explain": "La estructura 'All + cláusula singular' requiere la forma verbal 'is'."
     }
   ]
 }

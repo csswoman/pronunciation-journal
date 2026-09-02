@@ -1,53 +1,47 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "B2 · Conectores",
     "title": "Conectores",
     "titleEmphasis": "avanzados",
-    "goal": "Ya enlazas ideas formales con however, furthermore, therefore, nevertheless y whereas."
+    "goal": "Ya enlazas ideas formales con however, furthermore, therefore y nevertheless."
   },
   "cards": [
     {
       "id": "b2-conectores-avanzados-concept",
       "tag": "Idea central",
-      "title": "Conectores formales: precisión y matiz",
-      "lede": "En niveles avanzados, los conectores permiten articular argumentos complejos con precisión estilística y formal.",
+      "title": "Conectores: qué expresa",
+      "lede": "Ya enlazas ideas formales con however, furthermore, therefore y nevertheless.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "however",
-              "value": "contraste formal · The strategy had risks; however, it succeeded.",
+              "key": "however (contraste)",
+              "value": "Muestra un contraste directo entre dos oraciones · The team worked hard. However, they missed the deadline.",
               "highlights": [
-                "however"
+                "However"
               ]
             },
             {
-              "key": "furthermore",
-              "value": "adición y refuerzo · Furthermore, new data confirms our findings.",
+              "key": "furthermore (adición)",
+              "value": "Añade una razón o argumento adicional con mayor peso · The product is expensive. Furthermore, it lacks support.",
               "highlights": [
-                "furthermore"
+                "Furthermore"
               ]
             },
             {
-              "key": "therefore / consequently",
-              "value": "consecuencia lógica · Profits fell; consequently, we adapted.",
+              "key": "therefore (consecuencia)",
+              "value": "Indica un resultado o consecuencia lógica · Sales dropped; therefore, we had to cut costs.",
               "highlights": [
-                "consequently"
+                "therefore"
               ]
             },
             {
-              "key": "nevertheless / nonetheless",
-              "value": "a pesar de ello / aun así · It was risky; nevertheless, they invested.",
+              "key": "nevertheless (concesión)",
+              "value": "Expresa 'a pesar de ello' en contexto formal · It was raining. Nevertheless, the outdoor event continued.",
               "highlights": [
-                "nevertheless"
-              ]
-            },
-            {
-              "key": "whereas",
-              "value": "contraste directo / mientras que · Some prefer remote work, whereas others value the office.",
-              "highlights": [
-                "whereas"
+                "Nevertheless"
               ]
             }
           ]
@@ -55,32 +49,45 @@
       ],
       "tip": {
         "label": "Objetivo:",
-        "body": "sustituir conectores básicos (and, but, so) por alternativas formales y precisas en escritura profesional."
+        "body": "reconocer el patrón y usarlo en frases propias."
       }
     },
     {
       "id": "b2-conectores-avanzados-form",
-      "tag": "Forma y puntuación",
-      "title": "Reglas de puntuación en nivel B2",
-      "lede": "Los adverbios conjuntivos requieren una puntuación rigurosa para evitar errores comunes de unión de cláusulas.",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Cláusula + ; + conector + , + Cláusula",
-              "value": "The evidence is strong; nevertheless, more research is required.",
-              "highlights": ["; nevertheless,"]
+              "key": "Afirmativa (Inicio)",
+              "value": "Oración 1. Conector + coma + Oración 2 · The proposal was risky. Furthermore, it was costly.",
+              "highlights": [
+                "Furthermore,"
+              ]
             },
             {
-              "key": "Inicio de párrafo / oración",
-              "value": "Furthermore, the proposed timeline is unrealistic.",
-              "highlights": ["Furthermore,"]
+              "key": "Afirmativa (Punto y coma)",
+              "value": "Oración 1; conector + coma + Oración 2 · The results were poor; therefore, we revised the plan.",
+              "highlights": [
+                "; therefore,"
+              ]
             },
             {
-              "key": "Whereas (conjunción subordinante)",
-              "value": "He prefers theory, whereas she excels in practical application.",
-              "highlights": [", whereas"]
+              "key": "Negativa",
+              "value": "Sujeto + verbo negativo. Conector + coma + Oración · We didn't win. However, we learned a lot.",
+              "highlights": [
+                "However,"
+              ]
+            },
+            {
+              "key": "Interrogativa de seguimiento",
+              "value": "¿Pregunta? Conector, ¿pregunta adicional? · Is the project feasible? Furthermore, is it profitable?",
+              "highlights": [
+                "Furthermore,"
+              ]
             }
           ]
         }
@@ -89,27 +96,27 @@
     {
       "id": "b2-conectores-avanzados-examples",
       "tag": "En contexto",
-      "title": "Ejemplos profesionales",
-      "lede": "Lee cada ejemplo observando el tono y la estructura sintáctica.",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Concesión fuerte",
-              "value": "The team had limited budget; nevertheless, they delivered an award-winning campaign."
+              "key": "Presentación de negocios",
+              "value": "Inflation has risen sharply; therefore, central banks are raising interest rates."
             },
             {
-              "key": "Adición argumentativa",
-              "value": "The candidate has extensive experience. Furthermore, she speaks three languages fluently."
+              "key": "Ensayo académico",
+              "value": "The initial experiment failed. However, subsequent trials yielded positive results."
             },
             {
-              "key": "Consecuencia formal",
-              "value": "Energy costs surged; consequently, operational margins shrank."
+              "key": "Informe técnico",
+              "value": "The server hardware is outdated. Furthermore, the software requires urgent security patches."
             },
             {
-              "key": "Comparación directa",
-              "value": "Traditional retail is declining, whereas e-commerce continues to expand rapidly."
+              "key": "Debate formal",
+              "value": "The candidate lacked executive experience. Nevertheless, she won the majority of votes."
             }
           ]
         }
@@ -118,24 +125,26 @@
     {
       "id": "b2-conectores-avanzados-contrast",
       "tag": "Contraste",
-      "title": "Nevertheless vs. Furthermore",
-      "lede": "Diferencia claramente entre matizar una dificultad y sumar un argumento de apoyo.",
+      "title": "Cómo cambia el significado",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "nevertheless (concesión)",
-              "rule": "reconoce un obstáculo pero mantiene el resultado",
+              "label": "However / Nevertheless (Contraste)",
+              "rule": "Conectan dos ideas opuestas u objetan la expectativa previa.",
               "examples": [
-                "The project was complex; nevertheless, it was finished on time."
+                "The test was tough. However, everyone passed.",
+                "It was late. Nevertheless, he kept working."
               ]
             },
             {
-              "label": "furthermore (adición)",
-              "rule": "añade un argumento que refuerza el punto",
+              "label": "Furthermore / Therefore (Adición y Resultado)",
+              "rule": "Furthermore agrega más información; Therefore expresa la consecuencia directa.",
               "examples": [
-                "The project was finished on time; furthermore, it stayed under budget."
+                "She is smart. Furthermore, she is diligent.",
+                "He lied; therefore, nobody trusts him."
               ]
             }
           ]
@@ -146,28 +155,19 @@
       "id": "b2-conectores-avanzados-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara errores frecuentes en exámenes y redacción formal con sus versiones correctas.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "The market declined, however, we maintained our revenue."
+              "text": "The weather was bad, however we went to the beach."
             },
             {
               "variant": "good",
-              "text": "The market declined; however, we maintained our revenue.",
-              "note": "usa ';' en vez de coma antes de 'however' para evitar un comma splice"
-            },
-            {
-              "variant": "bad",
-              "text": "Despite of the high price, we bought the license."
-            },
-            {
-              "variant": "good",
-              "text": "Despite the high price, we bought the license.",
-              "note": "nunca uses 'of' después de 'despite'"
+              "text": "The weather was bad. However, we went to the beach.",
+              "note": "'however' no une dos oraciones simples con una sola coma; requiere punto (.) o punto y coma (;) seguido de coma"
             }
           ]
         }
@@ -176,81 +176,67 @@
     {
       "id": "b2-conectores-avanzados-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu redacción formal.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Registro",
-              "value": "¿Es un texto formal/académico? Elige conectores B2 en lugar de and/but/so."
+              "key": "Coma obligatoria",
+              "value": "Coloca siempre una coma inmediatamente después del conector al iniciar oración."
             },
             {
-              "key": "2. Función",
-              "value": "¿Concesión (nevertheless), refuerzo (furthermore) o contraste (whereas)?"
+              "key": "Punto y coma opcional",
+              "value": "Puedes usar ';' antes del conector si unes dos cláusulas independientes relacionadas."
             },
             {
-              "key": "3. Puntuación",
-              "value": "Verifica punto y coma (;) antes y coma (,) después de los adverbios de enlace."
+              "key": "Evita 'however but'",
+              "value": "Nunca combines 'however' y 'but' en la misma cláusula."
             },
             {
-              "key": "4. Concordancia",
-              "value": "Asegúrate de que ambas cláusulas sean oraciones gramaticales completas."
+              "key": "Registro formal",
+              "value": "Usa estos conectores en informes, correos profesionales y ensayos, no en chats casuales."
             }
           ]
         }
       ],
       "tip": {
         "label": "Práctica:",
-        "body": "redacta dos oraciones formales enlazadas con '; furthermore,' y '; nevertheless,'."
+        "body": "escribe una frase personal con el patrón."
       }
     }
   ],
   "quiz": [
     {
-      "q": "Costs rose significantly; ___, we had to adjust our retail prices.",
+      "q": "The company lost money this quarter. ___, they decided to freeze all hiring.",
       "options": [
-        "consequently",
-        "although",
-        "whereas",
-        "despite"
+        "Therefore",
+        "However",
+        "Although"
       ],
       "answer": 0,
-      "explain": "'Consequently' expresa la consecuencia o resultado lógico en registro formal precedido de punto y coma."
+      "explain": "Se expresa la consecuencia lógica de perder dinero (freeze hiring) mediante 'Therefore'."
     },
     {
-      "q": "Which sentence has completely correct grammar and punctuation?",
+      "q": "The project was extremely challenging. ___, the team delivered it on schedule.",
       "options": [
-        "The applicant was qualified; nevertheless, another candidate was chosen.",
-        "The applicant was qualified, nevertheless another candidate was chosen.",
-        "Despite of the qualification, another candidate was chosen.",
-        "The applicant was qualified, whereas another candidate was chosen."
+        "Nevertheless",
+        "Furthermore",
+        "Because"
       ],
       "answer": 0,
-      "explain": "La estructura con '; nevertheless,' une correctamente dos cláusulas independientes expresando concesión formal."
+      "explain": "'Nevertheless' expresa concesión o contraste ('a pesar de ello') frente al desafío del proyecto."
     },
     {
-      "q": "Choose the best connector: 'The report was delivered on time. ___, it provided valuable strategic insights.'",
+      "q": "The new laptop is lightweight and durable. ___, its battery life exceeds 15 hours.",
       "options": [
         "Furthermore",
-        "Whereas",
-        "Despite",
-        "Even though"
+        "However",
+        "Unless"
       ],
       "answer": 0,
-      "explain": "'Furthermore' inicia la oración añadiendo un punto que refuerza positivamente el argumento anterior."
-    },
-    {
-      "q": "Complete the direct contrast: 'Digital sales surged by 40%, ___ store visits dropped by 15%.'",
-      "options": [
-        "whereas",
-        "therefore",
-        "furthermore",
-        "consequently"
-      ],
-      "answer": 0,
-      "explain": "'Whereas' introduce una cláusula de contraste directo entre dos hechos simultáneos."
+      "explain": "'Furthermore' añade un beneficio o argumento adicional del mismo signo positivo."
     }
   ]
 }

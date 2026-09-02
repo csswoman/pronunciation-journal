@@ -1,4 +1,5 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "B2 · Relativas",
     "title": "Relativas con",
@@ -16,31 +17,31 @@
           "type": "rules",
           "rows": [
             {
-              "key": "Al final",
-              "value": "the person I spoke to · informal",
+              "key": "Preposición al final (Informal)",
+              "value": "The man I was talking to · posición natural conversacional",
               "highlights": [
-                "spoke to"
+                "talking to"
               ]
             },
             {
-              "key": "Formal",
-              "value": "the person to whom I spoke",
+              "key": "Preposición al inicio (Formal)",
+              "value": "The man to whom I was speaking · registro formal escrito",
               "highlights": [
                 "to whom"
               ]
             },
             {
-              "key": "whose",
-              "value": "the student whose essay won",
+              "key": "Cuantificador + of + whom/which",
+              "value": "I have three brothers, two of whom live in London.",
               "highlights": [
-                "whose"
+                "two of whom"
               ]
             },
             {
-              "key": "quantifiers",
-              "value": "many of whom, most of which",
+              "key": "whose con preposición",
+              "value": "The author in whose books I am interested · pertenencia formal",
               "highlights": [
-                "of whom"
+                "in whose"
               ]
             }
           ]
@@ -55,30 +56,37 @@
       "id": "b2-relativas-preposiciones-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Al final",
-              "value": "the person I spoke to · informal",
+              "key": "Estilo Cotidiano (Preposición al final)",
+              "value": "Sujeto + (who/that/which) + S + V + preposición · The candidate (who) we voted for won.",
               "highlights": [
-                "spoke to"
+                "voted for"
               ]
             },
             {
-              "key": "Formal",
-              "value": "the person to whom I spoke",
+              "key": "Estilo Formal (Preposición al inicio)",
+              "value": "Sujeto + preposición + whom/which + S + V · The candidate for whom we voted won.",
               "highlights": [
-                "to whom"
+                "for whom"
               ]
             },
             {
-              "key": "whose",
-              "value": "the student whose essay won",
+              "key": "Cuantificadores en relativa",
+              "value": "Sujeto, cuantificador + of + whom/which + V · They interviewed ten applicants, three of whom were hired.",
               "highlights": [
-                "whose"
+                ", three of whom"
+              ]
+            },
+            {
+              "key": "Negativa en relativa",
+              "value": "There were several proposals, none of which were accepted. · quantifier neg",
+              "highlights": [
+                ", none of which"
               ]
             }
           ]
@@ -89,26 +97,26 @@
       "id": "b2-relativas-preposiciones-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "informal"
+              "key": "Entorno académico",
+              "value": "The research field to which she dedicated her entire career has advanced rapidly."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "the person to whom I spoke"
+              "key": "Reunión de equipo",
+              "value": "We discussed several potential solutions, none of which proved to be cost-effective."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "the student whose essay won"
+              "key": "Redes profesionales",
+              "value": "She introduced me to her colleagues, most of whom had years of industry experience."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "many of whom, most of which"
+              "key": "Trámites oficiales",
+              "value": "The company with which we signed the contract has offices across Europe."
             }
           ]
         }
@@ -118,23 +126,25 @@
       "id": "b2-relativas-preposiciones-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "Al final",
-              "rule": "the person I spoke to · informal",
+              "label": "Posición Informal / Hablada",
+              "rule": "La preposición queda atrapada al final de la cláusula; admite omitir el pronombre.",
               "examples": [
-                "informal"
+                "That's the company I worked for.",
+                "Who were you speaking to?"
               ]
             },
             {
-              "label": "Formal",
-              "rule": "the person to whom I spoke",
+              "label": "Posición Formal / Académica",
+              "rule": "La preposición encabeza la cláusula seguida imperativamente de 'whom' (personas) o 'which' (cosas).",
               "examples": [
-                "the person to whom I spoke"
+                "That is the company for which I worked.",
+                "To whom were you speaking?"
               ]
             }
           ]
@@ -145,19 +155,19 @@
       "id": "b2-relativas-preposiciones-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "the person to who I spoke"
+              "text": "The committee member to who I sent the file was absent."
             },
             {
               "variant": "good",
-              "text": "the person who I spoke to",
-              "note": "who no lleva preposición delante en uso cotidiano"
+              "text": "The committee member to whom I sent the file was absent. / The member who I sent the file to was absent.",
+              "note": "si la preposición precede directamente al pronombre relativo referido a personas, se debe usar 'whom', no 'who'"
             }
           ]
         }
@@ -166,27 +176,27 @@
     {
       "id": "b2-relativas-preposiciones-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "Preposición + WHOM para personas",
+              "value": "Tras una preposición NUNCA se usa 'who' ni 'that', solo 'whom' (with whom, about whom)."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "Preposición + WHICH para cosas",
+              "value": "Usa 'which' para objetos o instituciones (in which, to which)."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "Cuantificadores comunes",
+              "value": "some of whom, all of which, half of whom, neither of which."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "Omitir el pronombre en uso informal",
+              "value": "En el habla cotidiana puedes omitir 'who/that' si la preposición va al final."
             }
           ]
         }
@@ -199,13 +209,34 @@
   ],
   "quiz": [
     {
-      "q": "The colleagues ___ I work with are great.",
+      "q": "He manages a team of twelve engineers, all of ___ hold master's degrees.",
       "options": [
-        "who/that",
-        "whose"
+        "whom",
+        "who",
+        "which"
       ],
       "answer": 0,
-      "explain": "Sujeto/objeto de la relativa → who/that."
+      "explain": "Tras la preposición 'of' referida a personas en un cuantificador se utiliza obligatoriamente 'whom'."
+    },
+    {
+      "q": "The hotel at ___ we stayed during our trip to Florence was built in the 18th century.",
+      "options": [
+        "which",
+        "that",
+        "where"
+      ],
+      "answer": 0,
+      "explain": "Tras una preposición directa referida a un edificio o cosa ('at...'), el pronombre adecuado es 'which'."
+    },
+    {
+      "q": "She had dozens of books on her shelves, many of ___ she had never actually read.",
+      "options": [
+        "which",
+        "whom",
+        "that"
+      ],
+      "answer": 0,
+      "explain": "Cuantificador referido a objetos inanimados ('books') → 'many of which'."
     }
   ]
 }

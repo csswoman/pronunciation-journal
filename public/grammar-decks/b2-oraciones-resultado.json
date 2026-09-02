@@ -1,4 +1,5 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "B2 · Resultado",
     "title": "So/such",
@@ -16,31 +17,32 @@
           "type": "rules",
           "rows": [
             {
-              "key": "so + adj",
-              "value": "so tired that I fell asleep",
+              "key": "so + adjetivo / adverbio + that",
+              "value": "The book was so good that I finished it in one day.",
               "highlights": [
-                "so tired that"
+                "so good that"
               ]
             },
             {
-              "key": "such + noun",
-              "value": "such a mess that…",
+              "key": "such + (a/an) + adjetivo + sustantivo + that",
+              "value": "It was such a good book that I recommended it.",
               "highlights": [
-                "such a"
+                "such a good book that"
               ]
             },
             {
-              "key": "so many/much",
-              "value": "so many people that…",
+              "key": "so much / so many + sustantivo + that",
+              "value": "There were so many people that we couldn't enter.",
               "highlights": [
-                "so many"
-              ]
-            },
-            {
-              "key": "Resultado",
-              "value": "that + cláusula de consecuencia",
-              "highlights": [
+                "so many",
                 "that"
+              ]
+            },
+            {
+              "key": "Omitir 'that' en conversación",
+              "value": "The test was so hard I failed (that se puede omitir).",
+              "highlights": [
+                "so hard"
               ]
             }
           ]
@@ -55,30 +57,37 @@
       "id": "b2-oraciones-resultado-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "so + adj",
-              "value": "so tired that I fell asleep",
+              "key": "Afirmativa con SO",
+              "value": "Sujeto + verbo + so + adjetivo/adverbio + (that) + resultado · She ran so fast that she won.",
               "highlights": [
-                "so tired that"
+                "so fast that"
               ]
             },
             {
-              "key": "such + noun",
-              "value": "such a mess that…",
+              "key": "Afirmativa con SUCH (Singular contable)",
+              "value": "Sujeto + verbo + such a/an + adj + sustantivo singular + (that) + resultado · It was such a loud noise that I jumped.",
               "highlights": [
-                "such a"
+                "such a loud noise that"
               ]
             },
             {
-              "key": "so many/much",
-              "value": "so many people that…",
+              "key": "Afirmativa con SUCH (Plural / Incontable)",
+              "value": "Sujeto + verbo + such + adj + sustantivo plural/incontable + (that) + resultado · They have such expensive cars that everyone looks.",
               "highlights": [
-                "so many"
+                "such expensive cars"
+              ]
+            },
+            {
+              "key": "Negativa",
+              "value": "The weather wasn't so cold that we needed coats. / It wasn't such a bad day.",
+              "highlights": [
+                "wasn't so cold that"
               ]
             }
           ]
@@ -89,26 +98,26 @@
       "id": "b2-oraciones-resultado-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "so tired that I fell asleep"
+              "key": "Experiencia de viaje",
+              "value": "The mountain view was so breath-taking that we took dozens of photographs."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "such a mess that…"
+              "key": "Restaurante",
+              "value": "It was such a delicious meal that we decided to leave a generous tip for the waiter."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "so many people that…"
+              "key": "Cansancio",
+              "value": "I had so much work to complete yesterday that I didn't sleep until 2 am."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "that + cláusula de consecuencia"
+              "key": "Clima extremo",
+              "value": "There was such heavy traffic on the motorway that we missed our flight connection."
             }
           ]
         }
@@ -118,23 +127,24 @@
       "id": "b2-oraciones-resultado-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "so + adj",
-              "rule": "so tired that I fell asleep",
+              "label": "SO (Modifica Adjetivos y Adverbios)",
+              "rule": "Se coloca directamente antes de un adjetivo o adverbio sin sustantivo posterior.",
               "examples": [
-                "so tired that I fell asleep"
+                "The exam was so difficult that nobody passed.",
+                "He spoke so quietly that I couldn't hear."
               ]
             },
             {
-              "label": "such + noun",
-              "rule": "such a mess that…",
+              "label": "SUCH (Modifica Sustantivos / Grupos Nominales)",
+              "rule": "Exige ir seguido de un grupo nominal (adjetivo + sustantivo).",
               "examples": [
-                "such a mess that…"
+                "It was such a difficult exam that nobody passed."
               ]
             }
           ]
@@ -145,19 +155,19 @@
       "id": "b2-oraciones-resultado-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "It was so a long day."
+              "text": "It was so a beautiful day that we went to the beach."
             },
             {
               "variant": "good",
-              "text": "It was such a long day.",
-              "note": "such + sustantivo; so + adjetivo"
+              "text": "It was such a beautiful day that we went to the beach. / The day was so beautiful that we went...",
+              "note": "no uses 'so' delante de 'a/an + adjetivo + sustantivo'; debes usar 'such a beautiful day'"
             }
           ]
         }
@@ -166,27 +176,27 @@
     {
       "id": "b2-oraciones-resultado-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "So + Adjetivo",
+              "value": "so tired, so bright, so quickly."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "Such + (a/an) + Sustantivo",
+              "value": "such a mess, such a disaster, such nice people."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "So much / So many",
+              "value": "Usa 'so much' para incontables (so much noise) y 'so many' para plurales (so many cars)."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "'That' es opcional",
+              "value": "En el habla cotidiana informal se suele prescindir de la palabra 'that'."
             }
           ]
         }
@@ -199,13 +209,34 @@
   ],
   "quiz": [
     {
-      "q": "It was ___ cold that we stayed inside.",
+      "q": "The lecture was ___ boring that half of the audience fell asleep.",
       "options": [
         "so",
-        "such"
+        "such",
+        "such a"
       ],
       "answer": 0,
-      "explain": "so + adjetivo (cold)."
+      "explain": "Delante de un adjetivo aislado ('boring') sin sustantivo posterior se debe usar 'so'."
+    },
+    {
+      "q": "It was ___ unexpected news that nobody knew how to react initially.",
+      "options": [
+        "such",
+        "so",
+        "such an"
+      ],
+      "answer": 0,
+      "explain": "'News' es un sustantivo incontable, por lo que exige 'such' sin artículo indefinido."
+    },
+    {
+      "q": "He made ___ many spelling mistakes in his essay that he lost ten marks.",
+      "options": [
+        "so",
+        "such",
+        "too"
+      ],
+      "answer": 0,
+      "explain": "Con los cuantificadores 'many' o 'much' se combina siempre 'so' ('so many... that')."
     }
   ]
 }

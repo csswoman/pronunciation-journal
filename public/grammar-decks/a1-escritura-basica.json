@@ -14,10 +14,35 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Inicio de frase", "value": "The dog is big.", "highlights": ["The"] },
-            { "key": "El pronombre I", "value": "siempre con mayúscula · I am here.", "highlights": ["I"] },
-            { "key": "Nombres propios", "value": "Maria, London, Monday, July", "highlights": ["Maria", "London"] },
-            { "key": "Idiomas/países", "value": "English, Spanish, Mexican", "highlights": ["English"] }
+            {
+              "key": "Inicio de frase",
+              "value": "The dog is big.",
+              "highlights": [
+                "The"
+              ]
+            },
+            {
+              "key": "El pronombre I",
+              "value": "siempre con mayúscula · I am here.",
+              "highlights": [
+                "I"
+              ]
+            },
+            {
+              "key": "Nombres propios",
+              "value": "Maria, London, Monday, July",
+              "highlights": [
+                "Maria",
+                "London"
+              ]
+            },
+            {
+              "key": "Idiomas/países",
+              "value": "English, Spanish, Mexican",
+              "highlights": [
+                "English"
+              ]
+            }
           ]
         }
       ],
@@ -35,10 +60,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Punto", "value": "She works here.", "highlights": ["."] },
-            { "key": "Pregunta", "value": "Where are you? (sin ¿)", "highlights": ["?"] },
-            { "key": "Exclamación", "value": "Be careful! (sin ¡)", "highlights": ["!"] },
-            { "key": "Apóstrofo", "value": "I'm · don't · Ana's car", "highlights": ["'"] }
+            {
+              "key": "Punto",
+              "value": "She works here.",
+              "highlights": [
+                "."
+              ]
+            },
+            {
+              "key": "Pregunta",
+              "value": "Where are you? (sin ¿)",
+              "highlights": [
+                "?"
+              ]
+            },
+            {
+              "key": "Exclamación",
+              "value": "Be careful! (sin ¡)",
+              "highlights": [
+                "!"
+              ]
+            },
+            {
+              "key": "Apóstrofo",
+              "value": "I'm · don't · Ana's car",
+              "highlights": [
+                "'"
+              ]
+            }
           ]
         }
       ]
@@ -52,10 +101,25 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "bad", "text": "Is a teacher.", "note": "falta el sujeto" },
-            { "variant": "good", "text": "She is a teacher.", "note": "sujeto + verbo + objeto" },
-            { "variant": "bad", "text": "I like very much pizza." },
-            { "variant": "good", "text": "I like pizza very much.", "note": "objeto antes del modificador" }
+            {
+              "variant": "bad",
+              "text": "Is a teacher.",
+              "note": "falta el sujeto"
+            },
+            {
+              "variant": "good",
+              "text": "She is a teacher.",
+              "note": "sujeto + verbo + objeto"
+            },
+            {
+              "variant": "bad",
+              "text": "I like very much pizza."
+            },
+            {
+              "variant": "good",
+              "text": "I like pizza very much.",
+              "note": "objeto antes del modificador"
+            }
           ]
         }
       ],
@@ -73,9 +137,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "a + consonante", "value": "a book · a car", "highlights": ["a"] },
-            { "key": "an + vocal", "value": "an apple · an hour", "highlights": ["an"] },
-            { "key": "the", "value": "the sun · the book I bought", "highlights": ["the"] }
+            {
+              "key": "a + consonante",
+              "value": "a book · a car",
+              "highlights": [
+                "a"
+              ]
+            },
+            {
+              "key": "an + vocal",
+              "value": "an apple · an hour",
+              "highlights": [
+                "an"
+              ]
+            },
+            {
+              "key": "the",
+              "value": "the sun · the book I bought",
+              "highlights": [
+                "the"
+              ]
+            }
           ]
         }
       ],
@@ -93,9 +175,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Afirmativa", "value": "She likes tea.", "highlights": ["likes"] },
-            { "key": "Negativa", "value": "She doesn't like tea.", "highlights": ["doesn't"] },
-            { "key": "Pregunta", "value": "Does she like tea?", "highlights": ["Does"] }
+            {
+              "key": "Afirmativa",
+              "value": "She likes tea.",
+              "highlights": [
+                "likes"
+              ]
+            },
+            {
+              "key": "Negativa",
+              "value": "She doesn't like tea.",
+              "highlights": [
+                "doesn't"
+              ]
+            },
+            {
+              "key": "Pregunta",
+              "value": "Does she like tea?",
+              "highlights": [
+                "Does"
+              ]
+            }
           ]
         }
       ]
@@ -109,13 +209,60 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Saludo", "value": "Hi Tom, · Hello,", "highlights": ["Hi Tom,"] },
-            { "key": "Cuerpo", "value": "una idea por frase, frases cortas" },
-            { "key": "Despedida", "value": "Thanks, · Best, · See you soon", "highlights": ["Thanks,"] },
-            { "key": "Firma", "value": "tu nombre en la última línea" }
+            {
+              "key": "Saludo",
+              "value": "Hi Tom, · Hello,",
+              "highlights": [
+                "Hi Tom,"
+              ]
+            },
+            {
+              "key": "Cuerpo",
+              "value": "una idea por frase, frases cortas"
+            },
+            {
+              "key": "Despedida",
+              "value": "Thanks, · Best, · See you soon",
+              "highlights": [
+                "Thanks,"
+              ]
+            },
+            {
+              "key": "Firma",
+              "value": "tu nombre en la última línea"
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "¿Cuál de estos elementos debe empezar SIEMPRE con mayúscula en inglés?",
+      "options": [
+        "Los días de la semana y el pronombre 'I'",
+        "Todos los adjetivos"
+      ],
+      "answer": 0,
+      "explain": "En inglés, los días de la semana, los meses y el pronombre 'I' llevan siempre mayúscula inicial."
+    },
+    {
+      "q": "Selecciona la oración con la puntuación y mayúsculas correctas:",
+      "options": [
+        "On Monday, I meet Alex.",
+        "On monday i meet alex."
+      ],
+      "answer": 0,
+      "explain": "'On', 'Monday', 'I' y 'Alex' requieren mayúscula inicial."
+    },
+    {
+      "q": "¿Cómo se une correctamente una lista de tres elementos?",
+      "options": [
+        "apples, bananas, and oranges",
+        "apples, bananas, or oranges and"
+      ],
+      "answer": 0,
+      "explain": "Se enumeran los elementos separados por comas y se usa 'and' antes del último."
     }
   ]
 }

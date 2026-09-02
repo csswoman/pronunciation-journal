@@ -1,4 +1,5 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "B2 · Concesión",
     "title": "Even though,",
@@ -16,31 +17,31 @@
           "type": "rules",
           "rows": [
             {
-              "key": "even though",
-              "value": "aunque (énfasis) · Even though it rained…",
+              "key": "even though (concesión fuerte)",
+              "value": "Introduce un hecho real sorprendente o inesperado · Even though it rained, we enjoyed the walk.",
               "highlights": [
                 "Even though"
               ]
             },
             {
-              "key": "while",
-              "value": "mientras / aunque · While I agree…",
+              "key": "while (contraste / concesión)",
+              "value": "Expresa 'si bien' o 'mientras que' · While I understand your view, I disagree.",
               "highlights": [
                 "While"
               ]
             },
             {
-              "key": "whereas",
-              "value": "mientras que (contraste) · whereas he prefers tea",
+              "key": "whereas (contraste directo)",
+              "value": "Compara dos hechos o situaciones opuestas · Tom likes tea, whereas Anna prefers coffee.",
               "highlights": [
                 "whereas"
               ]
             },
             {
-              "key": "Posición",
-              "value": "pueden ir al inicio o en medio",
+              "key": "Posición de cláusula",
+              "value": "Pueden ir al inicio (con coma en medio) o en la segunda mitad de la oración.",
               "highlights": [
-                "Even though"
+                ","
               ]
             }
           ]
@@ -55,30 +56,38 @@
       "id": "b2-concesion-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "even though",
-              "value": "aunque (énfasis) · Even though it rained…",
+              "key": "Afirmativa (Inicio)",
+              "value": "Even though / While / Whereas + S + V, S + V · Even though she was tired, she kept working.",
+              "highlights": [
+                "Even though",
+                ","
+              ]
+            },
+            {
+              "key": "Afirmativa (Medio)",
+              "value": "S + V + whereas / while + S + V · He earns a lot, whereas his brother saves little.",
+              "highlights": [
+                "whereas"
+              ]
+            },
+            {
+              "key": "Negativa",
+              "value": "Even though + S + didn't + V, S + V · Even though we didn't win, we were proud.",
               "highlights": [
                 "Even though"
               ]
             },
             {
-              "key": "while",
-              "value": "mientras / aunque · While I agree…",
+              "key": "Interrogativa",
+              "value": "Do you prefer X, whereas others prefer Y? · Why do you stay here while others leave?",
               "highlights": [
-                "While"
-              ]
-            },
-            {
-              "key": "whereas",
-              "value": "mientras que (contraste) · whereas he prefers tea",
-              "highlights": [
-                "whereas"
+                "while"
               ]
             }
           ]
@@ -89,26 +98,26 @@
       "id": "b2-concesion-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "Even though it rained…"
+              "key": "Comparación comercial",
+              "value": "Our product is handcrafted, whereas competitors rely entirely on mass automation."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "While I agree…"
+              "key": "Opinión profesional",
+              "value": "While the strategy carries some financial risk, the potential reward is immense."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "whereas he prefers tea"
+              "key": "Vida cotidiana",
+              "value": "Even though the flight was delayed by three hours, the passengers remained calm."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "pueden ir al inicio o en medio"
+              "key": "Hábitos familiares",
+              "value": "My sister loves living in big cities, whereas I prefer small coastal towns."
             }
           ]
         }
@@ -118,23 +127,23 @@
       "id": "b2-concesion-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "even though",
-              "rule": "aunque (énfasis) · Even though it rained…",
+              "label": "Even Though (Concesión / Hecho real)",
+              "rule": "Equivale a 'a pesar de que'; enfatiza un obstáculo superado.",
               "examples": [
-                "Even though it rained…"
+                "Even though he was injured, he played the final match."
               ]
             },
             {
-              "label": "while",
-              "rule": "mientras / aunque · While I agree…",
+              "label": "Whereas / While (Contraste formal)",
+              "rule": "Muestra la diferencia objetiva entre dos conceptos o sujetos distintos.",
               "examples": [
-                "While I agree…"
+                "Private cars pollute, whereas public transport reduces emissions."
               ]
             }
           ]
@@ -145,19 +154,19 @@
       "id": "b2-concesion-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "Even though it was late, but we stayed."
+              "text": "Even though it was freezing cold, but we went swimming."
             },
             {
               "variant": "good",
-              "text": "Even though it was late, we stayed.",
-              "note": "no uses but con even though"
+              "text": "Even though it was freezing cold, we went swimming.",
+              "note": "no dupliques conectores adversativos; usa 'Even though' al inicio o 'but' en el medio, jamás ambos"
             }
           ]
         }
@@ -166,27 +175,27 @@
     {
       "id": "b2-concesion-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "No uses 'but' con Even though",
+              "value": "Nunca pongas 'but' en la segunda cláusula si ya empezaste con 'Even though'."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "Whereas compara dos cosas",
+              "value": "Usa 'whereas' para contraponer dos datos o perfiles (X es así, mientras que Y es asá)."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "While puede ser temporal o concesivo",
+              "value": "En nivel B2, 'while' se usa frecuentemente como 'si bien' o 'aunque'."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "Uso de comas",
+              "value": "Si la cláusula con 'Even though/While' va primero, separa con coma la oración principal."
             }
           ]
         }
@@ -199,13 +208,34 @@
   ],
   "quiz": [
     {
-      "q": "___ he is rich, he lives simply.",
+      "q": "___ my sister loves travelling abroad, I prefer spending holidays at home.",
       "options": [
-        "Whereas",
+        "While",
+        "Despite",
         "Because"
       ],
       "answer": 0,
-      "explain": "Contraste entre dos hechos → whereas."
+      "explain": "'While' funciona aquí como conector de contraste ('si bien / mientras que') entre dos preferencias."
+    },
+    {
+      "q": "Electric cars produce zero emissions, ___ petrol cars contribute to air pollution.",
+      "options": [
+        "whereas",
+        "unless",
+        "in order to"
+      ],
+      "answer": 0,
+      "explain": "'Whereas' establece una comparación y contraste directo entre dos elementos."
+    },
+    {
+      "q": "___ he had little experience, he performed exceptionally well during his trial week.",
+      "options": [
+        "Even though",
+        "Despite of",
+        "However"
+      ],
+      "answer": 0,
+      "explain": "'Even though' introduce una cláusula completa con sujeto y verbo para indicar concesión."
     }
   ]
 }

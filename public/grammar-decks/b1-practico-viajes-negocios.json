@@ -6,7 +6,10 @@
     "goal": "Ya puedes gestionar un viaje de trabajo: reservas, aeropuerto, hotel, reuniones y small talk."
   },
   "related": [
-    { "slug": "biz-viajes-negocios", "label": "Biz · Viajes de negocios (profesional)" }
+    {
+      "slug": "biz-viajes-negocios",
+      "label": "Biz · Viajes de negocios (profesional)"
+    }
   ],
   "cards": [
     {
@@ -18,9 +21,24 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Reservar", "value": "book a flight · make a reservation", "highlights": ["book a flight"] },
-            { "key": "Documentos", "value": "itinerary, booking confirmation" },
-            { "key": "Frase", "value": "I'd like to book a room for two nights.", "highlights": ["I'd like to book"] }
+            {
+              "key": "Reservar",
+              "value": "book a flight · make a reservation",
+              "highlights": [
+                "book a flight"
+              ]
+            },
+            {
+              "key": "Documentos",
+              "value": "itinerary, booking confirmation"
+            },
+            {
+              "key": "Frase",
+              "value": "I'd like to book a room for two nights.",
+              "highlights": [
+                "I'd like to book"
+              ]
+            }
           ]
         }
       ]
@@ -34,9 +52,28 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Equipaje", "value": "Do I check this bag or carry it on?", "highlights": ["check", "carry on"] },
-            { "key": "Asiento", "value": "Could I have a window seat?", "highlights": ["window seat"] },
-            { "key": "Retraso", "value": "The flight is delayed.", "highlights": ["delayed"] }
+            {
+              "key": "Equipaje",
+              "value": "Do I check this bag or carry it on?",
+              "highlights": [
+                "check",
+                "carry on"
+              ]
+            },
+            {
+              "key": "Asiento",
+              "value": "Could I have a window seat?",
+              "highlights": [
+                "window seat"
+              ]
+            },
+            {
+              "key": "Retraso",
+              "value": "The flight is delayed.",
+              "highlights": [
+                "delayed"
+              ]
+            }
           ]
         }
       ]
@@ -50,9 +87,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Registro", "value": "I have a reservation under...", "highlights": ["reservation under"] },
-            { "key": "Servicios", "value": "Is there a business center / Wi-Fi?", "highlights": ["business center"] },
-            { "key": "Factura", "value": "Could I get an invoice/receipt?", "highlights": ["invoice"] }
+            {
+              "key": "Registro",
+              "value": "I have a reservation under...",
+              "highlights": [
+                "reservation under"
+              ]
+            },
+            {
+              "key": "Servicios",
+              "value": "Is there a business center / Wi-Fi?",
+              "highlights": [
+                "business center"
+              ]
+            },
+            {
+              "key": "Factura",
+              "value": "Could I get an invoice/receipt?",
+              "highlights": [
+                "invoice"
+              ]
+            }
           ]
         }
       ],
@@ -70,9 +125,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Proponer", "value": "Shall we meet at 10?", "highlights": ["Shall we meet"] },
-            { "key": "Confirmar", "value": "That works for me.", "highlights": ["That works for me"] },
-            { "key": "Posponer", "value": "Could we reschedule?", "highlights": ["reschedule"] }
+            {
+              "key": "Proponer",
+              "value": "Shall we meet at 10?",
+              "highlights": [
+                "Shall we meet"
+              ]
+            },
+            {
+              "key": "Confirmar",
+              "value": "That works for me.",
+              "highlights": [
+                "That works for me"
+              ]
+            },
+            {
+              "key": "Posponer",
+              "value": "Could we reschedule?",
+              "highlights": [
+                "reschedule"
+              ]
+            }
           ]
         }
       ]
@@ -86,10 +159,26 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "good", "text": "How was your flight?", "note": "tema seguro" },
-            { "variant": "good", "text": "Is this your first time here?", "note": "romper el hielo" },
-            { "variant": "good", "text": "What do you think of the city?", "note": "mostrar interés" },
-            { "variant": "good", "text": "Let me know if you need anything.", "note": "ofrecer ayuda" }
+            {
+              "variant": "good",
+              "text": "How was your flight?",
+              "note": "tema seguro"
+            },
+            {
+              "variant": "good",
+              "text": "Is this your first time here?",
+              "note": "romper el hielo"
+            },
+            {
+              "variant": "good",
+              "text": "What do you think of the city?",
+              "note": "mostrar interés"
+            },
+            {
+              "variant": "good",
+              "text": "Let me know if you need anything.",
+              "note": "ofrecer ayuda"
+            }
           ]
         }
       ]
@@ -103,12 +192,62 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Pagar", "value": "Can I put this on the company card?", "highlights": ["company card"] },
-            { "key": "Propina", "value": "tip (15–20% en EE. UU.)", "highlights": ["tip"] },
-            { "key": "Reembolso", "value": "I'll claim it back as an expense.", "highlights": ["expense"] }
+            {
+              "key": "Pagar",
+              "value": "Can I put this on the company card?",
+              "highlights": [
+                "company card"
+              ]
+            },
+            {
+              "key": "Propina",
+              "value": "tip (15–20% en EE. UU.)",
+              "highlights": [
+                "tip"
+              ]
+            },
+            {
+              "key": "Reembolso",
+              "value": "I'll claim it back as an expense.",
+              "highlights": [
+                "expense"
+              ]
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Could you please tell me what time the flight ___?",
+      "options": [
+        "departs",
+        "does depart",
+        "is depart"
+      ],
+      "answer": 0,
+      "explain": "En preguntas indirectas, el verbo mantiene el orden afirmativo normal."
+    },
+    {
+      "q": "I would like to ___ a double room for three nights.",
+      "options": [
+        "book",
+        "booking",
+        "booked"
+      ],
+      "answer": 0,
+      "explain": "'Would like to' exige la forma base del verbo en infinitivo."
+    },
+    {
+      "q": "Passengers are requested ___ their seatbelts fast.",
+      "options": [
+        "to keep",
+        "keeping",
+        "keep"
+      ],
+      "answer": 0,
+      "explain": "Estructura pasiva de solicitud formal: 'request someone to do something'."
     }
   ]
 }

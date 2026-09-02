@@ -1,30 +1,31 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "B1 · Preposiciones",
     "title": "Preposiciones",
     "titleEmphasis": "dependientes",
-    "goal": "Ya eliges la preposición correcta tras adjetivos y verbos: depend on, good at, interested in."
+    "goal": "Ya eliges la preposición correcta tras adjetivos y verbos: depend on, good at, interested in, proud of."
   },
   "cards": [
     {
       "id": "b1-preposiciones-dependientes-concept",
       "tag": "Idea central",
       "title": "Preposiciones: qué expresa",
-      "lede": "Ya eliges la preposición correcta tras adjetivos y verbos: depend on, good at, interested in.",
+      "lede": "Ya eliges la preposición correcta tras adjetivos y verbos: depend on, good at, interested in, proud of.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "depend on",
-              "value": "depende de · It depends on the weather.",
+              "key": "depend on / rely on",
+              "value": "depender de / confiar en · It depends on the weather.",
               "highlights": [
                 "on"
               ]
             },
             {
-              "key": "good at",
-              "value": "bueno en · She's good at maths.",
+              "key": "good at / bad at",
+              "value": "habilidad o torpeza · She is good at maths.",
               "highlights": [
                 "at"
               ]
@@ -37,8 +38,8 @@
               ]
             },
             {
-              "key": "afraid of",
-              "value": "miedo a · afraid of spiders",
+              "key": "proud of / afraid of",
+              "value": "orgulloso de / temeroso de · proud of her achievements",
               "highlights": [
                 "of"
               ]
@@ -55,30 +56,37 @@
       "id": "b1-preposiciones-dependientes-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "depend on",
-              "value": "depende de · It depends on the weather.",
+              "key": "Afirmativa (Adjetivo)",
+              "value": "Sujeto + be + adjetivo + preposición + sustantivo/-ing · She is good at solving problems.",
               "highlights": [
-                "on"
+                "good at"
               ]
             },
             {
-              "key": "good at",
-              "value": "bueno en · She's good at maths.",
+              "key": "Negativa (Verbo)",
+              "value": "Sujeto + don't/doesn't + verbo + preposición... · We don't depend on public transport.",
               "highlights": [
-                "at"
+                "depend on"
               ]
             },
             {
-              "key": "interested in",
-              "value": "interesado en · interested in art",
+              "key": "Interrogativa",
+              "value": "What + correspondencia be + sujeto + adjetivo + preposición? · What are you interested in?",
               "highlights": [
-                "in"
+                "interested in"
+              ]
+            },
+            {
+              "key": "Verbo + preposición",
+              "value": "Sujeto + verbo + preposición + objeto · Everything depends on the situation.",
+              "highlights": [
+                "depends on"
               ]
             }
           ]
@@ -89,26 +97,26 @@
       "id": "b1-preposiciones-dependientes-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "It depends on the weather."
+              "key": "Entrevista de trabajo",
+              "value": "I am very good at working under pressure and managing teams."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "She's good at maths."
+              "key": "Hobbies y gustos",
+              "value": "My brother is really interested in learning foreign languages."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "interested in art"
+              "key": "Emociones familiares",
+              "value": "Her parents are extremely proud of her academic achievements."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "afraid of spiders"
+              "key": "Decisiones",
+              "value": "Whether we go to the beach depends on the weather tomorrow."
             }
           ]
         }
@@ -118,23 +126,23 @@
       "id": "b1-preposiciones-dependientes-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "depend on",
-              "rule": "depende de · It depends on the weather.",
+              "label": "Good at / Bad at",
+              "rule": "Usado exclusivamente para describir destrezas o habilidades personales",
               "examples": [
-                "It depends on the weather."
+                "He is good at playing chess."
               ]
             },
             {
-              "label": "good at",
-              "rule": "bueno en · She's good at maths.",
+              "label": "Interested in",
+              "rule": "Usado para describir atracción, curiosidad o interés hacia un tema",
               "examples": [
-                "She's good at maths."
+                "She is interested in modern art."
               ]
             }
           ]
@@ -145,19 +153,19 @@
       "id": "b1-preposiciones-dependientes-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "I'm interested on music."
+              "text": "Everything depends of your choice."
             },
             {
               "variant": "good",
-              "text": "I'm interested in music.",
-              "note": "interested + in"
+              "text": "Everything depends on your choice.",
+              "note": "el verbo 'depend' exige la preposición 'on', jamás 'of'"
             }
           ]
         }
@@ -166,27 +174,27 @@
     {
       "id": "b1-preposiciones-dependientes-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "Preposición + -ing",
+              "value": "Tras cualquier preposición, el verbo siguiente debe ir en gerundio (interested in buying)."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "Depend on",
+              "value": "Nunca digas 'depend of'; la preposición correcta en inglés es 'on'."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "Good at",
+              "value": "No uses 'good in' para habilidades o aptitudes."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "Afraid of / Proud of",
+              "value": "Adjetivos de sentimiento suelen combinarse con la preposición 'of'."
             }
           ]
         }
@@ -199,13 +207,34 @@
   ],
   "quiz": [
     {
-      "q": "She's good ___ tennis.",
+      "q": "Are you interested ___ joining our English book club?",
       "options": [
-        "at",
-        "in"
+        "in",
+        "on",
+        "at"
       ],
       "answer": 0,
-      "explain": "good at + actividad."
+      "explain": "El adjetivo 'interested' rige siempre la preposición 'in'."
+    },
+    {
+      "q": "My sister has always been very good ___ playing the piano.",
+      "options": [
+        "at",
+        "in",
+        "for"
+      ],
+      "answer": 0,
+      "explain": "Para expresar destreza en una actividad se usa 'good at'."
+    },
+    {
+      "q": "They are afraid ___ losing their current jobs.",
+      "options": [
+        "of",
+        "about",
+        "from"
+      ],
+      "answer": 0,
+      "explain": "El adjetivo 'afraid' se combina con la preposición 'of'."
     }
   ]
 }

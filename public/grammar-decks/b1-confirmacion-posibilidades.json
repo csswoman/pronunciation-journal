@@ -9,15 +9,35 @@
       "id": "cf-questiontags",
       "tag": "Question tags",
       "title": "..., isn't it?",
-      "titleItalic": ["isn't it?"],
+      "titleItalic": [
+        "isn't it?"
+      ],
       "lede": "Las coletillas confirman información. La regla: afirmativa lleva coletilla negativa, y viceversa.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
-            { "key": "Afirm. → neg.", "value": "It's cold, isn't it?", "highlights": ["isn't it?"] },
-            { "key": "Neg. → afirm.", "value": "You don't smoke, do you?", "highlights": ["do you?"] },
-            { "key": "Con pasado", "value": "She left, didn't she?", "highlights": ["didn't she?"] }
+            {
+              "key": "Afirm. → neg.",
+              "value": "It's cold, isn't it?",
+              "highlights": [
+                "isn't it?"
+              ]
+            },
+            {
+              "key": "Neg. → afirm.",
+              "value": "You don't smoke, do you?",
+              "highlights": [
+                "do you?"
+              ]
+            },
+            {
+              "key": "Con pasado",
+              "value": "She left, didn't she?",
+              "highlights": [
+                "didn't she?"
+              ]
+            }
           ]
         }
       ],
@@ -35,9 +55,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "I am → aren't I?", "value": "I'm late, aren't I?", "highlights": ["aren't I?"] },
-            { "key": "Let's → shall we?", "value": "Let's go, shall we?", "highlights": ["shall we?"] },
-            { "key": "Imperativo → will you?", "value": "Close the door, will you?", "highlights": ["will you?"] }
+            {
+              "key": "I am → aren't I?",
+              "value": "I'm late, aren't I?",
+              "highlights": [
+                "aren't I?"
+              ]
+            },
+            {
+              "key": "Let's → shall we?",
+              "value": "Let's go, shall we?",
+              "highlights": [
+                "shall we?"
+              ]
+            },
+            {
+              "key": "Imperativo → will you?",
+              "value": "Close the door, will you?",
+              "highlights": [
+                "will you?"
+              ]
+            }
           ]
         }
       ]
@@ -51,9 +89,28 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "may / might", "value": "It may rain. · It might be true.", "highlights": ["may", "might"] },
-            { "key": "could", "value": "She could be at home.", "highlights": ["could"] },
-            { "key": "Negativo", "value": "It might not work.", "highlights": ["might not"] }
+            {
+              "key": "may / might",
+              "value": "It may rain. · It might be true.",
+              "highlights": [
+                "may",
+                "might"
+              ]
+            },
+            {
+              "key": "could",
+              "value": "She could be at home.",
+              "highlights": [
+                "could"
+              ]
+            },
+            {
+              "key": "Negativo",
+              "value": "It might not work.",
+              "highlights": [
+                "might not"
+              ]
+            }
           ]
         }
       ],
@@ -74,12 +131,18 @@
             {
               "label": "must (seguro sí)",
               "rule": "99% seguro positivo",
-              "examples": ["She must be tired.", "He must know."]
+              "examples": [
+                "She must be tired.",
+                "He must know."
+              ]
             },
             {
               "label": "can't (seguro no)",
               "rule": "99% seguro negativo",
-              "examples": ["That can't be true.", "He can't be home."]
+              "examples": [
+                "That can't be true.",
+                "He can't be home."
+              ]
             }
           ]
         }
@@ -98,10 +161,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Seguro", "value": "will definitely · It will happen.", "highlights": ["will"] },
-            { "key": "Probable", "value": "will probably · is likely to", "highlights": ["probably"] },
-            { "key": "Posible", "value": "may / might / could", "highlights": ["might"] },
-            { "key": "Improbable", "value": "is unlikely to · probably won't", "highlights": ["unlikely"] }
+            {
+              "key": "Seguro",
+              "value": "will definitely · It will happen.",
+              "highlights": [
+                "will"
+              ]
+            },
+            {
+              "key": "Probable",
+              "value": "will probably · is likely to",
+              "highlights": [
+                "probably"
+              ]
+            },
+            {
+              "key": "Posible",
+              "value": "may / might / could",
+              "highlights": [
+                "might"
+              ]
+            },
+            {
+              "key": "Improbable",
+              "value": "is unlikely to · probably won't",
+              "highlights": [
+                "unlikely"
+              ]
+            }
           ]
         }
       ]
@@ -115,13 +202,61 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "good", "text": "So do I. / Me too.", "note": "acuerdo afirmativo" },
-            { "variant": "good", "text": "Neither do I. / Me neither.", "note": "acuerdo negativo" },
-            { "variant": "good", "text": "That's right.", "note": "confirmar" },
-            { "variant": "good", "text": "Exactly! / I think so too.", "note": "reforzar acuerdo" }
+            {
+              "variant": "good",
+              "text": "So do I. / Me too.",
+              "note": "acuerdo afirmativo"
+            },
+            {
+              "variant": "good",
+              "text": "Neither do I. / Me neither.",
+              "note": "acuerdo negativo"
+            },
+            {
+              "variant": "good",
+              "text": "That's right.",
+              "note": "confirmar"
+            },
+            {
+              "variant": "good",
+              "text": "Exactly! / I think so too.",
+              "note": "reforzar acuerdo"
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "You live in Madrid, ___ you?",
+      "options": [
+        "don't",
+        "aren't",
+        "do"
+      ],
+      "answer": 0,
+      "explain": "Si la oración principal es afirmativa en presente simple, el question tag usa el auxiliar negativo 'don't'."
+    },
+    {
+      "q": "She can speak German, ___ she?",
+      "options": [
+        "can't",
+        "doesn't",
+        "couldn't"
+      ],
+      "answer": 0,
+      "explain": "El modal 'can' invierte a 'can't' en el question tag correspondiente."
+    },
+    {
+      "q": "Take an umbrella; it ___ rain later this evening.",
+      "options": [
+        "might",
+        "must",
+        "should"
+      ],
+      "answer": 0,
+      "explain": "'Might' expresa una posibilidad futura incierta o moderada."
     }
   ]
 }

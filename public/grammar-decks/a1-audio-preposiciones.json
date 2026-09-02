@@ -5,7 +5,9 @@
     "titleEmphasis": "lugar",
     "goal": "Ya puedes situar objetos en el espacio y reconocer las preposiciones aunque suenen reducidas al hablar."
   },
-  "sounds": ["ə"],
+  "sounds": [
+    "ə"
+  ],
   "cards": [
     {
       "id": "pr-basic",
@@ -16,9 +18,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "in", "value": "dentro · in the box · in the room", "highlights": ["in"] },
-            { "key": "on", "value": "sobre · on the table · on the wall", "highlights": ["on"] },
-            { "key": "at", "value": "punto exacto · at the door · at home", "highlights": ["at"] }
+            {
+              "key": "in",
+              "value": "dentro · in the box · in the room",
+              "highlights": [
+                "in"
+              ]
+            },
+            {
+              "key": "on",
+              "value": "sobre · on the table · on the wall",
+              "highlights": [
+                "on"
+              ]
+            },
+            {
+              "key": "at",
+              "value": "punto exacto · at the door · at home",
+              "highlights": [
+                "at"
+              ]
+            }
           ]
         }
       ],
@@ -36,10 +56,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "under", "value": "debajo · The cat is under the bed.", "highlights": ["under"] },
-            { "key": "over / above", "value": "encima · A lamp over the table.", "highlights": ["over"] },
-            { "key": "between", "value": "entre dos · between the chairs", "highlights": ["between"] },
-            { "key": "among", "value": "entre muchos · among the trees", "highlights": ["among"] }
+            {
+              "key": "under",
+              "value": "debajo · The cat is under the bed.",
+              "highlights": [
+                "under"
+              ]
+            },
+            {
+              "key": "over / above",
+              "value": "encima · A lamp over the table.",
+              "highlights": [
+                "over"
+              ]
+            },
+            {
+              "key": "between",
+              "value": "entre dos · between the chairs",
+              "highlights": [
+                "between"
+              ]
+            },
+            {
+              "key": "among",
+              "value": "entre muchos · among the trees",
+              "highlights": [
+                "among"
+              ]
+            }
           ]
         }
       ]
@@ -53,10 +97,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "next to", "value": "al lado de · next to the bank", "highlights": ["next to"] },
-            { "key": "near", "value": "cerca de · near the station", "highlights": ["near"] },
-            { "key": "in front of", "value": "delante de · in front of the house", "highlights": ["in front of"] },
-            { "key": "behind", "value": "detrás de · behind the door", "highlights": ["behind"] }
+            {
+              "key": "next to",
+              "value": "al lado de · next to the bank",
+              "highlights": [
+                "next to"
+              ]
+            },
+            {
+              "key": "near",
+              "value": "cerca de · near the station",
+              "highlights": [
+                "near"
+              ]
+            },
+            {
+              "key": "in front of",
+              "value": "delante de · in front of the house",
+              "highlights": [
+                "in front of"
+              ]
+            },
+            {
+              "key": "behind",
+              "value": "detrás de · behind the door",
+              "highlights": [
+                "behind"
+              ]
+            }
           ]
         }
       ]
@@ -70,9 +138,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "to", "value": "hacia · I go to work.", "highlights": ["to"] },
-            { "key": "from", "value": "desde · I come from Spain.", "highlights": ["from"] },
-            { "key": "into / out of", "value": "hacia dentro / fuera · into the room", "highlights": ["into"] }
+            {
+              "key": "to",
+              "value": "hacia · I go to work.",
+              "highlights": [
+                "to"
+              ]
+            },
+            {
+              "key": "from",
+              "value": "desde · I come from Spain.",
+              "highlights": [
+                "from"
+              ]
+            },
+            {
+              "key": "into / out of",
+              "value": "hacia dentro / fuera · into the room",
+              "highlights": [
+                "into"
+              ]
+            }
           ]
         }
       ],
@@ -90,10 +176,26 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "good", "text": "in a → \"in-uh\"", "note": "se enlazan" },
-            { "variant": "good", "text": "at the → \"at-thuh\"", "note": "the débil" },
-            { "variant": "good", "text": "out of → \"out-uh\"", "note": "la f casi desaparece" },
-            { "variant": "good", "text": "next to → \"nex-tuh\"", "note": "la t se suaviza" }
+            {
+              "variant": "good",
+              "text": "in a → \"in-uh\"",
+              "note": "se enlazan"
+            },
+            {
+              "variant": "good",
+              "text": "at the → \"at-thuh\"",
+              "note": "the débil"
+            },
+            {
+              "variant": "good",
+              "text": "out of → \"out-uh\"",
+              "note": "la f casi desaparece"
+            },
+            {
+              "variant": "good",
+              "text": "next to → \"nex-tuh\"",
+              "note": "la t se suaviza"
+            }
           ]
         }
       ]
@@ -107,12 +209,62 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Ejemplo 1", "value": "The book is on the table near the window.", "highlights": ["on", "near"] },
-            { "key": "Ejemplo 2", "value": "The keys are in the drawer under the desk.", "highlights": ["in", "under"] },
-            { "key": "Ejemplo 3", "value": "The dog is behind the sofa next to the wall.", "highlights": ["behind", "next to"] }
+            {
+              "key": "Ejemplo 1",
+              "value": "The book is on the table near the window.",
+              "highlights": [
+                "on",
+                "near"
+              ]
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "The keys are in the drawer under the desk.",
+              "highlights": [
+                "in",
+                "under"
+              ]
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "The dog is behind the sofa next to the wall.",
+              "highlights": [
+                "behind",
+                "next to"
+              ]
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "The cat is sleeping ___ the sofa.",
+      "options": [
+        "on",
+        "in"
+      ],
+      "answer": 0,
+      "explain": "El gato duerme sobre la superficie del sofá ('on')."
+    },
+    {
+      "q": "The keys are ___ my pocket.",
+      "options": [
+        "in",
+        "on"
+      ],
+      "answer": 0,
+      "explain": "Las llaves están dentro del bolsillo ('in')."
+    },
+    {
+      "q": "The bus stop is right ___ to the pharmacy.",
+      "options": [
+        "next",
+        "near to"
+      ],
+      "answer": 0,
+      "explain": "La expresión fija de posición relativa al lado de algo es 'next to'."
     }
   ]
 }

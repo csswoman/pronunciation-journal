@@ -1,46 +1,47 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "C2 · Topicalización",
     "title": "Orden de palabras",
     "titleEmphasis": "marcado",
-    "goal": "Ya topicalizas elementos al inicio para marcar el tema del discurso y crear cohesión temática."
+    "goal": "Establece el tema del discurso (topicalización) moviendo elementos informativos clave al inicio de la oración para coordinar el foco temático."
   },
   "cards": [
     {
       "id": "c2-topicalizacion-concept",
       "tag": "Idea central",
       "title": "Orden de palabras: qué expresa",
-      "lede": "Ya topicalizas elementos al inicio para marcar el tema del discurso y crear cohesión temática.",
+      "lede": "Establece el tema del discurso (topicalización) moviendo elementos informativos clave al inicio de la oración para coordinar el foco temático.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Topicalización",
-              "value": "This issue, we have debated for years.",
+              "key": "Topicalización de objeto directo",
+              "value": "The primary objectives, we have already fulfilled.",
               "highlights": [
-                "This issue"
+                "The primary objectives"
               ]
             },
             {
-              "key": "Foco",
-              "value": "señala qué es el tema de la frase siguiente",
+              "key": "Topicalización de complemento",
+              "value": "Unreasonable, I would not call their demands.",
               "highlights": [
-                "This issue"
+                "Unreasonable"
               ]
             },
             {
-              "key": "Contraste",
-              "value": "The data I trust; the interpretation, less so.",
+              "key": "Contraste de dos temas",
+              "value": "The financial aspects we can handle; the ethical concerns remain unresolved.",
               "highlights": [
-                "The data"
+                "The financial aspects"
               ]
             },
             {
-              "key": "Estilo",
-              "value": "escritura formal, retórica, análisis",
+              "key": "Cohesión temática de texto",
+              "value": "That argument, the court rejected out of hand.",
               "highlights": [
-                "less so"
+                "That argument"
               ]
             }
           ]
@@ -55,30 +56,32 @@
       "id": "c2-topicalizacion-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Topicalización",
-              "value": "This issue, we have debated for years.",
+              "key": "Afirmativa",
+              "value": "Elemento topicalizado (Objeto/Adj) + Sujeto + Verbo principal · Most of these problems we solved.",
               "highlights": [
-                "This issue"
+                "Most of these problems",
+                "we solved"
               ]
             },
             {
-              "key": "Foco",
-              "value": "señala qué es el tema de la frase siguiente",
+              "key": "Afirmativa (Contraste)",
+              "value": "Tema A + sujeto + verbo; Tema B + sujeto + verbo · Cash flow we have; profit we lack.",
               "highlights": [
-                "This issue"
+                "Cash flow",
+                "profit"
               ]
             },
             {
-              "key": "Contraste",
-              "value": "The data I trust; the interpretation, less so.",
+              "key": "Negativa",
+              "value": "Such inappropriate behavior we will not tolerate in our organization.",
               "highlights": [
-                "The data"
+                "Such inappropriate behavior"
               ]
             }
           ]
@@ -89,26 +92,26 @@
       "id": "c2-topicalizacion-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "This issue, we have debated for years."
+              "key": "Debates parlamentarios",
+              "value": "That specific amendment, the coalition cannot support."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "señala qué es el tema de la frase siguiente"
+              "key": "Análisis de negocios",
+              "value": "Market leadership we achieved years ago; sustainable profitability is our new goal."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "The data I trust; the interpretation, less so."
+              "key": "Discursos persuasivos",
+              "value": "His integrity no one can question, but his methodology is flawed."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "escritura formal, retórica, análisis"
+              "key": "Escritura de opinión",
+              "value": "These long-term risks, the board chose to ignore."
             }
           ]
         }
@@ -118,23 +121,23 @@
       "id": "c2-topicalizacion-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "Topicalización",
-              "rule": "This issue, we have debated for years.",
+              "label": "Topicalización (C2)",
+              "rule": "Antepone el elemento sin añadir pronombre ni alterar el orden estándar de Sujeto + Verbo",
               "examples": [
-                "This issue, we have debated for years."
+                "This milestone we achieved through sheer persistence."
               ]
             },
             {
-              "label": "Foco",
-              "rule": "señala qué es el tema de la frase siguiente",
+              "label": "Dislocación a la izquierda (Informal)",
+              "rule": "Antepone el tema pero incluye un pronombre redundante en la posición original",
               "examples": [
-                "señala qué es el tema de la frase siguiente"
+                "This milestone, we achieved it through sheer persistence."
               ]
             }
           ]
@@ -145,19 +148,19 @@
       "id": "c2-topicalizacion-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "This issue, we have debated it for years."
+              "text": "This software, we have tested it extensively."
             },
             {
               "variant": "good",
-              "text": "This issue, we have debated for years.",
-              "note": "no dupliques el objeto topicalizado"
+              "text": "This software we have tested extensively.",
+              "note": "En la topicalización formal se omite el pronombre redundante ('it')."
             }
           ]
         }
@@ -166,27 +169,27 @@
     {
       "id": "c2-topicalizacion-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "1. Sin cambio de auxiliar",
+              "value": "A diferencia de la inversión negativa, la topicalización simple conserva el orden Sujeto + Verbo."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "2. Cero pronombres resuntivos",
+              "value": "No agregues pronombres como 'it' o 'them' para referirte al tema antepuesto."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "3. Uso para contrastes",
+              "value": "Es excelente para oponer dos elementos en dos cláusulas consecutivas."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "4. Claridad contextual",
+              "value": "El elemento topicalizado debe ser información conocida o relevante en el contexto previo."
             }
           ]
         }
@@ -199,13 +202,37 @@
   ],
   "quiz": [
     {
-      "q": "The timeline, ___ cannot accept.",
+      "q": "The technical documentation we have thoroughly reviewed; the financial projections ___.",
       "options": [
-        "we",
-        "us"
+        "we have yet to examine",
+        "have we yet to examine",
+        "we have yet to examine them",
+        "did we examine yet"
       ],
       "answer": 0,
-      "explain": "Sujeto tras topicalización: we."
+      "explain": "Mantiene la estructura de topicalización paralela (Tema + Sujeto + Verbo) sin pronombres extra."
+    },
+    {
+      "q": "___ no auditor could possibly dispute.",
+      "options": [
+        "These figures",
+        "These figures that",
+        "That these figures",
+        "Because these figures"
+      ],
+      "answer": 0,
+      "explain": "'These figures' funciona como el objeto topicalizado directo de 'could dispute'."
+    },
+    {
+      "q": "¿Cuál es la diferencia principal entre la topicalización y la inversión negativa?",
+      "options": [
+        "La topicalización mantiene el orden Sujeto + Verbo; la inversión altera el orden a Auxiliar + Sujeto",
+        "La topicalización requiere siempre el pronombre 'it'",
+        "La inversión no permite el uso de adjetivos",
+        "La topicalización solo se utiliza en preguntas"
+      ],
+      "answer": 0,
+      "explain": "La topicalización solo mueve el elemento al inicio sin invertir el auxiliar con el sujeto."
     }
   ]
 }

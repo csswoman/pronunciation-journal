@@ -13,18 +13,73 @@
       "blocks": [
         {
           "type": "verb-table",
-          "headers": ["Base", "Pasado", "Participio", "Español"],
+          "headers": [
+            "Base",
+            "Pasado",
+            "Participio",
+            "Español"
+          ],
           "rows": [
-            ["be", "was / were", "been", "ser / estar"],
-            ["have", "had", "had", "tener"],
-            ["go", "went", "gone", "ir"],
-            ["do", "did", "done", "hacer"],
-            ["make", "made", "made", "hacer / crear"],
-            ["take", "took", "taken", "tomar"],
-            ["get", "got", "gotten", "obtener"],
-            ["say", "said", "said", "decir"],
-            ["know", "knew", "known", "saber / conocer"],
-            ["come", "came", "come", "venir"]
+            [
+              "be",
+              "was / were",
+              "been",
+              "ser / estar"
+            ],
+            [
+              "have",
+              "had",
+              "had",
+              "tener"
+            ],
+            [
+              "go",
+              "went",
+              "gone",
+              "ir"
+            ],
+            [
+              "do",
+              "did",
+              "done",
+              "hacer"
+            ],
+            [
+              "make",
+              "made",
+              "made",
+              "hacer / crear"
+            ],
+            [
+              "take",
+              "took",
+              "taken",
+              "tomar"
+            ],
+            [
+              "get",
+              "got",
+              "gotten",
+              "obtener"
+            ],
+            [
+              "say",
+              "said",
+              "said",
+              "decir"
+            ],
+            [
+              "know",
+              "knew",
+              "known",
+              "saber / conocer"
+            ],
+            [
+              "come",
+              "came",
+              "come",
+              "venir"
+            ]
           ]
         }
       ],
@@ -37,15 +92,39 @@
       "id": "vc-have",
       "tag": "have",
       "title": "have: tener y más",
-      "titleItalic": ["have"],
+      "titleItalic": [
+        "have"
+      ],
       "lede": "have significa tener, pero también forma muchas expresiones cotidianas.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
-            { "key": "Posesión", "value": "I have a car.", "highlights": ["have a car"], "hint": "tengo un coche" },
-            { "key": "Comidas", "value": "have breakfast / lunch / dinner", "highlights": ["have breakfast"], "hint": "desayunar / comer / cenar" },
-            { "key": "Acciones", "value": "have a shower · have a break", "highlights": ["have a shower", "have a break"], "hint": "ducharse · tomar un descanso" }
+            {
+              "key": "Posesión",
+              "value": "I have a car.",
+              "highlights": [
+                "have a car"
+              ],
+              "hint": "tengo un coche"
+            },
+            {
+              "key": "Comidas",
+              "value": "have breakfast / lunch / dinner",
+              "highlights": [
+                "have breakfast"
+              ],
+              "hint": "desayunar / comer / cenar"
+            },
+            {
+              "key": "Acciones",
+              "value": "have a shower · have a break",
+              "highlights": [
+                "have a shower",
+                "have a break"
+              ],
+              "hint": "ducharse · tomar un descanso"
+            }
           ]
         }
       ],
@@ -58,7 +137,10 @@
       "id": "vc-do-make",
       "tag": "Confusiones",
       "title": "do vs make",
-      "titleItalic": ["do", "make"],
+      "titleItalic": [
+        "do",
+        "make"
+      ],
       "lede": "Los dos significan hacer en español, pero se usan en casos distintos.",
       "blocks": [
         {
@@ -67,12 +149,20 @@
             {
               "label": "do",
               "rule": "tareas y actividades",
-              "examples": ["do homework", "do the dishes", "do exercise"]
+              "examples": [
+                "do homework",
+                "do the dishes",
+                "do exercise"
+              ]
             },
             {
               "label": "make",
               "rule": "crear o producir algo",
-              "examples": ["make a cake", "make a mistake", "make a decision"]
+              "examples": [
+                "make a cake",
+                "make a mistake",
+                "make a decision"
+              ]
             }
           ]
         }
@@ -91,9 +181,30 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "like / love / enjoy", "value": "+ verbo-ing · I like cooking.", "highlights": ["cooking"], "hint": "me gusta cocinar" },
-            { "key": "want / need / would like", "value": "+ to + verbo · I want to eat.", "highlights": ["to eat"], "hint": "quiero comer" },
-            { "key": "can", "value": "+ verbo base · I can swim.", "highlights": ["swim"], "hint": "sé nadar" }
+            {
+              "key": "like / love / enjoy",
+              "value": "+ verbo-ing · I like cooking.",
+              "highlights": [
+                "cooking"
+              ],
+              "hint": "me gusta cocinar"
+            },
+            {
+              "key": "want / need / would like",
+              "value": "+ to + verbo · I want to eat.",
+              "highlights": [
+                "to eat"
+              ],
+              "hint": "quiero comer"
+            },
+            {
+              "key": "can",
+              "value": "+ verbo base · I can swim.",
+              "highlights": [
+                "swim"
+              ],
+              "hint": "sé nadar"
+            }
           ]
         }
       ]
@@ -107,10 +218,24 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "bad", "text": "I am agree." },
-            { "variant": "good", "text": "I agree.", "note": "agree ya es verbo, sin am" },
-            { "variant": "bad", "text": "I want eat." },
-            { "variant": "good", "text": "I want to eat.", "note": "want pide to + verbo" }
+            {
+              "variant": "bad",
+              "text": "I am agree."
+            },
+            {
+              "variant": "good",
+              "text": "I agree.",
+              "note": "agree ya es verbo, sin am"
+            },
+            {
+              "variant": "bad",
+              "text": "I want eat."
+            },
+            {
+              "variant": "good",
+              "text": "I want to eat.",
+              "note": "want pide to + verbo"
+            }
           ]
         }
       ]
@@ -119,15 +244,40 @@
       "id": "vc-go-get",
       "tag": "Movimiento",
       "title": "go y get: muy versátiles",
-      "titleItalic": ["go", "get"],
+      "titleItalic": [
+        "go",
+        "get"
+      ],
       "lede": "Dos verbos comodín. Cambian de sentido según la palabra que los acompaña.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
-            { "key": "go to", "value": "ir a un lugar · go to work", "highlights": ["go to work"], "hint": "ir al trabajo" },
-            { "key": "go + ing", "value": "actividad · go shopping · go swimming", "highlights": ["go shopping"], "hint": "ir de compras / a nadar" },
-            { "key": "get", "value": "conseguir / llegar / volverse · get a job · get home", "highlights": ["get a job", "get home"], "hint": "conseguir trabajo / llegar a casa" }
+            {
+              "key": "go to",
+              "value": "ir a un lugar · go to work",
+              "highlights": [
+                "go to work"
+              ],
+              "hint": "ir al trabajo"
+            },
+            {
+              "key": "go + ing",
+              "value": "actividad · go shopping · go swimming",
+              "highlights": [
+                "go shopping"
+              ],
+              "hint": "ir de compras / a nadar"
+            },
+            {
+              "key": "get",
+              "value": "conseguir / llegar / volverse · get a job · get home",
+              "highlights": [
+                "get a job",
+                "get home"
+              ],
+              "hint": "conseguir trabajo / llegar a casa"
+            }
           ]
         }
       ],
@@ -135,6 +285,35 @@
         "label": "Cuidado:",
         "body": "se dice go home, sin to (nunca \"go to home\")."
       }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "I want ___ English fluently.",
+      "options": [
+        "to speak",
+        "speaking"
+      ],
+      "answer": 0,
+      "explain": "El verbo 'want' se combina con el infinitivo completo con 'to' ('want to speak')."
+    },
+    {
+      "q": "She has got two cats.",
+      "options": [
+        "Tiene dos gatos.",
+        "Es dos gatos."
+      ],
+      "answer": 0,
+      "explain": "'have got' o 'has got' se utiliza para indicar posesión."
+    },
+    {
+      "q": "Can you ___ me the time, please?",
+      "options": [
+        "tell",
+        "say"
+      ],
+      "answer": 0,
+      "explain": "Se dice 'tell me the time' cuando indicas información a una persona."
     }
   ]
 }

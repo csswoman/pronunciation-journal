@@ -118,5 +118,25 @@
         "body": "un acento extranjero claro y con buen ritmo comunica perfectamente. No persigas la perfección nativa."
       }
     }
+  ],
+  "quiz": [
+    {
+      "q": "¿Cómo influye el desplazamiento del foco tonal (tonic stress) en una oración?",
+      "options": ["Cambia el énfasis y la intención comunicativa de la frase.", "Modifica la gramática del verbo principal a pasado.", "Fuerza la omisión de las consonantes finales.", "Transforma la oración en una pregunta sí/no obligatoriamente."],
+      "answer": 0,
+      "explain": "Destacar una palabra distinta (ej. 'I didn't SAY that' vs 'I didn't say THAT') modifica el significado implícito."
+    },
+    {
+      "q": "¿Qué dirección de entonación suele acompañar a las preguntas cerradas (yes/no questions) para transmitir cortesía o duda?",
+      "options": ["Entonación ascendente (Rise ↗)", "Entonación descendente (Fall ↘)", "Tono completamente plano", "Silencio total tras el auxiliar"],
+      "answer": 0,
+      "explain": "Las preguntas cerradas y las expresiones de duda suelen llevar entonación ascendente al final (↗)."
+    },
+    {
+      "q": "Según la perspectiva avanzada de nivel C1 sobre el acento extranjero, el objetivo principal es:",
+      "options": ["Ser claro, fluido e inteligible manteniendo un buen ritmo y acentuación de palabra.", "Eliminar por completo el acento materno para sonar idéntico a un nativo.", "Hablar a la máxima velocidad posible sin hacer pausas.", "Pronunciar cada sílaba con la misma fuerza e intensidad."],
+      "answer": 0,
+      "explain": "La inteligibilidad y la naturalidad rítmica importan más que intentar borrar el acento de origen."
+    }
   ]
 }

@@ -14,9 +14,18 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Comida", "value": "supermarket, bakery, market" },
-            { "key": "Ropa", "value": "clothes shop, shoe store" },
-            { "key": "Otros", "value": "pharmacy, bookstore, mall" }
+            {
+              "key": "Comida",
+              "value": "supermarket, bakery, market"
+            },
+            {
+              "key": "Ropa",
+              "value": "clothes shop, shoe store"
+            },
+            {
+              "key": "Otros",
+              "value": "pharmacy, bookstore, mall"
+            }
           ]
         }
       ]
@@ -30,9 +39,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Buscar", "value": "I'm looking for a jacket.", "highlights": ["looking for"] },
-            { "key": "Talla", "value": "Do you have this in a medium?", "highlights": ["in a medium"] },
-            { "key": "Probar", "value": "Can I try it on?", "highlights": ["try it on"] }
+            {
+              "key": "Buscar",
+              "value": "I'm looking for a jacket.",
+              "highlights": [
+                "looking for"
+              ]
+            },
+            {
+              "key": "Talla",
+              "value": "Do you have this in a medium?",
+              "highlights": [
+                "in a medium"
+              ]
+            },
+            {
+              "key": "Probar",
+              "value": "Can I try it on?",
+              "highlights": [
+                "try it on"
+              ]
+            }
           ]
         }
       ],
@@ -45,15 +72,36 @@
       "id": "sh-price",
       "tag": "Precios",
       "title": "How much...?",
-      "titleItalic": ["How much"],
+      "titleItalic": [
+        "How much"
+      ],
       "lede": "Preguntar precios y entender ofertas. Recuerda much con dinero (incontable).",
       "blocks": [
         {
           "type": "rules",
           "rows": [
-            { "key": "Precio", "value": "How much is this? · How much are these?", "highlights": ["How much"] },
-            { "key": "Caro/barato", "value": "It's expensive. · It's cheap.", "highlights": ["expensive", "cheap"] },
-            { "key": "Oferta", "value": "It's on sale. · 20% off", "highlights": ["on sale"] }
+            {
+              "key": "Precio",
+              "value": "How much is this? · How much are these?",
+              "highlights": [
+                "How much"
+              ]
+            },
+            {
+              "key": "Caro/barato",
+              "value": "It's expensive. · It's cheap.",
+              "highlights": [
+                "expensive",
+                "cheap"
+              ]
+            },
+            {
+              "key": "Oferta",
+              "value": "It's on sale. · 20% off",
+              "highlights": [
+                "on sale"
+              ]
+            }
           ]
         }
       ]
@@ -67,10 +115,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Método", "value": "Cash or card?", "highlights": ["Cash or card?"] },
-            { "key": "Pagar con", "value": "I'll pay by card.", "highlights": ["pay by card"] },
-            { "key": "Cambio", "value": "Here's your change.", "highlights": ["change"] },
-            { "key": "Recibo", "value": "Do you want a receipt?", "highlights": ["receipt"] }
+            {
+              "key": "Método",
+              "value": "Cash or card?",
+              "highlights": [
+                "Cash or card?"
+              ]
+            },
+            {
+              "key": "Pagar con",
+              "value": "I'll pay by card.",
+              "highlights": [
+                "pay by card"
+              ]
+            },
+            {
+              "key": "Cambio",
+              "value": "Here's your change.",
+              "highlights": [
+                "change"
+              ]
+            },
+            {
+              "key": "Recibo",
+              "value": "Do you want a receipt?",
+              "highlights": [
+                "receipt"
+              ]
+            }
           ]
         }
       ]
@@ -87,12 +159,18 @@
             {
               "label": "Cerca",
               "rule": "this / these",
-              "examples": ["this shirt (sing.)", "these shoes (plur.)"]
+              "examples": [
+                "this shirt (sing.)",
+                "these shoes (plur.)"
+              ]
             },
             {
               "label": "Lejos",
               "rule": "that / those",
-              "examples": ["that bag (sing.)", "those jeans (plur.)"]
+              "examples": [
+                "that bag (sing.)",
+                "those jeans (plur.)"
+              ]
             }
           ]
         }
@@ -107,13 +185,61 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "good", "text": "I'd like to return this.", "note": "devolver" },
-            { "variant": "good", "text": "Can I get a refund?", "note": "pedir reembolso" },
-            { "variant": "good", "text": "It doesn't fit.", "note": "no me queda" },
-            { "variant": "good", "text": "Do you have the receipt?", "note": "te lo pedirán" }
+            {
+              "variant": "good",
+              "text": "I'd like to return this.",
+              "note": "devolver"
+            },
+            {
+              "variant": "good",
+              "text": "Can I get a refund?",
+              "note": "pedir reembolso"
+            },
+            {
+              "variant": "good",
+              "text": "It doesn't fit.",
+              "note": "no me queda"
+            },
+            {
+              "variant": "good",
+              "text": "Do you have the receipt?",
+              "note": "te lo pedirán"
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "How ___ are these sunglasses?",
+      "options": [
+        "much",
+        "many",
+        "price"
+      ],
+      "answer": 0,
+      "explain": "'How much' se emplea para consultar el precio o costo de un artículo."
+    },
+    {
+      "q": "Can I try this winter coat ___ in size medium?",
+      "options": [
+        "on",
+        "in",
+        "at"
+      ],
+      "answer": 0,
+      "explain": "El phrasal verb para probarse ropa es 'try on'."
+    },
+    {
+      "q": "I would like to pay ___ credit card, please.",
+      "options": [
+        "by",
+        "with",
+        "on"
+      ],
+      "answer": 0,
+      "explain": "La preposición estándar para el medio de pago con tarjeta es 'by credit card'."
     }
   ]
 }

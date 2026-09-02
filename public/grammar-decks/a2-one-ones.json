@@ -1,39 +1,49 @@
 {
+  "isGenerated": true,
   "meta": {
-    "eyebrow": "A2 · Sustitución",
-    "title": "One y",
-    "titleEmphasis": "ones",
-    "goal": "Ya evitas repetir sustantivos con the red one, these ones, a new one."
+    "eyebrow": "A2 · Sustitución nominal",
+    "title": "Uso de one",
+    "titleEmphasis": "y ones",
+    "goal": "Evita la repetición innecesaria de sustantivos utilizando one (singular) y ones (plural)."
   },
   "cards": [
     {
       "id": "a2-one-ones-concept",
       "tag": "Idea central",
-      "title": "One y: qué expresa",
-      "lede": "Ya evitas repetir sustantivos con the red one, these ones, a new one.",
+      "title": "Uso de one: qué expresa",
+      "lede": "Evita la repetición innecesaria de sustantivos utilizando one (singular) y ones (plural).",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "one",
-              "value": "singular · Which bag? The black one.",
+              "key": "one (Singular)",
+              "value": "Reemplaza a un sustantivo contable singular · Which bag? The red one.",
               "highlights": [
                 "one"
               ]
             },
             {
-              "key": "ones",
-              "value": "plural · I like the blue ones.",
+              "key": "ones (Plural)",
+              "value": "Reemplaza a sustantivos contables plurales · I like the blue ones.",
               "highlights": [
                 "ones"
               ]
             },
             {
-              "key": "a/an + one",
-              "value": "I need a new one.",
+              "key": "Con adjetivos",
+              "value": "a new one / the small ones / this old one",
               "highlights": [
-                "a new one"
+                "a new one",
+                "small ones"
+              ]
+            },
+            {
+              "key": "Con demostrativos",
+              "value": "this one / that one / these ones / those ones",
+              "highlights": [
+                "this one",
+                "those ones"
               ]
             }
           ]
@@ -48,30 +58,31 @@
       "id": "a2-one-ones-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "one",
-              "value": "singular · Which bag? The black one.",
+              "key": "Singular",
+              "value": "Determinado/Adjetivo + one · I need a bigger one.",
               "highlights": [
                 "one"
               ]
             },
             {
-              "key": "ones",
-              "value": "plural · I like the blue ones.",
+              "key": "Plural",
+              "value": "Determinado/Adjetivo + ones · I'll buy the leather ones.",
               "highlights": [
                 "ones"
               ]
             },
             {
-              "key": "a/an + one",
-              "value": "I need a new one.",
+              "key": "Preguntas de elección",
+              "value": "Which one do you prefer? / Which ones are yours?",
               "highlights": [
-                "a new one"
+                "Which one",
+                "Which ones"
               ]
             }
           ]
@@ -82,22 +93,26 @@
       "id": "a2-one-ones-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "Which bag? The black one."
+              "key": "De compras",
+              "value": "These shoes are nice, but I prefer the black ones over there."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "I like the blue ones."
+              "key": "Elección entre objetos",
+              "value": "Don't take that broken chair; take this one."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "I need a new one."
+              "key": "Restaurante",
+              "value": "Would you like a large coffee or a small one?"
+            },
+            {
+              "key": "Prendas de vestir",
+              "value": "My old coat is ruined, so I am going to buy a new one."
             }
           ]
         }
@@ -107,23 +122,23 @@
       "id": "a2-one-ones-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "one",
-              "rule": "singular · Which bag? The black one.",
+              "label": "one (Reemplazo singular)",
+              "rule": "Usado para sustituir un objeto contable en singular ya mencionado",
               "examples": [
-                "Which bag? The black one."
+                "Which shirt do you want? - The white one."
               ]
             },
             {
-              "label": "ones",
-              "rule": "plural · I like the blue ones.",
+              "label": "ones (Reemplazo plural)",
+              "rule": "Usado para sustituir varios objetos contables en plural",
               "examples": [
-                "I like the blue ones."
+                "Which boots do you want? - The brown ones."
               ]
             }
           ]
@@ -134,19 +149,19 @@
       "id": "a2-one-ones-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "I want the red."
+              "text": "I don't like this phone, I want a new."
             },
             {
               "variant": "good",
-              "text": "I want the red one.",
-              "note": "one reemplaza al sustantivo omitido"
+              "text": "I don't like this phone, I want a new one.",
+              "note": "'one' es imprescindible tras un adjetivo para sustituir al sustantivo omitido"
             }
           ]
         }
@@ -155,27 +170,27 @@
     {
       "id": "a2-one-ones-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "1. Evita la repetición",
+              "value": "Sirve para no repetir la misma palabra dos veces en una frase."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "2. Solo para contables",
+              "value": "No se usa one/ones con sustantivos incontables (ej. agua, dinero, información)."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "3. Con adjetivos",
+              "value": "Siempre coloca el adjetivo ANTES de one/ones (ej. green one, smart ones)."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "4. Con artículos",
+              "value": "Se combina con a/an, the, this, that, etc. (a good one, this one)."
             }
           ]
         }
@@ -188,13 +203,34 @@
   ],
   "quiz": [
     {
-      "q": "These shoes are nice, but I prefer the black ___.",
+      "q": "There are two umbrellas here. Which ___ is yours?",
       "options": [
+        "one",
         "ones",
-        "one"
+        "it"
       ],
       "answer": 0,
-      "explain": "shoes es plural → ones."
+      "explain": "Se pregunta por un único objeto en singular ('umbrella') entre opciones, corresponde 'one'."
+    },
+    {
+      "q": "I have many books, but these ___ are my favorites.",
+      "options": [
+        "ones",
+        "one",
+        "them"
+      ],
+      "answer": 0,
+      "explain": "'books' es un sustantivo plural, por lo que el pronombre de sustitución adecuado es 'ones'."
+    },
+    {
+      "q": "¿Cuál respuesta responde de forma fluida y gramaticalmente correcta a: 'Do you want the red shirt?'",
+      "options": [
+        "No, I want the blue one.",
+        "No, I want the blue.",
+        "No, I want the blue ones."
+      ],
+      "answer": 0,
+      "explain": "'shirt' es singular, por lo que debemos decir 'the blue one'."
     }
   ]
 }

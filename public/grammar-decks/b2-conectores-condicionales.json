@@ -1,4 +1,5 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "B2 · Condicionales",
     "title": "Unless, provided",
@@ -16,29 +17,29 @@
           "type": "rules",
           "rows": [
             {
-              "key": "unless",
-              "value": "a menos que (= if not) · unless you hurry",
+              "key": "unless (condición negativa)",
+              "value": "Equivale a 'if not' (a menos que) · Unless you study, you won't pass.",
               "highlights": [
-                "unless"
+                "Unless"
               ]
             },
             {
-              "key": "provided (that)",
-              "value": "siempre que · provided you pay",
+              "key": "provided (that) (requisito formal)",
+              "value": "Establece una condición o garantía previa · Provided that you pay, you can stay.",
               "highlights": [
-                "provided"
+                "Provided that"
               ]
             },
             {
-              "key": "as long as",
-              "value": "mientras / con tal de que · as long as you're happy",
+              "key": "as long as (duración / permiso)",
+              "value": "Significa 'con tal de que' o 'mientras' · You can stay as long as you are quiet.",
               "highlights": [
                 "as long as"
               ]
             },
             {
-              "key": "in case",
-              "value": "por si acaso · take an umbrella in case",
+              "key": "in case (precaución)",
+              "value": "Expresa preparación 'por si acaso' · Take an umbrella in case it rains.",
               "highlights": [
                 "in case"
               ]
@@ -55,30 +56,38 @@
       "id": "b2-conectores-condicionales-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "unless",
-              "value": "a menos que (= if not) · unless you hurry",
+              "key": "Afirmativa (Unless)",
+              "value": "Unless + sujeto + verbo afirmativo en presente, sujeto + won't... · Unless it stops raining, we won't leave.",
               "highlights": [
-                "unless"
+                "Unless",
+                "won't"
               ]
             },
             {
-              "key": "provided (that)",
-              "value": "siempre que · provided you pay",
+              "key": "Afirmativa (As long as / Provided)",
+              "value": "Sujeto + will... + as long as / provided + sujeto + presente · You will succeed as long as you work hard.",
+              "highlights": [
+                "as long as"
+              ]
+            },
+            {
+              "key": "Negativa",
+              "value": "Sujeto + won't... + provided + sujeto + doesn't... · We won't launch provided tests don't fail.",
               "highlights": [
                 "provided"
               ]
             },
             {
-              "key": "as long as",
-              "value": "mientras / con tal de que · as long as you're happy",
+              "key": "Interrogativa",
+              "value": "Can we go provided that we finish early? · Will you come unless it rains?",
               "highlights": [
-                "as long as"
+                "provided that"
               ]
             }
           ]
@@ -89,26 +98,26 @@
       "id": "b2-conectores-condicionales-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "unless you hurry"
+              "key": "Acuerdo contractual",
+              "value": "The contract will be signed provided that all legal terms are met by Friday."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "provided you pay"
+              "key": "Norma de convivencia",
+              "value": "You are welcome to borrow my bicycle as long as you return it in good condition."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "as long as you're happy"
+              "key": "Advertencia laboral",
+              "value": "Unless we increase our quarterly revenue, the project will be cancelled."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "take an umbrella in case"
+              "key": "Planes de viaje",
+              "value": "I will pack extra bottles of water in case we get stuck in traffic."
             }
           ]
         }
@@ -118,23 +127,23 @@
       "id": "b2-conectores-condicionales-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "unless",
-              "rule": "a menos que (= if not) · unless you hurry",
+              "label": "Unless (A menos que = If not)",
+              "rule": "La condición exige que NO ocurra algo para obtener un resultado.",
               "examples": [
-                "unless you hurry"
+                "I won't call you unless there is a major problem."
               ]
             },
             {
-              "label": "provided (that)",
-              "rule": "siempre que · provided you pay",
+              "label": "Provided / As long as (Con tal de que)",
+              "rule": "El resultado ocurre SIEMPRE QUE se cumpla la condición positiva planteada.",
               "examples": [
-                "provided you pay"
+                "I will call you provided that I get news."
               ]
             }
           ]
@@ -145,19 +154,19 @@
       "id": "b2-conectores-condicionales-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "Unless you will not hurry…"
+              "text": "Unless you don't hurry, we will miss the train."
             },
             {
               "variant": "good",
-              "text": "Unless you hurry…",
-              "note": "unless ya implica negación"
+              "text": "Unless you hurry, we will miss the train.",
+              "note": "'unless' significa 'if not', por lo que la cláusula posterior debe llevar el verbo en afirmativo"
             }
           ]
         }
@@ -166,27 +175,27 @@
     {
       "id": "b2-conectores-condicionales-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "No uses verbo negativo tras 'unless'",
+              "value": "'Unless' ya es negativo por sí mismo (say 'Unless you ask', not 'Unless you don't ask')."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "Sin 'will' en la condición",
+              "value": "Tras unless, provided that o as long as usa presente simple para hablar del futuro."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "Diferencia 'in case' vs 'if'",
+              "value": "'In case' es prevención antes del evento; 'if' es respuesta tras el evento."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "'That' es opcional",
+              "value": "Puedes decir 'provided that' o simplemente 'provided'."
             }
           ]
         }
@@ -199,13 +208,34 @@
   ],
   "quiz": [
     {
-      "q": "You can go out ___ you finish your homework.",
+      "q": "You can stay at our house ___ you help with the housework.",
       "options": [
         "as long as",
-        "unless"
+        "unless",
+        "in case"
       ],
       "answer": 0,
-      "explain": "Condición positiva → as long as."
+      "explain": "'As long as' expresa una condición positiva ('con tal de que / mientras')."
+    },
+    {
+      "q": "We will proceed with the outdoor concert ___ it starts pouring with rain.",
+      "options": [
+        "unless",
+        "provided that",
+        "so that"
+      ],
+      "answer": 0,
+      "explain": "'Unless' significa 'a menos que' (salvo que comience a llover a cántaros)."
+    },
+    {
+      "q": "Take some extra cash with you ___ the card payment machine is out of order.",
+      "options": [
+        "in case",
+        "unless",
+        "provided"
+      ],
+      "answer": 0,
+      "explain": "'In case' indica una medida de precaución ante una posibilidad futura."
     }
   ]
 }

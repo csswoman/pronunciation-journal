@@ -14,9 +14,24 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Medios", "value": "bus, train, subway, taxi, plane" },
-            { "key": "by + medio", "value": "by bus · by train · by car", "highlights": ["by"] },
-            { "key": "Excepción", "value": "on foot (a pie)", "highlights": ["on foot"] }
+            {
+              "key": "Medios",
+              "value": "bus, train, subway, taxi, plane"
+            },
+            {
+              "key": "by + medio",
+              "value": "by bus · by train · by car",
+              "highlights": [
+                "by"
+              ]
+            },
+            {
+              "key": "Excepción",
+              "value": "on foot (a pie)",
+              "highlights": [
+                "on foot"
+              ]
+            }
           ]
         }
       ],
@@ -34,9 +49,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Pedir", "value": "A ticket to London, please.", "highlights": ["A ticket to"] },
-            { "key": "Ida/vuelta", "value": "one-way · round-trip / return", "highlights": ["round-trip"] },
-            { "key": "Horario", "value": "What time does it leave?", "highlights": ["What time does it leave?"] }
+            {
+              "key": "Pedir",
+              "value": "A ticket to London, please.",
+              "highlights": [
+                "A ticket to"
+              ]
+            },
+            {
+              "key": "Ida/vuelta",
+              "value": "one-way · round-trip / return",
+              "highlights": [
+                "round-trip"
+              ]
+            },
+            {
+              "key": "Horario",
+              "value": "What time does it leave?",
+              "highlights": [
+                "What time does it leave?"
+              ]
+            }
           ]
         }
       ]
@@ -50,9 +83,25 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Lugares", "value": "museum, castle, beach, park" },
-            { "key": "Preguntar", "value": "What's worth seeing here?", "highlights": ["worth seeing"] },
-            { "key": "Horario", "value": "What time does it open/close?", "highlights": ["open", "close"] }
+            {
+              "key": "Lugares",
+              "value": "museum, castle, beach, park"
+            },
+            {
+              "key": "Preguntar",
+              "value": "What's worth seeing here?",
+              "highlights": [
+                "worth seeing"
+              ]
+            },
+            {
+              "key": "Horario",
+              "value": "What time does it open/close?",
+              "highlights": [
+                "open",
+                "close"
+              ]
+            }
           ]
         }
       ]
@@ -66,9 +115,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Girar", "value": "Turn left at the corner.", "highlights": ["Turn left"] },
-            { "key": "Seguir", "value": "Go straight ahead.", "highlights": ["Go straight"] },
-            { "key": "Referencia", "value": "It's opposite the bank.", "highlights": ["opposite"] }
+            {
+              "key": "Girar",
+              "value": "Turn left at the corner.",
+              "highlights": [
+                "Turn left"
+              ]
+            },
+            {
+              "key": "Seguir",
+              "value": "Go straight ahead.",
+              "highlights": [
+                "Go straight"
+              ]
+            },
+            {
+              "key": "Referencia",
+              "value": "It's opposite the bank.",
+              "highlights": [
+                "opposite"
+              ]
+            }
           ]
         }
       ]
@@ -82,9 +149,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Plan", "value": "We're going to visit Rome.", "highlights": ["going to visit"] },
-            { "key": "Negativo", "value": "I'm not going to fly.", "highlights": ["not going to"] },
-            { "key": "Pregunta", "value": "Where are you going to stay?", "highlights": ["going to stay"] }
+            {
+              "key": "Plan",
+              "value": "We're going to visit Rome.",
+              "highlights": [
+                "going to visit"
+              ]
+            },
+            {
+              "key": "Negativo",
+              "value": "I'm not going to fly.",
+              "highlights": [
+                "not going to"
+              ]
+            },
+            {
+              "key": "Pregunta",
+              "value": "Where are you going to stay?",
+              "highlights": [
+                "going to stay"
+              ]
+            }
           ]
         }
       ],
@@ -102,13 +187,61 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "good", "text": "I'm lost.", "note": "estoy perdido" },
-            { "variant": "good", "text": "I missed my train.", "note": "perdí el tren" },
-            { "variant": "good", "text": "Can you help me, please?", "note": "pedir ayuda" },
-            { "variant": "good", "text": "Where's the nearest hospital?", "note": "emergencia" }
+            {
+              "variant": "good",
+              "text": "I'm lost.",
+              "note": "estoy perdido"
+            },
+            {
+              "variant": "good",
+              "text": "I missed my train.",
+              "note": "perdí el tren"
+            },
+            {
+              "variant": "good",
+              "text": "Can you help me, please?",
+              "note": "pedir ayuda"
+            },
+            {
+              "variant": "good",
+              "text": "Where's the nearest hospital?",
+              "note": "emergencia"
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "We need to ___ our flight tickets online early.",
+      "options": [
+        "book",
+        "hire",
+        "order"
+      ],
+      "answer": 0,
+      "explain": "'book' es el verbo adecuado para realizar una reserva de pasajes o alojamiento."
+    },
+    {
+      "q": "What time is ___ at the hotel reception desk?",
+      "options": [
+        "check-in",
+        "take-off",
+        "departure"
+      ],
+      "answer": 0,
+      "explain": "'check-in' es el proceso de registro y recepción a la llegada al hotel."
+    },
+    {
+      "q": "Excuse me, where is the nearest tourist information ___?",
+      "options": [
+        "office",
+        "station",
+        "stop"
+      ],
+      "answer": 0,
+      "explain": "La oficina de información al viajero se llama 'tourist information office'."
     }
   ]
 }

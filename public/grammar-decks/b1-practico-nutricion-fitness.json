@@ -14,9 +14,18 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Sano", "value": "vegetables, fruit, protein, fiber" },
-            { "key": "Menos sano", "value": "junk food, sugar, fat, processed food" },
-            { "key": "Nutrientes", "value": "carbs, vitamins, calories" }
+            {
+              "key": "Sano",
+              "value": "vegetables, fruit, protein, fiber"
+            },
+            {
+              "key": "Menos sano",
+              "value": "junk food, sugar, fat, processed food"
+            },
+            {
+              "key": "Nutrientes",
+              "value": "carbs, vitamins, calories"
+            }
           ]
         }
       ]
@@ -30,9 +39,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Frecuencia", "value": "I usually eat breakfast.", "highlights": ["usually"] },
-            { "key": "Intentar", "value": "I try to avoid sugar.", "highlights": ["try to avoid"] },
-            { "key": "Soler", "value": "I tend to skip lunch.", "highlights": ["tend to"] }
+            {
+              "key": "Frecuencia",
+              "value": "I usually eat breakfast.",
+              "highlights": [
+                "usually"
+              ]
+            },
+            {
+              "key": "Intentar",
+              "value": "I try to avoid sugar.",
+              "highlights": [
+                "try to avoid"
+              ]
+            },
+            {
+              "key": "Soler",
+              "value": "I tend to skip lunch.",
+              "highlights": [
+                "tend to"
+              ]
+            }
           ]
         }
       ]
@@ -46,9 +73,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "go + -ing", "value": "go running, go swimming, go to the gym", "highlights": ["go"] },
-            { "key": "do + actividad", "value": "do yoga, do exercise", "highlights": ["do"] },
-            { "key": "play + deporte", "value": "play tennis, play football", "highlights": ["play"] }
+            {
+              "key": "go + -ing",
+              "value": "go running, go swimming, go to the gym",
+              "highlights": [
+                "go"
+              ]
+            },
+            {
+              "key": "do + actividad",
+              "value": "do yoga, do exercise",
+              "highlights": [
+                "do"
+              ]
+            },
+            {
+              "key": "play + deporte",
+              "value": "play tennis, play football",
+              "highlights": [
+                "play"
+              ]
+            }
           ]
         }
       ],
@@ -66,9 +111,28 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Meta", "value": "I want to lose weight / get fit.", "highlights": ["lose weight", "get fit"] },
-            { "key": "Plan", "value": "I'm going to join a gym.", "highlights": ["going to join"] },
-            { "key": "Ganar", "value": "build muscle · gain weight", "highlights": ["build muscle"] }
+            {
+              "key": "Meta",
+              "value": "I want to lose weight / get fit.",
+              "highlights": [
+                "lose weight",
+                "get fit"
+              ]
+            },
+            {
+              "key": "Plan",
+              "value": "I'm going to join a gym.",
+              "highlights": [
+                "going to join"
+              ]
+            },
+            {
+              "key": "Ganar",
+              "value": "build muscle · gain weight",
+              "highlights": [
+                "build muscle"
+              ]
+            }
           ]
         }
       ]
@@ -82,10 +146,26 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "good", "text": "You should drink more water.", "note": "consejo" },
-            { "variant": "good", "text": "You shouldn't skip meals.", "note": "qué evitar" },
-            { "variant": "good", "text": "Try to get enough sleep.", "note": "sugerencia suave" },
-            { "variant": "good", "text": "Cut down on sugar.", "note": "reducir" }
+            {
+              "variant": "good",
+              "text": "You should drink more water.",
+              "note": "consejo"
+            },
+            {
+              "variant": "good",
+              "text": "You shouldn't skip meals.",
+              "note": "qué evitar"
+            },
+            {
+              "variant": "good",
+              "text": "Try to get enough sleep.",
+              "note": "sugerencia suave"
+            },
+            {
+              "variant": "good",
+              "text": "Cut down on sugar.",
+              "note": "reducir"
+            }
           ]
         }
       ]
@@ -99,12 +179,63 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Comparar", "value": "Water is healthier than soda.", "highlights": ["healthier than"] },
-            { "key": "Más / menos", "value": "more protein · less sugar", "highlights": ["more", "less"] },
-            { "key": "Superlativo", "value": "the healthiest option", "highlights": ["the healthiest"] }
+            {
+              "key": "Comparar",
+              "value": "Water is healthier than soda.",
+              "highlights": [
+                "healthier than"
+              ]
+            },
+            {
+              "key": "Más / menos",
+              "value": "more protein · less sugar",
+              "highlights": [
+                "more",
+                "less"
+              ]
+            },
+            {
+              "key": "Superlativo",
+              "value": "the healthiest option",
+              "highlights": [
+                "the healthiest"
+              ]
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "You ought ___ exercise regularly to stay healthy.",
+      "options": [
+        "to",
+        "for",
+        "at"
+      ],
+      "answer": 0,
+      "explain": "'Ought' exige llevar 'to' antes del infinitivo ('ought to')."
+    },
+    {
+      "q": "Eating too ___ fast food can cause health issues.",
+      "options": [
+        "much",
+        "many",
+        "few"
+      ],
+      "answer": 0,
+      "explain": "'Fast food' es un sustantivo incontable, por lo que requiere 'much'."
+    },
+    {
+      "q": "He stopped ___ sugary drinks two months ago.",
+      "options": [
+        "consuming",
+        "to consume",
+        "consumed"
+      ],
+      "answer": 0,
+      "explain": "'Stop + -ing' significa abandonar o dejar un hábito por completo."
     }
   ]
 }

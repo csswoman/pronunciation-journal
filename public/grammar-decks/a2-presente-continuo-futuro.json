@@ -1,39 +1,47 @@
 {
+  "isGenerated": true,
   "meta": {
-    "eyebrow": "A2 · Futuro",
-    "title": "Continuo para",
-    "titleEmphasis": "planes",
-    "goal": "Ya usas presente continuo para citas y planes ya acordados."
+    "eyebrow": "A2 · Planes futuros",
+    "title": "Presente continuo",
+    "titleEmphasis": "para planes acordados",
+    "goal": "Utiliza el presente continuo para hablar de citas, viajes y planes ya confirmados con fecha u hora."
   },
   "cards": [
     {
       "id": "a2-presente-continuo-futuro-concept",
       "tag": "Idea central",
-      "title": "Continuo para: qué expresa",
-      "lede": "Ya usas presente continuo para citas y planes ya acordados.",
+      "title": "Presente continuo: qué expresa",
+      "lede": "Utiliza el presente continuo para hablar de citas, viajes y planes ya confirmados con fecha u hora.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Plan fijo",
-              "value": "I'm meeting John at 6. (ya acordado)",
+              "key": "Cita confirmada",
+              "value": "I'm meeting the doctor at 4 PM tomorrow · Cita fijada",
               "highlights": [
                 "I'm meeting"
               ]
             },
             {
-              "key": "Señales",
-              "value": "tonight, tomorrow, next week",
+              "key": "Viaje / Evento",
+              "value": "We're flying to Paris next Monday · Boletos comprados",
               "highlights": [
-                "tomorrow"
+                "We're flying"
               ]
             },
             {
-              "key": "vs going to",
-              "value": "I'm going to study = intención general",
+              "key": "Compromiso social",
+              "value": "She is having dinner with Marcus tonight",
               "highlights": [
-                "going to"
+                "is having"
+              ]
+            },
+            {
+              "key": "Marcador temporal",
+              "value": "Requiere expresiones como tonight, tomorrow, next week",
+              "highlights": [
+                "expresiones"
               ]
             }
           ]
@@ -48,30 +56,30 @@
       "id": "a2-presente-continuo-futuro-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Plan fijo",
-              "value": "I'm meeting John at 6. (ya acordado)",
+              "key": "Afirmativa",
+              "value": "Sujeto + am/is/are + Verbo-ing + Marcador · We are leaving at 9 AM.",
               "highlights": [
-                "I'm meeting"
+                "are leaving"
               ]
             },
             {
-              "key": "Señales",
-              "value": "tonight, tomorrow, next week",
+              "key": "Negativa",
+              "value": "Sujeto + am/is/are not + Verbo-ing · He isn't working this weekend.",
               "highlights": [
-                "tomorrow"
+                "isn't working"
               ]
             },
             {
-              "key": "vs going to",
-              "value": "I'm going to study = intención general",
+              "key": "Interrogativa",
+              "value": "Am/Is/Are + Sujeto + Verbo-ing + Marcador? · Are you coming to the party?",
               "highlights": [
-                "going to"
+                "Are you coming"
               ]
             }
           ]
@@ -82,22 +90,26 @@
       "id": "a2-presente-continuo-futuro-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "I'm meeting John at 6. (ya acordado)"
+              "key": "Citas médicas",
+              "value": "I'm seeing the dentist tomorrow morning at ten."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "tonight, tomorrow, next week"
+              "key": "Planes sociales",
+              "value": "We're meeting Sarah outside the cinema after work."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "I'm going to study = intención general"
+              "key": "Viajes organizados",
+              "value": "They're taking the morning flight to Rome on Tuesday."
+            },
+            {
+              "key": "Eventos laborales",
+              "value": "Our manager is giving a presentation next Thursday."
             }
           ]
         }
@@ -107,23 +119,23 @@
       "id": "a2-presente-continuo-futuro-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "Plan fijo",
-              "rule": "I'm meeting John at 6. (ya acordado)",
+              "label": "Presente continuo (Planes confirmados)",
+              "rule": "Arreglos y acuerdos concretos con otras personas o agenda fijada",
               "examples": [
-                "I'm meeting John at 6. (ya acordado)"
+                "I'm meeting Lucas at 6 PM. (Quedamos a esa hora)"
               ]
             },
             {
-              "label": "Señales",
-              "rule": "tonight, tomorrow, next week",
+              "label": "Going to (Intención personal)",
+              "rule": "Intención o decisión previa de hacer algo, sin acuerdo cerrado aún",
               "examples": [
-                "tonight, tomorrow, next week"
+                "I'm going to learn Italian next year. (Intención)"
               ]
             }
           ]
@@ -134,19 +146,19 @@
       "id": "a2-presente-continuo-futuro-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "I meet him tomorrow."
+              "text": "I meet my friend tomorrow at the café."
             },
             {
               "variant": "good",
-              "text": "I'm meeting him tomorrow.",
-              "note": "cita acordada → continuo"
+              "text": "I'm meeting my friend tomorrow at the café.",
+              "note": "para una cita confirmada en el futuro cercano se usa presente continuo"
             }
           ]
         }
@@ -155,27 +167,27 @@
     {
       "id": "a2-presente-continuo-futuro-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "1. Acuerdo previo",
+              "value": "Úsalo solo si la actividad ya está en la agenda o concertada."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "2. Expresión de tiempo",
+              "value": "Incluye siempre tiempo futuro (tomorrow, next Friday, tonight)."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "3. Verbo to be",
+              "value": "No olvides am / is / are según el sujeto."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "4. Diferencia con rutina",
+              "value": "Sin marcador futuro, significa que está ocurriendo ahora mismo."
             }
           ]
         }
@@ -188,13 +200,34 @@
   ],
   "quiz": [
     {
-      "q": "We ___ lunch with them on Friday.",
+      "q": "We ___ dinner with my grandparents tomorrow night.",
       "options": [
         "are having",
-        "have"
+        "have",
+        "had"
       ],
       "answer": 0,
-      "explain": "Plan acordado → present continuous."
+      "explain": "Para una cita o compromiso agendado en el futuro se usa el presente continuo ('are having')."
+    },
+    {
+      "q": "___ she starting her new job next month?",
+      "options": [
+        "Is",
+        "Does",
+        "Will be"
+      ],
+      "answer": 0,
+      "explain": "En preguntas de presente continuo para planes de futuro se inicia con la forma del verbo to be ('Is' para 'she')."
+    },
+    {
+      "q": "¿Qué frase expresa un acuerdo futuro totalmente agendado?",
+      "options": [
+        "They are taking the 9:00 train tomorrow.",
+        "They take the 9:00 train tomorrow.",
+        "They took the 9:00 train tomorrow."
+      ],
+      "answer": 0,
+      "explain": "'They are taking...' utiliza presente continuo con referencia temporal futura para un viaje confirmado."
     }
   ]
 }

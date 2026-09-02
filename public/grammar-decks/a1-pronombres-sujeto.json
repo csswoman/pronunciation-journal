@@ -1,4 +1,5 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "A1 · Pronombres",
     "title": "Pronombres",
@@ -24,14 +25,14 @@
             },
             {
               "key": "you",
-              "value": "tú / usted · You are here.",
+              "value": "tú / usted / ustedes · You are here.",
               "highlights": [
                 "You"
               ]
             },
             {
               "key": "he / she / it",
-              "value": "él / ella / eso · She works.",
+              "value": "él / ella / objeto o animal · She works.",
               "highlights": [
                 "She"
               ]
@@ -55,30 +56,30 @@
       "id": "a1-pronombres-sujeto-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "I",
-              "value": "yo · I am a student.",
+              "key": "Afirmativo",
+              "value": "Sujeto + Verbo · I study English.",
               "highlights": [
-                "I"
+                "I study"
               ]
             },
             {
-              "key": "you",
-              "value": "tú / usted · You are here.",
+              "key": "Negativo",
+              "value": "Sujeto + don't/doesn't + Verbo · She does not like tea.",
               "highlights": [
-                "You"
+                "She does not"
               ]
             },
             {
-              "key": "he / she / it",
-              "value": "él / ella / eso · She works.",
+              "key": "Interrogativo",
+              "value": "Auxiliar + Sujeto + Verbo? · Do you speak Spanish?",
               "highlights": [
-                "She"
+                "Do you"
               ]
             }
           ]
@@ -89,26 +90,26 @@
       "id": "a1-pronombres-sujeto-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "I am a student."
+              "key": "Presentación",
+              "value": "Hi! I am Alex and she is Sarah."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "You are here."
+              "key": "Rutina diaria",
+              "value": "We live in Madrid and they work together."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "She works."
+              "key": "Clima y lugar",
+              "value": "It is cold today, but it is a nice day."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "They live here."
+              "key": "Profesión",
+              "value": "He is a doctor and works at the city hospital."
             }
           ]
         }
@@ -118,23 +119,23 @@
       "id": "a1-pronombres-sujeto-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "I",
-              "rule": "yo · I am a student.",
+              "label": "I / She / They (Sujeto)",
+              "rule": "Realiza la acción antes del verbo",
               "examples": [
-                "I am a student."
+                "I called Maria yesterday."
               ]
             },
             {
-              "label": "you",
-              "rule": "tú / usted · You are here.",
+              "label": "me / her / them (Objeto)",
+              "rule": "Recibe la acción después del verbo",
               "examples": [
-                "You are here."
+                "Maria called me yesterday."
               ]
             }
           ]
@@ -145,19 +146,19 @@
       "id": "a1-pronombres-sujeto-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "Me am tired."
+              "text": "Is raining today."
             },
             {
               "variant": "good",
-              "text": "I am tired.",
-              "note": "el sujeto es I, no me"
+              "text": "It is raining today.",
+              "note": "el sujeto 'It' es obligatorio para el clima"
             }
           ]
         }
@@ -166,27 +167,27 @@
     {
       "id": "a1-pronombres-sujeto-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "Sujeto obligatorio",
+              "value": "Nunca omitas el pronombre en inglés (ej. It is warm, no Is warm)."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "Mayúscula",
+              "value": "El pronombre 'I' (yo) siempre se escribe en mayúscula."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "You",
+              "value": "Sirve tanto para singular (tú/usted) como para plural (ustedes)."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "It",
+              "value": "Reemplaza cosas, animales, lugares o clima en singular."
             }
           ]
         }
@@ -199,13 +200,31 @@
   ],
   "quiz": [
     {
-      "q": "___ is my brother.",
+      "q": "___ lives in London with her family.",
       "options": [
-        "He",
-        "Him"
+        "She",
+        "Her"
       ],
       "answer": 0,
-      "explain": "Antes del verbo va el pronombre sujeto he."
+      "explain": "Antes del verbo va el pronombre sujeto 'She'."
+    },
+    {
+      "q": "¿Cuál oración es gramaticalmente correcta en inglés?",
+      "options": [
+        "Is very warm today.",
+        "It is very warm today."
+      ],
+      "answer": 1,
+      "explain": "En inglés las oraciones sobre el clima requieren el pronombre sujeto 'It'."
+    },
+    {
+      "q": "___ always study together on weekends.",
+      "options": [
+        "We",
+        "Us"
+      ],
+      "answer": 0,
+      "explain": "'We' es el pronombre sujeto correspondiente a 'nosotros'."
     }
   ]
 }

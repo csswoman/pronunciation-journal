@@ -14,8 +14,16 @@
         {
           "type": "conjugation",
           "rows": [
-            { "pronoun": "I / He / She / It", "form": "was working", "hint": "at 8pm" },
-            { "pronoun": "You / We / They", "form": "were working", "hint": "at 8pm" }
+            {
+              "pronoun": "I / He / She / It",
+              "form": "was working",
+              "hint": "at 8pm"
+            },
+            {
+              "pronoun": "You / We / They",
+              "form": "were working",
+              "hint": "at 8pm"
+            }
           ]
         }
       ],
@@ -36,12 +44,18 @@
             {
               "label": "Past continuous",
               "rule": "acción en curso (fondo)",
-              "examples": ["I was sleeping", "She was cooking"]
+              "examples": [
+                "I was sleeping",
+                "She was cooking"
+              ]
             },
             {
               "label": "Past simple",
               "rule": "acción que interrumpe",
-              "examples": ["when the phone rang", "when he arrived"]
+              "examples": [
+                "when the phone rang",
+                "when he arrived"
+              ]
             }
           ]
         }
@@ -51,14 +65,31 @@
       "id": "cc-when-while",
       "tag": "when / while",
       "title": "when y while",
-      "titleItalic": ["when", "while"],
+      "titleItalic": [
+        "when",
+        "while"
+      ],
       "lede": "Conectan las dos acciones. Suelen acompañar a uno u otro tiempo.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
-            { "key": "while", "value": "+ acción larga · While I was reading...", "highlights": ["while"], "hint": "+ pasado continuo" },
-            { "key": "when", "value": "+ acción corta · ...when the lights went out.", "highlights": ["when"], "hint": "+ pasado simple" }
+            {
+              "key": "while",
+              "value": "+ acción larga · While I was reading...",
+              "highlights": [
+                "while"
+              ],
+              "hint": "+ pasado continuo"
+            },
+            {
+              "key": "when",
+              "value": "+ acción corta · ...when the lights went out.",
+              "highlights": [
+                "when"
+              ],
+              "hint": "+ pasado simple"
+            }
           ]
         }
       ],
@@ -71,15 +102,36 @@
       "id": "cc-first-cond",
       "tag": "Primer condicional",
       "title": "if + presente, will + verbo",
-      "titleItalic": ["if"],
+      "titleItalic": [
+        "if"
+      ],
       "lede": "Para situaciones reales y posibles en el futuro y su consecuencia.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
-            { "key": "Condición (if)", "value": "presente simple · If it rains...", "highlights": ["If it rains"], "hint": "nunca \"if it will rain\"" },
-            { "key": "Resultado", "value": "will + verbo · ...we will stay home.", "highlights": ["we will stay"] },
-            { "key": "Orden libre", "value": "We'll stay home if it rains. (sin coma)", "highlights": ["if it rains"] }
+            {
+              "key": "Condición (if)",
+              "value": "presente simple · If it rains...",
+              "highlights": [
+                "If it rains"
+              ],
+              "hint": "nunca \"if it will rain\""
+            },
+            {
+              "key": "Resultado",
+              "value": "will + verbo · ...we will stay home.",
+              "highlights": [
+                "we will stay"
+              ]
+            },
+            {
+              "key": "Orden libre",
+              "value": "We'll stay home if it rains. (sin coma)",
+              "highlights": [
+                "if it rains"
+              ]
+            }
           ]
         }
       ]
@@ -93,9 +145,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "unless", "value": "a menos que (= if not) · unless you hurry", "highlights": ["unless"] },
-            { "key": "as soon as", "value": "en cuanto · as soon as I arrive", "highlights": ["as soon as"] },
-            { "key": "when", "value": "cuando (futuro seguro) · when I finish", "highlights": ["when"] }
+            {
+              "key": "unless",
+              "value": "a menos que (= if not) · unless you hurry",
+              "highlights": [
+                "unless"
+              ]
+            },
+            {
+              "key": "as soon as",
+              "value": "en cuanto · as soon as I arrive",
+              "highlights": [
+                "as soon as"
+              ]
+            },
+            {
+              "key": "when",
+              "value": "cuando (futuro seguro) · when I finish",
+              "highlights": [
+                "when"
+              ]
+            }
           ]
         }
       ]
@@ -109,13 +179,59 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "bad", "text": "If it will rain, we will stay." },
-            { "variant": "good", "text": "If it rains, we will stay.", "note": "tras if, presente" },
-            { "variant": "bad", "text": "When I will arrive, I'll call you." },
-            { "variant": "good", "text": "When I arrive, I'll call you.", "note": "tras when (futuro), presente" }
+            {
+              "variant": "bad",
+              "text": "If it will rain, we will stay."
+            },
+            {
+              "variant": "good",
+              "text": "If it rains, we will stay.",
+              "note": "tras if, presente"
+            },
+            {
+              "variant": "bad",
+              "text": "When I will arrive, I'll call you."
+            },
+            {
+              "variant": "good",
+              "text": "When I arrive, I'll call you.",
+              "note": "tras when (futuro), presente"
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "If it rains tomorrow, we ___ the football match.",
+      "options": [
+        "will cancel",
+        "cancelled",
+        "would cancel"
+      ],
+      "answer": 0,
+      "explain": "En el primer condicional, la consecuencia futura probable lleva 'will + verbo'."
+    },
+    {
+      "q": "I was reading a book when the lights suddenly ___ off.",
+      "options": [
+        "went",
+        "were going",
+        "have gone"
+      ],
+      "answer": 0,
+      "explain": "Una acción puntual que interrumpe una acción en progreso pasada va en pasado simple."
+    },
+    {
+      "q": "While we ___ dinner, someone knocked on the door.",
+      "options": [
+        "were having",
+        "had",
+        "have had"
+      ],
+      "answer": 0,
+      "explain": "'While' introduce la acción continuada en pasado continuo ('were having')."
     }
   ]
 }

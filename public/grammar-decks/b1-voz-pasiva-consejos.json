@@ -14,8 +14,20 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Fórmula", "value": "objeto + be + participio · The car is washed.", "highlights": ["is washed"] },
-            { "key": "El sujeto pasa al final", "value": "o desaparece si no importa quién", "highlights": ["desaparece"] }
+            {
+              "key": "Fórmula",
+              "value": "objeto + be + participio · The car is washed.",
+              "highlights": [
+                "is washed"
+              ]
+            },
+            {
+              "key": "El sujeto pasa al final",
+              "value": "o desaparece si no importa quién",
+              "highlights": [
+                "desaparece"
+              ]
+            }
           ]
         }
       ],
@@ -36,12 +48,18 @@
             {
               "label": "Activa",
               "rule": "el sujeto actúa",
-              "examples": ["Shakespeare wrote it.", "They build houses."]
+              "examples": [
+                "Shakespeare wrote it.",
+                "They build houses."
+              ]
             },
             {
               "label": "Pasiva",
               "rule": "el foco es la acción",
-              "examples": ["It was written by Shakespeare.", "Houses are built."]
+              "examples": [
+                "It was written by Shakespeare.",
+                "Houses are built."
+              ]
             }
           ]
         }
@@ -56,9 +74,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Presente", "value": "is / are + participio · English is spoken here.", "highlights": ["is spoken"] },
-            { "key": "Pasado", "value": "was / were + participio · It was made in Italy.", "highlights": ["was made"] },
-            { "key": "Futuro", "value": "will be + participio · It will be finished tomorrow.", "highlights": ["will be finished"] }
+            {
+              "key": "Presente",
+              "value": "is / are + participio · English is spoken here.",
+              "highlights": [
+                "is spoken"
+              ]
+            },
+            {
+              "key": "Pasado",
+              "value": "was / were + participio · It was made in Italy.",
+              "highlights": [
+                "was made"
+              ]
+            },
+            {
+              "key": "Futuro",
+              "value": "will be + participio · It will be finished tomorrow.",
+              "highlights": [
+                "will be finished"
+              ]
+            }
           ]
         }
       ]
@@ -67,15 +103,28 @@
       "id": "pv-by",
       "tag": "by",
       "title": "by + quién la hizo",
-      "titleItalic": ["by"],
+      "titleItalic": [
+        "by"
+      ],
       "lede": "Si quieres mencionar al autor de la acción, usa by. Pero solo si aporta algo.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
-            { "variant": "good", "text": "The novel was written by Orwell.", "note": "el autor importa → by" },
-            { "variant": "bad", "text": "My wallet was stolen by someone." },
-            { "variant": "good", "text": "My wallet was stolen.", "note": "no importa quién → sin by" }
+            {
+              "variant": "good",
+              "text": "The novel was written by Orwell.",
+              "note": "el autor importa → by"
+            },
+            {
+              "variant": "bad",
+              "text": "My wallet was stolen by someone."
+            },
+            {
+              "variant": "good",
+              "text": "My wallet was stolen.",
+              "note": "no importa quién → sin by"
+            }
           ]
         }
       ]
@@ -84,15 +133,35 @@
       "id": "pv-advice",
       "tag": "Consejos",
       "title": "should y shouldn't",
-      "titleItalic": ["should"],
+      "titleItalic": [
+        "should"
+      ],
       "lede": "La forma más común de aconsejar. should + verbo base, igual para todos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
-            { "key": "should", "value": "deberías · You should rest.", "highlights": ["should rest"] },
-            { "key": "shouldn't", "value": "no deberías · You shouldn't smoke.", "highlights": ["shouldn't smoke"] },
-            { "key": "Pregunta", "value": "What should I do?", "highlights": ["What should I do?"] }
+            {
+              "key": "should",
+              "value": "deberías · You should rest.",
+              "highlights": [
+                "should rest"
+              ]
+            },
+            {
+              "key": "shouldn't",
+              "value": "no deberías · You shouldn't smoke.",
+              "highlights": [
+                "shouldn't smoke"
+              ]
+            },
+            {
+              "key": "Pregunta",
+              "value": "What should I do?",
+              "highlights": [
+                "What should I do?"
+              ]
+            }
           ]
         }
       ],
@@ -110,9 +179,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "had better", "value": "más fuerte (advertencia) · You'd better hurry.", "highlights": ["'d better hurry"] },
-            { "key": "ought to", "value": "= should · You ought to call her.", "highlights": ["ought to call"] },
-            { "key": "Why don't you...?", "value": "sugerencia suave · Why don't you rest?", "highlights": ["Why don't you"] }
+            {
+              "key": "had better",
+              "value": "más fuerte (advertencia) · You'd better hurry.",
+              "highlights": [
+                "'d better hurry"
+              ]
+            },
+            {
+              "key": "ought to",
+              "value": "= should · You ought to call her.",
+              "highlights": [
+                "ought to call"
+              ]
+            },
+            {
+              "key": "Why don't you...?",
+              "value": "sugerencia suave · Why don't you rest?",
+              "highlights": [
+                "Why don't you"
+              ]
+            }
           ]
         }
       ],
@@ -120,6 +207,38 @@
         "label": "Matiz:",
         "body": "had better implica que algo malo pasará si no lo haces; should es un consejo neutro."
       }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "The new hospital ___ built next year.",
+      "options": [
+        "will be",
+        "was",
+        "is"
+      ],
+      "answer": 0,
+      "explain": "La voz pasiva en futuro se construye con 'will be + participio'."
+    },
+    {
+      "q": "You had better ___ your warm coat today.",
+      "options": [
+        "take",
+        "to take",
+        "taking"
+      ],
+      "answer": 0,
+      "explain": "'Had better' expresa una recomendación urgente seguida del verbo base sin 'to'."
+    },
+    {
+      "q": "English ___ spoken in many countries around the world.",
+      "options": [
+        "is",
+        "are",
+        "be"
+      ],
+      "answer": 0,
+      "explain": "Voz pasiva en presente simple con sujeto singular ('English is spoken')."
     }
   ]
 }

@@ -1,51 +1,49 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "C1 · Colocaciones",
     "title": "Verbos",
     "titleEmphasis": "delexicales",
-    "goal": "Ya combinas make/do/take/have con sustantivos en colocaciones fijas: make a decision, take responsibility."
+    "goal": "Utiliza verbos delexicales (make, do, take, have, give, pay) combinados con sustantivos para expresar acciones de forma natural."
   },
-  "related": [
-    { "slug": "chunk-the-9-verbs-strategy", "label": "La estrategia de los 9 verbos" },
-    { "slug": "chunk-light-verbs-get-set-put-go", "label": "Light Verbs: Get, Set, Put y Go" },
-    { "slug": "chunk-collocations", "label": "Colocaciones naturales" }
-  ],
   "cards": [
     {
       "id": "c1-verbos-delexicales-concept",
       "tag": "Idea central",
       "title": "Verbos: qué expresa",
-      "lede": "Ya combinas make/do/take/have con sustantivos en colocaciones fijas: make a decision, take responsibility.",
+      "lede": "Utiliza verbos delexicales (make, do, take, have, give, pay) combinados con sustantivos para expresar acciones de forma natural.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "make",
-              "value": "make a mistake · make progress · make an effort",
+              "key": "make (crear/decidir)",
+              "value": "make a recommendation · make progress · make a decision",
               "highlights": [
                 "make"
               ]
             },
             {
-              "key": "do",
-              "value": "do research · do your best · do business",
+              "key": "do (ejecutar/trabajar)",
+              "value": "do research · do business · do an assignment",
               "highlights": [
                 "do"
               ]
             },
             {
-              "key": "take",
-              "value": "take action · take responsibility · take a break",
+              "key": "take (adoptar/asumir)",
+              "value": "take measures · take responsibility · take a stance",
               "highlights": [
                 "take"
               ]
             },
             {
-              "key": "have",
-              "value": "have a meeting · have an impact · have trouble",
+              "key": "have & give (acciones)",
+              "value": "have an impact on · give priority to · pay attention to",
               "highlights": [
-                "have"
+                "have",
+                "give",
+                "pay"
               ]
             }
           ]
@@ -60,30 +58,30 @@
       "id": "c1-verbos-delexicales-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "make",
-              "value": "make a mistake · make progress · make an effort",
+              "key": "Afirmativa",
+              "value": "Sujeto + verbo delexical + sustantivo + complemento · The board made a strategic decision.",
               "highlights": [
-                "make"
+                "made a strategic decision"
               ]
             },
             {
-              "key": "do",
-              "value": "do research · do your best · do business",
+              "key": "Negativa",
+              "value": "They did not take any precautions prior to the system update.",
               "highlights": [
-                "do"
+                "take any precautions"
               ]
             },
             {
-              "key": "take",
-              "value": "take action · take responsibility · take a break",
+              "key": "Interrogativa",
+              "value": "Has the team done research on market trends?",
               "highlights": [
-                "take"
+                "done research"
               ]
             }
           ]
@@ -94,26 +92,26 @@
       "id": "c1-verbos-delexicales-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "make progress"
+              "key": "Liderazgo corporativo",
+              "value": "Executives must take full responsibility for corporate compliance."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "do your best"
+              "key": "Investigación científica",
+              "value": "Our team is doing extensive research into renewable energy sources."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "take responsibility"
+              "key": "Consultoría estratégica",
+              "value": "We made a formal recommendation to restructure the department."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "have an impact"
+              "key": "Análisis de mercado",
+              "value": "The new tax regulation will have a direct impact on small businesses."
             }
           ]
         }
@@ -123,23 +121,24 @@
       "id": "c1-verbos-delexicales-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "make",
-              "rule": "make a mistake · make progress · make an effort",
+              "label": "Make vs. Do",
+              "rule": "'Make' se enfoca en decisiones, planes y resultados; 'Do' en tareas, obligaciones y estudios",
               "examples": [
-                "make progress"
+                "make an arrangement",
+                "do a thorough analysis"
               ]
             },
             {
-              "label": "do",
-              "rule": "do research · do your best · do business",
+              "label": "Verbo simple vs. Delexical",
+              "rule": "El verbo delexical enfatiza la naturaleza de la acción mediante un adjetivo modificador",
               "examples": [
-                "do your best"
+                "decide vs. make a firm decision"
               ]
             }
           ]
@@ -150,19 +149,19 @@
       "id": "c1-verbos-delexicales-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "do a decision"
+              "text": "The committee did a decision after hours of debate."
             },
             {
               "variant": "good",
-              "text": "make a decision",
-              "note": "colocación fija, no traducible palabra a palabra"
+              "text": "The committee made a decision after hours of debate.",
+              "note": "'Decision' se combina exclusivamente con 'make', no con 'do'."
             }
           ]
         }
@@ -171,27 +170,27 @@
     {
       "id": "c1-verbos-delexicales-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "1. Colocaciones fijas",
+              "value": "Los verbos delexicales pierden su significado literal y forman un núcleo idiomático con el sustantivo."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "2. Modificación adjetival",
+              "value": "Permiten añadir adjetivos fácilmente (ej. 'take immediate action' en lugar de 'act immediately')."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "3. 'Make' para acuerdos",
+              "value": "Usado para 'make a decision', 'make an offer', 'make a complaint'."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "4. 'Do' para tareas",
+              "value": "Usado para 'do research', 'do business', 'do damage'."
             }
           ]
         }
@@ -204,13 +203,37 @@
   ],
   "quiz": [
     {
-      "q": "We need to ___ responsibility for the delay.",
+      "q": "The government decided to ___ immediate action to curb inflation.",
       "options": [
         "take",
-        "make"
+        "make",
+        "do",
+        "perform"
       ],
       "answer": 0,
-      "explain": "take responsibility es la colocación natural."
+      "explain": "'Take action' (tomar medidas/acción) es la colocación delexical correcta."
+    },
+    {
+      "q": "Our analysts have ___ substantial research into consumer trends.",
+      "options": [
+        "done",
+        "made",
+        "taken",
+        "given"
+      ],
+      "answer": 0,
+      "explain": "'Research' se combina con el verbo 'do' (do research)."
+    },
+    {
+      "q": "¿Cuál de las siguientes oraciones utiliza una colocación delexical natural?",
+      "options": [
+        "The new policy will have a profound effect on productivity.",
+        "The new policy will make a profound effect on productivity.",
+        "The new policy will do a profound effect on productivity.",
+        "The new policy will perform a profound effect on productivity."
+      ],
+      "answer": 0,
+      "explain": "'Have an effect / impact on' es la estructura fija delexical idónea."
     }
   ]
 }

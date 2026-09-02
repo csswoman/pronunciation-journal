@@ -1,4 +1,5 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "B2 · Condicionales",
     "title": "Condicionales",
@@ -16,33 +17,34 @@
           "type": "rules",
           "rows": [
             {
-              "key": "Pasado → presente",
-              "value": "If I had studied, I would have a better job now.",
+              "key": "Tipo A: Causa pasada → Efecto presente",
+              "value": "If + past perfect, would + verbo base · If I had studied medicine, I would be a doctor today.",
               "highlights": [
                 "had studied",
-                "would have"
+                "would be"
               ]
             },
             {
-              "key": "Presente → pasado",
-              "value": "If I were taller, I would have joined the team.",
+              "key": "Tipo B: Causa presente → Efecto pasado",
+              "value": "If + past simple, would have + participio · If I were braver, I would have accepted the offer.",
               "highlights": [
                 "were",
-                "would have"
+                "would have accepted"
               ]
             },
             {
-              "key": "Idea",
-              "value": "condición en un tiempo, resultado en otro",
+              "key": "Marcadores temporales claros",
+              "value": "Uso de 'now', 'today', 'at the time' para indicar el tiempo de cada cláusula.",
               "highlights": [
-                "If"
-              ]
-            },
-            {
-              "key": "Señal",
-              "value": "now, then, at the time",
-              "highlights": [
+                "today",
                 "now"
+              ]
+            },
+            {
+              "key": "Variación de modales",
+              "value": "Se puede usar could / might en lugar de would para indicar posibilidad.",
+              "highlights": [
+                "might be"
               ]
             }
           ]
@@ -57,32 +59,41 @@
       "id": "b2-condicionales-mixtos-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Pasado → presente",
-              "value": "If I had studied, I would have a better job now.",
+              "key": "Afirmativa (Pasado → Presente)",
+              "value": "If + sujet + had + V3, sujet + would + V base + now · If she had saved money, she would own a house now.",
               "highlights": [
-                "had studied",
-                "would have"
+                "had saved",
+                "would own"
               ]
             },
             {
-              "key": "Presente → pasado",
-              "value": "If I were taller, I would have joined the team.",
+              "key": "Afirmativa (Presente → Pasado)",
+              "value": "If + sujet + past simple, sujet + would have + V3 · If I spoke French, I would have translated it.",
               "highlights": [
-                "were",
-                "would have"
+                "spoke",
+                "would have translated"
               ]
             },
             {
-              "key": "Idea",
-              "value": "condición en un tiempo, resultado en otro",
+              "key": "Negativa",
+              "value": "If I hadn't missed the train, I wouldn't be stuck here now. · Past perfect neg + would neg",
               "highlights": [
-                "If"
+                "hadn't missed",
+                "wouldn't be"
+              ]
+            },
+            {
+              "key": "Interrogativa",
+              "value": "Would you be happier now if you had taken that job? · Would + S + V base if + had + V3?",
+              "highlights": [
+                "Would you be",
+                "had taken"
               ]
             }
           ]
@@ -93,26 +104,26 @@
       "id": "b2-condicionales-mixtos-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "If I had studied, I would have a better job now."
+              "key": "Decisiones de carrera",
+              "value": "If I had accepted the promotion in London, I would be living there right now."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "If I were taller, I would have joined the team."
+              "key": "Rasgos de personalidad",
+              "value": "If Peter weren't so indecisive, he would have bought that property last week."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "condición en un tiempo, resultado en otro"
+              "key": "Consecuencias presentes",
+              "value": "If we hadn't lost our passports, we wouldn't be waiting at the embassy today."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "now, then, at the time"
+              "key": "Reflexión de vida",
+              "value": "If I had learned to code at school, I would have a much higher salary now."
             }
           ]
         }
@@ -122,23 +133,23 @@
       "id": "b2-condicionales-mixtos-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "Pasado → presente",
-              "rule": "If I had studied, I would have a better job now.",
+              "label": "Tercer Condicional Puro (Pasado → Pasado)",
+              "rule": "Tanto la hipótesis como el resultado imaginario pertenecen 100% al pasado.",
               "examples": [
-                "If I had studied, I would have a better job now."
+                "If I had studied, I would have passed the exam last year."
               ]
             },
             {
-              "label": "Presente → pasado",
-              "rule": "If I were taller, I would have joined the team.",
+              "label": "Condicional Mixto (Pasado → Presente)",
+              "rule": "La causa hipotética ocurrió en el pasado, pero su efecto afecta la realidad presente.",
               "examples": [
-                "If I were taller, I would have joined the team."
+                "If I had studied, I would have a degree now."
               ]
             }
           ]
@@ -149,19 +160,19 @@
       "id": "b2-condicionales-mixtos-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "If I studied harder, I would have passed."
+              "text": "If I had win the lottery last year, I would buy a yacht today."
             },
             {
               "variant": "good",
-              "text": "If I had studied harder, I would have passed.",
-              "note": "arrepentimiento pasado → past perfect"
+              "text": "If I had won the lottery last year, I would buy a yacht today.",
+              "note": "la cláusula de condición pasada requiere 'had + participio pasado' (had won)"
             }
           ]
         }
@@ -170,27 +181,27 @@
     {
       "id": "b2-condicionales-mixtos-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "Mezcla de tiempos deliberada",
+              "value": "No es un error gramatical; se combinan tiempos para reflejar la realidad temporal de la frase."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "'If I were' para estados permanentes",
+              "value": "Si la condición es un rasgo continuo del presente, usa pasado simple en la cláusula con 'if'."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "Atención a 'now' y 'today'",
+              "value": "Estas palabras en la cláusula principal suelen indicar el uso de 'would + verbo base'."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "'Could have' o 'Might have'",
+              "value": "Sustituyen a 'would have' para expresar capacidad o posibilidad reducida en el pasado."
             }
           ]
         }
@@ -203,13 +214,34 @@
   ],
   "quiz": [
     {
-      "q": "If I ___ the train, I would be there now.",
+      "q": "If I ___ my keys yesterday, I wouldn't be locked out of my apartment right now.",
       "options": [
-        "had caught",
-        "caught"
+        "hadn't lost",
+        "didn't lose",
+        "don't lose"
       ],
       "answer": 0,
-      "explain": "Condición pasada, resultado presente → had + pp."
+      "explain": "Causa pasada hipotética (perder las llaves ayer) → past perfect negative ('hadn't lost')."
+    },
+    {
+      "q": "If Sarah were more organized, she ___ her presentation on time last night.",
+      "options": [
+        "would have finished",
+        "would finish",
+        "will finish"
+      ],
+      "answer": 0,
+      "explain": "Condición presente/habitual (ser organizada) con resultado pasado (terminar anoche) → 'would have + V3'."
+    },
+    {
+      "q": "If we had taken the map with us, we ___ lost in the forest right now.",
+      "options": [
+        "wouldn't be",
+        "wouldn't have been",
+        "won't be"
+      ],
+      "answer": 0,
+      "explain": "La consecuencia actual ('right now') de una acción pasada requiere 'wouldn't be + adjetivo'."
     }
   ]
 }

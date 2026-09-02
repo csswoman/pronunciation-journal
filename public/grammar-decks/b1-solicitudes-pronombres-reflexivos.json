@@ -14,10 +14,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Directo", "value": "Can you help me?", "highlights": ["Can you"] },
-            { "key": "Educado", "value": "Could you help me?", "highlights": ["Could you"] },
-            { "key": "Muy educado", "value": "Would you mind helping me?", "highlights": ["Would you mind"] },
-            { "key": "Formal", "value": "I was wondering if you could help.", "highlights": ["I was wondering if"] }
+            {
+              "key": "Directo",
+              "value": "Can you help me?",
+              "highlights": [
+                "Can you"
+              ]
+            },
+            {
+              "key": "Educado",
+              "value": "Could you help me?",
+              "highlights": [
+                "Could you"
+              ]
+            },
+            {
+              "key": "Muy educado",
+              "value": "Would you mind helping me?",
+              "highlights": [
+                "Would you mind"
+              ]
+            },
+            {
+              "key": "Formal",
+              "value": "I was wondering if you could help.",
+              "highlights": [
+                "I was wondering if"
+              ]
+            }
           ]
         }
       ],
@@ -35,9 +59,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Shall I", "value": "Shall I carry that?", "highlights": ["Shall I"] },
-            { "key": "Would you like", "value": "Would you like a coffee?", "highlights": ["Would you like"] },
-            { "key": "I'll", "value": "I'll get it for you.", "highlights": ["I'll"] }
+            {
+              "key": "Shall I",
+              "value": "Shall I carry that?",
+              "highlights": [
+                "Shall I"
+              ]
+            },
+            {
+              "key": "Would you like",
+              "value": "Would you like a coffee?",
+              "highlights": [
+                "Would you like"
+              ]
+            },
+            {
+              "key": "I'll",
+              "value": "I'll get it for you.",
+              "highlights": [
+                "I'll"
+              ]
+            }
           ]
         }
       ]
@@ -51,9 +93,22 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Singular", "value": "myself, yourself, himself, herself, itself" },
-            { "key": "Plural", "value": "ourselves, yourselves, themselves" },
-            { "key": "Uso", "value": "I hurt myself. · She taught herself.", "highlights": ["myself", "herself"] }
+            {
+              "key": "Singular",
+              "value": "myself, yourself, himself, herself, itself"
+            },
+            {
+              "key": "Plural",
+              "value": "ourselves, yourselves, themselves"
+            },
+            {
+              "key": "Uso",
+              "value": "I hurt myself. · She taught herself.",
+              "highlights": [
+                "myself",
+                "herself"
+              ]
+            }
           ]
         }
       ],
@@ -71,9 +126,21 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "good", "text": "I made it myself.", "note": "yo mismo, sin ayuda" },
-            { "variant": "good", "text": "The president himself came.", "note": "el mismísimo presidente" },
-            { "variant": "good", "text": "By myself = solo / sin ayuda", "note": "expresión fija" }
+            {
+              "variant": "good",
+              "text": "I made it myself.",
+              "note": "yo mismo, sin ayuda"
+            },
+            {
+              "variant": "good",
+              "text": "The president himself came.",
+              "note": "el mismísimo presidente"
+            },
+            {
+              "variant": "good",
+              "text": "By myself = solo / sin ayuda",
+              "note": "expresión fija"
+            }
           ]
         }
       ]
@@ -90,12 +157,18 @@
             {
               "label": "each other",
               "rule": "mutuo, entre dos",
-              "examples": ["They help each other.", "We love each other."]
+              "examples": [
+                "They help each other.",
+                "We love each other."
+              ]
             },
             {
               "label": "-selves",
               "rule": "cada uno a sí mismo",
-              "examples": ["They blame themselves.", "We taught ourselves."]
+              "examples": [
+                "They blame themselves.",
+                "We taught ourselves."
+              ]
             }
           ]
         }
@@ -110,9 +183,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Aceptar", "value": "Sure. · No problem. · Of course.", "highlights": ["No problem"] },
-            { "key": "A Would you mind", "value": "Not at all. (= claro que sí)", "highlights": ["Not at all"] },
-            { "key": "Declinar", "value": "I'm sorry, I can't right now.", "highlights": ["I'm sorry"] }
+            {
+              "key": "Aceptar",
+              "value": "Sure. · No problem. · Of course.",
+              "highlights": [
+                "No problem"
+              ]
+            },
+            {
+              "key": "A Would you mind",
+              "value": "Not at all. (= claro que sí)",
+              "highlights": [
+                "Not at all"
+              ]
+            },
+            {
+              "key": "Declinar",
+              "value": "I'm sorry, I can't right now.",
+              "highlights": [
+                "I'm sorry"
+              ]
+            }
           ]
         }
       ],
@@ -120,6 +211,38 @@
         "label": "Cuidado:",
         "body": "a Would you mind...? se responde Not at all o No, go ahead para decir que sí."
       }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Could you ___ pass me the salt, please?",
+      "options": [
+        "possibly",
+        "maybe",
+        "like"
+      ],
+      "answer": 0,
+      "explain": "'Could you possibly...?' es una forma sumamente amable de pedir un favor."
+    },
+    {
+      "q": "He fixed the broken car all by ___.",
+      "options": [
+        "himself",
+        "him",
+        "his"
+      ],
+      "answer": 0,
+      "explain": "El pronombre reflexivo de 'he' es 'himself'; 'by himself' significa 'sin ayuda'."
+    },
+    {
+      "q": "Make ___ at home while I prepare some coffee.",
+      "options": [
+        "yourself",
+        "you",
+        "your"
+      ],
+      "answer": 0,
+      "explain": "'Make yourself at home' es una expresión idiomática reflexiva fija."
     }
   ]
 }

@@ -1,46 +1,40 @@
 {
+  "isGenerated": true,
   "meta": {
-    "eyebrow": "A1 · Preguntas en presente",
+    "eyebrow": "A1 · Preguntas",
     "title": "Preguntas en presente",
     "titleEmphasis": "do y does",
-    "goal": "Ya puedes usar do y does en ejemplos claros y adecuados al contexto."
+    "goal": "Ya puedes formular preguntas en presente con do y does correctamente."
   },
   "cards": [
     {
       "id": "a1-preguntas-do-does-concept",
       "tag": "Idea central",
       "title": "Preguntas en presente: qué expresa",
-      "lede": "Esta lección te ayuda a usar do y does con precisión y sin traducir palabra por palabra.",
+      "lede": "Ya puedes formular preguntas en presente con do y does correctamente.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Do + I/you/we/they",
-              "value": "Do you work here?",
+              "key": "Do",
+              "value": "con I / you / we / they · Do you work here?",
               "highlights": [
-                "Do + I/you/we/they"
+                "Do"
               ]
             },
             {
-              "key": "Does + he/she/it",
-              "value": "Does she live nearby?",
+              "key": "Does",
+              "value": "con he / she / it · Does she live nearby?",
               "highlights": [
-                "Does + he/she/it"
+                "Does"
               ]
             },
             {
-              "key": "verbo base",
-              "value": "después de does no lleva -s",
+              "key": "Verbo base",
+              "value": "el verbo principal no lleva -s tras does",
               "highlights": [
                 "verbo base"
-              ]
-            },
-            {
-              "key": "respuestas cortas",
-              "value": "Yes, I do. / No, she doesn't.",
-              "highlights": [
-                "respuestas cortas"
               ]
             }
           ]
@@ -48,29 +42,38 @@
       ],
       "tip": {
         "label": "Objetivo:",
-        "body": "reconocer la intención y elegir correctamente do y does en situaciones reales."
+        "body": "reconocer el patrón y usarlo en frases propias."
       }
     },
     {
       "id": "a1-preguntas-do-does-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Do + I/you/we/they",
-              "value": "Do you work here?"
+              "key": "Do + Sujeto + Verbo",
+              "value": "Do you like coffee?",
+              "highlights": [
+                "Do you"
+              ]
             },
             {
-              "key": "Does + he/she/it",
-              "value": "Does she live nearby?"
+              "key": "Does + Sujeto + Verbo",
+              "value": "Does he work on Saturdays?",
+              "highlights": [
+                "Does he"
+              ]
             },
             {
-              "key": "verbo base",
-              "value": "después de does no lleva -s"
+              "key": "Respuestas cortas",
+              "value": "Yes, I do. / No, she doesn't.",
+              "highlights": [
+                "Yes, I do"
+              ]
             }
           ]
         }
@@ -80,22 +83,26 @@
       "id": "a1-preguntas-do-does-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa y fíjate en la posición de las palabras.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "Do they speak English?"
+              "key": "Hábitos",
+              "value": "Do you drink coffee every morning?"
             },
             {
-              "key": "Ejemplo 2",
-              "value": "Does he drive?"
+              "key": "Tercera persona",
+              "value": "Does your brother work on Saturdays?"
             },
             {
-              "key": "Ejemplo 3",
-              "value": "Where do you live?"
+              "key": "Idiomas",
+              "value": "Do they speak English fluently?"
+            },
+            {
+              "key": "Información",
+              "value": "Where does your family live?"
             }
           ]
         }
@@ -105,23 +112,23 @@
       "id": "a1-preguntas-do-does-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende de la intención, la cantidad, el tiempo o el registro.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "Do + I/you/we/they",
-              "rule": "Do you work here?",
+              "label": "Do (I / You / We / They)",
+              "rule": "Auxiliar para primera persona y plurales",
               "examples": [
-                "Do they speak English?"
+                "Do you know the answer?"
               ]
             },
             {
-              "label": "Does + he/she/it",
-              "rule": "Does she live nearby?",
+              "label": "Does (He / She / It)",
+              "rule": "Auxiliar para tercera persona singular",
               "examples": [
-                "Does he drive?"
+                "Does he know the answer?"
               ]
             }
           ]
@@ -132,7 +139,7 @@
       "id": "a1-preguntas-do-does-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural y gramatical.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
@@ -144,7 +151,7 @@
             {
               "variant": "good",
               "text": "Does she work here?",
-              "note": "forma recomendada"
+              "note": "después de does el verbo pierde la -s"
             }
           ]
         }
@@ -153,64 +160,64 @@
     {
       "id": "a1-preguntas-do-does-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase antes de continuar.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar exactamente?"
+              "key": "Do",
+              "value": "I, you, we, they"
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma adecuada de do y does."
+              "key": "Does",
+              "value": "he, she, it"
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, verbo, número y tiempo."
+              "key": "Verbo principal",
+              "value": "Siempre en FORMA BASE (sin -s ni -ing)"
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase completa y evita traducir literalmente."
+              "key": "Respuestas cortas",
+              "value": "Yes, I do / No, he doesn't"
             }
           ]
         }
       ],
       "tip": {
         "label": "Práctica:",
-        "body": "crea una frase personal con cada patrón y léela en voz alta."
+        "body": "escribe una frase personal con el patrón."
       }
     }
   ],
   "quiz": [
     {
-      "q": "___ he like coffee?",
+      "q": "___ your sister like classical music?",
       "options": [
-        "Do",
-        "Does"
-      ],
-      "answer": 1,
-      "explain": "La respuesta correcta aplica la regla central de do y does."
-    },
-    {
-      "q": "¿Cuál de estas frases es correcta?",
-      "options": [
-        "Does she works here?",
-        "Does she work here?"
-      ],
-      "answer": 1,
-      "explain": "La segunda opción usa la estructura y el orden correctos."
-    },
-    {
-      "q": "¿Qué conviene revisar al usar do y does?",
-      "options": [
-        "La intención, la estructura y el contexto.",
-        "Solo la traducción literal al español."
+        "Does",
+        "Do"
       ],
       "answer": 0,
-      "explain": "Una frase natural depende del significado, la forma y el contexto, no de traducir palabra por palabra."
+      "explain": "'your sister' equivale a 'she', exige el auxiliar 'Does'."
+    },
+    {
+      "q": "Does he ___ to the gym every day?",
+      "options": [
+        "go",
+        "goes"
+      ],
+      "answer": 0,
+      "explain": "Con el auxiliar 'Does', el verbo principal vuelve a su forma base ('go')."
+    },
+    {
+      "q": "¿Cuál respuesta corta es correcta para 'Do you live in Spain?'?",
+      "options": [
+        "Yes, I do.",
+        "Yes, I live."
+      ],
+      "answer": 0,
+      "explain": "La respuesta corta estándar en inglés utiliza el auxiliar: 'Yes, I do'."
     }
   ]
 }

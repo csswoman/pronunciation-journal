@@ -1,4 +1,5 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "B2 · Concesión",
     "title": "Despite /",
@@ -16,31 +17,30 @@
           "type": "rules",
           "rows": [
             {
-              "key": "despite",
-              "value": "despite the rain · + sustantivo/-ing",
+              "key": "despite + sustantivo / -ing",
+              "value": "despite the rain / despite feeling ill · Sin 'of'",
               "highlights": [
                 "despite"
               ]
             },
             {
-              "key": "in spite of",
-              "value": "in spite of the delay",
+              "key": "in spite of + sustantivo / -ing",
+              "value": "in spite of the delay / in spite of working hard · Con 'of'",
               "highlights": [
                 "in spite of"
               ]
             },
             {
-              "key": "although",
-              "value": "although it rained · + cláusula",
+              "key": "despite the fact that + cláusula",
+              "value": "despite the fact that it rained · Permite oración con verbo conjugado",
               "highlights": [
-                "although"
+                "the fact that"
               ]
             },
             {
-              "key": "Contraste",
-              "value": "despite ≠ although en estructura",
+              "key": "although + oración completa",
+              "value": "although it was raining · Requiere sujeto y verbo conjugado",
               "highlights": [
-                "despite",
                 "although"
               ]
             }
@@ -56,30 +56,37 @@
       "id": "b2-despite-in-spite-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "despite",
-              "value": "despite the rain · + sustantivo/-ing",
+              "key": "Afirmativa con Sustantivo",
+              "value": "Despite / In spite of + sustantivo, sujeto + verbo · Despite the heavy traffic, we arrived on time.",
               "highlights": [
-                "despite"
+                "Despite the heavy traffic"
               ]
             },
             {
-              "key": "in spite of",
-              "value": "in spite of the delay",
+              "key": "Afirmativa con Gerundio",
+              "value": "Despite / In spite of + verbo-ing, sujeto + verbo · In spite of being tired, she finished the report.",
               "highlights": [
-                "in spite of"
+                "In spite of being"
               ]
             },
             {
-              "key": "although",
-              "value": "although it rained · + cláusula",
+              "key": "Afirmativa con 'the fact that'",
+              "value": "Despite the fact that + sujeto + verbo, sujeto + verbo · Despite the fact that he lacked experience, he got the job.",
               "highlights": [
-                "although"
+                "Despite the fact that"
+              ]
+            },
+            {
+              "key": "Negativa con gerundio",
+              "value": "Despite not having a degree, he built a successful business. · despite not -ing",
+              "highlights": [
+                "Despite not having"
               ]
             }
           ]
@@ -90,26 +97,26 @@
       "id": "b2-despite-in-spite-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "+ sustantivo/-ing"
+              "key": "Rendimiento deportivo",
+              "value": "In spite of playing with ten men for most of the game, the team won the final."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "in spite of the delay"
+              "key": "Éxito profesional",
+              "value": "He secured the investment despite facing severe criticism from industry experts."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "+ cláusula"
+              "key": "Condiciones climáticas",
+              "value": "We had a wonderful weekend at the campsite in spite of the gloomy weather."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "despite ≠ although en estructura"
+              "key": "Decisiones de compra",
+              "value": "Despite the high price tag of the device, thousands of customers queued overnight."
             }
           ]
         }
@@ -119,23 +126,25 @@
       "id": "b2-despite-in-spite-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "despite",
-              "rule": "despite the rain · + sustantivo/-ing",
+              "label": "Despite / In Spite Of (Preposiciones)",
+              "rule": "Van seguidas ÚNICAMENTE de un sustantivo, un pronombre (this/that) o un gerundio (-ing).",
               "examples": [
-                "+ sustantivo/-ing"
+                "Despite the rain, we left.",
+                "In spite of being late, he smiled."
               ]
             },
             {
-              "label": "in spite of",
-              "rule": "in spite of the delay",
+              "label": "Although / Even Though (Conjunciones)",
+              "rule": "Van seguidas obligatoriamente de una ORACIÓN COMPLETA (Sujeto + Verbo conjugado).",
               "examples": [
-                "in spite of the delay"
+                "Although it was raining, we left.",
+                "Even though he was late, he smiled."
               ]
             }
           ]
@@ -146,19 +155,19 @@
       "id": "b2-despite-in-spite-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "Despite it rained…"
+              "text": "Despite of the terrible weather, we went hiking."
             },
             {
               "variant": "good",
-              "text": "Despite the rain… / Although it rained…",
-              "note": "despite + sustantivo, no oración completa"
+              "text": "Despite the terrible weather, we went hiking. / In spite of the terrible weather...",
+              "note": "la palabra 'despite' nunca lleva la preposición 'of'; 'in spite of' sí requiere 'of'"
             }
           ]
         }
@@ -167,27 +176,27 @@
     {
       "id": "b2-despite-in-spite-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "DESPITE jamás lleva 'of'",
+              "value": "Es un error común decir 'despite of'; di siempre 'despite' a secas."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "IN SPITE exige 'of'",
+              "value": "No omitas la preposición 'of' cuando uses 'in spite' (in spite OF the cold)."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "Usa 'the fact that' para oraciones",
+              "value": "Si quieres poner sujeto y verbo después de 'despite', añade 'the fact that'."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "Mismo significado",
+              "value": "Despite e In spite of son 100% intercambiables entre sí."
             }
           ]
         }
@@ -200,13 +209,34 @@
   ],
   "quiz": [
     {
-      "q": "___ the weather, we went out.",
+      "q": "___ having a sore throat, the singer gave a magnificent performance.",
       "options": [
         "Despite",
-        "Although"
+        "Although",
+        "Even though"
       ],
       "answer": 0,
-      "explain": "Tras despite va sustantivo (the weather)."
+      "explain": "Tras el hueco hay un verbo en gerundio ('having'), por lo que corresponde la preposición 'Despite'."
+    },
+    {
+      "q": "We enjoyed our picnic in the park ___ the cold wind.",
+      "options": [
+        "in spite of",
+        "despite of",
+        "although"
+      ],
+      "answer": 0,
+      "explain": "'In spite of' es la forma correcta con preposición 'of' seguida de un grupo nominal ('the cold wind')."
+    },
+    {
+      "q": "___ he studied diligently for weeks, he failed to score top marks.",
+      "options": [
+        "Although",
+        "Despite",
+        "In spite of"
+      ],
+      "answer": 0,
+      "explain": "Tras el hueco hay una oración completa con sujeto y verbo ('he studied'), exigiendo 'Although'."
     }
   ]
 }

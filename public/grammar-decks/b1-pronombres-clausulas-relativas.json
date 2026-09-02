@@ -9,15 +9,39 @@
       "id": "rc-who-which-that",
       "tag": "Relativos",
       "title": "who, which, that",
-      "titleItalic": ["who", "which", "that"],
+      "titleItalic": [
+        "who",
+        "which",
+        "that"
+      ],
       "lede": "Unen dos ideas y añaden información sobre un sustantivo. Cada uno tiene su uso.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
-            { "key": "who", "value": "personas · the man who called", "highlights": ["who"], "hint": "quien" },
-            { "key": "which", "value": "cosas · the book which I read", "highlights": ["which"], "hint": "que (cosas)" },
-            { "key": "that", "value": "personas o cosas (informal) · the car that broke down", "highlights": ["that"] }
+            {
+              "key": "who",
+              "value": "personas · the man who called",
+              "highlights": [
+                "who"
+              ],
+              "hint": "quien"
+            },
+            {
+              "key": "which",
+              "value": "cosas · the book which I read",
+              "highlights": [
+                "which"
+              ],
+              "hint": "que (cosas)"
+            },
+            {
+              "key": "that",
+              "value": "personas o cosas (informal) · the car that broke down",
+              "highlights": [
+                "that"
+              ]
+            }
           ]
         }
       ]
@@ -26,15 +50,39 @@
       "id": "rc-where-whose",
       "tag": "Más relativos",
       "title": "where y whose",
-      "titleItalic": ["where", "whose"],
+      "titleItalic": [
+        "where",
+        "whose"
+      ],
       "lede": "Para hablar de lugares y de posesión dentro de la frase.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
-            { "key": "where", "value": "lugares · the city where I was born", "highlights": ["where"], "hint": "donde" },
-            { "key": "whose", "value": "posesión · the woman whose dog barks", "highlights": ["whose"], "hint": "cuyo / de quien" },
-            { "key": "when", "value": "tiempo · the day when we met", "highlights": ["when"], "hint": "cuando" }
+            {
+              "key": "where",
+              "value": "lugares · the city where I was born",
+              "highlights": [
+                "where"
+              ],
+              "hint": "donde"
+            },
+            {
+              "key": "whose",
+              "value": "posesión · the woman whose dog barks",
+              "highlights": [
+                "whose"
+              ],
+              "hint": "cuyo / de quien"
+            },
+            {
+              "key": "when",
+              "value": "tiempo · the day when we met",
+              "highlights": [
+                "when"
+              ],
+              "hint": "cuando"
+            }
           ]
         }
       ]
@@ -51,12 +99,18 @@
             {
               "label": "Sin comas",
               "rule": "información esencial",
-              "examples": ["The man who lives here is a doctor.", "(distingue de qué hombre hablo)"]
+              "examples": [
+                "The man who lives here is a doctor.",
+                "(distingue de qué hombre hablo)"
+              ]
             },
             {
               "label": "Con comas",
               "rule": "información extra",
-              "examples": ["My father, who is 60, still works.", "(dato adicional, no esencial)"]
+              "examples": [
+                "My father, who is 60, still works.",
+                "(dato adicional, no esencial)"
+              ]
             }
           ]
         }
@@ -75,9 +129,20 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "good", "text": "The film (that) I saw was great.", "note": "se puede quitar: es objeto" },
-            { "variant": "bad", "text": "The man lives here is nice." },
-            { "variant": "good", "text": "The man who lives here is nice.", "note": "aquí es sujeto: no se quita" }
+            {
+              "variant": "good",
+              "text": "The film (that) I saw was great.",
+              "note": "se puede quitar: es objeto"
+            },
+            {
+              "variant": "bad",
+              "text": "The man lives here is nice."
+            },
+            {
+              "variant": "good",
+              "text": "The man who lives here is nice.",
+              "note": "aquí es sujeto: no se quita"
+            }
           ]
         }
       ]
@@ -91,10 +156,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "I → me", "value": "She called me.", "highlights": ["me"] },
-            { "key": "he → him", "value": "I saw him.", "highlights": ["him"] },
-            { "key": "she → her", "value": "We helped her.", "highlights": ["her"] },
-            { "key": "they → them", "value": "He knows them.", "highlights": ["them"] }
+            {
+              "key": "I → me",
+              "value": "She called me.",
+              "highlights": [
+                "me"
+              ]
+            },
+            {
+              "key": "he → him",
+              "value": "I saw him.",
+              "highlights": [
+                "him"
+              ]
+            },
+            {
+              "key": "she → her",
+              "value": "We helped her.",
+              "highlights": [
+                "her"
+              ]
+            },
+            {
+              "key": "they → them",
+              "value": "He knows them.",
+              "highlights": [
+                "them"
+              ]
+            }
           ]
         }
       ]
@@ -108,13 +197,59 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "bad", "text": "The book that I bought it is good." },
-            { "variant": "good", "text": "The book that I bought is good.", "note": "no repitas el objeto (it)" },
-            { "variant": "bad", "text": "This is the house what I want." },
-            { "variant": "good", "text": "This is the house that I want.", "note": "that/which, no what" }
+            {
+              "variant": "bad",
+              "text": "The book that I bought it is good."
+            },
+            {
+              "variant": "good",
+              "text": "The book that I bought is good.",
+              "note": "no repitas el objeto (it)"
+            },
+            {
+              "variant": "bad",
+              "text": "This is the house what I want."
+            },
+            {
+              "variant": "good",
+              "text": "This is the house that I want.",
+              "note": "that/which, no what"
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "The woman ___ lives next door is a software engineer.",
+      "options": [
+        "who",
+        "which",
+        "whose"
+      ],
+      "answer": 0,
+      "explain": "Para referirse a personas como sujeto de la oración de relativo se usa 'who'."
+    },
+    {
+      "q": "This is the restaurant ___ we celebrated my birthday.",
+      "options": [
+        "where",
+        "which",
+        "that"
+      ],
+      "answer": 0,
+      "explain": "'Where' se utiliza para hacer referencia a lugares."
+    },
+    {
+      "q": "I met a writer ___ book won an international prize.",
+      "options": [
+        "whose",
+        "who",
+        "which"
+      ],
+      "answer": 0,
+      "explain": "'Whose' indica posesión ('cuyo libro')."
     }
   ]
 }

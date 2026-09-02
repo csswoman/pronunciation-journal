@@ -1,4 +1,5 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "A1 · Posesión",
     "title": "Genitivo sajón",
@@ -30,10 +31,10 @@
               ]
             },
             {
-              "key": "cosas / lugares",
-              "value": "today's news · the city's park",
+              "key": "plural irregular",
+              "value": "the children's toys (+ 's)",
               "highlights": [
-                "today's"
+                "children's"
               ]
             }
           ]
@@ -48,30 +49,30 @@
       "id": "a1-genitivo-sajon-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "persona + 's",
-              "value": "Maria's phone · my brother's car",
+              "key": "Singular + 's",
+              "value": "Paul's car is blue.",
               "highlights": [
-                "'s"
+                "Paul's"
               ]
             },
             {
-              "key": "plural en -s",
-              "value": "the students' books (solo apóstrofo)",
+              "key": "Plural en -s + '",
+              "value": "My parents' house is big.",
               "highlights": [
-                "students'"
+                "parents'"
               ]
             },
             {
-              "key": "cosas / lugares",
-              "value": "today's news · the city's park",
+              "key": "Plural irregular + 's",
+              "value": "The children's room is clean.",
               "highlights": [
-                "today's"
+                "children's"
               ]
             }
           ]
@@ -82,22 +83,26 @@
       "id": "a1-genitivo-sajon-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "my brother's car"
+              "key": "Familia",
+              "value": "My sister's husband is a lawyer."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "the students' books (solo apóstrofo)"
+              "key": "Pertenencias",
+              "value": "Is this David's laptop on the desk?"
             },
             {
-              "key": "Ejemplo 3",
-              "value": "the city's park"
+              "key": "Lugares",
+              "value": "We met at my uncle's house yesterday."
+            },
+            {
+              "key": "Plurales",
+              "value": "The girls' bedroom is painted blue."
             }
           ]
         }
@@ -107,23 +112,23 @@
       "id": "a1-genitivo-sajon-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "persona + 's",
-              "rule": "Maria's phone · my brother's car",
+              "label": "Personas / Animales ('s)",
+              "rule": "Se añade 's o apóstrofo final",
               "examples": [
-                "my brother's car"
+                "John's car / My cat's food"
               ]
             },
             {
-              "label": "plural en -s",
-              "rule": "the students' books (solo apóstrofo)",
+              "label": "Objetos inanimados (of the)",
+              "rule": "Se prefiere la construcción con of",
               "examples": [
-                "the students' books (solo apóstrofo)"
+                "The leg of the table"
               ]
             }
           ]
@@ -134,7 +139,7 @@
       "id": "a1-genitivo-sajon-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
@@ -146,7 +151,7 @@
             {
               "variant": "good",
               "text": "Maria's book.",
-              "note": "en inglés cotidiano preferimos 's"
+              "note": "en inglés cotidiano de personas se usa siempre 's"
             }
           ]
         }
@@ -155,27 +160,27 @@
     {
       "id": "a1-genitivo-sajon-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "Singular",
+              "value": "Nombre + 's (Maria's phone)"
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "Plural regular",
+              "value": "Sustantivo en -s + ' (the students' books)"
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "Plural irregular",
+              "value": "Sustantivo plural + 's (the men's coats)"
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "Pronombres",
+              "value": "Los pronombres posesivos no llevan apóstrofo (its, yours, hers)"
             }
           ]
         }
@@ -188,13 +193,31 @@
   ],
   "quiz": [
     {
-      "q": "This is ___ laptop.",
+      "q": "Where is ___ handbag?",
       "options": [
-        "Anna's",
-        "Anna"
+        "Sarah's",
+        "Sarah"
       ],
       "answer": 0,
-      "explain": "Posesión → Anna's."
+      "explain": "Para indicar posesión de Sarah se añade 's."
+    },
+    {
+      "q": "This is the ___ playground.",
+      "options": [
+        "children's",
+        "childrens'"
+      ],
+      "answer": 0,
+      "explain": "'children' es plural irregular, su posesivo es 'children's'."
+    },
+    {
+      "q": "¿Cuál opción traduce mejor 'El carro de mi hermano'?",
+      "options": [
+        "My brother's car",
+        "The car of my brother"
+      ],
+      "answer": 0,
+      "explain": "'My brother's car' es la forma idiomática en inglés."
     }
   ]
 }

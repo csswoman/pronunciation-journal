@@ -1,46 +1,40 @@
 {
+  "isGenerated": true,
   "meta": {
-    "eyebrow": "A1 · Existencia y lugar",
+    "eyebrow": "A1 · Existencia",
     "title": "Existencia y lugar",
     "titleEmphasis": "there is y there are",
-    "goal": "Ya puedes usar there is y there are en ejemplos claros y adecuados al contexto."
+    "goal": "Ya expresas la presencia de objetos y personas con there is y there are."
   },
   "cards": [
     {
       "id": "a1-there-is-there-are-concept",
       "tag": "Idea central",
       "title": "Existencia y lugar: qué expresa",
-      "lede": "Esta lección te ayuda a usar there is y there are con precisión y sin traducir palabra por palabra.",
+      "lede": "Ya expresas la presencia de objetos y personas con there is y there are.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
               "key": "there is",
-              "value": "una cosa: There is a table.",
+              "value": "singular o incontable · There is a table",
               "highlights": [
                 "there is"
               ]
             },
             {
               "key": "there are",
-              "value": "varias cosas: There are two chairs.",
+              "value": "plural · There are two chairs",
               "highlights": [
                 "there are"
               ]
             },
             {
-              "key": "is there...?",
-              "value": "pregunta singular",
+              "key": "negativo",
+              "value": "There isn't a bank / There aren't any eggs",
               "highlights": [
-                "is there...?"
-              ]
-            },
-            {
-              "key": "are there...?",
-              "value": "pregunta plural",
-              "highlights": [
-                "are there...?"
+                "isn't / aren't"
               ]
             }
           ]
@@ -48,29 +42,38 @@
       ],
       "tip": {
         "label": "Objetivo:",
-        "body": "reconocer la intención y elegir correctamente there is y there are en situaciones reales."
+        "body": "reconocer el patrón y usarlo en frases propias."
       }
     },
     {
       "id": "a1-there-is-there-are-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "there is",
-              "value": "una cosa: There is a table."
+              "key": "There is + singular",
+              "value": "There is a computer on the desk.",
+              "highlights": [
+                "There is a"
+              ]
             },
             {
-              "key": "there are",
-              "value": "varias cosas: There are two chairs."
+              "key": "There is + incontable",
+              "value": "There is some milk in the fridge.",
+              "highlights": [
+                "There is some"
+              ]
             },
             {
-              "key": "is there...?",
-              "value": "pregunta singular"
+              "key": "There are + plural",
+              "value": "There are three apples in the basket.",
+              "highlights": [
+                "There are"
+              ]
             }
           ]
         }
@@ -80,22 +83,26 @@
       "id": "a1-there-is-there-are-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa y fíjate en la posición de las palabras.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "There is some milk."
+              "key": "Singular en habitación",
+              "value": "There is a large mirror in the bathroom."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "There are three windows."
+              "key": "Plural en la ciudad",
+              "value": "There are many nice cafes in this neighborhood."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "There isn't a bank nearby."
+              "key": "Incontable",
+              "value": "There is some cold water in the fridge."
+            },
+            {
+              "key": "Pregunta por servicios",
+              "value": "Is there a pharmacy near here?"
             }
           ]
         }
@@ -105,23 +112,23 @@
       "id": "a1-there-is-there-are-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende de la intención, la cantidad, el tiempo o el registro.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "there is",
-              "rule": "una cosa: There is a table.",
+              "label": "There is (Singular / Incontable)",
+              "rule": "Para 1 solo objeto o masa incontable",
               "examples": [
-                "There is some milk."
+                "There is a cat / There is milk"
               ]
             },
             {
-              "label": "there are",
-              "rule": "varias cosas: There are two chairs.",
+              "label": "There are (Plural)",
+              "rule": "Para 2 o más objetos contables",
               "examples": [
-                "There are three windows."
+                "There are two cats"
               ]
             }
           ]
@@ -132,19 +139,19 @@
       "id": "a1-there-is-there-are-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural y gramatical.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "There is two shops."
+              "text": "There is two cars in the garage."
             },
             {
               "variant": "good",
-              "text": "There are two shops.",
-              "note": "forma recomendada"
+              "text": "There are two cars in the garage.",
+              "note": "plural exige there are"
             }
           ]
         }
@@ -153,64 +160,64 @@
     {
       "id": "a1-there-is-there-are-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase antes de continuar.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar exactamente?"
+              "key": "There is + a/an",
+              "value": "Singular (There is a car)"
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma adecuada de there is y there are."
+              "key": "There is + some",
+              "value": "Incontable (There is some water)"
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, verbo, número y tiempo."
+              "key": "There are + plural",
+              "value": "Plural (There are five books)"
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase completa y evita traducir literalmente."
+              "key": "Preguntas",
+              "value": "Is there...? / Are there...?"
             }
           ]
         }
       ],
       "tip": {
         "label": "Práctica:",
-        "body": "crea una frase personal con cada patrón y léela en voz alta."
+        "body": "escribe una frase personal con el patrón."
       }
     }
   ],
   "quiz": [
     {
-      "q": "There ___ two parks.",
+      "q": "___ any apples left in the basket?",
       "options": [
-        "is",
-        "are"
-      ],
-      "answer": 1,
-      "explain": "La respuesta correcta aplica la regla central de there is y there are."
-    },
-    {
-      "q": "¿Cuál de estas frases es correcta?",
-      "options": [
-        "There is two shops.",
-        "There are two shops."
-      ],
-      "answer": 1,
-      "explain": "La segunda opción usa la estructura y el orden correctos."
-    },
-    {
-      "q": "¿Qué conviene revisar al usar there is y there are?",
-      "options": [
-        "La intención, la estructura y el contexto.",
-        "Solo la traducción literal al español."
+        "Are there",
+        "Is there"
       ],
       "answer": 0,
-      "explain": "Una frase natural depende del significado, la forma y el contexto, no de traducir palabra por palabra."
+      "explain": "'apples' es plural, por lo que la pregunta requiere 'Are there'."
+    },
+    {
+      "q": "___ a huge park near my new house.",
+      "options": [
+        "There is",
+        "There are"
+      ],
+      "answer": 0,
+      "explain": "'a huge park' es singular, se expresa con 'There is'."
+    },
+    {
+      "q": "Elige la opción que corrige 'Is there two banks on this street?'",
+      "options": [
+        "Are there two banks on this street?",
+        "There is two banks on this street?"
+      ],
+      "answer": 0,
+      "explain": "'two banks' es plural y es una pregunta, la forma correcta es 'Are there'."
     }
   ]
 }

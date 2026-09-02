@@ -14,9 +14,29 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Fórmula", "value": "had + participio (igual para todos)", "highlights": ["had + participio"] },
-            { "key": "Ejemplo", "value": "When I arrived, she had left.", "highlights": ["had left"], "hint": "ella se fue antes" },
-            { "key": "Contracción", "value": "I'd, she'd, they'd had", "highlights": ["I'd", "she'd"] }
+            {
+              "key": "Fórmula",
+              "value": "had + participio (igual para todos)",
+              "highlights": [
+                "had + participio"
+              ]
+            },
+            {
+              "key": "Ejemplo",
+              "value": "When I arrived, she had left.",
+              "highlights": [
+                "had left"
+              ],
+              "hint": "ella se fue antes"
+            },
+            {
+              "key": "Contracción",
+              "value": "I'd, she'd, they'd had",
+              "highlights": [
+                "I'd",
+                "she'd"
+              ]
+            }
           ]
         }
       ],
@@ -37,12 +57,18 @@
             {
               "label": "Antes (had + part.)",
               "rule": "lo más lejano",
-              "examples": ["The train had left", "I had already eaten"]
+              "examples": [
+                "The train had left",
+                "I had already eaten"
+              ]
             },
             {
               "label": "Después (past simple)",
               "rule": "lo más reciente",
-              "examples": ["when we got there.", "when she called."]
+              "examples": [
+                "when we got there.",
+                "when she called."
+              ]
             }
           ]
         }
@@ -57,8 +83,22 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Acción base", "value": "She felt nervous.", "highlights": ["felt"], "hint": "pasado simple" },
-            { "key": "Flashback", "value": "She had never flown before.", "highlights": ["had never flown"], "hint": "explica por qué" }
+            {
+              "key": "Acción base",
+              "value": "She felt nervous.",
+              "highlights": [
+                "felt"
+              ],
+              "hint": "pasado simple"
+            },
+            {
+              "key": "Flashback",
+              "value": "She had never flown before.",
+              "highlights": [
+                "had never flown"
+              ],
+              "hint": "explica por qué"
+            }
           ]
         }
       ]
@@ -72,9 +112,20 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "bad", "text": "I had woken up, had showered and had left." },
-            { "variant": "good", "text": "I woke up, showered and left.", "note": "orden claro → pasado simple" },
-            { "variant": "good", "text": "I realised I had forgotten my keys.", "note": "aquí sí: una es anterior" }
+            {
+              "variant": "bad",
+              "text": "I had woken up, had showered and had left."
+            },
+            {
+              "variant": "good",
+              "text": "I woke up, showered and left.",
+              "note": "orden claro → pasado simple"
+            },
+            {
+              "variant": "good",
+              "text": "I realised I had forgotten my keys.",
+              "note": "aquí sí: una es anterior"
+            }
           ]
         }
       ]
@@ -88,9 +139,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "by the time", "value": "para cuando · By the time we arrived, it had ended.", "highlights": ["by the time"] },
-            { "key": "already / just", "value": "ya / recién · had already gone", "highlights": ["already"] },
-            { "key": "no sooner... than", "value": "apenas... cuando · No sooner had I sat down than the phone rang.", "highlights": ["No sooner"] }
+            {
+              "key": "by the time",
+              "value": "para cuando · By the time we arrived, it had ended.",
+              "highlights": [
+                "by the time"
+              ]
+            },
+            {
+              "key": "already / just",
+              "value": "ya / recién · had already gone",
+              "highlights": [
+                "already"
+              ]
+            },
+            {
+              "key": "no sooner... than",
+              "value": "apenas... cuando · No sooner had I sat down than the phone rang.",
+              "highlights": [
+                "No sooner"
+              ]
+            }
           ]
         }
       ]
@@ -104,10 +173,24 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "bad", "text": "She had finished already her work." },
-            { "variant": "good", "text": "She had already finished her work.", "note": "el adverbio va entre had y el participio" },
-            { "variant": "bad", "text": "By the time arrived we, it was late." },
-            { "variant": "good", "text": "By the time we arrived, it was late.", "note": "sujeto + verbo tras la frase adverbial" }
+            {
+              "variant": "bad",
+              "text": "She had finished already her work."
+            },
+            {
+              "variant": "good",
+              "text": "She had already finished her work.",
+              "note": "el adverbio va entre had y el participio"
+            },
+            {
+              "variant": "bad",
+              "text": "By the time arrived we, it was late."
+            },
+            {
+              "variant": "good",
+              "text": "By the time we arrived, it was late.",
+              "note": "sujeto + verbo tras la frase adverbial"
+            }
           ]
         }
       ],
@@ -115,6 +198,38 @@
         "label": "Regla:",
         "body": "already, just, never van entre el auxiliar (had) y el participio."
       }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "No sooner had I stepped outside ___ it started pouring with rain.",
+      "options": [
+        "than",
+        "when",
+        "that"
+      ],
+      "answer": 0,
+      "explain": "La estructura enfática 'No sooner had...' requiere la correlación con 'than'."
+    },
+    {
+      "q": "Hardly had the meeting started ___ the fire alarm rang.",
+      "options": [
+        "when",
+        "than",
+        "then"
+      ],
+      "answer": 0,
+      "explain": "La estructura 'Hardly had...' se combina con 'when' para indicar dos acciones casi simultáneas."
+    },
+    {
+      "q": "By the time the police arrived, the burglar ___.",
+      "options": [
+        "had already escaped",
+        "has escaped",
+        "escapes"
+      ],
+      "answer": 0,
+      "explain": "La cláusula introducida por 'by the time + pasado simple' exige pasado perfecto en la oración principal."
     }
   ]
 }

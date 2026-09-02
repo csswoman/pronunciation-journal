@@ -1,46 +1,47 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "A1 · Sustantivos",
-    "title": "Sustantivos",
-    "titleEmphasis": "plurales regulares e irregulares",
-    "goal": "Ya puedes usar plurales regulares e irregulares en ejemplos claros y adecuados al contexto."
+    "title": "Sustantivos plurales",
+    "titleEmphasis": "regulares e irregulares",
+    "goal": "Ya puedes formar el plural de los sustantivos en inglés correctamente."
   },
   "cards": [
     {
       "id": "a1-plurales-concept",
       "tag": "Idea central",
-      "title": "Sustantivos: qué expresa",
-      "lede": "Esta lección te ayuda a usar plurales regulares e irregulares con precisión y sin traducir palabra por palabra.",
+      "title": "Sustantivos plurales: qué expresa",
+      "lede": "Ya puedes formar el plural de los sustantivos en inglés correctamente.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
               "key": "+ s",
-              "value": "book → books",
+              "value": "regla general · book → books",
               "highlights": [
-                "+ s"
+                "books"
               ]
             },
             {
               "key": "+ es",
-              "value": "bus → buses; box → boxes",
+              "value": "terminación en -s, -sh, -ch, -x · box → boxes",
               "highlights": [
-                "+ es"
+                "boxes"
               ]
             },
             {
-              "key": "y → ies",
-              "value": "city → cities",
+              "key": "-ies",
+              "value": "consonante + y · city → cities",
               "highlights": [
-                "y → ies"
+                "cities"
               ]
             },
             {
               "key": "irregulares",
-              "value": "child → children; person → people",
+              "value": "cambian de forma · child → children, person → people",
               "highlights": [
-                "irregulares"
+                "children"
               ]
             }
           ]
@@ -48,29 +49,45 @@
       ],
       "tip": {
         "label": "Objetivo:",
-        "body": "reconocer la intención y elegir correctamente plurales regulares e irregulares en situaciones reales."
+        "body": "reconocer el patrón y usarlo en frases propias."
       }
     },
     {
       "id": "a1-plurales-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "+ s",
-              "value": "book → books"
+              "key": "Regla general (+s)",
+              "value": "cat → cats / dog → dogs",
+              "highlights": [
+                "+s"
+              ]
             },
             {
-              "key": "+ es",
-              "value": "bus → buses; box → boxes"
+              "key": "Terminados en -ch/-sh/-x (+es)",
+              "value": "watch → watches / bus → buses",
+              "highlights": [
+                "+es"
+              ]
             },
             {
-              "key": "y → ies",
-              "value": "city → cities"
+              "key": "Consonante + y (-ies)",
+              "value": "baby → babies / family → families",
+              "highlights": [
+                "-ies"
+              ]
+            },
+            {
+              "key": "Irregulares",
+              "value": "man → men / woman → women / person → people",
+              "highlights": [
+                "forma propia"
+              ]
             }
           ]
         }
@@ -80,22 +97,26 @@
       "id": "a1-plurales-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa y fíjate en la posición de las palabras.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "two books"
+              "key": "Plural regular",
+              "value": "I have three cats and two dogs."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "three children"
+              "key": "Terminados en -es",
+              "value": "Put the glasses into the boxes."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "five boxes"
+              "key": "Terminados en -ies",
+              "value": "There are many big cities in Europe."
+            },
+            {
+              "key": "Irregulares",
+              "value": "The children are playing happily in the park."
             }
           ]
         }
@@ -105,23 +126,23 @@
       "id": "a1-plurales-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende de la intención, la cantidad, el tiempo o el registro.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "+ s",
-              "rule": "book → books",
+              "label": "Plurales regulares",
+              "rule": "Forman el plural añadiendo -s, -es o -ies",
               "examples": [
-                "two books"
+                "dog -> dogs / box -> boxes"
               ]
             },
             {
-              "label": "+ es",
-              "rule": "bus → buses; box → boxes",
+              "label": "Plurales irregulares",
+              "rule": "Cambian su raíz y no llevan -s al final",
               "examples": [
-                "three children"
+                "child -> children / foot -> feet"
               ]
             }
           ]
@@ -132,19 +153,19 @@
       "id": "a1-plurales-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural y gramatical.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "two childs"
+              "text": "There are four persons."
             },
             {
               "variant": "good",
-              "text": "two children",
-              "note": "forma recomendada"
+              "text": "There are four people.",
+              "note": "el plural natural de person es people"
             }
           ]
         }
@@ -153,64 +174,64 @@
     {
       "id": "a1-plurales-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase antes de continuar.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar exactamente?"
+              "key": "Normal",
+              "value": "Añade -s (key → keys)"
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma adecuada de plurales regulares e irregulares."
+              "key": "-es",
+              "value": "Palabras terminadas en -s, -sh, -ch, -x (watch → watches)"
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, verbo, número y tiempo."
+              "key": "-ies",
+              "value": "Palabras en consonante + y (city → cities)"
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase completa y evita traducir literalmente."
+              "key": "Irregulares clave",
+              "value": "child → children, person → people, man → men, woman → women"
             }
           ]
         }
       ],
       "tip": {
         "label": "Práctica:",
-        "body": "crea una frase personal con cada patrón y léela en voz alta."
+        "body": "escribe una frase personal con el patrón."
       }
     }
   ],
   "quiz": [
     {
-      "q": "One person, two ___.",
+      "q": "There are many ___ studying at this school.",
       "options": [
-        "persons",
-        "people"
-      ],
-      "answer": 1,
-      "explain": "La respuesta correcta aplica la regla central de plurales regulares e irregulares."
-    },
-    {
-      "q": "¿Cuál de estas frases es correcta?",
-      "options": [
-        "two childs",
-        "two children"
-      ],
-      "answer": 1,
-      "explain": "La segunda opción usa la estructura y el orden correctos."
-    },
-    {
-      "q": "¿Qué conviene revisar al usar plurales regulares e irregulares?",
-      "options": [
-        "La intención, la estructura y el contexto.",
-        "Solo la traducción literal al español."
+        "children",
+        "childs"
       ],
       "answer": 0,
-      "explain": "Una frase natural depende del significado, la forma y el contexto, no de traducir palabra por palabra."
+      "explain": "El plural de 'child' es irregular: 'children'."
+    },
+    {
+      "q": "She bought two new ___ for her living room.",
+      "options": [
+        "watches",
+        "watchs"
+      ],
+      "answer": 0,
+      "explain": "Palabras terminadas en '-ch' forman plural añadiendo '-es'."
+    },
+    {
+      "q": "¿Cuál de estos pares muestra un plural irregular correcto?",
+      "options": [
+        "person → people",
+        "person → persons"
+      ],
+      "answer": 0,
+      "explain": "El plural habitual e idiomático de 'person' es 'people'."
     }
   ]
 }

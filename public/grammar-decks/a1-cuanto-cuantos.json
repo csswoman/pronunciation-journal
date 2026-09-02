@@ -1,4 +1,5 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "A1 · Cantidad",
     "title": "¿Cuánto?",
@@ -30,10 +31,10 @@
               ]
             },
             {
-              "key": "Respuesta corta",
-              "value": "Two. / A lot. / Not much.",
+              "key": "Precio",
+              "value": "How much is this jacket?",
               "highlights": [
-                "Two"
+                "How much is"
               ]
             }
           ]
@@ -48,30 +49,30 @@
       "id": "a1-cuanto-cuantos-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "How many",
-              "value": "+ plural contable · How many apples?",
+              "key": "How many + Contable",
+              "value": "How many books do you read?",
               "highlights": [
                 "How many"
               ]
             },
             {
-              "key": "How much",
-              "value": "+ incontable · How much water?",
+              "key": "How much + Incontable",
+              "value": "How much sugar do we need?",
               "highlights": [
                 "How much"
               ]
             },
             {
-              "key": "Respuesta corta",
-              "value": "Two. / A lot. / Not much.",
+              "key": "Preguntar Precio",
+              "value": "How much is / How much are...?",
               "highlights": [
-                "Two"
+                "How much is"
               ]
             }
           ]
@@ -82,22 +83,26 @@
       "id": "a1-cuanto-cuantos-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "How many apples?"
+              "key": "Objetos",
+              "value": "How many chairs are in the dining room?"
             },
             {
-              "key": "Ejemplo 2",
-              "value": "How much water?"
+              "key": "Ingredientes",
+              "value": "How much sugar should I put in the coffee?"
             },
             {
-              "key": "Ejemplo 3",
-              "value": "Two. / A lot. / Not much."
+              "key": "Tienda",
+              "value": "How much is this leather jacket?"
+            },
+            {
+              "key": "Tiempo",
+              "value": "How much time do we have before the flight?"
             }
           ]
         }
@@ -107,23 +112,23 @@
       "id": "a1-cuanto-cuantos-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "How many",
-              "rule": "+ plural contable · How many apples?",
+              "label": "How many (Contables)",
+              "rule": "Para elementos contables en plural",
               "examples": [
-                "How many apples?"
+                "How many cars / How many dollars"
               ]
             },
             {
-              "label": "How much",
-              "rule": "+ incontable · How much water?",
+              "label": "How much (Incontables)",
+              "rule": "Para líquidos, masas o conceptos abstractos",
               "examples": [
-                "How much water?"
+                "How much water / How much money"
               ]
             }
           ]
@@ -134,7 +139,7 @@
       "id": "a1-cuanto-cuantos-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
@@ -155,27 +160,27 @@
     {
       "id": "a1-cuanto-cuantos-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "How many",
+              "value": "+ sustantivos contables en plural (books, days, cars)"
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "How much",
+              "value": "+ sustantivos incontables (water, rice, time, money)"
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "Precio",
+              "value": "How much is this? / How much are these?"
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "Respuestas",
+              "value": "A lot, a few (contables), a little (incontables)"
             }
           ]
         }
@@ -188,13 +193,31 @@
   ],
   "quiz": [
     {
-      "q": "___ money do you have?",
+      "q": "___ milk is left in the fridge?",
       "options": [
         "How much",
         "How many"
       ],
       "answer": 0,
-      "explain": "money es incontable."
+      "explain": "'milk' es sustantivo incontable, se pregunta con 'How much'."
+    },
+    {
+      "q": "___ rooms are there in your apartment?",
+      "options": [
+        "How many",
+        "How much"
+      ],
+      "answer": 0,
+      "explain": "'rooms' es plural contable, corresponde 'How many'."
+    },
+    {
+      "q": "¿Cómo se pregunta el precio de un objeto en una tienda?",
+      "options": [
+        "How much is this?",
+        "How many is this?"
+      ],
+      "answer": 0,
+      "explain": "Para preguntar el costo o precio siempre se usa 'How much'."
     }
   ]
 }

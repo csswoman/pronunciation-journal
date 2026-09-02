@@ -14,9 +14,21 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Géneros", "value": "rock, pop, jazz, classical, hip-hop" },
-            { "key": "Instrumentos", "value": "play the guitar / piano / drums", "highlights": ["play the"] },
-            { "key": "Acción", "value": "a band, a singer, a song, a track" }
+            {
+              "key": "Géneros",
+              "value": "rock, pop, jazz, classical, hip-hop"
+            },
+            {
+              "key": "Instrumentos",
+              "value": "play the guitar / piano / drums",
+              "highlights": [
+                "play the"
+              ]
+            },
+            {
+              "key": "Acción",
+              "value": "a band, a singer, a song, a track"
+            }
           ]
         }
       ],
@@ -34,9 +46,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Me encanta", "value": "I'm really into jazz.", "highlights": ["into"] },
-            { "key": "No es lo mío", "value": "It's not really my thing.", "highlights": ["not really my thing"] },
-            { "key": "Opinar", "value": "In my opinion... · I find it...", "highlights": ["In my opinion"] }
+            {
+              "key": "Me encanta",
+              "value": "I'm really into jazz.",
+              "highlights": [
+                "into"
+              ]
+            },
+            {
+              "key": "No es lo mío",
+              "value": "It's not really my thing.",
+              "highlights": [
+                "not really my thing"
+              ]
+            },
+            {
+              "key": "Opinar",
+              "value": "In my opinion... · I find it...",
+              "highlights": [
+                "In my opinion"
+              ]
+            }
           ]
         }
       ]
@@ -50,9 +80,21 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Obras", "value": "painting, sculpture, portrait, exhibition" },
-            { "key": "Personas", "value": "artist, painter, gallery" },
-            { "key": "Describir", "value": "It depicts... · It represents...", "highlights": ["depicts"] }
+            {
+              "key": "Obras",
+              "value": "painting, sculpture, portrait, exhibition"
+            },
+            {
+              "key": "Personas",
+              "value": "artist, painter, gallery"
+            },
+            {
+              "key": "Describir",
+              "value": "It depicts... · It represents...",
+              "highlights": [
+                "depicts"
+              ]
+            }
           ]
         }
       ]
@@ -66,9 +108,24 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Positivo", "value": "stunning, moving, original, powerful", "highlights": ["stunning"] },
-            { "key": "Neutro", "value": "abstract, modern, traditional, realistic" },
-            { "key": "Negativo", "value": "dull, overrated, disappointing", "highlights": ["overrated"] }
+            {
+              "key": "Positivo",
+              "value": "stunning, moving, original, powerful",
+              "highlights": [
+                "stunning"
+              ]
+            },
+            {
+              "key": "Neutro",
+              "value": "abstract, modern, traditional, realistic"
+            },
+            {
+              "key": "Negativo",
+              "value": "dull, overrated, disappointing",
+              "highlights": [
+                "overrated"
+              ]
+            }
           ]
         }
       ]
@@ -82,9 +139,21 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "good", "text": "The artist who painted this is famous.", "note": "who = personas" },
-            { "variant": "good", "text": "It's a song which always makes me cry.", "note": "which = cosas" },
-            { "variant": "good", "text": "The museum where we met is closed.", "note": "where = lugares" }
+            {
+              "variant": "good",
+              "text": "The artist who painted this is famous.",
+              "note": "who = personas"
+            },
+            {
+              "variant": "good",
+              "text": "It's a song which always makes me cry.",
+              "note": "which = cosas"
+            },
+            {
+              "variant": "good",
+              "text": "The museum where we met is closed.",
+              "note": "where = lugares"
+            }
           ]
         }
       ]
@@ -98,12 +167,62 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Recomendar", "value": "You should check out this band.", "highlights": ["check out"] },
-            { "key": "Interés", "value": "That sounds interesting!", "highlights": ["sounds interesting"] },
-            { "key": "Compartir", "value": "Have you heard of...?", "highlights": ["Have you heard of"] }
+            {
+              "key": "Recomendar",
+              "value": "You should check out this band.",
+              "highlights": [
+                "check out"
+              ]
+            },
+            {
+              "key": "Interés",
+              "value": "That sounds interesting!",
+              "highlights": [
+                "sounds interesting"
+              ]
+            },
+            {
+              "key": "Compartir",
+              "value": "Have you heard of...?",
+              "highlights": [
+                "Have you heard of"
+              ]
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "This sculpture was created ___ a famous Italian artist.",
+      "options": [
+        "by",
+        "with",
+        "from"
+      ],
+      "answer": 0,
+      "explain": "En voz pasiva, el agente o creador se introduce con la preposición 'by'."
+    },
+    {
+      "q": "I prefer classical music ___ modern pop music.",
+      "options": [
+        "to",
+        "than",
+        "rather"
+      ],
+      "answer": 0,
+      "explain": "El verbo 'prefer' compara dos cosas usando la estructura 'prefer X to Y'."
+    },
+    {
+      "q": "The exhibition was so ___ that everyone recommended it.",
+      "options": [
+        "impressive",
+        "impressed",
+        "impression"
+      ],
+      "answer": 0,
+      "explain": "Para calificar un evento o exposición se utiliza el adjetivo descriptivo ('impressive')."
     }
   ]
 }

@@ -1,46 +1,47 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "B1 · Causa y permiso",
     "title": "Make, let",
     "titleEmphasis": "y allow",
-    "goal": "Ya usas make/let + objeto + base y allow + objeto + to + infinitivo."
+    "goal": "Ya estructuras make/let + objeto + verbo base y allow + objeto + to + infinitivo."
   },
   "cards": [
     {
       "id": "b1-make-let-allow-concept",
       "tag": "Idea central",
       "title": "Make, let: qué expresa",
-      "lede": "Ya usas make/let + objeto + base y allow + objeto + to + infinitivo.",
+      "lede": "Ya estructuras make/let + objeto + verbo base y allow + objeto + to + infinitivo.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
               "key": "make",
-              "value": "obligar · She made me wait.",
+              "value": "obligar / hacer que alguien haga algo · She made me clean my room.",
               "highlights": [
-                "made me wait"
+                "made me clean"
               ]
             },
             {
               "key": "let",
-              "value": "permitir · Let me help you.",
+              "value": "permitir / dejar hacer algo · My parents let me stay out late.",
               "highlights": [
-                "Let me"
+                "let me stay"
               ]
             },
             {
               "key": "allow",
-              "value": "permitir (formal) · allow us to leave",
+              "value": "permitir (forma formal con 'to') · They don't allow students to use phones.",
               "highlights": [
-                "allow us to"
+                "allow students to"
               ]
             },
             {
-              "key": "passive",
-              "value": "I was made to apologise.",
+              "key": "Pasiva de Make",
+              "value": "be made to do · He was made to apologize.",
               "highlights": [
-                "was made to"
+                "made to"
               ]
             }
           ]
@@ -55,30 +56,30 @@
       "id": "b1-make-let-allow-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "make",
-              "value": "obligar · She made me wait.",
+              "key": "Make (Obligación)",
+              "value": "Sujeto + make + persona + verbo base (sin to) · The boss made us work late.",
               "highlights": [
-                "made me wait"
+                "made us work"
               ]
             },
             {
-              "key": "let",
-              "value": "permitir · Let me help you.",
+              "key": "Let (Permiso informal)",
+              "value": "Sujeto + let + persona + verbo base (sin to) · Let him speak.",
               "highlights": [
-                "Let me"
+                "Let him speak"
               ]
             },
             {
-              "key": "allow",
-              "value": "permitir (formal) · allow us to leave",
+              "key": "Allow (Permiso formal)",
+              "value": "Sujeto + allow + persona + to + infinitivo · We allow clients to cancel for free.",
               "highlights": [
-                "allow us to"
+                "allow clients to cancel"
               ]
             }
           ]
@@ -89,26 +90,26 @@
       "id": "b1-make-let-allow-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "She made me wait."
+              "key": "Recuerdos escolares",
+              "value": "Our teacher made us memorize 50 English verbs every week."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "Let me help you."
+              "key": "Reglas en el hogar",
+              "value": "My flatmates let me borrow their tools whenever I need them."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "allow us to leave"
+              "key": "Normativa de empresa",
+              "value": "The company allows employees to work remotely two days a week."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "I was made to apologise."
+              "key": "Cine y entretenimiento",
+              "value": "Sad movies always make me cry."
             }
           ]
         }
@@ -118,23 +119,23 @@
       "id": "b1-make-let-allow-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "make",
-              "rule": "obligar · She made me wait.",
+              "label": "Let + objeto + verbo base",
+              "rule": "Estructura de permiso cotidiana e informal que NO lleva 'to'",
               "examples": [
-                "She made me wait."
+                "Let me go."
               ]
             },
             {
-              "label": "let",
-              "rule": "permitir · Let me help you.",
+              "label": "Allow + objeto + to + infinitivo",
+              "rule": "Estructura de permiso más formal que exige llevar 'to'",
               "examples": [
-                "Let me help you."
+                "Allow me to go."
               ]
             }
           ]
@@ -145,19 +146,19 @@
       "id": "b1-make-let-allow-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "She let me to go."
+              "text": "My parents didn't let me to go to the party."
             },
             {
               "variant": "good",
-              "text": "She let me go.",
-              "note": "let + objeto + verbo base, sin to"
+              "text": "My parents didn't let me go to the party.",
+              "note": "el verbo 'let' se construye con el objeto y la forma base del verbo sin 'to'"
             }
           ]
         }
@@ -166,27 +167,27 @@
     {
       "id": "b1-make-let-allow-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "Cero 'to' con Let y Make",
+              "value": "NUNCA pongas 'to' tras 'let' o 'make' activo (ej. let me stay, make me laugh)."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "To obligatorio con Allow",
+              "value": "Siempre usa 'allow someone TO do something'."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "Pasiva de Make",
+              "value": "En pasiva 'make' SÍ lleva 'to': She was made TO pay a fine."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "No existe 'be let to'",
+              "value": "En pasiva de permiso se usa 'be allowed to'."
             }
           ]
         }
@@ -199,13 +200,34 @@
   ],
   "quiz": [
     {
-      "q": "My parents won't ___ me stay out late.",
+      "q": "The security guard didn't ___ us enter the building.",
       "options": [
+        "allow",
         "let",
-        "allow"
+        "make"
       ],
       "answer": 0,
-      "explain": "let + objeto + base; allow llevaría to."
+      "explain": "Como hay un infinitivo con 'to' implícito o explícito ('to enter'), el verbo adecuado es 'allow'."
+    },
+    {
+      "q": "Her funny joke really made everyone ___.",
+      "options": [
+        "laugh",
+        "to laugh",
+        "laughing"
+      ],
+      "answer": 0,
+      "explain": "'Make + objeto' se combina con la forma base del verbo sin 'to'."
+    },
+    {
+      "q": "Will your boss let you ___ home early today?",
+      "options": [
+        "go",
+        "to go",
+        "going"
+      ],
+      "answer": 0,
+      "explain": "'Let + persona' requiere el verbo en su forma base (bare infinitive)."
     }
   ]
 }

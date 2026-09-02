@@ -14,9 +14,21 @@
         {
           "type": "conjugation",
           "rows": [
-            { "pronoun": "I", "form": "am working", "hint": "I'm working" },
-            { "pronoun": "He / She / It", "form": "is working", "hint": "she's working" },
-            { "pronoun": "You / We / They", "form": "are working", "hint": "we're working" }
+            {
+              "pronoun": "I",
+              "form": "am working",
+              "hint": "I'm working"
+            },
+            {
+              "pronoun": "He / She / It",
+              "form": "is working",
+              "hint": "she's working"
+            },
+            {
+              "pronoun": "You / We / They",
+              "form": "are working",
+              "hint": "we're working"
+            }
           ]
         }
       ],
@@ -34,9 +46,31 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "+ ing (normal)", "value": "play → playing · go → going", "highlights": ["playing", "going"] },
-            { "key": "quita -e", "value": "make → making · write → writing", "highlights": ["making", "writing"] },
-            { "key": "dobla consonante", "value": "run → running · sit → sitting", "highlights": ["running", "sitting"], "hint": "vocal corta + consonante" }
+            {
+              "key": "+ ing (normal)",
+              "value": "play → playing · go → going",
+              "highlights": [
+                "playing",
+                "going"
+              ]
+            },
+            {
+              "key": "quita -e",
+              "value": "make → making · write → writing",
+              "highlights": [
+                "making",
+                "writing"
+              ]
+            },
+            {
+              "key": "dobla consonante",
+              "value": "run → running · sit → sitting",
+              "highlights": [
+                "running",
+                "sitting"
+              ],
+              "hint": "vocal corta + consonante"
+            }
           ]
         }
       ]
@@ -53,12 +87,18 @@
             {
               "label": "Continuo",
               "rule": "ahora mismo",
-              "examples": ["I'm eating now.", "She's working today."]
+              "examples": [
+                "I'm eating now.",
+                "She's working today."
+              ]
             },
             {
               "label": "Simple",
               "rule": "rutina o hecho",
-              "examples": ["I eat at 2pm.", "She works in a bank."]
+              "examples": [
+                "I eat at 2pm.",
+                "She works in a bank."
+              ]
             }
           ]
         }
@@ -77,10 +117,24 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "bad", "text": "I am wanting a coffee." },
-            { "variant": "good", "text": "I want a coffee.", "note": "want es un estado" },
-            { "variant": "bad", "text": "I am knowing the answer." },
-            { "variant": "good", "text": "I know the answer.", "note": "know, like, need, love → simple" }
+            {
+              "variant": "bad",
+              "text": "I am wanting a coffee."
+            },
+            {
+              "variant": "good",
+              "text": "I want a coffee.",
+              "note": "want es un estado"
+            },
+            {
+              "variant": "bad",
+              "text": "I am knowing the answer."
+            },
+            {
+              "variant": "good",
+              "text": "I know the answer.",
+              "note": "know, like, need, love → simple"
+            }
           ]
         }
       ]
@@ -89,14 +143,30 @@
       "id": "pc-infinitive-purpose",
       "tag": "Infinitivo",
       "title": "to + verbo = para",
-      "titleItalic": ["to"],
+      "titleItalic": [
+        "to"
+      ],
       "lede": "El infinitivo con to expresa el propósito de algo: para qué lo haces.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
-            { "key": "Propósito", "value": "I study to get a better job.", "highlights": ["to get"], "hint": "para conseguir" },
-            { "key": "Después de verbo", "value": "I want to travel. · She needs to rest.", "highlights": ["to travel", "to rest"] }
+            {
+              "key": "Propósito",
+              "value": "I study to get a better job.",
+              "highlights": [
+                "to get"
+              ],
+              "hint": "para conseguir"
+            },
+            {
+              "key": "Después de verbo",
+              "value": "I want to travel. · She needs to rest.",
+              "highlights": [
+                "to travel",
+                "to rest"
+              ]
+            }
           ]
         }
       ],
@@ -114,12 +184,62 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "+ -ing", "value": "enjoy, like, finish · I enjoy reading.", "highlights": ["reading"] },
-            { "key": "+ to", "value": "want, need, decide · I decided to leave.", "highlights": ["to leave"] },
-            { "key": "going to", "value": "para planes · I'm going to call her.", "highlights": ["going to call"] }
+            {
+              "key": "+ -ing",
+              "value": "enjoy, like, finish · I enjoy reading.",
+              "highlights": [
+                "reading"
+              ]
+            },
+            {
+              "key": "+ to",
+              "value": "want, need, decide · I decided to leave.",
+              "highlights": [
+                "to leave"
+              ]
+            },
+            {
+              "key": "going to",
+              "value": "para planes · I'm going to call her.",
+              "highlights": [
+                "going to call"
+              ]
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "I went to the supermarket ___ some fresh groceries.",
+      "options": [
+        "to buy",
+        "for buy",
+        "for buying"
+      ],
+      "answer": 0,
+      "explain": "El propósito o la finalidad de una acción se expresa mediante el infinitivo con 'to'."
+    },
+    {
+      "q": "She decided ___ abroad for her postgraduate studies.",
+      "options": [
+        "to study",
+        "studying",
+        "study"
+      ],
+      "answer": 0,
+      "explain": "El verbo 'decide' va seguido de un verbo en infinitivo con 'to'."
+    },
+    {
+      "q": "They are staying at home tonight ___ for the final test.",
+      "options": [
+        "to prepare",
+        "for prepare",
+        "preparing"
+      ],
+      "answer": 0,
+      "explain": "La razón o finalidad de la acción exige el infinitivo de propósito ('to prepare')."
     }
   ]
 }

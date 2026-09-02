@@ -137,5 +137,25 @@
         "body": "úsalos con moderación: bien puestos dan fluidez; en exceso suenan a relleno."
       }
     }
+  ],
+  "quiz": [
+    {
+      "q": "¿En qué contexto es adecuado escribir reducciones como 'gonna', 'wanna' o 'gotta'?",
+      "options": ["En chats informales o transcripciones de habla rápida, pero no en informes formales.", "En ensayos académicos y correos a clientes.", "Únicamente en contratos legales y avisos oficiales.", "En cualquier documento escrito de nivel C1."],
+      "answer": 0,
+      "explain": "Las reducciones fonéticas reflejan el habla coloquial rápida; deben evitarse en redacción formal."
+    },
+    {
+      "q": "¿Cuál es la posición natural de 'though' como conector informal en la conversación hablada?",
+      "options": ["Al final de la frase para matizar o contrastar.", "Únicamente antes de un sustantivo en plural.", "Entre el auxiliar y el verbo principal.", "Al inicio de la oración seguido de dos comas."],
+      "answer": 0,
+      "explain": "En inglés hablado es muy común colocar 'though' al final de la frase ('It's pricey. I like it, though')."
+    },
+    {
+      "q": "¿Cómo se reduce la combinación 'What did you' en el habla coloquial rápida?",
+      "options": ["Whatcha (/wɑtʃə/)", "Gonna", "Kinda", "Wanna"],
+      "answer": 0,
+      "explain": "'What did you' se asimila y reduce frecuentemente a 'whatcha'."
+    }
   ]
 }

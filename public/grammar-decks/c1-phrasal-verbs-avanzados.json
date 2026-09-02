@@ -1,46 +1,50 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "C1 · Phrasal verbs",
     "title": "Phrasal verbs",
     "titleEmphasis": "avanzados",
-    "goal": "Ya dominas phrasals de tres partes, separables e idiomáticos en registros formales e informales."
+    "goal": "Aplica phrasal verbs de tres partes, inseparables e idiomáticos avanzados en contextos profesionales y de alta precisión."
   },
   "cards": [
     {
       "id": "c1-phrasal-verbs-avanzados-concept",
       "tag": "Idea central",
       "title": "Phrasal verbs: qué expresa",
-      "lede": "Ya dominas phrasals de tres partes, separables e idiomáticos en registros formales e informales.",
+      "lede": "Aplica phrasal verbs de tres partes, inseparables e idiomáticos avanzados en contextos profesionales y de alta precisión.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Tres partes",
-              "value": "put up with · get away with · look forward to",
+              "key": "Tres partes (Inseparable)",
+              "value": "come up against stiff competition · run up against obstacle",
               "highlights": [
-                "put up with"
+                "come up against"
               ]
             },
             {
-              "key": "Separable",
-              "value": "turn the offer down · turn down the offer",
+              "key": "Afrontar / Tolerar",
+              "value": "put up with continuous delays · face up to consequences",
               "highlights": [
-                "turn down"
+                "put up with",
+                "face up to"
               ]
             },
             {
-              "key": "Inseparable",
-              "value": "come across as · run into someone",
+              "key": "Reducir / Cancelar",
+              "value": "cut back on expenses · call off negotiations",
               "highlights": [
-                "come across"
+                "cut back on",
+                "call off"
               ]
             },
             {
-              "key": "Idiomático",
-              "value": "significado no literal · aprende como unidad",
+              "key": "Surgir / Proponer",
+              "value": "come up with an innovative solution · bring about change",
               "highlights": [
-                "put up with"
+                "come up with",
+                "bring about"
               ]
             }
           ]
@@ -55,30 +59,30 @@
       "id": "c1-phrasal-verbs-avanzados-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Tres partes",
-              "value": "put up with · get away with · look forward to",
+              "key": "Afirmativa (3 partículas)",
+              "value": "Sujeto + verbo + partícula 1 + partícula 2 + objeto · We need to come up with new ideas.",
               "highlights": [
-                "put up with"
+                "come up with"
               ]
             },
             {
-              "key": "Separable",
-              "value": "turn the offer down · turn down the offer",
+              "key": "Negativa (Con pronombre)",
+              "value": "They didn't turn it down immediately.",
               "highlights": [
-                "turn down"
+                "turn it down"
               ]
             },
             {
-              "key": "Inseparable",
-              "value": "come across as · run into someone",
+              "key": "Interrogativa",
+              "value": "How did you manage to get away with such a risky move?",
               "highlights": [
-                "come across"
+                "get away with"
               ]
             }
           ]
@@ -89,26 +93,26 @@
       "id": "c1-phrasal-verbs-avanzados-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "get away with"
+              "key": "Gestión presupuestaria",
+              "value": "We must cut back on non-essential expenditures during the crisis."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "turn down the offer"
+              "key": "Resolución de problemas",
+              "value": "The engineering team came up with a brilliant workaround."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "run into someone"
+              "key": "Gestión de clientes",
+              "value": "We cannot put up with such poor service quality any longer."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "aprende como unidad"
+              "key": "Estrategia corporativa",
+              "value": "The new leadership aims to bring about a cultural transformation."
             }
           ]
         }
@@ -118,23 +122,23 @@
       "id": "c1-phrasal-verbs-avanzados-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "Tres partes",
-              "rule": "put up with · get away with · look forward to",
+              "label": "Separable con pronombre",
+              "rule": "Si el objeto es un pronombre (it/them), DEBE ir obligatoriamente entre el verbo y la partícula",
               "examples": [
-                "get away with"
+                "We turned down the offer. / We turned it down."
               ]
             },
             {
-              "label": "Separable",
-              "rule": "turn the offer down · turn down the offer",
+              "label": "Tres partes (Inseparable)",
+              "rule": "Las tres palabras forman un bloque indivisible; el objeto va siempre al final",
               "examples": [
-                "turn down the offer"
+                "I look forward to your reply. / I look forward to it."
               ]
             }
           ]
@@ -145,19 +149,19 @@
       "id": "c1-phrasal-verbs-avanzados-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "I can't put up it anymore."
+              "text": "I look forward to hear from you soon."
             },
             {
               "variant": "good",
-              "text": "I can't put up with it anymore.",
-              "note": "pronombre entre verbo y partícula si es separable"
+              "text": "I look forward to hearing from you soon.",
+              "note": "En 'look forward to', 'to' es una preposición que requiere sustantivo o gerundio (-ing)."
             }
           ]
         }
@@ -166,27 +170,27 @@
     {
       "id": "c1-phrasal-verbs-avanzados-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "1. Regla de pronombres",
+              "value": "En verbos separables de 2 partes: 'turn it down' (correcto), NO 'turn down it'."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "2. Verbos de 3 partes",
+              "value": "Nunca separes las partículas de verbos como 'look forward to' o 'put up with'."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "3. Estilo profesional",
+              "value": "Usa phrasals avanzados para matizar registros sin sonar excesivamente rígido."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "4. Gerundio tras preposición",
+              "value": "La última partícula es preposición; usa verbo en -ing ('look forward to meeting')."
             }
           ]
         }
@@ -199,13 +203,37 @@
   ],
   "quiz": [
     {
-      "q": "We had to ___ the noise for months.",
+      "q": "The legal department decided to ___ the proposal after reviewing the terms.",
       "options": [
-        "put up with",
-        "put with up"
+        "turn down",
+        "turn it down to",
+        "turn off to",
+        "turn away with"
       ],
       "answer": 0,
-      "explain": "put up with es inseparable en orden fijo."
+      "explain": "'Turn down' significa rechazar una oferta o propuesta."
+    },
+    {
+      "q": "It took the committee weeks to ___ a viable strategy for restructuring.",
+      "options": [
+        "come up with",
+        "come with up",
+        "come out to",
+        "come in with"
+      ],
+      "answer": 0,
+      "explain": "'Come up with' es un phrasal verb de tres partes inseparable que significa idear o proponer."
+    },
+    {
+      "q": "¿Cuál es la colocación correcta utilizando el pronombre 'it'?",
+      "options": [
+        "We decided to phase it out over two years.",
+        "We decided to phase out it over two years.",
+        "We decided to phase it out of over two years.",
+        "We decided to phase out of it over two years."
+      ],
+      "answer": 0,
+      "explain": "Con verbos separables, los pronombres objeto van entre el verbo y la partícula ('phase it out')."
     }
   ]
 }

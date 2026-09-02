@@ -115,5 +115,25 @@
         }
       ]
     }
+  ],
+  "quiz": [
+    {
+      "q": "¿Cuál es una forma educada de pedir el turno de palabra en una discusión grupal sin sonar agresivo?",
+      "options": ["Can I just say something here?", "Stop talking right now.", "You are talking too much.", "Listen to me first."],
+      "answer": 0,
+      "explain": "'Can I just say...?' o 'Sorry to interrupt...' piden paso de manera diplomática."
+    },
+    {
+      "q": "Para ganar unos segundos y ordenar las ideas tras una pregunta compleja, puedes usar la frase puente:",
+      "options": ["That's an interesting question. Let me put it this way...", "I don't care about that question.", "Next question, please.", "Why are you asking me this?"],
+      "answer": 0,
+      "explain": "Validar la pregunta ('That's an interesting question') da tiempo para estructurar la respuesta sin generar silencios incómodos."
+    },
+    {
+      "q": "¿Qué opción expresa un desacuerdo parcial y respetuoso en una reunión de negocios?",
+      "options": ["I see your point, but we also have to consider the cost.", "No, that makes no sense.", "I completely reject your opinion.", "You are wrong on every level."],
+      "answer": 0,
+      "explain": "'I see your point, but...' valida al interlocutor antes de introducir la salvedad o restricción."
+    }
   ]
 }

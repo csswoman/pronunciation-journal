@@ -15,9 +15,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Hechos", "value": "Languages developed over centuries.", "highlights": ["developed"] },
-            { "key": "Fondo", "value": "People were trading and mixing words.", "highlights": ["were trading"] },
-            { "key": "Anterior", "value": "Latin had already spread.", "highlights": ["had already spread"] }
+            {
+              "key": "Hechos",
+              "value": "Languages developed over centuries.",
+              "highlights": [
+                "developed"
+              ]
+            },
+            {
+              "key": "Fondo",
+              "value": "People were trading and mixing words.",
+              "highlights": [
+                "were trading"
+              ]
+            },
+            {
+              "key": "Anterior",
+              "value": "Latin had already spread.",
+              "highlights": [
+                "had already spread"
+              ]
+            }
           ]
         }
       ],
@@ -35,9 +53,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Venir de", "value": "comes from · derives from · originates in", "highlights": ["comes from"] },
-            { "key": "Préstamos", "value": "borrowed from · loanword", "highlights": ["borrowed from"] },
-            { "key": "Cambio", "value": "evolved · spread · merged", "highlights": ["evolved"] }
+            {
+              "key": "Venir de",
+              "value": "comes from · derives from · originates in",
+              "highlights": [
+                "comes from"
+              ]
+            },
+            {
+              "key": "Préstamos",
+              "value": "borrowed from · loanword",
+              "highlights": [
+                "borrowed from"
+              ]
+            },
+            {
+              "key": "Cambio",
+              "value": "evolved · spread · merged",
+              "highlights": [
+                "evolved"
+              ]
+            }
           ]
         }
       ]
@@ -51,9 +87,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Presente", "value": "English is spoken worldwide.", "highlights": ["is spoken"] },
-            { "key": "Pasado", "value": "The word was borrowed from French.", "highlights": ["was borrowed"] },
-            { "key": "Perfecto", "value": "Many words have been added.", "highlights": ["have been added"] }
+            {
+              "key": "Presente",
+              "value": "English is spoken worldwide.",
+              "highlights": [
+                "is spoken"
+              ]
+            },
+            {
+              "key": "Pasado",
+              "value": "The word was borrowed from French.",
+              "highlights": [
+                "was borrowed"
+              ]
+            },
+            {
+              "key": "Perfecto",
+              "value": "Many words have been added.",
+              "highlights": [
+                "have been added"
+              ]
+            }
           ]
         }
       ]
@@ -67,9 +121,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "which", "value": "Latin, which spread across Europe...", "highlights": ["which"] },
-            { "key": "who", "value": "the people who spoke it", "highlights": ["who"] },
-            { "key": "where", "value": "the region where it began", "highlights": ["where"] }
+            {
+              "key": "which",
+              "value": "Latin, which spread across Europe...",
+              "highlights": [
+                "which"
+              ]
+            },
+            {
+              "key": "who",
+              "value": "the people who spoke it",
+              "highlights": [
+                "who"
+              ]
+            },
+            {
+              "key": "where",
+              "value": "the region where it began",
+              "highlights": [
+                "where"
+              ]
+            }
           ]
         }
       ]
@@ -83,9 +155,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Tiempo", "value": "over time · eventually · gradually", "highlights": ["eventually"] },
-            { "key": "Causa", "value": "as a result · due to", "highlights": ["as a result"] },
-            { "key": "Contraste", "value": "however · nevertheless", "highlights": ["however"] }
+            {
+              "key": "Tiempo",
+              "value": "over time · eventually · gradually",
+              "highlights": [
+                "eventually"
+              ]
+            },
+            {
+              "key": "Causa",
+              "value": "as a result · due to",
+              "highlights": [
+                "as a result"
+              ]
+            },
+            {
+              "key": "Contraste",
+              "value": "however · nevertheless",
+              "highlights": [
+                "however"
+              ]
+            }
           ]
         }
       ]
@@ -99,13 +189,61 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "good", "text": "Capta primero la idea general, no cada palabra.", "note": "escucha global" },
-            { "variant": "good", "text": "Las fechas y nombres anclan la historia.", "note": "puntos de referencia" },
-            { "variant": "good", "text": "Los conectores anuncian un giro.", "note": "however, then..." },
-            { "variant": "good", "text": "weak forms: was, were, of suenan reducidos.", "note": "fija el oído" }
+            {
+              "variant": "good",
+              "text": "Capta primero la idea general, no cada palabra.",
+              "note": "escucha global"
+            },
+            {
+              "variant": "good",
+              "text": "Las fechas y nombres anclan la historia.",
+              "note": "puntos de referencia"
+            },
+            {
+              "variant": "good",
+              "text": "Los conectores anuncian un giro.",
+              "note": "however, then..."
+            },
+            {
+              "variant": "good",
+              "text": "weak forms: was, were, of suenan reducidos.",
+              "note": "fija el oído"
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "English belongs to which language family branch?",
+      "options": [
+        "Germanic",
+        "Romance",
+        "Slavic"
+      ],
+      "answer": 0,
+      "explain": "El inglés es históricamente una lengua de la rama germánica de la familia indoeuropea."
+    },
+    {
+      "q": "Which historical event brought a vast amount of French vocabulary into English?",
+      "options": [
+        "The Norman Conquest of 1066",
+        "The Industrial Revolution",
+        "The Roman invasion of Britain"
+      ],
+      "answer": 0,
+      "explain": "La conquista normanda de 1066 introdujo miles de términos de origen francés normando en el idioma inglés."
+    },
+    {
+      "q": "Words like \"brother\", \"water\", and \"house\" in English originate from:",
+      "options": [
+        "Anglo-Saxon / Germanic roots",
+        "Modern Greek borrowings",
+        "Arabic trade routes"
+      ],
+      "answer": 0,
+      "explain": "El vocabulario básico cotidiano del inglés proviene de sus raíces anglosajonas/germánicas."
     }
   ]
 }

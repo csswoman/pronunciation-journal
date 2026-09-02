@@ -9,15 +9,35 @@
       "id": "ha-usedto",
       "tag": "Pasado",
       "title": "used to",
-      "titleItalic": ["used to"],
+      "titleItalic": [
+        "used to"
+      ],
       "lede": "Para hábitos del pasado que ya no ocurren. Va con verbo base.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
-            { "key": "Afirmativo", "value": "I used to smoke.", "highlights": ["used to"] },
-            { "key": "Negativo", "value": "I didn't use to like it.", "highlights": ["didn't use to"] },
-            { "key": "Pregunta", "value": "Did you use to live here?", "highlights": ["Did you use to"] }
+            {
+              "key": "Afirmativo",
+              "value": "I used to smoke.",
+              "highlights": [
+                "used to"
+              ]
+            },
+            {
+              "key": "Negativo",
+              "value": "I didn't use to like it.",
+              "highlights": [
+                "didn't use to"
+              ]
+            },
+            {
+              "key": "Pregunta",
+              "value": "Did you use to live here?",
+              "highlights": [
+                "Did you use to"
+              ]
+            }
           ]
         }
       ],
@@ -38,12 +58,18 @@
             {
               "label": "used to",
               "rule": "acciones Y estados",
-              "examples": ["I used to live there.", "I used to play tennis."]
+              "examples": [
+                "I used to live there.",
+                "I used to play tennis."
+              ]
             },
             {
               "label": "would",
               "rule": "solo acciones repetidas",
-              "examples": ["Every summer we would travel.", "He'd always call on Sundays."]
+              "examples": [
+                "Every summer we would travel.",
+                "He'd always call on Sundays."
+              ]
             }
           ]
         }
@@ -62,9 +88,24 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "be used to", "value": "I'm used to working late. (ya estoy)", "highlights": ["used to working"] },
-            { "key": "get used to", "value": "I'm getting used to it. (proceso)", "highlights": ["getting used to"] },
-            { "key": "Contraste", "value": "used to do (pasado) ≠ used to doing (acostumbrado)" }
+            {
+              "key": "be used to",
+              "value": "I'm used to working late. (ya estoy)",
+              "highlights": [
+                "used to working"
+              ]
+            },
+            {
+              "key": "get used to",
+              "value": "I'm getting used to it. (proceso)",
+              "highlights": [
+                "getting used to"
+              ]
+            },
+            {
+              "key": "Contraste",
+              "value": "used to do (pasado) ≠ used to doing (acostumbrado)"
+            }
           ]
         }
       ]
@@ -78,9 +119,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Queja", "value": "He's always complaining!", "highlights": ["always complaining"] },
-            { "key": "Tendencia", "value": "tend to · be inclined to", "highlights": ["tend to"] },
-            { "key": "Frecuencia alta", "value": "more often than not", "highlights": ["more often than not"] }
+            {
+              "key": "Queja",
+              "value": "He's always complaining!",
+              "highlights": [
+                "always complaining"
+              ]
+            },
+            {
+              "key": "Tendencia",
+              "value": "tend to · be inclined to",
+              "highlights": [
+                "tend to"
+              ]
+            },
+            {
+              "key": "Frecuencia alta",
+              "value": "more often than not",
+              "highlights": [
+                "more often than not"
+              ]
+            }
           ]
         }
       ]
@@ -94,9 +153,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Cerca de", "value": "roughly · approximately · around", "highlights": ["roughly"] },
-            { "key": "Más o menos", "value": "more or less · give or take", "highlights": ["give or take"] },
-            { "key": "Límites", "value": "up to · at least · no more than", "highlights": ["up to"] }
+            {
+              "key": "Cerca de",
+              "value": "roughly · approximately · around",
+              "highlights": [
+                "roughly"
+              ]
+            },
+            {
+              "key": "Más o menos",
+              "value": "more or less · give or take",
+              "highlights": [
+                "give or take"
+              ]
+            },
+            {
+              "key": "Límites",
+              "value": "up to · at least · no more than",
+              "highlights": [
+                "up to"
+              ]
+            }
           ]
         }
       ]
@@ -110,13 +187,61 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "good", "text": "stuff like that / and so on", "note": "etcétera" },
-            { "variant": "good", "text": "or something / or so", "note": "aproximar" },
-            { "variant": "good", "text": "a couple of / a bunch of", "note": "cantidad vaga" },
-            { "variant": "good", "text": "kind of / sort of", "note": "más o menos" }
+            {
+              "variant": "good",
+              "text": "stuff like that / and so on",
+              "note": "etcétera"
+            },
+            {
+              "variant": "good",
+              "text": "or something / or so",
+              "note": "aproximar"
+            },
+            {
+              "variant": "good",
+              "text": "a couple of / a bunch of",
+              "note": "cantidad vaga"
+            },
+            {
+              "variant": "good",
+              "text": "kind of / sort of",
+              "note": "más o menos"
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Which structure expresses a general tendency or present habit?",
+      "options": [
+        "tend to + infinitive",
+        "used to + infinitive",
+        "would + infinitive"
+      ],
+      "answer": 0,
+      "explain": "'Tend to + infinitivo' se usa para describir hábitos o comportamientos habituales en el presente."
+    },
+    {
+      "q": "How do you give an informal approximate time for a meeting around 7 o'clock?",
+      "options": [
+        "Let's meet at 7-ish.",
+        "Let's meet at 7 sharp.",
+        "Let's meet at 7 exactly."
+      ],
+      "answer": 0,
+      "explain": "El sufijo informal '-ish' añadido a horas o números indica aproximación ('sobre las 7')."
+    },
+    {
+      "q": "Which phrase gives a rough estimate of costs?",
+      "options": [
+        "Roughly around 500 euros",
+        "Exactly 500 euros to the cent",
+        "Without any budget limit"
+      ],
+      "answer": 0,
+      "explain": "'Roughly' o 'approximately' señalan que la cifra dada es una estimación aproximada."
     }
   ]
 }

@@ -1,46 +1,40 @@
 {
+  "isGenerated": true,
   "meta": {
-    "eyebrow": "A1 · Artículos básicos",
+    "eyebrow": "A1 · Artículos",
     "title": "Artículos básicos",
     "titleEmphasis": "a, an y the",
-    "goal": "Ya puedes usar a, an y the en ejemplos claros y adecuados al contexto."
+    "goal": "Ya distingues cuándo usar a, an, the o ningún artículo."
   },
   "cards": [
     {
       "id": "a1-articulos-basicos-concept",
       "tag": "Idea central",
       "title": "Artículos básicos: qué expresa",
-      "lede": "Esta lección te ayuda a usar a, an y the con precisión y sin traducir palabra por palabra.",
+      "lede": "Ya distingues cuándo usar a, an, the o ningún artículo.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
               "key": "a",
-              "value": "antes de sonido consonántico: a book, a university",
+              "value": "sonido consonántico · a book, a house",
               "highlights": [
                 "a"
               ]
             },
             {
               "key": "an",
-              "value": "antes de sonido vocálico: an apple, an hour",
+              "value": "sonido vocálico · an apple, an hour",
               "highlights": [
                 "an"
               ]
             },
             {
               "key": "the",
-              "value": "para algo específico o ya conocido",
+              "value": "objeto específico o único · the sun, the door",
               "highlights": [
                 "the"
-              ]
-            },
-            {
-              "key": "sin artículo",
-              "value": "para plurales y conceptos generales",
-              "highlights": [
-                "sin artículo"
               ]
             }
           ]
@@ -48,29 +42,38 @@
       ],
       "tip": {
         "label": "Objetivo:",
-        "body": "reconocer la intención y elegir correctamente a, an y the en situaciones reales."
+        "body": "reconocer el patrón y usarlo en frases propias."
       }
     },
     {
       "id": "a1-articulos-basicos-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "a",
-              "value": "antes de sonido consonántico: a book, a university"
+              "key": "a + consonante",
+              "value": "a book / a university",
+              "highlights": [
+                "a"
+              ]
             },
             {
-              "key": "an",
-              "value": "antes de sonido vocálico: an apple, an hour"
+              "key": "an + vocal",
+              "value": "an apple / an honest man",
+              "highlights": [
+                "an"
+              ]
             },
             {
-              "key": "the",
-              "value": "para algo específico o ya conocido"
+              "key": "the + específico",
+              "value": "the president / the keys on the table",
+              "highlights": [
+                "the"
+              ]
             }
           ]
         }
@@ -80,22 +83,26 @@
       "id": "a1-articulos-basicos-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa y fíjate en la posición de las palabras.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "I have a dog."
+              "key": "Indefinido inicial",
+              "value": "I bought a laptop yesterday."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "She is an engineer."
+              "key": "Definido",
+              "value": "The laptop is very fast!"
             },
             {
-              "key": "Ejemplo 3",
-              "value": "The dog is in the garden."
+              "key": "Sonido vocálico",
+              "value": "She is an engineer at a tech firm."
+            },
+            {
+              "key": "Objeto único",
+              "value": "The moon looks beautiful tonight."
             }
           ]
         }
@@ -105,23 +112,23 @@
       "id": "a1-articulos-basicos-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende de la intención, la cantidad, el tiempo o el registro.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "a",
-              "rule": "antes de sonido consonántico: a book, a university",
+              "label": "a / an (Cualquiera / Indefinido)",
+              "rule": "Se habla de un elemento no especificado por primera vez",
               "examples": [
-                "I have a dog."
+                "I need a pen."
               ]
             },
             {
-              "label": "an",
-              "rule": "antes de sonido vocálico: an apple, an hour",
+              "label": "the (Específico / Definido)",
+              "rule": "Se habla de algo concreto o ya conocido por ambos",
               "examples": [
-                "She is an engineer."
+                "Give me the blue pen."
               ]
             }
           ]
@@ -132,19 +139,19 @@
       "id": "a1-articulos-basicos-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural y gramatical.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "I have an car."
+              "text": "She is a engineer."
             },
             {
               "variant": "good",
-              "text": "I have a car.",
-              "note": "forma recomendada"
+              "text": "She is an engineer.",
+              "note": "engineer empieza por sonido vocálico → an"
             }
           ]
         }
@@ -153,64 +160,64 @@
     {
       "id": "a1-articulos-basicos-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase antes de continuar.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar exactamente?"
+              "key": "a",
+              "value": "Sonido consonántico inicial (a dog, a university)"
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma adecuada de a, an y the."
+              "key": "an",
+              "value": "Sonido vocálico inicial (an egg, an hour)"
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, verbo, número y tiempo."
+              "key": "the",
+              "value": "Objeto específico, único o mencionado antes (the sun, the door)"
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase completa y evita traducir literalmente."
+              "key": "Sin artículo",
+              "value": "Plurales y conceptos generales (I like cats, Water is essential)"
             }
           ]
         }
       ],
       "tip": {
         "label": "Práctica:",
-        "body": "crea una frase personal con cada patrón y léela en voz alta."
+        "body": "escribe una frase personal con el patrón."
       }
     }
   ],
   "quiz": [
     {
-      "q": "Elige la opción correcta para a, an y the.",
+      "q": "He has been waiting for ___ hour.",
+      "options": [
+        "an",
+        "a"
+      ],
+      "answer": 0,
+      "explain": "'hour' comienza con sonido vocálico (/aʊər/), por lo que lleva 'an'."
+    },
+    {
+      "q": "Look at ___ sky, it is going to rain.",
+      "options": [
+        "the",
+        "a"
+      ],
+      "answer": 0,
+      "explain": "El cielo es único y específico en este contexto, corresponde 'the'."
+    },
+    {
+      "q": "¿En cuál opción se usa correctamente el artículo 'a'?",
       "options": [
         "a university",
         "an university"
       ],
       "answer": 0,
-      "explain": "La respuesta correcta aplica la regla central de a, an y the."
-    },
-    {
-      "q": "¿Cuál de estas frases es correcta?",
-      "options": [
-        "I have an car.",
-        "I have a car."
-      ],
-      "answer": 1,
-      "explain": "La segunda opción usa la estructura y el orden correctos."
-    },
-    {
-      "q": "¿Qué conviene revisar al usar a, an y the?",
-      "options": [
-        "La intención, la estructura y el contexto.",
-        "Solo la traducción literal al español."
-      ],
-      "answer": 0,
-      "explain": "Una frase natural depende del significado, la forma y el contexto, no de traducir palabra por palabra."
+      "explain": "'University' comienza con el sonido consonántico /j/ ('yoo'), por lo que lleva 'a'."
     }
   ]
 }

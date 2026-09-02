@@ -17,12 +17,18 @@
             {
               "label": "-ed (sentimiento)",
               "rule": "cómo me siento",
-              "examples": ["I'm bored.", "She's interested."]
+              "examples": [
+                "I'm bored.",
+                "She's interested."
+              ]
             },
             {
               "label": "-ing (causa)",
               "rule": "qué lo provoca",
-              "examples": ["The film is boring.", "It's interesting."]
+              "examples": [
+                "The film is boring.",
+                "It's interesting."
+              ]
             }
           ]
         }
@@ -41,10 +47,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "+ of", "value": "afraid of · proud of · tired of", "highlights": ["of"] },
-            { "key": "+ at", "value": "good at · bad at · surprised at", "highlights": ["at"] },
-            { "key": "+ about", "value": "worried about · excited about", "highlights": ["about"] },
-            { "key": "+ in", "value": "interested in", "highlights": ["in"] }
+            {
+              "key": "+ of",
+              "value": "afraid of · proud of · tired of",
+              "highlights": [
+                "of"
+              ]
+            },
+            {
+              "key": "+ at",
+              "value": "good at · bad at · surprised at",
+              "highlights": [
+                "at"
+              ]
+            },
+            {
+              "key": "+ about",
+              "value": "worried about · excited about",
+              "highlights": [
+                "about"
+              ]
+            },
+            {
+              "key": "+ in",
+              "value": "interested in",
+              "highlights": [
+                "in"
+              ]
+            }
           ]
         }
       ]
@@ -58,9 +88,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "too + adj", "value": "too expensive · too hot", "highlights": ["too"] },
-            { "key": "adj + enough", "value": "big enough · old enough", "highlights": ["enough"] },
-            { "key": "enough + noun", "value": "enough money · enough time", "highlights": ["enough"] }
+            {
+              "key": "too + adj",
+              "value": "too expensive · too hot",
+              "highlights": [
+                "too"
+              ]
+            },
+            {
+              "key": "adj + enough",
+              "value": "big enough · old enough",
+              "highlights": [
+                "enough"
+              ]
+            },
+            {
+              "key": "enough + noun",
+              "value": "enough money · enough time",
+              "highlights": [
+                "enough"
+              ]
+            }
           ]
         }
       ]
@@ -74,10 +122,24 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "bad", "text": "Could you tell me where is the station?" },
-            { "variant": "good", "text": "Could you tell me where the station is?", "note": "orden normal" },
-            { "variant": "bad", "text": "Do you know what time does it start?" },
-            { "variant": "good", "text": "Do you know what time it starts?", "note": "sin does" }
+            {
+              "variant": "bad",
+              "text": "Could you tell me where is the station?"
+            },
+            {
+              "variant": "good",
+              "text": "Could you tell me where the station is?",
+              "note": "orden normal"
+            },
+            {
+              "variant": "bad",
+              "text": "Do you know what time does it start?"
+            },
+            {
+              "variant": "good",
+              "text": "Do you know what time it starts?",
+              "note": "sin does"
+            }
           ]
         }
       ],
@@ -95,9 +157,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Directa", "value": "Is it open?", "highlights": ["Is it open?"] },
-            { "key": "Indirecta", "value": "Do you know if it's open?", "highlights": ["if it's open"] },
-            { "key": "whether", "value": "I wonder whether it's open.", "highlights": ["whether"] }
+            {
+              "key": "Directa",
+              "value": "Is it open?",
+              "highlights": [
+                "Is it open?"
+              ]
+            },
+            {
+              "key": "Indirecta",
+              "value": "Do you know if it's open?",
+              "highlights": [
+                "if it's open"
+              ]
+            },
+            {
+              "key": "whether",
+              "value": "I wonder whether it's open.",
+              "highlights": [
+                "whether"
+              ]
+            }
           ]
         }
       ]
@@ -111,12 +191,62 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Could you tell me", "value": "...where the exit is?", "highlights": ["Could you tell me"] },
-            { "key": "Do you know", "value": "...when it opens?", "highlights": ["Do you know"] },
-            { "key": "I was wondering", "value": "...if you could help.", "highlights": ["I was wondering"] }
+            {
+              "key": "Could you tell me",
+              "value": "...where the exit is?",
+              "highlights": [
+                "Could you tell me"
+              ]
+            },
+            {
+              "key": "Do you know",
+              "value": "...when it opens?",
+              "highlights": [
+                "Do you know"
+              ]
+            },
+            {
+              "key": "I was wondering",
+              "value": "...if you could help.",
+              "highlights": [
+                "I was wondering"
+              ]
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "I found the documentary very ___, so I fell asleep.",
+      "options": [
+        "boring",
+        "bored",
+        "boredom"
+      ],
+      "answer": 0,
+      "explain": "El documental provoca la sensación (causa), por lo que se utiliza el adjetivo terminado en '-ing'."
+    },
+    {
+      "q": "Could you tell me where ___?",
+      "options": [
+        "the nearest station is",
+        "is the nearest station",
+        "does the nearest station be"
+      ],
+      "answer": 0,
+      "explain": "En preguntas indirectas, el orden sigue el de una afirmación (sujeto + verbo)."
+    },
+    {
+      "q": "This suit is not big ___ for him.",
+      "options": [
+        "enough",
+        "too",
+        "so"
+      ],
+      "answer": 0,
+      "explain": "'Enough' se coloca inmediatamente después de un adjetivo ('big enough')."
     }
   ]
 }

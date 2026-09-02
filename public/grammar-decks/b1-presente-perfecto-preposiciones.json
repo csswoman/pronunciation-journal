@@ -14,9 +14,30 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Experiencia", "value": "I have visited Rome twice.", "highlights": ["have visited"], "hint": "en mi vida" },
-            { "key": "Resultado", "value": "She has lost her keys.", "highlights": ["has lost"], "hint": "y siguen perdidas" },
-            { "key": "Tiempo no acabado", "value": "I have worked a lot this week.", "highlights": ["this week"], "hint": "la semana sigue" }
+            {
+              "key": "Experiencia",
+              "value": "I have visited Rome twice.",
+              "highlights": [
+                "have visited"
+              ],
+              "hint": "en mi vida"
+            },
+            {
+              "key": "Resultado",
+              "value": "She has lost her keys.",
+              "highlights": [
+                "has lost"
+              ],
+              "hint": "y siguen perdidas"
+            },
+            {
+              "key": "Tiempo no acabado",
+              "value": "I have worked a lot this week.",
+              "highlights": [
+                "this week"
+              ],
+              "hint": "la semana sigue"
+            }
           ]
         }
       ],
@@ -29,7 +50,10 @@
       "id": "pp-for-since",
       "tag": "for / since",
       "title": "for y since",
-      "titleItalic": ["for", "since"],
+      "titleItalic": [
+        "for",
+        "since"
+      ],
       "lede": "Las dos hablan de duración, pero miden el tiempo de forma distinta.",
       "blocks": [
         {
@@ -38,12 +62,18 @@
             {
               "label": "for",
               "rule": "+ periodo de tiempo",
-              "examples": ["for two years", "for ten minutes"]
+              "examples": [
+                "for two years",
+                "for ten minutes"
+              ]
             },
             {
               "label": "since",
               "rule": "+ punto de inicio",
-              "examples": ["since 2020", "since Monday"]
+              "examples": [
+                "since 2020",
+                "since Monday"
+              ]
             }
           ]
         }
@@ -62,10 +92,38 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "just", "value": "hace nada · I've just arrived.", "highlights": ["just"], "hint": "antes del participio" },
-            { "key": "already", "value": "ya · I've already done it.", "highlights": ["already"], "hint": "antes de lo esperado" },
-            { "key": "yet", "value": "todavía no · I haven't finished yet.", "highlights": ["yet"], "hint": "al final, negativos/preguntas" },
-            { "key": "still", "value": "aún · I still haven't called.", "highlights": ["still"], "hint": "antes del auxiliar" }
+            {
+              "key": "just",
+              "value": "hace nada · I've just arrived.",
+              "highlights": [
+                "just"
+              ],
+              "hint": "antes del participio"
+            },
+            {
+              "key": "already",
+              "value": "ya · I've already done it.",
+              "highlights": [
+                "already"
+              ],
+              "hint": "antes de lo esperado"
+            },
+            {
+              "key": "yet",
+              "value": "todavía no · I haven't finished yet.",
+              "highlights": [
+                "yet"
+              ],
+              "hint": "al final, negativos/preguntas"
+            },
+            {
+              "key": "still",
+              "value": "aún · I still haven't called.",
+              "highlights": [
+                "still"
+              ],
+              "hint": "antes del auxiliar"
+            }
           ]
         }
       ]
@@ -79,10 +137,24 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "bad", "text": "I have seen her yesterday." },
-            { "variant": "good", "text": "I saw her yesterday.", "note": "yesterday = momento concreto → pasado" },
-            { "variant": "bad", "text": "Did you ever eat sushi?" },
-            { "variant": "good", "text": "Have you ever eaten sushi?", "note": "experiencia sin fecha → present perfect" }
+            {
+              "variant": "bad",
+              "text": "I have seen her yesterday."
+            },
+            {
+              "variant": "good",
+              "text": "I saw her yesterday.",
+              "note": "yesterday = momento concreto → pasado"
+            },
+            {
+              "variant": "bad",
+              "text": "Did you ever eat sushi?"
+            },
+            {
+              "variant": "good",
+              "text": "Have you ever eaten sushi?",
+              "note": "experiencia sin fecha → present perfect"
+            }
           ]
         }
       ]
@@ -96,9 +168,29 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "in", "value": "meses, años, lugares grandes · in May · in a car", "highlights": ["in"], "hint": "lo más general" },
-            { "key": "on", "value": "días, superficies · on Monday · on the wall", "highlights": ["on"] },
-            { "key": "at", "value": "horas, puntos exactos · at 5pm · at the door", "highlights": ["at"], "hint": "lo más preciso" }
+            {
+              "key": "in",
+              "value": "meses, años, lugares grandes · in May · in a car",
+              "highlights": [
+                "in"
+              ],
+              "hint": "lo más general"
+            },
+            {
+              "key": "on",
+              "value": "días, superficies · on Monday · on the wall",
+              "highlights": [
+                "on"
+              ]
+            },
+            {
+              "key": "at",
+              "value": "horas, puntos exactos · at 5pm · at the door",
+              "highlights": [
+                "at"
+              ],
+              "hint": "lo más preciso"
+            }
           ]
         }
       ]
@@ -112,10 +204,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "good at", "value": "bueno en · good at maths", "highlights": ["good at"] },
-            { "key": "interested in", "value": "interesado en · interested in art", "highlights": ["interested in"] },
-            { "key": "depend on", "value": "depender de · It depends on you.", "highlights": ["depend on"] },
-            { "key": "listen to", "value": "escuchar · listen to music", "highlights": ["listen to"] }
+            {
+              "key": "good at",
+              "value": "bueno en · good at maths",
+              "highlights": [
+                "good at"
+              ]
+            },
+            {
+              "key": "interested in",
+              "value": "interesado en · interested in art",
+              "highlights": [
+                "interested in"
+              ]
+            },
+            {
+              "key": "depend on",
+              "value": "depender de · It depends on you.",
+              "highlights": [
+                "depend on"
+              ]
+            },
+            {
+              "key": "listen to",
+              "value": "escuchar · listen to music",
+              "highlights": [
+                "listen to"
+              ]
+            }
           ]
         }
       ],
@@ -123,6 +239,38 @@
         "label": "Calco común:",
         "body": "se dice depend on (no \"depend of\") y listen to (no \"listen\" a secas)."
       }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "I haven't finished reading the report ___.",
+      "options": [
+        "yet",
+        "already",
+        "just"
+      ],
+      "answer": 0,
+      "explain": "'Yet' se coloca al final de oraciones negativas e interrogativas en presente perfecto."
+    },
+    {
+      "q": "She has ___ arrived at the office, so she is taking off her coat.",
+      "options": [
+        "just",
+        "yet",
+        "ever"
+      ],
+      "answer": 0,
+      "explain": "'Just' expresa una acción ocurrida hace breves instantes."
+    },
+    {
+      "q": "We arrived ___ the train station five minutes late.",
+      "options": [
+        "at",
+        "in",
+        "to"
+      ],
+      "answer": 0,
+      "explain": "Se utiliza 'arrive at' para lugares o puntos específicos como estaciones o edificios."
     }
   ]
 }

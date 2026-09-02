@@ -14,9 +14,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Seguro sí", "value": "She must be at work.", "highlights": ["must be"] },
-            { "key": "Posible", "value": "He might be sleeping.", "highlights": ["might be"] },
-            { "key": "Seguro no", "value": "That can't be right.", "highlights": ["can't be"] }
+            {
+              "key": "Seguro sí",
+              "value": "She must be at work.",
+              "highlights": [
+                "must be"
+              ]
+            },
+            {
+              "key": "Posible",
+              "value": "He might be sleeping.",
+              "highlights": [
+                "might be"
+              ]
+            },
+            {
+              "key": "Seguro no",
+              "value": "That can't be right.",
+              "highlights": [
+                "can't be"
+              ]
+            }
           ]
         }
       ],
@@ -34,9 +52,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Seguro sí", "value": "She must have left already.", "highlights": ["must have left"] },
-            { "key": "Posible", "value": "He might have forgotten.", "highlights": ["might have forgotten"] },
-            { "key": "Seguro no", "value": "They can't have known.", "highlights": ["can't have known"] }
+            {
+              "key": "Seguro sí",
+              "value": "She must have left already.",
+              "highlights": [
+                "must have left"
+              ]
+            },
+            {
+              "key": "Posible",
+              "value": "He might have forgotten.",
+              "highlights": [
+                "might have forgotten"
+              ]
+            },
+            {
+              "key": "Seguro no",
+              "value": "They can't have known.",
+              "highlights": [
+                "can't have known"
+              ]
+            }
           ]
         }
       ]
@@ -50,9 +86,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "suppose / guess", "value": "I suppose it's fine.", "highlights": ["suppose"] },
-            { "key": "assume", "value": "I assume you've heard.", "highlights": ["assume"] },
-            { "key": "bound to", "value": "It's bound to rain.", "highlights": ["bound to"] }
+            {
+              "key": "suppose / guess",
+              "value": "I suppose it's fine.",
+              "highlights": [
+                "suppose"
+              ]
+            },
+            {
+              "key": "assume",
+              "value": "I assume you've heard.",
+              "highlights": [
+                "assume"
+              ]
+            },
+            {
+              "key": "bound to",
+              "value": "It's bound to rain.",
+              "highlights": [
+                "bound to"
+              ]
+            }
           ]
         }
       ]
@@ -66,9 +120,28 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Afirmativo", "value": "Press the button. · Insert the card.", "highlights": ["Press"] },
-            { "key": "Negativo", "value": "Don't touch the screen.", "highlights": ["Don't"] },
-            { "key": "Secuencia", "value": "First... then... after that... finally", "highlights": ["First", "finally"] }
+            {
+              "key": "Afirmativo",
+              "value": "Press the button. · Insert the card.",
+              "highlights": [
+                "Press"
+              ]
+            },
+            {
+              "key": "Negativo",
+              "value": "Don't touch the screen.",
+              "highlights": [
+                "Don't"
+              ]
+            },
+            {
+              "key": "Secuencia",
+              "value": "First... then... after that... finally",
+              "highlights": [
+                "First",
+                "finally"
+              ]
+            }
           ]
         }
       ]
@@ -82,9 +155,21 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "good", "text": "The device should be turned off first.", "note": "instrucción formal" },
-            { "variant": "good", "text": "Cards must not be removed during use.", "note": "prohibición" },
-            { "variant": "good", "text": "Make sure (that) it's plugged in.", "note": "asegurarse" }
+            {
+              "variant": "good",
+              "text": "The device should be turned off first.",
+              "note": "instrucción formal"
+            },
+            {
+              "variant": "good",
+              "text": "Cards must not be removed during use.",
+              "note": "prohibición"
+            },
+            {
+              "variant": "good",
+              "text": "Make sure (that) it's plugged in.",
+              "note": "asegurarse"
+            }
           ]
         }
       ]
@@ -98,12 +183,62 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Pedir", "value": "Could you go over that again?", "highlights": ["go over that again"] },
-            { "key": "Confirmar", "value": "So, you mean I should...?", "highlights": ["you mean"] },
-            { "key": "Aclarar", "value": "In other words, ...", "highlights": ["In other words"] }
+            {
+              "key": "Pedir",
+              "value": "Could you go over that again?",
+              "highlights": [
+                "go over that again"
+              ]
+            },
+            {
+              "key": "Confirmar",
+              "value": "So, you mean I should...?",
+              "highlights": [
+                "you mean"
+              ]
+            },
+            {
+              "key": "Aclarar",
+              "value": "In other words, ...",
+              "highlights": [
+                "In other words"
+              ]
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Which modal structure expresses a strong positive deduction about the present?",
+      "options": [
+        "must be",
+        "can't be",
+        "might have been"
+      ],
+      "answer": 0,
+      "explain": "'Must + be / verbo base' expresa deducción o suposición casi cierta basada en evidencias."
+    },
+    {
+      "q": "Which phrase indicates a negative assumption of impossibility?",
+      "options": [
+        "It can't be true.",
+        "It must be true.",
+        "It should be true."
+      ],
+      "answer": 0,
+      "explain": "'Can't be' se utiliza para expresar certeza de que algo es imposible."
+    },
+    {
+      "q": "Which connector is best suited for introducing the initial step in instructions?",
+      "options": [
+        "First and foremost",
+        "Finally",
+        "In conclusion"
+      ],
+      "answer": 0,
+      "explain": "'First and foremost' o 'First of all' se usa para dar la primera instrucción prioritaria."
     }
   ]
 }

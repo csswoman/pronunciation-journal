@@ -1,44 +1,45 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "C2 · Pragmática",
     "title": "Marcadores",
     "titleEmphasis": "pragmáticos",
-    "goal": "Ya posicionas tu actitud con frankly, presumably, as it were y if you ask me."
+    "goal": "Modula la postura, actitud y distancia comunicativa del hablante mediante marcadores pragmáticos ('frankly', 'presumably', 'as it were')."
   },
   "cards": [
     {
       "id": "c2-marcadores-pragmaticos-concept",
       "tag": "Idea central",
       "title": "Marcadores: qué expresa",
-      "lede": "Ya posicionas tu actitud con frankly, presumably, as it were y if you ask me.",
+      "lede": "Modula la postura, actitud y distancia comunicativa del hablante mediante marcadores pragmáticos ('frankly', 'presumably', 'as it were').",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "frankly",
-              "value": "Frankly, the plan won't work. · honestidad directa",
+              "key": "Franqueza directa",
+              "value": "Frankly / To be frank, the current strategy is unsustainable.",
               "highlights": [
                 "Frankly"
               ]
             },
             {
-              "key": "presumably",
-              "value": "Presumably, they already know.",
+              "key": "Deducción hipotética",
+              "value": "Presumably, the legal department has already reviewed these clauses.",
               "highlights": [
                 "Presumably"
               ]
             },
             {
-              "key": "as it were",
-              "value": "a kind of bridge, as it were · distanciamiento irónico",
+              "key": "Atenuación metafórica",
+              "value": "He has become the undisputed architect of the project, as it were.",
               "highlights": [
                 "as it were"
               ]
             },
             {
-              "key": "if you ask me",
-              "value": "If you ask me, it's too risky. · opinión personal",
+              "key": "Perspectiva personal",
+              "value": "If you ask me, the market is overestimating their growth potential.",
               "highlights": [
                 "If you ask me"
               ]
@@ -55,28 +56,28 @@
       "id": "c2-marcadores-pragmaticos-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "frankly",
-              "value": "Frankly, the plan won't work. · honestidad directa",
+              "key": "Afirmativa (Postura oracional)",
+              "value": "Marcador pragmático + coma + oración principal · Frankly, we cannot afford more delays.",
               "highlights": [
                 "Frankly"
               ]
             },
             {
-              "key": "presumably",
-              "value": "Presumably, they already know.",
+              "key": "Afirmativa (Marcador incrustado)",
+              "value": "The plan is, presumably, going to be approved by the board.",
               "highlights": [
-                "Presumably"
+                "presumably"
               ]
             },
             {
-              "key": "as it were",
-              "value": "a kind of bridge, as it were · distanciamiento irónico",
+              "key": "Afirmativa (Marcador final)",
+              "value": "They have established a monopoly, as it were.",
               "highlights": [
                 "as it were"
               ]
@@ -89,26 +90,26 @@
       "id": "c2-marcadores-pragmaticos-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "honestidad directa"
+              "key": "Evaluaciones críticas",
+              "value": "Frankly, the performance figures presented today are unsatisfactory."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "Presumably, they already know."
+              "key": "Suposiciones gerenciales",
+              "value": "Presumably, the team will complete testing prior to the public release."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "distanciamiento irónico"
+              "key": "Explicaciones conceptuales",
+              "value": "The new division will act as an incubator, as it were, for fresh talent."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "opinión personal"
+              "key": "Comentarios de pasillo / Reuniones",
+              "value": "If you ask me, we should have negotiated harder on pricing."
             }
           ]
         }
@@ -118,23 +119,23 @@
       "id": "c2-marcadores-pragmaticos-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "frankly",
-              "rule": "Frankly, the plan won't work. · honestidad directa",
+              "label": "Frankly / To be frank",
+              "rule": "Introduce una opinión honesta y directa que puede ser incómoda o confrontativa",
               "examples": [
-                "honestidad directa"
+                "Frankly, we don't have the expertise to execute this in-house."
               ]
             },
             {
-              "label": "presumably",
-              "rule": "Presumably, they already know.",
+              "label": "Presumably",
+              "rule": "Indica una suposición razonable basada en la lógica o rutina, sin confirmación absoluta",
               "examples": [
-                "Presumably, they already know."
+                "Presumably, they will notify us when the audit is complete."
               ]
             }
           ]
@@ -145,19 +146,19 @@
       "id": "c2-marcadores-pragmaticos-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "Frankly to say…"
+              "text": "Frankly to say, the project is a failure."
             },
             {
               "variant": "good",
-              "text": "Frankly, … / To be frank, …",
-              "note": "frankly va al inicio o como frase hecha"
+              "text": "Frankly, the project is a failure. / To be frank, the project is a failure.",
+              "note": "No mezcles 'frankly' con 'to say'; usa 'Frankly,' o 'To be frank,'."
             }
           ]
         }
@@ -166,27 +167,27 @@
     {
       "id": "c2-marcadores-pragmaticos-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "1. Moduladores de actitud",
+              "value": "Los marcadores pragmáticos no cambian la gramática de la frase, sino cómo debe ser interpretada."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "2. 'As it were' atenúa metáforas",
+              "value": "Úsalo para señalar que una expresión no debe tomarse de forma strictly literal."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "3. 'Presumably' presupone lógica",
+              "value": "Equivale a 'I assume that', aportando distancia profesional."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "4. Puntuación",
+              "value": "Separa los marcadores pragmáticos con comas al inicio, centro o final de la oración."
             }
           ]
         }
@@ -199,13 +200,37 @@
   ],
   "quiz": [
     {
-      "q": "___, the merger is already decided.",
+      "q": "___, the board has already agreed on the successor, though no official announcement was made.",
       "options": [
         "Presumably",
-        "Frankly"
+        "As it were",
+        "Frankly to say",
+        "To be frankly"
       ],
       "answer": 0,
-      "explain": "Presumably = suposición razonable, no confesión directa."
+      "explain": "'Presumably' refleja una deducción lógica basada en las circunstancias."
+    },
+    {
+      "q": "The startup is living on borrowed time, ___.",
+      "options": [
+        "as it were",
+        "presumably that",
+        "if asking me",
+        "frankly to say"
+      ],
+      "answer": 0,
+      "explain": "'As it were' atenúa la metáfora 'living on borrowed time'."
+    },
+    {
+      "q": "¿Qué marcador pragmático introduce una opinión directa y honesta sin rodeos?",
+      "options": [
+        "Frankly",
+        "As it were",
+        "Notwithstanding",
+        "In so far as"
+      ],
+      "answer": 0,
+      "explain": "'Frankly' indica franqueza directa en la exposición de una postura."
     }
   ]
 }

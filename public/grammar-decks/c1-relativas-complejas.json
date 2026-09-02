@@ -1,46 +1,47 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "C1 · Relativas",
     "title": "Estructuras",
     "titleEmphasis": "relativas complejas",
-    "goal": "Ya usas relativas reducidas, preposición al inicio y relativas encajadas para empaquetar información precisa."
+    "goal": "Empaqueta información densa mediante relativas reducidas, preposición inicial (fronting) y relativas subordinadas encajadas."
   },
   "cards": [
     {
       "id": "c1-relativas-complejas-concept",
       "tag": "Idea central",
       "title": "Estructuras: qué expresa",
-      "lede": "Ya usas relativas reducidas, preposición al inicio y relativas encajadas para empaquetar información precisa.",
+      "lede": "Empaqueta información densa mediante relativas reducidas, preposición inicial (fronting) y relativas subordinadas encajadas.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Reducida",
-              "value": "The report submitted yesterday… (= which was submitted)",
+              "key": "Relativa reducida (pasiva)",
+              "value": "The audit conducted last month revealed several discrepancies.",
               "highlights": [
-                "submitted"
+                "conducted"
               ]
             },
             {
-              "key": "Prep. inicial",
-              "value": "the person to whom I spoke · formal",
+              "key": "Relativa reducida (activa)",
+              "value": "Engineers working on the project need clear instructions.",
+              "highlights": [
+                "working"
+              ]
+            },
+            {
+              "key": "Preposición inicial (formal)",
+              "value": "The client to whom we addressed the proposal accepted the terms.",
               "highlights": [
                 "to whom"
               ]
             },
             {
-              "key": "Encajada",
-              "value": "The policy, which the board debated, which analysts criticised…",
+              "key": "Cuantificador + of which/whom",
+              "value": "We reviewed ten applications, three of which met all criteria.",
               "highlights": [
-                "which"
-              ]
-            },
-            {
-              "key": "Precisión",
-              "value": "una sola oración, múltiples capas de detalle",
-              "highlights": [
-                "which"
+                "three of which"
               ]
             }
           ]
@@ -55,30 +56,30 @@
       "id": "c1-relativas-complejas-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Reducida",
-              "value": "The report submitted yesterday… (= which was submitted)",
+              "key": "Afirmativa (Preposición inicial)",
+              "value": "Sujeto + preposición + whom/which + sujeto + verbo... · The vehicle in which they traveled was inspected.",
               "highlights": [
-                "submitted"
+                "in which"
               ]
             },
             {
-              "key": "Prep. inicial",
-              "value": "the person to whom I spoke · formal",
+              "key": "Negativa (Participio reducido)",
+              "value": "Products not meeting safety standards will be recalled.",
               "highlights": [
-                "to whom"
+                "not meeting"
               ]
             },
             {
-              "key": "Encajada",
-              "value": "The policy, which the board debated, which analysts criticised…",
+              "key": "Interrogativa (Formal)",
+              "value": "Is this the framework to which you were referring during the debate?",
               "highlights": [
-                "which"
+                "to which"
               ]
             }
           ]
@@ -89,26 +90,26 @@
       "id": "c1-relativas-complejas-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "The report submitted yesterday… (= which was submitted)"
+              "key": "Informes ejecutivos",
+              "value": "The guidelines published by the regulator require full compliance by Q4."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "formal"
+              "key": "Negociaciones comerciales",
+              "value": "The firm with which we partnered has expanded into international markets."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "The policy, which the board debated, which analysts criticised…"
+              "key": "Académico",
+              "value": "Research conducted across five universities demonstrates a strong correlation."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "una sola oración, múltiples capas de detalle"
+              "key": "Gestión de proyectos",
+              "value": "We identified four major risks, all of which can be mitigated."
             }
           ]
         }
@@ -118,23 +119,23 @@
       "id": "c1-relativas-complejas-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "Reducida",
-              "rule": "The report submitted yesterday… (= which was submitted)",
+              "label": "Preposición al inicio (Formal / C1)",
+              "rule": "La preposición va antes de 'whom' o 'which', eliminando informalidades",
               "examples": [
-                "The report submitted yesterday… (= which was submitted)"
+                "The person with whom I negotiated the contract was extremely thorough."
               ]
             },
             {
-              "label": "Prep. inicial",
-              "rule": "the person to whom I spoke · formal",
+              "label": "Preposición pospuesta (Informal / B1-B2)",
+              "rule": "La preposición queda al final de la cláusula de relativo",
               "examples": [
-                "formal"
+                "The person I negotiated the contract with was very friendly."
               ]
             }
           ]
@@ -145,19 +146,19 @@
       "id": "c1-relativas-complejas-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "The man who I spoke to him…"
+              "text": "The manager who I talked to him yesterday approved the vacation."
             },
             {
               "variant": "good",
-              "text": "The man to whom I spoke… / The man I spoke to.",
-              "note": "no dupliques el pronombre objeto"
+              "text": "The manager to whom I talked yesterday approved the vacation.",
+              "note": "No dupliques el pronombre objeto ('him') en una oración relativa."
             }
           ]
         }
@@ -166,27 +167,27 @@
     {
       "id": "c1-relativas-complejas-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "1. Pronombres de objeto",
+              "value": "Usa 'whom' para personas tras preposición ('to whom', 'with whom'). NUNCA 'to who'."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "2. Omisión de que/quien",
+              "value": "En cláusulas reducidas se omite 'who is/which was' dejando solo el participio (-ing / -ed)."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "3. Sin repetición de pronombre",
+              "value": "No repitas el pronombre objeto (ej. 'the man who I saw him')."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "4. Cuantificadores",
+              "value": "Estructuras como 'some of which', 'neither of whom' aportan precisión cuantitativa."
             }
           ]
         }
@@ -199,13 +200,37 @@
   ],
   "quiz": [
     {
-      "q": "The documents ___ last week are ready.",
+      "q": "The policy ___ last year has significantly reduced operating costs.",
       "options": [
-        "reviewed",
-        "reviewing"
+        "implemented",
+        "implementing",
+        "which implemented it",
+        "that being implemented"
       ],
       "answer": 0,
-      "explain": "Relativa reducida pasiva → participio pasado."
+      "explain": "'Implemented' es una cláusula relativa reducida pasiva (abreviación de 'which was implemented')."
+    },
+    {
+      "q": "We interviewed five candidates, two of ___ had extensive experience abroad.",
+      "options": [
+        "whom",
+        "who",
+        "which",
+        "them"
+      ],
+      "answer": 0,
+      "explain": "Tras la preposición 'of' al referirse a personas se requiere 'whom'."
+    },
+    {
+      "q": "¿Qué opción es la más apropiada para un registro académico formal?",
+      "options": [
+        "The subjects to which we turned our attention were highly complex.",
+        "The subjects which we turned our attention to them were hard.",
+        "The subjects that we turned our attention to were hard.",
+        "The subjects where we turned our attention were complex."
+      ],
+      "answer": 0,
+      "explain": "La estructura 'preposición + which' evita terminar la frase con preposición y elimina pronombres redundantes."
     }
   ]
 }

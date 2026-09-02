@@ -1,46 +1,47 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "C1 · Énfasis",
     "title": "Anteposición",
     "titleEmphasis": "para énfasis",
-    "goal": "Ya adelantas objetos o adverbiales al inicio de la oración para destacar información y crear contraste."
+    "goal": "Mueve complementos directos o adverbiales al inicio de la oración (fronting) para generar relieve temático o contraste dramático."
   },
   "cards": [
     {
       "id": "c1-anteposicion-enfasis-concept",
       "tag": "Idea central",
       "title": "Anteposición: qué expresa",
-      "lede": "Ya adelantas objetos o adverbiales al inicio de la oración para destacar información y crear contraste.",
+      "lede": "Mueve complementos directos o adverbiales al inicio de la oración (fronting) para generar relieve temático o contraste dramático.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Objeto",
-              "value": "This proposal, we cannot accept.",
+              "key": "Anteposición de complemento",
+              "value": "This final clause, we cannot accept under any circumstance.",
               "highlights": [
-                "This proposal"
+                "This final clause"
               ]
             },
             {
-              "key": "Adverbial",
-              "value": "On no account should you share the password.",
+              "key": "Anteposición adverbial negativa",
+              "value": "Under no circumstances should confidential files be shared.",
               "highlights": [
-                "On no account"
+                "Under no circumstances"
               ]
             },
             {
-              "key": "Contraste",
-              "value": "The budget I can manage; the timeline is another matter.",
+              "key": "Anteposición adjetival",
+              "value": "Talented though she is, she still requires ongoing coaching.",
               "highlights": [
-                "The budget"
+                "Talented though she is"
               ]
             },
             {
-              "key": "Registro",
-              "value": "formal, retórico, escrito académico",
+              "key": "Contraste temático",
+              "value": "The hardware we can replace; the lost data is gone forever.",
               "highlights": [
-                "should"
+                "The hardware"
               ]
             }
           ]
@@ -55,30 +56,31 @@
       "id": "c1-anteposicion-enfasis-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Objeto",
-              "value": "This proposal, we cannot accept.",
+              "key": "Afirmativa (Sin inversión)",
+              "value": "Objeto/Complemento + Sujeto + Verbo · Excellent results they produced.",
               "highlights": [
-                "This proposal"
+                "Excellent results",
+                "they produced"
               ]
             },
             {
-              "key": "Adverbial",
-              "value": "On no account should you share the password.",
+              "key": "Afirmativa (Con inversión negativa)",
+              "value": "Expresión negativa + Auxiliar + Sujeto + Verbo principal · Rarely have I seen such dedication.",
               "highlights": [
-                "On no account"
+                "Rarely have I seen"
               ]
             },
             {
-              "key": "Contraste",
-              "value": "The budget I can manage; the timeline is another matter.",
+              "key": "Interrogativa enfática",
+              "value": "On no account must any user disclose their credentials?",
               "highlights": [
-                "The budget"
+                "On no account must"
               ]
             }
           ]
@@ -89,26 +91,26 @@
       "id": "c1-anteposicion-enfasis-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "This proposal, we cannot accept."
+              "key": "Discursos y presentaciones",
+              "value": "Not a single detail did the auditor overlook during the inspection."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "On no account should you share the password."
+              "key": "Negociaciones exigentes",
+              "value": "Such conditions we have never agreed to in past contracts."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "The budget I can manage; the timeline is another matter."
+              "key": "Redacción periodística",
+              "value": "Hard work it was, but the team persevered until final delivery."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "formal, retórico, escrito académico"
+              "key": "Comunicación corporativa",
+              "value": "The financial risk we anticipated; the regulatory change caught us off guard."
             }
           ]
         }
@@ -118,23 +120,23 @@
       "id": "c1-anteposicion-enfasis-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "Objeto",
-              "rule": "This proposal, we cannot accept.",
+              "label": "Fronting directo (Sin inversión)",
+              "rule": "Trae el objeto al inicio manteniendo orden Sujeto + Verbo para destacar el tema",
               "examples": [
-                "This proposal, we cannot accept."
+                "All these proposals we have carefully evaluated."
               ]
             },
             {
-              "label": "Adverbial",
-              "rule": "On no account should you share the password.",
+              "label": "Fronting negativo (Con inversión)",
+              "rule": "Expresiones restrictivas/negativas fuerzan el orden Auxiliar + Sujeto + Verbo",
               "examples": [
-                "On no account should you share the password."
+                "Under no circumstances can we evaluate those proposals."
               ]
             }
           ]
@@ -145,19 +147,19 @@
       "id": "c1-anteposicion-enfasis-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "This point we cannot ignore it."
+              "text": "This proposal we cannot accept it."
             },
             {
               "variant": "good",
-              "text": "This point we cannot ignore.",
-              "note": "no repitas el pronombre tras topicalizar"
+              "text": "This proposal we cannot accept.",
+              "note": "Al anteponer el objeto ('This proposal'), elimina el pronombre redundante ('it')."
             }
           ]
         }
@@ -166,27 +168,27 @@
     {
       "id": "c1-anteposicion-enfasis-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "1. Regla de inversión",
+              "value": "Si el elemento antepuesto es negativo ('Never', 'Seldom', 'Under no circumstances'), requiere inversión."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "2. Sin pronombres extra",
+              "value": "No repitas el objeto con un pronombre (ej. 'This document we signed it')."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "3. Uso con 'though / as'",
+              "value": "Estructuras como 'Difficult as it was' mueven el adjetivo al inicio."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "4. Impacto retórico",
+              "value": "Utilízalo con moderación para resaltar contrastes clave en discursos formales."
             }
           ]
         }
@@ -199,13 +201,37 @@
   ],
   "quiz": [
     {
-      "q": "___ should this data be shared externally.",
+      "q": "___ should employee data be modified without authorization.",
       "options": [
-        "Under no circumstances",
-        "Under no circumstance"
+        "On no account",
+        "In spite of",
+        "With a view to",
+        "As a matter of fact"
       ],
       "answer": 0,
-      "explain": "Anteposición + inversión con expresión negativa."
+      "explain": "'On no account' al inicio desencadena inversión del auxiliar y expresa prohibición estricta."
+    },
+    {
+      "q": "The initial investment we managed; the recurring fees ___.",
+      "options": [
+        "we could not afford",
+        "could not afford we",
+        "we could not afford them",
+        "afforded we not"
+      ],
+      "answer": 0,
+      "explain": "La anteposición del complemento conserva el orden sujeto + verbo ('we could not afford') sin pronombre redundante."
+    },
+    {
+      "q": "Selecciona la oración con la anteposición y concordancia correctas:",
+      "options": [
+        "Rarely has the company faced such stiff competition.",
+        "Rarely the company has faced such stiff competition.",
+        "Rarely has faced the company such stiff competition.",
+        "Rarely faced the company such stiff competition."
+      ],
+      "answer": 0,
+      "explain": "'Rarely' exige auxiliar antes del sujeto ('has the company faced')."
     }
   ]
 }

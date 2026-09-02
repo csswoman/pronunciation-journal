@@ -14,9 +14,28 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "for + periodo", "value": "for two years · for a week", "highlights": ["for"] },
-            { "key": "since + momento", "value": "since 2020 · since Monday", "highlights": ["since"] },
-            { "key": "Ejemplo", "value": "I've lived here for five years / since 2019.", "highlights": ["for", "since"] }
+            {
+              "key": "for + periodo",
+              "value": "for two years · for a week",
+              "highlights": [
+                "for"
+              ]
+            },
+            {
+              "key": "since + momento",
+              "value": "since 2020 · since Monday",
+              "highlights": [
+                "since"
+              ]
+            },
+            {
+              "key": "Ejemplo",
+              "value": "I've lived here for five years / since 2019.",
+              "highlights": [
+                "for",
+                "since"
+              ]
+            }
           ]
         }
       ],
@@ -34,9 +53,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "just", "value": "acaba de · I've just arrived.", "highlights": ["just"] },
-            { "key": "already", "value": "ya · I've already done it.", "highlights": ["already"] },
-            { "key": "yet", "value": "todavía no · I haven't finished yet.", "highlights": ["yet"] }
+            {
+              "key": "just",
+              "value": "acaba de · I've just arrived.",
+              "highlights": [
+                "just"
+              ]
+            },
+            {
+              "key": "already",
+              "value": "ya · I've already done it.",
+              "highlights": [
+                "already"
+              ]
+            },
+            {
+              "key": "yet",
+              "value": "todavía no · I haven't finished yet.",
+              "highlights": [
+                "yet"
+              ]
+            }
           ]
         }
       ]
@@ -50,9 +87,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "during + sustantivo", "value": "during the meeting", "highlights": ["during"] },
-            { "key": "while + cláusula", "value": "while I was working", "highlights": ["while"] },
-            { "key": "for + duración", "value": "for two hours", "highlights": ["for"] }
+            {
+              "key": "during + sustantivo",
+              "value": "during the meeting",
+              "highlights": [
+                "during"
+              ]
+            },
+            {
+              "key": "while + cláusula",
+              "value": "while I was working",
+              "highlights": [
+                "while"
+              ]
+            },
+            {
+              "key": "for + duración",
+              "value": "for two hours",
+              "highlights": [
+                "for"
+              ]
+            }
           ]
         }
       ],
@@ -70,10 +125,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "most", "value": "la mayoría · most people", "highlights": ["most"] },
-            { "key": "several", "value": "varios · several times", "highlights": ["several"] },
-            { "key": "plenty of", "value": "de sobra · plenty of time", "highlights": ["plenty of"] },
-            { "key": "a couple of", "value": "un par de · a couple of days", "highlights": ["a couple of"] }
+            {
+              "key": "most",
+              "value": "la mayoría · most people",
+              "highlights": [
+                "most"
+              ]
+            },
+            {
+              "key": "several",
+              "value": "varios · several times",
+              "highlights": [
+                "several"
+              ]
+            },
+            {
+              "key": "plenty of",
+              "value": "de sobra · plenty of time",
+              "highlights": [
+                "plenty of"
+              ]
+            },
+            {
+              "key": "a couple of",
+              "value": "un par de · a couple of days",
+              "highlights": [
+                "a couple of"
+              ]
+            }
           ]
         }
       ]
@@ -87,9 +166,29 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "about / around", "value": "about 20 people · around noon", "highlights": ["about", "around"] },
-            { "key": "almost / nearly", "value": "almost ready · nearly done", "highlights": ["almost"] },
-            { "key": "over / under", "value": "over 100 · under an hour", "highlights": ["over", "under"] }
+            {
+              "key": "about / around",
+              "value": "about 20 people · around noon",
+              "highlights": [
+                "about",
+                "around"
+              ]
+            },
+            {
+              "key": "almost / nearly",
+              "value": "almost ready · nearly done",
+              "highlights": [
+                "almost"
+              ]
+            },
+            {
+              "key": "over / under",
+              "value": "over 100 · under an hour",
+              "highlights": [
+                "over",
+                "under"
+              ]
+            }
           ]
         }
       ]
@@ -103,13 +202,60 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "good", "text": "I worked there for two years.", "note": "for = duración" },
-            { "variant": "good", "text": "I left two years ago.", "note": "ago = hace, pasado" },
-            { "variant": "good", "text": "I'll be back in two years.", "note": "in = dentro de, futuro" },
-            { "variant": "bad", "text": "I left for two years ago." }
+            {
+              "variant": "good",
+              "text": "I worked there for two years.",
+              "note": "for = duración"
+            },
+            {
+              "variant": "good",
+              "text": "I left two years ago.",
+              "note": "ago = hace, pasado"
+            },
+            {
+              "variant": "good",
+              "text": "I'll be back in two years.",
+              "note": "in = dentro de, futuro"
+            },
+            {
+              "variant": "bad",
+              "text": "I left for two years ago."
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "They have been living here ___ 2010.",
+      "options": [
+        "since",
+        "for",
+        "ago"
+      ],
+      "answer": 0,
+      "explain": "'Since' señala el punto de inicio específico en el tiempo."
+    },
+    {
+      "q": "We met two years ___ in Paris.",
+      "options": [
+        "ago",
+        "since",
+        "for"
+      ],
+      "answer": 0,
+      "explain": "'Ago' indica cuánto tiempo atrás ocurrió una acción en pasado simple."
+    },
+    {
+      "q": "There are only a ___ apples left in the basket.",
+      "options": [
+        "few",
+        "little",
+        "much"
+      ],
+      "answer": 0,
+      "explain": "'A few' se utiliza con sustantivos contables en plural."
     }
   ]
 }

@@ -1,4 +1,5 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "B2 · Patrones verbales",
     "title": "Verbo + objeto",
@@ -16,31 +17,32 @@
           "type": "rules",
           "rows": [
             {
-              "key": "want/expect + obj + to",
-              "value": "I want you to try.",
+              "key": "verbo + objeto + to + infinitivo",
+              "value": "want/allow/encourage/persuade + obj + to · She persuaded me to stay.",
+              "highlights": [
+                "persuade me to"
+              ]
+            },
+            {
+              "key": "verbo + objeto + -ing",
+              "value": "catch/find/hear/see + obj + -ing · I caught him stealing cookies.",
+              "highlights": [
+                "caught him stealing"
+              ]
+            },
+            {
+              "key": "Evita 'that' tras 'want/would like'",
+              "value": "I want you to help me (JAMÁS 'I want that you help me').",
               "highlights": [
                 "want you to"
               ]
             },
             {
-              "key": "catch/find + obj + -ing",
-              "value": "I caught him lying.",
+              "key": "Verbos de percepción (Base vs -ing)",
+              "value": "saw her leave (acción completa) vs saw her leaving (acción en progreso)",
               "highlights": [
-                "caught him lying"
-              ]
-            },
-            {
-              "key": "persuade/convince",
-              "value": "persuade her to stay",
-              "highlights": [
-                "persuade her to"
-              ]
-            },
-            {
-              "key": "see/hear + obj + base/-ing",
-              "value": "I saw her leave / leaving",
-              "highlights": [
-                "saw her"
+                "saw her leave",
+                "saw her leaving"
               ]
             }
           ]
@@ -55,30 +57,37 @@
       "id": "b2-verbo-objeto-gerundio-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "want/expect + obj + to",
-              "value": "I want you to try.",
+              "key": "Afirmativa (con TO)",
+              "value": "Sujeto + verbo + persona/objeto + to + infinitivo · My parents encouraged me to apply.",
               "highlights": [
-                "want you to"
+                "encouraged me to apply"
               ]
             },
             {
-              "key": "catch/find + obj + -ing",
-              "value": "I caught him lying.",
+              "key": "Afirmativa (con -ING)",
+              "value": "Sujeto + verbo + persona/objeto + verbo-ing · The guard found them lurking nearby.",
               "highlights": [
-                "caught him lying"
+                "found them lurking"
               ]
             },
             {
-              "key": "persuade/convince",
-              "value": "persuade her to stay",
+              "key": "Negativa",
+              "value": "Sujeto + verbo + objeto + not + to + infinitivo · He warned us not to touch the wires.",
               "highlights": [
-                "persuade her to"
+                "warned us not to"
+              ]
+            },
+            {
+              "key": "Interrogativa",
+              "value": "Did you expect him to arrive so early? · Would you mind me sitting here?",
+              "highlights": [
+                "expect him to"
               ]
             }
           ]
@@ -89,26 +98,26 @@
       "id": "b2-verbo-objeto-gerundio-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "I want you to try."
+              "key": "En la oficina",
+              "value": "Our team manager encouraged us to take regular breaks during long shifts."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "I caught him lying."
+              "key": "Testimonio policial",
+              "value": "The witness reported seeing the suspect running away from the scene of the crime."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "persuade her to stay"
+              "key": "Relaciones personales",
+              "value": "I finally managed to convince my brother to join the gym with me."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "I saw her leave / leaving"
+              "key": "Seguridad e higiene",
+              "value": "The signs strictly forbid visitors from feeding the animals in the park."
             }
           ]
         }
@@ -118,23 +127,25 @@
       "id": "b2-verbo-objeto-gerundio-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "want/expect + obj + to",
-              "rule": "I want you to try.",
+              "label": "Verbos de Persuasión / Orden (+ objeto + to)",
+              "rule": "Indican influencia sobre otra persona para ejecutar un propósito (want, allow, advise, tell, ask, persuade).",
               "examples": [
-                "I want you to try."
+                "She asked me to open the window.",
+                "I expect you to be punctual."
               ]
             },
             {
-              "label": "catch/find + obj + -ing",
-              "rule": "I caught him lying.",
+              "label": "Verbos de Percepción / Hallazgo (+ objeto + -ing)",
+              "rule": "Indican observación directa de alguien realizando una acción en curso (see, hear, catch, find, notice).",
               "examples": [
-                "I caught him lying."
+                "I saw him walking in the park.",
+                "They caught her cheating on the exam."
               ]
             }
           ]
@@ -145,19 +156,19 @@
       "id": "b2-verbo-objeto-gerundio-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "I want that you help me."
+              "text": "My teacher wants that I write a 500-word essay."
             },
             {
               "variant": "good",
-              "text": "I want you to help me.",
-              "note": "want + objeto + to, no that"
+              "text": "My teacher wants me to write a 500-word essay.",
+              "note": "el verbo 'want' se construye con objeto + infinitivo con 'to', jamás con una cláusula introducida por 'that'"
             }
           ]
         }
@@ -166,27 +177,27 @@
     {
       "id": "b2-verbo-objeto-gerundio-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "Cero 'that' con WANT",
+              "value": "Nunca digas 'I want that you go'; la forma correcta es 'I want you to go'."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "Warn someone NOT to",
+              "value": "Para aconsejar que no hagan algo coloca 'not' antes de 'to' (warned us NOT to go)."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "Catch someone -ING",
+              "value": "Significa descubrir a alguien haciendo algo indebido o sopresivo."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "Diferencia de percepción",
+              "value": "I saw her dance (vi todo el baile) vs I saw her dancing (la vi en mitad del baile)."
             }
           ]
         }
@@ -199,13 +210,34 @@
   ],
   "quiz": [
     {
-      "q": "She persuaded me ___ the job.",
+      "q": "The security guard caught the teenager ___ graffiti on the wall.",
       "options": [
-        "to accept",
-        "accepting"
+        "painting",
+        "to paint",
+        "paint"
       ],
       "answer": 0,
-      "explain": "persuade + objeto + to + infinitivo."
+      "explain": "Descubrir a alguien en el acto de realizar una acción exige el patrón 'catch + objeto + -ing'."
+    },
+    {
+      "q": "Her mother advised her ___ that expensive second-hand car.",
+      "options": [
+        "not to buy",
+        "to not buy",
+        "don't buy"
+      ],
+      "answer": 0,
+      "explain": "Negación con patrón de objeto + infinitivo: 'advise + objeto + not + to + infinitivo'."
+    },
+    {
+      "q": "I didn't expect them ___ so quickly after the long flight.",
+      "options": [
+        "to arrive",
+        "arriving",
+        "that they arrive"
+      ],
+      "answer": 0,
+      "explain": "El verbo 'expect' exige la estructura 'expect + objeto + to + infinitivo'."
     }
   ]
 }

@@ -1,47 +1,47 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "C1 · Pasado irreal",
     "title": "Pasado irreal",
     "titleEmphasis": "avanzado",
-    "goal": "Ya usas wish/if only + past perfect, as if + past, e it's time + past simple para significados hipotéticos."
+    "goal": "Expresa situaciones hipotéticas, deseos o arrepentimientos usando 'wish', 'if only', 'it's time' y 'would rather' con tiempos pasados."
   },
   "cards": [
     {
       "id": "c1-pasado-irreal-avanzado-concept",
       "tag": "Idea central",
       "title": "Pasado irreal: qué expresa",
-      "lede": "Ya usas wish/if only + past perfect, as if + past, e it's time + past simple para significados hipotéticos.",
+      "lede": "Expresa situaciones hipotéticas, deseos o arrepentimientos usando 'wish', 'if only', 'it's time' y 'would rather' con tiempos pasados.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "wish + pp",
-              "value": "I wish I had studied harder. · arrepentimiento pasado",
+              "key": "Wish / If only + Past Perfect",
+              "value": "I wish we had secured the intellectual property earlier.",
               "highlights": [
-                "had studied"
+                "had secured"
               ]
             },
             {
-              "key": "as if",
-              "value": "He talks as if he knew everything. · irreal presente",
+              "key": "Wish + Would (Queja/Cambio)",
+              "value": "I wish the regulations would stabilize.",
               "highlights": [
-                "knew"
+                "would stabilize"
               ]
             },
             {
-              "key": "it's time",
-              "value": "It's high time we left. · debería ocurrir ya",
+              "key": "It's high time + Past Simple",
+              "value": "It's high time the government revised the tax code.",
               "highlights": [
-                "we left"
+                "revised"
               ]
             },
             {
-              "key": "Idea",
-              "value": "pasado = irreal, no tiempo literal",
+              "key": "Would rather + Past Simple",
+              "value": "I'd rather we discussed this matter in private.",
               "highlights": [
-                "wish",
-                "as if"
+                "we discussed"
               ]
             }
           ]
@@ -56,30 +56,30 @@
       "id": "c1-pasado-irreal-avanzado-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "wish + pp",
-              "value": "I wish I had studied harder. · arrepentimiento pasado",
+              "key": "Afirmativa (Arrepentimiento)",
+              "value": "Sujeto + wish + (that) + sujeto + past perfect · I wish I had known.",
               "highlights": [
-                "had studied"
+                "had known"
               ]
             },
             {
-              "key": "as if",
-              "value": "He talks as if he knew everything. · irreal presente",
+              "key": "Afirmativa (Urgencia social)",
+              "value": "It is (high/about) time + sujeto + past simple · It's time we made a decision.",
               "highlights": [
-                "knew"
+                "made"
               ]
             },
             {
-              "key": "it's time",
-              "value": "It's high time we left. · debería ocurrir ya",
+              "key": "Afirmativa (Preferencia sobre otros)",
+              "value": "Sujeto + would rather + sujeto + past simple · She'd rather he didn't attend.",
               "highlights": [
-                "we left"
+                "didn't attend"
               ]
             }
           ]
@@ -90,26 +90,26 @@
       "id": "c1-pasado-irreal-avanzado-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "arrepentimiento pasado"
+              "key": "Análisis de decisiones pasadas",
+              "value": "If only we had conducted market validation before launching."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "irreal presente"
+              "key": "Exigencia de cambio",
+              "value": "It's high time the executive board addressed the workplace culture issues."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "debería ocurrir ya"
+              "key": "Preferencia interorganizacional",
+              "value": "We'd rather our partners refrained from issuing public statements."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "pasado = irreal, no tiempo literal"
+              "key": "Frustración presente",
+              "value": "I wish the supply chain team would communicate delays more transparently."
             }
           ]
         }
@@ -119,23 +119,23 @@
       "id": "c1-pasado-irreal-avanzado-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "wish + pp",
-              "rule": "I wish I had studied harder. · arrepentimiento pasado",
+              "label": "Wish + Past Simple",
+              "rule": "Expresa el deseo de que una situación presente fuera diferente",
               "examples": [
-                "arrepentimiento pasado"
+                "I wish we had more resources for this research."
               ]
             },
             {
-              "label": "as if",
-              "rule": "He talks as if he knew everything. · irreal presente",
+              "label": "Wish + Past Perfect",
+              "rule": "Expresa lamento o arrepentimiento sobre una acción u omisión en el pasado",
               "examples": [
-                "irreal presente"
+                "I wish we had hired that specialist last year."
               ]
             }
           ]
@@ -146,19 +146,19 @@
       "id": "c1-pasado-irreal-avanzado-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "It's time we leave."
+              "text": "It's high time we start the meeting."
             },
             {
               "variant": "good",
-              "text": "It's time we left.",
-              "note": "it's time + past simple para urgencia"
+              "text": "It's high time we started the meeting.",
+              "note": "Tras 'It's (high) time + sujeto', la gramática exige el verbo en Past Simple ('started')."
             }
           ]
         }
@@ -167,27 +167,27 @@
     {
       "id": "c1-pasado-irreal-avanzado-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "1. 'It's time' requiere pasado",
+              "value": "A pesar de referirse al presente/futuro inmediato, usa Past Simple ('It's time we left')."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "2. 'Would rather' con sujeto",
+              "value": "Si hay sujeto tras 'would rather', usa Past Simple ('I'd rather you came tomorrow')."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "3. 'If only' enfatiza emoción",
+              "value": "Funciona igual que 'wish', pero transmite una carga dramática o de lamento superior."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "4. 'Wish + would' para conducta",
+              "value": "Úsalo para quejarte de acciones de otros que deseas que cambien."
             }
           ]
         }
@@ -200,13 +200,37 @@
   ],
   "quiz": [
     {
-      "q": "She acts as if she ___ the owner.",
+      "q": "If only we ___ more attention to the auditor's early warnings last quarter.",
       "options": [
-        "were",
-        "is"
+        "had paid",
+        "have paid",
+        "would pay",
+        "pay"
       ],
       "answer": 0,
-      "explain": "as if + past para hipótesis irreal."
+      "explain": "El arrepentimiento sobre el pasado requiere Past Perfect ('had paid')."
+    },
+    {
+      "q": "I'd rather you ___ the client until we have the final contract ready.",
+      "options": [
+        "didn't contact",
+        "don't contact",
+        "not contact",
+        "won't contact"
+      ],
+      "answer": 0,
+      "explain": "Cuando 'would rather' lleva un sujeto distinto ('you'), el verbo va en Past Simple negativo ('didn't contact')."
+    },
+    {
+      "q": "¿Cuál de las siguientes frases expresa una urgencia de actuar en el presente?",
+      "options": [
+        "It is high time we updated our security protocols.",
+        "It is high time we update our security protocols.",
+        "It is high time we have updated our security protocols.",
+        "It is high time for updating our security protocols."
+      ],
+      "answer": 0,
+      "explain": "'It's high time + sujeto + Past Simple' es la estructura correcta para urgencia."
     }
   ]
 }

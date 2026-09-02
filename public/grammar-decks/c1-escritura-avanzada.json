@@ -106,5 +106,25 @@
         }
       ]
     }
+  ],
+  "quiz": [
+    {
+      "q": "¿Cuál es el propósito de la nominalización en el estilo de redacción formal o académico?",
+      "options": ["Convertir verbos en sustantivos para empaquetar ideas de forma más compacta.", "Añadir más adjetivos calificativos para emocionar al lector.", "Sustituir todos los conectores por oraciones simples.", "Eliminar la necesidad de usar tiempos verbales en pasado."],
+      "answer": 0,
+      "explain": "La nominalización ('increase' en vez de 'prices increased') aporta abstracción y concisión al texto académico."
+    },
+    {
+      "q": "¿Qué función cumple el 'hedging' en la escritura académica?",
+      "options": ["Moderar afirmaciones absolutas con verbos y modales de cautela.", "Garantizar que todas las conclusiones sean incontrovertibles.", "Utilizar solo frases directas sin adverbios.", "Repetir la misma tesis al final de cada párrafo."],
+      "answer": 0,
+      "explain": "El hedging ('suggests', 'may', 'arguably') evita la sobregeneralización y muestra prudencia científica."
+    },
+    {
+      "q": "Identifica la opción que elimina redundancias en el proceso de edición:",
+      "options": ["Reemplazar 'due to the fact that' por 'because'.", "Cambiar 'because' por 'due to the fact that'.", "Insertar 'in order to be able to' antes de cada infinitivo.", "Duplicar los adjetivos descriptivos en cada párrafo."],
+      "answer": 0,
+      "explain": "Editar implica concisión; 'because' transmite la misma relación causal sin rodeos innecesarios."
+    }
   ]
 }

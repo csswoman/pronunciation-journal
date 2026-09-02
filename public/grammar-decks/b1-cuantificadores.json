@@ -1,47 +1,48 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "B1 · Cuantificadores",
     "title": "All, most,",
     "titleEmphasis": "none, each, every",
-    "goal": "Ya usas all, most, none, each y every con concordancia correcta."
+    "goal": "Ya usas all, most, none, each y every ajustando la concordancia de plural o singular."
   },
   "cards": [
     {
       "id": "b1-cuantificadores-concept",
       "tag": "Idea central",
       "title": "All, most,: qué expresa",
-      "lede": "Ya usas all, most, none, each y every con concordancia correcta.",
+      "lede": "Ya usas all, most, none, each y every ajustando la concordancia de plural o singular.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "all / most",
-              "value": "All students passed. · Most people agree.",
+              "key": "all / most (+ plural)",
+              "value": "All students passed. / Most people enjoy music.",
               "highlights": [
                 "All",
                 "Most"
               ]
             },
             {
-              "key": "none",
-              "value": "None of them is ready. · singular",
+              "key": "none of (+ determinante)",
+              "value": "None of the answers is correct.",
               "highlights": [
-                "None"
+                "None of"
               ]
             },
             {
-              "key": "each",
-              "value": "each + singular · Each child has a book.",
+              "key": "each (+ singular)",
+              "value": "Each member gets a badge (individualizado).",
               "highlights": [
                 "Each"
               ]
             },
             {
-              "key": "every",
-              "value": "every + singular · every day",
+              "key": "every (+ singular)",
+              "value": "Every day is a fresh start (todos como grupo).",
               "highlights": [
-                "every"
+                "Every"
               ]
             }
           ]
@@ -56,31 +57,30 @@
       "id": "b1-cuantificadores-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "all / most",
-              "value": "All students passed. · Most people agree.",
+              "key": "All / Most + Plural",
+              "value": "All/Most + sustantivo plural + verbo plural · Most apples are red.",
               "highlights": [
-                "All",
-                "Most"
+                "Most apples are"
               ]
             },
             {
-              "key": "none",
-              "value": "None of them is ready. · singular",
+              "key": "Each / Every + Singular",
+              "value": "Each/Every + sustantivo singular + verbo singular · Every applicant needs a passport.",
               "highlights": [
-                "None"
+                "Every applicant needs"
               ]
             },
             {
-              "key": "each",
-              "value": "each + singular · Each child has a book.",
+              "key": "None of + determinante",
+              "value": "None of the + sustantivo plural + verbo singular/plural · None of us has finished.",
               "highlights": [
-                "Each"
+                "None of us"
               ]
             }
           ]
@@ -91,26 +91,26 @@
       "id": "b1-cuantificadores-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "Most people agree."
+              "key": "Organización de eventos",
+              "value": "Every guest must register at the main desk upon arrival."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "singular"
+              "key": "Trabajo en equipo",
+              "value": "Each member of our group contributed unique ideas to the project."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "Each child has a book."
+              "key": "Encuestas y opiniones",
+              "value": "Most citizens agree with the new environmental policy."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "every day"
+              "key": "Resultados",
+              "value": "None of the submitted applications met all the mandatory criteria."
             }
           ]
         }
@@ -120,23 +120,23 @@
       "id": "b1-cuantificadores-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "all / most",
-              "rule": "All students passed. · Most people agree.",
+              "label": "Every + Sustantivo Singular",
+              "rule": "Considera a todos los miembros de un grupo juntos colectivamente",
               "examples": [
-                "Most people agree."
+                "Every child needs love."
               ]
             },
             {
-              "label": "none",
-              "rule": "None of them is ready. · singular",
+              "label": "Each + Sustantivo Singular",
+              "rule": "Considera a los miembros de uno en uno, de forma individual",
               "examples": [
-                "singular"
+                "Each child received a different present."
               ]
             }
           ]
@@ -147,19 +147,19 @@
       "id": "b1-cuantificadores-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "Every students have a book."
+              "text": "Every students in the class has a computer."
             },
             {
               "variant": "good",
-              "text": "Every student has a book.",
-              "note": "every/each + singular"
+              "text": "Every student in the class has a computer.",
+              "note": "'every' exige sustantivo singular"
             }
           ]
         }
@@ -168,27 +168,27 @@
     {
       "id": "b1-cuantificadores-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "Every y Each son singulares",
+              "value": "NUNCA uses sustantivo en plural tras 'every' o 'each' (every student, NO every students)."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "All of / Most of",
+              "value": "Usan 'of' solo cuando hay un determinante (all of my friends vs all friends)."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "Every day vs Everyday",
+              "value": "'Every day' (cada día, adverbio); 'everyday' (cotidiano, adjetivo)."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "None of + plural",
+              "value": "Lleva verbo singular en registro formal y plural en informal."
             }
           ]
         }
@@ -201,13 +201,34 @@
   ],
   "quiz": [
     {
-      "q": "___ of the cake is gone.",
+      "q": "___ passenger must show their boarding pass before entering.",
       "options": [
-        "None",
-        "All"
+        "Every",
+        "All",
+        "Most"
       ],
       "answer": 0,
-      "explain": "None of + singular cuando el sustantivo es incontable."
+      "explain": "Como 'passenger' está en singular, se requiere 'Every' (o 'Each')."
+    },
+    {
+      "q": "___ of my friends could come to the party last night.",
+      "options": [
+        "None",
+        "No",
+        "Every"
+      ],
+      "answer": 0,
+      "explain": "La estructura 'None of + determinante + plural' expresa 'ninguno de'."
+    },
+    {
+      "q": "Each room in the hotel ___ equipped with air conditioning.",
+      "options": [
+        "is",
+        "are",
+        "be"
+      ],
+      "answer": 0,
+      "explain": "'Each + sustantivo singular' toma un verbo en singular ('is')."
     }
   ]
 }
