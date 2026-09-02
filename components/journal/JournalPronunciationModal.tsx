@@ -21,7 +21,6 @@ import {
   type PronunciationAnalysisResult,
 } from '@/lib/journal/pronunciation-assistant'
 import type {
-  PronunciationItem,
   PronunciationDifficultyReason,
 } from '@/lib/journal/types'
 
@@ -56,7 +55,6 @@ export function JournalPronunciationModal({
 }: JournalPronunciationModalProps) {
   const [wordInput, setWordInput] = useState('')
   const [reason, setReason] = useState<PronunciationDifficultyReason>('difficult_sound')
-  const [notes, setNotes] = useState('')
   const [analyzing, setAnalyzing] = useState(false)
   const [analysis, setAnalysis] = useState<PronunciationAnalysisResult | null>(null)
   const [addedWords, setAddedWords] = useState<string[]>(existingWords)
@@ -98,7 +96,6 @@ export function JournalPronunciationModal({
       setAddedWords((prev) => [...prev, trimmed])
     }
     setWordInput('')
-    setNotes('')
     setAnalysis(null)
     setReason('difficult_sound')
   }

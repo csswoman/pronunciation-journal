@@ -105,33 +105,14 @@ export default function HomeCommandGrid({
     isGuest && planSettled && !showActivation && (allDone || !isNewLearner);
 
   return (
-    <div className="flex flex-col gap-6">
-      {/* Encabezado con racha y tiempo diario */}
-      <HomeHeader
-        streakDays={streak ?? 0}
-        minutesDone={0}
-        goalMinutes={24}
-      />
+    <div className="flex flex-col gap-8">
+      {/* Encabezado: saludo + título + marcador de racha */}
+      <HomeHeader streakDays={streak ?? 0} />
 
       {/* Cuadrícula principal de 2 columnas */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-8 items-start">
         {/* Columna Principal (Izquierda) */}
-        <div className="flex flex-col gap-6 min-w-0">
-          {showReviewBanner ? (
-            <HomeReviewBanner
-              wordsDueCount={wordsDueCount}
-              soundsDueCount={soundsDueCount}
-            />
-          ) : null}
-
-          {showActivation ? (
-            <HomeActivationStrip
-              showPlacementLink={needsPlacement}
-              showPronunciationLink={needsPronunciation}
-              showGuestSaveInline={isGuest}
-            />
-          ) : null}
-
+        <div className="flex flex-col gap-8 min-w-0">
           <div className={showPostPlan ? "hidden" : "contents"}>
             <HomeDailyCard
               conceptLesson={conceptLesson}
@@ -141,6 +122,23 @@ export default function HomeCommandGrid({
               onPlanStatusChange={onPlanStatusChange}
               primaryAction={primaryAction}
               weakestPhoneme={weakestPhoneme}
+              customEmptyState={
+                showActivation ? (
+                  <HomeActivationStrip
+                    showPlacementLink={needsPlacement}
+                    showPronunciationLink={needsPronunciation}
+                    showGuestSaveInline={isGuest}
+                  />
+                ) : undefined
+              }
+              customPrefix={
+                showReviewBanner ? (
+                  <HomeReviewBanner
+                    wordsDueCount={wordsDueCount}
+                    soundsDueCount={soundsDueCount}
+                  />
+                ) : null
+              }
             />
           </div>
 
@@ -161,7 +159,7 @@ export default function HomeCommandGrid({
               {needsPlacement ? (
                 <Link
                   href="/assessment"
-                  className="focus-ring font-medium text-fg underline-offset-2 hover:underline"
+                  className="focus-ring font-medium text-primary underline underline-offset-4 decoration-primary/50 hover:decoration-primary"
                 >
                   prueba de nivel
                 </Link>
@@ -170,7 +168,7 @@ export default function HomeCommandGrid({
               {needsPronunciation ? (
                 <Link
                   href="/assessment/pronunciation"
-                  className="focus-ring font-medium text-fg underline-offset-2 hover:underline"
+                  className="focus-ring font-medium text-primary underline underline-offset-4 decoration-primary/50 hover:decoration-primary"
                 >
                   diagnóstico oral
                 </Link>

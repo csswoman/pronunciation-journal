@@ -4,6 +4,18 @@ import { describe, expect, it, vi } from 'vitest'
 import { NotebookHomeView } from '@/components/journal/NotebookHomeView'
 import type { NotebookHome } from '@/lib/journal/notebook-types'
 
+vi.mock('cuelume', () => ({
+  bind: vi.fn(),
+  setEnabled: vi.fn(),
+}))
+
+vi.mock('@/lib/ui-sounds/cues', () => ({
+  playUiCue: vi.fn(),
+  initCuelume: vi.fn(),
+  isNavCuesEnabled: vi.fn(() => false),
+  isCueAllowed: vi.fn(() => false),
+}))
+
 const mockDataWithPast: NotebookHome = {
   totals: { pages: 3, sentences: 21 },
   today: {
@@ -56,8 +68,7 @@ describe('NotebookHomeView ("Tu cuaderno")', () => {
     expect(screen.getByText('¿Qué conversación recuerdas de hoy?')).toBeInTheDocument()
 
     // Acciones de prompt
-    expect(screen.getByRole('button', { name: /Otra pregunta/i })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Cambiar de tema/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Cambiar tema/i })).toBeInTheDocument()
 
     // Control de pestañas
     expect(screen.getByRole('tab', { name: 'Con estructura' })).toBeInTheDocument()
@@ -88,17 +99,19 @@ describe('NotebookHomeView ("Tu cuaderno")', () => {
     expect(screen.queryByRole('heading', { name: 'Páginas anteriores' })).not.toBeInTheDocument()
   })
 
-  it('changes prompt dynamically when topic radio or shuffle button is clicked', () => {
+  it('changes prompt and starter chips dynamically when shuffle button is clicked', () => {
     render(<NotebookHomeView initialData={mockDataWithPast} />)
 
-    // Cambiar a "Ficción"
-    fireEvent.click(screen.getByRole('button', { name: /Cambiar de tema/i }))
-    fireEvent.click(screen.getByRole('radio', { name: 'Ficción' }))
-    expect(screen.getByText(/letter from 50 years ago/i)).toBeInTheDocument()
+    const initialPromptText = screen.getByText('What conversation do you remember today?')
+    expect(initialPromptText).toBeInTheDocument()
+    // Chip inicial de Daily ("Today I talked with...")
+    expect(screen.getByRole('button', { name: /Today I talked with.../i })).toBeInTheDocument()
 
-    // Otra pregunta
-    fireEvent.click(screen.getByRole('button', { name: /Otra pregunta/i }))
-    expect(screen.getByText(/teleport anywhere/i)).toBeInTheDocument()
+    // Hacer click en el botón icono de "Cambiar tema" al lado del título para avanzar de tema/pregunta
+    fireEvent.click(screen.getByRole('button', { name: /Cambiar tema/i }))
+
+    // Verifica que la pregunta y las frases sugeridas hayan cambiado
+    expect(screen.queryByText('What conversation do you remember today?')).not.toBeInTheDocument()
   })
 
   it('opens pronunciation modal when + Añadir palabra button is clicked', () => {

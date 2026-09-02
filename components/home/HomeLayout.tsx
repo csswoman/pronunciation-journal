@@ -45,7 +45,7 @@ export default function HomeLayout({
   const currentStreak = streak?.currentStreak ?? 0;
 
   return (
-    <div className="w-full max-w-[1200px] mx-auto px-4 sm:px-6 pb-12">
+    <div className="mx-auto w-full max-w-(--layout-canvas-max) px-4 pb-12 sm:px-6">
       <HomeCommandGrid
         primaryAction={primaryAction}
         conceptLesson={conceptLesson}

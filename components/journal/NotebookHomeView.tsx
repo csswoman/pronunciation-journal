@@ -22,6 +22,10 @@ import { JournalPronunciationModal } from './JournalPronunciationModal'
 import { NotebookPastGrid } from './NotebookPastGrid'
 import { NotebookLearningsCard } from './NotebookLearningsCard'
 
+// Stable reference: a `= []` default param is a fresh array every render, which
+// makes the savedPronunciationWords effect below loop once the parent re-renders.
+const EMPTY_WORDS: string[] = []
+
 interface NotebookHomeViewProps {
   initialData?: NotebookHome
   learnings?: {
@@ -36,7 +40,7 @@ interface NotebookHomeViewProps {
 export function NotebookHomeView({
   initialData = SAMPLE_NOTEBOOK_DATA,
   learnings,
-  savedPronunciationWords = [],
+  savedPronunciationWords = EMPTY_WORDS,
   onSelectMode,
   onSavePronunciationWords,
 }: NotebookHomeViewProps) {

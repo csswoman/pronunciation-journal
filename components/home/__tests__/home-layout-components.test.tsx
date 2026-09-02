@@ -75,8 +75,8 @@ describe("DailyPlanCard", () => {
     );
 
     expect(screen.getByText("Buenas tardes, Karla")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Plan de hoy" })).toBeInTheDocument();
-    expect(screen.getByText(/2 pasos · 5 min/i)).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Empezar · 12 min" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Tu sesión de hoy" })).toBeInTheDocument();
+    expect(screen.getByText(/2 actividades · 5 min/i)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Empezar/i })).toBeInTheDocument();
   });
 });

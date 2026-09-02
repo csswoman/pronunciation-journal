@@ -128,8 +128,10 @@ export default function GuestSaveProgressBanner({
         <Link
           href="/login?intent=save&mode=register"
           className={cn(
-            "focus-ring inline-flex items-center justify-center rounded-md bg-primary font-label text-on-primary transition-colors hover:bg-primary-hover",
-            emphasized ? "min-h-12 px-5" : "min-h-11 px-4",
+            "focus-ring inline-flex items-center justify-center rounded-md font-label transition-colors",
+            emphasized
+              ? "min-h-12 px-5 bg-primary text-on-primary hover:bg-primary-hover"
+              : "min-h-11 px-4 border border-border-default bg-surface text-fg hover:bg-surface-sunken",
           )}
         >
           Crear cuenta
@@ -137,7 +139,7 @@ export default function GuestSaveProgressBanner({
         <Link
           href="/login?intent=save"
           className={cn(
-            "focus-ring inline-flex items-center justify-center rounded-md border border-border-default bg-transparent font-label text-fg transition-colors hover:bg-surface-sunken",
+            "focus-ring inline-flex items-center justify-center rounded-md border border-border-subtle bg-transparent font-label text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg",
             emphasized ? "min-h-12 px-5" : "min-h-11 px-4",
           )}
         >

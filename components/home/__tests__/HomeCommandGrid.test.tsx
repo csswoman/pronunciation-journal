@@ -53,6 +53,8 @@ vi.mock("@/components/auth/AuthProvider", async (importOriginal) => {
 vi.mock("@/components/home/HomeDailyCard", () => ({
   default: ({
     onPlanStatusChange,
+    customEmptyState,
+    customPrefix,
   }: {
     onPlanStatusChange?: (status: {
       empty: boolean;
@@ -63,6 +65,8 @@ vi.mock("@/components/home/HomeDailyCard", () => ({
       arc: undefined;
       stepCount: number;
     }) => void;
+    customEmptyState?: React.ReactNode;
+    customPrefix?: React.ReactNode;
   }) => {
     useEffect(() => {
       onPlanStatusChange?.({
@@ -75,7 +79,13 @@ vi.mock("@/components/home/HomeDailyCard", () => ({
         stepCount: 5,
       });
     }, [onPlanStatusChange]);
-    return <div>Daily plan</div>;
+    return (
+      <div>
+        {customPrefix}
+        <div>Daily plan</div>
+        {customEmptyState}
+      </div>
+    );
   },
 }));
 vi.mock("@/components/home/HomeReviewBanner", () => ({

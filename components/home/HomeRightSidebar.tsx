@@ -22,7 +22,7 @@ export default function HomeRightSidebar({
   return (
     <aside
       aria-label="Contenido diario y repasos"
-      className="flex min-w-0 flex-col gap-6"
+      className="flex min-w-0 flex-col gap-8 self-start lg:sticky lg:top-[calc(var(--layout-page-block)+0.5rem)]"
     >
       {/* Frase del día */}
       <HomeChunkOfDayCard />
@@ -31,7 +31,7 @@ export default function HomeRightSidebar({
       <HomeWordOfDayCard profileLevel={profileLevel} />
 
       {/* Bloque Te tocan hoy */}
-      <section className="flex flex-col gap-3 rounded-xl border border-border-subtle bg-surface-raised p-4" aria-label="Te tocan hoy">
+      <section className="flex flex-col gap-3 rounded-xl border border-border-subtle bg-surface-raised p-5" aria-label="Te tocan hoy">
         <h3 className="font-label text-body-xs font-semibold text-fg-muted">
           Te tocan hoy
         </h3>
@@ -52,7 +52,9 @@ export default function HomeRightSidebar({
             ) : null}
           </div>
         ) : (
-          <p className="font-body-sm text-fg-muted">Todo al día por hoy.</p>
+          <p className="font-body-sm text-fg-muted">
+            Todo al día · Tus repasos programados aparecerán aquí conforme avances.
+          </p>
         )}
       </section>
     </aside>

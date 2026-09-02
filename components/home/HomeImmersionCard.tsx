@@ -1,7 +1,14 @@
 "use client";
 
+// Planned structure:
+// <HomeImmersionCard>
+//   <Header (icon, title, hint)>
+//   <Controls (category chips, minutes stepper, CTA button)>
+// </HomeImmersionCard>
+
 import { useState } from "react";
-import { Clapperboard } from "@/components/icons";
+import { Clapperboard, Check } from "@/components/icons";
+import Button from "@/components/ui/Button";
 
 const IMMERSION_CATEGORIES = [
   { id: "video", label: "Video" },
@@ -23,25 +30,31 @@ export default function HomeImmersionCard() {
   return (
     <section
       aria-label="Registrar inmersión"
-      className="flex flex-col gap-4 rounded-xl border border-border-subtle bg-surface-raised p-5 shadow-xs"
+      className="flex flex-col gap-3 rounded-xl border border-border-subtle bg-surface-raised p-3.5 sm:p-4 shadow-xs"
     >
-      <div className="flex items-start gap-3">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-surface-sunken text-fg-muted">
-          <Clapperboard size={18} aria-hidden />
+      {/* Header compacto */}
+      <div className="flex items-center gap-2.5">
+        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-surface-sunken text-fg-muted">
+          <Clapperboard size={15} aria-hidden />
         </div>
-        <div className="flex flex-col">
-          <h2 className="font-heading text-body-md font-bold text-fg">
+        <div className="flex flex-wrap items-baseline gap-x-2">
+          <h2 className="text-body-sm font-semibold text-fg">
             Registrar inmersión
           </h2>
-          <p className="font-body-sm text-fg-muted">
-            ¿Viste algo en inglés hoy? Cuenta para tu exposición real.
-          </p>
+          <span className="text-caption text-fg-muted">
+            ¿Viste algo en inglés hoy?
+          </span>
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+      {/* Fila de controles: categorías + tiempo + acción */}
+      <div className="flex flex-wrap items-center justify-between gap-2.5 pt-0.5">
         {/* Chips de categoría */}
-        <div className="flex flex-wrap items-center gap-2">
+        <div
+          className="flex flex-wrap items-center gap-1.5"
+          role="group"
+          aria-label="Tipo de inmersión"
+        >
           {IMMERSION_CATEGORIES.map((cat) => {
             const isSelected = selectedCategory === cat.id;
             return (
@@ -49,10 +62,10 @@ export default function HomeImmersionCard() {
                 key={cat.id}
                 type="button"
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`focus-ring rounded-lg px-3 py-1.5 font-body-sm font-medium transition-all ${
+                className={`focus-ring inline-flex h-8 items-center rounded-lg px-2.5 text-caption font-medium transition-all ${
                   isSelected
-                    ? "bg-primary text-primary-fg shadow-xs"
-                    : "bg-surface-sunken text-fg-muted hover:bg-surface-sunken/80 hover:text-fg"
+                    ? "border border-primary/25 bg-primary-soft text-primary font-semibold"
+                    : "border border-border-subtle/60 bg-surface-sunken text-fg-muted hover:bg-surface-raised hover:text-fg"
                 }`}
               >
                 {cat.label}
@@ -61,35 +74,39 @@ export default function HomeImmersionCard() {
           })}
         </div>
 
-        {/* Input de tiempo + Botón registrar */}
+        {/* Stepper de tiempo + Botón registrar */}
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1 rounded-lg border border-border-subtle bg-surface-sunken px-2 py-1 font-sans text-body-sm font-medium tabular-nums text-fg">
+          <div className="flex h-8 items-center rounded-lg border border-border-subtle bg-surface-sunken px-1 font-sans text-caption font-medium tabular-nums text-fg">
             <button
               type="button"
               onClick={() => setMinutes((m) => Math.max(5, m - 5))}
-              className="focus-ring px-1 text-fg-muted hover:text-fg font-bold"
-              aria-label="Disminuir tiempo"
+              className="focus-ring flex h-6 w-6 items-center justify-center rounded text-sm font-bold text-fg-muted transition-colors hover:bg-surface-raised hover:text-fg"
+              aria-label="Disminuir tiempo 5 minutos"
             >
-              -
+              −
             </button>
-            <span>{minutes}</span>
-            <span className="text-fg-muted">min</span>
+            <span className="min-w-[3.5ch] px-1 text-center">
+              {minutes}
+              <span className="ml-0.5 text-fg-muted">m</span>
+            </span>
             <button
               type="button"
               onClick={() => setMinutes((m) => Math.min(180, m + 5))}
-              className="focus-ring px-1 text-fg-muted hover:text-fg font-bold"
-              aria-label="Aumentar tiempo"
+              className="focus-ring flex h-6 w-6 items-center justify-center rounded text-sm font-bold text-fg-muted transition-colors hover:bg-surface-raised hover:text-fg"
+              aria-label="Aumentar tiempo 5 minutos"
             >
               +
             </button>
           </div>
-          <button
-            type="button"
+
+          <Button
+            size="sm"
+            variant={registered ? "secondary" : "primary"}
             onClick={handleRegister}
-            className="focus-ring rounded-lg border border-border-default bg-surface px-4 py-1.5 font-body-sm font-semibold text-fg transition-all hover:bg-surface-sunken hover:border-border-strong"
+            icon={registered ? <Check size={14} className="text-success" /> : undefined}
           >
             {registered ? "¡Registrado!" : "Registrar"}
-          </button>
+          </Button>
         </div>
       </div>
     </section>

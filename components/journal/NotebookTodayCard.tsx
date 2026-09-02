@@ -3,7 +3,7 @@
 // Planned structure:
 // <NotebookTodayCard>
 //   <MetaRow: date + Monospace Primary Badge ("PÁGINA DE HOY") />
-//   <PromptHeader: english serif + spanish + action buttons ("Otra pregunta", "Cambiar de tema") />
+//   <PromptHeader: english serif + spanish + compact icon button ("Cambiar tema") />
 //   <TopicSelector: collapsible pills when toggled />
 //   <UnderlineTabs: tabs ("Con estructura" / "Página en blanco") + right-aligned caption text />
 //   <SentenceStarters: topic-specific chips ("Toca una frase para empezar") when "Con estructura" />
@@ -13,7 +13,7 @@
 // </NotebookTodayCard>
 
 import { useState } from 'react'
-import { RefreshCw, Sparkles } from '@/components/icons'
+import { Sparkles } from '@/components/icons'
 import Button from '@/components/ui/Button'
 import { getIllustration } from '@/lib/illustrations/registry'
 import { correctJournalEntry } from '@/lib/journal/correct-client'
@@ -21,55 +21,22 @@ import type { JournalFeedback } from '@/lib/journal/correction'
 import { playUiCue } from '@/lib/ui-sounds/cues'
 import {
   TOPIC_PROMPTS,
+  ALL_TOPICS,
+  TOPIC_STARTER_CHIPS,
   type NotebookHome,
   type NotebookTopic,
+  type PromptDefinition,
 } from '@/lib/journal/notebook-types'
 import { JournalFeedbackView } from './JournalFeedbackView'
-import { NotebookTopicSelector } from './NotebookTopicSelector'
+import { NotebookPromptHeader } from './NotebookPromptHeader'
+import { NotebookStarterChips } from './NotebookStarterChips'
 
 const PhraseBookIllustration = getIllustration('journalPhraseBook')
 const BlankBoardIllustration = getIllustration('journalBlankBoard')
 
-const ALL_TOPICS: NotebookTopic[] = ['daily', 'opinion', 'fiction', 'situational', 'vocab', 'free']
-
-const TOPIC_STARTER_CHIPS: Record<NotebookTopic, string[]> = {
-  daily: [
-    'Today I talked with...',
-    'We talked about...',
-    'She told me that...',
-    'It made me feel...',
-  ],
-  opinion: [
-    'In my opinion...',
-    'I personally believe that...',
-    'The main reason is...',
-    'From my point of view...',
-  ],
-  fiction: [
-    'It all started when...',
-    'Suddenly, I noticed...',
-    'Without warning...',
-    'In the end, it turned out...',
-  ],
-  situational: [
-    'I am writing to update you on...',
-    'Could you please help me with...',
-    'I would recommend checking...',
-    'Thanks for your time and...',
-  ],
-  vocab: [
-    'First, I noticed that...',
-    'Then, I realized...',
-    'Finally, I discovered...',
-    'To figure this out, I...',
-  ],
-  free: [
-    'Today I was thinking about...',
-    'Something interesting happened...',
-    'Lately, I have been...',
-    'What caught my attention was...',
-  ],
-}
+const ALL_FLAT_PROMPTS: Array<{ prompt: PromptDefinition; topic: NotebookTopic }> = ALL_TOPICS.flatMap(
+  (topicKey) => (TOPIC_PROMPTS[topicKey] || []).map((prompt) => ({ prompt, topic: topicKey }))
+)
 
 interface NotebookTodayCardProps {
   today: NotebookHome['today']
@@ -83,16 +50,7 @@ export function NotebookTodayCard({
   onTopicChange,
   onShufflePrompt,
 }: NotebookTodayCardProps) {
-  // Rotación dinámica de tema e índice al entrar a la pantalla para mostrar siempre un tema nuevo
-  const [selectedTopic, setSelectedTopic] = useState<NotebookTopic>(() => {
-    if (typeof window !== 'undefined') {
-      const randomTopic = ALL_TOPICS[Math.floor(Math.random() * ALL_TOPICS.length)]
-      return randomTopic
-    }
-    return today.topic || 'daily'
-  })
-  const [promptIndex, setPromptIndex] = useState(() => Math.floor(Math.random() * 5))
-  const [showTopicSelector, setShowTopicSelector] = useState(false)
+  const [promptIndex, setPromptIndex] = useState(0)
   const [scaffoldMode, setScaffoldMode] = useState<'guided' | 'blank'>('guided')
   const [content, setContent] = useState(today.preview ?? '')
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -100,24 +58,28 @@ export function NotebookTodayCard({
   const [correctedContent, setCorrectedContent] = useState<string | null>(null)
   const [feedback, setFeedback] = useState<JournalFeedback | null>(null)
 
-  const activePrompts = TOPIC_PROMPTS[selectedTopic] ?? TOPIC_PROMPTS.daily
-  const currentPrompt =
-    activePrompts[promptIndex % activePrompts.length] ?? {
-      id: today.prompt.id || 'small-win',
+  const currentItem = ALL_FLAT_PROMPTS[promptIndex % ALL_FLAT_PROMPTS.length] ?? {
+    prompt: {
+      id: today.prompt.id || 'remembered-conversation',
       en: today.prompt.en,
       es: today.prompt.es,
-    }
-
-  const starterChips = TOPIC_STARTER_CHIPS[selectedTopic] ?? TOPIC_STARTER_CHIPS.daily
-
-  function handleTopicSelect(topic: NotebookTopic) {
-    setSelectedTopic(topic)
-    setPromptIndex(0)
-    onTopicChange?.(topic)
+    },
+    topic: today.topic || 'daily',
   }
 
+  const currentPrompt = currentItem.prompt
+  const currentTopic = currentItem.topic
+  const starterChips = TOPIC_STARTER_CHIPS[currentTopic] ?? TOPIC_STARTER_CHIPS.daily
+
   function handleShuffle() {
-    setPromptIndex((prev) => prev + 1)
+    setPromptIndex((prev) => {
+      const nextIndex = prev + 1
+      const nextItem = ALL_FLAT_PROMPTS[nextIndex % ALL_FLAT_PROMPTS.length]
+      if (nextItem) {
+        onTopicChange?.(nextItem.topic)
+      }
+      return nextIndex
+    })
     onShufflePrompt?.()
   }
 
@@ -191,51 +153,11 @@ export function NotebookTodayCard({
         </time>
       </div>
 
-      {/* ── Pregunta en inglés (serif) + traducción + Acciones ── */}
-      <div className="flex flex-col gap-3">
-        <div className="flex flex-col gap-1">
-          <h2
-            id="today-page-heading"
-            className="font-serif font-h3 font-normal leading-snug text-fg text-balance"
-          >
-            {currentPrompt.en}
-          </h2>
-          <p className="font-body-sm text-fg-muted">
-            {currentPrompt.es}
-          </p>
-        </div>
-
-        {/* Acciones de prompt: "Otra pregunta" y "Cambiar de tema" */}
-        <div className="flex flex-wrap items-center gap-2 pt-1">
-          <button
-            type="button"
-            onClick={handleShuffle}
-            className="focus-ring inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-surface-sunken px-3 py-1 font-caption font-medium text-fg transition-all duration-150 hover:border-border-strong hover:bg-surface-raised active:scale-95"
-          >
-            <RefreshCw size={13} className="text-fg-muted transition-transform duration-300 hover:rotate-180" aria-hidden />
-            Otra pregunta
-          </button>
-          <button
-            type="button"
-            onClick={() => setShowTopicSelector((prev) => !prev)}
-            className="focus-ring inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-surface-sunken px-3 py-1 font-caption font-medium text-fg transition-all duration-150 hover:border-border-strong hover:bg-surface-raised active:scale-95"
-          >
-            Cambiar de tema
-          </button>
-        </div>
-      </div>
-
-      {/* Selector de tema expandible */}
-      {showTopicSelector && (
-        <div className="animate-in fade-in-0 duration-200">
-          <NotebookTopicSelector
-            selectedTopic={selectedTopic}
-            onSelectTopic={handleTopicSelect}
-            onShuffle={handleShuffle}
-            defaultExpanded={true}
-          />
-        </div>
-      )}
+      {/* ── Pregunta en inglés (serif) + traducción + Botón de cambio de tema al lado ── */}
+      <NotebookPromptHeader
+        currentPrompt={currentPrompt}
+        onShuffle={handleShuffle}
+      />
 
       {/* ── Pestañas (Underline tabs): "Con estructura" vs "Página en blanco" ── */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border-subtle pb-0">
@@ -277,23 +199,7 @@ export function NotebookTodayCard({
 
       {/* ── Chips de arranque de frase adaptados al tema (cuando scaffoldMode === 'guided') ── */}
       {scaffoldMode === 'guided' && (
-        <div className="flex flex-col gap-2 animate-in fade-in-0 duration-200">
-          <span className="font-tiny font-medium text-fg-muted uppercase tracking-wider">
-            Toca una frase para empezar
-          </span>
-          <div className="flex flex-wrap gap-2">
-            {starterChips.map((chip) => (
-              <button
-                key={chip}
-                type="button"
-                onClick={() => handleInsertStarter(chip)}
-                className="focus-ring rounded-full border border-dashed border-border-subtle bg-surface-sunken px-3.5 py-1.5 font-mono text-xs text-fg transition-all duration-150 hover:border-border-strong hover:bg-surface-raised hover:scale-[1.02] active:scale-[0.98]"
-              >
-                {chip}
-              </button>
-            ))}
-          </div>
-        </div>
+        <NotebookStarterChips chips={starterChips} onInsert={handleInsertStarter} />
       )}
 
       {/* ── Hoja de cuaderno rayada (ruled paper) con Ilustración de marca de agua al fondo ── */}
@@ -374,15 +280,8 @@ export function NotebookTodayCard({
   )
 }
 
-function formatLongDate(dateStr: string): string {
+function formatLongDate(d: string): string {
   try {
-    const date = new Date(`${dateStr}T12:00:00`)
-    return new Intl.DateTimeFormat('es-PE', {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long',
-    }).format(date)
-  } catch {
-    return dateStr
-  }
+    return new Intl.DateTimeFormat('es-PE', { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date(`${d}T12:00:00`))
+  } catch { return d }
 }

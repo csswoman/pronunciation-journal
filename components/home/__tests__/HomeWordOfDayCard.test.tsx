@@ -20,6 +20,7 @@ vi.mock('@/hooks/useWordOfDay', () => ({
       ipa: '/ˌserənˈdɪpɪti/',
       definition: 'a happy accident',
       example_sentence: 'Finding this cafe was pure serendipity.',
+      example_translation: 'Encontrar este café fue pura casualidad afortunada.',
     },
     loading: false,
     error: null,
@@ -32,12 +33,18 @@ vi.mock('@/lib/word-bank/queries', () => ({
   toggleFavorite: vi.fn().mockResolvedValue(undefined),
 }))
 
+const speakTextMock = vi.fn()
+vi.mock('@/lib/speech/synthesis', () => ({
+  speakText: (...args: unknown[]) => speakTextMock(...args),
+}))
+
 beforeEach(() => {
   playUiCue.mockClear()
+  speakTextMock.mockClear()
 })
 
-describe('HomeWordOfDayCard favorite heart', () => {
-  it('plays the save cue and pops the heart when saved', async () => {
+describe('HomeWordOfDayCard', () => {
+  it('plays the save cue and pops the bookmark when saved', async () => {
     render(<HomeWordOfDayCard />)
 
     const button = screen.getByRole('button', { name: 'Guardar palabra' })
@@ -48,5 +55,22 @@ describe('HomeWordOfDayCard favorite heart', () => {
       expect(playUiCue).toHaveBeenCalledWith('save')
       expect(button.classList.contains('animate-heart-pop')).toBe(true)
     })
+  })
+
+  it('renders example section, allows listening and shows translation', () => {
+    render(<HomeWordOfDayCard />)
+
+    // Example is closed by default, click it to open
+    const exampleButton = screen.getByRole('button', { name: 'Ejemplo' })
+    fireEvent.click(exampleButton)
+
+    // Now the translation should be visible
+    expect(screen.getByText('Encontrar este café fue pura casualidad afortunada.')).toBeInTheDocument()
+
+    // And the listen button should be visible
+    const exampleSpeakButton = screen.getByRole('button', { name: 'Escuchar ejemplo' })
+    expect(exampleSpeakButton).toBeInTheDocument()
+    fireEvent.click(exampleSpeakButton)
+    expect(speakTextMock).toHaveBeenCalledWith('Finding this cafe was pure serendipity.')
   })
 })

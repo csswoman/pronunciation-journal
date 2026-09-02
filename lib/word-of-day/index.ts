@@ -15,6 +15,7 @@ export interface WordOfDay {
   part_of_speech?: string;
   definition: string;
   example_sentence: string;
+  example_translation?: string;
   difficulty: "beginner" | "intermediate" | "advanced";
 }
 
@@ -125,6 +126,7 @@ function buildFallbackWord(word: string): WordOfDay {
     part_of_speech: fallback?.part_of_speech,
     definition: fallback?.definition ?? "Consulta esta palabra en el diario o diccionario para conocer su significado.",
     example_sentence: fallback?.example_sentence ?? "",
+    example_translation: fallback?.example_translation,
     difficulty: getDifficulty(word),
   };
 }
