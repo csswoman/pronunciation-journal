@@ -47,15 +47,15 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning>
       <head>
-        <title>Pronunciation Journal</title>
+        <title>English Journal</title>
         <meta name="description" content="Track and improve your pronunciation" />
         <link rel="icon" href="/icon.svg" />
         <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
-        <meta name="theme-color" content="#7c6fcd" />
+        <meta name="theme-color" content="#ffffff" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="PronJournal" />
+        <meta name="apple-mobile-web-app-title" content="English Journal" />
         {/* Raw blocking script (not next/script): runs while HTML parses, before paint.
             Authorized by script-src sha256 hash in proxy CSP — not a layout nonce. */}
         <script
