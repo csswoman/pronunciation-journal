@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { Logo } from "@/components/illustrations/Logo";
 import { AuthTabs } from "@/components/auth/AuthTabs";
 import { AuthFeedback } from "@/components/auth/AuthFeedback";
-import { AuthMobileIdentity } from "@/components/auth/AuthMobileIdentity";
 import { AuthImagePanel } from "@/components/auth/AuthImagePanel";
 import { AuthGuestButton } from "@/components/auth/AuthGuestButton";
 import { LoginForm } from "@/components/auth/LoginForm";
@@ -38,35 +38,29 @@ export default function AuthPanel() {
       <AuthImagePanel />
 
       <div className="flex-1 flex flex-col min-h-screen bg-surface-raised">
-        <AuthMobileIdentity />
-
         <div className="flex-1 px-[var(--layout-page-inline)] flex flex-col items-center justify-center py-[var(--layout-page-block)] lg:py-[var(--layout-page-block-end)]">
           <div className="w-full max-w-md">
-            <div className="hidden lg:block mb-8">
-              <p className="text-h4 text-fg font-semibold leading-none tracking-tight">
-                English Journal
-              </p>
-              <p className="mt-1.5 text-body-sm text-fg-muted">
-                Pronunciación y vocabulario, sesión a sesión.
-              </p>
-            </div>
-
-            {showExplorePrimary || isSave ? (
-              <div className="mb-8 flex flex-col gap-2">
-                <h1 className="text-h3 font-bold text-balance text-fg">
+            <div className="flex flex-col items-center text-center mb-8">
+              <Logo className="size-9 text-fg mb-4" />
+              <h1 className="text-h3 font-bold tracking-tight text-balance leading-tight">
+                <span className="block text-fg">
                   {isSave
-                    ? "No pierdas tu racha"
-                    : "Empieza a practicar ahora"}
-                </h1>
-                <p className="text-body-sm text-pretty text-fg-muted max-w-[46ch]">
+                    ? "Guarda tu progreso"
+                    : showExplorePrimary
+                      ? "Practica ahora, sin crear cuenta"
+                      : "English Journal"}
+                </span>
+                <span className="block text-fg-muted text-pretty">
                   {isSave
                     ? auth.upgradingGuest
-                      ? "Guarda esta sesión en una cuenta. Conservas tu progreso y puedes retomarlo desde cualquier dispositivo."
-                      : "Crea una cuenta o inicia sesión para no perder lo que practiques."
-                    : "Prueba una sesión completa sin cuenta. Crea una cuando quieras guardar tu progreso."}
-                </p>
-              </div>
-            ) : null}
+                      ? "Conserva esta sesión en tu cuenta"
+                      : "Inicia sesión para no perder tu práctica"
+                    : showExplorePrimary
+                      ? "Una sesión completa gratis, sin registrarte"
+                      : "Inicia sesión en tu cuenta"}
+                </span>
+              </h1>
+            </div>
 
             {(auth.error || auth.message) && (
               <div className="mb-6">
@@ -128,7 +122,7 @@ export default function AuthPanel() {
                           onClick={revealAccount}
                           className="font-medium text-primary underline-offset-2 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm"
                         >
-                          Entrar con mi cuenta
+                          Inicia sesión
                         </button>
                       </p>
                     ) : null}
@@ -163,7 +157,7 @@ export default function AuthPanel() {
                     submitLabel="Iniciar sesión"
                     googleLabel={
                       auth.upgradingGuest
-                        ? "Guardar mi progreso con Google"
+                        ? "Iniciar sesión con Google"
                         : "Continuar con Google"
                     }
                   />

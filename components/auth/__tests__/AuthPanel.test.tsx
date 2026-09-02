@@ -45,10 +45,10 @@ describe("AuthPanel", { timeout: 15_000 }, () => {
   });
 
   // First-time visitors see the guest CTA; the account form is folded behind
-  // "¿Ya tienes cuenta? Iniciar sesión". These tests exercise the login form,
+  // "¿Ya tienes cuenta? Inicia sesión". These tests exercise the login form,
   // so they open it first.
   const revealAccountForm = () => {
-    const link = screen.queryByRole("button", { name: "Entrar con mi cuenta" });
+    const link = screen.queryByRole("button", { name: "Inicia sesión" });
     if (link) fireEvent.click(link);
   };
 
@@ -58,14 +58,14 @@ describe("AuthPanel", { timeout: 15_000 }, () => {
       screen.getByRole("button", { name: "Probar una sesión" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: /Empieza a practicar ahora/i }),
+      screen.getByRole("heading", { name: /Practica ahora, sin crear cuenta/i }),
     ).toBeInTheDocument();
   });
 
   it("folds the account form behind a returning-user link for new visitors", () => {
     render(<AuthPanel />);
     expect(screen.queryByLabelText("Correo electrónico")).not.toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "Entrar con mi cuenta" }));
+    fireEvent.click(screen.getByRole("button", { name: "Inicia sesión" }));
     expect(screen.getByLabelText("Correo electrónico")).toBeInTheDocument();
   });
 
