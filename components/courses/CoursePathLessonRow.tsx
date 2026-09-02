@@ -9,9 +9,9 @@
  */
 
 import Link from "next/link";
+import { Check } from "@/components/icons";
 import { cn } from "@/lib/cn";
 import { studyLessonPath } from "@/lib/courses/curriculumIndex";
-import { CoursePathLessonStateDot } from "@/components/courses/CoursePathIcons";
 import { TrackingSaveButton } from "@/components/tracking/TrackingSaveButton";
 import type { CoursePathLesson, CoursePathTrackId, LessonProgressState, LessonTag } from "@/lib/courses/types";
 
@@ -20,16 +20,16 @@ interface CoursePathLessonRowProps {
   levelId: CoursePathTrackId;
 }
 
-function getTagStyle(tag?: LessonTag, soundLab?: boolean, isOptional?: boolean): { label: LessonTag; className: string } {
+function getTagStyle(tag?: LessonTag, soundLab?: boolean, isOptional?: boolean): { label: string; className: string } {
   if (tag) {
-    if (tag === "CONCEPTO") return { label: "CONCEPTO", className: "course-path__tag--concepto" };
-    if (tag === "PRÁCTICA") return { label: "PRÁCTICA", className: "course-path__tag--practica" };
-    if (tag === "PRONUNCIACIÓN") return { label: "PRONUNCIACIÓN", className: "course-path__tag--pronunciacion" };
-    if (tag === "REPASO") return { label: "REPASO", className: "course-path__tag--repaso" };
+    if (tag === "CONCEPTO") return { label: "concepto", className: "course-path__tag--concepto" };
+    if (tag === "PRÁCTICA") return { label: "practica", className: "course-path__tag--practica" };
+    if (tag === "PRONUNCIACIÓN") return { label: "pronunciacion", className: "course-path__tag--pronunciacion" };
+    if (tag === "REPASO") return { label: "repaso", className: "course-path__tag--repaso" };
   }
-  if (soundLab) return { label: "PRONUNCIACIÓN", className: "course-path__tag--pronunciacion" };
-  if (isOptional) return { label: "PRÁCTICA", className: "course-path__tag--practica" };
-  return { label: "CONCEPTO", className: "course-path__tag--concepto" };
+  if (soundLab) return { label: "pronunciacion", className: "course-path__tag--pronunciacion" };
+  if (isOptional) return { label: "practica", className: "course-path__tag--practica" };
+  return { label: "concepto", className: "course-path__tag--concepto" };
 }
 
 export default function CoursePathLessonRow({ lesson, levelId }: CoursePathLessonRowProps) {
@@ -48,10 +48,12 @@ export default function CoursePathLessonRow({ lesson, levelId }: CoursePathLesso
         lesson.state === "current" && "course-path__lesson--current"
       )}
     >
-      <span className="course-path__num">{formattedNum}</span>
-
       <div
-        className="course-path__st"
+        className={cn(
+          "course-path__num-circle",
+          lesson.state === "done" && "course-path__num-circle--done",
+          lesson.state === "current" && "course-path__num-circle--current"
+        )}
         role="img"
         aria-label={
           lesson.state === "done"
@@ -61,7 +63,11 @@ export default function CoursePathLessonRow({ lesson, levelId }: CoursePathLesso
             : "Pendiente"
         }
       >
-        <CoursePathLessonStateDot state={lesson.state} />
+        {lesson.state === "done" ? (
+          <Check size={12} strokeWidth={2.5} aria-hidden />
+        ) : (
+          <span>{formattedNum}</span>
+        )}
       </div>
 
       <div className="course-path__lesson-main">
@@ -69,6 +75,9 @@ export default function CoursePathLessonRow({ lesson, levelId }: CoursePathLesso
           <Link href={href} className="course-path__lt course-path__lt--link" title={lesson.title}>
             {lesson.title}
           </Link>
+          <span className={cn("course-path__tag", tagInfo.className)}>
+            {tagInfo.label}
+          </span>
           {lesson.slug && (
             <div className="course-path__lesson-heart">
               <TrackingSaveButton
@@ -86,12 +95,7 @@ export default function CoursePathLessonRow({ lesson, levelId }: CoursePathLesso
         )}
       </div>
 
-      <div className="course-path__lesson-meta-end">
-        <span className={cn("course-path__tag", tagInfo.className)}>
-          {tagInfo.label}
-        </span>
-        <span className="course-path__duration">{durationText}</span>
-      </div>
+      <span className="course-path__duration">{durationText}</span>
     </div>
   );
 }

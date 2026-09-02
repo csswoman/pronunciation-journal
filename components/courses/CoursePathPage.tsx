@@ -50,17 +50,20 @@ export default function CoursePathPage({ levelParam }: CoursePathPageProps) {
       />
       <PageLayout archetype="catalog">
         <PageHeader
-          kicker="Aprender"
           title="Cursos"
           subtitle="Lecciones de pronunciación, gramática, vocabulario y más, organizadas por nivel para que avances a tu ritmo."
         />
         <div className="course-path__wrap course-path__wrap--shell">
+          <CoursePathLevelPicker
+            levels={COURSE_PATH_CURRICULUM.levels}
+            selectedLevelId={selectedLevelId}
+          />
+
           <div className="course-path__desktop-layout">
             <main className="course-path__main">
-              <CoursePathLevelPicker
-                levels={COURSE_PATH_CURRICULUM.levels}
-                selectedLevelId={selectedLevelId}
-              />
+              <div className="course-path__main-search mb-4">
+                <CoursePathSearch />
+              </div>
 
               <section
                 key={selectedLevel.id}
@@ -75,39 +78,42 @@ export default function CoursePathPage({ levelParam }: CoursePathPageProps) {
               </section>
             </main>
 
-            <aside className="course-path__aside" aria-label="Contexto del nivel">
-              <CoursePathSearch />
+            <aside className="course-path__aside hidden lg:flex" aria-label="Contexto del nivel">
+              <Link href="/courses/pronunciation" className="course-path__aside-card course-path__pronunciation-card">
+                <div className="course-path__aside-card-head">
+                  <div className="course-path__aside-card-icon-box course-path__aside-card-icon-box--amber" aria-hidden="true">
+                    <MicVocal size={18} />
+                  </div>
+                  <div className="course-path__aside-card-heading">
+                    <h3 className="course-path__aside-card-title">Pronunciacion</h3>
+                    <p className="course-path__aside-card-sub">4 palabras guardadas para practicar</p>
+                  </div>
+                </div>
+                <div className="course-path__pronunciation-tags">
+                  <span className="course-path__pronunciation-tag">thoroughly</span>
+                  <span className="course-path__pronunciation-tag">world</span>
+                </div>
+              </Link>
 
               {selectedLevel.realLife && selectedLevel.realLife.length > 0 && (
                 <CoursePathRealLife scenarios={selectedLevel.realLife} />
               )}
 
-              <section className="course-path__aside-section" aria-label="Resumen del nivel">
-                <div className="course-path__aside-heading">
-                  <h3 className="course-path__aside-title course-path__aside-title--small">
-                    Este nivel
-                  </h3>
+              <section className="course-path__aside-card course-path__level-summary" aria-label="Resumen del nivel">
+                <div className="course-path__aside-card-head">
+                  <h3 className="course-path__aside-card-title">Este nivel</h3>
                   <span className="course-path__aside-level">{selectedLevel.spineLabel}</span>
                 </div>
                 <dl className="course-path__aside-facts">
                   <div>
-                    <dt>Duración</dt>
-                    <dd>{selectedLevel.hours ?? "A tu ritmo"}</dd>
+                    <dt>Duracion</dt>
+                    <dd>{selectedLevel.hours ?? "20 h"}</dd>
                   </div>
                   <div>
                     <dt>Lecciones</dt>
                     <dd>{selectedLevelLessonCount}</dd>
                   </div>
                 </dl>
-              </section>
-
-              <section className="course-path__aside-section" aria-label="Pronunciación">
-                <p className="font-kicker text-fg-subtle m-0">Pronunciación</p>
-                <Link href="/courses/pronunciation" className="course-path__aside-link">
-                  <MicVocal size={16} aria-hidden />
-                  Ruta de pronunciación
-                  <ArrowRight size={14} aria-hidden />
-                </Link>
               </section>
             </aside>
           </div>
