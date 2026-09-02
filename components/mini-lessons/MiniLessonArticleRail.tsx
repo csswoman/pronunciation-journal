@@ -4,7 +4,7 @@ import type { MiniLessonDeckLink } from "@/lib/learning-loop/mini-lesson-deck-li
 
 // Planned structure:
 // <MiniLessonArticleRail>
-//   <TOC />
+//   <TOCNav />
 //   <MiniLessonDeckCta? />
 //   <ExploreNav />
 // </MiniLessonArticleRail>

@@ -2,17 +2,12 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import PageLayout from "@/components/layout/PageLayout";
-import PageHeader from "@/components/layout/PageHeader";
 import {
   getLessonBySlug,
   getMiniLessonBySlug,
   getAllLessonSlugs,
   getAllMiniLessons,
 } from "@/lib/content/lessons";
-import {
-  MINI_LESSON_CATEGORY_LABELS,
-  MINI_LESSON_LEVEL_LABELS,
-} from "@/lib/content/mini-lesson-labels";
 import MiniLessonQuiz from "@/components/mini-lessons/MiniLessonQuiz";
 import MiniLessonComplete from "@/components/mini-lessons/MiniLessonComplete";
 import MiniLessonArticleRail from "@/components/mini-lessons/MiniLessonArticleRail";
@@ -20,6 +15,12 @@ import ExerciseBlock from "@/components/mini-lessons/ExerciseBlock";
 import ContentFunctionEarTrainer from "@/components/mini-lessons/ContentFunctionEarTrainer";
 import { TrackingSaveButton } from "@/components/tracking/TrackingSaveButton";
 import { resolveMiniLessonDeckLink } from "@/lib/learning-loop/mini-lesson-deck-link";
+
+import MiniLessonHeader from "@/components/mini-lessons/MiniLessonHeader";
+import MiniLessonCardCallout from "@/components/mini-lessons/MiniLessonCardCallout";
+import MiniLessonVisualCallout from "@/components/mini-lessons/MiniLessonVisualCallout";
+import MiniLessonWordChips from "@/components/mini-lessons/MiniLessonWordChips";
+import MiniLessonExampleItem from "@/components/mini-lessons/MiniLessonExampleItem";
 
 interface MiniLessonPageProps {
   params: Promise<{ slug: string }>;
@@ -63,85 +64,83 @@ export default async function MiniLessonDetailPage({ params }: MiniLessonPagePro
   return (
     <PageLayout
       archetype="dashboard"
-        banner={
-          <header className="mini-lessons__article-intro">
-            <Link href="/mini-lessons" className="mini-lessons__back">
-              ← Mini lecciones
-            </Link>
+      banner={
+        <header className="mini-lessons__article-intro">
+          <Link href="/mini-lessons" className="mini-lessons__back">
+            ← Mini lecciones
+          </Link>
+          <MiniLessonHeader category={lesson.category} title={lesson.title} />
+        </header>
+      }
+      rail={
+        <MiniLessonArticleRail
+          tocItems={tocItems}
+          deckLink={deckLink}
+          nextLesson={nextLesson}
+          previousLesson={previousLesson}
+        />
+      }
+      railLabel="Resumen de la lección"
+    >
+      <main className="mini-lessons__article-main">
+        {content.sections.map((section, idx) => {
+          const sectionId = `lesson-section-${idx + 1}`;
 
-            <PageHeader
-              variant="compact"
-              kicker={MINI_LESSON_CATEGORY_LABELS[lesson.category]}
-              title={lesson.title}
-              subtitle={lesson.body}
-            />
+          if (section.variant === "card") {
+            return (
+              <section key={idx} id={sectionId}>
+                <MiniLessonCardCallout heading={section.heading} body={section.body} />
+              </section>
+            );
+          }
 
-            <div className="mini-lessons__article-badges">
-              <span className="mini-lessons__pill mini-lessons__pill--level">
-                {MINI_LESSON_LEVEL_LABELS[lesson.level]}
-              </span>
-              <span className="mini-lessons__pill mini-lessons__pill--category">
-                {MINI_LESSON_CATEGORY_LABELS[lesson.category]}
-              </span>
-              <span className="mini-lessons__pill mini-lessons__pill--duration">
-                {lesson.duration} min
-              </span>
-            </div>
-          </header>
-        }
-        rail={
-          <MiniLessonArticleRail
-            tocItems={tocItems}
-            deckLink={deckLink}
-            nextLesson={nextLesson}
-            previousLesson={previousLesson}
-          />
-        }
-        railLabel="Resumen de la lección"
-      >
-        <main className="mini-lessons__article-main">
-          {content.sections.map((section, idx) => (
-            <section
-              key={idx}
-              id={`lesson-section-${idx + 1}`}
-              className="mini-lessons__section"
-            >
+          if (section.variant === "callout") {
+            return (
+              <section key={idx} id={sectionId}>
+                <MiniLessonVisualCallout
+                  heading={section.heading}
+                  body={section.body}
+                  icon={section.calloutIcon}
+                />
+              </section>
+            );
+          }
+
+          if (section.variant === "chips" && section.chips) {
+            return (
+              <section key={idx} id={sectionId}>
+                <MiniLessonWordChips
+                  heading={section.heading}
+                  body={section.body}
+                  chips={section.chips}
+                />
+              </section>
+            );
+          }
+
+          return (
+            <section key={idx} id={sectionId} className="mini-lessons__section">
               <h2 className="mini-lessons__section-title">{section.heading}</h2>
               <div className="mini-lessons__section-body">
                 <ReactMarkdown>{section.body}</ReactMarkdown>
               </div>
             </section>
-          ))}
+          );
+        })}
 
-          {content.examples.length > 0 && (
-            <section
-              id="lesson-examples"
-              className="mini-lessons__section mini-lessons__section--examples"
-            >
-              <h2 className="mini-lessons__section-title">Ejemplos</h2>
-              <div className="mini-lessons__examples">
-                {content.examples.map((example, idx) => (
-                  <div key={idx} className="mini-lessons__example">
-                    <p className="mini-lessons__example-en">{example.english}</p>
-                    {example.ipa && (
-                      <p className="mini-lessons__example-ipa" lang="en-fonipa">
-                        <span className="mini-lessons__ipa-slash" aria-hidden>
-                          /
-                        </span>
-                        {example.ipa}
-                        <span className="mini-lessons__ipa-slash" aria-hidden>
-                          /
-                        </span>
-                      </p>
-                    )}
-                    {example.note && (
-                      <p className="mini-lessons__example-note">{example.note}</p>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </section>
-          )}
+        {content.examples.length > 0 && (
+          <section
+            id="lesson-examples"
+            className="mini-lessons__section mini-lessons__section--examples"
+          >
+            <h2 className="mini-lessons__section-title">Ejemplos</h2>
+            <div className="mini-lessons__examples-list">
+              {content.examples.map((example, idx) => (
+                <MiniLessonExampleItem key={idx} example={example} />
+              ))}
+            </div>
+          </section>
+        )}
 
           {lesson.tip && (
             <aside className="mini-lessons__tip">

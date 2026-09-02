@@ -168,16 +168,16 @@ export default function ContentFunctionEarTrainer() {
         {currentPhrase.words.map((item, idx) => {
           const isSelected = !!selectedWords[idx];
           const isContent = item.type === "content";
-          let tokenStyle = "border-border bg-surface text-fg hover:border-primary/50";
+          let wordStyle = "border-border bg-surface text-fg hover:border-primary/50";
 
           if (isRevealed) {
             if (isContent) {
-              tokenStyle = "border-primary bg-primary/10 text-primary font-semibold shadow-xs";
+              wordStyle = "border-primary bg-primary/10 text-primary font-semibold shadow-xs";
             } else {
-              tokenStyle = "border-border/50 bg-surface-sunken text-fg-muted line-through-none opacity-75";
+              wordStyle = "border-border/50 bg-surface-sunken text-fg-muted line-through-none opacity-75";
             }
           } else if (isSelected) {
-            tokenStyle = "border-primary bg-primary text-white font-medium";
+            wordStyle = "border-primary bg-primary text-white font-medium";
           }
 
           return (
@@ -188,7 +188,7 @@ export default function ContentFunctionEarTrainer() {
               aria-pressed={isSelected}
               className={cn(
                 "px-3 py-1.5 rounded-lg border text-body-md transition-all duration-150 flex flex-col items-center",
-                tokenStyle
+                wordStyle
               )}
             >
               <span>{item.text}</span>

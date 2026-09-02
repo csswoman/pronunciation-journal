@@ -3,37 +3,27 @@
 // Planned structure:
 // <MiniLessonsBrowser>
 //   <PageHeader />
-//   <SidebarFilters>
-//     <SearchBar />
-//     <LevelFilter />
-//     <CategoryFilter />
-//   </SidebarFilters>
-//   <Results>
-//     <MiniLessonCard /> × N
-//     <ListPagination />
-//   </Results>
+//   <CatalogLayout>
+//     <MiniLessonSidebarFilters />
+//     <ResultsSection>
+//       <MiniLessonFeaturedCard />
+//       <AsymmetricGrid>
+//         <MiniLessonCard /> × N
+//       </AsymmetricGrid>
+//       <ListPagination />
+//     </ResultsSection>
+//   </CatalogLayout>
 // </MiniLessonsBrowser>
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import PageHeader from "@/components/layout/PageHeader";
 import { MiniLessonCard } from "@/components/mini-lessons/MiniLessonCard";
+import { MiniLessonFeaturedCard } from "@/components/mini-lessons/MiniLessonFeaturedCard";
+import { MiniLessonSidebarFilters } from "@/components/mini-lessons/MiniLessonSidebarFilters";
 import { ListPagination } from "@/components/ui/ListPagination";
-import { cn } from "@/lib/cn";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-import {
-  LESSON_LEVELS,
-  LESSON_CATEGORIES,
-  type LessonLevel,
-  type LessonCategory,
-  type MiniLesson,
-} from "@/lib/content/schemas";
-import {
-  MINI_LESSON_CATEGORY_LABELS,
-  MINI_LESSON_LEVEL_LABELS,
-} from "@/lib/content/mini-lesson-labels";
-
-const levels: LessonLevel[] = [...LESSON_LEVELS];
-const categories: LessonCategory[] = [...LESSON_CATEGORIES];
+import type { LessonLevel, LessonCategory, MiniLesson } from "@/lib/content/schemas";
+import { MINI_LESSON_CATEGORY_LABELS } from "@/lib/content/mini-lesson-labels";
 
 const PAGE_SIZE_DESKTOP = 12;
 const PAGE_SIZE_MOBILE = 8;
@@ -52,6 +42,8 @@ export default function MiniLessonsBrowser({ lessons }: { lessons: MiniLesson[] 
   useEffect(() => {
     setLayoutReady(true);
   }, []);
+
+  const featuredLesson = lessons[0];
 
   const filteredLessons = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
@@ -124,105 +116,25 @@ export default function MiniLessonsBrowser({ lessons }: { lessons: MiniLesson[] 
 
       <div className="mini-lessons__wrap mini-lessons__wrap--shell">
         <div className="mini-lessons__catalog">
-          <aside className="mini-lessons__filters" aria-label="Filtrar lecciones">
-            <div className="mini-lessons__filter-group">
-              <span id="lesson-search-label" className="mini-lessons__filter-label">
-                Buscar
-              </span>
-              <input
-                type="search"
-                value={searchQuery}
-                aria-labelledby="lesson-search-label"
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Buscar lección..."
-                className="w-full px-3 py-1.5 text-body-sm rounded-sm bg-surface-sunken border border-border-default text-fg placeholder:text-fg-placeholder focus:border-primary focus:outline-none transition-colors"
-              />
-            </div>
-
-            <div
-              className="mini-lessons__filter-group"
-              role="group"
-              aria-labelledby="lesson-level-filter"
-            >
-              <span id="lesson-level-filter" className="mini-lessons__filter-label">
-                Nivel
-              </span>
-              <div className="mini-lessons__filter-options">
-                <button
-                  type="button"
-                  className={cn(
-                    "mini-lessons__chip",
-                    selectedLevel === "all" && "mini-lessons__chip--on",
-                  )}
-                  aria-pressed={selectedLevel === "all"}
-                  onClick={() => setSelectedLevel("all")}
-                >
-                  Todos
-                </button>
-                {levels.map((level) => (
-                  <button
-                    key={level}
-                    type="button"
-                    className={cn(
-                      "mini-lessons__chip",
-                      selectedLevel === level && "mini-lessons__chip--on",
-                    )}
-                    aria-pressed={selectedLevel === level}
-                    onClick={() => setSelectedLevel(level)}
-                  >
-                    {MINI_LESSON_LEVEL_LABELS[level]}
-                    {levelCounts[level] !== undefined && (
-                      <span className="mini-lessons__chip-count">{levelCounts[level]}</span>
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div
-              className="mini-lessons__filter-group"
-              role="group"
-              aria-labelledby="lesson-category-filter"
-            >
-              <span id="lesson-category-filter" className="mini-lessons__filter-label">
-                Tema
-              </span>
-              <div className="mini-lessons__filter-options mini-lessons__filter-options--categories">
-                <button
-                  type="button"
-                  className={cn(
-                    "mini-lessons__chip",
-                    selectedCategory === "all" && "mini-lessons__chip--on",
-                  )}
-                  aria-pressed={selectedCategory === "all"}
-                  onClick={() => setSelectedCategory("all")}
-                >
-                  Todas
-                </button>
-                {categories.map((category) => (
-                  <button
-                    key={category}
-                    type="button"
-                    className={cn(
-                      "mini-lessons__chip",
-                      selectedCategory === category && "mini-lessons__chip--on",
-                    )}
-                    aria-pressed={selectedCategory === category}
-                    onClick={() => setSelectedCategory(category)}
-                  >
-                    {MINI_LESSON_CATEGORY_LABELS[category]}
-                    {categoryCounts[category] !== undefined && (
-                      <span className="mini-lessons__chip-count">
-                        {categoryCounts[category]}
-                      </span>
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </aside>
+          <MiniLessonSidebarFilters
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            selectedLevel={selectedLevel}
+            onLevelChange={setSelectedLevel}
+            selectedCategory={selectedCategory}
+            onCategoryChange={setSelectedCategory}
+            levelCounts={levelCounts}
+            categoryCounts={categoryCounts}
+          />
 
           <section className="mini-lessons__results" aria-label="Lecciones disponibles">
+            {/* Top Featured Hero Card (when no filters or page 1) */}
+            {!hasActiveFilters && currentPage === 1 && featuredLesson && (
+              <div className="mb-2">
+                <MiniLessonFeaturedCard lesson={featuredLesson} />
+              </div>
+            )}
+
             <div className="mini-lessons__results-header">
               <p className="mini-lessons__count" aria-live="polite">
                 {filteredLessons.length}{" "}
@@ -253,10 +165,19 @@ export default function MiniLessonsBrowser({ lessons }: { lessons: MiniLesson[] 
             ) : (
               <div ref={listRef} className="flex flex-col gap-4">
                 <div className="mini-lessons__grid">
-                  {paginatedLessons.map((lesson) => (
-                    <MiniLessonCard key={lesson.id} lesson={lesson} />
-                  ))}
+                  {paginatedLessons.map((lesson, idx) => {
+                    // Asymmetric grid: span 2 columns every 5 items (e.g. index 2)
+                    const isSpanning = isWide && (idx % 5 === 2);
+                    return (
+                      <MiniLessonCard
+                        key={lesson.id}
+                        lesson={lesson}
+                        isSpanning={isSpanning}
+                      />
+                    );
+                  })}
                 </div>
+
                 <ListPagination
                   currentPage={currentPage}
                   totalPages={totalPages}

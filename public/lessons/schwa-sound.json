@@ -2,20 +2,26 @@
   "slug": "schwa-sound",
   "sections": [
     {
-      "heading": "¿Qué es la schwa?",
-      "body": "La schwa /ə/ es el sonido vocálico más común en inglés y también el más ignorado. Es el sonido perezoso y neutro que emite la boca cuando una vocal no está acentuada: en algún lugar entre 'uh' y 'eh', producido con la mandíbula y la lengua relajadas en el centro de la boca."
+      "heading": "Que es la schwa?",
+      "body": "La schwa es el sonido vocalico mas comun en ingles y tambien el mas ignorado. Es el sonido neutro que emite la boca cuando una vocal no esta acentuada.",
+      "variant": "card"
     },
     {
-      "heading": "Por qué es importante",
-      "body": "El español es un idioma de vocales completas: cada vocal suena como se escribe. El inglés no lo es. En inglés, las vocales átonas colapsan en /ə/ independientemente de cómo estén escritas. Si pronuncias cada vocal completamente, sonarás robótico y más difícil de entender, no más fácil."
+      "heading": "Posicion de la boca",
+      "body": "Mandibula y lengua relajadas, en el centro de la boca — ni abierta ni cerrada.",
+      "variant": "callout",
+      "calloutIcon": "eye",
+      "calloutSubtext": "Mandibula y lengua relajadas, en el centro de la boca — ni abierta ni cerrada."
     },
     {
-      "heading": "donde encontrarlo",
-      "body": "El schwa aparece en sílabas átonas de casi cualquier palabra con dos o más sílabas. También aparece en palabras funcionales (artículos, preposiciones, conjunciones) que no se acentúan en el habla natural: 'un', 'el', 'a', 'de', 'y', 'pero', 'para'."
+      "heading": "Donde encontrarlo",
+      "body": "Aparece en silabas atonas de casi cualquier palabra, y en palabras funcionales que no se acentuan en el habla natural:",
+      "variant": "chips",
+      "chips": ["un", "el", "a", "de", "y", "pero", "para"]
     },
     {
-      "heading": "como practicar",
-      "body": "Tome cualquier palabra de varias sílabas y dígala en voz alta. Encuentra la sílaba acentuada: es la que dices más fuerte y por más tiempo. ¿Cualquier otra vocal? Intenta reemplazarlo con /ə/ y escucha. Lo más probable es que así lo digan los hablantes nativos."
+      "heading": "Como practicar",
+      "body": "Tome cualquier palabra de varias sílabas y dígala en voz alta. Encuentra la sílaba acentuada: es la que dices más fuerte y por más tiempo. ¿Cualquier otra vocal? Intenta reemplazarlo con /ə/ y escucha."
     }
   ],
   "examples": [
