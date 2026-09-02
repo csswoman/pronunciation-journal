@@ -29,6 +29,8 @@ export interface NotebookHome {
     firstLine: string
     sentences: number
     newWords: number
+    status?: 'reviewed' | 'unreviewed'
+    errorCount?: number
   }>
 }
 

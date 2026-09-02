@@ -8,9 +8,10 @@
 import { useMemo } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import PageLayout from '@/components/layout/PageLayout'
-import { listLocalJournalEntries } from '@/lib/journal/queries'
+import { listLocalJournalEntries, saveJournalEntry } from '@/lib/journal/queries'
 import { journalPromptForDate } from '@/lib/journal/prompts'
 import type { JournalFeedback } from '@/lib/journal/correction'
+import type { JournalEntryRecord, PronunciationJournalPayload } from '@/lib/journal/types'
 import {
   type NotebookHome,
   type NotebookTopic,
@@ -25,7 +26,30 @@ interface JournalNotebookClientProps {
 export function JournalNotebookClient({ userId, todayDate }: JournalNotebookClientProps) {
   const rawEntries = useLiveQuery(() => listLocalJournalEntries(userId, 60), [userId])
 
-  const { notebook, learnings } = useMemo(() => {
+  async function handleSavePronunciationWords(words: string[]) {
+    const items = words.map((w) => ({
+      id: crypto.randomUUID(),
+      wordOrPhrase: w,
+      difficultyReason: 'difficult_sound' as const,
+      practiceCount: 1,
+    }))
+    const payload: PronunciationJournalPayload = { items }
+    const now = new Date().toISOString()
+    const pronRecord: JournalEntryRecord = {
+      id: crypto.randomUUID(),
+      userId,
+      entryDate: todayDate,
+      entryMode: 'pronunciation',
+      prompt: 'Pronunciation journal words',
+      content: JSON.stringify(payload),
+      status: 'submitted',
+      createdAt: now,
+      updatedAt: now,
+    }
+    await saveJournalEntry(pronRecord)
+  }
+
+  const { notebook, learnings, savedPronunciationWords } = useMemo(() => {
     const entries = rawEntries ?? []
     const todayEntry = entries.find((e) => e.entryDate === todayDate)
     const prompt = journalPromptForDate(todayDate)
@@ -51,6 +75,7 @@ export function JournalNotebookClient({ userId, todayDate }: JournalNotebookClie
 
     const pastPages = validEntries.map((e) => {
       const fb = e.feedback as JournalFeedback | undefined
+      const isReviewed = e.status === 'corrected' || Boolean(fb?.errors)
       return {
         id: e.id,
         date: e.entryDate,
@@ -59,6 +84,8 @@ export function JournalNotebookClient({ userId, todayDate }: JournalNotebookClie
         firstLine: e.content.trim().split('\n')[0] || e.prompt,
         sentences: countSentences(e.content),
         newWords: fb?.newWords?.length ?? 0,
+        status: isReviewed ? ('reviewed' as const) : ('unreviewed' as const),
+        errorCount: fb?.errors?.length ?? 0,
       }
     })
 
@@ -67,6 +94,22 @@ export function JournalNotebookClient({ userId, todayDate }: JournalNotebookClie
 
     const recentErrors: Array<{ quote: string; correction: string; type: string; explanationEs: string }> = []
     const recentWords: string[] = []
+    const savedPronunciationWords: string[] = []
+
+    for (const entry of entries) {
+      if (entry.entryMode === 'pronunciation' && entry.content) {
+        try {
+          const parsed = JSON.parse(entry.content) as { items?: Array<{ word?: string }> }
+          if (Array.isArray(parsed.items)) {
+            for (const item of parsed.items) {
+              if (item.word && !savedPronunciationWords.includes(item.word)) {
+                savedPronunciationWords.push(item.word)
+              }
+            }
+          }
+        } catch {}
+      }
+    }
 
     for (const entry of validEntries) {
       const fb = entry.feedback as JournalFeedback | undefined
@@ -112,6 +155,7 @@ export function JournalNotebookClient({ userId, todayDate }: JournalNotebookClie
         recentErrors,
         recentWords,
       },
+      savedPronunciationWords,
     }
   }, [rawEntries, todayDate])
 
@@ -120,6 +164,8 @@ export function JournalNotebookClient({ userId, todayDate }: JournalNotebookClie
       <NotebookHomeView
         initialData={notebook}
         learnings={learnings}
+        savedPronunciationWords={savedPronunciationWords}
+        onSavePronunciationWords={(words) => void handleSavePronunciationWords(words)}
       />
     </PageLayout>
   )

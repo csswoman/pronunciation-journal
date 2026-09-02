@@ -2,8 +2,10 @@
 
 // Planned structure:
 // <NotebookHomeView>
-//   <Header: "Tu cuaderno" + totals count (sentences, not words/streaks) />
-//   <NotebookTodayCard: today's elevated card />
+//   <Header: "Tu cuaderno" + totals count />
+//   <NotebookTodayCard: main writing card />
+//   <JournalPronunciationCard: pronunciation journal card (opens modal) />
+//   <JournalPronunciationModal: interactive modal for adding/editing words />
 //   {learnings ? <NotebookLearningsCard /> : null}
 //   {pastPages.length === 0 ? <FirstUseHint /> : <NotebookPastGrid />}
 // </NotebookHomeView>
@@ -15,6 +17,8 @@ import {
   type NotebookTopic,
 } from '@/lib/journal/notebook-types'
 import { NotebookTodayCard } from './NotebookTodayCard'
+import { JournalPronunciationCard } from './JournalPronunciationCard'
+import { JournalPronunciationModal } from './JournalPronunciationModal'
 import { NotebookPastGrid } from './NotebookPastGrid'
 import { NotebookLearningsCard } from './NotebookLearningsCard'
 
@@ -24,20 +28,29 @@ interface NotebookHomeViewProps {
     recentErrors: Array<{ quote: string; correction: string; type: string; explanationEs: string }>
     recentWords: string[]
   }
+  savedPronunciationWords?: string[]
   onSelectMode?: (mode: 'guided' | 'blank' | 'pronunciation') => void
+  onSavePronunciationWords?: (words: string[]) => void
 }
-
 
 export function NotebookHomeView({
   initialData = SAMPLE_NOTEBOOK_DATA,
   learnings,
+  savedPronunciationWords = [],
   onSelectMode,
+  onSavePronunciationWords,
 }: NotebookHomeViewProps) {
   const [data, setData] = useState<NotebookHome>(initialData)
+  const [isPronunciationModalOpen, setIsPronunciationModalOpen] = useState(false)
+  const [pronunciationWords, setPronunciationWords] = useState<string[]>(savedPronunciationWords)
 
   useEffect(() => {
     setData(initialData)
   }, [initialData])
+
+  useEffect(() => {
+    setPronunciationWords(savedPronunciationWords)
+  }, [savedPronunciationWords])
 
   const isFirstUse = data.pastPages.length === 0
 
@@ -51,6 +64,11 @@ export function NotebookHomeView({
     }))
   }
 
+  function handleSaveModalWords(newWords: string[]) {
+    setPronunciationWords(newWords)
+    onSavePronunciationWords?.(newWords)
+  }
+
   return (
     <div className="flex w-full flex-col gap-6">
       {/* ── Encabezado ── */}
@@ -62,16 +80,31 @@ export function NotebookHomeView({
         {!isFirstUse && data.totals && (
           <p className="font-caption text-fg-muted">
             {data.totals.pages} {data.totals.pages === 1 ? 'página' : 'páginas'} ·{' '}
-            {data.totals.sentences} {data.totals.sentences === 1 ? 'frase' : 'frases'} en inglés
+            {data.totals.sentences} {data.totals.sentences === 1 ? 'frase' : 'frases'} en inglés ·{' '}
+            1 día seguido
           </p>
         )}
       </header>
 
-      {/* ── Tarjeta de la página de hoy (única superficie elevada) ── */}
+      {/* ── Tarjeta principal de la página de hoy ── */}
       <NotebookTodayCard
         today={data.today}
         onSelectMode={onSelectMode}
         onTopicChange={handleTopicChange}
+      />
+
+      {/* ── Tarjeta del Diario de Pronunciación ── */}
+      <JournalPronunciationCard
+        savedWords={pronunciationWords}
+        onAddWord={() => setIsPronunciationModalOpen(true)}
+      />
+
+      {/* ── Modal interactivo de Diario de Pronunciación ── */}
+      <JournalPronunciationModal
+        isOpen={isPronunciationModalOpen}
+        onClose={() => setIsPronunciationModalOpen(false)}
+        onSaveWords={handleSaveModalWords}
+        existingWords={pronunciationWords}
       />
 
       {/* ── Notas de aprendizaje de páginas anteriores ── */}

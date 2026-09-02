@@ -89,8 +89,28 @@ export async function saveMasteredToDexie(userId: string, mastered: Set<string>)
   await savePronunciationMasteredPhrases(userId, mastered);
 }
 
+import { STATIC_WORD_IPA } from "./pronunciation-ipa-dict";
+
+export function getStaticWordIPA(word: string): string | null {
+  const clean = word.replace(/[^a-zA-Z']/g, "").toLowerCase();
+  return STATIC_WORD_IPA[clean] ?? null;
+}
+
 export async function fetchWordIPA(word: string): Promise<string | null> {
-  try { const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`); if (!res.ok) return null; const data = await res.json(); if (!Array.isArray(data) || !data[0]) return null; const phonetics = (data[0] as { phonetics?: Array<{ text?: string; audio?: string }> }).phonetics ?? []; const raw = pickUSPhonetic(phonetics); return raw ? stripIPASlashes(raw) : null; } catch { return null; }
+  const staticIpa = getStaticWordIPA(word);
+  if (staticIpa) return staticIpa;
+
+  try {
+    const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (!Array.isArray(data) || !data[0]) return null;
+    const phonetics = (data[0] as { phonetics?: Array<{ text?: string; audio?: string }> }).phonetics ?? [];
+    const raw = pickUSPhonetic(phonetics);
+    return raw ? stripIPASlashes(raw) : null;
+  } catch {
+    return null;
+  }
 }
 
 export function speakPhrase(phrase: string, rate = 0.85) {

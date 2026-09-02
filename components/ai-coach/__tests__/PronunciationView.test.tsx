@@ -14,6 +14,7 @@ const pronunciationMocks = vi.hoisted(() => ({
   loadQueueFromDexie: vi.fn(async () => ["Could you repeat that?"]),
   loadSeenFromDexie: vi.fn(async () => new Set<string>()),
   fetchWordIPA: vi.fn(async () => "test-ipa"),
+  getStaticWordIPA: vi.fn(() => null),
   speakPhrase: vi.fn(),
   saveQueueToDexie: vi.fn(async () => undefined),
   saveMasteredToDexie: vi.fn(async () => undefined),
