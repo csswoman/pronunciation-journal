@@ -8,7 +8,6 @@ import { getLastPracticeMode } from '@/lib/db'
 import { countWordsDueForReviewClient } from '@/lib/word-bank/queries'
 import { resolveRecommendedMode, type RecommendedResult } from '@/lib/practice/practice-modes'
 import PracticeHubHeader from './PracticeHubHeader'
-import RecommendedPracticeCard from './RecommendedPracticeCard'
 import PracticeOptionsGrid from './PracticeOptionsGrid'
 
 interface Props {

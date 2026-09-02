@@ -10,7 +10,7 @@ export default function ReferenceSection() {
     <Link
       href="/words"
       onClick={() => void setLastPracticeMode('dictionary')}
-      className="group flex flex-col justify-between gap-5 rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-6 shadow-xs transition-colors hover:border-border-strong focus-ring h-full"
+      className="group flex flex-col justify-between gap-5 rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-5 md:p-6 shadow-xs transition-colors hover:border-border-strong focus-ring h-full"
     >
       <div className="flex flex-col gap-3">
         <span className="font-kicker text-fg-subtle text-tiny">consulta</span>

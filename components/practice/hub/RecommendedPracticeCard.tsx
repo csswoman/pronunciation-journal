@@ -21,7 +21,7 @@ export default function RecommendedPracticeCard({ recommendation }: Props) {
   const restText = match ? match[2] : headline
 
   return (
-    <div className="group relative flex flex-col justify-between gap-6 rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-6 shadow-xs transition-colors hover:border-border-strong h-full overflow-hidden">
+    <div className="group relative flex flex-col justify-between gap-6 rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-5 md:p-6 shadow-xs transition-colors hover:border-border-strong h-full overflow-hidden">
       <div className="flex flex-col gap-4 min-w-0 z-10">
         <div className="flex items-center justify-between gap-2">
           <span className="font-kicker text-fg-subtle uppercase tracking-wider text-tiny">
@@ -35,8 +35,11 @@ export default function RecommendedPracticeCard({ recommendation }: Props) {
 
         {numberStr ? (
           <div className="flex flex-col gap-1">
-            <span className="font-mono text-6xl font-bold tracking-tight text-fg">{numberStr}</span>
-            <p className="font-caption text-pretty text-fg-muted">{restText} · unos 5 min</p>
+            <h2 className="text-h2 font-bold text-fg leading-snug">
+              <span className="tabular-nums">{numberStr}</span>{' '}
+              <span>{restText}</span>
+            </h2>
+            <p className="font-caption text-pretty text-fg-muted">unos 5 min · Repaso recomendado</p>
           </div>
         ) : (
           <div className="flex flex-col gap-1">
@@ -80,7 +83,7 @@ export default function RecommendedPracticeCard({ recommendation }: Props) {
         <Link
           href={mode.href}
           onClick={() => void setLastPracticeMode(mode.id)}
-          className="focus-ring inline-flex min-h-10 items-center justify-center gap-2 rounded-[var(--radius-md)] bg-primary px-4 py-2 font-label font-semibold text-on-primary shadow-xs transition-all duration-150 hover:opacity-90 active:translate-y-[-1px]"
+          className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-[var(--radius-md)] bg-primary px-4 py-2.5 font-label font-semibold text-on-primary shadow-xs transition-all duration-150 hover:opacity-90 active:translate-y-[-1px]"
         >
           <Sparkles size={16} aria-hidden />
           <span>Empezar repaso</span>
@@ -89,7 +92,7 @@ export default function RecommendedPracticeCard({ recommendation }: Props) {
           <Link
             href="/practice/essential-words"
             onClick={() => void setLastPracticeMode('essential-words')}
-            className="focus-ring inline-flex min-h-10 items-center justify-center gap-2 rounded-[var(--radius-md)] border border-border-default bg-surface-raised px-4 py-2 font-label font-semibold text-fg transition-all duration-150 hover:bg-surface-sunken active:translate-y-[-1px]"
+            className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-[var(--radius-md)] border border-border-default bg-surface-raised px-4 py-2.5 font-label font-semibold text-fg transition-all duration-150 hover:bg-surface-sunken active:translate-y-[-1px]"
           >
             <span>Ver cuáles</span>
           </Link>

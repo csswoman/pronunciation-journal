@@ -130,7 +130,7 @@ export default function SoundMicroQuiz({ category, resetKey }: Props) {
           type="button"
           onClick={() => handleSelectAnswer(currentQuiz.phoneme)}
           className={cn(
-            'focus-ring relative flex flex-col items-center justify-center rounded-lg border p-2.5 transition-all duration-150 text-center active:scale-95',
+            'focus-ring relative flex min-h-12 flex-col items-center justify-center rounded-lg border p-2.5 transition-all duration-150 text-center active:scale-95',
             selectedAnswer === currentQuiz.phoneme
               ? 'border-success bg-success-soft text-success shadow-xs ring-2 ring-success/30 scale-[1.02]'
               : 'border-border-subtle bg-surface-sunken text-fg hover:border-border-default hover:bg-surface-raised hover:shadow-2xs',
@@ -147,7 +147,7 @@ export default function SoundMicroQuiz({ category, resetKey }: Props) {
           type="button"
           onClick={() => handleSelectAnswer(currentQuiz.distractorPhoneme)}
           className={cn(
-            'focus-ring relative flex flex-col items-center justify-center rounded-lg border p-2.5 transition-all duration-150 text-center active:scale-95',
+            'focus-ring relative flex min-h-12 flex-col items-center justify-center rounded-lg border p-2.5 transition-all duration-150 text-center active:scale-95',
             selectedAnswer === currentQuiz.distractorPhoneme
               ? 'border-warning bg-warning-soft text-warning shadow-xs ring-2 ring-warning/30 scale-[1.02]'
               : 'border-border-subtle bg-surface-sunken text-fg hover:border-border-default hover:bg-surface-raised hover:shadow-2xs',

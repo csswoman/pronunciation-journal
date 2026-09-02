@@ -42,11 +42,11 @@ export default function CoachCallCard({ arc }: Props) {
       </div>
 
       <div className="flex items-center justify-between gap-3 pt-2 z-10">
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
             onClick={() => openCoach({ tab: 'chat', prefill })}
-            className="focus-ring inline-flex min-h-9 items-center justify-center gap-1.5 rounded-[var(--radius-md)] border border-border-default bg-surface-raised px-3 py-1.5 font-label text-body-xs font-semibold text-fg transition-all duration-150 hover:bg-surface-sunken active:translate-y-[-1px]"
+            className="focus-ring inline-flex min-h-11 items-center justify-center gap-1.5 rounded-[var(--radius-md)] border border-border-default bg-surface-raised px-3.5 py-2.5 font-label text-body-xs font-semibold text-fg transition-all duration-150 hover:bg-surface-sunken active:translate-y-[-1px]"
           >
             <MessageCircle size={14} aria-hidden />
             <span>Conversa</span>
@@ -54,7 +54,7 @@ export default function CoachCallCard({ arc }: Props) {
           <button
             type="button"
             onClick={() => openCoach({ tab: 'missions', prefill })}
-            className="focus-ring inline-flex min-h-9 items-center justify-center gap-1.5 rounded-[var(--radius-md)] border border-border-default bg-surface-raised px-3 py-1.5 font-label text-body-xs font-semibold text-fg transition-all duration-150 hover:bg-surface-sunken active:translate-y-[-1px]"
+            className="focus-ring inline-flex min-h-11 items-center justify-center gap-1.5 rounded-[var(--radius-md)] border border-border-default bg-surface-raised px-3.5 py-2.5 font-label text-body-xs font-semibold text-fg transition-all duration-150 hover:bg-surface-sunken active:translate-y-[-1px]"
           >
             <Mic size={14} aria-hidden />
             <span>Misión oral</span>

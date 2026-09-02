@@ -5,16 +5,12 @@
 //   </PracticeCategoryLane>
 // </GamesSection>
 
-import { Trophy } from '@/components/icons'
-import PracticeCategoryLane from './PracticeCategoryLane'
-import { PRACTICE_CATEGORIES, PRACTICE_GAMES } from '@/lib/practice/practice-categories'
-
 // Planned structure:
 // <GamesSection> — "Juegos de vocabulario" bento card (Próximamente badge, game tags, controller graphic)
 
 export default function GamesSection() {
   return (
-    <div className="group relative flex flex-col justify-between gap-6 rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-6 shadow-xs transition-colors hover:border-border-strong h-full overflow-hidden opacity-90">
+    <div className="group relative flex flex-col justify-between gap-6 rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-5 md:p-6 shadow-xs transition-colors hover:border-border-strong h-full overflow-hidden opacity-90">
       <div className="flex flex-col gap-3 min-w-0 z-10">
         <div className="flex items-center justify-between gap-2">
           <h2 className="text-h3 font-bold text-fg">Juegos de vocabulario</h2>

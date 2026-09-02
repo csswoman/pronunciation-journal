@@ -22,7 +22,7 @@ export default function SoundQuizWidget() {
             <span className="font-kicker text-fg-subtle uppercase tracking-wider text-tiny">Pronunciación</span>
           </div>
 
-          <div className="flex items-center gap-1 rounded-full border border-border-subtle bg-surface-base/80 p-0.5 shadow-2xs backdrop-blur-xs">
+          <div className="flex items-center gap-1 rounded-full border border-border-subtle bg-surface-base/80 p-1 shadow-2xs backdrop-blur-xs">
             {(['all', 'vowels', 'consonants'] as const).map((cat) => (
               <button
                 key={cat}
@@ -32,7 +32,7 @@ export default function SoundQuizWidget() {
                   setResetKey((k) => k + 1)
                 }}
                 className={cn(
-                  'focus-ring rounded-full px-2.5 py-0.5 text-tiny transition-all duration-150',
+                  'focus-ring inline-flex min-h-[36px] items-center rounded-full px-3 py-1 text-tiny transition-all duration-150',
                   selectedCategory === cat
                     ? 'border border-border-strong bg-surface-raised font-semibold text-fg shadow-2xs'
                     : 'border border-transparent text-fg-muted hover:text-fg hover:bg-surface-sunken',

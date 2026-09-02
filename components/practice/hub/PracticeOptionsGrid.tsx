@@ -43,15 +43,15 @@ export default function PracticeOptionsGrid({
         </div>
       </div>
 
-      {/* ─── FILA 2: Vocabulario, Coach y Mazos (3 columnas iguales: 4 + 4 + 4 cols) ─── */}
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+      {/* ─── FILA 2: Vocabulario, Coach y Mazos (2 cols en tablet, 3 en desktop) ─── */}
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
         <VocabularyReviewCard dueCount={dueCount} />
         <CoachCallCard arc={arc} />
         <DecksCard />
       </div>
 
-      {/* ─── FILA 3: Inmersión, Lectura en Contexto y Ruta Guiada (3 columnas iguales) ─── */}
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+      {/* ─── FILA 3: Inmersión, Lectura en Contexto y Ruta Guiada (2 cols en tablet, 3 en desktop) ─── */}
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
         <ImmersionCard />
         <ReaderCard />
         <CourseCard />
