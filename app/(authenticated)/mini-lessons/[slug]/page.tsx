@@ -17,6 +17,7 @@ import MiniLessonQuiz from "@/components/mini-lessons/MiniLessonQuiz";
 import MiniLessonComplete from "@/components/mini-lessons/MiniLessonComplete";
 import MiniLessonArticleRail from "@/components/mini-lessons/MiniLessonArticleRail";
 import ExerciseBlock from "@/components/mini-lessons/ExerciseBlock";
+import ContentFunctionEarTrainer from "@/components/mini-lessons/ContentFunctionEarTrainer";
 import { TrackingSaveButton } from "@/components/tracking/TrackingSaveButton";
 import { resolveMiniLessonDeckLink } from "@/lib/learning-loop/mini-lesson-deck-link";
 
@@ -49,6 +50,9 @@ export default async function MiniLessonDetailPage({ params }: MiniLessonPagePro
     })),
     ...(content.examples.length > 0
       ? [{ href: "#lesson-examples", label: "Ejemplos" }]
+      : []),
+    ...(slug === "better-listening-weak-forms"
+      ? [{ href: "#listening-trainer", label: "Laboratorio de Escucha" }]
       : []),
     ...(content.exercises.length > 0
       ? [{ href: "#lesson-exercises", label: "Ejercicios" }]
@@ -162,6 +166,12 @@ export default async function MiniLessonDetailPage({ params }: MiniLessonPagePro
                 <p className="mini-lessons__tip-body">{lesson.tip}</p>
               </div>
             </aside>
+          )}
+
+          {slug === "better-listening-weak-forms" && (
+            <section id="listening-trainer" className="mini-lessons__section">
+              <ContentFunctionEarTrainer />
+            </section>
           )}
 
           {content.exercises.length > 0 && (

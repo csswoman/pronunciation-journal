@@ -6,6 +6,7 @@ import { ArrowRight } from '@/components/icons'
 import Button from '@/components/ui/Button'
 import DailyStepList, { readInProgressStepId } from '@/components/daily/DailyStepList'
 import { PlanSegmentProgress } from '@/components/home/PlanSegmentProgress'
+import HomeHeroCard from '@/components/home/HomeHeroCard'
 import type {
   DailyPlanStatus,
   DailyStep,
@@ -35,8 +36,12 @@ export interface DailyPlanCardProps {
   inProgressStepId?: string | null
   listPrefix?: ReactNode
   greeting?: string | null
+  /** Show the greeting + "Plan de hoy" heading. Off on Home, where the page
+   *  header already carries both — the card leads with progress instead. */
+  showTitle?: boolean
   primaryAction?: { label: string; href: string; variant?: string } | null
   hideThreadHints?: boolean
+  customEmptyState?: ReactNode
 }
 
 export default function DailyPlanCard({
@@ -53,7 +58,9 @@ export default function DailyPlanCard({
   demoteEntryHighlight = false,
   inProgressStepId: inProgressStepIdProp,
   listPrefix,
+  customEmptyState,
   greeting = null,
+  showTitle = true,
   primaryAction = null,
   hideThreadHints = false,
 }: DailyPlanCardProps) {
@@ -82,17 +89,41 @@ export default function DailyPlanCard({
     }, 0)
   }, [steps, getStepStatus])
 
+  const actionLabel = useMemo(() => {
+    if (!primaryAction) return null
+    if (primaryAction.href.startsWith('/daily') && remainingMinutes > 0) {
+      return completedCount > 0
+        ? `Continuar sesión (${remainingMinutes} min)`
+        : `Empezar sesión (${remainingMinutes} min)`
+    }
+    return primaryAction.label
+  }, [primaryAction, remainingMinutes, completedCount])
+
+  if (status === 'ready' && !allDone && steps.length > 0 && !showTitle) {
+    return (
+      <HomeHeroCard
+        steps={steps}
+        getStepStatus={getStepStatus}
+        completedCount={completedCount}
+        allDone={allDone}
+        onStartStep={onStartStep}
+        inProgressStepId={inProgressStepId}
+        primaryActionHref={primaryAction?.href}
+      />
+    )
+  }
+
   return (
     <section aria-label="Plan de hoy">
-      <div className="flex flex-col rounded-xl border border-border-default bg-daily-card px-[var(--layout-card-pad)] pb-[var(--layout-card-pad)] pt-5 shadow-sm motion-reduce:shadow-none">
+      <div className="flex flex-col rounded-xl border border-border-default bg-daily-card p-5 shadow-sm motion-reduce:shadow-none">
         <div aria-live="polite" aria-atomic="true" className="sr-only">
           {status === 'ready' && !allDone && `Plan de hoy listo, ${steps.length} pasos`}
           {status === 'ready' && allDone && 'Plan diario completo'}
         </div>
 
         {(status === 'loading' || status === 'idle') && (
-          <div className="flex flex-col gap-5" aria-hidden>
-            <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-4" aria-hidden>
+            <div className="flex flex-col gap-3">
               <div className="flex items-baseline justify-between gap-3">
                 <div className="h-5 w-28 animate-pulse rounded-md bg-surface-sunken" />
                 <div className="h-4 w-24 animate-pulse rounded-md bg-surface-sunken" />
@@ -103,7 +134,7 @@ export default function DailyPlanCard({
                 ))}
               </div>
             </div>
-            <div className="flex flex-col gap-2.5">
+            <div className="flex flex-col gap-3">
               {(['w-4/5', 'w-3/4', 'w-11/12', 'w-2/3', 'w-5/6'] as const).map((widthClass, i) => (
                 <div
                   key={i}
@@ -126,7 +157,7 @@ export default function DailyPlanCard({
           <div className="animate-state-in flex flex-col items-center gap-3 py-[var(--layout-section-gap)] text-center">
             <p className="font-body-sm text-error">No se pudo preparar tu plan.</p>
             {onRetry ? (
-              <Button type="button" variant="primary" size="md" onClick={() => void onRetry()}>
+               <Button type="button" variant="primary" size="md" onClick={() => void onRetry()}>
                 Reintentar
               </Button>
             ) : null}
@@ -134,50 +165,53 @@ export default function DailyPlanCard({
         )}
 
         {status === 'ready' && !allDone && steps.length === 0 && (
-          <div className="animate-state-in flex flex-col items-center gap-4 py-[var(--layout-section-gap)] text-center">
-            <div className="flex flex-col gap-1.5">
-              <p className="font-label font-semibold text-fg">
-                {reviewDue
-                  ? 'Después del repaso, arma tu plan.'
-                  : isNewLearner
-                    ? 'Aquí verás tu plan del día'
-                    : 'Tu plan está vacío hoy.'}
-              </p>
-              <p className="font-body-sm max-w-[36ch] text-pretty text-fg-muted">
-                {isNewLearner && !reviewDue
-                  ? 'Cuando practiques sonidos o un curso, aparecen pasos claros para hoy.'
-                  : 'Se arma cuando empiezas un curso o practicas sonidos.'}
-              </p>
+          customEmptyState ? customEmptyState : (
+            <div className="animate-state-in flex flex-col items-center gap-4 py-[var(--layout-section-gap)] text-center">
+              <div className="flex flex-col gap-1.5">
+                <p className="font-label font-semibold text-fg">
+                  {reviewDue
+                    ? 'Después del repaso, arma tu plan.'
+                    : isNewLearner
+                      ? 'Aquí verás tu plan del día'
+                      : 'Tu plan está vacío hoy.'}
+                </p>
+                <p className="font-body-sm max-w-[36ch] text-pretty text-fg-muted">
+                  {isNewLearner && !reviewDue
+                    ? 'Cuando practiques sonidos o un curso, aparecen pasos claros para hoy.'
+                    : 'Se arma cuando empiezas un curso o practicas sonidos.'}
+                </p>
+              </div>
+              {!isNewLearner || reviewDue ? (
+                <Link href="/courses">
+                  <Button
+                    variant={reviewDue ? 'secondary' : 'primary'}
+                    size="md"
+                    icon={<ArrowRight size={18} />}
+                    iconPosition="right"
+                  >
+                    Explorar cursos
+                  </Button>
+                </Link>
+              ) : null}
             </div>
-            {!isNewLearner || reviewDue ? (
-              <Link href="/courses">
-                <Button
-                  variant={reviewDue ? 'secondary' : 'primary'}
-                  size="md"
-                  icon={<ArrowRight size={18} />}
-                  iconPosition="right"
-                >
-                  Explorar cursos
-                </Button>
-              </Link>
-            ) : null}
-          </div>
+          )
         )}
 
         {status === 'ready' && allDone ? (
           <p className="sr-only">Plan diario completo</p>
         ) : null}
 
-        {status === 'ready' && !allDone && steps.length > 0 ? (
+        {status === 'ready' && !allDone && steps.length > 0 && showTitle ? (
           <div className="animate-state-in flex flex-col gap-4">
-            <div className="flex flex-col gap-2.5">
+            {listPrefix && <div className="-mt-1 mb-2">{listPrefix}</div>}
+            <div className="flex flex-col gap-3">
               {greeting && (
                 <p className="font-body-sm text-fg-muted -mb-1">{greeting}</p>
               )}
               <div className="flex items-baseline justify-between gap-3">
-                <h2 className="text-h3 font-bold text-fg">Plan de hoy</h2>
+                <h2 className="text-h3 font-bold text-fg">Tu sesión de hoy</h2>
                 <span className="font-body-sm tabular-nums text-fg-muted">
-                  {steps.length} {steps.length === 1 ? 'paso' : 'pasos'} · {remainingMinutes > 0 ? remainingMinutes : 12} min
+                  {steps.length} {steps.length === 1 ? 'actividad' : 'actividades'} · {remainingMinutes > 0 ? remainingMinutes : 12} min
                 </span>
               </div>
               <PlanSegmentProgress
@@ -188,7 +222,6 @@ export default function DailyPlanCard({
                 entryStepId={entryStep?.id ?? null}
               />
             </div>
-            {listPrefix}
             <DailyStepList
               steps={steps}
               getStepStatus={getStepStatus}
@@ -198,12 +231,12 @@ export default function DailyPlanCard({
               collapseFutureSteps={collapseFutureSteps}
               hideThreadHints={hideThreadHints}
             />
-            {primaryAction && (
+            {primaryAction && actionLabel && (
               <Link
                 href={primaryAction.href}
-                className="mt-2 focus-ring flex w-full items-center justify-center rounded-xl bg-cta-bg py-3 px-6 text-center font-label text-body-sm font-semibold text-cta-fg shadow-sm transition-colors hover:bg-cta-bg-hover"
+                className="mt-1 focus-ring flex w-full max-w-xs items-center justify-center rounded-xl bg-cta-bg py-3 px-6 text-center font-label text-body-sm font-semibold text-cta-fg shadow-sm transition-colors hover:bg-cta-bg-hover"
               >
-                {primaryAction.label}
+                {actionLabel}
               </Link>
             )}
           </div>

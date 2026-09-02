@@ -66,6 +66,7 @@ describe('DailyPlanCard', () => {
       makeStep({ id: 's3', title: 'Práctica en contexto', estMinutes: 5 }),
       makeStep({ id: 's4', title: 'Estudia teoría', estMinutes: 5 }),
       makeStep({ id: 's5', title: 'Sentence stress', estMinutes: 2 }),
+      makeStep({ id: 's6', title: 'Extra', estMinutes: 2 }),
     ]
     render(
       <DailyPlanCard
@@ -78,8 +79,8 @@ describe('DailyPlanCard', () => {
         collapseFutureSteps
       />,
     )
-    expect(screen.getByText('Plan de hoy')).toBeInTheDocument()
+    expect(screen.getByText('Tu sesión de hoy')).toBeInTheDocument()
     expect(screen.getByText('Palabras nuevas')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /\+ \d+ pasos? más/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Ver \d+ pasos? más/i })).toBeInTheDocument()
   })
 })
