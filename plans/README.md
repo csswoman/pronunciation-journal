@@ -104,6 +104,14 @@ your row when done.
 | 073 | Connect all content to the shared learning loop | P1 product/pedagogy | XL | 074, 066 | DONE (2026-08-10: executable 3,230-entry manifest, shared theory identity, tracked phrases, canonical launches, deterministic Daily policy, audited evidence exits and separate activity/coverage/learning projections) |
 | 075 | Consolidate active exercise capabilities and retire producer-less promises | P1 pedagogy/tech-debt | M | 073 | DONE (2026-08-11; audited capability inventory, authored error correction, deferred conjugation and shared safe primitives) |
 | 076 | Close learning-loop acceptance and run a cold retention/transfer pilot | P1 release/pedagogy | M + 7–14 days | 074, 073, 075 | IN PROGRESS (2026-08-11: integrations, CI gates, two coverage runs and 56-check visual matrix green; data-backed browser flows and real day-0/day-2/day-7 pilot pending) |
+| 077 | Diccionario: limpieza de rutas, perfil de dominio y split receptivo/productivo | P2 | M | 073 | DONE (2026-09-02: canonicalización a /words con redirects 301, perfil de dominio en learning-state/AI Coach y split receptivo/productivo en cards/plan diario) |
+| 078 | Prompt: generación de campos faltantes del léxico (IPA y traducciones) | P2 | S | 077 | DONE (2026-08-28: 695/695 IPA normalizado en catálogo estático) |
+| 079 | Unificar la gestión de vocabulario en una superficie coherente ("Mi Léxico") | P1 | M | 077 | REJECTED (2026-09-02: confirmado por usuario — Tracking gestiona palabras, frases y lecciones heterogéneas; mantenerlo autónomo en sidebar preserva su visibilidad) |
+| 080 | Llevar `/practice/sounds` a Dexie y cerrar la brecha offline | P1 | M | — | DONE (2026-09-02: caché local Dexie para sounds/contrast_progress, fallback offline y retiro de excepción en CLAUDE.md) |
+| 081 | Conectar guías biomecánicas al feedback de pronunciación en `speakEvaluator` | P2 | S | — | DONE (2026-09-02: findArticulationGuide integrado en speakEvaluator para dar tips físicos y advertencias de trampas hispanas) |
+| 082 | Consolidar variantes redundantes en los registros de ejercicios | P2 | M | 075 | DONE (2026-09-02: creada AuditoryDiscriminationBase para MinimalPair/PickWord/AX/ABX y MultipleChoiceBase para MultipleChoice y SentenceContext) |
+| 083 | Normalizar la ruta de generación de oraciones bajo `/api/gemini/generate-sentences` | P3 | S | — | DONE (2026-09-02: movida ruta bajo /api/gemini/generate-sentences con checkLayeredRateLimit y retirada excepción de auditoría) |
+| 084 | Descomponer el orquestador del Plan Diario (`composer.ts`) por debajo del límite de líneas | P3 | M | — | DONE (2026-09-02: extraído review-plan.ts, daily-steps-builder.ts, candidate-helpers.ts, composer.ts <250 líneas y retirado de MAX_LINES_ALLOWLIST) |
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJECTED (with one-line rationale)
 
