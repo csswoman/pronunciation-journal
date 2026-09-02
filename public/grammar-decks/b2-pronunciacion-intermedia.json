@@ -5,7 +5,10 @@
     "titleEmphasis": "intermedia",
     "goal": "Ya puedes manejar el acento de palabra y de frase, reducir las palabras débiles y enlazar al hablar."
   },
-  "sounds": ["ə", "ɪ"],
+  "sounds": [
+    "ə",
+    "ɪ"
+  ],
   "cards": [
     {
       "id": "pi-stress-word",
@@ -16,9 +19,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "PHO-to-graph", "value": "foto · fuerza en la 1ª", "highlights": ["PHO"] },
-            { "key": "pho-TO-gra-pher", "value": "fotógrafo · fuerza en la 2ª", "highlights": ["TO"] },
-            { "key": "pho-to-GRAPH-ic", "value": "fotográfico · fuerza en la 3ª", "highlights": ["GRAPH"] }
+            {
+              "key": "PHO-to-graph",
+              "value": "foto · fuerza en la 1ª",
+              "highlights": [
+                "PHO"
+              ]
+            },
+            {
+              "key": "pho-TO-gra-pher",
+              "value": "fotógrafo · fuerza en la 2ª",
+              "highlights": [
+                "TO"
+              ]
+            },
+            {
+              "key": "pho-to-GRAPH-ic",
+              "value": "fotográfico · fuerza en la 3ª",
+              "highlights": [
+                "GRAPH"
+              ]
+            }
           ]
         }
       ],
@@ -39,12 +60,20 @@
             {
               "label": "Sustantivo",
               "rule": "acento al inicio",
-              "examples": ["a REcord", "a PREsent", "an INcrease"]
+              "examples": [
+                "a REcord",
+                "a PREsent",
+                "an INcrease"
+              ]
             },
             {
               "label": "Verbo",
               "rule": "acento al final",
-              "examples": ["to reCORD", "to preSENT", "to inCREASE"]
+              "examples": [
+                "to reCORD",
+                "to preSENT",
+                "to inCREASE"
+              ]
             }
           ]
         }
@@ -59,8 +88,22 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Fuertes", "value": "verbos, sustantivos, adjetivos · I WANT to GO HOME.", "highlights": ["WANT", "GO", "HOME"] },
-            { "key": "Débiles", "value": "to, the, a, of, and · se reducen", "highlights": ["to, the, a"] }
+            {
+              "key": "Fuertes",
+              "value": "verbos, sustantivos, adjetivos · I WANT to GO HOME.",
+              "highlights": [
+                "WANT",
+                "GO",
+                "HOME"
+              ]
+            },
+            {
+              "key": "Débiles",
+              "value": "to, the, a, of, and · se reducen",
+              "highlights": [
+                "to, the, a"
+              ]
+            }
           ]
         }
       ],
@@ -78,10 +121,24 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "bad", "text": "I want TO go (to clara)" },
-            { "variant": "good", "text": "I wanna go → /tə/", "note": "to se reduce a /tə/" },
-            { "variant": "bad", "text": "fish AND chips (and clara)" },
-            { "variant": "good", "text": "fish 'n' chips → /ən/", "note": "and se reduce a /ən/" }
+            {
+              "variant": "bad",
+              "text": "I want TO go (to clara)"
+            },
+            {
+              "variant": "good",
+              "text": "I wanna go → /tə/",
+              "note": "to se reduce a /tə/"
+            },
+            {
+              "variant": "bad",
+              "text": "fish AND chips (and clara)"
+            },
+            {
+              "variant": "good",
+              "text": "fish 'n' chips → /ən/",
+              "note": "and se reduce a /ən/"
+            }
           ]
         }
       ]
@@ -95,19 +152,50 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "consonante + vocal", "value": "an apple → \"a-napple\"", "highlights": ["a-napple"] },
-            { "key": "pick it up", "value": "→ \"pi-ki-tup\"", "highlights": ["pi-ki-tup"] },
-            { "key": "vocal + vocal (/w/ /j/)", "value": "go away → \"go-waway\"", "highlights": ["go-waway"] }
+            {
+              "key": "consonante + vocal",
+              "value": "an apple → \"a-napple\"",
+              "highlights": [
+                "a-napple"
+              ]
+            },
+            {
+              "key": "pick it up",
+              "value": "→ \"pi-ki-tup\"",
+              "highlights": [
+                "pi-ki-tup"
+              ]
+            },
+            {
+              "key": "vocal + vocal (/w/ /j/)",
+              "value": "go away → \"go-waway\"",
+              "highlights": [
+                "go-waway"
+              ]
+            }
           ]
         },
         {
           "type": "pronunciation",
           "sound": "Enlace y schwa",
-          "focus": ["ə"],
+          "focus": [
+            "ə"
+          ],
           "examples": [
-            { "text": "an apple", "ipa": "/ə ˈnæpl̩/", "es": "se enlaza: a-napple" },
-            { "text": "pick it up", "ipa": "/ˌpɪ kɪ ˈtʌp/", "es": "pi-ki-tup" },
-            { "text": "I want to go home.", "es": "to → /tə/, débil y rápida" }
+            {
+              "text": "an apple",
+              "ipa": "/ə ˈnæpl̩/",
+              "es": "se enlaza: a-napple"
+            },
+            {
+              "text": "pick it up",
+              "ipa": "/ˌpɪ kɪ ˈtʌp/",
+              "es": "pi-ki-tup"
+            },
+            {
+              "text": "I want to go home.",
+              "es": "to → /tə/, débil y rápida"
+            }
           ],
           "note": "Escucha cómo las palabras se pegan y las débiles casi desaparecen."
         }
@@ -122,10 +210,38 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "b muda", "value": "comb, climb, doubt", "highlights": ["comb", "doubt"] },
-            { "key": "k muda", "value": "know, knife, knee", "highlights": ["know", "knife"] },
-            { "key": "l muda", "value": "could, would, talk, half", "highlights": ["could", "talk"] },
-            { "key": "t muda", "value": "listen, castle, often", "highlights": ["listen", "castle"] }
+            {
+              "key": "b muda",
+              "value": "comb, climb, doubt",
+              "highlights": [
+                "comb",
+                "doubt"
+              ]
+            },
+            {
+              "key": "k muda",
+              "value": "know, knife, knee",
+              "highlights": [
+                "know",
+                "knife"
+              ]
+            },
+            {
+              "key": "l muda",
+              "value": "could, would, talk, half",
+              "highlights": [
+                "could",
+                "talk"
+              ]
+            },
+            {
+              "key": "t muda",
+              "value": "listen, castle, often",
+              "highlights": [
+                "listen",
+                "castle"
+              ]
+            }
           ]
         }
       ],
@@ -133,6 +249,38 @@
         "label": "Truco:",
         "body": "ante una palabra nueva, fíjate en cómo suena en un diccionario de audio, no en cómo se escribe."
       }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "What happens to structure words like \"to\", \"for\", and \"and\" in natural connected speech?",
+      "options": [
+        "They are pronounced using weak forms with schwa /ə/.",
+        "They are always heavily stressed.",
+        "They are pronounced with long vowels."
+      ],
+      "answer": 0,
+      "explain": "Las palabras gramaticales se reducen a formas débiles (weak forms) con la vocal schwa /ə/ en el habla fluida."
+    },
+    {
+      "q": "Where is the primary stress located in the noun PHOTOGRAPH vs PHOTOGRAPHY?",
+      "options": [
+        "First syllable for PHOTOGRAPH, second syllable for PHOTOGRAPHY",
+        "Second syllable for PHOTOGRAPH, first syllable for PHOTOGRAPHY",
+        "Third syllable for both words"
+      ],
+      "answer": 0,
+      "explain": "El acento tónico principal recae en la primera sílaba en PHOtograph y en la segunda en phoTOGraphy."
+    },
+    {
+      "q": "What is \"linking r\" in Connected Speech?",
+      "options": [
+        "Pronouncing the final \"r\" when the next word starts with a vowel sound",
+        "Dropping all \"r\" sounds in every word",
+        "Changing \"r\" to \"l\""
+      ],
+      "answer": 0,
+      "explain": "En inglés británico/no rótico, la 'r' final silenciada se pronuncia si la palabra siguiente empieza por vocal (ej. far away)."
     }
   ]
 }

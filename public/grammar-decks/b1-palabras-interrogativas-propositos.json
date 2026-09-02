@@ -14,9 +14,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "what", "value": "opción abierta · What do you want?", "highlights": ["What"] },
-            { "key": "which", "value": "opción limitada · Which one, A or B?", "highlights": ["Which"] },
-            { "key": "whose", "value": "posesión · Whose is this?", "highlights": ["Whose"] }
+            {
+              "key": "what",
+              "value": "opción abierta · What do you want?",
+              "highlights": [
+                "What"
+              ]
+            },
+            {
+              "key": "which",
+              "value": "opción limitada · Which one, A or B?",
+              "highlights": [
+                "Which"
+              ]
+            },
+            {
+              "key": "whose",
+              "value": "posesión · Whose is this?",
+              "highlights": [
+                "Whose"
+              ]
+            }
           ]
         }
       ],
@@ -34,10 +52,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "How long", "value": "duración · How long does it take?", "highlights": ["How long"] },
-            { "key": "How often", "value": "frecuencia · How often?", "highlights": ["How often"] },
-            { "key": "How far", "value": "distancia · How far is it?", "highlights": ["How far"] },
-            { "key": "How much/many", "value": "cantidad", "highlights": ["How much"] }
+            {
+              "key": "How long",
+              "value": "duración · How long does it take?",
+              "highlights": [
+                "How long"
+              ]
+            },
+            {
+              "key": "How often",
+              "value": "frecuencia · How often?",
+              "highlights": [
+                "How often"
+              ]
+            },
+            {
+              "key": "How far",
+              "value": "distancia · How far is it?",
+              "highlights": [
+                "How far"
+              ]
+            },
+            {
+              "key": "How much/many",
+              "value": "cantidad",
+              "highlights": [
+                "How much"
+              ]
+            }
           ]
         }
       ]
@@ -51,10 +93,25 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "good", "text": "Who called you?", "note": "sujeto: sin did" },
-            { "variant": "bad", "text": "Who did call you?" },
-            { "variant": "good", "text": "Who did you call?", "note": "objeto: con did" },
-            { "variant": "good", "text": "What happened?", "note": "sujeto: sin did" }
+            {
+              "variant": "good",
+              "text": "Who called you?",
+              "note": "sujeto: sin did"
+            },
+            {
+              "variant": "bad",
+              "text": "Who did call you?"
+            },
+            {
+              "variant": "good",
+              "text": "Who did you call?",
+              "note": "objeto: con did"
+            },
+            {
+              "variant": "good",
+              "text": "What happened?",
+              "note": "sujeto: sin did"
+            }
           ]
         }
       ],
@@ -72,9 +129,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "to + verbo", "value": "I went out to buy milk.", "highlights": ["to buy"] },
-            { "key": "Pregunta", "value": "What for? · Why?", "highlights": ["What for?"] },
-            { "key": "Respuesta", "value": "To relax. · To save time.", "highlights": ["To relax"] }
+            {
+              "key": "to + verbo",
+              "value": "I went out to buy milk.",
+              "highlights": [
+                "to buy"
+              ]
+            },
+            {
+              "key": "Pregunta",
+              "value": "What for? · Why?",
+              "highlights": [
+                "What for?"
+              ]
+            },
+            {
+              "key": "Respuesta",
+              "value": "To relax. · To save time.",
+              "highlights": [
+                "To relax"
+              ]
+            }
           ]
         }
       ],
@@ -92,9 +167,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "in order to", "value": "I saved money in order to travel.", "highlights": ["in order to"] },
-            { "key": "so as to", "value": "He left early so as to avoid traffic.", "highlights": ["so as to"] },
-            { "key": "so that + cláusula", "value": "I called so that you'd know.", "highlights": ["so that"] }
+            {
+              "key": "in order to",
+              "value": "I saved money in order to travel.",
+              "highlights": [
+                "in order to"
+              ]
+            },
+            {
+              "key": "so as to",
+              "value": "He left early so as to avoid traffic.",
+              "highlights": [
+                "so as to"
+              ]
+            },
+            {
+              "key": "so that + cláusula",
+              "value": "I called so that you'd know.",
+              "highlights": [
+                "so that"
+              ]
+            }
           ]
         }
       ]
@@ -111,16 +204,54 @@
             {
               "label": "for + sustantivo",
               "rule": "para (una cosa)",
-              "examples": ["I went out for milk.", "It's for cleaning."]
+              "examples": [
+                "I went out for milk.",
+                "It's for cleaning."
+              ]
             },
             {
               "label": "to + verbo",
               "rule": "para (hacer algo)",
-              "examples": ["I went out to buy milk.", "It's used to clean."]
+              "examples": [
+                "I went out to buy milk.",
+                "It's used to clean."
+              ]
             }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "I went to the supermarket ___ buy some fresh milk.",
+      "options": [
+        "to",
+        "for",
+        "so that"
+      ],
+      "answer": 0,
+      "explain": "El infinitivo de propósito usa 'to + verbo' para indicar intención personal."
+    },
+    {
+      "q": "She saved money ___ she could buy a car.",
+      "options": [
+        "so that",
+        "to",
+        "for"
+      ],
+      "answer": 0,
+      "explain": "'So that' se combina con una cláusula completa (sujeto + verbo modal)."
+    },
+    {
+      "q": "___ of these two dresses do you prefer?",
+      "options": [
+        "Which",
+        "What",
+        "Whose"
+      ],
+      "answer": 0,
+      "explain": "'Which' se utiliza cuando se elige entre un grupo limitado de opciones."
     }
   ]
 }

@@ -8,7 +8,7 @@
  *   - LevelMobileAccordion (collapsible dropdown for small screens)
  */
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { ChevronDown } from "@/components/icons";
 import { cn } from "@/lib/cn";
@@ -21,6 +21,7 @@ const DEFAULT_LEVEL: CefrLevelId = "a1";
 interface CoursePathLevelPickerProps {
   levels: CoursePathLevel[];
   selectedLevelId: CefrLevelId;
+  mobileSearch?: ReactNode;
 }
 
 async function getOptionalUserId(): Promise<string | null> {
@@ -50,7 +51,6 @@ function LevelCardTab({
   totalCount,
 }: LevelCardTabProps) {
   const href = level.id === DEFAULT_LEVEL ? "/courses" : `/courses?level=${level.id}`;
-  const percent = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
 
   return (
     <Link
@@ -63,12 +63,6 @@ function LevelCardTab({
       )}
     >
       <div className="course-path__level-lv">{level.spineLabel}</div>
-      <div className="course-path__level-progress" aria-hidden="true">
-        <div
-          className="course-path__level-progress-bar"
-          style={{ width: `${percent}%` }}
-        />
-      </div>
       <div className="course-path__level-count" aria-hidden="true">
         {completedCount}/{totalCount}
       </div>
@@ -100,6 +94,7 @@ function AssessmentActions({ selectedLevelId }: { selectedLevelId: CefrLevelId }
 export default function CoursePathLevelPicker({
   levels,
   selectedLevelId,
+  mobileSearch,
 }: CoursePathLevelPickerProps) {
   const [completedCounts, setCompletedCounts] = useState<Record<string, number>>({});
 
@@ -185,39 +180,45 @@ export default function CoursePathLevelPicker({
         })}
       </nav>
 
-      {/* Mobile Collapsible Selector */}
-      <details className="course-path__level-picker-mobile">
-        <summary className="course-path__level-picker-mobile-summary">
-          <span className="course-path__level-picker-mobile-label">Nivel actual</span>
-          <strong className="course-path__level-picker-mobile-current">
-            {selectedLevel.spineLabel}
-          </strong>
-          <span className="course-path__level-picker-mobile-change">Cambiar</span>
-          <ChevronDown size={16} aria-hidden />
-        </summary>
-        <div className="course-path__level-picker-mobile-content">
-          <nav className="course-path__spine course-path__spine--mobile" aria-label="Cambiar nivel">
-            {levels.map((level) => {
-              const totalCount = level.units.reduce((sum, u) => sum + u.lessons.length, 0);
-              const completedCount = completedCounts[level.id] ?? 0;
-              const isActive = level.id === selectedLevelId;
-
-              return (
-                <LevelCardTab
-                  key={level.id}
-                  level={level}
-                  isActive={isActive}
-                  completedCount={completedCount}
-                  totalCount={totalCount}
-                />
-              );
-            })}
-          </nav>
-          <div className="course-path__level-picker-mobile-actions">
-            <AssessmentActions selectedLevelId={selectedLevelId} />
+      {/* Mobile Toolbar (Search + Level Selector side-by-side) */}
+      <div className="course-path__mobile-toolbar lg:hidden">
+        {mobileSearch && (
+          <div className="course-path__mobile-search-wrap">
+            {mobileSearch}
           </div>
-        </div>
-      </details>
+        )}
+        <details className="course-path__level-picker-mobile">
+          <summary className="course-path__level-picker-mobile-summary">
+            <span className="course-path__level-picker-mobile-label">Nivel actual</span>
+            <strong className="course-path__level-picker-mobile-current">
+              {selectedLevel.spineLabel}
+            </strong>
+            <ChevronDown size={14} aria-hidden />
+          </summary>
+          <div className="course-path__level-picker-mobile-content">
+            <nav className="course-path__spine course-path__spine--mobile" aria-label="Cambiar nivel">
+              {levels.map((level) => {
+                const totalCount = level.units.reduce((sum, u) => sum + u.lessons.length, 0);
+                const completedCount = completedCounts[level.id] ?? 0;
+                const isActive = level.id === selectedLevelId;
+
+                return (
+                  <LevelCardTab
+                    key={level.id}
+                    level={level}
+                    isActive={isActive}
+                    completedCount={completedCount}
+                    totalCount={totalCount}
+                  />
+                );
+              })}
+            </nav>
+            <div className="course-path__level-picker-mobile-actions">
+              <AssessmentActions selectedLevelId={selectedLevelId} />
+            </div>
+          </div>
+        </details>
+      </div>
     </section>
   );
 }

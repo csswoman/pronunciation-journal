@@ -14,9 +14,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Neutro", "value": "In my opinion, ... · I think...", "highlights": ["In my opinion"] },
-            { "key": "Personal", "value": "If you ask me, ... · As far as I'm concerned", "highlights": ["If you ask me"] },
-            { "key": "Enfático", "value": "I strongly believe (that)...", "highlights": ["I strongly believe"] }
+            {
+              "key": "Neutro",
+              "value": "In my opinion, ... · I think...",
+              "highlights": [
+                "In my opinion"
+              ]
+            },
+            {
+              "key": "Personal",
+              "value": "If you ask me, ... · As far as I'm concerned",
+              "highlights": [
+                "If you ask me"
+              ]
+            },
+            {
+              "key": "Enfático",
+              "value": "I strongly believe (that)...",
+              "highlights": [
+                "I strongly believe"
+              ]
+            }
           ]
         }
       ],
@@ -34,9 +52,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Total", "value": "I completely agree. · Absolutely.", "highlights": ["completely agree"] },
-            { "key": "Parcial", "value": "I see your point, but...", "highlights": ["I see your point"] },
-            { "key": "Reforzar", "value": "That's exactly what I think.", "highlights": ["exactly"] }
+            {
+              "key": "Total",
+              "value": "I completely agree. · Absolutely.",
+              "highlights": [
+                "completely agree"
+              ]
+            },
+            {
+              "key": "Parcial",
+              "value": "I see your point, but...",
+              "highlights": [
+                "I see your point"
+              ]
+            },
+            {
+              "key": "Reforzar",
+              "value": "That's exactly what I think.",
+              "highlights": [
+                "exactly"
+              ]
+            }
           ]
         }
       ]
@@ -50,10 +86,26 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "good", "text": "I'm afraid I disagree.", "note": "educado" },
-            { "variant": "good", "text": "I see what you mean, but...", "note": "reconocer primero" },
-            { "variant": "bad", "text": "You're wrong.", "note": "demasiado directo" },
-            { "variant": "good", "text": "I'm not so sure about that.", "note": "duda suave" }
+            {
+              "variant": "good",
+              "text": "I'm afraid I disagree.",
+              "note": "educado"
+            },
+            {
+              "variant": "good",
+              "text": "I see what you mean, but...",
+              "note": "reconocer primero"
+            },
+            {
+              "variant": "bad",
+              "text": "You're wrong.",
+              "note": "demasiado directo"
+            },
+            {
+              "variant": "good",
+              "text": "I'm not so sure about that.",
+              "note": "duda suave"
+            }
           ]
         }
       ]
@@ -67,9 +119,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Interés", "value": "That's interesting. · Good point.", "highlights": ["Good point"] },
-            { "key": "Sorpresa", "value": "Really? · You're kidding!", "highlights": ["Really?"] },
-            { "key": "Empatía", "value": "That makes sense.", "highlights": ["makes sense"] }
+            {
+              "key": "Interés",
+              "value": "That's interesting. · Good point.",
+              "highlights": [
+                "Good point"
+              ]
+            },
+            {
+              "key": "Sorpresa",
+              "value": "Really? · You're kidding!",
+              "highlights": [
+                "Really?"
+              ]
+            },
+            {
+              "key": "Empatía",
+              "value": "That makes sense.",
+              "highlights": [
+                "makes sense"
+              ]
+            }
           ]
         }
       ]
@@ -83,9 +153,28 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Probabilidad", "value": "It seems / tends to be...", "highlights": ["seems", "tends to"] },
-            { "key": "Generalizar", "value": "in general · on the whole", "highlights": ["on the whole"] },
-            { "key": "Atenuar", "value": "kind of · sort of · a bit", "highlights": ["kind of"] }
+            {
+              "key": "Probabilidad",
+              "value": "It seems / tends to be...",
+              "highlights": [
+                "seems",
+                "tends to"
+              ]
+            },
+            {
+              "key": "Generalizar",
+              "value": "in general · on the whole",
+              "highlights": [
+                "on the whole"
+              ]
+            },
+            {
+              "key": "Atenuar",
+              "value": "kind of · sort of · a bit",
+              "highlights": [
+                "kind of"
+              ]
+            }
           ]
         }
       ],
@@ -103,12 +192,62 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Directo", "value": "What do you think?", "highlights": ["What do you think?"] },
-            { "key": "Sobre algo", "value": "How do you feel about...?", "highlights": ["How do you feel about"] },
-            { "key": "Acuerdo", "value": "Wouldn't you agree?", "highlights": ["Wouldn't you agree?"] }
+            {
+              "key": "Directo",
+              "value": "What do you think?",
+              "highlights": [
+                "What do you think?"
+              ]
+            },
+            {
+              "key": "Sobre algo",
+              "value": "How do you feel about...?",
+              "highlights": [
+                "How do you feel about"
+              ]
+            },
+            {
+              "key": "Acuerdo",
+              "value": "Wouldn't you agree?",
+              "highlights": [
+                "Wouldn't you agree?"
+              ]
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Which phrase is used to state a personal opinion politely?",
+      "options": [
+        "From my perspective",
+        "At all costs",
+        "In spite of"
+      ],
+      "answer": 0,
+      "explain": "'From my perspective' es una expresión formal y educada para dar el propio punto de vista."
+    },
+    {
+      "q": "How do you express partial agreement with someone?",
+      "options": [
+        "I see your point, but...",
+        "I couldn't agree more!",
+        "You are completely wrong."
+      ],
+      "answer": 0,
+      "explain": "'I see your point, but...' reconoce la razón del interlocutor antes de introducir un matiz."
+    },
+    {
+      "q": "Which connector introduces a strong contrasting opinion?",
+      "options": [
+        "On the other hand",
+        "In addition to",
+        "As a matter of fact"
+      ],
+      "answer": 0,
+      "explain": "'On the other hand' se utiliza para presentar un punto opuesto o una perspectiva divergente."
     }
   ]
 }

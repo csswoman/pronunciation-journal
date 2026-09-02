@@ -1,40 +1,49 @@
 {
+  "isGenerated": true,
   "meta": {
-    "eyebrow": "A2 · Tiempo",
+    "eyebrow": "A2 · Conectores de tiempo",
     "title": "When y while",
-    "titleEmphasis": "en pasado",
-    "goal": "Ya conectas dos acciones pasadas con when y while."
+    "titleEmphasis": "en historias pasadas",
+    "goal": "Conecta acciones simultáneas e interrupciones pasadas combinando when y while correctamente."
   },
   "cards": [
     {
       "id": "a2-when-while-pasado-concept",
       "tag": "Idea central",
       "title": "When y while: qué expresa",
-      "lede": "Ya conectas dos acciones pasadas con when y while.",
+      "lede": "Conecta acciones simultáneas e interrupciones pasadas combinando when y while correctamente.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "when + pasado",
-              "value": "When I arrived, she left.",
-              "highlights": [
-                "When"
-              ]
-            },
-            {
-              "key": "while + continuo",
-              "value": "While I was cooking, he called.",
+              "key": "While + Continuo",
+              "value": "While I was studying, my brother arrived · Durante una acción larga",
               "highlights": [
                 "While",
-                "was cooking"
+                "was studying"
               ]
             },
             {
-              "key": "Idea",
-              "value": "while enfatiza duración; when puede ser puntual",
+              "key": "When + Pasado simple",
+              "value": "I was reading a book when she called · Acción puntual que interrumpe",
               "highlights": [
-                "while"
+                "when",
+                "called"
+              ]
+            },
+            {
+              "key": "Acciones paralelas",
+              "value": "While she was cooking, I was cleaning · Dos procesos simultáneos",
+              "highlights": [
+                "While"
+              ]
+            },
+            {
+              "key": "Secuencia rápida",
+              "value": "When I opened the door, the cat ran out",
+              "highlights": [
+                "When"
               ]
             }
           ]
@@ -49,31 +58,30 @@
       "id": "a2-when-while-pasado-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "when + pasado",
-              "value": "When I arrived, she left.",
+              "key": "While (Duración)",
+              "value": "While + Sujeto + was/were + -ing, Sujeto + verbo en pasado · While we were driving, it snowed.",
               "highlights": [
-                "When"
+                "While we were driving"
               ]
             },
             {
-              "key": "while + continuo",
-              "value": "While I was cooking, he called.",
+              "key": "When (Interrupción)",
+              "value": "Sujeto + was/were + -ing + when + Sujeto + verbo en pasado · I was writing when he came in.",
               "highlights": [
-                "While",
-                "was cooking"
+                "when he came in"
               ]
             },
             {
-              "key": "Idea",
-              "value": "while enfatiza duración; when puede ser puntual",
+              "key": "Ubicación de cláusula",
+              "value": "Si la oración empieza con While/When, usa coma entre cláusulas.",
               "highlights": [
-                "while"
+                "coma"
               ]
             }
           ]
@@ -84,22 +92,26 @@
       "id": "a2-when-while-pasado-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "When I arrived, she left."
+              "key": "Interrupción común",
+              "value": "The phone rang while I was taking a shower."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "While I was cooking, he called."
+              "key": "Accidentes/Sorpresas",
+              "value": "She burned her hand when she was taking the dish out."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "while enfatiza duración; when puede ser puntual"
+              "key": "Paralelismo",
+              "value": "While the students were doing the exam, the teacher was checking notes."
+            },
+            {
+              "key": "Momento exacto",
+              "value": "When we arrived at the station, the bus was already waiting."
             }
           ]
         }
@@ -109,23 +121,25 @@
       "id": "a2-when-while-pasado-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "when + pasado",
-              "rule": "When I arrived, she left.",
+              "label": "while (mientras)",
+              "rule": "Acompaña a verbos de duración en pasado continuo (was/were + -ing)",
               "examples": [
-                "When I arrived, she left."
+                "While I was cooking...",
+                "While they were talking..."
               ]
             },
             {
-              "label": "while + continuo",
-              "rule": "While I was cooking, he called.",
+              "label": "when (cuando)",
+              "rule": "Acompaña a acciones breves o interrupciones en pasado simple",
               "examples": [
-                "While I was cooking, he called."
+                "...when the alarm sounded.",
+                "When he stepped outside..."
               ]
             }
           ]
@@ -136,19 +150,19 @@
       "id": "a2-when-while-pasado-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "While I cooked, he called."
+              "text": "While I walked in the street, I was meeting John."
             },
             {
               "variant": "good",
-              "text": "While I was cooking, he called.",
-              "note": "acción larga en fondo → past continuous"
+              "text": "While I was walking in the street, I met John.",
+              "note": "'while' acompaña a la acción continua y 'met' es el evento puntual"
             }
           ]
         }
@@ -157,27 +171,27 @@
     {
       "id": "a2-when-while-pasado-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "1. Regla while",
+              "value": "While + Past Continuous (acción de fondo / larga)."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "2. Regla when",
+              "value": "When + Past Simple (acción puntual / interrupción)."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "3. Orden flexible",
+              "value": "Puedes cambiar el orden de las frases (ej. 'While I was cooking, he called' = 'He called while I was cooking')."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "4. Uso de comas",
+              "value": "Usa coma solo cuando el conector va al principio de la oración."
             }
           ]
         }
@@ -190,13 +204,34 @@
   ],
   "quiz": [
     {
-      "q": "I read ___ she was sleeping.",
+      "q": "I lost my wallet ___ I was walking through the market.",
       "options": [
         "while",
-        "because"
+        "when",
+        "during"
       ],
       "answer": 0,
-      "explain": "Simultaneidad → while."
+      "explain": "'while' se utiliza para introducir la cláusula en pasado continuo ('I was walking')."
+    },
+    {
+      "q": "The power went out while we ___ a movie.",
+      "options": [
+        "were watching",
+        "watched",
+        "are watching"
+      ],
+      "answer": 0,
+      "explain": "Después de 'while' la acción en desarrollo requiere pasado continuo ('were watching')."
+    },
+    {
+      "q": "¿Cuál opción completa la frase correctamente? 'She was driving home ___ it started to rain.'",
+      "options": [
+        "when",
+        "while",
+        "since"
+      ],
+      "answer": 0,
+      "explain": "'when' introduce el evento repentino e interrupción en pasado simple ('it started')."
     }
   ]
 }

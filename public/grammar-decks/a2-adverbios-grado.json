@@ -1,39 +1,47 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "A2 · Adverbios",
-    "title": "Adverbios de",
-    "titleEmphasis": "grado",
-    "goal": "Ya matizas intensidad con very, really y quite delante de adjetivos."
+    "title": "Adverbios de grado",
+    "titleEmphasis": "(very, really, quite)",
+    "goal": "Modifica e intensifica el significado de adjetivos y adverbios con very, really, quite y extremely."
   },
   "cards": [
     {
       "id": "a2-adverbios-grado-concept",
       "tag": "Idea central",
-      "title": "Adverbios de: qué expresa",
-      "lede": "Ya matizas intensidad con very, really y quite delante de adjetivos.",
+      "title": "Adverbios de grado: qué expresa",
+      "lede": "Modifica e intensifica el significado de adjetivos y adverbios con very, really, quite y extremely.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "very",
-              "value": "muy · very hot, very tired",
+              "key": "quite (Moderado)",
+              "value": "bastante / razonablemente · The movie was quite good (7/10)",
+              "highlights": [
+                "quite"
+              ]
+            },
+            {
+              "key": "very (Alto)",
+              "value": "muy · It is very cold outside today (8.5/10)",
               "highlights": [
                 "very"
               ]
             },
             {
-              "key": "really",
-              "value": "de verdad · really good",
+              "key": "really (Intenso / Sincero)",
+              "value": "realmente / de verdad · I am really excited (9/10)",
               "highlights": [
                 "really"
               ]
             },
             {
-              "key": "quite",
-              "value": "bastante · quite interesting",
+              "key": "extremely (Máximo)",
+              "value": "extremadamente · This test was extremely difficult (10/10)",
               "highlights": [
-                "quite"
+                "extremely"
               ]
             }
           ]
@@ -48,30 +56,30 @@
       "id": "a2-adverbios-grado-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "very",
-              "value": "muy · very hot, very tired",
+              "key": "Ante adjetivo",
+              "value": "Sujeto + to be + Adverbio de grado + Adjetivo · She is really fast.",
               "highlights": [
-                "very"
+                "really fast"
               ]
             },
             {
-              "key": "really",
-              "value": "de verdad · really good",
+              "key": "Ante adverbio",
+              "value": "Sujeto + Verbo + Adverbio de grado + Adverbio · He speaks quite clearly.",
               "highlights": [
-                "really"
+                "quite clearly"
               ]
             },
             {
-              "key": "quite",
-              "value": "bastante · quite interesting",
+              "key": "Posición del artículo a/an",
+              "value": "quite a + adj + sustantivo | a very + adj + sustantivo · quite a long day",
               "highlights": [
-                "quite"
+                "quite a"
               ]
             }
           ]
@@ -82,22 +90,26 @@
       "id": "a2-adverbios-grado-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "very hot, very tired"
+              "key": "Opiniones cotidianas",
+              "value": "The new Italian restaurant in downtown is really good."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "really good"
+              "key": "Descripción del clima",
+              "value": "Wear a heavy coat because it is extremely windy today."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "quite interesting"
+              "key": "Evaluación de dificultad",
+              "value": "The exam was quite easy, so most students passed."
+            },
+            {
+              "key": "Sensaciones físicas",
+              "value": "After working 10 hours, I feel very tired."
             }
           ]
         }
@@ -107,23 +119,23 @@
       "id": "a2-adverbios-grado-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "very",
-              "rule": "muy · very hot, very tired",
+              "label": "quite (Intensidad moderada)",
+              "rule": "Menos fuerte que very; indica un grado medio aceptable",
               "examples": [
-                "very hot, very tired"
+                "The apartment is quite nice. (Está bastante bien)"
               ]
             },
             {
-              "label": "really",
-              "rule": "de verdad · really good",
+              "label": "very / really (Intensidad alta)",
+              "rule": "Aumenta fuertemente el grado de la característica",
               "examples": [
-                "really good"
+                "The apartment is very nice. (Es muy bonito)"
               ]
             }
           ]
@@ -134,19 +146,19 @@
       "id": "a2-adverbios-grado-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "It is very much hot."
+              "text": "The apartment is very much expensive."
             },
             {
               "variant": "good",
-              "text": "It is very hot.",
-              "note": "very + adjetivo, sin much"
+              "text": "The apartment is very expensive.",
+              "note": "'very' modifica directamente al adjetivo sin necesidad de 'much'"
             }
           ]
         }
@@ -155,27 +167,27 @@
     {
       "id": "a2-adverbios-grado-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "1. Posición básica",
+              "value": "Se colocan directamente antes del adjetivo o adverbio que modifican."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "2. Regla con much",
+              "value": "Usa 'very cold' o 'really cold', NUNCA 'very much cold'."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "3. Posición con 'quite a'",
+              "value": "Se dice 'quite a good movie' (el artículo 'a' va después de 'quite')."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "4. Really con verbos",
+              "value": "Really también puede modificar verbos ('I really like it'), muy poco común con very."
             }
           ]
         }
@@ -188,13 +200,34 @@
   ],
   "quiz": [
     {
-      "q": "The movie was ___ good.",
+      "q": "The teacher explained the lesson ___ clearly, so everyone understood.",
       "options": [
-        "really",
-        "real"
+        "very",
+        "much",
+        "too much"
       ],
       "answer": 0,
-      "explain": "Intensificador del adjetivo → really."
+      "explain": "'very' se usa delante de adverbios ('clearly') para intensificar el grado sin añadir 'much'."
+    },
+    {
+      "q": "It's ___ long story, so I will tell you later.",
+      "options": [
+        "quite a",
+        "a quite",
+        "very a"
+      ],
+      "answer": 0,
+      "explain": "La estructura correcta con el artículo indefinido es 'quite a' + adjetivo + sustantivo."
+    },
+    {
+      "q": "¿Cuál oración utiliza correctamente un adverbio de grado?",
+      "options": [
+        "I am really happy with my exam score.",
+        "I am very much happy with my exam score.",
+        "I am real happy with my exam score."
+      ],
+      "answer": 0,
+      "explain": "'really' intensifica adecuadamente al adjetivo 'happy'. En inglés estándar 'very much happy' es incorrecto."
     }
   ]
 }

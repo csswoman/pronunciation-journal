@@ -14,9 +14,21 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Topic sentence", "value": "la idea principal al inicio", "highlights": ["Topic sentence"] },
-            { "key": "Supporting", "value": "ejemplos y detalles que la apoyan" },
-            { "key": "Concluding", "value": "cierre o transición al siguiente" }
+            {
+              "key": "Topic sentence",
+              "value": "la idea principal al inicio",
+              "highlights": [
+                "Topic sentence"
+              ]
+            },
+            {
+              "key": "Supporting",
+              "value": "ejemplos y detalles que la apoyan"
+            },
+            {
+              "key": "Concluding",
+              "value": "cierre o transición al siguiente"
+            }
           ]
         }
       ]
@@ -30,9 +42,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Añadir", "value": "moreover, furthermore, in addition", "highlights": ["moreover"] },
-            { "key": "Contrastar", "value": "however, on the other hand, whereas", "highlights": ["however"] },
-            { "key": "Concluir", "value": "in conclusion, to sum up, overall", "highlights": ["in conclusion"] }
+            {
+              "key": "Añadir",
+              "value": "moreover, furthermore, in addition",
+              "highlights": [
+                "moreover"
+              ]
+            },
+            {
+              "key": "Contrastar",
+              "value": "however, on the other hand, whereas",
+              "highlights": [
+                "however"
+              ]
+            },
+            {
+              "key": "Concluir",
+              "value": "in conclusion, to sum up, overall",
+              "highlights": [
+                "in conclusion"
+              ]
+            }
           ]
         }
       ]
@@ -49,12 +79,20 @@
             {
               "label": "Formal",
               "rule": "informes, solicitudes",
-              "examples": ["I would like to...", "I am writing to inquire...", "Therefore,"]
+              "examples": [
+                "I would like to...",
+                "I am writing to inquire...",
+                "Therefore,"
+              ]
             },
             {
               "label": "Informal",
               "rule": "emails a amigos",
-              "examples": ["I'd love to...", "Just wanted to ask...", "So,"]
+              "examples": [
+                "I'd love to...",
+                "Just wanted to ask...",
+                "So,"
+              ]
             }
           ]
         }
@@ -73,9 +111,28 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Saludo", "value": "Dear Mr. Lee, (formal) · Hi Anna, (informal)", "highlights": ["Dear", "Hi"] },
-            { "key": "Propósito", "value": "I'm writing to... · Just a quick note to...", "highlights": ["I'm writing to"] },
-            { "key": "Cierre", "value": "Best regards, (formal) · Cheers, (informal)", "highlights": ["Best regards"] }
+            {
+              "key": "Saludo",
+              "value": "Dear Mr. Lee, (formal) · Hi Anna, (informal)",
+              "highlights": [
+                "Dear",
+                "Hi"
+              ]
+            },
+            {
+              "key": "Propósito",
+              "value": "I'm writing to... · Just a quick note to...",
+              "highlights": [
+                "I'm writing to"
+              ]
+            },
+            {
+              "key": "Cierre",
+              "value": "Best regards, (formal) · Cheers, (informal)",
+              "highlights": [
+                "Best regards"
+              ]
+            }
           ]
         }
       ]
@@ -89,9 +146,21 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "bad", "text": "The plan failed. The plan was too risky.", "note": "repite" },
-            { "variant": "good", "text": "The plan failed. It was too risky.", "note": "pronombre" },
-            { "variant": "good", "text": "...the project. This approach...", "note": "sinónimo + referencia" }
+            {
+              "variant": "bad",
+              "text": "The plan failed. The plan was too risky.",
+              "note": "repite"
+            },
+            {
+              "variant": "good",
+              "text": "The plan failed. It was too risky.",
+              "note": "pronombre"
+            },
+            {
+              "variant": "good",
+              "text": "...the project. This approach...",
+              "note": "sinónimo + referencia"
+            }
           ]
         }
       ]
@@ -105,12 +174,56 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Intro", "value": "presenta el tema y tu postura" },
-            { "key": "Cuerpo", "value": "un argumento por párrafo, con ejemplos" },
-            { "key": "Conclusión", "value": "All things considered, I believe...", "highlights": ["All things considered"] }
+            {
+              "key": "Intro",
+              "value": "presenta el tema y tu postura"
+            },
+            {
+              "key": "Cuerpo",
+              "value": "un argumento por párrafo, con ejemplos"
+            },
+            {
+              "key": "Conclusión",
+              "value": "All things considered, I believe...",
+              "highlights": [
+                "All things considered"
+              ]
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Which linking expression is used to summarize the main points in a conclusion?",
+      "options": [
+        "To sum up",
+        "For instance",
+        "First of all"
+      ],
+      "answer": 0,
+      "explain": "'To sum up' o 'In conclusion' se emplean para introducir el párrafo final de síntesis."
+    },
+    {
+      "q": "What is the purpose of a topic sentence in an essay paragraph?",
+      "options": [
+        "To introduce the central idea of that paragraph",
+        "To list all references and quotes",
+        "To ask a controversial question"
+      ],
+      "answer": 0,
+      "explain": "La 'topic sentence' (oración temática) establece la idea principal que se desarrollará en el párrafo."
+    },
+    {
+      "q": "Which transition phrase introduces a real-world example?",
+      "options": [
+        "For instance",
+        "On the contrary",
+        "In spite of"
+      ],
+      "answer": 0,
+      "explain": "'For instance' (por ejemplo) introduce ilustraciones o casos concretos en un texto escrito."
     }
   ]
 }

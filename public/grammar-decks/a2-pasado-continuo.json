@@ -1,39 +1,48 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "A2 · Pasado",
-    "title": "Pasado",
-    "titleEmphasis": "continuo",
-    "goal": "Ya describes acciones en progreso en el pasado con was/were + -ing."
+    "title": "Pasado continuo",
+    "titleEmphasis": "(was / were + -ing)",
+    "goal": "Describe acciones que estaban en progreso en un momento determinado del pasado."
   },
   "cards": [
     {
       "id": "a2-pasado-continuo-concept",
       "tag": "Idea central",
-      "title": "Pasado: qué expresa",
-      "lede": "Ya describes acciones en progreso en el pasado con was/were + -ing.",
+      "title": "Pasado continuo: qué expresa",
+      "lede": "Describe acciones que estaban en progreso en un momento determinado del pasado.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Forma",
-              "value": "I was working · They were waiting",
+              "key": "Acción en progreso",
+              "value": "I was cooking dinner at 7 PM · Estaba cocinando",
               "highlights": [
-                "was working"
+                "was cooking"
               ]
             },
             {
-              "key": "Fondo",
-              "value": "It was raining when we left.",
+              "key": "Acciones paralelas",
+              "value": "She was reading while he was sleeping · Estaban ocurriendo a la vez",
               "highlights": [
-                "was raining"
+                "was reading",
+                "was sleeping"
+              ]
+            },
+            {
+              "key": "Escenario de fondo",
+              "value": "The sun was shining when we woke up · Creación de contexto",
+              "highlights": [
+                "was shining"
               ]
             },
             {
               "key": "Interrupción",
-              "value": "I was reading when you called.",
+              "value": "I was watching TV when the telephone rang",
               "highlights": [
-                "when"
+                "was watching"
               ]
             }
           ]
@@ -48,30 +57,30 @@
       "id": "a2-pasado-continuo-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Forma",
-              "value": "I was working · They were waiting",
+              "key": "Afirmativa",
+              "value": "Sujeto + was/were + Verbo-ing · They were studying all night.",
               "highlights": [
-                "was working"
+                "were studying"
               ]
             },
             {
-              "key": "Fondo",
-              "value": "It was raining when we left.",
+              "key": "Negativa",
+              "value": "Sujeto + wasn't/weren't + Verbo-ing · I wasn't paying attention.",
               "highlights": [
-                "was raining"
+                "wasn't paying"
               ]
             },
             {
-              "key": "Interrupción",
-              "value": "I was reading when you called.",
+              "key": "Interrogativa",
+              "value": "Was/Were + Sujeto + Verbo-ing? · Were you sleeping when I arrived?",
               "highlights": [
-                "when"
+                "Were you sleeping"
               ]
             }
           ]
@@ -82,22 +91,26 @@
       "id": "a2-pasado-continuo-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "They were waiting"
+              "key": "Hora específica",
+              "value": "At 10 PM last night, I was writing a report for work."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "It was raining when we left."
+              "key": "Fondo de una historia",
+              "value": "It was raining heavily and the wind was blowing strongly."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "I was reading when you called."
+              "key": "Acción interrumpida",
+              "value": "She was walking in the park when she saw her old friend."
+            },
+            {
+              "key": "Simultaneidad",
+              "value": "While the children were playing outside, we were preparing food."
             }
           ]
         }
@@ -107,23 +120,25 @@
       "id": "a2-pasado-continuo-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "Forma",
-              "rule": "I was working · They were waiting",
+              "label": "Pasado continuo (was/were + -ing)",
+              "rule": "Acción en progreso durante un periodo o interrumpida",
               "examples": [
-                "They were waiting"
+                "I was sleeping at midnight.",
+                "She was driving when it rained."
               ]
             },
             {
-              "label": "Fondo",
-              "rule": "It was raining when we left.",
+              "label": "Pasado simple (verbo en pasado / -ed)",
+              "rule": "Acción puntual o completada en un momento específico",
               "examples": [
-                "It was raining when we left."
+                "I slept for 8 hours.",
+                "She drove to work yesterday."
               ]
             }
           ]
@@ -134,19 +149,19 @@
       "id": "a2-pasado-continuo-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "I was work at 8pm."
+              "text": "I was work at 8pm yesterday."
             },
             {
               "variant": "good",
-              "text": "I was working at 8pm.",
-              "note": "continuo = was/were + -ing"
+              "text": "I was working at 8pm yesterday.",
+              "note": "el pasado continuo exige el verbo principal en -ing (was working)"
             }
           ]
         }
@@ -155,27 +170,27 @@
     {
       "id": "a2-pasado-continuo-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "1. Verbo auxiliar",
+              "value": "Usa was (I, he, she, it) o were (you, we, they)."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "2. Verbo principal",
+              "value": "Añade la terminación -ing al verbo (running, eating, working)."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "3. Conector while",
+              "value": "Usa 'while' para introducir una acción continua en pasado."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "4. Conector when",
+              "value": "Usa 'when' para la acción corta en pasado simple que interrumpe."
             }
           ]
         }
@@ -188,13 +203,34 @@
   ],
   "quiz": [
     {
-      "q": "They ___ dinner at 7pm.",
+      "q": "What ___ you doing when the lights went out?",
       "options": [
-        "were having",
-        "were have"
+        "were",
+        "was",
+        "did"
       ],
       "answer": 0,
-      "explain": "Pasado continuo = were + -ing."
+      "explain": "El sujeto 'you' requiere el auxiliar 'were' en pasado continuo."
+    },
+    {
+      "q": "She fell asleep while she ___ a movie.",
+      "options": [
+        "was watching",
+        "watched",
+        "were watching"
+      ],
+      "answer": 0,
+      "explain": "'while' introduce una acción continua en progreso en pasado ('was watching' para 'she')."
+    },
+    {
+      "q": "¿Cuál oración demuestra un uso correcto del pasado continuo?",
+      "options": [
+        "They were having breakfast when the mail arrived.",
+        "They was having breakfast when the mail arrived.",
+        "They were have breakfast when the mail arrived."
+      ],
+      "answer": 0,
+      "explain": "'They' requiere 'were' + gerundio '-ing' ('were having')."
     }
   ]
 }

@@ -1,46 +1,47 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "C2 · Modalidad",
     "title": "Modalidad",
     "titleEmphasis": "matizada",
-    "goal": "Ya calibras certeza con may well, must have, can't have y would have to be con precisión epistémica."
+    "goal": "Calibra grados extremos de certeza, suposición o inferencia lógica usando 'may well', 'must have', 'can't have' y 'would have to be'."
   },
   "cards": [
     {
       "id": "c2-modalidad-matizada-concept",
       "tag": "Idea central",
       "title": "Modalidad: qué expresa",
-      "lede": "Ya calibras certeza con may well, must have, can't have y would have to be con precisión epistémica.",
+      "lede": "Calibra grados extremos de certeza, suposición o inferencia lógica usando 'may well', 'must have', 'can't have' y 'would have to be'.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "may well",
-              "value": "It may well be true. · probabilidad alta",
+              "key": "Probabilidad muy alta (may well)",
+              "value": "The central bank may well raise interest rates next quarter.",
               "highlights": [
-                "may well"
+                "may well raise"
               ]
             },
             {
-              "key": "must have",
-              "value": "She must have left early. · inferencia fuerte pasada",
+              "key": "Deducción lógica pasada (+)",
+              "value": "The auditors must have overlooked the secondary ledger.",
               "highlights": [
-                "must have"
+                "must have overlooked"
               ]
             },
             {
-              "key": "can't have",
-              "value": "He can't have known. · imposibilidad inferida",
+              "key": "Deducción lógica pasada (-)",
+              "value": "They can't have finalized the contract without legal approval.",
               "highlights": [
-                "can't have"
+                "can't have finalized"
               ]
             },
             {
-              "key": "would have to",
-              "value": "That would have to be the answer. · conclusión forzada",
+              "key": "Inferencia forzada presente",
+              "value": "For costs to double, there would have to be systemic inefficiency.",
               "highlights": [
-                "would have to"
+                "would have to be"
               ]
             }
           ]
@@ -55,30 +56,30 @@
       "id": "c2-modalidad-matizada-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "may well",
-              "value": "It may well be true. · probabilidad alta",
+              "key": "Afirmativa (Inferencia pasada)",
+              "value": "Sujeto + must have + participio pasado · She must have left early.",
               "highlights": [
-                "may well"
+                "must have left"
               ]
             },
             {
-              "key": "must have",
-              "value": "She must have left early. · inferencia fuerte pasada",
+              "key": "Negativa (Imposibilidad pasada)",
+              "value": "Sujeto + cannot/can't have + participio pasado · He can't have known.",
               "highlights": [
-                "must have"
+                "can't have known"
               ]
             },
             {
-              "key": "can't have",
-              "value": "He can't have known. · imposibilidad inferida",
+              "key": "Afirmativa (Probabilidad fortalecida)",
+              "value": "Sujeto + may/might well + verbo base · Prices may well surge soon.",
               "highlights": [
-                "can't have"
+                "may well surge"
               ]
             }
           ]
@@ -89,26 +90,26 @@
       "id": "c2-modalidad-matizada-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "probabilidad alta"
+              "key": "Investigación forense",
+              "value": "The security breach must have occurred during the system maintenance window."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "inferencia fuerte pasada"
+              "key": "Proyecciones económicas",
+              "value": "Given current trends, the market may well experience a correction."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "imposibilidad inferida"
+              "key": "Análisis de credibilidad",
+              "value": "The defendant can't have been at the scene; witnesses place him elsewhere."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "conclusión forzada"
+              "key": "Evaluación de hipótesis",
+              "value": "To explain such anomalous data, there would have to be an unrecorded variable."
             }
           ]
         }
@@ -118,23 +119,23 @@
       "id": "c2-modalidad-matizada-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "may well",
-              "rule": "It may well be true. · probabilidad alta",
+              "label": "Must have + Participio",
+              "rule": "Indica certeza lógica absoluta sobre un evento del pasado basada en evidencia",
               "examples": [
-                "probabilidad alta"
+                "The streets are wet; it must have rained last night."
               ]
             },
             {
-              "label": "must have",
-              "rule": "She must have left early. · inferencia fuerte pasada",
+              "label": "May/Might have + Participio",
+              "rule": "Indica una posibilidad pasada incierta u opcional",
               "examples": [
-                "inferencia fuerte pasada"
+                "He hasn't arrived; he might have missed his train."
               ]
             }
           ]
@@ -145,19 +146,19 @@
       "id": "c2-modalidad-matizada-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "She must left early."
+              "text": "They mustn't have received the payment because the system shows zero balance."
             },
             {
               "variant": "good",
-              "text": "She must have left early.",
-              "note": "inferencia pasada → must have + pp"
+              "text": "They can't have received the payment because the system shows zero balance.",
+              "note": "La imposibilidad deductiva pasada se expresa con 'can't have', no con 'mustn't have'."
             }
           ]
         }
@@ -166,27 +167,27 @@
     {
       "id": "c2-modalidad-matizada-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "1. 'May well' refuerza la probabilidad",
+              "value": "Significa 'es highly probable que' (más fuerte que 'may' a secas)."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "2. 'Can't have' para imposibilidad",
+              "value": "NUNCA uses 'mustn't have' para deducción negativa pasada; usa 'can't have'."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "3. 'Would have to be'",
+              "value": "Se utiliza para expresar la condición o conclusión inevitable de una situación."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "4. Participio pasado indispensable",
+              "value": "Todas las inferencias sobre el pasado requieren la estructura modal + have + participio."
             }
           ]
         }
@@ -199,13 +200,37 @@
   ],
   "quiz": [
     {
-      "q": "They ___ have missed the memo; everyone else complied.",
+      "q": "The management team ___ known about the flaw; otherwise, they would have halted distribution.",
       "options": [
-        "can't",
-        "mustn't"
+        "can't have",
+        "mustn't have",
+        "shouldn't have",
+        "won't have"
       ],
       "answer": 0,
-      "explain": "can't have = imposible que haya ocurrido."
+      "explain": "'Can't have + participio' expresa la imposibilidad lógica de un evento pasado."
+    },
+    {
+      "q": "Considering our rapid growth, we ___ need to recruit additional engineers soon.",
+      "options": [
+        "may well",
+        "must to",
+        "can well",
+        "would to"
+      ],
+      "answer": 0,
+      "explain": "'May well' indica una alta probabilidad en el presente/futuro."
+    },
+    {
+      "q": "¿Qué opción expresa una inferencia lógica afirmativa fundamentada en evidencia pasada?",
+      "options": [
+        "The server logs show thousands of requests; we must have suffered a DDoS attack.",
+        "The server logs show thousands of requests; we can have suffered a DDoS attack.",
+        "The server logs show thousands of requests; we would suffer a DDoS attack.",
+        "The server logs show thousands of requests; we may to suffer a DDoS attack."
+      ],
+      "answer": 0,
+      "explain": "'Must have + participio' es la forma para conclusiones afirmativas de alta certeza sobre el pasado."
     }
   ]
 }

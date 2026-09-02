@@ -14,9 +14,21 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Frutas/verduras", "value": "apple, tomato, onion, carrot" },
-            { "key": "Proteínas", "value": "chicken, beef, fish, eggs" },
-            { "key": "Básicos", "value": "rice, bread, milk, butter (incontables)", "highlights": ["incontables"] }
+            {
+              "key": "Frutas/verduras",
+              "value": "apple, tomato, onion, carrot"
+            },
+            {
+              "key": "Proteínas",
+              "value": "chicken, beef, fish, eggs"
+            },
+            {
+              "key": "Básicos",
+              "value": "rice, bread, milk, butter (incontables)",
+              "highlights": [
+                "incontables"
+              ]
+            }
           ]
         }
       ]
@@ -30,9 +42,30 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Calor", "value": "boil, fry, bake, grill", "highlights": ["boil", "fry"] },
-            { "key": "Preparar", "value": "cut, chop, mix, add", "highlights": ["chop", "mix"] },
-            { "key": "Imperativo", "value": "Cut the onion. · Add salt.", "highlights": ["Cut", "Add"] }
+            {
+              "key": "Calor",
+              "value": "boil, fry, bake, grill",
+              "highlights": [
+                "boil",
+                "fry"
+              ]
+            },
+            {
+              "key": "Preparar",
+              "value": "cut, chop, mix, add",
+              "highlights": [
+                "chop",
+                "mix"
+              ]
+            },
+            {
+              "key": "Imperativo",
+              "value": "Cut the onion. · Add salt.",
+              "highlights": [
+                "Cut",
+                "Add"
+              ]
+            }
           ]
         }
       ]
@@ -46,9 +79,28 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Líquidos", "value": "a cup of milk · a glass of water", "highlights": ["a cup of"] },
-            { "key": "Sólidos", "value": "a piece of cheese · a slice of bread", "highlights": ["a piece of", "a slice of"] },
-            { "key": "Envases", "value": "a bottle of · a can of · a bag of", "highlights": ["a bottle of"] }
+            {
+              "key": "Líquidos",
+              "value": "a cup of milk · a glass of water",
+              "highlights": [
+                "a cup of"
+              ]
+            },
+            {
+              "key": "Sólidos",
+              "value": "a piece of cheese · a slice of bread",
+              "highlights": [
+                "a piece of",
+                "a slice of"
+              ]
+            },
+            {
+              "key": "Envases",
+              "value": "a bottle of · a can of · a bag of",
+              "highlights": [
+                "a bottle of"
+              ]
+            }
           ]
         }
       ]
@@ -62,9 +114,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "first", "value": "First, heat the oil.", "highlights": ["First"] },
-            { "key": "then / next", "value": "Then add the eggs.", "highlights": ["Then"] },
-            { "key": "finally", "value": "Finally, serve hot.", "highlights": ["Finally"] }
+            {
+              "key": "first",
+              "value": "First, heat the oil.",
+              "highlights": [
+                "First"
+              ]
+            },
+            {
+              "key": "then / next",
+              "value": "Then add the eggs.",
+              "highlights": [
+                "Then"
+              ]
+            },
+            {
+              "key": "finally",
+              "value": "Finally, serve hot.",
+              "highlights": [
+                "Finally"
+              ]
+            }
           ]
         }
       ]
@@ -78,10 +148,26 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "good", "text": "We need some flour.", "note": "afirmativa" },
-            { "variant": "good", "text": "We don't have any eggs.", "note": "negativa" },
-            { "variant": "good", "text": "Is there any milk?", "note": "pregunta" },
-            { "variant": "good", "text": "Would you like some tea?", "note": "oferta = some" }
+            {
+              "variant": "good",
+              "text": "We need some flour.",
+              "note": "afirmativa"
+            },
+            {
+              "variant": "good",
+              "text": "We don't have any eggs.",
+              "note": "negativa"
+            },
+            {
+              "variant": "good",
+              "text": "Is there any milk?",
+              "note": "pregunta"
+            },
+            {
+              "variant": "good",
+              "text": "Would you like some tea?",
+              "note": "oferta = some"
+            }
           ]
         }
       ]
@@ -95,12 +181,59 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Sabores", "value": "sweet, salty, spicy, sour", "highlights": ["spicy"] },
-            { "key": "Gusto", "value": "It's delicious! · It tastes good.", "highlights": ["delicious"] },
-            { "key": "Preferencia", "value": "I'm a vegetarian. · I don't eat meat." }
+            {
+              "key": "Sabores",
+              "value": "sweet, salty, spicy, sour",
+              "highlights": [
+                "spicy"
+              ]
+            },
+            {
+              "key": "Gusto",
+              "value": "It's delicious! · It tastes good.",
+              "highlights": [
+                "delicious"
+              ]
+            },
+            {
+              "key": "Preferencia",
+              "value": "I'm a vegetarian. · I don't eat meat."
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Could you please ___ the onions before frying them?",
+      "options": [
+        "chop",
+        "boil",
+        "bake"
+      ],
+      "answer": 0,
+      "explain": "'chop' significa picar o cortar en trozos pequeños los alimentos."
+    },
+    {
+      "q": "Add a small ___ of salt to the soup bowl.",
+      "options": [
+        "pinch",
+        "slice",
+        "piece"
+      ],
+      "answer": 0,
+      "explain": "Para cantidades muy pequeñas de especias o sal se usa la expresión 'a pinch of' (una pizca de)."
+    },
+    {
+      "q": "Mix all ingredients together in a deep glass ___.",
+      "options": [
+        "bowl",
+        "pan",
+        "fork"
+      ],
+      "answer": 0,
+      "explain": "Mezclar ingredientes se realiza habitualmente dentro de un recipiente llamado 'bowl'."
     }
   ]
 }

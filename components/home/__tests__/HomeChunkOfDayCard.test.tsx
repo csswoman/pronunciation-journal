@@ -22,8 +22,70 @@ describe("HomeChunkOfDayCard", () => {
     expect(ipaElement).toBeInTheDocument();
 
     expect(screen.getByRole("button", { name: "Escuchar pronunciación" })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Ejemplo" }));
+    expect(screen.getByRole("button", { name: "Escuchar ejemplo" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Guardar frase" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Ver otra frase" })).toBeInTheDocument();
+  });
+
+  it("toggles example translation for a sentence-style example", () => {
+    // Seed a chunk whose example is a plain sentence (no structured dialogue).
+    sessionStorage.setItem(
+      "chunk_of_day_session",
+      JSON.stringify({
+        date: new Date().toISOString().slice(0, 10),
+        isShuffled: true,
+        chunk: {
+          id: "test-sentence",
+          chunk: "Break the ice",
+          ipa: "/breɪk ðə aɪs/",
+          meaning: "Romper el hielo",
+          example: "He told a joke to break the ice.",
+          example_translation: "Contó un chiste para romper el hielo.",
+          category: "Breaking the Ice",
+        },
+      })
+    );
+    render(<HomeChunkOfDayCard />);
+    
+    // Example is hidden by default
+    expect(screen.queryByText("Contó un chiste para romper el hielo.")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Ejemplo" }));
+    expect(screen.getByText("Contó un chiste para romper el hielo.")).toBeInTheDocument();
+  });
+
+  it("renders a two-turn dialogue with leading dashes for connector phrases", () => {
+    sessionStorage.setItem(
+      "chunk_of_day_session",
+      JSON.stringify({
+        date: new Date().toISOString().slice(0, 10),
+        isShuffled: true,
+        chunk: {
+          id: "test-dialogue",
+          chunk: "Just out of curiosity,...",
+          ipa: "/dʒʌst aʊt əv ˌkjʊəriˈɒsɪti/",
+          meaning: "Solo por curiosidad,...",
+          example: "Just out of curiosity, how much did that cost?",
+          example_translation: "Solo por curiosidad, ¿cuánto costó eso?",
+          example_dialogue: [
+            { en: "We finally got the kitchen remodeled last month.", es: "Por fin remodelamos la cocina el mes pasado." },
+            { en: "Just out of curiosity, how much did that cost?", es: "Solo por curiosidad, ¿cuánto costó eso?" },
+          ],
+          category: "Useful Connectors",
+        },
+      })
+    );
+    render(<HomeChunkOfDayCard />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Ejemplo" }));
+    
+    // Dialogue turns render with a leading em dash
+    expect(
+      screen.getByText((_, el) => el?.textContent === "— Just out of curiosity, how much did that cost?")
+    ).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Ver traducción" })).not.toBeInTheDocument();
   });
 
   it("triggers speakText when clicking the audio button", () => {
@@ -31,6 +93,11 @@ describe("HomeChunkOfDayCard", () => {
     const speakButton = screen.getByRole("button", { name: "Escuchar pronunciación" });
     fireEvent.click(speakButton);
     expect(speakTextMock).toHaveBeenCalled();
+
+    fireEvent.click(screen.getByRole("button", { name: "Ejemplo" }));
+    const exampleSpeakButton = screen.getByRole("button", { name: "Escuchar ejemplo" });
+    fireEvent.click(exampleSpeakButton);
+    expect(speakTextMock).toHaveBeenCalledTimes(2);
   });
 
   it("changes the chunk when clicking the Otra button", async () => {

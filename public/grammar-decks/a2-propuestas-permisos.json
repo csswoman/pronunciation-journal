@@ -14,9 +14,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Let's", "value": "Let's go! · Let's eat.", "highlights": ["Let's"] },
-            { "key": "Why don't we", "value": "Why don't we watch a movie?", "highlights": ["Why don't we"] },
-            { "key": "How about", "value": "How about pizza? · How about going out?", "highlights": ["How about"] }
+            {
+              "key": "Let's",
+              "value": "Let's go! · Let's eat.",
+              "highlights": [
+                "Let's"
+              ]
+            },
+            {
+              "key": "Why don't we",
+              "value": "Why don't we watch a movie?",
+              "highlights": [
+                "Why don't we"
+              ]
+            },
+            {
+              "key": "How about",
+              "value": "How about pizza? · How about going out?",
+              "highlights": [
+                "How about"
+              ]
+            }
           ]
         }
       ],
@@ -34,9 +52,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Shall I", "value": "Shall I open the window?", "highlights": ["Shall I"] },
-            { "key": "Can I help", "value": "Can I help you?", "highlights": ["Can I help"] },
-            { "key": "Would you like", "value": "Would you like some tea?", "highlights": ["Would you like"] }
+            {
+              "key": "Shall I",
+              "value": "Shall I open the window?",
+              "highlights": [
+                "Shall I"
+              ]
+            },
+            {
+              "key": "Can I help",
+              "value": "Can I help you?",
+              "highlights": [
+                "Can I help"
+              ]
+            },
+            {
+              "key": "Would you like",
+              "value": "Would you like some tea?",
+              "highlights": [
+                "Would you like"
+              ]
+            }
           ]
         }
       ]
@@ -50,9 +86,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Can I (informal)", "value": "Can I sit here?", "highlights": ["Can I"] },
-            { "key": "Could I (educado)", "value": "Could I borrow your pen?", "highlights": ["Could I"] },
-            { "key": "May I (formal)", "value": "May I come in?", "highlights": ["May I"] }
+            {
+              "key": "Can I (informal)",
+              "value": "Can I sit here?",
+              "highlights": [
+                "Can I"
+              ]
+            },
+            {
+              "key": "Could I (educado)",
+              "value": "Could I borrow your pen?",
+              "highlights": [
+                "Could I"
+              ]
+            },
+            {
+              "key": "May I (formal)",
+              "value": "May I come in?",
+              "highlights": [
+                "May I"
+              ]
+            }
           ]
         }
       ],
@@ -70,9 +124,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Can you", "value": "Can you help me?", "highlights": ["Can you"] },
-            { "key": "Could you", "value": "Could you repeat that?", "highlights": ["Could you"] },
-            { "key": "Would you mind", "value": "Would you mind closing the door?", "highlights": ["Would you mind"] }
+            {
+              "key": "Can you",
+              "value": "Can you help me?",
+              "highlights": [
+                "Can you"
+              ]
+            },
+            {
+              "key": "Could you",
+              "value": "Could you repeat that?",
+              "highlights": [
+                "Could you"
+              ]
+            },
+            {
+              "key": "Would you mind",
+              "value": "Would you mind closing the door?",
+              "highlights": [
+                "Would you mind"
+              ]
+            }
           ]
         }
       ],
@@ -93,12 +165,20 @@
             {
               "label": "Aceptar",
               "rule": "decir que sí",
-              "examples": ["Sure! · Of course.", "That sounds great.", "Yes, please."]
+              "examples": [
+                "Sure! · Of course.",
+                "That sounds great.",
+                "Yes, please."
+              ]
             },
             {
               "label": "Rechazar",
               "rule": "decir que no con tacto",
-              "examples": ["Sorry, I can't.", "Maybe another time.", "I'd love to, but..."]
+              "examples": [
+                "Sorry, I can't.",
+                "Maybe another time.",
+                "I'd love to, but..."
+              ]
             }
           ]
         }
@@ -113,13 +193,61 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "good", "text": "Why don't we go for coffee?", "note": "propuesta" },
-            { "variant": "good", "text": "Sure, that sounds great!", "note": "aceptar" },
-            { "variant": "good", "text": "Could you pick me up?", "note": "petición" },
-            { "variant": "good", "text": "Of course, no problem.", "note": "aceptar el favor" }
+            {
+              "variant": "good",
+              "text": "Why don't we go for coffee?",
+              "note": "propuesta"
+            },
+            {
+              "variant": "good",
+              "text": "Sure, that sounds great!",
+              "note": "aceptar"
+            },
+            {
+              "variant": "good",
+              "text": "Could you pick me up?",
+              "note": "petición"
+            },
+            {
+              "variant": "good",
+              "text": "Of course, no problem.",
+              "note": "aceptar el favor"
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "___ we go for a walk in the park this afternoon?",
+      "options": [
+        "Shall",
+        "Would",
+        "Do"
+      ],
+      "answer": 0,
+      "explain": "'Shall we...?' es una fórmula cortés para proponer un plan en grupo."
+    },
+    {
+      "q": "___ go to the cinema tonight!",
+      "options": [
+        "Let's",
+        "Shall",
+        "May"
+      ],
+      "answer": 0,
+      "explain": "'Let's' + verbo en forma base se usa para hacer una sugerencia entusiasta en conjunto."
+    },
+    {
+      "q": "Could I ___ your dictionary for a moment?",
+      "options": [
+        "borrow",
+        "lend",
+        "keep"
+      ],
+      "answer": 0,
+      "explain": "'borrow' significa pedir o tomar prestado algo para uso temporal."
     }
   ]
 }

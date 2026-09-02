@@ -1,0 +1,124 @@
+{
+  "slug": "better-listening-weak-forms",
+  "sections": [
+    {
+      "heading": "1. La Jerarquía de las Palabras: Content vs. Function Words",
+      "body": "El inglés distingue entre dos grandes clases de palabras: las **palabras de contenido (Content words)** —sustantivos, verbos principales, adjetivos y adverbios— que transportan el 90% del significado, y las **palabras funcionales (Function words)** —preposiciones, pronombres, artículos, conjunciones y verbos auxiliares— que actúan como el 'pegamento' gramatical de la frase. Mientras las palabras de contenido reciben acento prosódico y claridad articulatoria, las funcionales están diseñadas para subordinarse en la cadena hablada."
+    },
+    {
+      "heading": "2. El Poder de las Palabras de Contenido",
+      "body": "Cuando los hablantes nativos conversan, su cerebro se apoya en los picos de acentuación de las palabras de contenido. Como estudiante, a menudo puedes comprender el sentido general de una conversación enfocándote exclusivamente en esos puntos de tensión sonora. Las palabras funcionales intermedias no necesitan descodificarse una a una con esfuerzo consciente: se perciben como un hilo de enlace rítmico."
+    },
+    {
+      "heading": "3. Habla Conectada y la Reducción a Schwa (/ə/)",
+      "body": "Para hablar a velocidad natural sin trabarse, los hablantes nativos reducen sistemáticamente las vocales de las palabras funcionales a un sonido neutral y relajado: el **schwa (/ə/)**, el fonema vocálico más frecuente en la lengua inglesa. Esta reducción no denota descuido ni falta de educación; es el mecanismo acústico fundamental que dota al inglés de su compás rítmico basado en el acento (*stress-timed rhythm*)."
+    },
+    {
+      "heading": "4. Formas Débiles (Weak Forms vs. Strong Forms)",
+      "body": "Casi todas las palabras gramaticales tienen dos caras: una **forma fuerte (Strong Form)** que escuchas en el diccionario cuando se pronuncia la palabra aislada, y una **forma débil (Weak Form)** que ocurre en el 95% de las oraciones cotidianas. Por ejemplo, 'can' aislada suena `/kæn/`, pero en *'I can help you'* suena `/kən/`. Esperar la forma de diccionario al escuchar es la causa número uno de frustración auditiva."
+    },
+    {
+      "heading": "5. Estrategias Accionables para Entrenar tu Oído",
+      "body": "Para transformar tu comprensión auditiva, adopta estas tres actitudes prácticas:\n\n- **Aceptación activa**: Comprende que las palabras no 'desaparecen' por capricho; el idioma opera así. No es que tengas un mal oído, es que buscabas las señales equivocadas.\n- **Entrenamiento deliberado**: Enseña a tu cerebro a cazar intencionalmente las formas débiles (`/tə/`, `/fər/`, `/kən/`, `/wəz/`) en lugar de esperar una dicción ortográfica estricta.\n- **Práctica en contexto**: Utiliza fragmentos reales de audio y películas para notar cómo las palabras de contenido guían el compás y las débiles crean el puente entre ellas."
+    }
+  ],
+  "examples": [
+    {
+      "english": "We can meet at two",
+      "ipa": "/wi kən ˈmiːt ət ˈtuː/",
+      "translation": "Podemos encontrarnos a las dos",
+      "note": "'can' se reduce a /kən/ y 'at' a /ət/ con schwa neutral."
+    },
+    {
+      "english": "It is for the team",
+      "ipa": "/ɪt ɪz fər ðə ˈtiːm/",
+      "translation": "Es para el equipo",
+      "note": "'for' pasa de /fɔːr/ a /fər/ y 'the' a /ðə/."
+    },
+    {
+      "english": "He was ready to go",
+      "ipa": "/hi wəz ˈrɛdi tə ˈɡoʊ/",
+      "translation": "Él estaba listo para ir",
+      "note": "'was' suena /wəz/ y 'to' suena /tə/."
+    },
+    {
+      "english": "Bread and butter",
+      "ipa": "/ˌbrɛd ən ˈbʌtər/",
+      "translation": "Pan con mantequilla",
+      "note": "'and' pierde la consonante final y la vocal se reduce a /ən/."
+    },
+    {
+      "english": "She could have told him",
+      "ipa": "/ʃi kəd əv ˈtoʊld ɪm/",
+      "translation": "Ella podría habérselo dicho",
+      "note": "Cadena de reducciones: 'could' /kəd/, 'have' /əv/, 'him' /ɪm/."
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Identifica si la palabra en mayúsculas es una palabra de contenido ('Content') o de función ('Function').",
+      "items": [
+        "She LOVES chocolate.",
+        "I was waiting AT the door.",
+        "They arrived QUICKLY.",
+        "Can you send it TO me?"
+      ],
+      "answers": [
+        "Content",
+        "Function",
+        "Content",
+        "Function"
+      ]
+    },
+    {
+      "instruction": "Escribe la forma débil (con schwa /.../) para cada palabra en su forma hablada conectada:",
+      "items": [
+        "can (/kæn/ → ___)",
+        "to (/tuː/ → ___)",
+        "for (/fɔːr/ → ___)",
+        "was (/wɒz/ → ___)"
+      ],
+      "answers": [
+        "/kən/",
+        "/tə/",
+        "/fər/",
+        "/wəz/"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "¿Qué tipo de palabras transmiten el significado principal en una oración en inglés?",
+      "options": [
+        "Palabras de función (preposiciones, artículos)",
+        "Palabras de contenido (sustantivos, verbos, adjetivos, adverbios)",
+        "Únicamente las contracciones informales",
+        "Todas reciben exactamente la misma fuerza sonora"
+      ],
+      "correct": 1,
+      "explanation": "Las 'Content words' aportan el núcleo del mensaje y reciben el acento principal de la oración."
+    },
+    {
+      "question": "¿A qué sonido vocálico se reducen con más frecuencia las palabras de función en el habla natural?",
+      "options": [
+        "Al sonido largo /iː/",
+        "Al diptongo /oʊ/",
+        "Al sonido neutro schwa /ə/",
+        "A la vocal abierta /æ/"
+      ],
+      "correct": 2,
+      "explanation": "El schwa /ə/ es el sonido más común del inglés; permite articular las palabras gramaticales con mínimo esfuerzo muscular."
+    },
+    {
+      "question": "¿Cuál es la estrategia recomendada para mejorar tu escucha frente a hablantes nativos?",
+      "options": [
+        "Exigir mentalmente que pronuncien cada palabra como en el diccionario",
+        "Aceptar que las palabras de función se reducen y orientar la atención a las palabras de contenido",
+        "Aprender únicamente contracciones de jerga callejera",
+        "Traducir cada palabra gramatical por separado en tiempo real"
+      ],
+      "correct": 1,
+      "explanation": "La aceptación activa del funcionamiento del inglés y el entrenamiento focalizado en las palabras de contenido liberan la tensión y aumentan la comprensión real."
+    }
+  ]
+}

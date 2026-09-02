@@ -172,52 +172,62 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
         kicker="Hoy"
         title="Sesión diaria"
         subtitle="La lección de hoy y práctica extra opcional"
+        actions={
+          streak != null && streak > 0 ? (
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-surface-raised px-3 py-1 font-kicker text-caption font-medium text-fg">
+              <span aria-hidden>🔥</span>
+              <span>{streak} {streak === 1 ? 'día' : 'días'}</span>
+            </div>
+          ) : undefined
+        }
       />
 
-      {status === 'ready' ? (
-        <div className="flex flex-col gap-4">
-          <SessionOpeningBanner arc={plan?.arc} />
-          <DailyLessonCard lesson={conceptLesson} />
-          <StudyTipDisclosure />
-        </div>
-      ) : status === 'error' ? (
-        <div className="mt-4 flex flex-col items-center gap-3 rounded-xl border border-border-default bg-daily-card px-[var(--layout-card-pad)] py-[var(--layout-section-gap)] text-center">
-          <p className="font-body-sm text-error">No se pudo preparar tu plan.</p>
-          <Button type="button" variant="primary" size="md" onClick={() => void load()}>
-            Reintentar
-          </Button>
-        </div>
-      ) : null}
+      <div className="flex flex-col gap-[var(--layout-section-gap)]">
+        {status === 'ready' ? (
+          <div className="flex flex-col gap-4">
+            <SessionOpeningBanner arc={plan?.arc} />
+            <DailyLessonCard lesson={conceptLesson} />
+            <StudyTipDisclosure />
+          </div>
+        ) : status === 'error' ? (
+          <div className="flex flex-col items-center gap-3 rounded-xl border border-border-default bg-surface-raised px-[var(--layout-card-pad)] py-[var(--layout-section-gap)] text-center">
+            <p className="font-body-sm text-error">No se pudo preparar tu plan.</p>
+            <Button type="button" variant="primary" size="md" onClick={() => void load()}>
+              Reintentar
+            </Button>
+          </div>
+        ) : null}
 
-      {/* External Immersion Logger */}
-      <div className="mt-[var(--layout-section-gap)]">
-        <ImmersionLogCard />
-      </div>
-
-      {recommendation ? (
-        <div className="mt-[var(--layout-section-gap)]">
-          <p className="font-kicker mb-[var(--layout-stack-tight)] text-fg-muted">
-            Ejercicios extra de hoy
-          </p>
-          <RecommendedPracticeCard recommendation={recommendation} />
+        {/* External Immersion Logger */}
+        <div>
+          <ImmersionLogCard />
         </div>
-      ) : null}
 
-      <div className="mt-[var(--layout-section-gap)] flex flex-col items-center gap-2 text-center">
-        <Link
-          href="/courses"
-          className="focus-ring inline-flex min-h-11 items-center gap-1.5 rounded-md px-2 font-caption font-medium text-fg-muted transition-colors hover:text-primary"
-        >
-          <GraduationCap size={14} className="text-primary" aria-hidden />
-          Ver cursos y teoría
-        </Link>
-        <Link
-          href="/practice"
-          className="focus-ring inline-flex min-h-11 items-center gap-1.5 rounded-md px-2 font-caption font-medium text-fg-muted transition-colors hover:text-primary"
-        >
-          <Sparkles size={14} className="text-primary" aria-hidden />
-          ¿Práctica libre? Elige qué trabajar
-        </Link>
+        {recommendation ? (
+          <div>
+            <p className="font-kicker mb-[var(--layout-stack-tight)] text-fg-muted">
+              Ejercicios extra de hoy
+            </p>
+            <RecommendedPracticeCard recommendation={recommendation} />
+          </div>
+        ) : null}
+
+        <div className="flex flex-col items-center gap-2 pt-2 text-center sm:flex-row sm:justify-center">
+          <Link
+            href="/courses"
+            className="focus-ring inline-flex min-h-11 items-center gap-1.5 rounded-md px-3 font-label text-fg-muted transition-colors hover:text-primary"
+          >
+            <GraduationCap size={16} className="text-primary" aria-hidden />
+            Ver cursos y teoría
+          </Link>
+          <Link
+            href="/practice"
+            className="focus-ring inline-flex min-h-11 items-center gap-1.5 rounded-md px-3 font-label text-fg-muted transition-colors hover:text-primary"
+          >
+            <Sparkles size={16} className="text-primary" aria-hidden />
+            ¿Práctica libre? Elige qué trabajar
+          </Link>
+        </div>
       </div>
     </PageLayout>
   )

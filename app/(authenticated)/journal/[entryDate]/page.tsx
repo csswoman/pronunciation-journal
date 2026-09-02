@@ -21,7 +21,7 @@ export default async function JournalHistoryPage({
   if (!userId) notFound()
 
   return (
-    <PageLayout archetype="session">
+    <PageLayout archetype="catalog">
       <JournalHistoryEntryClient userId={userId} entryDate={entryDate} />
     </PageLayout>
   )

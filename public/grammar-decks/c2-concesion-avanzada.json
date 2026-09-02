@@ -1,46 +1,47 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "C2 · Concesión",
     "title": "Concesión",
     "titleEmphasis": "avanzada",
-    "goal": "Ya concedes y matizas con much as, whatever, however + adj/adv y estructuras invertidas de concesión."
+    "goal": "Expresa concesión y contraste sofisticado con 'much as', 'whatever', 'however + adj/adv' y 'adj + as/though + sujeto + verbo'."
   },
   "cards": [
     {
       "id": "c2-concesion-avanzada-concept",
       "tag": "Idea central",
       "title": "Concesión: qué expresa",
-      "lede": "Ya concedes y matizas con much as, whatever, however + adj/adv y estructuras invertidas de concesión.",
+      "lede": "Expresa concesión y contraste sofisticado con 'much as', 'whatever', 'however + adj/adv' y 'adj + as/though + sujeto + verbo'.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "much as",
-              "value": "Much as I admire her work, I disagree.",
+              "key": "Much as (A pesar de cuánto)",
+              "value": "Much as I respect his dedication, I cannot support his proposal.",
               "highlights": [
                 "Much as"
               ]
             },
             {
-              "key": "whatever",
-              "value": "Whatever the outcome, we proceed.",
+              "key": "However + Adjetivo",
+              "value": "However compelling the evidence may be, doubts persist.",
               "highlights": [
-                "Whatever"
+                "However compelling"
               ]
             },
             {
-              "key": "however",
-              "value": "However hard we try, delays persist.",
+              "key": "Adjetivo + as/though",
+              "value": "Difficult though the negotiation was, an agreement was reached.",
               "highlights": [
-                "However hard"
+                "Difficult though"
               ]
             },
             {
-              "key": "Matiz",
-              "value": "reconoces un punto antes de refutarlo",
+              "key": "Whatever / Whoever",
+              "value": "Whatever the outcome, we remain committed to transparency.",
               "highlights": [
-                "Much as"
+                "Whatever the outcome"
               ]
             }
           ]
@@ -55,30 +56,30 @@
       "id": "c2-concesion-avanzada-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "much as",
-              "value": "Much as I admire her work, I disagree.",
+              "key": "Afirmativa (Much as)",
+              "value": "Much as + sujeto + verbo de sentimiento/opinión, cláusula principal.",
               "highlights": [
                 "Much as"
               ]
             },
             {
-              "key": "whatever",
-              "value": "Whatever the outcome, we proceed.",
+              "key": "Afirmativa (However + Adj)",
+              "value": "However + adjetivo/adverbio + sujeto + may/can be, cláusula principal.",
               "highlights": [
-                "Whatever"
+                "However compelling"
               ]
             },
             {
-              "key": "however",
-              "value": "However hard we try, delays persist.",
+              "key": "Afirmativa (Adj + as/though)",
+              "value": "Adjetivo + as/though + sujeto + verbo, cláusula principal · Qualified as she is, she lacked experience.",
               "highlights": [
-                "However hard"
+                "Qualified as she is"
               ]
             }
           ]
@@ -89,26 +90,26 @@
       "id": "c2-concesion-avanzada-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "Much as I admire her work, I disagree."
+              "key": "Debates ejecutivos",
+              "value": "Much as we would like to expand immediately, capital constraints prevent it."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "Whatever the outcome, we proceed."
+              "key": "Análisis de riesgos",
+              "value": "However meticulous our planning might be, unforeseen market shocks occur."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "However hard we try, delays persist."
+              "key": "Evaluación de talento",
+              "value": "Capable though he is, he struggles under tight deadlines."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "reconoces un punto antes de refutarlo"
+              "key": "Postura institucional",
+              "value": "Whatever political pressure we face, our audit will remain independent."
             }
           ]
         }
@@ -118,23 +119,23 @@
       "id": "c2-concesion-avanzada-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "much as",
-              "rule": "Much as I admire her work, I disagree.",
+              "label": "However + Adjetivo",
+              "rule": "Funciona como subordinador de concesión al unirse inmediatamente a un adjetivo/adverbio",
               "examples": [
-                "Much as I admire her work, I disagree."
+                "However hard we tried, we couldn't meet the deadline."
               ]
             },
             {
-              "label": "whatever",
-              "rule": "Whatever the outcome, we proceed.",
+              "label": "However (Conector independiente)",
+              "rule": "Conecta dos oraciones independientes mediante una pausa (coma tras 'However')",
               "examples": [
-                "Whatever the outcome, we proceed."
+                "We tried hard. However, we couldn't meet the deadline."
               ]
             }
           ]
@@ -145,19 +146,19 @@
       "id": "c2-concesion-avanzada-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "Much as I admire her, but I disagree."
+              "text": "Much as I admire her work, but I disagree with her conclusion."
             },
             {
               "variant": "good",
-              "text": "Much as I admire her, I disagree.",
-              "note": "no añadas but tras much as"
+              "text": "Much as I admire her work, I disagree with her conclusion.",
+              "note": "No incluyas la conjunción 'but' cuando la oración inicia con 'Much as'."
             }
           ]
         }
@@ -166,27 +167,27 @@
     {
       "id": "c2-concesion-avanzada-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "1. 'Much as' con verbo mental",
+              "value": "Combínalo con verbos como 'admire', 'respect', 'enjoy', 'like', 'dislike'."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "2. Adjetivo antepuesto con 'as'",
+              "value": "'Exhausted as they were, they pushed on' equivale a 'Although they were exhausted'."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "3. Sin 'but' tras concesión",
+              "value": "Al usar 'Much as' o 'However adj', NUNCA agregues 'but' en la segunda cláusula."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "4. 'Whatever' con sustantivo",
+              "value": "Acepta sustantivos directos ('Whatever the difficulties,...')."
             }
           ]
         }
@@ -199,13 +200,37 @@
   ],
   "quiz": [
     {
-      "q": "___ the evidence, doubts remain.",
+      "q": "___ I appreciate your perspective, we must adhere to regulatory guidelines.",
       "options": [
-        "Compelling as",
-        "As compelling"
+        "Much as",
+        "Even as",
+        "As much",
+        "In spite"
       ],
       "answer": 0,
-      "explain": "Adj + as + sujeto + verbo: concesión invertida."
+      "explain": "'Much as' introduce una cláusula concesiva formal seguida de un verbo de apreciación/sentimiento."
+    },
+    {
+      "q": "___ the challenge may seem, our research team is prepared to address it.",
+      "options": [
+        "Daunting as",
+        "As daunting",
+        "Though daunting",
+        "How daunting"
+      ],
+      "answer": 0,
+      "explain": "La estructura 'Adjetivo + as + sujeto + verbo' ('Daunting as the challenge may seem') expresa concesión."
+    },
+    {
+      "q": "¿Cuál de las siguientes oraciones utiliza 'however' de manera concesiva avanzada?",
+      "options": [
+        "However complex the system is, we can optimize it.",
+        "However, the system is complex and hard to optimize.",
+        "The system is complex, however we can optimize it.",
+        "However the system complex is, we can optimize it."
+      ],
+      "answer": 0,
+      "explain": "'However + adjetivo + sujeto + verbo' es la subordinación concesiva correcta."
     }
   ]
 }

@@ -4,8 +4,6 @@ import { describe, expect, it, vi } from "vitest";
 import ProfilePreferencesPanel from "../ProfilePreferencesPanel";
 
 vi.mock("@/components/layout/QuickSettingsControls", () => ({
-  ThemeControls: () => <div>Theme</div>,
-  SoundControls: () => <div>Sound</div>,
   StudyLevelControls: () => <div>Level</div>,
 }));
 

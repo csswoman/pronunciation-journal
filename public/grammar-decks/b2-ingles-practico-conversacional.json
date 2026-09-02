@@ -14,10 +14,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Well,...", "value": "bueno... · para empezar", "highlights": ["Well"] },
-            { "key": "Let me think", "value": "déjame pensar · ganar segundos", "highlights": ["Let me think"] },
-            { "key": "You know,...", "value": "ya sabes... · conector informal", "highlights": ["You know"] },
-            { "key": "I mean,...", "value": "quiero decir... · para corregirte", "highlights": ["I mean"] }
+            {
+              "key": "Well,...",
+              "value": "bueno... · para empezar",
+              "highlights": [
+                "Well"
+              ]
+            },
+            {
+              "key": "Let me think",
+              "value": "déjame pensar · ganar segundos",
+              "highlights": [
+                "Let me think"
+              ]
+            },
+            {
+              "key": "You know,...",
+              "value": "ya sabes... · conector informal",
+              "highlights": [
+                "You know"
+              ]
+            },
+            {
+              "key": "I mean,...",
+              "value": "quiero decir... · para corregirte",
+              "highlights": [
+                "I mean"
+              ]
+            }
           ]
         }
       ],
@@ -35,10 +59,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Really?", "value": "¿en serio? · interés / sorpresa", "highlights": ["Really?"] },
-            { "key": "That makes sense", "value": "tiene sentido · acuerdo", "highlights": ["That makes sense"] },
-            { "key": "No way!", "value": "¡no me digas! · sorpresa fuerte", "highlights": ["No way!"] },
-            { "key": "Fair enough", "value": "me parece bien · aceptación", "highlights": ["Fair enough"] }
+            {
+              "key": "Really?",
+              "value": "¿en serio? · interés / sorpresa",
+              "highlights": [
+                "Really?"
+              ]
+            },
+            {
+              "key": "That makes sense",
+              "value": "tiene sentido · acuerdo",
+              "highlights": [
+                "That makes sense"
+              ]
+            },
+            {
+              "key": "No way!",
+              "value": "¡no me digas! · sorpresa fuerte",
+              "highlights": [
+                "No way!"
+              ]
+            },
+            {
+              "key": "Fair enough",
+              "value": "me parece bien · aceptación",
+              "highlights": [
+                "Fair enough"
+              ]
+            }
           ]
         }
       ]
@@ -55,12 +103,20 @@
             {
               "label": "Suave",
               "rule": "menos tajante",
-              "examples": ["I'd say...", "It seems to me that...", "I guess..."]
+              "examples": [
+                "I'd say...",
+                "It seems to me that...",
+                "I guess..."
+              ]
             },
             {
               "label": "Firme",
               "rule": "más seguro",
-              "examples": ["I'm convinced that...", "There's no doubt...", "Clearly,..."]
+              "examples": [
+                "I'm convinced that...",
+                "There's no doubt...",
+                "Clearly,..."
+              ]
             }
           ]
         }
@@ -75,10 +131,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "kind of / sort of", "value": "más o menos · It's kind of cold.", "highlights": ["kind of"] },
-            { "key": "stuff / things", "value": "cosas · books and stuff", "highlights": ["stuff"] },
-            { "key": "or so", "value": "aproximadamente · ten people or so", "highlights": ["or so"] },
-            { "key": "-ish", "value": "tirando a · It's blue-ish. · at six-ish", "highlights": ["-ish"] }
+            {
+              "key": "kind of / sort of",
+              "value": "más o menos · It's kind of cold.",
+              "highlights": [
+                "kind of"
+              ]
+            },
+            {
+              "key": "stuff / things",
+              "value": "cosas · books and stuff",
+              "highlights": [
+                "stuff"
+              ]
+            },
+            {
+              "key": "or so",
+              "value": "aproximadamente · ten people or so",
+              "highlights": [
+                "or so"
+              ]
+            },
+            {
+              "key": "-ish",
+              "value": "tirando a · It's blue-ish. · at six-ish",
+              "highlights": [
+                "-ish"
+              ]
+            }
           ]
         }
       ]
@@ -92,10 +172,24 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "bad", "text": "I want a coffee." },
-            { "variant": "good", "text": "Could I get a coffee, please?", "note": "más educado" },
-            { "variant": "bad", "text": "You're wrong." },
-            { "variant": "good", "text": "I'm not sure I agree.", "note": "discrepar sin chocar" }
+            {
+              "variant": "bad",
+              "text": "I want a coffee."
+            },
+            {
+              "variant": "good",
+              "text": "Could I get a coffee, please?",
+              "note": "más educado"
+            },
+            {
+              "variant": "bad",
+              "text": "You're wrong."
+            },
+            {
+              "variant": "good",
+              "text": "I'm not sure I agree.",
+              "note": "discrepar sin chocar"
+            }
           ]
         }
       ]
@@ -109,10 +203,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "anyway", "value": "en fin · vuelve al tema", "highlights": ["anyway"] },
-            { "key": "by the way", "value": "por cierto · cambia de tema", "highlights": ["by the way"] },
-            { "key": "actually", "value": "de hecho · corrige o matiza", "highlights": ["actually"] },
-            { "key": "as I was saying", "value": "como decía · retoma el hilo", "highlights": ["as I was saying"] }
+            {
+              "key": "anyway",
+              "value": "en fin · vuelve al tema",
+              "highlights": [
+                "anyway"
+              ]
+            },
+            {
+              "key": "by the way",
+              "value": "por cierto · cambia de tema",
+              "highlights": [
+                "by the way"
+              ]
+            },
+            {
+              "key": "actually",
+              "value": "de hecho · corrige o matiza",
+              "highlights": [
+                "actually"
+              ]
+            },
+            {
+              "key": "as I was saying",
+              "value": "como decía · retoma el hilo",
+              "highlights": [
+                "as I was saying"
+              ]
+            }
           ]
         }
       ],
@@ -120,6 +238,38 @@
         "label": "Falso amigo:",
         "body": "actually = de hecho, no \"actualmente\". Eso es currently."
       }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Which response shows active listening and sympathy?",
+      "options": [
+        "That must have been really tough!",
+        "I don't care at all.",
+        "Why are you telling me this?"
+      ],
+      "answer": 0,
+      "explain": "'That must have been really tough!' demuestra empatía y atención en una conversación."
+    },
+    {
+      "q": "What is a conversational filler used to gain time to think?",
+      "options": [
+        "Let me see...",
+        "Listen carefully now!",
+        "Answer me right away!"
+      ],
+      "answer": 0,
+      "explain": "'Let me see...' o 'Well...' son muletillas naturales para ganar tiempo al formular una respuesta."
+    },
+    {
+      "q": "Which phrase is used to change the subject smoothly?",
+      "options": [
+        "By the way...",
+        "In order to...",
+        "As long as..."
+      ],
+      "answer": 0,
+      "explain": "'By the way' (por cierto) se usa para introducir un nuevo tema de conversación con fluidez."
     }
   ]
 }

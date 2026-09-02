@@ -1,39 +1,48 @@
 {
+  "isGenerated": true,
   "meta": {
-    "eyebrow": "A2 · Pasado",
+    "eyebrow": "A2 · Pasado simple",
     "title": "To be en",
-    "titleEmphasis": "pasado",
-    "goal": "Ya usas was/were para describir estados y lugares en el pasado."
+    "titleEmphasis": "pasado (was / were)",
+    "goal": "Expresa estados, situaciones y ubicaciones pasadas utilizando was y were de forma precisa."
   },
   "cards": [
     {
       "id": "a2-pasado-to-be-concept",
       "tag": "Idea central",
       "title": "To be en: qué expresa",
-      "lede": "Ya usas was/were para describir estados y lugares en el pasado.",
+      "lede": "Expresa estados, situaciones y ubicaciones pasadas utilizando was y were de forma precisa.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
               "key": "was",
-              "value": "I / he / she / it was tired",
+              "value": "I / he / she / it was tired yesterday · Estaba / era",
               "highlights": [
                 "was"
               ]
             },
             {
               "key": "were",
-              "value": "you / we / they were at home",
+              "value": "you / we / they were at home last night · Estabas / éramos / estaban",
               "highlights": [
                 "were"
               ]
             },
             {
-              "key": "Negativo",
-              "value": "wasn't / weren't",
+              "key": "Forma negativa",
+              "value": "wasn't (was not) / weren't (were not)",
               "highlights": [
-                "wasn't"
+                "wasn't",
+                "weren't"
+              ]
+            },
+            {
+              "key": "Uso principal",
+              "value": "Describe cómo eran o dónde estaban las personas o cosas en el pasado",
+              "highlights": [
+                "Describe"
               ]
             }
           ]
@@ -48,30 +57,30 @@
       "id": "a2-pasado-to-be-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "was",
-              "value": "I / he / she / it was tired",
+              "key": "Afirmativa",
+              "value": "Sujeto + was/were + Complemento · She was in London in 2022.",
               "highlights": [
-                "was"
+                "She was"
               ]
             },
             {
-              "key": "were",
-              "value": "you / we / they were at home",
+              "key": "Negativa",
+              "value": "Sujeto + wasn't/weren't + Complemento · They weren't hungry after lunch.",
               "highlights": [
-                "were"
+                "They weren't"
               ]
             },
             {
-              "key": "Negativo",
-              "value": "wasn't / weren't",
+              "key": "Interrogativa",
+              "value": "Was/Were + Sujeto + Complemento? · Were you happy with the results?",
               "highlights": [
-                "wasn't"
+                "Were you"
               ]
             }
           ]
@@ -82,22 +91,26 @@
       "id": "a2-pasado-to-be-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "I / he / she / it was tired"
+              "key": "Clima y lugar",
+              "value": "It was very sunny during our weekend trip to the beach."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "you / we / they were at home"
+              "key": "Estado emocional",
+              "value": "I was nervous before the interview, but my team was calm."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "wasn't / weren't"
+              "key": "Ubicación pasada",
+              "value": "Where were you at 8 o'clock yesterday evening?"
+            },
+            {
+              "key": "Eventos pasados",
+              "value": "The concert wasn't expensive, so it was completely crowded."
             }
           ]
         }
@@ -107,23 +120,25 @@
       "id": "a2-pasado-to-be-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "was",
-              "rule": "I / he / she / it was tired",
+              "label": "was (Singular: I, he, she, it)",
+              "rule": "Acompaña a la primera y tercera persona del singular",
               "examples": [
-                "I / he / she / it was tired"
+                "He was my English teacher last year.",
+                "It was cold yesterday."
               ]
             },
             {
-              "label": "were",
-              "rule": "you / we / they were at home",
+              "label": "were (Plural y You: you, we, they)",
+              "rule": "Acompaña a la segunda persona y a todos los sujetos plurales",
               "examples": [
-                "you / we / they were at home"
+                "We were late for the train.",
+                "They were very friendly."
               ]
             }
           ]
@@ -134,19 +149,19 @@
       "id": "a2-pasado-to-be-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "They was happy."
+              "text": "They was happy at the party."
             },
             {
               "variant": "good",
-              "text": "They were happy.",
-              "note": "they → were"
+              "text": "They were happy at the party.",
+              "note": "'they' es sujeto plural y exige 'were'"
             }
           ]
         }
@@ -155,27 +170,27 @@
     {
       "id": "a2-pasado-to-be-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "1. Identifica el sujeto",
+              "value": "I, he, she, it → was | you, we, they → were."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "2. Negaciones",
+              "value": "Usa wasn't / weren't sin añadir didn't."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "3. Preguntas",
+              "value": "Invierte el orden: Was/Were va antes del sujeto."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "4. Sin verbo principal",
+              "value": "Was/were funciona como verbo principal (no necesita aux. did)."
             }
           ]
         }
@@ -188,13 +203,34 @@
   ],
   "quiz": [
     {
-      "q": "We ___ at school yesterday.",
+      "q": "We ___ very busy at work all morning.",
       "options": [
         "were",
-        "was"
+        "was",
+        "are"
       ],
       "answer": 0,
-      "explain": "We → were."
+      "explain": "El sujeto 'We' requiere 'were' para formar el pasado del verbo to be."
+    },
+    {
+      "q": "___ she at the doctor's office this morning?",
+      "options": [
+        "Was",
+        "Were",
+        "Did"
+      ],
+      "answer": 0,
+      "explain": "Para el sujeto 'she' en pasado con to be se utiliza 'Was' al inicio de la pregunta."
+    },
+    {
+      "q": "¿Cuál oración expresa correctamente una negación en pasado?",
+      "options": [
+        "They weren't aware of the new schedule.",
+        "They didn't was aware of the new schedule.",
+        "They wasn't aware of the new schedule."
+      ],
+      "answer": 0,
+      "explain": "'They' requiere 'weren't' (were not). El auxiliar 'did' nunca se usa con 'was/were'."
     }
   ]
 }

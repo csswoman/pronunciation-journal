@@ -217,15 +217,15 @@ The palette is neutral-first with a dynamic primary scale. Every surface carries
 - **Ink Black (CTA)** (`oklch(0.18 0.008 var(--hue))`): The CTA button background. Uses the primary text color so it always-contrasts against the surface, regardless of hue. Not a semantic color; a contrast strategy.
 
 ### Neutral
-- **Quiet Canvas** (`oklch(0.965 0.003 var(--hue))`): Page background. Near-neutral so the learner's chosen hue does not color-wash the interface.
-- **Lifted Paper** (`oklch(0.99 0.003 var(--hue))`): Cards, panels, sidebars. The elevation of choice for raised surfaces.
-- **Sunken Stone** (`oklch(0.94 0.01 var(--hue))`): Inputs, code blocks, inset regions. Slightly darker than the page to create recession without contrast.
+- **Quiet Canvas** (`oklch(0.968 0.004 var(--hue))`): Page background. Near-neutral base, darkest surface level in light mode.
+- **Lifted Paper** (`oklch(1 0 0)`): Cards, panels, sidebars. Pure white elevation for raised surfaces on the canvas.
+- **Sunken Stone** (`oklch(0.978 0.004 var(--hue))`): Inputs, code blocks, inset regions inside cards. Slightly recessed fill, lighter than the page background.
 - **Deep Ink** (`oklch(0.18 0.008 var(--hue))`): Primary text. Near-black with a hair of hue.
 - **Faded Ink** (`oklch(0.40 0.006 var(--hue))`): Secondary text, metadata, descriptions.
 - **Ghost Ink** (`oklch(0.49 0.005 var(--hue))`): Tertiary text, timestamps, placeholders.
-- **Hairline** (`oklch(0.895 0.002 var(--hue))`): Subtle borders, dividers.
-- **Standard Rule** (`oklch(0.875 0 0)`): Default card and input borders.
-- **Bold Rule** (`oklch(0.720 0 0)`): Emphasized borders, active states.
+- **Hairline** (`oklch(0.945 0.004 var(--hue))`): Subtle borders, dividers.
+- **Standard Rule** (`oklch(0.918 0.008 var(--hue))`): Default card and input borders.
+- **Bold Rule** (`oklch(0.878 0.010 var(--hue))`): Emphasized borders, active states.
 
 **The Active Theme Rule.** The primary color is a variable, not a fixed brand color. Code, documentation, and design reference semantic tokens (`--primary`, `--surface-*`, `--text-*`) rather than a hue value or a hardcoded hex. `250` is only the initial fallback in `useOKLCHTheme`; any saved hue and either color mode are equally valid.
 

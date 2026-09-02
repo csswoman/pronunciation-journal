@@ -78,6 +78,8 @@ describe('DailyStepList (collapseFutureSteps=true)', () => {
       makeStep({ id: 's3', title: 'Práctica de sonido', subtitle: '4 ejercicios', estMinutes: 8 }),
       makeStep({ id: 's4', title: 'Estudia teoría', subtitle: 'Cómo estudiar', estMinutes: 5 }),
       makeStep({ id: 's5', title: 'Irregular past tense', subtitle: 'Grammar of the day', estMinutes: 2 }),
+      makeStep({ id: 's6', title: 'Extra Step 1', subtitle: 'Extra 1', estMinutes: 2 }),
+      makeStep({ id: 's7', title: 'Extra Step 2', subtitle: 'Extra 2', estMinutes: 2 }),
     ]
     render(
       <DailyStepList
@@ -88,27 +90,20 @@ describe('DailyStepList (collapseFutureSteps=true)', () => {
       />,
     )
 
-    // Current step: expanded (subtitle visible). Regex, not exact string —
-    // the expanded row joins subtitle + stepMeta() into one text node
-    // (e.g. "Afianza 6 palabras · 1 ejercicio · 5 min"), same as the
-    // default-rendering tests above.
+    // Current step: expanded
     expect(screen.getByText('Repaso de palabras')).toBeInTheDocument()
     expect(screen.getByText(/Afianza 6 palabras/)).toBeInTheDocument()
     expect(screen.getByText('1')).toBeInTheDocument()
 
-    // Next 2 pending steps: compact (title + subtitle + time)
+    // Next 2 pending steps: compact
     expect(screen.getByText('Lectura')).toBeInTheDocument()
-    expect(screen.getByText(/3 min/)).toBeInTheDocument()
-    expect(screen.getByText('Tus palabras recientes')).toBeInTheDocument()
-
     expect(screen.getByText('Práctica de sonido')).toBeInTheDocument()
-    expect(screen.getByText(/8 min/)).toBeInTheDocument()
-    expect(screen.getByText('4 ejercicios')).toBeInTheDocument()
 
-    // Remaining 2 steps hidden behind the toggle
+    // Remaining 4 steps hidden behind the toggle
     expect(screen.queryByText('Estudia teoría')).not.toBeInTheDocument()
     expect(screen.queryByText('Irregular past tense')).not.toBeInTheDocument()
-    expect(screen.getByText(/\+ 2 pasos más/i)).toBeInTheDocument()
+    expect(screen.queryByText('Extra Step 1')).not.toBeInTheDocument()
+    expect(screen.getByText(/Ver 4 pasos más/i)).toBeInTheDocument()
   })
 
   it('reveals the remaining compact steps when the toggle is clicked', async () => {
@@ -118,6 +113,8 @@ describe('DailyStepList (collapseFutureSteps=true)', () => {
       makeStep({ id: 's2', title: 'Lectura', estMinutes: 3 }),
       makeStep({ id: 's3', title: 'Práctica de sonido', estMinutes: 8 }),
       makeStep({ id: 's4', title: 'Estudia teoría', estMinutes: 5 }),
+      makeStep({ id: 's5', title: 'Extra 1', estMinutes: 5 }),
+      makeStep({ id: 's6', title: 'Extra 2', estMinutes: 5 }),
     ]
     const { container } = render(
       <DailyStepList
@@ -129,10 +126,10 @@ describe('DailyStepList (collapseFutureSteps=true)', () => {
     )
 
     expect(screen.queryByText('Estudia teoría')).not.toBeInTheDocument()
-    await userEvent.click(screen.getByText(/\+ 1 paso más/i))
+    await userEvent.click(screen.getByText(/Ver \d+ pasos? más/i))
     expect(playUiCue).toHaveBeenCalledWith('nav-open')
     expect(screen.getByText('Estudia teoría')).toBeInTheDocument()
-    expect(screen.queryByText(/\+ \d+ más/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/Ver \d+ pasos? más/i)).not.toBeInTheDocument()
 
     const revealed = screen.getByText('Estudia teoría').closest('li')
     expect(revealed?.classList.contains('list-stagger')).toBe(true)
@@ -140,7 +137,7 @@ describe('DailyStepList (collapseFutureSteps=true)', () => {
     // Previously visible compact rows stay un-staggered
     const alreadyVisible = screen.getByText('Lectura').closest('li')
     expect(alreadyVisible?.classList.contains('list-stagger')).toBe(false)
-    expect(container.querySelectorAll('.list-stagger')).toHaveLength(1)
+    expect(container.querySelectorAll('.list-stagger')).toHaveLength(3)
   })
 
   it('does not render a toggle if exactly 3 steps exist', () => {
@@ -157,7 +154,7 @@ describe('DailyStepList (collapseFutureSteps=true)', () => {
         collapseFutureSteps
       />,
     )
-    expect(screen.queryByText(/\+ \d+ más/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/Ver \d+ pasos? más/i)).not.toBeInTheDocument()
   })
 
   it('renders done steps compact with a check, never hidden, and does not count them against the pending budget', () => {
@@ -167,6 +164,7 @@ describe('DailyStepList (collapseFutureSteps=true)', () => {
       makeStep({ id: 's3', title: 'Práctica de sonido' }),
       makeStep({ id: 's4', title: 'Estudia teoría' }),
       makeStep({ id: 's5', title: 'Irregular past tense' }),
+      makeStep({ id: 's6', title: 'Extra Step 1' }),
     ]
     render(
       <DailyStepList
@@ -184,13 +182,13 @@ describe('DailyStepList (collapseFutureSteps=true)', () => {
     expect(screen.queryByText('Ya completado')).not.toBeInTheDocument()
 
     // Entry point moves to s2. s3 and s4 are the 2 pending steps shown
-    // compact (full budget, unaffected by the done step). s5 is the only
-    // one hidden behind the toggle.
+    // compact (full budget, unaffected by the done step). s5 and s6 are
+    // hidden behind the toggle.
     expect(screen.getByText('Lectura')).toBeInTheDocument()
     expect(screen.getByText('Práctica de sonido')).toBeInTheDocument()
     expect(screen.getByText('Estudia teoría')).toBeInTheDocument()
     expect(screen.queryByText('Irregular past tense')).not.toBeInTheDocument()
-    expect(screen.getByText(/\+ 1 paso más/i)).toBeInTheDocument()
+    expect(screen.getByText(/Ver 2 pasos más/i)).toBeInTheDocument()
   })
 })
 

@@ -9,14 +9,23 @@
       "id": "ps-form",
       "tag": "Forma",
       "title": "La -s de la tercera persona",
-      "titleItalic": ["-s"],
+      "titleItalic": [
+        "-s"
+      ],
       "lede": "Acciones habituales y hechos. El único cambio importante: he/she/it añade -s.",
       "blocks": [
         {
           "type": "conjugation",
           "rows": [
-            { "pronoun": "I / You / We / They", "form": "work" },
-            { "pronoun": "He / She / It", "form": "works", "hint": "+ s" }
+            {
+              "pronoun": "I / You / We / They",
+              "form": "work"
+            },
+            {
+              "pronoun": "He / She / It",
+              "form": "works",
+              "hint": "+ s"
+            }
           ]
         }
       ],
@@ -34,9 +43,31 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "+ s (normal)", "value": "work → works · play → plays", "highlights": ["works", "plays"] },
-            { "key": "+ es (s, sh, ch, x, o)", "value": "go → goes · watch → watches", "highlights": ["goes", "watches"] },
-            { "key": "y → ies", "value": "study → studies · fly → flies", "highlights": ["studies", "flies"], "hint": "solo si antes de la y hay consonante" }
+            {
+              "key": "+ s (normal)",
+              "value": "work → works · play → plays",
+              "highlights": [
+                "works",
+                "plays"
+              ]
+            },
+            {
+              "key": "+ es (s, sh, ch, x, o)",
+              "value": "go → goes · watch → watches",
+              "highlights": [
+                "goes",
+                "watches"
+              ]
+            },
+            {
+              "key": "y → ies",
+              "value": "study → studies · fly → flies",
+              "highlights": [
+                "studies",
+                "flies"
+              ],
+              "hint": "solo si antes de la y hay consonante"
+            }
           ]
         }
       ]
@@ -50,10 +81,24 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "bad", "text": "She work here." },
-            { "variant": "good", "text": "She works here.", "note": "ella trabaja aquí" },
-            { "variant": "bad", "text": "My brother live in Madrid." },
-            { "variant": "good", "text": "My brother lives in Madrid.", "note": "un hermano = tercera persona" }
+            {
+              "variant": "bad",
+              "text": "She work here."
+            },
+            {
+              "variant": "good",
+              "text": "She works here.",
+              "note": "ella trabaja aquí"
+            },
+            {
+              "variant": "bad",
+              "text": "My brother live in Madrid."
+            },
+            {
+              "variant": "good",
+              "text": "My brother lives in Madrid.",
+              "note": "un hermano = tercera persona"
+            }
           ]
         }
       ]
@@ -62,21 +107,45 @@
       "id": "ps-do-does",
       "tag": "Negativo y pregunta",
       "title": "do / does como auxiliar",
-      "titleItalic": ["do", "does"],
+      "titleItalic": [
+        "do",
+        "does"
+      ],
       "lede": "Para negar y preguntar usas do/does + verbo base (sin -s).",
       "blocks": [
         {
           "type": "rules",
           "rows": [
-            { "key": "Negativo", "value": "I don't work. · She doesn't work.", "highlights": ["don't", "doesn't"] },
-            { "key": "Pregunta", "value": "Do you work? · Does she work?", "highlights": ["Do you", "Does she"] }
+            {
+              "key": "Negativo",
+              "value": "I don't work. · She doesn't work.",
+              "highlights": [
+                "don't",
+                "doesn't"
+              ]
+            },
+            {
+              "key": "Pregunta",
+              "value": "Do you work? · Does she work?",
+              "highlights": [
+                "Do you",
+                "Does she"
+              ]
+            }
           ]
         },
         {
           "type": "pairs",
           "lines": [
-            { "variant": "bad", "text": "Does she works?" },
-            { "variant": "good", "text": "Does she work?", "note": "la -s ya está en does" }
+            {
+              "variant": "bad",
+              "text": "Does she works?"
+            },
+            {
+              "variant": "good",
+              "text": "Does she work?",
+              "note": "la -s ya está en does"
+            }
           ]
         }
       ],
@@ -97,12 +166,18 @@
             {
               "label": "Hábitos",
               "rule": "rutinas que se repiten",
-              "examples": ["I drink coffee every day.", "We start at 9."]
+              "examples": [
+                "I drink coffee every day.",
+                "We start at 9."
+              ]
             },
             {
               "label": "Verdades",
               "rule": "hechos generales",
-              "examples": ["Water boils at 100°C.", "The sun rises in the east."]
+              "examples": [
+                "Water boils at 100°C.",
+                "The sun rises in the east."
+              ]
             }
           ]
         }
@@ -117,10 +192,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "always", "value": "siempre · I always study at night.", "highlights": ["always study"] },
-            { "key": "usually", "value": "normalmente · She usually walks.", "highlights": ["usually walks"] },
-            { "key": "sometimes", "value": "a veces · They sometimes travel.", "highlights": ["sometimes travel"] },
-            { "key": "never", "value": "nunca · He never eats meat.", "highlights": ["never eats"] }
+            {
+              "key": "always",
+              "value": "siempre · I always study at night.",
+              "highlights": [
+                "always study"
+              ]
+            },
+            {
+              "key": "usually",
+              "value": "normalmente · She usually walks.",
+              "highlights": [
+                "usually walks"
+              ]
+            },
+            {
+              "key": "sometimes",
+              "value": "a veces · They sometimes travel.",
+              "highlights": [
+                "sometimes travel"
+              ]
+            },
+            {
+              "key": "never",
+              "value": "nunca · He never eats meat.",
+              "highlights": [
+                "never eats"
+              ]
+            }
           ]
         }
       ],
@@ -128,6 +227,35 @@
         "label": "Posición:",
         "body": "antes del verbo (I always work) pero después de to be (I am always late)."
       }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "He ___ breakfast at 7:30 every morning.",
+      "options": [
+        "eats",
+        "eat"
+      ],
+      "answer": 0,
+      "explain": "En tercera persona del singular (he), el verbo en presente simple añade '-s'."
+    },
+    {
+      "q": "They ___ not live in Chicago.",
+      "options": [
+        "do",
+        "does"
+      ],
+      "answer": 0,
+      "explain": "Con el sujeto 'They' se usa el auxiliar negativo 'do not' (don't)."
+    },
+    {
+      "q": "My parents ___ TV in the evening.",
+      "options": [
+        "watch",
+        "watches"
+      ],
+      "answer": 0,
+      "explain": "'My parents' es plural (they), por lo que el verbo no lleva '-s'."
     }
   ]
 }

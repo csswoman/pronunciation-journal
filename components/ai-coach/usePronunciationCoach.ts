@@ -8,6 +8,7 @@ import { saveAIWord } from "@/lib/db/ai";
 import {
   PHONEME_TIPS,
   fetchWordIPA,
+  getStaticWordIPA,
   loadMasteredFromDexie,
   loadQueueFromDexie,
   loadSeenFromDexie,
@@ -103,19 +104,45 @@ export function usePronunciationCoach() {
   useEffect(() => {
     if (!activePhrase) return;
 
-    setWordIPAs([]);
-    setIpaLoading(true);
     const words = activePhrase.split(/\s+/).filter(Boolean);
     const clean = (word: string) => word.replace(/[^a-zA-Z']/g, "").toLowerCase();
 
-    void Promise.all(words.map((word) => fetchWordIPA(clean(word)))).then((ipas) => {
-      setWordIPAs(
-        words.map((word, index) => ({
-          word,
-          ipa: ipas[index],
-          alignment: null,
-        })),
-      );
+    const initialWordIPAs: WordIPA[] = [];
+    const missingIndices: number[] = [];
+
+    words.forEach((word, index) => {
+      const staticIpa = getStaticWordIPA(word);
+      initialWordIPAs.push({
+        word,
+        ipa: staticIpa,
+        alignment: null,
+      });
+      if (!staticIpa) {
+        missingIndices.push(index);
+      }
+    });
+
+    setWordIPAs(initialWordIPAs);
+
+    if (missingIndices.length === 0) {
+      setIpaLoading(false);
+      return;
+    }
+
+    setIpaLoading(true);
+    void Promise.all(
+      missingIndices.map((index) => fetchWordIPA(clean(words[index]))),
+    ).then((fetchedIpas) => {
+      setWordIPAs((prev) => {
+        if (prev.length !== words.length) return prev;
+        const next = [...prev];
+        missingIndices.forEach((wordIdx, i) => {
+          if (fetchedIpas[i]) {
+            next[wordIdx] = { ...next[wordIdx], ipa: fetchedIpas[i] };
+          }
+        });
+        return next;
+      });
       setIpaLoading(false);
     });
   }, [activePhrase]);

@@ -1,4 +1,5 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "B2 · Énfasis",
     "title": "Do/does/did",
@@ -16,32 +17,31 @@
           "type": "rules",
           "rows": [
             {
-              "key": "do/does",
-              "value": "I do agree. · She does know.",
+              "key": "do (énfasis presente plural/I/you)",
+              "value": "Destaca la veracidad de la acción · I do want to visit Japan.",
               "highlights": [
-                "do agree",
-                "does know"
+                "do want"
               ]
             },
             {
-              "key": "did",
-              "value": "I did tell you! · pasado",
+              "key": "does (énfasis presente 3ª persona)",
+              "value": "Enfatiza el hecho en 3ª persona · She does speak English fluently.",
               "highlights": [
-                "did tell"
+                "does speak"
               ]
             },
             {
-              "key": "Contraste",
-              "value": "I like it → I do like it (énfasis)",
+              "key": "did (énfasis pasado)",
+              "value": "Reafirma una acción pasada cuestionada · I did send the report yesterday!",
               "highlights": [
-                "do"
+                "did send"
               ]
             },
             {
-              "key": "Pronunciación",
-              "value": "el auxiliar lleva el acento",
+              "key": "Contraste y corrección",
+              "value": "Corrige una suposición falsa · You think I don't care, but I do care.",
               "highlights": [
-                "do"
+                "do care"
               ]
             }
           ]
@@ -56,31 +56,37 @@
       "id": "b2-enfasis-auxiliares-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "do/does",
-              "value": "I do agree. · She does know.",
+              "key": "Afirmativa con do/does",
+              "value": "Sujeto + do/does + verbo base (sin -s) · He does like seafood, despite what he said.",
               "highlights": [
-                "do agree",
-                "does know"
+                "does like"
               ]
             },
             {
-              "key": "did",
-              "value": "I did tell you! · pasado",
+              "key": "Afirmativa con did",
+              "value": "Sujeto + did + verbo base (forma infinitiva) · We did meet them at the conference.",
               "highlights": [
-                "did tell"
+                "did meet"
               ]
             },
             {
-              "key": "Contraste",
-              "value": "I like it → I do like it (énfasis)",
+              "key": "Contraste concesivo",
+              "value": "Although + S + V, S + do/does/did + V base · Although tired, I do want to continue.",
               "highlights": [
-                "do"
+                "do want"
+              ]
+            },
+            {
+              "key": "Imperativo enfático",
+              "value": "Do + verbo base! (invitación/orden cálida) · Do sit down and make yourself at home!",
+              "highlights": [
+                "Do sit"
               ]
             }
           ]
@@ -91,26 +97,26 @@
       "id": "b2-enfasis-auxiliares-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "She does know."
+              "key": "Defendiendo una postura",
+              "value": "I know you think I forgot your birthday, but I did buy you a gift!"
             },
             {
-              "key": "Ejemplo 2",
-              "value": "pasado"
+              "key": "Hospitalidad",
+              "value": "Please do call me if you experience any difficulties during your stay."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "I like it → I do like it (énfasis)"
+              "key": "Confirmando información",
+              "value": "Although she rarely speaks in meetings, she does have brilliant ideas."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "el auxiliar lleva el acento"
+              "key": "Superando dudas",
+              "value": "Many doubted our team, but we did manage to complete the project on time."
             }
           ]
         }
@@ -120,23 +126,25 @@
       "id": "b2-enfasis-auxiliares-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "do/does",
-              "rule": "I do agree. · She does know.",
+              "label": "Oración Afirmativa Estándar",
+              "rule": "Declaración neutra sin acento tonal especial en el auxiliar.",
               "examples": [
-                "She does know."
+                "I like your new apartment.",
+                "He called you yesterday."
               ]
             },
             {
-              "label": "did",
-              "rule": "I did tell you! · pasado",
+              "label": "Oración con Auxiliar Enfático",
+              "rule": "Usa do/does/did recargado para reafirmar la verdad frente a una duda o negación previa.",
               "examples": [
-                "pasado"
+                "I DO like your new apartment!",
+                "He DID call you yesterday!"
               ]
             }
           ]
@@ -147,19 +155,19 @@
       "id": "b2-enfasis-auxiliares-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "I do likes it."
+              "text": "She does works very hard every day."
             },
             {
               "variant": "good",
-              "text": "I do like it.",
-              "note": "tras do/does/did va la base del verbo"
+              "text": "She does work very hard every day.",
+              "note": "cuando se usa el auxiliar enfático 'does', el verbo principal vuelve a su forma base infinitiva sin '-s'"
             }
           ]
         }
@@ -168,27 +176,27 @@
     {
       "id": "b2-enfasis-auxiliares-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "Verbo principal en forma base",
+              "value": "Tras do/does/did el verbo principal NUNCA lleva -s ni -ed (She does know, He did call)."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "Acento prosódico",
+              "value": "En el habla hablada, el estrés de la voz recae sobre el propio auxiliar (do/does/did)."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "Imperativos amables",
+              "value": "Usar 'Do' antes de un imperativo le da un tono de cortesía entusiasta (Do come in!)."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "Uso con 'Although'",
+              "value": "Combina muy bien para matizar: 'Although expensive, it does work well'."
             }
           ]
         }
@@ -201,13 +209,34 @@
   ],
   "quiz": [
     {
-      "q": "She ___ want to come, honestly.",
+      "q": "Why did you say I didn't lock the door? I ___ lock it!",
       "options": [
-        "does",
-        "is"
+        "did",
+        "do",
+        "have"
       ],
       "answer": 0,
-      "explain": "Énfasis en presente → does + base."
+      "explain": "Para reafirmar con énfasis una acción en el pasado cuestionada se utiliza 'did'."
+    },
+    {
+      "q": "Although he doesn't talk much, he ___ care deeply about his work.",
+      "options": [
+        "does",
+        "is",
+        "do"
+      ],
+      "answer": 0,
+      "explain": "Tercera persona del singular en presente con énfasis → 'does + verbo base'."
+    },
+    {
+      "q": "Please ___ try some of this homemade cake; it is delicious!",
+      "options": [
+        "do",
+        "does",
+        "did"
+      ],
+      "answer": 0,
+      "explain": "El auxiliar 'Do' antes de un verbo imperativo añade una invitación entusiasta y cortés."
     }
   ]
 }

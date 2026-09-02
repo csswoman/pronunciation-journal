@@ -2,6 +2,46 @@ import type { JournalEntryMode } from './types'
 
 export type NotebookTopic = 'daily' | 'opinion' | 'fiction' | 'situational' | 'vocab' | 'free'
 
+export const ALL_TOPICS: NotebookTopic[] = ['daily', 'opinion', 'fiction', 'situational', 'vocab', 'free']
+
+export const TOPIC_STARTER_CHIPS: Record<NotebookTopic, string[]> = {
+  daily: [
+    'Today I talked with...',
+    'We talked about...',
+    'She told me that...',
+    'It made me feel...',
+  ],
+  opinion: [
+    'In my opinion...',
+    'I personally believe that...',
+    'The main reason is...',
+    'From my point of view...',
+  ],
+  fiction: [
+    'It all started when...',
+    'Suddenly, I noticed...',
+    'Without warning...',
+    'In the end, it turned out...',
+  ],
+  situational: [
+    'I am writing to update you on...',
+    'Could you please help me with...',
+    'I would recommend checking...',
+    'Thanks for your time and...',
+  ],
+  vocab: [
+    'First, I noticed that...',
+    'Then, I realized...',
+    'Finally, I discovered...',
+    'To figure this out, I...',
+  ],
+  free: [
+    'Today I was thinking about...',
+    'Something interesting happened...',
+    'Lately, I have been...',
+    'What caught my attention was...',
+  ],
+}
 export interface PromptDefinition {
   id: string
   en: string
@@ -29,6 +69,8 @@ export interface NotebookHome {
     firstLine: string
     sentences: number
     newWords: number
+    status?: 'reviewed' | 'unreviewed'
+    errorCount?: number
   }>
 }
 

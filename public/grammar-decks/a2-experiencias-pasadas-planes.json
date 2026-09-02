@@ -13,14 +13,49 @@
       "blocks": [
         {
           "type": "verb-table",
-          "headers": ["Base", "Pasado", "Tipo", "Español"],
+          "headers": [
+            "Base",
+            "Pasado",
+            "Tipo",
+            "Español"
+          ],
           "rows": [
-            ["work", "worked", "regular", "trabajar"],
-            ["play", "played", "regular", "jugar"],
-            ["go", "went", "irregular", "ir"],
-            ["see", "saw", "irregular", "ver"],
-            ["have", "had", "irregular", "tener"],
-            ["buy", "bought", "irregular", "comprar"]
+            [
+              "work",
+              "worked",
+              "regular",
+              "trabajar"
+            ],
+            [
+              "play",
+              "played",
+              "regular",
+              "jugar"
+            ],
+            [
+              "go",
+              "went",
+              "irregular",
+              "ir"
+            ],
+            [
+              "see",
+              "saw",
+              "irregular",
+              "ver"
+            ],
+            [
+              "have",
+              "had",
+              "irregular",
+              "tener"
+            ],
+            [
+              "buy",
+              "bought",
+              "irregular",
+              "comprar"
+            ]
           ]
         }
       ],
@@ -33,21 +68,43 @@
       "id": "ep-past-did",
       "tag": "Negativo y pregunta",
       "title": "did / didn't",
-      "titleItalic": ["did", "didn't"],
+      "titleItalic": [
+        "did",
+        "didn't"
+      ],
       "lede": "En negativo y pregunta usas did + verbo base. El verbo vuelve a su forma original.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
-            { "key": "Negativo", "value": "I didn't go. (no \"didn't went\")", "highlights": ["didn't go"] },
-            { "key": "Pregunta", "value": "Did you go? · Where did she go?", "highlights": ["Did you go?"] }
+            {
+              "key": "Negativo",
+              "value": "I didn't go. (no \"didn't went\")",
+              "highlights": [
+                "didn't go"
+              ]
+            },
+            {
+              "key": "Pregunta",
+              "value": "Did you go? · Where did she go?",
+              "highlights": [
+                "Did you go?"
+              ]
+            }
           ]
         },
         {
           "type": "pairs",
           "lines": [
-            { "variant": "bad", "text": "Did you went?" },
-            { "variant": "good", "text": "Did you go?", "note": "did ya marca el pasado" }
+            {
+              "variant": "bad",
+              "text": "Did you went?"
+            },
+            {
+              "variant": "good",
+              "text": "Did you go?",
+              "note": "did ya marca el pasado"
+            }
           ]
         }
       ]
@@ -61,15 +118,35 @@
         {
           "type": "conjugation",
           "rows": [
-            { "pronoun": "I / You / We / They", "form": "have been", "hint": "to Paris" },
-            { "pronoun": "He / She / It", "form": "has been", "hint": "to Paris" }
+            {
+              "pronoun": "I / You / We / They",
+              "form": "have been",
+              "hint": "to Paris"
+            },
+            {
+              "pronoun": "He / She / It",
+              "form": "has been",
+              "hint": "to Paris"
+            }
           ]
         },
         {
           "type": "rules",
           "rows": [
-            { "key": "ever", "value": "alguna vez · Have you ever tried sushi?", "highlights": ["ever"] },
-            { "key": "never", "value": "nunca · I have never been to Japan.", "highlights": ["never"] }
+            {
+              "key": "ever",
+              "value": "alguna vez · Have you ever tried sushi?",
+              "highlights": [
+                "ever"
+              ]
+            },
+            {
+              "key": "never",
+              "value": "nunca · I have never been to Japan.",
+              "highlights": [
+                "never"
+              ]
+            }
           ]
         }
       ]
@@ -86,12 +163,18 @@
             {
               "label": "Past simple",
               "rule": "momento concreto",
-              "examples": ["I saw it yesterday.", "She went in 2020."]
+              "examples": [
+                "I saw it yesterday.",
+                "She went in 2020."
+              ]
             },
             {
               "label": "Present perfect",
               "rule": "experiencia, sin fecha",
-              "examples": ["I have seen it.", "She has been there."]
+              "examples": [
+                "I have seen it.",
+                "She has been there."
+              ]
             }
           ]
         }
@@ -105,15 +188,37 @@
       "id": "ep-going-to",
       "tag": "Planes",
       "title": "be going to: intenciones",
-      "titleItalic": ["going to"],
+      "titleItalic": [
+        "going to"
+      ],
       "lede": "Para planes y decisiones que ya tomaste. Estructura: be + going to + verbo.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
-            { "key": "Plan", "value": "I'm going to study tonight.", "highlights": ["going to study"], "hint": "voy a estudiar" },
-            { "key": "Predicción", "value": "It's going to rain.", "highlights": ["going to rain"], "hint": "va a llover (lo ves venir)" },
-            { "key": "Pregunta", "value": "Are you going to come?", "highlights": ["Are you going to come?"] }
+            {
+              "key": "Plan",
+              "value": "I'm going to study tonight.",
+              "highlights": [
+                "going to study"
+              ],
+              "hint": "voy a estudiar"
+            },
+            {
+              "key": "Predicción",
+              "value": "It's going to rain.",
+              "highlights": [
+                "going to rain"
+              ],
+              "hint": "va a llover (lo ves venir)"
+            },
+            {
+              "key": "Pregunta",
+              "value": "Are you going to come?",
+              "highlights": [
+                "Are you going to come?"
+              ]
+            }
           ]
         }
       ]
@@ -127,9 +232,30 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "ago", "value": "hace... · two days ago", "highlights": ["ago"], "hint": "va con pasado simple" },
-            { "key": "already", "value": "ya · I have already eaten.", "highlights": ["already"], "hint": "antes de lo esperado" },
-            { "key": "yet", "value": "todavía / ya · Have you finished yet?", "highlights": ["yet"], "hint": "va al final, en preguntas y negativos" }
+            {
+              "key": "ago",
+              "value": "hace... · two days ago",
+              "highlights": [
+                "ago"
+              ],
+              "hint": "va con pasado simple"
+            },
+            {
+              "key": "already",
+              "value": "ya · I have already eaten.",
+              "highlights": [
+                "already"
+              ],
+              "hint": "antes de lo esperado"
+            },
+            {
+              "key": "yet",
+              "value": "todavía / ya · Have you finished yet?",
+              "highlights": [
+                "yet"
+              ],
+              "hint": "va al final, en preguntas y negativos"
+            }
           ]
         }
       ],
@@ -137,6 +263,38 @@
         "label": "Truco:",
         "body": "ago se pone DESPUÉS del tiempo (two days ago), no antes."
       }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Last summer, our family ___ to Italy on vacation.",
+      "options": [
+        "went",
+        "go",
+        "gone"
+      ],
+      "answer": 0,
+      "explain": "El pasado simple del verbo irregular 'go' es 'went'."
+    },
+    {
+      "q": "They ___ a comfortable house near the lake two months ago.",
+      "options": [
+        "bought",
+        "buyed",
+        "buys"
+      ],
+      "answer": 0,
+      "explain": "El pasado simple del verbo irregular 'buy' es 'bought'."
+    },
+    {
+      "q": "What ___ you do during the weekend?",
+      "options": [
+        "did",
+        "do",
+        "were"
+      ],
+      "answer": 0,
+      "explain": "El auxiliar para formular preguntas en pasado simple es 'did'."
     }
   ]
 }

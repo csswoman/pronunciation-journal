@@ -1,38 +1,53 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "A2 · Pronombres",
     "title": "Pronombres",
-    "titleEmphasis": "reflexivos",
-    "goal": "Ya usas myself, yourself, himself… cuando sujeto y objeto son la misma persona."
+    "titleEmphasis": "reflexivos (myself, yourself…)",
+    "goal": "Emplea pronombres reflexivos cuando el sujeto realiza y recibe la misma acción."
   },
   "cards": [
     {
       "id": "a2-pronombres-reflexivos-concept",
       "tag": "Idea central",
       "title": "Pronombres: qué expresa",
-      "lede": "Ya usas myself, yourself, himself… cuando sujeto y objeto son la misma persona.",
+      "lede": "Emplea pronombres reflexivos cuando el sujeto realiza y recibe la misma acción.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "myself",
-              "value": "I hurt myself.",
+              "key": "Singulares",
+              "value": "myself, yourself, himself, herself, itself · Sobre uno mismo",
+              "highlights": [
+                "myself",
+                "yourself",
+                "himself",
+                "herself",
+                "itself"
+              ]
+            },
+            {
+              "key": "Plurales",
+              "value": "ourselves, yourselves, themselves · Sobre sí mismos",
+              "highlights": [
+                "ourselves",
+                "yourselves",
+                "themselves"
+              ]
+            },
+            {
+              "key": "Uso reflexivo",
+              "value": "I cut myself while chopping onions",
               "highlights": [
                 "myself"
               ]
             },
             {
-              "key": "yourself",
-              "value": "Help yourself.",
+              "key": "Uso enfático / autogestión",
+              "value": "by myself = solo / por mi cuenta | She solved it herself",
               "highlights": [
-                "yourself"
-              ]
-            },
-            {
-              "key": "himself / herself",
-              "value": "She taught herself.",
-              "highlights": [
+                "by myself",
                 "herself"
               ]
             }
@@ -48,30 +63,32 @@
       "id": "a2-pronombres-reflexivos-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "myself",
-              "value": "I hurt myself.",
+              "key": "Sujeto → Reflexivo (Singular)",
+              "value": "I→myself | You→yourself | He→himself | She→herself | It→itself",
               "highlights": [
-                "myself"
-              ]
-            },
-            {
-              "key": "yourself",
-              "value": "Help yourself.",
-              "highlights": [
+                "myself",
                 "yourself"
               ]
             },
             {
-              "key": "himself / herself",
-              "value": "She taught herself.",
+              "key": "Sujeto → Reflexivo (Plural)",
+              "value": "We→ourselves | You (pl)→yourselves | They→themselves",
               "highlights": [
-                "herself"
+                "ourselves",
+                "themselves"
+              ]
+            },
+            {
+              "key": "Estructura por cuenta propia",
+              "value": "Sujeto + Verbo + by + Pronombre reflexivo · He lives by himself.",
+              "highlights": [
+                "by himself"
               ]
             }
           ]
@@ -82,22 +99,26 @@
       "id": "a2-pronombres-reflexivos-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "I hurt myself."
+              "key": "Accidentes cotidianos",
+              "value": "Be careful with that knife, don't cut yourself!"
             },
             {
-              "key": "Ejemplo 2",
-              "value": "Help yourself."
+              "key": "Autoaprendizaje",
+              "value": "Maria taught herself to play the piano without a teacher."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "She taught herself."
+              "key": "Independencia",
+              "value": "My grandfather fixed the roof all by himself."
+            },
+            {
+              "key": "Cuidado personal",
+              "value": "They really enjoyed themselves at the summer festival."
             }
           ]
         }
@@ -107,23 +128,25 @@
       "id": "a2-pronombres-reflexivos-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "myself",
-              "rule": "I hurt myself.",
+              "label": "Pronombres de objeto (me, him, them)",
+              "rule": "La acción recae en OTRA persona o cosa",
               "examples": [
-                "I hurt myself."
+                "She looked at him. (Ella lo miró a él)",
+                "I helped them."
               ]
             },
             {
-              "label": "yourself",
-              "rule": "Help yourself.",
+              "label": "Pronombres reflexivos (myself, himself, themselves)",
+              "rule": "La acción recae sobre EL MISMO sujeto que la realiza",
               "examples": [
-                "Help yourself."
+                "She looked at herself in the mirror.",
+                "I helped myself."
               ]
             }
           ]
@@ -134,19 +157,19 @@
       "id": "a2-pronombres-reflexivos-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "I cut me."
+              "text": "He cut him while shaving."
             },
             {
               "variant": "good",
-              "text": "I cut myself.",
-              "note": "misma persona → reflexivo"
+              "text": "He cut himself while shaving.",
+              "note": "se cortó a sí mismo, por lo que exige el reflexivo 'himself'"
             }
           ]
         }
@@ -155,27 +178,27 @@
     {
       "id": "a2-pronombres-reflexivos-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "1. Concordancia obligatoria",
+              "value": "El reflexivo debe coincidir exactamente con el sujeto."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "2. Expresión by + reflexivo",
+              "value": "Significa 'solo' o 'sin ayuda de nadie'."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "3. Verbos comunes",
+              "value": "Frecuente con hurt, cut, teach, enjoy, introduce, look at."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "4. No usar en rutinas",
+              "value": "En inglés NO se usan reflexivos para lavarse/vestirse (no se dice 'I wash myself')."
             }
           ]
         }
@@ -188,13 +211,34 @@
   ],
   "quiz": [
     {
-      "q": "Be careful. Don't hurt ___.",
+      "q": "Did you prepare this wonderful meal all by ___?",
       "options": [
         "yourself",
-        "you"
+        "you",
+        "yours"
       ],
       "answer": 0,
-      "explain": "Acción sobre uno mismo → yourself."
+      "explain": "'by yourself' significa sin ayuda de nadie para el sujeto 'you'."
+    },
+    {
+      "q": "The children were old enough to dress ___ for school.",
+      "options": [
+        "themselves",
+        "them",
+        "theirselves"
+      ],
+      "answer": 0,
+      "explain": "El reflexivo plural de 'they/the children' es 'themselves'. ('theirselves' no existe)."
+    },
+    {
+      "q": "¿Cuál frase expresa que ella hizo el trabajo sin ayuda?",
+      "options": [
+        "She completed the whole project by herself.",
+        "She completed the whole project by her.",
+        "She completed the whole project by hers."
+      ],
+      "answer": 0,
+      "explain": "La estructura 'by + reflexivo' ('by herself') expresa que lo hizo sola o sin ayuda externa."
     }
   ]
 }

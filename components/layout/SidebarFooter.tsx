@@ -1,16 +1,5 @@
 "use client";
 
-// Planned structure:
-// <SidebarFooter>
-//   <ProfileTrigger />
-//   <QuickSettingsPanel>   — portaled dialog
-//     <PanelHeader />
-//     <ThemeControls />
-//     <SoundControls />
-//     <AccountAction />
-//   </QuickSettingsPanel>
-// </SidebarFooter>
-
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -19,13 +8,10 @@ import { cn } from "@/lib/cn";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useUserPreferences } from "@/hooks/useUserPreferences";
 import { isAnonymousUser } from "@/lib/auth/is-anonymous";
-import { LogIn, LogOut, Settings2 } from "@/components/icons";
+import { LogIn, LogOut, Settings2, User } from "@/components/icons";
 import { useSidebar } from "@/components/theme/sidebar/SidebarContext";
 import { playUiCue } from "@/lib/ui-sounds/cues";
-import {
-  SoundControls,
-  ThemeControls,
-} from "@/components/layout/QuickSettingsControls";
+import { QuickSettingsAccordion } from "@/components/layout/QuickSettingsControls";
 
 export default function SidebarFooter() {
   const router = useRouter();
@@ -37,7 +23,7 @@ export default function SidebarFooter() {
   const panelRef = useRef<HTMLDivElement>(null);
   const isGuest = isAnonymousUser(user);
   const displayName = isGuest
-    ? "Modo invitado"
+    ? "Sesión temporal"
     : preferences?.full_name || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Mi perfil";
   const avatarUrl = user?.user_metadata?.avatar_url as string | undefined;
   const initials = isGuest
@@ -79,32 +65,92 @@ export default function SidebarFooter() {
     playUiCue("wrong");
     setOpen(false);
     await signOutUser();
-    router.push("/");
+    router.replace("/login?intent=explore");
   };
 
+  const settingsButton = (
+    <button
+      type="button"
+      onClick={() => {
+        playUiCue(open ? "nav-close" : "nav-open");
+        setOpen((value) => !value);
+      }}
+      aria-expanded={open}
+      aria-haspopup="dialog"
+      aria-label="Ajustes rápidos"
+      title="Ajustes rápidos"
+      className={cn(
+        "focus-ring press-feedback grid size-9 shrink-0 place-items-center rounded-md transition-colors text-fg-subtle hover:text-fg hover:bg-surface-sunken",
+        open && "bg-surface-sunken text-primary",
+      )}
+    >
+      <Settings2 size={18} aria-hidden />
+    </button>
+  );
+
   return (
-    <div ref={footerRef} className="relative flex-shrink-0 border-t border-border-subtle px-3 pb-3 pt-2">
-      <button
-        type="button"
-        onClick={() => {
-          playUiCue(open ? "nav-close" : "nav-open");
-          setOpen((value) => !value);
-        }}
-        aria-expanded={open}
-        aria-haspopup="dialog"
-        aria-label={isGuest ? "Abrir ajustes rápidos" : `Ajustes de ${displayName}`}
-        className={cn(
-          "focus-ring press-feedback flex h-10 items-center rounded-md text-left transition-colors",
-          collapsed ? "mx-auto w-10 justify-center" : "w-full gap-2.5 px-2.5",
-          open ? "bg-surface-sunken" : "hover:bg-surface-raised",
-        )}
-      >
-        <span className="relative grid size-6 shrink-0 place-items-center overflow-hidden rounded-full bg-primary-soft text-tiny font-bold text-primary">
-          {avatarUrl ? <Image src={avatarUrl} alt="" fill sizes="24px" className="object-cover" /> : initials}
-        </span>
-        {!collapsed && <span className="min-w-0 flex-1 truncate font-label text-fg">{displayName}</span>}
-        {!collapsed && <Settings2 size={16} aria-hidden className="shrink-0 text-fg-subtle" />}
-      </button>
+    <div ref={footerRef} className="relative shrink-0 border-t border-border-subtle p-3 space-y-2">
+      {/* Guests: single unified block — status, save-progress CTA and settings gear together */}
+      {isGuest && !collapsed && (
+        <div className="rounded-lg border border-border-subtle bg-surface-sunken p-2.5 space-y-2">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <span className="grid size-5 shrink-0 place-items-center rounded-full bg-surface-raised text-fg-subtle">
+                <User size={12} aria-hidden />
+              </span>
+              <span className="font-caption text-tiny font-semibold text-fg-subtle uppercase tracking-wider">
+                Modo invitado
+              </span>
+            </div>
+            {settingsButton}
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              playUiCue("tap");
+              router.push("/login?intent=save&mode=register");
+            }}
+            className="focus-ring press-feedback flex w-full items-center justify-center gap-2 rounded-md border border-border-default bg-surface hover:bg-surface-sunken py-1.5 px-3 text-caption font-semibold text-fg transition-all"
+          >
+            <LogIn size={14} aria-hidden />
+            Guardar progreso
+          </button>
+        </div>
+      )}
+
+      {/* Collapsed guest: just the gear */}
+      {isGuest && collapsed && (
+        <div className="flex justify-center">{settingsButton}</div>
+      )}
+
+      {/* Signed-in users: normal profile row + settings gear */}
+      {!isGuest && (
+        <div className="flex items-center justify-between gap-1.5">
+          <button
+            type="button"
+            onClick={() => {
+              playUiCue("tap");
+              router.push("/profile");
+            }}
+            title={`Perfil de ${displayName}`}
+            className={cn(
+              "focus-ring press-feedback flex min-h-[38px] flex-1 items-center gap-2.5 rounded-md text-left transition-colors hover:bg-surface-sunken px-2 py-1",
+              collapsed && "justify-center px-0",
+            )}
+          >
+            <span className="relative grid size-7 shrink-0 place-items-center overflow-hidden rounded-full bg-primary-soft text-caption font-bold text-primary">
+              {avatarUrl ? <Image src={avatarUrl} alt="" fill sizes="28px" className="object-cover" /> : initials}
+            </span>
+            {!collapsed && (
+              <div className="min-w-0 flex-1 truncate">
+                <p className="truncate font-label text-fg text-caption font-medium">{displayName}</p>
+              </div>
+            )}
+          </button>
+
+          {settingsButton}
+        </div>
+      )}
 
       {open &&
         typeof document !== "undefined" &&
@@ -113,17 +159,10 @@ export default function SidebarFooter() {
             ref={panelRef}
             role="dialog"
             aria-label="Ajustes rápidos"
-            className="panel-reveal fixed bottom-3 left-[calc(var(--sidebar-width)+0.75rem)] z-50 w-[min(23rem,calc(100vw-1.5rem))] rounded-xl border border-border-subtle bg-surface-raised p-4 shadow-xl"
+            className="panel-reveal fixed bottom-3 left-[calc(var(--sidebar-width)+0.75rem)] z-50 w-[min(23rem,calc(100vw-1.5rem))] rounded-xl border border-border-subtle bg-surface-raised p-4 shadow-xl before:absolute before:-left-2 before:bottom-5 before:size-4 before:rotate-45 before:border-l before:border-b before:border-border-subtle before:bg-surface-raised"
           >
-            <div className="mb-1 flex items-start justify-between gap-3 px-1 pb-2">
-              <div>
-                <p className="font-label text-fg">Ajustes rápidos</p>
-                <p className="font-caption text-fg-muted">
-                  {isGuest
-                    ? "Para no perder tu progreso, crea una cuenta"
-                    : "Se guardan en tu perfil"}
-                </p>
-              </div>
+            <div className="flex items-center justify-between gap-3 px-1 pb-3">
+              <p className="font-label font-semibold text-fg">Ajustes rápidos</p>
               {!isGuest && (
                 <button
                   type="button"
@@ -132,19 +171,18 @@ export default function SidebarFooter() {
                     setOpen(false);
                     router.push("/profile");
                   }}
-                  className="focus-ring press-feedback shrink-0 rounded-sm px-2 py-1 font-caption text-primary transition-colors hover:bg-primary-soft"
+                  className="focus-ring press-feedback shrink-0 rounded-sm px-2 py-1 font-caption font-medium text-primary transition-colors hover:bg-primary-soft"
                 >
                   Ver perfil
                 </button>
               )}
             </div>
 
-            <ThemeControls />
-            <SoundControls />
+            <QuickSettingsAccordion />
 
-            <div className="border-t border-border-subtle pt-2">
+            <div className="border-t border-border-subtle pt-3 mt-3">
               {isGuest ? (
-                <div className="flex flex-col gap-1">
+                <div className="flex flex-col gap-2">
                   <button
                     type="button"
                     onClick={() => {
@@ -152,9 +190,9 @@ export default function SidebarFooter() {
                       setOpen(false);
                       router.push("/login?intent=save&mode=register");
                     }}
-                    className="focus-ring press-feedback flex min-h-10 w-full items-center gap-2 rounded-sm px-2 text-left font-label text-primary transition-colors hover:bg-primary-soft"
+                    className="focus-ring press-feedback flex min-h-9 w-full items-center justify-center gap-2 rounded-md bg-primary px-3 text-caption font-semibold text-on-primary transition-colors hover:brightness-105"
                   >
-                    <LogIn size={16} aria-hidden />
+                    <LogIn size={15} aria-hidden />
                     Guardar progreso
                   </button>
                   <button
@@ -164,16 +202,16 @@ export default function SidebarFooter() {
                       setOpen(false);
                       router.push("/login?intent=save");
                     }}
-                    className="focus-ring press-feedback flex min-h-10 w-full items-center gap-2 rounded-sm px-2 text-left font-label text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg"
+                    className="focus-ring press-feedback flex min-h-8 w-full items-center justify-center gap-1.5 rounded-md px-3 text-caption font-medium text-fg-subtle transition-colors hover:bg-surface-sunken hover:text-fg"
                   >
-                    Iniciar sesión
+                    ¿Ya tienes cuenta? Iniciar sesión
                   </button>
                 </div>
               ) : (
                 <button
                   type="button"
                   onClick={signOut}
-                  className="focus-ring press-feedback group flex min-h-10 w-full items-center gap-2 rounded-sm px-2 text-left font-label text-error-value transition-all duration-150 ease-out hover:bg-error-soft hover:pl-2.5"
+                  className="focus-ring press-feedback group flex min-h-9 w-full items-center gap-2 rounded-md px-2 text-left font-label text-error-value transition-all duration-150 ease-out hover:bg-error-soft"
                 >
                   <LogOut
                     size={16}

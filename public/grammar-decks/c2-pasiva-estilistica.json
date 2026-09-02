@@ -1,47 +1,47 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "C2 · Pasiva",
     "title": "Pasiva",
     "titleEmphasis": "estilística",
-    "goal": "Ya usas pasiva impersonal y reportada: It is believed that…, He is said to be…, It is reported that…"
+    "goal": "Utiliza pasivas impersonales y de reportaje ('It is believed that', 'He is said to be') para distanciar al autor o comunicar rumores oficiales."
   },
   "cards": [
     {
       "id": "c2-pasiva-estilistica-concept",
       "tag": "Idea central",
       "title": "Pasiva: qué expresa",
-      "lede": "Ya usas pasiva impersonal y reportada: It is believed that…, He is said to be…, It is reported that…",
+      "lede": "Utiliza pasivas impersonales y de reportaje ('It is believed that', 'He is said to be') para distanciar al autor o comunicar rumores oficiales.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "It is believed",
-              "value": "It is believed that costs will rise.",
+              "key": "It + Pasiva + Clause",
+              "value": "It is widely acknowledged that climate change threatens global security.",
               "highlights": [
-                "It is believed"
+                "It is widely acknowledged"
               ]
             },
             {
-              "key": "is said to",
-              "value": "He is said to be considering retirement.",
+              "key": "Sujeto + Pasiva + Infinitivo",
+              "value": "The CEO is reported to be considering a major buyout.",
               "highlights": [
-                "is said to be"
+                "is reported to be considering"
               ]
             },
             {
-              "key": "Impersonal",
-              "value": "oculta o difumina el agente",
+              "key": "Infinitivo perfecto pasivo",
+              "value": "The suspect is believed to have left the country.",
               "highlights": [
-                "It is"
+                "is believed to have left"
               ]
             },
             {
-              "key": "Registro",
-              "value": "académico, periodístico, oficial",
+              "key": "Pasiva continua presente",
+              "value": "New policies are currently being drafted by the committee.",
               "highlights": [
-                "believed",
-                "reported"
+                "are currently being drafted"
               ]
             }
           ]
@@ -56,30 +56,30 @@
       "id": "c2-pasiva-estilistica-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "It is believed",
-              "value": "It is believed that costs will rise.",
+              "key": "Afirmativa (Impersonal It)",
+              "value": "It + is/was + participio de reporte + that + cláusula · It is rumored that they will merge.",
               "highlights": [
-                "It is believed"
+                "It is rumored that"
               ]
             },
             {
-              "key": "is said to",
-              "value": "He is said to be considering retirement.",
+              "key": "Afirmativa (Sujeto personal)",
+              "value": "Sujeto + be + participio + to + infinitivo (simple/continuo/perfecto) · She is said to be rich.",
               "highlights": [
                 "is said to be"
               ]
             },
             {
-              "key": "Impersonal",
-              "value": "oculta o difumina el agente",
+              "key": "Negativa",
+              "value": "The preliminary findings are not expected to be published until next year.",
               "highlights": [
-                "It is"
+                "are not expected to be published"
               ]
             }
           ]
@@ -90,26 +90,26 @@
       "id": "c2-pasiva-estilistica-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "It is believed that costs will rise."
+              "key": "Periodismo internacional",
+              "value": "It is reported that negotiations have reached a stalemate in Geneva."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "He is said to be considering retirement."
+              "key": "Información de mercado",
+              "value": "The tech giant is understood to be developing a quantum processor."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "oculta o difumina el agente"
+              "key": "Informes policiales/judiciales",
+              "value": "The fugitive is thought to have crossed the border under a false identity."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "académico, periodístico, oficial"
+              "key": "Redacción académica",
+              "value": "It has been demonstrated that the compound inhibits viral replication."
             }
           ]
         }
@@ -119,23 +119,23 @@
       "id": "c2-pasiva-estilistica-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "It is believed",
-              "rule": "It is believed that costs will rise.",
+              "label": "Pasiva impersonal (It is said that)",
+              "rule": "Introduce una creencia general usando 'It' como sujeto nulo",
               "examples": [
-                "It is believed that costs will rise."
+                "It is alleged that the executive committed fraud."
               ]
             },
             {
-              "label": "is said to",
-              "rule": "He is said to be considering retirement.",
+              "label": "Pasiva personal (He is said to)",
+              "rule": "Hace del sujeto de la noticia el foco de la oración mediante un infinitivo",
               "examples": [
-                "He is said to be considering retirement."
+                "The executive is alleged to have committed fraud."
               ]
             }
           ]
@@ -146,19 +146,19 @@
       "id": "c2-pasiva-estilistica-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "People is said that…"
+              "text": "People is said that the company is going bankrupt."
             },
             {
               "variant": "good",
-              "text": "It is said that… / He is said to…",
-              "note": "estructura impersonal fija"
+              "text": "It is said that the company is going bankrupt. / The company is said to be going bankrupt.",
+              "note": "No combines 'People' con la estructura pasiva de reporte; usa 'It is said' o el sujeto directo."
             }
           ]
         }
@@ -167,27 +167,27 @@
     {
       "id": "c2-pasiva-estilistica-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "1. Verbos de reporte comunes",
+              "value": "Usa 'allege', 'believe', 'claim', 'consider', 'estimate', 'report', 'say', 'understand'."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "2. Infinitivo pasado (to have done)",
+              "value": "Usa 'to have + participio' si la acción reportada ocurrió antes que el reporte."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "3. Infinitivo continuo (to be doing)",
+              "value": "Usa 'to be + -ing' si la acción reportada ocurre de manera simultánea."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "4. Distanciamiento profesional",
+              "value": "Evita atribuir declaraciones sin verificar usando 'It is claimed that'."
             }
           ]
         }
@@ -200,13 +200,37 @@
   ],
   "quiz": [
     {
-      "q": "The CEO ___ to be negotiating a deal.",
+      "q": "The missing artwork is believed ___ stolen during the early hours of Tuesday.",
       "options": [
-        "is said",
-        "says"
+        "to have been",
+        "to be",
+        "that it was",
+        "having been"
       ],
       "answer": 0,
-      "explain": "Reportaje pasivo → is said to + infinitivo."
+      "explain": "'To have been + participio' expresa una acción pasiva completada en el pasado."
+    },
+    {
+      "q": "___ that the new tax reform will pass without major amendments.",
+      "options": [
+        "It is anticipated",
+        "They are anticipated",
+        "He is anticipated",
+        "Is anticipated"
+      ],
+      "answer": 0,
+      "explain": "La pasiva impersonal requiere el sujeto preparatorio 'It' ('It is anticipated that')."
+    },
+    {
+      "q": "¿Cuál es la forma correcta de transformar 'People say he works 80 hours a week' a pasiva estilística personal?",
+      "options": [
+        "He is said to work 80 hours a week.",
+        "It is said he to work 80 hours a week.",
+        "He says to work 80 hours a week.",
+        "He is saying to work 80 hours a week."
+      ],
+      "answer": 0,
+      "explain": "Sujeto + is said + infinitivo presente ('to work')."
     }
   ]
 }

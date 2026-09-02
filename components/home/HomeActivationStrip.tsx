@@ -30,14 +30,14 @@ export default function HomeActivationStrip({
   const showAssessments = showPlacementLink || showPronunciationLink;
 
   return (
-    <section
-      className="flex flex-col gap-4 rounded-xl border border-border-subtle bg-surface-raised px-4 py-4 sm:px-5"
+    <div
+      className="flex flex-col gap-5 py-2 animate-in fade-in"
       aria-labelledby="home-activation-title"
     >
-      <div className="min-w-0 flex flex-col gap-1">
+      <div className="min-w-0 flex flex-col gap-1.5">
         <h2
           id="home-activation-title"
-          className="font-label font-semibold text-balance text-fg"
+          className="text-h3 font-bold text-balance text-fg"
         >
           Una práctica ahora — sin cuenta
         </h2>
@@ -50,7 +50,7 @@ export default function HomeActivationStrip({
       <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
         <Link href="/practice/sounds" className="shrink-0">
           <Button
-            variant="secondary"
+            variant="primary"
             size="md"
             icon={<ArrowRight size={16} aria-hidden />}
             iconPosition="right"
@@ -94,6 +94,6 @@ export default function HomeActivationStrip({
       ) : null}
 
       {showGuestSaveInline ? <GuestSaveProgressBanner variant="inline" /> : null}
-    </section>
+    </div>
   );
 }

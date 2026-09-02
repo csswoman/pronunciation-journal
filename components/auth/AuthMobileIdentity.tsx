@@ -3,10 +3,12 @@
 //   <Image fill />         — full-bleed login background
 //   <DarkOverlay />
 //   <BottomGradient />
+//   <Logo />
 //   <Wordmark />
 // </AuthMobileIdentity>
 
 import Image from "next/image";
+import { Logo } from "@/components/illustrations/Logo";
 
 const BACKGROUND_SRC = "/images/background.jpg";
 
@@ -32,11 +34,12 @@ export function AuthMobileIdentity() {
 
       {/* Wordmark — not an h1; the form owns the page heading */}
       <div className="absolute inset-x-0 bottom-0 px-[var(--layout-page-inline)] pb-7 z-10">
+        <Logo className="size-8 text-white mb-2" />
         <p className="font-bold leading-tight text-white text-h2 tracking-[-0.02em]">
           English Journal
         </p>
-        <p className="mt-1 text-white/70 text-body-sm italic">
-          Practice with intention. Listen closely.
+        <p className="mt-1 text-white/70 text-body-sm">
+          Mejora tu pronunciación y vocabulario, una sesión a la vez.
         </p>
       </div>
     </div>

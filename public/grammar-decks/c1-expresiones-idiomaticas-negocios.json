@@ -106,5 +106,25 @@
         }
       ]
     }
+  ],
+  "quiz": [
+    {
+      "q": "¿Qué significa la expresión corporativa 'to touch base'?",
+      "options": ["Ponerse en contacto o revisar el estado de un asunto brevemente.", "Firmar un acuerdo financiero definitivo.", "Cancelar una reunión por falta de tiempo.", "Realizar una inspección física en las instalaciones."],
+      "answer": 0,
+      "explain": "'Touch base' se usa para contactar o ponerse al día con alguien de manera rápida."
+    },
+    {
+      "q": "Si un proyecto debe volver 'back to the drawing board', significa que:",
+      "options": ["Hay que descartar el plan actual y empezar desde cero.", "El proyecto ha sido aprobado con honores.", "Se deben recortar los presupuestos a la mitad.", "Se requiere presentar una queja formal al cliente."],
+      "answer": 0,
+      "explain": "'Back to the drawing board' se emplea cuando una propuesta falla y hay que volver a diseñarla desde el inicio."
+    },
+    {
+      "q": "Selecciona la expresión que indica estar operando con ganancias financieras:",
+      "options": ["in the black", "in the red", "ballpark figure", "call the shots"],
+      "answer": 0,
+      "explain": "'In the black' significa tener saldo positivo o ganancias, mientras que 'in the red' indica pérdidas."
+    }
   ]
 }

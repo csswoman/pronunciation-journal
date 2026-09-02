@@ -1,6 +1,6 @@
 "use client";
 
-import { Check } from "@/components/icons";
+import { ArrowRight, Check } from "@/components/icons";
 import { cn } from "@/lib/cn";
 import type { GrammarStudyCardData } from "@/lib/courses/grammar-deck/types";
 import GrammarCardTitle from "./GrammarCardTitle";
@@ -9,11 +9,30 @@ import GrammarCardBody from "./GrammarCardBody";
 interface GrammarStudyCardProps {
   card: GrammarStudyCardData;
   reviewed: boolean;
-  onToggleReviewed: () => void;
+  /** True when this is the final card — the CTA finishes the lesson instead of advancing. */
+  isLast: boolean;
+  /** Mark this card reviewed and move to the next card (or finish on the last one). */
+  onAdvance: () => void;
 }
 
-export default function GrammarStudyCard({ card, reviewed, onToggleReviewed }: GrammarStudyCardProps) {
+export default function GrammarStudyCard({
+  card,
+  reviewed,
+  isLast,
+  onAdvance,
+}: GrammarStudyCardProps) {
   const indexLabel = String(card.index).padStart(2, "0");
+
+  // The foot CTA carries the whole progression: it marks the card reviewed and
+  // advances in one move. Three faces so it never reads as a dead-end:
+  //  · unreviewed        → primary "Marcar como repasada"  (advance)
+  //  · reviewed, mid-deck → soft "Repasada · Siguiente"     (advance, no re-toggle)
+  //  · last card          → primary "Terminar lección"      (to quiz / done)
+  const ctaLabel = isLast
+    ? "Terminar lección"
+    : reviewed
+      ? "Repasada · Siguiente"
+      : "Marcar como repasada";
 
   return (
     <article className={cn("grammar-card", reviewed && "grammar-card--done")}>
@@ -35,15 +54,17 @@ export default function GrammarStudyCard({ card, reviewed, onToggleReviewed }: G
         </p>
       )}
 
-      <button type="button" className="grammar-card__gotit" onClick={onToggleReviewed}>
-        {reviewed ? (
-          <>
-            <Check size={16} strokeWidth={2.5} aria-hidden />
-            Repasada
-          </>
-        ) : (
-          "Marcar como repasada"
+      <button
+        type="button"
+        className={cn(
+          "grammar-card__advance",
+          reviewed && !isLast && "grammar-card__advance--soft",
         )}
+        onClick={onAdvance}
+      >
+        {reviewed && !isLast && <Check size={16} strokeWidth={2.5} aria-hidden />}
+        <span>{ctaLabel}</span>
+        <ArrowRight size={16} strokeWidth={2.5} aria-hidden className="grammar-card__advance-arrow" />
       </button>
     </article>
   );

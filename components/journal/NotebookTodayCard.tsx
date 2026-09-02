@@ -2,27 +2,41 @@
 
 // Planned structure:
 // <NotebookTodayCard>
-//   <MetaRow: date + Badge />
-//   <TopicSelector: radiogroup pills + shuffle-button />
-//   <PromptSection: english (serif) + spanish />
-//   <ActionArea:
-//     empty: 2 entry cards (guided vs blank)
-//     in_progress: preview in serif + resume button
-//     done: stats + view page button
-//   />
+//   <MetaRow: date + Monospace Primary Badge ("PÁGINA DE HOY") />
+//   <PromptHeader: english serif + spanish + compact icon button ("Cambiar tema") />
+//   <TopicSelector: collapsible pills when toggled />
+//   <UnderlineTabs: tabs ("Con estructura" / "Página en blanco") + right-aligned caption text />
+//   <SentenceStarters: topic-specific chips ("Toca una frase para empezar") when "Con estructura" />
+//   <NotebookSheet: paper sheet container + lined paper (notebook-ruled-paper) + watermark illustration + serif textarea />
+//   <WritingFooter: word count + switch ("Teclado en inglés") + "Revisar mi inglés" button />
+//   <AIFeedbackArea: inline feedback when reviewed />
 // </NotebookTodayCard>
 
 import { useState } from 'react'
-import Link from 'next/link'
-import { FileText, Pencil, MicVocal } from '@/components/icons'
-import Badge from '@/components/ui/Badge'
+import { Sparkles } from '@/components/icons'
 import Button from '@/components/ui/Button'
+import { getIllustration } from '@/lib/illustrations/registry'
+import { correctJournalEntry } from '@/lib/journal/correct-client'
+import type { JournalFeedback } from '@/lib/journal/correction'
+import { playUiCue } from '@/lib/ui-sounds/cues'
 import {
   TOPIC_PROMPTS,
+  ALL_TOPICS,
+  TOPIC_STARTER_CHIPS,
   type NotebookHome,
   type NotebookTopic,
+  type PromptDefinition,
 } from '@/lib/journal/notebook-types'
-import { NotebookTopicSelector } from './NotebookTopicSelector'
+import { JournalFeedbackView } from './JournalFeedbackView'
+import { NotebookPromptHeader } from './NotebookPromptHeader'
+import { NotebookStarterChips } from './NotebookStarterChips'
+
+const PhraseBookIllustration = getIllustration('journalPhraseBook')
+const BlankBoardIllustration = getIllustration('journalBlankBoard')
+
+const ALL_FLAT_PROMPTS: Array<{ prompt: PromptDefinition; topic: NotebookTopic }> = ALL_TOPICS.flatMap(
+  (topicKey) => (TOPIC_PROMPTS[topicKey] || []).map((prompt) => ({ prompt, topic: topicKey }))
+)
 
 interface NotebookTodayCardProps {
   today: NotebookHome['today']
@@ -33,227 +47,241 @@ interface NotebookTodayCardProps {
 
 export function NotebookTodayCard({
   today,
-  onSelectMode,
   onTopicChange,
   onShufflePrompt,
 }: NotebookTodayCardProps) {
-  const [selectedTopic, setSelectedTopic] = useState<NotebookTopic>(today.topic)
   const [promptIndex, setPromptIndex] = useState(0)
+  const [scaffoldMode, setScaffoldMode] = useState<'guided' | 'blank'>('guided')
+  const [content, setContent] = useState(today.preview ?? '')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [soundEnabled, setSoundEnabled] = useState(true)
+  const [correctedContent, setCorrectedContent] = useState<string | null>(null)
+  const [feedback, setFeedback] = useState<JournalFeedback | null>(null)
 
-  const activePrompts = TOPIC_PROMPTS[selectedTopic] ?? TOPIC_PROMPTS.daily
-  const currentPrompt =
-    activePrompts[promptIndex % activePrompts.length] ?? {
-      id: today.prompt.id || 'small-win',
+  const currentItem = ALL_FLAT_PROMPTS[promptIndex % ALL_FLAT_PROMPTS.length] ?? {
+    prompt: {
+      id: today.prompt.id || 'remembered-conversation',
       en: today.prompt.en,
       es: today.prompt.es,
-    }
-
-  function handleTopicSelect(topic: NotebookTopic) {
-    setSelectedTopic(topic)
-    setPromptIndex(0)
-    onTopicChange?.(topic)
+    },
+    topic: today.topic || 'daily',
   }
 
+  const currentPrompt = currentItem.prompt
+  const currentTopic = currentItem.topic
+  const starterChips = TOPIC_STARTER_CHIPS[currentTopic] ?? TOPIC_STARTER_CHIPS.daily
+
   function handleShuffle() {
-    setPromptIndex((prev) => prev + 1)
+    setPromptIndex((prev) => {
+      const nextIndex = prev + 1
+      const nextItem = ALL_FLAT_PROMPTS[nextIndex % ALL_FLAT_PROMPTS.length]
+      if (nextItem) {
+        onTopicChange?.(nextItem.topic)
+      }
+      return nextIndex
+    })
     onShufflePrompt?.()
   }
 
-  const promptId = currentPrompt.id || 'small-win'
-  // Reabrir el mismo editor con el que se escribió la entrada (guiado vs. blanco vs. pronunciación).
-  const resumeHref = `/journal/write?mode=${today.entryMode ?? 'blank'}&promptId=${encodeURIComponent(promptId)}&topic=${today.topic}`
+  function handleInsertStarter(starterText: string) {
+    const cleanStarter = starterText.replace(/\.\.\.$/, ' ')
+    if (soundEnabled) {
+      playUiCue('mech-space')
+    }
+    setContent((prev) => {
+      if (!prev.trim()) return cleanStarter
+      return `${prev.trim()}\n${cleanStarter}`
+    })
+  }
+
+  async function handleReview() {
+    if (!content.trim() || isSubmitting) return
+    setIsSubmitting(true)
+    try {
+      const res = await correctJournalEntry({
+        entryId: '00000000-0000-0000-0000-000000000000',
+        content: content.trim(),
+      })
+      setCorrectedContent(res.correctedContent)
+      setFeedback({
+        errors: res.errors,
+        newWords: res.newWords,
+        scheduledTopics: res.scheduled?.topics,
+      })
+    } catch {
+      setCorrectedContent(content.trim())
+      setFeedback({
+        errors: [],
+        newWords: [],
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+      e.preventDefault()
+      void handleReview()
+      return
+    }
+
+    if (soundEnabled && e.key !== 'Shift' && e.key !== 'Control' && e.key !== 'Alt' && e.key !== 'Meta') {
+      if (e.key === ' ' || e.key === 'Enter') {
+        playUiCue('mech-space')
+      } else {
+        playUiCue('mech-key')
+      }
+    }
+  }
+
+  const wordCount = content.trim() ? content.trim().split(/\s+/).length : 0
 
   return (
     <article
       aria-labelledby="today-page-heading"
-      className="flex flex-col gap-4 rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised layout-card-pad"
+      className="flex flex-col gap-5 rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised layout-card-pad transition-all duration-200"
     >
-      {/* Fila meta: Fecha a la izquierda, Badge semántico a la derecha */}
-      <div className="flex items-center justify-between gap-2">
+      {/* ── Fila Meta: Texto limpio de PÁGINA DE HOY + fecha ── */}
+      <div className="flex items-center gap-2">
+        <span className="font-mono text-xs font-semibold tracking-wider text-primary uppercase">
+          PÁGINA DE HOY
+        </span>
+        <span className="font-caption text-fg-muted">·</span>
         <time dateTime={today.date} className="font-caption text-fg-muted">
           {formatLongDate(today.date)}
         </time>
-
-        {today.status === 'empty' && (
-          <Badge label="Página de hoy" variant="default" size="sm" />
-        )}
-        {today.status === 'in_progress' && (
-          <Badge label="En progreso" variant="info" size="sm" />
-        )}
-        {today.status === 'done' && (
-          <Badge label="Terminada" variant="success" size="sm" />
-        )}
       </div>
 
-      {/* Selector de tema: solo activo cuando no está terminada */}
-      {today.status !== 'done' && (
-        <NotebookTopicSelector
-          selectedTopic={selectedTopic}
-          onSelectTopic={handleTopicSelect}
-          onShuffle={handleShuffle}
-        />
-      )}
+      {/* ── Pregunta en inglés (serif) + traducción + Botón de cambio de tema al lado ── */}
+      <NotebookPromptHeader
+        currentPrompt={currentPrompt}
+        onShuffle={handleShuffle}
+      />
 
-      {/* Pregunta en inglés (voz serif) + traducción (sans secundaria) */}
-      <div className="flex flex-col gap-1">
-        <h2
-          id="today-page-heading"
-          className="font-serif font-h3 font-normal leading-snug text-fg text-balance"
-        >
-          {currentPrompt.en}
-        </h2>
-        <p className="font-body-sm text-fg-muted">
-          {currentPrompt.es}
+      {/* ── Pestañas (Underline tabs): "Con estructura" vs "Página en blanco" ── */}
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border-subtle pb-0">
+        <div className="flex items-center gap-6" role="tablist" aria-label="Modo de redacción">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={scaffoldMode === 'guided'}
+            onClick={() => setScaffoldMode('guided')}
+            className={`pb-2.5 font-body-sm font-semibold transition-all duration-150 focus-ring ${
+              scaffoldMode === 'guided'
+                ? 'text-primary border-b-2 border-primary -mb-px'
+                : 'text-fg-muted hover:text-fg'
+            }`}
+          >
+            Con estructura
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={scaffoldMode === 'blank'}
+            onClick={() => setScaffoldMode('blank')}
+            className={`pb-2.5 font-body-sm font-semibold transition-all duration-150 focus-ring ${
+              scaffoldMode === 'blank'
+                ? 'text-primary border-b-2 border-primary -mb-px'
+                : 'text-fg-muted hover:text-fg'
+            }`}
+          >
+            Página en blanco
+          </button>
+        </div>
+
+        <p className="pb-2.5 font-caption text-fg-muted transition-opacity duration-150">
+          {scaffoldMode === 'guided'
+            ? 'Termina la frase a tu manera.'
+            : 'Redacta a tu propio ritmo sin restricciones.'}
         </p>
       </div>
 
-      {/* ── Estado EMPTY: Tres tarjetas de entrada ── */}
-      {today.status === 'empty' && (
-        <div className="mt-1 grid grid-cols-1 gap-2.5 sm:grid-cols-3">
-          {/* Opción A: Completar frases */}
-          <Link
-            href={`/journal/write?mode=guided&promptId=${encodeURIComponent(promptId)}&topic=${selectedTopic}`}
-            onClick={(e) => {
-              if (onSelectMode) {
-                e.preventDefault()
-                onSelectMode('guided')
-              }
-            }}
-            className="focus-ring group flex flex-col justify-between gap-3 rounded-[var(--radius-sm)] border border-border-subtle bg-surface-sunken p-4 transition-colors hover:border-border-strong"
-          >
-            <div className="flex items-start gap-3">
-              <span className="mt-0.5 text-fg-muted transition-colors group-hover:text-fg">
-                <FileText size={18} aria-hidden />
-              </span>
-              <div className="flex flex-col gap-0.5">
-                <span className="font-body-sm font-medium text-fg">
-                  Completar frases
-                </span>
-                <span className="font-caption text-fg-muted leading-normal">
-                  Estructuras sugeridas para redactar hoy.
-                </span>
-              </div>
-            </div>
-          </Link>
-
-          {/* Opción B: Página en blanco */}
-          <Link
-            href={`/journal/write?mode=blank&promptId=${encodeURIComponent(promptId)}&topic=${selectedTopic}`}
-            onClick={(e) => {
-              if (onSelectMode) {
-                e.preventDefault()
-                onSelectMode('blank')
-              }
-            }}
-            className="focus-ring group flex flex-col justify-between gap-3 rounded-[var(--radius-sm)] border border-border-subtle bg-surface-sunken p-4 transition-colors hover:border-border-strong"
-          >
-            <div className="flex items-start gap-3">
-              <span className="mt-0.5 text-fg-muted transition-colors group-hover:text-fg">
-                <Pencil size={18} aria-hidden />
-              </span>
-              <div className="flex flex-col gap-0.5">
-                <span className="font-body-sm font-medium text-fg">
-                  {selectedTopic === 'free' ? 'Escribir libremente' : 'Página en blanco'}
-                </span>
-                <span className="font-caption text-fg-muted leading-normal">
-                  Redacta desde cero a tu propio ritmo.
-                </span>
-              </div>
-            </div>
-          </Link>
-
-          {/* Opción C: Diario de pronunciación */}
-          <Link
-            href={`/journal/write?mode=pronunciation&promptId=${encodeURIComponent(promptId)}&topic=${selectedTopic}`}
-            onClick={(e) => {
-              if (onSelectMode) {
-                e.preventDefault()
-                onSelectMode('pronunciation')
-              }
-            }}
-            className="focus-ring group flex flex-col justify-between gap-3 rounded-[var(--radius-sm)] border border-border-subtle bg-surface-sunken p-4 transition-colors hover:border-border-strong"
-          >
-            <div className="flex items-start gap-3">
-              <span className="mt-0.5 text-accent-1 transition-colors group-hover:text-fg">
-                <MicVocal size={18} aria-hidden />
-              </span>
-              <div className="flex flex-col gap-0.5">
-                <span className="font-body-sm font-medium text-fg">
-                  Diario de pronunciación
-                </span>
-                <span className="font-caption text-fg-muted leading-normal">
-                  Registra palabras y sonidos difíciles.
-                </span>
-              </div>
-            </div>
-          </Link>
-        </div>
+      {/* ── Chips de arranque de frase adaptados al tema (cuando scaffoldMode === 'guided') ── */}
+      {scaffoldMode === 'guided' && (
+        <NotebookStarterChips chips={starterChips} onInsert={handleInsertStarter} />
       )}
 
-
-      {/* ── Estado IN PROGRESS: Primera línea en serif + botones de acción ── */}
-      {today.status === 'in_progress' && (
-        <div className="mt-1 flex flex-col gap-3 rounded-[var(--radius-sm)] bg-surface-sunken p-4">
-          {today.preview && (
-            <p className="line-clamp-2 font-serif font-body-sm italic text-fg">
-              “{today.preview}”
-            </p>
-          )}
-          <div className="flex flex-wrap items-center gap-2">
-            <Link href={resumeHref}>
-              <Button variant="primary" size="sm">
-                Seguir editando
-              </Button>
-            </Link>
-            <Link href={`/journal/${today.date}`}>
-              <Button variant="secondary" size="sm">
-                Ver página
-              </Button>
-            </Link>
-          </div>
+      {/* ── Hoja de cuaderno rayada (ruled paper) con Ilustración de marca de agua al fondo ── */}
+      <div className="relative w-full rounded-[var(--radius-lg)] border border-border-subtle bg-surface-sunken p-4 sm:p-5 shadow-xs overflow-hidden transition-all duration-200 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/40">
+        {/* Marca de agua de ilustración al fondo a la derecha */}
+        <div
+          className="pointer-events-none absolute bottom-2 right-2 h-40 w-36 shrink-0 text-primary opacity-15 transition-opacity duration-300 [&>svg]:h-full [&>svg]:w-auto select-none"
+          aria-hidden="true"
+        >
+          {scaffoldMode === 'guided' ? <PhraseBookIllustration /> : <BlankBoardIllustration />}
         </div>
-      )}
 
-      {/* ── Estado DONE: Acumulado de la entrada + preview + botón ver página ── */}
-      {today.status === 'done' && (
-        <div className="mt-1 flex flex-col gap-3 rounded-[var(--radius-sm)] bg-surface-sunken p-4">
-          {today.preview && (
-            <p className="line-clamp-2 font-serif font-body-sm italic text-fg">
-              “{today.preview}”
-            </p>
-          )}
-          <p className="font-caption text-fg-muted">
-            {today.sentences ?? 0} {today.sentences === 1 ? 'frase' : 'frases'} ·{' '}
-            {today.newWords ?? 0} {today.newWords === 1 ? 'palabra nueva' : 'palabras nuevas'}
-          </p>
-          <div className="flex flex-wrap items-center gap-2">
-            <Link href={`/journal/${today.date}`}>
-              <Button variant="primary" size="sm">
-                Ver página
-              </Button>
-            </Link>
-            <Link href={resumeHref}>
-              <Button variant="secondary" size="sm">
-                Escribir otra vez
-              </Button>
-            </Link>
-          </div>
+        {/* Textarea con renglones de cuaderno alineados (ruled paper) */}
+        <textarea
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          onKeyDown={handleKeyDown}
+          rows={6}
+          placeholder="Escribe en inglés. No importa si te equivocas: para eso está la revisión."
+          className="notebook-ruled-paper relative z-10 w-full resize-y bg-transparent p-0 font-serif text-base italic text-fg placeholder:font-serif placeholder:not-italic placeholder:text-fg-muted/70 focus:outline-none"
+        />
+      </div>
+
+      {/* ── Pie de hoja: Contador + Switch + Botón de revisión ── */}
+      <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+        <div className="flex items-center gap-4">
+          <span className="font-caption text-fg-muted">
+            {wordCount} {wordCount === 1 ? 'palabra' : 'palabras'} · {content.trim() ? 'borrador' : 'sin guardar'}
+          </span>
+
+          {/* Switch de sonido de teclado en inglés */}
+          <label className="inline-flex items-center gap-2 cursor-pointer select-none">
+            <button
+              type="button"
+              role="switch"
+              aria-checked={soundEnabled}
+              onClick={() => setSoundEnabled((prev) => !prev)}
+              className={`relative inline-flex h-5 w-9 shrink-0 items-center rounded-full p-0.5 transition-colors duration-200 ease-in-out focus-ring ${
+                soundEnabled ? 'bg-primary' : 'bg-surface-sunken border border-border-subtle'
+              }`}
+            >
+              <span
+                className={`pointer-events-none inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow-sm transition duration-200 ease-in-out ${
+                  soundEnabled ? 'translate-x-4' : 'translate-x-0'
+                }`}
+              />
+            </button>
+            <span className="font-caption text-fg font-medium">
+              Teclado en inglés
+            </span>
+          </label>
+        </div>
+
+        <Button
+          variant="primary"
+          size="md"
+          disabled={!content.trim() || isSubmitting}
+          isLoading={isSubmitting}
+          onClick={() => void handleReview()}
+          title="Presiona Cmd+Enter o Ctrl+Enter para enviar a revisión"
+        >
+          <Sparkles size={16} aria-hidden />
+          Revisar mi inglés
+        </Button>
+      </div>
+
+      {/* ── Panel de revisión de IA en pantalla ── */}
+      {feedback && correctedContent && (
+        <div className="border-t border-border-subtle pt-4 animate-in fade-in-0 duration-300">
+          <JournalFeedbackView
+            originalContent={content}
+            correctedContent={correctedContent}
+            feedback={feedback}
+          />
         </div>
       )}
     </article>
   )
 }
 
-function formatLongDate(dateStr: string): string {
+function formatLongDate(d: string): string {
   try {
-    const date = new Date(`${dateStr}T12:00:00`)
-    return new Intl.DateTimeFormat('es-PE', {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-    }).format(date)
-  } catch {
-    return dateStr
-  }
+    return new Intl.DateTimeFormat('es-PE', { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date(`${d}T12:00:00`))
+  } catch { return d }
 }

@@ -9,16 +9,42 @@
       "id": "ph-like",
       "tag": "Gustos",
       "title": "like, love, hate",
-      "titleItalic": ["like"],
+      "titleItalic": [
+        "like"
+      ],
       "lede": "Para hablar de gustos usas el verbo + -ing o + sustantivo. La acción que te gusta termina en -ing.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
-            { "key": "like", "value": "I like coffee. · I like running.", "highlights": ["like"] },
-            { "key": "love", "value": "She loves music. · He loves cooking.", "highlights": ["loves"] },
-            { "key": "hate", "value": "They hate waiting.", "highlights": ["hate"] },
-            { "key": "don't like", "value": "I don't like onions.", "highlights": ["don't like"] }
+            {
+              "key": "like",
+              "value": "I like coffee. · I like running.",
+              "highlights": [
+                "like"
+              ]
+            },
+            {
+              "key": "love",
+              "value": "She loves music. · He loves cooking.",
+              "highlights": [
+                "loves"
+              ]
+            },
+            {
+              "key": "hate",
+              "value": "They hate waiting.",
+              "highlights": [
+                "hate"
+              ]
+            },
+            {
+              "key": "don't like",
+              "value": "I don't like onions.",
+              "highlights": [
+                "don't like"
+              ]
+            }
           ]
         }
       ],
@@ -36,9 +62,28 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "prefer A to B", "value": "I prefer tea to coffee.", "highlights": ["prefer", "to"] },
-            { "key": "prefer + -ing", "value": "I prefer walking.", "highlights": ["walking"] },
-            { "key": "would rather", "value": "I'd rather stay home.", "highlights": ["'d rather stay"] }
+            {
+              "key": "prefer A to B",
+              "value": "I prefer tea to coffee.",
+              "highlights": [
+                "prefer",
+                "to"
+              ]
+            },
+            {
+              "key": "prefer + -ing",
+              "value": "I prefer walking.",
+              "highlights": [
+                "walking"
+              ]
+            },
+            {
+              "key": "would rather",
+              "value": "I'd rather stay home.",
+              "highlights": [
+                "'d rather stay"
+              ]
+            }
           ]
         }
       ],
@@ -56,9 +101,24 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "favorite", "value": "My favorite color is blue.", "highlights": ["favorite"] },
-            { "key": "Pregunta", "value": "What's your favorite food?", "highlights": ["What's your favorite"] },
-            { "key": "Respuesta", "value": "It's pizza. · I love pizza." }
+            {
+              "key": "favorite",
+              "value": "My favorite color is blue.",
+              "highlights": [
+                "favorite"
+              ]
+            },
+            {
+              "key": "Pregunta",
+              "value": "What's your favorite food?",
+              "highlights": [
+                "What's your favorite"
+              ]
+            },
+            {
+              "key": "Respuesta",
+              "value": "It's pizza. · I love pizza."
+            }
           ]
         }
       ]
@@ -67,15 +127,36 @@
       "id": "ph-can",
       "tag": "Habilidad",
       "title": "can para habilidades",
-      "titleItalic": ["can"],
+      "titleItalic": [
+        "can"
+      ],
       "lede": "can dice lo que sabes o puedes hacer. Va con el verbo base, igual para todas las personas.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
-            { "key": "Afirmativo", "value": "I can swim. · She can drive.", "highlights": ["can swim", "can drive"] },
-            { "key": "Negativo", "value": "He can't cook. (cannot)", "highlights": ["can't"] },
-            { "key": "Pregunta", "value": "Can you dance?", "highlights": ["Can you"] }
+            {
+              "key": "Afirmativo",
+              "value": "I can swim. · She can drive.",
+              "highlights": [
+                "can swim",
+                "can drive"
+              ]
+            },
+            {
+              "key": "Negativo",
+              "value": "He can't cook. (cannot)",
+              "highlights": [
+                "can't"
+              ]
+            },
+            {
+              "key": "Pregunta",
+              "value": "Can you dance?",
+              "highlights": [
+                "Can you"
+              ]
+            }
           ]
         }
       ],
@@ -93,9 +174,24 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "good at", "value": "I'm good at math. · She's good at singing.", "highlights": ["good at"] },
-            { "key": "bad at", "value": "He's bad at drawing.", "highlights": ["bad at"] },
-            { "key": "not very good at", "value": "I'm not very good at cooking." }
+            {
+              "key": "good at",
+              "value": "I'm good at math. · She's good at singing.",
+              "highlights": [
+                "good at"
+              ]
+            },
+            {
+              "key": "bad at",
+              "value": "He's bad at drawing.",
+              "highlights": [
+                "bad at"
+              ]
+            },
+            {
+              "key": "not very good at",
+              "value": "I'm not very good at cooking."
+            }
           ]
         }
       ],
@@ -116,16 +212,51 @@
             {
               "label": "can (habilidad)",
               "rule": "sé hacerlo",
-              "examples": ["I can cook.", "She can play guitar."]
+              "examples": [
+                "I can cook.",
+                "She can play guitar."
+              ]
             },
             {
               "label": "like (gusto)",
               "rule": "lo disfruto",
-              "examples": ["I like cooking.", "She likes playing guitar."]
+              "examples": [
+                "I like cooking.",
+                "She likes playing guitar."
+              ]
             }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "I love ___ to music in my free time.",
+      "options": [
+        "listening",
+        "listen"
+      ],
+      "answer": 0,
+      "explain": "Verbos de preferencia como 'love' se siguen habitualmente de verbo con '-ing' ('listening')."
+    },
+    {
+      "q": "She is good at ___ chess.",
+      "options": [
+        "playing",
+        "play"
+      ],
+      "answer": 0,
+      "explain": "Tras la preposición 'at' en 'good at', el verbo va obligatoriamente en -ing."
+    },
+    {
+      "q": "He doesn't like ___ early on Sunday morning.",
+      "options": [
+        "waking up",
+        "wake up"
+      ],
+      "answer": 0,
+      "explain": "'like' exige gerundio (-ing) tras la negación: 'waking up'."
     }
   ]
 }

@@ -13,6 +13,7 @@ import type { CefrLevel } from "@/lib/essential-words/types";
 import { buildCoursePracticeSession } from "@/lib/courses/practice/build-session";
 import type { GrammarRelatedLink, GrammarStudyDeckData } from "@/lib/courses/grammar-deck/types";
 import type { CoursePathTrackId } from "@/lib/courses/types";
+import PageLayout from "@/components/layout/PageLayout";
 import GrammarDeckHeader from "./GrammarDeckHeader";
 import { GrammarStudyDeckBody, retryLessonCompletion } from "./GrammarStudyDeckBody";
 
@@ -60,15 +61,6 @@ export default function GrammarStudyDeck({
   const hasQuiz = (deck.quiz?.length ?? 0) > 0;
   const finished = phase === "done";
   const reviewedCount = reviewed.size;
-
-  const toggleReviewed = useCallback((id: string) => {
-    setReviewed((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  }, []);
 
   const goTo = useCallback(
     (target: number) => {
@@ -139,6 +131,22 @@ export default function GrammarStudyDeck({
     }
   }, [finished, levelId, lessonId]);
 
+  useEffect(() => {
+    if (!finished) return;
+    const resolvedSlug = (deckSlug ?? lessonId) ?? "";
+    if (!resolvedSlug) return;
+    const level: CefrLevel = cefrLevel ?? "A1";
+    void buildCoursePracticeSession({ deckSlug: resolvedSlug, cefrLevel: level })
+      .then((exercises) => {
+        if (exercises.length === 0) {
+          setPracticeError(true);
+        } else {
+          setPracticeExercises(exercises);
+        }
+      })
+      .catch(() => setPracticeError(true));
+  }, [finished, deckSlug, lessonId, cefrLevel]);
+
   const meta = useMemo(() => {
     if (!courseTitle) return deck.meta;
     return { ...deck.meta, title: courseTitle, titleEmphasis: undefined };
@@ -147,7 +155,7 @@ export default function GrammarStudyDeck({
   const isLast = index === total - 1;
 
   return (
-    <div className="grammar-deck" data-course-study-deck>
+    <PageLayout archetype="session" className="grammar-deck" data-course-study-deck>
       <div className="grammar-deck__wrap">
         <GrammarDeckHeader
           meta={meta}
@@ -195,10 +203,9 @@ export default function GrammarStudyDeck({
             onPrev: goPrev,
             onNext: goNext,
             onGoTo: goTo,
-            onToggleReviewed: toggleReviewed,
           }}
         />
       </div>
-    </div>
+    </PageLayout>
   );
 }

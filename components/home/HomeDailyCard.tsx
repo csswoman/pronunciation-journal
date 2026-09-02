@@ -6,8 +6,6 @@ import DailyPlanCard from '@/components/daily/DailyPlanCard'
 import HomeFirstSessionHint from '@/components/home/HomeFirstSessionHint'
 import { useDailyPlan, type ConceptLesson, type DailyStep } from '@/hooks/useDailyPlan'
 import { useAuth } from '@/components/auth/AuthProvider'
-import { useUserPreferences } from '@/hooks/useUserPreferences'
-import { isPermanentUser } from '@/lib/auth/is-anonymous'
 import type { SessionArc } from '@/lib/practice/types'
 import type { PrimaryAction } from '@/lib/home/primary-action'
 import type { WeakestPhonemeHome } from '@/lib/home/constants'
@@ -34,13 +32,8 @@ interface HomeDailyCardProps {
   hideSegmentProgress?: boolean
   primaryAction?: PrimaryAction | null
   weakestPhoneme?: WeakestPhonemeHome | null
-}
-
-function getGreeting(): "Buenos días" | "Buenas tardes" | "Buenas noches" {
-  const hour = new Date().getHours()
-  if (hour < 12) return "Buenos días"
-  if (hour < 19) return "Buenas tardes"
-  return "Buenas noches"
+  customEmptyState?: React.ReactNode
+  customPrefix?: React.ReactNode
 }
 
 function isReviewEntryStep(step: DailyStep | undefined): boolean {
@@ -57,9 +50,10 @@ export default function HomeDailyCard({
   onPlanStatusChange,
   primaryAction = null,
   weakestPhoneme = null,
+  customEmptyState,
+  customPrefix,
 }: HomeDailyCardProps) {
   const { user } = useAuth()
-  const { preferences } = useUserPreferences()
   const router = useRouter()
   const { status, steps, getStepStatus, completedCount, allDone, arc, load, celebrate } = useDailyPlan({
     conceptLesson,
@@ -121,14 +115,6 @@ export default function HomeDailyCard({
     router.push(`/daily?step=${step.id}`)
   }, [router])
 
-  const userName = isPermanentUser(user)
-    ? preferences?.full_name?.trim().split(/\s+/)[0] ||
-      user?.email?.split('@')[0] ||
-      null
-    : null
-  const greetingText = getGreeting()
-  const greeting = userName ? `${greetingText}, ${userName}` : greetingText
-
   const enrichedSteps = useMemo(() => {
     if (!weakestPhoneme) return steps
     const cleanIpa = (weakestPhoneme.ipa || '').replace(/^\/+|\/+$/g, '')
@@ -159,10 +145,16 @@ export default function HomeDailyCard({
       reviewDue={reviewDue}
       isNewLearner={isNewLearner}
       demoteEntryHighlight={demoteEntryHighlight}
-      greeting={greeting}
+      showTitle={false}
       primaryAction={primaryAction}
       hideThreadHints
-      listPrefix={<HomeFirstSessionHint enabled={showFirstSessionHint} />}
+      customEmptyState={customEmptyState}
+      listPrefix={
+        <>
+          {customPrefix}
+          <HomeFirstSessionHint enabled={showFirstSessionHint} />
+        </>
+      }
     />
   )
 }

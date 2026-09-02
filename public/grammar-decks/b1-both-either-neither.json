@@ -1,46 +1,49 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "B1 · Cuantificadores",
     "title": "Both, either",
     "titleEmphasis": "y neither",
-    "goal": "Ya distingues both (los dos), either (uno u otro) y neither (ninguno de los dos)."
+    "goal": "Ya utilizas correctamente both (ambos), either (uno u otro) y neither (ninguno de los dos) con 2 opciones."
   },
   "cards": [
     {
       "id": "b1-both-either-neither-concept",
       "tag": "Idea central",
       "title": "Both, either: qué expresa",
-      "lede": "Ya distingues both (los dos), either (uno u otro) y neither (ninguno de los dos).",
+      "lede": "Ya utilizas correctamente both (ambos), either (uno u otro) y neither (ninguno de los dos) con 2 opciones.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "both",
-              "value": "los dos · Both answers are correct.",
+              "key": "both (+ plural)",
+              "value": "ambos / los dos · Both restaurants are good.",
               "highlights": [
                 "Both"
               ]
             },
             {
-              "key": "either",
-              "value": "cualquiera de dos · Either option works.",
+              "key": "either (+ singular)",
+              "value": "cualquiera de los dos · You can take either road.",
               "highlights": [
                 "Either"
               ]
             },
             {
-              "key": "neither",
-              "value": "ninguno · Neither answer is right.",
+              "key": "neither (+ singular)",
+              "value": "ninguno de los dos · Neither answer is correct.",
               "highlights": [
                 "Neither"
               ]
             },
             {
-              "key": "So do I",
-              "value": "So do I. / Neither do I. · acuerdo",
+              "key": "Correlativos",
+              "value": "both... and / either... or / neither... nor",
               "highlights": [
-                "So do I"
+                "both",
+                "either",
+                "neither"
               ]
             }
           ]
@@ -55,30 +58,37 @@
       "id": "b1-both-either-neither-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "both",
-              "value": "los dos · Both answers are correct.",
+              "key": "Both + plural",
+              "value": "Both + sustantivo plural + verbo plural · Both options sound interesting.",
               "highlights": [
-                "Both"
+                "Both options"
               ]
             },
             {
-              "key": "either",
-              "value": "cualquiera de dos · Either option works.",
+              "key": "Either + singular",
+              "value": "Either + sustantivo singular + verbo singular · Either day suits me fine.",
               "highlights": [
-                "Either"
+                "Either day"
               ]
             },
             {
-              "key": "neither",
-              "value": "ninguno · Neither answer is right.",
+              "key": "Neither + singular",
+              "value": "Neither + sustantivo singular + verbo afirmativo · Neither candidate has experience.",
               "highlights": [
-                "Neither"
+                "Neither candidate"
+              ]
+            },
+            {
+              "key": "Estructura 'of the'",
+              "value": "Neither/Either/Both of the + sustantivo plural · Neither of the cars is cheap.",
+              "highlights": [
+                "Neither of"
               ]
             }
           ]
@@ -89,26 +99,26 @@
       "id": "b1-both-either-neither-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "Both answers are correct."
+              "key": "Menú y comida",
+              "value": "Both dishes taste delicious, so pick whichever you prefer."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "Either option works."
+              "key": "Coordinación de reuniones",
+              "value": "We can meet on Monday or Tuesday; either day works for me."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "Neither answer is right."
+              "key": "Opinión sobre películas",
+              "value": "Neither movie was worth watching at the cinema."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "acuerdo"
+              "key": "Respuestas cortas",
+              "value": "—Do you prefer tea or coffee? —Neither, I drink warm water."
             }
           ]
         }
@@ -118,23 +128,23 @@
       "id": "b1-both-either-neither-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "both",
-              "rule": "los dos · Both answers are correct.",
+              "label": "Either (Opción A u Opción B)",
+              "rule": "Expresa alternativa entre dos opciones posibles",
               "examples": [
-                "Both answers are correct."
+                "You can wear either shirt."
               ]
             },
             {
-              "label": "either",
-              "rule": "cualquiera de dos · Either option works.",
+              "label": "Neither (Ni A ni B)",
+              "rule": "Expresa negación de ambas opciones (sin usar sintaxis negativa)",
               "examples": [
-                "Either option works."
+                "Neither shirt fits me."
               ]
             }
           ]
@@ -145,19 +155,19 @@
       "id": "b1-both-either-neither-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "Both of them doesn't like it."
+              "text": "Neither of my brothers don't live here."
             },
             {
               "variant": "good",
-              "text": "Neither of them likes it.",
-              "note": "neither + singular"
+              "text": "Neither of my brothers lives here.",
+              "note": "'neither' aporta significado negativo, por lo que el verbo debe ser afirmativo"
             }
           ]
         }
@@ -166,27 +176,27 @@
     {
       "id": "b1-both-either-neither-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "Siempre para 2 elementos",
+              "value": "Para 3 o más elementos usa 'all', 'any' o 'none'."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "Neither ya es negativo",
+              "value": "NUNCA uses verbo negativo con 'neither' (no digas 'neither doesn't work')."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "Both exige plural",
+              "value": "Both friends are..."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "Parejas de conectores",
+              "value": "Both... and / Either... or / Neither... nor."
             }
           ]
         }
@@ -199,13 +209,34 @@
   ],
   "quiz": [
     {
-      "q": "___ of the two roads leads to the centre.",
+      "q": "___ of the two candidates passed the final interview.",
       "options": [
         "Neither",
-        "Both"
+        "None",
+        "No one"
       ],
       "answer": 0,
-      "explain": "Ninguna de las dos → neither."
+      "explain": "Para negar 2 elementos específicos se utiliza 'Neither'."
+    },
+    {
+      "q": "You can choose ___ the red coat or the blue jacket.",
+      "options": [
+        "either",
+        "both",
+        "neither"
+      ],
+      "answer": 0,
+      "explain": "La estructura correlativa 'either... or' expresa una elección entre dos."
+    },
+    {
+      "q": "Both my parents ___ doctors.",
+      "options": [
+        "are",
+        "is",
+        "be"
+      ],
+      "answer": 0,
+      "explain": "'Both' siempre concierta con verbo en plural."
     }
   ]
 }

@@ -1,46 +1,47 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "B1 · Futuro",
     "title": "Futuro",
     "titleEmphasis": "continuo",
-    "goal": "Ya describes acciones en progreso en un momento futuro con will be + -ing."
+    "goal": "Ya describes acciones en progreso en un momento futuro determinado con will be + -ing."
   },
   "cards": [
     {
       "id": "b1-futuro-continuo-concept",
       "tag": "Idea central",
       "title": "Futuro: qué expresa",
-      "lede": "Ya describes acciones en progreso en un momento futuro con will be + -ing.",
+      "lede": "Ya describes acciones en progreso en un momento futuro determinado con will be + -ing.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Forma",
-              "value": "will be + -ing · I will be working at 9.",
+              "key": "Acción en curso futura",
+              "value": "will be + -ing · At 10 am, I will be taking an exam.",
               "highlights": [
-                "will be working"
+                "will be taking"
               ]
             },
             {
-              "key": "Momento",
-              "value": "this time tomorrow · at 8 tonight",
+              "key": "Marcadores temporales",
+              "value": "this time tomorrow, at 8 tonight, in five years",
               "highlights": [
-                "this time"
+                "this time tomorrow"
               ]
             },
             {
-              "key": "Pregunta cortés",
-              "value": "Will you be using the car?",
+              "key": "Preguntas corteses",
+              "value": "Will you be using the printer?",
               "highlights": [
                 "Will you be"
               ]
             },
             {
-              "key": "Planes fijos",
-              "value": "acción ya prevista en curso",
+              "key": "Planes programados",
+              "value": "acciones previstas en curso como rutina",
               "highlights": [
-                "be + -ing"
+                "will be"
               ]
             }
           ]
@@ -55,30 +56,30 @@
       "id": "b1-futuro-continuo-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Forma",
-              "value": "will be + -ing · I will be working at 9.",
+              "key": "Afirmativa",
+              "value": "Sujeto + will be + verbo-ing + tiempo futuro · I will be sleeping at midnight.",
               "highlights": [
-                "will be working"
+                "will be sleeping"
               ]
             },
             {
-              "key": "Momento",
-              "value": "this time tomorrow · at 8 tonight",
+              "key": "Negativa",
+              "value": "Sujeto + won't be + verbo-ing + tiempo futuro · She won't be working next week.",
               "highlights": [
-                "this time"
+                "won't be working"
               ]
             },
             {
-              "key": "Pregunta cortés",
-              "value": "Will you be using the car?",
+              "key": "Interrogativa",
+              "value": "Will + sujeto + be + verbo-ing...? · Will they be arriving around 7 pm?",
               "highlights": [
-                "Will you be"
+                "Will they be arriving"
               ]
             }
           ]
@@ -89,26 +90,26 @@
       "id": "b1-futuro-continuo-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "I will be working at 9."
+              "key": "Rutina de estudio",
+              "value": "This time next week, I will be lying on the beach in Valencia."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "at 8 tonight"
+              "key": "En el trabajo",
+              "value": "Please don't call me at 3 pm; I will be presenting our report."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "Will you be using the car?"
+              "key": "Cortesía",
+              "value": "Will you be passing by the supermarket on your way home?"
             },
             {
-              "key": "Ejemplo 4",
-              "value": "acción ya prevista en curso"
+              "key": "Planes grupales",
+              "value": "They will be staying with us during the holiday weekend."
             }
           ]
         }
@@ -118,23 +119,23 @@
       "id": "b1-futuro-continuo-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "Forma",
-              "rule": "will be + -ing · I will be working at 9.",
+              "label": "Will (Futuro simple)",
+              "rule": "Decisiones espontáneas o eventos puntuales futuros sin duración",
               "examples": [
-                "I will be working at 9."
+                "I will call you at 8."
               ]
             },
             {
-              "label": "Momento",
-              "rule": "this time tomorrow · at 8 tonight",
+              "label": "Will be + -ing (Futuro continuo)",
+              "rule": "Enfatiza una acción que ya estará transcurriendo en un momento exacto",
               "examples": [
-                "at 8 tonight"
+                "At 8, I will be having dinner."
               ]
             }
           ]
@@ -145,19 +146,19 @@
       "id": "b1-futuro-continuo-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "I will work at 9 tomorrow."
+              "text": "Don't call me at 9 because I will work."
             },
             {
               "variant": "good",
-              "text": "I will be working at 9 tomorrow.",
-              "note": "acción en curso en un punto futuro"
+              "text": "Don't call me at 9 because I will be working.",
+              "note": "se usa futuro continuo porque la acción estará en progreso en ese momento exacto"
             }
           ]
         }
@@ -166,27 +167,27 @@
     {
       "id": "b1-futuro-continuo-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "Punto temporal específico",
+              "value": "Exige mencionar o sobreentender un momento futuro puntual."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "Forma invariable 'be'",
+              "value": "'will be' no cambia según la persona (I will be, She will be)."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "Preguntas de cortesía",
+              "value": "'Will you be using...?' suena más educado que 'Are you going to use...?'."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "Negativa 'won't be'",
+              "value": "Contracción habitual de 'will not be'."
             }
           ]
         }
@@ -199,13 +200,34 @@
   ],
   "quiz": [
     {
-      "q": "This time next week I ___ on a beach.",
+      "q": "At this exact time tomorrow, we ___ across the Atlantic.",
       "options": [
-        "will be lying",
-        "will lie"
+        "will be flying",
+        "will fly",
+        "are fly"
       ],
       "answer": 0,
-      "explain": "Momento concreto futuro → continuo."
+      "explain": "Para una acción que estará en desarrollo en un punto futuro concreto se usa 'will be + -ing'."
+    },
+    {
+      "q": "___ you be using your computer this afternoon?",
+      "options": [
+        "Will",
+        "Do",
+        "Are"
+      ],
+      "answer": 0,
+      "explain": "Forma interrogativa de futuro continuo para preguntar amablemente sobre intenciones: 'Will + sujeto + be + -ing'."
+    },
+    {
+      "q": "He won't ___ working on Sunday, so we can meet up.",
+      "options": [
+        "be",
+        "been",
+        "is"
+      ],
+      "answer": 0,
+      "explain": "La estructura del futuro continuo negativo requiere 'won't be + -ing'."
     }
   ]
 }

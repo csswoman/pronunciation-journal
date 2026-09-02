@@ -1,46 +1,48 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "C2 · Condicionales",
     "title": "Condicionales",
     "titleEmphasis": "idiomáticas",
-    "goal": "Ya usas condicionales comprimidas: Had I known…, Were it not for…, If need be, If so/if not."
+    "goal": "Expresa hipótesis complejas mediante condicionales omitidas e invertidas ('Had I known', 'Were it not for', 'If need be', 'If so/not')."
   },
   "cards": [
     {
       "id": "c2-condicionales-idiomaticas-concept",
       "tag": "Idea central",
       "title": "Condicionales: qué expresa",
-      "lede": "Ya usas condicionales comprimidas: Had I known…, Were it not for…, If need be, If so/if not.",
+      "lede": "Expresa hipótesis complejas mediante condicionales omitidas e invertidas ('Had I known', 'Were it not for', 'If need be', 'If so/not').",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Had I known",
-              "value": "Had I known, I would have acted. · elipsis de if",
+              "key": "Inversión de 3er condicional",
+              "value": "Had we anticipated the demand, we would have doubled production.",
               "highlights": [
-                "Had I known"
+                "Had we anticipated"
               ]
             },
             {
-              "key": "Were it not for",
-              "value": "Were it not for her help, we would have failed.",
+              "key": "Inversión de 2do condicional",
+              "value": "Were the manager to resign, the department would collapse.",
               "highlights": [
-                "Were it not for"
+                "Were the manager to resign"
               ]
             },
             {
-              "key": "If need be",
-              "value": "We can reschedule if need be.",
+              "key": "Condicional de exclusión",
+              "value": "Were it not for / But for your intervention, we would have failed.",
+              "highlights": [
+                "Were it not for",
+                "But for"
+              ]
+            },
+            {
+              "key": "Fórmulas elípticas",
+              "value": "We can deploy additional servers if need be.",
               "highlights": [
                 "if need be"
-              ]
-            },
-            {
-              "key": "If so / if not",
-              "value": "Is it urgent? If so, call me.",
-              "highlights": [
-                "If so"
               ]
             }
           ]
@@ -55,30 +57,30 @@
       "id": "c2-condicionales-idiomaticas-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Had I known",
-              "value": "Had I known, I would have acted. · elipsis de if",
+              "key": "Afirmativa (Inversión Had)",
+              "value": "Had + sujeto + participio pasado, sujeto + would have + participio · Had I known, I would have acted.",
               "highlights": [
                 "Had I known"
               ]
             },
             {
-              "key": "Were it not for",
-              "value": "Were it not for her help, we would have failed.",
+              "key": "Afirmativa (Inversión Were)",
+              "value": "Were + sujeto + to + verbo base, sujeto + would + verbo base · Were you to ask, I would assist.",
               "highlights": [
-                "Were it not for"
+                "Were you to ask"
               ]
             },
             {
-              "key": "If need be",
-              "value": "We can reschedule if need be.",
+              "key": "Afirmativa (Elíptica)",
+              "value": "Are there any updates? If so, notify the team immediately.",
               "highlights": [
-                "if need be"
+                "If so"
               ]
             }
           ]
@@ -89,26 +91,26 @@
       "id": "c2-condicionales-idiomaticas-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "elipsis de if"
+              "key": "Revisión de crisis pasadas",
+              "value": "Had the warning systems functioned properly, the disaster would have been averted."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "Were it not for her help, we would have failed."
+              "key": "Planificación de contingencias",
+              "value": "Were competitors to lower their prices, we would respond with value-added services."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "We can reschedule if need be."
+              "key": "Agradecimiento profesional",
+              "value": "But for the legal team's quick response, the firm would have faced heavy fines."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "Is it urgent? If so, call me."
+              "key": "Instrucciones operativas",
+              "value": "Check whether the system is responsive. If not, initiate a manual reboot."
             }
           ]
         }
@@ -118,23 +120,23 @@
       "id": "c2-condicionales-idiomaticas-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "Had I known",
-              "rule": "Had I known, I would have acted. · elipsis de if",
+              "label": "Inversión condicional (C2)",
+              "rule": "Elimina la conjunción 'if' invirtiendo el auxiliar 'Had' o 'Were' al inicio de la cláusula",
               "examples": [
-                "elipsis de if"
+                "Had I received the report, I would have reviewed it."
               ]
             },
             {
-              "label": "Were it not for",
-              "rule": "Were it not for her help, we would have failed.",
+              "label": "Condicional estándar con If (B2)",
+              "rule": "Mantiene la conjunción 'if' y el orden estándar de sujeto + verbo",
               "examples": [
-                "Were it not for her help, we would have failed."
+                "If I had received the report, I would have reviewed it."
               ]
             }
           ]
@@ -145,19 +147,19 @@
       "id": "c2-condicionales-idiomaticas-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "If I would have known…"
+              "text": "If had I known about the defect, I wouldn't have approved it."
             },
             {
               "variant": "good",
-              "text": "Had I known… / If I had known…",
-              "note": "condicional pasado sin would en la parte if"
+              "text": "Had I known about the defect, I wouldn't have approved it.",
+              "note": "Al invertir el verbo ('Had I known'), la conjunción 'if' debe eliminarse completamente."
             }
           ]
         }
@@ -166,27 +168,27 @@
     {
       "id": "c2-condicionales-idiomaticas-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "1. Sin 'if' en inversión",
+              "value": "NUNCA uses 'if' junto a la inversión (ej. 'If had I known' es incorrecto)."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "2. 'Were it not for' = sin tu ayuda",
+              "value": "Expresa que una circunstancia presente es el único obstáculo o razón."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "3. 'Had it not been for'",
+              "value": "Es la versión pasada de la exclusión ('Had it not been for your help...')."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "4. Fórmulas fijas elípticas",
+              "value": "Usa 'if need be' (si es necesario), 'if any' (si los hay), 'if so' (si es así)."
             }
           ]
         }
@@ -199,13 +201,37 @@
   ],
   "quiz": [
     {
-      "q": "___ it not for the grant, the project would collapse.",
+      "q": "___ it not for your strategic guidance, the project would have run out of funds.",
       "options": [
         "Were",
-        "Was"
+        "Had been",
+        "Had",
+        "Would be"
       ],
       "answer": 0,
-      "explain": "Were it not for = if it were not for."
+      "explain": "'Were it not for' equivale a 'si no fuera por tu orientación estratégica'."
+    },
+    {
+      "q": "___ we to encounter technical difficulties, our support desk will assist you.",
+      "options": [
+        "Were",
+        "Had",
+        "Should",
+        "If"
+      ],
+      "answer": 0,
+      "explain": "'Were + sujeto + to + infinitivo' es la forma invertida del segundo condicional."
+    },
+    {
+      "q": "Please verify if the documents require notarization. ___, send them to legal.",
+      "options": [
+        "If so",
+        "If such",
+        "If yes",
+        "If true"
+      ],
+      "answer": 0,
+      "explain": "'If so' reemplaza elípticamente a la afirmación 'if they require notarization'."
     }
   ]
 }

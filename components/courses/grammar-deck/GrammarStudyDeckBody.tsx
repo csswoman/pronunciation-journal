@@ -15,6 +15,7 @@ import { theoryTopicForDeck } from "@/lib/learning-loop/theory-targets";
 import QuizStep from "./QuizStep";
 import { DeckDoneScreen } from "./DeckDoneScreen";
 import { DeckCarousel } from "./DeckCarousel";
+import DeckSidebarRail from "./DeckSidebarRail";
 
 type DeckPhase = "cards" | "quiz" | "done" | "practice";
 
@@ -53,7 +54,6 @@ interface GrammarStudyDeckBodyProps {
     onPrev: () => void;
     onNext: () => void;
     onGoTo: (target: number) => void;
-    onToggleReviewed: (id: string) => void;
   };
 }
 
@@ -81,10 +81,7 @@ export function GrammarStudyDeckBody({
     onRetryCompletion,
     onStartSentencePractice,
     onRestart,
-    onPrev,
     onNext,
-    onGoTo,
-    onToggleReviewed,
   } = handlers;
 
   if (phase === "practice" && practiceExercises) {
@@ -177,17 +174,24 @@ export function GrammarStudyDeckBody({
   }
 
   return (
-    <DeckCarousel
-      cards={deck.cards}
-      index={index}
-      direction={direction}
-      reviewed={reviewed}
-      isLast={isLast}
-      onPrev={onPrev}
-      onNext={onNext}
-      onGoTo={onGoTo}
-      onToggleReviewed={onToggleReviewed}
-    />
+    <div className="grammar-deck__grid">
+      <div className="grammar-deck__main">
+        <DeckCarousel
+          cards={deck.cards}
+          index={index}
+          direction={direction}
+          reviewed={reviewed}
+          isLast={isLast}
+          onNext={onNext}
+        />
+      </div>
+      <DeckSidebarRail
+        cards={deck.cards}
+        currentIndex={index}
+        reviewed={reviewed}
+        onSelectCard={handlers.onGoTo}
+      />
+    </div>
   );
 }
 

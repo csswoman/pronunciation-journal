@@ -40,9 +40,11 @@ export default function CoursePathHeroBanner({
         <span className="course-path__hero-kicker">{label}</span>
         <h2 className="course-path__hero-title">{lesson.title}</h2>
       </div>
-      <div className="course-path__hero-action">
-        <span>{actionText}</span>
-        <ArrowRight size={16} aria-hidden />
+      <div className="course-path__hero-action" aria-hidden="true">
+        <span className="course-path__hero-action-text">{actionText}</span>
+        <span className="course-path__hero-action-icon">
+          <ArrowRight size={16} aria-hidden />
+        </span>
       </div>
     </Link>
   );

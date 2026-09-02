@@ -1,44 +1,45 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "C2 · Subjuntivo",
     "title": "Subjuntivo",
     "titleEmphasis": "fórmulas fijas",
-    "goal": "Ya reconoces y usas fórmulas subjuntivas: be that as it may, come what may, suffice it to say, so be it."
+    "goal": "Reconoce y aplica expresiones subjuntivas congeladas y formulaicas ('be that as it may', 'come what may', 'suffice it to say')."
   },
   "cards": [
     {
       "id": "c2-subjuntivo-formulas-concept",
       "tag": "Idea central",
       "title": "Subjuntivo: qué expresa",
-      "lede": "Ya reconoces y usas fórmulas subjuntivas: be that as it may, come what may, suffice it to say, so be it.",
+      "lede": "Reconoce y aplica expresiones subjuntivas congeladas y formulaicas ('be that as it may', 'come what may', 'suffice it to say').",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "be that as it may",
-              "value": "sea como fuere · concesión formal",
+              "key": "Concesión de punto (Sea como fuere)",
+              "value": "Be that as it may, we must adhere to our strategic timetable.",
               "highlights": [
-                "be that as it may"
+                "Be that as it may"
               ]
             },
             {
-              "key": "come what may",
-              "value": "pase lo que pase",
+              "key": "Determinación (Pase lo que pase)",
+              "value": "Come what may, the organization will support its employees.",
               "highlights": [
-                "come what may"
+                "Come what may"
               ]
             },
             {
-              "key": "suffice it to say",
-              "value": "baste decir",
+              "key": "Síntesis (Baste decir que)",
+              "value": "Suffice it to say, the project was an overwhelming success.",
               "highlights": [
-                "suffice it to say"
+                "Suffice it to say"
               ]
             },
             {
-              "key": "so be it",
-              "value": "así sea · aceptación solemne",
+              "key": "Aceptación solemne (Que así sea)",
+              "value": "If they refuse our proposal, then so be it.",
               "highlights": [
                 "so be it"
               ]
@@ -55,30 +56,30 @@
       "id": "c2-subjuntivo-formulas-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "be that as it may",
-              "value": "sea como fuere · concesión formal",
+              "key": "Afirmativa (Be that as it may)",
+              "value": "Be that as it may, + cláusula principal de contraste.",
               "highlights": [
-                "be that as it may"
+                "Be that as it may"
               ]
             },
             {
-              "key": "come what may",
-              "value": "pase lo que pase",
+              "key": "Afirmativa (Suffice it to say)",
+              "value": "Suffice it to say (that) + cláusula aclaratoria.",
               "highlights": [
-                "come what may"
+                "Suffice it to say"
               ]
             },
             {
-              "key": "suffice it to say",
-              "value": "baste decir",
+              "key": "Afirmativa (God forbid / Far be it from me)",
+              "value": "Far be it from me to criticize, but we need better organization.",
               "highlights": [
-                "suffice it to say"
+                "Far be it from me"
               ]
             }
           ]
@@ -89,26 +90,26 @@
       "id": "c2-subjuntivo-formulas-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "concesión formal"
+              "key": "Debates de alta dirección",
+              "value": "Sales were lower than expected. Be that as it may, our profits remain stable."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "pase lo que pase"
+              "key": "Declaraciones institucionales",
+              "value": "Come what may, our firm will honor all contractual obligations."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "baste decir"
+              "key": "Resúmenes ejecutivos",
+              "value": "Suffice it to say, the launch surpassed all performance benchmarks."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "aceptación solemne"
+              "key": "Intervenciones diplomáticas",
+              "value": "Far be it from me to dictate strategy, but caution is advised."
             }
           ]
         }
@@ -118,23 +119,23 @@
       "id": "c2-subjuntivo-formulas-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "be that as it may",
-              "rule": "sea como fuere · concesión formal",
+              "label": "Fórmula Subjuntiva Fija (C2)",
+              "rule": "Son expresiones fosilizadas que mantienen la forma base del verbo en posición inicial o fija",
               "examples": [
-                "concesión formal"
+                "Suffice it to say that we won."
               ]
             },
             {
-              "label": "come what may",
-              "rule": "pase lo que pase",
+              "label": "Paráfrasis Estándar (B2)",
+              "rule": "Utiliza gramática convencional y conectores modernos",
               "examples": [
-                "pase lo que pase"
+                "It is enough to say that we won."
               ]
             }
           ]
@@ -145,19 +146,19 @@
       "id": "c2-subjuntivo-formulas-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "Be that as it is…"
+              "text": "Be that as it is, we will continue."
             },
             {
               "variant": "good",
-              "text": "Be that as it may…",
-              "note": "fórmula fija congelada"
+              "text": "Be that as it may, we will continue.",
+              "note": "'Be that as it may' es una fórmula subjuntiva fija; la forma 'is' es un error."
             }
           ]
         }
@@ -166,27 +167,27 @@
     {
       "id": "c2-subjuntivo-formulas-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "1. Inalterabilidad gramatical",
+              "value": "No cambies los tiempos ni pronombres de estas expresiones (ej. 'Be that as it is' es INCORRECTO)."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "2. 'Suffice it to say'",
+              "value": "Significa 'baste decir'; se usa para resumir una explicación larga."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "3. 'Far be it from me'",
+              "value": "Se usa antes de dar una opinión o crítica para sonar cortés o atenuado."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "4. 'Heaven forbid / God forbid'",
+              "value": "Expresa el deseo ferviente de que algo no ocurra."
             }
           ]
         }
@@ -199,13 +200,37 @@
   ],
   "quiz": [
     {
-      "q": "___, we must proceed regardless.",
+      "q": "The economic outlook is uncertain. ___, we must proceed with the expansion.",
       "options": [
-        "Come what may",
-        "Comes what may"
+        "Be that as it may",
+        "Be that as it is",
+        "Being that as it may",
+        "As it may be that"
       ],
       "answer": 0,
-      "explain": "Fórmula subjuntiva fija: come what may."
+      "explain": "'Be that as it may' (sea como fuere) es la expresión subjuntiva fija correcta."
+    },
+    {
+      "q": "___ to say, the audit revealed zero irregularities.",
+      "options": [
+        "Suffice it",
+        "Suffices it",
+        "Sufficing it",
+        "It suffices"
+      ],
+      "answer": 0,
+      "explain": "'Suffice it to say' es la fórmula fija congelada para indicar 'baste decir'."
+    },
+    {
+      "q": "¿Qué expresión fija subjuntiva transmite aceptación incondicional ante cualquier adversidad futura?",
+      "options": [
+        "Come what may",
+        "God forbids",
+        "Far be it to me",
+        "Be it as it may"
+      ],
+      "answer": 0,
+      "explain": "'Come what may' equivale a 'pase lo que pase'."
     }
   ]
 }

@@ -17,8 +17,8 @@ export default function GrammarPairsBlock({ lines }: { lines: GrammarPairLine[] 
               <Check size={12} strokeWidth={2.5} />
             )}
           </span>
-          <span className="grammar-pair__text">
-            {line.text}
+          <span className="grammar-pair__content">
+            <span className="grammar-pair__text">{line.text}</span>
             {line.note && <span className="grammar-pair__note">{line.note}</span>}
           </span>
         </div>

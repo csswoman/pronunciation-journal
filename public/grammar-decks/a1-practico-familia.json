@@ -14,10 +14,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Padres", "value": "father (dad) · mother (mom) · parents", "highlights": ["parents"] },
-            { "key": "Hijos", "value": "son · daughter · children (kids)", "highlights": ["children"] },
-            { "key": "Hermanos", "value": "brother · sister · siblings", "highlights": ["siblings"] },
-            { "key": "Abuelos", "value": "grandfather · grandmother · grandparents", "highlights": ["grandparents"] }
+            {
+              "key": "Padres",
+              "value": "father (dad) · mother (mom) · parents",
+              "highlights": [
+                "parents"
+              ]
+            },
+            {
+              "key": "Hijos",
+              "value": "son · daughter · children (kids)",
+              "highlights": [
+                "children"
+              ]
+            },
+            {
+              "key": "Hermanos",
+              "value": "brother · sister · siblings",
+              "highlights": [
+                "siblings"
+              ]
+            },
+            {
+              "key": "Abuelos",
+              "value": "grandfather · grandmother · grandparents",
+              "highlights": [
+                "grandparents"
+              ]
+            }
           ]
         }
       ],
@@ -35,10 +59,36 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Tíos", "value": "uncle · aunt", "highlights": ["uncle", "aunt"] },
-            { "key": "Primos", "value": "cousin (mismo para ambos)", "highlights": ["cousin"] },
-            { "key": "Sobrinos", "value": "nephew · niece", "highlights": ["nephew", "niece"] },
-            { "key": "Políticos", "value": "mother-in-law · brother-in-law", "highlights": ["in-law"] }
+            {
+              "key": "Tíos",
+              "value": "uncle · aunt",
+              "highlights": [
+                "uncle",
+                "aunt"
+              ]
+            },
+            {
+              "key": "Primos",
+              "value": "cousin (mismo para ambos)",
+              "highlights": [
+                "cousin"
+              ]
+            },
+            {
+              "key": "Sobrinos",
+              "value": "nephew · niece",
+              "highlights": [
+                "nephew",
+                "niece"
+              ]
+            },
+            {
+              "key": "Políticos",
+              "value": "mother-in-law · brother-in-law",
+              "highlights": [
+                "in-law"
+              ]
+            }
           ]
         }
       ]
@@ -52,9 +102,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Persona + 's", "value": "Ana's brother · my dad's car", "highlights": ["'s"] },
-            { "key": "Plural en -s", "value": "my parents' house (solo apóstrofo)", "highlights": ["'"] },
-            { "key": "Pregunta", "value": "Whose book is this?", "highlights": ["Whose"] }
+            {
+              "key": "Persona + 's",
+              "value": "Ana's brother · my dad's car",
+              "highlights": [
+                "'s"
+              ]
+            },
+            {
+              "key": "Plural en -s",
+              "value": "my parents' house (solo apóstrofo)",
+              "highlights": [
+                "'"
+              ]
+            },
+            {
+              "key": "Pregunta",
+              "value": "Whose book is this?",
+              "highlights": [
+                "Whose"
+              ]
+            }
           ]
         }
       ],
@@ -72,9 +140,30 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "my / your", "value": "my sister · your family", "highlights": ["my", "your"] },
-            { "key": "his / her", "value": "his mom · her brother", "highlights": ["his", "her"] },
-            { "key": "our / their", "value": "our kids · their parents", "highlights": ["our", "their"] }
+            {
+              "key": "my / your",
+              "value": "my sister · your family",
+              "highlights": [
+                "my",
+                "your"
+              ]
+            },
+            {
+              "key": "his / her",
+              "value": "his mom · her brother",
+              "highlights": [
+                "his",
+                "her"
+              ]
+            },
+            {
+              "key": "our / their",
+              "value": "our kids · their parents",
+              "highlights": [
+                "our",
+                "their"
+              ]
+            }
           ]
         }
       ],
@@ -92,9 +181,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Tener", "value": "I have two brothers.", "highlights": ["have"] },
-            { "key": "Hay", "value": "There are five people in my family.", "highlights": ["There are"] },
-            { "key": "Edad", "value": "My sister is ten years old.", "highlights": ["years old"] }
+            {
+              "key": "Tener",
+              "value": "I have two brothers.",
+              "highlights": [
+                "have"
+              ]
+            },
+            {
+              "key": "Hay",
+              "value": "There are five people in my family.",
+              "highlights": [
+                "There are"
+              ]
+            },
+            {
+              "key": "Edad",
+              "value": "My sister is ten years old.",
+              "highlights": [
+                "years old"
+              ]
+            }
           ]
         }
       ]
@@ -108,13 +215,58 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "good", "text": "Do you have any brothers or sisters?", "note": "preguntar por hermanos" },
-            { "variant": "good", "text": "How many people are in your family?", "note": "número de miembros" },
-            { "variant": "good", "text": "What does your father do?", "note": "preguntar el trabajo" },
-            { "variant": "good", "text": "How old is your sister?", "note": "preguntar la edad" }
+            {
+              "variant": "good",
+              "text": "Do you have any brothers or sisters?",
+              "note": "preguntar por hermanos"
+            },
+            {
+              "variant": "good",
+              "text": "How many people are in your family?",
+              "note": "número de miembros"
+            },
+            {
+              "variant": "good",
+              "text": "What does your father do?",
+              "note": "preguntar el trabajo"
+            },
+            {
+              "variant": "good",
+              "text": "How old is your sister?",
+              "note": "preguntar la edad"
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "My mother's sister is my ___.",
+      "options": [
+        "aunt",
+        "cousin"
+      ],
+      "answer": 0,
+      "explain": "La hermana de tu madre es tu tía ('aunt')."
+    },
+    {
+      "q": "My uncle's son is my ___.",
+      "options": [
+        "cousin",
+        "brother"
+      ],
+      "answer": 0,
+      "explain": "El hijo de tu tío es tu primo ('cousin')."
+    },
+    {
+      "q": "Your father and mother are your ___.",
+      "options": [
+        "parents",
+        "relatives"
+      ],
+      "answer": 0,
+      "explain": "'Parents' se refiere específicamente a padre y madre."
     }
   ]
 }

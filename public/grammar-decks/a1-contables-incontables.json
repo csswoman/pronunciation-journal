@@ -1,4 +1,5 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "A1 · Sustantivos",
     "title": "Contables e",
@@ -16,24 +17,24 @@
           "type": "rules",
           "rows": [
             {
-              "key": "Contable",
+              "key": "Contables",
               "value": "an apple, two apples, many apples",
               "highlights": [
                 "apples"
               ]
             },
             {
-              "key": "Incontable",
+              "key": "Incontables",
               "value": "water, rice, money (sin plural)",
               "highlights": [
                 "water"
               ]
             },
             {
-              "key": "a/an",
-              "value": "solo con contables singulares · a book",
+              "key": "Artículos",
+              "value": "a/an con contables singular · some con incontables",
               "highlights": [
-                "a"
+                "some"
               ]
             }
           ]
@@ -48,30 +49,30 @@
       "id": "a1-contables-incontables-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Contable",
-              "value": "an apple, two apples, many apples",
+              "key": "Contable singular",
+              "value": "a book / an apple",
               "highlights": [
-                "apples"
+                "a/an"
+              ]
+            },
+            {
+              "key": "Contable plural",
+              "value": "two books / many apples",
+              "highlights": [
+                "-s"
               ]
             },
             {
               "key": "Incontable",
-              "value": "water, rice, money (sin plural)",
+              "value": "some water / some advice",
               "highlights": [
-                "water"
-              ]
-            },
-            {
-              "key": "a/an",
-              "value": "solo con contables singulares · a book",
-              "highlights": [
-                "a"
+                "some"
               ]
             }
           ]
@@ -82,22 +83,26 @@
       "id": "a1-contables-incontables-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "an apple, two apples, many apples"
+              "key": "Comida contable",
+              "value": "Can I have two eggs and an apple?"
             },
             {
-              "key": "Ejemplo 2",
-              "value": "water, rice, money (sin plural)"
+              "key": "Líquidos",
+              "value": "We need to buy some milk and juice."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "a book"
+              "key": "Información",
+              "value": "He gave me useful information about the city."
+            },
+            {
+              "key": "Conceptos",
+              "value": "Money doesn't guarantee happiness."
             }
           ]
         }
@@ -107,23 +112,23 @@
       "id": "a1-contables-incontables-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "Contable",
-              "rule": "an apple, two apples, many apples",
+              "label": "Contables (Plural en -s)",
+              "rule": "Tienen forma singular y plural",
               "examples": [
-                "an apple, two apples, many apples"
+                "one dollar -> five dollars"
               ]
             },
             {
-              "label": "Incontable",
-              "rule": "water, rice, money (sin plural)",
+              "label": "Incontables (Sin -s)",
+              "rule": "No se cuentan con números directos, usan 'some'",
               "examples": [
-                "water, rice, money (sin plural)"
+                "some money (NUNCA moneys)"
               ]
             }
           ]
@@ -134,7 +139,7 @@
       "id": "a1-contables-incontables-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
@@ -146,7 +151,7 @@
             {
               "variant": "good",
               "text": "I need some information.",
-              "note": "information es incontable"
+              "note": "information es incontable, usa some"
             }
           ]
         }
@@ -155,27 +160,27 @@
     {
       "id": "a1-contables-incontables-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "Contables",
+              "value": "a/an en singular, plural con -s (apples, cars)"
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "Incontables",
+              "value": "usan 'some' en afirmativo, no llevan a/an (water, bread)"
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "Incontables comunes",
+              "value": "water, coffee, bread, money, advice, information"
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "Medidas",
+              "value": "a cup of coffee, a glass of water, a piece of advice"
             }
           ]
         }
@@ -188,13 +193,31 @@
   ],
   "quiz": [
     {
-      "q": "Can I have ___ water?",
+      "q": "Could you give me some ___ about the project?",
       "options": [
-        "some",
-        "a"
+        "information",
+        "informations"
       ],
       "answer": 0,
-      "explain": "water es incontable → some."
+      "explain": "'information' es incontable y no lleva -s en plural."
+    },
+    {
+      "q": "We need to buy ___ loaf of bread and some cheese.",
+      "options": [
+        "a",
+        "an"
+      ],
+      "answer": 0,
+      "explain": "'loaf' empieza por sonido consonántico, corresponde el artículo 'a'."
+    },
+    {
+      "q": "Indica cuál grupo contiene SOLO sustantivos incontables:",
+      "options": [
+        "Water, rice, money, advice",
+        "Book, car, apple, water"
+      ],
+      "answer": 0,
+      "explain": "Water, rice, money y advice son sustantivos incontables en masa."
     }
   ]
 }

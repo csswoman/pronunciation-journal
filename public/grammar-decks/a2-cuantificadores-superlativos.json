@@ -17,12 +17,18 @@
             {
               "label": "Contables",
               "rule": "tienen plural",
-              "examples": ["one apple, two apples", "a book, books"]
+              "examples": [
+                "one apple, two apples",
+                "a book, books"
+              ]
             },
             {
               "label": "Incontables",
               "rule": "no tienen plural",
-              "examples": ["water, money, rice", "information, advice"]
+              "examples": [
+                "water, money, rice",
+                "information, advice"
+              ]
             }
           ]
         }
@@ -41,9 +47,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "some", "value": "I have some money. · some apples", "highlights": ["some"] },
-            { "key": "any (neg.)", "value": "I don't have any money.", "highlights": ["any"] },
-            { "key": "any (pregunta)", "value": "Do you have any questions?", "highlights": ["any"] }
+            {
+              "key": "some",
+              "value": "I have some money. · some apples",
+              "highlights": [
+                "some"
+              ]
+            },
+            {
+              "key": "any (neg.)",
+              "value": "I don't have any money.",
+              "highlights": [
+                "any"
+              ]
+            },
+            {
+              "key": "any (pregunta)",
+              "value": "Do you have any questions?",
+              "highlights": [
+                "any"
+              ]
+            }
           ]
         }
       ],
@@ -61,9 +85,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "many + contable", "value": "many books · How many?", "highlights": ["many"] },
-            { "key": "much + incontable", "value": "much water · How much?", "highlights": ["much"] },
-            { "key": "a lot of", "value": "a lot of books · a lot of water", "highlights": ["a lot of"] }
+            {
+              "key": "many + contable",
+              "value": "many books · How many?",
+              "highlights": [
+                "many"
+              ]
+            },
+            {
+              "key": "much + incontable",
+              "value": "much water · How much?",
+              "highlights": [
+                "much"
+              ]
+            },
+            {
+              "key": "a lot of",
+              "value": "a lot of books · a lot of water",
+              "highlights": [
+                "a lot of"
+              ]
+            }
           ]
         }
       ],
@@ -81,10 +123,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "a few", "value": "unos cuantos · a few friends", "highlights": ["a few"] },
-            { "key": "few", "value": "pocos (negativo) · few people came", "highlights": ["few"] },
-            { "key": "a little", "value": "un poco · a little water", "highlights": ["a little"] },
-            { "key": "little", "value": "poco (negativo) · little time", "highlights": ["little"] }
+            {
+              "key": "a few",
+              "value": "unos cuantos · a few friends",
+              "highlights": [
+                "a few"
+              ]
+            },
+            {
+              "key": "few",
+              "value": "pocos (negativo) · few people came",
+              "highlights": [
+                "few"
+              ]
+            },
+            {
+              "key": "a little",
+              "value": "un poco · a little water",
+              "highlights": [
+                "a little"
+              ]
+            },
+            {
+              "key": "little",
+              "value": "poco (negativo) · little time",
+              "highlights": [
+                "little"
+              ]
+            }
           ]
         }
       ]
@@ -98,9 +164,28 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Adjetivo corto", "value": "cheaper than · faster than", "highlights": ["-er than"] },
-            { "key": "Adjetivo largo", "value": "more expensive than", "highlights": ["more"] },
-            { "key": "Irregular", "value": "good → better · bad → worse", "highlights": ["better", "worse"] }
+            {
+              "key": "Adjetivo corto",
+              "value": "cheaper than · faster than",
+              "highlights": [
+                "-er than"
+              ]
+            },
+            {
+              "key": "Adjetivo largo",
+              "value": "more expensive than",
+              "highlights": [
+                "more"
+              ]
+            },
+            {
+              "key": "Irregular",
+              "value": "good → better · bad → worse",
+              "highlights": [
+                "better",
+                "worse"
+              ]
+            }
           ]
         }
       ]
@@ -114,9 +199,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Corto", "value": "the cheapest · the fastest", "highlights": ["the cheapest"] },
-            { "key": "Largo", "value": "the most expensive", "highlights": ["the most"] },
-            { "key": "Irregular", "value": "the best · the worst", "highlights": ["the best"] }
+            {
+              "key": "Corto",
+              "value": "the cheapest · the fastest",
+              "highlights": [
+                "the cheapest"
+              ]
+            },
+            {
+              "key": "Largo",
+              "value": "the most expensive",
+              "highlights": [
+                "the most"
+              ]
+            },
+            {
+              "key": "Irregular",
+              "value": "the best · the worst",
+              "highlights": [
+                "the best"
+              ]
+            }
           ]
         }
       ],
@@ -124,6 +227,38 @@
         "label": "Ojo:",
         "body": "el superlativo siempre lleva the: the tallest building, no \"tallest building\"."
       }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Mount Everest is the ___ mountain in the world.",
+      "options": [
+        "highest",
+        "higher",
+        "most high"
+      ],
+      "answer": 0,
+      "explain": "El superlativo regular de un adjetivo corto como 'high' añade el sufijo '-est' ('highest')."
+    },
+    {
+      "q": "We have ___ time left before the train leaves, so hurry up!",
+      "options": [
+        "little",
+        "a few",
+        "many"
+      ],
+      "answer": 0,
+      "explain": "'time' es sustantivo incontable y 'little' indica una cantidad reducida o insuficiente."
+    },
+    {
+      "q": "She has a ___ close friends living in London.",
+      "options": [
+        "few",
+        "little",
+        "much"
+      ],
+      "answer": 0,
+      "explain": "'friends' es un sustantivo contable plural, por lo que requiere 'a few'."
     }
   ]
 }

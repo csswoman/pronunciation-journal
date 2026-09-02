@@ -14,9 +14,29 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Cortos (+ -er)", "value": "cheap → cheaper than", "highlights": ["cheaper than"], "hint": "1 sílaba" },
-            { "key": "y → ier", "value": "easy → easier than", "highlights": ["easier than"] },
-            { "key": "Largos (more)", "value": "expensive → more expensive than", "highlights": ["more expensive"], "hint": "2+ sílabas" }
+            {
+              "key": "Cortos (+ -er)",
+              "value": "cheap → cheaper than",
+              "highlights": [
+                "cheaper than"
+              ],
+              "hint": "1 sílaba"
+            },
+            {
+              "key": "y → ier",
+              "value": "easy → easier than",
+              "highlights": [
+                "easier than"
+              ]
+            },
+            {
+              "key": "Largos (more)",
+              "value": "expensive → more expensive than",
+              "highlights": [
+                "more expensive"
+              ],
+              "hint": "2+ sílabas"
+            }
           ]
         }
       ],
@@ -34,9 +54,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Cortos (the -est)", "value": "cheap → the cheapest", "highlights": ["the cheapest"] },
-            { "key": "Largos (the most)", "value": "the most expensive", "highlights": ["the most expensive"] },
-            { "key": "Con grupo", "value": "the best in the world", "highlights": ["the best"] }
+            {
+              "key": "Cortos (the -est)",
+              "value": "cheap → the cheapest",
+              "highlights": [
+                "the cheapest"
+              ]
+            },
+            {
+              "key": "Largos (the most)",
+              "value": "the most expensive",
+              "highlights": [
+                "the most expensive"
+              ]
+            },
+            {
+              "key": "Con grupo",
+              "value": "the best in the world",
+              "highlights": [
+                "the best"
+              ]
+            }
           ]
         }
       ]
@@ -49,12 +87,37 @@
       "blocks": [
         {
           "type": "verb-table",
-          "headers": ["Adjetivo", "Comparativo", "Superlativo", "Español"],
+          "headers": [
+            "Adjetivo",
+            "Comparativo",
+            "Superlativo",
+            "Español"
+          ],
           "rows": [
-            ["good", "better", "the best", "bueno"],
-            ["bad", "worse", "the worst", "malo"],
-            ["far", "further", "the furthest", "lejos"],
-            ["little", "less", "the least", "poco"]
+            [
+              "good",
+              "better",
+              "the best",
+              "bueno"
+            ],
+            [
+              "bad",
+              "worse",
+              "the worst",
+              "malo"
+            ],
+            [
+              "far",
+              "further",
+              "the furthest",
+              "lejos"
+            ],
+            [
+              "little",
+              "less",
+              "the least",
+              "poco"
+            ]
           ]
         }
       ]
@@ -63,16 +126,33 @@
       "id": "cf-asas",
       "tag": "Igualdad",
       "title": "as ... as",
-      "titleItalic": ["as ... as"],
+      "titleItalic": [
+        "as ... as"
+      ],
       "lede": "Para decir que dos cosas son iguales, o que no lo son.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
-            { "variant": "good", "text": "She is as tall as her brother.", "note": "igual de alta" },
-            { "variant": "good", "text": "It isn't as cold as yesterday.", "note": "menos frío que ayer" },
-            { "variant": "bad", "text": "She is so tall as him." },
-            { "variant": "good", "text": "She is as tall as he is.", "note": "as... as, no \"so... as\"" }
+            {
+              "variant": "good",
+              "text": "She is as tall as her brother.",
+              "note": "igual de alta"
+            },
+            {
+              "variant": "good",
+              "text": "It isn't as cold as yesterday.",
+              "note": "menos frío que ayer"
+            },
+            {
+              "variant": "bad",
+              "text": "She is so tall as him."
+            },
+            {
+              "variant": "good",
+              "text": "She is as tall as he is.",
+              "note": "as... as, no \"so... as\""
+            }
           ]
         }
       ]
@@ -86,9 +166,28 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Present continuous", "value": "cita ya fijada · I'm meeting Ana at 6.", "highlights": ["I'm meeting"], "hint": "agenda con hora/lugar" },
-            { "key": "be going to", "value": "intención · I'm going to study tonight.", "highlights": ["going to study"] },
-            { "key": "will", "value": "decisión del momento · I'll get it!", "highlights": ["I'll get it"] }
+            {
+              "key": "Present continuous",
+              "value": "cita ya fijada · I'm meeting Ana at 6.",
+              "highlights": [
+                "I'm meeting"
+              ],
+              "hint": "agenda con hora/lugar"
+            },
+            {
+              "key": "be going to",
+              "value": "intención · I'm going to study tonight.",
+              "highlights": [
+                "going to study"
+              ]
+            },
+            {
+              "key": "will",
+              "value": "decisión del momento · I'll get it!",
+              "highlights": [
+                "I'll get it"
+              ]
+            }
           ]
         }
       ]
@@ -102,13 +201,59 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "bad", "text": "She is more taller than me." },
-            { "variant": "good", "text": "She is taller than me.", "note": "-er O more, nunca los dos juntos" },
-            { "variant": "bad", "text": "the best player of the team" },
-            { "variant": "good", "text": "the best player on the team", "note": "con grupos se usa in/on (nunca of); EE. UU. prefiere on" }
+            {
+              "variant": "bad",
+              "text": "She is more taller than me."
+            },
+            {
+              "variant": "good",
+              "text": "She is taller than me.",
+              "note": "-er O more, nunca los dos juntos"
+            },
+            {
+              "variant": "bad",
+              "text": "the best player of the team"
+            },
+            {
+              "variant": "good",
+              "text": "the best player on the team",
+              "note": "con grupos se usa in/on (nunca of); EE. UU. prefiere on"
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "This new phone is as fast ___ the old one.",
+      "options": [
+        "as",
+        "than",
+        "like"
+      ],
+      "answer": 0,
+      "explain": "La estructura de comparación de igualdad es 'as + adjetivo + as'."
+    },
+    {
+      "q": "We ___ to London next Friday; we already bought the tickets.",
+      "options": [
+        "are flying",
+        "will fly",
+        "fly"
+      ],
+      "answer": 0,
+      "explain": "El presente continuo se usa para planes futuros confirmados y organizados previamente."
+    },
+    {
+      "q": "The exam was ___ harder than I expected.",
+      "options": [
+        "much",
+        "more",
+        "very"
+      ],
+      "answer": 0,
+      "explain": "'Much' intensifica adjetivos comparativos (much harder)."
     }
   ]
 }

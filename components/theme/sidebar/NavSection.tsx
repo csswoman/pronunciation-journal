@@ -20,7 +20,7 @@ export function NavSection({ section, isActive, isFirst = false }: NavSectionPro
       ) : (
         !isFirst && <div className="my-1.5 mx-3 border-t border-border-subtle" />
       )}
-      <div className="space-y-0.5">
+      <div className="space-y-px">
         {section.items.map((item) => (
           <NavLink key={item.href} item={item} active={isActive(item.href)} />
         ))}

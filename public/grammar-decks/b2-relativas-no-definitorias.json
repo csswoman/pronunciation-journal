@@ -1,4 +1,5 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "B2 · Relativas",
     "title": "Cláusulas",
@@ -16,30 +17,33 @@
           "type": "rules",
           "rows": [
             {
-              "key": "Comas",
-              "value": "My brother, who lives in Rome, …",
+              "key": "Separadas por comas",
+              "value": "Añaden detalles prescindibles · My boss, who is 45, loves marathon running.",
               "highlights": [
+                ",",
+                "who",
                 ","
               ]
             },
             {
-              "key": "Información extra",
-              "value": "no define; solo añade detalle",
+              "key": "uso de 'which' para oraciones",
+              "value": "which modifica toda la idea anterior · He arrived late, which annoyed everyone.",
               "highlights": [
-                "who"
+                ", which"
               ]
             },
             {
-              "key": "which",
-              "value": "The book, which I bought yesterday, …",
+              "key": "whose para posesión",
+              "value": "whose indica pertenencia en cláusula extra · Dr. Evans, whose son is a doctor, retired.",
               "highlights": [
-                "which"
+                "whose"
               ]
             },
             {
-              "key": "that",
-              "value": "no se usa that en no definitorias",
+              "key": "Prohibición de 'that'",
+              "value": "NUNCA se utiliza 'that' entre comas en oraciones no definitorias.",
               "highlights": [
+                "who",
                 "which"
               ]
             }
@@ -55,30 +59,40 @@
       "id": "b2-relativas-no-definitorias-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Comas",
-              "value": "My brother, who lives in Rome, …",
+              "key": "Afirmativa (Persona entre comas)",
+              "value": "Sujeto, who + verbo + complemento, verbo principal + complemento · Mary, who works with me, got promoted.",
               "highlights": [
+                ", who",
                 ","
               ]
             },
             {
-              "key": "Información extra",
-              "value": "no define; solo añade detalle",
+              "key": "Afirmativa (Cosa/Lugar entre comas)",
+              "value": "Sujeto, which/where + verbo, verbo principal... · Tokyo, where I lived, is fascinating.",
               "highlights": [
-                "who"
+                ", where",
+                ","
               ]
             },
             {
-              "key": "which",
-              "value": "The book, which I bought yesterday, …",
+              "key": "Negativa dentro de la relativa",
+              "value": "Sujeto, who didn't attend the meeting, was informed later. · relative neg",
               "highlights": [
-                "which"
+                ", who didn't",
+                ","
+              ]
+            },
+            {
+              "key": "Cláusula al final de la oración",
+              "value": "Oración principal, relative clause. · She showed me her new house, which was built in 1920.",
+              "highlights": [
+                ", which was"
               ]
             }
           ]
@@ -89,26 +103,26 @@
       "id": "b2-relativas-no-definitorias-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "My brother, who lives in Rome, …"
+              "key": "Presentación de colegas",
+              "value": "Professor Miller, who has published several books on linguistics, will deliver the keynote speech."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "no define; solo añade detalle"
+              "key": "Descripción de viajes",
+              "value": "We visited Barcelona, which is famous for its stunning modernist architecture."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "The book, which I bought yesterday, …"
+              "key": "Comentario sobre eventos",
+              "value": "The company doubled its profits this quarter, which was a surprise to all investors."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "no se usa that en no definitorias"
+              "key": "Contexto familiar",
+              "value": "My uncle, whose car was stolen last week, had to buy a new one."
             }
           ]
         }
@@ -118,23 +132,25 @@
       "id": "b2-relativas-no-definitorias-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "Comas",
-              "rule": "My brother, who lives in Rome, …",
+              "label": "Relativa Definitoria (Sin comas)",
+              "rule": "Información ESENCIAL para identificar de qué persona o cosa se habla; admite 'that'.",
               "examples": [
-                "My brother, who lives in Rome, …"
+                "The doctor who treated me was very kind.",
+                "The car that I bought is blue."
               ]
             },
             {
-              "label": "Información extra",
-              "rule": "no define; solo añade detalle",
+              "label": "Relativa No Definitoria (Entre comas)",
+              "rule": "Información ADICIONAL que se puede eliminar sin cambiar el sentido principal; PROHÍBE 'that'.",
               "examples": [
-                "no define; solo añade detalle"
+                "Dr. Smith, who is a surgeon, was very kind.",
+                "My car, which is blue, is fast."
               ]
             }
           ]
@@ -145,19 +161,19 @@
       "id": "b2-relativas-no-definitorias-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "My brother that lives in Rome…"
+              "text": "My elder brother, that lives in Sydney, is coming to visit."
             },
             {
               "variant": "good",
-              "text": "My brother, who lives in Rome,…",
-              "note": "información extra → comas + who"
+              "text": "My elder brother, who lives in Sydney, is coming to visit.",
+              "note": "en las oraciones relativas explicativas (no definitorias entre comas) jamás debe utilizarse 'that', sino 'who' o 'which'"
             }
           ]
         }
@@ -166,27 +182,27 @@
     {
       "id": "b2-relativas-no-definitorias-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "Las comas son obligatorias",
+              "value": "Si la cláusula se puede eliminar sin romper el sentido, pon comas al inicio y final."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "'That' está totalmente prohibido",
+              "value": "Nunca uses 'that' tras una coma en inglés (say 'Paris, which...', not 'Paris, that...')."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "'Which' refiere a toda la oración",
+              "value": "Usa ', which' al final para dar tu opinión sobre todo el hecho anterior."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "'Whose' no lleva apóstrofe",
+              "value": "'whose' indica posesión de una persona u objeto (whose roof, whose son)."
             }
           ]
         }
@@ -199,13 +215,34 @@
   ],
   "quiz": [
     {
-      "q": "London, ___ I visited last year, is huge.",
+      "q": "The new shopping mall, ___ opened last month, features over 200 luxury stores.",
       "options": [
         "which",
+        "that",
+        "where"
+      ],
+      "answer": 0,
+      "explain": "Cláusula explicativa sobre una cosa entre comas → se debe utilizar el pronombre 'which'."
+    },
+    {
+      "q": "My colleague Julia, ___ husband is a pilot, travels around the world frequently.",
+      "options": [
+        "whose",
+        "who",
+        "whom"
+      ],
+      "answer": 0,
+      "explain": "Para indicar una relación de posesión ('cuyo marido') se utiliza el pronombre relativo 'whose'."
+    },
+    {
+      "q": "He passed all his final examinations with honors, ___ made his parents immensely proud.",
+      "options": [
+        "which",
+        "what",
         "that"
       ],
       "answer": 0,
-      "explain": "No definitoria → which entre comas."
+      "explain": "', which' se utiliza para hacer referencia y comentar la totalidad de la proposición anterior."
     }
   ]
 }

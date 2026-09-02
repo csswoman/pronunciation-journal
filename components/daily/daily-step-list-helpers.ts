@@ -32,7 +32,6 @@ export function stepMeta(step: DailyStep): string {
     parts.push(`${cardCount} ${cardCount === 1 ? 'palabra' : 'palabras'}`)
   }
   if (step.readerPassage) parts.push('lectura')
-  parts.push(`${step.estMinutes} min`)
   return parts.join(' · ')
 }
 

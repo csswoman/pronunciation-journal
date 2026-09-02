@@ -1,4 +1,5 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "A1 · Preguntas",
     "title": "Palabras",
@@ -17,7 +18,7 @@
           "rows": [
             {
               "key": "What",
-              "value": "¿Qué? · What is this?",
+              "value": "¿Qué? / ¿Cuál? · What is this?",
               "highlights": [
                 "What"
               ]
@@ -57,30 +58,30 @@
       "id": "a1-palabras-interrogativas-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "What",
-              "value": "¿Qué? · What is this?",
+              "key": "Estructura general",
+              "value": "Wh- Word + Auxiliar + Sujeto + Verbo?",
               "highlights": [
-                "What"
+                "Wh- Word + Auxiliar"
               ]
             },
             {
-              "key": "Who",
-              "value": "¿Quién? · Who is she?",
+              "key": "Con Verbo To Be",
+              "value": "Wh- Word + is/are + Sujeto?",
               "highlights": [
-                "Who"
+                "Wh- Word + is/are"
               ]
             },
             {
-              "key": "Where",
-              "value": "¿Dónde? · Where do you live?",
+              "key": "Con Can",
+              "value": "Wh- Word + can + Sujeto + Verbo?",
               "highlights": [
-                "Where"
+                "Wh- Word + can"
               ]
             }
           ]
@@ -91,26 +92,26 @@
       "id": "a1-palabras-interrogativas-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "What is this?"
+              "key": "Información",
+              "value": "What is your favorite food?"
             },
             {
-              "key": "Ejemplo 2",
-              "value": "Who is she?"
-            },
-            {
-              "key": "Ejemplo 3",
+              "key": "Lugar",
               "value": "Where do you live?"
             },
             {
-              "key": "Ejemplo 4",
-              "value": "¿Cuándo? / ¿Por qué? / ¿Cómo?"
+              "key": "Tiempo",
+              "value": "When does the store open?"
+            },
+            {
+              "key": "Razón",
+              "value": "Why are you learning English?"
             }
           ]
         }
@@ -120,23 +121,23 @@
       "id": "a1-palabras-interrogativas-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "What",
-              "rule": "¿Qué? · What is this?",
+              "label": "Who (Persona)",
+              "rule": "Pregunta por quién realiza o recibe algo",
               "examples": [
-                "What is this?"
+                "Who is your teacher?"
               ]
             },
             {
-              "label": "Who",
-              "rule": "¿Quién? · Who is she?",
+              "label": "What (Cosa / Actividad)",
+              "rule": "Pregunta por objetos, datos o acciones",
               "examples": [
-                "Who is she?"
+                "What is your plan?"
               ]
             }
           ]
@@ -147,7 +148,7 @@
       "id": "a1-palabras-interrogativas-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
@@ -168,27 +169,35 @@
     {
       "id": "a1-palabras-interrogativas-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "What",
+              "value": "Qué / Cuál (cosas o datos)"
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "Where",
+              "value": "Dónde (lugares)"
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "When",
+              "value": "Cuándo (tiempo)"
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "Who",
+              "value": "Quién (personas)"
+            },
+            {
+              "key": "Why",
+              "value": "Por qué (motivos)"
+            },
+            {
+              "key": "How",
+              "value": "Cómo (forma o estado)"
             }
           ]
         }
@@ -201,13 +210,31 @@
   ],
   "quiz": [
     {
-      "q": "___ is your name?",
+      "q": "___ is your English class? - At 9:00 AM.",
       "options": [
-        "What",
+        "When",
         "Where"
       ],
       "answer": 0,
-      "explain": "Pides información → What."
+      "explain": "La respuesta indica la hora (tiempo), corresponde 'When'."
+    },
+    {
+      "q": "___ is that boy standing near the door?",
+      "options": [
+        "Who",
+        "What"
+      ],
+      "answer": 0,
+      "explain": "Se pregunta por una persona ('that boy'), corresponde 'Who'."
+    },
+    {
+      "q": "¿Cuál pregunta está correctamente estructurada?",
+      "options": [
+        "Where does your friend live?",
+        "Where your friend lives?"
+      ],
+      "answer": 0,
+      "explain": "Sigue la fórmula: Wh- word + Auxiliar (does) + Sujeto + Verbo."
     }
   ]
 }

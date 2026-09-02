@@ -1,4 +1,5 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "B1 · Artículos",
     "title": "Artículos con",
@@ -17,30 +18,30 @@
           "rows": [
             {
               "key": "Superlativo",
-              "value": "the + -est/most · the best student",
-              "highlights": [
-                "the best"
-              ]
-            },
-            {
-              "key": "Único",
-              "value": "the sun, the president · cosas únicas",
+              "value": "the + -est / most · She is the tallest girl in class.",
               "highlights": [
                 "the"
               ]
             },
             {
-              "key": "Artículo cero",
-              "value": "sin artículo · Life is hard.",
+              "key": "Entidad única",
+              "value": "the sun, the internet, the government · cosas únicas",
               "highlights": [
-                "Life"
+                "the"
               ]
             },
             {
-              "key": "General plural",
-              "value": "Dogs are loyal. · categorías",
+              "key": "Artículo cero (Abstracto)",
+              "value": "sin artículo · Love and health are important.",
               "highlights": [
-                "Dogs"
+                "Love"
+              ]
+            },
+            {
+              "key": "Artículo cero (Plural general)",
+              "value": "sin artículo · Cats love milk.",
+              "highlights": [
+                "Cats"
               ]
             }
           ]
@@ -55,30 +56,37 @@
       "id": "b1-articulos-superlativos-cero-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Superlativo",
-              "value": "the + -est/most · the best student",
+              "key": "Afirmativa (Superlativo)",
+              "value": "Sujeto + be + the + superlativo + complemento · This is the cheapest room.",
               "highlights": [
-                "the best"
+                "the cheapest"
               ]
             },
             {
-              "key": "Único",
-              "value": "the sun, the president · cosas únicas",
+              "key": "Afirmativa (Cero abstracto)",
+              "value": "Sustantivo incontable / plural + verbo · Knowledge is power.",
               "highlights": [
-                "the"
+                "Knowledge"
               ]
             },
             {
-              "key": "Artículo cero",
-              "value": "sin artículo · Life is hard.",
+              "key": "Negativa (Cero abstracto)",
+              "value": "Sujeto + don't/doesn't + verbo + sustantivo general · I don't like fast food.",
               "highlights": [
-                "Life"
+                "fast food"
+              ]
+            },
+            {
+              "key": "Interrogativa",
+              "value": "Is/Are + sustantivo general + adjetivo? · Are computers necessary?",
+              "highlights": [
+                "computers"
               ]
             }
           ]
@@ -89,26 +97,26 @@
       "id": "b1-articulos-superlativos-cero-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "the best student"
+              "key": "En el trabajo",
+              "value": "This is the most efficient software we have used this year."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "cosas únicas"
+              "key": "Hablando del clima",
+              "value": "August is usually the hottest month in Spain."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "Life is hard."
+              "key": "Filosofía de vida",
+              "value": "Money cannot buy happiness or peace of mind."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "categorías"
+              "key": "Intereses personales",
+              "value": "I enjoy reading books about science and technology."
             }
           ]
         }
@@ -118,23 +126,23 @@
       "id": "b1-articulos-superlativos-cero-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "Superlativo",
-              "rule": "the + -est/most · the best student",
+              "label": "The + Sustantivo (Específico)",
+              "rule": "Se refiere a cosas concretas o ya mencionadas previamente",
               "examples": [
-                "the best student"
+                "The dogs in that garden are barking."
               ]
             },
             {
-              "label": "Único",
-              "rule": "the sun, the president · cosas únicas",
+              "label": "Artículo Cero (General)",
+              "rule": "Habla de toda la especie, categoría o concepto en abstracto",
               "examples": [
-                "cosas únicas"
+                "Dogs are very loyal animals."
               ]
             }
           ]
@@ -145,19 +153,19 @@
       "id": "b1-articulos-superlativos-cero-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "She is best in class."
+              "text": "The life is beautiful when you travel."
             },
             {
               "variant": "good",
-              "text": "She is the best in class.",
-              "note": "superlativo → the"
+              "text": "Life is beautiful when you travel.",
+              "note": "'life' en sentido general no lleva el artículo 'the'"
             }
           ]
         }
@@ -166,27 +174,27 @@
     {
       "id": "b1-articulos-superlativos-cero-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "Superlativos",
+              "value": "Usa siempre 'the' antes de '-est' o 'most' (ej. the best, the most interesting)."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "Conceptos abstractos",
+              "value": "No uses 'the' para educación, amor, dinero o vida en general."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "Plurales generales",
+              "value": "Omite 'the' al hablar de cosas o personas en plural general."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "Entidades únicas",
+              "value": "Usa 'the' con el sol, la luna, la tierra o el internet."
             }
           ]
         }
@@ -199,13 +207,34 @@
   ],
   "quiz": [
     {
-      "q": "He is ___ tallest in the team.",
+      "q": "Tokyo is ___ largest city in Japan.",
       "options": [
         "the",
-        "a"
+        "a",
+        "cero (sin artículo)"
       ],
       "answer": 0,
-      "explain": "Con superlativo va the."
+      "explain": "Los adjetivos superlativos como 'largest' requieren el artículo definido 'the'."
+    },
+    {
+      "q": "___ is essential for human survival.",
+      "options": [
+        "Water",
+        "The water",
+        "A water"
+      ],
+      "answer": 0,
+      "explain": "Los sustantivos incontables usados en sentido general no llevan artículo."
+    },
+    {
+      "q": "I prefer ___ to violent movies.",
+      "options": [
+        "comedies",
+        "the comedies",
+        "a comedy"
+      ],
+      "answer": 0,
+      "explain": "Para referirse a un género o categoría plural en general se usa el artículo cero."
     }
   ]
 }

@@ -110,5 +110,25 @@
         }
       ]
     }
+  ],
+  "quiz": [
+    {
+      "q": "¿Cuál es la función de frases como 'Turning now to...' o 'Moving on to...' en una presentación?",
+      "options": ["Marcar una transición clara hacia el siguiente bloque temático.", "Concluir la presentación y agradecer a la audiencia.", "Ganar tiempo mientras se consulta una duda técnica.", "Pedir al público que guarde silencio durante el turno de preguntas."],
+      "answer": 0,
+      "explain": "Estas expresiones sirven de puente para anunciar el paso a una nueva sección del discurso."
+    },
+    {
+      "q": "¿Qué estrategia es aconsejable si un asistente formula una pregunta difícil en el Q&A y no dispones de la cifra exacta?",
+      "options": ["Reconocer con cortesía la duda y prometer averiguar el dato ('I don't have that data on hand, but I'll find out').", "Inventar una cifra aproximada para no dudar.", "Dar por terminada la presentación de forma abrupta.", "Ignorar al interlocutor y cambiar de tema inmediatamente."],
+      "answer": 0,
+      "explain": "En C1, la profesionalidad se demuestra gestionando la falta de información con honestidad y seguimiento posterior."
+    },
+    {
+      "q": "Para describir un gráfico con un incremento vertiginoso en ventas, ¿qué combinación de vocabulario es la más precisa?",
+      "options": ["sales experienced a sharp increase", "sales fell steadily", "sales remained flat", "sales went up a little bit"],
+      "answer": 0,
+      "explain": "'Sharp increase' (fuerte aumento) describe con precisión una subida empinada y rápida en un gráfico."
+    }
   ]
 }

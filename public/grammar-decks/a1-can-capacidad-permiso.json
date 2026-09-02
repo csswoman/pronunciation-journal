@@ -1,46 +1,40 @@
 {
+  "isGenerated": true,
   "meta": {
-    "eyebrow": "A1 · Capacidad y permiso",
+    "eyebrow": "A1 · Modales",
     "title": "Capacidad y permiso",
     "titleEmphasis": "can y can't",
-    "goal": "Ya puedes usar can y can't en ejemplos claros y adecuados al contexto."
+    "goal": "Ya usas can y can't para expresar habilidad, posibilidad y permiso."
   },
   "cards": [
     {
       "id": "a1-can-capacidad-permiso-concept",
       "tag": "Idea central",
       "title": "Capacidad y permiso: qué expresa",
-      "lede": "Esta lección te ayuda a usar can y can't con precisión y sin traducir palabra por palabra.",
+      "lede": "Ya usas can y can't para expresar habilidad, posibilidad y permiso.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "can + verbo base",
-              "value": "I can swim.",
+              "key": "can + verbo",
+              "value": "habilidad o permiso · I can swim",
               "highlights": [
-                "can + verbo base"
+                "can"
               ]
             },
             {
-              "key": "can't + verbo base",
-              "value": "She can't drive.",
+              "key": "can't + verbo",
+              "value": "incapacidad o prohibición · She can't drive",
               "highlights": [
-                "can't + verbo base"
+                "can't"
               ]
             },
             {
               "key": "Can...?",
-              "value": "Can you help me?",
+              "value": "petición o permiso · Can you help me?",
               "highlights": [
-                "Can...?"
-              ]
-            },
-            {
-              "key": "sin to ni -s",
-              "value": "He can play, no can plays",
-              "highlights": [
-                "sin to ni -s"
+                "Can"
               ]
             }
           ]
@@ -48,29 +42,38 @@
       ],
       "tip": {
         "label": "Objetivo:",
-        "body": "reconocer la intención y elegir correctamente can y can't en situaciones reales."
+        "body": "reconocer el patrón y usarlo en frases propias."
       }
     },
     {
       "id": "a1-can-capacidad-permiso-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "can + verbo base",
-              "value": "I can swim."
+              "key": "Afirmativa",
+              "value": "Sujeto + can + Verbo base",
+              "highlights": [
+                "can + verbo"
+              ]
             },
             {
-              "key": "can't + verbo base",
-              "value": "She can't drive."
+              "key": "Negativa",
+              "value": "Sujeto + can't + Verbo base",
+              "highlights": [
+                "can't + verbo"
+              ]
             },
             {
-              "key": "Can...?",
-              "value": "Can you help me?"
+              "key": "Interrogativa",
+              "value": "Can + Sujeto + Verbo base?",
+              "highlights": [
+                "Can + Sujeto"
+              ]
             }
           ]
         }
@@ -80,22 +83,26 @@
       "id": "a1-can-capacidad-permiso-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa y fíjate en la posición de las palabras.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "I can cook."
+              "key": "Habilidad",
+              "value": "He can play the guitar very well."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "Can I sit here?"
+              "key": "Permiso",
+              "value": "Can I open the window, please?"
             },
             {
-              "key": "Ejemplo 3",
-              "value": "We can't come today."
+              "key": "Incapacidad",
+              "value": "I'm sorry, I can't come to the party tonight."
+            },
+            {
+              "key": "Petición cortés",
+              "value": "Can you repeat that sentence, please?"
             }
           ]
         }
@@ -105,23 +112,23 @@
       "id": "a1-can-capacidad-permiso-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende de la intención, la cantidad, el tiempo o el registro.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "can + verbo base",
-              "rule": "I can swim.",
+              "label": "Can (Habilidad / Permiso)",
+              "rule": "Expresa lo que se puede o sabe hacer",
               "examples": [
-                "I can cook."
+                "I can speak English."
               ]
             },
             {
-              "label": "can't + verbo base",
-              "rule": "She can't drive.",
+              "label": "Can't (Imposibilidad / Prohibición)",
+              "rule": "Expresa lo que no se puede hacer",
               "examples": [
-                "Can I sit here?"
+                "I can't fly."
               ]
             }
           ]
@@ -132,19 +139,19 @@
       "id": "a1-can-capacidad-permiso-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural y gramatical.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "She can to dance."
+              "text": "She can to drive."
             },
             {
               "variant": "good",
-              "text": "She can dance.",
-              "note": "forma recomendada"
+              "text": "She can drive.",
+              "note": "después de can no se usa to"
             }
           ]
         }
@@ -153,64 +160,64 @@
     {
       "id": "a1-can-capacidad-permiso-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase antes de continuar.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar exactamente?"
+              "key": "Sin 'to'",
+              "value": "Can va directamente con el verbo base (can speak, no can to speak)"
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma adecuada de can y can't."
+              "key": "Sin '-s'",
+              "value": "Nunca añade '-s' en tercera persona (He can, no He cans)"
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, verbo, número y tiempo."
+              "key": "Negativo",
+              "value": "can't / cannot"
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase completa y evita traducir literalmente."
+              "key": "Pregunta",
+              "value": "Can + Sujeto + Verbo base?"
             }
           ]
         }
       ],
       "tip": {
         "label": "Práctica:",
-        "body": "crea una frase personal con cada patrón y léela en voz alta."
+        "body": "escribe una frase personal con el patrón."
       }
     }
   ],
   "quiz": [
     {
-      "q": "He can ___ English.",
+      "q": "My brother ___ speak three languages fluently.",
       "options": [
-        "speaks",
-        "speak"
-      ],
-      "answer": 1,
-      "explain": "La respuesta correcta aplica la regla central de can y can't."
-    },
-    {
-      "q": "¿Cuál de estas frases es correcta?",
-      "options": [
-        "She can to dance.",
-        "She can dance."
-      ],
-      "answer": 1,
-      "explain": "La segunda opción usa la estructura y el orden correctos."
-    },
-    {
-      "q": "¿Qué conviene revisar al usar can y can't?",
-      "options": [
-        "La intención, la estructura y el contexto.",
-        "Solo la traducción literal al español."
+        "can",
+        "cans"
       ],
       "answer": 0,
-      "explain": "Una frase natural depende del significado, la forma y el contexto, no de traducir palabra por palabra."
+      "explain": "'can' no añade '-s' en tercera persona."
+    },
+    {
+      "q": "I'm busy now, so I ___ help you with your homework.",
+      "options": [
+        "can't",
+        "can"
+      ],
+      "answer": 0,
+      "explain": "Estar ocupado implica una imposibilidad → 'can't'."
+    },
+    {
+      "q": "¿Cuál oración tiene una estructura correcta?",
+      "options": [
+        "Can you speak slower?",
+        "Can you to speak slower?"
+      ],
+      "answer": 0,
+      "explain": "'Can' se combina directamente con el verbo base sin 'to'."
     }
   ]
 }

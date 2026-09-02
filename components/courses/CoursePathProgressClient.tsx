@@ -17,6 +17,7 @@ import { BookOpen, ChevronRight } from "@/components/icons";
 import { useEffect, useMemo, useState } from "react";
 import CoursePathHeroBanner from "@/components/courses/CoursePathHeroBanner";
 import CoursePathLessonGroup, { type LessonWithState } from "@/components/courses/CoursePathLessonGroup";
+import CoursePathLessonRow from "@/components/courses/CoursePathLessonRow";
 import CoursePracticeSuggestions from "@/components/courses/CoursePracticeSuggestions";
 import { WordCarousel } from "@/components/practice/session/WordCarousel";
 import { useLoadingWords } from "@/hooks/useLoadingWords";
@@ -161,12 +162,14 @@ export default function CoursePathProgressClient({ level, compactHead }: CourseP
         </div>
       )}
 
-      <div className={compactHead ? "course-path__head course-path__head--compact" : "course-path__head"}>
-        {compactHead ? <h2>{derived.level.title}</h2> : <h1>{derived.level.title}</h1>}
-        {derived.level.description && (
-          <p className="course-path__head-subtitle">{derived.level.description}</p>
-        )}
-      </div>
+      {!compactHead && (
+        <div className="course-path__head">
+          <h1>{derived.level.title}</h1>
+          {derived.level.description && (
+            <p className="course-path__head-subtitle">{derived.level.description}</p>
+          )}
+        </div>
+      )}
 
       <CoursePathHeroBanner
         levelId={level.id}
@@ -209,14 +212,10 @@ export default function CoursePathProgressClient({ level, compactHead }: CourseP
 
                 <div className="course-path__optional-body">
                   {unit.lessons.map((lesson) => (
-                    <CoursePathLessonGroup
+                    <CoursePathLessonRow
                       key={`${unit.unit.id}-${lesson.id}`}
-                      id={`${unit.unit.id}-${lesson.id}`}
-                      title={lesson.title}
-                      lessons={[lesson]}
+                      lesson={lesson}
                       levelId={level.id}
-                      open={false}
-                      onToggle={handleGroupToggle}
                     />
                   ))}
                 </div>

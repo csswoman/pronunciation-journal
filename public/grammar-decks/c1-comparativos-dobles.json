@@ -1,47 +1,51 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "C1 · Comparativos",
     "title": "Comparativos",
     "titleEmphasis": "dobles (the … the …)",
-    "goal": "Ya expresas relaciones proporcionales con the + comparativo, the + comparativo: cuanto más X, más Y."
+    "goal": "Expresa relaciones proporcionales de causa-efecto con 'the + comparativo, the + comparativo' (cuanto más X, más Y)."
   },
   "cards": [
     {
       "id": "c1-comparativos-dobles-concept",
       "tag": "Idea central",
       "title": "Comparativos: qué expresa",
-      "lede": "Ya expresas relaciones proporcionales con the + comparativo, the + comparativo: cuanto más X, más Y.",
+      "lede": "Expresa relaciones proporcionales de causa-efecto con 'the + comparativo, the + comparativo' (cuanto más X, más Y).",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Estructura",
-              "value": "The + comparativo, the + comparativo · The harder you work, the more you achieve.",
-              "highlights": [
-                "The harder",
-                "the more"
-              ]
-            },
-            {
-              "key": "Adjetivo",
+              "key": "Proporción simple",
               "value": "The older I get, the wiser I become.",
               "highlights": [
-                "The older"
+                "The older",
+                "the wiser"
               ]
             },
             {
-              "key": "Adverbio",
-              "value": "The sooner we leave, the better.",
+              "key": "Con adverbio",
+              "value": "The sooner we leave, the better we will feel.",
               "highlights": [
-                "The sooner"
+                "The sooner",
+                "the better"
               ]
             },
             {
-              "key": "Registro",
-              "value": "muy frecuente en escritura formal y argumentos",
+              "key": "Con sustantivo",
+              "value": "The more effort you put in, the more progress you make.",
               "highlights": [
-                "The"
+                "The more effort",
+                "the more progress"
+              ]
+            },
+            {
+              "key": "Estructura corta",
+              "value": "The bigger, the better.",
+              "highlights": [
+                "The bigger",
+                "the better"
               ]
             }
           ]
@@ -56,31 +60,33 @@
       "id": "c1-comparativos-dobles-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Estructura",
-              "value": "The + comparativo, the + comparativo · The harder you work, the more you achieve.",
+              "key": "Afirmativa",
+              "value": "The + comparativo + sujeto + verbo, the + comparativo + sujeto + verbo · The faster we run, the earlier we arrive.",
               "highlights": [
-                "The harder",
-                "the more"
+                "The faster",
+                "the earlier"
               ]
             },
             {
-              "key": "Adjetivo",
-              "value": "The older I get, the wiser I become.",
+              "key": "Negativa",
+              "value": "The less you worry, the fewer problems you will encounter.",
               "highlights": [
-                "The older"
+                "The less",
+                "the fewer"
               ]
             },
             {
-              "key": "Adverbio",
-              "value": "The sooner we leave, the better.",
+              "key": "Interrogativa",
+              "value": "Is it true that the more you practice, the easier it gets?",
               "highlights": [
-                "The sooner"
+                "the more",
+                "the easier"
               ]
             }
           ]
@@ -91,26 +97,26 @@
       "id": "c1-comparativos-dobles-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "The harder you work, the more you achieve."
+              "key": "Desarrollo profesional",
+              "value": "The more senior your role becomes, the greater responsibility you carry."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "The older I get, the wiser I become."
+              "key": "Planificación de viajes",
+              "value": "The earlier you book the flights, the cheaper the tickets are."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "The sooner we leave, the better."
+              "key": "Toma de decisiones",
+              "value": "The longer we hesitate on this strategy, the higher the risk grows."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "muy frecuente en escritura formal y argumentos"
+              "key": "Salud y bienestar",
+              "value": "The more sleep you get during peak stress, the better your focus remains."
             }
           ]
         }
@@ -120,23 +126,23 @@
       "id": "c1-comparativos-dobles-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "Estructura",
-              "rule": "The + comparativo, the + comparativo · The harder you work, the more you achieve.",
+              "label": "Proporcional (The... the...)",
+              "rule": "Vincula el cambio progresivo de dos variables",
               "examples": [
-                "The harder you work, the more you achieve."
+                "The higher the demand, the steeper the price."
               ]
             },
             {
-              "label": "Adjetivo",
-              "rule": "The older I get, the wiser I become.",
+              "label": "Comparativo estándar (as... as)",
+              "rule": "Compara dos elementos en un punto fijo de igualdad",
               "examples": [
-                "The older I get, the wiser I become."
+                "This product is as expensive as the market leader."
               ]
             }
           ]
@@ -147,7 +153,7 @@
       "id": "c1-comparativos-dobles-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
@@ -159,7 +165,7 @@
             {
               "variant": "good",
               "text": "The more you study, the more you learn.",
-              "note": "ambas partes llevan the"
+              "note": "Ambas cláusulas requieren 'the' antes del comparativo."
             }
           ]
         }
@@ -168,27 +174,27 @@
     {
       "id": "c1-comparativos-dobles-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "1. Artículo obligatorio",
+              "value": "Ambas cláusulas deben comenzar con 'the'."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "2. Formas de comparativo",
+              "value": "Usa adjetivos en -er, 'more' o 'less' según el tipo de palabra."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "3. Orden de palabras",
+              "value": "Mantén el orden de sujeto + verbo tras la frase comparativa."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "4. Expresiones elípticas",
+              "value": "Fórmulas cortas como 'The more, the merrier' son comunes en habla informal."
             }
           ]
         }
@@ -201,13 +207,37 @@
   ],
   "quiz": [
     {
-      "q": "___ earlier we start, ___ sooner we finish.",
+      "q": "___ earlier we start the presentation, ___ sooner we can answer questions.",
       "options": [
         "The / the",
-        "More / more"
+        "More / more",
+        "As / as",
+        "So / so"
       ],
       "answer": 0,
-      "explain": "Patrón proporcional: the + comparativo en ambas cláusulas."
+      "explain": "La estructura de proporcionalidad requiere 'the' en ambas partes del comparativo."
+    },
+    {
+      "q": "Elige la opción que mejor expresa 'cuanto menos hables, menos errores cometerás':",
+      "options": [
+        "The less you speak, the fewer mistakes you will make.",
+        "Less you speak, less mistakes you make.",
+        "The lower you speak, the minor mistakes you do.",
+        "The least you speak, the least mistakes you make."
+      ],
+      "answer": 0,
+      "explain": "'The less' (adverbio) contrasta con 'the fewer' (para sustantivos contables en plural como mistakes)."
+    },
+    {
+      "q": "¿Cuál es la estructura gramatical correcta para una oración comparativa doble?",
+      "options": [
+        "The + comparativo + sujeto + verbo, the + comparativo + sujeto + verbo",
+        "The + sujeto + comparativo, the + verbo + comparativo",
+        "Comparativo + the + sujeto, comparativo + the + verbo",
+        "More + adjetivo + sujeto, less + adjetivo + verbo"
+      ],
+      "answer": 0,
+      "explain": "La regla establece poner 'the' seguido inmediatamente del término comparativo al inicio de cada cláusula."
     }
   ]
 }

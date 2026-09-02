@@ -1,46 +1,47 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "C2 · Inversión",
     "title": "Inversión",
     "titleEmphasis": "literaria",
-    "goal": "Ya creas énfasis dramático con So great was…, Such was… y otras inversiones literarias."
+    "goal": "Crea dramatismo, intensidad y estilo retórico mediante estructuras invertidas con 'So + adjetivo', 'Such + be' y locaciones."
   },
   "cards": [
     {
       "id": "c2-inversion-literaria-concept",
       "tag": "Idea central",
       "title": "Inversión: qué expresa",
-      "lede": "Ya creas énfasis dramático con So great was…, Such was… y otras inversiones literarias.",
+      "lede": "Crea dramatismo, intensidad y estilo retórico mediante estructuras invertidas con 'So + adjetivo', 'Such + be' y locaciones.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "So + adj",
-              "value": "So great was her despair that she resigned.",
+              "key": "So + Adjetivo + be",
+              "value": "So great was the interest that servers crashed within minutes.",
               "highlights": [
                 "So great was"
               ]
             },
             {
-              "key": "Such + noun",
-              "value": "Such was his courage that everyone followed.",
+              "key": "Such + be + Sustantivo",
+              "value": "Such was the severity of the storm that flights were grounded.",
               "highlights": [
                 "Such was"
               ]
             },
             {
-              "key": "Registro",
-              "value": "literario, ceremonial, retórico",
+              "key": "Inversión de lugar / dirección",
+              "value": "On the top of the mountain stood an ancient fortress.",
               "highlights": [
-                "So great"
+                "stood an ancient fortress"
               ]
             },
             {
-              "key": "Efecto",
-              "value": "llama la atención al elemento inicial",
+              "key": "Inversión con participio",
+              "value": "Enclosed in this envelope is the signed agreement.",
               "highlights": [
-                "was"
+                "Enclosed in this envelope is"
               ]
             }
           ]
@@ -55,30 +56,30 @@
       "id": "c2-inversion-literaria-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "So + adj",
-              "value": "So great was her despair that she resigned.",
+              "key": "Afirmativa (So + Adj)",
+              "value": "So + adjetivo + verbo be/auxiliar + sujeto + that... · So intense was the competition that prices dropped.",
               "highlights": [
-                "So great was"
+                "So intense was"
               ]
             },
             {
-              "key": "Such + noun",
-              "value": "Such was his courage that everyone followed.",
+              "key": "Afirmativa (Such + be)",
+              "value": "Such + be + sujeto/sustantivo + that... · Such was his determination that he succeeded.",
               "highlights": [
                 "Such was"
               ]
             },
             {
-              "key": "Registro",
-              "value": "literario, ceremonial, retórico",
+              "key": "Afirmativa (Ubicación)",
+              "value": "Preposición de lugar + verbo de posición + sujeto · Next to the station stands the headquarters.",
               "highlights": [
-                "So great"
+                "stands the headquarters"
               ]
             }
           ]
@@ -89,26 +90,26 @@
       "id": "c2-inversion-literaria-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "So great was her despair that she resigned."
+              "key": "Discursos de alto impacto",
+              "value": "So profound was his influence that an entire generation adopted his philosophy."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "Such was his courage that everyone followed."
+              "key": "Narrativa histórica",
+              "value": "Such was the devastation caused by the fire that rebuilding took decades."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "literario, ceremonial, retórico"
+              "key": "Correspondencia ejecutiva",
+              "value": "Attached to this communication are the revised financial forecasts."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "llama la atención al elemento inicial"
+              "key": "Descripciones periodísticas",
+              "value": "High above the skyline rose the new architectural landmark."
             }
           ]
         }
@@ -118,23 +119,23 @@
       "id": "c2-inversion-literaria-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "So + adj",
-              "rule": "So great was her despair that she resigned.",
+              "label": "Inversión retórica (C2)",
+              "rule": "Coloca 'So + adjetivo' o 'Such' al inicio invirtiendo el verbo principal para máxima intensidad",
               "examples": [
-                "So great was her despair that she resigned."
+                "So fierce was the opposition that the law was repealed."
               ]
             },
             {
-              "label": "Such + noun",
-              "rule": "Such was his courage that everyone followed.",
+              "label": "Estructura directa (B2)",
+              "rule": "Mantiene el orden tradicional sujeto + verbo + so/such",
               "examples": [
-                "Such was his courage that everyone followed."
+                "The opposition was so fierce that the law was repealed."
               ]
             }
           ]
@@ -145,19 +146,19 @@
       "id": "c2-inversion-literaria-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "So great her despair was…"
+              "text": "So great the shock was that nobody spoke."
             },
             {
               "variant": "good",
-              "text": "So great was her despair…",
-              "note": "inversión: So + adj + was + sujeto"
+              "text": "So great was the shock that nobody spoke.",
+              "note": "En la inversión con 'So + adjetivo', el verbo 'was' debe preceder al sujeto 'the shock'."
             }
           ]
         }
@@ -166,27 +167,27 @@
     {
       "id": "c2-inversion-literaria-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "1. 'So' requiere adjetivo",
+              "value": "Usa 'So + adjetivo + be + sujeto' ('So impressive was the demo')."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "2. 'Such' requiere sustantivo",
+              "value": "Usa 'Such + be + sustantivo' ('Such was the noise that...')."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "3. Inversión con verbos de movimiento",
+              "value": "Tras adverbios de lugar ('Down came the rain'), el verbo principal antecede al sujeto si es un sustantivo."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "4. No invertimos con pronombres",
+              "value": "Si el sujeto es un pronombre, no se invierte ('Away he ran', NO 'Away ran he')."
             }
           ]
         }
@@ -199,13 +200,37 @@
   ],
   "quiz": [
     {
-      "q": "___ impressive was the result that applause erupted.",
+      "q": "___ was the urgency of the situation that an emergency meeting was called.",
       "options": [
+        "Such",
         "So",
-        "Such"
+        "Thus",
+        "How"
       ],
       "answer": 0,
-      "explain": "So + adjetivo + was + sujeto."
+      "explain": "'Such + was + sustantivo (the urgency)' expresa la intensidad del sustantivo."
+    },
+    {
+      "q": "So complex ___ the technical challenges that the project took three years.",
+      "options": [
+        "were",
+        "did",
+        "was it",
+        "they were"
+      ],
+      "answer": 0,
+      "explain": "'So + adjetivo (complex)' requiere el verbo de estado en plural 'were' para concordar con 'challenges'."
+    },
+    {
+      "q": "¿Cuál de las siguientes oraciones presenta la inversión de lugar correcta?",
+      "options": [
+        "At the center of the debate lies the question of ethics.",
+        "At the center of the debate the question of ethics lies.",
+        "At the center of the debate does lie the question of ethics.",
+        "At the center of the debate lie it the question of ethics."
+      ],
+      "answer": 0,
+      "explain": "Tras la locación inicial, el verbo de posición ('lies') antecede al sujeto ('the question of ethics')."
     }
   ]
 }

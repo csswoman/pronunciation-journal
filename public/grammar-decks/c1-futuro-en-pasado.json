@@ -1,46 +1,47 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "C1 · Tiempo",
     "title": "Futuro",
     "titleEmphasis": "en el pasado",
-    "goal": "Ya describes planes o predicciones pasadas con was/were going to y would desde un punto de vista anterior."
+    "goal": "Describe planes, intenciones o eventos que eran futuros desde una perspectiva del pasado usando 'was/were going to', 'would' y 'was to'."
   },
   "cards": [
     {
       "id": "c1-futuro-en-pasado-concept",
       "tag": "Idea central",
       "title": "Futuro: qué expresa",
-      "lede": "Ya describes planes o predicciones pasadas con was/were going to y would desde un punto de vista anterior.",
+      "lede": "Describe planes, intenciones o eventos que eran futuros desde una perspectiva del pasado usando 'was/were going to', 'would' y 'was to'.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "was going to",
-              "value": "I was going to call, but I forgot. · plan no cumplido",
+              "key": "Intención no cumplida",
+              "value": "I was going to call you, but my battery died.",
               "highlights": [
-                "was going to"
+                "was going to call"
               ]
             },
             {
-              "key": "would",
-              "value": "We knew the price would rise. · predicción desde el pasado",
+              "key": "Predicción / Destino",
+              "value": "Little did they know that this decision would change the industry.",
               "highlights": [
-                "would rise"
+                "would change"
               ]
             },
             {
-              "key": "Narrativa",
-              "value": "She was going to resign when the offer arrived.",
+              "key": "Acuerdo / Plan formal",
+              "value": "The signing was to take place on Monday, but was delayed.",
               "highlights": [
-                "was going to"
+                "was to take place"
               ]
             },
             {
-              "key": "Reported",
-              "value": "He said he would finish by Friday.",
+              "key": "A punto de suceder",
+              "value": "The meeting was about to start when the alarm went off.",
               "highlights": [
-                "would finish"
+                "was about to start"
               ]
             }
           ]
@@ -55,30 +56,30 @@
       "id": "c1-futuro-en-pasado-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "was going to",
-              "value": "I was going to call, but I forgot. · plan no cumplido",
+              "key": "Afirmativa (Plan)",
+              "value": "Sujeto + was/were going to + verbo base · We were going to launch in May.",
               "highlights": [
-                "was going to"
+                "were going to launch"
               ]
             },
             {
-              "key": "would",
-              "value": "We knew the price would rise. · predicción desde el pasado",
+              "key": "Negativa (Predicción)",
+              "value": "Sujeto + would not + verbo base · They believed prices would not increase.",
               "highlights": [
-                "would rise"
+                "would not increase"
               ]
             },
             {
-              "key": "Narrativa",
-              "value": "She was going to resign when the offer arrived.",
+              "key": "Interrogativa (Discurso indirecto)",
+              "value": "Did she mention when the train was to arrive?",
               "highlights": [
-                "was going to"
+                "was to arrive"
               ]
             }
           ]
@@ -89,26 +90,26 @@
       "id": "c1-futuro-en-pasado-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "plan no cumplido"
+              "key": "Gestión de imprevistos",
+              "value": "We were going to release the feature today, but identified a critical bug."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "predicción desde el pasado"
+              "key": "Narrativa estratégica",
+              "value": "He knew the venture would involve risk, yet he pursued it relentlessly."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "She was going to resign when the offer arrived."
+              "key": "Revisión de proyectos",
+              "value": "The contract was to be signed last week, but legal required amendments."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "He said he would finish by Friday."
+              "key": "Eventos inminentes",
+              "value": "I was about to submit the report when new data arrived."
             }
           ]
         }
@@ -118,23 +119,23 @@
       "id": "c1-futuro-en-pasado-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "was going to",
-              "rule": "I was going to call, but I forgot. · plan no cumplido",
+              "label": "Was/Were going to",
+              "rule": "Se usa para intenciones o planes pasados que a menudo se vieron interrumpidos o cambiaron",
               "examples": [
-                "plan no cumplido"
+                "I was going to travel, but I fell ill."
               ]
             },
             {
-              "label": "would",
-              "rule": "We knew the price would rise. · predicción desde el pasado",
+              "label": "Would",
+              "rule": "Se usa para predicciones o eventos futuros vistos desde una perspectiva pasada (estilo indirecto)",
               "examples": [
-                "predicción desde el pasado"
+                "She promised she would deliver the final report by Friday."
               ]
             }
           ]
@@ -145,19 +146,19 @@
       "id": "c1-futuro-en-pasado-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "I was going to called him."
+              "text": "I was going to called him yesterday."
             },
             {
               "variant": "good",
-              "text": "I was going to call him.",
-              "note": "going to + base del verbo"
+              "text": "I was going to call him yesterday.",
+              "note": "Tras 'was going to', el verbo debe permanecer en su forma base infinitiva."
             }
           ]
         }
@@ -166,27 +167,27 @@
     {
       "id": "c1-futuro-en-pasado-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "1. 'Going to' para planes",
+              "value": "Indica una intención previa que con frecuencia no llegó a realizarse."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "2. 'Would' para certezas/futuro",
+              "value": "Funciona como el futuro del pasado en narrativas y estilo indirecto."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "3. 'Was/Were to'",
+              "value": "Indica planes formales o eventos predeterminados en registros oficiales."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "4. 'Was about to'",
+              "value": "Resalta la inminencia de una acción justo antes de ser interrumpida."
             }
           ]
         }
@@ -199,13 +200,37 @@
   ],
   "quiz": [
     {
-      "q": "They ___ going to launch in March, but postponed.",
+      "q": "We ___ to announce the merger yesterday, but the board requested more time.",
       "options": [
-        "were",
-        "would"
+        "were going",
+        "would",
+        "are going",
+        "will"
       ],
       "answer": 0,
-      "explain": "Plan pasado → was/were going to."
+      "explain": "Para planes o intenciones pasadas interrumpidas se usa 'were going to'."
+    },
+    {
+      "q": "She assured us that the shipment ___ arrive before the weekend.",
+      "options": [
+        "would",
+        "was going",
+        "is to",
+        "will be"
+      ],
+      "answer": 0,
+      "explain": "En estilo indirecto sobre una promesa futura desde el pasado se emplea 'would'."
+    },
+    {
+      "q": "¿Qué estructura formal indica un acuerdo o plan institucional pasado?",
+      "options": [
+        "The ceremony was to begin at noon.",
+        "The ceremony will begin at noon.",
+        "The ceremony was going begin at noon.",
+        "The ceremony would to begin at noon."
+      ],
+      "answer": 0,
+      "explain": "'Was/Were to + infinitivo' expresa compromisos u órdenes organizadas en el pasado."
     }
   ]
 }

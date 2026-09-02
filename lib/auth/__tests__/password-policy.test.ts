@@ -30,7 +30,7 @@ describe("Password Policy Validation", () => {
 
   it("returns generic public error message on auth errors", () => {
     expect(publicAuthErrorMessage()).toBe(
-      "We could not complete that request. Check your details and try again.",
+      "No pudimos completar la solicitud. Revisa tus datos e inténtalo de nuevo.",
     );
   });
 });

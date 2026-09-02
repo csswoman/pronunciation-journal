@@ -14,9 +14,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Doblar consonante", "value": "run → running · big → bigger", "highlights": ["running"] },
-            { "key": "-e muda cae", "value": "make → making · write → writing", "highlights": ["making"] },
-            { "key": "-y → -i", "value": "happy → happier · study → studied", "highlights": ["happier"] }
+            {
+              "key": "Doblar consonante",
+              "value": "run → running · big → bigger",
+              "highlights": [
+                "running"
+              ]
+            },
+            {
+              "key": "-e muda cae",
+              "value": "make → making · write → writing",
+              "highlights": [
+                "making"
+              ]
+            },
+            {
+              "key": "-y → -i",
+              "value": "happy → happier · study → studied",
+              "highlights": [
+                "happier"
+              ]
+            }
           ]
         }
       ]
@@ -30,10 +48,26 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "bad", "text": "definately", "note": "→ definitely" },
-            { "variant": "bad", "text": "recieve", "note": "→ receive (i antes de e, salvo tras c)" },
-            { "variant": "bad", "text": "seperate", "note": "→ separate" },
-            { "variant": "good", "text": "necessary, accommodate, beginning", "note": "ojo a las dobles" }
+            {
+              "variant": "bad",
+              "text": "definately",
+              "note": "→ definitely"
+            },
+            {
+              "variant": "bad",
+              "text": "recieve",
+              "note": "→ receive (i antes de e, salvo tras c)"
+            },
+            {
+              "variant": "bad",
+              "text": "seperate",
+              "note": "→ separate"
+            },
+            {
+              "variant": "good",
+              "text": "necessary, accommodate, beginning",
+              "note": "ojo a las dobles"
+            }
           ]
         }
       ]
@@ -47,9 +81,31 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "their / there / they're", "value": "su / allí / they are", "highlights": ["their", "there", "they're"] },
-            { "key": "your / you're", "value": "tu / you are", "highlights": ["your", "you're"] },
-            { "key": "its / it's", "value": "su / it is", "highlights": ["its", "it's"] }
+            {
+              "key": "their / there / they're",
+              "value": "su / allí / they are",
+              "highlights": [
+                "their",
+                "there",
+                "they're"
+              ]
+            },
+            {
+              "key": "your / you're",
+              "value": "tu / you are",
+              "highlights": [
+                "your",
+                "you're"
+              ]
+            },
+            {
+              "key": "its / it's",
+              "value": "su / it is",
+              "highlights": [
+                "its",
+                "it's"
+              ]
+            }
           ]
         }
       ],
@@ -67,9 +123,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Listas", "value": "apples, pears, and grapes", "highlights": [","] },
-            { "key": "Tras conector inicial", "value": "However, it was late.", "highlights": ["However,"] },
-            { "key": "Cláusula extra", "value": "My boss, who is kind, helped.", "highlights": [",who is kind,"] }
+            {
+              "key": "Listas",
+              "value": "apples, pears, and grapes",
+              "highlights": [
+                ","
+              ]
+            },
+            {
+              "key": "Tras conector inicial",
+              "value": "However, it was late.",
+              "highlights": [
+                "However,"
+              ]
+            },
+            {
+              "key": "Cláusula extra",
+              "value": "My boss, who is kind, helped.",
+              "highlights": [
+                ",who is kind,"
+              ]
+            }
           ]
         }
       ]
@@ -83,10 +157,26 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "good", "text": "Ana's car (posesión)", "note": "de Ana" },
-            { "variant": "good", "text": "don't, it's, we're (contracción)", "note": "letras omitidas" },
-            { "variant": "bad", "text": "I bought two apple's.", "note": "el plural no lleva apóstrofo" },
-            { "variant": "good", "text": "the students' books (plural posesivo)", "note": "apóstrofo tras la -s" }
+            {
+              "variant": "good",
+              "text": "Ana's car (posesión)",
+              "note": "de Ana"
+            },
+            {
+              "variant": "good",
+              "text": "don't, it's, we're (contracción)",
+              "note": "letras omitidas"
+            },
+            {
+              "variant": "bad",
+              "text": "I bought two apple's.",
+              "note": "el plural no lleva apóstrofo"
+            },
+            {
+              "variant": "good",
+              "text": "the students' books (plural posesivo)",
+              "note": "apóstrofo tras la -s"
+            }
           ]
         }
       ]
@@ -100,12 +190,62 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Dos puntos", "value": "introduce una lista o explicación:", "highlights": [":"] },
-            { "key": "Punto y coma", "value": "une dos frases relacionadas; así.", "highlights": [";"] },
-            { "key": "Guion", "value": "well-known, twenty-one", "highlights": ["-"] }
+            {
+              "key": "Dos puntos",
+              "value": "introduce una lista o explicación:",
+              "highlights": [
+                ":"
+              ]
+            },
+            {
+              "key": "Punto y coma",
+              "value": "une dos frases relacionadas; así.",
+              "highlights": [
+                ";"
+              ]
+            },
+            {
+              "key": "Guion",
+              "value": "well-known, twenty-one",
+              "highlights": [
+                "-"
+              ]
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Which punctuation mark joins two independent clauses closely related in thought?",
+      "options": [
+        "Semicolon (;)",
+        "Comma (,)",
+        "Hyphen (-)"
+      ],
+      "answer": 0,
+      "explain": "El punto y coma (;) conecta dos oraciones independientes estrechamente vinculadas sin usar conjunción."
+    },
+    {
+      "q": "Which sentence shows correct apostrophe placement for plural possession?",
+      "options": [
+        "The students' books were on the table.",
+        "The student's books were on the table (for many students).",
+        "The students book's were on the table."
+      ],
+      "answer": 0,
+      "explain": "Para plurales regulares terminados en 's', el apóstrofe de posesión se coloca al final (students')."
+    },
+    {
+      "q": "When dropping the final \"-e\" before adding \"-ing\", which word is spelled correctly?",
+      "options": [
+        "Writing",
+        "Writeing",
+        "Writting"
+      ],
+      "answer": 0,
+      "explain": "Verbos terminados en '-e' silenciosa pierden la 'e' al añadir '-ing' (write → writing)."
     }
   ]
 }

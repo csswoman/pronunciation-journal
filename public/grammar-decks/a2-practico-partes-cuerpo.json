@@ -14,9 +14,28 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Cara", "value": "eye, nose, mouth, ear", "highlights": ["eye"] },
-            { "key": "Plural irregular", "value": "tooth → teeth · foot → feet", "highlights": ["teeth", "feet"] },
-            { "key": "Pelo", "value": "hair (incontable)", "highlights": ["hair"] }
+            {
+              "key": "Cara",
+              "value": "eye, nose, mouth, ear",
+              "highlights": [
+                "eye"
+              ]
+            },
+            {
+              "key": "Plural irregular",
+              "value": "tooth → teeth · foot → feet",
+              "highlights": [
+                "teeth",
+                "feet"
+              ]
+            },
+            {
+              "key": "Pelo",
+              "value": "hair (incontable)",
+              "highlights": [
+                "hair"
+              ]
+            }
           ]
         }
       ]
@@ -30,9 +49,18 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Brazos", "value": "arm, hand, finger, shoulder" },
-            { "key": "Piernas", "value": "leg, knee, foot, toe" },
-            { "key": "Tronco", "value": "chest, back, stomach" }
+            {
+              "key": "Brazos",
+              "value": "arm, hand, finger, shoulder"
+            },
+            {
+              "key": "Piernas",
+              "value": "leg, knee, foot, toe"
+            },
+            {
+              "key": "Tronco",
+              "value": "chest, back, stomach"
+            }
           ]
         }
       ]
@@ -46,9 +74,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "-ache", "value": "headache, stomachache, toothache", "highlights": ["-ache"] },
-            { "key": "have a", "value": "I have a headache.", "highlights": ["have a headache"] },
-            { "key": "hurts", "value": "My back hurts.", "highlights": ["hurts"] }
+            {
+              "key": "-ache",
+              "value": "headache, stomachache, toothache",
+              "highlights": [
+                "-ache"
+              ]
+            },
+            {
+              "key": "have a",
+              "value": "I have a headache.",
+              "highlights": [
+                "have a headache"
+              ]
+            },
+            {
+              "key": "hurts",
+              "value": "My back hurts.",
+              "highlights": [
+                "hurts"
+              ]
+            }
           ]
         }
       ],
@@ -66,9 +112,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Cómo estás", "value": "What's wrong? · How do you feel?", "highlights": ["What's wrong?"] },
-            { "key": "Síntoma", "value": "I feel sick. · I have a fever.", "highlights": ["feel sick"] },
-            { "key": "Consejo", "value": "You should rest.", "highlights": ["should rest"] }
+            {
+              "key": "Cómo estás",
+              "value": "What's wrong? · How do you feel?",
+              "highlights": [
+                "What's wrong?"
+              ]
+            },
+            {
+              "key": "Síntoma",
+              "value": "I feel sick. · I have a fever.",
+              "highlights": [
+                "feel sick"
+              ]
+            },
+            {
+              "key": "Consejo",
+              "value": "You should rest.",
+              "highlights": [
+                "should rest"
+              ]
+            }
           ]
         }
       ]
@@ -82,9 +146,24 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Manos", "value": "clap, wave, point, hold", "highlights": ["wave"] },
-            { "key": "Cabeza", "value": "nod, shake your head", "highlights": ["nod"] },
-            { "key": "Cuerpo", "value": "stand, sit, walk, run, jump" }
+            {
+              "key": "Manos",
+              "value": "clap, wave, point, hold",
+              "highlights": [
+                "wave"
+              ]
+            },
+            {
+              "key": "Cabeza",
+              "value": "nod, shake your head",
+              "highlights": [
+                "nod"
+              ]
+            },
+            {
+              "key": "Cuerpo",
+              "value": "stand, sit, walk, run, jump"
+            }
           ]
         }
       ]
@@ -98,13 +177,60 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "good", "text": "She has long brown hair.", "note": "longitud + color + hair" },
-            { "variant": "good", "text": "He has blue eyes.", "note": "color + eyes" },
-            { "variant": "good", "text": "He's got a beard.", "note": "has got = tiene" },
-            { "variant": "bad", "text": "She has hairs long." }
+            {
+              "variant": "good",
+              "text": "She has long brown hair.",
+              "note": "longitud + color + hair"
+            },
+            {
+              "variant": "good",
+              "text": "He has blue eyes.",
+              "note": "color + eyes"
+            },
+            {
+              "variant": "good",
+              "text": "He's got a beard.",
+              "note": "has got = tiene"
+            },
+            {
+              "variant": "bad",
+              "text": "She has hairs long."
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "I have a terrible ___ in my head after studying all day.",
+      "options": [
+        "pain",
+        "hurt",
+        "sore"
+      ],
+      "answer": 0,
+      "explain": "Se usa el sustantivo 'pain' (o headache) para referirse a una molestia o dolor físico."
+    },
+    {
+      "q": "He broke his ___ while playing soccer yesterday.",
+      "options": [
+        "leg",
+        "hair",
+        "throat"
+      ],
+      "answer": 0,
+      "explain": "'leg' (pierna) es la extremidad propensa a fracturas en deportes."
+    },
+    {
+      "q": "My eyes feel very ___ after looking at the screen for hours.",
+      "options": [
+        "tired",
+        "broken",
+        "sprained"
+      ],
+      "answer": 0,
+      "explain": "Los ojos se sienten cansados ('tired') tras esfuerzos visuales prolongados."
     }
   ]
 }

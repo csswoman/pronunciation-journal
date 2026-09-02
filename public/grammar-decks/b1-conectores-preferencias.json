@@ -14,9 +14,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "but", "value": "une dos cláusulas · cheap but slow", "highlights": ["but"] },
-            { "key": "although", "value": "+ cláusula · Although it rained, we went.", "highlights": ["Although"] },
-            { "key": "however", "value": "inicia frase + coma · However, it was late.", "highlights": ["However"] }
+            {
+              "key": "but",
+              "value": "une dos cláusulas · cheap but slow",
+              "highlights": [
+                "but"
+              ]
+            },
+            {
+              "key": "although",
+              "value": "+ cláusula · Although it rained, we went.",
+              "highlights": [
+                "Although"
+              ]
+            },
+            {
+              "key": "however",
+              "value": "inicia frase + coma · However, it was late.",
+              "highlights": [
+                "However"
+              ]
+            }
           ]
         }
       ],
@@ -34,9 +52,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "also", "value": "en medio · She also speaks French.", "highlights": ["also"] },
-            { "key": "as well / too", "value": "al final · I went too.", "highlights": ["too"] },
-            { "key": "in addition", "value": "inicia frase formal", "highlights": ["in addition"] }
+            {
+              "key": "also",
+              "value": "en medio · She also speaks French.",
+              "highlights": [
+                "also"
+              ]
+            },
+            {
+              "key": "as well / too",
+              "value": "al final · I went too.",
+              "highlights": [
+                "too"
+              ]
+            },
+            {
+              "key": "in addition",
+              "value": "inicia frase formal",
+              "highlights": [
+                "in addition"
+              ]
+            }
           ]
         }
       ]
@@ -50,9 +86,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "so (informal)", "value": "It was late, so we left.", "highlights": ["so"] },
-            { "key": "therefore (formal)", "value": "...; therefore, we left.", "highlights": ["therefore"] },
-            { "key": "as a result", "value": "As a result, sales rose.", "highlights": ["As a result"] }
+            {
+              "key": "so (informal)",
+              "value": "It was late, so we left.",
+              "highlights": [
+                "so"
+              ]
+            },
+            {
+              "key": "therefore (formal)",
+              "value": "...; therefore, we left.",
+              "highlights": [
+                "therefore"
+              ]
+            },
+            {
+              "key": "as a result",
+              "value": "As a result, sales rose.",
+              "highlights": [
+                "As a result"
+              ]
+            }
           ]
         }
       ]
@@ -66,9 +120,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "prefer + -ing/noun", "value": "I prefer tea. · I prefer walking.", "highlights": ["prefer"] },
-            { "key": "would prefer + to", "value": "I'd prefer to walk.", "highlights": ["'d prefer to"] },
-            { "key": "would rather + base", "value": "I'd rather walk.", "highlights": ["'d rather walk"] }
+            {
+              "key": "prefer + -ing/noun",
+              "value": "I prefer tea. · I prefer walking.",
+              "highlights": [
+                "prefer"
+              ]
+            },
+            {
+              "key": "would prefer + to",
+              "value": "I'd prefer to walk.",
+              "highlights": [
+                "'d prefer to"
+              ]
+            },
+            {
+              "key": "would rather + base",
+              "value": "I'd rather walk.",
+              "highlights": [
+                "'d rather walk"
+              ]
+            }
           ]
         }
       ],
@@ -86,8 +158,20 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "prefer A to B", "value": "I prefer coffee to tea.", "highlights": ["to"] },
-            { "key": "would rather A than B", "value": "I'd rather walk than drive.", "highlights": ["than"] }
+            {
+              "key": "prefer A to B",
+              "value": "I prefer coffee to tea.",
+              "highlights": [
+                "to"
+              ]
+            },
+            {
+              "key": "would rather A than B",
+              "value": "I'd rather walk than drive.",
+              "highlights": [
+                "than"
+              ]
+            }
           ]
         }
       ]
@@ -101,13 +185,60 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "good", "text": "I called to confirm.", "note": "to + verbo base" },
-            { "variant": "good", "text": "I left early in order to catch the bus.", "note": "más formal" },
-            { "variant": "good", "text": "I wrote it down so that I wouldn't forget.", "note": "so that + cláusula" },
-            { "variant": "bad", "text": "I called for confirm." }
+            {
+              "variant": "good",
+              "text": "I called to confirm.",
+              "note": "to + verbo base"
+            },
+            {
+              "variant": "good",
+              "text": "I left early in order to catch the bus.",
+              "note": "más formal"
+            },
+            {
+              "variant": "good",
+              "text": "I wrote it down so that I wouldn't forget.",
+              "note": "so that + cláusula"
+            },
+            {
+              "variant": "bad",
+              "text": "I called for confirm."
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "___ it rained heavily, we enjoyed the outdoor concert.",
+      "options": [
+        "Although",
+        "However",
+        "Despite"
+      ],
+      "answer": 0,
+      "explain": "'Although' introduce una oración subordinada completa con sujeto y verbo."
+    },
+    {
+      "q": "I would rather ___ at home tonight than go out.",
+      "options": [
+        "stay",
+        "to stay",
+        "staying"
+      ],
+      "answer": 0,
+      "explain": "'Would rather' se construye con el verbo en su forma base (bare infinitive)."
+    },
+    {
+      "q": "The weather was terrible. ___, the flight was not cancelled.",
+      "options": [
+        "However",
+        "Although",
+        "In spite of"
+      ],
+      "answer": 0,
+      "explain": "'However' une dos oraciones independientes introduciendo un contraste."
     }
   ]
 }

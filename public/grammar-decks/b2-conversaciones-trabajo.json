@@ -14,10 +14,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Can I add...?", "value": "¿puedo añadir...? · pedir turno", "highlights": ["Can I add"] },
-            { "key": "Going back to...", "value": "volviendo a... · retomar un punto", "highlights": ["Going back to"] },
-            { "key": "Let's move on", "value": "sigamos · pasar de tema", "highlights": ["Let's move on"] },
-            { "key": "To sum up,...", "value": "en resumen... · cerrar", "highlights": ["To sum up"] }
+            {
+              "key": "Can I add...?",
+              "value": "¿puedo añadir...? · pedir turno",
+              "highlights": [
+                "Can I add"
+              ]
+            },
+            {
+              "key": "Going back to...",
+              "value": "volviendo a... · retomar un punto",
+              "highlights": [
+                "Going back to"
+              ]
+            },
+            {
+              "key": "Let's move on",
+              "value": "sigamos · pasar de tema",
+              "highlights": [
+                "Let's move on"
+              ]
+            },
+            {
+              "key": "To sum up,...",
+              "value": "en resumen... · cerrar",
+              "highlights": [
+                "To sum up"
+              ]
+            }
           ]
         }
       ]
@@ -34,12 +58,20 @@
             {
               "label": "Inicio",
               "rule": "según la confianza",
-              "examples": ["Dear Mr Lee, (formal)", "Hi Sarah, (cercano)", "I hope you're well."]
+              "examples": [
+                "Dear Mr Lee, (formal)",
+                "Hi Sarah, (cercano)",
+                "I hope you're well."
+              ]
             },
             {
               "label": "Cierre",
               "rule": "despedida",
-              "examples": ["Best regards, (formal)", "Best, (neutro)", "Looking forward to hearing from you."]
+              "examples": [
+                "Best regards, (formal)",
+                "Best, (neutro)",
+                "Looking forward to hearing from you."
+              ]
             }
           ]
         }
@@ -54,10 +86,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Speaking.", "value": "soy yo (al responder por ti)", "highlights": ["Speaking."] },
-            { "key": "Could you hold on?", "value": "¿puede esperar?", "highlights": ["hold on"] },
-            { "key": "I'm calling about...", "value": "llamo por... · motivo", "highlights": ["I'm calling about"] },
-            { "key": "Can you repeat that?", "value": "¿puede repetir?", "highlights": ["repeat that"] }
+            {
+              "key": "Speaking.",
+              "value": "soy yo (al responder por ti)",
+              "highlights": [
+                "Speaking."
+              ]
+            },
+            {
+              "key": "Could you hold on?",
+              "value": "¿puede esperar?",
+              "highlights": [
+                "hold on"
+              ]
+            },
+            {
+              "key": "I'm calling about...",
+              "value": "llamo por... · motivo",
+              "highlights": [
+                "I'm calling about"
+              ]
+            },
+            {
+              "key": "Can you repeat that?",
+              "value": "¿puede repetir?",
+              "highlights": [
+                "repeat that"
+              ]
+            }
           ]
         }
       ]
@@ -71,10 +127,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "I see your point, but...", "value": "entiendo tu punto, pero...", "highlights": ["I see your point"] },
-            { "key": "That's a fair point", "value": "es un buen argumento", "highlights": ["fair point"] },
-            { "key": "I'd suggest...", "value": "yo sugeriría...", "highlights": ["I'd suggest"] },
-            { "key": "Shall we compromise?", "value": "¿llegamos a un punto medio?", "highlights": ["compromise"] }
+            {
+              "key": "I see your point, but...",
+              "value": "entiendo tu punto, pero...",
+              "highlights": [
+                "I see your point"
+              ]
+            },
+            {
+              "key": "That's a fair point",
+              "value": "es un buen argumento",
+              "highlights": [
+                "fair point"
+              ]
+            },
+            {
+              "key": "I'd suggest...",
+              "value": "yo sugeriría...",
+              "highlights": [
+                "I'd suggest"
+              ]
+            },
+            {
+              "key": "Shall we compromise?",
+              "value": "¿llegamos a un punto medio?",
+              "highlights": [
+                "compromise"
+              ]
+            }
           ]
         }
       ],
@@ -92,10 +172,24 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "bad", "text": "Send me the report." },
-            { "variant": "good", "text": "Could you send me the report when you have a moment?", "note": "petición educada" },
-            { "variant": "bad", "text": "I need this today." },
-            { "variant": "good", "text": "Would it be possible to have this today?", "note": "menos exigente" }
+            {
+              "variant": "bad",
+              "text": "Send me the report."
+            },
+            {
+              "variant": "good",
+              "text": "Could you send me the report when you have a moment?",
+              "note": "petición educada"
+            },
+            {
+              "variant": "bad",
+              "text": "I need this today."
+            },
+            {
+              "variant": "good",
+              "text": "Would it be possible to have this today?",
+              "note": "menos exigente"
+            }
           ]
         }
       ]
@@ -109,9 +203,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "How's it going?", "value": "¿qué tal todo? · saludo informal", "highlights": ["How's it going?"] },
-            { "key": "How was your weekend?", "value": "¿qué tal el finde?", "highlights": ["How was your weekend?"] },
-            { "key": "Did you have a good trip?", "value": "¿buen viaje? · con visitantes", "highlights": ["good trip"] }
+            {
+              "key": "How's it going?",
+              "value": "¿qué tal todo? · saludo informal",
+              "highlights": [
+                "How's it going?"
+              ]
+            },
+            {
+              "key": "How was your weekend?",
+              "value": "¿qué tal el finde?",
+              "highlights": [
+                "How was your weekend?"
+              ]
+            },
+            {
+              "key": "Did you have a good trip?",
+              "value": "¿buen viaje? · con visitantes",
+              "highlights": [
+                "good trip"
+              ]
+            }
           ]
         }
       ],
@@ -119,6 +231,38 @@
         "label": "Cultura:",
         "body": "saltarte el small talk e ir directo al negocio puede parecer frío o brusco."
       }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Which expression politely interrupts a meeting to make a point?",
+      "options": [
+        "Could I just interject for a second?",
+        "Stop talking right now!",
+        "Listen to me immediately!"
+      ],
+      "answer": 0,
+      "explain": "'Could I just interject for a second?' es la forma profesional y educada de intervenir en una reunión."
+    },
+    {
+      "q": "What does \"to follow up on an email\" mean?",
+      "options": [
+        "To check or inquire about a previous email",
+        "To delete an unread email",
+        "To forward an email to a friend"
+      ],
+      "answer": 0,
+      "explain": "'Follow up on' significa hacer seguimiento o consultar el estado de una comunicación previa."
+    },
+    {
+      "q": "Which phrase is commonly used to defer a decision until later?",
+      "options": [
+        "Let's table this discussion until next week.",
+        "Let's finish this in ten seconds.",
+        "Let me reject your idea."
+      ],
+      "answer": 0,
+      "explain": "'Table a discussion' significa posponer un tema para ser tratado más adelante."
     }
   ]
 }

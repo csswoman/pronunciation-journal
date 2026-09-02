@@ -22,20 +22,33 @@ function renderValue(row: GrammarRuleRow) {
 export default function GrammarRulesBlock({ rows }: { rows: GrammarRuleRow[] }) {
   return (
     <div className="grammar-rules">
-      {rows.map((row) => (
-        <div key={row.key} className="grammar-rules__row">
-          <span className="grammar-rules__key">{row.key}</span>
-          <span className="grammar-rules__val">
-            {renderValue(row)}
-            {row.hint && (
-              <>
-                {" "}
+      {rows.map((row) => {
+        const dotIndex = row.value.indexOf(" · ");
+        const hasSplit = !row.hint && dotIndex !== -1;
+        const gloss = hasSplit ? row.value.slice(0, dotIndex) : null;
+        const exampleText = hasSplit ? row.value.slice(dotIndex + 3) : row.value;
+
+        return (
+          <div key={row.key} className="grammar-rules__row">
+            <span className="grammar-rules__key">{row.key}</span>
+            <span className="grammar-rules__val">
+              {hasSplit ? (
+                <span className="grammar-rules__content">
+                  <span className="grammar-rules__gloss">{gloss}</span>
+                  <span className="grammar-rules__phrase">
+                    {renderValue({ ...row, value: exampleText })}
+                  </span>
+                </span>
+              ) : (
+                renderValue(row)
+              )}
+              {row.hint && (
                 <span className="grammar-rules__hint">— {row.hint}</span>
-              </>
-            )}
-          </span>
-        </div>
-      ))}
+              )}
+            </span>
+          </div>
+        );
+      })}
     </div>
   );
 }

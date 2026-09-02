@@ -13,6 +13,7 @@ interface NotebookTopicSelectorProps {
   selectedTopic: NotebookTopic
   onSelectTopic: (topic: NotebookTopic) => void
   onShuffle: () => void
+  defaultExpanded?: boolean
 }
 
 const TOPIC_LABELS: Record<NotebookTopic, string> = {
@@ -30,10 +31,11 @@ export function NotebookTopicSelector({
   selectedTopic,
   onSelectTopic,
   onShuffle,
+  defaultExpanded = false,
 }: NotebookTopicSelectorProps) {
   // Colapsado por defecto: solo el tema activo + "Cambiar tema" son visibles.
   // Evita presentar 6 pills + shuffle antes de que el usuario haya empezado a escribir.
-  const [expanded, setExpanded] = useState(false)
+  const [expanded, setExpanded] = useState(defaultExpanded)
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
     const currentIndex = TOPIC_KEYS.indexOf(selectedTopic)

@@ -1,46 +1,40 @@
 {
+  "isGenerated": true,
   "meta": {
-    "eyebrow": "A1 · Lugar y tiempo",
+    "eyebrow": "A1 · Preposiciones",
     "title": "Lugar y tiempo",
-    "titleEmphasis": "preposiciones básicas",
-    "goal": "Ya puedes usar preposiciones básicas en ejemplos claros y adecuados al contexto."
+    "titleEmphasis": "preposiciones básicas in, on, at",
+    "goal": "Ya usas in, on y at para indicar tiempo y ubicación correctamente."
   },
   "cards": [
     {
       "id": "a1-preposiciones-lugar-tiempo-concept",
       "tag": "Idea central",
       "title": "Lugar y tiempo: qué expresa",
-      "lede": "Esta lección te ayuda a usar preposiciones básicas con precisión y sin traducir palabra por palabra.",
+      "lede": "Ya usas in, on y at para indicar tiempo y ubicación correctamente.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "in",
-              "value": "dentro; meses, años y partes del día",
-              "highlights": [
-                "in"
-              ]
-            },
-            {
-              "key": "on",
-              "value": "sobre una superficie; días y fechas",
-              "highlights": [
-                "on"
-              ]
-            },
-            {
               "key": "at",
-              "value": "punto exacto; horas y lugares concretos",
+              "value": "horas y puntos específicos · at 8:00, at home",
               "highlights": [
                 "at"
               ]
             },
             {
-              "key": "next to / between",
-              "value": "posición relativa",
+              "key": "on",
+              "value": "días, fechas y superficies · on Monday, on the table",
               "highlights": [
-                "next to / between"
+                "on"
+              ]
+            },
+            {
+              "key": "in",
+              "value": "meses, años y dentro de espacios · in May, in Madrid",
+              "highlights": [
+                "in"
               ]
             }
           ]
@@ -48,29 +42,38 @@
       ],
       "tip": {
         "label": "Objetivo:",
-        "body": "reconocer la intención y elegir correctamente preposiciones básicas en situaciones reales."
+        "body": "reconocer el patrón y usarlo en frases propias."
       }
     },
     {
       "id": "a1-preposiciones-lugar-tiempo-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "in",
-              "value": "dentro; meses, años y partes del día"
+              "key": "at + hora / punto",
+              "value": "at 8:30 AM / at the door / at night",
+              "highlights": [
+                "at"
+              ]
             },
             {
-              "key": "on",
-              "value": "sobre una superficie; días y fechas"
+              "key": "on + día / fecha",
+              "value": "on Tuesday / on May 5th / on the wall",
+              "highlights": [
+                "on"
+              ]
             },
             {
-              "key": "at",
-              "value": "punto exacto; horas y lugares concretos"
+              "key": "in + mes / año / lugar",
+              "value": "in August / in 2026 / in the room",
+              "highlights": [
+                "in"
+              ]
             }
           ]
         }
@@ -80,22 +83,26 @@
       "id": "a1-preposiciones-lugar-tiempo-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa y fíjate en la posición de las palabras.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "The keys are on the table."
+              "key": "Horarios",
+              "value": "The train leaves at 8:30 AM."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "We meet at six."
+              "key": "Días y fechas",
+              "value": "Our test is on Tuesday morning."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "My birthday is in May."
+              "key": "Espacios cerrados",
+              "value": "She is waiting in the kitchen."
+            },
+            {
+              "key": "Meses y países",
+              "value": "We are going to travel to Canada in August."
             }
           ]
         }
@@ -105,23 +112,23 @@
       "id": "a1-preposiciones-lugar-tiempo-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende de la intención, la cantidad, el tiempo o el registro.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "in",
-              "rule": "dentro; meses, años y partes del día",
+              "label": "at (Punto específico)",
+              "rule": "Horas exactas y ubicaciones puntuales",
               "examples": [
-                "The keys are on the table."
+                "at 9:00 AM / at the bus stop"
               ]
             },
             {
-              "label": "on",
-              "rule": "sobre una superficie; días y fechas",
+              "label": "in (Espacio / Período amplio)",
+              "rule": "Dentro de ciudades, países, meses o años",
               "examples": [
-                "We meet at six."
+                "in London / in July"
               ]
             }
           ]
@@ -132,19 +139,19 @@
       "id": "a1-preposiciones-lugar-tiempo-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural y gramatical.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "See you in Monday."
+              "text": "I will see you in Monday."
             },
             {
               "variant": "good",
-              "text": "See you on Monday.",
-              "note": "forma recomendada"
+              "text": "I will see you on Monday.",
+              "note": "los días de la semana llevan la preposición on"
             }
           ]
         }
@@ -153,64 +160,60 @@
     {
       "id": "a1-preposiciones-lugar-tiempo-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase antes de continuar.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar exactamente?"
+              "key": "at",
+              "value": "horas (at 5:00), at night, at home, at work"
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma adecuada de preposiciones básicas."
+              "key": "on",
+              "value": "días de la semana (on Monday), fechas, superficies"
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, verbo, número y tiempo."
-            },
-            {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase completa y evita traducir literalmente."
+              "key": "in",
+              "value": "meses, años, estaciones, partes del día (in the morning)"
             }
           ]
         }
       ],
       "tip": {
         "label": "Práctica:",
-        "body": "crea una frase personal con cada patrón y léela en voz alta."
+        "body": "escribe una frase personal con el patrón."
       }
     }
   ],
   "quiz": [
     {
-      "q": "The class starts ___ 9.",
+      "q": "Our English class starts ___ 9:00 AM.",
       "options": [
-        "in",
-        "at"
-      ],
-      "answer": 1,
-      "explain": "La respuesta correcta aplica la regla central de preposiciones básicas."
-    },
-    {
-      "q": "¿Cuál de estas frases es correcta?",
-      "options": [
-        "See you in Monday.",
-        "See you on Monday."
-      ],
-      "answer": 1,
-      "explain": "La segunda opción usa la estructura y el orden correctos."
-    },
-    {
-      "q": "¿Qué conviene revisar al usar preposiciones básicas?",
-      "options": [
-        "La intención, la estructura y el contexto.",
-        "Solo la traducción literal al español."
+        "at",
+        "in"
       ],
       "answer": 0,
-      "explain": "Una frase natural depende del significado, la forma y el contexto, no de traducir palabra por palabra."
+      "explain": "Para horas específicas se usa la preposición 'at'."
+    },
+    {
+      "q": "They are getting married ___ June.",
+      "options": [
+        "in",
+        "on"
+      ],
+      "answer": 0,
+      "explain": "Para meses del año sin un día concreto se utiliza 'in'."
+    },
+    {
+      "q": "Selecciona la oración con el uso correcto de preposiciones:",
+      "options": [
+        "I was born on July 14th.",
+        "I was born in July 14th."
+      ],
+      "answer": 0,
+      "explain": "Al incluir la fecha completa con el día (July 14th), corresponde 'on'."
     }
   ]
 }

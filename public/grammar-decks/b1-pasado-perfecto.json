@@ -1,46 +1,47 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "B1 · Pasado perfecto",
     "title": "Pasado",
     "titleEmphasis": "perfecto",
-    "goal": "Ya ordenas dos acciones pasadas con had + participio para la más antigua."
+    "goal": "Ya ordenas dos acciones pasadas usando had + participio para la acción anterior en el tiempo."
   },
   "cards": [
     {
       "id": "b1-pasado-perfecto-concept",
       "tag": "Idea central",
       "title": "Pasado: qué expresa",
-      "lede": "Ya ordenas dos acciones pasadas con had + participio para la más antigua.",
+      "lede": "Ya ordenas dos acciones pasadas usando had + participio para la acción anterior en el tiempo.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Forma",
-              "value": "had + participio · had left",
-              "highlights": [
-                "had"
-              ]
-            },
-            {
-              "key": "Antes de otra",
-              "value": "When I arrived, he had left.",
+              "key": "Pasado del pasado",
+              "value": "had + participio · The train had left when I arrived.",
               "highlights": [
                 "had left"
               ]
             },
             {
-              "key": "Experiencia previa",
-              "value": "I had never seen snow before.",
+              "key": "Conectores clave",
+              "value": "when, before, after, by the time, already, just",
+              "highlights": [
+                "by the time"
+              ]
+            },
+            {
+              "key": "Experiencia previa pas.",
+              "value": "had never seen snow until last winter",
               "highlights": [
                 "had never seen"
               ]
             },
             {
-              "key": "Señal",
-              "value": "already, just, never, by the time",
+              "key": "Causa y efecto pasado",
+              "value": "He failed because he hadn't studied",
               "highlights": [
-                "by the time"
+                "hadn't studied"
               ]
             }
           ]
@@ -55,30 +56,30 @@
       "id": "b1-pasado-perfecto-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Forma",
-              "value": "had + participio · had left",
+              "key": "Afirmativa",
+              "value": "Sujeto + had + participio pasado · She had finished her homework before dinner.",
               "highlights": [
-                "had"
+                "had finished"
               ]
             },
             {
-              "key": "Antes de otra",
-              "value": "When I arrived, he had left.",
+              "key": "Negativa",
+              "value": "Sujeto + hadn't + participio pasado · They hadn't seen each other for years.",
               "highlights": [
-                "had left"
+                "hadn't seen"
               ]
             },
             {
-              "key": "Experiencia previa",
-              "value": "I had never seen snow before.",
+              "key": "Interrogativa",
+              "value": "Had + sujeto + participio pasado...? · Had you met him before the party?",
               "highlights": [
-                "had never seen"
+                "Had you met"
               ]
             }
           ]
@@ -89,26 +90,26 @@
       "id": "b1-pasado-perfecto-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "had left"
+              "key": "Malentendido u olvido",
+              "value": "When I reached the airport, I realized I had left my passport at home."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "When I arrived, he had left."
+              "key": "Cine y eventos",
+              "value": "By the time we got to the cinema, the movie had already started."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "I had never seen snow before."
+              "key": "Experiencia única",
+              "value": "She was nervous because she had never flown in a helicopter before."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "already, just, never, by the time"
+              "key": "Éxito laboral",
+              "value": "He landed the job because he had prepared his presentation thoroughly."
             }
           ]
         }
@@ -118,23 +119,23 @@
       "id": "b1-pasado-perfecto-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "Forma",
-              "rule": "had + participio · had left",
+              "label": "Pasado simple (V2)",
+              "rule": "Acción más reciente o secuencia cronológica paso a paso en el pasado",
               "examples": [
-                "had left"
+                "I opened the door and entered."
               ]
             },
             {
-              "label": "Antes de otra",
-              "rule": "When I arrived, he had left.",
+              "label": "Pasado perfecto (had + V3)",
+              "rule": "Acción ocurrida ANTES de otra acción pasada de referencia",
               "examples": [
-                "When I arrived, he had left."
+                "The meeting had ended before I arrived."
               ]
             }
           ]
@@ -145,19 +146,19 @@
       "id": "b1-pasado-perfecto-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "When I arrived, he left already."
+              "text": "When I arrived at the station, the bus already left."
             },
             {
               "variant": "good",
-              "text": "When I arrived, he had already left.",
-              "note": "la salida fue antes de llegar"
+              "text": "When I arrived at the station, the bus had already left.",
+              "note": "la salida del autobús ocurrió antes de la llegada, requiere pasado perfecto"
             }
           ]
         }
@@ -166,27 +167,27 @@
     {
       "id": "b1-pasado-perfecto-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "Auxiliar invariable 'had'",
+              "value": "Se usa 'had' para todas las personas (I, he, we, they had)."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "By the time...",
+              "value": "Suele introducir una cláusula en pasado simple y requiere pasado perfecto en la principal."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "Already / Just",
+              "value": "Se colocan entre 'had' y el participio (had already left)."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "No abuses de él",
+              "value": "Si las acciones siguen un orden cronológico claro con 'and', usa pasado simple."
             }
           ]
         }
@@ -199,13 +200,34 @@
   ],
   "quiz": [
     {
-      "q": "She ___ the keys before she left.",
+      "q": "By the time Sarah arrived, everybody ___ home.",
       "options": [
-        "had lost",
-        "lost"
+        "had gone",
+        "went",
+        "has gone"
       ],
       "answer": 0,
-      "explain": "Perder las llaves fue antes de irse."
+      "explain": "La acción de irse a casa ocurrió antes de la llegada de Sarah → 'had gone'."
+    },
+    {
+      "q": "I couldn't get into my flat because I ___ my keys.",
+      "options": [
+        "had lost",
+        "lost",
+        "have lost"
+      ],
+      "answer": 0,
+      "explain": "Perder las llaves ocurrió con anterioridad a no poder entrar."
+    },
+    {
+      "q": "___ you ever visited London before you moved there?",
+      "options": [
+        "Had",
+        "Have",
+        "Did"
+      ],
+      "answer": 0,
+      "explain": "Experiencia previa a un momento del pasado → 'Had + sujeto + participio'."
     }
   ]
 }

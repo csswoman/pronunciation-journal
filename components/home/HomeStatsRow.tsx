@@ -1,0 +1,102 @@
+"use client";
+
+import Link from "next/link";
+import { useLiveQuery } from "dexie-react-hooks";
+import { db } from "@/lib/db";
+
+const CEFR_WORD_TOTALS: Record<string, number> = {
+  A1: 740,
+  A2: 1150,
+  B1: 1800,
+  B2: 2400,
+};
+
+interface HomeStatsRowProps {
+  profileLevel?: string | null;
+  wordsDueCount?: number;
+  soundsDueCount?: number;
+}
+
+export default function HomeStatsRow({
+  profileLevel = "A1",
+  wordsDueCount = 0,
+  soundsDueCount = 0,
+}: HomeStatsRowProps) {
+  const levelKey = (profileLevel || "A1").toUpperCase();
+  const totalLevelWords = CEFR_WORD_TOTALS[levelKey] ?? 740;
+
+  const learnedCount =
+    useLiveQuery(async () => {
+      try {
+        return await db.srsData
+          .filter((item) => (item.interval ?? 0) > 0 && !item.archived)
+          .count();
+      } catch {
+        return 0;
+      }
+    }, []) ?? 0;
+
+  const totalDue = wordsDueCount + soundsDueCount;
+
+  if (learnedCount === 0 && totalDue === 0) {
+    return (
+      <Link
+        href="/practice/essential-words"
+        className="focus-ring group flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-xl border border-border-subtle bg-surface-raised p-4 transition-all hover:border-border-default hover:shadow-xs"
+      >
+        <div className="flex flex-col gap-1">
+          <span className="font-label text-body-xs font-semibold text-primary">
+            Vocabulario esencial · {levelKey}
+          </span>
+          <p className="font-sans text-body-md font-bold text-fg">
+            Tus primeras 10 palabras te esperan
+          </p>
+          <span className="font-body-xs text-fg-muted">
+            Aprende tus primeras palabras clave para desbloquear repasos diarios.
+          </span>
+        </div>
+        <span className="inline-flex min-h-10 shrink-0 items-center justify-center rounded-lg border border-border-default bg-surface px-4 font-label text-body-xs font-semibold text-fg transition-colors group-hover:bg-primary group-hover:text-on-primary">
+          Empezar lección →
+        </span>
+      </Link>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {/* Palabras esenciales */}
+      <Link
+        href="/practice/essential-words"
+        className="focus-ring group flex flex-col gap-1 rounded-xl border border-border-subtle bg-surface-raised p-4 transition-all hover:border-border-default hover:shadow-xs"
+      >
+        <span className="font-label text-body-xs font-medium text-fg-muted">
+          Palabras esenciales · {levelKey}
+        </span>
+        <p className="font-sans text-heading-md font-bold tabular-nums text-fg">
+          {learnedCount}{" "}
+          <span className="font-body-sm font-normal text-fg-muted">
+            de {totalLevelWords}
+          </span>
+        </p>
+      </Link>
+
+      {/* En repaso */}
+      <Link
+        href="/review"
+        className="focus-ring group flex flex-col gap-1 rounded-xl border border-border-subtle bg-surface-raised p-4 transition-all hover:border-border-default hover:shadow-xs"
+      >
+        <span className="font-label text-body-xs font-medium text-fg-muted">
+          En repaso
+        </span>
+        <p className="font-sans text-heading-md font-bold tabular-nums text-fg">
+          {totalDue}
+        </p>
+        <span className="font-body-xs text-fg-muted">
+          {totalDue === 0
+            ? "Empiezan tras tus primeras palabras"
+            : `${totalDue} ${totalDue === 1 ? "elemento pendiente" : "elementos pendientes"}`}
+        </span>
+      </Link>
+    </div>
+  );
+}

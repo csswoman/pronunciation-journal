@@ -14,9 +14,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Sorpresa", "value": "Don't you like it?", "highlights": ["Don't you"] },
-            { "key": "Confirmar", "value": "Isn't this great?", "highlights": ["Isn't this"] },
-            { "key": "Reproche suave", "value": "Didn't you call her?", "highlights": ["Didn't you"] }
+            {
+              "key": "Sorpresa",
+              "value": "Don't you like it?",
+              "highlights": [
+                "Don't you"
+              ]
+            },
+            {
+              "key": "Confirmar",
+              "value": "Isn't this great?",
+              "highlights": [
+                "Isn't this"
+              ]
+            },
+            {
+              "key": "Reproche suave",
+              "value": "Didn't you call her?",
+              "highlights": [
+                "Didn't you"
+              ]
+            }
           ]
         }
       ],
@@ -34,9 +52,20 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "good", "text": "Don't you like it? — Yes, I do.", "note": "sí me gusta" },
-            { "variant": "good", "text": "Don't you like it? — No, I don't.", "note": "no me gusta" },
-            { "variant": "bad", "text": "Don't you like it? — Yes, I don't." }
+            {
+              "variant": "good",
+              "text": "Don't you like it? — Yes, I do.",
+              "note": "sí me gusta"
+            },
+            {
+              "variant": "good",
+              "text": "Don't you like it? — No, I don't.",
+              "note": "no me gusta"
+            },
+            {
+              "variant": "bad",
+              "text": "Don't you like it? — Yes, I don't."
+            }
           ]
         }
       ],
@@ -54,9 +83,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "should", "value": "You should see a doctor.", "highlights": ["should"] },
-            { "key": "shouldn't", "value": "You shouldn't worry.", "highlights": ["shouldn't"] },
-            { "key": "ought to", "value": "You ought to apologize.", "highlights": ["ought to"] }
+            {
+              "key": "should",
+              "value": "You should see a doctor.",
+              "highlights": [
+                "should"
+              ]
+            },
+            {
+              "key": "shouldn't",
+              "value": "You shouldn't worry.",
+              "highlights": [
+                "shouldn't"
+              ]
+            },
+            {
+              "key": "ought to",
+              "value": "You ought to apologize.",
+              "highlights": [
+                "ought to"
+              ]
+            }
           ]
         }
       ]
@@ -70,9 +117,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "had better", "value": "You'd better hurry.", "highlights": ["'d better"] },
-            { "key": "had better not", "value": "You'd better not be late.", "highlights": ["'d better not"] },
-            { "key": "must (consejo fuerte)", "value": "You must try this!", "highlights": ["must"] }
+            {
+              "key": "had better",
+              "value": "You'd better hurry.",
+              "highlights": [
+                "'d better"
+              ]
+            },
+            {
+              "key": "had better not",
+              "value": "You'd better not be late.",
+              "highlights": [
+                "'d better not"
+              ]
+            },
+            {
+              "key": "must (consejo fuerte)",
+              "value": "You must try this!",
+              "highlights": [
+                "must"
+              ]
+            }
           ]
         }
       ],
@@ -90,9 +155,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Why don't you", "value": "Why don't you rest?", "highlights": ["Why don't you"] },
-            { "key": "If I were you", "value": "If I were you, I'd wait.", "highlights": ["If I were you"] },
-            { "key": "It might be a good idea to", "value": "...call first.", "highlights": ["It might be a good idea to"] }
+            {
+              "key": "Why don't you",
+              "value": "Why don't you rest?",
+              "highlights": [
+                "Why don't you"
+              ]
+            },
+            {
+              "key": "If I were you",
+              "value": "If I were you, I'd wait.",
+              "highlights": [
+                "If I were you"
+              ]
+            },
+            {
+              "key": "It might be a good idea to",
+              "value": "...call first.",
+              "highlights": [
+                "It might be a good idea to"
+              ]
+            }
           ]
         }
       ]
@@ -101,19 +184,68 @@
       "id": "nr-asking-advice",
       "tag": "Pedir consejo",
       "title": "What should I do?",
-      "titleItalic": ["What should I do?"],
+      "titleItalic": [
+        "What should I do?"
+      ],
       "lede": "Cómo pedir recomendaciones a otra persona de forma natural.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
-            { "variant": "good", "text": "What should I do?", "note": "directo" },
-            { "variant": "good", "text": "What would you do?", "note": "pedir su punto de vista" },
-            { "variant": "good", "text": "Do you have any advice?", "note": "advice es incontable" },
-            { "variant": "bad", "text": "Do you have any advices?" }
+            {
+              "variant": "good",
+              "text": "What should I do?",
+              "note": "directo"
+            },
+            {
+              "variant": "good",
+              "text": "What would you do?",
+              "note": "pedir su punto de vista"
+            },
+            {
+              "variant": "good",
+              "text": "Do you have any advice?",
+              "note": "advice es incontable"
+            },
+            {
+              "variant": "bad",
+              "text": "Do you have any advices?"
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Why ___ we try that new Italian restaurant tonight?",
+      "options": [
+        "don't",
+        "aren't",
+        "didn't"
+      ],
+      "answer": 0,
+      "explain": "'Why don't we...?' es una fórmula habitual para proponer sugerencias."
+    },
+    {
+      "q": "___ you seen this movie before? It's amazing!",
+      "options": [
+        "Haven't",
+        "Don't",
+        "Aren't"
+      ],
+      "answer": 0,
+      "explain": "Las preguntas negativas en presente perfecto se forman con 'Haven't / Hasn't'."
+    },
+    {
+      "q": "Isn't she ___ to join the meeting?",
+      "options": [
+        "going",
+        "go",
+        "will"
+      ],
+      "answer": 0,
+      "explain": "Pregunta negativa sobre intenciones futuras en la estructura 'be going to'."
     }
   ]
 }

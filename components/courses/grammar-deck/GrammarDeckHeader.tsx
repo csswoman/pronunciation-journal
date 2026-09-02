@@ -48,12 +48,12 @@ export default function GrammarDeckHeader({
         </div>
       </div>
       <div className="grammar-deck__meta">
-        <span className="grammar-deck__count">
-          <b>{reviewedCount}</b> / {totalCount} repasadas
-        </span>
         <div className="grammar-deck__prog" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
           <span className="grammar-deck__prog-fill" style={{ transform: `scaleX(${pct / 100})` }} />
         </div>
+        <span className="grammar-deck__count">
+          <b>{String(reviewedCount).padStart(2, "0")}</b> / {String(totalCount).padStart(2, "0")}
+        </span>
       </div>
     </header>
   );

@@ -1,4 +1,5 @@
 import type {
+  ErrorCorrectionExercise,
   FillBlankExercise,
   GenericExercise,
   ReorderWordsExercise,
@@ -20,6 +21,17 @@ const STOPWORDS = new Set([
   'were', 'be', 'and', 'or', 'but', 'i', 'you', 'he', 'she', 'it', 'we',
   'they', 'my', 'your', 'his', 'her', 'its', 'our', 'their', 'this', 'that',
   'do', 'does', 'did', 'not', 'with', 'for', 'so', 'as', 'by',
+])
+
+const PRONOUNS = new Set([
+  'i', 'you', 'he', 'she', 'it', 'we', 'they', 'me', 'him', 'her', 'us', 'them',
+  'my', 'your', 'his', 'its', 'our', 'their', 'mine', 'yours', 'hers', 'ours', 'theirs',
+])
+
+const MODALS = new Set(['can', 'could', 'should', 'would', 'must', 'may', 'might', 'will', 'shall'])
+
+const PREPOSITIONS = new Set([
+  'in', 'on', 'at', 'under', 'over', 'between', 'during', 'behind', 'with', 'for', 'about', 'from', 'into', 'through',
 ])
 
 /** Strips surrounding punctuation from a token: "eat." → "eat". */
@@ -61,10 +73,23 @@ function buildDictation(fragment: TextFragment): SentenceDictationExercise {
   }
 }
 
+function getCategoryPool(answer: string, fallbackPool: string[]): string[] {
+  const lower = answer.toLowerCase()
+  if (PRONOUNS.has(lower)) {
+    return Array.from(PRONOUNS).filter((w) => w.toLowerCase() !== lower)
+  }
+  if (MODALS.has(lower)) {
+    return Array.from(MODALS).filter((w) => w.toLowerCase() !== lower)
+  }
+  if (PREPOSITIONS.has(lower)) {
+    return Array.from(PREPOSITIONS).filter((w) => w.toLowerCase() !== lower)
+  }
+  return fallbackPool.filter((w) => w.toLowerCase() !== lower)
+}
+
 /**
- * Builds a fill-blank from the fragment by blanking a content word and drawing
- * distractors from the other fragments' content words. Returns null when no
- * usable word or not enough distractors exist.
+ * Builds a fill-blank from the fragment by blanking a word and drawing
+ * category-aware distractors (pronouns vs pronouns, modals vs modals, or content pool).
  */
 function buildFillBlank(fragment: TextFragment, distractorPool: string[]): FillBlankExercise | null {
   const answer = pickContentWord(fragment.content)
@@ -73,10 +98,8 @@ function buildFillBlank(fragment: TextFragment, distractorPool: string[]): FillB
   const sentence = blankWord(fragment.content, answer)
   if (!sentence) return null
 
-  const distractors = pick(
-    distractorPool.filter((w) => w.toLowerCase() !== answer.toLowerCase()),
-    FILL_BLANK_OPTIONS - 1,
-  )
+  const categoryPool = getCategoryPool(answer, distractorPool)
+  const distractors = pick(categoryPool, FILL_BLANK_OPTIONS - 1)
   if (distractors.length < FILL_BLANK_OPTIONS - 1) return null
 
   return {
@@ -92,9 +115,42 @@ function buildFillBlank(fragment: TextFragment, distractorPool: string[]): FillB
 }
 
 /**
+ * Builds an error-correction exercise from a sentence fragment by introducing
+ * a subtle syntactic error (e.g. swapping third-person 's' or auxiliary).
+ */
+function buildErrorCorrection(fragment: TextFragment): ErrorCorrectionExercise | null {
+  const tokens = tokenize(fragment.content)
+  if (tokens.length < MIN_TOKENS) return null
+
+  // Search for third-person verb to misconjugate (e.g. "goes" -> "go", "likes" -> "like")
+  let wrongSentence: string | null = null;
+  let explanation: string | undefined = undefined;
+
+  for (let i = 0; i < tokens.length; i++) {
+    const token = tokens[i]
+    if (token.endsWith('s') && token.length > 3 && !STOPWORDS.has(token.toLowerCase())) {
+      const baseForm = token.slice(0, -1)
+      wrongSentence = fragment.content.replace(token, baseForm)
+      explanation = `En tercera persona singular se agrega '-s' o '-es': "${token}" es la forma correcta.`
+      break
+    }
+  }
+
+  if (!wrongSentence) return null
+
+  return {
+    id: exerciseId('error_correction', fragment.id, fragment.content),
+    type: 'error_correction',
+    sourceRef: { source: 'text_fragments', id: fragment.id },
+    sentence: wrongSentence,
+    correctSentence: fragment.content,
+    explanation,
+  }
+}
+
+/**
  * Generates a mixed set of exercises from sentence fragments: reorder-words,
- * sentence-dictation and fill-blank. Distributes types roughly evenly so each
- * lesson's practice feels varied instead of "armar oraciones" only.
+ * sentence-dictation, fill-blank, and error-correction. Distributes types evenly.
  */
 export function generateMixedFromFragments(
   fragments: TextFragment[],
@@ -121,16 +177,19 @@ export function generateMixedFromFragments(
   const exercises: GenericExercise[] = []
 
   selected.forEach((fragment, i) => {
-    // Round-robin across the three types: reorder, dictation, fill-blank.
-    const variant = i % 3
+    // Round-robin across types: reorder, dictation, fill-blank, error-correction
+    const variant = i % 4
     if (variant === 0) {
       exercises.push(buildReorder(fragment))
     } else if (variant === 1) {
       exercises.push(buildDictation(fragment))
-    } else {
+    } else if (variant === 2) {
       const fb = buildFillBlank(fragment, distractorPool)
-      // Fall back to reorder when the sentence can't yield a fill-blank.
       exercises.push(fb ?? buildReorder(fragment))
+    } else {
+      const ec = buildErrorCorrection(fragment)
+      const fb = buildFillBlank(fragment, distractorPool)
+      exercises.push(ec ?? fb ?? buildReorder(fragment))
     }
   })
 

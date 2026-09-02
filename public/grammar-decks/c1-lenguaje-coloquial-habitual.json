@@ -120,5 +120,25 @@
         }
       ]
     }
+  ],
+  "quiz": [
+    {
+      "q": "¿Por qué no se debe usar 'very' antes de un adjetivo extremo como 'exhausted' o 'freezing'?",
+      "options": ["Porque los adjetivos extremos no admiten grado y requieren intensificadores absolutos como 'absolutely'.", "Porque 'very' solo se utiliza en oraciones negativas.", "Porque 'exhausted' es un verbo y no un adjetivo.", "Porque 'very' solo se combina con sustantivos contables."],
+      "answer": 0,
+      "explain": "Los adjetivos límite o extremos se combinan con 'absolutely' o 'totally', nunca con 'very'."
+    },
+    {
+      "q": "¿Qué expresa el idiom coloquial 'to be under the weather'?",
+      "options": ["Sentirse indispuesto, enfermo o sin energía.", "Estar muy preocupado por el pronóstico del clima.", "Estar disfrutando de vacaciones en la playa.", "Quedarse sin dinero disponible."],
+      "answer": 0,
+      "explain": "'Under the weather' es una forma cotidiana de decir que uno se siente algo enfermo o indispuesto."
+    },
+    {
+      "q": "¿Qué opción adapta mejor la frase 'I'm kinda broke' a una entrevista de trabajo formal?",
+      "options": ["I'm currently seeking new professional opportunities.", "I have no cash right now.", "I am totally broke at this moment.", "Gimme some money for work."],
+      "answer": 0,
+      "explain": "El registro profesional requiere evitar 'broke' o 'kinda' usando expresiones sobrias como 'between jobs' o 'seeking opportunities'."
+    }
   ]
 }

@@ -1,47 +1,47 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "C2 · Sintaxis",
     "title": "Sintagmas",
     "titleEmphasis": "nominales complejos",
-    "goal": "Ya construyes sintagmas nominales densos con modificadores, participios, prep. y relativas alrededor del núcleo."
+    "goal": "Construye sintagmas nominales densos agrupando premodificadores (adjetivos, sustantivos) y posmodificadores (participios, preposiciones)."
   },
   "cards": [
     {
       "id": "c2-sintagmas-nominales-concept",
       "tag": "Idea central",
       "title": "Sintagmas: qué expresa",
-      "lede": "Ya construyes sintagmas nominales densos con modificadores, participios, prep. y relativas alrededor del núcleo.",
+      "lede": "Construye sintagmas nominales densos agrupando premodificadores (adjetivos, sustantivos) y posmodificadores (participios, preposiciones).",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Núcleo",
-              "value": "sustantivo central · decision",
+              "key": "Premodificación sustantiva",
+              "value": "groundbreaking cross-border supply chain management systems",
               "highlights": [
-                "decision"
+                "supply chain management systems"
               ]
             },
             {
-              "key": "Modificadores",
-              "value": "the recent controversial board decision on restructuring",
+              "key": "Posmodificación participial",
+              "value": "the proposals submitted by the foreign delegation",
               "highlights": [
-                "recent",
-                "controversial"
+                "submitted by"
               ]
             },
             {
-              "key": "Participio",
-              "value": "the policy announced yesterday",
+              "key": "Posmodificación preposicional",
+              "value": "the underlying causes of structural market volatility",
               "highlights": [
-                "announced"
+                "causes of structural market volatility"
               ]
             },
             {
-              "key": "Relativa",
-              "value": "the analyst who led the review",
+              "key": "Núcleo denso empaquetado",
+              "value": "a highly controversial government-backed infrastructure initiative",
               "highlights": [
-                "who led"
+                "infrastructure initiative"
               ]
             }
           ]
@@ -56,31 +56,30 @@
       "id": "c2-sintagmas-nominales-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Núcleo",
-              "value": "sustantivo central · decision",
+              "key": "Estructura completa",
+              "value": "Determinado + Adverbio/Adj + Sustantivo modificador + NÚCLEO + Posmodificador · A very costly software security flaw reported yesterday.",
               "highlights": [
-                "decision"
+                "security flaw"
               ]
             },
             {
-              "key": "Modificadores",
-              "value": "the recent controversial board decision on restructuring",
+              "key": "Afirmativa",
+              "value": "The newly adopted environmental protection laws will impact heavy industry.",
               "highlights": [
-                "recent",
-                "controversial"
+                "environmental protection laws"
               ]
             },
             {
-              "key": "Participio",
-              "value": "the policy announced yesterday",
+              "key": "Negativa",
+              "value": "No poorly constructed risk assessment models should be approved.",
               "highlights": [
-                "announced"
+                "risk assessment models"
               ]
             }
           ]
@@ -91,26 +90,26 @@
       "id": "c2-sintagmas-nominales-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "decision"
+              "key": "Redacción académica",
+              "value": "Recent peer-reviewed academic studies on climate resilience indicate rapid changes."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "the recent controversial board decision on restructuring"
+              "key": "Informes financieros",
+              "value": "The surprisingly high third-quarter revenue growth surprised institutional investors."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "the policy announced yesterday"
+              "key": "Documentos legales",
+              "value": "Any unauthorized disclosure of proprietary trade secrets constitutes a breach."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "the analyst who led the review"
+              "key": "Estrategia empresarial",
+              "value": "Our customer relationship management software upgrade is complete."
             }
           ]
         }
@@ -120,23 +119,23 @@
       "id": "c2-sintagmas-nominales-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "Núcleo",
-              "rule": "sustantivo central · decision",
+              "label": "Sintagma nominal denso (C2)",
+              "rule": "Condensa múltiples conceptos en una sola frase nominal sin recurrir a cláusulas complejas",
               "examples": [
-                "decision"
+                "The unexpected mid-year budgetary constraints forced project cancellation."
               ]
             },
             {
-              "label": "Modificadores",
-              "rule": "the recent controversial board decision on restructuring",
+              "label": "Oración desplegada (B2)",
+              "rule": "Utiliza cláusulas de relativo y conectores para distribuir la información",
               "examples": [
-                "the recent controversial board decision on restructuring"
+                "The constraints on the budget, which were unexpected and happened mid-year, forced us to cancel."
               ]
             }
           ]
@@ -147,19 +146,19 @@
       "id": "c2-sintagmas-nominales-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "a decision recent controversial"
+              "text": "The high risk management decisions were questioned."
             },
             {
               "variant": "good",
-              "text": "a recent controversial decision",
-              "note": "orden de adjetivos en inglés"
+              "text": "The high-risk management decisions were questioned.",
+              "note": "Usa guion en 'high-risk' para evitar ambigüedad en el sintagma nominal."
             }
           ]
         }
@@ -168,27 +167,27 @@
     {
       "id": "c2-sintagmas-nominales-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "1. Identifica el núcleo",
+              "value": "En inglés, el sustantivo principal (head noun) se ubica al final de la premodificación."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "2. Sustantivos como adjetivos",
+              "value": "Los sustantivos que modifican al núcleo van en singular ('risk assessment', NO 'risks assessment')."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "3. Uso de guiones",
+              "value": "Enlaza adjetivos compuestos antes del sustantivo ('state-of-the-art facility')."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "4. Posmodificación concisa",
+              "value": "Prefiere cláusulas de participio ('data collected') frente a relativas enteras ('data which was collected')."
             }
           ]
         }
@@ -201,14 +200,37 @@
   ],
   "quiz": [
     {
-      "q": "Identify the head noun: 'the rapidly evolving regulatory framework'",
+      "q": "Identify the head noun in: 'the rapidly expanding international digital asset market'.",
       "options": [
-        "rapidly",
-        "framework",
-        "regulatory"
+        "market",
+        "asset",
+        "digital",
+        "expanding"
       ],
-      "answer": 1,
-      "explain": "framework es el núcleo del sintagma."
+      "answer": 0,
+      "explain": "'Market' es el sustantivo núcleo (head noun) al que modifican todos los términos anteriores."
+    },
+    {
+      "q": "Which compound modifier is written correctly before a noun?",
+      "options": [
+        "well-established protocol",
+        "well established protocol",
+        "well establishing protocol",
+        "protocol well-established"
+      ],
+      "answer": 0,
+      "explain": "Los modificadores compuestos antes del sustantivo llevan guion ('well-established')."
+    },
+    {
+      "q": "¿Qué opción demuestra la construcción de un sintagma nominal denso y natural?",
+      "options": [
+        "The company's long-term strategic growth plan",
+        "The plan of growth strategic long-term of the company",
+        "The company plan of strategic long-term growth",
+        "The long-term plan growth strategic of the company"
+      ],
+      "answer": 0,
+      "explain": "Sigue el orden natural de premodificación en inglés: poseedor + adjetivos compuestos + sustantivo núcleo."
     }
   ]
 }

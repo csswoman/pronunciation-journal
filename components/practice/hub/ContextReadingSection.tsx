@@ -1,7 +1,7 @@
 // Planned structure:
 // <ContextReadingSection>
 //   <PracticeCategoryLane title kicker>
-//     <Link /practice/immersion> Inmersión & Speaking
+//     <Link /practice/immersion> Inmersión y conversación
 //     <Link /practice/reader>    Lectura en contexto
 //     <Link /courses font-cap>   Ruta guiada
 //   </PracticeCategoryLane>
@@ -18,23 +18,23 @@ export default function ContextReadingSection() {
 
   return (
     <PracticeCategoryLane title={category.title} kicker={category.kicker}>
-      {/* Inmersión y Speaking (EngVid) */}
+      {/* Inmersión y conversación */}
       <Link
         href="/practice/immersion"
         onClick={() => void setLastPracticeMode('immersion')}
-        className="flex shrink-0 w-[82vw] max-w-[280px] md:w-auto md:max-w-none snap-start flex-col justify-between gap-3 rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised p-4 transition-colors hover:bg-surface-sunken focus-ring group"
+        className="flex shrink-0 w-[82vw] max-w-[280px] md:w-auto md:max-w-none snap-start flex-col justify-between gap-3 rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised p-4 transition-colors hover:bg-surface-sunken focus-ring group h-full"
       >
         <div className="flex items-start justify-between gap-2">
           <span className="grid h-9 w-9 place-items-center rounded-[var(--radius-md)] bg-[var(--hue-icon-bg)] text-[var(--primary)]">
             <Clapperboard size={18} aria-hidden />
           </span>
-          <span className="font-caption text-tiny font-medium text-primary">Inmersión</span>
+          <span className="font-caption text-tiny font-medium text-fg-subtle">Libre</span>
         </div>
 
-        <div className="flex flex-col gap-1">
+        <div className="mt-auto flex flex-col gap-1">
           <div className="flex items-center justify-between gap-1">
             <span className="font-label font-semibold text-fg group-hover:text-primary transition-colors">
-              Inmersión & Speaking
+              Inmersión y conversación
             </span>
             <ArrowRight size={15} className="text-fg-subtle group-hover:text-primary group-hover:translate-x-0.5 transition-transform" />
           </div>
@@ -48,16 +48,16 @@ export default function ContextReadingSection() {
       <Link
         href="/practice/reader"
         onClick={() => void setLastPracticeMode('reader')}
-        className="flex shrink-0 w-[82vw] max-w-[280px] md:w-auto md:max-w-none snap-start flex-col justify-between gap-3 rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised p-4 transition-colors hover:bg-surface-sunken focus-ring group"
+        className="flex shrink-0 w-[82vw] max-w-[280px] md:w-auto md:max-w-none snap-start flex-col justify-between gap-3 rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised p-4 transition-colors hover:bg-surface-sunken focus-ring group h-full"
       >
         <div className="flex items-start justify-between gap-2">
           <span className="grid h-9 w-9 place-items-center rounded-[var(--radius-md)] bg-[var(--hue-icon-bg)] text-[var(--primary)]">
             <BookOpen size={18} aria-hidden />
           </span>
-          <span className="font-caption text-tiny font-medium text-primary">Libre</span>
+          <span className="font-caption text-tiny font-medium text-fg-subtle">Libre</span>
         </div>
 
-        <div className="flex flex-col gap-1">
+        <div className="mt-auto flex flex-col gap-1">
           <div className="flex items-center justify-between gap-1">
             <span className="font-label font-semibold text-fg group-hover:text-primary transition-colors">
               Lectura en contexto
@@ -74,7 +74,7 @@ export default function ContextReadingSection() {
       <Link
         href="/courses"
         onClick={() => void setLastPracticeMode('courses')}
-        className="flex shrink-0 w-[82vw] max-w-[280px] md:w-auto md:max-w-none snap-start flex-col justify-between gap-3 rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised p-4 transition-colors hover:bg-surface-sunken focus-ring group"
+        className="flex shrink-0 w-[82vw] max-w-[280px] md:w-auto md:max-w-none snap-start flex-col justify-between gap-3 rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised p-4 transition-colors hover:bg-surface-sunken focus-ring group h-full"
       >
         <div className="flex items-start justify-between gap-2">
           <span className="grid h-9 w-9 place-items-center rounded-[var(--radius-md)] bg-[var(--hue-icon-bg)] text-[var(--primary)]">
@@ -83,7 +83,7 @@ export default function ContextReadingSection() {
           <span className="font-caption text-tiny font-medium text-fg-subtle">Guiado</span>
         </div>
 
-        <div className="flex flex-col gap-1">
+        <div className="mt-auto flex flex-col gap-1">
           <div className="flex items-center justify-between gap-1">
             <span className="font-label font-semibold text-fg group-hover:text-primary transition-colors">
               Ruta guiada
@@ -98,4 +98,5 @@ export default function ContextReadingSection() {
     </PracticeCategoryLane>
   )
 }
+
 

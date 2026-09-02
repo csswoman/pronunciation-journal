@@ -1,4 +1,5 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "B2 · Gerundio vs infinitivo",
     "title": "Cambio de",
@@ -16,31 +17,35 @@
           "type": "rules",
           "rows": [
             {
-              "key": "stop + -ing",
-              "value": "dejar de · stop smoking",
+              "key": "stop + -ing vs stop + to",
+              "value": "stop smoking (interrumpir hábito) vs stop to smoke (pausar para fumar)",
               "highlights": [
-                "stop smoking"
+                "stop smoking",
+                "stop to smoke"
               ]
             },
             {
-              "key": "stop + to",
-              "value": "parar para · stop to rest",
+              "key": "remember + -ing vs to",
+              "value": "remember doing (recuerdas el pasado) vs remember to do (recordar tarea futura)",
               "highlights": [
-                "stop to rest"
+                "remember doing",
+                "remember to do"
               ]
             },
             {
-              "key": "remember + -ing",
-              "value": "recordar hecho pasado · remember meeting her",
+              "key": "try + -ing vs try + to",
+              "value": "try changing (experimentar método) vs try to lift (hacer un esfuerzo físico)",
               "highlights": [
-                "remember meeting"
+                "try changing",
+                "try to lift"
               ]
             },
             {
-              "key": "remember + to",
-              "value": "no olvidar · remember to call",
+              "key": "regret + -ing vs to",
+              "value": "regret saying (arrepentirse de algo dicho) vs regret to inform (lamentar dar una noticia)",
               "highlights": [
-                "remember to call"
+                "regret saying",
+                "regret to inform"
               ]
             }
           ]
@@ -55,30 +60,37 @@
       "id": "b2-gerundio-significado-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "stop + -ing",
-              "value": "dejar de · stop smoking",
+              "key": "Patrón -ing (Memoria/Hábito/Experimento)",
+              "value": "Sujeto + verbo + verbo-ing + objeto · I remember visiting Rome in 2018.",
               "highlights": [
-                "stop smoking"
+                "remember visiting"
               ]
             },
             {
-              "key": "stop + to",
-              "value": "parar para · stop to rest",
+              "key": "Patrón to + Infinitivo (Propósito/Obligación/Esfuerzo)",
+              "value": "Sujeto + verbo + to + infinitivo + objeto · He stopped to buy a coffee.",
               "highlights": [
-                "stop to rest"
+                "stopped to buy"
               ]
             },
             {
-              "key": "remember + -ing",
-              "value": "recordar hecho pasado · remember meeting her",
+              "key": "Negativa con -ing",
+              "value": "Sujeto + verbo + not + verbo-ing · I regret not studying harder for the test.",
               "highlights": [
-                "remember meeting"
+                "regret not studying"
+              ]
+            },
+            {
+              "key": "Interrogativa",
+              "value": "Did you remember to send the email? · Have you tried restarting the computer?",
+              "highlights": [
+                "remember to send"
               ]
             }
           ]
@@ -89,26 +101,26 @@
       "id": "b2-gerundio-significado-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "stop smoking"
+              "key": "En el trabajo",
+              "value": "We regret to inform you that your application was not successful on this occasion."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "stop to rest"
+              "key": "Soporte técnico",
+              "value": "If the screen stays black, try unplugging the cable and plugging it in again."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "remember meeting her"
+              "key": "Salud y hábitos",
+              "value": "My doctor advised me to stop working so late at night."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "remember to call"
+              "key": "Memoria personal",
+              "value": "I clearly remember locking the front door before we left this morning."
             }
           ]
         }
@@ -118,23 +130,25 @@
       "id": "b2-gerundio-significado-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "stop + -ing",
-              "rule": "dejar de · stop smoking",
+              "label": "Verbo + -ing (Acción previa / Experimento)",
+              "rule": "La acción del verbo secundario ocurre ANTES o como experimento en sí.",
               "examples": [
-                "stop smoking"
+                "I remember posting the letter. (Recuerdo haberlo hecho)",
+                "Try adding more salt. (Prueba a ver qué pasa)"
               ]
             },
             {
-              "label": "stop + to",
-              "rule": "parar para · stop to rest",
+              "label": "Verbo + to + Infinitivo (Objetivo / Tarea futura)",
+              "rule": "La acción del verbo secundario es el OBJETIVO o la obligación por realizar.",
               "examples": [
-                "stop to rest"
+                "Remember to post the letter! (No olvides hacerlo)",
+                "Try to open the heavy door. (Haz el esfuerzo)"
               ]
             }
           ]
@@ -145,19 +159,19 @@
       "id": "b2-gerundio-significado-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "I stopped to smoke."
+              "text": "I stopped to smoke three years ago and now I feel great."
             },
             {
               "variant": "good",
-              "text": "I stopped smoking.",
-              "note": "dejar el hábito → stop + -ing"
+              "text": "I stopped smoking three years ago and now I feel great.",
+              "note": "'stop to smoke' significa parar para encender un cigarrillo; para abandonar el hábito se usa 'stop smoking'"
             }
           ]
         }
@@ -166,27 +180,27 @@
     {
       "id": "b2-gerundio-significado-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "Remember to = Tarea pendiente",
+              "value": "Usar 'to' significa recordar que debes hacer algo antes de ejecutarlo."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "Remember -ing = Recuerdo pasado",
+              "value": "Usar '-ing' significa evocar en tu memoria una vivencia ya ocurrida."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "Stop -ing = Abandono definitivo",
+              "value": "Significa cesar una actividad por completo (I stopped eating sugar)."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "Regret to inform = Noticia formal",
+              "value": "Fórmula estándar en cartas formales para comunicar noticias desfavorables."
             }
           ]
         }
@@ -199,13 +213,34 @@
   ],
   "quiz": [
     {
-      "q": "Remember ___ the door when you leave.",
+      "q": "Please remember ___ off the lights before leaving the lecture hall.",
       "options": [
-        "to lock",
-        "locking"
+        "to turn",
+        "turning",
+        "turn"
       ],
       "answer": 0,
-      "explain": "Acción futura que no debes olvidar → to."
+      "explain": "Se trata de una obligación o tarea por cumplir en el futuro → 'remember + to + infinitivo'."
+    },
+    {
+      "q": "I will never forget ___ the Eiffel Tower for the very first time.",
+      "options": [
+        "seeing",
+        "to see",
+        "see"
+      ],
+      "answer": 0,
+      "explain": "Evocar el recuerdo de una experiencia del pasado requiere la forma en gerundio ('-ing')."
+    },
+    {
+      "q": "He tried ___ the heavy box, but it was far too heavy for one person.",
+      "options": [
+        "to lift",
+        "lifting",
+        "lifted"
+      ],
+      "answer": 0,
+      "explain": "'Try + to + infinitivo' expresa hacer el esfuerzo físico de lograr un objetivo difícil."
     }
   ]
 }

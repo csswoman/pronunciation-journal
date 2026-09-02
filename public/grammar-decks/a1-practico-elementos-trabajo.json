@@ -6,7 +6,10 @@
     "goal": "Ya puedes nombrar tu profesión, los objetos de la oficina y decir dónde están las cosas."
   },
   "related": [
-    { "slug": "biz-elementos-trabajo", "label": "Biz · Elementos de trabajo (profesional)" }
+    {
+      "slug": "biz-elementos-trabajo",
+      "label": "Biz · Elementos de trabajo (profesional)"
+    }
   ],
   "cards": [
     {
@@ -18,9 +21,25 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Estructura", "value": "I'm a teacher. · She's an engineer.", "highlights": ["a teacher", "an engineer"] },
-            { "key": "Profesiones", "value": "doctor, nurse, lawyer, designer, driver" },
-            { "key": "Pregunta", "value": "What do you do?", "highlights": ["What do you do?"] }
+            {
+              "key": "Estructura",
+              "value": "I'm a teacher. · She's an engineer.",
+              "highlights": [
+                "a teacher",
+                "an engineer"
+              ]
+            },
+            {
+              "key": "Profesiones",
+              "value": "doctor, nurse, lawyer, designer, driver"
+            },
+            {
+              "key": "Pregunta",
+              "value": "What do you do?",
+              "highlights": [
+                "What do you do?"
+              ]
+            }
           ]
         }
       ],
@@ -38,9 +57,18 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Escritorio", "value": "desk, chair, computer, laptop, screen" },
-            { "key": "Papelería", "value": "pen, pencil, notebook, paper, folder" },
-            { "key": "Tecnología", "value": "phone, printer, keyboard, mouse" }
+            {
+              "key": "Escritorio",
+              "value": "desk, chair, computer, laptop, screen"
+            },
+            {
+              "key": "Papelería",
+              "value": "pen, pencil, notebook, paper, folder"
+            },
+            {
+              "key": "Tecnología",
+              "value": "phone, printer, keyboard, mouse"
+            }
           ]
         }
       ]
@@ -54,10 +82,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Singular", "value": "There is a computer on the desk.", "highlights": ["There is"] },
-            { "key": "Plural", "value": "There are two chairs.", "highlights": ["There are"] },
-            { "key": "Negativo", "value": "There isn't a printer.", "highlights": ["isn't"] },
-            { "key": "Pregunta", "value": "Is there a phone?", "highlights": ["Is there"] }
+            {
+              "key": "Singular",
+              "value": "There is a computer on the desk.",
+              "highlights": [
+                "There is"
+              ]
+            },
+            {
+              "key": "Plural",
+              "value": "There are two chairs.",
+              "highlights": [
+                "There are"
+              ]
+            },
+            {
+              "key": "Negativo",
+              "value": "There isn't a printer.",
+              "highlights": [
+                "isn't"
+              ]
+            },
+            {
+              "key": "Pregunta",
+              "value": "Is there a phone?",
+              "highlights": [
+                "Is there"
+              ]
+            }
           ]
         }
       ],
@@ -75,9 +127,25 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Lugares", "value": "office, factory, shop, hospital, school" },
-            { "key": "at work", "value": "I'm at work. (en el trabajo)", "highlights": ["at work"] },
-            { "key": "work at/for", "value": "I work at a bank. · I work for Google.", "highlights": ["work at", "work for"] }
+            {
+              "key": "Lugares",
+              "value": "office, factory, shop, hospital, school"
+            },
+            {
+              "key": "at work",
+              "value": "I'm at work. (en el trabajo)",
+              "highlights": [
+                "at work"
+              ]
+            },
+            {
+              "key": "work at/for",
+              "value": "I work at a bank. · I work for Google.",
+              "highlights": [
+                "work at",
+                "work for"
+              ]
+            }
           ]
         }
       ]
@@ -91,9 +159,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Empezar", "value": "I start work at 9.", "highlights": ["start work"] },
-            { "key": "Terminar", "value": "I finish at 5.", "highlights": ["finish"] },
-            { "key": "Descanso", "value": "I have lunch at noon.", "highlights": ["have lunch"] }
+            {
+              "key": "Empezar",
+              "value": "I start work at 9.",
+              "highlights": [
+                "start work"
+              ]
+            },
+            {
+              "key": "Terminar",
+              "value": "I finish at 5.",
+              "highlights": [
+                "finish"
+              ]
+            },
+            {
+              "key": "Descanso",
+              "value": "I have lunch at noon.",
+              "highlights": [
+                "have lunch"
+              ]
+            }
           ]
         }
       ]
@@ -107,13 +193,58 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "good", "text": "The pen is on the desk.", "note": "on = sobre" },
-            { "variant": "good", "text": "The laptop is in the bag.", "note": "in = dentro" },
-            { "variant": "good", "text": "The trash is under the desk.", "note": "under = debajo" },
-            { "variant": "good", "text": "The phone is next to the computer.", "note": "next to = junto a" }
+            {
+              "variant": "good",
+              "text": "The pen is on the desk.",
+              "note": "on = sobre"
+            },
+            {
+              "variant": "good",
+              "text": "The laptop is in the bag.",
+              "note": "in = dentro"
+            },
+            {
+              "variant": "good",
+              "text": "The trash is under the desk.",
+              "note": "under = debajo"
+            },
+            {
+              "variant": "good",
+              "text": "The phone is next to the computer.",
+              "note": "next to = junto a"
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Where do you write notes during a business meeting?",
+      "options": [
+        "In a notebook.",
+        "In a fridge."
+      ],
+      "answer": 0,
+      "explain": "'Notebook' es cuaderno o libreta de notas."
+    },
+    {
+      "q": "I need to print this document. Is the ___ working?",
+      "options": [
+        "printer",
+        "stapler"
+      ],
+      "answer": 0,
+      "explain": "Para imprimir un documento se necesita una impresora ('printer')."
+    },
+    {
+      "q": "She receives many ___ on her company account every day.",
+      "options": [
+        "emails",
+        "desks"
+      ],
+      "answer": 0,
+      "explain": "'Emails' es la palabra adecuada para correos electrónicos recibidos."
     }
   ]
 }

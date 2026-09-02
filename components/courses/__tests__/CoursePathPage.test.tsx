@@ -38,7 +38,6 @@ describe("CoursePathPage", () => {
     render(<CoursePathPage />);
 
     expect(screen.getByRole("heading", { name: "Cursos" })).toBeInTheDocument();
-    expect(screen.getByText("Aprender")).toBeInTheDocument();
     expect(screen.getByText("Fundamentos A1")).toBeInTheDocument();
     expect(screen.getAllByRole("link", { name: /A1/i })[0]).toHaveAttribute("href", "/courses");
     expect(screen.getByText("Nivel actual")).toBeInTheDocument();
@@ -81,7 +80,7 @@ describe("CoursePathPage", () => {
   it("links to the pronunciation path from the level aside", () => {
     render(<CoursePathPage levelParam="a2" />);
 
-    expect(screen.getByRole("link", { name: /Ruta de pronunciación/i })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: /Pronunciacion/i })).toHaveAttribute(
       "href",
       "/courses/pronunciation",
     );

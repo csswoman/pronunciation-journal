@@ -47,11 +47,11 @@ export default function DailyLessonCard({ lesson }: DailyLessonCardProps) {
           <GraduationCap className="size-4" />
           <span className="font-kicker text-fg-muted">La lección de hoy</span>
         </div>
-        <h2 className="font-heading text-body font-semibold text-fg">{lesson.title}</h2>
+        <h2 className="text-h3 font-bold text-fg">{lesson.title}</h2>
         <p className="text-body-sm text-fg-muted">{lesson.subtitle}</p>
       </header>
 
-      <div className="flex max-h-72 flex-col gap-2 overflow-hidden text-body-sm text-fg [mask-image:linear-gradient(to_bottom,black_80%,transparent)]">
+      <div className="flex flex-col gap-2 text-body-sm text-fg leading-relaxed">
         <ReactMarkdown>{lesson.body}</ReactMarkdown>
       </div>
 

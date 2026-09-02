@@ -14,9 +14,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Sujeto", "value": "quién realiza la acción · She", "highlights": ["She"] },
-            { "key": "Verbo", "value": "la acción · eats", "highlights": ["eats"] },
-            { "key": "Objeto", "value": "qué o quién la recibe · an apple", "highlights": ["an apple"] }
+            {
+              "key": "Sujeto",
+              "value": "quién realiza la acción · She",
+              "highlights": [
+                "She"
+              ]
+            },
+            {
+              "key": "Verbo",
+              "value": "la acción · eats",
+              "highlights": [
+                "eats"
+              ]
+            },
+            {
+              "key": "Objeto",
+              "value": "qué o quién la recibe · an apple",
+              "highlights": [
+                "an apple"
+              ]
+            }
           ]
         }
       ],
@@ -34,10 +52,38 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Noun (sustantivo)", "value": "persona, cosa o lugar · dog, city, love", "highlights": ["dog", "city"] },
-            { "key": "Verb (verbo)", "value": "acción o estado · run, be, have", "highlights": ["run", "be"] },
-            { "key": "Adjective (adjetivo)", "value": "describe al sustantivo · big, red, happy", "highlights": ["big", "red"] },
-            { "key": "Adverb (adverbio)", "value": "describe al verbo · quickly, always", "highlights": ["quickly", "always"] }
+            {
+              "key": "Noun (sustantivo)",
+              "value": "persona, cosa o lugar · dog, city, love",
+              "highlights": [
+                "dog",
+                "city"
+              ]
+            },
+            {
+              "key": "Verb (verbo)",
+              "value": "acción o estado · run, be, have",
+              "highlights": [
+                "run",
+                "be"
+              ]
+            },
+            {
+              "key": "Adjective (adjetivo)",
+              "value": "describe al sustantivo · big, red, happy",
+              "highlights": [
+                "big",
+                "red"
+              ]
+            },
+            {
+              "key": "Adverb (adverbio)",
+              "value": "describe al verbo · quickly, always",
+              "highlights": [
+                "quickly",
+                "always"
+              ]
+            }
           ]
         }
       ]
@@ -51,10 +97,24 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "bad", "text": "a car red" },
-            { "variant": "good", "text": "a red car", "note": "adjetivo + sustantivo" },
-            { "variant": "bad", "text": "a house big and white" },
-            { "variant": "good", "text": "a big white house", "note": "varios adjetivos, también antes" }
+            {
+              "variant": "bad",
+              "text": "a car red"
+            },
+            {
+              "variant": "good",
+              "text": "a red car",
+              "note": "adjetivo + sustantivo"
+            },
+            {
+              "variant": "bad",
+              "text": "a house big and white"
+            },
+            {
+              "variant": "good",
+              "text": "a big white house",
+              "note": "varios adjetivos, también antes"
+            }
           ]
         }
       ],
@@ -75,17 +135,26 @@
             {
               "label": "Afirmativa",
               "rule": "sujeto + verbo",
-              "examples": ["You like coffee.", "She is happy."]
+              "examples": [
+                "You like coffee.",
+                "She is happy."
+              ]
             },
             {
               "label": "Negativa",
               "rule": "+ don't / isn't",
-              "examples": ["You don't like coffee.", "She isn't happy."]
+              "examples": [
+                "You don't like coffee.",
+                "She isn't happy."
+              ]
             },
             {
               "label": "Pregunta",
               "rule": "auxiliar al inicio",
-              "examples": ["Do you like coffee?", "Is she happy?"]
+              "examples": [
+                "Do you like coffee?",
+                "Is she happy?"
+              ]
             }
           ]
         }
@@ -95,7 +164,9 @@
       "id": "co-articles",
       "tag": "Artículos",
       "title": "a · an · the",
-      "titleItalic": ["a · an · the"],
+      "titleItalic": [
+        "a · an · the"
+      ],
       "lede": "Pequeños pero obligatorios delante de muchos sustantivos. Depende del sonido.",
       "blocks": [
         {
@@ -104,19 +175,31 @@
             {
               "label": "a",
               "rule": "+ sonido consonante",
-              "examples": ["a book", "a university (yu-)"]
+              "examples": [
+                "a book",
+                "a university (yu-)"
+              ]
             },
             {
               "label": "an",
               "rule": "+ sonido vocal",
-              "examples": ["an apple", "an hour (h muda)"]
+              "examples": [
+                "an apple",
+                "an hour (h muda)"
+              ]
             }
           ]
         },
         {
           "type": "rules",
           "rows": [
-            { "key": "the", "value": "algo específico o ya conocido · the book on the table", "highlights": ["the book"] }
+            {
+              "key": "the",
+              "value": "algo específico o ya conocido · the book on the table",
+              "highlights": [
+                "the book"
+              ]
+            }
           ]
         }
       ],
@@ -134,13 +217,56 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "bad", "text": "Is very important the sleep." },
-            { "variant": "good", "text": "Sleep is very important.", "note": "el sujeto va primero" },
-            { "variant": "bad", "text": "I like very much pizza." },
-            { "variant": "good", "text": "I like pizza very much.", "note": "very much va al final" }
+            {
+              "variant": "bad",
+              "text": "Is very important the sleep."
+            },
+            {
+              "variant": "good",
+              "text": "Sleep is very important.",
+              "note": "el sujeto va primero"
+            },
+            {
+              "variant": "bad",
+              "text": "I like very much pizza."
+            },
+            {
+              "variant": "good",
+              "text": "I like pizza very much.",
+              "note": "very much va al final"
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "¿Cuál es el orden básico de una oración afirmativa en inglés?",
+      "options": [
+        "Sujeto + Verbo + Objeto",
+        "Verbo + Sujeto + Objeto"
+      ],
+      "answer": 0,
+      "explain": "El orden estándar en inglés es Sujeto + Verbo + Objeto (ej. I like coffee)."
+    },
+    {
+      "q": "In the sentence 'She speaks English', what is 'English'?",
+      "options": [
+        "The object",
+        "The subject"
+      ],
+      "answer": 0,
+      "explain": "'English' es el objeto directo que recibe la acción del verbo."
+    },
+    {
+      "q": "¿Qué elemento no puede faltar en una oración en inglés?",
+      "options": [
+        "El sujeto expreso",
+        "La coma"
+      ],
+      "answer": 0,
+      "explain": "A diferencia del español, el inglés exige siempre un sujeto explícito."
     }
   ]
 }

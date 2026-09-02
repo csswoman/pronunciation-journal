@@ -1,4 +1,5 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "B2 · Pasiva",
     "title": "Pasiva en",
@@ -16,31 +17,31 @@
           "type": "rules",
           "rows": [
             {
-              "key": "Presente",
-              "value": "is/are + pp · is made",
+              "key": "Presente/Pasado Continuo Pasivo",
+              "value": "is/was being + V3 · The road is being repaired.",
               "highlights": [
-                "is made"
+                "is being repaired"
               ]
             },
             {
-              "key": "Pasado",
-              "value": "was/were + pp · was built",
+              "key": "Presente/Pasado Perfecto Pasivo",
+              "value": "has/had been + V3 · The decision has been made.",
               "highlights": [
-                "was built"
+                "has been made"
               ]
             },
             {
-              "key": "Perfecto",
-              "value": "has been + pp · has been done",
+              "key": "Futuro Pasivo",
+              "value": "will be + V3 / is going to be + V3 · The results will be published tomorrow.",
               "highlights": [
-                "has been"
+                "will be published"
               ]
             },
             {
-              "key": "Modales",
-              "value": "can be + pp · must be finished",
+              "key": "Modales Pasivos",
+              "value": "can/must/should be + V3 · Safety rules must be followed.",
               "highlights": [
-                "can be"
+                "must be followed"
               ]
             }
           ]
@@ -55,30 +56,38 @@
       "id": "b2-pasiva-completa-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Presente",
-              "value": "is/are + pp · is made",
+              "key": "Afirmativa (Continuo)",
+              "value": "Sujeto + am/is/are/was/were + being + participio · A new stadium is being built in the city.",
               "highlights": [
-                "is made"
+                "is being built"
               ]
             },
             {
-              "key": "Pasado",
-              "value": "was/were + pp · was built",
+              "key": "Afirmativa (Perfecto)",
+              "value": "Sujeto + has/have/had + been + participio · All tickets have already been sold.",
               "highlights": [
-                "was built"
+                "have been sold"
               ]
             },
             {
-              "key": "Perfecto",
-              "value": "has been + pp · has been done",
+              "key": "Negativa (Modales)",
+              "value": "Sujeto + modal + not + be + participio · The confidential files must not be shared.",
               "highlights": [
-                "has been"
+                "must not be shared"
+              ]
+            },
+            {
+              "key": "Interrogativa",
+              "value": "Has the project been approved by the board yet? · Has + S + been + V3?",
+              "highlights": [
+                "Has",
+                "been approved"
               ]
             }
           ]
@@ -89,26 +98,26 @@
       "id": "b2-pasiva-completa-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "is made"
+              "key": "Noticias de infraestructura",
+              "value": "A modern hospital is currently being constructed near the main railway station."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "was built"
+              "key": "Gestión de proyectos",
+              "value": "All required documents have been reviewed and signed by our legal counsel."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "has been done"
+              "key": "Instrucciones de seguridad",
+              "value": "Emergency exits must be kept clear of any obstacles at all times."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "must be finished"
+              "key": "Eventos corporativos",
+              "value": "The annual conference will be hosted in Paris next November."
             }
           ]
         }
@@ -118,23 +127,25 @@
       "id": "b2-pasiva-completa-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "Presente",
-              "rule": "is/are + pp · is made",
+              "label": "Voz Activa (Foco en el agente)",
+              "rule": "El sujeto realiza la acción expresada por el verbo principal.",
               "examples": [
-                "is made"
+                "Engineers are testing the software.",
+                "They have delivered the package."
               ]
             },
             {
-              "label": "Pasado",
-              "rule": "was/were + pp · was built",
+              "label": "Voz Pasiva (Foco en la acción / objeto)",
+              "rule": "El sujeto recibe la acción; el agente es secundario u omitido.",
               "examples": [
-                "was built"
+                "The software is being tested.",
+                "The package has been delivered."
               ]
             }
           ]
@@ -145,19 +156,19 @@
       "id": "b2-pasiva-completa-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "The house was build in 1990."
+              "text": "The new bridge was build in less than six months."
             },
             {
               "variant": "good",
-              "text": "The house was built in 1990.",
-              "note": "pasiva → participio pasado"
+              "text": "The new bridge was built in less than six months.",
+              "note": "la voz pasiva siempre exige el participio pasado del verbo principal (built), no el presente ni el infinitivo"
             }
           ]
         }
@@ -166,27 +177,27 @@
     {
       "id": "b2-pasiva-completa-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "La fórmula sagrada: BE + V3",
+              "value": "Cualquier tiempo pasivo se forma cambiando el verbo 'be' al tiempo correspondiente seguido de V3."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "'Being' para tiempos continuos",
+              "value": "En presente o pasado continuo pasivo NUNCA olvides 'being' (is being built)."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "'Been' para tiempos perfectos",
+              "value": "En presente o pasado perfecto pasivo NUNCA olvides 'been' (has been finished)."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "Agente con 'by'",
+              "value": "Añade 'by + persona/agente' solo si la información sobre quién lo hizo es relevante."
             }
           ]
         }
@@ -199,13 +210,34 @@
   ],
   "quiz": [
     {
-      "q": "The report ___ by Friday.",
+      "q": "The stolen jewels ___ by the local police in an abandoned warehouse.",
       "options": [
-        "must be finished",
-        "must finish"
+        "have been recovered",
+        "have recovered",
+        "were recovering"
       ],
       "answer": 0,
-      "explain": "Obligación pasiva → must be + pp."
+      "explain": "Acción pasiva completada con relevancia presente → presente perfecto pasivo ('have been recovered')."
+    },
+    {
+      "q": "Don't enter that room right now; it ___ painted by the decorators.",
+      "options": [
+        "is being",
+        "is",
+        "has"
+      ],
+      "answer": 0,
+      "explain": "Acción pasiva que ocurre progresivamente en este instante → presente continuo pasivo ('is being')."
+    },
+    {
+      "q": "All applications must ___ before the midnight deadline.",
+      "options": [
+        "be submitted",
+        "submit",
+        "been submitted"
+      ],
+      "answer": 0,
+      "explain": "Voz pasiva con verbo modal → 'modal + be + participio pasado' ('must be submitted')."
     }
   ]
 }

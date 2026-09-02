@@ -1,16 +1,17 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "A1 · Demostrativos",
     "title": "Demostrativos",
     "titleEmphasis": "this, that, these, those",
-    "goal": "Ya puedes señalar cosas cerca o lejos con this/that/these/those."
+    "goal": "Ya puedes señalar cosas cerca o lejos con this, that, these y those."
   },
   "cards": [
     {
       "id": "a1-demostrativos-concept",
       "tag": "Idea central",
       "title": "Demostrativos: qué expresa",
-      "lede": "Ya puedes señalar cosas cerca o lejos con this/that/these/those.",
+      "lede": "Ya puedes señalar cosas cerca o lejos con this, that, these y those.",
       "blocks": [
         {
           "type": "rules",
@@ -55,30 +56,37 @@
       "id": "a1-demostrativos-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "this",
-              "value": "singular cerca · this book",
+              "key": "Singular + Cerca",
+              "value": "This is my key.",
               "highlights": [
-                "this"
+                "This is"
               ]
             },
             {
-              "key": "that",
-              "value": "singular lejos · that car",
+              "key": "Singular + Lejos",
+              "value": "That is your car over there.",
               "highlights": [
-                "that"
+                "That is"
               ]
             },
             {
-              "key": "these",
-              "value": "plural cerca · these shoes",
+              "key": "Plural + Cerca",
+              "value": "These shoes fit me well.",
               "highlights": [
-                "these"
+                "These"
+              ]
+            },
+            {
+              "key": "Plural + Lejos",
+              "value": "Those buildings are very old.",
+              "highlights": [
+                "Those"
               ]
             }
           ]
@@ -89,26 +97,26 @@
       "id": "a1-demostrativos-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "this book"
+              "key": "En una tienda",
+              "value": "How much are these apples in my hand?"
             },
             {
-              "key": "Ejemplo 2",
-              "value": "that car"
+              "key": "Distante",
+              "value": "Look at that bird on top of the tree."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "these shoes"
+              "key": "Presentación",
+              "value": "This is my friend Marco."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "those houses"
+              "key": "Cosas lejanas",
+              "value": "Who owns those bicycles across the street?"
             }
           ]
         }
@@ -118,23 +126,23 @@
       "id": "a1-demostrativos-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "this",
-              "rule": "singular cerca · this book",
+              "label": "This / These (Cerca)",
+              "rule": "Objetos que puedes tocar o muy próximos a ti",
               "examples": [
-                "this book"
+                "This shirt / These books"
               ]
             },
             {
-              "label": "that",
-              "rule": "singular lejos · that car",
+              "label": "That / Those (Lejos)",
+              "rule": "Objetos alejados o en otra ubicación",
               "examples": [
-                "that car"
+                "That star / Those cars"
               ]
             }
           ]
@@ -145,7 +153,7 @@
       "id": "a1-demostrativos-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
@@ -157,7 +165,7 @@
             {
               "variant": "good",
               "text": "These books are new.",
-              "note": "books es plural → these"
+              "note": "books es plural → exige these"
             }
           ]
         }
@@ -166,27 +174,27 @@
     {
       "id": "a1-demostrativos-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "Singular + Cerca",
+              "value": "This (Este / Esta / Esto)"
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "Singular + Lejos",
+              "value": "That (Ese / Aquel / Eso)"
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "Plural + Cerca",
+              "value": "These (Estos / Estas)"
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "Plural + Lejos",
+              "value": "Those (Esos / Aquellos)"
             }
           ]
         }
@@ -199,13 +207,31 @@
   ],
   "quiz": [
     {
-      "q": "Look at ___ flowers over there.",
+      "q": "Can you pass me ___ book on the table over there?",
       "options": [
-        "those",
-        "that"
+        "that",
+        "this"
       ],
       "answer": 0,
-      "explain": "flowers es plural y están lejos → those."
+      "explain": "El libro está lejos ('over there') y es singular, corresponde 'that'."
+    },
+    {
+      "q": "___ keys in my hand belong to the office.",
+      "options": [
+        "These",
+        "This"
+      ],
+      "answer": 0,
+      "explain": "'keys' es plural y están en la mano (cerca), corresponde 'These'."
+    },
+    {
+      "q": "¿Cuál frase es correcta al señalar personas a lo lejos?",
+      "options": [
+        "Those people are waiting.",
+        "This people are waiting."
+      ],
+      "answer": 0,
+      "explain": "'people' es sustantivo plural y están alejados → 'Those'."
     }
   ]
 }

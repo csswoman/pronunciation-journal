@@ -84,7 +84,7 @@ export default function SoundMicroQuiz({ category, resetKey }: Props) {
     <div className="mt-1 flex flex-col gap-3 rounded-xl border border-border-default bg-surface-base p-4 shadow-xs transition-all">
       <div className="flex items-center justify-between text-caption">
         <span className="font-mono text-tiny font-semibold uppercase text-fg-subtle">
-          Micro-reto: ¿Cuál de los dos suena?
+          Micro-reto: ¿Cuál escuchaste?
         </span>
         <button
           type="button"
@@ -130,7 +130,7 @@ export default function SoundMicroQuiz({ category, resetKey }: Props) {
           type="button"
           onClick={() => handleSelectAnswer(currentQuiz.phoneme)}
           className={cn(
-            'focus-ring relative flex flex-col items-center justify-center rounded-lg border p-2.5 transition-all duration-150 text-center active:scale-95',
+            'focus-ring relative flex min-h-12 flex-col items-center justify-center rounded-lg border p-2.5 transition-all duration-150 text-center active:scale-95',
             selectedAnswer === currentQuiz.phoneme
               ? 'border-success bg-success-soft text-success shadow-xs ring-2 ring-success/30 scale-[1.02]'
               : 'border-border-subtle bg-surface-sunken text-fg hover:border-border-default hover:bg-surface-raised hover:shadow-2xs',
@@ -147,7 +147,7 @@ export default function SoundMicroQuiz({ category, resetKey }: Props) {
           type="button"
           onClick={() => handleSelectAnswer(currentQuiz.distractorPhoneme)}
           className={cn(
-            'focus-ring relative flex flex-col items-center justify-center rounded-lg border p-2.5 transition-all duration-150 text-center active:scale-95',
+            'focus-ring relative flex min-h-12 flex-col items-center justify-center rounded-lg border p-2.5 transition-all duration-150 text-center active:scale-95',
             selectedAnswer === currentQuiz.distractorPhoneme
               ? 'border-warning bg-warning-soft text-warning shadow-xs ring-2 ring-warning/30 scale-[1.02]'
               : 'border-border-subtle bg-surface-sunken text-fg hover:border-border-default hover:bg-surface-raised hover:shadow-2xs',

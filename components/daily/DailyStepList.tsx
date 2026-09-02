@@ -8,7 +8,7 @@
 // </DailyStepList>
 
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
-import { ArrowRight, Check } from "@/components/icons"
+import { ArrowRight, Check, ChevronDown } from "@/components/icons"
 import { DailyStepTitle } from './DailyStepTitle'
 import { DailyThreadStrip } from './DailyThreadStrip'
 import type { DailyStepStatus } from '@/hooks/useDailyPlan'
@@ -98,7 +98,7 @@ export default function DailyStepList({
     return true
   }
   const isHiddenRow = (status: DailyStepStatus, isEntryOrCurrent: boolean): boolean => {
-    if (!collapseFutureSteps || showAllCompact) return false
+    if (!collapseFutureSteps || showAllCompact || steps.length <= 5) return false
     if (isEntryOrCurrent) return false
     if (status === 'done' || status === 'resolved') return false
     if (visiblePendingCompactBudget > 0) {
@@ -171,7 +171,7 @@ export default function DailyStepList({
             visual === 'entry' &&
               (demoteEntryHighlight
                 ? 'border border-border-default bg-surface-raised hover:border-border-default'
-                : 'border border-primary/40 bg-primary/10 text-fg'),
+                : 'border border-border-default bg-surface-raised hover:border-primary/40 text-fg'),
             visual === 'current' &&
               'border border-primary/40 bg-primary/10 text-fg',
             visual === 'pending' &&
@@ -181,11 +181,12 @@ export default function DailyStepList({
           )
 
           const localizedSubtitle = localizeDailyStepSubtitle(step.subtitle)
+          const stepMetaText = stepMeta(step)
           const stepNumber = (
             <span
               className={cn(
                 "font-mono text-body-sm font-medium w-4 shrink-0 select-none",
-                visual === 'entry' || visual === 'current' ? 'text-primary font-bold' : 'text-fg-muted/60'
+                visual === 'entry' || visual === 'current' ? 'text-primary font-bold' : 'text-fg-muted'
               )}
             >
               {i + 1}
@@ -218,7 +219,7 @@ export default function DailyStepList({
                   Hecho
                 </span>
               ) : (
-                <span className="shrink-0 font-caption tabular-nums text-fg-muted">
+                <span className="w-16 shrink-0 text-right font-caption tabular-nums text-fg-muted">
                   {step.estMinutes} min
                 </span>
               )}
@@ -233,42 +234,50 @@ export default function DailyStepList({
                     ipa={step.ipa}
                     muted={done}
                   />
-                  <p
-                    className={cn(
-                      'mt-0.5 truncate font-body-sm',
-                      done
-                        ? 'text-fg-subtle'
-                        : isEntryOrCurrent
-                          ? 'text-fg font-medium'
-                          : 'text-fg-muted',
-                    )}
-                  >
-                    {[localizedSubtitle, stepMeta(step)]
-                      .filter(Boolean)
-                      .join(' · ')}
-                  </p>
+                  {(localizedSubtitle || stepMetaText) ? (
+                    <p
+                      className={cn(
+                        'mt-0.5 truncate font-body-sm',
+                        done
+                          ? 'text-fg-muted'
+                          : isEntryOrCurrent
+                            ? 'text-fg font-medium'
+                            : 'text-fg-muted',
+                      )}
+                    >
+                      {[localizedSubtitle, stepMetaText]
+                        .filter(Boolean)
+                        .join(' · ')}
+                    </p>
+                  ) : null}
                 </div>
               </div>
               {done ? (
-                <span
-                  className={cn(
-                    "animate-state-in inline-flex shrink-0 items-center gap-1 rounded-md bg-accent-2-soft px-2.5 py-1 font-caption font-semibold text-accent-2",
-                    justCompleted && "success-pulse",
-                  )}
-                >
-                  <Check size={16} aria-hidden />
-                  Hecho
-                </span>
-              ) : isEntryOrCurrent ? (
-                <ArrowRight
-                  size={18}
-                  className="shrink-0 text-primary transition-transform duration-150 group-hover:translate-x-0.5"
-                />
+                <div className="flex shrink-0 items-center gap-2.5">
+                  <span
+                    className={cn(
+                      "animate-state-in inline-flex items-center gap-1 rounded-md bg-accent-2-soft px-2.5 py-1 font-caption font-semibold text-accent-2",
+                      justCompleted && "success-pulse",
+                    )}
+                  >
+                    <Check size={16} aria-hidden />
+                    Hecho
+                  </span>
+                  <span className="w-6 shrink-0" aria-hidden />
+                </div>
               ) : (
-                <ArrowRight
-                  size={18}
-                  className="shrink-0 text-fg-muted transition-colors duration-150 group-hover:translate-x-0.5 group-hover:text-primary"
-                />
+                <div className="flex shrink-0 items-center gap-2.5">
+                  <span className="w-16 text-right font-caption tabular-nums text-fg-muted">
+                    {step.estMinutes} min
+                  </span>
+                  <ArrowRight
+                    size={18}
+                    className={cn(
+                      "w-6 shrink-0 transition-transform duration-150 group-hover:translate-x-0.5",
+                      isEntryOrCurrent ? "text-primary" : "text-fg-muted group-hover:text-primary"
+                    )}
+                  />
+                </div>
               )}
             </div>
           )
@@ -300,13 +309,15 @@ export default function DailyStepList({
       {collapseFutureSteps && !showAllCompact && hiddenCount > 0 ? (
         <button
           type="button"
-          className="press-feedback focus-ring inline-flex items-center gap-1 self-start pt-1 font-body-sm font-medium text-fg-muted transition-colors hover:text-fg"
+          aria-expanded={false}
+          className="press-feedback focus-ring -mx-1.5 inline-flex min-h-11 items-center gap-1.5 self-start rounded-lg px-1.5 font-body-sm font-medium text-fg-muted transition-colors hover:bg-surface-sunken/70 hover:text-fg"
           onClick={() => {
             playUiCue('nav-open')
             setShowAllCompact(true)
           }}
         >
-          + {hiddenCount} {hiddenCount === 1 ? 'paso más' : 'pasos más'}
+          <ChevronDown size={16} aria-hidden />
+          Ver {hiddenCount} {hiddenCount === 1 ? 'paso más' : 'pasos más'}
         </button>
       ) : null}
       {threadHints.length > 0 && !hideThreadHints ? (

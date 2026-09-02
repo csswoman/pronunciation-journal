@@ -14,10 +14,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "and", "value": "suma · tea and coffee", "highlights": ["and"] },
-            { "key": "but", "value": "contraste · cheap but good", "highlights": ["but"] },
-            { "key": "or", "value": "opción · tea or coffee?", "highlights": ["or"] },
-            { "key": "so", "value": "resultado · I was tired, so I slept.", "highlights": ["so"] }
+            {
+              "key": "and",
+              "value": "suma · tea and coffee",
+              "highlights": [
+                "and"
+              ]
+            },
+            {
+              "key": "but",
+              "value": "contraste · cheap but good",
+              "highlights": [
+                "but"
+              ]
+            },
+            {
+              "key": "or",
+              "value": "opción · tea or coffee?",
+              "highlights": [
+                "or"
+              ]
+            },
+            {
+              "key": "so",
+              "value": "resultado · I was tired, so I slept.",
+              "highlights": [
+                "so"
+              ]
+            }
           ]
         }
       ]
@@ -31,9 +55,21 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "good", "text": "I stayed home because it rained.", "note": "razón después" },
-            { "variant": "good", "text": "It rained, so I stayed home.", "note": "resultado después" },
-            { "variant": "bad", "text": "Because it rained, so I stayed home.", "note": "no se usan juntas" }
+            {
+              "variant": "good",
+              "text": "I stayed home because it rained.",
+              "note": "razón después"
+            },
+            {
+              "variant": "good",
+              "text": "It rained, so I stayed home.",
+              "note": "resultado después"
+            },
+            {
+              "variant": "bad",
+              "text": "Because it rained, so I stayed home.",
+              "note": "no se usan juntas"
+            }
           ]
         }
       ],
@@ -51,9 +87,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "when", "value": "When I arrived, she left.", "highlights": ["When"] },
-            { "key": "before / after", "value": "Brush your teeth before bed.", "highlights": ["before"] },
-            { "key": "while", "value": "I read while I wait.", "highlights": ["while"] }
+            {
+              "key": "when",
+              "value": "When I arrived, she left.",
+              "highlights": [
+                "When"
+              ]
+            },
+            {
+              "key": "before / after",
+              "value": "Brush your teeth before bed.",
+              "highlights": [
+                "before"
+              ]
+            },
+            {
+              "key": "while",
+              "value": "I read while I wait.",
+              "highlights": [
+                "while"
+              ]
+            }
           ]
         }
       ]
@@ -67,9 +121,28 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "want / need + to", "value": "I want to go. · I need to rest.", "highlights": ["to go"] },
-            { "key": "enjoy / finish + -ing", "value": "I enjoy reading.", "highlights": ["reading"] },
-            { "key": "like + ambos", "value": "I like to cook / cooking.", "highlights": ["to cook", "cooking"] }
+            {
+              "key": "want / need + to",
+              "value": "I want to go. · I need to rest.",
+              "highlights": [
+                "to go"
+              ]
+            },
+            {
+              "key": "enjoy / finish + -ing",
+              "value": "I enjoy reading.",
+              "highlights": [
+                "reading"
+              ]
+            },
+            {
+              "key": "like + ambos",
+              "value": "I like to cook / cooking.",
+              "highlights": [
+                "to cook",
+                "cooking"
+              ]
+            }
           ]
         }
       ],
@@ -87,9 +160,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "get up", "value": "levantarse · I get up at 7.", "highlights": ["get up"] },
-            { "key": "turn on / off", "value": "encender / apagar", "highlights": ["turn on"] },
-            { "key": "look for", "value": "buscar · I'm looking for my keys.", "highlights": ["look for"] }
+            {
+              "key": "get up",
+              "value": "levantarse · I get up at 7.",
+              "highlights": [
+                "get up"
+              ]
+            },
+            {
+              "key": "turn on / off",
+              "value": "encender / apagar",
+              "highlights": [
+                "turn on"
+              ]
+            },
+            {
+              "key": "look for",
+              "value": "buscar · I'm looking for my keys.",
+              "highlights": [
+                "look for"
+              ]
+            }
           ]
         }
       ]
@@ -102,16 +193,78 @@
       "blocks": [
         {
           "type": "verb-table",
-          "headers": ["Base", "Pasado", "Participio", "Español"],
+          "headers": [
+            "Base",
+            "Pasado",
+            "Participio",
+            "Español"
+          ],
           "rows": [
-            ["go", "went", "gone", "ir"],
-            ["have", "had", "had", "tener"],
-            ["make", "made", "made", "hacer"],
-            ["take", "took", "taken", "tomar"],
-            ["see", "saw", "seen", "ver"]
+            [
+              "go",
+              "went",
+              "gone",
+              "ir"
+            ],
+            [
+              "have",
+              "had",
+              "had",
+              "tener"
+            ],
+            [
+              "make",
+              "made",
+              "made",
+              "hacer"
+            ],
+            [
+              "take",
+              "took",
+              "taken",
+              "tomar"
+            ],
+            [
+              "see",
+              "saw",
+              "seen",
+              "ver"
+            ]
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "I stayed at home ___ it was raining heavily outside.",
+      "options": [
+        "because",
+        "so",
+        "but"
+      ],
+      "answer": 0,
+      "explain": "'because' introduce la causa o razón de la acción principal."
+    },
+    {
+      "q": "She was very tired, ___ she finished the entire report before midnight.",
+      "options": [
+        "but",
+        "so",
+        "because"
+      ],
+      "answer": 0,
+      "explain": "'but' establece un contraste entre el cansancio y el logro de terminar el informe."
+    },
+    {
+      "q": "It started to snow, ___ we opened our umbrellas.",
+      "options": [
+        "so",
+        "because",
+        "although"
+      ],
+      "answer": 0,
+      "explain": "'so' expresa la consecuencia o resultado de la primera situación."
     }
   ]
 }

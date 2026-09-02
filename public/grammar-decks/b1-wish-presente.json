@@ -1,46 +1,47 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "B1 · Wish",
     "title": "Wish + pasado",
     "titleEmphasis": "simple",
-    "goal": "Ya lamentas situaciones presentes con I wish + pasado simple."
+    "goal": "Ya expresas deseos o lamentos sobre situaciones presentes deseadas con I wish / If only + pasado simple."
   },
   "cards": [
     {
       "id": "b1-wish-presente-concept",
       "tag": "Idea central",
       "title": "Wish + pasado: qué expresa",
-      "lede": "Ya lamentas situaciones presentes con I wish + pasado simple.",
+      "lede": "Ya expresas deseos o lamentos sobre situaciones presentes deseadas con I wish / If only + pasado simple.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
               "key": "Presente irreal",
-              "value": "I wish I had more time.",
+              "value": "I wish + sujeto + pasado simple · I wish I had a car.",
               "highlights": [
                 "had"
               ]
             },
             {
-              "key": "Estado",
-              "value": "I wish I lived closer.",
+              "key": "Estados deseadas",
+              "value": "I wish I lived in a warmer country.",
               "highlights": [
                 "lived"
               ]
             },
             {
-              "key": "were",
-              "value": "I wish it were warmer. · todas las personas",
+              "key": "Uso de 'were'",
+              "value": "I wish I were taller / I wish it were summer",
               "highlights": [
                 "were"
               ]
             },
             {
-              "key": "Contraste",
-              "value": "I don't have time → I wish I had time.",
+              "key": "Capacidad",
+              "value": "I wish I could speak fluent German.",
               "highlights": [
-                "wish"
+                "could"
               ]
             }
           ]
@@ -55,30 +56,30 @@
       "id": "b1-wish-presente-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Presente irreal",
-              "value": "I wish I had more time.",
+              "key": "Afirmativa (Tener/Estar)",
+              "value": "I wish + sujeto + pasado simple · I wish I knew his telephone number.",
               "highlights": [
-                "had"
+                "I wish I knew"
               ]
             },
             {
-              "key": "Estado",
-              "value": "I wish I lived closer.",
+              "key": "Negativa",
+              "value": "I wish + sujeto + didn't + verbo base · I wish I didn't have to work on Saturday.",
               "highlights": [
-                "lived"
+                "didn't have"
               ]
             },
             {
-              "key": "were",
-              "value": "I wish it were warmer. · todas las personas",
+              "key": "Poder / Capacidad",
+              "value": "I wish + sujeto + could + verbo base · I wish we could travel more often.",
               "highlights": [
-                "were"
+                "could travel"
               ]
             }
           ]
@@ -89,26 +90,26 @@
       "id": "b1-wish-presente-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "I wish I had more time."
+              "key": "Vivienda y clima",
+              "value": "I wish I lived closer to the beach so I could swim every morning."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "I wish I lived closer."
+              "key": "Economía personal",
+              "value": "I wish I didn't have to pay so much rent for this apartment."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "todas las personas"
+              "key": "Habilidades",
+              "value": "I wish I could play the guitar like a professional musician."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "I don't have time → I wish I had time."
+              "key": "Trabajo",
+              "value": "I wish my job were less stressful during peak season."
             }
           ]
         }
@@ -118,23 +119,23 @@
       "id": "b1-wish-presente-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "Presente irreal",
-              "rule": "I wish I had more time.",
+              "label": "Hope + Presente",
+              "rule": "Expresa un deseo real, posible y alcanzable para el futuro",
               "examples": [
-                "I wish I had more time."
+                "I hope I pass the exam tomorrow."
               ]
             },
             {
-              "label": "Estado",
-              "rule": "I wish I lived closer.",
+              "label": "Wish + Pasado",
+              "rule": "Expresa una situación hipotética o lamento sobre una realidad presente insatisfactoria",
               "examples": [
-                "I wish I lived closer."
+                "I wish I passed all my exams without studying."
               ]
             }
           ]
@@ -145,19 +146,19 @@
       "id": "b1-wish-presente-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "I wish I have more money."
+              "text": "I wish I have more free time this week."
             },
             {
               "variant": "good",
-              "text": "I wish I had more money.",
-              "note": "wish + pasado para presente irreal"
+              "text": "I wish I had more free time this week.",
+              "note": "'wish' requiere pasado simple para indicar un deseo sobre el presente"
             }
           ]
         }
@@ -166,27 +167,27 @@
     {
       "id": "b1-wish-presente-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "Pasado = Presente irreal",
+              "value": "Aunque el verbo va en pasado (had, lived), te refieres al presente actual."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "Wish + could",
+              "value": "Usa 'could' para deseos sobre habilidades o posibilidades (I wish I could fly)."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "Wish + were",
+              "value": "En inglés formal se prefiere 'I wish I were' a 'I wish I was'."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "No confundas Wish con Hope",
+              "value": "Usa 'hope' para eventos probables del futuro."
             }
           ]
         }
@@ -199,13 +200,34 @@
   ],
   "quiz": [
     {
-      "q": "I wish I ___ speak French.",
+      "q": "I'm stuck in traffic. I wish I ___ by train today.",
       "options": [
-        "could",
-        "can"
+        "were travelling",
+        "am travelling",
+        "will travel"
       ],
       "answer": 0,
-      "explain": "Deseo sobre el presente → pasado modal."
+      "explain": "Deseo o lamento sobre una acción presente en curso → 'wish + pasado continuo'."
+    },
+    {
+      "q": "I wish I ___ speak French as fluently as you.",
+      "options": [
+        "could",
+        "can",
+        "would can"
+      ],
+      "answer": 0,
+      "explain": "Deseo sobre una habilidad o posibilidad actual → 'wish + could'."
+    },
+    {
+      "q": "If only it ___ so cold outside today!",
+      "options": [
+        "were not",
+        "is not",
+        "will not be"
+      ],
+      "answer": 0,
+      "explain": "'If only' sigue las mismas reglas que 'wish' exigiendo el pasado hipotético."
     }
   ]
 }

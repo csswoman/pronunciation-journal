@@ -28,8 +28,7 @@ function primaryTarget(wordsDueCount: number, soundsDueCount: number): {
 }
 
 /**
- * Full-width strip above the plan grid — never nested inside the daily card.
- * When review is due it owns the single solid hue-base CTA for the view.
+ * Consolidation of review actions. Embedded directly in the Daily Card to maintain hierarchy.
  */
 export default function HomeReviewBanner({
   wordsDueCount = 0,
@@ -53,7 +52,7 @@ export default function HomeReviewBanner({
       : null;
 
   return (
-    <div className="flex flex-col gap-3 rounded-xl border border-border-subtle bg-primary-soft/40 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-5">
+    <div className="flex flex-col gap-3 pb-4 mb-4 border-b border-border-subtle sm:flex-row sm:items-center sm:justify-between">
       <div className="min-w-0 flex flex-col gap-0.5">
         <p className="font-label font-semibold text-fg">Te toca repasar</p>
       </div>

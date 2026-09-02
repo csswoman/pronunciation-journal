@@ -12,7 +12,7 @@
 
 import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
-import { AlertCircle, Check, HelpCircle } from "@/components/icons";
+import { AlertCircle, Check, HelpCircle, Pencil } from "@/components/icons";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { db } from "@/lib/db";
 import { saveManualConceptSignal } from "@/lib/learning-focus/queries";
@@ -42,6 +42,7 @@ export default function ConceptFeedbackSelector({
     user = null;
   }
   const [saving, setSaving] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const currentSignal = useLiveQuery(
     async () => {
@@ -77,6 +78,7 @@ export default function ConceptFeedbackSelector({
         },
         option,
       );
+      setIsEditing(false);
     } finally {
       setSaving(false);
     }
@@ -108,10 +110,48 @@ export default function ConceptFeedbackSelector({
     },
   ];
 
+  const selectedOptionItem = options.find((o) => o.id === selectedOption);
+  const isCollapsed = Boolean(selectedOption) && !isEditing;
+
+  if (isCollapsed && selectedOptionItem) {
+    const Icon = selectedOptionItem.icon;
+    return (
+      <div
+        className={cn(
+          "flex items-center justify-between gap-3 rounded-xl border border-border-default bg-surface-raised px-4 py-2.5 transition-all duration-300 ease-in-out shadow-xs",
+          className,
+        )}
+      >
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="font-caption text-body-sm font-medium text-fg-muted">
+            ¿Cómo sientes este tema?
+          </span>
+          <span
+            className={cn(
+              "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-caption font-semibold transition-all",
+              selectedOptionItem.selectedClass,
+            )}
+          >
+            <Icon size={13} className="shrink-0" aria-hidden />
+            <span>{selectedOptionItem.label}</span>
+          </span>
+        </div>
+        <button
+          type="button"
+          onClick={() => setIsEditing(true)}
+          className="focus-ring inline-flex items-center gap-1 rounded-md px-2 py-1 text-caption font-medium text-primary hover:bg-primary-soft/50 hover:underline transition-colors"
+        >
+          <Pencil size={12} className="shrink-0" aria-hidden />
+          <span>Cambiar</span>
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div
       className={cn(
-        "flex flex-col gap-2 rounded-xl border border-border-default bg-surface-raised p-3.5",
+        "flex flex-col gap-2.5 rounded-xl border border-border-default bg-surface-raised p-3.5 transition-all duration-300 ease-in-out",
         className,
       )}
     >
@@ -125,7 +165,9 @@ export default function ConceptFeedbackSelector({
       </div>
       <div
         className={cn(
-          "grid grid-cols-3 gap-2",
+          // Full-width stack on phones so labels never truncate ("Necesito
+          // ayuda" + icon needs ~150px); 3-up row only at tablet width.
+          "grid grid-cols-1 gap-2 sm:grid-cols-3",
           compact ? "text-xs" : "text-sm",
         )}
         role="group"
@@ -141,14 +183,16 @@ export default function ConceptFeedbackSelector({
               disabled={!user || saving}
               aria-pressed={isSelected}
               className={cn(
-                "focus-ring flex min-h-10 items-center justify-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-center transition-colors",
+                // Stacked (1-col) rows read left-aligned like a list; the 3-up
+                // row re-centers. min-h-11 keeps a comfortable touch target.
+                "focus-ring flex min-h-11 items-center justify-start gap-1.5 rounded-lg border px-3 py-2 transition-all duration-200 sm:min-h-10 sm:justify-center sm:px-2.5 sm:py-1.5 sm:text-center",
                 isSelected
                   ? selectedClass
                   : "border-border-default bg-surface hover:bg-surface-sunken text-fg-muted hover:text-fg",
               )}
             >
               <Icon size={14} className="shrink-0" aria-hidden />
-              <span className="truncate">{label}</span>
+              <span className="whitespace-nowrap">{label}</span>
             </button>
           );
         })}
@@ -156,3 +200,4 @@ export default function ConceptFeedbackSelector({
     </div>
   );
 }
+

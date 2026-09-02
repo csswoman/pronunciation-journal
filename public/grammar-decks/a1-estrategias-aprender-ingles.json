@@ -17,12 +17,20 @@
             {
               "label": "Te frena",
               "rule": "miedo al error",
-              "examples": ["Espero a hablar perfecto", "Solo estudio reglas", "Me da vergüenza"]
+              "examples": [
+                "Espero a hablar perfecto",
+                "Solo estudio reglas",
+                "Me da vergüenza"
+              ]
             },
             {
               "label": "Te impulsa",
               "rule": "práctica con errores",
-              "examples": ["Hablo desde hoy", "Uso lo poco que sé", "Pido que me corrijan"]
+              "examples": [
+                "Hablo desde hoy",
+                "Uso lo poco que sé",
+                "Pido que me corrijan"
+              ]
             }
           ]
         }
@@ -41,9 +49,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "15 min al día", "value": "supera 3 horas de un solo día", "highlights": ["15 min al día"] },
-            { "key": "Misma hora", "value": "crea un hábito automático (después del café)", "highlights": ["hábito"] },
-            { "key": "Racha", "value": "no rompas la cadena dos días seguidos", "highlights": ["la cadena"] }
+            {
+              "key": "15 min al día",
+              "value": "supera 3 horas de un solo día",
+              "highlights": [
+                "15 min al día"
+              ]
+            },
+            {
+              "key": "Misma hora",
+              "value": "crea un hábito automático (después del café)",
+              "highlights": [
+                "hábito"
+              ]
+            },
+            {
+              "key": "Racha",
+              "value": "no rompas la cadena dos días seguidos",
+              "highlights": [
+                "la cadena"
+              ]
+            }
           ]
         }
       ],
@@ -61,9 +87,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Comprensible", "value": "entiendes ~80%: ni muy fácil ni imposible", "highlights": ["~80%"] },
-            { "key": "Que te guste", "value": "series, canciones, podcasts de tus temas", "highlights": ["te guste"] },
-            { "key": "Repetido", "value": "vuelve al mismo episodio: cada vez pillas más", "highlights": ["mismo episodio"] }
+            {
+              "key": "Comprensible",
+              "value": "entiendes ~80%: ni muy fácil ni imposible",
+              "highlights": [
+                "~80%"
+              ]
+            },
+            {
+              "key": "Que te guste",
+              "value": "series, canciones, podcasts de tus temas",
+              "highlights": [
+                "te guste"
+              ]
+            },
+            {
+              "key": "Repetido",
+              "value": "vuelve al mismo episodio: cada vez pillas más",
+              "highlights": [
+                "mismo episodio"
+              ]
+            }
           ]
         }
       ]
@@ -77,8 +121,20 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Repetición espaciada", "value": "repasa flashcards justo antes de olvidarlas", "highlights": ["antes de olvidarlas"] },
-            { "key": "Shadowing", "value": "repite en voz alta a la vez que el audio, imitando el ritmo", "highlights": ["en voz alta"] }
+            {
+              "key": "Repetición espaciada",
+              "value": "repasa flashcards justo antes de olvidarlas",
+              "highlights": [
+                "antes de olvidarlas"
+              ]
+            },
+            {
+              "key": "Shadowing",
+              "value": "repite en voz alta a la vez que el audio, imitando el ritmo",
+              "highlights": [
+                "en voz alta"
+              ]
+            }
           ]
         }
       ],
@@ -96,9 +152,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "El teléfono", "value": "ponlo en inglés: ves palabras útiles cada día", "highlights": ["en inglés"] },
-            { "key": "Subtítulos", "value": "en inglés, no en español, para asociar sonido y texto", "highlights": ["en inglés"] },
-            { "key": "Etiquetas", "value": "nombra objetos de tu casa en inglés", "highlights": ["nombra objetos"] }
+            {
+              "key": "El teléfono",
+              "value": "ponlo en inglés: ves palabras útiles cada día",
+              "highlights": [
+                "en inglés"
+              ]
+            },
+            {
+              "key": "Subtítulos",
+              "value": "en inglés, no en español, para asociar sonido y texto",
+              "highlights": [
+                "en inglés"
+              ]
+            },
+            {
+              "key": "Etiquetas",
+              "value": "nombra objetos de tu casa en inglés",
+              "highlights": [
+                "nombra objetos"
+              ]
+            }
           ]
         }
       ]
@@ -112,10 +186,24 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "bad", "text": "Quiero aprender inglés." },
-            { "variant": "good", "text": "Voy a estudiar 15 min cada mañana este mes.", "note": "medible y con plazo" },
-            { "variant": "bad", "text": "Voy a ver muchas series." },
-            { "variant": "good", "text": "Veo un episodio con subtítulos en inglés a la semana.", "note": "concreto" }
+            {
+              "variant": "bad",
+              "text": "Quiero aprender inglés."
+            },
+            {
+              "variant": "good",
+              "text": "Voy a estudiar 15 min cada mañana este mes.",
+              "note": "medible y con plazo"
+            },
+            {
+              "variant": "bad",
+              "text": "Voy a ver muchas series."
+            },
+            {
+              "variant": "good",
+              "text": "Veo un episodio con subtítulos en inglés a la semana.",
+              "note": "concreto"
+            }
           ]
         }
       ],
@@ -123,6 +211,35 @@
         "label": "Mídelo:",
         "body": "una meta sirve si puedes responder sí o no a si la cumpliste hoy."
       }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "¿Cuál es la mejor práctica para consolidar vocabulario nuevo?",
+      "options": [
+        "Usar las palabras en oraciones personales y repasarlas a diario.",
+        "Memorizar listas aisladas una sola vez."
+      ],
+      "answer": 0,
+      "explain": "Crear frases propias y repasar de forma espaciada consolida la memoria a largo plazo."
+    },
+    {
+      "q": "¿Qué hacer si cometes un error al hablar?",
+      "options": [
+        "Corregir si es posible y seguir comunicándote sin miedo.",
+        "Dejar de hablar inglés."
+      ],
+      "answer": 0,
+      "explain": "Los errores son parte natural del aprendizaje; mantener la fluidez y aprender del error es clave."
+    },
+    {
+      "q": "¿Cuál de estas actividades ayuda más a mejorar la comprensión auditiva?",
+      "options": [
+        "Escuchar audios cortos repetidamente y seguir la transcripción.",
+        "Escuchar podcasts avanzados sin entender nada."
+      ],
+      "answer": 0,
+      "explain": "Escuchar audios adecuados a tu nivel con transcripción ayuda a asociar sonido y grafía."
     }
   ]
 }

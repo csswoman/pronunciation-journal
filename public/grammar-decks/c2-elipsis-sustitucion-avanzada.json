@@ -1,46 +1,48 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "C2 · Cohesión",
     "title": "Elipsis y sustitución",
     "titleEmphasis": "avanzadas",
-    "goal": "Ya comprimes el discurso con elipsis sofisticada y sustitución con do so, not y one/ones en textos densos."
+    "goal": "Comprime textos densos omitiendo elementos redundantes (elipsis) o reemplazando cláusulas enteras con 'do so', 'so/not' y 'one/ones'."
   },
   "cards": [
     {
       "id": "c2-elipsis-sustitucion-avanzada-concept",
       "tag": "Idea central",
       "title": "Elipsis y sustitución: qué expresa",
-      "lede": "Ya comprimes el discurso con elipsis sofisticada y sustitución con do so, not y one/ones en textos densos.",
+      "lede": "Comprime textos densos omitiendo elementos redundantes (elipsis) o reemplazando cláusulas enteras con 'do so', 'so/not' y 'one/ones'.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Elipsis verbal",
-              "value": "A: Will you attend? B: I might. (= might attend)",
+              "key": "Sustitución verbal (do so)",
+              "value": "The board pledged to reduce carbon emissions and has already done so.",
               "highlights": [
-                "might"
+                "done so"
               ]
             },
             {
-              "key": "do so",
-              "value": "The firm may restructure if required to do so.",
+              "key": "Sustitución de cláusula (so/not)",
+              "value": "Will market conditions improve? Analysts hope so, but fear not.",
               "highlights": [
-                "do so"
+                "hope so",
+                "fear not"
               ]
             },
             {
-              "key": "not",
-              "value": "Will it succeed? I hope not.",
+              "key": "Elipsis verbal acumulativa",
+              "value": "Some experts predicted immediate growth; others, prolonged stagnation.",
               "highlights": [
-                "not"
+                "others, prolonged"
               ]
             },
             {
-              "key": "Economía",
-              "value": "evita repetir cláusulas completas con elegancia",
+              "key": "Sustitución nominal (one/ones)",
+              "value": "The old regulations were restrictive, but the new ones are flexible.",
               "highlights": [
-                "do so"
+                "new ones"
               ]
             }
           ]
@@ -55,30 +57,30 @@
       "id": "c2-elipsis-sustitucion-avanzada-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Elipsis verbal",
-              "value": "A: Will you attend? B: I might. (= might attend)",
+              "key": "Afirmativa (do so)",
+              "value": "Sujeto + aux + do so (en el tiempo verbal correspondiente) · She was asked to speak and did so.",
               "highlights": [
-                "might"
+                "did so"
               ]
             },
             {
-              "key": "do so",
-              "value": "The firm may restructure if required to do so.",
+              "key": "Negativa (not por cláusula)",
+              "value": "Is there any risk of insolvency? I believe not.",
               "highlights": [
-                "do so"
+                "believe not"
               ]
             },
             {
-              "key": "not",
-              "value": "Will it succeed? I hope not.",
+              "key": "Elipsis de infinitivo (to)",
+              "value": "You don't have to complete the survey unless you want to.",
               "highlights": [
-                "not"
+                "want to"
               ]
             }
           ]
@@ -89,26 +91,26 @@
       "id": "c2-elipsis-sustitucion-avanzada-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "A: Will you attend? B: I might. (= might attend)"
+              "key": "Análisis corporativo",
+              "value": "Companies that fail to digitize will struggle; those that do so will thrive."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "The firm may restructure if required to do so."
+              "key": "Pronósticos de mercado",
+              "value": "Will inflation stabilize by Q3? Senior economists certainly hope so."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "Will it succeed? I hope not."
+              "key": "Debates de política",
+              "value": "Primary sources provide raw data; secondary ones, interpretation."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "evita repetir cláusulas completas con elegancia"
+              "key": "Comunicación concisa",
+              "value": "You may decline the offer if you wish to."
             }
           ]
         }
@@ -118,23 +120,23 @@
       "id": "c2-elipsis-sustitucion-avanzada-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "Elipsis verbal",
-              "rule": "A: Will you attend? B: I might. (= might attend)",
+              "label": "Do so vs. Do it",
+              "rule": "'Do so' reemplaza acciones delimitadas en registro formal; 'Do it' es más concreto e informal",
               "examples": [
-                "A: Will you attend? B: I might. (= might attend)"
+                "Employees are required to register and must do so online."
               ]
             },
             {
-              "label": "do so",
-              "rule": "The firm may restructure if required to do so.",
+              "label": "Elipsis vs. Repetición",
+              "rule": "La elipsis elimina palabras innecesarias sin perder claridad ni significado",
               "examples": [
-                "The firm may restructure if required to do so."
+                "She can manage the team better than he can [manage the team]."
               ]
             }
           ]
@@ -145,19 +147,19 @@
       "id": "c2-elipsis-sustitucion-avanzada-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "I hope no."
+              "text": "Will the stock rise? I hope no."
             },
             {
               "variant": "good",
-              "text": "I hope not.",
-              "note": "not sustituye la cláusula negativa completa"
+              "text": "Will the stock rise? I hope not.",
+              "note": "'Not' sustituye a toda la cláusula subordinada negativa que sigue a verbos de opinión/deseo."
             }
           ]
         }
@@ -166,27 +168,27 @@
     {
       "id": "c2-elipsis-sustitucion-avanzada-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "1. 'Do so' mantiene concordancia",
+              "value": "Ajusta la forma de 'do' según el tiempo gramatical ('did so', 'has done so', 'doing so')."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "2. 'Hope not' vs 'Don't hope so'",
+              "value": "Di 'I hope not' / 'I suspect not' en lugar de 'I don't hope so'."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "3. Coma elíptica",
+              "value": "En textos formales, la coma reemplaza a un verbo omitido ('John studied law; Mary, medicine')."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "4. Infinitivos elípticos",
+              "value": "Puedes terminar la frase en la partícula 'to' si el verbo es evidente."
             }
           ]
         }
@@ -199,13 +201,37 @@
   ],
   "quiz": [
     {
-      "q": "The board may vote; shareholders are expected to do ___.",
+      "q": "The company intended to expand into Asia, but lacked the resources to ___.",
       "options": [
-        "so",
-        "it"
+        "do so",
+        "do it so",
+        "make so",
+        "doing so"
       ],
       "answer": 0,
-      "explain": "do so recupera la acción vote."
+      "explain": "'Do so' sustituye formalmente a la acción 'expand into Asia'."
+    },
+    {
+      "q": "Are there any hidden fees associated with this account? — I trust ___.",
+      "options": [
+        "not",
+        "no",
+        "don't",
+        "none"
+      ],
+      "answer": 0,
+      "explain": "'I trust not' sustituye a la cláusula negativa 'that there are no hidden fees'."
+    },
+    {
+      "q": "¿Qué opción demuestra una elipsis verbal elegante?",
+      "options": [
+        "The director advocated expansion; the CFO, cost retention.",
+        "The director advocated expansion; the CFO advocated cost retention.",
+        "The director advocated expansion; the CFO did so cost retention.",
+        "The director advocated expansion; the CFO advocated it."
+      ],
+      "answer": 0,
+      "explain": "La coma sustituye la repetición del verbo 'advocated'."
     }
   ]
 }

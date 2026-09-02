@@ -1,0 +1,24 @@
+{
+  "id": 66,
+  "slug": "better-listening-weak-forms",
+  "level": "intermediate",
+  "category": "listening",
+  "duration": 6,
+  "title": "El Secreto de la Escucha Fluida: Palabras de Contenido y Formas Débiles",
+  "subtitle": "Por qué los nativos reducen ciertas palabras y cómo reprogramar tu oído",
+  "body": "En inglés hablado, las palabras de contenido (sustantivos, verbos, adjetivos) llevan el significado central y se acentúan, mientras que las palabras gramaticales (preposiciones, pronombres, auxiliares) se reducen al sonido neutro schwa /ə/. Entender este principio transforma tu capacidad de escucha.",
+  "examples": [
+    {
+      "word": "I can go to the store",
+      "ipa": "/aɪ kən ˈɡoʊ tə ðə ˈstɔːr/",
+      "translation": "Puedo ir a la tienda ('can' y 'to' se reducen a /kən/ y /tə/)"
+    },
+    {
+      "word": "This is for you",
+      "ipa": "/ðɪs ɪz fər ˈjuː/",
+      "translation": "Esto es para ti ('for' se debilita a /fər/)"
+    }
+  ],
+  "tip": "Aceptación activa: las palabras gramaticales se reducen por el ritmo del idioma, no porque tengas mal oído. Entrena tu cerebro para apoyarse en las palabras de contenido.",
+  "href": "/mini-lessons/better-listening-weak-forms"
+}

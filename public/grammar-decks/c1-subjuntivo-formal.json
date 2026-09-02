@@ -1,46 +1,49 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "C1 · Subjuntivo",
     "title": "Subjuntivo",
     "titleEmphasis": "formal",
-    "goal": "Ya usas la forma base tras suggest/insist/demand + that: They insisted that he be present."
+    "goal": "Emplea el subjuntivo mandativo (forma base sin flexión de persona) tras verbos y adjetivos de demanda, insistencia o sugerencia."
   },
   "cards": [
     {
       "id": "c1-subjuntivo-formal-concept",
       "tag": "Idea central",
       "title": "Subjuntivo: qué expresa",
-      "lede": "Ya usas la forma base tras suggest/insist/demand + that: They insisted that he be present.",
+      "lede": "Emplea el subjuntivo mandativo (forma base sin flexión de persona) tras verbos y adjetivos de demanda, insistencia o sugerencia.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Verbos",
-              "value": "suggest · insist · demand · recommend · propose",
+              "key": "Verbos de demanda/sugerencia",
+              "value": "suggest · insist · demand · recommend · propose · require",
               "highlights": [
-                "insist"
+                "insist",
+                "demand"
               ]
             },
             {
-              "key": "Estructura",
-              "value": "that + sujeto + base · no -s en 3ª persona",
+              "key": "Forma base universal",
+              "value": "They insisted that he be present during the audit.",
               "highlights": [
                 "that he be"
               ]
             },
             {
-              "key": "Ejemplo",
-              "value": "She demanded that he leave immediately.",
+              "key": "Tercera persona sin -s",
+              "value": "The committee recommended that she head the new department.",
               "highlights": [
-                "leave"
+                "she head"
               ]
             },
             {
-              "key": "Alternativa",
-              "value": "should + infinitivo en registro menos formal",
+              "key": "Adjetivos impersonales",
+              "value": "It is essential that every member sign the non-disclosure agreement.",
               "highlights": [
-                "should"
+                "It is essential that",
+                "sign"
               ]
             }
           ]
@@ -55,30 +58,30 @@
       "id": "c1-subjuntivo-formal-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Verbos",
-              "value": "suggest · insist · demand · recommend · propose",
+              "key": "Afirmativa",
+              "value": "Sujeto + verbo de demanda + that + sujeto + forma base · I propose that he join the board.",
               "highlights": [
-                "insist"
+                "that he join"
               ]
             },
             {
-              "key": "Estructura",
-              "value": "that + sujeto + base · no -s en 3ª persona",
+              "key": "Negativa",
+              "value": "Sujeto + verbo + that + sujeto + NOT + forma base · She asked that they not discuss the deal.",
               "highlights": [
-                "that he be"
+                "that they not discuss"
               ]
             },
             {
-              "key": "Ejemplo",
-              "value": "She demanded that he leave immediately.",
+              "key": "Pasiva subjuntiva",
+              "value": "It is imperative that the guidelines be followed strictly.",
               "highlights": [
-                "leave"
+                "be followed"
               ]
             }
           ]
@@ -89,26 +92,26 @@
       "id": "c1-subjuntivo-formal-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "insist"
+              "key": "Gobernanza corporativa",
+              "value": "The auditors requested that all financial logs be audited independently."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "no -s en 3ª persona"
+              "key": "Protocolos de seguridad",
+              "value": "It is vital that no unverified personnel enter the laboratory."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "She demanded that he leave immediately."
+              "key": "Políticas internas",
+              "value": "Management insists that every employee attend the compliance workshop."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "should + infinitivo en registro menos formal"
+              "key": "Contratos formales",
+              "value": "The contract mandates that the tenant pay rent on the first of each month."
             }
           ]
         }
@@ -118,23 +121,23 @@
       "id": "c1-subjuntivo-formal-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "Verbos",
-              "rule": "suggest · insist · demand · recommend · propose",
+              "label": "Subjuntivo formal (C1 / US / Formal UK)",
+              "rule": "Usa la forma base del verbo para todas las personas, sin '-s' en 3ª persona ni tiempos pasados",
               "examples": [
-                "insist"
+                "We demand that he resign immediately."
               ]
             },
             {
-              "label": "Estructura",
-              "rule": "that + sujeto + base · no -s en 3ª persona",
+              "label": "Should + Infinitivo (UK Estándar)",
+              "rule": "Inserta 'should' antes del verbo principal como alternativa formal",
               "examples": [
-                "no -s en 3ª persona"
+                "We demand that he should resign immediately."
               ]
             }
           ]
@@ -145,19 +148,19 @@
       "id": "c1-subjuntivo-formal-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "They insisted that he leaves."
+              "text": "The manager recommended that she accepts the promotion."
             },
             {
               "variant": "good",
-              "text": "They insisted that he leave.",
-              "note": "subjuntivo formal → base sin -s"
+              "text": "The manager recommended that she accept the promotion.",
+              "note": "En el subjuntivo mandativo se utiliza la forma base 'accept', no la tercera persona 'accepts'."
             }
           ]
         }
@@ -166,27 +169,27 @@
     {
       "id": "c1-subjuntivo-formal-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "1. Sin conjugación de 3ª persona",
+              "value": "NUNCA añadas '-s' al verbo en la cláusula que sigue a 'that' (ej. 'he remain')."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "2. Negación con 'not'",
+              "value": "La negación se forma simplemente colocando 'not' antes de la forma base ('that he not leave')."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "3. Uso del verbo 'to be'",
+              "value": "El verbo 'to be' utiliza la forma 'be' para todas las personas ('that I be', 'that he be')."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "4. Omisión opcional de 'that'",
+              "value": "En contextos sumamente formales se mantiene 'that'; omitirlo resta formalidad."
             }
           ]
         }
@@ -199,13 +202,37 @@
   ],
   "quiz": [
     {
-      "q": "The board recommended that she ___ the role.",
+      "q": "The board of directors required that the CEO ___ a revised budget by tomorrow.",
       "options": [
-        "take",
-        "takes"
+        "submit",
+        "submits",
+        "submitted",
+        "has submitted"
       ],
       "answer": 0,
-      "explain": "Tras recommend that → forma base."
+      "explain": "Tras el verbo de exigencia 'require that' se debe utilizar la forma base 'submit'."
+    },
+    {
+      "q": "It is crucial that confidential records ___ stored on unsecured servers.",
+      "options": [
+        "not be",
+        "be not",
+        "are not",
+        "to not be"
+      ],
+      "answer": 0,
+      "explain": "La negación del subjuntivo se construye situando 'not' antes de la forma base 'be'."
+    },
+    {
+      "q": "¿Cuál de las siguientes frases representa el subjuntivo formal correcto?",
+      "options": [
+        "The judge ordered that the evidence be suppressed.",
+        "The judge ordered that the evidence is suppressed.",
+        "The judge ordered that the evidence was suppressed.",
+        "The judge ordered that the evidence to be suppressed."
+      ],
+      "answer": 0,
+      "explain": "'Be suppressed' es la forma pasiva en subjuntivo (be + participio)."
     }
   ]
 }

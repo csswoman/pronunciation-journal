@@ -36,30 +36,21 @@ describe('PracticeHubClient', () => {
     render(<PracticeHubClient fromDaily={false} />)
 
     await waitFor(() => {
-      expect(screen.getByText('5 palabras esperan repaso')).toBeInTheDocument()
+      expect(screen.getByText('5')).toBeInTheDocument()
+      expect(screen.getByText(/palabras esperan repaso/i)).toBeInTheDocument()
     })
 
-    // "Vocabulario" appears both as the hero SRS card's kicker and as the
-    // VocabularySection lane title — both doors are expected to coexist.
-    expect(screen.getAllByText('Vocabulario').length).toBeGreaterThan(0)
-    // Same for "Pronunciación": hero kicker + PronunciationSection lane title.
-    expect(screen.getAllByText('Pronunciación').length).toBeGreaterThan(0)
-    // B5: the four practice doors, all present now that games has a door too.
-    expect(screen.getByText('Juegos')).toBeInTheDocument()
-    expect(screen.getByText('Consulta')).toBeInTheDocument()
-
-    // "Palabras esenciales" and "Laboratorio de sonidos" each appear twice:
-    // once as the hero card's own title, once as a door card's title in the
-    // corresponding *Section lane below. Both placements are intentional.
-    expect(screen.getAllByText('Palabras esenciales').length).toBeGreaterThan(0)
+    expect(screen.getByText('Las 1000 esenciales')).toBeInTheDocument()
     expect(screen.getByText('Tus mazos')).toBeInTheDocument()
-    expect(screen.getAllByText('Empezar repaso').length).toBeGreaterThan(0)
-    expect(screen.getAllByText('Laboratorio de sonidos').length).toBeGreaterThan(0)
+    expect(screen.getByText('Empezar repaso')).toBeInTheDocument()
+    expect(screen.getByText('Laboratorio de sonidos')).toBeInTheDocument()
     expect(screen.getByText('Habla conectada')).toBeInTheDocument()
     expect(screen.getByText('Entonación')).toBeInTheDocument()
-    expect(screen.getByText('Serie de pares mínimos')).toBeInTheDocument()
+    expect(screen.getByText('Pares mínimos')).toBeInTheDocument()
+    expect(screen.getByText('Inmersión y conversación')).toBeInTheDocument()
     expect(screen.getByText('Lectura en contexto')).toBeInTheDocument()
     expect(screen.getByText('Ruta guiada')).toBeInTheDocument()
+    expect(screen.getByText('Juegos de vocabulario')).toBeInTheDocument()
     expect(screen.getByText('Diccionario')).toBeInTheDocument()
     expect(screen.getByTestId('speak-with-coach')).toBeInTheDocument()
   })

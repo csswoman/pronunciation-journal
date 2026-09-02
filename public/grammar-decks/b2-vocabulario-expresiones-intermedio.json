@@ -17,12 +17,20 @@
             {
               "label": "make (crear)",
               "rule": "produce un resultado",
-              "examples": ["make a decision", "make a mistake", "make money"]
+              "examples": [
+                "make a decision",
+                "make a mistake",
+                "make money"
+              ]
             },
             {
               "label": "do (realizar)",
               "rule": "acción o tarea",
-              "examples": ["do homework", "do the dishes", "do business"]
+              "examples": [
+                "do homework",
+                "do the dishes",
+                "do business"
+              ]
             }
           ]
         }
@@ -41,10 +49,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "find out", "value": "averiguar · I found out the truth.", "highlights": ["find out"] },
-            { "key": "give up", "value": "rendirse · Don't give up.", "highlights": ["give up"] },
-            { "key": "put off", "value": "posponer · They put off the meeting.", "highlights": ["put off"] },
-            { "key": "come up with", "value": "idear · come up with a plan", "highlights": ["come up with"] }
+            {
+              "key": "find out",
+              "value": "averiguar · I found out the truth.",
+              "highlights": [
+                "find out"
+              ]
+            },
+            {
+              "key": "give up",
+              "value": "rendirse · Don't give up.",
+              "highlights": [
+                "give up"
+              ]
+            },
+            {
+              "key": "put off",
+              "value": "posponer · They put off the meeting.",
+              "highlights": [
+                "put off"
+              ]
+            },
+            {
+              "key": "come up with",
+              "value": "idear · come up with a plan",
+              "highlights": [
+                "come up with"
+              ]
+            }
           ]
         }
       ]
@@ -58,9 +90,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "a piece of cake", "value": "muy fácil", "highlights": ["a piece of cake"] },
-            { "key": "under the weather", "value": "sentirse mal", "highlights": ["under the weather"] },
-            { "key": "hit the books", "value": "ponerse a estudiar", "highlights": ["hit the books"] }
+            {
+              "key": "a piece of cake",
+              "value": "muy fácil",
+              "highlights": [
+                "a piece of cake"
+              ]
+            },
+            {
+              "key": "under the weather",
+              "value": "sentirse mal",
+              "highlights": [
+                "under the weather"
+              ]
+            },
+            {
+              "key": "hit the books",
+              "value": "ponerse a estudiar",
+              "highlights": [
+                "hit the books"
+              ]
+            }
           ]
         }
       ]
@@ -74,9 +124,29 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Negar", "value": "un-, im-, dis- · unhappy, impossible", "highlights": ["un-", "im-"] },
-            { "key": "Sustantivos", "value": "-ment, -tion, -ness · movement", "highlights": ["-ment"] },
-            { "key": "Adjetivos", "value": "-ful, -less, -able · useful, useless", "highlights": ["-ful", "-less"] }
+            {
+              "key": "Negar",
+              "value": "un-, im-, dis- · unhappy, impossible",
+              "highlights": [
+                "un-",
+                "im-"
+              ]
+            },
+            {
+              "key": "Sustantivos",
+              "value": "-ment, -tion, -ness · movement",
+              "highlights": [
+                "-ment"
+              ]
+            },
+            {
+              "key": "Adjetivos",
+              "value": "-ful, -less, -able · useful, useless",
+              "highlights": [
+                "-ful",
+                "-less"
+              ]
+            }
           ]
         }
       ]
@@ -90,9 +160,22 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "good →", "value": "great, excellent, outstanding" },
-            { "key": "big →", "value": "huge, enormous, massive" },
-            { "key": "very + adj →", "value": "exhausted (very tired), starving (very hungry)", "highlights": ["exhausted", "starving"] }
+            {
+              "key": "good →",
+              "value": "great, excellent, outstanding"
+            },
+            {
+              "key": "big →",
+              "value": "huge, enormous, massive"
+            },
+            {
+              "key": "very + adj →",
+              "value": "exhausted (very tired), starving (very hungry)",
+              "highlights": [
+                "exhausted",
+                "starving"
+              ]
+            }
           ]
         }
       ],
@@ -110,13 +193,61 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "good", "text": "lend (prestar) vs. borrow (pedir prestado)", "note": "dirección opuesta" },
-            { "variant": "good", "text": "say (decir algo) vs. tell (decir a alguien)", "note": "tell + persona" },
-            { "variant": "good", "text": "actually = en realidad (no \"actualmente\")", "note": "falso amigo" },
-            { "variant": "bad", "text": "I have 25 years.", "note": "→ I'm 25 years old" }
+            {
+              "variant": "good",
+              "text": "lend (prestar) vs. borrow (pedir prestado)",
+              "note": "dirección opuesta"
+            },
+            {
+              "variant": "good",
+              "text": "say (decir algo) vs. tell (decir a alguien)",
+              "note": "tell + persona"
+            },
+            {
+              "variant": "good",
+              "text": "actually = en realidad (no \"actualmente\")",
+              "note": "falso amigo"
+            },
+            {
+              "variant": "bad",
+              "text": "I have 25 years.",
+              "note": "→ I'm 25 years old"
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "What does the idiom \"to hit the nail on the head\" mean?",
+      "options": [
+        "To describe exactly what is causing a situation or problem",
+        "To injure yourself while working",
+        "To make a serious mistake"
+      ],
+      "answer": 0,
+      "explain": "'Hit the nail on the head' significa acertar plenamente en un análisis o diagnóstico."
+    },
+    {
+      "q": "Which word is a false friend for Spanish speakers (\"actual\" in English does NOT mean \"actual\" in Spanish)?",
+      "options": [
+        "Actual means \"real or exact\", not \"current\"",
+        "Actual means \"modern\"",
+        "Actual means \"temporary\""
+      ],
+      "answer": 0,
+      "explain": "'Actual' en inglés significa real o verdadero; 'actual' en español equivale a 'current' o 'present-day'."
+    },
+    {
+      "q": "Which adjective collocation correctly describes high competition?",
+      "options": [
+        "Fierce competition",
+        "Heavy competition",
+        "Fat competition"
+      ],
+      "answer": 0,
+      "explain": "La colocación natural en inglés para competencia intensa es 'fierce competition' o 'stiff competition'."
     }
   ]
 }

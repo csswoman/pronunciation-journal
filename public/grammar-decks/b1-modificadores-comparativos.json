@@ -1,4 +1,5 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "B1 · Comparativos",
     "title": "Modificadores de",
@@ -17,7 +18,7 @@
           "rows": [
             {
               "key": "much / far",
-              "value": "much bigger · far more expensive",
+              "value": "gran diferencia (+++) · much bigger, far more expensive",
               "highlights": [
                 "much",
                 "far"
@@ -25,21 +26,22 @@
             },
             {
               "key": "a bit / a little",
-              "value": "a bit colder · a little easier",
+              "value": "pequeña diferencia (+) · a bit colder, a little easier",
               "highlights": [
-                "a bit"
+                "a bit",
+                "a little"
               ]
             },
             {
               "key": "slightly",
-              "value": "slightly taller · matiz suave",
+              "value": "diferencia muy leve · slightly taller than me",
               "highlights": [
                 "slightly"
               ]
             },
             {
               "key": "even",
-              "value": "even better · énfasis extra",
+              "value": "énfasis adicional · even faster than before",
               "highlights": [
                 "even"
               ]
@@ -56,31 +58,37 @@
       "id": "b1-modificadores-comparativos-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "much / far",
-              "value": "much bigger · far more expensive",
+              "key": "Afirmativa (Gran dif.)",
+              "value": "Sujeto + verbo + much/far + comparativo + than... · This train is much faster than the bus.",
               "highlights": [
-                "much",
-                "far"
+                "much faster"
               ]
             },
             {
-              "key": "a bit / a little",
-              "value": "a bit colder · a little easier",
+              "key": "Afirmativa (Peq. dif.)",
+              "value": "Sujeto + verbo + a bit/a little + comparativo + than... · My room is a bit larger than yours.",
               "highlights": [
-                "a bit"
+                "a bit larger"
               ]
             },
             {
-              "key": "slightly",
-              "value": "slightly taller · matiz suave",
+              "key": "Negativa",
+              "value": "Sujeto + isn't/aren't + much + comparativo... · It isn't much more expensive.",
               "highlights": [
-                "slightly"
+                "much more"
+              ]
+            },
+            {
+              "key": "Interrogativa",
+              "value": "Is + sujeto + slightly + comparativo + than...? · Is this seat slightly cheaper than that one?",
+              "highlights": [
+                "slightly cheaper"
               ]
             }
           ]
@@ -91,26 +99,26 @@
       "id": "b1-modificadores-comparativos-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "far more expensive"
+              "key": "De compras",
+              "value": "This leather jacket is far more durable than the plastic one."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "a little easier"
+              "key": "En la oficina",
+              "value": "The new strategy is much more effective for our team."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "matiz suave"
+              "key": "Comparando precios",
+              "value": "The hotel room was only a bit cheaper on weekdays."
             },
             {
-              "key": "Ejemplo 4",
-              "value": "énfasis extra"
+              "key": "Ajuste de horario",
+              "value": "Could we meet slightly earlier tomorrow morning?"
             }
           ]
         }
@@ -120,23 +128,23 @@
       "id": "b1-modificadores-comparativos-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "much / far",
-              "rule": "much bigger · far more expensive",
+              "label": "Much / Far (Intensificadores fuertes)",
+              "rule": "Indican un margen o diferencia amplia entre dos elementos",
               "examples": [
-                "far more expensive"
+                "Flying is far faster than driving."
               ]
             },
             {
-              "label": "a bit / a little",
-              "rule": "a bit colder · a little easier",
+              "label": "A bit / Slightly (Intensificadores suaves)",
+              "rule": "Indican una diferencia mínima o imperceptible entre dos elementos",
               "examples": [
-                "a little easier"
+                "Today is slightly warmer than yesterday."
               ]
             }
           ]
@@ -147,19 +155,19 @@
       "id": "b1-modificadores-comparativos-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "She is more much taller."
+              "text": "She feels more much better today."
             },
             {
               "variant": "good",
-              "text": "She is much taller.",
-              "note": "much va antes del comparativo, no con more"
+              "text": "She feels much better today.",
+              "note": "el modificador 'much' se coloca antes del comparativo sin añadir 'more'"
             }
           ]
         }
@@ -168,27 +176,27 @@
     {
       "id": "b1-modificadores-comparativos-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "Modificador + Comparativo",
+              "value": "El intensificador va SIEMPRE antes del comparativo (much taller, NO taller much)."
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "No dupliques 'more'",
+              "value": "No digas 'much more better', di 'much better'."
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "Far (formal)",
+              "value": "'Far more expensive' suena más elegante que 'a lot more expensive'."
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "A bit (informal)",
+              "value": "Úsalo en conversaciones cotidianas en lugar de 'slightly'."
             }
           ]
         }
@@ -201,13 +209,34 @@
   ],
   "quiz": [
     {
-      "q": "This version is ___ better.",
+      "q": "Learning Chinese is ___ harder than learning Spanish for me.",
       "options": [
         "much",
-        "more"
+        "more",
+        "very"
       ],
       "answer": 0,
-      "explain": "much + comparativo (-er o more)."
+      "explain": "Para intensificar un comparativo corto (-er) se utiliza 'much' o 'far', no 'very' ni 'more'."
+    },
+    {
+      "q": "The new smartphone is only ___ more expensive than the old model.",
+      "options": [
+        "a bit",
+        "many",
+        "too"
+      ],
+      "answer": 0,
+      "explain": "'A bit' modifica comparativos indicando una diferencia pequeña."
+    },
+    {
+      "q": "This apartment is ___ larger than our previous one.",
+      "options": [
+        "far",
+        "very",
+        "so"
+      ],
+      "answer": 0,
+      "explain": "'Far' actúa como intensificador fuerte ante un comparativo."
     }
   ]
 }

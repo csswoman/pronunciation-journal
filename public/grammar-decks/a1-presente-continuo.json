@@ -1,4 +1,5 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "A1 · Presente",
     "title": "Presente",
@@ -16,26 +17,24 @@
           "type": "rules",
           "rows": [
             {
-              "key": "Forma",
-              "value": "I am working · She is reading · They are waiting",
+              "key": "I am",
+              "value": "I am working right now",
               "highlights": [
-                "am",
-                "is",
-                "are"
+                "am working"
               ]
             },
             {
-              "key": "Ahora",
-              "value": "now, right now, at the moment",
+              "key": "He / She / It",
+              "value": "She is reading a book",
               "highlights": [
-                "now"
+                "is reading"
               ]
             },
             {
-              "key": "Negativo",
-              "value": "I'm not working · She isn't reading",
+              "key": "We / You / They",
+              "value": "They are playing football",
               "highlights": [
-                "n't"
+                "are playing"
               ]
             }
           ]
@@ -50,32 +49,30 @@
       "id": "a1-presente-continuo-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Forma",
-              "value": "I am working · She is reading · They are waiting",
+              "key": "Afirmativa",
+              "value": "Sujeto + am/is/are + Verbo-ing",
               "highlights": [
-                "am",
-                "is",
-                "are"
+                "am/is/are + -ing"
               ]
             },
             {
-              "key": "Ahora",
-              "value": "now, right now, at the moment",
+              "key": "Negativa",
+              "value": "Sujeto + am not/isn't/aren't + Verbo-ing",
               "highlights": [
-                "now"
+                "isn't/aren't"
               ]
             },
             {
-              "key": "Negativo",
-              "value": "I'm not working · She isn't reading",
+              "key": "Interrogativa",
+              "value": "Am/Is/Are + Sujeto + Verbo-ing?",
               "highlights": [
-                "n't"
+                "Am/Is/Are"
               ]
             }
           ]
@@ -86,22 +83,26 @@
       "id": "a1-presente-continuo-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "She is reading"
+              "key": "En casa",
+              "value": "I am cooking dinner right now."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "now, right now, at the moment"
+              "key": "Teléfono",
+              "value": "Sorry, I can't talk. I am driving."
             },
             {
-              "key": "Ejemplo 3",
-              "value": "She isn't reading"
+              "key": "Trabajo",
+              "value": "The manager is meeting with a client at the moment."
+            },
+            {
+              "key": "Clima",
+              "value": "Look outside, it is raining heavily!"
             }
           ]
         }
@@ -111,23 +112,23 @@
       "id": "a1-presente-continuo-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende del contexto y la intención.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "Forma",
-              "rule": "I am working · She is reading · They are waiting",
+              "label": "Present Continuous (Ahora)",
+              "rule": "Acciones sucediendo en este preciso momento",
               "examples": [
-                "She is reading"
+                "I am eating breakfast now."
               ]
             },
             {
-              "label": "Ahora",
-              "rule": "now, right now, at the moment",
+              "label": "Present Simple (Rutina)",
+              "rule": "Hábitos y costumbres cotidianas",
               "examples": [
-                "now, right now, at the moment"
+                "I eat breakfast at 8 every day."
               ]
             }
           ]
@@ -138,7 +139,7 @@
       "id": "a1-presente-continuo-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
@@ -150,7 +151,7 @@
             {
               "variant": "good",
               "text": "I am working now.",
-              "note": "falta el verbo to be"
+              "note": "falta el verbo to be antes de -ing"
             }
           ]
         }
@@ -159,27 +160,27 @@
     {
       "id": "a1-presente-continuo-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar?"
+              "key": "I",
+              "value": "am + verbo-ing (I am studying)"
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma del patrón."
+              "key": "He / She / It",
+              "value": "is + verbo-ing (He is working)"
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, tiempo y número."
+              "key": "We / You / They",
+              "value": "are + verbo-ing (We are waiting)"
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase en voz alta."
+              "key": "Señales",
+              "value": "now, right now, at the moment, currently"
             }
           ]
         }
@@ -192,13 +193,31 @@
   ],
   "quiz": [
     {
-      "q": "She ___ TV now.",
+      "q": "Listen! The baby ___ right now.",
       "options": [
-        "is watching",
-        "watching"
+        "is crying",
+        "cries"
       ],
       "answer": 0,
-      "explain": "Continuo = is + -ing."
+      "explain": "'Listen!' y 'right now' indican una acción sucediendo en el momento → Present Continuous."
+    },
+    {
+      "q": "What ___ you ___ at the moment?",
+      "options": [
+        "are / doing",
+        "do / do"
+      ],
+      "answer": 0,
+      "explain": "Para preguntar por la acción en progreso se usa 'are + sujeto + doing'."
+    },
+    {
+      "q": "Selecciona la oración correcta:",
+      "options": [
+        "They are watching a movie.",
+        "They watching a movie."
+      ],
+      "answer": 0,
+      "explain": "La estructura requiere el auxiliar 'are' antes del verbo en -ing."
     }
   ]
 }

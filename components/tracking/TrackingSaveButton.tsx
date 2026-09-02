@@ -6,6 +6,7 @@ import { Bookmark, BookmarkCheck, Heart } from "@/components/icons";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { db } from "@/lib/db";
 import { removeTrackedItem, saveTrackedItem } from "@/lib/tracking/queries";
+import Button from "@/components/ui/Button";
 import type { PersistedTrackedKind } from "@/lib/tracking/types";
 import { cn } from "@/lib/cn";
 
@@ -99,14 +100,15 @@ export function TrackingSaveButton({
   }
 
   return (
-    <button
-      type="button"
+    <Button
+      variant="ghost"
+      size="sm"
+      icon={isTracked ? <BookmarkCheck size={14} aria-hidden /> : <Bookmark size={14} aria-hidden />}
       onClick={() => void toggle()}
       disabled={!user || busy}
-      className={cn("mini-lessons__btn mini-lessons__btn--ghost", className)}
+      className={className}
     >
-      {isTracked ? <BookmarkCheck size={16} aria-hidden /> : <Bookmark size={16} aria-hidden />}
       {isTracked ? "Guardada" : busy ? "Guardando…" : "Guardar en Tracking"}
-    </button>
+    </Button>
   );
 }

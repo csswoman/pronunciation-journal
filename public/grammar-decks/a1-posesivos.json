@@ -1,46 +1,33 @@
 {
+  "isGenerated": true,
   "meta": {
     "eyebrow": "A1 · Posesión",
-    "title": "Posesión",
-    "titleEmphasis": "adjetivos y pronombres posesivos",
-    "goal": "Ya puedes usar adjetivos y pronombres posesivos en ejemplos claros y adecuados al contexto."
+    "title": "Posesivos",
+    "titleEmphasis": "adjetivos y pronombres",
+    "goal": "Ya distingues entre adjetivos posesivos (my car) y pronombres (mine)."
   },
   "cards": [
     {
       "id": "a1-posesivos-concept",
       "tag": "Idea central",
-      "title": "Posesión: qué expresa",
-      "lede": "Esta lección te ayuda a usar adjetivos y pronombres posesivos con precisión y sin traducir palabra por palabra.",
+      "title": "Posesivos: qué expresa",
+      "lede": "Ya distingues entre adjetivos posesivos (my car) y pronombres (mine).",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "my / mine",
-              "value": "my book / The book is mine",
+              "key": "Adjetivos",
+              "value": "my, your, his, her, its, our, their (+ sustantivo)",
               "highlights": [
-                "my / mine"
+                "my"
               ]
             },
             {
-              "key": "your / yours",
-              "value": "your coat / The coat is yours",
+              "key": "Pronombres",
+              "value": "mine, yours, his, hers, ours, theirs (van solos)",
               "highlights": [
-                "your / yours"
-              ]
-            },
-            {
-              "key": "his / her / its",
-              "value": "posesión de él, ella o una cosa",
-              "highlights": [
-                "his / her / its"
-              ]
-            },
-            {
-              "key": "our / their",
-              "value": "posesión de nosotros o ellos",
-              "highlights": [
-                "our / their"
+                "mine"
               ]
             }
           ]
@@ -48,29 +35,31 @@
       ],
       "tip": {
         "label": "Objetivo:",
-        "body": "reconocer la intención y elegir correctamente adjetivos y pronombres posesivos en situaciones reales."
+        "body": "reconocer el patrón y usarlo en frases propias."
       }
     },
     {
       "id": "a1-posesivos-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
-      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "my / mine",
-              "value": "my book / The book is mine"
+              "key": "Adjetivo Posesivo + Sustantivo",
+              "value": "This is my house.",
+              "highlights": [
+                "my house"
+              ]
             },
             {
-              "key": "your / yours",
-              "value": "your coat / The coat is yours"
-            },
-            {
-              "key": "his / her / its",
-              "value": "posesión de él, ella o una cosa"
+              "key": "Pronombre Posesivo (solo)",
+              "value": "This house is mine.",
+              "highlights": [
+                "is mine"
+              ]
             }
           ]
         }
@@ -80,22 +69,26 @@
       "id": "a1-posesivos-examples",
       "tag": "En contexto",
       "title": "Ejemplos naturales",
-      "lede": "Lee cada ejemplo como una unidad completa y fíjate en la posición de las palabras.",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Ejemplo 1",
-              "value": "This is my phone."
+              "key": "Adjetivos",
+              "value": "Her father is a doctor and their house is big."
             },
             {
-              "key": "Ejemplo 2",
-              "value": "That bag is hers."
+              "key": "Pronombres",
+              "value": "Is this pen yours or mine?"
             },
             {
-              "key": "Ejemplo 3",
-              "value": "Their house is new."
+              "key": "Objetos / Animales",
+              "value": "The dog is eating its food."
+            },
+            {
+              "key": "Identificación",
+              "value": "That red coat isn't hers; it's ours."
             }
           ]
         }
@@ -105,23 +98,23 @@
       "id": "a1-posesivos-contrast",
       "tag": "Contraste",
       "title": "Cómo cambia el significado",
-      "lede": "La elección depende de la intención, la cantidad, el tiempo o el registro.",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
       "blocks": [
         {
           "type": "contrast",
           "columns": [
             {
-              "label": "my / mine",
-              "rule": "my book / The book is mine",
+              "label": "Adjetivos posesivos (my, your...)",
+              "rule": "Van acompañados del sustantivo que poseen",
               "examples": [
-                "This is my phone."
+                "This is my book."
               ]
             },
             {
-              "label": "your / yours",
-              "rule": "your coat / The coat is yours",
+              "label": "Pronombres posesivos (mine, yours...)",
+              "rule": "Reemplazan al sustantivo y van solos",
               "examples": [
-                "That bag is hers."
+                "This book is mine."
               ]
             }
           ]
@@ -132,19 +125,19 @@
       "id": "a1-posesivos-mistakes",
       "tag": "Error frecuente",
       "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con una forma natural y gramatical.",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
             {
               "variant": "bad",
-              "text": "This is the book of me."
+              "text": "This house is my."
             },
             {
               "variant": "good",
-              "text": "This is my book.",
-              "note": "forma recomendada"
+              "text": "This house is mine.",
+              "note": "my necesita sustantivo; al final va mine"
             }
           ]
         }
@@ -153,64 +146,64 @@
     {
       "id": "a1-posesivos-reference",
       "tag": "Referencia rápida",
-      "title": "Decisión en cuatro pasos",
-      "lede": "Usa esta lista para comprobar tu frase antes de continuar.",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "1. Intención",
-              "value": "¿Qué quieres expresar exactamente?"
+              "key": "my → mine",
+              "value": "mi / mío"
             },
             {
-              "key": "2. Estructura",
-              "value": "Elige la forma adecuada de adjetivos y pronombres posesivos."
+              "key": "your → yours",
+              "value": "tu / tuyo"
             },
             {
-              "key": "3. Concordancia",
-              "value": "Revisa sujeto, verbo, número y tiempo."
+              "key": "his → his / her → hers",
+              "value": "su / suyo (de él / de ella)"
             },
             {
-              "key": "4. Naturalidad",
-              "value": "Lee la frase completa y evita traducir literalmente."
+              "key": "our → ours / their → theirs",
+              "value": "nuestro / suyo (de ellos)"
             }
           ]
         }
       ],
       "tip": {
         "label": "Práctica:",
-        "body": "crea una frase personal con cada patrón y léela en voz alta."
+        "body": "escribe una frase personal con el patrón."
       }
     }
   ],
   "quiz": [
     {
-      "q": "The keys are ___.",
+      "q": "Whose jacket is this? - It's ___.",
       "options": [
-        "my",
-        "mine"
-      ],
-      "answer": 1,
-      "explain": "La respuesta correcta aplica la regla central de adjetivos y pronombres posesivos."
-    },
-    {
-      "q": "¿Cuál de estas frases es correcta?",
-      "options": [
-        "This is the book of me.",
-        "This is my book."
-      ],
-      "answer": 1,
-      "explain": "La segunda opción usa la estructura y el orden correctos."
-    },
-    {
-      "q": "¿Qué conviene revisar al usar adjetivos y pronombres posesivos?",
-      "options": [
-        "La intención, la estructura y el contexto.",
-        "Solo la traducción literal al español."
+        "mine",
+        "my"
       ],
       "answer": 0,
-      "explain": "Una frase natural depende del significado, la forma y el contexto, no de traducir palabra por palabra."
+      "explain": "Al no haber sustantivo después del espacio, corresponde el pronombre posesivo 'mine'."
+    },
+    {
+      "q": "They forgot ___ passports at the hotel.",
+      "options": [
+        "their",
+        "theirs"
+      ],
+      "answer": 0,
+      "explain": "Acompaña al sustantivo 'passports', exige el adjetivo posesivo 'their'."
+    },
+    {
+      "q": "Elige la opción que complete correctamente: 'That car is not ours, it is ___.'",
+      "options": [
+        "hers",
+        "her"
+      ],
+      "answer": 0,
+      "explain": "Al no llevar el sustantivo 'car' después, se requiere el pronombre 'hers'."
     }
   ]
 }

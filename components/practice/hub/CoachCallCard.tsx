@@ -16,6 +16,9 @@ interface Props {
   arc?: SessionArc
 }
 
+// Planned structure:
+// <CoachCallCard> — "Coach de conversación" bento card with mic icon, actions, and chat graphic
+
 export default function CoachCallCard({ arc }: Props) {
   const openCoach = useAICoachStore((s) => s.openCoach)
   const prefill = buildCoachPrefill(arc)
@@ -23,50 +26,48 @@ export default function CoachCallCard({ arc }: Props) {
   return (
     <div
       data-testid="speak-with-coach"
-      className="group/coach flex flex-col justify-between gap-3 rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-5 shadow-xs transition-colors hover:border-border-strong"
+      className="group relative flex flex-col justify-between gap-5 rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-5 shadow-xs transition-colors hover:border-border-strong h-full overflow-hidden"
     >
-      <div className="flex flex-col gap-3">
-        <div className="flex items-center justify-between gap-2">
-          <span className="font-kicker text-fg-subtle">Speaking en vivo</span>
-          <span className="inline-flex items-center gap-1.5 rounded-[var(--radius-sm)] bg-primary-soft px-2.5 py-0.5 font-caption text-caption font-medium text-primary">
-            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-primary" />
-            Micrófono
+      <div className="flex flex-col gap-3 z-10">
+        <div className="flex items-center gap-2.5">
+          <span className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-[var(--hue-icon-bg)] text-primary">
+            <Mic size={18} aria-hidden />
           </span>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-[var(--radius-md)] bg-[var(--hue-icon-bg)] text-primary">
-            <Mic size={22} aria-hidden />
-          </span>
-          <div className="min-w-0">
-            <h3 className="text-h4 font-bold text-fg">Coach de conversación</h3>
-          </div>
+          <h2 className="text-h3 font-bold text-fg">Coach de conversación</h2>
         </div>
 
         <p className="text-body-sm text-fg-muted text-pretty">
-          Habla en voz alta sobre tus temas de hoy y recibe retroalimentación en tiempo real.
+          Habla en voz alta y recibe corrección en tiempo real.
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-2.5 pt-2">
-        <button
-          type="button"
-          onClick={() => openCoach({ tab: 'chat', prefill })}
-          className="focus-ring inline-flex min-h-10 items-center justify-center gap-2 rounded-[var(--radius-md)] border border-border-default bg-surface-raised px-3 font-label font-semibold text-fg transition-all duration-150 hover:bg-surface-sunken active:translate-y-[-1px]"
-        >
-          <MessageCircle size={16} aria-hidden />
-          Conversa
-        </button>
-        <button
-          type="button"
-          onClick={() => openCoach({ tab: 'missions', prefill })}
-          aria-label="Un reto corto con micrófono: el coach te da un objetivo y te escucha"
-          className="focus-ring inline-flex min-h-10 items-center justify-center gap-2 rounded-[var(--radius-md)] border border-border-default bg-surface-raised px-3 font-label font-semibold text-fg transition-all duration-150 hover:bg-surface-sunken active:translate-y-[-1px]"
-        >
-          <Mic size={16} aria-hidden />
-          Misión oral
-        </button>
+      <div className="flex items-center justify-between gap-3 pt-2 z-10">
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() => openCoach({ tab: 'chat', prefill })}
+            className="focus-ring inline-flex min-h-11 items-center justify-center gap-1.5 rounded-[var(--radius-md)] border border-border-default bg-surface-raised px-3.5 py-2.5 font-label text-body-xs font-semibold text-fg transition-all duration-150 hover:bg-surface-sunken active:translate-y-[-1px]"
+          >
+            <MessageCircle size={14} aria-hidden />
+            <span>Conversa</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => openCoach({ tab: 'missions', prefill })}
+            className="focus-ring inline-flex min-h-11 items-center justify-center gap-1.5 rounded-[var(--radius-md)] border border-border-default bg-surface-raised px-3.5 py-2.5 font-label text-body-xs font-semibold text-fg transition-all duration-150 hover:bg-surface-sunken active:translate-y-[-1px]"
+          >
+            <Mic size={14} aria-hidden />
+            <span>Misión oral</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Chat bubbles illustration (bottom right) */}
+      <div className="absolute right-3 bottom-3 hidden sm:flex flex-col gap-1.5 opacity-40 transition-opacity group-hover:opacity-70">
+        <div className="h-4 w-12 rounded-lg rounded-br-xs bg-border-strong/50" />
+        <div className="h-5 w-16 rounded-lg rounded-bl-xs bg-primary/40 ml-4" />
       </div>
     </div>
   )
 }
+
