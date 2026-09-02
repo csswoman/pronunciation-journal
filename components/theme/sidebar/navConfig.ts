@@ -1,6 +1,5 @@
 import {
   Home,
-  CalendarCheck,
   Notebook,
   BookOpen,
   Sparkles,
@@ -11,12 +10,11 @@ import {
 } from "@/components/icons";
 import { NavSectionType } from "./NavSection";
 
-/** Group 1: Hoy - daily entry point, daily plan & journal */
+/** Group 1: Hoy - home entry point & journal */
 export const todayNav: NavSectionType = {
   label: "Hoy",
   items: [
     { name: "Inicio", href: "/", icon: Home },
-    { name: "Plan del día", href: "/daily", icon: CalendarCheck },
     { name: "Mi diario", href: "/journal", icon: Notebook },
   ],
 };

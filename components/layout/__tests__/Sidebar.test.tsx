@@ -53,7 +53,7 @@ describe("Sidebar component", () => {
     // Group 1: Hoy
     expect(screen.getByRole("link", { name: /Inicio/i })).toHaveAttribute("href", "/");
     expect(screen.getByRole("link", { name: /Mi diario/i })).toHaveAttribute("href", "/journal");
-    expect(screen.getByRole("link", { name: /Plan del día/i })).toHaveAttribute("href", "/daily");
+    expect(screen.queryByRole("link", { name: /Plan del día/i })).not.toBeInTheDocument();
 
     // Group 2: Aprender
     expect(screen.getByRole("link", { name: /Práctica libre/i })).toHaveAttribute("href", "/practice");

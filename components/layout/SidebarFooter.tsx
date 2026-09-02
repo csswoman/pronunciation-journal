@@ -11,10 +11,7 @@ import { isAnonymousUser } from "@/lib/auth/is-anonymous";
 import { LogIn, LogOut, Settings2, User } from "@/components/icons";
 import { useSidebar } from "@/components/theme/sidebar/SidebarContext";
 import { playUiCue } from "@/lib/ui-sounds/cues";
-import {
-  SoundControls,
-  ThemeControls,
-} from "@/components/layout/QuickSettingsControls";
+import { QuickSettingsAccordion } from "@/components/layout/QuickSettingsControls";
 
 export default function SidebarFooter() {
   const router = useRouter();
@@ -26,7 +23,7 @@ export default function SidebarFooter() {
   const panelRef = useRef<HTMLDivElement>(null);
   const isGuest = isAnonymousUser(user);
   const displayName = isGuest
-    ? "Modo invitado"
+    ? "Sesión temporal"
     : preferences?.full_name || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Mi perfil";
   const avatarUrl = user?.user_metadata?.avatar_url as string | undefined;
   const initials = isGuest
@@ -71,18 +68,41 @@ export default function SidebarFooter() {
     router.replace("/login?intent=explore");
   };
 
+  const settingsButton = (
+    <button
+      type="button"
+      onClick={() => {
+        playUiCue(open ? "nav-close" : "nav-open");
+        setOpen((value) => !value);
+      }}
+      aria-expanded={open}
+      aria-haspopup="dialog"
+      aria-label="Ajustes rápidos"
+      title="Ajustes rápidos"
+      className={cn(
+        "focus-ring press-feedback grid size-9 shrink-0 place-items-center rounded-md transition-colors text-fg-subtle hover:text-fg hover:bg-surface-sunken",
+        open && "bg-surface-sunken text-primary",
+      )}
+    >
+      <Settings2 size={18} aria-hidden />
+    </button>
+  );
+
   return (
     <div ref={footerRef} className="relative shrink-0 border-t border-border-subtle p-3 space-y-2">
-      {/* Direct Guest CTA Banner when uncollapsed */}
+      {/* Guests: single unified block — status, save-progress CTA and settings gear together */}
       {isGuest && !collapsed && (
         <div className="rounded-lg border border-border-subtle bg-surface-sunken p-2.5 space-y-2">
-          <div className="flex items-center gap-2">
-            <span className="grid size-5 shrink-0 place-items-center rounded-full bg-surface-raised text-fg-subtle">
-              <User size={12} aria-hidden />
-            </span>
-            <span className="font-caption text-tiny font-semibold text-fg-subtle uppercase tracking-wider">
-              Modo invitado
-            </span>
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <span className="grid size-5 shrink-0 place-items-center rounded-full bg-surface-raised text-fg-subtle">
+                <User size={12} aria-hidden />
+              </span>
+              <span className="font-caption text-tiny font-semibold text-fg-subtle uppercase tracking-wider">
+                Modo invitado
+              </span>
+            </div>
+            {settingsButton}
           </div>
           <button
             type="button"
@@ -90,7 +110,7 @@ export default function SidebarFooter() {
               playUiCue("tap");
               router.push("/login?intent=save&mode=register");
             }}
-            className="focus-ring press-feedback flex w-full items-center justify-center gap-2 rounded-md bg-primary py-1.5 px-3 text-caption font-semibold text-on-primary transition-all hover:brightness-105"
+            className="focus-ring press-feedback flex w-full items-center justify-center gap-2 rounded-md border border-border-default bg-surface hover:bg-surface-sunken py-1.5 px-3 text-caption font-semibold text-fg transition-all"
           >
             <LogIn size={14} aria-hidden />
             Guardar progreso
@@ -98,52 +118,39 @@ export default function SidebarFooter() {
         </div>
       )}
 
-      {/* Footer trigger row: user profile / guest status + separate settings gear */}
-      <div className="flex items-center justify-between gap-1.5">
-        <button
-          type="button"
-          onClick={() => {
-            playUiCue("tap");
-            if (isGuest) {
-              router.push("/login?intent=save&mode=register");
-            } else {
-              router.push("/profile");
-            }
-          }}
-          title={isGuest ? "Crear cuenta para guardar progreso" : `Perfil de ${displayName}`}
-          className={cn(
-            "focus-ring press-feedback flex min-h-[38px] flex-1 items-center gap-2.5 rounded-md text-left transition-colors hover:bg-surface-sunken px-2 py-1",
-            collapsed && "justify-center px-0",
-          )}
-        >
-          <span className="relative grid size-7 shrink-0 place-items-center overflow-hidden rounded-full bg-primary-soft text-caption font-bold text-primary">
-            {avatarUrl ? <Image src={avatarUrl} alt="" fill sizes="28px" className="object-cover" /> : initials}
-          </span>
-          {!collapsed && (
-            <div className="min-w-0 flex-1 truncate">
-              <p className="truncate font-label text-fg text-caption font-medium">{displayName}</p>
-            </div>
-          )}
-        </button>
+      {/* Collapsed guest: just the gear */}
+      {isGuest && collapsed && (
+        <div className="flex justify-center">{settingsButton}</div>
+      )}
 
-        <button
-          type="button"
-          onClick={() => {
-            playUiCue(open ? "nav-close" : "nav-open");
-            setOpen((value) => !value);
-          }}
-          aria-expanded={open}
-          aria-haspopup="dialog"
-          aria-label="Ajustes rápidos"
-          title="Ajustes rápidos de apariencia y sonido"
-          className={cn(
-            "focus-ring press-feedback grid size-9 shrink-0 place-items-center rounded-md transition-colors text-fg-subtle hover:text-fg hover:bg-surface-sunken",
-            open && "bg-surface-sunken text-primary",
-          )}
-        >
-          <Settings2 size={18} aria-hidden />
-        </button>
-      </div>
+      {/* Signed-in users: normal profile row + settings gear */}
+      {!isGuest && (
+        <div className="flex items-center justify-between gap-1.5">
+          <button
+            type="button"
+            onClick={() => {
+              playUiCue("tap");
+              router.push("/profile");
+            }}
+            title={`Perfil de ${displayName}`}
+            className={cn(
+              "focus-ring press-feedback flex min-h-[38px] flex-1 items-center gap-2.5 rounded-md text-left transition-colors hover:bg-surface-sunken px-2 py-1",
+              collapsed && "justify-center px-0",
+            )}
+          >
+            <span className="relative grid size-7 shrink-0 place-items-center overflow-hidden rounded-full bg-primary-soft text-caption font-bold text-primary">
+              {avatarUrl ? <Image src={avatarUrl} alt="" fill sizes="28px" className="object-cover" /> : initials}
+            </span>
+            {!collapsed && (
+              <div className="min-w-0 flex-1 truncate">
+                <p className="truncate font-label text-fg text-caption font-medium">{displayName}</p>
+              </div>
+            )}
+          </button>
+
+          {settingsButton}
+        </div>
+      )}
 
       {open &&
         typeof document !== "undefined" &&
@@ -154,13 +161,8 @@ export default function SidebarFooter() {
             aria-label="Ajustes rápidos"
             className="panel-reveal fixed bottom-3 left-[calc(var(--sidebar-width)+0.75rem)] z-50 w-[min(23rem,calc(100vw-1.5rem))] rounded-xl border border-border-subtle bg-surface-raised p-4 shadow-xl before:absolute before:-left-2 before:bottom-5 before:size-4 before:rotate-45 before:border-l before:border-b before:border-border-subtle before:bg-surface-raised"
           >
-            <div className="mb-1 flex items-start justify-between gap-3 px-1 pb-2">
-              <div>
-                <p className="font-label font-semibold text-fg">Ajustes rápidos</p>
-                <p className="font-caption text-fg-subtle">
-                  Personaliza tu experiencia visual y de sonido
-                </p>
-              </div>
+            <div className="flex items-center justify-between gap-3 px-1 pb-3">
+              <p className="font-label font-semibold text-fg">Ajustes rápidos</p>
               {!isGuest && (
                 <button
                   type="button"
@@ -176,15 +178,11 @@ export default function SidebarFooter() {
               )}
             </div>
 
-            <ThemeControls />
-            <SoundControls />
+            <QuickSettingsAccordion />
 
-            <div className="border-t border-border-subtle pt-3 mt-1">
+            <div className="border-t border-border-subtle pt-3 mt-3">
               {isGuest ? (
                 <div className="flex flex-col gap-2">
-                  <p className="font-caption text-tiny text-fg-subtle px-1">
-                    Crea tu cuenta para respaldar tu progreso en la nube
-                  </p>
                   <button
                     type="button"
                     onClick={() => {
