@@ -36,7 +36,7 @@ export function JournalGuidedTemplateArea({
 }: JournalGuidedTemplateAreaProps) {
   return (
     <div className="flex flex-col gap-5">
-      <div className="flex flex-wrap items-baseline gap-2 font-serif font-h3 font-medium text-fg">
+      <div className="flex flex-wrap items-baseline gap-2 font-sans font-h3 font-medium text-fg">
         <span>{starterPrefix}</span>
 
         {isCustom ? (
@@ -47,14 +47,14 @@ export function JournalGuidedTemplateArea({
               value={customText}
               onChange={(e) => onCustomTextChange(e.target.value)}
               placeholder="escribe aquí…"
-              className="min-w-[140px] border-b-2 border-primary bg-primary-soft/30 px-2 py-0.5 font-serif font-h3 text-fg placeholder:font-sans placeholder:text-body-sm placeholder:text-fg-placeholder focus:outline-none"
+              className="min-w-[140px] border-b-2 border-primary bg-primary-soft/30 px-2 py-0.5 font-sans font-h3 text-fg placeholder:font-sans placeholder:text-body-sm placeholder:text-fg-placeholder focus:outline-none"
             />
           </span>
         ) : (
           <span
             onClick={onEnableCustom}
             className={cn(
-              'inline-flex min-h-[32px] min-w-[90px] cursor-pointer items-center justify-center rounded-[var(--radius-sm)] px-2.5 py-0.5 text-center font-serif font-h3 transition-all',
+              'inline-flex min-h-[32px] min-w-[90px] cursor-pointer items-center justify-center rounded-[var(--radius-sm)] px-2.5 py-0.5 text-center font-sans font-h3 transition-all',
               selectedOption
                 ? 'bg-primary-soft text-primary'
                 : 'border-b-2 border-primary bg-primary-soft/20 text-transparent',

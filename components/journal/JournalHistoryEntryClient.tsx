@@ -140,9 +140,9 @@ function JournalHistoryEntry({
         </div>
       </header>
 
-      {/* ── Pregunta en inglés (serif) + traducción ── */}
+      {/* ── Pregunta en inglés + traducción ── */}
       <div className="flex flex-col gap-1">
-        <h2 className="font-serif text-xl sm:text-2xl font-normal text-fg leading-relaxed">
+        <h2 className="font-h3 font-semibold text-fg leading-relaxed">
           {entry.prompt}
         </h2>
       </div>
@@ -153,7 +153,7 @@ function JournalHistoryEntry({
           LO QUE ESCRIBISTE
         </span>
         <div className="rounded-[var(--radius-md)] border border-border-subtle/70 bg-surface-sunken/60 p-5">
-          <p className="font-serif text-lg sm:text-xl italic leading-relaxed text-fg whitespace-pre-wrap break-words">
+          <p className="font-sans text-base sm:text-lg leading-relaxed text-fg whitespace-pre-wrap break-words">
             {displayContent(entry.content) || 'Esta página todavía está vacía.'}
           </p>
         </div>
@@ -233,14 +233,14 @@ function JournalHistoryEntry({
             <span className="font-caption font-medium text-fg-muted">
               ← Página anterior · {formatShortDay(prevEntry.entryDate)}
             </span>
-            <p className="line-clamp-1 font-serif text-sm font-medium text-fg">
+            <p className="line-clamp-1 font-sans text-sm font-medium text-fg">
               {displayContent(prevEntry.content) || prevEntry.prompt}
             </p>
           </Link>
         ) : (
           <div className="flex flex-col gap-1.5 rounded-[var(--radius-md)] border border-dashed border-border-subtle p-4 opacity-60">
             <span className="font-caption font-medium text-fg-muted">← Página anterior</span>
-            <span className="font-serif text-sm text-fg-muted">Esta es tu primera página</span>
+            <span className="font-sans text-sm text-fg-muted">Esta es tu primera página</span>
           </div>
         )}
 
@@ -253,14 +253,14 @@ function JournalHistoryEntry({
               <span>Página siguiente · {formatShortDay(nextEntry.entryDate)}</span>
               <ArrowRight size={14} aria-hidden />
             </span>
-            <p className="line-clamp-1 font-serif text-sm font-medium text-fg">
+            <p className="line-clamp-1 font-sans text-sm font-medium text-fg">
               {displayContent(nextEntry.content) || nextEntry.prompt}
             </p>
           </Link>
         ) : (
           <div className="flex flex-col items-end gap-1.5 rounded-[var(--radius-md)] border border-dashed border-border-subtle p-4 opacity-60">
             <span className="font-caption font-medium text-fg-muted">Página siguiente →</span>
-            <span className="font-serif text-sm text-fg-muted">Esta es tu página más reciente</span>
+            <span className="font-sans text-sm text-fg-muted">Esta es tu página más reciente</span>
           </div>
         )}
       </div>

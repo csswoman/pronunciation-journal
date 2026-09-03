@@ -68,7 +68,7 @@ export function JournalHistorySidebar({ entries, selectedDate }: JournalHistoryS
                   {formatShortDay(entry.entryDate)}
                 </span>
               </div>
-              <p className="line-clamp-2 font-serif text-sm leading-relaxed text-fg-muted">
+              <p className="line-clamp-2 font-sans text-sm leading-relaxed text-fg-muted">
                 {previewText}
               </p>
             </Link>

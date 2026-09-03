@@ -36,7 +36,7 @@ export function JournalPronunciationCard({
       <div className="flex items-start gap-4 sm:items-center">
         {/* Ilustración ámbar / accent */}
         <div
-          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-[var(--radius-md)] bg-accent-1-soft/30 text-accent-1 [&>svg]:h-10 [&>svg]:w-auto"
+          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-[var(--radius-md)] bg-primary-soft text-primary [&>svg]:h-10 [&>svg]:w-auto"
           aria-hidden="true"
         >
           <LanguageBookIllustration />

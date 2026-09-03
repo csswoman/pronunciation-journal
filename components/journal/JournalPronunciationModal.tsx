@@ -183,7 +183,7 @@ export function JournalPronunciationModal({
         {analysis && (
           <div className="flex items-center justify-between gap-3 rounded-[var(--radius-md)] border border-border-subtle bg-surface-sunken p-3 animate-in fade-in-0 duration-150">
             <div className="flex items-center gap-2">
-              <span className="font-mono text-sm font-semibold text-accent-1">
+              <span className="font-ipa text-base font-semibold text-primary">
                 {analysis.ipa}
               </span>
               <span className="font-caption text-fg-muted">
