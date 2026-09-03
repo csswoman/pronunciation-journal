@@ -484,15 +484,16 @@
 .course-path__level-picker {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
-  margin-bottom: var(--space-6);
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
 }
 
-.course-path__level-picker-head {
+.course-path__level-picker-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
+  width: 100%;
 }
 
 .course-path__level-picker-title {
