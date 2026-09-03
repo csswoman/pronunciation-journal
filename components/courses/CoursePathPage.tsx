@@ -52,8 +52,6 @@ export default function CoursePathPage({ levelParam }: CoursePathPageProps) {
           }
         />
 
-        <div className="course-path__header-divider my-4 border-b border-subtle" />
-
         <div className="course-path__wrap course-path__wrap--shell">
           <section
             key={selectedLevel.id}
