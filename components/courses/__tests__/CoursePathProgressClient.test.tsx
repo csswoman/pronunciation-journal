@@ -19,6 +19,10 @@ vi.mock("@/lib/db", () => ({
   },
 }));
 
+vi.mock("@/lib/auth/session", () => ({
+  getCurrentUser: async () => ({ id: "user-123" }),
+}));
+
 vi.mock("@/lib/supabase/client", () => ({
   getSupabaseBrowserClient: () => ({ auth: { getUser: async () => ({ data: { user: { id: "user-1" } } }) } }),
 }));

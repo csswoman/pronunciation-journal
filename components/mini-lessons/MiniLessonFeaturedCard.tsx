@@ -13,6 +13,7 @@
 // </MiniLessonFeaturedCard>
 
 import Link from "next/link";
+import { ArrowRight } from "@/components/icons";
 import { CategoryIcon } from "@/components/mini-lessons/CategoryIcon";
 import type { MiniLesson } from "@/lib/content/schemas";
 import { MINI_LESSON_CATEGORY_LABELS } from "@/lib/content/mini-lesson-labels";
@@ -23,8 +24,6 @@ export function MiniLessonFeaturedCard({ lesson }: { lesson: MiniLesson }) {
       href={`/mini-lessons/${lesson.slug}`}
       className="group relative block w-full no-underline rounded-lg border border-border-subtle bg-surface-raised p-5 md:p-6 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-primary/40 overflow-hidden"
     >
-      <div className="absolute top-0 left-0 right-0 h-1.5 bg-primary" aria-hidden />
-
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-5">
         <div className="flex items-start md:items-center gap-4">
           <div className="flex-shrink-0 w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center bg-primary/10 border border-primary/20 text-primary transition-transform duration-200 group-hover:scale-105">
@@ -56,12 +55,10 @@ export function MiniLessonFeaturedCard({ lesson }: { lesson: MiniLesson }) {
           <span className="text-body-sm font-semibold text-primary group-hover:underline">
             Continuar lección
           </span>
-          <span
-            className="text-primary font-bold transition-transform duration-200 group-hover:translate-x-1"
+          <ArrowRight
+            className="w-4 h-4 text-primary transition-transform duration-200 group-hover:translate-x-1"
             aria-hidden
-          >
-            →
-          </span>
+          />
         </div>
       </div>
     </Link>

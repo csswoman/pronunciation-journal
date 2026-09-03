@@ -79,29 +79,30 @@ async function WordsContent() {
 function WordsSkeleton() {
   return (
     <PageLayout archetype="catalog">
-      <div className="words-lexicon space-y-6" aria-busy="true" aria-label="Cargando diccionario">
-        <div className="flex items-center justify-between pb-2">
+      <div className="space-y-6 pt-2" aria-busy="true" aria-label="Cargando diccionario">
+        {/* Header Skeleton */}
+        <div className="flex flex-wrap items-center justify-between gap-4 pb-2 border-b border-border-subtle/50">
           <div className="space-y-2">
-            <div className="h-4 w-28 animate-pulse rounded bg-surface-sunken" />
-            <div className="h-8 w-44 animate-pulse rounded-md bg-surface-sunken" />
+            <div className="h-8 w-44 animate-pulse rounded-lg bg-surface-sunken" />
+            <div className="h-4 w-60 animate-pulse rounded bg-surface-sunken" />
           </div>
-          <div className="h-10 w-52 animate-pulse rounded-full bg-surface-sunken" />
+          <div className="h-10 w-48 animate-pulse rounded-full bg-surface-sunken" />
         </div>
-        <div className="words-lexicon__dictionary-layout mt-4">
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <div className="h-3 w-20 animate-pulse rounded bg-surface-sunken" />
-              <div className="h-7 w-56 animate-pulse rounded-md bg-surface-sunken" />
-              <div className="h-4 w-72 animate-pulse rounded bg-surface-sunken" />
-            </div>
-            <div className="h-14 w-full animate-pulse rounded-md border border-border-subtle bg-surface-raised" />
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="h-28 animate-pulse rounded-md border border-border-subtle bg-surface-raised" />
-              ))}
-            </div>
+
+        {/* Today Panel Skeleton */}
+        <div className="h-32 w-full animate-pulse rounded-2xl border border-border-subtle bg-surface-raised" />
+
+        {/* Search Bar Skeleton */}
+        <div className="h-14 w-full animate-pulse rounded-2xl border border-border-subtle bg-surface-raised" />
+
+        {/* Category Grid Skeleton */}
+        <div className="space-y-4 pt-4">
+          <div className="h-6 w-36 animate-pulse rounded bg-surface-sunken" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="h-24 animate-pulse rounded-2xl border border-border-subtle bg-surface-raised" />
+            ))}
           </div>
-          <div className="h-52 animate-pulse rounded-md border border-border-subtle bg-surface-raised" />
         </div>
       </div>
     </PageLayout>
