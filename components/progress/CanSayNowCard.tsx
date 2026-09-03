@@ -1,11 +1,22 @@
+// Structure:
+// <CanSayNowCard>
+//   <Header />
+//   <SpeechLatencyBanner />
+//   <MasteredList />
+//   <InProgressList />
+//   <DailyPracticeLink />
+// </CanSayNowCard>
+
 import Link from "next/link"
 import type { CanSayNow } from '@/lib/progress/can-say-now'
+import type { SpeechLatencyData } from '@/lib/progress/speech-latency-queries'
 
 interface Props {
   data: CanSayNow
+  latency?: SpeechLatencyData
 }
 
-export function CanSayNowCard({ data }: Props) {
+export function CanSayNowCard({ data, latency }: Props) {
   const hasAny = data.mastered.length > 0 || data.inProgress.length > 0
 
   return (
@@ -21,6 +32,19 @@ export function CanSayNowCard({ data }: Props) {
           Estructuras que has producido tú, sin que te las dieran hechas.
         </p>
       </header>
+
+      {latency && latency.averageMs !== null && (
+        <div className="flex flex-wrap items-center gap-2 rounded-md bg-surface-sunken px-3 py-2 text-caption">
+          <span className="font-medium text-fg">
+            ⏱️ Latencia media de habla: {(latency.averageMs / 1000).toFixed(1)}s
+          </span>
+          {latency.trend && latency.trend.improvedMs > 0 && (
+            <span className="font-semibold text-success">
+              (↓ {(latency.trend.improvedMs / 1000).toFixed(1)}s más ágil que hace dos semanas)
+            </span>
+          )}
+        </div>
+      )}
 
       {!hasAny && (
         <p className="text-body-sm text-fg-muted">

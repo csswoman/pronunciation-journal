@@ -25,6 +25,9 @@ import { deriveWordProgressSignal } from '@/lib/word-bank/progress-state'
 import { projectProgress, type ProgressFact, type ProgressProjections } from './projections'
 import type { EvidenceAttribution } from '@/lib/practice/attribution'
 import type { CanSayAttempt } from './can-say-now'
+import { getSpeechLatencyData, type SpeechLatencyData } from './speech-latency-queries'
+
+export type { SpeechLatencyData } from './speech-latency-queries'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -106,6 +109,7 @@ export interface ProgressPageData {
   recentSessions: ActivitySessionSummary[]
   projections: ProgressProjections
   canSayAttempts: CanSayAttempt[]
+  speechLatency: SpeechLatencyData
 }
 
 // ── Queries ───────────────────────────────────────────────────────────────────
@@ -569,7 +573,7 @@ export async function getCanSayNowAttempts(userId: string): Promise<CanSayAttemp
 }
 
 export async function getProgressPageData(userId: string): Promise<ProgressPageData> {
-  const [streak, dailyCompletion, accuracy, skillProfile, weeklySummary, coachInsights, recentSessions, projections, canSayAttempts] =
+  const [streak, dailyCompletion, accuracy, skillProfile, weeklySummary, coachInsights, recentSessions, projections, canSayAttempts, speechLatency] =
     await Promise.all([
       getDailyStreak(userId),
       getDailyCompletionStats(userId),
@@ -580,6 +584,7 @@ export async function getProgressPageData(userId: string): Promise<ProgressPageD
       getRecentActivitySessions(userId),
       getProgressProjections(userId),
       getCanSayNowAttempts(userId),
+      getSpeechLatencyData(userId),
     ])
 
   const fluencyProfile = await getFluencyProfile(userId, skillProfile)
@@ -595,6 +600,7 @@ export async function getProgressPageData(userId: string): Promise<ProgressPageD
     recentSessions,
     projections,
     canSayAttempts,
+    speechLatency,
   }
 }
 

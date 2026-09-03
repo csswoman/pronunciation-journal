@@ -98,7 +98,10 @@ export default async function ProgressPage() {
         <LevelConceptsProgressCard />
 
         {/* Producción oral demostrada */}
-        <CanSayNowCard data={buildCanSayNow({ attempts: data.canSayAttempts })} />
+        <CanSayNowCard
+          data={buildCanSayNow({ attempts: data.canSayAttempts })}
+          latency={data.speechLatency}
+        />
 
         {/* Práctica vs dominio + historial */}
         <ProgressProjectionCards data={data.projections} />
