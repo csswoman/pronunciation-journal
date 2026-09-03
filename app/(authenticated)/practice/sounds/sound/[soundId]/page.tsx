@@ -14,8 +14,6 @@ import {
 import { finishAttributedContrastSessions } from '@/lib/phoneme-practice/finish-session'
 import { buildMixedSession } from '@/lib/phoneme-practice/mixed-session'
 import { fromMixedExercise } from '@/lib/practice/adapters'
-import { fetchEssentialWordsForDay } from '@/lib/essential-words/client-fetch'
-import { dayOfYear } from '@/lib/practice/daily-plan/selectors'
 import { PHONEME_CONFUSION, contrastKey } from '@/lib/phoneme-practice/phoneme-similarity'
 import type { PracticeExercise, SessionResult } from '@/lib/practice/types'
 
@@ -47,10 +45,9 @@ export default function SoundPracticePage() {
     setError(null)
     setNextReview(null)
     try {
-      const [dataset, allProgress, matchPairWords] = await Promise.all([
+      const [dataset, allProgress] = await Promise.all([
         getSessionDataset(soundId),
         getAllContrastProgress(user.id),
-        fetchEssentialWordsForDay(dayOfYear(), 4),
       ])
       const { targetSound: sound, sounds, wordsBySoundId, minimalPairs } = dataset
       setSoundIpa(sound.ipa)
@@ -66,7 +63,6 @@ export default function SoundPracticePage() {
       const targetWords = wordsBySoundId.get(soundId) ?? []
       const mixed = buildMixedSession(sound, targetWords, sounds, wordsBySoundId, minimalPairs, {
         contrastProgress: allProgress,
-        matchPairWords,
       })
       setExercises(mixed.map((m) => fromMixedExercise(m, 'sound_lab')))
       setSessionKey((k) => k + 1)

@@ -187,9 +187,9 @@ export const AI_COACH_EMPTY_STATE_PROMPTS = {
     Summarize it in 3–4 sentences in clear, natural English.
     Then open the discussion with one strong question. As the user responds, push the conversation deeper with follow-up questions.
     Occasionally highlight good vocabulary they use, and introduce 1–2 new relevant words naturally within your responses.`,
-  pronunciation: `You are a friendly English pronunciation coach.
-    Start by asking the user their native language — this helps you focus on sounds that are genuinely tricky for them.
-    Then guide them through targeted exercises: minimal pairs, tongue twisters, and real words from everyday speech.
+  pronunciation: `You are a friendly English pronunciation coach for a native Spanish speaker.
+    Focus directly on sounds that are genuinely tricky for Spanish speakers (e.g. tense vs lax vowels /iː/ vs /ɪ/, /θ/ vs /s/, /v/ vs /b/, final consonant clusters, /z/ vs /s/).
+    Guide them through targeted exercises: minimal pairs, tongue twisters, and real words from everyday speech.
     Describe sounds clearly (mouth position, airflow) since you're working in text.
     Give them a short phrase to practice, ask them to type it back with any notes on how it felt, and coach from there.
     Keep it encouraging — pronunciation is vulnerable work.`,
@@ -245,7 +245,8 @@ Rules:
 3. "newWords": Suggest 2 to 5 useful, natural vocabulary words or collocations (lowercase dictionary form) that fit the topic or elevate the learner's entry. Max 8 items.`
 
 export function buildJournalCorrectionPrompt(content: string, interests: readonly string[] = []): string {
-  return `Please review and correct the following learner journal entry. Ensure every error[].topic strictly matches one of the canonical topic IDs: ${JOURNAL_TOPIC_IDS}.${interestsClause(interests)}\n\nLearner Entry:\n"""\n${content}\n"""`
+  const sanitizedContent = content.replaceAll('"""', '\\"\\"\\"')
+  return `Please review and correct the following learner journal entry. Ensure every error[].topic strictly matches one of the canonical topic IDs: ${JOURNAL_TOPIC_IDS}.${interestsClause(interests)}\n\nLearner Entry:\n"""\n${sanitizedContent}\n"""`
 }
 
 export const JOURNAL_NUDGE_SYSTEM_PROMPT = `You help a Spanish-speaking English learner continue a journal entry when they are stuck. Return ONLY valid JSON with exactly three nudges: { "nudges": [{ "en": "...", "es": "..." }, { "en": "...", "es": "..." }, { "en": "...", "es": "..." }] }.

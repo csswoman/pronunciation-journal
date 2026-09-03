@@ -23,7 +23,7 @@ export default function VocabularyReviewCard({ dueCount }: Props) {
     >
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between gap-2">
-          <span className="font-kicker text-fg-subtle text-tiny">vocabulario</span>
+          <span className="font-kicker text-fg-subtle">vocabulario</span>
           <span className="inline-flex items-center rounded-full border border-border-subtle bg-surface-sunken px-2.5 py-0.5 font-caption text-tiny font-medium text-fg-muted">
             {countText}
           </span>

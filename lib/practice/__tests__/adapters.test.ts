@@ -51,18 +51,26 @@ describe('fromMixedExercise', () => {
     }
   })
 
-  it('produces payload.kind="generic" for match_pairs', () => {
+  it('produces payload.kind="generic" for reorder_words', () => {
+    const reorderData: ReorderWordsExercise = {
+      id: 'rw-1',
+      type: 'reorder_words',
+      sourceRef: { source: 'words', id: 'word-1' },
+      level: 'A2',
+      sentence: 'she sells seashells',
+      tokens: ['she', 'sells', 'seashells'],
+    }
     const result = fromMixedExercise(
-      { kind: 'match_pairs', data: matchPairsData },
+      { kind: 'reorder_words', data: reorderData },
       'sound_lab',
     )
     expect(result.payload.kind).toBe('generic')
-    expect(result.slug).toBe('match_pairs')
-    expect(result.exerciseTypeId).toBe(EXERCISE_TYPE_IDS.match_pairs)
-    expect(result.contentId).toBe('mp-1')
+    expect(result.slug).toBe('reorder_words')
+    expect(result.exerciseTypeId).toBe(EXERCISE_TYPE_IDS.reorder_words)
+    expect(result.contentId).toBe('rw-1')
     expect(result.sourceRef).toEqual({ source: 'words', id: 'word-1' })
     if (result.payload.kind === 'generic') {
-      expect(result.payload.data).toBe(matchPairsData)
+      expect(result.payload.data).toBe(reorderData)
     }
   })
 

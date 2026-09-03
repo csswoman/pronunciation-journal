@@ -24,7 +24,7 @@ export default function RecommendedPracticeCard({ recommendation }: Props) {
     <div className="group relative flex flex-col justify-between gap-6 rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-5 md:p-6 shadow-xs transition-colors hover:border-border-strong h-full overflow-hidden">
       <div className="flex flex-col gap-4 min-w-0 z-10">
         <div className="flex items-center justify-between gap-2">
-          <span className="font-kicker text-fg-subtle uppercase tracking-wider text-tiny">
+          <span className="font-kicker text-fg-subtle">
             continúa donde lo dejaste
           </span>
           <span className="inline-flex items-center gap-1 rounded-full border border-border-subtle bg-surface-sunken px-2.5 py-0.5 font-caption text-tiny font-medium text-fg-muted">
@@ -65,13 +65,13 @@ export default function RecommendedPracticeCard({ recommendation }: Props) {
             {['receipt', 'refused', 'schedule'].map((word) => (
               <span
                 key={word}
-                className="inline-flex items-center rounded border border-border-subtle bg-surface-sunken/40 px-2 py-0.5 font-mono text-[11px] text-fg-muted"
+                className="inline-flex items-center rounded border border-border-subtle bg-surface-sunken/40 px-2 py-0.5 font-mono text-tiny text-fg-muted"
               >
                 {word}
               </span>
             ))}
             {numberStr && parseInt(numberStr, 10) > 3 ? (
-              <span className="font-caption text-[11px] text-fg-subtle">
+              <span className="font-caption text-tiny text-fg-subtle">
                 +{parseInt(numberStr, 10) - 3} más
               </span>
             ) : null}

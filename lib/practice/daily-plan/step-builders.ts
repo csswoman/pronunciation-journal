@@ -170,11 +170,8 @@ export function buildPhonemeFocusStep(
   pairs: MinimalPair[],
   isWeak: boolean,
   context: PracticeContext = 'daily',
-  matchPairWords?: WordBankEntry[],
 ): DailyStep | null {
-  const mixed = buildMixedSession(sound, targetWords, allSounds, allWordsBySoundId, pairs, {
-    matchPairWords,
-  })
+  const mixed = buildMixedSession(sound, targetWords, allSounds, allWordsBySoundId, pairs)
   const core = mixed.filter((ex: MixedExercise) => !(ex.kind === 'phoneme' && ex.data.type === 'minimal_pair'))
   const exercises = dedupeByContentId(
     core.slice(0, PHONEME_FOCUS_EXERCISE_COUNT).map((ex) => fromMixedExercise(ex, context)),

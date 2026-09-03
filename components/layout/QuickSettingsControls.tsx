@@ -47,29 +47,48 @@ function AccordionRow({
 }) {
   const panelId = useId();
   return (
-    <div className="border-b border-border-subtle last:border-b-0">
+    <div
+      className={cn(
+        "-mx-2 rounded-lg px-2 transition-colors",
+        open && "bg-surface-sunken/50",
+      )}
+    >
       <button
         type="button"
         onClick={onToggle}
         aria-expanded={open}
         aria-controls={panelId}
-        className="focus-ring press-feedback flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left transition-colors hover:bg-surface-sunken"
+        className="focus-ring press-feedback flex w-full items-center justify-between gap-3 rounded-lg py-2 text-left"
       >
         <span className="flex items-center gap-2.5">
-          <Icon size={16} className="text-fg-subtle" aria-hidden />
-          <span className="font-label text-caption font-medium text-fg">{label}</span>
+          <Icon
+            size={15}
+            className={cn("shrink-0 transition-colors", open ? "text-primary" : "text-fg-subtle")}
+            aria-hidden
+          />
+          <span
+            className={cn(
+              "font-label text-caption transition-all",
+              open ? "font-semibold text-fg" : "font-normal text-fg-muted",
+            )}
+          >
+            {label}
+          </span>
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="font-caption text-tiny text-fg-subtle">{value}</span>
+          {!open && <span className="font-caption text-tiny text-fg-subtle">{value}</span>}
           <ChevronDown
-            size={15}
+            size={14}
             aria-hidden
-            className={cn("shrink-0 text-fg-subtle transition-transform duration-150", open && "rotate-180")}
+            className={cn(
+              "shrink-0 transition-transform duration-200",
+              open ? "rotate-180 text-primary" : "text-fg-subtle",
+            )}
           />
         </span>
       </button>
       {open && (
-        <div id={panelId} className="px-3 pb-3 pt-0.5">
+        <div id={panelId} className="pb-3 pt-0.5">
           {children}
         </div>
       )}
@@ -102,12 +121,7 @@ export function QuickSettingsAccordion({ className }: { className?: string } = {
     : `${soundPreference === "all" ? "Todos" : "Ejercicios"} · ${percent}%`;
 
   return (
-    <div
-      className={cn(
-        "overflow-hidden rounded-lg border border-border-subtle bg-surface-sunken/40",
-        className,
-      )}
-    >
+    <div className={cn("flex flex-col gap-0.5", className)}>
       <AccordionRow
         icon={Sun}
         label="Apariencia"
@@ -115,7 +129,7 @@ export function QuickSettingsAccordion({ className }: { className?: string } = {
         open={section === "appearance"}
         onToggle={() => toggle("appearance")}
       >
-        <div className="grid grid-cols-3 gap-1 rounded-md bg-surface-sunken p-1">
+        <div className="grid grid-cols-3 gap-1.5">
           {APPEARANCE_OPTIONS.map(({ value, label, icon: OptionIcon }) => {
             const isSelected = preference === value;
             return (
@@ -125,13 +139,13 @@ export function QuickSettingsAccordion({ className }: { className?: string } = {
                 onClick={() => setPreference(value)}
                 aria-pressed={isSelected}
                 className={cn(
-                  "focus-ring flex min-h-8 flex-col items-center justify-center gap-1 rounded-sm font-label text-caption transition-colors",
+                  "focus-ring flex min-h-14 flex-col items-center justify-center gap-1.5 rounded-lg border font-label text-caption transition-all duration-150",
                   isSelected
-                    ? "bg-surface-raised text-fg font-semibold shadow-xs"
-                    : "text-fg-subtle hover:text-fg",
+                    ? "border-primary bg-primary-soft text-primary font-semibold"
+                    : "border-border-subtle text-fg-subtle hover:border-border-default hover:text-fg",
                 )}
               >
-                <OptionIcon size={15} aria-hidden />
+                <OptionIcon size={16} aria-hidden />
                 {label}
               </button>
             );
@@ -146,10 +160,13 @@ export function QuickSettingsAccordion({ className }: { className?: string } = {
         open={section === "color"}
         onToggle={() => toggle("color")}
       >
-        {colorNote && (
-          <p className="mb-2 text-right font-caption text-tiny text-primary font-semibold">{colorNote}</p>
-        )}
-        <div className="grid grid-cols-3 justify-items-center gap-2 rounded-lg border border-border-subtle bg-surface-sunken/60 p-2">
+        <div className="flex items-center justify-between gap-2 pb-2">
+          <span className="font-caption text-tiny text-fg-subtle">
+            {colorValue}
+            {colorNote && <span className="text-fg-muted"> · {colorNote}</span>}
+          </span>
+        </div>
+        <div className="flex flex-wrap gap-2">
           {HUE_PRESETS.map((preset) => {
             const isSelected = matchesHuePreset(hue, preset);
             return (
@@ -161,18 +178,17 @@ export function QuickSettingsAccordion({ className }: { className?: string } = {
                 aria-pressed={isSelected}
                 title={preset.label}
                 className={cn(
-                  "focus-ring grid size-8 shrink-0 place-items-center rounded-full transition-transform",
-                  isSelected
-                    ? "outline-2 outline-offset-2 outline-primary scale-105"
-                    : "hover:scale-110 opacity-85 hover:opacity-100",
+                  "focus-ring grid size-8 shrink-0 place-items-center rounded-full ring-1 ring-inset ring-black/10 transition-transform duration-150 dark:ring-white/10",
+                  isSelected ? "scale-110" : "hover:scale-105",
                 )}
                 style={{
                   backgroundColor: swatchColor(preset),
-                  outlineColor: isSelected ? swatchColor(preset) : undefined,
+                  outline: isSelected ? "2px solid var(--primary)" : undefined,
+                  outlineOffset: isSelected ? "2px" : undefined,
                 }}
               >
                 {isSelected && (
-                  <Check size={14} className="text-(--on-swatch)" aria-hidden strokeWidth={3} />
+                  <Check size={15} className="text-(--on-swatch)" aria-hidden strokeWidth={3} />
                 )}
               </button>
             );
@@ -187,7 +203,7 @@ export function QuickSettingsAccordion({ className }: { className?: string } = {
         open={section === "sound"}
         onToggle={() => toggle("sound")}
       >
-        <div className="flex items-center gap-1 rounded-md bg-surface-sunken p-0.5 text-tiny font-medium">
+        <div className="grid grid-cols-3 gap-1.5 text-caption font-medium">
           {SOUND_OPTIONS.map(({ val, label }) => {
             const active = soundPreference === val;
             return (
@@ -195,11 +211,12 @@ export function QuickSettingsAccordion({ className }: { className?: string } = {
                 key={val}
                 type="button"
                 onClick={() => setSoundPreference(val)}
+                aria-pressed={active}
                 className={cn(
-                  "press-feedback flex-1 rounded px-2 py-1 transition-colors",
+                  "press-feedback focus-ring min-h-9 rounded-lg border px-2 transition-all duration-150",
                   active
-                    ? "bg-surface-raised font-semibold text-primary shadow-xs"
-                    : "text-fg-subtle hover:text-fg",
+                    ? "border-primary bg-primary-soft font-semibold text-primary"
+                    : "border-border-subtle text-fg-subtle hover:border-border-default hover:text-fg",
                 )}
               >
                 {label}
@@ -209,7 +226,7 @@ export function QuickSettingsAccordion({ className }: { className?: string } = {
         </div>
         <div
           className={cn(
-            "mt-2.5 flex items-center gap-3 transition-opacity duration-150",
+            "mt-3 flex items-center gap-3 transition-opacity duration-150",
             isMuted ? "opacity-35 pointer-events-none" : "opacity-100",
           )}
         >

@@ -12,4 +12,15 @@ describe("ConnectedSpeechTrainer", () => {
     expect(screen.getByText(/Habla conectada nativa:/i)).toBeInTheDocument();
     expect(screen.getByText("«pi-ki-tap»")).toBeInTheDocument();
   });
+
+  it("switches to acoustic unpacking mode on click", async () => {
+    const { fireEvent } = await import("@testing-library/react");
+    render(<ConnectedSpeechTrainer />);
+
+    const unpackBtn = screen.getByText(/Desempaquetado Auditivo/i);
+    fireEvent.click(unpackBtn);
+
+    expect(screen.getByText("Desempaquetado Acústico")).toBeInTheDocument();
+    expect(screen.getByText(/Velocidad nativa \(1\.0x\)/i)).toBeInTheDocument();
+  });
 });

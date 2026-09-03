@@ -267,6 +267,18 @@ export type SessionArc = {
   soundIpa: string | null
   /** Distinct words touched in the session (from word_intro/word_review/context steps). */
   sessionWords: string[]
+  /** Metadatos de la prescripción diagnóstica activa si el sonido de hoy proviene de ella. */
+  diagnosticPrescription?: {
+    soundIpa: string
+    dayIndex: number
+    totalDays: number
+    reason?: string
+  } | null
+  /** Metadatos de errores de Journal encolados para reparación hoy. */
+  journalRepairs?: {
+    count: number
+    patterns: string[]
+  } | null
 }
 
 export type DailyPlan = {

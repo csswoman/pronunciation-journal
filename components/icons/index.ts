@@ -43,6 +43,7 @@ import {
   IconConfetti,
   IconCornerDownLeft,
   IconDeviceLaptop,
+  IconDeviceTv,
   IconDotsVertical,
   IconDumbbell,
   IconEar,
@@ -239,6 +240,7 @@ export const Timer = createIcon(IconClockHour4, "Timer");
 export const Trash2 = createIcon(IconTrash, "Trash2");
 export const TrendingUp = createIcon(IconTrendingUp, "TrendingUp");
 export const Trophy = createIcon(IconTrophy, "Trophy");
+export const Tv = createIcon(IconDeviceTv, "Tv");
 export const Undo2 = createIcon(IconRotateClockwise, "Undo2");
 export const User = createIcon(IconUser, "User");
 export const Utensils = createIcon(IconToolsKitchen2, "Utensils");

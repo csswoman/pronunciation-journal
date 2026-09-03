@@ -96,9 +96,9 @@ export function fromMixedExercise(
     }
   }
 
-  if (ex.kind === 'match_pairs' || ex.kind === 'reorder_words') {
+  if (ex.kind === 'reorder_words') {
     const data = ex.data
-    const slug: ExerciseSlug = ex.kind === 'match_pairs' ? 'match_pairs' : 'reorder_words'
+    const slug: ExerciseSlug = 'reorder_words'
     const payload: GenericPayload = { kind: 'generic', data }
     const contentId = data.id
     return {

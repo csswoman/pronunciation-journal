@@ -1,5 +1,5 @@
 import type { Exercise, Sound, SoundWord, MinimalPair, UserContrastProgress } from './types'
-import type { MatchPairsExercise, ReorderWordsExercise } from '@/lib/exercises/types'
+import type { ReorderWordsExercise } from '@/lib/exercises/types'
 import type { CEFRLevel } from '@/lib/exercises/cefr'
 import {
   generatePickWord,
@@ -15,14 +15,12 @@ import {
   generateFinalConsonantAx,
   getFinalConsonantPairs,
 } from './exercises'
-import { generateMatchPairsFromWordBank } from '@/lib/exercises/generators/match-pairs'
 import { generateReorderFromSoundExample } from '@/lib/exercises/generators/reorder-words'
 import { IPA_EXTRA } from '@/lib/pronunciation/ipa-data'
 import { HARD_FOR_SPANISH_SPEAKERS } from '@/lib/pronunciation/ipa-data'
 import { contrastKey, PHONEME_CONFUSION } from './phoneme-similarity'
 import { isContrastMastered } from './mastery'
 import { cefrToNumeric } from './cefr'
-import type { WordBankEntry } from '@/lib/word-bank/types'
 
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr]
@@ -35,7 +33,6 @@ function shuffle<T>(arr: T[]): T[] {
 
 export type MixedExercise =
   | { kind: 'phoneme'; data: Exercise }
-  | { kind: 'match_pairs'; data: MatchPairsExercise }
   | { kind: 'reorder_words'; data: ReorderWordsExercise }
 
 /**
@@ -107,12 +104,6 @@ export interface AdaptiveSessionOptions {
   userLevel?: CEFRLevel
   /** All contrast progress rows for this user (used for adaptive ordering). */
   contrastProgress?: UserContrastProgress[]
-  /**
-   * Vocabulary entries for the optional aggregate matching activity.
-   * Sound-word rows intentionally do not supply this exercise: matching a
-   * spelling to its IPA is visual recognition, not pronunciation practice.
-   */
-  matchPairWords?: WordBankEntry[]
 }
 
 /**
@@ -209,13 +200,10 @@ export function buildAdaptiveSession(
   }
 
   // ── Stage 5: Consolidation & Transfer ──
-  // Optional aggregate vocabulary retrieval plus a sound-specific example drill.
-  // The matching pairs come from Essential Words (or another vocabulary source),
-  // never from the Sound Lab word → IPA dataset.
-  const matchGroups = opts.matchPairWords
-    ? generateMatchPairsFromWordBank(opts.matchPairWords, 1)
-    : []
-  if (matchGroups.length > 0) stage5.push({ kind: 'match_pairs', data: matchGroups[0] })
+  // A sound-specific example drill. Vocabulary matching intentionally does not
+  // belong here: it was identical across every sound session in a day (same
+  // Essential Words), so it repeated. Vocab matching now lives only in vocab
+  // practice.
   const reorder = generateReorderFromSoundExample(sound)
   if (reorder) stage5.push({ kind: 'reorder_words', data: reorder })
 

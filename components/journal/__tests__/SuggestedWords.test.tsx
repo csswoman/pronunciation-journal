@@ -29,7 +29,22 @@ describe('SuggestedWords', () => {
       expect(screen.getByRole('button', { name: /commute/i })).toHaveAttribute('aria-pressed', 'true')
     })
     expect(quickAddWord).toHaveBeenCalledTimes(1)
-    expect(quickAddWord).toHaveBeenCalledWith({ text: 'commute', source: 'manual' })
+    expect(quickAddWord).toHaveBeenCalledWith({ text: 'commute', source: 'journal' })
+  })
+
+  it('adds all words on Guardar todas click', async () => {
+    quickAddWord.mockResolvedValue({})
+    render(<SuggestedWords words={['commute', 'deadline']} />)
+
+    const addAllButton = screen.getByRole('button', { name: /guardar todas/i })
+    expect(addAllButton).toBeInTheDocument()
+    fireEvent.click(addAllButton)
+
+    await waitFor(() => {
+      expect(quickAddWord).toHaveBeenCalledTimes(2)
+    })
+    expect(quickAddWord).toHaveBeenCalledWith({ text: 'commute', source: 'journal' })
+    expect(quickAddWord).toHaveBeenCalledWith({ text: 'deadline', source: 'journal' })
   })
 
   it('shows the next review returned by word_bank after opt-in', async () => {

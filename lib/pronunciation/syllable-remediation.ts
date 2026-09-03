@@ -3,6 +3,7 @@ import { ARPABET_TO_IPA } from './phonemes'
 import { IPA_EXTRA } from './ipa-data'
 import { ARTICULATION_GUIDE_MAP } from './articulation-guide-data'
 import { stripStressDigit } from './arpabet-vowels'
+import { getVowelDurationGuidance, type VowelDurationGuidance } from './vowel-duration'
 
 export interface SyllableRemediation {
   /** Clave IPA con barras, ej. "/iː/" — el formato de IPA_EXTRA. */
@@ -13,6 +14,8 @@ export interface SyllableRemediation {
   spanishTip: string | null
   /** Pista visual de la guía articulatoria. */
   visualCueEs: string | null
+  /** Guía de duración acústica (tensas vs laxas). */
+  vowelDuration: VowelDurationGuidance | null
   /** Pares mínimos reproducibles como ejemplo. */
   minimalPairs: { wordA: string; wordB: string }[]
 }
@@ -41,6 +44,7 @@ export function buildRemediation(
     articulationEs: extra?.articulationEs ?? [],
     spanishTip: extra?.spanishTip ?? null,
     visualCueEs: guide?.visualCueEs ?? null,
+    vowelDuration: getVowelDurationGuidance(symbol),
     minimalPairs: (extra?.minimalPairs ?? []).map((pair) => ({
       wordA: pair.wordA,
       wordB: pair.wordB,

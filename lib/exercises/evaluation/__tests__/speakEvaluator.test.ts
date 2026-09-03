@@ -133,4 +133,32 @@ describe("evaluateSpeak biomechanical feedback", () => {
     expect(result.feedback.tip).toContain("Casi perfecto: cuida el sonido /ð/ en \"this\".");
     expect(result.feedback.tip).toContain("vibración o zumbido claro");
   });
+
+  it("returns suggestedPerceptionTarget on failed speak attempt with missed phonemes", async () => {
+    mockedScore.mockResolvedValueOnce({
+      accuracy: 40,
+      isCorrect: false,
+      transcript: "sink",
+      wordResults: [
+        {
+          expected: "think",
+          got: "sink",
+          status: "incorrect",
+          phonemes: {
+            expected: ['TH', 'IH'],
+            got: ['S', 'IH'],
+            tip: null,
+            alignment: [
+              { phoneme: 'TH', ipa: 'θ', status: 'incorrect' },
+              { phoneme: 'IH', ipa: 'ɪ', status: 'correct' },
+            ],
+          },
+        },
+      ],
+    });
+
+    const result = await evaluateSpeak(baseInput);
+    expect(result.correct).toBe(false);
+    expect(result.suggestedPerceptionTarget).toBe("θ");
+  });
 });

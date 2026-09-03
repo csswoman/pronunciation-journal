@@ -15,7 +15,7 @@ export default function ImmersionCard() {
       className="group relative flex flex-col justify-between gap-5 rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-5 shadow-xs transition-colors hover:border-border-strong focus-ring h-full overflow-hidden"
     >
       <div className="flex flex-col gap-3 z-10">
-        <span className="font-kicker text-fg-subtle text-tiny">libre</span>
+        <span className="font-kicker text-fg-subtle">libre</span>
         <div className="flex flex-col gap-1">
           <h2 className="text-h3 font-bold text-fg group-hover:text-primary transition-colors">
             Inmersión y conversación
@@ -28,13 +28,13 @@ export default function ImmersionCard() {
 
       <div className="flex items-center justify-between gap-2 pt-2 z-10">
         <div className="flex flex-wrap items-center gap-1.5">
-          <span className="inline-flex items-center rounded-md border border-border-subtle bg-surface-sunken px-2 py-0.5 font-mono text-[11px] text-fg-subtle">
+          <span className="inline-flex items-center rounded-md border border-border-subtle bg-surface-sunken px-2 py-0.5 font-mono text-tiny text-fg-subtle">
             video
           </span>
-          <span className="inline-flex items-center rounded-md border border-border-subtle bg-surface-sunken px-2 py-0.5 font-mono text-[11px] text-fg-subtle">
+          <span className="inline-flex items-center rounded-md border border-border-subtle bg-surface-sunken px-2 py-0.5 font-mono text-tiny text-fg-subtle">
             fonética
           </span>
-          <span className="inline-flex items-center rounded-md border border-border-subtle bg-surface-sunken px-2 py-0.5 font-mono text-[11px] text-fg-subtle">
+          <span className="inline-flex items-center rounded-md border border-border-subtle bg-surface-sunken px-2 py-0.5 font-mono text-tiny text-fg-subtle">
             frases
           </span>
         </div>

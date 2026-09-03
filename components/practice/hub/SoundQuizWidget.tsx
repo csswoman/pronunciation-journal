@@ -19,7 +19,7 @@ export default function SoundQuizWidget() {
             <span className="grid h-8 w-8 place-items-center rounded-[var(--radius-md)] bg-[var(--hue-icon-bg)] text-primary">
               <MicVocal size={18} aria-hidden />
             </span>
-            <span className="font-kicker text-fg-subtle uppercase tracking-wider text-tiny">Pronunciación</span>
+            <span className="font-kicker text-fg-subtle">pronunciación</span>
           </div>
 
           <div className="flex items-center gap-1 rounded-full border border-border-subtle bg-surface-base/80 p-1 shadow-2xs backdrop-blur-xs">
@@ -32,7 +32,7 @@ export default function SoundQuizWidget() {
                   setResetKey((k) => k + 1)
                 }}
                 className={cn(
-                  'focus-ring inline-flex min-h-[36px] items-center rounded-full px-3 py-1 text-tiny transition-all duration-150',
+                  'focus-ring inline-flex min-h-9 sm:min-h-10 items-center rounded-full px-3 py-1 text-tiny transition-all duration-150',
                   selectedCategory === cat
                     ? 'border border-border-strong bg-surface-raised font-semibold text-fg shadow-2xs'
                     : 'border border-transparent text-fg-muted hover:text-fg hover:bg-surface-sunken',
@@ -76,7 +76,7 @@ export default function SoundQuizWidget() {
             <span className="font-label text-body-xs font-semibold text-fg group-hover/item:text-primary transition-colors">
               Pares mínimos
             </span>
-            <span className="font-caption text-[11px] text-fg-subtle">
+            <span className="font-caption text-tiny text-fg-subtle">
               10 pares · 4 min
             </span>
           </Link>
@@ -89,7 +89,7 @@ export default function SoundQuizWidget() {
             <span className="font-label text-body-xs font-semibold text-fg group-hover/item:text-primary transition-colors">
               Entonación
             </span>
-            <span className="font-caption text-[11px] text-fg-subtle">
+            <span className="font-caption text-tiny text-fg-subtle">
               6 frases · 3 min
             </span>
           </Link>
@@ -102,7 +102,7 @@ export default function SoundQuizWidget() {
             <span className="font-label text-body-xs font-semibold text-fg group-hover/item:text-primary transition-colors">
               Habla conectada
             </span>
-            <span className="font-caption text-[11px] text-fg-subtle">
+            <span className="font-caption text-tiny text-fg-subtle">
               8 frases · 3 min
             </span>
           </Link>

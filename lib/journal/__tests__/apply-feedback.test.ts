@@ -13,6 +13,7 @@ interface TopicRow {
 interface MockState {
   journalUpdatePayload: Record<string, unknown> | null
   topicRpcArgs: Record<string, unknown>[]
+  userLearningStatePayload?: unknown
 }
 
 function createSupabaseMock(opts: {
@@ -25,6 +26,20 @@ function createSupabaseMock(opts: {
   }
 
   const from = vi.fn((table: string) => {
+    if (table === 'user_learning_state') {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- test double
+      const builder: any = {
+        select: () => builder,
+        eq: () => builder,
+        maybeSingle: async () => ({ data: null, error: null }),
+        upsert: async (payload: unknown) => {
+          state.userLearningStatePayload = payload
+          return { error: null }
+        },
+      }
+      return builder
+    }
+
     if (table !== 'journal_entries') throw new Error(`unexpected table ${table}`)
 
     return {
@@ -164,11 +179,15 @@ describe('applyJournalFeedback', () => {
     warn.mockRestore()
   })
 
-  it('does not add newWords to the word bank or write topic_srs directly', async () => {
+  it('does not add newWords to the word bank or write topic_srs directly, but updates errorRecurrence in user_learning_state', async () => {
     const { client, state } = createSupabaseMock({ journalUpdate: { data: [{ id: 'e1' }], error: null } })
     await applyJournalFeedback(client, { userId: 'u1', entryId: 'e1', correction: baseCorrection })
 
-    expect((client.from as unknown as { mock: { calls: string[][] } }).mock.calls.map((c) => c[0])).toEqual(['journal_entries'])
+    expect((client.from as unknown as { mock: { calls: string[][] } }).mock.calls.map((c) => c[0])).toEqual([
+      'journal_entries',
+      'user_learning_state',
+    ])
     expect(state.topicRpcArgs).toHaveLength(1)
+    expect(state.userLearningStatePayload).toBeDefined()
   })
 })

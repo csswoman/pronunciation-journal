@@ -13,7 +13,7 @@ export default function ReferenceSection() {
       className="group flex flex-col justify-between gap-5 rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-5 md:p-6 shadow-xs transition-colors hover:border-border-strong focus-ring h-full"
     >
       <div className="flex flex-col gap-3">
-        <span className="font-kicker text-fg-subtle text-tiny">consulta</span>
+        <span className="font-kicker text-fg-subtle">consulta</span>
         <div className="flex flex-col gap-1">
           <h2 className="text-h3 font-bold text-fg group-hover:text-primary transition-colors">
             Diccionario

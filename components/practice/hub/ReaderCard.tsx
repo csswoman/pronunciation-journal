@@ -14,7 +14,7 @@ export default function ReaderCard() {
       className="group relative flex flex-col justify-between gap-4 rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-5 shadow-xs transition-colors hover:border-border-strong focus-ring h-full overflow-hidden"
     >
       <div className="flex flex-col gap-3 z-10">
-        <span className="font-kicker text-fg-subtle text-tiny">libre</span>
+        <span className="font-kicker text-fg-subtle">libre</span>
         <h2 className="text-h3 font-bold text-fg group-hover:text-primary transition-colors">
           Lectura en contexto
         </h2>

@@ -16,12 +16,15 @@ export function SuggestedWords({ words }: { words: string[] }) {
   const [states, setStates] = useState<Record<string, WordState>>({})
   const [nextReviews, setNextReviews] = useState<Record<string, string | null>>({})
 
+  const pendingWords = unique.filter((w) => states[w] !== 'added' && states[w] !== 'adding')
+  const isAddingAll = Object.values(states).some((s) => s === 'adding')
+
   if (unique.length === 0) return null
 
   async function add(word: string) {
     setStates((prev) => ({ ...prev, [word]: 'adding' }))
     try {
-      const saved = await quickAddWord({ text: word, source: 'manual' })
+      const saved = await quickAddWord({ text: word, source: 'journal' })
       setNextReviews((prev) => ({ ...prev, [word]: saved.next_review_at }))
       setStates((prev) => ({ ...prev, [word]: 'added' }))
     } catch {
@@ -29,11 +32,30 @@ export function SuggestedWords({ words }: { words: string[] }) {
     }
   }
 
+  async function addAll() {
+    for (const word of pendingWords) {
+      void add(word)
+    }
+  }
+
   return (
     <section aria-labelledby="journal-suggested-words" className="flex flex-col gap-2">
-      <h3 id="journal-suggested-words" className="font-body-sm font-semibold text-fg">
-        Palabras sugeridas
-      </h3>
+      <div className="flex items-center justify-between gap-2">
+        <h3 id="journal-suggested-words" className="font-body-sm font-semibold text-fg">
+          Palabras sugeridas
+        </h3>
+        {pendingWords.length >= 2 && (
+          <button
+            type="button"
+            onClick={() => void addAll()}
+            disabled={isAddingAll}
+            className="focus-ring inline-flex items-center gap-1 rounded-full border border-primary/40 bg-primary-soft px-2.5 py-0.5 text-xs font-medium text-primary hover:bg-primary/20 transition-colors"
+          >
+            <Plus size={12} aria-hidden />
+            <span>Guardar todas ({pendingWords.length})</span>
+          </button>
+        )}
+      </div>
       <p className="font-body-sm text-fg-muted">
         Guarda solo las que quieras practicar. No se añaden automáticamente.
       </p>
@@ -48,7 +70,13 @@ export function SuggestedWords({ words }: { words: string[] }) {
                 onClick={() => void add(word)}
                 disabled={state === 'adding' || added}
                 aria-pressed={added}
-                className={cn( 'focus-ring inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-body-sm transition-colors', added ? 'border-success-border bg-success-soft text-success' : 'border-border-default bg-surface-raised text-fg hover:border-primary', state === 'error' && 'border-error-border text-error', )}
+                className={cn(
+                  'focus-ring inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-body-sm transition-colors',
+                  added
+                    ? 'border-success-border bg-success-soft text-success'
+                    : 'border-border-default bg-surface-raised text-fg hover:border-primary',
+                  state === 'error' && 'border-error-border text-error',
+                )}
               >
                 {added ? <Check size={14} aria-hidden /> : <Plus size={14} aria-hidden />}
                 {added && nextReviews[word] ? `${word} · ${reviewCopy(nextReviews[word]!)}` : word}

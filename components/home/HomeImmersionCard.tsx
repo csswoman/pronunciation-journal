@@ -1,13 +1,13 @@
 "use client";
 
-// Planned structure:
+// Sub-components:
 // <HomeImmersionCard>
-//   <Header (icon, title, hint)>
-//   <Controls (category chips, minutes stepper, CTA button)>
+//   <ImmersionBar (icon, title, categories list, CTA button)>
+//   <ImmersionControls (category chips, duration stepper)> [conditional when open]
 // </HomeImmersionCard>
 
 import { useState } from "react";
-import { Clapperboard, Check } from "@/components/icons";
+import { Tv, Check } from "@/components/icons";
 import Button from "@/components/ui/Button";
 
 const IMMERSION_CATEGORIES = [
@@ -21,9 +21,15 @@ export default function HomeImmersionCard() {
   const [selectedCategory, setSelectedCategory] = useState("video");
   const [minutes, setMinutes] = useState(30);
   const [registered, setRegistered] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleRegister = () => {
+    if (!isOpen && !registered) {
+      setIsOpen(true);
+      return;
+    }
     setRegistered(true);
+    setIsOpen(false);
     setTimeout(() => setRegistered(false), 3000);
   };
 
@@ -32,50 +38,63 @@ export default function HomeImmersionCard() {
       aria-label="Registrar inmersión"
       className="flex flex-col gap-3 rounded-xl border border-border-subtle bg-surface-raised p-3.5 sm:p-4 shadow-xs"
     >
-      {/* Header compacto */}
-      <div className="flex items-center gap-2.5">
-        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-surface-sunken text-fg-muted">
-          <Clapperboard size={15} aria-hidden />
+      {/* Bar compacto principal */}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        {/* Izquierda: Icono TV + Pregunta y Categorías */}
+        <div className="flex items-center gap-2.5 min-w-0">
+          <Tv className="size-5 shrink-0 text-fg-muted" aria-hidden />
+          <div className="flex flex-wrap items-baseline gap-x-2.5 gap-y-0.5 min-w-0">
+            <h2 className="text-body-sm font-semibold text-fg">
+              ¿Viste algo en inglés hoy?
+            </h2>
+            <span className="text-caption text-fg-muted">
+              Video, serie, podcast, lectura
+            </span>
+          </div>
         </div>
-        <div className="flex flex-wrap items-baseline gap-x-2">
-          <h2 className="text-body-sm font-semibold text-fg">
-            Registrar inmersión
-          </h2>
-          <span className="text-caption text-fg-muted">
-            ¿Viste algo en inglés hoy?
-          </span>
+
+        {/* Derecha: Botón de acción */}
+        <div className="flex items-center gap-2 shrink-0">
+          <Button
+            size="sm"
+            variant="secondary"
+            onClick={handleRegister}
+            icon={registered ? <Check size={14} className="text-success" /> : undefined}
+          >
+            {registered ? "¡Registrado!" : isOpen ? "Guardar" : "Registrar"}
+          </Button>
         </div>
       </div>
 
-      {/* Fila de controles: categorías + tiempo + acción */}
-      <div className="flex flex-wrap items-center justify-between gap-2.5 pt-0.5">
-        {/* Chips de categoría */}
-        <div
-          className="flex flex-wrap items-center gap-1.5"
-          role="group"
-          aria-label="Tipo de inmersión"
-        >
-          {IMMERSION_CATEGORIES.map((cat) => {
-            const isSelected = selectedCategory === cat.id;
-            return (
-              <button
-                key={cat.id}
-                type="button"
-                onClick={() => setSelectedCategory(cat.id)}
-                className={`focus-ring inline-flex h-8 items-center rounded-lg px-2.5 text-caption font-medium transition-all ${
-                  isSelected
-                    ? "border border-primary/25 bg-primary-soft text-primary font-semibold"
-                    : "border border-border-subtle/60 bg-surface-sunken text-fg-muted hover:bg-surface-raised hover:text-fg"
-                }`}
-              >
-                {cat.label}
-              </button>
-            );
-          })}
-        </div>
+      {/* Selector desplegable de detalles de inmersión */}
+      {isOpen && (
+        <div className="flex flex-wrap items-center justify-between gap-2.5 border-t border-border-subtle/50 pt-3">
+          {/* Chips de categoría */}
+          <div
+            className="flex flex-wrap items-center gap-1.5"
+            role="group"
+            aria-label="Tipo de inmersión"
+          >
+            {IMMERSION_CATEGORIES.map((cat) => {
+              const isSelected = selectedCategory === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => setSelectedCategory(cat.id)}
+                  className={`focus-ring inline-flex h-8 items-center rounded-lg px-2.5 text-caption font-medium transition-all ${
+                    isSelected
+                      ? "border border-primary/25 bg-primary-soft text-primary font-semibold"
+                      : "border border-border-subtle/60 bg-surface-sunken text-fg-muted hover:bg-surface-raised hover:text-fg"
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              );
+            })}
+          </div>
 
-        {/* Stepper de tiempo + Botón registrar */}
-        <div className="flex items-center gap-2">
+          {/* Stepper de tiempo */}
           <div className="flex h-8 items-center rounded-lg border border-border-subtle bg-surface-sunken px-1 font-sans text-caption font-medium tabular-nums text-fg">
             <button
               type="button"
@@ -98,17 +117,8 @@ export default function HomeImmersionCard() {
               +
             </button>
           </div>
-
-          <Button
-            size="sm"
-            variant={registered ? "secondary" : "primary"}
-            onClick={handleRegister}
-            icon={registered ? <Check size={14} className="text-success" /> : undefined}
-          >
-            {registered ? "¡Registrado!" : "Registrar"}
-          </Button>
         </div>
-      </div>
+      )}
     </section>
   );
 }

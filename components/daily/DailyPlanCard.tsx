@@ -7,6 +7,8 @@ import Button from '@/components/ui/Button'
 import DailyStepList, { readInProgressStepId } from '@/components/daily/DailyStepList'
 import { PlanSegmentProgress } from '@/components/home/PlanSegmentProgress'
 import HomeHeroCard from '@/components/home/HomeHeroCard'
+import { PedagogicalContextBanner } from './PedagogicalContextBanner'
+import type { SessionArc } from '@/lib/practice/types'
 import type {
   DailyPlanStatus,
   DailyStep,
@@ -36,12 +38,11 @@ export interface DailyPlanCardProps {
   inProgressStepId?: string | null
   listPrefix?: ReactNode
   greeting?: string | null
-  /** Show the greeting + "Plan de hoy" heading. Off on Home, where the page
-   *  header already carries both — the card leads with progress instead. */
   showTitle?: boolean
   primaryAction?: { label: string; href: string; variant?: string } | null
   hideThreadHints?: boolean
   customEmptyState?: ReactNode
+  arc?: SessionArc
 }
 
 export default function DailyPlanCard({
@@ -63,6 +64,7 @@ export default function DailyPlanCard({
   showTitle = true,
   primaryAction = null,
   hideThreadHints = false,
+  arc,
 }: DailyPlanCardProps) {
   const [inProgressStepId, setInProgressStepId] = useState<string | null>(null)
 
@@ -109,6 +111,7 @@ export default function DailyPlanCard({
         onStartStep={onStartStep}
         inProgressStepId={inProgressStepId}
         primaryActionHref={primaryAction?.href}
+        arc={arc}
       />
     )
   }
@@ -203,11 +206,10 @@ export default function DailyPlanCard({
 
         {status === 'ready' && !allDone && steps.length > 0 && showTitle ? (
           <div className="animate-state-in flex flex-col gap-4">
+            <PedagogicalContextBanner arc={arc} />
             {listPrefix && <div className="-mt-1 mb-2">{listPrefix}</div>}
             <div className="flex flex-col gap-3">
-              {greeting && (
-                <p className="font-body-sm text-fg-muted -mb-1">{greeting}</p>
-              )}
+              {greeting && <p className="font-body-sm text-fg-muted -mb-1">{greeting}</p>}
               <div className="flex items-baseline justify-between gap-3">
                 <h2 className="text-h3 font-bold text-fg">Tu sesión de hoy</h2>
                 <span className="font-body-sm tabular-nums text-fg-muted">

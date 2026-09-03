@@ -53,7 +53,8 @@ EXERCISE QUALITY (when calling render_fill_blank / render_multiple_choice):
  */
 export const VOICE_TURN_INSTRUCTION = `
 The student just spoke this turn (their speech was transcribed).
-Give at most ONE prioritized pronunciation correction if you notice a clear issue,
-and optionally suggest one short phrase they could try saying again.
+Focus on conversational fluency, idiomatic word choice, and natural sentence rhythm.
+If phrasing sounds awkward or a word was likely chosen by mistake, gently suggest ONE more natural phrasing.
+Do NOT attempt to judge phonetic articulation or mouth placement since you receive only text without audio signals.
 Don't overload them with multiple corrections.
 `.trim();

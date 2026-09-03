@@ -9,7 +9,7 @@
  */
 
 import Link from "next/link";
-import { ArrowRight, MicVocal } from "@/components/icons";
+import { MicVocal } from "@/components/icons";
 import CoursePathAutoLevelSync from "@/components/courses/CoursePathAutoLevelSync";
 import CoursePathLevelPanel from "@/components/courses/CoursePathLevelPanel";
 import CoursePathLevelPicker from "@/components/courses/CoursePathLevelPicker";

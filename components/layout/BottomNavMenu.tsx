@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { BookOpen, FileText, Layers, MicVocal, Moon, RotateCcw, Sun, User } from "@/components/icons";
+import { BookOpen, Bookmark, FileText, Layers, LibraryBig, MicVocal, Moon, RotateCcw, Sun, User } from "@/components/icons";
 import { useEffect } from "react";
 import { cn } from "@/lib/cn";
 import { useOKLCHTheme } from "@/hooks/useOKLCHTheme";
@@ -11,6 +11,8 @@ import { playUiCue } from "@/lib/ui-sounds/cues";
 const navItems = [
   { name: "Diario", href: "/journal", icon: FileText },
   { name: "Repaso", href: "/practice/review", icon: RotateCcw },
+  { name: "Diccionario", href: "/words", icon: LibraryBig },
+  { name: "Guardadas", href: "/tracking", icon: Bookmark },
   { name: "Mazos", href: "/practice/decks", icon: Layers },
   { name: "Laboratorio de sonidos", href: "/practice/sounds", icon: MicVocal },
   { name: "Ruta", href: "/courses", icon: BookOpen },

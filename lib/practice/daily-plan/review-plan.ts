@@ -1,4 +1,3 @@
-import { fetchEssentialWordsForDay } from '@/lib/essential-words/client-fetch'
 import { getSessionDatasets } from '@/lib/phoneme-practice/queries'
 import { buildFailedSentencesMixStep } from '@/lib/review/build-failed-exercises'
 import { fetchRecentFailedSentences } from '@/lib/review/client-queries'
@@ -14,7 +13,7 @@ import {
   fetchDueSounds,
   fetchWeakWords,
 } from './fetchers'
-import { dayOfYear, getSemanticContentKey } from './selectors'
+import { getSemanticContentKey } from './selectors'
 import { getWordCategoryIndex } from '@/lib/lexicon/word-index-client'
 import {
   buildContextPracticeStep,
@@ -36,7 +35,6 @@ export function shouldKeepNonExerciseStep(step: DailyStep): boolean {
 export interface BuildReviewPlanOptions {
   dueWords?: WordBankEntry[]
   dueSounds?: Sound[]
-  essentialMatchWords?: WordBankEntry[]
 }
 
 export async function buildReviewPlan(
@@ -45,12 +43,11 @@ export async function buildReviewPlan(
 ): Promise<ReviewPlan> {
   const reviewContext = 'review' as const
 
-  const [failedItems, weakWords, reviewWords, dueSounds, essentialMatchWords, wordIndex] = await Promise.all([
+  const [failedItems, weakWords, reviewWords, dueSounds, wordIndex] = await Promise.all([
     fetchRecentFailedSentences(userId, 5),
     fetchWeakWords(userId, WORD_REVIEW_WORD_COUNT),
     options?.dueWords ?? fetchDueReviewWords(userId, WORD_REVIEW_WORD_COUNT),
     options?.dueSounds ?? fetchDueSounds(userId),
-    options?.essentialMatchWords ?? fetchEssentialWordsForDay(dayOfYear(), 4),
     getWordCategoryIndex(),
   ])
 
@@ -85,7 +82,6 @@ export async function buildReviewPlan(
       minimalPairs,
       true,
       reviewContext,
-      essentialMatchWords,
     )
     if (focus) steps.push({ ...focus, id: `review_sound:${targetSound.id}`, kind: 'phoneme_focus' })
   }

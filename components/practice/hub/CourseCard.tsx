@@ -14,7 +14,7 @@ export default function CourseCard() {
       className="group relative flex flex-col justify-between gap-5 rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-5 shadow-xs transition-colors hover:border-border-strong focus-ring h-full overflow-hidden"
     >
       <div className="flex flex-col gap-3 z-10">
-        <span className="font-kicker text-fg-subtle text-tiny">guiado</span>
+        <span className="font-kicker text-fg-subtle">guiado</span>
         <div className="flex flex-col gap-1">
           <h2 className="text-h3 font-bold text-fg group-hover:text-primary transition-colors">
             Ruta guiada

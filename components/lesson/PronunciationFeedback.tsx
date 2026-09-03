@@ -23,6 +23,7 @@ interface PronunciationFeedbackProps {
   xpEarned: number;
   /** Transcript from the STT evaluator; used only for signal-honest feedback. */
   transcript?: string;
+  userAudioUrl?: string | null;
   /**
    * When false, hides the per-word phoneme breakdown and the "sounds to
    * practice" chips, leaving only the score summary. Defaults to true.
@@ -36,6 +37,7 @@ export default function PronunciationFeedback({
   feedback,
   xpEarned,
   transcript = "",
+  userAudioUrl = null,
   showPhonemeDetail = true,
 }: PronunciationFeedbackProps) {
   const actionableFeedback = feedbackFromScoringResult({
@@ -53,6 +55,7 @@ export default function PronunciationFeedback({
     <div className="w-full animate-fadeIn space-y-4">
       {/* Tarjeta de entendimiento accionable */}
       <section aria-live="polite" className="rounded-md border border-border-subtle bg-surface-raised px-4 py-3">
+        <p className="sr-only">Resultado: {accuracy}%, {feedback.message}.</p>
         {feedbackCopyEnabled ? (
           <>
             <p className="m-0 font-kicker text-fg-subtle">LO QUE ENTENDIMOS</p>
@@ -94,7 +97,7 @@ export default function PronunciationFeedback({
             ? "var(--admonitions-color-tip)"
             : accuracy >= 60
               ? "var(--admonitions-color-warning)"
-              : "var(--admonitions-color-caution)"
+              : "var(--error)"
         }
       />
 
@@ -103,6 +106,7 @@ export default function PronunciationFeedback({
         <SentenceContinuousFeedback
           wordResults={wordResults}
           syllableMap={syllableMap}
+          userAudioUrl={userAudioUrl}
         />
       )}
     </div>

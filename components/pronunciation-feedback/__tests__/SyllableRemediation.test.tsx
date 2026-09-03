@@ -11,6 +11,7 @@ const data: RemediationData = {
   articulationEs: ['Estira los labios como en una sonrisa amplia'],
   spanishTip: 'En español no existe esta vocal larga.',
   visualCueEs: 'Sonrisa amplia',
+  vowelDuration: null,
   minimalPairs: [{ wordA: 'sheep', wordB: 'ship' }],
 }
 
@@ -34,7 +35,7 @@ describe('SyllableRemediation', () => {
   it('no rompe cuando faltan campos opcionales', () => {
     render(<SyllableRemediation remediation={{
       ipa: '/p/', articulationEs: [], spanishTip: null,
-      visualCueEs: null, minimalPairs: [],
+      visualCueEs: null, vowelDuration: null, minimalPairs: [],
     }} />)
     expect(screen.getByText('/p/')).toBeInTheDocument()
   })

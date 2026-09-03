@@ -32,7 +32,7 @@ export default function DecksCard() {
           {['Viajes', 'Trabajo', 'Verbos'].map((deckName) => (
             <span
               key={deckName}
-              className="inline-flex items-center rounded border border-border-subtle bg-surface-sunken/60 px-2 py-0.5 font-mono text-[11px] text-fg-subtle"
+              className="inline-flex items-center rounded border border-border-subtle bg-surface-sunken/60 px-2 py-0.5 font-mono text-tiny text-fg-subtle"
             >
               {deckName}
             </span>

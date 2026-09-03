@@ -86,7 +86,7 @@ describe('SpeakScoredExercise', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /continuar/i }))
 
-    await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(false, ''))
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(false, '', { status: 'unscored' }))
     // Never a correct answer, never a score — cannot affect accuracy/SRS/mastery.
     expect(onSubmit).not.toHaveBeenCalledWith(true, expect.anything(), expect.anything())
   })
@@ -108,7 +108,7 @@ describe('SpeakScoredExercise', () => {
     expect(screen.getByText(/no admite puntuación por voz/i)).toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: /continuar/i }))
 
-    await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(false, ''))
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(false, '', { status: 'unscored' }))
   })
 
   it('falls back to an unscored shadowing result when evaluation rejects', async () => {
@@ -130,6 +130,6 @@ describe('SpeakScoredExercise', () => {
     const continueBtn = await screen.findByRole('button', { name: /continuar/i }, { timeout: 3000 })
     fireEvent.click(continueBtn)
 
-    await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(false, ''))
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(false, '', { status: 'evaluator_failed' }))
   })
 })

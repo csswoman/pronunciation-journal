@@ -8,6 +8,7 @@
 import Button from "@/components/ui/Button";
 import { Volume2, Mic, ArrowRight, Sparkles } from "@/components/icons";
 import { SelfPlaybackAudioBar } from "./SelfPlaybackAudioBar";
+import { RhythmicSentenceDisplay } from "./RhythmicSentenceDisplay";
 import { CONNECTED_SPEECH_DATA, type ConnectedPhrase } from "@/lib/pronunciation/connected-speech-data";
 import { cn } from "@/lib/cn";
 
@@ -17,6 +18,7 @@ const CATEGORIES = [
   { id: "flap-t", label: "Flap T (/ɾ/)" },
   { id: "intrusion", label: "Intrusión (/w/ y /j/)" },
   { id: "weak-forms", label: "Formas Débiles" },
+  { id: "silent-letters", label: "Letras Mudas" },
 ] as const;
 
 export function ConnectedSpeechCategoryPills({
@@ -56,6 +58,7 @@ export function ConnectedSpeechPhraseCard({
   isSupported,
   transcript,
   userAudioUrl,
+  isSaved,
   onPlaySlow,
   onPlayConnected,
   onToggleMic,
@@ -69,6 +72,7 @@ export function ConnectedSpeechPhraseCard({
   isSupported: boolean;
   transcript?: string;
   userAudioUrl: string | null;
+  isSaved?: boolean;
   onPlaySlow: () => void;
   onPlayConnected: () => void;
   onToggleMic: () => void;
@@ -78,10 +82,12 @@ export function ConnectedSpeechPhraseCard({
     <div className="flex flex-col gap-5 rounded-2xl border border-border-default bg-surface-raised p-6 shadow-sm">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <span className="font-caption uppercase tracking-wider text-xs font-semibold text-primary">
+          <span className="font-caption text-xs font-bold text-primary uppercase tracking-wider">
             {phrase.categoryNameEs}
           </span>
-          <h2 className="text-h1 font-bold text-fg mt-1">&ldquo;{phrase.phrase}&rdquo;</h2>
+          <h2 className="text-h2 font-bold text-fg mt-1 text-pretty">
+            &ldquo;{phrase.phrase}&rdquo;
+          </h2>
         </div>
 
         <div className="flex items-center gap-2">
@@ -90,33 +96,33 @@ export function ConnectedSpeechPhraseCard({
             onClick={onPlaySlow}
             disabled={isPlayingSlow || isPlayingAudio}
             className={cn(
-              "flex h-11 items-center gap-1.5 rounded-full border border-border-default bg-surface-base px-3.5 text-caption font-semibold text-fg transition-transform hover:scale-105 active:scale-95",
-              isPlayingSlow && "border-primary text-primary animate-pulse",
+              "flex h-11 px-3.5 items-center gap-1.5 rounded-full border border-border-default bg-surface-base text-fg text-xs font-medium transition-transform hover:scale-105 active:scale-95",
+              isPlayingSlow && "border-primary text-primary",
             )}
-            title="Escuchar lento (0.65x)"
+            title="Escuchar a velocidad lenta y articulada"
           >
-            <span>🐢 0.65x</span>
+            <Volume2 size={16} />
+            <span>Lento (0.65x)</span>
           </button>
 
           <button
             type="button"
             onClick={onPlayConnected}
-            disabled={isPlayingAudio || isPlayingSlow}
+            disabled={isPlayingSlow || isPlayingAudio}
             className={cn(
-              "flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border-default bg-primary text-on-primary transition-transform hover:scale-105 active:scale-95 shadow-sm",
-              isPlayingAudio && "animate-pulse ring-2 ring-primary/40",
+              "flex h-11 w-11 items-center justify-center rounded-full border border-border-default bg-surface-base text-primary transition-transform hover:scale-105 active:scale-95",
+              isPlayingAudio && "animate-pulse border-primary",
             )}
-            title="Escuchar habla conectada normal"
-            aria-label="Escuchar habla conectada normal"
+            title="Escuchar habla conectada nativa (1.0x)"
           >
             <Volume2 size={20} />
           </button>
         </div>
       </div>
 
-      <div className="flex flex-col gap-3 rounded-xl border border-primary/20 bg-primary-wash/50 p-4">
+      <div className="rounded-xl border border-border-default bg-surface-base p-5 flex flex-col gap-4">
         <div className="flex items-center gap-2">
-          <Sparkles size={16} className="text-primary" />
+          <Sparkles className="size-4 text-primary" />
           <span className="font-caption text-xs font-bold text-primary uppercase tracking-wider">
             Enlace Fonético en Acción
           </span>
@@ -158,6 +164,11 @@ export function ConnectedSpeechPhraseCard({
         </div>
       </div>
 
+      <RhythmicSentenceDisplay
+        sentence={phrase.phrase}
+        showAudio={false}
+      />
+
       <div className="rounded-xl border border-border-subtle bg-surface-base p-4">
         <div className="flex items-center gap-2 mb-1">
           <span className="font-caption text-xs font-semibold text-fg-muted">Cómo suena al oído:</span>
@@ -192,10 +203,17 @@ export function ConnectedSpeechPhraseCard({
             <div className="pt-2">
               <SelfPlaybackAudioBar targetWord={phrase.phrase} userAudioUrl={userAudioUrl} />
               {transcript && (
-                <p className="mt-2 text-body-sm text-fg">
-                  Reconocido:{" "}
-                  <strong className="font-medium text-primary">&ldquo;{transcript}&rdquo;</strong>
-                </p>
+                <div className="mt-2 flex items-center justify-between gap-2 text-body-sm text-fg">
+                  <p>
+                    Reconocido:{" "}
+                    <strong className="font-medium text-primary">&ldquo;{transcript}&rdquo;</strong>
+                  </p>
+                  {isSaved && (
+                    <span className="font-caption text-xs font-semibold px-2 py-0.5 rounded-full bg-success/20 text-success shrink-0">
+                      ✓ Guardado (+XP)
+                    </span>
+                  )}
+                </div>
               )}
             </div>
           )}

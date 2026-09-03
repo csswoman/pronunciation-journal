@@ -16,7 +16,6 @@ import { defaultEvaluationEngine } from '@/lib/exercises/evaluation'
 import { getEvaluationWordResults } from '@/lib/exercises/evaluation/word-results'
 import { getFeedbackMessage, calculateXP } from '@/lib/pronunciation/scoring'
 import PronunciationFeedback from '@/components/lesson/PronunciationFeedback'
-import { SelfPlaybackAudioBar } from '@/components/pronunciation/SelfPlaybackAudioBar'
 import Button from '@/components/ui/Button'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { feedbackFromScoringResult } from '@/lib/pronunciation/feedback/from-scoring'
@@ -114,12 +113,6 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
     reset()
   }, [reset])
 
-  const handleShadowingDone = useCallback(() => {
-    if (submitted.current) return
-    submitted.current = true
-    onSubmit(false, '')
-  }, [onSubmit])
-
   const isListening = status === 'listening'
   const isDone = status === 'done'
   const isError = status === 'error'
@@ -130,6 +123,15 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
     : isNetworkShadowing
       ? 'browser'
       : 'unavailable'
+
+  const handleShadowingDone = useCallback(() => {
+    if (submitted.current) return
+    submitted.current = true
+    // When shadowing due to network outage or unsupported browser, mark as unscored
+    // so answerToGrade does not penalize the learner's SRS ease factor for a network glitch
+    const resultStatus = (isNetworkShadowing || !isSupported) ? 'unscored' : 'evaluator_failed'
+    onSubmit(false, '', { status: resultStatus })
+  }, [isNetworkShadowing, isSupported, onSubmit])
 
   return (
     <div className="layout-stack-loose items-center w-full">
@@ -175,10 +177,6 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
             feedback={getFeedbackMessage(scored.score, 70)}
             xpEarned={calculateXP(scored.score)}
             transcript={scored.transcript}
-          />
-
-          <SelfPlaybackAudioBar
-            targetWord={exercise.targetWord}
             userAudioUrl={userAudioUrl}
           />
 

@@ -19,94 +19,122 @@ export interface LexiconWordInput {
   difficulty?: number
 }
 
+const WB_COLUMNS = 'id, user_id, text, context, meaning, translation, ipa, example, synonyms, image_prompt, audio_url, status, difficulty, error_reason, audio_fetch_attempts, has_audio, ease_factor, interval_days, repetitions, srs_status, next_review_at, last_reviewed_at, review_count, familiarity_status, familiarity_confidence, verification_due_at, mastery_provenance, mastery_version, objective_evidence_count, source, source_ref, created_at, updated_at'
+
+function calculateFlashcardUpdate(rating: FlashcardRating, entry?: WordBankEntry, now: Date = new Date()): Database['public']['Tables']['word_bank']['Update'] {
+  const verificationDue = new Date(now)
+  if (rating === 'known') {
+    verificationDue.setDate(verificationDue.getDate() + 1)
+    return { familiarity_status: 'familiar', familiarity_confidence: 100, verification_due_at: verificationDue.toISOString() }
+  }
+  if (rating === 'forgot') {
+    const tomorrow = new Date(now)
+    tomorrow.setDate(tomorrow.getDate() + 1)
+    return {
+      ease_factor: entry ? Math.max(MIN_EASE, (entry.ease_factor ?? 2.5) - 0.15) : 2.35,
+      interval_days: 1,
+      repetitions: 0,
+      srs_status: 'learning',
+      next_review_at: tomorrow.toISOString(),
+      last_reviewed_at: now.toISOString(),
+      review_count: (entry?.review_count ?? 0) + 1,
+      familiarity_status: 'unknown',
+      familiarity_confidence: 0,
+      verification_due_at: tomorrow.toISOString(),
+    }
+  }
+  verificationDue.setDate(verificationDue.getDate() + 2)
+  return { familiarity_status: 'familiar', familiarity_confidence: 60, verification_due_at: verificationDue.toISOString() }
+}
+
 export async function applyFlashcardRating(
   userId: string,
   input: LexiconWordInput,
   rating: FlashcardRating,
 ): Promise<WordBankEntry> {
-  const db = supabase()
-
-  const { data: existing, error: selectError } = await db
-    .from('word_bank')
-    .select('id, user_id, text, context, meaning, translation, ipa, example, synonyms, image_prompt, audio_url, status, difficulty, error_reason, audio_fetch_attempts, has_audio, ease_factor, interval_days, repetitions, srs_status, next_review_at, last_reviewed_at, review_count, familiarity_status, familiarity_confidence, verification_due_at, mastery_provenance, mastery_version, objective_evidence_count, source, source_ref, created_at, updated_at')
-    .eq('user_id', userId)
-    .eq('source_ref', input.sourceRef)
-    .maybeSingle()
-
-  if (selectError) throw selectError
-
-  let entry: WordBankEntry
-
-  if (existing) {
-    entry = existing as WordBankEntry // Supabase select('*') returns untyped — shape guaranteed by the word_bank table schema
-  } else {
-    const { data: inserted, error: insertError } = await db
-      .from('word_bank')
-      .insert({
-        user_id: userId,
-        text: input.text,
-        meaning: input.definition,
-        example: input.example ?? null,
-        difficulty: input.difficulty ?? 0,
-        status: 'ready',
-        source: 'lexicon',
-        source_ref: input.sourceRef,
-      })
-      .select('id, user_id, text, context, meaning, translation, ipa, example, synonyms, image_prompt, audio_url, status, difficulty, error_reason, audio_fetch_attempts, has_audio, ease_factor, interval_days, repetitions, srs_status, next_review_at, last_reviewed_at, review_count, familiarity_status, familiarity_confidence, verification_due_at, mastery_provenance, mastery_version, objective_evidence_count, source, source_ref, created_at, updated_at')
-      .single()
-
-    if (insertError) throw insertError
-    entry = inserted as WordBankEntry // Supabase select('*') returns untyped — shape guaranteed by the word_bank table schema
-  }
-
+  const client = supabase()
   const now = new Date()
 
-  let srsUpdate: Database['public']['Tables']['word_bank']['Update']
+  try {
+    const { data: existing, error: selectError } = await client
+      .from('word_bank')
+      .select(WB_COLUMNS)
+      .eq('user_id', userId)
+      .eq('source_ref', input.sourceRef)
+      .maybeSingle()
 
-  if (rating === 'known') {
-    const verificationDue = new Date(now)
-    verificationDue.setDate(verificationDue.getDate() + 1)
-    srsUpdate = {
-      familiarity_status: 'familiar',
-      familiarity_confidence: 100,
-      verification_due_at: verificationDue.toISOString(),
+    if (selectError) throw selectError
+
+    let entry: WordBankEntry
+    if (existing) {
+      entry = existing as WordBankEntry
+    } else {
+      const { data: inserted, error: insertError } = await client
+        .from('word_bank')
+        .insert({
+          user_id: userId,
+          text: input.text,
+          meaning: input.definition,
+          example: input.example ?? null,
+          difficulty: input.difficulty ?? 0,
+          status: 'ready',
+          source: 'lexicon',
+          source_ref: input.sourceRef,
+        })
+        .select(WB_COLUMNS)
+        .single()
+
+      if (insertError) throw insertError
+      entry = inserted as WordBankEntry
     }
-  } else if (rating === 'forgot') {
-    const tomorrow = new Date(now)
-    tomorrow.setDate(tomorrow.getDate() + 1)
-    srsUpdate = {
-      ease_factor: Math.max(MIN_EASE, (entry.ease_factor ?? 2.5) - 0.15),
+
+    const srsUpdate = calculateFlashcardUpdate(rating, entry, now)
+    const { data: updated, error: updateError } = await client
+      .from('word_bank')
+      .update(srsUpdate)
+      .eq('id', entry.id)
+      .eq('user_id', userId)
+      .select(WB_COLUMNS)
+      .single()
+
+    if (updateError) throw updateError
+    return updated as WordBankEntry
+  } catch (err) {
+    console.warn('[applyFlashcardRating] Supabase call failed, queuing offline outbox event', err)
+    const grade = rating === 'known' ? 5 : rating === 'normal' ? 3 : 1
+    const wordId = input.sourceRef
+    try {
+      await enqueueWordBankSRSUpdate(userId, wordId, grade, { rating, sourceRef: input.sourceRef, offline: true })
+    } catch (enqueueErr) {
+      console.warn('[applyFlashcardRating] outbox enqueue fallback failed', enqueueErr)
+    }
+
+    const srsUpdate = calculateFlashcardUpdate(rating, undefined, now)
+    return {
+      id: wordId,
+      user_id: userId,
+      text: input.text,
+      meaning: input.definition,
+      example: input.example ?? null,
+      difficulty: input.difficulty ?? 0,
+      status: 'ready',
+      source: 'lexicon',
+      source_ref: input.sourceRef,
+      ease_factor: 2.5,
       interval_days: 1,
-      repetitions: 0,
-      // Deliberately softer than a grade-1 SM-2 lapse, but still learning.
+      repetitions: 1,
       srs_status: 'learning',
-      next_review_at: tomorrow.toISOString(),
+      next_review_at: new Date(Date.now() + 86400000).toISOString(),
       last_reviewed_at: now.toISOString(),
-      review_count: (entry.review_count ?? 0) + 1,
-      familiarity_status: 'unknown',
-      familiarity_confidence: 0,
-      verification_due_at: tomorrow.toISOString(),
-    }
-  } else {
-    const verificationDue = new Date(now)
-    verificationDue.setDate(verificationDue.getDate() + 2)
-    srsUpdate = {
-      familiarity_status: 'familiar',
-      familiarity_confidence: 60,
-      verification_due_at: verificationDue.toISOString(),
-    }
+      review_count: 1,
+      familiarity_status: rating === 'forgot' ? 'unknown' : 'familiar',
+      familiarity_confidence: rating === 'known' ? 100 : rating === 'normal' ? 60 : 0,
+      verification_due_at: new Date(Date.now() + 86400000).toISOString(),
+      created_at: now.toISOString(),
+      updated_at: now.toISOString(),
+      ...srsUpdate,
+    } as WordBankEntry
   }
-
-  const { data: updated, error: updateError } = await db
-    .from('word_bank')
-    .update(srsUpdate)
-    .eq('id', entry.id)
-    .eq('user_id', userId)
-    .select('id, user_id, text, context, meaning, translation, ipa, example, synonyms, image_prompt, audio_url, status, difficulty, error_reason, audio_fetch_attempts, has_audio, ease_factor, interval_days, repetitions, srs_status, next_review_at, last_reviewed_at, review_count, familiarity_status, familiarity_confidence, verification_due_at, mastery_provenance, mastery_version, objective_evidence_count, source, source_ref, created_at, updated_at')
-    .single()
-
-  if (updateError) throw updateError
-  return updated as WordBankEntry // Supabase select('*') returns untyped — shape guaranteed by the word_bank table schema
 }
 
 export async function applyPhase2Penalty(
