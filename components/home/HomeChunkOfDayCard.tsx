@@ -13,7 +13,7 @@
 // </HomeChunkOfDayCard>
 
 import { useEffect, useState } from "react";
-import { Bookmark, BookmarkCheck, RefreshCw } from "@/components/icons";
+import { Bookmark, BookmarkCheck, MessageCircle, RefreshCw } from "@/components/icons";
 import { ListenButton } from "@/components/ui/ListenButton";
 import { HeroTermExample } from "@/components/home/HeroTermExample";
 import { formatIpaDisplay } from "@/lib/lexicon/format-ipa";
@@ -92,18 +92,21 @@ export default function HomeChunkOfDayCard() {
 
   return (
     <div
-      className="home-sidebar-card relative flex h-full flex-col justify-between gap-3 overflow-hidden rounded-xl border border-border-default bg-surface-raised p-4 shadow-sm motion-reduce:shadow-none"
+      className="home-sidebar-card relative flex h-full flex-col justify-between gap-3 overflow-hidden rounded-xl border border-border-default border-l-[3px] border-l-primary/75 bg-surface-raised p-4 shadow-xs motion-reduce:shadow-none"
       aria-busy={loading || undefined}
       aria-labelledby="chunk-of-day-heading"
     >
       {/* Header: Frase del día + Categoría */}
       <div className="relative z-1 flex items-center justify-between gap-2 min-w-0">
-        <span id="chunk-of-day-heading" className="shrink-0 whitespace-nowrap font-label text-caption text-fg-muted">
-          Frase del día
-        </span>
+        <div className="flex items-center gap-1.5 shrink-0">
+          <MessageCircle size={14} className="text-primary" aria-hidden />
+          <span id="chunk-of-day-heading" className="whitespace-nowrap font-label text-caption font-semibold text-fg">
+            Frase del día
+          </span>
+        </div>
         {categoryLabel ? (
           <span
-            className="truncate max-w-[65%] rounded-full border border-border-subtle bg-surface-sunken px-2.5 py-0.5 font-kicker text-xs text-fg-muted whitespace-nowrap"
+            className="truncate max-w-[62%] rounded-full border border-primary/25 bg-primary-soft/60 px-2.5 py-0.5 font-sans text-caption font-medium text-primary whitespace-nowrap"
             title={categoryLabel}
           >
             {categoryLabel}

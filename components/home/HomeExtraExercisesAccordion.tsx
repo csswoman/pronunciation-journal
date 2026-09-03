@@ -12,7 +12,10 @@ export default function HomeExtraExercisesAccordion({
 }: HomeExtraExercisesAccordionProps) {
   if (unlocked) {
     return (
-      <section className="flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
+      <section
+        aria-label="Ejercicios extra"
+        className="flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-2 duration-300"
+      >
         <h3 className="font-heading text-body-md font-bold text-fg px-1">Ejercicios extra</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <Link
@@ -41,22 +44,28 @@ export default function HomeExtraExercisesAccordion({
   }
 
   return (
-    <div className="rounded-xl border border-border-subtle bg-surface-raised transition-all">
-      <div className="flex w-full items-center justify-between gap-4 p-5 text-left opacity-75 cursor-not-allowed">
+    <section
+      aria-label="Ejercicios adicionales bloqueados"
+      className="rounded-xl border border-border-subtle bg-surface-raised transition-all"
+    >
+      <div className="flex w-full items-center justify-between gap-4 p-5 text-left opacity-80 select-none">
         <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-surface-sunken text-fg-muted">
-            <Lock size={16} aria-hidden />
+          <div
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-surface-sunken text-fg-muted"
+            aria-hidden
+          >
+            <Lock size={16} />
           </div>
           <div className="flex flex-col">
             <span className="font-heading text-body-md font-bold text-fg">
               Ejercicios extra
             </span>
             <span className="font-body-sm text-fg-muted">
-              Se abren al terminar el plan de hoy
+              Se desbloquean al completar tu sesión de hoy
             </span>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

@@ -66,6 +66,11 @@ export default function HomeImmersionCard() {
         </div>
       </div>
 
+      {/* Feedback para lectores de pantalla */}
+      <div aria-live="polite" aria-atomic="true" className="sr-only">
+        {registered ? `Se han registrado ${minutes} minutos de inmersión en ${selectedCategory}` : ""}
+      </div>
+
       {/* Selector desplegable de detalles de inmersión */}
       {isOpen && (
         <div className="flex flex-wrap items-center justify-between gap-2.5 border-t border-border-subtle/50 pt-3">
@@ -82,7 +87,7 @@ export default function HomeImmersionCard() {
                   key={cat.id}
                   type="button"
                   onClick={() => setSelectedCategory(cat.id)}
-                  className={`focus-ring inline-flex h-8 items-center rounded-lg px-2.5 text-caption font-medium transition-all ${
+                  className={`focus-ring inline-flex min-h-9 items-center rounded-lg px-3 py-1.5 text-caption font-medium transition-all ${
                     isSelected
                       ? "border border-primary/25 bg-primary-soft text-primary font-semibold"
                       : "border border-border-subtle/60 bg-surface-sunken text-fg-muted hover:bg-surface-raised hover:text-fg"
@@ -95,11 +100,11 @@ export default function HomeImmersionCard() {
           </div>
 
           {/* Stepper de tiempo */}
-          <div className="flex h-8 items-center rounded-lg border border-border-subtle bg-surface-sunken px-1 font-sans text-caption font-medium tabular-nums text-fg">
+          <div className="flex min-h-9 items-center rounded-lg border border-border-subtle bg-surface-sunken px-1 font-sans text-caption font-medium tabular-nums text-fg">
             <button
               type="button"
               onClick={() => setMinutes((m) => Math.max(5, m - 5))}
-              className="focus-ring flex h-6 w-6 items-center justify-center rounded text-sm font-bold text-fg-muted transition-colors hover:bg-surface-raised hover:text-fg"
+              className="focus-ring flex h-8 w-8 items-center justify-center rounded text-sm font-bold text-fg-muted transition-colors hover:bg-surface-raised hover:text-fg"
               aria-label="Disminuir tiempo 5 minutos"
             >
               −
@@ -111,7 +116,7 @@ export default function HomeImmersionCard() {
             <button
               type="button"
               onClick={() => setMinutes((m) => Math.min(180, m + 5))}
-              className="focus-ring flex h-6 w-6 items-center justify-center rounded text-sm font-bold text-fg-muted transition-colors hover:bg-surface-raised hover:text-fg"
+              className="focus-ring flex h-8 w-8 items-center justify-center rounded text-sm font-bold text-fg-muted transition-colors hover:bg-surface-raised hover:text-fg"
               aria-label="Aumentar tiempo 5 minutos"
             >
               +
