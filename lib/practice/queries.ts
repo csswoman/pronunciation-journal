@@ -19,6 +19,8 @@ import {
 import { enqueue } from '@/lib/sync/sync-manager'
 import { buildSessionResult } from '@/lib/practice/session-result'
 import { recordActivitySession } from '@/lib/progress/activity-hub'
+import { recordPracticeErrorRecurrence } from './error-recurrence-sync'
+import type { ErrorPatternId } from '@/lib/exercises/error-patterns'
 import type {
   PracticeAnswer,
   PracticeContext,
@@ -50,38 +52,22 @@ export async function recordLessonComplete(courseSlug: string, lessonSlug: strin
   const completedAt = new Date().toISOString()
   await db.transaction('rw', [db.completedLessons, db.syncOutbox], async () => {
     await markLessonComplete(user.id, courseSlug, lessonSlug)
-    await enqueue(
-      user.id,
-      'lesson_completions',
-      'upsert',
-      {
-        user_id: user.id,
-        course_slug: courseSlug,
-        lesson_slug: lessonSlug,
-        completed_at: completedAt,
-        source: 'lesson_completion',
-        updated_at: completedAt,
-      },
-      undefined,
-      'user_id,course_slug,lesson_slug',
-    )
+    await enqueue(user.id, 'lesson_completions', 'upsert', {
+      user_id: user.id, course_slug: courseSlug, lesson_slug: lessonSlug,
+      completed_at: completedAt, source: 'lesson_completion', updated_at: completedAt,
+    }, undefined, 'user_id,course_slug,lesson_slug')
   })
 }
 
 /** Reverses only the completion marker; genuine quiz answers/sessions remain evidence. */
-export async function recordLessonIncomplete(
-  courseSlug: string,
-  lessonSlug: string,
-): Promise<void> {
+export async function recordLessonIncomplete(courseSlug: string, lessonSlug: string): Promise<void> {
   const { data: { user } } = await supabase().auth.getUser()
   if (!user) throw new Error('Cannot remove lesson completion without an authenticated user')
 
   await db.transaction('rw', [db.completedLessons, db.syncOutbox], async () => {
     await markLessonIncomplete(user.id, courseSlug, lessonSlug)
     await enqueue(user.id, 'lesson_completions', 'delete', {}, {
-      user_id: user.id,
-      course_slug: courseSlug,
-      lesson_slug: lessonSlug,
+      user_id: user.id, course_slug: courseSlug, lesson_slug: lessonSlug,
     })
   })
 }
@@ -199,6 +185,20 @@ export async function savePracticeAnswer(
       await enqueueTopicSRSUpdate(userId, normalizedTopic, grade)
     }
   })
+
+  const epPayload = answer.exercisePayload as {
+    errorPattern?: ErrorPatternId
+    rehearsedPattern?: ErrorPatternId
+  } | null
+
+  if (epPayload?.errorPattern || epPayload?.rehearsedPattern) {
+    await recordPracticeErrorRecurrence(
+      userId,
+      epPayload.errorPattern,
+      epPayload.rehearsedPattern,
+      isAnswered ? answer.isCorrect : false,
+    )
+  }
 }
 
 export interface LessonQuizAnswerInput {
