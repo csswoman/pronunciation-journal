@@ -12,6 +12,7 @@ import HomeImmersionCard from "@/components/home/HomeImmersionCard";
 import HomeExtraExercisesAccordion from "@/components/home/HomeExtraExercisesAccordion";
 import HomeRightSidebar from "@/components/home/HomeRightSidebar";
 import HomeReviewBanner from "@/components/home/HomeReviewBanner";
+import HomePlanRationale from "@/components/home/HomePlanRationale";
 import HomePlanDone from "@/components/home/HomePlanDone";
 import HomePlacementPrompt from "@/components/home/HomePlacementPrompt";
 import HomePronunciationPrompt from "@/components/home/HomePronunciationPrompt";
@@ -132,12 +133,23 @@ export default function HomeCommandGrid({
                 ) : undefined
               }
               customPrefix={
-                showReviewBanner ? (
-                  <HomeReviewBanner
-                    wordsDueCount={wordsDueCount}
-                    soundsDueCount={soundsDueCount}
+                <>
+                  <HomePlanRationale
+                    ready={planSettled && !planEmpty}
+                    reviewDue={showReviewBanner}
+                    isNewLearner={isNewLearner}
+                    conceptLesson={
+                      conceptLesson ? { title: conceptLesson.title } : null
+                    }
+                    weakestPhoneme={weakestPhoneme}
                   />
-                ) : null
+                  {showReviewBanner ? (
+                    <HomeReviewBanner
+                      wordsDueCount={wordsDueCount}
+                      soundsDueCount={soundsDueCount}
+                    />
+                  ) : null}
+                </>
               }
             />
           </div>
