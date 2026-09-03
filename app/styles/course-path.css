@@ -672,7 +672,7 @@
 }
 
 .course-path__level--on .course-path__level-progress {
-  background: color-mix(in oklch, var(--primary) 20%, var(--surface-sunken));
+  background: color-mix(in srgb, var(--primary) 20%, var(--surface-sunken));
 }
 
 .course-path__level--on .course-path__level-progress-bar {
