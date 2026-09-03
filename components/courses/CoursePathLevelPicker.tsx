@@ -62,10 +62,12 @@ function LevelCardTab({
         isActive && "course-path__level--on"
       )}
     >
-      <div className="course-path__level-lv">{level.spineLabel}</div>
-      <div className="course-path__level-count" aria-hidden="true">
-        {completedCount}/{totalCount}
-      </div>
+      <span className="course-path__level-lv">{level.spineLabel}</span>
+      {isActive && (
+        <span className="course-path__level-count" aria-hidden="true">
+          {completedCount}/{totalCount}
+        </span>
+      )}
     </Link>
   );
 }
@@ -156,30 +158,24 @@ export default function CoursePathLevelPicker({
         Nivel
       </h2>
 
-      {/* Desktop / Tablet Spine Navigation & Actions in 1 Row */}
-      <div className="course-path__level-picker-row hidden lg:flex">
-        <nav className="course-path__spine course-path__spine--desktop" aria-label="Niveles del curso">
-          {levels.map((level) => {
-            const totalCount = level.units.reduce((sum, u) => sum + u.lessons.length, 0);
-            const completedCount = completedCounts[level.id] ?? 0;
-            const isActive = level.id === selectedLevelId;
+      {/* Desktop / Tablet Spine Navigation */}
+      <nav className="course-path__spine course-path__spine--desktop hidden lg:flex" aria-label="Niveles del curso">
+        {levels.map((level) => {
+          const totalCount = level.units.reduce((sum, u) => sum + u.lessons.length, 0);
+          const completedCount = completedCounts[level.id] ?? 0;
+          const isActive = level.id === selectedLevelId;
 
-            return (
-              <LevelCardTab
-                key={level.id}
-                level={level}
-                isActive={isActive}
-                completedCount={completedCount}
-                totalCount={totalCount}
-              />
-            );
-          })}
-        </nav>
-
-        <div className="course-path__level-picker-actions">
-          <AssessmentActions selectedLevelId={selectedLevelId} />
-        </div>
-      </div>
+          return (
+            <LevelCardTab
+              key={level.id}
+              level={level}
+              isActive={isActive}
+              completedCount={completedCount}
+              totalCount={totalCount}
+            />
+          );
+        })}
+      </nav>
 
       {/* Mobile Toolbar (Search + Level Selector side-by-side) */}
       <div className="course-path__mobile-toolbar lg:hidden">

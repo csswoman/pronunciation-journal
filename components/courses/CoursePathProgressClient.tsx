@@ -15,6 +15,7 @@
  *   - CoursePathAsideProgress (sidebar progress dashboard)
  */
 
+import Link from "next/link";
 import { BookOpen, ChevronRight } from "@/components/icons";
 import { useEffect, useMemo, useState } from "react";
 import CoursePathAsideProgress from "@/components/courses/CoursePathAsideProgress";
@@ -175,11 +176,31 @@ export default function CoursePathProgressClient({ level, compactHead }: CourseP
         )}
 
         {!compactHead && (
-          <div className="course-path__head">
-            <h1>{derived.level.title}</h1>
-            {derived.level.description && (
-              <p className="course-path__head-subtitle">{derived.level.description}</p>
-            )}
+          <div className="course-path__head-row flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between mb-6">
+            <div className="course-path__head min-w-0 flex-1">
+              <h2 className="text-h2 font-bold text-fg">{derived.level.title}</h2>
+              {derived.level.description && (
+                <p className="course-path__head-subtitle text-body-sm text-fg-muted mt-1">
+                  {derived.level.description}
+                </p>
+              )}
+            </div>
+            <div className="course-path__head-actions flex items-center gap-4 shrink-0 pt-1">
+              <Link
+                href="/assessment"
+                className="course-path__text-link font-semibold text-primary hover:underline"
+                title="Evaluación diagnóstica inicial para ubicar tu nivel"
+              >
+                Test de ubicación
+              </Link>
+              <Link
+                href={`/assessment?mode=checkpoint&level=${level.id}`}
+                className="course-path__text-link font-semibold text-primary hover:underline"
+                title="Evaluación de salida del nivel seleccionado"
+              >
+                Checkpoint
+              </Link>
+            </div>
           </div>
         )}
 

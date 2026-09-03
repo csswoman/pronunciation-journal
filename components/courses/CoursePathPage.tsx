@@ -43,14 +43,18 @@ export default function CoursePathPage({ levelParam }: CoursePathPageProps) {
       <PageLayout archetype="catalog">
         <PageHeader
           title="Cursos"
-          subtitle="Lecciones de pronunciación, gramática, vocabulario y más, organizadas por nivel para que avances a tu ritmo."
+          subtitle="Organizadas por nivel, a tu ritmo."
+          actions={
+            <CoursePathLevelPicker
+              levels={COURSE_PATH_CURRICULUM.levels}
+              selectedLevelId={selectedLevelId}
+            />
+          }
         />
-        <div className="course-path__wrap course-path__wrap--shell">
-          <CoursePathLevelPicker
-            levels={COURSE_PATH_CURRICULUM.levels}
-            selectedLevelId={selectedLevelId}
-          />
 
+        <div className="course-path__header-divider my-4 border-b border-subtle" />
+
+        <div className="course-path__wrap course-path__wrap--shell">
           <section
             key={selectedLevel.id}
             id={`course-level-${selectedLevel.id}`}
