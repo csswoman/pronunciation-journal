@@ -12,6 +12,10 @@ const VALIDATION_EXEMPTIONS = new Set([
 
 const SAME_ORIGIN_EXEMPTIONS = new Set<string>();
 
+const DELEGATE_EXEMPTIONS = new Set([
+  "app/api/sentences/generate/route.ts",
+]);
+
 function routeFiles(dir: string): string[] {
   return fs
     .readdirSync(dir, { withFileTypes: true })
@@ -34,8 +38,10 @@ describe("POST API guard coverage", () => {
 
   it("keeps authenticated POST routes behind auth, same-origin, and rate-limit guards", () => {
     const missing = postRoutes.flatMap((filePath) => {
-      const source = fs.readFileSync(filePath, "utf8");
       const rel = relative(filePath);
+      if (DELEGATE_EXEMPTIONS.has(rel)) return [];
+
+      const source = fs.readFileSync(filePath, "utf8");
       const issues: string[] = [];
 
       if (
@@ -64,7 +70,7 @@ describe("POST API guard coverage", () => {
   it("keeps JSON POST routes behind centralized body validation", () => {
     const missing = postRoutes.flatMap((filePath) => {
       const rel = relative(filePath);
-      if (VALIDATION_EXEMPTIONS.has(rel)) return [];
+      if (VALIDATION_EXEMPTIONS.has(rel) || DELEGATE_EXEMPTIONS.has(rel)) return [];
 
       const source = fs.readFileSync(filePath, "utf8");
       return source.includes("validateBody(") ? [] : [`${rel}: missing validateBody`];

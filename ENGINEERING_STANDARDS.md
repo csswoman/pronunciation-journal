@@ -205,7 +205,7 @@ Categorías de exención (todas requieren justificación al añadir):
 | Registries | `lib/ai-practice/tools/registry.ts`, `lib/pronunciation/targets/registry.ts` | Crecen por entrada; la longitud es la señal correcta |
 | Scripts | `scripts/**` | No se despliegan |
 | Tests | `lib/**/__tests__/*.test.ts` | Cobertura exhaustiva por caso |
-| Deuda pendiente de split | `lib/db/index.ts`, `lib/phoneme-practice/exercises.ts`, `lib/practice/daily-plan/composer.ts`, `lib/sync/sync-manager.ts` | Módulos cohesivos a la espera de extracción |
+| Deuda pendiente de split | `lib/db/index.ts`, `lib/phoneme-practice/exercises.ts`, `lib/sync/sync-manager.ts` | Módulos cohesivos a la espera de extracción |
 
 La última categoría es deuda real, no una exención permanente: al tocar uno de esos
 archivos, considera extraer antes de añadir.
@@ -227,6 +227,7 @@ Los inventarios de este doc (feature folders, query layer) se desincronizan con
 facilidad. Al añadir una carpeta en `lib/` o un `queries.ts`, actualízalos en el
 mismo PR — o verifícalos con `ls lib/` y `ls lib/*/queries.ts`.
 
-Última revisión: 2026-08-21 — sincronización de inventarios con el código
+Última revisión: 2026-09-02 — extracción y split modular de composer.ts, unificación de primitivas de ejercicios y soporte offline en phoneme-practice
+
 (`core-1000` → `essential-words`, query layer 9 → 14 módulos, allowlist `max-lines`
 delegada a `eslint.config.mjs`).

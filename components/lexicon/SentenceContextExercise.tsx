@@ -3,22 +3,21 @@
 // Planned structure:
 // <SentenceContextExercise>
 //   <SentencePromptCard>
-//     <AudioTrigger />     — clean listen button for context sentence
-//     <SentenceDisplay />  — sentence with dynamic blank and animated reveal
+//     <ListenButton />
+//     <SentenceWithBlank />
 //   </SentencePromptCard>
-//   <OptionGrid>           — 4 options with keyboard shortcuts and check/x reveal
-//     <OptionButton />
-//   </OptionGrid>
-//   <DefinitionCard />     — word definition revealed on answer
+//   <MultipleChoiceBase (indicatorType="number") />
+//   <DefinitionCard />
 // </SentenceContextExercise>
 
 import { useState, useRef, useEffect, useCallback } from 'react'
-import { Check, X, BookOpen } from '@/components/icons'
+import { BookOpen } from '@/components/icons'
 import { cn } from '@/lib/cn'
 import type { SentenceContextExercise as SentenceContextExerciseType, SentenceContextOption } from '@/lib/exercises/types'
 import { buildPedagogicalFeedback } from '@/lib/exercises/feedback'
 import { useUISounds } from '@/hooks/useUISounds'
 import { ListenButton } from '@/components/ui/ListenButton'
+import { MultipleChoiceBase } from '@/components/exercises/MultipleChoiceBase'
 
 interface Props {
   exercise: SentenceContextExerciseType
@@ -64,15 +63,14 @@ export function SentenceContextExercise({ exercise, onResult }: Props) {
   const handlePick = useCallback((opt: SentenceContextOption) => {
     if (state !== 'idle') return
     playTap()
-    const isCorrect = opt.word === exercise.answer
+    const isCorrect = opt.word.toLowerCase() === exercise.answer.toLowerCase()
     setSelectedId(opt.id)
     setState(isCorrect ? 'correct' : 'wrong')
     if (isCorrect) playCorrect(); else playWrong()
-
     onResult(isCorrect, opt.word, Date.now() - startMs.current, {
       feedback: buildPedagogicalFeedback(exercise, isCorrect, opt.word),
     })
-  }, [state, exercise, onResult, playTap, playCorrect, playWrong])
+  }, [state, exercise, playTap, playCorrect, playWrong, onResult])
 
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
@@ -85,6 +83,8 @@ export function SentenceContextExercise({ exercise, onResult }: Props) {
   }, [state, exercise.options, handlePick])
 
   const selectedOption = exercise.options.find((o) => o.id === selectedId)
+  const correctOption = exercise.options.find((o) => o.word.toLowerCase() === exercise.answer.toLowerCase())
+  const choiceOptions = exercise.options.map((opt) => ({ id: opt.id, label: opt.word }))
 
   return (
     <div className="flex w-full flex-col gap-5">
@@ -96,12 +96,16 @@ export function SentenceContextExercise({ exercise, onResult }: Props) {
         isPlaying={isPlaying}
         onPlayAudio={handlePlay}
       />
-      <OptionGrid
-        options={exercise.options}
-        answer={exercise.answer}
+      <MultipleChoiceBase
+        options={choiceOptions}
         selectedId={selectedId}
-        answerState={state}
-        onPick={handlePick}
+        correctId={correctOption?.id ?? null}
+        state={state}
+        indicatorType="number"
+        onSelect={(item) => {
+          const opt = exercise.options.find((o) => o.id === item.id)
+          if (opt) handlePick(opt)
+        }}
       />
       {state !== 'idle' && exercise.definition && (
         <DefinitionCard word={exercise.answer} definition={exercise.definition} />
@@ -164,70 +168,6 @@ function SentencePromptCard({
   )
 }
 
-function OptionGrid({
-  options,
-  answer,
-  selectedId,
-  answerState,
-  onPick,
-}: {
-  options: SentenceContextOption[]
-  answer: string
-  selectedId: string | null
-  answerState: AnswerState
-  onPick: (opt: SentenceContextOption) => void
-}) {
-  const done = answerState !== 'idle'
-
-  return (
-    <div className="flex flex-col gap-2.5">
-      {options.map((opt, idx) => {
-        const isSelected = opt.id === selectedId
-        const isAnswer = opt.word === answer
-
-        return (
-          <button
-            key={opt.id}
-            type="button"
-            onClick={() => onPick(opt)}
-            disabled={done}
-            aria-label={`${idx + 1}. ${opt.word}`}
-            className={cn(
-              'group flex w-full min-h-13.5 items-center justify-between rounded-xl border p-4 transition-all duration-150 select-none text-left focus-ring',
-              !done && 'border-border-default bg-surface-sunken/40 hover:border-primary/50 hover:bg-surface-sunken text-fg cursor-pointer active:scale-[0.99]',
-              done && isAnswer && 'border-success-border bg-success-soft text-success pf-reveal-ok font-semibold cursor-default',
-              done && isSelected && !isAnswer && 'border-error-border bg-error-soft text-error pf-reveal-bad font-semibold cursor-default',
-              done && !isAnswer && !isSelected && 'border-border-subtle bg-surface-raised/40 text-fg-subtle opacity-40 cursor-default',
-            )}
-          >
-            <div className="flex items-center gap-3.5">
-              <span
-                className={cn(
-                  'flex size-5 shrink-0 items-center justify-center rounded-md font-mono text-tiny font-semibold transition-colors',
-                  !done && 'border border-border-strong bg-surface-base text-fg-muted group-hover:border-primary/60 group-hover:text-primary',
-                  done && isAnswer && 'border border-success bg-success-soft text-success',
-                  done && isSelected && !isAnswer && 'border border-error bg-error-soft text-error',
-                  done && !isAnswer && !isSelected && 'border border-border-subtle bg-surface-base text-fg-subtle opacity-60',
-                )}
-                aria-hidden
-              >
-                {idx + 1}
-              </span>
-              <span className="text-body-md font-medium">{opt.word}</span>
-            </div>
-
-            {done && (
-              <div className="shrink-0">
-                {isAnswer ? <Check size={20} className="text-success" /> : isSelected ? <X size={20} className="text-error" /> : null}
-              </div>
-            )}
-          </button>
-        )
-      })}
-    </div>
-  )
-}
-
 function DefinitionCard({ word, definition }: { word: string; definition: string }) {
   return (
     <div className="flex items-start gap-3.5 rounded-xl border border-border-subtle bg-surface-sunken/80 p-4 text-left shadow-xs animate-in fade-in slide-in-from-top-1 duration-200">
@@ -243,4 +183,3 @@ function DefinitionCard({ word, definition }: { word: string; definition: string
     </div>
   )
 }
-

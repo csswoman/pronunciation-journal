@@ -4,8 +4,8 @@ import type { ReorderWordsExercise } from '@/lib/exercises/types'
 
 /**
  * Generates reorder-words exercises using Gemini-generated sentences.
- * Calls /api/sentences/generate, caches results in text_fragments,
- * and returns exercises immediately.
+ * Calls /api/gemini/generate-sentences, caches results in text_fragments,
+ * and splits into ReorderWordsExercise instances.
  *
  * @param topic    Subject or grammar concept (e.g. "present simple questions")
  * @param level    CEFR level string (e.g. "A2", "B1")
@@ -20,7 +20,7 @@ export async function generateReorderAI(
 ): Promise<ReorderWordsExercise[]> {
   const accessToken = await getAccessToken()
 
-  const res = await fetch('/api/sentences/generate', {
+  const res = await fetch('/api/gemini/generate-sentences', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

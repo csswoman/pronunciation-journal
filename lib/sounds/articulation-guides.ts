@@ -139,7 +139,39 @@ export const PHONEME_ARTICULATION_GUIDES: Record<string, ArticulationGuide> = {
   },
 };
 
+export function findArticulationGuide(phoneme: string): ArticulationGuide | null {
+  if (!phoneme) return null;
+  const clean = phoneme.replace(/[/\[\]ˈˌ\s]/g, '').trim();
+  if (!clean) return null;
+
+  const withSlashes = `/${clean}/`;
+  if (PHONEME_ARTICULATION_GUIDES[withSlashes]) {
+    return PHONEME_ARTICULATION_GUIDES[withSlashes];
+  }
+
+  if (PHONEME_ARTICULATION_GUIDES[clean]) {
+    return PHONEME_ARTICULATION_GUIDES[clean];
+  }
+
+  const ALIASES: Record<string, string> = {
+    th: '/θ/',
+    dh: '/ð/',
+    iy: '/iː/',
+    ih: '/ɪ/',
+    ae: '/æ/',
+    ah: '/ʌ/',
+    ax: '/ə/',
+    v: '/v/',
+  };
+
+  const alias = ALIASES[clean.toLowerCase()];
+  if (alias && PHONEME_ARTICULATION_GUIDES[alias]) {
+    return PHONEME_ARTICULATION_GUIDES[alias];
+  }
+
+  return null;
+}
+
 export function getArticulationGuide(phoneme: string): ArticulationGuide | undefined {
-  const normalized = phoneme.startsWith('/') ? phoneme : `/${phoneme}/`;
-  return PHONEME_ARTICULATION_GUIDES[normalized];
+  return findArticulationGuide(phoneme) ?? undefined;
 }

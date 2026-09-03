@@ -323,6 +323,35 @@ export interface SrsReviewEventRecord extends SrsReviewEvent {
   synced: boolean;
 }
 
+/** Local cache of reference sounds for offline phoneme practice (Plan 080). */
+export interface CachedSoundRecord {
+  id: number;
+  ipa: string;
+  example: string | null;
+  category: string | null;
+  type: string | null;
+  difficulty: number | null;
+}
+
+/** Local offline cache of contrast progress for phoneme practice (Plan 080). */
+export interface CachedContrastProgressRecord {
+  key: string; // `${userId}:${contrastId}`
+  id?: string;
+  userId: string;
+  contrastId: string;
+  easeFactor: number;
+  intervalDays: number;
+  nextReview: string | null;
+  lastSeen: string | null;
+  totalAttempts: number;
+  correctAnswers: number;
+  streak: number;
+  masteryPct: number;
+  adaptiveScore?: number;
+  observationCount?: number;
+  updatedAt: string;
+}
+
 class PronunciationDB extends Dexie {
   attempts!: Table<Attempt, number>;
   srsData!: Table<SRSData, string>;
@@ -358,6 +387,8 @@ class PronunciationDB extends Dexie {
   attemptLogs!: Table<AttemptLogRecord, string>;
   srsReviewEvents!: Table<SrsReviewEventRecord, string>;
   generatedScripts!: Table<GeneratedScriptRecord, string>;
+  cachedSounds!: Table<CachedSoundRecord, number>;
+  cachedContrastProgress!: Table<CachedContrastProgressRecord, string>;
 
 
   constructor() {
@@ -587,6 +618,11 @@ class PronunciationDB extends Dexie {
     // v33: Gemini-generated scripts table
     this.version(33).stores({
       generatedScripts: 'id, userId, [userId+createdAt], createdAt',
+    });
+    // v34: offline cache for sounds and contrast progress (plan 080)
+    this.version(34).stores({
+      cachedSounds: 'id, ipa, category',
+      cachedContrastProgress: 'key, userId, contrastId, [userId+contrastId], nextReview, updatedAt',
     });
 
 

@@ -1,4 +1,5 @@
 overrides:
+  browserslist: "^4.28.8"
   postcss: "8.5.25"
   protobufjs: "7.6.5"
   undici: "7.29.0"

@@ -1,6 +1,10 @@
 # 077 — Diccionario: limpieza de rutas, perfil de dominio y split receptivo/productivo
 
-**Estado:** propuesto · **Rama:** `dev` · **Fecha:** 2026-08-28
+**Estado:** completado · **Rama:** `dev` · **Fecha:** 2026-09-02
+
+> [!NOTE]
+> **Completado y verificado (2026-09-02)**: Fase 1 (limpieza y canonicalización a `/words` con redirects 301 en `next.config.mjs`), Fase 2 (`deriveDomainProfile`, integración en `UserLearningState`, `compactState` y `LearnerContext`), y Fase 3 (split `StudyMode = 'receptive' | 'productive'`, filtros en el plan diario y badges "Reconocer"/"Producir" en `LexiconView` y `LessonCard`).
+
 
 ## Contexto
 

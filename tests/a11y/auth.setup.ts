@@ -1,3 +1,4 @@
+import { existsSync, rmSync } from "node:fs";
 import { test as setup, expect } from "@playwright/test";
 
 const AUTH_FILE = "tests/a11y/.auth/guest.json";
@@ -11,7 +12,7 @@ const AUTH_FILE = "tests/a11y/.auth/guest.json";
  */
 setup("authenticate as guest", async ({ page }) => {
   await page.goto("/login");
-  const guestButton = page.getByRole("button", { name: "Explorar sin cuenta" });
+  const guestButton = page.getByRole("button", { name: "Probar una sesión" });
   await expect(guestButton).toBeVisible();
   await guestButton.click();
 
@@ -22,6 +23,9 @@ setup("authenticate as guest", async ({ page }) => {
   ]).catch(() => "timeout" as const);
 
   if (result !== "signed-in") {
+    if (existsSync(AUTH_FILE)) {
+      rmSync(AUTH_FILE);
+    }
     setup.skip(
       true,
       "Guest sign-in did not complete — enable_anonymous_sign_ins is likely off on the connected Supabase project.",

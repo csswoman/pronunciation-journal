@@ -1,5 +1,6 @@
 import { scorePronunciation } from "@/lib/pronunciation/scoring";
 import { cefrToNumber } from "@/lib/exercises/cefr";
+import { findArticulationGuide } from "@/lib/sounds/articulation-guides";
 import type { EvaluationResult } from "@/lib/exercises/design";
 import type { EvaluationInput } from "./types";
 import type { CEFRLevel } from "@/lib/exercises/cefr";
@@ -42,6 +43,7 @@ function feedbackForScore(
   const isEarlyLearner = !userLevel || cefrToNumber(userLevel) <= 2;
   const passed = score >= threshold;
   const missedPhoneme = firstMissedPhoneme(wordResults);
+  const guide = missedPhoneme ? findArticulationGuide(missedPhoneme) : null;
 
   if (passed) {
     return {
@@ -52,18 +54,22 @@ function feedbackForScore(
       tip: score >= 90
         ? undefined
         : missedPhoneme
-          ? `Casi perfecto: cuida el sonido /${missedPhoneme}/ en "${expected}".`
+          ? guide
+            ? `Casi perfecto: cuida el sonido ${guide.phoneme} en "${expected}". ${guide.biomechanicsTip}`
+            : `Casi perfecto: cuida el sonido /${missedPhoneme}/ en "${expected}".`
           : isEarlyLearner
             ? `Sigue practicando: "${expected}".`
             : `Bien. Intenta pronunciar "${expected}" con aún más claridad.`,
     };
   }
 
-  const phonemeTip = missedPhoneme
-    ? `Concéntrate en el sonido /${missedPhoneme}/: escucha el modelo e inténtalo de nuevo.`
-    : isEarlyLearner
-      ? "Escucha la palabra y repítela despacio."
-      : "Separa la palabra en sílabas y vuelve a grabarte.";
+  const phonemeTip = guide
+    ? `${guide.biomechanicsTip} (Ojo: ${guide.spanishTrap})`
+    : missedPhoneme
+      ? `Concéntrate en el sonido /${missedPhoneme}/: escucha el modelo e inténtalo de nuevo.`
+      : isEarlyLearner
+        ? "Escucha la palabra y repítela despacio."
+        : "Separa la palabra en sílabas y vuelve a grabarte.";
 
   return {
     immediate: isEarlyLearner ? "¡Casi!" : "Todavía no.",

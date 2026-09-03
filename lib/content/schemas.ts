@@ -48,6 +48,10 @@ export const MiniLessonSchema = z.object({
 const LessonSectionSchema = z.object({
   heading: z.string(),
   body: z.string(), // supports markdown-ish: **bold**, *italic*, `code`
+  variant: z.enum(["default", "card", "callout", "chips"]).optional(),
+  calloutIcon: z.string().optional(),
+  calloutSubtext: z.string().optional(),
+  chips: z.array(z.string()).optional(),
 });
 
 const LessonExampleSchema = z.object({
