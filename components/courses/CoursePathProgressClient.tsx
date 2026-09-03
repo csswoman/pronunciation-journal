@@ -21,6 +21,7 @@ import CoursePathAsideProgress from "@/components/courses/CoursePathAsideProgres
 import CoursePathHeroBanner from "@/components/courses/CoursePathHeroBanner";
 import CoursePathLessonGroup, { type LessonWithState } from "@/components/courses/CoursePathLessonGroup";
 import CoursePathLessonRow from "@/components/courses/CoursePathLessonRow";
+import CoursePathSearch from "@/components/courses/CoursePathSearch";
 import CoursePathYaPuedesDecirEsto from "@/components/courses/CoursePathYaPuedesDecirEsto";
 import CoursePracticeSuggestions from "@/components/courses/CoursePracticeSuggestions";
 import { WordCarousel } from "@/components/practice/session/WordCarousel";
@@ -188,6 +189,10 @@ export default function CoursePathProgressClient({ level, compactHead }: CourseP
           currentLesson={currentLesson}
           hasProgress={completedIds.size > 0}
         />
+
+        <div className="course-path__main-search mb-4">
+          <CoursePathSearch />
+        </div>
 
         <div className="course-path__units" aria-label="Unidades del curso">
           {derived.units.map((unit) => {

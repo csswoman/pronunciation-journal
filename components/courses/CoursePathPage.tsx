@@ -11,7 +11,6 @@
 import CoursePathAutoLevelSync from "@/components/courses/CoursePathAutoLevelSync";
 import CoursePathLevelPanel from "@/components/courses/CoursePathLevelPanel";
 import CoursePathLevelPicker from "@/components/courses/CoursePathLevelPicker";
-import CoursePathSearch from "@/components/courses/CoursePathSearch";
 import PageHeader from "@/components/layout/PageHeader";
 import PageLayout from "@/components/layout/PageLayout";
 import { COURSE_PATH_CURRICULUM } from "@/lib/courses/curriculum";
@@ -51,10 +50,6 @@ export default function CoursePathPage({ levelParam }: CoursePathPageProps) {
             levels={COURSE_PATH_CURRICULUM.levels}
             selectedLevelId={selectedLevelId}
           />
-
-          <div className="course-path__main-search mb-4">
-            <CoursePathSearch />
-          </div>
 
           <section
             key={selectedLevel.id}
