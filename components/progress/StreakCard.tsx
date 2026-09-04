@@ -14,7 +14,7 @@ function StreakValue({ value, label, accent }: { value: number; label: string; a
       <div
         className={[
           'text-h1 leading-none',
-          accent ? 'text-[var(--accent-2)]' : 'text-fg',
+          accent ? 'text-accent-2' : 'text-fg',
         ].join(' ')}
       >
         {value}
@@ -41,10 +41,10 @@ export function StreakCard({ streak }: Props) {
 
       <p className="mt-1 text-center text-caption text-fg-muted">
         {completedToday
-          ? 'Hoy ya cuenta. Vuelve mañana para sumar.'
+          ? 'Objetivo de hoy completado. Vuelve mañana para sumar un día más.'
           : currentStreak > 0
-            ? 'Practica hoy para no perder la racha.'
-            : 'Completa el plan de hoy para empezar una racha.'}
+            ? 'Practica hoy para mantener tu racha activa.'
+            : 'Completa tu plan de hoy para iniciar tu racha.'}
       </p>
     </ProgressCard>
   )

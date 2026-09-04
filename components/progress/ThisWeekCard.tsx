@@ -26,9 +26,12 @@ export function ThisWeekCard({ stats }: Props) {
           />
         </div>
       ) : (
-        <p className="py-2 text-center text-body-sm text-fg-muted">
-          Practica esta semana para ver el resumen de tu actividad.
-        </p>
+        <div className="flex flex-col items-center gap-1.5 py-4 text-center">
+          <p className="text-body-sm font-semibold text-fg">Sin actividad esta semana</p>
+          <p className="text-caption text-fg-muted max-w-[220px]">
+            Realiza una sesión para ver tu volumen de ejercicios y palabras nuevas.
+          </p>
+        </div>
       )}
     </ProgressCard>
   )

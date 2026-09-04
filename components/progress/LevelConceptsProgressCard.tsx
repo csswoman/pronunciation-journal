@@ -90,7 +90,7 @@ export function LevelConceptsProgressCard() {
         : pending;
 
   return (
-    <section className="flex flex-col gap-4 rounded-lg border border-border-subtle bg-surface-raised p-4 sm:p-5">
+    <section className="flex flex-col gap-4 rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised p-4 sm:p-5">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <span className="font-kicker font-semibold text-fg-subtle">Dominio por temas</span>
@@ -102,6 +102,8 @@ export function LevelConceptsProgressCard() {
             <button
               key={lvl.id}
               type="button"
+              aria-pressed={selectedLevel === lvl.id}
+              aria-label={`Nivel ${lvl.id.toUpperCase()}`}
               onClick={() => setSelectedLevel(lvl.id)}
               className={cn(
                 "flex min-h-[44px] min-w-[44px] items-center justify-center rounded px-3 py-1.5 font-caption font-semibold uppercase transition-colors focus-ring",
@@ -123,7 +125,14 @@ export function LevelConceptsProgressCard() {
             {mastered.length}/{total} dominados ({pct}%)
           </span>
         </div>
-        <div className="h-2 w-full overflow-hidden rounded-full bg-surface-sunken">
+        <div
+          role="progressbar"
+          aria-valuenow={pct}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label={`Porcentaje de conceptos dominados en nivel ${levelData.title}`}
+          className="h-2 w-full overflow-hidden rounded-full bg-surface-sunken"
+        >
           <div
             className="h-full bg-success transition-all duration-300 ease-out"
             style={{ width: `${pct}%` }}
@@ -190,16 +199,17 @@ export function LevelConceptsProgressCard() {
       <div
         id="panel-concepts"
         role="tabpanel"
+        tabIndex={0}
         aria-labelledby={`tab-${activeTab}`}
-        className="flex flex-col divide-y divide-border-subtle"
+        className="flex flex-col divide-y divide-border-subtle focus-visible:outline-none"
       >
         {currentList.length === 0 ? (
           <p className="py-6 text-center text-body-sm text-fg-muted">
             {activeTab === "mastered"
-              ? "Aún no tienes temas dominados en este nivel. ¡Completa lecciones para dominar conceptos!"
+              ? "Aún no registras temas dominados en este nivel. Completa lecciones y evaluaciones para afianzar conceptos."
               : activeTab === "review"
                 ? "No tienes temas pendientes de repaso en este nivel."
-                : "¡Felicitaciones! Has visto todos los temas de este nivel."}
+                : "Has visto todos los temas disponibles en este nivel."}
           </p>
         ) : (
           currentList.map((item) => (
@@ -207,8 +217,8 @@ export function LevelConceptsProgressCard() {
               key={item.id}
               className="flex items-center justify-between gap-3 py-3 first:pt-1 last:pb-1"
             >
-              <div className="flex flex-col gap-0.5 min-w-0">
-                <span className="text-body-md font-medium text-fg">{item.title}</span>
+              <div className="flex flex-col gap-0.5 min-w-0 flex-1">
+                <span className="text-body-md font-medium text-fg break-words">{item.title}</span>
                 {item.group && (
                   <span className="text-body-sm text-fg-muted line-clamp-1">
                     {item.group}
@@ -217,10 +227,10 @@ export function LevelConceptsProgressCard() {
               </div>
               <Link
                 href={`/courses/study/${item.slug}`}
-                className="focus-ring flex min-h-[44px] shrink-0 items-center gap-1 rounded-lg border border-border-subtle bg-surface-sunken px-3 py-2 text-body-sm font-medium text-fg hover:bg-surface-raised transition-colors"
+                className="focus-ring flex min-h-[44px] shrink-0 items-center gap-1 rounded-[var(--radius-md)] border border-border-subtle bg-surface-sunken px-3 py-2 text-body-sm font-medium text-fg hover:bg-surface-raised transition-colors"
               >
                 <span>{item.status === "mastered" ? "Repasar" : "Estudiar"}</span>
-                <ChevronRight size={14} aria-hidden />
+                <ChevronRight size={14} aria-hidden="true" />
               </Link>
             </div>
           ))

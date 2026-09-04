@@ -8,15 +8,15 @@ interface Props {
 
 function qualityLabel(accuracy: number): { text: string; className: string; strokeClass: string } {
   if (accuracy >= 85) {
-    return { text: 'Excelente', className: 'text-[var(--success)]', strokeClass: 'stroke-[var(--success)]' }
+    return { text: 'Excelente', className: 'text-success', strokeClass: 'stroke-success' }
   }
   if (accuracy >= 70) {
-    return { text: 'Buena', className: 'text-[var(--primary)]', strokeClass: 'stroke-[var(--primary)]' }
+    return { text: 'Buena', className: 'text-primary', strokeClass: 'stroke-primary' }
   }
   if (accuracy >= 50) {
-    return { text: 'Mejorando', className: 'text-[var(--warning)]', strokeClass: 'stroke-[var(--warning)]' }
+    return { text: 'Mejorando', className: 'text-warning', strokeClass: 'stroke-warning' }
   }
-  return { text: 'Sigue así', className: 'text-[var(--warning)]', strokeClass: 'stroke-[var(--warning)]' }
+  return { text: 'Sigue así', className: 'text-warning', strokeClass: 'stroke-warning' }
 }
 
 export function AccuracyTrend({ stats }: Props) {
@@ -65,7 +65,7 @@ export function AccuracyTrend({ stats }: Props) {
             ) : null}
           </svg>
           <div className="-mt-[26px] text-center text-h2 leading-none text-fg">
-            {hasData ? `${stats.accuracy7}%` : '—'}
+            {hasData ? `${stats.accuracy7}%` : 'S/D'}
           </div>
         </div>
 
@@ -77,8 +77,8 @@ export function AccuracyTrend({ stats }: Props) {
 
         <p className="mt-2 text-caption text-fg-subtle text-center">
           {hasData
-            ? `Basado en ${stats.totalAnswers7.toLocaleString()} respuesta${stats.totalAnswers7 !== 1 ? 's' : ''}`
-            : 'Sin respuestas registradas esta semana'}
+            ? `Basado en ${stats.totalAnswers7.toLocaleString()} respuesta${stats.totalAnswers7 !== 1 ? 's evaluadas' : ' evaluada'}`
+            : 'Sin respuestas evaluadas esta semana'}
         </p>
       </div>
     </ProgressCard>

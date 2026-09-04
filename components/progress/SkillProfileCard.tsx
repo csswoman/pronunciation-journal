@@ -20,9 +20,9 @@ const STATUS_CONFIG: {
   label: string
   color: string
 }[] = [
-  { key: 'new', label: 'Nuevas', color: 'var(--border-subtle)' },
+  { key: 'new', label: 'Nuevas', color: 'color-mix(in oklch, var(--primary) 25%, var(--surface-sunken))' },
   { key: 'learning', label: 'En aprendizaje', color: 'var(--warning)' },
-  { key: 'review', label: 'En repaso', color: 'color-mix(in oklch, var(--primary) 75%, transparent)' },
+  { key: 'review', label: 'En repaso', color: 'color-mix(in oklch, var(--primary) 70%, transparent)' },
   { key: 'mastered', label: 'Dominadas', color: 'var(--primary)' },
 ]
 
@@ -52,7 +52,7 @@ function SoundLabPanel({ phonemes }: { phonemes: SkillProfileData['weakestPhonem
           labelClassName="font-ipa text-primary"
         />
       ))}
-      <Link href="/practice" className="mt-1 inline-flex min-h-[36px] items-center text-caption font-semibold text-primary transition-opacity hover:opacity-80 focus-ring">
+      <Link href="/practice" className="mt-1 inline-flex min-h-[44px] items-center text-body-sm font-semibold text-primary transition-opacity hover:opacity-80 focus-ring">
         Practicar estos sonidos →
       </Link>
     </ProgressCard>
@@ -95,7 +95,14 @@ function LexiconPanel({
             <ProgressBigNumber value={`${masteredPct}%`} sub={`dominadas · ${mastered}/${total}`} />
             <ProgressBigNumber value={toReview} sub="por repasar" tone={toReview > 0 ? 'warning' : 'primary'} />
           </div>
-          <div className="mt-4 flex h-2.5 w-full overflow-hidden rounded-full bg-surface-sunken">
+          <div
+            role="progressbar"
+            aria-label="Distribución de vocabulario por estado"
+            aria-valuenow={masteredPct}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            className="mt-4 flex h-2.5 w-full overflow-hidden rounded-full bg-surface-sunken"
+          >
             {STATUS_CONFIG.map(({ key, color }) => {
               const pct = total > 0 ? (wordsByStatus[key] / total) * 100 : 0
               if (pct === 0) return null
@@ -109,7 +116,7 @@ function LexiconPanel({
           })}
           {needsVerification > 0 && (
             <p className="mt-3 text-caption text-warning">
-              {needsVerification} marcadas como dominadas sin evidencia reciente — vuelve a repasarlas.
+              {needsVerification} marcadas como dominadas sin evidencia reciente: vuelve a repasarlas.
             </p>
           )}
         </>
@@ -124,7 +131,7 @@ function LexiconPanel({
           )}
         </div>
       )}
-      <Link href="/words" className="mt-1 inline-flex min-h-[36px] items-center text-caption font-semibold text-primary transition-opacity hover:opacity-80 focus-ring">
+      <Link href="/words" className="mt-1 inline-flex min-h-[44px] items-center text-body-sm font-semibold text-primary transition-opacity hover:opacity-80 focus-ring">
         Abrir diccionario →
       </Link>
     </ProgressCard>
@@ -139,7 +146,7 @@ function CoachInsightsPanel({ coach }: { coach: CoachInsights }) {
       <ProgressCard>
         <ProgressCardHeader icon={<BrainCircuit size={16} />} eyebrow="AI Coach" title="Diagnóstico de gramática" />
         <p className="text-caption text-fg-muted">
-          Chatea con el AI Coach para estructurar tu perfil de gramática.
+          Conversa con el AI Coach para estructurar tu diagnóstico de gramática.
         </p>
       </ProgressCard>
     )
@@ -149,10 +156,10 @@ function CoachInsightsPanel({ coach }: { coach: CoachInsights }) {
   const level = coach.cefrEstimate ?? coach.profileLevel
   const levelSub =
     coach.cefrEstimate && coach.profileLevel && coach.cefrEstimate !== coach.profileLevel
-      ? `nivel estimado · perfil ${coach.profileLevel}`
+      ? `Estimado por coach (${coach.cefrEstimate}), perfil (${coach.profileLevel})`
       : coach.cefrEstimate
-        ? 'nivel estimado'
-        : 'nivel actual'
+        ? 'Nivel estimado por tu práctica'
+        : 'Nivel actual en tu perfil'
 
   return (
     <ProgressCard>
@@ -175,7 +182,7 @@ function CoachInsightsPanel({ coach }: { coach: CoachInsights }) {
           ))}
         </div>
       )}
-      <Link href="/practice/decks" className="mt-1 inline-flex min-h-[36px] items-center text-caption font-semibold text-primary transition-opacity hover:opacity-80 focus-ring">
+      <Link href="/practice/decks" className="mt-1 inline-flex min-h-[44px] items-center text-body-sm font-semibold text-primary transition-opacity hover:opacity-80 focus-ring">
         Practicar estos temas →
       </Link>
     </ProgressCard>
@@ -204,9 +211,10 @@ export function SkillProfileCard({ data, coach }: Props) {
   }
 
   return (
-    <section className="flex flex-col gap-4">
+    <section className="flex flex-col gap-3">
       <div className="flex flex-col gap-0.5">
-        <h2 className="text-base font-medium text-fg">Dónde enfocar</h2>
+        <span className="font-kicker font-semibold text-fg-subtle">Diagnóstico</span>
+        <h2 className="text-base font-semibold text-fg">Dónde enfocar</h2>
         <p className="text-caption text-fg-muted">
           El detalle de las tres dimensiones con más margen de mejora.
         </p>
