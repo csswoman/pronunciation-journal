@@ -28,7 +28,7 @@ import { speakText, cancelSpeech } from "@/lib/speech/synthesis";
 import { recordIntonationAttempt } from "@/lib/sounds/queries";
 import { useAuthOptional } from "@/components/auth/AuthProvider";
 import Button from "@/components/ui/Button";
-import { Mic, ArrowRight } from "@/components/icons";
+import { Mic, ArrowRight, ArrowLeft } from "@/components/icons";
 import { playUiCue } from "@/lib/ui-sounds/cues";
 
 export function IntonationTrainer() {
@@ -149,14 +149,11 @@ export function IntonationTrainer() {
   };
 
   return (
-    <div className="flex flex-col gap-6 max-w-4xl mx-auto py-2">
-      <IntonationPatternPills
-        patterns={INTONATION_PATTERNS}
-        selectedIndex={selectedPatternIndex}
-        onSelect={setSelectedPatternIndex}
-      />
-
-      <div className="flex flex-col gap-4 rounded-2xl border border-border-default bg-surface-raised p-6 shadow-sm">
+    <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,22rem)] gap-6 items-start w-full py-2">
+      <div
+        id="intonation-trainer-content"
+        className="flex flex-col gap-5 rounded-2xl border border-border-default bg-surface-raised p-5 sm:p-7 shadow-xs w-full min-w-0 order-2 lg:order-1"
+      >
         <IntonationSentenceHeader
           sentence={currentSentence}
           onPlay={handlePlayReference}
@@ -179,7 +176,7 @@ export function IntonationTrainer() {
           </div>
         )}
 
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2 border-t border-border-subtle">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-3 border-t border-border-subtle">
           <Button
             type="button"
             variant={isRecording ? "error" : "primary"}
@@ -191,19 +188,46 @@ export function IntonationTrainer() {
             {isRecording ? "Detener grabación" : "Grabar mi entonación"}
           </Button>
 
-          <Button
-            type="button"
-            variant="secondary"
-            size="md"
-            onClick={() => {
-              setSelectedPatternIndex((prev) => (prev + 1) % INTONATION_PATTERNS.length);
-            }}
-            className="w-full sm:w-auto"
-          >
-            Siguiente oración
-            <ArrowRight size={16} />
-          </Button>
+          <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+            <span className="font-mono text-xs text-fg-muted font-medium">
+              {selectedPatternIndex + 1} de {INTONATION_PATTERNS.length}
+            </span>
+
+            <div className="flex items-center gap-2">
+              {selectedPatternIndex > 0 && (
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="md"
+                  onClick={() => setSelectedPatternIndex((prev) => prev - 1)}
+                  aria-label="Oración anterior"
+                >
+                  <ArrowLeft size={16} />
+                </Button>
+              )}
+
+              <Button
+                type="button"
+                variant="secondary"
+                size="md"
+                onClick={() => {
+                  setSelectedPatternIndex((prev) => (prev + 1) % INTONATION_PATTERNS.length);
+                }}
+              >
+                Siguiente oración
+                <ArrowRight size={16} />
+              </Button>
+            </div>
+          </div>
         </div>
+      </div>
+
+      <div className="order-1 lg:order-2 w-full">
+        <IntonationPatternPills
+          patterns={INTONATION_PATTERNS}
+          selectedIndex={selectedPatternIndex}
+          onSelect={setSelectedPatternIndex}
+        />
       </div>
     </div>
   );

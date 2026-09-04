@@ -2,11 +2,13 @@
 
 // Planned structure:
 // <ConnectedSpeechTrainer>
+//   <ConnectedSpeechModeSelector />
 //   <ConnectedSpeechCategoryPills />
-//   <ConnectedSpeechPhraseCard />
+//   <ConnectedSpeechProgress />
+//   <AcousticUnpackingCard | ConnectedSpeechPhraseCard>
 // </ConnectedSpeechTrainer>
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import { CONNECTED_SPEECH_DATA } from "@/lib/pronunciation/connected-speech-data";
 import { speakText, cancelSpeech } from "@/lib/speech/synthesis";
 import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
@@ -15,11 +17,10 @@ import { useAuthOptional } from "@/components/auth/AuthProvider";
 import {
   ConnectedSpeechCategoryPills,
   ConnectedSpeechPhraseCard,
-  firstIndexForCategory,
 } from "./ConnectedSpeechParts";
 import { AcousticUnpackingCard } from "./AcousticUnpackingCard";
 import Button from "@/components/ui/Button";
-import { ArrowRight } from "@/components/icons";
+import { ArrowRight, ArrowLeft } from "@/components/icons";
 import { cn } from "@/lib/cn";
 
 export function ConnectedSpeechTrainer() {
@@ -33,7 +34,14 @@ export function ConnectedSpeechTrainer() {
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const recordedAttemptRef = useRef<string | null>(null);
 
-  const currentPhrase = CONNECTED_SPEECH_DATA[selectedIndex] ?? CONNECTED_SPEECH_DATA[0];
+  const filteredPhrases = useMemo(() => {
+    if (activeCategory === "all") return CONNECTED_SPEECH_DATA;
+    return CONNECTED_SPEECH_DATA.filter((p) => p.category === activeCategory);
+  }, [activeCategory]);
+
+  const totalPhrases = filteredPhrases.length;
+  const safeIndex = selectedIndex >= totalPhrases ? 0 : selectedIndex;
+  const currentPhrase = filteredPhrases[safeIndex] ?? CONNECTED_SPEECH_DATA[0];
 
   const {
     status,
@@ -52,7 +60,7 @@ export function ConnectedSpeechTrainer() {
     setIsSaved(false);
     recordedAttemptRef.current = null;
     reset();
-  }, [selectedIndex, reset]);
+  }, [safeIndex, reset]);
 
   useEffect(() => {
     if (status === "done" && speechResult?.transcript && user?.id) {
@@ -97,36 +105,52 @@ export function ConnectedSpeechTrainer() {
     });
   }, [currentPhrase.phrase]);
 
+  const handleNextPhrase = useCallback(() => {
+    setSelectedIndex((prev) => (prev + 1) % totalPhrases);
+  }, [totalPhrases]);
+
+  const handlePrevPhrase = useCallback(() => {
+    setSelectedIndex((prev) => (prev - 1 + totalPhrases) % totalPhrases);
+  }, [totalPhrases]);
+
   const isListening = status === "listening";
   const isDone = status === "done";
 
   return (
-    <div className="flex flex-col gap-6 max-w-4xl mx-auto py-2">
-      {/* Mode Selector */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-border-default pb-3">
+    <div className="flex flex-col gap-5 w-full py-2">
+      {/* Mode Selector - Apple HIG Segmented Control */}
+      <div
+        role="tablist"
+        aria-label="Modalidad de entrenamiento"
+        className="inline-flex w-full sm:w-auto p-1 rounded-xl bg-surface-sunken border border-border-subtle gap-1"
+      >
         <button
           type="button"
+          role="tab"
+          aria-selected={trainerMode === "unpacking"}
           onClick={() => setTrainerMode("unpacking")}
           className={cn(
-            "px-3.5 py-1.5 rounded-lg text-body-sm font-semibold transition-colors focus-ring cursor-pointer",
+            "flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 min-h-[44px] px-4 rounded-lg text-body-sm font-semibold transition-all focus-ring cursor-pointer",
             trainerMode === "unpacking"
-              ? "bg-primary text-on-primary shadow-xs"
-              : "text-fg-muted hover:bg-surface-raised hover:text-fg",
+              ? "bg-surface-raised text-fg shadow-xs border border-border-default"
+              : "text-fg-muted hover:text-fg hover:bg-surface-raised/40",
           )}
         >
-          🎧 Desempaquetado Auditivo (Oído)
+          <span>🎧 Desempaquetado Auditivo (Oído)</span>
         </button>
         <button
           type="button"
+          role="tab"
+          aria-selected={trainerMode === "production"}
           onClick={() => setTrainerMode("production")}
           className={cn(
-            "px-3.5 py-1.5 rounded-lg text-body-sm font-semibold transition-colors focus-ring cursor-pointer",
+            "flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 min-h-[44px] px-4 rounded-lg text-body-sm font-semibold transition-all focus-ring cursor-pointer",
             trainerMode === "production"
-              ? "bg-primary text-on-primary shadow-xs"
-              : "text-fg-muted hover:bg-surface-raised hover:text-fg",
+              ? "bg-surface-raised text-fg shadow-xs border border-border-default"
+              : "text-fg-muted hover:text-fg hover:bg-surface-raised/40",
           )}
         >
-          🎤 Producción Oral (Voz)
+          <span>🎤 Producción Oral (Voz)</span>
         </button>
       </div>
 
@@ -134,10 +158,27 @@ export function ConnectedSpeechTrainer() {
         activeCategory={activeCategory}
         onSelect={(categoryId) => {
           setActiveCategory(categoryId);
-          const firstMatch = firstIndexForCategory(categoryId);
-          if (firstMatch >= 0) setSelectedIndex(firstMatch);
+          setSelectedIndex(0);
         }}
       />
+
+      {/* Progress and Counter */}
+      <div className="flex items-center justify-between text-caption font-medium text-fg-muted px-1">
+        <span>
+          Frase <strong className="text-fg font-bold">{safeIndex + 1}</strong> de {totalPhrases}
+        </span>
+        <div className="flex items-center gap-1.5" aria-hidden="true">
+          {filteredPhrases.slice(0, Math.min(8, totalPhrases)).map((_, idx) => (
+            <span
+              key={idx}
+              className={cn(
+                "h-1.5 rounded-full transition-all",
+                idx === safeIndex ? "w-5 bg-primary" : "w-1.5 bg-border-default",
+              )}
+            />
+          ))}
+        </div>
+      </div>
 
       {trainerMode === "unpacking" ? (
         <div className="flex flex-col gap-4">
@@ -160,13 +201,21 @@ export function ConnectedSpeechTrainer() {
             }}
           />
 
-          <div className="flex justify-end pt-2">
+          <div className="flex items-center justify-between pt-2">
             <Button
               variant="secondary"
-              size="sm"
-              onClick={() => {
-                setSelectedIndex((prev) => (prev + 1) % CONNECTED_SPEECH_DATA.length);
-              }}
+              size="md"
+              onClick={handlePrevPhrase}
+              disabled={safeIndex === 0}
+              className="flex items-center gap-1.5"
+            >
+              <ArrowLeft className="size-4" />
+              <span>Anterior</span>
+            </Button>
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={handleNextPhrase}
               className="flex items-center gap-1.5"
             >
               <span>Siguiente frase</span>
@@ -188,11 +237,12 @@ export function ConnectedSpeechTrainer() {
           onPlaySlow={handlePlaySlow}
           onPlayConnected={handlePlayConnected}
           onToggleMic={isListening ? stop : start}
-          onNext={() => {
-            setSelectedIndex((prev) => (prev + 1) % CONNECTED_SPEECH_DATA.length);
-          }}
+          onNext={handleNextPhrase}
+          onPrev={handlePrevPhrase}
+          hasPrev={safeIndex > 0}
         />
       )}
     </div>
   );
 }
+

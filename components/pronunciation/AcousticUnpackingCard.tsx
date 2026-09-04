@@ -12,7 +12,7 @@ import { useState, useCallback, useMemo } from "react";
 import type { ConnectedPhrase } from "@/lib/pronunciation/connected-speech-data";
 import { speakText, cancelSpeech } from "@/lib/speech/synthesis";
 import Button from "@/components/ui/Button";
-import { Volume2, Sparkles, Check } from "@/components/icons";
+import { Volume2, Sparkles, Check, X } from "@/components/icons";
 import { RhythmicSentenceDisplay } from "./RhythmicSentenceDisplay";
 import { cn } from "@/lib/cn";
 
@@ -31,12 +31,10 @@ export function AcousticUnpackingCard({ phrase, onComplete, isSaved }: Props) {
   // Generate plausible options for the acoustic unpacking question
   const options = useMemo(() => {
     const correct = phrase.phrase;
-    // Alternative 1: isolated form (robotic word-by-word)
     const distractor1 = phrase.phrase
       .split(" ")
       .map((w) => w.toUpperCase())
       .join(" ... ");
-    // Alternative 2: common Spanish acoustic confusion
     const distractor2 = phrase.howItSoundsEs
       .replace(/[«»]/g, "")
       .trim();
@@ -84,7 +82,7 @@ export function AcousticUnpackingCard({ phrase, onComplete, isSaved }: Props) {
   const isCorrect = selectedOption !== null && options[selectedOption]?.isCorrect;
 
   return (
-    <div className="flex flex-col gap-5 rounded-2xl border border-border-default bg-surface-raised p-6 shadow-sm">
+    <div className="flex flex-col gap-5 rounded-xl border border-border-default bg-surface-raised p-5 sm:p-6 shadow-xs">
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border-subtle pb-3">
         <div>
@@ -97,25 +95,25 @@ export function AcousticUnpackingCard({ phrase, onComplete, isSaved }: Props) {
         </div>
         <div className="flex items-center gap-2">
           {isSaved && (
-            <span className="font-caption text-xs font-semibold px-2 py-0.5 rounded-full bg-success/20 text-success">
+            <span className="font-caption text-xs font-semibold px-2.5 py-1 rounded-full bg-success/20 text-success">
               ✓ Guardado (+XP)
             </span>
           )}
-          <span className="font-mono text-xs font-semibold px-2 py-0.5 rounded-md bg-surface-base text-fg-muted border border-border-subtle">
+          <span className="font-mono text-xs font-semibold px-2.5 py-1 rounded-md bg-surface-base text-fg-muted border border-border-subtle">
             Oído Rápido
           </span>
         </div>
       </div>
 
       {/* Audio Player Controls */}
-      <div className="flex flex-wrap items-center gap-3 p-3.5 rounded-xl bg-surface-base border border-border-default">
+      <div className="flex flex-wrap items-center gap-3 p-3 rounded-lg bg-surface-base border border-border-default">
         <Button
           type="button"
           variant="primary"
-          size="sm"
+          size="md"
           onClick={handlePlayNormal}
           disabled={isPlayingNormal}
-          className="flex items-center gap-2"
+          className="min-h-[44px] flex items-center gap-2"
         >
           <Volume2 size={18} className={isPlayingNormal ? "animate-pulse" : ""} />
           <span>{isPlayingNormal ? "Reproduciendo..." : "Velocidad nativa (1.0x)"}</span>
@@ -124,10 +122,10 @@ export function AcousticUnpackingCard({ phrase, onComplete, isSaved }: Props) {
         <Button
           type="button"
           variant="secondary"
-          size="sm"
+          size="md"
           onClick={handlePlaySlow}
           disabled={isPlayingSlow}
-          className="flex items-center gap-2"
+          className="min-h-[44px] flex items-center gap-2"
         >
           <Volume2 size={16} className={isPlayingSlow ? "animate-pulse" : ""} />
           <span>{isPlayingSlow ? "Desacelerando..." : "Desacelerar (0.65x)"}</span>
@@ -140,17 +138,19 @@ export function AcousticUnpackingCard({ phrase, onComplete, isSaved }: Props) {
           Escucha el micro-clip y selecciona qué frase completa se articuló:
         </p>
 
-        <div className="grid gap-2.5">
+        <div className="grid gap-2.5" role="radiogroup" aria-label="Opciones de frase articulada">
           {options.map((opt, i) => {
             const isSelected = selectedOption === i;
             return (
               <button
                 key={i}
                 type="button"
+                role="radio"
+                aria-checked={isSelected}
                 onClick={() => handleSelectOption(i)}
                 disabled={isAnswered}
                 className={cn(
-                  "rounded-xl border p-3.5 text-left text-body-sm font-medium transition-all focus-ring cursor-pointer",
+                  "min-h-[48px] rounded-lg border p-3.5 text-left text-body-sm font-medium transition-all focus-ring cursor-pointer",
                   !isAnswered && "border-border-default bg-surface hover:border-primary/60 hover:bg-surface-base",
                   isAnswered && opt.isCorrect && "border-success/60 bg-success-soft text-fg font-bold",
                   isAnswered && isSelected && !opt.isCorrect && "border-error/60 bg-error-soft text-fg",
@@ -160,7 +160,10 @@ export function AcousticUnpackingCard({ phrase, onComplete, isSaved }: Props) {
                 <div className="flex items-center justify-between gap-2">
                   <span>{opt.label}</span>
                   {isAnswered && opt.isCorrect && (
-                    <Check size={18} className="text-success shrink-0" />
+                    <Check size={18} className="text-success shrink-0" aria-label="Correcto" />
+                  )}
+                  {isAnswered && isSelected && !opt.isCorrect && (
+                    <X size={18} className="text-error shrink-0" aria-label="Incorrecto" />
                   )}
                 </div>
               </button>
@@ -169,7 +172,7 @@ export function AcousticUnpackingCard({ phrase, onComplete, isSaved }: Props) {
         </div>
 
         {isAnswered && (
-          <p className={cn("text-body-sm font-semibold", isCorrect ? "text-success" : "text-warning")}>
+          <p className={cn("text-body-sm font-semibold pt-1", isCorrect ? "text-success" : "text-warning")}>
             {isCorrect
               ? "✓ ¡Excelente! Has identificado el patrón acústico nativo."
               : "⚠ Revisa la comparativa a continuación para contrastar la pronunciación conectada."}
@@ -181,7 +184,7 @@ export function AcousticUnpackingCard({ phrase, onComplete, isSaved }: Props) {
             <button
               type="button"
               onClick={handleDirectReveal}
-              className="text-caption font-medium text-primary hover:underline cursor-pointer focus-ring"
+              className="min-h-[44px] px-2 text-caption font-medium text-primary hover:underline cursor-pointer focus-ring inline-flex items-center"
             >
               Revelar mapa acústico sin responder →
             </button>
@@ -199,20 +202,17 @@ export function AcousticUnpackingCard({ phrase, onComplete, isSaved }: Props) {
             </span>
           </div>
 
-          <RhythmicSentenceDisplay
-            sentence={phrase.phrase}
-            showAudio={false}
-          />
+          <RhythmicSentenceDisplay sentence={phrase.phrase} showAudio={false} />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="rounded-xl border border-border-subtle bg-surface-base p-3.5">
+            <div className="rounded-lg border border-border-subtle bg-surface-base p-3.5">
               <span className="font-caption text-xs text-fg-muted font-semibold block mb-0.5">
                 Palabra por palabra aislada:
               </span>
               <span className="font-ipa text-fg-muted text-sm">{phrase.isolatedIpa}</span>
             </div>
 
-            <div className="rounded-xl border border-primary/30 bg-primary-soft/40 p-3.5">
+            <div className="rounded-lg border border-primary/30 bg-primary-soft/40 p-3.5">
               <span className="font-caption text-xs text-primary font-semibold block mb-0.5">
                 Cómo suena al oído (enlace nativo):
               </span>
@@ -221,7 +221,7 @@ export function AcousticUnpackingCard({ phrase, onComplete, isSaved }: Props) {
             </div>
           </div>
 
-          <div className="rounded-xl border border-border-subtle bg-surface-base p-3.5">
+          <div className="rounded-lg border border-border-subtle bg-surface-base p-3.5">
             <p className="text-body-sm text-fg-muted text-pretty">
               💡 {phrase.explanationEs}
             </p>
@@ -231,3 +231,4 @@ export function AcousticUnpackingCard({ phrase, onComplete, isSaved }: Props) {
     </div>
   );
 }
+

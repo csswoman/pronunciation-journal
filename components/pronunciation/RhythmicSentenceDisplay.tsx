@@ -89,7 +89,7 @@ export function RhythmicSentenceDisplay({
       </div>
 
       <div
-        className="flex flex-wrap items-baseline gap-x-2 gap-y-3 py-1 font-sans text-fg"
+        className="flex flex-wrap items-start gap-x-3 gap-y-2 py-2 font-sans text-fg"
         aria-describedby={showLegend ? legendId : undefined}
       >
         {analysis.tokens.map((token, idx) => (
@@ -130,29 +130,30 @@ function RhythmicTokenItem({
       )}
       onClick={onClick ? () => onClick(token.word) : undefined}
     >
-      {isContent && (
-        <span
-          className="text-primary text-[10px] leading-none mb-0.5 select-none font-bold animate-fadeIn"
-          aria-hidden="true"
-        >
-          ●
-        </span>
-      )}
+      <span
+        className={cn(
+          'text-[10px] leading-none mb-1 select-none font-bold',
+          isContent ? 'text-primary animate-fadeIn' : 'invisible',
+        )}
+        aria-hidden="true"
+      >
+        ●
+      </span>
       <span
         className={cn(
           'transition-all text-pretty',
           isContent
-            ? 'font-bold text-h4 text-fg tracking-tight'
+            ? 'font-bold text-h3 sm:text-h2 text-fg tracking-tight'
             : isRhythmMode
-              ? 'font-normal text-body-sm text-fg-muted'
-              : 'font-normal text-body text-fg',
+              ? 'font-normal text-body sm:text-h4 text-fg-muted'
+              : 'font-normal text-body sm:text-h4 text-fg',
         )}
       >
         {token.raw}
       </span>
       {isRhythmMode && token.weakIpa && (
         <span
-          className="font-ipa text-[10px] text-fg-subtle select-none leading-none mt-0.5"
+          className="font-ipa text-caption sm:text-body-sm text-fg-subtle select-none leading-none mt-1"
           aria-label={`Forma débil /${token.weakIpa}/`}
         >
           /{token.weakIpa}/

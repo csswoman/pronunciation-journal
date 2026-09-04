@@ -58,24 +58,32 @@ export function SagittalDiagram({
         </linearGradient>
       </defs>
 
-      {/* 1. Cavidad oral: volumen de aire del tracto vocal */}
+      {/* 1. Silueta de la cabeza (cráneo, perfil facial y cuello) */}
       <path
-        d="M 48,168 C 44,128 50,84 88,46 C 118,24 158,30 178,46 C 192,58 196,72 196,86 C 196,96 189,103 183,105 C 186,116 178,136 155,149 C 141,158 136,164 136,170 Z"
-        className="fill-surface-base stroke-border-subtle"
-        strokeWidth="1.5"
+        d="M 36,172 C 36,128 38,94 48,64 C 62,32 94,16 132,16 C 154,16 168,26 176,38 C 182,47 183,56 182,62 C 185,67 196,73 198,77 C 200,81 197,85 191,86 C 188,88 186,91 187,94 C 192,97 192,101 184,104 C 188,107 189,112 182,118 C 179,121 180,124 182,127 C 185,131 184,136 179,141 C 168,148 152,154 144,172 Z"
+        className="fill-surface-sunken/40 stroke-fg-muted/40"
+        strokeWidth="1.2"
+        strokeLinejoin="round"
       />
 
-      {/* 2. Silueta facial: frente, nariz, labios y mentón */}
+      {/* 2. Trazo continuo del perfil facial y cuello anterior */}
       <path
-        d="M 163,33 C 177,43 184,53 187,62 C 189,68 200,76 201,80 C 201,84 191,87 186,89 C 186,94 189,97 189,100 C 186,103 181,104 181,107 C 184,110 186,114 184,119 C 180,128 170,138 152,149 C 142,155 137,163 136,170"
+        d="M 166,28 C 174,38 181,49 182,62 C 185,67 196,73 198,77 C 200,81 197,85 191,86 C 188,88 186,91 187,94 C 192,97 192,101 184,104 C 188,107 189,112 182,118 C 179,121 180,124 182,127 C 185,131 184,136 179,141 C 168,148 152,154 144,172"
         fill="none"
         className="stroke-fg-muted"
-        strokeWidth="2.2"
+        strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
 
-      {/* 3. Paladar duro (hueso) */}
+      {/* 3. Tracto vocal y pared faríngea posterior */}
+      <path
+        d="M 54,172 L 54,116 C 54,94 62,82 72,74 C 84,65 106,64 122,64 C 148,64 168,76 176,96 L 168,104 C 158,116 148,138 135,138 C 110,138 78,144 68,172 Z"
+        className="fill-surface-base stroke-border-subtle"
+        strokeWidth="1.2"
+      />
+
+      {/* 4. Paladar duro (hueso) */}
       <path
         d="M 176,97 C 164,88 143,74 112,74"
         fill="none"
@@ -84,7 +92,7 @@ export function SagittalDiagram({
         strokeLinecap="round"
       />
 
-      {/* 4. Velo del paladar y úvula */}
+      {/* 5. Velo del paladar y úvula */}
       <path
         d="M 112,74 C 94,75 82,84 76,100 C 74,106 70,112 68,108"
         fill="none"
@@ -96,7 +104,7 @@ export function SagittalDiagram({
         strokeLinecap="round"
       />
 
-      {/* 5. Incisivo superior */}
+      {/* 6. Incisivo superior */}
       <path
         d="M 176,96 L 174,108 L 168,108 L 169,96 Z"
         className="fill-surface-raised stroke-fg"
@@ -104,7 +112,7 @@ export function SagittalDiagram({
         strokeLinejoin="round"
       />
 
-      {/* 6. Incisivo inferior */}
+      {/* 7. Incisivo inferior */}
       <path
         d="M 170,125 L 168,112 L 162,112 L 164,125 Z"
         className="fill-surface-raised stroke-fg"
@@ -112,7 +120,7 @@ export function SagittalDiagram({
         strokeLinejoin="round"
       />
 
-      {/* 7. Lengua del sonido contrastado, como referencia fantasma */}
+      {/* 8. Lengua del sonido contrastado, como referencia fantasma */}
       {reference && (
         <path
           d={reference.path}
@@ -124,7 +132,7 @@ export function SagittalDiagram({
         />
       )}
 
-      {/* 8. Cuerpo de la lengua */}
+      {/* 9. Cuerpo de la lengua */}
       <g
         className={cn(
           isAnimating && (speed === "slow" ? "animate-tongue-breathe-slow" : "animate-tongue-breathe"),
@@ -138,7 +146,7 @@ export function SagittalDiagram({
           strokeLinejoin="round"
         />
 
-        {/* 9. Surco medial: da volumen al dorso */}
+        {/* 10. Surco medial: da volumen al dorso */}
         <path
           d="M 74,138 Q 104,128 134,133"
           fill="none"
@@ -147,7 +155,7 @@ export function SagittalDiagram({
           strokeDasharray="2 3"
         />
 
-        {/* 10. Punto de articulación: sólo pulsa si hay contacto real */}
+        {/* 11. Punto de articulación: sólo pulsa si hay contacto real */}
         {tongue.isContact && (
           <circle
             cx={tongue.contactX}
@@ -165,43 +173,55 @@ export function SagittalDiagram({
         />
       </g>
 
-      {/* 11. Laringe: vibración de las cuerdas vocales */}
+      {/* 12. Laringe y cuerdas vocales anatómicas */}
       {guide.vocalCordsVibrate ? (
         <g className={cn(isAnimating && "animate-pulse")}>
-          <rect
-            x="46"
-            y="146"
-            width="12"
-            height="20"
-            rx="3"
+          <ellipse
+            cx="54"
+            cy="156"
+            rx="6"
+            ry="9"
             className="fill-warning-soft stroke-warning"
             strokeWidth="1.5"
           />
           <path
-            d="M 42,151 Q 46,156 42,161"
+            d="M 51,152 Q 54,156 51,160 M 57,152 Q 54,156 57,160"
             fill="none"
             className="stroke-warning"
-            strokeWidth="2"
+            strokeWidth="1.6"
             strokeLinecap="round"
           />
           <path
-            d="M 38,148 Q 44,156 38,164"
+            d="M 44,151 Q 41,156 44,161"
             fill="none"
-            className="stroke-warning"
+            className="stroke-warning/80"
             strokeWidth="1.5"
+            strokeLinecap="round"
+          />
+          <path
+            d="M 39,147 Q 35,156 39,165"
+            fill="none"
+            className="stroke-warning/50"
+            strokeWidth="1.2"
             strokeLinecap="round"
           />
         </g>
       ) : (
         <g opacity="0.4">
-          <rect
-            x="46"
-            y="146"
-            width="12"
-            height="20"
-            rx="3"
+          <ellipse
+            cx="54"
+            cy="156"
+            rx="5"
+            ry="8"
             className="fill-surface-sunken stroke-border-default"
             strokeWidth="1.2"
+          />
+          <path
+            d="M 52,152 L 52,160 M 56,152 L 56,160"
+            fill="none"
+            className="stroke-fg-muted"
+            strokeWidth="1.2"
+            strokeLinecap="round"
           />
         </g>
       )}
