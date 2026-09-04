@@ -2,7 +2,7 @@ import fs from "fs";
 import os from "os";
 import path from "path";
 import { afterEach, describe, expect, it } from "vitest";
-import { loadEssentialWords } from "../data";
+import { loadEssentialWords, findEssentialWord } from "../data";
 
 function entry(rank: number) {
   return {
@@ -74,5 +74,11 @@ describe("loadEssentialWords", () => {
     (bad.entries[0] as Record<string, unknown>).cefr_level = "Z9";
     const dir = writeChunks({ n: 1, data: bad });
     expect(() => loadEssentialWords(dir)).toThrow(/Zod/i);
+  });
+
+  it("finds essential word case-insensitively with findEssentialWord", () => {
+    const dir = writeChunks({ n: 1, data: chunk(1) });
+    expect(findEssentialWord("WORD1", dir)).toMatchObject({ word: "word1", rank: 1 });
+    expect(findEssentialWord("nonexistent", dir)).toBeNull();
   });
 });

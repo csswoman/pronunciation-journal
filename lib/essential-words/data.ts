@@ -61,3 +61,24 @@ export function loadEssentialWords(dir: string = DEFAULT_DIR): EssentialWord[] {
     return [];
   }
 }
+
+let essentialWordsMap: Map<string, EssentialWord> | null = null;
+
+/**
+ * Fast O(1) in-memory lookup for essential words by lowercased text.
+ * Cached across requests in the Node server environment.
+ */
+export function findEssentialWord(text: string, dir: string = DEFAULT_DIR): EssentialWord | null {
+  if (!essentialWordsMap) {
+    const map = new Map<string, EssentialWord>();
+    const all = loadEssentialWords(dir);
+    for (const item of all) {
+      if (item.word) {
+        map.set(item.word.toLowerCase().trim(), item);
+      }
+    }
+    essentialWordsMap = map;
+  }
+  return essentialWordsMap.get(text.toLowerCase().trim()) ?? null;
+}
+

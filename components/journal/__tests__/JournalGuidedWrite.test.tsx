@@ -137,8 +137,8 @@ describe('JournalGuidedWrite ("Completar frases")', () => {
     expect(cycleBtn).toBeInTheDocument()
 
     fireEvent.click(cycleBtn)
-    expect(screen.getByText('What was one small win from your day?')).toBeInTheDocument()
-    expect(screen.getByText('One small win today was')).toBeInTheDocument()
+    expect(screen.getByText('What do you think about your daily routine? (I think... because... For example...)')).toBeInTheDocument()
+    expect(screen.getByText('I think having a clear routine is')).toBeInTheDocument()
   })
 
   it('allows chaining multiple sentences with "+ Otra frase"', () => {
