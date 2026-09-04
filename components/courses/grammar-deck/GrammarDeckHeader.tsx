@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowLeft } from "@/components/icons";
 import { TrackingSaveButton } from "@/components/tracking/TrackingSaveButton";
 import type { GrammarDeckMeta } from "@/lib/courses/grammar-deck/types";
+import { studyOrPracticeDeckHref } from "@/lib/courses/curriculumIndex";
 
 interface GrammarDeckHeaderProps {
   meta: GrammarDeckMeta;
@@ -23,6 +24,8 @@ export default function GrammarDeckHeader({
   lessonSlug,
 }: GrammarDeckHeaderProps) {
   const pct = totalCount === 0 ? 0 : Math.round((reviewedCount / totalCount) * 100);
+  const fullTitle = [meta.title, meta.titleEmphasis].filter(Boolean).join(" ");
+  const deckHref = lessonSlug ? studyOrPracticeDeckHref(lessonSlug) : undefined;
 
   return (
     <header className="grammar-deck__head">
@@ -41,7 +44,8 @@ export default function GrammarDeckHeader({
             <TrackingSaveButton
               kind="lesson"
               reference={lessonSlug}
-              title={meta.title}
+              title={fullTitle}
+              payload={deckHref ? { href: deckHref } : undefined}
               variant="heart"
             />
           )}

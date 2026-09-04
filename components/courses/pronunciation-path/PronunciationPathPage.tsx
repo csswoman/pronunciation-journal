@@ -172,10 +172,6 @@ export function PronunciationPathPage({
 
   return (
     <div className="mx-auto flex w-full min-w-0 max-w-6xl flex-col layout-section-gap pb-[max(5.5rem,env(safe-area-inset-bottom))] lg:pb-4">
-      <p className="max-w-prose text-pretty font-body-sm text-fg-muted">
-        De sonidos a frases reales. Un paso claro a la vez.
-      </p>
-
       {evidenceReady ? (
         <div className="grid min-w-0 gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,24rem)] lg:items-start">
           <main className="flex min-w-0 flex-col gap-8">

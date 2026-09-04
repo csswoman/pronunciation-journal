@@ -4,6 +4,8 @@ import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth/session";
+import { readGuestStudyLevel } from "@/lib/preferences/guest-study-level";
+import { parseCefrLevelId } from "@/lib/courses/curriculumIndex";
 import type { CefrLevelId } from "@/lib/courses/types";
 
 interface LevelProgressEntry {
@@ -43,27 +45,49 @@ export default function CoursePathAutoLevelSync({
 
     async function syncLevel() {
       const userId = await getOptionalUserId();
-      if (!userId) return;
+      let activeLevelId: CefrLevelId | null = null;
 
-      const counts = await Promise.all(
-        levels.map(async (level) => {
-          const rows = await db.completedLessons.bulkGet(
-            level.lessonIds.map((lessonId) => completionKey(userId, level.id, lessonId))
+      if (userId) {
+        try {
+          const counts = await Promise.all(
+            levels.map(async (level) => {
+              const rows = await db.completedLessons.bulkGet(
+                level.lessonIds.map((lessonId) => completionKey(userId, level.id, lessonId))
+              );
+
+              return {
+                id: level.id,
+                count: rows.filter(Boolean).length,
+              };
+            })
           );
 
-          return {
-            id: level.id,
-            count: rows.filter(Boolean).length,
-          };
-        })
-      );
+          if (cancelled) return;
+
+          const activeLevel = [...counts].reverse().find((level) => level.count > 0);
+          if (activeLevel) {
+            activeLevelId = activeLevel.id;
+          } else {
+            const stateRow = await db.learningState?.get(userId);
+            const userEst = stateRow?.state?.level?.cefrEstimate;
+            if (userEst) {
+              activeLevelId = parseCefrLevelId(userEst.toLowerCase());
+            }
+          }
+        } catch {
+          /* Fallback a nivel local de estudio */
+        }
+      }
+
+      if (!activeLevelId) {
+        activeLevelId = parseCefrLevelId(readGuestStudyLevel().toLowerCase());
+      }
 
       if (cancelled) return;
 
-      const activeLevel = [...counts].reverse().find((level) => level.count > 0);
-      if (!activeLevel) return;
-
-      router.replace(`${pathname}?level=${activeLevel.id}`, { scroll: false });
+      if (activeLevelId && activeLevelId !== "a1") {
+        router.replace(`${pathname}?level=${activeLevelId}`, { scroll: false });
+      }
     }
 
     syncLevel().catch(() => {});

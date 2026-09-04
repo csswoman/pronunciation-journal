@@ -21,6 +21,7 @@ import {
   reportedLevelIsAbove,
   saveAssessmentLevel,
 } from "./assessment-client-helpers";
+import { saveGuestStudyLevel } from "@/lib/preferences/guest-study-level";
 
 interface AssessmentClientProps {
   mode: "placement" | "checkpoint";
@@ -79,6 +80,11 @@ export default function AssessmentClient({
     setResult(nextResult);
     if (attemptedQuestions.length > 0) {
       persistLocalAssessmentCache({ userId, mode, checkpointLabel, nextResult });
+      try {
+        saveGuestStudyLevel(nextResult.assignedLevel);
+      } catch {
+        /* no-op */
+      }
       if (userId) {
         void saveAssessmentLevel({
           mode,

@@ -2904,11 +2904,20 @@
   gap: var(--space-6);
 }
 
+.course-path__client-layout--no-aside {
+  display: block;
+}
+
 @media (min-width: 1024px) {
-  .course-path__client-layout {
+  .course-path__client-layout:not(.course-path__client-layout--no-aside) {
     grid-template-columns: minmax(0, 1fr) minmax(17rem, 21rem);
     align-items: start;
     gap: var(--space-8);
+  }
+
+  .course-path__client-layout--no-aside {
+    display: block;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 

@@ -200,7 +200,12 @@ export default async function MiniLessonDetailPage({ params }: MiniLessonPagePro
             ← Todas las lecciones
           </Link>
           {content.quiz.length === 0 && <MiniLessonComplete slug={slug} />}
-          <TrackingSaveButton kind="lesson" reference={slug} title={lesson.title} />
+          <TrackingSaveButton
+            kind="lesson"
+            reference={slug}
+            title={lesson.title}
+            payload={{ href: `/mini-lessons/${slug}` }}
+          />
           {deckLink ? (
             <Link href={deckLink.href} className="mini-lessons__btn">
               {deckLink.viaRoute ? "Estudiar en la Ruta" : "Abrir mazo"} →

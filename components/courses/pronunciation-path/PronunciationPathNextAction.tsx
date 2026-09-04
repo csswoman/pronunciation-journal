@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { Play } from '@/components/icons'
 import { getLearnerTargetCopy } from '@/lib/pronunciation/assessment/learner-copy'
 import { cn } from '@/lib/cn'
 import type { PathRecommendation } from '@/lib/pronunciation/path/types'
@@ -57,7 +58,10 @@ export function PronunciationPathNextAction({
     >
       <div className="flex min-w-0 flex-col gap-1.5">
         <p
-          className={cn( 'font-mono text-caption', isCompact ? 'text-fg-subtle' : 'text-primary' )}
+          className={cn(
+            'font-kicker uppercase tracking-wider',
+            isCompact ? 'text-fg-subtle' : 'text-primary'
+          )}
         >
           {title}
         </p>
@@ -102,7 +106,8 @@ export function PronunciationPathNextAction({
           href={href}
           className={cn(pathCtaPrimaryClass, isCompact && 'min-h-10 sm:w-fit')}
         >
-          {ctaLabel}
+          <Play size={13} className="shrink-0 stroke-[2.5]" aria-hidden />
+          <span>{ctaLabel}</span>
         </Link>
         {!isCompact && lessonHref ? (
           <Link href={lessonHref} className={pathCtaSecondaryClass}>

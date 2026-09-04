@@ -12,6 +12,7 @@
  *     - UnitLessonsList (pending LessonGroups and completed LessonGroup)
  *   - CoursePathYaPuedesDecirEsto (inline achievement block for real-world phrases)
  *   - CoursePracticeSuggestions (footer review suggestions)
+ *   - CoursePathC1Electives (optional post-C1 elective tracks list)
  *   - CoursePathAsideProgress (sidebar progress dashboard)
  */
 
@@ -19,6 +20,7 @@ import Link from "next/link";
 import { BookOpen, ChevronRight } from "@/components/icons";
 import { useEffect, useMemo, useState } from "react";
 import CoursePathAsideProgress from "@/components/courses/CoursePathAsideProgress";
+import CoursePathC1Electives from "@/components/courses/CoursePathC1Electives";
 import CoursePathHeroBanner from "@/components/courses/CoursePathHeroBanner";
 import CoursePathLessonGroup, { type LessonWithState } from "@/components/courses/CoursePathLessonGroup";
 import CoursePathLessonRow from "@/components/courses/CoursePathLessonRow";
@@ -31,10 +33,13 @@ import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth/session";
 import { deriveLevelView, lessonProgressKey } from "@/lib/courses/progress";
 import type { CoursePathLevel } from "@/lib/courses/types";
+import { cn } from "@/lib/cn";
 
 interface CoursePathProgressClientProps {
   level: CoursePathLevel;
   compactHead?: boolean;
+  hideAside?: boolean;
+  electiveTracks?: CoursePathLevel[];
 }
 
 function groupPendingLessons(lessons: LessonWithState[]): Array<{ group: string; lessons: LessonWithState[] }> {
@@ -63,7 +68,12 @@ function completionKey(userId: string, courseSlug: string, lessonSlug: string): 
   return `${userId}:${courseSlug}:${lessonSlug}`;
 }
 
-export default function CoursePathProgressClient({ level, compactHead }: CoursePathProgressClientProps) {
+export default function CoursePathProgressClient({
+  level,
+  compactHead,
+  hideAside,
+  electiveTracks,
+}: CoursePathProgressClientProps) {
   const loadingWords = useLoadingWords();
   const [completedIds, setCompletedIds] = useState<Set<string> | null>(null);
   const [loadError, setLoadError] = useState(false);
@@ -162,9 +172,15 @@ export default function CoursePathProgressClient({ level, compactHead }: CourseP
     (sum, u) => sum + u.lessons.filter((l) => l.state === "done").length,
     0
   );
+  const showAside = !hideAside && !level.isElective;
 
   return (
-    <div className="course-path__client-layout">
+    <div
+      className={cn(
+        "course-path__client-layout",
+        !showAside && "course-path__client-layout--no-aside"
+      )}
+    >
       <div className="course-path__client-main">
         {loadError && (
           <div className="course-path__load-error" role="alert">
@@ -313,17 +329,23 @@ export default function CoursePathProgressClient({ level, compactHead }: CourseP
         )}
 
         <CoursePracticeSuggestions level={level} levelId={level.id} completedIds={completedIds} />
+
+        {electiveTracks && electiveTracks.length > 0 && (
+          <CoursePathC1Electives tracks={electiveTracks} />
+        )}
       </div>
 
-      <div className="course-path__client-aside hidden lg:block">
-        <CoursePathAsideProgress
-          level={level}
-          selectedLevelId={level.id}
-          completedCount={completedLessonCount}
-          totalCount={totalLessonCount}
-          completedIds={completedIds}
-        />
-      </div>
+      {showAside && (
+        <div className="course-path__client-aside hidden lg:block">
+          <CoursePathAsideProgress
+            level={level}
+            selectedLevelId={level.id}
+            completedCount={completedLessonCount}
+            totalCount={totalLessonCount}
+            completedIds={completedIds}
+          />
+        </div>
+      )}
     </div>
   );
 }

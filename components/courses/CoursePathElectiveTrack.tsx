@@ -49,7 +49,7 @@ export default function CoursePathElectiveTrack({ level, defaultOpen }: CoursePa
 
       <div className="course-path__ruta-body-wrap">
         <div className="course-path__ruta-body">
-          <CoursePathLevelPanel level={level} compactHead />
+          <CoursePathLevelPanel level={level} compactHead hideAside />
         </div>
       </div>
     </div>

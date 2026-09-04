@@ -63,8 +63,27 @@ describe("course curriculum coverage", () => {
       "/courses/study/10?level=a2&custom=1",
     );
 
+    // Standalone practice deck slug
+    expect(resolveLessonHref("chunk-standalone-deck")).toBe("/practice/decks/chunk-standalone-deck");
+
     // Fallback mini-lesson slug
     expect(resolveLessonHref("standalone-mini-lesson")).toBe("/mini-lessons/standalone-mini-lesson");
+  });
+
+  it("resolves canonical titles for lessons and decks using resolveLessonTitle", async () => {
+    const { resolveLessonTitle } = await import("../curriculumIndex");
+
+    // Standalone deck with truncated saved title is restored to canonical full title
+    expect(resolveLessonTitle("chunk-speaking-frameworks", "Frameworks para")).toBe(
+      "Frameworks para hablar sin traducir",
+    );
+
+    // Course lesson title
+    expect(resolveLessonTitle("a2-descripciones-comparaciones")).toBe("Describir y comparar");
+
+    // Unknown reference falls back to provided title or ref
+    expect(resolveLessonTitle("custom-ref", "My Custom Title")).toBe("My Custom Title");
+    expect(resolveLessonTitle("custom-ref")).toBe("custom-ref");
   });
 });
 
