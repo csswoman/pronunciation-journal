@@ -42,7 +42,7 @@ describe('ShadowingController', () => {
     const playBtn = screen.getByText(/Iniciar Shadowing/i);
     fireEvent.click(playBtn);
 
-    expect(screen.getByText(/Escucha la pronunciación/i)).toBeInTheDocument();
+    expect(screen.getByText(/Escuchando pronunciación/i)).toBeInTheDocument();
     expect(window.speechSynthesis.speak).toHaveBeenCalled();
   });
 
@@ -51,6 +51,6 @@ describe('ShadowingController', () => {
 
     const slowBtn = screen.getByText('0.75x');
     fireEvent.click(slowBtn);
-    expect(slowBtn).toHaveClass('bg-primary-soft');
+    expect(slowBtn).toHaveClass('bg-surface-raised');
   });
 });

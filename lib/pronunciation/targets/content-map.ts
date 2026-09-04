@@ -36,6 +36,7 @@ export const CONTENT_MAP: readonly ContentMapEntry[] = [
   { targetId: contrastTargetId('/θ/', '/ð/'), kind: 'public_lesson', slug: 'th-sounds' },
   { targetId: targetId('prosody.word-stress'), kind: 'public_lesson', slug: 'word-stress-basics' },
   { targetId: targetId('prosody.sentence-stress'), kind: 'public_lesson', slug: 'sentence-stress' },
+  { targetId: targetId('prosody.rhythm'), kind: 'public_lesson', slug: 'rhythm-and-fluency' },
   {
     targetId: targetId('prosody.intonation.rising-question'),
     kind: 'public_lesson',

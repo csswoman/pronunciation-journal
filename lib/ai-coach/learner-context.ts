@@ -1,6 +1,7 @@
 import type { CEFRLevel } from '@/lib/exercises/cefr'
 import { normalizeCEFR } from '@/lib/exercises/cefr'
 import type { PronunciationTargetId } from '@/lib/pronunciation/targets/types'
+import { phonemeTargetId } from '@/lib/pronunciation/targets/registry'
 
 /** Nivel asumido sin datos: ni tan bajo que aburra, ni tan alto que bloquee. */
 const DEFAULT_CEFR: CEFRLevel = 'A2'
@@ -54,10 +55,21 @@ export async function buildLearnerContext(userId: string): Promise<LearnerContex
   const profile = profileResult.status === 'fulfilled' ? profileResult.value : null
   const domainProfile = domainsResult.status === 'fulfilled' ? domainsResult.value : null
 
+  const weakTargets: PronunciationTargetId[] = (profile?.weakestPhonemes ?? [])
+    .slice(0, 3)
+    .map((p) => {
+      try {
+        return phonemeTargetId(p.ipa)
+      } catch {
+        return null
+      }
+    })
+    .filter((t): t is PronunciationTargetId => t !== null)
+
   return {
     ...base,
     cefr: profile?.cefr ? normalizeCEFR(profile.cefr) : DEFAULT_CEFR,
-    weakTargets: [],
+    weakTargets,
     domains: (domainProfile?.domains ?? []).slice(0, 3).map((d) => d.label),
   }
 }

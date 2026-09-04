@@ -62,10 +62,12 @@ function LevelCardTab({
         isActive && "course-path__level--on"
       )}
     >
-      <div className="course-path__level-lv">{level.spineLabel}</div>
-      <div className="course-path__level-count" aria-hidden="true">
-        {completedCount}/{totalCount}
-      </div>
+      <span className="course-path__level-lv">{level.spineLabel}</span>
+      {isActive && (
+        <span className="course-path__level-count" aria-hidden="true">
+          {completedCount}/{totalCount}
+        </span>
+      )}
     </Link>
   );
 }
@@ -152,17 +154,12 @@ export default function CoursePathLevelPicker({
 
   return (
     <section className="course-path__level-picker" aria-labelledby="course-level-picker-title">
-      <div className="course-path__level-picker-head">
-        <h2 id="course-level-picker-title" className="course-path__level-picker-title">
-          Nivel
-        </h2>
-        <div className="course-path__level-picker-actions">
-          <AssessmentActions selectedLevelId={selectedLevelId} />
-        </div>
-      </div>
+      <h2 id="course-level-picker-title" className="sr-only">
+        Nivel
+      </h2>
 
       {/* Desktop / Tablet Spine Navigation */}
-      <nav className="course-path__spine course-path__spine--desktop" aria-label="Niveles del curso">
+      <nav className="course-path__spine course-path__spine--desktop hidden lg:flex" aria-label="Niveles del curso">
         {levels.map((level) => {
           const totalCount = level.units.reduce((sum, u) => sum + u.lessons.length, 0);
           const completedCount = completedCounts[level.id] ?? 0;

@@ -7,7 +7,7 @@ import { hydrateTrackedItems, listTrackedItems } from "@/lib/tracking/queries";
 import type { TrackingItem } from "@/lib/tracking/types";
 import type { TrackingReviewSource } from "@/lib/tracking/review-queue";
 import { deriveWordProgressSignal, WORD_PROGRESS_LABELS } from "@/lib/word-bank/progress-state";
-import { resolveLessonHref } from "@/lib/courses/curriculumIndex";
+import { resolveLessonHref, resolveLessonTitle } from "@/lib/courses/curriculumIndex";
 import { useWords } from "./useWords";
 
 export function useTracking() {
@@ -40,16 +40,20 @@ export function useTracking() {
         return { item, word }
       });
     const saved = trackedItems.map((trackedItem) => {
+      const canonicalTitle =
+        trackedItem.kind === "lesson"
+          ? resolveLessonTitle(trackedItem.ref, trackedItem.title)
+          : (trackedItem.title ?? trackedItem.ref);
       const item: TrackingItem = {
         id: trackedItem.id,
         kind: trackedItem.kind,
-        title: trackedItem.title ?? trackedItem.ref,
+        title: canonicalTitle,
         description: typeof trackedItem.payload.context === "string" ? trackedItem.payload.context : null,
         href: trackedItem.kind === "lesson" ? resolveLessonHref(trackedItem.ref, trackedItem.payload) : undefined,
         progressState: 'saved',
         progressLabel: WORD_PROGRESS_LABELS.saved,
-      }
-      return { item, trackedItem }
+      };
+      return { item, trackedItem };
     });
     return [...favoriteWords, ...saved];
   }, [trackedItems, words]);

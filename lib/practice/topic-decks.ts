@@ -50,6 +50,12 @@ export const TOPIC_DECK_MAP: Array<{ keyword: string; deckSlug: string }> = [
   { keyword: 'negative',           deckSlug: 'b1-preguntas-negativas-recomendaciones' },
 
   // ── Collocations & Light Verbs ────────────────────────────────────────────
+  { keyword: 'speaking framework', deckSlug: 'chunk-speaking-frameworks' },
+  { keyword: 'think in english',   deckSlug: 'chunk-speaking-frameworks' },
+  { keyword: 'pensar en ingles',   deckSlug: 'chunk-speaking-frameworks' },
+  { keyword: 'i think because',    deckSlug: 'chunk-speaking-frameworks' },
+  { keyword: 'prep framework',     deckSlug: 'chunk-speaking-frameworks' },
+  { keyword: 'fluency chunk',      deckSlug: 'chunk-speaking-frameworks' },
   { keyword: 'light verb',         deckSlug: 'chunk-the-9-verbs-strategy' },
   { keyword: '9-verb',             deckSlug: 'chunk-the-9-verbs-strategy' },
   { keyword: '9 verb',             deckSlug: 'chunk-the-9-verbs-strategy' },

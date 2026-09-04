@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { buildAdaptiveSession, buildMixedSession } from '@/lib/phoneme-practice/mixed-session'
 import type { MinimalPair, Sound, SoundWord, UserContrastProgress } from '@/lib/phoneme-practice/types'
-import { makeWordBankEntry } from '@/lib/exercises/__tests__/fixtures/word-bank-entry'
 
 function sound(id: number, ipa: string): Sound {
   return {
@@ -51,13 +50,7 @@ describe('phoneme mixed sessions with bounded datasets', () => {
       contrast_sound_b_id: 2,
     }]
 
-    const matchPairWords = [
-      makeWordBankEntry({ id: 'core1k:build', text: 'build', meaning: 'to make something' }),
-      makeWordBankEntry({ id: 'core1k:learn', text: 'learn', meaning: 'to gain knowledge' }),
-    ]
-    const session = buildMixedSession(target, targetWords, allSounds, allWordsBySoundId, pairs, {
-      matchPairWords,
-    })
+    const session = buildMixedSession(target, targetWords, allSounds, allWordsBySoundId, pairs)
     const phonemeTypes = new Set(
       session.filter((item) => item.kind === 'phoneme').map((item) => item.data.type),
     )
@@ -70,16 +63,16 @@ describe('phoneme mixed sessions with bounded datasets', () => {
       'minimal_pair',
       'dictation',
     ]))
-    expect(session.some((item) => item.kind === 'match_pairs')).toBe(true)
     expect(session.some((item) => item.kind === 'reorder_words')).toBe(true)
   })
 
-  it('only adds matching when vocabulary entries with definitions are supplied', () => {
+  it('only emits phoneme and reorder_words kinds — vocabulary matching lives in vocab practice', () => {
     const target = sound(1, '/ɪ/')
     const targetWords = [word(1, 1, 'ship'), word(2, 1, 'sit')]
     const session = buildMixedSession(target, targetWords, [target], new Map([[1, targetWords]]), [])
 
-    expect(session.some((item) => item.kind === 'match_pairs')).toBe(false)
+    const kinds = new Set(session.map((item) => item.kind))
+    expect([...kinds].every((k) => k === 'phoneme' || k === 'reorder_words')).toBe(true)
   })
 
   it('falls back cleanly when minimal pairs are missing from the bounded dataset', () => {

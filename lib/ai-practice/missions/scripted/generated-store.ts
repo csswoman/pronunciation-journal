@@ -3,6 +3,7 @@
 import { db } from '@/lib/db'
 import type { CEFRLevel } from '@/lib/exercises/cefr'
 import type { ScriptedMission } from '../types'
+import { registerDynamicMission } from '../registry'
 
 interface RawScriptLine {
   speaker: 'coach' | 'learner'
@@ -47,13 +48,16 @@ export async function saveGeneratedScript(
     createdAt: new Date().toISOString(),
   })
 
+  registerDynamicMission(mission)
   return mission
 }
 
 /** Guiones generados del usuario, del más reciente al más antiguo. */
 export async function listGeneratedScripts(userId: string): Promise<ScriptedMission[]> {
   const rows = await db.generatedScripts.where('userId').equals(userId).toArray()
-  return rows
+  const list = rows
     .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
     .map((row) => row.mission)
+  list.forEach(registerDynamicMission)
+  return list
 }

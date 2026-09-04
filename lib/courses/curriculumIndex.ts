@@ -1,5 +1,6 @@
 import { COURSE_PATH_CURRICULUM } from "./curriculum";
 import type { CefrLevelId, CoursePathLesson, CoursePathLevel, CoursePathTrackId } from "./types";
+import { STANDALONE_DECK_TITLES } from "./grammar-deck/standalone-titles";
 
 const ALL_LEVELS: CoursePathLevel[] = [
   ...COURSE_PATH_CURRICULUM.levels,
@@ -87,9 +88,31 @@ export function studyOrPracticeDeckHref(deckSlug: string): string {
 }
 
 /**
- * Resolves the destination URL for a saved lesson.
+ * Checks if a slug belongs to an authored grammar or chunk deck.
+ */
+export function isGrammarDeckSlug(slug: string): boolean {
+  return (
+    slug.startsWith("a1-") ||
+    slug.startsWith("a2-") ||
+    slug.startsWith("b1-") ||
+    slug.startsWith("b2-") ||
+    slug.startsWith("c1-") ||
+    slug.startsWith("c2-") ||
+    slug.startsWith("biz-") ||
+    slug.startsWith("tech-") ||
+    slug.startsWith("cs-") ||
+    slug.startsWith("chunk-") ||
+    slug.startsWith("chunks-") ||
+    slug.startsWith("ff-") ||
+    Boolean(STANDALONE_DECK_TITLES[slug])
+  );
+}
+
+/**
+ * Resolves the destination URL for a saved lesson or deck.
  * Checks payload.href first, then checks if the slug belongs to a course lesson
- * (/courses/study/:n?level=:trackId), falling back to /mini-lessons/:slug.
+ * (/courses/study/:n?level=:trackId), then checks if it's a grammar/chunk deck
+ * (/practice/decks/:slug), falling back to /mini-lessons/:slug.
  */
 export function resolveLessonHref(ref: string, payload?: Record<string, unknown>): string {
   if (typeof payload?.href === "string" && payload.href.trim()) {
@@ -99,6 +122,21 @@ export function resolveLessonHref(ref: string, payload?: Record<string, unknown>
   if (study) {
     return studyLessonPath(study.trackId, study.lesson.number);
   }
+  if (isGrammarDeckSlug(ref)) {
+    return `/practice/decks/${ref}`;
+  }
   return `/mini-lessons/${ref}`;
 }
+
+/**
+ * Resolves the canonical full title for a lesson or deck reference.
+ * Prevents truncated titles (e.g. when titleEmphasis was missing upon save).
+ */
+export function resolveLessonTitle(ref: string, currentTitle?: string | null): string {
+  const study = findStudyByDeckSlug(ref);
+  if (study?.lesson.title) return study.lesson.title;
+  if (STANDALONE_DECK_TITLES[ref]) return STANDALONE_DECK_TITLES[ref];
+  return (currentTitle && currentTitle.trim()) || ref;
+}
+
 

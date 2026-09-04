@@ -3,7 +3,6 @@ import { db } from '@/lib/db'
 import { getAllSounds } from '@/lib/phoneme-practice/queries'
 import { dominantTopicLabel } from '@/lib/practice/topic-labels'
 import type { DailyPlan, DailyStep, SessionArc } from '@/lib/practice/types'
-import type { Sound } from '@/lib/phoneme-practice/types'
 import { buildJournalDailyStep, shouldOfferJournalStep } from '@/lib/journal/daily-step'
 import { shouldOfferMission } from './mission-cadence'
 import { capPronunciationSteps, DAILY_PLAN_STEP_COUNT, WORD_REVIEW_WORD_COUNT } from './constants'
@@ -14,7 +13,7 @@ import {
   fetchSavedOrFamiliarWords,
   fetchWeakestSoundProgress,
 } from './fetchers'
-import { dayOfYear, pickSeedSound, getSemanticContentKey } from './selectors'
+import { dayOfYear, getSemanticContentKey } from './selectors'
 import { getWordCategoryIndex } from '@/lib/lexicon/word-index-client'
 import { biasWordsBySound } from './sound-word-bridge'
 import { selectDailyReviewWords } from './saved-priority'
@@ -30,8 +29,14 @@ import {
   type ReviewPlan,
   shouldKeepNonExerciseStep,
 } from './review-plan'
-import { reasonForStep, targetRefsForStep } from './candidate-helpers'
+import {
+  reasonForStep,
+  resolvePrimarySound,
+  sortStepsByPedagogicalProgression,
+  targetRefsForStep,
+} from './candidate-helpers'
 import { buildDailyCandidateSteps } from './daily-steps-builder'
+import { resolveDiagnosticPrescriptionTarget } from './diagnostic-prescription'
 
 export {
   buildReviewPlan,
@@ -100,25 +105,14 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
   if (reviewWords.length === 0) {
     reviewWords = await fetchEssentialWordsForDay(dayOfYear(), WORD_REVIEW_WORD_COUNT)
   }
-  const essentialMatchWords = hasWordBank
-    ? await fetchEssentialWordsForDay(dayOfYear(), 4)
-    : reviewWords.slice(0, 4)
 
   const aiState = localLearningState?.state ?? null
   const hasProgress = weakest != null
   const activeLevel = localLearningState?.state.level.cefrEstimate.toLowerCase() as import('@/lib/courses/types').CefrLevelId | undefined
   const completedLessonIds = new Set(completedLessons.map((lesson) => `${lesson.courseSlug}:${lesson.lessonSlug}`))
+  const diagnosticTarget = await resolveDiagnosticPrescriptionTarget(userId, allSounds).catch(() => null)
 
-  let primarySound: Sound | null = weakest
-  if (!primarySound && aiState) {
-    const worstSound = [...(aiState.pronunciation.strugglingSounds ?? [])]
-      .filter((s) => s.attempts >= 3 && s.avgAccuracy < 70)
-      .sort((a, b) => a.avgAccuracy - b.avgAccuracy)[0]
-    if (worstSound) {
-      primarySound = allSounds.find((s) => s.ipa === worstSound.ipa) ?? null
-    }
-  }
-  if (!primarySound) primarySound = pickSeedSound(allSounds, 0)
+  const primarySound = resolvePrimarySound(weakest, aiState, allSounds, diagnosticTarget?.sound)
 
   // Puente fonema ↔ vocabulario: sesga las palabras del word_bank hacia el sonido débil del día.
   if (primarySound && hasWordBank) {
@@ -142,7 +136,6 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     activeLevel,
     completedLessonIds,
     aiState,
-    essentialMatchWords,
     savedOrFamiliarWordIds: dailyWordSelection.savedOrFamiliarIds,
     wordIndex,
     repairConstraints,
@@ -152,7 +145,7 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
   const hasDueSrs = dueWords.length > 0 || dueSounds.length > 0
 
   if (hasDueSrs) {
-    const hubPlan = await buildReviewPlan(userId, { dueWords, dueSounds, essentialMatchWords })
+    const hubPlan = await buildReviewPlan(userId, { dueWords, dueSounds })
     const hubPriority = hubPlan.steps.slice(0, 2)
     const usedIds = new Set(steps.map((s) => s.id))
     const toPrepend = hubPriority.filter((s) => !usedIds.has(s.id))
@@ -228,19 +221,25 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
   const arcTopics = dedupedFinalSteps.flatMap((s) =>
     s.exercises.map((e) => (e.payload.kind === 'generic' ? e.payload.data.topic : undefined)),
   )
-  const sessionWords = Array.from(
-    new Set(reviewWords.map((w) => w.text).filter((t): t is string => !!t)),
-  )
+  const sessionWords = Array.from(new Set(reviewWords.map((w) => w.text).filter((t): t is string => !!t)))
+  const diagnosticPrescription = diagnosticTarget?.sound && primarySound?.ipa === diagnosticTarget.sound.ipa
+    ? { soundIpa: diagnosticTarget.sound.ipa, dayIndex: diagnosticTarget.dayIndex + 1, totalDays: 5, reason: diagnosticTarget.session.reason }
+    : null
+  const journalRepairs = repairConstraints.length > 0
+    ? { count: repairConstraints.length, patterns: repairConstraints }
+    : null
   const arc: SessionArc = {
     topicLabel: dominantTopicLabel(arcTopics),
     soundIpa: primarySound?.ipa ?? null,
     sessionWords,
+    diagnosticPrescription,
+    journalRepairs,
   }
 
   const totalExercises = dedupedFinalSteps.reduce((sum, s) => sum + s.exercises.length, 0)
 
   return {
-    steps: dedupedFinalSteps,
+    steps: sortStepsByPedagogicalProgression(dedupedFinalSteps),
     totalExercises,
     isNewUser: !hasWordBank && !hasProgress,
     arc,

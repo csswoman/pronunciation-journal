@@ -45,19 +45,17 @@ export default function HomeLayout({
   const currentStreak = streak?.currentStreak ?? 0;
 
   return (
-    <div className="mx-auto w-full max-w-(--layout-canvas-max) px-4 pb-12 sm:px-6">
-      <HomeCommandGrid
-        primaryAction={primaryAction}
-        conceptLesson={conceptLesson}
-        profileLevel={profileLevel}
-        weakestPhoneme={weakestPhoneme}
-        wordsDueCount={wordsDueCount}
-        soundsDueCount={soundsDueCount}
-        streak={currentStreak}
-        previewWords={previewWords}
-        placementState={placementState}
-        pronunciationDiagnosticState={pronunciationDiagnosticState}
-      />
-    </div>
+    <HomeCommandGrid
+      primaryAction={primaryAction}
+      conceptLesson={conceptLesson}
+      profileLevel={profileLevel}
+      weakestPhoneme={weakestPhoneme}
+      wordsDueCount={wordsDueCount}
+      soundsDueCount={soundsDueCount}
+      streak={currentStreak}
+      previewWords={previewWords}
+      placementState={placementState}
+      pronunciationDiagnosticState={pronunciationDiagnosticState}
+    />
   );
 }

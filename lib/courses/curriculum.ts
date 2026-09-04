@@ -412,6 +412,7 @@ export const COURSE_PATH_CURRICULUM: CoursePathCurriculum = {
         { t: "Plantillas de oraciones (Sentence Frames)", p: 0, g: "chunk-sentence-frames" },
         { t: "Marcadores del discurso y conectores", p: 0, g: "chunk-discourse-markers" },
         { t: "The Add-On Strategy: Fluidez sin bloqueos", p: 0, g: "the-add-on-strategy" },
+        { t: "Frameworks para hablar sin traducir", p: 0, g: "chunk-speaking-frameworks" },
         { t: "Chunks de programación", p: 0, g: "chunk-programacion" },
         { t: "Daily standup en inglés", p: 1, g: "chunk-daily-standup" },
         { t: "Chunks de diseño UX y UI", p: 0, g: "chunk-ux-ui" },

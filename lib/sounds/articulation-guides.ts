@@ -139,6 +139,59 @@ export const PHONEME_ARTICULATION_GUIDES: Record<string, ArticulationGuide> = {
   },
 };
 
+import {
+  ARTICULATION_GUIDE_MAP,
+  type PhonemeArticulationGuide,
+} from "@/lib/pronunciation/articulation-guide-data";
+
+function fromCatalogGuide(guide: PhonemeArticulationGuide): ArticulationGuide {
+  let spanishTrap = `Presta atención al punto de articulación: ${guide.placeEs}.`;
+  let biomechanicsTip = guide.visualCueEs;
+
+  if (guide.symbol === "/z/") {
+    spanishTrap = 'En español no existe la /z/ sonora; tendemos a decir /s/. Haz vibrar tus cuerdas vocales.';
+    biomechanicsTip = 'Coloca los dedos en tu garganta: debes sentir un zumbido continuo como una abeja.';
+  } else if (guide.symbol === "/ʃ/") {
+    spanishTrap = 'Difiere de la "ch" española (/tʃ/). No toques el paladar con la lengua; el aire debe salir continuo.';
+    biomechanicsTip = 'Haz el gesto de pedir silencio ("shhh") redondeando suavemente los labios hacia adelante.';
+  } else if (guide.symbol === "/tʃ/") {
+    spanishTrap = 'Similar a la "ch" española, pero con una expulsión de aire más marcada.';
+    biomechanicsTip = 'Bloquea el aire un instante con la lengua tras los dientes superiores y luego suéltalo.';
+  } else if (guide.symbol === "/dʒ/") {
+    spanishTrap = 'Sonora: requiere voz activa. Los hispanohablantes a veces la pronuncian como "y" o "ch".';
+    biomechanicsTip = 'Pronuncia una "ch" pero haciendo vibrar fuertemente las cuerdas vocales en la garganta.';
+  } else if (["/p/", "/t/", "/k/"].includes(guide.symbol)) {
+    spanishTrap = 'En inglés al inicio de sílaba estas consonantes son aspiradas con un soplo de aire.';
+    biomechanicsTip = 'Pon tu mano frente a la boca: debes sentir una ráfaga clara de aire al pronunciarla.';
+  } else if (["/b/", "/d/", "/g/"].includes(guide.symbol)) {
+    spanishTrap = 'En posición final o entre vocales, no las ensordezcas; en inglés deben mantenerse sonoras.';
+    biomechanicsTip = 'Mantén la vibración vocal en la garganta hasta que concluya la consonante.';
+  }
+
+  const diagramMap: Record<string, ArticulationGuide["diagramType"]> = {
+    "tip-between-teeth": "interdental",
+    "teeth-on-lip": "labiodental",
+    "high-front": "vowel-high-front",
+    "mid-front": "vowel-lax-front",
+    central: "schwa",
+    "low-front": "vowel-open",
+  };
+
+  return {
+    phoneme: guide.symbol,
+    name: guide.nameEs,
+    type: guide.category,
+    voiced: guide.voicing === "voiced",
+    tonguePosition: guide.placeEs,
+    lipsPosition: `Forma de labios: ${guide.lipShape}, apertura: ${guide.jawOpening}`,
+    airflow: guide.mannerEs,
+    spanishTrap,
+    biomechanicsTip,
+    keyWords: [],
+    diagramType: diagramMap[guide.tonguePosition] ?? "postalveolar",
+  };
+}
+
 export function findArticulationGuide(phoneme: string): ArticulationGuide | null {
   if (!phoneme) return null;
   const clean = phoneme.replace(/[/\[\]ˈˌ\s]/g, '').trim();
@@ -162,11 +215,29 @@ export function findArticulationGuide(phoneme: string): ArticulationGuide | null
     ah: '/ʌ/',
     ax: '/ə/',
     v: '/v/',
+    sh: '/ʃ/',
+    zh: '/ʒ/',
+    ch: '/tʃ/',
+    jh: '/dʒ/',
+    z: '/z/',
+    s: '/s/',
+    w: '/w/',
+    r: '/r/',
   };
 
   const alias = ALIASES[clean.toLowerCase()];
   if (alias && PHONEME_ARTICULATION_GUIDES[alias]) {
     return PHONEME_ARTICULATION_GUIDES[alias];
+  }
+
+  // Fallback universal: buscar en el catálogo completo de 44 fonemas
+  const catalogGuide =
+    ARTICULATION_GUIDE_MAP[withSlashes] ??
+    ARTICULATION_GUIDE_MAP[clean] ??
+    (alias ? ARTICULATION_GUIDE_MAP[alias] : undefined);
+
+  if (catalogGuide) {
+    return fromCatalogGuide(catalogGuide);
   }
 
   return null;

@@ -66,9 +66,14 @@ export function AssessmentResultView({
             </section>
           )}
         </div>
-        <Link href={userId ? recommendedHref : "/login"}>
-          {userId ? result.needsReview.length > 0 ? "Ver lecciones recomendadas" : "Ir a mi ruta" : "Iniciar sesión para continuar"}
+        <Link href={recommendedHref}>
+          {result.needsReview.length > 0 ? "Ver lecciones recomendadas" : "Ir a mi ruta"}
         </Link>
+        {!userId && (
+          <small className="assessment-guest-note">
+            Progreso guardado en este dispositivo. <Link href="/login">Inicia sesión</Link> si deseas sincronizar en la nube.
+          </small>
+        )}
         {saving && <small>Guardando nivel…</small>}
         {saveError && (
           <div className="assessment-save-error" role="alert">

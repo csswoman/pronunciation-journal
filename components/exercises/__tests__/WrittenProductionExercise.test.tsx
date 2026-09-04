@@ -92,7 +92,9 @@ describe('WrittenProductionExercise', () => {
       }))
     })
 
-    expect(screen.getByText('Excellent use of the target word!')).toBeInTheDocument()
+    await waitFor(() => {
+      expect(screen.getByText('Excellent use of the target word!')).toBeInTheDocument()
+    })
 
     const continueBtn = screen.getByRole('button', { name: 'Continuar' })
     fireEvent.click(continueBtn)

@@ -65,4 +65,25 @@ describe("CoursePathAutoLevelSync", () => {
       expect(replace).not.toHaveBeenCalled();
     });
   });
+
+  it("redirects to guest study level when there are no completed lessons and level is A2", async () => {
+    bulkGet.mockResolvedValue([]);
+    window.localStorage.setItem("guest-study-level", "A2");
+
+    render(
+      <CoursePathAutoLevelSync
+        hasExplicitLevel={false}
+        levels={[
+          { id: "a1", lessonIds: ["1"] },
+          { id: "a2", lessonIds: ["1", "2"] },
+        ]}
+      />
+    );
+
+    await waitFor(() => {
+      expect(replace).toHaveBeenCalledWith("/courses?level=a2", { scroll: false });
+    });
+
+    window.localStorage.removeItem("guest-study-level");
+  });
 });

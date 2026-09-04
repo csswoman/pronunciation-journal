@@ -145,7 +145,7 @@ export function JournalPronunciationWrite({
       {promptEn && (
         <div className="rounded-[var(--radius-md)] border border-border-subtle bg-surface-sunken p-4">
           <p className="font-caption text-fg-muted">Reflexión de hoy:</p>
-          <p className="font-serif font-body-sm text-fg">{promptEn}</p>
+          <p className="font-sans font-body-sm text-fg">{promptEn}</p>
           {promptEs && <p className="font-caption text-fg-muted">{promptEs}</p>}
         </div>
       )}

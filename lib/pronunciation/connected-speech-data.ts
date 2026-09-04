@@ -1,7 +1,7 @@
 export interface ConnectedPhrase {
   id: string;
   phrase: string;
-  category: "linking-cv" | "flap-t" | "intrusion" | "weak-forms";
+  category: "linking-cv" | "flap-t" | "intrusion" | "weak-forms" | "silent-letters";
   categoryNameEs: string;
   connectedIpa: string;
   isolatedIpa: string;
@@ -308,3 +308,6 @@ export const CONNECTED_SPEECH_DATA: ConnectedPhrase[] = [
     linkSound: "n",
   },
 ];
+
+import { silentLettersToConnectedPhrases } from "./silent-letters-data";
+CONNECTED_SPEECH_DATA.push(...(silentLettersToConnectedPhrases() as ConnectedPhrase[]));

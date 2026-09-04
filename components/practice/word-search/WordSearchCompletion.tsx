@@ -9,12 +9,15 @@
 //   <ActionGroup />         (Elegir otro tema primary CTA, Repetir tablero secondary CTA)
 // </WordSearchCompletion>
 
+import { useEffect, useRef, useState } from 'react'
 import type { WordSearchPuzzle } from '@/lib/exercises/word-search/types'
 import { getWordColorTheme } from '@/lib/exercises/word-search/word-colors'
 import { getIllustration } from '@/lib/illustrations/registry'
+import { recordWordSearchRepetition } from '@/lib/word-bank/domain-queries'
+import { useAuthOptional } from '@/components/auth/AuthProvider'
 import Button from '@/components/ui/Button'
 import { ListenButton } from '@/components/ui/ListenButton'
-import { ArrowLeft, CheckCircle2, RotateCcw } from '@/components/icons'
+import { ArrowLeft, CheckCircle2, RotateCcw, Sparkles } from '@/components/icons'
 
 interface WordSearchCompletionProps {
   puzzle: WordSearchPuzzle
@@ -40,8 +43,27 @@ export default function WordSearchCompletion({
   onRepeat,
   onExit,
 }: WordSearchCompletionProps) {
+  const auth = useAuthOptional()
+  const user = auth?.user ?? null
+  const [recordedCount, setRecordedCount] = useState<number | null>(null)
+  const hasRecordedRef = useRef(false)
   const Illustration = getIllustration('stateCompletado')
   const modeLabel = puzzle.mode === 'classic' ? 'Lista visible' : 'Con pistas'
+
+  useEffect(() => {
+    if (!user?.id || hasRecordedRef.current || puzzle.source !== 'word_bank') return
+    hasRecordedRef.current = true
+
+    const items = puzzle.items.map((item) => ({
+      id: item.id,
+      word: item.word,
+      clue: item.clue,
+    }))
+
+    void recordWordSearchRepetition(user.id, items, elapsedSeconds * 1000)
+      .then((count) => setRecordedCount(count))
+      .catch((err) => console.warn('[WordSearchCompletion] record error', err))
+  }, [user?.id, puzzle, elapsedSeconds])
 
   return (
     <section
@@ -59,9 +81,17 @@ export default function WordSearchCompletion({
       </div>
 
       <div className="flex flex-col items-center gap-2">
-        <div className="inline-flex items-center gap-1.5 rounded-full bg-success-soft px-3 py-1 text-caption font-medium text-success">
-          <CheckCircle2 className="h-3.5 w-3.5" aria-hidden />
-          <span>Partida completada</span>
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-success-soft px-3 py-1 text-caption font-medium text-success">
+            <CheckCircle2 className="h-3.5 w-3.5" aria-hidden />
+            <span>Partida completada</span>
+          </div>
+          {recordedCount !== null && recordedCount > 0 && (
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-primary-soft px-3 py-1 text-caption font-medium text-primary">
+              <Sparkles className="h-3.5 w-3.5" aria-hidden />
+              <span>{recordedCount} palabras repasadas en SRS (+XP)</span>
+            </div>
+          )}
         </div>
         <h2 className="text-balance text-h2 font-bold text-fg">
           ¡Encontraste todas las palabras!
@@ -107,9 +137,9 @@ export default function WordSearchCompletion({
             return (
               <div
                 key={item.id}
-                className={`inline-flex items-center gap-2 rounded-md border ${colorTheme.cardBorder} ${colorTheme.badgeBg} px-3 py-1.5 text-caption font-medium text-fg shadow-xs transition-colors`}
+                className={`inline-flex items-center gap-2 rounded-lg border ${colorTheme.cardBorder} ${colorTheme.badgeBg} ps-3.5 pe-1 py-1 text-caption font-medium text-fg shadow-xs transition-colors`}
               >
-                <span>{item.displayWord}</span>
+                <span className="font-semibold">{item.displayWord}</span>
                 {item.ipa ? (
                   <span className="font-ipa text-caption text-fg-muted">
                     {item.ipa}
@@ -119,7 +149,7 @@ export default function WordSearchCompletion({
                   iconOnly
                   label={`Escuchar ${item.displayWord}`}
                   onPlay={() => playWordAudio(item.word)}
-                  className="h-6 w-6 text-fg-muted hover:text-primary"
+                  className="min-h-11 min-w-11 sm:min-h-8 sm:min-w-8 text-fg-muted hover:text-primary"
                 />
               </div>
             )

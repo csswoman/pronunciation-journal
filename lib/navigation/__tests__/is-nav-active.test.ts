@@ -19,11 +19,21 @@ describe('isNavActive', () => {
     expect(isNavActive('/courses', '/courses/pronunciation')).toBe(false)
   })
 
-  it('activates Práctica on /practice and its subpaths', () => {
+  it('activates Práctica on /practice and its general subpaths, but not pronunciation subpaths', () => {
     expect(isNavActive('/practice', '/practice')).toBe(true)
-    expect(isNavActive('/practice/sounds', '/practice')).toBe(true)
     expect(isNavActive('/practice/decks', '/practice')).toBe(true)
     expect(isNavActive('/practice/review', '/practice')).toBe(true)
+    expect(isNavActive('/practice/sounds', '/practice')).toBe(false)
+    expect(isNavActive('/practice/intonation', '/practice')).toBe(false)
+    expect(isNavActive('/practice/connected-speech', '/practice')).toBe(false)
+  })
+
+  it('matches pronunciation subpaths and query tabs', () => {
+    expect(isNavActive('/practice/sounds', '/practice/sounds')).toBe(true)
+    expect(isNavActive('/practice/sounds?tab=minimal-pairs', '/practice/sounds?tab=minimal-pairs')).toBe(true)
+    expect(isNavActive('/practice/sounds?tab=path', '/practice/sounds?tab=minimal-pairs')).toBe(false)
+    expect(isNavActive('/practice/intonation', '/practice/intonation')).toBe(true)
+    expect(isNavActive('/practice/connected-speech', '/practice/connected-speech')).toBe(true)
   })
 
   it('activates Diccionario only on /words, not /tracking', () => {

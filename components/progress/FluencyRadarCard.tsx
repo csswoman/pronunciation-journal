@@ -15,12 +15,12 @@ interface Props {
 }
 
 const SKILL_ORDER: { key: SkillKey; label: string; source: string; href: string }[] = [
-  { key: 'pronunciation', label: 'Pronunciación', source: 'Sound Lab · evidencia del evaluador', href: '/practice' },
-  { key: 'grammar', label: 'Gramática', source: 'Respuestas evaluadas', href: '/practice/decks' },
-  { key: 'vocabulary', label: 'Vocabulario', source: 'Repaso y retención verificada', href: '/words' },
-  { key: 'listening', label: 'Escucha', source: 'Percepción y dictado', href: '/daily' },
-  { key: 'speaking', label: 'Habla', source: 'Producción evaluada', href: '/daily' },
-  { key: 'reading', label: 'Lectura', source: 'Comprensión evaluada', href: '/courses' },
+  { key: 'pronunciation', label: 'Pronunciación', source: 'Sound Lab: fonemas evaluados', href: '/practice' },
+  { key: 'grammar', label: 'Gramática', source: 'Decks: patrones estructurales', href: '/practice/decks' },
+  { key: 'vocabulary', label: 'Vocabulario', source: 'Diccionario: retención activa', href: '/words' },
+  { key: 'listening', label: 'Escucha', source: 'Práctica diaria: percepción y dictado', href: '/daily' },
+  { key: 'speaking', label: 'Habla', source: 'Práctica diaria: producción oral', href: '/daily' },
+  { key: 'reading', label: 'Lectura', source: 'Cursos: comprensión de textos', href: '/courses' },
 ]
 
 const SIZE = 380
@@ -42,7 +42,12 @@ function RadarChart({ scores }: { scores: FluencyScores }) {
   const polygon = points.map((p) => `${p.x},${p.y}`).join(' ')
 
   return (
-    <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="w-full max-w-[380px]">
+    <svg
+      viewBox={`0 0 ${SIZE} ${SIZE}`}
+      className="w-full max-w-[380px]"
+      role="img"
+      aria-label="Gráfico de radar del balance de habilidades en 6 dimensiones"
+    >
       {RINGS.map((ratio, i) => {
         const ring = SKILL_ORDER.map((_, j) => {
           const p = polarPoint(j, total, ratio)
@@ -93,11 +98,11 @@ function RadarChart({ scores }: { scores: FluencyScores }) {
               y={labelPos.y}
               textAnchor="middle"
               dominantBaseline="middle"
-              fill="var(--text-tertiary)"
+              fill="currentColor"
               fontSize={10.5}
               fontWeight={600}
               letterSpacing="0.08em"
-              className="uppercase"
+              className="uppercase fill-fg-subtle text-fg-subtle"
             >
               {s.label}
             </text>
@@ -150,15 +155,15 @@ function DimensionList({ scores }: { scores: FluencyScores }) {
       <div className="mt-1 flex flex-col sm:flex-row gap-2.5">
         <div className="flex-1 rounded-[var(--radius-md)] bg-success-soft px-3 py-2.5 text-caption text-success">
           <b className="mb-0.5 block text-body-sm text-success-value">
-            {best.label} {max}
+            {best.label}: {max}/100
           </b>
-          Tu área más fuerte en este momento.
+          Tu dimensión más consolidada actualmente.
         </div>
         <div className="flex-1 rounded-[var(--radius-md)] bg-warning-soft px-3 py-2.5 text-caption text-warning">
           <b className="mb-0.5 block text-body-sm text-warning-value">
-            {worst.label} {min}
+            {worst.label}: {min}/100
           </b>
-          Recomendado para una práctica enfocada.
+          Prioridad recomendada para enfocar tu práctica.
         </div>
       </div>
     </div>
@@ -167,7 +172,12 @@ function DimensionList({ scores }: { scores: FluencyScores }) {
 
 function EmptyRadar() {
   return (
-    <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="w-full max-w-[320px] opacity-60">
+    <svg
+      viewBox={`0 0 ${SIZE} ${SIZE}`}
+      className="w-full max-w-[320px] opacity-60"
+      role="img"
+      aria-label="Gráfico de radar vacío (sin actividad registrada)"
+    >
       {RINGS.map((ratio, i) => {
         const ring = SKILL_ORDER.map((_, j) => {
           const p = polarPoint(j, SKILL_ORDER.length, ratio)
@@ -192,11 +202,11 @@ function EmptyRadar() {
             y={labelPos.y}
             textAnchor="middle"
             dominantBaseline="middle"
-            fill="var(--text-tertiary)"
+            fill="currentColor"
             fontSize={10.5}
             fontWeight={600}
             letterSpacing="0.08em"
-            className="uppercase"
+            className="uppercase fill-fg-subtle text-fg-subtle"
           >
             {s.label}
           </text>
@@ -229,10 +239,10 @@ export function FluencyRadarCard({ scores, comparisonLabel }: Props) {
         <div className="flex flex-col items-center gap-4 py-2 text-center">
           <EmptyRadar />
           <div className="flex max-w-[280px] flex-col gap-1">
-            <p className="text-body-sm font-semibold text-fg">Sin datos de fluidez aún</p>
+            <p className="text-body-sm font-semibold text-fg">Perfil de habilidades en construcción</p>
             <p className="text-caption text-fg-muted">
-              Completa ejercicios en pronunciación, gramática, vocabulario, escucha,
-              habla y lectura para desbloquear tu perfil.
+              Completa ejercicios en pronunciación, gramática, vocabulario y habla para
+              desbloquear el radar de tus 6 dimensiones.
             </p>
           </div>
         </div>

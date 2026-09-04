@@ -53,8 +53,10 @@ pnpm prepush              # suite completa: lint + types + auditorías + tests
 Mínimo, siempre:
 
 ```bash
-pnpm type-check && pnpm lint && pnpm test
+pnpm type-check && pnpm lint
 ```
+
+> **Nota sobre tests**: No ejecutar la suite completa (`pnpm test`) de forma automática tras cada tarea (consume demasiados recursos de CPU/RAM y puede congelar el entorno en Windows). Si se modifica lógica crítica con tests asociados, correr **únicamente el test específico** de ese archivo (ej. `pnpm vitest run ruta/al/archivo.test.ts`), o correr tests solo si el usuario lo solicita explícitamente.
 
 Añade `pnpm audit:hard-rules` si tocaste prompts de Gemini, migraciones de Supabase,
 tokens de diseño o stores de Zustand. Antes de un PR, `pnpm prepush` corre la cadena

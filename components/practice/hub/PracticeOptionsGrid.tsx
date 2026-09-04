@@ -33,36 +33,36 @@ export default function PracticeOptionsGrid({
 }: PracticeOptionsGridProps) {
   return (
     <div className="flex flex-col gap-5">
-      {/* ─── FILA 1: Top Hero Bento (2 columnas: 5 / 7 cols) ─── */}
-      <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
-        <div className="lg:col-span-5">
+      {/* ─── FILA 1: Top Hero Bento (2 columnas: 5 / 7 cols desde md:) ─── */}
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-12">
+        <div className="md:col-span-5">
           <RecommendedPracticeCard recommendation={recommendation} />
         </div>
-        <div className="lg:col-span-7">
+        <div className="md:col-span-7">
           <SoundQuizWidget />
         </div>
       </div>
 
-      {/* ─── FILA 2: Vocabulario, Coach y Mazos (2 cols en tablet, 3 en desktop) ─── */}
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {/* ─── FILA 2: Vocabulario, Coach y Mazos (3 cols en tablet y desktop) ─── */}
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
         <VocabularyReviewCard dueCount={dueCount} />
         <CoachCallCard arc={arc} />
         <DecksCard />
       </div>
 
-      {/* ─── FILA 3: Inmersión, Lectura en Contexto y Ruta Guiada (2 cols en tablet, 3 en desktop) ─── */}
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {/* ─── FILA 3: Inmersión, Lectura en Contexto y Ruta Guiada (3 cols en tablet y desktop) ─── */}
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
         <ImmersionCard />
         <ReaderCard />
         <CourseCard />
       </div>
 
-      {/* ─── FILA 4: Juegos de Vocabulario y Diccionario (2 columnas: 8 / 4 cols) ─── */}
-      <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
-        <div className="lg:col-span-8">
+      {/* ─── FILA 4: Juegos de Vocabulario y Diccionario (2 columnas: 8 / 4 cols desde md:) ─── */}
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-12">
+        <div className="md:col-span-8">
           <GamesSection />
         </div>
-        <div className="lg:col-span-4">
+        <div className="md:col-span-4">
           <ReferenceSection />
         </div>
       </div>

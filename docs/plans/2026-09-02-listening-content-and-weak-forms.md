@@ -1,12 +1,14 @@
-# Contenido de Escucha y Formas Débiles: Plan de Implementación
+# Plan 090 — Ecosistema SLA Completo: Explicabilidad en Home, Shadowing Oral en Reader, Weak Forms & Letras Mudas, y Duración Vocálica
 
 > **For Antigravity:** REQUIRED WORKFLOW: Use `.agent/workflows/execute-plan.md` to execute this plan in single-flow mode.
 
-**Goal:** Implementar contenidos pedagógicos y herramientas interactivas de entrenamiento auditivo sobre palabras de contenido vs. palabras funcionales, reducciones con schwa y formas débiles.
+**Goal:** Cerrar el ecosistema SLA con cuatro frentes: (1) contenidos y entrenamiento auditivo sobre content/function words, schwa y formas débiles; (2) explicabilidad del plan diario en Home ("por qué este plan"); (3) shadowing oral con grabación y reproducción dual en el Reader; (4) datos de letras mudas y duración vocálica para el entrenador de habla conectada y la remediación silábica.
 
-**Architecture:** Sistema integrado compuesto por una nueva lección y mini-lección estática en JSON (`lib/content`), enriquecimiento de lecciones existentes, componente cliente especializado `ContentFunctionEarTrainer` montado en `/mini-lessons/[slug]` y expansión de datos en `CONNECTED_SPEECH_DATA` para `/practice/connected-speech`.
+**Architecture:** Sistema integrado compuesto por lección/mini-lección estáticas en JSON (`lib/content`), enriquecimiento de lecciones existentes, componente cliente `ContentFunctionEarTrainer` en `/mini-lessons/[slug]`, expansión de `CONNECTED_SPEECH_DATA` (categorías `weak-forms` y `silent-letters`), helper puro `lib/home/plan-rationale.ts` + `HomePlanRationale` montado vía `customPrefix` de `HomeDailyCard`, refactor de `ShadowingController` con `ReaderSentenceRecorder` / `ShadowingPlaybackBar`, y módulos `lib/pronunciation/{silent-letters-data,vowel-duration}.ts`.
 
 **Tech Stack:** Next.js 16 (App Router), React 19, TypeScript, Tailwind v4, Zod, Web Speech API (`lib/speech/synthesis.ts`), Vitest.
+
+**Estado:** Completado — verificado con `pnpm type-check`, `pnpm lint`, `pnpm audit:hard-rules` y `pnpm test`.
 
 ---
 
@@ -88,7 +90,75 @@ Expected: PASS.
 
 ---
 
-### Task 5: Verificación global de calidad
+### Task 5: Explicabilidad en Home ("Por qué este plan")
+**Files:**
+- Create: `lib/home/plan-rationale.ts`
+- Create: `components/home/HomePlanRationale.tsx`
+- Create: `lib/home/__tests__/plan-rationale.test.ts`
+- Modify: `components/home/HomeCommandGrid.tsx`
+
+**Step 1: Escribir `derivePlanRationale` (módulo puro, sin React ni I/O)**
+Recibe las señales que Home ya tiene (`reviewDue`, `isNewLearner`, `conceptLesson`, `weakestPhoneme`) y devuelve `{ headline, detail }` con la prioridad del compositor de la diaria: nuevo aprendiz -> repasos vencidos -> sonido más débil -> lección de concepto -> `null`.
+
+**Step 2: Test del helper**
+Run: `pnpm test --run lib/home/__tests__/plan-rationale.test.ts`
+Expected: PASS (5 casos, incluyendo `null` cuando no hay nada que explicar).
+
+**Step 3: Componente `HomePlanRationale` colapsable**
+Nota point-of-use con `aria-expanded`, tokens Tailwind v4, `< 250` líneas. Sólo renderiza cuando el plan ha asentado (`ready`) y `derivePlanRationale` devuelve contenido.
+
+**Step 4: Montar vía `customPrefix` de `HomeDailyCard`**
+En `HomeCommandGrid`, anteponer `<HomePlanRationale />` al `HomeReviewBanner` dentro de `customPrefix`.
+
+---
+
+### Task 6: Shadowing Oral en Reader
+**Files:**
+- Modify: `components/practice/reader/ShadowingController.tsx`
+- Modify: `components/practice/reader/ReaderExercise.tsx`
+- Modify: `components/practice/reader/passage-tokens.ts`
+- Create: `components/practice/reader/ReaderSentenceRecorder.tsx`
+- Create: `components/practice/reader/ShadowingPlaybackBar.tsx`
+- Test: `components/practice/reader/__tests__/ReaderExercise.bimodal.test.tsx`
+- Test: `components/practice/reader/__tests__/ReaderSentenceRecorder.test.tsx`
+
+**Step 1: Extraer grabación por oración a `ReaderSentenceRecorder`**
+Grabación con Web Audio (OGG/Opus), estados accesibles, `< 250` líneas.
+
+**Step 2: Extraer la barra de reproducción dual a `ShadowingPlaybackBar`**
+Reproducción modelo vs. usuario; `ShadowingController` queda como orquestador (`~180` líneas, sin la excepción de allowlist).
+
+**Step 3: Ampliar `passage-tokens.ts` para sincronización a nivel token**
+Añadir el manejo de tokens que necesita el shadowing.
+
+**Step 4: Tests**
+Run: `pnpm test --run components/practice/reader/__tests__/ReaderExercise.bimodal.test.tsx components/practice/reader/__tests__/ReaderSentenceRecorder.test.tsx`
+Expected: PASS.
+
+---
+
+### Task 7: Letras Mudas y Duración Vocálica
+**Files:**
+- Create: `lib/pronunciation/silent-letters-data.ts`
+- Create: `lib/pronunciation/vowel-duration.ts`
+- Create: `lib/pronunciation/__tests__/silent-letters.test.ts`
+- Create: `lib/pronunciation/__tests__/vowel-duration.test.ts`
+- Modify: `lib/pronunciation/connected-speech-data.ts`
+- Modify: `lib/pronunciation/syllable-remediation.ts`
+
+**Step 1: `silent-letters-data.ts` + `silentLettersToConnectedPhrases`**
+Dataset de palabras con letras mudas y adaptador a frases de habla conectada; nueva categoría `silent-letters` en `CONNECTED_SPEECH_DATA`.
+
+**Step 2: `vowel-duration.ts`**
+Helper puro de duración vocálica (vocales tensas vs. laxas, *clipping* pre-fortis); consumido por `syllable-remediation.ts`.
+
+**Step 3: Tests**
+Run: `pnpm test --run lib/pronunciation/__tests__/silent-letters.test.ts lib/pronunciation/__tests__/vowel-duration.test.ts`
+Expected: PASS.
+
+---
+
+### Task 8: Verificación global de calidad
 **Step 1: Comprobación de tipos**
 Run: `pnpm type-check`
 

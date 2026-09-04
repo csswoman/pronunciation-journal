@@ -55,7 +55,7 @@ export function NotebookPastGrid({ pastPages }: NotebookPastGridProps) {
                 <time className="w-16 shrink-0 font-caption font-medium text-fg-muted">
                   {dateLabel}
                 </time>
-                <p className="line-clamp-1 flex-1 font-serif font-body-sm text-fg">
+                <p className="line-clamp-1 flex-1 font-sans font-body-sm text-fg">
                   {page.firstLine}
                 </p>
               </div>

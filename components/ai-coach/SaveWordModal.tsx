@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Difficulty } from "@/lib/types";
 import Button from "@/components/ui/Button";
 import { H3 } from "@/components/ui/Typography";
@@ -28,6 +28,40 @@ const DIFFICULTIES: { value: Difficulty; label: string; color: string }[] = [
 export default function SaveWordModal({ word, context, onConfirm, onClose }: SaveWordModalProps) {
   const [meaning, setMeaning] = useState("");
   const [difficulty, setDifficulty] = useState<Difficulty>("medium");
+  const modalRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        onClose();
+        return;
+      }
+
+      if (e.key === "Tab" && modalRef.current) {
+        const focusable = modalRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onClose]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,6 +76,7 @@ export default function SaveWordModal({ word, context, onConfirm, onClose }: Sav
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
       <div
+        ref={modalRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
@@ -79,6 +114,7 @@ export default function SaveWordModal({ word, context, onConfirm, onClose }: Sav
               Meaning <span className="text-fg-subtle font-normal">(optional)</span>
             </label>
             <input
+              ref={inputRef}
               type="text"
               value={meaning}
               onChange={(e) => setMeaning(e.target.value)}

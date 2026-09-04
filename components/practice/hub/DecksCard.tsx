@@ -12,7 +12,7 @@ export default function DecksCard() {
     <Link
       href="/practice/decks"
       onClick={() => void setLastPracticeMode('decks')}
-      className="group flex flex-col justify-between gap-5 rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-5 shadow-xs transition-colors hover:border-border-strong focus-ring h-full"
+      className="group flex flex-col justify-between gap-5 rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-5 shadow-xs transition-all duration-200 hover:border-border-strong hover:shadow-sm active:scale-[0.99] focus-ring h-full"
     >
       <div className="flex flex-col gap-3">
         <div className="flex items-center gap-2.5">
@@ -32,7 +32,7 @@ export default function DecksCard() {
           {['Viajes', 'Trabajo', 'Verbos'].map((deckName) => (
             <span
               key={deckName}
-              className="inline-flex items-center rounded border border-border-subtle bg-surface-sunken/60 px-2 py-0.5 font-mono text-[11px] text-fg-subtle"
+              className="inline-flex items-center rounded border border-border-subtle bg-surface-sunken/60 px-2 py-0.5 font-mono text-tiny text-fg-subtle"
             >
               {deckName}
             </span>

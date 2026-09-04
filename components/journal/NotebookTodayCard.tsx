@@ -206,7 +206,7 @@ export function NotebookTodayCard({
       <div className="relative w-full rounded-[var(--radius-lg)] border border-border-subtle bg-surface-sunken p-4 sm:p-5 shadow-xs overflow-hidden transition-all duration-200 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/40">
         {/* Marca de agua de ilustración al fondo a la derecha */}
         <div
-          className="pointer-events-none absolute bottom-2 right-2 h-40 w-36 shrink-0 text-primary opacity-15 transition-opacity duration-300 [&>svg]:h-full [&>svg]:w-auto select-none"
+          className="pointer-events-none absolute bottom-2 right-2 h-40 w-36 shrink-0 text-primary opacity-10 transition-opacity duration-300 [&>svg]:h-full [&>svg]:w-auto select-none"
           aria-hidden="true"
         >
           {scaffoldMode === 'guided' ? <PhraseBookIllustration /> : <BlankBoardIllustration />}
@@ -219,7 +219,7 @@ export function NotebookTodayCard({
           onKeyDown={handleKeyDown}
           rows={6}
           placeholder="Escribe en inglés. No importa si te equivocas: para eso está la revisión."
-          className="notebook-ruled-paper relative z-10 w-full resize-y bg-transparent p-0 font-serif text-base italic text-fg placeholder:font-serif placeholder:not-italic placeholder:text-fg-muted/70 focus:outline-none"
+          className="notebook-ruled-paper relative z-10 w-full resize-y bg-transparent p-0 font-sans text-base text-fg placeholder:font-sans placeholder:text-fg-muted/70 focus:outline-none"
         />
       </div>
 
@@ -231,10 +231,11 @@ export function NotebookTodayCard({
           </span>
 
           {/* Switch de sonido de teclado en inglés */}
-          <label className="inline-flex items-center gap-2 cursor-pointer select-none">
+          <label className="inline-flex items-center gap-2 cursor-pointer select-none py-1">
             <button
               type="button"
               role="switch"
+              aria-label="Efectos de sonido de teclado en inglés"
               aria-checked={soundEnabled}
               onClick={() => setSoundEnabled((prev) => !prev)}
               className={`relative inline-flex h-5 w-9 shrink-0 items-center rounded-full p-0.5 transition-colors duration-200 ease-in-out focus-ring ${
@@ -242,7 +243,7 @@ export function NotebookTodayCard({
               }`}
             >
               <span
-                className={`pointer-events-none inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow-sm transition duration-200 ease-in-out ${
+                className={`pointer-events-none inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow-xs transition duration-200 ease-in-out ${
                   soundEnabled ? 'translate-x-4' : 'translate-x-0'
                 }`}
               />
@@ -262,7 +263,10 @@ export function NotebookTodayCard({
           title="Presiona Cmd+Enter o Ctrl+Enter para enviar a revisión"
         >
           <Sparkles size={16} aria-hidden />
-          Revisar mi inglés
+          <span>Revisar mi inglés</span>
+          <span className="ml-1 rounded bg-cta-fg/15 px-1.5 py-0.5 font-mono text-[10px] font-semibold leading-none tracking-tight select-none opacity-85">
+            ⌘↵
+          </span>
         </Button>
       </div>
 

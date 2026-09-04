@@ -1,5 +1,15 @@
 "use client";
 
+// Planned structure:
+// <IntonationTrainer>
+//   <IntonationPatternPills />
+//   <IntonationSentenceCard>
+//     <IntonationGraph />
+//     <IntonationAssessmentCard />
+//     <RecordingControls />
+//   </IntonationSentenceCard>
+// </IntonationTrainer>
+
 import { useCallback, useEffect, useRef, useState } from "react";
 import { INTONATION_PATTERNS } from "@/lib/speech/intonation-patterns";
 import {
@@ -9,28 +19,38 @@ import {
   type IntonationAssessment,
 } from "@/lib/speech/pitch-detector";
 import { IntonationGraph } from "./IntonationGraph";
+import {
+  IntonationPatternPills,
+  IntonationAssessmentCard,
+  IntonationSentenceHeader,
+} from "./IntonationParts";
 import { speakText, cancelSpeech } from "@/lib/speech/synthesis";
+import { recordIntonationAttempt } from "@/lib/sounds/queries";
+import { useAuthOptional } from "@/components/auth/AuthProvider";
 import Button from "@/components/ui/Button";
-import { Mic, Volume2, ArrowRight } from "@/components/icons";
+import { Mic, ArrowRight, ArrowLeft } from "@/components/icons";
 import { playUiCue } from "@/lib/ui-sounds/cues";
-import { cn } from "@/lib/cn";
 
 export function IntonationTrainer() {
+  const auth = useAuthOptional();
+  const user = auth?.user ?? null;
   const [selectedPatternIndex, setSelectedPatternIndex] = useState(0);
   const [isRecording, setIsRecording] = useState(false);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [userPitchPoints, setUserPitchPoints] = useState<PitchPoint[]>([]);
   const [assessment, setAssessment] = useState<IntonationAssessment | null>(null);
+  const [isSaved, setIsSaved] = useState(false);
   const [micError, setMicError] = useState<string | null>(null);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
+  const recordStartTimeRef = useRef<number>(0);
   const currentSentence = INTONATION_PATTERNS[selectedPatternIndex] ?? INTONATION_PATTERNS[0];
 
   useEffect(() => {
-    // Reset state on sentence change
     setUserPitchPoints([]);
     setAssessment(null);
+    setIsSaved(false);
     setMicError(null);
     cancelSpeech();
     setIsPlayingAudio(false);
@@ -50,6 +70,7 @@ export function IntonationTrainer() {
       setMicError(null);
       setUserPitchPoints([]);
       setAssessment(null);
+      setIsSaved(false);
 
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
@@ -60,6 +81,7 @@ export function IntonationTrainer() {
       });
 
       audioChunksRef.current = [];
+      recordStartTimeRef.current = Date.now();
       const mediaRecorder = new MediaRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
 
@@ -83,11 +105,9 @@ export function IntonationTrainer() {
           const audioContext = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
           const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
 
-          // Extract pitch track from user audio buffer
           const points = extractPitchTrack(audioBuffer);
           setUserPitchPoints(points);
 
-          // Evaluate contour match
           const result = evaluateIntonationContour(points, currentSentence.pattern);
           setAssessment(result);
 
@@ -95,6 +115,18 @@ export function IntonationTrainer() {
             playUiCue("correct");
           } else {
             playUiCue("soft");
+          }
+
+          if (user?.id) {
+            const timeMs = Math.max(800, Date.now() - recordStartTimeRef.current);
+            void recordIntonationAttempt(user.id, {
+              sentenceId: currentSentence.id,
+              pattern: currentSentence.pattern,
+              text: currentSentence.text,
+              score: result.scorePct,
+              matched: result.matched,
+              timeMs,
+            }).then(() => setIsSaved(true)).catch((err) => console.warn('[IntonationTrainer] record error', err));
           }
         } catch {
           setMicError("No se pudo procesar el audio del micrófono.");
@@ -117,88 +149,25 @@ export function IntonationTrainer() {
   };
 
   return (
-    <div className="flex flex-col gap-6 max-w-4xl mx-auto py-2">
-      {/* Pattern Selector Pills */}
-      <div className="flex flex-wrap gap-2">
-        {INTONATION_PATTERNS.map((item, idx) => (
-          <button
-            key={item.id}
-            type="button"
-            onClick={() => setSelectedPatternIndex(idx)}
-            className={cn(
-              "rounded-full px-3.5 py-1.5 font-label text-xs transition-colors",
-              selectedPatternIndex === idx
-                ? "bg-primary text-on-primary font-semibold shadow-sm"
-                : "bg-surface-raised border border-border-default text-fg-muted hover:text-fg hover:bg-surface-sunken",
-            )}
-          >
-            {item.patternNameEs}
-          </button>
-        ))}
-      </div>
+    <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,22rem)] gap-6 items-start w-full py-2">
+      <div
+        id="intonation-trainer-content"
+        className="flex flex-col gap-5 rounded-2xl border border-border-default bg-surface-raised p-5 sm:p-7 shadow-xs w-full min-w-0 order-2 lg:order-1"
+      >
+        <IntonationSentenceHeader
+          sentence={currentSentence}
+          onPlay={handlePlayReference}
+          isPlaying={isPlayingAudio}
+        />
 
-      {/* Main Sentence Card */}
-      <div className="flex flex-col gap-4 rounded-2xl border border-border-default bg-surface-raised p-6 shadow-sm">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <span className="font-caption uppercase tracking-wider text-xs font-semibold text-primary">
-              {currentSentence.patternNameEs}
-            </span>
-            <h2 className="text-h2 font-bold text-fg mt-1 text-pretty">
-              &ldquo;{currentSentence.text}&rdquo;
-            </h2>
-            <p className="text-body-sm text-fg-muted mt-1 text-pretty">
-              {currentSentence.descriptionEs}
-            </p>
-          </div>
-
-          <button
-            type="button"
-            onClick={handlePlayReference}
-            disabled={isPlayingAudio}
-            className={cn(
-              "flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-border-default bg-surface-base text-primary transition-transform hover:scale-105 active:scale-95",
-              isPlayingAudio && "animate-pulse border-primary",
-            )}
-            title="Escuchar entonación de referencia"
-            aria-label="Escuchar entonación de referencia"
-          >
-            <Volume2 size={22} />
-          </button>
-        </div>
-
-        {/* Intonation Visualizer Canvas */}
         <IntonationGraph
           targetCurve={currentSentence.targetCurve}
           userPitchPoints={userPitchPoints}
           isRecording={isRecording}
         />
 
-        {/* Feedback Section */}
         {assessment && (
-          <div
-            className={cn(
-              "flex flex-col gap-2 rounded-xl border p-4 transition-all duration-200",
-              assessment.matched
-                ? "border-success/40 bg-success-soft"
-                : "border-warning/40 bg-warning-soft",
-            )}
-          >
-            <div className="flex items-center justify-between gap-2">
-              <span
-                className={cn(
-                  "font-label text-sm font-bold",
-                  assessment.matched ? "text-success" : "text-warning",
-                )}
-              >
-                {assessment.matched ? "✓ ¡Entonación lograda!" : "⚠ Revisa la curva"}
-              </span>
-              <span className="font-mono text-xs font-semibold px-2 py-0.5 rounded-md bg-surface-raised text-fg">
-                Puntaje: {assessment.scorePct}%
-              </span>
-            </div>
-            <p className="text-body-sm text-fg text-pretty">{assessment.feedbackEs}</p>
-          </div>
+          <IntonationAssessmentCard assessment={assessment} isSaved={isSaved} />
         )}
 
         {micError && (
@@ -207,8 +176,7 @@ export function IntonationTrainer() {
           </div>
         )}
 
-        {/* Recording Controls */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2 border-t border-border-subtle">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-3 border-t border-border-subtle">
           <Button
             type="button"
             variant={isRecording ? "error" : "primary"}
@@ -220,19 +188,46 @@ export function IntonationTrainer() {
             {isRecording ? "Detener grabación" : "Grabar mi entonación"}
           </Button>
 
-          <Button
-            type="button"
-            variant="secondary"
-            size="md"
-            onClick={() => {
-              setSelectedPatternIndex((prev) => (prev + 1) % INTONATION_PATTERNS.length);
-            }}
-            className="w-full sm:w-auto"
-          >
-            Siguiente oración
-            <ArrowRight size={16} />
-          </Button>
+          <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+            <span className="font-mono text-xs text-fg-muted font-medium">
+              {selectedPatternIndex + 1} de {INTONATION_PATTERNS.length}
+            </span>
+
+            <div className="flex items-center gap-2">
+              {selectedPatternIndex > 0 && (
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="md"
+                  onClick={() => setSelectedPatternIndex((prev) => prev - 1)}
+                  aria-label="Oración anterior"
+                >
+                  <ArrowLeft size={16} />
+                </Button>
+              )}
+
+              <Button
+                type="button"
+                variant="secondary"
+                size="md"
+                onClick={() => {
+                  setSelectedPatternIndex((prev) => (prev + 1) % INTONATION_PATTERNS.length);
+                }}
+              >
+                Siguiente oración
+                <ArrowRight size={16} />
+              </Button>
+            </div>
+          </div>
         </div>
+      </div>
+
+      <div className="order-1 lg:order-2 w-full">
+        <IntonationPatternPills
+          patterns={INTONATION_PATTERNS}
+          selectedIndex={selectedPatternIndex}
+          onSelect={setSelectedPatternIndex}
+        />
       </div>
     </div>
   );

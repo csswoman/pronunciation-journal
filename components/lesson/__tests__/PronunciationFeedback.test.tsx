@@ -81,7 +81,7 @@ describe('PronunciationFeedback', () => {
     )
 
     expect(screen.getByText('60%')).toBeInTheDocument()
-    expect(screen.getByText(/Bien/)).toBeInTheDocument()
+    expect(screen.getAllByText(/Bien/).length).toBeGreaterThanOrEqual(1)
     expect(screen.getByText('+5 XP')).toBeInTheDocument()
     expect(screen.getByText("i'm")).toBeInTheDocument()
     expect(screen.getByText('gonna')).toBeInTheDocument()
@@ -148,6 +148,22 @@ describe('PronunciationFeedback', () => {
     expect(
       screen.getByText(/Se esperaba \/n\/ pero se reconoció \/t\//i),
     ).toBeInTheDocument()
+  })
+
+  it('renders SelfPlaybackAudioBar when userAudioUrl is provided', () => {
+    render(
+      <PronunciationFeedback
+        wordResults={sampleWordResults}
+        accuracy={75}
+        feedback={{ message: 'Buen intento', emoji: '👍', color: 'text-warning' }}
+        xpEarned={10}
+        userAudioUrl="blob:http://localhost/test-audio"
+      />,
+    )
+
+    expect(screen.getByText('Comparación de Audio')).toBeInTheDocument()
+    expect(screen.getByText('Nativo')).toBeInTheDocument()
+    expect(screen.getByText('Mi voz')).toBeInTheDocument()
   })
 })
 

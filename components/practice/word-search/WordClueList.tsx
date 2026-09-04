@@ -81,13 +81,18 @@ export default function WordClueList({
                   {mode === 'classic' || isFound ? (
                     <div className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5">
                       <span
-                        className={`text-label font-semibold text-fg ${
-                          isFound && !isInspected ? `line-through ${colorTheme.strikeColor}` : ''
+                        className={`text-label font-semibold ${
+                          isFound && isInspected ? 'text-primary' : 'text-fg'
                         }`}
                         lang="en"
                       >
                         {item.displayWord}
                       </span>
+                      {isFound ? (
+                        <span className="inline-flex items-center rounded-full bg-surface-sunken px-2 py-0.5 text-caption font-medium text-fg-muted">
+                          Encontrada
+                        </span>
+                      ) : null}
                       {item.ipa ? (
                         <span className="font-ipa text-caption text-fg-muted">
                           {item.ipa}
@@ -139,7 +144,7 @@ export default function WordClueList({
                     onClick={() => toggleHint(item.id)}
                     aria-expanded={isHintRevealed}
                     aria-controls={hintId}
-                    className="focus-ring inline-flex min-h-11 w-fit items-center gap-1.5 rounded-sm text-caption font-medium text-fg-muted transition-colors hover:text-primary"
+                    className="focus-ring inline-flex min-h-11 w-fit items-center gap-1.5 rounded-full border border-border-subtle bg-surface-sunken px-3 py-1.5 text-caption font-medium text-fg-muted transition-[background-color,color,transform] duration-150 ease-out-quart hover:bg-surface-raised hover:text-fg active:scale-[0.98] motion-reduce:transform-none"
                   >
                     {isHintRevealed ? (
                       <EyeOff className="h-3.5 w-3.5" aria-hidden />

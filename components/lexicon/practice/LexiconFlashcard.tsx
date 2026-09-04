@@ -248,44 +248,44 @@ export function LexiconFlashcard({
 
       {/* Anki Rating Action Bar with Interval Estimates */}
       {revealed && (
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-3 gap-2.5 sm:gap-3" role="group" aria-label="Valoración de recuerdo">
           <button
             type="button"
             onClick={() => handleRate('forgot')}
             disabled={disabled}
-            className="flex flex-col items-center justify-center gap-0.5 rounded-xl border border-error/40 bg-error-soft px-4 py-3 text-body-sm font-semibold text-error transition-all hover:bg-error/20 active:scale-[0.98] focus-ring disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex flex-col items-center justify-center gap-1 min-h-[52px] rounded-xl border border-error/40 bg-error-soft px-3 py-3 text-body-sm font-semibold text-error transition-all hover:bg-error/20 active:scale-[0.98] focus-ring disabled:opacity-50 disabled:cursor-not-allowed select-none"
           >
             <div className="flex items-center gap-1">
               <span className="font-mono text-tiny opacity-75">[1]</span>
               <span>Otra vez</span>
             </div>
-            <span className="text-tiny font-normal opacity-80">Próximamente</span>
+            <span className="text-tiny font-normal opacity-80">Pronto</span>
           </button>
 
           <button
             type="button"
             onClick={() => handleRate('normal')}
             disabled={disabled}
-            className="flex flex-col items-center justify-center gap-0.5 rounded-xl border border-border-subtle bg-surface-raised px-4 py-3 text-body-sm font-semibold text-fg transition-all hover:border-border-strong active:scale-[0.98] focus-ring disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex flex-col items-center justify-center gap-1 min-h-[52px] rounded-xl border border-border-subtle bg-surface-raised px-3 py-3 text-body-sm font-semibold text-fg transition-all hover:border-border-strong active:scale-[0.98] focus-ring disabled:opacity-50 disabled:cursor-not-allowed select-none"
           >
             <div className="flex items-center gap-1">
               <span className="font-mono text-tiny opacity-60">[2]</span>
               <span>Me costó</span>
             </div>
-            <span className="text-tiny font-normal text-fg-subtle">En 1-2 días</span>
+            <span className="text-tiny font-normal text-fg-subtle">1-2 días</span>
           </button>
 
           <button
             type="button"
             onClick={() => handleRate('known')}
             disabled={disabled}
-            className="flex flex-col items-center justify-center gap-0.5 rounded-xl border border-primary/40 bg-primary-soft px-4 py-3 text-body-sm font-semibold text-primary transition-all hover:bg-primary/20 active:scale-[0.98] focus-ring disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex flex-col items-center justify-center gap-1 min-h-[52px] rounded-xl border border-primary/40 bg-primary-soft px-3 py-3 text-body-sm font-semibold text-primary transition-all hover:bg-primary/20 active:scale-[0.98] focus-ring disabled:opacity-50 disabled:cursor-not-allowed select-none"
           >
             <div className="flex items-center gap-1">
               <span className="font-mono text-tiny opacity-75">[3]</span>
               <span>La domino</span>
             </div>
-            <span className="text-tiny font-normal opacity-80">En 4-7 días</span>
+            <span className="text-tiny font-normal opacity-80">4-7 días</span>
           </button>
         </div>
       )}

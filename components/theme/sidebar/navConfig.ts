@@ -4,6 +4,7 @@ import {
   BookOpen,
   Sparkles,
   Target,
+  MicVocal,
   LibraryBig,
   Bookmark,
   TrendingUp,
@@ -22,11 +23,23 @@ export const todayNav: NavSectionType = {
 /** Alias for backwards compatibility */
 export const coreNav = todayNav;
 
-/** Group 2: Aprender - courses, mini lessons & free practice */
+/** Group 2: Aprender - courses, pronunciation, mini lessons & free practice */
 export const learnNav: NavSectionType = {
   label: "Aprender",
   items: [
     { name: "Ruta", href: "/courses", icon: BookOpen },
+    {
+      name: "Pronunciación",
+      href: "/practice/sounds",
+      icon: MicVocal,
+      children: [
+        { name: "Fonemas", href: "/practice/sounds" },
+        { name: "Pares mínimos", href: "/practice/sounds?tab=minimal-pairs" },
+        { name: "Entonación", href: "/practice/intonation" },
+        { name: "Habla conectada", href: "/practice/connected-speech" },
+        { name: "Tu progreso", href: "/practice/sounds?tab=path" },
+      ],
+    },
     { name: "Mini lecciones", href: "/mini-lessons", icon: Sparkles },
     { name: "Práctica libre", href: "/practice", icon: Target },
   ],

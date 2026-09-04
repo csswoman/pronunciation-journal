@@ -52,5 +52,6 @@ export type EvaluationResult = {
     example?: string;
   };
   score?: number;
+  suggestedPerceptionTarget?: string;
   gradedBy: "client" | "model";
 };

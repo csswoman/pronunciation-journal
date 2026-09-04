@@ -19,6 +19,7 @@
 import Link from "next/link";
 import Card from "@/components/layout/Card";
 import Badge from "@/components/ui/Badge";
+import { ArrowRight } from "@/components/icons";
 import { CategoryIcon } from "@/components/mini-lessons/CategoryIcon";
 import type { MiniLesson } from "@/lib/content/schemas";
 import {
@@ -48,13 +49,10 @@ export function MiniLessonCard({ lesson, isSpanning = false }: MiniLessonCardPro
       <Card
         variant="interactive"
         className={cn(
-          "relative flex flex-col h-full gap-3 overflow-hidden pt-4 border-border-subtle hover:border-primary/40",
+          "relative flex flex-col h-full gap-3 overflow-hidden border-border-subtle hover:border-primary/40",
           isSpanning && "md:p-6"
         )}
       >
-        {/* Subtle top primary accent line */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-primary/20 group-hover:bg-primary transition-colors duration-200" aria-hidden />
-
         <div className="flex items-center justify-between gap-2">
           {/* Category Icon Avatar */}
           <div className="w-10 h-10 rounded-full flex items-center justify-center bg-surface-sunken border border-border-subtle text-fg-muted group-hover:text-primary group-hover:bg-primary/10 group-hover:border-primary/20 transition-all duration-200">
@@ -69,7 +67,7 @@ export function MiniLessonCard({ lesson, isSpanning = false }: MiniLessonCardPro
         </div>
 
         <div className="flex flex-col gap-1">
-          <span className="text-caption font-mono text-fg-subtle uppercase tracking-wider text-[11px]">
+          <span className="font-mono text-kicker text-fg-subtle uppercase tracking-wider">
             {MINI_LESSON_CATEGORY_LABELS[lesson.category]}
           </span>
           <h2
@@ -93,12 +91,10 @@ export function MiniLessonCard({ lesson, isSpanning = false }: MiniLessonCardPro
 
         <div className="mt-auto pt-3 border-t border-border-subtle flex items-center justify-between gap-2 text-caption text-fg-subtle">
           <span>{lesson.duration} min</span>
-          <span
-            className="text-primary font-bold group-hover:translate-x-1 transition-transform duration-200"
+          <ArrowRight
+            className="w-4 h-4 text-primary group-hover:translate-x-1 transition-transform duration-200"
             aria-hidden
-          >
-            →
-          </span>
+          />
         </div>
       </Card>
     </Link>

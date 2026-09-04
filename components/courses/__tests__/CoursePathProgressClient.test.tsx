@@ -7,6 +7,12 @@ const { bulkGet } = vi.hoisted(() => ({
   bulkGet: vi.fn(),
 }));
 
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({
+    push: vi.fn(),
+  }),
+}));
+
 vi.mock("next/link", () => ({
   default: ({ href, children, ...props }: React.ComponentProps<"a">) => <a href={String(href)} {...props}>{children}</a>,
 }));
@@ -17,6 +23,10 @@ vi.mock("@/lib/db", () => ({
       bulkGet,
     },
   },
+}));
+
+vi.mock("@/lib/auth/session", () => ({
+  getCurrentUser: async () => ({ id: "user-123" }),
 }));
 
 vi.mock("@/lib/supabase/client", () => ({
@@ -167,6 +177,42 @@ describe("CoursePathProgressClient", () => {
       // Unstarted unit state
       expect(screen.getAllByText(/sin empezar/i).length).toBeGreaterThan(0);
     });
+  });
+
+  it("does not render the aside sidebar when hideAside is true or level is elective", async () => {
+    bulkGet.mockResolvedValue([]);
+
+    const { container } = render(
+      <CoursePathProgressClient level={COURSE_PATH_CURRICULUM.levels[0]} hideAside />
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText("EMPIEZA AQUÍ")).toBeInTheDocument();
+    });
+
+    expect(container.querySelector(".course-path__client-aside")).not.toBeInTheDocument();
+    expect(container.querySelector(".course-path__client-layout--no-aside")).toBeInTheDocument();
+  });
+
+  it("renders elective tracks inside the main layout when passed", async () => {
+    bulkGet.mockResolvedValue([]);
+
+    const c1Level = COURSE_PATH_CURRICULUM.levels.find((l) => l.id === "c1")!;
+
+    render(
+      <CoursePathProgressClient
+        level={c1Level}
+        electiveTracks={COURSE_PATH_CURRICULUM.electiveTracks}
+      />
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText("Después de C1: rutas opcionales")).toBeInTheDocument();
+    });
+
+    const electivesSection = screen.getByText("Después de C1: rutas opcionales").closest(".course-path__c1-electives");
+    const mainColumn = document.querySelector(".course-path__client-main");
+    expect(mainColumn).toContainElement(electivesSection as HTMLElement);
   });
 });
 

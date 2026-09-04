@@ -1,12 +1,13 @@
 "use client";
 
-import { Flame } from "@/components/icons";
+import { Flame, Map } from "@/components/icons";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useUserPreferences } from "@/hooks/useUserPreferences";
 import { isPermanentUser } from "@/lib/auth/is-anonymous";
 
 interface HomeHeaderProps {
   streakDays?: number;
+  onOpenTour?: () => void;
 }
 
 function getGreeting(): "Buenos días" | "Buenas tardes" | "Buenas noches" {
@@ -16,7 +17,7 @@ function getGreeting(): "Buenos días" | "Buenas tardes" | "Buenas noches" {
   return "Buenas noches";
 }
 
-export default function HomeHeader({ streakDays = 0 }: HomeHeaderProps) {
+export default function HomeHeader({ streakDays = 0, onOpenTour }: HomeHeaderProps) {
   const { user } = useAuth();
   const { preferences } = useUserPreferences();
 
@@ -35,20 +36,32 @@ export default function HomeHeader({ streakDays = 0 }: HomeHeaderProps) {
         <h1 className="font-heading text-heading-lg font-bold text-fg">Tu sesión de hoy</h1>
       </div>
 
-      {/* Streak lives here as a single quiet marker; the daily-minutes goal and
-          vocabulary/review counts have their own homes (sidebar + HomeStatsRow),
-          so the header no longer restates them. */}
-      {streakDays > 0 ? (
-        <div className="flex shrink-0 items-center gap-1.5 self-center rounded-lg border border-border-subtle bg-surface-raised px-3 py-1.5 shadow-xs">
-          <Flame size={16} className="text-racha" aria-hidden />
-          <span className="font-sans text-body-sm font-bold tabular-nums text-fg">
-            {streakDays}
-          </span>
-          <span className="font-body-sm text-fg-muted">
-            {streakDays === 1 ? "día de racha" : "días de racha"}
-          </span>
-        </div>
-      ) : null}
+      <div className="flex items-center gap-2 self-center shrink-0">
+        {onOpenTour ? (
+          <button
+            type="button"
+            onClick={onOpenTour}
+            className="focus-ring inline-flex items-center gap-1.5 rounded-lg border border-border-subtle bg-surface-raised px-2.5 py-1.5 text-caption font-medium text-fg-muted hover:bg-surface-sunken hover:text-fg transition-colors"
+            title="Guía rápida y nivel"
+            aria-label="Abrir guía rápida y selección de nivel"
+          >
+            <Map size={14} aria-hidden />
+            <span>Guía de la app</span>
+          </button>
+        ) : null}
+
+        {streakDays > 0 ? (
+          <div className="flex shrink-0 items-center gap-1.5 rounded-lg border border-border-subtle bg-surface-raised px-3 py-1.5 shadow-xs">
+            <Flame size={16} className="text-racha" aria-hidden />
+            <span className="font-sans text-body-sm font-bold tabular-nums text-fg">
+              {streakDays}
+            </span>
+            <span className="font-body-sm text-fg-muted">
+              {streakDays === 1 ? "día de racha" : "días de racha"}
+            </span>
+          </div>
+        ) : null}
+      </div>
     </header>
   );
 }

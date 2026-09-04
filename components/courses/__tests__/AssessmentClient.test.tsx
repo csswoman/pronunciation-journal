@@ -229,7 +229,7 @@ describe("AssessmentClient", () => {
     fireEvent.click(screen.getByRole("button", { name: "Ver resultado" }));
 
     expect(screen.getByRole("heading", { name: "Avanzas a A2" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Iniciar sesión para continuar" }))
+    expect(screen.getByRole("link", { name: "Inicia sesión" }))
       .toHaveAttribute("href", "/login");
     expect(window.localStorage.getItem("assessment:guest:checkpoint:A1"))
       .toContain('"assignedLevel":"A2"');

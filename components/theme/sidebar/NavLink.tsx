@@ -1,10 +1,16 @@
 import { NavButton } from "./NavButton";
 import { useSidebar } from "./SidebarContext";
 
+export interface NavSubItem {
+  name: string;
+  href: string;
+}
+
 export interface NavItem {
   name: string;
   href: string;
   icon: typeof import("@/components/icons").Home;
+  children?: NavSubItem[];
 }
 
 interface NavLinkProps {

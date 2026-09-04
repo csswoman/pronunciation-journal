@@ -149,6 +149,7 @@ export default function HomeDailyCard({
       primaryAction={primaryAction}
       hideThreadHints
       customEmptyState={customEmptyState}
+      arc={arc}
       listPrefix={
         <>
           {customPrefix}

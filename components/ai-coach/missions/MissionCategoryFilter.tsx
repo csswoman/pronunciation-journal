@@ -1,16 +1,15 @@
 'use client'
 
-import type { MissionCategory } from '@/lib/ai-practice/missions/types'
 import { cn } from '@/lib/cn'
-import { MISSION_CATEGORY_LABELS } from './mission-category-labels'
+import { MISSION_CATEGORY_LABELS, type MissionFilterCategory } from './mission-category-labels'
 
 const CATEGORIES = Object.entries(MISSION_CATEGORY_LABELS) as Array<
-  [MissionCategory | 'all', string]
+  [MissionFilterCategory, string]
 >
 
 interface MissionCategoryFilterProps {
-  active: MissionCategory | 'all'
-  onChange: (category: MissionCategory | 'all') => void
+  active: MissionFilterCategory
+  onChange: (category: MissionFilterCategory) => void
 }
 
 export function MissionCategoryFilter({ active, onChange }: MissionCategoryFilterProps) {

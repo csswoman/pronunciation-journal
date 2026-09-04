@@ -52,4 +52,16 @@ describe('MissionLibrary category filter', () => {
 
     expect(screen.getByText(/no hay misiones en social/i)).toBeInTheDocument()
   })
+
+  it('shows the empty state for mis diálogos when no generated scripts exist', () => {
+    const missions = listMissions()
+    render(<MissionLibrary missions={missions} onSelect={vi.fn()} />)
+
+    fireEvent.click(screen.getByRole('button', { name: /mis diálogos/i }))
+
+    expect(
+      screen.getByText(/aún no has generado diálogos personalizados/i),
+    ).toBeInTheDocument()
+  })
 })
+

@@ -34,7 +34,7 @@ export function DailyCompletionRate({ stats }: Props) {
           <div
             className="mt-1 grid grid-cols-[repeat(15,minmax(0,1fr))] gap-1"
             role="img"
-            aria-label="Mapa de calor de práctica diaria de 30 días"
+            aria-label={`Mapa de calor de los últimos 30 días: ${stats.completedDays30} días practicados (${stats.rate30}% del mes).`}
           >
             {stats.heatmap30.map((level, i) => (
               <span
@@ -45,18 +45,28 @@ export function DailyCompletionRate({ stats }: Props) {
               />
             ))}
           </div>
-          <div className="mt-2 flex justify-between text-body-sm text-fg-muted">
+          <div className="mt-2.5 flex items-center justify-between text-body-sm text-fg-muted">
             <span>
-              <b className="font-normal text-fg">{stats.completedDays30}</b> de 30 días
+              <b className="font-semibold text-fg">{stats.completedDays30}</b> de 30 días
             </span>
             <span>{stats.rate30}% del mes</span>
           </div>
+          <div className="mt-2 flex items-center justify-end gap-1.5 text-tiny text-fg-subtle" aria-hidden="true">
+            <span>Menos</span>
+            <div className="flex gap-1">
+              <span className={cn('h-2.5 w-2.5 rounded-xs border border-border-subtle', HEAT_CLASS[0])} />
+              <span className={cn('h-2.5 w-2.5 rounded-xs', HEAT_CLASS[1])} />
+              <span className={cn('h-2.5 w-2.5 rounded-xs', HEAT_CLASS[2])} />
+              <span className={cn('h-2.5 w-2.5 rounded-xs', HEAT_CLASS[3])} />
+            </div>
+            <span>Más</span>
+          </div>
         </>
       ) : (
-        <div className="flex flex-col items-center gap-2 py-4 text-center">
-          <p className="text-body-sm font-medium text-fg-muted">Sin sesiones diarias aún</p>
-          <p className="text-caption text-fg-muted">
-            Completa una práctica diaria para ver tu consistencia.
+        <div className="flex flex-col items-center gap-1.5 py-4 text-center">
+          <p className="text-body-sm font-semibold text-fg">Sin sesiones registradas este mes</p>
+          <p className="text-caption text-fg-muted max-w-[240px]">
+            Cada día que completes tu plan se registrará en este mapa de constancia mensual.
           </p>
         </div>
       )}

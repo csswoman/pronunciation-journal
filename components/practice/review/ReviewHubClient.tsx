@@ -97,9 +97,7 @@ export function ReviewHubClient({ summary }: Props) {
                 <div className="min-w-0">
                   <span className="text-fg">{item.label}</span>
                   <span className="ml-2 font-caption text-fg-muted">{item.typeLabel}</span>
-                  {!item.drillable ? (
-                    <span className="ml-2 font-caption text-fg-subtle">· solo historial</span>
-                  ) : null}
+                  {!item.drillable ? <span className="ml-2 font-caption text-fg-subtle">· solo historial</span> : null}
                 </div>
                 {item.drillable && state.phase !== 'loading' ? (
                   <Button
@@ -129,9 +127,7 @@ export function ReviewHubClient({ summary }: Props) {
               <li key={w.id} className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <p className="text-base font-medium text-fg">{w.text}</p>
-                  {w.translation ? (
-                    <p className="font-body-sm text-fg-muted">{w.translation}</p>
-                  ) : null}
+                  {w.translation ? <p className="font-body-sm text-fg-muted">{w.translation}</p> : null}
                 </div>
                 <WordStrengthBars strength={getWordStrength(w)} size={14} />
               </li>
@@ -148,18 +144,12 @@ export function ReviewHubClient({ summary }: Props) {
             {summary.dueWords.slice(0, 4).map((w) => (
               <li key={w.id} className="font-body-sm text-fg">
                 {w.text}
-                {w.ipa ? (
-                  <span className="font-ipa ml-2 text-primary">{formatIpa(w.ipa)}</span>
-                ) : null}
+                {w.ipa ? <span className="font-ipa ml-2 text-primary">{formatIpa(w.ipa)}</span> : null}
               </li>
             ))}
           </ul>
           {counts.dueWords > 0 ? (
-            <Link
-              href="/words"
-              className="font-caption text-primary transition-opacity hover:opacity-80"
-              data-cuelume-hover="tick"
-            >
+            <Link href="/words" className="font-caption text-primary transition-opacity hover:opacity-80" data-cuelume-hover="tick">
               Ver léxico →
             </Link>
           ) : null}
@@ -174,21 +164,13 @@ export function ReviewHubClient({ summary }: Props) {
             {summary.soundsDue.slice(0, 4).map((s) => (
               <li key={`${s.soundId}-${s.ipa}`} className="font-body-sm text-fg">
                 <span className="font-ipa text-primary">{formatIpa(s.ipa)}</span>
-                {s.example ? (
-                  <span className="ml-2 text-fg-secondary">{s.example}</span>
-                ) : null}
-                <span className="ml-2 font-caption text-fg-muted">
-                  {overdueLabel(s.daysOverdue)}
-                </span>
+                {s.example ? <span className="ml-2 text-fg-secondary">{s.example}</span> : null}
+                <span className="ml-2 font-caption text-fg-muted">{overdueLabel(s.daysOverdue)}</span>
               </li>
             ))}
           </ul>
           {counts.soundsDue > 0 ? (
-            <Link
-              href="/practice/sounds"
-              className="font-caption text-primary transition-opacity hover:opacity-80"
-              data-cuelume-hover="tick"
-            >
+            <Link href="/practice/sounds" className="font-caption text-primary transition-opacity hover:opacity-80" data-cuelume-hover="tick">
               Laboratorio de sonidos →
             </Link>
           ) : null}
@@ -215,12 +197,23 @@ export function ReviewHubClient({ summary }: Props) {
         >
           <ul className="flex flex-col gap-2">
             {summary.weakTopics.slice(0, 4).map((t) => (
-              <li key={t.id} className="font-body-sm text-fg">
-                {t.topic}
-              </li>
+              <li key={t.id} className="font-body-sm text-fg">{t.topic}</li>
             ))}
           </ul>
         </ReviewSectionCard>
+
+        <div className="flex items-center justify-between rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised p-4">
+          <div className="min-w-0">
+            <h3 className="text-body-sm font-semibold text-fg">Contenido guardado</h3>
+            <p className="text-caption text-fg-muted">Repasa las palabras y frases de tu lista personal</p>
+          </div>
+          <Link
+            href="/tracking"
+            className="focus-ring inline-flex h-9 items-center justify-center rounded-[var(--radius-sm)] border border-border-subtle bg-surface-sunken px-3.5 text-caption font-semibold text-fg transition-colors hover:bg-surface-raised hover:border-border-default"
+          >
+            Ver guardadas →
+          </Link>
+        </div>
 
         <ReviewHubActions
           phase={state.phase}

@@ -119,24 +119,24 @@ export function ActivityHistoryCard({ sessions }: Props) {
               <span className="text-caption text-fg-muted">
                 Página {currentPage} de {totalPages}
               </span>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1.5">
                 <button
                   type="button"
                   disabled={currentPage === 1}
                   onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                  className="flex min-h-[32px] min-w-[32px] items-center justify-center rounded-md border border-border-subtle bg-surface-sunken p-1 text-fg hover:bg-surface-raised disabled:opacity-40 disabled:cursor-not-allowed transition-colors focus-ring"
+                  className="flex min-h-[36px] min-w-[36px] items-center justify-center rounded-[var(--radius-sm)] border border-border-subtle bg-surface-sunken p-1.5 text-fg hover:bg-surface-raised disabled:opacity-40 disabled:cursor-not-allowed transition-colors focus-ring"
                   aria-label="Página anterior"
                 >
-                  <ChevronLeft size={14} />
+                  <ChevronLeft size={15} />
                 </button>
                 <button
                   type="button"
                   disabled={currentPage === totalPages}
                   onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                  className="flex min-h-[32px] min-w-[32px] items-center justify-center rounded-md border border-border-subtle bg-surface-sunken p-1 text-fg hover:bg-surface-raised disabled:opacity-40 disabled:cursor-not-allowed transition-colors focus-ring"
+                  className="flex min-h-[36px] min-w-[36px] items-center justify-center rounded-[var(--radius-sm)] border border-border-subtle bg-surface-sunken p-1.5 text-fg hover:bg-surface-raised disabled:opacity-40 disabled:cursor-not-allowed transition-colors focus-ring"
                   aria-label="Página siguiente"
                 >
-                  <ChevronRight size={14} />
+                  <ChevronRight size={15} />
                 </button>
               </div>
             </div>

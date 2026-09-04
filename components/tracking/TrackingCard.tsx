@@ -46,7 +46,7 @@ export function TrackingCard({ source, onEditWord, onDeleteWord }: TrackingCardP
 
   const content = (
     <>
-      <span className="self-start pt-0.5 text-fg-subtle">
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-surface-sunken text-fg-muted">
         <Icon size={16} aria-hidden />
       </span>
       <span className="min-w-0">
@@ -78,13 +78,13 @@ export function TrackingCard({ source, onEditWord, onDeleteWord }: TrackingCardP
           <span className="mt-1 block text-caption text-fg-subtle">Contexto: {phraseContext}</span>
         ) : null}
       </span>
-      <span className="flex shrink-0 items-center gap-1 text-caption text-fg-subtle">
+      <span className="flex shrink-0 items-center gap-1.5 text-caption text-fg-subtle">
         {phraseTargetId ? (
           <PronunciationMissionLaunchButton
             targetId={phraseTargetId}
             source="tracking"
             label="Misión"
-            className="min-h-9 rounded-[var(--radius-sm)] px-3 text-caption font-semibold text-primary hover:bg-primary-soft focus-ring"
+            className="focus-ring min-h-9 rounded-[var(--radius-sm)] px-3 text-caption font-semibold text-primary hover:bg-primary-soft"
           />
         ) : null}
         {word ? (
@@ -94,7 +94,7 @@ export function TrackingCard({ source, onEditWord, onDeleteWord }: TrackingCardP
               onClick={() => onEditWord(word)}
               aria-label={`Editar ${word.text}`}
               title="Editar palabra"
-              className="flex h-9 w-9 items-center justify-center rounded-[var(--radius-sm)] text-fg-subtle transition-colors hover:bg-surface-sunken hover:text-fg active:scale-[0.96]"
+              className="focus-ring flex h-9 w-9 items-center justify-center rounded-[var(--radius-sm)] text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg active:scale-95"
             >
               <Pencil size={16} aria-hidden />
             </button>
@@ -103,7 +103,7 @@ export function TrackingCard({ source, onEditWord, onDeleteWord }: TrackingCardP
               onClick={() => onDeleteWord(word)}
               aria-label={`Eliminar ${word.text}`}
               title="Eliminar palabra"
-              className="flex h-9 w-9 items-center justify-center rounded-[var(--radius-sm)] text-fg-subtle transition-colors hover:bg-error-soft hover:text-error active:scale-[0.96]"
+              className="focus-ring flex h-9 w-9 items-center justify-center rounded-[var(--radius-sm)] text-fg-muted transition-colors hover:bg-error-soft hover:text-error active:scale-95"
             >
               <Trash2 size={16} aria-hidden />
             </button>

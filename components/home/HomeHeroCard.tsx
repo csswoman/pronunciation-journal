@@ -2,13 +2,18 @@
 
 // Structure:
 // <HomeHeroCard>
-//   <HeroHeader>
-//     <KickerAndTitle />
-//     <SessionMetrics />
-//   </HeroHeader>
-//   <SubTitleAndMeta />
-//   <PlanSegmentProgress />
-//   <PrimaryCTA />
+//   <HeroContentRow>
+//     <MainContent>
+//       <HeroHeader>
+//         <KickerAndTitle />
+//         <SessionMetrics />
+//       </HeroHeader>
+//       <SubTitleAndMeta />
+//       <PedagogicalContextBanner />
+//       <PrimaryCTA />
+//     </MainContent>
+//     <RightIllustration />
+//   </HeroContentRow>
 //   <SubordinateStepListToggle />
 // </HomeHeroCard>
 
@@ -23,6 +28,9 @@ import {
   localizeDailyStepTitle,
 } from "@/lib/daily/localize-step-copy";
 import { stepMeta } from "@/components/daily/daily-step-list-helpers";
+import type { SessionArc } from "@/lib/practice/types";
+import { PedagogicalContextBanner } from "@/components/daily/PedagogicalContextBanner";
+import { getIllustration, type IllustrationKey } from "@/lib/illustrations/registry";
 
 interface HomeHeroCardProps {
   steps: DailyStep[];
@@ -32,15 +40,43 @@ interface HomeHeroCardProps {
   onStartStep: (step: DailyStep) => void;
   inProgressStepId?: string | null;
   primaryActionHref?: string;
+  arc?: SessionArc;
+}
+
+function getHeroIllustrationKey(
+  step: DailyStep | undefined,
+  allDone: boolean
+): IllustrationKey {
+  if (allDone) return "stateCompletado";
+  if (!step) return "domainProgress";
+  switch (step.kind) {
+    case "phoneme_focus":
+    case "minimal_pairs":
+    case "mission":
+      return "domainSpeaking";
+    case "listening":
+    case "connected_speech":
+      return "domainListening";
+    case "reader":
+      return "domainReading";
+    case "concept":
+    case "study_deck":
+    case "grammar_focus":
+      return "domainDictionary";
+    case "sentence_builder":
+      return "domainWriting";
+    default:
+      return "domainVocabulary";
+  }
 }
 
 export default function HomeHeroCard({
   steps,
   getStepStatus,
-  completedCount,
   allDone,
   onStartStep,
   inProgressStepId = null,
+  arc,
 }: HomeHeroCardProps) {
   const [showSecondarySteps, setShowSecondarySteps] = useState(false);
 
@@ -88,80 +124,93 @@ export default function HomeHeroCard({
 
   const isReadingConcept = currentStep?.kind === "concept" && currentStep?.href;
 
+  const illustrationKey = getHeroIllustrationKey(currentStep, allDone);
+  const HeroIllustration = getIllustration(illustrationKey);
+
   return (
     <section aria-label="Sesión de hoy" className="w-full">
       <div className="flex flex-col gap-5 rounded-2xl border border-border-default bg-surface-raised p-5 shadow-sm sm:p-6 motion-reduce:shadow-none">
-        {/* Header: Kicker de actividad + Métricas de la sesión */}
-        <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
-          <div className="flex flex-col gap-1.5">
-            <span className="font-mono text-caption font-semibold tracking-wider uppercase text-primary">
-              {allDone
-                ? "Sesión completada"
-                : isMidSession
-                  ? "Continuar donde lo dejaste"
-                  : "Sesión de hoy"}
-            </span>
-            <div className="flex flex-wrap items-center gap-2.5">
-              <h2 className="font-heading text-h2 font-bold text-fg">
-                {allDone ? "¡Todo listo por hoy!" : stepTitle}
-              </h2>
-              {!allDone ? (
-                <Badge
-                  label={`Actividad ${activeStepIndex + 1} de ${steps.length}`}
-                  variant={isMidSession ? "info" : "default"}
-                  dot={isMidSession}
-                  size="sm"
-                />
-              ) : (
-                <Badge label="Completado" variant="success" dot size="sm" />
-              )}
+        {/* Contenido principal superior (Texto + Ilustración a la derecha) */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex flex-col gap-4 min-w-0 flex-1">
+            {/* Header: Kicker de actividad con chip + Métricas de la sesión */}
+            <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
+              <div className="flex flex-col gap-1.5">
+                <div className="flex items-center gap-2.5">
+                  <span className="font-mono text-caption font-semibold tracking-wider uppercase text-primary">
+                    {allDone
+                      ? "Sesión completada"
+                      : isMidSession
+                        ? "Continuar donde lo dejaste"
+                        : "Sesión de hoy"}
+                  </span>
+                  {!allDone ? (
+                    <Badge
+                      label={`Actividad ${activeStepIndex + 1} de ${steps.length}`}
+                      variant={isMidSession ? "info" : "default"}
+                      dot={isMidSession}
+                      size="sm"
+                    />
+                  ) : (
+                    <Badge label="Completado" variant="success" dot size="sm" />
+                  )}
+                </div>
+                <h2 className="font-heading text-h2 font-bold text-fg">
+                  {allDone ? "¡Todo listo por hoy!" : stepTitle}
+                </h2>
+              </div>
             </div>
+
+            {/* Subtítulo y Metadatos de la actividad hero */}
+            {!allDone && (stepSubtitle || metaText || currentStepMinutes) ? (
+              <p className="-mt-2 font-body-sm text-fg-muted text-pretty">
+                {[
+                  stepSubtitle,
+                  metaText,
+                  currentStepMinutes ? `${currentStepMinutes} min` : null,
+                ]
+                  .filter(Boolean)
+                  .join(" · ")}
+              </p>
+            ) : null}
+
+            {/* Contexto pedagógico del foco del día */}
+            {!allDone && <PedagogicalContextBanner arc={arc} />}
+
+            {/* Botón Principal de Acción (CTA) de la pantalla */}
+            {!allDone && currentStep ? (
+              <div className="pt-1">
+                {isReadingConcept ? (
+                  <Link
+                    href={currentStep.href!}
+                    className="focus-ring inline-flex w-full items-center justify-center gap-2.5 rounded-xl bg-cta-bg py-3 px-6 text-center font-label text-body-sm font-semibold text-cta-fg shadow-sm transition-colors hover:bg-cta-bg-hover sm:w-auto"
+                  >
+                    <span>{ctaLabel}</span>
+                    <ArrowRight size={18} aria-hidden />
+                  </Link>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleStartCurrentStep}
+                    className="press-feedback focus-ring inline-flex w-full items-center justify-center gap-2.5 rounded-xl bg-cta-bg py-3 px-6 text-center font-label text-body-sm font-semibold text-cta-fg shadow-sm transition-colors hover:bg-cta-bg-hover sm:w-auto"
+                  >
+                    <span>{ctaLabel}</span>
+                    <ArrowRight size={18} aria-hidden />
+                  </button>
+                )}
+              </div>
+            ) : null}
           </div>
-          <div className="flex items-center gap-2 font-body-sm font-medium tabular-nums text-fg-muted">
-            <span className="rounded-full bg-surface-sunken px-3 py-1 font-caption font-semibold text-fg">
-              {completedCount}/{steps.length} actividades
-            </span>
-            <span>·</span>
-            <span>{totalMinutes > 0 ? totalMinutes : 36} min total</span>
+
+          {/* Ilustración de lado derecho */}
+          <div
+            className="hidden sm:flex shrink-0 items-center justify-center self-center p-2 text-primary opacity-90 transition-opacity hover:opacity-100 [&>svg]:h-28 md:[&>svg]:h-32 [&>svg]:w-auto select-none"
+            aria-hidden="true"
+            data-testid="hero-illustration"
+          >
+            <HeroIllustration />
           </div>
         </div>
-
-        {/* Subtítulo y Metadatos de la actividad hero */}
-        {!allDone && (stepSubtitle || metaText || currentStepMinutes) ? (
-          <p className="-mt-2 font-body-sm text-fg-muted text-pretty">
-            {[
-              stepSubtitle,
-              metaText,
-              currentStepMinutes ? `${currentStepMinutes} min` : null,
-            ]
-              .filter(Boolean)
-              .join(" · ")}
-          </p>
-        ) : null}
-
-        {/* Botón Principal de Acción (CTA) de la pantalla */}
-        {!allDone && currentStep ? (
-          <div className="pt-1">
-            {isReadingConcept ? (
-              <Link
-                href={currentStep.href!}
-                className="focus-ring inline-flex w-full items-center justify-center gap-2.5 rounded-xl bg-cta-bg py-3 px-6 text-center font-label text-body-sm font-semibold text-cta-fg shadow-sm transition-colors hover:bg-cta-bg-hover sm:w-auto"
-              >
-                <span>{ctaLabel}</span>
-                <ArrowRight size={18} aria-hidden />
-              </Link>
-            ) : (
-              <button
-                type="button"
-                onClick={handleStartCurrentStep}
-                className="press-feedback focus-ring inline-flex w-full items-center justify-center gap-2.5 rounded-xl bg-cta-bg py-3 px-6 text-center font-label text-body-sm font-semibold text-cta-fg shadow-sm transition-colors hover:bg-cta-bg-hover sm:w-auto"
-              >
-                <span>{ctaLabel}</span>
-                <ArrowRight size={18} aria-hidden />
-              </button>
-            )}
-          </div>
-        ) : null}
 
         {/* Desplegable de Actividades Secundarias del Día */}
         {steps.length > 1 ? (
@@ -174,8 +223,8 @@ export default function HomeHeroCard({
             >
               <span>
                 {showSecondarySteps
-                  ? "Ocultar lista de actividades"
-                  : `Ver todas las actividades de hoy (${steps.length})`}
+                  ? "Ocultar plan del día"
+                  : "Ver plan del día"}
               </span>
               {showSecondarySteps ? (
                 <ChevronUp size={18} aria-hidden />
@@ -234,3 +283,4 @@ export default function HomeHeroCard({
     </section>
   );
 }
+

@@ -48,17 +48,17 @@ export default async function ProgressPage() {
 
         {/* Action bar / status */}
         <div className="flex flex-col gap-3 rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
-          <div className="flex flex-col gap-0.5">
+          <div className="flex flex-col gap-0.5 min-w-0">
             <span className="font-kicker font-semibold text-fg-subtle">Plan diario</span>
             <p className="text-body-sm font-medium text-fg">
               {data.streak.completedToday
-                ? "Ya practicaste hoy. Puedes seguir sumando."
-                : "Aún no has practicado hoy."}
+                ? "Plan diario completado hoy. Puedes seguir practicando para acelerar tu avance."
+                : "Aún no has iniciado tu plan de hoy. Dedica unos minutos para mantener tu racha activa."}
             </p>
           </div>
-          <Link href="/daily" className="w-full sm:w-auto">
-            <Button variant="primary" size="lg" fullWidth>
-              {data.streak.completedToday ? "Practicar más" : "Empezar el plan de hoy"}
+          <Link href="/daily" className="w-full sm:w-auto shrink-0">
+            <Button variant="primary" size="lg" fullWidth className="sm:w-auto">
+              {data.streak.completedToday ? "Continuar practicando" : "Iniciar plan de hoy"}
             </Button>
           </Link>
         </div>
@@ -98,7 +98,10 @@ export default async function ProgressPage() {
         <LevelConceptsProgressCard />
 
         {/* Producción oral demostrada */}
-        <CanSayNowCard data={buildCanSayNow({ attempts: data.canSayAttempts })} />
+        <CanSayNowCard
+          data={buildCanSayNow({ attempts: data.canSayAttempts })}
+          latency={data.speechLatency}
+        />
 
         {/* Práctica vs dominio + historial */}
         <ProgressProjectionCards data={data.projections} />

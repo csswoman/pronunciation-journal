@@ -229,10 +229,12 @@ function OptionButton({ option, isAnswer, isSelected, answerState, onPick }: Opt
         </div>
 
         <span className="text-body-lg font-medium">{option}</span>
+        {done && isAnswer && <span className="sr-only"> (respuesta correcta)</span>}
+        {done && isSelected && !isAnswer && <span className="sr-only"> (respuesta incorrecta)</span>}
       </div>
 
       {done && (
-        <div className="shrink-0">
+        <div className="shrink-0" aria-hidden="true">
           {isAnswer ? (
             <Check size={20} className="text-success" />
           ) : isSelected ? (

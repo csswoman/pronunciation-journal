@@ -30,7 +30,12 @@ vi.mock("../CoursePathAutoLevelSync", () => ({
 }));
 
 vi.mock("../CoursePathLevelPanel", () => ({
-  default: ({ level }: { level: { id: string; title: string } }) => <div>{level.title}</div>,
+  default: ({ level }: { level: { id: string; title: string } }) => (
+    <div>
+      <span>{level.title}</span>
+      <a href="/courses/pronunciation">Pronunciacion</a>
+    </div>
+  ),
 }));
 
 describe("CoursePathPage", () => {

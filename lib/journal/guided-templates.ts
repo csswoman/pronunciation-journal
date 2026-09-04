@@ -15,6 +15,18 @@ export const GUIDED_TEMPLATES: readonly GuidedTemplate[] = [
     options: ['my brother', 'my partner', 'a friend', 'my coworker'],
   },
   {
+    id: 'habit-opinion-framework',
+    promptEn: 'What do you think about your daily routine? (I think... because... For example...)',
+    promptEs: '¿Qué opinas de tu rutina diaria? (Usa la estructura de 3 pasos)',
+    starterPrefix: 'I think having a clear routine is',
+    options: [
+      'great because it saves time. For example, planning ahead keeps me focused',
+      'essential because it builds consistency. For example, practicing English daily helps a lot',
+      'challenging because life gets busy. For example, yesterday I had to adapt my schedule',
+      'rewarding because progress is visible. For example, I understand much better now',
+    ],
+  },
+  {
     id: 'small-win',
     promptEn: 'What was one small win from your day?',
     promptEs: '¿Qué fue un pequeño logro de tu día?',

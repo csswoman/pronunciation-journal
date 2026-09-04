@@ -16,18 +16,20 @@ import type { SyllableResult } from '@/lib/pronunciation/syllable-scoring'
 import { cn } from '@/lib/cn'
 import { speak } from '@/lib/phoneme-practice/tts'
 import { playIpaSound } from '@/lib/pronunciation/ipa-audio'
-import { buildRemediation } from '@/lib/pronunciation/syllable-remediation'
-import {
-  buildDetailedTip,
-  getPhonemeErrorDescription,
-} from './PronunciationFeedbackChips'
+import { SentenceErrorDetailPanel } from './SentenceErrorDetailPanel'
+import { SelfPlaybackAudioBar } from '@/components/pronunciation/SelfPlaybackAudioBar'
 
 interface Props {
   wordResults: WordResult[]
   syllableMap: Map<string, SyllableResult[]>
+  userAudioUrl?: string | null
 }
 
-export function SentenceContinuousFeedback({ wordResults, syllableMap }: Props) {
+export function SentenceContinuousFeedback({
+  wordResults,
+  syllableMap,
+  userAudioUrl,
+}: Props) {
   const [selectedWordIdx, setSelectedWordIdx] = useState<number | null>(null)
   const [selectedPhoneme, setSelectedPhoneme] = useState<PhonemeAlignment | null>(null)
 
@@ -64,25 +66,8 @@ export function SentenceContinuousFeedback({ wordResults, syllableMap }: Props) 
     }
   }
 
-  const handleSpeakNormal = () => {
-    if (fullSentence) {
-      speak(fullSentence)
-    }
-  }
-
-  const handleSpeakSlow = () => {
-    if (fullSentence) {
-      speak(fullSentence, { rate: 0.6 })
-    }
-  }
-
-  const remediation = selectedPhoneme
-    ? buildRemediation(selectedPhoneme)
-    : selectedWord?.phonemes?.alignment?.find((p) => p.status !== 'correct')
-      ? buildRemediation(
-          selectedWord.phonemes.alignment.find((p) => p.status !== 'correct')!,
-        )
-      : null
+  const handleSpeakNormal = () => { if (fullSentence) speak(fullSentence) }
+  const handleSpeakSlow = () => { if (fullSentence) speak(fullSentence, { rate: 0.6 }) }
 
   return (
     <div className="space-y-3">
@@ -104,11 +89,7 @@ export function SentenceContinuousFeedback({ wordResults, syllableMap }: Props) 
                   {syllables.map((syl, sIdx) => {
                     const isSylError = syl.status !== 'correct'
                     if (!isSylError) {
-                      return (
-                        <span key={sIdx} className="text-success">
-                          {syl.text}
-                        </span>
-                      )
+                      return <span key={sIdx} className="text-success">{syl.text}</span>
                     }
                     return (
                       <button
@@ -134,11 +115,7 @@ export function SentenceContinuousFeedback({ wordResults, syllableMap }: Props) 
             }
 
             if (!hasError && word.status === 'correct') {
-              return (
-                <span key={idx} className="text-success">
-                  {word.expected}
-                </span>
-              )
+              return <span key={idx} className="text-success">{word.expected}</span>
             }
 
             return (
@@ -241,83 +218,25 @@ export function SentenceContinuousFeedback({ wordResults, syllableMap }: Props) 
         </div>
       </div>
 
+      {/* Barra de auto-reproducción y contraste auditivo propioceptivo */}
+      {userAudioUrl && (
+        <SelfPlaybackAudioBar
+          targetWord={fullSentence}
+          userAudioUrl={userAudioUrl}
+          className="max-w-none"
+        />
+      )}
+
       {/* Panel Desplegable de Detalle de Error */}
       {selectedWord && (
-        <div className="animate-fadeIn rounded-lg border border-border-default bg-surface-raised p-3.5 space-y-2.5 shadow-xs">
-          <div className="flex items-center justify-between gap-2 border-b border-border-subtle pb-2">
-            <div className="flex items-center gap-2">
-              <span className="text-body leading-none" aria-hidden="true">💡</span>
-              <span className="font-semibold text-body-sm text-fg">
-                {selectedPhoneme
-                  ? `Sonido /${selectedPhoneme.ipa ?? selectedPhoneme.phoneme}/ en "${selectedWord.expected}"`
-                  : `Palabra "${selectedWord.expected || selectedWord.got}"`}
-              </span>
-            </div>
-            <button
-              type="button"
-              onClick={() => {
-                setSelectedWordIdx(null)
-                setSelectedPhoneme(null)
-              }}
-              className="text-fg-muted hover:text-fg text-caption px-1.5 py-0.5 rounded cursor-pointer focus-ring"
-              aria-label="Cerrar detalle de error"
-            >
-              ✕
-            </button>
-          </div>
-
-          <div className="space-y-2 text-caption text-fg">
-            {selectedPhoneme ? (
-              <p className="m-0 text-body-sm font-medium text-fg leading-relaxed">
-                {getPhonemeErrorDescription(selectedPhoneme)}
-              </p>
-            ) : (
-              <p className="m-0 text-body-sm text-fg leading-relaxed">
-                {buildDetailedTip(selectedWord) ?? 'Revisa la pronunciación de esta palabra.'}
-              </p>
-            )}
-
-            {selectedWord.status === 'incorrect' && selectedWord.got && (
-              <p className="m-0 text-fg-subtle text-caption">
-                Reconocido: &ldquo;{selectedWord.got}&rdquo; (esperado: &ldquo;{selectedWord.expected}&rdquo;)
-              </p>
-            )}
-
-            {remediation?.visualCueEs && (
-              <p className="m-0 text-fg-muted text-caption">
-                👉 {remediation.visualCueEs}
-              </p>
-            )}
-            {remediation?.spanishTip && (
-              <p className="m-0 text-fg-muted text-caption">
-                💡 {remediation.spanishTip}
-              </p>
-            )}
-
-            <div className="flex flex-wrap items-center gap-2 pt-1">
-              {selectedPhoneme?.ipa && (
-                <button
-                  type="button"
-                  onClick={() => playIpaSound(selectedPhoneme.ipa!)}
-                  className="inline-flex items-center gap-1.5 rounded-md border border-border-default bg-surface px-2.5 py-1 text-caption font-medium text-fg hover:border-primary focus-ring cursor-pointer"
-                >
-                  <span>Escuchar /{selectedPhoneme.ipa}/</span>
-                  <span aria-hidden="true">🔊</span>
-                </button>
-              )}
-              {selectedWord.expected && (
-                <button
-                  type="button"
-                  onClick={() => speak(selectedWord.expected)}
-                  className="inline-flex items-center gap-1.5 rounded-md border border-border-default bg-surface px-2.5 py-1 text-caption font-medium text-fg hover:border-primary focus-ring cursor-pointer"
-                >
-                  <span>Escuchar &ldquo;{selectedWord.expected}&rdquo;</span>
-                  <span aria-hidden="true">🔊</span>
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
+        <SentenceErrorDetailPanel
+          selectedWord={selectedWord}
+          selectedPhoneme={selectedPhoneme}
+          onClose={() => {
+            setSelectedWordIdx(null)
+            setSelectedPhoneme(null)
+          }}
+        />
       )}
     </div>
   )

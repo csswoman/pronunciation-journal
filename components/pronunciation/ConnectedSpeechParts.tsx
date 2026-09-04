@@ -2,12 +2,17 @@
 
 // Planned structure:
 // <ConnectedSpeechCategoryPills />
-// <ConnectedSpeechPhraseCard />
-//   linking visual + IPA comparison + tip + mic
+// <ConnectedSpeechPhraseCard>
+//   - Header & audio actions
+//   - Phonetic linking breakdown & IPA comparison
+//   - Rhythmic display & acoustic notes
+//   - Shadowing recording controls & feedback
+// </ConnectedSpeechPhraseCard>
 
 import Button from "@/components/ui/Button";
-import { Volume2, Mic, ArrowRight, Sparkles } from "@/components/icons";
+import { Volume2, Mic, ArrowRight, ArrowLeft, Sparkles } from "@/components/icons";
 import { SelfPlaybackAudioBar } from "./SelfPlaybackAudioBar";
+import { RhythmicSentenceDisplay } from "./RhythmicSentenceDisplay";
 import { CONNECTED_SPEECH_DATA, type ConnectedPhrase } from "@/lib/pronunciation/connected-speech-data";
 import { cn } from "@/lib/cn";
 
@@ -17,6 +22,7 @@ const CATEGORIES = [
   { id: "flap-t", label: "Flap T (/ɾ/)" },
   { id: "intrusion", label: "Intrusión (/w/ y /j/)" },
   { id: "weak-forms", label: "Formas Débiles" },
+  { id: "silent-letters", label: "Letras Mudas" },
 ] as const;
 
 export function ConnectedSpeechCategoryPills({
@@ -27,22 +33,31 @@ export function ConnectedSpeechCategoryPills({
   onSelect: (categoryId: string) => void;
 }) {
   return (
-    <div className="flex flex-wrap gap-2">
-      {CATEGORIES.map((cat) => (
-        <button
-          key={cat.id}
-          type="button"
-          onClick={() => onSelect(cat.id)}
-          className={cn(
-            "rounded-full px-3.5 py-1.5 font-label text-xs transition-colors",
-            activeCategory === cat.id
-              ? "bg-primary text-on-primary font-semibold shadow-sm"
-              : "bg-surface-raised border border-border-default text-fg-muted hover:text-fg hover:bg-surface-sunken",
-          )}
-        >
-          {cat.label}
-        </button>
-      ))}
+    <div
+      role="tablist"
+      aria-label="Categorías de habla conectada"
+      className="flex flex-wrap gap-2"
+    >
+      {CATEGORIES.map((cat) => {
+        const isSelected = activeCategory === cat.id;
+        return (
+          <button
+            key={cat.id}
+            type="button"
+            role="tab"
+            aria-selected={isSelected}
+            onClick={() => onSelect(cat.id)}
+            className={cn(
+              "inline-flex min-h-[44px] items-center justify-center rounded-full px-4 py-2 font-label text-xs sm:text-body-sm transition-all focus-ring cursor-pointer",
+              isSelected
+                ? "bg-primary text-on-primary font-semibold shadow-xs"
+                : "bg-surface-raised border border-border-default text-fg-muted hover:text-fg hover:bg-surface-sunken",
+            )}
+          >
+            {cat.label}
+          </button>
+        );
+      })}
     </div>
   );
 }
@@ -56,10 +71,13 @@ export function ConnectedSpeechPhraseCard({
   isSupported,
   transcript,
   userAudioUrl,
+  isSaved,
   onPlaySlow,
   onPlayConnected,
   onToggleMic,
   onNext,
+  onPrev,
+  hasPrev = false,
 }: {
   phrase: ConnectedPhrase;
   isPlayingAudio: boolean;
@@ -69,71 +87,79 @@ export function ConnectedSpeechPhraseCard({
   isSupported: boolean;
   transcript?: string;
   userAudioUrl: string | null;
+  isSaved?: boolean;
   onPlaySlow: () => void;
   onPlayConnected: () => void;
   onToggleMic: () => void;
   onNext: () => void;
+  onPrev?: () => void;
+  hasPrev?: boolean;
 }) {
   return (
-    <div className="flex flex-col gap-5 rounded-2xl border border-border-default bg-surface-raised p-6 shadow-sm">
-      <div className="flex items-start justify-between gap-4">
+    <div className="flex flex-col gap-5 rounded-xl border border-border-default bg-surface-raised p-5 sm:p-6 shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         <div>
-          <span className="font-caption uppercase tracking-wider text-xs font-semibold text-primary">
+          <span className="font-caption text-xs font-bold text-primary uppercase tracking-wider">
             {phrase.categoryNameEs}
           </span>
-          <h2 className="text-h1 font-bold text-fg mt-1">&ldquo;{phrase.phrase}&rdquo;</h2>
+          <h2 className="text-h2 font-bold text-fg mt-1 text-pretty">
+            &ldquo;{phrase.phrase}&rdquo;
+          </h2>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           <button
             type="button"
             onClick={onPlaySlow}
             disabled={isPlayingSlow || isPlayingAudio}
             className={cn(
-              "flex h-11 items-center gap-1.5 rounded-full border border-border-default bg-surface-base px-3.5 text-caption font-semibold text-fg transition-transform hover:scale-105 active:scale-95",
-              isPlayingSlow && "border-primary text-primary animate-pulse",
+              "inline-flex min-h-[44px] px-3.5 items-center gap-1.5 rounded-full border border-border-default bg-surface-base text-fg text-xs font-medium transition-all hover:bg-surface-sunken active:scale-95 focus-ring cursor-pointer disabled:opacity-50",
+              isPlayingSlow && "border-primary text-primary bg-primary-soft/30",
             )}
-            title="Escuchar lento (0.65x)"
+            title="Escuchar a velocidad lenta y articulada"
+            aria-label="Escuchar a velocidad lenta 0.65x"
           >
-            <span>🐢 0.65x</span>
+            <Volume2 size={16} />
+            <span>Lento (0.65x)</span>
           </button>
 
           <button
             type="button"
             onClick={onPlayConnected}
-            disabled={isPlayingAudio || isPlayingSlow}
+            disabled={isPlayingSlow || isPlayingAudio}
             className={cn(
-              "flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border-default bg-primary text-on-primary transition-transform hover:scale-105 active:scale-95 shadow-sm",
-              isPlayingAudio && "animate-pulse ring-2 ring-primary/40",
+              "inline-flex min-h-[44px] px-3.5 items-center gap-1.5 rounded-full border border-border-default bg-surface-base text-primary text-xs font-semibold transition-all hover:bg-surface-sunken active:scale-95 focus-ring cursor-pointer disabled:opacity-50",
+              isPlayingAudio && "border-primary bg-primary-soft/40 shadow-xs",
             )}
-            title="Escuchar habla conectada normal"
-            aria-label="Escuchar habla conectada normal"
+            title="Escuchar habla conectada nativa (1.0x)"
+            aria-label="Escuchar habla conectada nativa 1.0x"
           >
-            <Volume2 size={20} />
+            <Volume2 size={18} className={isPlayingAudio ? "animate-pulse" : ""} />
+            <span>Nativa (1.0x)</span>
           </button>
         </div>
       </div>
 
-      <div className="flex flex-col gap-3 rounded-xl border border-primary/20 bg-primary-wash/50 p-4">
+      <div className="rounded-lg border border-border-default bg-surface-base p-4 sm:p-5 flex flex-col gap-4">
         <div className="flex items-center gap-2">
-          <Sparkles size={16} className="text-primary" />
+          <Sparkles className="size-4 text-primary" />
           <span className="font-caption text-xs font-bold text-primary uppercase tracking-wider">
             Enlace Fonético en Acción
           </span>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3 text-body-lg font-bold text-fg py-2">
+        <div className="flex flex-wrap items-center gap-3 text-body-lg font-bold text-fg py-1">
           {phrase.phrase.split(" ").map((w, idx, arr) => {
             const isLinked =
               phrase.linkedWords.includes(w.replace(/[^a-zA-Z]/g, "")) && idx < arr.length - 1;
             return (
               <div key={idx} className="flex items-center gap-1.5">
-                <span className="px-2.5 py-1 rounded-lg bg-surface-raised border border-border-default shadow-xs">
+                <span className="px-2.5 py-1 rounded-md bg-surface-raised border border-border-default shadow-2xs">
                   {w}
                 </span>
                 {isLinked && (
-                  <span className="inline-flex items-center gap-1 text-primary font-mono text-xs px-2 py-0.5 rounded-full bg-primary-soft border border-primary/30 animate-pulse">
-                    <span>🔗</span>
+                  <span className="inline-flex items-center gap-1 text-primary font-mono text-xs px-2.5 py-1 rounded-full bg-primary-soft border border-primary/30 font-medium">
+                    <Sparkles className="size-3 text-primary shrink-0" />
                     <span>/{phrase.linkSound}/</span>
                   </span>
                 )}
@@ -143,14 +169,14 @@ export function ConnectedSpeechPhraseCard({
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-border-subtle/60 text-body-sm">
-          <div>
-            <span className="font-caption text-xs text-fg-muted block">
+          <div className="rounded-md border border-border-subtle bg-surface-sunken/50 p-3">
+            <span className="font-caption text-xs text-fg-muted font-medium block mb-0.5">
               Pronunciación aislada (antinatural):
             </span>
-            <span className="font-ipa text-fg-muted line-through">{phrase.isolatedIpa}</span>
+            <span className="font-ipa text-fg-muted text-sm sm:text-base">{phrase.isolatedIpa}</span>
           </div>
-          <div>
-            <span className="font-caption text-xs text-primary font-semibold block">
+          <div className="rounded-md border border-primary/30 bg-primary-soft/30 p-3">
+            <span className="font-caption text-xs text-primary font-semibold block mb-0.5">
               Habla conectada nativa:
             </span>
             <span className="font-ipa text-primary font-bold text-base">{phrase.connectedIpa}</span>
@@ -158,8 +184,10 @@ export function ConnectedSpeechPhraseCard({
         </div>
       </div>
 
-      <div className="rounded-xl border border-border-subtle bg-surface-base p-4">
-        <div className="flex items-center gap-2 mb-1">
+      <RhythmicSentenceDisplay sentence={phrase.phrase} showAudio={false} />
+
+      <div className="rounded-lg border border-border-subtle bg-surface-base p-4">
+        <div className="flex flex-wrap items-center gap-2 mb-1">
           <span className="font-caption text-xs font-semibold text-fg-muted">Cómo suena al oído:</span>
           <span className="font-label text-sm font-bold text-fg bg-surface-raised px-2 py-0.5 rounded border border-border-subtle">
             {phrase.howItSoundsEs}
@@ -170,7 +198,7 @@ export function ConnectedSpeechPhraseCard({
 
       {isSupported && (
         <div className="flex flex-col gap-3 pt-2 border-t border-border-subtle">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
             <Button
               type="button"
               variant={isListening ? "error" : "primary"}
@@ -182,20 +210,42 @@ export function ConnectedSpeechPhraseCard({
               {isListening ? "Detener grabación" : "Grabar mi repetición (Shadowing)"}
             </Button>
 
-            <Button type="button" variant="secondary" size="md" onClick={onNext} className="w-full sm:w-auto">
-              Siguiente frase
-              <ArrowRight size={16} />
-            </Button>
+            <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+              {onPrev && (
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="md"
+                  onClick={onPrev}
+                  disabled={!hasPrev}
+                  className="w-full sm:w-auto"
+                >
+                  <ArrowLeft size={16} />
+                  <span>Anterior</span>
+                </Button>
+              )}
+              <Button type="button" variant="secondary" size="md" onClick={onNext} className="w-full sm:w-auto">
+                <span>Siguiente frase</span>
+                <ArrowRight size={16} />
+              </Button>
+            </div>
           </div>
 
           {isDone && (
             <div className="pt-2">
               <SelfPlaybackAudioBar targetWord={phrase.phrase} userAudioUrl={userAudioUrl} />
               {transcript && (
-                <p className="mt-2 text-body-sm text-fg">
-                  Reconocido:{" "}
-                  <strong className="font-medium text-primary">&ldquo;{transcript}&rdquo;</strong>
-                </p>
+                <div className="mt-2 flex items-center justify-between gap-2 text-body-sm text-fg">
+                  <p>
+                    Reconocido:{" "}
+                    <strong className="font-medium text-primary">&ldquo;{transcript}&rdquo;</strong>
+                  </p>
+                  {isSaved && (
+                    <span className="font-caption text-xs font-semibold px-2 py-0.5 rounded-full bg-success/20 text-success shrink-0">
+                      ✓ Guardado (+XP)
+                    </span>
+                  )}
+                </div>
               )}
             </div>
           )}
@@ -210,3 +260,4 @@ export function firstIndexForCategory(categoryId: string): number {
     (p) => categoryId === "all" || p.category === categoryId,
   );
 }
+

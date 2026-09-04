@@ -32,7 +32,7 @@ export async function quickAddWord(input: {
   text: string;
   context?: string | null;
   deckId?: string | null;
-  source?: "manual" | "reader";
+  source?: "manual" | "reader" | "journal";
   enrichment?: WordEnrichment;
 }): Promise<WordBankEntry> {
   const accessToken = await getAccessToken();

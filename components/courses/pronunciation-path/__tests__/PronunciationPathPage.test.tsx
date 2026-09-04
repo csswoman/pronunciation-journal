@@ -131,4 +131,18 @@ describe('PronunciationPathPage', () => {
     expect(screen.queryByText(/^etapas$/i)).not.toBeInTheDocument()
     expect(screen.queryByText(/borde:\s*siguiente práctica/i)).not.toBeInTheDocument()
   })
+
+  it('renders sentence-prosody with lesson links and without broken mission launchers', () => {
+    render(
+      <PronunciationPathPage
+        evidenceOverride={emptyEvidence()}
+        initialStage="sentence-prosody"
+        copyEnabled
+      />
+    )
+    const unitRegion = screen.getByRole('region', { name: /unidad activa/i })
+    expect(unitRegion).toHaveTextContent(/palabras fuertes|ritmo/i)
+    expect(within(unitRegion).getByRole('link', { name: /abrir lección/i })).toBeInTheDocument()
+    expect(within(unitRegion).queryByRole('button', { name: /misión/i })).not.toBeInTheDocument()
+  })
 })

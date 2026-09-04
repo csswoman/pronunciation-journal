@@ -95,6 +95,7 @@ export async function evaluateSpeak(input: EvaluationInput): Promise<EvaluationR
   const scoring = await scorePronunciation(transcript, input.expected, threshold, strictWordMatch);
 
   const passed = scoring.accuracy >= threshold;
+  const missedPhoneme = firstMissedPhoneme(scoring.wordResults);
 
   return {
     correct: passed,
@@ -111,6 +112,7 @@ export async function evaluateSpeak(input: EvaluationInput): Promise<EvaluationR
       scoring.wordResults
     ),
     score: Math.round(scoring.accuracy),
+    suggestedPerceptionTarget: !passed && missedPhoneme ? missedPhoneme : undefined,
     gradedBy: "client",
     ...(scoring.wordResults ? { wordResults: scoring.wordResults } : {}),
   };

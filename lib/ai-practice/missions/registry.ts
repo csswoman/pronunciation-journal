@@ -584,8 +584,14 @@ export const MISSION_REGISTRY: Readonly<Record<string, OralMission>> = Object.fr
   Object.fromEntries(ALL_MISSIONS.map((mission) => [mission.id, mission])) as Record<string, OralMission>,
 )
 
+const DYNAMIC_MISSIONS = new Map<string, OralMission>()
+
+export function registerDynamicMission(mission: OralMission): void {
+  DYNAMIC_MISSIONS.set(mission.id, mission)
+}
+
 export function listMissions(): readonly OralMission[] {
-  return ALL_MISSIONS
+  return [...DYNAMIC_MISSIONS.values(), ...ALL_MISSIONS]
 }
 
 /**
@@ -594,7 +600,8 @@ export function listMissions(): readonly OralMission[] {
  * El filtrado vive aqui y no en la UI para que exista una sola fuente.
  */
 export function listScriptedMissions(): readonly ScriptedMission[] {
-  return ALL_MISSIONS.filter(isScriptedMission)
+  const dynamic = Array.from(DYNAMIC_MISSIONS.values()).filter(isScriptedMission)
+  return [...dynamic, ...ALL_MISSIONS.filter(isScriptedMission)]
 }
 
 export function listConversationalMissions(): readonly ConversationalMission[] {
@@ -602,7 +609,7 @@ export function listConversationalMissions(): readonly ConversationalMission[] {
 }
 
 export function getMission(missionId: string): OralMission | null {
-  return MISSION_REGISTRY[missionId] ?? null
+  return DYNAMIC_MISSIONS.get(missionId) ?? MISSION_REGISTRY[missionId] ?? null
 }
 
 export function missionIdFromLegacyMode(mode: string): string | null {

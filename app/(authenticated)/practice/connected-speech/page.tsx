@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import PageLayout from "@/components/layout/PageLayout";
 import { ConnectedSpeechTrainer } from "@/components/pronunciation/ConnectedSpeechTrainer";
+import { ArrowLeft } from "@/components/icons";
 
 export const metadata: Metadata = {
   title: "Habla Conectada y Enlaces | English Journal",
@@ -8,8 +11,18 @@ export const metadata: Metadata = {
 
 export default function ConnectedSpeechPage() {
   return (
-    <div className="page-shell page-shell--catalog layout-stack-md py-6">
-      <header className="page-header max-w-4xl mx-auto w-full">
+    <PageLayout archetype="session" className="layout-stack-md py-6">
+      <div className="flex items-center justify-between">
+        <Link
+          href="/practice"
+          className="inline-flex items-center gap-1.5 text-body-sm font-medium text-fg-muted transition-colors hover:text-fg focus-ring rounded py-1"
+        >
+          <ArrowLeft className="size-4" />
+          <span>Volver al Hub de Práctica</span>
+        </Link>
+      </div>
+
+      <header className="page-header w-full">
         <span className="font-kicker text-primary">Fluidez & Comprensión Auditiva</span>
         <h1 className="text-h1 text-fg mt-1">Habla Conectada y Enlaces</h1>
         <p className="text-body text-fg-muted max-w-2xl text-pretty mt-1">
@@ -18,9 +31,10 @@ export default function ConnectedSpeechPage() {
         </p>
       </header>
 
-      <main className="max-w-4xl mx-auto w-full">
+      <main className="w-full">
         <ConnectedSpeechTrainer />
       </main>
-    </div>
+    </PageLayout>
   );
 }
+

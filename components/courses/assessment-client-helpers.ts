@@ -8,6 +8,7 @@ import {
 import type { AssessmentConcept, ConceptSelfRating } from "@/lib/courses/concept-profile";
 import type { CefrLevelId } from "@/lib/courses/types";
 import { persistAssessmentConceptProfile } from "@/lib/courses/assessment-profile";
+import { saveGuestStudyLevel } from "@/lib/preferences/guest-study-level";
 
 export function isConcreteCefrLevel(
   value: CefrLevelId | "unsure" | "full" | null,
@@ -34,6 +35,14 @@ export async function saveAssessmentLevel(params: {
   const { mode, questions, userId, nextResult, setSaving, setSaveError } = params;
   setSaving(true);
   setSaveError(false);
+
+  // Asegurar persistencia inmediata en el dispositivo
+  try {
+    saveGuestStudyLevel(nextResult.assignedLevel);
+  } catch {
+    /* localStorage no disponible */
+  }
+
   try {
     const evaluatedLevel =
       mode === "checkpoint"
@@ -44,16 +53,27 @@ export async function saveAssessmentLevel(params: {
               ? level
               : highest;
           }, null) ?? null;
-    const [response] = await Promise.all([
-      fetch("/api/assessment/results", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mode, evaluatedLevel, result: nextResult }),
-      }),
-      persistAssessmentConceptProfile(userId, nextResult.conceptSignals, nextResult.assignedLevel),
-    ]);
-    if (!response.ok) throw new Error("Failed to persist assessment result");
-  } catch {
+
+    // 1. Guardado local en Dexie (fuente de verdad offline-first)
+    await persistAssessmentConceptProfile(
+      userId,
+      nextResult.conceptSignals,
+      nextResult.assignedLevel,
+    );
+
+    // 2. Sincronización remota best-effort
+    const response = await fetch("/api/assessment/results", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ mode, evaluatedLevel, result: nextResult }),
+    });
+    // 401 o 403 indica sesión anónima o no autenticada en Supabase: el progreso local ya está a salvo
+    if (!response.ok && response.status !== 401 && response.status !== 403) {
+      console.warn("[assessment] remote sync non-ok status:", response.status);
+      throw new Error(`Remote sync failed with status ${response.status}`);
+    }
+  } catch (error) {
+    console.error("[assessment] local persistence failed:", error);
     setSaveError(true);
   } finally {
     setSaving(false);

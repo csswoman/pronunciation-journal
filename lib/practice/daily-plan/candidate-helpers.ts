@@ -1,5 +1,7 @@
 import type { DailySelectionReason, DailyStep } from '@/lib/practice/types'
 import type { Sound } from '@/lib/phoneme-practice/types'
+import type { UserLearningState } from '@/lib/ai-practice/learning-state'
+import { pickSeedSound } from './selectors'
 
 export function targetRefsForStep(
   step: DailyStep,
@@ -39,4 +41,81 @@ export function reasonForStep(
   if (step.kind === 'study_deck' || step.kind === 'reader') return 'route_next'
   if (step.kind === 'word_review' && options.hasSavedOrFamiliar) return 'saved_intent'
   return 'variety'
+}
+
+/**
+ * Ordena los pasos seleccionados según la progresión pedagógica de adquisición:
+ * 1. Discriminación auditiva / Pares mínimos (calentamiento de percepción)
+ * 2. Foco fonético (articulación de sonido)
+ * 3. Comprensión / Gramática / Lectura (input comprensible i+1)
+ * 4. Presentación / Repaso de vocabulario
+ * 5. Producción guiada / libre (oral/escrita)
+ * 6. Misión / Diario reflexivo (aplicación libre)
+ */
+const PEDAGOGICAL_KIND_ORDER: Record<string, number> = {
+  minimal_pairs: 1,
+  listening: 1,
+  phoneme_focus: 2,
+  concept: 3,
+  study_deck: 3,
+  reader: 3,
+  sentence_context: 3,
+  context_practice: 3,
+  grammar_focus: 3,
+  word_intro: 4,
+  word_review: 4,
+  written_production: 5,
+  spoken_production: 5,
+  mission: 6,
+  journal_entry: 7,
+}
+
+export function sortStepsByPedagogicalProgression(steps: DailyStep[]): DailyStep[] {
+  return [...steps].sort((a, b) => {
+    const orderA = PEDAGOGICAL_KIND_ORDER[a.kind] ?? 4
+    const orderB = PEDAGOGICAL_KIND_ORDER[b.kind] ?? 4
+    return orderA - orderB
+  })
+}
+
+/**
+ * Resuelve el sonido primario del día respetando el bucle adaptativo SLA:
+ * 1. Prioridad máxima: fonema con fallos orales reiterados (≥2 intentos, <65% precisión) en producción oral.
+ *    Esto fuerza un paso de discriminación auditiva (pares mínimos) antes de volver a exigir producción oral.
+ * 2. Prescripción de evaluación diagnóstica activa (diagnosticSound).
+ * 3. Sonido más débil en progreso general histórico (weakest).
+ * 4. Sonido con dificultades acumuladas en el coach de IA.
+ * 5. Sonido semilla determinista del día.
+ */
+export function resolvePrimarySound(
+  weakest: Sound | null,
+  aiState: UserLearningState | null,
+  allSounds: Sound[],
+  diagnosticSound: Sound | null = null,
+): Sound | null {
+  if (aiState?.pronunciation?.strugglingSounds) {
+    const urgentOralSound = [...aiState.pronunciation.strugglingSounds]
+      .filter((s) => s.attempts >= 2 && s.avgAccuracy < 65)
+      .sort((a, b) => a.avgAccuracy - b.avgAccuracy)[0]
+    if (urgentOralSound) {
+      const match = allSounds.find((s) => s.ipa === urgentOralSound.ipa)
+      if (match) return match
+    }
+  }
+
+  if (diagnosticSound) return diagnosticSound
+
+  if (weakest) return weakest
+
+  if (aiState?.pronunciation?.strugglingSounds) {
+    const worstSound = [...aiState.pronunciation.strugglingSounds]
+      .filter((s) => s.attempts >= 3 && s.avgAccuracy < 70)
+      .sort((a, b) => a.avgAccuracy - b.avgAccuracy)[0]
+    if (worstSound) {
+      const match = allSounds.find((s) => s.ipa === worstSound.ipa)
+      if (match) return match
+    }
+  }
+
+  return pickSeedSound(allSounds, 0)
 }

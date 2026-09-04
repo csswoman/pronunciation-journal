@@ -76,7 +76,14 @@ export function ProgressStatBar({
       >
         {label}
       </span>
-      <div className="h-2 flex-1 overflow-hidden rounded-full bg-surface-sunken">
+      <div
+        role="progressbar"
+        aria-valuenow={value}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-label={label}
+        className="h-2 flex-1 overflow-hidden rounded-full bg-surface-sunken"
+      >
         <span
           className="block h-full w-full rounded-full origin-left transition-transform duration-300 ease-out"
           style={{ transform: `scaleX(${Math.min(1, Math.max(0, value / 100))})`, background: barColor }}
@@ -162,7 +169,11 @@ export function ProgressCategoryChart({
       </div>
 
       {/* Segmented Distribution Bar */}
-      <div className="flex h-3 w-full overflow-hidden rounded-full bg-surface-raised border border-border-subtle p-0.5">
+      <div
+        role="img"
+        aria-label="Distribución de práctica reciente por categoría"
+        className="flex h-3 w-full overflow-hidden rounded-full bg-surface-raised border border-border-subtle p-0.5"
+      >
         {items.map((item, idx) => {
           const widthPct = (item.percentage / totalShare) * 100
           if (widthPct <= 0) return null

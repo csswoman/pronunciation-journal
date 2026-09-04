@@ -9,6 +9,7 @@ import {
   DEFAULT_CONTRAST_CATEGORY,
   type ContrastCategory,
 } from "@/lib/sounds/contrast-categories";
+import { MinimalPairsSidebar } from "./MinimalPairsSidebar";
 import { ContrastMouthComparison } from "./ContrastMouthComparison";
 
 const CATEGORY_LABELS: Record<ContrastCategory, string> = {
@@ -16,7 +17,7 @@ const CATEGORY_LABELS: Record<ContrastCategory, string> = {
   consonant: "Consonantes",
 };
 
-// Sub-components: Category picker group, Contrast pair picker group, ContrastMouthComparison, MinimalPairsRunner
+// Sub-components: Category picker group, Contrast pair picker group, MinimalPairsSidebar, ContrastMouthComparison, MinimalPairsRunner
 export default function MinimalPairsWorkspace() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -56,14 +57,8 @@ export default function MinimalPairsWorkspace() {
 
   return (
     <section className="sound-lab__minimal-pairs space-y-4" aria-label="Práctica de pares mínimos">
-      <div className="flex flex-col gap-1">
-        <h2 className="text-h3 font-bold text-fg">Entrenamiento de pares mínimos</h2>
-        <p className="text-body-sm text-fg-muted">
-          Entrena tu oído para distinguir diferencias sutiles entre sonidos similares en inglés.
-        </p>
-      </div>
-
-      <div className="sound-lab__contrast-selector">
+      {/* Selector superior horizontal para pantallas móviles / tablets estrechas */}
+      <div className="sound-lab__contrast-selector lg:hidden">
         <div className="sound-lab__contrast-row">
           <div
             className="sound-lab__contrast-category-picker"
@@ -108,16 +103,32 @@ export default function MinimalPairsWorkspace() {
         </div>
       </div>
 
-      <ContrastMouthComparison
-        phonemeA={activeContrast.phonemeA}
-        phonemeB={activeContrast.phonemeB}
-      />
+      {/* Layout principal: 2 columnas en desktop (ejercicio + comparación de boca a la izquierda, sidebar navegable a la derecha) */}
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_300px] xl:grid-cols-[minmax(0,1fr)_340px] items-start gap-5">
+        <div className="flex flex-col gap-4 min-w-0">
+          <ContrastMouthComparison
+            phonemeA={activeContrast.phonemeA}
+            phonemeB={activeContrast.phonemeB}
+          />
 
-      <MinimalPairsRunner
-        key={activeContrast.id}
-        initialPhoneme={activeContrast.phonemeA}
-        initialContrastId={activeContrast.id}
-      />
+          <MinimalPairsRunner
+            key={activeContrast.id}
+            initialPhoneme={activeContrast.phonemeA}
+            initialContrastId={activeContrast.id}
+          />
+        </div>
+
+        {/* Sidebar exclusivo para Desktop (sticky, cómodo de scrollear y ver todos los pares) */}
+        <div className="hidden lg:block sticky top-6">
+          <MinimalPairsSidebar
+            activeCategory={activeCategory}
+            activeContrastId={activeContrast.id}
+            categoryContrasts={categoryContrasts}
+            onSelectCategory={selectCategory}
+            onSelectContrast={selectContrast}
+          />
+        </div>
+      </div>
     </section>
   );
 }

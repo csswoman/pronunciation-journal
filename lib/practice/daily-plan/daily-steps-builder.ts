@@ -42,7 +42,6 @@ export interface BuildDailyCandidateStepsParams {
   activeLevel?: CefrLevelId
   completedLessonIds: Set<string>
   aiState: UserLearningState | null
-  essentialMatchWords: WordBankEntry[]
   savedOrFamiliarWordIds: Set<string>
   wordIndex: WordCategoryIndex
   repairConstraints: SpeechConstraintId[]
@@ -66,7 +65,6 @@ export async function buildDailyCandidateSteps(
     activeLevel,
     completedLessonIds,
     aiState,
-    essentialMatchWords,
     savedOrFamiliarWordIds,
     wordIndex,
     repairConstraints,
@@ -87,7 +85,6 @@ export async function buildDailyCandidateSteps(
       minimalPairs,
       hasProgress,
       'daily',
-      essentialMatchWords,
     )
     if (focus) newSteps.push(focus)
 
@@ -199,7 +196,6 @@ export async function buildDailyCandidateSteps(
         minimalPairs,
         false,
         'daily',
-        essentialMatchWords,
       )
       if (focus && !usedIds.has(focus.id)) {
         steps.push(focus)

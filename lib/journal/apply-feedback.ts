@@ -5,6 +5,13 @@ import { enqueueTopicSRSUpdate } from '@/lib/practice/topic-srs-queries'
 import { normalizeTopic } from '@/lib/practice/normalize-topic'
 import { JOURNAL_TOPIC_IDS } from './topic-catalog'
 import type { JournalCorrectionResult, JournalFeedback, ScheduledTopic } from './correction'
+import { journalErrorToPatternId } from './error-pattern-mapper'
+import type { ErrorPatternId } from '@/lib/exercises/error-patterns'
+import {
+  applyProductionGrade,
+  createEmptyState,
+  type UserLearningState,
+} from '@/lib/ai-practice/learning-state'
 
 /**
  * Correcting an entry is a "recall failure" for every topic the learner tripped
@@ -71,6 +78,8 @@ export async function applyJournalFeedback(
     topics.map((topic) => scheduleTopicReview(supabase, userId, topic)),
   )).filter((topic): topic is ScheduledTopic => topic !== null)
 
+  await scheduleErrorPatterns(supabase, userId, correction.errors)
+
   return { applied: true, scheduledTopics }
 }
 
@@ -126,5 +135,44 @@ async function scheduleTopicReview(
     topicId: result.topic,
     nextReviewAt: row.next_review_at,
     intervalDays: row.interval_days,
+  }
+}
+
+async function scheduleErrorPatterns(
+  supabase: SupabaseClient<Database>,
+  userId: string,
+  errors: JournalCorrectionResult['errors'],
+): Promise<void> {
+  const patterns = errors
+    .map((err) => journalErrorToPatternId(err))
+    .filter((p): p is ErrorPatternId => p !== null)
+
+  if (patterns.length === 0) return
+
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const client = supabase.from('user_learning_state' as never) as any
+    const { data: row } = await client
+      .select('state')
+      .eq('user_id', userId)
+      .maybeSingle()
+
+    let state: UserLearningState = row?.state
+      ? (row.state as unknown as UserLearningState)
+      : createEmptyState(userId, 'server')
+
+    const now = Date.now()
+    for (const pattern of patterns) {
+      state = applyProductionGrade(state, { errorPattern: pattern, correct: false }, now)
+    }
+
+    await client.upsert({
+      user_id: userId,
+      state: state as unknown as Record<string, unknown>,
+      updated_at: new Date(now).toISOString(),
+    })
+  } catch (err) {
+    // Non-blocking for journal submission
+    console.warn('[applyJournalFeedback] failed to schedule error patterns', err)
   }
 }

@@ -1,0 +1,187 @@
+{
+  "meta": {
+    "eyebrow": "Chunks · Fluidez Oral",
+    "title": "Frameworks para",
+    "titleEmphasis": "hablar sin traducir",
+    "goal": "Aprende y automatiza las 5 estructuras mentales clave para responder con seguridad, fluidez y sin traducir en tu cabeza."
+  },
+  "related": [
+    { "slug": "chunk-sentence-frames", "label": "Plantillas de oraciones" },
+    { "slug": "chunk-discourse-markers", "label": "Marcadores del discurso y conectores" },
+    { "slug": "biz-entrevistas-trabajo", "label": "Inglés para entrevistas" },
+    { "slug": "chunk-daily-standup", "label": "Daily Standup en inglés" }
+  ],
+  "cards": [
+    {
+      "id": "frame-think-because-example",
+      "tag": "Estructura de Opinión",
+      "title": "I think + because + for example",
+      "lede": "El riel mental de 3 pasos: elimina la presión de inventar oraciones complejas desde cero.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "1. I think...", "value": "Declara tu postura de inmediato · I think working from home is great...", "highlights": ["I think"] },
+            { "key": "2. Because...", "value": "Aporta tu justificación central · ...because you save time and feel more comfortable.", "highlights": ["because"] },
+            { "key": "3. For example, ...", "value": "Aterriza un caso real y concreto · ...For example, I don't have to wake up early to commute.", "highlights": ["For example,"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Automatismo clave:",
+        "body": "No pienses la frase entera en español. Empieza en voz alta con \"I think [tu idea]\", enlaza con \"because\" y cierra con \"For example\". Tu mente rellenará cada espacio con mucha más facilidad."
+      }
+    },
+    {
+      "id": "frame-prep-method",
+      "tag": "Profesional y Reuniones",
+      "title": "El Método PREP",
+      "lede": "Point, Reason, Example, Point: la estructura estándar para debates y reuniones de trabajo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Point (Tu punto)", "value": "Tu postura principal concisa · In my view, we should adopt this library.", "highlights": ["In my view"] },
+            { "key": "Reason (La razón)", "value": "El motivo técnico o de negocio · The main reason is that it cuts development time.", "highlights": ["The main reason is that"] },
+            { "key": "Example (El ejemplo)", "value": "Evidencia o caso reciente · For instance, last sprint we spent 3 days on boilerplate.", "highlights": ["For instance,"] },
+            { "key": "Point (Reafirmación)", "value": "Conclusión de cierre · That's why I strongly recommend moving forward with it.", "highlights": ["That's why I strongly recommend"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Evita divagar:",
+        "body": "En reuniones de trabajo es común dar vueltas sin llegar al punto. El método PREP te obliga a ser claro y directo en exactamente 4 oraciones."
+      }
+    },
+    {
+      "id": "frame-past-present-future",
+      "tag": "Historias y Experiencia",
+      "title": "Pasado · Presente · Futuro",
+      "lede": "La fórmula ideal para preguntas abiertas como 'Tell me about yourself' o proyectos personales.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Past (De dónde vienes)", "value": "A few years ago, I started working as a frontend developer.", "highlights": ["A few years ago, I started"] },
+            { "key": "Present (Qué haces hoy)", "value": "Nowadays, I am focusing on building full-stack products with Next.js.", "highlights": ["Nowadays, I am focusing on"] },
+            { "key": "Future (Hacia dónde vas)", "value": "Looking ahead, my goal is to lead international engineering teams.", "highlights": ["Looking ahead, my goal is to"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Línea narrativa simple:",
+        "body": "Organizar tu respuesta cronológicamente le permite a tu oyente seguirte sin esfuerzo y te asegura que nunca te quedarás sin saber qué decir a continuación."
+      }
+    },
+    {
+      "id": "frame-feel-felt-found",
+      "tag": "Empatía y Feedback",
+      "title": "Feel · Felt · Found",
+      "lede": "Para validar a la otra persona, discrepar con cortesía o proponer alternativas sin sonar agresivo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Feel (Empatía)", "value": "Valida la inquietud del otro · I understand completely how you feel about the deadline.", "highlights": ["I understand completely how you feel"] },
+            { "key": "Felt (Conexión)", "value": "Muestra que tú pasaste por ahí · I felt the same way when we started the previous refactor.", "highlights": ["I felt the same way when"] },
+            { "key": "Found (Descubrimiento)", "value": "Aporta la solución · But what we found is that automated tests saved us hours.", "highlights": ["But what we found is that"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Soft Skill indispensable:",
+        "body": "Esta estructura evita que la otra persona se ponga a la defensiva cuando quieres proponer una solución diferente a la suya."
+      }
+    },
+    {
+      "id": "frame-time-gaining-chunks",
+      "tag": "Ganar Tiempo",
+      "title": "Frases comodín para pensar",
+      "lede": "Chunks naturales para ganar 2 a 3 segundos de reflexión sin decir 'ehhh...' ni congelarte.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Wait, let me think...", "value": "Ganas tiempo naturalmente mientras tu cerebro ordena la idea.", "highlights": ["Wait, let me think..."] },
+            { "key": "That's an interesting question...", "value": "Halagas al interlocutor y compras 3 segundos de silencio productivo.", "highlights": ["That's an interesting question..."] },
+            { "key": "To be completely honest...", "value": "Conector conversacional para introducir una opinión sincera.", "highlights": ["To be completely honest..."] },
+            { "key": "In my experience, ...", "value": "Abre paso a tu ejemplo de la vida real con naturalidad.", "highlights": ["In my experience,"] },
+            { "key": "What I mean by that is...", "value": "Para reformular o aclarar si sientes que tu frase no quedó del todo clara.", "highlights": ["What I mean by that is"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Cero pena:",
+        "body": "Los hablantes nativos usan estas frases todo el tiempo para pensar en tiempo real. No te disculpes por tu inglés; recurre a un chunk comodín."
+      }
+    },
+    {
+      "id": "frame-pass-the-mic",
+      "tag": "Cierre y Conversación",
+      "title": "Cerrar tu idea y pasar el turno",
+      "lede": "Fórmulas naturales para terminar de hablar sin silencios incómodos y mantener la conversación viva.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "That's pretty much my take on it.", "value": "Cierra tu punto con soltura · ...So that's pretty much my take on working from home.", "highlights": ["pretty much my take on"] },
+            { "key": "What are your thoughts on that?", "value": "Pasa la palabra con educación · ...What are your thoughts on that?", "highlights": ["What are your thoughts"] },
+            { "key": "Have you experienced something similar?", "value": "Invita a la otra persona a compartir su propia experiencia.", "highlights": ["Have you experienced"] },
+            { "key": "How do you usually handle that?", "value": "Ideal para conversaciones de trabajo o tecnología.", "highlights": ["How do you usually handle"] },
+            { "key": "Does that make sense?", "value": "Verifica comprensión de forma casual y abre el turno al otro.", "highlights": ["Does that make sense?"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "La regla del tenis:",
+        "body": "Una conversación fluida es como un partido de tenis. En cuanto termines tu ejemplo de \"For example...\", no te quedes en silencio: pasa la pelota preguntando \"What about you?\" o \"Does that make sense?\"."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Te hacen una pregunta de opinión casual y quieres responder sin traducir en tu cabeza. ¿Cuál es el orden del framework más directo?",
+      "options": [
+        "Because -> For example -> I think",
+        "I think -> Because -> For example",
+        "For example -> I think -> Because",
+        "In my opinion -> However -> Therefore"
+      ],
+      "answer": 1,
+      "explain": "El orden 'I think + because + for example' arranca con tu opinión directa, continúa con la razón y aterriza con un ejemplo de la vida real."
+    },
+    {
+      "q": "En una reunión de trabajo o entrevista te piden argumentar una propuesta. ¿Qué método te ayuda a estructurar tu respuesta en 4 pasos concisos?",
+      "options": [
+        "El método STAR",
+        "El método PREP (Point, Reason, Example, Point)",
+        "El método Feel-Felt-Found",
+        "El método Past-Present-Future"
+      ],
+      "answer": 1,
+      "explain": "El método PREP es ideal para comunicación profesional clara y al grano: Punto inicial, Razón, Ejemplo real y Reafirmación."
+    },
+    {
+      "q": "Si necesitas 2 o 3 segundos para organizar tu idea en inglés sin quedarte en blanco ni decir 'ehhh...', ¿qué frase suena más natural?",
+      "options": [
+        "Wait, let me think...",
+        "Sorry, my English is bad...",
+        "I am translating in my mind...",
+        "Please wait for my brain..."
+      ],
+      "answer": 0,
+      "explain": "'Wait, let me think...' es un conversational chunk nativo que te compra segundos valiosos con total naturalidad."
+    },
+    {
+      "q": "Para responder a la pregunta clásica 'Tell me about yourself', ¿qué estructura temporal te da orden instantáneo?",
+      "options": [
+        "Future -> Past -> Present",
+        "Present -> Past -> Present",
+        "Past -> Present -> Future",
+        "Solo hablar del futuro"
+      ],
+      "answer": 2,
+      "explain": "Past (de dónde vienes) -> Present (qué haces y te apasiona hoy) -> Future (hacia dónde te diriges) construye una narrativa limpia y profesional."
+    }
+  ]
+}

@@ -42,7 +42,7 @@ interface Props {
 
 export function CsShadowPhraseExercise({ exercise, onResult }: Props) {
   const { user } = useAuth()
-  const { status, result: speechResult, errorCode, isSupported, start, stop, reset } =
+  const { status, result: speechResult, userAudioUrl, errorCode, isSupported, start, stop, reset } =
     useSpeechRecognition()
   const [scoring, setScoring] = useState<ScoringResult | null>(null)
   const [isScoring, setIsScoring] = useState(false)
@@ -183,6 +183,7 @@ export function CsShadowPhraseExercise({ exercise, onResult }: Props) {
             feedback={getFeedbackMessage(scoring.accuracy)}
             xpEarned={calculateXP(scoring.accuracy)}
             transcript={scoring.transcript}
+            userAudioUrl={userAudioUrl}
           />
           <PracticeActionBar>
             <Button variant="secondary" size="lg" fullWidth onClick={handleRetry}>Intentar de nuevo</Button>

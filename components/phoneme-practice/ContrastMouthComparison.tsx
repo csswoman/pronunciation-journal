@@ -34,35 +34,37 @@ export function ContrastMouthComparison({ phonemeA, phonemeB }: Props) {
   );
 
   return (
-    <div className="rounded-md border border-border-subtle bg-surface-raised p-3.5 my-2">
-      <div className="flex items-center justify-between gap-3">
+    <div className="rounded-2xl border border-border-default bg-surface-raised transition-colors shadow-xs my-2 overflow-hidden">
+      <div className="p-1">
         <button
           type="button"
           onClick={() => setOpen((prev) => !prev)}
-          className="flex flex-1 items-center justify-between gap-2 text-left font-label text-body-sm font-semibold text-primary hover:underline"
+          className="flex w-full items-center justify-between gap-3 text-left font-label text-body-sm font-semibold rounded-xl px-3 py-2.5 transition-colors hover:bg-surface-sunken focus-visible:outline-2 focus-visible:outline-focus-ring"
           aria-expanded={open}
         >
           <span className="flex items-center gap-2 flex-wrap">
-            <Sparkles size={16} className="text-primary shrink-0" aria-hidden />
-            <span>¿Cómo cambia la boca entre</span>
-            <span className="font-ipa text-body-md font-bold text-fg whitespace-nowrap">
+            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary-soft text-primary">
+              <Sparkles size={15} aria-hidden />
+            </span>
+            <span className="text-fg">¿Cómo cambia la boca entre</span>
+            <span className="font-ipa text-body-md font-bold text-primary whitespace-nowrap">
               {phonemeA}
             </span>
-            <span>y</span>
-            <span className="font-ipa text-body-md font-bold text-fg whitespace-nowrap">
+            <span className="text-fg">y</span>
+            <span className="font-ipa text-body-md font-bold text-primary whitespace-nowrap">
               {phonemeB}
             </span>
-            <span>?</span>
+            <span className="text-fg">?</span>
           </span>
-          <span className="inline-flex items-center gap-1 text-fg-muted font-caption shrink-0">
-            {open ? "Ocultar" : "Ver comparación"}
-            {open ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          <span className="inline-flex items-center gap-1.5 text-fg-muted font-caption text-xs font-medium rounded-full bg-surface-sunken px-2.5 py-1 shrink-0 border border-border-subtle">
+            {open ? "Ocultar" : "Comparar"}
+            {open ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
           </span>
         </button>
       </div>
 
       {open && (
-        <div className="pt-3 mt-2 border-t border-border-subtle animate-in fade-in duration-200">
+        <div className="p-4 pt-3 border-t border-border-subtle animate-in fade-in duration-200">
           <div className="flex items-center justify-between gap-3 mb-3 flex-wrap">
             <p className="font-caption text-fg-muted">
               Ambas bocas se animan a la vez para que compares la misma fase del sonido.

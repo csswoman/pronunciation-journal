@@ -51,13 +51,14 @@ export function PronunciationPathActiveUnit({
           <p className="max-w-prose text-pretty font-body-sm text-fg-muted">
             <Link
               href={recommendedHref!}
-              className="font-label text-primary underline-offset-2 hover:underline"
+              className="inline-flex items-center gap-1.5 font-label text-primary underline-offset-2 hover:underline"
             >
-              Volver a {recommendedTitle}
+              <span aria-hidden>←</span>
+              <span>Volver a {recommendedTitle}</span>
             </Link>
           </p>
         ) : (
-          <p className="font-mono text-caption text-fg-subtle">Unidad seleccionada</p>
+          <p className="font-kicker uppercase tracking-wider text-fg-subtle">Unidad seleccionada</p>
         )}
         <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1.5">
           <h2 className="min-w-0 text-balance font-h4 text-fg">

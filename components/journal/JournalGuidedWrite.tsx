@@ -175,7 +175,7 @@ export function JournalGuidedWrite({
 
         <h1
           id="guided-prompt-heading"
-          className="font-serif font-h3 font-semibold leading-snug text-fg text-balance"
+          className="font-h3 font-semibold leading-snug text-fg text-balance"
         >
           {promptEn}
         </h1>
@@ -185,7 +185,7 @@ export function JournalGuidedWrite({
       </div>
 
       {accumulated.length > 0 && (
-        <div className="flex flex-col gap-1 rounded-[var(--radius-md)] bg-surface-sunken p-3 font-serif font-body-sm">
+        <div className="flex flex-col gap-1 rounded-[var(--radius-md)] bg-surface-sunken p-3 font-sans font-body-sm">
           {accumulated.map((sentence, idx) => (
             <p key={idx} className="italic text-fg-muted">
               {sentence}

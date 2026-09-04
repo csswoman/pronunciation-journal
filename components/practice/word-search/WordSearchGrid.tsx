@@ -38,6 +38,20 @@ function sameCoordinate(a: CellCoordinate, b: CellCoordinate): boolean {
   return a.row === b.row && a.col === b.col
 }
 
+function triggerHaptic(pattern: number | number[] = 10) {
+  if (
+    typeof window !== 'undefined' &&
+    'navigator' in window &&
+    typeof navigator.vibrate === 'function'
+  ) {
+    try {
+      navigator.vibrate(pattern)
+    } catch {
+      // Ignore when haptics are unsupported or disallowed
+    }
+  }
+}
+
 export default function WordSearchGrid({
   grid,
   placements,
@@ -120,7 +134,11 @@ export default function WordSearchGrid({
   const submitPath = useCallback(
     (path: CellCoordinate[]) => {
       const result = onSelectPath(path)
-      if (result === 'invalid' || result === 'already-found') {
+      if (result === 'found') {
+        triggerHaptic([12, 35, 20])
+        clearPathFeedback()
+      } else if (result === 'invalid' || result === 'already-found') {
+        triggerHaptic(result === 'invalid' ? 25 : [15, 30])
         showPathFeedback(path, result)
       } else {
         clearPathFeedback()
@@ -134,6 +152,7 @@ export default function WordSearchGrid({
     (coordinate: CellCoordinate) => {
       clearPathFeedback()
       if (!tapStart) {
+        triggerHaptic(8)
         setTapStart(coordinate)
         const letter = grid[coordinate.row]?.[coordinate.col] ?? ''
         setInteractionMessage(
@@ -185,6 +204,7 @@ export default function WordSearchGrid({
     event.currentTarget.focus()
     event.currentTarget.setPointerCapture(event.pointerId)
     pointerHandledClickRef.current = true
+    triggerHaptic(8)
     const start = { row, col }
     setFocusedCell(start)
     setPointerStart(start)
@@ -277,7 +297,7 @@ export default function WordSearchGrid({
         aria-describedby="word-search-board-help"
         aria-rowcount={size}
         aria-colcount={size}
-        className="grid w-full select-none gap-1 self-center rounded-lg bg-surface-sunken p-2"
+        className="grid w-full select-none gap-1 self-center rounded-xl border border-border-subtle bg-surface-sunken p-2 shadow-xs sm:gap-1.5 sm:p-2.5"
         style={{
           gridTemplateColumns: `repeat(${size}, minmax(0, 1fr))`,
           touchAction: 'none',
@@ -294,6 +314,7 @@ export default function WordSearchGrid({
               const key = coordinateKey(coordinate)
               const foundPlacementIndex = foundCellMap.get(key)
               const isFound = foundPlacementIndex !== undefined
+              const isTapAnchor = tapStart !== null && sameCoordinate(tapStart, coordinate)
               const isSelected = selectedCellSet.has(key)
               const isActive = activeWordCellSet.has(key)
               const isFeedback = feedbackCellSet.has(key)
@@ -307,6 +328,9 @@ export default function WordSearchGrid({
               } else if (isFeedback && feedbackResult === 'already-found') {
                 state = 'already-found'
                 cellStyle = 'bg-warning-soft text-warning ring-2 ring-warning/50'
+              } else if (isTapAnchor) {
+                state = 'selected'
+                cellStyle = 'bg-primary text-on-primary ring-2 ring-primary shadow-xs font-bold'
               } else if (isSelected) {
                 state = 'selected'
                 cellStyle = 'bg-primary-soft text-primary ring-2 ring-primary/60 font-bold'
@@ -329,7 +353,7 @@ export default function WordSearchGrid({
                   data-state={state}
                   tabIndex={sameCoordinate(focusedCell, coordinate) ? 0 : -1}
                   aria-label={`Fila ${rowIndex + 1}, columna ${colIndex + 1}, letra ${letter}`}
-                  aria-selected={isSelected || undefined}
+                  aria-selected={isSelected || isTapAnchor || undefined}
                   onFocus={() => setFocusedCell(coordinate)}
                   onPointerDown={(event) => handlePointerDown(rowIndex, colIndex, event)}
                   onClick={() => {
@@ -340,7 +364,7 @@ export default function WordSearchGrid({
                     handleTapCoordinate(coordinate)
                   }}
                   onKeyDown={(event) => handleCellKeyDown(coordinate, event)}
-                  className={`focus-ring flex aspect-square min-w-0 select-none items-center justify-center rounded-sm font-mono font-bold transition-[background-color,color,box-shadow,transform] duration-150 ease-out-quart active:scale-[0.96] motion-reduce:transform-none ${cellTextClass} ${cellStyle}`}
+                  className={`focus-ring flex aspect-square min-w-0 select-none items-center justify-center rounded-sm font-mono font-bold transition-[background-color,color,box-shadow,transform] duration-150 ease-out-quart motion-reduce:transform-none ${!pointerStart ? 'active:scale-[0.96]' : ''} ${cellTextClass} ${cellStyle}`}
                 >
                   {letter}
                 </button>

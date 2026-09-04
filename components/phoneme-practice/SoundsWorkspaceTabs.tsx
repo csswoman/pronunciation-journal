@@ -9,17 +9,18 @@ interface Props {
 }
 
 const tabs: Array<{ id: SoundsWorkspaceTab; label: string }> = [
-  { id: "sounds", label: "Ejercicios de sonido" },
+  { id: "sounds", label: "Sonidos" },
   { id: "minimal-pairs", label: "Pares mínimos" },
   { id: "intonation", label: "Entonación" },
-  { id: "path", label: "Tu progreso" },
+  { id: "path", label: "Ruta" },
 ];
 
 export function SoundsWorkspaceTabs({ activeTab, onTabChange, onOpenIPA }: Props) {
   return (
     <div className="sound-lab__workspace-row">
-      <nav
+      <div
         className="sound-lab__workspace-tabs"
+        role="tablist"
         aria-label="Contenido de pronunciación"
       >
         {tabs.map((tab) => {
@@ -28,23 +29,26 @@ export function SoundsWorkspaceTabs({ activeTab, onTabChange, onOpenIPA }: Props
             <button
               key={tab.id}
               type="button"
+              role="tab"
               className="sound-lab__workspace-tab"
               data-active={isActive ? "true" : undefined}
-              aria-pressed={isActive}
+              aria-selected={isActive}
+              tabIndex={isActive ? 0 : -1}
               onClick={() => onTabChange(tab.id)}
             >
               {tab.label}
             </button>
           );
         })}
-      </nav>
+      </div>
       <button
         type="button"
-        className="sound-lab__workspace-tab sound-lab__workspace-tab--ipa"
+        className="sound-lab__ipa-trigger"
         onClick={onOpenIPA}
-        aria-label="Ver tabla IPA"
+        aria-label="Abrir tabla IPA de referencia"
+        title="Tabla IPA"
       >
-        <LayoutGrid size={16} aria-hidden />
+        <LayoutGrid size={15} aria-hidden />
         <span className="sound-lab__ipa-trigger-label">Tabla IPA</span>
       </button>
     </div>

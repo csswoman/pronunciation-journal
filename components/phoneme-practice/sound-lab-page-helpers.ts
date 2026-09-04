@@ -1,7 +1,8 @@
-import type { SoundLabChip } from "./SoundLabFilterRow";
 import type { Lesson } from "@/lib/types";
 import { ipaFromLessonTitle } from "@/lib/sound-lab/display";
 import { getCanonicalSound } from "@/lib/sounds/inventory";
+import { MASTERY_DISPLAY_THRESHOLD } from "@/lib/phoneme-practice/mastery-pct";
+import { getSpanishContrast, type SpanishContrastLevel } from "@/lib/sounds/spanish-contrast";
 
 export const ALL_GROUP_SECTIONS = [
   { id: "vowel", title: "Vocales" },
@@ -13,9 +14,46 @@ export function getLessonSectionId(lesson: Lesson): string {
   return getCanonicalSound(ipaFromLessonTitle(lesson.title) ?? "")?.type ?? "consonant";
 }
 
-export function matchesDifficultyChip(lesson: Lesson, chip: SoundLabChip): boolean {
-  if (chip === "all") return true;
-  return lesson.difficulty === chip;
+export type SoundLabProgressFilter = "all" | "review" | "unpracticed" | "mastered";
+export type SoundLabContrastFilter = "all" | SpanishContrastLevel;
+
+export function matchesProgressFilter(
+  lesson: Lesson,
+  filter: SoundLabProgressFilter,
+  soundProgressMap: Map<string, number>,
+): boolean {
+  if (filter === "all") return true;
+  const ipa = ipaFromLessonTitle(lesson.title);
+  const progressPct = ipa ? soundProgressMap.get(ipa) : undefined;
+
+  if (filter === "unpracticed") {
+    return progressPct === undefined || progressPct === 0;
+  }
+  if (filter === "review") {
+    return progressPct !== undefined && progressPct > 0 && progressPct < 60;
+  }
+  if (filter === "mastered") {
+    return progressPct !== undefined && progressPct >= MASTERY_DISPLAY_THRESHOLD;
+  }
+  return true;
+}
+
+export function matchesContrastFilter(
+  lesson: Lesson,
+  filter: SoundLabContrastFilter,
+): boolean {
+  if (filter === "all") return true;
+  const ipa = ipaFromLessonTitle(lesson.title);
+  if (!ipa) return false;
+  const info = getSpanishContrast(ipa);
+  return info.level === filter;
+}
+
+export function matchesHardFilter(lesson: Lesson): boolean {
+  const ipa = ipaFromLessonTitle(lesson.title);
+  if (!ipa) return false;
+  const info = getSpanishContrast(ipa);
+  return info.level === "missing" || info.level === "confusable" || lesson.difficulty === "hard";
 }
 
 export function resolveGroupId(lesson: Lesson): string {

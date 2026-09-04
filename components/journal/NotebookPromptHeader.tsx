@@ -15,7 +15,7 @@ export function NotebookPromptHeader({
       <div className="flex items-start justify-between gap-3">
         <h2
           id="today-page-heading"
-          className="font-serif font-h3 font-normal leading-snug text-fg text-balance"
+          className="font-h3 font-semibold leading-snug text-fg text-balance"
         >
           {currentPrompt.en}
         </h2>
@@ -24,10 +24,10 @@ export function NotebookPromptHeader({
           onClick={onShuffle}
           aria-label="Cambiar tema"
           title="Cambiar tema"
-          className="group relative inline-flex size-7 shrink-0 items-center justify-center rounded-full border border-border-subtle bg-surface-sunken text-fg-muted transition-all duration-150 hover:border-border-strong hover:bg-surface-raised hover:text-fg active:scale-95 focus-ring mt-1"
+          className="group relative inline-flex min-h-[44px] min-w-[44px] size-9 shrink-0 items-center justify-center rounded-full border border-border-subtle bg-surface-sunken text-fg-muted transition-all duration-150 hover:border-border-strong hover:bg-surface-raised hover:text-fg active:scale-95 focus-ring mt-0.5"
         >
           <RefreshCw
-            size={13}
+            size={15}
             className="transition-transform duration-300 group-hover:rotate-180"
             aria-hidden
           />

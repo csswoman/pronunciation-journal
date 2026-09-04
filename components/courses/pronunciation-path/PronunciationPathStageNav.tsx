@@ -60,27 +60,27 @@ export function PronunciationPathStageNav({
                 type="button"
                 aria-pressed={isActive}
                 aria-label={stageLabel}
-                className="group flex shrink-0 flex-col items-center gap-1.5 rounded-sm px-1 pt-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                className="group flex min-h-[44px] min-w-[44px] shrink-0 cursor-pointer flex-col items-center gap-1.5 rounded-md px-1.5 pt-1.5 pb-1 transition-all active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                 onClick={() => onStageChange(stage.id)}
               >
                 <span
                   className={cn(
-                    'flex h-8 w-8 shrink-0 items-center justify-center rounded-full font-label text-caption transition-colors',
+                    'flex h-8 w-8 shrink-0 items-center justify-center rounded-full font-label text-caption transition-all duration-150',
                     isComplete
                       ? 'bg-success-soft text-success ring-1 ring-inset ring-success-border'
                       : isActive
-                        ? 'bg-primary-soft text-primary ring-2 ring-inset ring-primary'
+                        ? 'bg-primary-soft text-primary ring-2 ring-inset ring-primary shadow-xs'
                         : isRecommended
                           ? 'bg-primary-soft text-primary ring-1 ring-inset ring-badge-primary-border'
-                          : 'bg-surface-raised text-fg-subtle ring-1 ring-inset ring-border-subtle group-hover:text-fg'
+                          : 'bg-surface-raised text-fg-subtle ring-1 ring-inset ring-border-subtle group-hover:text-fg group-hover:ring-border-default'
                   )}
                 >
                   {isComplete ? <Check size={16} aria-hidden /> : index + 1}
                 </span>
                 <span
                   className={cn(
-                    'max-w-20 text-pretty text-center font-caption leading-snug',
-                    isActive ? 'text-fg' : 'text-fg-muted group-hover:text-fg'
+                    'max-w-20 text-pretty text-center font-caption leading-snug transition-colors',
+                    isActive ? 'font-medium text-fg' : 'text-fg-muted group-hover:text-fg'
                   )}
                 >
                   {stage.titleShortEs}
@@ -90,7 +90,7 @@ export function PronunciationPathStageNav({
                 <div
                   aria-hidden
                   className={cn(
-                    'mt-4 h-px min-w-4 flex-1 sm:min-w-8',
+                    'mt-5 h-px min-w-4 flex-1 sm:min-w-8 transition-colors',
                     isComplete ? 'bg-success-border' : 'bg-border-default'
                   )}
                 />

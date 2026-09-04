@@ -27,8 +27,8 @@ describe("SkillProfileCard", () => {
     );
 
     expect(screen.getByText("B1")).toBeInTheDocument();
-    expect(screen.getByText("nivel estimado · perfil A2")).toBeInTheDocument();
-    expect(screen.queryByText("nivel actual")).not.toBeInTheDocument();
+    expect(screen.getByText("Estimado por coach (B1), perfil (A2)")).toBeInTheDocument();
+    expect(screen.queryByText("Nivel actual en tu perfil")).not.toBeInTheDocument();
   });
 
   it("falls back to the profile level when there is no coach estimate", () => {
@@ -50,6 +50,6 @@ describe("SkillProfileCard", () => {
     );
 
     expect(screen.getByText("A2")).toBeInTheDocument();
-    expect(screen.getByText("nivel actual")).toBeInTheDocument();
+    expect(screen.getByText("Nivel actual en tu perfil")).toBeInTheDocument();
   });
 });

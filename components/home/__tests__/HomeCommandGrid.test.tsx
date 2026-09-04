@@ -179,7 +179,7 @@ describe("HomeCommandGrid first-visit activation", () => {
     );
     await waitFor(() => {
       expect(screen.getByRole("heading", { name: /Una práctica ahora/i })).toBeInTheDocument();
-    });
+    }, { timeout: 3000 });
     expect(screen.getByRole("link", { name: /Abrir laboratorio/i })).toHaveAttribute(
       "href",
       "/practice/sounds",

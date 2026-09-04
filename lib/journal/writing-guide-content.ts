@@ -54,6 +54,17 @@ export const USEFUL_PHRASES_GUIDE: UsefulPhraseGroup[] = [
     phrases: ['In my opinion...', 'I personally believe that...', 'From my perspective...', 'It seems to me that...'],
   },
   {
+    purpose: 'Frameworks de Fluidez (Pensar en Inglés)',
+    phrases: [
+      'I think... because... For example, ...',
+      'The main reason is that...',
+      'For instance, just yesterday...',
+      'Wait, let me think...',
+      'In my experience, ...',
+      'That is why I believe that...',
+    ],
+  },
+  {
     purpose: 'Contrastar ideas (Sin embargo / Aunque)',
     phrases: ['However, ...', 'Even though...', 'On the other hand, ...', 'Although it was difficult, ...'],
   },

@@ -5,19 +5,19 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Play } from "@/components/icons";
 import PageLayout from "@/components/layout/PageLayout";
 import PageHeader from "@/components/layout/PageHeader";
+import Button from "@/components/ui/Button";
 import dynamic from "next/dynamic";
 import { SoundLabFilterRow } from "./SoundLabFilterRow";
 import { SoundLabLessonGrid } from "./SoundLabLessonGrid";
 import type { LessonSection } from "./SoundLabLessonGrid";
 import { useSoundLabData } from "@/hooks/useSoundLabData";
-import type { SoundLabChip } from "./SoundLabFilterRow";
 import type { Lesson } from "@/lib/types";
 import { ipaFromLessonTitle } from "@/lib/sound-lab/display";
 import { useDialogFocus } from "@/hooks/useDialogFocus";
 import { useSoundLabWorkspace } from "@/hooks/useSoundLabWorkspace";
-import { SoundsWorkspaceTabs } from "./SoundsWorkspaceTabs";
 import { SoundLabFocusBanner } from "./SoundLabFocusBanner";
 import { SoundLabDetailDialog } from "./SoundLabDetailDialog";
+import { SoundsWorkspaceTabs } from "./SoundsWorkspaceTabs";
 
 const MinimalPairsWorkspace = dynamic(() => import("./MinimalPairsWorkspace"), {
   loading: () => <div className="p-8 text-center text-fg-muted font-caption">Cargando pares mínimos…</div>,
@@ -39,9 +39,11 @@ import {
   continueCtaLabel,
   headerStatsLine,
   lessonMatchesSearch,
-  matchesDifficultyChip,
   matchesFocus,
+  matchesHardFilter,
+  matchesProgressFilter,
   resolveGroupId,
+  type SoundLabProgressFilter,
 } from "./sound-lab-page-helpers";
 import {
   CANONICAL_SOUND_COUNT,
@@ -74,7 +76,8 @@ export default function SoundLabPage({ userId }: SoundLabPageProps) {
     return raw ? raw.split(",").map((s) => s.trim()).filter(Boolean) : [];
   }, [searchParams]);
 
-  const [activeChip, setActiveChip] = useState<SoundLabChip>("all");
+  const [progressFilter, setProgressFilter] = useState<SoundLabProgressFilter>("all");
+  const [onlyHard, setOnlyHard] = useState(false);
   const [search, setSearch] = useState("");
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
   const closeDetail = useCallback(() => setSelectedLesson(null), []);
@@ -103,24 +106,14 @@ export default function SoundLabPage({ userId }: SoundLabPageProps) {
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
     return allLessons.filter((lesson) => {
-      if (!matchesDifficultyChip(lesson, activeChip)) return false;
+      if (!matchesProgressFilter(lesson, progressFilter, soundProgressMap)) return false;
+      if (onlyHard && !matchesHardFilter(lesson)) return false;
       return lessonMatchesSearch(lesson, q);
     });
-  }, [allLessons, activeChip, search]);
+  }, [allLessons, progressFilter, onlyHard, soundProgressMap, search]);
 
   const sections = useMemo<LessonSection[]>(() => {
     if (filtered.length === 0) return [];
-
-    if (activeChip !== "all") {
-      return [
-        {
-          id: activeChip,
-          title: "",
-          count: filtered.length,
-          lessons: filtered,
-        },
-      ];
-    }
 
     const buckets = new Map<string, Lesson[]>(
       ALL_GROUP_SECTIONS.map((g) => [g.id, []]),
@@ -139,7 +132,7 @@ export default function SoundLabPage({ userId }: SoundLabPageProps) {
       count: buckets.get(g.id)?.length ?? 0,
       lessons: buckets.get(g.id) ?? [],
     })).filter((s) => s.lessons.length > 0);
-  }, [filtered, activeChip]);
+  }, [filtered]);
 
   function handleResume() {
     if (!heroLesson.lesson?.href) return;
@@ -147,7 +140,8 @@ export default function SoundLabPage({ userId }: SoundLabPageProps) {
   }
 
   function handleClearFilters() {
-    setActiveChip("all");
+    setProgressFilter("all");
+    setOnlyHard(false);
     setSearch("");
   }
 
@@ -158,38 +152,67 @@ export default function SoundLabPage({ userId }: SoundLabPageProps) {
     ? soundProgressMap.get(selectedPhoneme.symbol)
     : undefined;
 
+  const headerKicker = isPathView
+    ? "Práctica · Ruta"
+    : isMinimalPairsView
+      ? "Práctica · Pares mínimos"
+      : isIntonationView
+        ? "Práctica · Entonación"
+        : "Práctica";
+
+  const headerTitle = isPathView
+    ? "Ruta de pronunciación"
+    : isMinimalPairsView
+      ? "Entrenamiento de pares mínimos"
+      : isIntonationView
+        ? "Entrenador de entonación"
+        : "Laboratorio de sonidos";
+
+  const headerSubtitle = isPathView
+    ? "De sonidos a frases reales. Un paso claro a la vez."
+    : isMinimalPairsView
+      ? "Entrena tu oído para distinguir diferencias sutiles entre sonidos similares en inglés."
+      : isIntonationView
+        ? "Practica el ritmo, la melodía y el tono natural del inglés hablado."
+        : headerStatsLine(inProgressCount, CANONICAL_SOUND_COUNT);
+
   return (
     <PageLayout archetype="catalog" className="sound-lab min-h-screen">
       <header className="sound-lab__page-header">
         <PageHeader
-          kicker="Práctica"
-          title="Laboratorio de sonidos"
-          subtitle={headerStatsLine(inProgressCount, CANONICAL_SOUND_COUNT)}
-          primaryCta={
-            isSoundsView && heroLesson.lesson
-              ? {
-                  label: continueCtaLabel(heroLesson.lesson),
-                  icon: <Play size={14} className="fill-current" aria-hidden />,
-                  onClick: handleResume,
-                }
-              : undefined
+          kicker={headerKicker}
+          title={headerTitle}
+          subtitle={headerSubtitle}
+          actions={
+            <SoundsWorkspaceTabs
+              activeTab={activeTab}
+              onTabChange={selectTab}
+              onOpenIPA={openIPA}
+            />
           }
-        />
-
-        <SoundsWorkspaceTabs
-          activeTab={activeTab}
-          onTabChange={selectTab}
-          onOpenIPA={openIPA}
         />
 
         {isSoundsView ? (
           <SoundLabFilterRow
-            activeChip={activeChip}
+            progressFilter={progressFilter}
+            onlyHard={onlyHard}
             search={search}
-            resultCount={filtered.length}
-            onChipChange={setActiveChip}
+            onProgressFilterChange={setProgressFilter}
+            onOnlyHardChange={setOnlyHard}
             onSearchChange={setSearch}
-            onClearFilters={handleClearFilters}
+            resumeAction={
+              heroLesson.lesson ? (
+                <Button
+                  variant="primary"
+                  size="md"
+                  onClick={handleResume}
+                  className="rounded-xl px-4 py-2 font-semibold inline-flex items-center gap-2 cursor-pointer shadow-xs whitespace-nowrap active:scale-95 transition-all"
+                >
+                  <Play size={13} className="stroke-[2.5]" aria-hidden />
+                  <span>{continueCtaLabel(heroLesson.lesson)}</span>
+                </Button>
+              ) : undefined
+            }
           />
         ) : null}
 
@@ -227,8 +250,14 @@ export default function SoundLabPage({ userId }: SoundLabPageProps) {
           progressPct={selectedProgress ?? 0}
           isWeak={selectedProgress !== undefined && selectedProgress < 60}
           isContinuing={selectedLesson.id === heroLesson.lesson?.id}
-          practiceHref={selectedLesson.href ?? "/practice/sounds"}
-          onPractice={() => router.push(selectedLesson.href ?? "/practice/sounds")}
+          practiceHref={selectedLesson.href ?? `/practice/sounds/sound/${selectedLesson.id.replace("sound-", "")}`}
+          onPractice={() => {
+            const targetHref =
+              selectedLesson.href ??
+              `/practice/sounds/sound/${selectedLesson.id.replace("sound-", "")}`;
+            closeDetail();
+            router.push(targetHref);
+          }}
           onClose={closeDetail}
         />
       ) : null}

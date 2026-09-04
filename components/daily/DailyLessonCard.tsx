@@ -62,7 +62,12 @@ export default function DailyLessonCard({ lesson }: DailyLessonCardProps) {
           </Button>
         </Link>
 
-        <TrackingSaveButton kind="lesson" reference={lesson.slug} title={lesson.title} />
+        <TrackingSaveButton
+          kind="lesson"
+          reference={lesson.slug}
+          title={lesson.title}
+          payload={{ href: `/mini-lessons/${lesson.slug}` }}
+        />
 
         <Button
           variant="ghost"

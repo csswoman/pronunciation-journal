@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import Link from 'next/link'
 import type {
   CellCoordinate,
   WordSearchItem,
@@ -14,13 +13,13 @@ import { useHideMobileNavDuringSession } from '@/hooks/useHideMobileNavDuringSes
 import PageHeader from '@/components/layout/PageHeader'
 import { PillButton } from '@/components/ui/PillButton'
 import { getWordColorTheme } from '@/lib/exercises/word-search/word-colors'
-import WordSearchSetup from './WordSearchSetup'
+import WordSearchSetupView from './WordSearchSetupView'
 import WordSearchGrid from './WordSearchGrid'
 import WordClueList from './WordClueList'
 import WordFoundBanner from './WordFoundBanner'
 import WordSearchCompletion from './WordSearchCompletion'
+import WordSearchProgressBar from './WordSearchProgressBar'
 import {
-  ArrowLeft,
   RotateCcw,
   Timer as TimerIcon,
   X,
@@ -133,26 +132,7 @@ export default function WordSearchSession() {
   }
 
   if (!puzzle) {
-    return (
-      <div
-        id="word-search-setup"
-        className="mx-auto flex w-full max-w-[var(--layout-session-max)] flex-col gap-layout-section-gap"
-      >
-        <Link
-          href="/practice"
-          className="focus-ring inline-flex min-h-11 w-fit items-center gap-1.5 rounded-sm text-caption text-fg-muted transition-colors hover:text-fg"
-        >
-          <ArrowLeft className="h-4 w-4" aria-hidden />
-          <span>Volver a Práctica</span>
-        </Link>
-        <PageHeader
-          kicker="Práctica de vocabulario"
-          title="Sopa de letras"
-          subtitle="Encuentra seis palabras, descifra pistas y escucha su pronunciación al descubrirlas."
-        />
-        <WordSearchSetup onStartPuzzle={handleStartPuzzle} />
-      </div>
-    )
+    return <WordSearchSetupView onStartPuzzle={handleStartPuzzle} />
   }
 
   const itemsWithFoundState: WordSearchItem[] = puzzle.items.map((item) => ({
@@ -211,41 +191,16 @@ export default function WordSearchSession() {
         }
       />
 
-      <div className="flex flex-col gap-3 rounded-lg border border-border-subtle bg-surface-raised p-4 shadow-xs" aria-label="Progreso de la partida">
-        <div className="flex items-center justify-between gap-3 text-caption text-fg-muted">
-          <span className="font-medium text-fg">{isCompleted ? 'Partida completada' : 'Palabras encontradas'}</span>
-          <span className="font-mono font-semibold tabular-nums text-fg">
-            {foundWordIds.size} / {puzzle.items.length}
-          </span>
-        </div>
-        <div
-          role="progressbar"
-          aria-label="Palabras encontradas"
-          aria-valuemin={0}
-          aria-valuemax={puzzle.items.length}
-          aria-valuenow={foundWordIds.size}
-          className="h-2 overflow-hidden rounded-full bg-surface-sunken"
-        >
-          <div
-            className={`h-full rounded-full transition-[width] duration-300 ease-out-quart motion-reduce:transition-none ${
-              isCompleted ? 'bg-success' : 'bg-primary'
-            }`}
-            style={{ width: `${progressPercent}%` }}
-          />
-        </div>
-      </div>
+      <WordSearchProgressBar
+        foundCount={foundWordIds.size}
+        totalCount={puzzle.items.length}
+        progressPercent={progressPercent}
+        isCompleted={isCompleted}
+      />
 
       <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">
         {statusMessage}
       </p>
-
-      {!isCompleted ? (
-        <WordFoundBanner
-          item={lastFoundItem}
-          colorTheme={lastFoundTheme}
-          onDismiss={() => setLastFoundItem(null)}
-        />
-      ) : null}
 
       {isCompleted ? (
         <WordSearchCompletion
@@ -268,13 +223,23 @@ export default function WordSearchSession() {
             />
           </div>
 
-          <WordClueList
-            key={`clues-${runId}`}
-            items={itemsWithFoundState}
-            mode={puzzle.mode}
-            activeWordId={activeWordId}
-            onInspectWord={setActiveWordId}
-          />
+          <div className="flex min-w-0 flex-col gap-3">
+            {lastFoundItem ? (
+              <WordFoundBanner
+                item={lastFoundItem}
+                colorTheme={lastFoundTheme}
+                onDismiss={() => setLastFoundItem(null)}
+              />
+            ) : null}
+
+            <WordClueList
+              key={`clues-${runId}`}
+              items={itemsWithFoundState}
+              mode={puzzle.mode}
+              activeWordId={activeWordId}
+              onInspectWord={setActiveWordId}
+            />
+          </div>
         </div>
       )}
     </div>

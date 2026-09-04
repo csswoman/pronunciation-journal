@@ -87,7 +87,7 @@ export function WordCard({
         {/* Encabezado: Palabra + Categoría Gramatical + IPA */}
         <div className="flex items-start justify-between gap-3">
           <div className="flex flex-col gap-0.5 min-w-0">
-            <h3 className="text-h4 font-bold text-fg tracking-tight truncate">{word}</h3>
+            <h3 className="text-h4 font-bold text-fg tracking-tight break-words">{word}</h3>
             {ipa ? (
               <span className="font-ipa text-body-sm font-medium text-primary tracking-wide">
                 {formatIpaDisplay(ipa)}
@@ -115,13 +115,28 @@ export function WordCard({
       <div className="flex flex-col gap-3 pt-3 border-t border-border-subtle shrink-0">
         <div className="flex items-center justify-between gap-2">
           <Badge variant={cfg.variant} label={cfg.label} dot={status !== "new"} />
-          <span className="text-tiny font-mono text-fg-subtle">
-            Dif: {difficulty}/5
-          </span>
+          <div
+            className="flex items-center gap-1.5 text-tiny font-mono text-fg-subtle"
+            title={`Dificultad: ${difficulty} de 5`}
+            aria-label={`Dificultad: ${difficulty} de 5`}
+          >
+            <span>Dif {difficulty}/5</span>
+            <span className="inline-flex items-center gap-0.5" aria-hidden>
+              {Array.from({ length: 5 }, (_, i) => (
+                <span
+                  key={i}
+                  className={cn(
+                    "w-1.5 h-1.5 rounded-full transition-colors",
+                    i < difficulty ? "bg-primary/80" : "bg-surface-sunken border border-border-subtle"
+                  )}
+                />
+              ))}
+            </span>
+          </div>
         </div>
 
         <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
             <ListenButton
               iconOnly
               onPlay={() => {
@@ -139,7 +154,7 @@ export function WordCard({
                 onClick={onToggleFavorite}
                 aria-label={isFavorite ? "Eliminar de favoritos" : "Agregar a favoritos"}
                 className={cn(
-                  "inline-flex shrink-0 items-center justify-center w-8 h-8 rounded-full border border-border-subtle bg-transparent text-fg-muted cursor-pointer transition-colors duration-150 ease-out-quart focus-ring hover:bg-surface-sunken",
+                  "relative touch-manipulation before:absolute before:-inset-1.5 before:content-[''] inline-flex shrink-0 items-center justify-center w-8 h-8 rounded-full border border-border-subtle bg-transparent text-fg-muted cursor-pointer transition-colors duration-150 ease-out-quart focus-ring hover:bg-surface-sunken",
                   isFavorite && "text-error border-error-soft bg-error-soft"
                 )}
               >
@@ -154,7 +169,7 @@ export function WordCard({
                 disabled={isInMyWords}
                 aria-label={isInMyWords ? "En mis palabras" : "Agregar a mis palabras"}
                 className={cn(
-                  "inline-flex shrink-0 items-center justify-center w-8 h-8 rounded-full border border-border-subtle bg-transparent text-fg-muted cursor-pointer transition-colors duration-150 ease-out-quart focus-ring hover:bg-surface-sunken disabled:opacity-40 disabled:cursor-not-allowed"
+                  "relative touch-manipulation before:absolute before:-inset-1.5 before:content-[''] inline-flex shrink-0 items-center justify-center w-8 h-8 rounded-full border border-border-subtle bg-transparent text-fg-muted cursor-pointer transition-colors duration-150 ease-out-quart focus-ring hover:bg-surface-sunken disabled:opacity-40 disabled:cursor-not-allowed"
                 )}
               >
                 {isInMyWords ? <Check size={14} /> : <Plus size={14} />}

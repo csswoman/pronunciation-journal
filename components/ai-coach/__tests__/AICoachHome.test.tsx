@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { render, screen } from '@testing-library/react'
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import AICoachHome from '../AICoachHome'
 
 const noop = () => undefined
@@ -28,25 +28,10 @@ describe('AICoachHome', () => {
     ).not.toBeInTheDocument()
   })
 
-  it('la pestana de chat ofrece las misiones conversacionales', () => {
+  it('la pestana de chat muestra el estado inicial limpio para conversar', () => {
     renderHome('chat')
     expect(
-      screen.getByText(/Presentarte y explicar una experiencia profesional relevante/i),
-    ).toBeInTheDocument()
-  })
-
-  it('al elegir una conversacional desde chat se avisa con su id', async () => {
-    const onSelectMission = vi.fn()
-    render(
-      <AICoachHome
-        activeTab="chat"
-        onSendMessage={noop}
-        onSelectMission={onSelectMission}
-        isStreaming={false}
-      />,
-    )
-    const buttons = screen.getAllByRole('button', { name: /empezar/i })
-    buttons[0]?.click()
-    expect(onSelectMission).toHaveBeenCalledWith(expect.stringMatching(/^roleplay\./))
+      screen.queryByText(/Misiones de conversación/i),
+    ).not.toBeInTheDocument()
   })
 })

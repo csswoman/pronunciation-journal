@@ -17,11 +17,12 @@
 //   </FilterCardSection>
 // </MiniLessonSidebarFilters>
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
-import { ChevronDown, ChevronUp } from "@/components/icons";
+import { ChevronDown, ChevronUp, Search, X } from "@/components/icons";
 import { CategoryIcon } from "@/components/mini-lessons/CategoryIcon";
 import { LevelIcon } from "@/components/mini-lessons/LevelIcon";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import {
   LESSON_LEVELS,
   LESSON_CATEGORIES,
@@ -57,24 +58,44 @@ export function MiniLessonSidebarFilters({
   levelCounts,
   categoryCounts,
 }: MiniLessonSidebarFiltersProps) {
-  const [isLevelExpanded, setIsLevelExpanded] = useState(true);
-  const [isCategoryExpanded, setIsCategoryExpanded] = useState(true);
+  const isMobileOrTablet = useMediaQuery("(max-width: 1024px)");
+  const [isLevelExpanded, setIsLevelExpanded] = useState(false);
+  const [isCategoryExpanded, setIsCategoryExpanded] = useState(false);
+  const [hasInitialized, setHasInitialized] = useState(false);
+
+  useEffect(() => {
+    if (!hasInitialized) {
+      setHasInitialized(true);
+      if (!isMobileOrTablet) {
+        setIsLevelExpanded(true);
+        setIsCategoryExpanded(true);
+      }
+    }
+  }, [isMobileOrTablet, hasInitialized]);
 
   return (
     <aside className="mini-lessons__filters flex flex-col gap-4" aria-label="Filtrar lecciones">
       {/* Search Input Box */}
-      <div className="mini-lessons__filter-card bg-surface-raised border border-border-subtle rounded-md p-4 space-y-2 shadow-xs">
-        <span id="lesson-search-label" className="mini-lessons__filter-label">
-          Buscar
-        </span>
+      <div className="relative flex items-center w-full">
+        <Search className="absolute left-3 w-4 h-4 text-fg-subtle pointer-events-none" />
         <input
           type="search"
           value={searchQuery}
-          aria-labelledby="lesson-search-label"
+          aria-label="Buscar lecciones"
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder="Buscar lección..."
-          className="w-full px-3 py-2 text-body-sm rounded-sm bg-surface-sunken border border-border-default text-fg placeholder:text-fg-placeholder focus:border-primary focus:outline-none transition-colors"
+          className="w-full pl-9 pr-8 py-2 min-h-[44px] text-body-sm rounded-md bg-surface-raised border border-border-subtle text-fg placeholder:text-fg-placeholder focus:border-primary focus:outline-none transition-colors shadow-xs"
         />
+        {searchQuery.trim().length > 0 && (
+          <button
+            type="button"
+            onClick={() => onSearchChange("")}
+            className="absolute right-2.5 p-1 text-fg-subtle hover:text-fg rounded-full transition-colors"
+            aria-label="Limpiar búsqueda"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        )}
       </div>
 
       {/* Level Filter Card: Collapsible with quiet icons, active pill, and count */}
@@ -88,7 +109,14 @@ export function MiniLessonSidebarFilters({
           onClick={() => setIsLevelExpanded(!isLevelExpanded)}
           className="flex items-center justify-between w-full text-left font-mono text-kicker text-fg-muted font-semibold hover:text-fg transition-colors"
         >
-          <span id="lesson-level-filter">Nivel</span>
+          <div className="flex items-center gap-2">
+            <span id="lesson-level-filter">Nivel</span>
+            {!isLevelExpanded && selectedLevel !== "all" && (
+              <span className="font-sans text-caption text-primary font-normal">
+                • {MINI_LESSON_LEVEL_LABELS[selectedLevel]}
+              </span>
+            )}
+          </div>
           {isLevelExpanded ? (
             <ChevronUp className="w-4 h-4 text-fg-subtle" />
           ) : (
@@ -174,7 +202,14 @@ export function MiniLessonSidebarFilters({
           onClick={() => setIsCategoryExpanded(!isCategoryExpanded)}
           className="flex items-center justify-between w-full text-left font-mono text-kicker text-fg-muted font-semibold hover:text-fg transition-colors"
         >
-          <span id="lesson-category-filter">Tema</span>
+          <div className="flex items-center gap-2">
+            <span id="lesson-category-filter">Tema</span>
+            {!isCategoryExpanded && selectedCategory !== "all" && (
+              <span className="font-sans text-caption text-primary font-normal">
+                • {MINI_LESSON_CATEGORY_LABELS[selectedCategory]}
+              </span>
+            )}
+          </div>
           {isCategoryExpanded ? (
             <ChevronUp className="w-4 h-4 text-fg-subtle" />
           ) : (
@@ -233,7 +268,7 @@ export function MiniLessonSidebarFilters({
                     {MINI_LESSON_CATEGORY_LABELS[category]}
                   </span>
                   {categoryCounts[category] !== undefined && (
-                    <span className="text-[10px] text-fg-subtle">
+                    <span className="text-caption text-fg-subtle">
                       {categoryCounts[category]}
                     </span>
                   )}

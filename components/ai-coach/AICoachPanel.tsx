@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { ArrowLeft } from "@/components/icons";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { usePathname } from "next/navigation";
 import { useAICoachStore } from "@/lib/stores/aiCoachStore";
@@ -142,6 +143,23 @@ export default function AICoachPanel() {
               : !hasMessages
               ? <AICoachHome activeTab="chat" onSendMessage={sendMessage} onSelectMission={(missionId) => { void changeMode(`mission:${missionId}`); }} isStreaming={isStreaming} prefill={inputPrefill} onPrefillConsumed={() => setInputPrefill(undefined)} />
               : <>
+                  <div className="flex shrink-0 items-center justify-between border-b border-border-subtle bg-surface-raised px-3 py-2">
+                    <button
+                      type="button"
+                      onClick={() => { resetSession(); }}
+                      className="inline-flex items-center gap-1.5 rounded-md px-1.5 py-1 text-caption font-medium text-fg-muted hover:text-fg hover:bg-surface-sunken/60 transition-colors cursor-pointer focus-ring"
+                    >
+                      <ArrowLeft size={14} aria-hidden />
+                      <span>Volver al inicio</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => { resetSession(); }}
+                      className="text-caption font-medium text-primary hover:underline transition-colors cursor-pointer focus-ring"
+                    >
+                      Nueva conversación
+                    </button>
+                  </div>
                   <div className="flex-1 overflow-y-auto" aria-live="polite" aria-label="Chat messages">
                     {error && <ErrorBanner message={error} />}
                     <ChatView messages={messages} isStreaming={isStreaming} onSaveWord={openSaveWordModal} onSuggestionClick={(prompt) => setInputPrefill(prompt)} onToolAnswer={answerToolCall} onNext={() => sendMessage("next")} />
