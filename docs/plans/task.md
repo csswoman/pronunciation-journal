@@ -14,3 +14,5 @@
 | Plan 089 | Cierre del Ecosistema SLA: Bucle Journal -> Error Recurrence, Prescripción Diagnóstica -> Daily Plan y Self-Playback en Oraciones | Completed |
 | Plan 090 | Ecosistema SLA Completo: Explicabilidad en Home, Shadowing Oral en Reader, Weak Forms & Letras Mudas, y Duración Vocálica | Completed |
 | Plan 091 | Cableado Integral de Aprendizaje: Telemetría de Shadowing en Reader, Avance Diagnóstico por Logro, Latencia Oral en Progreso y Consolidación Git | Completed |
+| Plan 092 | Auditoría y mejora de diseño Apple HIG en Practice Hub (/practice) | Completed |
+| Plan 093 | Auditoría y mejora de diseño Apple HIG en Word Search (/practice/word-search) | Completed |
