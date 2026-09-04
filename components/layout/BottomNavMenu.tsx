@@ -14,7 +14,7 @@ const navItems = [
   { name: "Diccionario", href: "/words", icon: LibraryBig },
   { name: "Guardadas", href: "/tracking", icon: Bookmark },
   { name: "Mazos", href: "/practice/decks", icon: Layers },
-  { name: "Laboratorio de sonidos", href: "/practice/sounds", icon: MicVocal },
+  { name: "Pronunciación", href: "/practice/sounds", icon: MicVocal },
   { name: "Ruta", href: "/courses", icon: BookOpen },
   { name: "Perfil", href: "/profile", icon: User },
 ] as const;

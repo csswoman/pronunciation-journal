@@ -1,11 +1,17 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { isAnonymousUser } from "@/lib/auth/is-anonymous";
+import { readWelcomeTourCompleted } from "@/lib/home/onboarding";
 import type { HomePlanStatus } from "@/components/home/HomeDailyCard";
+
+const HomeWelcomeTourModal = dynamic(
+  () => import("@/components/home/HomeWelcomeTourModal"),
+  { ssr: false },
+);
 import HomeHeader from "@/components/home/HomeHeader";
 import HomeStatsRow from "@/components/home/HomeStatsRow";
 import HomeImmersionCard from "@/components/home/HomeImmersionCard";
@@ -75,6 +81,13 @@ export default function HomeCommandGrid({
   const [allDone, setAllDone] = useState(false);
   const [arc, setArc] = useState<SessionArc | undefined>(undefined);
   const [stepCount, setStepCount] = useState(0);
+  const [tourOpen, setTourOpen] = useState(false);
+
+  useEffect(() => {
+    if (!readWelcomeTourCompleted()) {
+      setTourOpen(true);
+    }
+  }, []);
 
   const onPlanStatusChange = useCallback((next: HomePlanStatus) => {
     setPlanEmpty(next.empty);
@@ -108,7 +121,7 @@ export default function HomeCommandGrid({
   return (
     <div className="flex flex-col gap-8">
       {/* Encabezado: saludo + título + marcador de racha */}
-      <HomeHeader streakDays={streak ?? 0} />
+      <HomeHeader streakDays={streak ?? 0} onOpenTour={() => setTourOpen(true)} />
 
       {/* Cuadrícula principal de 2 columnas */}
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-8 items-start">
@@ -220,6 +233,11 @@ export default function HomeCommandGrid({
           previewWords={previewWords}
         />
       </div>
+
+      <HomeWelcomeTourModal
+        isOpen={tourOpen}
+        onClose={() => setTourOpen(false)}
+      />
     </div>
   );
 }

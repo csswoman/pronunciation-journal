@@ -56,21 +56,43 @@ describe("Sidebar component", () => {
     expect(screen.queryByRole("link", { name: /Plan del día/i })).not.toBeInTheDocument();
 
     // Group 2: Aprender
-    expect(screen.getByRole("link", { name: /Práctica libre/i })).toHaveAttribute("href", "/practice");
-
-    // Group 3: Explorar
+    expect(screen.getByRole("link", { name: /^Pronunciación$/i })).toHaveAttribute("href", "/practice/sounds");
     expect(screen.getByRole("link", { name: /Ruta/i })).toHaveAttribute("href", "/courses");
     expect(screen.getByRole("link", { name: /Mini lecciones/i })).toHaveAttribute("href", "/mini-lessons");
+    expect(screen.getByRole("link", { name: /Práctica libre/i })).toHaveAttribute("href", "/practice");
+
+    // Group 3: Consultar
     expect(screen.getByRole("link", { name: /Diccionario/i })).toHaveAttribute("href", "/words");
+    expect(screen.getByRole("link", { name: /Guardadas/i })).toHaveAttribute("href", "/tracking");
 
     // Group 4: Progreso
     expect(screen.getByRole("link", { name: /Progreso/i })).toHaveAttribute("href", "/progress");
-    expect(screen.getByRole("link", { name: /Guardadas/i })).toHaveAttribute("href", "/tracking");
 
     // Removed direct sidebar items
     expect(screen.queryByRole("link", { name: /Laboratorio de sonidos/i })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /Palabras esenciales/i })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /Mazos/i })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /Repaso/i })).not.toBeInTheDocument();
+  });
+
+  it("toggles the Pronunciación accordion to reveal mode sub-links", async () => {
+    const { userEvent } = await import("@testing-library/user-event");
+    const user = userEvent.setup();
+    render(<Sidebar />);
+
+    // Initially collapsed (since mockPathname is /)
+    expect(screen.queryByRole("link", { name: /^Fonemas$/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /^Pares mínimos$/i })).not.toBeInTheDocument();
+
+    // Click toggle button for Pronunciación
+    const expandButton = screen.getByRole("button", { name: /Expandir Pronunciación/i });
+    await user.click(expandButton);
+
+    // Sub-items should now be visible
+    expect(screen.getByRole("link", { name: /^Fonemas$/i })).toHaveAttribute("href", "/practice/sounds");
+    expect(screen.getByRole("link", { name: /^Pares mínimos$/i })).toHaveAttribute("href", "/practice/sounds?tab=minimal-pairs");
+    expect(screen.getByRole("link", { name: /^Entonación$/i })).toHaveAttribute("href", "/practice/intonation");
+    expect(screen.getByRole("link", { name: /^Habla conectada$/i })).toHaveAttribute("href", "/practice/connected-speech");
+    expect(screen.getByRole("link", { name: /^Tu progreso$/i })).toHaveAttribute("href", "/practice/sounds?tab=path");
   });
 });

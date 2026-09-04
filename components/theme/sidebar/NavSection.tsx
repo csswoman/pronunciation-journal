@@ -1,4 +1,5 @@
 import { NavLink, NavItem } from "./NavLink";
+import { NavAccordionItem } from "./NavAccordionItem";
 import { SectionLabel } from "./SectionLabel";
 
 export interface NavSectionType {
@@ -21,9 +22,13 @@ export function NavSection({ section, isActive, isFirst = false }: NavSectionPro
         !isFirst && <div className="my-1.5 mx-3 border-t border-border-subtle" />
       )}
       <div className="space-y-px">
-        {section.items.map((item) => (
-          <NavLink key={item.href} item={item} active={isActive(item.href)} />
-        ))}
+        {section.items.map((item) =>
+          item.children && item.children.length > 0 ? (
+            <NavAccordionItem key={item.href} item={item} isActive={isActive} />
+          ) : (
+            <NavLink key={item.href} item={item} active={isActive(item.href)} />
+          )
+        )}
       </div>
     </div>
   );
