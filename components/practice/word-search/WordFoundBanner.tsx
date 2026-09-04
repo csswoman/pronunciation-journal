@@ -6,6 +6,13 @@ import { CheckCircle2, X } from '@/components/icons'
 import { ListenButton } from '@/components/ui/ListenButton'
 import { speakText } from '@/lib/speech/synthesis'
 
+// Planned structure:
+// <WordFoundBanner>
+//   <BannerStatusIcon />
+//   <BannerContentGroup />
+//   <BannerActions />
+// </WordFoundBanner>
+
 interface Props {
   item: WordSearchItem | null
   colorTheme?: WordColorTheme
@@ -22,7 +29,7 @@ export default function WordFoundBanner({ item, colorTheme, onDismiss }: Props) 
   return (
     <aside
       aria-label="Palabra encontrada"
-      className={`animate-state-in flex w-full items-start gap-3 rounded-lg border ${cardBorder} ${cardBg} p-3.5 shadow-xs`}
+      className={`animate-state-in flex w-full items-start gap-3 rounded-xl border ${cardBorder} ${cardBg} p-3.5 shadow-xs`}
     >
       <span className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${iconBg}`}>
         <CheckCircle2 className="h-4 w-4" aria-hidden />
@@ -57,7 +64,7 @@ export default function WordFoundBanner({ item, colorTheme, onDismiss }: Props) 
         <button
           type="button"
           onClick={onDismiss}
-          className="focus-ring inline-flex min-h-11 min-w-11 items-center justify-center rounded-full text-fg-subtle transition-[background-color,color,transform] duration-150 ease-out-quart hover:bg-surface-raised hover:text-fg active:scale-[0.96] motion-reduce:transform-none"
+          className="focus-ring inline-flex min-h-11 min-w-11 items-center justify-center rounded-full text-fg-subtle transition-[background-color,color,transform] duration-150 ease-out-quart hover:bg-surface-sunken hover:text-fg active:scale-[0.98] motion-reduce:transform-none"
           aria-label="Cerrar detalle de la palabra"
         >
           <X className="h-4 w-4" aria-hidden />

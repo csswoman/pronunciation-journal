@@ -123,10 +123,10 @@ function SourceTab({
       tabIndex={isSelected ? 0 : -1}
       onClick={() => onSelect(source)}
       onKeyDown={handleKeyDown}
-      className={`focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-2 py-2 text-caption font-semibold transition-[background-color,color,transform] duration-150 ease-out-quart active:scale-[0.96] motion-reduce:transform-none sm:px-3 sm:text-body-sm ${
+      className={`focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-2 py-2 text-caption font-semibold transition-[background-color,color,box-shadow,transform] duration-150 ease-out-quart active:scale-[0.98] motion-reduce:transform-none sm:px-3 sm:text-body-sm ${
         isSelected
-          ? 'bg-primary-soft text-primary'
-          : 'text-fg-muted hover:bg-surface-raised hover:text-fg'
+          ? 'border border-border-subtle/70 bg-surface-raised text-fg shadow-xs'
+          : 'text-fg-muted hover:bg-surface-raised/60 hover:text-fg'
       }`}
     >
       <span aria-hidden>{icon}</span>
@@ -356,15 +356,22 @@ export default function WordSearchSetup({ onStartPuzzle }: Props) {
             type="button"
             onClick={() => setMode('clues')}
             aria-pressed={mode === 'clues'}
-            className={`focus-ring flex min-h-28 flex-col gap-3 rounded-lg border p-layout-card-pad text-left transition-[background-color,border-color,box-shadow,transform] duration-150 ease-out-quart active:scale-[0.96] motion-reduce:transform-none ${
+            className={`focus-ring flex min-h-28 flex-col gap-3 rounded-xl border p-layout-card-pad text-left transition-[background-color,border-color,box-shadow,transform] duration-150 ease-out-quart active:scale-[0.98] motion-reduce:transform-none ${
               mode === 'clues'
-                ? 'border-primary bg-primary-soft'
+                ? 'border-primary bg-primary-soft shadow-xs'
                 : 'border-border-subtle bg-surface-raised hover:border-border-default hover:bg-surface-sunken'
             }`}
           >
             <span className="flex w-full items-center justify-between gap-2">
               <span className="text-label font-semibold text-fg">Con pistas</span>
-              <Badge label="Recomendado" />
+              <div className="flex items-center gap-1.5">
+                <Badge label="Recomendado" />
+                {mode === 'clues' ? (
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-on-primary">
+                    <Check className="h-3 w-3" aria-hidden />
+                  </span>
+                ) : null}
+              </div>
             </span>
             <span className="text-pretty text-body-sm text-fg-muted">
               Descifra cada palabra por su definición o sonido antes de encontrarla.
@@ -375,17 +382,17 @@ export default function WordSearchSetup({ onStartPuzzle }: Props) {
             type="button"
             onClick={() => setMode('classic')}
             aria-pressed={mode === 'classic'}
-            className={`focus-ring flex min-h-28 flex-col gap-3 rounded-lg border p-layout-card-pad text-left transition-[background-color,border-color,box-shadow,transform] duration-150 ease-out-quart active:scale-[0.96] motion-reduce:transform-none ${
+            className={`focus-ring flex min-h-28 flex-col gap-3 rounded-xl border p-layout-card-pad text-left transition-[background-color,border-color,box-shadow,transform] duration-150 ease-out-quart active:scale-[0.98] motion-reduce:transform-none ${
               mode === 'classic'
-                ? 'border-primary bg-primary-soft'
+                ? 'border-primary bg-primary-soft shadow-xs'
                 : 'border-border-subtle bg-surface-raised hover:border-border-default hover:bg-surface-sunken'
             }`}
           >
             <span className="flex w-full items-center justify-between gap-2">
               <span className="text-label font-semibold text-fg">Lista visible</span>
               {mode === 'classic' ? (
-                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-on-primary">
-                  <Check className="h-3.5 w-3.5" aria-hidden />
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-on-primary">
+                  <Check className="h-3 w-3" aria-hidden />
                 </span>
               ) : null}
             </span>
@@ -409,7 +416,7 @@ export default function WordSearchSetup({ onStartPuzzle }: Props) {
         <div
           role="tablist"
           aria-label="Origen del vocabulario"
-          className="grid grid-cols-2 gap-1 rounded-lg border border-border-subtle bg-surface-sunken p-1 sm:grid-cols-4"
+          className="grid grid-cols-2 gap-1 rounded-xl border border-border-subtle bg-surface-sunken p-1 sm:grid-cols-4"
         >
           <SourceTab
             source="dictionary"
@@ -500,9 +507,9 @@ export default function WordSearchSetup({ onStartPuzzle }: Props) {
                     role="radio"
                     aria-checked={isSelected}
                     onClick={() => setSelectedPresetId(preset.id)}
-                    className={`focus-ring flex min-h-28 flex-col gap-2 rounded-lg border p-layout-card-pad text-left transition-[background-color,border-color,transform] duration-150 ease-out-quart active:scale-[0.96] motion-reduce:transform-none ${
+                    className={`focus-ring flex min-h-28 flex-col gap-2 rounded-xl border p-layout-card-pad text-left transition-[background-color,border-color,box-shadow,transform] duration-150 ease-out-quart active:scale-[0.98] motion-reduce:transform-none ${
                       isSelected
-                        ? 'border-primary bg-primary-soft'
+                        ? 'border-primary bg-primary-soft shadow-xs'
                         : 'border-border-subtle bg-surface-raised hover:border-border-default hover:bg-surface-sunken'
                     }`}
                   >
@@ -612,10 +619,10 @@ export default function WordSearchSetup({ onStartPuzzle }: Props) {
                     role="radio"
                     aria-checked={customLevel === level}
                     onClick={() => setCustomLevel(level)}
-                    className={`focus-ring min-h-11 rounded-md border px-2 py-1.5 text-caption font-semibold transition-[background-color,border-color,color,transform] duration-150 ease-out-quart active:scale-[0.96] motion-reduce:transform-none sm:text-body-sm ${
+                    className={`focus-ring min-h-11 rounded-lg border px-2 py-1.5 text-caption font-semibold transition-[background-color,border-color,color,box-shadow,transform] duration-150 ease-out-quart active:scale-[0.98] motion-reduce:transform-none sm:text-body-sm ${
                       customLevel === level
-                        ? 'border-primary bg-primary-soft text-primary'
-                        : 'border-border-subtle bg-surface-sunken text-fg-muted hover:text-fg'
+                        ? 'border-primary bg-primary-soft text-primary shadow-xs'
+                        : 'border-border-subtle bg-surface-sunken text-fg-muted hover:bg-surface-base hover:text-fg'
                     }`}
                   >
                     {LEVEL_LABELS[level]}

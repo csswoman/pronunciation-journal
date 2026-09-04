@@ -137,9 +137,9 @@ export default function WordSearchCompletion({
             return (
               <div
                 key={item.id}
-                className={`inline-flex items-center gap-2 rounded-md border ${colorTheme.cardBorder} ${colorTheme.badgeBg} px-3 py-1.5 text-caption font-medium text-fg shadow-xs transition-colors`}
+                className={`inline-flex items-center gap-2 rounded-lg border ${colorTheme.cardBorder} ${colorTheme.badgeBg} ps-3.5 pe-1 py-1 text-caption font-medium text-fg shadow-xs transition-colors`}
               >
-                <span>{item.displayWord}</span>
+                <span className="font-semibold">{item.displayWord}</span>
                 {item.ipa ? (
                   <span className="font-ipa text-caption text-fg-muted">
                     {item.ipa}
@@ -149,7 +149,7 @@ export default function WordSearchCompletion({
                   iconOnly
                   label={`Escuchar ${item.displayWord}`}
                   onPlay={() => playWordAudio(item.word)}
-                  className="h-6 w-6 text-fg-muted hover:text-primary"
+                  className="min-h-11 min-w-11 sm:min-h-8 sm:min-w-8 text-fg-muted hover:text-primary"
                 />
               </div>
             )
