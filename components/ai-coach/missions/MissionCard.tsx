@@ -49,6 +49,13 @@ export function MissionCard({ mission, onSelect }: MissionCardProps) {
             variant="neutral"
             size="sm"
           />
+          {isScripted && mission.origin === 'generated' && (
+            <Badge
+              label="IA"
+              variant="default"
+              size="sm"
+            />
+          )}
         </div>
         <span className="font-kicker text-fg-subtle">
           {isScripted

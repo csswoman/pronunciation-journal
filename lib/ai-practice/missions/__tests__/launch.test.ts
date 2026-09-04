@@ -40,19 +40,16 @@ describe('canonical mission launches', () => {
     expect(() => parseMissionLaunch({ missionId: 'roleplay.airport', targetIds: ['connected.linking'], source: 'route' })).toThrow()
   })
 
-  it('finds only authored target-to-mission links', () => {
-    expect(missionForTarget(TARGET)?.id).toBe('roleplay.airport')
+  it('finds authored scripted target-to-mission links', () => {
+    expect(missionForTarget(TARGET)?.id).toBe('scripted.service.transit_directions')
     expect(missionForTarget('missing.target')).toBeNull()
   })
 
-  it('never hands a scripted mission to target-based launchers', () => {
-    // `scripted.interview.intro` declara el mismo target de contraste que las
-    // conversacionales. Los consumidores (daily plan, pronunciation path)
-    // esperan el flujo de chat, asi que aqui solo pueden salir conversacionales.
+  it('hands scripted dialogue missions to target-based launchers', () => {
     const SHARED_TARGET = contrastTargetId('/iː/', '/ɪ/')
     const found = missionForTarget(SHARED_TARGET)
     expect(found).not.toBeNull()
-    expect(found?.mode).toBe('conversational')
+    expect(found?.mode).toBe('scripted')
   })
 })
 
