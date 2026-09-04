@@ -20,20 +20,20 @@ export function ContrastControlBar({
   onToggleSpeed,
 }: Props) {
   return (
-    <div className="flex items-center gap-1 rounded-full border border-border-subtle bg-surface-sunken p-0.5">
+    <div className="flex items-center gap-1 rounded-full border border-border-subtle bg-surface-sunken p-1">
       <button
         type="button"
         onClick={onToggleAnimating}
         className={cn(
-          "inline-flex items-center gap-1 rounded-full px-2.5 py-1 font-caption text-xs transition-colors",
+          "inline-flex min-h-[30px] items-center gap-1.5 rounded-full px-3 py-1 font-caption text-xs transition-colors",
           isAnimating
-            ? "bg-primary-soft text-primary font-semibold"
+            ? "bg-surface-raised text-primary font-semibold shadow-xs"
             : "text-fg-muted hover:text-fg",
         )}
         aria-pressed={isAnimating}
         aria-label={isAnimating ? "Pausar ambas animaciones" : "Reproducir ambas animaciones"}
       >
-        {isAnimating ? <Pause size={12} aria-hidden /> : <Play size={12} aria-hidden />}
+        {isAnimating ? <Pause size={13} aria-hidden /> : <Play size={13} aria-hidden />}
         <span>{isAnimating ? "Animando" : "Pausado"}</span>
       </button>
 
@@ -42,15 +42,15 @@ export function ContrastControlBar({
         onClick={onToggleSpeed}
         disabled={!isAnimating}
         className={cn(
-          "inline-flex items-center gap-0.5 rounded-full px-2 py-1 font-caption text-xs transition-colors",
+          "inline-flex min-h-[30px] items-center gap-1 rounded-full px-2.5 py-1 font-caption text-xs transition-colors",
           speed === "slow"
-            ? "bg-primary text-on-primary font-semibold"
+            ? "bg-primary text-on-primary font-semibold shadow-xs"
             : "text-fg-muted hover:text-fg",
           !isAnimating && "opacity-40 cursor-not-allowed",
         )}
         aria-label={speed === "slow" ? "Cámara lenta activa" : "Activar cámara lenta"}
       >
-        <Timer size={11} aria-hidden />
+        <Timer size={12} aria-hidden />
         <span>{speed === "slow" ? "0.5x" : "1.0x"}</span>
       </button>
     </div>

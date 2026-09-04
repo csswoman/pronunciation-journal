@@ -14,7 +14,7 @@ interface Props {
  *  to spot it by comparing two near-identical diagrams. */
 export function ContrastDifferenceSummary({ contrast, phonemeA, phonemeB }: Props) {
   return (
-    <div className="rounded-md border border-primary/25 bg-surface-base p-3">
+    <div className="rounded-xl border border-primary/20 bg-surface-base p-3.5 shadow-xs">
       <p className="font-label text-xs font-semibold text-primary flex items-center gap-1.5 mb-1.5">
         <Lightbulb size={14} className="text-primary shrink-0" aria-hidden />
         <span>Qué cambia realmente</span>
@@ -23,16 +23,16 @@ export function ContrastDifferenceSummary({ contrast, phonemeA, phonemeB }: Prop
       <p className="text-body-sm text-fg text-pretty">{contrast.summaryEs}</p>
 
       {contrast.differences.length > 0 && (
-        <ul className="mt-2.5 grid gap-1.5 sm:grid-cols-2">
+        <ul className="mt-2.5 grid gap-2 sm:grid-cols-2">
           {contrast.differences.map((diff) => (
             <li
               key={diff.dimension}
-              className="flex items-center gap-2 rounded-md bg-surface-sunken px-2.5 py-1.5 font-caption text-[11px]"
+              className="flex items-center gap-2 rounded-lg bg-surface-sunken px-3 py-2 font-caption text-xs"
             >
               <span className="font-semibold text-fg-subtle shrink-0">{diff.labelEs}</span>
               <span className="flex items-center gap-1.5 text-fg-muted min-w-0">
                 <span className="truncate">{diff.valueA}</span>
-                <ArrowRight size={11} className="text-primary shrink-0" aria-hidden />
+                <ArrowRight size={12} className="text-primary shrink-0" aria-hidden />
                 <span className="truncate text-fg font-medium">{diff.valueB}</span>
               </span>
             </li>
