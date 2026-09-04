@@ -111,6 +111,15 @@ export default function TrackingReviewClient({ sessionId }: { sessionId: string 
           onSessionComplete={() => undefined}
           onExit={() => void exitReview()}
         />
+      ) : lessonItems.length > 0 ? (
+        <div className="rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised layout-card-pad text-center">
+          <p className="mb-4 text-body-sm text-fg">
+            Selecciona una lección arriba para continuar tu estudio en la Ruta.
+          </p>
+          <Button variant="primary" onClick={() => router.push(lessonItems[0]!.href!)}>
+            Abrir lección
+          </Button>
+        </div>
       ) : (
         <div className="rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised layout-card-pad text-center">
           <Check size={22} aria-hidden className="mx-auto mb-3 text-fg-muted" />

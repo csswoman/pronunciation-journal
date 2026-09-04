@@ -32,17 +32,67 @@
   margin-bottom: var(--layout-stack-loose);
 }
 
+.tracking-segmented-control {
+  display: inline-flex;
+  align-items: center;
+  background: var(--surface-sunken);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full, 9999px);
+  padding: 3px;
+  gap: 2px;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.tracking-segmented-control__item {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.25rem;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-full, 9999px);
+  font-size: var(--text-body-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 150ms var(--ease-out-quart, ease-out),
+    background-color 150ms var(--ease-out-quart, ease-out),
+    box-shadow 150ms var(--ease-out-quart, ease-out);
+}
+
+.tracking-segmented-control__item:hover:not(.tracking-segmented-control__item--active) {
+  color: var(--text-primary);
+  background: var(--surface-raised);
+}
+
+.tracking-segmented-control__item--active {
+  color: var(--text-primary);
+  background: var(--surface-raised);
+  font-weight: 600;
+  box-shadow: 0 1px 2px oklch(0 0 0 / 0.06);
+}
+
 .tracking-item {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: start;
   gap: var(--layout-stack);
-  min-block-size: 3rem;
+  min-block-size: 3.5rem;
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
   background: var(--surface-raised);
   padding: var(--space-3) var(--space-4);
   color: var(--text-primary);
+  transition: border-color 150ms var(--ease-out-quart, ease-out),
+    box-shadow 150ms var(--ease-out-quart, ease-out);
+}
+
+.tracking-item:hover {
+  border-color: var(--border-default);
 }
 
 .tracking-item > :last-child {
@@ -50,7 +100,8 @@
 }
 
 a.tracking-item {
-  transition: background-color 150ms var(--ease-out-quart, ease-out), border-color 150ms var(--ease-out-quart, ease-out);
+  transition: background-color 150ms var(--ease-out-quart, ease-out),
+    border-color 150ms var(--ease-out-quart, ease-out);
 }
 
 a.tracking-item:hover {
@@ -84,3 +135,4 @@ a.tracking-item:hover {
     top: var(--layout-stack-loose);
   }
 }
+
