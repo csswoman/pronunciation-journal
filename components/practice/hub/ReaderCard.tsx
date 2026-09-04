@@ -11,10 +11,10 @@ export default function ReaderCard() {
     <Link
       href="/practice/reader"
       onClick={() => void setLastPracticeMode('reader')}
-      className="group relative flex flex-col justify-between gap-4 rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-5 shadow-xs transition-colors hover:border-border-strong focus-ring h-full overflow-hidden"
+      className="group relative flex flex-col justify-between gap-4 rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-5 shadow-xs transition-all duration-200 hover:border-border-strong hover:shadow-sm active:scale-[0.99] focus-ring h-full overflow-hidden"
     >
       <div className="flex flex-col gap-3 z-10">
-        <span className="font-kicker text-fg-subtle">libre</span>
+        <span className="font-kicker text-tiny uppercase tracking-wider text-fg-subtle">libre</span>
         <h2 className="text-h3 font-bold text-fg group-hover:text-primary transition-colors">
           Lectura en contexto
         </h2>
@@ -30,7 +30,10 @@ export default function ReaderCard() {
       </div>
 
       {/* Document lines graphic illustration (bottom right) */}
-      <div className="absolute right-4 bottom-3 hidden sm:flex flex-col gap-1 opacity-30 transition-opacity group-hover:opacity-60">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute right-4 bottom-3 hidden sm:flex flex-col gap-1 opacity-30 transition-opacity group-hover:opacity-60"
+      >
         <div className="h-2 w-8 rounded-full bg-border-strong" />
         <div className="h-2 w-6 rounded-full bg-border-strong" />
       </div>

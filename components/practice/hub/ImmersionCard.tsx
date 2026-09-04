@@ -12,10 +12,10 @@ export default function ImmersionCard() {
     <Link
       href="/practice/immersion"
       onClick={() => void setLastPracticeMode('immersion')}
-      className="group relative flex flex-col justify-between gap-5 rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-5 shadow-xs transition-colors hover:border-border-strong focus-ring h-full overflow-hidden"
+      className="group relative flex flex-col justify-between gap-5 rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-5 shadow-xs transition-all duration-200 hover:border-border-strong hover:shadow-sm active:scale-[0.99] focus-ring h-full overflow-hidden"
     >
       <div className="flex flex-col gap-3 z-10">
-        <span className="font-kicker text-fg-subtle">libre</span>
+        <span className="font-kicker text-tiny uppercase tracking-wider text-fg-subtle">libre</span>
         <div className="flex flex-col gap-1">
           <h2 className="text-h3 font-bold text-fg group-hover:text-primary transition-colors">
             Inmersión y conversación
@@ -41,9 +41,12 @@ export default function ImmersionCard() {
       </div>
 
       {/* Video player graphic illustration (bottom right) */}
-      <div className="absolute right-4 bottom-4 hidden sm:flex h-16 w-24 flex-col items-center justify-center rounded-lg border border-border-subtle/50 bg-surface-sunken/60 opacity-50 transition-opacity group-hover:opacity-80">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute right-4 bottom-4 hidden sm:flex h-16 w-24 flex-col items-center justify-center rounded-lg border border-border-subtle/50 bg-surface-sunken/60 opacity-50 transition-opacity group-hover:opacity-80"
+      >
         <span className="grid h-7 w-7 place-items-center rounded-full bg-primary/20 text-primary">
-          <Play size={14} className="fill-current ml-0.5" aria-hidden />
+          <Play size={14} className="fill-current ml-0.5" aria-hidden="true" />
         </span>
       </div>
     </Link>

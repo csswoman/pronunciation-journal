@@ -47,6 +47,15 @@ export const PRACTICE_CATEGORIES: Record<string, PracticeCategory> = {
 
 export const PRACTICE_GAMES: readonly PracticeGame[] = [
   {
+    id: "word-search",
+    title: "Sopa de letras",
+    description: "Encuentra vocabulario en la cuadrícula con pistas y audio",
+    icon: "Grid2x2",
+    href: "/practice/word-search",
+    tag: "Disponible",
+    available: true,
+  },
+  {
     id: "word-chain",
     title: "Word Chain",
     description: "Encadena palabras por su último sonido",

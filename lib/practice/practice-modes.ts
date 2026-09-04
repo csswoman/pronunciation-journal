@@ -14,7 +14,7 @@ export interface PracticeMode {
 export const PRACTICE_MODES: readonly PracticeMode[] = [
   {
     id: 'sounds',
-    label: 'Laboratorio de sonidos',
+    label: 'Pronunciación',
     description: 'Distingue sonidos parecidos (pares mínimos)',
     href: '/practice/sounds',
     icon: 'MicVocal',
