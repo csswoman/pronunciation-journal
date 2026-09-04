@@ -7,8 +7,9 @@
 //   <ConnectedSpeechTips />
 // </ShadowingPlaybackBar>
 
-import { Play, Pause, SkipForward, Undo2, Volume2, Timer } from '@/components/icons';
+import { Play, Pause, SkipForward, Undo2, Volume2, Mic } from '@/components/icons';
 import Button from '@/components/ui/Button';
+import { cn } from '@/lib/cn';
 import type { SentenceSegment } from '@/lib/speech/shadowing';
 
 export type PlaybackPhase = 'idle' | 'listening' | 'echoing';
@@ -47,41 +48,55 @@ export function ShadowingPlaybackBar({
   currentSegment,
 }: Props) {
   return (
-    <div className="flex flex-col gap-3 rounded-card-interactive border border-border-default bg-surface-raised p-4 shadow-sm">
+    <div className="flex flex-col gap-3 rounded-card-interactive border border-border-default bg-surface-raised p-4 shadow-xs">
       {/* Header with Mode Toggle & Speed Selector */}
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border-default/60 pb-3">
         <div className="flex items-center gap-2">
-          <label className="relative inline-flex cursor-pointer items-center">
+          <label className="relative inline-flex cursor-pointer items-center gap-2.5 select-none">
             <input
               type="checkbox"
+              role="switch"
+              aria-checked={isShadowingMode}
               checked={isShadowingMode}
               onChange={(e) => onToggleShadowingMode(e.target.checked)}
               className="peer sr-only"
             />
-            <div className="peer h-5 w-9 rounded-full bg-surface-sunken after:absolute after:top-0.5 after:left-0.5 after:h-4 after:w-4 after:rounded-full after:bg-fg-muted after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:bg-white peer-focus:outline-none" />
+            <div className="peer relative h-6 w-11 rounded-full bg-surface-sunken border border-border-default transition-colors duration-200 after:absolute after:top-0.5 after:left-0.5 after:h-4.5 after:w-4.5 after:rounded-full after:bg-white after:shadow-xs after:transition-transform after:duration-200 after:content-[''] peer-checked:bg-primary peer-checked:border-primary peer-checked:after:translate-x-5 peer-focus-visible:ring-2 peer-focus-visible:ring-primary/40" />
+            <span className="text-body-sm font-medium text-fg">
+              {isShadowingMode ? 'Modo Shadowing (Eco con pausas)' : 'Lectura bimodal continua'}
+            </span>
           </label>
-          <span className="text-body-sm font-semibold text-fg">
-            {isShadowingMode ? 'Modo Shadowing (Eco con pausas)' : 'Lectura bimodal continua'}
-          </span>
         </div>
 
-        {/* Speed Selector */}
-        <div className="flex items-center gap-1.5">
-          <span className="text-tiny text-fg-muted">Velocidad:</span>
-          {SPEED_OPTIONS.map((rate) => (
-            <button
-              key={rate}
-              type="button"
-              onClick={() => onSelectPlaybackRate(rate)}
-              className={`rounded px-2 py-0.5 font-mono text-tiny font-medium transition-colors focus-ring cursor-pointer ${
-                playbackRate === rate
-                  ? 'bg-primary-soft text-primary font-bold'
-                  : 'text-fg-muted hover:bg-surface-sunken hover:text-fg'
-              }`}
-            >
-              {rate}x
-            </button>
-          ))}
+        {/* Speed Selector as Apple-style Segmented Control */}
+        <div className="flex items-center gap-2">
+          <span className="text-caption text-fg-muted">Velocidad:</span>
+          <div
+            role="radiogroup"
+            aria-label="Velocidad de reproducción"
+            className="inline-flex items-center rounded-full bg-surface-sunken p-0.5 border border-border-subtle"
+          >
+            {SPEED_OPTIONS.map((rate) => {
+              const isActive = playbackRate === rate;
+              return (
+                <button
+                  key={rate}
+                  type="button"
+                  role="radio"
+                  aria-checked={isActive}
+                  onClick={() => onSelectPlaybackRate(rate)}
+                  className={cn(
+                    'rounded-full px-2.5 py-1 font-mono text-tiny transition-all duration-150 focus-ring cursor-pointer select-none',
+                    isActive
+                      ? 'bg-surface-raised text-primary font-bold shadow-xs'
+                      : 'text-fg-muted hover:text-fg'
+                  )}
+                >
+                  {rate}x
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
@@ -93,7 +108,7 @@ export function ShadowingPlaybackBar({
             size="sm"
             onClick={onTogglePlay}
             disabled={!online || totalSentences === 0}
-            className="flex items-center gap-1.5"
+            className="flex items-center gap-1.5 active:scale-95 transition-all shadow-xs cursor-pointer"
           >
             {isPlaying ? (
               <>
@@ -121,6 +136,7 @@ export function ShadowingPlaybackBar({
             disabled={!online || activeSentenceIdx === null}
             title="Repetir oración actual"
             aria-label="Repetir oración actual"
+            className="size-9 p-0 flex items-center justify-center rounded-full hover:bg-surface-sunken active:scale-90 transition-all cursor-pointer"
           >
             <Undo2 className="size-4" />
           </Button>
@@ -132,30 +148,45 @@ export function ShadowingPlaybackBar({
             disabled={!online || (activeSentenceIdx !== null && activeSentenceIdx >= totalSentences - 1)}
             title="Siguiente oración"
             aria-label="Siguiente oración"
+            className="size-9 p-0 flex items-center justify-center rounded-full hover:bg-surface-sunken active:scale-90 transition-all cursor-pointer"
           >
             <SkipForward className="size-4" />
           </Button>
         </div>
 
-        {/* Dynamic Status / Phase Badge */}
+        {/* Dynamic Status, Sentence Progress & Phase Badge */}
         <div className="flex items-center gap-2">
+          {totalSentences > 0 && (
+            <div className="flex items-center gap-2 text-tiny text-fg-muted font-mono bg-surface-sunken px-2.5 py-1 rounded-full border border-border-subtle">
+              <span>
+                {activeSentenceIdx !== null ? activeSentenceIdx + 1 : 0}/{totalSentences}
+              </span>
+              <div className="h-1.5 w-12 rounded-full bg-border-default overflow-hidden">
+                <div
+                  className="h-full bg-primary transition-all duration-300"
+                  style={{
+                    width: `${
+                      activeSentenceIdx !== null
+                        ? Math.round(((activeSentenceIdx + 1) / totalSentences) * 100)
+                        : 0
+                    }%`,
+                  }}
+                />
+              </div>
+            </div>
+          )}
+
           {phase === 'listening' && (
-            <span className="flex items-center gap-1.5 rounded-full bg-badge-info-bg px-2.5 py-1 text-tiny font-semibold text-info animate-pulse">
+            <span className="flex items-center gap-1.5 rounded-full bg-badge-info-bg px-3 py-1 text-tiny font-semibold text-info animate-pulse border border-badge-info-border">
               <Volume2 className="size-3.5" />
-              <span>Escucha la pronunciación nativa...</span>
+              <span>Escuchando pronunciación nativa…</span>
             </span>
           )}
 
           {phase === 'echoing' && (
-            <span className="flex items-center gap-1.5 rounded-full bg-badge-success-bg px-2.5 py-1 text-tiny font-semibold text-success animate-bounce">
-              <Timer className="size-3.5" />
-              <span>🎤 Tu turno: ¡Repite en voz alta!</span>
-            </span>
-          )}
-
-          {phase === 'idle' && activeSentenceIdx !== null && (
-            <span className="text-tiny text-fg-muted font-mono">
-              Oración {activeSentenceIdx + 1} de {totalSentences}
+            <span className="flex items-center gap-1.5 rounded-full bg-badge-success-bg px-3 py-1 text-tiny font-semibold text-success animate-pulse border border-badge-success-border">
+              <Mic className="size-3.5" />
+              <span>Tu turno · Repite en voz alta</span>
             </span>
           )}
         </div>
@@ -163,7 +194,7 @@ export function ShadowingPlaybackBar({
 
       {/* Connected Speech Tips for Active Sentence */}
       {currentSegment?.connectedSpeechNotes && currentSegment.connectedSpeechNotes.length > 0 && (
-        <div className="rounded-md border border-primary/20 bg-primary-soft/40 p-2.5 text-tiny text-fg">
+        <div className="rounded-card border border-primary/20 bg-primary-soft/40 p-3 text-tiny text-fg">
           <p className="font-semibold text-primary mb-1">💡 Consejos de enlace (Connected Speech):</p>
           <ul className="list-disc list-inside space-y-0.5 text-fg-muted">
             {currentSegment.connectedSpeechNotes.map((note, i) => (

@@ -83,11 +83,14 @@ export function ReaderSentenceRecorder({ sentenceText, onRecorded }: Omit<Props,
   }
 
   return (
-    <div className="flex flex-col gap-3 rounded-xl border border-border-default bg-surface-raised p-4 shadow-xs">
+    <div className="flex flex-col gap-3 rounded-card border border-border-default bg-surface-raised p-4 shadow-xs">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <span className="text-body-sm font-semibold text-fg">🎙️ Práctica oral de la frase</span>
-          <span className="text-caption text-fg-muted">Shadowing</span>
+          <span className="flex size-7 items-center justify-center rounded-full bg-primary-soft text-primary">
+            <Mic className="size-3.5" />
+          </span>
+          <span className="text-body-sm font-semibold text-fg">Práctica oral de la frase</span>
+          <span className="text-caption text-fg-muted font-mono">Shadowing</span>
         </div>
 
         {!scoring && (

@@ -149,6 +149,33 @@ export function ShadowingController({
     playSentence(nextIdx);
   }
 
+  // Keyboard navigation shortcuts for power users (User Control & Freedom)
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement ||
+        (e.target as HTMLElement).isContentEditable
+      ) {
+        return;
+      }
+
+      if (e.code === 'Space') {
+        e.preventDefault();
+        togglePlay();
+      } else if (e.code === 'ArrowRight') {
+        e.preventDefault();
+        handleNext();
+      } else if (e.code === 'ArrowLeft') {
+        e.preventDefault();
+        handleRepeat();
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isPlaying, activeSentenceIdx]);
+
   const currentSegment = activeSentenceIdx !== null ? sentences[activeSentenceIdx] : null;
 
   return (

@@ -54,7 +54,7 @@ describe('ReaderSentenceRecorder', () => {
       />,
     )
 
-    expect(screen.getByText('🎙️ Práctica oral de la frase')).toBeInTheDocument()
+    expect(screen.getByText('Práctica oral de la frase')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /grabar repetición/i })).toBeInTheDocument()
   })
 

@@ -16,8 +16,8 @@ interface GenerateReaderResponse {
  * reader. Read once by the wiring and passed into both the cache key and the
  * generator so lookup and persistence stay in sync.
  */
-export async function resolveReaderLevel(userId: string): Promise<CEFRLevel> {
-  return normalizeCEFR((await readStoredCefrLevel(userId)) ?? 'B1')
+export async function resolveReaderLevel(userId: string, defaultLevel: CEFRLevel = 'B1'): Promise<CEFRLevel> {
+  return normalizeCEFR((await readStoredCefrLevel(userId)) ?? defaultLevel)
 }
 
 /**
