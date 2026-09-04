@@ -45,16 +45,16 @@ export function WordsTopbar({
             aria-label={id === "dictionary" ? `${label} (${lexiconCount} palabras)` : label}
             aria-current={isActive ? "page" : undefined}
             className={cn(
-              "inline-flex items-center gap-1.5 min-h-[2.25rem] px-3.5 py-1.5 rounded-full text-caption font-semibold transition-all duration-150 select-none",
+              "inline-flex items-center justify-center gap-2 min-h-[42px] sm:min-h-[38px] px-4 py-2 rounded-full text-body-sm font-semibold transition-all duration-150 select-none focus-ring",
               isActive
-                ? "bg-surface-raised text-fg shadow-xs border border-border-subtle/60"
-                : "text-fg-muted hover:text-fg hover:bg-surface-raised/40"
+                ? "bg-surface-raised text-fg shadow-xs border border-border-subtle/80"
+                : "text-fg-muted hover:text-fg hover:bg-surface-raised/50"
             )}
           >
             <Icon
-              size={15}
-              strokeWidth={isActive ? 2 : 1.6}
-              className={cn("transition-colors", isActive ? "text-primary" : "text-fg-subtle")}
+              size={16}
+              strokeWidth={isActive ? 2 : 1.7}
+              className={cn("transition-colors shrink-0", isActive ? "text-primary" : "text-fg-subtle")}
               aria-hidden
             />
             <span>{label}</span>

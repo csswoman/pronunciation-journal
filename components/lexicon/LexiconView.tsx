@@ -4,7 +4,6 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { LexiconHeroSearch } from "@/components/lexicon/LexiconHeroSearch";
 import { LexiconTodayPanel } from "@/components/lexicon/LexiconTodayPanel";
-import { LexiconProgressStrip } from "@/components/lexicon/LexiconProgressStrip";
 import { LexiconContinueSection } from "@/components/lexicon/LexiconContinueSection";
 import { LessonGrid } from "@/components/lexicon/LessonGrid";
 import { AnkiDeckGrid } from "@/components/lexicon/AnkiDeckGrid";
@@ -31,11 +30,8 @@ import type { WordsMode } from "@/components/words/WordsTopbar";
 //   {mode === "learn" && !activeDeckId && (
 //     <LearnFlow>
 //       <AnkiReviewBanner />
-//       <LexiconProgressStrip />
 //       <LexiconContinueSection />
-//       <AnkiStudioSection>
-//         <AnkiDeckGrid />
-//       </AnkiStudioSection>
+//       <AnkiDeckGrid />
 //     </LearnFlow>
 //   )}
 // </LexiconView>
@@ -56,10 +52,6 @@ interface LexiconViewProps {
 
 export function LexiconView({
   lessons,
-  lexiconTotal,
-  lexiconLearned,
-  lexiconInProgress,
-  lexiconPercent,
   dueForReview = 0,
   recentWords = [],
   dueWordLabels = [],
@@ -69,7 +61,6 @@ export function LexiconView({
 }: LexiconViewProps) {
   const router = useRouter();
   const [activeDeckId, setActiveDeckId] = useState<string | null>(null);
-  const notStarted = Math.max(0, lexiconTotal - lexiconLearned - lexiconInProgress);
 
   const inProgress = useMemo(() => {
     const active = lessons.filter((l) => l.progress > 0 && l.progress < 100);
@@ -149,7 +140,7 @@ export function LexiconView({
                 <div className="inline-flex items-center gap-2 rounded-full bg-primary-soft/80 border border-primary/20 px-2.5 py-0.5 text-xs font-semibold text-primary">
                   <span className="font-kicker text-[11px] uppercase tracking-wider">REPASO ANKI PENDIENTE</span>
                 </div>
-                <h3 className="text-h4 sm:text-h3 font-bold text-fg tracking-tight leading-snug">
+                <h3 className="text-h3 font-bold text-fg tracking-tight leading-snug">
                   Tienes {dueForReview} {dueForReview === 1 ? "palabra" : "palabras"} por repasar hoy
                 </h3>
                 <p className="text-body-sm text-fg-muted max-w-xl leading-relaxed">
@@ -159,20 +150,13 @@ export function LexiconView({
               <button
                 type="button"
                 onClick={() => setActiveDeckId(nextLesson?.id ?? "backend-infra")}
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-cta-bg text-cta-fg px-6 py-3.5 text-body-sm font-semibold hover:bg-cta-bg-hover active:scale-[0.98] transition-all shadow-xs focus-ring shrink-0"
+                className="inline-flex items-center justify-center gap-2 min-h-[48px] rounded-xl bg-cta-bg text-cta-fg px-6 py-3.5 text-body-sm font-semibold hover:bg-cta-bg-hover active:scale-[0.98] transition-all shadow-xs focus-ring shrink-0"
               >
                 <span>Iniciar repaso Anki mixto ({dueForReview})</span>
                 <span aria-hidden className="transition-transform group-hover:translate-x-0.5">→</span>
               </button>
             </div>
           )}
-
-          <LexiconProgressStrip
-            percent={lexiconPercent}
-            learned={lexiconLearned}
-            inProgress={lexiconInProgress}
-            notStarted={notStarted}
-          />
 
           {inProgress.length > 0 ? (
             <LexiconContinueSection
@@ -181,15 +165,7 @@ export function LexiconView({
             />
           ) : null}
 
-          <section className="space-y-5 pt-1" aria-labelledby="words-anki-studio-title">
-            <div className="space-y-1 pb-3 border-b border-border-subtle/50">
-              <p className="font-kicker text-fg-subtle">MAZOS ANKI</p>
-              <h2 id="words-anki-studio-title" className="text-h3 font-bold text-fg tracking-tight">
-                Selecciona un mazo para practicar
-              </h2>
-              <p className="text-body-sm text-fg-muted">Explora tus mazos de vocabulario e inicia el repaso de tarjetas Anki directamente aquí.</p>
-            </div>
-
+          <section aria-label="Catálogo de mazos">
             <AnkiDeckGrid
               lessons={lessons}
               onSelectDeck={(id) => setActiveDeckId(id)}

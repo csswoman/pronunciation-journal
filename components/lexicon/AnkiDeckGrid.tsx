@@ -53,9 +53,9 @@ export function AnkiDeckGrid({ lessons, onSelectDeck }: AnkiDeckGridProps) {
 
   return (
     <div className="space-y-4">
-      {/* Filter chips */}
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="text-caption font-medium text-fg-subtle mr-1">Filtrar:</span>
+      {/* Filter chips with accessible touch targets */}
+      <div className="flex flex-wrap items-center gap-2" role="toolbar" aria-label="Filtros de mazos">
+        <span className="text-caption font-medium text-fg-subtle mr-1 select-none">Filtrar:</span>
         {FILTERS.map(({ id, label }) => {
           const isActive = filter === id;
           return (
@@ -63,8 +63,9 @@ export function AnkiDeckGrid({ lessons, onSelectDeck }: AnkiDeckGridProps) {
               key={id}
               type="button"
               onClick={() => setFilter(id)}
+              aria-pressed={isActive}
               className={cn(
-                "px-3 py-1 rounded-full text-xs font-semibold transition-all duration-150 focus-ring",
+                "inline-flex items-center justify-center min-h-[36px] px-3.5 py-1.5 rounded-full text-caption font-semibold transition-all duration-150 focus-ring select-none",
                 isActive
                   ? "bg-primary text-on-primary shadow-xs"
                   : "bg-surface-sunken text-fg-muted border border-border-subtle hover:text-fg hover:bg-surface-raised"
@@ -77,7 +78,7 @@ export function AnkiDeckGrid({ lessons, onSelectDeck }: AnkiDeckGridProps) {
       </div>
 
       {filteredLessons.length === 0 ? (
-        <div className="text-center py-10 rounded-2xl bg-surface-raised/40 border border-border-subtle text-fg-muted text-body-sm">
+        <div className="text-center py-10 rounded-xl bg-surface-raised/40 border border-border-subtle text-fg-muted text-body-sm">
           No se encontraron mazos con este filtro.
         </div>
       ) : (
@@ -91,7 +92,7 @@ export function AnkiDeckGrid({ lessons, onSelectDeck }: AnkiDeckGridProps) {
             return (
               <div
                 key={lesson.id}
-                className="group relative flex flex-col justify-between rounded-2xl border border-border-subtle bg-surface-raised p-5 sm:p-6 shadow-xs hover:border-primary/60 hover:shadow-sm transition-all duration-150"
+                className="group relative flex flex-col justify-between rounded-xl border border-border-subtle bg-surface-raised p-5 sm:p-6 shadow-xs hover:border-primary/60 hover:shadow-sm transition-all duration-150"
               >
                 <div className="space-y-4">
                   <div className="flex items-start justify-between gap-3">
@@ -143,7 +144,7 @@ export function AnkiDeckGrid({ lessons, onSelectDeck }: AnkiDeckGridProps) {
                   <button
                     type="button"
                     onClick={() => onSelectDeck(lesson.id)}
-                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-cta-bg text-cta-fg px-4 py-2.5 text-body-sm font-semibold hover:bg-cta-bg-hover active:scale-[0.98] transition-all focus-ring shadow-xs"
+                    className="inline-flex items-center justify-center gap-2 min-h-[44px] rounded-xl bg-cta-bg text-cta-fg px-4 py-2.5 text-body-sm font-semibold hover:bg-cta-bg-hover active:scale-[0.98] transition-all focus-ring shadow-xs"
                   >
                     <span>Estudiar mazo</span>
                     <span aria-hidden className="transition-transform group-hover:translate-x-0.5">→</span>
@@ -151,7 +152,7 @@ export function AnkiDeckGrid({ lessons, onSelectDeck }: AnkiDeckGridProps) {
 
                   <Link
                     href={`/words/${lesson.id}`}
-                    className="text-caption font-semibold text-fg-subtle hover:text-fg transition-colors py-1"
+                    className="inline-flex items-center min-h-[44px] px-2 text-caption font-semibold text-fg-subtle hover:text-fg transition-colors focus-ring rounded-lg"
                   >
                     Ver palabras
                   </Link>

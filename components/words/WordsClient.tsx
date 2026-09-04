@@ -54,15 +54,17 @@ export function WordsClient({
   const rawMode = searchParams.get("mode");
   const activeMode: WordsMode = rawMode === "learn" ? "learn" : "dictionary";
 
+  const pageKicker = activeMode === "learn" ? "PRÁCTICA ANKI" : "VOCABULARIO";
   const pageTitle = activeMode === "learn" ? "Mazos de Aprendizaje" : "Diccionario";
   const pageSubtitle = activeMode === "learn"
-    ? `${lexiconTotal} tarjetas · ${lexiconLessons.length} mazos Anki`
-    : `${lexiconTotal} términos · ${lexiconLessons.length} categorías`;
+    ? `Entrena con ${lexiconTotal} tarjetas en ${lexiconLessons.length} mazos temáticos.`
+    : `${lexiconTotal} términos agrupados en ${lexiconLessons.length} categorías de uso común.`;
 
   return (
     <PageLayout archetype="catalog">
       <div className="words-lexicon">
         <PageHeader
+          kicker={pageKicker}
           title={pageTitle}
           subtitle={pageSubtitle}
           actions={<WordsTopbar activeMode={activeMode} lexiconCount={lexiconTotal} />}

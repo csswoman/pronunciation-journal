@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
-import Link from "next/link";
-import { ArrowUp, Dumbbell } from "@/components/icons";
+import { ArrowUp } from "@/components/icons";
 import { PillButton } from "@/components/ui/PillButton";
+import { LessonDetailHeader } from "./LessonDetailHeader";
 import { WordFiltersBar } from "./WordFiltersBar";
 import { WordGrid } from "./WordGrid";
 import type { Word } from "./WordGrid";
@@ -29,7 +29,7 @@ interface WordBrowserProps {
  * WordBrowser - Navegador de palabras del tema del diccionario.
  *
  * Sub-componentes:
- * - HeaderFullColor (Cabecera en bloque de color sólido con título, blurb, barra de progreso y CTA)
+ * - WordBrowserHeader (Cabecera en superficie neutral con título, blurb, barra de progreso y CTA)
  * - WordGrid (Rejilla principal de tarjetas de palabras)
  * - WordFiltersBar (Sidebar de búsqueda, filtrado por estado, ordenamiento y vista)
  * - PillButton (Botón "Volver arriba")
@@ -151,73 +151,15 @@ export function WordBrowser({
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Cabecera Full Color estilo Banner Destacado con Progreso Integrado a lo Ancho */}
       {categoryTitle ? (
-        <header className="bg-primary text-on-primary rounded-2xl p-6 md:p-8 shadow-sm flex flex-col gap-6">
-          {/* Fila superior: Título, Descripción y Botón de Práctica */}
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-            <div className="flex flex-col gap-2">
-              <nav className="flex items-center gap-1.5 font-mono text-tiny text-on-primary opacity-80 mb-0.5" aria-label="Ruta de navegación">
-                <Link href="/words" className="hover:underline">Diccionario</Link>
-                <span aria-hidden>/</span>
-                <span aria-current="page">{categoryTitle}</span>
-              </nav>
-
-              <h1 className="text-h1 font-bold tracking-tight text-on-primary">{categoryTitle}</h1>
-              {blurb ? <p className="text-body-md text-on-primary opacity-90 leading-relaxed max-w-2xl">{blurb}</p> : null}
-            </div>
-
-            <div className="shrink-0 self-stretch md:self-auto">
-              <Link href={`/words/${categoryId}/practice`} className="inline-block w-full md:w-auto">
-                <button
-                  type="button"
-                  className="w-full md:w-auto px-6 py-3 bg-white text-primary font-semibold text-body-sm rounded-full shadow-md hover:bg-surface-raised transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <Dumbbell size={16} aria-hidden />
-                  Practicar este tema
-                </button>
-              </Link>
-            </div>
-          </div>
-
-          {/* Fila inferior: Barra de progreso a lo ancho y métricas de palabras */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-4 border-t border-white/20">
-            <div className="flex flex-col sm:flex-row sm:items-center gap-3 flex-1 max-w-2xl">
-              <div className="flex items-baseline gap-2 shrink-0">
-                <span className="font-mono text-tiny uppercase tracking-wider text-on-primary opacity-85 font-medium">
-                  Progreso
-                </span>
-                <strong className="text-h3 font-bold text-on-primary tabular-nums">{learnedPct}%</strong>
-              </div>
-
-              <div
-                className="w-full h-2.5 rounded-full bg-white/20 overflow-hidden flex-1"
-                role="progressbar"
-                aria-label="Palabras aprendidas"
-                aria-valuenow={statusCounts.learned}
-                aria-valuemin={0}
-                aria-valuemax={words.length}
-              >
-                <div
-                  className="h-full bg-white rounded-full transition-all duration-300"
-                  style={{ width: `${learnedPct}%` }}
-                />
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2 flex-wrap shrink-0">
-              <span className="inline-flex items-center px-3.5 py-1.5 rounded-full text-caption bg-white/15 backdrop-blur-xs font-medium text-on-primary">
-                {statusCounts.learned} aprendidas
-              </span>
-              <span className="inline-flex items-center px-3.5 py-1.5 rounded-full text-caption bg-white/15 backdrop-blur-xs font-medium text-on-primary">
-                {statusCounts.reviewing} en repaso
-              </span>
-              <span className="inline-flex items-center px-3.5 py-1.5 rounded-full text-caption bg-white/15 backdrop-blur-xs font-medium text-on-primary">
-                {statusCounts.new} nuevas
-              </span>
-            </div>
-          </div>
-        </header>
+        <LessonDetailHeader
+          categoryTitle={categoryTitle}
+          blurb={blurb}
+          categoryId={categoryId}
+          learnedPct={learnedPct}
+          statusCounts={statusCounts}
+          totalWords={words.length}
+        />
       ) : null}
 
       {/* Disposición con resultados y sidebar conciso de búsqueda/filtros */}

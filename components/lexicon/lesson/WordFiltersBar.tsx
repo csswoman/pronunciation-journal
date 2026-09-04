@@ -55,8 +55,8 @@ export function WordFiltersBar({
       <div className="flex flex-col gap-4" role="search">
         <p className="font-mono text-tiny uppercase tracking-wider text-fg-subtle font-medium">Filtrar y buscar</p>
 
-        {/* Campo de búsqueda */}
-        <label className="flex items-center gap-2 px-3 py-2 bg-surface-sunken border border-border-default rounded-md text-fg-subtle focus-within:border-primary">
+        {/* Campo de búsqueda estilo Apple Search field */}
+        <label className="flex items-center gap-2 px-3 py-2 bg-surface-sunken border border-border-subtle rounded-md text-fg-subtle focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all">
           <Search className="w-4 h-4 shrink-0" aria-hidden />
           <span className="sr-only">Buscar palabras</span>
           <input
@@ -66,9 +66,19 @@ export function WordFiltersBar({
             onChange={(e) => onSearchChange(e.target.value)}
             className="w-full bg-transparent border-none text-body-sm text-fg outline-none placeholder:text-fg-disabled"
           />
+          {search ? (
+            <button
+              type="button"
+              onClick={() => onSearchChange("")}
+              className="text-fg-subtle hover:text-fg p-0.5 rounded-full focus-ring cursor-pointer"
+              aria-label="Borrar búsqueda"
+            >
+              <span aria-hidden className="text-tiny font-bold leading-none block">✕</span>
+            </button>
+          ) : null}
         </label>
 
-        {/* Pestañas de estado */}
+        {/* Pestañas de estado estilo Segmented List */}
         <div className="flex flex-col gap-1.5">
           <span className="text-caption font-medium text-fg-subtle">Estado</span>
           <div className="flex flex-col gap-1" role="tablist" aria-label="Filtrar por estado">
@@ -80,9 +90,9 @@ export function WordFiltersBar({
                 aria-selected={status === tab.id}
                 onClick={() => onStatusChange(tab.id)}
                 className={cn(
-                  "flex items-center justify-between px-3 py-2 text-caption font-medium rounded-md transition-colors text-left cursor-pointer",
+                  "flex items-center justify-between px-3 py-2 text-caption font-medium rounded-md transition-all text-left cursor-pointer focus-ring",
                   status === tab.id
-                    ? "bg-primary-soft text-primary font-semibold"
+                    ? "bg-primary-soft text-primary font-semibold shadow-xs"
                     : "text-fg-muted hover:bg-surface-sunken hover:text-fg"
                 )}
               >
@@ -106,7 +116,7 @@ export function WordFiltersBar({
                 type="button"
                 onClick={() => onSortChange("alpha")}
                 className={cn(
-                  "px-3 py-1 text-tiny font-medium rounded-full transition-colors cursor-pointer",
+                  "px-3 py-1 text-tiny font-medium rounded-full transition-all cursor-pointer focus-ring",
                   sort === "alpha" ? "bg-surface-raised text-fg font-semibold shadow-xs" : "text-fg-muted hover:text-fg"
                 )}
               >
@@ -116,7 +126,7 @@ export function WordFiltersBar({
                 type="button"
                 onClick={() => onSortChange("difficulty")}
                 className={cn(
-                  "px-3 py-1 text-tiny font-medium rounded-full transition-colors cursor-pointer",
+                  "px-3 py-1 text-tiny font-medium rounded-full transition-all cursor-pointer focus-ring",
                   sort === "difficulty" ? "bg-surface-raised text-fg font-semibold shadow-xs" : "text-fg-muted hover:text-fg"
                 )}
               >
@@ -132,7 +142,7 @@ export function WordFiltersBar({
                 type="button"
                 onClick={() => onViewChange("grid")}
                 className={cn(
-                  "p-1.5 rounded-sm transition-colors cursor-pointer",
+                  "p-1.5 rounded-sm transition-all cursor-pointer focus-ring",
                   view === "grid" ? "bg-surface-raised text-fg shadow-xs" : "text-fg-subtle hover:text-fg"
                 )}
                 aria-label="Vista en cuadrícula"
@@ -144,7 +154,7 @@ export function WordFiltersBar({
                 type="button"
                 onClick={() => onViewChange("list")}
                 className={cn(
-                  "p-1.5 rounded-sm transition-colors cursor-pointer",
+                  "p-1.5 rounded-sm transition-all cursor-pointer focus-ring",
                   view === "list" ? "bg-surface-raised text-fg shadow-xs" : "text-fg-subtle hover:text-fg"
                 )}
                 aria-label="Vista en lista"
@@ -173,11 +183,7 @@ export function WordFiltersBar({
               className={cn("lexicon-area__ftab", status === tab.id && "is-active")}
             >
               {tab.label}
-              {counts ? (
-                <span className="lexicon-area__ftab-count" aria-hidden>
-                  {counts[tab.id]}
-                </span>
-              ) : null}
+              {counts ? <span className="lexicon-area__ftab-count" aria-hidden>{counts[tab.id]}</span> : null}
             </button>
           ))}
         </div>

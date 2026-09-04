@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { lookupWordWithGemini } from "@/lib/word-bank/gemini";
 import { getCachedWordDefinition, getOrCreateWordDefinition } from "@/lib/word-bank/definition-cache";
+import { findEssentialWord } from "@/lib/essential-words/data";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { createUserScopedClient, publicErrorResponse, rateLimit, requireSameOrigin, requireUser, validateBody } from "@/lib/api/guards";
 import { logServerError } from "@/lib/api/logging";
@@ -47,6 +48,24 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       });
     }
 
+    // 1. Catálogo local curado en memoria (Core 1000) — 0ms, 0 llamadas a IA
+    const localEssential = findEssentialWord(data.text);
+    if (localEssential && localEssential.meaning && localEssential.translation) {
+      return NextResponse.json({
+        enrichment: {
+          meaning: localEssential.meaning,
+          translation: localEssential.translation,
+          ipa: localEssential.ipa_strong ?? "",
+          example: localEssential.example_sentence ?? "",
+          synonyms: [],
+          image_prompt: "",
+        },
+        source: "dictionary",
+        alreadySaved: !!savedWord,
+      });
+    }
+
+    // 2. Caché compartida de base de datos
     const cached = await getCachedWordDefinition(data.text);
     if (cached) {
       return NextResponse.json({ enrichment: cached, source: "dictionary", alreadySaved: !!savedWord });
