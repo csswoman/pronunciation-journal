@@ -19,6 +19,7 @@ import type { CoursePathLesson, CoursePathTrackId, LessonProgressState, LessonTa
 interface CoursePathLessonRowProps {
   lesson: CoursePathLesson & { state: LessonProgressState };
   levelId: CoursePathTrackId;
+  isDownloaded?: boolean;
 }
 
 function getTagStyle(tag?: LessonTag, soundLab?: boolean, isOptional?: boolean): { label: string; className: string } {
@@ -33,7 +34,7 @@ function getTagStyle(tag?: LessonTag, soundLab?: boolean, isOptional?: boolean):
   return { label: "concepto", className: "course-path__tag--concepto" };
 }
 
-export default function CoursePathLessonRow({ lesson, levelId }: CoursePathLessonRowProps) {
+export default function CoursePathLessonRow({ lesson, levelId, isDownloaded }: CoursePathLessonRowProps) {
   const href = studyLessonPath(levelId, lesson.number);
   const formattedNum = String(lesson.number).padStart(2, "0");
   const tagInfo = getTagStyle(lesson.tag, lesson.soundLab, lesson.isOptional);
@@ -86,6 +87,7 @@ export default function CoursePathLessonRow({ lesson, levelId }: CoursePathLesso
                 lessonNumber={lesson.number}
                 slug={lesson.slug}
                 title={lesson.title}
+                isDownloaded={isDownloaded}
               />
               <TrackingSaveButton
                 kind="lesson"

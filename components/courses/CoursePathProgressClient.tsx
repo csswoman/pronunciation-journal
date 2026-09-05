@@ -29,6 +29,7 @@ import CoursePathYaPuedesDecirEsto from "@/components/courses/CoursePathYaPuedes
 import CoursePracticeSuggestions from "@/components/courses/CoursePracticeSuggestions";
 import { WordCarousel } from "@/components/practice/session/WordCarousel";
 import { useLoadingWords } from "@/hooks/useLoadingWords";
+import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth/session";
 import { deriveLevelView, lessonProgressKey } from "@/lib/courses/progress";
@@ -152,6 +153,19 @@ export default function CoursePathProgressClient({
   const currentLesson = derived?.units.flatMap((unit) => unit.lessons).find((lesson) => lesson.state === "current");
   const firstLesson = derived?.units[0]?.lessons[0];
 
+  // Single reactive subscription for the whole lesson list — each LessonDownloadButton
+  // below receives its status as a plain prop instead of subscribing individually,
+  // so the Dexie-backed download engine only needs to be resolved once per page.
+  const downloadedRows = useLiveQuery(
+    () => db.downloadedLessons.where("trackId").equals(level.id).toArray(),
+    [level.id],
+    [],
+  );
+  const downloadedIds = useMemo(
+    () => new Set((downloadedRows ?? []).map((row) => `${row.trackId}:${row.lessonNumber}`)),
+    [downloadedRows],
+  );
+
   if (!derived || !completedIds) {
     return (
       <div
@@ -269,6 +283,7 @@ export default function CoursePathProgressClient({
                         key={`${unit.unit.id}-${lesson.id}`}
                         lesson={lesson}
                         levelId={level.id}
+                        isDownloaded={downloadedIds.has(`${level.id}:${lesson.number}`)}
                       />
                     ))}
                   </div>
@@ -298,6 +313,7 @@ export default function CoursePathProgressClient({
                       levelId={level.id}
                       open={expandedGroups[id] ?? (hasCurrentLesson || index === 0)}
                       onToggle={handleGroupToggle}
+                      downloadedIds={downloadedIds}
                     />
                   );
                 })}
@@ -313,6 +329,7 @@ export default function CoursePathProgressClient({
                       open={expandedGroups[id] ?? false}
                       onToggle={handleGroupToggle}
                       completed
+                      downloadedIds={downloadedIds}
                     />
                   );
                 })()}

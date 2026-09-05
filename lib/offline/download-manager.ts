@@ -1,5 +1,4 @@
 import { useLiveQuery } from "dexie-react-hooks";
-import { useState, useCallback } from "react";
 import {
   db,
   getDownloadedLesson,
@@ -118,66 +117,6 @@ export async function removeDownloadedLesson(id: string): Promise<void> {
       console.warn("[download-manager] Error al limpiar caché de audio:", cacheErr);
     }
   }
-}
-
-/**
- * Reactive hook to query the download status and trigger download/removal of a lesson.
- */
-export function useLessonDownload(id: string | null) {
-  const [isDownloading, setIsDownloading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const downloadedRecord = useLiveQuery(
-    async () => {
-      if (!id) return undefined;
-      return db.downloadedLessons.get(id);
-    },
-    [id],
-    undefined,
-  );
-
-  const isDownloaded = Boolean(downloadedRecord);
-
-  const handleDownload = useCallback(
-    async (options: DownloadLessonOptions) => {
-      setIsDownloading(true);
-      setError(null);
-      try {
-        await downloadLesson(options);
-      } catch (err) {
-        const message = err instanceof Error ? err.message : "Error al descargar la lección";
-        setError(message);
-        throw err;
-      } finally {
-        setIsDownloading(false);
-      }
-    },
-    [],
-  );
-
-  const handleRemove = useCallback(async () => {
-    if (!id) return;
-    setIsDownloading(true);
-    setError(null);
-    try {
-      await removeDownloadedLesson(id);
-    } catch (err) {
-      const message = err instanceof Error ? err.message : "Error al eliminar la lección descargada";
-      setError(message);
-      throw err;
-    } finally {
-      setIsDownloading(false);
-    }
-  }, [id]);
-
-  return {
-    isDownloaded,
-    isDownloading,
-    downloadedRecord,
-    error,
-    download: handleDownload,
-    remove: handleRemove,
-  };
 }
 
 /**

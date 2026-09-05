@@ -1,7 +1,9 @@
 import Link from "next/link";
+import { useLiveQuery } from "dexie-react-hooks";
 import { ArrowLeft } from "@/components/icons";
 import { TrackingSaveButton } from "@/components/tracking/TrackingSaveButton";
 import { LessonDownloadButton } from "@/components/courses/LessonDownloadButton";
+import { db } from "@/lib/db";
 import type { GrammarDeckMeta } from "@/lib/courses/grammar-deck/types";
 import { studyOrPracticeDeckHref } from "@/lib/courses/curriculumIndex";
 
@@ -31,6 +33,15 @@ export default function GrammarDeckHeader({
   const pct = totalCount === 0 ? 0 : Math.round((reviewedCount / totalCount) * 100);
   const fullTitle = [meta.title, meta.titleEmphasis].filter(Boolean).join(" ");
   const deckHref = lessonSlug ? studyOrPracticeDeckHref(lessonSlug) : undefined;
+  const downloadId = levelId && lessonNumber ? `${levelId}:${lessonNumber}` : null;
+  const downloadedRecord = useLiveQuery(
+    async () => {
+      if (!downloadId) return undefined;
+      return db.downloadedLessons.get(downloadId);
+    },
+    [downloadId],
+    undefined,
+  );
 
   return (
     <header className="grammar-deck__head">
@@ -54,6 +65,7 @@ export default function GrammarDeckHeader({
                   slug={lessonSlug}
                   title={fullTitle}
                   variant="badge"
+                  isDownloaded={Boolean(downloadedRecord)}
                 />
               )}
               <TrackingSaveButton
