@@ -1,12 +1,13 @@
-import { NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { redirectAfterClearingSession } from "@/lib/supabase/redirect-after-sign-out";
 import {
   buildGoogleExistingAccountLoginPath,
   isIdentityAlreadyExistsError,
 } from "@/lib/auth/oauth-identity";
 import { safeNextPath } from "@/lib/auth/safe-next-path";
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
   const destination = safeNextPath(searchParams.get("next"));
@@ -19,8 +20,10 @@ export async function GET(request: Request) {
     })
   ) {
     // Guest tried to link Google, but that identity already belongs to a
-    // permanent account — continue as a normal Google sign-in instead.
-    return NextResponse.redirect(
+    // permanent account. Drop the anonymous session on this redirect so the
+    // follow-up signInWithOAuth is not treated as another linkIdentity.
+    return redirectAfterClearingSession(
+      request,
       `${origin}${buildGoogleExistingAccountLoginPath()}`,
     );
   }

@@ -1,11 +1,9 @@
 import {
   getBrowserSession,
-  linkGoogleIdentity,
   resetPasswordForEmail,
   signInAsGuest,
   signInWithEmail,
-  signInWithGoogle,
-  signOut,
+  signInWithGoogleReplacingSession,
   signUpWithEmail,
   updatePassword,
   upgradeGuestWithEmail,
@@ -16,9 +14,8 @@ import {
   publicAuthErrorMessage,
   validatePasswordPolicy,
 } from "@/lib/auth/password-policy";
-import { isIdentityAlreadyExistsError } from "@/lib/auth/oauth-identity";
 import { markAuthSeen } from "@/lib/auth/returning-visitor";
-import type { AuthPanelIntent, AuthPanelMode } from "@/components/auth/auth-panel-types";
+import type { AuthPanelMode } from "@/components/auth/auth-panel-types";
 
 type AuthRouter = {
   replace: (href: string) => void;
@@ -31,7 +28,6 @@ export type AuthPanelHandlersDeps = {
   password: string;
   confirmPassword: string;
   upgradingGuest: boolean;
-  intent: AuthPanelIntent;
   clearFeedback: () => void;
   finishSignedIn: () => void;
   setError: (value: string | null) => void;
@@ -50,7 +46,6 @@ export function createAuthPanelHandlers(deps: AuthPanelHandlersDeps) {
     password,
     confirmPassword,
     upgradingGuest,
-    intent,
     clearFeedback,
     finishSignedIn,
     setError,
@@ -164,7 +159,7 @@ export function createAuthPanelHandlers(deps: AuthPanelHandlersDeps) {
     clearFeedback();
     setPending(true);
     let leavingForProvider = false;
-    // signInWithOAuth/linkIdentity return the provider URL under PKCE; nothing
+    // signInWithOAuth returns the provider URL under PKCE; nothing
     // navigates unless we send the browser there ourselves.
     const redirectToProvider = (url: string | null) => {
       if (!url) {
@@ -177,35 +172,10 @@ export function createAuthPanelHandlers(deps: AuthPanelHandlersDeps) {
       window.location.assign(url);
     };
     try {
-      if (upgradingGuest && intent === "save") {
-        const { data: linkData, error: err } = await linkGoogleIdentity();
-        if (err) {
-          if (
-            isIdentityAlreadyExistsError({
-              message: err.message,
-              errorCode: "code" in err ? String(err.code) : null,
-            })
-          ) {
-            // Google already belongs to a permanent account — sign into that
-            // account instead of leaving the guest stuck on a link error.
-            await signOut();
-            const { data: signInData, error: signInErr } = await signInWithGoogle();
-            if (signInErr) {
-              console.error("[auth] google sign in after link conflict failed", signInErr);
-              setError(oauthErrorMessage());
-              return;
-            }
-            redirectToProvider(signInData?.url ?? null);
-            return;
-          }
-          console.error("[auth] google link failed", err);
-          setError(oauthErrorMessage());
-          return;
-        }
-        redirectToProvider(linkData?.url ?? null);
-        return;
-      }
-      const { data, error: err } = await signInWithGoogle();
+      // Always drop a guest session first. Google OAuth with an anonymous JWT
+      // is treated as linkIdentity by GoTrue, which 422s when that Google
+      // account already exists — a dead end for anyone trying to log in.
+      const { data, error: err } = await signInWithGoogleReplacingSession();
       if (err) {
         console.error("[auth] google sign in failed", err);
         setError(oauthErrorMessage());

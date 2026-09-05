@@ -52,6 +52,22 @@ export async function signInWithGoogle() {
   });
 }
 
+/**
+ * Sign in with Google as a *new* session. Required after a guest link
+ * conflict: an anonymous JWT on `/authorize` makes GoTrue link, not sign in.
+ */
+export async function signInWithGoogleReplacingSession() {
+  const supabase = getSupabaseBrowserClient();
+  await supabase.auth.signOut({ scope: "local" });
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  if (session) {
+    await supabase.auth.signOut({ scope: "local" });
+  }
+  return signInWithGoogle();
+}
+
 /** Link Google to the current anonymous session so progress stays on the same user id. */
 export async function linkGoogleIdentity() {
   const supabase = getSupabaseBrowserClient();

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-import { getBrowserSession, signInWithGoogle, signOut } from "@/lib/supabase/auth-actions";
+import { getBrowserSession, signInWithGoogleReplacingSession } from "@/lib/supabase/auth-actions";
 import { isAnonymousUser } from "@/lib/auth/is-anonymous";
 import {
   GOOGLE_OAUTH_RESUME_PARAM,
@@ -95,14 +95,16 @@ export function useAuthPanelController() {
     if (googleResumeStarted.current) return;
     googleResumeStarted.current = true;
 
-    router.replace(intent === "save" ? "/login?intent=save" : "/login");
+    // Strip the resume flag without a Next navigation: `router.replace` would
+    // race the proxy session refresh and put the guest cookies back.
+    const nextPath = intent === "save" ? "/login?intent=save" : "/login";
+    window.history.replaceState(null, "", nextPath);
     setError(null);
     setMessage(null);
     setPending(true);
 
     void (async () => {
-      await signOut();
-      const { data, error: err } = await signInWithGoogle();
+      const { data, error: err } = await signInWithGoogleReplacingSession();
       if (err || !data?.url) {
         if (err) console.error("[auth] google resume sign in failed", err);
         setError(err ? oauthErrorMessage() : oauthUnavailableMessage());
@@ -112,7 +114,7 @@ export function useAuthPanelController() {
       // Leave pending true: the browser is leaving for Google.
       window.location.assign(data.url);
     })();
-  }, [intent, router, searchParams]);
+  }, [intent, searchParams]);
 
   const clearFeedback = () => {
     setError(null);
@@ -137,7 +139,6 @@ export function useAuthPanelController() {
     password,
     confirmPassword,
     upgradingGuest,
-    intent,
     clearFeedback,
     finishSignedIn,
     setError,

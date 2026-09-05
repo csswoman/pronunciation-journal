@@ -12,6 +12,7 @@ export interface ReadinessPayload {
   checks: {
     supabase: { status: "ok"; latencyMs?: number } | { status: "error"; latencyMs?: number; message?: string };
     gemini: { status: "ok" } | { status: "error"; message?: string };
+    rateLimit: { status: "ok" } | { status: "error"; message?: string };
   };
 }
 
@@ -44,11 +45,19 @@ export function checkGemini(): CheckResult {
     : { ok: false, message: "GEMINI_API_KEY not configured" };
 }
 
+/** Service-role key is required in production for distributed Gemini rate limits. */
+export function checkRateLimitBackend(): CheckResult {
+  return process.env.SUPABASE_SERVICE_ROLE_KEY
+    ? { ok: true }
+    : { ok: false, message: "SUPABASE_SERVICE_ROLE_KEY not configured" };
+}
+
 export async function buildReadinessPayload(): Promise<{ payload: ReadinessPayload; status: 200 | 503 }> {
   const version = process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) ?? "unknown";
   const supabase = await checkSupabase();
   const gemini = checkGemini();
-  const allOk = supabase.ok && gemini.ok;
+  const rateLimit = checkRateLimitBackend();
+  const allOk = supabase.ok && gemini.ok && rateLimit.ok;
 
   return {
     status: allOk ? 200 : 503,
@@ -60,6 +69,9 @@ export async function buildReadinessPayload(): Promise<{ payload: ReadinessPaylo
           ? { status: "ok", latencyMs: supabase.latencyMs }
           : { status: "error", latencyMs: supabase.latencyMs, message: supabase.message },
         gemini: gemini.ok ? { status: "ok" } : { status: "error", message: gemini.message },
+        rateLimit: rateLimit.ok
+          ? { status: "ok" }
+          : { status: "error", message: rateLimit.message },
       },
     },
   };

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  AI_SESSION_REQUIRED_MESSAGE,
   AI_UNAVAILABLE_MESSAGE,
   DATA_UNAVAILABLE_MESSAGE,
   isQuotaLikeError,
@@ -16,6 +17,7 @@ describe("degradation messages", () => {
 
   it("returns public AI degradation copy without provider internals", () => {
     expect(publicAiErrorMessage(503, "Gemini stack trace")).toBe(AI_UNAVAILABLE_MESSAGE);
+    expect(publicAiErrorMessage(401, "Unauthorized")).toBe(AI_SESSION_REQUIRED_MESSAGE);
     expect(publicAiErrorMessage(429, "Gemini quota")).toMatch(/vuelve mañana|tokens/i);
     expect(DATA_UNAVAILABLE_MESSAGE).toMatch(/sync will retry/i);
   });
