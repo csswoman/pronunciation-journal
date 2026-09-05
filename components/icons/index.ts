@@ -63,6 +63,7 @@ import {
   IconHistory,
   IconHome,
   IconInfoCircle,
+  IconLanguage,
   IconLayoutGrid,
   IconLayoutList,
   IconLayoutSidebarLeftCollapse,
@@ -183,6 +184,7 @@ export const History = createIcon(IconHistory, "History");
 export const Home = createIcon(IconHome, "Home");
 export const ImagePlus = createIcon(IconPhotoPlus, "ImagePlus");
 export const Info = createIcon(IconInfoCircle, "Info");
+export const Languages = createIcon(IconLanguage, "Languages");
 export const Laptop = createIcon(IconDeviceLaptop, "Laptop");
 export const Layers = createIcon(IconStack2, "Layers");
 export const LayoutGrid = createIcon(IconLayoutGrid, "LayoutGrid");

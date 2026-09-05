@@ -57,14 +57,10 @@ describe('HomeWordOfDayCard', () => {
     })
   })
 
-  it('renders example section, allows listening and shows translation', () => {
+  it('renders example section open by default, allows listening and shows translation', () => {
     render(<HomeWordOfDayCard />)
 
-    // Example is closed by default, click it to open
-    const exampleButton = screen.getByRole('button', { name: 'Ejemplo' })
-    fireEvent.click(exampleButton)
-
-    // Now the translation should be visible
+    // Example is visible by default
     expect(screen.getByText('Encontrar este café fue pura casualidad afortunada.')).toBeInTheDocument()
 
     // And the listen button should be visible
@@ -72,5 +68,11 @@ describe('HomeWordOfDayCard', () => {
     expect(exampleSpeakButton).toBeInTheDocument()
     fireEvent.click(exampleSpeakButton)
     expect(speakTextMock).toHaveBeenCalledWith('Finding this cafe was pure serendipity.')
+
+    // The whole word row is clickable to listen to pronunciation
+    const wordSpeakButton = screen.getByRole('button', { name: 'Escuchar pronunciación de serendipity' })
+    expect(wordSpeakButton).toBeInTheDocument()
+    fireEvent.click(wordSpeakButton)
+    expect(speakTextMock).toHaveBeenCalledWith('serendipity')
   })
 })

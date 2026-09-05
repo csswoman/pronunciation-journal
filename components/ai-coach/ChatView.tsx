@@ -18,6 +18,7 @@ interface ChatViewProps {
   messages: AIMessage[];
   isStreaming: boolean;
   onSaveWord: (word: string, context: string) => void;
+  onSaveTranslation?: (msgIndex: number, translation: string) => void;
   onSuggestionClick: (text: string) => void;
   onToolAnswer: (callId: string, result: ExerciseResult) => void;
   onNext: () => void;
@@ -29,10 +30,11 @@ export default function ChatView({
   messages,
   isStreaming,
   onSaveWord,
+  onSaveTranslation,
   onSuggestionClick,
   onToolAnswer,
   onNext,
-  align = "bottom",
+  align = "top",
   className,
 }: ChatViewProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -91,7 +93,7 @@ export default function ChatView({
   return (
     <div
       className={cn(
-        "chat-messages-container flex min-h-0 flex-col py-3",
+        "chat-messages-container flex min-h-full flex-1 w-full flex-col py-3",
         isTop ? "justify-start" : "h-full justify-end",
         className,
       )}
@@ -109,6 +111,7 @@ export default function ChatView({
               message={msg}
               showAvatar={isLastInGroup[i]}
               onSaveWord={onSaveWord}
+              onSaveTranslation={(translation) => onSaveTranslation?.(messages.indexOf(msg), translation)}
               onSuggestionClick={onSuggestionClick}
               onToolAnswer={onToolAnswer}
               onNext={onNext}

@@ -38,28 +38,9 @@ export default function HomeStatsRow({
 
   const totalDue = wordsDueCount + soundsDueCount;
 
+  // No mostrar la tira si está completamente vacía (estado inicial / día 1)
   if (learnedCount === 0 && totalDue === 0) {
-    return (
-      <Link
-        href="/practice/essential-words"
-        className="focus-ring group flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-xl border border-border-subtle bg-surface-raised p-4 transition-all hover:border-border-default hover:shadow-xs"
-      >
-        <div className="flex flex-col gap-1">
-          <span className="font-label text-body-xs font-semibold text-primary">
-            Vocabulario esencial · {levelKey}
-          </span>
-          <p className="font-sans text-body-md font-bold text-fg">
-            Tus primeras 10 palabras te esperan
-          </p>
-          <span className="font-body-xs text-fg-muted">
-            Aprende tus primeras palabras clave para desbloquear repasos diarios.
-          </span>
-        </div>
-        <span className="inline-flex min-h-10 shrink-0 items-center justify-center rounded-lg border border-border-default bg-surface px-4 font-label text-body-xs font-semibold text-fg transition-colors group-hover:bg-primary group-hover:text-on-primary">
-          Empezar lección →
-        </span>
-      </Link>
-    );
+    return null;
   }
 
   return (

@@ -2,6 +2,7 @@ import { ChevronLeft, History, Plus, Sparkles, X } from "@/components/icons";
 import { useState, useEffect, useRef } from "react";
 import type { AIConversation } from "@/lib/types";
 import { groupConversationsByDate } from "@/lib/group-by-date";
+import { formatConversationTitle } from "@/lib/ai-practice/conversation-title";
 import { cn } from "@/lib/cn";
 
 export function AICoachHeader({
@@ -47,6 +48,36 @@ export function AICoachHeader({
   );
 }
 
+export function AICoachResizeHandle({
+  onDragStart,
+}: {
+  onDragStart: (e: React.MouseEvent) => void;
+}) {
+  return (
+    <div
+      role="separator"
+      aria-orientation="vertical"
+      aria-label="Ajustar ancho del panel"
+      onMouseDown={onDragStart}
+      title="Arrastra para ajustar el ancho"
+      className="absolute top-0 -left-1.5 bottom-0 w-3 cursor-col-resize group z-20 flex items-center justify-center select-none"
+    >
+      <div className="h-full w-0.5 bg-transparent group-hover:bg-primary/70 group-active:bg-primary transition-colors" />
+    </div>
+  );
+}
+
+export function AICoachMobileScrim({ onClose }: { onClose: () => void }) {
+  return (
+    <div
+      role="presentation"
+      aria-hidden="true"
+      onClick={onClose}
+      className="fixed inset-0 z-40 bg-surface-base/80 backdrop-blur-xs transition-opacity motion-reduce:transition-none"
+    />
+  );
+}
+
 function PanelIconButton({
   onClick,
   title,
@@ -66,7 +97,7 @@ function PanelIconButton({
       aria-label={title}
       data-active={active ? "true" : undefined}
       className={cn(
-        "size-8 rounded-md flex items-center justify-center transition-colors cursor-pointer focus-ring",
+        "min-h-9 min-w-9 sm:size-8 rounded-md flex items-center justify-center transition-colors cursor-pointer focus-ring",
         active
           ? "text-primary bg-primary-soft font-medium shadow-xs"
           : "text-fg-muted hover:text-fg hover:bg-surface-sunken",
@@ -122,6 +153,12 @@ export function ConversationHistoryPanel({
 
   const grouped = groupConversationsByDate(conversations);
   const order = ["TODAY", "YESTERDAY", "7 DAYS", "OLDER"] as const;
+  const labels: Record<(typeof order)[number], string> = {
+    TODAY: "HOY",
+    YESTERDAY: "AYER",
+    "7 DAYS": "ÚLTIMOS 7 DÍAS",
+    OLDER: "ANTERIORES",
+  };
   const isEmpty = order.every((label) => grouped[label].length === 0);
 
   return (
@@ -148,7 +185,7 @@ export function ConversationHistoryPanel({
             if (!items?.length) return null;
             return (
               <div key={label} className="mb-3">
-                <p className="font-kicker px-3.5 py-1 text-fg-subtle text-xxs">{label}</p>
+                <p className="font-kicker px-3.5 py-1 text-fg-subtle text-xxs">{labels[label]}</p>
                 {items.map((conv) => {
                   const isActive = conv.id === activeId;
                   const isPending = conv.id === pendingDelete;
@@ -170,9 +207,7 @@ export function ConversationHistoryPanel({
                           isPending && "opacity-50",
                         )}
                       >
-                        {typeof conv.messages.find((m) => m.role === "user")?.content === "string"
-                          ? conv.messages.find((m) => m.role === "user")?.content.slice(0, 48)
-                          : "Conversación sin título"}
+                        {formatConversationTitle(conv)}
                       </span>
                       {isPending ? (
                         <button

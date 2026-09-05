@@ -149,8 +149,8 @@ export function buildStudyDeckStep(
   return {
     kind: 'study_deck',
     id: `study_deck:${target.level.id}:${target.lesson.id}`,
-    title: 'Estudia teoría',
-    subtitle: target.lesson.title,
+    title: `Teoría: ${target.lesson.title}`,
+    subtitle: target.lesson.keywords || 'Explicación de la regla y ejemplos',
     icon: 'GraduationCap',
     exercises: [],
     estMinutes: 5,

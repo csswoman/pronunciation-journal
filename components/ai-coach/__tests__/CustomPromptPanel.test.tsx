@@ -1,111 +1,51 @@
 // @vitest-environment jsdom
 import { render, screen, fireEvent } from "@testing-library/react";
-import { describe, expect, it, vi, beforeEach } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import CustomPromptPanel from "../CustomPromptPanel";
 
-vi.mock("@/hooks/useSharedMicStream", () => ({
-  useSharedMicStream: () => ({ getStream: vi.fn() }),
-}));
-
-const speechInputMocks = vi.hoisted(() => ({
-  state: "idle" as string,
-  result: null as { transcript: string } | null,
-  error: null as string | null,
-  start: vi.fn(),
-  stop: vi.fn(),
-  reset: vi.fn(),
-  __onResult: undefined as ((r: { transcript: string }) => void) | undefined,
-  __onError: undefined as ((e: Error) => void) | undefined,
-}));
-
-vi.mock("@/hooks/useSpeechInput", () => ({
-  useSpeechInput: (opts: { onResult?: (r: { transcript: string }) => void; onError?: (e: Error) => void }) => {
-    speechInputMocks.__onResult = opts.onResult;
-    speechInputMocks.__onError = opts.onError;
-    return {
-      state: speechInputMocks.state,
-      result: speechInputMocks.result,
-      error: speechInputMocks.error,
-      isSupported: true,
-      start: speechInputMocks.start,
-      stop: speechInputMocks.stop,
-      abort: vi.fn(),
-      reset: speechInputMocks.reset,
-    };
-  },
-}));
-
 describe("CustomPromptPanel", () => {
-  beforeEach(() => {
-    speechInputMocks.state = "idle";
-    speechInputMocks.result = null;
-    speechInputMocks.error = null;
-    speechInputMocks.start.mockReset();
-    speechInputMocks.stop.mockReset();
-    speechInputMocks.reset.mockReset();
-  });
-
-  it("sends a typed message without a voice tag", () => {
+  it("sends a typed message on submit", () => {
     const onSubmit = vi.fn();
     render(<CustomPromptPanel onSubmit={onSubmit} isDisabled={false} variant="chat" />);
 
-    const textarea = screen.getByPlaceholderText("Type your message...");
+    const textarea = screen.getByPlaceholderText(/escribe a tu ai coach|escribe tu mensaje\.\.\.|type your message\.\.\./i);
     fireEvent.change(textarea, { target: { value: "hello there" } });
-    fireEvent.click(screen.getByLabelText("Send"));
+    fireEvent.click(screen.getByLabelText(/enviar|send/i));
 
     expect(onSubmit).toHaveBeenCalledWith("hello there");
   });
 
-  it("clicking the mic button starts recording", () => {
+  it("sends a message on Enter key press without Shift", () => {
     const onSubmit = vi.fn();
     render(<CustomPromptPanel onSubmit={onSubmit} isDisabled={false} variant="chat" />);
 
-    fireEvent.click(screen.getByLabelText("Voice input"));
+    const textarea = screen.getByPlaceholderText(/escribe a tu ai coach|escribe tu mensaje\.\.\.|type your message\.\.\./i);
+    fireEvent.change(textarea, { target: { value: "good morning" } });
+    fireEvent.keyDown(textarea, { key: "Enter", shiftKey: false });
 
-    expect(speechInputMocks.start).toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenCalledWith("good morning");
   });
 
-  it("sends the transcript with a scored voice tag on successful recognition", () => {
+  it("does not send on Shift+Enter", () => {
     const onSubmit = vi.fn();
-    speechInputMocks.state = "listening";
-    const { rerender } = render(<CustomPromptPanel onSubmit={onSubmit} isDisabled={false} variant="chat" />);
-
-    // Simulate onResult firing (as useSpeechInput would after stop())
-    speechInputMocks.__onResult?.({ transcript: "how are you" });
-    speechInputMocks.state = "done";
-    speechInputMocks.result = { transcript: "how are you" };
-    rerender(<CustomPromptPanel onSubmit={onSubmit} isDisabled={false} variant="chat" />);
-
-    expect(onSubmit).toHaveBeenCalledWith("how are you", { voice: { transcript: true, scored: true } });
-  });
-
-  it("shows a retry affordance and does not call onSubmit on permission denial", () => {
-    const onSubmit = vi.fn();
-    speechInputMocks.state = "error";
-    speechInputMocks.error = "not-allowed";
     render(<CustomPromptPanel onSubmit={onSubmit} isDisabled={false} variant="chat" />);
+
+    const textarea = screen.getByPlaceholderText(/escribe a tu ai coach|escribe tu mensaje\.\.\.|type your message\.\.\./i);
+    fireEvent.change(textarea, { target: { value: "good morning" } });
+    fireEvent.keyDown(textarea, { key: "Enter", shiftKey: true });
 
     expect(onSubmit).not.toHaveBeenCalled();
-    expect(screen.getByRole("button", { name: /retry/i })).toBeInTheDocument();
   });
 
-  it("retry button resets the speech input state", () => {
-    const onSubmit = vi.fn();
-    speechInputMocks.state = "error";
-    speechInputMocks.error = "not-allowed";
-    render(<CustomPromptPanel onSubmit={onSubmit} isDisabled={false} variant="chat" />);
-
-    fireEvent.click(screen.getByRole("button", { name: /retry/i }));
-
-    expect(speechInputMocks.reset).toHaveBeenCalled();
-  });
-
-  it("does not send anything when recognition produces an empty transcript", () => {
+  it("does not send empty text", () => {
     const onSubmit = vi.fn();
     render(<CustomPromptPanel onSubmit={onSubmit} isDisabled={false} variant="chat" />);
 
-    speechInputMocks.__onResult?.({ transcript: "   " });
+    const textarea = screen.getByPlaceholderText(/escribe a tu ai coach|escribe tu mensaje\.\.\.|type your message\.\.\./i);
+    fireEvent.change(textarea, { target: { value: "   " } });
+    fireEvent.click(screen.getByLabelText(/enviar|send/i));
 
     expect(onSubmit).not.toHaveBeenCalled();
   });
 });
+

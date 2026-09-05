@@ -21,6 +21,14 @@ vi.mock('@/lib/db', () => ({
   setLastPracticeMode: vi.fn(),
 }))
 
+vi.mock('@/lib/essential-words/level-count', () => ({
+  getEssentialWordsLevelCount: vi.fn(async () => ({ learned: 0, total: 1000 })),
+}))
+
+vi.mock('@/lib/essential-words/target-level', () => ({
+  readStoredCefrLevel: vi.fn(async () => 'A1'),
+}))
+
 vi.mock('@/components/ai-coach/SpeakWithCoachCard', () => ({
   default: () => <div data-testid="speak-with-coach">SpeakWithCoach</div>,
 }))

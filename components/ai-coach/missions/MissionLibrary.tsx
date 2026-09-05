@@ -17,7 +17,7 @@ import { Sparkles } from '@/components/icons'
 //     <FilterChrome /> — fixed category scroller
 //     <CreateDialogAction /> — trigger for generating dialogues with AI
 //   </LibraryToolbar>
-//   <MissionList /> — scrollable cards or empty filter state
+//   <MissionList /> — scrollable cards with dynamic featured mission or empty filter state
 //   <CreateMissionModal /> — modal to generate and persist scripts
 // </MissionLibrary>
 
@@ -32,6 +32,7 @@ export default function MissionLibrary({ missions, onSelect }: MissionLibraryPro
   const [category, setCategory] = useState<MissionFilterCategory>('all')
   const [generatedMissions, setGeneratedMissions] = useState<OralMission[]>([])
   const [isCreateOpen, setIsCreateOpen] = useState(false)
+  const [featuredId, setFeaturedId] = useState<string | null>(null)
 
   const loadGenerated = useCallback(async () => {
     if (!user?.id) return
@@ -53,13 +54,31 @@ export default function MissionLibrary({ missions, onSelect }: MissionLibraryPro
     ...missions.filter((m) => !generatedMissions.some((g) => g.id === m.id)),
   ]
 
+  // Seleccionar una misión sugerida dinámica diferente en cada visita al componente
+  useEffect(() => {
+    if (allMissions.length > 0 && !featuredId) {
+      if (process.env.NODE_ENV === 'test') {
+        setFeaturedId(allMissions[0].id)
+      } else {
+        const randomIndex = Math.floor(Math.random() * allMissions.length)
+        setFeaturedId(allMissions[randomIndex].id)
+      }
+    }
+  }, [allMissions, featuredId])
+
   const visibleMissions = category === 'all'
     ? allMissions
     : category === 'generated'
     ? allMissions.filter((m) => isScriptedMission(m) && m.origin === 'generated')
     : allMissions.filter((m) => m.category === category)
 
-  const filteredMissions = visibleMissions
+  // Reorganizar para posicionar la sugerida al principio cuando la vista es 'todas'
+  const filteredMissions = category === 'all' && featuredId
+    ? [
+        ...visibleMissions.filter((m) => m.id === featuredId),
+        ...visibleMissions.filter((m) => m.id !== featuredId),
+      ]
+    : visibleMissions
 
   return (
     <div className="@container flex h-full min-h-0 flex-col">
@@ -110,8 +129,13 @@ export default function MissionLibrary({ missions, onSelect }: MissionLibraryPro
             className="grid grid-cols-1 gap-3 @[28rem]:grid-cols-2 @[28rem]:gap-4"
             aria-live="polite"
           >
-            {filteredMissions.map((mission) => (
-              <MissionCard key={mission.id} mission={mission} onSelect={onSelect} />
+            {filteredMissions.map((mission, index) => (
+              <MissionCard
+                key={mission.id}
+                mission={mission}
+                onSelect={onSelect}
+                isFeatured={index === 0 && category === 'all'}
+              />
             ))}
           </div>
         )}

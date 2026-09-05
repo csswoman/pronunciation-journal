@@ -114,7 +114,7 @@ export async function buildGrammarFocusStep(
   return {
     kind: 'grammar_focus',
     id: `grammar_focus:${deckSlug}`,
-    title: 'Estructura del día',
+    title: rule.title ? `Estructura: ${rule.title}` : 'Práctica de gramática',
     subtitle: rule.goal || rule.title,
     icon: 'Blocks',
     exercises,

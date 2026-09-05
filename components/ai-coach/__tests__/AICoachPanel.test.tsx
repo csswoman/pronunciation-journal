@@ -74,6 +74,8 @@ vi.mock("@/lib/db/ai", () => ({
 vi.mock("../AICoachPanelParts", () => ({
   AICoachHeader: () => <div>Header</div>,
   ConversationHistoryPanel: () => null,
+  AICoachResizeHandle: () => null,
+  AICoachMobileScrim: () => null,
 }));
 
 vi.mock("../ChatView", () => ({ default: () => null }));

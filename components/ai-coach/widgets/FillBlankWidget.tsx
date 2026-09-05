@@ -111,7 +111,7 @@ export default function FillBlankWidget({ args, status, onAnswer, onNext, onRetr
           onClick={() => setShowOptions(true)}
           className="w-full py-2 rounded-full text-caption font-medium text-[var(--text-secondary)] bg-[var(--surface-raised)] border border-[var(--border-subtle)] hover:bg-[var(--surface-hover)] transition-colors"
         >
-          Show options
+          Mostrar opciones
         </button>
       )}
 
@@ -139,7 +139,7 @@ export default function FillBlankWidget({ args, status, onAnswer, onNext, onRetr
           onClick={handleSubmit}
           className="w-full py-3 rounded-full text-body-sm font-semibold bg-[var(--primary)] text-[var(--on-primary)] transition-opacity hover:opacity-90"
         >
-          Check
+          Comprobar
         </button>
       )}
 

@@ -8,6 +8,7 @@
 // </ProfilePreferencesPanel>
 
 import Link from "next/link";
+import Button from "@/components/ui/Button";
 import { StudyLevelControls } from "@/components/layout/QuickSettingsControls";
 import InterestsEditor from "@/components/profile/InterestsEditor";
 import type { CefrLevel } from "@/lib/essential-words/types";
@@ -33,23 +34,23 @@ export default function ProfilePreferencesPanel({
   onInterestsSave,
   topicsLevel,
   onTopicsOpen,
-  hint = "Esto ajusta recomendaciones. Tu progreso se conserva; puedes seguir explorando cualquier contenido.",
+  hint = "Ajusta tus recomendaciones. Tu progreso se conserva independientemente de estas opciones.",
 }: Props) {
   return (
     <section aria-labelledby="profile-prefs-title" className="layout-stack-loose">
       <div className="layout-stack-tight px-0.5">
-        <h2 id="profile-prefs-title" className="font-label text-fg m-0">
+        <h2 id="profile-prefs-title" className="m-0 font-label text-fg">
           Cómo quieres aprender
         </h2>
-        <p className="font-caption text-fg-muted m-0">{hint}</p>
+        <p className="m-0 font-caption text-fg-muted">{hint}</p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        <section className="layout-stack rounded-xl border border-border-subtle bg-surface-raised p-5">
+      <div className="grid gap-5 md:grid-cols-2">
+        <section className="layout-stack rounded-xl border border-border-subtle bg-surface-raised p-6 shadow-xs">
           <div className="layout-stack-tight">
             <h3 className="m-0 font-label text-fg">Nivel de estudio</h3>
             <p className="m-0 font-caption text-fg-muted">
-              Ajusta la dificultad de las recomendaciones. Tu progreso no cambia.
+              Define la dificultad de tus prácticas sugeridas.
             </p>
           </div>
           <StudyLevelControls
@@ -57,18 +58,12 @@ export default function ProfilePreferencesPanel({
             level={level}
             onChange={onLevelChange}
             footer={
-              <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1">
+              <div className="mt-3.5">
                 <Link
                   href="/assessment"
-                  className="font-caption font-semibold text-primary hover:text-primary-hover"
+                  className="font-caption font-semibold text-primary transition-colors hover:text-primary-hover hover:underline"
                 >
-                  Hacer prueba de nivel
-                </Link>
-                <Link
-                  href={`/assessment?mode=checkpoint&level=${level.toLowerCase()}`}
-                  className="font-caption text-fg-muted hover:text-fg"
-                >
-                  Comprobar mi nivel actual
+                  Hacer prueba de nivel →
                 </Link>
               </div>
             }
@@ -76,25 +71,23 @@ export default function ProfilePreferencesPanel({
         </section>
 
         {topicsLevel && onTopicsOpen ? (
-          <section className="layout-stack rounded-xl border border-border-subtle bg-surface-raised p-5">
+          <section className="layout-stack justify-between rounded-xl border border-border-subtle bg-surface-raised p-6 shadow-xs">
             <div className="layout-stack-tight">
               <h3 className="m-0 font-label text-fg">Temas que ya conozco</h3>
               <p className="m-0 font-caption text-fg-muted">
-                Indica qué temas de {topicsLevel.toUpperCase()} ya has trabajado para que tu ruta no los priorice.
+                Marca contenidos de {topicsLevel.toUpperCase()} dominados para optimizar tu ruta diaria.
               </p>
             </div>
-            <button
-              type="button"
-              onClick={onTopicsOpen}
-              className="focus-ring min-h-10 w-fit rounded-md border border-border-default px-3 font-label text-fg hover:bg-surface-sunken"
-            >
-              Revisar temas de {topicsLevel.toUpperCase()}
-            </button>
+            <div className="pt-2">
+              <Button type="button" variant="secondary" size="md" onClick={onTopicsOpen}>
+                Revisar temas de {topicsLevel.toUpperCase()}
+              </Button>
+            </div>
           </section>
         ) : null}
 
         {onInterestsSave && interests != null && (
-          <section className="rounded-xl border border-border-subtle bg-surface-raised p-5 md:col-span-2">
+          <section className="rounded-xl border border-border-subtle bg-surface-raised p-6 shadow-xs md:col-span-2">
             <InterestsEditor interests={interests} onSave={onInterestsSave} bare />
           </section>
         )}

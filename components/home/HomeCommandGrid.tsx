@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import Link from "next/link";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { isAnonymousUser } from "@/lib/auth/is-anonymous";
 import { readWelcomeTourCompleted } from "@/lib/home/onboarding";
@@ -14,7 +13,6 @@ const HomeWelcomeTourModal = dynamic(
 );
 import HomeHeader from "@/components/home/HomeHeader";
 import HomeStatsRow from "@/components/home/HomeStatsRow";
-import HomeImmersionCard from "@/components/home/HomeImmersionCard";
 import HomeExtraExercisesAccordion from "@/components/home/HomeExtraExercisesAccordion";
 import HomeRightSidebar from "@/components/home/HomeRightSidebar";
 import HomeReviewBanner from "@/components/home/HomeReviewBanner";
@@ -81,6 +79,7 @@ export default function HomeCommandGrid({
   const [allDone, setAllDone] = useState(false);
   const [arc, setArc] = useState<SessionArc | undefined>(undefined);
   const [stepCount, setStepCount] = useState(0);
+  const [completedCount, setCompletedCount] = useState(0);
   const [tourOpen, setTourOpen] = useState(false);
 
   useEffect(() => {
@@ -96,6 +95,7 @@ export default function HomeCommandGrid({
     setAllDone(next.allDone);
     setArc(next.arc);
     setStepCount(next.stepCount);
+    setCompletedCount(next.completedCount ?? 0);
   }, []);
 
   const reviewDue = wordsDueCount + soundsDueCount > 0;
@@ -108,15 +108,17 @@ export default function HomeCommandGrid({
   const showPostPlan = showPlanExtras && allDone;
   const activePlanSession = showPlanExtras && !allDone;
 
+  const isDayOneLearner = isNewLearner && (streak ?? 0) === 0;
+  const showImmersionCard = !isDayOneLearner || allDone;
+
   const showSetupPair =
     planSettled &&
     !showActivation &&
     !activePlanSession &&
     (needsPlacement || needsPronunciation);
-  const showQuietRouteLink =
-    activePlanSession && (needsPlacement || needsPronunciation);
+  // Banner de guardado para invitados: solo en el sidebar antes de empezar; inline bajo la sesión solo tras completar al menos 1 actividad o toda la sesión
   const showGuestSaveStrip =
-    isGuest && planSettled && !showActivation && (allDone || !isNewLearner);
+    isGuest && planSettled && !showActivation && (completedCount >= 1 || allDone);
 
   return (
     <div className="flex flex-col gap-8">
@@ -136,6 +138,8 @@ export default function HomeCommandGrid({
               onPlanStatusChange={onPlanStatusChange}
               primaryAction={primaryAction}
               weakestPhoneme={weakestPhoneme}
+              needsPlacement={needsPlacement}
+              needsPronunciation={needsPronunciation}
               customEmptyState={
                 showActivation ? (
                   <HomeActivationStrip
@@ -178,29 +182,6 @@ export default function HomeCommandGrid({
             </section>
           ) : null}
 
-          {showQuietRouteLink ? (
-            <p className="font-body-sm text-pretty text-fg-muted">
-              Si quieres afinar la ruta primero:{" "}
-              {needsPlacement ? (
-                <Link
-                  href="/assessment"
-                  className="focus-ring font-medium text-primary underline underline-offset-4 decoration-primary/50 hover:decoration-primary"
-                >
-                  prueba de nivel
-                </Link>
-              ) : null}
-              {needsPlacement && needsPronunciation ? " · " : null}
-              {needsPronunciation ? (
-                <Link
-                  href="/assessment/pronunciation"
-                  className="focus-ring font-medium text-primary underline underline-offset-4 decoration-primary/50 hover:decoration-primary"
-                >
-                  diagnóstico oral
-                </Link>
-              ) : null}
-            </p>
-          ) : null}
-
           {showSetupPair ? (
             <div
               className="grid grid-cols-1 sm:grid-cols-2 gap-3"
@@ -218,19 +199,17 @@ export default function HomeCommandGrid({
             soundsDueCount={soundsDueCount}
           />
 
-          {/* Tarjeta de Registro de inmersión */}
-          <HomeImmersionCard />
-
-          {/* Acordeón de Ejercicios extra */}
-          <HomeExtraExercisesAccordion unlocked={allDone} />
+          {/* Acordeón de Ejercicios extra: desbloqueado al completar el plan */}
+          {allDone ? <HomeExtraExercisesAccordion unlocked /> : null}
         </div>
 
-        {/* Sidebar Derecho (Frase del día, Palabra del día, Te tocan hoy) */}
+        {/* Sidebar Derecho (Frase del día, Palabra del día, Registro de inmersión, Te tocan hoy) */}
         <HomeRightSidebar
           profileLevel={profileLevel}
           wordsDueCount={wordsDueCount}
           soundsDueCount={soundsDueCount}
           previewWords={previewWords}
+          showImmersionCard={showImmersionCard}
         />
       </div>
 

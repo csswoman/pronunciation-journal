@@ -15,7 +15,7 @@ const SCALARS: Record<string, number> = {
   sizeY: 1,
   time: 0,
   speed: 1.5,
-  radius: 0.72,
+  radius: 0.98,
   zoom: 0.3, // low zoom = broad, slow-reading interference cells
   warp: 2.8,
   ridgeAmt: 0.36,

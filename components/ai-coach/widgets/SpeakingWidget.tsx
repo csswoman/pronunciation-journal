@@ -31,10 +31,10 @@ function buildResult(target: string, scoring: ScoringResult): EvaluationResult {
     expectedAnswer: target,
     feedback: {
       immediate: correct
-        ? accuracy >= 90 ? "Excellent pronunciation!" : "Great job!"
-        : "Close — keep practicing.",
-      explanation: `You said: "${scoring.transcript}"`,
-      tip: correct ? undefined : `Target: "${target}"`,
+        ? accuracy >= 90 ? "¡Excelente pronunciación!" : "¡Buen trabajo!"
+        : "Cerca, sigue practicando.",
+      explanation: `Dijiste: "${scoring.transcript}"`,
+      tip: correct ? undefined : `Objetivo: "${target}"`,
     },
     score: accuracy,
     gradedBy: "model",
@@ -105,7 +105,7 @@ export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-caption font-medium border border-[var(--border-default)] text-[var(--text-secondary)] transition-opacity hover:opacity-70"
         >
           <Volume2 className="w-3.5 h-3.5" />
-          Listen
+          Escuchar
         </button>
       </div>
 
@@ -118,7 +118,7 @@ export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry
       )}
 
       {analyzing && !hasResult && (
-        <p className="text-caption text-center text-[var(--text-tertiary)] animate-pulse">Analyzing…</p>
+        <p className="text-caption text-center text-[var(--text-tertiary)] animate-pulse">Analizando…</p>
       )}
 
       {scoring && (

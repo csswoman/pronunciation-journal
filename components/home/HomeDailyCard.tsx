@@ -21,6 +21,7 @@ export interface HomePlanStatus {
   allDone: boolean
   arc: SessionArc | undefined
   stepCount: number
+  completedCount: number
 }
 
 interface HomeDailyCardProps {
@@ -34,6 +35,8 @@ interface HomeDailyCardProps {
   weakestPhoneme?: WeakestPhonemeHome | null
   customEmptyState?: React.ReactNode
   customPrefix?: React.ReactNode
+  needsPlacement?: boolean
+  needsPronunciation?: boolean
 }
 
 function isReviewEntryStep(step: DailyStep | undefined): boolean {
@@ -52,6 +55,8 @@ export default function HomeDailyCard({
   weakestPhoneme = null,
   customEmptyState,
   customPrefix,
+  needsPlacement = false,
+  needsPronunciation = false,
 }: HomeDailyCardProps) {
   const { user } = useAuth()
   const router = useRouter()
@@ -92,6 +97,7 @@ export default function HomeDailyCard({
         allDone: false,
         arc: undefined,
         stepCount: 0,
+        completedCount: 0,
       })
       return
     }
@@ -104,8 +110,9 @@ export default function HomeDailyCard({
       allDone: status === 'ready' && allDone,
       arc: status === 'ready' ? arc : undefined,
       stepCount: steps.length,
+      completedCount,
     })
-  }, [status, allDone, steps.length, reviewIsEntry, conceptSlug, arc, onPlanStatusChange])
+  }, [status, allDone, steps.length, completedCount, reviewIsEntry, conceptSlug, arc, onPlanStatusChange])
 
   const handleStartStep = useCallback((step: DailyStep) => {
     if (step.kind === 'concept') return
@@ -119,18 +126,22 @@ export default function HomeDailyCard({
     if (!weakestPhoneme) return steps
     const cleanIpa = (weakestPhoneme.ipa || '').replace(/^\/+|\/+$/g, '')
     const confusableClean = (weakestPhoneme.confusableIpa || '').replace(/^\/+|\/+$/g, '')
+    const isPersonalized = Boolean(user && !isNewLearner && !needsPronunciation)
     return steps.map((s) => {
       const isSoundStep = s.kind.includes('sound') || s.id.includes('sound') || s.kind === 'phoneme_focus'
       if (!isSoundStep) return s
       const stepIpa = (s.ipa || cleanIpa).replace(/^\/+|\/+$/g, '')
+      const confusableText = confusableClean
+        ? (isPersonalized ? `Lo confundes con /${confusableClean}/` : `Suele confundirse con /${confusableClean}/`)
+        : (isPersonalized ? s.subtitle : 'Sonido difícil para hispanohablantes')
       return {
         ...s,
         ipa: stepIpa,
         title: 'Práctica de sonido',
-        subtitle: confusableClean ? `Lo confundes con /${confusableClean}/` : s.subtitle,
+        subtitle: confusableText,
       }
     })
-  }, [steps, weakestPhoneme])
+  }, [steps, weakestPhoneme, user, isNewLearner, needsPronunciation])
 
   return (
     <DailyPlanCard
@@ -150,6 +161,8 @@ export default function HomeDailyCard({
       hideThreadHints
       customEmptyState={customEmptyState}
       arc={arc}
+      needsPlacement={needsPlacement}
+      needsPronunciation={needsPronunciation}
       listPrefix={
         <>
           {customPrefix}

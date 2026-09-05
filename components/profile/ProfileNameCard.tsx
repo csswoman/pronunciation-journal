@@ -1,4 +1,8 @@
-"use client";
+// Planned structure:
+// <ProfileNameCard>
+//   <NameDisplayRow />
+//   <NameEditForm />
+// </ProfileNameCard>
 
 import { useState } from "react";
 import Button from "@/components/ui/Button";
@@ -8,6 +12,7 @@ interface Props {
   currentName: string;
   onSave: (name: string) => Promise<void>;
 }
+
 export default function ProfileNameCard({ currentName, onSave }: Props) {
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState(currentName);
@@ -39,9 +44,9 @@ export default function ProfileNameCard({ currentName, onSave }: Props) {
   };
 
   return (
-    <div>
-      <div className="mb-1 flex items-center justify-between">
-        <span className="font-kicker text-fg-subtle">
+    <div className="py-1">
+      <div className="flex items-center justify-between gap-3">
+        <span className="font-caption font-medium text-fg-muted">
           Nombre para mostrar
         </span>
         {!isEditing && (
@@ -52,11 +57,11 @@ export default function ProfileNameCard({ currentName, onSave }: Props) {
       </div>
 
       {!isEditing ? (
-        <p className="py-1 text-body-sm font-medium text-fg">
-          {currentName || <span className="text-fg-subtle">No configurado</span>}
+        <p className="mt-1 text-body-sm font-semibold text-fg">
+          {currentName || <span className="font-normal text-fg-subtle">No configurado</span>}
         </p>
       ) : (
-        <form onSubmit={handleSave} className="mt-2 space-y-2">
+        <form onSubmit={handleSave} className="mt-2.5 space-y-3">
           <label htmlFor="profile-name-input" className="sr-only">
             Tu nombre completo
           </label>
@@ -68,9 +73,9 @@ export default function ProfileNameCard({ currentName, onSave }: Props) {
             placeholder="Tu nombre completo"
             autoComplete="name"
             autoFocus
-            className="w-full rounded-sm border border-border-default bg-surface-sunken px-3 py-2 text-body-sm text-fg transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full rounded-md border border-border-default bg-surface-sunken px-3.5 py-2 text-body-sm text-fg transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
           />
-          {error && <p className="text-caption text-error">{error}</p>}
+          {error && <p className="font-caption text-error">{error}</p>}
           <div className="flex gap-2">
             <Button type="submit" variant="primary" size="sm" disabled={isSaving}>
               {isSaving ? "Guardando…" : "Guardar"}

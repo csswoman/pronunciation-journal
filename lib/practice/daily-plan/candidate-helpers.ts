@@ -59,21 +59,21 @@ const PEDAGOGICAL_KIND_ORDER: Record<string, number> = {
   concept: 3,
   study_deck: 3,
   reader: 3,
-  sentence_context: 3,
-  context_practice: 3,
-  grammar_focus: 3,
-  word_intro: 4,
-  word_review: 4,
-  written_production: 5,
-  spoken_production: 5,
-  mission: 6,
-  journal_entry: 7,
+  grammar_focus: 4,
+  sentence_context: 4,
+  context_practice: 4,
+  word_intro: 5,
+  word_review: 5,
+  written_production: 6,
+  spoken_production: 6,
+  mission: 7,
+  journal_entry: 8,
 }
 
 export function sortStepsByPedagogicalProgression(steps: DailyStep[]): DailyStep[] {
   return [...steps].sort((a, b) => {
-    const orderA = PEDAGOGICAL_KIND_ORDER[a.kind] ?? 4
-    const orderB = PEDAGOGICAL_KIND_ORDER[b.kind] ?? 4
+    const orderA = a.id === 'journal_entry' ? 99 : (PEDAGOGICAL_KIND_ORDER[a.kind] ?? 4)
+    const orderB = b.id === 'journal_entry' ? 99 : (PEDAGOGICAL_KIND_ORDER[b.kind] ?? 4)
     return orderA - orderB
   })
 }

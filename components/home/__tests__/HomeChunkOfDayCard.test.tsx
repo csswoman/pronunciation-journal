@@ -21,15 +21,13 @@ describe("HomeChunkOfDayCard", () => {
     const ipaElement = container.querySelector(".font-ipa");
     expect(ipaElement).toBeInTheDocument();
 
-    expect(screen.getByRole("button", { name: "Escuchar pronunciación" })).toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole("button", { name: "Ejemplo" }));
+    expect(screen.getByRole("button", { name: /escuchar pronunciación/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Escuchar ejemplo" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Guardar frase" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Ver otra frase" })).toBeInTheDocument();
   });
 
-  it("toggles example translation for a sentence-style example", () => {
+  it("renders example translation for a sentence-style example by default", () => {
     // Seed a chunk whose example is a plain sentence (no structured dialogue).
     sessionStorage.setItem(
       "chunk_of_day_session",
@@ -49,10 +47,7 @@ describe("HomeChunkOfDayCard", () => {
     );
     render(<HomeChunkOfDayCard />);
     
-    // Example is hidden by default
-    expect(screen.queryByText("Contó un chiste para romper el hielo.")).not.toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole("button", { name: "Ejemplo" }));
+    // Example is visible by default
     expect(screen.getByText("Contó un chiste para romper el hielo.")).toBeInTheDocument();
   });
 
@@ -79,8 +74,6 @@ describe("HomeChunkOfDayCard", () => {
     );
     render(<HomeChunkOfDayCard />);
 
-    fireEvent.click(screen.getByRole("button", { name: "Ejemplo" }));
-    
     // Dialogue turns render with a leading em dash
     expect(
       screen.getByText((_, el) => el?.textContent === "— Just out of curiosity, how much did that cost?")
@@ -90,11 +83,10 @@ describe("HomeChunkOfDayCard", () => {
 
   it("triggers speakText when clicking the audio button", () => {
     render(<HomeChunkOfDayCard />);
-    const speakButton = screen.getByRole("button", { name: "Escuchar pronunciación" });
+    const speakButton = screen.getByRole("button", { name: /escuchar pronunciación/i });
     fireEvent.click(speakButton);
     expect(speakTextMock).toHaveBeenCalled();
 
-    fireEvent.click(screen.getByRole("button", { name: "Ejemplo" }));
     const exampleSpeakButton = screen.getByRole("button", { name: "Escuchar ejemplo" });
     fireEvent.click(exampleSpeakButton);
     expect(speakTextMock).toHaveBeenCalledTimes(2);

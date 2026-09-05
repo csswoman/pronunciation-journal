@@ -102,4 +102,16 @@ describe('sortStepsByPedagogicalProgression', () => {
     const sorted = sortStepsByPedagogicalProgression(steps)
     expect(sorted.map((s) => s.kind)).toEqual(['minimal_pairs', 'phoneme_focus', 'spoken_production'])
   })
+
+  it('orders journal_entry at the very end as an optional reflection step', () => {
+    const steps = [
+      { kind: 'concept', id: 'journal_entry' } as unknown as DailyStep,
+      { kind: 'spoken_production', id: 'step-sp' } as unknown as DailyStep,
+      { kind: 'minimal_pairs', id: 'step-mp' } as unknown as DailyStep,
+      { kind: 'phoneme_focus', id: 'step-pf' } as unknown as DailyStep,
+    ]
+
+    const sorted = sortStepsByPedagogicalProgression(steps)
+    expect(sorted.map((s) => s.id)).toEqual(['step-mp', 'step-pf', 'step-sp', 'journal_entry'])
+  })
 })

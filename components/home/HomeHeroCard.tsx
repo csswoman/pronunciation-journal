@@ -19,10 +19,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, ChevronDown, ChevronUp, Check } from "@/components/icons";
+import { ArrowRight, ChevronDown, ChevronUp } from "@/components/icons";
 import Badge from "@/components/ui/Badge";
 import type { DailyStep, DailyStepStatus } from "@/hooks/useDailyPlan";
-import { cn } from "@/lib/cn";
 import {
   localizeDailyStepSubtitle,
   localizeDailyStepTitle,
@@ -30,7 +29,9 @@ import {
 import { stepMeta } from "@/components/daily/daily-step-list-helpers";
 import type { SessionArc } from "@/lib/practice/types";
 import { PedagogicalContextBanner } from "@/components/daily/PedagogicalContextBanner";
-import { getIllustration, type IllustrationKey } from "@/lib/illustrations/registry";
+import { getIllustration } from "@/lib/illustrations/registry";
+import { getHeroIllustrationKey } from "@/lib/home/hero-illustration";
+import HomeHeroStepList from "@/components/home/HomeHeroStepList";
 
 interface HomeHeroCardProps {
   steps: DailyStep[];
@@ -41,33 +42,8 @@ interface HomeHeroCardProps {
   inProgressStepId?: string | null;
   primaryActionHref?: string;
   arc?: SessionArc;
-}
-
-function getHeroIllustrationKey(
-  step: DailyStep | undefined,
-  allDone: boolean
-): IllustrationKey {
-  if (allDone) return "stateCompletado";
-  if (!step) return "domainProgress";
-  switch (step.kind) {
-    case "phoneme_focus":
-    case "minimal_pairs":
-    case "mission":
-      return "domainSpeaking";
-    case "listening":
-    case "connected_speech":
-      return "domainListening";
-    case "reader":
-      return "domainReading";
-    case "concept":
-    case "study_deck":
-    case "grammar_focus":
-      return "domainDictionary";
-    case "sentence_builder":
-      return "domainWriting";
-    default:
-      return "domainVocabulary";
-  }
+  needsPlacement?: boolean;
+  needsPronunciation?: boolean;
 }
 
 export default function HomeHeroCard({
@@ -77,6 +53,8 @@ export default function HomeHeroCard({
   onStartStep,
   inProgressStepId = null,
   arc,
+  needsPlacement = false,
+  needsPronunciation = false,
 }: HomeHeroCardProps) {
   const [showSecondarySteps, setShowSecondarySteps] = useState(false);
 
@@ -94,12 +72,16 @@ export default function HomeHeroCard({
   const currentStep = steps[activeStepIndex] ?? steps[0];
   const isMidSession = Boolean(inProgressStepId) && !allDone;
 
+  const isRequiredStep = (s: DailyStep) =>
+    s.id !== "journal_entry" && s.href !== "/journal";
+  const requiredSteps = steps.filter(isRequiredStep);
+  const requiredCount = requiredSteps.length;
+  const isCurrentOptional = currentStep ? !isRequiredStep(currentStep) : false;
+  const currentRequiredIndex = currentStep
+    ? requiredSteps.findIndex((s) => s.id === currentStep.id)
+    : 0;
+
   const totalMinutes = steps.reduce((sum, s) => sum + (s.estMinutes || 0), 0);
-  const remainingMinutes = steps.reduce((sum, s) => {
-    const st = getStepStatus(s.id);
-    if (st === "done" || st === "resolved") return sum;
-    return sum + (s.estMinutes || 0);
-  }, 0);
 
   const stepTitle = currentStep
     ? localizeDailyStepTitle(currentStep.title)
@@ -111,8 +93,8 @@ export default function HomeHeroCard({
   const currentStepMinutes = currentStep?.estMinutes ?? 7;
 
   const ctaLabel = isMidSession
-    ? "Continuar"
-    : `Empezar sesión · ${remainingMinutes > 0 ? remainingMinutes : totalMinutes} min`;
+    ? `Continuar · ${currentStepMinutes} min`
+    : `Empezar · ${currentStepMinutes} min`;
 
   const handleStartCurrentStep = () => {
     if (!currentStep) return;
@@ -129,7 +111,7 @@ export default function HomeHeroCard({
 
   return (
     <section aria-label="Sesión de hoy" className="w-full">
-      <div className="flex flex-col gap-5 rounded-2xl border border-border-default bg-surface-raised p-5 shadow-sm sm:p-6 motion-reduce:shadow-none">
+      <div className="flex flex-col gap-5 rounded-2xl border border-border-default bg-surface-raised p-5 shadow-sm ring-1 ring-border-subtle/50 sm:p-6 motion-reduce:shadow-none">
         {/* Contenido principal superior (Texto + Ilustración a la derecha) */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex flex-col gap-4 min-w-0 flex-1">
@@ -146,7 +128,11 @@ export default function HomeHeroCard({
                   </span>
                   {!allDone ? (
                     <Badge
-                      label={`Actividad ${activeStepIndex + 1} de ${steps.length}`}
+                      label={
+                        isCurrentOptional
+                          ? "Actividad opcional"
+                          : `Actividad ${Math.max(1, currentRequiredIndex + 1)} de ${requiredCount}`
+                      }
                       variant={isMidSession ? "info" : "default"}
                       dot={isMidSession}
                       size="sm"
@@ -223,8 +209,8 @@ export default function HomeHeroCard({
             >
               <span>
                 {showSecondarySteps
-                  ? "Ocultar plan del día"
-                  : "Ver plan del día"}
+                  ? `Ocultar plan del día · ${requiredCount} actividades · ${totalMinutes} min`
+                  : `Plan del día · ${requiredCount} actividades · ${totalMinutes} min`}
               </span>
               {showSecondarySteps ? (
                 <ChevronUp size={18} aria-hidden />
@@ -234,48 +220,13 @@ export default function HomeHeroCard({
             </button>
 
             {showSecondarySteps ? (
-              <ol className="mt-2 flex flex-col gap-1.5">
-                {steps.map((step, idx) => {
-                  const status = getStepStatus(step.id);
-                  const isDone = status === "done" || status === "resolved";
-                  const isCurrent = idx === activeStepIndex;
-
-                  return (
-                    <li
-                      key={step.id}
-                      className={cn(
-                        "flex items-center justify-between gap-3 rounded-lg px-3 py-2 text-body-sm transition-colors",
-                        isCurrent
-                          ? "bg-primary/10 font-semibold text-fg"
-                          : isDone
-                            ? "text-fg-muted bg-transparent"
-                            : "text-fg hover:bg-surface-sunken/60"
-                      )}
-                    >
-                      <div className="flex items-center gap-2.5 min-w-0 flex-1">
-                        <span className="font-mono text-caption w-4 shrink-0 text-fg-muted">
-                          {idx + 1}
-                        </span>
-                        <span className="truncate">
-                          {localizeDailyStepTitle(step.title)}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center gap-2 shrink-0">
-                        {isDone ? (
-                          <span className="inline-flex items-center gap-1 font-caption text-success font-semibold">
-                            <Check size={14} aria-hidden /> Hecho
-                          </span>
-                        ) : (
-                          <span className="font-caption tabular-nums text-fg-muted">
-                            {step.estMinutes} min
-                          </span>
-                        )}
-                      </div>
-                    </li>
-                  );
-                })}
-              </ol>
+              <HomeHeroStepList
+                steps={steps}
+                getStepStatus={getStepStatus}
+                activeStepIndex={activeStepIndex}
+                needsPlacement={needsPlacement}
+                needsPronunciation={needsPronunciation}
+              />
             ) : null}
           </div>
         ) : null}

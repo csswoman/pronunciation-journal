@@ -13,9 +13,8 @@
 // </HomeWordOfDayCard>
 
 import { useEffect, useState } from "react";
-import { BookOpen, Bookmark, BookmarkCheck, RefreshCw } from "@/components/icons";
+import { BookOpen, Bookmark, BookmarkCheck, RefreshCw, Volume2 } from "@/components/icons";
 import Button from "@/components/ui/Button";
-import { ListenButton } from "@/components/ui/ListenButton";
 import { HeroTermExample } from "@/components/home/HeroTermExample";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useWordOfDay } from "@/hooks/useWordOfDay";
@@ -36,10 +35,14 @@ type SaveState = "idle" | "saving" | "saved" | "error";
 
 interface HomeWordOfDayCardProps {
   profileLevel?: string | null;
+  inSessionToday?: boolean;
 }
 
 /** Single-word focus — large hero title, clean hierarchy, editorial visual language. */
-export default function HomeWordOfDayCard({ profileLevel = null }: HomeWordOfDayCardProps) {
+export default function HomeWordOfDayCard({
+  profileLevel = null,
+  inSessionToday = false,
+}: HomeWordOfDayCardProps) {
   const { user } = useAuth();
   const [level, setLevel] = useState<string | undefined>(
     profileLevel ? profileLevel.toLowerCase() : undefined
@@ -113,7 +116,7 @@ export default function HomeWordOfDayCard({ profileLevel = null }: HomeWordOfDay
       aria-busy={loading || undefined}
       aria-labelledby="word-of-day-heading"
     >
-      {/* Header: Palabra del día + Categoría gramatical */}
+      {/* Header: Palabra del día + Categoría gramatical o vínculo con la sesión */}
       <div className="relative z-1 flex items-center justify-between gap-2 min-w-0">
         <div className="flex items-center gap-1.5 shrink-0">
           <BookOpen size={14} className="text-fg-muted" aria-hidden />
@@ -121,9 +124,16 @@ export default function HomeWordOfDayCard({ profileLevel = null }: HomeWordOfDay
             Palabra del día
           </span>
         </div>
-        {posLabel ? (
+        {inSessionToday ? (
           <span
-            className="rounded-md border border-border-subtle bg-surface-sunken px-2 py-0.5 font-mono text-caption text-fg-muted lowercase whitespace-nowrap"
+            className="truncate max-w-[62%] rounded-full border border-primary/25 bg-primary-soft/60 px-2.5 py-0.5 font-sans text-caption font-medium text-primary whitespace-nowrap"
+            title="Aparece en tu sesión de hoy"
+          >
+            En tu sesión de hoy
+          </span>
+        ) : posLabel ? (
+          <span
+            className="truncate max-w-[62%] rounded-full border border-border-subtle bg-surface-sunken px-2.5 py-0.5 font-sans text-caption font-medium text-fg-muted lowercase whitespace-nowrap"
             title={posLabel}
           >
             {posLabel}
@@ -151,33 +161,36 @@ export default function HomeWordOfDayCard({ profileLevel = null }: HomeWordOfDay
 
       {word && !loading && (
         <div className="animate-state-in relative z-1 flex flex-col gap-3" key={word.word}>
-          {/* Grupo de título y pronunciación */}
-          <div className="flex flex-col gap-1">
-            <p
-              className={cn(
-                "font-heading font-bold text-fg leading-tight break-words tracking-tight",
-                getHeroScale(word.word)
-              )}
-            >
-              {word.word}
-            </p>
-
-            <div className="flex items-center gap-2">
-              {word.ipa ? (
-                <span
-                  className="font-ipa text-body-md font-medium text-fg-muted"
-                  lang="en-fonipa"
-                >
-                  {formatIpaDisplay(word.ipa)}
-                </span>
-              ) : null}
-              <ListenButton
-                iconOnly
-                aria-label="Escuchar pronunciación"
-                onPlay={() => speakText(word.word)}
-              />
+          {/* Grupo de título y pronunciación tocable */}
+          <button
+            type="button"
+            onClick={() => speakText(word.word)}
+            className="group/listen focus-ring -mx-1.5 flex flex-col gap-1 rounded-xl p-1.5 text-left transition-colors hover:bg-surface-sunken/60 cursor-pointer"
+            aria-label={`Escuchar pronunciación de ${word.word}`}
+          >
+            <div className="flex items-start justify-between gap-2">
+              <span
+                className={cn(
+                  "font-heading font-bold text-fg leading-tight break-words tracking-tight transition-colors group-hover/listen:text-primary",
+                  getHeroScale(word.word)
+                )}
+              >
+                {word.word}
+              </span>
+              <div className="mt-1 shrink-0 rounded-full border border-border-subtle bg-surface-sunken p-1.5 text-fg-muted transition-colors group-hover/listen:border-primary/40 group-hover/listen:bg-primary-soft group-hover/listen:text-primary">
+                <Volume2 size={15} aria-hidden />
+              </div>
             </div>
-          </div>
+
+            {word.ipa ? (
+              <span
+                className="font-ipa text-body-md font-medium text-fg-muted"
+                lang="en-fonipa"
+              >
+                {formatIpaDisplay(word.ipa)}
+              </span>
+            ) : null}
+          </button>
 
           {/* Significado (definición) */}
           {word.definition ? (
@@ -222,16 +235,17 @@ export default function HomeWordOfDayCard({ profileLevel = null }: HomeWordOfDay
           type="button"
           onClick={handleShuffle}
           aria-label="Ver otra palabra"
-          className="focus-ring inline-flex min-h-10 min-w-10 items-center justify-center rounded-lg border border-border-default bg-surface-base text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg cursor-pointer"
+          className="focus-ring inline-flex min-h-10 items-center gap-1.5 rounded-lg border border-border-default bg-surface-base px-3 text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg cursor-pointer"
         >
           <RefreshCw
-            size={15}
+            size={14}
             className={cn(
               "transition-transform duration-300",
               isRotating && "rotate-180"
             )}
             aria-hidden
           />
+          <span className="font-body-sm font-medium">Otra</span>
         </button>
       </div>
     </div>

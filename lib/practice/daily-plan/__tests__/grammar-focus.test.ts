@@ -51,6 +51,7 @@ describe('buildGrammarFocusStep', () => {
     const step = await buildGrammarFocusStep('a2-presente-perfecto-experiencias', words)
     expect(step).not.toBeNull()
     expect(step!.kind).toBe('grammar_focus')
+    expect(step!.title).toContain('Estructura:')
     expect(step!.grammarRule?.deckSlug).toBe('a2-presente-perfecto-experiencias')
     expect(step!.grammarRule?.title.length).toBeGreaterThan(0)
     expect(step!.grammarRule!.rows.length).toBeGreaterThan(0)

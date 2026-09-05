@@ -63,35 +63,40 @@ export default function InterestsEditor({ interests, onSave, bare = false }: Pro
   const body = (
     <>
       <div className="layout-stack-tight">
-        <h3 id="interests-title" className="font-kicker text-fg-muted m-0">
-          Intereses
+        <h3 id="interests-title" className="m-0 font-label text-fg">
+          Intereses de práctica
         </h3>
-        <p className="font-caption text-fg-muted m-0">
-          Personalizan futuras lecturas y práctica. Máximo 10.
+        <p className="m-0 font-caption text-fg-muted">
+          Personalizan futuras lecturas y ejercicios recomendados. Selecciona hasta 10.
         </p>
       </div>
-      <div className="flex flex-wrap gap-2">
-        {INTEREST_OPTIONS.map((interest) => (
-          <button
-            key={interest}
-            type="button"
-            aria-pressed={selected.includes(interest)}
-            onClick={() => toggle(interest)}
-            className={cn(
-              "focus-ring rounded-full px-3 py-1 font-caption transition-colors",
-              selected.includes(interest)
-                ? "bg-primary font-medium text-on-primary"
-                : "border border-border-default text-fg hover:bg-surface-sunken",
-            )}
-          >
-            {labels[interest]}
-          </button>
-        ))}
+      <div className="flex flex-wrap gap-2 py-1">
+        {INTEREST_OPTIONS.map((interest) => {
+          const isSelected = selected.includes(interest);
+          return (
+            <button
+              key={interest}
+              type="button"
+              aria-pressed={isSelected}
+              onClick={() => toggle(interest)}
+              className={cn(
+                "focus-ring rounded-full px-3.5 py-1.5 font-caption text-body-sm transition-all duration-150 active:scale-95",
+                isSelected
+                  ? "bg-primary font-medium text-on-primary shadow-xs"
+                  : "border border-border-subtle bg-surface-sunken/60 text-fg-muted hover:border-border-default hover:bg-surface-sunken hover:text-fg",
+              )}
+            >
+              {labels[interest]}
+            </button>
+          );
+        })}
       </div>
-      {error && <p className="font-caption text-error m-0">{error}</p>}
-      <Button type="button" variant="primary" size="sm" disabled={saving} onClick={save}>
-        {saving ? "Guardando…" : "Guardar intereses"}
-      </Button>
+      {error && <p className="m-0 font-caption text-error">{error}</p>}
+      <div className="pt-1">
+        <Button type="button" variant="primary" size="sm" disabled={saving} onClick={save}>
+          {saving ? "Guardando…" : "Guardar intereses"}
+        </Button>
+      </div>
     </>
   );
 
