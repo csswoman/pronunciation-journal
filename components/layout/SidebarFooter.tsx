@@ -23,9 +23,9 @@ export default function SidebarFooter() {
   const panelRef = useRef<HTMLDivElement>(null);
   const isGuest = isAnonymousUser(user);
   const displayName = isGuest
-    ? "Sesión temporal"
+    ? preferences?.full_name || "Sesión temporal"
     : preferences?.full_name || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Mi perfil";
-  const avatarUrl = user?.user_metadata?.avatar_url as string | undefined;
+  const avatarUrl = preferences?.avatar_url || (user?.user_metadata?.avatar_url as string | undefined);
   const initials = isGuest
     ? "·"
     : displayName
@@ -94,11 +94,15 @@ export default function SidebarFooter() {
       {isGuest && !collapsed && (
         <div className="rounded-lg border border-border-subtle bg-surface-sunken p-2.5 space-y-2">
           <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <span className="grid size-5 shrink-0 place-items-center rounded-full bg-surface-raised text-fg-subtle">
-                <User size={12} aria-hidden />
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="relative grid size-6 shrink-0 place-items-center overflow-hidden rounded-full bg-surface-raised text-fg-subtle">
+                {avatarUrl ? (
+                  <Image src={avatarUrl} alt="" fill sizes="24px" className="object-cover" />
+                ) : (
+                  <User size={12} aria-hidden />
+                )}
               </span>
-              <span className="font-caption text-tiny font-semibold text-fg-subtle uppercase tracking-wider">
+              <span className="truncate font-caption text-tiny font-semibold text-fg-subtle uppercase tracking-wider">
                 Modo invitado
               </span>
             </div>
@@ -108,7 +112,7 @@ export default function SidebarFooter() {
             type="button"
             onClick={() => {
               playUiCue("tap");
-              router.push("/login?intent=save&mode=register");
+              router.push("/login?intent=save");
             }}
             className="focus-ring press-feedback flex w-full items-center justify-center gap-2 rounded-md border border-border-default bg-surface hover:bg-surface-sunken py-1.5 px-3 text-caption font-semibold text-fg transition-all"
           >
@@ -188,12 +192,12 @@ export default function SidebarFooter() {
                     onClick={() => {
                       playUiCue("tap");
                       setOpen(false);
-                      router.push("/login?intent=save&mode=register");
+                      router.push("/profile");
                     }}
-                    className="focus-ring press-feedback flex min-h-9 w-full items-center justify-center gap-2 rounded-md bg-primary px-3 text-caption font-semibold text-on-primary transition-colors hover:brightness-105"
+                    className="focus-ring press-feedback flex min-h-8 w-full items-center justify-center gap-1.5 rounded-md px-3 text-caption font-medium text-fg-subtle transition-colors hover:bg-surface-sunken hover:text-fg"
                   >
-                    <LogIn size={15} aria-hidden />
-                    Guardar progreso
+                    <User size={15} aria-hidden />
+                    Ver ajustes
                   </button>
                   <button
                     type="button"
@@ -202,9 +206,10 @@ export default function SidebarFooter() {
                       setOpen(false);
                       router.push("/login?intent=save");
                     }}
-                    className="focus-ring press-feedback flex min-h-8 w-full items-center justify-center gap-1.5 rounded-md px-3 text-caption font-medium text-fg-subtle transition-colors hover:bg-surface-sunken hover:text-fg"
+                    className="focus-ring press-feedback flex min-h-9 w-full items-center justify-center gap-2 rounded-md bg-primary px-3 text-caption font-semibold text-on-primary transition-colors hover:brightness-105"
                   >
-                    ¿Ya tienes cuenta? Iniciar sesión
+                    <LogIn size={15} aria-hidden />
+                    Guardar progreso
                   </button>
                 </div>
               ) : (

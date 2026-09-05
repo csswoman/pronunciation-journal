@@ -1,4 +1,8 @@
-"use client";
+// Planned structure:
+// <ProfilePasswordCard>
+//   <PasswordDisplayRow />
+//   <PasswordEditForm />
+// </ProfilePasswordCard>
 
 import { useState } from "react";
 import Button from "@/components/ui/Button";
@@ -7,6 +11,7 @@ import { publicAuthErrorMessage } from "@/lib/auth/password-policy";
 interface Props {
   onSave: (password: string) => Promise<void>;
 }
+
 export default function ProfilePasswordCard({ onSave }: Props) {
   const [isEditing, setIsEditing] = useState(false);
   const [newPassword, setNewPassword] = useState("");
@@ -50,12 +55,12 @@ export default function ProfilePasswordCard({ onSave }: Props) {
   };
 
   const inputClass =
-    "w-full px-3 py-2 text-body-sm rounded-sm bg-surface-sunken border border-border-default text-fg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all";
+    "w-full rounded-md border border-border-default bg-surface-sunken px-3.5 py-2 text-body-sm text-fg transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40";
 
   return (
-    <div>
-      <div className="mb-1 flex items-center justify-between">
-        <span className="font-kicker text-fg-subtle">
+    <div className="py-1">
+      <div className="flex items-center justify-between gap-3">
+        <span className="font-caption font-medium text-fg-muted">
           Contraseña
         </span>
         {!isEditing && (
@@ -66,9 +71,9 @@ export default function ProfilePasswordCard({ onSave }: Props) {
       </div>
 
       {!isEditing ? (
-        <p className="py-1 text-body-sm tracking-[0.2em] text-fg-subtle">••••••••</p>
+        <p className="mt-1 text-body-sm tracking-[0.25em] text-fg-subtle">••••••••</p>
       ) : (
-        <form onSubmit={handleSave} className="mt-2 space-y-2">
+        <form onSubmit={handleSave} className="mt-2.5 space-y-2.5">
           <div>
             <label htmlFor="new-password-input" className="sr-only">
               Nueva contraseña
@@ -98,8 +103,8 @@ export default function ProfilePasswordCard({ onSave }: Props) {
               className={inputClass}
             />
           </div>
-          {error && <p className="text-caption text-error">{error}</p>}
-          <div className="flex gap-2">
+          {error && <p className="font-caption text-error">{error}</p>}
+          <div className="flex gap-2 pt-1">
             <Button type="submit" variant="primary" size="sm" disabled={isSaving}>
               {isSaving ? "Guardando…" : "Actualizar contraseña"}
             </Button>
