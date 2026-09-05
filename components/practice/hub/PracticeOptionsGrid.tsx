@@ -23,12 +23,16 @@ import ReferenceSection from './ReferenceSection'
 interface PracticeOptionsGridProps {
   recommendation: RecommendedResult
   dueCount: number | null
+  vocabLearnedCount: number | null
+  vocabTotalCount: number | null
   arc?: SessionArc
 }
 
 export default function PracticeOptionsGrid({
   recommendation,
   dueCount,
+  vocabLearnedCount,
+  vocabTotalCount,
   arc,
 }: PracticeOptionsGridProps) {
   return (
@@ -45,7 +49,11 @@ export default function PracticeOptionsGrid({
 
       {/* ─── FILA 2: Vocabulario, Coach y Mazos (3 cols en tablet y desktop) ─── */}
       <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
-        <VocabularyReviewCard dueCount={dueCount} />
+        <VocabularyReviewCard
+          dueCount={dueCount}
+          learnedCount={vocabLearnedCount}
+          totalCount={vocabTotalCount}
+        />
         <CoachCallCard arc={arc} />
         <DecksCard />
       </div>
