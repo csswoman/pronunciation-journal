@@ -1,4 +1,5 @@
 import { useCallback, useRef } from "react";
+import { useSidebarStore } from "@/lib/stores/sidebarStore";
 
 const MIN_WIDTH = 320;
 const MAX_WIDTH = 760;
@@ -30,6 +31,7 @@ export function usePanelResize({ panelWidth, setPanelWidth }: UsePanelResizePara
 
   const onDragStart = useCallback((event: React.MouseEvent) => {
     event.preventDefault();
+    useSidebarStore.getState().collapse();
     isDragging.current = true;
     dragStartX.current = event.clientX;
     dragStartWidth.current = panelWidth;

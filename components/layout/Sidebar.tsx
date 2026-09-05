@@ -17,6 +17,8 @@ import { isNavActive } from "@/lib/navigation/is-nav-active";
 import { SearchTrigger } from "@/components/search/SearchTrigger";
 import { useSearchShortcut } from "@/lib/search/useSearchShortcut";
 import { playUiCue } from "@/lib/ui-sounds/cues";
+import { useSidebarStore } from "@/lib/stores/sidebarStore";
+import { cn } from "@/lib/cn";
 
 const SidebarFooter = dynamic(() => import("./SidebarFooter"), {
   loading: () => <div className="h-14 shrink-0 border-t border-border-subtle" aria-hidden />,
@@ -33,7 +35,7 @@ interface SidebarProps {
 
 export default function Sidebar({ className = "" }: SidebarProps) {
   const pathname = usePathname();
-  const [collapsed, setCollapsed] = useState(false);
+  const { isCollapsed, setCollapsed, toggleCollapsed } = useSidebarStore();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const openSearch = useCallback(() => setIsSearchOpen(true), []);
   const toggleSearch = useCallback(() => setIsSearchOpen((current) => !current), []);
@@ -43,34 +45,33 @@ export default function Sidebar({ className = "" }: SidebarProps) {
   useEffect(() => {
     const saved = localStorage.getItem("sidebar-collapsed");
     if (saved === "true") setCollapsed(true);
-  }, []);
+  }, [setCollapsed]);
 
   const toggle = () => {
-    setCollapsed((prev) => {
-      const next = !prev;
-      playUiCue(next ? "nav-close" : "nav-open");
-      localStorage.setItem("sidebar-collapsed", String(next));
-      return next;
-    });
+    const next = !isCollapsed;
+    playUiCue(next ? "nav-close" : "nav-open");
+    toggleCollapsed();
   };
 
   const isActive = (href: string) => isNavActive(pathname, href);
 
   return (
-    <SidebarContext.Provider value={{ collapsed }}>
+    <SidebarContext.Provider value={{ collapsed: isCollapsed }}>
       <aside
-        className={`flex h-full min-h-0 flex-col overflow-hidden bg-surface-raised border-r border-border-subtle transition-all duration-200 ${
-          collapsed ? "w-[60px]" : "w-[268px]"
-        } ${className}`}
+        className={cn(
+          "flex h-full min-h-0 flex-col overflow-hidden bg-surface-raised border-r border-border-subtle transition-[width] duration-300 cubic-bezier(0.22,1,0.36,1) motion-reduce:transition-none",
+          isCollapsed ? "w-[60px]" : "w-[268px]",
+          className
+        )}
       >
         {/* Brand + toggle — pinned */}
         <div
           className={`flex shrink-0 items-center ${
-            collapsed ? "flex-col gap-2 px-2 py-4" : "justify-between px-4 py-4"
+            isCollapsed ? "flex-col gap-2 px-2 py-4" : "justify-between px-4 py-4"
           }`}
         >
-          {collapsed && <Logo className="size-6 text-primary" />}
-          {!collapsed && (
+          {isCollapsed && <Logo className="size-6 text-primary" />}
+          {!isCollapsed && (
             <div className="flex items-center gap-2.5">
               <Logo className="size-7 text-primary" />
               <span className="font-heading font-semibold text-body-sm text-fg">
@@ -82,13 +83,13 @@ export default function Sidebar({ className = "" }: SidebarProps) {
             type="button"
             onClick={toggle}
             className="press-feedback p-1.5 rounded-lg transition-colors hover:bg-surface-sunken text-fg-subtle hover:text-fg shrink-0"
-            title={collapsed ? "Expandir barra" : "Contraer barra"}
+            title={isCollapsed ? "Expandir barra" : "Contraer barra"}
           >
-            {collapsed ? <PanelLeftOpen className="size-4" /> : <PanelLeftClose className="size-4" />}
+            {isCollapsed ? <PanelLeftOpen className="size-4" /> : <PanelLeftClose className="size-4" />}
           </button>
         </div>
 
-        {!collapsed && (
+        {!isCollapsed && (
           <div className="shrink-0 px-3 pb-2.5">
             <SearchTrigger onOpen={openSearch} />
           </div>
@@ -97,7 +98,7 @@ export default function Sidebar({ className = "" }: SidebarProps) {
         {/* Navigation scrolls; footer stays visible */}
         <nav
           className={`sidebar-scrollbar min-h-0 flex-1 overflow-y-auto ${
-            collapsed ? "px-1.5" : "px-3"
+            isCollapsed ? "px-1.5" : "px-3"
           } pb-2 space-y-px`}
         >
           <NavSection section={todayNav} isActive={isActive} isFirst />

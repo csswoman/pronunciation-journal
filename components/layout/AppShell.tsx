@@ -11,9 +11,10 @@ import {
 } from "@/lib/stores/sessionChromeStore";
 import { isPublicAuthPath } from "@/lib/auth/public-paths";
 import { cn } from "@/lib/cn";
+import { useSidebarStore } from "@/lib/stores/sidebarStore";
 
 const Sidebar = dynamic(() => import("./Sidebar"), {
-  loading: () => <div className="hidden lg:block w-64 shrink-0" aria-hidden />,
+  loading: () => <div className="hidden lg:block w-[268px] shrink-0" aria-hidden />,
 });
 
 const BottomNav = dynamic(() => import("./BottomNav"), {
@@ -56,6 +57,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     if (isPanelOpen || launch) {
       setHasMountedCoach(true);
     }
+    if (isPanelOpen) {
+      useSidebarStore.getState().collapse();
+    }
   }, [isPanelOpen, launch]);
 
   if (isAuthPage) return <>{children}</>;
@@ -69,7 +73,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-white focus:rounded-md">
         Skip to main content
       </a>
-      <Sidebar className="hidden lg:flex h-screen w-64 shrink-0 flex-col" />
+      <Sidebar className="hidden lg:flex h-screen shrink-0 flex-col" />
       <main
         id="main-content"
         className={cn( "main-scrollbar flex min-h-0 flex-1 flex-col overflow-y-auto overflow-x-hidden lg:pb-0", hideMobileNav ? "pb-0" : "pb-20", )}
