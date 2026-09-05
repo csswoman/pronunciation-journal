@@ -9,10 +9,6 @@
 // Opening framing for the daily session. Core 1000 progress is Dexie-only, read
 // live from IndexedDB (offline-safe). Renders nothing when there is no framing data.
 
-import { useLiveQuery } from 'dexie-react-hooks'
-import { db } from '@/lib/db'
-import { ESSENTIAL_WORD_PREFIX } from '@/lib/essential-words/types'
-import { useAuth } from '@/components/auth/AuthProvider'
 import { formatIpaDisplay } from '@/lib/lexicon/format-ipa'
 import type { SessionArc } from '@/lib/practice/types'
 
@@ -20,16 +16,14 @@ const ESSENTIAL_WORD_TARGET = 1000
 
 interface Props {
   arc: SessionArc | undefined
+  /**
+   * Essential Words learned count, queried once by the shared ancestor
+   * (DailyChecklist) instead of each daily card subscribing independently.
+   */
+  learned?: number
 }
 
-export default function SessionOpeningBanner({ arc }: Props) {
-  const { user } = useAuth()
-  const learned = useLiveQuery(
-    () => user?.id ? db.srsData.filter((e) => e.userId === user.id && e.wordId.startsWith(ESSENTIAL_WORD_PREFIX)).count() : 0,
-    [user?.id],
-    0,
-  )
-
+export default function SessionOpeningBanner({ arc, learned = 0 }: Props) {
   const hasFraming = !!(arc?.topicLabel || arc?.soundIpa) || (learned ?? 0) > 0
   if (!hasFraming) return null
 

@@ -31,6 +31,9 @@ import { ImmersionLogCard } from './ImmersionLogCard'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { useDailyPlan, type ConceptLesson, type DailyStep } from '@/hooks/useDailyPlan'
 import { fetchDueTomorrowCount } from '@/lib/review/client-queries'
+import { useLiveQuery } from 'dexie-react-hooks'
+import { db } from '@/lib/db'
+import { ESSENTIAL_WORD_PREFIX } from '@/lib/essential-words/types'
 
 export type { ConceptLesson }
 
@@ -81,6 +84,14 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
   const [view, setView] = useState<View>({ mode: 'checklist' })
   const [sessionKey, setSessionKey] = useState(0)
   const [dueTomorrow, setDueTomorrow] = useState<number | null>(null)
+
+  // Single reactive subscription shared by SessionOpeningBanner and SessionRecapCard —
+  // both previously ran this identical srsData query independently.
+  const learnedCount = useLiveQuery(
+    () => user?.id ? db.srsData.filter((e) => e.userId === user.id && e.wordId.startsWith(ESSENTIAL_WORD_PREFIX)).count() : 0,
+    [user?.id],
+    0,
+  )
   // Prevents double-triggering the initialStepId open-on-load (e.g. from a
   // notification link with ?step=). Doesn't auto-start anything else; the
   // learner picks a step from the checklist.
@@ -157,6 +168,7 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
         stepCount={steps.length}
         dueTomorrow={dueTomorrow}
         streak={streak}
+        learned={learnedCount}
       />
     )
   }
@@ -185,7 +197,7 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
       <div className="flex flex-col gap-[var(--layout-section-gap)]">
         {status === 'ready' ? (
           <div className="flex flex-col gap-4">
-            <SessionOpeningBanner arc={plan?.arc} />
+            <SessionOpeningBanner arc={plan?.arc} learned={learnedCount} />
             <DailyLessonCard lesson={conceptLesson} />
             <StudyTipDisclosure />
           </div>

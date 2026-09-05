@@ -13,6 +13,7 @@ const authActions = vi.hoisted(() => ({
   signUpWithEmail: vi.fn(),
   signInAsGuest: vi.fn(),
   signInWithGoogle: vi.fn(),
+  signInWithGoogleReplacingSession: vi.fn(),
   signOut: vi.fn().mockResolvedValue({ error: null }),
   resetPasswordForEmail: vi.fn(),
   updatePassword: vi.fn(),
@@ -202,7 +203,7 @@ describe("AuthPanel", { timeout: 15_000 }, () => {
     expect(replace).toHaveBeenCalledWith("/");
   });
 
-  it("falls back to Google sign-in when guest linking hits an existing identity", async () => {
+  it("signs into Google by replacing a guest session instead of linking", async () => {
     searchParams = new URLSearchParams("intent=save&mode=register");
     authActions.getBrowserSession.mockResolvedValue({
       data: {
@@ -211,14 +212,7 @@ describe("AuthPanel", { timeout: 15_000 }, () => {
         },
       },
     });
-    authActions.linkGoogleIdentity.mockResolvedValue({
-      data: { provider: "google", url: null },
-      error: {
-        message: "Identity is already linked to another user",
-        code: "identity_already_exists",
-      },
-    });
-    authActions.signInWithGoogle.mockResolvedValue({
+    authActions.signInWithGoogleReplacingSession.mockResolvedValue({
       data: { provider: "google", url: "https://accounts.google.com" },
       error: null,
     });
@@ -234,15 +228,16 @@ describe("AuthPanel", { timeout: 15_000 }, () => {
     fireEvent.click(screen.getByRole("button", { name: "Guardar mi progreso con Google" }));
 
     await waitFor(() => {
-      expect(authActions.linkGoogleIdentity).toHaveBeenCalled();
-      expect(authActions.signInWithGoogle).toHaveBeenCalled();
+      expect(authActions.signInWithGoogleReplacingSession).toHaveBeenCalled();
     });
+    expect(authActions.linkGoogleIdentity).not.toHaveBeenCalled();
+    expect(authActions.signInWithGoogle).not.toHaveBeenCalled();
     expect(screen.queryByText(/No pudimos/i)).not.toBeInTheDocument();
   });
 
   it("auto-resumes Google sign-in when oauth_resume=google is present", async () => {
     searchParams = new URLSearchParams("intent=save&oauth_resume=google");
-    authActions.signInWithGoogle.mockResolvedValue({
+    authActions.signInWithGoogleReplacingSession.mockResolvedValue({
       data: { provider: "google", url: "https://accounts.google.com" },
       error: null,
     });
@@ -250,9 +245,9 @@ describe("AuthPanel", { timeout: 15_000 }, () => {
     render(<AuthPanel />);
 
     await waitFor(() => {
-      expect(authActions.signInWithGoogle).toHaveBeenCalled();
+      expect(authActions.signInWithGoogleReplacingSession).toHaveBeenCalled();
     });
-    expect(replace).toHaveBeenCalledWith("/login?intent=save");
+    expect(replace).not.toHaveBeenCalled();
   });
 
   it("blocks weak recovery passwords before calling Supabase", async () => {

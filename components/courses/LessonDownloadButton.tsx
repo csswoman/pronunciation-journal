@@ -7,7 +7,6 @@
 
 import { useState, useCallback } from "react";
 import { Download, Check, Loader2, Trash2 } from "@/components/icons";
-import { useLessonDownload } from "@/lib/offline/download-manager";
 import { cn } from "@/lib/cn";
 
 interface LessonDownloadButtonProps {
@@ -17,6 +16,13 @@ interface LessonDownloadButtonProps {
   title: string;
   variant?: "icon-only" | "badge";
   className?: string;
+  /**
+   * Reactive download status, computed once by an ancestor (e.g. CoursePathProgressClient)
+   * via a single `useLiveQuery` over `db.downloadedLessons`. Keeping this a plain prop means
+   * this component never imports the Dexie-backed download engine just to render a badge —
+   * only the action handlers below lazy-load it, and only when actually clicked.
+   */
+  isDownloaded?: boolean;
 }
 
 export function LessonDownloadButton({
@@ -26,10 +32,12 @@ export function LessonDownloadButton({
   title,
   variant = "icon-only",
   className,
+  isDownloaded = false,
 }: LessonDownloadButtonProps) {
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const id = `${trackId}:${lessonNumber}`;
-  const { isDownloaded, isDownloading, download, remove, error } = useLessonDownload(slug ? id : null);
 
   const handleAction = useCallback(
     async (e: React.MouseEvent) => {
@@ -45,13 +53,31 @@ export function LessonDownloadButton({
           setTimeout(() => setShowConfirmDelete(false), 3000);
           return;
         }
-        await remove();
-        setShowConfirmDelete(false);
+        setIsDownloading(true);
+        setError(null);
+        try {
+          const { removeDownloadedLesson } = await import("@/lib/offline/download-manager");
+          await removeDownloadedLesson(id);
+        } catch (err) {
+          setError(err instanceof Error ? err.message : "Error al eliminar la lección descargada");
+        } finally {
+          setIsDownloading(false);
+          setShowConfirmDelete(false);
+        }
       } else {
-        await download({ trackId, lessonNumber, slug, title });
+        setIsDownloading(true);
+        setError(null);
+        try {
+          const { downloadLesson } = await import("@/lib/offline/download-manager");
+          await downloadLesson({ trackId, lessonNumber, slug, title });
+        } catch (err) {
+          setError(err instanceof Error ? err.message : "Error al descargar la lección");
+        } finally {
+          setIsDownloading(false);
+        }
       }
     },
-    [slug, isDownloaded, showConfirmDelete, download, remove, trackId, lessonNumber, title],
+    [slug, isDownloaded, showConfirmDelete, id, trackId, lessonNumber, title],
   );
 
   if (!slug) return null;

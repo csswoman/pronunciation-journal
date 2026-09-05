@@ -14,9 +14,11 @@ import { RecoveryForm } from "@/components/auth/RecoveryForm";
 import { SocialDivider } from "@/components/auth/SocialDivider";
 import { hasAuthedBefore } from "@/lib/auth/returning-visitor";
 import { useAuthPanelController } from "@/components/auth/useAuthPanelController";
+import { useOAuthIdentityRecovery } from "@/components/auth/useOAuthIdentityRecovery";
 
 export default function AuthPanel() {
   const auth = useAuthPanelController();
+  useOAuthIdentityRecovery();
   const isSave = auth.intent === "save";
   const isAccountMode = auth.mode === "login" || auth.mode === "register";
   const showExplorePrimary = !isSave && isAccountMode;

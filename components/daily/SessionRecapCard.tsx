@@ -11,12 +11,8 @@
 
 import Link from 'next/link'
 import { ArrowRight, Flame } from "@/components/icons"
-import { useLiveQuery } from 'dexie-react-hooks'
 import PageLayout from '@/components/layout/PageLayout'
 import Button from '@/components/ui/Button'
-import { db } from '@/lib/db'
-import { ESSENTIAL_WORD_PREFIX } from '@/lib/essential-words/types'
-import { useAuth } from '@/components/auth/AuthProvider'
 import type { SessionArc } from '@/lib/practice/types'
 import SpeakWithCoachCard from '@/components/ai-coach/SpeakWithCoachCard'
 
@@ -29,15 +25,14 @@ interface Props {
   dueTomorrow: number | null
   /** Current streak in days, or null when unavailable. */
   streak: number | null
+  /**
+   * Essential Words learned count, queried once by the shared ancestor
+   * (DailyChecklist) instead of each daily card subscribing independently.
+   */
+  learned?: number
 }
 
-export default function SessionRecapCard({ arc, stepCount, dueTomorrow, streak }: Props) {
-  const { user } = useAuth()
-  const learned = useLiveQuery(
-    () => user?.id ? db.srsData.filter((e) => e.userId === user.id && e.wordId.startsWith(ESSENTIAL_WORD_PREFIX)).count() : 0,
-    [user?.id],
-    0,
-  )
+export default function SessionRecapCard({ arc, stepCount, dueTomorrow, streak, learned = 0 }: Props) {
 
   const topicParts: string[] = []
   if (arc?.topicLabel) topicParts.push(arc.topicLabel)

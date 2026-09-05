@@ -20,6 +20,7 @@ describe("GET /api/health/ready", () => {
       NEXT_PUBLIC_SUPABASE_URL: "https://test.supabase.co",
       NEXT_PUBLIC_SUPABASE_ANON_KEY: "test-anon-key",
       GEMINI_API_KEY: "test-gemini-key",
+      SUPABASE_SERVICE_ROLE_KEY: "test-service-role-key",
     };
     rpc.mockResolvedValue({ error: null });
   });
@@ -48,7 +49,19 @@ describe("GET /api/health/ready", () => {
     expect(body.status).toBe("ready");
     expect(body.checks.supabase.status).toBe("ok");
     expect(body.checks.gemini.status).toBe("ok");
+    expect(body.checks.rateLimit.status).toBe("ok");
     expect(body.version).toBeDefined();
+  });
+
+  it("returns degraded when the rate-limit service-role key is missing", async () => {
+    delete process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    const res = await GET();
+
+    expect(res.status).toBe(503);
+    const body = await res.json();
+    expect(body.status).toBe("degraded");
+    expect(body.checks.rateLimit.status).toBe("error");
   });
 
   it("returns degraded when Supabase check fails", async () => {

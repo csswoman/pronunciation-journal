@@ -1,6 +1,9 @@
 export const AI_UNAVAILABLE_MESSAGE =
   "AI practice is unavailable right now. You can keep reviewing saved lessons and try again shortly.";
 
+export const AI_SESSION_REQUIRED_MESSAGE =
+  "No pudimos validar tu sesión. Recarga la página e inicia sesión para usar el coach.";
+
 export const DATA_UNAVAILABLE_MESSAGE =
   "Saved progress is temporarily unavailable. Local practice may continue, and sync will retry when the connection recovers.";
 
@@ -23,6 +26,9 @@ export function publicAiErrorMessage(
   message = "",
   fallback: string = AI_UNAVAILABLE_MESSAGE,
 ): string {
+  if (status === 401) {
+    return AI_SESSION_REQUIRED_MESSAGE;
+  }
   if (status === 429 || isQuotaLikeError(message)) {
     return AI_QUOTA_EXHAUSTED_MESSAGE;
   }

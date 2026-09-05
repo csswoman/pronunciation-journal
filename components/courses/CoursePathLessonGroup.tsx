@@ -23,6 +23,7 @@ interface CoursePathLessonGroupProps {
   open: boolean;
   onToggle: (id: string, open: boolean) => void;
   completed?: boolean;
+  downloadedIds?: ReadonlySet<string>;
 }
 
 function getGroupIcon(title: string) {
@@ -42,6 +43,7 @@ export default function CoursePathLessonGroup({
   open,
   onToggle,
   completed,
+  downloadedIds,
 }: CoursePathLessonGroupProps) {
   const totalCount = lessons.length;
   const completedCount = lessons.filter((lesson) => lesson.state === "done").length;
@@ -98,7 +100,11 @@ export default function CoursePathLessonGroup({
                   {lesson.subgroup}
                 </div>
               )}
-              <CoursePathLessonRow lesson={lesson} levelId={levelId} />
+              <CoursePathLessonRow
+                lesson={lesson}
+                levelId={levelId}
+                isDownloaded={downloadedIds?.has(`${levelId}:${lesson.number}`)}
+              />
             </Fragment>
           );
         })}
