@@ -489,8 +489,8 @@ describe("HomeCommandGrid lifecycle states", () => {
     );
     await waitFor(() => {
       expect(screen.getByText("Daily plan")).toBeInTheDocument();
+      expect(screen.getByRole("heading", { name: /¿viste algo en inglés hoy\?/i })).toBeInTheDocument();
+      expect(screen.getByRole("heading", { name: "Ejercicios extra" })).toBeInTheDocument();
     });
-    expect(screen.getByRole("heading", { name: /¿viste algo en inglés hoy\?/i })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Ejercicios extra" })).toBeInTheDocument();
   });
 });

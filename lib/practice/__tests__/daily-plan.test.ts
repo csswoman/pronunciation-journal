@@ -129,6 +129,7 @@ import {
   EmptyWordBankError,
   DAILY_PLAN_STEP_COUNT,
 } from '../daily-plan/index'
+import { MAX_PRONUNCIATION_STEPS } from '../daily-plan/constants'
 import { buildReaderStep } from '../daily-plan/async-step-builders'
 import type { PracticeExercise } from '../types'
 
@@ -196,7 +197,7 @@ describe('buildDailyPlan', () => {
     const pronunciation = plan.steps.filter((s) =>
       ['phoneme_focus', 'minimal_pairs', 'listening', 'connected_speech'].includes(s.kind),
     )
-    expect(pronunciation.length).toBeLessThanOrEqual(1)
+    expect(pronunciation.length).toBeLessThanOrEqual(MAX_PRONUNCIATION_STEPS)
   })
 
   it('respeta el tope de pronunciación cuando hay seed', async () => {
@@ -204,7 +205,7 @@ describe('buildDailyPlan', () => {
     const pronunciation = plan.steps.filter((s) =>
       ['phoneme_focus', 'minimal_pairs', 'listening', 'connected_speech'].includes(s.kind),
     )
-    expect(pronunciation.length).toBeLessThanOrEqual(1)
+    expect(pronunciation.length).toBeLessThanOrEqual(MAX_PRONUNCIATION_STEPS)
   })
 
   it('populates arc with the primary sound IPA and session words', async () => {
@@ -288,7 +289,7 @@ describe('buildDailyPlan', () => {
     const pronunciation = plan.steps.filter((s) =>
       ['phoneme_focus', 'minimal_pairs', 'listening', 'connected_speech'].includes(s.kind),
     )
-    expect(pronunciation.length).toBeLessThanOrEqual(1)
+    expect(pronunciation.length).toBeLessThanOrEqual(MAX_PRONUNCIATION_STEPS)
   })
 
   it('context_practice aparece cuando hay palabras con oraciones de ejemplo', async () => {
