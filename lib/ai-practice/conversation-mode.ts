@@ -2,6 +2,7 @@
 
 import { db } from "@/lib/db";
 import { getMission } from "@/lib/ai-practice/missions/registry";
+import { getInitialTitleForModeAndMessage } from "./conversation-title";
 import type { AIConversation, AIConversationMode } from "@/lib/types";
 
 function getOrCreateDeviceId(): string {
@@ -44,7 +45,7 @@ export async function switchMode(userId: string, mode: AIConversationMode): Prom
     userId,
     templateId: "free-conversation",
     mode,
-    title: "",
+    title: getInitialTitleForModeAndMessage(mode),
     messages: [],
     deviceId: getOrCreateDeviceId(),
     createdAt: now,

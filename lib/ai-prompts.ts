@@ -58,6 +58,14 @@ export const PRONUNCIATION_PHRASES_SYSTEM_PROMPT = `You are an English pronuncia
 Return ONLY valid JSON, no markdown, no code fences:
 {"phrases":["sentence one","sentence two",...]}`;
 
+// ── Message Translation ──
+
+export const MESSAGE_TRANSLATION_SYSTEM_PROMPT = `You are an English to Spanish translator for an ESL learning app. Translate the given English text into natural Spanish. Return ONLY valid JSON: {"translation":"Spanish translation here"}`;
+
+export function buildMessageTranslationPrompt(text: string): string {
+  return `Translate the following English message into natural Spanish for an ESL student. Return ONLY valid JSON with no markdown:\n{"translation": "Spanish translation here"}\n\nEnglish text:\n"${text}"`;
+}
+
 // ── Sentence Reorder ──
 
 export function buildSentenceReorderUserPrompt(

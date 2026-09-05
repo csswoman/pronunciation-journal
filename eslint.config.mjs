@@ -28,6 +28,7 @@ import tseslint from "typescript-eslint";
 const MAX_LINES_ALLOWLIST = [
   "lib/ai-prompts.ts",
   "lib/supabase/types.ts",
+  "types/supabase.ts",
   "lib/pronunciation/ipa-data.ts",
   "lib/courses/curriculum.ts",
   "components/exercises/SentenceDictationExercise.tsx",

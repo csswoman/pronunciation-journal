@@ -23,7 +23,7 @@ export type VoiceMetadata = { transcript: true; scored: boolean };
 
 export type AIMessage =
   | { role: "user"; content: string; timestamp: string; hidden?: boolean; voice?: VoiceMetadata }
-  | { role: "model"; contentParts: ContentPart[]; toolCalls: Map<string, ToolCall>; timestamp: string }
+  | { role: "model"; contentParts: ContentPart[]; toolCalls: Map<string, ToolCall>; timestamp: string; translation?: string }
   | { role: "tool"; toolCallId: string; name: string; result: unknown; timestamp: string };
 
 export type StreamChunk =
