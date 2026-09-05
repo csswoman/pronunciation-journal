@@ -21,7 +21,7 @@ describe("minimal-pair runner selection", () => {
 
   it("builds a canonical preloaded route", () => {
     expect(minimalPairsRunnerHref("/ɡ/")).toBe(
-      "/practice/sounds/minimal-pairs?phoneme=%2Fg%2F",
+      "/practice/sounds?tab=minimal-pairs&phoneme=%2Fg%2F",
     );
   });
 });

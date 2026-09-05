@@ -16,3 +16,4 @@
 | Plan 091 | Cableado Integral de Aprendizaje: Telemetría de Shadowing en Reader, Avance Diagnóstico por Logro, Latencia Oral en Progreso y Consolidación Git | Completed |
 | Plan 092 | Auditoría y mejora de diseño Apple HIG en Practice Hub (/practice) | Completed |
 | Plan 093 | Auditoría y mejora de diseño Apple HIG en Word Search (/practice/word-search) | Completed |
+| Plan 094 | Modelo Híbrido: Descarga de lecciones bajo demanda para uso offline con Dexie, CacheStorage y sincronización diferida | Completed |

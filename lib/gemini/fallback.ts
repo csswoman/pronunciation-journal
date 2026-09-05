@@ -2,6 +2,11 @@ export const ENABLE_PREVIEW_MODELS =
   process.env.GEMINI_ENABLE_PREVIEW_MODELS === 'true'
 
 export const BASE_MODELS = [
+  'gemini-3.1-flash-lite',
+  'gemini-3.5-flash-lite',
+  'gemini-3.7-flash',
+  'gemini-3.6-flash',
+  'gemini-3.5-flash',
   'gemini-2.5-flash-lite',
   'gemini-2.5-flash',
   'gemini-flash-latest',
@@ -9,7 +14,7 @@ export const BASE_MODELS = [
 
 export const PREVIEW_MODELS = ['gemini-3.1-flash-lite-preview'] as const
 
-export const FALLBACK_MODELS = ENABLE_PREVIEW_MODELS
+export const FALLBACK_MODELS: readonly string[] = ENABLE_PREVIEW_MODELS
   ? [...BASE_MODELS, ...PREVIEW_MODELS]
   : [...BASE_MODELS]
 

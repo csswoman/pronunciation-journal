@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { AI_QUOTA_EXHAUSTED_MESSAGE } from '@/lib/degradation/messages'
 
 const mocks = vi.hoisted(() => ({
   callWithFallback: vi.fn(),
@@ -85,7 +86,7 @@ describe('gemini json-route helpers', () => {
     const body = await res.json()
 
     expect(res.status).toBe(429)
-    expect(body).toEqual({ error: 'failed' })
+    expect(body).toEqual({ error: AI_QUOTA_EXHAUSTED_MESSAGE })
   })
 
   it('maps malformed model output to a sanitized 500 response', async () => {

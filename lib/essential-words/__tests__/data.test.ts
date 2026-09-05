@@ -2,7 +2,7 @@ import fs from "fs";
 import os from "os";
 import path from "path";
 import { afterEach, describe, expect, it } from "vitest";
-import { loadEssentialWords, findEssentialWord } from "../data";
+import { loadEssentialWords, findEssentialWord, clearEssentialWordsCache } from "../data";
 
 function entry(rank: number) {
   return {
@@ -35,6 +35,7 @@ function writeChunks(...chunks: Array<{ n: number; data: unknown }>) {
 }
 
 afterEach(() => {
+  clearEssentialWordsCache();
   if (tmp) fs.rmSync(tmp, { recursive: true, force: true });
 });
 

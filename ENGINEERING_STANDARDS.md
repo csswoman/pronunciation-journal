@@ -37,7 +37,7 @@ Complemento operativo de `CLAUDE.md`.
 `ai-coach`, `ai-practice`, `api`, `auth`, `chunk-of-day`, `content`, `courses`,
 `daily`, `db`, `decks`, `degradation`, `essential-words`, `exercises`,
 `false-friends`, `gemini`, `home`, `images`, `immersion`, `ipa`, `journal`,
-`learning-focus`, `learning-loop`, `lexicon`, `navigation`, `phoneme-practice`,
+`learning-focus`, `learning-loop`, `lexicon`, `navigation`, `offline`, `phoneme-practice`,
 `practice`, `preferences`, `progress`, `pronunciation`, `review`, `search`,
 `security`, `sound-lab`, `sounds`, `speech`, `srs`, `stores`, `supabase`, `sync`,
 `theme`, `tracking`, `ui-sounds`, `users`, `vocabulary`, `word-bank`, `word-of-day`.

@@ -45,6 +45,7 @@ import {
   IconDeviceLaptop,
   IconDeviceTv,
   IconDotsVertical,
+  IconDownload,
   IconDumbbell,
   IconEar,
   IconEye,
@@ -162,6 +163,7 @@ export const Code2 = createIcon(IconCode, "Code2");
 export const Columns2 = createIcon(IconColumns2, "Columns2");
 export const Component = createIcon(IconComponents, "Component");
 export const CornerDownLeft = createIcon(IconCornerDownLeft, "CornerDownLeft");
+export const Download = createIcon(IconDownload, "Download");
 export const Dumbbell = createIcon(IconDumbbell, "Dumbbell");
 export const Ear = createIcon(IconEar, "Ear");
 export const Eye = createIcon(IconEye, "Eye");

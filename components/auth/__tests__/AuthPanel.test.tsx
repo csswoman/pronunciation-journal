@@ -13,6 +13,7 @@ const authActions = vi.hoisted(() => ({
   signUpWithEmail: vi.fn(),
   signInAsGuest: vi.fn(),
   signInWithGoogle: vi.fn(),
+  signOut: vi.fn().mockResolvedValue({ error: null }),
   resetPasswordForEmail: vi.fn(),
   updatePassword: vi.fn(),
   upgradeGuestWithEmail: vi.fn(),

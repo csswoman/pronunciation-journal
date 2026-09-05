@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { publicErrorResponse } from "@/lib/api/guards";
 import { logServerError } from "@/lib/api/logging";
 import { callWithFallback, getErrorStatus, stripJsonFences, type CallWithFallbackOptions, type GeminiCallParams } from "@/lib/gemini/client";
+import { publicAiErrorMessage } from "@/lib/degradation/messages";
 
 type GeminiJsonRouteOptions<T> = {
   endpoint: string;
@@ -44,7 +45,8 @@ export async function callGeminiJson<T>({
       status,
       userId,
     });
-    return { data: null, response: publicErrorResponse(status >= 500 ? 500 : status, failureMessage) };
+    const errMessage = publicAiErrorMessage(status, String(err), failureMessage);
+    return { data: null, response: publicErrorResponse(status >= 500 ? 500 : status, errMessage) };
   }
 }
 

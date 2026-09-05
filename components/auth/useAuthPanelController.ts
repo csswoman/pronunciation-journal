@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-import { getBrowserSession, signInWithGoogle } from "@/lib/supabase/auth-actions";
+import { getBrowserSession, signInWithGoogle, signOut } from "@/lib/supabase/auth-actions";
 import { isAnonymousUser } from "@/lib/auth/is-anonymous";
 import {
   GOOGLE_OAUTH_RESUME_PARAM,
@@ -101,6 +101,7 @@ export function useAuthPanelController() {
     setPending(true);
 
     void (async () => {
+      await signOut();
       const { data, error: err } = await signInWithGoogle();
       if (err || !data?.url) {
         if (err) console.error("[auth] google resume sign in failed", err);

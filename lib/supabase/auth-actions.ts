@@ -75,7 +75,13 @@ export async function updatePassword(password: string) {
   return supabase.auth.updateUser({ password });
 }
 
+export async function signOut() {
+  const supabase = getSupabaseBrowserClient();
+  return supabase.auth.signOut();
+}
+
 export async function getBrowserSession() {
   const supabase = getSupabaseBrowserClient();
   return supabase.auth.getSession();
 }
+

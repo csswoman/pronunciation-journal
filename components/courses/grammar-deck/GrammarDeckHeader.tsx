@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft } from "@/components/icons";
 import { TrackingSaveButton } from "@/components/tracking/TrackingSaveButton";
+import { LessonDownloadButton } from "@/components/courses/LessonDownloadButton";
 import type { GrammarDeckMeta } from "@/lib/courses/grammar-deck/types";
 import { studyOrPracticeDeckHref } from "@/lib/courses/curriculumIndex";
 
@@ -12,6 +13,8 @@ interface GrammarDeckHeaderProps {
   backLabel?: string;
   subtitle?: string;
   lessonSlug?: string;
+  levelId?: string;
+  lessonNumber?: number;
 }
 
 export default function GrammarDeckHeader({
@@ -22,6 +25,8 @@ export default function GrammarDeckHeader({
   backLabel = "Ruta",
   subtitle,
   lessonSlug,
+  levelId,
+  lessonNumber,
 }: GrammarDeckHeaderProps) {
   const pct = totalCount === 0 ? 0 : Math.round((reviewedCount / totalCount) * 100);
   const fullTitle = [meta.title, meta.titleEmphasis].filter(Boolean).join(" ");
@@ -41,13 +46,24 @@ export default function GrammarDeckHeader({
             {meta.titleEmphasis && <em> {meta.titleEmphasis}</em>}
           </h1>
           {lessonSlug && (
-            <TrackingSaveButton
-              kind="lesson"
-              reference={lessonSlug}
-              title={fullTitle}
-              payload={deckHref ? { href: deckHref } : undefined}
-              variant="heart"
-            />
+            <>
+              {levelId && lessonNumber && (
+                <LessonDownloadButton
+                  trackId={levelId}
+                  lessonNumber={lessonNumber}
+                  slug={lessonSlug}
+                  title={fullTitle}
+                  variant="badge"
+                />
+              )}
+              <TrackingSaveButton
+                kind="lesson"
+                reference={lessonSlug}
+                title={fullTitle}
+                payload={deckHref ? { href: deckHref } : undefined}
+                variant="heart"
+              />
+            </>
           )}
         </div>
       </div>

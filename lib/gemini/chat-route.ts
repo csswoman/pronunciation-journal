@@ -1,6 +1,7 @@
 import { GoogleGenAI, type Content, type FunctionCallingConfigMode, type FunctionDeclaration } from "@google/genai";
 import { TOOL_DECLARATIONS } from "@/lib/ai-practice/tools/registry";
 import { FALLBACK_MODELS, shouldTryNextModel } from "@/lib/gemini/fallback";
+import { publicAiErrorMessage } from "@/lib/degradation/messages";
 
 type ChatMessage = {
   role: "user" | "model" | "tool";
@@ -191,7 +192,7 @@ export async function streamWithFallback(
     }
   }
 
-  safeEnqueue({ type: "error", message: "AI response failed. Please try again." });
+  safeEnqueue({ type: "error", message: publicAiErrorMessage(429, "quota exhausted") });
   safeClose();
 }
 
