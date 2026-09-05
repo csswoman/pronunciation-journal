@@ -38,7 +38,7 @@ export default function QuotaExhaustedCard({ messages, onNewSession }: QuotaExha
           <Zap size={14} className="text-[var(--primary)]" />
         </span>
         <p className="text-body-sm font-semibold text-fg">
-          {hasConversation ? "Session ended" : "AI unavailable right now"}
+          {hasConversation ? "Sesión finalizada" : "IA no disponible en este momento"}
         </p>
       </div>
 
@@ -48,7 +48,7 @@ export default function QuotaExhaustedCard({ messages, onNewSession }: QuotaExha
         >
           <div>
             <p className="text-caption font-medium text-fg-muted">
-              Exercises completed
+              Ejercicios completados
             </p>
             <p className="text-body-lg font-bold mt-0.5 text-fg">
               {correct} / {total}
@@ -68,14 +68,14 @@ export default function QuotaExhaustedCard({ messages, onNewSession }: QuotaExha
       )}
 
       <p className="text-body-sm leading-relaxed text-fg-muted">
-        The daily AI quota has been reached. Your conversation is saved — you can continue when the quota resets (usually within 24 hours).
+        Has alcanzado el límite diario de la IA. Tu conversación está guardada; podrás continuar cuando se restablezca el límite (normalmente en 24 horas).
       </p>
 
       <button
         onClick={onNewSession}
         className="w-full rounded-xl bg-[color-mix(in_oklch,var(--primary)_14%,transparent)] py-2 text-caption font-semibold text-[var(--primary)] transition-opacity hover:opacity-80"
       >
-        Start new session
+        Iniciar nueva sesión
       </button>
     </div>
   );

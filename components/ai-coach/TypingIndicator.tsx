@@ -15,11 +15,11 @@ export default function TypingIndicator() {
     <div
       className="inline-flex items-center gap-2.5 rounded-full border border-border-subtle bg-surface-raised/80 px-2.5 py-1.5 shadow-sm backdrop-blur-sm"
       role="status"
-      aria-label="AI Coach is thinking"
+      aria-label="El AI Coach está pensando"
     >
       <AIAvatar state="thinking" />
       <span className="pr-1.5 text-body-sm font-medium tracking-tight text-fg-muted">
-        Thinking…
+        Pensando…
       </span>
     </div>
   );

@@ -10,10 +10,10 @@ describe('ChatTabs', () => {
     expect(tabIds).toContain('missions')
   })
 
-  it('renders the missions tab label and description', () => {
+  it('renders the missions tab label and exposes description metadata', () => {
     render(<ChatTabs active="missions" onChange={vi.fn()} />)
 
     expect(screen.getByText('Misiones')).toBeInTheDocument()
-    expect(screen.getByText('Lee un guion en voz alta')).toBeInTheDocument()
+    expect(TABS.find((tab) => tab.id === 'missions')?.desc).toBe('Lee un guion en voz alta')
   })
 })

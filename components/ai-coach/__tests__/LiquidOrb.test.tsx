@@ -31,15 +31,15 @@ describe("LiquidOrb and WebGPU fallbacks", () => {
       render(<ChatEmptyState onSendMessage={vi.fn()} />);
 
       // Sparkles and heading are present in fallback
-      expect(screen.getByText("Let's practice together.")).toBeDefined();
-      expect(screen.getByText("Free Conversation")).toBeDefined();
+      expect(screen.getByText(/de qué te gustaría hablar hoy\?/i)).toBeDefined();
+      expect(screen.getByText(/conversación libre|free conversation/i)).toBeDefined();
     });
 
     it("renders AIAvatar thinking state in TypingIndicator", () => {
       render(<TypingIndicator />);
 
-      expect(screen.getByRole("status", { name: "AI Coach is thinking" })).toBeDefined();
-      expect(screen.getByText("Thinking…")).toBeDefined();
+      expect(screen.getByRole("status", { name: /el ai coach está pensando|ai coach is thinking/i })).toBeDefined();
+      expect(screen.getByText(/pensando…|thinking…/i)).toBeDefined();
     });
   });
 

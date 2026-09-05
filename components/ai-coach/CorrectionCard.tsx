@@ -14,7 +14,7 @@ export default function CorrectionCard({ correction }: CorrectionCardProps) {
     >
       <p className="mb-1 flex items-center gap-1.5 font-kicker font-semibold text-[var(--success)]">
         <Check size={14} strokeWidth={2.25} aria-hidden />
-        Small correction
+        Corrección rápida
       </p>
       <p className="flex flex-wrap items-center gap-1.5">
         <s className="text-[var(--text-tertiary)]">{correction.original}</s>

@@ -34,10 +34,10 @@ describe('SaveWordModal', () => {
       />
     )
 
-    expect(screen.getByText('Save Vocabulary')).toBeInTheDocument()
+    expect(screen.getByText(/guardar vocabulario|save vocabulary/i)).toBeInTheDocument()
     expect(screen.getByText('ubiquitous')).toBeInTheDocument()
 
-    fireEvent.click(screen.getByRole('button', { name: /save/i }))
+    fireEvent.click(screen.getByRole('button', { name: /guardar palabra|save/i }))
     expect(handleConfirm).toHaveBeenCalledWith({
       word: 'ubiquitous',
       meaning: '',

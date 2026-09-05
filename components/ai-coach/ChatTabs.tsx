@@ -23,8 +23,6 @@ interface ChatTabsProps {
 }
 
 export default function ChatTabs({ active, onChange }: ChatTabsProps) {
-  const activeTab = TABS.find((tab) => tab.id === active) ?? TABS[0];
-
   return (
     <div className="@container flex w-full flex-col">
       <div
@@ -65,13 +63,6 @@ export default function ChatTabs({ active, onChange }: ChatTabsProps) {
           );
         })}
       </div>
-
-      <p
-        aria-live="polite"
-        className="border-b border-border-subtle px-3 py-1.5 text-center text-caption text-pretty text-fg-subtle"
-      >
-        {activeTab.desc}
-      </p>
     </div>
   );
 }

@@ -20,9 +20,9 @@ interface SaveWordModalProps {
 }
 
 const DIFFICULTIES: { value: Difficulty; label: string; color: string }[] = [
-  { value: "easy", label: "Easy", color: "bg-success-soft text-success border-success" },
-  { value: "medium", label: "Medium", color: "bg-warning-soft text-warning border-warning" },
-  { value: "hard", label: "Hard", color: "bg-warning-soft text-warning border-warning" },
+  { value: "easy", label: "Fácil", color: "bg-success-soft text-success border-success" },
+  { value: "medium", label: "Medio", color: "bg-warning-soft text-warning border-warning" },
+  { value: "hard", label: "Difícil", color: "bg-warning-soft text-warning border-warning" },
 ];
 
 export default function SaveWordModal({ word, context, onConfirm, onClose }: SaveWordModalProps) {
@@ -84,13 +84,13 @@ export default function SaveWordModal({ word, context, onConfirm, onClose }: Sav
       >
         <div className="flex items-center justify-between">
           <H3 id={titleId} className="text-body-lg font-bold">
-            Save Vocabulary
+            Guardar vocabulario
           </H3>
           <Button
             onClick={onClose}
             variant="ghost"
             size="icon"
-            aria-label="Close"
+            aria-label="Cerrar"
             className="text-fg-subtle hover:text-fg-muted dark:hover:text-fg"
             icon={
               <svg aria-hidden="true" className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -111,21 +111,21 @@ export default function SaveWordModal({ word, context, onConfirm, onClose }: Sav
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-body-sm font-medium text-fg-muted mb-1">
-              Meaning <span className="text-fg-subtle font-normal">(optional)</span>
+              Significado <span className="text-fg-subtle font-normal">(opcional)</span>
             </label>
             <input
               ref={inputRef}
               type="text"
               value={meaning}
               onChange={(e) => setMeaning(e.target.value)}
-              placeholder="Add a definition or translation..."
+              placeholder="Añade una definición o traducción..."
               className="w-full px-3 py-2 rounded-lg border border-border-subtle bg-surface-sunken text-fg placeholder:text-fg-placeholder text-body-sm focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
 
           <div>
             <label className="block text-body-sm font-medium text-fg-muted mb-2">
-              Difficulty
+              Dificultad
             </label>
             <div className="flex gap-2">
               {DIFFICULTIES.map((d) => (
@@ -151,7 +151,7 @@ export default function SaveWordModal({ word, context, onConfirm, onClose }: Sav
               size="lg"
               fullWidth
             >
-              Cancel
+              Cancelar
             </Button>
             <Button
               type="submit"
@@ -159,7 +159,7 @@ export default function SaveWordModal({ word, context, onConfirm, onClose }: Sav
               size="lg"
               fullWidth
             >
-              Save Word
+              Guardar palabra
             </Button>
           </div>
         </form>

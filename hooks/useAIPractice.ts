@@ -28,6 +28,7 @@ interface UseAIPracticeReturn {
   conversationId: number | null;
   sendMessage: (text: string, options?: { hidden?: boolean; voice?: VoiceMetadata }) => Promise<void>;
   answerToolCall: (callId: string, result: ExerciseResult) => void;
+  saveTranslation: (msgIndex: number, translation: string) => void;
   openSaveWordModal: (word: string, context: string) => void;
   closeSaveWordModal: () => void;
   confirmSaveWord: (data: SaveWordData) => Promise<void>;
@@ -203,6 +204,7 @@ export function useAIPractice(): UseAIPracticeReturn {
     conversationId,
     sendMessage: chat.sendMessage,
     answerToolCall: chat.answerToolCall,
+    saveTranslation: chat.saveTranslation,
     openSaveWordModal: words.openSaveWordModal,
     closeSaveWordModal: words.closeSaveWordModal,
     confirmSaveWord: words.confirmSaveWord,

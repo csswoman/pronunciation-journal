@@ -10,10 +10,10 @@ import {
   BriefcaseBusiness,
   AlignLeft,
   Mic,
+  Sparkles,
 } from "@/components/icons";
 import { AI_COACH_EMPTY_STATE_PROMPTS } from "@/lib/ai-prompts";
 import { cn } from "@/lib/cn";
-import LiquidOrb from "./LiquidOrb";
 
 
 // Planned structure:
@@ -26,32 +26,32 @@ import LiquidOrb from "./LiquidOrb";
 const CARDS = [
   {
     id: "free-conversation",
-    title: "Free Conversation",
-    desc: "Chat about anything, no script needed.",
+    title: "Conversación libre",
+    desc: "Habla de cualquier tema, sin guion.",
     colorVar: "var(--primary)",
     Icon: MessageCircle,
     prompt: AI_COACH_EMPTY_STATE_PROMPTS.freeConversation,
   },
   {
     id: "sentence-correction",
-    title: "Correct My Sentences",
-    desc: "Write something, get feedback instantly.",
+    title: "Corrige mis oraciones",
+    desc: "Escribe algo y recibe comentarios al instante.",
     colorVar: "var(--success)",
     Icon: CheckCheck,
     prompt: AI_COACH_EMPTY_STATE_PROMPTS.sentenceCorrection,
   },
   {
     id: "practice-questions",
-    title: "Practice Questions",
-    desc: "Thought-provoking questions to expand your English.",
+    title: "Preguntas de práctica",
+    desc: "Preguntas para reflexionar y ampliar tu inglés.",
     colorVar: "var(--error)",
     Icon: ClipboardList,
     prompt: AI_COACH_EMPTY_STATE_PROMPTS.practiceQuestions,
   },
   {
     id: "personalized-practice",
-    title: "Personalized",
-    desc: "Practice based on your goals.",
+    title: "Personalizado",
+    desc: "Práctica adaptada a tus objetivos.",
     colorVar: "var(--warning)",
     Icon: Star,
     prompt: AI_COACH_EMPTY_STATE_PROMPTS.personalizedPractice,
@@ -60,22 +60,22 @@ const CARDS = [
 
 const SUGGESTION_CHIPS = [
   {
-    label: "Trip to New York",
+    label: "Viaje a Nueva York",
     Icon: Plane,
     prompt: AI_COACH_EMPTY_STATE_PROMPTS.newYorkTrip,
   },
   {
-    label: "Job interview",
+    label: "Entrevista de trabajo",
     Icon: BriefcaseBusiness,
     prompt: AI_COACH_EMPTY_STATE_PROMPTS.jobInterview,
   },
   {
-    label: "Discuss an article",
+    label: "Comentar un artículo",
     Icon: AlignLeft,
     prompt: AI_COACH_EMPTY_STATE_PROMPTS.discussArticle,
   },
   {
-    label: "Pronunciation",
+    label: "Pronunciación",
     Icon: Mic,
     prompt: AI_COACH_EMPTY_STATE_PROMPTS.pronunciation,
   },
@@ -94,23 +94,24 @@ export default function ChatEmptyState({ onSendMessage }: ChatEmptyStateProps) {
       <div className="blob blob-4" />
 
       <div className="relative z-10 mx-auto flex w-full max-w-md flex-col px-3 py-6 @[22rem]:px-4 @[22rem]:py-8">
-        {/* Hero — orb hero prominente */}
+        {/* Hero — avatar prominente */}
         <header className="mb-5 flex flex-col items-center gap-3 text-center @[22rem]:mb-6">
-          <div className="relative flex size-24 shrink-0 items-center justify-center">
-            <LiquidOrb size={96} intensity="idle" />
+          <div className="relative flex size-16 shrink-0 items-center justify-center rounded-full bg-gradient-primary text-on-primary shadow-lg shadow-primary/25">
+            <Sparkles size={32} strokeWidth={2} />
+            <span className="pointer-events-none absolute inset-0 rounded-full shadow-[inset_0_1px_0_0_rgb(255_255_255_/_0.35)]" />
           </div>
           <div className="layout-stack-tight max-w-prose">
-            <h2 className="m-0 flex items-center justify-center gap-2 text-balance text-h3 text-fg">
-              Let&apos;s practice together.
+            <h2 className="m-0 flex items-center justify-center gap-2 text-balance text-h3 text-fg font-semibold tracking-tight">
+              ¡Hola! ¿De qué te gustaría hablar hoy?
             </h2>
             <p className="m-0 text-pretty text-caption leading-relaxed text-fg-muted">
-              Pick a mode or shortcut below to start.
+              Elige una opción para romper el hielo o escribe tu mensaje abajo.
             </p>
           </div>
         </header>
 
         {/* Primary modes — stacked rows beat a cramped 2×2 in the coach panel */}
-        <section aria-label="Practice modes" className="layout-stack-tight w-full">
+        <section aria-label="Modos de práctica" className="layout-stack-tight w-full">
           {CARDS.map(({ id, title, desc, colorVar, Icon, prompt }) => (
             <button
               key={id}
@@ -155,10 +156,10 @@ export default function ChatEmptyState({ onSendMessage }: ChatEmptyStateProps) {
         </section>
 
         {/* Secondary shortcuts — more air above, tighter within */}
-        <section aria-label="Popular shortcuts" className="mt-6 w-full @[22rem]:mt-7">
+        <section aria-label="Atajos populares" className="mt-6 w-full @[22rem]:mt-7">
           <div className="mb-2.5 flex items-center gap-2.5">
             <span className="h-px flex-1 bg-border-subtle" />
-            <p className="m-0 font-kicker text-fg-subtle">Popular Shortcuts</p>
+            <p className="m-0 font-kicker text-fg-subtle">Atajos populares</p>
             <span className="h-px flex-1 bg-border-subtle" />
           </div>
           <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">

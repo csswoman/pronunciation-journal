@@ -46,7 +46,7 @@ export default function ExerciseFeedback({ result, onNext, onRetry }: ExerciseFe
           onClick={onRetry}
           className="mt-1 rounded-full border border-[var(--border-default)] bg-[var(--surface-raised)] px-3 py-1.5 text-caption font-semibold text-[var(--text-secondary)] transition-opacity hover:opacity-70"
         >
-          Try again
+          Intentar de nuevo
         </button>
       )}
       {correct && onNext && (
@@ -55,7 +55,7 @@ export default function ExerciseFeedback({ result, onNext, onRetry }: ExerciseFe
           onClick={onNext}
           className="mt-1 inline-flex items-center gap-1.5 rounded-full bg-[var(--primary)] px-3 py-1.5 text-caption font-semibold text-[var(--on-primary)] transition-opacity hover:opacity-90"
         >
-          Next
+          Siguiente
           <ArrowRight size={14} strokeWidth={2.25} aria-hidden />
         </button>
       )}

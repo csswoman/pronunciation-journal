@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import type { AIMessage, StreamChunk, ExerciseResult, VoiceMetadata } from "@/lib/ai-practice/types";
 import { serializeMessage, deserializeMessage, type SerializedModelMessage } from "@/lib/ai-practice/types";
 import { applyExerciseResult, type UserLearningState } from "@/lib/ai-practice/learning-state";
-import { saveConversation, updateConversation } from "@/lib/db/ai";
+import { updateConversation } from "@/lib/db/ai";
 import { messagesToWire } from "@/lib/ai-practice/wire";
 import { logEvent } from "@/lib/ai-practice/events";
 import { makeStreamState, processChunk } from "@/lib/ai-practice/stream-processor";
@@ -19,13 +19,7 @@ import {
 } from "@/lib/ai-practice/coach-progress";
 import type { AIConversationMode } from "@/lib/types";
 import { AI_UNAVAILABLE_MESSAGE, isQuotaLikeError, publicAiErrorMessage } from "@/lib/degradation/messages";
-
-function getOrCreateDeviceId(): string {
-  const key = "ai_practice_device_id";
-  let id = localStorage.getItem(key);
-  if (!id) { id = crypto.randomUUID(); localStorage.setItem(key, id); }
-  return id;
-}
+import { logFirstExerciseTimeIfNeeded, persistConversationState } from "@/lib/ai-practice/chat-helpers";
 
 interface UseStreamingChatOptions {
   mode: AIConversationMode;
@@ -169,10 +163,8 @@ export function useStreamingChat({
 
           if (result === "done") break outer;
           if (typeof result === "object" && "error" in result) {
-            // Stream-level error from the server (e.g. quota exhausted after all fallbacks)
             if (isQuotaLikeError(result.error)) {
               setQuotaExhausted(true);
-              // Remove the empty model placeholder; keep prior conversation
               setMessages(prev => prev.slice(0, -1));
             } else {
               setError(publicAiErrorMessage(undefined, result.error));
@@ -190,35 +182,22 @@ export function useStreamingChat({
       const finalMessages = [...nextMessages, finalModelMsg];
       setMessages(finalMessages);
 
-      if (!firstExerciseLoggedRef.current && state.calls.size > 0) {
-        const { isExerciseTool } = await import("@/lib/ai-practice/tools/registry");
-        const hasExercise = [...state.calls.values()].some(tc => isExerciseTool(tc.name as never));
-        if (hasExercise) {
-          firstExerciseLoggedRef.current = true;
-          logEvent("time_to_first_exercise", { timeMs: Date.now() - sessionStartAtRef.current }, userId).catch(() => {});
-        }
-      }
+      firstExerciseLoggedRef.current = await logFirstExerciseTimeIfNeeded(
+        firstExerciseLoggedRef.current,
+        state.calls,
+        sessionStartAtRef.current,
+        userId,
+      );
 
-      const now = new Date().toISOString();
-      const serialized = finalMessages.map(m => m.role === "model" ? serializeMessage(m) : m) as never;
-      const currentId = conversationIdRef.current;
-      if (currentId) {
-        if (!userId) return;
-        await updateConversation(userId, currentId, { messages: serialized, updatedAt: now });
-      } else {
-        if (!userId) return;
-        const id = await saveConversation(userId, {
-          templateId: "free-conversation",
-          mode,
-          title: text.slice(0, 60),
-          messages: serialized,
-          deviceId: getOrCreateDeviceId(),
-          createdAt: now,
-          updatedAt: now,
-        });
-        conversationIdRef.current = id;
-        onConversationCreated(id);
-      }
+      const newId = await persistConversationState({
+        userId,
+        conversationId: conversationIdRef.current,
+        mode,
+        text,
+        messages: finalMessages,
+        onConversationCreated,
+      });
+      if (newId) conversationIdRef.current = newId;
     } catch (err: unknown) {
       if ((err as Error).name === "AbortError") return;
       const message = err instanceof Error ? err.message : "";
@@ -296,7 +275,7 @@ export function useStreamingChat({
     setMessages([]);
     setError(null);
     setQuotaExhausted(false);
-  }, [mode, finalizeSession]);
+  }, [mode, finalizeSession, userId]);
 
   const loadMessages = useCallback((msgs: AIMessage[]) => {
     const hydrated = msgs.map(m => {
@@ -308,6 +287,23 @@ export function useStreamingChat({
     setMessages(hydrated);
   }, []);
 
+  const saveTranslation = useCallback((msgIndex: number, translation: string) => {
+    setMessages(prev => {
+      const copy = [...prev];
+      const target = copy[msgIndex];
+      if (target && target.role === "model") {
+        copy[msgIndex] = { ...target, translation };
+      }
+      const currentId = conversationIdRef.current;
+      const activeUserId = userIdRef.current;
+      if (currentId && activeUserId) {
+        const serialized = copy.map(m => m.role === "model" ? serializeMessage(m) : m) as never;
+        void updateConversation(activeUserId, currentId, { messages: serialized, updatedAt: new Date().toISOString() });
+      }
+      return copy;
+    });
+  }, []);
+
   return {
     messages,
     isStreaming,
@@ -315,6 +311,7 @@ export function useStreamingChat({
     quotaExhausted,
     sendMessage,
     answerToolCall,
+    saveTranslation,
     resetChat,
     finalizeSession,
     loadMessages,

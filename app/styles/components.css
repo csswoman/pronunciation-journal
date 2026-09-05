@@ -174,13 +174,18 @@
 
 /* ── Chat backgrounds ────────────────────────────────────────────────────── */
 .chat-messages-container {
-  background-color: var(--surface-base);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Ccircle cx='12' cy='12' r='1.5' fill='oklch(0 0 0 / 0.07)'/%3E%3C/svg%3E");
-  background-size: 24px 24px;
-  background-repeat: repeat;
+  position: relative;
+  background: color-mix(in oklch, var(--primary) 3%, var(--bg));
 }
-.dark .chat-messages-container {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Ccircle cx='12' cy='12' r='1.5' fill='oklch(1 0 0 / 0.06)'/%3E%3C/svg%3E");
+.chat-messages-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 0%,   color-mix(in oklch, var(--primary)           12%, transparent) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 90% 20%,  color-mix(in oklch, var(--accent-analog-1)   10%, transparent) 0%, transparent 70%),
+    radial-gradient(ellipse 70% 50% at 70% 100%, color-mix(in oklch, var(--accent-complement)  6%, transparent) 0%, transparent 70%);
+  pointer-events: none;
 }
 
 .chat-bg {
