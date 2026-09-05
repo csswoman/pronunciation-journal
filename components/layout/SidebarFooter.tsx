@@ -163,7 +163,10 @@ export default function SidebarFooter() {
             ref={panelRef}
             role="dialog"
             aria-label="Ajustes rápidos"
-            className="panel-reveal fixed bottom-3 left-[calc(var(--sidebar-width)+0.75rem)] z-50 w-[min(23rem,calc(100vw-1.5rem))] rounded-xl border border-border-subtle bg-surface-raised p-4 shadow-xl before:absolute before:-left-2 before:bottom-5 before:size-4 before:rotate-45 before:border-l before:border-b before:border-border-subtle before:bg-surface-raised"
+            className={cn(
+              "panel-reveal fixed bottom-3 z-50 w-[min(23rem,calc(100vw-1.5rem))] rounded-xl border border-border-subtle bg-surface-raised p-4 shadow-xl transition-[left] duration-300 cubic-bezier(0.22,1,0.36,1) motion-reduce:transition-none before:absolute before:-left-2 before:bottom-5 before:size-4 before:rotate-45 before:border-l before:border-b before:border-border-subtle before:bg-surface-raised",
+              collapsed ? "left-[calc(60px+0.75rem)]" : "left-[calc(268px+0.75rem)]",
+            )}
           >
             <div className="flex items-center justify-between gap-3 pb-2">
               <p className="font-kicker text-fg-muted">Ajustes rápidos</p>
