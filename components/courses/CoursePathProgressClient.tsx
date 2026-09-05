@@ -8,8 +8,8 @@
  *   - ProgressLevelHead (level title heading)
  *   - ProgressCtaSection (start here / resume next lesson)
  *   - UnitAccordionList (list of course path units with 3-state summary rows)
- *     - UnitSummaryRow (CoursePathProgressRing + title + meta + chevron)
- *     - UnitLessonsList (pending LessonGroups and completed LessonGroup)
+ *     - CoursePathOptionalCard (collapsible card for optional course units)
+ *     - CoursePathMainCard (main card container for core unit lessons)
  *   - CoursePathYaPuedesDecirEsto (inline achievement block for real-world phrases)
  *   - CoursePracticeSuggestions (footer review suggestions)
  *   - CoursePathC1Electives (optional post-C1 elective tracks list)
@@ -17,13 +17,12 @@
  */
 
 import Link from "next/link";
-import { BookOpen, ChevronRight } from "@/components/icons";
 import { useEffect, useMemo, useState } from "react";
 import CoursePathAsideProgress from "@/components/courses/CoursePathAsideProgress";
 import CoursePathC1Electives from "@/components/courses/CoursePathC1Electives";
 import CoursePathHeroBanner from "@/components/courses/CoursePathHeroBanner";
-import CoursePathLessonGroup, { type LessonWithState } from "@/components/courses/CoursePathLessonGroup";
-import CoursePathLessonRow from "@/components/courses/CoursePathLessonRow";
+import CoursePathMainCard from "@/components/courses/CoursePathMainCard";
+import CoursePathOptionalCard from "@/components/courses/CoursePathOptionalCard";
 import CoursePathSearch from "@/components/courses/CoursePathSearch";
 import CoursePathYaPuedesDecirEsto from "@/components/courses/CoursePathYaPuedesDecirEsto";
 import CoursePracticeSuggestions from "@/components/courses/CoursePracticeSuggestions";
@@ -41,19 +40,6 @@ interface CoursePathProgressClientProps {
   compactHead?: boolean;
   hideAside?: boolean;
   electiveTracks?: CoursePathLevel[];
-}
-
-function groupPendingLessons(lessons: LessonWithState[]): Array<{ group: string; lessons: LessonWithState[] }> {
-  return lessons.reduce<Array<{ group: string; lessons: LessonWithState[] }>>((groups, lesson) => {
-    const group = lesson.group ?? "Contenido del curso";
-    const lastGroup = groups.at(-1);
-    if (lastGroup?.group === group) {
-      lastGroup.lessons.push(lesson);
-    } else {
-      groups.push({ group, lessons: [lesson] });
-    }
-    return groups;
-  }, []);
 }
 
 async function getOptionalUserId(): Promise<string | null> {
@@ -153,9 +139,6 @@ export default function CoursePathProgressClient({
   const currentLesson = derived?.units.flatMap((unit) => unit.lessons).find((lesson) => lesson.state === "current");
   const firstLesson = derived?.units[0]?.lessons[0];
 
-  // Single reactive subscription for the whole lesson list — each LessonDownloadButton
-  // below receives its status as a plain prop instead of subscribing individually,
-  // so the Dexie-backed download engine only needs to be resolved once per page.
   const downloadedRows = useLiveQuery(
     () => db.downloadedLessons.where("trackId").equals(level.id).toArray(),
     [level.id],
@@ -247,93 +230,33 @@ export default function CoursePathProgressClient({
 
         <div className="course-path__units" aria-label="Unidades del curso">
           {derived.units.map((unit) => {
-            const totalCount = unit.unit.lessons.length;
-            const completedCount = unit.lessons.filter((lesson) => lesson.state === "done").length;
             const isOptional = Boolean(unit.unit.isOptionalSection);
+            const optId = `${unit.unit.id}-optional-card`;
 
             if (isOptional) {
-              const optId = `${unit.unit.id}-optional-card`;
-              const optOpen = expandedGroups[optId] ?? false;
-
               return (
-                <details
+                <CoursePathOptionalCard
                   key={unit.unit.id}
-                  className="course-path__optional-card"
-                  open={optOpen}
-                  onToggle={(e) => handleGroupToggle(optId, e.currentTarget.open)}
-                >
-                  <summary className="course-path__optional-summary">
-                    <div className="course-path__optional-icon-box" aria-hidden="true">
-                      <BookOpen size={20} className="course-path__optional-icon" />
-                    </div>
-                    <div className="course-path__optional-heading">
-                      <span className="course-path__optional-title">{unit.unit.title}</span>
-                      <span className="course-path__optional-meta">
-                        {totalCount} {totalCount === 1 ? "lección" : "lecciones"} ·{" "}
-                        {completedCount === totalCount && totalCount > 0 ? "completado" : completedCount > 0 ? `${completedCount} de ${totalCount}` : "sin empezar"}{" "}
-                        <span className="course-path__optional-badge">OPCIONAL</span>
-                      </span>
-                    </div>
-                    <ChevronRight className="course-path__optional-chevron" size={16} aria-hidden />
-                  </summary>
-
-                  <div className="course-path__optional-body">
-                    {unit.lessons.map((lesson) => (
-                      <CoursePathLessonRow
-                        key={`${unit.unit.id}-${lesson.id}`}
-                        lesson={lesson}
-                        levelId={level.id}
-                        isDownloaded={downloadedIds.has(`${level.id}:${lesson.number}`)}
-                      />
-                    ))}
-                  </div>
-                </details>
+                  unit={unit}
+                  levelId={level.id}
+                  isOpen={expandedGroups[optId] ?? false}
+                  onToggle={handleGroupToggle}
+                  downloadedIds={downloadedIds}
+                />
               );
             }
 
-            // Core essential units card container
-            const pendingGroups = groupPendingLessons(
-              unit.lessons.filter((lesson) => {
-                const isDuplicatedStart = completedIds.size === 0 && lesson.id === firstLesson?.id;
-                return lesson.state !== "done" && !isDuplicatedStart;
-              })
-            );
-
             return (
-              <div key={unit.unit.id} className="course-path__main-card">
-                {pendingGroups.map(({ group, lessons }, index) => {
-                  const id = `${unit.unit.id}-${group}-${index}`;
-                  const hasCurrentLesson = lessons.some((lesson) => lesson.state === "current");
-                  return (
-                    <CoursePathLessonGroup
-                      key={id}
-                      id={id}
-                      title={group}
-                      lessons={lessons}
-                      levelId={level.id}
-                      open={expandedGroups[id] ?? (hasCurrentLesson || index === 0)}
-                      onToggle={handleGroupToggle}
-                      downloadedIds={downloadedIds}
-                    />
-                  );
-                })}
-                {unit.lessons.some((lesson) => lesson.state === "done") && (() => {
-                  const id = `${unit.unit.id}-completed`;
-                  const lessons = unit.lessons.filter((lesson) => lesson.state === "done");
-                  return (
-                    <CoursePathLessonGroup
-                      id={id}
-                      title="Completadas"
-                      lessons={lessons}
-                      levelId={level.id}
-                      open={expandedGroups[id] ?? false}
-                      onToggle={handleGroupToggle}
-                      completed
-                      downloadedIds={downloadedIds}
-                    />
-                  );
-                })()}
-              </div>
+              <CoursePathMainCard
+                key={unit.unit.id}
+                unit={unit}
+                levelId={level.id}
+                firstLessonId={firstLesson?.id}
+                completedIdsCount={completedIds.size}
+                expandedGroups={expandedGroups}
+                onToggle={handleGroupToggle}
+                downloadedIds={downloadedIds}
+              />
             );
           })}
         </div>
