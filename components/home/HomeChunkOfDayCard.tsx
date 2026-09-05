@@ -13,8 +13,7 @@
 // </HomeChunkOfDayCard>
 
 import { useEffect, useState } from "react";
-import { Bookmark, BookmarkCheck, MessageCircle, RefreshCw } from "@/components/icons";
-import { ListenButton } from "@/components/ui/ListenButton";
+import { Bookmark, BookmarkCheck, MessageCircle, RefreshCw, Volume2 } from "@/components/icons";
 import { HeroTermExample } from "@/components/home/HeroTermExample";
 import { formatIpaDisplay } from "@/lib/lexicon/format-ipa";
 import { useChunkOfDay } from "@/hooks/useChunkOfDay";
@@ -35,11 +34,8 @@ function OpenEndedText({ value }: { value: string }) {
   if (!hasGap) return <>{value}</>;
   return (
     <>
-      {text}{" "}
-      <span
-        aria-hidden
-        className="inline-block w-4 translate-y-[-0.15em] border-b border-border-default align-middle"
-      />
+      {text}
+      <span className="text-fg-muted font-normal" aria-hidden>…</span>
       <span className="sr-only">(continúa)</span>
     </>
   );
@@ -106,7 +102,7 @@ export default function HomeChunkOfDayCard() {
         </div>
         {categoryLabel ? (
           <span
-            className="truncate max-w-[62%] rounded-full border border-primary/25 bg-primary-soft/60 px-2.5 py-0.5 font-sans text-caption font-medium text-primary whitespace-nowrap"
+            className="truncate max-w-[62%] rounded-full border border-border-subtle bg-surface-sunken px-2.5 py-0.5 font-sans text-caption font-medium text-fg-muted whitespace-nowrap"
             title={categoryLabel}
           >
             {categoryLabel}
@@ -125,33 +121,36 @@ export default function HomeChunkOfDayCard() {
 
       {chunk && !loading && (
         <div className="animate-state-in relative z-1 flex flex-col gap-3" key={chunk.id}>
-          {/* Grupo de título y pronunciación */}
-          <div className="flex flex-col gap-1">
-            <p
-              className={cn(
-                "font-heading font-bold text-fg leading-snug break-words tracking-tight",
-                getHeroScale(chunk.chunk)
-              )}
-            >
-              <OpenEndedText value={chunk.chunk} />
-            </p>
-
-            <div className="flex items-center gap-2">
-              {chunk.ipa ? (
-                <span
-                  className="font-ipa text-body-md font-medium text-fg-muted"
-                  lang="en-fonipa"
-                >
-                  {formatIpaDisplay(chunk.ipa)}
-                </span>
-              ) : null}
-              <ListenButton
-                iconOnly
-                aria-label="Escuchar pronunciación"
-                onPlay={() => speakText(chunk.chunk)}
-              />
+          {/* Grupo de título y pronunciación tocable */}
+          <button
+            type="button"
+            onClick={() => speakText(chunk.chunk)}
+            className="group/listen focus-ring -mx-1.5 flex flex-col gap-1 rounded-xl p-1.5 text-left transition-colors hover:bg-surface-sunken/60 cursor-pointer"
+            aria-label={`Escuchar pronunciación de ${chunk.chunk}`}
+          >
+            <div className="flex items-start justify-between gap-2">
+              <span
+                className={cn(
+                  "font-heading font-bold text-fg leading-snug break-words tracking-tight transition-colors group-hover/listen:text-primary",
+                  getHeroScale(chunk.chunk)
+                )}
+              >
+                <OpenEndedText value={chunk.chunk} />
+              </span>
+              <div className="mt-1 shrink-0 rounded-full border border-border-subtle bg-surface-sunken p-1.5 text-fg-muted transition-colors group-hover/listen:border-primary/40 group-hover/listen:bg-primary-soft group-hover/listen:text-primary">
+                <Volume2 size={15} aria-hidden />
+              </div>
             </div>
-          </div>
+
+            {chunk.ipa ? (
+              <span
+                className="font-ipa text-body-md font-medium text-fg-muted"
+                lang="en-fonipa"
+              >
+                {formatIpaDisplay(chunk.ipa)}
+              </span>
+            ) : null}
+          </button>
 
           {/* Traducción de la frase */}
           <p className="font-body-md text-fg leading-relaxed">
@@ -193,16 +192,17 @@ export default function HomeChunkOfDayCard() {
           type="button"
           onClick={handleShuffle}
           aria-label="Ver otra frase"
-          className="focus-ring inline-flex min-h-10 min-w-10 items-center justify-center rounded-lg border border-border-default bg-surface-base text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg cursor-pointer"
+          className="focus-ring inline-flex min-h-10 items-center gap-1.5 rounded-lg border border-border-default bg-surface-base px-3 text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg cursor-pointer"
         >
           <RefreshCw
-            size={15}
+            size={14}
             className={cn(
               "transition-transform duration-300",
               isRotating && "rotate-180"
             )}
             aria-hidden
           />
+          <span className="font-body-sm font-medium">Otra</span>
         </button>
       </div>
     </div>

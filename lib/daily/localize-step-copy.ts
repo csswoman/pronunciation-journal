@@ -51,7 +51,7 @@ export function localizeDailyPlanSubtitles<
       title: string
       subtitle: string
       ipa?: string
-      grammarRule?: { title?: string }
+      grammarRule?: { title?: string; goal?: string }
       featuredWords?: string[]
       studyCards?: Array<{ word: string }>
     }>
@@ -65,6 +65,11 @@ export function localizeDailyPlanSubtitles<
       if (step.grammarRule?.title) {
         title = `Estructura: ${step.grammarRule.title}`
       }
+      if (step.grammarRule?.goal && step.grammarRule.goal !== step.grammarRule.title) {
+        subtitle = step.grammarRule.goal
+      } else if (!subtitle || subtitle === step.grammarRule?.title || subtitle === title) {
+        subtitle = 'Aplica la regla en oraciones y pronunciación'
+      }
     } else if (title === 'Práctica de sonido' || step.kind === 'phoneme_focus') {
       if (step.ipa) {
         title = `Práctica del sonido /${step.ipa.replace(/^\/+|\/+$/g, '')}/`
@@ -75,8 +80,14 @@ export function localizeDailyPlanSubtitles<
         }
       }
     } else if (title === 'Estudia teoría' || step.kind === 'study_deck') {
-      if (subtitle && !subtitle.startsWith('Teoría:')) {
+      if (title === 'Estudia teoría' && subtitle && !subtitle.startsWith('Teoría:')) {
         title = `Teoría: ${subtitle}`
+        subtitle = 'Explicación de la regla y ejemplos clave'
+      } else if (title.startsWith('Teoría:')) {
+        const rawTitle = title.replace(/^Teoría:\s*/, '')
+        if (!subtitle || subtitle === rawTitle || subtitle === title) {
+          subtitle = 'Explicación de la regla y ejemplos clave'
+        }
       }
     }
 

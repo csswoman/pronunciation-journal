@@ -106,14 +106,14 @@ describe('localizeDailyPlanSubtitles', () => {
     const localized = localizeDailyPlanSubtitles(plan)
     expect(localized.steps.map((s) => s.id)).toEqual([
       'phoneme_focus:1',
-      'grammar_focus:1',
       'study_deck:1',
+      'grammar_focus:1',
       'word_intro',
       'journal_entry',
     ])
     expect(localized.steps[0].title).toBe('Práctica del sonido /ɛ/')
-    expect(localized.steps[1].title).toBe('Estructura: Was y Were en pasado')
-    expect(localized.steps[2].title).toBe('Teoría: Was y were en pasado')
+    expect(localized.steps[1].title).toBe('Teoría: Was y were en pasado')
+    expect(localized.steps[2].title).toBe('Estructura: Was y Were en pasado')
     expect(localized.steps[3].subtitle).toBe('was, were, yesterday · 3 palabras nuevas')
     expect(localized.steps[4].subtitle).toBe('Sugerencia opcional · Reflexión al final del día')
   })

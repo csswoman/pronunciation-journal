@@ -8,6 +8,7 @@ const dailyCardState = vi.hoisted(() => ({
   settled: true,
   allDone: false,
   reviewIsEntry: false,
+  completedCount: 0,
 }));
 const authMock = vi.hoisted(() => ({
   useAuth: vi.fn(() => ({
@@ -24,6 +25,7 @@ beforeEach(() => {
   dailyCardState.settled = true;
   dailyCardState.allDone = false;
   dailyCardState.reviewIsEntry = false;
+  dailyCardState.completedCount = 0;
   authMock.useAuth.mockReturnValue({
     user: { id: "user-1" },
     session: null,
@@ -78,6 +80,7 @@ vi.mock("@/components/home/HomeDailyCard", () => ({
       allDone: boolean;
       arc: undefined;
       stepCount: number;
+      completedCount: number;
     }) => void;
     customEmptyState?: React.ReactNode;
     customPrefix?: React.ReactNode;
@@ -91,6 +94,7 @@ vi.mock("@/components/home/HomeDailyCard", () => ({
         allDone: dailyCardState.allDone,
         arc: undefined,
         stepCount: 5,
+        completedCount: dailyCardState.completedCount,
       });
     }, [
       onPlanStatusChange,
@@ -98,6 +102,7 @@ vi.mock("@/components/home/HomeDailyCard", () => ({
       dailyCardState.settled,
       dailyCardState.reviewIsEntry,
       dailyCardState.allDone,
+      dailyCardState.completedCount,
     ]);
     return (
       <div>
@@ -228,7 +233,7 @@ describe("HomeCommandGrid first-visit activation", () => {
 });
 
 describe("HomeCommandGrid placement visibility", () => {
-  it("uses a quiet route link when the plan owns the fold", async () => {
+  it("does not compete with primary CTA outside the plan during active session", async () => {
     dailyCardState.empty = false;
     dailyCardState.settled = true;
     dailyCardState.allDone = false;
@@ -240,7 +245,7 @@ describe("HomeCommandGrid placement visibility", () => {
       />,
     );
     await waitFor(() => {
-      expect(screen.getByRole("link", { name: /prueba de nivel/i })).toBeInTheDocument();
+      expect(screen.getByText("Daily plan")).toBeInTheDocument();
     });
     expect(screen.queryByRole("heading", { name: "Afina tu nivel" })).not.toBeInTheDocument();
     expect(
@@ -262,13 +267,10 @@ describe("HomeCommandGrid placement visibility", () => {
     await waitFor(() => {
       expect(screen.getByText("Daily plan")).toBeInTheDocument();
     });
-    await waitFor(() => {
-      expect(screen.getByRole("link", { name: /prueba de nivel/i })).toBeInTheDocument();
-    });
     const words = screen.getAllByText("Palabra del día");
     expect(words.length).toBeGreaterThan(0);
     expect(screen.queryByRole("heading", { name: "Afina tu nivel" })).not.toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /diagnóstico oral/i })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Evalúa tu pronunciación" })).not.toBeInTheDocument();
   });
 
   it("shows setup cards after the plan is complete", async () => {
@@ -383,10 +385,11 @@ describe("HomeCommandGrid guest save prompt", () => {
     expect(screen.queryByLabelText("Guardar progreso")).not.toBeInTheDocument();
   });
 
-  it("places saving progress below the plan for returning guests", async () => {
+  it("places saving progress below the plan for returning guests after completing an activity", async () => {
     dailyCardState.empty = false;
     dailyCardState.settled = true;
     dailyCardState.allDone = false;
+    dailyCardState.completedCount = 1;
     authMock.useAuth.mockReturnValue({
       user: { id: "guest-1", is_anonymous: true } as unknown as import("@supabase/supabase-js").User,
       session: null,
@@ -447,5 +450,47 @@ describe("HomeCommandGrid review banner", () => {
     await waitFor(() => {
       expect(screen.queryByText("Review banner")).not.toBeInTheDocument();
     });
+  });
+});
+
+describe("HomeCommandGrid lifecycle states", () => {
+  it("hides immersion card and full-width locked exercises on Day 1", async () => {
+    dailyCardState.empty = false;
+    dailyCardState.settled = true;
+    dailyCardState.allDone = false;
+    render(
+      <HomeCommandGrid
+        {...baseProps}
+        streak={0}
+        placementState={{ hasPlacement: false, hasMeaningfulProgress: false }}
+        pronunciationDiagnosticState={{ hasPronunciationDiagnostic: false }}
+      />,
+    );
+    await waitFor(() => {
+      expect(screen.getByText("Daily plan")).toBeInTheDocument();
+    });
+    // Immersion prompt should not distract a day 1 learner
+    expect(screen.queryByRole("heading", { name: /¿viste algo en inglés hoy\?/i })).not.toBeInTheDocument();
+    // Full width locked exercises card is replaced by reward item inside plan
+    expect(screen.queryByLabelText("Ejercicios adicionales bloqueados")).not.toBeInTheDocument();
+  });
+
+  it("shows immersion card and unlocks extra exercises when plan is done", async () => {
+    dailyCardState.empty = false;
+    dailyCardState.settled = true;
+    dailyCardState.allDone = true;
+    render(
+      <HomeCommandGrid
+        {...baseProps}
+        streak={0}
+        placementState={{ hasPlacement: false, hasMeaningfulProgress: false }}
+        pronunciationDiagnosticState={{ hasPronunciationDiagnostic: false }}
+      />,
+    );
+    await waitFor(() => {
+      expect(screen.getByText("Daily plan")).toBeInTheDocument();
+    });
+    expect(screen.getByRole("heading", { name: /¿viste algo en inglés hoy\?/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Ejercicios extra" })).toBeInTheDocument();
   });
 });

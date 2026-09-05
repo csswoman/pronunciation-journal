@@ -43,6 +43,8 @@ export interface DailyPlanCardProps {
   hideThreadHints?: boolean
   customEmptyState?: ReactNode
   arc?: SessionArc
+  needsPlacement?: boolean
+  needsPronunciation?: boolean
 }
 
 export default function DailyPlanCard({
@@ -65,6 +67,8 @@ export default function DailyPlanCard({
   primaryAction = null,
   hideThreadHints = false,
   arc,
+  needsPlacement = false,
+  needsPronunciation = false,
 }: DailyPlanCardProps) {
   const [inProgressStepId, setInProgressStepId] = useState<string | null>(null)
 
@@ -112,6 +116,8 @@ export default function DailyPlanCard({
         inProgressStepId={inProgressStepId}
         primaryActionHref={primaryAction?.href}
         arc={arc}
+        needsPlacement={needsPlacement}
+        needsPronunciation={needsPronunciation}
       />
     )
   }

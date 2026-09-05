@@ -53,4 +53,38 @@ describe("HomeHeroCard", () => {
     expect(screen.getByText("¡Todo listo por hoy!")).toBeInTheDocument();
     expect(screen.getByTestId("hero-illustration")).toBeInTheDocument();
   });
+
+  it("shows immediate step cost on primary button and total in plan toggle", async () => {
+    const { fireEvent } = await import("@testing-library/react");
+    const steps = [
+      makeStep({ id: "s-1", estMinutes: 7 }),
+      makeStep({ id: "s-2", estMinutes: 10 }),
+    ];
+    render(
+      <HomeHeroCard
+        steps={steps}
+        getStepStatus={statusMap({})}
+        completedCount={0}
+        allDone={false}
+        onStartStep={vi.fn()}
+        needsPlacement
+      />
+    );
+
+    // Primary CTA displays immediate duration
+    expect(screen.getByRole("button", { name: /^empezar · 7 min$/i })).toBeInTheDocument();
+
+    // Toggle shows total session metrics
+    const toggle = screen.getByRole("button", { name: /plan del día · 2 actividades · 17 min/i });
+    expect(toggle).toBeInTheDocument();
+
+    fireEvent.click(toggle);
+
+    // Expanded list contains locked extra exercises reward
+    expect(screen.getByText("Ejercicios extra")).toBeInTheDocument();
+    expect(screen.getByText("Se desbloquean al completar tu sesión de hoy")).toBeInTheDocument();
+
+    // Contextual placement hint inside plan
+    expect(screen.getByRole("link", { name: /prueba de nivel/i })).toBeInTheDocument();
+  });
 });
