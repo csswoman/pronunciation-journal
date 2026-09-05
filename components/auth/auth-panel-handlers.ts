@@ -5,6 +5,7 @@ import {
   signInAsGuest,
   signInWithEmail,
   signInWithGoogle,
+  signOut,
   signUpWithEmail,
   updatePassword,
   upgradeGuestWithEmail,
@@ -187,6 +188,7 @@ export function createAuthPanelHandlers(deps: AuthPanelHandlersDeps) {
           ) {
             // Google already belongs to a permanent account — sign into that
             // account instead of leaving the guest stuck on a link error.
+            await signOut();
             const { data: signInData, error: signInErr } = await signInWithGoogle();
             if (signInErr) {
               console.error("[auth] google sign in after link conflict failed", signInErr);

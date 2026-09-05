@@ -7,7 +7,7 @@ import type { CefrLevel, FalseFriend } from "./types";
 import { CEFR_LEVELS } from "./types";
 
 export const CHUNK_SIZE = 25;
-export const MAX_CHUNKS = 8;
+export const MAX_CHUNKS = 4;
 
 function chunkUrl(n: number): string {
   return `/false-friends/pairs-${String(n).padStart(3, "0")}.json`;

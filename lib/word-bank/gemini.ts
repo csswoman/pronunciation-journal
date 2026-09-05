@@ -1,16 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 import type { WordEnrichment } from "@/lib/word-bank/types";
 
-const ENABLE_PREVIEW_MODELS = process.env.GEMINI_ENABLE_PREVIEW_MODELS === "true";
-const BASE_MODELS = [
-  "gemini-2.5-flash-lite",
-  "gemini-2.5-flash",
-  "gemini-flash-latest",
-] as const;
-const PREVIEW_MODELS = ["gemini-3.1-flash-lite-preview"] as const;
-const FALLBACK_MODELS: readonly string[] = ENABLE_PREVIEW_MODELS
-  ? [...BASE_MODELS, ...PREVIEW_MODELS]
-  : [...BASE_MODELS];
+import { FALLBACK_MODELS } from "@/lib/gemini/fallback";
 
 const SYSTEM_PROMPT = `You are an English learning assistant for Spanish speakers.
 

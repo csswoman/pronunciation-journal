@@ -47,14 +47,26 @@ function readAll(dir: string): EssentialWord[] {
   return words;
 }
 
+const wordsCache = new Map<string, EssentialWord[]>();
+
+export function clearEssentialWordsCache(): void {
+  wordsCache.clear();
+  essentialWordsMap = null;
+}
+
 /**
  * Returns every available Core 1000 entry, rank-sorted. Tolerates a partially
  * curated dataset (chunks must be contiguous from 001). Dev: malformed data
  * throws; prod: logs and returns [] so the app degrades gracefully.
  */
 export function loadEssentialWords(dir: string = DEFAULT_DIR): EssentialWord[] {
+  if (wordsCache.has(dir)) {
+    return wordsCache.get(dir)!;
+  }
   try {
-    return readAll(dir);
+    const words = readAll(dir);
+    wordsCache.set(dir, words);
+    return words;
   } catch (err) {
     if (process.env.NODE_ENV !== "production") throw err;
     console.error(String(err));
@@ -81,4 +93,5 @@ export function findEssentialWord(text: string, dir: string = DEFAULT_DIR): Esse
   }
   return essentialWordsMap.get(text.toLowerCase().trim()) ?? null;
 }
+
 

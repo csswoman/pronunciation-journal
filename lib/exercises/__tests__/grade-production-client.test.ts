@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { AI_QUOTA_EXHAUSTED_MESSAGE } from '@/lib/degradation/messages'
 import { gradeProduction, ProductionGradeError, PRODUCTION_AI_UNAVAILABLE_MESSAGE } from '@/lib/exercises/grade-production-client'
 import type { GradeProductionInput } from '@/lib/exercises/production-grade'
 
@@ -45,7 +46,7 @@ describe('gradeProduction', () => {
 
     await expect(gradeProduction(input)).rejects.toMatchObject({
       code: 'server',
-      message: expect.stringMatching(/temporarily limited/i),
+      message: AI_QUOTA_EXHAUSTED_MESSAGE,
     })
   })
 })

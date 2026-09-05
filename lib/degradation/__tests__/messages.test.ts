@@ -16,7 +16,7 @@ describe("degradation messages", () => {
 
   it("returns public AI degradation copy without provider internals", () => {
     expect(publicAiErrorMessage(503, "Gemini stack trace")).toBe(AI_UNAVAILABLE_MESSAGE);
-    expect(publicAiErrorMessage(429, "Gemini quota")).toMatch(/temporarily limited/i);
+    expect(publicAiErrorMessage(429, "Gemini quota")).toMatch(/vuelve mañana|tokens/i);
     expect(DATA_UNAVAILABLE_MESSAGE).toMatch(/sync will retry/i);
   });
 

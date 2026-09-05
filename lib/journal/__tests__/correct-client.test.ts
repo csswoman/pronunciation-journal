@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { AI_QUOTA_EXHAUSTED_MESSAGE } from '@/lib/degradation/messages'
 import {
   correctJournalEntry,
   JournalCorrectionError,
@@ -67,7 +68,7 @@ describe('correctJournalEntry', () => {
 
     await expect(correctJournalEntry(input)).rejects.toMatchObject({
       code: 'server',
-      message: expect.stringMatching(/temporarily limited/i),
+      message: AI_QUOTA_EXHAUSTED_MESSAGE,
     })
   })
 

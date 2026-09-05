@@ -340,9 +340,12 @@ export function findMinimalPairContrastIndex(
 }
 
 export function minimalPairsRunnerHref(phoneme: string): string {
-  return `/practice/sounds/minimal-pairs?phoneme=${encodeURIComponent(
-    canonicalizeSoundIpa(phoneme),
-  )}`;
+  // Points directly at the sounds hub tab instead of the
+  // /practice/sounds/minimal-pairs redirect page — Next.js's Link prefetch
+  // 404s on the RSC payload of a page whose only job is `redirect()`.
+  const params = new URLSearchParams({ tab: "minimal-pairs" });
+  params.set("phoneme", canonicalizeSoundIpa(phoneme));
+  return `/practice/sounds?${params.toString()}`;
 }
 
 /** The only pairs a SoundDetail session may practice: its own preview data. */

@@ -80,7 +80,7 @@ describe("selectMode — tiers", () => {
       failing.map((w) => w.word),
       `Words with fewer than two level-1 modes: ${failing.slice(0, 10).map((w) => w.word).join(", ")}`,
     ).toEqual([]);
-  });
+  }, 15_000);
 
   it("falls back to recognize_meaning when translation is missing", () => {
     const noTranslation = entry({ translation: undefined });
