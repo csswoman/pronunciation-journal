@@ -72,8 +72,8 @@ const PEDAGOGICAL_KIND_ORDER: Record<string, number> = {
 
 export function sortStepsByPedagogicalProgression(steps: DailyStep[]): DailyStep[] {
   return [...steps].sort((a, b) => {
-    const orderA = PEDAGOGICAL_KIND_ORDER[a.kind] ?? 4
-    const orderB = PEDAGOGICAL_KIND_ORDER[b.kind] ?? 4
+    const orderA = a.id === 'journal_entry' ? 99 : (PEDAGOGICAL_KIND_ORDER[a.kind] ?? 4)
+    const orderB = b.id === 'journal_entry' ? 99 : (PEDAGOGICAL_KIND_ORDER[b.kind] ?? 4)
     return orderA - orderB
   })
 }

@@ -21,7 +21,7 @@ export function buildJournalDailyStep(): DailyStep {
     kind: 'concept',
     id: 'journal_entry',
     title: 'Escribe en tu diario',
-    subtitle: 'Unas líneas y, si quieres, corrección',
+    subtitle: 'Sugerencia opcional · Reflexión al final del día',
     icon: 'Pencil',
     exercises: [],
     href: '/journal',

@@ -44,7 +44,7 @@ export function buildWordIntroStep(words: WordBankEntry[]): DailyStep | null {
     kind: 'word_intro',
     id: 'word_intro',
     title: 'Palabras nuevas',
-    subtitle: `${newWords.length} ${newWords.length === 1 ? 'palabra nueva' : 'palabras nuevas'} para conocer hoy`,
+    subtitle: `${newWords.map((w) => w.text).join(', ')} · ${newWords.length} ${newWords.length === 1 ? 'palabra nueva' : 'palabras nuevas'}`,
     icon: 'Sparkles',
     exercises: [],
     studyCards,
@@ -182,9 +182,9 @@ export function buildPhonemeFocusStep(
   return {
     kind: 'phoneme_focus',
     id: `phoneme_focus:${sound.id}`,
-    title: 'Práctica de sonido',
+    title: `Práctica del sonido /${sound.ipa}/`,
     subtitle: isWeak
-      ? 'Tu sonido a reforzar hoy'
+      ? `Tu sonido a reforzar hoy (como en '${sound.example}')`
       : `Practica el sonido como en '${sound.example}'`,
     icon: 'Waves',
     exercises,

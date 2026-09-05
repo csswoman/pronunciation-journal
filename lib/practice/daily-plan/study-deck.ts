@@ -149,7 +149,7 @@ export function buildStudyDeckStep(
   return {
     kind: 'study_deck',
     id: `study_deck:${target.level.id}:${target.lesson.id}`,
-    title: 'Estudia teoría',
+    title: `Teoría: ${target.lesson.title}`,
     subtitle: target.lesson.title,
     icon: 'GraduationCap',
     exercises: [],

@@ -256,9 +256,16 @@ export default function HomeHeroCard({
                         <span className="font-mono text-caption w-4 shrink-0 text-fg-muted">
                           {idx + 1}
                         </span>
-                        <span className="truncate">
-                          {localizeDailyStepTitle(step.title)}
-                        </span>
+                        <div className="flex flex-col min-w-0 flex-1">
+                          <span className="truncate font-medium">
+                            {localizeDailyStepTitle(step.title)}
+                          </span>
+                          {step.subtitle ? (
+                            <span className="truncate font-caption font-normal text-fg-muted">
+                              {localizeDailyStepSubtitle(step.subtitle)}
+                            </span>
+                          ) : null}
+                        </div>
                       </div>
 
                       <div className="flex items-center gap-2 shrink-0">
@@ -267,9 +274,14 @@ export default function HomeHeroCard({
                             <Check size={14} aria-hidden /> Hecho
                           </span>
                         ) : (
-                          <span className="font-caption tabular-nums text-fg-muted">
-                            {step.estMinutes} min
-                          </span>
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            {step.id === "journal_entry" || step.href === "/journal" ? (
+                              <Badge label="Opcional" variant="neutral" size="sm" />
+                            ) : null}
+                            <span className="font-caption tabular-nums text-fg-muted">
+                              {step.estMinutes} min
+                            </span>
+                          </div>
                         )}
                       </div>
                     </li>

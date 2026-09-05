@@ -16,6 +16,7 @@ import type { DailyStep } from '@/lib/practice/types'
 import { cn } from '@/lib/cn'
 import { playUiCue } from '@/lib/ui-sounds/cues'
 import Link from 'next/link'
+import Badge from '@/components/ui/Badge'
 import {
   localizeDailyStepSubtitle,
   localizeDailyStepTitle,
@@ -219,9 +220,14 @@ export default function DailyStepList({
                   Hecho
                 </span>
               ) : (
-                <span className="w-16 shrink-0 text-right font-caption tabular-nums text-fg-muted">
-                  {step.estMinutes} min
-                </span>
+                <div className="flex items-center gap-1.5 shrink-0">
+                  {step.id === 'journal_entry' || step.href === '/journal' ? (
+                    <Badge label="Opcional" variant="neutral" size="sm" />
+                  ) : null}
+                  <span className="w-14 text-right font-caption tabular-nums text-fg-muted">
+                    {step.estMinutes} min
+                  </span>
+                </div>
               )}
             </div>
           ) : (
@@ -266,8 +272,11 @@ export default function DailyStepList({
                   <span className="w-6 shrink-0" aria-hidden />
                 </div>
               ) : (
-                <div className="flex shrink-0 items-center gap-2.5">
-                  <span className="w-16 text-right font-caption tabular-nums text-fg-muted">
+                <div className="flex shrink-0 items-center gap-2">
+                  {step.id === 'journal_entry' || step.href === '/journal' ? (
+                    <Badge label="Opcional" variant="neutral" size="sm" />
+                  ) : null}
+                  <span className="w-14 text-right font-caption tabular-nums text-fg-muted">
                     {step.estMinutes} min
                   </span>
                   <ArrowRight

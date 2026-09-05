@@ -1,3 +1,5 @@
+import { sortStepsByPedagogicalProgression } from '@/lib/practice/daily-plan/candidate-helpers'
+
 /**
  * Ensures daily-step chrome stays correctly localized even if an older
  * localStorage plan is somehow still present.
@@ -41,15 +43,69 @@ export function localizeDailyStepTitle(title: string): string {
   return TITLE_ES[title] ?? title
 }
 
-export function localizeDailyPlanSubtitles<T extends { steps: Array<{ title: string; subtitle: string }> }>(
-  plan: T,
-): T {
+export function localizeDailyPlanSubtitles<
+  T extends {
+    steps: Array<{
+      id?: string
+      kind?: string
+      title: string
+      subtitle: string
+      ipa?: string
+      grammarRule?: { title?: string }
+      featuredWords?: string[]
+      studyCards?: Array<{ word: string }>
+    }>
+  },
+>(plan: T): T {
+  const updatedSteps = plan.steps.map((step) => {
+    let title = localizeDailyStepTitle(step.title)
+    let subtitle = localizeDailyStepSubtitle(step.subtitle)
+
+    if (title === 'Estructura del día' || step.kind === 'grammar_focus') {
+      if (step.grammarRule?.title) {
+        title = `Estructura: ${step.grammarRule.title}`
+      }
+    } else if (title === 'Práctica de sonido' || step.kind === 'phoneme_focus') {
+      if (step.ipa) {
+        title = `Práctica del sonido /${step.ipa.replace(/^\/+|\/+$/g, '')}/`
+      } else {
+        const soundMatch = subtitle.match(/(\/[^/]+\/)/)
+        if (soundMatch) {
+          title = `Práctica del sonido ${soundMatch[1]}`
+        }
+      }
+    } else if (title === 'Estudia teoría' || step.kind === 'study_deck') {
+      if (subtitle && !subtitle.startsWith('Teoría:')) {
+        title = `Teoría: ${subtitle}`
+      }
+    }
+
+    if (
+      step.kind === 'word_intro' ||
+      title === 'Palabras nuevas' ||
+      /^(\d+)\s+palabras nuevas para conocer hoy$/i.test(subtitle) ||
+      /^(\d+)\s+new words to learn today$/i.test(subtitle)
+    ) {
+      const words = step.featuredWords ?? step.studyCards?.map((c) => c.word)
+      if (words && words.length > 0) {
+        subtitle = `${words.join(', ')} · ${words.length} ${words.length === 1 ? 'palabra nueva' : 'palabras nuevas'}`
+      }
+    } else if (step.id === 'journal_entry' || title === 'Escribe en tu diario') {
+      subtitle = 'Sugerencia opcional · Reflexión al final del día'
+    }
+
+    return {
+      ...step,
+      title,
+      subtitle,
+    }
+  })
+
+  // Ensure steps (including journal) are sorted in correct pedagogical order (journal always last)
+  const sortedSteps = sortStepsByPedagogicalProgression(updatedSteps as unknown as import('@/lib/practice/types').DailyStep[])
+
   return {
     ...plan,
-    steps: plan.steps.map((step) => ({
-      ...step,
-      title: localizeDailyStepTitle(step.title),
-      subtitle: localizeDailyStepSubtitle(step.subtitle),
-    })),
+    steps: sortedSteps as unknown as T['steps'],
   }
 }

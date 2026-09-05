@@ -196,12 +196,27 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     }),
   )
 
+  const targetPracticeCount = DAILY_PLAN_STEP_COUNT - 1
   let finalSteps = capPronunciationSteps(
     selectDailyCandidates(candidates, {
       limit: DAILY_PLAN_STEP_COUNT,
       availableCapabilities: new Set(['network', 'microphone', 'speech_recognition']),
     }),
   )
+
+  if (finalSteps.length < targetPracticeCount) {
+    const selectedIds = new Set(finalSteps.map((s) => s.id))
+    for (const c of candidates) {
+      if (finalSteps.length >= targetPracticeCount) break
+      if (!selectedIds.has(c.step.id)) {
+        const testCapped = capPronunciationSteps([...finalSteps, c.step])
+        if (testCapped.length > finalSteps.length) {
+          finalSteps = testCapped
+          selectedIds.add(c.step.id)
+        }
+      }
+    }
+  }
 
   if (shouldOfferJournalStep(dayOfYear()) && !finalSteps.some((step) => step.id === 'journal_entry')) {
     finalSteps = [...finalSteps, buildJournalDailyStep()]
