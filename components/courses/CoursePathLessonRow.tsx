@@ -13,6 +13,7 @@ import { Check } from "@/components/icons";
 import { cn } from "@/lib/cn";
 import { studyLessonPath } from "@/lib/courses/curriculumIndex";
 import { TrackingSaveButton } from "@/components/tracking/TrackingSaveButton";
+import { LessonDownloadButton } from "@/components/courses/LessonDownloadButton";
 import type { CoursePathLesson, CoursePathTrackId, LessonProgressState, LessonTag } from "@/lib/courses/types";
 
 interface CoursePathLessonRowProps {
@@ -79,7 +80,13 @@ export default function CoursePathLessonRow({ lesson, levelId }: CoursePathLesso
             {tagInfo.label}
           </span>
           {lesson.slug && (
-            <div className="course-path__lesson-heart">
+            <div className="course-path__lesson-heart flex items-center gap-0.5">
+              <LessonDownloadButton
+                trackId={levelId}
+                lessonNumber={lesson.number}
+                slug={lesson.slug}
+                title={lesson.title}
+              />
               <TrackingSaveButton
                 kind="lesson"
                 reference={lesson.slug}

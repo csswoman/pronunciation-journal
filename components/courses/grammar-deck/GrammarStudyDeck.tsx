@@ -165,6 +165,12 @@ export default function GrammarStudyDeck({
           backLabel={backLabel}
           subtitle={courseTitle ? deck.meta.eyebrow : undefined}
           lessonSlug={deckSlug ?? lessonId}
+          levelId={levelId}
+          lessonNumber={
+            lessonId && Number.isFinite(Number.parseInt(lessonId, 10))
+              ? Number.parseInt(lessonId, 10)
+              : undefined
+          }
         />
 
         <GrammarStudyDeckBody

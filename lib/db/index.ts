@@ -16,6 +16,7 @@ import { patchActivateNow, patchMaster, patchSnooze } from "../srs/status";
 import type { JournalEntryRecord } from '../journal/types';
 import type { TrackingReviewQueue } from '../tracking/review-queue';
 import type { ScriptedMission } from '../ai-practice/missions/types';
+import type { GrammarStudyDeckData } from '../courses/grammar-deck/types';
 
 export interface GeneratedScriptRecord {
   id: string;
@@ -352,6 +353,17 @@ export interface CachedContrastProgressRecord {
   updatedAt: string;
 }
 
+export interface DownloadedLessonRecord {
+  id: string; // `${trackId}:${lessonNumber}`
+  trackId: string;
+  lessonNumber: number;
+  slug?: string;
+  title: string;
+  deck: GrammarStudyDeckData;
+  audioUrls: string[];
+  downloadedAt: string; // ISO
+}
+
 class PronunciationDB extends Dexie {
   attempts!: Table<Attempt, number>;
   srsData!: Table<SRSData, string>;
@@ -389,6 +401,7 @@ class PronunciationDB extends Dexie {
   generatedScripts!: Table<GeneratedScriptRecord, string>;
   cachedSounds!: Table<CachedSoundRecord, number>;
   cachedContrastProgress!: Table<CachedContrastProgressRecord, string>;
+  downloadedLessons!: Table<DownloadedLessonRecord, string>;
 
 
   constructor() {
@@ -623,6 +636,10 @@ class PronunciationDB extends Dexie {
     this.version(34).stores({
       cachedSounds: 'id, ipa, category',
       cachedContrastProgress: 'key, userId, contrastId, [userId+contrastId], nextReview, updatedAt',
+    });
+    // v35: downloaded lessons for on-demand offline study (hybrid model)
+    this.version(35).stores({
+      downloadedLessons: 'id, trackId, lessonNumber, slug, downloadedAt, [trackId+lessonNumber]',
     });
 
 
@@ -1273,4 +1290,28 @@ export async function savePronunciationCoachState(
     updatedAt: new Date().toISOString(),
     migratedFromLocalStorage: options.migratedFromLocalStorage ? 1 : 0,
   });
+}
+
+export async function getDownloadedLesson(id: string): Promise<DownloadedLessonRecord | undefined> {
+  return db.downloadedLessons.get(id);
+}
+
+export async function saveDownloadedLesson(record: DownloadedLessonRecord): Promise<void> {
+  await db.downloadedLessons.put(record);
+}
+
+export async function deleteDownloadedLesson(id: string): Promise<void> {
+  await db.downloadedLessons.delete(id);
+}
+
+export async function listDownloadedLessons(trackId?: string): Promise<DownloadedLessonRecord[]> {
+  if (trackId) {
+    return db.downloadedLessons.where('trackId').equals(trackId).toArray();
+  }
+  return db.downloadedLessons.toArray();
+}
+
+export async function isLessonDownloaded(id: string): Promise<boolean> {
+  const record = await db.downloadedLessons.get(id);
+  return record !== undefined;
 }
