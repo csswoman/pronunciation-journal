@@ -3,6 +3,7 @@ import {
   type DictionaryMeaning,
 } from "@/lib/word-of-day/select-sense";
 import { FALLBACK_DEFINITIONS } from "@/lib/word-of-day/definitions-fallback";
+import { findEssentialWord, loadEssentialWords } from "@/lib/essential-words/data";
 
 export {
   selectDictionarySense,
@@ -85,6 +86,11 @@ export function isWordOfDay(value: unknown): value is WordOfDay {
 }
 
 function getDifficulty(word: string): WordOfDay["difficulty"] {
+  const essential = findEssentialWord(word);
+  if (essential) {
+    const band = bandForLevel(essential.cefr_level);
+    if (band) return band;
+  }
   if (BEGINNER_WORDS.has(word)) return "beginner";
   if (ADVANCED_WORDS.has(word)) return "advanced";
   return "intermediate";
@@ -102,6 +108,26 @@ function bandForLevel(level: string): WordOfDay["difficulty"] | null {
 /** Word pool scoped to the learner's level; full list when level is unknown/empty. */
 function wordPool(level?: string): readonly string[] {
   const band = level ? bandForLevel(level) : null;
+
+  try {
+    const essentialWords = loadEssentialWords();
+    if (essentialWords && essentialWords.length > 0) {
+      const filtered = essentialWords.filter((w) => {
+        if (!w.word) return false;
+        if (["article", "preposition", "conjunction", "pronoun", "auxiliary"].includes(w.pos)) {
+          return false;
+        }
+        if (!band) return true;
+        return bandForLevel(w.cefr_level) === band;
+      });
+      if (filtered.length > 0) {
+        return filtered.map((w) => w.word);
+      }
+    }
+  } catch {
+    // Fall back to WORD_LIST if essential words dataset is unavailable in environment
+  }
+
   if (!band) return WORD_LIST;
   const pool = WORD_LIST.filter((w) => getDifficulty(w) === band);
   return pool.length > 0 ? pool : WORD_LIST;
@@ -120,42 +146,110 @@ function pickWord(seed: string, pool: readonly string[]): string {
 
 function buildFallbackWord(word: string): WordOfDay {
   const fallback = FALLBACK_DEFINITIONS[word.toLowerCase()];
+  const essential = findEssentialWord(word);
+
+  const ipa = fallback?.ipa || essential?.ipa_strong || "";
+  const pos = fallback?.part_of_speech || essential?.pos || undefined;
+
+  let definition = fallback?.definition;
+  if (!definition && essential) {
+    if (essential.study?.definitionEs) {
+      definition = essential.study.definitionEs;
+    } else if (essential.translation) {
+      definition = essential.meaning
+        ? `${essential.translation} — ${essential.meaning}`
+        : essential.translation;
+    } else if (essential.meaning) {
+      definition = essential.meaning;
+    }
+  }
+  if (!definition) {
+    definition = "Consulta esta palabra en el diario o diccionario para conocer su significado.";
+  }
+
+  const example_sentence =
+    fallback?.example_sentence || essential?.example_sentence || "";
+  const example_translation =
+    fallback?.example_translation ||
+    essential?.study?.examples?.[0]?.translationEs ||
+    (essential?.translation ? `Traducción: ${essential.translation}` : undefined);
+
   return {
     word,
-    ipa: fallback?.ipa ?? "",
-    part_of_speech: fallback?.part_of_speech,
-    definition: fallback?.definition ?? "Consulta esta palabra en el diario o diccionario para conocer su significado.",
-    example_sentence: fallback?.example_sentence ?? "",
-    example_translation: fallback?.example_translation,
+    ipa,
+    part_of_speech: pos,
+    definition,
+    example_sentence,
+    example_translation,
     difficulty: getDifficulty(word),
   };
 }
 
 async function fetchWordData(word: string): Promise<WordOfDay | null> {
+  const essential = findEssentialWord(word);
+  const fallback = FALLBACK_DEFINITIONS[word.toLowerCase()];
+
   const res = await fetch(
     `https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`,
     { signal: AbortSignal.timeout(DICTIONARY_TIMEOUT_MS) },
-  );
-  if (!res.ok) return null;
+  ).catch(() => null);
 
-  const data = (await res.json()) as DictionaryApiEntry[];
-  const entry = data[0];
-  if (!entry) return null;
+  let phonetic = essential?.ipa_strong || fallback?.ipa || "";
+  let senseDefinition: string | null = null;
+  let senseExample: string | null = null;
+  let sensePos: string | undefined = essential?.pos || fallback?.part_of_speech;
 
-  const phonetic =
-    entry.phonetics?.find((item) => item.text)?.text ??
-    entry.phonetic ??
-    "";
+  if (res && res.ok) {
+    const data = (await res.json().catch(() => null)) as DictionaryApiEntry[] | null;
+    const entry = data?.[0];
+    if (entry) {
+      phonetic =
+        entry.phonetics?.find((item) => item.text)?.text ??
+        entry.phonetic ??
+        phonetic;
 
-  const sense = selectDictionarySense(entry.meanings);
-  if (!sense) return null;
+      const sense = selectDictionarySense(entry.meanings);
+      if (sense) {
+        senseDefinition = sense.definition;
+        senseExample = sense.example;
+        sensePos = sense.partOfSpeech || sensePos;
+      }
+    }
+  }
+
+  let definition =
+    senseDefinition ||
+    fallback?.definition ||
+    essential?.study?.definitionEs;
+
+  if (!definition && essential) {
+    if (essential.translation) {
+      definition = essential.meaning
+        ? `${essential.translation} — ${essential.meaning}`
+        : essential.translation;
+    } else if (essential.meaning) {
+      definition = essential.meaning;
+    }
+  }
+
+  if (!definition) {
+    return null;
+  }
+
+  const example_sentence =
+    senseExample || fallback?.example_sentence || essential?.example_sentence || "";
+  const example_translation =
+    fallback?.example_translation ||
+    essential?.study?.examples?.[0]?.translationEs ||
+    (essential?.translation ? `Traducción: ${essential.translation}` : undefined);
 
   return {
     word,
     ipa: phonetic,
-    part_of_speech: sense.partOfSpeech,
-    definition: sense.definition,
-    example_sentence: sense.example,
+    part_of_speech: sensePos,
+    definition,
+    example_sentence,
+    example_translation,
     difficulty: getDifficulty(word),
   };
 }

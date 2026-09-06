@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect, useRef, useMemo } from "react";
-import type { AIMessage, StreamChunk, ExerciseResult, VoiceMetadata } from "@/lib/ai-practice/types";
+import type { AIMessage, StreamChunk, ExerciseResult, SendOpts } from "@/lib/ai-practice/types";
 import { applyExerciseResult, type UserLearningState } from "@/lib/ai-practice/learning-state";
 import { messagesToWire } from "@/lib/ai-practice/wire";
 import { logEvent } from "@/lib/ai-practice/events";
@@ -18,8 +18,6 @@ import {
 import type { AIConversationMode } from "@/lib/types";
 import { AI_COACH_TURN_FAILED_MESSAGE, isQuotaLikeError, publicAiErrorMessage } from "@/lib/degradation/messages";
 import { coachErrorMessage, hydratePersistedMessages, logFirstExerciseTimeIfNeeded, persistConversationState, persistMessageEdit } from "@/lib/ai-practice/chat-helpers";
-
-type SendOpts = { hidden?: boolean; voice?: VoiceMetadata; starterId?: string };
 
 interface UseStreamingChatOptions {
   mode: AIConversationMode;
@@ -100,6 +98,7 @@ export function useStreamingChat({
           messages: messagesToWire(nextMessages),
           stream: true,
           missionId: mode.startsWith("mission:") ? mode.slice("mission:".length) : undefined,
+          starterId: options?.starterId,
         }),
         signal: controller.signal,
       });

@@ -87,3 +87,25 @@ export function intentToToolConfig(intent: Intent): ToolConfig {
       return { toolChoice: "auto", allowedTools: [...ACTION_TOOLS, "annotate_turn"] };
   }
 }
+
+/**
+ * Tool selection for one chat turn.
+ *
+ * `isStarter` marks the hidden opening message the chat home sends on the
+ * user's behalf. Those are prompts we author, so running them through
+ * `detectIntent` is a category error: it reads our own instructions as if the
+ * learner had typed them. It bit us concretely — the "learn" starter says
+ * "Do NOT call any exercise tool on this first turn", the keyword `exercise`
+ * matched EXERCISE_PATTERNS, and the resulting toolChoice "any" forced a tool
+ * call while forbidding plain text, so the coach rendered an empty bubble.
+ *
+ * Every starter opens the same way: prose first, tools only once the learner
+ * has replied. So a starter's selection is fixed rather than inferred; `auto`
+ * still lets the model reach for annotate_turn to offer saveable words.
+ */
+export function selectionForRequest(message: string, isStarter: boolean): ToolConfig {
+  if (isStarter) {
+    return { toolChoice: "auto", allowedTools: [...ACTION_TOOLS, "annotate_turn"] };
+  }
+  return intentToToolConfig(detectIntent(message));
+}

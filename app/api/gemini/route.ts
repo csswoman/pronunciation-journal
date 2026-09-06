@@ -1,7 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 import { NextRequest } from "next/server";
 import { requireSameOrigin, requireUser, checkLayeredRateLimit, validateBody, SECURE_HEADERS, publicErrorResponse } from "@/lib/api/guards";
-import { detectIntent, intentToToolConfig } from "@/lib/ai-practice/intent-detection";
+import { detectIntent, selectionForRequest } from "@/lib/ai-practice/intent-detection";
 import { buildSystemPrompt, extractLastTopicFromWire, lastUserVoiceMetadataFromWire } from "@/lib/ai-practice/wire";
 import { getMission } from "@/lib/ai-practice/missions/registry";
 import { fetchServerLearningState } from "@/lib/ai-practice/server-state";
@@ -83,12 +83,12 @@ export async function POST(request: NextRequest): Promise<Response> {
   // Cap input fed to intent detection — detectIntent has its own guard but we
   // also avoid building a huge string from the full content field.
   const lastUserText = (lastMsg.content ?? "").slice(0, 2_000);
-  const intent = detectIntent(lastUserText);
+  const isStarter = body.starterId !== undefined;
   const selection = body.missionId
-    ? intent.type === "explanation_request"
+    ? detectIntent(lastUserText).type === "explanation_request"
       ? { toolChoice: "none" as const, allowedTools: [] as string[] }
       : { toolChoice: "auto" as const, allowedTools: ["save_word", "mission_intent_observed"] }
-    : intentToToolConfig(intent);
+    : selectionForRequest(lastUserText, isStarter);
 
   const history = buildHistory(body.messages.slice(0, -1));
   const ai = new GoogleGenAI({ apiKey });

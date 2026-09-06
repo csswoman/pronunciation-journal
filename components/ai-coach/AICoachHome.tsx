@@ -16,7 +16,7 @@ import MissionLibrary from "./missions/MissionLibrary";
 
 interface AICoachHomeProps {
   activeTab: TabId;
-  onSendMessage: (text: string, options?: { hidden?: boolean; starterId?: string }) => void;
+  onSendMessage: (text: string, options?: { hidden?: boolean; starterId?: StarterId }) => void;
   onSelectMission: (missionId: string) => void;
   isStreaming: boolean;
   starters?: ResolvedStarter[] | null;
