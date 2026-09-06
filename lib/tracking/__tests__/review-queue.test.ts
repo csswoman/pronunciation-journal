@@ -92,4 +92,29 @@ describe('buildTrackingReviewQueue', () => {
     expect(queue.items).toHaveLength(1)
     expect(queue.exercises).toHaveLength(1)
   })
+
+  it("never puts an explanation into the queue or the skip list", () => {
+    const source = {
+      item: {
+        id: "x1",
+        kind: "explanation" as const,
+        title: '"actually" — falso amigo',
+        description: "One common false friend…",
+      },
+      trackedItem: {
+        id: "x1",
+        userId: "u1",
+        kind: "explanation" as const,
+        ref: '"actually" — falso amigo',
+        title: '"actually" — falso amigo',
+        payload: { body: "One common false friend…", source: "ai_coach" },
+        createdAt: "2026-09-06T00:00:00.000Z",
+        updatedAt: "2026-09-06T00:00:00.000Z",
+      },
+    };
+    const queue = buildTrackingReviewQueue([source]);
+    expect(queue.exercises).toHaveLength(0);
+    expect(queue.items).toHaveLength(0);
+    expect(queue.skipped).toHaveLength(0);
+  });
 })
