@@ -10,53 +10,23 @@ import ToolWidget from "./chat/ToolWidget";
 import PracticeSession, { type ExerciseSessionSummary } from "./PracticeSession";
 import { isExerciseTool } from "@/lib/ai-practice/tools/registry";
 import { parseCorrection } from "@/lib/ai-coach/parse-correction";
-import { extractTurnCorrection } from "@/lib/ai-practice/correction";
+import { extractTurnCorrection, extractTurnSaveables } from "@/lib/ai-practice/correction";
+import type { TurnSaveable } from "@/lib/ai-practice/tools/registry";
 import CorrectionCard from "./CorrectionCard";
+import SaveChips from "./SaveChips";
 import {
   extractSentenceContext,
   extractSuggestions,
   formatMessageTime,
+  generateContextualSuggestions,
   renderProse,
 } from "./chat/message-formatting";
-
-function generateContextualSuggestions(text: string) {
-  const lower = text.toLowerCase();
-
-  if (lower.includes("smile") || lower.includes("happy") || lower.includes("made your day") || lower.includes("made you feel")) {
-    return [
-      { label: "I had a great coffee this morning", prompt: "I had a great cup of coffee this morning." },
-      { label: "I talked with a good friend", prompt: "I had a nice conversation with a good friend today." },
-      { label: "How do I say it in English?", prompt: "I want to share something, but how do I say it in English?" },
-    ];
-  }
-
-  if (lower.includes("how are you") || lower.includes("how's your day") || lower.includes("how was your day")) {
-    return [
-      { label: "I'm doing well, thank you!", prompt: "I'm doing really well today, thank you! How are you?" },
-      { label: "It's been a busy day", prompt: "It's been a pretty busy day for me so far." },
-      { label: "Just relaxing right now", prompt: "Just relaxing right now and practicing my English." },
-    ];
-  }
-
-  if (lower.includes("plan") || lower.includes("weekend") || lower.includes("free time") || lower.includes("hobby")) {
-    return [
-      { label: "I plan to relax at home", prompt: "I'm planning to relax at home and watch a movie." },
-      { label: "Going out with friends", prompt: "I'm planning to go out with some friends." },
-      { label: "Working on a project", prompt: "I'll be working on some personal projects." },
-    ];
-  }
-
-  return [
-    { label: "Could you give me an example?", prompt: "Could you give me an example to help me understand?" },
-    { label: "Can you rephrase that simpler?", prompt: "Could you rephrase that in simpler English please?" },
-    { label: "How do I answer this in English?", prompt: "How would a native speaker typically answer this question?" },
-  ];
-}
 
 interface AIBubbleProps {
   message: Extract<AIMessage, { role: "model" }>;
   showAvatar: boolean;
   onSaveWord: (word: string, context: string) => void;
+  onSaveSaveable: (saveable: TurnSaveable) => Promise<void>;
   onSaveTranslation?: (translation: string) => void;
   onSuggestionClick: (text: string) => void;
   onToolAnswer: (callId: string, result: ExerciseResult) => void;
@@ -68,6 +38,7 @@ function AIBubble({
   message,
   showAvatar,
   onSaveWord,
+  onSaveSaveable,
   onSaveTranslation,
   onSuggestionClick,
   onToolAnswer,
@@ -87,6 +58,7 @@ function AIBubble({
   // The tool call is the primary source; parseCorrection stays as a fallback for
   // turns where the model wrote the correction into its prose instead.
   const toolCorrection = extractTurnCorrection(message.toolCalls);
+  const saveables = extractTurnSaveables(message.toolCalls);
   const parsed = parseCorrection(fullText);
   const correction = toolCorrection ?? parsed.correction;
   // Only strip text from the prose when the regex fallback matched it there.
@@ -261,6 +233,10 @@ function AIBubble({
             onSelect={onSuggestionClick}
           />
         )}
+
+        {saveables.length > 0 && (
+          <SaveChips saveables={saveables} onSave={onSaveSaveable} />
+        )}
       </div>
     </div>
   );
@@ -270,6 +246,7 @@ interface MessageBubbleProps {
   message: AIMessage;
   showAvatar?: boolean;
   onSaveWord: (word: string, context: string) => void;
+  onSaveSaveable: (saveable: TurnSaveable) => Promise<void>;
   onSaveTranslation?: (translation: string) => void;
   onSuggestionClick: (text: string) => void;
   onToolAnswer: (callId: string, result: ExerciseResult) => void;
@@ -281,6 +258,7 @@ export default function MessageBubble({
   message,
   showAvatar = true,
   onSaveWord,
+  onSaveSaveable,
   onSaveTranslation,
   onSuggestionClick,
   onToolAnswer,
@@ -312,6 +290,7 @@ export default function MessageBubble({
       message={message}
       showAvatar={showAvatar}
       onSaveWord={onSaveWord}
+      onSaveSaveable={onSaveSaveable}
       onSaveTranslation={onSaveTranslation}
       onSuggestionClick={onSuggestionClick}
       onToolAnswer={onToolAnswer}

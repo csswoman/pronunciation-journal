@@ -1,7 +1,6 @@
 "use client";
 
 import { getUserStats, getFavorites, getNeedsPracticeWords } from "@/lib/db";
-import { getAIWords } from "@/lib/db/ai";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { getWordBankSourceRefs } from "@/lib/word-bank/domain-queries";
 import { deriveDomainProfile, emptyDomainProfile } from "@/lib/lexicon/domain-profile";
@@ -58,12 +57,11 @@ async function buildUserLearningState(userId: string): Promise<UserLearningState
   const base = createEmptyState(userId, deviceId);
 
   try {
-    const [stats, favorites, practiceWords, aiWords, soundProgress, domainProfile] =
+    const [stats, favorites, practiceWords, soundProgress, domainProfile] =
       await Promise.allSettled([
         getUserStats(userId),
         getFavorites(userId),
         getNeedsPracticeWords(userId),
-        getAIWords(userId, 50),
         fetchSoundProgress(userId),
         fetchDomainProfile(userId),
       ]);
@@ -71,7 +69,6 @@ async function buildUserLearningState(userId: string): Promise<UserLearningState
     const resolvedStats = stats.status === "fulfilled" ? stats.value : null;
     const resolvedFavs = favorites.status === "fulfilled" ? favorites.value : [];
     const resolvedPractice = practiceWords.status === "fulfilled" ? practiceWords.value : [];
-    const resolvedAIWords = aiWords.status === "fulfilled" ? aiWords.value : [];
     const resolvedSounds = soundProgress.status === "fulfilled" ? soundProgress.value : [];
     const resolvedDomainProfile =
       domainProfile.status === "fulfilled" ? domainProfile.value : emptyDomainProfile();
@@ -80,10 +77,7 @@ async function buildUserLearningState(userId: string): Promise<UserLearningState
     const cefrEstimate = accuracyToCEFR(avgAccuracy);
     const confidence = Math.min(1, (resolvedStats?.totalAttempts ?? 0) / 100);
 
-    const savedWords = [
-      ...resolvedFavs.map(f => ({ word: f.word, ipa: f.ipa })),
-      ...resolvedAIWords.map(w => ({ word: w.word })),
-    ].filter((v, i, arr) => arr.findIndex(x => x.word === v.word) === i);
+    const savedWords = resolvedFavs.map(f => ({ word: f.word, ipa: f.ipa }));
 
     const strugglingWords = resolvedPractice.map(p => ({
       word: p.word,

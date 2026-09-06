@@ -1,5 +1,5 @@
 import Dexie, { type Table } from "dexie";
-import type { AIConversation, AISavedWord, Attempt, DailyProgress, FavoriteWord, SRSData, UserStats } from "../types";
+import type { AIConversation, Attempt, DailyProgress, FavoriteWord, SRSData, UserStats } from "../types";
 import type { SyncOutboxEntry } from "../sync/types";
 import type { UserLearningState } from "../ai-practice/learning-state";
 import type { GenericExercise, GenericExerciseType, ExerciseSource } from "../exercises/types";
@@ -371,7 +371,6 @@ class PronunciationDB extends Dexie {
   userStats!: Table<UserStats, number>;
   favorites!: Table<FavoriteWord, number>;
   aiConversations!: Table<AIConversation, number>;
-  aiWords!: Table<AISavedWord, number>;
   lessonOffsets!: Table<LessonSessionOffset, string>;
   syncOutbox!: Table<SyncOutboxEntry, number>;
   completedLessons!: Table<CompletedCourseLesson, string>;
@@ -526,7 +525,7 @@ class PronunciationDB extends Dexie {
     }).upgrade(async (tx) => {
       const ambiguousStores = [
         'attempts', 'srsData', 'dailyProgress', 'userStats', 'favorites',
-        'aiConversations', 'aiWords', 'lessonOffsets', 'ipaExplorations',
+        'aiConversations', 'lessonOffsets', 'ipaExplorations',
         'pronunciationMastery', 'pronunciationCoachState',
       ];
       const quarantine = tx.table('localDataQuarantine');
@@ -641,6 +640,9 @@ class PronunciationDB extends Dexie {
     this.version(35).stores({
       downloadedLessons: 'id, trackId, lessonNumber, slug, downloadedAt, [trackId+lessonNumber]',
     });
+    // v36 — the AI Coach no longer keeps its own word silo: saved items go to
+    // word_bank / tracked_items so they sync and enter the SRS.
+    this.version(36).stores({ aiWords: null });
 
 
     this.pronunciationMastery = this.table("pronunciationMasteryV2") as Table<PronunciationMasteryRecord, string>;

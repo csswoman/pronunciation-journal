@@ -206,18 +206,6 @@ export interface AIConversation {
   syncedAt?: string;
 }
 
-export interface AISavedWord {
-  id?: number;
-  /** Owner of the conversation-derived saved word. */
-  userId: string;
-  word: string;
-  meaning: string;
-  difficulty: Difficulty;
-  context: string; // sentence the word appeared in
-  conversationId: number;
-  savedAt: string;
-}
-
 // ── AI Learning Session (structured workspace) ──
 
 export type StepExerciseFormat = "fill_blank" | "multiple_choice" | "speaking" | "checklist";

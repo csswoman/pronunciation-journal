@@ -57,7 +57,6 @@ async function coachTurn(userText: string): Promise<CoachTurn> {
   const state = makeStreamState();
   for (const chunk of chunks) {
     processChunk(chunk, state, {
-      onSaveWord: () => {},
       onActionToolResult: () => {},
       onError: () => {},
     });

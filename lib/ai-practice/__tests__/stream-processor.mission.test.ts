@@ -3,7 +3,6 @@ import { makeStreamState, processChunk, type ActionHandlers } from '../stream-pr
 
 function handlers(): ActionHandlers {
   return {
-    onSaveWord: vi.fn(),
     onStartRoleplay: vi.fn(),
     onStartMission: vi.fn(),
     onMissionIntentObserved: vi.fn(),

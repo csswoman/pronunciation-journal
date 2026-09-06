@@ -34,14 +34,12 @@ vi.mock('@/components/auth/AuthProvider', () => ({
 }))
 vi.mock('../useSavedWords', () => ({
   useSavedWords: () => ({
-    savedWords: [],
     wordToSave: null,
+    setWordToSave: vi.fn(),
     openSaveWordModal: vi.fn(),
     closeSaveWordModal: vi.fn(),
     confirmSaveWord: vi.fn(async () => undefined),
-    deleteSavedWord: vi.fn(async () => undefined),
-    loadSavedWords: vi.fn(async () => undefined),
-    setWordToSave: vi.fn(),
+    saveSaveable: vi.fn(async () => undefined),
   }),
 }))
 vi.mock('../useStreamingChat', () => ({

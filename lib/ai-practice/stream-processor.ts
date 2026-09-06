@@ -7,7 +7,6 @@ import {
   type StartRoleplayArgs,
   type MissionIntentObservedArgs,
 } from "./tools/registry";
-import type { SaveWordArgs } from "./tools/registry";
 
 export interface StreamState {
   parts: ContentPart[];
@@ -16,7 +15,6 @@ export interface StreamState {
 }
 
 export interface ActionHandlers {
-  onSaveWord: (word: string, context: string) => void;
   /** Compatibility callback for old persisted start_roleplay calls. */
   onStartRoleplay?: (scenario: StartRoleplayArgs["scenario"]) => void;
   onStartMission?: (missionId: StartMissionArgs["missionId"]) => void;
@@ -64,10 +62,7 @@ export function processChunk(
             state.calls.set(chunk.id, { ...tc, args, status: "rendered" });
           } else {
             state.calls.set(chunk.id, { ...tc, args, status: "answered" });
-            if (tc.name === "save_word") {
-              const { word, meaning } = args as SaveWordArgs;
-              handlers.onSaveWord(word, meaning);
-            } else if (tc.name === "start_mission") {
+            if (tc.name === "start_mission") {
               handlers.onStartMission?.((args as StartMissionArgs).missionId);
             } else if (tc.name === "mission_intent_observed") {
               handlers.onMissionIntentObserved?.((args as MissionIntentObservedArgs).intentId);

@@ -58,7 +58,7 @@ export default function AICoachPanel() {
   const {
     messages, isStreaming, error, quotaExhausted, wordToSave, conversationId,
     activeMissionId, sendMessage, answerToolCall, saveTranslation, openSaveWordModal, closeSaveWordModal,
-    confirmSaveWord, resetSession, finalizeSession, loadConversation, removeConversation,
+    confirmSaveWord, saveSaveable, resetSession, finalizeSession, loadConversation, removeConversation,
     changeMode, setMissionIntentHandler,
   } = useAIPractice();
 
@@ -128,7 +128,8 @@ export default function AICoachPanel() {
       launch={missionLaunch?.missionId === activeMissionId ? missionLaunch : null}
       setMissionIntentHandler={setMissionIntentHandler}
       messages={messages} isStreaming={isStreaming} isDisabled={quotaExhausted}
-      onSendMessage={sendMessage} onSaveWord={openSaveWordModal} onToolAnswer={answerToolCall}
+      onSendMessage={sendMessage} onSaveWord={openSaveWordModal} onSaveSaveable={saveSaveable}
+      onToolAnswer={answerToolCall}
       onExitMission={() => { void changeMode("chat"); setActiveTab(exitTab); }}
     />
   );
@@ -198,7 +199,8 @@ export default function AICoachPanel() {
                   <div className="flex-1 flex flex-col min-h-0 overflow-y-auto chat-messages-container" aria-live="polite" aria-label="Mensajes del chat">
                     {error && <ErrorBanner message={error} />}
                     <ChatView
-                      messages={messages} isStreaming={isStreaming} onSaveWord={openSaveWordModal} onSaveTranslation={saveTranslation}
+                      messages={messages} isStreaming={isStreaming} onSaveWord={openSaveWordModal} onSaveSaveable={saveSaveable}
+                      onSaveTranslation={saveTranslation}
                       onSuggestionClick={(prompt) => setInputPrefill(prompt)} onToolAnswer={answerToolCall} onNext={() => sendMessage("next")}
                       onExerciseComplete={(s) => void sendMessage(`I completed the exercise! I got ${s.correct} of ${s.total} correct.`)}
                     />

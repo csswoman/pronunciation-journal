@@ -27,7 +27,6 @@ interface UseStreamingChatOptions {
   onConversationCreated: (id: number) => void;
   learningState: UserLearningState | null;
   setLearningState: (s: UserLearningState) => void;
-  onSaveWord: (word: string, context: string) => void;
   onStartMission: (missionId: StartMissionArgs["missionId"]) => void;
   onMissionIntentObserved: (intentId: MissionIntentObservedArgs["intentId"]) => void;
   userId: string | null;
@@ -39,7 +38,6 @@ export function useStreamingChat({
   onConversationCreated,
   learningState,
   setLearningState,
-  onSaveWord,
   onStartMission,
   onMissionIntentObserved,
   userId,
@@ -146,7 +144,6 @@ export function useStreamingChat({
           try { chunk = JSON.parse(raw); } catch { continue; }
 
           const result = processChunk(chunk, state, {
-            onSaveWord,
             onStartMission,
             onMissionIntentObserved,
             onActionToolResult: (toolCallId, name) => {
@@ -208,7 +205,7 @@ export function useStreamingChat({
     } finally {
       if (streamIdRef.current === thisId) setIsStreaming(false);
     }
-  }, [isStreaming, mode, learningState, onSaveWord, onStartMission, onMissionIntentObserved, onConversationCreated, userId]);
+  }, [isStreaming, mode, learningState, onStartMission, onMissionIntentObserved, onConversationCreated, userId]);
 
   const answerToolCall = useCallback((callId: string, result: ExerciseResult) => {
     let toolName = "exercise_result";

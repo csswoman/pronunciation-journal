@@ -54,6 +54,7 @@ const props = {
   isDisabled: false,
   onSendMessage: vi.fn(async () => undefined),
   onSaveWord: vi.fn(),
+  onSaveSaveable: vi.fn(async () => undefined),
   onToolAnswer: vi.fn(),
 }
 

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { AIMessage, ExerciseResult } from "@/lib/ai-practice/types";
+import type { TurnSaveable } from "@/lib/ai-practice/tools/registry";
 import type { ExerciseSessionSummary } from "./PracticeSession";
 import { cn } from "@/lib/cn";
 import MessageBubble from "./MessageBubble";
@@ -19,6 +20,7 @@ interface ChatViewProps {
   messages: AIMessage[];
   isStreaming: boolean;
   onSaveWord: (word: string, context: string) => void;
+  onSaveSaveable: (saveable: TurnSaveable) => Promise<void>;
   onSaveTranslation?: (msgIndex: number, translation: string) => void;
   onSuggestionClick: (text: string) => void;
   onToolAnswer: (callId: string, result: ExerciseResult) => void;
@@ -32,6 +34,7 @@ export default function ChatView({
   messages,
   isStreaming,
   onSaveWord,
+  onSaveSaveable,
   onSaveTranslation,
   onSuggestionClick,
   onToolAnswer,
@@ -114,6 +117,7 @@ export default function ChatView({
               message={msg}
               showAvatar={isLastInGroup[i]}
               onSaveWord={onSaveWord}
+              onSaveSaveable={onSaveSaveable}
               onSaveTranslation={(translation) => onSaveTranslation?.(messages.indexOf(msg), translation)}
               onSuggestionClick={onSuggestionClick}
               onToolAnswer={onToolAnswer}

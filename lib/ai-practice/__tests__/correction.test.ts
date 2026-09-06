@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { extractTurnCorrection } from "../correction";
+import { extractTurnCorrection, extractTurnSaveables } from "../correction";
 import type { ToolCall } from "../types";
 
 function callMap(calls: ToolCall[]): Map<string, ToolCall> {
@@ -54,5 +54,41 @@ describe("extractTurnCorrection", () => {
 
   it("returns null for an empty map", () => {
     expect(extractTurnCorrection(new Map())).toBeNull();
+  });
+});
+
+describe("extractTurnSaveables", () => {
+  it("returns the saveables carried by an annotate_turn call", () => {
+    const calls = callMap([
+      {
+        id: "c1",
+        name: "annotate_turn",
+        status: "answered",
+        args: {
+          saveables: [{ type: "word", text: "creepy", meaning: "escalofriante" }],
+        },
+      },
+    ]);
+    expect(extractTurnSaveables(calls)).toEqual([
+      { type: "word", text: "creepy", meaning: "escalofriante" },
+    ]);
+  });
+
+  it("returns an empty array when annotate_turn carried none", () => {
+    const calls = callMap([
+      { id: "c1", name: "annotate_turn", status: "answered", args: { correction: undefined } },
+    ]);
+    expect(extractTurnSaveables(calls)).toEqual([]);
+  });
+
+  it("returns an empty array when there is no annotate_turn call", () => {
+    expect(extractTurnSaveables(new Map())).toEqual([]);
+  });
+
+  it("ignores an annotate_turn call that errored", () => {
+    const calls = callMap([
+      { id: "c1", name: "annotate_turn", status: "error", args: {}, error: "boom", errorId: "e1" },
+    ]);
+    expect(extractTurnSaveables(calls)).toEqual([]);
   });
 });

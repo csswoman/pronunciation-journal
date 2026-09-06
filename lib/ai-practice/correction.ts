@@ -1,5 +1,5 @@
 import type { ToolCall } from "./types";
-import type { AnnotateTurnArgs, TurnCorrection } from "./tools/registry";
+import type { AnnotateTurnArgs, TurnCorrection, TurnSaveable } from "./tools/registry";
 
 /**
  * Pulls the correction out of a model turn's annotate_turn call.
@@ -18,4 +18,17 @@ export function extractTurnCorrection(
     if (args?.correction) return args.correction;
   }
   return null;
+}
+
+/** Companion to extractTurnCorrection: the items the coach offered to save. */
+export function extractTurnSaveables(
+  toolCalls: Map<string, ToolCall>,
+): TurnSaveable[] {
+  for (const call of toolCalls.values()) {
+    if (call.name !== "annotate_turn") continue;
+    if (call.status === "error") continue;
+    const args = call.args as AnnotateTurnArgs;
+    if (args?.saveables?.length) return args.saveables;
+  }
+  return [];
 }

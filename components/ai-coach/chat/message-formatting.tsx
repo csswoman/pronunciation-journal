@@ -44,3 +44,38 @@ export function extractSuggestions(text: string): string[] {
   const match = text.match(/suggestions?:\s*([\s\S]*?)(?:\n\n|$)/i)
   return match ? match[1].split('\n').map((line) => line.replace(/^[-•*]\s*/, '').trim()).filter(Boolean) : []
 }
+
+/** Fallback reply prompts for turns where the coach offered no explicit suggestions. */
+export function generateContextualSuggestions(text: string): Array<{ label: string; prompt: string }> {
+  const lower = text.toLowerCase()
+
+  if (lower.includes('smile') || lower.includes('happy') || lower.includes('made your day') || lower.includes('made you feel')) {
+    return [
+      { label: 'I had a great coffee this morning', prompt: 'I had a great cup of coffee this morning.' },
+      { label: 'I talked with a good friend', prompt: 'I had a nice conversation with a good friend today.' },
+      { label: 'How do I say it in English?', prompt: 'I want to share something, but how do I say it in English?' },
+    ]
+  }
+
+  if (lower.includes('how are you') || lower.includes("how's your day") || lower.includes('how was your day')) {
+    return [
+      { label: "I'm doing well, thank you!", prompt: "I'm doing really well today, thank you! How are you?" },
+      { label: "It's been a busy day", prompt: "It's been a pretty busy day for me so far." },
+      { label: 'Just relaxing right now', prompt: 'Just relaxing right now and practicing my English.' },
+    ]
+  }
+
+  if (lower.includes('plan') || lower.includes('weekend') || lower.includes('free time') || lower.includes('hobby')) {
+    return [
+      { label: 'I plan to relax at home', prompt: "I'm planning to relax at home and watch a movie." },
+      { label: 'Going out with friends', prompt: "I'm planning to go out with some friends." },
+      { label: 'Working on a project', prompt: "I'll be working on some personal projects." },
+    ]
+  }
+
+  return [
+    { label: 'Could you give me an example?', prompt: 'Could you give me an example to help me understand?' },
+    { label: 'Can you rephrase that simpler?', prompt: 'Could you rephrase that in simpler English please?' },
+    { label: 'How do I answer this in English?', prompt: 'How would a native speaker typically answer this question?' },
+  ]
+}
