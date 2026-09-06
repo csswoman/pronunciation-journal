@@ -77,9 +77,12 @@ export type TurnSaveable = {
   ipa?: string;
 };
 
+export type TurnConcept = { title: string };
+
 export type AnnotateTurnArgs = {
   correction?: TurnCorrection;
   saveables?: TurnSaveable[];
+  concept?: TurnConcept;
 };
 
 export type SummaryCorrection = {
@@ -231,6 +234,17 @@ function parseTurnCorrection(val: unknown): TurnCorrection | undefined {
   };
 }
 
+/**
+ * Like parseTurnCorrection, a malformed concept must never throw — the turn's
+ * prose is still valid. A blank or missing title means "no concept".
+ */
+function parseTurnConcept(val: unknown): TurnConcept | undefined {
+  if (!val || typeof val !== "object") return undefined;
+  const o = val as Record<string, unknown>;
+  if (typeof o.title !== "string" || !o.title.trim()) return undefined;
+  return { title: o.title.trim() };
+}
+
 /** Cap on summary items: a wall of twenty cards is not a summary. */
 const MAX_SUMMARY_ITEMS = 8;
 
@@ -356,6 +370,7 @@ export function parseToolArgs(name: ToolName, raw: unknown): ToolArgs["args"] {
       return {
         correction: parseTurnCorrection(obj.correction),
         saveables: parseTurnSaveables(obj.saveables),
+        concept: parseTurnConcept(obj.concept),
       } satisfies AnnotateTurnArgs;
     case "render_session_summary":
       return {

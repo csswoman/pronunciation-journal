@@ -198,6 +198,7 @@ describe("parseToolArgs: annotate_turn", () => {
         kind: "error",
       },
       saveables: undefined,
+      concept: undefined,
     });
   });
 
@@ -205,7 +206,28 @@ describe("parseToolArgs: annotate_turn", () => {
     expect(parseToolArgs("annotate_turn", {})).toEqual({
       correction: undefined,
       saveables: undefined,
+      concept: undefined,
     });
+  });
+
+  it("parses a concept with a title", () => {
+    const args = parseToolArgs("annotate_turn", {
+      concept: { title: '"actually" — falso amigo' },
+    }) as AnnotateTurnArgs;
+    expect(args.concept).toEqual({ title: '"actually" — falso amigo' });
+  });
+
+  it("trims the concept title", () => {
+    const args = parseToolArgs("annotate_turn", {
+      concept: { title: "  phrasal verbs  " },
+    }) as AnnotateTurnArgs;
+    expect(args.concept).toEqual({ title: "phrasal verbs" });
+  });
+
+  it("drops a concept with a blank or missing title instead of throwing", () => {
+    expect((parseToolArgs("annotate_turn", { concept: { title: "   " } }) as AnnotateTurnArgs).concept).toBeUndefined();
+    expect((parseToolArgs("annotate_turn", { concept: {} }) as AnnotateTurnArgs).concept).toBeUndefined();
+    expect((parseToolArgs("annotate_turn", { concept: "nope" }) as AnnotateTurnArgs).concept).toBeUndefined();
   });
 
   it("drops a correction missing required fields instead of throwing", () => {
