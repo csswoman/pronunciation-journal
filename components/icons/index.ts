@@ -55,6 +55,7 @@ import {
   IconFolderOpen,
   IconFolderPlus,
   IconGitCompare,
+  IconGlobe,
   IconGridDots,
   IconHeadphones,
   IconHeart,
@@ -176,6 +177,7 @@ export const FolderPlus = createIcon(IconFolderPlus, "FolderPlus");
 export const GitCompareArrows = createIcon(IconGitCompare, "GitCompareArrows");
 export const GraduationCap = createIcon(IconSchool, "GraduationCap");
 export const Grid2x2 = createIcon(IconGridDots, "Grid2x2");
+export const Globe = createIcon(IconGlobe, "Globe");
 export const Headphones = createIcon(IconHeadphones, "Headphones");
 export const Handshake = createIcon(IconHeartHandshake, "Handshake");
 export const Heart = createIcon(IconHeart, "Heart");
