@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useMemo } from "react";
-import { persistSaveable } from "@/lib/ai-coach/saveables/persist";
+import { persistSaveable, persistConcept } from "@/lib/ai-coach/saveables/persist";
 import type { TurnSaveable } from "@/lib/ai-practice/tools/registry";
 import type { Difficulty } from "@/lib/types";
 
@@ -36,6 +36,14 @@ export function useSavedWords(userId: string | null) {
     [userId],
   );
 
+  const saveConcept = useCallback(
+    async (title: string, body: string) => {
+      if (!userId) throw new Error("Not authenticated");
+      await persistConcept(userId, title, body);
+    },
+    [userId],
+  );
+
   const confirmSaveWord = useCallback(
     async (data: SaveWordData) => {
       if (!userId) return;
@@ -58,7 +66,8 @@ export function useSavedWords(userId: string | null) {
       closeSaveWordModal,
       confirmSaveWord,
       saveSaveable,
+      saveConcept,
     }),
-    [wordToSave, openSaveWordModal, closeSaveWordModal, confirmSaveWord, saveSaveable],
+    [wordToSave, openSaveWordModal, closeSaveWordModal, confirmSaveWord, saveSaveable, saveConcept],
   );
 }

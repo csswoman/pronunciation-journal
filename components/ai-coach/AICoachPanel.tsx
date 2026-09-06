@@ -54,7 +54,7 @@ export default function AICoachPanel() {
   const {
     messages, userTurnCount, isStreaming, error, quotaExhausted, wordToSave, conversationId,
     activeMissionId, sendMessage, retryLastFailedSend, dismissError, answerToolCall, saveTranslation,
-    openSaveWordModal, closeSaveWordModal, confirmSaveWord, saveSaveable, resetSession, finalizeSession,
+    openSaveWordModal, closeSaveWordModal, confirmSaveWord, saveSaveable, saveConcept, resetSession, finalizeSession,
     loadConversation, removeConversation, changeMode, setMissionIntentHandler,
   } = useAIPractice();
 
@@ -186,7 +186,7 @@ export default function AICoachPanel() {
               ) : (
                 renderActiveChat({
                   messages, isStreaming, error, quotaExhausted, resetSession, openSaveWordModal,
-                  saveSaveable, saveAllFromSummary, saveTranslation, inputPrefill, setInputPrefill, answerToolCall, sendMessage,
+                  saveSaveable, saveConcept, saveAllFromSummary, saveTranslation, inputPrefill, setInputPrefill, answerToolCall, sendMessage,
                 })
               )}
             </div>

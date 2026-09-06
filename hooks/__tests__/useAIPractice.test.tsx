@@ -40,6 +40,7 @@ vi.mock('../useSavedWords', () => ({
     closeSaveWordModal: vi.fn(),
     confirmSaveWord: vi.fn(async () => undefined),
     saveSaveable: vi.fn(async () => undefined),
+    saveConcept: vi.fn(async () => undefined),
   }),
 }))
 vi.mock('../useStreamingChat', () => ({

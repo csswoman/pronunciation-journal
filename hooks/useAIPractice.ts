@@ -36,6 +36,7 @@ interface UseAIPracticeReturn {
   closeSaveWordModal: () => void;
   confirmSaveWord: (data: SaveWordData) => Promise<void>;
   saveSaveable: (saveable: TurnSaveable) => Promise<void>;
+  saveConcept: (title: string, body: string) => Promise<void>;
   setMissionIntentHandler: (handler: MissionIntentHandler | null) => void;
   resetSession: () => void;
   finalizeSession: () => void;
@@ -211,6 +212,7 @@ export function useAIPractice(): UseAIPracticeReturn {
     closeSaveWordModal: words.closeSaveWordModal,
     confirmSaveWord: words.confirmSaveWord,
     saveSaveable: words.saveSaveable,
+    saveConcept: words.saveConcept,
     setMissionIntentHandler,
     resetSession,
     finalizeSession: chat.finalizeSession,
