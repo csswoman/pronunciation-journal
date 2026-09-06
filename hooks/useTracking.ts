@@ -42,6 +42,7 @@ export function useTracking() {
         return { item, word }
       });
     const saved = trackedItems.map((trackedItem) => {
+      const isExplanation = trackedItem.kind === "explanation";
       const canonicalTitle =
         trackedItem.kind === "lesson"
           ? resolveLessonTitle(trackedItem.ref, trackedItem.title)
@@ -50,10 +51,12 @@ export function useTracking() {
         id: trackedItem.id,
         kind: trackedItem.kind,
         title: canonicalTitle,
-        description: typeof trackedItem.payload.context === "string" ? trackedItem.payload.context : null,
+        description: isExplanation
+          ? (typeof trackedItem.payload.body === "string" ? trackedItem.payload.body : null)
+          : (typeof trackedItem.payload.context === "string" ? trackedItem.payload.context : null),
         href: trackedItem.kind === "lesson" ? resolveLessonHref(trackedItem.ref, trackedItem.payload) : undefined,
-        progressState: 'saved',
-        progressLabel: WORD_PROGRESS_LABELS.saved,
+        progressState: isExplanation ? undefined : "saved",
+        progressLabel: isExplanation ? undefined : WORD_PROGRESS_LABELS.saved,
         fromCoach: isFromCoach(trackedItem),
       };
       return { item, trackedItem };
