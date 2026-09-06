@@ -7,7 +7,7 @@ import { cn } from "@/lib/cn";
 import AIAvatar from "./AIAvatar";
 import SuggestionChips from "./SuggestionChips";
 import ToolWidget from "./chat/ToolWidget";
-import PracticeSession from "./PracticeSession";
+import PracticeSession, { type ExerciseSessionSummary } from "./PracticeSession";
 import { isExerciseTool } from "@/lib/ai-practice/tools/registry";
 import { parseCorrection } from "@/lib/ai-coach/parse-correction";
 import CorrectionCard from "./CorrectionCard";
@@ -60,6 +60,7 @@ interface AIBubbleProps {
   onSuggestionClick: (text: string) => void;
   onToolAnswer: (callId: string, result: ExerciseResult) => void;
   onNext: () => void;
+  onExerciseComplete?: (summary: ExerciseSessionSummary) => void;
 }
 
 function AIBubble({
@@ -70,6 +71,7 @@ function AIBubble({
   onSuggestionClick,
   onToolAnswer,
   onNext,
+  onExerciseComplete,
 }: AIBubbleProps) {
   const [showTranslation, setShowTranslation] = useState(Boolean(message.translation));
   const [isTranslating, setIsTranslating] = useState(false);
@@ -202,6 +204,7 @@ function AIBubble({
                       key={exerciseCalls[0].id}
                       initialExercises={exerciseCalls}
                       onAnswer={onToolAnswer}
+                      onComplete={onExerciseComplete}
                     />
                   )}
                   {showTranslation && (
@@ -264,6 +267,7 @@ interface MessageBubbleProps {
   onSuggestionClick: (text: string) => void;
   onToolAnswer: (callId: string, result: ExerciseResult) => void;
   onNext: () => void;
+  onExerciseComplete?: (summary: ExerciseSessionSummary) => void;
 }
 
 export default function MessageBubble({
@@ -274,6 +278,7 @@ export default function MessageBubble({
   onSuggestionClick,
   onToolAnswer,
   onNext,
+  onExerciseComplete,
 }: MessageBubbleProps) {
   if (message.role === "user") {
     return (
@@ -304,6 +309,7 @@ export default function MessageBubble({
       onSuggestionClick={onSuggestionClick}
       onToolAnswer={onToolAnswer}
       onNext={onNext}
+      onExerciseComplete={onExerciseComplete}
     />
   );
 }

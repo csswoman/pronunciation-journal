@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { AIMessage, ExerciseResult } from "@/lib/ai-practice/types";
+import type { ExerciseSessionSummary } from "./PracticeSession";
 import { cn } from "@/lib/cn";
 import MessageBubble from "./MessageBubble";
 import TypingIndicator from "./TypingIndicator";
@@ -22,6 +23,7 @@ interface ChatViewProps {
   onSuggestionClick: (text: string) => void;
   onToolAnswer: (callId: string, result: ExerciseResult) => void;
   onNext: () => void;
+  onExerciseComplete?: (summary: ExerciseSessionSummary) => void;
   align?: "bottom" | "top";
   className?: string;
 }
@@ -34,6 +36,7 @@ export default function ChatView({
   onSuggestionClick,
   onToolAnswer,
   onNext,
+  onExerciseComplete,
   align = "top",
   className,
 }: ChatViewProps) {
@@ -115,6 +118,7 @@ export default function ChatView({
               onSuggestionClick={onSuggestionClick}
               onToolAnswer={onToolAnswer}
               onNext={onNext}
+              onExerciseComplete={onExerciseComplete}
             />
           </div>
         ))}

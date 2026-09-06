@@ -195,13 +195,12 @@ export default function AICoachPanel() {
                     </button>
                     <span className="text-xxs font-medium text-fg-subtle">Sesión activa</span>
                   </div>
-                  <div className="flex-1 flex flex-col min-h-0 overflow-y-auto" aria-live="polite" aria-label="Mensajes del chat">
+                  <div className="flex-1 flex flex-col min-h-0 overflow-y-auto chat-messages-container" aria-live="polite" aria-label="Mensajes del chat">
                     {error && <ErrorBanner message={error} />}
                     <ChatView
-                      messages={messages} isStreaming={isStreaming} onSaveWord={openSaveWordModal}
-                      onSaveTranslation={saveTranslation}
-                      onSuggestionClick={(prompt) => setInputPrefill(prompt)} onToolAnswer={answerToolCall}
-                      onNext={() => sendMessage("next")}
+                      messages={messages} isStreaming={isStreaming} onSaveWord={openSaveWordModal} onSaveTranslation={saveTranslation}
+                      onSuggestionClick={(prompt) => setInputPrefill(prompt)} onToolAnswer={answerToolCall} onNext={() => sendMessage("next")}
+                      onExerciseComplete={(s) => void sendMessage(`I completed the exercise! I got ${s.correct} of ${s.total} correct.`)}
                     />
                   </div>
                   <div className="shrink-0 px-3 pb-3 pt-1 border-t border-border-subtle bg-surface-base">

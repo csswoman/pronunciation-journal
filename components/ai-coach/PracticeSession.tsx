@@ -10,7 +10,8 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import type { ToolCall, ExerciseResult } from "@/lib/ai-practice/types";
-import { fetchExerciseCard, cycleExercisePrompt } from "@/lib/ai-practice/fetch-card";
+import { Check, Sparkles } from "@/components/icons";
+import Button from "@/components/ui/Button";
 import ToolWidget from "./chat/ToolWidget";
 
 type ExStatus = "idle" | "correct" | "incorrect" | "reviewing";
@@ -79,41 +80,29 @@ function SessionProgress({ current, total, dotCount, hasNextPending }: {
   );
 }
 
-const AUTO_ADVANCE_MS         = 1500;
-const PREFETCH_WHEN_REMAINING = 1;
-const PREFETCH_COUNT          = 2;
+const AUTO_ADVANCE_MS = 1500;
 
-interface Props { initialExercises: ToolCall[]; onAnswer: (callId: string, result: ExerciseResult) => void; }
+export interface ExerciseSessionSummary {
+  total: number;
+  correct: number;
+}
 
-export default function PracticeSession({ initialExercises, onAnswer }: Props) {
+interface Props {
+  initialExercises: ToolCall[];
+  onAnswer: (callId: string, result: ExerciseResult) => void;
+  onComplete?: (summary: ExerciseSessionSummary) => void;
+}
+
+export default function PracticeSession({ initialExercises, onAnswer, onComplete }: Props) {
   const [exercises, setExercises] = useState<SessionExercise[]>(() =>
     initialExercises.map(tc => ({ id: tc.id, toolCall: tc, status: "idle", result: null }))
   );
   const [current, setCurrent]   = useState(0);
   const [slideKey, setSlideKey] = useState(0);
   const [slideDir, setSlideDir] = useState<"R" | "L">("R");
+  const [completedSent, setCompletedSent] = useState(false);
 
-  const promptIndexRef = useRef(initialExercises.length);
-  const fetchingRef    = useRef(false);
-  const autoTimerRef   = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    const remaining = exercises.length - 1 - current;
-    if (remaining <= PREFETCH_WHEN_REMAINING && !fetchingRef.current) {
-      fetchingRef.current = true;
-      const fetches = Array.from({ length: PREFETCH_COUNT }, (_, i) =>
-        fetchExerciseCard(cycleExercisePrompt(promptIndexRef.current + i))
-      );
-      promptIndexRef.current += PREFETCH_COUNT;
-      Promise.all(fetches).then(results => {
-        const valid = results.filter((tc): tc is ToolCall => tc !== null);
-        setExercises(prev => [
-          ...prev,
-          ...valid.map(tc => ({ id: tc.id, toolCall: tc, status: "idle" as ExStatus, result: null })),
-        ]);
-      }).finally(() => { fetchingRef.current = false; });
-    }
-  }, [current, exercises.length]);
+  const autoTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const goTo = useCallback((target: number) => {
     if (target < 0) return;
@@ -148,10 +137,59 @@ export default function PracticeSession({ initialExercises, onAnswer }: Props) {
 
   useEffect(() => () => { if (autoTimerRef.current) clearTimeout(autoTimerRef.current); }, []);
 
-  const ex     = exercises[current];
+  const ex = exercises[current];
   const nextEx = exercises[current + 1];
+  const isFinished = current >= exercises.length;
 
-  if (!ex) return null;
+  if (isFinished) {
+    const total = exercises.length;
+    const correctCount = exercises.filter(e => e.status === "correct" || e.result?.correct).length;
+    const isAllCorrect = correctCount === total;
+
+    const handleContinue = () => {
+      setCompletedSent(true);
+      onComplete?.({ total, correct: correctCount });
+    };
+
+    return (
+      <div className="layout-stack w-full rounded-xl border border-border-subtle bg-surface-raised p-4 shadow-xs">
+        <div className="flex items-center gap-2.5">
+          <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary-soft text-primary shadow-xs">
+            <Sparkles size={16} strokeWidth={2.2} aria-hidden />
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="m-0 text-caption font-semibold text-fg">¡Práctica finalizada!</p>
+            <p className="m-0 text-tiny font-medium text-fg-muted">
+              {correctCount} de {total} ejercicio{total > 1 ? "s" : ""} correcto{total > 1 ? "s" : ""}
+            </p>
+          </div>
+        </div>
+
+        <p className="m-0 text-body-sm text-fg-secondary">
+          {isAllCorrect
+            ? "¡Excelente trabajo! Has completado la práctica con éxito."
+            : "¡Buen intento! Continúa practicando para afianzar estos conceptos."}
+        </p>
+
+        <Button
+          variant={completedSent ? "secondary" : "primary"}
+          size="sm"
+          disabled={completedSent}
+          onClick={handleContinue}
+          className="mt-1 w-full justify-center"
+        >
+          {completedSent ? (
+            <>
+              <Check size={14} strokeWidth={2.25} aria-hidden />
+              Conversación continuada
+            </>
+          ) : (
+            "Continuar con el Coach"
+          )}
+        </Button>
+      </div>
+    );
+  }
 
   const topic    = (ex.toolCall.args as Record<string, unknown>)?.topic as string | undefined;
   const dotCount = Math.min(exercises.length, 7);
