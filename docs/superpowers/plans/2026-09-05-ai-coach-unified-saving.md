@@ -86,7 +86,7 @@ Un solo sitio define qué significa "esto vino del coach". Sin esto, la cadena
 - Create: `lib/ai-coach/saveables/source.ts`
 - Test: `lib/ai-coach/saveables/__tests__/source.test.ts`
 
-- [ ] **Step 1: Escribir el test que falla**
+- [x] **Step 1: Escribir el test que falla**
 
 Crea `lib/ai-coach/saveables/__tests__/source.test.ts`:
 
@@ -118,7 +118,7 @@ describe("isFromCoach", () => {
 });
 ```
 
-- [ ] **Step 2: Ejecutar y ver fallar**
+- [x] **Step 2: Ejecutar y ver fallar**
 
 ```bash
 pnpm test lib/ai-coach/saveables/__tests__/source.test.ts
@@ -126,7 +126,7 @@ pnpm test lib/ai-coach/saveables/__tests__/source.test.ts
 
 Esperado: FAIL con "Failed to resolve import ../source".
 
-- [ ] **Step 3: Implementar**
+- [x] **Step 3: Implementar**
 
 Crea `lib/ai-coach/saveables/source.ts`:
 
@@ -148,7 +148,7 @@ export function isFromCoach(row: unknown): boolean {
 }
 ```
 
-- [ ] **Step 4: Ejecutar y ver pasar**
+- [x] **Step 4: Ejecutar y ver pasar**
 
 ```bash
 pnpm test lib/ai-coach/saveables/__tests__/source.test.ts
@@ -156,7 +156,7 @@ pnpm test lib/ai-coach/saveables/__tests__/source.test.ts
 
 Esperado: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add lib/ai-coach/saveables/source.ts lib/ai-coach/saveables/__tests__/source.test.ts
@@ -175,7 +175,7 @@ Solo hay que abrir la validación de Zod en la ruta y el tipo en el cliente.
 - Modify: `app/api/words/route.ts:15`
 - Modify: `lib/word-bank/queries.ts:31-37`
 
-- [ ] **Step 1: Ampliar el enum de la ruta**
+- [x] **Step 1: Ampliar el enum de la ruta**
 
 En `app/api/words/route.ts` línea 15, sustituye:
 
@@ -189,7 +189,7 @@ por:
     source: z.enum(["manual", "reader", "journal", "ai_coach"]).default("manual"),
 ```
 
-- [ ] **Step 2: Ampliar el tipo del cliente**
+- [x] **Step 2: Ampliar el tipo del cliente**
 
 En `lib/word-bank/queries.ts`, dentro de la firma de `quickAddWord`, sustituye:
 
@@ -203,7 +203,7 @@ por:
   source?: "manual" | "reader" | "journal" | "ai_coach";
 ```
 
-- [ ] **Step 3: Verificar**
+- [x] **Step 3: Verificar**
 
 ```bash
 pnpm type-check && pnpm test app/api lib/word-bank
@@ -211,7 +211,7 @@ pnpm type-check && pnpm test app/api lib/word-bank
 
 Esperado: `tsc` limpio y los suites existentes en verde.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add app/api/words/route.ts lib/word-bank/queries.ts
@@ -226,7 +226,7 @@ git commit -m "feat(words): accept ai_coach as a word_bank source"
 - Create: `lib/ai-coach/saveables/persist.ts`
 - Test: `lib/ai-coach/saveables/__tests__/persist.test.ts`
 
-- [ ] **Step 1: Escribir los tests que fallan**
+- [x] **Step 1: Escribir los tests que fallan**
 
 Crea `lib/ai-coach/saveables/__tests__/persist.test.ts`:
 
@@ -345,7 +345,7 @@ describe("persistSaveable: phrases", () => {
 });
 ```
 
-- [ ] **Step 2: Ejecutar y ver fallar**
+- [x] **Step 2: Ejecutar y ver fallar**
 
 ```bash
 pnpm test lib/ai-coach/saveables/__tests__/persist.test.ts
@@ -353,7 +353,7 @@ pnpm test lib/ai-coach/saveables/__tests__/persist.test.ts
 
 Esperado: FAIL con "Failed to resolve import ../persist".
 
-- [ ] **Step 3: Implementar**
+- [x] **Step 3: Implementar**
 
 Crea `lib/ai-coach/saveables/persist.ts`:
 
@@ -413,7 +413,7 @@ asíncrono del servidor, que rellena significado, IPA y audio con la misma calid
 cualquier otra palabra del banco. Guardar el significado del modelo lo pisaría con datos
 peores. En las frases sí se guarda, porque `tracked_items` no tiene enriquecimiento.
 
-- [ ] **Step 4: Ejecutar y ver pasar**
+- [x] **Step 4: Ejecutar y ver pasar**
 
 ```bash
 pnpm test lib/ai-coach/saveables/__tests__/persist.test.ts && pnpm type-check
@@ -421,7 +421,7 @@ pnpm test lib/ai-coach/saveables/__tests__/persist.test.ts && pnpm type-check
 
 Esperado: PASS y `tsc` limpio.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add lib/ai-coach/saveables/persist.ts lib/ai-coach/saveables/__tests__/persist.test.ts
@@ -439,7 +439,7 @@ git commit -m "feat(ai-coach): route coach saveables into word_bank and tracked_
 Mira `components/ai-coach/SuggestionChips.tsx` (44 líneas) antes de empezar: el chip nuevo
 reutiliza su patrón de píldora y sus tokens.
 
-- [ ] **Step 1: Escribir los tests que fallan**
+- [x] **Step 1: Escribir los tests que fallan**
 
 Crea `components/ai-coach/__tests__/SaveChips.test.tsx`:
 
@@ -511,7 +511,7 @@ describe("SaveChips", () => {
 });
 ```
 
-- [ ] **Step 2: Ejecutar y ver fallar**
+- [x] **Step 2: Ejecutar y ver fallar**
 
 ```bash
 pnpm test components/ai-coach/__tests__/SaveChips.test.tsx
@@ -519,7 +519,7 @@ pnpm test components/ai-coach/__tests__/SaveChips.test.tsx
 
 Esperado: FAIL con "Failed to resolve import ../SaveChips".
 
-- [ ] **Step 3: Implementar**
+- [x] **Step 3: Implementar**
 
 Crea `components/ai-coach/SaveChips.tsx`:
 
@@ -605,7 +605,7 @@ Antes de dar la task por buena, comprueba que `Bookmark`, `Check` y `RotateCcw` 
 exportados en `components/icons/index.ts`. Si `RotateCcw` no lo está, añádelo siguiendo el
 patrón de los demás iconos de ese archivo.
 
-- [ ] **Step 4: Ejecutar y ver pasar**
+- [x] **Step 4: Ejecutar y ver pasar**
 
 ```bash
 pnpm test components/ai-coach/__tests__/SaveChips.test.tsx
@@ -613,7 +613,7 @@ pnpm test components/ai-coach/__tests__/SaveChips.test.tsx
 
 Esperado: PASS los 7.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add components/ai-coach/SaveChips.tsx components/ai-coach/__tests__/SaveChips.test.tsx components/icons/index.ts
@@ -629,7 +629,7 @@ git commit -m "feat(ai-coach): add SaveChips for coach-proposed saveables"
 - Modify: `lib/ai-practice/__tests__/correction.test.ts`
 - Modify: `components/ai-coach/MessageBubble.tsx`
 
-- [ ] **Step 1: Escribir el test que falla**
+- [x] **Step 1: Escribir el test que falla**
 
 Añade a `lib/ai-practice/__tests__/correction.test.ts`:
 
@@ -673,7 +673,7 @@ describe("extractTurnSaveables", () => {
 });
 ```
 
-- [ ] **Step 2: Ejecutar y ver fallar**
+- [x] **Step 2: Ejecutar y ver fallar**
 
 ```bash
 pnpm test lib/ai-practice/__tests__/correction.test.ts
@@ -681,7 +681,7 @@ pnpm test lib/ai-practice/__tests__/correction.test.ts
 
 Esperado: FAIL — `extractTurnSaveables` no existe.
 
-- [ ] **Step 3: Implementar el extractor**
+- [x] **Step 3: Implementar el extractor**
 
 Añade a `lib/ai-practice/correction.ts`:
 
@@ -705,7 +705,7 @@ export function extractTurnSaveables(
 Ajusta el import existente de la primera línea para que incluya `TurnSaveable` en lugar de
 duplicar la sentencia.
 
-- [ ] **Step 4: Renderizar los chips en la burbuja**
+- [x] **Step 4: Renderizar los chips en la burbuja**
 
 En `components/ai-coach/MessageBubble.tsx`:
 
@@ -744,7 +744,7 @@ columna (el `div` con `className="flex min-w-0 flex-1 flex-col gap-2"`):
         )}
 ```
 
-- [ ] **Step 5: Propagar la prop desde arriba**
+- [x] **Step 5: Propagar la prop desde arriba**
 
 `onSaveSaveable` tiene que llegar desde `AICoachPanel`. Sigue el rastro que ya existe para
 `onSaveWord`:
@@ -755,7 +755,7 @@ columna (el `div` con `className="flex min-w-0 flex-1 flex-col gap-2"`):
 - `components/ai-coach/AICoachPanel.tsx` — pásala en las líneas 131 y 201, con el valor que
   crearás en la Task 6 (`saveSaveable` de `useSavedWords`).
 
-- [ ] **Step 6: Verificar**
+- [x] **Step 6: Verificar**
 
 ```bash
 pnpm test lib/ai-practice components/ai-coach && pnpm type-check
@@ -765,7 +765,7 @@ Esperado: PASS. `tsc` señalará que `saveSaveable` aún no existe en `useSavedW
 resuelve la Task 6. Si prefieres no dejar el árbol roto entre tasks, haz la Task 6 antes
 del step 5 y vuelve.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add lib/ai-practice/correction.ts lib/ai-practice/__tests__/correction.test.ts components/ai-coach/
@@ -782,7 +782,7 @@ git commit -m "feat(ai-coach): render SaveChips from annotate_turn saveables"
 - Modify: `hooks/useAIPractice.ts`
 - Modify: `lib/ai-practice/stream-processor.ts`
 
-- [ ] **Step 1: Reescribir el hook**
+- [x] **Step 1: Reescribir el hook**
 
 Sustituye `hooks/useSavedWords.ts` entero por:
 
@@ -856,7 +856,7 @@ export function useSavedWords(userId: string | null) {
 Fíjate en que **desaparece el parámetro `conversationId`**: ya no hace falta, porque
 `AISavedWord.conversationId` era el único que lo usaba.
 
-- [ ] **Step 2: Actualizar los consumidores**
+- [x] **Step 2: Actualizar los consumidores**
 
 En `hooks/useAIPractice.ts`:
 
@@ -872,7 +872,7 @@ En `components/ai-coach/AICoachPanel.tsx`:
 - Pásalo como `onSaveSaveable={saveSaveable}` en las líneas 131 y 201 (lo que quedó
   pendiente en la Task 5, step 5).
 
-- [ ] **Step 3: Quitar la rama `save_word` del stream-processor**
+- [x] **Step 3: Quitar la rama `save_word` del stream-processor**
 
 En `lib/ai-practice/stream-processor.ts`, líneas 67-69, borra:
 
@@ -896,7 +896,7 @@ y el test de integración de la fase 1
 > `save_word` se queda en `declarations.ts` por compatibilidad con conversaciones ya
 > persistidas que la contengan, pero no dispara nada.
 
-- [ ] **Step 4: Desenganchar `load-state.ts` del silo**
+- [x] **Step 4: Desenganchar `load-state.ts` del silo**
 
 `lib/ai-practice/load-state.ts` también lee el silo: lo usa para construir
 `vocabulary.savedWords`, que alimenta `compactState()`. Hay que quitarlo **antes** de
@@ -918,7 +918,7 @@ El `filter` de deduplicación desaparece con ellos: sobraba solo porque se fusio
 fuentes. No se pierde nada de cara al futuro — las palabras que el coach guarde a partir de
 ahora van a `word_bank` como favoritas, que es justo lo que `resolvedFavs` recoge.
 
-- [ ] **Step 5: Borrar la tabla y el tipo**
+- [x] **Step 5: Borrar la tabla y el tipo**
 
 En `lib/db/ai.ts`: borra `saveAIWord`, `getAIWords` y `deleteAIWord`, y el import de
 `AISavedWord`. Los helpers de conversaciones se quedan.
@@ -940,7 +940,7 @@ En `lib/db/index.ts`:
 
 En `lib/types.ts`: borra la interfaz `AISavedWord` (líneas 209-219).
 
-- [ ] **Step 6: Verificar que no quedan referencias**
+- [x] **Step 6: Verificar que no quedan referencias**
 
 ```bash
 grep -rn "aiWords\|AISavedWord\|saveAIWord\|getAIWords\|deleteAIWord" --include=*.ts --include=*.tsx lib components hooks app
@@ -948,7 +948,7 @@ grep -rn "aiWords\|AISavedWord\|saveAIWord\|getAIWords\|deleteAIWord" --include=
 
 Esperado: sin resultados.
 
-- [ ] **Step 7: Verificar todo**
+- [x] **Step 7: Verificar todo**
 
 ```bash
 pnpm test && pnpm type-check && pnpm lint && pnpm audit:state-duplication
@@ -957,7 +957,7 @@ pnpm test && pnpm type-check && pnpm lint && pnpm audit:state-duplication
 Esperado: todo verde. `audit:state-duplication` debería estar más contento que antes: se ha
 eliminado una duplicación real.
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add -A
@@ -976,7 +976,7 @@ git commit -m "refactor(ai-coach): drop the aiWords silo, route all saves throug
 - Modify: `components/tracking/TrackingCard.tsx`
 - Test: `components/tracking/__tests__/TrackingToolbar.test.tsx`
 
-- [ ] **Step 1: Escribir el test que falla**
+- [x] **Step 1: Escribir el test que falla**
 
 Crea o amplía `components/tracking/__tests__/TrackingToolbar.test.tsx`:
 
@@ -1022,7 +1022,7 @@ describe("TrackingToolbar coach filter", () => {
 Si el toolbar no usa hoy `aria-pressed`, mira cómo marca el filtro activo (línea 63,
 `const isActive = filter === id;`) y adapta el tercer test a ese mecanismo real.
 
-- [ ] **Step 2: Ejecutar y ver fallar**
+- [x] **Step 2: Ejecutar y ver fallar**
 
 ```bash
 pnpm test components/tracking/__tests__/TrackingToolbar.test.tsx
@@ -1030,7 +1030,7 @@ pnpm test components/tracking/__tests__/TrackingToolbar.test.tsx
 
 Esperado: FAIL — no existe el botón "Del coach".
 
-- [ ] **Step 3: Añadir el tipo de filtro**
+- [x] **Step 3: Añadir el tipo de filtro**
 
 En `lib/tracking/types.ts`, añade:
 
@@ -1059,7 +1059,7 @@ export interface TrackingItem {
 }
 ```
 
-- [ ] **Step 4: Propagar el origen desde `useTracking`**
+- [x] **Step 4: Propagar el origen desde `useTracking`**
 
 En `hooks/useTracking.ts`, dentro de `reviewSources`:
 
@@ -1084,7 +1084,7 @@ import { isFromCoach } from "@/lib/ai-coach/saveables/source";
 `isFromCoach` acepta las dos formas (columna plana y `payload.source`), así que la misma
 llamada sirve para ambos bloques.
 
-- [ ] **Step 5: Añadir el chip al toolbar**
+- [x] **Step 5: Añadir el chip al toolbar**
 
 En `components/tracking/TrackingToolbar.tsx`:
 
@@ -1107,7 +1107,7 @@ Y cambia el tipo de las props:
   onFilterChange: (filter: TrackingFilter) => void;
 ```
 
-- [ ] **Step 6: Filtrar en el cliente**
+- [x] **Step 6: Filtrar en el cliente**
 
 En `components/tracking/TrackingClient.tsx`, la línea 73 es hoy:
 
@@ -1141,7 +1141,7 @@ La línea 141 tiene la misma forma para `hasCategoryItems`. Cámbiala igual:
 
 Y actualiza el tipo del `useState` del filtro a `TrackingFilter`.
 
-- [ ] **Step 7: El badge en la tarjeta**
+- [x] **Step 7: El badge en la tarjeta**
 
 En `components/tracking/TrackingCard.tsx`, junto a donde ya se pinta `progressLabel`, añade:
 
@@ -1155,7 +1155,7 @@ Comprueba primero cómo se importa y qué variantes acepta `Badge` en este proye
 `components/pronunciation/IntonationParts.tsx:144` tiene un ejemplo de uso. Si no existe la
 variante `info`, usa la que más se acerque a un tono neutro-informativo.
 
-- [ ] **Step 8: Verificar**
+- [x] **Step 8: Verificar**
 
 ```bash
 pnpm test components/tracking && pnpm type-check && pnpm lint
@@ -1163,7 +1163,7 @@ pnpm test components/tracking && pnpm type-check && pnpm lint
 
 Esperado: PASS y limpio.
 
-- [ ] **Step 9: Commit**
+- [x] **Step 9: Commit**
 
 ```bash
 git add lib/tracking/types.ts hooks/useTracking.ts components/tracking/
@@ -1174,7 +1174,7 @@ git commit -m "feat(tracking): filter Guardadas by AI Coach origin"
 
 ## Verificación final de la fase
 
-- [ ] **Step 1: Suite completa y puertas**
+- [x] **Step 1: Suite completa y puertas**
 
 ```bash
 pnpm test && pnpm type-check && pnpm lint && pnpm audit:hard-rules
@@ -1182,7 +1182,7 @@ pnpm test && pnpm type-check && pnpm lint && pnpm audit:hard-rules
 
 Esperado: todo verde.
 
-- [ ] **Step 2: Comprobación manual**
+- [x] **Step 2: Comprobación manual**
 
 ```bash
 pnpm dev
@@ -1200,7 +1200,7 @@ pnpm dev
 7. Toca un chip de una palabra que **ya tenías** guardada → debe quedar en `✓ Guardada`,
    no en error.
 
-- [ ] **Step 3: Offline**
+- [x] **Step 3: Offline**
 
 Con DevTools en Offline:
 
@@ -1213,7 +1213,7 @@ Ese comportamiento asimétrico es esperado y correcto: las palabras necesitan el
 enriquecimiento del servidor, las frases no. Si te parece que merece una cola offline
 propia para palabras, anótalo como trabajo futuro — no lo metas en esta fase.
 
-- [ ] **Step 4: Commit de cierre si hubo ajustes**
+- [x] **Step 4: Commit de cierre si hubo ajustes**
 
 ```bash
 git add -A && git commit -m "chore(ai-coach): phase 2 verification fixes"
