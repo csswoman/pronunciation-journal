@@ -12,7 +12,7 @@ const WordsRequestSchema = z
     context: z.string().trim().max(1000).optional(),
     id: z.string().min(1).optional(),
     deckId: z.string().trim().min(1).optional(),
-    source: z.enum(["manual", "reader", "journal"]).default("manual"),
+    source: z.enum(["manual", "reader", "journal", "ai_coach"]).default("manual"),
     enrichment: z.object({
       meaning: z.string().trim().min(1).max(500),
       translation: z.string().trim().min(1).max(500),
