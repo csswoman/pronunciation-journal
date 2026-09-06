@@ -17,3 +17,5 @@
 | Plan 092 | Auditoría y mejora de diseño Apple HIG en Practice Hub (/practice) | Completed |
 | Plan 093 | Auditoría y mejora de diseño Apple HIG en Word Search (/practice/word-search) | Completed |
 | Plan 094 | Modelo Híbrido: Descarga de lecciones bajo demanda para uso offline con Dexie, CacheStorage y sincronización diferida | Completed |
+| Plan 095 | Auditoría y mejora de diseño Apple HIG en Word Search (/practice/word-search) — Decomposición modular y refinamiento ergonómico | Completed |
+| Plan 096 | Corrección integral de repetición de palabras en Sopa de Letras: ampliación de bancos curados, muestreo ponderado anti-repetición y memoria reciente | Completed |
