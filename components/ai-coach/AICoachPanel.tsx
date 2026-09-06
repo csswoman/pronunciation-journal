@@ -12,6 +12,7 @@ import PronunciationView from "@/components/ai-coach/PronunciationView";
 import CustomPromptPanel from "@/components/ai-coach/CustomPromptPanel";
 import ChatTabs, { type TabId } from "@/components/ai-coach/ChatTabs";
 import AICoachHome from "@/components/ai-coach/AICoachHome";
+import { useCoachStarters } from "@/hooks/useCoachStarters";
 import SaveWordModal from "@/components/ai-coach/SaveWordModal";
 import ErrorBanner from "@/components/ai-coach/ErrorBanner";
 import QuotaExhaustedCard from "@/components/ai-coach/QuotaExhaustedCard";
@@ -43,8 +44,7 @@ const QUOTA_WARN_THRESHOLD = 18;
 
 function tabForMission(missionId: string): TabId {
   const mission = getMission(missionId);
-  if (!mission) return "chat";
-  return isScriptedMission(mission) ? "missions" : "chat";
+  return mission && isScriptedMission(mission) ? "missions" : "chat";
 }
 
 export default function AICoachPanel() {
@@ -115,9 +115,7 @@ export default function AICoachPanel() {
   const hasMessages = messages.some((m) => m.role !== "tool" && !(m.role === "user" && m.hidden)) || isStreaming;
 
   const panelStyle = {
-    transform: isMobile
-      ? isOpen ? "translateY(0)" : "translateY(100%)"
-      : isOpen ? "translateX(0)" : "translateX(100%)",
+    transform: isMobile ? (isOpen ? "translateY(0)" : "translateY(100%)") : (isOpen ? "translateX(0)" : "translateX(100%)"),
     transition: isMobile ? "transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)" : "transform 0.25s ease",
     ...(isMobile ? {} : { width: isFullscreen ? "calc(100vw - var(--sidebar-width))" : `${panelWidth}px` }),
   } as const;
@@ -134,11 +132,14 @@ export default function AICoachPanel() {
     />
   );
 
+  const { starters, loading: startersLoading, noteUse } = useCoachStarters();
+
   const renderHome = (tab: "chat" | "missions") => (
     <AICoachHome
       activeTab={tab} onSendMessage={sendMessage}
       onSelectMission={(mId) => { void changeMode(`mission:${mId}`); }}
-      isStreaming={isStreaming} prefill={inputPrefill} onPrefillConsumed={() => setInputPrefill(undefined)}
+      isStreaming={isStreaming} starters={starters} startersLoading={startersLoading} onStarterUsed={noteUse}
+      prefill={inputPrefill} onPrefillConsumed={() => setInputPrefill(undefined)}
     />
   );
 
@@ -239,10 +240,8 @@ export default function AICoachPanel() {
 
       {wordToSave && (
         <SaveWordModal
-          word={wordToSave.word}
-          context={wordToSave.context}
-          onConfirm={confirmSaveWord}
-          onClose={closeSaveWordModal}
+          word={wordToSave.word} context={wordToSave.context}
+          onConfirm={confirmSaveWord} onClose={closeSaveWordModal}
         />
       )}
     </>

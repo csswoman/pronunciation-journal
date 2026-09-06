@@ -63,7 +63,7 @@ export function useStreamingChat({
   const userIdRef = useRef(userId);
   userIdRef.current = userId;
 
-  const sendMessage = useCallback(async (text: string, options?: { hidden?: boolean; voice?: VoiceMetadata }) => {
+  const sendMessage = useCallback(async (text: string, options?: { hidden?: boolean; voice?: VoiceMetadata; starterId?: string }) => {
     if (!text.trim() || isStreaming) return;
     setError(null);
     setQuotaExhausted(false);
@@ -191,6 +191,7 @@ export function useStreamingChat({
         conversationId: conversationIdRef.current,
         mode,
         text,
+        starterId: options?.starterId,
         messages: finalMessages,
         onConversationCreated,
       });

@@ -1,24 +1,37 @@
 import type { AIConversation, AIConversationMode } from "@/lib/types";
 import { getMission } from "@/lib/ai-practice/missions/registry";
-import { AI_COACH_EMPTY_STATE_PROMPTS } from "@/lib/ai-prompts";
+import type { StarterId } from "@/lib/ai-practice/starters/types";
 
-const PROMPT_TO_TITLE_MAP: Record<string, string> = {
-  [AI_COACH_EMPTY_STATE_PROMPTS.freeConversation]: "Conversación libre",
-  [AI_COACH_EMPTY_STATE_PROMPTS.sentenceCorrection]: "Corrige mis oraciones",
-  [AI_COACH_EMPTY_STATE_PROMPTS.practiceQuestions]: "Preguntas de práctica",
-  [AI_COACH_EMPTY_STATE_PROMPTS.personalizedPractice]: "Práctica personalizada",
-  [AI_COACH_EMPTY_STATE_PROMPTS.newYorkTrip]: "Viaje a Nueva York",
-  [AI_COACH_EMPTY_STATE_PROMPTS.jobInterview]: "Entrevista de trabajo",
-  [AI_COACH_EMPTY_STATE_PROMPTS.discussArticle]: "Comentar un artículo",
-  [AI_COACH_EMPTY_STATE_PROMPTS.pronunciation]: "Práctica de pronunciación",
+const STARTER_TITLES: Record<string, string> = {
+  review: "Repaso de errores",
+  learn: "Algo nuevo",
+  world: "Tus intereses",
+  free: "Conversación libre",
+  "free-conversation": "Conversación libre",
+  "sentence-correction": "Corrige mis oraciones",
+  "practice-questions": "Preguntas de práctica",
+  "personalized-practice": "Práctica personalizada",
 };
+
+/**
+ * Titles a conversation by the starter that opened it.
+ *
+ * This replaced matching against the prompt text: starter prompts are now
+ * built per user and per session, so no fixed string could identify them.
+ */
+export function titleForStarter(id: string | undefined): string | null {
+  if (!id) return null;
+  return STARTER_TITLES[id as StarterId] ?? null;
+}
 
 /** Checks if a text string is a system prompt or empty-state starter prompt. */
 export function isSystemPromptText(text: string): boolean {
   if (!text || typeof text !== "string") return true;
   const trimmed = text.trim();
-  if (PROMPT_TO_TITLE_MAP[trimmed]) return true;
   if (/^you are (a|an|the) /i.test(trimmed)) return true;
+  if (/^the student (picked|has struggled)/i.test(trimmed)) return true;
+  if (/^teach this /i.test(trimmed)) return true;
+  if (/^practice english around /i.test(trimmed)) return true;
   if (
     trimmed.includes("conversation coach") ||
     trimmed.includes("writing coach") ||
@@ -31,28 +44,11 @@ export function isSystemPromptText(text: string): boolean {
   return false;
 }
 
-/** Resolves a human-readable title for a prompt string if it is a starter prompt. */
-export function titleFromStarterPrompt(text: string): string | null {
-  if (!text || typeof text !== "string") return null;
-  const trimmed = text.trim();
-  if (PROMPT_TO_TITLE_MAP[trimmed]) {
-    return PROMPT_TO_TITLE_MAP[trimmed];
-  }
-  if (trimmed.includes("New York City")) return "Viaje a Nueva York";
-  if (trimmed.includes("mock interview")) return "Entrevista de trabajo";
-  if (trimmed.includes("Socratic method")) return "Preguntas de práctica";
-  if (trimmed.includes("writing coach")) return "Corrige mis oraciones";
-  if (trimmed.includes("pronunciation coach")) return "Práctica de pronunciación";
-  if (trimmed.includes("personalized English coach")) return "Práctica personalizada";
-  if (trimmed.includes("discussion-based English coach")) return "Comentar un artículo";
-  if (trimmed.includes("warm, encouraging English conversation coach")) return "Conversación libre";
-  return null;
-}
-
 /** Determines the initial title when creating a new conversation. */
 export function getInitialTitleForModeAndMessage(
   mode: AIConversationMode,
-  text?: string
+  text?: string,
+  starterId?: string,
 ): string {
   if (mode?.startsWith("mission:")) {
     const missionId = mode.slice("mission:".length);
@@ -61,12 +57,11 @@ export function getInitialTitleForModeAndMessage(
     return "Misión";
   }
 
-  if (text) {
-    const starterTitle = titleFromStarterPrompt(text);
-    if (starterTitle) return starterTitle;
-    if (!isSystemPromptText(text)) {
-      return text.trim().slice(0, 60);
-    }
+  const starterTitle = titleForStarter(starterId);
+  if (starterTitle) return starterTitle;
+
+  if (text && !isSystemPromptText(text)) {
+    return text.trim().slice(0, 60);
   }
 
   if (mode === "pronunciation") return "Práctica de pronunciación";
@@ -89,10 +84,14 @@ export function formatConversationTitle(conv: AIConversation): string {
     return "Misión";
   }
 
-  // 2. Search messages for a non-system-prompt user message (real user content)
+  // 2. Search messages for a non-system-prompt, non-hidden user message (real user content)
   if (Array.isArray(conv.messages)) {
     const realUserMsg = conv.messages.find(
-      (m) => m.role === "user" && typeof m.content === "string" && !isSystemPromptText(m.content)
+      (m) =>
+        m.role === "user" &&
+        !(m as { hidden?: boolean }).hidden &&
+        typeof m.content === "string" &&
+        !isSystemPromptText(m.content),
     );
     if (realUserMsg && typeof realUserMsg.content === "string") {
       return realUserMsg.content.trim().slice(0, 60);
@@ -104,16 +103,9 @@ export function formatConversationTitle(conv: AIConversation): string {
     return conv.title;
   }
 
-  // 4. Check if the first user message was a starter prompt card
-  if (Array.isArray(conv.messages)) {
-    const firstUserMsg = conv.messages.find(
-      (m) => m.role === "user" && typeof m.content === "string"
-    );
-    if (firstUserMsg && typeof firstUserMsg.content === "string") {
-      const starterTitle = titleFromStarterPrompt(firstUserMsg.content);
-      if (starterTitle) return starterTitle;
-    }
-  }
+  // 4. Starter template title fallback
+  const starterTitle = titleForStarter(conv.templateId);
+  if (starterTitle) return starterTitle;
 
   // 5. Fallback based on mode
   if (conv.mode === "pronunciation") return "Práctica de pronunciación";

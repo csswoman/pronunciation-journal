@@ -3,19 +3,26 @@ import {
   formatConversationTitle,
   getInitialTitleForModeAndMessage,
   isSystemPromptText,
-  titleFromStarterPrompt,
+  titleForStarter,
 } from "../conversation-title";
-import { AI_COACH_EMPTY_STATE_PROMPTS } from "@/lib/ai-prompts";
 import type { AIConversation } from "@/lib/types";
 
 describe("conversation-title utilities", () => {
-  describe("isSystemPromptText", () => {
-    it("identifies empty state prompts as system prompts", () => {
-      expect(isSystemPromptText(AI_COACH_EMPTY_STATE_PROMPTS.freeConversation)).toBe(true);
-      expect(isSystemPromptText(AI_COACH_EMPTY_STATE_PROMPTS.sentenceCorrection)).toBe(true);
-      expect(isSystemPromptText(AI_COACH_EMPTY_STATE_PROMPTS.newYorkTrip)).toBe(true);
+  describe("titleForStarter", () => {
+    it("names each of the four starters", () => {
+      expect(titleForStarter("review")).toBe("Repaso de errores");
+      expect(titleForStarter("learn")).toBe("Algo nuevo");
+      expect(titleForStarter("world")).toBe("Tus intereses");
+      expect(titleForStarter("free")).toBe("Conversación libre");
     });
 
+    it("returns null for anything that is not a starter id", () => {
+      expect(titleForStarter("banana")).toBeNull();
+      expect(titleForStarter(undefined)).toBeNull();
+    });
+  });
+
+  describe("isSystemPromptText", () => {
     it("identifies generic prompt instructions starting with 'You are a'", () => {
       expect(isSystemPromptText("You are a warm, encouraging English conversation coach.")).toBe(true);
       expect(isSystemPromptText("You are an English writing coach.")).toBe(true);
@@ -27,29 +34,25 @@ describe("conversation-title utilities", () => {
     });
   });
 
-  describe("titleFromStarterPrompt", () => {
-    it("maps empty state prompts to human-readable titles", () => {
-      expect(titleFromStarterPrompt(AI_COACH_EMPTY_STATE_PROMPTS.freeConversation)).toBe("Conversación libre");
-      expect(titleFromStarterPrompt(AI_COACH_EMPTY_STATE_PROMPTS.sentenceCorrection)).toBe("Corrige mis oraciones");
-      expect(titleFromStarterPrompt(AI_COACH_EMPTY_STATE_PROMPTS.newYorkTrip)).toBe("Viaje a Nueva York");
-      expect(titleFromStarterPrompt(AI_COACH_EMPTY_STATE_PROMPTS.jobInterview)).toBe("Entrevista de trabajo");
-    });
-  });
-
-  describe("getInitialTitleForModeAndMessage", () => {
+  describe("getInitialTitleForModeAndMessage with a starter id", () => {
     it("uses mission communicativeGoal for mission modes", () => {
       const title = getInitialTitleForModeAndMessage("mission:roleplay.cafe");
       expect(title).toBe("Pedir una bebida y confirmar tus preferencias.");
     });
 
-    it("uses starter prompt title for card prompts", () => {
-      const title = getInitialTitleForModeAndMessage("chat", AI_COACH_EMPTY_STATE_PROMPTS.freeConversation);
-      expect(title).toBe("Conversación libre");
+    it("prefers the starter id over the message text", () => {
+      const title = getInitialTitleForModeAndMessage("chat", "You are a warm coach...", "review");
+      expect(title).toBe("Repaso de errores");
     });
 
-    it("uses user message text for real user messages", () => {
-      const title = getInitialTitleForModeAndMessage("chat", "I want to practice my job interview skills");
-      expect(title).toBe("I want to practice my job interview skills");
+    it("still titles a plain typed message by its text", () => {
+      const title = getInitialTitleForModeAndMessage("chat", "I want to talk about films");
+      expect(title).toBe("I want to talk about films");
+    });
+
+    it("does not title a conversation with raw prompt text when the starter id is missing", () => {
+      const title = getInitialTitleForModeAndMessage("chat", "You are a warm, encouraging English conversation coach.");
+      expect(title).not.toContain("You are a warm");
     });
   });
 
@@ -68,16 +71,16 @@ describe("conversation-title utilities", () => {
       expect(formatConversationTitle(conv)).toBe("Pedir una bebida y confirmar tus preferencias.");
     });
 
-    it("returns card title when conversation only contains starter prompt", () => {
+    it("returns starter title when conversation has starterId or saved title", () => {
       const conv: AIConversation = {
         userId: "user-1",
         templateId: "free-conversation",
         mode: "chat",
-        title: "You are a warm, encouraging English conversation coach.",
+        title: "Conversación libre",
         messages: [
           {
             role: "user",
-            content: AI_COACH_EMPTY_STATE_PROMPTS.freeConversation,
+            content: "The student picked free conversation...",
             timestamp: "2026-09-05T00:00:00Z",
           },
         ],
@@ -97,7 +100,7 @@ describe("conversation-title utilities", () => {
         messages: [
           {
             role: "user",
-            content: AI_COACH_EMPTY_STATE_PROMPTS.freeConversation,
+            content: "You are a warm, encouraging English conversation coach.",
             timestamp: "2026-09-05T00:00:00Z",
           },
           {

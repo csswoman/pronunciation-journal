@@ -37,6 +37,7 @@ export async function persistConversationState({
   conversationId,
   mode,
   text,
+  starterId,
   messages,
   onConversationCreated,
 }: {
@@ -44,6 +45,7 @@ export async function persistConversationState({
   conversationId: number | null;
   mode: AIConversationMode;
   text: string;
+  starterId?: string;
   messages: AIMessage[];
   onConversationCreated: (id: number) => void;
 }): Promise<number | null> {
@@ -63,7 +65,7 @@ export async function persistConversationState({
     return conversationId;
   }
 
-  const title = getInitialTitleForModeAndMessage(mode, text);
+  const title = getInitialTitleForModeAndMessage(mode, text, starterId);
   const id = await saveConversation(userId, {
     templateId: "free-conversation",
     mode,

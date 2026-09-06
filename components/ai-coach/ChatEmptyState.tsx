@@ -13,15 +13,15 @@ import CoachShortcutRail from "./starters/CoachShortcutRail";
 // </ChatEmptyState>
 
 interface ChatEmptyStateProps {
-  starters: ResolvedStarter[] | null;
-  loading: boolean;
-  onSelectStarter: (starter: ResolvedStarter) => void;
+  starters?: ResolvedStarter[] | null;
+  loading?: boolean;
+  onSelectStarter?: (starter: ResolvedStarter) => void;
   onSendMessage: (text: string) => void;
 }
 
 export default function ChatEmptyState({
-  starters,
-  loading,
+  starters = null,
+  loading = false,
   onSelectStarter,
   onSendMessage,
 }: ChatEmptyStateProps) {
@@ -34,7 +34,7 @@ export default function ChatEmptyState({
 
       <div className="relative z-10 mx-auto flex w-full max-w-md flex-col px-3 py-6 @[22rem]:px-4 @[22rem]:py-8">
         <CoachGreeting />
-        <CoachStarterList starters={starters} loading={loading} onSelect={onSelectStarter} />
+        <CoachStarterList starters={starters} loading={loading} onSelect={onSelectStarter ?? (() => {})} />
         <CoachShortcutRail onSendMessage={onSendMessage} />
       </div>
     </div>

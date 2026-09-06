@@ -3,7 +3,6 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { AICoachHeader, ConversationHistoryPanel } from "../AICoachPanelParts";
 import type { AIConversation } from "@/lib/types";
-import { AI_COACH_EMPTY_STATE_PROMPTS } from "@/lib/ai-prompts";
 
 describe("AICoachHeader", () => {
   it("renders brand, page label and action buttons with accessible targets", () => {
@@ -49,11 +48,11 @@ describe("ConversationHistoryPanel", () => {
         userId: "user-1",
         templateId: "free-conversation",
         mode: "chat",
-        title: "You are a warm, encouraging English conversation coach.",
+        title: "Conversación libre",
         messages: [
           {
             role: "user",
-            content: AI_COACH_EMPTY_STATE_PROMPTS.freeConversation,
+            content: "The student picked free conversation...",
             timestamp: new Date().toISOString(),
           },
         ],
