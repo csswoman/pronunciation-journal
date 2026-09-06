@@ -62,6 +62,7 @@ teach one on purpose — call annotate_turn with \`saveables\`. Max 2 per turn.
 Give \`meaning\` in SPANISH, and an \`example\` using the word in the context you
 were just discussing, not a generic one.
 Prefer vocabulary from the student's declared interest areas.
+When a turn explains a concept the learner should be able to revisit later — a false friend, a grammar point, a usage contrast — also pass \`concept.title\` (a short Spanish label) so they can save the whole explanation, not just the word.
 
 EXERCISE QUALITY (when calling render_fill_blank / render_multiple_choice):
 - "instruction": specific, e.g. "Fill in the blank with the PAST TENSE of 'read'" (not "Complete the sentence").
