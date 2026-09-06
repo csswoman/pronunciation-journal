@@ -33,6 +33,10 @@ vi.mock('@/lib/ai-practice/server-state', () => ({
   fetchServerLearningState: vi.fn(async () => null),
 }))
 
+vi.mock('@/lib/users/server-queries', () => ({
+  getUserInterests: vi.fn(async () => []),
+}))
+
 vi.mock('@/lib/gemini/fallback', () => ({
   FALLBACK_MODELS: ['model-a', 'model-b'],
   getErrorStatus: (error: unknown) =>
