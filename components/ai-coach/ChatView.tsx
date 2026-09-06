@@ -73,11 +73,14 @@ export default function ChatView({
   const visibleMessages = messages.filter((m, i) => {
     if (m.role === "tool") return false;
     if (m.role === "user" && m.hidden) return false;
-    if (i === messages.length - 1 && m.role === "model") {
+    if (m.role === "model") {
       const hasText = m.contentParts.some((p) => p.type === "text" && p.text.trim().length > 0);
-      if (!hasText) return false;
-      if (thinkingHold) return false;
-      return true;
+      const hasToolCall = m.toolCalls.size > 0;
+      // An empty model bubble is either the turn still streaming (last message,
+      // covered by the typing indicator) or an orphan left behind when a stream
+      // was superseded mid-flight. Neither should render as a blank bubble.
+      if (!hasText && !hasToolCall) return false;
+      if (i === messages.length - 1 && thinkingHold) return false;
     }
     return true;
   });

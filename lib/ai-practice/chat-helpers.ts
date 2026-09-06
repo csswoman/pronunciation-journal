@@ -3,7 +3,29 @@ import { deserializeMessage, serializeMessage, type SerializedModelMessage } fro
 import { saveConversation, updateConversation } from "@/lib/db/ai";
 import { getInitialTitleForModeAndMessage, isSystemPromptText } from "@/lib/ai-practice/conversation-title";
 import { logEvent } from "@/lib/ai-practice/events";
+import {
+  AI_COACH_TURN_FAILED_MESSAGE,
+  AI_UNAVAILABLE_MESSAGE,
+  publicAiErrorMessage,
+} from "@/lib/degradation/messages";
 import type { AIConversationMode } from "@/lib/types";
+
+/**
+ * Maps a thrown streaming error to the user-facing line: pass through the
+ * messages that are already public-safe, otherwise route through
+ * `publicAiErrorMessage` with the coach-specific fallback.
+ */
+export function coachErrorMessage(err: unknown): string {
+  const message = err instanceof Error ? err.message : "";
+  if (
+    message === AI_UNAVAILABLE_MESSAGE ||
+    message === AI_COACH_TURN_FAILED_MESSAGE ||
+    message.includes("temporarily limited")
+  ) {
+    return message;
+  }
+  return publicAiErrorMessage(undefined, message, AI_COACH_TURN_FAILED_MESSAGE);
+}
 
 export function getOrCreateDeviceId(): string {
   const key = "ai_practice_device_id";

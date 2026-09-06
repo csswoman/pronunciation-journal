@@ -16,8 +16,8 @@ import {
   type CoachSessionExercise,
 } from "@/lib/ai-practice/coach-progress";
 import type { AIConversationMode } from "@/lib/types";
-import { AI_COACH_TURN_FAILED_MESSAGE, AI_UNAVAILABLE_MESSAGE, isQuotaLikeError, publicAiErrorMessage } from "@/lib/degradation/messages";
-import { hydratePersistedMessages, logFirstExerciseTimeIfNeeded, persistConversationState, persistMessageEdit } from "@/lib/ai-practice/chat-helpers";
+import { AI_COACH_TURN_FAILED_MESSAGE, isQuotaLikeError, publicAiErrorMessage } from "@/lib/degradation/messages";
+import { coachErrorMessage, hydratePersistedMessages, logFirstExerciseTimeIfNeeded, persistConversationState, persistMessageEdit } from "@/lib/ai-practice/chat-helpers";
 
 type SendOpts = { hidden?: boolean; voice?: VoiceMetadata; starterId?: string };
 
@@ -180,7 +180,11 @@ export function useStreamingChat({
         }
       }
 
-      if (streamIdRef.current !== thisId) return;
+      if (streamIdRef.current !== thisId) {
+        // Superseded mid-flight: drop this turn's still-empty placeholder bubble.
+        setMessages(prev => (prev[prev.length - 1] === modelMsg ? prev.slice(0, -1) : prev));
+        return;
+      }
 
       const finalModelMsg: AIMessage = { role: "model", contentParts: state.parts, toolCalls: state.calls, timestamp: modelMsg.timestamp };
       const finalMessages = [...nextMessages, finalModelMsg];
@@ -205,10 +209,7 @@ export function useStreamingChat({
       if (newId) conversationIdRef.current = newId;
     } catch (err: unknown) {
       if ((err as Error).name === "AbortError") return;
-      const message = err instanceof Error ? err.message : "";
-      setError(message === AI_UNAVAILABLE_MESSAGE || message === AI_COACH_TURN_FAILED_MESSAGE || message.includes("temporarily limited")
-        ? message
-        : publicAiErrorMessage(undefined, message, AI_COACH_TURN_FAILED_MESSAGE));
+      setError(coachErrorMessage(err));
       setMessages(messagesRef.current.slice(0, -2));
       lastFailedSendRef.current = { text, options };
     } finally {
