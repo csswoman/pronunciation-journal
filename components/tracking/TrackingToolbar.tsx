@@ -19,6 +19,7 @@ const FILTERS: { id: TrackingFilter; label: string }[] = [
   { id: "word", label: "Palabras" },
   { id: "phrase", label: "Frases" },
   { id: "lesson", label: "Lecciones" },
+  { id: "explanation", label: "Explicaciones" },
   { id: "ai_coach", label: "Del coach" },
 ];
 
