@@ -161,6 +161,19 @@ export const TOOL_DECLARATIONS = [
             required: ["type", "text", "meaning"],
           },
         },
+        concept: {
+          type: "object",
+          description:
+            "Include ONLY when this turn explains a concept the learner should be able to revisit later " +
+            "(a false friend, a grammar point, a usage contrast). Omit it for ordinary conversational replies.",
+          properties: {
+            title: {
+              type: "string",
+              description: "A short label in SPANISH for the concept, e.g. '\"actually\" — falso amigo'.",
+            },
+          },
+          required: ["title"],
+        },
       },
     },
   },
