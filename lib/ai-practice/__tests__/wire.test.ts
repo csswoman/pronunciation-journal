@@ -112,3 +112,17 @@ describe("lastUserVoiceMetadataFromWire", () => {
     expect(lastUserVoiceMetadataFromWire(messages)).toEqual({ transcript: true, scored: true });
   });
 });
+
+describe("BASE_TUTOR_PROMPT feedback discipline", () => {
+  it("instructs the model to call annotate_turn for corrections", () => {
+    expect(BASE_TUTOR_PROMPT).toContain("annotate_turn");
+  });
+
+  it("forbids praising a turn that had nothing to correct", () => {
+    expect(BASE_TUTOR_PROMPT).toMatch(/DO NOT\s+say "that's correct"/i);
+  });
+
+  it("limits feedback to one item per turn", () => {
+    expect(BASE_TUTOR_PROMPT).toMatch(/ONE only/i);
+  });
+});
