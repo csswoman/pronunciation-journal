@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { extractTurnCorrection, extractTurnSaveables } from "../correction";
+import { extractTurnCorrection, extractTurnSaveables, extractTurnConcept } from "../correction";
 import type { ToolCall } from "../types";
 
 function callMap(calls: ToolCall[]): Map<string, ToolCall> {
@@ -90,5 +90,38 @@ describe("extractTurnSaveables", () => {
       { id: "c1", name: "annotate_turn", status: "error", args: {}, error: "boom", errorId: "e1" },
     ]);
     expect(extractTurnSaveables(calls)).toEqual([]);
+  });
+});
+
+describe("extractTurnConcept", () => {
+  it("returns the concept carried by an annotate_turn call", () => {
+    const calls = callMap([
+      {
+        id: "c1",
+        name: "annotate_turn",
+        status: "answered",
+        args: { concept: { title: '"actually" — falso amigo' } },
+      },
+    ]);
+    expect(extractTurnConcept(calls)).toEqual({ title: '"actually" — falso amigo' });
+  });
+
+  it("returns null when no annotate_turn call carries a concept", () => {
+    const calls = callMap([
+      { id: "c1", name: "annotate_turn", status: "answered", args: { saveables: [] } },
+    ]);
+    expect(extractTurnConcept(calls)).toBeNull();
+  });
+
+  it("ignores an errored annotate_turn call", () => {
+    const calls = callMap([
+      {
+        id: "c1",
+        name: "annotate_turn",
+        status: "error",
+        args: { concept: { title: "x" } },
+      },
+    ]);
+    expect(extractTurnConcept(calls)).toBeNull();
   });
 });
