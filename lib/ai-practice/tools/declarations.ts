@@ -129,4 +129,39 @@ export const TOOL_DECLARATIONS = [
       required: ["intentId"],
     },
   },
+  {
+    name: "annotate_turn",
+    description:
+      "Attach feedback to the student's latest turn. Call it alongside your normal reply — never instead of it. Include `correction` ONLY when the student's message has a real error or sounds unnatural; omit it entirely when their English was fine. Include `saveables` for words or expressions worth keeping.",
+    parameters: {
+      type: "object",
+      properties: {
+        correction: {
+          type: "object",
+          properties: {
+            original:  { type: "string", description: "The student's exact wording, quoted verbatim." },
+            corrected: { type: "string", description: "The fixed or more natural wording." },
+            rule:      { type: "string", description: "One short sentence in SPANISH explaining why." },
+            kind:      { type: "string", enum: ["error", "unnatural"] },
+          },
+          required: ["original", "corrected", "rule", "kind"],
+        },
+        saveables: {
+          type: "array",
+          maxItems: 2,
+          items: {
+            type: "object",
+            properties: {
+              type:    { type: "string", enum: ["word", "phrase"] },
+              text:    { type: "string", description: "The English word or expression." },
+              meaning: { type: "string", description: "Its meaning in SPANISH." },
+              example: { type: "string", description: "A sentence using it, from the current conversation." },
+              ipa:     { type: "string" },
+            },
+            required: ["type", "text", "meaning"],
+          },
+        },
+      },
+    },
+  },
 ];

@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { parseToolArgs, isValidToolName, isExerciseTool, TOOL_DECLARATIONS } from "../tools/registry";
+import { parseToolArgs, isValidToolName, isExerciseTool, TOOL_DECLARATIONS, ACTION_TOOL_NAMES } from "../tools/registry";
+import type { AnnotateTurnArgs } from "../tools/registry";
 
 describe("isValidToolName", () => {
   it("returns true for all exercise tools", () => {
@@ -43,7 +44,8 @@ describe("TOOL_DECLARATIONS", () => {
     expect(names).toContain("save_word");
     expect(names).toContain("start_mission");
     expect(names).toContain("mission_intent_observed");
-    expect(names).toHaveLength(7);
+    expect(names).toContain("annotate_turn");
+    expect(names).toHaveLength(8);
   });
 });
 
@@ -174,5 +176,82 @@ describe("parseToolArgs — start_roleplay", () => {
   it("throws for invalid scenario", () => {
     expect(() => parseToolArgs("start_roleplay", { scenario: "gym" })).toThrow();
     expect(() => parseToolArgs("start_roleplay", { scenario: "" })).toThrow();
+  });
+});
+
+describe("parseToolArgs: annotate_turn", () => {
+  it("parses a correction with all required fields", () => {
+    const args = parseToolArgs("annotate_turn", {
+      correction: {
+        original: "I go to the cinema yesterday",
+        corrected: "I went to the cinema yesterday",
+        rule: "Past simple: 'yesterday' requires the past form of the verb",
+        kind: "error",
+      },
+    });
+    expect(args).toEqual({
+      correction: {
+        original: "I go to the cinema yesterday",
+        corrected: "I went to the cinema yesterday",
+        rule: "Past simple: 'yesterday' requires the past form of the verb",
+        kind: "error",
+      },
+      saveables: undefined,
+    });
+  });
+
+  it("accepts an empty call — the turn needed no feedback", () => {
+    expect(parseToolArgs("annotate_turn", {})).toEqual({
+      correction: undefined,
+      saveables: undefined,
+    });
+  });
+
+  it("drops a correction missing required fields instead of throwing", () => {
+    const args = parseToolArgs("annotate_turn", {
+      correction: { original: "I go", kind: "error" },
+    }) as AnnotateTurnArgs;
+    expect(args.correction).toBeUndefined();
+  });
+
+  it("defaults an unknown kind to 'error'", () => {
+    const args = parseToolArgs("annotate_turn", {
+      correction: { original: "a", corrected: "b", rule: "c", kind: "banana" },
+    }) as AnnotateTurnArgs;
+    expect(args.correction?.kind).toBe("error");
+  });
+
+  it("parses saveables and caps them at 2", () => {
+    const args = parseToolArgs("annotate_turn", {
+      saveables: [
+        { type: "word", text: "creepy", meaning: "escalofriante" },
+        { type: "phrase", text: "that sounds creepy", meaning: "eso suena escalofriante" },
+        { type: "word", text: "spooky", meaning: "tenebroso" },
+      ],
+    }) as AnnotateTurnArgs;
+    expect(args.saveables).toHaveLength(2);
+    expect(args.saveables?.[0]).toEqual({
+      type: "word",
+      text: "creepy",
+      meaning: "escalofriante",
+      example: undefined,
+      ipa: undefined,
+    });
+  });
+
+  it("skips saveables with an invalid type", () => {
+    const args = parseToolArgs("annotate_turn", {
+      saveables: [
+        { type: "sentence", text: "x", meaning: "y" },
+        { type: "word", text: "creepy", meaning: "escalofriante" },
+      ],
+    }) as AnnotateTurnArgs;
+    expect(args.saveables).toHaveLength(1);
+    expect(args.saveables?.[0].text).toBe("creepy");
+  });
+
+  it("is an action tool, not an exercise tool", () => {
+    expect(isExerciseTool("annotate_turn")).toBe(false);
+    expect(ACTION_TOOL_NAMES).toContain("annotate_turn");
   });
 });

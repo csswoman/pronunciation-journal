@@ -60,6 +60,28 @@ export type SaveWordArgs = {
 export type StartMissionArgs = { missionId: string };
 export type MissionIntentObservedArgs = { intentId: string };
 
+export type CorrectionKind = "error" | "unnatural";
+
+export type TurnCorrection = {
+  original: string;
+  corrected: string;
+  rule: string;
+  kind: CorrectionKind;
+};
+
+export type TurnSaveable = {
+  type: "word" | "phrase";
+  text: string;
+  meaning: string;
+  example?: string;
+  ipa?: string;
+};
+
+export type AnnotateTurnArgs = {
+  correction?: TurnCorrection;
+  saveables?: TurnSaveable[];
+};
+
 /** @deprecated Kept only to parse old persisted tool calls. */
 export type StartRoleplayArgs = { scenario: LegacyRoleplayScenario };
 
@@ -71,11 +93,16 @@ export type ToolArgs =
   | { name: "save_word"; args: SaveWordArgs }
   | { name: "start_mission"; args: StartMissionArgs }
   | { name: "mission_intent_observed"; args: MissionIntentObservedArgs }
+  | { name: "annotate_turn"; args: AnnotateTurnArgs }
   | { name: "start_roleplay"; args: StartRoleplayArgs };
 
 export type ToolName = ToolArgs["name"];
 export type ExerciseToolName = "render_multiple_choice" | "render_fill_blank" | "render_speaking" | "render_word_card";
-export type ActionToolName = "save_word" | "start_mission" | "mission_intent_observed";
+export type ActionToolName =
+  | "save_word"
+  | "start_mission"
+  | "mission_intent_observed"
+  | "annotate_turn";
 
 export const EXERCISE_TOOL_NAMES: ExerciseToolName[] = [
   "render_multiple_choice",
@@ -84,7 +111,12 @@ export const EXERCISE_TOOL_NAMES: ExerciseToolName[] = [
   "render_word_card",
 ];
 
-export const ACTION_TOOL_NAMES: ActionToolName[] = ["save_word", "start_mission", "mission_intent_observed"];
+export const ACTION_TOOL_NAMES: ActionToolName[] = [
+  "save_word",
+  "start_mission",
+  "mission_intent_observed",
+  "annotate_turn",
+];
 
 export { TOOL_DECLARATIONS } from "./declarations";
 
@@ -157,6 +189,51 @@ function parseProgressiveHint(val: unknown): ProgressiveHint | undefined {
   };
 }
 
+function parseTurnCorrection(val: unknown): TurnCorrection | undefined {
+  if (!val || typeof val !== "object") return undefined;
+  const o = val as Record<string, unknown>;
+  if (
+    typeof o.original !== "string" || !o.original ||
+    typeof o.corrected !== "string" || !o.corrected ||
+    typeof o.rule !== "string" || !o.rule
+  ) {
+    // A half-filled correction is worse than none: it would render a card
+    // with a blank side. Drop it rather than throwing — the prose is still
+    // worth showing.
+    return undefined;
+  }
+  return {
+    original: o.original,
+    corrected: o.corrected,
+    rule: o.rule,
+    kind: o.kind === "unnatural" ? "unnatural" : "error",
+  };
+}
+
+/** Max saveables surfaced per turn — more than two chips crowds the bubble. */
+const MAX_SAVEABLES_PER_TURN = 2;
+
+function parseTurnSaveables(val: unknown): TurnSaveable[] | undefined {
+  if (!Array.isArray(val)) return undefined;
+  const out: TurnSaveable[] = [];
+  for (const item of val) {
+    if (out.length >= MAX_SAVEABLES_PER_TURN) break;
+    if (!item || typeof item !== "object") continue;
+    const o = item as Record<string, unknown>;
+    if (o.type !== "word" && o.type !== "phrase") continue;
+    if (typeof o.text !== "string" || !o.text) continue;
+    if (typeof o.meaning !== "string" || !o.meaning) continue;
+    out.push({
+      type: o.type,
+      text: o.text,
+      meaning: o.meaning,
+      example: typeof o.example === "string" ? o.example : undefined,
+      ipa: typeof o.ipa === "string" ? o.ipa : undefined,
+    });
+  }
+  return out.length ? out : undefined;
+}
+
 export function parseToolArgs(name: ToolName, raw: unknown): ToolArgs["args"] {
   const obj = raw as Record<string, unknown>;
 
@@ -216,6 +293,14 @@ export function parseToolArgs(name: ToolName, raw: unknown): ToolArgs["args"] {
     }
     case "mission_intent_observed":
       return { intentId: assertString(obj.intentId, "intentId") } satisfies MissionIntentObservedArgs;
+    // Unlike the other tools, a malformed annotation must not throw: the turn's
+    // prose is still valid, so a bad annotation disappears silently instead of
+    // breaking the message.
+    case "annotate_turn":
+      return {
+        correction: parseTurnCorrection(obj.correction),
+        saveables: parseTurnSaveables(obj.saveables),
+      } satisfies AnnotateTurnArgs;
     case "start_roleplay": {
       const valid = LEGACY_ROLEPLAY_SCENARIOS;
       if (!valid.includes(obj.scenario as typeof valid[number]))
