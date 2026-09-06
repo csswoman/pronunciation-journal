@@ -155,7 +155,7 @@ git commit -m "feat(ai-coach): add the starter registry with seeded angle rotati
 - Create: `lib/ai-practice/starters/select.ts`
 - Test: `lib/ai-practice/starters/__tests__/select.test.ts`
 
-- [ ] **Step 1: Escribir los tests que fallan**
+- [x] **Step 1: Escribir los tests que fallan**
 
 Crea `lib/ai-practice/starters/__tests__/select.test.ts`:
 
@@ -239,7 +239,7 @@ describe("selectStarters", () => {
 });
 ```
 
-- [ ] **Step 2: Ejecutar y ver fallar**
+- [x] **Step 2: Ejecutar y ver fallar**
 
 ```bash
 pnpm test lib/ai-practice/starters/__tests__/select.test.ts
@@ -247,7 +247,7 @@ pnpm test lib/ai-practice/starters/__tests__/select.test.ts
 
 Esperado: FAIL con "Failed to resolve import ../select".
 
-- [ ] **Step 3: Implementar**
+- [x] **Step 3: Implementar**
 
 Crea `lib/ai-practice/starters/select.ts`:
 
@@ -323,7 +323,7 @@ selection" — el padding reutiliza el id `learn`. Cámbialo para que compruebe 
 únicos en lugar de ids únicos, y añade un test que confirme que un usuario nuevo recibe 4
 elementos.
 
-- [ ] **Step 4: Ejecutar y ver pasar**
+- [x] **Step 4: Ejecutar y ver pasar**
 
 ```bash
 pnpm test lib/ai-practice/starters/__tests__/select.test.ts && pnpm type-check
@@ -331,7 +331,7 @@ pnpm test lib/ai-practice/starters/__tests__/select.test.ts && pnpm type-check
 
 Esperado: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add lib/ai-practice/starters/select.ts lib/ai-practice/starters/__tests__/select.test.ts
@@ -349,7 +349,7 @@ git commit -m "feat(ai-coach): add the pure starter selector"
 Sigue el patrón de `cacheUserInterests` en `lib/db/index.ts:1208-1227`: clave/valor sobre
 `db.practicePrefs`. **No subas la versión de Dexie** — no hace falta store nuevo.
 
-- [ ] **Step 1: Escribir el test que falla**
+- [x] **Step 1: Escribir el test que falla**
 
 Crea `lib/ai-practice/starters/__tests__/history.test.ts`:
 
@@ -413,7 +413,7 @@ describe("recordStarterUse", () => {
 });
 ```
 
-- [ ] **Step 2: Ejecutar y ver fallar**
+- [x] **Step 2: Ejecutar y ver fallar**
 
 ```bash
 pnpm test lib/ai-practice/starters/__tests__/history.test.ts
@@ -421,7 +421,7 @@ pnpm test lib/ai-practice/starters/__tests__/history.test.ts
 
 Esperado: FAIL con "Failed to resolve import ../history".
 
-- [ ] **Step 3: Implementar**
+- [x] **Step 3: Implementar**
 
 Crea `lib/ai-practice/starters/history.ts`:
 
@@ -475,7 +475,7 @@ export async function recordStarterUse(
 }
 ```
 
-- [ ] **Step 4: Ejecutar y ver pasar**
+- [x] **Step 4: Ejecutar y ver pasar**
 
 ```bash
 pnpm test lib/ai-practice/starters/__tests__/history.test.ts
@@ -483,7 +483,7 @@ pnpm test lib/ai-practice/starters/__tests__/history.test.ts
 
 Esperado: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add lib/ai-practice/starters/history.ts lib/ai-practice/starters/__tests__/history.test.ts
@@ -497,7 +497,7 @@ git commit -m "feat(ai-coach): persist starter history for anti-repetition"
 **Files:**
 - Create: `hooks/useCoachStarters.ts`
 
-- [ ] **Step 1: Implementar**
+- [x] **Step 1: Implementar**
 
 Crea `hooks/useCoachStarters.ts`:
 
@@ -570,7 +570,7 @@ export function useCoachStarters() {
 Comprueba la ruta real de `useAuth` antes de commitear — mira cómo lo importa
 `hooks/useTracking.ts`.
 
-- [ ] **Step 2: Verificar**
+- [x] **Step 2: Verificar**
 
 ```bash
 pnpm type-check && pnpm lint hooks/useCoachStarters.ts
@@ -578,7 +578,7 @@ pnpm type-check && pnpm lint hooks/useCoachStarters.ts
 
 Esperado: limpio.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add hooks/useCoachStarters.ts
@@ -599,7 +599,7 @@ parte **antes** de crecer.
 - Modify: `components/ai-coach/ChatEmptyState.tsx`
 - Test: `components/ai-coach/starters/__tests__/CoachStarterList.test.tsx`
 
-- [ ] **Step 1: Escribir el test que falla**
+- [x] **Step 1: Escribir el test que falla**
 
 Crea `components/ai-coach/starters/__tests__/CoachStarterList.test.tsx`:
 
@@ -645,7 +645,7 @@ describe("CoachStarterList", () => {
 });
 ```
 
-- [ ] **Step 2: Ejecutar y ver fallar**
+- [x] **Step 2: Ejecutar y ver fallar**
 
 ```bash
 pnpm test components/ai-coach/starters/__tests__/CoachStarterList.test.tsx
@@ -653,7 +653,7 @@ pnpm test components/ai-coach/starters/__tests__/CoachStarterList.test.tsx
 
 Esperado: FAIL — no existe el componente.
 
-- [ ] **Step 3: Extraer `CoachGreeting`**
+- [x] **Step 3: Extraer `CoachGreeting`**
 
 Crea `components/ai-coach/starters/CoachGreeting.tsx` con el `<header>` que hoy está en
 `ChatEmptyState.tsx` (el bloque del orbe y los dos textos), **copiado tal cual**:
@@ -682,7 +682,7 @@ export default function CoachGreeting() {
 }
 ```
 
-- [ ] **Step 4: Crear `CoachStarterList`**
+- [x] **Step 4: Crear `CoachStarterList`**
 
 Crea `components/ai-coach/starters/CoachStarterList.tsx`. Reutiliza **exactamente** las
 clases de la fila que hoy tiene `ChatEmptyState` (`layout-card-pad-compact`, el cuadro de
@@ -776,14 +776,14 @@ El `style={{}}` del icono está permitido: los valores se calculan en runtime a 
 `colorVar` (ya era así en el código original). Comprueba que `RotateCcw` y `Globe` están en
 `components/icons/index.ts`; si no, añádelos.
 
-- [ ] **Step 5: Extraer `CoachShortcutRail`**
+- [x] **Step 5: Extraer `CoachShortcutRail`**
 
 Crea `components/ai-coach/starters/CoachShortcutRail.tsx` con la `<section>` de "Atajos
 populares" que hoy está en `ChatEmptyState.tsx`, copiada tal cual, con
 `SUGGESTION_CHIPS` movido aquí y apuntando a `AI_COACH_SHORTCUT_PROMPTS` (la constante que
 creó la Task 2). Recibe `onSendMessage: (prompt: string) => void`.
 
-- [ ] **Step 6: Reducir `ChatEmptyState` a composición**
+- [x] **Step 6: Reducir `ChatEmptyState` a composición**
 
 Sustituye `components/ai-coach/ChatEmptyState.tsx` por:
 
@@ -832,7 +832,7 @@ export default function ChatEmptyState({
 }
 ```
 
-- [ ] **Step 7: Verificar tamaños y tests**
+- [x] **Step 7: Verificar tamaños y tests**
 
 ```bash
 pnpm test components/ai-coach && wc -l components/ai-coach/ChatEmptyState.tsx components/ai-coach/starters/*.tsx
@@ -840,7 +840,7 @@ pnpm test components/ai-coach && wc -l components/ai-coach/ChatEmptyState.tsx co
 
 Esperado: PASS, y ningún archivo por encima de 250 líneas.
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add components/ai-coach/
@@ -861,7 +861,7 @@ adivinar el título a partir del texto del prompt.
 - Modify: `components/ai-coach/AICoachPanel.tsx`
 - Test: `lib/ai-practice/__tests__/conversation-title.test.ts`
 
-- [ ] **Step 1: Escribir los tests que fallan**
+- [x] **Step 1: Escribir los tests que fallan**
 
 Añade a `lib/ai-practice/__tests__/conversation-title.test.ts`:
 
@@ -900,7 +900,7 @@ describe("getInitialTitleForModeAndMessage with a starter id", () => {
 });
 ```
 
-- [ ] **Step 2: Ejecutar y ver fallar**
+- [x] **Step 2: Ejecutar y ver fallar**
 
 ```bash
 pnpm test lib/ai-practice/__tests__/conversation-title.test.ts
@@ -910,7 +910,7 @@ Esperado: FAIL. Además verás fallar tests existentes que dependen de
 `AI_COACH_EMPTY_STATE_PROMPTS`, que ya no existe — eso confirma el acoplamiento que
 estamos rompiendo.
 
-- [ ] **Step 3: Migrar `conversation-title.ts`**
+- [x] **Step 3: Migrar `conversation-title.ts`**
 
 En `lib/ai-practice/conversation-title.ts`:
 
@@ -974,7 +974,7 @@ export function getInitialTitleForModeAndMessage(
 `starterId` no llegó (conversaciones antiguas). Quítale del cuerpo la comprobación
 `if (PROMPT_TO_TITLE_MAP[trimmed]) return true;`, que ya no compila.
 
-- [ ] **Step 4: Llevar el `starterId` hasta el título**
+- [x] **Step 4: Llevar el `starterId` hasta el título**
 
 En `hooks/useStreamingChat.ts`, amplía las opciones de `sendMessage` (línea 75):
 
@@ -992,7 +992,7 @@ en `switchMode`/`updateConversation`, según dónde se titule). Búscalo con:
 grep -rn "getInitialTitleForModeAndMessage" --include=*.ts --include=*.tsx hooks lib components
 ```
 
-- [ ] **Step 5: Cablear el panel**
+- [x] **Step 5: Cablear el panel**
 
 En `components/ai-coach/AICoachHome.tsx`, añade las props y pásalas:
 
@@ -1035,7 +1035,7 @@ En `components/ai-coach/AICoachPanel.tsx`, llama al hook y pasa lo que devuelve 
   const { starters, loading: startersLoading, noteUse } = useCoachStarters();
 ```
 
-- [ ] **Step 6: Verificar todo**
+- [x] **Step 6: Verificar todo**
 
 ```bash
 pnpm test && pnpm type-check && pnpm lint && pnpm audit:hard-rules
@@ -1045,7 +1045,7 @@ Esperado: todo verde. Si `conversation-title.test.ts` tiene tests viejos que com
 mapeo por texto, **bórralos**: comprobaban un comportamiento que acabamos de eliminar a
 propósito.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add -A
