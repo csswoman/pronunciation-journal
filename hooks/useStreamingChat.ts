@@ -2,9 +2,7 @@
 
 import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import type { AIMessage, StreamChunk, ExerciseResult, VoiceMetadata } from "@/lib/ai-practice/types";
-import { serializeMessage, deserializeMessage, type SerializedModelMessage } from "@/lib/ai-practice/types";
 import { applyExerciseResult, type UserLearningState } from "@/lib/ai-practice/learning-state";
-import { updateConversation } from "@/lib/db/ai";
 import { messagesToWire } from "@/lib/ai-practice/wire";
 import { logEvent } from "@/lib/ai-practice/events";
 import { makeStreamState, processChunk } from "@/lib/ai-practice/stream-processor";
@@ -18,8 +16,10 @@ import {
   type CoachSessionExercise,
 } from "@/lib/ai-practice/coach-progress";
 import type { AIConversationMode } from "@/lib/types";
-import { AI_UNAVAILABLE_MESSAGE, isQuotaLikeError, publicAiErrorMessage } from "@/lib/degradation/messages";
-import { logFirstExerciseTimeIfNeeded, persistConversationState } from "@/lib/ai-practice/chat-helpers";
+import { AI_COACH_TURN_FAILED_MESSAGE, AI_UNAVAILABLE_MESSAGE, isQuotaLikeError, publicAiErrorMessage } from "@/lib/degradation/messages";
+import { hydratePersistedMessages, logFirstExerciseTimeIfNeeded, persistConversationState, persistMessageEdit } from "@/lib/ai-practice/chat-helpers";
+
+type SendOpts = { hidden?: boolean; voice?: VoiceMetadata; starterId?: string };
 
 interface UseStreamingChatOptions {
   mode: AIConversationMode;
@@ -63,10 +63,15 @@ export function useStreamingChat({
   const userIdRef = useRef(userId);
   userIdRef.current = userId;
 
-  const sendMessage = useCallback(async (text: string, options?: { hidden?: boolean; voice?: VoiceMetadata; starterId?: string }) => {
+  // Last send that failed before any model text landed. A hidden send (starter,
+  // session summary) leaves nothing on screen, so retry is the only way back in.
+  const lastFailedSendRef = useRef<{ text: string; options?: SendOpts } | null>(null);
+
+  const sendMessage = useCallback(async (text: string, options?: SendOpts) => {
     if (!text.trim() || isStreaming) return;
     setError(null);
     setQuotaExhausted(false);
+    lastFailedSendRef.current = null;
 
     if (!sessionStartedRef.current) {
       sessionStartedRef.current = true;
@@ -105,9 +110,10 @@ export function useStreamingChat({
         if (res.status === 429 || isQuotaLikeError(errMsg)) {
           setQuotaExhausted(true);
           setMessages(messagesRef.current.slice(0, -1));
+          lastFailedSendRef.current = { text, options };
           return;
         }
-        throw new Error(publicAiErrorMessage(res.status, errMsg));
+        throw new Error(publicAiErrorMessage(res.status, errMsg, AI_COACH_TURN_FAILED_MESSAGE));
       }
 
       const reader = res.body.getReader();
@@ -164,9 +170,10 @@ export function useStreamingChat({
               setQuotaExhausted(true);
               setMessages(prev => prev.slice(0, -1));
             } else {
-              setError(publicAiErrorMessage(undefined, result.error));
+              setError(publicAiErrorMessage(undefined, result.error, AI_COACH_TURN_FAILED_MESSAGE));
               setMessages(messagesRef.current.slice(0, -2));
             }
+            lastFailedSendRef.current = { text, options };
             break outer;
           }
           if (result === "flush") flush();
@@ -199,14 +206,28 @@ export function useStreamingChat({
     } catch (err: unknown) {
       if ((err as Error).name === "AbortError") return;
       const message = err instanceof Error ? err.message : "";
-      setError(message === AI_UNAVAILABLE_MESSAGE || message.includes("temporarily limited")
+      setError(message === AI_UNAVAILABLE_MESSAGE || message === AI_COACH_TURN_FAILED_MESSAGE || message.includes("temporarily limited")
         ? message
-        : publicAiErrorMessage(undefined, message));
+        : publicAiErrorMessage(undefined, message, AI_COACH_TURN_FAILED_MESSAGE));
       setMessages(messagesRef.current.slice(0, -2));
+      lastFailedSendRef.current = { text, options };
     } finally {
       if (streamIdRef.current === thisId) setIsStreaming(false);
     }
   }, [isStreaming, mode, learningState, onStartMission, onMissionIntentObserved, onConversationCreated, userId]);
+
+  const retryLastFailedSend = useCallback(async () => {
+    const failed = lastFailedSendRef.current;
+    if (!failed || isStreaming) return;
+    lastFailedSendRef.current = null;
+    await sendMessage(failed.text, failed.options);
+  }, [isStreaming, sendMessage]);
+
+  const dismissError = useCallback(() => {
+    lastFailedSendRef.current = null;
+    setError(null);
+    setQuotaExhausted(false);
+  }, []);
 
   const answerToolCall = useCallback((callId: string, result: ExerciseResult) => {
     let toolName = "exercise_result";
@@ -257,6 +278,7 @@ export function useStreamingChat({
   const resetChat = useCallback(() => {
     abortRef.current?.abort();
     finalizeSession();
+    lastFailedSendRef.current = null;
     if (sessionStartedRef.current) {
       const completed = exercisesCompletedRef.current;
       logEvent("session_ended", {
@@ -276,13 +298,7 @@ export function useStreamingChat({
   }, [mode, finalizeSession, userId]);
 
   const loadMessages = useCallback((msgs: AIMessage[]) => {
-    const hydrated = msgs.map(m => {
-      if (m.role !== "model") return m;
-      const raw = m as unknown as SerializedModelMessage | Extract<AIMessage, { role: "model" }>;
-      if (raw.toolCalls instanceof Map) return raw as Extract<AIMessage, { role: "model" }>;
-      return deserializeMessage(raw as SerializedModelMessage);
-    });
-    setMessages(hydrated);
+    setMessages(hydratePersistedMessages(msgs));
   }, []);
 
   const saveTranslation = useCallback((msgIndex: number, translation: string) => {
@@ -292,12 +308,7 @@ export function useStreamingChat({
       if (target && target.role === "model") {
         copy[msgIndex] = { ...target, translation };
       }
-      const currentId = conversationIdRef.current;
-      const activeUserId = userIdRef.current;
-      if (currentId && activeUserId) {
-        const serialized = copy.map(m => m.role === "model" ? serializeMessage(m) : m) as never;
-        void updateConversation(activeUserId, currentId, { messages: serialized, updatedAt: new Date().toISOString() });
-      }
+      persistMessageEdit(userIdRef.current, conversationIdRef.current, copy);
       return copy;
     });
   }, []);
@@ -314,6 +325,8 @@ export function useStreamingChat({
     error,
     quotaExhausted,
     sendMessage,
+    retryLastFailedSend,
+    dismissError,
     answerToolCall,
     saveTranslation,
     resetChat,

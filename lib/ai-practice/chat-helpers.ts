@@ -1,5 +1,5 @@
 import type { AIMessage } from "@/lib/ai-practice/types";
-import { serializeMessage } from "@/lib/ai-practice/types";
+import { deserializeMessage, serializeMessage, type SerializedModelMessage } from "@/lib/ai-practice/types";
 import { saveConversation, updateConversation } from "@/lib/db/ai";
 import { getInitialTitleForModeAndMessage, isSystemPromptText } from "@/lib/ai-practice/conversation-title";
 import { logEvent } from "@/lib/ai-practice/events";
@@ -13,6 +13,33 @@ export function getOrCreateDeviceId(): string {
     localStorage.setItem(key, id);
   }
   return id;
+}
+
+/**
+ * Rehydrates persisted messages: model turns arrive with plain-object toolCalls
+ * and must become `Map`s again; everything else passes through untouched.
+ */
+export function hydratePersistedMessages(msgs: AIMessage[]): AIMessage[] {
+  return msgs.map((m) => {
+    if (m.role !== "model") return m;
+    const raw = m as unknown as SerializedModelMessage | Extract<AIMessage, { role: "model" }>;
+    if (raw.toolCalls instanceof Map) return raw as Extract<AIMessage, { role: "model" }>;
+    return deserializeMessage(raw as SerializedModelMessage);
+  });
+}
+
+/** Serializes and writes a message-array edit to an existing conversation. */
+export function persistMessageEdit(
+  userId: string | null,
+  conversationId: number | null,
+  messages: AIMessage[],
+): void {
+  if (!userId || !conversationId) return;
+  const serialized = messages.map((m) => (m.role === "model" ? serializeMessage(m) : m)) as never;
+  void updateConversation(userId, conversationId, {
+    messages: serialized,
+    updatedAt: new Date().toISOString(),
+  } as never);
 }
 
 export async function logFirstExerciseTimeIfNeeded(

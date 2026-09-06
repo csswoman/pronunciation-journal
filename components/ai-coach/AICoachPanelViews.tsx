@@ -3,6 +3,7 @@ import type { TabId } from "./ChatTabs";
 import { MissionWorkspace } from "./missions/MissionWorkspace";
 import AICoachHome from "./AICoachHome";
 import ChatView from "./ChatView";
+import CoachErrorState from "./CoachErrorState";
 import ErrorBanner from "./ErrorBanner";
 import QuotaExhaustedCard from "./QuotaExhaustedCard";
 import CustomPromptPanel from "./CustomPromptPanel";
@@ -70,23 +71,40 @@ export interface RenderHomeParams {
   noteUse: (id: StarterId, angle: string) => void;
   inputPrefill?: string;
   setInputPrefill: (v?: string) => void;
+  /** A hidden turn (starter, summary) failed and left nothing on screen. */
+  error?: string | null;
+  quotaExhausted?: boolean;
+  onRetry?: () => void;
+  onDismissError?: () => void;
 }
 
 export function renderHome(p: RenderHomeParams) {
   return (
-    <AICoachHome
-      activeTab={p.tab}
-      onSendMessage={p.sendMessage}
-      onSelectMission={(mId) => {
-        void p.changeMode(`mission:${mId}`);
-      }}
-      isStreaming={p.isStreaming}
-      starters={p.starters}
-      startersLoading={p.startersLoading}
-      onStarterUsed={p.noteUse}
-      prefill={p.inputPrefill}
-      onPrefillConsumed={() => p.setInputPrefill(undefined)}
-    />
+    <div className="flex flex-1 min-h-0 flex-col overflow-hidden">
+      {p.quotaExhausted ? (
+        <QuotaExhaustedCard messages={[]} onNewSession={() => p.onDismissError?.()} />
+      ) : p.error ? (
+        <CoachErrorState
+          message={p.error}
+          retrying={p.isStreaming}
+          onRetry={() => p.onRetry?.()}
+          onDismiss={() => p.onDismissError?.()}
+        />
+      ) : null}
+      <AICoachHome
+        activeTab={p.tab}
+        onSendMessage={p.sendMessage}
+        onSelectMission={(mId) => {
+          void p.changeMode(`mission:${mId}`);
+        }}
+        isStreaming={p.isStreaming}
+        starters={p.starters}
+        startersLoading={p.startersLoading}
+        onStarterUsed={p.noteUse}
+        prefill={p.inputPrefill}
+        onPrefillConsumed={() => p.setInputPrefill(undefined)}
+      />
+    </div>
   );
 }
 

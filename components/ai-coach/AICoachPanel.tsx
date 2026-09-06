@@ -53,9 +53,9 @@ export default function AICoachPanel() {
 
   const {
     messages, userTurnCount, isStreaming, error, quotaExhausted, wordToSave, conversationId,
-    activeMissionId, sendMessage, answerToolCall, saveTranslation, openSaveWordModal, closeSaveWordModal,
-    confirmSaveWord, saveSaveable, resetSession, finalizeSession, loadConversation, removeConversation,
-    changeMode, setMissionIntentHandler,
+    activeMissionId, sendMessage, retryLastFailedSend, dismissError, answerToolCall, saveTranslation,
+    openSaveWordModal, closeSaveWordModal, confirmSaveWord, saveSaveable, resetSession, finalizeSession,
+    loadConversation, removeConversation, changeMode, setMissionIntentHandler,
   } = useAIPractice();
 
   const [activeTab, setActiveTab] = useState<TabId>("chat");
@@ -181,6 +181,7 @@ export default function AICoachPanel() {
                 renderHome({
                   tab: "chat", sendMessage, changeMode, isStreaming, starters, startersLoading,
                   noteUse, inputPrefill, setInputPrefill,
+                  error, quotaExhausted, onRetry: retryLastFailedSend, onDismissError: dismissError,
                 })
               ) : (
                 renderActiveChat({
@@ -201,6 +202,7 @@ export default function AICoachPanel() {
                 : renderHome({
                     tab: "missions", sendMessage, changeMode, isStreaming, starters, startersLoading,
                     noteUse, inputPrefill, setInputPrefill,
+                    error, quotaExhausted, onRetry: retryLastFailedSend, onDismissError: dismissError,
                   })}
             </div>
 

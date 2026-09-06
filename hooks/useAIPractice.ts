@@ -28,6 +28,8 @@ interface UseAIPracticeReturn {
   mode: AIConversationMode;
   conversationId: number | null;
   sendMessage: (text: string, options?: { hidden?: boolean; voice?: VoiceMetadata }) => Promise<void>;
+  retryLastFailedSend: () => Promise<void>;
+  dismissError: () => void;
   answerToolCall: (callId: string, result: ExerciseResult) => void;
   saveTranslation: (msgIndex: number, translation: string) => void;
   openSaveWordModal: (word: string, context: string) => void;
@@ -201,6 +203,8 @@ export function useAIPractice(): UseAIPracticeReturn {
     mode,
     conversationId,
     sendMessage: chat.sendMessage,
+    retryLastFailedSend: chat.retryLastFailedSend,
+    dismissError: chat.dismissError,
     answerToolCall: chat.answerToolCall,
     saveTranslation: chat.saveTranslation,
     openSaveWordModal: words.openSaveWordModal,

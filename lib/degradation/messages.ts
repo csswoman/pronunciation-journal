@@ -1,5 +1,8 @@
 export const AI_UNAVAILABLE_MESSAGE =
-  "AI practice is unavailable right now. You can keep reviewing saved lessons and try again shortly.";
+  "La función de IA no está disponible ahora mismo. Suele ser algo puntual: inténtalo de nuevo en un momento.";
+
+export const AI_COACH_TURN_FAILED_MESSAGE =
+  "El coach no pudo preparar tu práctica esta vez. Suele ser algo puntual de la conexión o del servicio: vuelve a intentarlo.";
 
 export const AI_SESSION_REQUIRED_MESSAGE =
   "No pudimos validar tu sesión. Recarga la página e inicia sesión para usar el coach.";
