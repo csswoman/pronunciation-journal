@@ -164,4 +164,47 @@ export const TOOL_DECLARATIONS = [
       },
     },
   },
+  {
+    name: "render_session_summary",
+    description:
+      "Close the session with a summary card. Call this ONLY when the student asks to finish. Fill it from what actually happened in this conversation — never invent corrections or words that did not come up. Empty arrays are fine if there is nothing to report.",
+    parameters: {
+      type: "object",
+      properties: {
+        corrections: {
+          type: "array",
+          maxItems: 8,
+          items: {
+            type: "object",
+            properties: {
+              original:  { type: "string", description: "What the student wrote, verbatim." },
+              corrected: { type: "string" },
+              rule:      { type: "string", description: "One short sentence in SPANISH." },
+            },
+            required: ["original", "corrected", "rule"],
+          },
+        },
+        learned: {
+          type: "array",
+          maxItems: 8,
+          items: {
+            type: "object",
+            properties: {
+              type:    { type: "string", enum: ["word", "phrase"] },
+              text:    { type: "string" },
+              meaning: { type: "string", description: "In SPANISH." },
+              example: { type: "string" },
+              ipa:     { type: "string" },
+            },
+            required: ["type", "text", "meaning"],
+          },
+        },
+        reviewNext: {
+          type: "array",
+          maxItems: 8,
+          items: { type: "string", description: "A short SPANISH label of what to revisit." },
+        },
+      },
+    },
+  },
 ];

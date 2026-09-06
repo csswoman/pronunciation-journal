@@ -82,6 +82,20 @@ export type AnnotateTurnArgs = {
   saveables?: TurnSaveable[];
 };
 
+export type SummaryCorrection = {
+  original: string;
+  corrected: string;
+  rule: string;
+};
+
+export type SessionSummaryArgs = {
+  corrections: SummaryCorrection[];
+  /** Reuses the saveable shape so "Guardar todo" can hand these to persistSaveable. */
+  learned: TurnSaveable[];
+  /** Short Spanish labels of what to revisit; display only in this phase. */
+  reviewNext: string[];
+};
+
 /** @deprecated Kept only to parse old persisted tool calls. */
 export type StartRoleplayArgs = { scenario: LegacyRoleplayScenario };
 
@@ -90,6 +104,7 @@ export type ToolArgs =
   | { name: "render_fill_blank"; args: FillBlankArgs }
   | { name: "render_speaking"; args: SpeakingArgs }
   | { name: "render_word_card"; args: WordCardArgs }
+  | { name: "render_session_summary"; args: SessionSummaryArgs }
   | { name: "save_word"; args: SaveWordArgs }
   | { name: "start_mission"; args: StartMissionArgs }
   | { name: "mission_intent_observed"; args: MissionIntentObservedArgs }
@@ -97,7 +112,12 @@ export type ToolArgs =
   | { name: "start_roleplay"; args: StartRoleplayArgs };
 
 export type ToolName = ToolArgs["name"];
-export type ExerciseToolName = "render_multiple_choice" | "render_fill_blank" | "render_speaking" | "render_word_card";
+export type ExerciseToolName =
+  | "render_multiple_choice"
+  | "render_fill_blank"
+  | "render_speaking"
+  | "render_word_card"
+  | "render_session_summary";
 export type ActionToolName =
   | "save_word"
   | "start_mission"
@@ -109,6 +129,7 @@ export const EXERCISE_TOOL_NAMES: ExerciseToolName[] = [
   "render_fill_blank",
   "render_speaking",
   "render_word_card",
+  "render_session_summary",
 ];
 
 export const ACTION_TOOL_NAMES: ActionToolName[] = [
@@ -210,14 +231,40 @@ function parseTurnCorrection(val: unknown): TurnCorrection | undefined {
   };
 }
 
+/** Cap on summary items: a wall of twenty cards is not a summary. */
+const MAX_SUMMARY_ITEMS = 8;
+
+function parseSummaryCorrections(val: unknown): SummaryCorrection[] {
+  if (!Array.isArray(val)) return [];
+  const out: SummaryCorrection[] = [];
+  for (const item of val) {
+    if (out.length >= MAX_SUMMARY_ITEMS) break;
+    if (!item || typeof item !== "object") continue;
+    const o = item as Record<string, unknown>;
+    if (typeof o.original !== "string" || !o.original) continue;
+    if (typeof o.corrected !== "string" || !o.corrected) continue;
+    out.push({
+      original: o.original,
+      corrected: o.corrected,
+      rule: typeof o.rule === "string" ? o.rule : "",
+    });
+  }
+  return out;
+}
+
+function parseSummaryStrings(val: unknown): string[] {
+  if (!Array.isArray(val)) return [];
+  return val.filter((v): v is string => typeof v === "string" && v.length > 0).slice(0, MAX_SUMMARY_ITEMS);
+}
+
 /** Max saveables surfaced per turn — more than two chips crowds the bubble. */
 const MAX_SAVEABLES_PER_TURN = 2;
 
-function parseTurnSaveables(val: unknown): TurnSaveable[] | undefined {
-  if (!Array.isArray(val)) return undefined;
+function parseSaveableList(val: unknown, max: number): TurnSaveable[] {
+  if (!Array.isArray(val)) return [];
   const out: TurnSaveable[] = [];
   for (const item of val) {
-    if (out.length >= MAX_SAVEABLES_PER_TURN) break;
+    if (out.length >= max) break;
     if (!item || typeof item !== "object") continue;
     const o = item as Record<string, unknown>;
     if (o.type !== "word" && o.type !== "phrase") continue;
@@ -231,7 +278,16 @@ function parseTurnSaveables(val: unknown): TurnSaveable[] | undefined {
       ipa: typeof o.ipa === "string" ? o.ipa : undefined,
     });
   }
+  return out;
+}
+
+function parseTurnSaveables(val: unknown): TurnSaveable[] | undefined {
+  const out = parseSaveableList(val, MAX_SAVEABLES_PER_TURN);
   return out.length ? out : undefined;
+}
+
+function parseSummarySaveables(val: unknown): TurnSaveable[] {
+  return parseSaveableList(val, MAX_SUMMARY_ITEMS);
 }
 
 export function parseToolArgs(name: ToolName, raw: unknown): ToolArgs["args"] {
@@ -301,6 +357,12 @@ export function parseToolArgs(name: ToolName, raw: unknown): ToolArgs["args"] {
         correction: parseTurnCorrection(obj.correction),
         saveables: parseTurnSaveables(obj.saveables),
       } satisfies AnnotateTurnArgs;
+    case "render_session_summary":
+      return {
+        corrections: parseSummaryCorrections(obj.corrections),
+        learned: parseSummarySaveables(obj.learned),
+        reviewNext: parseSummaryStrings(obj.reviewNext),
+      } satisfies SessionSummaryArgs;
     case "start_roleplay": {
       const valid = LEGACY_ROLEPLAY_SCENARIOS;
       if (!valid.includes(obj.scenario as typeof valid[number]))

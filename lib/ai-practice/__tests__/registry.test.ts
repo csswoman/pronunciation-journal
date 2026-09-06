@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { parseToolArgs, isValidToolName, isExerciseTool, TOOL_DECLARATIONS, ACTION_TOOL_NAMES } from "../tools/registry";
-import type { AnnotateTurnArgs } from "../tools/registry";
+import type { AnnotateTurnArgs, SessionSummaryArgs } from "../tools/registry";
 
 describe("isValidToolName", () => {
   it("returns true for all exercise tools", () => {
@@ -45,7 +45,8 @@ describe("TOOL_DECLARATIONS", () => {
     expect(names).toContain("start_mission");
     expect(names).toContain("mission_intent_observed");
     expect(names).toContain("annotate_turn");
-    expect(names).toHaveLength(8);
+    expect(names).toContain("render_session_summary");
+    expect(names).toHaveLength(9);
   });
 });
 
@@ -253,5 +254,43 @@ describe("parseToolArgs: annotate_turn", () => {
   it("is an action tool, not an exercise tool", () => {
     expect(isExerciseTool("annotate_turn")).toBe(false);
     expect(ACTION_TOOL_NAMES).toContain("annotate_turn");
+  });
+});
+
+describe("parseToolArgs: render_session_summary", () => {
+  it("parses a full summary", () => {
+    const args = parseToolArgs("render_session_summary", {
+      corrections: [{ original: "I go", corrected: "I went", rule: "Pasado simple" }],
+      learned: [{ type: "word", text: "creepy", meaning: "escalofriante" }],
+      reviewNext: ["Pasado simple irregular"],
+    }) as SessionSummaryArgs;
+
+    expect(args.corrections).toHaveLength(1);
+    expect(args.learned).toHaveLength(1);
+    expect(args.reviewNext).toEqual(["Pasado simple irregular"]);
+  });
+
+  it("accepts a summary with nothing to report", () => {
+    const args = parseToolArgs("render_session_summary", {}) as SessionSummaryArgs;
+    expect(args).toEqual({ corrections: [], learned: [], reviewNext: [] });
+  });
+
+  it("drops corrections missing a side instead of throwing", () => {
+    const args = parseToolArgs("render_session_summary", {
+      corrections: [{ original: "I go" }, { original: "a", corrected: "b", rule: "c" }],
+    }) as SessionSummaryArgs;
+    expect(args.corrections).toHaveLength(1);
+  });
+
+  it("reuses the saveable shape for learned items and caps the list", () => {
+    const learned = Array.from({ length: 12 }, (_, i) => ({
+      type: "word", text: `w${i}`, meaning: `m${i}`,
+    }));
+    const args = parseToolArgs("render_session_summary", { learned }) as SessionSummaryArgs;
+    expect(args.learned.length).toBeLessThanOrEqual(8);
+  });
+
+  it("is an exercise tool so the stream leaves it rendered, not answered", () => {
+    expect(isExerciseTool("render_session_summary")).toBe(true);
   });
 });
