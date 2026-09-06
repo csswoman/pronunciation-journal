@@ -10,9 +10,10 @@ import ToolWidget from "./ToolWidget";
 import PracticeSession, { type ExerciseSessionSummary } from "../PracticeSession";
 import { isExerciseTool, type SessionSummaryArgs, type TurnSaveable } from "@/lib/ai-practice/tools/registry";
 import { parseCorrection } from "@/lib/ai-coach/parse-correction";
-import { extractTurnCorrection, extractTurnSaveables } from "@/lib/ai-practice/correction";
+import { extractTurnCorrection, extractTurnSaveables, extractTurnConcept } from "@/lib/ai-practice/correction";
 import CorrectionCard from "../CorrectionCard";
 import SaveChips from "../SaveChips";
+import SaveConceptChip from "../SaveConceptChip";
 import SessionSummaryCard from "../session/SessionSummaryCard";
 import {
   extractSentenceContext,
@@ -34,6 +35,7 @@ import {
 //   </MessageContent>
 //   <SuggestionChips />
 //   <SaveChips />
+//   <SaveConceptChip />
 // </AIBubble>
 
 export interface AIBubbleProps {
@@ -41,6 +43,7 @@ export interface AIBubbleProps {
   showAvatar: boolean;
   onSaveWord: (word: string, context: string) => void;
   onSaveSaveable: (saveable: TurnSaveable) => Promise<void>;
+  onSaveConcept?: (title: string, body: string) => Promise<void>;
   onSaveAllFromSummary: (learned: TurnSaveable[]) => Promise<void>;
   onSaveTranslation?: (translation: string) => void;
   onSuggestionClick: (text: string) => void;
@@ -50,7 +53,7 @@ export interface AIBubbleProps {
 }
 
 export default function AIBubble({
-  message, showAvatar, onSaveWord, onSaveSaveable, onSaveAllFromSummary,
+  message, showAvatar, onSaveWord, onSaveSaveable, onSaveConcept, onSaveAllFromSummary,
   onSaveTranslation, onSuggestionClick, onToolAnswer, onNext, onExerciseComplete,
 }: AIBubbleProps) {
   const [showTranslation, setShowTranslation] = useState(Boolean(message.translation));
@@ -65,6 +68,7 @@ export default function AIBubble({
 
   const toolCorrection = extractTurnCorrection(message.toolCalls);
   const saveables = extractTurnSaveables(message.toolCalls);
+  const concept = extractTurnConcept(message.toolCalls);
   const parsed = parseCorrection(fullText);
   const correction = toolCorrection ?? parsed.correction;
   const proseBody = toolCorrection ? fullText : parsed.body;
@@ -231,6 +235,9 @@ export default function AIBubble({
 
         {chips.length > 0 && <SuggestionChips suggestions={chips} onSelect={onSuggestionClick} />}
         {saveables.length > 0 && <SaveChips saveables={saveables} onSave={onSaveSaveable} />}
+        {concept && onSaveConcept && (
+          <SaveConceptChip onSave={() => onSaveConcept(concept.title, proseBody || fullText)} />
+        )}
       </div>
     </div>
   );
