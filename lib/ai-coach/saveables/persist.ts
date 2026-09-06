@@ -3,6 +3,11 @@ import { quickAddWord, toggleFavorite, DuplicateWordError } from "@/lib/word-ban
 import { saveTrackedItem } from "@/lib/tracking/queries";
 import { AI_COACH_SOURCE } from "./source";
 
+/** Stable idempotency key for an explanation: lowercase, trimmed, single-spaced. */
+function slug(s: string): string {
+  return s.toLowerCase().trim().replace(/\s+/g, " ");
+}
+
 /**
  * Routes one coach-proposed item to the store it belongs in, so it inherits
  * the review machinery that already exists rather than living in a side table.
@@ -45,4 +50,19 @@ export async function persistSaveable(userId: string, saveable: TurnSaveable): P
     }
     throw err;
   }
+}
+
+/**
+ * Saves a coach explanation as a reference note in Guardadas. `body` is the
+ * coach message's rendered prose; `title` is the short label the coach gave it.
+ * Idempotent per (user, title): re-saving updates the existing row.
+ */
+export async function persistConcept(userId: string, title: string, body: string): Promise<void> {
+  await saveTrackedItem({
+    userId,
+    kind: "explanation",
+    ref: slug(title),
+    title,
+    payload: { body, source: AI_COACH_SOURCE },
+  });
 }

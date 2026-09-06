@@ -20,7 +20,7 @@ vi.mock("@/lib/tracking/queries", () => ({
   saveTrackedItem: (...args: unknown[]) => saveTrackedItem(...args),
 }));
 
-const { persistSaveable } = await import("../persist");
+const { persistSaveable, persistConcept } = await import("../persist");
 const { DuplicateWordError } = await import("@/lib/word-bank/queries");
 
 const WORD: TurnSaveable = {
@@ -107,6 +107,35 @@ describe("persistSaveable: phrases", () => {
 
   it("does not touch the word bank for a phrase", async () => {
     await persistSaveable("u1", PHRASE);
+    expect(quickAddWord).not.toHaveBeenCalled();
+  });
+});
+
+describe("persistConcept", () => {
+  it("saves the explanation as a coach-sourced tracked item", async () => {
+    await persistConcept("u1", '"actually" — falso amigo', "One common false friend is 'actually'.");
+
+    expect(saveTrackedItem).toHaveBeenCalledWith({
+      userId: "u1",
+      kind: "explanation",
+      ref: '"actually" — falso amigo',
+      title: '"actually" — falso amigo',
+      payload: {
+        body: "One common false friend is 'actually'.",
+        source: "ai_coach",
+      },
+    });
+  });
+
+  it("normalizes the ref (lowercase, collapsed whitespace) so re-saving upserts", async () => {
+    await persistConcept("u1", "  Phrasal   Verbs  ", "body");
+    expect(saveTrackedItem).toHaveBeenCalledWith(
+      expect.objectContaining({ ref: "phrasal verbs", title: "  Phrasal   Verbs  " }),
+    );
+  });
+
+  it("does not touch the word bank", async () => {
+    await persistConcept("u1", "title", "body");
     expect(quickAddWord).not.toHaveBeenCalled();
   });
 });
