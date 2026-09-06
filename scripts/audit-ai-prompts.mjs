@@ -64,7 +64,17 @@ function* walkFiles(dir) {
   }
 }
 
+/**
+ * Integration tests (*.integration.test.ts) are excluded from `pnpm test`
+ * and deliberately exercise the real SDK end-to-end (see
+ * lib/ai-practice/__tests__/annotate-turn.integration.test.ts) — that is
+ * their job, not a UI/component leak, so they are exempt from the
+ * prefix allowlist below rather than added to it wholesale.
+ */
+const INTEGRATION_TEST_SUFFIX = ".integration.test.ts";
+
 function isAllowlisted(relPath) {
+  if (relPath.endsWith(INTEGRATION_TEST_SUFFIX)) return true;
   return GENAI_ALLOWLIST_PREFIXES.some((prefix) => relPath.startsWith(prefix));
 }
 
