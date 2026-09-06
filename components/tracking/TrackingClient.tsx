@@ -12,8 +12,9 @@ import { TrackingToolbar } from "./TrackingToolbar";
 import { PhraseCaptureModal } from "./PhraseCaptureModal";
 import { EditWordModal } from "./EditWordModal";
 import { DeleteWordDialog } from "./DeleteWordDialog";
-import { saveTrackedItem } from "@/lib/tracking/queries";
-import { buildTrackingReviewQueue } from "@/lib/tracking/review-queue";
+import { DeleteExplanationDialog } from "./DeleteExplanationDialog";
+import { saveTrackedItem, removeTrackedItem } from "@/lib/tracking/queries";
+import { buildTrackingReviewQueue, type TrackingReviewSource } from "@/lib/tracking/review-queue";
 import Button from "@/components/ui/Button";
 import PracticeSession from "@/components/practice/PracticeSession";
 import { ListPagination } from "@/components/ui/ListPagination";
@@ -46,6 +47,7 @@ export default function TrackingClient({ embed = false }: TrackingClientProps) {
   const [showPhraseModal, setShowPhraseModal] = useState(false);
   const [editingWord, setEditingWord] = useState<WordBankEntry | null>(null);
   const [deletingWord, setDeletingWord] = useState<WordBankEntry | null>(null);
+  const [deletingExplanation, setDeletingExplanation] = useState<TrackingReviewSource | null>(null);
   const [activeExercises, setActiveExercises] = useState<PracticeExercise[] | null>(null);
 
   const editExistingWord = useCallback((wordId: string) => {
@@ -138,6 +140,12 @@ export default function TrackingClient({ embed = false }: TrackingClientProps) {
     setPhraseContext("");
   }
 
+  async function deleteExplanation(source: TrackingReviewSource) {
+    if (!userId || !("trackedItem" in source)) return;
+    await removeTrackedItem(userId, "explanation", source.trackedItem.ref);
+    setDeletingExplanation(null);
+  }
+
   function handlePageChange(page: number) {
     setCurrentPage(page);
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -202,7 +210,13 @@ export default function TrackingClient({ embed = false }: TrackingClientProps) {
             <div className="flex flex-col gap-4">
               <div className="tracking-list">
                 {paginatedSources.map((source) => (
-                  <TrackingCard key={`${source.item.kind}:${source.item.id}`} source={source} onEditWord={setEditingWord} onDeleteWord={setDeletingWord} />
+                  <TrackingCard
+                    key={`${source.item.kind}:${source.item.id}`}
+                    source={source}
+                    onEditWord={setEditingWord}
+                    onDeleteWord={setDeletingWord}
+                    onDeleteExplanation={setDeletingExplanation}
+                  />
                 ))}
               </div>
               <ListPagination
@@ -221,6 +235,7 @@ export default function TrackingClient({ embed = false }: TrackingClientProps) {
       <PhraseCaptureModal open={showPhraseModal} value={phrase} onChange={setPhrase} context={phraseContext} onContextChange={setPhraseContext} onClose={closePhraseModal} onSubmit={() => void addPhrase()} />
       <EditWordModal word={editingWord} onClose={() => setEditingWord(null)} onSubmit={updateWord} />
       <DeleteWordDialog word={deletingWord} onClose={() => setDeletingWord(null)} onConfirm={removeWord} />
+      <DeleteExplanationDialog source={deletingExplanation} onClose={() => setDeletingExplanation(null)} onConfirm={deleteExplanation} />
     </>
   );
 
