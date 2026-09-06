@@ -154,7 +154,7 @@ export function renderActiveChat(p: RenderActiveChatParams) {
           onSuggestionClick={(prompt) => p.setInputPrefill(prompt)}
           onToolAnswer={p.answerToolCall}
           onNext={() => p.sendMessage("next")}
-          onExerciseComplete={(s) => void p.sendMessage(`I completed the exercise! I got ${s.correct} of ${s.total} correct.`)}
+          onExerciseComplete={(s) => void p.sendMessage(`I just finished — ${s.correct} of ${s.total} right. How did I do?`)}
         />
       </div>
       <div className="shrink-0 px-3 pb-3 pt-1 border-t border-border-subtle bg-surface-base">

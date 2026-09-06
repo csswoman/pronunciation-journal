@@ -96,6 +96,36 @@ describe('useStreamingChat failed sends', () => {
     expect((globalThis.fetch as ReturnType<typeof vi.fn>)).not.toHaveBeenCalled()
     vi.unstubAllGlobals()
   })
+
+  it('surfaces an error and drops the empty model placeholder when stream ends with zero content', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () =>
+        new Response(
+          new ReadableStream({
+            start(c) {
+              c.close()
+            },
+          }),
+          { status: 200, headers: { 'Content-Type': 'text/event-stream' } },
+        ),
+      ),
+    )
+    const { result } = makeHook()
+
+    await act(async () => {
+      await result.current.sendMessage('hello test')
+    })
+
+    expect(result.current.error).toBeTruthy()
+    expect(result.current.messages).toHaveLength(1)
+    const [msg] = result.current.messages
+    expect(msg.role).toBe('user')
+    if (msg.role === 'user') {
+      expect(msg.content).toBe('hello test')
+    }
+    vi.unstubAllGlobals()
+  })
 })
 
 describe('useStreamingChat session finalization', () => {

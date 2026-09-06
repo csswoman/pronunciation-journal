@@ -17,7 +17,7 @@ import {
 } from "@/lib/ai-practice/coach-progress";
 import type { AIConversationMode } from "@/lib/types";
 import { AI_COACH_TURN_FAILED_MESSAGE, isQuotaLikeError, publicAiErrorMessage } from "@/lib/degradation/messages";
-import { coachErrorMessage, hydratePersistedMessages, logFirstExerciseTimeIfNeeded, persistConversationState, persistMessageEdit } from "@/lib/ai-practice/chat-helpers";
+import { applyAnswerToMessages, coachErrorMessage, hydratePersistedMessages, logFirstExerciseTimeIfNeeded, persistConversationState, persistMessageEdit } from "@/lib/ai-practice/chat-helpers";
 
 interface UseStreamingChatOptions {
   mode: AIConversationMode;
@@ -185,6 +185,14 @@ export function useStreamingChat({
         return;
       }
 
+      const hasContent = state.parts.length > 0 || state.calls.size > 0;
+      if (!hasContent) {
+        setMessages(prev => (prev[prev.length - 1] === modelMsg ? prev.slice(0, -1) : prev));
+        setError(publicAiErrorMessage(undefined, "AI response was empty", AI_COACH_TURN_FAILED_MESSAGE));
+        lastFailedSendRef.current = { text, options };
+        return;
+      }
+
       const finalModelMsg: AIMessage = { role: "model", contentParts: state.parts, toolCalls: state.calls, timestamp: modelMsg.timestamp };
       const finalMessages = [...nextMessages, finalModelMsg];
       setMessages(finalMessages);
@@ -230,30 +238,20 @@ export function useStreamingChat({
   }, []);
 
   const answerToolCall = useCallback((callId: string, result: ExerciseResult) => {
-    let toolName = "exercise_result";
+    let resolvedToolName = "exercise_result";
     setMessages(prev => {
-      const copy = [...prev];
-      for (let i = copy.length - 1; i >= 0; i--) {
-        const msg = copy[i];
-        if (msg.role === "model" && msg.toolCalls.has(callId)) {
-          const newCalls = new Map(msg.toolCalls);
-          const tc = newCalls.get(callId)!;
-          toolName = tc.name;
-          newCalls.set(callId, { ...tc, status: "answered", result });
-          copy[i] = { ...msg, toolCalls: newCalls };
-          break;
-        }
-      }
-      return copy;
+      const { updatedMessages, toolName } = applyAnswerToMessages(prev, callId, result);
+      resolvedToolName = toolName;
+      return updatedMessages;
     });
-    setMessages(prev => [...prev, { role: "tool" as const, toolCallId: callId, name: toolName, result, timestamp: new Date().toISOString() }]);
+    setMessages(prev => [...prev, { role: "tool" as const, toolCallId: callId, name: resolvedToolName, result, timestamp: new Date().toISOString() }]);
     if (result.topic) lastTopicRef.current = result.topic;
     exercisesCompletedRef.current += 1;
     if (result.correct) correctCountRef.current += 1;
-    sessionExercisesRef.current.push({ toolName, result });
+    sessionExercisesRef.current.push({ toolName: resolvedToolName, result });
     if (learningState) setLearningState(applyExerciseResult(learningState, result));
     if (userId) {
-      void persistCoachExerciseResult(userId, toolName, result).catch(() => {});
+      void persistCoachExerciseResult(userId, resolvedToolName, result).catch(() => {});
     }
   }, [learningState, setLearningState, userId]);
 

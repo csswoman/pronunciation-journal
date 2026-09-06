@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { getUserLearningState } from "@/lib/ai-practice/load-state";
 import { getCachedUserInterests } from "@/lib/db";
@@ -15,14 +15,26 @@ import { readStoredCefrLevel } from "@/lib/essential-words/target-level";
 /**
  * Resolves the starters shown on the chat home.
  *
- * The seed is fixed for the lifetime of one mount so the buttons do not
- * reshuffle under the user's finger; a fresh mount (reopening the panel) picks
- * a new one.
+ * The seed stays stable while the panel remains open so the buttons do not
+ * reshuffle under the user's finger. Reopening the panel (or starting a new chat)
+ * picks a fresh seed so different syllabus topics and angles are offered.
  */
-export function useCoachStarters() {
+export function useCoachStarters(isOpen = true) {
   const { user } = useAuth();
   const [starters, setStarters] = useState<ResolvedStarter[] | null>(null);
-  const seed = useMemo(() => Math.floor(Math.random() * 1_000_000), []);
+  const [seed, setSeed] = useState(() => Math.floor(Math.random() * 1_000_000));
+
+  const refresh = useCallback(() => {
+    setSeed(Math.floor(Math.random() * 1_000_000));
+  }, []);
+
+  const prevOpenRef = useRef(isOpen);
+  useEffect(() => {
+    if (isOpen && !prevOpenRef.current) {
+      setSeed(Math.floor(Math.random() * 1_000_000));
+    }
+    prevOpenRef.current = isOpen;
+  }, [isOpen]);
 
   useEffect(() => {
     let cancelled = false;
@@ -69,5 +81,5 @@ export function useCoachStarters() {
     [user?.id],
   );
 
-  return { starters, loading: starters === null, noteUse };
+  return { starters, loading: starters === null, noteUse, refresh };
 }

@@ -6,14 +6,25 @@ describe("grammarTopicsForLevel", () => {
     const topics = grammarTopicsForLevel("A1");
     expect(topics.length).toBeGreaterThan(0);
     expect(topics.length).toBeLessThanOrEqual(8);
-    // The A1 course path teaches "to be" early — it should surface.
-    expect(topics.join(" ").toLowerCase()).toMatch(/to be|am · is · are/);
+    expect(topics.every((t) => t.length > 3)).toBe(true);
+  });
+
+  it("is deterministic when seed is provided", () => {
+    const a = grammarTopicsForLevel("A1", [], 8, 42);
+    const b = grammarTopicsForLevel("A1", [], 8, 42);
+    expect(a).toEqual(b);
+  });
+
+  it("randomizes and produces varied topics across different seeds", () => {
+    const a = grammarTopicsForLevel("A1", [], 8, 1);
+    const b = grammarTopicsForLevel("A1", [], 8, 9999);
+    expect(a).not.toEqual(b);
   });
 
   it("drops topics the learner covered recently", () => {
-    const all = grammarTopicsForLevel("A1", [], 20);
+    const all = grammarTopicsForLevel("A1", [], 20, 100);
     const target = all[0].replace(/\s*\(.*\)$/, "");
-    const filtered = grammarTopicsForLevel("A1", [target], 20);
+    const filtered = grammarTopicsForLevel("A1", [target], 20, 100);
     expect(filtered.some((t) => t.startsWith(target))).toBe(false);
   });
 
@@ -22,8 +33,8 @@ describe("grammarTopicsForLevel", () => {
   });
 
   it("gives different content per level", () => {
-    const a1 = grammarTopicsForLevel("A1").join("|");
-    const c1 = grammarTopicsForLevel("C1").join("|");
+    const a1 = grammarTopicsForLevel("A1", [], 8, 5).join("|");
+    const c1 = grammarTopicsForLevel("C1", [], 8, 5).join("|");
     expect(a1).not.toBe(c1);
   });
 });

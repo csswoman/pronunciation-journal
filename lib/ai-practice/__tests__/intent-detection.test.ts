@@ -39,6 +39,10 @@ describe("detectIntent", () => {
       const long = "I was walking to the store yesterday and something funny happened to me";
       expect(detectIntent(long).type).toBe("conversation");
     });
+
+    it("exercise completion message → conversation (not exercise_request)", () => {
+      expect(detectIntent("I just finished — 3 of 3 right. How did I do?").type).toBe("conversation");
+    });
   });
 
   describe("SHORT_EXERCISE_CONTINUATIONS with context", () => {

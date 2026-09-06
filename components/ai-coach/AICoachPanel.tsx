@@ -125,7 +125,7 @@ export default function AICoachPanel() {
     [saveSaveable],
   );
 
-  const { starters, loading: startersLoading, noteUse } = useCoachStarters();
+  const { starters, loading: startersLoading, noteUse, refresh: refreshStarters } = useCoachStarters(isOpen);
 
   return (
     <>
@@ -144,7 +144,7 @@ export default function AICoachPanel() {
 
         <AICoachHeader
           pageLabel={ctx.label} showHistory={showHistory}
-          onNewChat={() => { resetSession(); setActiveTab("chat"); }}
+          onNewChat={() => { resetSession(); setActiveTab("chat"); refreshStarters(); }}
           onToggleHistory={() => setShowHistory((v) => !v)}
           onClose={() => { finalizeSession(); close(); }}
           endSessionSlot={

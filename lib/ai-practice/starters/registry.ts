@@ -61,7 +61,7 @@ const learnStarter: CoachStarter = {
   isAvailable: () => true,
   build: (ctx) => {
     const level = ctx.level;
-    const avoidTopics = (ctx.state?.lastSessions ?? []).slice(0, 2).map((s) => s.topic);
+    const avoidTopics = (ctx.state?.lastSessions ?? []).slice(0, 5).map((s) => s.topic);
     const angle = pickBySeed(STARTER_ANGLES.learn, ctx.seed, ctx.recentAngles);
     return {
       id: "learn",
@@ -71,7 +71,7 @@ const learnStarter: CoachStarter = {
         level,
         avoidTopics,
         angle,
-        syllabusTopics: grammarTopicsForLevel(level, avoidTopics),
+        syllabusTopics: grammarTopicsForLevel(level, avoidTopics, 8, ctx.seed),
       }),
       angle,
     };

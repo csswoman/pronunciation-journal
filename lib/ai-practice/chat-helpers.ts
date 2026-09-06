@@ -1,4 +1,4 @@
-import type { AIMessage } from "@/lib/ai-practice/types";
+import type { AIMessage, ExerciseResult } from "@/lib/ai-practice/types";
 import { deserializeMessage, serializeMessage, type SerializedModelMessage } from "@/lib/ai-practice/types";
 import { saveConversation, updateConversation } from "@/lib/db/ai";
 import { getInitialTitleForModeAndMessage, isSystemPromptText } from "@/lib/ai-practice/conversation-title";
@@ -126,4 +126,25 @@ export async function persistConversationState({
   });
   onConversationCreated(id);
   return id;
+}
+
+export function applyAnswerToMessages(
+  prev: AIMessage[],
+  callId: string,
+  result: ExerciseResult
+): { updatedMessages: AIMessage[]; toolName: string } {
+  let toolName = "exercise_result";
+  const copy = [...prev];
+  for (let i = copy.length - 1; i >= 0; i--) {
+    const msg = copy[i];
+    if (msg.role === "model" && msg.toolCalls.has(callId)) {
+      const newCalls = new Map(msg.toolCalls);
+      const tc = newCalls.get(callId)!;
+      toolName = tc.name;
+      newCalls.set(callId, { ...tc, status: "answered", result });
+      copy[i] = { ...msg, toolCalls: newCalls };
+      break;
+    }
+  }
+  return { updatedMessages: copy, toolName };
 }

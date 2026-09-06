@@ -33,7 +33,7 @@ type StreamLimitOverrides = {
   maxChunks?: number;
 };
 
-export const STREAM_TIMEOUT_MS = 30_000;
+export const STREAM_TIMEOUT_MS = 50_000;
 
 const MAX_STREAM_BYTES = 512_000;
 const MAX_STREAM_CHUNKS = 2_000;
@@ -181,13 +181,25 @@ export async function streamWithFallback(
         }
       }
 
-      if (abortSignal.aborted) { safeClose(); return; }
+      if (abortSignal.aborted) {
+        if (chunksStreamed === 0) {
+          safeEnqueue({ type: "error", message: publicAiErrorMessage(504, "timeout") });
+        }
+        safeClose();
+        return;
+      }
 
       safeEnqueue({ type: "done" });
       safeClose();
       return;
     } catch (err: unknown) {
-      if (abortSignal.aborted || isAbortError(err)) { safeClose(); return; }
+      if (abortSignal.aborted || isAbortError(err)) {
+        if (chunksStreamed === 0) {
+          safeEnqueue({ type: "error", message: publicAiErrorMessage(504, "timeout") });
+        }
+        safeClose();
+        return;
+      }
       if (!shouldTryNextModel(err)) break;
     }
   }

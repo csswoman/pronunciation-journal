@@ -10,8 +10,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import type { ToolCall, ExerciseResult } from "@/lib/ai-practice/types";
-import { Check, Sparkles } from "@/components/icons";
-import Button from "@/components/ui/Button";
+import { Sparkles } from "@/components/icons";
 import ToolWidget from "./chat/ToolWidget";
 
 type ExStatus = "idle" | "correct" | "incorrect" | "reviewing";
@@ -34,10 +33,12 @@ function exerciseLabel(name: string) {
 
 function SessionHeader({ title, current, total }: { title: string; current: number; total: number }) {
   return (
-    <div className="relative flex items-center justify-center px-4 py-3 bg-[oklch(0.18_0.008_var(--hue))]">
-      <span className="text-body-sm font-semibold text-[oklch(0.96_0.008_var(--hue))]">{title}</span>
-      <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xxs font-bold px-2.5 py-1 rounded-full bg-[var(--primary)] text-[var(--on-primary)] tabular-nums">
+    <div className="flex flex-col items-center gap-1.5 px-4 py-2.5 text-center bg-[oklch(0.18_0.008_var(--hue))]">
+      <span className="text-xxs font-bold px-2.5 py-1 rounded-full bg-[var(--primary)] text-[var(--on-primary)] tabular-nums">
         EJERCICIO {current} DE {total}
+      </span>
+      <span className="text-body-sm font-semibold text-[oklch(0.96_0.008_var(--hue))] line-clamp-2">
+        {title}
       </span>
     </div>
   );
@@ -93,16 +94,47 @@ interface Props {
   onComplete?: (summary: ExerciseSessionSummary) => void;
 }
 
+// A word card is informational, not answerable. A session made up entirely of
+// word cards has nothing to act on, so we skip the exercise chrome (dark header,
+// progress bar, dots) and just stack the cards.
+function isWordCardOnly(calls: ToolCall[]) {
+  return calls.length > 0 && calls.every(tc => tc.name === "render_word_card");
+}
+
 export default function PracticeSession({ initialExercises, onAnswer, onComplete }: Props) {
+  if (isWordCardOnly(initialExercises)) {
+    return (
+      <div className="layout-stack w-full">
+        {initialExercises.map(tc => (
+          <div
+            key={tc.id}
+            className="w-full overflow-hidden rounded-xl border border-border-subtle bg-surface-raised px-[var(--layout-card-pad)] py-3 shadow-xs motion-reduce:shadow-none"
+          >
+            <ToolWidget toolCall={tc} onAnswer={() => {}} onNext={() => {}} />
+          </div>
+        ))}
+      </div>
+    );
+  }
+  return (
+    <PracticeSessionInner
+      initialExercises={initialExercises}
+      onAnswer={onAnswer}
+      onComplete={onComplete}
+    />
+  );
+}
+
+function PracticeSessionInner({ initialExercises, onAnswer, onComplete }: Props) {
   const [exercises, setExercises] = useState<SessionExercise[]>(() =>
     initialExercises.map(tc => ({ id: tc.id, toolCall: tc, status: "idle", result: null }))
   );
   const [current, setCurrent]   = useState(0);
   const [slideKey, setSlideKey] = useState(0);
   const [slideDir, setSlideDir] = useState<"R" | "L">("R");
-  const [completedSent, setCompletedSent] = useState(false);
 
   const autoTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const completeSentRef = useRef(false);
 
   const goTo = useCallback((target: number) => {
     if (target < 0) return;
@@ -137,20 +169,19 @@ export default function PracticeSession({ initialExercises, onAnswer, onComplete
 
   useEffect(() => () => { if (autoTimerRef.current) clearTimeout(autoTimerRef.current); }, []);
 
-  const ex = exercises[current];
-  const nextEx = exercises[current + 1];
+  const total = exercises.length;
+  const correctCount = exercises.filter(e => e.status === "correct" || e.result?.correct).length;
+  const isAllCorrect = correctCount === total;
   const isFinished = current >= exercises.length;
 
-  if (isFinished) {
-    const total = exercises.length;
-    const correctCount = exercises.filter(e => e.status === "correct" || e.result?.correct).length;
-    const isAllCorrect = correctCount === total;
-
-    const handleContinue = () => {
-      setCompletedSent(true);
+  useEffect(() => {
+    if (isFinished && !completeSentRef.current) {
+      completeSentRef.current = true;
       onComplete?.({ total, correct: correctCount });
-    };
+    }
+  }, [isFinished, total, correctCount, onComplete]);
 
+  if (isFinished) {
     return (
       <div className="layout-stack w-full rounded-xl border border-border-subtle bg-surface-raised p-4 shadow-xs">
         <div className="flex items-center gap-2.5">
@@ -170,26 +201,12 @@ export default function PracticeSession({ initialExercises, onAnswer, onComplete
             ? "¡Excelente trabajo! Has completado la práctica con éxito."
             : "¡Buen intento! Continúa practicando para afianzar estos conceptos."}
         </p>
-
-        <Button
-          variant={completedSent ? "secondary" : "primary"}
-          size="sm"
-          disabled={completedSent}
-          onClick={handleContinue}
-          className="mt-1 w-full justify-center"
-        >
-          {completedSent ? (
-            <>
-              <Check size={14} strokeWidth={2.25} aria-hidden />
-              Conversación continuada
-            </>
-          ) : (
-            "Continuar con el Coach"
-          )}
-        </Button>
       </div>
     );
   }
+
+  const ex = exercises[current];
+  const nextEx = exercises[current + 1];
 
   const topic    = (ex.toolCall.args as Record<string, unknown>)?.topic as string | undefined;
   const dotCount = Math.min(exercises.length, 7);

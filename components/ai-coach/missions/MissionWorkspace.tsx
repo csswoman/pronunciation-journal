@@ -265,7 +265,7 @@ export function MissionWorkspace({
               onSuggestionClick={(text) => handleMissionSubmit(text)}
               onToolAnswer={onToolAnswer}
               onNext={() => handleMissionSubmit('next')}
-              onExerciseComplete={(s) => void handleMissionSubmit(`I completed the exercise! (${s.correct}/${s.total} correct)`)}
+              onExerciseComplete={(s) => void handleMissionSubmit(`I just finished — ${s.correct} of ${s.total} right. How did I do?`)}
             />
           </>
         )}

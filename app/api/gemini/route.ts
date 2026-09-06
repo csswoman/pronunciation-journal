@@ -22,6 +22,8 @@ import { GeminiRequestSchema } from "./schema";
 // Route handler
 // ---------------------------------------------------------------------------
 
+export const maxDuration = 60;
+
 export async function POST(request: NextRequest): Promise<Response> {
   const originError = requireSameOrigin(request);
   if (originError) return originError;

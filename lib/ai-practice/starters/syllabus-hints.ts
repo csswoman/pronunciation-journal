@@ -28,19 +28,34 @@ function coveredRecently(title: string, exclude: readonly string[]): boolean {
 }
 
 /**
+ * Pure LCG (Park-Miller) pseudo-random number generator for deterministic
+ * shuffling when a seed is provided.
+ */
+function seededRandom(seed: number): () => number {
+  let s = Math.abs(seed) % 2147483647;
+  if (s === 0) s = 1;
+  return () => {
+    s = (s * 16807) % 2147483647;
+    return (s - 1) / 2147483646;
+  };
+}
+
+/**
  * Priority grammar/vocabulary lesson titles for a level, minus anything the
- * learner covered recently. Capped so the prompt stays small.
+ * learner covered recently. Draws randomly across the whole level curriculum
+ * so consecutive sessions do not repeat the same early lessons.
  */
 export function grammarTopicsForLevel(
   level: CefrLevel,
   exclude: readonly string[] = [],
   limit = 8,
+  seed?: number,
 ): string[] {
   const trackId = TRACK_BY_LEVEL[level];
   const track = COURSE_PATH_CURRICULUM.levels.find((l) => l.id === trackId);
   if (!track) return [];
 
-  const titles: string[] = [];
+  const candidates: string[] = [];
   for (const unit of track.units) {
     for (const lesson of unit.lessons) {
       if (lesson.isOptional) continue;
@@ -48,11 +63,19 @@ export function grammarTopicsForLevel(
       const label = lesson.keywords
         ? `${lesson.title} (${lesson.keywords})`
         : lesson.title;
-      if (!titles.includes(label)) titles.push(label);
-      if (titles.length >= limit) return titles;
+      if (!candidates.includes(label)) candidates.push(label);
     }
   }
-  return titles;
+
+  if (candidates.length <= limit) return candidates;
+
+  const rng = seed !== undefined ? seededRandom(seed) : Math.random;
+  const pool = [...candidates];
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  return pool.slice(0, limit);
 }
 
 /**

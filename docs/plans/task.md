@@ -22,3 +22,5 @@
 | Plan 098 | AI Coach Fase 2: Guardado unificado en Guardadas (`/tracking`), `persistSaveable`, filtro `ai_coach`, `SaveChips` y eliminación de tabla `aiWords` | Completed |
 | Plan 099 | AI Coach Fase 3: Starters adaptativos, selector por estado e intereses, rotación de ángulos y titulación por starterId | Completed |
 | Plan 100 | AI Coach Fase 4: Cierre de sesión con resumen (`render_session_summary`, prompt de cierre, `SessionSummaryCard`, integración y botón Terminar) | Completed |
+| Plan 101 | AI Coach: Layout de ejercicios (cabecera de 2 filas sin colisión) y feedback automático del coach sin botón | Completed |
+
