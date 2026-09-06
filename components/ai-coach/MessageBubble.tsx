@@ -17,6 +17,7 @@ export interface MessageBubbleProps {
   showAvatar?: boolean;
   onSaveWord: (word: string, context: string) => void;
   onSaveSaveable: (saveable: TurnSaveable) => Promise<void>;
+  onSaveConcept?: (title: string, body: string) => Promise<void>;
   onSaveAllFromSummary: (learned: TurnSaveable[]) => Promise<void>;
   onSaveTranslation?: (translation: string) => void;
   onSuggestionClick: (text: string) => void;
@@ -30,6 +31,7 @@ export default function MessageBubble({
   showAvatar = true,
   onSaveWord,
   onSaveSaveable,
+  onSaveConcept,
   onSaveAllFromSummary,
   onSaveTranslation,
   onSuggestionClick,
@@ -63,6 +65,7 @@ export default function MessageBubble({
       showAvatar={showAvatar}
       onSaveWord={onSaveWord}
       onSaveSaveable={onSaveSaveable}
+      onSaveConcept={onSaveConcept}
       onSaveAllFromSummary={onSaveAllFromSummary}
       onSaveTranslation={onSaveTranslation}
       onSuggestionClick={onSuggestionClick}

@@ -116,6 +116,7 @@ export interface RenderActiveChatParams {
   resetSession: () => void;
   openSaveWordModal: (word: string, context: string) => void;
   saveSaveable: (saveable: TurnSaveable) => Promise<void>;
+  saveConcept: (title: string, body: string) => Promise<void>;
   saveAllFromSummary: (learned: TurnSaveable[]) => Promise<void>;
   saveTranslation: (msgIndex: number, translation: string) => void;
   inputPrefill?: string;
@@ -149,6 +150,7 @@ export function renderActiveChat(p: RenderActiveChatParams) {
           isStreaming={p.isStreaming}
           onSaveWord={p.openSaveWordModal}
           onSaveSaveable={p.saveSaveable}
+          onSaveConcept={p.saveConcept}
           onSaveAllFromSummary={p.saveAllFromSummary}
           onSaveTranslation={p.saveTranslation}
           onSuggestionClick={(prompt) => p.setInputPrefill(prompt)}
