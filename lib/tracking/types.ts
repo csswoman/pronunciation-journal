@@ -1,6 +1,6 @@
 import type { WordProgressSignal } from '@/lib/word-bank/progress-state';
 
-export type TrackedKind = "word" | "phrase" | "lesson";
+export type TrackedKind = "word" | "phrase" | "lesson" | "explanation";
 export type PersistedTrackedKind = Exclude<TrackedKind, "word">;
 
 export interface TrackedItem {
@@ -15,8 +15,9 @@ export interface TrackedItem {
 }
 
 /**
- * Guardadas filters. The first four narrow by item kind; "ai_coach" narrows by
- * origin instead, so it cuts across all three kinds.
+ * Guardadas filters. Every filter except "ai_coach" narrows by item kind
+ * (word, phrase, lesson, explanation); "ai_coach" narrows by origin instead,
+ * so it cuts across all kinds.
  */
 export type TrackingFilter = "all" | TrackedKind | "ai_coach";
 

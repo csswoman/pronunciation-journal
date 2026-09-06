@@ -8,7 +8,7 @@
 // </TrackingCard>
 
 import Link from "next/link";
-import { Bookmark, BookOpen, FileText, Pencil, Trash2 } from "@/components/icons";
+import { Bookmark, BookOpen, FileText, Lightbulb, Pencil, Trash2 } from "@/components/icons";
 import Badge from "@/components/ui/Badge";
 import { PronunciationMissionLaunchButton } from "@/components/pronunciation/PronunciationMissionLaunchButton";
 import { getTarget, targetId } from "@/lib/pronunciation/targets/registry";
@@ -20,6 +20,7 @@ const registry: Record<TrackedKind, { label: string; icon: typeof Bookmark }> = 
   word: { label: "Palabra", icon: Bookmark },
   phrase: { label: "Frase", icon: FileText },
   lesson: { label: "Lección", icon: BookOpen },
+  explanation: { label: "Explicación", icon: Lightbulb },
 };
 
 interface TrackingCardProps {

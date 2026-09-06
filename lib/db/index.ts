@@ -145,7 +145,7 @@ export interface LocalDataQuarantineRecord {
 export interface TrackedItemRecord {
   id: string;
   userId: string;
-  kind: "phrase" | "lesson";
+  kind: "phrase" | "lesson" | "explanation";
   ref: string;
   title: string | null;
   payload: Record<string, unknown>;
