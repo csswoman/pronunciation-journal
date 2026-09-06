@@ -67,7 +67,11 @@ export async function POST(request: NextRequest): Promise<Response> {
   const learningState = await fetchServerLearningState(user.id, accessToken);
   const lastTopic = extractLastTopicFromWire(body.messages);
   const voice = lastUserVoiceMetadataFromWire(body.messages);
-  const systemPrompt = buildSystemPrompt(learningState, lastTopic, voice?.scored === true, body.missionId);
+  const systemPrompt = buildSystemPrompt(learningState, {
+    lastTopic,
+    voiceScored: voice?.scored === true,
+    missionId: body.missionId,
+  });
 
   // Cap input fed to intent detection — detectIntent has its own guard but we
   // also avoid building a huge string from the full content field.

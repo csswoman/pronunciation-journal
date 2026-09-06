@@ -42,7 +42,7 @@ describe("messagesToWire", () => {
 
 describe("buildSystemPrompt voice instruction", () => {
   it("does not include the voice instruction for a plain text turn (no learning state)", () => {
-    const prompt = buildSystemPrompt(null, undefined, false);
+    const prompt = buildSystemPrompt(null);
     expect(prompt).toBe(BASE_TUTOR_PROMPT);
     expect(prompt).not.toContain(VOICE_TURN_INSTRUCTION);
   });
@@ -53,24 +53,24 @@ describe("buildSystemPrompt voice instruction", () => {
   });
 
   it("includes the voice instruction when the last user turn was a scored spoken turn (no learning state)", () => {
-    const prompt = buildSystemPrompt(null, undefined, true);
+    const prompt = buildSystemPrompt(null, { voiceScored: true });
     expect(prompt).toContain(VOICE_TURN_INSTRUCTION);
   });
 
   it("includes the voice instruction alongside learning-state hints", () => {
     const state = createEmptyState("u1", "d1");
-    const prompt = buildSystemPrompt(state, undefined, true);
+    const prompt = buildSystemPrompt(state, { voiceScored: true });
     expect(prompt).toContain(VOICE_TURN_INSTRUCTION);
     expect(prompt).toContain("Student:");
   });
 
   it("does not include the voice instruction for an unscored voice turn", () => {
-    const prompt = buildSystemPrompt(null, undefined, false);
+    const prompt = buildSystemPrompt(null);
     expect(prompt).not.toContain(VOICE_TURN_INSTRUCTION);
   });
 
   it("renders the authored mission contract when a mission id is supplied", () => {
-    const prompt = buildSystemPrompt(null, undefined, false, "roleplay.cafe");
+    const prompt = buildSystemPrompt(null, { missionId: "roleplay.cafe" });
 
     expect(prompt).toContain("ORAL MISSION: ROLEPLAY.CAFE");
     expect(prompt).toContain("mission_intent_observed");
@@ -79,7 +79,7 @@ describe("buildSystemPrompt voice instruction", () => {
   });
 
   it("does not fall back to a different mission for an unknown id", () => {
-    expect(buildSystemPrompt(null, undefined, false, "roleplay.unknown")).toBe(BASE_TUTOR_PROMPT);
+    expect(buildSystemPrompt(null, { missionId: "roleplay.unknown" })).toBe(BASE_TUTOR_PROMPT);
   });
 });
 
@@ -124,5 +124,38 @@ describe("BASE_TUTOR_PROMPT feedback discipline", () => {
 
   it("limits feedback to one item per turn", () => {
     expect(BASE_TUTOR_PROMPT).toMatch(/ONE only/i);
+  });
+});
+
+describe("buildSystemPrompt interests", () => {
+  it("includes the declared interests when there are any", () => {
+    const prompt = buildSystemPrompt(null, { interests: ["technology", "gaming"] });
+    expect(prompt).toContain("technology, gaming");
+  });
+
+  it("tells the model not to force interests into every message", () => {
+    const prompt = buildSystemPrompt(null, { interests: ["food"] });
+    expect(prompt).toMatch(/do NOT force/i);
+  });
+
+  it("omits the interests block entirely when the list is empty", () => {
+    const prompt = buildSystemPrompt(null, { interests: [] });
+    expect(prompt).not.toMatch(/declared interests/i);
+  });
+
+  it("omits the interests block when interests are not provided", () => {
+    expect(buildSystemPrompt(null)).not.toMatch(/declared interests/i);
+  });
+
+  it("keeps interests alongside the learning state hint", () => {
+    const state = createEmptyState("u1", "d1");
+    const prompt = buildSystemPrompt(state, { interests: ["books"] });
+    expect(prompt).toContain("books");
+    expect(prompt).toContain("Student:");
+  });
+
+  it("keeps interests in mission mode", () => {
+    const prompt = buildSystemPrompt(null, { missionId: "roleplay.cafe", interests: ["travel"] });
+    expect(prompt).toContain("travel");
   });
 });
