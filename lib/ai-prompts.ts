@@ -462,3 +462,15 @@ export function buildJournalPronunciationUserPrompt(wordOrPhrase: string): strin
   return `Analyze this word/phrase for a Pronunciation Journal entry: "${wordOrPhrase}"`
 }
 
+export function buildSessionSummaryPrompt(): string {
+  return `The student is ending this session. Close it now.
+Call render_session_summary with what ACTUALLY happened in this conversation:
+- corrections: the mistakes you flagged, with the rule in Spanish.
+- learned: words or expressions you taught or that they asked about.
+- reviewNext: at most three short Spanish labels of what they should revisit.
+Do not invent corrections, words or topics that did not come up — empty arrays
+are the right answer for a short conversation.
+Write ONE warm closing sentence before the tool call, and nothing after it.
+Do not ask another question. Do not offer more practice.`;
+}
+
