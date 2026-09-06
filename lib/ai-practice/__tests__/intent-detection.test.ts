@@ -76,10 +76,12 @@ describe("intentToToolConfig", () => {
     expect(config.allowedTools).not.toContain("save_word");
   });
 
-  it("explanation_request → toolChoice none + empty tools", () => {
+  // Was "toolChoice none + empty tools" — feedback is no longer gated by mode,
+  // so explanation turns now allow annotate_turn and nothing else.
+  it("explanation_request → no exercise tools", () => {
     const config = intentToToolConfig({ type: "explanation_request" });
-    expect(config.toolChoice).toBe("none");
-    expect(config.allowedTools).toHaveLength(0);
+    expect(config.allowedTools).not.toContain("render_fill_blank");
+    expect(config.allowedTools).not.toContain("render_multiple_choice");
   });
 
   it("conversation → toolChoice auto + action tools", () => {
@@ -88,5 +90,29 @@ describe("intentToToolConfig", () => {
     expect(config.allowedTools).toContain("save_word");
     expect(config.allowedTools).toContain("start_mission");
     expect(config.allowedTools).not.toContain("render_multiple_choice");
+  });
+});
+
+describe("intentToToolConfig: annotate_turn availability", () => {
+  it("allows annotate_turn on a conversation turn", () => {
+    const config = intentToToolConfig({ type: "conversation" });
+    expect(config.allowedTools).toContain("annotate_turn");
+    expect(config.toolChoice).toBe("auto");
+  });
+
+  it("allows annotate_turn on an explanation request", () => {
+    const config = intentToToolConfig({ type: "explanation_request" });
+    expect(config.allowedTools).toEqual(["annotate_turn"]);
+    expect(config.toolChoice).toBe("auto");
+  });
+
+  it("allows annotate_turn alongside the exercise tools", () => {
+    const config = intentToToolConfig({ type: "exercise_request" });
+    expect(config.allowedTools).toContain("annotate_turn");
+    expect(config.allowedTools).toContain("render_fill_blank");
+  });
+
+  it("no longer forces toolChoice 'none' on explanation requests", () => {
+    expect(intentToToolConfig({ type: "explanation_request" }).toolChoice).not.toBe("none");
   });
 });

@@ -7,7 +7,7 @@ export type Intent =
 
 export type ToolConfig = {
   toolChoice: "any" | "none" | "auto";
-  allowedTools: ExerciseToolName[] | ActionToolName[] | [];
+  allowedTools: Array<ExerciseToolName | ActionToolName>;
 };
 
 // ReDoS safety: all patterns use only \b word-boundary anchors, simple
@@ -71,13 +71,19 @@ const EXERCISE_TOOLS: ExerciseToolName[] = [
 
 const ACTION_TOOLS: ActionToolName[] = ["save_word", "start_mission"];
 
+/**
+ * Feedback is not a mode: the coach must be able to correct the student on
+ * every kind of turn, so annotate_turn is allowed for all three intents.
+ * Explanation requests can no longer use toolChoice "none" for that reason —
+ * "auto" with a single allowed tool keeps exercises out just as effectively.
+ */
 export function intentToToolConfig(intent: Intent): ToolConfig {
   switch (intent.type) {
     case "exercise_request":
-      return { toolChoice: "any", allowedTools: EXERCISE_TOOLS };
+      return { toolChoice: "any", allowedTools: [...EXERCISE_TOOLS, "annotate_turn"] };
     case "explanation_request":
-      return { toolChoice: "none", allowedTools: [] };
+      return { toolChoice: "auto", allowedTools: ["annotate_turn"] };
     case "conversation":
-      return { toolChoice: "auto", allowedTools: ACTION_TOOLS };
+      return { toolChoice: "auto", allowedTools: [...ACTION_TOOLS, "annotate_turn"] };
   }
 }
