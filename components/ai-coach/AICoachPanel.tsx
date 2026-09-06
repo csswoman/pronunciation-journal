@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronLeft } from "@/components/icons";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { usePathname } from "next/navigation";
@@ -25,6 +25,7 @@ import { MissionWorkspace } from "./missions/MissionWorkspace";
 import type { MissionLaunch } from "@/lib/ai-practice/missions/launch";
 import { getMission } from "@/lib/ai-practice/missions/registry";
 import { isScriptedMission } from "@/lib/ai-practice/missions/types";
+import type { TurnSaveable } from "@/lib/ai-practice/tools/registry";
 
 // Planned structure:
 // <AICoachPanel>
@@ -120,6 +121,15 @@ export default function AICoachPanel() {
     ...(isMobile ? {} : { width: isFullscreen ? "calc(100vw - var(--sidebar-width))" : `${panelWidth}px` }),
   } as const;
 
+  const saveAllFromSummary = useCallback(
+    async (learned: TurnSaveable[]) => {
+      for (const item of learned) {
+        await saveSaveable(item);
+      }
+    },
+    [saveSaveable],
+  );
+
   const renderMission = (exitTab: TabId) => (
     <MissionWorkspace
       missionId={activeMissionId!}
@@ -127,6 +137,7 @@ export default function AICoachPanel() {
       setMissionIntentHandler={setMissionIntentHandler}
       messages={messages} isStreaming={isStreaming} isDisabled={quotaExhausted}
       onSendMessage={sendMessage} onSaveWord={openSaveWordModal} onSaveSaveable={saveSaveable}
+      onSaveAllFromSummary={saveAllFromSummary}
       onToolAnswer={answerToolCall}
       onExitMission={() => { void changeMode("chat"); setActiveTab(exitTab); }}
     />
@@ -201,6 +212,7 @@ export default function AICoachPanel() {
                     {error && <ErrorBanner message={error} />}
                     <ChatView
                       messages={messages} isStreaming={isStreaming} onSaveWord={openSaveWordModal} onSaveSaveable={saveSaveable}
+                      onSaveAllFromSummary={saveAllFromSummary}
                       onSaveTranslation={saveTranslation}
                       onSuggestionClick={(prompt) => setInputPrefill(prompt)} onToolAnswer={answerToolCall} onNext={() => sendMessage("next")}
                       onExerciseComplete={(s) => void sendMessage(`I completed the exercise! I got ${s.correct} of ${s.total} correct.`)}

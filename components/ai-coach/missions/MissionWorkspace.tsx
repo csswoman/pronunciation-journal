@@ -51,6 +51,7 @@ interface MissionWorkspaceProps {
   onSendMessage: (text: string, options?: { voice?: VoiceMetadata }) => Promise<void>
   onSaveWord: (word: string, context: string) => void
   onSaveSaveable: (saveable: TurnSaveable) => Promise<void>
+  onSaveAllFromSummary?: (learned: TurnSaveable[]) => Promise<void>
   onToolAnswer: (callId: string, result: ExerciseResult) => void
   /** Limpia la misión activa y devuelve a la biblioteca. */
   onExitMission?: () => void
@@ -67,6 +68,7 @@ export function MissionWorkspace({
   onSendMessage,
   onSaveWord,
   onSaveSaveable,
+  onSaveAllFromSummary,
   onToolAnswer,
   onExitMission,
 }: MissionWorkspaceProps) {
@@ -259,6 +261,7 @@ export function MissionWorkspace({
               isStreaming={isStreaming}
               onSaveWord={onSaveWord}
               onSaveSaveable={onSaveSaveable}
+              onSaveAllFromSummary={onSaveAllFromSummary ?? (async () => {})}
               onSuggestionClick={(text) => handleMissionSubmit(text)}
               onToolAnswer={onToolAnswer}
               onNext={() => handleMissionSubmit('next')}

@@ -21,6 +21,7 @@ interface ChatViewProps {
   isStreaming: boolean;
   onSaveWord: (word: string, context: string) => void;
   onSaveSaveable: (saveable: TurnSaveable) => Promise<void>;
+  onSaveAllFromSummary: (learned: TurnSaveable[]) => Promise<void>;
   onSaveTranslation?: (msgIndex: number, translation: string) => void;
   onSuggestionClick: (text: string) => void;
   onToolAnswer: (callId: string, result: ExerciseResult) => void;
@@ -35,6 +36,7 @@ export default function ChatView({
   isStreaming,
   onSaveWord,
   onSaveSaveable,
+  onSaveAllFromSummary,
   onSaveTranslation,
   onSuggestionClick,
   onToolAnswer,
@@ -118,6 +120,7 @@ export default function ChatView({
               showAvatar={isLastInGroup[i]}
               onSaveWord={onSaveWord}
               onSaveSaveable={onSaveSaveable}
+              onSaveAllFromSummary={onSaveAllFromSummary}
               onSaveTranslation={(translation) => onSaveTranslation?.(messages.indexOf(msg), translation)}
               onSuggestionClick={onSuggestionClick}
               onToolAnswer={onToolAnswer}
