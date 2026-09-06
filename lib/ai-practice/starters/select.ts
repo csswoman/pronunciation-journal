@@ -1,26 +1,37 @@
-import { AI_COACH_SHORTCUT_PROMPTS } from "@/lib/ai-prompts";
+import { AI_COACH_SHORTCUT_PROMPTS, buildPronunciationStarterPrompt } from "@/lib/ai-prompts";
 import { STARTERS } from "./registry";
+import { soundLabelsForLevel } from "./syllabus-hints";
 import type { ResolvedStarter, StarterContext } from "./types";
 
 /** The chat home shows four rows; free always occupies the last one. */
 const SLOTS = 4;
 
-const STATIC_PADDING: ResolvedStarter[] = [
-  {
-    id: "learn",
-    title: "Entrevista de trabajo",
-    subtitle: "Simulacro guiado",
-    prompt: AI_COACH_SHORTCUT_PROMPTS.jobInterview,
-    angle: "static:jobInterview",
-  },
-  {
-    id: "learn",
-    title: "Pronunciación",
-    subtitle: "Sonidos difíciles en español",
-    prompt: AI_COACH_SHORTCUT_PROMPTS.pronunciation,
-    angle: "static:pronunciation",
-  },
-];
+/**
+ * Shortcuts shown when there is not enough signal for dynamic starters — the
+ * guest / no-history case. Pronunciation is level-scoped so a first-time A1
+ * learner is offered easy sounds, not a generic advanced list.
+ */
+function staticPadding(ctx: StarterContext): ResolvedStarter[] {
+  return [
+    {
+      id: "learn",
+      title: "Entrevista de trabajo",
+      subtitle: "Simulacro guiado",
+      prompt: AI_COACH_SHORTCUT_PROMPTS.jobInterview,
+      angle: "static:jobInterview",
+    },
+    {
+      id: "learn",
+      title: "Pronunciación",
+      subtitle: `Sonidos de nivel ${ctx.level}`,
+      prompt: buildPronunciationStarterPrompt({
+        level: ctx.level,
+        soundTargets: soundLabelsForLevel(ctx.level),
+      }),
+      angle: "static:pronunciation",
+    },
+  ];
+}
 
 /**
  * Resolves the starters to offer right now.
@@ -43,6 +54,6 @@ export function selectStarters(ctx: StarterContext): ResolvedStarter[] {
 
   // Not enough signal yet: pad with static shortcuts so the panel still reads
   // as a full set of options rather than a half-empty screen.
-  const padding = STATIC_PADDING.slice(0, SLOTS - chosen.length);
+  const padding = staticPadding(ctx).slice(0, SLOTS - chosen.length);
   return [...dynamic, ...padding, free];
 }

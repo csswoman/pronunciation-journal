@@ -4,6 +4,7 @@ import {
   buildLearnStarterPrompt,
   buildWorldStarterPrompt,
   buildFreeStarterPrompt,
+  buildPronunciationStarterPrompt,
   STARTER_ANGLES,
 } from "@/lib/ai-prompts";
 
@@ -106,6 +107,40 @@ describe("buildWorldStarterPrompt", () => {
   it("forbids calling a tool on the first turn", () => {
     const prompt = buildWorldStarterPrompt({ interest: "music", knownWords: [], angle: "x" });
     expect(prompt).toMatch(/do NOT call any\s*\n?\s*tool on this first turn/i);
+  });
+});
+
+describe("buildLearnStarterPrompt syllabus topics", () => {
+  it("lists the syllabus topics when provided", () => {
+    const prompt = buildLearnStarterPrompt({
+      level: "A1",
+      avoidTopics: [],
+      angle: "x",
+      syllabusTopics: ["Ser y estar (to be) (am · is · are)", "Artículos básicos (a · an · the)"],
+    });
+    expect(prompt).toMatch(/from this student's A1 syllabus/i);
+    expect(prompt).toContain("Ser y estar (to be) (am · is · are)");
+  });
+
+  it("omits the syllabus block when the list is empty", () => {
+    const prompt = buildLearnStarterPrompt({ level: "A1", avoidTopics: [], angle: "x", syllabusTopics: [] });
+    expect(prompt).not.toMatch(/syllabus/i);
+  });
+});
+
+describe("buildPronunciationStarterPrompt", () => {
+  it("states the level and forbids a tool call on turn 1", () => {
+    const prompt = buildPronunciationStarterPrompt({ level: "A1" });
+    expect(prompt).toContain("level A1");
+    expect(prompt).toMatch(/Do NOT call any tool on this first turn/i);
+  });
+
+  it("lists the level's sound targets when given", () => {
+    const prompt = buildPronunciationStarterPrompt({
+      level: "A1",
+      soundTargets: ["Bilabial/labiodental contrast (b/v)", "Open vowel contrast (æ/ʌ)"],
+    });
+    expect(prompt).toContain("Bilabial/labiodental contrast (b/v)");
   });
 });
 

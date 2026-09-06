@@ -6,7 +6,7 @@ import { createEmptyState } from "@/lib/ai-practice/learning-state";
 const NOW = Date.parse("2026-09-05T12:00:00Z");
 
 function ctx(overrides: Partial<StarterContext> = {}): StarterContext {
-  return { state: null, interests: [], seed: 0, recentIds: [], recentAngles: [], now: NOW, ...overrides };
+  return { state: null, level: "B1", interests: [], seed: 0, recentIds: [], recentAngles: [], now: NOW, ...overrides };
 }
 
 function weakState(errorRate = 0.7) {

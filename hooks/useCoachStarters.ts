@@ -8,6 +8,9 @@ import { normalizeInterests } from "@/lib/users/interests";
 import { selectStarters } from "@/lib/ai-practice/starters/select";
 import { readStarterHistory, recordStarterUse } from "@/lib/ai-practice/starters/history";
 import type { ResolvedStarter, StarterId } from "@/lib/ai-practice/starters/types";
+import { isAnonymousUser } from "@/lib/auth/is-anonymous";
+import { readGuestStudyLevel } from "@/lib/preferences/guest-study-level";
+import { readStoredCefrLevel } from "@/lib/essential-words/target-level";
 
 /**
  * Resolves the starters shown on the chat home.
@@ -24,22 +27,29 @@ export function useCoachStarters() {
   useEffect(() => {
     let cancelled = false;
     const userId = user?.id;
-    if (!userId) {
+    const isGuest = isAnonymousUser(user);
+
+    if (!userId || isGuest) {
       setStarters(selectStarters({
-        state: null, interests: [], seed, recentIds: [], recentAngles: [], now: Date.now(),
+        state: null,
+        level: readGuestStudyLevel(),
+        interests: [], seed, recentIds: [], recentAngles: [], now: Date.now(),
       }));
       return;
     }
 
     void (async () => {
-      const [state, cachedInterests, history] = await Promise.all([
+      const [state, cachedInterests, history, storedLevel] = await Promise.all([
         getUserLearningState(userId).catch(() => null),
         getCachedUserInterests(userId).catch(() => null),
         readStarterHistory(userId).catch(() => ({ ids: [], angles: [] })),
+        readStoredCefrLevel(userId).catch(() => null),
       ]);
       if (cancelled) return;
       setStarters(selectStarters({
         state,
+        // readStoredCefrLevel already folds C2→C1 and validates; default A1.
+        level: storedLevel ?? "A1",
         interests: normalizeInterests(cachedInterests ?? []),
         seed,
         recentIds: history.ids,
@@ -49,7 +59,7 @@ export function useCoachStarters() {
     })();
 
     return () => { cancelled = true; };
-  }, [user?.id, seed]);
+  }, [user?.id, user, seed]);
 
   const noteUse = useCallback(
     (id: StarterId, angle: string) => {

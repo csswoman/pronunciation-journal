@@ -6,6 +6,7 @@ import {
   buildWorldStarterPrompt,
 } from "@/lib/ai-prompts";
 import { INTEREST_LABELS_ES } from "@/lib/users/interests";
+import { grammarTopicsForLevel } from "./syllabus-hints";
 import type { CoachStarter, StarterContext, StarterId } from "./types";
 
 /** A weak topic below this error rate is not worth interrupting the user for. */
@@ -59,14 +60,19 @@ const learnStarter: CoachStarter = {
   id: "learn",
   isAvailable: () => true,
   build: (ctx) => {
-    const level = ctx.state?.level.cefrEstimate ?? "B1";
+    const level = ctx.level;
     const avoidTopics = (ctx.state?.lastSessions ?? []).slice(0, 2).map((s) => s.topic);
     const angle = pickBySeed(STARTER_ANGLES.learn, ctx.seed, ctx.recentAngles);
     return {
       id: "learn",
       title: "Enséñame algo nuevo",
       subtitle: `Nivel ${level} · no visto aún`,
-      prompt: buildLearnStarterPrompt({ level, avoidTopics, angle }),
+      prompt: buildLearnStarterPrompt({
+        level,
+        avoidTopics,
+        angle,
+        syllabusTopics: grammarTopicsForLevel(level, avoidTopics),
+      }),
       angle,
     };
   },

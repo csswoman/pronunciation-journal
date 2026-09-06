@@ -197,9 +197,14 @@ export function buildLearnStarterPrompt(input: {
   level: string;
   avoidTopics: readonly string[];
   angle: string;
+  /** Real syllabus topics for this level to pick from (title + key examples). */
+  syllabusTopics?: readonly string[];
 }): string {
   const avoid = input.avoidTopics.length
     ? `\nAvoid these topics — they were covered recently: ${input.avoidTopics.join(", ")}.`
+    : "";
+  const syllabus = input.syllabusTopics?.length
+    ? `\nPick from this student's ${input.level} syllabus — choose ONE not already covered:\n${input.syllabusTopics.map((t) => `- ${t}`).join("\n")}`
     : "";
   return `Teach this ${input.level} student ONE new thing right now: ${input.angle}.
 Structure: name it, explain it in at most three lines, give two examples, then
@@ -207,7 +212,29 @@ ask one short question in plain text to check they followed.
 Do NOT call any exercise tool on this first turn — wait until they reply, then
 run one exercise via the exercise tools.
 Pick something genuinely useful at ${input.level} — not trivia, not something
-far above their level.${avoid}`;
+far above their level.${syllabus}${avoid}`;
+}
+
+/**
+ * Pronunciation starter, scoped to the learner's level. Replaces the old static
+ * `AI_COACH_SHORTCUT_PROMPTS.pronunciation` so a first-time A1 learner gets easy
+ * sounds (b/v, æ/ʌ, the American R) rather than a generic advanced list.
+ */
+export function buildPronunciationStarterPrompt(input: {
+  level: string;
+  soundTargets?: readonly string[];
+}): string {
+  const targets = input.soundTargets?.length
+    ? `\nWork within this level's sounds — pick ONE to start:\n${input.soundTargets.map((t) => `- ${t}`).join("\n")}`
+    : "";
+  return `You are a friendly English pronunciation coach for a native Spanish speaker at level ${input.level}.
+Focus on sounds that are genuinely tricky for Spanish speakers at this level.${targets}
+First turn: pick ONE sound, describe it clearly in plain text (mouth position, airflow),
+give two example words, and a short phrase to say. Ask them to type the phrase back
+with notes on how it felt. Do NOT call any tool on this first turn.
+From their reply on, coach from what they report and use minimal pairs, tongue
+twisters, and real words — running exercises via the exercise tools when useful.
+Keep it encouraging — pronunciation is vulnerable work.`;
 }
 
 export function buildWorldStarterPrompt(input: {

@@ -8,6 +8,7 @@ const NOW = Date.parse("2026-09-05T12:00:00Z");
 function ctx(overrides: Partial<StarterContext> = {}): StarterContext {
   return {
     state: null,
+    level: "B1",
     interests: [],
     seed: 0,
     recentIds: [],
@@ -46,13 +47,14 @@ describe("learn starter", () => {
     expect(getStarter("learn").isAvailable(ctx())).toBe(true);
   });
 
-  it("defaults to B1 when there is no state", () => {
-    expect(getStarter("learn").build(ctx()).prompt).toContain("B1");
+  it("teaches at the level carried by the context", () => {
+    expect(getStarter("learn").build(ctx({ level: "A1" })).prompt).toContain("A1");
+    expect(getStarter("learn").build(ctx({ level: "C1" })).prompt).toContain("C1");
   });
 
-  it("uses the student's estimated level when there is state", () => {
-    const state = { ...createEmptyState("u1", "d1"), level: { cefrEstimate: "A2" as const, confidence: 0.4 } };
-    expect(getStarter("learn").build(ctx({ state })).prompt).toContain("A2");
+  it("feeds the model real syllabus topics for that level", () => {
+    const prompt = getStarter("learn").build(ctx({ level: "A1" })).prompt;
+    expect(prompt).toMatch(/from this student's A1 syllabus/i);
   });
 
   it("picks a different angle for a different seed", () => {
