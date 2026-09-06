@@ -138,7 +138,11 @@ export function renderActiveChat(p: RenderActiveChatParams) {
         </button>
         <span className="text-xxs font-medium text-fg-subtle">Sesión activa</span>
       </div>
-      <div className="flex-1 flex flex-col min-h-0 overflow-y-auto chat-messages-container" aria-live="polite" aria-label="Mensajes del chat">
+      <div
+        className="chat-messages-scroll flex flex-1 min-h-0 flex-col overflow-y-auto"
+        aria-live="polite"
+        aria-label="Mensajes del chat"
+      >
         {p.error && <ErrorBanner message={p.error} />}
         <ChatView
           messages={p.messages}

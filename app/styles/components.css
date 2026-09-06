@@ -173,6 +173,18 @@
 .sound-volume-slider::-moz-range-thumb { width: 12px; height: 12px; border: 2px solid var(--surface-raised); border-radius: var(--radius-full); background: var(--primary); box-shadow: var(--shadow-sm); }
 
 /* ── Chat backgrounds ────────────────────────────────────────────────────── */
+
+/* The overflow:auto scroll wrapper: solid themed base only, so the overscroll
+   region is not bare. The decorative gradient must NOT live here — an
+   `absolute; inset:0` layer clips to the viewport, leaving scrolled-past rows
+   flat grey. */
+.chat-messages-scroll {
+  background: color-mix(in oklch, var(--primary) 3%, var(--bg));
+}
+
+/* The flex column inside that wrapper (ChatView root, and its equivalent in
+   MissionWorkspace) grows to the full scroll height via `min-h-full`, so its
+   `absolute; inset:0` gradient covers every row. */
 .chat-messages-container {
   position: relative;
   background: color-mix(in oklch, var(--primary) 3%, var(--bg));
