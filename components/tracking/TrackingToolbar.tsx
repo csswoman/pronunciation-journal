@@ -12,18 +12,19 @@
 import { useCallback, type KeyboardEvent } from "react";
 import { Play, Search, X } from "@/components/icons";
 import Button from "@/components/ui/Button";
-import type { TrackedKind } from "@/lib/tracking/types";
+import type { TrackingFilter } from "@/lib/tracking/types";
 
-const FILTERS: { id: "all" | TrackedKind; label: string }[] = [
+const FILTERS: { id: TrackingFilter; label: string }[] = [
   { id: "all", label: "Todo" },
   { id: "word", label: "Palabras" },
   { id: "phrase", label: "Frases" },
   { id: "lesson", label: "Lecciones" },
+  { id: "ai_coach", label: "Del coach" },
 ];
 
 export interface TrackingToolbarProps {
-  filter: "all" | TrackedKind;
-  onFilterChange: (filter: "all" | TrackedKind) => void;
+  filter: TrackingFilter;
+  onFilterChange: (filter: TrackingFilter) => void;
   searchQuery: string;
   onSearchChange: (query: string) => void;
   canReview: boolean;

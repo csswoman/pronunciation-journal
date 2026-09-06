@@ -61,6 +61,9 @@ export function TrackingCard({ source, onEditWord, onDeleteWord }: TrackingCardP
           {item.progressState && item.progressState !== "saved" && item.progressLabel ? (
             <Badge label={item.progressLabel} variant="info" size="sm" />
           ) : null}
+          {source.item.fromCoach && (
+            <Badge label="✦ coach" variant="info" size="sm" />
+          )}
         </span>
         {word ? (
           <>

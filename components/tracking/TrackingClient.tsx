@@ -18,7 +18,7 @@ import Button from "@/components/ui/Button";
 import PracticeSession from "@/components/practice/PracticeSession";
 import { ListPagination } from "@/components/ui/ListPagination";
 import type { PracticeExercise } from "@/lib/practice/types";
-import type { TrackedKind } from "@/lib/tracking/types";
+import type { TrackingFilter } from "@/lib/tracking/types";
 import type { WordBankEntry } from "@/lib/word-bank/types";
 
 const PAGE_SIZE = 15;
@@ -37,7 +37,7 @@ interface TrackingClientProps {
 // </TrackingClient>
 export default function TrackingClient({ embed = false }: TrackingClientProps) {
   const { reviewSources, loading, userId, words, addWord, removeWord, updateWord } = useTracking();
-  const [filter, setFilter] = useState<"all" | TrackedKind>("all");
+  const [filter, setFilter] = useState<TrackingFilter>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [phrase, setPhrase] = useState("");
@@ -70,7 +70,14 @@ export default function TrackingClient({ embed = false }: TrackingClientProps) {
   }, [showPhraseModal, showWordModal]);
 
   const filteredSources = useMemo(() => {
-    let list = filter === "all" ? reviewSources : reviewSources.filter((s) => s.item.kind === filter);
+    // "ai_coach" filters by origin, not by kind — it cuts across words,
+    // phrases and lessons alike.
+    let list =
+      filter === "all"
+        ? reviewSources
+        : filter === "ai_coach"
+          ? reviewSources.filter((s) => s.item.fromCoach)
+          : reviewSources.filter((s) => s.item.kind === filter);
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase().trim();
       list = list.filter((s) => {
@@ -138,7 +145,12 @@ export default function TrackingClient({ embed = false }: TrackingClientProps) {
   }
 
   const canReview = availableReviewCount > 0;
-  const hasCategoryItems = filter === "all" ? reviewSources.length > 0 : reviewSources.some((s) => s.item.kind === filter);
+  const hasCategoryItems =
+    filter === "all"
+      ? reviewSources.length > 0
+      : filter === "ai_coach"
+        ? reviewSources.some((s) => s.item.fromCoach)
+        : reviewSources.some((s) => s.item.kind === filter);
 
   const content = (
     <>

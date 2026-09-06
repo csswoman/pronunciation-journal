@@ -4,9 +4,10 @@ import Link from "next/link";
 import { Plus } from "@/components/icons";
 import EmptyState from "@/components/EmptyState";
 import { getIllustration } from "@/lib/illustrations/registry";
+import type { TrackingFilter } from "@/lib/tracking/types";
 
 interface Props {
-  filter: "all" | "word" | "phrase" | "lesson";
+  filter: TrackingFilter;
 }
 
 const Illustration = getIllustration("emptyTracking");
@@ -19,6 +20,16 @@ export function TrackingEmptyState({ filter }: Props) {
     : isPhrases
       ? "Todavía no hay frases aquí"
       : "Empieza con una palabra";
+
+  if (filter === "ai_coach") {
+    return (
+      <EmptyState
+        illustration={<Illustration />}
+        title="Aún no guardaste nada del coach"
+        description="Practica con el AI Coach y guarda palabras o expresiones desde el chat."
+      />
+    );
+  }
 
   if (filter === "lesson") {
     return (

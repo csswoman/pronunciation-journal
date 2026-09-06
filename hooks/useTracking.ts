@@ -8,6 +8,7 @@ import type { TrackingItem } from "@/lib/tracking/types";
 import type { TrackingReviewSource } from "@/lib/tracking/review-queue";
 import { deriveWordProgressSignal, WORD_PROGRESS_LABELS } from "@/lib/word-bank/progress-state";
 import { resolveLessonHref, resolveLessonTitle } from "@/lib/courses/curriculumIndex";
+import { isFromCoach } from "@/lib/ai-coach/saveables/source";
 import { useWords } from "./useWords";
 
 export function useTracking() {
@@ -36,6 +37,7 @@ export function useTracking() {
           description: word.translation ?? word.meaning,
           progressState,
           progressLabel: WORD_PROGRESS_LABELS[progressState],
+          fromCoach: isFromCoach(word),
         }
         return { item, word }
       });
@@ -52,6 +54,7 @@ export function useTracking() {
         href: trackedItem.kind === "lesson" ? resolveLessonHref(trackedItem.ref, trackedItem.payload) : undefined,
         progressState: 'saved',
         progressLabel: WORD_PROGRESS_LABELS.saved,
+        fromCoach: isFromCoach(trackedItem),
       };
       return { item, trackedItem };
     });

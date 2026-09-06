@@ -14,6 +14,12 @@ export interface TrackedItem {
   updatedAt: string;
 }
 
+/**
+ * Guardadas filters. The first four narrow by item kind; "ai_coach" narrows by
+ * origin instead, so it cuts across all three kinds.
+ */
+export type TrackingFilter = "all" | TrackedKind | "ai_coach";
+
 export interface TrackingItem {
   id: string;
   kind: TrackedKind;
@@ -22,4 +28,6 @@ export interface TrackingItem {
   href?: string;
   progressState?: WordProgressSignal;
   progressLabel?: string;
+  /** True when the AI Coach saved this item. */
+  fromCoach?: boolean;
 }
