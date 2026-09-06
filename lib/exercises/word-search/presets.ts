@@ -1,4 +1,6 @@
 import type { WordSearchItem, WordSearchThemePreset } from './types'
+import { SILENT_LETTER_WORDS } from './curated-silent-letters'
+import { WORKPLACE_TECH_WORDS } from './curated-workplace'
 
 export const WORD_SEARCH_PRESETS: WordSearchThemePreset[] = [
   {
@@ -18,116 +20,6 @@ export const WORD_SEARCH_PRESETS: WordSearchThemePreset[] = [
 ]
 
 export const CURATED_PUZZLE_ITEMS: Record<string, Array<Omit<WordSearchItem, 'found' | 'foundAt'>>> = {
-  'silent-letters': [
-    {
-      id: 'sl-1',
-      word: 'KNIGHT',
-      displayWord: 'knight',
-      ipa: '/naɪt/',
-      clue: 'A historical soldier in armor; starts with a silent K.',
-      meaningEs: 'Caballero (medieval)',
-      exampleSentence: 'The brave knight protected the kingdom.',
-    },
-    {
-      id: 'sl-2',
-      word: 'DOUBT',
-      displayWord: 'doubt',
-      ipa: '/daʊt/',
-      clue: 'A feeling of uncertainty; contains a silent B.',
-      meaningEs: 'Duda',
-      exampleSentence: 'I have no doubt that you will succeed.',
-    },
-    {
-      id: 'sl-3',
-      word: 'HONEST',
-      displayWord: 'honest',
-      ipa: '/ˈɒn.ɪst/',
-      clue: 'Telling the truth and not lying; starts with a silent H.',
-      meaningEs: 'Honesto / Sincero',
-      exampleSentence: 'Always be honest with yourself.',
-    },
-    {
-      id: 'sl-4',
-      word: 'SALMON',
-      displayWord: 'salmon',
-      ipa: '/ˈsæm.ən/',
-      clue: 'A large silver fish with pink meat; silent L.',
-      meaningEs: 'Salmón',
-      exampleSentence: 'Grilled salmon is rich in healthy fats.',
-    },
-    {
-      id: 'sl-5',
-      word: 'CASTLE',
-      displayWord: 'castle',
-      ipa: '/ˈkɑː.səl/',
-      clue: 'A large fortified stone building; silent T.',
-      meaningEs: 'Castillo',
-      exampleSentence: 'The ancient castle sits on the hill.',
-    },
-    {
-      id: 'sl-6',
-      word: 'WRIST',
-      displayWord: 'wrist',
-      ipa: '/rɪst/',
-      clue: 'The joint connecting the hand to the arm; silent W.',
-      meaningEs: 'Muñeca (articulación)',
-      exampleSentence: 'He wears a watch on his left wrist.',
-    },
-  ],
-  'workplace-tech': [
-    {
-      id: 'wt-1',
-      word: 'FEEDBACK',
-      displayWord: 'feedback',
-      ipa: '/ˈfiːd.bæk/',
-      clue: 'Helpful information or criticism about performance.',
-      meaningEs: 'Retroalimentación / Comentarios',
-      exampleSentence: 'Constructive feedback helps you grow.',
-    },
-    {
-      id: 'wt-2',
-      word: 'DEADLINE',
-      displayWord: 'deadline',
-      ipa: '/ˈded.laɪn/',
-      clue: 'The latest time or date by which something should be completed.',
-      meaningEs: 'Fecha límite',
-      exampleSentence: 'The project deadline is tomorrow morning.',
-    },
-    {
-      id: 'wt-3',
-      word: 'SCHEDULE',
-      displayWord: 'schedule',
-      ipa: '/ˈskedʒ.uːl/',
-      clue: 'A plan for carrying out a process or procedure.',
-      meaningEs: 'Horario / Agenda',
-      exampleSentence: 'Let us check our schedule for next week.',
-    },
-    {
-      id: 'wt-4',
-      word: 'DEPLOY',
-      displayWord: 'deploy',
-      ipa: '/dɪˈplɔɪ/',
-      clue: 'To bring software or resources into effective action.',
-      meaningEs: 'Desplegar / Poner en marcha',
-      exampleSentence: 'We deploy the new update this afternoon.',
-    },
-    {
-      id: 'wt-5',
-      word: 'MEETING',
-      displayWord: 'meeting',
-      ipa: '/ˈmiː.tɪŋ/',
-      clue: 'An assembly of people for discussion.',
-      meaningEs: 'Reunión',
-      exampleSentence: 'The team meeting starts in ten minutes.',
-    },
-    {
-      id: 'wt-6',
-      word: 'REVIEW',
-      displayWord: 'review',
-      ipa: '/rɪˈvjuː/',
-      clue: 'A formal assessment or examination with the possibility of making changes.',
-      meaningEs: 'Revisión / Repaso',
-      exampleSentence: 'We conducted a code review before launch.',
-    },
-  ],
+  'silent-letters': SILENT_LETTER_WORDS,
+  'workplace-tech': WORKPLACE_TECH_WORDS,
 }

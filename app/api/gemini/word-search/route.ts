@@ -7,8 +7,9 @@ import { buildWordSearchUserPrompt, WORD_SEARCH_SYSTEM_PROMPT } from '@/lib/ai-p
 const WordSearchRequestSchema = z.object({
   topic: z.string().min(1).max(150),
   level: z.enum(['beginner', 'intermediate', 'advanced']).optional().default('intermediate'),
-  count: z.number().int().min(4).max(8).optional().default(6),
+  count: z.number().int().min(4).max(10).optional().default(8),
   knownWords: z.array(z.string().max(50)).max(30).optional(),
+  excludeWords: z.array(z.string().max(50)).max(30).optional(),
 })
 
 const WordSearchItemSchema = z.object({

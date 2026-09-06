@@ -34,6 +34,16 @@ describe("ai-prompts user builders", () => {
     expect(prompt).toContain("knife, spoon");
   });
 
+  it("buildWordSearchUserPrompt includes exclude list when provided", () => {
+    const prompt = buildWordSearchUserPrompt({
+      topic: "office",
+      level: "intermediate",
+      count: 6,
+      excludeWords: ["meeting", "agenda"],
+    });
+    expect(prompt).toContain("Do NOT reuse any of these recently played words: meeting, agenda");
+  });
+
   it("buildDeckSuggestUserPrompt excludes existing deck words", () => {
     const prompt = buildDeckSuggestUserPrompt({
       deckName: "Kitchen",

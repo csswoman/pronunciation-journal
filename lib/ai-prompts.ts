@@ -295,13 +295,18 @@ export function buildWordSearchUserPrompt(input: {
   level: string
   count: number
   knownWords?: string[]
+  excludeWords?: string[]
 }): string {
   const known = input.knownWords?.length
     ? `\nIncorporate or complement these known words if relevant: ${input.knownWords.join(', ')}`
     : ''
+  const excluded = input.excludeWords?.length
+    ? `\nDo NOT reuse any of these recently played words: ${input.excludeWords.join(', ')}.`
+    : ''
   return `Generate a word search puzzle with ${input.count} words.
 Topic: "${input.topic}"
-Learner level: ${input.level}${known}
+Learner level: ${input.level}${known}${excluded}
+Ensure all words are unique, varied, and relevant.
 
 Respond with JSON: {"topicTitle":"Short title describing the set","words":[{"word":"EXAMPLENOSPACES","ipa":"/.../","clue":"Clear definition or hint in English","meaningEs":"Significado en español","exampleSentence":"A short natural example sentence using the word."}]}`
 }
