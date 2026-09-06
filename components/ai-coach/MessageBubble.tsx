@@ -10,6 +10,7 @@ import ToolWidget from "./chat/ToolWidget";
 import PracticeSession, { type ExerciseSessionSummary } from "./PracticeSession";
 import { isExerciseTool } from "@/lib/ai-practice/tools/registry";
 import { parseCorrection } from "@/lib/ai-coach/parse-correction";
+import { extractTurnCorrection } from "@/lib/ai-practice/correction";
 import CorrectionCard from "./CorrectionCard";
 import {
   extractSentenceContext,
@@ -83,7 +84,13 @@ function AIBubble({
     .map((p) => p.text)
     .join("\n");
 
-  const { correction, body: proseBody } = parseCorrection(fullText);
+  // The tool call is the primary source; parseCorrection stays as a fallback for
+  // turns where the model wrote the correction into its prose instead.
+  const toolCorrection = extractTurnCorrection(message.toolCalls);
+  const parsed = parseCorrection(fullText);
+  const correction = toolCorrection ?? parsed.correction;
+  // Only strip text from the prose when the regex fallback matched it there.
+  const proseBody = toolCorrection ? fullText : parsed.body;
 
   const hasSuggestions = message.contentParts.some(
     (p) => p.type === "text" && /^suggestions?:/im.test(proseBody),
@@ -188,7 +195,7 @@ function AIBubble({
                       );
                     }
                     const tc = message.toolCalls.get(part.callId);
-                    if (!tc || tc.name === "suggestions") return null;
+                    if (!tc || tc.name === "suggestions" || tc.name === "annotate_turn") return null;
                     if (isExerciseTool(tc.name as never)) return null;
                     return (
                       <ToolWidget
