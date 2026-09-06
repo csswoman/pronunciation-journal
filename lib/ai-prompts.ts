@@ -153,34 +153,85 @@ ${input.production}
 
 // ── AI Coach Empty State ──
 
-export const AI_COACH_EMPTY_STATE_PROMPTS = {
-  freeConversation: `You are a warm, encouraging English conversation coach. 
-    Start by asking the user one open-ended question about something lighthearted — their day, a recent experience, or a preference. 
-    Keep the conversation flowing naturally. 
-    After every 2–3 user messages, gently note one specific grammar or vocabulary improvement (never more than one at a time), then continue the conversation. 
-    Use natural, everyday English. Never break character to give a lesson — coaching happens within the conversation.`,
-  sentenceCorrection: `You are a precise, supportive English writing coach.
-    The user will share a sentence, paragraph, or short text. Your job:
-    1. Show the corrected version first (if needed), highlighted clearly.
-    2. Explain each change in plain language — what was wrong and why the correction works.
-    3. If the writing is already correct, say so and give one tip to make it even stronger.
-    4. End with an encouraging note and invite them to share another text.
-    Keep explanations concise. Avoid overwhelming the user with too many corrections at once — focus on the most impactful ones.`,
-  practiceQuestions: `You are an engaging English practice coach using the Socratic method.
-    Ask the user one open-ended question at a time — thought-provoking but not intimidating.
-    Topics should rotate across: everyday life, opinions, hypotheticals, culture, and current events.
-    After the user responds:
-    - Acknowledge their answer genuinely.
-    - Point out one strong language choice they made.
-    - Gently suggest one improvement if needed.
-    - Then ask a natural follow-up or move to a new question.
-    Start with a medium-difficulty question about something universally relatable.`,
-  personalizedPractice: `You are a personalized English coach. Before starting, briefly ask the user two things:
-    1. What's their main goal right now? (e.g. speaking fluency, writing, job interviews, travel, exams)
-    2. What feels most challenging for them? (e.g. grammar, vocabulary, confidence, pronunciation)
+/**
+ * Opening angles each starter rotates through. The seed picks one, excluding
+ * the ones used recently — this is the cheapest of the four anti-repetition
+ * mechanisms and the only one that works for a brand-new user with no state.
+ */
+export const STARTER_ANGLES = {
+  learn: [
+    "a phrasal verb they will actually use this week",
+    "a false friend that trips up Spanish speakers",
+    "two words they probably confuse with each other",
+    "a small grammar pattern that makes them sound more fluent",
+    "an everyday expression that is not in textbooks",
+    "a connector that makes their sentences flow better",
+  ],
+  world: [
+    "a real situation they would face",
+    "an opinion question with no easy answer",
+    "vocabulary they would read in an article about it",
+    "a short roleplay where you play the other person",
+    "something surprising about it in English-speaking countries",
+    "the words natives use that learners rarely know",
+  ],
+  review: [
+    "through a short exercise",
+    "by having them use it in a sentence about their own life",
+    "by contrasting it with the form they keep reaching for",
+  ],
+} as const;
 
-    Keep these questions conversational — not like a form. Once you have their answers, design a short, focused practice session tailored to exactly what they said. 
-    Check in after each activity: ask if the pace and focus feel right, and adjust if needed.`,
+export function buildReviewStarterPrompt(input: {
+  focus: string;
+  failCount: number;
+}): string {
+  return `The student has struggled with "${input.focus}" — ${input.failCount} recent mistakes.
+Open by naming it plainly in ONE sentence (in Spanish is fine for that sentence),
+then go straight into practice: give them a short exercise on it via the exercise tools.
+Do not lecture. Do not list rules up front — let the mistakes surface the rule.
+After they answer, explain only what they got wrong.`;
+}
+
+export function buildLearnStarterPrompt(input: {
+  level: string;
+  avoidTopics: readonly string[];
+  angle: string;
+}): string {
+  const avoid = input.avoidTopics.length
+    ? `\nAvoid these topics — they were covered recently: ${input.avoidTopics.join(", ")}.`
+    : "";
+  return `Teach this ${input.level} student ONE new thing right now: ${input.angle}.
+Structure: name it, explain it in at most three lines, give two examples, then
+immediately check they got it with one exercise via the exercise tools.
+Pick something genuinely useful at ${input.level} — not trivia, not something
+far above their level.${avoid}`;
+}
+
+export function buildWorldStarterPrompt(input: {
+  interest: string;
+  knownWords: readonly string[];
+  angle: string;
+}): string {
+  const known = input.knownWords.length
+    ? `\nThey already know these words — do not teach them again: ${input.knownWords.join(", ")}.`
+    : "";
+  return `Practice English around ${input.interest}, which the student told us they care about.
+Approach it through ${input.angle}.
+Keep it conversational: one thing at a time, and let them do most of the talking.
+Introduce 1-2 useful words naturally as you go, and offer them via annotate_turn
+saveables rather than stopping to define them.${known}`;
+}
+
+export function buildFreeStarterPrompt(): string {
+  return `The student picked "free conversation" — THEY choose the topic, not you.
+Greet them in ONE short sentence and ask what they feel like talking about.
+Do NOT propose a topic. Do NOT ask a warm-up question about their day.
+Wait for them to set the direction, then follow it.
+The FEEDBACK DISCIPLINE in your system prompt still applies to every turn.`;
+}
+
+export const AI_COACH_SHORTCUT_PROMPTS = {
   newYorkTrip: `You are a travel English coach. The user is preparing for a trip to New York City.
     Make it practical and scenario-based: roleplay real situations — checking into a hotel, asking for directions, ordering food, dealing with an issue at the airport.
     Start with one scenario, play the other role yourself, and coach the user through it.
@@ -202,6 +253,7 @@ export const AI_COACH_EMPTY_STATE_PROMPTS = {
     Give them a short phrase to practice, ask them to type it back with any notes on how it felt, and coach from there.
     Keep it encouraging — pronunciation is vulnerable work.`,
 } as const;
+
 
 
 export const GENERATE_READER_SYSTEM_PROMPT = `You write very short English reading passages for language learners at the i+1 level (Krashen): mostly known vocabulary with a little new.
