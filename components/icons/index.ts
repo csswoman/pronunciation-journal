@@ -51,6 +51,7 @@ import {
   IconEye,
   IconEyeOff,
   IconFileText,
+  IconFlag,
   IconFlame,
   IconFolderOpen,
   IconFolderPlus,
@@ -171,6 +172,7 @@ export const Ear = createIcon(IconEar, "Ear");
 export const Eye = createIcon(IconEye, "Eye");
 export const EyeOff = createIcon(IconEyeOff, "EyeOff");
 export const FileText = createIcon(IconFileText, "FileText");
+export const Flag = createIcon(IconFlag, "Flag");
 export const Flame = createIcon(IconFlame, "Flame");
 export const FolderInput = createIcon(IconFolderOpen, "FolderInput");
 export const FolderPlus = createIcon(IconFolderPlus, "FolderPlus");

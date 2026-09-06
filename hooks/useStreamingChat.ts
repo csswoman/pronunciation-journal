@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import type { AIMessage, StreamChunk, ExerciseResult, VoiceMetadata } from "@/lib/ai-practice/types";
 import { serializeMessage, deserializeMessage, type SerializedModelMessage } from "@/lib/ai-practice/types";
 import { applyExerciseResult, type UserLearningState } from "@/lib/ai-practice/learning-state";
@@ -302,8 +302,14 @@ export function useStreamingChat({
     });
   }, []);
 
+  const userTurnCount = useMemo(
+    () => messages.filter((m) => m.role === "user").length,
+    [messages],
+  );
+
   return {
     messages,
+    userTurnCount,
     isStreaming,
     error,
     quotaExhausted,

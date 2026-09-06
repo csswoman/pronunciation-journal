@@ -168,28 +168,11 @@ export default function AIBubble({
                     if (part.type === "text") {
                       const text = displayText ?? part.text;
                       if (!text.trim()) return null;
-                      return (
-                        <div key={i} className="layout-stack-tight">
-                          {renderProse(text.split("\n"))}
-                        </div>
-                      );
+                      return <div key={i} className="layout-stack-tight">{renderProse(text.split("\n"))}</div>;
                     }
                     const tc = message.toolCalls.get(part.callId);
-                    if (
-                      !tc ||
-                      tc.name === "suggestions" ||
-                      tc.name === "annotate_turn" ||
-                      tc.name === "render_session_summary"
-                    ) return null;
-                    if (isExerciseTool(tc.name as never)) return null;
-                    return (
-                      <ToolWidget
-                        key={i}
-                        toolCall={tc}
-                        onAnswer={onToolAnswer}
-                        onNext={onNext}
-                      />
-                    );
+                    if (!tc || tc.name === "suggestions" || tc.name === "annotate_turn" || tc.name === "render_session_summary" || isExerciseTool(tc.name as never)) return null;
+                    return <ToolWidget key={i} toolCall={tc} onAnswer={onToolAnswer} onNext={onNext} />;
                   })}
                   {summaryCall && (
                     <SessionSummaryCard
@@ -246,16 +229,8 @@ export default function AIBubble({
           </button>
         </div>
 
-        {chips.length > 0 && (
-          <SuggestionChips
-            suggestions={chips}
-            onSelect={onSuggestionClick}
-          />
-        )}
-
-        {saveables.length > 0 && (
-          <SaveChips saveables={saveables} onSave={onSaveSaveable} />
-        )}
+        {chips.length > 0 && <SuggestionChips suggestions={chips} onSelect={onSuggestionClick} />}
+        {saveables.length > 0 && <SaveChips saveables={saveables} onSave={onSaveSaveable} />}
       </div>
     </div>
   );

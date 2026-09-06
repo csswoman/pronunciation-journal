@@ -11,12 +11,14 @@ export function AICoachHeader({
   onNewChat,
   onToggleHistory,
   onClose,
+  endSessionSlot,
 }: {
   pageLabel?: string;
   showHistory: boolean;
   onNewChat: () => void;
   onToggleHistory: () => void;
   onClose: () => void;
+  endSessionSlot?: React.ReactNode;
 }) {
   const showBadge = Boolean(pageLabel && pageLabel.trim() !== "" && pageLabel !== "AI Coach");
 
@@ -34,6 +36,7 @@ export function AICoachHeader({
         )}
       </div>
       <div className="flex items-center gap-1 shrink-0">
+        {endSessionSlot}
         <PanelIconButton onClick={onNewChat} title="Nueva conversación">
           <Plus size={16} strokeWidth={2} />
         </PanelIconButton>

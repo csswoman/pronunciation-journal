@@ -19,6 +19,7 @@ type MissionIntentHandler = (intentId: string) => void;
 
 interface UseAIPracticeReturn {
   messages: ReturnType<typeof useStreamingChat>["messages"];
+  userTurnCount: number;
   isStreaming: boolean;
   error: string | null;
   quotaExhausted: boolean;
@@ -191,6 +192,7 @@ export function useAIPractice(): UseAIPracticeReturn {
 
   return {
     messages: chat.messages,
+    userTurnCount: chat.userTurnCount,
     isStreaming: chat.isStreaming,
     error: chat.error,
     quotaExhausted: chat.quotaExhausted,
