@@ -15,3 +15,18 @@ export function normalizeInterests(values: readonly unknown[]): Interest[] {
 
   return [...new Set(normalized)].slice(0, 10) as Interest[]
 }
+
+export const INTEREST_LABELS_ES: Record<Interest, string> = {
+  technology: "tecnología",
+  travel: "viajes",
+  work: "trabajo",
+  food: "comida",
+  music: "música",
+  films: "películas",
+  books: "libros",
+  sports: "deportes",
+  health: "salud",
+  science: "ciencia",
+  business: "negocios",
+  gaming: "videojuegos",
+};
