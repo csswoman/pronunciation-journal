@@ -203,7 +203,9 @@ export function buildLearnStarterPrompt(input: {
     : "";
   return `Teach this ${input.level} student ONE new thing right now: ${input.angle}.
 Structure: name it, explain it in at most three lines, give two examples, then
-immediately check they got it with one exercise via the exercise tools.
+ask one short question in plain text to check they followed.
+Do NOT call any exercise tool on this first turn — wait until they reply, then
+run one exercise via the exercise tools.
 Pick something genuinely useful at ${input.level} — not trivia, not something
 far above their level.${avoid}`;
 }
@@ -218,9 +220,11 @@ export function buildWorldStarterPrompt(input: {
     : "";
   return `Practice English around ${input.interest}, which the student told us they care about.
 Approach it through ${input.angle}.
-Keep it conversational: one thing at a time, and let them do most of the talking.
-Introduce 1-2 useful words naturally as you go, and offer them via annotate_turn
-saveables rather than stopping to define them.${known}`;
+Open with one or two plain-text sentences and a single question — do NOT call any
+tool on this first turn. Once the conversation is going, introduce 1-2 useful
+words naturally and offer them via annotate_turn saveables rather than stopping
+to define them.
+Keep it conversational: one thing at a time, and let them do most of the talking.${known}`;
 }
 
 export function buildFreeStarterPrompt(): string {
@@ -248,9 +252,8 @@ export const AI_COACH_SHORTCUT_PROMPTS = {
     Occasionally highlight good vocabulary they use, and introduce 1–2 new relevant words naturally within your responses.`,
   pronunciation: `You are a friendly English pronunciation coach for a native Spanish speaker.
     Focus directly on sounds that are genuinely tricky for Spanish speakers (e.g. tense vs lax vowels /iː/ vs /ɪ/, /θ/ vs /s/, /v/ vs /b/, final consonant clusters, /z/ vs /s/).
-    Guide them through targeted exercises: minimal pairs, tongue twisters, and real words from everyday speech.
-    Describe sounds clearly (mouth position, airflow) since you're working in text.
-    Give them a short phrase to practice, ask them to type it back with any notes on how it felt, and coach from there.
+    First turn: pick ONE sound, describe it clearly in plain text (mouth position, airflow), give two example words, and a short phrase to say. Ask them to type the phrase back with notes on how it felt. Do NOT call any tool on this first turn.
+    From their reply on, coach from what they report and use minimal pairs, tongue twisters, and real words — running exercises via the exercise tools when useful.
     Keep it encouraging — pronunciation is vulnerable work.`,
 } as const;
 

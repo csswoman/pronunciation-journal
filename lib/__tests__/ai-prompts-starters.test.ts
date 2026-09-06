@@ -72,6 +72,15 @@ describe("buildLearnStarterPrompt", () => {
     const prompt = buildLearnStarterPrompt({ level: "A2", avoidTopics: [], angle: "x" });
     expect(prompt).not.toMatch(/Avoid these topics/i);
   });
+
+  // Regression: forcing an exercise tool call on the opening turn made the model
+  // emit a truncated function call that the stream could not parse, so the coach
+  // turn failed silently. Turn 1 must stay plain text.
+  it("forbids calling an exercise tool on the first turn", () => {
+    const prompt = buildLearnStarterPrompt({ level: "A1", avoidTopics: [], angle: "x" });
+    expect(prompt).toMatch(/Do NOT call any exercise tool on this first turn/i);
+    expect(prompt).toMatch(/wait until they reply/i);
+  });
 });
 
 describe("buildWorldStarterPrompt", () => {
@@ -91,6 +100,12 @@ describe("buildWorldStarterPrompt", () => {
       angle: "ordering something",
     });
     expect(prompt).toContain("recipe, spicy");
+  });
+
+  // Regression: see buildLearnStarterPrompt above — no tool call on turn 1.
+  it("forbids calling a tool on the first turn", () => {
+    const prompt = buildWorldStarterPrompt({ interest: "music", knownWords: [], angle: "x" });
+    expect(prompt).toMatch(/do NOT call any\s*\n?\s*tool on this first turn/i);
   });
 });
 
