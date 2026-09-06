@@ -7,11 +7,13 @@
 //   <ActionArea: MissionLaunch / Edit / Delete />
 // </TrackingCard>
 
+import { useState } from "react";
 import Link from "next/link";
 import { Bookmark, BookOpen, FileText, Lightbulb, Pencil, Trash2 } from "@/components/icons";
 import Badge from "@/components/ui/Badge";
 import { PronunciationMissionLaunchButton } from "@/components/pronunciation/PronunciationMissionLaunchButton";
 import { getTarget, targetId } from "@/lib/pronunciation/targets/registry";
+import { cn } from "@/lib/cn";
 import type { TrackingReviewSource } from "@/lib/tracking/review-queue";
 import type { TrackedKind } from "@/lib/tracking/types";
 import type { WordBankEntry } from "@/lib/word-bank/types";
@@ -27,10 +29,60 @@ interface TrackingCardProps {
   source: TrackingReviewSource;
   onEditWord: (word: WordBankEntry) => void;
   onDeleteWord: (word: WordBankEntry) => void;
+  onDeleteExplanation: (source: TrackingReviewSource) => void;
 }
 
-export function TrackingCard({ source, onEditWord, onDeleteWord }: TrackingCardProps) {
+export function TrackingCard({ source, onEditWord, onDeleteWord, onDeleteExplanation }: TrackingCardProps) {
+  const [expanded, setExpanded] = useState(false);
   const { item } = source;
+
+  if (item.kind === "explanation") {
+    return (
+      <div className="tracking-item">
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-surface-sunken text-fg-muted">
+          <Lightbulb size={16} aria-hidden />
+        </span>
+        <span className="min-w-0">
+          <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
+            <span className="text-body-sm font-semibold text-fg">{item.title}</span>
+            <Badge label="Explicación" variant="neutral" size="sm" />
+            {item.fromCoach && <Badge label="✦ coach" variant="info" size="sm" />}
+          </span>
+          {item.description ? (
+            <>
+              <span
+                className={cn(
+                  "mt-1.5 block text-body-sm text-fg-muted whitespace-pre-line",
+                  !expanded && "line-clamp-3",
+                )}
+              >
+                {item.description}
+              </span>
+              <button
+                type="button"
+                onClick={() => setExpanded((v) => !v)}
+                className="focus-ring mt-1 text-caption font-semibold text-primary underline-offset-2 hover:underline"
+              >
+                {expanded ? "Ver menos" : "Ver más"}
+              </button>
+            </>
+          ) : null}
+        </span>
+        <span className="flex shrink-0 items-center gap-1.5">
+          <button
+            type="button"
+            onClick={() => onDeleteExplanation(source)}
+            aria-label={`Eliminar ${item.title}`}
+            title="Eliminar explicación"
+            className="focus-ring flex h-9 w-9 items-center justify-center rounded-[var(--radius-sm)] text-fg-muted transition-colors hover:bg-error-soft hover:text-error active:scale-95"
+          >
+            <Trash2 size={16} aria-hidden />
+          </button>
+        </span>
+      </div>
+    );
+  }
+
   const entry = registry[item.kind];
   const Icon = entry.icon;
   const word = "word" in source ? source.word : null;
