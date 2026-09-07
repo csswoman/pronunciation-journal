@@ -129,10 +129,10 @@ describe("buildLearnStarterPrompt syllabus topics", () => {
 });
 
 describe("buildPronunciationStarterPrompt", () => {
-  it("states the level and forbids a tool call on turn 1", () => {
+  it("states the level and forbids an exercise tool call on turn 1", () => {
     const prompt = buildPronunciationStarterPrompt({ level: "A1" });
     expect(prompt).toContain("level A1");
-    expect(prompt).toMatch(/Do NOT call any tool on this first turn/i);
+    expect(prompt).toMatch(/Do NOT call any exercise tool on this first turn/i);
   });
 
   it("lists the level's sound targets when given", () => {

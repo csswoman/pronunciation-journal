@@ -239,10 +239,19 @@ export function buildPronunciationStarterPrompt(input: {
 Focus on sounds that are genuinely tricky for Spanish speakers at this level.${targets}
 First turn: pick ONE sound, describe it clearly in plain text (mouth position, airflow),
 give two example words, and a short phrase to say. Ask them to type the phrase back
-with notes on how it felt. Do NOT call any tool on this first turn.
+with notes on how it felt. Do NOT call any exercise tool on this first turn — you
+MAY call annotate_turn.
 From their reply on, coach from what they report and use minimal pairs, tongue
 twisters, and real words — running exercises via the exercise tools when useful.
-Keep it encouraging — pronunciation is vulnerable work.`;
+Keep it encouraging — pronunciation is vulnerable work.
+After your teaching text, call annotate_turn with a concept whose title is a
+short Spanish label for the sound you just taught (e.g. 'Sonido /æ/ vs /ʌ/').
+This lets the student save the lesson.
+End your message with a suggestions: block — exactly 3 short first-person replies
+the student could send right now, each on its own line prefixed with "- ". Make
+them fit this sound: one an attempt at saying the phrase with a note on how it
+felt, one a request for another example word, one a request to explain the mouth
+position more simply. Write them in English at the student's level.`;
 }
 
 export function buildWorldStarterPrompt(input: {

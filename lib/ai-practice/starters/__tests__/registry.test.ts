@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { buildPronunciationStarterPrompt } from "@/lib/ai-prompts";
 import { STARTERS, getStarter } from "../registry";
 import type { StarterContext } from "../types";
 import { createEmptyState } from "@/lib/ai-practice/learning-state";
@@ -132,6 +133,24 @@ describe("world starter", () => {
       domainProfile: { domains: [{ id: "engineering" as const, label: "ingeniería", wordCount: 1 }], categories: [] },
     } as never;
     expect(getStarter("world").isAvailable(ctx({ state }))).toBe(true);
+  });
+});
+
+describe("pronunciation starter prompt", () => {
+  it("no longer forbids all tools on the first turn", () => {
+    const prompt = buildPronunciationStarterPrompt({ level: "A2" });
+    expect(prompt).not.toMatch(/Do NOT call any tool on this first turn/i);
+    expect(prompt).toContain("Do NOT call any exercise tool on this first turn");
+  });
+
+  it("tells the coach to emit a concept for the sound it taught", () => {
+    const prompt = buildPronunciationStarterPrompt({ level: "A2" });
+    expect(prompt).toMatch(/call annotate_turn with a concept/i);
+  });
+
+  it("tells the coach to end with a topical suggestions: block", () => {
+    const prompt = buildPronunciationStarterPrompt({ level: "A2" });
+    expect(prompt).toMatch(/end your message with a suggestions: block/i);
   });
 });
 
