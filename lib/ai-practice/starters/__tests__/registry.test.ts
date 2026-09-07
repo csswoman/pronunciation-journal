@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { buildPronunciationStarterPrompt } from "@/lib/ai-prompts";
+import { buildPronunciationStarterPrompt, buildWorldStarterPrompt } from "@/lib/ai-prompts";
 import { STARTERS, getStarter } from "../registry";
 import type { StarterContext } from "../types";
 import { createEmptyState } from "@/lib/ai-practice/learning-state";
@@ -150,6 +150,26 @@ describe("pronunciation starter prompt", () => {
 
   it("tells the coach to end with a topical suggestions: block", () => {
     const prompt = buildPronunciationStarterPrompt({ level: "A2" });
+    expect(prompt).toMatch(/end your message with a suggestions: block/i);
+  });
+});
+
+describe("world starter prompt", () => {
+  const base = { interest: "gaming", knownWords: [], angle: "a real situation they would face" } as const;
+
+  it("no longer forbids all tools on the first turn", () => {
+    const prompt = buildWorldStarterPrompt({ ...base });
+    expect(prompt).not.toMatch(/do NOT call any\s+tool on this first turn/i);
+    expect(prompt).toContain("Do NOT call any exercise tool on this first turn");
+  });
+
+  it("tells the coach to emit a concept so the point can be saved", () => {
+    const prompt = buildWorldStarterPrompt({ ...base });
+    expect(prompt).toMatch(/call annotate_turn with a concept/i);
+  });
+
+  it("tells the coach to end with a topical suggestions: block", () => {
+    const prompt = buildWorldStarterPrompt({ ...base });
     expect(prompt).toMatch(/end your message with a suggestions: block/i);
   });
 });

@@ -264,11 +264,20 @@ export function buildWorldStarterPrompt(input: {
     : "";
   return `Practice English around ${input.interest}, which the student told us they care about.
 Approach it through ${input.angle}.
-Open with one or two plain-text sentences and a single question — do NOT call any
-tool on this first turn. Once the conversation is going, introduce 1-2 useful
-words naturally and offer them via annotate_turn saveables rather than stopping
-to define them.
-Keep it conversational: one thing at a time, and let them do most of the talking.${known}`;
+Open with one or two plain-text sentences and a single question.
+Do NOT call any exercise tool on this first turn — you MAY call annotate_turn.
+Once the conversation is going, introduce 1-2 useful words naturally and offer
+them via annotate_turn saveables rather than stopping to define them.
+Keep it conversational: one thing at a time, and let them do most of the talking.${known}
+After your opening, call annotate_turn with a concept whose title is a short
+Spanish label for the vocabulary point or expression you introduced (e.g.
+'Vocabulario de videojuegos — to grind, to respawn'). This lets the student save
+it. Skip the concept only if this turn introduced nothing teachable.
+End your message with a suggestions: block — exactly 3 short first-person replies
+the student could send right now, each on its own line prefixed with "- ". Make
+them fit this topic: one an answer to your question, one a request for another
+example, one a request to explain it more simply. Write them in English at the
+student's level.`;
 }
 
 export function buildFreeStarterPrompt(): string {

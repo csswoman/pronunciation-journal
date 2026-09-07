@@ -103,10 +103,10 @@ describe("buildWorldStarterPrompt", () => {
     expect(prompt).toContain("recipe, spicy");
   });
 
-  // Regression: see buildLearnStarterPrompt above — no tool call on turn 1.
-  it("forbids calling a tool on the first turn", () => {
+  // Regression: see buildLearnStarterPrompt above — no EXERCISE tool call on turn 1.
+  it("forbids calling an exercise tool on the first turn", () => {
     const prompt = buildWorldStarterPrompt({ interest: "music", knownWords: [], angle: "x" });
-    expect(prompt).toMatch(/do NOT call any\s*\n?\s*tool on this first turn/i);
+    expect(prompt).toMatch(/do NOT call any exercise tool on this first turn/i);
   });
 });
 
