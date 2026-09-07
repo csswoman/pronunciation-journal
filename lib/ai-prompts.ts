@@ -210,9 +210,17 @@ export function buildLearnStarterPrompt(input: {
 Structure: name it, explain it in at most three lines, give two examples, then
 ask one short question in plain text to check they followed.
 Do NOT call any exercise tool on this first turn — wait until they reply, then
-run one exercise via the exercise tools.
+run one exercise via the exercise tools. You MAY call annotate_turn on this turn.
 Pick something genuinely useful at ${input.level} — not trivia, not something
-far above their level.${syllabus}${avoid}`;
+far above their level.${syllabus}${avoid}
+After your teaching text, call annotate_turn with a concept whose title is a
+short Spanish label for what you just taught (e.g. 'Adjetivos posesivos — my,
+your, his'). This lets the student save the lesson.
+End your message with a suggestions: block — exactly 3 short first-person replies
+the student could send right now, each on its own line prefixed with "- ". Make
+them fit this topic: one an attempt at the task you asked for, one a request for
+another example, one a request to explain it more simply. Write them in English
+at the student's level.`;
 }
 
 /**

@@ -68,6 +68,23 @@ describe("learn starter", () => {
     const second = getStarter("learn").build(ctx({ seed: 0, recentAngles: [first] })).angle;
     expect(second).not.toBe(first);
   });
+
+  it("still forbids exercise tools on the first turn but allows annotate_turn", () => {
+    const prompt = getStarter("learn").build(ctx()).prompt;
+    expect(prompt).toContain("Do NOT call any exercise tool on this first turn");
+    expect(prompt).not.toMatch(/Do NOT call any tool on this first turn/i);
+  });
+
+  it("tells the coach to emit a concept so the lesson can be saved", () => {
+    const prompt = getStarter("learn").build(ctx()).prompt;
+    expect(prompt).toMatch(/call annotate_turn with a concept/i);
+  });
+
+  it("tells the coach to end with a topical suggestions: block", () => {
+    const prompt = getStarter("learn").build(ctx()).prompt;
+    expect(prompt).toMatch(/end your message with a suggestions: block/i);
+    expect(prompt).toContain("exactly 3 short first-person replies");
+  });
 });
 
 describe("review starter", () => {
