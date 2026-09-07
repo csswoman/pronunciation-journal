@@ -79,4 +79,62 @@ describe('useMasonryLayout', () => {
     expect((children[0] as HTMLElement).style.gridRowEnd).toBe('span 5')
     expect((children[1] as HTMLElement).style.gridRowEnd).toBe('span 12')
   })
+
+  it('clears gridRowEnd when the mobile media query matches', () => {
+    vi.spyOn(window, 'matchMedia').mockImplementation(
+      (query: string) =>
+        ({
+          matches: true, // mobile
+          media: query,
+          addEventListener: vi.fn(),
+          removeEventListener: vi.fn(),
+          addListener: vi.fn(),
+          removeListener: vi.fn(),
+          onchange: null,
+          dispatchEvent: vi.fn(),
+        }) as unknown as MediaQueryList,
+    )
+    const container = mountGrid([100, 300])
+    // Pre-set stale inline values to prove they get cleared.
+    ;(container.children[0] as HTMLElement).style.gridRowEnd = 'span 9'
+    renderHook(() => {
+      const ref = useRef<HTMLDivElement>(container)
+      useMasonryLayout(ref)
+    })
+    expect((container.children[0] as HTMLElement).style.gridRowEnd).toBe('')
+    expect((container.children[1] as HTMLElement).style.gridRowEnd).toBe('')
+  })
+
+  it('flags data-masonry-off when ResizeObserver is unavailable', () => {
+    vi.stubGlobal('ResizeObserver', undefined)
+    const container = mountGrid([100, 300])
+    renderHook(() => {
+      const ref = useRef<HTMLDivElement>(container)
+      useMasonryLayout(ref)
+    })
+    expect(container.hasAttribute('data-masonry-off')).toBe(true)
+    expect((container.children[0] as HTMLElement).style.gridRowEnd).toBe('')
+  })
+
+  it('disconnects the observer and clears styles on unmount', () => {
+    const container = mountGrid([100, 300])
+    let disconnectSpy: ReturnType<typeof vi.fn> | null = null
+    class SpyRO extends MockResizeObserver {
+      constructor(cb: ResizeObserverCallback) {
+        super(cb)
+        disconnectSpy = this.disconnect
+      }
+    }
+    vi.stubGlobal('ResizeObserver', SpyRO)
+
+    const { unmount } = renderHook(() => {
+      const ref = useRef<HTMLDivElement>(container)
+      useMasonryLayout(ref)
+    })
+    expect((container.children[0] as HTMLElement).style.gridRowEnd).toBe('span 5')
+
+    unmount()
+    expect(disconnectSpy).toHaveBeenCalled()
+    expect((container.children[0] as HTMLElement).style.gridRowEnd).toBe('')
+  })
 })
