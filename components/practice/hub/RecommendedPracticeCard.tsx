@@ -21,7 +21,7 @@ export default function RecommendedPracticeCard({ recommendation }: Props) {
   const restText = match ? match[2] : headline
 
   return (
-    <div className="group relative flex flex-col justify-between gap-6 rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-5 md:p-6 shadow-xs transition-all duration-200 hover:border-border-strong hover:shadow-sm h-full overflow-hidden">
+    <div className="group relative flex flex-col justify-between gap-6 rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-5 md:p-6 shadow-xs transition-all duration-200 hover:border-border-strong hover:shadow-sm overflow-hidden">
       <div className="flex flex-col gap-4 min-w-0 z-10">
         <div className="flex items-center justify-between gap-2">
           <span className="font-kicker text-tiny uppercase tracking-wider text-fg-subtle">

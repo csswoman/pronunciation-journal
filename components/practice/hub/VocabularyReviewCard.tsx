@@ -30,7 +30,7 @@ export default function VocabularyReviewCard({ dueCount, learnedCount, totalCoun
     <Link
       href="/practice/essential-words"
       onClick={() => void setLastPracticeMode('essential-words')}
-      className="group flex flex-col justify-between gap-5 rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-5 shadow-xs transition-all duration-200 hover:border-border-strong hover:shadow-sm active:scale-[0.99] focus-ring h-full"
+      className="group flex flex-col justify-between gap-5 rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-5 shadow-xs transition-all duration-200 hover:border-border-strong hover:shadow-sm active:scale-[0.99] focus-ring"
     >
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between gap-2">

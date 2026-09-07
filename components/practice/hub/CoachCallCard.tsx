@@ -26,7 +26,7 @@ export default function CoachCallCard({ arc }: Props) {
   return (
     <div
       data-testid="speak-with-coach"
-      className="group relative flex flex-col justify-between gap-5 rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-5 shadow-xs transition-all duration-200 hover:border-border-strong hover:shadow-sm h-full overflow-hidden"
+      className="group relative flex flex-col justify-between gap-5 rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-5 shadow-xs transition-all duration-200 hover:border-border-strong hover:shadow-sm overflow-hidden"
     >
       <div className="flex flex-col gap-3 z-10">
         <div className="flex items-center gap-2.5">
