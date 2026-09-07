@@ -109,6 +109,13 @@ describe("review starter", () => {
     expect(built.prompt).toContain("past-simple");
     expect(built.subtitle).toContain("past-simple");
   });
+
+  it("carries neither the save-lesson concept nor the suggestions instruction", () => {
+    const state = stateWithWeakTopic("past-simple", 0.62);
+    const prompt = getStarter("review").build(ctx({ state })).prompt;
+    expect(prompt).not.toMatch(/call annotate_turn with a concept/i);
+    expect(prompt).not.toMatch(/end your message with a suggestions: block/i);
+  });
 });
 
 describe("world starter", () => {
