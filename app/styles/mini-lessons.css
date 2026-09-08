@@ -928,17 +928,22 @@
   color: var(--text-primary);
 }
 
-/* Exercise / quiz blocks: sunken so they read as contained regions, not floating cards */
+/* Exercise / quiz blocks: transparent section flow, individual cards breathe */
 .mini-lessons__block {
-  border-radius: var(--ml-radius-sm);
-  border: 1px solid var(--border-subtle);
-  background: var(--surface-sunken);
+  background: transparent;
+  border: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
 }
 
 .mini-lessons__block-label {
-  font-size: var(--text-size-body-sm);
-  font-weight: 600;
+  font-size: var(--text-size-h4);
+  font-weight: 700;
   color: var(--text-primary);
+  letter-spacing: -0.01em;
+  line-height: 1.35;
 }
 
 .mini-lessons__list {
@@ -1389,14 +1394,15 @@
 .mini-lessons__exercise-item-container {
   width: 100%;
   display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 14px 16px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
   background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--ml-radius-sm);
-  font-size: var(--text-size-body-sm);
-  color: var(--text-secondary);
+  border-radius: var(--radius-md);
+  font-size: var(--text-size-body);
+  color: var(--text-primary);
   transition: border-color 150ms ease-out, background-color 150ms ease-out;
 }
 
