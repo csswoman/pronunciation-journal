@@ -26,6 +26,8 @@ import { LearnerLine, type LineAttemptResult } from './LearnerLine'
 import { ScriptedResult } from './ScriptedResult'
 import { ArrowLeft } from '@/components/icons'
 import type { ScriptedMission } from '@/lib/ai-practice/missions/types'
+import { fetchMissionLineAudio } from '@/lib/ai-practice/missions/scripted/audio-queries'
+import { updateGeneratedScriptLineAudio } from '@/lib/ai-practice/missions/scripted/generated-store'
 import type { WordResult } from '@/lib/types'
 
 interface Props {
@@ -83,6 +85,38 @@ export default function ScriptedMissionRunner({ mission, onExit }: Props) {
       active = false
     }
   }, [user?.id, mission.id])
+
+  useEffect(() => {
+    if (typeof navigator === 'undefined' || !navigator.onLine) return
+    let active = true
+
+    const coachLines = mission.script.filter((l) => l.speaker === 'coach' && !l.modelAudio?.path)
+    if (coachLines.length === 0) return
+
+    void Promise.all(
+      coachLines.map(async (cl) => {
+        try {
+          const audioUrl = await fetchMissionLineAudio(cl, mission.id)
+          if (!active || !audioUrl) return
+          if (mission.id.startsWith('generated.')) {
+            void updateGeneratedScriptLineAudio(mission.id, cl.id, audioUrl)
+          }
+          setState((prev) => ({
+            ...prev,
+            script: prev.script.map((s) =>
+              s.id === cl.id ? { ...s, modelAudio: { path: audioUrl } } : s,
+            ),
+          }))
+        } catch {
+          // Swallow prefetch errors, will fall back cleanly in CoachLine
+        }
+      }),
+    )
+
+    return () => {
+      active = false
+    }
+  }, [mission.id, mission.script])
 
   const handleLineComplete = useCallback(
     (result: LineAttemptResult | null) => {
@@ -174,7 +208,7 @@ export default function ScriptedMissionRunner({ mission, onExit }: Props) {
         <ScriptTranscript script={state.script} currentIndex={state.currentIndex} />
         <div className={state.currentIndex > 0 ? 'pt-1' : ''}>
           {line.speaker === 'coach'
-            ? <CoachLine line={line} onContinue={handleCoachContinue} />
+            ? <CoachLine line={line} missionId={mission.id} onContinue={handleCoachContinue} />
             : <LearnerLine line={line} onLineComplete={handleLineComplete} />}
         </div>
         <div ref={bottomRef} className="h-px shrink-0" aria-hidden />

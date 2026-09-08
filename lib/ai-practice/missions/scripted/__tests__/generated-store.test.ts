@@ -1,7 +1,7 @@
 import 'fake-indexeddb/auto'
 import { describe, expect, it, afterEach } from 'vitest'
 import { db } from '@/lib/db'
-import { saveGeneratedScript, listGeneratedScripts } from '../generated-store'
+import { saveGeneratedScript, listGeneratedScripts, updateGeneratedScriptLineAudio } from '../generated-store'
 
 const script = [
   { speaker: 'coach' as const, text: 'Tell me about your stack.' },
@@ -35,5 +35,14 @@ describe('generated script store', () => {
     const mission = await saveGeneratedScript('user-a', 'cafe', 'A2', script)
     const ids = mission.script.map((line) => line.id)
     expect(new Set(ids).size).toBe(ids.length)
+  })
+
+  it('actualiza el audio de una línea generada', async () => {
+    const mission = await saveGeneratedScript('user-a', 'tech', 'B1', script)
+    const targetLineId = mission.script[0].id
+
+    await updateGeneratedScriptLineAudio(mission.id, targetLineId, 'https://example.com/audio.wav')
+    const reloaded = await listGeneratedScripts('user-a')
+    expect(reloaded[0].script[0].modelAudio?.path).toBe('https://example.com/audio.wav')
   })
 })

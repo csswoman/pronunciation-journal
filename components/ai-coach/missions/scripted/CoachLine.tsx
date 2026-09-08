@@ -8,17 +8,19 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { speak } from '@/lib/phoneme-practice/tts'
-import { resolveModelAudio } from '@/lib/speech/model-audio'
 import { useSpokenWordHighlight } from '@/hooks/useSpokenWordHighlight'
 import { splitSpokenWords } from '@/lib/speech/word-timings'
 import Button from '@/components/ui/Button'
 import { ArrowRight, Volume2 } from '@/components/icons'
 import type { ScriptLine } from '@/lib/ai-practice/missions/types'
+import { fetchMissionLineAudio } from '@/lib/ai-practice/missions/scripted/audio-queries'
+import { updateGeneratedScriptLineAudio } from '@/lib/ai-practice/missions/scripted/generated-store'
 import { SpokenLine } from './SpokenLine'
 
 interface Props {
   line: ScriptLine
   onContinue: () => void
+  missionId?: string
 }
 
 /**
@@ -44,13 +46,41 @@ function wordIndexAtChar(text: string, charIndex: number): number {
   return Math.max(0, words.length - 1)
 }
 
-export function CoachLine({ line, onContinue }: Props) {
+export function CoachLine({ line, onContinue, missionId }: Props) {
   const [isPlaying, setIsPlaying] = useState(false)
   const autoplayedRef = useRef<string | null>(null)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
   const highlight = useSpokenWordHighlight({ text: line.text })
+  const [hdAudioUrl, setHdAudioUrl] = useState<string | undefined>(line.modelAudio?.path)
 
-  const handleListen = useCallback(() => {
-    const source = resolveModelAudio(line)
+  useEffect(() => {
+    if (line.modelAudio?.path) {
+      setHdAudioUrl(line.modelAudio.path)
+      return
+    }
+    if (!missionId || typeof navigator === 'undefined' || !navigator.onLine) return
+    let active = true
+    void fetchMissionLineAudio(line, missionId)
+      .then((url) => {
+        if (active && url) {
+          setHdAudioUrl(url)
+          if (missionId.startsWith('generated.')) {
+            void updateGeneratedScriptLineAudio(missionId, line.id, url)
+          }
+        }
+      })
+      .catch(() => {})
+    return () => {
+      active = false
+    }
+  }, [line, missionId])
+
+  const handleListen = useCallback((overrideUrl?: string) => {
+    if (audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current = null
+    }
+
     setIsPlaying(true)
 
     const finish = () => {
@@ -58,41 +88,47 @@ export function CoachLine({ line, onContinue }: Props) {
       highlight.stop()
     }
 
-    if (source.kind === 'synthesized') {
-      highlight.start(estimatedDuration(source.text))
-      speak(source.text, {
-        onEnd: finish,
-        onError: finish,
-        // Si el motor sí emite boundary, manda sobre la estimacion.
-        onBoundary: (charIndex) =>
-          highlight.markWord(wordIndexAtChar(source.text, charIndex)),
+    const effectiveAudioUrl = overrideUrl || hdAudioUrl || line.modelAudio?.path
+
+    if (effectiveAudioUrl) {
+      const audio = new Audio(effectiveAudioUrl)
+      audioRef.current = audio
+      highlight.start(line.modelAudio?.durationMs ?? estimatedDuration(line.text))
+      audio.onended = finish
+      audio.onerror = () => {
+        highlight.start(estimatedDuration(line.text))
+        speak(line.text, { onEnd: finish, onError: finish })
+      }
+      void audio.play().catch(() => {
+        highlight.start(estimatedDuration(line.text))
+        speak(line.text, { onEnd: finish, onError: finish })
       })
       return
     }
 
-    const audio = new Audio(source.path)
-    // El OGG autorado puede traer duracion medida; si no, se estima.
-    highlight.start(source.durationMs ?? estimatedDuration(line.text))
-    audio.onended = finish
-    audio.onerror = () => {
-      // El OGG pregrabado puede faltar; la sintesis mantiene la linea audible.
-      highlight.start(estimatedDuration(line.text))
-      speak(line.text, { onEnd: finish, onError: finish })
-    }
-    void audio.play().catch(() => {
-      highlight.start(estimatedDuration(line.text))
-      speak(line.text, { onEnd: finish, onError: finish })
+    highlight.start(estimatedDuration(line.text))
+    speak(line.text, {
+      onEnd: finish,
+      onError: finish,
+      onBoundary: (charIndex) =>
+        highlight.markWord(wordIndexAtChar(line.text, charIndex)),
     })
-  }, [line, highlight])
+  }, [line, hdAudioUrl, highlight])
 
-  // El coach habla solo al llegar su turno: la mision es escuchar y responder,
-  // no pulsar un boton para que empiece. `autoplayedRef` la ata al id de la
-  // linea, asi que un re-render no la repite pero avanzar de turno si.
   useEffect(() => {
     if (autoplayedRef.current === line.id) return
     autoplayedRef.current = line.id
     handleListen()
   }, [line.id, handleListen])
+
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause()
+        audioRef.current = null
+      }
+    }
+  }, [])
 
   return (
     <div className="flex flex-col items-start gap-2 animate-message-in">
@@ -114,7 +150,7 @@ export function CoachLine({ line, onContinue }: Props) {
           variant="secondary"
           size="sm"
           icon={<Volume2 size={16} aria-hidden />}
-          onClick={handleListen}
+          onClick={() => handleListen()}
           disabled={isPlaying}
         >
           {isPlaying ? 'Reproduciendo…' : 'Repetir'}
