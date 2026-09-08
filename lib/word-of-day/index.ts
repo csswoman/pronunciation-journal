@@ -4,21 +4,14 @@ import {
 } from "@/lib/word-of-day/select-sense";
 import { FALLBACK_DEFINITIONS } from "@/lib/word-of-day/definitions-fallback";
 import { findEssentialWord, loadEssentialWords } from "@/lib/essential-words/data";
+import type { WordOfDay } from "@/lib/word-of-day/types";
 
 export {
   selectDictionarySense,
   type SelectedDictionarySense,
 } from "@/lib/word-of-day/select-sense";
 
-export interface WordOfDay {
-  word: string;
-  ipa: string;
-  part_of_speech?: string;
-  definition: string;
-  example_sentence: string;
-  example_translation?: string;
-  difficulty: "beginner" | "intermediate" | "advanced";
-}
+export { isWordOfDay, type WordOfDay } from "@/lib/word-of-day/types";
 
 const DICTIONARY_TIMEOUT_MS = 4_000;
 
@@ -73,17 +66,6 @@ interface DictionaryApiEntry {
 
 let cachedKey = "";
 let cachedWord: WordOfDay | null = null;
-
-export function isWordOfDay(value: unknown): value is WordOfDay {
-  if (!value || typeof value !== "object") return false;
-  const candidate = value as WordOfDay;
-  return (
-    typeof candidate.word === "string" &&
-    candidate.word.length > 0 &&
-    typeof candidate.definition === "string" &&
-    typeof candidate.difficulty === "string"
-  );
-}
 
 function getDifficulty(word: string): WordOfDay["difficulty"] {
   const essential = findEssentialWord(word);

@@ -1,6 +1,6 @@
 "use client";
 
-import { isWordOfDay, type WordOfDay } from "@/lib/word-of-day";
+import { isWordOfDay, type WordOfDay } from "@/lib/word-of-day/types";
 import { publicAiErrorMessage } from "@/lib/degradation/messages";
 import { useCallback, useEffect, useRef, useState } from "react";
 
