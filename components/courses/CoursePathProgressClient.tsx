@@ -217,12 +217,30 @@ export default function CoursePathProgressClient({
           </div>
         )}
 
-        <CoursePathHeroBanner
-          levelId={level.id}
-          firstLesson={firstLesson}
-          currentLesson={currentLesson}
-          hasProgress={completedIds.size > 0}
-        />
+        {(() => {
+          const hasProgress = completedIds.size > 0;
+          const targetLesson = hasProgress && currentLesson ? currentLesson : firstLesson;
+          const targetUnit = derived.units.find((u) =>
+            u.lessons.some((l) => l.id === targetLesson?.id)
+          ) ?? derived.units[0];
+          const unitCompletedCount = targetUnit
+            ? targetUnit.lessons.filter((l) => l.state === "done").length
+            : 0;
+          const unitTotalCount = targetUnit ? targetUnit.unit.lessons.length : 6;
+
+          return (
+            <CoursePathHeroBanner
+              levelId={level.id}
+              levelTitle={level.title}
+              levelSpineLabel={level.spineLabel}
+              firstLesson={firstLesson}
+              currentLesson={currentLesson}
+              hasProgress={hasProgress}
+              unitCompletedCount={unitCompletedCount}
+              unitTotalCount={unitTotalCount}
+            />
+          );
+        })()}
 
         <div className="course-path__main-search mb-4">
           <CoursePathSearch />

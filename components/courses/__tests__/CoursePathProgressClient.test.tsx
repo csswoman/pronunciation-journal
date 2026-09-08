@@ -63,7 +63,8 @@ describe("CoursePathProgressClient", () => {
     render(<CoursePathProgressClient level={COURSE_PATH_CURRICULUM.levels[0]} />);
 
     await waitFor(() => {
-      expect(screen.getByText("EMPIEZA AQUÍ")).toBeInTheDocument();
+      expect(screen.getByText("A1 · FUNDAMENTOS")).toBeInTheDocument();
+      expect(screen.getByText("Comenzar")).toBeInTheDocument();
     });
   });
 
@@ -75,13 +76,14 @@ describe("CoursePathProgressClient", () => {
       null,
       null,
       null,
+      null,
     ]);
 
     render(<CoursePathProgressClient level={COURSE_PATH_CURRICULUM.levels[0]} />);
 
     await waitFor(() => {
-      expect(screen.getByText("TU SIGUIENTE LECCIÓN")).toBeInTheDocument();
-      expect(screen.getByText("Continuar lección")).toBeInTheDocument();
+      expect(screen.getByText("A1 · FUNDAMENTOS")).toBeInTheDocument();
+      expect(screen.getByText("Continuar")).toBeInTheDocument();
       expect(screen.getByText("Repasa lo que ya aprendiste")).toBeInTheDocument();
       expect(screen.queryByText("Tu lección actual")).not.toBeInTheDocument();
     });
@@ -120,7 +122,7 @@ describe("CoursePathProgressClient", () => {
     await waitFor(() => {
       expect(screen.getByRole("alert")).toHaveTextContent("No hemos podido leer tu progreso en este dispositivo");
       expect(screen.getByRole("button", { name: "Reintentar" })).toBeInTheDocument();
-      expect(screen.getByText("EMPIEZA AQUÍ")).toBeInTheDocument();
+      expect(screen.getByText("A1 · FUNDAMENTOS")).toBeInTheDocument();
     });
   });
 
@@ -187,7 +189,7 @@ describe("CoursePathProgressClient", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText("EMPIEZA AQUÍ")).toBeInTheDocument();
+      expect(screen.getByText("A1 · FUNDAMENTOS")).toBeInTheDocument();
     });
 
     expect(container.querySelector(".course-path__client-aside")).not.toBeInTheDocument();
