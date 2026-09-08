@@ -37,8 +37,6 @@ describe('describePhonemeInWord — fallback and contrast', () => {
 })
 
 describe('describePhonemeInWord — pattern table', () => {
-  const seg = (r: NonNullable<ReturnType<typeof describePhonemeInWord>>) =>
-    r.segments.map((s) => `${s.emphasis ?? '_'}:${s.text}`)
 
   it('/z/ final voiced → anchors the final «s» of the word', () => {
     const r = describePhonemeInWord('goes', {

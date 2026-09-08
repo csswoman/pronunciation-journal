@@ -2,178 +2,179 @@
 
 // Planned structure:
 // <LearnerLine>
-//   <TargetText />
-//   <SpeakMicButton />
-//   <SpokenLineFeedback />       (la frase en color, palabra a palabra)
-//   <SyllableRemediation />      (fonema culpable)
-//   <SelfPlaybackAudioBar />     (comparación IA vs tú)
-//   <RetryAndContinue />
+//   <ShadowingPanel />           (escuchar el modelo antes/después de hablar)
+//   <LearnerSpeechControls />    (captura con osciloscopio real)
+//   <LineResult />               (veredicto + línea coloreada + fix + escucha)
+//   <SelfPlaybackAudioBar />     (comparación en modo práctica sin STT)
+//   <RetryAndContinue />         (repetir / continuar)
+// </LearnerLine>
 
 import { useCallback, useEffect, useState } from 'react'
-import { useSpeechRecognition } from '@/hooks/useSpeechRecognition'
+import { useSharedMicStream } from '@/hooks/useSharedMicStream'
+import { useLearnerSpeechCapture } from '@/hooks/useLearnerSpeechCapture'
+import { useVoiceLevel } from '@/hooks/useVoiceLevel'
 import { defaultEvaluationEngine } from '@/lib/exercises/evaluation'
 import { getEvaluationWordResults } from '@/lib/exercises/evaluation/word-results'
 import { useSyllableFeedback } from '@/hooks/useSyllableFeedback'
-import { SpokenLineFeedback } from '@/components/pronunciation-feedback/SpokenLineFeedback'
-import { SyllableRemediation } from '@/components/pronunciation-feedback/SyllableRemediation'
 import { buildRemediation } from '@/lib/pronunciation/syllable-remediation'
+import { pickPrimaryFix } from '@/lib/pronunciation/pick-primary-fix'
+import { describePhonemeInWord } from '@/lib/pronunciation/phoneme-in-word'
+import { LineResult, type LineResultFix } from './LineResult'
 import { SelfPlaybackAudioBar } from '@/components/pronunciation/SelfPlaybackAudioBar'
 import Button from '@/components/ui/Button'
-import { ArrowRight, Mic, RotateCcw } from '@/components/icons'
+import { ArrowRight } from '@/components/icons'
+import { ShadowingPanel } from './ShadowingPanel'
+import { LearnerSpeechControls } from './LearnerSpeechControls'
+import { RetryAndContinue } from './RetryAndContinue'
 import type { ScriptLine } from '@/lib/ai-practice/missions/types'
 import type { WordResult } from '@/lib/types'
 
-/** Exportado: `ScriptedMissionRunner` (Tarea 15) consume este mismo tipo. */
 export interface LineAttemptResult {
   score: number
   transcript: string
   wordResults: WordResult[]
 }
 
-function feedbackHeadline(score: number): string {
-  if (score >= 90) return 'Muy bien'
-  if (score >= 70) return 'Casi: fíjate en lo marcado'
-  return 'Repite fijándote en lo marcado'
-}
-
 interface Props {
   line: ScriptLine
+  missionId?: string
   onLineComplete: (result: LineAttemptResult | null) => void
 }
 
-export function LearnerLine({ line, onLineComplete }: Props) {
-  const { status, result: speechResult, userAudioUrl, isSupported, start, reset } =
-    useSpeechRecognition()
+export function LearnerLine({ line, missionId, onLineComplete }: Props) {
+  const { getStream, release } = useSharedMicStream()
+  const capture = useLearnerSpeechCapture({ targetText: line.text, getStream })
+  const voice = useVoiceLevel(capture.micStream)
+
   const [attempt, setAttempt] = useState<LineAttemptResult | null>(null)
   const [isScoring, setIsScoring] = useState(false)
 
   const syllableMap = useSyllableFeedback(attempt?.wordResults ?? [])
 
   useEffect(() => {
-    if (status !== 'done' || !speechResult || isScoring || attempt) return
+    return release
+  }, [release])
+
+  useEffect(() => {
+    if (capture.status !== 'done' || isScoring || attempt) return
+    // Sin grabación real no hay nada que puntuar: evaluar aquí produciría un
+    // score inventado sobre un transcript que el micro nunca respaldó.
+    if (!capture.hasRecording) return
+    const transcript = capture.transcript?.trim()
+    if (!transcript) return
     setIsScoring(true)
 
     void defaultEvaluationEngine
       .evaluate({
         exercise: { domain: 'pronunciation', mode: 'speak' },
         expected: line.text,
-        actual: { kind: 'speech', transcript: speechResult.transcript },
+        actual: { kind: 'speech', transcript },
       })
       .then((evaluation) => {
         setAttempt({
           score: evaluation.score ?? 0,
-          transcript: speechResult.transcript,
+          transcript,
           wordResults: getEvaluationWordResults(evaluation),
         })
       })
       .finally(() => setIsScoring(false))
-  }, [status, speechResult, isScoring, attempt, line.text])
+  }, [
+    capture.status,
+    capture.transcript,
+    capture.hasRecording,
+    isScoring,
+    attempt,
+    line.text,
+  ])
 
-  // El primer fonema fallado de toda la linea, en orden de lectura.
-  //
-  // Se busca en dos pasadas: primero el culpable que localizo el desglose
-  // silabico, y si ninguna palabra tuvo mapeo fiable, directamente el primer
-  // fonema fallado del alignment. Antes solo existia la primera pasada, asi
-  // que una linea sin silabas fiables se quedaba coloreada pero sin explicar
-  // por que estaba mal — que es justo lo que hay que decirle a quien practica.
-  const remediation = (() => {
-    for (const word of attempt?.wordResults ?? []) {
-      const culprit = syllableMap.get(word.expected)?.find((s) => s.culprit)?.culprit
-      if (culprit) {
-        const built = buildRemediation(culprit)
-        if (built) return built
-      }
-    }
-    for (const word of attempt?.wordResults ?? []) {
-      const failed = word.phonemes?.alignment?.find((p) => p.status !== 'correct')
-      if (failed) {
-        const built = buildRemediation(failed)
-        if (built) return built
-      }
-    }
-    return null
+  const primaryFix = attempt
+    ? pickPrimaryFix(attempt.wordResults, syllableMap)
+    : null
+
+  const remediation = primaryFix ? buildRemediation(primaryFix.culprit) : null
+
+  const fix: LineResultFix | null = (() => {
+    if (!primaryFix) return null
+    const explanation = describePhonemeInWord(primaryFix.syllableText, primaryFix.culprit)
+    if (!explanation) return null
+    const phonemeIpa = remediation?.ipa ?? `/${primaryFix.culprit.ipa ?? ''}/`
+    const status = primaryFix.culprit.status === 'missing' ? 'missing' : 'incorrect'
+    return { explanation, phonemeIpa, status }
   })()
 
   const handleRetry = useCallback(() => {
     setAttempt(null)
-    reset()
-  }, [reset])
+    capture.reset()
+  }, [capture])
 
-  // Sin reconocimiento no hay puntuación: se avanza sin inventar un 0.
-  if (!isSupported) {
-    return (
-      <div className="flex flex-col items-end gap-2">
-        <p className="m-0 max-w-[85%] rounded-xl bg-primary-soft px-3 py-2 text-body text-fg">{line.text}</p>
-        <p className="text-body-sm text-fg-muted">
-          Tu navegador no permite evaluar la pronunciación. Practica en voz alta y continúa.
-        </p>
-        <Button variant="primary" onClick={() => onLineComplete(null)}>Continuar</Button>
-      </div>
-    )
-  }
+  // Hubo audio pero no habrá puntuación (offline, STT caído o transcript vacío):
+  // igual se ofrece la comparación en lugar de dejar el turno sin salida.
+  const showPracticePlayback =
+    !attempt && capture.hasRecording && !capture.isCapturing && !isScoring
 
   return (
-    <div className="flex flex-col items-end gap-2 animate-message-in">
+    <div className="flex flex-col items-end gap-2.5 w-full animate-message-in">
       <span className="text-xxs font-semibold uppercase tracking-wider text-fg-subtle">
         Tu turno
       </span>
 
-      {!attempt && (
-        <div className="flex flex-col items-end gap-2.5 w-full max-w-[88%]">
-          <p className="m-0 w-full rounded-lg border border-primary-subtle bg-primary-soft/95 px-4 py-3 text-body-md font-medium text-fg shadow-xs">
-            {line.text}
-          </p>
-          <Button
-            variant="primary"
-            size="sm"
-            className="mt-0.5"
-            icon={<Mic size={16} aria-hidden />}
-            onClick={start}
-            disabled={status === 'listening' || isScoring}
-          >
-            {status === 'listening' ? 'Escuchando…' : 'Hablar'}
-          </Button>
-        </div>
-      )}
+      <div className="flex flex-col items-end gap-2.5 w-full max-w-[88%]">
+        <ShadowingPanel line={line} missionId={missionId} />
 
-      {attempt && (
-        <>
-          <div className="flex w-full max-w-[88%] flex-col gap-2.5 rounded-lg border border-border-subtle bg-primary-soft/95 px-4 py-3 shadow-xs">
-            <SpokenLineFeedback
-              wordResults={attempt.wordResults}
-              syllableMap={syllableMap}
+        {!attempt && !showPracticePlayback && (
+          <>
+            <LearnerSpeechControls
+              status={capture.status}
+              isCapturing={capture.isCapturing}
+              isScoring={isScoring || capture.status === 'processing'}
+              errorCode={capture.errorCode}
+              getSamples={voice.getSamples}
+              peak={voice.peak}
+              canScore={capture.canScore}
+              onStart={capture.start}
+              onStop={capture.stop}
+              onRetry={handleRetry}
             />
-            <p className="m-0 text-caption font-medium text-fg-muted">
-              {attempt.score}% · {feedbackHeadline(attempt.score)}
-            </p>
-            {remediation && <SyllableRemediation remediation={remediation} />}
-          </div>
+            {!capture.canScore && capture.status === 'idle' && (
+              <Button
+                variant="secondary"
+                size="sm"
+                icon={<ArrowRight size={15} aria-hidden />}
+                iconPosition="right"
+                onClick={() => onLineComplete(null)}
+              >
+                Continuar
+              </Button>
+            )}
+          </>
+        )}
 
-          <div className="w-full max-w-[88%]">
-            <SelfPlaybackAudioBar targetWord={line.text} userAudioUrl={userAudioUrl} />
-          </div>
+        {showPracticePlayback && (
+          <>
+            <div className="w-full">
+              <SelfPlaybackAudioBar targetWord={line.text} userAudioUrl={capture.userAudioUrl} />
+            </div>
+            <RetryAndContinue
+              onRetry={handleRetry}
+              onContinue={() => onLineComplete(null)}
+            />
+          </>
+        )}
 
-          <div className="flex items-center gap-2.5 pt-1.5">
-            <Button
-              variant="secondary"
-              size="sm"
-              icon={<RotateCcw size={16} aria-hidden />}
-              onClick={handleRetry}
-            >
-              Repetir
-            </Button>
-            <Button
-              variant="primary"
-              size="sm"
-              icon={<ArrowRight size={16} aria-hidden />}
-              iconPosition="right"
-              onClick={() => onLineComplete(attempt)}
-            >
-              Continuar
-            </Button>
-          </div>
-        </>
-      )}
+        {attempt && (
+          <LineResult
+            score={attempt.score}
+            wordResults={attempt.wordResults}
+            syllableMap={syllableMap}
+            fix={fix}
+            remediation={remediation}
+            targetText={line.text}
+            userAudioUrl={capture.userAudioUrl}
+            onRetry={handleRetry}
+            onContinue={() => onLineComplete(attempt)}
+          />
+        )}
+      </div>
     </div>
   )
 }
