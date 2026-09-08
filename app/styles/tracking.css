@@ -79,7 +79,7 @@
 .tracking-item {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: start;
+  align-items: center;
   gap: var(--layout-stack);
   min-block-size: 3.5rem;
   border: 1px solid var(--border-subtle);
@@ -89,6 +89,10 @@
   color: var(--text-primary);
   transition: border-color 150ms var(--ease-out-quart, ease-out),
     box-shadow 150ms var(--ease-out-quart, ease-out);
+}
+
+.tracking-item--multiline {
+  align-items: start;
 }
 
 .tracking-item:hover {

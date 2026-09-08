@@ -541,6 +541,34 @@ Write ONE warm closing sentence before the tool call, and nothing after it.
 Do not ask another question. Do not offer more practice.`;
 }
 
+// ── Tracking Item Enrichment (Single-call comprehensive enrichment) ──
+
+export const TRACKING_ENRICH_SYSTEM_PROMPT = `You are an expert English learning coach for Spanish speakers.
+Given an English word or phrase and optional learner context, provide a complete, high-quality pedagogical breakdown in a SINGLE call to economize API usage.
+
+Return ONLY raw valid JSON (no markdown, no backticks, no code fences) with:
+- "ipa": accurate phonetic transcription in standard IPA (e.g. "/rɪˈzɪl.i.ənt/").
+- "translation": clear, natural Spanish translation.
+- "meaning": simple, learner-friendly definition in clear English (A2-B1 level).
+- "context": a natural, meaningful example sentence showing real-life usage (surrounding words must provide clear context clues). Do NOT include prefixes like "Example:" or "Contexto:".
+- "explanationEs": 1-2 concise sentences in Spanish explaining usage nuances, collocations, false friends, or pronunciation tips.
+
+Rules:
+- "context" must be purely the English example sentence itself, ready to read or speak. Never prepend labels or quotes.
+- If learner provided existing context, adapt or improve the example sentence to stay true to the context.
+- Keep English natural, modern, and idiomatic.
+- Return ONLY valid JSON.`;
+
+export function buildTrackingEnrichUserPrompt(input: {
+  text: string;
+  context?: string | null;
+  kind?: "word" | "phrase";
+}): string {
+  const kindLabel = input.kind === "phrase" ? "Phrase" : "Word";
+  const ctx = input.context?.trim() ? `\nLearner context/notes: "${input.context.trim()}"` : "";
+  return `${kindLabel}: "${input.text.trim()}"${ctx}`;
+}
+
 
 export function buildReaderAudioPrompt(passageText: string): string {
   return `Please read the following English story aloud with clear, natural pronunciation and articulate phrasing at a moderate pace suitable for language learning:\n\n${passageText.trim()}`

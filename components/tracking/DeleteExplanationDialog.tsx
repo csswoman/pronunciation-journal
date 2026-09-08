@@ -23,6 +23,9 @@ export function DeleteExplanationDialog({ source, onClose, onConfirm }: Props) {
 
   if (!source) return null;
 
+  const isPhrase = source.item.kind === "phrase";
+  const label = isPhrase ? "frase" : "explicación";
+
   const remove = async () => {
     if (deleting) return;
     setDeleting(true);
@@ -31,7 +34,7 @@ export function DeleteExplanationDialog({ source, onClose, onConfirm }: Props) {
       await onConfirm(source);
       onClose();
     } catch {
-      setError("No pudimos eliminar la explicación. Inténtalo de nuevo.");
+      setError(`No pudimos eliminar la ${label}. Inténtalo de nuevo.`);
     } finally {
       setDeleting(false);
     }
@@ -46,8 +49,8 @@ export function DeleteExplanationDialog({ source, onClose, onConfirm }: Props) {
       <section
         role="alertdialog"
         aria-modal="true"
-        aria-labelledby="delete-explanation-title"
-        aria-describedby="delete-explanation-description"
+        aria-labelledby="delete-tracked-title"
+        aria-describedby="delete-tracked-description"
         onClick={(event) => event.stopPropagation()}
         className="w-full max-w-md rounded-[var(--radius-lg)] border border-border-subtle bg-surface-raised shadow-xl"
       >
@@ -55,11 +58,11 @@ export function DeleteExplanationDialog({ source, onClose, onConfirm }: Props) {
           <span className="flex h-10 w-10 items-center justify-center rounded-[var(--radius-md)] bg-error-soft text-error">
             <Trash2 size={18} aria-hidden />
           </span>
-          <h2 id="delete-explanation-title" className="mt-4 text-h3 text-fg">
+          <h2 id="delete-tracked-title" className="mt-4 text-h3 text-fg">
             Eliminar “{source.item.title}”
           </h2>
-          <p id="delete-explanation-description" className="mt-2 text-body-sm text-fg-muted">
-            Se eliminará esta explicación guardada. Esta acción no se puede deshacer.
+          <p id="delete-tracked-description" className="mt-2 text-body-sm text-fg-muted">
+            Se eliminará esta {label} guardada. Esta acción no se puede deshacer.
           </p>
           {error ? <p role="alert" className="mt-3 text-body-sm text-error">{error}</p> : null}
         </div>

@@ -41,6 +41,44 @@ export async function saveTrackedItem(input: {
   });
 }
 
+export async function updateTrackedItem(input: {
+  id: string;
+  userId: string;
+  title?: string | null;
+  payload?: Record<string, unknown>;
+}): Promise<void> {
+  const existing = await db.trackedItems.get(input.id);
+  if (!existing || existing.userId !== input.userId) return;
+  const now = new Date().toISOString();
+  const row: TrackedItemRecord = {
+    ...existing,
+    title: input.title !== undefined ? input.title : existing.title,
+    payload: input.payload !== undefined ? input.payload : existing.payload,
+    updatedAt: now,
+  };
+
+  await db.transaction("rw", [db.trackedItems, db.syncOutbox], async () => {
+    await db.trackedItems.put(row);
+    await enqueue(
+      row.userId,
+      "tracked_items",
+      "upsert",
+      {
+        id: row.id,
+        user_id: row.userId,
+        kind: row.kind,
+        ref: row.ref,
+        title: row.title,
+        payload: row.payload,
+        created_at: row.createdAt,
+        updated_at: row.updatedAt,
+      },
+      undefined,
+      "user_id,kind,ref"
+    );
+  });
+}
+
 export async function removeTrackedItem(userId: string, kind: PersistedTrackedKind, ref: string): Promise<void> {
   const row = await db.trackedItems.where("[userId+kind+ref]").equals([userId, kind, ref]).first();
   if (!row) return;

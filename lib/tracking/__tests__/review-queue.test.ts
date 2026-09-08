@@ -38,7 +38,7 @@ describe('buildTrackingReviewQueue', () => {
       },
     ])
 
-    expect(queue.items[0]?.href).toBe('/courses/study/10?level=a2')
+    expect(queue.items[0]?.href).toBe('/courses/study/12?level=a2')
   })
 
   it('keeps an unresolved personal phrase as activity-only shadowing', () => {
