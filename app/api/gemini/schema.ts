@@ -27,6 +27,8 @@ export const MessageSchema = z.object({
   role: z.enum(["user", "model", "tool"]),
   content: z.string().max(8_000).optional(),
   parts: z.array(MessagePartSchema).max(20).optional(),
+  /** Sent by `messagesToWire` for tool turns; unused server-side, but the
+   *  schema is `.strict()` so it must be accepted or the request 400s. */
   toolCallId: z.string().max(200).optional(),
   name: z.string().max(100).optional(),
   result: z.unknown().optional(),

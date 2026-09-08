@@ -69,9 +69,14 @@ export async function POST(request: NextRequest): Promise<Response> {
   //    only nudges feedback verbosity, not tool access or grading.
   // Interests are a nice-to-have: a profile read failure must never block the
   // chat, so it degrades to an empty list rather than rejecting the request.
+  // Both fetches are best-effort: cap them at 800 ms so a slow Supabase
+  // cold-start never delays the first streamed token.
+  const withTimeout = <T>(p: Promise<T>, fallback: T) =>
+    Promise.race([p, new Promise<T>((r) => setTimeout(() => r(fallback), 800))]);
+
   const [learningState, interests] = await Promise.all([
-    fetchServerLearningState(user.id, accessToken),
-    getUserInterests(user.id).catch(() => []),
+    withTimeout(fetchServerLearningState(user.id, accessToken), null),
+    withTimeout(getUserInterests(user.id).catch(() => []), []),
   ]);
   const lastTopic = extractLastTopicFromWire(body.messages);
   const voice = lastUserVoiceMetadataFromWire(body.messages);

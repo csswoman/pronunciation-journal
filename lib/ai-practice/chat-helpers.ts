@@ -5,6 +5,7 @@ import { getInitialTitleForModeAndMessage, isSystemPromptText } from "@/lib/ai-p
 import { logEvent } from "@/lib/ai-practice/events";
 import {
   AI_COACH_TURN_FAILED_MESSAGE,
+  AI_COACH_TURN_TRUNCATED_MESSAGE,
   AI_UNAVAILABLE_MESSAGE,
   publicAiErrorMessage,
 } from "@/lib/degradation/messages";
@@ -25,6 +26,16 @@ export function coachErrorMessage(err: unknown): string {
     return message;
   }
   return publicAiErrorMessage(undefined, message, AI_COACH_TURN_FAILED_MESSAGE);
+}
+
+/**
+ * The stream ended with nothing renderable. Distinguishes hitting the output
+ * budget (retry is worth it, a shorter message helps) from a generic failure.
+ */
+export function emptyResponseMessage(truncated: boolean): string {
+  return truncated
+    ? AI_COACH_TURN_TRUNCATED_MESSAGE
+    : publicAiErrorMessage(undefined, "AI response was empty", AI_COACH_TURN_FAILED_MESSAGE);
 }
 
 export function getOrCreateDeviceId(): string {

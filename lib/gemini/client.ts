@@ -6,7 +6,7 @@
 
 import { GoogleGenAI } from "@google/genai";
 import type { GenerateContentParameters } from "@google/genai";
-import { FALLBACK_MODELS, shouldTryNextModel } from "./fallback";
+import { FALLBACK_MODELS, getFastThinkingConfig, shouldTryNextModel } from "./fallback";
 
 export { getErrorStatus, shouldTryNextModel } from "./fallback";
 
@@ -65,8 +65,13 @@ export async function callWithFallback<T>(
 
   for (const model of FALLBACK_MODELS) {
     try {
+      const thinkingConfig = getFastThinkingConfig(model);
+      const effectiveConfig = thinkingConfig
+        ? { ...params.config, thinkingConfig: (params.config as { thinkingConfig?: unknown } | undefined)?.thinkingConfig ?? thinkingConfig }
+        : params.config;
+
       const result = await withGeminiTimeout(
-        ai.models.generateContent({ model, ...params }),
+        ai.models.generateContent({ model, ...params, config: effectiveConfig }),
         timeoutMs
       );
       if (!result.text) throw new Error("Empty response from AI");

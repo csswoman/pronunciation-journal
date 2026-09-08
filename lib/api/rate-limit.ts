@@ -167,6 +167,24 @@ function consumeMemory(key: string, max: number, windowMs: number): ConsumeResul
 }
 
 /**
+ * A 429 from *our own* throttle, not the provider's. The `retryable` flag and
+ * `retryAfterSeconds` let the client recover in place (wait, retry the same
+ * turn) instead of showing the provider-quota "session over" wall.
+ */
+function throttled(message: string, retryAfter: number): { limited: true; error: NextResponse } {
+  return {
+    limited: true,
+    error: NextResponse.json(
+      { error: message, retryable: true, retryAfterSeconds: retryAfter },
+      {
+        status: 429,
+        headers: { ...SECURE_HEADERS, "Retry-After": String(Math.max(1, retryAfter)) },
+      },
+    ),
+  };
+}
+
+/**
  * Multi-layered rate limiter for AI / Gemini routes:
  * 1. IP-level quota (thwarting session rotation).
  * 2. User-level quota (stricter for anonymous guests).
@@ -198,16 +216,10 @@ export async function checkLayeredRateLimit({
         ),
       };
     }
-    return {
-      limited: true,
-      error: NextResponse.json(
-        { error: "Too many requests from this network. Please wait before retrying." },
-        {
-          status: 429,
-          headers: { ...SECURE_HEADERS, "Retry-After": String(ipCheck.retryAfter) },
-        },
-      ),
-    };
+    return throttled(
+      "Too many requests from this network. Please wait before retrying.",
+      ipCheck.retryAfter,
+    );
   }
 
   // 2. IP-level cumulative anonymous cap
@@ -215,16 +227,10 @@ export async function checkLayeredRateLimit({
     const anonIpKey = `gemini:ip_anon:${ipHashed}`;
     const anonIpCheck = await consumeKey(anonIpKey, 6, windowMs);
     if (!anonIpCheck.allowed) {
-      return {
-        limited: true,
-        error: NextResponse.json(
-          { error: "Guest quota exceeded for this network. Please create an account or wait." },
-          {
-            status: 429,
-            headers: { ...SECURE_HEADERS, "Retry-After": String(anonIpCheck.retryAfter) },
-          },
-        ),
-      };
+      return throttled(
+        "Guest quota exceeded for this network. Please create an account or wait.",
+        anonIpCheck.retryAfter,
+      );
     }
   }
 
@@ -242,16 +248,7 @@ export async function checkLayeredRateLimit({
         ),
       };
     }
-    return {
-      limited: true,
-      error: NextResponse.json(
-        { error: "Too many requests. Please wait before retrying." },
-        {
-          status: 429,
-          headers: { ...SECURE_HEADERS, "Retry-After": String(userCheck.retryAfter) },
-        },
-      ),
-    };
+    return throttled("Too many requests. Please wait before retrying.", userCheck.retryAfter);
   }
 
   // 4. Global emergency limit. It is deliberately last so a client already
@@ -267,16 +264,7 @@ export async function checkLayeredRateLimit({
         ),
       };
     }
-    return {
-      limited: true,
-      error: NextResponse.json(
-        { error: "System capacity reached. Please wait before retrying." },
-        {
-          status: 429,
-          headers: { ...SECURE_HEADERS, "Retry-After": String(globalCheck.retryAfter) },
-        },
-      ),
-    };
+    return throttled("System capacity reached. Please wait before retrying.", globalCheck.retryAfter);
   }
 
   return { limited: false, error: null };

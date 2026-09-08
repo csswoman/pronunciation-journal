@@ -31,7 +31,7 @@ export function processChunk(
   chunk: StreamChunk,
   state: StreamState,
   handlers: ActionHandlers,
-): "flush" | "no-flush" | "done" | { error: string } {
+): "flush" | "no-flush" | "done" | "done-truncated" | { error: string } {
   switch (chunk.type) {
     case "text_delta": {
       const last = state.parts[state.parts.length - 1];
@@ -83,7 +83,7 @@ export function processChunk(
       return "flush";
     }
     case "done":
-      return "done";
+      return chunk.truncated ? "done-truncated" : "done";
     case "error":
       return { error: chunk.message };
   }
