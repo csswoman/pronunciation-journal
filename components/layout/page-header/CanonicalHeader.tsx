@@ -39,7 +39,7 @@ export function CanonicalHeader({
       {chromeKicker ? (
         <span className="font-kicker text-fg-muted">{chromeKicker}</span>
       ) : null}
-      <div className="flex flex-col gap-layout-stack-tight sm:flex-row sm:items-start sm:justify-between sm:gap-layout-stack-loose">
+      <div className="flex flex-row items-center justify-between gap-layout-stack-tight sm:items-start sm:gap-layout-stack-loose">
         <div className="layout-stack-tight min-w-0">
           <h1 className={cn("text-balance text-fg", isCompact ? "text-h3" : "text-h2")}>
             {title}

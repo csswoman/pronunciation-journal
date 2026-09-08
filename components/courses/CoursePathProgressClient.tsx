@@ -189,8 +189,8 @@ export default function CoursePathProgressClient({
         )}
 
         {!compactHead && (
-          <div className="course-path__head-row flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between mb-6">
-            <div className="course-path__head min-w-0 flex-1">
+          <div className="course-path__head-row flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between mb-2 sm:mb-6">
+            <div className="course-path__head min-w-0 flex-1 hidden lg:block">
               <h2 className="text-h2 font-bold text-fg">{derived.level.title}</h2>
               {derived.level.description && (
                 <p className="course-path__head-subtitle text-body-sm text-fg-muted mt-1">
@@ -198,17 +198,17 @@ export default function CoursePathProgressClient({
                 </p>
               )}
             </div>
-            <div className="course-path__head-actions flex items-center gap-4 shrink-0 pt-1">
+            <div className="course-path__head-actions flex items-center gap-4 shrink-0 pt-0 sm:pt-1">
               <Link
                 href="/assessment"
-                className="course-path__text-link font-semibold text-primary hover:underline"
+                className="course-path__text-link font-semibold text-primary hover:underline text-xs sm:text-sm"
                 title="Evaluación diagnóstica inicial para ubicar tu nivel"
               >
                 Test de ubicación
               </Link>
               <Link
                 href={`/assessment?mode=checkpoint&level=${level.id}`}
-                className="course-path__text-link font-semibold text-primary hover:underline"
+                className="course-path__text-link font-semibold text-primary hover:underline text-xs sm:text-sm"
                 title="Evaluación de salida del nivel seleccionado"
               >
                 Checkpoint
@@ -242,7 +242,7 @@ export default function CoursePathProgressClient({
           );
         })()}
 
-        <div className="course-path__main-search mb-4">
+        <div className="course-path__main-search mb-3 sm:mb-4">
           <CoursePathSearch />
         </div>
 
