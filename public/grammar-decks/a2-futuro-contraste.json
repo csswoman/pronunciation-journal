@@ -1,0 +1,215 @@
+{
+  "isGenerated": true,
+  "meta": {
+    "eyebrow": "A2 · Tiempos verbales",
+    "title": "Contraste de futuro",
+    "titleEmphasis": "will vs going to vs presente continuo",
+    "goal": "Ya distingues entre decisiones espontáneas (will), planes e intenciones (going to) y citas confirmadas (present continuous)."
+  },
+  "cards": [
+    {
+      "id": "a2-futuro-contraste-concept",
+      "tag": "Idea central",
+      "title": "Contraste de futuro: qué expresa",
+      "lede": "Ya distingues entre decisiones espontáneas (will), planes e intenciones (going to) y citas confirmadas (present continuous).",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "will",
+              "value": "Decisiones al instante, promesas y predicciones · I will help you with that.",
+              "highlights": [
+                "will help"
+              ]
+            },
+            {
+              "key": "going to",
+              "value": "Planes previas e intenciones claras · I am going to buy a car next month.",
+              "highlights": [
+                "going to buy"
+              ]
+            },
+            {
+              "key": "Present Continuous",
+              "value": "Planes con hora/lugar o citas agendadas · I am meeting Sarah at 3 PM.",
+              "highlights": [
+                "am meeting"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "a2-futuro-contraste-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Will (Espontáneo)",
+              "value": "will + verbo base · The phone rings: I'll answer it!",
+              "highlights": [
+                "I'll answer"
+              ]
+            },
+            {
+              "key": "Going to (Intención)",
+              "value": "be + going to + verbo · She is going to study medicine.",
+              "highlights": [
+                "is going to study"
+              ]
+            },
+            {
+              "key": "Continuous (Cita)",
+              "value": "be + -ing + tiempo futuro · We are flying to Paris tomorrow.",
+              "highlights": [
+                "are flying"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-futuro-contraste-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Oferta en el momento",
+              "value": "Don't worry, I will carry those heavy bags for you."
+            },
+            {
+              "key": "Plan ya pensado",
+              "value": "Next year, we are going to learn how to drive."
+            },
+            {
+              "key": "Cita médica confirmada",
+              "value": "I am seeing the doctor tomorrow at 10 AM."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-futuro-contraste-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "will (Decisión instantánea)",
+              "rule": "Tomada en el momento de hablar",
+              "examples": [
+                "I'm hungry. I'll make a sandwich."
+              ]
+            },
+            {
+              "label": "going to / Continuous (Plan predeterminado)",
+              "rule": "Decidido antes de hablar o agendado",
+              "examples": [
+                "I am going to make a sandwich in 10 minutes."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-futuro-contraste-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "I am meeting my boss tomorrow, maybe."
+            },
+            {
+              "variant": "good",
+              "text": "I will meet my boss tomorrow, maybe.",
+              "note": "si es incierto o espontáneo usa will, el continuo es para citas confirmadas"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-futuro-contraste-reference",
+      "tag": "Referencia rápida",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "will",
+              "value": "ofertas ('I'll help'), promesas ('I will call'), predicciones"
+            },
+            {
+              "key": "going to",
+              "value": "intenciones ('I am going to save money'), evidencia presente"
+            },
+            {
+              "key": "continuous",
+              "value": "acuerdos con otras personas o eventos en agenda ('I'm meeting John tonight')"
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "A: The phone is ringing! B: OK, I ___ it.",
+      "options": [
+        "will answer",
+        "am going to answer"
+      ],
+      "answer": 0,
+      "explain": "Decisión rápida tomada en el momento de hablar: 'will answer'."
+    },
+    {
+      "q": "We already bought the tickets. We ___ a movie tonight at 8 PM.",
+      "options": [
+        "are watching",
+        "will watch"
+      ],
+      "answer": 0,
+      "explain": "Cita/evento con horario y boletos comprados: Present Continuous ('are watching')."
+    },
+    {
+      "q": "What are your plans for the summer? — I ___ visit my grandparents in Canada.",
+      "options": [
+        "am going to",
+        "will"
+      ],
+      "answer": 0,
+      "explain": "Expresa un plan e intención previa: 'am going to'."
+    }
+  ]
+}

@@ -60,6 +60,45 @@ export type SaveWordArgs = {
 export type StartMissionArgs = { missionId: string };
 export type MissionIntentObservedArgs = { intentId: string };
 
+export type CorrectionKind = "error" | "unnatural";
+
+export type TurnCorrection = {
+  original: string;
+  corrected: string;
+  rule: string;
+  kind: CorrectionKind;
+};
+
+export type TurnSaveable = {
+  type: "word" | "phrase";
+  text: string;
+  meaning: string;
+  example?: string;
+  ipa?: string;
+};
+
+export type TurnConcept = { title: string };
+
+export type AnnotateTurnArgs = {
+  correction?: TurnCorrection;
+  saveables?: TurnSaveable[];
+  concept?: TurnConcept;
+};
+
+export type SummaryCorrection = {
+  original: string;
+  corrected: string;
+  rule: string;
+};
+
+export type SessionSummaryArgs = {
+  corrections: SummaryCorrection[];
+  /** Reuses the saveable shape so "Guardar todo" can hand these to persistSaveable. */
+  learned: TurnSaveable[];
+  /** Short Spanish labels of what to revisit; display only in this phase. */
+  reviewNext: string[];
+};
+
 /** @deprecated Kept only to parse old persisted tool calls. */
 export type StartRoleplayArgs = { scenario: LegacyRoleplayScenario };
 
@@ -68,154 +107,42 @@ export type ToolArgs =
   | { name: "render_fill_blank"; args: FillBlankArgs }
   | { name: "render_speaking"; args: SpeakingArgs }
   | { name: "render_word_card"; args: WordCardArgs }
+  | { name: "render_session_summary"; args: SessionSummaryArgs }
   | { name: "save_word"; args: SaveWordArgs }
   | { name: "start_mission"; args: StartMissionArgs }
   | { name: "mission_intent_observed"; args: MissionIntentObservedArgs }
+  | { name: "annotate_turn"; args: AnnotateTurnArgs }
   | { name: "start_roleplay"; args: StartRoleplayArgs };
 
 export type ToolName = ToolArgs["name"];
-export type ExerciseToolName = "render_multiple_choice" | "render_fill_blank" | "render_speaking" | "render_word_card";
-export type ActionToolName = "save_word" | "start_mission" | "mission_intent_observed";
+export type ExerciseToolName =
+  | "render_multiple_choice"
+  | "render_fill_blank"
+  | "render_speaking"
+  | "render_word_card"
+  | "render_session_summary";
+export type ActionToolName =
+  | "save_word"
+  | "start_mission"
+  | "mission_intent_observed"
+  | "annotate_turn";
 
 export const EXERCISE_TOOL_NAMES: ExerciseToolName[] = [
   "render_multiple_choice",
   "render_fill_blank",
   "render_speaking",
   "render_word_card",
+  "render_session_summary",
 ];
 
-export const ACTION_TOOL_NAMES: ActionToolName[] = ["save_word", "start_mission", "mission_intent_observed"];
-
-// Gemini-compatible tool declarations
-export const TOOL_DECLARATIONS = [
-  {
-    name: "render_multiple_choice",
-    description:
-      "Show a single-answer multiple choice question inline. Include commonWrongAnswers with pedagogical feedback for the distractors whenever possible.",
-    parameters: {
-      type: "object",
-      properties: {
-        question:      { type: "string" },
-        options:       { type: "array", items: { type: "string" }, minItems: 2, maxItems: 5 },
-        correctIndex:  { type: "integer" },
-        explanation:   { type: "string" },
-        topic:         { type: "string" },
-        instruction:   { type: "string" },
-        learningGoal:  { type: "string" },
-        commonWrongAnswers: {
-          type: "array",
-          items: {
-            type: "object",
-            properties: { value: { type: "string" }, feedback: { type: "string" } },
-            required: ["value", "feedback"],
-          },
-        },
-        hint: {
-          type: "object",
-          properties: { level1: { type: "string" }, level2: { type: "string" }, level3: { type: "string" } },
-          required: ["level1", "level2"],
-        },
-      },
-      required: ["question", "options", "correctIndex", "topic"],
-    },
-  },
-  {
-    name: "render_fill_blank",
-    description:
-      "Show a sentence with exactly ONE blank to fill, marked with '___'. Never use more than one '___' in the sentence. Include commonWrongAnswers with pedagogical feedback for typical student errors.",
-    parameters: {
-      type: "object",
-      properties: {
-        sentence:          { type: "string" },
-        answer:            { type: "string" },
-        acceptableAnswers: { type: "array", items: { type: "string" } },
-        hint:              { type: "string" },
-        topic:             { type: "string" },
-        instruction:       { type: "string" },
-        learningGoal:      { type: "string" },
-        acceptableAlternatives: {
-          type: "array",
-          items: {
-            type: "object",
-            properties: { value: { type: "string" }, reason: { type: "string" } },
-            required: ["value", "reason"],
-          },
-        },
-        commonWrongAnswers: {
-          type: "array",
-          items: {
-            type: "object",
-            properties: { value: { type: "string" }, feedback: { type: "string" } },
-            required: ["value", "feedback"],
-          },
-        },
-      },
-      required: ["sentence", "answer", "topic"],
-    },
-  },
-  {
-    name: "render_speaking",
-    description: "Ask the student to pronounce a target phrase.",
-    parameters: {
-      type: "object",
-      properties: {
-        prompt: { type: "string" },
-        target: { type: "string" },
-        ipa:    { type: "string" },
-      },
-      required: ["prompt", "target"],
-    },
-  },
-  {
-    name: "render_word_card",
-    description: "Show a vocabulary card with meaning and example.",
-    parameters: {
-      type: "object",
-      properties: {
-        word:    { type: "string" },
-        meaning: { type: "string" },
-        example: { type: "string" },
-        ipa:     { type: "string" },
-      },
-      required: ["word", "meaning"],
-    },
-  },
-  {
-    name: "save_word",
-    description: "Save a word to the student's vocabulary list.",
-    parameters: {
-      type: "object",
-      properties: {
-        word:    { type: "string" },
-        meaning: { type: "string" },
-        ipa:     { type: "string" },
-      },
-      required: ["word", "meaning"],
-    },
-  },
-  {
-    name: "start_mission",
-    description: "Start one authored oral mission from the mission registry.",
-    parameters: {
-      type: "object",
-      properties: {
-        missionId: { type: "string" },
-      },
-      required: ["missionId"],
-    },
-  },
-  {
-    name: "mission_intent_observed",
-    description: "Report one communicative intent the learner clearly expressed in the current oral mission.",
-    parameters: {
-      type: "object",
-      properties: {
-        intentId: { type: "string" },
-      },
-      required: ["intentId"],
-    },
-  },
+export const ACTION_TOOL_NAMES: ActionToolName[] = [
+  "save_word",
+  "start_mission",
+  "mission_intent_observed",
+  "annotate_turn",
 ];
+
+export { TOOL_DECLARATIONS } from "./declarations";
 
 const VALID_TOOL_NAMES = new Set<string>([
   ...EXERCISE_TOOL_NAMES,
@@ -229,6 +156,18 @@ export function isValidToolName(name: string): name is ToolName {
 
 export function isExerciseTool(name: ToolName): name is ExerciseToolName {
   return (EXERCISE_TOOL_NAMES as string[]).includes(name);
+}
+
+/**
+ * Tools rendered by a dedicated component rather than inline in the bubble:
+ * exercises go to `PracticeSession`, `render_session_summary` to
+ * `SessionSummaryCard`, and `annotate_turn` only feeds chips and correction
+ * cards. Everything else is a `ToolWidget` in the message body.
+ */
+export function isInlineWidgetTool(name: string): boolean {
+  if (!isValidToolName(name)) return false;
+  if (name === "annotate_turn") return false;
+  return !isExerciseTool(name);
 }
 
 function assertString(val: unknown, field: string): string {
@@ -284,6 +223,97 @@ function parseProgressiveHint(val: unknown): ProgressiveHint | undefined {
     level2: o.level2,
     level3: typeof o.level3 === "string" ? o.level3 : undefined,
   };
+}
+
+function parseTurnCorrection(val: unknown): TurnCorrection | undefined {
+  if (!val || typeof val !== "object") return undefined;
+  const o = val as Record<string, unknown>;
+  if (
+    typeof o.original !== "string" || !o.original ||
+    typeof o.corrected !== "string" || !o.corrected ||
+    typeof o.rule !== "string" || !o.rule
+  ) {
+    // A half-filled correction is worse than none: it would render a card
+    // with a blank side. Drop it rather than throwing — the prose is still
+    // worth showing.
+    return undefined;
+  }
+  return {
+    original: o.original,
+    corrected: o.corrected,
+    rule: o.rule,
+    kind: o.kind === "unnatural" ? "unnatural" : "error",
+  };
+}
+
+/**
+ * Like parseTurnCorrection, a malformed concept must never throw — the turn's
+ * prose is still valid. A blank or missing title means "no concept".
+ */
+function parseTurnConcept(val: unknown): TurnConcept | undefined {
+  if (!val || typeof val !== "object") return undefined;
+  const o = val as Record<string, unknown>;
+  if (typeof o.title !== "string" || !o.title.trim()) return undefined;
+  return { title: o.title.trim() };
+}
+
+/** Cap on summary items: a wall of twenty cards is not a summary. */
+const MAX_SUMMARY_ITEMS = 8;
+
+function parseSummaryCorrections(val: unknown): SummaryCorrection[] {
+  if (!Array.isArray(val)) return [];
+  const out: SummaryCorrection[] = [];
+  for (const item of val) {
+    if (out.length >= MAX_SUMMARY_ITEMS) break;
+    if (!item || typeof item !== "object") continue;
+    const o = item as Record<string, unknown>;
+    if (typeof o.original !== "string" || !o.original) continue;
+    if (typeof o.corrected !== "string" || !o.corrected) continue;
+    out.push({
+      original: o.original,
+      corrected: o.corrected,
+      rule: typeof o.rule === "string" ? o.rule : "",
+    });
+  }
+  return out;
+}
+
+function parseSummaryStrings(val: unknown): string[] {
+  if (!Array.isArray(val)) return [];
+  return val.filter((v): v is string => typeof v === "string" && v.length > 0).slice(0, MAX_SUMMARY_ITEMS);
+}
+
+/** Max saveables surfaced per turn — more than two chips crowds the bubble. */
+const MAX_SAVEABLES_PER_TURN = 2;
+
+function parseSaveableList(val: unknown, max: number): TurnSaveable[] {
+  if (!Array.isArray(val)) return [];
+  const out: TurnSaveable[] = [];
+  for (const item of val) {
+    if (out.length >= max) break;
+    if (!item || typeof item !== "object") continue;
+    const o = item as Record<string, unknown>;
+    if (o.type !== "word" && o.type !== "phrase") continue;
+    if (typeof o.text !== "string" || !o.text) continue;
+    if (typeof o.meaning !== "string" || !o.meaning) continue;
+    out.push({
+      type: o.type,
+      text: o.text,
+      meaning: o.meaning,
+      example: typeof o.example === "string" ? o.example : undefined,
+      ipa: typeof o.ipa === "string" ? o.ipa : undefined,
+    });
+  }
+  return out;
+}
+
+function parseTurnSaveables(val: unknown): TurnSaveable[] | undefined {
+  const out = parseSaveableList(val, MAX_SAVEABLES_PER_TURN);
+  return out.length ? out : undefined;
+}
+
+function parseSummarySaveables(val: unknown): TurnSaveable[] {
+  return parseSaveableList(val, MAX_SUMMARY_ITEMS);
 }
 
 export function parseToolArgs(name: ToolName, raw: unknown): ToolArgs["args"] {
@@ -345,6 +375,21 @@ export function parseToolArgs(name: ToolName, raw: unknown): ToolArgs["args"] {
     }
     case "mission_intent_observed":
       return { intentId: assertString(obj.intentId, "intentId") } satisfies MissionIntentObservedArgs;
+    // Unlike the other tools, a malformed annotation must not throw: the turn's
+    // prose is still valid, so a bad annotation disappears silently instead of
+    // breaking the message.
+    case "annotate_turn":
+      return {
+        correction: parseTurnCorrection(obj.correction),
+        saveables: parseTurnSaveables(obj.saveables),
+        concept: parseTurnConcept(obj.concept),
+      } satisfies AnnotateTurnArgs;
+    case "render_session_summary":
+      return {
+        corrections: parseSummaryCorrections(obj.corrections),
+        learned: parseSummarySaveables(obj.learned),
+        reviewNext: parseSummaryStrings(obj.reviewNext),
+      } satisfies SessionSummaryArgs;
     case "start_roleplay": {
       const valid = LEGACY_ROLEPLAY_SCENARIOS;
       if (!valid.includes(obj.scenario as typeof valid[number]))

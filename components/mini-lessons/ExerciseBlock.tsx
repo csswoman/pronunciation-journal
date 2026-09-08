@@ -3,6 +3,21 @@
 import { useState } from "react";
 import Button from "@/components/ui/Button";
 import { cn } from "@/lib/cn";
+import ExerciseItemCard from "./ExerciseItemCard";
+
+// Planned structure:
+// <ExerciseBlock>
+//   <ExerciseBadge />
+//   <ExerciseInstructionHeading />
+//   <ExerciseCardsList>
+//     <ExerciseItemCard />
+//   </ExerciseCardsList>
+//   <ExerciseActions>
+//     <ScoreSummary />
+//     <VerifyButton /> | <ResetButton />
+//   </ExerciseActions>
+//   <SectionArrowDivider />
+// </ExerciseBlock>
 
 export interface BlankDefinition {
   accepted: string[];
@@ -25,122 +40,34 @@ export interface ExerciseBlockProps {
   answers?: Array<string | string[] | BlankDefinition[]>;
 }
 
-const CheckIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true" className="block">
-    <path
-      d="M2 6l3 3 5-5"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
+import {
+  checkAnswer,
+  resolveBlankAnswers,
+} from "@/lib/content/exercise-evaluator";
 
-const CrossIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true" className="block">
-    <path
-      d="M2 2l8 8M10 2L2 10"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
+export { checkAnswer, resolveBlankAnswers };
 
-function normalize(s: string): string {
-  return s
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, " ")
-    .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?¿¡'’"]/g, "");
-}
 
-function normalizeContractions(s: string): string {
-  return s
-    .replace(/\bdo not\b/g, "dont")
-    .replace(/\bdoes not\b/g, "doesnt")
-    .replace(/\bdid not\b/g, "didnt")
-    .replace(/\bwould not\b/g, "wouldnt")
-    .replace(/\bwill not\b/g, "wont")
-    .replace(/\bcannot\b/g, "cant")
-    .replace(/\bis not\b/g, "isnt")
-    .replace(/\bare not\b/g, "arent")
-    .replace(/\bhave not\b/g, "havent")
-    .replace(/\bhas not\b/g, "hasnt")
-    .replace(/\b'm\b/g, "am")
-    .replace(/\b're\b/g, "are")
-    .replace(/\b've\b/g, "have")
-    .replace(/\b'll\b/g, "will")
-    .replace(/\b'd\b/g, "would");
-}
+function getExerciseBadgeLabel(instruction: string, type?: string, hasBlanks?: boolean): string {
+  if (type === "open_response") return "Escritura";
+  if (type === "closed_blank") return "Completar";
+  if (type === "multiple_choice") return "Opción múltiple";
+  if (type === "self_check") return "Autoevaluación";
 
-export function checkAnswer(
-  userVal: string,
-  correctTarget: string | string[] | BlankDefinition | undefined
-): boolean {
-  if (!correctTarget) return false;
-
-  const normalizedUser = normalize(userVal);
-  const normalizedUserContractions = normalizeContractions(normalizedUser);
-
-  // Extract list of accepted candidate strings
-  let acceptedList: string[] = [];
-  if (typeof correctTarget === "string") {
-    const clean = correctTarget.replace(/\([^)]*\)/g, "");
-    // If it contains slash alternatives for a single blank, split them
-    acceptedList = clean.split("/").map((s) => s.trim());
-  } else if (Array.isArray(correctTarget)) {
-    acceptedList = correctTarget.flatMap((item) =>
-      typeof item === "string" ? [item] : (item as BlankDefinition).accepted ?? []
-    );
-  } else if (typeof correctTarget === "object" && "accepted" in correctTarget) {
-    acceptedList = correctTarget.accepted;
+  const lower = instruction.toLowerCase();
+  if (
+    lower.includes("transcribe") ||
+    lower.includes("escribe") ||
+    lower.includes("write") ||
+    lower.includes("fonemic") ||
+    lower.includes("phonemic")
+  ) {
+    return "Escritura";
   }
-
-  return acceptedList.some((candidate) => {
-    const norm = normalize(candidate);
-    const normContractions = normalizeContractions(norm);
-    return (
-      norm === normalizedUser ||
-      normContractions === normalizedUser ||
-      norm === normalizedUserContractions ||
-      normContractions === normalizedUserContractions
-    );
-  });
-}
-
-function resolveBlankAnswers(
-  rawAnswer: string | string[] | BlankDefinition[] | undefined,
-  blanksCount: number
-): Array<string | string[] | BlankDefinition> {
-  if (!rawAnswer) return [];
-
-  if (Array.isArray(rawAnswer)) {
-    // If it's already an array matching the number of blanks, return per blank
-    if (rawAnswer.length === blanksCount) {
-      return rawAnswer;
-    }
-    return rawAnswer;
+  if (hasBlanks || lower.includes("fill") || lower.includes("completa")) {
+    return "Completar";
   }
-
-  if (typeof rawAnswer === "string") {
-    // Check if explicit double-slash "//" was used to separate blanks
-    if (rawAnswer.includes("//")) {
-      return rawAnswer.split("//").map((s) => s.trim());
-    }
-    // Legacy slash split if multiple blanks
-    if (blanksCount > 1 && rawAnswer.includes("/")) {
-      const parts = rawAnswer.split("/").map((s) => s.trim());
-      if (parts.length === blanksCount) {
-        return parts;
-      }
-    }
-    return [rawAnswer.trim()];
-  }
-
-  return [rawAnswer];
+  return "Escritura";
 }
 
 export default function ExerciseBlock({
@@ -173,11 +100,16 @@ export default function ExerciseBlock({
 
   let totalInputsCount = 0;
   let correctInputsCount = 0;
+  let hasBlanks = false;
 
   items.forEach((item, itemIdx) => {
     const promptText = typeof item === "string" ? item : item.prompt;
     const parts = promptText.split(/_{3,}/);
     const rawAnswer = answers[itemIdx];
+
+    if (parts.length > 1) {
+      hasBlanks = true;
+    }
 
     if (parts.length === 1 || type === "open_response" || type === "self_check") {
       totalInputsCount++;
@@ -210,181 +142,49 @@ export default function ExerciseBlock({
   const scorePct = totalInputsCount > 0 ? (correctInputsCount / totalInputsCount) * 100 : 0;
   const isGoodScore = scorePct >= 85;
   const isMidScore = scorePct >= 60 && scorePct < 85;
+  const badgeLabel = getExerciseBadgeLabel(instruction, type, hasBlanks);
 
   return (
-    <div className="mini-lessons__block">
-      <p className="mini-lessons__block-label">{instruction}</p>
-
-      <div className="mini-lessons__exercise-list">
-        {items.map((item, itemIdx) => {
-          const promptText = typeof item === "string" ? item : item.prompt;
-          const parts = promptText.split(/_{3,}/);
-          const rawAnswer = answers[itemIdx];
-
-          // Render rewrite / open / self-check item (no blanks or explicitly open)
-          if (parts.length === 1 || type === "open_response" || type === "self_check") {
-            const inputKey = `${itemIdx}-0`;
-            const userVal = userInputs[inputKey] ?? "";
-            const modelAnswer =
-              typeof item !== "string" && item.sampleAnswer
-                ? item.sampleAnswer
-                : typeof rawAnswer === "string"
-                ? rawAnswer
-                : "";
-            const isExactMatch = isVerified && checkAnswer(userVal, modelAnswer);
-            const isSelfChecked = selfChecked[inputKey];
-            const isCorrect = isExactMatch || isSelfChecked;
-
-            return (
-              <div key={itemIdx} className="mini-lessons__exercise-item-container">
-                <div className="mini-lessons__exercise-marker" aria-hidden="true">
-                  <span className="mini-lessons__exercise-number">{itemIdx + 1}</span>
-                </div>
-                <div className="mini-lessons__exercise-content">
-                  <p className="mini-lessons__exercise-prompt">{promptText}</p>
-                  <div className="mini-lessons__exercise-input-row">
-                    <input
-                      type="text"
-                      className={cn(
-                        "mini-lessons__exercise-input",
-                        "mini-lessons__exercise-input--rewrite",
-                        isVerified &&
-                          (isCorrect
-                            ? "mini-lessons__exercise-input--correct"
-                            : "mini-lessons__exercise-input--incorrect")
-                      )}
-                      value={userVal}
-                      onChange={(e) => handleInputChange(inputKey, e.target.value)}
-                      disabled={isVerified}
-                      placeholder="Escribe tu respuesta..."
-                    />
-                    {isVerified && (
-                      <span
-                        className={cn(
-                          "mini-lessons__feedback-icon",
-                          isCorrect
-                            ? "mini-lessons__feedback-icon--correct"
-                            : "mini-lessons__feedback-icon--incorrect"
-                        )}
-                      >
-                        {isCorrect ? <CheckIcon /> : <CrossIcon />}
-                      </span>
-                    )}
-                  </div>
-
-                  {isVerified && modelAnswer && (
-                    <div className="mt-2 flex flex-col gap-2 rounded-lg bg-surface-sunken p-3 text-caption">
-                      <p className="mini-lessons__exercise-correction">
-                        Respuesta sugerida:{" "}
-                        <strong className="mini-lessons__correction-highlight">{modelAnswer}</strong>
-                      </p>
-                      {!isExactMatch && !isSelfChecked && (
-                        <div className="flex items-center gap-2 pt-1">
-                          <span className="text-fg-muted">¿Tu respuesta expresa lo mismo?</span>
-                          <button
-                            type="button"
-                            onClick={() => handleSelfCheck(inputKey, true)}
-                            className="rounded border border-primary/40 bg-primary-soft px-2 py-0.5 font-label text-tiny font-semibold text-primary hover:bg-primary/20"
-                          >
-                            Sí, es equivalente
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
-            );
-          }
-
-          // Render fill-in-the-blanks item
-          const blanksCount = parts.length - 1;
-          const blankAnswers = resolveBlankAnswers(rawAnswer, blanksCount);
-
-          return (
-            <div key={itemIdx} className="mini-lessons__exercise-item-container">
-              <div className="mini-lessons__exercise-marker" aria-hidden="true">
-                <span className="mini-lessons__exercise-number">{itemIdx + 1}</span>
-              </div>
-              <div className="mini-lessons__exercise-content">
-                <p className="mini-lessons__exercise-prompt">
-                  {parts.map((part, partIdx) => {
-                    const isLast = partIdx === parts.length - 1;
-                    if (isLast) {
-                      return <span key={partIdx}>{part}</span>;
-                    }
-
-                    const inputKey = `${itemIdx}-${partIdx}`;
-                    const userVal = userInputs[inputKey] ?? "";
-                    const expectedTarget = blankAnswers[partIdx] ?? blankAnswers[0];
-                    const isCorrect = isVerified && checkAnswer(userVal, expectedTarget);
-
-                    const hintDisplay =
-                      typeof expectedTarget === "string"
-                        ? expectedTarget
-                        : Array.isArray(expectedTarget)
-                        ? (expectedTarget as (string | BlankDefinition)[])
-                            .map((t) => (typeof t === "string" ? t : (t as BlankDefinition).accepted.join("/")))
-                            .join(" / ")
-                        : (expectedTarget as BlankDefinition | undefined)?.accepted?.join(" / ") ?? "";
-
-                    const inputWidth = Math.max(hintDisplay.length + 2, 8);
-
-                    return (
-                      <span key={partIdx} className="mini-lessons__inline-input-wrapper">
-                        {part}
-                        <input
-                          type="text"
-                          className={cn(
-                            "mini-lessons__exercise-input",
-                            "mini-lessons__exercise-input--inline",
-                            isVerified &&
-                              (isCorrect
-                                ? "mini-lessons__exercise-input--correct"
-                                : "mini-lessons__exercise-input--incorrect")
-                          )}
-                          style={{ width: `${inputWidth}ch` }}
-                          value={userVal}
-                          onChange={(e) => handleInputChange(inputKey, e.target.value)}
-                          disabled={isVerified}
-                          placeholder="..."
-                        />
-                        {isVerified && (
-                          <span
-                            className={cn(
-                              "mini-lessons__feedback-inline",
-                              isCorrect
-                                ? "mini-lessons__feedback-inline--correct"
-                                : "mini-lessons__feedback-inline--incorrect"
-                            )}
-                          >
-                            {isCorrect ? <CheckIcon /> : <CrossIcon />}
-                            {!isCorrect && (
-                              <span className="mini-lessons__correct-hint">({hintDisplay})</span>
-                            )}
-                          </span>
-                        )}
-                      </span>
-                    );
-                  })}
-                </p>
-              </div>
-            </div>
-          );
-        })}
+    <div className="mini-lessons__block flex flex-col gap-4 mb-6">
+      {/* Exercise badge & instruction heading */}
+      <div className="flex flex-col gap-2">
+        <div>
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-tiny font-semibold tracking-wide bg-primary-soft text-primary border border-primary/20">
+            {badgeLabel}
+          </span>
+        </div>
+        <h3 className="mini-lessons__block-label text-h4 font-bold text-fg leading-snug tracking-tight m-0">
+          {instruction}
+        </h3>
       </div>
 
+      {/* List of decoupled item cards */}
+      <div className="mini-lessons__exercise-list flex flex-col gap-3">
+        {items.map((item, itemIdx) => (
+          <ExerciseItemCard
+            key={itemIdx}
+            item={item}
+            itemIdx={itemIdx}
+            type={type}
+            rawAnswer={answers[itemIdx]}
+            state={{ userInputs, selfChecked, isVerified }}
+            actions={{ onInputChange: handleInputChange, onSelfCheck: handleSelfCheck }}
+          />
+        ))}
+      </div>
+
+      {/* Action area: Verify button / Score & Reset */}
       {(answers.length > 0 ||
         items.some((item) => typeof item !== "string" && (item.sampleAnswer || item.blanks))) && (
-        <div className="mini-lessons__exercise-actions">
+        <div className="mini-lessons__exercise-actions flex items-center justify-between gap-3 pt-2">
           {isVerified ? (
             <>
               <div
                 className={cn(
-                  "mini-lessons__exercise-summary",
-                  isGoodScore && "mini-lessons__exercise-summary--good",
-                  isMidScore && "mini-lessons__exercise-summary--mid",
-                  !isGoodScore && !isMidScore && "mini-lessons__exercise-summary--low"
+                  "mini-lessons__exercise-summary inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-caption font-semibold",
+                  isGoodScore && "mini-lessons__exercise-summary--good bg-success-soft text-success border border-success-border",
+                  isMidScore && "mini-lessons__exercise-summary--mid bg-warning-soft text-warning border border-warning-border",
+                  !isGoodScore && !isMidScore && "mini-lessons__exercise-summary--low bg-error-soft text-error border border-error-border"
                 )}
               >
                 <span>
@@ -399,13 +199,26 @@ export default function ExerciseBlock({
           ) : (
             <>
               <div />
-              <Button onClick={handleVerify}>
+              <Button variant="primary" onClick={handleVerify} className="px-6 py-2 rounded-lg font-semibold">
                 Verificar
               </Button>
             </>
           )}
         </div>
       )}
+
+      {/* Down arrow rhythm divider */}
+      <div className="flex items-center justify-center pt-2 text-fg-muted/40" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
+          <path
+            d="M8 3v10M4 9l4 4 4-4"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </div>
     </div>
   );
 }

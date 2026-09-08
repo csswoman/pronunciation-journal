@@ -33,9 +33,12 @@ interface Props {
 const useIsoLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect
 
 export function MatchPairsExercise({ exercise, onResult }: Props) {
+  // Only reshuffle when the exercise identity changes — `exercise.pairs` gets a
+  // new array reference on every parent re-render, which previously caused the
+  // right column to reshuffle mid-exercise and desync already-drawn connection lines.
   const rightItems = useMemo(
     () => shuffle(exercise.pairs.map((p) => ({ id: p.id, label: p.right }))),
-    [exercise.id, exercise.pairs],
+    [exercise.id],
   )
 
   const [selectedLeft, setSelectedLeft] = useState<string | null>(null)

@@ -5,7 +5,8 @@ import type { ExerciseResult, VoiceMetadata } from "@/lib/ai-practice/types";
 import { getUserLearningState } from "@/lib/ai-practice/load-state";
 import { hydrateFromRemote, persistLearningState } from "@/lib/ai-practice/queries";
 import type { UserLearningState } from "@/lib/ai-practice/learning-state";
-import type { AISavedWord, AIConversation, AIConversationMode } from "@/lib/types";
+import type { AIConversation, AIConversationMode } from "@/lib/types";
+import type { TurnSaveable } from "@/lib/ai-practice/tools/registry";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useStreamingChat } from "./useStreamingChat";
 import { useSavedWords, type SaveWordData } from "./useSavedWords";
@@ -18,22 +19,24 @@ type MissionIntentHandler = (intentId: string) => void;
 
 interface UseAIPracticeReturn {
   messages: ReturnType<typeof useStreamingChat>["messages"];
+  userTurnCount: number;
   isStreaming: boolean;
   error: string | null;
   quotaExhausted: boolean;
-  savedWords: AISavedWord[];
   wordToSave: { word: string; context: string } | null;
   activeMissionId: string | null;
   mode: AIConversationMode;
   conversationId: number | null;
   sendMessage: (text: string, options?: { hidden?: boolean; voice?: VoiceMetadata }) => Promise<void>;
+  retryLastFailedSend: () => Promise<void>;
+  dismissError: () => void;
   answerToolCall: (callId: string, result: ExerciseResult) => void;
   saveTranslation: (msgIndex: number, translation: string) => void;
   openSaveWordModal: (word: string, context: string) => void;
   closeSaveWordModal: () => void;
   confirmSaveWord: (data: SaveWordData) => Promise<void>;
-  deleteSavedWord: (id: number) => Promise<void>;
-  loadSavedWords: () => Promise<void>;
+  saveSaveable: (saveable: TurnSaveable) => Promise<void>;
+  saveConcept: (title: string, body: string) => Promise<void>;
   setMissionIntentHandler: (handler: MissionIntentHandler | null) => void;
   resetSession: () => void;
   finalizeSession: () => void;
@@ -51,7 +54,7 @@ export function useAIPractice(): UseAIPracticeReturn {
   const [mode, setMode] = useState<AIConversationMode>("chat");
   const [conversationId, setConversationId] = useState<number | null>(null);
 
-  const words = useSavedWords(user?.id ?? null, conversationId);
+  const words = useSavedWords(user?.id ?? null);
 
   const setMissionIntentHandler = useCallback((handler: MissionIntentHandler | null) => {
     missionIntentHandlerRef.current = handler;
@@ -67,7 +70,6 @@ export function useAIPractice(): UseAIPracticeReturn {
     onConversationCreated: setConversationId,
     learningState,
     setLearningState,
-    onSaveWord: words.openSaveWordModal,
     onStartMission: (missionId) => {
       setActiveMissionId(missionId)
       setMode(`mission:${missionId}`)
@@ -83,7 +85,6 @@ export function useAIPractice(): UseAIPracticeReturn {
     let cancelled = false;
 
     void (async () => {
-      await words.loadSavedWords();
       await hydrateFromRemote(userId).catch(() => {});
       if (cancelled) return;
       const state = await getUserLearningState(userId).catch(() => null);
@@ -93,7 +94,7 @@ export function useAIPractice(): UseAIPracticeReturn {
     return () => {
       cancelled = true;
     };
-  }, [user?.id, words.loadSavedWords]);
+  }, [user?.id]);
 
   // Throttled persistence: sync learningState to Supabase 5s after the last update.
   // Flushed early (instead of just cancelled) on unmount, dependency change, and
@@ -194,22 +195,24 @@ export function useAIPractice(): UseAIPracticeReturn {
 
   return {
     messages: chat.messages,
+    userTurnCount: chat.userTurnCount,
     isStreaming: chat.isStreaming,
     error: chat.error,
     quotaExhausted: chat.quotaExhausted,
-    savedWords: words.savedWords,
     wordToSave: words.wordToSave,
     activeMissionId,
     mode,
     conversationId,
     sendMessage: chat.sendMessage,
+    retryLastFailedSend: chat.retryLastFailedSend,
+    dismissError: chat.dismissError,
     answerToolCall: chat.answerToolCall,
     saveTranslation: chat.saveTranslation,
     openSaveWordModal: words.openSaveWordModal,
     closeSaveWordModal: words.closeSaveWordModal,
     confirmSaveWord: words.confirmSaveWord,
-    deleteSavedWord: words.deleteSavedWord,
-    loadSavedWords: words.loadSavedWords,
+    saveSaveable: words.saveSaveable,
+    saveConcept: words.saveConcept,
     setMissionIntentHandler,
     resetSession,
     finalizeSession: chat.finalizeSession,

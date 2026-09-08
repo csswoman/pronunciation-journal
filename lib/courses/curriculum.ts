@@ -1,5 +1,5 @@
 import { buildLevel } from "./buildCurriculum";
-import { a1CourseInputs, a2CourseInputs, b1CourseInputs, b2CourseInputs, c1CourseInputs } from "./level-curriculum-order";
+import { a1CourseInputs, a2CourseInputs, b1CourseInputs, b2CourseInputs, c1CourseInputs, c2CourseInputs } from "./level-curriculum-order";
 import type { CefrLevelId, CoursePathCurriculum } from "./types";
 import {
   targetId,
@@ -327,7 +327,36 @@ export const COURSE_PATH_CURRICULUM: CoursePathCurriculum = {
         },
       ],
     },
-    // No existe un nivel dedicado "c2" en esta app: el contenido se fusiona en C1.
+    {
+      ...buildLevel(
+        "c2",
+        "C2",
+        "Maestría",
+        "Dominio nativo C2",
+        "24 h",
+        c2CourseInputs(),
+        { optionalLabel: "C2+", optionalTitle: "Perfeccionamiento", description: "Perfeccionamiento estilístico, inversión literaria y dominio avanzado." }
+      ),
+      realLife: [
+        {
+          id: "c2-subtlety",
+          title: "Sutileza e inversión estilística",
+          icon: "target",
+          phrases: [
+            "Little did they know what lay ahead.",
+            "Seldom have I encountered such dedication.",
+            "Be that as it may, we must proceed.",
+            "Were it not for your assistance, we would have failed.",
+          ],
+          vocab: [
+            { word: "inversion", meaning: "inversión sintáctica para énfasis o estilo" },
+            { word: "register", meaning: "registro lingüístico (formal, sofisticado, literario)" },
+            { word: "ellipsis", meaning: "omisión intencionada de elementos gramaticales" },
+            { word: "rhetoric", meaning: "recursos retóricos y persuación avanzada" },
+          ],
+        },
+      ],
+    },
   ],
   electiveTracks: [
     buildLevel(
@@ -469,11 +498,11 @@ const REQUIRED_ASSESSMENT_SLUGS: Record<CefrLevelId, string[]> = {
     "a1-can-capacidad-permiso",
   ],
   a2: [
-    "a2-experiencias-pasadas-planes",
+    "a2-pasado-to-be",
     "a2-cuantificadores-esenciales",
     "a2-used-to",
     "a2-will-going-to",
-    "a2-presente-perfecto-experiencias",
+    "a2-pasado-continuo",
     "a2-preguntas-indirectas",
   ],
   b1: [
@@ -500,6 +529,14 @@ const REQUIRED_ASSESSMENT_SLUGS: Record<CefrLevelId, string[]> = {
     "c1-clausulas-reducidas-participiales",
     "c1-elipsis-sustitucion-referencia",
   ],
+  c2: [
+    "c2-elipsis-sustitucion-avanzada",
+    "c2-sintagmas-nominales",
+    "c2-concesion-avanzada",
+    "c2-condicionales-idiomaticas",
+    "c2-inversion-literaria",
+    "c2-topicalizacion",
+  ],
 };
 
 export const LEVEL_ASSESSMENT_CONTRACTS: Record<CefrLevelId, LevelAssessmentContract> = {
@@ -508,6 +545,7 @@ export const LEVEL_ASSESSMENT_CONTRACTS: Record<CefrLevelId, LevelAssessmentCont
   b1: { level: "b1", questionTypes: ["grammar", "vocabulary", "reading"], minimumCorrect: 5, questionCount: 6, requiredLessonSlugs: REQUIRED_ASSESSMENT_SLUGS.b1, failureFallback: "a2" },
   b2: { level: "b2", questionTypes: ["grammar", "vocabulary", "reading"], minimumCorrect: 5, questionCount: 6, requiredLessonSlugs: REQUIRED_ASSESSMENT_SLUGS.b2, failureFallback: "b1" },
   c1: { level: "c1", questionTypes: ["grammar", "vocabulary", "reading"], minimumCorrect: 5, questionCount: 6, requiredLessonSlugs: REQUIRED_ASSESSMENT_SLUGS.c1, failureFallback: "b2" },
+  c2: { level: "c2", questionTypes: ["grammar", "vocabulary", "reading"], minimumCorrect: 5, questionCount: 6, requiredLessonSlugs: REQUIRED_ASSESSMENT_SLUGS.c2, failureFallback: "c1" },
 };
 
 export interface AssessmentSection {
@@ -517,7 +555,7 @@ export interface AssessmentSection {
   items: Array<{ lessonSlug: string; questionType: AssessmentQuestionType }>;
 }
 
-const CEFR_ORDER: CefrLevelId[] = ["a1", "a2", "b1", "b2", "c1"];
+const CEFR_ORDER: CefrLevelId[] = ["a1", "a2", "b1", "b2", "c1", "c2"];
 
 export function buildAssessment(
   mode: AssessmentMode,

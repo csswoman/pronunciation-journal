@@ -1,24 +1,23 @@
-import { ChevronLeft, History, Plus, Sparkles, X } from "@/components/icons";
+import { ChevronLeft, History, Plus, Sparkles, Volume2, VolumeX, X } from "@/components/icons";
 import { useState, useEffect, useRef } from "react";
 import type { AIConversation } from "@/lib/types";
 import { groupConversationsByDate } from "@/lib/group-by-date";
 import { formatConversationTitle } from "@/lib/ai-practice/conversation-title";
+import { useAICoachStore } from "@/lib/stores/aiCoachStore";
 import { cn } from "@/lib/cn";
 
 export function AICoachHeader({
-  pageLabel,
-  showHistory,
-  onNewChat,
-  onToggleHistory,
-  onClose,
+  pageLabel, showHistory, onNewChat, onToggleHistory, onClose, endSessionSlot,
 }: {
   pageLabel?: string;
   showHistory: boolean;
   onNewChat: () => void;
   onToggleHistory: () => void;
   onClose: () => void;
+  endSessionSlot?: React.ReactNode;
 }) {
   const showBadge = Boolean(pageLabel && pageLabel.trim() !== "" && pageLabel !== "AI Coach");
+  const { autoSpeak, toggleAutoSpeak } = useAICoachStore();
 
   return (
     <header className="flex items-center justify-between px-3.5 py-2.5 sm:px-4 sm:py-3 shrink-0 border-b border-border-subtle bg-surface-raised">
@@ -34,6 +33,15 @@ export function AICoachHeader({
         )}
       </div>
       <div className="flex items-center gap-1 shrink-0">
+        {endSessionSlot}
+        <PanelIconButton
+          onClick={toggleAutoSpeak}
+          title={autoSpeak ? "Silenciar voz del coach" : "Activar voz del coach"}
+          ariaLabel="Silenciar voz del coach"
+          ariaPressed={!autoSpeak}
+        >
+          {autoSpeak ? <Volume2 size={16} strokeWidth={1.8} /> : <VolumeX size={16} strokeWidth={1.8} />}
+        </PanelIconButton>
         <PanelIconButton onClick={onNewChat} title="Nueva conversación">
           <Plus size={16} strokeWidth={2} />
         </PanelIconButton>
@@ -48,18 +56,11 @@ export function AICoachHeader({
   );
 }
 
-export function AICoachResizeHandle({
-  onDragStart,
-}: {
-  onDragStart: (e: React.MouseEvent) => void;
-}) {
+export function AICoachResizeHandle({ onDragStart }: { onDragStart: (e: React.MouseEvent) => void }) {
   return (
     <div
-      role="separator"
-      aria-orientation="vertical"
-      aria-label="Ajustar ancho del panel"
-      onMouseDown={onDragStart}
-      title="Arrastra para ajustar el ancho"
+      role="separator" aria-orientation="vertical" aria-label="Ajustar ancho del panel"
+      onMouseDown={onDragStart} title="Arrastra para ajustar el ancho"
       className="absolute top-0 -left-1.5 bottom-0 w-3 cursor-col-resize group z-20 flex items-center justify-center select-none"
     >
       <div className="h-full w-0.5 bg-transparent group-hover:bg-primary/70 group-active:bg-primary transition-colors" />
@@ -70,9 +71,7 @@ export function AICoachResizeHandle({
 export function AICoachMobileScrim({ onClose }: { onClose: () => void }) {
   return (
     <div
-      role="presentation"
-      aria-hidden="true"
-      onClick={onClose}
+      role="presentation" aria-hidden="true" onClick={onClose}
       className="fixed inset-0 z-40 bg-surface-base/80 backdrop-blur-xs transition-opacity motion-reduce:transition-none"
     />
   );
@@ -81,11 +80,15 @@ export function AICoachMobileScrim({ onClose }: { onClose: () => void }) {
 function PanelIconButton({
   onClick,
   title,
+  ariaLabel,
+  ariaPressed,
   active,
   children,
 }: {
   onClick: () => void;
   title: string;
+  ariaLabel?: string;
+  ariaPressed?: boolean;
   active?: boolean;
   children: React.ReactNode;
 }) {
@@ -94,7 +97,8 @@ function PanelIconButton({
       type="button"
       onClick={onClick}
       title={title}
-      aria-label={title}
+      aria-label={ariaLabel ?? title}
+      aria-pressed={ariaPressed}
       data-active={active ? "true" : undefined}
       className={cn(
         "min-h-9 min-w-9 sm:size-8 rounded-md flex items-center justify-center transition-colors cursor-pointer focus-ring",
@@ -109,11 +113,7 @@ function PanelIconButton({
 }
 
 export function ConversationHistoryPanel({
-  conversations,
-  activeId,
-  onSelect,
-  onDelete,
-  onClose,
+  conversations, activeId, onSelect, onDelete, onClose,
 }: {
   conversations: AIConversation[];
   activeId: number | null;
@@ -145,10 +145,8 @@ export function ConversationHistoryPanel({
     setPendingDelete(null);
   };
 
-  useEffect(() => {
-    return () => {
-      if (timerRef.current !== null) clearTimeout(timerRef.current);
-    };
+  useEffect(() => () => {
+    if (timerRef.current !== null) clearTimeout(timerRef.current);
   }, []);
 
   const grouped = groupConversationsByDate(conversations);

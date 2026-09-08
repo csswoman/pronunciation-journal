@@ -15,6 +15,7 @@ import type { ReaderQuestion } from "@/lib/practice/reader/types";
 const RequestSchema = z.object({
   targets: z.array(z.string().min(1).max(40)).min(1).max(10),
   level: z.string().min(2).max(4),
+  topic: z.string().max(200).optional(),
 }).strict();
 
 const ResponseSchema = z.object({
@@ -84,7 +85,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     endpoint: "/api/gemini/generate-reader",
     userId: user.id,
     params: {
-      contents: buildGenerateReaderUserPrompt({ targets: body.targets, level: body.level, interests }),
+      contents: buildGenerateReaderUserPrompt({ targets: body.targets, level: body.level, interests, topic: body.topic }),
       config: {
         systemInstruction: GENERATE_READER_SYSTEM_PROMPT,
         responseMimeType: "application/json",

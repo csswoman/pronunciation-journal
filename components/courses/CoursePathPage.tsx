@@ -43,7 +43,7 @@ export default function CoursePathPage({ levelParam }: CoursePathPageProps) {
       <PageLayout archetype="catalog">
         <PageHeader
           title="Cursos"
-          subtitle="Organizadas por nivel, a tu ritmo."
+          subtitle="Organizados por nivel, a tu ritmo."
           actions={
             <CoursePathLevelPicker
               levels={COURSE_PATH_CURRICULUM.levels}
@@ -61,6 +61,7 @@ export default function CoursePathPage({ levelParam }: CoursePathPageProps) {
           >
             <CoursePathLevelPanel
               level={selectedLevel}
+              compactHead
               electiveTracks={COURSE_PATH_CURRICULUM.electiveTracks}
             />
           </section>

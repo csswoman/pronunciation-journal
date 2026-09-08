@@ -12,6 +12,7 @@ import EmptySearch from "@/components/illustrations/search.svg";
 import StateCompletado from "@/components/illustrations/celebration-burst.svg";
 import StateTrophy from "@/components/illustrations/trophy.svg";
 import StateStreak from "@/components/illustrations/streak-flame.svg";
+import StateWin from "@/components/illustrations/win.svg";
 
 // ── Skill domains (home cards, daily steps) ─────────────────────────────────
 import DomainVocabulary from "@/components/illustrations/dictionary-book.svg";
@@ -51,6 +52,7 @@ export type IllustrationKey =
   | "stateCompletado"
   | "stateTrophy"
   | "stateStreak"
+  | "stateWin"
   // skill domains
   | "domainVocabulary"
   | "domainSpeaking"
@@ -100,6 +102,7 @@ export const ILLUSTRATIONS: Record<IllustrationKey, IllustrationComponent | null
   stateCompletado: StateCompletado,
   stateTrophy: StateTrophy,
   stateStreak: StateStreak,
+  stateWin: StateWin,
   domainVocabulary: DomainVocabulary,
   domainSpeaking: DomainSpeaking,
   domainListening: DomainListening,

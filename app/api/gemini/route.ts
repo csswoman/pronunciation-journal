@@ -1,10 +1,11 @@
 import { GoogleGenAI } from "@google/genai";
 import { NextRequest } from "next/server";
 import { requireSameOrigin, requireUser, checkLayeredRateLimit, validateBody, SECURE_HEADERS, publicErrorResponse } from "@/lib/api/guards";
-import { detectIntent, intentToToolConfig } from "@/lib/ai-practice/intent-detection";
+import { detectIntent, selectionForRequest } from "@/lib/ai-practice/intent-detection";
 import { buildSystemPrompt, extractLastTopicFromWire, lastUserVoiceMetadataFromWire } from "@/lib/ai-practice/wire";
 import { getMission } from "@/lib/ai-practice/missions/registry";
 import { fetchServerLearningState } from "@/lib/ai-practice/server-state";
+import { getUserInterests } from "@/lib/users/server-queries";
 import { getErrorStatus } from "@/lib/gemini/fallback";
 import {
   buildHistory,
@@ -20,6 +21,8 @@ import { GeminiRequestSchema } from "./schema";
 // ---------------------------------------------------------------------------
 // Route handler
 // ---------------------------------------------------------------------------
+
+export const maxDuration = 60;
 
 export async function POST(request: NextRequest): Promise<Response> {
   const originError = requireSameOrigin(request);
@@ -64,20 +67,35 @@ export async function POST(request: NextRequest): Promise<Response> {
   //    from the client — the client never supplies learningState directly, so
   //    a spoofed request can at most omit/alter its own `voice` tag, which
   //    only nudges feedback verbosity, not tool access or grading.
-  const learningState = await fetchServerLearningState(user.id, accessToken);
+  // Interests are a nice-to-have: a profile read failure must never block the
+  // chat, so it degrades to an empty list rather than rejecting the request.
+  // Both fetches are best-effort: cap them at 800 ms so a slow Supabase
+  // cold-start never delays the first streamed token.
+  const withTimeout = <T>(p: Promise<T>, fallback: T) =>
+    Promise.race([p, new Promise<T>((r) => setTimeout(() => r(fallback), 800))]);
+
+  const [learningState, interests] = await Promise.all([
+    withTimeout(fetchServerLearningState(user.id, accessToken), null),
+    withTimeout(getUserInterests(user.id).catch(() => []), []),
+  ]);
   const lastTopic = extractLastTopicFromWire(body.messages);
   const voice = lastUserVoiceMetadataFromWire(body.messages);
-  const systemPrompt = buildSystemPrompt(learningState, lastTopic, voice?.scored === true, body.missionId);
+  const systemPrompt = buildSystemPrompt(learningState, {
+    lastTopic,
+    voiceScored: voice?.scored === true,
+    missionId: body.missionId,
+    interests,
+  });
 
   // Cap input fed to intent detection — detectIntent has its own guard but we
   // also avoid building a huge string from the full content field.
   const lastUserText = (lastMsg.content ?? "").slice(0, 2_000);
-  const intent = detectIntent(lastUserText);
+  const isStarter = body.starterId !== undefined;
   const selection = body.missionId
-    ? intent.type === "explanation_request"
+    ? detectIntent(lastUserText).type === "explanation_request"
       ? { toolChoice: "none" as const, allowedTools: [] as string[] }
       : { toolChoice: "auto" as const, allowedTools: ["save_word", "mission_intent_observed"] }
-    : intentToToolConfig(intent);
+    : selectionForRequest(lastUserText, isStarter);
 
   const history = buildHistory(body.messages.slice(0, -1));
   const ai = new GoogleGenAI({ apiKey });

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   buildDeckSuggestUserPrompt,
+  buildGenerateReaderUserPrompt,
   buildPhrasesUserPrompt,
   buildSentenceReorderUserPrompt,
   buildWordSearchUserPrompt,
@@ -34,6 +35,16 @@ describe("ai-prompts user builders", () => {
     expect(prompt).toContain("knife, spoon");
   });
 
+  it("buildWordSearchUserPrompt includes exclude list when provided", () => {
+    const prompt = buildWordSearchUserPrompt({
+      topic: "office",
+      level: "intermediate",
+      count: 6,
+      excludeWords: ["meeting", "agenda"],
+    });
+    expect(prompt).toContain("Do NOT reuse any of these recently played words: meeting, agenda");
+  });
+
   it("buildDeckSuggestUserPrompt excludes existing deck words", () => {
     const prompt = buildDeckSuggestUserPrompt({
       deckName: "Kitchen",
@@ -43,5 +54,23 @@ describe("ai-prompts user builders", () => {
     expect(prompt).toContain('Deck: "Kitchen"');
     expect(prompt).toContain("knife, spoon");
     expect(prompt).toContain("do NOT suggest");
+  });
+
+  it("buildGenerateReaderUserPrompt embeds targets, level, and requested topic", () => {
+    const promptWithTopic = buildGenerateReaderUserPrompt({
+      targets: ["river", "bridge"],
+      level: "A2",
+      topic: "Nature walk in the mountains",
+    });
+    expect(promptWithTopic).toContain("Target words to embed: river, bridge");
+    expect(promptWithTopic).toContain("Level: A2");
+    expect(promptWithTopic).toContain("Requested Topic / Theme: Nature walk in the mountains");
+
+    const promptWithoutTopic = buildGenerateReaderUserPrompt({
+      targets: ["book", "read"],
+      level: "B1",
+    });
+    expect(promptWithoutTopic).toContain("Target words to embed: book, read");
+    expect(promptWithoutTopic).not.toContain("Requested Topic / Theme:");
   });
 });

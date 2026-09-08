@@ -1,29 +1,27 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { ChevronLeft } from "@/components/icons";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { usePathname } from "next/navigation";
 import { useAICoachStore } from "@/lib/stores/aiCoachStore";
 import { useAIPractice } from "@/hooks/useAIPractice";
 import { useAuth } from "@/components/auth/AuthProvider";
-import ChatView from "@/components/ai-coach/ChatView";
 import PronunciationView from "@/components/ai-coach/PronunciationView";
-import CustomPromptPanel from "@/components/ai-coach/CustomPromptPanel";
 import ChatTabs, { type TabId } from "@/components/ai-coach/ChatTabs";
-import AICoachHome from "@/components/ai-coach/AICoachHome";
+import { useCoachStarters } from "@/hooks/useCoachStarters";
 import SaveWordModal from "@/components/ai-coach/SaveWordModal";
-import ErrorBanner from "@/components/ai-coach/ErrorBanner";
-import QuotaExhaustedCard from "@/components/ai-coach/QuotaExhaustedCard";
 import { getRecentConversations } from "@/lib/db/ai";
 import type { AIConversation } from "@/lib/types";
 import { getPageContext } from "./page-context";
 import { usePanelResize } from "./usePanelResize";
 import { AICoachHeader, AICoachMobileScrim, AICoachResizeHandle, ConversationHistoryPanel } from "./AICoachPanelParts";
-import { MissionWorkspace } from "./missions/MissionWorkspace";
 import type { MissionLaunch } from "@/lib/ai-practice/missions/launch";
 import { getMission } from "@/lib/ai-practice/missions/registry";
 import { isScriptedMission } from "@/lib/ai-practice/missions/types";
+import type { TurnSaveable } from "@/lib/ai-practice/tools/registry";
+import CoachSessionEndButton from "./session/CoachSessionEndButton";
+import { buildSessionSummaryPrompt } from "@/lib/ai-prompts";
+import { renderMission, renderHome, renderActiveChat } from "./AICoachPanelViews";
 
 // Planned structure:
 // <AICoachPanel>
@@ -39,12 +37,10 @@ import { isScriptedMission } from "@/lib/ai-practice/missions/types";
 // </AICoachPanel>
 
 export const PANEL_WIDTH = 380;
-const QUOTA_WARN_THRESHOLD = 18;
 
 function tabForMission(missionId: string): TabId {
   const mission = getMission(missionId);
-  if (!mission) return "chat";
-  return isScriptedMission(mission) ? "missions" : "chat";
+  return mission && isScriptedMission(mission) ? "missions" : "chat";
 }
 
 export default function AICoachPanel() {
@@ -56,10 +52,10 @@ export default function AICoachPanel() {
   const { onDragStart } = usePanelResize({ panelWidth, setPanelWidth });
 
   const {
-    messages, isStreaming, error, quotaExhausted, wordToSave, conversationId,
-    activeMissionId, sendMessage, answerToolCall, saveTranslation, openSaveWordModal, closeSaveWordModal,
-    confirmSaveWord, resetSession, finalizeSession, loadConversation, removeConversation,
-    changeMode, setMissionIntentHandler,
+    messages, userTurnCount, isStreaming, error, quotaExhausted, wordToSave, conversationId,
+    activeMissionId, sendMessage, retryLastFailedSend, dismissError, answerToolCall, saveTranslation,
+    openSaveWordModal, closeSaveWordModal, confirmSaveWord, saveSaveable, saveConcept, resetSession, finalizeSession,
+    loadConversation, removeConversation, changeMode, setMissionIntentHandler,
   } = useAIPractice();
 
   const [activeTab, setActiveTab] = useState<TabId>("chat");
@@ -96,8 +92,8 @@ export default function AICoachPanel() {
   useEffect(() => {
     if (!isOpen) return;
     if (!user?.id) { setConversations([]); return; }
-    getRecentConversations(user.id, 30).then(setConversations);
-  }, [isOpen, messages.length, conversationId, user?.id]);
+    void getRecentConversations(user.id, 30).then(setConversations);
+  }, [isOpen, conversationId, user?.id]);
 
   // Cierre modal con tecla Escape (Apple HIG: Modality / Keyboards)
   useEffect(() => {
@@ -115,31 +111,21 @@ export default function AICoachPanel() {
   const hasMessages = messages.some((m) => m.role !== "tool" && !(m.role === "user" && m.hidden)) || isStreaming;
 
   const panelStyle = {
-    transform: isMobile
-      ? isOpen ? "translateY(0)" : "translateY(100%)"
-      : isOpen ? "translateX(0)" : "translateX(100%)",
+    transform: isMobile ? (isOpen ? "translateY(0)" : "translateY(100%)") : (isOpen ? "translateX(0)" : "translateX(100%)"),
     transition: isMobile ? "transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)" : "transform 0.25s ease",
     ...(isMobile ? {} : { width: isFullscreen ? "calc(100vw - var(--sidebar-width))" : `${panelWidth}px` }),
   } as const;
 
-  const renderMission = (exitTab: TabId) => (
-    <MissionWorkspace
-      missionId={activeMissionId!}
-      launch={missionLaunch?.missionId === activeMissionId ? missionLaunch : null}
-      setMissionIntentHandler={setMissionIntentHandler}
-      messages={messages} isStreaming={isStreaming} isDisabled={quotaExhausted}
-      onSendMessage={sendMessage} onSaveWord={openSaveWordModal} onToolAnswer={answerToolCall}
-      onExitMission={() => { void changeMode("chat"); setActiveTab(exitTab); }}
-    />
+  // Saved concurrently and with `allSettled` so one rejected item no longer
+  // aborts the rest of the batch halfway through.
+  const saveAllFromSummary = useCallback(
+    async (learned: TurnSaveable[]) => {
+      await Promise.allSettled(learned.map((item) => saveSaveable(item)));
+    },
+    [saveSaveable],
   );
 
-  const renderHome = (tab: "chat" | "missions") => (
-    <AICoachHome
-      activeTab={tab} onSendMessage={sendMessage}
-      onSelectMission={(mId) => { void changeMode(`mission:${mId}`); }}
-      isStreaming={isStreaming} prefill={inputPrefill} onPrefillConsumed={() => setInputPrefill(undefined)}
-    />
-  );
+  const { starters, loading: startersLoading, noteUse, refresh: refreshStarters } = useCoachStarters(isOpen);
 
   return (
     <>
@@ -158,9 +144,16 @@ export default function AICoachPanel() {
 
         <AICoachHeader
           pageLabel={ctx.label} showHistory={showHistory}
-          onNewChat={() => { resetSession(); setActiveTab("chat"); }}
+          onNewChat={() => { resetSession(); setActiveTab("chat"); refreshStarters(); }}
           onToggleHistory={() => setShowHistory((v) => !v)}
           onClose={() => { finalizeSession(); close(); }}
+          endSessionSlot={
+            <CoachSessionEndButton
+              userTurns={userTurnCount}
+              isStreaming={isStreaming}
+              onEnd={() => sendMessage(buildSessionSummaryPrompt(), { hidden: true })}
+            />
+          }
         />
 
         <div className="shrink-0"><ChatTabs active={activeTab} onChange={setActiveTab} /></div>
@@ -179,53 +172,39 @@ export default function AICoachPanel() {
             {/* Pestaña Chat */}
             <div className={`flex-1 flex flex-col min-h-0 overflow-hidden${activeTab !== "chat" ? " hidden" : ""}`}>
               {activeMissionId && tabForMission(activeMissionId) === "chat" ? (
-                renderMission("chat")
+                renderMission({
+                  activeMissionId, missionLaunch, setMissionIntentHandler, messages, isStreaming,
+                  quotaExhausted, sendMessage, openSaveWordModal, saveSaveable, saveAllFromSummary,
+                  answerToolCall, changeMode, setActiveTab, exitTab: "chat",
+                })
               ) : !hasMessages ? (
-                renderHome("chat")
+                renderHome({
+                  tab: "chat", sendMessage, changeMode, isStreaming, starters, startersLoading,
+                  noteUse, inputPrefill, setInputPrefill,
+                  error, quotaExhausted, onRetry: retryLastFailedSend, onDismissError: dismissError,
+                })
               ) : (
-                <>
-                  <div className="flex shrink-0 items-center justify-between border-b border-border-subtle/60 bg-surface-raised/80 px-3 py-1.5 backdrop-blur-xs">
-                    <button
-                      type="button"
-                      onClick={() => resetSession()}
-                      className="inline-flex items-center gap-1 rounded-full border border-border-subtle bg-surface-base px-2.5 py-0.5 text-caption font-medium text-fg-muted hover:text-fg hover:border-border-default hover:bg-surface-sunken transition-colors cursor-pointer focus-ring active:scale-[0.98] motion-reduce:transition-none"
-                    >
-                      <ChevronLeft size={14} aria-hidden />
-                      <span>Volver al inicio</span>
-                    </button>
-                    <span className="text-xxs font-medium text-fg-subtle">Sesión activa</span>
-                  </div>
-                  <div className="flex-1 flex flex-col min-h-0 overflow-y-auto" aria-live="polite" aria-label="Mensajes del chat">
-                    {error && <ErrorBanner message={error} />}
-                    <ChatView
-                      messages={messages} isStreaming={isStreaming} onSaveWord={openSaveWordModal}
-                      onSaveTranslation={saveTranslation}
-                      onSuggestionClick={(prompt) => setInputPrefill(prompt)} onToolAnswer={answerToolCall}
-                      onNext={() => sendMessage("next")}
-                    />
-                  </div>
-                  <div className="shrink-0 px-3 pb-3 pt-1 border-t border-border-subtle bg-surface-base">
-                    {quotaExhausted && <QuotaExhaustedCard messages={messages} onNewSession={resetSession} />}
-                    {!quotaExhausted && messages.length >= QUOTA_WARN_THRESHOLD && (
-                      <div className="flex justify-center mb-2">
-                        <span className="text-caption font-medium text-warning bg-warning-soft border border-warning/20 rounded-full px-3 py-0.5">
-                          Te estás acercando al límite de la sesión
-                        </span>
-                      </div>
-                    )}
-                    <CustomPromptPanel
-                      onSubmit={sendMessage} isDisabled={isStreaming || quotaExhausted}
-                      variant="chat" placeholder={quotaExhausted ? "Límite de sesión alcanzado" : "Escribe a tu AI Coach..."}
-                      prefill={inputPrefill} onPrefillConsumed={() => setInputPrefill(undefined)}
-                    />
-                  </div>
-                </>
+                renderActiveChat({
+                  messages, isStreaming, error, quotaExhausted, resetSession, openSaveWordModal,
+                  saveSaveable, saveConcept, saveAllFromSummary, saveTranslation, inputPrefill, setInputPrefill,
+                  answerToolCall, sendMessage, retryLastFailedSend,
+                })
               )}
             </div>
 
             {/* Pestaña Misiones */}
             <div className={`flex flex-1 flex-col min-h-0 overflow-hidden${activeTab !== "missions" ? " hidden" : ""}`}>
-              {activeMissionId && tabForMission(activeMissionId) === "missions" ? renderMission("missions") : renderHome("missions")}
+              {activeMissionId && tabForMission(activeMissionId) === "missions"
+                ? renderMission({
+                    activeMissionId, missionLaunch, setMissionIntentHandler, messages, isStreaming,
+                    quotaExhausted, sendMessage, openSaveWordModal, saveSaveable, saveAllFromSummary,
+                    answerToolCall, changeMode, setActiveTab, exitTab: "missions",
+                  })
+                : renderHome({
+                    tab: "missions", sendMessage, changeMode, isStreaming, starters, startersLoading,
+                    noteUse, inputPrefill, setInputPrefill,
+                    error, quotaExhausted, onRetry: retryLastFailedSend, onDismissError: dismissError,
+                  })}
             </div>
 
             {/* Pestaña Pronunciación */}
@@ -238,10 +217,8 @@ export default function AICoachPanel() {
 
       {wordToSave && (
         <SaveWordModal
-          word={wordToSave.word}
-          context={wordToSave.context}
-          onConfirm={confirmSaveWord}
-          onClose={closeSaveWordModal}
+          word={wordToSave.word} context={wordToSave.context}
+          onConfirm={confirmSaveWord} onClose={closeSaveWordModal}
         />
       )}
     </>

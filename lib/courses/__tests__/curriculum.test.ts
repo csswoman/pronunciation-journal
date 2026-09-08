@@ -14,7 +14,7 @@ function essentialSlugs(level: CefrLevelId): string[] {
 }
 
 describe("course curriculum coverage", () => {
-  it.each(["a1", "a2", "b1", "b2", "c1"] as CefrLevelId[])(
+  it.each(["a1", "a2", "b1", "b2", "c1", "c2"] as CefrLevelId[])(
     "keeps required %s assessment topics in the essential curriculum",
     (level) => {
       expect(essentialSlugs(level)).toEqual(
@@ -26,7 +26,7 @@ describe("course curriculum coverage", () => {
   it("builds placement sections in CEFR order without writing items", () => {
     const assessment = buildAssessment("placement");
 
-    expect(assessment.map((section) => section.level)).toEqual(["a1", "a2", "b1", "b2", "c1"]);
+    expect(assessment.map((section) => section.level)).toEqual(["a1", "a2", "b1", "b2", "c1", "c2"]);
     expect(assessment.every((section) => section.items.length === 6)).toBe(true);
     expect(assessment.flatMap((section) => section.items).every(
       (item) => item.questionType !== ("writing" as never),
@@ -44,7 +44,7 @@ describe("course curriculum coverage", () => {
     const core = c1?.units.find((unit) => !unit.isOptionalSection);
     const advanced = c1?.units.find((unit) => unit.isOptionalSection);
 
-    expect(core?.lessons).toHaveLength(28);
+    expect(core?.lessons).toHaveLength(17);
     expect(advanced).toMatchObject({
       label: "C1+",
       title: "Dominio avanzado",
@@ -56,11 +56,11 @@ describe("course curriculum coverage", () => {
     const { resolveLessonHref } = await import("../curriculumIndex");
 
     // Course lesson slug
-    expect(resolveLessonHref("a2-descripciones-comparaciones")).toBe("/courses/study/10?level=a2");
+    expect(resolveLessonHref("a2-descripciones-comparaciones")).toBe("/courses/study/12?level=a2");
 
     // Explicit payload href override
-    expect(resolveLessonHref("a2-descripciones-comparaciones", { href: "/courses/study/10?level=a2&custom=1" })).toBe(
-      "/courses/study/10?level=a2&custom=1",
+    expect(resolveLessonHref("a2-descripciones-comparaciones", { href: "/courses/study/12?level=a2&custom=1" })).toBe(
+      "/courses/study/12?level=a2&custom=1",
     );
 
     // Standalone practice deck slug

@@ -704,6 +704,45 @@ export type Database = {
         }
         Relationships: []
       }
+      reader_passages: {
+        Row: {
+          audio_url: string | null
+          created_at: string
+          id: string
+          level: string
+          passage: string
+          questions: Json
+          target_hash: string
+          target_items: string[]
+          topic: string
+          user_id: string
+        }
+        Insert: {
+          audio_url?: string | null
+          created_at?: string
+          id?: string
+          level?: string
+          passage: string
+          questions?: Json
+          target_hash: string
+          target_items: string[]
+          topic?: string
+          user_id: string
+        }
+        Update: {
+          audio_url?: string | null
+          created_at?: string
+          id?: string
+          level?: string
+          passage?: string
+          questions?: Json
+          target_hash?: string
+          target_items?: string[]
+          topic?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       text_fragments: {
         Row: {
           audio_url: string | null

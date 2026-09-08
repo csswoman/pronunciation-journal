@@ -11,7 +11,7 @@ export default function ReaderCard() {
     <Link
       href="/practice/reader"
       onClick={() => void setLastPracticeMode('reader')}
-      className="group relative flex flex-col justify-between gap-4 rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-5 shadow-xs transition-all duration-200 hover:border-border-strong hover:shadow-sm active:scale-[0.99] focus-ring h-full overflow-hidden"
+      className="group relative flex flex-col justify-between gap-4 rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-5 shadow-xs transition-all duration-200 hover:border-border-strong hover:shadow-sm active:scale-[0.99] focus-ring overflow-hidden"
     >
       <div className="flex flex-col gap-3 z-10">
         <span className="font-kicker text-tiny uppercase tracking-wider text-fg-subtle">libre</span>

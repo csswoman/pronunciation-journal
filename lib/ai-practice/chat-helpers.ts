@@ -1,9 +1,42 @@
-import type { AIMessage } from "@/lib/ai-practice/types";
-import { serializeMessage } from "@/lib/ai-practice/types";
+import type { AIMessage, ExerciseResult } from "@/lib/ai-practice/types";
+import { deserializeMessage, serializeMessage, type SerializedModelMessage } from "@/lib/ai-practice/types";
 import { saveConversation, updateConversation } from "@/lib/db/ai";
 import { getInitialTitleForModeAndMessage, isSystemPromptText } from "@/lib/ai-practice/conversation-title";
 import { logEvent } from "@/lib/ai-practice/events";
+import {
+  AI_COACH_TURN_FAILED_MESSAGE,
+  AI_COACH_TURN_TRUNCATED_MESSAGE,
+  AI_UNAVAILABLE_MESSAGE,
+  publicAiErrorMessage,
+} from "@/lib/degradation/messages";
 import type { AIConversationMode } from "@/lib/types";
+
+/**
+ * Maps a thrown streaming error to the user-facing line: pass through the
+ * messages that are already public-safe, otherwise route through
+ * `publicAiErrorMessage` with the coach-specific fallback.
+ */
+export function coachErrorMessage(err: unknown): string {
+  const message = err instanceof Error ? err.message : "";
+  if (
+    message === AI_UNAVAILABLE_MESSAGE ||
+    message === AI_COACH_TURN_FAILED_MESSAGE ||
+    message.includes("temporarily limited")
+  ) {
+    return message;
+  }
+  return publicAiErrorMessage(undefined, message, AI_COACH_TURN_FAILED_MESSAGE);
+}
+
+/**
+ * The stream ended with nothing renderable. Distinguishes hitting the output
+ * budget (retry is worth it, a shorter message helps) from a generic failure.
+ */
+export function emptyResponseMessage(truncated: boolean): string {
+  return truncated
+    ? AI_COACH_TURN_TRUNCATED_MESSAGE
+    : publicAiErrorMessage(undefined, "AI response was empty", AI_COACH_TURN_FAILED_MESSAGE);
+}
 
 export function getOrCreateDeviceId(): string {
   const key = "ai_practice_device_id";
@@ -13,6 +46,33 @@ export function getOrCreateDeviceId(): string {
     localStorage.setItem(key, id);
   }
   return id;
+}
+
+/**
+ * Rehydrates persisted messages: model turns arrive with plain-object toolCalls
+ * and must become `Map`s again; everything else passes through untouched.
+ */
+export function hydratePersistedMessages(msgs: AIMessage[]): AIMessage[] {
+  return msgs.map((m) => {
+    if (m.role !== "model") return m;
+    const raw = m as unknown as SerializedModelMessage | Extract<AIMessage, { role: "model" }>;
+    if (raw.toolCalls instanceof Map) return raw as Extract<AIMessage, { role: "model" }>;
+    return deserializeMessage(raw as SerializedModelMessage);
+  });
+}
+
+/** Serializes and writes a message-array edit to an existing conversation. */
+export function persistMessageEdit(
+  userId: string | null,
+  conversationId: number | null,
+  messages: AIMessage[],
+): void {
+  if (!userId || !conversationId) return;
+  const serialized = messages.map((m) => (m.role === "model" ? serializeMessage(m) : m)) as never;
+  void updateConversation(userId, conversationId, {
+    messages: serialized,
+    updatedAt: new Date().toISOString(),
+  } as never);
 }
 
 export async function logFirstExerciseTimeIfNeeded(
@@ -37,6 +97,7 @@ export async function persistConversationState({
   conversationId,
   mode,
   text,
+  starterId,
   messages,
   onConversationCreated,
 }: {
@@ -44,6 +105,7 @@ export async function persistConversationState({
   conversationId: number | null;
   mode: AIConversationMode;
   text: string;
+  starterId?: string;
   messages: AIMessage[];
   onConversationCreated: (id: number) => void;
 }): Promise<number | null> {
@@ -63,7 +125,7 @@ export async function persistConversationState({
     return conversationId;
   }
 
-  const title = getInitialTitleForModeAndMessage(mode, text);
+  const title = getInitialTitleForModeAndMessage(mode, text, starterId);
   const id = await saveConversation(userId, {
     templateId: "free-conversation",
     mode,
@@ -75,4 +137,25 @@ export async function persistConversationState({
   });
   onConversationCreated(id);
   return id;
+}
+
+export function applyAnswerToMessages(
+  prev: AIMessage[],
+  callId: string,
+  result: ExerciseResult
+): { updatedMessages: AIMessage[]; toolName: string } {
+  let toolName = "exercise_result";
+  const copy = [...prev];
+  for (let i = copy.length - 1; i >= 0; i--) {
+    const msg = copy[i];
+    if (msg.role === "model" && msg.toolCalls.has(callId)) {
+      const newCalls = new Map(msg.toolCalls);
+      const tc = newCalls.get(callId)!;
+      toolName = tc.name;
+      newCalls.set(callId, { ...tc, status: "answered", result });
+      copy[i] = { ...msg, toolCalls: newCalls };
+      break;
+    }
+  }
+  return { updatedMessages: copy, toolName };
 }

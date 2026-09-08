@@ -212,6 +212,8 @@ export function buildTrackingReviewQueue(
       continue
     }
 
+    if (source.item.kind === 'explanation') continue // reference-only, never reviewable
+
     const trackedItem = 'trackedItem' in source ? source.trackedItem : undefined
     if (!trackedItem?.ref) {
       skipped.push(skip(source, 'missing_lesson_ref', 'La lección guardada ya no tiene una referencia válida.'))

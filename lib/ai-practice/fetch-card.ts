@@ -52,7 +52,6 @@ export async function fetchExerciseCard(
         try { chunk = JSON.parse(raw); } catch { continue; }
 
         const result = processChunk(chunk, state, {
-          onSaveWord: () => {},
           onStartRoleplay: () => {},
           onActionToolResult: () => {},
           onError: () => {},

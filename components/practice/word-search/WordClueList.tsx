@@ -1,11 +1,18 @@
 'use client'
 
+// Planned structure:
+// <WordClueList>
+//   <CluesHeader />         (título, badge de progreso y kicker sutil)
+//   <WordBankContainer />   (rejilla responsiva compacta de 2 columnas con scroll contenido)
+//     <FoundWordRow />      (fila compacta reutilizable para palabras ya descubiertas)
+//     <WordClueCard />      (tarjeta compacta adaptativa para palabras por descubrir)
+// </WordClueList>
+
 import { useState } from 'react'
 import type { WordSearchItem, WordSearchMode } from '@/lib/exercises/word-search/types'
 import { getWordColorTheme } from '@/lib/exercises/word-search/word-colors'
-import { Check, Eye, EyeOff, Target } from '@/components/icons'
-import { ListenButton } from '@/components/ui/ListenButton'
-import { speakText } from '@/lib/speech/synthesis'
+import { Eye, EyeOff } from '@/components/icons'
+import WordSearchFoundRow from './WordSearchFoundRow'
 
 interface Props {
   items: WordSearchItem[]
@@ -31,173 +38,161 @@ export default function WordClueList({
     })
   }
 
+  const foundCount = items.filter((i) => i.found).length
+
   return (
-    <section className="flex min-w-0 flex-col gap-3" aria-labelledby="word-search-clues-title">
-      <div className="flex items-end justify-between gap-3">
-        <div className="flex flex-col gap-1">
-          <h2 id="word-search-clues-title" className="text-h4 text-fg">
-            {mode === 'classic' ? 'Palabras' : 'Pistas'}
+    <section className="flex min-w-0 flex-col gap-2" aria-labelledby="word-search-clues-title">
+      <div className="flex items-baseline justify-between gap-2 px-0.5">
+        <div className="flex items-center gap-2">
+          <h2 id="word-search-clues-title" className="text-label font-bold text-fg">
+            {mode === 'classic' ? 'Palabras a buscar' : 'Pistas (Modo Difícil)'}
           </h2>
-          <p className="text-body-sm text-fg-muted">
-            {mode === 'classic'
-              ? 'Selecciona cada palabra en el tablero.'
-              : 'Usa la ayuda solo cuando la necesites.'}
-          </p>
+          <span className="rounded-full bg-surface-sunken px-2 py-0.5 font-mono text-caption font-semibold text-fg-muted">
+            {foundCount}/{items.length}
+          </span>
         </div>
+        <span className="text-caption text-fg-subtle">
+          {mode === 'classic' ? 'Reconocimiento visual' : 'Deducción'}
+        </span>
       </div>
 
-      <ol className="grid grid-cols-1 gap-2.5">
-        {items.map((item, index) => {
-          const isFound = item.found
-          const isInspected = activeWordId === item.id
-          const isHintRevealed = revealedHints.has(item.id)
-          const hintId = `word-search-hint-${item.id}`
-          const colorTheme = getWordColorTheme(index)
+      <div className="max-h-[calc(100vh-14rem)] overflow-y-auto pr-0.5 scrollbar-thin sm:max-h-[38rem]">
+        {mode === 'classic' ? (
+          <div className="grid grid-cols-1 gap-2">
+            {items.map((item, index) => {
+              const isFound = item.found
+              const isInspected = activeWordId === item.id
+              const colorTheme = getWordColorTheme(index)
 
-          return (
-            <li
-              key={item.id}
-              className={`flex flex-col gap-2.5 rounded-lg border p-3.5 transition-[background-color,border-color] duration-150 ease-out-quart ${
-                isInspected
-                  ? 'border-primary bg-primary-soft ring-1 ring-primary/40'
-                  : isFound
-                    ? `${colorTheme.cardBorder} ${colorTheme.cardBg}`
-                    : 'border-border-subtle bg-surface-raised hover:border-border-default'
-              }`}
-            >
-              <div className="flex items-start gap-2.5">
-                <span
-                  className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full font-mono text-caption ${
-                    isFound
-                      ? `${colorTheme.iconBg}`
-                      : 'border border-border-subtle bg-surface-sunken text-fg-subtle'
-                  }`}
-                  aria-hidden
+              if (isFound) {
+                return (
+                  <WordSearchFoundRow
+                    key={item.id}
+                    item={item}
+                    isInspected={isInspected}
+                    colorTheme={colorTheme}
+                    onInspect={() => onInspectWord(isInspected ? null : item.id)}
+                  />
+                )
+              }
+
+              return (
+                <div
+                  key={item.id}
+                  className="flex items-center justify-between gap-3 rounded-xl border border-border-subtle bg-surface-raised px-3 py-2 shadow-2xs transition-colors hover:border-border-default hover:bg-surface-sunken/40"
                 >
-                  {isFound ? <Check className="h-3.5 w-3.5" /> : index + 1}
-                </span>
+                  <div className="flex min-w-0 items-center gap-2.5">
+                    <span
+                      className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-border-subtle bg-surface-sunken font-mono text-caption font-semibold text-fg-subtle"
+                      aria-hidden
+                    >
+                      {index + 1}
+                    </span>
 
-                <div className="min-w-0 flex-1">
-                  {mode === 'classic' || isFound ? (
                     <div className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5">
-                      <span
-                        className={`text-label font-semibold ${
-                          isFound && isInspected ? 'text-primary' : 'text-fg'
-                        }`}
-                        lang="en"
-                      >
+                      <span className="text-body-sm font-bold text-fg" lang="en">
                         {item.displayWord}
                       </span>
-                      {isFound ? (
-                        <span className="inline-flex items-center rounded-full bg-surface-sunken px-2 py-0.5 text-caption font-medium text-fg-muted">
-                          Encontrada
-                        </span>
-                      ) : null}
                       {item.ipa ? (
                         <span className="font-ipa text-caption text-fg-muted">
                           {item.ipa}
                         </span>
                       ) : null}
+                      {item.meaningEs ? (
+                        <span className="text-caption text-fg-subtle truncate">
+                          — {item.meaningEs}
+                        </span>
+                      ) : null}
                     </div>
-                  ) : (
-                    <span className="font-mono text-caption tracking-widest text-fg-muted">
-                      {item.word.split('').map(() => '•').join(' ')}{' '}
-                      <span className="whitespace-nowrap tracking-normal text-fg-subtle">
-                        ({item.word.length} letras)
-                      </span>
-                    </span>
-                  )}
+                  </div>
                 </div>
+              )
+            })}
+          </div>
+        ) : (
+          <ol className="grid grid-cols-1 gap-2">
+            {items.map((item, index) => {
+              const isFound = item.found
+              const isInspected = activeWordId === item.id
+              const isHintRevealed = revealedHints.has(item.id)
+              const hintId = `word-search-hint-${item.id}`
+              const colorTheme = getWordColorTheme(index)
 
-                {isFound ? (
-                  <div className="flex shrink-0 items-center gap-1">
-                    <ListenButton
-                      iconOnly
-                      className="min-h-11 min-w-11"
-                      aria-label={`Escuchar ${item.displayWord}`}
-                      onPlay={() => speakText(item.displayWord)}
+              if (isFound) {
+                return (
+                  <li key={item.id}>
+                    <WordSearchFoundRow
+                      item={item}
+                      isInspected={isInspected}
+                      colorTheme={colorTheme}
+                      onInspect={() => onInspectWord(isInspected ? null : item.id)}
                     />
+                  </li>
+                )
+              }
+
+              return (
+                <li
+                  key={item.id}
+                  className="flex flex-col justify-between gap-2 rounded-xl border border-border-subtle bg-surface-raised p-3 shadow-2xs transition-colors hover:border-border-default"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <span
+                        className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-border-subtle bg-surface-sunken font-mono text-caption font-semibold text-fg-subtle"
+                        aria-hidden
+                      >
+                        {index + 1}
+                      </span>
+                      <span className="font-mono text-caption font-medium text-fg-muted">
+                        {item.word.length} letras
+                      </span>
+                    </div>
+
                     <button
                       type="button"
-                      onClick={() => onInspectWord(isInspected ? null : item.id)}
-                      aria-label={
-                        isInspected
-                          ? `Dejar de resaltar ${item.displayWord}`
-                          : `Resaltar ${item.displayWord} en el tablero`
-                      }
-                      aria-pressed={isInspected}
-                      className="focus-ring inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-border-subtle text-fg-muted transition-[background-color,color,transform] duration-150 ease-out-quart hover:bg-surface-sunken hover:text-fg active:scale-[0.96] motion-reduce:transform-none"
+                      onClick={() => toggleHint(item.id)}
+                      aria-expanded={isHintRevealed}
+                      aria-controls={hintId}
+                      className="focus-ring inline-flex min-h-11 sm:min-h-6 items-center gap-1 rounded-full border border-border-subtle bg-surface-sunken px-2 py-0.5 text-caption font-medium text-fg-muted transition-colors hover:bg-surface-base hover:text-fg"
                     >
-                      <Target className="h-4 w-4" aria-hidden />
+                      {isHintRevealed ? (
+                        <EyeOff className="h-3 w-3" aria-hidden />
+                      ) : (
+                        <Eye className="h-3 w-3" aria-hidden />
+                      )}
+                      <span>{isHintRevealed ? 'Ocultar' : 'Pista'}</span>
                     </button>
                   </div>
-                ) : null}
-              </div>
 
-              {mode === 'clues' && !isFound ? (
-                <div className="flex flex-col gap-2 ps-8">
-                  <p lang="en" className="text-pretty text-body-sm italic text-fg-muted">
+                  <p lang="en" className="text-pretty text-caption italic text-fg leading-snug line-clamp-2">
                     “{item.clue}”
                   </p>
-                  <button
-                    type="button"
-                    onClick={() => toggleHint(item.id)}
-                    aria-expanded={isHintRevealed}
-                    aria-controls={hintId}
-                    className="focus-ring inline-flex min-h-11 w-fit items-center gap-1.5 rounded-full border border-border-subtle bg-surface-sunken px-3 py-1.5 text-caption font-medium text-fg-muted transition-[background-color,color,transform] duration-150 ease-out-quart hover:bg-surface-raised hover:text-fg active:scale-[0.98] motion-reduce:transform-none"
-                  >
-                    {isHintRevealed ? (
-                      <EyeOff className="h-3.5 w-3.5" aria-hidden />
-                    ) : (
-                      <Eye className="h-3.5 w-3.5" aria-hidden />
-                    )}
-                    <span>{isHintRevealed ? 'Ocultar ayuda' : 'Necesito una ayuda'}</span>
-                  </button>
+
                   {isHintRevealed ? (
-                    <div id={hintId} className="flex flex-col gap-1.5 rounded-md bg-surface-sunken p-2.5">
-                      <p className="text-caption text-fg-muted">
-                        {item.ipa ? (
-                          <>
-                            Sonido:{' '}
-                            <span className="font-ipa text-caption text-fg">
-                              {item.ipa}
-                            </span>
-                          </>
-                        ) : (
-                          <>
-                            Empieza por{' '}
-                            <span className="font-mono font-semibold text-fg">
-                              {item.word[0]}
-                            </span>
-                          </>
-                        )}
-                      </p>
+                    <div id={hintId} className="rounded-lg border border-border-subtle/80 bg-surface-sunken/80 px-2 py-1 text-caption text-fg-subtle">
+                      {item.ipa ? (
+                        <span>
+                          Sonido: <strong className="font-ipa text-fg">{item.ipa}</strong>
+                        </span>
+                      ) : (
+                        <span>
+                          Empieza por: <strong className="font-mono text-fg">{item.word[0]}</strong>
+                        </span>
+                      )}
                       {item.meaningEs ? (
-                        <p className="text-caption text-fg-muted">
-                          Significado: <span className="font-medium text-fg">{item.meaningEs}</span>
-                        </p>
+                        <span className="ms-1.5 text-fg-subtle">
+                          · {item.meaningEs}
+                        </span>
                       ) : null}
                     </div>
                   ) : null}
-                </div>
-              ) : (
-                <div className="flex flex-col gap-1 ps-8">
-                  {item.meaningEs ? (
-                    <p className="text-body-sm font-medium text-fg-muted">
-                      {item.meaningEs}
-                    </p>
-                  ) : null}
-                  {isFound && item.exampleSentence ? (
-                    <p lang="en" className="line-clamp-2 text-pretty text-caption italic text-fg-subtle">
-                      “{item.exampleSentence}”
-                    </p>
-                  ) : null}
-                </div>
-              )}
-            </li>
-          )
-        })}
-      </ol>
+                </li>
+              )
+            })}
+          </ol>
+        )}
+      </div>
     </section>
   )
 }

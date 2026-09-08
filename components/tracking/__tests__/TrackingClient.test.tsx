@@ -197,4 +197,35 @@ describe("TrackingClient capture shortcut", () => {
     expect(screen.getByText("Word 20")).toBeInTheDocument();
     expect(screen.queryByText("Word 1")).not.toBeInTheDocument();
   });
+
+  it("renders coach badge and filters by coach origin", () => {
+    trackingState.value = {
+      items: [],
+      words: [],
+      loading: false,
+      userId: "user-1",
+      addWord: vi.fn(),
+      updateWord: vi.fn(),
+      removeWord: vi.fn(),
+      reviewSources: [
+        {
+          item: { id: "word-1", kind: "word", title: "creepy", description: "escalofriante", fromCoach: true },
+          word: { id: "word-1", text: "creepy", ipa: "ˈkriːpi", translation: "escalofriante" },
+        },
+        {
+          item: { id: "word-2", kind: "word", title: "resilient", description: "resistente", fromCoach: false },
+          word: { id: "word-2", text: "resilient", ipa: "rɪˈzɪliənt", translation: "resistente" },
+        },
+      ],
+    };
+
+    render(<TrackingClient />);
+    expect(screen.getByText("✦ coach")).toBeInTheDocument();
+    expect(screen.getByText("creepy")).toBeInTheDocument();
+    expect(screen.getByText("resilient")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Del coach" }));
+    expect(screen.getByText("creepy")).toBeInTheDocument();
+    expect(screen.queryByText("resilient")).not.toBeInTheDocument();
+  });
 });

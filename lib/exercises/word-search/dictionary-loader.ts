@@ -6,6 +6,7 @@ import {
   MIN_WORD_SEARCH_ITEMS,
   sanitizeWord,
 } from './grid-generator'
+import { pickUnrepeatedWords } from './word-sampling'
 
 export interface DictionaryCategorySummary {
   id: string
@@ -38,6 +39,7 @@ interface RawLexiconWord {
   difficulty?: number
   ipa?: string
   exampleSentence?: string
+  translation?: string
 }
 
 /**
@@ -46,7 +48,8 @@ interface RawLexiconWord {
 export async function loadDictionaryPuzzle(
   categoryId: string,
   mode: WordSearchMode,
-  count = 6
+  count = 8,
+  recentWords?: Set<string>
 ): Promise<WordSearchPuzzle> {
   const category = DICTIONARY_CATEGORIES.find((c) => c.id === categoryId)
   if (!category) {
@@ -78,16 +81,18 @@ export async function loadDictionaryPuzzle(
     throw new Error(`El área ${category.name} no tiene suficientes palabras para jugar.`)
   }
 
-  const shuffled = shuffledCopy(validWords).slice(0, count)
+  const sampled = recentWords
+    ? pickUnrepeatedWords(validWords, count, recentWords)
+    : shuffledCopy(validWords).slice(0, count)
 
-  const items: Array<Omit<WordSearchItem, 'found' | 'foundAt'>> = shuffled.map(
+  const items: Array<Omit<WordSearchItem, 'found' | 'foundAt'>> = sampled.map(
     (w, idx) => ({
       id: `dict-${category.id}-${w.id || idx}`,
       word: w.word,
       displayWord: w.word,
       ipa: w.ipa || null,
       clue: w.definition,
-      meaningEs: null,
+      meaningEs: w.translation || null,
       exampleSentence: w.exampleSentence || null,
     })
   )

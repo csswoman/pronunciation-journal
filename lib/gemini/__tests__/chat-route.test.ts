@@ -206,4 +206,27 @@ describe('gemini chat-route helpers', () => {
     expect(create).not.toHaveBeenCalled()
     expect(text).toBe('')
   })
+
+  it('enqueues a timeout error chunk when aborted during stream before any chunks landed', async () => {
+    const abortController = new AbortController()
+    const create = vi.fn().mockReturnValue({
+      async *sendMessageStream() {
+        abortController.abort()
+        throw new Error('aborted')
+      },
+    })
+    const ai = { chats: { create } }
+
+    const text = await readStream((controller) => streamWithFallback(
+      ai as never,
+      'system',
+      [],
+      'message',
+      { toolChoice: 'none' },
+      controller,
+      abortController.signal
+    ))
+
+    expect(text).toContain('"type":"error"')
+  })
 })

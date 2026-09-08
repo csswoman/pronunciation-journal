@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useSpeechInput } from "@/hooks/useSpeechInput";
 import { useSharedMicStream } from "@/hooks/useSharedMicStream";
 import { useAuth } from "@/components/auth/AuthProvider";
-import { saveAIWord } from "@/lib/db/ai";
+import { persistSaveable } from "@/lib/ai-coach/saveables/persist";
 import {
   PHONEME_TIPS,
   fetchWordIPA,
@@ -200,15 +200,19 @@ export function usePronunciationCoach() {
 
   const handleSavePractice = async (word: string) => {
     if (!userId) return;
-    await saveAIWord(userId, {
-      word: word.toLowerCase(),
-      meaning: "",
-      difficulty: "medium",
-      context: activePhrase,
-      conversationId: 0,
-      savedAt: new Date().toISOString(),
-    });
-    setSavedWords((prev) => new Set(prev).add(word.toLowerCase()));
+    // CoachPanel calls this fire-and-forget, so a rejection here would surface
+    // as an unhandled promise. Only mark the word saved when the write lands.
+    try {
+      await persistSaveable(userId, {
+        type: "word",
+        text: word.toLowerCase(),
+        meaning: "",
+        ...(activePhrase ? { example: activePhrase } : {}),
+      });
+      setSavedWords((prev) => new Set(prev).add(word.toLowerCase()));
+    } catch (err) {
+      console.error("[usePronunciationCoach] save failed", err);
+    }
   };
 
   const hasAnalysis = wordIPAs.some((word) => word.alignment !== null);

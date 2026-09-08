@@ -39,7 +39,13 @@ export function FillBlankExercise({ exercise, onResult, hintCount = 0 }: Props) 
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
       if (state !== 'idle') return
-      const idx = parseInt(e.key) - 1
+      if (e.ctrlKey || e.metaKey || e.altKey) return
+      const target = e.target as HTMLElement | null
+      if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
+        return
+      }
+      if (!/^[1-9]$/.test(e.key)) return
+      const idx = parseInt(e.key, 10) - 1
       if (idx >= 0 && idx < exercise.options.length) {
         handlePick(exercise.options[idx])
       }
@@ -146,7 +152,7 @@ function SentencePrompt({
             </span>
           )}
         </span>
-        {parts[1]?.trimStart()}
+        {parts.slice(1).join('___').trimStart()}
       </p>
     </div>
   )

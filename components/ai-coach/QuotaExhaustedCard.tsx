@@ -1,12 +1,16 @@
 "use client";
 
-import { Zap } from "@/components/icons";
+import { RefreshCw, Zap } from "@/components/icons";
+import { cn } from "@/lib/cn";
 import type { AIMessage } from "@/lib/ai-practice/types";
 import type { ExerciseResult } from "@/lib/ai-practice/types";
 
 interface QuotaExhaustedCardProps {
   messages: AIMessage[];
   onNewSession: () => void;
+  /** Retry the last turn in the same conversation, when one is pending. */
+  onRetry?: () => void;
+  retrying?: boolean;
 }
 
 function computeScore(messages: AIMessage[]): { total: number; correct: number } {
@@ -21,7 +25,12 @@ function computeScore(messages: AIMessage[]): { total: number; correct: number }
   return { total, correct };
 }
 
-export default function QuotaExhaustedCard({ messages, onNewSession }: QuotaExhaustedCardProps) {
+export default function QuotaExhaustedCard({
+  messages,
+  onNewSession,
+  onRetry,
+  retrying = false,
+}: QuotaExhaustedCardProps) {
   const hasConversation = messages.some(m => m.role === "model" || m.role === "user");
   const { total, correct } = computeScore(messages);
   const hasScore = total > 0;
@@ -38,7 +47,7 @@ export default function QuotaExhaustedCard({ messages, onNewSession }: QuotaExha
           <Zap size={14} className="text-[var(--primary)]" />
         </span>
         <p className="text-body-sm font-semibold text-fg">
-          {hasConversation ? "Sesión finalizada" : "IA no disponible en este momento"}
+          {hasConversation ? "Pausa breve" : "El coach no está disponible en este momento"}
         </p>
       </div>
 
@@ -68,15 +77,30 @@ export default function QuotaExhaustedCard({ messages, onNewSession }: QuotaExha
       )}
 
       <p className="text-body-sm leading-relaxed text-fg-muted">
-        Has alcanzado el límite diario de la IA. Tu conversación está guardada; podrás continuar cuando se restablezca el límite (normalmente en 24 horas).
+        El coach no está disponible por ahora. Tu conversación está guardada; vuelve a intentarlo en un momento.
       </p>
 
-      <button
-        onClick={onNewSession}
-        className="w-full rounded-xl bg-[color-mix(in_oklch,var(--primary)_14%,transparent)] py-2 text-caption font-semibold text-[var(--primary)] transition-opacity hover:opacity-80"
-      >
-        Iniciar nueva sesión
-      </button>
+      <div className="flex gap-2">
+        {onRetry && (
+          <button
+            onClick={onRetry}
+            disabled={retrying}
+            className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-[color-mix(in_oklch,var(--primary)_14%,transparent)] py-2 text-caption font-semibold text-[var(--primary)] transition-opacity hover:opacity-80 disabled:opacity-60"
+          >
+            <RefreshCw size={13} aria-hidden className={retrying ? "animate-spin" : undefined} />
+            {retrying ? "Reintentando…" : "Reintentar"}
+          </button>
+        )}
+        <button
+          onClick={onNewSession}
+          className={cn(
+            "rounded-xl border border-[var(--line-divider)] bg-[var(--card-bg)] py-2 text-caption font-medium text-fg-muted transition-colors hover:text-fg",
+            onRetry ? "px-3" : "w-full",
+          )}
+        >
+          Iniciar nueva sesión
+        </button>
+      </div>
     </div>
   );
 }

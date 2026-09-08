@@ -1,0 +1,216 @@
+{
+  "isGenerated": true,
+  "meta": {
+    "eyebrow": "B2 · Modales de deducción",
+    "title": "Deducción presente vs pasado",
+    "titleEmphasis": "must be vs must have been",
+    "goal": "Comparas deducciones lógicas sobre el presente (must be) y sobre el pasado (must have been)."
+  },
+  "cards": [
+    {
+      "id": "b2-deduccion-presente-pasado-concept",
+      "tag": "Idea central",
+      "title": "Deducción presente vs pasado: qué expresa",
+      "lede": "Comparas deducciones lógicas sobre el presente (must be) y sobre el pasado (must have been).",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Deducción Presente",
+              "value": "must / can't / might + verbo base · He must be at home now.",
+              "highlights": [
+                "must be"
+              ]
+            },
+            {
+              "key": "Deducción Pasada",
+              "value": "must / can't / might + have + participio · He must have been at home.",
+              "highlights": [
+                "must have been"
+              ]
+            },
+            {
+              "key": "Imposibilidad Pasada",
+              "value": "can't have + participio · She can't have done it.",
+              "highlights": [
+                "can't have done"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "b2-deduccion-presente-pasado-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Presente (Certeza)",
+              "value": "must + be/verbo base · You have worked 12 hours, you must be exhausted.",
+              "highlights": [
+                "must be"
+              ]
+            },
+            {
+              "key": "Pasado (Certeza)",
+              "value": "must have + participio · The ground is wet; it must have rained last night.",
+              "highlights": [
+                "must have rained"
+              ]
+            },
+            {
+              "key": "Pasado (Imposibilidad)",
+              "value": "can't have + participio · He can't have stolen the car; he was with me.",
+              "highlights": [
+                "can't have stolen"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-deduccion-presente-pasado-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Llegada tarde",
+              "value": "They aren't here yet; they must be stuck in traffic."
+            },
+            {
+              "key": "Ventana rota",
+              "value": "Someone must have thrown a ball through the glass."
+            },
+            {
+              "key": "Ausencia demostrada",
+              "value": "She can't have attended the meeting because she was abroad."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-deduccion-presente-pasado-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Deducción Presente",
+              "rule": "must / can't + verbo base (conclusión sobre la situación actual)",
+              "examples": [
+                "She must speak French (now)."
+              ]
+            },
+            {
+              "label": "Deducción Pasada",
+              "rule": "must / can't + have + participio (conclusión sobre algo que ya ocurrió)",
+              "examples": [
+                "She must have spoken French (then)."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-deduccion-presente-pasado-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "He didn't answer. He must be sleeping yesterday."
+            },
+            {
+              "variant": "good",
+              "text": "He didn't answer. He must have been sleeping yesterday.",
+              "note": "para deducción lógica sobre el pasado usa 'must have + participio/gerundio perfecto'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-deduccion-presente-pasado-reference",
+      "tag": "Referencia rápida",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "must be / must do",
+              "value": "deducción sobre el presente"
+            },
+            {
+              "key": "must have been / done",
+              "value": "deducción sobre el pasado"
+            },
+            {
+              "key": "can't have done",
+              "value": "deducción de imposibilidad en el pasado (NUNCA 'mustn't have')"
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Look at the snow outside! It ___ freezing last night.",
+      "options": [
+        "must have been",
+        "must be",
+        "can't be"
+      ],
+      "answer": 0,
+      "explain": "Deducción sobre un hecho del pasado ('last night'): 'must have been'."
+    },
+    {
+      "q": "A: Where is Maria? B: She ___ in her office; the lights are on.",
+      "options": [
+        "must be",
+        "must have been"
+      ],
+      "answer": 0,
+      "explain": "Deducción sobre la situación presente actual: 'must be'."
+    },
+    {
+      "q": "He ___ the crime because he was out of the country when it happened.",
+      "options": [
+        "can't have committed",
+        "must have committed"
+      ],
+      "answer": 0,
+      "explain": "Imposibilidad lógica en el pasado → 'can't have + participio'."
+    }
+  ]
+}

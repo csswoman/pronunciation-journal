@@ -8,7 +8,7 @@
 // </SpeakingWidget>
 
 import { useState, useCallback } from "react";
-import { Volume2 } from "@/components/icons";
+import { Volume2, Lightbulb, ChevronDown } from "@/components/icons";
 import type { SpeakingArgs } from "@/lib/ai-practice/tools/registry";
 import type { ExerciseResult } from "@/lib/ai-practice/types";
 import type { EvaluationResult } from "@/lib/exercises/design";
@@ -53,6 +53,7 @@ export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry
   const { getStream } = useSharedMicStream();
   const [scoring, setScoring]   = useState<ScoringResult | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
+  const [hintOpen, setHintOpen] = useState(false);
 
   const { state, start, stop, reset } = useSpeechInput({
     prefer: "gemini",
@@ -93,7 +94,7 @@ export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry
 
   return (
     <div className="space-y-4 py-2">
-      <p className="text-body-sm text-[var(--text-secondary)] text-center">{args.prompt}</p>
+      {args.prompt && <PromptHint text={args.prompt} open={hintOpen} onToggle={() => setHintOpen(o => !o)} />}
 
       <div className="flex flex-col items-center gap-2 px-4 py-5 rounded-xl bg-[var(--surface-raised)] border border-[var(--border-subtle)]">
         <TargetPhrase target={args.target} wordResults={scoring?.wordResults ?? null} />
@@ -127,6 +128,26 @@ export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry
           onNext={scoring.isCorrect ? onNext : undefined}
           onRetry={!scoring.isCorrect ? handleRetry : undefined}
         />
+      )}
+    </div>
+  );
+}
+
+function PromptHint({ text, open, onToggle }: { text: string; open: boolean; onToggle: () => void }) {
+  return (
+    <div className="flex flex-col items-center gap-2">
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={open}
+        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-caption font-medium border border-[var(--border-default)] text-[var(--text-secondary)] transition-opacity hover:opacity-70"
+      >
+        <Lightbulb className="w-3.5 h-3.5" />
+        {open ? "Ocultar pista" : "Ver pista"}
+        <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
+      </button>
+      {open && (
+        <p className="text-body-sm text-[var(--text-secondary)] text-center">{text}</p>
       )}
     </div>
   );

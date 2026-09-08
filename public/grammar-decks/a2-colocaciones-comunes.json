@@ -1,0 +1,237 @@
+{
+  "isGenerated": true,
+  "meta": {
+    "eyebrow": "A2 · Vocabulario y estructuras",
+    "title": "Colocaciones comunes",
+    "titleEmphasis": "make, do, take, have",
+    "goal": "Ya usas correctamente las combinaciones fijas de verbos principales como make, do, take y have."
+  },
+  "cards": [
+    {
+      "id": "a2-colocaciones-comunes-concept",
+      "tag": "Idea central",
+      "title": "Colocaciones comunes: qué expresa",
+      "lede": "Ya usas correctamente las combinaciones fijas de verbos principales como make, do, take y have.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "make",
+              "value": "Crear, producir o decidir · make dinner, make a decision, make a mistake",
+              "highlights": [
+                "make"
+              ]
+            },
+            {
+              "key": "do",
+              "value": "Acciones, tareas o trabajo · do homework, do research, do the dishes",
+              "highlights": [
+                "do"
+              ]
+            },
+            {
+              "key": "take",
+              "value": "Tomar o realizar ciertas actividades · take a break, take a shower, take photos",
+              "highlights": [
+                "take"
+              ]
+            },
+            {
+              "key": "have",
+              "value": "Consumir alimentos o tener experiencias · have lunch, have fun, have a chat",
+              "highlights": [
+                "have"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "a2-colocaciones-comunes-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Make + Sustantivo",
+              "value": "Don't make noise while studying.",
+              "highlights": [
+                "make noise"
+              ]
+            },
+            {
+              "key": "Do + Sustantivo",
+              "value": "She does exercise every morning.",
+              "highlights": [
+                "does exercise"
+              ]
+            },
+            {
+              "key": "Take + Sustantivo",
+              "value": "Let's take a 10-minute break.",
+              "highlights": [
+                "take a 10-minute break"
+              ]
+            },
+            {
+              "key": "Have + Sustantivo",
+              "value": "We had a great time at the party.",
+              "highlights": [
+                "had a great time"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-colocaciones-comunes-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Decisiones y errores",
+              "value": "Everyone makes mistakes when learning something new."
+            },
+            {
+              "key": "Rutina de casa",
+              "value": "I usually do the housework on Saturday mornings."
+            },
+            {
+              "key": "Descanso",
+              "value": "You look tired, why don't you take a nap?"
+            },
+            {
+              "key": "Comidas",
+              "value": "They are having breakfast in the garden."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-colocaciones-comunes-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "make (Creación / Resultado)",
+              "rule": "Crear algo nuevo o tomar decisiones",
+              "examples": [
+                "make a plan / make a cup of tea"
+              ]
+            },
+            {
+              "label": "do (Actividad / Tarea)",
+              "rule": "Realizar tareas cotidianas o trabajo",
+              "examples": [
+                "do your best / do the cleaning"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-colocaciones-comunes-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "I need to do a decision right now."
+            },
+            {
+              "variant": "good",
+              "text": "I need to make a decision right now.",
+              "note": "'decision' se combina con el verbo 'make'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-colocaciones-comunes-reference",
+      "tag": "Referencia rápida",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "make",
+              "value": "make money, make friends, make an appointment, make progress"
+            },
+            {
+              "key": "do",
+              "value": "do a favor, do business, do yoga, do work"
+            },
+            {
+              "key": "take",
+              "value": "take a risk, take a test, take a seat, take time"
+            },
+            {
+              "key": "have",
+              "value": "have a shower, have a drink, have a problem, have a dream"
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "After working for 4 hours, let's ___ a break.",
+      "options": [
+        "take",
+        "do"
+      ],
+      "answer": 0,
+      "explain": "La colocación natural en inglés es 'take a break'."
+    },
+    {
+      "q": "Did you ___ your homework before going out?",
+      "options": [
+        "do",
+        "make"
+      ],
+      "answer": 0,
+      "explain": "Las tareas académicas o domésticas se combinan con 'do' ('do homework')."
+    },
+    {
+      "q": "Elige la opción que usa la colocación correcta:",
+      "options": [
+        "She made a big mistake on her exam.",
+        "She did a big mistake on her exam."
+      ],
+      "answer": 0,
+      "explain": "'mistake' se combina con 'make' ('make a mistake')."
+    }
+  ]
+}

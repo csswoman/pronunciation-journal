@@ -1,0 +1,205 @@
+{
+  "isGenerated": true,
+  "meta": {
+    "eyebrow": "B1 · Oraciones interrogativas",
+    "title": "Preguntas de sujeto vs objeto",
+    "titleEmphasis": "Who called you? vs Who did you call?",
+    "goal": "Ya sabes cuándo omitir el verbo auxiliar (do/does/did) al preguntar por el sujeto de la acción."
+  },
+  "cards": [
+    {
+      "id": "b1-preguntas-sujeto-objeto-concept",
+      "tag": "Idea central",
+      "title": "Preguntas de sujeto vs objeto: qué expresa",
+      "lede": "Ya sabes cuándo omitir el verbo auxiliar (do/does/did) al preguntar por el sujeto de la acción.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Subject Question",
+              "value": "La palabra interrogativa ES el sujeto de la acción · Who called you?",
+              "highlights": [
+                "Who called"
+              ]
+            },
+            {
+              "key": "Object Question",
+              "value": "La palabra interrogativa ES el objeto recibido · Who did you call?",
+              "highlights": [
+                "Who did you call"
+              ]
+            },
+            {
+              "key": "Regla del auxiliar",
+              "value": "Subject: Sin auxiliar do/did · Object: Con auxiliar do/does/did",
+              "highlights": [
+                "Sin auxiliar",
+                "Con auxiliar"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "b1-preguntas-sujeto-objeto-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Pregunta de Sujeto",
+              "value": "Who/What + verbo principal (pasado/presente) + objeto? · Who broke the window?",
+              "highlights": [
+                "Who broke"
+              ]
+            },
+            {
+              "key": "Pregunta de Objeto",
+              "value": "Who/What + auxiliar (do/did) + sujeto + verbo base? · What did you break?",
+              "highlights": [
+                "What did you break"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-preguntas-sujeto-objeto-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Llamada telefónica",
+              "value": "A: Who called you? (¿Quién te llamó?) — B: Sarah called me."
+            },
+            {
+              "key": "Llamada realizada",
+              "value": "A: Who did you call? (¿A quién llamaste?) — B: I called Sarah."
+            },
+            {
+              "key": "Suceso fortuito",
+              "value": "What happened next? (¿Qué ocurrió?) — Something surprised us."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-preguntas-sujeto-objeto-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Subject Question (¿Quién hizo?)",
+              "rule": "Pregunta por QUIÉN realiza la acción (sin aux. do/did)",
+              "examples": [
+                "Who told you that story?"
+              ]
+            },
+            {
+              "label": "Object Question (¿A quién le diste?)",
+              "rule": "Pregunta por QUIÉN recibe la acción (con aux. do/did)",
+              "examples": [
+                "Who did you tell that story to?"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-preguntas-sujeto-objeto-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "Who did call you yesterday?"
+            },
+            {
+              "variant": "good",
+              "text": "Who called you yesterday?",
+              "note": "si 'Who' realiza la llamada, no lleva el auxiliar 'did'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-preguntas-sujeto-objeto-reference",
+      "tag": "Referencia rápida",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Who / What como sujeto",
+              "value": "No uses do/does/did (Who wrote Hamlet?, What causes rain?)."
+            },
+            {
+              "key": "Who / What como objeto",
+              "value": "Requiere do/does/did (Who did you see?, What did you buy?)."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "___ this delicious cake? — My sister baked it.",
+      "options": [
+        "Who baked",
+        "Who did bake"
+      ],
+      "answer": 0,
+      "explain": "Pregunta por el sujeto ('Who' hizo la acción), no usa auxiliar did."
+    },
+    {
+      "q": "___ at the supermarket this morning?",
+      "options": [
+        "What did you buy",
+        "What bought you"
+      ],
+      "answer": 0,
+      "explain": "Pregunta por el objeto comprado por 'you', requiere el auxiliar 'did'."
+    },
+    {
+      "q": "¿Cuál pregunta busca saber qué persona recibió la llamada?",
+      "options": [
+        "Who did Sarah call?",
+        "Who called Sarah?"
+      ],
+      "answer": 0,
+      "explain": "'Who did Sarah call?' pregunta a quién llamó Sarah (objeto de la acción)."
+    }
+  ]
+}

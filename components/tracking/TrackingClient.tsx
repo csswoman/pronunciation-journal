@@ -11,14 +11,18 @@ import { TrackingCard } from "./TrackingCard";
 import { TrackingToolbar } from "./TrackingToolbar";
 import { PhraseCaptureModal } from "./PhraseCaptureModal";
 import { EditWordModal } from "./EditWordModal";
+import { EditPhraseModal } from "./EditPhraseModal";
 import { DeleteWordDialog } from "./DeleteWordDialog";
-import { saveTrackedItem } from "@/lib/tracking/queries";
-import { buildTrackingReviewQueue } from "@/lib/tracking/review-queue";
+import { DeleteExplanationDialog } from "./DeleteExplanationDialog";
+import { saveTrackedItem, removeTrackedItem, updateTrackedItem } from "@/lib/tracking/queries";
+import { buildTrackingReviewQueue, type TrackingReviewSource } from "@/lib/tracking/review-queue";
 import Button from "@/components/ui/Button";
 import PracticeSession from "@/components/practice/PracticeSession";
 import { ListPagination } from "@/components/ui/ListPagination";
+import { WordCarousel } from "@/components/practice/session/WordCarousel";
+import { FALLBACK_WORDS } from "@/hooks/loading-words-data";
 import type { PracticeExercise } from "@/lib/practice/types";
-import type { TrackedKind } from "@/lib/tracking/types";
+import type { TrackedItem, TrackingFilter } from "@/lib/tracking/types";
 import type { WordBankEntry } from "@/lib/word-bank/types";
 
 const PAGE_SIZE = 15;
@@ -33,11 +37,11 @@ interface TrackingClientProps {
 //     <TrackingCaptureAside: QuickAddWord + QuickAddPhrase + ShortcutBadge />
 //     <TrackingContent: TrackingToolbar + TrackingList + ListPagination />
 //   </TrackingWorkspace>
-//   <Modals: QuickAddModal + PhraseCaptureModal + EditWordModal + DeleteWordDialog />
+//   <Modals: QuickAddModal + PhraseCaptureModal + EditWordModal + EditPhraseModal + DeleteWordDialog />
 // </TrackingClient>
 export default function TrackingClient({ embed = false }: TrackingClientProps) {
   const { reviewSources, loading, userId, words, addWord, removeWord, updateWord } = useTracking();
-  const [filter, setFilter] = useState<"all" | TrackedKind>("all");
+  const [filter, setFilter] = useState<TrackingFilter>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [phrase, setPhrase] = useState("");
@@ -45,7 +49,9 @@ export default function TrackingClient({ embed = false }: TrackingClientProps) {
   const [showWordModal, setShowWordModal] = useState(false);
   const [showPhraseModal, setShowPhraseModal] = useState(false);
   const [editingWord, setEditingWord] = useState<WordBankEntry | null>(null);
+  const [editingTrackedItem, setEditingTrackedItem] = useState<TrackedItem | null>(null);
   const [deletingWord, setDeletingWord] = useState<WordBankEntry | null>(null);
+  const [deletingExplanation, setDeletingExplanation] = useState<TrackingReviewSource | null>(null);
   const [activeExercises, setActiveExercises] = useState<PracticeExercise[] | null>(null);
 
   const editExistingWord = useCallback((wordId: string) => {
@@ -70,7 +76,14 @@ export default function TrackingClient({ embed = false }: TrackingClientProps) {
   }, [showPhraseModal, showWordModal]);
 
   const filteredSources = useMemo(() => {
-    let list = filter === "all" ? reviewSources : reviewSources.filter((s) => s.item.kind === filter);
+    // "ai_coach" filters by origin, not by kind — it cuts across words,
+    // phrases and lessons alike.
+    let list =
+      filter === "all"
+        ? reviewSources
+        : filter === "ai_coach"
+          ? reviewSources.filter((s) => s.item.fromCoach)
+          : reviewSources.filter((s) => s.item.kind === filter);
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase().trim();
       list = list.filter((s) => {
@@ -131,6 +144,25 @@ export default function TrackingClient({ embed = false }: TrackingClientProps) {
     setPhraseContext("");
   }
 
+  async function deleteExplanation(source: TrackingReviewSource) {
+    if (!userId || !("trackedItem" in source)) return;
+    await removeTrackedItem(userId, source.trackedItem.kind, source.trackedItem.ref);
+    setDeletingExplanation(null);
+  }
+
+  async function handleUpdateTrackedItem(
+    id: string,
+    updates: { title?: string | null; payload?: Record<string, unknown> },
+  ) {
+    if (!userId) return;
+    await updateTrackedItem({
+      id,
+      userId,
+      title: updates.title,
+      payload: updates.payload,
+    });
+  }
+
   function handlePageChange(page: number) {
     setCurrentPage(page);
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -138,7 +170,12 @@ export default function TrackingClient({ embed = false }: TrackingClientProps) {
   }
 
   const canReview = availableReviewCount > 0;
-  const hasCategoryItems = filter === "all" ? reviewSources.length > 0 : reviewSources.some((s) => s.item.kind === filter);
+  const hasCategoryItems =
+    filter === "all"
+      ? reviewSources.length > 0
+      : filter === "ai_coach"
+        ? reviewSources.some((s) => s.item.fromCoach)
+        : reviewSources.some((s) => s.item.kind === filter);
 
   const content = (
     <>
@@ -172,7 +209,9 @@ export default function TrackingClient({ embed = false }: TrackingClientProps) {
             onStartReview={startReview}
           />
           {loading ? (
-            <p className="text-body-sm text-fg-muted">Cargando contenido guardado…</p>
+            <div className="flex items-center justify-center py-12">
+              <WordCarousel words={FALLBACK_WORDS} />
+            </div>
           ) : !hasCategoryItems ? (
             <TrackingEmptyState filter={filter} />
           ) : filteredSources.length === 0 ? (
@@ -190,7 +229,19 @@ export default function TrackingClient({ embed = false }: TrackingClientProps) {
             <div className="flex flex-col gap-4">
               <div className="tracking-list">
                 {paginatedSources.map((source) => (
-                  <TrackingCard key={`${source.item.kind}:${source.item.id}`} source={source} onEditWord={setEditingWord} onDeleteWord={setDeletingWord} />
+                  <TrackingCard
+                    key={`${source.item.kind}:${source.item.id}`}
+                    source={source}
+                    onEditWord={setEditingWord}
+                    onDeleteWord={setDeletingWord}
+                    onDeleteExplanation={setDeletingExplanation}
+                    onEditPhrase={(s) => {
+                      if ("trackedItem" in s && s.trackedItem) {
+                        setEditingTrackedItem(s.trackedItem);
+                      }
+                    }}
+                    onDeletePhrase={setDeletingExplanation}
+                  />
                 ))}
               </div>
               <ListPagination
@@ -208,7 +259,9 @@ export default function TrackingClient({ embed = false }: TrackingClientProps) {
       <QuickAddModal open={showWordModal} onClose={() => setShowWordModal(false)} onSubmit={addWord} onEditExisting={editExistingWord} contextLabel="TRACKING" />
       <PhraseCaptureModal open={showPhraseModal} value={phrase} onChange={setPhrase} context={phraseContext} onContextChange={setPhraseContext} onClose={closePhraseModal} onSubmit={() => void addPhrase()} />
       <EditWordModal word={editingWord} onClose={() => setEditingWord(null)} onSubmit={updateWord} />
+      <EditPhraseModal trackedItem={editingTrackedItem} onClose={() => setEditingTrackedItem(null)} onSubmit={handleUpdateTrackedItem} />
       <DeleteWordDialog word={deletingWord} onClose={() => setDeletingWord(null)} onConfirm={removeWord} />
+      <DeleteExplanationDialog source={deletingExplanation} onClose={() => setDeletingExplanation(null)} onConfirm={deleteExplanation} />
     </>
   );
 

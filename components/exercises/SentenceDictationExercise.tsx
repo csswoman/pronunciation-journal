@@ -39,7 +39,11 @@ function normalize(text: string): string {
   return text
     .toLowerCase()
     .trim()
-    .replace(/[^\w\s']/g, '')
+    // Strip apostrophes entirely (straight, curly, or omitted) before comparing,
+    // so "can't" typed as "cant" or "can’t" all match the reference sentence.
+    // Keeps grading consistent with the tolerance applied in gradeReorder.
+    .replace(/[’'ʼ]/g, '')
+    .replace(/[^\w\s]/g, '')
     .replace(/\s+/g, ' ')
 }
 

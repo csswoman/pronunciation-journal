@@ -1,0 +1,233 @@
+{
+  "isGenerated": true,
+  "meta": {
+    "eyebrow": "A2 · Determinantes y pronombres",
+    "title": "Another, other, others",
+    "titleEmphasis": "another, other, others, the other",
+    "goal": "Distingues con claridad cuándo usar another, other, others y the other."
+  },
+  "cards": [
+    {
+      "id": "a2-another-other-others-concept",
+      "tag": "Idea central",
+      "title": "Another, other, others: qué expresa",
+      "lede": "Distingues con claridad cuándo usar another, other, others y the other.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "another",
+              "value": "an + other (uno más o uno diferente en singular) · another cup of coffee",
+              "highlights": [
+                "another"
+              ]
+            },
+            {
+              "key": "other",
+              "value": "adjetivo con sustantivos en plural · other books",
+              "highlights": [
+                "other"
+              ]
+            },
+            {
+              "key": "others",
+              "value": "pronombre plural (reemplaza sustantivo) · Some agree, others disagree.",
+              "highlights": [
+                "others"
+              ]
+            },
+            {
+              "key": "the other",
+              "value": "el otro / la otra (específico o el último restante) · on the other hand",
+              "highlights": [
+                "the other"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "a2-another-other-others-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "another + singular",
+              "value": "Can I have another piece of cake?",
+              "highlights": [
+                "another piece"
+              ]
+            },
+            {
+              "key": "other + plural",
+              "value": "There are other options available.",
+              "highlights": [
+                "other options"
+              ]
+            },
+            {
+              "key": "others (sin sustantivo)",
+              "value": "Some people stayed, others left.",
+              "highlights": [
+                "others"
+              ]
+            },
+            {
+              "key": "the other + singular/plural",
+              "value": "Where is the other shoe?",
+              "highlights": [
+                "the other shoe"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-another-other-others-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Repetición u oferta",
+              "value": "Would you like another slice of pizza?"
+            },
+            {
+              "key": "Alternativas en plural",
+              "value": "Do you have other colors in stock?"
+            },
+            {
+              "key": "Grupos contrastantes",
+              "value": "Some students passed, but others failed."
+            },
+            {
+              "key": "El restante de un par",
+              "value": "I found one glove, but where is the other one?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-another-other-others-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "another (Singular e indeterminado)",
+              "rule": "Se usa solo con sustantivos contables singulares",
+              "examples": [
+                "another day, another car"
+              ]
+            },
+            {
+              "label": "other (Plural)",
+              "rule": "Se usa con sustantivos plurales",
+              "examples": [
+                "other days, other cars"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-another-other-others-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "I want to visit others countries."
+            },
+            {
+              "variant": "good",
+              "text": "I want to visit other countries.",
+              "note": "'other' funciona como adjetivo y no lleva 's' delante de un sustantivo plural"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-another-other-others-reference",
+      "tag": "Referencia rápida",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "another",
+              "value": "an + other (NUNCA 'other one car' ni 'an other')"
+            },
+            {
+              "key": "others",
+              "value": "NUNCA lleva sustantivo después (say 'others think', NOT 'others people')"
+            },
+            {
+              "key": "the other",
+              "value": "específico: el segundo de dos elementos"
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Could you bring me ___ bottle of water, please?",
+      "options": [
+        "another",
+        "other"
+      ],
+      "answer": 0,
+      "explain": "'bottle' es singular contable, requiere 'another'."
+    },
+    {
+      "q": "Some people like tea, while ___ prefer coffee.",
+      "options": [
+        "others",
+        "other"
+      ],
+      "answer": 0,
+      "explain": "Funciona como pronombre plural sin sustantivo posterior → 'others'."
+    },
+    {
+      "q": "I have two brothers: one is a doctor and ___ is an engineer.",
+      "options": [
+        "the other",
+        "another"
+      ],
+      "answer": 0,
+      "explain": "Al referirse al único restante entre dos, se usa 'the other'."
+    }
+  ]
+}

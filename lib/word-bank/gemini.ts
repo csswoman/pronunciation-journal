@@ -1,7 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 import type { WordEnrichment } from "@/lib/word-bank/types";
 
-import { FALLBACK_MODELS } from "@/lib/gemini/fallback";
+import { FALLBACK_MODELS, getFastThinkingConfig } from "@/lib/gemini/fallback";
 
 const SYSTEM_PROMPT = `You are an English learning assistant for Spanish speakers.
 
@@ -111,12 +111,14 @@ async function callGeminiOnce(
   let lastError: unknown;
   for (const modelName of FALLBACK_MODELS) {
     try {
+      const thinkingConfig = getFastThinkingConfig(modelName);
       const result = await ai.models.generateContent({
         model: modelName,
         contents: prompt,
         config: {
           systemInstruction,
           responseMimeType: "application/json",
+          ...(thinkingConfig ? { thinkingConfig } : {}),
         },
       });
 

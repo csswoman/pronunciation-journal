@@ -64,8 +64,8 @@ const activityHubMocks = vi.hoisted(() => ({
 }));
 vi.mock("@/lib/progress/activity-hub", () => activityHubMocks)
 
-vi.mock("@/lib/db/ai", () => ({
-  saveAIWord: vi.fn(async () => undefined),
+vi.mock("@/lib/ai-coach/saveables/persist", () => ({
+  persistSaveable: vi.fn(async () => undefined),
 }))
 
 vi.mock("@/lib/ai-coach/pronunciation", () => ({

@@ -1,5 +1,5 @@
 import Dexie, { type Table } from "dexie";
-import type { AIConversation, AISavedWord, Attempt, DailyProgress, FavoriteWord, SRSData, UserStats } from "../types";
+import type { AIConversation, Attempt, DailyProgress, FavoriteWord, SRSData, UserStats } from "../types";
 import type { SyncOutboxEntry } from "../sync/types";
 import type { UserLearningState } from "../ai-practice/learning-state";
 import type { GenericExercise, GenericExerciseType, ExerciseSource } from "../exercises/types";
@@ -17,6 +17,7 @@ import type { JournalEntryRecord } from '../journal/types';
 import type { TrackingReviewQueue } from '../tracking/review-queue';
 import type { ScriptedMission } from '../ai-practice/missions/types';
 import type { GrammarStudyDeckData } from '../courses/grammar-deck/types';
+import type { FocusSprint, FocusContent } from '../focus/types';
 
 export interface GeneratedScriptRecord {
   id: string;
@@ -145,7 +146,7 @@ export interface LocalDataQuarantineRecord {
 export interface TrackedItemRecord {
   id: string;
   userId: string;
-  kind: "phrase" | "lesson";
+  kind: "phrase" | "lesson" | "explanation";
   ref: string;
   title: string | null;
   payload: Record<string, unknown>;
@@ -371,7 +372,6 @@ class PronunciationDB extends Dexie {
   userStats!: Table<UserStats, number>;
   favorites!: Table<FavoriteWord, number>;
   aiConversations!: Table<AIConversation, number>;
-  aiWords!: Table<AISavedWord, number>;
   lessonOffsets!: Table<LessonSessionOffset, string>;
   syncOutbox!: Table<SyncOutboxEntry, number>;
   completedLessons!: Table<CompletedCourseLesson, string>;
@@ -402,6 +402,8 @@ class PronunciationDB extends Dexie {
   cachedSounds!: Table<CachedSoundRecord, number>;
   cachedContrastProgress!: Table<CachedContrastProgressRecord, string>;
   downloadedLessons!: Table<DownloadedLessonRecord, string>;
+  focusSprints!: Table<FocusSprint, string>;
+  focusContent!: Table<FocusContent, string>;
 
 
   constructor() {
@@ -526,7 +528,7 @@ class PronunciationDB extends Dexie {
     }).upgrade(async (tx) => {
       const ambiguousStores = [
         'attempts', 'srsData', 'dailyProgress', 'userStats', 'favorites',
-        'aiConversations', 'aiWords', 'lessonOffsets', 'ipaExplorations',
+        'aiConversations', 'lessonOffsets', 'ipaExplorations',
         'pronunciationMastery', 'pronunciationCoachState',
       ];
       const quarantine = tx.table('localDataQuarantine');
@@ -641,6 +643,15 @@ class PronunciationDB extends Dexie {
     this.version(35).stores({
       downloadedLessons: 'id, trackId, lessonNumber, slug, downloadedAt, [trackId+lessonNumber]',
     });
+    // v36 — the AI Coach no longer keeps its own word silo: saved items go to
+    // word_bank / tracked_items so they sync and enter the SRS.
+    this.version(36).stores({ aiWords: null });
+    // v37: Focus Mode — sprint de cierre de gap personal (7 días, 1-2 gaps).
+    // focusSprints: uno por usuario activo. focusContent: assets generados por Gemini.
+    this.version(37).stores({
+      focusSprints: 'id, userId, status, endsAt, [userId+status]',
+      focusContent: 'id, sprintId, userId, kind, createdAt, [sprintId+kind]',
+    });
 
 
     this.pronunciationMastery = this.table("pronunciationMasteryV2") as Table<PronunciationMasteryRecord, string>;
@@ -739,6 +750,17 @@ export async function saveReaderPassage(p: ReaderPassage): Promise<void> {
   await db.readerPassages.put(p);
 }
 
+export async function deleteReaderPassage(id: string): Promise<void> {
+  await db.readerPassages.delete(id);
+}
+
+export async function updateReaderPassageAudioUrl(
+  id: string,
+  audioUrl: string,
+): Promise<void> {
+  await db.readerPassages.update(id, { audioUrl });
+}
+
 /** Most recent cached passage for this user + target set, or undefined. */
 export async function getCachedReaderPassage(
   userId: string,
@@ -748,7 +770,47 @@ export async function getCachedReaderPassage(
     .where("targetHash").equals(targetHash)
     .filter((p) => p.userId === userId)
     .toArray();
-  return rows.sort((a, b) => b.createdAt.localeCompare(a.createdAt))[0];
+  return rows.sort((a, b) => {
+    if (Boolean(a.audioUrl) !== Boolean(b.audioUrl)) {
+      return a.audioUrl ? -1 : 1;
+    }
+    return b.createdAt.localeCompare(a.createdAt);
+  })[0];
+}
+
+/** All saved passages for this user, sorted newest first with automatic deduplication preferring audio. */
+export async function getAllReaderPassages(userId: string): Promise<ReaderPassage[]> {
+  const rows = await db.readerPassages
+    .where("userId")
+    .equals(userId)
+    .toArray();
+
+  const seen = new Map<string, ReaderPassage>();
+  const toDelete: string[] = [];
+
+  // Sort so items with audioUrl are processed first, then newest first
+  const sorted = [...rows].sort((a, b) => {
+    if (Boolean(a.audioUrl) !== Boolean(b.audioUrl)) {
+      return a.audioUrl ? -1 : 1;
+    }
+    return b.createdAt.localeCompare(a.createdAt);
+  });
+
+  for (const item of sorted) {
+    const key = item.passage.trim().toLowerCase();
+    if (!seen.has(key)) {
+      seen.set(key, item);
+    } else {
+      // Obsolete duplicate (missing audio or older): mark for background cleanup
+      toDelete.push(item.id);
+    }
+  }
+
+  if (toDelete.length > 0) {
+    void db.readerPassages.bulkDelete(toDelete).catch(() => {});
+  }
+
+  return Array.from(seen.values()).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 }
 
 // ── Daily Progress Helpers ──

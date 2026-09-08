@@ -18,6 +18,162 @@ vi.mock('@/lib/db/ai', () => ({
 }))
 vi.mock('@/lib/ai-practice/events', () => ({ logEvent: vi.fn(async () => undefined) }))
 
+function makeHook() {
+  return renderHook(() =>
+    useStreamingChat({
+      mode: 'chat',
+      conversationId: null,
+      onConversationCreated: vi.fn(),
+      learningState: null,
+      setLearningState: vi.fn(),
+      onStartMission: vi.fn(),
+      onMissionIntentObserved: vi.fn(),
+      userId: 'user-1',
+    }),
+  )
+}
+
+describe('useStreamingChat failed sends', () => {
+  it('surfaces an error and clears the empty turn when a hidden send fails', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => new Response('boom', { status: 500 })))
+    const { result } = makeHook()
+
+    await act(async () => {
+      await result.current.sendMessage('hidden starter prompt', { hidden: true })
+    })
+
+    expect(result.current.error).toBeTruthy()
+    expect(result.current.messages).toHaveLength(0)
+    vi.unstubAllGlobals()
+  })
+
+  it('retries the last failed send, hidden flag preserved, and clears the error', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(new Response('boom', { status: 500 }))
+      .mockResolvedValueOnce(
+        new Response(
+          new ReadableStream({
+            start(c) {
+              c.enqueue(new TextEncoder().encode('data: {"type":"text_delta","delta":"hi"}\n'))
+              c.enqueue(new TextEncoder().encode('data: {"type":"done"}\n'))
+              c.close()
+            },
+          }),
+          { status: 200, headers: { 'Content-Type': 'text/event-stream' } },
+        ),
+      )
+    vi.stubGlobal('fetch', fetchMock)
+    const { result } = makeHook()
+
+    await act(async () => {
+      await result.current.sendMessage('hidden starter prompt', { hidden: true })
+    })
+    expect(result.current.error).toBeTruthy()
+
+    await act(async () => {
+      await result.current.retryLastFailedSend()
+    })
+
+    expect(result.current.error).toBeNull()
+    const bodies = fetchMock.mock.calls.map((c) => JSON.parse((c[1] as RequestInit).body as string))
+    expect(bodies).toHaveLength(2)
+    // Both sends carry the same hidden starter text.
+    expect(JSON.stringify(bodies[1])).toContain('hidden starter prompt')
+    // The retried user turn stays hidden, exactly as the original starter send.
+    expect(result.current.messages.filter((m) => m.role === 'user').every((m) => m.hidden)).toBe(true)
+    vi.unstubAllGlobals()
+  })
+
+  it('treats our own transient rate-limit 429 as a recoverable error, not quota exhaustion', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () =>
+        new Response(
+          JSON.stringify({ error: 'Too many requests. Please wait before retrying.', retryable: true, retryAfterSeconds: 12 }),
+          { status: 429, headers: { 'Content-Type': 'application/json', 'Retry-After': '12' } },
+        ),
+      ),
+    )
+    const { result } = makeHook()
+
+    await act(async () => {
+      await result.current.sendMessage('one more question')
+    })
+
+    // Recoverable: no quota wall, the optimistic user bubble is rolled back,
+    // and the failed send is retained so the user can retry in the same thread.
+    expect(result.current.quotaExhausted).toBe(false)
+    expect(result.current.error).toBeTruthy()
+    expect(result.current.error).not.toMatch(/24 horas|límite diario|de la IA/i)
+    expect(result.current.messages).toHaveLength(0)
+
+    vi.unstubAllGlobals()
+  })
+
+  it('still shows the quota wall when the provider itself is exhausted (429 without retryable flag)', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () =>
+        new Response(JSON.stringify({ error: 'Gemini request failed: RESOURCE_EXHAUSTED quota' }), {
+          status: 429,
+          headers: { 'Content-Type': 'application/json' },
+        }),
+      ),
+    )
+    const { result } = makeHook()
+
+    await act(async () => {
+      await result.current.sendMessage('hello test')
+    })
+
+    expect(result.current.quotaExhausted).toBe(true)
+    vi.unstubAllGlobals()
+  })
+
+  it('is a no-op retry when nothing has failed', async () => {
+    vi.stubGlobal('fetch', vi.fn())
+    const { result } = makeHook()
+
+    await act(async () => {
+      await result.current.retryLastFailedSend()
+    })
+
+    expect((globalThis.fetch as ReturnType<typeof vi.fn>)).not.toHaveBeenCalled()
+    vi.unstubAllGlobals()
+  })
+
+  it('surfaces an error and drops the empty model placeholder when stream ends with zero content', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () =>
+        new Response(
+          new ReadableStream({
+            start(c) {
+              c.close()
+            },
+          }),
+          { status: 200, headers: { 'Content-Type': 'text/event-stream' } },
+        ),
+      ),
+    )
+    const { result } = makeHook()
+
+    await act(async () => {
+      await result.current.sendMessage('hello test')
+    })
+
+    expect(result.current.error).toBeTruthy()
+    expect(result.current.messages).toHaveLength(1)
+    const [msg] = result.current.messages
+    expect(msg.role).toBe('user')
+    if (msg.role === 'user') {
+      expect(msg.content).toBe('hello test')
+    }
+    vi.unstubAllGlobals()
+  })
+})
+
 describe('useStreamingChat session finalization', () => {
   it('aborts an active stream when the hook unmounts', async () => {
     let capturedSignal: AbortSignal | undefined
@@ -33,7 +189,6 @@ describe('useStreamingChat session finalization', () => {
         onConversationCreated: vi.fn(),
         learningState: null,
         setLearningState: vi.fn(),
-        onSaveWord: vi.fn(),
         onStartMission: vi.fn(),
         onMissionIntentObserved: vi.fn(),
         userId: 'user-1',
@@ -59,7 +214,6 @@ describe('useStreamingChat session finalization', () => {
         onConversationCreated: vi.fn(),
         learningState: null,
         setLearningState: vi.fn(),
-        onSaveWord: vi.fn(),
         onStartMission: vi.fn(),
         onMissionIntentObserved: vi.fn(),
         userId: 'user-1',

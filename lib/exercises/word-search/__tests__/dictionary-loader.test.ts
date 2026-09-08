@@ -60,4 +60,38 @@ describe('Dictionary Loader for Word Search', () => {
       loadDictionaryPuzzle('frontend-dev', 'classic', 6),
     ).rejects.toThrow('no tiene suficientes palabras')
   })
+
+  it('maps translation to meaningEs and prioritizes unplayed words when recentWords is passed', async () => {
+    const mockWords = [
+      { id: '1', word: 'render', definition: 'To draw', translation: 'Renderizar' },
+      { id: '2', word: 'component', definition: 'UI block', translation: 'Componente' },
+      { id: '3', word: 'state', definition: 'State data', translation: 'Estado' },
+      { id: '4', word: 'hook', definition: 'Hook', translation: 'Gancho' },
+      { id: '5', word: 'props', definition: 'Properties', translation: 'Propiedades' },
+      { id: '6', word: 'bundle', definition: 'Bundle', translation: 'Paquete' },
+      { id: '7', word: 'router', definition: 'Router', translation: 'Enrutador' },
+      { id: '8', word: 'cache', definition: 'Cache', translation: 'Caché' },
+    ]
+
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ words: mockWords }),
+    }) as unknown as typeof fetch
+
+    const recentWords = new Set(['RENDER', 'COMPONENT', 'STATE'])
+    const puzzle = await loadDictionaryPuzzle('frontend-dev', 'classic', 4, recentWords)
+
+    // Verify translation was mapped
+    const renderItem = puzzle.items.find((it) => it.word === 'RENDER')
+    if (renderItem) {
+      expect(renderItem.meaningEs).toBe('Renderizar')
+    }
+
+    // Since there are 5 fresh words ('hook', 'props', 'bundle', 'router', 'cache'),
+    // picking 4 should only include fresh words and avoid recent ones
+    const puzzleWordUpper = puzzle.items.map((it) => it.word.toUpperCase())
+    expect(puzzleWordUpper).not.toContain('RENDER')
+    expect(puzzleWordUpper).not.toContain('COMPONENT')
+    expect(puzzleWordUpper).not.toContain('STATE')
+  })
 })

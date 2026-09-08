@@ -1,5 +1,14 @@
 'use client'
 
+// Planned structure:
+// <WordSearchGrid>
+//   <GridHeader />         (título accesible e instrucciones táctiles/teclado)
+//   <BoardSurface>         (role="grid" con contenedor táctil y styling Apple HIG)
+//     <WordSearchCell />   (celdas individuales con respuesta háptica y animaciones)
+//   </BoardSurface>
+//   <ScreenReaderStatus /> (mensajes de accesibilidad para lectores de pantalla)
+// </WordSearchGrid>
+
 import {
   useCallback,
   useEffect,
@@ -16,6 +25,13 @@ import type {
 } from '@/lib/exercises/word-search/types'
 import { getPathBetween } from '@/lib/exercises/word-search/grid-generator'
 import { getWordColorTheme } from '@/lib/exercises/word-search/word-colors'
+import WordSearchCell, { type CellVisualState } from './WordSearchCell'
+import {
+  coordinateKey,
+  sameCoordinate,
+  triggerHaptic,
+  getCellFromPoint,
+} from './grid-helpers'
 
 interface Props {
   grid: string[][]
@@ -28,28 +44,6 @@ interface Props {
 interface PathFeedback {
   path: CellCoordinate[]
   result: Exclude<WordSelectionResult, 'found'>
-}
-
-function coordinateKey({ row, col }: CellCoordinate): string {
-  return `${row}-${col}`
-}
-
-function sameCoordinate(a: CellCoordinate, b: CellCoordinate): boolean {
-  return a.row === b.row && a.col === b.col
-}
-
-function triggerHaptic(pattern: number | number[] = 10) {
-  if (
-    typeof window !== 'undefined' &&
-    'navigator' in window &&
-    typeof navigator.vibrate === 'function'
-  ) {
-    try {
-      navigator.vibrate(pattern)
-    } catch {
-      // Ignore when haptics are unsupported or disallowed
-    }
-  }
 }
 
 export default function WordSearchGrid({
@@ -83,8 +77,7 @@ export default function WordSearchGrid({
     placements.forEach((placement, placementIndex) => {
       if (!foundWordIds.has(placement.wordId)) return
       for (const coordinate of placement.path) {
-        const key = coordinateKey(coordinate)
-        map.set(key, placementIndex)
+        map.set(coordinateKey(coordinate), placementIndex)
       }
     })
     return map
@@ -180,20 +173,6 @@ export default function WordSearchGrid({
     [clearPathFeedback, grid, onSelectPath, showPathFeedback, submitPath, tapStart],
   )
 
-  const getCellFromPoint = useCallback(
-    (clientX: number, clientY: number): CellCoordinate | null => {
-      const element = document.elementFromPoint(clientX, clientY)
-      const cell = element?.closest<HTMLElement>('[data-cell-row]')
-      if (!cell || !gridRef.current?.contains(cell)) return null
-
-      const row = Number.parseInt(cell.dataset.cellRow ?? '-1', 10)
-      const col = Number.parseInt(cell.dataset.cellCol ?? '-1', 10)
-      if (row < 0 || col < 0 || row >= size || col >= size) return null
-      return { row, col }
-    },
-    [size],
-  )
-
   const handlePointerDown = (
     row: number,
     col: number,
@@ -214,7 +193,7 @@ export default function WordSearchGrid({
 
   const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
     if (!pointerStart) return
-    const end = getCellFromPoint(event.clientX, event.clientY)
+    const end = getCellFromPoint(event.clientX, event.clientY, size, gridRef.current)
     if (!end) return
     const path = getPathBetween(pointerStart, end)
     if (path.length > 0) setPointerPath(path)
@@ -222,7 +201,6 @@ export default function WordSearchGrid({
 
   const finishPointerSelection = () => {
     if (!pointerStart) return
-
     if (pointerPath.length > 1) {
       submitPath(pointerPath)
       setTapStart(null)
@@ -230,23 +208,8 @@ export default function WordSearchGrid({
     } else {
       handleTapCoordinate(pointerStart)
     }
-
     setPointerStart(null)
     setPointerPath([])
-  }
-
-  const cancelPointerSelection = () => {
-    setPointerStart(null)
-    setPointerPath([])
-  }
-
-  const focusCoordinate = (coordinate: CellCoordinate) => {
-    setFocusedCell(coordinate)
-    gridRef.current
-      ?.querySelector<HTMLElement>(
-        `[data-cell-row="${coordinate.row}"][data-cell-col="${coordinate.col}"]`,
-      )
-      ?.focus()
   }
 
   const handleCellKeyDown = (
@@ -262,10 +225,16 @@ export default function WordSearchGrid({
 
     if (movement) {
       event.preventDefault()
-      focusCoordinate({
+      const next = {
         row: Math.min(size - 1, Math.max(0, coordinate.row + movement[0])),
         col: Math.min(size - 1, Math.max(0, coordinate.col + movement[1])),
-      })
+      }
+      setFocusedCell(next)
+      gridRef.current
+        ?.querySelector<HTMLElement>(
+          `[data-cell-row="${next.row}"][data-cell-col="${next.col}"]`,
+        )
+        ?.focus()
       return
     }
 
@@ -276,17 +245,16 @@ export default function WordSearchGrid({
     }
   }
 
-  const cellTextClass = size <= 9 ? 'text-body-md md:text-h4' : 'text-caption md:text-label'
   const gridMaxWidth = size <= 9 ? '32rem' : '34rem'
 
   return (
     <section className="flex w-full flex-col gap-3" aria-labelledby="word-search-board-title">
       <div className="flex flex-col gap-1">
-        <h2 id="word-search-board-title" className="text-h4 text-fg">
+        <h2 id="word-search-board-title" className="text-h4 font-bold text-fg">
           Tablero
         </h2>
         <p id="word-search-board-help" className="max-w-prose text-pretty text-body-sm text-fg-muted">
-          Arrastra sobre una palabra o selecciona su primera y última letra. Usa las flechas para moverte con el teclado.
+          Arrastra sobre una palabra o toca su primera y última letra. Usa las flechas para navegar con el teclado.
         </p>
       </div>
 
@@ -297,7 +265,7 @@ export default function WordSearchGrid({
         aria-describedby="word-search-board-help"
         aria-rowcount={size}
         aria-colcount={size}
-        className="grid w-full select-none gap-1 self-center rounded-xl border border-border-subtle bg-surface-sunken p-2 shadow-xs sm:gap-1.5 sm:p-2.5"
+        className="grid w-full select-none gap-1 self-center rounded-2xl border border-border-subtle bg-surface-sunken p-2 shadow-xs sm:gap-1.5 sm:p-3"
         style={{
           gridTemplateColumns: `repeat(${size}, minmax(0, 1fr))`,
           touchAction: 'none',
@@ -305,7 +273,10 @@ export default function WordSearchGrid({
         }}
         onPointerMove={handlePointerMove}
         onPointerUp={finishPointerSelection}
-        onPointerCancel={cancelPointerSelection}
+        onPointerCancel={() => {
+          setPointerStart(null)
+          setPointerPath([])
+        }}
       >
         {grid.map((row, rowIndex) => (
           <div key={`row-${rowIndex}`} role="row" className="contents">
@@ -320,42 +291,30 @@ export default function WordSearchGrid({
               const isFeedback = feedbackCellSet.has(key)
               const feedbackResult = pathFeedback?.result
 
-              let state = 'idle'
-              let cellStyle = 'bg-surface-raised text-fg hover:bg-surface-base'
-              if (isFeedback && feedbackResult === 'invalid') {
-                state = 'invalid'
-                cellStyle = 'bg-error-soft text-error ring-2 ring-error/50'
-              } else if (isFeedback && feedbackResult === 'already-found') {
-                state = 'already-found'
-                cellStyle = 'bg-warning-soft text-warning ring-2 ring-warning/50'
-              } else if (isTapAnchor) {
-                state = 'selected'
-                cellStyle = 'bg-primary text-on-primary ring-2 ring-primary shadow-xs font-bold'
-              } else if (isSelected) {
-                state = 'selected'
-                cellStyle = 'bg-primary-soft text-primary ring-2 ring-primary/60 font-bold'
-              } else if (isActive) {
-                state = 'active'
-                cellStyle = 'bg-primary-soft text-primary ring-2 ring-primary/40 font-bold'
-              } else if (isFound) {
-                state = 'found'
-                const colorTheme = getWordColorTheme(foundPlacementIndex)
-                cellStyle = `${colorTheme.gridBg} ${colorTheme.gridText} ${colorTheme.gridRing}`
-              }
+              let state: CellVisualState = 'idle'
+              if (isFeedback && feedbackResult === 'invalid') state = 'invalid'
+              else if (isFeedback && feedbackResult === 'already-found') state = 'already-found'
+              else if (isTapAnchor) state = 'tap-anchor'
+              else if (isSelected) state = 'selected'
+              else if (isActive) state = 'active'
+              else if (isFound) state = 'found'
+
+              const colorTheme =
+                foundPlacementIndex !== undefined
+                  ? getWordColorTheme(foundPlacementIndex)
+                  : undefined
 
               return (
-                <button
+                <WordSearchCell
                   key={key}
-                  type="button"
-                  role="gridcell"
-                  data-cell-row={rowIndex}
-                  data-cell-col={colIndex}
-                  data-state={state}
-                  tabIndex={sameCoordinate(focusedCell, coordinate) ? 0 : -1}
-                  aria-label={`Fila ${rowIndex + 1}, columna ${colIndex + 1}, letra ${letter}`}
-                  aria-selected={isSelected || isTapAnchor || undefined}
+                  coordinate={coordinate}
+                  letter={letter}
+                  size={size}
+                  state={state}
+                  colorTheme={colorTheme}
+                  isFocused={sameCoordinate(focusedCell, coordinate)}
                   onFocus={() => setFocusedCell(coordinate)}
-                  onPointerDown={(event) => handlePointerDown(rowIndex, colIndex, event)}
+                  onPointerDown={(e) => handlePointerDown(rowIndex, colIndex, e)}
                   onClick={() => {
                     if (pointerHandledClickRef.current) {
                       pointerHandledClickRef.current = false
@@ -363,11 +322,8 @@ export default function WordSearchGrid({
                     }
                     handleTapCoordinate(coordinate)
                   }}
-                  onKeyDown={(event) => handleCellKeyDown(coordinate, event)}
-                  className={`focus-ring flex aspect-square min-w-0 select-none items-center justify-center rounded-sm font-mono font-bold transition-[background-color,color,box-shadow,transform] duration-150 ease-out-quart motion-reduce:transform-none ${!pointerStart ? 'active:scale-[0.96]' : ''} ${cellTextClass} ${cellStyle}`}
-                >
-                  {letter}
-                </button>
+                  onKeyDown={(e) => handleCellKeyDown(coordinate, e)}
+                />
               )
             })}
           </div>

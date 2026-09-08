@@ -1,6 +1,6 @@
 import { GoogleGenAI, type Content, type FunctionCallingConfigMode, type FunctionDeclaration } from "@google/genai";
 import { TOOL_DECLARATIONS } from "@/lib/ai-practice/tools/registry";
-import { FALLBACK_MODELS, shouldTryNextModel } from "@/lib/gemini/fallback";
+import { FALLBACK_MODELS, getFastThinkingConfig, shouldTryNextModel } from "@/lib/gemini/fallback";
 import { publicAiErrorMessage } from "@/lib/degradation/messages";
 
 type ChatMessage = {
@@ -33,11 +33,15 @@ type StreamLimitOverrides = {
   maxChunks?: number;
 };
 
-export const STREAM_TIMEOUT_MS = 30_000;
+export const STREAM_TIMEOUT_MS = 50_000;
 
 const MAX_STREAM_BYTES = 512_000;
 const MAX_STREAM_CHUNKS = 2_000;
-const MAX_OUTPUT_TOKENS = 1_024;
+// A turn can spend its budget on tool-call args *and* prose (an exercise plus
+// its explanation). At 1_024 those turns ran out mid-flight and reached the
+// client as an empty response; 2_048 leaves headroom while the byte/chunk
+// guards in `streamWithFallback` remain the real ceiling.
+const MAX_OUTPUT_TOKENS = 2_048;
 
 // Cast needed: TOOL_DECLARATIONS uses plain string literals for `type` fields,
 // but the SDK expects its internal `Type` enum. Runtime values are identical.
@@ -61,17 +65,10 @@ export function buildToolConfig(
   toolChoice: ChatToolChoice,
   allowedTools: string[] | undefined
 ): { functionCallingConfig: { mode: FunctionCallingConfigMode; allowedFunctionNames?: string[] } } {
-  if (toolChoice === "none") {
-    return { functionCallingConfig: { mode: "NONE" as FunctionCallingConfigMode } };
-  }
+  if (toolChoice === "none") return { functionCallingConfig: { mode: "NONE" as FunctionCallingConfigMode } };
   if (toolChoice === "any") {
     const allowed = allowedTools?.length ? allowedTools : undefined;
-    return {
-      functionCallingConfig: {
-        mode: "ANY" as FunctionCallingConfigMode,
-        ...(allowed ? { allowedFunctionNames: allowed } : {}),
-      },
-    };
+    return { functionCallingConfig: { mode: "ANY" as FunctionCallingConfigMode, ...(allowed ? { allowedFunctionNames: allowed } : {}) } };
   }
   return { functionCallingConfig: { mode: "AUTO" as FunctionCallingConfigMode } };
 }
@@ -83,14 +80,11 @@ export function encodeChunk(chunk: object): Uint8Array {
 function isAbortError(err: unknown): boolean {
   if (!err || typeof err !== "object") return false;
   const e = err as { name?: unknown; code?: unknown; message?: unknown };
-  return (
-    e.name === "AbortError" ||
-    e.code === "ABORT_ERR" ||
-    String(e.message ?? "").toLowerCase().includes("aborted")
-  );
+  return e.name === "AbortError" || e.code === "ABORT_ERR" || String(e.message ?? "").toLowerCase().includes("aborted");
 }
 
 function buildGenerationConfig(
+  model: string,
   systemPrompt: string,
   toolChoice: ChatToolChoice,
   allowedTools: string[] | undefined
@@ -98,10 +92,12 @@ function buildGenerationConfig(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const tools: any = toolChoice !== "none" ? [{ functionDeclarations: TOOLS_TYPED }] : undefined;
   const toolConfig = buildToolConfig(toolChoice, allowedTools);
+  const thinkingConfig = getFastThinkingConfig(model);
   return {
     systemInstruction: systemPrompt,
     ...(tools ? { tools } : {}),
     toolConfig,
+    ...(thinkingConfig ? { thinkingConfig } : {}),
     maxOutputTokens: MAX_OUTPUT_TOKENS,
   };
 }
@@ -138,11 +134,12 @@ export async function streamWithFallback(
   for (const model of FALLBACK_MODELS) {
     if (abortSignal.aborted) break;
 
+    let annotateTurnName: string | null = null;
     try {
       const chat = ai.chats.create({
         model,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        config: buildGenerationConfig(systemPrompt, selection.toolChoice, selection.allowedTools) as any,
+        config: buildGenerationConfig(model, systemPrompt, selection.toolChoice, selection.allowedTools) as any,
         history,
       });
 
@@ -173,6 +170,7 @@ export async function streamWithFallback(
             if (part.functionCall) {
               const callName = part.functionCall.name ?? "unknown";
               const id = `${callName}_${Date.now()}`;
+              if (callName === "annotate_turn") annotateTurnName = callName;
               safeEnqueue({ type: "tool_call_start", id, name: callName });
               safeEnqueue({ type: "tool_call_args_delta", id, delta: JSON.stringify(part.functionCall.args ?? {}) });
               safeEnqueue({ type: "tool_call_end", id });
@@ -181,13 +179,51 @@ export async function streamWithFallback(
         }
       }
 
-      if (abortSignal.aborted) { safeClose(); return; }
+      // When Gemini called annotate_turn but emitted no prose, send the functionResponse
+      // back so it generates a dynamic conversational follow-up in context.
+      if (annotateTurnName && bytesStreamed === 0 && !abortSignal.aborted && !closed) {
+        const followUp = await chat.sendMessageStream({
+          message: [{ functionResponse: { name: annotateTurnName, response: { recorded: true } } }],
+        });
+        for await (const chunk of followUp) {
+          if (abortSignal.aborted || closed) break;
+          for (const candidate of chunk.candidates ?? []) {
+            for (const part of candidate.content?.parts ?? []) {
+              if (part.text) {
+                const encoded = encodeChunk({ type: "text_delta", delta: part.text });
+                bytesStreamed += encoded.byteLength;
+                if (bytesStreamed > maxBytes) {
+                  safeEnqueue({ type: "done", truncated: true });
+                  safeClose();
+                  return;
+                }
+                if (!closed) controller.enqueue(encoded);
+              }
+            }
+          }
+        }
+      }
+
+      if (abortSignal.aborted) {
+        if (chunksStreamed === 0) {
+          safeEnqueue({ type: "error", message: publicAiErrorMessage(504, "timeout") });
+        }
+        safeClose();
+        return;
+      }
+
 
       safeEnqueue({ type: "done" });
       safeClose();
       return;
     } catch (err: unknown) {
-      if (abortSignal.aborted || isAbortError(err)) { safeClose(); return; }
+      if (abortSignal.aborted || isAbortError(err)) {
+        if (chunksStreamed === 0) {
+          safeEnqueue({ type: "error", message: publicAiErrorMessage(504, "timeout") });
+        }
+        safeClose();
+        return;
+      }
       if (!shouldTryNextModel(err)) break;
     }
   }
@@ -210,7 +246,7 @@ export async function sendMessageWithFallback(
       const chat = ai.chats.create({
         model,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        config: buildGenerationConfig(systemPrompt, selection.toolChoice, selection.allowedTools) as any,
+        config: buildGenerationConfig(model, systemPrompt, selection.toolChoice, selection.allowedTools) as any,
         history,
       });
 

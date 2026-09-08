@@ -252,6 +252,37 @@ describe("Layered Rate Limiting and Anonymous Abuse Mitigation", () => {
     expect(stillAllowed.limited).toBe(false);
   });
 
+  it("marks its 429 body as retryable with a wait hint so clients don't show a quota wall", async () => {
+    const request = new Request("https://example.com/api/gemini", {
+      headers: { "x-real-ip": "198.51.100.77" },
+    });
+
+    for (let i = 0; i < 3; i++) {
+      await checkLayeredRateLimit({
+        request,
+        user: anonymousUserA,
+        endpoint: "/api/gemini/retryable-shape",
+        maxPermanent: 15,
+        maxAnonymous: 3,
+      });
+    }
+
+    const blocked = await checkLayeredRateLimit({
+      request,
+      user: anonymousUserA,
+      endpoint: "/api/gemini/retryable-shape",
+      maxPermanent: 15,
+      maxAnonymous: 3,
+    });
+
+    expect(blocked.limited).toBe(true);
+    expect(blocked.error?.status).toBe(429);
+    const body = await blocked.error!.json();
+    expect(body.retryable).toBe(true);
+    expect(typeof body.retryAfterSeconds).toBe("number");
+    expect(body.retryAfterSeconds).toBeGreaterThan(0);
+  });
+
   it("fails closed with 503 in production when the distributed limiter client is missing", async () => {
     vi.stubEnv("NODE_ENV", "production");
     vi.stubEnv("VITEST", "false");

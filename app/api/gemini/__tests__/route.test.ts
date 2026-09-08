@@ -33,8 +33,15 @@ vi.mock('@/lib/ai-practice/server-state', () => ({
   fetchServerLearningState: vi.fn(async () => null),
 }))
 
+vi.mock('@/lib/users/server-queries', () => ({
+  getUserInterests: vi.fn(async () => []),
+}))
+
 vi.mock('@/lib/gemini/fallback', () => ({
   FALLBACK_MODELS: ['model-a', 'model-b'],
+  // `chat-route` calls this for every model; without it the route 500s before
+  // ever reaching `chats.create`.
+  getFastThinkingConfig: () => undefined,
   getErrorStatus: (error: unknown) =>
     typeof error === 'object' && error !== null && 'status' in error
       ? (error as { status?: number }).status

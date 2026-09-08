@@ -1,5 +1,5 @@
 import { db } from ".";
-import type { AIConversation, AISavedWord } from "../types";
+import type { AIConversation } from "../types";
 
 // ── Conversation Helpers ──
 
@@ -31,26 +31,4 @@ export async function getRecentConversations(userId: string, limit = 20): Promis
 export async function deleteConversation(userId: string, id: number): Promise<void> {
   const row = await db.aiConversations.get(id);
   if (row?.userId === userId) await db.aiConversations.delete(id);
-}
-
-// ── Saved Word Helpers ──
-
-export async function saveAIWord(
-  userId: string,
-  word: Omit<AISavedWord, "id" | "userId">
-): Promise<number> {
-  return db.aiWords.add({ ...word, userId } as AISavedWord);
-}
-
-export async function getAIWords(userId: string, limit = 100): Promise<AISavedWord[]> {
-  return db.aiWords
-    .where("userId")
-    .equals(userId)
-    .sortBy("savedAt")
-    .then((rows) => rows.reverse().slice(0, limit));
-}
-
-export async function deleteAIWord(userId: string, id: number): Promise<void> {
-  const row = await db.aiWords.get(id);
-  if (row?.userId === userId) await db.aiWords.delete(id);
 }

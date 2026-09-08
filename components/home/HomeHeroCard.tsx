@@ -198,35 +198,36 @@ export default function HomeHeroCard({
           </div>
         </div>
 
-        {/* Desplegable de Actividades Secundarias del Día */}
-        {steps.length > 1 ? (
+        {/* Lista de actividades: 2 visibles por defecto, expandible a todas */}
+        {steps.length > 0 ? (
           <div className="flex flex-col gap-2 border-t border-border-subtle pt-3">
-            <button
-              type="button"
-              onClick={() => setShowSecondarySteps((prev) => !prev)}
-              aria-expanded={showSecondarySteps}
-              className="press-feedback focus-ring inline-flex items-center justify-between w-full py-1 text-left font-body-sm font-medium text-fg-muted transition-colors hover:text-fg"
-            >
-              <span>
-                {showSecondarySteps
-                  ? `Ocultar plan del día · ${requiredCount} actividades · ${totalMinutes} min`
-                  : `Plan del día · ${requiredCount} actividades · ${totalMinutes} min`}
-              </span>
-              {showSecondarySteps ? (
-                <ChevronUp size={18} aria-hidden />
-              ) : (
-                <ChevronDown size={18} aria-hidden />
-              )}
-            </button>
+            <HomeHeroStepList
+              steps={steps}
+              getStepStatus={getStepStatus}
+              activeStepIndex={activeStepIndex}
+              needsPlacement={needsPlacement}
+              needsPronunciation={needsPronunciation}
+              isExpanded={showSecondarySteps || steps.length <= 2}
+            />
 
-            {showSecondarySteps ? (
-              <HomeHeroStepList
-                steps={steps}
-                getStepStatus={getStepStatus}
-                activeStepIndex={activeStepIndex}
-                needsPlacement={needsPlacement}
-                needsPronunciation={needsPronunciation}
-              />
+            {steps.length > 2 ? (
+              <button
+                type="button"
+                onClick={() => setShowSecondarySteps((prev) => !prev)}
+                aria-expanded={showSecondarySteps}
+                className="press-feedback focus-ring inline-flex items-center justify-between w-full pt-1 pb-0.5 text-left font-body-sm font-medium text-fg-muted transition-colors hover:text-fg"
+              >
+                <span>
+                  {showSecondarySteps
+                    ? "Ver menos actividades"
+                    : `Ver todas las actividades (${steps.length}) · ${totalMinutes} min`}
+                </span>
+                {showSecondarySteps ? (
+                  <ChevronUp size={18} aria-hidden />
+                ) : (
+                  <ChevronDown size={18} aria-hidden />
+                )}
+              </button>
             ) : null}
           </div>
         ) : null}

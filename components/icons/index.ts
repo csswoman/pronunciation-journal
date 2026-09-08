@@ -37,6 +37,7 @@ import {
   IconClipboardList,
   IconClockHour4,
   IconCloudFog,
+  IconCloudRain,
   IconCode,
   IconColumns2,
   IconComponents,
@@ -51,10 +52,12 @@ import {
   IconEye,
   IconEyeOff,
   IconFileText,
+  IconFlag,
   IconFlame,
   IconFolderOpen,
   IconFolderPlus,
   IconGitCompare,
+  IconGlobe,
   IconGridDots,
   IconHeadphones,
   IconHeart,
@@ -122,6 +125,7 @@ import {
   IconTrophy,
   IconUser,
   IconVolume,
+  IconVolumeOff,
   IconWaveSine,
   IconNotebook,
   IconX,
@@ -160,6 +164,7 @@ export const Circle = createIcon(IconCircle, "Circle");
 export const Clapperboard = createIcon(IconMovie, "Clapperboard");
 export const ClipboardList = createIcon(IconClipboardList, "ClipboardList");
 export const CloudFog = createIcon(IconCloudFog, "CloudFog");
+export const CloudRain = createIcon(IconCloudRain, "CloudRain");
 export const Code2 = createIcon(IconCode, "Code2");
 export const Columns2 = createIcon(IconColumns2, "Columns2");
 export const Component = createIcon(IconComponents, "Component");
@@ -170,12 +175,14 @@ export const Ear = createIcon(IconEar, "Ear");
 export const Eye = createIcon(IconEye, "Eye");
 export const EyeOff = createIcon(IconEyeOff, "EyeOff");
 export const FileText = createIcon(IconFileText, "FileText");
+export const Flag = createIcon(IconFlag, "Flag");
 export const Flame = createIcon(IconFlame, "Flame");
 export const FolderInput = createIcon(IconFolderOpen, "FolderInput");
 export const FolderPlus = createIcon(IconFolderPlus, "FolderPlus");
 export const GitCompareArrows = createIcon(IconGitCompare, "GitCompareArrows");
 export const GraduationCap = createIcon(IconSchool, "GraduationCap");
 export const Grid2x2 = createIcon(IconGridDots, "Grid2x2");
+export const Globe = createIcon(IconGlobe, "Globe");
 export const Headphones = createIcon(IconHeadphones, "Headphones");
 export const Handshake = createIcon(IconHeartHandshake, "Handshake");
 export const Heart = createIcon(IconHeart, "Heart");
@@ -249,6 +256,7 @@ export const Undo2 = createIcon(IconRotateClockwise, "Undo2");
 export const User = createIcon(IconUser, "User");
 export const Utensils = createIcon(IconToolsKitchen2, "Utensils");
 export const Volume2 = createIcon(IconVolume, "Volume2");
+export const VolumeX = createIcon(IconVolumeOff, "VolumeX");
 export const Waves = createIcon(IconWaveSine, "Waves");
 export const X = createIcon(IconX, "X");
 export const Zap = createIcon(IconBolt, "Zap");

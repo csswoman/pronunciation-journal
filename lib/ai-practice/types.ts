@@ -1,3 +1,4 @@
+import type { StarterId } from "@/lib/ai-practice/starters/types";
 export type ToolCallStatus = "pending" | "rendered" | "answered" | "error";
 
 export type ToolCall = {
@@ -21,6 +22,9 @@ export type ContentPart =
  * capture — not a pronunciation-accuracy grade. */
 export type VoiceMetadata = { transcript: true; scored: boolean };
 
+/** Options for one chat send. `starterId` marks an authored starter prompt. */
+export type SendOpts = { hidden?: boolean; voice?: VoiceMetadata; starterId?: StarterId };
+
 export type AIMessage =
   | { role: "user"; content: string; timestamp: string; hidden?: boolean; voice?: VoiceMetadata }
   | { role: "model"; contentParts: ContentPart[]; toolCalls: Map<string, ToolCall>; timestamp: string; translation?: string }
@@ -31,7 +35,7 @@ export type StreamChunk =
   | { type: "tool_call_start"; id: string; name: string }
   | { type: "tool_call_args_delta"; id: string; delta: string }
   | { type: "tool_call_end"; id: string }
-  | { type: "done" }
+  | { type: "done"; truncated?: boolean }
   | { type: "error"; message: string };
 
 export type StreamBuffer = {

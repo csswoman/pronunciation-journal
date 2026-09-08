@@ -10,16 +10,17 @@ import {
 
 const decksDir = path.join(process.cwd(), "public", "grammar-decks");
 
-describe("grammar patterns A1–C1", () => {
+describe("grammar patterns A1–C2", () => {
   it("lists pattern counts per level", () => {
     expect(GRAMMAR_PATTERNS_BY_LEVEL.a1).toHaveLength(28);
-    expect(GRAMMAR_PATTERNS_BY_LEVEL.a2).toHaveLength(28);
-    expect(GRAMMAR_PATTERNS_BY_LEVEL.b1).toHaveLength(29);
+    expect(GRAMMAR_PATTERNS_BY_LEVEL.a2).toHaveLength(34);
+    expect(GRAMMAR_PATTERNS_BY_LEVEL.b1).toHaveLength(33);
     expect(GRAMMAR_PATTERNS_BY_LEVEL.b2).toHaveLength(25);
-    expect(GRAMMAR_PATTERNS_BY_LEVEL.c1).toHaveLength(28);
+    expect(GRAMMAR_PATTERNS_BY_LEVEL.c1).toHaveLength(17);
+    expect(GRAMMAR_PATTERNS_BY_LEVEL.c2).toHaveLength(11);
   });
 
-  it.each(["a1", "a2", "b1", "b2", "c1"] as const)("every %s pattern deck exists and validates", (level) => {
+  it.each(["a1", "a2", "b1", "b2", "c1", "c2"] as const)("every %s pattern deck exists and validates", (level) => {
     for (const slug of uniqueDeckSlugsForLevel(level)) {
       const filePath = path.join(decksDir, `${slug}.json`);
       expect(fs.existsSync(filePath), `missing deck for ${slug}`).toBe(true);

@@ -10,7 +10,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import type { ToolCall, ExerciseResult } from "@/lib/ai-practice/types";
-import { fetchExerciseCard, cycleExercisePrompt } from "@/lib/ai-practice/fetch-card";
+import { Sparkles } from "@/components/icons";
 import ToolWidget from "./chat/ToolWidget";
 
 type ExStatus = "idle" | "correct" | "incorrect" | "reviewing";
@@ -33,10 +33,12 @@ function exerciseLabel(name: string) {
 
 function SessionHeader({ title, current, total }: { title: string; current: number; total: number }) {
   return (
-    <div className="relative flex items-center justify-center px-4 py-3 bg-[oklch(0.18_0.008_var(--hue))]">
-      <span className="text-body-sm font-semibold text-[oklch(0.96_0.008_var(--hue))]">{title}</span>
-      <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xxs font-bold px-2.5 py-1 rounded-full bg-[var(--primary)] text-[var(--on-primary)] tabular-nums">
+    <div className="flex flex-col items-center gap-1.5 px-4 py-2.5 text-center bg-[oklch(0.18_0.008_var(--hue))]">
+      <span className="text-xxs font-bold px-2.5 py-1 rounded-full bg-[var(--primary)] text-[var(--on-primary)] tabular-nums">
         EJERCICIO {current} DE {total}
+      </span>
+      <span className="text-body-sm font-semibold text-[oklch(0.96_0.008_var(--hue))] line-clamp-2">
+        {title}
       </span>
     </div>
   );
@@ -79,13 +81,51 @@ function SessionProgress({ current, total, dotCount, hasNextPending }: {
   );
 }
 
-const AUTO_ADVANCE_MS         = 1500;
-const PREFETCH_WHEN_REMAINING = 1;
-const PREFETCH_COUNT          = 2;
+const AUTO_ADVANCE_MS = 1500;
 
-interface Props { initialExercises: ToolCall[]; onAnswer: (callId: string, result: ExerciseResult) => void; }
+export interface ExerciseSessionSummary {
+  total: number;
+  correct: number;
+}
 
-export default function PracticeSession({ initialExercises, onAnswer }: Props) {
+interface Props {
+  initialExercises: ToolCall[];
+  onAnswer: (callId: string, result: ExerciseResult) => void;
+  onComplete?: (summary: ExerciseSessionSummary) => void;
+}
+
+// A word card is informational, not answerable. A session made up entirely of
+// word cards has nothing to act on, so we skip the exercise chrome (dark header,
+// progress bar, dots) and just stack the cards.
+function isWordCardOnly(calls: ToolCall[]) {
+  return calls.length > 0 && calls.every(tc => tc.name === "render_word_card");
+}
+
+export default function PracticeSession({ initialExercises, onAnswer, onComplete }: Props) {
+  if (isWordCardOnly(initialExercises)) {
+    return (
+      <div className="layout-stack w-full">
+        {initialExercises.map(tc => (
+          <div
+            key={tc.id}
+            className="w-full overflow-hidden rounded-xl border border-border-subtle bg-surface-raised px-[var(--layout-card-pad)] py-3 shadow-xs motion-reduce:shadow-none"
+          >
+            <ToolWidget toolCall={tc} onAnswer={() => {}} onNext={() => {}} />
+          </div>
+        ))}
+      </div>
+    );
+  }
+  return (
+    <PracticeSessionInner
+      initialExercises={initialExercises}
+      onAnswer={onAnswer}
+      onComplete={onComplete}
+    />
+  );
+}
+
+function PracticeSessionInner({ initialExercises, onAnswer, onComplete }: Props) {
   const [exercises, setExercises] = useState<SessionExercise[]>(() =>
     initialExercises.map(tc => ({ id: tc.id, toolCall: tc, status: "idle", result: null }))
   );
@@ -93,27 +133,8 @@ export default function PracticeSession({ initialExercises, onAnswer }: Props) {
   const [slideKey, setSlideKey] = useState(0);
   const [slideDir, setSlideDir] = useState<"R" | "L">("R");
 
-  const promptIndexRef = useRef(initialExercises.length);
-  const fetchingRef    = useRef(false);
-  const autoTimerRef   = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    const remaining = exercises.length - 1 - current;
-    if (remaining <= PREFETCH_WHEN_REMAINING && !fetchingRef.current) {
-      fetchingRef.current = true;
-      const fetches = Array.from({ length: PREFETCH_COUNT }, (_, i) =>
-        fetchExerciseCard(cycleExercisePrompt(promptIndexRef.current + i))
-      );
-      promptIndexRef.current += PREFETCH_COUNT;
-      Promise.all(fetches).then(results => {
-        const valid = results.filter((tc): tc is ToolCall => tc !== null);
-        setExercises(prev => [
-          ...prev,
-          ...valid.map(tc => ({ id: tc.id, toolCall: tc, status: "idle" as ExStatus, result: null })),
-        ]);
-      }).finally(() => { fetchingRef.current = false; });
-    }
-  }, [current, exercises.length]);
+  const autoTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const completeSentRef = useRef(false);
 
   const goTo = useCallback((target: number) => {
     if (target < 0) return;
@@ -148,10 +169,44 @@ export default function PracticeSession({ initialExercises, onAnswer }: Props) {
 
   useEffect(() => () => { if (autoTimerRef.current) clearTimeout(autoTimerRef.current); }, []);
 
-  const ex     = exercises[current];
-  const nextEx = exercises[current + 1];
+  const total = exercises.length;
+  const correctCount = exercises.filter(e => e.status === "correct" || e.result?.correct).length;
+  const isAllCorrect = correctCount === total;
+  const isFinished = current >= exercises.length;
 
-  if (!ex) return null;
+  useEffect(() => {
+    if (isFinished && !completeSentRef.current) {
+      completeSentRef.current = true;
+      onComplete?.({ total, correct: correctCount });
+    }
+  }, [isFinished, total, correctCount, onComplete]);
+
+  if (isFinished) {
+    return (
+      <div className="layout-stack w-full rounded-xl border border-border-subtle bg-surface-raised p-4 shadow-xs">
+        <div className="flex items-center gap-2.5">
+          <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary-soft text-primary shadow-xs">
+            <Sparkles size={16} strokeWidth={2.2} aria-hidden />
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="m-0 text-caption font-semibold text-fg">¡Práctica finalizada!</p>
+            <p className="m-0 text-tiny font-medium text-fg-muted">
+              {correctCount} de {total} ejercicio{total > 1 ? "s" : ""} correcto{total > 1 ? "s" : ""}
+            </p>
+          </div>
+        </div>
+
+        <p className="m-0 text-body-sm text-fg-secondary">
+          {isAllCorrect
+            ? "¡Excelente trabajo! Has completado la práctica con éxito."
+            : "¡Buen intento! Continúa practicando para afianzar estos conceptos."}
+        </p>
+      </div>
+    );
+  }
+
+  const ex = exercises[current];
+  const nextEx = exercises[current + 1];
 
   const topic    = (ex.toolCall.args as Record<string, unknown>)?.topic as string | undefined;
   const dotCount = Math.min(exercises.length, 7);

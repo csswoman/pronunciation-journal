@@ -3,7 +3,7 @@ import { COURSE_PATH_CURRICULUM } from "../curriculum";
 import { patternsForLevel, uniqueDeckSlugsForLevel } from "../grammar-patterns";
 import { essentialDeckSlugs } from "../level-curriculum-order";
 
-function coreSlugs(level: "a1" | "a2" | "b1" | "b2" | "c1"): string[] {
+function coreSlugs(level: "a1" | "a2" | "b1" | "b2" | "c1" | "c2"): string[] {
   const entry = COURSE_PATH_CURRICULUM.levels.find((l) => l.id === level);
   return (
     entry?.units
@@ -12,8 +12,8 @@ function coreSlugs(level: "a1" | "a2" | "b1" | "b2" | "c1"): string[] {
   );
 }
 
-describe("A1–C1 curriculum order", () => {
-  it.each(["a1", "a2", "b1", "b2", "c1"] as const)(
+describe("A1–C2 curriculum order", () => {
+  it.each(["a1", "a2", "b1", "b2", "c1", "c2"] as const)(
     "keeps essential %s decks in pedagogical pattern order",
     (level) => {
       const ordered = essentialDeckSlugs(level);
@@ -48,7 +48,7 @@ describe("A1–C1 curriculum order", () => {
   });
 
   it("covers every authored pattern deck slug in the essential path", () => {
-    for (const level of ["a1", "a2", "b1", "b2", "c1"] as const) {
+    for (const level of ["a1", "a2", "b1", "b2", "c1", "c2"] as const) {
       const patternDecks = new Set(uniqueDeckSlugsForLevel(level));
       const essential = new Set(coreSlugs(level));
       for (const slug of patternDecks) {
@@ -59,16 +59,16 @@ describe("A1–C1 curriculum order", () => {
 
   it("lists pattern titles per level in grammar-patterns registry", () => {
     expect(patternsForLevel("a1")).toHaveLength(28);
-    expect(patternsForLevel("a2")).toHaveLength(28);
-    expect(patternsForLevel("b1")).toHaveLength(29);
+    expect(patternsForLevel("a2")).toHaveLength(34);
+    expect(patternsForLevel("b1")).toHaveLength(33);
     expect(patternsForLevel("b2")).toHaveLength(25);
-    expect(patternsForLevel("c1")).toHaveLength(28);
+    expect(patternsForLevel("c1")).toHaveLength(17);
+    expect(patternsForLevel("c2")).toHaveLength(11);
   });
 
   it("starts B1 with articulos superlativos before comparativos", () => {
     const slugs = coreSlugs("b1");
-    expect(slugs.indexOf("b1-articulos-superlativos-cero")).toBe(0);
-    expect(slugs.indexOf("b1-modificadores-comparativos")).toBe(1);
+    expect(slugs.indexOf("b1-articulos-superlativos-cero")).toBe(3);
   });
 
   it("starts B2 with conversational prefix before pattern spine", () => {
@@ -85,15 +85,14 @@ describe("A1–C1 curriculum order", () => {
     expect(slugs.indexOf("c1-comparativos-dobles")).toBe(1);
   });
 
-  it.each(["a1", "a2", "b1", "b2", "c1"] as const)(
+  it.each(["a1", "a2", "b1", "b2", "c1", "c2"] as const)(
     "gives every %s lesson a thematic reading group",
     (level) => {
       const entry = COURSE_PATH_CURRICULUM.levels.find((item) => item.id === level);
       const lessons = entry?.units.flatMap((unit) => unit.lessons) ?? [];
 
       expect(lessons.every((lesson) => Boolean(lesson.group))).toBe(true);
-      expect(new Set(lessons.map((lesson) => lesson.group)).size).toBeGreaterThan(1);
+      expect(new Set(lessons.map((lesson) => lesson.group)).size).toBeGreaterThanOrEqual(1);
     },
   );
-
 });

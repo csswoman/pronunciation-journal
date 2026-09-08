@@ -19,13 +19,33 @@ export function extractLastTopic(messages: AIMessage[]): string | undefined {
   return undefined;
 }
 
+export interface SystemPromptOptions {
+  lastTopic?: string;
+  voiceScored?: boolean;
+  missionId?: string;
+  /** Interests the student picked in their profile (lib/users/interests.ts). */
+  interests?: readonly string[];
+}
+
+function interestsBlock(interests: readonly string[] | undefined): string {
+  if (!interests?.length) return "";
+  return `
+
+The student's declared interests: ${interests.join(", ")}.
+Ground your examples, scenarios and vocabulary in these areas whenever it fits
+naturally. Do NOT force every message into them, and do NOT announce that you
+are using their interests.`;
+}
+
 export function buildSystemPrompt(
   learningState: UserLearningState | null,
-  lastTopic?: string,
-  voiceScored?: boolean,
-  missionId?: string,
+  options: SystemPromptOptions = {},
 ): string {
-  const voiceSuffix = voiceScored ? `\n\n${VOICE_TURN_INSTRUCTION}` : "";
+  const { lastTopic, voiceScored, missionId, interests } = options;
+  const voiceSuffix = voiceScored ? `
+
+${VOICE_TURN_INSTRUCTION}` : "";
+  const interestsSuffix = interestsBlock(interests);
 
   const mission = missionId ? getMission(missionId) : null;
   if (mission && isConversationalMission(mission)) {
@@ -33,10 +53,10 @@ export function buildSystemPrompt(
       mission,
       learningState ? compactState(learningState) : undefined,
     );
-    return `${missionPrompt}${voiceSuffix}`;
+    return `${missionPrompt}${interestsSuffix}${voiceSuffix}`;
   }
 
-  if (!learningState) return `${BASE_TUTOR_PROMPT}${voiceSuffix}`;
+  if (!learningState) return `${BASE_TUTOR_PROMPT}${interestsSuffix}${voiceSuffix}`;
 
   const stateHint = compactState(learningState);
   const knownTopics = learningState.grammar.weakTopics.map(t => t.topic);
@@ -46,7 +66,11 @@ export function buildSystemPrompt(
     ? `Next exercise: introduce a NEW topic — "${topic}". Do not repeat the last topic.`
     : `Next exercise: focus on "${topic}" (student has struggled here). Do not repeat the last topic.`;
 
-  return `${BASE_TUTOR_PROMPT}\n\n${stateHint}\n\n${nextHint}${voiceSuffix}`;
+  return `${BASE_TUTOR_PROMPT}
+
+${stateHint}
+
+${nextHint}${interestsSuffix}${voiceSuffix}`;
 }
 
 /** Returns the `voice` metadata of the most recent user message, if any. */

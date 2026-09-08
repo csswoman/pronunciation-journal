@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { type PromptKey } from "@/lib/api/prompts";
+import { type StarterId } from "@/lib/ai-practice/starters/types";
 
 // ---------------------------------------------------------------------------
 // Request schema — all strings bounded, unknown keys rejected
@@ -26,6 +27,8 @@ export const MessageSchema = z.object({
   role: z.enum(["user", "model", "tool"]),
   content: z.string().max(8_000).optional(),
   parts: z.array(MessagePartSchema).max(20).optional(),
+  /** Sent by `messagesToWire` for tool turns; unused server-side, but the
+   *  schema is `.strict()` so it must be accepted or the request 400s. */
   toolCallId: z.string().max(200).optional(),
   name: z.string().max(100).optional(),
   result: z.unknown().optional(),
@@ -41,6 +44,13 @@ export const GeminiRequestSchema = z.object({
    */
   promptKey: z.enum(["default"] satisfies [PromptKey, ...PromptKey[]]).optional().default("default"),
   missionId: z.string().min(1).max(120).optional(),
+  /**
+   * Set when this send is a starter — the hidden opening message the chat home
+   * dispatches on the user's behalf. Closed enum, and it only ever *relaxes*
+   * tool forcing (see `selectionForRequest`), so a spoofed value cannot widen
+   * the model's tool access beyond what a normal conversation turn allows.
+   */
+  starterId: z.enum(["review", "learn", "world", "free"] satisfies [StarterId, ...StarterId[]]).optional(),
   stream: z.boolean().optional().default(false),
 }).strict();
 

@@ -18,5 +18,6 @@ export interface ReaderPassage {
   passage: string
   questions: ReaderQuestion[]
   level: CEFRLevel
+  audioUrl?: string
   createdAt: string
 }

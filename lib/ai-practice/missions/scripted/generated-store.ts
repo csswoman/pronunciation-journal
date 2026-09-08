@@ -61,3 +61,28 @@ export async function listGeneratedScripts(userId: string): Promise<ScriptedMiss
   list.forEach(registerDynamicMission)
   return list
 }
+
+/** Actualiza la URL de audio en una línea de una misión generada y persiste en Dexie. */
+export async function updateGeneratedScriptLineAudio(
+  missionId: string,
+  lineId: string,
+  audioUrl: string,
+): Promise<void> {
+  const record = await db.generatedScripts.get(missionId)
+  if (!record) return
+
+  const updatedScript = record.mission.script.map((l) => {
+    if (l.id === lineId) {
+      return {
+        ...l,
+        modelAudio: { path: audioUrl },
+      }
+    }
+    return l
+  })
+
+  record.mission.script = updatedScript
+  await db.generatedScripts.put(record)
+  registerDynamicMission(record.mission)
+}
+

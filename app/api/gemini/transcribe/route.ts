@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireSameOrigin, requireUser, checkLayeredRateLimit, validateBody, publicErrorResponse } from "@/lib/api/guards";
 import { buildTranscriptionPrompt } from "@/lib/ai-prompts";
-import { getErrorStatus, shouldTryNextModel, FALLBACK_MODELS } from "@/lib/gemini/fallback";
+import { getErrorStatus, shouldTryNextModel, FALLBACK_MODELS, getFastThinkingConfig } from "@/lib/gemini/fallback";
 import { withGeminiTimeout } from "@/lib/gemini/client";
 import { logServerError } from "@/lib/api/logging";
 import { buildTranscriptionCacheKey, createTranscriptionCache } from "@/lib/gemini/transcription-cache";
@@ -74,6 +74,7 @@ async function transcribeWithFallback(
 
   for (const modelName of FALLBACK_MODELS) {
     try {
+      const thinkingConfig = getFastThinkingConfig(modelName);
       const result = await withGeminiTimeout(
         ai.models.generateContent({
           model: modelName,
@@ -81,7 +82,11 @@ async function transcribeWithFallback(
             { text: prompt },
             { inlineData: { mimeType, data: base64Data } },
           ],
-          config: { temperature: 0, maxOutputTokens: 24 },
+          config: {
+            temperature: 0,
+            maxOutputTokens: 24,
+            ...(thinkingConfig ? { thinkingConfig } : {}),
+          },
         }),
         45_000
       );

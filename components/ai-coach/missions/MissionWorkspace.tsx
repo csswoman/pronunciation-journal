@@ -7,6 +7,7 @@ import { useSharedMicStream } from '@/hooks/useSharedMicStream'
 import { useSpeechInput } from '@/hooks/useSpeechInput'
 import { scorePronunciation } from '@/lib/pronunciation/scoring'
 import type { AIMessage, ExerciseResult, VoiceMetadata } from '@/lib/ai-practice/types'
+import type { TurnSaveable } from '@/lib/ai-practice/tools/registry'
 import { getMission } from '@/lib/ai-practice/missions/registry'
 import { isConversationalMission, isScriptedMission } from '@/lib/ai-practice/missions/types'
 import { getRunnerFor } from '@/lib/ai-practice/missions/runner-registry'
@@ -49,6 +50,8 @@ interface MissionWorkspaceProps {
   isDisabled: boolean
   onSendMessage: (text: string, options?: { voice?: VoiceMetadata }) => Promise<void>
   onSaveWord: (word: string, context: string) => void
+  onSaveSaveable: (saveable: TurnSaveable) => Promise<void>
+  onSaveAllFromSummary?: (learned: TurnSaveable[]) => Promise<void>
   onToolAnswer: (callId: string, result: ExerciseResult) => void
   /** Limpia la misión activa y devuelve a la biblioteca. */
   onExitMission?: () => void
@@ -64,6 +67,8 @@ export function MissionWorkspace({
   isDisabled,
   onSendMessage,
   onSaveWord,
+  onSaveSaveable,
+  onSaveAllFromSummary,
   onToolAnswer,
   onExitMission,
 }: MissionWorkspaceProps) {
@@ -255,9 +260,12 @@ export function MissionWorkspace({
               messages={messages}
               isStreaming={isStreaming}
               onSaveWord={onSaveWord}
+              onSaveSaveable={onSaveSaveable}
+              onSaveAllFromSummary={onSaveAllFromSummary ?? (async () => {})}
               onSuggestionClick={(text) => handleMissionSubmit(text)}
               onToolAnswer={onToolAnswer}
               onNext={() => handleMissionSubmit('next')}
+              onExerciseComplete={(s) => void handleMissionSubmit(`I just finished — ${s.correct} of ${s.total} right. How did I do?`)}
             />
           </>
         )}

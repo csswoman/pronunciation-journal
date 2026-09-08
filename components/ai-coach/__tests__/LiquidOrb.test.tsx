@@ -32,7 +32,7 @@ describe("LiquidOrb and WebGPU fallbacks", () => {
 
       // Sparkles and heading are present in fallback
       expect(screen.getByText(/de qué te gustaría hablar hoy\?/i)).toBeDefined();
-      expect(screen.getByText(/conversación libre|free conversation/i)).toBeDefined();
+      expect(screen.getByText(/atajos populares/i)).toBeDefined();
     });
 
     it("renders AIAvatar thinking state in TypingIndicator", () => {
