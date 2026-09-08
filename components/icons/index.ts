@@ -37,6 +37,7 @@ import {
   IconClipboardList,
   IconClockHour4,
   IconCloudFog,
+  IconCloudRain,
   IconCode,
   IconColumns2,
   IconComponents,
@@ -163,6 +164,7 @@ export const Circle = createIcon(IconCircle, "Circle");
 export const Clapperboard = createIcon(IconMovie, "Clapperboard");
 export const ClipboardList = createIcon(IconClipboardList, "ClipboardList");
 export const CloudFog = createIcon(IconCloudFog, "CloudFog");
+export const CloudRain = createIcon(IconCloudRain, "CloudRain");
 export const Code2 = createIcon(IconCode, "Code2");
 export const Columns2 = createIcon(IconColumns2, "Columns2");
 export const Component = createIcon(IconComponents, "Component");
