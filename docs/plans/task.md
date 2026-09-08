@@ -29,3 +29,19 @@
 | Plan 105 | AI Coach: Reproducir respuestas del coach con Web Speech API (botón escuchar/detener, autoplay y toggle de silencio en cabecera) | Completed |
 | Plan 106 | Rediseño de banner 'Tu siguiente lección' en Cursos (/courses) según mockup con ilustración temática | Completed |
 | Plan 107 | Generación de nuevas historias y selección de tema personalizado en Reader (/practice/reader) | Completed |
+| Plan 108 | AI Coach Misiones: Salida accesible en cabecera/resultados/pestañas y feedback visual de grabación de voz (onda sonora, estado activo y botón detener) | Completed |
+| Plan 109 | Rediseño del turno del learner en misiones guiadas (captura resiliente con Gemini, osciloscopio real, prefetch de audio y panel de shadowing) | Completed |
+| Plan 110 | Agrupamiento por sonidos que más afectan a hispanohablantes en /practice/sounds (No existen en español, Se confunden fácil, Similares al español) con layout impecable | Completed |
+| Plan 111 | Remediación integral de diseño en /practice/sounds: armonización de radios a rounded-xl, separación accesible de audio y explicabilidad del porcentaje de dominio en modal | Completed |
+| Plan 112 - Task 1 | `describePhonemeInWord` — types + generic fallback | Completed |
+| Plan 112 - Task 2 | `describePhonemeInWord` — pattern table | Completed |
+| Plan 112 - Task 3 | `pickPrimaryFix` selector | Completed |
+| Plan 112 - Task 4 | `hookEs` + short/long `spanishTip` in phoneme data | Completed |
+| Plan 112 - Task 5 | `useDualPlayback` hook | Completed |
+| Plan 112 - Task 6 | `SoundHowTo` collapsible | Completed |
+| Plan 112 - Task 7 | `PhonemeFix` block | Completed |
+| Plan 112 - Task 8 | `ListenPanel` audio card merge | Completed |
+| Plan 112 - Task 9 | `ScoreVerdict` headline | Completed |
+| Plan 112 - Task 10 | `LineResult` composition | Completed |
+| Plan 112 - Task 11 | Wire `LearnerLine` & delete `SyllableRemediation` | Completed |
+| Plan 112 - Task 12 | Final verification pass | Completed |
