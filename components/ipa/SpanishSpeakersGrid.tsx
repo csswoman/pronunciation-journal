@@ -5,7 +5,8 @@ import { HARD_FOR_SPANISH_SPEAKERS } from "@/lib/pronunciation/ipa-data";
 import { PHONEMES, PHONEME_MATRIX, type PhonemeData } from "./data";
 
 function shortTip(symbol: string): string {
-  const tip = IPA_EXTRA[symbol]?.spanishTip;
+  const extra = IPA_EXTRA[symbol];
+  const tip = extra?.spanishTipLongEs ?? extra?.spanishTip;
   if (!tip) return "";
   const firstSentence = tip.split(/[.!?]/)[0];
   return firstSentence.length > 90

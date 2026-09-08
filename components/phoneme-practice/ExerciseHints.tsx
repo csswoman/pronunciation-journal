@@ -167,7 +167,7 @@ function HintContent({
         💡 Consejo para hispanohablantes
       </p>
       <p className="text-body text-fg text-pretty">
-        {extra?.spanishTip ?? 'Sin consejo disponible para este sonido.'}
+        {(extra?.spanishTipLongEs ?? extra?.spanishTip) ?? 'Sin consejo disponible para este sonido.'}
       </p>
     </div>
   )

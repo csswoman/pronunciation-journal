@@ -12,6 +12,10 @@ export interface SyllableRemediation {
   articulationEs: string[]
   /** Pista específica para hispanohablantes. */
   spanishTip: string | null
+  /** Versión completa del consejo para vistas de estudio profundo. */
+  spanishTipLongEs: string | null
+  /** Memorable hook for the SoundHowTo title; null ⇒ use the IPA symbol. */
+  hookEs: string | null
   /** Pista visual de la guía articulatoria. */
   visualCueEs: string | null
   /** Guía de duración acústica (tensas vs laxas). */
@@ -43,6 +47,8 @@ export function buildRemediation(
     ipa,
     articulationEs: extra?.articulationEs ?? [],
     spanishTip: extra?.spanishTip ?? null,
+    spanishTipLongEs: extra?.spanishTipLongEs ?? null,
+    hookEs: extra?.hookEs ?? null,
     visualCueEs: guide?.visualCueEs ?? null,
     vowelDuration: getVowelDurationGuidance(symbol),
     minimalPairs: (extra?.minimalPairs ?? []).map((pair) => ({

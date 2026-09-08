@@ -184,7 +184,9 @@ export function SoundDetail({
           speaking={speaking}
           onSpeak={handleSpeakExample}
         />
-        {extra?.spanishTip ? <SoundSpanishTip tip={extra.spanishTip} /> : null}
+        {(extra?.spanishTipLongEs ?? extra?.spanishTip) ? (
+          <SoundSpanishTip tip={extra.spanishTipLongEs ?? extra.spanishTip} />
+        ) : null}
       </div>
       <div className="sound-detail__footer">
         <SoundPractice

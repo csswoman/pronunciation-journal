@@ -1,18 +1,4 @@
 "use client";
-
-// Planned structure:
-// <SoundLabDetailDialog>
-//   <Backdrop />
-//   <ModalCard>
-//     <ModalHeader />     — Badges (Tipo, Dificultad) + CloseButton
-//     <IpaHero />         — Símbolo IPA interactivo + "como en {palabra}"
-//     <ExamplesRow />     — Botones de audio [▷ see] [▷ tree] [▷ key]
-//     <SpanishTipCard />  — Caja "El truco"
-//     <ArticulationAccordion /> — "Cómo se produce este sonido" (colapsable)
-//     <PracticeAction />  — Botón "Practicar ahora"
-//   </ModalCard>
-// </SoundLabDetailDialog>
-
 import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import { ChevronDown, Play, X } from "@/components/icons";
 import Badge from "@/components/ui/Badge";
@@ -33,14 +19,17 @@ interface SoundLabDetailDialogProps {
   dialogRef: RefObject<HTMLDivElement | null>;
   phoneme: PhonemeData;
   lesson: Lesson;
-  progressPct?: number; isWeak?: boolean; isContinuing?: boolean; practiceHref?: string;
+  progressPct?: number;
+  isWeak?: boolean;
+  isContinuing?: boolean;
+  practiceHref?: string;
   onPractice: () => void;
   onClose: () => void;
 }
 
 const DIFFICULTY_LABELS: Record<string, string> = { easy: "Fácil", medium: "Medio", hard: "Difícil" };
 
-export function SoundLabDetailDialog({ dialogRef, phoneme, lesson, onPractice, onClose }: SoundLabDetailDialogProps) {
+export function SoundLabDetailDialog({ dialogRef, phoneme, lesson, progressPct = 0, onPractice, onClose }: SoundLabDetailDialogProps) {
   const [showArticulation, setShowArticulation] = useState(false);
   const [ipaPlaying, setIpaPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -53,12 +42,10 @@ export function SoundLabDetailDialog({ dialogRef, phoneme, lesson, onPractice, o
   const hint = getSoundLearnerHint(phoneme);
   const duration = parseSoundDuration(lesson.description);
   const guide = getArticulationGuide(phoneme.symbol);
-
   const examples = useMemo(() => {
     const canonical = [...new Set(phoneme.examples)].filter(Boolean).slice(0, 3);
     return canonical.length > 0 ? canonical : [...new Set(lesson.words.map((w) => w.word))].filter(Boolean).slice(0, 3);
   }, [lesson.words, phoneme.examples]);
-
   const anchorWord = examples[0] ?? lesson.words[0]?.word ?? "";
   const articulationSteps = extra?.articulationEs?.length ? extra.articulationEs : phoneme.tips;
 
@@ -84,6 +71,9 @@ export function SoundLabDetailDialog({ dialogRef, phoneme, lesson, onPractice, o
     if (!result) setIpaPlaying(false);
   }
 
+  const isMastered = progressPct >= 80;
+  const hasStarted = progressPct > 0;
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in"
@@ -94,7 +84,7 @@ export function SoundLabDetailDialog({ dialogRef, phoneme, lesson, onPractice, o
     >
       <div
         ref={dialogRef}
-        className="relative w-full max-w-[440px] sm:max-w-[580px] md:max-w-[620px] max-h-[90vh] overflow-y-auto rounded-3xl border border-border-default bg-surface-raised p-5 sm:p-7 text-fg shadow-2xl focus:outline-none flex flex-col items-center"
+        className="relative w-full max-w-[440px] sm:max-w-[580px] md:max-w-[620px] max-h-[90vh] overflow-y-auto rounded-2xl border border-border-default bg-surface-raised p-5 sm:p-7 text-fg shadow-2xl focus:outline-none flex flex-col items-center"
         role="dialog"
         aria-modal="true"
         aria-labelledby="sound-dialog-ipa"
@@ -105,13 +95,7 @@ export function SoundLabDetailDialog({ dialogRef, phoneme, lesson, onPractice, o
           <div className="flex items-center gap-2">
             <Badge label={soundTypeLabel} variant="default" size="sm" />
             <Badge label={difficultyLabel} variant="neutral" size="sm" />
-            {duration && (
-              <Badge
-                label={duration === "long" ? "Larga" : "Corta"}
-                variant="neutral"
-                size="sm"
-              />
-            )}
+            {duration && <Badge label={duration === "long" ? "Larga" : "Corta"} variant="neutral" size="sm" />}
           </div>
           <button
             type="button"
@@ -137,6 +121,23 @@ export function SoundLabDetailDialog({ dialogRef, phoneme, lesson, onPractice, o
         >
           {phoneme.symbol}
         </button>
+
+        {/* Explicación contextual de progreso y dominio */}
+        <div className="w-full max-w-xs mb-3 flex flex-col items-center gap-1">
+          <div className="w-full h-1.5 overflow-hidden rounded-full bg-border-subtle">
+            <div
+              className={cn("h-full rounded-full transition-all duration-300", isMastered ? "bg-success" : "bg-primary")}
+              style={{ width: `${Math.min(100, Math.max(0, progressPct))}%` }}
+            />
+          </div>
+          <p className="text-[11px] text-fg-subtle text-center m-0 leading-tight">
+            {isMastered
+              ? "Dominado · Excelente precisión en tu pronunciación y discriminación"
+              : hasStarted
+                ? `${progressPct}% dominado · Calculado con tus grabaciones y pares mínimos`
+                : "Sin practicar aún · Completa grabaciones y ejercicios para medir tu progreso"}
+          </p>
+        </div>
 
         {/* Anchor Word & Friendly Hint */}
         {anchorWord && (
@@ -177,11 +178,11 @@ export function SoundLabDetailDialog({ dialogRef, phoneme, lesson, onPractice, o
         )}
 
         {/* Spanish Tip Box: "El truco" */}
-        {extra?.spanishTip && (
+        {(extra?.spanishTipLongEs ?? extra?.spanishTip) && (
           <aside className="w-full rounded-2xl border border-border-default bg-surface-sunken p-4 text-left mb-2.5">
             <p className="text-body-sm font-bold text-fg mb-1">El truco</p>
             <p className="text-caption sm:text-body-sm text-fg-muted leading-relaxed font-normal">
-              {extra.spanishTip}
+              {extra.spanishTipLongEs ?? extra.spanishTip}
             </p>
           </aside>
         )}
