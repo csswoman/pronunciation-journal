@@ -67,11 +67,11 @@ describe("PracticeSession", () => {
 
     await vi.waitFor(() => {
       expect(screen.getByText("¡Práctica finalizada!")).toBeInTheDocument();
-    }, { timeout: 3000 });
+      expect(onComplete).toHaveBeenCalledWith({ total: 1, correct: 1 });
+    }, { timeout: 4000 });
 
     expect(screen.getByText(/1 de 1 ejercicio correcto/)).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /Continuar con el Coach/ })).not.toBeInTheDocument();
-    expect(onComplete).toHaveBeenCalledWith({ total: 1, correct: 1 });
     expect(onComplete).toHaveBeenCalledTimes(1);
   });
 

@@ -80,9 +80,14 @@ export interface RenderHomeParams {
 
 export function renderHome(p: RenderHomeParams) {
   return (
-    <div className="flex flex-1 min-h-0 flex-col overflow-hidden">
+    <div className="chat-surface flex flex-1 min-h-0 flex-col overflow-hidden">
       {p.quotaExhausted ? (
-        <QuotaExhaustedCard messages={[]} onNewSession={() => p.onDismissError?.()} />
+        <QuotaExhaustedCard
+          messages={[]}
+          onNewSession={() => p.onDismissError?.()}
+          onRetry={p.onRetry ? () => p.onRetry?.() : undefined}
+          retrying={p.isStreaming}
+        />
       ) : p.error ? (
         <CoachErrorState
           message={p.error}
@@ -123,6 +128,8 @@ export interface RenderActiveChatParams {
   setInputPrefill: (prompt?: string) => void;
   answerToolCall: (callId: string, result: ExerciseResult) => void;
   sendMessage: (text: string) => Promise<void>;
+  /** Re-send the turn a transient throttle or quota bounce left pending. */
+  retryLastFailedSend: () => Promise<void>;
 }
 
 export function renderActiveChat(p: RenderActiveChatParams) {
@@ -159,8 +166,15 @@ export function renderActiveChat(p: RenderActiveChatParams) {
           onExerciseComplete={(s) => void p.sendMessage(`I just finished — ${s.correct} of ${s.total} right. How did I do?`)}
         />
       </div>
-      <div className="shrink-0 px-3 pb-3 pt-1 border-t border-border-subtle bg-surface-base">
-        {p.quotaExhausted && <QuotaExhaustedCard messages={p.messages} onNewSession={p.resetSession} />}
+      <div className="chat-surface shrink-0 px-3 pb-3 pt-1 border-t border-border-subtle/60">
+        {p.quotaExhausted && (
+          <QuotaExhaustedCard
+            messages={p.messages}
+            onNewSession={p.resetSession}
+            onRetry={() => void p.retryLastFailedSend()}
+            retrying={p.isStreaming}
+          />
+        )}
         {!p.quotaExhausted && p.messages.length >= QUOTA_WARN_THRESHOLD && (
           <div className="flex justify-center mb-2">
             <span className="text-caption font-medium text-warning bg-warning-soft border border-warning/20 rounded-full px-3 py-0.5">

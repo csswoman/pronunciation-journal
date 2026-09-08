@@ -85,6 +85,52 @@ describe('useStreamingChat failed sends', () => {
     vi.unstubAllGlobals()
   })
 
+  it('treats our own transient rate-limit 429 as a recoverable error, not quota exhaustion', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () =>
+        new Response(
+          JSON.stringify({ error: 'Too many requests. Please wait before retrying.', retryable: true, retryAfterSeconds: 12 }),
+          { status: 429, headers: { 'Content-Type': 'application/json', 'Retry-After': '12' } },
+        ),
+      ),
+    )
+    const { result } = makeHook()
+
+    await act(async () => {
+      await result.current.sendMessage('one more question')
+    })
+
+    // Recoverable: no quota wall, the optimistic user bubble is rolled back,
+    // and the failed send is retained so the user can retry in the same thread.
+    expect(result.current.quotaExhausted).toBe(false)
+    expect(result.current.error).toBeTruthy()
+    expect(result.current.error).not.toMatch(/24 horas|límite diario|de la IA/i)
+    expect(result.current.messages).toHaveLength(0)
+
+    vi.unstubAllGlobals()
+  })
+
+  it('still shows the quota wall when the provider itself is exhausted (429 without retryable flag)', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () =>
+        new Response(JSON.stringify({ error: 'Gemini request failed: RESOURCE_EXHAUSTED quota' }), {
+          status: 429,
+          headers: { 'Content-Type': 'application/json' },
+        }),
+      ),
+    )
+    const { result } = makeHook()
+
+    await act(async () => {
+      await result.current.sendMessage('hello test')
+    })
+
+    expect(result.current.quotaExhausted).toBe(true)
+    vi.unstubAllGlobals()
+  })
+
   it('is a no-op retry when nothing has failed', async () => {
     vi.stubGlobal('fetch', vi.fn())
     const { result } = makeHook()

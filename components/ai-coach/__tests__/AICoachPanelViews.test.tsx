@@ -48,7 +48,17 @@ describe("renderHome error surfacing", () => {
 
   it("prefers the quota card over the generic error when the limit is hit", () => {
     render(<>{renderHome(baseParams({ error: "whatever", quotaExhausted: true, onDismissError: vi.fn() }))}</>);
-    expect(screen.getByText(/límite diario de la IA/i)).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /reintentar/i })).not.toBeInTheDocument();
+    expect(screen.getByText(/no está disponible por ahora/i)).toBeInTheDocument();
+    // No implementation leak, no hard 24 h wall.
+    expect(screen.queryByText(/de la IA|24 horas|límite diario/i)).not.toBeInTheDocument();
+  });
+
+  it("lets the user retry the same conversation from the quota card", async () => {
+    const onRetry = vi.fn();
+    render(
+      <>{renderHome(baseParams({ quotaExhausted: true, onRetry, onDismissError: vi.fn() }))}</>,
+    );
+    await userEvent.click(screen.getByRole("button", { name: /reintentar/i }));
+    expect(onRetry).toHaveBeenCalledOnce();
   });
 });

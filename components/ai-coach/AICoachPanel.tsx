@@ -116,11 +116,11 @@ export default function AICoachPanel() {
     ...(isMobile ? {} : { width: isFullscreen ? "calc(100vw - var(--sidebar-width))" : `${panelWidth}px` }),
   } as const;
 
+  // Saved concurrently and with `allSettled` so one rejected item no longer
+  // aborts the rest of the batch halfway through.
   const saveAllFromSummary = useCallback(
     async (learned: TurnSaveable[]) => {
-      for (const item of learned) {
-        await saveSaveable(item);
-      }
+      await Promise.allSettled(learned.map((item) => saveSaveable(item)));
     },
     [saveSaveable],
   );
@@ -186,7 +186,8 @@ export default function AICoachPanel() {
               ) : (
                 renderActiveChat({
                   messages, isStreaming, error, quotaExhausted, resetSession, openSaveWordModal,
-                  saveSaveable, saveConcept, saveAllFromSummary, saveTranslation, inputPrefill, setInputPrefill, answerToolCall, sendMessage,
+                  saveSaveable, saveConcept, saveAllFromSummary, saveTranslation, inputPrefill, setInputPrefill,
+                  answerToolCall, sendMessage, retryLastFailedSend,
                 })
               )}
             </div>

@@ -4,20 +4,16 @@ import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import type { AIMessage, StreamChunk, ExerciseResult, SendOpts } from "@/lib/ai-practice/types";
 import { applyExerciseResult, type UserLearningState } from "@/lib/ai-practice/learning-state";
 import { messagesToWire } from "@/lib/ai-practice/wire";
-import { logEvent } from "@/lib/ai-practice/events";
 import { makeStreamState, processChunk } from "@/lib/ai-practice/stream-processor";
 import type {
   MissionIntentObservedArgs,
   StartMissionArgs,
 } from "@/lib/ai-practice/tools/registry";
-import {
-  persistCoachExerciseResult,
-  recordCoachSession,
-  type CoachSessionExercise,
-} from "@/lib/ai-practice/coach-progress";
+import { persistCoachExerciseResult } from "@/lib/ai-practice/coach-progress";
+import { useCoachSessionMetrics } from "./useCoachSessionMetrics";
 import type { AIConversationMode } from "@/lib/types";
-import { AI_COACH_TURN_FAILED_MESSAGE, isQuotaLikeError, publicAiErrorMessage } from "@/lib/degradation/messages";
-import { applyAnswerToMessages, coachErrorMessage, hydratePersistedMessages, logFirstExerciseTimeIfNeeded, persistConversationState, persistMessageEdit } from "@/lib/ai-practice/chat-helpers";
+import { AI_COACH_RATE_LIMITED_MESSAGE, AI_COACH_TURN_FAILED_MESSAGE, isQuotaLikeError, publicAiErrorMessage } from "@/lib/degradation/messages";
+import { applyAnswerToMessages, coachErrorMessage, emptyResponseMessage, hydratePersistedMessages, persistConversationState, persistMessageEdit } from "@/lib/ai-practice/chat-helpers";
 
 interface UseStreamingChatOptions {
   mode: AIConversationMode;
@@ -51,13 +47,6 @@ export function useStreamingChat({
   conversationIdRef.current = conversationId;
   const abortRef = useRef<AbortController | null>(null);
   const streamIdRef = useRef(0);
-  const lastTopicRef = useRef<string | undefined>(undefined);
-  const sessionStartedRef = useRef(false);
-  const sessionStartAtRef = useRef(0);
-  const exercisesCompletedRef = useRef(0);
-  const correctCountRef = useRef(0);
-  const firstExerciseLoggedRef = useRef(false);
-  const sessionExercisesRef = useRef<CoachSessionExercise[]>([]);
   const userIdRef = useRef(userId);
   userIdRef.current = userId;
 
@@ -65,17 +54,15 @@ export function useStreamingChat({
   // session summary) leaves nothing on screen, so retry is the only way back in.
   const lastFailedSendRef = useRef<{ text: string; options?: SendOpts } | null>(null);
 
+  const metrics = useCoachSessionMetrics({ mode, userId });
+
   const sendMessage = useCallback(async (text: string, options?: SendOpts) => {
     if (!text.trim() || isStreaming) return;
     setError(null);
     setQuotaExhausted(false);
     lastFailedSendRef.current = null;
 
-    if (!sessionStartedRef.current) {
-      sessionStartedRef.current = true;
-      sessionStartAtRef.current = Date.now();
-      logEvent("session_started", { mode, conversationId: conversationIdRef.current ?? undefined }, userId).catch(() => {});
-    }
+    metrics.markSessionStarted(conversationIdRef.current);
 
     const userMsg: AIMessage = { role: "user", content: text.trim(), timestamp: new Date().toISOString(), hidden: options?.hidden, voice: options?.voice };
     const nextMessages = [...messagesRef.current, userMsg];
@@ -106,6 +93,16 @@ export function useStreamingChat({
       if (!res.ok || !res.body) {
         const data = await res.json().catch(() => ({}));
         const errMsg: string = data.error ?? "Failed to get AI response";
+        // Our own layered rate limiter (15 req / 60 s per user) sets
+        // `retryable`. That is a short throttle, not the provider's daily
+        // quota: surface it as a recoverable error the user retries in the
+        // same conversation, never the "session over" quota wall.
+        if (data.retryable === true) {
+          setError(AI_COACH_RATE_LIMITED_MESSAGE);
+          setMessages(messagesRef.current.slice(0, -1));
+          lastFailedSendRef.current = { text, options };
+          return;
+        }
         if (res.status === 429 || isQuotaLikeError(errMsg)) {
           setQuotaExhausted(true);
           setMessages(messagesRef.current.slice(0, -1));
@@ -118,6 +115,7 @@ export function useStreamingChat({
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
       let buf = "";
+      let truncated = false;
       const state = makeStreamState();
 
       const flush = () => {
@@ -164,6 +162,7 @@ export function useStreamingChat({
           });
 
           if (result === "done") break outer;
+          if (result === "done-truncated") { truncated = true; break outer; }
           if (typeof result === "object" && "error" in result) {
             if (isQuotaLikeError(result.error)) {
               setQuotaExhausted(true);
@@ -188,7 +187,7 @@ export function useStreamingChat({
       const hasContent = state.parts.length > 0 || state.calls.size > 0;
       if (!hasContent) {
         setMessages(prev => (prev[prev.length - 1] === modelMsg ? prev.slice(0, -1) : prev));
-        setError(publicAiErrorMessage(undefined, "AI response was empty", AI_COACH_TURN_FAILED_MESSAGE));
+        setError(emptyResponseMessage(truncated));
         lastFailedSendRef.current = { text, options };
         return;
       }
@@ -197,12 +196,7 @@ export function useStreamingChat({
       const finalMessages = [...nextMessages, finalModelMsg];
       setMessages(finalMessages);
 
-      firstExerciseLoggedRef.current = await logFirstExerciseTimeIfNeeded(
-        firstExerciseLoggedRef.current,
-        state.calls,
-        sessionStartAtRef.current,
-        userId,
-      );
+      await metrics.noteFirstExercise(state.calls);
 
       const newId = await persistConversationState({
         userId,
@@ -222,7 +216,9 @@ export function useStreamingChat({
     } finally {
       if (streamIdRef.current === thisId) setIsStreaming(false);
     }
-  }, [isStreaming, mode, learningState, onStartMission, onMissionIntentObserved, onConversationCreated, userId]);
+    // `learningState` omitted on purpose: the server resolves it, and including
+    // it rebuilt `sendMessage` after every exercise, re-rendering the panel.
+  }, [isStreaming, mode, metrics, onStartMission, onMissionIntentObserved, onConversationCreated, userId]);
 
   const retryLastFailedSend = useCallback(async () => {
     const failed = lastFailedSendRef.current;
@@ -245,26 +241,14 @@ export function useStreamingChat({
       return updatedMessages;
     });
     setMessages(prev => [...prev, { role: "tool" as const, toolCallId: callId, name: resolvedToolName, result, timestamp: new Date().toISOString() }]);
-    if (result.topic) lastTopicRef.current = result.topic;
-    exercisesCompletedRef.current += 1;
-    if (result.correct) correctCountRef.current += 1;
-    sessionExercisesRef.current.push({ toolName: resolvedToolName, result });
+    metrics.recordExercise(resolvedToolName, result);
     if (learningState) setLearningState(applyExerciseResult(learningState, result));
     if (userId) {
       void persistCoachExerciseResult(userId, resolvedToolName, result).catch(() => {});
     }
-  }, [learningState, setLearningState, userId]);
+  }, [learningState, metrics, setLearningState, userId]);
 
-  const finalizeSession = useCallback(() => {
-    const completedExercises = sessionExercisesRef.current;
-    sessionExercisesRef.current = [];
-    const activeUserId = userIdRef.current;
-    if (activeUserId && completedExercises.length > 0) {
-      void recordCoachSession(activeUserId, completedExercises).catch((err) => {
-        console.error("[AI Coach] session progress save failed", err);
-      });
-    }
-  }, []);
+  const finalizeSession = metrics.finalizeSession;
 
   useEffect(() => {
     return () => {
@@ -277,23 +261,11 @@ export function useStreamingChat({
     abortRef.current?.abort();
     finalizeSession();
     lastFailedSendRef.current = null;
-    if (sessionStartedRef.current) {
-      const completed = exercisesCompletedRef.current;
-      logEvent("session_ended", {
-        mode,
-        exercisesCompleted: completed,
-        correctRate: completed > 0 ? correctCountRef.current / completed : 0,
-        durationMs: Date.now() - sessionStartAtRef.current,
-      }, userId).catch(() => {});
-      sessionStartedRef.current = false;
-      exercisesCompletedRef.current = 0;
-      correctCountRef.current = 0;
-      firstExerciseLoggedRef.current = false;
-    }
+    metrics.endSession();
     setMessages([]);
     setError(null);
     setQuotaExhausted(false);
-  }, [mode, finalizeSession, userId]);
+  }, [finalizeSession, metrics]);
 
   const loadMessages = useCallback((msgs: AIMessage[]) => {
     setMessages(hydratePersistedMessages(msgs));

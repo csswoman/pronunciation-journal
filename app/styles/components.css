@@ -200,6 +200,15 @@
   pointer-events: none;
 }
 
+/* The flat chat ground with no gradient or blobs. Put it on the containers
+   that wrap the decorated chat surfaces (the quota / error footer, the Home
+   view around the empty state) so the tint runs edge to edge and there is no
+   seam where a plain panel surface meets `.chat-messages-*`. Matches the
+   `.chat-messages-scroll` / `.chat-messages-container` base tint exactly. */
+.chat-surface {
+  background: color-mix(in oklch, var(--primary) 3%, var(--bg));
+}
+
 .chat-bg {
   position: relative;
   overflow: hidden;
