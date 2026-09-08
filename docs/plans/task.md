@@ -23,4 +23,9 @@
 | Plan 099 | AI Coach Fase 3: Starters adaptativos, selector por estado e intereses, rotación de ángulos y titulación por starterId | Completed |
 | Plan 100 | AI Coach Fase 4: Cierre de sesión con resumen (`render_session_summary`, prompt de cierre, `SessionSummaryCard`, integración y botón Terminar) | Completed |
 | Plan 101 | AI Coach: Layout de ejercicios (cabecera de 2 filas sin colisión) y feedback automático del coach sin botón | Completed |
-
+| Plan 102 | AI Coach: Guardar explicación completa del coach en Guardadas (tracked_items kind=explanation, SaveConceptChip, filtro Explicaciones) | Completed |
+| Plan 103 | Mini-lessons: Rediseño de layout y estilo visual de ejercicios y quizzes (impeccable layout) | Completed |
+| Plan 104 | AI Coach: Corrección implícita sin burbuja en blanco y continuidad conversacional obligatoria (prompt turn order + fallback UI) | Completed |
+| Plan 105 | AI Coach: Reproducir respuestas del coach con Web Speech API (botón escuchar/detener, autoplay y toggle de silencio en cabecera) | Completed |
+| Plan 106 | Rediseño de banner 'Tu siguiente lección' en Cursos (/courses) según mockup con ilustración temática | Completed |
+| Plan 107 | Generación de nuevas historias y selección de tema personalizado en Reader (/practice/reader) | Completed |
