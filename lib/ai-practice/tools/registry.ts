@@ -158,6 +158,18 @@ export function isExerciseTool(name: ToolName): name is ExerciseToolName {
   return (EXERCISE_TOOL_NAMES as string[]).includes(name);
 }
 
+/**
+ * Tools rendered by a dedicated component rather than inline in the bubble:
+ * exercises go to `PracticeSession`, `render_session_summary` to
+ * `SessionSummaryCard`, and `annotate_turn` only feeds chips and correction
+ * cards. Everything else is a `ToolWidget` in the message body.
+ */
+export function isInlineWidgetTool(name: string): boolean {
+  if (!isValidToolName(name)) return false;
+  if (name === "annotate_turn") return false;
+  return !isExerciseTool(name);
+}
+
 function assertString(val: unknown, field: string): string {
   if (typeof val !== "string" || !val) throw new Error(`${field} must be a non-empty string`);
   return val;

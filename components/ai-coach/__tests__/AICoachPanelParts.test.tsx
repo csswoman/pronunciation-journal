@@ -38,6 +38,25 @@ describe("AICoachHeader", () => {
     fireEvent.click(historyBtn);
     expect(onToggleHistory).toHaveBeenCalledOnce();
   });
+
+  it("renders mute toggle button and toggles autoSpeak in store", () => {
+    render(
+      <AICoachHeader
+        pageLabel="Practice"
+        showHistory={false}
+        onNewChat={vi.fn()}
+        onToggleHistory={vi.fn()}
+        onClose={vi.fn()}
+      />
+    );
+
+    const muteBtn = screen.getByRole("button", { name: /silenciar voz del coach/i });
+    expect(muteBtn).toBeInTheDocument();
+    expect(muteBtn).toHaveAttribute("aria-pressed", "false");
+
+    fireEvent.click(muteBtn);
+    expect(muteBtn).toHaveAttribute("aria-pressed", "true");
+  });
 });
 
 describe("ConversationHistoryPanel", () => {

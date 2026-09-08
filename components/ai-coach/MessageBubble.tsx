@@ -15,6 +15,7 @@ import AIBubble from "./chat/AIBubble";
 export interface MessageBubbleProps {
   message: AIMessage;
   showAvatar?: boolean;
+  autoSpeak?: boolean;
   onSaveWord: (word: string, context: string) => void;
   onSaveSaveable: (saveable: TurnSaveable) => Promise<void>;
   onSaveConcept?: (title: string, body: string) => Promise<void>;
@@ -29,6 +30,7 @@ export interface MessageBubbleProps {
 export default function MessageBubble({
   message,
   showAvatar = true,
+  autoSpeak,
   onSaveWord,
   onSaveSaveable,
   onSaveConcept,
@@ -48,7 +50,7 @@ export default function MessageBubble({
           </div>
           <div className="flex items-center gap-1 pr-1 opacity-0 transition-opacity group-hover/msg:opacity-100 motion-reduce:transition-none">
             <span className="text-tiny text-fg-subtle">
-              {formatMessageTime((message as { createdAt?: Date }).createdAt)}
+              {formatMessageTime(message.timestamp)}
             </span>
             <CheckCheck size={12} strokeWidth={2} className="text-primary" aria-hidden />
           </div>
@@ -63,6 +65,7 @@ export default function MessageBubble({
     <AIBubble
       message={message}
       showAvatar={showAvatar}
+      autoSpeak={autoSpeak}
       onSaveWord={onSaveWord}
       onSaveSaveable={onSaveSaveable}
       onSaveConcept={onSaveConcept}

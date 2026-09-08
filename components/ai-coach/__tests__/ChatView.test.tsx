@@ -12,14 +12,14 @@ beforeAll(() => {
 // MessageBubble pulls in the whole chat rendering stack; a stub keeps this test
 // focused on which messages ChatView decides to render.
 vi.mock("../MessageBubble", () => ({
-  default: ({ message }: { message: AIMessage }) => {
+  default: ({ message, autoSpeak }: { message: AIMessage; autoSpeak?: boolean }) => {
     const text =
       message.role === "model"
         ? message.contentParts.map((p) => (p.type === "text" ? p.text : "[tool]")).join("")
         : message.role === "user"
           ? message.content
           : "";
-    return <div data-testid={`bubble-${message.role}`}>{text}</div>;
+    return <div data-testid={`bubble-${message.role}`} data-autospeak={autoSpeak ? "true" : "false"}>{text}</div>;
   },
 }));
 vi.mock("../TypingIndicator", () => ({ default: () => <div data-testid="typing" /> }));
@@ -64,5 +64,55 @@ describe("ChatView message visibility", () => {
     };
     render(<ChatView {...baseProps} messages={[withTool]} />);
     expect(screen.getByTestId("bubble-model")).toBeInTheDocument();
+  });
+});
+
+describe("ChatView autoSpeak propagation", () => {
+  it("passes autoSpeak=true only to the newest model message when store autoSpeak is true", async () => {
+    const { useAICoachStore } = await import("@/lib/stores/aiCoachStore");
+    useAICoachStore.setState({ autoSpeak: true });
+
+    const messages: AIMessage[] = [
+      model("First model message"),
+      { role: "user", content: "hello", timestamp: "t1" },
+      model("Second model message"),
+    ];
+    render(<ChatView {...baseProps} messages={messages} />);
+
+    const modelBubbles = screen.getAllByTestId("bubble-model");
+    expect(modelBubbles).toHaveLength(2);
+    expect(modelBubbles[0]).toHaveAttribute("data-autospeak", "false");
+    expect(modelBubbles[1]).toHaveAttribute("data-autospeak", "true");
+  });
+
+  it("passes autoSpeak=false to all bubbles when store autoSpeak is false", async () => {
+    const { useAICoachStore } = await import("@/lib/stores/aiCoachStore");
+    useAICoachStore.setState({ autoSpeak: false });
+
+    const messages: AIMessage[] = [
+      model("First model message"),
+      { role: "user", content: "hello", timestamp: "t1" },
+      model("Second model message"),
+    ];
+    render(<ChatView {...baseProps} messages={messages} />);
+
+    const modelBubbles = screen.getAllByTestId("bubble-model");
+    expect(modelBubbles).toHaveLength(2);
+    expect(modelBubbles[0]).toHaveAttribute("data-autospeak", "false");
+    expect(modelBubbles[1]).toHaveAttribute("data-autospeak", "false");
+  });
+
+  it("passes autoSpeak=false if the last message is a user message", async () => {
+    const { useAICoachStore } = await import("@/lib/stores/aiCoachStore");
+    useAICoachStore.setState({ autoSpeak: true });
+
+    const messages: AIMessage[] = [
+      model("First model message"),
+      { role: "user", content: "hello", timestamp: "t1" },
+    ];
+    render(<ChatView {...baseProps} messages={messages} />);
+
+    const modelBubble = screen.getByTestId("bubble-model");
+    expect(modelBubble).toHaveAttribute("data-autospeak", "false");
   });
 });

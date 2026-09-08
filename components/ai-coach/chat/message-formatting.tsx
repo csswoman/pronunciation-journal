@@ -40,9 +40,41 @@ export function extractSentenceContext(fullText: string, selected: string): stri
   return fullText.split(/(?<=[.!?])\s+/).find((sentence) => sentence.toLowerCase().includes(selected.toLowerCase()))?.trim() || selected
 }
 
+const SUGGESTIONS_HEADER_RE = /(?:^|\n)\s*(?:\*{1,2}|_{1,2})?suggestions?:(?:\*{1,2}|_{1,2})?\s*([\s\S]*?)(?:\n\n\S|$)/i;
+const TRAILING_BULLETS_RE = /(?:\n\s*[-•*]\s+[^\n]+){2,4}\s*$/;
+
 export function extractSuggestions(text: string): string[] {
-  const match = text.match(/suggestions?:\s*([\s\S]*?)(?:\n\n|$)/i)
-  return match ? match[1].split('\n').map((line) => line.replace(/^[-•*]\s*/, '').trim()).filter(Boolean) : []
+  const headerMatch = text.match(SUGGESTIONS_HEADER_RE);
+  if (headerMatch) {
+    return headerMatch[1]
+      .split('\n')
+      .map((line) => line.replace(/^[-•*]\s*/, '').replace(/^\*{1,2}|\*{1,2}$/g, '').trim())
+      .filter(Boolean);
+  }
+
+  // Fallback: trailing 2-4 bullet replies if the model forgot the "suggestions:" header
+  const trailingMatch = text.match(TRAILING_BULLETS_RE);
+  if (trailingMatch) {
+    const lines = trailingMatch[0]
+      .split('\n')
+      .map((line) => line.replace(/^[-•*]\s*/, '').trim())
+      .filter(Boolean);
+    if (lines.length >= 2 && lines.length <= 4) {
+      return lines;
+    }
+  }
+
+  return [];
+}
+
+export function stripSuggestions(text: string): string {
+  if (SUGGESTIONS_HEADER_RE.test(text)) {
+    return text.replace(/(?:\n|^)\s*(?:\*{1,2}|_{1,2})?suggestions?:(?:\*{1,2}|_{1,2})?\s*[\s\S]*$/i, '').trimEnd();
+  }
+  if (TRAILING_BULLETS_RE.test(text)) {
+    return text.replace(TRAILING_BULLETS_RE, '').trimEnd();
+  }
+  return text;
 }
 
 /** Fallback reply prompts for turns where the coach offered no explicit suggestions. */

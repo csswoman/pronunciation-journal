@@ -1,38 +1,36 @@
 "use client";
 
-import { useState } from "react";
-import { Languages } from "@/components/icons";
+import { useEffect, useRef } from "react";
+import { useCoachSpeech } from "@/hooks/useCoachSpeech";
+import { useMessageTranslation } from "@/hooks/useMessageTranslation";
 import type { AIMessage, ExerciseResult } from "@/lib/ai-practice/types";
 import { cn } from "@/lib/cn";
 import AIAvatar from "../AIAvatar";
 import SuggestionChips from "../SuggestionChips";
-import ToolWidget from "./ToolWidget";
-import PracticeSession, { type ExerciseSessionSummary } from "../PracticeSession";
-import { isExerciseTool, type SessionSummaryArgs, type TurnSaveable } from "@/lib/ai-practice/tools/registry";
+import type { ExerciseSessionSummary } from "../PracticeSession";
+import { isInlineWidgetTool, type TurnSaveable } from "@/lib/ai-practice/tools/registry";
 import { parseCorrection } from "@/lib/ai-coach/parse-correction";
 import { extractTurnCorrection, extractTurnSaveables, extractTurnConcept } from "@/lib/ai-practice/correction";
 import CorrectionCard from "../CorrectionCard";
 import SaveChips from "../SaveChips";
 import SaveConceptChip from "../SaveConceptChip";
-import SessionSummaryCard from "../session/SessionSummaryCard";
+import BubbleActions from "./BubbleActions";
+import BubbleContent from "./BubbleContent";
+import BubbleTranslation from "./BubbleTranslation";
 import {
   extractSentenceContext,
   extractSuggestions,
-  formatMessageTime,
   generateContextualSuggestions,
-  renderProse,
+  stripSuggestions,
 } from "./message-formatting";
 
 // Planned structure:
 // <AIBubble>
 //   <AIAvatar />
 //   <CorrectionCard />
-//   <MessageContent>
-//     <Prose />
-//     <SessionSummaryCard />
-//     <PracticeSession />
-//     <Translation />
-//   </MessageContent>
+//   <BubbleContent />
+//   <BubbleTranslation />
+//   <BubbleActions />
 //   <SuggestionChips />
 //   <SaveChips />
 //   <SaveConceptChip />
@@ -41,6 +39,7 @@ import {
 export interface AIBubbleProps {
   message: Extract<AIMessage, { role: "model" }>;
   showAvatar: boolean;
+  autoSpeak?: boolean;
   onSaveWord: (word: string, context: string) => void;
   onSaveSaveable: (saveable: TurnSaveable) => Promise<void>;
   onSaveConcept?: (title: string, body: string) => Promise<void>;
@@ -53,14 +52,9 @@ export interface AIBubbleProps {
 }
 
 export default function AIBubble({
-  message, showAvatar, onSaveWord, onSaveSaveable, onSaveConcept, onSaveAllFromSummary,
+  message, showAvatar, autoSpeak, onSaveWord, onSaveSaveable, onSaveConcept, onSaveAllFromSummary,
   onSaveTranslation, onSuggestionClick, onToolAnswer, onNext, onExerciseComplete,
 }: AIBubbleProps) {
-  const [showTranslation, setShowTranslation] = useState(Boolean(message.translation));
-  const [isTranslating, setIsTranslating] = useState(false);
-  const [translatedText, setTranslatedText] = useState<string | null>(message.translation ?? null);
-  const [translationError, setTranslationError] = useState(false);
-
   const fullText = message.contentParts
     .filter((p): p is { type: "text"; text: string } => p.type === "text")
     .map((p) => p.text)
@@ -71,60 +65,51 @@ export default function AIBubble({
   const concept = extractTurnConcept(message.toolCalls);
   const parsed = parseCorrection(fullText);
   const correction = toolCorrection ?? parsed.correction;
-  const proseBody = toolCorrection ? fullText : parsed.body;
+  const rawProse = toolCorrection ? fullText : parsed.body;
+  const proseBody = rawProse.trim();
+  const extractedSuggestions = extractSuggestions(proseBody);
+  const effectiveProse = stripSuggestions(proseBody);
+  const hasProse = Boolean(effectiveProse.trim());
 
-  const hasSuggestions = message.contentParts.some(
-    (p) => p.type === "text" && /^suggestions?:/im.test(proseBody),
-  );
+  const messageKey = message.timestamp || fullText;
+  const { isSpeaking, isAvailable, toggle: toggleSpeech, speak } = useCoachSpeech({
+    text: effectiveProse,
+    ownerId: messageKey,
+  });
 
-  const handleToggleTranslation = async (forceRetry = false) => {
-    if (showTranslation && !translationError && !forceRetry) {
-      setShowTranslation(false);
-      return;
-    }
-    if (translatedText && !translationError && !forceRetry) {
-      setShowTranslation(true);
-      return;
-    }
-    setTranslationError(false);
-    setTranslatedText(null);
-    setIsTranslating(true);
-    setShowTranslation(true);
-    try {
-      const textToTranslate = proseBody || fullText;
-      const res = await fetch("/api/gemini/translate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: textToTranslate }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        const text = (data.translation || "").trim();
-        setTranslatedText(text || "No se pudo traducir este mensaje.");
-        setTranslationError(!text);
-        if (text) onSaveTranslation?.(text);
-      } else {
-        setTranslatedText("No se pudo obtener la traducción en este momento.");
-        setTranslationError(true);
-      }
-    } catch {
-      setTranslatedText("Error de conexión al traducir.");
-      setTranslationError(true);
-    } finally {
-      setIsTranslating(false);
-    }
-  };
+  const translation = useMessageTranslation({
+    text: effectiveProse || fullText,
+    onTranslated: onSaveTranslation,
+    initial: message.translation,
+  });
+
+  const autoplayedRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!autoSpeak || !hasProse || !isAvailable) return;
+    if (autoplayedRef.current === messageKey) return;
+    autoplayedRef.current = messageKey;
+    speak();
+  }, [autoSpeak, messageKey, hasProse, isAvailable, speak]);
 
   const handleMouseUp = () => {
     const selected = window.getSelection()?.toString().trim();
     if (selected && selected.length >= 2 && selected.split(/\s+/).length <= 4) {
-      onSaveWord(selected, extractSentenceContext(fullText, selected));
+      onSaveWord(selected, extractSentenceContext(fullText || effectiveProse, selected));
     }
   };
 
-  const chips = hasSuggestions
-    ? extractSuggestions(proseBody).map((s) => ({ label: s, prompt: s }))
-    : generateContextualSuggestions(proseBody || fullText);
+  const chips = extractedSuggestions.length > 0
+    ? extractedSuggestions.map((s) => ({ label: s, prompt: s }))
+    : generateContextualSuggestions(effectiveProse || fullText);
+
+  const textParts = message.contentParts.filter((p): p is { type: "text"; text: string } => p.type === "text");
+  const displayText = textParts.length === 1 && correction ? effectiveProse : null;
+
+  const hasContentBox = hasProse || translation.isVisible || message.contentParts.some((p) => {
+    if (p.type !== "tool_call") return false;
+    const tc = message.toolCalls.get(p.callId);
+    return tc && tc.status !== "error" && (isInlineWidgetTool(tc.name) || tc.name === "render_session_summary");
+  });
 
   return (
     <div className="group/msg flex max-w-[min(88%,36rem)] items-start justify-start gap-3">
@@ -135,108 +120,51 @@ export default function AIBubble({
       <div className="flex min-w-0 flex-1 flex-col gap-2">
         {correction && <CorrectionCard correction={correction} />}
 
-        <div
-          className={cn(
-            "cursor-text select-text rounded-md border border-border-subtle bg-surface-raised px-3.5 py-2.5 text-fg",
-            showAvatar && "rounded-bl-sm",
-          )}
-          onMouseUp={handleMouseUp}
-        >
-          <div className="layout-stack">
-            {(() => {
-              const exerciseCalls = message.contentParts
-                .filter((p) => p.type === "tool_call")
-                .map((p) => message.toolCalls.get(p.callId))
-                .filter(
-                  (tc): tc is NonNullable<typeof tc> =>
-                    tc != null &&
-                    isExerciseTool(tc.name as never) &&
-                    tc.name !== "render_session_summary" &&
-                    tc.status !== "error",
-                );
-
-              const summaryCall = message.contentParts
-                .filter((p) => p.type === "tool_call")
-                .map((p) => message.toolCalls.get(p.callId))
-                .find((tc) => tc?.name === "render_session_summary" && tc.status !== "error");
-
-              const textParts = message.contentParts.filter(
-                (p): p is { type: "text"; text: string } => p.type === "text",
-              );
-              const displayText =
-                textParts.length === 1 && correction ? proseBody : null;
-
-              return (
-                <>
-                  {message.contentParts.map((part, i) => {
-                    if (part.type === "text") {
-                      const text = displayText ?? part.text;
-                      if (!text.trim()) return null;
-                      return <div key={i} className="layout-stack-tight">{renderProse(text.split("\n"))}</div>;
-                    }
-                    const tc = message.toolCalls.get(part.callId);
-                    if (!tc || tc.name === "suggestions" || tc.name === "annotate_turn" || tc.name === "render_session_summary" || isExerciseTool(tc.name as never)) return null;
-                    return <ToolWidget key={i} toolCall={tc} onAnswer={onToolAnswer} onNext={onNext} />;
-                  })}
-                  {summaryCall && (
-                    <SessionSummaryCard
-                      summary={summaryCall.args as SessionSummaryArgs}
-                      onSaveAll={onSaveAllFromSummary}
-                    />
-                  )}
-                  {exerciseCalls.length > 0 && (
-                    <PracticeSession
-                      key={exerciseCalls[0].id}
-                      initialExercises={exerciseCalls}
-                      onAnswer={onToolAnswer}
-                      onComplete={onExerciseComplete}
-                    />
-                  )}
-                  {showTranslation && (
-                    <div className="mt-2.5 pt-2 border-t border-border-subtle/80 text-caption text-fg-muted bg-surface-sunken/60 px-3 py-2 rounded-md">
-                      <div className="flex items-center justify-between mb-0.5">
-                        <span className="font-semibold text-xxs uppercase tracking-wider text-primary">Traducción</span>
-                        {translationError && (
-                          <button
-                            type="button"
-                            onClick={() => handleToggleTranslation(true)}
-                            disabled={isTranslating}
-                            className="text-xxs font-semibold text-primary hover:underline cursor-pointer"
-                          >
-                            {isTranslating ? "Cargando..." : "Reintentar"}
-                          </button>
-                        )}
-                      </div>
-                      <p className={cn("m-0 text-pretty text-body-sm leading-relaxed", translationError && "text-error font-medium")}>
-                        {isTranslating ? "Cargando traducción..." : (translatedText || "Cargando traducción...")}
-                      </p>
-                    </div>
-                  )}
-                </>
-              );
-            })()}
-          </div>
-        </div>
-
-        <div className="flex items-center justify-between px-1">
-          <p className="text-tiny text-fg-subtle opacity-0 transition-opacity group-hover/msg:opacity-100 motion-reduce:transition-none">
-            {formatMessageTime((message as { createdAt?: Date }).createdAt)}
-          </p>
-          <button
-            type="button"
-            onClick={() => handleToggleTranslation(false)}
-            disabled={isTranslating}
-            className="inline-flex items-center gap-1 text-tiny font-medium text-fg-subtle hover:text-primary transition-colors cursor-pointer"
+        {hasContentBox && (
+          <div
+            className={cn(
+              "cursor-text select-text rounded-md border border-border-subtle bg-surface-raised px-3.5 py-2.5 text-fg",
+              showAvatar && "rounded-bl-sm",
+            )}
+            onMouseUp={handleMouseUp}
           >
-            <Languages size={12} strokeWidth={1.8} />
-            <span>{isTranslating ? "Traduciendo..." : showTranslation ? "Ver original" : "Traducir"}</span>
-          </button>
-        </div>
+            <div className="layout-stack">
+              <BubbleContent
+                message={message}
+                effectiveProse={effectiveProse}
+                displayText={displayText}
+                onToolAnswer={onToolAnswer}
+                onNext={onNext}
+                onSaveAllFromSummary={onSaveAllFromSummary}
+                onExerciseComplete={onExerciseComplete}
+              />
+              {translation.isVisible && (
+                <BubbleTranslation
+                  translation={translation.translation}
+                  isLoading={translation.isLoading}
+                  hasError={translation.hasError}
+                  onRetry={() => void translation.toggle(true)}
+                />
+              )}
+            </div>
+          </div>
+        )}
 
-        {chips.length > 0 && <SuggestionChips suggestions={chips} onSelect={onSuggestionClick} />}
+        <BubbleActions
+          timestamp={message.timestamp}
+          hasProse={hasProse}
+          speechAvailable={isAvailable}
+          isSpeaking={isSpeaking}
+          onToggleSpeech={toggleSpeech}
+          isTranslating={translation.isLoading}
+          translationVisible={translation.isVisible}
+          onToggleTranslation={() => void translation.toggle()}
+        />
+
+        {chips.length > 0 && hasProse && <SuggestionChips suggestions={chips} onSelect={onSuggestionClick} />}
         {saveables.length > 0 && <SaveChips saveables={saveables} onSave={onSaveSaveable} />}
         {concept && onSaveConcept && (
-          <SaveConceptChip onSave={() => onSaveConcept(concept.title, proseBody || fullText)} />
+          <SaveConceptChip onSave={() => onSaveConcept(concept.title, stripSuggestions(proseBody || fullText))} />
         )}
       </div>
     </div>

@@ -17,6 +17,7 @@ interface AICoachState {
   panelWidth: number;
   /** Opciones consumidas al abrir el panel (p. ej. desde /ipa). */
   launch: OpenCoachOptions | null;
+  autoSpeak: boolean;
   open: () => void;
   openCoach: (options?: OpenCoachOptions) => void;
   consumeLaunch: () => OpenCoachOptions | null;
@@ -24,6 +25,7 @@ interface AICoachState {
   toggle: () => void;
   setFullscreen: (v: boolean) => void;
   setPanelWidth: (w: number) => void;
+  toggleAutoSpeak: () => void;
 }
 
 export const useAICoachStore = create<AICoachState>((set, get) => ({
@@ -31,6 +33,7 @@ export const useAICoachStore = create<AICoachState>((set, get) => ({
   isFullscreen: false,
   panelWidth: PANEL_DEFAULT_WIDTH,
   launch: null,
+  autoSpeak: true,
   open: () => set({ isOpen: true }),
   openCoach: (options) =>
     set({
@@ -46,4 +49,5 @@ export const useAICoachStore = create<AICoachState>((set, get) => ({
   toggle: () => set((s) => ({ isOpen: !s.isOpen })),
   setFullscreen: (v) => set({ isFullscreen: v }),
   setPanelWidth: (w) => set({ panelWidth: w }),
+  toggleAutoSpeak: () => set((s) => ({ autoSpeak: !s.autoSpeak })),
 }));

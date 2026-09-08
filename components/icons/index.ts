@@ -124,6 +124,7 @@ import {
   IconTrophy,
   IconUser,
   IconVolume,
+  IconVolumeOff,
   IconWaveSine,
   IconNotebook,
   IconX,
@@ -253,6 +254,7 @@ export const Undo2 = createIcon(IconRotateClockwise, "Undo2");
 export const User = createIcon(IconUser, "User");
 export const Utensils = createIcon(IconToolsKitchen2, "Utensils");
 export const Volume2 = createIcon(IconVolume, "Volume2");
+export const VolumeX = createIcon(IconVolumeOff, "VolumeX");
 export const Waves = createIcon(IconWaveSine, "Waves");
 export const X = createIcon(IconX, "X");
 export const Zap = createIcon(IconBolt, "Zap");
