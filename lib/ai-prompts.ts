@@ -210,17 +210,20 @@ export function buildLearnStarterPrompt(input: {
 Structure: name it, explain it in at most three lines, give two examples, then
 ask one short question in plain text to check they followed.
 Do NOT call any exercise tool on this first turn — wait until they reply, then
-run one exercise via the exercise tools. You MAY call annotate_turn on this turn.
-Pick something genuinely useful at ${input.level} — not trivia, not something
-far above their level.${syllabus}${avoid}
-After your teaching text, call annotate_turn with a concept whose title is a
+run one exercise via the exercise tools.
+You MUST call annotate_turn on this first turn with a concept whose title is a
 short Spanish label for what you just taught (e.g. 'Adjetivos posesivos — my,
 your, his'). This lets the student save the lesson.
-End your message with a suggestions: block — exactly 3 short first-person replies
-the student could send right now, each on its own line prefixed with "- ". Make
-them fit this topic: one an attempt at the task you asked for, one a request for
-another example, one a request to explain it more simply. Write them in English
-at the student's level.`;
+Pick something genuinely useful at ${input.level} — not trivia, not something
+far above their level.${syllabus}${avoid}
+End your message with a suggestions: block — at the very end of your response,
+output the literal line 'suggestions:' followed by exactly 3 short first-person
+replies the student could send right now, each on its own line prefixed with "- ".
+NEVER give away the complete answer to your question in the suggestions. The
+first option must be a sentence starter or attempt with uncertainty (e.g. 'I think
+it is...', 'Is it something like...'), NOT the finished solution. The second must
+ask for another example. The third must ask to explain it more simply. Write them
+in English at the student's level.`;
 }
 
 /**
@@ -239,18 +242,20 @@ export function buildPronunciationStarterPrompt(input: {
 Focus on sounds that are genuinely tricky for Spanish speakers at this level.${targets}
 First turn: pick ONE sound, describe it clearly in plain text (mouth position, airflow),
 give two example words, and a short phrase to say. Ask them to type the phrase back
-with notes on how it felt. Do NOT call any exercise tool on this first turn — you
-MAY call annotate_turn.
+with notes on how it felt. Do NOT call any exercise tool on this first turn.
+You MUST call annotate_turn on this first turn with a concept whose title is a
+short Spanish label for the sound you just taught (e.g. 'Sonido /æ/ vs /ʌ/').
+This lets the student save the lesson.
 From their reply on, coach from what they report and use minimal pairs, tongue
 twisters, and real words — running exercises via the exercise tools when useful.
 Keep it encouraging — pronunciation is vulnerable work.
-After your teaching text, call annotate_turn with a concept whose title is a
-short Spanish label for the sound you just taught (e.g. 'Sonido /æ/ vs /ʌ/').
-This lets the student save the lesson.
-End your message with a suggestions: block — exactly 3 short first-person replies
-the student could send right now, each on its own line prefixed with "- ". Make
-them fit this sound: one an attempt at saying the phrase with a note on how it
-felt, one a request for another example word, one a request to explain the mouth
+End your message with a suggestions: block — at the very end of your response,
+output the literal line 'suggestions:' followed by exactly 3 short first-person
+replies the student could send right now, each on its own line prefixed with "- ".
+NEVER give away the complete answer or solution in the suggestions. The first
+option must be a sentence starter or attempt with uncertainty (e.g. 'I tried
+saying it like...', 'It felt tricky to...'), NOT a completed perfect answer. The
+second must ask for another example word. The third must ask to explain the mouth
 position more simply. Write them in English at the student's level.`;
 }
 
@@ -265,19 +270,22 @@ export function buildWorldStarterPrompt(input: {
   return `Practice English around ${input.interest}, which the student told us they care about.
 Approach it through ${input.angle}.
 Open with one or two plain-text sentences and a single question.
-Do NOT call any exercise tool on this first turn — you MAY call annotate_turn.
+Do NOT call any exercise tool on this first turn.
+You MUST call annotate_turn on this first turn with a concept whose title is a
+short Spanish label for the vocabulary point or theme you introduced (e.g.
+'Vocabulario de videojuegos — to grind, to respawn'). This lets the student save
+it. Skip the concept only if this turn introduced nothing teachable.
 Once the conversation is going, introduce 1-2 useful words naturally and offer
 them via annotate_turn saveables rather than stopping to define them.
 Keep it conversational: one thing at a time, and let them do most of the talking.${known}
-After your opening, call annotate_turn with a concept whose title is a short
-Spanish label for the vocabulary point or expression you introduced (e.g.
-'Vocabulario de videojuegos — to grind, to respawn'). This lets the student save
-it. Skip the concept only if this turn introduced nothing teachable.
-End your message with a suggestions: block — exactly 3 short first-person replies
-the student could send right now, each on its own line prefixed with "- ". Make
-them fit this topic: one an answer to your question, one a request for another
-example, one a request to explain it more simply. Write them in English at the
-student's level.`;
+End your message with a suggestions: block — at the very end of your response,
+output the literal line 'suggestions:' followed by exactly 3 short first-person
+replies the student could send right now, each on its own line prefixed with "- ".
+NEVER give away the complete answer to your question in the suggestions. The
+first option must be a sentence starter or thought prompt (e.g. 'Personally, I
+prefer...', 'In my experience...'), NOT the finished full response. The second
+must ask for another example or follow-up. The third must ask to explain it more
+simply. Write them in English at the student's level.`;
 }
 
 export function buildFreeStarterPrompt(): string {

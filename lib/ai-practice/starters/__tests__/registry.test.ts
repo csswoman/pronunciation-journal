@@ -78,13 +78,15 @@ describe("learn starter", () => {
 
   it("tells the coach to emit a concept so the lesson can be saved", () => {
     const prompt = getStarter("learn").build(ctx()).prompt;
-    expect(prompt).toMatch(/call annotate_turn with a concept/i);
+    expect(prompt).toMatch(/MUST call annotate_turn on this first turn with a concept/i);
   });
 
-  it("tells the coach to end with a topical suggestions: block", () => {
+  it("tells the coach to end with a topical suggestions: block without spoilers", () => {
     const prompt = getStarter("learn").build(ctx()).prompt;
     expect(prompt).toMatch(/end your message with a suggestions: block/i);
-    expect(prompt).toContain("exactly 3 short first-person replies");
+    expect(prompt).toMatch(/exactly 3 short first-person\s+replies/i);
+    expect(prompt).toMatch(/NEVER give away the complete answer/i);
+    expect(prompt).toContain("sentence starter");
   });
 });
 
@@ -152,12 +154,14 @@ describe("pronunciation starter prompt", () => {
 
   it("tells the coach to emit a concept for the sound it taught", () => {
     const prompt = buildPronunciationStarterPrompt({ level: "A2" });
-    expect(prompt).toMatch(/call annotate_turn with a concept/i);
+    expect(prompt).toMatch(/MUST call annotate_turn on this first turn with a concept/i);
   });
 
-  it("tells the coach to end with a topical suggestions: block", () => {
+  it("tells the coach to end with a topical suggestions: block without spoilers", () => {
     const prompt = buildPronunciationStarterPrompt({ level: "A2" });
     expect(prompt).toMatch(/end your message with a suggestions: block/i);
+    expect(prompt).toMatch(/NEVER give away the complete answer/i);
+    expect(prompt).toContain("sentence starter");
   });
 });
 
@@ -172,12 +176,14 @@ describe("world starter prompt", () => {
 
   it("tells the coach to emit a concept so the point can be saved", () => {
     const prompt = buildWorldStarterPrompt({ ...base });
-    expect(prompt).toMatch(/call annotate_turn with a concept/i);
+    expect(prompt).toMatch(/MUST call annotate_turn on this first turn with a concept/i);
   });
 
-  it("tells the coach to end with a topical suggestions: block", () => {
+  it("tells the coach to end with a topical suggestions: block without spoilers", () => {
     const prompt = buildWorldStarterPrompt({ ...base });
     expect(prompt).toMatch(/end your message with a suggestions: block/i);
+    expect(prompt).toMatch(/NEVER give away the complete answer/i);
+    expect(prompt).toContain("sentence starter");
   });
 });
 
