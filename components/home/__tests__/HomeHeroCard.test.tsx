@@ -34,7 +34,7 @@ describe("HomeHeroCard", () => {
       />
     );
 
-    expect(screen.getByText("Sonido del día")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Sonido del día" })).toBeInTheDocument();
     expect(screen.getByTestId("hero-illustration")).toBeInTheDocument();
   });
 
@@ -59,6 +59,7 @@ describe("HomeHeroCard", () => {
     const steps = [
       makeStep({ id: "s-1", estMinutes: 7 }),
       makeStep({ id: "s-2", estMinutes: 10 }),
+      makeStep({ id: "s-3", estMinutes: 5 }),
     ];
     render(
       <HomeHeroCard
@@ -75,7 +76,7 @@ describe("HomeHeroCard", () => {
     expect(screen.getByRole("button", { name: /^empezar · 7 min$/i })).toBeInTheDocument();
 
     // Toggle shows total session metrics
-    const toggle = screen.getByRole("button", { name: /plan del día · 2 actividades · 17 min/i });
+    const toggle = screen.getByRole("button", { name: /ver todas las actividades \(3\) · 22 min/i });
     expect(toggle).toBeInTheDocument();
 
     fireEvent.click(toggle);

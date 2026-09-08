@@ -66,7 +66,6 @@ export default function HomeCommandGrid({
   wordsDueCount = 0,
   soundsDueCount = 0,
   streak = null,
-  previewWords = [],
   placementState,
   pronunciationDiagnosticState,
 }: HomeCommandGridProps) {
@@ -192,24 +191,19 @@ export default function HomeCommandGrid({
             </div>
           ) : null}
 
-          {/* Tira de estadísticas (Palabras esenciales + En repaso) */}
+          {/* Fila secundaria: Palabras esenciales + Registro de inmersión */}
           <HomeStatsRow
             profileLevel={profileLevel}
-            wordsDueCount={wordsDueCount}
-            soundsDueCount={soundsDueCount}
+            showImmersionCard={showImmersionCard}
           />
 
           {/* Acordeón de Ejercicios extra: desbloqueado al completar el plan */}
           {allDone ? <HomeExtraExercisesAccordion unlocked /> : null}
         </div>
 
-        {/* Sidebar Derecho (Frase del día, Palabra del día, Registro de inmersión, Te tocan hoy) */}
+        {/* Sidebar Derecho (Frase del día, Palabra del día) */}
         <HomeRightSidebar
           profileLevel={profileLevel}
-          wordsDueCount={wordsDueCount}
-          soundsDueCount={soundsDueCount}
-          previewWords={previewWords}
-          showImmersionCard={showImmersionCard}
         />
       </div>
 

@@ -25,6 +25,7 @@ interface HomeHeroStepListProps {
   activeStepIndex: number;
   needsPlacement?: boolean;
   needsPronunciation?: boolean;
+  isExpanded?: boolean;
 }
 
 export default function HomeHeroStepList({
@@ -33,11 +34,13 @@ export default function HomeHeroStepList({
   activeStepIndex,
   needsPlacement = false,
   needsPronunciation = false,
+  isExpanded = true,
 }: HomeHeroStepListProps) {
+  const visibleSteps = isExpanded ? steps : steps.slice(0, 2);
   return (
     <div className="flex flex-col gap-2">
       <ol className="mt-2 flex flex-col gap-1.5">
-        {steps.map((step, idx) => {
+        {visibleSteps.map((step, idx) => {
           const status = getStepStatus(step.id);
           const isDone = status === "done" || status === "resolved";
           const isCurrent = idx === activeStepIndex;
@@ -97,29 +100,31 @@ export default function HomeHeroStepList({
           );
         })}
 
-        {/* Recompensa final: Ejercicios extra bloqueados */}
-        <li className="flex items-center justify-between gap-3 rounded-lg border border-dashed border-border-subtle px-3 py-2 text-body-sm text-fg-muted">
-          <div className="flex items-center gap-2.5 min-w-0 flex-1">
-            <span className="font-mono text-caption w-4 shrink-0 text-fg-muted">
-              {steps.length + 1}
-            </span>
-            <div className="flex flex-col min-w-0 flex-1">
-              <span className="truncate font-medium text-fg-muted">
-                Ejercicios extra
+        {/* Recompensa final: Ejercicios extra bloqueados (solo al expandir) */}
+        {isExpanded ? (
+          <li className="flex items-center justify-between gap-3 rounded-lg border border-dashed border-border-subtle px-3 py-2 text-body-sm text-fg-muted">
+            <div className="flex items-center gap-2.5 min-w-0 flex-1">
+              <span className="font-mono text-caption w-4 shrink-0 text-fg-muted">
+                {steps.length + 1}
               </span>
-              <span className="truncate font-caption text-fg-muted">
-                Se desbloquean al completar tu sesión de hoy
-              </span>
+              <div className="flex flex-col min-w-0 flex-1">
+                <span className="truncate font-medium text-fg-muted">
+                  Ejercicios extra
+                </span>
+                <span className="truncate font-caption text-fg-muted">
+                  Se desbloquean al completar tu sesión de hoy
+                </span>
+              </div>
             </div>
-          </div>
-          <div className="flex items-center gap-1.5 shrink-0">
-            <Lock size={14} className="text-fg-muted" aria-hidden />
-          </div>
-        </li>
+            <div className="flex items-center gap-1.5 shrink-0">
+              <Lock size={14} className="text-fg-muted" aria-hidden />
+            </div>
+          </li>
+        ) : null}
       </ol>
 
-      {/* Afinar la ruta contextual dentro del plan del día */}
-      {needsPlacement || needsPronunciation ? (
+      {/* Afinar la ruta contextual dentro del plan del día (solo al expandir) */}
+      {isExpanded && (needsPlacement || needsPronunciation) ? (
         <div className="mt-1 rounded-lg border border-border-subtle bg-surface-sunken/40 px-3 py-2 text-caption text-fg-muted">
           <span>¿El nivel no se ajusta a ti? </span>
           {needsPlacement ? (
