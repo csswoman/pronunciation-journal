@@ -1,172 +1,205 @@
 'use client'
 
+// Planned structure:
+// <ReaderEntry>
+//   state: mode ('catalog' | 'reading')
+//   catalog mode:
+//     <ReaderCatalog />
+//     <CreateStoryModal />
+//   reading mode:
+//     <BackToCatalogBar />
+//     <ReaderExercise />
+//   loading state: <WordCarousel />
+// </ReaderEntry>
+
 import { useCallback, useEffect, useState } from 'react'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { getMyWords } from '@/lib/word-bank/queries'
-import { resolveReaderPassage } from '@/lib/practice/reader/get-passage'
-import { getCachedReaderPassage, saveReaderPassage } from '@/lib/db'
-import { generateReaderPassage, resolveReaderLevel } from '@/lib/practice/reader/queries'
-import Link from 'next/link'
-import { pickTargets, type ReaderTargetRow } from '@/lib/practice/reader/select-targets'
+import { saveReaderPassage } from '@/lib/db'
+import {
+  generateReaderPassage,
+  resolveReaderLevel,
+  getUserReaderPassages,
+  deleteUserReaderPassage,
+} from '@/lib/practice/reader/queries'
+import { pickTargets, type ReaderTargetRow, type ReaderTarget } from '@/lib/practice/reader/select-targets'
 import { fetchEssentialWordsForDay } from '@/lib/essential-words/client-fetch'
 import type { ReaderPassage } from '@/lib/practice/reader/types'
+import type { CEFRLevel } from '@/lib/exercises/cefr'
 import { completeReader } from '@/lib/practice/reader/complete-reader'
 import { WordCarousel } from '@/components/practice/session/WordCarousel'
 import { useLoadingWords } from '@/hooks/useLoadingWords'
-import Button from '@/components/ui/Button'
-import { AlertCircle, BookOpen } from '@/components/icons'
+import { ArrowLeft } from '@/components/icons'
+import { ReaderCatalog } from './ReaderCatalog'
 import { ReaderExercise } from './ReaderExercise'
+import { CreateStoryModal } from './CreateStoryModal'
 
-// Planned structure:
-// <ReaderEntry>
-//   loads SRS rows → fallback to essential words if < 3 → resolves passage
-//   loading state: <WordCarousel />
-//   ready state: <ReaderExercise />
-//   empty/error states: structured Card views
-
-type LoadState =
-  | { kind: 'loading' }
-  | { kind: 'empty' }
-  | { kind: 'error'; message: string }
-  | { kind: 'ready'; passage: ReaderPassage }
+async function resolveTargets(offset = 0): Promise<ReaderTarget[] | null> {
+  const words = await getMyWords()
+  const rows: ReaderTargetRow[] = words.map((w) => ({
+    srsId: `wb:${w.id}`,
+    word: w.text,
+    status: w.srs_status ?? 'new',
+    nextReview: w.next_review_at ?? '',
+  }))
+  let targets = pickTargets(rows)
+  if (!targets) {
+    const dayOfYear = Math.floor(Date.now() / 86_400_000)
+    const fallbackWords = await fetchEssentialWordsForDay(dayOfYear + offset, 5)
+    if (fallbackWords.length >= 3) {
+      targets = fallbackWords.map((w) => ({
+        srsId: w.id,
+        word: w.text,
+      }))
+    }
+  }
+  return targets
+}
 
 export function ReaderEntry() {
   const { user } = useAuth()
   const loadingWords = useLoadingWords()
-  const [state, setState] = useState<LoadState>({ kind: 'loading' })
   const [online, setOnline] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
+  const [isGenerating, setIsGenerating] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [userLevel, setUserLevel] = useState<CEFRLevel>('B1')
+  const [previewWords, setPreviewWords] = useState<string[]>([])
+  const [passages, setPassages] = useState<ReaderPassage[]>([])
+  const [selectedPassage, setSelectedPassage] = useState<ReaderPassage | null>(null)
+  const [mode, setMode] = useState<'catalog' | 'reading'>('catalog')
 
   useEffect(() => {
     setOnline(navigator.onLine)
   }, [])
 
-  const load = useCallback(async () => {
+  const loadCatalog = useCallback(async () => {
     if (!user) return
-    setState({ kind: 'loading' })
-
     try {
-      const words = await getMyWords()
-      const rows: ReaderTargetRow[] = words.map((w) => ({
-        srsId: `wb:${w.id}`,
-        word: w.text,
-        status: w.srs_status ?? 'new',
-        nextReview: w.next_review_at ?? '',
-      }))
-      let targets = pickTargets(rows)
-      let isFallback = false
-
-      if (!targets) {
-        const dayOfYear = Math.floor(Date.now() / 86_400_000)
-        const fallbackWords = await fetchEssentialWordsForDay(dayOfYear, 5)
-        if (fallbackWords.length >= 3) {
-          targets = fallbackWords.map((w) => ({
-            srsId: w.id,
-            word: w.text,
-          }))
-          isFallback = true
-        }
+      const [items, level, targets] = await Promise.all([
+        getUserReaderPassages(user.id),
+        resolveReaderLevel(user.id, 'B1'),
+        resolveTargets(0),
+      ])
+      setPassages(items)
+      setUserLevel(level)
+      if (targets) {
+        setPreviewWords(targets.map((t) => t.word))
       }
-
-      if (!targets) {
-        setState({ kind: 'empty' })
-        return
-      }
-
-      const level = await resolveReaderLevel(user.id, isFallback ? 'A1' : 'B1')
-      const passage = await resolveReaderPassage({
-        userId: user.id,
-        targets,
-        online: navigator.onLine,
-        now: Date.now(),
-        level,
-        getCached: getCachedReaderPassage,
-        generate: (uid, t) => generateReaderPassage(uid, t, level),
-        save: saveReaderPassage,
-      })
-      setState(passage ? { kind: 'ready', passage } : { kind: 'empty' })
-    } catch (err) {
-      setState({
-        kind: 'error',
-        message: err instanceof Error ? err.message : 'No se pudo preparar la lectura.',
-      })
+    } finally {
+      setIsLoading(false)
     }
   }, [user])
 
   useEffect(() => {
-    void load()
-  }, [load])
+    void loadCatalog()
+  }, [loadCatalog])
 
-  if (state.kind === 'loading') {
+  const handleDeletePassage = useCallback(
+    async (passage: ReaderPassage) => {
+      setPassages((prev) => prev.filter((p) => p.id !== passage.id))
+      await deleteUserReaderPassage(passage.id)
+    },
+    [],
+  )
+
+  const handleCreateStory = useCallback(
+    async ({ topic, level }: { topic?: string; level: CEFRLevel }) => {
+      if (!user) return
+      setIsGenerating(true)
+
+      try {
+        const targets = await resolveTargets(passages.length)
+        if (!targets || targets.length === 0) {
+          throw new Error('No hay suficientes palabras para generar la lectura')
+        }
+
+        const freshPassage = await generateReaderPassage(
+          user.id,
+          targets,
+          level,
+          topic,
+        )
+
+        await saveReaderPassage(freshPassage)
+        setSelectedPassage(freshPassage)
+        setMode('reading')
+        setIsModalOpen(false)
+        await loadCatalog()
+      } finally {
+        setIsGenerating(false)
+      }
+    },
+    [user, passages.length, loadCatalog],
+  )
+
+  if (isLoading) {
     return (
       <div className="flex w-full flex-col items-center justify-center rounded-card border border-border-default bg-surface-raised p-8 sm:p-12 shadow-xs min-h-[360px]">
         <WordCarousel words={loadingWords} />
         <p className="mt-3 text-caption text-fg-muted animate-pulse">
-          Cargando lectura…
+          Cargando biblioteca de lecturas…
         </p>
       </div>
     )
   }
 
-  if (state.kind === 'empty') {
+  if (mode === 'reading' && selectedPassage) {
     return (
-      <div className="flex flex-col items-center text-center gap-4 rounded-card border border-border-default bg-surface-raised p-8 sm:p-10 shadow-xs">
-        <div className="flex size-12 items-center justify-center rounded-full bg-primary-soft text-primary">
-          <BookOpen className="size-6" />
+      <div className="flex flex-col gap-6 w-full max-w-5xl mx-auto">
+        <div className="flex items-center justify-between border-b border-border-default pb-4">
+          <button
+            type="button"
+            onClick={() => {
+              setMode('catalog')
+              void loadCatalog()
+            }}
+            className="inline-flex items-center gap-1.5 text-body-sm font-medium text-fg-muted transition-colors hover:text-fg focus-ring rounded py-1 px-2 -ml-2"
+          >
+            <ArrowLeft className="size-4" />
+            <span>Volver a la biblioteca de lecturas</span>
+          </button>
         </div>
-        <div className="flex flex-col gap-1.5 max-w-md">
-          <h2 className="text-h3 text-fg font-medium">Lecturas en preparación</h2>
-          <p className="text-body-sm text-fg-muted text-pretty">
-            Sigue practicando para desbloquear lecturas con tus palabras recientes.
-          </p>
-        </div>
-        <Link
-          href="/practice"
-          className="inline-flex items-center justify-center rounded-md bg-cta-bg px-4 py-2 text-body-sm font-semibold text-cta-fg transition-opacity hover:opacity-90"
-        >
-          Practicar vocabulario
-        </Link>
-      </div>
-    )
-  }
 
-  if (state.kind === 'error') {
-    return (
-      <div className="flex flex-col items-center text-center gap-4 rounded-card border border-border-default bg-surface-raised p-8 sm:p-10 shadow-xs">
-        <div className="flex size-12 items-center justify-center rounded-full bg-error-soft text-error">
-          <AlertCircle className="size-6" />
-        </div>
-        <div className="flex flex-col gap-1.5 max-w-md">
-          <h2 className="text-h3 text-fg font-medium">No se pudo preparar la lectura</h2>
-          <p role="alert" className="text-body-sm text-fg-muted text-pretty">
-            No se pudo preparar la lectura. Comprueba tu conexión e inténtalo de nuevo.
-          </p>
-        </div>
-        <Button
-          type="button"
-          variant="primary"
-          onClick={() => void load()}
-        >
-          Reintentar
-        </Button>
+        <ReaderExercise
+          passage={selectedPassage}
+          online={online}
+          onComplete={async (correct) => {
+            if (!user) return
+            await completeReader({
+              userId: user.id,
+              passageId: selectedPassage.id,
+              correct,
+              context: 'practice',
+            })
+            await loadCatalog()
+          }}
+        />
       </div>
     )
   }
 
   return (
-    <div className="w-full">
-      <ReaderExercise
-        passage={state.passage}
-        online={online}
-        onComplete={async (correct) => {
-          if (!user) return
-          await completeReader({
-            userId: user.id,
-            passageId: state.passage.id,
-            correct,
-            context: 'practice',
-          })
+    <>
+      <ReaderCatalog
+        passages={passages}
+        onSelectPassage={(p) => {
+          setSelectedPassage(p)
+          setMode('reading')
         }}
+        onDeletePassage={handleDeletePassage}
+        onGenerateNew={() => setIsModalOpen(true)}
+        isGenerating={isGenerating}
+        online={online}
       />
-    </div>
+      <CreateStoryModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleCreateStory}
+        isGenerating={isGenerating}
+        initialLevel={userLevel}
+        targetWordsPreview={previewWords}
+      />
+    </>
   )
 }

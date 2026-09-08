@@ -1,22 +1,31 @@
 // @vitest-environment jsdom
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import type { ReaderPassage } from '@/lib/practice/reader/types'
 
 const {
   user,
   getMyWords,
   pickTargets,
-  resolveReaderPassage,
   completeReader,
   fetchEssentialWordsForDay,
+  getUserReaderPassages,
+  deleteUserReaderPassage,
+  generateReaderPassage,
+  resolveReaderLevel,
+  saveReaderPassage,
 } = vi.hoisted(() => ({
   user: { id: 'u1' },
   getMyWords: vi.fn(),
   pickTargets: vi.fn(),
-  resolveReaderPassage: vi.fn(),
   completeReader: vi.fn(),
   fetchEssentialWordsForDay: vi.fn(),
+  getUserReaderPassages: vi.fn(),
+  deleteUserReaderPassage: vi.fn(),
+  generateReaderPassage: vi.fn(),
+  resolveReaderLevel: vi.fn(),
+  saveReaderPassage: vi.fn(),
 }))
 
 vi.mock('@/components/auth/AuthProvider', () => ({
@@ -27,19 +36,18 @@ vi.mock('@/hooks/useLoadingWords', () => ({
 }))
 vi.mock('@/lib/word-bank/queries', () => ({
   getMyWords,
-  getReadyWordSummaries: vi.fn(async () => []),
 }))
 vi.mock('@/lib/practice/reader/select-targets', () => ({ pickTargets }))
 vi.mock('@/lib/essential-words/client-fetch', () => ({ fetchEssentialWordsForDay }))
-vi.mock('@/lib/practice/reader/get-passage', () => ({ resolveReaderPassage }))
 vi.mock('@/lib/practice/reader/complete-reader', () => ({ completeReader }))
 vi.mock('@/lib/db', () => ({
-  getCachedReaderPassage: vi.fn(),
-  saveReaderPassage: vi.fn(),
+  saveReaderPassage,
 }))
 vi.mock('@/lib/practice/reader/queries', () => ({
-  generateReaderPassage: vi.fn(),
-  resolveReaderLevel: vi.fn(async (_uid, defaultLvl = 'B1') => defaultLvl),
+  generateReaderPassage,
+  resolveReaderLevel,
+  getUserReaderPassages,
+  deleteUserReaderPassage,
 }))
 vi.mock('../ReaderExercise', () => ({
   ReaderExercise: ({ passage, onComplete }: { passage: ReaderPassage; onComplete: (correct: boolean) => Promise<void> }) => (
@@ -52,68 +60,118 @@ vi.mock('../ReaderExercise', () => ({
 
 import { ReaderEntry } from '../ReaderEntry'
 
-const passage: ReaderPassage = {
-  id: 'p1', userId: 'u1', targetItems: ['go'], targetSrsIds: ['wb:1'], targetHash: 'h', topic: 'travel',
-  passage: 'Go home.', questions: [], level: 'B1', createdAt: '2030-01-01T00:00:00.000Z',
+const samplePassage: ReaderPassage = {
+  id: 'p1',
+  userId: 'u1',
+  targetItems: ['coffee', 'ordered'],
+  targetSrsIds: ['wb:1', 'wb:2'],
+  targetHash: 'hash-p1',
+  topic: 'Coffee Adventure',
+  passage: 'I ordered coffee at a small shop.',
+  questions: [],
+  level: 'B1',
+  createdAt: '2026-09-01T10:00:00.000Z',
 }
 
 describe('ReaderEntry', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    getMyWords.mockResolvedValue([{ id: '1', text: 'go', srs_status: 'new', next_review_at: null }])
+    getMyWords.mockResolvedValue([{ id: '1', text: 'coffee', srs_status: 'learning', next_review_at: '2026-09-10' }])
+    pickTargets.mockReturnValue([{ srsId: 'wb:1', word: 'coffee' }, { srsId: 'wb:2', word: 'ordered' }])
+    getUserReaderPassages.mockResolvedValue([samplePassage])
+    resolveReaderLevel.mockResolvedValue('B1')
     fetchEssentialWordsForDay.mockResolvedValue([])
   })
 
-  it('shows the existing empty state when targets and fallback are ineligible', async () => {
-    pickTargets.mockReturnValue(null)
-    fetchEssentialWordsForDay.mockResolvedValue([])
+  it('renders catalog with saved passages and handles passage selection', async () => {
     render(<ReaderEntry />)
 
-    await waitFor(() => expect(screen.getByText(/desbloquear lecturas/i)).toBeInTheDocument())
-    expect(resolveReaderPassage).not.toHaveBeenCalled()
+    await waitFor(() => {
+      expect(screen.getByText('Coffee Adventure')).toBeInTheDocument()
+    })
+
+    fireEvent.click(screen.getByText('Coffee Adventure'))
+
+    await waitFor(() => {
+      expect(screen.getByText('Exercise: p1')).toBeInTheDocument()
+    })
+
+    // Navigation back to catalog
+    fireEvent.click(screen.getByText(/Volver a la biblioteca/i))
+
+    await waitFor(() => {
+      expect(screen.getByText('Coffee Adventure')).toBeInTheDocument()
+    })
   })
 
-  it('falls back to essential words when user has fewer than 3 SRS targets', async () => {
-    pickTargets.mockReturnValue(null)
-    fetchEssentialWordsForDay.mockResolvedValue([
-      { id: 'core1k:water', text: 'water' },
-      { id: 'core1k:place', text: 'place' },
-      { id: 'core1k:friend', text: 'friend' },
-    ])
-    resolveReaderPassage.mockResolvedValue(passage)
+  it('opens create story modal and generates a new story with custom topic and level', async () => {
+    const userEv = userEvent.setup()
+    const newPassage: ReaderPassage = {
+      id: 'p2',
+      userId: 'u1',
+      targetItems: ['coffee'],
+      targetSrsIds: ['wb:1'],
+      targetHash: 'hash-p2',
+      topic: 'Viaje a Tokio',
+      passage: 'En Tokio tomé café delicioso.',
+      questions: [],
+      level: 'A2',
+      createdAt: '2026-09-07T10:00:00.000Z',
+    }
+    generateReaderPassage.mockResolvedValue(newPassage)
+
     render(<ReaderEntry />)
 
-    await waitFor(() => expect(screen.getByText('Exercise: p1')).toBeInTheDocument())
-    expect(resolveReaderPassage).toHaveBeenCalledWith(
-      expect.objectContaining({
-        targets: [
-          { srsId: 'core1k:water', word: 'water' },
-          { srsId: 'core1k:place', word: 'place' },
-          { srsId: 'core1k:friend', word: 'friend' },
-        ],
-        level: 'A1',
-      }),
-    )
+    await waitFor(() => {
+      expect(screen.getByText('Coffee Adventure')).toBeInTheDocument()
+    })
+
+    // Open modal
+    await userEv.click(screen.getByRole('button', { name: /Nueva historia ✨/i }))
+
+    const modal = screen.getByRole('dialog')
+    expect(modal).toBeInTheDocument()
+
+    // Change level to A2 inside modal
+    const a2Button = within(modal).getByRole('button', { name: /A2/i })
+    await userEv.click(a2Button)
+
+    // Type custom topic inside modal
+    const topicInput = within(modal).getByLabelText(/¿De qué tema quieres la historia\?/i)
+    await userEv.type(topicInput, 'Viaje a Tokio')
+
+    // Click submit inside modal
+    await userEv.click(within(modal).getByRole('button', { name: /Crear historia/i }))
+
+    await waitFor(() => {
+      expect(generateReaderPassage).toHaveBeenCalledWith(
+        'u1',
+        expect.any(Array),
+        'A2',
+        'Viaje a Tokio',
+      )
+    })
+
+    expect(saveReaderPassage).toHaveBeenCalledWith(newPassage)
+    await waitFor(() => {
+      expect(screen.getByText('Exercise: p2')).toBeInTheDocument()
+    })
   })
 
-  it('resolves eligible targets and persists completion through the shared function', async () => {
-    pickTargets.mockReturnValue([{ srsId: 'wb:1', word: 'go' }])
-    resolveReaderPassage.mockResolvedValue(passage)
+  it('handles passage deletion from catalog', async () => {
+    const userEv = userEvent.setup()
     render(<ReaderEntry />)
 
-    await waitFor(() => expect(screen.getByText('Exercise: p1')).toBeInTheDocument())
-    fireEvent.click(screen.getByRole('button', { name: 'Complete' }))
-    await waitFor(() => expect(completeReader).toHaveBeenCalledWith({
-      userId: 'u1', passageId: 'p1', correct: true, context: 'practice',
-    }))
-  })
+    await waitFor(() => {
+      expect(screen.getByText('Coffee Adventure')).toBeInTheDocument()
+    })
 
-  it('shows the existing retry action when loading fails', async () => {
-    pickTargets.mockReturnValue([{ srsId: 'wb:1', word: 'go' }])
-    resolveReaderPassage.mockRejectedValue(new Error('network'))
-    render(<ReaderEntry />)
+    const deleteBtn = screen.getByRole('button', { name: /Eliminar lectura/i })
+    await userEv.click(deleteBtn)
 
-    await waitFor(() => expect(screen.getByRole('alert')).toBeInTheDocument())
-    expect(screen.getByRole('button', { name: 'Reintentar' })).toBeInTheDocument()
+    expect(deleteUserReaderPassage).toHaveBeenCalledWith('p1')
+    await waitFor(() => {
+      expect(screen.queryByText('Coffee Adventure')).not.toBeInTheDocument()
+    })
   })
 })

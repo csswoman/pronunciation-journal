@@ -741,6 +741,17 @@ export async function saveReaderPassage(p: ReaderPassage): Promise<void> {
   await db.readerPassages.put(p);
 }
 
+export async function deleteReaderPassage(id: string): Promise<void> {
+  await db.readerPassages.delete(id);
+}
+
+export async function updateReaderPassageAudioUrl(
+  id: string,
+  audioUrl: string,
+): Promise<void> {
+  await db.readerPassages.update(id, { audioUrl });
+}
+
 /** Most recent cached passage for this user + target set, or undefined. */
 export async function getCachedReaderPassage(
   userId: string,
@@ -750,7 +761,47 @@ export async function getCachedReaderPassage(
     .where("targetHash").equals(targetHash)
     .filter((p) => p.userId === userId)
     .toArray();
-  return rows.sort((a, b) => b.createdAt.localeCompare(a.createdAt))[0];
+  return rows.sort((a, b) => {
+    if (Boolean(a.audioUrl) !== Boolean(b.audioUrl)) {
+      return a.audioUrl ? -1 : 1;
+    }
+    return b.createdAt.localeCompare(a.createdAt);
+  })[0];
+}
+
+/** All saved passages for this user, sorted newest first with automatic deduplication preferring audio. */
+export async function getAllReaderPassages(userId: string): Promise<ReaderPassage[]> {
+  const rows = await db.readerPassages
+    .where("userId")
+    .equals(userId)
+    .toArray();
+
+  const seen = new Map<string, ReaderPassage>();
+  const toDelete: string[] = [];
+
+  // Sort so items with audioUrl are processed first, then newest first
+  const sorted = [...rows].sort((a, b) => {
+    if (Boolean(a.audioUrl) !== Boolean(b.audioUrl)) {
+      return a.audioUrl ? -1 : 1;
+    }
+    return b.createdAt.localeCompare(a.createdAt);
+  });
+
+  for (const item of sorted) {
+    const key = item.passage.trim().toLowerCase();
+    if (!seen.has(key)) {
+      seen.set(key, item);
+    } else {
+      // Obsolete duplicate (missing audio or older): mark for background cleanup
+      toDelete.push(item.id);
+    }
+  }
+
+  if (toDelete.length > 0) {
+    void db.readerPassages.bulkDelete(toDelete).catch(() => {});
+  }
+
+  return Array.from(seen.values()).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 }
 
 // ── Daily Progress Helpers ──

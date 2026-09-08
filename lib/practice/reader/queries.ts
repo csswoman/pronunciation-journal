@@ -3,6 +3,7 @@ import { readStoredCefrLevel } from '@/lib/essential-words/target-level'
 import { targetHash } from './target-hash'
 import type { ReaderTarget } from './select-targets'
 import type { ReaderPassage, ReaderQuestion } from './types'
+import { getAllReaderPassages, deleteReaderPassage } from '@/lib/db'
 
 interface GenerateReaderResponse {
   passage: string
@@ -30,14 +31,22 @@ export async function generateReaderPassage(
   userId: string,
   targets: ReaderTarget[],
   level: CEFRLevel,
+  topic?: string,
 ): Promise<ReaderPassage> {
   const words = targets.map((t) => t.word)
   const res = await fetch('/api/gemini/generate-reader', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ targets: words, level: level.toLowerCase() }),
+    body: JSON.stringify({
+      targets: words,
+      level: level.toLowerCase(),
+      topic: topic?.trim() || undefined,
+    }),
   })
-  if (!res.ok) throw new Error(`generate-reader failed: ${res.status}`)
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}))
+    throw new Error(errorData.error || errorData.message || `generate-reader failed: ${res.status}`)
+  }
   const data = (await res.json()) as GenerateReaderResponse
 
   return {
@@ -52,4 +61,40 @@ export async function generateReaderPassage(
     level,
     createdAt: new Date().toISOString(),
   }
+}
+
+/**
+ * Calls /api/gemini/reader-audio to retrieve or generate high-fidelity speech
+ * audio for the specified passage, caching the result permanently in Supabase Storage.
+ */
+export async function fetchReaderAudioUrl(
+  passageId: string,
+  passageText?: string,
+  voice?: "Puck" | "Charon" | "Kore" | "Fenrir" | "Aoede",
+): Promise<string> {
+  const res = await fetch('/api/gemini/reader-audio', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ passageId, passageText, voice }),
+  })
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}))
+    throw new Error(errorData.error || `Audio generation failed (${res.status})`)
+  }
+  const data = (await res.json()) as { audioUrl: string }
+  return data.audioUrl
+}
+
+/**
+ * Retrieves all saved reader passages for the given user from local Dexie storage.
+ */
+export async function getUserReaderPassages(userId: string): Promise<ReaderPassage[]> {
+  return getAllReaderPassages(userId)
+}
+
+/**
+ * Deletes a saved reader passage from local Dexie storage.
+ */
+export async function deleteUserReaderPassage(id: string): Promise<void> {
+  return deleteReaderPassage(id)
 }

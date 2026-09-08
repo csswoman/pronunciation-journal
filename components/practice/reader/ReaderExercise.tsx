@@ -8,6 +8,7 @@ import { tokenizePassage, groupTokensBySentence } from './passage-tokens'
 import { WordSavePopover } from './WordSavePopover'
 import { ShadowingController } from './ShadowingController'
 import { ReaderSentenceRecorder } from './ReaderSentenceRecorder'
+import { ReaderAudioPlayer } from './ReaderAudioPlayer'
 import { useAuthOptional } from '@/components/auth/AuthProvider'
 import { recordReaderShadowingAttempt } from '@/lib/practice/reader/reader-shadowing'
 import Badge from '@/components/ui/Badge'
@@ -39,6 +40,7 @@ export function ReaderExercise({ passage, online, onComplete }: ReaderExercisePr
   const [openToken, setOpenToken] = useState<number | null>(null)
   const [activeSentenceIdx, setActiveSentenceIdx] = useState<number | null>(null)
   const [requestedSentenceIdx, setRequestedSentenceIdx] = useState<number | null>(null)
+  const [audioUrl, setAudioUrl] = useState<string | undefined>(passage.audioUrl)
 
   const question = passage.questions[0]
   const tokens = useMemo(() => tokenizePassage(passage.passage), [passage.passage])
@@ -101,6 +103,14 @@ export function ReaderExercise({ passage, online, onComplete }: ReaderExercisePr
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
         {/* Main Reading & Audio Column */}
         <div className="lg:col-span-7 flex flex-col gap-6">
+          <ReaderAudioPlayer
+            passageId={passage.id}
+            passageText={passage.passage}
+            initialAudioUrl={audioUrl}
+            online={online}
+            onAudioReady={(url) => setAudioUrl(url)}
+          />
+
           <ShadowingController
             passageText={passage.passage}
             online={online}

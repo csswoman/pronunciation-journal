@@ -324,6 +324,7 @@ export const GENERATE_READER_SYSTEM_PROMPT = `You write very short English readi
 
 Rules:
 - 60-90 words, one short coherent paragraph telling a tiny real-world story or scene.
+- If a requested topic or theme is provided, center the story and topic title around that theme.
 - Embed EVERY target word. Prefer each target's citation (base/dictionary) form; if grammar forces inflection, keep it regular and recognizable.
 - Keep all other vocabulary simple and high-frequency. No idioms, no rare words.
 - Then write 1-2 comprehension questions about the MEANING of the passage (not grammar), each with exactly 4 plausible options and one correct answer.
@@ -333,8 +334,10 @@ export function buildGenerateReaderUserPrompt(input: {
   targets: string[]
   level: string
   interests?: string[]
+  topic?: string
 }): string {
-  return `Target words to embed: ${input.targets.join(', ')}\nLevel: ${input.level}${interestsClause(input.interests ?? [])}\n\nReturn JSON: { "passage": string, "topic": string, "questions": [{ "prompt": string, "options": [string,string,string,string], "correctIndex": number }] }`
+  const topicClause = input.topic?.trim() ? `\nRequested Topic / Theme: ${input.topic.trim()}` : ''
+  return `Target words to embed: ${input.targets.join(', ')}\nLevel: ${input.level}${topicClause}${interestsClause(input.interests ?? [])}\n\nReturn JSON: { "passage": string, "topic": string, "questions": [{ "prompt": string, "options": [string,string,string,string], "correctIndex": number }] }`
 }
 
 const JOURNAL_TOPIC_IDS = JOURNAL_TOPIC_CATALOG.map(({ id }) => id).join(', ')
@@ -538,3 +541,11 @@ Write ONE warm closing sentence before the tool call, and nothing after it.
 Do not ask another question. Do not offer more practice.`;
 }
 
+
+export function buildReaderAudioPrompt(passageText: string): string {
+  return `Please read the following English story aloud with clear, natural pronunciation and articulate phrasing at a moderate pace suitable for language learning:\n\n${passageText.trim()}`
+}
+
+export function buildMissionAudioPrompt(lineText: string): string {
+  return `Please speak the following conversational dialogue line aloud with natural pronunciation, expressive intonation, and native cadence suitable for language learning:\n\n${lineText.trim()}`
+}
