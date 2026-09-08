@@ -569,6 +569,143 @@ export function buildTrackingEnrichUserPrompt(input: {
   return `${kindLabel}: "${input.text.trim()}"${ctx}`;
 }
 
+// ── Focus Mode Prompts ──
+
+export const FOCUS_STORY_SYSTEM_PROMPT = `You are an expert English language writer creating targeted pedagogical mini-stories for Spanish-speaking learners.
+Your goal is to write a short, captivating story (150-220 words) that intentionally and naturally saturates the requested target grammar pattern, vocabulary, or phoneme contrast.
+The story must NOT sound robotic or like a grammar drill; it should feel like high-quality flash fiction or a compelling personal anecdote.
+
+Requirements:
+- Level appropriate for the learner's CEFR level.
+- Highlight 4-8 exact phrases from the passage that exemplify the target pattern in "keyPhrases".
+- Provide a clear, encouraging 2-3 line micro-explanation in Spanish ("explanation") explaining what the pattern is and a tip to master it.
+- Return ONLY raw valid JSON with no markdown formatting or code blocks:
+{
+  "title": "Story title",
+  "passage": "Full English passage text...",
+  "explanation": "Explicación breve en español sobre el patrón...",
+  "keyPhrases": ["phrase one", "phrase two"]
+}`
+
+export function buildFocusStoryUserPrompt(input: {
+  gaps: Array<{ kind: string; label: string; level?: string }>;
+  level: string;
+  interests?: string[];
+}): string {
+  const gapDescriptions = input.gaps.map((g) => `- ${g.label} (${g.kind})`).join('\n')
+  const interestsText = input.interests && input.interests.length > 0
+    ? `\nConnect the story theme/setting to these learner interests if natural: ${input.interests.join(', ')}.`
+    : ''
+
+  return `Write a focus story for a learner at CEFR level ${input.level.toUpperCase()} targeting these specific gaps:
+${gapDescriptions}${interestsText}
+
+Ensure key instances of the gap pattern appear naturally in the passage and are listed in keyPhrases.`
+}
+
+export const FOCUS_DRILL_SYSTEM_PROMPT = `You are an ESL exercise designer creating focused pattern-drill sentences for learners closing specific gaps.
+Create 8 to 10 distinct, natural English sentences that repeatedly utilize the targeted gap pattern.
+For each sentence:
+- "text": The complete, natural English sentence (6-15 words).
+- "translation": Natural Spanish translation for Spanish-to-English translation exercises.
+- "gapWord": The exact target word, verb form, or phrase in the sentence that embodies the gap pattern (for fill-in-the-blank practice).
+
+Return ONLY raw valid JSON with no markdown formatting:
+{
+  "sentences": [
+    {
+      "text": "Yesterday I walked to the park and met an old friend.",
+      "translation": "Ayer caminé al parque y me encontré con un viejo amigo.",
+      "gapWord": "walked"
+    }
+  ]
+}`
+
+export function buildFocusDrillUserPrompt(input: {
+  gaps: Array<{ kind: string; label: string; level?: string }>;
+  level: string;
+}): string {
+  const gapsList = input.gaps.map((g) => `${g.label} (${g.kind})`).join(', ')
+  return `Generate 8-10 drill sentences at level ${input.level.toUpperCase()} targeting: ${gapsList}.
+Each sentence must have text, natural Spanish translation, and the exact gapWord.`
+}
+
+export const FOCUS_DIALOGUE_SYSTEM_PROMPT = `You are a conversational English curriculum designer.
+Create a lively, authentic dialogue between two speakers (A and B) spanning 10 to 14 turns.
+The conversation must revolve around a realistic everyday or workplace situation where the target patterns/gaps naturally occur multiple times.
+
+Return ONLY raw valid JSON with no markdown formatting:
+{
+  "context": "Short 1-sentence description of the situation in Spanish",
+  "turns": [
+    { "speaker": "A", "text": "..." },
+    { "speaker": "B", "text": "..." }
+  ]
+}`
+
+export function buildFocusDialogueUserPrompt(input: {
+  gaps: Array<{ kind: string; label: string; level?: string }>;
+  level: string;
+}): string {
+  const gapsList = input.gaps.map((g) => `${g.label} (${g.kind})`).join(', ')
+  return `Create a realistic 10-14 turn dialogue for level ${input.level.toUpperCase()} demonstrating: ${gapsList}.
+Context must be in Spanish.`
+}
+
+export const FOCUS_ERROR_TRAP_SYSTEM_PROMPT = `You are an English teacher specialized in common fossilized errors made by Spanish-speaking learners.
+Create exactly 5 sentences related to the target gaps:
+- 3 sentences must be completely grammatically correct and natural.
+- 2 sentences must contain the subtle, classic error Spanish speakers make regarding this gap (e.g. using base form instead of past simple, omitting -ed, false friend, or confusing /iː/ vs /ɪ/ homophones).
+For erroneous sentences, specify "hasError": true, the "correction" (corrected sentence), and a clear "explanation" in Spanish.
+For correct sentences, "hasError": false, and omit or keep null correction and explanation.
+
+Return ONLY raw valid JSON with no markdown formatting:
+{
+  "sentences": [
+    {
+      "text": "I went to the store and buy some milk.",
+      "hasError": true,
+      "correction": "I went to the store and bought some milk.",
+      "explanation": "En el pasado simple se debe usar 'bought' para mantener la concordancia de tiempo."
+    },
+    {
+      "text": "She listened carefully to what he said.",
+      "hasError": false
+    }
+  ]
+}`
+
+export function buildFocusErrorTrapUserPrompt(input: {
+  gaps: Array<{ kind: string; label: string; level?: string }>;
+  level: string;
+}): string {
+  const gapsList = input.gaps.map((g) => `${g.label} (${g.kind})`).join(', ')
+  return `Generate 5 error-trap sentences (3 correct, 2 with typical mistakes) for level ${input.level.toUpperCase()} targeting: ${gapsList}.`
+}
+
+export const FOCUS_SONG_SYSTEM_PROMPT = `You are a creative songwriter and ESL educator.
+Write a rhythmic, memorable 16-line song/poem lyric in English that incorporates the target gap pattern repeatedly and catchily.
+Features:
+- Exactly 16 lines (separated by newline).
+- Rhyme scheme or strong rhythm (AABB, ABAB, or ballad meter).
+- "gapLines": An array of 0-based integers indicating which lines (0 to 15) contain the target gap pattern.
+- "notes": 1-2 sentences in Spanish highlighting the rhythmic/phonetic pattern to listen for or sing along with.
+
+Return ONLY raw valid JSON with no markdown formatting:
+{
+  "title": "Song or poem title",
+  "lyrics": "Line 1\\nLine 2\\n...",
+  "gapLines": [0, 2, 4, 8, 12],
+  "notes": "Fíjate en el ritmo de los verbos en pasado al final de cada estrofa..."
+}`
+
+export function buildFocusSongUserPrompt(input: {
+  gaps: Array<{ kind: string; label: string; level?: string }>;
+  level: string;
+}): string {
+  const gapsList = input.gaps.map((g) => `${g.label} (${g.kind})`).join(', ')
+  return `Write a 16-line rhythmic song/rhyme for level ${input.level.toUpperCase()} focused on practicing: ${gapsList}.`
+}
 
 export function buildReaderAudioPrompt(passageText: string): string {
   return `Please read the following English story aloud with clear, natural pronunciation and articulate phrasing at a moderate pace suitable for language learning:\n\n${passageText.trim()}`

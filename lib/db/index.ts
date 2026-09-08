@@ -17,6 +17,7 @@ import type { JournalEntryRecord } from '../journal/types';
 import type { TrackingReviewQueue } from '../tracking/review-queue';
 import type { ScriptedMission } from '../ai-practice/missions/types';
 import type { GrammarStudyDeckData } from '../courses/grammar-deck/types';
+import type { FocusSprint, FocusContent } from '../focus/types';
 
 export interface GeneratedScriptRecord {
   id: string;
@@ -401,6 +402,8 @@ class PronunciationDB extends Dexie {
   cachedSounds!: Table<CachedSoundRecord, number>;
   cachedContrastProgress!: Table<CachedContrastProgressRecord, string>;
   downloadedLessons!: Table<DownloadedLessonRecord, string>;
+  focusSprints!: Table<FocusSprint, string>;
+  focusContent!: Table<FocusContent, string>;
 
 
   constructor() {
@@ -643,6 +646,12 @@ class PronunciationDB extends Dexie {
     // v36 — the AI Coach no longer keeps its own word silo: saved items go to
     // word_bank / tracked_items so they sync and enter the SRS.
     this.version(36).stores({ aiWords: null });
+    // v37: Focus Mode — sprint de cierre de gap personal (7 días, 1-2 gaps).
+    // focusSprints: uno por usuario activo. focusContent: assets generados por Gemini.
+    this.version(37).stores({
+      focusSprints: 'id, userId, status, endsAt, [userId+status]',
+      focusContent: 'id, sprintId, userId, kind, createdAt, [sprintId+kind]',
+    });
 
 
     this.pronunciationMastery = this.table("pronunciationMasteryV2") as Table<PronunciationMasteryRecord, string>;

@@ -8,6 +8,7 @@ import {
   LibraryBig,
   Bookmark,
   TrendingUp,
+  Radar,
 } from "@/components/icons";
 import { NavSectionType } from "./NavSection";
 
@@ -28,6 +29,7 @@ export const learnNav: NavSectionType = {
   label: "Aprender",
   items: [
     { name: "Ruta", href: "/courses", icon: BookOpen },
+    { name: "Modo Foco", href: "/focus", icon: Radar },
     {
       name: "Pronunciación",
       href: "/practice/sounds",
