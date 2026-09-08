@@ -1,0 +1,218 @@
+{
+  "isGenerated": true,
+  "meta": {
+    "eyebrow": "B1 · Conectores",
+    "title": "Conectores de propósito",
+    "titleEmphasis": "in order to, so as to, so that",
+    "goal": "Expresses la finalidad o propósito con estructuras formales e informales."
+  },
+  "cards": [
+    {
+      "id": "b1-conectores-proposito-concept",
+      "tag": "Idea central",
+      "title": "Conectores de propósito: qué expresa",
+      "lede": "Expresses la finalidad o propósito con estructuras formales e informales.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "to / in order to / so as to + infinitivo",
+              "value": "I study in order to pass the exam.",
+              "highlights": [
+                "in order to"
+              ]
+            },
+            {
+              "key": "so that + sujeto + modal (can/could/will/would)",
+              "value": "I left early so that I could catch the train.",
+              "highlights": [
+                "so that"
+              ]
+            },
+            {
+              "key": "Negativo: in order not to / so as not to",
+              "value": "He walked quietly so as not to wake the baby.",
+              "highlights": [
+                "so as not to"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "b1-conectores-proposito-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "in order to + verbo base",
+              "value": "She moved to London in order to learn English.",
+              "highlights": [
+                "in order to learn"
+              ]
+            },
+            {
+              "key": "so that + oración",
+              "value": "Speak clearly so that everyone can hear you.",
+              "highlights": [
+                "so that everyone can hear"
+              ]
+            },
+            {
+              "key": "so as not to + verbo base",
+              "value": "Write it down so as not to forget it.",
+              "highlights": [
+                "so as not to forget"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-conectores-proposito-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ahorro personal",
+              "value": "I am saving money so that I can buy a laptop."
+            },
+            {
+              "key": "Puntualidad laboral",
+              "value": "Set an alarm in order to arrive on time."
+            },
+            {
+              "key": "Silencio nocturno",
+              "value": "We spoke in whispers so as not to disturb the neighbors."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-conectores-proposito-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "in order to / so as to + Infinitivo",
+              "rule": "Van seguidos directamente de un verbo en infinitivo",
+              "examples": [
+                "He ran in order to catch the bus."
+              ]
+            },
+            {
+              "label": "so that + Sujeto + Modal",
+              "rule": "Va seguido de una oración completa con sujeto y verbo modal",
+              "examples": [
+                "He ran so that he could catch the bus."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-conectores-proposito-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "I called him for to ask a question."
+            },
+            {
+              "variant": "good",
+              "text": "I called him to ask a question. / ...in order to ask...",
+              "note": "en inglés no se usa 'for to' para indicar propósito, usa 'to' o 'in order to'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-conectores-proposito-reference",
+      "tag": "Referencia rápida",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "in order to",
+              "value": "formal, habitual en escritos académicos/laborales"
+            },
+            {
+              "key": "so that",
+              "value": "requiere sujeto + can/could/will/would"
+            },
+            {
+              "key": "so as not to",
+              "value": "negación formal del propósito"
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "She stayed up late ___ finish her project on time.",
+      "options": [
+        "in order to",
+        "so that",
+        "for"
+      ],
+      "answer": 0,
+      "explain": "Seguido directamente de un verbo base ('finish') se usa 'in order to'."
+    },
+    {
+      "q": "I opened the window ___ fresh air could come in.",
+      "options": [
+        "so that",
+        "in order to",
+        "so as to"
+      ],
+      "answer": 0,
+      "explain": "Seguido de sujeto y modal ('fresh air could') requiere 'so that'."
+    },
+    {
+      "q": "Drive carefully ___ cause an accident.",
+      "options": [
+        "so as not to",
+        "in order to not",
+        "for not"
+      ],
+      "answer": 0,
+      "explain": "La negación formal de propósito con infinitivo es 'so as not to'."
+    }
+  ]
+}

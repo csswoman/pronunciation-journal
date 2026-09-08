@@ -245,6 +245,80 @@ export const B1_B2_DECK_SPECS: DeckSpec[] = [
     ],
   },
   {
+    slug: "b1-preguntas-sujeto-objeto",
+    eyebrow: "B1 · Oraciones interrogativas",
+    title: "Preguntas de sujeto vs objeto",
+    emphasis: "Who called you? vs Who did you call?",
+    goal: "Ya sabes cuándo omitir el verbo auxiliar (do/does/did) al preguntar por el sujeto de la acción.",
+    conceptRows: [
+      { key: "Subject Question", value: "La palabra interrogativa ES el sujeto de la acción · Who called you?", highlights: ["Who called"] },
+      { key: "Object Question", value: "La palabra interrogativa ES el objeto recibido · Who did you call?", highlights: ["Who did you call"] },
+      { key: "Regla del auxiliar", value: "Subject: Sin auxiliar do/did · Object: Con auxiliar do/does/did", highlights: ["Sin auxiliar", "Con auxiliar"] },
+    ],
+    structureRows: [
+      { key: "Pregunta de Sujeto", value: "Who/What + verbo principal (pasado/presente) + objeto? · Who broke the window?", highlights: ["Who broke"] },
+      { key: "Pregunta de Objeto", value: "Who/What + auxiliar (do/did) + sujeto + verbo base? · What did you break?", highlights: ["What did you break"] },
+    ],
+    contextExamples: [
+      { key: "Llamada telefónica", value: "A: Who called you? (¿Quién te llamó?) — B: Sarah called me." },
+      { key: "Llamada realizada", value: "A: Who did you call? (¿A quién llamaste?) — B: I called Sarah." },
+      { key: "Suceso fortuito", value: "What happened next? (¿Qué ocurrió?) — Something surprised us." },
+    ],
+    contrastColumns: [
+      { label: "Subject Question (¿Quién hizo?)", rule: "Pregunta por QUIÉN realiza la acción (sin aux. do/did)", examples: ["Who told you that story?"] },
+      { label: "Object Question (¿A quién le diste?)", rule: "Pregunta por QUIÉN recibe la acción (con aux. do/did)", examples: ["Who did you tell that story to?"] },
+    ],
+    quickReferenceRows: [
+      { key: "Who / What como sujeto", value: "No uses do/does/did (Who wrote Hamlet?, What causes rain?)." },
+      { key: "Who / What como objeto", value: "Requiere do/does/did (Who did you see?, What did you buy?)." },
+    ],
+    mistake: { bad: "Who did call you yesterday?", good: "Who called you yesterday?", note: "si 'Who' realiza la llamada, no lleva el auxiliar 'did'" },
+    quiz: [
+      { q: "___ this delicious cake? — My sister baked it.", options: ["Who baked", "Who did bake"], answer: 0, explain: "Pregunta por el sujeto ('Who' hizo la acción), no usa auxiliar did." },
+      { q: "___ at the supermarket this morning?", options: ["What did you buy", "What bought you"], answer: 0, explain: "Pregunta por el objeto comprado por 'you', requiere el auxiliar 'did'." },
+      { q: "¿Cuál pregunta busca saber qué persona recibió la llamada?", options: ["Who did Sarah call?", "Who called Sarah?"], answer: 0, explain: "'Who did Sarah call?' pregunta a quién llamó Sarah (objeto de la acción)." },
+    ],
+  },
+  {
+    slug: "b1-formacion-palabras",
+    eyebrow: "B1 · Vocabulario y gramática",
+    title: "Formación de palabras",
+    emphasis: "prefijos, sufijos y derivaciones",
+    goal: "Ya derivas sustantivos, adjetivos, verbos y adverbios agregando prefijos y sufijos comunes.",
+    conceptRows: [
+      { key: "Prefijos de negación", value: "un-, dis-, im-, in- · happy → unhappy, agree → disagree", highlights: ["un-", "dis-"] },
+      { key: "Sufijos nominales", value: "-tion, -ness, -ment · develop → development, happy → happiness", highlights: ["-ness", "-ment"] },
+      { key: "Sufijos adjetivales", value: "-ful, -less, -able · use → useful / useless, comfort → comfortable", highlights: ["-ful", "-less"] },
+      { key: "Sufijos adverbiales", value: "-ly · quick → quickly, polite → politely", highlights: ["-ly"] },
+    ],
+    structureRows: [
+      { key: "Verbo ➔ Sustantivo", value: "verbo + -ment / -tion · educate ➔ education", highlights: ["education"] },
+      { key: "Adjetivo ➔ Negación", value: "un-/im- + adjetivo · possible ➔ impossible", highlights: ["impossible"] },
+      { key: "Sustantivo ➔ Adjetivo", value: "sustantivo + -ful/-less · care ➔ careful / careless", highlights: ["careful"] },
+    ],
+    contextExamples: [
+      { key: "Evolución personal", value: "Her technological knowledge led to the development of a new app." },
+      { key: "Emociones", value: "Finding a solution brought endless happiness to the family." },
+      { key: "Precaución", value: "Be careful when walking on wet floors." },
+    ],
+    contrastColumns: [
+      { label: "-ful (Lleno de)", rule: "Indica abundancia de la característica", examples: ["useful (útil) / hopeful (esperanzado)"] },
+      { label: "-less (Sin)", rule: "Indica ausencia de la característica", examples: ["useless (inútil) / hopeless (sin esperanza)"] },
+    ],
+    quickReferenceRows: [
+      { key: "un-", value: "unhappy, uncomfortable, unbelievable" },
+      { key: "dis-", value: "disappear, disagree, dishonest" },
+      { key: "im- (antes de p/m)", value: "impossible, impolite, impatient" },
+      { key: "-ness (adjetivo ➔ sustantivo)", value: "darkness, sadness, weakness" },
+    ],
+    mistake: { bad: "It is unpossible to solve this problem.", good: "It is impossible to solve this problem.", note: "delante de la letra 'p' se utiliza el prefijo 'im-'" },
+    quiz: [
+      { q: "The company announced the ___ of a new office.", options: ["development", "developness"], answer: 0, explain: "El sustantivo derivado del verbo 'develop' es 'development'." },
+      { q: "He was very ___ when he heard the bad news.", options: ["unhappy", "imhappy"], answer: 0, explain: "El prefijo negativo para 'happy' es 'un-' ('unhappy')." },
+      { q: "This tool is completely ___ — it broke on the first day!", options: ["useless", "useful"], answer: 0, explain: "El sufijo '-less' significa sin uso o inútil ('useless')." },
+    ],
+  },
+  {
     slug: "b1-both-either-neither",
     eyebrow: "B1 · Cuantificadores",
     title: "Both, either",
@@ -979,5 +1053,117 @@ export const B1_B2_DECK_SPECS: DeckSpec[] = [
       { q: "___ he studied diligently for weeks, he failed to score top marks.", options: ["Although", "Despite", "In spite of"], answer: 0, explain: "Tras el hueco hay una oración completa con sujeto y verbo ('he studied'), exigiendo 'Although'." },
     ],
   },
+  {
+    slug: "b1-so-vs-such",
+    eyebrow: "B1 · Grado y resultado",
+    title: "So vs Such",
+    emphasis: "so beautiful vs such a beautiful day",
+    goal: "Distingues cuándo usar so con adjetivos/adverbios y such con grupos nominales.",
+    conceptRows: [
+      { key: "so + adjetivo / adverbio", value: "so fast, so expensive, so quiet", highlights: ["so"] },
+      { key: "such + (a/an) + adjetivo + sustantivo", value: "such a nice person, such big houses, such good weather", highlights: ["such"] },
+      { key: "so much / so many + sustantivo", value: "so much money, so many friends", highlights: ["so much", "so many"] },
+    ],
+    structureRows: [
+      { key: "so + adjetivo", value: "The room is so big.", highlights: ["so big"] },
+      { key: "such a/an + adj + sustantivo singular", value: "It is such a big room.", highlights: ["such a big room"] },
+      { key: "such + adj + sustantivo plural/incontable", value: "They are such nice people. / It is such good news.", highlights: ["such nice people"] },
+    ],
+    contextExamples: [
+      { key: "Elogio de lugar", value: "This restaurant is so romantic!" },
+      { key: "Descripción de película", value: "It was such an interesting documentary." },
+      { key: "Abundancia", value: "Why did you buy so much food?" },
+    ],
+    contrastColumns: [
+      { label: "SO (Sin sustantivo inmediatamente posterior)", rule: "Modifica adjetivos o adverbios solos", examples: ["She is so intelligent."] },
+      { label: "SUCH (Con sustantivo posterior)", rule: "Modifica sustantivos (con o sin adjetivo)", examples: ["She is such an intelligent woman."] },
+    ],
+    quickReferenceRows: [
+      { key: "so", value: "so + adjetivo/adverbio (so happy, so quickly)" },
+      { key: "such a/an", value: "such a + adjetivo + sustantivo singular contable (such a great idea)" },
+      { key: "so much / so many", value: "so + much/many (NUNCA 'such many')" },
+    ],
+    mistake: { bad: "It was so a good movie.", good: "It was such a good movie. / The movie was so good.", note: "delante de 'a/an + adjetivo + sustantivo' se utiliza 'such', no 'so'" },
+    quiz: [
+      { q: "Why are you ___ tired today?", options: ["so", "such", "such a"], answer: 0, explain: "Delante de un adjetivo aislado ('tired') sin sustantivo va 'so'." },
+      { q: "He is ___ talented singer!", options: ["such a", "so", "such"], answer: 0, explain: "Con sustantivo contable singular ('singer') precedido de adjetivo corresponde 'such a'." },
+      { q: "I have never seen ___ many people in one room.", options: ["so", "such"], answer: 0, explain: "Delante de 'many' o 'much' se usa 'so' ('so many')." },
+    ],
+  },
+  {
+    slug: "b1-conectores-proposito",
+    eyebrow: "B1 · Conectores",
+    title: "Conectores de propósito",
+    emphasis: "in order to, so as to, so that",
+    goal: "Expresses la finalidad o propósito con estructuras formales e informales.",
+    conceptRows: [
+      { key: "to / in order to / so as to + infinitivo", value: "I study in order to pass the exam.", highlights: ["in order to"] },
+      { key: "so that + sujeto + modal (can/could/will/would)", value: "I left early so that I could catch the train.", highlights: ["so that"] },
+      { key: "Negativo: in order not to / so as not to", value: "He walked quietly so as not to wake the baby.", highlights: ["so as not to"] },
+    ],
+    structureRows: [
+      { key: "in order to + verbo base", value: "She moved to London in order to learn English.", highlights: ["in order to learn"] },
+      { key: "so that + oración", value: "Speak clearly so that everyone can hear you.", highlights: ["so that everyone can hear"] },
+      { key: "so as not to + verbo base", value: "Write it down so as not to forget it.", highlights: ["so as not to forget"] },
+    ],
+    contextExamples: [
+      { key: "Ahorro personal", value: "I am saving money so that I can buy a laptop." },
+      { key: "Puntualidad laboral", value: "Set an alarm in order to arrive on time." },
+      { key: "Silencio nocturno", value: "We spoke in whispers so as not to disturb the neighbors." },
+    ],
+    contrastColumns: [
+      { label: "in order to / so as to + Infinitivo", rule: "Van seguidos directamente de un verbo en infinitivo", examples: ["He ran in order to catch the bus."] },
+      { label: "so that + Sujeto + Modal", rule: "Va seguido de una oración completa con sujeto y verbo modal", examples: ["He ran so that he could catch the bus."] },
+    ],
+    quickReferenceRows: [
+      { key: "in order to", value: "formal, habitual en escritos académicos/laborales" },
+      { key: "so that", value: "requiere sujeto + can/could/will/would" },
+      { key: "so as not to", value: "negación formal del propósito" },
+    ],
+    mistake: { bad: "I called him for to ask a question.", good: "I called him to ask a question. / ...in order to ask...", note: "en inglés no se usa 'for to' para indicar propósito, usa 'to' o 'in order to'" },
+    quiz: [
+      { q: "She stayed up late ___ finish her project on time.", options: ["in order to", "so that", "for"], answer: 0, explain: "Seguido directamente de un verbo base ('finish') se usa 'in order to'." },
+      { q: "I opened the window ___ fresh air could come in.", options: ["so that", "in order to", "so as to"], answer: 0, explain: "Seguido de sujeto y modal ('fresh air could') requiere 'so that'." },
+      { q: "Drive carefully ___ cause an accident.", options: ["so as not to", "in order to not", "for not"], answer: 0, explain: "La negación formal de propósito con infinitivo es 'so as not to'." },
+    ],
+  },
+  {
+    slug: "b2-deduccion-presente-pasado",
+    eyebrow: "B2 · Modales de deducción",
+    title: "Deducción presente vs pasado",
+    emphasis: "must be vs must have been",
+    goal: "Comparas deducciones lógicas sobre el presente (must be) y sobre el pasado (must have been).",
+    conceptRows: [
+      { key: "Deducción Presente", value: "must / can't / might + verbo base · He must be at home now.", highlights: ["must be"] },
+      { key: "Deducción Pasada", value: "must / can't / might + have + participio · He must have been at home.", highlights: ["must have been"] },
+      { key: "Imposibilidad Pasada", value: "can't have + participio · She can't have done it.", highlights: ["can't have done"] },
+    ],
+    structureRows: [
+      { key: "Presente (Certeza)", value: "must + be/verbo base · You have worked 12 hours, you must be exhausted.", highlights: ["must be"] },
+      { key: "Pasado (Certeza)", value: "must have + participio · The ground is wet; it must have rained last night.", highlights: ["must have rained"] },
+      { key: "Pasado (Imposibilidad)", value: "can't have + participio · He can't have stolen the car; he was with me.", highlights: ["can't have stolen"] },
+    ],
+    contextExamples: [
+      { key: "Llegada tarde", value: "They aren't here yet; they must be stuck in traffic." },
+      { key: "Ventana rota", value: "Someone must have thrown a ball through the glass." },
+      { key: "Ausencia demostrada", value: "She can't have attended the meeting because she was abroad." },
+    ],
+    contrastColumns: [
+      { label: "Deducción Presente", rule: "must / can't + verbo base (conclusión sobre la situación actual)", examples: ["She must speak French (now)."] },
+      { label: "Deducción Pasada", rule: "must / can't + have + participio (conclusión sobre algo que ya ocurrió)", examples: ["She must have spoken French (then)."] },
+    ],
+    quickReferenceRows: [
+      { key: "must be / must do", value: "deducción sobre el presente" },
+      { key: "must have been / done", value: "deducción sobre el pasado" },
+      { key: "can't have done", value: "deducción de imposibilidad en el pasado (NUNCA 'mustn't have')" },
+    ],
+    mistake: { bad: "He didn't answer. He must be sleeping yesterday.", good: "He didn't answer. He must have been sleeping yesterday.", note: "para deducción lógica sobre el pasado usa 'must have + participio/gerundio perfecto'" },
+    quiz: [
+      { q: "Look at the snow outside! It ___ freezing last night.", options: ["must have been", "must be", "can't be"], answer: 0, explain: "Deducción sobre un hecho del pasado ('last night'): 'must have been'." },
+      { q: "A: Where is Maria? B: She ___ in her office; the lights are on.", options: ["must be", "must have been"], answer: 0, explain: "Deducción sobre la situación presente actual: 'must be'." },
+      { q: "He ___ the crime because he was out of the country when it happened.", options: ["can't have committed", "must have committed"], answer: 0, explain: "Imposibilidad lógica en el pasado → 'can't have + participio'." },
+    ],
+  },
 ];
+
 

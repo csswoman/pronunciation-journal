@@ -1,0 +1,229 @@
+{
+  "isGenerated": true,
+  "meta": {
+    "eyebrow": "B1 · Vocabulario y gramática",
+    "title": "Formación de palabras",
+    "titleEmphasis": "prefijos, sufijos y derivaciones",
+    "goal": "Ya derivas sustantivos, adjetivos, verbos y adverbios agregando prefijos y sufijos comunes."
+  },
+  "cards": [
+    {
+      "id": "b1-formacion-palabras-concept",
+      "tag": "Idea central",
+      "title": "Formación de palabras: qué expresa",
+      "lede": "Ya derivas sustantivos, adjetivos, verbos y adverbios agregando prefijos y sufijos comunes.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Prefijos de negación",
+              "value": "un-, dis-, im-, in- · happy → unhappy, agree → disagree",
+              "highlights": [
+                "un-",
+                "dis-"
+              ]
+            },
+            {
+              "key": "Sufijos nominales",
+              "value": "-tion, -ness, -ment · develop → development, happy → happiness",
+              "highlights": [
+                "-ness",
+                "-ment"
+              ]
+            },
+            {
+              "key": "Sufijos adjetivales",
+              "value": "-ful, -less, -able · use → useful / useless, comfort → comfortable",
+              "highlights": [
+                "-ful",
+                "-less"
+              ]
+            },
+            {
+              "key": "Sufijos adverbiales",
+              "value": "-ly · quick → quickly, polite → politely",
+              "highlights": [
+                "-ly"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "b1-formacion-palabras-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Verbo ➔ Sustantivo",
+              "value": "verbo + -ment / -tion · educate ➔ education",
+              "highlights": [
+                "education"
+              ]
+            },
+            {
+              "key": "Adjetivo ➔ Negación",
+              "value": "un-/im- + adjetivo · possible ➔ impossible",
+              "highlights": [
+                "impossible"
+              ]
+            },
+            {
+              "key": "Sustantivo ➔ Adjetivo",
+              "value": "sustantivo + -ful/-less · care ➔ careful / careless",
+              "highlights": [
+                "careful"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-formacion-palabras-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Evolución personal",
+              "value": "Her technological knowledge led to the development of a new app."
+            },
+            {
+              "key": "Emociones",
+              "value": "Finding a solution brought endless happiness to the family."
+            },
+            {
+              "key": "Precaución",
+              "value": "Be careful when walking on wet floors."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-formacion-palabras-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "-ful (Lleno de)",
+              "rule": "Indica abundancia de la característica",
+              "examples": [
+                "useful (útil) / hopeful (esperanzado)"
+              ]
+            },
+            {
+              "label": "-less (Sin)",
+              "rule": "Indica ausencia de la característica",
+              "examples": [
+                "useless (inútil) / hopeless (sin esperanza)"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-formacion-palabras-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "It is unpossible to solve this problem."
+            },
+            {
+              "variant": "good",
+              "text": "It is impossible to solve this problem.",
+              "note": "delante de la letra 'p' se utiliza el prefijo 'im-'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-formacion-palabras-reference",
+      "tag": "Referencia rápida",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "un-",
+              "value": "unhappy, uncomfortable, unbelievable"
+            },
+            {
+              "key": "dis-",
+              "value": "disappear, disagree, dishonest"
+            },
+            {
+              "key": "im- (antes de p/m)",
+              "value": "impossible, impolite, impatient"
+            },
+            {
+              "key": "-ness (adjetivo ➔ sustantivo)",
+              "value": "darkness, sadness, weakness"
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "The company announced the ___ of a new office.",
+      "options": [
+        "development",
+        "developness"
+      ],
+      "answer": 0,
+      "explain": "El sustantivo derivado del verbo 'develop' es 'development'."
+    },
+    {
+      "q": "He was very ___ when he heard the bad news.",
+      "options": [
+        "unhappy",
+        "imhappy"
+      ],
+      "answer": 0,
+      "explain": "El prefijo negativo para 'happy' es 'un-' ('unhappy')."
+    },
+    {
+      "q": "This tool is completely ___ — it broke on the first day!",
+      "options": [
+        "useless",
+        "useful"
+      ],
+      "answer": 0,
+      "explain": "El sufijo '-less' significa sin uso o inútil ('useless')."
+    }
+  ]
+}

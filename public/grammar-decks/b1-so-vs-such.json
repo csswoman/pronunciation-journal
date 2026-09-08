@@ -1,0 +1,218 @@
+{
+  "isGenerated": true,
+  "meta": {
+    "eyebrow": "B1 · Grado y resultado",
+    "title": "So vs Such",
+    "titleEmphasis": "so beautiful vs such a beautiful day",
+    "goal": "Distingues cuándo usar so con adjetivos/adverbios y such con grupos nominales."
+  },
+  "cards": [
+    {
+      "id": "b1-so-vs-such-concept",
+      "tag": "Idea central",
+      "title": "So vs Such: qué expresa",
+      "lede": "Distingues cuándo usar so con adjetivos/adverbios y such con grupos nominales.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "so + adjetivo / adverbio",
+              "value": "so fast, so expensive, so quiet",
+              "highlights": [
+                "so"
+              ]
+            },
+            {
+              "key": "such + (a/an) + adjetivo + sustantivo",
+              "value": "such a nice person, such big houses, such good weather",
+              "highlights": [
+                "such"
+              ]
+            },
+            {
+              "key": "so much / so many + sustantivo",
+              "value": "so much money, so many friends",
+              "highlights": [
+                "so much",
+                "so many"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "b1-so-vs-such-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "so + adjetivo",
+              "value": "The room is so big.",
+              "highlights": [
+                "so big"
+              ]
+            },
+            {
+              "key": "such a/an + adj + sustantivo singular",
+              "value": "It is such a big room.",
+              "highlights": [
+                "such a big room"
+              ]
+            },
+            {
+              "key": "such + adj + sustantivo plural/incontable",
+              "value": "They are such nice people. / It is such good news.",
+              "highlights": [
+                "such nice people"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-so-vs-such-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Elogio de lugar",
+              "value": "This restaurant is so romantic!"
+            },
+            {
+              "key": "Descripción de película",
+              "value": "It was such an interesting documentary."
+            },
+            {
+              "key": "Abundancia",
+              "value": "Why did you buy so much food?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-so-vs-such-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "SO (Sin sustantivo inmediatamente posterior)",
+              "rule": "Modifica adjetivos o adverbios solos",
+              "examples": [
+                "She is so intelligent."
+              ]
+            },
+            {
+              "label": "SUCH (Con sustantivo posterior)",
+              "rule": "Modifica sustantivos (con o sin adjetivo)",
+              "examples": [
+                "She is such an intelligent woman."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-so-vs-such-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "It was so a good movie."
+            },
+            {
+              "variant": "good",
+              "text": "It was such a good movie. / The movie was so good.",
+              "note": "delante de 'a/an + adjetivo + sustantivo' se utiliza 'such', no 'so'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-so-vs-such-reference",
+      "tag": "Referencia rápida",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "so",
+              "value": "so + adjetivo/adverbio (so happy, so quickly)"
+            },
+            {
+              "key": "such a/an",
+              "value": "such a + adjetivo + sustantivo singular contable (such a great idea)"
+            },
+            {
+              "key": "so much / so many",
+              "value": "so + much/many (NUNCA 'such many')"
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Why are you ___ tired today?",
+      "options": [
+        "so",
+        "such",
+        "such a"
+      ],
+      "answer": 0,
+      "explain": "Delante de un adjetivo aislado ('tired') sin sustantivo va 'so'."
+    },
+    {
+      "q": "He is ___ talented singer!",
+      "options": [
+        "such a",
+        "so",
+        "such"
+      ],
+      "answer": 0,
+      "explain": "Con sustantivo contable singular ('singer') precedido de adjetivo corresponde 'such a'."
+    },
+    {
+      "q": "I have never seen ___ many people in one room.",
+      "options": [
+        "so",
+        "such"
+      ],
+      "answer": 0,
+      "explain": "Delante de 'many' o 'much' se usa 'so' ('so many')."
+    }
+  ]
+}

@@ -1,0 +1,222 @@
+{
+  "isGenerated": true,
+  "meta": {
+    "eyebrow": "A2 · Pronombres",
+    "title": "Pronombres indefinidos",
+    "titleEmphasis": "somebody, anything, nowhere, everybody",
+    "goal": "Ya refieres personas, cosas y lugares no especificados con compuestos de some, any, no y every."
+  },
+  "cards": [
+    {
+      "id": "a2-pronombres-indefinidos-concept",
+      "tag": "Idea central",
+      "title": "Pronombres indefinidos: qué expresa",
+      "lede": "Ya refieres personas, cosas y lugares no especificados con compuestos de some, any, no y every.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "-body / -one (Personas)",
+              "value": "somebody / someone, anybody, nobody, everybody",
+              "highlights": [
+                "somebody"
+              ]
+            },
+            {
+              "key": "-thing (Cosas)",
+              "value": "something, anything, nothing, everything",
+              "highlights": [
+                "something"
+              ]
+            },
+            {
+              "key": "-where (Lugares)",
+              "value": "somewhere, anywhere, nowhere, everywhere",
+              "highlights": [
+                "somewhere"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
+      "id": "a2-pronombres-indefinidos-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la estructura completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Afirmativo",
+              "value": "Somebody is at the door. / I want something to eat.",
+              "highlights": [
+                "Somebody",
+                "something"
+              ]
+            },
+            {
+              "key": "Negativo / Pregunta",
+              "value": "Did you see anybody? / I don't know anything.",
+              "highlights": [
+                "anybody",
+                "anything"
+              ]
+            },
+            {
+              "key": "Forma 'no-' (Verbo afirmativo)",
+              "value": "Nobody was at home. / There is nothing left.",
+              "highlights": [
+                "Nobody",
+                "nothing"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-pronombres-indefinidos-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo en situaciones reales del día a día.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Búsqueda de objetos",
+              "value": "I left my keys somewhere in the kitchen."
+            },
+            {
+              "key": "Pregunta abierta",
+              "value": "Is there anything I can do to help you?"
+            },
+            {
+              "key": "Presencia total",
+              "value": "Everybody enjoyed the live concert last night."
+            },
+            {
+              "key": "Ausencia total",
+              "value": "There is nowhere to hide in this room."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-pronombres-indefinidos-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "Compara estas opciones para saber cuándo elegir cada una.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "some- / any-",
+              "rule": "some- en afirmativas; any- en preguntas y negativas",
+              "examples": [
+                "I have something to say. / Do you have anything to say?"
+              ]
+            },
+            {
+              "label": "no- (Dobles negativas prohibidas)",
+              "rule": "Usa verbo en afirmativo con nothing/nobody",
+              "examples": [
+                "I know nothing. (no: I don't know nothing)"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-pronombres-indefinidos-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "I didn't see nobody in the park."
+            },
+            {
+              "variant": "good",
+              "text": "I didn't see anybody in the park.",
+              "note": "evita la doble negativa; usa anybody con verbos en negativo"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-pronombres-indefinidos-reference",
+      "tag": "Referencia rápida",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Verbo en singular",
+              "value": "Los pronombres indefinidos llevan verbo singular (Everybody IS happy)."
+            },
+            {
+              "key": "somebody vs someone",
+              "value": "Tienen exactamente el mismo significado; 'someone' es un poco más formal."
+            },
+            {
+              "key": "any- en afirmativo",
+              "value": "Significa 'cualquiera' (Anyone can join the club)."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Is there ___ inside the house?",
+      "options": [
+        "anyone",
+        "no one"
+      ],
+      "answer": 0,
+      "explain": "En preguntas se prefiere 'anyone' o 'anybody'."
+    },
+    {
+      "q": "Everybody in the team ___ excited about the trip.",
+      "options": [
+        "is",
+        "are"
+      ],
+      "answer": 0,
+      "explain": "Los pronombres indefinidos rigen verbo en singular ('is')."
+    },
+    {
+      "q": "I looked for my wallet, but I couldn't find it ___.",
+      "options": [
+        "anywhere",
+        "nowhere"
+      ],
+      "answer": 0,
+      "explain": "Tras la negación 'couldn't' corresponde usar 'anywhere'."
+    }
+  ]
+}

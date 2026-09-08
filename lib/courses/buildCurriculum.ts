@@ -18,6 +18,7 @@ export interface CourseInput {
   keywords?: string;
   tag?: LessonTag;
   duration?: string;
+  description?: string;
   s?: boolean;
   /** Stable grammar-deck slug → `public/grammar-decks/<g>.json`. Independent of `number`. */
   g?: string;
@@ -43,6 +44,7 @@ function toLesson(
     keywords: course.keywords,
     tag: course.tag,
     duration: course.duration,
+    description: course.description,
     isOptional: course.p === 0,
     soundLab: course.s,
     pronunciationTargetIds: course.pt,

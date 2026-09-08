@@ -632,4 +632,39 @@ export const A1_DECK_SPECS: DeckSpec[] = [
       { q: "Elige la opción que corrige 'Is there two banks on this street?'", options: ["Are there two banks on this street?", "There is two banks on this street?"], answer: 0, explain: "'two banks' es plural y es una pregunta, la forma correcta es 'Are there'." },
     ],
   },
+  {
+    slug: "a1-presente-simple-vs-continuo",
+    eyebrow: "A1 · Tiempos verbales",
+    title: "Present Simple vs Present Continuous",
+    emphasis: "hábitos vs momento actual",
+    goal: "Ya distingues entre acciones habituales (rutinas) y acciones que están ocurriendo ahora mismo.",
+    conceptRows: [
+      { key: "Present Simple", value: "Hábitos, rutinas y datos permanentes · I work every day.", highlights: ["work"] },
+      { key: "Present Continuous", value: "Acciones en curso en este instante · I am working right now.", highlights: ["am working"] },
+      { key: "Pistas temporales", value: "Simple: always, usually, every day · Continuous: now, right now, today.", highlights: ["every day", "now"] },
+    ],
+    structureRows: [
+      { key: "Hábito (Simple)", value: "Sujeto + Verbo(s) · She drinks coffee every morning.", highlights: ["drinks"] },
+      { key: "Acción actual (Continuous)", value: "Sujeto + am/is/are + -ing · She is drinking tea right now.", highlights: ["is drinking"] },
+    ],
+    contextExamples: [
+      { key: "Rutina vs Ahora", value: "I usually wear jeans, but today I am wearing a suit." },
+      { key: "Trabajo actual", value: "He works at a bank, but he is working from home today." },
+      { key: "Actividad en curso", value: "Listen! The baby is crying." },
+    ],
+    contrastColumns: [
+      { label: "Present Simple (Rutina)", rule: "Verbo base / -s · Expresa lo regular y permanente", examples: ["I play tennis on Saturdays."] },
+      { label: "Present Continuous (Ahora)", rule: "be + verbo-ing · Expresa lo temporal o en curso", examples: ["I am playing tennis right now."] },
+    ],
+    quickReferenceRows: [
+      { key: "Simple", value: "every day, usually, always, often, on Mondays" },
+      { key: "Continuous", value: "now, right now, at the moment, today, look!, listen!" },
+    ],
+    mistake: { bad: "I read a book right now.", good: "I am reading a book right now.", note: "para una acción en el momento actual usa present continuous" },
+    quiz: [
+      { q: "She usually ___ to work by bus, but today she ___ her car.", options: ["goes / is driving", "is going / drives"], answer: 0, explain: "'usually' indica hábito (goes), 'today' indica acción temporal (is driving)." },
+      { q: "Listen! Somebody ___ at the door.", options: ["knocks", "is knocking"], answer: 1, explain: "La llamada de atención 'Listen!' indica que ocurre en este instante (is knocking)." },
+      { q: "¿Cuál oración expresa una rutina diaria habitual?", options: ["I cook dinner every night at 7 PM.", "I am cooking dinner right now."], answer: 0, explain: "'every night' señala un hábito regular en presente simple." },
+    ],
+  },
 ];

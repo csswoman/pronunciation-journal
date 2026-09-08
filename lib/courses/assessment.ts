@@ -34,7 +34,7 @@ export interface AssessmentResult {
   conceptSignals: ConceptSignal[];
 }
 
-export const ASSESSMENT_LEVEL_ORDER: CefrLevelId[] = ["a1", "a2", "b1", "b2", "c1"];
+export const ASSESSMENT_LEVEL_ORDER: CefrLevelId[] = ["a1", "a2", "b1", "b2", "c1", "c2"];
 const QUESTIONS_PER_LEVEL = 10;
 
 export function assessmentAnchorIndex(level: CefrLevelId, sections: readonly { level: CefrLevelId }[]): number {
@@ -58,35 +58,35 @@ const READING_QUESTIONS: Record<CefrLevelId, AssessmentQuestion[]> = {
   a2: [
     {
       id: "a2:reading:1", level: "a2", lessonSlug: "a2-reading-plans",
-      passage: "Leo has booked a train to Brighton for Saturday. He is going to visit an old friend, but he has not chosen where to stay yet.",
-      prompt: "Why is Leo going to Brighton?", options: ["To work", "To visit a friend", "To find a hotel"], answer: 1,
+      passage: "Next weekend, Leo is visiting his grandparents in Madrid. He has already bought the train tickets.",
+      prompt: "Where is Leo going next weekend?", options: ["To Barcelona", "To Madrid", "To London"], answer: 1,
     },
     {
       id: "a2:reading:2", level: "a2", lessonSlug: "a2-reading-plans",
-      passage: "Leo has booked a train to Brighton for Saturday. He is going to visit an old friend, but he has not chosen where to stay yet.",
-      prompt: "What has Leo not decided?", options: ["When to travel", "Who to visit", "Where to stay"], answer: 2,
+      passage: "Next weekend, Leo is visiting his grandparents in Madrid. He has already bought the train tickets.",
+      prompt: "Has Leo bought his tickets yet?", options: ["Yes, he has", "No, not yet", "He is buying them now"], answer: 0,
     },
   ],
   b1: [
     {
-      id: "b1:reading:1", level: "b1", lessonSlug: "b1-reading-remote-work",
-      passage: "Nora enjoyed working remotely at first because she could organize her day. After several months, however, she missed informal conversations with colleagues, so she began using a co-working space twice a week.",
-      prompt: "What changed Nora's remote-work routine?", options: ["She needed faster internet", "She felt socially isolated", "Her employer required it"], answer: 1,
+      id: "b1:reading:1", level: "b1", lessonSlug: "b1-reading-experience",
+      passage: "Sara has been studying software development for two years. Before that, she worked as a graphic designer.",
+      prompt: "What was Sara's previous profession?", options: ["Software engineer", "Graphic designer", "Teacher"], answer: 1,
     },
     {
-      id: "b1:reading:2", level: "b1", lessonSlug: "b1-reading-remote-work",
-      passage: "Nora enjoyed working remotely at first because she could organize her day. After several months, however, she missed informal conversations with colleagues, so she began using a co-working space twice a week.",
-      prompt: "How often does Nora use the co-working space?", options: ["Every day", "Once a month", "Twice a week"], answer: 2,
+      id: "b1:reading:2", level: "b1", lessonSlug: "b1-reading-experience",
+      passage: "Sara has been studying software development for two years. Before that, she worked as a graphic designer.",
+      prompt: "How long has Sara been studying software development?", options: ["Two months", "Two years", "Five years"], answer: 1,
     },
   ],
   b2: [
     {
-      id: "b2:reading:1", level: "b2", lessonSlug: "b2-reading-policy",
+      id: "b2:reading:1", level: "b2", lessonSlug: "b2-reading-workplace",
       passage: "The company introduced flexible hours to improve retention. Although productivity remained stable, managers found that coordinating meetings became more difficult. The policy was retained, but teams were asked to establish shared availability periods.",
-      prompt: "Why did the company retain the policy?", options: ["Productivity did not decline", "Meetings became easier", "Managers rejected fixed schedules"], answer: 0,
+      prompt: "What was the main reason for introducing flexible hours?", options: ["To reduce costs", "To improve retention", "To cancel meetings"], answer: 1,
     },
     {
-      id: "b2:reading:2", level: "b2", lessonSlug: "b2-reading-policy",
+      id: "b2:reading:2", level: "b2", lessonSlug: "b2-reading-workplace",
       passage: "The company introduced flexible hours to improve retention. Although productivity remained stable, managers found that coordinating meetings became more difficult. The policy was retained, but teams were asked to establish shared availability periods.",
       prompt: "What compromise was introduced?", options: ["Fewer meetings", "Common availability windows", "Mandatory office days"], answer: 1,
     },
@@ -101,6 +101,18 @@ const READING_QUESTIONS: Record<CefrLevelId, AssessmentQuestion[]> = {
       id: "c1:reading:2", level: "c1", lessonSlug: "c1-reading-evidence",
       passage: "While the findings appear to support the intervention, the sample was relatively small and participants were self-selected. The results should therefore be treated as suggestive rather than conclusive.",
       prompt: "What does “suggestive rather than conclusive” imply?", options: ["The results indicate a possibility but do not prove it", "The results are deliberately misleading", "The results contradict the intervention"], answer: 0,
+    },
+  ],
+  c2: [
+    {
+      id: "c2:reading:1", level: "c2", lessonSlug: "c2-reading-stylistics",
+      passage: "Seldom does a framework command such instant consensus without provoking underlying friction regarding implementation details. The apparent unanimity masks subtle divergent interpretations.",
+      prompt: "What does the text suggest about the agreement?", options: ["It is complete and unambiguous", "It is superficial and hides underlying differences", "It was rejected by the team"], answer: 1,
+    },
+    {
+      id: "c2:reading:2", level: "c2", lessonSlug: "c2-reading-stylistics",
+      passage: "Seldom does a framework command such instant consensus without provoking underlying friction regarding implementation details. The apparent unanimity masks subtle divergent interpretations.",
+      prompt: "Which literary/rhetorical device opens the passage?", options: ["Subject-verb inversion following a negative adverb", "A second conditional clause", "A cleft sentence"], answer: 0,
     },
   ],
 };

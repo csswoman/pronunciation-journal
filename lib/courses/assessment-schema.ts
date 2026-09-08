@@ -3,7 +3,7 @@ import type { CefrLevelId } from "@/lib/courses/types";
 
 const ConceptSignalSchema = z.object({
   lessonSlug: z.string().trim().min(1).max(200),
-  level: z.enum(["a1", "a2", "b1", "b2", "c1"] satisfies [CefrLevelId, ...CefrLevelId[]]),
+  level: z.enum(["a1", "a2", "b1", "b2", "c1", "c2"] satisfies [CefrLevelId, ...CefrLevelId[]]),
   title: z.string().trim().min(1).max(200),
   selfRating: z.enum(["unknown", "familiar", "confident"]),
   status: z.enum(["mastered", "review", "learn"]),
@@ -16,11 +16,11 @@ const ConceptSignalSchema = z.object({
 });
 
 export const AssessmentPayloadSchema = z.object({
-  assignedLevel: z.enum(["A1", "A2", "B1", "B2", "C1"]),
-  evaluatedLevels: z.array(z.enum(["a1", "a2", "b1", "b2", "c1"] satisfies [CefrLevelId, ...CefrLevelId[]])).max(5).optional(),
+  assignedLevel: z.enum(["A1", "A2", "B1", "B2", "C1", "C2"]),
+  evaluatedLevels: z.array(z.enum(["a1", "a2", "b1", "b2", "c1", "c2"] satisfies [CefrLevelId, ...CefrLevelId[]])).max(6).optional(),
   confidence: z.enum(["low", "medium", "high"]).optional(),
   passed: z.boolean(),
-  passedLevels: z.array(z.enum(["a1", "a2", "b1", "b2", "c1"] satisfies [CefrLevelId, ...CefrLevelId[]])).max(5),
+  passedLevels: z.array(z.enum(["a1", "a2", "b1", "b2", "c1", "c2"] satisfies [CefrLevelId, ...CefrLevelId[]])).max(6),
   score: z.number().int().min(0),
   total: z.number().int().min(1).max(500),
   topicScores: z.array(z.object({
@@ -42,6 +42,6 @@ export const AssessmentPayloadSchema = z.object({
 
 export const AssessmentResultSchema = z.object({
   mode: z.enum(["placement", "checkpoint"]),
-  evaluatedLevel: z.enum(["a1", "a2", "b1", "b2", "c1"] satisfies [CefrLevelId, ...CefrLevelId[]]).nullable().optional(),
+  evaluatedLevel: z.enum(["a1", "a2", "b1", "b2", "c1", "c2"] satisfies [CefrLevelId, ...CefrLevelId[]]).nullable().optional(),
   result: AssessmentPayloadSchema,
 }).strict();

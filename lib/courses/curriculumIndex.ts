@@ -14,6 +14,7 @@ export function parseCoursePathTrackId(value: string | undefined): CoursePathTra
     value === "b1" ||
     value === "b2" ||
     value === "c1" ||
+    value === "c2" ||
     value === "purposes" ||
     value === "business" ||
     value === "connected-speech" ||
@@ -26,7 +27,7 @@ export function parseCoursePathTrackId(value: string | undefined): CoursePathTra
 }
 
 export function parseCefrLevelId(value: string | undefined): CefrLevelId | null {
-  if (value === "a1" || value === "a2" || value === "b1" || value === "b2" || value === "c1") {
+  if (value === "a1" || value === "a2" || value === "b1" || value === "b2" || value === "c1" || value === "c2") {
     return value;
   }
   return null;

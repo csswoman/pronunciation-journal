@@ -7,7 +7,7 @@ type LessonDef = CourseInput & { g: string };
 /** Titles and flags keyed by grammar-deck slug. */
 const LESSON_BY_SLUG: Record<string, Omit<CourseInput, "g">> = {
   "a1-estrategias-aprender-ingles": { t: "Cómo estudiar por tu cuenta", p: 1, keywords: "estrategias · hábitos · estudio", tag: "CONCEPTO", duration: "5 min" },
-  "a1-ingles-principiantes": { t: "Tus primeras frases", p: 1, keywords: "hello · thanks · please", tag: "PRÁCTICA", duration: "6 min" },
+  "a1-ingles-principiantes": { t: "Tus primeras frases", p: 1, keywords: "hello · thanks · please", tag: "PRÁCTICA", duration: "6 min", description: "Aprende a presentarte y a formar tus primeras frases en inglés." },
   "a1-pronombres-sujeto": { t: "Pronombres sujeto", p: 1, keywords: "I · you · he · she · they", tag: "CONCEPTO", duration: "5 min", subgroup: "PRONOMBRES Y ARTÍCULOS" },
   "a1-verbo-to-be": { t: "Ser y estar (to be)", p: 1, keywords: "am · is · are", tag: "CONCEPTO", duration: "7 min", subgroup: "PRONOMBRES Y ARTÍCULOS" },
   "a1-articulos-basicos": { t: "Artículos básicos", p: 1, keywords: "a · an · the", tag: "CONCEPTO", duration: "6 min", subgroup: "PRONOMBRES Y ARTÍCULOS" },
@@ -26,6 +26,7 @@ const LESSON_BY_SLUG: Record<string, Omit<CourseInput, "g">> = {
   "a1-pronombres-objeto": { t: "me, te, lo… (objeto)", p: 1 },
   "a1-imperativo": { t: "Instrucciones y órdenes", p: 1 },
   "a1-presente-continuo": { t: "Lo que pasa ahora (continuo)", p: 1 },
+  "a1-presente-simple-vs-continuo": { t: "Present Simple vs Continuous", p: 1 },
   "a1-preposiciones-lugar-tiempo": { t: "Preposiciones básicas de lugar y tiempo", p: 1 },
   "a1-adverbios-frecuencia": { t: "Always, usually, never", p: 1 },
   "a1-conjunciones-basicas": { t: "And, but, or: conectores básicos", p: 1 },
@@ -52,13 +53,17 @@ const LESSON_BY_SLUG: Record<string, Omit<CourseInput, "g">> = {
   "a2-presente-perfecto-experiencias": { t: "Presente perfecto: experiencias", p: 1 },
   "a2-presente-continuo-futuro": { t: "Planes ya acordados (continuo)", p: 1 },
   "a2-will-going-to": { t: "Will o going to", p: 1 },
+  "a2-futuro-contraste": { t: "Will vs going to vs continuo", p: 1 },
   "a2-sustantivos-intenciones-futuras": { t: "Planes e intenciones", p: 1 },
   "a2-descripciones-comparaciones": { t: "Describir y comparar", p: 1 },
   "a2-cuantificadores-superlativos": { t: "Mucho, poco y superlativos", p: 1 },
+  "a2-another-other-others": { t: "Another, other, others y the other", p: 1 },
   "a2-orden-adjetivos": { t: "Orden de los adjetivos", p: 1 },
   "a2-adverbios-expresiones-tiempo": { t: "Tiempo, frecuencia y lugar", p: 1 },
   "a2-adverbios-grado": { t: "Very, really, quite", p: 1 },
   "a2-cuantificadores-esenciales": { t: "Some, any, much y many", p: 1 },
+  "a2-colocaciones-comunes": { t: "Make, do, take y have", p: 1 },
+  "a2-pronombres-indefinidos": { t: "Somebody, anything, nowhere…", p: 1 },
   "a2-obligacion-prohibicion": { t: "Debes, no debes, prohibido", p: 1 },
   "a2-modales-consejo-posibilidad": { t: "Should, could y must", p: 1 },
   "a2-preguntas-respuestas": { t: "Preguntas que siempre vuelven", p: 1 },
@@ -80,10 +85,14 @@ const LESSON_BY_SLUG: Record<string, Omit<CourseInput, "g">> = {
   "b1-articulos-superlativos-cero": { t: "Artículos con superlativos y cero", p: 1 },
   "b1-modificadores-comparativos": { t: "Much, far, a bit + comparativo", p: 1 },
   "b1-comparativos-planes-futuros": { t: "Comparar y planear el futuro", p: 1 },
+  "b1-so-vs-such": { t: "So vs Such: tan vs tal", p: 1 },
   "b1-pronombres-clausulas-relativas": { t: "Pronombres y oraciones de relativo", p: 1 },
   "b1-preposiciones-dependientes": { t: "Preposiciones tras adjetivos y verbos", p: 1 },
   "b1-primer-condicional-pasado-continuo": { t: "Primer condicional y pasado continuo", p: 1 },
   "b1-futuro-continuo": { t: "Futuro continuo (will be + -ing)", p: 1 },
+  "b1-preguntas-sujeto-objeto": { t: "Preguntas de sujeto vs objeto", p: 1 },
+  "b1-formacion-palabras": { t: "Formación de palabras (prefijos/sufijos)", p: 1 },
+  "b1-conectores-proposito": { t: "Conectores de propósito (in order to, so that)", p: 1 },
   "b1-gerundios-infinitivos": { t: "Gerundios e infinitivos", p: 1 },
   "b1-adjetivos-preguntas-indirectas": { t: "Adjetivos y preguntas indirectas", p: 1 },
   "b1-conectores-discurso": { t: "Conectores para organizar ideas", p: 1 },
@@ -136,6 +145,7 @@ const LESSON_BY_SLUG: Record<string, Omit<CourseInput, "g">> = {
   "b2-pasiva-reportada": { t: "Reportaje pasivo", p: 1 },
   "b2-pasiva-completa": { t: "Pasiva en todos los tiempos", p: 1 },
   "b2-modales-pasado": { t: "Modales en el pasado", p: 1 },
+  "b2-deduccion-presente-pasado": { t: "Deducción en presente vs pasado", p: 1 },
   "b2-relativas-preposiciones": { t: "Relativas con preposiciones", p: 1 },
   "b2-discurso-indirecto-condicionales": { t: "Estilo indirecto y condicionales", p: 1 },
   "b2-oraciones-resultado": { t: "So/such … that", p: 1 },
@@ -366,7 +376,7 @@ const C1_OPTIONAL = [
   "c1-plus-pragmatica-intercultural",
 ] as const;
 
-type GrammarLevel = "a1" | "a2" | "b1" | "b2" | "c1";
+type GrammarLevel = "a1" | "a2" | "b1" | "b2" | "c1" | "c2";
 
 function lesson(slug: string, priority?: CourseInput["p"]): LessonDef {
   const meta = LESSON_BY_SLUG[slug];
@@ -513,7 +523,6 @@ export function c1CourseInputs(): CourseInput[] {
       ["c1-cohesion-discurso", "Cohesión y estructura del discurso"],
       ["c1-futuro-en-pasado", "Tiempo, modalidad y matiz"],
       ["c1-nominalizacion", "Precisión gramatical avanzada"],
-      ["c2-elipsis-sustitucion-avanzada", "Recursos avanzados de expresión"],
       ["c1-conectores-contracciones-informales", "Naturalidad y pronunciación"],
       ["c1-lenguaje-coloquial-habitual", "Conversación, registro y cortesía"],
       ["c1-argumentos-discusiones", "Comunicación profesional"],
@@ -528,6 +537,17 @@ export function c1CourseInputs(): CourseInput[] {
       ["c1-plus-lectura-critica-evidencia", "Lectura crítica y edición"],
       ["c1-plus-mediacion-conflictos", "Mediación y negociación"],
       ["c1-plus-produccion-espontanea-extensa", "Producción espontánea"],
+    ],
+  );
+}
+
+/** Essential + optional lessons for C2 in pedagogical order. */
+export function c2CourseInputs(): CourseInput[] {
+  const essentialSlugs = uniquePatternSlugs("c2");
+  return withThematicGroups(
+    essentialSlugs.map((slug) => lesson(slug, 1)),
+    [
+      ["c2-elipsis-sustitucion-avanzada", "Dominio nativo y estructuras estilísticas"],
     ],
   );
 }
@@ -554,6 +574,8 @@ export function essentialDeckSlugs(level: GrammarLevel): string[] {
   if (level === "c1") {
     return uniquePatternSlugs("c1");
   }
-  // Exhaustive type: unreachable.
-  return uniquePatternSlugs("c1");
+  if (level === "c2") {
+    return uniquePatternSlugs("c2");
+  }
+  return uniquePatternSlugs("c2");
 }

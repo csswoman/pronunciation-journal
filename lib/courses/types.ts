@@ -1,6 +1,6 @@
 import type { PronunciationTargetId } from "@/lib/pronunciation/targets/types";
 
-export type CefrLevelId = "a1" | "a2" | "b1" | "b2" | "c1";
+export type CefrLevelId = "a1" | "a2" | "b1" | "b2" | "c1" | "c2";
 
 export type ElectiveTrackId =
   | "purposes"
@@ -80,6 +80,8 @@ export interface CoursePathLesson {
   tag?: LessonTag;
   /** Estimated duration string (e.g. 5 min) */
   duration?: string;
+  /** Short descriptive summary of what this lesson teaches */
+  description?: string;
   /** Part of the broad curriculum (p === 0), shown after priority block */
   isOptional: boolean;
   /** Connects to Sound Lab (pronunciation / audio). @deprecated kept for compatibility — prefer `pronunciationTargetIds`. */
