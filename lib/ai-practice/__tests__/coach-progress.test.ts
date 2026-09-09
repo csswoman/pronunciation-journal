@@ -2,6 +2,9 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 const savePracticeAnswerMock = vi.fn().mockResolvedValue(undefined)
 const recordActivitySessionMock = vi.fn().mockResolvedValue({ reconciledStepIds: [] })
+const learningStateGetMock = vi.fn().mockResolvedValue(undefined)
+const getUserLearningStateMock = vi.fn()
+const persistLearningStateMock = vi.fn().mockResolvedValue(undefined)
 
 vi.mock('@/lib/practice/queries', () => ({
   savePracticeAnswer: (...args: unknown[]) => savePracticeAnswerMock(...args),
@@ -9,12 +12,23 @@ vi.mock('@/lib/practice/queries', () => ({
 vi.mock('@/lib/progress/activity-hub', () => ({
   recordActivitySession: (...args: unknown[]) => recordActivitySessionMock(...args),
 }))
+vi.mock('@/lib/db', () => ({
+  db: { learningState: { get: (...args: unknown[]) => learningStateGetMock(...args) } },
+}))
+vi.mock('@/lib/ai-practice/load-state', () => ({
+  getUserLearningState: (...args: unknown[]) => getUserLearningStateMock(...args),
+}))
+vi.mock('@/lib/ai-practice/queries', () => ({
+  persistLearningState: (...args: unknown[]) => persistLearningStateMock(...args),
+}))
 
 import {
   buildCoachPracticeAnswer,
+  buildSessionTopics,
   persistCoachExerciseResult,
   recordCoachSession,
 } from '@/lib/ai-practice/coach-progress'
+import { createEmptyState } from '@/lib/ai-practice/learning-state'
 import type { ExerciseResult } from '@/lib/ai-practice/types'
 
 const baseResult: ExerciseResult = {
@@ -26,6 +40,113 @@ const baseResult: ExerciseResult = {
 beforeEach(() => {
   savePracticeAnswerMock.mockClear()
   recordActivitySessionMock.mockClear()
+  learningStateGetMock.mockClear()
+  getUserLearningStateMock.mockClear()
+  persistLearningStateMock.mockClear()
+  learningStateGetMock.mockResolvedValue(undefined)
+  getUserLearningStateMock.mockResolvedValue(createEmptyState('user-1', 'device-1'))
+})
+
+describe('buildSessionTopics', () => {
+  it('collapses repeated topics into one entry with an accuracy rate', () => {
+    const topics = buildSessionTopics(
+      [
+        { toolName: 'render_fill_blank', result: { ...baseResult, topic: 'Present perfect' } },
+        { toolName: 'render_fill_blank', result: { ...baseResult, topic: 'Present perfect', correct: false } },
+        { toolName: 'render_multiple_choice', result: { ...baseResult, topic: 'Articles' } },
+      ],
+      '2026-09-08T00:00:00.000Z',
+    )
+
+    expect(topics).toEqual([
+      { topic: 'Present perfect', endedAt: '2026-09-08T00:00:00.000Z', exercisesCompleted: 2, correctRate: 0.5 },
+      { topic: 'Articles', endedAt: '2026-09-08T00:00:00.000Z', exercisesCompleted: 1, correctRate: 1 },
+    ])
+  })
+
+  it('ignores exercises with no usable topic', () => {
+    const topics = buildSessionTopics(
+      [{ toolName: 'render_fill_blank', result: { ...baseResult, topic: '   ' } }],
+      '2026-09-08T00:00:00.000Z',
+    )
+    expect(topics).toEqual([])
+  })
+})
+
+describe('recordCoachSession lastSessions', () => {
+  it('prepends this session ahead of previous ones', async () => {
+    learningStateGetMock.mockResolvedValue({
+      userId: 'user-1',
+      updatedAt: '2026-09-01T00:00:00.000Z',
+      state: {
+        ...createEmptyState('user-1', 'device-1'),
+        lastSessions: [
+          { topic: 'Articles', endedAt: '2026-09-01T00:00:00.000Z', exercisesCompleted: 3, correctRate: 1 },
+        ],
+      },
+    })
+
+    await recordCoachSession('user-1', [
+      { toolName: 'render_fill_blank', result: { ...baseResult, topic: 'Present perfect' } },
+    ])
+
+    expect(persistLearningStateMock).toHaveBeenCalledTimes(1)
+    const [, next] = persistLearningStateMock.mock.calls[0]
+    expect(next.lastSessions.map((s: { topic: string }) => s.topic)).toEqual([
+      'Present perfect',
+      'Articles',
+    ])
+  })
+
+  it('caps the history at ten sessions', async () => {
+    learningStateGetMock.mockResolvedValue({
+      userId: 'user-1',
+      updatedAt: '2026-09-01T00:00:00.000Z',
+      state: {
+        ...createEmptyState('user-1', 'device-1'),
+        lastSessions: Array.from({ length: 10 }, (_, i) => ({
+          topic: `Topic ${i}`,
+          endedAt: '2026-09-01T00:00:00.000Z',
+          exercisesCompleted: 1,
+          correctRate: 1,
+        })),
+      },
+    })
+
+    await recordCoachSession('user-1', [
+      { toolName: 'render_fill_blank', result: { ...baseResult, topic: 'Present perfect' } },
+    ])
+
+    const [, next] = persistLearningStateMock.mock.calls[0]
+    expect(next.lastSessions).toHaveLength(10)
+    expect(next.lastSessions[0].topic).toBe('Present perfect')
+  })
+
+  it('preserves weak topics already stored', async () => {
+    const weakTopics = [
+      { topic: 'present perfect', errorRate: 0.7, sampleCount: 10, lastCoveredAt: '2026-09-01T00:00:00.000Z' },
+    ]
+    learningStateGetMock.mockResolvedValue({
+      userId: 'user-1',
+      updatedAt: '2026-09-01T00:00:00.000Z',
+      state: { ...createEmptyState('user-1', 'device-1'), grammar: { weakTopics } },
+    })
+
+    await recordCoachSession('user-1', [
+      { toolName: 'render_fill_blank', result: { ...baseResult, topic: 'Present perfect' } },
+    ])
+
+    const [, next] = persistLearningStateMock.mock.calls[0]
+    expect(next.grammar.weakTopics).toEqual(weakTopics)
+  })
+
+  it('does not touch learning state when no widget produced an answer', async () => {
+    await recordCoachSession('user-1', [
+      { toolName: 'unknown_tool', result: baseResult },
+    ])
+
+    expect(persistLearningStateMock).not.toHaveBeenCalled()
+  })
 })
 
 describe('recordCoachSession', () => {

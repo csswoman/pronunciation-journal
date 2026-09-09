@@ -12,12 +12,15 @@ const SCRIPT: ScriptLine[] = [
 
 describe('ScriptTranscript', () => {
   it('muestra solo las lineas ya recorridas, no las futuras', () => {
-    render(<ScriptTranscript script={SCRIPT} currentIndex={2} />)
+    const { container } = render(<ScriptTranscript script={SCRIPT} currentIndex={2} />)
 
-    expect(screen.getByText(SCRIPT[0].text)).toBeInTheDocument()
-    expect(screen.getByText(SCRIPT[1].text)).toBeInTheDocument()
+    // Las lineas del coach se pintan palabra a palabra, asi que se comprueba
+    // sobre el texto plano del historial, no sobre un unico nodo.
+    const shown = container.textContent ?? ''
+    expect(shown).toContain(SCRIPT[0].text)
+    expect(shown).toContain(SCRIPT[1].text)
     // La linea actual la renderiza el runner (Coach/LearnerLine), no el historial.
-    expect(screen.queryByText(SCRIPT[2].text)).not.toBeInTheDocument()
+    expect(shown).not.toContain(SCRIPT[2].text)
   })
 
   it('no renderiza nada antes de la primera linea', () => {
@@ -32,10 +35,26 @@ describe('ScriptTranscript', () => {
     expect(screen.getByText('Tú')).toBeInTheDocument()
   })
 
-  it('es solo lectura: no ofrece ningun control de entrada', () => {
+  it('no avanza la mision: su unica accion es volver a oir una linea', () => {
     render(<ScriptTranscript script={SCRIPT} currentIndex={3} />)
 
     expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
-    expect(screen.queryByRole('button')).not.toBeInTheDocument()
+    // Cada linea del coach se puede volver a escuchar; las del alumno no.
+    const buttons = screen.getAllByRole('button')
+    expect(buttons).toHaveLength(2)
+    for (const button of buttons) {
+      expect(button).toHaveAccessibleName(/volver a escuchar/i)
+    }
+  })
+
+  it('permite volver a escuchar una linea del coach ya recorrida', () => {
+    render(<ScriptTranscript script={SCRIPT} currentIndex={3} />)
+
+    expect(
+      screen.getByRole('button', { name: `Volver a escuchar: ${SCRIPT[0].text}` }),
+    ).toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: `Volver a escuchar: ${SCRIPT[1].text}` }),
+    ).not.toBeInTheDocument()
   })
 })

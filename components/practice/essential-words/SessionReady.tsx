@@ -2,8 +2,7 @@
 
 // Planned structure:
 // <SessionReady>
-//   <SessionReadyHero /> (full width)
-//   <SessionReadyRecap />
+//   <SessionReadyHero> (full width: title, minutes, recap, size picker, CTA, route) </SessionReadyHero>
 //   main: forecast + vocabulary + vault | rail: streak, retention, leeches, heatmap
 // </SessionReady>
 
@@ -15,7 +14,6 @@ import { SessionReadyForecast } from './SessionReadyForecast'
 import { SessionReadyHeatmap } from './SessionReadyHeatmap'
 import { SessionReadyHero } from './SessionReadyHero'
 import { SessionReadyLeeches } from './SessionReadyLeeches'
-import { SessionReadyRecap } from './SessionReadyRecap'
 import { SessionReadyRetention } from './SessionReadyRetention'
 import { SessionReadyStreak } from './SessionReadyStreak'
 import { SessionReadyVaultRow } from './SessionReadyVaultRow'
@@ -67,11 +65,8 @@ export function SessionReady({
         onBegin={onBegin}
         onDiscard={onDiscard}
         previewLoading={previewLoading}
+        lastSession={dashboard?.lastSession}
       />
-
-      {dashboard?.lastSession ? (
-        <SessionReadyRecap session={dashboard.lastSession} />
-      ) : null}
 
       <div className="flex flex-col gap-space-3 md:grid md:grid-cols-[minmax(0,1fr)_minmax(12.5rem,15rem)] md:items-start md:gap-space-3">
         <div className="flex min-w-0 flex-col gap-space-3 animate-home-in animate-home-in-d1">

@@ -2,7 +2,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import BottomNavTab from '../BottomNavTab'
-import BottomNavMenu from '../BottomNavMenu'
+import BottomNavDrawer from '../BottomNavDrawer'
 import { playUiCue, isNavCuesEnabled } from '@/lib/ui-sounds/cues'
 import { useUISoundsStore } from '@/lib/stores/uiSoundsStore'
 
@@ -13,6 +13,18 @@ vi.mock('@/lib/ui-sounds/cues', async (importOriginal) => {
     playUiCue: vi.fn(),
   }
 })
+
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ push: vi.fn(), replace: vi.fn() }),
+}))
+
+vi.mock('@/components/auth/AuthProvider', () => ({
+  useAuth: () => ({ user: { id: 'u1' }, signOutUser: vi.fn() }),
+}))
+
+vi.mock('@/hooks/useUserPreferences', () => ({
+  useUserPreferences: () => ({ preferences: { full_name: 'Test User' } }),
+}))
 
 describe('Navigation Domain Sound Triggering & Double-Trigger Prevention', () => {
   beforeEach(() => {
@@ -53,17 +65,17 @@ describe('Navigation Domain Sound Triggering & Double-Trigger Prevention', () =>
     expect(playUiCue).not.toHaveBeenCalled()
   })
 
-  it('plays ONLY nav-switch (and 0 nav-close) when clicking a menu link in BottomNavMenu', () => {
+  it('plays ONLY nav-switch (and 0 nav-close) when clicking a nav link in BottomNavDrawer', () => {
     const onClose = vi.fn()
     render(
-      <BottomNavMenu
+      <BottomNavDrawer
         open={true}
         onClose={onClose}
         isActive={(href) => href === '/profile'}
       />
     )
 
-    const journalLink = screen.getByRole('link', { name: /diario/i })
+    const journalLink = screen.getByRole('link', { name: /mi diario/i })
     fireEvent.click(journalLink)
 
     expect(playUiCue).toHaveBeenCalledTimes(1)
@@ -72,10 +84,10 @@ describe('Navigation Domain Sound Triggering & Double-Trigger Prevention', () =>
     expect(onClose).toHaveBeenCalled()
   })
 
-  it('plays ONLY nav-close when dismissing BottomNavMenu via backdrop', () => {
+  it('plays ONLY nav-close when dismissing BottomNavDrawer via backdrop', () => {
     const onClose = vi.fn()
     render(
-      <BottomNavMenu
+      <BottomNavDrawer
         open={true}
         onClose={onClose}
         isActive={() => false}

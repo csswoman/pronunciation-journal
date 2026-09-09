@@ -144,6 +144,8 @@ export default function AICoachPanel() {
 
         <AICoachHeader
           pageLabel={ctx.label} showHistory={showHistory}
+          activeMissionId={activeMissionId}
+          onExitMission={() => { void changeMode("chat"); setActiveTab("missions"); }}
           onNewChat={() => { resetSession(); setActiveTab("chat"); refreshStarters(); }}
           onToggleHistory={() => setShowHistory((v) => !v)}
           onClose={() => { finalizeSession(); close(); }}
@@ -156,7 +158,18 @@ export default function AICoachPanel() {
           }
         />
 
-        <div className="shrink-0"><ChatTabs active={activeTab} onChange={setActiveTab} /></div>
+        <div className="shrink-0">
+          <ChatTabs
+            active={activeTab}
+            onChange={(tab) => {
+              if (tab === "missions" && activeTab === "missions" && activeMissionId) {
+                void changeMode("chat");
+                return;
+              }
+              setActiveTab(tab);
+            }}
+          />
+        </div>
 
         {showHistory && (
           <ConversationHistoryPanel

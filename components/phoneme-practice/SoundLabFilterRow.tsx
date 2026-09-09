@@ -2,19 +2,22 @@
 
 import { ChevronDown, Search, X } from "@/components/icons";
 import { cn } from "@/lib/cn";
-import type { SoundLabProgressFilter } from "./sound-lab-page-helpers";
+import type { SoundLabGrouping, SoundLabProgressFilter } from "./sound-lab-page-helpers";
 
 // Structure:
 // <SoundLabFilterRow>
 //   <SearchField />
+//   <GroupingDropdown />
 //   <StateDropdown />
 //   <HardOnlyToggle />
 // </SoundLabFilterRow>
 
 interface Props {
+  groupBy: SoundLabGrouping;
   progressFilter: SoundLabProgressFilter;
   onlyHard: boolean;
   search: string;
+  onGroupByChange: (grouping: SoundLabGrouping) => void;
   onProgressFilterChange: (filter: SoundLabProgressFilter) => void;
   onOnlyHardChange: (onlyHard: boolean) => void;
   onSearchChange: (query: string) => void;
@@ -22,9 +25,11 @@ interface Props {
 }
 
 export function SoundLabFilterRow({
+  groupBy,
   progressFilter,
   onlyHard,
   search,
+  onGroupByChange,
   onProgressFilterChange,
   onOnlyHardChange,
   onSearchChange,
@@ -80,14 +85,32 @@ export function SoundLabFilterRow({
         ) : null}
       </div>
 
-      {/* Zona 2: Filtros de estado y dificultad */}
+      {/* Zona 2: Filtros de agrupación, estado y dificultad */}
       <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto scrollbar-none py-0.5 sm:py-0 shrink-0">
+        {/* Selector de Agrupación */}
+        <div className="relative shrink-0">
+          <select
+            value={groupBy}
+            onChange={(e) => onGroupByChange(e.target.value as SoundLabGrouping)}
+            className="h-10 appearance-none rounded-xl border border-border-default bg-surface-sunken pl-3.5 pr-8 text-body-sm font-medium text-fg shadow-xs transition-all hover:border-border-strong focus:border-primary focus:outline-none focus:ring-2 focus:ring-[var(--focus-ring)] cursor-pointer"
+            aria-label="Agrupar sonidos por impacto o tipo"
+          >
+            <option value="impact">Grupo: por impacto</option>
+            <option value="type">Grupo: por tipo</option>
+          </select>
+          <ChevronDown
+            size={14}
+            className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-fg-subtle"
+            aria-hidden
+          />
+        </div>
+
         {/* Selector de Estado */}
         <div className="relative shrink-0">
           <select
             value={progressFilter}
             onChange={(e) => onProgressFilterChange(e.target.value as SoundLabProgressFilter)}
-            className="h-10 appearance-none rounded-xl border border-border-default bg-surface-sunken pl-4 pr-9 text-body-sm font-medium text-fg shadow-xs transition-all hover:border-border-strong focus:border-primary focus:outline-none focus:ring-2 focus:ring-[var(--focus-ring)] cursor-pointer"
+            className="h-10 appearance-none rounded-xl border border-border-default bg-surface-sunken pl-3.5 pr-8 text-body-sm font-medium text-fg shadow-xs transition-all hover:border-border-strong focus:border-primary focus:outline-none focus:ring-2 focus:ring-[var(--focus-ring)] cursor-pointer"
             aria-label="Filtrar por estado de práctica"
           >
             <option value="all">Estado: todos</option>
@@ -97,7 +120,7 @@ export function SoundLabFilterRow({
           </select>
           <ChevronDown
             size={14}
-            className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-fg-subtle"
+            className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-fg-subtle"
             aria-hidden
           />
         </div>

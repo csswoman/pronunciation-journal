@@ -3,7 +3,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { ImmersionCatalog } from '../ImmersionCatalog';
 import { LessonStudyPanel } from '../LessonStudyPanel';
-import { ENGVID_IMMERSION_LESSONS } from '@/lib/immersion/engvid-catalog';
+import type { ImmersionLesson } from '@/lib/immersion/types';
 
 vi.mock('@/lib/word-bank/queries', () => ({
   quickAddWord: vi.fn().mockResolvedValue({ id: 'w1' }),
@@ -13,18 +13,44 @@ vi.mock('@/lib/word-bank/speech', () => ({
   speakWord: vi.fn(),
 }));
 
+const FIXTURE_LESSONS: ImmersionLesson[] = [
+  {
+    id: 'engvid-emma-friends',
+    slug: 'how-to-talk-about-friends-in-english',
+    youtubeVideoId: 'ChZJ1Q3GSuI',
+    title: 'How to talk about friends in English',
+    teacher: 'Emma',
+    teacherChannelUrl: 'https://www.youtube.com/@engvidEmma',
+    level: 'B1',
+    topic: 'speaking',
+    durationMinutes: 8,
+    summary: 'Emma explica cómo describir amistades en inglés natural.',
+    timestamps: [
+      { seconds: 0, label: 'Escucha completa sin pausas' },
+      { seconds: 120, label: 'Repite en voz alta con el profesor' },
+    ],
+    keyVocabulary: [
+      { word: 'acquaintance', ipa: '/əˈkweɪntəns/', definition: 'Conocido, no un amigo cercano.', contextSentence: 'He is just an acquaintance from work.' },
+    ],
+    targetPhrases: [{ phrase: 'go way back', ipa: '/ɡoʊ weɪ bæk/', note: 'Conocerse desde hace mucho tiempo.' }],
+    quiz: [
+      { id: 'q1', question: '¿Qué significa "acquaintance"?', options: ['Conocido', 'Familiar', 'Vecino', 'Colega'], correctIndex: 0, explanation: 'Acquaintance es alguien que conoces poco.' },
+    ],
+  },
+];
+
 describe('ImmersionCatalog', () => {
   it('renders lesson cards from catalog', () => {
-    render(<ImmersionCatalog lessons={ENGVID_IMMERSION_LESSONS} />);
+    render(<ImmersionCatalog lessons={FIXTURE_LESSONS} />);
 
     expect(screen.getAllByText(/Teacher/i).length).toBeGreaterThan(0);
-    expect(screen.getByText(ENGVID_IMMERSION_LESSONS[0].title)).toBeInTheDocument();
+    expect(screen.getByText(FIXTURE_LESSONS[0].title)).toBeInTheDocument();
   });
 
   it('filters lessons when searching', () => {
-    render(<ImmersionCatalog lessons={ENGVID_IMMERSION_LESSONS} />);
+    render(<ImmersionCatalog lessons={FIXTURE_LESSONS} />);
 
-    const firstLesson = ENGVID_IMMERSION_LESSONS[0];
+    const firstLesson = FIXTURE_LESSONS[0];
     const input = screen.getByPlaceholderText(/Buscar por tema/i);
     fireEvent.change(input, { target: { value: firstLesson.teacher } });
 
@@ -33,7 +59,7 @@ describe('ImmersionCatalog', () => {
 });
 
 describe('LessonStudyPanel', () => {
-  const sampleLesson = ENGVID_IMMERSION_LESSONS[0];
+  const sampleLesson = FIXTURE_LESSONS[0];
 
   it('renders timestamps and triggers onSeek', () => {
     const onSeek = vi.fn();

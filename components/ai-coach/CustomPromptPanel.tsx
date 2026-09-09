@@ -26,7 +26,6 @@ export default function CustomPromptPanel({
 }: CustomPromptPanelProps) {
   const [text, setText] = useState("");
   const [focused, setFocused] = useState(false);
-  const [feedbackEnabled, setFeedbackEnabled] = useState(true);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
@@ -131,28 +130,6 @@ export default function CustomPromptPanel({
 
         <button
           type="button"
-          role="switch"
-          aria-checked={feedbackEnabled}
-          onClick={() => setFeedbackEnabled((v) => !v)}
-          title={feedbackEnabled ? "Desactivar correcciones de IA" : "Activar correcciones de IA"}
-          className={cn(
-            "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xxs font-medium transition-colors cursor-pointer select-none shrink-0",
-            feedbackEnabled
-              ? "bg-success-soft text-success border border-success/25"
-              : "bg-surface-sunken text-fg-subtle border border-border-subtle hover:text-fg",
-          )}
-        >
-          <span
-            className={cn(
-              "size-1.5 rounded-full transition-colors",
-              feedbackEnabled ? "bg-success" : "bg-fg-subtle",
-            )}
-          />
-          <span>Feedback IA</span>
-        </button>
-
-        <button
-          type="button"
           onClick={handleSubmit}
           disabled={!hasText || isDisabled}
           aria-label="Enviar"
@@ -164,7 +141,13 @@ export default function CustomPromptPanel({
         </button>
       </div>
 
-      <div className="flex items-center justify-between px-2 text-tiny text-fg-subtle">
+      <div
+        className={cn(
+          "flex items-center justify-between px-2 text-tiny text-fg-subtle transition-opacity duration-150 motion-reduce:transition-none",
+          focused ? "opacity-100" : "opacity-0",
+        )}
+        aria-hidden={!focused}
+      >
         <p className="hidden sm:block m-0 text-xxs text-fg-subtle">
           <kbd className="px-1 py-px rounded text-xxs font-mono bg-surface-sunken text-fg-muted border border-border-subtle">
             ↵

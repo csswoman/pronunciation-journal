@@ -2,15 +2,16 @@
 
 // Planned structure:
 // <ScriptTranscript>
-//   <TranscriptLine />  — burbuja de solo lectura por linea recorrida
+//   <TranscriptLine />  — una burbuja por línea ya recorrida
 
-import { cn } from '@/lib/cn'
+import { TranscriptLine } from './TranscriptLine'
 import type { ScriptLine } from '@/lib/ai-practice/missions/types'
 
 interface Props {
   script: ScriptLine[]
   /** Indice de la linea en curso: el historial llega hasta la anterior. */
   currentIndex: number
+  missionId?: string
 }
 
 /**
@@ -18,9 +19,9 @@ interface Props {
  *
  * La mision con guion se practica hablando, pero el guion sigue siendo una
  * conversacion: leerla turno a turno es lo que da contexto a la linea actual.
- * Por eso esto es deliberadamente inerte — ni input, ni botones.
+ * No hay input ni avance aqui — la unica accion es volver a oir una linea.
  */
-export function ScriptTranscript({ script, currentIndex }: Props) {
+export function ScriptTranscript({ script, currentIndex, missionId }: Props) {
   const past = script.slice(0, Math.max(0, currentIndex))
   if (past.length === 0) return null
 
@@ -29,29 +30,9 @@ export function ScriptTranscript({ script, currentIndex }: Props) {
       aria-label="Diálogo hasta ahora"
       className="flex flex-col gap-3.5 list-none p-0 m-0"
     >
-      {past.map((line) => {
-        const isCoach = line.speaker === 'coach'
-        return (
-          <li
-            key={line.id}
-            className={cn('flex flex-col gap-1.5', isCoach ? 'items-start' : 'items-end')}
-          >
-            <span className="text-xxs font-semibold uppercase tracking-wider text-fg-subtle">
-              {isCoach ? 'Coach' : 'Tú'}
-            </span>
-            <div
-              className={cn(
-                'max-w-[88%] rounded-lg px-4 py-2.5 text-body-sm shadow-xs',
-                isCoach
-                  ? 'border border-border-subtle/80 bg-surface-raised/90 text-fg-muted'
-                  : 'bg-primary-soft/90 text-fg',
-              )}
-            >
-              {line.text}
-            </div>
-          </li>
-        )
-      })}
+      {past.map((line) => (
+        <TranscriptLine key={line.id} line={line} missionId={missionId} />
+      ))}
     </ol>
   )
 }

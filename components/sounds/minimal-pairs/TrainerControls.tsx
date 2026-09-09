@@ -4,13 +4,8 @@ import {
   ArrowRight,
   Check,
   Flame,
-  HelpCircle,
-  Pause,
   Play,
-  Radio,
   RefreshCw,
-  RotateCcw,
-  Timer,
   Trophy,
   X,
 } from "@/components/icons";
@@ -21,7 +16,6 @@ type Side = "A" | "B";
 
 // Sub-components: TrainerControls completion view, in-flight pair controls, quiz verdict bar
 export function TrainerControls({
-  quizTarget,
   verdict,
   correctWord,
   isLastPair,
@@ -29,8 +23,6 @@ export function TrainerControls({
   accuracy,
   onPlayBoth,
   onNextPair,
-  onReplayClue,
-  onStartQuiz,
   onNextRound,
   onRestart,
   onNextContrast,
@@ -42,7 +34,7 @@ export function TrainerControls({
   bestStreak,
   embedded = false,
 }: {
-  quizTarget: Side | null;
+  quizTarget?: Side | null;
   verdict: Verdict;
   correctWord: string;
   isLastPair: boolean;
@@ -50,8 +42,8 @@ export function TrainerControls({
   accuracy: number | null;
   onPlayBoth: () => void;
   onNextPair: () => void;
-  onReplayClue: () => void;
-  onStartQuiz: () => void;
+  onReplayClue?: () => void;
+  onStartQuiz?: () => void;
   onNextRound: () => void;
   onRestart: () => void;
   onNextContrast?: () => void;
@@ -113,14 +105,13 @@ export function TrainerControls({
             type="button"
             onClick={onToggleSlow}
             className={cn(
-              "ipa-chart__btn ipa-chart__btn--ghost flex items-center gap-1",
-              isSlow && "text-primary font-bold bg-primary-soft border border-primary/30",
+              "ipa-chart__btn ipa-chart__btn--ghost",
+              isSlow && "text-primary font-bold bg-primary-soft border border-primary/30"
             )}
             title={isSlow ? "Velocidad lenta activa (0.75x)" : "Cambiar a velocidad lenta"}
             aria-label={isSlow ? "Velocidad lenta activa" : "Cambiar a velocidad lenta"}
           >
-            <Timer size={13} aria-hidden />
-            <span>{isSlow ? "0.75x" : "1.0x"}</span>
+            <span>🐢 {isSlow ? "0.75x" : "1.0x"}</span>
           </button>
         ) : null}
         {onToggleAutoLoop ? (
@@ -128,96 +119,58 @@ export function TrainerControls({
             type="button"
             onClick={onToggleAutoLoop}
             className={cn(
-              "ipa-chart__btn ipa-chart__btn--ghost flex items-center gap-1",
-              isAutoLoop && "text-primary font-bold bg-primary-soft border border-primary/30 animate-pulse",
+              "ipa-chart__btn ipa-chart__btn--ghost",
+              isAutoLoop && "text-primary font-bold bg-primary-soft border border-primary/30"
             )}
             title={isAutoLoop ? "Pausar reproducción continua" : "Activar modo escucha continua manos libres"}
             aria-label={isAutoLoop ? "Pausar reproducción continua" : "Activar modo escucha continua"}
           >
-            {isAutoLoop ? <Pause size={13} aria-hidden /> : <Radio size={13} aria-hidden />}
-            <span>{isAutoLoop ? "Pausar" : "Continuo"}</span>
+            <span>{isAutoLoop ? "⏸ Pausar" : "📻 Continuo"}</span>
           </button>
         ) : null}
-        <div className="flex items-center gap-1.5">
-          <button
-            type="button"
-            onClick={onNextPair}
-            className="ipa-chart__btn ipa-chart__btn--ghost sound-detail__pairs-action sound-detail__pairs-action--next"
-          >
-            {isLastPair ? "Último" : "Siguiente"}
-            <ArrowRight size={13} aria-hidden />
-          </button>
-          {!embedded ? (
-            <kbd className="ipa-chart__kbd ipa-chart__kbd--inline" aria-hidden>
-              Enter
-            </kbd>
-          ) : null}
-        </div>
-        {quizTarget ? (
-          <button
-            type="button"
-            onClick={onReplayClue}
-            className="ipa-chart__btn ipa-chart__btn--ghost sound-detail__pairs-action sound-detail__pairs-action--replay"
-          >
-            <RotateCcw size={13} aria-hidden />
-            Repetir pista
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={onStartQuiz}
-            className="ipa-chart__btn ipa-chart__btn--primary ipa-chart__mpfoot-quiz sound-detail__pairs-action sound-detail__pairs-action--quiz"
-          >
-            <HelpCircle size={14} aria-hidden />
-            {embedded ? "Escuchar una opción" : "Escuchar una opción"}
-          </button>
-        )}
-      </div>
 
-      {quizTarget ? (
-        <div className="mt-4 flex flex-col items-start justify-between gap-3 border-t border-border-subtle pt-4 sm:flex-row sm:items-center">
+        <div className="flex items-center gap-2 ml-auto">
           {verdict ? (
-            <>
-              <div className="flex items-center gap-2.5">
-                <span
-                  className={cn(
-                    "inline-flex h-7 w-7 items-center justify-center rounded-full",
-                    verdict === "correct"
-                      ? "bg-[var(--success)] text-[var(--on-success,white)]"
-                      : "bg-[var(--error)] text-[var(--on-error,white)]",
-                  )}
-                >
-                  {verdict === "correct" ? <Check size={14} strokeWidth={3} /> : <X size={14} strokeWidth={3} />}
+            <div className="flex items-center gap-2">
+              <span
+                className={cn(
+                  "inline-flex h-6 w-6 items-center justify-center rounded-full",
+                  verdict === "correct"
+                    ? "bg-[var(--success)] text-[var(--on-success,white)]"
+                    : "bg-[var(--error)] text-[var(--on-error,white)]",
+                )}
+              >
+                {verdict === "correct" ? <Check size={12} strokeWidth={3} /> : <X size={12} strokeWidth={3} />}
+              </span>
+              <span className="text-caption font-semibold text-fg">
+                {verdict === "correct" ? "¡Correcto!" : `Era «${correctWord}».`}
+              </span>
+              {verdict === "correct" && streak && streak >= 2 ? (
+                <span className="inline-flex items-center gap-1 rounded-full bg-warning-soft border border-warning/30 px-2 py-0.5 text-[11px] font-bold text-warning">
+                  <Flame size={11} className="text-warning shrink-0" aria-hidden />
+                  <span>{streak}</span>
                 </span>
-                <p className="text-body-sm font-medium text-fg">
-                  {verdict === "correct" ? "¡Correcto!" : `Era «${correctWord}».`}
-                </p>
-                {verdict === "correct" && streak && streak >= 2 ? (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-warning-soft border border-warning/30 px-2.5 py-0.5 text-caption font-bold text-warning animate-pulse">
-                    <Flame size={12} className="text-warning shrink-0" aria-hidden />
-                    <span>Racha: {streak}</span>
-                  </span>
-                ) : null}
-              </div>
-              <div className="flex items-center gap-1.5">
-                <button type="button" onClick={onNextRound} className="ipa-chart__btn ipa-chart__btn--primary">
-                  {isLastPair ? "Ver resultado" : "Siguiente"}
-                  <ArrowRight size={13} aria-hidden />
-                </button>
-                {!embedded ? (
-                  <kbd className="ipa-chart__kbd ipa-chart__kbd--inline" aria-hidden>
-                    Enter
-                  </kbd>
-                ) : null}
-              </div>
-            </>
-          ) : (
-            <p className="text-body-sm text-fg-muted" role="status">
-              {embedded ? "Elige la palabra que oíste." : <>¿Qué palabra oíste? Elige una opción o pulsa <kbd className="ipa-chart__kbd">A</kbd> / <kbd className="ipa-chart__kbd">B</kbd></>}
-            </p>
-          )}
+              ) : null}
+            </div>
+          ) : null}
+
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={verdict ? onNextRound : onNextPair}
+              className="ipa-chart__btn ipa-chart__btn--primary sound-detail__pairs-action sound-detail__pairs-action--next"
+            >
+              {isLastPair ? (verdict ? "Ver resultado" : "Último") : "Siguiente"}
+              <ArrowRight size={13} aria-hidden />
+            </button>
+            {!embedded ? (
+              <kbd className="ipa-chart__kbd ipa-chart__kbd--inline" aria-hidden>
+                Enter
+              </kbd>
+            ) : null}
+          </div>
         </div>
-      ) : null}
+      </div>
     </>
   );
 }

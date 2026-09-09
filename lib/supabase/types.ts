@@ -7,30 +7,10 @@ export type Json =
   | Json[]
 
 export type Database = {
-  graphql_public: {
-    Tables: {
-      [_ in never]: never
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      graphql: {
-        Args: {
-          extensions?: Json
-          operationName?: string
-          query?: string
-          variables?: Json
-        }
-        Returns: Json
-      }
-    }
-    Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "14.5"
   }
   public: {
     Tables: {
@@ -184,6 +164,48 @@ export type Database = {
           topic_scores?: Json
           total?: number
           user_id?: string
+        }
+        Relationships: []
+      }
+      attempt_logs: {
+        Row: {
+          assessment: Json
+          created_at: string
+          diagnostic: Json | null
+          event_type: string
+          id: string
+          observations: Json
+          occurred_at: string
+          rendered_mode: string | null
+          session_id: string
+          user_id: string
+          word_id: string
+        }
+        Insert: {
+          assessment: Json
+          created_at?: string
+          diagnostic?: Json | null
+          event_type: string
+          id: string
+          observations?: Json
+          occurred_at: string
+          rendered_mode?: string | null
+          session_id: string
+          user_id: string
+          word_id: string
+        }
+        Update: {
+          assessment?: Json
+          created_at?: string
+          diagnostic?: Json | null
+          event_type?: string
+          id?: string
+          observations?: Json
+          occurred_at?: string
+          rendered_mode?: string | null
+          session_id?: string
+          user_id?: string
+          word_id?: string
         }
         Relationships: []
       }
@@ -386,6 +408,57 @@ export type Database = {
           },
         ]
       }
+      essential_word_blank_quality: {
+        Row: {
+          guessed_at: string
+          sentence_id: string
+          token_index: number
+          user_id: string
+        }
+        Insert: {
+          guessed_at?: string
+          sentence_id: string
+          token_index: number
+          user_id: string
+        }
+        Update: {
+          guessed_at?: string
+          sentence_id?: string
+          token_index?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      essential_word_contrast_observations: {
+        Row: {
+          attempt_id: string
+          contrast_id: string
+          created_at: string
+          id: string
+          is_correct: boolean
+          user_id: string
+          weight: number
+        }
+        Insert: {
+          attempt_id: string
+          contrast_id: string
+          created_at?: string
+          id?: string
+          is_correct: boolean
+          user_id: string
+          weight: number
+        }
+        Update: {
+          attempt_id?: string
+          contrast_id?: string
+          created_at?: string
+          id?: string
+          is_correct?: boolean
+          user_id?: string
+          weight?: number
+        }
+        Relationships: []
+      }
       exercise_types: {
         Row: {
           id: number
@@ -404,12 +477,191 @@ export type Database = {
         }
         Relationships: []
       }
+      focus_content: {
+        Row: {
+          audio_narration_url: string | null
+          audio_sentences_urls: string[]
+          body: Json
+          created_at: string
+          exercises: Json
+          gap_ids: string[]
+          id: string
+          image_prompt_url: string | null
+          image_scene_url: string | null
+          kind: string
+          sprint_id: string
+          user_id: string
+          video_clip_url: string | null
+        }
+        Insert: {
+          audio_narration_url?: string | null
+          audio_sentences_urls?: string[]
+          body: Json
+          created_at?: string
+          exercises?: Json
+          gap_ids?: string[]
+          id?: string
+          image_prompt_url?: string | null
+          image_scene_url?: string | null
+          kind: string
+          sprint_id: string
+          user_id: string
+          video_clip_url?: string | null
+        }
+        Update: {
+          audio_narration_url?: string | null
+          audio_sentences_urls?: string[]
+          body?: Json
+          created_at?: string
+          exercises?: Json
+          gap_ids?: string[]
+          id?: string
+          image_prompt_url?: string | null
+          image_scene_url?: string | null
+          kind?: string
+          sprint_id?: string
+          user_id?: string
+          video_clip_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "focus_content_sprint_id_fkey"
+            columns: ["sprint_id"]
+            isOneToOne: false
+            referencedRelation: "focus_sprints"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      focus_sprints: {
+        Row: {
+          created_at: string
+          ends_at: string
+          gaps: Json
+          id: string
+          starts_at: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          ends_at: string
+          gaps?: Json
+          id?: string
+          starts_at?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          ends_at?: string
+          gaps?: Json
+          id?: string
+          starts_at?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      immersion_lesson_progress: {
+        Row: {
+          lesson_id: string
+          quiz_score: number | null
+          updated_at: string
+          user_id: string
+          watched: boolean
+          watched_at: string | null
+        }
+        Insert: {
+          lesson_id: string
+          quiz_score?: number | null
+          updated_at?: string
+          user_id: string
+          watched?: boolean
+          watched_at?: string | null
+        }
+        Update: {
+          lesson_id?: string
+          quiz_score?: number | null
+          updated_at?: string
+          user_id?: string
+          watched?: boolean
+          watched_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "immersion_lesson_progress_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "immersion_lessons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      immersion_lessons: {
+        Row: {
+          created_at: string
+          duration_minutes: number
+          id: string
+          key_vocabulary: Json
+          level: string
+          quiz: Json
+          slug: string
+          summary: string
+          target_phrases: Json
+          teacher: string
+          teacher_channel_url: string
+          timestamps: Json
+          title: string
+          topic: string
+          updated_at: string
+          youtube_video_id: string
+        }
+        Insert: {
+          created_at?: string
+          duration_minutes: number
+          id: string
+          key_vocabulary?: Json
+          level: string
+          quiz?: Json
+          slug: string
+          summary: string
+          target_phrases?: Json
+          teacher: string
+          teacher_channel_url: string
+          timestamps?: Json
+          title: string
+          topic: string
+          updated_at?: string
+          youtube_video_id: string
+        }
+        Update: {
+          created_at?: string
+          duration_minutes?: number
+          id?: string
+          key_vocabulary?: Json
+          level?: string
+          quiz?: Json
+          slug?: string
+          summary?: string
+          target_phrases?: Json
+          teacher?: string
+          teacher_channel_url?: string
+          timestamps?: Json
+          title?: string
+          topic?: string
+          updated_at?: string
+          youtube_video_id?: string
+        }
+        Relationships: []
+      }
       journal_entries: {
         Row: {
           content: string
           corrected_content: string | null
           created_at: string
           entry_date: string
+          entry_mode: string
           feedback: Json | null
           id: string
           prompt: string
@@ -423,6 +675,7 @@ export type Database = {
           corrected_content?: string | null
           created_at?: string
           entry_date: string
+          entry_mode?: string
           feedback?: Json | null
           id: string
           prompt?: string
@@ -436,6 +689,7 @@ export type Database = {
           corrected_content?: string | null
           created_at?: string
           entry_date?: string
+          entry_mode?: string
           feedback?: Json | null
           id?: string
           prompt?: string
@@ -443,6 +697,69 @@ export type Database = {
           status?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      learning_items: {
+        Row: {
+          content_origin: string
+          created_at: string
+          due_at: string | null
+          generator_provider: string | null
+          id: string
+          initial_listening_level: Json | null
+          lapses: number
+          last_review: string | null
+          payload: Json | null
+          placement_inference: Json | null
+          repetitions: number
+          schedule: Json
+          schedule_kind: string
+          skill: string
+          suspended: boolean
+          updated_at: string
+          user_id: string
+          word_id: string
+        }
+        Insert: {
+          content_origin: string
+          created_at?: string
+          due_at?: string | null
+          generator_provider?: string | null
+          id: string
+          initial_listening_level?: Json | null
+          lapses?: number
+          last_review?: string | null
+          payload?: Json | null
+          placement_inference?: Json | null
+          repetitions?: number
+          schedule: Json
+          schedule_kind: string
+          skill: string
+          suspended?: boolean
+          updated_at?: string
+          user_id: string
+          word_id: string
+        }
+        Update: {
+          content_origin?: string
+          created_at?: string
+          due_at?: string | null
+          generator_provider?: string | null
+          id?: string
+          initial_listening_level?: Json | null
+          lapses?: number
+          last_review?: string | null
+          payload?: Json | null
+          placement_inference?: Json | null
+          repetitions?: number
+          schedule?: Json
+          schedule_kind?: string
+          skill?: string
+          suspended?: boolean
+          updated_at?: string
+          user_id?: string
+          word_id?: string
         }
         Relationships: []
       }
@@ -551,6 +868,42 @@ export type Database = {
         }
         Relationships: []
       }
+      pronunciation_feedback_evidence: {
+        Row: {
+          attempt_pair_id: string | null
+          created_at: string
+          evaluator_kind: string
+          evaluator_version: string
+          id: string
+          occurred_at: string
+          outcome: string
+          target_id: string
+          user_id: string
+        }
+        Insert: {
+          attempt_pair_id?: string | null
+          created_at?: string
+          evaluator_kind: string
+          evaluator_version: string
+          id?: string
+          occurred_at?: string
+          outcome: string
+          target_id: string
+          user_id: string
+        }
+        Update: {
+          attempt_pair_id?: string | null
+          created_at?: string
+          evaluator_kind?: string
+          evaluator_version?: string
+          id?: string
+          occurred_at?: string
+          outcome?: string
+          target_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       rate_limits: {
         Row: {
           count: number
@@ -569,6 +922,45 @@ export type Database = {
           key?: string
           updated_at?: string
           window_start?: string
+        }
+        Relationships: []
+      }
+      reader_passages: {
+        Row: {
+          audio_url: string | null
+          created_at: string
+          id: string
+          level: string
+          passage: string
+          questions: Json
+          target_hash: string
+          target_items: string[]
+          topic: string
+          user_id: string
+        }
+        Insert: {
+          audio_url?: string | null
+          created_at?: string
+          id?: string
+          level?: string
+          passage: string
+          questions?: Json
+          target_hash: string
+          target_items: string[]
+          topic?: string
+          user_id: string
+        }
+        Update: {
+          audio_url?: string | null
+          created_at?: string
+          id?: string
+          level?: string
+          passage?: string
+          questions?: Json
+          target_hash?: string
+          target_items?: string[]
+          topic?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -668,6 +1060,66 @@ export type Database = {
         }
         Relationships: []
       }
+      srs_review_events: {
+        Row: {
+          affects_schedule: boolean
+          assessment: Json
+          attempt_log_id: string
+          created_at: string
+          fsrs_audit: Json
+          grade: string
+          id: string
+          learning_item_id: string
+          occurred_at: string
+          prior_schedule: Json
+          resulting_schedule: Json
+          user_id: string
+        }
+        Insert: {
+          affects_schedule?: boolean
+          assessment: Json
+          attempt_log_id: string
+          created_at?: string
+          fsrs_audit: Json
+          grade: string
+          id: string
+          learning_item_id: string
+          occurred_at: string
+          prior_schedule: Json
+          resulting_schedule: Json
+          user_id: string
+        }
+        Update: {
+          affects_schedule?: boolean
+          assessment?: Json
+          attempt_log_id?: string
+          created_at?: string
+          fsrs_audit?: Json
+          grade?: string
+          id?: string
+          learning_item_id?: string
+          occurred_at?: string
+          prior_schedule?: Json
+          resulting_schedule?: Json
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "srs_review_events_attempt_fk"
+            columns: ["user_id", "attempt_log_id"]
+            isOneToOne: false
+            referencedRelation: "attempt_logs"
+            referencedColumns: ["user_id", "id"]
+          },
+          {
+            foreignKeyName: "srs_review_events_item_fk"
+            columns: ["user_id", "learning_item_id"]
+            isOneToOne: false
+            referencedRelation: "learning_items"
+            referencedColumns: ["user_id", "id"]
+          },
+        ]
+      }
       stt_transcription_cache: {
         Row: {
           cache_key: string
@@ -700,45 +1152,6 @@ export type Database = {
           target_word?: string | null
           transcript?: string
           updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
-      reader_passages: {
-        Row: {
-          audio_url: string | null
-          created_at: string
-          id: string
-          level: string
-          passage: string
-          questions: Json
-          target_hash: string
-          target_items: string[]
-          topic: string
-          user_id: string
-        }
-        Insert: {
-          audio_url?: string | null
-          created_at?: string
-          id?: string
-          level?: string
-          passage: string
-          questions?: Json
-          target_hash: string
-          target_items: string[]
-          topic?: string
-          user_id: string
-        }
-        Update: {
-          audio_url?: string | null
-          created_at?: string
-          id?: string
-          level?: string
-          passage?: string
-          questions?: Json
-          target_hash?: string
-          target_items?: string[]
-          topic?: string
           user_id?: string
         }
         Relationships: []
@@ -856,6 +1269,7 @@ export type Database = {
       }
       user_contrast_progress: {
         Row: {
+          adaptive_score: number
           contrast_id: string
           correct_answers: number
           created_at: string
@@ -865,12 +1279,14 @@ export type Database = {
           last_seen: string | null
           mastery_pct: number
           next_review: string | null
+          observation_count: number
           streak: number
           total_attempts: number
           updated_at: string
           user_id: string
         }
         Insert: {
+          adaptive_score?: number
           contrast_id: string
           correct_answers?: number
           created_at?: string
@@ -880,12 +1296,14 @@ export type Database = {
           last_seen?: string | null
           mastery_pct?: number
           next_review?: string | null
+          observation_count?: number
           streak?: number
           total_attempts?: number
           updated_at?: string
           user_id: string
         }
         Update: {
+          adaptive_score?: number
           contrast_id?: string
           correct_answers?: number
           created_at?: string
@@ -895,6 +1313,7 @@ export type Database = {
           last_seen?: string | null
           mastery_pct?: number
           next_review?: string | null
+          observation_count?: number
           streak?: number
           total_attempts?: number
           updated_at?: string
@@ -950,51 +1369,24 @@ export type Database = {
         }
         Relationships: []
       }
-      word_definitions: {
+      user_roles: {
         Row: {
           created_at: string
-          definition_version: number
-          example: string
-          id: string
-          image_prompt: string
-          ipa: string
-          meaning: string
-          normalized_text: string
-          source: string
-          synonyms: string[]
-          text: string
-          translation: string
+          role: string
           updated_at: string
+          user_id: string
         }
         Insert: {
           created_at?: string
-          definition_version?: number
-          example?: string
-          id?: string
-          image_prompt?: string
-          ipa?: string
-          meaning: string
-          normalized_text: string
-          source?: string
-          synonyms?: string[]
-          text: string
-          translation: string
+          role?: string
           updated_at?: string
+          user_id: string
         }
         Update: {
           created_at?: string
-          definition_version?: number
-          example?: string
-          id?: string
-          image_prompt?: string
-          ipa?: string
-          meaning?: string
-          normalized_text?: string
-          source?: string
-          synonyms?: string[]
-          text?: string
-          translation?: string
+          role?: string
           updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -1142,6 +1534,54 @@ export type Database = {
           },
         ]
       }
+      word_definitions: {
+        Row: {
+          created_at: string
+          definition_version: number
+          example: string
+          id: string
+          image_prompt: string
+          ipa: string
+          meaning: string
+          normalized_text: string
+          source: string
+          synonyms: string[]
+          text: string
+          translation: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          definition_version?: number
+          example?: string
+          id?: string
+          image_prompt?: string
+          ipa?: string
+          meaning: string
+          normalized_text: string
+          source?: string
+          synonyms?: string[]
+          text: string
+          translation: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          definition_version?: number
+          example?: string
+          id?: string
+          image_prompt?: string
+          ipa?: string
+          meaning?: string
+          normalized_text?: string
+          source?: string
+          synonyms?: string[]
+          text?: string
+          translation?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       word_enrichment_jobs: {
         Row: {
           attempts: number
@@ -1242,7 +1682,15 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      essential_word_blank_review_queue: {
+        Row: {
+          distinct_guess_users: number | null
+          sentence_id: string | null
+          status: string | null
+          token_index: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       _sm2_derive_status: {
@@ -1263,6 +1711,15 @@ export type Database = {
           next_repetitions: number
           next_review_at: string
         }[]
+      }
+      apply_essential_word_contrast_observation: {
+        Args: {
+          p_attempt_id: string
+          p_contrast_id: string
+          p_is_correct: boolean
+          p_weight: number
+        }
+        Returns: undefined
       }
       apply_topic_srs_rating_event: {
         Args: {
@@ -1385,6 +1842,8 @@ export type Database = {
         }[]
       }
       get_lesson_completion_total: { Args: never; Returns: number }
+      health_check: { Args: never; Returns: boolean }
+      is_admin: { Args: never; Returns: boolean }
       is_valid_interest_list: { Args: { value: Json }; Returns: boolean }
       text_fragments_within_limit: { Args: never; Returns: boolean }
     }
@@ -1405,12 +1864,12 @@ export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -1434,11 +1893,11 @@ export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -1459,11 +1918,11 @@ export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -1484,11 +1943,11 @@ export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -1501,11 +1960,11 @@ export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
+    : never) = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -1515,11 +1974,7 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
-  graphql_public: {
-    Enums: {},
-  },
   public: {
     Enums: {},
   },
 } as const
-

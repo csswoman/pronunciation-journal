@@ -133,7 +133,7 @@ export function SoundLabLessonCard({
   return (
     <article
       className={cn(
-        "sound-lab__card group relative flex flex-col justify-between rounded-2xl border border-border-default bg-surface-raised p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-border-strong focus-within:border-primary active:scale-[0.99]",
+        "sound-lab__card group relative flex flex-col justify-between rounded-xl border border-border-default bg-surface-raised p-4 sm:p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-border-strong focus-within:border-primary active:scale-[0.99]",
         isContinuing && "sound-lab__card--continuing border-primary/60 ring-1 ring-primary/20 shadow-sm",
         isWeak && !isContinuing && "sound-lab__card--weak border-warning/40 shadow-xs",
         isDone && !isContinuing && !isWeak && "sound-lab__card--done border-success/40 shadow-xs",
@@ -144,7 +144,7 @@ export function SoundLabLessonCard({
         <button
           type="button"
           onClick={onSelect}
-          className="flex flex-col text-left outline-none flex-1 focus-visible:ring-2 focus-visible:ring-primary rounded-xl cursor-pointer"
+          className="flex flex-col text-left outline-none flex-1 focus-visible:ring-2 focus-visible:ring-primary rounded-lg cursor-pointer"
           aria-label={`Ver detalles de ${[ipa, heroWord, topTag?.label].filter(Boolean).join(" — ")}`}
         >
           {content}
@@ -152,16 +152,20 @@ export function SoundLabLessonCard({
       ) : (
         <Link
           href={linkHref}
-          className="flex flex-col no-underline outline-none flex-1 focus-visible:ring-2 focus-visible:ring-primary rounded-xl"
+          className="flex flex-col no-underline outline-none flex-1 focus-visible:ring-2 focus-visible:ring-primary rounded-lg"
           aria-label={[ipa, heroWord, topTag?.label].filter(Boolean).join(" — ")}
         >
           {content}
         </Link>
       )}
 
-      {/* Botones de ejemplos de audio con acabado pill interactivo */}
+      {/* Barra de audio secundaria con separación accesible y touch targets de 32px */}
       {examples.length > 0 && (
-        <div className="flex flex-wrap items-center gap-2 pt-2.5 border-t border-border-subtle">
+        <div
+          className="flex flex-wrap items-center gap-2 pt-3 border-t border-border-subtle"
+          role="group"
+          aria-label={`Escuchar ejemplos de ${ipa ?? "este sonido"}`}
+        >
           {examples.map((word, i) => (
             <button
               key={`${word}-${i}`}
@@ -174,7 +178,8 @@ export function SoundLabLessonCard({
                 "inline-flex items-center gap-1.5 rounded-full border border-border-default bg-surface-sunken/80 px-3 min-h-[32px] max-w-full text-caption font-medium text-fg hover:border-border-strong hover:bg-surface-raised active:scale-95 transition-all cursor-pointer focus-visible:outline-2 focus-visible:outline-primary",
                 speaking === word && "border-primary bg-primary-soft text-primary shadow-xs",
               )}
-              aria-label={`Pronunciar ${word}`}
+              aria-label={`Escuchar ${word}`}
+              title={`Escuchar pronunciación de "${word}"`}
             >
               <Play
                 size={11}

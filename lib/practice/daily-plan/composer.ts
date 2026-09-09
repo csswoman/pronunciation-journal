@@ -37,6 +37,8 @@ import {
 } from './candidate-helpers'
 import { buildDailyCandidateSteps } from './daily-steps-builder'
 import { resolveDiagnosticPrescriptionTarget } from './diagnostic-prescription'
+import { buildImmersionLessonStep } from './immersion-step'
+import { loadWatchedImmersionLessonIds } from '@/lib/immersion/progress-queries'
 
 export {
   buildReviewPlan,
@@ -121,6 +123,9 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
 
   const repairConstraints = constraintIdsForDuePatterns(aiState?.errorRecurrence)
 
+  const watchedImmersionIds = await loadWatchedImmersionLessonIds(userId).catch(() => new Set<string>())
+  const immersionStep = await buildImmersionLessonStep(activeLevel, watchedImmersionIds, dayOfYear())
+
   const {
     steps: candidateSteps,
     grammarStep,
@@ -181,6 +186,7 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     ...steps,
     ...(grammarStep ? [grammarStep] : []),
     ...(studyDeckStep ? [studyDeckStep] : []),
+    ...(immersionStep ? [immersionStep] : []),
     ...(missionAllowedToday && missionStep ? [missionStep] : []),
   ].map((step) =>
     candidate(step, {

@@ -202,6 +202,7 @@ export type DailyStepKind =
   | 'reader'           // comprehensible-input: párrafo i+1 que recicla vocab reciente
   | 'mission'          // transferencia oral con target/source/step exactos
   | 'grammar_focus'    // regla + producción restringida desde un mazo de gramática
+  | 'immersion_lesson' // video de EngVid del nivel del usuario (catálogo en Supabase)
 
 export type DailySelectionReason =
   | 'due'

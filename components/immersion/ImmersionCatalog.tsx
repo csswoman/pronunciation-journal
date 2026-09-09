@@ -5,11 +5,19 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, Timer } from '@/components/icons';
 import Badge from '@/components/ui/Badge';
-import type { ImmersionLesson, ImmersionTopic } from '@/lib/immersion/types';
+import type { ImmersionLesson, ImmersionLevel, ImmersionTopic } from '@/lib/immersion/types';
 
 interface ImmersionCatalogProps {
   lessons: ImmersionLesson[];
 }
+
+const LEVEL_LABELS: Record<ImmersionLevel, string> = {
+  A2: 'A2 - Elemental',
+  B1: 'B1 - Intermedio',
+  C1: 'C1 - Avanzado',
+};
+
+const LEVEL_ORDER: ImmersionLevel[] = ['A2', 'B1', 'C1'];
 
 const TOPIC_LABELS: Record<ImmersionTopic, string> = {
   speaking: 'Speaking',
@@ -22,6 +30,11 @@ const TOPIC_LABELS: Record<ImmersionTopic, string> = {
 
 export function ImmersionCatalog({ lessons }: ImmersionCatalogProps) {
   const [selectedLevel, setSelectedLevel] = useState<string>('all');
+  // Solo se ofrecen los niveles que el catálogo realmente tiene, para que
+  // ningún filtro lleve a una lista vacía.
+  const availableLevels = LEVEL_ORDER.filter((level) =>
+    lessons.some((lesson) => lesson.level === level),
+  );
   const [selectedTopic, setSelectedTopic] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
@@ -61,10 +74,11 @@ export function ImmersionCatalog({ lessons }: ImmersionCatalogProps) {
             aria-label="Filtrar por nivel"
           >
             <option value="all">Todos los niveles</option>
-            <option value="A1">A1 - Inicial</option>
-            <option value="A2">A2 - Elemental</option>
-            <option value="B1">B1 - Intermedio</option>
-            <option value="B2">B2 - Intermedio Alto</option>
+            {availableLevels.map((level) => (
+              <option key={level} value={level}>
+                {LEVEL_LABELS[level]}
+              </option>
+            ))}
           </select>
 
           {/* Topic Filter */}

@@ -50,6 +50,7 @@
   --color-fg:             var(--text-primary);
   --color-fg-muted:       var(--text-secondary);
   --color-fg-subtle:      var(--text-tertiary);
+  --color-fg-faint:       var(--text-quaternary);
   --color-fg-disabled:    var(--text-disabled);
   --color-fg-placeholder: var(--text-placeholder);
 

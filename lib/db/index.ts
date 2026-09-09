@@ -101,6 +101,17 @@ export interface CompletedCourseLesson {
   updatedAt: string; // ISO
 }
 
+export interface ImmersionLessonProgressRecord {
+  // PK: `${userId}:${lessonId}`
+  key: string;
+  userId: string;
+  lessonId: string;
+  watched: boolean;
+  watchedAt?: string; // ISO
+  quizScore?: number;
+  updatedAt: string; // ISO
+}
+
 export interface IpaExplorationRecord {
   userId?: string;
   // PK: `${date}:${symbol}` — one row per phoneme explored per day
@@ -404,6 +415,7 @@ class PronunciationDB extends Dexie {
   downloadedLessons!: Table<DownloadedLessonRecord, string>;
   focusSprints!: Table<FocusSprint, string>;
   focusContent!: Table<FocusContent, string>;
+  immersionLessonProgress!: Table<ImmersionLessonProgressRecord, string>;
 
 
   constructor() {
@@ -652,7 +664,11 @@ class PronunciationDB extends Dexie {
       focusSprints: 'id, userId, status, endsAt, [userId+status]',
       focusContent: 'id, sprintId, userId, kind, createdAt, [sprintId+kind]',
     });
-
+    // v38: espejo de immersion_lesson_progress — qué lecciones de inmersión ya
+    // vio cada usuario, para que el plan diario no repita una hasta agotar el nivel.
+    this.version(38).stores({
+      immersionLessonProgress: 'key, userId, lessonId, [userId+watched]',
+    });
 
     this.pronunciationMastery = this.table("pronunciationMasteryV2") as Table<PronunciationMasteryRecord, string>;
     this.pronunciationCoachState = this.table("pronunciationCoachStateV2") as Table<PronunciationCoachStateRecord, string>;

@@ -20,7 +20,7 @@ export function targetRefsForStep(
   if (step.kind === 'reader') {
     return step.readerPassage ? [`reader:${step.readerPassage.id}`] : [step.id]
   }
-  if (step.kind === 'study_deck' || step.kind === 'concept') return [step.id]
+  if (step.kind === 'study_deck' || step.kind === 'concept' || step.kind === 'immersion_lesson') return [step.id]
   return step.exercises.length > 0 ? step.exercises.map((exercise) => exercise.contentId) : [step.id]
 }
 
@@ -38,7 +38,7 @@ export function reasonForStep(
   if (step.id.startsWith('review_') || (options.hasDueSrs && step.kind === 'word_review')) return 'due'
   if (step.id.includes('failed') || (step.kind === 'sentence_builder' && options.weakTopic)) return 'recent_error'
   if (options.hasProgress && ['phoneme_focus', 'minimal_pairs', 'listening'].includes(step.kind)) return 'weak_target'
-  if (step.kind === 'study_deck' || step.kind === 'reader') return 'route_next'
+  if (step.kind === 'study_deck' || step.kind === 'reader' || step.kind === 'immersion_lesson') return 'route_next'
   if (step.kind === 'word_review' && options.hasSavedOrFamiliar) return 'saved_intent'
   return 'variety'
 }
@@ -59,6 +59,7 @@ const PEDAGOGICAL_KIND_ORDER: Record<string, number> = {
   concept: 3,
   study_deck: 3,
   reader: 3,
+  immersion_lesson: 3,
   grammar_focus: 4,
   sentence_context: 4,
   context_practice: 4,

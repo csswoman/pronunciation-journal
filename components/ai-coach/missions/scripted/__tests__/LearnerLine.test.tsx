@@ -4,14 +4,29 @@ import { fireEvent, render, screen } from '@testing-library/react'
 import { LearnerLine } from '../LearnerLine'
 import type { ScriptLine } from '@/lib/ai-practice/missions/types'
 
-const captureState = {
-  status: 'idle' as any,
-  transcript: null as string | null,
-  userAudioUrl: null as string | null,
-  micStream: null as any,
-  errorCode: null as any,
+import type { LearnerCaptureState, LearnerSpeechErrorCode } from '@/hooks/useLearnerSpeechCapture'
+
+const captureState: {
+  status: 'idle' | 'listening' | 'processing' | 'done' | 'error' | 'unsupported'
+  transcript: string | null
+  userAudioUrl: string | null
+  micStream: MediaStream | null
+  errorCode: LearnerSpeechErrorCode
+  canScore: boolean
+  captureState: LearnerCaptureState
+  isCapturing: boolean
+  hasRecording: boolean
+  start: ReturnType<typeof vi.fn>
+  stop: ReturnType<typeof vi.fn>
+  reset: ReturnType<typeof vi.fn>
+} = {
+  status: 'idle',
+  transcript: null,
+  userAudioUrl: null,
+  micStream: null,
+  errorCode: null,
   canScore: true,
-  captureState: 'inactive' as any,
+  captureState: 'inactive',
   isCapturing: false,
   hasRecording: false,
   start: vi.fn(),

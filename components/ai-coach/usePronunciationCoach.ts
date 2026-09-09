@@ -249,5 +249,6 @@ export function usePronunciationCoach() {
     speakPhrase,
     advanceQueue,
     wordIPAs,
+    wordResults: latestScoring?.wordResults ?? [],
   };
 }

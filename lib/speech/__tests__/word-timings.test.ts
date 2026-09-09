@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { splitSpokenWords, estimateWordOffsets } from '../word-timings'
+import { splitSpokenWords, estimateWordOffsets, estimatedDuration, wordIndexAtChar } from '../word-timings'
 
 describe('splitSpokenWords', () => {
   it('conserva la puntuacion pegada a su palabra', () => {
@@ -43,3 +43,34 @@ describe('estimateWordOffsets', () => {
     expect(estimateWordOffsets([], 500)).toEqual([])
   })
 })
+
+describe('estimatedDuration', () => {
+  it('tiene un mínimo de 600ms para frases cortas', () => {
+    expect(estimatedDuration('Hi')).toBe(600)
+    expect(estimatedDuration('')).toBe(600)
+  })
+
+  it('calcula 60ms por carácter para textos más largos', () => {
+    const text = 'This is a longer sentence for testing duration estimation.'
+    expect(estimatedDuration(text)).toBe(text.length * 60)
+  })
+})
+
+describe('wordIndexAtChar', () => {
+  it('identifica correctamente el índice de palabra según la posición del carácter', () => {
+    const text = 'How are you today?'
+    // "How" (0..2), "are" (4..6), "you" (8..10), "today?" (12..17)
+    expect(wordIndexAtChar(text, 0)).toBe(0)
+    expect(wordIndexAtChar(text, 2)).toBe(0)
+    expect(wordIndexAtChar(text, 4)).toBe(1)
+    expect(wordIndexAtChar(text, 6)).toBe(1)
+    expect(wordIndexAtChar(text, 8)).toBe(2)
+    expect(wordIndexAtChar(text, 13)).toBe(3)
+  })
+
+  it('no desborda el índice de palabra para posiciones más allá del texto', () => {
+    const text = 'One two'
+    expect(wordIndexAtChar(text, 100)).toBe(1)
+  })
+})
+

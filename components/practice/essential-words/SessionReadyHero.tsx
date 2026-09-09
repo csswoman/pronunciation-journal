@@ -4,14 +4,18 @@
 // <SessionReadyHero>
 //   title + minutes
 //   breakdown
+//   recap (if lastSession)
 //   <SessionReadySizePicker />
 //   CTA
 //   <SessionReadyRouteChips /> (secondary)
 // </SessionReadyHero>
 
+import { useEffect } from 'react'
 import type { SessionSizeId } from '@/lib/essential-words/session-size'
 import { PillButton } from '@/components/ui/PillButton'
 import type { EssentialWordsSessionPreview } from '@/lib/essential-words/action-session'
+import type { LastEssentialWordsSession } from '@/lib/essential-words/ready-last-session'
+import { SessionReadyRecap } from './SessionReadyRecap'
 import { SessionReadyRouteChips } from './SessionReadyRouteChips'
 import { SessionReadySizePicker } from './SessionReadySizePicker'
 import { SessionSurface } from './session-chrome'
@@ -26,6 +30,7 @@ interface Props {
   onBegin: () => void
   onDiscard: () => void
   previewLoading: boolean
+  lastSession?: LastEssentialWordsSession | null
 }
 
 function breakdownLine(preview: EssentialWordsSessionPreview, isResume: boolean): string | null {
@@ -50,6 +55,7 @@ export function SessionReadyHero({
   onBegin,
   onDiscard,
   previewLoading,
+  lastSession,
 }: Props) {
   const minutes = Math.max(1, Math.round(preview.estimatedDurationMs / 60000))
   const breakdown = breakdownLine(preview, isResume)
@@ -57,6 +63,29 @@ export function SessionReadyHero({
     ? 'Continuar donde lo dejaste'
     : `Hoy tienes ${preview.scheduledActions} ${preview.scheduledActions === 1 ? 'ejercicio' : 'ejercicios'}`
   const ctaLabel = isResume ? 'Continuar' : 'Empezar'
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (previewLoading) return
+      if (event.defaultPrevented) return
+      const target = event.target as HTMLElement | null
+      const isInput =
+        target &&
+        (target.tagName === 'INPUT' ||
+          target.tagName === 'TEXTAREA' ||
+          target.tagName === 'SELECT' ||
+          target.isContentEditable)
+      if (isInput) return
+
+      if (event.key === 'Enter') {
+        event.preventDefault()
+        onBegin()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [onBegin, previewLoading])
 
   return (
     <SessionSurface density="primary" className="animate-home-in">
@@ -69,6 +98,11 @@ export function SessionReadyHero({
             <p className="m-0 text-body-sm text-pretty tabular-nums text-fg-muted">
               {breakdown}
             </p>
+          ) : null}
+          {lastSession ? (
+            <div className="pt-0.5">
+              <SessionReadyRecap session={lastSession} />
+            </div>
           ) : null}
         </div>
         <span className="shrink-0 pt-1 font-caption tabular-nums text-fg-muted">

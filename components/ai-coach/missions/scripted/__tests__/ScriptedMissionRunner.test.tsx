@@ -36,8 +36,11 @@ describe('ScriptedMissionRunner', () => {
   })
 
   it('avanza al turno del estudiante', () => {
-    render(<ScriptedMissionRunner mission={mission} onExit={vi.fn()} />)
+    const { container } = render(<ScriptedMissionRunner mission={mission} onExit={vi.fn()} />)
     fireEvent.click(screen.getByRole('button', { name: /continuar/i }))
-    expect(screen.getByText('A coffee, please.')).toBeInTheDocument()
+    // La frase del alumno se pinta palabra a palabra en el ShadowingPanel:
+    // cada palabra es su propio boton, asi que no hay separadores en el DOM.
+    const words = (container.textContent ?? '').replace(/\s+/g, '')
+    expect(words).toContain('Acoffee,please.')
   })
 })

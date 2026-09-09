@@ -22,7 +22,7 @@ export function SessionReadyRouteChips({ activeRouteId, onRouteChange, disabled 
         value={activeRouteId ?? ''}
         disabled={disabled}
         onChange={(event) => onRouteChange(event.target.value || null)}
-        className="min-h-11 w-full appearance-none rounded-md border border-border-default bg-surface-sunken py-2 pl-3 pr-10 text-label font-semibold text-fg transition-[color,background-color,border-color,box-shadow] duration-150 ease-out-quart hover:border-border-strong hover:bg-surface-raised focus:border-primary focus:bg-surface-raised focus:shadow-sm focus-ring disabled:cursor-not-allowed disabled:opacity-60"
+        className="min-h-9 sm:min-h-10 w-full appearance-none rounded-md border border-border-default bg-surface-sunken py-1.5 sm:py-2 pl-3 pr-9 text-caption sm:text-label font-semibold text-fg transition-[color,background-color,border-color,box-shadow] duration-150 ease-out-quart hover:border-border-strong hover:bg-surface-raised focus:border-primary focus:bg-surface-raised focus:shadow-sm focus-ring disabled:cursor-not-allowed disabled:opacity-60"
       >
         <option value="">Por frecuencia</option>
         {groups.map((group) => (

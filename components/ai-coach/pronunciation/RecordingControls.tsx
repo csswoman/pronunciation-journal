@@ -1,17 +1,24 @@
 "use client";
 
-import { Mic, ChevronRight } from "@/components/icons";
+import { Loader2, Mic, ChevronRight } from "@/components/icons";
 
 interface Props {
   isRecording: boolean;
+  isAnalyzing: boolean;
   onMicClick: () => void;
   onSkip: () => void;
 }
 
 const WAVE_HEIGHTS = [30, 50, 70, 45, 80, 60, 35, 55, 75, 40, 65, 90, 50, 30, 70, 45, 60, 35, 55, 80, 50, 40, 65, 30];
 
-export default function RecordingControls({ isRecording, onMicClick, onSkip }: Props) {
-  const hint = isRecording ? "Grabando… pulsa para detener" : "Pulsa para grabar";
+export default function RecordingControls({ isRecording, isAnalyzing, onMicClick, onSkip }: Props) {
+  const hint = isAnalyzing
+    ? "Analizando pronunciación…"
+    : isRecording
+    ? "Grabando… pulsa para detener"
+    : "Pulsa para grabar";
+
+  const isDisabled = isAnalyzing;
 
   return (
     <div className="shrink-0 flex flex-col items-center gap-3 pt-4 pb-[var(--layout-section-gap)] relative">
@@ -20,13 +27,9 @@ export default function RecordingControls({ isRecording, onMicClick, onSkip }: P
           0%, 100% { transform: scaleY(0.4); opacity: 0.25; }
           50%       { transform: scaleY(1);   opacity: 0.65; }
         }
-        @keyframes waveBarIdle {
-          0%, 100% { transform: scaleY(0.35); opacity: 0.35; }
-          50%       { transform: scaleY(0.8);  opacity: 0.5; }
-        }
       `}</style>
 
-      {/* Waveform */}
+      {/* Waveform — estática en reposo, animada solo al grabar */}
       <div
         className="flex items-center justify-center gap-1 h-10 w-full max-w-[280px]"
         aria-hidden="true"
@@ -34,11 +37,12 @@ export default function RecordingControls({ isRecording, onMicClick, onSkip }: P
         {WAVE_HEIGHTS.map((h, i) => (
           <span
             key={i}
-            className={`inline-block w-1 rounded-sm origin-center ${isRecording ? "animate-[waveBarPulse_1.4s_ease-in-out_infinite]" : "animate-[waveBarIdle_1.8s_ease-in-out_infinite]"}`}
+            className={`inline-block w-1 rounded-sm origin-center ${isRecording ? "animate-[waveBarPulse_1.4s_ease-in-out_infinite]" : ""}`}
             style={{
-              height: `${h}%`,
+              height: isRecording ? `${h}%` : "25%",
               backgroundColor: "var(--primary)",
-              animationDelay: `${isRecording ? i * 0.05 : i * 0.06}s`,
+              opacity: isRecording ? undefined : 0.3,
+              animationDelay: isRecording ? `${i * 0.05}s` : undefined,
             }}
           />
         ))}
@@ -47,9 +51,10 @@ export default function RecordingControls({ isRecording, onMicClick, onSkip }: P
       {/* Record button + skip */}
       <div className="relative flex items-center justify-center w-full">
         <button
-          onClick={onMicClick}
-          aria-label={isRecording ? "Detener grabación" : "Iniciar grabación"}
-          className="w-[72px] h-[72px] rounded-full flex items-center justify-center border-none cursor-pointer transition-all duration-200 active:scale-95 hover:scale-[1.04]"
+          onClick={isDisabled ? undefined : onMicClick}
+          disabled={isDisabled}
+          aria-label={isAnalyzing ? "Analizando" : isRecording ? "Detener grabación" : "Iniciar grabación"}
+          className="w-[72px] h-[72px] rounded-full flex items-center justify-center border-none cursor-pointer transition-all duration-200 active:scale-95 hover:scale-[1.04] disabled:cursor-default disabled:hover:scale-100 disabled:opacity-70"
           style={{
             backgroundColor: isRecording ? "var(--error)" : "var(--primary)",
             color: "white",
@@ -58,7 +63,10 @@ export default function RecordingControls({ isRecording, onMicClick, onSkip }: P
               : "0 0 0 0 color-mix(in oklch, var(--primary) 25%, transparent)",
           }}
         >
-          <Mic size={26} />
+          {isAnalyzing
+            ? <Loader2 size={24} className="animate-spin" />
+            : <Mic size={26} />
+          }
         </button>
 
         <div className="absolute right-8 group">
@@ -81,3 +89,4 @@ export default function RecordingControls({ isRecording, onMicClick, onSkip }: P
     </div>
   );
 }
+

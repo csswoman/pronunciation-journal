@@ -8,7 +8,7 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { cn } from "@/lib/cn";
 import { isNavActive } from "@/lib/navigation/is-nav-active";
 import { playUiCue } from "@/lib/ui-sounds/cues";
-import BottomNavMenu from "./BottomNavMenu";
+import BottomNavDrawer from "./BottomNavDrawer";
 import BottomNavTab from "./BottomNavTab";
 
 interface BottomNavProps {
@@ -47,7 +47,7 @@ export default function BottomNav({ className = "" }: BottomNavProps) {
 
   return (
     <>
-      <BottomNavMenu open={showMenu} onClose={closeMenu} isActive={isActive} />
+      <BottomNavDrawer open={showMenu} onClose={closeMenu} isActive={isActive} />
 
       <nav
         aria-label="Navegación principal"

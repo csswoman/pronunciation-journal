@@ -25,17 +25,18 @@ function chipIcon(label: string): LucideIcon {
 
 export default function SuggestionChips({ suggestions, onSelect }: SuggestionChipsProps) {
   return (
-    <div className="flex flex-wrap gap-1.5">
+    <div className="flex flex-wrap gap-1.5 px-1">
       {suggestions.map((s) => {
         const Icon = chipIcon(s.label);
         return (
           <button
             key={s.label}
             onClick={() => onSelect(s.prompt)}
-            className="flex items-center gap-1.5 text-caption px-3 py-1.5 rounded-full transition-colors bg-surface-sunken text-fg-muted hover:bg-[var(--primary-100)] hover:text-[color:var(--primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--primary)]/40"
+            title={s.prompt}
+            className="inline-flex max-w-full items-center gap-1.5 rounded-full border border-border-subtle bg-surface-sunken px-2.5 py-1 text-tiny text-fg-muted transition-colors hover:border-[color:var(--primary)]/30 hover:bg-[var(--primary-100)] hover:text-[color:var(--primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--primary)]/40"
           >
-            <Icon size={12} strokeWidth={1.8} />
-            {s.label}
+            <Icon size={11} strokeWidth={1.8} className="shrink-0" />
+            <span className="truncate">{s.label}</span>
           </button>
         );
       })}

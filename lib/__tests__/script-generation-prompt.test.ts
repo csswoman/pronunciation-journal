@@ -21,6 +21,22 @@ describe('buildScriptGenerationPrompt', () => {
     expect(prompt).toContain('receipt')
   })
 
+  it('ancla el guión en el área de vocabulario que se le resiste', () => {
+    const prompt = buildScriptGenerationPrompt({
+      topic: 'daily standup',
+      context: { ...emptyLearnerContext(), weakDomains: ['Backend e infraestructura'] },
+    })
+    expect(prompt).toContain('Backend e infraestructura')
+  })
+
+  it('menciona los dominios donde estudia cuando no hay área débil', () => {
+    const prompt = buildScriptGenerationPrompt({
+      topic: 'daily standup',
+      context: { ...emptyLearnerContext(), domains: ['Ingeniería'] },
+    })
+    expect(prompt).toContain('Ingeniería')
+  })
+
   it('funciona sin datos de personalización', () => {
     const prompt = buildScriptGenerationPrompt({
       topic: 'cafe',

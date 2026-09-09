@@ -14,8 +14,8 @@ interface Props {
 
 const chipClass = (selected: boolean) =>
   cn(
-    'inline-flex min-h-10 w-full items-center justify-center rounded-full px-2 py-2',
-    'text-caption font-semibold transition-[color,background-color,border-color,transform]',
+    'inline-flex min-h-8 sm:min-h-9 w-full items-center justify-center rounded-full px-1.5 py-1 sm:px-2.5 sm:py-1.5',
+    'text-caption font-semibold whitespace-nowrap transition-[color,background-color,border-color,transform]',
     'duration-150 ease-out-quart focus-ring active:scale-[0.97]',
     'motion-reduce:transition-colors motion-reduce:active:scale-100',
     selected

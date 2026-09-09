@@ -15,6 +15,13 @@ export interface LearnerContext {
   srsDueWords: string[]
   /** Dominios del léxico donde el usuario guarda palabras, más frecuente primero. */
   domains: string[]
+  /**
+   * Áreas de vocabulario que se le resisten, la más dura primero.
+   *
+   * Distinto de `domains`: aquello mide dónde colecciona palabras, esto mide
+   * dónde las olvida. Es el grano con el que se puede armar una lección.
+   */
+  weakDomains: string[]
 }
 
 export function emptyLearnerContext(): LearnerContext {
@@ -25,6 +32,7 @@ export function emptyLearnerContext(): LearnerContext {
     strugglingWords: [],
     srsDueWords: [],
     domains: [],
+    weakDomains: [],
   }
 }
 
@@ -38,22 +46,59 @@ export function emptyLearnerContext(): LearnerContext {
 export async function buildLearnerContext(userId: string): Promise<LearnerContext> {
   const base = emptyLearnerContext()
 
-  const [profileResult, domainsResult] = await Promise.allSettled([
-    (async () => {
-      const { loadSkillProfile } = await import('@/lib/progress/queries')
-      return loadSkillProfile(userId)
-    })(),
-    (async () => {
-      const { deriveDomainProfile } = await import('@/lib/lexicon/domain-profile')
-      const { getWordCategoryIndex } = await import('@/lib/lexicon/categories')
-      const { getWordBankSourceRefsServer } = await import('@/lib/word-bank/server-queries')
-      const entries = await getWordBankSourceRefsServer(userId)
-      return deriveDomainProfile(entries, getWordCategoryIndex())
-    })(),
-  ])
+  const [profileResult, lexiconResult, vocabResult, stateResult] =
+    await Promise.allSettled([
+      (async () => {
+        const { loadSkillProfile } = await import('@/lib/progress/queries')
+        return loadSkillProfile(userId)
+      })(),
+      // Ambas mitades del perfil léxico comparten el catálogo de categorías.
+      // Importarlo dos veces en paralelo hace que las ramas compitan por
+      // resolverlo, así que se leen juntas.
+      (async () => {
+        const { deriveDomainProfile } = await import('@/lib/lexicon/domain-profile')
+        const { deriveWeakDomains } = await import('@/lib/lexicon/weak-domains')
+        const { getWordCategoryIndex, getCategories } = await import('@/lib/lexicon/categories')
+        const { getWordBankSourceRefsServer, getStrugglingWordBankRefs } = await import(
+          '@/lib/word-bank/server-queries'
+        )
+        const [entries, strugglingRows] = await Promise.all([
+          getWordBankSourceRefsServer(userId),
+          getStrugglingWordBankRefs(userId),
+        ])
+        const wordIndex = getWordCategoryIndex()
+        const names = new Map(getCategories().map((c) => [c.id, c.name]))
+        return {
+          profile: deriveDomainProfile(entries, wordIndex),
+          weak: deriveWeakDomains(strugglingRows, wordIndex, names),
+        }
+      })(),
+      (async () => {
+        const { getWordsDueForReview, getWeakWordsForReviewServer } = await import(
+          '@/lib/word-bank/server-queries'
+        )
+        // Ambas listas salen del mismo módulo: una sola importación evita que
+        // las dos llamadas compitan por resolverlo.
+        const [due, weak] = await Promise.all([
+          getWordsDueForReview(userId, 8),
+          getWeakWordsForReviewServer(userId, 6),
+        ])
+        return { due, weak }
+      })(),
+      (async () => {
+        const { fetchServerLearningState } = await import('@/lib/ai-practice/server-state')
+        return fetchServerLearningState(userId, null)
+      })(),
+    ])
 
   const profile = profileResult.status === 'fulfilled' ? profileResult.value : null
-  const domainProfile = domainsResult.status === 'fulfilled' ? domainsResult.value : null
+  const lexicon = lexiconResult.status === 'fulfilled' ? lexiconResult.value : null
+  const domainProfile = lexicon?.profile ?? null
+  const vocab = vocabResult.status === 'fulfilled' ? vocabResult.value : null
+  const dueWords = vocab?.due ?? []
+  const weakWords = vocab?.weak ?? []
+  const state = stateResult.status === 'fulfilled' ? stateResult.value : null
+  const weakDomains = lexicon?.weak ?? []
 
   const weakTargets: PronunciationTargetId[] = (profile?.weakestPhonemes ?? [])
     .slice(0, 3)
@@ -70,6 +115,16 @@ export async function buildLearnerContext(userId: string): Promise<LearnerContex
     ...base,
     cefr: profile?.cefr ? normalizeCEFR(profile.cefr) : DEFAULT_CEFR,
     weakTargets,
+    // Vocabulario vencido: el guión lo obliga a producirlo, que es donde el
+    // reconocimiento pasivo se convierte en uso activo.
+    srsDueWords: dueWords.map((w) => w.text).filter(Boolean).slice(0, 8),
+    // Palabras con peor ease factor: las que más se resisten.
+    strugglingWords: weakWords.map((w) => w.text).filter(Boolean).slice(0, 6),
+    // Lo ya cubierto, para que el guión no repita el mismo tema.
+    recentTopics: (state?.lastSessions ?? []).slice(0, 5).map((s) => s.topic).filter(Boolean),
     domains: (domainProfile?.domains ?? []).slice(0, 3).map((d) => d.label),
+    // Dónde el vocabulario se le resiste de verdad: el coach apunta aquí antes
+    // que a un dominio amplio donde ya va bien.
+    weakDomains: weakDomains.slice(0, 3).map((d) => d.label),
   }
 }

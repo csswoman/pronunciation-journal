@@ -170,22 +170,17 @@ export default function ScriptedMissionRunner({ mission, onExit }: Props) {
   }
 
   return (
-    <div className="relative flex h-full min-h-0 flex-col overflow-hidden chat-bg">
-      <div className="blob blob-1" />
-      <div className="blob blob-2" />
-      <div className="blob blob-3" />
-      <div className="blob blob-4" />
-
+    <div className="relative flex h-full min-h-0 flex-col overflow-hidden bg-surface-base">
       <header className="relative z-10 shrink-0 border-b border-border-subtle/70 bg-surface-raised/85 backdrop-blur-md px-3.5 py-2.5">
         <div className="flex items-center justify-between gap-3">
           <button
             type="button"
             onClick={onExit}
             aria-label="Volver a misiones"
-            className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-caption font-medium text-fg-muted hover:text-fg hover:bg-surface-sunken/60 transition-colors cursor-pointer shrink-0"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-border-subtle bg-surface-base px-2.5 py-1 text-caption font-medium text-fg hover:text-fg hover:bg-surface-sunken hover:border-border-default transition-colors cursor-pointer shrink-0 shadow-2xs"
           >
             <ArrowLeft size={16} aria-hidden />
-            <span>Volver</span>
+            <span>Volver a misiones</span>
           </button>
 
           <div className="flex items-center gap-2 min-w-0">
@@ -205,11 +200,16 @@ export default function ScriptedMissionRunner({ mission, onExit }: Props) {
         tabIndex={0}
         className="@container relative z-10 flex-1 min-h-0 overflow-y-auto px-4 pt-6 pb-12 @[22rem]:px-6 space-y-5 [scrollbar-width:thin]"
       >
-        <ScriptTranscript script={state.script} currentIndex={state.currentIndex} />
+        <ScriptTranscript
+          script={state.script}
+          currentIndex={state.currentIndex}
+          missionId={mission.id}
+        />
         <div className={state.currentIndex > 0 ? 'pt-1' : ''}>
           {line.speaker === 'coach'
             ? <CoachLine line={line} missionId={mission.id} onContinue={handleCoachContinue} />
-            : <LearnerLine line={line} onLineComplete={handleLineComplete} />}
+            : <LearnerLine line={line} missionId={mission.id} onLineComplete={handleLineComplete} />}
+
         </div>
         <div ref={bottomRef} className="h-px shrink-0" aria-hidden />
       </div>

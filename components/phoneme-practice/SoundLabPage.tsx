@@ -35,14 +35,14 @@ const IPAReferenceDialog = dynamic(
   { ssr: false },
 );
 import {
-  ALL_GROUP_SECTIONS,
+  buildLessonSections,
   continueCtaLabel,
   headerStatsLine,
   lessonMatchesSearch,
   matchesFocus,
   matchesHardFilter,
   matchesProgressFilter,
-  resolveGroupId,
+  type SoundLabGrouping,
   type SoundLabProgressFilter,
 } from "./sound-lab-page-helpers";
 import {
@@ -76,6 +76,7 @@ export default function SoundLabPage({ userId }: SoundLabPageProps) {
     return raw ? raw.split(",").map((s) => s.trim()).filter(Boolean) : [];
   }, [searchParams]);
 
+  const [groupBy, setGroupBy] = useState<SoundLabGrouping>("impact");
   const [progressFilter, setProgressFilter] = useState<SoundLabProgressFilter>("all");
   const [onlyHard, setOnlyHard] = useState(false);
   const [search, setSearch] = useState("");
@@ -113,26 +114,8 @@ export default function SoundLabPage({ userId }: SoundLabPageProps) {
   }, [allLessons, progressFilter, onlyHard, soundProgressMap, search]);
 
   const sections = useMemo<LessonSection[]>(() => {
-    if (filtered.length === 0) return [];
-
-    const buckets = new Map<string, Lesson[]>(
-      ALL_GROUP_SECTIONS.map((g) => [g.id, []]),
-    );
-
-    for (const lesson of filtered) {
-      const groupId = resolveGroupId(lesson);
-      const list = buckets.get(groupId) ?? buckets.get("consonant")!;
-      list.push(lesson);
-      buckets.set(groupId, list);
-    }
-
-    return ALL_GROUP_SECTIONS.map((g) => ({
-      id: g.id,
-      title: g.title,
-      count: buckets.get(g.id)?.length ?? 0,
-      lessons: buckets.get(g.id) ?? [],
-    })).filter((s) => s.lessons.length > 0);
-  }, [filtered]);
+    return buildLessonSections(filtered, groupBy);
+  }, [filtered, groupBy]);
 
   function handleResume() {
     if (!heroLesson.lesson?.href) return;
@@ -152,21 +135,8 @@ export default function SoundLabPage({ userId }: SoundLabPageProps) {
     ? soundProgressMap.get(selectedPhoneme.symbol)
     : undefined;
 
-  const headerKicker = isPathView
-    ? "Práctica · Ruta"
-    : isMinimalPairsView
-      ? "Práctica · Pares mínimos"
-      : isIntonationView
-        ? "Práctica · Entonación"
-        : "Práctica";
-
-  const headerTitle = isPathView
-    ? "Ruta de pronunciación"
-    : isMinimalPairsView
-      ? "Entrenamiento de pares mínimos"
-      : isIntonationView
-        ? "Entrenador de entonación"
-        : "Laboratorio de sonidos";
+  const headerKicker = isPathView ? "Práctica · Ruta" : isMinimalPairsView ? "Práctica · Pares mínimos" : isIntonationView ? "Práctica · Entonación" : "Práctica";
+  const headerTitle = isPathView ? "Ruta de pronunciación" : isMinimalPairsView ? "Entrenamiento de pares mínimos" : isIntonationView ? "Entrenador de entonación" : "Laboratorio de sonidos";
 
   const headerSubtitle = isPathView
     ? "De sonidos a frases reales. Un paso claro a la vez."
@@ -174,7 +144,7 @@ export default function SoundLabPage({ userId }: SoundLabPageProps) {
       ? "Entrena tu oído para distinguir diferencias sutiles entre sonidos similares en inglés."
       : isIntonationView
         ? "Practica el ritmo, la melodía y el tono natural del inglés hablado."
-        : headerStatsLine(inProgressCount, CANONICAL_SOUND_COUNT);
+        : headerStatsLine(inProgressCount, CANONICAL_SOUND_COUNT, groupBy);
 
   return (
     <PageLayout archetype="catalog" className="sound-lab min-h-screen">
@@ -194,9 +164,11 @@ export default function SoundLabPage({ userId }: SoundLabPageProps) {
 
         {isSoundsView ? (
           <SoundLabFilterRow
+            groupBy={groupBy}
             progressFilter={progressFilter}
             onlyHard={onlyHard}
             search={search}
+            onGroupByChange={setGroupBy}
             onProgressFilterChange={setProgressFilter}
             onOnlyHardChange={setOnlyHard}
             onSearchChange={setSearch}

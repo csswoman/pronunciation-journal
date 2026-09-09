@@ -38,6 +38,25 @@ interface HomeWordOfDayCardProps {
   inSessionToday?: boolean;
 }
 
+function FormattedDefinition({ definition }: { definition: string }) {
+  const parts = definition.split(/\s+[—–-]\s+/);
+  if (parts.length >= 2) {
+    const spanish = parts[0];
+    const english = parts.slice(1).join(" — ");
+    return (
+      <p className="font-body-md leading-relaxed">
+        <span className="font-bold text-fg">{spanish}</span>
+        <span className="text-fg-muted font-normal"> — {english}</span>
+      </p>
+    );
+  }
+  return (
+    <p className="font-body-md text-fg font-semibold leading-relaxed">
+      {definition}
+    </p>
+  );
+}
+
 /** Single-word focus — large hero title, clean hierarchy, editorial visual language. */
 export default function HomeWordOfDayCard({
   profileLevel = null,
@@ -112,28 +131,28 @@ export default function HomeWordOfDayCard({
 
   return (
     <div
-      className="home-sidebar-card relative flex h-full flex-col justify-between gap-3 overflow-hidden rounded-xl border border-border-default bg-surface-raised p-4 shadow-xs motion-reduce:shadow-none"
+      className="home-sidebar-card relative flex h-full flex-col justify-between gap-4 overflow-hidden rounded-2xl border border-border-default bg-surface-raised p-5 shadow-xs motion-reduce:shadow-none"
       aria-busy={loading || undefined}
       aria-labelledby="word-of-day-heading"
     >
       {/* Header: Palabra del día + Categoría gramatical o vínculo con la sesión */}
       <div className="relative z-1 flex items-center justify-between gap-2 min-w-0">
-        <div className="flex items-center gap-1.5 shrink-0">
-          <BookOpen size={14} className="text-fg-muted" aria-hidden />
-          <span id="word-of-day-heading" className="whitespace-nowrap font-label text-caption font-semibold text-fg">
+        <div className="flex items-center gap-2 shrink-0">
+          <BookOpen size={16} className="text-accent" aria-hidden />
+          <span id="word-of-day-heading" className="whitespace-nowrap font-kicker text-fg-subtle">
             Palabra del día
           </span>
         </div>
         {inSessionToday ? (
           <span
-            className="truncate max-w-[62%] rounded-full border border-primary/25 bg-primary-soft/60 px-2.5 py-0.5 font-sans text-caption font-medium text-primary whitespace-nowrap"
+            className="truncate max-w-[62%] rounded-full border border-primary/25 bg-primary-soft/60 px-3 py-1 font-sans text-caption font-medium text-primary whitespace-nowrap"
             title="Aparece en tu sesión de hoy"
           >
             En tu sesión de hoy
           </span>
         ) : posLabel ? (
           <span
-            className="truncate max-w-[62%] rounded-full border border-border-subtle bg-surface-sunken px-2.5 py-0.5 font-sans text-caption font-medium text-fg-muted lowercase whitespace-nowrap"
+            className="truncate max-w-[62%] rounded-full bg-surface-sunken/80 px-3 py-1 font-sans text-caption font-medium text-fg-muted lowercase whitespace-nowrap"
             title={posLabel}
           >
             {posLabel}
@@ -168,7 +187,7 @@ export default function HomeWordOfDayCard({
             className="group/listen focus-ring -mx-1.5 flex flex-col gap-1 rounded-xl p-1.5 text-left transition-colors hover:bg-surface-sunken/60 cursor-pointer"
             aria-label={`Escuchar pronunciación de ${word.word}`}
           >
-            <div className="flex items-start justify-between gap-2">
+            <div className="flex items-center justify-between gap-2">
               <span
                 className={cn(
                   "font-heading font-bold text-fg leading-tight break-words tracking-tight transition-colors group-hover/listen:text-primary",
@@ -177,14 +196,14 @@ export default function HomeWordOfDayCard({
               >
                 {word.word}
               </span>
-              <div className="mt-1 shrink-0 rounded-full border border-border-subtle bg-surface-sunken p-1.5 text-fg-muted transition-colors group-hover/listen:border-primary/40 group-hover/listen:bg-primary-soft group-hover/listen:text-primary">
-                <Volume2 size={15} aria-hidden />
+              <div className="shrink-0 rounded-full border border-border-subtle/50 bg-surface-sunken/70 p-2 text-fg-muted transition-colors group-hover/listen:border-primary/40 group-hover/listen:bg-primary-soft group-hover/listen:text-primary">
+                <Volume2 size={16} aria-hidden />
               </div>
             </div>
 
             {word.ipa ? (
               <span
-                className="font-ipa text-body-md font-medium text-fg-muted"
+                className="font-ipa text-body-md font-medium text-fg-subtle tracking-wide"
                 lang="en-fonipa"
               >
                 {formatIpaDisplay(word.ipa)}
@@ -192,14 +211,12 @@ export default function HomeWordOfDayCard({
             ) : null}
           </button>
 
-          {/* Significado (definición) */}
+          {/* Significado (definición con formato de resaltado) */}
           {word.definition ? (
-            <p className="font-body-md text-fg leading-relaxed">
-              {word.definition}
-            </p>
+            <FormattedDefinition definition={word.definition} />
           ) : null}
 
-          {/* Ejemplo con filete lateral y botón de audio */}
+          {/* Ejemplo estilo card con kicker y audio */}
           {example ? (
             <HeroTermExample example={example} resetKey={word.word} />
           ) : null}
