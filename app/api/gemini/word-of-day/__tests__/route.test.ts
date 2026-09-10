@@ -2,6 +2,9 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const mocks = vi.hoisted(() => ({
   getWordOfDay: vi.fn(),
+  requireSameOrigin: vi.fn(),
+  requireUser: vi.fn(),
+  checkLayeredRateLimit: vi.fn(),
 }))
 
 vi.mock('@/lib/word-of-day', () => ({
@@ -10,12 +13,18 @@ vi.mock('@/lib/word-of-day', () => ({
 
 vi.mock('@/lib/api/guards', () => ({
   redactError: (error: unknown) => error,
+  requireSameOrigin: mocks.requireSameOrigin,
+  requireUser: mocks.requireUser,
+  checkLayeredRateLimit: mocks.checkLayeredRateLimit,
 }))
 
 import { GET } from '../route'
 
 beforeEach(() => {
   mocks.getWordOfDay.mockReset()
+  mocks.requireSameOrigin.mockReset().mockReturnValue(null)
+  mocks.requireUser.mockReset().mockResolvedValue({ user: { id: 'u1' }, error: null })
+  mocks.checkLayeredRateLimit.mockReset().mockResolvedValue({ limited: false, error: null })
 })
 
 describe('word-of-day route', () => {
@@ -46,6 +55,43 @@ describe('word-of-day route', () => {
     await GET(new Request('http://x/api/gemini/word-of-day?level=Z9') as never)
 
     expect(mocks.getWordOfDay).toHaveBeenCalledWith({ forceRefresh: false, level: undefined })
+  })
+
+  it('rejects an unauthenticated request before touching the generator', async () => {
+    mocks.requireUser.mockResolvedValueOnce({
+      user: null,
+      error: new Response('unauthorized', { status: 401 }),
+    })
+
+    const res = await GET(new Request('http://x/api/gemini/word-of-day') as never)
+
+    expect(res.status).toBe(401)
+    expect(mocks.getWordOfDay).not.toHaveBeenCalled()
+  })
+
+  it('applies a tighter quota to forced refresh than to cached reads', async () => {
+    mocks.getWordOfDay.mockResolvedValueOnce({ word: 'focus', definition: 'attention' })
+
+    await GET(new Request('http://x/api/gemini/word-of-day?refresh=1') as never)
+
+    expect(mocks.checkLayeredRateLimit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        endpoint: '/api/gemini/word-of-day:refresh',
+        maxPermanent: 4,
+      }),
+    )
+  })
+
+  it('returns a 429 when the limiter blocks the request', async () => {
+    mocks.checkLayeredRateLimit.mockResolvedValueOnce({
+      limited: true,
+      error: new Response('slow down', { status: 429 }),
+    })
+
+    const res = await GET(new Request('http://x/api/gemini/word-of-day') as never)
+
+    expect(res.status).toBe(429)
+    expect(mocks.getWordOfDay).not.toHaveBeenCalled()
   })
 
   it('returns the static fallback when refresh and fallback generation fail', async () => {
