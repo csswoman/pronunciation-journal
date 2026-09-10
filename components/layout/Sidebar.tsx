@@ -8,8 +8,8 @@ import {
   NavSection,
   todayNav,
   learnNav,
+  practiceNav,
   consultNav,
-  footerNav,
 } from "../theme/sidebar/index";
 
 import { SidebarContext } from "../theme/sidebar/SidebarContext";
@@ -103,8 +103,8 @@ export default function Sidebar({ className = "" }: SidebarProps) {
         >
           <NavSection section={todayNav} isActive={isActive} isFirst />
           <NavSection section={learnNav} isActive={isActive} />
+          <NavSection section={practiceNav} isActive={isActive} />
           <NavSection section={consultNav} isActive={isActive} />
-          <NavSection section={footerNav} isActive={isActive} />
         </nav>
 
         <SidebarFooter />

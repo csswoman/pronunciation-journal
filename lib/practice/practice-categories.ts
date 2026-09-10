@@ -1,13 +1,3 @@
-export interface PracticeGame {
-  id: string
-  title: string
-  description: string
-  icon: string
-  href: string
-  tag: string
-  available: boolean
-}
-
 export interface PracticeCategory {
   id: string
   title: string
@@ -44,51 +34,3 @@ export const PRACTICE_CATEGORIES: Record<string, PracticeCategory> = {
     description: "Búsqueda libre, fuera del flujo de ejercicios",
   },
 } as const
-
-export const PRACTICE_GAMES: readonly PracticeGame[] = [
-  {
-    id: "word-search",
-    title: "Sopa de letras",
-    description: "Encuentra vocabulario en la cuadrícula con pistas y audio",
-    icon: "Grid2x2",
-    href: "/practice/word-search",
-    tag: "Disponible",
-    available: true,
-  },
-  {
-    id: "word-chain",
-    title: "Word Chain",
-    description: "Encadena palabras por su último sonido",
-    icon: "Zap",
-    href: "/practice/games/word-chain",
-    tag: "Próximamente",
-    available: false,
-  },
-  {
-    id: "chunk-duel",
-    title: "Chunk Duel",
-    description: "Desafío de bloques de lenguaje frecuentes",
-    icon: "Flame",
-    href: "/practice/games/chunk-duel",
-    tag: "Próximamente",
-    available: false,
-  },
-  {
-    id: "phoneme-invaders",
-    title: "Phoneme Invaders",
-    description: "Arcade de discriminación auditiva y fonemas",
-    icon: "BrainCircuit",
-    href: "/practice/games/phoneme-invaders",
-    tag: "Próximamente",
-    available: false,
-  },
-  {
-    id: "word-rain",
-    title: "Lluvia de palabras",
-    description: "Escribe y reconoce vocabulario contra el reloj",
-    icon: "Trophy",
-    href: "/practice/games/word-rain",
-    tag: "Próximamente",
-    available: false,
-  },
-] as const
