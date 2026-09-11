@@ -1,12 +1,24 @@
 'use client'
 
 // Planned structure:
-// <ReaderCard> — "Lectura en contexto" bento card (sentence snippet, recent words subtext)
+// <ReaderCard> — "Lectura en contexto" bento card
+//   header: kicker + title
+//   sample context sentence (illustrative UI copy)
+//   footer: real recent-word count (hidden when 0)
+//   illustration: hand-drawn watermark, bottom-right
 
 import Link from 'next/link'
 import { setLastPracticeMode } from '@/lib/db'
+import { getIllustration } from '@/lib/illustrations/registry'
 
-export default function ReaderCard() {
+const Illustration = getIllustration('domainReading')
+
+interface Props {
+  /** Words in the bank that are ready to appear in the reader. */
+  recentWordCount: number
+}
+
+export default function ReaderCard({ recentWordCount }: Props) {
   return (
     <Link
       href="/practice/reader"
@@ -19,23 +31,32 @@ export default function ReaderCard() {
           Lectura en contexto
         </h2>
 
-        {/* Real context sentence snippet preview */}
         <div className="rounded-lg border border-border-subtle bg-surface-sunken/60 p-3 font-body-xs text-fg-muted leading-relaxed">
-          She kept the <span className="font-semibold text-primary underline underline-offset-2 decoration-primary/40">receipt</span> in her coat pocket, just in case the shop <span className="font-semibold text-primary underline underline-offset-2 decoration-primary/40">refused</span> to take it back.
+          She kept the{' '}
+          <span className="font-semibold text-primary underline underline-offset-2 decoration-primary/40">
+            receipt
+          </span>{' '}
+          in her coat pocket, just in case the shop{' '}
+          <span className="font-semibold text-primary underline underline-offset-2 decoration-primary/40">
+            refused
+          </span>{' '}
+          to take it back.
         </div>
       </div>
 
-      <div className="flex items-center justify-between font-caption text-tiny text-fg-subtle pt-1 z-10">
-        <span>Con tus 25 palabras recientes</span>
-      </div>
+      {recentWordCount > 0 && (
+        <div className="flex items-center justify-between font-caption text-tiny text-fg-subtle pt-1 z-10">
+          <span>
+            Con tus {recentWordCount} {recentWordCount === 1 ? 'palabra reciente' : 'palabras recientes'}
+          </span>
+        </div>
+      )}
 
-      {/* Document lines graphic illustration (bottom right) */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute right-4 bottom-3 hidden sm:flex flex-col gap-1 opacity-30 transition-opacity group-hover:opacity-60"
+        className="pointer-events-none absolute right-4 bottom-2 hidden text-primary/15 transition-colors duration-200 group-hover:text-primary/25 sm:block [&>svg]:h-20 [&>svg]:w-auto"
       >
-        <div className="h-2 w-8 rounded-full bg-border-strong" />
-        <div className="h-2 w-6 rounded-full bg-border-strong" />
+        <Illustration />
       </div>
     </Link>
   )

@@ -10,6 +10,7 @@
 import Link from 'next/link'
 import { ArrowRight, CloudRain, Grid2x2 } from '@/components/icons'
 import { setLastPracticeMode } from '@/lib/db'
+import { getIllustration } from '@/lib/illustrations/registry'
 import { PRACTICE_GAMES, UPCOMING_GAMES } from '@/lib/practice/practice-games'
 
 const GAME_ICONS: Record<string, typeof Grid2x2> = {
@@ -17,15 +18,17 @@ const GAME_ICONS: Record<string, typeof Grid2x2> = {
   'word-rain': CloudRain,
 }
 
+const Illustration = getIllustration('stateCompletado')
+
 export default function GamesSection() {
   return (
-    <div className="flex flex-col justify-between gap-5 rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-5 md:p-6 shadow-xs transition-all duration-200 hover:border-border-strong hover:shadow-sm">
-      <div className="flex flex-col gap-4">
+    <div className="group relative flex flex-col justify-between gap-5 overflow-hidden rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-5 md:p-6 shadow-xs transition-all duration-200 hover:border-border-strong hover:shadow-sm">
+      <div className="flex flex-col gap-4 z-10">
         {/* Header */}
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between gap-2">
             <span className="font-kicker text-tiny uppercase tracking-wider text-fg-subtle">
-              lúdico
+              juego
             </span>
             <span className="inline-flex items-center rounded-full border border-primary/30 bg-primary/10 px-2.5 py-0.5 font-caption text-tiny font-medium text-primary">
               {PRACTICE_GAMES.length} disponibles
@@ -102,6 +105,13 @@ export default function GamesSection() {
             </span>
           ))}
         </div>
+      </div>
+
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute right-4 bottom-3 hidden text-primary/15 transition-colors duration-200 group-hover:text-primary/25 sm:block [&>svg]:h-16 [&>svg]:w-auto"
+      >
+        <Illustration />
       </div>
     </div>
   )

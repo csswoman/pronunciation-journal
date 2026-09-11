@@ -9,6 +9,7 @@
 import { useRef } from 'react'
 import type { SessionArc } from '@/lib/practice/types'
 import type { RecommendedResult } from '@/lib/practice/practice-modes'
+import type { PracticeHubData } from '@/lib/practice/hub-data-types'
 import { useMasonryLayout } from '@/hooks/useMasonryLayout'
 import RecommendedPracticeCard from './RecommendedPracticeCard'
 import SoundQuizWidget from './SoundQuizWidget'
@@ -41,6 +42,9 @@ interface PracticeOptionsGridProps {
   vocabLearnedCount: number | null
   vocabTotalCount: number | null
   arc?: SessionArc
+  hubData: PracticeHubData
+  /** Dexie-backed count of immersion lessons the user has watched. */
+  immersionWatchedCount: number | null
 }
 
 export default function PracticeOptionsGrid({
@@ -49,6 +53,8 @@ export default function PracticeOptionsGrid({
   vocabLearnedCount,
   vocabTotalCount,
   arc,
+  hubData,
+  immersionWatchedCount,
 }: PracticeOptionsGridProps) {
   const gridRef = useRef<HTMLDivElement>(null)
   useMasonryLayout(gridRef)
@@ -56,7 +62,7 @@ export default function PracticeOptionsGrid({
   return (
     <div className="practice-hub__masonry" ref={gridRef}>
       <div className="practice-hub__masonry-item" data-span={PRACTICE_CARD_SPANS.recommended}>
-        <RecommendedPracticeCard recommendation={recommendation} />
+        <RecommendedPracticeCard recommendation={recommendation} data={hubData.recommended} />
       </div>
       <div className="practice-hub__masonry-item" data-span={PRACTICE_CARD_SPANS.vocabulary}>
         <VocabularyReviewCard
@@ -66,7 +72,7 @@ export default function PracticeOptionsGrid({
         />
       </div>
       <div className="practice-hub__masonry-item" data-span={PRACTICE_CARD_SPANS.decks}>
-        <DecksCard />
+        <DecksCard data={hubData.decks} />
       </div>
       <div className="practice-hub__masonry-item" data-span={PRACTICE_CARD_SPANS.soundQuiz}>
         <SoundQuizWidget />
@@ -78,13 +84,16 @@ export default function PracticeOptionsGrid({
         <GamesSection />
       </div>
       <div className="practice-hub__masonry-item" data-span={PRACTICE_CARD_SPANS.immersion}>
-        <ImmersionCard />
+        <ImmersionCard
+          watchedCount={immersionWatchedCount}
+          totalCount={hubData.immersion.totalCount}
+        />
       </div>
       <div className="practice-hub__masonry-item" data-span={PRACTICE_CARD_SPANS.reader}>
-        <ReaderCard />
+        <ReaderCard recentWordCount={hubData.reader.recentWordCount} />
       </div>
       <div className="practice-hub__masonry-item" data-span={PRACTICE_CARD_SPANS.course}>
-        <CourseCard />
+        <CourseCard data={hubData.course} />
       </div>
       <div className="practice-hub__masonry-item" data-span={PRACTICE_CARD_SPANS.reference}>
         <ReferenceSection />

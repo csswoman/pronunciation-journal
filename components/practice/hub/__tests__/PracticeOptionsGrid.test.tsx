@@ -3,6 +3,21 @@ import { describe, it, expect, vi } from 'vitest'
 import { render } from '@testing-library/react'
 import PracticeOptionsGrid from '../PracticeOptionsGrid'
 import type { RecommendedResult } from '@/lib/practice/practice-modes'
+import type { PracticeHubData } from '@/lib/practice/hub-data-types'
+
+const hubData: PracticeHubData = {
+  recommended: { dueCount: 15, criticalCount: 4, retentionPct: 88, previewWords: ['receipt'] },
+  decks: { deckCount: 4, cardCount: 112, topDeckNames: ['Viajes', 'Trabajo'] },
+  reader: { recentWordCount: 25 },
+  immersion: { totalCount: 12 },
+  course: {
+    levelId: 'b1',
+    levelLabel: 'B1 · Intermedio',
+    progressPct: 65,
+    currentUnitTitle: 'Unidad 4',
+    currentLessonTitle: 'Pasado simple',
+  },
+}
 
 vi.mock('@/lib/db', () => ({
   setLastPracticeMode: vi.fn(),
@@ -28,6 +43,8 @@ describe('PracticeOptionsGrid', () => {
         vocabLearnedCount={612}
         vocabTotalCount={1000}
         arc={undefined}
+        hubData={hubData}
+        immersionWatchedCount={3}
       />,
     )
 

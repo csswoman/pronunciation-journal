@@ -6,6 +6,9 @@
 
 import Link from 'next/link'
 import { setLastPracticeMode } from '@/lib/db'
+import { getIllustration } from '@/lib/illustrations/registry'
+
+const Illustration = getIllustration('domainVocabulary')
 
 interface Props {
   dueCount: number | null
@@ -30,11 +33,11 @@ export default function VocabularyReviewCard({ dueCount, learnedCount, totalCoun
     <Link
       href="/practice/essential-words"
       onClick={() => void setLastPracticeMode('essential-words')}
-      className="group flex flex-col justify-between gap-5 rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-5 shadow-xs transition-all duration-200 hover:border-border-strong hover:shadow-sm active:scale-[0.99] focus-ring"
+      className="group relative flex flex-col justify-between gap-5 overflow-hidden rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-5 shadow-xs transition-all duration-200 hover:border-border-strong hover:shadow-sm active:scale-[0.99] focus-ring"
     >
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 z-10">
         <div className="flex items-center justify-between gap-2">
-          <span className="font-kicker text-tiny uppercase tracking-wider text-fg-subtle">vocabulario</span>
+          <span className="font-kicker text-tiny uppercase tracking-wider text-fg-subtle">repaso</span>
           <span className="inline-flex items-center rounded-full border border-border-subtle bg-surface-sunken px-2.5 py-0.5 font-caption text-tiny font-medium text-fg-muted">
             {countText}
           </span>
@@ -48,7 +51,7 @@ export default function VocabularyReviewCard({ dueCount, learnedCount, totalCoun
       </div>
 
       {hasCounts && (
-        <div className="flex flex-col gap-2 pt-2">
+        <div className="flex flex-col gap-2 pt-2 z-10">
           <div
             role="progressbar"
             aria-valuenow={progressPct}
@@ -79,6 +82,13 @@ export default function VocabularyReviewCard({ dueCount, learnedCount, totalCoun
           )}
         </div>
       )}
+
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute right-3 bottom-2 hidden text-primary/15 transition-colors duration-200 group-hover:text-primary/25 sm:block [&>svg]:h-16 [&>svg]:w-auto"
+      >
+        <Illustration />
+      </div>
     </Link>
   )
 }

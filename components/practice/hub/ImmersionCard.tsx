@@ -1,13 +1,27 @@
 'use client'
 
 // Planned structure:
-// <ImmersionCard> — "Inmersión y conversación" bento card (kicker libre, tags, video player graphic)
+// <ImmersionCard> — "Inmersión y conversación" bento card
+//   header: kicker + title + description
+//   footer: real "N de M vistas" progress (or tag chips when no data)
+//   illustration: hand-drawn watermark, bottom-right
 
 import Link from 'next/link'
-import { Play } from '@/components/icons'
 import { setLastPracticeMode } from '@/lib/db'
+import { getIllustration } from '@/lib/illustrations/registry'
 
-export default function ImmersionCard() {
+const Illustration = getIllustration('domainListening')
+
+interface Props {
+  /** Dexie-backed count of lessons watched. null = unavailable/offline. */
+  watchedCount: number | null
+  /** Total immersion lessons available (from the server bundle). */
+  totalCount: number
+}
+
+export default function ImmersionCard({ watchedCount, totalCount }: Props) {
+  const hasProgress = watchedCount !== null && totalCount > 0
+
   return (
     <Link
       href="/practice/immersion"
@@ -21,33 +35,35 @@ export default function ImmersionCard() {
             Inmersión y conversación
           </h2>
           <p className="text-body-sm text-fg-muted text-pretty">
-            Lecciones en video con profesores nativos, fonética y minería de frases.
+            Lecciones en video con nativos, fonética y minería de frases.
           </p>
         </div>
       </div>
 
       <div className="flex items-center justify-between gap-2 pt-2 z-10">
-        <div className="flex flex-wrap items-center gap-1.5">
-          <span className="inline-flex items-center rounded-md border border-border-subtle bg-surface-sunken px-2 py-0.5 font-mono text-tiny text-fg-subtle">
-            video
+        {hasProgress ? (
+          <span className="font-caption text-tiny text-fg-subtle">
+            {watchedCount} de {totalCount} {totalCount === 1 ? 'lección vista' : 'lecciones vistas'}
           </span>
-          <span className="inline-flex items-center rounded-md border border-border-subtle bg-surface-sunken px-2 py-0.5 font-mono text-tiny text-fg-subtle">
-            fonética
-          </span>
-          <span className="inline-flex items-center rounded-md border border-border-subtle bg-surface-sunken px-2 py-0.5 font-mono text-tiny text-fg-subtle">
-            frases
-          </span>
-        </div>
+        ) : (
+          <div className="flex flex-wrap items-center gap-1.5">
+            {['video', 'fonética', 'frases'].map((tag) => (
+              <span
+                key={tag}
+                className="inline-flex items-center rounded-md border border-border-subtle bg-surface-sunken px-2 py-0.5 font-mono text-tiny text-fg-subtle"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Video player graphic illustration (bottom right) */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute right-4 bottom-4 hidden sm:flex h-16 w-24 flex-col items-center justify-center rounded-lg border border-border-subtle/50 bg-surface-sunken/60 opacity-50 transition-opacity group-hover:opacity-80"
+        className="pointer-events-none absolute right-4 bottom-2 hidden text-primary/15 transition-colors duration-200 group-hover:text-primary/25 sm:block [&>svg]:h-20 [&>svg]:w-auto"
       >
-        <span className="grid h-7 w-7 place-items-center rounded-full bg-primary/20 text-primary">
-          <Play size={14} className="fill-current ml-0.5" aria-hidden="true" />
-        </span>
+        <Illustration />
       </div>
     </Link>
   )
