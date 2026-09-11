@@ -14,6 +14,21 @@ type ContentLevelSelectorProps<Level extends string> = {
  * Shared CEFR-like level choice UI. Parents own the meaning and persistence of
  * the selected level; this component only renders and reports the selection.
  */
+/**
+ * Column count tracks the number of levels passed in, so a range that is not
+ * five wide (a feature capped at B2, or a future C2) lays out correctly instead
+ * of overflowing a hardcoded five-column grid. Tailwind needs literal class
+ * names, so these are spelled out rather than interpolated.
+ */
+const GRID_COLS: Record<number, string> = {
+  1: 'grid-cols-1',
+  2: 'grid-cols-2',
+  3: 'grid-cols-3',
+  4: 'grid-cols-4',
+  5: 'grid-cols-5',
+  6: 'grid-cols-6',
+}
+
 export default function ContentLevelSelector<Level extends string>({
   levels,
   value,
@@ -23,8 +38,10 @@ export default function ContentLevelSelector<Level extends string>({
   disabled = false,
   className,
 }: ContentLevelSelectorProps<Level>) {
+  const columns = GRID_COLS[levels.length] ?? 'grid-cols-5'
+
   return (
-    <div className={cn('grid grid-cols-5 gap-1', className)} role="group" aria-label={ariaLabel}>
+    <div className={cn('grid gap-1', columns, className)} role="group" aria-label={ariaLabel}>
       {levels.map((level) => {
         const selected = value === level
 

@@ -16,6 +16,20 @@ describe('deriveSuggestedFocus', () => {
     })
   })
 
+  it('keeps a C2 learner at c1 instead of collapsing to a1', () => {
+    const result = deriveSuggestedFocus({
+      profileLevel: 'C2',
+      routeLevel: null,
+      recentTheoryLessonSlug: null,
+      weakSoundKey: null,
+    })
+    expect(result).toEqual({
+      level: 'c1',
+      thread: null,
+      source: 'profile',
+    })
+  })
+
   it('uses route level when profile missing, with theory thread from recent practice', () => {
     const result = deriveSuggestedFocus({
       profileLevel: null,
