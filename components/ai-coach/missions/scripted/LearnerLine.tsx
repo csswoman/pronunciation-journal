@@ -68,9 +68,17 @@ export function LearnerLine({ line, missionId, onLineComplete }: Props) {
       .evaluate({
         exercise: { domain: 'pronunciation', mode: 'speak' },
         expected: line.text,
-        actual: { kind: 'speech', transcript },
+        actual: {
+          kind: 'speech',
+          transcript,
+          confidence: capture.confidence,
+          source: capture.source,
+        },
       })
       .then((evaluation) => {
+        // Abstención: no registrar un intento que la evaluación no respalda.
+        if (evaluation.scorable === false) return
+
         setAttempt({
           score: evaluation.score ?? 0,
           transcript,

@@ -3,6 +3,7 @@
 import { WebSpeechAdapter, isWebSpeechReliable } from "./webSpeechAdapter";
 import { GeminiAdapter } from "./geminiAdapter";
 import type { SpeechInputAdapter, SpeechInputPreference } from "../types";
+import { INTELLIGIBILITY_CAPTURE } from "../capture-profiles";
 
 export type SpeechAdapterKind = "web-speech" | "gemini" | "unsupported";
 
@@ -16,13 +17,7 @@ export function getDefaultAudioStream(): Promise<MediaStream> {
   if (typeof navigator === "undefined" || !navigator.mediaDevices?.getUserMedia) {
     return Promise.reject(new Error("Microphone access is not supported in this environment"));
   }
-  return navigator.mediaDevices.getUserMedia({
-    audio: {
-      echoCancellation: true,
-      noiseSuppression: true,
-      autoGainControl: true,
-    },
-  });
+  return navigator.mediaDevices.getUserMedia(INTELLIGIBILITY_CAPTURE);
 }
 
 /**

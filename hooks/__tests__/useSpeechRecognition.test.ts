@@ -75,6 +75,36 @@ function setUserAgent(ua: string) {
   Object.defineProperty(navigator, 'userAgent', { configurable: true, value: ua })
 }
 
+
+// jsdom no implementa Web Audio: simulamos un analizador que reporta una
+// desviación fija respecto al silencio (128) para controlar el pico medido.
+const SPEECH_SAMPLE = 200
+const SILENT_SAMPLE = 129
+
+function installAudioAnalyser(sampleValue: number) {
+  const analyser = {
+    fftSize: 2048,
+    frequencyBinCount: 1024,
+    getByteTimeDomainData: (arr: Uint8Array) => arr.fill(sampleValue),
+    disconnect: vi.fn(),
+  }
+  const ctx = {
+    createAnalyser: () => analyser,
+    createMediaStreamSource: () => ({ connect: vi.fn(), disconnect: vi.fn() }),
+    close: vi.fn(),
+  }
+  ;(window as unknown as { AudioContext: unknown }).AudioContext = function () {
+    return ctx
+  }
+  // El hook mide el pico dentro de requestAnimationFrame; ejecutarlo una vez
+  // de forma síncrona basta para registrar una muestra.
+  window.requestAnimationFrame = ((cb: FrameRequestCallback) => {
+    cb(0)
+    return 1
+  }) as typeof window.requestAnimationFrame
+  window.cancelAnimationFrame = vi.fn() as typeof window.cancelAnimationFrame
+}
+
 describe('useSpeechRecognition', () => {
   let originalUserAgent: string
 
@@ -117,6 +147,7 @@ describe('useSpeechRecognition', () => {
     }
     ;(window as unknown as { MediaRecorder: unknown }).MediaRecorder = FakeRecorderImpl
 
+    installAudioAnalyser(SPEECH_SAMPLE)
     installRecognition()
     vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:fake')
     vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {})
@@ -213,6 +244,45 @@ describe('useSpeechRecognition', () => {
 
     await waitFor(() => expect(result.current.status).toBe('done'))
     expect(result.current.result?.transcript).toBe('hello world')
+  })
+
+  it('rejects a transcript when the microphone never captured audible speech', async () => {
+    // Micro silenciado: el reconocedor puede devolver texto igualmente, pero
+    // puntuarlo sería calificar una alucinación.
+    installAudioAnalyser(SILENT_SAMPLE)
+
+    const { result } = renderHook(() => useSpeechRecognition())
+
+    await act(async () => {
+      await result.current.start()
+    })
+
+    act(() => {
+      lastRecognition!.onresult?.({
+        results: [[{ transcript: 'hi there', confidence: 0.9 }]],
+      })
+    })
+
+    expect(result.current.status).toBe('error')
+    expect(result.current.errorCode).toBe('no-speech')
+    expect(result.current.result).toBeNull()
+  })
+
+  it('does not spend a Gemini request on a silent recording', async () => {
+    installAudioAnalyser(SILENT_SAMPLE)
+
+    const { result } = renderHook(() => useSpeechRecognition())
+
+    await act(async () => {
+      await result.current.start()
+    })
+
+    await act(async () => {
+      lastRecognition!.onerror?.({ error: 'network' })
+    })
+
+    expect(result.current.errorCode).toBe('no-speech')
+    expect(transcribeMock).not.toHaveBeenCalled()
   })
 
   it('releases microphone tracks when the recorder cannot be created', async () => {

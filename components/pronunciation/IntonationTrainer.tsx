@@ -31,6 +31,7 @@ import Button from "@/components/ui/Button";
 import { Mic, ArrowRight, ArrowLeft } from "@/components/icons";
 import { playUiCue } from "@/lib/ui-sounds/cues";
 import { hasAudibleAudio, NO_AUDIO_CAPTURED_MESSAGE } from "@/lib/speech/audio-thresholds";
+import { ACOUSTIC_CAPTURE } from "@/lib/speech/capture-profiles";
 
 export function IntonationTrainer() {
   const auth = useAuthOptional();
@@ -91,13 +92,9 @@ export function IntonationTrainer() {
       setAssessment(null);
       setIsSaved(false);
 
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: {
-          echoCancellation: true,
-          noiseSuppression: true,
-          autoGainControl: true,
-        },
-      });
+      // Perfil acústico: el análisis de tono mide la señal cruda, y la
+      // supresión de ruido y el control de ganancia la alterarían.
+      const stream = await navigator.mediaDevices.getUserMedia(ACOUSTIC_CAPTURE);
 
       audioChunksRef.current = [];
       recordStartTimeRef.current = Date.now();

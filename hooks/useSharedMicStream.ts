@@ -1,10 +1,7 @@
 "use client";
 
 import { useRef, useCallback, useEffect } from "react";
-
-const MIC_CONSTRAINTS: MediaStreamConstraints = {
-  audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
-};
+import { INTELLIGIBILITY_CAPTURE } from "@/lib/speech/capture-profiles";
 
 /** Un stream cacheado sólo sirve si sus tracks siguen vivos. */
 function isStreamLive(stream: MediaStream): boolean {
@@ -37,7 +34,7 @@ export function useSharedMicStream() {
     if (pendingRef.current) return pendingRef.current;
 
     const request = navigator.mediaDevices
-      .getUserMedia(MIC_CONSTRAINTS)
+      .getUserMedia(INTELLIGIBILITY_CAPTURE)
       .then((stream) => {
         streamRef.current = stream;
         return stream;

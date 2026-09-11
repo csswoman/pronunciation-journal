@@ -93,9 +93,20 @@ export function SpeakReviewCard({
       .evaluate({
         exercise: { domain: 'pronunciation', mode: 'speak' },
         expected: sentence,
-        actual: { kind: 'speech', transcript: result.transcript },
+        actual: {
+          kind: 'speech',
+          transcript: result.transcript,
+          confidence: result.confidence,
+          source: result.source,
+        },
       })
       .then((evalResult) => {
+        // Abstención: sin evidencia suficiente no se muestra una nota inventada.
+        if (evalResult.scorable === false) {
+          setMicError(evalResult.feedback.explanation)
+          return
+        }
+
         const score = evalResult.score ?? 0
         setScored({
           score,

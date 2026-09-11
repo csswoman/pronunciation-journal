@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useSpeechInput } from '@/hooks/useSpeechInput'
+import type { TranscriptSource } from '@/lib/speech/transcript-quality'
 
 export type LearnerSpeechErrorCode = 'network' | 'not-allowed' | 'no-speech' | 'unknown' | null
 
@@ -23,6 +24,10 @@ export interface LearnerCapture {
   isCapturing: boolean
   hasRecording: boolean
   transcript: string | null
+  /** Confianza del reconocedor (0-1); ausente cuando la fuente no la reporta. */
+  confidence?: number
+  /** Qué reconocedor produjo el texto. */
+  source?: TranscriptSource
   userAudioUrl: string | null
   micStream: MediaStream | null
   errorCode: LearnerSpeechErrorCode
@@ -220,6 +225,8 @@ export function useLearnerSpeechCapture({
     isCapturing: captureState === 'recording',
     hasRecording,
     transcript: speechInput.result?.transcript ?? null,
+    confidence: speechInput.result?.confidence,
+    source: speechInput.result?.source,
     userAudioUrl,
     micStream,
     errorCode,

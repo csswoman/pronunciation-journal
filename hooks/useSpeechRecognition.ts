@@ -1,60 +1,40 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { GeminiAdapter } from '@/lib/speech/adapters/geminiAdapter'
 import { isWebSpeechReliable } from '@/lib/speech/adapters/webSpeechAdapter'
-import { hasAudibleAudio } from '@/lib/speech/audio-thresholds'
+import type { TranscriptSource } from '@/lib/speech/transcript-quality'
+import {
+  attachPeakAnalyser,
+  isSilentCapture,
+  trackPeak,
+  type PeakTracker,
+} from '@/lib/speech/signal-quality'
+import { INTELLIGIBILITY_CAPTURE } from '@/lib/speech/capture-profiles'
+import { transcribeWithGemini } from '@/lib/speech/gemini-fallback'
+import { startSelfListeningRecorder } from '@/lib/speech/self-listening-recorder'
+import {
+  WEB_SPEECH_UNUSABLE_ERRORS,
+  bestAlternative,
+  getSpeechRecognitionCtor,
+  type SpeechRecognitionInstance,
+} from '@/lib/speech/web-speech-recognition'
 
 export type SpeechStatus = 'idle' | 'listening' | 'processing' | 'done' | 'error' | 'unsupported'
 export type SpeechErrorCode = 'network' | 'not-allowed' | 'no-speech' | 'unknown'
 
 export interface SpeechResult {
   transcript: string
-  confidence: number
+  /**
+   * Confianza del reconocedor (0-1). Ausente cuando la fuente no la reporta
+   * (Gemini devuelve sólo texto); no inventar un valor, porque la evaluación
+   * distingue "confianza baja" de "sin dato".
+   */
+  confidence?: number
+  /** Qué reconocedor produjo el texto. Las fuentes no son equivalentes. */
+  source: TranscriptSource
 }
 
-interface SpeechRecognitionResultLike {
-  transcript: string
-  confidence: number
-}
 
-interface SpeechRecognitionEventLike {
-  results: ArrayLike<ArrayLike<SpeechRecognitionResultLike>>
-}
-
-interface SpeechRecognitionInstance {
-  lang: string
-  interimResults: boolean
-  maxAlternatives: number
-  onstart: (() => void) | null
-  onresult: ((event: SpeechRecognitionEventLike) => void) | null
-  onerror: ((event: { error?: string }) => void) | null
-  onend: (() => void) | null
-  start: () => void
-  stop: () => void
-  abort: () => void
-}
-
-interface SpeechRecognitionCtor {
-  new (): SpeechRecognitionInstance
-}
-
-/**
- * Errores que significan "este navegador nunca podrá usar Web Speech": Brave,
- * Edge, Arc y Opera reportan UA de Chrome pero no traen la clave del servidor
- * de voz de Google, así que todo intento muere con 'network' aunque haya red.
- * Ante ellos transcribimos el audio ya grabado con Gemini en lugar de dejar al
- * usuario con un fallo sin salida.
- */
-const WEB_SPEECH_UNUSABLE_ERRORS = new Set(['network', 'service-not-allowed'])
-
-const MIC_CONSTRAINTS: MediaStreamConstraints = {
-  audio: {
-    echoCancellation: true,
-    noiseSuppression: true,
-    autoGainControl: true,
-  },
-}
 
 /**
  * Captura de voz para ejercicios puntuados. Usa Web Speech cuando es fiable y
@@ -71,13 +51,16 @@ export function useSpeechRecognition() {
   const recRef = useRef<SpeechRecognitionInstance | null>(null)
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
   const mediaStreamRef = useRef<MediaStream | null>(null)
-  const audioChunksRef = useRef<Blob[]>([])
   const audioUrlRef = useRef<string | null>(null)
   // Evita que un onend tardío o un fallback en vuelo pisen un estado final.
   const settledRef = useRef(false)
   const fallbackRunningRef = useRef(false)
+  // Mide la amplitud real del micro: el tamaño del blob no distingue voz de silencio.
+  const peakRef = useRef<PeakTracker>(trackPeak())
+  const analyserCleanupRef = useRef<(() => void) | null>(null)
 
   const stopStream = useCallback(() => {
+    analyserCleanupRef.current?.()
     mediaStreamRef.current?.getTracks().forEach((t) => t.stop())
     mediaStreamRef.current = null
   }, [])
@@ -140,34 +123,41 @@ export function useSpeechRecognition() {
       return
     }
 
+    if (isSilentCapture(peakRef.current.peak())) {
+      settledRef.current = true
+      setErrorCode('no-speech')
+      setStatus('error')
+      stopRecorder()
+      stopStream()
+      return
+    }
+
     fallbackRunningRef.current = true
     setStatus('processing')
 
-    // El adaptador vuelve a grabar sobre el stream vivo: pedimos al usuario
-    // que siga hablando sólo el tiempo que ya estaba hablando.
-    const adapter = new GeminiAdapter(async () => stream)
-    try {
-      await adapter.start()
-      const geminiResult = await adapter.stop()
-      const transcript = geminiResult.transcript.trim()
-      settledRef.current = true
-      if (!transcript) {
-        setErrorCode('no-speech')
-        setStatus('error')
-        return
-      }
-      setResult({ transcript, confidence: geminiResult.confidence ?? 0.8 })
+    // El adaptador vuelve a grabar sobre el stream vivo, así que el usuario no
+    // tiene que repetir la frase.
+    const outcome = await transcribeWithGemini(stream)
+    settledRef.current = true
+
+    if (outcome.kind === 'transcript') {
+      // Gemini no reporta confianza: dejarla ausente en vez de inventar un
+      // valor que haría pasar por segura una transcripción no verificada.
+      setResult({
+        transcript: outcome.result.transcript,
+        confidence: outcome.result.confidence,
+        source: 'gemini',
+      })
       setErrorCode(null)
       setStatus('done')
-    } catch {
-      settledRef.current = true
-      setErrorCode('network')
+    } else {
+      setErrorCode(outcome.kind === 'no-speech' ? 'no-speech' : 'network')
       setStatus('error')
-    } finally {
-      fallbackRunningRef.current = false
-      stopRecorder()
-      stopStream()
     }
+
+    fallbackRunningRef.current = false
+    stopRecorder()
+    stopStream()
   }, [stopRecorder, stopStream])
 
   const start = useCallback(async () => {
@@ -185,7 +175,7 @@ export function useSpeechRecognition() {
 
     let stream: MediaStream
     try {
-      stream = await navigator.mediaDevices.getUserMedia(MIC_CONSTRAINTS)
+      stream = await navigator.mediaDevices.getUserMedia(INTELLIGIBILITY_CAPTURE)
       mediaStreamRef.current = stream
     } catch (error) {
       const name = error instanceof DOMException ? error.name : ''
@@ -198,42 +188,31 @@ export function useSpeechRecognition() {
       return
     }
 
+    peakRef.current.reset()
+    analyserCleanupRef.current = attachPeakAnalyser(stream, peakRef.current)
+
     // Grabación local para que el usuario se escuche y para alimentar a Gemini.
-    try {
-      audioChunksRef.current = []
-      const recorder = new MediaRecorder(stream)
-      recorder.ondataavailable = (e) => {
-        if (e.data.size > 0) audioChunksRef.current.push(e.data)
-      }
-      recorder.onstop = () => {
-        const blob = new Blob(audioChunksRef.current, {
-          type: recorder.mimeType || 'audio/webm',
-        })
-        if (hasAudibleAudio(blob)) {
-          const url = URL.createObjectURL(blob)
-          audioUrlRef.current = url
-          setUserAudioUrl(url)
-        }
-        // El stream sigue vivo si hay un fallback de Gemini en curso.
-        if (!fallbackRunningRef.current) {
-          stopStream()
-        }
-      }
-      recorder.start(50)
-      mediaRecorderRef.current = recorder
-    } catch {
+    const recorder = startSelfListeningRecorder(stream, {
+      onAudioUrl: (url) => {
+        audioUrlRef.current = url
+        setUserAudioUrl(url)
+      },
+      // El stream sigue vivo si hay un fallback de Gemini en curso.
+      onStopped: () => {
+        if (!fallbackRunningRef.current) stopStream()
+      },
+    })
+
+    if (!recorder) {
       // Sin grabador no hay auto-escucha ni fallback: no dejar el micro abierto.
       stopStream()
       setErrorCode('unknown')
       setStatus('error')
       return
     }
+    mediaRecorderRef.current = recorder
 
-    const w = window as Window & {
-      SpeechRecognition?: SpeechRecognitionCtor
-      webkitSpeechRecognition?: SpeechRecognitionCtor
-    }
-    const SR = w.SpeechRecognition ?? w.webkitSpeechRecognition
+    const SR = getSpeechRecognitionCtor()
 
     // Navegador con UA de Chrome pero sin clave de Google: ir directo a Gemini
     // en vez de gastar un intento que siempre falla con 'network'.
@@ -250,12 +229,21 @@ export function useSpeechRecognition() {
     rec.onstart = () => setStatus('listening')
 
     rec.onresult = (e) => {
-      let best = e.results[0][0]
-      for (let i = 1; i < e.results[0].length; i++) {
-        if (e.results[0][i].confidence > best.confidence) best = e.results[0][i]
-      }
+      const best = bestAlternative(e)
       settledRef.current = true
-      setResult({ transcript: best.transcript.trim(), confidence: best.confidence })
+      if (isSilentCapture(peakRef.current.peak())) {
+        // El reconocedor devolvió texto pero el micro nunca captó voz audible
+        // (micro silenciado o entrada equivocada): no puntuar esa alucinación.
+        setErrorCode('no-speech')
+        setStatus('error')
+        stopRecorder()
+        return
+      }
+      setResult({
+        transcript: best.transcript.trim(),
+        confidence: best.confidence,
+        source: 'web-speech',
+      })
       setStatus('done')
       stopRecorder()
     }
@@ -326,7 +314,6 @@ export function useSpeechRecognition() {
     fallbackRunningRef.current = false
     stopRecorder()
     mediaRecorderRef.current = null
-    audioChunksRef.current = []
     stopStream()
     revokeAudioUrl()
     setStatus('idle')

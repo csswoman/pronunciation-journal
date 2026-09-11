@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { evaluateSpeak } from "../speakEvaluator";
 import { findArticulationGuide } from "@/lib/sounds/articulation-guides";
 import type { EvaluationInput } from "../types";
@@ -160,5 +160,92 @@ describe("evaluateSpeak biomechanical feedback", () => {
     const result = await evaluateSpeak(baseInput);
     expect(result.correct).toBe(false);
     expect(result.suggestedPerceptionTarget).toBe("θ");
+  });
+});
+
+describe("evaluateSpeak honesty gate", () => {
+  beforeEach(() => {
+    mockedScore.mockClear();
+  });
+
+  const gateInput: EvaluationInput = {
+    exercise: { domain: "pronunciation", mode: "speak", variant: "phoneme" },
+    expected: "think",
+    actual: { kind: "speech", transcript: "think" },
+    userLevel: "B1",
+  };
+
+  it("abstains instead of scoring a transcript the recognizer barely heard", async () => {
+    const result = await evaluateSpeak({
+      ...gateInput,
+      actual: { kind: "speech", transcript: "think", confidence: 0.2, source: "web-speech" },
+    });
+
+    expect(result.scorable).toBe(false);
+    expect(result.abstentionReason).toBe("low_confidence");
+    expect(result.score).toBeUndefined();
+    expect(mockedScore).not.toHaveBeenCalled();
+  });
+
+  it("abstains on an empty transcript rather than reporting 0%", async () => {
+    const result = await evaluateSpeak({
+      ...gateInput,
+      actual: { kind: "speech", transcript: "  ", confidence: 0.95, source: "web-speech" },
+    });
+
+    expect(result.scorable).toBe(false);
+    expect(result.abstentionReason).toBe("empty_transcript");
+    expect(result.score).toBeUndefined();
+  });
+
+  it("scores a confident transcript and marks it scorable", async () => {
+    mockedScore.mockResolvedValueOnce({
+      accuracy: 95,
+      isCorrect: true,
+      transcript: "think",
+      wordResults: [],
+    });
+
+    const result = await evaluateSpeak({
+      ...gateInput,
+      actual: { kind: "speech", transcript: "think", confidence: 0.95, source: "web-speech" },
+    });
+
+    expect(result.scorable).toBe(true);
+    expect(result.abstentionReason).toBeUndefined();
+    expect(result.score).toBe(95);
+  });
+
+  it("records which recognizer produced the transcript", async () => {
+    mockedScore.mockResolvedValueOnce({
+      accuracy: 95,
+      isCorrect: true,
+      transcript: "think",
+      wordResults: [],
+    });
+
+    const result = await evaluateSpeak({
+      ...gateInput,
+      actual: { kind: "speech", transcript: "think", source: "gemini" },
+    });
+
+    expect(result.transcriptSource).toBe("gemini");
+  });
+
+  it("scores a Gemini transcript that carries no confidence", async () => {
+    mockedScore.mockResolvedValueOnce({
+      accuracy: 88,
+      isCorrect: true,
+      transcript: "think",
+      wordResults: [],
+    });
+
+    const result = await evaluateSpeak({
+      ...gateInput,
+      actual: { kind: "speech", transcript: "think", source: "gemini" },
+    });
+
+    expect(result.scorable).toBe(true);
+    expect(result.score).toBe(88);
   });
 });
