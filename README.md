@@ -81,10 +81,9 @@ practice session, nothing interrupts it.
 
 ```text
 app/         Next.js routes, layouts, API handlers, styles
-components/  UI and feature components (by domain)
+components/  UI and feature components (by domain), incl. Dexie useLiveQuery reads
 lib/         Domain logic, data access, practice engines, SRS, AI
-hooks/       Stateful orchestration
-store/       Dexie useLiveQuery bindings (reactive IndexedDB → React)
+hooks/       Stateful orchestration, incl. Dexie useLiveQuery reads
 scripts/     Validation, enrichment, and maintenance tooling
 docs/        Architecture, deployment, design system, product notes
 supabase/    Migrations and edge functions
