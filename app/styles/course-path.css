@@ -710,7 +710,7 @@
     display: flex;
     align-items: center;
     min-height: 1.875rem;
-    gap: var(--space-1.5);
+    gap: var(--space-2);
     padding: 0 var(--space-2);
     color: var(--text-primary);
     cursor: pointer;
@@ -1160,7 +1160,7 @@
   .course-path__hero-banner {
     gap: var(--space-3);
     padding: var(--space-3) var(--space-4);
-    margin-bottom: var(--space-3.5);
+    margin-bottom: var(--space-4);
   }
 
   .course-path__hero-icon-box {
@@ -2166,7 +2166,7 @@
 
   .course-path__lesson-group-summary {
     gap: var(--space-3);
-    padding: var(--space-3.5) var(--space-4);
+    padding: var(--space-3) var(--space-4);
   }
 
   .course-path__lesson-group-body {
@@ -2174,7 +2174,7 @@
   }
 
   .course-path__subgroup-kicker {
-    padding: var(--space-3.5) var(--space-4) var(--space-2);
+    padding: var(--space-3) var(--space-4) var(--space-2);
   }
 
   .course-path__subgroup-kicker:first-child {
@@ -2183,7 +2183,7 @@
 
   .course-path__lesson {
     gap: var(--space-3);
-    padding: var(--space-3.5) var(--space-4);
+    padding: var(--space-3) var(--space-4);
   }
 
   .course-path__lesson-main {

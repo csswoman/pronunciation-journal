@@ -25,8 +25,8 @@ import {
   NavSection,
   todayNav,
   learnNav,
+  practiceNav,
   consultNav,
-  footerNav,
 } from "@/components/theme/sidebar/index";
 import { SidebarContext } from "@/components/theme/sidebar/SidebarContext";
 import { playUiCue } from "@/lib/ui-sounds/cues";
@@ -148,8 +148,8 @@ export default function BottomNavDrawer({ open, onClose, isActive }: BottomNavDr
             <SidebarContext.Provider value={{ collapsed: false }}>
               <NavSectionGroup section={todayNav} isActive={isActive} onNavigate={onClose} isFirst />
               <NavSectionGroup section={learnNav} isActive={isActive} onNavigate={onClose} />
+              <NavSectionGroup section={practiceNav} isActive={isActive} onNavigate={onClose} />
               <NavSectionGroup section={consultNav} isActive={isActive} onNavigate={onClose} />
-              <NavSectionGroup section={footerNav} isActive={isActive} onNavigate={onClose} />
             </SidebarContext.Provider>
           </nav>
 
