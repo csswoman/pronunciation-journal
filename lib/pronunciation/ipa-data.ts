@@ -22,6 +22,16 @@ export interface PhonemeExtra {
   minimalPairs: { wordA: string; wordB: string; phonemeA: string; phonemeB: string }[];
   spanishTip: string;
   /**
+   * Short, memorable hook (≤ 40 chars) used as the SoundHowTo title in mission
+   * feedback. Absent ⇒ SoundHowTo falls back to the IPA symbol.
+   */
+  hookEs?: string;
+  /**
+   * Full original tip for deep-study views. When present, `spanishTip` is the
+   * shortened mission version and study views read `spanishTipLongEs ?? spanishTip`.
+   */
+  spanishTipLongEs?: string;
+  /**
    * Minimal pairs practiced specifically in word-final position.
    * Used for Fase 9 final-consonant exercises (devoicing / elision).
    * Only present for consonants where final position is a known L1 problem.
@@ -50,7 +60,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "feet", wordB: "fit", phonemeA: "/iː/", phonemeB: "/ɪ/" },
       { wordA: "leave", wordB: "live", phonemeA: "/iː/", phonemeB: "/ɪ/" },
     ],
-    spanishTip: "Es como la 'i' del español pero con más tensión: exagera una sonrisa amplia y aprieta los músculos faciales. La clave que la distingue de /ɪ/ es la firmeza muscular, no solo que dure más tiempo (see, feet, leave).",
+    hookEs: "La 'i' tensa y sonriente",
+    spanishTip: "Como la «i» del español pero con más tensión: sonrisa amplia y músculos firmes.",
+    spanishTipLongEs: "Es como la 'i' del español pero con más tensión: exagera una sonrisa amplia y aprieta los músculos faciales. La clave que la distingue de /ɪ/ es la firmeza muscular, no solo que dure más tiempo (see, feet, leave).",
   },
   "/ɪ/": {
     difficulty: "hard",
@@ -69,7 +81,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "bit", wordB: "beat", phonemeA: "/ɪ/", phonemeB: "/iː/" },
       { wordA: "ship", wordB: "sheep", phonemeA: "/ɪ/", phonemeB: "/iː/" },
     ],
-    spanishTip: "¡El sonido más rentable del inglés! Para el oído hispanohablante suena casi como una 'e' perezosa. Di una 'i', pero afloja toda la fuerza de la mandíbula y no sonrías. Dominar este sonido te evitará confusiones críticas como ship vs sheep o live vs leave.",
+    hookEs: "La 'i' floja, casi 'e'",
+    spanishTip: "Di una «i» pero afloja toda la mandíbula y no sonrías. Suena a «e» perezosa.",
+    spanishTipLongEs: "¡El sonido más rentable del inglés! Para el oído hispanohablante suena casi como una 'e' perezosa. Di una 'i', pero afloja toda la fuerza de la mandíbula y no sonrías. Dominar este sonido te evitará confusiones críticas como ship vs sheep o live vs leave.",
   },
   "/ɛ/": {
     difficulty: "medium",
@@ -88,7 +102,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "pen", wordB: "pan", phonemeA: "/ɛ/", phonemeB: "/æ/" },
       { wordA: "set", wordB: "sat", phonemeA: "/ɛ/", phonemeB: "/æ/" },
     ],
-    spanishTip: "Empieza diciendo la 'e' de 'mesa', pero deja caer la mandíbula un centímetro más. Es más abierta y corta que en español. Cuidado con no cerrarla ni convertirla en diptongo: bed se dice con /ɛ/ pura, nunca 'beid'.",
+    hookEs: "La 'e' abierta",
+    spanishTip: "Abre la mandíbula un poco más que para la «e» española.",
+    spanishTipLongEs: "Empieza diciendo la 'e' de 'mesa', pero deja caer la mandíbula un centímetro más. Es más abierta y corta que en español. Cuidado con no cerrarla ni convertirla en diptongo: bed se dice con /ɛ/ pura, nunca 'beid'.",
   },
   "/æ/": {
     difficulty: "hard",
@@ -107,7 +123,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "bad", wordB: "bed", phonemeA: "/æ/", phonemeB: "/ɛ/" },
       { wordA: "man", wordB: "men", phonemeA: "/æ/", phonemeB: "/ɛ/" },
     ],
-    spanishTip: "No existe en español y es súper importante. Es el híbrido exacto entre 'a' y 'e': pon la boca como si fueras a decir una 'a' gigante, pero intenta pronunciar una 'e'. Es el sonido inconfundible de cat, apple, bad y man.",
+    hookEs: "La 'a' de la sonrisa ancha",
+    spanishTip: "Entre «a» y «e»: baja la mandíbula y estira los labios a los lados.",
+    spanishTipLongEs: "No existe en español y es súper importante. Es el híbrido exacto entre 'a' y 'e': pon la boca como si fueras a decir una 'a' gigante, pero intenta pronunciar una 'e'. Es el sonido inconfundible de cat, apple, bad y man.",
   },
   "/ɑ/": {
     difficulty: "medium",
@@ -126,7 +144,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "cop", wordB: "cap", phonemeA: "/ɑ/", phonemeB: "/æ/" },
       { wordA: "stock", wordB: "stack", phonemeA: "/ɑ/", phonemeB: "/æ/" },
     ],
-    spanishTip: "¡El truco de la 'o' americana! En palabras escritas con 'o' como hot, stop, box, coffee o job, la pronunciación estándar en EE.UU. es esta /ɑ/ abierta (suenan 'jat', 'stap', 'baks'). Abre la boca como en el médico y no redondees los labios.",
+    hookEs: "La 'a' larga de médico",
+    spanishTip: "Abre bien la boca y alarga: «aaa», como en el médico.",
+    spanishTipLongEs: "¡El truco de la 'o' americana! En palabras escritas con 'o' como hot, stop, box, coffee o job, la pronunciación estándar en EE.UU. es esta /ɑ/ abierta (suenan 'jat', 'stap', 'baks'). Abre la boca como en el médico y no redondees los labios.",
   },
   "/ɔ/": {
     difficulty: "medium",
@@ -145,7 +165,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "caught", wordB: "coat", phonemeA: "/ɔ/", phonemeB: "/oʊ/" },
       { wordA: "bought", wordB: "boat", phonemeA: "/ɔ/", phonemeB: "/oʊ/" },
     ],
-    spanishTip: "Es la 'o' profunda y alargada de law, all, talk y caught. Pon la boca en forma de óvalo vertical (como sorprendido). En muchas regiones de EE.UU. suena casi idéntica a /ɑ/ (caught y cot se confunden), así que si te cuesta distinguirlas, no te preocupes: es un fenómeno nativo real.",
+    hookEs: "La 'o' larga y redonda",
+    spanishTip: "Redondea los labios y alarga la «o».",
+    spanishTipLongEs: "Es la 'o' profunda y alargada de law, all, talk y caught. Pon la boca en forma de óvalo vertical (como sorprendido). En muchas regiones de EE.UU. suena casi idéntica a /ɑ/ (caught y cot se confunden), así que si te cuesta distinguirlas, no te preocupes: es un fenómeno nativo real.",
   },
   "/ʊ/": {
     difficulty: "medium",
@@ -164,7 +186,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "pull", wordB: "pool", phonemeA: "/ʊ/", phonemeB: "/uː/" },
       { wordA: "full", wordB: "fool", phonemeA: "/ʊ/", phonemeB: "/uː/" },
     ],
-    spanishTip: "La 'u' relajada. En español siempre apretamos los labios hacia adelante como dando un beso para decir 'u'. Para /ʊ/ (book, good, look, put), no hagas beso: relaja los labios y emite un sonido corto y suave. Es el opuesto de la /uː/ tensa de moon.",
+    hookEs: "La 'u' floja y corta",
+    spanishTip: "Una «u» breve y sin fuerza; no redondees tanto los labios.",
+    spanishTipLongEs: "La 'u' relajada. En español siempre apretamos los labios hacia adelante como dando un beso para decir 'u'. Para /ʊ/ (book, good, look, put), no hagas beso: relaja los labios y emite un sonido corto y suave. Es el opuesto de la /uː/ tensa de moon.",
   },
   "/uː/": {
     difficulty: "easy",
@@ -183,7 +207,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "food", wordB: "foot", phonemeA: "/uː/", phonemeB: "/ʊ/" },
       { wordA: "pool", wordB: "pull", phonemeA: "/uː/", phonemeB: "/ʊ/" },
     ],
-    spanishTip: "Esta sí es la 'u' del beso: proyecta los labios hacia afuera y aprieta con firmeza. Es más tensa y definida que la 'u' del español. Piensa en blue, shoe, food y moon. Contrasta directamente con la /ʊ/ relajada de foot y book.",
+    hookEs: "La 'u' larga con labios de beso",
+    spanishTip: "Redondea fuerte los labios y alarga la «u».",
+    spanishTipLongEs: "Esta sí es la 'u' del beso: proyecta los labios hacia afuera y aprieta con firmeza. Es más tensa y definida que la 'u' del español. Piensa en blue, shoe, food y moon. Contrasta directamente con la /ʊ/ relajada de foot y book.",
   },
   "/ʌ/": {
     difficulty: "hard",
@@ -202,7 +228,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "cut", wordB: "cat", phonemeA: "/ʌ/", phonemeB: "/æ/" },
       { wordA: "luck", wordB: "lock", phonemeA: "/ʌ/", phonemeB: "/ɑ/" },
     ],
-    spanishTip: "El sonido del 'pequeño golpe en el estómago': imagina que sueltas un 'uh' corto y seco al recibir un toque en el abdomen. No es una 'a' abierta ni una 'o'. Es el sonido tónico de cup, bus, love, money y sun. ¡Aparece siempre en la sílaba con fuerza de voz!",
+    hookEs: "La 'a' corta y central",
+    spanishTip: "Una «a» breve y relajada, hecha en el centro de la boca.",
+    spanishTipLongEs: "El sonido del 'pequeño golpe en el estómago': imagina que sueltas un 'uh' corto y seco al recibir un toque en el abdomen. No es una 'a' abierta ni una 'o'. Es el sonido tónico de cup, bus, love, money y sun. ¡Aparece siempre en la sílaba con fuerza de voz!",
   },
   "/ɜr/": {
     difficulty: "hard",
@@ -221,7 +249,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "shirt", wordB: "short", phonemeA: "/ɜr/", phonemeB: "/ɔ/" },
       { wordA: "bird", wordB: "beard", phonemeA: "/ɜr/", phonemeB: "/ɪ/" },
     ],
-    spanishTip: "¡La famosa vocal con R americana! El gran secreto: no intentes pronunciar una vocal y luego una R por separado (no digas 'b-e-r-d' ni 'b-i-r-d'). La lengua flota suspendida hacia atrás y todo el sonido es una masa continua: bird, work, her, first.",
+    hookEs: "La vocal del gruñido",
+    spanishTip: "Sin equivalente en español: lengua a media altura, sonido largo y neutro.",
+    spanishTipLongEs: "¡La famosa vocal con R americana! El gran secreto: no intentes pronunciar una vocal y luego una R por separado (no digas 'b-e-r-d' ni 'b-i-r-d'). La lengua flota suspendida hacia atrás y todo el sonido es una masa continua: bird, work, her, first.",
   },
   "/ə/": {
     difficulty: "medium",
@@ -238,7 +268,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
     // El schwa nunca contrasta en sílaba tónica, así que no tiene pares mínimos.
     // Se domina con ritmo y reducción (sílaba fuerte clara, débiles reducidas).
     minimalPairs: [],
-    spanishTip: "¡El sonido rey del inglés! Es el más común de todos. El error número uno en español es pronunciar cada vocal escrita con la misma fuerza. En inglés, las sílabas débiles se apagan a este murmullo relajado: bə-NA-nə, a-BOUT, SO-fə. ¡Nunca lo acentúes!",
+    hookEs: "La vocal perezosa (schwa)",
+    spanishTip: "En sílabas átonas la vocal se relaja hasta un sonido neutro y corto.",
+    spanishTipLongEs: "¡El sonido rey del inglés! Es el más común de todos. El error número uno en español es pronunciar cada vocal escrita con la misma fuerza. En inglés, las sílabas débiles se apagan a este murmullo relajado: bə-NA-nə, a-BOUT, SO-fə. ¡Nunca lo acentúes!",
   },
   "/p/": {
     difficulty: "easy",
@@ -257,7 +289,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "pig", wordB: "big", phonemeA: "/p/", phonemeB: "/b/" },
       { wordA: "pie", wordB: "buy", phonemeA: "/p/", phonemeB: "/b/" },
     ],
-    spanishTip: "Es como tu 'p' española, pero con un 'puff' de aire al inicio de palabras tónicas (pen, park, power). Pon una hoja de papel a dos centímetros de tus labios: al decir paper, la hoja debe moverse con la ráfaga de aire.",
+    hookEs: "Tu 'p' con ráfaga de aire",
+    spanishTip: "Como la «p» española pero con un 'puff' de aire al inicio de palabras tónicas.",
+    spanishTipLongEs: "Es como tu 'p' española, pero con un 'puff' de aire al inicio de palabras tónicas (pen, park, power). Pon una hoja de papel a dos centímetros de tus labios: al decir paper, la hoja debe moverse con la ráfaga de aire.",
   },
   "/b/": {
     difficulty: "easy",
@@ -276,7 +310,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "berry", wordB: "very", phonemeA: "/b/", phonemeB: "/v/" },
       { wordA: "bat", wordB: "pat", phonemeA: "/b/", phonemeB: "/p/" },
     ],
-    spanishTip: "En español suavizamos la 'b' entre vocales (en lobo casi no cerramos los labios). En inglés, la /b/ siempre junta los dos labios con firmeza (habit, baby). Al final de palabra (cab vs cap), el secreto es hacer que la vocal anterior suene más larga.",
+    hookEs: "La 'b' con labios firmes",
+    spanishTip: "Junta los dos labios con firmeza; en inglés nunca se suaviza entre vocales.",
+    spanishTipLongEs: "En español suavizamos la 'b' entre vocales (en lobo casi no cerramos los labios). En inglés, la /b/ siempre junta los dos labios con firmeza (habit, baby). Al final de palabra (cab vs cap), el secreto es hacer que la vocal anterior suene más larga.",
     finalConsonantPairs: [
       { wordVoiced: "robe", wordVoiceless: "rope", voicedIpa: "/b/", voicelessIpa: "/p/" },
       { wordVoiced: "cab", wordVoiceless: "cap", voicedIpa: "/b/", voicelessIpa: "/p/" },
@@ -301,7 +337,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "tip", wordB: "dip", phonemeA: "/t/", phonemeB: "/d/" },
       { wordA: "town", wordB: "down", phonemeA: "/t/", phonemeB: "/d/" },
     ],
-    spanishTip: "En español la 't' es dental (tocas los dientes y es seca). En inglés apoyas la lengua más arriba, en la encía, y sale un soplo de aire (tea, time). Además, entre dos vocales (water, city, butter) se convierte en un toque suave idéntico a la 'r' de cara (el flap T americano).",
+    hookEs: "La 't' en la encía con aire",
+    spanishTip: "Apoya la lengua en la encía superior con un soplo de aire; no toques los dientes.",
+    spanishTipLongEs: "En español la 't' es dental (tocas los dientes y es seca). En inglés apoyas la lengua más arriba, en la encía, y sale un soplo de aire (tea, time). Además, entre dos vocales (water, city, butter) se convierte en un toque suave idéntico a la 'r' de cara (el flap T americano).",
   },
   "/d/": {
     difficulty: "easy",
@@ -320,7 +358,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "day", wordB: "they", phonemeA: "/d/", phonemeB: "/ð/" },
       { wordA: "dare", wordB: "there", phonemeA: "/d/", phonemeB: "/ð/" },
     ],
-    spanishTip: "¡Cuidado con suavizarla! En español decimos lado o cada casi sin tocar los dientes (suena como /ð/). En inglés, la /d/ NUNCA se suaviza: siempre golpea la encía con firmeza (day ≠ they). Al final de palabra (bad vs bat), alarga la vocal antes de la /d/.",
+    hookEs: "La 'd' firme en la encía",
+    spanishTip: "Golpea la encía con firmeza; en inglés nunca se suaviza como en español.",
+    spanishTipLongEs: "¡Cuidado con suavizarla! En español decimos lado o cada casi sin tocar los dientes (suena como /ð/). En inglés, la /d/ NUNCA se suaviza: siempre golpea la encía con firmeza (day ≠ they). Al final de palabra (bad vs bat), alarga la vocal antes de la /d/.",
     finalConsonantPairs: [
       { wordVoiced: "bad", wordVoiceless: "bat", voicedIpa: "/d/", voicelessIpa: "/t/" },
       { wordVoiced: "bid", wordVoiceless: "bit", voicedIpa: "/d/", voicelessIpa: "/t/" },
@@ -345,7 +385,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "coat", wordB: "goat", phonemeA: "/k/", phonemeB: "/g/" },
       { wordA: "class", wordB: "glass", phonemeA: "/k/", phonemeB: "/g/" },
     ],
-    spanishTip: "Es como la 'k' o la 'c' de casa, pero con un detalle americano: al inicio de palabras como cat, key o cool, expulsa una ráfaga de aire más fuerte y definida. Si pones la mano frente a la boca debes sentir el soplido.",
+    hookEs: "La 'k' con golpe de aire",
+    spanishTip: "Como la «c» de casa pero con una expulsión de aire más fuerte al inicio.",
+    spanishTipLongEs: "Es como la 'k' o la 'c' de casa, pero con un detalle americano: al inicio de palabras como cat, key o cool, expulsa una ráfaga de aire más fuerte y definida. Si pones la mano frente a la boca debes sentir el soplido.",
   },
   "/g/": {
     difficulty: "easy",
@@ -364,7 +406,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "goat", wordB: "coat", phonemeA: "/g/", phonemeB: "/k/" },
       { wordA: "gold", wordB: "cold", phonemeA: "/g/", phonemeB: "/k/" },
     ],
-    spanishTip: "En español entre vocales (como en agua o amigo) la 'g' se vuelve suave y raspadita. En inglés, la /g/ siempre mantiene un bloqueo firme y sonoro (again, sugar). Al final de palabra (bag vs back), haz durar más la vocal antes de la /g/ sonora.",
+    hookEs: "La 'g' sonora y firme",
+    spanishTip: "Bloqueo firme y sonoro en el fondo de la boca; nunca se suaviza.",
+    spanishTipLongEs: "En español entre vocales (como en agua o amigo) la 'g' se vuelve suave y raspadita. En inglés, la /g/ siempre mantiene un bloqueo firme y sonoro (again, sugar). Al final de palabra (bag vs back), haz durar más la vocal antes de la /g/ sonora.",
     finalConsonantPairs: [
       { wordVoiced: "bag", wordVoiceless: "back", voicedIpa: "/g/", voicelessIpa: "/k/" },
       { wordVoiced: "pig", wordVoiceless: "pick", voicedIpa: "/g/", voicelessIpa: "/k/" },
@@ -389,7 +433,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "fat", wordB: "vat", phonemeA: "/f/", phonemeB: "/v/" },
       { wordA: "fine", wordB: "vine", phonemeA: "/f/", phonemeB: "/v/" },
     ],
-    spanishTip: "¡Sonido amigo! Es idéntico a la 'f' española de fuego o café. Simplemente coloca los dientes superiores sobre el labio inferior y sopla aire continuo sin encender la voz en la garganta.",
+    hookEs: "La 'f' continua de siempre",
+    spanishTip: "Dientes superiores sobre el labio inferior soplando continuo sin voz.",
+    spanishTipLongEs: "¡Sonido amigo! Es idéntico a la 'f' española de fuego o café. Simplemente coloca los dientes superiores sobre el labio inferior y sopla aire continuo sin encender la voz en la garganta.",
   },
   "/v/": {
     difficulty: "hard",
@@ -408,7 +454,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "vat", wordB: "bat", phonemeA: "/v/", phonemeB: "/b/" },
       { wordA: "vine", wordB: "fine", phonemeA: "/v/", phonemeB: "/f/" },
     ],
-    spanishTip: "En español 'b' y 'v' suenan exactamente igual (boca y vaca usan los dos labios). En inglés, la /v/ es un sonido completamente distinto: dientes superiores sobre el labio inferior con vibración de motor (very, van, love). Siente el cosquilleo en el labio inferior.",
+    hookEs: "Dientes de arriba sobre el labio",
+    spanishTip: "Apoya los dientes superiores en el labio inferior y vibra; no es «b».",
+    spanishTipLongEs: "En español 'b' y 'v' suenan exactamente igual (boca y vaca usan los dos labios). En inglés, la /v/ es un sonido completamente distinto: dientes superiores sobre el labio inferior con vibración de motor (very, van, love). Siente el cosquilleo en el labio inferior.",
     finalConsonantPairs: [
       { wordVoiced: "leave", wordVoiceless: "leaf", voicedIpa: "/v/", voicelessIpa: "/f/" },
       { wordVoiced: "live", wordVoiceless: "life", voicedIpa: "/v/", voicelessIpa: "/f/" },
@@ -433,7 +481,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "thin", wordB: "tin", phonemeA: "/θ/", phonemeB: "/t/" },
       { wordA: "three", wordB: "tree", phonemeA: "/θ/", phonemeB: "/t/" },
     ],
-    spanishTip: "Es la 'z' de España (zapato, cielo). Si eres de Latinoamérica, saca la puntita de la lengua entre los dientes como mordiéndotela despacio y sopla aire suave. No la conviertas en 's' (sink ≠ think) ni en 't' (tin ≠ thin). Es la 'th' de think, three y thanks.",
+    hookEs: "La lengua asoma entre los dientes",
+    spanishTip: "Saca un poco la punta de la lengua entre los dientes y sopla, sin voz.",
+    spanishTipLongEs: "Es la 'z' de España (zapato, cielo). Si eres de Latinoamérica, saca la puntita de la lengua entre los dientes como mordiéndotela despacio y sopla aire suave. No la conviertas en 's' (sink ≠ think) ni en 't' (tin ≠ thin). Es la 'th' de think, three y thanks.",
   },
   "/ð/": {
     difficulty: "hard",
@@ -452,7 +502,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "those", wordB: "dose", phonemeA: "/ð/", phonemeB: "/d/" },
       { wordA: "either", wordB: "ether", phonemeA: "/ð/", phonemeB: "/θ/" },
     ],
-    spanishTip: "¡Buenas noticias: ya dominas este sonido! Es exactamente la 'd' suave que usas en español al decir cada o todo. El reto es que en inglés aparece al principio de palabras esenciales: the, this, that, they. No la endurezcas diciendo una 'd' fuerte: deja la lengua entre los dientes y hazla zumbar.",
+    hookEs: "'th' con voz y lengua fuera",
+    spanishTip: "Como /θ/ pero encendiendo la voz: this, the, mother.",
+    spanishTipLongEs: "¡Buenas noticias: ya dominas este sonido! Es exactamente la 'd' suave que usas en español al decir cada o todo. El reto es que en inglés aparece al principio de palabras esenciales: the, this, that, they. No la endurezcas diciendo una 'd' fuerte: deja la lengua entre los dientes y hazla zumbar.",
   },
   "/s/": {
     difficulty: "easy",
@@ -471,7 +523,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "sip", wordB: "zip", phonemeA: "/s/", phonemeB: "/z/" },
       { wordA: "seal", wordB: "zeal", phonemeA: "/s/", phonemeB: "/z/" },
     ],
-    spanishTip: "Es igual a tu 's' de sol. La gran trampa: en inglés, muchas palabras escritas con 's' al final (como plurales dogs o verbos runs, is, has) en realidad se pronuncian con la vibrante /z/. Reserva la /s/ limpia y sorda para palabras como see, bus y yes.",
+    hookEs: "Tu 's' de siempre, sorda",
+    spanishTip: "Es tu «s» de sol. Resérvala para palabras sin voz; muchas «s» finales son /z/.",
+    spanishTipLongEs: "Es igual a tu 's' de sol. La gran trampa: en inglés, muchas palabras escritas con 's' al final (como plurales dogs o verbos runs, is, has) en realidad se pronuncian con la vibrante /z/. Reserva la /s/ limpia y sorda para palabras como see, bus y yes.",
   },
   "/z/": {
     difficulty: "hard",
@@ -490,7 +544,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "zip", wordB: "sip", phonemeA: "/z/", phonemeB: "/s/" },
       { wordA: "zeal", wordB: "seal", phonemeA: "/z/", phonemeB: "/s/" },
     ],
-    spanishTip: "¡El zumbido de la abeja! No existe en español, pero es ultra frecuente en inglés (is, was, easy, music, dogs, eyes). Pon tus dedos en la garganta mientras haces 'ssss' y luego enciende la voz: notarás un zumbido inmediato. Este sonido distingue rice (arroz) de rise (levantarse).",
+    hookEs: "El zumbido de la abeja",
+    spanishTip: "No existe en español. Pon los dedos en la garganta: al pasar de «sss» a «zzz» notas la vibración.",
+    spanishTipLongEs: "¡El zumbido de la abeja! No existe en español, pero es ultra frecuente en inglés (is, was, easy, music, dogs, eyes). Pon tus dedos en la garganta mientras haces 'ssss' y luego enciende la voz: notarás un zumbido inmediato. Este sonido distingue rice (arroz) de rise (levantarse).",
     finalConsonantPairs: [
       { wordVoiced: "buzz", wordVoiceless: "bus", voicedIpa: "/z/", voicelessIpa: "/s/" },
       { wordVoiced: "his", wordVoiceless: "hiss", voicedIpa: "/z/", voicelessIpa: "/s/" },
@@ -515,7 +571,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "ship", wordB: "sip", phonemeA: "/ʃ/", phonemeB: "/s/" },
       { wordA: "shoe", wordB: "sue", phonemeA: "/ʃ/", phonemeB: "/s/" },
     ],
-    spanishTip: "Es el gesto universal de pedir silencio: '¡Shhh!'. Aunque no existe en el abecedario español, lo conoces de sobra. Cuidado con no convertirlo en una 'ch' seca: la /ʃ/ es continua y suave, como en she, shoe, fashion y English (cheap no es lo mismo que sheep).",
+    hookEs: "El gesto de pedir silencio",
+    spanishTip: "«¡Shhh!»: continuo y suave, no lo conviertas en «ch» seca.",
+    spanishTipLongEs: "Es el gesto universal de pedir silencio: '¡Shhh!'. Aunque no existe en el abecedario español, lo conoces de sobra. Cuidado con no convertirlo en una 'ch' seca: la /ʃ/ es continua y suave, como en she, shoe, fashion y English (cheap no es lo mismo que sheep).",
   },
   "/ʒ/": {
     difficulty: "hard",
@@ -534,7 +592,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "version", wordB: "virgin", phonemeA: "/ʒ/", phonemeB: "/dʒ/" },
       { wordA: "composure", wordB: "composer", phonemeA: "/ʒ/", phonemeB: "/z/" },
     ],
-    spanishTip: "Imagina decir '¡shhh!' pero encendiendo el motor de la garganta. Si has escuchado el acento argentino o uruguayo al decir playa o yo, es casi idéntico. Es el sonido suave y elegante de vision, measure, treasure, casual y decision.",
+    hookEs: "'shhh' con motor encendido",
+    spanishTip: "«¡Shhh!» pero con voz, como la «y» rioplatense: vision, measure.",
+    spanishTipLongEs: "Imagina decir '¡shhh!' pero encendiendo el motor de la garganta. Si has escuchado el acento argentino o uruguayo al decir playa o yo, es casi idéntico. Es el sonido suave y elegante de vision, measure, treasure, casual y decision.",
   },
   "/h/": {
     difficulty: "easy",
@@ -553,7 +613,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "hit", wordB: "it", phonemeA: "/h/", phonemeB: "∅" },
       { wordA: "hold", wordB: "old", phonemeA: "/h/", phonemeB: "∅" },
     ],
-    spanishTip: "¡Dos reglas de oro! 1) En inglés la 'h' NO es muda (hello, happy, house se pronuncian). 2) NO es la 'j' fuerte española de jamón ni raspa la garganta: es simplemente un suspiro de aire tibio, como cuando echas vaho para empañar un espejo.",
+    hookEs: "Un soplo tibio, no la 'j'",
+    spanishTip: "La «h» no es muda y no raspa: es un suspiro tibio, como para empañar un cristal.",
+    spanishTipLongEs: "¡Dos reglas de oro! 1) En inglés la 'h' NO es muda (hello, happy, house se pronuncian). 2) NO es la 'j' fuerte española de jamón ni raspa la garganta: es simplemente un suspiro de aire tibio, como cuando echas vaho para empañar un espejo.",
   },
   "/tʃ/": {
     difficulty: "easy",
@@ -572,7 +634,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "cheap", wordB: "sheep", phonemeA: "/tʃ/", phonemeB: "/ʃ/" },
       { wordA: "chin", wordB: "gin", phonemeA: "/tʃ/", phonemeB: "/dʒ/" },
     ],
-    spanishTip: "Es idéntico a la 'ch' española de chocolate y chico. Lo crucial no es cómo se hace, sino cuándo usarlo: no lo confundas con el sonido suave 'sh' (/ʃ/). Decir chair (silla) tiene un golpe seco 'ch', mientras que share (compartir) es un suspiro continuo 'sh'.",
+    hookEs: "La 'ch' de siempre",
+    spanishTip: "Es tu «ch» de coche; cuida no suavizarla en «sh».",
+    spanishTipLongEs: "Es idéntico a la 'ch' española de chocolate y chico. Lo crucial no es cómo se hace, sino cuándo usarlo: no lo confundas con el sonido suave 'sh' (/ʃ/). Decir chair (silla) tiene un golpe seco 'ch', mientras que share (compartir) es un suspiro continuo 'sh'.",
   },
   "/dʒ/": {
     difficulty: "easy",
@@ -591,7 +655,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "jet", wordB: "yet", phonemeA: "/dʒ/", phonemeB: "/j/" },
       { wordA: "jam", wordB: "yam", phonemeA: "/dʒ/", phonemeB: "/j/" },
     ],
-    spanishTip: "Es la 'ch' española pero con vibración en la garganta. Es el sonido de la 'j' inglesa en job, juice, jump y judge. Cuidado con no confundirla con la /j/ suave de yes: jet (avión) empieza con golpe fuerte /dʒ/, mientras que yet (todavía) empieza suave como 'ie'.",
+    hookEs: "'ch' con voz: la 'j' inglesa",
+    spanishTip: "Como «ch» pero con voz: jam, gym, bridge.",
+    spanishTipLongEs: "Es la 'ch' española pero con vibración en la garganta. Es el sonido de la 'j' inglesa en job, juice, jump y judge. Cuidado con no confundirla con la /j/ suave de yes: jet (avión) empieza con golpe fuerte /dʒ/, mientras que yet (todavía) empieza suave como 'ie'.",
   },
   "/m/": {
     difficulty: "easy",
@@ -610,7 +676,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "meet", wordB: "neat", phonemeA: "/m/", phonemeB: "/n/" },
       { wordA: "might", wordB: "night", phonemeA: "/m/", phonemeB: "/n/" },
     ],
-    spanishTip: "¡Sonido 100% natural para ti! Es exactamente igual a la 'm' española de mamá y mar. En inglés, asegúrate de mantener los labios bien cerrados cuando aparece al final de palabras como time, dream y from para que no se convierta en 'n'.",
+    hookEs: "La 'm' con labios cerrados",
+    spanishTip: "Cierra bien los labios hasta el final, especialmente al final de palabra.",
+    spanishTipLongEs: "¡Sonido 100% natural para ti! Es exactamente igual a la 'm' española de mamá y mar. En inglés, asegúrate de mantener los labios bien cerrados cuando aparece al final de palabras como time, dream y from para que no se convierta en 'n'.",
   },
   "/n/": {
     difficulty: "easy",
@@ -629,7 +697,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "sin", wordB: "sing", phonemeA: "/n/", phonemeB: "/ŋ/" },
       { wordA: "nail", wordB: "mail", phonemeA: "/n/", phonemeB: "/m/" },
     ],
-    spanishTip: "Prácticamente igual a la 'n' española de nube o pan. La única sutileza: en inglés la lengua apoya un poquito más arriba (en la encía rugosa, no en la cara interna de los dientes). Es el sonido claro de no, night, sun y green.",
+    hookEs: "La 'n' en la encía rugosa",
+    spanishTip: "Apoya la punta de la lengua en la encía superior, no en los dientes.",
+    spanishTipLongEs: "Prácticamente igual a la 'n' española de nube o pan. La única sutileza: en inglés la lengua apoya un poquito más arriba (en la encía rugosa, no en la cara interna de los dientes). Es el sonido claro de no, night, sun y green.",
   },
   "/ŋ/": {
     difficulty: "medium",
@@ -648,7 +718,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "wing", wordB: "win", phonemeA: "/ŋ/", phonemeB: "/n/" },
       { wordA: "bang", wordB: "ban", phonemeA: "/ŋ/", phonemeB: "/n/" },
     ],
-    spanishTip: "Ya lo haces en español en la 'n' de banco o tango. El truco del profe: en inglés está al final de palabras (sing, king, morning). ¡NUNCA pronuncies la 'g' final! La boca se queda quieta y el sonido se apaga en la nariz: di 'sin-g' cortando antes de que la 'g' explote.",
+    hookEs: "La 'n' del fondo de la boca",
+    spanishTip: "Un solo sonido nasal con el dorso de la lengua atrás; no marques la «g».",
+    spanishTipLongEs: "Ya lo haces en español en la 'n' de banco o tango. El truco del profe: en inglés está al final de palabras (sing, king, morning). ¡NUNCA pronuncies la 'g' final! La boca se queda quieta y el sonido se apaga en la nariz: di 'sin-g' cortando antes de que la 'g' explote.",
   },
   "/l/": {
     difficulty: "easy",
@@ -667,7 +739,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "led", wordB: "red", phonemeA: "/l/", phonemeB: "/r/" },
       { wordA: "late", wordB: "rate", phonemeA: "/l/", phonemeB: "/r/" },
     ],
-    spanishTip: "En inglés hay dos 'L': 1) Al inicio (light, love) es clara, parecida a la española. 2) Al final o antes de consonante (milk, ball, feel) es la 'Dark L': la parte trasera de la lengua sube y suena más oscura y profunda, casi como una pequeña 'u' hueca en el fondo de la boca.",
+    hookEs: "La 'l' clara y con punta arriba",
+    spanishTip: "Punta de la lengua en los alvéolos; al final de sílaba suena más oscura.",
+    spanishTipLongEs: "En inglés hay dos 'L': 1) Al inicio (light, love) es clara, parecida a la española. 2) Al final o antes de consonante (milk, ball, feel) es la 'Dark L': la parte trasera de la lengua sube y suena más oscura y profunda, casi como una pequeña 'u' hueca en el fondo de la boca.",
   },
   "/r/": {
     difficulty: "hard",
@@ -686,7 +760,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "rate", wordB: "late", phonemeA: "/r/", phonemeB: "/l/" },
       { wordA: "rain", wordB: "lane", phonemeA: "/r/", phonemeB: "/l/" },
     ],
-    spanishTip: "¡La regla de oro: CERO vibración! En español la 'r' golpea el paladar (pero, perro). En inglés americano, la lengua flota en el aire sin tocar nada y los labios se redondean un poco (red, run, car). Imagina el sonido de un motor suave ('rrr'). Y recuerda: en EE.UU. la R se pronuncia siempre, incluso al final de palabra.",
+    hookEs: "La 'r' sin tocar nada",
+    spanishTip: "La lengua no toca el paladar: retráela y curva la punta hacia atrás.",
+    spanishTipLongEs: "¡La regla de oro: CERO vibración! En español la 'r' golpea el paladar (pero, perro). En inglés americano, la lengua flota en el aire sin tocar nada y los labios se redondean un poco (red, run, car). Imagina el sonido de un motor suave ('rrr'). Y recuerda: en EE.UU. la R se pronuncia siempre, incluso al final de palabra.",
   },
   "/j/": {
     difficulty: "easy",
@@ -705,7 +781,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "yam", wordB: "jam", phonemeA: "/j/", phonemeB: "/dʒ/" },
       { wordA: "year", wordB: "ear", phonemeA: "/j/", phonemeB: "∅" },
     ],
-    spanishTip: "Es como el inicio de una 'i' española muy rápida y suave (yes suena 'i-es', yellow suena 'i-élou'). El error más común de los hispanohablantes es endurecerla con fuerza diciendo 'dyes' o 'jes'. Manténla siempre como una 'i' deslizante sin ningún golpe: yes, you, young.",
+    hookEs: "La 'y' suave de «hielo»",
+    spanishTip: "Un deslizamiento suave desde «i», no la «y» fuerte: yes, year.",
+    spanishTipLongEs: "Es como el inicio de una 'i' española muy rápida y suave (yes suena 'i-es', yellow suena 'i-élou'). El error más común de los hispanohablantes es endurecerla con fuerza diciendo 'dyes' o 'jes'. Manténla siempre como una 'i' deslizante sin ningún golpe: yes, you, young.",
   },
   "/w/": {
     difficulty: "easy",
@@ -724,7 +802,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "wine", wordB: "vine", phonemeA: "/w/", phonemeB: "/v/" },
       { wordA: "west", wordB: "vest", phonemeA: "/w/", phonemeB: "/v/" },
     ],
-    spanishTip: "Empieza exactamente como una 'u' española antes de otra vocal (como en hueso, agua, bueno). Cuidado con dos errores: 1) No le pongas una 'g' antes (no digas 'guater', sino water con 'u' limpia). 2) No toques los dientes con el labio: para /w/ los labios forman un círculo, para /v/ los dientes muerden el labio.",
+    hookEs: "La 'u' que arranca la sílaba",
+    spanishTip: "Empieza con labios de «u» y desliza rápido a la vocal: water, one.",
+    spanishTipLongEs: "Empieza exactamente como una 'u' española antes de otra vocal (como en hueso, agua, bueno). Cuidado con dos errores: 1) No le pongas una 'g' antes (no digas 'guater', sino water con 'u' limpia). 2) No toques los dientes con el labio: para /w/ los labios forman un círculo, para /v/ los dientes muerden el labio.",
   },
   "/eɪ/": {
     difficulty: "medium",
@@ -743,7 +823,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "late", wordB: "light", phonemeA: "/eɪ/", phonemeB: "/aɪ/" },
       { wordA: "pain", wordB: "pine", phonemeA: "/eɪ/", phonemeB: "/aɪ/" },
     ],
-    spanishTip: "Es como el diptongo 'ei' en rey o peine. En inglés muchas letras 'A' suenan así (day, name, make, late). No digas una 'e' corta y plana: deja que el sonido viaje de 'e' a 'i' en un solo movimiento suave y conectado.",
+    hookEs: "Diptongo 'ei' suave",
+    spanishTip: "Un deslizamiento suave y continuo desde «e» hasta «i».",
+    spanishTipLongEs: "Es como el diptongo 'ei' en rey o peine. En inglés muchas letras 'A' suenan así (day, name, make, late). No digas una 'e' corta y plana: deja que el sonido viaje de 'e' a 'i' en un solo movimiento suave y conectado.",
   },
   "/aɪ/": {
     difficulty: "medium",
@@ -762,7 +844,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "light", wordB: "late", phonemeA: "/aɪ/", phonemeB: "/eɪ/" },
       { wordA: "price", wordB: "place", phonemeA: "/aɪ/", phonemeB: "/eɪ/" },
     ],
-    spanishTip: "Idéntico al diptongo 'ai' en aire o baile. Es el sonido de la palabra I (yo), y de palabras como my, time, like, night y fly. Comienza con la boca bien abierta y ciérrala con naturalidad hacia una 'i'.",
+    hookEs: "Diptongo 'ai' abierto",
+    spanishTip: "Empieza con la boca abierta en «a» y ciérrala hacia «i».",
+    spanishTipLongEs: "Idéntico al diptongo 'ai' en aire o baile. Es el sonido de la palabra I (yo), y de palabras como my, time, like, night y fly. Comienza con la boca bien abierta y ciérrala con naturalidad hacia una 'i'.",
   },
   "/ɔɪ/": {
     difficulty: "medium",
@@ -781,7 +865,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "coin", wordB: "cone", phonemeA: "/ɔɪ/", phonemeB: "/oʊ/" },
       { wordA: "oil", wordB: "ale", phonemeA: "/ɔɪ/", phonemeB: "/eɪ/" },
     ],
-    spanishTip: "Muy parecido al diptongo 'oi' en hoy o heroico. Redondea bien la boca para la 'o' inicial y luego estírala en una sonrisa para la 'i'. Es el sonido de boy, toy, voice, oil y coin.",
+    hookEs: "Diptongo 'oi' redondo",
+    spanishTip: "Empieza con labios redondos en «o» y estira hacia «i».",
+    spanishTipLongEs: "Muy parecido al diptongo 'oi' en hoy o heroico. Redondea bien la boca para la 'o' inicial y luego estírala en una sonrisa para la 'i'. Es el sonido de boy, toy, voice, oil y coin.",
   },
   "/oʊ/": {
     difficulty: "medium",
@@ -800,7 +886,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "coat", wordB: "caught", phonemeA: "/oʊ/", phonemeB: "/ɔ/" },
       { wordA: "no", wordB: "now", phonemeA: "/oʊ/", phonemeB: "/aʊ/" },
     ],
-    spanishTip: "¡El secreto para no sonar plano en inglés! En español la 'o' es estática y corta (no, yo). En inglés americano, la 'o' SIEMPRE viaja hacia una 'u': no suena 'nou', go suena 'gou', home suena 'joum'. Si terminas cerrando los labios hacia la 'u', tu acento mejorará al instante.",
+    hookEs: "La 'o' que viaja a 'u'",
+    spanishTip: "La «o» en inglés nunca es plana: viaja siempre cerrando hacia «u».",
+    spanishTipLongEs: "¡El secreto para no sonar plano en inglés! En español la 'o' es estática y corta (no, yo). En inglés americano, la 'o' SIEMPRE viaja hacia una 'u': no suena 'nou', go suena 'gou', home suena 'joum'. Si terminas cerrando los labios hacia la 'u', tu acento mejorará al instante.",
   },
   "/aʊ/": {
     difficulty: "medium",
@@ -819,7 +907,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "down", wordB: "done", phonemeA: "/aʊ/", phonemeB: "/ʌ/" },
       { wordA: "out", wordB: "oat", phonemeA: "/aʊ/", phonemeB: "/oʊ/" },
     ],
-    spanishTip: "Como el diptongo 'au' en auto o aplauso. Empieza con la boca bien abierta y ciérrala de inmediato en una 'u' redonda con los labios hacia afuera. Es el sonido característico de now, how, house, out y down.",
+    hookEs: "Diptongo 'au' de boca a beso",
+    spanishTip: "Boca abierta en «a» cerrando rápido a «u» con labios proyectados.",
+    spanishTipLongEs: "Como el diptongo 'au' en auto o aplauso. Empieza con la boca bien abierta y ciérrala de inmediato en una 'u' redonda con los labios hacia afuera. Es el sonido característico de now, how, house, out y down.",
   },
 };
 

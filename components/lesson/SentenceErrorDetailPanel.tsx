@@ -75,9 +75,9 @@ export function SentenceErrorDetailPanel({
             👉 {remediation.visualCueEs}
           </p>
         )}
-        {remediation?.spanishTip && (
+        {(remediation?.spanishTipLongEs ?? remediation?.spanishTip) && (
           <p className="m-0 text-fg-muted text-caption">
-            💡 {remediation.spanishTip}
+            💡 {remediation.spanishTipLongEs ?? remediation.spanishTip}
           </p>
         )}
 

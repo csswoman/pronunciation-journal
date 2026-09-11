@@ -4,10 +4,8 @@ import { describe, expect, it } from "vitest";
 
 const GEMINI_DIR = path.join(process.cwd(), "app", "api", "gemini");
 
-/** Public dictionary cache; does not call Gemini and is GET-only. */
-const LAYERED_LIMIT_EXEMPTIONS = new Set([
-  path.join(GEMINI_DIR, "word-of-day", "route.ts"),
-]);
+/** Every Gemini route must apply the layered limiter, including word-of-day. */
+const LAYERED_LIMIT_EXEMPTIONS = new Set<string>([]);
 
 function geminiRouteFiles(dir: string): string[] {
   return fs

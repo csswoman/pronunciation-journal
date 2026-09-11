@@ -8,6 +8,7 @@ import { cn } from "@/lib/cn";
 
 export function AICoachHeader({
   pageLabel, showHistory, onNewChat, onToggleHistory, onClose, endSessionSlot,
+  activeMissionId, onExitMission,
 }: {
   pageLabel?: string;
   showHistory: boolean;
@@ -15,6 +16,8 @@ export function AICoachHeader({
   onToggleHistory: () => void;
   onClose: () => void;
   endSessionSlot?: React.ReactNode;
+  activeMissionId?: string | null;
+  onExitMission?: () => void;
 }) {
   const showBadge = Boolean(pageLabel && pageLabel.trim() !== "" && pageLabel !== "AI Coach");
   const { autoSpeak, toggleAutoSpeak } = useAICoachStore();
@@ -22,14 +25,28 @@ export function AICoachHeader({
   return (
     <header className="flex items-center justify-between px-3.5 py-2.5 sm:px-4 sm:py-3 shrink-0 border-b border-border-subtle bg-surface-raised">
       <div className="flex items-center gap-2.5 min-w-0">
-        <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-primary-soft text-primary shadow-xs">
-          <Sparkles size={16} strokeWidth={2} aria-hidden />
-        </span>
-        <span className="text-label font-semibold text-fg tracking-tight">AI Coach</span>
-        {showBadge && (
-          <span className="text-xxs px-2 py-0.5 rounded-full font-medium hidden sm:inline-block bg-surface-base text-fg-muted border border-border-subtle truncate max-w-[140px]">
-            {pageLabel}
-          </span>
+        {activeMissionId && onExitMission ? (
+          <button
+            type="button"
+            onClick={onExitMission}
+            aria-label="Salir de la misión activa"
+            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-border-subtle bg-surface-base text-caption font-medium text-fg hover:bg-surface-sunken hover:border-border-default transition-colors cursor-pointer shadow-2xs shrink-0"
+          >
+            <ChevronLeft size={15} aria-hidden />
+            <span>Salir de misión</span>
+          </button>
+        ) : (
+          <>
+            <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-primary-soft text-primary shadow-xs">
+              <Sparkles size={16} strokeWidth={2} aria-hidden />
+            </span>
+            <span className="text-label font-semibold text-fg tracking-tight">AI Coach</span>
+            {showBadge && (
+              <span className="text-xxs px-2 py-0.5 rounded-full font-medium hidden sm:inline-block bg-surface-base text-fg-muted border border-border-subtle truncate max-w-[140px]">
+                {pageLabel}
+              </span>
+            )}
+          </>
         )}
       </div>
       <div className="flex items-center gap-1 shrink-0">
@@ -162,11 +179,7 @@ export function ConversationHistoryPanel({
   return (
     <div className="flex-1 flex flex-col min-h-0 overflow-hidden bg-surface-raised">
       <div className="flex items-center gap-2 px-3.5 py-2.5 border-b border-border-subtle shrink-0">
-        <button
-          type="button"
-          onClick={onClose}
-          className="flex items-center gap-1 text-caption text-fg-muted hover:text-fg transition-colors cursor-pointer"
-        >
+        <button type="button" onClick={onClose} className="flex items-center gap-1 text-caption text-fg-muted hover:text-fg transition-colors cursor-pointer">
           <ChevronLeft size={16} />
           <span>Volver</span>
         </button>
@@ -174,9 +187,7 @@ export function ConversationHistoryPanel({
       </div>
       <div className="flex-1 overflow-y-auto py-2">
         {isEmpty ? (
-          <p className="text-caption text-fg-muted text-center py-8">
-            No hay conversaciones previas
-          </p>
+          <p className="text-caption text-fg-muted text-center py-8">No hay conversaciones previas</p>
         ) : (
           order.map((label) => {
             const items = grouped[label];
@@ -190,44 +201,18 @@ export function ConversationHistoryPanel({
                   return (
                     <div
                       key={conv.id}
-                      className={cn(
-                        "group flex items-center gap-2 px-3.5 py-2 mx-1.5 rounded-lg cursor-pointer transition-colors",
-                        isActive
-                          ? "bg-primary-soft text-primary font-medium"
-                          : "hover:bg-surface-sunken text-fg-muted",
-                      )}
+                      className={cn("group flex items-center gap-2 px-3.5 py-2 mx-1.5 rounded-lg cursor-pointer transition-colors", isActive ? "bg-primary-soft text-primary font-medium" : "hover:bg-surface-sunken text-fg-muted")}
                       onClick={() => !isPending && onSelect(conv)}
                     >
-                      <span
-                        className={cn(
-                          "text-caption truncate flex-1",
-                          isActive ? "text-primary" : "text-fg",
-                          isPending && "opacity-50",
-                        )}
-                      >
+                      <span className={cn("text-caption truncate flex-1", isActive ? "text-primary" : "text-fg", isPending && "opacity-50")}>
                         {formatConversationTitle(conv)}
                       </span>
                       {isPending ? (
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleUndo();
-                          }}
-                          className="text-xxs font-medium text-primary hover:underline px-1 cursor-pointer"
-                        >
+                        <button type="button" onClick={(e) => { e.stopPropagation(); handleUndo(); }} className="text-xxs font-medium text-primary hover:underline px-1 cursor-pointer">
                           Deshacer
                         </button>
                       ) : (
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            if (conv.id !== undefined) handleDeleteClick(conv.id);
-                          }}
-                          className="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-surface-base text-fg-subtle hover:text-error cursor-pointer"
-                          title="Eliminar"
-                        >
+                        <button type="button" onClick={(e) => { e.stopPropagation(); if (conv.id !== undefined) handleDeleteClick(conv.id); }} className="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-surface-base text-fg-subtle hover:text-error cursor-pointer" title="Eliminar">
                           <X size={13} />
                         </button>
                       )}

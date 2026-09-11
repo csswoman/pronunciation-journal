@@ -35,10 +35,10 @@ export function PhonemeIntroTray({
 
   return (
     <div className="phoneme-intro__tray flex flex-col gap-5 px-[var(--layout-card-pad)] pb-[var(--layout-section-gap)] pt-1">
-      {extra?.spanishTip && (
+      {(extra?.spanishTipLongEs ?? extra?.spanishTip) && (
         <aside className="phoneme-intro__tip">
           <p className="phoneme-intro__tip-label">El truco</p>
-          <p className="phoneme-intro__tip-body">{extra.spanishTip}</p>
+          <p className="phoneme-intro__tip-body">{extra.spanishTipLongEs ?? extra.spanishTip}</p>
         </aside>
       )}
 

@@ -1,4 +1,8 @@
-export type ImmersionLevel = 'A1' | 'A2' | 'B1' | 'B2' | 'C1';
+/**
+ * engVid solo publica tres niveles (Beginner, Intermediate, Advanced), asi que
+ * el catalogo solo puede afirmar honestamente estos tres puntos del MCER.
+ */
+export type ImmersionLevel = 'A2' | 'B1' | 'C1';
 
 export type ImmersionTopic =
   | 'speaking'

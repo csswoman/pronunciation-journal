@@ -88,21 +88,21 @@ export default function HomeChunkOfDayCard() {
 
   return (
     <div
-      className="home-sidebar-card relative flex h-full flex-col justify-between gap-3 overflow-hidden rounded-xl border border-border-default border-l-[3px] border-l-primary/75 bg-surface-raised p-4 shadow-xs motion-reduce:shadow-none"
+      className="home-sidebar-card relative flex h-full flex-col justify-between gap-4 overflow-hidden rounded-2xl border border-border-default border-l-[3px] border-l-primary/75 bg-surface-raised p-5 shadow-xs motion-reduce:shadow-none"
       aria-busy={loading || undefined}
       aria-labelledby="chunk-of-day-heading"
     >
       {/* Header: Frase del día + Categoría */}
       <div className="relative z-1 flex items-center justify-between gap-2 min-w-0">
-        <div className="flex items-center gap-1.5 shrink-0">
-          <MessageCircle size={14} className="text-primary" aria-hidden />
-          <span id="chunk-of-day-heading" className="whitespace-nowrap font-label text-caption font-semibold text-fg">
+        <div className="flex items-center gap-2 shrink-0">
+          <MessageCircle size={16} className="text-primary" aria-hidden />
+          <span id="chunk-of-day-heading" className="whitespace-nowrap font-label text-caption font-bold text-fg">
             Frase del día
           </span>
         </div>
         {categoryLabel ? (
           <span
-            className="truncate max-w-[62%] rounded-full border border-border-subtle bg-surface-sunken px-2.5 py-0.5 font-sans text-caption font-medium text-fg-muted whitespace-nowrap"
+            className="truncate max-w-[62%] rounded-full bg-surface-sunken/80 px-3 py-1 font-sans text-caption font-medium text-fg-muted lowercase whitespace-nowrap"
             title={categoryLabel}
           >
             {categoryLabel}
@@ -128,7 +128,7 @@ export default function HomeChunkOfDayCard() {
             className="group/listen focus-ring -mx-1.5 flex flex-col gap-1 rounded-xl p-1.5 text-left transition-colors hover:bg-surface-sunken/60 cursor-pointer"
             aria-label={`Escuchar pronunciación de ${chunk.chunk}`}
           >
-            <div className="flex items-start justify-between gap-2">
+            <div className="flex items-center justify-between gap-2">
               <span
                 className={cn(
                   "font-heading font-bold text-fg leading-snug break-words tracking-tight transition-colors group-hover/listen:text-primary",
@@ -137,14 +137,14 @@ export default function HomeChunkOfDayCard() {
               >
                 <OpenEndedText value={chunk.chunk} />
               </span>
-              <div className="mt-1 shrink-0 rounded-full border border-border-subtle bg-surface-sunken p-1.5 text-fg-muted transition-colors group-hover/listen:border-primary/40 group-hover/listen:bg-primary-soft group-hover/listen:text-primary">
-                <Volume2 size={15} aria-hidden />
+              <div className="shrink-0 rounded-full border border-border-subtle/50 bg-surface-sunken/70 p-2 text-fg-muted transition-colors group-hover/listen:border-primary/40 group-hover/listen:bg-primary-soft group-hover/listen:text-primary">
+                <Volume2 size={16} aria-hidden />
               </div>
             </div>
 
             {chunk.ipa ? (
               <span
-                className="font-ipa text-body-md font-medium text-fg-muted"
+                className="font-ipa text-body-md font-medium text-fg-muted/80 tracking-wide"
                 lang="en-fonipa"
               >
                 {formatIpaDisplay(chunk.ipa)}
@@ -153,11 +153,11 @@ export default function HomeChunkOfDayCard() {
           </button>
 
           {/* Traducción de la frase */}
-          <p className="font-body-md text-fg leading-relaxed">
+          <p className="font-body-md text-fg font-semibold leading-relaxed">
             <OpenEndedText value={chunk.meaning} />
           </p>
 
-          {/* Ejemplo con filete lateral y botón de audio */}
+          {/* Ejemplo estilo card con kicker y audio */}
           {example ? (
             <HeroTermExample example={example} resetKey={chunk.id} />
           ) : null}

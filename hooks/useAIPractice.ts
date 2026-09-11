@@ -146,22 +146,21 @@ export function useAIPractice(): UseAIPracticeReturn {
   }, [activeMissionId, conversationId, user?.id])
 
   const changeMode = useCallback(async (next: AIConversationMode) => {
-    if (!user?.id) return;
     chat.resetChat();
-    setActiveMissionId(null);
+    setActiveMissionId(next.startsWith("mission:") ? next.slice("mission:".length) : null);
     words.setWordToSave(null);
     setMode(next);
-    const { conversationId: id, conversation } = await switchMode(user.id, next);
-    setConversationId(id);
+    if (!user?.id) return;
+    try {
+      const { conversationId: id, conversation } = await switchMode(user.id, next);
+      setConversationId(id);
 
-    // Restore messages from the existing conversation (if any)
-    if (conversation.messages.length > 0) {
-      chat.loadMessages(conversation.messages as never);
-    }
-
-    // Track the active mission id from the mode string.
-    if (next.startsWith("mission:")) {
-      setActiveMissionId(next.slice("mission:".length));
+      // Restore messages from the existing conversation (if any)
+      if (conversation.messages.length > 0) {
+        chat.loadMessages(conversation.messages as never);
+      }
+    } catch {
+      // Graceful offline fallback: mode already switched in UI
     }
   }, [chat, words, user?.id]);
 

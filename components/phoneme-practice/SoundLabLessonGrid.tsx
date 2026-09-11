@@ -88,15 +88,22 @@ export function SoundLabLessonGrid({
           ].join(" ")}
         >
           {section.title ? (
-            <div className="flex items-baseline gap-2.5 mb-1">
-              <h2 className="text-2xl font-bold tracking-tight text-fg m-0">
-                {section.title}
-              </h2>
-              {section.count !== undefined && (
-                <span className="text-body-sm font-normal text-fg-muted">
-                  {section.count} {section.count === 1 ? "sonido" : "sonidos"}
-                </span>
-              )}
+            <div className="flex flex-col gap-1 mb-1">
+              <div className="flex items-baseline gap-2.5">
+                <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-fg m-0">
+                  {section.title}
+                </h2>
+                {section.count !== undefined && (
+                  <span className="text-caption font-medium text-fg-muted">
+                    {section.count} {section.count === 1 ? "sonido" : "sonidos"}
+                  </span>
+                )}
+              </div>
+              {section.subtitle ? (
+                <p className="text-body-sm text-fg-muted m-0 leading-relaxed max-w-3xl">
+                  {section.subtitle}
+                </p>
+              ) : null}
             </div>
           ) : null}
           <div className="sound-lab__grid">

@@ -2,12 +2,20 @@ import type { ExerciseType } from "../taxonomy";
 import type { CEFRLevel } from "../cefr";
 import type { EvaluationResult } from "../design";
 import type { ExerciseDesign } from "../design";
+import type { TranscriptSource } from "@/lib/speech/transcript-quality";
 
 export type { EvaluationResult };
 
 export type ActualAnswer =
   | { kind: 'text'; value: string }
-  | { kind: 'speech'; transcript: string; confidence?: number }
+  | {
+      kind: 'speech';
+      transcript: string;
+      /** Confianza del reconocedor (0-1). Ausente en Gemini, que sólo devuelve texto. */
+      confidence?: number;
+      /** Qué reconocedor produjo el texto; las fuentes no son equivalentes. */
+      source?: TranscriptSource;
+    }
   | { kind: 'selection'; chosen: string | string[] };
 
 export interface EvaluationInput {

@@ -48,7 +48,6 @@ const MAX_LINES_ALLOWLIST = [
   "lib/essential-words/__tests__/runtime-engine.integration.test.ts",
   "lib/essential-words/dictation-feedback.ts",
   "lib/essential-words/runtime-engine.ts",
-  "lib/immersion/engvid-catalog.ts",
   "lib/practice/__tests__/queries.test.ts",
   "lib/pronunciation/articulation-guide-data.ts",
   "lib/pronunciation/connected-speech-data.ts",

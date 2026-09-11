@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import PageLayout from '@/components/layout/PageLayout';
 import { ArrowLeft, Clapperboard } from '@/components/icons';
-import { ENGVID_IMMERSION_LESSONS } from '@/lib/immersion/engvid-catalog';
+import { fetchImmersionLessonsServer } from '@/lib/immersion/server-queries';
 import { ImmersionCatalog } from '@/components/immersion/ImmersionCatalog';
 
 export const metadata: Metadata = {
@@ -10,7 +10,9 @@ export const metadata: Metadata = {
   description: 'Lecciones en video de profesores nativos (EngVid) con timestamps interactivos, glosarios fonéticos IPA y minería de frases.',
 };
 
-export default function ImmersionPage() {
+export default async function ImmersionPage() {
+  const lessons = await fetchImmersionLessonsServer();
+
   return (
     <PageLayout archetype="catalog">
       <div className="flex flex-col gap-6">
@@ -42,7 +44,7 @@ export default function ImmersionPage() {
         </div>
 
         {/* Catalog */}
-        <ImmersionCatalog lessons={ENGVID_IMMERSION_LESSONS} />
+        <ImmersionCatalog lessons={lessons} />
       </div>
     </PageLayout>
   );

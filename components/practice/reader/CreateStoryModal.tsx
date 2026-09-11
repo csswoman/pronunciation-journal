@@ -19,14 +19,13 @@
 import { useEffect, useRef, useState } from 'react'
 import Button from '@/components/ui/Button'
 import { Sparkles, X } from '@/components/icons'
+import { cefrLevelOptions } from '@/lib/content/cefr-labels'
 import type { CEFRLevel } from '@/lib/exercises/cefr'
 
-const CEFR_LEVELS: Array<{ value: CEFRLevel; label: string; desc: string }> = [
-  { value: 'A1', label: 'A1', desc: 'Básico' },
-  { value: 'A2', label: 'A2', desc: 'Elemental' },
-  { value: 'B1', label: 'B1', desc: 'Intermedio' },
-  { value: 'B2', label: 'B2', desc: 'Intermedio Alto' },
-]
+/** Story generation is tuned up to B2; names come from the shared CEFR table. */
+const CEFR_LEVELS: Array<{ value: CEFRLevel; label: string; desc: string }> = cefrLevelOptions(
+  'B2',
+).map((option) => ({ value: option.value, label: option.label, desc: option.name }))
 
 const SUGGESTED_TOPICS = [
   { label: '☕ Vida cotidiana', prompt: 'Una situación de la vida diaria en la ciudad' },

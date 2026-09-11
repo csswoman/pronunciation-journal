@@ -1,9 +1,8 @@
 "use client";
 
-import { useRef, useState } from "react";
 import { Volume2, Mic, Pause } from "@/components/icons";
-import { speak } from "@/lib/phoneme-practice/tts";
 import { cn } from "@/lib/cn";
+import { useDualPlayback } from "@/hooks/useDualPlayback";
 
 interface Props {
   targetWord?: string;
@@ -12,43 +11,10 @@ interface Props {
 }
 
 export function SelfPlaybackAudioBar({ targetWord, userAudioUrl, className }: Props) {
-  const [isPlayingNative, setIsPlayingNative] = useState(false);
-  const [isPlayingUser, setIsPlayingUser] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-
-  const playNative = () => {
-    if (!targetWord) return;
-    if (audioRef.current) {
-      audioRef.current.pause();
-      setIsPlayingUser(false);
-    }
-    setIsPlayingNative(true);
-    speak(targetWord, () => setIsPlayingNative(false));
-  };
-
-  const playUser = () => {
-    if (!userAudioUrl) return;
-    window.speechSynthesis?.cancel();
-    setIsPlayingNative(false);
-
-    if (isPlayingUser && audioRef.current) {
-      audioRef.current.pause();
-      setIsPlayingUser(false);
-      return;
-    }
-
-    if (!audioRef.current) {
-      audioRef.current = new Audio(userAudioUrl);
-      audioRef.current.onended = () => setIsPlayingUser(false);
-      audioRef.current.onerror = () => setIsPlayingUser(false);
-    } else {
-      audioRef.current.src = userAudioUrl;
-      audioRef.current.currentTime = 0;
-    }
-
-    setIsPlayingUser(true);
-    audioRef.current.play().catch(() => setIsPlayingUser(false));
-  };
+  const { isPlayingNative, isPlayingUser, playNative, playUser } = useDualPlayback(
+    targetWord,
+    userAudioUrl,
+  );
 
   return (
     <div

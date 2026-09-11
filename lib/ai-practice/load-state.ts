@@ -1,15 +1,23 @@
 "use client";
 
-import { getUserStats, getFavorites, getNeedsPracticeWords } from "@/lib/db";
+import Dexie from "dexie";
+import { db, getUserStats, getFavorites, getNeedsPracticeWords } from "@/lib/db";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { getWordBankSourceRefs } from "@/lib/word-bank/domain-queries";
 import { deriveDomainProfile, emptyDomainProfile } from "@/lib/lexicon/domain-profile";
 import { getWordCategoryIndex } from "@/lib/lexicon/word-index-client";
 import { createEmptyState, type UserLearningState } from "./learning-state";
+import { aggregateTopicRatings, mergeWeakTopics, type WeakTopic } from "./srs-weak-topics";
 
 const CACHE_TTL_MS = 30_000;
 const cache = new Map<string, { expiresAt: number; state: UserLearningState }>();
 const inflight = new Map<string, Promise<UserLearningState>>();
+
+/** Test-only: drops the in-memory TTL cache so each case starts clean. */
+export function __clearLearningStateCache(): void {
+  cache.clear();
+  inflight.clear();
+}
 
 function getOrCreateDeviceId(): string {
   const key = "ai_practice_device_id";
@@ -52,18 +60,64 @@ export async function getUserLearningState(userId: string): Promise<UserLearning
   return promise;
 }
 
+/**
+ * The persisted snapshot in `db.learningState`, or null when there is none.
+ *
+ * This row is the ONLY home of the fields no live source can recompute:
+ * `grammar.weakTopics`, `lastSessions`, `theory.concepts`, `focus` and
+ * `errorRecurrence`. Reading it here is what lets the coach remember what it
+ * already taught — without it, every read reset those to empty and the
+ * "repasa lo que fallaste" starter could never fire.
+ */
+async function readStoredState(userId: string): Promise<UserLearningState | null> {
+  try {
+    const row = await db.learningState.get(userId);
+    return row?.state ?? null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Weak topics derived from graded practice answers (`topic_srs`).
+ *
+ * The coach only ever tracked exercises it ran itself, so failing a topic
+ * repeatedly in practice never changed what it offered. Reading the local
+ * rating-event mirror closes that gap and keeps working offline.
+ */
+async function fetchSrsWeakTopics(userId: string): Promise<WeakTopic[]> {
+  try {
+    const events = await db.srsRatingEvents
+      .where("[userId+entityType+topic]")
+      .between([userId, "topic_srs", Dexie.minKey], [userId, "topic_srs", Dexie.maxKey])
+      .toArray();
+    return aggregateTopicRatings(events);
+  } catch {
+    return [];
+  }
+}
+
 async function buildUserLearningState(userId: string): Promise<UserLearningState> {
   const deviceId = getOrCreateDeviceId();
-  const base = createEmptyState(userId, deviceId);
+  const stored = await readStoredState(userId);
+  // Stored fields win for accumulated history; live sources below overwrite
+  // everything that is cheaper to recompute than to keep in sync.
+  const base: UserLearningState = {
+    ...createEmptyState(userId, deviceId),
+    ...(stored ?? {}),
+    userId,
+    deviceId,
+  };
 
   try {
-    const [stats, favorites, practiceWords, soundProgress, domainProfile] =
+    const [stats, favorites, practiceWords, soundProgress, domainProfile, srsWeakTopics] =
       await Promise.allSettled([
         getUserStats(userId),
         getFavorites(userId),
         getNeedsPracticeWords(userId),
         fetchSoundProgress(userId),
         fetchDomainProfile(userId),
+        fetchSrsWeakTopics(userId),
       ]);
 
     const resolvedStats = stats.status === "fulfilled" ? stats.value : null;
@@ -72,6 +126,8 @@ async function buildUserLearningState(userId: string): Promise<UserLearningState
     const resolvedSounds = soundProgress.status === "fulfilled" ? soundProgress.value : [];
     const resolvedDomainProfile =
       domainProfile.status === "fulfilled" ? domainProfile.value : emptyDomainProfile();
+    const resolvedSrsWeakTopics =
+      srsWeakTopics.status === "fulfilled" ? srsWeakTopics.value : [];
 
     const avgAccuracy = resolvedStats?.averageAccuracy ?? 0;
     const cefrEstimate = accuracyToCEFR(avgAccuracy);
@@ -100,11 +156,20 @@ async function buildUserLearningState(userId: string): Promise<UserLearningState
 
     return {
       ...base,
-      level: { cefrEstimate, confidence },
+      // An assessed level (stored) beats one guessed from raw accuracy: the
+      // assessment asked real questions, `accuracyToCEFR` only sees a percentage.
+      level: stored?.level
+        ? { ...stored.level, confidence: Math.max(stored.level.confidence, confidence) }
+        : { cefrEstimate, confidence },
       vocabulary: {
         knownCount: resolvedStats?.totalWords ?? 0,
         strugglingWords,
         savedWords,
+      },
+      // Practice failures now reach the coach. Its own rows win on conflict —
+      // see mergeWeakTopics.
+      grammar: {
+        weakTopics: mergeWeakTopics(base.grammar.weakTopics, resolvedSrsWeakTopics),
       },
       pronunciation: {
         averageAccuracy: avgAccuracy,

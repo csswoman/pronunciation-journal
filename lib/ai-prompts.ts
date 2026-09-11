@@ -504,6 +504,28 @@ export function buildScriptGenerationPrompt({
     )
   }
 
+  if (context.recentTopics.length > 0) {
+    lines.push(
+      `- Avoid rehashing what was covered recently: ${context.recentTopics.slice(0, 5).join(', ')}.`,
+    )
+  }
+
+  // El área débil manda sobre el dominio amplio: apuntar donde el vocabulario
+  // se resiste vale más que repetir un tema donde ya va bien.
+  if (context.weakDomains.length > 0) {
+    lines.push(
+      `- Set the dialogue somewhere the learner is still shaky with vocabulary: ${context.weakDomains
+        .slice(0, 2)
+        .join(', ')}.`,
+    )
+  } else if (context.domains.length > 0) {
+    lines.push(
+      `- Draw situations and vocabulary from what the learner studies: ${context.domains
+        .slice(0, 2)
+        .join(', ')}.`,
+    )
+  }
+
   lines.push(
     '',
     'Return JSON only, with this shape:',
@@ -713,4 +735,74 @@ export function buildReaderAudioPrompt(passageText: string): string {
 
 export function buildMissionAudioPrompt(lineText: string): string {
   return `Please speak the following conversational dialogue line aloud with natural pronunciation, expressive intonation, and native cadence suitable for language learning:\n\n${lineText.trim()}`
+}
+
+export const IMMERSION_ENRICH_SYSTEM_PROMPT = `You are an ESL curriculum designer building study material for Spanish-speaking learners around a real English video lesson from engVid.
+
+You receive only the lesson's title, its official description, its published categories, and its duration. You do NOT receive a transcript. Never invent specific claims about what the teacher said, wrote on the board, or did at a given moment.
+
+Produce:
+- keyVocabulary: 4-6 words or short structures that this specific lesson is genuinely about, inferred from the title and description. For each: the word, its IPA transcription in slashes using standard General American symbols, a definition written in Spanish (max 140 characters), and one natural English example sentence (max 90 characters) showing real usage.
+- targetPhrases: 3-4 natural English phrases a learner should be able to say after this lesson. Each with its IPA and a short note in Spanish (max 100 characters) about rhythm, linking, or when to use it.
+- quiz: 3 comprehension questions in Spanish about the CONCEPT the lesson teaches, each with exactly 4 plausible options and one correct answer, plus a Spanish explanation (max 180 characters). Test understanding of the language point, never trivia about the video itself.
+- summary: 1-2 sentences in Spanish (max 220 characters) describing what the learner will be able to do after this lesson. Write it as a benefit, not as a description of the video.
+
+Rules:
+- Vocabulary must be specific to this lesson. Never emit the lesson slug, a bare number, or a generic placeholder as a word.
+- IPA must be plausible General American, wrapped in forward slashes.
+- Spanish text uses correct accents and natural phrasing, never machine-translated English.
+- Output JSON only, no markdown fences.`
+
+export function buildImmersionEnrichUserPrompt(input: {
+  title: string
+  teacher: string
+  description: string
+  categories: string[]
+  durationMinutes: number
+}): string {
+  const categories = input.categories.length > 0 ? input.categories.join(', ') : 'unspecified'
+  return `Lesson title: ${input.title}
+Teacher: ${input.teacher}
+Published categories: ${categories}
+Duration: ${input.durationMinutes} minutes
+Official description: ${input.description}
+
+Return JSON: { "summary": string, "keyVocabulary": [{ "word": string, "ipa": string, "definition": string, "contextSentence": string }], "targetPhrases": [{ "phrase": string, "ipa": string, "note": string }], "quiz": [{ "question": string, "options": [string,string,string,string], "correctIndex": number, "explanation": string }] }`
+}
+
+// ── Focus Mode: mapeo de dificultad en texto libre ──
+
+export const FOCUS_GAP_MATCH_SYSTEM_PROMPT = `You are an ESL diagnostic assistant for Spanish-speaking learners of English.
+
+The learner describes, in their own words (usually Spanish), something they find hard about English. Your job is to map that description onto the closest topics from a fixed catalog you are given.
+
+Rules:
+- Choose ONLY from the provided catalog ids. Never invent an id.
+- Return between 1 and 3 matches, best match first.
+- If the description is vague, off-topic, or not about learning English, return an empty "matches" array and explain why in "clarification".
+- "confidence" is 0.0-1.0: how sure you are that this topic is what the learner means.
+- "rationale" is ONE short sentence in Spanish, addressed to the learner, connecting their words to the topic. Quote their own phrasing when it helps.
+- Never shame the learner. Their description is valid input, not an error.
+
+Return ONLY raw valid JSON with no markdown formatting or code blocks:
+{
+  "matches": [{ "topicId": "grammar:past simple", "confidence": 0.9, "rationale": "Explicación breve en español..." }],
+  "clarification": null
+}`
+
+export function buildFocusGapMatchUserPrompt(input: {
+  description: string;
+  catalog: Array<{ id: string; label: string }>;
+}): string {
+  const catalogList = input.catalog.map((t) => `- ${t.id} → ${t.label}`).join('\n')
+
+  return `Catalog of available topics:
+${catalogList}
+
+The learner describes their difficulty like this:
+"""
+${input.description}
+"""
+
+Map this description to the closest catalog topics.`
 }

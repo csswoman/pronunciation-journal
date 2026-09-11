@@ -31,3 +31,27 @@ export function estimateWordOffsets(words: string[], durationMs: number): number
   }
   return offsets
 }
+
+/**
+ * Duracion estimada cuando el motor no la da: ~60ms por caracter hablado
+ * es una aproximacion razonable a ritmo normal, y solo alimenta una pista
+ * visual — si sale corta, el resaltado termina antes que el audio.
+ */
+export const MS_PER_CHAR = 60
+
+export function estimatedDuration(text: string): number {
+  return Math.max(600, text.length * MS_PER_CHAR)
+}
+
+/** Indice de la palabra que contiene una posicion en caracteres. */
+export function wordIndexAtChar(text: string, charIndex: number): number {
+  const words = splitSpokenWords(text)
+  let cursor = 0
+  for (let index = 0; index < words.length; index += 1) {
+    const found = text.indexOf(words[index] as string, cursor)
+    if (found > charIndex) return Math.max(0, index - 1)
+    cursor = found + (words[index] as string).length
+  }
+  return Math.max(0, words.length - 1)
+}
+

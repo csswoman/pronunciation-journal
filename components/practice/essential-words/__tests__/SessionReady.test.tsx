@@ -43,16 +43,21 @@ vi.mock('../SessionReadyHero', () => ({
     preview,
     isResume,
     onBegin,
+    lastSession,
   }: {
     preview: { scheduledActions: number }
     isResume: boolean
     onBegin: () => void
+    lastSession?: { correct: number; practiced: number } | null
   }) => {
     return (
       <div>
         <h2 id="session-ready-title">
           {isResume ? 'Continuar donde lo dejaste' : `Hoy tienes ${preview.scheduledActions} ejercicios`}
         </h2>
+        {lastSession ? (
+          <div>Última: buen ritmo · {lastSession.correct}/{lastSession.practiced}</div>
+        ) : null}
         <button type="button" onClick={onBegin}>
           {isResume ? 'Continuar' : 'Empezar'}
         </button>

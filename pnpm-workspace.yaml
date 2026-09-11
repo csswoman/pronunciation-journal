@@ -7,7 +7,6 @@ overrides:
   brace-expansion: "5.0.9"
   "js-yaml@4": "4.3.1"
   "nanoid@3": "3.3.18"
-  sharp: "0.35.3"
   # Prevent orphaned top-level @supabase/* copies (e.g. 2.102.x) from
   # coexisting with supabase-js@2.108.x — dual postgrest breaks .from() with M_ID.
   "@supabase/auth-js": "2.108.2"
@@ -15,6 +14,9 @@ overrides:
   "@supabase/postgrest-js": "2.108.2"
   "@supabase/realtime-js": "2.108.2"
   "@supabase/storage-js": "2.108.2"
+  js-yaml@>=4.0.0 <4.3.2: ^4.3.2
+  sharp@<0.35.4: ^0.35.4
+  svgo@>=3.0.0 <3.3.5: ^3.3.5
 
 allowBuilds:
   '@google/genai': true

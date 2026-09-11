@@ -219,3 +219,32 @@ export async function getWordsDueForReview(userId: string, limit = 5): Promise<W
   if (error) throw error;
   return (data ?? []) as WordBankEntry[];
 }
+
+/**
+ * Server-only: the narrow slice of lexicon-sourced rows needed to tell which
+ * vocabulary areas resist the learner. Input to
+ * lib/lexicon/weak-domains.ts's deriveWeakDomains.
+ *
+ * Filtered to unsettled SRS states in the query so a learner with thousands of
+ * mastered words does not pay for reading them.
+ */
+export async function getStrugglingWordBankRefs(
+  userId: string,
+): Promise<
+  Array<{
+    source: string | null;
+    source_ref: string | null;
+    ease_factor: number | null;
+    srs_status: string | null;
+  }>
+> {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from(TABLE)
+    .select("source, source_ref, ease_factor, srs_status")
+    .eq("user_id", userId)
+    .eq("source", "lexicon")
+    .in("srs_status", ["new", "learning", "relearning"]);
+  if (error) throw error;
+  return data ?? [];
+}

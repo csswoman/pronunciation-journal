@@ -75,9 +75,21 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
       .evaluate({
         exercise: { domain: 'pronunciation', mode: 'speak' },
         expected: target,
-        actual: { kind: 'speech', transcript: speechResult.transcript },
+        actual: {
+          kind: 'speech',
+          transcript: speechResult.transcript,
+          confidence: speechResult.confidence,
+          source: speechResult.source,
+        },
       })
       .then((evalResult) => {
+        // Abstención: el intento no cuenta ni a favor ni en contra, así que
+        // se trata como no puntuado en vez de como un fallo de pronunciación.
+        if (evalResult.scorable === false) {
+          setEvalFailed(true)
+          return
+        }
+
         const wordResults = getEvaluationWordResults(evalResult)
         setScored({
           correct: evalResult.correct,

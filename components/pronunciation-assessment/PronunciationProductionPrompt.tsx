@@ -145,6 +145,8 @@ export function PronunciationProductionPrompt({
   }
 
   const isListening = status === 'listening'
+  // Transcripción por Gemini en curso: no ofrecer regrabar todavía.
+  const isProcessing = status === 'processing'
   const isError = status === 'error'
   const isDone = status === 'done' && result !== null
   const heardText = result?.transcript.trim() ?? ''
@@ -170,6 +172,7 @@ export function PronunciationProductionPrompt({
             variant={isListening ? 'soft' : 'primary'}
             icon={isListening ? <MicOff size={16} aria-hidden /> : <Mic size={16} aria-hidden />}
             onClick={isListening ? stop : start}
+            disabled={isProcessing}
             aria-label={isListening ? 'Detener grabación' : 'Grabar'}
             aria-pressed={isListening}
           >
@@ -177,7 +180,9 @@ export function PronunciationProductionPrompt({
           </Button>
 
           <p role="status" aria-live="polite" className="m-0 text-center font-body-sm text-fg-muted">
-            {isListening
+            {isProcessing
+              ? 'Transcribiendo tu voz…'
+              : isListening
               ? graceListening
                 ? 'Sin voz aún — seguimos escuchando. Di la frase cuando puedas.'
                 : 'Escuchando… toca Detener cuando termines'

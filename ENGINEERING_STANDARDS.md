@@ -36,7 +36,7 @@ Complemento operativo de `CLAUDE.md`.
 
 `ai-coach`, `ai-practice`, `api`, `auth`, `chunk-of-day`, `content`, `courses`,
 `daily`, `db`, `decks`, `degradation`, `essential-words`, `exercises`,
-`false-friends`, `gemini`, `home`, `images`, `immersion`, `ipa`, `journal`,
+`false-friends`, `focus`, `gemini`, `home`, `images`, `immersion`, `ipa`, `journal`,
 `learning-focus`, `learning-loop`, `lexicon`, `navigation`, `offline`, `phoneme-practice`,
 `practice`, `preferences`, `progress`, `pronunciation`, `review`, `search`,
 `security`, `sound-lab`, `sounds`, `speech`, `srs`, `stores`, `supabase`, `sync`,
@@ -50,9 +50,9 @@ Módulos activos (`lib/*/queries.ts`):
 
 ```text
 ai-practice/    courses/        decks/          essential-words/
-home/           journal/        learning-focus/ phoneme-practice/
-practice/       progress/       sounds/         tracking/
-users/          word-bank/
+focus/          home/           immersion/      journal/
+learning-focus/ phoneme-practice/ practice/      progress/
+sounds/         tracking/       users/          word-bank/
 ```
 
 `lib/word-bank/` tiene además `server-queries.ts` (server-side), `srs-queries.ts`
@@ -227,7 +227,7 @@ Los inventarios de este doc (feature folders, query layer) se desincronizan con
 facilidad. Al añadir una carpeta en `lib/` o un `queries.ts`, actualízalos en el
 mismo PR — o verifícalos con `ls lib/` y `ls lib/*/queries.ts`.
 
-Última revisión: 2026-09-02 — extracción y split modular de composer.ts, unificación de primitivas de ejercicios y soporte offline en phoneme-practice
+Última revisión: 2026-09-11 — inventario de feature folders y query layer resincronizado (`focus`, `immersion` añadidos)
 
-(`core-1000` → `essential-words`, query layer 9 → 14 módulos, allowlist `max-lines`
+(`core-1000` → `essential-words`, query layer 9 → 16 módulos, allowlist `max-lines`
 delegada a `eslint.config.mjs`).

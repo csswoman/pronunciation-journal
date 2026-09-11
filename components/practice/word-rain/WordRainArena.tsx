@@ -280,8 +280,7 @@ export default function WordRainArena({
 
         {/* Impact ground warning boundary line */}
         <div
-          className="absolute left-0 right-0 h-px bg-error/30 border-b border-dashed border-error/40 pointer-events-none"
-          style={{ top: '88%' }}
+          className="absolute left-0 right-0 top-[88%] h-px bg-error/30 border-b border-dashed border-error/40 pointer-events-none"
           aria-hidden="true"
         />
 

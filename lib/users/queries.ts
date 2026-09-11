@@ -114,6 +114,36 @@ export async function syncCefrLevel(userId: string, cefrEstimate: string): Promi
   if (error) throw error;
 }
 
+/**
+ * Applies a level the learner picked by hand to BOTH stores that hold it:
+ * `user_profiles.cefr_level` (remote, what AuthProvider hydrates from at login)
+ * and `db.learningState`'s `cefrEstimate` (local, what the daily plan, practice
+ * hub and learning focus actually read). Writing only the remote row leaves the
+ * session reading a stale level until the user id changes, since AuthProvider
+ * re-hydrates on user change only.
+ */
+export async function applyManualCefrLevel(userId: string, level: CefrLevel): Promise<void> {
+  await syncCefrLevel(userId, level);
+
+  const [{ db, ensureDbReady }, { getUserLearningState }, { persistLearningState }] =
+    await Promise.all([
+      import("@/lib/db"),
+      import("@/lib/ai-practice/load-state"),
+      import("@/lib/ai-practice/queries"),
+    ]);
+
+  await ensureDbReady();
+  const local = await db.learningState.get(userId);
+  const base = local?.state ?? (await getUserLearningState(userId));
+
+  await persistLearningState(userId, {
+    ...base,
+    userId,
+    updatedAt: new Date().toISOString(),
+    level: { ...base.level, cefrEstimate: level },
+  });
+}
+
 export async function updateInterests(userId: string, interests: readonly unknown[]): Promise<Interest[]> {
   const normalized = normalizeInterests(interests);
   const supabase = getSupabaseBrowserClient();

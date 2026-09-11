@@ -9,7 +9,7 @@ import {
   updateDisplayName,
   updateAvatar as updateAvatarQuery,
   updatePassword as updatePasswordQuery,
-  syncCefrLevel,
+  applyManualCefrLevel,
   updateInterests as updateInterestsQuery,
 } from "@/lib/users/queries";
 import type { Interest } from "@/lib/users/interests";
@@ -118,7 +118,7 @@ export function useUserPreferences() {
     async (level: CefrLevel) => {
       if (!user) return;
       try {
-        await syncCefrLevel(user.id, level);
+        await applyManualCefrLevel(user.id, level);
         setPreferences((prev) => ({ ...prev, cefr_level: level }));
       } catch {
         const message = publicDataErrorMessage();

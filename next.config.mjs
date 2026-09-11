@@ -27,6 +27,11 @@ const nextPolyfillModuleIds = [
   "next/dist/build/polyfills/polyfill-module",
 ];
 
+// Vercel sets VERCEL_ENV to production | preview | development. Anything that is
+// not the production deploy (branch previews, local) must stay out of search
+// indexes so rama URLs never surface publicly.
+const isPublicProductionDeploy = process.env.VERCEL_ENV === "production";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   turbopack: {
@@ -64,6 +69,9 @@ const nextConfig = {
             // microphone capture. Keep camera and geolocation disabled.
             value: "camera=(), microphone=(self), geolocation=()",
           },
+          ...(isPublicProductionDeploy
+            ? []
+            : [{ key: "X-Robots-Tag", value: "noindex, nofollow" }]),
         ],
       },
       {

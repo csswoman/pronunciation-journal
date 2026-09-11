@@ -1,4 +1,6 @@
 import PracticeHubClient from '@/components/practice/hub/PracticeHubClient'
+import { getSupabaseServerUser } from '@/lib/supabase/session'
+import { getPracticeHubData, emptyPracticeHubData } from '@/lib/practice/hub-data'
 
 interface PageProps {
   searchParams: Promise<{ from?: string }>
@@ -6,5 +8,8 @@ interface PageProps {
 
 export default async function PracticePage({ searchParams }: PageProps) {
   const { from } = await searchParams
-  return <PracticeHubClient fromDaily={from === 'daily'} />
+  const user = await getSupabaseServerUser()
+  const hubData = user ? await getPracticeHubData(user.id) : emptyPracticeHubData()
+
+  return <PracticeHubClient fromDaily={from === 'daily'} serverData={hubData} />
 }

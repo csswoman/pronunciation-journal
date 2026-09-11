@@ -37,9 +37,10 @@ export default function HomeHeroStepList({
   isExpanded = true,
 }: HomeHeroStepListProps) {
   const visibleSteps = isExpanded ? steps : steps.slice(0, 2);
+
   return (
     <div className="flex flex-col gap-2">
-      <ol className="mt-2 flex flex-col gap-1.5">
+      <ol className="mt-2 flex flex-col gap-2">
         {visibleSteps.map((step, idx) => {
           const status = getStepStatus(step.id);
           const isDone = status === "done" || status === "resolved";
@@ -49,24 +50,35 @@ export default function HomeHeroStepList({
             <li
               key={step.id}
               className={cn(
-                "flex items-center justify-between gap-3 rounded-lg px-3 py-2 text-body-sm transition-colors",
+                "flex items-center justify-between gap-3.5 rounded-xl px-3.5 py-2.5 text-body-sm transition-all duration-150",
                 isCurrent
-                  ? "bg-primary/10 font-semibold text-fg"
+                  ? "bg-primary/5 border border-primary/20 text-fg shadow-2xs"
                   : isDone
-                    ? "text-fg-muted bg-transparent"
-                    : "text-fg hover:bg-surface-sunken/60"
+                    ? "text-fg-muted/80 bg-transparent opacity-85 hover:opacity-100"
+                    : "text-fg bg-surface-sunken/30 hover:bg-surface-sunken/60 border border-transparent"
               )}
             >
-              <div className="flex items-center gap-2.5 min-w-0 flex-1">
-                <span className="font-mono text-caption w-4 shrink-0 text-fg-muted">
+              <div className="flex items-center gap-3.5 min-w-0 flex-1">
+                {/* Cuadrado redondeado con el número de paso tal cual el diseño */}
+                <span
+                  className={cn(
+                    "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl font-mono text-sm font-bold select-none transition-colors",
+                    isCurrent
+                      ? "bg-surface border-2 border-primary/30 text-primary shadow-xs"
+                      : isDone
+                        ? "bg-success/10 border border-success/20 text-success"
+                        : "bg-surface border border-border-subtle/80 text-fg-muted"
+                  )}
+                >
                   {idx + 1}
                 </span>
+
                 <div className="flex flex-col min-w-0 flex-1">
-                  <span className="truncate font-medium">
+                  <span className={cn("truncate font-semibold text-fg", isDone && "line-through opacity-75")}>
                     {localizeDailyStepTitle(step.title)}
                   </span>
                   {isCurrent ? (
-                    <span className="truncate font-caption font-normal text-primary">
+                    <span className="truncate font-caption font-medium text-primary">
                       Paso actual · {step.subtitle ? localizeDailyStepSubtitle(step.subtitle) : "Por aquí empiezas hoy"}
                     </span>
                   ) : step.subtitle ? (
@@ -77,20 +89,20 @@ export default function HomeHeroStepList({
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 shrink-0">
+              <div className="flex items-center gap-3 shrink-0">
                 {isDone ? (
-                  <span className="inline-flex items-center gap-1 font-caption text-success font-semibold">
+                  <span className="inline-flex items-center gap-1 font-caption text-success font-semibold select-none">
                     <Check size={14} aria-hidden /> Hecho
                   </span>
                 ) : (
-                  <div className="flex items-center gap-1.5 shrink-0">
+                  <div className="flex items-center gap-2 shrink-0">
                     {isCurrent ? (
                       <Badge label="En curso" variant="default" size="sm" />
                     ) : null}
                     {step.id === "journal_entry" || step.href === "/journal" ? (
                       <Badge label="Opcional" variant="neutral" size="sm" />
                     ) : null}
-                    <span className="font-caption tabular-nums text-fg-muted">
+                    <span className="font-caption tabular-nums text-fg-muted select-none">
                       {step.estMinutes} min
                     </span>
                   </div>
@@ -102,16 +114,16 @@ export default function HomeHeroStepList({
 
         {/* Recompensa final: Ejercicios extra bloqueados (solo al expandir) */}
         {isExpanded ? (
-          <li className="flex items-center justify-between gap-3 rounded-lg border border-dashed border-border-subtle px-3 py-2 text-body-sm text-fg-muted">
-            <div className="flex items-center gap-2.5 min-w-0 flex-1">
-              <span className="font-mono text-caption w-4 shrink-0 text-fg-muted">
+          <li className="flex items-center justify-between gap-3.5 rounded-xl border border-dashed border-border-subtle bg-surface-sunken/20 px-3.5 py-2.5 text-body-sm text-fg-muted transition-colors">
+            <div className="flex items-center gap-3.5 min-w-0 flex-1">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-surface-sunken/60 font-mono text-sm font-semibold text-fg-muted border border-border-subtle/50 select-none">
                 {steps.length + 1}
               </span>
               <div className="flex flex-col min-w-0 flex-1">
                 <span className="truncate font-medium text-fg-muted">
                   Ejercicios extra
                 </span>
-                <span className="truncate font-caption text-fg-muted">
+                <span className="truncate font-caption text-fg-muted/80">
                   Se desbloquean al completar tu sesión de hoy
                 </span>
               </div>
@@ -125,12 +137,12 @@ export default function HomeHeroStepList({
 
       {/* Afinar la ruta contextual dentro del plan del día (solo al expandir) */}
       {isExpanded && (needsPlacement || needsPronunciation) ? (
-        <div className="mt-1 rounded-lg border border-border-subtle bg-surface-sunken/40 px-3 py-2 text-caption text-fg-muted">
+        <div className="mt-1 rounded-xl border border-border-subtle bg-surface-sunken/40 px-3.5 py-2.5 text-caption text-fg-muted">
           <span>¿El nivel no se ajusta a ti? </span>
           {needsPlacement ? (
             <Link
               href="/assessment"
-              className="focus-ring font-medium text-primary underline underline-offset-2 hover:underline"
+              className="focus-ring font-medium text-primary underline underline-offset-2 hover:text-primary-hover transition-colors"
             >
               Prueba de nivel
             </Link>
@@ -139,7 +151,7 @@ export default function HomeHeroStepList({
           {needsPronunciation ? (
             <Link
               href="/assessment/pronunciation"
-              className="focus-ring font-medium text-primary underline underline-offset-2 hover:underline"
+              className="focus-ring font-medium text-primary underline underline-offset-2 hover:text-primary-hover transition-colors"
             >
               Diagnóstico oral
             </Link>
@@ -149,3 +161,5 @@ export default function HomeHeroStepList({
     </div>
   );
 }
+
+

@@ -114,4 +114,25 @@ describe('SessionReadyHero', () => {
     await user.click(screen.getByRole('button', { name: 'Descartar sesión' }))
     expect(onDiscard).toHaveBeenCalledOnce()
   })
+
+  it('triggers onBegin when pressing Enter', async () => {
+    const user = userEvent.setup()
+    const onBegin = vi.fn()
+    render(<SessionReadyHero {...heroProps} onBegin={onBegin} />)
+
+    await user.keyboard('{Enter}')
+    expect(onBegin).toHaveBeenCalledOnce()
+  })
+
+  it('renders lastSession recap inside the hero when provided', () => {
+    const lastSession = {
+      practiced: 10,
+      correct: 10,
+      durationMs: 120_000,
+      completedAt: '2026-09-08T00:00:00.000Z',
+    }
+    render(<SessionReadyHero {...heroProps} lastSession={lastSession} />)
+
+    expect(screen.getByText(/Última: sin fallos · 10\/10/)).toBeInTheDocument()
+  })
 })

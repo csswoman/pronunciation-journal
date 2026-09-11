@@ -23,6 +23,7 @@ export function SessionReadyForecast({ days }: Props) {
         aria-label="Repasos previstos por día"
       >
         {days.map((day, index) => {
+          const isToday = index === 0
           const heightPct = Math.max(day.count === 0 ? 10 : 14, (day.count / max) * 100)
           return (
             <div key={day.dayKey} className="flex min-w-0 flex-1 flex-col items-center gap-1">
@@ -32,15 +33,23 @@ export function SessionReadyForecast({ days }: Props) {
                     'w-full max-w-5 rounded-sm transition-[colors,opacity] duration-150 ease-out-quart',
                     'hover:opacity-90',
                     day.count === 0 ? 'bg-surface-sunken' : 'bg-primary/85 animate-stat-rise',
+                    isToday && day.count > 0 && 'ring-1 ring-primary/40',
                   )}
                   style={{
                     height: `${heightPct}%`,
                     animationDelay: day.count > 0 ? `${index * 45}ms` : undefined,
                   }}
-                  title={`${day.label}: ${day.count} ${day.count === 1 ? 'repaso' : 'repasos'}`}
+                  title={`${isToday ? 'Hoy' : day.label}: ${day.count} ${day.count === 1 ? 'repaso' : 'repasos'}`}
                 />
               </div>
-              <span className="font-kicker text-fg-muted">{day.label}</span>
+              <span
+                className={cn(
+                  'font-kicker text-fg-muted',
+                  isToday && 'font-semibold text-primary underline decoration-primary/50 underline-offset-2',
+                )}
+              >
+                {day.label}
+              </span>
             </div>
           )
         })}

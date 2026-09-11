@@ -1,23 +1,38 @@
 /**
- * Script de sincronización y extracción automatizada de lecciones EngVid.
- * 
+ * Sincroniza el catálogo de inmersión desde el RSS de EngVid y enriquece cada
+ * lección con Gemini (vocabulario, frases y quiz reales en vez de plantillas).
+ * El catálogo vive en Supabase (tabla immersion_lessons) — este script es la
+ * única escritura permitida, usando SUPABASE_SERVICE_ROLE_KEY.
+ *
  * Uso:
- *   npx tsx scripts/sync-engvid-lessons.ts
- *   npx tsx scripts/sync-engvid-lessons.ts --url https://www.engvid.com/12-very-confusing-english-verbs/
- *   npx tsx scripts/sync-engvid-lessons.ts --topic speaking --limit 10
+ *   pnpm sync:engvid                      # lecciones nuevas del RSS (solo las 10 más recientes)
+ *   pnpm sync:engvid --archive --limit 20 # trae del archivo histórico (~2300 lecciones)
+ *   pnpm sync:engvid --archive --level C1 # solo de un nivel (A2, B1 o C1)
+ *   pnpm sync:engvid --balance --limit 30 # reparte el límite entre los tres niveles
+ *   pnpm sync:engvid --archive --page 5   # empieza en otra página del archivo
+ *   pnpm sync:engvid --url <engvid>       # una lección concreta
+ *   pnpm sync:engvid --refresh            # re-enriquece las que tengan plantillas
+ *
+ * Requiere GEMINI_API_KEY, NEXT_PUBLIC_SUPABASE_URL y SUPABASE_SERVICE_ROLE_KEY.
+ * Cada lección se hace upsert por youtube_video_id: nunca borra lo existente.
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
-import { decodeHtmlEntities } from '../lib/immersion/decode-html';
+import { createClient, type SupabaseClient } from '@supabase/supabase-js'
+import type { Database, Json } from '../lib/supabase/types'
+import { enrichImmersionLesson } from '../lib/gemini/immersion-enrich'
 import {
-  normalizeImmersionTeacher,
-  type ImmersionLesson,
-  type ImmersionTeacher,
-  type KeyVocabularyItem,
-  type TargetPhraseItem,
-  type ImmersionQuizQuestion,
-} from '../lib/immersion/types';
+  buildStudyCheckpoints,
+  fetchArchiveLessonUrls,
+  fetchLessonHtml,
+  fetchRssLessonUrls,
+  fetchYouTubeFacts,
+  IMMERSION_LEVELS,
+  isImmersionLevel,
+  normalizeLevel,
+  normalizeTopic,
+  parseLessonPage,
+} from '../lib/immersion/scrape'
+import type { ImmersionLesson, ImmersionLevel, ImmersionTeacher } from '../lib/immersion/types'
 
 const TEACHER_CHANNELS: Record<ImmersionTeacher, string> = {
   Adam: 'https://www.youtube.com/@engVidAdam',
@@ -30,252 +45,308 @@ const TEACHER_CHANNELS: Record<ImmersionTeacher, string> = {
   Rebecca: 'https://www.youtube.com/@engVidRebecca',
   Ronnie: 'https://www.youtube.com/@EnglishWithRonnie',
   Jon: 'https://www.youtube.com/@engvid',
-};
-
-function normalizeLevel(levelText: string): 'A1' | 'A2' | 'B1' | 'B2' | 'C1' {
-  const lower = levelText.toLowerCase();
-  if (lower.includes('beginner') || lower.includes('1-beginner')) return 'A1';
-  if (lower.includes('elementary') || lower.includes('a2')) return 'A2';
-  if (lower.includes('intermediate') || lower.includes('2-intermediate')) return 'B1';
-  if (lower.includes('upper') || lower.includes('b2')) return 'B2';
-  if (lower.includes('advanced') || lower.includes('3-advanced')) return 'C1';
-  return 'B1';
 }
 
-function normalizeTopic(topicText: string): 'speaking' | 'pronunciation' | 'connected-speech' | 'intonation' | 'vocabulary' | 'conversation' {
-  const lower = topicText.toLowerCase();
-  if (lower.includes('pronunciation')) return 'pronunciation';
-  if (lower.includes('stress') || lower.includes('intonation')) return 'intonation';
-  if (lower.includes('connected') || lower.includes('linking')) return 'connected-speech';
-  if (lower.includes('conversation')) return 'conversation';
-  if (lower.includes('vocabulary') || lower.includes('words') || lower.includes('verbs')) return 'vocabulary';
-  return 'speaking';
+const DEFAULT_DURATION_MINUTES = 10
+
+function getSupabaseAdmin(): SupabaseClient<Database> {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (!url || !serviceKey) {
+    console.error('[sync] falta NEXT_PUBLIC_SUPABASE_URL o SUPABASE_SERVICE_ROLE_KEY')
+    process.exit(1)
+  }
+  return createClient<Database>(url, serviceKey)
 }
 
-function extractSlug(url: string): string {
-  const clean = url.replace(/\/$/, '');
-  const parts = clean.split('/');
-  return parts[parts.length - 1] || 'lesson';
+interface ImmersionLessonRow {
+  id: string
+  slug: string
+  youtube_video_id: string
+  title: string
+  teacher: string
+  teacher_channel_url: string
+  level: string
+  topic: string
+  duration_minutes: number
+  summary: string
+  timestamps: Json
+  key_vocabulary: Json
+  target_phrases: Json
+  quiz: Json
 }
 
-export async function fetchLessonPage(url: string): Promise<ImmersionLesson | null> {
-  try {
-    console.log(`[EngVid Sync] Fetching: ${url}`);
-    const res = await fetch(url, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-      },
-    });
-
-    if (!res.ok) {
-      console.error(`Failed to fetch ${url}: ${res.status}`);
-      return null;
-    }
-
-    const html = await res.text();
-
-    // Extract YouTube embed ID
-    const embedMatch = html.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/);
-    if (!embedMatch) {
-      console.warn(`No YouTube embed found in ${url}`);
-      return null;
-    }
-    const youtubeVideoId = embedMatch[1];
-
-    // Extract Title
-    const titleMatch = html.match(/<h1 class="posttitle">.*?<a[^>]*>(.*?)<\/a><\/h1>/s) || html.match(/<title>(.*?)<\/title>/);
-    const rawTitle = titleMatch ? decodeHtmlEntities(titleMatch[1]).trim() : 'EngVid Lesson';
-    const cleanTitle = rawTitle.replace(/ · engVid/i, '').replace(/ &middot; engVid/i, '');
-
-    // Extract Teacher (URLs use lowercase slugs like /english-teacher/adam/)
-    const teacherMatch = html.match(/english-teacher\/([a-zA-Z]+)/i) || html.match(/<dc:creator><!\[CDATA\[([a-zA-Z]+)\]\]><\/dc:creator>/i);
-    const rawTeacher = teacherMatch ? teacherMatch[1].trim() : '';
-    const teacher = normalizeImmersionTeacher(rawTeacher);
-    if (!teacher) {
-      console.warn(`Unknown or missing teacher "${rawTeacher}" in ${url}`);
-      return null;
-    }
-
-    // Extract Description / Summary
-    const descMatch = html.match(/<span class="featured_description"[^>]*>(.*?)<\/span>/s) || html.match(/<div class="entry">.*?<p>(.*?)<\/p>/s);
-    const rawDesc = descMatch
-      ? decodeHtmlEntities(descMatch[1].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim())
-      : 'Lección oficial de EngVid.';
-
-    // Extract Category / Level
-    const catMatch = html.match(/<div class="featured_category_list">(.*?)<\/div>/s);
-    const catContent = catMatch ? catMatch[1] : '';
-    const level = normalizeLevel(catContent || html);
-    const topic = normalizeTopic(catContent || cleanTitle);
-
-    const slug = extractSlug(url);
-    const id = `engvid-${teacher.toLowerCase()}-${slug.slice(0, 30)}`;
-
-    // Key words extracted from <code> tags in the description
-    const codeMatches = descMatch
-      ? Array.from(descMatch[1].matchAll(/<code>(.*?)<\/code>/g)).map((m) => decodeHtmlEntities(m[1].trim()))
-      : [];
-    const keyVocabulary: KeyVocabularyItem[] = (codeMatches.length > 0 ? codeMatches.slice(0, 4) : [slug.split('-')[0]]).map((word) => ({
-      word,
-      ipa: `/${word}/`,
-      definition: `Término o estructura clave explicada por Teacher ${teacher} en esta lección.`,
-      contextSentence: `Study how ${word} is used naturally in context.`,
-    }));
-
-    // Target phrases
-    const targetPhrases: TargetPhraseItem[] = [
-      {
-        phrase: cleanTitle,
-        ipa: `/${slug.replace(/-/g, ' ')}/`,
-        note: `Tema central y estructura explicada en la clase de Teacher ${teacher}.`,
-      },
-    ];
-
-    // Comprehension Quiz
-    const quiz: ImmersionQuizQuestion[] = [
-      {
-        id: 'q1',
-        question: `¿Cuál es el objetivo principal de la lección "${cleanTitle}"?`,
-        options: [
-          'Aprender a aplicar este concepto de forma natural y fluida al hablar.',
-          'Memorizar reglas gramaticales complejas sin practicarlas.',
-          'Traducir palabra por palabra al español.',
-          'Hablar lo más rápido posible sin modular.',
-        ],
-        correctIndex: 0,
-        explanation: `Teacher ${teacher} se enfoca en la pronunciación real, comprensión auditiva y uso natural en conversaciones cotidianas.`,
-      },
-    ];
-
-    const lesson: ImmersionLesson = {
-      id,
-      slug,
-      youtubeVideoId,
-      title: cleanTitle,
-      teacher,
-      teacherChannelUrl: TEACHER_CHANNELS[teacher],
-      level,
-      topic,
-      durationMinutes: 10,
-      summary: rawDesc.slice(0, 240) + '...',
-      timestamps: [
-        { seconds: 0, label: 'Introducción al tema de la clase' },
-        { seconds: 90, label: 'Explicación de conceptos y ejemplos en pizarra' },
-        { seconds: 280, label: 'Práctica guiada y errores comunes' },
-        { seconds: 480, label: 'Resumen y consejos para sonar natural' },
-      ],
-      keyVocabulary,
-      targetPhrases,
-      quiz,
-    };
-
-    return lesson;
-  } catch (err) {
-    console.error(`Error processing ${url}:`, err);
-    return null;
+function toRow(lesson: ImmersionLesson): ImmersionLessonRow {
+  return {
+    id: lesson.id,
+    slug: lesson.slug,
+    youtube_video_id: lesson.youtubeVideoId,
+    title: lesson.title,
+    teacher: lesson.teacher,
+    teacher_channel_url: lesson.teacherChannelUrl,
+    level: lesson.level,
+    topic: lesson.topic,
+    duration_minutes: lesson.durationMinutes,
+    summary: lesson.summary,
+    timestamps: lesson.timestamps as unknown as Json,
+    key_vocabulary: lesson.keyVocabulary as unknown as Json,
+    target_phrases: lesson.targetPhrases as unknown as Json,
+    quiz: lesson.quiz as unknown as Json,
   }
 }
 
-const CURATED_ESSENTIAL_URLS = [
-  'https://www.engvid.com/3-tips-for-sounding-like-a-native-speaker/',
-  'https://www.engvid.com/eh-or-ah-say-these-16-common-words-correctly/',
-  'https://www.engvid.com/how-to-talk-about-friends-in-english/',
-  'https://www.engvid.com/6-easy-english-conversation-responses/',
-  'https://www.engvid.com/12-very-confusing-english-verbs/',
-  'https://www.engvid.com/speak-like-a-native-speaker-by-using-sentence-stress-in-english-with-examples/',
-  'https://www.engvid.com/i-answered-your-english-questions/',
-];
-
-export async function syncFromRssFeed(limit = 10): Promise<ImmersionLesson[]> {
-  console.log('[EngVid Sync] Fetching official RSS Feed: https://www.engvid.com/feed/');
-  const res = await fetch('https://www.engvid.com/feed/');
-  const xml = await res.text();
-
-  const itemMatches = Array.from(xml.matchAll(/<item>[\s\S]*?<link>(.*?)<\/link>[\s\S]*?<\/item>/g));
-  const rssUrls = itemMatches.map((m) => m[1].trim());
-
-  const allUrls = Array.from(new Set([...CURATED_ESSENTIAL_URLS, ...rssUrls])).slice(0, limit + CURATED_ESSENTIAL_URLS.length);
-
-  console.log(`[EngVid Sync] Processing ${allUrls.length} total lessons.`);
-  const lessons: ImmersionLesson[] = [];
-
-  for (const url of allUrls) {
-    const lesson = await fetchLessonPage(url);
-    if (lesson) {
-      lessons.push(lesson);
-    }
-  }
-
-  return lessons;
-}
-
-export function writeCatalogFile(lessons: ImmersionLesson[]): void {
-  const targetPath = path.join(process.cwd(), 'lib/immersion/engvid-catalog.ts');
-
-  // Deduplicate by youtubeVideoId and canonicalize teacher names ("adam" → "Adam")
-  const map = new Map<string, ImmersionLesson>();
-  for (const l of lessons) {
-    const teacher = normalizeImmersionTeacher(l.teacher);
-    if (!teacher) {
-      console.warn(`[EngVid Sync] Skipping lesson with unknown teacher "${l.teacher}": ${l.slug}`);
-      continue;
-    }
-    map.set(l.youtubeVideoId, JSON.parse(
-      JSON.stringify({
-        ...l,
-        teacher,
-        teacherChannelUrl: TEACHER_CHANNELS[teacher],
-      }),
-      (_key, value: unknown) => (typeof value === 'string' ? decodeHtmlEntities(value) : value),
-    ) as ImmersionLesson);
-  }
-
-  const combined = Array.from(map.values());
-
-  const fileContent = `import type { ImmersionLesson } from './types';
-
-export const ENGVID_IMMERSION_LESSONS: ImmersionLesson[] = ${JSON.stringify(combined, null, 2)};
-
-export function getImmersionLessonById(id: string): ImmersionLesson | undefined {
-  return ENGVID_IMMERSION_LESSONS.find((l) => l.id === id || l.slug === id);
-}
-
-export function getImmersionLessonsByTopic(topic?: string): ImmersionLesson[] {
-  if (!topic || topic === 'all') return ENGVID_IMMERSION_LESSONS;
-  return ENGVID_IMMERSION_LESSONS.filter((l) => l.topic === topic);
-}
-
-export function getImmersionLessonsByLevel(level?: string): ImmersionLesson[] {
-  if (!level || level === 'all') return ENGVID_IMMERSION_LESSONS;
-  return ENGVID_IMMERSION_LESSONS.filter((l) => l.level === level);
-}
-`;
-
-  fs.writeFileSync(targetPath, fileContent, 'utf-8');
-  console.log(`[EngVid Sync] Successfully updated ${targetPath} with ${combined.length} verified lessons!`);
-}
-
-async function main() {
-  const args = process.argv.slice(2);
-  const urlArgIndex = args.indexOf('--url');
-
-  if (urlArgIndex >= 0 && args[urlArgIndex + 1]) {
-    const targetUrl = args[urlArgIndex + 1];
-    const lesson = await fetchLessonPage(targetUrl);
-    if (lesson) {
-      writeCatalogFile([lesson]);
-    }
-  } else {
-    const lessons = await syncFromRssFeed(10);
-    if (lessons.length > 0) {
-      writeCatalogFile(lessons);
-    }
+function fromRow(row: ImmersionLessonRow): ImmersionLesson {
+  return {
+    id: row.id,
+    slug: row.slug,
+    youtubeVideoId: row.youtube_video_id,
+    title: row.title,
+    teacher: row.teacher as ImmersionTeacher,
+    teacherChannelUrl: row.teacher_channel_url,
+    level: row.level as ImmersionLevel,
+    topic: row.topic as ImmersionLesson['topic'],
+    durationMinutes: row.duration_minutes,
+    summary: row.summary,
+    timestamps: row.timestamps as unknown as ImmersionLesson['timestamps'],
+    keyVocabulary: row.key_vocabulary as unknown as ImmersionLesson['keyVocabulary'],
+    targetPhrases: row.target_phrases as unknown as ImmersionLesson['targetPhrases'],
+    quiz: row.quiz as unknown as ImmersionLesson['quiz'],
   }
 }
 
-if (require.main === module || (typeof process !== 'undefined' && process.argv[1]?.includes('sync-engvid-lessons'))) {
+async function fetchExistingCatalog(
+  supabase: SupabaseClient<Database>,
+): Promise<ImmersionLesson[]> {
+  const { data, error } = await supabase
+    .from('immersion_lessons')
+    .select(
+      'id, slug, youtube_video_id, title, teacher, teacher_channel_url, level, topic, duration_minutes, summary, timestamps, key_vocabulary, target_phrases, quiz',
+    )
+  if (error) throw error
+  return ((data ?? []) as unknown as ImmersionLessonRow[]).map(fromRow)
+}
+
+async function buildLesson(url: string, apiKey: string): Promise<ImmersionLesson | null> {
+  console.log(`[sync] ${url}`)
+
+  const html = await fetchLessonHtml(url)
+  if (!html) {
+    console.warn('  ✗ página inaccesible')
+    return null
+  }
+
+  const page = parseLessonPage(html, url)
+  if (!page) {
+    console.warn('  ✗ sin embed de YouTube o sin título')
+    return null
+  }
+
+  const facts = await fetchYouTubeFacts(page.youtubeVideoId)
+  if (!facts.teacher) {
+    console.warn(`  ✗ profesor desconocido para ${page.slug}`)
+    return null
+  }
+
+  const durationMinutes = facts.durationMinutes ?? DEFAULT_DURATION_MINUTES
+  const level = normalizeLevel(page.categories)
+  const topic = normalizeTopic(page.categories, page.title)
+
+  const enrichment = await enrichImmersionLesson(apiKey, {
+    title: page.title,
+    teacher: facts.teacher,
+    description: page.description,
+    categories: page.categories,
+    durationMinutes,
+  })
+
+  console.log(`  ✓ ${facts.teacher} · ${level} · ${topic} · ${enrichment.keyVocabulary.length} palabras`)
+
+  return {
+    id: `engvid-${facts.teacher.toLowerCase()}-${page.slug.slice(0, 30)}`,
+    slug: page.slug,
+    youtubeVideoId: page.youtubeVideoId,
+    title: page.title,
+    teacher: facts.teacher,
+    teacherChannelUrl: TEACHER_CHANNELS[facts.teacher],
+    level,
+    topic,
+    durationMinutes,
+    summary: enrichment.summary,
+    timestamps: buildStudyCheckpoints(durationMinutes),
+    keyVocabulary: enrichment.keyVocabulary,
+    targetPhrases: enrichment.targetPhrases,
+    quiz: enrichment.quiz,
+  }
+}
+
+async function upsertLessons(
+  supabase: SupabaseClient<Database>,
+  lessons: ImmersionLesson[],
+): Promise<void> {
+  const { error } = await supabase
+    .from('immersion_lessons')
+    .upsert(lessons.map(toRow), { onConflict: 'youtube_video_id' })
+  if (error) throw error
+  console.log(`[sync] ${lessons.length} lecciones escritas en Supabase`)
+}
+
+function readFlag(args: string[], name: string): string | undefined {
+  const index = args.indexOf(name)
+  return index >= 0 ? args[index + 1] : undefined
+}
+
+/**
+ * Detecta lecciones generadas por la versión anterior del script, que rellenaba
+ * vocabulario con el slug, números sueltos y definiciones plantilla.
+ */
+export function hasTemplateContent(lesson: ImmersionLesson): boolean {
+  return lesson.keyVocabulary.some(
+    (item) =>
+      /^\d+$/.test(item.word.trim()) ||
+      item.ipa.replace(/\//g, '').trim().toLowerCase() === item.word.trim().toLowerCase() ||
+      item.definition.includes('Término o estructura clave'),
+  )
+}
+
+/**
+ * El archivo va de lo más nuevo a lo más viejo, así que se avanza por páginas
+ * hasta juntar `limit` lecciones que aún no estén en el catálogo.
+ */
+async function collectFromArchive(options: {
+  limit: number
+  knownSlugs: Set<string>
+  startPage: number
+  level?: ImmersionLevel
+}): Promise<string[]> {
+  const { limit, knownSlugs, startPage, level } = options
+  const label = level ? `${level} ` : ''
+  const fresh: string[] = []
+  for (let page = startPage; page < startPage + 20 && fresh.length < limit; page += 1) {
+    const posts = await fetchArchiveLessonUrls({ page, perPage: 100, level })
+    if (posts.length === 0) break
+    for (const post of posts) {
+      if (!knownSlugs.has(post.slug)) {
+        fresh.push(post.link)
+        // Una lección puede estar en dos categorías de nivel. Reservarla aquí
+        // evita enriquecerla dos veces y gastar una llamada a Gemini de más.
+        knownSlugs.add(post.slug)
+      }
+      if (fresh.length >= limit) break
+    }
+    console.log(`[sync] archivo ${label}página ${page}: ${fresh.length}/${limit} candidatas`)
+  }
+  return fresh.slice(0, limit)
+}
+
+/** Reparte el presupuesto entre los tres niveles para que ninguno se quede vacío. */
+export function splitLimitByLevel(limit: number, levels: ImmersionLevel[]): Map<ImmersionLevel, number> {
+  const base = Math.floor(limit / levels.length)
+  let remainder = limit % levels.length
+  return new Map(
+    levels.map((level) => {
+      const extra = remainder > 0 ? 1 : 0
+      remainder -= extra
+      return [level, base + extra]
+    }),
+  )
+}
+
+async function collectBalanced(
+  limit: number,
+  knownSlugs: Set<string>,
+  startPage: number,
+): Promise<string[]> {
+  const quota = splitLimitByLevel(limit, IMMERSION_LEVELS)
+  const urls: string[] = []
+  for (const level of IMMERSION_LEVELS) {
+    const share = quota.get(level) ?? 0
+    if (share === 0) continue
+    urls.push(...(await collectFromArchive({ limit: share, knownSlugs, startPage, level })))
+  }
+  return urls
+}
+
+async function resolveUrls(args: string[], existingCatalog: ImmersionLesson[]): Promise<string[]> {
+  const single = readFlag(args, '--url')
+  if (single) return [single]
+
+  const limit = Number(readFlag(args, '--limit') ?? 10)
+
+  if (args.includes('--refresh')) {
+    const stale = existingCatalog.filter(hasTemplateContent)
+    console.log(`[sync] ${stale.length} lecciones con contenido de plantilla`)
+    return stale.slice(0, limit).map((lesson) => `https://www.engvid.com/${lesson.slug}/`)
+  }
+
+  const knownSlugs = new Set(existingCatalog.map((lesson) => lesson.slug))
+
+  if (args.includes('--balance')) {
+    return collectBalanced(limit, knownSlugs, Number(readFlag(args, '--page') ?? 1))
+  }
+
+  if (args.includes('--archive')) {
+    const startPage = Number(readFlag(args, '--page') ?? 1)
+    const level = readFlag(args, '--level')
+    if (level && !isImmersionLevel(level)) {
+      console.error(`[sync] nivel desconocido "${level}" — usa ${IMMERSION_LEVELS.join(', ')}`)
+      return []
+    }
+    return collectFromArchive({
+      limit,
+      knownSlugs,
+      startPage,
+      level: level as ImmersionLevel | undefined,
+    })
+  }
+
+  const rssUrls = await fetchRssLessonUrls()
+  const fresh = rssUrls.filter((url) => !knownSlugs.has(url.replace(/\/+$/, '').split('/').pop() ?? ''))
+  console.log(`[sync] ${rssUrls.length} en el feed, ${fresh.length} nuevas`)
+  if (fresh.length === 0 && rssUrls.length > 0) {
+    console.log('[sync] el RSS solo lista las 10 más recientes — usa --archive para traer del histórico')
+  }
+  return fresh.slice(0, limit)
+}
+
+async function main(): Promise<void> {
+  const apiKey = process.env.GEMINI_API_KEY
+  if (!apiKey) {
+    console.error('[sync] falta GEMINI_API_KEY')
+    process.exit(1)
+  }
+
+  const supabase = getSupabaseAdmin()
+  const existingCatalog = await fetchExistingCatalog(supabase)
+
+  const args = process.argv.slice(2)
+  const urls = await resolveUrls(args, existingCatalog)
+  if (urls.length === 0) {
+    console.log('[sync] no hay lecciones nuevas')
+    return
+  }
+
+  const lessons: ImmersionLesson[] = []
+  for (const url of urls) {
+    try {
+      const lesson = await buildLesson(url, apiKey)
+      if (lesson) lessons.push(lesson)
+    } catch (err) {
+      // Una lección fallida no debe abortar el lote completo.
+      console.warn(`  ✗ ${url}: ${(err as Error).message}`)
+    }
+  }
+
+  if (lessons.length === 0) {
+    console.log('[sync] ninguna lección se pudo procesar; catálogo sin cambios')
+    return
+  }
+
+  await upsertLessons(supabase, lessons)
+}
+
+if (process.argv[1]?.includes('sync-engvid-lessons')) {
   main().catch((err) => {
-    console.error('[EngVid Sync] Error:', err);
-    process.exit(1);
-  });
+    console.error('[sync] error:', err)
+    process.exit(1)
+  })
 }

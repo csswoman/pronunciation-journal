@@ -30,10 +30,10 @@ export function MissionHeader({ mission, turnCount, maxTurns, onExit }: MissionH
               type="button"
               onClick={onExit}
               aria-label="Volver a misiones"
-              className="inline-flex items-center gap-1 rounded-md px-1.5 py-1 text-caption font-medium text-fg-muted hover:text-fg hover:bg-surface-sunken/60 transition-colors cursor-pointer shrink-0"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-border-subtle bg-surface-base px-2.5 py-1 text-caption font-medium text-fg hover:text-fg hover:bg-surface-sunken hover:border-border-default transition-colors cursor-pointer shrink-0 shadow-2xs"
             >
               <ArrowLeft size={16} aria-hidden />
-              <span>Volver</span>
+              <span>Volver a misiones</span>
             </button>
           )}
           <span className="inline-flex items-center gap-1 text-xs font-semibold text-fg truncate">

@@ -240,7 +240,11 @@ export function MissionWorkspace({
       >
         {outcome ? (
           <div className="p-4">
-            <MissionResult outcome={outcome} onReviewCta={() => window.location.assign('/tracking/review')} />
+            <MissionResult
+              outcome={outcome}
+              onReviewCta={() => window.location.assign('/tracking/review')}
+              onExit={onExitMission}
+            />
           </div>
         ) : (
           <>

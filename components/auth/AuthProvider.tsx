@@ -127,17 +127,20 @@ export default function AuthProvider({
             { hydrateFromRemote },
             { normalizeCEFR },
             { hydrateLessonCompletions },
+            { hydrateImmersionProgress },
           ] = await Promise.all([
             import("@/lib/db"),
             import("@/lib/ai-practice/load-state"),
             import("@/lib/ai-practice/queries"),
             import("@/lib/exercises/cefr"),
             import("@/lib/courses/queries"),
+            import("@/lib/immersion/progress-queries"),
           ]);
 
           await ensureDbReady();
           await hydrateFromRemote(userId);
           await hydrateLessonCompletions(userId);
+          await hydrateImmersionProgress(userId);
           if (!profile?.cefr_level) return;
 
           const nextLevel = normalizeCEFR(profile.cefr_level);

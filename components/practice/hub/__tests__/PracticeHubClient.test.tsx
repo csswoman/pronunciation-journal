@@ -29,6 +29,10 @@ vi.mock('@/lib/essential-words/target-level', () => ({
   readStoredCefrLevel: vi.fn(async () => 'A1'),
 }))
 
+vi.mock('@/lib/immersion/progress-queries', () => ({
+  loadWatchedImmersionLessonIds: vi.fn(async () => new Set()),
+}))
+
 vi.mock('@/components/ai-coach/SpeakWithCoachCard', () => ({
   default: () => <div data-testid="speak-with-coach">SpeakWithCoach</div>,
 }))

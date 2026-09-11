@@ -113,14 +113,12 @@ export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry
       {!answered && !hasResult && (
         <RecordingControls
           isRecording={isRecording}
+          isAnalyzing={analyzing}
           onMicClick={handleMicClick}
           onSkip={() => onNext?.()}
         />
       )}
 
-      {analyzing && !hasResult && (
-        <p className="text-caption text-center text-[var(--text-tertiary)] animate-pulse">Analizando…</p>
-      )}
 
       {scoring && (
         <ExerciseFeedback

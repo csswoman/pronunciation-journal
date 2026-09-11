@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { render, screen } from '@testing-library/react'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import MissionResult from '../MissionResult'
 import type { MissionOutcome } from '@/lib/ai-practice/missions/outcome'
 
@@ -37,4 +37,15 @@ describe('MissionResult', () => {
 
     expect(screen.getByText(/siguiente foco/i)).toBeInTheDocument()
   })
+
+  it('renders exit button when onExit is provided', () => {
+    const onExit = vi.fn()
+    render(<MissionResult outcome={outcome} onReviewCta={() => {}} onExit={onExit} />)
+
+    const exitBtn = screen.getByRole('button', { name: /volver a misiones/i })
+    expect(exitBtn).toBeInTheDocument()
+    exitBtn.click()
+    expect(onExit).toHaveBeenCalledOnce()
+  })
 })
+

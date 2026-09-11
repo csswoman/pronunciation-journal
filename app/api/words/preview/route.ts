@@ -4,7 +4,7 @@ import { lookupWordWithGemini } from "@/lib/word-bank/gemini";
 import { getCachedWordDefinition, getOrCreateWordDefinition } from "@/lib/word-bank/definition-cache";
 import { findEssentialWord } from "@/lib/essential-words/data";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { createUserScopedClient, publicErrorResponse, rateLimit, requireSameOrigin, requireUser, validateBody } from "@/lib/api/guards";
+import { checkLayeredRateLimit, createUserScopedClient, publicErrorResponse, requireSameOrigin, requireUser, validateBody } from "@/lib/api/guards";
 import { logServerError } from "@/lib/api/logging";
 
 const PreviewSchema = z.object({
@@ -71,10 +71,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ enrichment: cached, source: "dictionary", alreadySaved: !!savedWord });
     }
 
-    const { limited, error: rateLimitError } = await rateLimit(`/api/words/preview:${user.id}`, {
-      max: 15,
-      windowMs: 60_000,
-      meta: { endpoint: "/api/words/preview", userId: user.id },
+    // Only reached when every cache missed, so this is the real Gemini path.
+    // Use the layered limiter so these calls also draw down the global budget.
+    const { limited, error: rateLimitError } = await checkLayeredRateLimit({
+      request,
+      user,
+      endpoint: "/api/words/preview",
+      maxPermanent: 15,
+      maxAnonymous: 3,
     });
     if (limited) return rateLimitError as NextResponse;
 

@@ -25,54 +25,55 @@ export function HeroTermExample({ example }: HeroTermExampleProps) {
       : example.turns.map((t) => t.en).join(" ");
 
   return (
-    <div className="flex flex-col gap-1.5 mt-1">
-      <span className="font-label text-caption font-semibold text-fg-muted">
-        Ejemplo
-      </span>
+    <div className="rounded-2xl border border-border-subtle/50 bg-surface-sunken/60 p-4 flex flex-col gap-2.5 mt-1">
+      <div className="flex items-center justify-between gap-2">
+        <span className="font-kicker text-fg-faint">
+          EJEMPLO
+        </span>
+        <ListenButton
+          iconOnly
+          aria-label="Escuchar ejemplo"
+          className="shrink-0 text-fg-muted hover:text-primary transition-colors"
+          onPlay={() => speakText(speakSource)}
+        />
+      </div>
 
-      <div className="border-l-2 border-border-default pl-3.5 py-0.5 flex flex-col gap-2">
-          <div className="flex items-start justify-between gap-2">
-            {example.kind === "sentence" ? (
-              <p className="font-body-md text-fg leading-relaxed whitespace-pre-line">
-                {example.en}
-              </p>
-            ) : (
-              <div className="flex flex-col gap-1">
-                {example.turns.map((turn, i) => (
-                  <p
-                    key={i}
-                    className="font-body-md text-fg leading-relaxed whitespace-pre-line"
-                  >
-                    — {turn.en}
-                  </p>
-                ))}
-              </div>
-            )}
-            <ListenButton
-              iconOnly
-              aria-label="Escuchar ejemplo"
-              className="-mt-1 shrink-0 self-start"
-              onPlay={() => speakText(speakSource)}
-            />
-          </div>
-
-          {example.kind === "dialogue" ? (
-            <div className="flex flex-col gap-1">
-              {example.turns.map((turn, i) => (
-                <p
-                  key={i}
-                  className="font-body-sm text-fg-muted leading-normal whitespace-pre-line"
-                >
-                  — {turn.es}
-                </p>
-              ))}
-            </div>
-          ) : example.es ? (
-            <p className="font-body-sm text-fg-muted leading-normal whitespace-pre-line">
-              {example.es}
+      {example.kind === "sentence" ? (
+        <p className="font-body-md text-fg-muted leading-relaxed whitespace-pre-line">
+          {example.en}
+        </p>
+      ) : (
+        <div className="flex flex-col gap-1">
+          {example.turns.map((turn, i) => (
+            <p
+              key={i}
+              className="font-body-md text-fg-muted leading-relaxed whitespace-pre-line"
+            >
+              — {turn.en}
             </p>
-          ) : null}
+          ))}
         </div>
+      )}
+
+      {example.kind === "dialogue" ? (
+        <div className="flex flex-col gap-1 pt-1">
+          {example.turns.map((turn, i) => (
+            <p
+              key={i}
+              className="font-body-sm text-fg-subtle leading-normal whitespace-pre-line"
+            >
+              — {turn.es}
+            </p>
+          ))}
+        </div>
+      ) : example.es ? (
+        <p className="font-body-sm text-fg-subtle leading-normal whitespace-pre-line">
+          {example.es.startsWith("Traducción:") ? null : (
+            <span className="text-fg-faint font-normal">Traducción: </span>
+          )}
+          {example.es.replace(/^Traducción:\s*/, "")}
+        </p>
+      ) : null}
     </div>
   );
 }

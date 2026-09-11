@@ -151,10 +151,13 @@ function buildFallbackWord(word: string): WordOfDay {
 
   const example_sentence =
     fallback?.example_sentence || essential?.example_sentence || "";
+  // Only a real translation of the example sentence belongs here — reusing
+  // essential.translation (the bare word) would just repeat what
+  // `definition` above already shows (e.g. "reconocer" twice).
   const example_translation =
     fallback?.example_translation ||
     essential?.study?.examples?.[0]?.translationEs ||
-    (essential?.translation ? `Traducción: ${essential.translation}` : undefined);
+    undefined;
 
   return {
     word,
@@ -220,10 +223,13 @@ async function fetchWordData(word: string): Promise<WordOfDay | null> {
 
   const example_sentence =
     senseExample || fallback?.example_sentence || essential?.example_sentence || "";
+  // Only a real translation of the example sentence belongs here — reusing
+  // essential.translation (the bare word) would just repeat what
+  // `definition` above already shows (e.g. "reconocer" twice).
   const example_translation =
     fallback?.example_translation ||
     essential?.study?.examples?.[0]?.translationEs ||
-    (essential?.translation ? `Traducción: ${essential.translation}` : undefined);
+    undefined;
 
   return {
     word,

@@ -1,4 +1,5 @@
 import { BookOpen, Map, Mic, Sparkles, User } from "@/components/icons";
+import { cefrLevelOptions, cefrNameWithLevel } from "@/lib/content/cefr-labels";
 import type { CefrLevel } from "@/lib/essential-words/types";
 
 export interface LevelOption {
@@ -7,13 +8,11 @@ export interface LevelOption {
   desc: string;
 }
 
-export const CEFR_OPTIONS: LevelOption[] = [
-  { id: "A1", title: "Principiante (A1)", desc: "Sonidos básicos, frases sencillas y vocabulario inicial." },
-  { id: "A2", title: "Básico (A2)", desc: "Estructuras cotidianas, preguntas comunes y conversación elemental." },
-  { id: "B1", title: "Intermedio (B1)", desc: "Conversación fluida, vocabulario más amplio y comprensión auditiva." },
-  { id: "B2", title: "Intermedio alto (B2)", desc: "Mayor naturalidad, matices de pronunciación y ritmo conectado." },
-  { id: "C1", title: "Avanzado (C1)", desc: "Entonación precisa, pares mínimos sutiles y fluidez natural." },
-];
+export const CEFR_OPTIONS: LevelOption[] = cefrLevelOptions().map((option) => ({
+  id: option.value,
+  title: cefrNameWithLevel(option.value),
+  desc: option.description,
+}));
 
 export const STEP_1_FEATURES = [
   { icon: Mic, title: "Práctica oral activa", desc: "Grábate y recibe retroalimentación precisa sobre sonidos y patrones difíciles." },

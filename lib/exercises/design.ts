@@ -1,5 +1,9 @@
 import type { ExerciseType } from './taxonomy';
 import type { ExerciseErrorCode } from './error-taxonomy';
+import type {
+  TranscriptAbstentionReason,
+  TranscriptSource,
+} from '@/lib/speech/transcript-quality';
 
 export type ProgressiveHint = {
   level1: string;
@@ -54,4 +58,21 @@ export type EvaluationResult = {
   score?: number;
   suggestedPerceptionTarget?: string;
   gradedBy: "client" | "model";
+  /**
+   * False cuando la evidencia no bastó para puntuar (transcripción vacía o
+   * confianza demasiado baja). Un intento no puntuable no es aprobado ni
+   * suspendido: se excluye de precisión y de mastery, igual que exige el
+   * contrato de `SpokenAttempt`. Ausente significa puntuable.
+   */
+  scorable?: boolean;
+  /** Por qué se abstuvo la evaluación; sólo presente si `scorable` es false. */
+  abstentionReason?: TranscriptAbstentionReason;
+  /** Qué reconocedor produjo el texto evaluado, para auditar la nota. */
+  transcriptSource?: TranscriptSource;
+  /**
+   * Salvedad sobre una nota que sí se otorgó: la evidencia era ambigua (p. ej.
+   * el reconocedor escribió un homófono del objetivo). No invalida el intento,
+   * lo hace auditable.
+   */
+  scoreCaveat?: string;
 };

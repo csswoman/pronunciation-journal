@@ -1,4 +1,10 @@
 import { scorePronunciation } from "@/lib/pronunciation/scoring";
+import { homophoneCaveat } from "@/lib/pronunciation/homophone-guard";
+import {
+  transcriptAbstentionReason,
+  type TranscriptAbstentionReason,
+  type TranscriptSource,
+} from "@/lib/speech/transcript-quality";
 import { cefrToNumber } from "@/lib/exercises/cefr";
 import { findArticulationGuide } from "@/lib/sounds/articulation-guides";
 import type { EvaluationResult } from "@/lib/exercises/design";
@@ -80,12 +86,60 @@ function feedbackForScore(
   };
 }
 
+const ABSTENTION_COPY: Record<TranscriptAbstentionReason, { immediate: string; explanation: string; tip: string }> = {
+  empty_transcript: {
+    immediate: "No te escuchamos",
+    explanation: "No llegó audio con voz. Revisa que el micrófono esté activo y vuelve a intentarlo.",
+    tip: "Acerca el micrófono y habla en un tono normal.",
+  },
+  low_confidence: {
+    immediate: "No quedó claro",
+    explanation:
+      "El audio se oyó demasiado confuso para evaluarlo con honestidad, así que este intento no cuenta ni a favor ni en contra.",
+    tip: "Graba en un lugar más silencioso y pronuncia la frase completa.",
+  },
+};
+
+/**
+ * Resultado de abstención: ni aprobado ni suspendido.
+ *
+ * `correct: false` sólo porque el tipo lo exige; los consumidores deben mirar
+ * `scorable` antes de contar el intento. Sin `score`, para que nadie lo lea
+ * como un 0 %.
+ */
+function abstainedResult(
+  transcript: string,
+  expected: string,
+  source: TranscriptSource,
+  reason: TranscriptAbstentionReason
+): EvaluationResult {
+  return {
+    correct: false,
+    category: "invalid",
+    errorCode: "unknown",
+    userAnswer: transcript,
+    expectedAnswer: expected,
+    feedback: ABSTENTION_COPY[reason],
+    gradedBy: "client",
+    scorable: false,
+    abstentionReason: reason,
+    transcriptSource: source,
+  };
+}
+
 export async function evaluateSpeak(input: EvaluationInput): Promise<EvaluationResult> {
   if (input.actual.kind !== "speech") {
     throw new Error("speakEvaluator: expected speech answer");
   }
 
-  const { transcript } = input.actual;
+  const { transcript, confidence, source = "web-speech" } = input.actual;
+
+  // Compuerta de honestidad: sin evidencia suficiente no se inventa una nota.
+  const abstention = transcriptAbstentionReason({ transcript, confidence, source });
+  if (abstention) {
+    return abstainedResult(transcript, input.expected, source, abstention);
+  }
+
   const threshold = input.threshold ?? thresholdForLevel(input.userLevel);
   // Minimal pair and phoneme exercises require exact word matching — "bit" and "beat"
   // differ by 1 edit but must NOT be treated as equivalent, since distinguishing them
@@ -96,6 +150,13 @@ export async function evaluateSpeak(input: EvaluationInput): Promise<EvaluationR
 
   const passed = scoring.accuracy >= threshold;
   const missedPhoneme = firstMissedPhoneme(scoring.wordResults);
+
+  // Homófono: el acierto vino de la ortografía del reconocedor, no de una
+  // distinción que el audio pruebe. En pares mínimos no puede ocurrir, porque
+  // esas palabras no suenan igual.
+  const caveat = strictWordMatch
+    ? null
+    : await homophoneCaveat(input.expected, transcript);
 
   return {
     correct: passed,
@@ -112,8 +173,11 @@ export async function evaluateSpeak(input: EvaluationInput): Promise<EvaluationR
       scoring.wordResults
     ),
     score: Math.round(scoring.accuracy),
+    ...(caveat ? { scoreCaveat: caveat } : {}),
     suggestedPerceptionTarget: !passed && missedPhoneme ? missedPhoneme : undefined,
     gradedBy: "client",
+    scorable: true,
+    transcriptSource: source,
     ...(scoring.wordResults ? { wordResults: scoring.wordResults } : {}),
   };
 }

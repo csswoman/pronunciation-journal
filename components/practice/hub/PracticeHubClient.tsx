@@ -10,16 +10,20 @@ import { getEssentialWordsLevelCount } from '@/lib/essential-words/level-count'
 import { readGuestStudyLevel } from '@/lib/preferences/guest-study-level'
 import { readStoredCefrLevel } from '@/lib/essential-words/target-level'
 import { isAnonymousUser } from '@/lib/auth/is-anonymous'
+import { loadWatchedImmersionLessonIds } from '@/lib/immersion/progress-queries'
 import { resolveRecommendedMode, type RecommendedResult } from '@/lib/practice/practice-modes'
+import { emptyPracticeHubData, type PracticeHubData } from '@/lib/practice/hub-data-types'
 import PracticeHubHeader from './PracticeHubHeader'
 import PracticeOptionsGrid from './PracticeOptionsGrid'
 
 interface Props {
   fromDaily: boolean
+  serverData?: PracticeHubData
 }
 
-export default function PracticeHubClient({ fromDaily }: Props) {
+export default function PracticeHubClient({ fromDaily, serverData }: Props) {
   const { user } = useAuth()
+  const hubData = serverData ?? emptyPracticeHubData()
   const [recommendation, setRecommendation] = useState<RecommendedResult>(() =>
     resolveRecommendedMode({ fromDaily: false, arc: undefined, lastModeId: null }),
   )
@@ -27,6 +31,7 @@ export default function PracticeHubClient({ fromDaily }: Props) {
   const [dueCount, setDueCount] = useState<number | null>(null)
   const [vocabLearnedCount, setVocabLearnedCount] = useState<number | null>(null)
   const [vocabTotalCount, setVocabTotalCount] = useState<number | null>(null)
+  const [immersionWatchedCount, setImmersionWatchedCount] = useState<number | null>(null)
   const [activityUnavailable, setActivityUnavailable] = useState(false)
 
   useEffect(() => {
@@ -77,6 +82,17 @@ export default function PracticeHubClient({ fromDaily }: Props) {
         setVocabLearnedCount(vocabCount?.learned ?? null)
         setVocabTotalCount(vocabCount?.total ?? null)
       }
+
+      // Immersion "watched" count is Dexie-backed (offline-first); the total
+      // comes from the server bundle.
+      if (user) {
+        try {
+          const watched = await loadWatchedImmersionLessonIds(user.id)
+          if (!cancelled) setImmersionWatchedCount(watched.size)
+        } catch {
+          if (!cancelled) setImmersionWatchedCount(null)
+        }
+      }
     }
     void resolve()
     return () => {
@@ -99,6 +115,8 @@ export default function PracticeHubClient({ fromDaily }: Props) {
           vocabLearnedCount={vocabLearnedCount}
           vocabTotalCount={vocabTotalCount}
           arc={arc}
+          hubData={hubData}
+          immersionWatchedCount={immersionWatchedCount}
         />
       </div>
     </PageLayout>

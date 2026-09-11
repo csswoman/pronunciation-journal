@@ -57,6 +57,15 @@ function normalizeWordForLookup(word: string): string {
   return word.toLowerCase().replace(/[^a-z']/g, "");
 }
 
+/**
+ * Transcripción ARPAbet de una palabra, o lista vacía si no está en el
+ * diccionario. Expuesta para que el guardia de homófonos pueda comparar
+ * sonidos en vez de grafías.
+ */
+export async function phonemesForWord(word: string): Promise<string[]> {
+  return phonemesFor(word);
+}
+
 async function phonemesFor(word: string): Promise<string[]> {
   const normalized = normalizeWordForLookup(word);
   if (!normalized) return [];
