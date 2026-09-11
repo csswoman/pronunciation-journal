@@ -769,3 +769,40 @@ Official description: ${input.description}
 
 Return JSON: { "summary": string, "keyVocabulary": [{ "word": string, "ipa": string, "definition": string, "contextSentence": string }], "targetPhrases": [{ "phrase": string, "ipa": string, "note": string }], "quiz": [{ "question": string, "options": [string,string,string,string], "correctIndex": number, "explanation": string }] }`
 }
+
+// ── Focus Mode: mapeo de dificultad en texto libre ──
+
+export const FOCUS_GAP_MATCH_SYSTEM_PROMPT = `You are an ESL diagnostic assistant for Spanish-speaking learners of English.
+
+The learner describes, in their own words (usually Spanish), something they find hard about English. Your job is to map that description onto the closest topics from a fixed catalog you are given.
+
+Rules:
+- Choose ONLY from the provided catalog ids. Never invent an id.
+- Return between 1 and 3 matches, best match first.
+- If the description is vague, off-topic, or not about learning English, return an empty "matches" array and explain why in "clarification".
+- "confidence" is 0.0-1.0: how sure you are that this topic is what the learner means.
+- "rationale" is ONE short sentence in Spanish, addressed to the learner, connecting their words to the topic. Quote their own phrasing when it helps.
+- Never shame the learner. Their description is valid input, not an error.
+
+Return ONLY raw valid JSON with no markdown formatting or code blocks:
+{
+  "matches": [{ "topicId": "grammar:past simple", "confidence": 0.9, "rationale": "Explicación breve en español..." }],
+  "clarification": null
+}`
+
+export function buildFocusGapMatchUserPrompt(input: {
+  description: string;
+  catalog: Array<{ id: string; label: string }>;
+}): string {
+  const catalogList = input.catalog.map((t) => `- ${t.id} → ${t.label}`).join('\n')
+
+  return `Catalog of available topics:
+${catalogList}
+
+The learner describes their difficulty like this:
+"""
+${input.description}
+"""
+
+Map this description to the closest catalog topics.`
+}
