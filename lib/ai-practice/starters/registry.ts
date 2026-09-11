@@ -6,6 +6,7 @@ import {
   buildWorldStarterPrompt,
 } from "@/lib/ai-prompts";
 import { INTEREST_LABELS_ES } from "@/lib/users/interests";
+import { topicDisplayLabel } from "@/lib/practice/topic-labels";
 import { grammarTopicsForLevel } from "./syllabus-hints";
 import type { CoachStarter, StarterContext, StarterId } from "./types";
 
@@ -29,7 +30,7 @@ function weakestTopic(ctx: StarterContext) {
   return eligible.reduce((a, b) => (a.errorRate >= b.errorRate ? a : b));
 }
 
-function worldSubject(ctx: StarterContext): { key: string; label: string } | null {
+function worldSubject(ctx: StarterContext): { key: string; label: string; source: "interest" | "domain" } | null {
   if (ctx.interests.length > 0) {
     const key = pickBySeed(
       ctx.interests.map(String),
@@ -37,10 +38,10 @@ function worldSubject(ctx: StarterContext): { key: string; label: string } | nul
       // Interests rotate on their own; recentAngles holds angles, not subjects.
       [],
     );
-    return { key, label: INTEREST_LABELS_ES[key as keyof typeof INTEREST_LABELS_ES] ?? key };
+    return { key, label: INTEREST_LABELS_ES[key as keyof typeof INTEREST_LABELS_ES] ?? key, source: "interest" };
   }
   const domain = ctx.state?.domainProfile?.domains?.[0];
-  if (domain) return { key: domain.label, label: domain.label };
+  if (domain) return { key: domain.label, label: domain.label, source: "domain" };
   return null;
 }
 
@@ -63,15 +64,17 @@ const learnStarter: CoachStarter = {
     const level = ctx.level;
     const avoidTopics = (ctx.state?.lastSessions ?? []).slice(0, 5).map((s) => s.topic);
     const angle = pickBySeed(STARTER_ANGLES.learn, ctx.seed, ctx.recentAngles);
+    const syllabusTopics = grammarTopicsForLevel(level, avoidTopics, 8, ctx.seed);
+    const nextTopicLabel = topicDisplayLabel(syllabusTopics[0]);
     return {
       id: "learn",
       title: "Enséñame algo nuevo",
-      subtitle: `Nivel ${level} · no visto aún`,
+      subtitle: nextTopicLabel ? `${nextTopicLabel} · nivel ${level}` : `Nivel ${level} · aún no visto`,
       prompt: buildLearnStarterPrompt({
         level,
         avoidTopics,
         angle,
-        syllabusTopics: grammarTopicsForLevel(level, avoidTopics, 8, ctx.seed),
+        syllabusTopics,
       }),
       angle,
     };
@@ -84,12 +87,13 @@ const reviewStarter: CoachStarter = {
   build: (ctx) => {
     const topic = weakestTopic(ctx);
     const focus = topic?.topic ?? "lo que fallaste";
+    const focusLabel = topicDisplayLabel(topic?.topic) ?? "Lo que fallaste";
     const failCount = topic ? Math.round(topic.errorRate * topic.sampleCount) : 0;
     const angle = pickBySeed(STARTER_ANGLES.review, ctx.seed, ctx.recentAngles);
     return {
       id: "review",
       title: "Repasa lo que fallaste",
-      subtitle: `${focus} · ${failCount} errores`,
+      subtitle: `${focusLabel} · ${failCount} errores`,
       prompt: `${buildReviewStarterPrompt({ focus, failCount })}\nApproach it ${angle}.`,
       angle,
     };
@@ -105,10 +109,12 @@ const worldStarter: CoachStarter = {
     const label = subject?.label ?? "tu día a día";
     const knownWords = (ctx.state?.vocabulary.savedWords ?? []).slice(0, 5).map((w) => w.word);
     const angle = pickBySeed(STARTER_ANGLES.world, ctx.seed, ctx.recentAngles);
+    const subtitle =
+      subject?.source === "domain" ? "Tu área de trabajo · conversación" : "Tu interés · conversación";
     return {
       id: "world",
       title: `Inglés de ${label}`,
-      subtitle: "Tu área · conversación",
+      subtitle,
       prompt: buildWorldStarterPrompt({ interest: key, knownWords, angle }),
       angle,
     };

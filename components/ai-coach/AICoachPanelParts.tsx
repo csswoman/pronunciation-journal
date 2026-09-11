@@ -5,6 +5,7 @@ import { groupConversationsByDate } from "@/lib/group-by-date";
 import { formatConversationTitle } from "@/lib/ai-practice/conversation-title";
 import { useAICoachStore } from "@/lib/stores/aiCoachStore";
 import { cn } from "@/lib/cn";
+import { CoachLanguageToggle } from "./chat/CoachLanguageToggle";
 
 export function AICoachHeader({
   pageLabel, showHistory, onNewChat, onToggleHistory, onClose, endSessionSlot,
@@ -51,6 +52,7 @@ export function AICoachHeader({
       </div>
       <div className="flex items-center gap-1 shrink-0">
         {endSessionSlot}
+        <CoachLanguageToggle />
         <PanelIconButton
           onClick={toggleAutoSpeak}
           title={autoSpeak ? "Silenciar voz del coach" : "Activar voz del coach"}

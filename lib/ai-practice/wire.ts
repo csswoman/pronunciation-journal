@@ -5,6 +5,11 @@ import { isExerciseTool } from "./tools/registry";
 import { buildMissionPrompt } from "./missions/prompts";
 import { getMission } from "./missions/registry";
 import { isConversationalMission } from "./missions/types";
+import {
+  languagePolicyBlock,
+  resolveCoachLanguage,
+  type CoachLanguagePreference,
+} from "./coach-language";
 
 /** Returns the topic of the most recently answered exercise in the message list. */
 export function extractLastTopic(messages: AIMessage[]): string | undefined {
@@ -25,6 +30,8 @@ export interface SystemPromptOptions {
   missionId?: string;
   /** Interests the student picked in their profile (lib/users/interests.ts). */
   interests?: readonly string[];
+  /** Explicit learner override; `null`/absent follows their CEFR level. */
+  languagePreference?: CoachLanguagePreference;
 }
 
 function interestsBlock(interests: readonly string[] | undefined): string {
@@ -41,7 +48,16 @@ export function buildSystemPrompt(
   learningState: UserLearningState | null,
   options: SystemPromptOptions = {},
 ): string {
-  const { lastTopic, voiceScored, missionId, interests } = options;
+  const { lastTopic, voiceScored, missionId, interests, languagePreference } = options;
+  // Defaults to B1 (English) when we have no state yet, matching the default
+  // `cefrEstimate` a fresh learning state is seeded with.
+  const language = resolveCoachLanguage(
+    learningState?.level.cefrEstimate ?? "B1",
+    languagePreference ?? null,
+  );
+  const languageSuffix = `
+
+${languagePolicyBlock(language)}`;
   const voiceSuffix = voiceScored ? `
 
 ${VOICE_TURN_INSTRUCTION}` : "";
@@ -53,10 +69,10 @@ ${VOICE_TURN_INSTRUCTION}` : "";
       mission,
       learningState ? compactState(learningState) : undefined,
     );
-    return `${missionPrompt}${interestsSuffix}${voiceSuffix}`;
+    return `${missionPrompt}${languageSuffix}${interestsSuffix}${voiceSuffix}`;
   }
 
-  if (!learningState) return `${BASE_TUTOR_PROMPT}${interestsSuffix}${voiceSuffix}`;
+  if (!learningState) return `${BASE_TUTOR_PROMPT}${languageSuffix}${interestsSuffix}${voiceSuffix}`;
 
   const stateHint = compactState(learningState);
   const knownTopics = learningState.grammar.weakTopics.map(t => t.topic);
@@ -70,7 +86,7 @@ ${VOICE_TURN_INSTRUCTION}` : "";
 
 ${stateHint}
 
-${nextHint}${interestsSuffix}${voiceSuffix}`;
+${nextHint}${languageSuffix}${interestsSuffix}${voiceSuffix}`;
 }
 
 /** Returns the `voice` metadata of the most recent user message, if any. */

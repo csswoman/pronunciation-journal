@@ -8,6 +8,7 @@ import { useAICoachStore } from "@/lib/stores/aiCoachStore";
 import { cn } from "@/lib/cn";
 import MessageBubble from "./MessageBubble";
 import TypingIndicator from "./TypingIndicator";
+import { ChatContextDivider } from "./chat/ChatContextDivider";
 
 // Planned structure:
 // <ChatView>
@@ -90,7 +91,21 @@ export default function ChatView({
 
     messages.forEach((m, i) => {
       if (m.role === "tool") return;
-      if (m.role === "user" && m.hidden) return;
+      if (m.role === "user" && m.hidden) {
+        // A hidden send with a `marker` still leaves a trace: a centered event
+        // divider, so the thread does not jump from the learner's last visible
+        // turn straight to the coach reacting to something unseen.
+        if (m.marker) {
+          kept.push({
+            msg: m,
+            sourceIndex: i,
+            key: `${m.timestamp}-${i}`,
+            isLastInGroup: true,
+            senderChanged: true,
+          });
+        }
+        return;
+      }
       if (m.role === "model") {
         const hasText = m.contentParts.some((p) => p.type === "text" && p.text.trim().length > 0);
         const hasToolCall = m.toolCalls.size > 0;
@@ -144,6 +159,13 @@ export default function ChatView({
           // arriving, and autoplaying then spoke a truncated fragment.
           const isNewest =
             i === visibleMessages.length - 1 && msg.role === "model" && !isStreaming;
+          if (msg.role === "user" && msg.hidden && msg.marker) {
+            return (
+              <div key={key} className="mt-4 first:mt-0">
+                <ChatContextDivider label={msg.marker} />
+              </div>
+            );
+          }
           return (
             <div
               key={key}

@@ -23,10 +23,20 @@ export type ContentPart =
 export type VoiceMetadata = { transcript: true; scored: boolean };
 
 /** Options for one chat send. `starterId` marks an authored starter prompt. */
-export type SendOpts = { hidden?: boolean; voice?: VoiceMetadata; starterId?: StarterId };
+export type SendOpts = {
+  hidden?: boolean;
+  voice?: VoiceMetadata;
+  starterId?: StarterId;
+  /**
+   * Short label rendered as a centered divider in place of a hidden message.
+   * Only meaningful alongside `hidden` — it marks that an event happened
+   * (an exercise finished) without faking a user bubble.
+   */
+  marker?: string;
+};
 
 export type AIMessage =
-  | { role: "user"; content: string; timestamp: string; hidden?: boolean; voice?: VoiceMetadata }
+  | { role: "user"; content: string; timestamp: string; hidden?: boolean; voice?: VoiceMetadata; marker?: string }
   | { role: "model"; contentParts: ContentPart[]; toolCalls: Map<string, ToolCall>; timestamp: string; translation?: string }
   | { role: "tool"; toolCallId: string; name: string; result: unknown; timestamp: string };
 
