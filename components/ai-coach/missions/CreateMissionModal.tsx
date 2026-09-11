@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Button from '@/components/ui/Button'
 import { Sparkles, X } from '@/components/icons'
+import { cefrLevelOptions } from '@/lib/content/cefr-labels'
 import type { CEFRLevel } from '@/lib/exercises/cefr'
 import type { ScriptedMission } from '@/lib/ai-practice/missions/types'
 import { saveGeneratedScript } from '@/lib/ai-practice/missions/scripted/generated-store'
@@ -20,13 +21,12 @@ import { saveGeneratedScript } from '@/lib/ai-practice/missions/scripted/generat
 //   </ModalContainer>
 // </CreateMissionModal>
 
-const CEFR_OPTIONS: Array<{ value: CEFRLevel; label: string; desc: string }> = [
-  { value: 'A1', label: 'A1', desc: 'Básico / Inicial' },
-  { value: 'A2', label: 'A2', desc: 'Elemental' },
-  { value: 'B1', label: 'B1', desc: 'Intermedio' },
-  { value: 'B2', label: 'B2', desc: 'Intermedio alto' },
-  { value: 'C1', label: 'C1', desc: 'Avanzado' },
-]
+const CEFR_OPTIONS: Array<{ value: CEFRLevel; label: string; desc: string }> =
+  cefrLevelOptions().map((option) => ({
+    value: option.value,
+    label: option.label,
+    desc: option.name,
+  }))
 
 interface CreateMissionModalProps {
   userId: string

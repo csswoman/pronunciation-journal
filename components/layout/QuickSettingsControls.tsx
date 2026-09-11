@@ -5,7 +5,7 @@
 //   <AccordionRow> — Apariencia (light/dark/system segmented)
 //   <AccordionRow> — Color del tema (hue preset swatches)
 //   <AccordionRow> — Sonidos (mute/exercise/all + volume)
-// <StudyLevelControls /> — CEFR A1–C2, used in the profile preferences panel
+// <StudyLevelControls /> — CEFR A1–C1, used in the profile preferences panel
 
 import { type CSSProperties, type ReactNode, useId, useState } from "react";
 import { cn } from "@/lib/cn";

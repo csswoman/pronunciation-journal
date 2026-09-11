@@ -2,7 +2,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const mocks = vi.hoisted(() => ({
   getWordOfDay: vi.fn(),
-  requireSameOrigin: vi.fn(),
   requireUser: vi.fn(),
   checkLayeredRateLimit: vi.fn(),
 }))
@@ -13,7 +12,6 @@ vi.mock('@/lib/word-of-day', () => ({
 
 vi.mock('@/lib/api/guards', () => ({
   redactError: (error: unknown) => error,
-  requireSameOrigin: mocks.requireSameOrigin,
   requireUser: mocks.requireUser,
   checkLayeredRateLimit: mocks.checkLayeredRateLimit,
 }))
@@ -22,7 +20,6 @@ import { GET } from '../route'
 
 beforeEach(() => {
   mocks.getWordOfDay.mockReset()
-  mocks.requireSameOrigin.mockReset().mockReturnValue(null)
   mocks.requireUser.mockReset().mockResolvedValue({ user: { id: 'u1' }, error: null })
   mocks.checkLayeredRateLimit.mockReset().mockResolvedValue({ limited: false, error: null })
 })
@@ -55,6 +52,16 @@ describe('word-of-day route', () => {
     await GET(new Request('http://x/api/gemini/word-of-day?level=Z9') as never)
 
     expect(mocks.getWordOfDay).toHaveBeenCalledWith({ forceRefresh: false, level: undefined })
+  })
+
+  it('succeeds on a same-origin GET with no Origin header (browsers omit it on simple GETs)', async () => {
+    mocks.getWordOfDay.mockResolvedValueOnce({ word: 'focus', definition: 'attention' })
+
+    // No `Origin` header set — this reproduces the real-world browser request
+    // that a requireSameOrigin guard would incorrectly reject with a 403.
+    const res = await GET(new Request('http://x/api/gemini/word-of-day') as never)
+
+    expect(res.status).toBe(200)
   })
 
   it('rejects an unauthenticated request before touching the generator', async () => {

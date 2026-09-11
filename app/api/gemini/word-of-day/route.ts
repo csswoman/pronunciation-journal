@@ -1,14 +1,16 @@
 import { getWordOfDay } from "@/lib/word-of-day";
 import { NextRequest, NextResponse } from "next/server";
-import { checkLayeredRateLimit, requireSameOrigin, requireUser } from "@/lib/api/guards";
+import { checkLayeredRateLimit, requireUser } from "@/lib/api/guards";
 import { logServerError } from "@/lib/api/logging";
 
 export const dynamic = "force-dynamic";
 
+// No requireSameOrigin here: this is a read-only GET, not a mutation, and
+// browsers frequently omit the `Origin` header on simple same-origin GETs
+// (only reliably sent on state-changing requests) — that guard was rejecting
+// legitimate same-origin requests with a 403. requireUser + the layered
+// rate limit below already gate cost/abuse.
 export async function GET(request: NextRequest): Promise<NextResponse> {
-  const originError = requireSameOrigin(request);
-  if (originError) return originError;
-
   const { user, error: authError } = await requireUser(request);
   if (authError) return authError as NextResponse;
 

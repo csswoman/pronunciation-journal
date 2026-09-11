@@ -30,6 +30,7 @@ import { useAuthOptional } from "@/components/auth/AuthProvider";
 import Button from "@/components/ui/Button";
 import { Mic, ArrowRight, ArrowLeft } from "@/components/icons";
 import { playUiCue } from "@/lib/ui-sounds/cues";
+import { hasAudibleAudio, NO_AUDIO_CAPTURED_MESSAGE } from "@/lib/speech/audio-thresholds";
 
 export function IntonationTrainer() {
   const auth = useAuthOptional();
@@ -43,6 +44,7 @@ export function IntonationTrainer() {
   const [micError, setMicError] = useState<string | null>(null);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const mediaStreamRef = useRef<MediaStream | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const recordStartTimeRef = useRef<number>(0);
   const currentSentence = INTONATION_PATTERNS[selectedPatternIndex] ?? INTONATION_PATTERNS[0];
@@ -55,6 +57,23 @@ export function IntonationTrainer() {
     cancelSpeech();
     setIsPlayingAudio(false);
   }, [selectedPatternIndex]);
+
+  // Salir del ejercicio mientras se graba no debe dejar el micrófono abierto.
+  useEffect(() => {
+    return () => {
+      const recorder = mediaRecorderRef.current;
+      if (recorder && recorder.state === "recording") {
+        try {
+          recorder.stop();
+        } catch {
+          // El recorder puede estar ya inactivo.
+        }
+      }
+      mediaStreamRef.current?.getTracks().forEach((track) => track.stop());
+      mediaStreamRef.current = null;
+      cancelSpeech();
+    };
+  }, []);
 
   const handlePlayReference = useCallback(() => {
     cancelSpeech();
@@ -84,6 +103,7 @@ export function IntonationTrainer() {
       recordStartTimeRef.current = Date.now();
       const mediaRecorder = new MediaRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
+      mediaStreamRef.current = stream;
 
       mediaRecorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
@@ -93,10 +113,11 @@ export function IntonationTrainer() {
 
       mediaRecorder.onstop = async () => {
         stream.getTracks().forEach((track) => track.stop());
+        mediaStreamRef.current = null;
         const audioBlob = new Blob(audioChunksRef.current, { type: "audio/webm" });
 
-        if (audioBlob.size < 1000) {
-          setMicError("No se detectó audio suficiente. Intenta hablar con más volumen.");
+        if (!hasAudibleAudio(audioBlob)) {
+          setMicError(NO_AUDIO_CAPTURED_MESSAGE);
           return;
         }
 

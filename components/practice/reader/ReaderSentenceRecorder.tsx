@@ -57,6 +57,9 @@ export function ReaderSentenceRecorder({ sentenceText, onRecorded }: Omit<Props,
       })
   }, [status, speechResult, isScoring, scoring, sentenceText, onRecorded])
 
+  // Transcripción por Gemini en curso: no ofrecer regrabar todavía.
+  const isTranscribing = status === 'processing'
+
   const handleToggleRecord = () => {
     if (status === 'listening') {
       stop()
@@ -97,8 +100,9 @@ export function ReaderSentenceRecorder({ sentenceText, onRecorded }: Omit<Props,
           <button
             type="button"
             onClick={handleToggleRecord}
+            disabled={isTranscribing}
             className={cn(
-              'inline-flex items-center gap-2 rounded-full px-4 py-2 font-label text-caption font-semibold transition-all cursor-pointer focus-ring',
+              'inline-flex items-center gap-2 rounded-full px-4 py-2 font-label text-caption font-semibold transition-all cursor-pointer focus-ring disabled:opacity-60 disabled:cursor-not-allowed',
               status === 'listening'
                 ? 'bg-error text-on-error animate-pulse shadow-sm'
                 : 'bg-primary text-on-primary hover:bg-primary/90 shadow-sm',
@@ -106,7 +110,13 @@ export function ReaderSentenceRecorder({ sentenceText, onRecorded }: Omit<Props,
             aria-label={status === 'listening' ? 'Detener grabación' : 'Grabar repetición'}
           >
             <Mic className="w-4 h-4" />
-            <span>{status === 'listening' ? 'Detener (escuchando…)' : 'Imitar y grabar'}</span>
+            <span>
+              {isTranscribing
+                ? 'Transcribiendo…'
+                : status === 'listening'
+                ? 'Detener (escuchando…)'
+                : 'Imitar y grabar'}
+            </span>
           </button>
         )}
       </div>
