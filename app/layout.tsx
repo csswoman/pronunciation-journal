@@ -8,6 +8,7 @@ const dmSans = DM_Sans({
   weight: ["400", "500", "600", "700"],
   subsets: ["latin", "latin-ext"],
   variable: "--font-sans",
+  display: "swap",
 });
 
 // Monospace — kickers, code (not IPA)
@@ -15,6 +16,7 @@ const dmMono = DM_Mono({
   weight: ["400", "500"],
   subsets: ["latin"],
   variable: "--font-mono-var",
+  display: "swap",
 });
 
 // IPA / phonetic transcription — SIL Andika (literacy + full IPA glyph set)

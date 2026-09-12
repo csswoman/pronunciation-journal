@@ -88,7 +88,7 @@ export default function HomeChunkOfDayCard() {
 
   return (
     <div
-      className="home-sidebar-card relative flex h-full flex-col justify-between gap-4 overflow-hidden rounded-2xl border border-border-default border-l-[3px] border-l-primary/75 bg-surface-raised p-5 shadow-xs motion-reduce:shadow-none"
+      className="home-sidebar-card relative flex min-h-[220px] h-full flex-col justify-between gap-4 overflow-hidden rounded-2xl border border-border-default border-l-[3px] border-l-primary/75 bg-surface-raised p-5 shadow-xs motion-reduce:shadow-none"
       aria-busy={loading || undefined}
       aria-labelledby="chunk-of-day-heading"
     >
