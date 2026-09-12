@@ -109,7 +109,7 @@ describe("review starter", () => {
     const state = stateWithWeakTopic("past-simple", 0.62);
     const built = getStarter("review").build(ctx({ state }));
     expect(built.prompt).toContain("past-simple");
-    expect(built.subtitle).toContain("past-simple");
+    expect(built.subtitle).toContain("Pasado simple");
   });
 
   it("carries neither the save-lesson concept nor the suggestions instruction", () => {
