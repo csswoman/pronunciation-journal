@@ -51,6 +51,13 @@ export const GeminiRequestSchema = z.object({
    * the model's tool access beyond what a normal conversation turn allows.
    */
   starterId: z.enum(["review", "learn", "world", "free"] satisfies [StarterId, ...StarterId[]]).optional(),
+  /**
+   * Explicit learner override for the language the coach writes its prose in.
+   * Omitted/absent means "follow my CEFR level". Purely presentational — it
+   * selects between two server-defined policy blocks and cannot inject text
+   * or affect tool access.
+   */
+  coachLanguage: z.enum(["es", "en"]).optional(),
   stream: z.boolean().optional().default(false),
 }).strict();
 

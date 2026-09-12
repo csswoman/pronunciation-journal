@@ -48,7 +48,7 @@ export default function HomeActivationStrip({
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-        <Link href="/practice/sounds" className="shrink-0">
+        <Link href="/practice/sounds" prefetch={false} className="shrink-0">
           <Button
             variant="primary"
             size="md"
@@ -60,6 +60,7 @@ export default function HomeActivationStrip({
         </Link>
         <Link
           href="/courses"
+          prefetch={false}
           className="focus-ring inline-flex min-h-10 items-center gap-1.5 font-body-sm font-medium text-fg-muted underline-offset-2 transition-colors hover:text-fg hover:underline"
         >
           Explorar cursos
@@ -73,6 +74,7 @@ export default function HomeActivationStrip({
           {showPlacementLink ? (
             <Link
               href="/assessment"
+              prefetch={false}
               className="focus-ring font-medium text-fg underline-offset-2 hover:underline"
             >
               prueba de nivel
@@ -84,6 +86,7 @@ export default function HomeActivationStrip({
           {showPronunciationLink ? (
             <Link
               href="/assessment/pronunciation"
+              prefetch={false}
               className="focus-ring font-medium text-fg underline-offset-2 hover:underline"
             >
               diagnóstico oral

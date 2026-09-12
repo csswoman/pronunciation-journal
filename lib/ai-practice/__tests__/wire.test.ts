@@ -43,7 +43,7 @@ describe("messagesToWire", () => {
 describe("buildSystemPrompt voice instruction", () => {
   it("does not include the voice instruction for a plain text turn (no learning state)", () => {
     const prompt = buildSystemPrompt(null);
-    expect(prompt).toBe(BASE_TUTOR_PROMPT);
+    expect(prompt).toContain(BASE_TUTOR_PROMPT);
     expect(prompt).not.toContain(VOICE_TURN_INSTRUCTION);
   });
 
@@ -79,7 +79,47 @@ describe("buildSystemPrompt voice instruction", () => {
   });
 
   it("does not fall back to a different mission for an unknown id", () => {
-    expect(buildSystemPrompt(null, { missionId: "roleplay.unknown" })).toBe(BASE_TUTOR_PROMPT);
+    const prompt = buildSystemPrompt(null, { missionId: "roleplay.unknown" });
+    expect(prompt).toContain(BASE_TUTOR_PROMPT);
+    expect(prompt).not.toContain("ORAL MISSION");
+  });
+});
+
+// ─── buildSystemPrompt: coach reply language ────────────────────────────────
+
+describe("buildSystemPrompt language policy", () => {
+  const stateAt = (level: "A1" | "A2" | "B1" | "B2") => {
+    const state = createEmptyState("u1", "d1");
+    return { ...state, level: { ...state.level, cefrEstimate: level } };
+  };
+
+  it("writes prose in Spanish for A1 and A2", () => {
+    for (const level of ["A1", "A2"] as const) {
+      expect(buildSystemPrompt(stateAt(level))).toContain("Write your prose in SPANISH");
+    }
+  });
+
+  it("writes prose in English from B1 upward", () => {
+    for (const level of ["B1", "B2"] as const) {
+      expect(buildSystemPrompt(stateAt(level))).toContain("Write your prose in ENGLISH");
+    }
+  });
+
+  it("defaults to English when there is no learning state yet", () => {
+    expect(buildSystemPrompt(null)).toContain("Write your prose in ENGLISH");
+  });
+
+  it("lets an explicit preference override the level default", () => {
+    expect(buildSystemPrompt(stateAt("A1"), { languagePreference: "en" }))
+      .toContain("Write your prose in ENGLISH");
+    expect(buildSystemPrompt(stateAt("B2"), { languagePreference: "es" }))
+      .toContain("Write your prose in SPANISH");
+  });
+
+  it("applies the policy to conversational missions too", () => {
+    const prompt = buildSystemPrompt(stateAt("A1"), { missionId: "roleplay.cafe" });
+    expect(prompt).toContain("ORAL MISSION: ROLEPLAY.CAFE");
+    expect(prompt).toContain("Write your prose in SPANISH");
   });
 });
 

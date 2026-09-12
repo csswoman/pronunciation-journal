@@ -1,13 +1,14 @@
 import { ChevronLeft } from "@/components/icons";
 import type { TabId } from "./ChatTabs";
 import { MissionWorkspace } from "./missions/MissionWorkspace";
+import { exerciseResultMarker } from "./chat/exercise-result-marker";
 import AICoachHome from "./AICoachHome";
 import ChatView from "./ChatView";
 import CoachErrorState from "./CoachErrorState";
 import ErrorBanner from "./ErrorBanner";
 import QuotaExhaustedCard from "./QuotaExhaustedCard";
 import CustomPromptPanel from "./CustomPromptPanel";
-import type { AIMessage, ExerciseResult } from "@/lib/ai-practice/types";
+import type { AIMessage, ExerciseResult, SendOpts } from "@/lib/ai-practice/types";
 import type { MissionLaunch } from "@/lib/ai-practice/missions/launch";
 import type { TurnSaveable } from "@/lib/ai-practice/tools/registry";
 import type { ResolvedStarter, StarterId } from "@/lib/ai-practice/starters/types";
@@ -29,7 +30,7 @@ export interface RenderMissionParams {
   messages: AIMessage[];
   isStreaming: boolean;
   quotaExhausted: boolean;
-  sendMessage: (text: string) => Promise<void>;
+  sendMessage: (text: string, options?: SendOpts) => Promise<void>;
   openSaveWordModal: (word: string, context: string) => void;
   saveSaveable: (saveable: TurnSaveable) => Promise<void>;
   saveAllFromSummary: (learned: TurnSaveable[]) => Promise<void>;
@@ -63,7 +64,7 @@ export function renderMission(p: RenderMissionParams) {
 
 export interface RenderHomeParams {
   tab: "chat" | "missions";
-  sendMessage: (text: string) => Promise<void>;
+  sendMessage: (text: string, options?: SendOpts) => Promise<void>;
   changeMode: (next: AIConversationMode) => Promise<void>;
   isStreaming: boolean;
   starters: ResolvedStarter[] | null;
@@ -127,7 +128,7 @@ export interface RenderActiveChatParams {
   inputPrefill?: string;
   setInputPrefill: (prompt?: string) => void;
   answerToolCall: (callId: string, result: ExerciseResult) => void;
-  sendMessage: (text: string) => Promise<void>;
+  sendMessage: (text: string, options?: SendOpts) => Promise<void>;
   /** Re-send the turn a transient throttle or quota bounce left pending. */
   retryLastFailedSend: () => Promise<void>;
 }
@@ -163,7 +164,12 @@ export function renderActiveChat(p: RenderActiveChatParams) {
           onSuggestionClick={(prompt) => p.setInputPrefill(prompt)}
           onToolAnswer={p.answerToolCall}
           onNext={() => p.sendMessage("next")}
-          onExerciseComplete={(s) => void p.sendMessage(`I just finished — ${s.correct} of ${s.total} right. How did I do?`)}
+          onExerciseComplete={(s) =>
+            void p.sendMessage(`I just finished — ${s.correct} of ${s.total} right. How did I do?`, {
+              hidden: true,
+              marker: exerciseResultMarker(s),
+            })
+          }
         />
       </div>
       <div className="chat-surface shrink-0 px-3 pb-3 pt-1 border-t border-border-subtle/60">

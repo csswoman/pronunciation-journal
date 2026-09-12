@@ -85,6 +85,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     voiceScored: voice?.scored === true,
     missionId: body.missionId,
     interests,
+    languagePreference: body.coachLanguage ?? null,
   });
 
   // Cap input fed to intent detection — detectIntent has its own guard but we

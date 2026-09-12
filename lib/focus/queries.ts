@@ -76,6 +76,20 @@ export async function updateSprintStatus(
   })
 }
 
+/**
+ * Borra un sprint que nunca llegó a tener contenido.
+ *
+ * Existe para el rollback del setup: si la generación del primer asset falla,
+ * el sprint ya está escrito en Dexie y, sin esto, queda activo y vacío. La
+ * siguiente visita a /focus/setup redirigiría a un sprint sin nada dentro.
+ */
+export async function deleteSprint(sprintId: string, userId: string): Promise<void> {
+  await db.transaction('rw', [db.focusSprints, db.syncOutbox], async () => {
+    await db.focusSprints.delete(sprintId)
+    await enqueue(userId, 'focus_sprints', 'delete', {}, { id: sprintId })
+  })
+}
+
 // ── Focus Content ──────────────────────────────────────────────────────────────
 
 /** Todos los assets de un sprint, ordenados por fecha de creación. */

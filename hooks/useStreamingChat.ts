@@ -2,6 +2,10 @@
 
 import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import type { AIMessage, StreamChunk, ExerciseResult, SendOpts } from "@/lib/ai-practice/types";
+// Read via `getState()` at send time rather than subscribing: this hook's
+// comments note that a changing dep would rebuild `sendMessage` and re-render
+// the whole panel, and the language only matters at the moment of the request.
+import { useAICoachStore } from "@/lib/stores/aiCoachStore";
 import { applyExerciseResult, type UserLearningState } from "@/lib/ai-practice/learning-state";
 import { messagesToWire } from "@/lib/ai-practice/wire";
 import { makeStreamState, processChunk } from "@/lib/ai-practice/stream-processor";
@@ -64,7 +68,7 @@ export function useStreamingChat({
 
     metrics.markSessionStarted(conversationIdRef.current);
 
-    const userMsg: AIMessage = { role: "user", content: text.trim(), timestamp: new Date().toISOString(), hidden: options?.hidden, voice: options?.voice };
+    const userMsg: AIMessage = { role: "user", content: text.trim(), timestamp: new Date().toISOString(), hidden: options?.hidden, voice: options?.voice, marker: options?.marker };
     const nextMessages = [...messagesRef.current, userMsg];
     setMessages(nextMessages);
 
@@ -86,6 +90,9 @@ export function useStreamingChat({
           stream: true,
           missionId: mode.startsWith("mission:") ? mode.slice("mission:".length) : undefined,
           starterId: options?.starterId,
+          // Omitted when the learner has not overridden it, so the server
+          // falls back to the CEFR-derived default.
+          coachLanguage: useAICoachStore.getState().coachLanguage ?? undefined,
         }),
         signal: controller.signal,
       });

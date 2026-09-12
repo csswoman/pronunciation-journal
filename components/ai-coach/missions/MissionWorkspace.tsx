@@ -6,7 +6,7 @@ import { speakPhrase } from '@/lib/ai-coach/pronunciation'
 import { useSharedMicStream } from '@/hooks/useSharedMicStream'
 import { useSpeechInput } from '@/hooks/useSpeechInput'
 import { scorePronunciation } from '@/lib/pronunciation/scoring'
-import type { AIMessage, ExerciseResult, VoiceMetadata } from '@/lib/ai-practice/types'
+import type { AIMessage, ExerciseResult, SendOpts } from '@/lib/ai-practice/types'
 import type { TurnSaveable } from '@/lib/ai-practice/tools/registry'
 import { getMission } from '@/lib/ai-practice/missions/registry'
 import { isConversationalMission, isScriptedMission } from '@/lib/ai-practice/missions/types'
@@ -23,6 +23,7 @@ import MissionResult from './MissionResult'
 import { MissionHeader } from './MissionHeader'
 import ChatView from '../ChatView'
 import CustomPromptPanel from '../CustomPromptPanel'
+import { exerciseResultMarker } from '../chat/exercise-result-marker'
 import type { MissionLaunch } from '@/lib/ai-practice/missions/launch'
 
 // Planned structure:
@@ -48,7 +49,7 @@ interface MissionWorkspaceProps {
   messages: AIMessage[]
   isStreaming: boolean
   isDisabled: boolean
-  onSendMessage: (text: string, options?: { voice?: VoiceMetadata }) => Promise<void>
+  onSendMessage: (text: string, options?: SendOpts) => Promise<void>
   onSaveWord: (word: string, context: string) => void
   onSaveSaveable: (saveable: TurnSaveable) => Promise<void>
   onSaveAllFromSummary?: (learned: TurnSaveable[]) => Promise<void>
@@ -206,7 +207,7 @@ export function MissionWorkspace({
     reset()
     void start()
   }
-  const handleMissionSubmit = (text: string, options?: { voice?: VoiceMetadata }) => {
+  const handleMissionSubmit = (text: string, options?: SendOpts) => {
     if (options?.voice?.transcript) {
       void dispatchSpokenTurn(text)
     } else {
@@ -269,7 +270,12 @@ export function MissionWorkspace({
               onSuggestionClick={(text) => handleMissionSubmit(text)}
               onToolAnswer={onToolAnswer}
               onNext={() => handleMissionSubmit('next')}
-              onExerciseComplete={(s) => void handleMissionSubmit(`I just finished — ${s.correct} of ${s.total} right. How did I do?`)}
+              onExerciseComplete={(s) =>
+                void handleMissionSubmit(
+                  `I just finished — ${s.correct} of ${s.total} right. How did I do?`,
+                  { hidden: true, marker: exerciseResultMarker(s) },
+                )
+              }
             />
           </>
         )}
