@@ -112,6 +112,70 @@ export function rightCardClass({
   )
 }
 
+export function mobileTermChipClass({
+  pairId,
+  selectedLeft,
+  matches,
+  results,
+}: {
+  pairId: string
+  selectedLeft: string | null
+  matches: Record<string, string>
+  results: MatchResult
+}): string {
+  const result = results[pairId]
+  const isSelected = selectedLeft === pairId
+  const isMatched = !!matches[pairId]
+
+  return cn(
+    'relative flex min-h-11 items-center gap-2 rounded-full border px-3.5 py-2 text-left transition-all duration-150 active:scale-[0.98]',
+    result === 'correct' &&
+      'cursor-default border-success-border bg-success-soft text-success pf-reveal-ok',
+    result === 'wrong' &&
+      'cursor-default border-error-border bg-error-soft text-error pf-reveal-bad',
+    !result &&
+      isSelected &&
+      'border-primary bg-primary-soft text-primary ring-1 ring-primary/30 shadow-xs font-semibold',
+    !result && isMatched && 'border-primary/40 bg-surface-raised text-fg font-medium',
+    !result &&
+      !isSelected &&
+      !isMatched &&
+      'border-border-default bg-surface-raised text-fg hover:border-primary/40 hover:bg-surface-base',
+  )
+}
+
+export function mobileDefinitionCardClass({
+  rightId,
+  armedRight,
+  matches,
+  results,
+}: {
+  rightId: string
+  armedRight: string | null
+  matches: Record<string, string>
+  results: MatchResult
+}): string {
+  const leftId = Object.keys(matches).find((candidate) => matches[candidate] === rightId)
+  const result = leftId ? results[leftId] : undefined
+  const isArmed = armedRight === rightId
+
+  return cn(
+    'relative flex w-full flex-col gap-2 rounded-lg border p-3.5 text-left transition-all duration-150 active:scale-[0.99]',
+    result === 'correct' &&
+      'cursor-default border-success-border bg-success-soft pf-reveal-ok',
+    result === 'wrong' &&
+      'cursor-default border-error-border bg-error-soft pf-reveal-bad',
+    !result &&
+      isArmed &&
+      'border-primary bg-primary-soft text-fg ring-1 ring-primary/30 shadow-xs',
+    !result && leftId && 'border-primary/40 bg-surface-raised',
+    !result &&
+      !isArmed &&
+      !leftId &&
+      'border-border-default bg-surface-raised hover:border-primary/40 hover:bg-surface-base',
+  )
+}
+
 export function strokeFor(
   state: MatchConnection['state'],
   leftId: string,
@@ -121,3 +185,4 @@ export function strokeFor(
   if (state === 'wrong') return 'var(--error)'
   return pairColor(leftId)
 }
+
