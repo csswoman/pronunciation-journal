@@ -2,15 +2,23 @@
 
 // Sub-components:
 // <HomeStatsRow>
-//   <Link (Palabras esenciales con barra de progreso)>
-//   <HomeImmersionCard (Registro de inmersión)>
+//   <HomeEssentialWordsCount /> (lazy — carries Dexie)
+//   <HomeImmersionCard />
 // </HomeStatsRow>
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useLiveQuery } from "dexie-react-hooks";
-import { db } from "@/lib/db";
-import { BookOpen } from "@/components/icons";
+import dynamic from "next/dynamic";
+import HomeEssentialWordsBody from "@/components/home/HomeEssentialWordsBody";
 import HomeImmersionCard from "@/components/home/HomeImmersionCard";
+
+// Dexie exists here only to fill in one counter, so it loads after first paint
+// instead of blocking hydration. Until it arrives the card renders the same
+// body at count 0, so the swap costs no layout shift.
+const HomeEssentialWordsCount = dynamic(
+  () => import("@/components/home/HomeEssentialWordsCount"),
+  { ssr: false },
+);
 
 const CEFR_WORD_TOTALS: Record<string, number> = {
   A1: 740,
@@ -31,68 +39,33 @@ export default function HomeStatsRow({
   const levelKey = (profileLevel || "A1").toUpperCase();
   const totalLevelWords = CEFR_WORD_TOTALS[levelKey] ?? 740;
 
-  const learnedCount =
-    useLiveQuery(async () => {
-      try {
-        return await db.srsData
-          .filter((item) => (item.interval ?? 0) > 0 && !item.archived)
-          .count();
-      } catch {
-        return 0;
-      }
-    }, []) ?? 0;
-
-  const progressPct =
-    totalLevelWords > 0
-      ? Math.min(100, Math.round((learnedCount / totalLevelWords) * 100))
-      : 0;
+  // Defer the Dexie chunk past the first frame; the placeholder below is
+  // byte-identical in geometry, so nothing moves when the real count lands.
+  const [showLiveCount, setShowLiveCount] = useState(false);
+  useEffect(() => {
+    setShowLiveCount(true);
+  }, []);
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
       {/* Palabras esenciales */}
       <Link
         href="/practice/essential-words"
+        prefetch={false}
         className="focus-ring group flex flex-col justify-between gap-3 rounded-xl border border-border-subtle bg-surface-raised p-3.5 sm:p-4 shadow-xs transition-all hover:border-border-default hover:shadow-sm"
       >
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <BookOpen className="size-4.5 text-primary shrink-0" aria-hidden />
-            <span className="font-label text-body-xs font-medium text-fg-muted">
-              Palabras esenciales · {levelKey}
-            </span>
-          </div>
-          <span className="font-mono text-caption font-semibold tabular-nums text-primary">
-            {progressPct}%
-          </span>
-        </div>
-
-        <div className="flex flex-col gap-2">
-          <div className="flex items-baseline justify-between gap-2">
-            <p className="font-sans text-heading-md font-bold tabular-nums text-fg leading-none">
-              {learnedCount}{" "}
-              <span className="font-body-sm font-normal text-fg-muted">
-                de {totalLevelWords}
-              </span>
-            </p>
-            <span className="text-caption text-fg-muted">
-              {learnedCount === 0 ? "Comenzar" : `${totalLevelWords - learnedCount} restantes`}
-            </span>
-          </div>
-
-          <div
-            role="progressbar"
-            aria-valuenow={progressPct}
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-label={`Progreso de palabras esenciales nivel ${levelKey}: ${progressPct}% (${learnedCount} de ${totalLevelWords})`}
-            className="h-2 w-full overflow-hidden rounded-full bg-surface-sunken border border-border-subtle/60"
-          >
-            <div
-              className="h-full rounded-full bg-primary transition-all duration-500"
-              style={{ width: `${progressPct}%` }}
-            />
-          </div>
-        </div>
+        {showLiveCount ? (
+          <HomeEssentialWordsCount
+            totalLevelWords={totalLevelWords}
+            levelKey={levelKey}
+          />
+        ) : (
+          <HomeEssentialWordsBody
+            learnedCount={0}
+            totalLevelWords={totalLevelWords}
+            levelKey={levelKey}
+          />
+        )}
       </Link>
 
       {/* Registro de inmersión: ¿Viste algo en inglés hoy? */}

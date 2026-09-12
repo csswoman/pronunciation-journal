@@ -48,6 +48,7 @@ export default function WeakSoundCard({ weakestPhoneme = null }: WeakSoundCardPr
     return (
       <Link
         href="/practice/sounds"
+        prefetch={false}
         className="home-sidebar-card focus-ring group relative flex flex-col gap-2 overflow-hidden transition-colors hover:bg-surface-sunken"
       >
         <DomainIcon
@@ -73,6 +74,7 @@ export default function WeakSoundCard({ weakestPhoneme = null }: WeakSoundCardPr
   return (
     <Link
       href="/practice/sounds"
+      prefetch={false}
       className="home-sidebar-card focus-ring group relative flex flex-col gap-3 overflow-hidden transition-colors hover:bg-surface-sunken"
     >
       <DomainIcon

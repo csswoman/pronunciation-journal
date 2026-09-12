@@ -14,6 +14,7 @@ export default function HomePlacementPrompt({
   const cta = (
     <Link
       href="/assessment"
+      prefetch={false}
       className="focus-ring inline-flex min-h-10 items-center gap-1.5 font-body-sm text-fg-muted underline-offset-2 transition-colors hover:text-fg hover:underline"
     >
       Hacer prueba de nivel
