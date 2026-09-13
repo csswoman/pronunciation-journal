@@ -208,6 +208,7 @@ export default function HomeHeroCard({
               needsPlacement={needsPlacement}
               needsPronunciation={needsPronunciation}
               isExpanded={showSecondarySteps || steps.length <= 2}
+              onStartStep={onStartStep}
             />
 
             {steps.length > 2 ? (
