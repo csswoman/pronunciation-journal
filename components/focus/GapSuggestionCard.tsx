@@ -11,6 +11,7 @@
 
 import React from 'react'
 import Badge from '@/components/ui/Badge'
+import { Check } from '@/components/icons'
 import { cn } from '@/lib/cn'
 import { getTopicMetadata, hasExample } from '@/lib/focus/topic-metadata'
 import type { GapSuggestion } from '@/lib/focus/gap-suggestions'
@@ -59,8 +60,8 @@ export function GapSuggestionCard({
         'focus-ring relative flex flex-col gap-2.5 rounded-xl border p-4 text-left transition-all',
         disabled ? 'cursor-not-allowed opacity-55' : 'cursor-pointer',
         selected
-          ? 'border-[var(--primary)] bg-[var(--primary-soft)] shadow-sm'
-          : 'border-[var(--border-default)] bg-[var(--surface-raised)] hover:border-[var(--border-hover)]',
+          ? 'border-primary bg-primary-soft shadow-xs'
+          : 'border-border-default bg-surface-raised hover:border-border-hover',
       )}
     >
       <div className="flex items-start justify-between gap-2">
@@ -74,11 +75,11 @@ export function GapSuggestionCard({
           className={cn(
             'flex h-5 w-5 shrink-0 items-center justify-center rounded-md border text-xs transition-colors',
             selected
-              ? 'border-[var(--primary)] bg-[var(--primary)] text-white'
-              : 'border-[var(--border-default)] bg-[var(--surface-base)]',
+              ? 'border-primary bg-primary text-on-primary'
+              : 'border-border-default bg-surface-sunken',
           )}
         >
-          {selected && '✓'}
+          {selected && <Check className="h-3.5 w-3.5 text-on-primary" strokeWidth={2.5} />}
         </div>
       </div>
 
@@ -100,11 +101,18 @@ export function GapSuggestionCard({
       )}
 
       {showExample && (
-        <div className="flex flex-col gap-0.5 rounded-lg bg-surface-sunken px-3 py-2">
-          <span className="text-tiny text-[var(--warning)] line-through decoration-1">{meta.wrong}</span>
-          <span className="text-tiny font-medium text-[var(--success)]">{meta.right}</span>
+        <div className="flex flex-col gap-1 rounded-lg border border-border-subtle bg-surface-sunken p-2.5">
+          <div className="flex items-center gap-1.5 text-tiny">
+            <span className="shrink-0 font-medium text-warning">✕ Decías:</span>
+            <span className="line-through decoration-1 text-fg-muted">{meta.wrong}</span>
+          </div>
+          <div className="flex items-center gap-1.5 text-tiny">
+            <span className="shrink-0 font-semibold text-success">✓ Lo ideal:</span>
+            <span className="font-medium text-fg">{meta.right}</span>
+          </div>
         </div>
       )}
     </div>
   )
 }
+

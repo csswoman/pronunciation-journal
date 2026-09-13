@@ -7,6 +7,7 @@
 
 import React, { useState } from 'react'
 import Button from '@/components/ui/Button'
+import Badge from '@/components/ui/Badge'
 import { cn } from '@/lib/cn'
 import { getTopicMetadata } from '@/lib/focus/topic-metadata'
 import { TOPIC_CATALOG } from '@/lib/topic-catalog'
@@ -40,6 +41,13 @@ function labelFor(topicId: string): string {
  * cualquier id inventado antes de devolverlo. El usuario siempre confirma el
  * tema: la coincidencia se propone, nunca se selecciona sola.
  */
+const PROMPT_SUGGESTIONS = [
+  'Diferenciar preposiciones (in, on, at)',
+  'Pronunciar verbos en pasado con -ed',
+  'Cuándo usar "I did" vs "I have done"',
+  'Hacer preguntas sin dudar',
+]
+
 export function FreeformGapInput({ selectedIds, onSelect, selectionFull }: FreeformGapInputProps) {
   const [description, setDescription] = useState('')
   const [matches, setMatches] = useState<GapMatch[] | null>(null)
@@ -49,8 +57,8 @@ export function FreeformGapInput({ selectedIds, onSelect, selectionFull }: Freef
 
   const canSubmit = description.trim().length >= 3 && !isMatching
 
-  const handleSubmit = async () => {
-    if (!canSubmit) return
+  const performMatch = async (text: string) => {
+    if (text.trim().length < 3 || isMatching) return
     setIsMatching(true)
     setError(null)
     setClarification(null)
@@ -59,7 +67,7 @@ export function FreeformGapInput({ selectedIds, onSelect, selectionFull }: Freef
       const res = await fetch('/api/gemini/focus/match-gap', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ description: description.trim() }),
+        body: JSON.stringify({ description: text.trim() }),
       })
 
       if (!res.ok) throw new Error('No pudimos interpretar tu descripción ahora mismo.')
@@ -75,11 +83,37 @@ export function FreeformGapInput({ selectedIds, onSelect, selectionFull }: Freef
     }
   }
 
+  const handleSubmit = () => performMatch(description)
+
+  const handleChipClick = (prompt: string) => {
+    setDescription(prompt)
+    performMatch(prompt)
+  }
+
   return (
-    <div className="flex flex-col gap-3">
-      <label htmlFor="freeform-gap" className="text-body-sm text-fg-muted">
-        Descríbelo con tus palabras. No necesitas saber cómo se llama el tema.
-      </label>
+    <div className="flex flex-col gap-3.5 rounded-xl border border-border-default bg-surface-raised p-4 shadow-xs">
+      <div>
+        <label htmlFor="freeform-gap" className="text-body-sm font-medium text-fg">
+          Descríbelo con tus palabras
+        </label>
+        <p className="text-tiny text-fg-muted">
+          Escribe lo que te pasa al hablar o elige una idea rápida de abajo.
+        </p>
+      </div>
+
+      <div className="flex flex-wrap gap-1.5">
+        {PROMPT_SUGGESTIONS.map((prompt) => (
+          <button
+            key={prompt}
+            type="button"
+            onClick={() => handleChipClick(prompt)}
+            disabled={isMatching}
+            className="focus-ring rounded-full border border-border-subtle bg-surface-sunken px-2.5 py-1 text-tiny text-fg-muted transition-colors hover:border-primary hover:bg-primary-soft hover:text-primary disabled:opacity-50"
+          >
+            {prompt}
+          </button>
+        ))}
+      </div>
 
       <textarea
         id="freeform-gap"
@@ -87,7 +121,7 @@ export function FreeformGapInput({ selectedIds, onSelect, selectionFull }: Freef
         onChange={(e) => setDescription(e.target.value.slice(0, MAX_LENGTH))}
         rows={3}
         placeholder="Ej: cuando hablo de algo que ya pasó me trabo y no sé si decir I did o I have done"
-        className="focus-ring w-full resize-y rounded-lg border border-[var(--border-default)] bg-[var(--surface-base)] p-3 text-body-sm text-fg placeholder:text-fg-subtle"
+        className="focus-ring w-full resize-y rounded-lg border border-border-default bg-surface-sunken p-3 text-body-sm text-fg placeholder:text-fg-subtle transition-colors"
       />
 
       <div className="flex items-center justify-between gap-3">
@@ -100,7 +134,7 @@ export function FreeformGapInput({ selectedIds, onSelect, selectionFull }: Freef
       </div>
 
       {error && (
-        <p className="rounded-lg bg-[var(--badge-error-bg)] p-3 text-body-sm text-[var(--text-error)]">{error}</p>
+        <p className="rounded-lg bg-error-soft p-3 text-body-sm text-error">{error}</p>
       )}
 
       {clarification && (
@@ -108,7 +142,7 @@ export function FreeformGapInput({ selectedIds, onSelect, selectionFull }: Freef
       )}
 
       {matches && matches.length > 0 && (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 pt-2 border-t border-border-subtle">
           <span className="text-tiny font-semibold uppercase tracking-wider text-fg-subtle">
             Esto es lo que encontramos
           </span>
@@ -137,19 +171,17 @@ export function FreeformGapInput({ selectedIds, onSelect, selectionFull }: Freef
                   'focus-ring flex flex-col gap-1 rounded-lg border p-3 text-left transition-colors',
                   isDisabled && 'cursor-not-allowed opacity-55',
                   isSelected
-                    ? 'border-[var(--primary)] bg-[var(--primary-soft)]'
-                    : 'border-[var(--border-default)] bg-[var(--surface-raised)] hover:border-[var(--border-hover)]',
+                    ? 'border-primary bg-primary-soft shadow-xs'
+                    : 'border-border-default bg-surface-base hover:bg-surface-sunken hover:border-border-hover',
                 )}
               >
                 <span className="flex items-center justify-between gap-2">
                   <span className="text-body-sm font-semibold text-fg">{label}</span>
-                  <span className="shrink-0 text-tiny font-medium text-fg-subtle">
-                    {meta.level.toUpperCase()}
-                  </span>
+                  <Badge label={meta.level.toUpperCase()} variant="neutral" size="sm" />
                 </span>
                 <span className="text-tiny text-fg-muted">{match.rationale}</span>
                 {match.confidence < LOW_CONFIDENCE && (
-                  <span className="text-tiny text-[var(--warning)]">
+                  <span className="text-tiny text-warning">
                     Coincidencia aproximada. Revisa que sea lo que buscas.
                   </span>
                 )}
@@ -161,3 +193,4 @@ export function FreeformGapInput({ selectedIds, onSelect, selectionFull }: Freef
     </div>
   )
 }
+

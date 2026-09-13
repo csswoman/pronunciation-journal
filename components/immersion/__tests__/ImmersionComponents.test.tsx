@@ -47,6 +47,36 @@ describe('ImmersionCatalog', () => {
     expect(screen.getByText(FIXTURE_LESSONS[0].title)).toBeInTheDocument();
   });
 
+  it('renders completed badge when lesson is in completed status', () => {
+    const progressMap = {
+      [FIXTURE_LESSONS[0].id]: {
+        lessonId: FIXTURE_LESSONS[0].id,
+        watched: true,
+        status: 'completed' as const,
+        quizScore: 100,
+      },
+    };
+    render(<ImmersionCatalog lessons={FIXTURE_LESSONS} progressMap={progressMap} />);
+
+    expect(screen.getAllByText('Completada').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText(/Quiz 100%/i)).toBeInTheDocument();
+    expect(screen.getByText('Repasar')).toBeInTheDocument();
+  });
+
+  it('renders in progress badge when lesson is in_progress', () => {
+    const progressMap = {
+      [FIXTURE_LESSONS[0].id]: {
+        lessonId: FIXTURE_LESSONS[0].id,
+        watched: true,
+        status: 'in_progress' as const,
+      },
+    };
+    render(<ImmersionCatalog lessons={FIXTURE_LESSONS} progressMap={progressMap} />);
+
+    expect(screen.getAllByText('En progreso').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText('Continuar')).toBeInTheDocument();
+  });
+
   it('filters lessons when searching', () => {
     render(<ImmersionCatalog lessons={FIXTURE_LESSONS} />);
 

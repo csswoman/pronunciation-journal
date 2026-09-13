@@ -41,4 +41,20 @@ describe('SessionRecapCard', () => {
     render(<SessionRecapCard arc={undefined} stepCount={5} dueTomorrow={null} streak={null} />)
     expect(screen.getByText(/Sesión diaria completada/i)).toBeInTheDocument()
   })
+
+  it('calls onBackHome when provided instead of navigating to /', () => {
+    const onBackHome = vi.fn()
+    render(
+      <SessionRecapCard
+        arc={arc}
+        stepCount={5}
+        dueTomorrow={null}
+        streak={null}
+        onBackHome={onBackHome}
+      />,
+    )
+    const button = screen.getByRole('button', { name: 'Volver al inicio' })
+    button.click()
+    expect(onBackHome).toHaveBeenCalledTimes(1)
+  })
 })

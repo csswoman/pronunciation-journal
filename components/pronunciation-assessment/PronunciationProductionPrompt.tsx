@@ -193,7 +193,8 @@ export function PronunciationProductionPrompt({
 
       {!isSupported ? (
         <p className="text-pretty text-center font-body-sm text-fg-muted">
-          Tu navegador no soporta reconocimiento de voz. Puedes saltar esta pregunta.
+          No podemos acceder a tu micrófono, así que esta pregunta no se puede
+          grabar. Puedes saltarla y seguir con el resto del diagnóstico.
         </p>
       ) : null}
 

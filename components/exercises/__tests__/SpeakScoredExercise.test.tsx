@@ -91,7 +91,7 @@ describe('SpeakScoredExercise', () => {
     expect(onSubmit).not.toHaveBeenCalledWith(true, expect.anything(), expect.anything())
   })
 
-  it('keeps the unsupported-browser fallback unscored and completable', async () => {
+  it('keeps the no-microphone fallback unscored and completable', async () => {
     speechMocks.useSpeechRecognition.mockReturnValue({
       status: 'idle',
       result: null,
@@ -105,7 +105,9 @@ describe('SpeakScoredExercise', () => {
 
     render(<SpeakScoredExercise exercise={exercise} onSubmit={onSubmit} />)
 
-    expect(screen.getByText(/no admite puntuación por voz/i)).toBeInTheDocument()
+    expect(screen.getByText(/no podemos acceder a tu micrófono/i)).toBeInTheDocument()
+    // Never blame the browser: scoring runs through Gemini everywhere.
+    expect(screen.queryByText(/Chrome|Firefox|Safari|Brave|Edge/i)).not.toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: /continuar/i }))
 
     await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(false, '', { status: 'unscored' }))

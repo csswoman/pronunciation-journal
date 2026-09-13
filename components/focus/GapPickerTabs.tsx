@@ -25,8 +25,8 @@ type Tab = 'suggestions' | 'diagnosis' | 'catalog' | 'freeform'
 const TABS: { id: Tab; label: string }[] = [
   { id: 'suggestions', label: 'Sugerencias' },
   { id: 'diagnosis', label: '¿Qué se te dificulta?' },
-  { id: 'catalog', label: 'Buscar tema' },
-  { id: 'freeform', label: 'Describirlo' },
+  { id: 'catalog', label: 'Catálogo de temas' },
+  { id: 'freeform', label: 'Describir con mis palabras' },
 ]
 
 interface GapPickerTabsProps {
@@ -44,9 +44,8 @@ function gapFromTopicId(curriculumGaps: SprintGap[], topicId: string): SprintGap
 }
 
 /**
- * Las tres rutas de autodiagnóstico que pidió el usuario, más las sugerencias
- * basadas en evidencia, agrupadas en pestañas para no amontonar todo en una
- * sola pantalla larga.
+ * Pestañas para elegir gaps mediante evidencia, situaciones cotidianas,
+ * catálogo CEFR o descripción con lenguaje natural.
  */
 export function GapPickerTabs({ suggestedGaps, curriculumGaps, selectedGaps, onToggle }: GapPickerTabsProps) {
   const [tab, setTab] = useState<Tab>('suggestions')
@@ -56,13 +55,29 @@ export function GapPickerTabs({ suggestedGaps, curriculumGaps, selectedGaps, onT
   const selectionFull = selectedGaps.length >= 2
 
   const handleDiagnosisToggle = (itemId: string) => {
-    const next = diagnosisIds.includes(itemId)
+    const isCurrentlySelected = diagnosisIds.includes(itemId)
+    const next = isCurrentlySelected
       ? diagnosisIds.filter((id) => id !== itemId)
       : [...diagnosisIds, itemId]
     setDiagnosisIds(next)
 
-    // El autodiagnóstico describe una situación, no un tema: al marcarla,
-    // seleccionamos directamente su tema central en vez de pedir un segundo paso.
+    if (isCurrentlySelected) {
+      // Al desmarcar una situación, removemos los gaps asociados que ya no correspondan
+      const currentTopics = topicsFromSelection(diagnosisIds)
+      const nextTopics = topicsFromSelection(next)
+      const removedTopics = currentTopics.filter((t) => !nextTopics.includes(t))
+      for (const topicId of removedTopics) {
+        const gap = selectedGaps.find((g) => g.targetId === topicId)
+        if (gap) onToggle(gap)
+      }
+      if (selectionNeedsPhoneme(diagnosisIds) && !selectionNeedsPhoneme(next)) {
+        const phonemeGap = selectedGaps.find((g) => g.targetId === DEFAULT_PHONEME_TARGET.targetId)
+        if (phonemeGap) onToggle(phonemeGap)
+      }
+      return
+    }
+
+    // Al marcar una situación, seleccionamos directamente su tema central
     const topicIds = topicsFromSelection(next)
     for (const topicId of topicIds) {
       const gap = gapFromTopicId(curriculumGaps, topicId)
@@ -78,7 +93,7 @@ export function GapPickerTabs({ suggestedGaps, curriculumGaps, selectedGaps, onT
 
   return (
     <div className="mb-8">
-      <div className="mb-4 flex flex-wrap gap-1.5" role="tablist" aria-label="Cómo elegir tu gap">
+      <div className="mb-4 flex flex-wrap gap-2" role="tablist" aria-label="Cómo elegir tu foco de estudio">
         {TABS.map((t) => (
           <button
             key={t.id}
@@ -87,10 +102,10 @@ export function GapPickerTabs({ suggestedGaps, curriculumGaps, selectedGaps, onT
             aria-selected={tab === t.id}
             onClick={() => setTab(t.id)}
             className={cn(
-              'focus-ring rounded-full px-3.5 py-1.5 text-body-sm font-medium transition-colors',
+              'focus-ring rounded-full px-4 py-1.5 text-body-sm font-medium transition-all',
               tab === t.id
-                ? 'bg-[var(--primary)] text-white'
-                : 'bg-[var(--surface-sunken)] text-fg-muted hover:text-fg',
+                ? 'bg-primary text-on-primary shadow-xs'
+                : 'border border-border-subtle bg-surface-raised text-fg-muted hover:border-border-default hover:text-fg shadow-xs',
             )}
           >
             {t.label}
@@ -131,3 +146,4 @@ export function GapPickerTabs({ suggestedGaps, curriculumGaps, selectedGaps, onT
     </div>
   )
 }
+

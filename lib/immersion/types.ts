@@ -80,9 +80,16 @@ export interface ImmersionLesson {
   quiz: ImmersionQuizQuestion[];
 }
 
+export type ImmersionLessonStatus = 'not_started' | 'in_progress' | 'completed';
+
 export interface ImmersionProgress {
   lessonId: string;
   watched: boolean;
+  status: ImmersionLessonStatus;
   completedAt?: string;
+  watchedAt?: string;
   quizScore?: number;
 }
+
+export type ImmersionProgressMap = Record<string, ImmersionProgress>;
+

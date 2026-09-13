@@ -1,4 +1,6 @@
 import { isExerciseAvailableOnSurface } from '@/lib/exercises/capabilities'
+import { normalizeCEFR } from '@/lib/exercises/cefr'
+import type { CefrLevelId } from '@/lib/courses/types'
 import { generateFillBlankFromWordBank } from '@/lib/exercises/generators/fill-blank'
 import { generateSentenceDictationFromWordBank } from '@/lib/exercises/generators/sentence-dictation'
 import { generateReorderWordsFromWordBank } from '@/lib/exercises/generators/reorder-words'
@@ -59,6 +61,7 @@ export function buildWordReviewStep(
   context: PracticeContext = 'daily',
   savedOrFamiliarIds?: ReadonlySet<string>,
   wordIndex?: WordCategoryIndex,
+  activeLevel?: CefrLevelId,
 ): DailyStep | null {
   if (words.length === 0) return null
 
@@ -95,11 +98,17 @@ export function buildWordReviewStep(
   // Guarantee one Rodeo (circumlocution) and one spoken tense-transform slot
   // per session — otherwise these two constraints only show up by random
   // rotation and a learner could go weeks without ever seeing them.
+  // Constraints above the learner's level are dropped inside the generator,
+  // forced slots included: asking an A1 learner for circumlocution or a
+  // second conditional is not a challenge, it is an unanswerable prompt.
+  const learnerLevel = activeLevel ? normalizeCEFR(activeLevel) : undefined
   const spokenProduction = isExerciseAvailableOnSurface('spoken_production', targetSurface)
-    ? generateSpokenProductionFromWordBank(productionWords, SPOKEN_PRODUCTION_PER_SESSION, [
-        'rodeo_circumlocution',
-        'spoken_verb_transform',
-      ])
+    ? generateSpokenProductionFromWordBank(
+        productionWords,
+        SPOKEN_PRODUCTION_PER_SESSION,
+        ['rodeo_circumlocution', 'spoken_verb_transform'],
+        learnerLevel,
+      )
     : { exercises: [] }
 
   const exercises = dedupeByContentId([

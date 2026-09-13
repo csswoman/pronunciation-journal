@@ -7,6 +7,7 @@
 
 import React, { useMemo, useState } from 'react'
 import Input from '@/components/ui/Input'
+import Badge from '@/components/ui/Badge'
 import { cn } from '@/lib/cn'
 import { getTopicMetadata, TOPIC_FAMILY_LABELS, type TopicFamily } from '@/lib/focus/topic-metadata'
 import type { SprintGap } from '@/lib/focus/types'
@@ -25,13 +26,18 @@ function normalize(text: string): string {
 
 const FAMILY_ORDER: TopicFamily[] = ['tiempos', 'estructura', 'palabras', 'vocabulario']
 
+const FAMILY_DESCRIPTIONS: Record<TopicFamily, string> = {
+  tiempos: 'Expresa pasado, presente y futuro con fluidez temporal.',
+  estructura: 'Domina el orden natural de las oraciones en inglés.',
+  palabras: 'Artículos, preposiciones y conectores esenciales.',
+  vocabulario: 'Vocabulario y frases idiomáticas para sonar natural.',
+}
+
 /**
  * Catálogo completo con búsqueda y agrupación por familia.
  *
- * La versión anterior era una lista plana de 27 botones dentro de un panel con
- * scroll de 240px, sin nivel ni ejemplo. Aquí cada tema muestra su nivel CEFR
- * real y la búsqueda cubre también el ejemplo, así que escribir "ed" o "sheep"
- * encuentra el tema aunque el usuario no sepa cómo se llama.
+ * Cada tema muestra su nivel CEFR estructurado con Badge y el contraste
+ * de ejemplo (error frecuente → forma correcta) para máxima claridad.
  */
 export function CurriculumBrowser({
   gaps,
@@ -66,7 +72,7 @@ export function CurriculumBrowser({
   return (
     <div className="flex flex-col gap-4">
       <Input
-        label="Buscar tema del currículo"
+        label="Buscar tema del catálogo"
         type="search"
         value={query}
         onChange={setQuery}
@@ -75,14 +81,19 @@ export function CurriculumBrowser({
 
       {totalResults === 0 ? (
         <p className="py-4 text-center text-body-sm text-fg-muted">
-          Ningún tema coincide con “{query}”. Prueba con el buscador de arriba o descríbelo con tus palabras.
+          Ningún tema coincide con “{query}”. Prueba con otra palabra clave o descríbelo con tus palabras.
         </p>
       ) : (
         grouped.map(({ family, items }) => (
           <div key={family} className="flex flex-col gap-2">
-            <h4 className="text-tiny font-semibold uppercase tracking-wider text-fg-subtle">
-              {TOPIC_FAMILY_LABELS[family]}
-            </h4>
+            <div>
+              <h4 className="text-tiny font-semibold uppercase tracking-wider text-fg-subtle">
+                {TOPIC_FAMILY_LABELS[family]}
+              </h4>
+              <p className="text-tiny text-fg-muted">
+                {FAMILY_DESCRIPTIONS[family]}
+              </p>
+            </div>
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
               {items.map((gap) => {
                 const isSelected = selectedIds.includes(gap.targetId)
@@ -98,24 +109,28 @@ export function CurriculumBrowser({
                     aria-disabled={isDisabled}
                     onClick={() => onToggle(gap)}
                     className={cn(
-                      'focus-ring flex flex-col gap-1 rounded-lg border p-2.5 text-left transition-colors',
+                      'focus-ring flex flex-col gap-1.5 rounded-xl border p-3 text-left transition-colors',
                       isDisabled && 'cursor-not-allowed opacity-55',
                       isSelected
-                        ? 'border-[var(--primary)] bg-[var(--primary-soft)]'
-                        : 'border-[var(--border-default)] bg-[var(--surface-base)] hover:bg-[var(--surface-raised)]',
+                        ? 'border-primary bg-primary-soft shadow-xs'
+                        : 'border-border-default bg-surface-raised hover:bg-surface-sunken hover:border-border-hover shadow-xs',
                     )}
                   >
                     <span className="flex items-center justify-between gap-2">
-                      <span className={cn('text-body-sm', isSelected ? 'font-semibold text-[var(--primary)]' : 'text-fg')}>
+                      <span className={cn('text-body-sm', isSelected ? 'font-semibold text-primary' : 'font-medium text-fg')}>
                         {gap.label}
                       </span>
-                      <span className="shrink-0 text-tiny font-medium text-fg-subtle">
-                        {gap.level.toUpperCase()}
-                      </span>
+                      <Badge label={gap.level.toUpperCase()} variant="neutral" size="sm" />
                     </span>
-                    {meta.right && (
+                    {meta.wrong && meta.right ? (
+                      <div className="flex flex-wrap items-center gap-1.5 text-tiny leading-tight">
+                        <span className="line-through decoration-1 text-warning/90">{meta.wrong}</span>
+                        <span className="text-fg-subtle">→</span>
+                        <span className="font-medium text-success">{meta.right}</span>
+                      </div>
+                    ) : meta.right ? (
                       <span className="text-tiny text-fg-subtle">{meta.right}</span>
-                    )}
+                    ) : null}
                   </button>
                 )
               })}
@@ -126,3 +141,4 @@ export function CurriculumBrowser({
     </div>
   )
 }
+

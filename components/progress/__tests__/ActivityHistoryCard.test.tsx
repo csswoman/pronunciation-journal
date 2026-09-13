@@ -62,7 +62,7 @@ describe('ActivityHistoryCard', () => {
       completedAt: new Date(Date.now() - i * 1000).toISOString(),
     }))
 
-    render(<ActivityHistoryCard sessions={sessions} />)
+    render(<ActivityHistoryCard sessions={sessions} pageSize={3} />)
 
     // Page 1 renders 3 items initially
     const itemsPage1 = screen.getAllByText(/8\d% precisión/i)

@@ -57,6 +57,15 @@ export function speak(
   return utt
 }
 
+export interface SpeakSequenceOptions {
+  rate?: number
+  voice?: SpeechSynthesisVoice
+  onItemStart?: (index: number) => void
+  onItemEnd?: (index: number) => void
+  onEnd?: () => void
+  onError?: () => void
+}
+
 /**
  * Speak several words back-to-back. Cancels anything in flight once, then
  * queues each utterance so they play in order (a per-word `speak()` would
@@ -64,18 +73,37 @@ export function speak(
  */
 export function speakSequence(
   words: string[],
-  options: { rate?: number; voice?: SpeechSynthesisVoice } = {}
+  options: SpeakSequenceOptions = {}
 ): void {
   if (typeof window === 'undefined') return
   const usable = words.filter(Boolean)
-  if (usable.length === 0) return
+  if (usable.length === 0) {
+    options.onEnd?.()
+    return
+  }
   window.speechSynthesis.cancel()
-  for (const word of usable) {
+  usable.forEach((word, index) => {
     const utt = new SpeechSynthesisUtterance(word)
     utt.rate = options.rate ?? 1.0
     utt.lang = 'en-US'
     if (options.voice) utt.voice = options.voice
+    utt.onstart = () => {
+      options.onItemStart?.(index)
+    }
+    utt.onend = () => {
+      options.onItemEnd?.(index)
+      if (index === usable.length - 1) {
+        options.onEnd?.()
+      }
+    }
+    utt.onerror = () => {
+      options.onItemEnd?.(index)
+      options.onError?.()
+      if (index === usable.length - 1) {
+        options.onEnd?.()
+      }
+    }
     // No cancel() between utterances — the engine queues them in order.
     window.speechSynthesis.speak(utt)
-  }
+  })
 }

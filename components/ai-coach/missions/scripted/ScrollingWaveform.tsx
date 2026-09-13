@@ -8,11 +8,21 @@
 import { useEffect, useRef } from 'react'
 import { cn } from '@/lib/cn'
 
+/** Token de color del trazo. `error` conserva el rojo REC de las misiones. */
+type WaveformTone = 'error' | 'pronunciacion' | 'primary'
+
 interface Props {
   getSamples: () => Uint8Array
   peak?: number
   isActive: boolean
+  tone?: WaveformTone
   className?: string
+}
+
+const TONE_VAR: Record<WaveformTone, string> = {
+  error: '--error',
+  pronunciacion: '--c-pronunciacion',
+  primary: '--primary',
 }
 
 const CANVAS_WIDTH = 64
@@ -27,6 +37,7 @@ export function ScrollingWaveform({
   getSamples,
   peak = 0,
   isActive,
+  tone = 'error',
   className,
 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
@@ -64,9 +75,9 @@ export function ScrollingWaveform({
       ctx.lineCap = 'round'
       ctx.lineJoin = 'round'
 
-      const errorColor =
-        getComputedStyle(canvas).getPropertyValue('--error').trim() || 'currentColor'
-      ctx.strokeStyle = errorColor
+      const strokeColor =
+        getComputedStyle(canvas).getPropertyValue(TONE_VAR[tone]).trim() || 'currentColor'
+      ctx.strokeStyle = strokeColor
 
 
       ctx.beginPath()
@@ -107,7 +118,7 @@ export function ScrollingWaveform({
         c?.clearRect(0, 0, canvas.width, canvas.height)
       }
     }
-  }, [isActive, getSamples, isReducedMotion])
+  }, [isActive, getSamples, isReducedMotion, tone])
 
   if (isReducedMotion) {
     return (
@@ -115,12 +126,18 @@ export function ScrollingWaveform({
         data-testid="reduced-motion-level-bar"
         aria-hidden="true"
         className={cn(
-          'flex items-center h-4 w-14 rounded-full bg-error/15 px-1 overflow-hidden',
+          'flex items-center h-4 w-14 rounded-full px-1 overflow-hidden',
+          tone === 'error' ? 'bg-error/15' : 'bg-current/15',
+          tone === 'pronunciacion' && 'text-pronunciacion',
+          tone === 'primary' && 'text-primary',
           className,
         )}
       >
         <span
-          className="h-1.5 rounded-full bg-error transition-all duration-100"
+          className={cn(
+            'h-1.5 rounded-full transition-all duration-100',
+            tone === 'error' ? 'bg-error' : 'bg-current',
+          )}
           style={{ width: `${Math.min(100, Math.max(8, Math.round(peak * 100)))}%` }}
         />
       </div>

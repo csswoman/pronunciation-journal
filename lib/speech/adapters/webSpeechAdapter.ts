@@ -27,6 +27,30 @@ type SpeechWindow = Window & {
 type BraveNavigator = Navigator & { brave?: { isBrave?: () => Promise<boolean> } };
 
 /**
+ * Mobile browsers are unreliable hosts for Web Speech even when the API is
+ * present: Chrome on Android drops recognition when the screen dims or the
+ * tab loses focus mid-utterance, and every iOS browser is a WebKit shell
+ * whose SpeechRecognition, when exposed at all, routes through Siri dictation
+ * with different endpointing. Both surface to the learner as "it did not hear
+ * me". Recording the audio ourselves and sending it to Gemini behaves the
+ * same on every phone, so mobile is routed there unconditionally.
+ *
+ * iPadOS reports a desktop user agent, so touch points are checked too.
+ */
+export function isMobileBrowser(): boolean {
+  if (typeof navigator === 'undefined') return false;
+  const ua = navigator.userAgent;
+
+  if (/Android|iPhone|iPod|IEMobile|Opera Mini|Mobile Safari|CriOS|FxiOS/i.test(ua)) return true;
+  if (/iPad/.test(ua)) return true;
+
+  // iPadOS 13+ masquerades as macOS; a Mac with touch points is an iPad.
+  if (/Macintosh/.test(ua) && (navigator.maxTouchPoints ?? 0) > 1) return true;
+
+  return false;
+}
+
+/**
  * Web Speech recognition needs Google's private speech-server key, which only
  * ships in real Google Chrome. Brave, Edge, Arc, Opera, etc. all report
  * "Chrome/" in their UA but lack the key, so every recognition attempt fails
@@ -41,6 +65,9 @@ export function isWebSpeechReliable(): boolean {
   const ua = navigator.userAgent;
   const nav = navigator as BraveNavigator;
 
+  // Phones and tablets never get Web Speech, whatever the browser claims.
+  if (isMobileBrowser()) return false;
+
   // Brave exposes navigator.brave; treat its mere presence as "not Chrome".
   if (nav.brave !== undefined) return false;
   if (!/Chrome\//.test(ua)) return false;
@@ -49,6 +76,36 @@ export function isWebSpeechReliable(): boolean {
   if (/Arc\//.test(ua)) return false; // Arc
 
   return true;
+}
+
+/**
+ * Whether this device can score spoken answers at all, by any adapter.
+ *
+ * Distinct from `isWebSpeechReliable`, which answers the narrower question of
+ * whether the *native* recognizer works here. Scoring does NOT require it:
+ * `createSpeechInputAdapter` routes every browser without a reliable native
+ * recognizer — Firefox, Safari, Brave, Edge, Arc, and every phone — to the
+ * Gemini adapter, which records the audio itself and transcribes it server
+ * side. So the real precondition is a microphone, not a particular browser.
+ *
+ * Keep this aligned with `detectSpeechAdapterKind`: it returns 'unsupported'
+ * only when neither a microphone nor Web Speech is reachable (an insecure
+ * origin, a blocking permission policy, a device with no mic, or SSR).
+ *
+ * UI that recommends switching browsers must consult this predicate — telling
+ * a Firefox or Safari learner their working browser is broken is a falsehood,
+ * and pointing someone whose mic is blocked at Chrome does not fix anything.
+ */
+export function canScoreSpeech(): boolean {
+  if (typeof window === 'undefined') return false;
+  const hasMic =
+    typeof navigator !== 'undefined' && !!navigator.mediaDevices?.getUserMedia;
+  if (hasMic) return true;
+  // No mic capture: the native recognizer is the only remaining path, and it
+  // must be both present and reliable to produce a score.
+  const webSupported =
+    'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
+  return webSupported && isWebSpeechReliable();
 }
 
 export class WebSpeechAdapter implements SpeechInputAdapter {

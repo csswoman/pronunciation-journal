@@ -1,5 +1,11 @@
 'use client';
 
+// Planned structure:
+// <YouTubeLessonPlayer>
+//   <VideoContainer> (16:9 rounded-2xl iframe container)
+//   <AttributionCard> (Rounded card with teacher avatar, bio note, and external channel link)
+// </YouTubeLessonPlayer>
+
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 import { ArrowUpRight } from '@/components/icons';
 import type { ImmersionLesson } from '@/lib/immersion/types';
@@ -42,23 +48,23 @@ export const YouTubeLessonPlayer = forwardRef<YouTubePlayerHandle, YouTubeLesson
     const embedUrl = `https://www.youtube-nocookie.com/embed/${lesson.youtubeVideoId}?enablejsapi=1&rel=0&modestbranding=1&origin=${typeof window !== 'undefined' ? window.location.origin : ''}`;
 
     return (
-      <div className="flex flex-col gap-3">
-        {/* 16:9 Aspect Ratio Container */}
-        <div className="relative w-full overflow-hidden rounded-card-interactive border border-border-default bg-surface-sunken shadow-sm aspect-video">
+      <div className="flex flex-col gap-4">
+        {/* 16:9 Aspect Ratio Container with rounded-2xl */}
+        <div className="relative w-full overflow-hidden rounded-2xl border border-border-default bg-surface-sunken shadow-xs aspect-video">
           <iframe
             ref={iframeRef}
             src={embedUrl}
             title={lesson.title}
-            className="absolute inset-0 size-full"
+            className="absolute inset-0 size-full rounded-2xl"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
           />
         </div>
 
         {/* Creator Attribution & Support Card */}
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border-default bg-surface-raised px-4 py-3 text-body-sm text-fg">
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border-default bg-surface-raised p-4 text-body-sm text-fg shadow-xs">
           <div className="flex items-center gap-3">
-            <div className="flex size-9 items-center justify-center rounded-full bg-primary-soft font-mono font-bold text-primary">
+            <div className="flex size-10 items-center justify-center rounded-full bg-primary-soft font-mono font-bold text-primary shadow-xs">
               {lesson.teacher[0]}
             </div>
             <div>
@@ -75,7 +81,7 @@ export const YouTubeLessonPlayer = forwardRef<YouTubePlayerHandle, YouTubeLesson
             href={lesson.teacherChannelUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-md border border-border-default px-3 py-1.5 text-tiny font-medium text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg focus-ring"
+            className="inline-flex items-center gap-1.5 rounded-full border border-border-default bg-surface-sunken px-4 py-1.5 text-tiny font-medium text-fg-muted transition-colors hover:bg-surface-raised hover:text-fg focus-ring"
             aria-label={`Visitar canal de YouTube de ${lesson.teacher}`}
           >
             <span>Canal oficial</span>

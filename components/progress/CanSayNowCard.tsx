@@ -23,36 +23,40 @@ export function CanSayNowCard({ data, latency }: Props) {
   return (
     <section
       aria-labelledby="can-say-now-heading"
-      className="flex flex-col gap-4 rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised p-4 sm:p-5"
+      className="flex flex-col gap-3 rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised p-4 sm:p-5"
     >
-      <header className="flex flex-col gap-0.5">
-        <span className="font-kicker font-semibold text-fg-subtle">Producción oral</span>
-        <h2 id="can-say-now-heading" className="text-h4 font-semibold text-fg">
-          Ahora puedo decir…
-        </h2>
-        <p className="text-body-sm text-fg-muted">
-          Estructuras que has formulado tú mismo de forma espontánea en tus sesiones orales.
-        </p>
+      <header className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
+        <div className="flex flex-col">
+          <span className="font-kicker font-semibold text-fg-subtle">Producción oral</span>
+          <h2 id="can-say-now-heading" className="text-h4 font-semibold text-fg">
+            Ahora puedo decir…
+          </h2>
+        </div>
+        <Link
+          href="/daily"
+          className="inline-flex items-center text-caption font-semibold text-primary transition-opacity hover:opacity-80 focus-ring"
+        >
+          Practicar producción oral →
+        </Link>
       </header>
 
       {latency && latency.averageMs !== null && (
-        <div className="flex flex-wrap items-center gap-2 rounded-[var(--radius-md)] border border-border-subtle bg-surface-sunken px-3.5 py-2.5 text-caption">
+        <div className="flex flex-wrap items-center gap-2 rounded-[var(--radius-md)] border border-border-subtle bg-surface-sunken px-3 py-2 text-caption">
           <div className="flex items-center gap-1.5 font-medium text-fg">
-            <Timer size={15} className="shrink-0 text-primary" aria-hidden="true" />
-            <span>Tiempo medio de respuesta oral: {(latency.averageMs / 1000).toFixed(1)}s</span>
+            <Timer size={14} className="shrink-0 text-primary" aria-hidden="true" />
+            <span>Tiempo medio de respuesta: {(latency.averageMs / 1000).toFixed(1)}s</span>
           </div>
           {latency.trend && latency.trend.improvedMs > 0 && (
             <span className="font-semibold text-success">
-              (↓ {(latency.trend.improvedMs / 1000).toFixed(1)}s más ágil que hace dos semanas)
+              (↓ {(latency.trend.improvedMs / 1000).toFixed(1)}s más ágil)
             </span>
           )}
         </div>
       )}
 
       {!hasAny && (
-        <p className="py-2 text-body-sm text-fg-muted">
-          Aún no registras producción oral espontánea. Completa sesiones diarias de habla
-          y aquí aparecerán las estructuras que logras producir con fluidez.
+        <p className="py-2 text-caption text-fg-muted">
+          Aún no registras estructuras orales espontáneas en tus sesiones diarias.
         </p>
       )}
 
@@ -94,13 +98,6 @@ export function CanSayNowCard({ data, latency }: Props) {
           </ul>
         </div>
       )}
-
-      <Link
-        href="/daily"
-        className="mt-1 inline-flex min-h-[44px] items-center text-body-sm font-semibold text-primary transition-opacity hover:opacity-80 focus-ring"
-      >
-        Practicar producción oral →
-      </Link>
     </section>
   )
 }

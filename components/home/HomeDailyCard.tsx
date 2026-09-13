@@ -1,7 +1,6 @@
 'use client'
 
 import { useCallback, useEffect, useMemo } from 'react'
-import { useRouter } from 'next/navigation'
 import DailyPlanCard from '@/components/daily/DailyPlanCard'
 import HomeFirstSessionHint from '@/components/home/HomeFirstSessionHint'
 import { useDailyPlan, type ConceptLesson, type DailyStep } from '@/hooks/useDailyPlan'
@@ -24,7 +23,7 @@ export interface HomePlanStatus {
   completedCount: number
 }
 
-interface HomeDailyCardProps {
+export interface HomeDailyCardProps {
   conceptLesson: ConceptLesson | null
   reviewDue?: boolean
   isNewLearner?: boolean
@@ -37,6 +36,8 @@ interface HomeDailyCardProps {
   customPrefix?: React.ReactNode
   needsPlacement?: boolean
   needsPronunciation?: boolean
+  onStartStep?: (step: DailyStep) => void
+  planState?: ReturnType<typeof useDailyPlan>
 }
 
 function isReviewEntryStep(step: DailyStep | undefined): boolean {
@@ -45,8 +46,7 @@ function isReviewEntryStep(step: DailyStep | undefined): boolean {
   return step.id.startsWith('review_sound:') || step.id === 'failed_sentences'
 }
 
-export default function HomeDailyCard({
-  conceptLesson,
+function HomeDailyCardView({
   reviewDue = false,
   isNewLearner = false,
   showFirstSessionHint = false,
@@ -57,21 +57,11 @@ export default function HomeDailyCard({
   customPrefix,
   needsPlacement = false,
   needsPronunciation = false,
-}: HomeDailyCardProps) {
+  onStartStep,
+  planState,
+}: HomeDailyCardProps & { planState: ReturnType<typeof useDailyPlan> }) {
   const { user } = useAuth()
-  const router = useRouter()
-  const { status, steps, getStepStatus, completedCount, allDone, arc, load, celebrate } = useDailyPlan({
-    conceptLesson,
-    autoLoad: false,
-  })
-
-  useEffect(() => {
-    if (user && status === 'idle') void load()
-  }, [user, status, load])
-
-  useEffect(() => {
-    if (allDone) celebrate()
-  }, [allDone, celebrate])
+  const { status, steps, getStepStatus, completedCount, allDone, arc, load } = planState
 
   const entryStep = useMemo(() => {
     return steps.find((s) => {
@@ -116,11 +106,14 @@ export default function HomeDailyCard({
 
   const handleStartStep = useCallback((step: DailyStep) => {
     if (step.kind === 'concept') return
-    try {
-      sessionStorage.setItem('daily:step', JSON.stringify({ stepId: step.id, exerciseIndex: 0 }))
-    } catch { /* quota errors: ignore */ }
-    router.push(`/daily?step=${step.id}`)
-  }, [router])
+    if (onStartStep) {
+      onStartStep(step)
+    } else {
+      try {
+        sessionStorage.setItem('daily:step', JSON.stringify({ stepId: step.id, exerciseIndex: 0 }))
+      } catch { /* quota errors: ignore */ }
+    }
+  }, [onStartStep])
 
   const enrichedSteps = useMemo(() => {
     if (!weakestPhoneme) return steps
@@ -171,4 +164,29 @@ export default function HomeDailyCard({
       }
     />
   )
+}
+
+function HomeDailyCardWithPlan(props: HomeDailyCardProps) {
+  const { user } = useAuth()
+  const planState = useDailyPlan({
+    conceptLesson: props.conceptLesson,
+    autoLoad: false,
+  })
+
+  useEffect(() => {
+    if (user && planState.status === 'idle') void planState.load()
+  }, [user, planState.status, planState.load])
+
+  useEffect(() => {
+    if (planState.allDone) planState.celebrate()
+  }, [planState.allDone, planState.celebrate])
+
+  return <HomeDailyCardView {...props} planState={planState} />
+}
+
+export default function HomeDailyCard(props: HomeDailyCardProps) {
+  if (props.planState) {
+    return <HomeDailyCardView {...props} planState={props.planState} />
+  }
+  return <HomeDailyCardWithPlan {...props} />
 }

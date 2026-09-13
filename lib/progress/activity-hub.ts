@@ -29,6 +29,10 @@ export type ActivitySessionInput = {
   explicitReconciledStepIds?: string[]
   /** Override inferred source (e.g. lexicon). */
   source?: ActivitySource
+  /** Explicit skill tags when not derived directly from exercise slugs (e.g. immersion). */
+  explicitSkillTags?: SkillTag[]
+  /** Explicit XP earned when not derived per exercise result. */
+  explicitXp?: number
   /** When omitted, today's cached daily plan is used for reconciliation. */
   dailyPlanSteps?: DailyStep[]
   /** Domain routing data; deliberately not persisted as free-form session text. */
@@ -38,6 +42,8 @@ export type ActivitySessionInput = {
     coachTool?: string
     dailyTargetId?: string
     quizPassed?: boolean
+    mediaType?: string
+    notes?: string
   }
 }
 
@@ -110,7 +116,7 @@ export function buildSessionTelemetry(
   const { practiceContext, sessionResult } = input
   const total = sessionResult.results.length
   const source = input.source ?? practiceContextToSource(practiceContext)
-  const skillTags = deriveSkillTags(practiceContext, sessionResult)
+  const skillTags = input.explicitSkillTags ?? deriveSkillTags(practiceContext, sessionResult)
   const correct = sessionResult.results.filter((r) => r.isCorrect).length
   const planSteps = input.dailyPlanSteps ?? []
   const reconciledStepIds = input.explicitReconciledStepIds ?? (
@@ -130,7 +136,7 @@ export function buildSessionTelemetry(
       exercises_correct: correct,
       accuracy_pct: Math.round(sessionResult.accuracy),
       duration_ms: sessionResult.totalTimeMs,
-      xp_earned: sessionXp(sessionResult),
+      xp_earned: input.explicitXp ?? sessionXp(sessionResult),
       reconciled_step_ids: reconciledStepIds,
       completed_at: (options.completedAt ?? new Date()).toISOString(),
     },

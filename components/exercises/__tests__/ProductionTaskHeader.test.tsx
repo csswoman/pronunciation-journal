@@ -26,6 +26,7 @@ describe('ProductionTaskHeader', () => {
         exercise={exercise({
           constraint: {
             id: 'rodeo_circumlocution',
+    minLevel: 'B1',
             label: 'Rodeo',
             promptEs: () => '',
             checkEn: '',
@@ -47,6 +48,7 @@ describe('ProductionTaskHeader', () => {
         exercise={exercise({
           constraint: {
             id: 'spoken_verb_transform',
+    minLevel: 'A2',
             label: 'Transformación',
             promptEs: () => '',
             checkEn: '',

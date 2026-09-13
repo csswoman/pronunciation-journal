@@ -9,6 +9,7 @@ import { getWordStrength } from '@/lib/word-bank/strength'
 import { useReviewSession } from '@/hooks/useReviewSession'
 import { ReviewSessionLauncher } from '@/components/practice/review/ReviewSessionLauncher'
 import { ReviewSectionCard } from '@/components/practice/review/ReviewSectionCard'
+import { ReviewLessonSection } from '@/components/practice/review/ReviewLessonSection'
 import { ReviewHubActions } from '@/components/practice/review/ReviewHubActions'
 import { SrsHistoryPanel } from '@/components/practice/review/SrsHistoryPanel'
 import { SrsVault } from '@/components/practice/srs-vault/SrsVault'
@@ -201,6 +202,11 @@ export function ReviewHubClient({ summary }: Props) {
             ))}
           </ul>
         </ReviewSectionCard>
+
+        <ReviewLessonSection
+          lessons={summary.dueLessons}
+          count={counts.dueLessons}
+        />
 
         <div className="flex items-center justify-between rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised p-4">
           <div className="min-w-0">

@@ -17,6 +17,7 @@ import { ThisWeekCard } from "@/components/progress/ThisWeekCard";
 import { ActivityHistoryCard } from "@/components/progress/ActivityHistoryCard";
 import { ProgressProjectionCards } from "@/components/progress/ProgressProjectionCards";
 import { LevelConceptsProgressCard } from "@/components/progress/LevelConceptsProgressCard";
+import { ProgressActivationBanner } from "@/components/progress/ProgressActivationBanner";
 import { buildCanSayNow } from "@/lib/progress/can-say-now";
 
 const progressHeader = (
@@ -45,6 +46,8 @@ export default async function ProgressPage() {
     <PageLayout archetype="dashboard" hero={progressHeader}>
       <div className="flex flex-col gap-[var(--layout-section-gap)]">
         {isGuest ? <GuestSaveProgressBanner variant="emphasized" /> : null}
+
+        <ProgressActivationBanner hasSessions={data.recentSessions.length > 0 || data.streak.currentStreak > 0} />
 
         {/* Action bar / status */}
         <div className="flex flex-col gap-3 rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">

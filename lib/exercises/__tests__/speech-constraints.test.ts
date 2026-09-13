@@ -3,6 +3,7 @@ import {
   SPEECH_CONSTRAINTS,
   selectConstraints,
   constraintById,
+  constraintsForLevel,
 } from '@/lib/exercises/speech-constraints'
 
 describe('SPEECH_CONSTRAINTS', () => {
@@ -67,5 +68,82 @@ describe('constraintById', () => {
 
   it('returns null for an unknown id', () => {
     expect(constraintById('nope')).toBeNull()
+  })
+})
+
+describe('constraintsForLevel', () => {
+  it('gives A1 only constraints an A1 learner can actually produce', () => {
+    const ids = constraintsForLevel('A1').map((c) => c.id)
+
+    // Grammar an A1 syllabus has not introduced yet.
+    expect(ids).not.toContain('second_conditional')
+    expect(ids).not.toContain('present_perfect_experience')
+    expect(ids).not.toContain('past_continuous_interrupted')
+    // Discourse tasks that presuppose sustained multi-sentence speech.
+    expect(ids).not.toContain('rodeo_circumlocution')
+    expect(ids).not.toContain('past_chain_narrative')
+    expect(ids).not.toContain('problem_explanation')
+  })
+
+  it('leaves A1 with a usable set rather than an empty one', () => {
+    const a1 = constraintsForLevel('A1')
+    expect(a1.length).toBeGreaterThanOrEqual(4)
+    const ids = a1.map((c) => c.id)
+    expect(ids).toContain('question_form')
+    expect(ids).toContain('negative_experience')
+  })
+
+  it('widens the set as the level rises', () => {
+    const a1 = constraintsForLevel('A1').length
+    const a2 = constraintsForLevel('A2').length
+    const b1 = constraintsForLevel('B1').length
+    const b2 = constraintsForLevel('B2').length
+
+    expect(a2).toBeGreaterThan(a1)
+    expect(b1).toBeGreaterThan(a2)
+    expect(b2).toBeGreaterThanOrEqual(b1)
+  })
+
+  it('gives B2 and above the full catalog', () => {
+    expect(constraintsForLevel('B2')).toHaveLength(SPEECH_CONSTRAINTS.length)
+    expect(constraintsForLevel('C1')).toHaveLength(SPEECH_CONSTRAINTS.length)
+  })
+
+  it('falls back to the full catalog when the level is unknown', () => {
+    expect(constraintsForLevel(undefined)).toHaveLength(SPEECH_CONSTRAINTS.length)
+  })
+
+  it('tags every constraint with a minimum level', () => {
+    for (const c of SPEECH_CONSTRAINTS) {
+      expect(['A1', 'A2', 'B1', 'B2']).toContain(c.minLevel)
+    }
+  })
+})
+
+describe('selectConstraints with a level', () => {
+  it('never returns an above-level constraint to an A1 learner', () => {
+    const picked = selectConstraints('seed-a1', 12, [], 'A1')
+    const allowed = new Set(constraintsForLevel('A1').map((c) => c.id))
+    for (const c of picked) {
+      expect(allowed.has(c.id)).toBe(true)
+    }
+  })
+
+  it('drops a preferred constraint that is above the learner level', () => {
+    // step-builders always prefers these two; both are above A1.
+    const picked = selectConstraints('seed-a1', 6, ['rodeo_circumlocution', 'spoken_verb_transform'], 'A1')
+    expect(picked.map((c) => c.id)).not.toContain('rodeo_circumlocution')
+    expect(picked.length).toBeGreaterThan(0)
+  })
+
+  it('still honors preferred constraints that are at or below level', () => {
+    const picked = selectConstraints('seed-b2', 6, ['rodeo_circumlocution'], 'B2')
+    expect(picked[0]?.id).toBe('rodeo_circumlocution')
+  })
+
+  it('is unchanged from the old behaviour when no level is passed', () => {
+    expect(selectConstraints('seed-x', 5).map((c) => c.id)).toEqual(
+      selectConstraints('seed-x', 5, [], undefined).map((c) => c.id),
+    )
   })
 })

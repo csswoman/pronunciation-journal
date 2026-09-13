@@ -37,8 +37,8 @@ export function SpeakMicPanel({
   if (useFallback) {
     return (
       <div className="flex w-full flex-col items-center gap-2">
-        <p className="m-0 text-caption text-fg-subtle">
-          Micrófono no disponible en este navegador — practica en voz alta y califícate:
+        <p className="m-0 max-w-xs text-center text-caption text-fg-subtle">
+          No podemos acceder a tu micrófono — practica en voz alta y califícate:
         </p>
         <SelfGradeBar onGrade={onSelfGrade} />
         {submitError && <p className="m-0 text-center text-caption text-error">{submitError}</p>}

@@ -30,9 +30,21 @@ interface Props {
    * (DailyChecklist) instead of each daily card subscribing independently.
    */
   learned?: number
+  /**
+   * Optional callback when completing on Home: resets the runner to idle in place
+   * rather than navigating away to `/`.
+   */
+  onBackHome?: () => void
 }
 
-export default function SessionRecapCard({ arc, stepCount, dueTomorrow, streak, learned = 0 }: Props) {
+export default function SessionRecapCard({
+  arc,
+  stepCount,
+  dueTomorrow,
+  streak,
+  learned = 0,
+  onBackHome,
+}: Props) {
 
   const topicParts: string[] = []
   if (arc?.topicLabel) topicParts.push(arc.topicLabel)
@@ -88,11 +100,17 @@ export default function SessionRecapCard({ arc, stepCount, dueTomorrow, streak, 
         </p>
 
         <div className="mt-4 flex flex-col gap-3 sm:flex-row">
-          <Link href="/">
-            <Button variant="primary" size="md">
+          {onBackHome ? (
+            <Button variant="primary" size="md" onClick={onBackHome}>
               Volver al inicio
             </Button>
-          </Link>
+          ) : (
+            <Link href="/">
+              <Button variant="primary" size="md">
+                Volver al inicio
+              </Button>
+            </Link>
+          )}
           <Link href="/practice?from=daily">
             <Button
               variant="secondary"

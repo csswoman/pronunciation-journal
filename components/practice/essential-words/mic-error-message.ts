@@ -4,7 +4,7 @@ import { STT_NETWORK_FAILURE_ES } from '@/lib/speech/browser-support-message'
 export function micErrorMessage(error: string | null): string {
   if (!error) return 'No se pudo iniciar el micrófono.'
   if (error === 'not-allowed' || error.includes('Permission')) {
-    return 'Permiso de micrófono bloqueado. Actívalo en el candado de la barra de direcciones.'
+    return 'Permiso de micrófono bloqueado. Actívalo en el icono junto a la barra de direcciones.'
   }
   if (error === 'no-speech') return 'No se detectó voz. Intenta hablar más cerca del micrófono.'
   if (error === 'audio-capture') return 'No se encontró un micrófono activo en el sistema.'

@@ -6,13 +6,20 @@
 
 import { Mic, MicOff } from '@/components/icons'
 import { speak } from '@/lib/phoneme-practice/tts'
-import { BROWSER_BLOCKS_SCORING_ES } from '@/lib/speech/browser-support-message'
+import { SCORING_UNAVAILABLE_ES } from '@/lib/speech/browser-support-message'
 import { PhoneticWordHighlight } from '@/components/pronunciation/PhoneticWordHighlight'
 import { ListenButton } from '@/components/ui/ListenButton'
 import { PracticeActionBar, PracticeContinueButton } from '@/components/practice/session/PracticeActionBar'
 import { cn } from '@/lib/cn'
 
-export type UnscoredReason = 'unsupported' | 'browser' | 'unavailable'
+/**
+ * Why this attempt cannot be scored.
+ * - `no-mic`: the microphone is unreachable (insecure origin, blocked
+ *   permission, or no device). Not a browser-brand problem.
+ * - `network`: transcription could not reach the server.
+ * - `unavailable`: the evaluator itself failed after a successful capture.
+ */
+export type UnscoredReason = 'no-mic' | 'network' | 'unavailable'
 
 export function WordDisplay({
   word,
@@ -48,10 +55,10 @@ export function ShadowingFallback({
   return (
     <div className="flex flex-col items-center gap-4">
       <p className="text-caption text-fg-muted text-center max-w-xs m-0">
-        {reason === 'unsupported'
-          ? 'Tu navegador no admite puntuación por voz. Escucha el modelo y repite la palabra; este intento no recibirá puntuación.'
-          : reason === 'browser'
-            ? BROWSER_BLOCKS_SCORING_ES
+        {reason === 'no-mic'
+          ? SCORING_UNAVAILABLE_ES
+          : reason === 'network'
+            ? 'No se pudo completar la transcripción; necesita conexión a internet. Escucha el modelo y repite la palabra; este intento no recibirá puntuación.'
             : 'La puntuación por voz no está disponible ahora. Escucha el modelo y repite la palabra; este intento no recibirá puntuación.'}
       </p>
       <ListenButton onPlay={() => word && speak(word)} label="Escuchar" />

@@ -34,8 +34,7 @@ describe('SessionReadyHero', () => {
     expect(screen.getByText(/unos \d+ min/)).toBeInTheDocument()
     expect(screen.getByText('3 palabras nuevas · 4 repasos')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Recomendada · 15' })).toHaveAttribute('aria-pressed', 'true')
-    expect(screen.getByLabelText('Ruta')).toHaveValue('')
-    expect(screen.getByRole('option', { name: 'Por frecuencia' })).toBeInTheDocument()
+    expect(screen.getByRole('combobox', { name: 'Ruta' })).toHaveTextContent('Por frecuencia')
     expect(screen.getByRole('button', { name: 'Empezar' })).toBeInTheDocument()
   })
 
@@ -86,11 +85,17 @@ describe('SessionReadyHero', () => {
     const onRouteChange = vi.fn()
     render(<SessionReadyHero {...heroProps} activeRouteId="verbs-b1" onRouteChange={onRouteChange} />)
 
-    const routePicker = screen.getByLabelText('Ruta')
-    await user.selectOptions(routePicker, '')
+    const routePicker = screen.getByRole('combobox', { name: 'Ruta' })
+    expect(routePicker).toHaveTextContent('Verbos B1')
+
+    await user.click(routePicker)
+    const porFrecuencia = screen.getAllByRole('option', { name: /Por frecuencia/ })[0]
+    await user.click(porFrecuencia)
     expect(onRouteChange).toHaveBeenCalledWith(null)
 
-    await user.selectOptions(routePicker, 'nouns-b2')
+    await user.click(routePicker)
+    const nounsB2 = screen.getAllByRole('option', { name: /Sustantivos B2/ })[0]
+    await user.click(nounsB2)
     expect(onRouteChange).toHaveBeenLastCalledWith('nouns-b2')
   })
 
@@ -101,7 +106,7 @@ describe('SessionReadyHero', () => {
     expect(screen.getByRole('status')).toHaveTextContent('Actualizando sesión')
     expect(screen.getByRole('button', { name: 'Actualizando…' })).toBeDisabled()
     expect(screen.getByRole('button', { name: 'Corta · 5' })).toBeEnabled()
-    expect(screen.getByLabelText('Ruta')).toBeEnabled()
+    expect(screen.getByRole('combobox', { name: 'Ruta' })).toBeEnabled()
   })
 
   it('freezes route and size but lets the learner discard a resumed session', async () => {
@@ -110,7 +115,7 @@ describe('SessionReadyHero', () => {
     render(<SessionReadyHero {...heroProps} isResume onDiscard={onDiscard} />)
 
     expect(screen.getByRole('button', { name: 'Corta · 5' })).toBeDisabled()
-    expect(screen.getByLabelText('Ruta')).toBeDisabled()
+    expect(screen.getByRole('combobox', { name: 'Ruta' })).toBeDisabled()
     await user.click(screen.getByRole('button', { name: 'Descartar sesión' }))
     expect(onDiscard).toHaveBeenCalledOnce()
   })

@@ -12,10 +12,7 @@ export default async function EssentialWordsPage() {
     : 0
 
   return (
-    <PageLayout
-      archetype="session"
-      className="pt-space-8! pb-[calc(var(--layout-page-block-end)+var(--space-12))]! sm:pt-space-10! sm:pb-layout-page-block-end!"
-    >
+    <PageLayout archetype="session">
       <EssentialWordsSession initialStreak={streak} />
     </PageLayout>
   )

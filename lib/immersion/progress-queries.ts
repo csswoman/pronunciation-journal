@@ -47,6 +47,30 @@ export async function loadWatchedImmersionLessonIds(userId: string): Promise<Set
   return new Set(rows.filter((row) => row.watched).map((row) => row.lessonId))
 }
 
+export async function loadImmersionProgressMap(
+  userId: string,
+): Promise<import('./types').ImmersionProgressMap> {
+  const rows = await db.immersionLessonProgress.where('userId').equals(userId).toArray()
+  const map: import('./types').ImmersionProgressMap = {}
+  for (const r of rows) {
+    let status: import('./types').ImmersionLessonStatus = 'not_started'
+    if (r.quizScore != null) {
+      status = r.quizScore >= 70 ? 'completed' : 'in_progress'
+    } else if (r.watched) {
+      status = 'in_progress'
+    }
+    map[r.lessonId] = {
+      lessonId: r.lessonId,
+      watched: r.watched,
+      status,
+      watchedAt: r.watchedAt,
+      quizScore: r.quizScore,
+      completedAt: status === 'completed' ? (r.updatedAt ?? r.watchedAt) : undefined,
+    }
+  }
+  return map
+}
+
 export async function markImmersionLessonWatched(
   userId: string,
   lessonId: string,

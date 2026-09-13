@@ -30,7 +30,7 @@ export default function DailyLessonCard({ lesson }: DailyLessonCardProps) {
 
   if (!lesson) {
     return (
-      <section className="rounded-card-interactive border border-border-default bg-surface-raised p-[var(--layout-card-pad)] shadow-sm">
+      <section className="rounded-xl border border-border-default bg-surface-raised p-[var(--layout-card-pad)] shadow-sm">
         <EmptyState
           illustration={<EmptyIllustration />}
           title="Hoy no hay lección nueva"
@@ -41,7 +41,7 @@ export default function DailyLessonCard({ lesson }: DailyLessonCardProps) {
   }
 
   return (
-    <section className="flex flex-col gap-4 rounded-card-interactive border border-border-default bg-surface-raised p-[var(--layout-card-pad)] shadow-sm">
+    <section className="flex flex-col gap-4 rounded-xl border border-border-default bg-surface-raised p-[var(--layout-card-pad)] shadow-sm">
       <header className="flex flex-col gap-1">
         <div className="flex items-center gap-2 text-primary">
           <GraduationCap className="size-4" />

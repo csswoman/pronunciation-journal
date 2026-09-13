@@ -1,5 +1,14 @@
 'use client';
 
+// Planned structure:
+// <ImmersionLessonDetailClient>
+//   <LessonDetailHeader /> (Breadcrumb, level & duration badges, title & summary)
+//   <LessonDetailContent>
+//     <YouTubeLessonPlayer /> (Left column: 16:9 player + teacher attribution)
+//     <LessonStudyPanel /> (Right column: tabs for timestamps, vocabulary, phrases, quiz)
+//   </LessonDetailContent>
+// </ImmersionLessonDetailClient>
+
 import { useRef } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Timer } from '@/components/icons';
@@ -25,7 +34,7 @@ export function ImmersionLessonDetailClient({ lesson }: ImmersionLessonDetailCli
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border-default pb-4">
         <Link
           href="/practice/immersion"
-          className="inline-flex items-center gap-2 text-body-sm font-medium text-fg-muted transition-colors hover:text-fg focus-ring"
+          className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-body-sm font-medium text-fg-muted transition-colors hover:bg-surface-raised hover:text-fg focus-ring"
         >
           <ArrowLeft className="size-4" />
           <span>Volver al Catálogo de Inmersión</span>
@@ -34,22 +43,25 @@ export function ImmersionLessonDetailClient({ lesson }: ImmersionLessonDetailCli
         <div className="flex items-center gap-2">
           <Badge
             label={`Nivel ${lesson.level}`}
-            variant={lesson.level.startsWith("A") ? "default" : "neutral"}
+            variant="neutral"
             size="sm"
           />
-          <span className="inline-flex items-center gap-1 rounded-full bg-surface-sunken px-2.5 py-0.5 text-tiny font-mono text-fg-muted">
-            <Timer className="size-3" />
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-surface-sunken px-3 py-1 text-tiny font-mono text-fg-muted">
+            <Timer className="size-3.5" />
             <span>{lesson.durationMinutes} min</span>
           </span>
         </div>
       </div>
 
       {/* Lesson Header */}
-      <div>
+      <div className="flex flex-col gap-1.5">
+        <span className="font-mono text-tiny font-semibold uppercase tracking-wider text-primary">
+          Teacher {lesson.teacher} • EngVid
+        </span>
         <h1 className="text-display-sm font-bold text-fg md:text-display-md">
           {lesson.title}
         </h1>
-        <p className="mt-1 text-body text-fg-muted">
+        <p className="max-w-3xl text-body text-fg-muted">
           {lesson.summary}
         </p>
       </div>

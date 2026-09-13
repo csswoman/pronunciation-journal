@@ -15,8 +15,7 @@ const OPTIONS: { days: number; label: string; hint: string }[] = [
 ]
 
 /**
- * Duración del sprint. `createSprint` ya acepta `durationDays`; la pantalla
- * anterior lo dejaba fijo en 7 sin decírselo al usuario.
+ * Selector de duración del sprint con opciones predefinidas.
  */
 export function DurationSelector({ value, onChange, disabled = false }: DurationSelectorProps) {
   return (
@@ -36,11 +35,11 @@ export function DurationSelector({ value, onChange, disabled = false }: Duration
               className={cn(
                 'focus-ring flex flex-col items-center gap-0.5 rounded-lg border px-2 py-2.5 text-center transition-colors disabled:opacity-60',
                 selected
-                  ? 'border-[var(--primary)] bg-[var(--primary-soft)]'
-                  : 'border-[var(--border-default)] bg-[var(--surface-base)] hover:bg-[var(--surface-raised)]',
+                  ? 'border-primary bg-primary-soft shadow-xs'
+                  : 'border-border-default bg-surface-raised hover:bg-surface-sunken hover:border-border-hover shadow-xs',
               )}
             >
-              <span className={cn('text-body-sm font-semibold', selected ? 'text-[var(--primary)]' : 'text-fg')}>
+              <span className={cn('text-body-sm font-semibold', selected ? 'text-primary' : 'text-fg')}>
                 {opt.label}
               </span>
               <span className="text-tiny text-fg-subtle">{opt.hint}</span>
@@ -51,3 +50,4 @@ export function DurationSelector({ value, onChange, disabled = false }: Duration
     </div>
   )
 }
+

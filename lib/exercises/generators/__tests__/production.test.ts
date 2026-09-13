@@ -4,6 +4,7 @@ import {
   generateWrittenProductionFromWordBank,
 } from '../production'
 import type { WordBankEntry } from '@/lib/word-bank/types'
+import { constraintsForLevel } from '@/lib/exercises/speech-constraints'
 
 function entry(overrides: Partial<WordBankEntry> = {}): WordBankEntry {
   return {
@@ -57,5 +58,49 @@ describe('generateSpokenProductionFromWordBank', () => {
     expect(exercises[0].type).toBe('spoken_production')
     expect(exercises[0].taskPrompt).toContain('achieve')
     expect(exercises[0].taskPrompt).not.toMatch(/Say|Speak|aloud/)
+  })
+})
+
+describe('generateSpokenProductionFromWordBank level filtering', () => {
+  const words = Array.from({ length: 4 }, (_, i) =>
+    entry({ id: `wb-${i}`, text: `word${i}` }),
+  )
+
+  it('never hands an A1 learner a constraint above their level', () => {
+    const { exercises } = generateSpokenProductionFromWordBank(words, 8, [], 'A1')
+    const allowed = new Set(constraintsForLevel('A1').map((c) => c.id))
+
+    expect(exercises.length).toBeGreaterThan(0)
+    for (const ex of exercises) {
+      expect(allowed.has(ex.constraint!.id)).toBe(true)
+    }
+  })
+
+  it('ignores preferred constraints that are above the A1 learner', () => {
+    const { exercises } = generateSpokenProductionFromWordBank(
+      words,
+      6,
+      ['rodeo_circumlocution', 'spoken_verb_transform'],
+      'A1',
+    )
+    expect(exercises.map((e) => e.constraint!.id)).not.toContain('rodeo_circumlocution')
+  })
+
+  it('gives a B2 learner the demanding constraints', () => {
+    const { exercises } = generateSpokenProductionFromWordBank(
+      words,
+      4,
+      ['rodeo_circumlocution'],
+      'B2',
+    )
+    expect(exercises[0]?.constraint?.id).toBe('rodeo_circumlocution')
+  })
+
+  it('behaves as before when no level is given', () => {
+    const without = generateSpokenProductionFromWordBank(words, 5)
+    const explicitUndefined = generateSpokenProductionFromWordBank(words, 5, [], undefined)
+    expect(without.exercises.map((e) => e.id)).toEqual(
+      explicitUndefined.exercises.map((e) => e.id),
+    )
   })
 })

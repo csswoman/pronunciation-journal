@@ -23,9 +23,10 @@ const BottomNav = dynamic(() => import("./BottomNav"), {
 
 const AICoachTrigger = dynamic(() => import("@/components/ai-coach/AICoachTrigger"));
 
-const ChromeMicTip = dynamic(() => import("@/components/speech/ChromeMicTip"), {
-  ssr: false,
-});
+const MicAvailabilityTip = dynamic(
+  () => import("@/components/speech/MicAvailabilityTip"),
+  { ssr: false },
+);
 
 const AICoachPanel = dynamic(() => import("@/components/ai-coach/AICoachPanel"), {
   // Panel-shaped placeholder so a slow first load never flashes the route-level
@@ -45,7 +46,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   // Active sessions also hide mobile BottomNav via sessionChromeStore.
   const isImmersivePractice =
     pathname.startsWith("/practice/sounds/sound/") ||
-    pathname === "/daily" ||
     pathname === "/assessment" ||
     pathname === "/assessment/pronunciation";
   const hideMobileNav = useSessionChromeStore(selectHideMobileNav);
@@ -87,9 +87,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           }
         >
           {/* Soft tip only outside active sessions — session chrome stays sacred. */}
-          {!isImmersivePractice && !hideMobileNav ? (
-            <ChromeMicTip variant="app" />
-          ) : null}
+          {!isImmersivePractice && !hideMobileNav ? <MicAvailabilityTip /> : null}
           {children}
         </div>
       </main>

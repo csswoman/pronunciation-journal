@@ -9,8 +9,11 @@
 import { useState } from "react";
 import { Tv, Check } from "@/components/icons";
 import Button from "@/components/ui/Button";
+import { useAuthOptional } from "@/components/auth/AuthProvider";
+import { logExternalImmersion } from "@/lib/immersion/external-log";
+import type { ImmersionMediaType } from "@/lib/progress/activity-types";
 
-const IMMERSION_CATEGORIES = [
+const IMMERSION_CATEGORIES: { id: ImmersionMediaType; label: string }[] = [
   { id: "video", label: "Video" },
   { id: "series", label: "Serie" },
   { id: "podcast", label: "Podcast" },
@@ -18,15 +21,27 @@ const IMMERSION_CATEGORIES = [
 ];
 
 export default function HomeImmersionCard() {
-  const [selectedCategory, setSelectedCategory] = useState("video");
+  const auth = useAuthOptional();
+  const userId = auth?.user?.id ?? null;
+  const [selectedCategory, setSelectedCategory] = useState<ImmersionMediaType>("video");
   const [minutes, setMinutes] = useState(30);
   const [registered, setRegistered] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     if (!isOpen && !registered) {
       setIsOpen(true);
       return;
+    }
+    if (userId) {
+      try {
+        await logExternalImmersion(userId, {
+          type: selectedCategory,
+          minutes,
+        });
+      } catch (err) {
+        console.error("[HomeImmersionCard] Error logging immersion:", err);
+      }
     }
     setRegistered(true);
     setIsOpen(false);

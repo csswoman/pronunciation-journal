@@ -121,49 +121,61 @@ function DimensionList({ scores }: { scores: FluencyScores }) {
   const worst = SKILL_ORDER.find((s) => scores[s.key] === min)!
 
   return (
-    <div className="flex flex-col gap-2">
-      {SKILL_ORDER.map((s) => {
-        const val = scores[s.key]
-        const isBest = val === max && max > 0
-        const isWorst = val === min && min < max
-        return (
-          <Link
-            key={s.key}
-            href={s.href}
-            className={cn(
-              'flex min-h-[44px] items-center gap-3 rounded-[var(--radius-md)] border border-border-subtle bg-surface-sunken px-3 py-2.5 transition-colors hover:bg-surface-raised focus-ring',
-              isBest && 'border-[color-mix(in_oklch,var(--success)_40%,transparent)]',
-              isWorst && 'border-[color-mix(in_oklch,var(--warning)_40%,transparent)]',
-            )}
-          >
-            <div className="min-w-0 flex-1">
-              <div className="text-body-sm font-semibold text-fg flex items-center gap-1.5">
-                <span>{s.label}</span>
-                <span className="text-caption font-normal text-fg-subtle opacity-70">→</span>
-              </div>
-              <div className="text-tiny text-fg-subtle">{s.source}</div>
-            </div>
-            <div
-              className={cn('text-body-lg font-semibold text-primary', isBest && 'text-success', isWorst && 'text-warning')}
+    <div className="flex flex-col gap-2.5">
+      {/* 2-column compact grid for the 6 skills */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        {SKILL_ORDER.map((s) => {
+          const val = scores[s.key]
+          const isBest = val === max && max > 0
+          const isWorst = val === min && min < max
+          return (
+            <Link
+              key={s.key}
+              href={s.href}
+              className={cn(
+                'group flex min-h-[44px] items-center justify-between gap-2.5 rounded-[var(--radius-md)] border border-border-subtle bg-surface-sunken px-3 py-2 transition-colors hover:bg-surface-raised focus-ring',
+                isBest && 'border-[color-mix(in_oklch,var(--success)_40%,transparent)]',
+                isWorst && 'border-[color-mix(in_oklch,var(--warning)_40%,transparent)]',
+              )}
             >
-              {val}
-            </div>
-          </Link>
-        )
-      })}
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-1 text-body-sm font-semibold text-fg">
+                  <span className="truncate">{s.label}</span>
+                  <span className="text-caption font-normal text-fg-subtle opacity-60 transition-transform group-hover:translate-x-0.5">
+                    →
+                  </span>
+                </div>
+                <div className="truncate text-tiny text-fg-subtle">{s.source}</div>
+              </div>
+              <div
+                className={cn(
+                  'shrink-0 text-body-md font-bold tabular-nums text-primary',
+                  isBest && 'text-success',
+                  isWorst && 'text-warning',
+                )}
+              >
+                {val}
+              </div>
+            </Link>
+          )
+        })}
+      </div>
 
-      <div className="mt-1 flex flex-col sm:flex-row gap-2.5">
-        <div className="flex-1 rounded-[var(--radius-md)] bg-success-soft px-3 py-2.5 text-caption text-success">
-          <b className="mb-0.5 block text-body-sm text-success-value">
-            {best.label}: {max}/100
-          </b>
-          Tu dimensión más consolidada actualmente.
+      {/* Highlights: Best & Area to reinforce */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <div className="rounded-[var(--radius-md)] border border-[color-mix(in_oklch,var(--success)_25%,transparent)] bg-success-soft/70 px-3 py-2 text-caption text-success">
+          <div className="flex items-center justify-between gap-1">
+            <span className="text-body-sm font-bold text-success-value">{best.label}</span>
+            <span className="font-semibold text-success-value">{max}/100</span>
+          </div>
+          <p className="mt-0.5 text-tiny opacity-90">Tu dimensión más consolidada.</p>
         </div>
-        <div className="flex-1 rounded-[var(--radius-md)] bg-warning-soft px-3 py-2.5 text-caption text-warning">
-          <b className="mb-0.5 block text-body-sm text-warning-value">
-            {worst.label}: {min}/100
-          </b>
-          Prioridad recomendada para enfocar tu práctica.
+        <div className="rounded-[var(--radius-md)] border border-[color-mix(in_oklch,var(--warning)_25%,transparent)] bg-warning-soft/70 px-3 py-2 text-caption text-warning">
+          <div className="flex items-center justify-between gap-1">
+            <span className="text-body-sm font-bold text-warning-value">{worst.label}</span>
+            <span className="font-semibold text-warning-value">{min}/100</span>
+          </div>
+          <p className="mt-0.5 text-tiny opacity-90">Prioridad recomendada para tu práctica.</p>
         </div>
       </div>
     </div>
@@ -238,17 +250,30 @@ export function FluencyRadarCard({ scores, comparisonLabel }: Props) {
       {isEmpty ? (
         <div className="flex flex-col items-center gap-4 py-2 text-center">
           <EmptyRadar />
-          <div className="flex max-w-[280px] flex-col gap-1">
+          <div className="flex max-w-[340px] flex-col gap-2">
             <p className="text-body-sm font-semibold text-fg">Perfil de habilidades en construcción</p>
             <p className="text-caption text-fg-muted">
-              Completa ejercicios en pronunciación, gramática, vocabulario y habla para
-              desbloquear el radar de tus 6 dimensiones.
+              Se calibra automáticamente a medida que practicas pronunciación, gramática, vocabulario y habla.
             </p>
+            <div className="mt-1 flex flex-wrap justify-center gap-2">
+              <Link
+                href="/daily"
+                className="inline-flex min-h-[36px] items-center rounded-sm bg-primary-soft px-3 py-1.5 text-caption font-semibold text-primary transition-opacity hover:opacity-80 focus-ring"
+              >
+                Plan diario →
+              </Link>
+              <Link
+                href="/practice"
+                className="inline-flex min-h-[36px] items-center rounded-sm border border-border-subtle bg-surface-sunken px-3 py-1.5 text-caption font-semibold text-fg hover:bg-surface-raised transition-colors focus-ring"
+              >
+                Sound Lab →
+              </Link>
+            </div>
           </div>
         </div>
       ) : (
-        <div className="flex flex-col @[660px]:flex-row @[660px]:items-center gap-6">
-          <div className="flex shrink-0 justify-center mx-auto @[660px]:mx-0 w-full max-w-[320px]">
+        <div className="flex flex-col @[520px]:flex-row @[520px]:items-center gap-5">
+          <div className="flex shrink-0 justify-center mx-auto @[520px]:mx-0 w-full max-w-[260px] sm:max-w-[280px]">
             <RadarChart scores={scores!} />
           </div>
           <div className="flex-1 min-w-0">

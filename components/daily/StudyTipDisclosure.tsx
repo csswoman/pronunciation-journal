@@ -4,7 +4,7 @@
 
 export default function StudyTipDisclosure() {
   return (
-    <details className="group rounded-card-interactive border border-border-default bg-daily-card px-[var(--layout-card-pad)] py-3">
+    <details className="group rounded-xl border border-border-default bg-daily-card px-[var(--layout-card-pad)] py-3">
       <summary className="focus-ring flex cursor-pointer list-none items-center justify-between gap-2 font-body-sm font-medium text-fg marker:content-none">
         ¿Cómo estudiar hoy?
         <span className="text-fg-muted transition-transform group-open:rotate-180" aria-hidden>

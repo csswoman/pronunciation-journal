@@ -1,40 +1,28 @@
+import { Info } from '@/components/icons'
+
 interface SetupHeaderProps {
   isAnonymous: boolean
 }
 
 /**
- * Encabezado + aviso de modo invitado. Separado del resto porque no depende
- * de ningún estado de selección.
+ * Aviso contextual para modo invitado en la configuración del sprint.
  */
 export function SetupHeader({ isAnonymous }: SetupHeaderProps) {
-  return (
-    <div className="mb-8">
-      <span className="text-tiny uppercase tracking-wider font-semibold text-[var(--primary)] block mb-1">
-        Modo Foco
-      </span>
-      <h1 className="text-2xl font-bold text-[var(--text-primary)] mb-2">
-        Cierra tus gaps de inglés
-      </h1>
-      <p className="text-body text-[var(--text-secondary)]">
-        Elige hasta 2 puntos que se te dificulten. Generamos una historia, ejercicios,
-        un diálogo y más, centrados exclusivamente en dominarlos durante tu sprint.
-      </p>
+  if (!isAnonymous) return null
 
-      {isAnonymous && (
-        <div className="mt-4 p-4 rounded-xl bg-[var(--surface-raised)] border border-[var(--border-default)] flex items-start gap-3">
-          <span className="text-lg">💾</span>
-          <div className="text-body-sm">
-            <span className="font-semibold text-[var(--text-primary)] block mb-0.5">
-              Modo invitado: guardado en tu navegador
-            </span>
-            <span className="text-[var(--text-secondary)] leading-relaxed">
-              No has iniciado sesión, así que tu sprint y tu progreso se guardan localmente
-              (IndexedDB). Si limpias tus datos o cambias de dispositivo, se perderán hasta
-              que inicies sesión.
-            </span>
-          </div>
-        </div>
-      )}
+  return (
+    <div className="mb-6 flex items-start gap-3 rounded-lg border border-border-default bg-surface-raised p-3.5 text-body-sm shadow-xs">
+      <Info className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
+      <div className="flex flex-col gap-0.5">
+        <span className="font-semibold text-fg">
+          Modo invitado: guardado en tu navegador
+        </span>
+        <p className="text-fg-muted text-tiny leading-relaxed">
+          Tu sprint y tu progreso se guardan localmente en este dispositivo.
+          Para sincronizar entre dispositivos y respaldar tus datos, inicia sesión cuando quieras.
+        </p>
+      </div>
     </div>
   )
 }
+

@@ -14,9 +14,10 @@ import {
 
 interface Props {
   sessions: ActivitySessionSummary[]
+  pageSize?: number
 }
 
-const PAGE_SIZE = 3
+const DEFAULT_PAGE_SIZE = 4
 
 function formatWhen(iso: string): string {
   const date = new Date(iso)
@@ -31,7 +32,7 @@ function formatWhen(iso: string): string {
   return date.toLocaleDateString('es', { month: 'short', day: 'numeric' })
 }
 
-export function ActivityHistoryCard({ sessions }: Props) {
+export function ActivityHistoryCard({ sessions, pageSize = DEFAULT_PAGE_SIZE }: Props) {
   const [currentPage, setCurrentPage] = useState(1)
 
   if (sessions.length === 0) {
@@ -78,8 +79,12 @@ export function ActivityHistoryCard({ sessions }: Props) {
     sessions.reduce((acc, s) => acc + s.accuracyPct, 0) / sessions.length,
   )
 
-  const totalPages = Math.ceil(sessions.length / PAGE_SIZE)
-  const displayedSessions = sessions.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
+  const effectivePageSize = Math.max(1, pageSize)
+  const totalPages = Math.ceil(sessions.length / effectivePageSize)
+  const displayedSessions = sessions.slice(
+    (currentPage - 1) * effectivePageSize,
+    currentPage * effectivePageSize,
+  )
 
   return (
     <ProgressCard>
@@ -97,7 +102,7 @@ export function ActivityHistoryCard({ sessions }: Props) {
             </span>
           </div>
 
-          <ul className="flex flex-col gap-2">
+          <ul key={currentPage} className="flex flex-col gap-2 animate-state-in">
             {displayedSessions.map((session) => (
               <li
                 key={session.id}
@@ -124,19 +129,19 @@ export function ActivityHistoryCard({ sessions }: Props) {
                   type="button"
                   disabled={currentPage === 1}
                   onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                  className="flex min-h-[36px] min-w-[36px] items-center justify-center rounded-[var(--radius-sm)] border border-border-subtle bg-surface-sunken p-1.5 text-fg hover:bg-surface-raised disabled:opacity-40 disabled:cursor-not-allowed transition-colors focus-ring"
+                  className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-[var(--radius-sm)] border border-border-subtle bg-surface-sunken p-2 text-fg hover:bg-surface-raised disabled:opacity-40 disabled:cursor-not-allowed transition-colors focus-ring"
                   aria-label="Página anterior"
                 >
-                  <ChevronLeft size={15} />
+                  <ChevronLeft size={16} />
                 </button>
                 <button
                   type="button"
                   disabled={currentPage === totalPages}
                   onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                  className="flex min-h-[36px] min-w-[36px] items-center justify-center rounded-[var(--radius-sm)] border border-border-subtle bg-surface-sunken p-1.5 text-fg hover:bg-surface-raised disabled:opacity-40 disabled:cursor-not-allowed transition-colors focus-ring"
+                  className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-[var(--radius-sm)] border border-border-subtle bg-surface-sunken p-2 text-fg hover:bg-surface-raised disabled:opacity-40 disabled:cursor-not-allowed transition-colors focus-ring"
                   aria-label="Página siguiente"
                 >
-                  <ChevronRight size={15} />
+                  <ChevronRight size={16} />
                 </button>
               </div>
             </div>

@@ -13,10 +13,16 @@ interface Props {
 
 export function SessionReadyForecast({ days }: Props) {
   const max = Math.max(1, ...days.map((d) => d.count))
+  const total = days.reduce((acc, d) => acc + d.count, 0)
 
   return (
     <SessionSurface density="compact">
-      <h3 className="m-0 font-label text-fg">Próximos 7 días</h3>
+      <div className="flex items-baseline justify-between gap-2">
+        <h3 className="m-0 font-label text-fg">Próximos 7 días</h3>
+        <span className="font-caption tabular-nums text-fg-muted">
+          {total} {total === 1 ? 'repaso' : 'repasos'}
+        </span>
+      </div>
       <div
         className="flex h-20 items-end gap-1.5"
         role="img"
@@ -25,8 +31,13 @@ export function SessionReadyForecast({ days }: Props) {
         {days.map((day, index) => {
           const isToday = index === 0
           const heightPct = Math.max(day.count === 0 ? 10 : 14, (day.count / max) * 100)
+          const tooltip = `${isToday ? 'Hoy' : day.label}: ${day.count} ${day.count === 1 ? 'repaso' : 'repasos'}`
           return (
-            <div key={day.dayKey} className="flex min-w-0 flex-1 flex-col items-center gap-1">
+            <div
+              key={day.dayKey}
+              className="group flex min-w-0 flex-1 flex-col items-center gap-1"
+              aria-label={tooltip}
+            >
               <div className="flex h-14 w-full items-end justify-center">
                 <div
                   className={cn(
@@ -39,7 +50,7 @@ export function SessionReadyForecast({ days }: Props) {
                     height: `${heightPct}%`,
                     animationDelay: day.count > 0 ? `${index * 45}ms` : undefined,
                   }}
-                  title={`${isToday ? 'Hoy' : day.label}: ${day.count} ${day.count === 1 ? 'repaso' : 'repasos'}`}
+                  title={tooltip}
                 />
               </div>
               <span
