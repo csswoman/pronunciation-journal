@@ -21,7 +21,15 @@ import { Phase3LadderCard } from './Phase3LadderCard'
 
 type SessionPhase = 1 | 2 | 3 | 'complete'
 
-export function EdDrillSession() {
+interface Props {
+  /**
+   * Señal de cierre para el contenedor (la diaria la necesita para marcar el
+   * paso como hecho). En la ruta suelta se omite y la sesión ofrece repetir.
+   */
+  onComplete?: () => void
+}
+
+export function EdDrillSession({ onComplete }: Props = {}) {
   const auth = useAuthOptional()
   const userId = auth?.user?.id
   const [phase, setPhase] = useState<SessionPhase>(1)
@@ -57,7 +65,13 @@ export function EdDrillSession() {
       <div className="flex flex-col items-center gap-4 rounded-lg border border-success bg-success-soft layout-card-pad text-center">
         <h2 className="text-h3 text-fg">Escalera completada</h2>
         <p className="text-body-sm text-fg-muted">Tu siguiente práctica priorizará el cluster que más lo necesite.</p>
-        <button type="button" onClick={() => setPhase(1)} className="min-h-11 rounded-md bg-primary px-5 py-2 text-body-sm font-semibold text-on-primary transition-colors focus-ring hover:bg-primary-hover">Practicar otro cluster</button>
+        <button
+          type="button"
+          onClick={() => (onComplete ? onComplete() : setPhase(1))}
+          className="min-h-11 rounded-md bg-primary px-5 py-2 text-body-sm font-semibold text-on-primary transition-colors focus-ring hover:bg-primary-hover"
+        >
+          {onComplete ? 'Terminar paso' : 'Practicar otro cluster'}
+        </button>
       </div>
     )
   }

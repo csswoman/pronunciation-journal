@@ -20,6 +20,7 @@ import { FalseFriendsIntroStep } from '@/components/daily/FalseFriendsIntroStep'
 import { GrammarRuleCard } from '@/components/daily/GrammarRuleCard'
 import { DailyReaderStep } from '@/components/daily/DailyReaderStep'
 import { DailyThreadStrip } from '@/components/daily/DailyThreadStrip'
+import { EdDrillSession } from '@/components/pronunciation/ed-drills/EdDrillSession'
 import { getThreadHintsForStep } from '@/lib/practice/daily-plan/step-thread'
 import { IPA_EXTRA } from '@/lib/pronunciation/ipa-data'
 import type { DailyStep } from '@/lib/practice/types'
@@ -64,6 +65,17 @@ export default function DailyStepSession({
       <div className="mx-auto flex w-full flex-col gap-4 p-[var(--layout-card-pad)] pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] lg:pb-[var(--layout-section-gap)]">
         {threadHints.length > 0 ? <DailyThreadStrip hints={threadHints} /> : null}
         <WordIntroStep cards={step.studyCards ?? []} onComplete={onComplete} />
+      </div>
+    )
+  }
+
+  // Sesión autocontenida (sin `exercises`): debe salir antes del fallthrough a
+  // PracticeSession, que con una lista vacía se autocompletaría al instante.
+  if (step.kind === 'ed_cluster_drill') {
+    return (
+      <div className="mx-auto flex w-full max-w-prose flex-col gap-4 p-[var(--layout-card-pad)] pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] lg:pb-[var(--layout-section-gap)]">
+        {threadHints.length > 0 ? <DailyThreadStrip hints={threadHints} /> : null}
+        <EdDrillSession onComplete={onComplete} />
       </div>
     )
   }

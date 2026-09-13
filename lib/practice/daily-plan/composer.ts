@@ -38,6 +38,7 @@ import {
 import { buildDailyCandidateSteps } from './daily-steps-builder'
 import { resolveDiagnosticPrescriptionTarget } from './diagnostic-prescription'
 import { buildImmersionLessonStep } from './immersion-step'
+import { buildEdClusterDrillStep } from './ed-drill-step'
 import { loadWatchedImmersionLessonIds } from '@/lib/immersion/progress-queries'
 
 export {
@@ -126,6 +127,10 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
   const watchedImmersionIds = await loadWatchedImmersionLessonIds(userId).catch(() => new Set<string>())
   const immersionStep = await buildImmersionLessonStep(activeLevel, watchedImmersionIds, dayOfYear())
 
+  // Paso correctivo: solo aparece con evidencia de error en algún cluster de -ed.
+  // Compite por el único slot de producción, no se añade encima.
+  const edDrillStep = await buildEdClusterDrillStep(userId).catch(() => null)
+
   const {
     steps: candidateSteps,
     grammarStep,
@@ -183,6 +188,9 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
   const missionAllowedToday = shouldOfferMission(new Date().getDay(), true)
 
   const candidates = [
+    // Antes que el resto de producción: con reason 'recent_error' gana el slot
+    // frente a phoneme_focus/connected_speech, que entran como 'variety'.
+    ...(edDrillStep ? [edDrillStep] : []),
     ...steps,
     ...(grammarStep ? [grammarStep] : []),
     ...(studyDeckStep ? [studyDeckStep] : []),

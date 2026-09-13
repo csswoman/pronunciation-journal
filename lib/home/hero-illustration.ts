@@ -11,6 +11,7 @@ export function getHeroIllustrationKey(
     case "phoneme_focus":
     case "minimal_pairs":
     case "mission":
+    case "ed_cluster_drill":
       return "domainSpeaking";
     case "listening":
     case "connected_speech":

@@ -51,6 +51,30 @@ describe('pronunciation cap', () => {
     expect(capped.map((s) => s.id)).toEqual(['phoneme_focus', 'minimal_pairs', 'word_review'])
   })
 
+  it('ed_cluster_drill compite por el slot de producción, no se añade encima', () => {
+    const steps = [
+      step('ed_cluster_drill', 'ed_cluster_drill'), // production 1 -> keep
+      step('phoneme_focus', 'phoneme_focus'), // production 2 -> drop
+      step('connected_speech', 'connected_speech'), // production 3 -> drop
+      step('word_review', 'word_review'),
+    ]
+    const capped = capPronunciationSteps(steps)
+    const production = capped.filter((s) => PRODUCTION_KINDS.includes(s.kind))
+
+    expect(production).toHaveLength(1)
+    expect(production[0].id).toBe('ed_cluster_drill')
+    expect(capped.map((s) => s.id)).toEqual(['ed_cluster_drill', 'word_review'])
+  })
+
+  it('ed_cluster_drill no desplaza al bucket de percepción', () => {
+    const steps = [
+      step('ed_cluster_drill', 'ed_cluster_drill'),
+      step('minimal_pairs', 'minimal_pairs'),
+    ]
+    const capped = capPronunciationSteps(steps)
+    expect(capped.map((s) => s.id)).toEqual(['ed_cluster_drill', 'minimal_pairs'])
+  })
+
   it('keeps every non-pronunciation step', () => {
     const steps = [
       step('phoneme_focus', 'phoneme_focus'),

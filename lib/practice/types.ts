@@ -203,6 +203,7 @@ export type DailyStepKind =
   | 'mission'          // transferencia oral con target/source/step exactos
   | 'grammar_focus'    // regla + producción restringida desde un mazo de gramática
   | 'immersion_lesson' // video de EngVid del nivel del usuario (catálogo en Supabase)
+  | 'ed_cluster_drill' // escalera de -ed y clusters finales (solo con evidencia de error)
 
 export type DailySelectionReason =
   | 'due'
@@ -248,6 +249,13 @@ export type DailyStep = {
   selection?: DailySelectionMetadata
   /** Exact oral handoff for mission steps. */
   missionLaunch?: MissionLaunch
+  /** Solo para 'ed_cluster_drill': qué cluster se corrige y con qué evidencia. */
+  edClusterDrill?: {
+    cluster: string
+    itemId: string
+    /** Accuracy previa del cluster (0-1) que justificó insertar el paso. */
+    accuracy: number
+  }
   /** Unscored shadowing phrases played before the step's first free production. */
   warmupPhrases?: WarmupShadowPhrase[]
   /** Solo para 'grammar_focus': regla mostrada antes de los ejercicios de producción del paso. */
