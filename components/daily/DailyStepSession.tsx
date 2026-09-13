@@ -35,6 +35,11 @@ interface Props {
   onExit: () => void
 }
 
+function ActiveSessionChrome() {
+  useHideMobileNavDuringSession()
+  return null
+}
+
 export default function DailyStepSession({
   step,
   allSteps,
@@ -44,7 +49,7 @@ export default function DailyStepSession({
   onComplete,
   onExit,
 }: Props) {
-  useHideMobileNavDuringSession()
+  const isReader = step.kind === 'reader'
   const threadHints = getThreadHintsForStep(allSteps, stepIndex)
 
   const showable =
@@ -60,9 +65,12 @@ export default function DailyStepSession({
 
   const [started, setStarted] = useState(!showable && !showFalseFriendsIntro && !showGrammarIntro)
 
+  const sessionChrome = !isReader ? <ActiveSessionChrome /> : null
+
   if (step.kind === 'word_intro') {
     return (
       <div className="mx-auto flex w-full flex-col gap-4 p-[var(--layout-card-pad)] pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] lg:pb-[var(--layout-section-gap)]">
+        {sessionChrome}
         {threadHints.length > 0 ? <DailyThreadStrip hints={threadHints} /> : null}
         <WordIntroStep cards={step.studyCards ?? []} onComplete={onComplete} />
       </div>
@@ -74,6 +82,7 @@ export default function DailyStepSession({
   if (step.kind === 'ed_cluster_drill') {
     return (
       <div className="mx-auto flex w-full max-w-prose flex-col gap-4 p-[var(--layout-card-pad)] pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] lg:pb-[var(--layout-section-gap)]">
+        {sessionChrome}
         {threadHints.length > 0 ? <DailyThreadStrip hints={threadHints} /> : null}
         <EdDrillSession onComplete={onComplete} />
       </div>
@@ -86,6 +95,7 @@ export default function DailyStepSession({
         passage={step.readerPassage}
         threadHints={threadHints}
         onComplete={onComplete}
+        onExit={onExit}
       />
     )
   }

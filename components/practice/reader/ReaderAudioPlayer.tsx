@@ -112,20 +112,20 @@ export function ReaderAudioPlayer({
 
   if (!audioUrl) {
     return (
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 rounded-xl border border-border-default bg-surface-raised p-3.5 shadow-xs transition-colors">
-        <div className="flex items-center gap-2.5">
-          <div className="flex size-8 items-center justify-center rounded-lg bg-primary-soft text-primary">
-            <Volume2 className="size-4" />
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 rounded-xl border border-border-default bg-surface-raised px-3.5 py-2.5 shadow-xs transition-colors">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="flex size-7 items-center justify-center rounded-lg bg-primary-soft text-primary shrink-0">
+            <Volume2 className="size-3.5" />
           </div>
-          <div>
-            <p className="text-body-sm font-medium text-fg">Voz nativa de alta fidelidad</p>
-            <p className="text-caption text-fg-muted">
+          <div className="min-w-0">
+            <p className="text-body-sm font-medium text-fg leading-tight">Voz nativa de alta fidelidad</p>
+            <p className="text-caption text-fg-muted truncate">
               Genera la narración hablada con Gemini TTS y déjala lista para escuchar siempre.
             </p>
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2 w-full sm:w-auto">
+        <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2 w-full sm:w-auto shrink-0">
           {errorMsg && (
             <span className="text-caption text-danger">{errorMsg}</span>
           )}
@@ -134,9 +134,9 @@ export function ReaderAudioPlayer({
             size="sm"
             onClick={handleGenerateAudio}
             disabled={!online || isGenerating}
-            className="w-full sm:w-auto font-medium"
+            className="w-full sm:w-auto font-medium text-caption h-8"
           >
-            <Sparkles className="size-3.5 text-primary" />
+            <Sparkles className="size-3 text-primary" />
             <span>{isGenerating ? 'Generando voz HD...' : 'Generar voz HD 🎙️'}</span>
           </Button>
         </div>
@@ -145,7 +145,7 @@ export function ReaderAudioPlayer({
   }
 
   return (
-    <div className="flex flex-col gap-2.5 rounded-xl border border-primary/20 bg-primary-soft/30 p-3.5 shadow-xs transition-colors">
+    <div className="flex flex-col gap-2 rounded-xl border border-primary/20 bg-primary-soft/30 px-3.5 py-2.5 shadow-xs transition-colors">
       <audio
         ref={audioRef}
         src={audioUrl}

@@ -48,9 +48,9 @@ export function ShadowingPlaybackBar({
   currentSegment,
 }: Props) {
   return (
-    <div className="flex flex-col gap-3 rounded-card-interactive border border-border-default bg-surface-raised p-4 shadow-xs">
+    <div className="flex flex-col gap-2.5 rounded-xl border border-border-default bg-surface-raised p-3 sm:px-3.5 sm:py-3 shadow-xs">
       {/* Header with Mode Toggle & Speed Selector */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border-default/60 pb-3">
+      <div className="flex flex-wrap items-center justify-between gap-2.5 border-b border-border-default/60 pb-2.5">
         <div className="flex items-center gap-2">
           <label className="relative inline-flex cursor-pointer items-center gap-2.5 select-none">
             <input
