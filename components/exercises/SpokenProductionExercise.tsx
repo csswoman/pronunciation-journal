@@ -237,6 +237,7 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
       {isSupported && !grade && (
         <SpokenProductionControls
           exampleSentence={exercise.exampleSentence}
+          hintAlwaysVisible={exercise.constraint?.id !== 'rodeo_circumlocution'}
           exerciseId={exercise.id}
           online={online}
           isListening={isListening}

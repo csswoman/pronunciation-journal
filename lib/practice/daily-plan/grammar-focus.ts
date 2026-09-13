@@ -1,16 +1,34 @@
-import { generateSpokenProductionFromWordBank } from '@/lib/exercises/generators/production'
-import { constraintIdForDeck } from '@/lib/practice/grammar-constraint-map'
+import type { CEFRLevel } from '@/lib/exercises/cefr'
 import { fromGenericExercise } from '@/lib/practice/adapters'
 import type { DailyStep, PracticeContext } from '@/lib/practice/types'
-import type { WordBankEntry } from '@/lib/word-bank/types'
+import { exerciseId } from '@/lib/exercises/utils'
+import type { MultipleChoiceExercise } from '@/lib/exercises/types'
 import { dedupeByContentId } from './selectors'
-
-/** Production items in the grammar step. Enough reps to feel the pattern. */
-const GRAMMAR_PRODUCTION_COUNT = 5
 
 interface DeckRuleRow {
   key: string
   value: string
+}
+
+function buildRuleExercises(
+  deckSlug: string,
+  rows: DeckRuleRow[],
+  level?: CEFRLevel,
+): MultipleChoiceExercise[] {
+  if (rows.length < 2) return []
+
+  return rows.map((row, index) => ({
+    id: exerciseId('multiple_choice', `${deckSlug}:rule:${index}`, 'v1'),
+    type: 'multiple_choice' as const,
+    exerciseType: { domain: 'grammar', mode: 'multiple_choice' },
+    sourceRef: { source: 'grammar_deck' as const, id: `${deckSlug}:rule:${index}` },
+    lessonSlug: deckSlug,
+    level,
+    question: `¿Qué regla o significado corresponde a "${row.key}"?`,
+    options: rows.map(({ value }) => value),
+    answerIndex: index,
+    explanation: `"${row.key}" corresponde a: ${row.value}`,
+  }))
 }
 
 interface LoadedDeckRule {
@@ -71,43 +89,23 @@ export function extractRule(json: unknown): LoadedDeckRule | null {
 }
 
 /**
- * Grammar step: show the rule, then make the learner PRODUCE it.
- *
- * Deliberately not reorder_words — being handed every token is recognition
- * with extra steps, and recognition is exactly what the learner already has.
+ * Grammar step: show the rule, then recall only material authored in that
+ * same deck. Vocabulary review belongs to its own word_review step: using a
+ * dictionary entry here can turn an A1 pronoun lesson into a prompt about a
+ * technical term unrelated to the lesson.
  */
 export async function buildGrammarFocusStep(
   deckSlug: string | null,
-  words: WordBankEntry[],
   context: PracticeContext = 'daily',
-  repairConstraints: readonly string[] = [],
+  level?: CEFRLevel,
 ): Promise<DailyStep | null> {
-  if (!deckSlug || words.length === 0) return null
+  if (!deckSlug) return null
 
   const rule = await loadDeckRule(deckSlug)
   if (!rule) return null
 
-  const constraintId = constraintIdForDeck(deckSlug)
-  // Due repairs come first: a scheduled error outranks the day's deck topic.
-  const preferred = [
-    ...repairConstraints,
-    ...(constraintId ? [constraintId] : []),
-  ]
-  const { exercises: generated } = generateSpokenProductionFromWordBank(
-    words,
-    GRAMMAR_PRODUCTION_COUNT,
-    preferred,
-  )
-
   const exercises = dedupeByContentId(
-    generated.map((ex) => {
-      const exWithLesson = {
-        ...ex,
-        lessonSlug: deckSlug,
-        sourceRef: { source: 'grammar_deck' as const, id: deckSlug },
-      }
-      return fromGenericExercise(exWithLesson, context)
-    }),
+    buildRuleExercises(deckSlug, rule.rows, level).map((ex) => fromGenericExercise(ex, context)),
   )
   if (exercises.length === 0) return null
 

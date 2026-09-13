@@ -33,7 +33,11 @@ export function buildPedagogicalFeedback(
     case 'written_production':
     case 'spoken_production':
       return {
-        immediate: isCorrect ? 'Usaste bien el elemento objetivo.' : 'Revisa el feedback antes de continuar.',
+        immediate: isCorrect
+          ? `Usaste “${exercise.targetItem}” correctamente en tu oración.`
+          : userAnswer.toLowerCase().includes(exercise.targetItem.toLowerCase())
+            ? `Usaste “${exercise.targetItem}”, pero hay algo que ajustar en la oración.`
+            : `Falta “${exercise.targetItem}” en tu oración: es la palabra que toca practicar.`,
         expectedAnswer: exercise.exampleSentence,
         tip: exercise.targetMeaning ? `Ten presente el significado de “${exercise.targetItem}”: ${exercise.targetMeaning}.` : undefined,
         category: isCorrect ? 'production_accepted' : 'production_review',
@@ -57,10 +61,29 @@ export function buildPedagogicalFeedback(
     case 'error_correction':
       return errorCorrectionFeedback(exercise, isCorrect)
     case 'conjugation_blank':
-      return { immediate: isCorrect ? 'Correcto.' : 'Revisa la forma verbal.', expectedAnswer: exercise.answer, tip: exercise.hint, errorCode: isCorrect ? 'correct' : 'form_error', canRetry: !isCorrect, nextAction: isCorrect ? 'continue' : 'retry' }
+      return {
+        immediate: isCorrect
+          ? 'Esa es la forma verbal correcta.'
+          : `Esa forma no encaja aquí. La correcta es “${exercise.answer}”.`,
+        explanation: isCorrect
+          ? undefined
+          : exercise.lemma
+            ? `Parte del infinitivo “${exercise.lemma}” y ajústalo al sujeto y al tiempo que pide la oración.`
+            : 'Fíjate en el sujeto y en el tiempo verbal que pide la oración antes de conjugar.',
+        expectedAnswer: exercise.answer,
+        tip: exercise.hint,
+        errorCode: isCorrect ? 'correct' : 'form_error',
+        canRetry: !isCorrect,
+        nextAction: isCorrect ? 'continue' : 'retry',
+      }
     case 'sentence_transformation':
       return {
-        immediate: isCorrect ? 'Correcto.' : 'Revisa el feedback antes de continuar.',
+        immediate: isCorrect
+          ? 'La transformación conserva el significado y cumple la instrucción.'
+          : 'Tu oración no cumple del todo la instrucción. Compárala con la de referencia.',
+        explanation: isCorrect
+          ? undefined
+          : `La instrucción pedía: ${exercise.instruction}. El significado debe mantenerse igual que en la oración original.`,
         expectedAnswer: exercise.referenceAnswer,
         correction: exercise.referenceAnswer,
         errorCode: isCorrect ? 'correct' : 'unknown',
@@ -68,7 +91,19 @@ export function buildPedagogicalFeedback(
         nextAction: isCorrect ? 'continue' : 'retry',
       }
     case 'translation_es_en':
-      return { immediate: isCorrect ? 'Correcto.' : 'Compara tu traducción con la referencia.', expectedAnswer: exercise.referenceEn, correction: exercise.referenceEn, errorCode: isCorrect ? 'correct' : 'meaning_choice', canRetry: !isCorrect, nextAction: isCorrect ? 'continue' : 'retry' }
+      return {
+        immediate: isCorrect
+          ? 'Tu traducción transmite el mismo significado.'
+          : 'Tu traducción cambia parte del significado. Compárala con la referencia.',
+        explanation: isCorrect
+          ? undefined
+          : 'Traducir no es cambiar palabra por palabra: revisa el orden y las estructuras que el inglés necesita para decir lo mismo.',
+        expectedAnswer: exercise.referenceEn,
+        correction: exercise.referenceEn,
+        errorCode: isCorrect ? 'correct' : 'meaning_choice',
+        canRetry: !isCorrect,
+        nextAction: isCorrect ? 'continue' : 'retry',
+      }
     case 'cs_shadow_phrase':
       return {
         immediate: isCorrect ? '¡Muy buena imitación!' : emptyAnswer ? 'Este intento no recibió puntuación. Sigue practicando.' : 'Sigue practicando esta frase.',
@@ -81,7 +116,18 @@ export function buildPedagogicalFeedback(
 }
 
 function errorCorrectionFeedback(exercise: ErrorCorrectionExercise, isCorrect: boolean): PedagogicalFeedback {
-  return { immediate: isCorrect ? 'Correcto.' : 'Corrige la forma de la oración.', correction: exercise.correctSentence, explanation: exercise.explanation, expectedAnswer: exercise.correctSentence, category: isCorrect ? 'error_correction_correct' : 'error_correction_form', errorCode: isCorrect ? 'correct' : 'form_error', canRetry: !isCorrect, nextAction: isCorrect ? 'continue' : 'retry' }
+  return {
+    immediate: isCorrect
+      ? 'Encontraste y corregiste el error.'
+      : 'Esa no es la corrección. Compara tu versión con la correcta.',
+    correction: exercise.correctSentence,
+    explanation: exercise.explanation,
+    expectedAnswer: exercise.correctSentence,
+    category: isCorrect ? 'error_correction_correct' : 'error_correction_form',
+    errorCode: isCorrect ? 'correct' : 'form_error',
+    canRetry: !isCorrect,
+    nextAction: isCorrect ? 'continue' : 'retry',
+  }
 }
 
 export function pedagogicalFeedbackFromEvaluation(result: EvaluationResult): PedagogicalFeedback {
@@ -105,7 +151,11 @@ export function pedagogicalFeedbackFromProductionGrade(
     ? `Patrón a vigilar: ${describeErrorPattern(result.errorPattern)}.`
     : undefined
   return {
-    immediate: result.correct ? '¡Buen trabajo!' : 'Revisa el feedback antes de continuar.',
+    immediate: result.correct
+      ? '¡Buen trabajo!'
+      : result.usedTarget
+        ? 'Usaste el elemento objetivo, pero hay detalles que corregir.'
+        : 'Falta el elemento objetivo en tu respuesta.',
     explanation: result.feedback,
     correction: result.corrections,
     tip: patternTip,
@@ -181,7 +231,7 @@ function reorderFeedback(
   isCorrect: boolean,
 ): PedagogicalFeedback {
   return {
-    immediate: isCorrect ? 'El orden es correcto.' : 'Las palabras son correctas, pero debes revisar el orden.',
+    immediate: isCorrect ? 'El orden es correcto.' : 'Usaste todas las palabras, pero el orden no es el correcto.',
     explanation: isCorrect
       ? undefined
       : 'El orden de las palabras comunica el sentido de la oración. Empieza por el sujeto, sigue con el verbo principal y después completa la idea.',
@@ -233,7 +283,11 @@ function matchPairsFeedback(
         : `${correctPairCount} de ${totalPairCount} pares correctos.`
 
   return {
-    immediate: isCorrect ? 'Todos los pares coinciden correctamente.' : countLine ?? 'Revisa las parejas.',
+    immediate: isCorrect
+      ? 'Todos los pares coinciden correctamente.'
+      : countLine
+        ? `${countLine} Abajo tienes las parejas correctas.`
+        : 'Algunas parejas no coinciden. Abajo tienes las correctas.',
     explanation: isCorrect
       ? undefined
       : isPhoneme

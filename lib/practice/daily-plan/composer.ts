@@ -17,6 +17,7 @@ import { dayOfYear, getSemanticContentKey } from './selectors'
 import { getWordCategoryIndex } from '@/lib/lexicon/word-index-client'
 import { biasWordsBySound } from './sound-word-bridge'
 import { selectDailyReviewWords } from './saved-priority'
+import { normalizeCEFR } from '@/lib/exercises/cefr'
 import { candidate, selectDailyCandidates } from './policy'
 import { missionForTarget, parseMissionLaunch } from '@/lib/ai-practice/missions/launch'
 import { getTarget, phonemeTargetId } from '@/lib/pronunciation/targets/registry'
@@ -40,6 +41,7 @@ import { resolveDiagnosticPrescriptionTarget } from './diagnostic-prescription'
 import { buildImmersionLessonStep } from './immersion-step'
 import { buildEdClusterDrillStep } from './ed-drill-step'
 import { loadWatchedImmersionLessonIds } from '@/lib/immersion/progress-queries'
+import { loadDueChunkReviewStep } from '@/lib/chunk-of-day/queries'
 
 export {
   buildReviewPlan,
@@ -84,6 +86,7 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     localLearningState,
     completedLessons,
     wordIndex,
+    dueChunkStep,
   ] = await Promise.all([
     getAllSounds(),
     fetchNewWords(userId, WORD_REVIEW_WORD_COUNT),
@@ -94,13 +97,19 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     db.learningState.get(userId).catch(() => null),
     readCompletedLessons().catch(() => []),
     getWordCategoryIndex(),
+    loadDueChunkReviewStep(userId, 'daily').catch(() => null),
   ])
+
+  const aiState = localLearningState?.state ?? null
+  const hasProgress = weakest != null
+  const activeLevel = localLearningState?.state.level.cefrEstimate.toLowerCase() as import('@/lib/courses/types').CefrLevelId | undefined
 
   const dailyWordSelection = selectDailyReviewWords({
     newWords,
     dueWords,
     savedOrFamiliarWords,
     limit: WORD_REVIEW_WORD_COUNT,
+    learnerLevel: activeLevel ? normalizeCEFR(activeLevel) : undefined,
   })
   let reviewWords = dailyWordSelection.words
   const hasWordBank = reviewWords.length > 0
@@ -108,10 +117,6 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
   if (reviewWords.length === 0) {
     reviewWords = await fetchEssentialWordsForDay(dayOfYear(), WORD_REVIEW_WORD_COUNT)
   }
-
-  const aiState = localLearningState?.state ?? null
-  const hasProgress = weakest != null
-  const activeLevel = localLearningState?.state.level.cefrEstimate.toLowerCase() as import('@/lib/courses/types').CefrLevelId | undefined
   const completedLessonIds = new Set(completedLessons.map((lesson) => `${lesson.courseSlug}:${lesson.lessonSlug}`))
   const diagnosticTarget = await resolveDiagnosticPrescriptionTarget(userId, allSounds).catch(() => null)
 
@@ -148,11 +153,10 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     aiState,
     savedOrFamiliarWordIds: dailyWordSelection.savedOrFamiliarIds,
     wordIndex,
-    repairConstraints,
   })
 
-  let steps: DailyStep[] = [...candidateSteps]
-  const hasDueSrs = dueWords.length > 0 || dueSounds.length > 0
+  let steps: DailyStep[] = [...(dueChunkStep ? [dueChunkStep] : []), ...candidateSteps]
+  const hasDueSrs = dueWords.length > 0 || dueSounds.length > 0 || dueChunkStep !== null
 
   if (hasDueSrs) {
     const hubPlan = await buildReviewPlan(userId, { dueWords, dueSounds })

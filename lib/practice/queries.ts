@@ -5,6 +5,7 @@ import { enqueueWordBankSRSUpdate } from '@/lib/word-bank/srs-queries'
 import { normalizeTopic } from '@/lib/practice/normalize-topic'
 import { enqueueTopicSRSUpdate } from '@/lib/practice/topic-srs-queries'
 import { upsertFragmentSrs } from '@/lib/practice/fragment-srs'
+import { upsertChunkSrs } from '@/lib/chunk-of-day/srs'
 import {
   ATTRIBUTION_VERSION,
   mergeAttributionIntoPayload,
@@ -178,6 +179,8 @@ export async function savePracticeAnswer(
       // System sentences carry no per-user Supabase row; their review state is
       // local (Dexie srsData), so this write is direct rather than via the outbox.
       await upsertFragmentSrs(answer.sourceRef.id, grade)
+    } else if (allowSrs && answer.sourceRef?.source === 'chunks') {
+      await upsertChunkSrs(userId, answer.sourceRef.id, grade)
     }
 
     // Enqueue SRS update for the concept (topic) when the exercise carries one.
