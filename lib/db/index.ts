@@ -18,6 +18,7 @@ import type { TrackingReviewQueue } from '../tracking/review-queue';
 import type { ScriptedMission } from '../ai-practice/missions/types';
 import type { GrammarStudyDeckData } from '../courses/grammar-deck/types';
 import type { FocusSprint, FocusContent } from '../focus/types';
+import type { UserEdClusterProgress } from '../pronunciation/ed-drills/types';
 
 export interface GeneratedScriptRecord {
   id: string;
@@ -416,6 +417,7 @@ class PronunciationDB extends Dexie {
   focusSprints!: Table<FocusSprint, string>;
   focusContent!: Table<FocusContent, string>;
   immersionLessonProgress!: Table<ImmersionLessonProgressRecord, string>;
+  userEdClusterProgress!: Table<UserEdClusterProgress, string>;
 
 
   constructor() {
@@ -668,6 +670,10 @@ class PronunciationDB extends Dexie {
     // vio cada usuario, para que el plan diario no repita una hasta agotar el nivel.
     this.version(38).stores({
       immersionLessonProgress: 'key, userId, lessonId, [userId+watched]',
+    });
+    // v39: progreso por cluster de -ed / clusters finales (Ed Ladder Drill).
+    this.version(39).stores({
+      userEdClusterProgress: 'id, userId, cluster, [userId+cluster], unlockedLevel, lastPracticedAt',
     });
 
     this.pronunciationMastery = this.table("pronunciationMasteryV2") as Table<PronunciationMasteryRecord, string>;
