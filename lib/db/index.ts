@@ -295,6 +295,23 @@ export interface EssentialWordProgressRecord {
   attempts: number;
 }
 
+/**
+ * A learner's self-report for an Essential Word. It deliberately does not
+ * duplicate the skill engine's evidence or FSRS schedules: those stay in
+ * LearningItem and AttemptLog records.
+ */
+export interface EssentialWordLearnerSignalRecord {
+  /** Primary key: `${userId}:${wordId}`. */
+  id: string;
+  wordId: string;
+  userId: string;
+  familiarity: "unknown" | "self-declared";
+  declaredKnownAt?: string;
+  pronunciationDifficulty: "none" | "self-reported";
+  pronunciationDifficultyAt?: string;
+  updatedAt: string;
+}
+
 /** Device-local, account-scoped snapshot of an unfinished Essential Words session. */
 export interface EssentialWordSessionDraftRecord {
   /** One active draft per account. */
@@ -403,6 +420,7 @@ class PronunciationDB extends Dexie {
   srsEntityState!: Table<SRSEntityStateRecord, string>;
   srsRatingEvents!: Table<SRSRatingEventRecord, string>;
   essentialWordProgress!: Table<EssentialWordProgressRecord, string>;
+  essentialWordLearnerSignals!: Table<EssentialWordLearnerSignalRecord, string>;
   essentialWordSessionDrafts!: Table<EssentialWordSessionDraftRecord, string>;
   pronunciationAssessments!: Table<PronunciationAssessmentRecord, string>;
   pronunciationFeedbackEvidence!: Table<PronunciationFeedbackEvidenceRecord, string>;
@@ -674,6 +692,12 @@ class PronunciationDB extends Dexie {
     // v39: progreso por cluster de -ed / clusters finales (Ed Ladder Drill).
     this.version(39).stores({
       userEdClusterProgress: 'id, userId, cluster, [userId+cluster], unlockedLevel, lastPracticedAt',
+    });
+    // v40: self-reported familiarity/pronunciation signals. They remain
+    // separate from scored evidence and SRS state so a claim cannot imply
+    // mastery or erase evidence from another modality.
+    this.version(40).stores({
+      essentialWordLearnerSignals: 'id, userId, wordId, [userId+wordId], updatedAt',
     });
 
     this.pronunciationMastery = this.table("pronunciationMasteryV2") as Table<PronunciationMasteryRecord, string>;
