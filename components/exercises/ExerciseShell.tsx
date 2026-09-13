@@ -182,7 +182,10 @@ function HintChip({ word, meaning }: { word: string; meaning?: string }) {
 
 function FeedbackBanner({ result }: { result: ExerciseResult }) {
   const { isCorrect, feedback } = result
-  const status = feedback?.immediate ?? (isCorrect ? '¡Muy bien!' : 'Aún no. Sigue intentándolo.')
+  // Sin `immediate` el banner sólo puede nombrar el resultado; la respuesta
+  // esperada se muestra justo debajo, así que no prometemos un reintento que
+  // este shell no siempre ofrece.
+  const status = feedback?.immediate ?? (isCorrect ? '¡Muy bien!' : 'No es correcto. Revisa la respuesta esperada.')
   const expected = feedback?.correction ?? feedback?.expectedAnswer
   const isIpa = expected ? expected.includes('/') : false
 

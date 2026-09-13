@@ -5,6 +5,8 @@ import { BookmarkPlus, FileText, Plus } from "@/components/icons";
 import PageHeader from "@/components/layout/PageHeader";
 import PageLayout from "@/components/layout/PageLayout";
 import { useTracking } from "@/hooks/useTracking";
+import { useUserPreferences } from "@/hooks/useUserPreferences";
+import { normalizeCEFR } from "@/lib/exercises/cefr";
 import { QuickAddModal } from "@/components/vocabulary/words/QuickAddModal";
 import { TrackingEmptyState } from "./TrackingEmptyState";
 import { TrackingCard } from "./TrackingCard";
@@ -41,6 +43,8 @@ interface TrackingClientProps {
 // </TrackingClient>
 export default function TrackingClient({ embed = false }: TrackingClientProps) {
   const { reviewSources, loading, userId, words, addWord, removeWord, updateWord } = useTracking();
+  const { preferences } = useUserPreferences();
+  const reviewLevel = preferences?.cefr_level ? normalizeCEFR(preferences.cefr_level) : undefined;
   const [filter, setFilter] = useState<TrackingFilter>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -117,8 +121,8 @@ export default function TrackingClient({ embed = false }: TrackingClientProps) {
   }, [currentPage, filteredSources]);
 
   const reviewQueue = useMemo(
-    () => buildTrackingReviewQueue(filteredSources),
-    [filteredSources],
+    () => buildTrackingReviewQueue(filteredSources, { level: reviewLevel }),
+    [filteredSources, reviewLevel],
   );
 
   const availableReviewCount = reviewQueue.exercises?.length ?? 0;

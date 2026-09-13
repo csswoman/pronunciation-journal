@@ -15,6 +15,7 @@ declare const core1kBrand: unique symbol
 declare const wordsBrand: unique symbol
 declare const contrastBrand: unique symbol
 declare const topicBrand: unique symbol
+declare const chunkBrand: unique symbol
 
 export type WordBankId = string & { readonly [wordBankBrand]: 'word_bank' }
 export type LexiconContentId = string & { readonly [lexiconBrand]: 'lexicon' }
@@ -24,6 +25,7 @@ export type WordsSoundId = string & { readonly [wordsBrand]: 'words' }
 /** Canonical contrast key, e.g. `θ|ð` from `contrastKey()`. */
 export type ContrastId = string & { readonly [contrastBrand]: 'contrast' }
 export type TopicId = string & { readonly [topicBrand]: 'topic' }
+export type ChunkId = string & { readonly [chunkBrand]: 'chunks' }
 
 export function wordBankId(id: string): WordBankId {
   return id as WordBankId
@@ -53,6 +55,10 @@ export function topicId(id: string): TopicId {
   return id as TopicId
 }
 
+export function chunkId(id: string): ChunkId {
+  return id as ChunkId
+}
+
 // ── Discriminated targets ──────────────────────────────────────────────────
 
 export type EvidenceTarget =
@@ -63,6 +69,7 @@ export type EvidenceTarget =
   | { namespace: 'words'; id: WordsSoundId }
   | { namespace: 'contrast'; id: ContrastId }
   | { namespace: 'topic'; id: TopicId }
+  | { namespace: 'chunks'; id: ChunkId }
 
 /**
  * The kind of objective evidence produced by an exercise. This is metadata

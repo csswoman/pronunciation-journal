@@ -20,6 +20,7 @@ import {
   buildPhonemeFocusStep,
   buildWordReviewStep,
 } from './step-builders'
+import { loadDueChunkReviewStep } from '@/lib/chunk-of-day/queries'
 
 export type ReviewPlan = {
   steps: DailyStep[]
@@ -43,17 +44,20 @@ export async function buildReviewPlan(
 ): Promise<ReviewPlan> {
   const reviewContext = 'review' as const
 
-  const [failedItems, weakWords, reviewWords, dueSounds, wordIndex] = await Promise.all([
+  const [failedItems, weakWords, reviewWords, dueSounds, wordIndex, chunkStep] = await Promise.all([
     fetchRecentFailedSentences(userId, 5),
     fetchWeakWords(userId, WORD_REVIEW_WORD_COUNT),
     options?.dueWords ?? fetchDueReviewWords(userId, WORD_REVIEW_WORD_COUNT),
     options?.dueSounds ?? fetchDueSounds(userId),
     getWordCategoryIndex(),
+    loadDueChunkReviewStep(userId, reviewContext).catch(() => null),
   ])
 
   const mergedWords = mergeReviewWords(weakWords, reviewWords, WORD_REVIEW_WORD_COUNT)
 
   const steps: DailyStep[] = []
+
+  if (chunkStep) steps.push(chunkStep)
 
   const failedStep = await buildFailedSentencesMixStep(failedItems, reviewContext)
   if (failedStep) steps.push(failedStep)

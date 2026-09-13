@@ -71,6 +71,7 @@ const PEDAGOGICAL_KIND_ORDER: Record<string, number> = {
   context_practice: 4,
   word_intro: 5,
   word_review: 5,
+  chunk_review: 5,
   written_production: 6,
   spoken_production: 6,
   ed_cluster_drill: 6,

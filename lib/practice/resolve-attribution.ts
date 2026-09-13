@@ -7,6 +7,7 @@ import {
   nonSrsAttribution,
   textFragmentId,
   topicId,
+  chunkId,
   wordBankId,
   type EvidenceModality,
   type EvidenceAttribution,
@@ -105,6 +106,15 @@ export function resolveAnswerAttribution(
   if (ref?.source === 'core1k') {
     outcomes.push({
       target: { namespace: 'core1k', id: core1kId(ref.id) },
+      correct: isCorrect,
+      score,
+      modality,
+    })
+  }
+
+  if (ref?.source === 'chunks') {
+    outcomes.push({
+      target: { namespace: 'chunks', id: chunkId(ref.id) },
       correct: isCorrect,
       score,
       modality,

@@ -24,6 +24,7 @@ import type { ProductionGradeResult } from '@/lib/exercises/production-grade'
 
 export function SpokenProductionControls({
   exampleSentence,
+  hintAlwaysVisible,
   exerciseId,
   online,
   isListening,
@@ -42,6 +43,8 @@ export function SpokenProductionControls({
   onSkip,
 }: {
   exampleSentence?: string
+  /** False for exercises the example would spoil (e.g. rodeo_circumlocution). */
+  hintAlwaysVisible?: boolean
   exerciseId: string
   online: boolean
   isListening: boolean
@@ -165,7 +168,11 @@ export function SpokenProductionControls({
         )}
       </div>
 
-      <ProductionHint exampleSentence={exampleSentence} exerciseId={exerciseId} />
+      <ProductionHint
+        exampleSentence={exampleSentence}
+        exerciseId={exerciseId}
+        alwaysVisible={hintAlwaysVisible}
+      />
 
       {onSkip && (
         <button

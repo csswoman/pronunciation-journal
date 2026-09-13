@@ -204,6 +204,7 @@ export type DailyStepKind =
   | 'grammar_focus'    // regla + producción restringida desde un mazo de gramática
   | 'immersion_lesson' // video de EngVid del nivel del usuario (catálogo en Supabase)
   | 'ed_cluster_drill' // escalera de -ed y clusters finales (solo con evidencia de error)
+  | 'chunk_review'     // repaso espaciado de una expresión frecuente completa
 
 export type DailySelectionReason =
   | 'due'

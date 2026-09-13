@@ -5,7 +5,7 @@ import type { ExerciseType as CanonicalExerciseType } from './taxonomy'
 
 // ── Source references ──────────────────────────────────────────────────────
 
-export type ExerciseSource = 'words' | 'text_fragments' | 'word_bank' | 'core1k' | 'lexicon' | 'false_friends' | 'tracked_items' | 'grammar_deck' | 'focus_content'
+export type ExerciseSource = 'words' | 'text_fragments' | 'word_bank' | 'core1k' | 'lexicon' | 'false_friends' | 'tracked_items' | 'grammar_deck' | 'focus_content' | 'chunks'
 
 export interface ExerciseSourceRef {
   source: ExerciseSource
@@ -72,6 +72,8 @@ export interface SentenceDictationExercise extends BaseGenericExercise {
   targetWord?: string
   /** English meaning/definition of the target word. */
   targetMeaning?: string
+  /** Authored variants that are equivalent to the reference sentence. */
+  acceptedAnswers?: string[]
 }
 
 // Match pairs ───────────────────────────────────────────────────────────────

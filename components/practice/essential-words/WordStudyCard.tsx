@@ -18,9 +18,10 @@ interface Props {
   contextLine?: string
   onContinue: () => void
   onOmit: () => void
+  onPronunciationDifficulty?: () => void
 }
 
-export function WordStudyCard({ entry, contextLine, onContinue, onOmit }: Props) {
+export function WordStudyCard({ entry, contextLine, onContinue, onOmit, onPronunciationDifficulty }: Props) {
   const model = essentialWordToStudyCard(entry)
 
   const onListen = (target: ListenTarget) => {
@@ -38,6 +39,7 @@ export function WordStudyCard({ entry, contextLine, onContinue, onOmit }: Props)
         continueLabel="Continuar con la práctica"
         onContinue={onContinue}
         onOmit={onOmit}
+        onPronunciationDifficulty={onPronunciationDifficulty}
         onListen={onListen}
         onListenText={(text) => speak(text, { rate: 0.95 })}
       />
