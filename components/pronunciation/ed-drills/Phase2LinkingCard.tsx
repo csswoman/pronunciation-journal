@@ -7,7 +7,7 @@
 //   <LinkingFeedback />
 // </Phase2LinkingCard>
 
-import { useCallback } from 'react'
+import { useCallback, useRef } from 'react'
 import { ListenButton } from '@/components/ui/ListenButton'
 import { PracticeActionBar, PracticeContinueButton, PracticeExerciseCard } from '@/components/practice/session/PracticeActionBar'
 import { useSpeechRecognition } from '@/hooks/useSpeechRecognition'
@@ -16,6 +16,7 @@ import { speak } from '@/lib/phoneme-practice/tts'
 import type { EdDrillItem } from '@/lib/pronunciation/ed-drills/types'
 import { canScoreSpeech } from '@/lib/speech/adapters/webSpeechAdapter'
 import { SCORING_UNAVAILABLE_SHADOW_ES, STT_NETWORK_FAILURE_ES } from '@/lib/speech/browser-support-message'
+import { detectSuspectedEpenthesis } from '@/lib/pronunciation/ed-drills/epenthesis'
 
 interface Phase2Result {
   correct: boolean
@@ -39,6 +40,10 @@ export function Phase2LinkingCard({
   suspectedEpenthesis = false,
 }: Phase2LinkingCardProps) {
   const { status, result, errorCode, start, stop, reset } = useSpeechRecognition()
+  const modelStartedAt = useRef<number | null>(null)
+  const modelDurationMs = useRef<number | null>(null)
+  const recordingStartedAt = useRef<number | null>(null)
+  const recordingDurationMs = useRef<number | null>(null)
   const environment = item.environments[1]
   const isProcessing = status === 'processing'
   const isNetworkShadowing = status === 'error' && errorCode === 'network'
@@ -46,6 +51,30 @@ export function Phase2LinkingCard({
   const transcript = result?.transcript ?? ''
   const isCorrect = status === 'done' && hasPastVerb(transcript, item.pastVerb)
   const isAnswered = status === 'done' && Boolean(transcript)
+  const detectedEpenthesis = Boolean(
+    modelDurationMs.current && recordingDurationMs.current &&
+    detectSuspectedEpenthesis(recordingDurationMs.current, modelDurationMs.current),
+  )
+  const showEpenthesisTip = suspectedEpenthesis || detectedEpenthesis
+
+  const playModel = useCallback(() => {
+    speak(environment.sentence, {
+      onStart: () => { modelStartedAt.current = Date.now() },
+      onEnd: () => {
+        if (modelStartedAt.current) modelDurationMs.current = Date.now() - modelStartedAt.current
+      },
+    })
+  }, [environment.sentence])
+
+  const toggleRecording = useCallback(() => {
+    if (status === 'listening') {
+      if (recordingStartedAt.current) recordingDurationMs.current = Date.now() - recordingStartedAt.current
+      stop()
+      return
+    }
+    recordingStartedAt.current = Date.now()
+    start()
+  }, [start, status, stop])
 
   const completeShadowing = useCallback(() => {
     onComplete({ correct: false, scored: false, suspectedEpenthesis: false })
@@ -53,8 +82,8 @@ export function Phase2LinkingCard({
 
   const retry = useCallback(() => reset(), [reset])
   const completeScored = useCallback(() => {
-    onComplete({ correct: isCorrect, scored: true, suspectedEpenthesis })
-  }, [isCorrect, onComplete, suspectedEpenthesis])
+    onComplete({ correct: isCorrect, scored: true, suspectedEpenthesis: showEpenthesisTip })
+  }, [isCorrect, onComplete, showEpenthesisTip])
 
   return (
     <PracticeExerciseCard spacing="roomy">
@@ -64,7 +93,7 @@ export function Phase2LinkingCard({
         <p className="text-body-lg font-medium text-fg">{environment.targetChunk}</p>
         <p className="font-mono text-body-md text-primary">{environment.syllabified}</p>
         <p className="font-ipa text-body-md text-fg-muted">{environment.ipa}</p>
-        <ListenButton onPlay={() => speak(environment.sentence)} label="Escuchar modelo" />
+        <ListenButton onPlay={playModel} label="Escuchar modelo" />
       </div>
 
       {isShadowing ? (
@@ -83,7 +112,7 @@ export function Phase2LinkingCard({
           <p className={cn('text-body-sm font-medium', isCorrect ? 'text-success' : 'text-error')}>
             {isCorrect ? `Detectamos “${item.pastVerb}”.` : `No apareció “${item.pastVerb}” en lo que escuchamos.`}
           </p>
-          {suspectedEpenthesis ? (
+          {showEpenthesisTip ? (
             <p className="text-body-sm text-warning">
               <strong>Tip de articulación:</strong> sonó un poco largo. Toca la consonante final y frénala sin abrir la boca para añadir una “e”.
             </p>
@@ -96,7 +125,7 @@ export function Phase2LinkingCard({
         <div className="flex flex-col items-center gap-3">
           <button
             type="button"
-            onClick={status === 'listening' ? stop : start}
+            onClick={toggleRecording}
             disabled={status === 'done'}
             aria-label={status === 'listening' ? 'Detener grabación' : 'Grabar mi voz'}
             className="min-h-11 rounded-full bg-primary px-6 py-3 text-body-sm font-semibold text-on-primary transition-colors focus-ring hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
