@@ -4,6 +4,13 @@ import { describe, expect, it, beforeEach, vi } from "vitest";
 import HomeChunkOfDayCard from "../HomeChunkOfDayCard";
 
 const speakTextMock = vi.fn();
+const saveTrackedItemMock = vi.fn();
+vi.mock("@/components/auth/AuthProvider", () => ({
+  useAuth: () => ({ user: { id: "user-1" } }),
+}));
+vi.mock("@/lib/tracking/queries", () => ({
+  saveTrackedItem: (...args: unknown[]) => saveTrackedItemMock(...args),
+}));
 vi.mock("@/lib/speech/synthesis", () => ({
   speakText: (...args: unknown[]) => speakTextMock(...args),
 }));
@@ -12,6 +19,7 @@ describe("HomeChunkOfDayCard", () => {
   beforeEach(() => {
     sessionStorage.clear();
     speakTextMock.mockClear();
+    saveTrackedItemMock.mockReset();
   });
 
   it("renders the chunk of the day with title, IPA, meaning, example and speak button", () => {
@@ -101,6 +109,18 @@ describe("HomeChunkOfDayCard", () => {
 
     await waitFor(() => {
       expect(screen.getByText("Frase del día")).toBeInTheDocument();
+    });
+  });
+
+  it("saves the phrase with its canonical chunk id", async () => {
+    render(<HomeChunkOfDayCard />);
+    fireEvent.click(screen.getByRole("button", { name: "Guardar frase" }));
+    await waitFor(() => expect(saveTrackedItemMock).toHaveBeenCalled());
+    expect(saveTrackedItemMock.mock.calls[0]?.[0]).toMatchObject({
+      userId: "user-1",
+      kind: "phrase",
+      ref: expect.stringMatching(/^chunk:/),
+      payload: { source: "chunk_catalog", chunkId: expect.any(String) },
     });
   });
 });

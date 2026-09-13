@@ -59,7 +59,7 @@ describe('ConjugationBlankExercise', () => {
       expect.any(Number),
       expect.objectContaining({
         feedback: expect.objectContaining({
-          immediate: 'Correcto.',
+          immediate: 'Esa es la forma verbal correcta.',
         }),
       }),
     )
@@ -79,7 +79,8 @@ describe('ConjugationBlankExercise', () => {
       expect.any(Number),
       expect.objectContaining({
         feedback: expect.objectContaining({
-          immediate: 'Revisa la forma verbal.',
+          immediate: 'Esa forma no encaja aquí. La correcta es “goes”.',
+          explanation: 'Parte del infinitivo “go” y ajústalo al sujeto y al tiempo que pide la oración.',
           expectedAnswer: 'goes',
         }),
       }),
@@ -123,7 +124,7 @@ describe('ConjugationBlankExercise', () => {
     expect(screen.getByText('Pista 2 de 2')).toBeInTheDocument()
   })
 
-  it('displays fallback letter hint when exercise has no authored hint', () => {
+  it('asks for the verb form first, then the spelling clue, when no hint is authored', () => {
     const noHintExercise: ConjugationBlankExerciseType = {
       id: 'test-cb-no-hint',
       type: 'conjugation_blank',
@@ -141,6 +142,14 @@ describe('ConjugationBlankExercise', () => {
     rerender(
       <ConjugationBlankExercise exercise={noHintExercise} onResult={onResultMock} hintCount={1} />,
     )
-    expect(screen.getByText('Empieza por "c…" (6 letras).')).toBeInTheDocument()
+    expect(
+      screen.getByText('Conjuga "cook" para que encaje con el sujeto y el tiempo de la oración.'),
+    ).toBeInTheDocument()
+
+    // El deletreo es el último recurso, no la primera ayuda.
+    rerender(
+      <ConjugationBlankExercise exercise={noHintExercise} onResult={onResultMock} hintCount={2} />,
+    )
+    expect(screen.getByText(/Empieza por "c…" \(6 letras\)\./)).toBeInTheDocument()
   })
 })

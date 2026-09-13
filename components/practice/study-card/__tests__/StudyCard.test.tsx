@@ -85,6 +85,20 @@ describe("StudyCard", () => {
     expect(onOmit).toHaveBeenCalledOnce();
   });
 
+  it("records a pronunciation-only difficulty through its own action", () => {
+    const onPronunciationDifficulty = vi.fn();
+    render(
+      <StudyCard
+        model={minimal}
+        onContinue={() => {}}
+        onListen={() => {}}
+        onPronunciationDifficulty={onPronunciationDifficulty}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: /me cuesta pronunciarla/i }));
+    expect(onPronunciationDifficulty).toHaveBeenCalledOnce();
+  });
+
   it("renders the known-word claim as a centered, keyboard-accessible secondary action", () => {
     render(
       <StudyCard

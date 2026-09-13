@@ -86,4 +86,25 @@ describe('DailyReaderStep', () => {
     )
     expect(onComplete).toHaveBeenCalledOnce()
   })
+
+  it('renders page header and calls onExit when clicking back button', () => {
+    const onExit = vi.fn()
+    render(
+      <DailyReaderStep
+        passage={passage}
+        threadHints={[]}
+        onComplete={vi.fn()}
+        onExit={onExit}
+      />,
+    )
+
+    expect(screen.getByText('Plan de hoy · Lectura')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Lectura: daily')
+    expect(screen.getByText(/Historia adaptada a tu nivel/i)).toBeInTheDocument()
+
+    const backButton = screen.getByRole('button', { name: /Volver al plan/i })
+    expect(backButton).toBeInTheDocument()
+    fireEvent.click(backButton)
+    expect(onExit).toHaveBeenCalledOnce()
+  })
 })

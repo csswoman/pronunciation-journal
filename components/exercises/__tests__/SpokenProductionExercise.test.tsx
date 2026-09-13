@@ -1,9 +1,13 @@
 // @vitest-environment jsdom
 import { render, screen, waitFor } from '@testing-library/react'
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const speechInputMocks = vi.hoisted(() => ({
   useSpeechInput: vi.fn(),
+  start: vi.fn(),
+  stop: vi.fn(),
+  reset: vi.fn(),
+  abort: vi.fn(),
 }))
 const micMocks = vi.hoisted(() => ({
   release: vi.fn(),
@@ -36,15 +40,22 @@ const exercise = {
 }
 
 describe('SpokenProductionExercise', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
   it('uses speech input with sentence endpoint and prioritizes retry when the target was not recognized', async () => {
+    // Timeout ampliado: bajo el suite completo (800+ archivos en paralelo) el
+    // waitFor por debajo de gradeProduction puede tardar más que los 5s default.
     speechInputMocks.useSpeechInput.mockReturnValue({
       state: 'done',
       result: { transcript: 'Insurance Company', source: 'gemini' },
       error: null,
       isSupported: true,
-      start: vi.fn(),
-      stop: vi.fn(),
-      reset: vi.fn(),
+      start: speechInputMocks.start,
+      stop: speechInputMocks.stop,
+      reset: speechInputMocks.reset,
+      abort: speechInputMocks.abort,
     })
     gradingMocks.gradeProduction.mockResolvedValue({
       correct: false,
@@ -62,6 +73,8 @@ describe('SpokenProductionExercise', () => {
         modality: 'spoken',
         production: 'Insurance Company',
       }))
+      expect(screen.getByRole('button', { name: 'Intentar de nuevo' })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Continuar de todos modos' })).toBeInTheDocument()
     })
 
     expect(speechInputMocks.useSpeechInput).toHaveBeenCalledWith(
@@ -70,9 +83,7 @@ describe('SpokenProductionExercise', () => {
         endpoint: '/api/gemini/transcribe-sentence',
       }),
     )
-    expect(screen.getByRole('button', { name: 'Intentar de nuevo' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Continuar de todos modos' })).toBeInTheDocument()
-  })
+  }, 15000)
 
   it('renders mic controls and keeps them accessible during listening and errors', () => {
     speechInputMocks.useSpeechInput.mockReturnValue({
@@ -80,9 +91,10 @@ describe('SpokenProductionExercise', () => {
       result: null,
       error: null,
       isSupported: true,
-      start: vi.fn(),
-      stop: vi.fn(),
-      reset: vi.fn(),
+      start: speechInputMocks.start,
+      stop: speechInputMocks.stop,
+      reset: speechInputMocks.reset,
+      abort: speechInputMocks.abort,
     })
 
     const { rerender } = render(<SpokenProductionExercise exercise={exercise} onResult={vi.fn()} />)
@@ -94,9 +106,10 @@ describe('SpokenProductionExercise', () => {
       result: null,
       error: 'no-speech',
       isSupported: true,
-      start: vi.fn(),
-      stop: vi.fn(),
-      reset: vi.fn(),
+      start: speechInputMocks.start,
+      stop: speechInputMocks.stop,
+      reset: speechInputMocks.reset,
+      abort: speechInputMocks.abort,
     })
 
     rerender(<SpokenProductionExercise exercise={exercise} onResult={vi.fn()} />)
@@ -110,9 +123,10 @@ describe('SpokenProductionExercise', () => {
       result: null,
       error: null,
       isSupported: true,
-      start: vi.fn(),
-      stop: vi.fn(),
-      reset: vi.fn(),
+      start: speechInputMocks.start,
+      stop: speechInputMocks.stop,
+      reset: speechInputMocks.reset,
+      abort: speechInputMocks.abort,
     })
 
     render(<SpokenProductionExercise exercise={exercise} onResult={vi.fn()} onSkip={vi.fn()} />)

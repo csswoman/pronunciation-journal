@@ -2,7 +2,7 @@
 
 **Estado:** contrato canónico de producto y arquitectura
 
-**Fecha:** 2026-08-10
+**Fecha:** 2026-09-13
 
 Este documento define cómo se conectan el Plan diario, Laboratorio de sonidos,
 Palabras esenciales, Mazos, Ruta, Mini-lecciones, contenido guardado, Repaso y
@@ -14,6 +14,12 @@ no mediante enlaces circunstanciales entre pantallas.
 > Cada contenido declara qué enseña; cada ejercicio produce evidencia; Plan
 > diario y Repaso deciden qué practicar; Progreso interpreta la evidencia sin
 > inventarla.
+
+El producto aplica además una jerarquía pedagógica explícita: los chunks son la
+unidad comunicativa principal y las palabras se activan dentro de ellos. La
+mezcla objetivo reserva 70% de las acciones para chunks y 30% para palabras y
+sonidos. El contrato completo vive en
+[`chunk-first-learning.md`](chunk-first-learning.md).
 
 ```mermaid
 flowchart LR
@@ -103,6 +109,7 @@ actuales siguen siendo la fuente de verdad:
 |---|---|
 | Vocabulario personal | UUID real de `word_bank` |
 | Palabras esenciales | Learning item estable del currículo, actualmente basado en `c1k:<word>` |
+| Chunks autorales | Identificador estable del catálogo y relaciones autorales con palabras, sonidos e intención |
 | Conceptos de teoría | Topic normalizado y su fila de `topic_srs` cuando corresponde |
 | Pronunciación | `PronunciationTargetId` del registro canónico |
 | Frases autorales del sistema | `text_fragments` u otra fuente autoral explícita |
@@ -156,16 +163,22 @@ de Progreso debe escribir de vuelta a estas fuentes.
 ### Plan diario
 
 El Plan diario es un orquestador, no un nuevo scheduler. Debe ordenar candidatos
-con una política determinista y visible:
+con una política determinista y visible. También debe construir un hilo
+comunicativo, no una lista de ejercicios sin relación.
 
 1. Repasos vencidos y verificaciones pendientes.
 2. Errores recientes y targets débiles con evidencia suficiente.
-3. Siguiente contenido de la Ruta o prescripción activa.
-4. Un número acotado de guardados/familiares como prioridad personal.
-5. Exploración o variedad para completar capacidad.
+3. Al menos un chunk nuevo en modo normal, con sus palabras ancla.
+4. Siguiente contenido de la Ruta o prescripción activa.
+5. Un número acotado de guardados/familiares como prioridad personal.
+6. Exploración o variedad para completar capacidad.
 
 Cada paso debe conservar `targetIds`, fuente y motivo de selección para que la
 finalización reconcilie únicamente el paso exacto.
+
+La proporción 70/30 se audita sobre acciones agregadas. El selector no sacrifica
+repasos vencidos para simular novedad, pero tampoco elimina toda novedad salvo
+que el alumno elija “solo repasar”.
 
 ### Repaso
 
@@ -232,3 +245,4 @@ completion explícita; no se inventa mastery.
 - [`pronunciation-targets.md`](pronunciation-targets.md): identidad canónica de pronunciación.
 - [`pronunciation-learning-route.md`](pronunciation-learning-route.md): currículo de pronunciación.
 - [`offline-sync.md`](offline-sync.md): outbox, persistencia local y reconciliación.
+- [`chunk-first-learning.md`](chunk-first-learning.md): contrato pedagógico de chunks, palabras, escucha y habla.

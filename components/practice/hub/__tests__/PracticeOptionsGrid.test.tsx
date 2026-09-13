@@ -53,6 +53,6 @@ describe('PracticeOptionsGrid', () => {
     ).map((el) => el.getAttribute('data-span'))
 
     // Order matches render order in the component.
-    expect(spans).toEqual(['4', '1', '1', '2', '2', '2', '1', '1', '1', '1'])
+    expect(spans).toEqual(['4', '1', '1', '1', '2', '2', '2', '1', '1', '1', '1'])
   })
 })
