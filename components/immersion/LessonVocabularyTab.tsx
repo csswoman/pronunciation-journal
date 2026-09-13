@@ -1,8 +1,16 @@
 'use client';
 
+// Planned structure:
+// <LessonVocabularyTab>
+//   <VocabularyGrid>
+//     <VocabularyCard /> (Word, IPA, definition, rounded quote box, ListenButton & save button)
+//   </VocabularyGrid>
+// </LessonVocabularyTab>
+
 import { useState } from 'react';
-import { Bookmark, BookmarkCheck, Volume2 } from '@/components/icons';
+import { Bookmark, BookmarkCheck } from '@/components/icons';
 import Button from '@/components/ui/Button';
+import { ListenButton } from '@/components/ui/ListenButton';
 import { quickAddWord } from '@/lib/word-bank/queries';
 import { speakWord } from '@/lib/word-bank/speech';
 import type { ImmersionLesson } from '@/lib/immersion/types';
@@ -54,32 +62,30 @@ export function LessonVocabularyTab({ lesson }: LessonVocabularyTabProps) {
           return (
             <div
               key={idx}
-              className="flex flex-col justify-between gap-2.5 rounded-lg border border-border-default bg-surface-sunken p-3.5"
+              className="flex flex-col justify-between gap-3 rounded-2xl border border-border-default bg-surface-sunken p-4 shadow-2xs"
             >
-              <div className="flex flex-col gap-1">
+              <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="font-semibold text-fg">{v.word}</span>
-                  <span className="font-ipa text-tiny text-fg-muted">{v.ipa}</span>
+                  <span className="font-semibold text-fg text-body">{v.word}</span>
+                  <span className="font-ipa text-tiny text-primary">{v.ipa}</span>
                 </div>
                 <p className="text-body-sm text-fg-muted">{v.definition}</p>
-                <p className="border-l-2 border-primary/40 pl-2 text-tiny italic text-fg-subtle">
+                <div className="rounded-xl bg-surface-raised/80 px-3 py-2 text-tiny italic text-fg-muted border border-border-subtle">
                   &quot;{v.contextSentence}&quot;
-                </p>
+                </div>
               </div>
 
-              <div className="flex items-center justify-between gap-2 pt-1">
-                <button
-                  type="button"
-                  onClick={() => speakWord(v.word)}
-                  className="inline-flex items-center gap-1 text-tiny text-fg-muted hover:text-primary focus-ring"
-                >
-                  <Volume2 className="size-3.5" />
-                  <span>Escuchar</span>
-                </button>
+              <div className="flex items-center justify-between gap-2 pt-2 border-t border-border-subtle">
+                <ListenButton
+                  iconOnly
+                  label={`Escuchar ${v.word}`}
+                  onPlay={() => speakWord(v.word)}
+                />
 
                 <Button
-                  variant={isSaved ? 'outline' : 'secondary'}
+                  variant={isSaved ? 'soft' : 'secondary'}
                   size="sm"
+                  className="rounded-full"
                   disabled={isSaving || isSaved}
                   onClick={() => handleSaveWord(v.word, v.contextSentence, v.definition, v.ipa)}
                 >

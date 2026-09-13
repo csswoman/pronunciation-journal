@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import Link from "next/link";
+import { ArrowRight } from "@/components/icons";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { isAnonymousUser } from "@/lib/auth/is-anonymous";
 import { readWelcomeTourCompleted } from "@/lib/home/onboarding";
@@ -22,7 +24,7 @@ import HomePlacementPrompt from "@/components/home/HomePlacementPrompt";
 import HomePronunciationPrompt from "@/components/home/HomePronunciationPrompt";
 import HomeActivationStrip from "@/components/home/HomeActivationStrip";
 import GuestSaveProgressBanner from "@/components/home/GuestSaveProgressBanner";
-import type { ConceptLesson } from "@/hooks/useDailyPlan";
+import type { ConceptLesson, DailyStep, useDailyPlan } from "@/hooks/useDailyPlan";
 import type { WeakestPhonemeHome } from "@/lib/home/constants";
 import type { HomePlacementState } from "@/lib/home/placement-state";
 import type { HomePronunciationDiagnosticState } from "@/lib/home/pronunciation-diagnostic-state";
@@ -56,6 +58,8 @@ export interface HomeCommandGridProps {
   previewWords?: Array<{ text: string }>;
   placementState: HomePlacementState;
   pronunciationDiagnosticState: HomePronunciationDiagnosticState;
+  onStartStep?: (step: DailyStep) => void;
+  planState?: ReturnType<typeof useDailyPlan>;
 }
 
 export default function HomeCommandGrid({
@@ -68,6 +72,8 @@ export default function HomeCommandGrid({
   streak = null,
   placementState,
   pronunciationDiagnosticState,
+  onStartStep,
+  planState,
 }: HomeCommandGridProps) {
   const { user } = useAuth();
   const isGuest = isAnonymousUser(user);
@@ -139,6 +145,8 @@ export default function HomeCommandGrid({
               weakestPhoneme={weakestPhoneme}
               needsPlacement={needsPlacement}
               needsPronunciation={needsPronunciation}
+              onStartStep={onStartStep}
+              planState={planState}
               customEmptyState={
                 showActivation ? (
                   <HomeActivationStrip
@@ -168,6 +176,16 @@ export default function HomeCommandGrid({
                 </>
               }
             />
+            {/* Home ejecuta el paso siguiente; /daily despliega el día entero. */}
+            {planSettled && !planEmpty ? (
+              <Link
+                href="/daily"
+                className="focus-ring inline-flex min-h-11 items-center gap-1.5 self-start rounded-md px-1 font-label text-body-sm text-fg-muted transition-colors hover:text-primary"
+              >
+                Ver el día completo
+                <ArrowRight size={16} aria-hidden />
+              </Link>
+            ) : null}
           </div>
 
           {showGuestSaveStrip ? <GuestSaveProgressBanner variant="footer" /> : null}

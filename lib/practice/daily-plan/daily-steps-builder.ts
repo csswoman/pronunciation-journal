@@ -143,7 +143,13 @@ export async function buildDailyCandidateSteps(
   const wordIntro = buildWordIntroStep(reviewWords)
   if (wordIntro) reviewSteps.push(wordIntro)
 
-  const wordReview = buildWordReviewStep(reviewWords, 'daily', savedOrFamiliarWordIds, wordIndex)
+  const wordReview = buildWordReviewStep(
+    reviewWords,
+    'daily',
+    savedOrFamiliarWordIds,
+    wordIndex,
+    studyDeckActiveLevel,
+  )
   if (wordReview) reviewSteps.push(wordReview)
 
   const contextPractice = buildContextPracticeStep(reviewWords)

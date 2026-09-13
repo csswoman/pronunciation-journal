@@ -157,12 +157,16 @@ export async function buildCapabilitySnapshot(
   const micPermission = micPermissionOverride ?? await queryMicPermission()
   const online = isBrowserOnline()
 
-  // Brave/Edge/etc. expose SpeechRecognition but lack Google's speech key.
-  // Treat them as unsupported for production scoring so preflight is honest.
-  const { isWebSpeechReliable } = await import(
+  // Scoring does not require the native recognizer. Browsers without a usable
+  // one — Firefox, Safari, Brave, Edge, Arc, every phone — are routed to the
+  // Gemini adapter, which records the audio and transcribes it server side.
+  // So a microphone is the real precondition; `canScoreSpeech` encodes that,
+  // falling back to Web Speech only when no mic capture is reachable.
+  const { canScoreSpeech } = await import(
     "@/lib/speech/adapters/webSpeechAdapter"
   )
-  const speechUsable = hasSpeechRecognition && isWebSpeechReliable()
+  const speechUsable =
+    canScoreSpeech() && (hasMicrophoneCapture || hasSpeechRecognition)
 
   return {
     micPermission,
@@ -174,7 +178,9 @@ export async function buildCapabilitySnapshot(
     ),
     browserSupport: speechUsable
       ? deriveBrowserSupport(
-          hasSpeechRecognition,
+          // Mic capture alone is enough to score, so it counts as support even
+          // when `window` exposes no SpeechRecognition (Firefox, Safari).
+          hasSpeechRecognition || hasMicrophoneCapture,
           micPermission,
           hasMicrophoneCapture
         )

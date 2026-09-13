@@ -177,7 +177,6 @@ const nextConfig = {
     }
     config.module.rules.unshift({
       test: /\.svg$/i,
-      issuer: /\.[jt]sx?$/,
       include: [illustrationsDir],
       use: [
         {

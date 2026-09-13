@@ -10,9 +10,7 @@ interface SetupActivationBarProps {
 }
 
 /**
- * Resumen de selección + CTA de activación. Separado del árbol de selección
- * para que el estado de carga (etapas de useSprintActivation) no fuerce un
- * re-render de toda la pantalla de picking.
+ * Resumen de selección y botón principal de activación del sprint.
  */
 export function SetupActivationBar({
   selectedGaps,
@@ -22,20 +20,20 @@ export function SetupActivationBar({
   onActivate,
 }: SetupActivationBarProps) {
   return (
-    <div className="sticky bottom-4 flex flex-col gap-3">
+    <div className="sticky bottom-4 z-10 flex flex-col gap-3">
       {errorMessage && (
-        <div className="p-3 rounded-lg bg-[var(--badge-error-bg)] text-[var(--text-error)] text-body-sm">
+        <div className="rounded-lg border border-error-soft bg-error-soft p-3 text-body-sm text-error shadow-xs">
           {errorMessage}
         </div>
       )}
 
-      <div className="flex items-center justify-between gap-4 p-4 rounded-xl bg-[var(--surface-raised)] border border-[var(--border-default)] shadow-md">
+      <div className="flex items-center justify-between gap-4 rounded-xl border border-border-default bg-surface-raised p-4 shadow-md">
         <div className="min-w-0">
-          <span className="text-body-sm font-semibold text-[var(--text-primary)] block">
-            {selectedGaps.length} de 2 seleccionados
+          <span className="block text-body-sm font-semibold text-fg">
+            {selectedGaps.length} de 2 focos seleccionados
           </span>
-          <span className="text-tiny text-[var(--text-tertiary)] block truncate">
-            {selectedGaps.map((g) => g.label).join(' · ') || 'Elige al menos 1 tema'}
+          <span className="block truncate text-tiny text-fg-subtle">
+            {selectedGaps.map((g) => g.label).join(' · ') || 'Elige al menos 1 foco para comenzar tu sprint'}
           </span>
         </div>
         <Button
@@ -50,3 +48,4 @@ export function SetupActivationBar({
     </div>
   )
 }
+

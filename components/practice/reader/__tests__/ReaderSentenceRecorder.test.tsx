@@ -58,7 +58,7 @@ describe('ReaderSentenceRecorder', () => {
     expect(screen.getByRole('button', { name: /grabar repetición/i })).toBeInTheDocument()
   })
 
-  it('renders unsupported message when browser lacks speech support', () => {
+  it('keeps listen-and-repeat practice when the microphone is unreachable', () => {
     mockIsSupported = false
     render(
       <ReaderSentenceRecorder
@@ -67,7 +67,11 @@ describe('ReaderSentenceRecorder', () => {
       />,
     )
 
-    expect(screen.getByText(/Tu navegador no soporta reconocimiento de voz/i)).toBeInTheDocument()
+    expect(screen.getByText(/no podemos acceder a tu micrófono/i)).toBeInTheDocument()
+    // The model audio is the practice that survives without a mic.
+    expect(screen.getByRole('button', { name: /escuchar el modelo/i })).toBeInTheDocument()
+    // Never blame the browser: scoring runs through Gemini everywhere.
+    expect(screen.queryByText(/Chrome|Firefox|Safari|Brave|Edge/i)).not.toBeInTheDocument()
   })
 
   it('starts recording when record button is clicked', () => {

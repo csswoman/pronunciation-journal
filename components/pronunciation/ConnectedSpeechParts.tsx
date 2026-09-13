@@ -14,6 +14,7 @@ import { Volume2, Mic, ArrowRight, ArrowLeft, Sparkles } from "@/components/icon
 import { SelfPlaybackAudioBar } from "./SelfPlaybackAudioBar";
 import { RhythmicSentenceDisplay } from "./RhythmicSentenceDisplay";
 import { CONNECTED_SPEECH_DATA, type ConnectedPhrase } from "@/lib/pronunciation/connected-speech-data";
+import { SCORING_UNAVAILABLE_SHADOW_ES } from "@/lib/speech/browser-support-message";
 import { cn } from "@/lib/cn";
 
 const CATEGORIES = [
@@ -196,19 +197,27 @@ export function ConnectedSpeechPhraseCard({
         <p className="text-body-sm text-fg-muted mt-2 text-pretty">{phrase.explanationEs}</p>
       </div>
 
-      {isSupported && (
-        <div className="flex flex-col gap-3 pt-2 border-t border-border-subtle">
+      {/* La navegación entre frases nunca depende del micrófono: ocultarla
+          dejaba al estudiante sin salida cuando la grabación no estaba
+          disponible. Sólo el botón de grabar se condiciona. */}
+      <div className="flex flex-col gap-3 pt-2 border-t border-border-subtle">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-            <Button
-              type="button"
-              variant={isListening ? "error" : "primary"}
-              size="lg"
-              onClick={onToggleMic}
-              className="w-full sm:w-auto min-w-[200px]"
-            >
-              <Mic size={18} className={isListening ? "animate-pulse" : ""} />
-              {isListening ? "Detener grabación" : "Grabar mi repetición (Shadowing)"}
-            </Button>
+            {isSupported ? (
+              <Button
+                type="button"
+                variant={isListening ? "error" : "primary"}
+                size="lg"
+                onClick={onToggleMic}
+                className="w-full sm:w-auto min-w-[200px]"
+              >
+                <Mic size={18} className={isListening ? "animate-pulse" : ""} />
+                {isListening ? "Detener grabación" : "Grabar mi repetición (Shadowing)"}
+              </Button>
+            ) : (
+              <p className="m-0 max-w-xs text-body-sm text-fg-muted">
+                {SCORING_UNAVAILABLE_SHADOW_ES}
+              </p>
+            )}
 
             <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
               {onPrev && (
@@ -231,7 +240,7 @@ export function ConnectedSpeechPhraseCard({
             </div>
           </div>
 
-          {isDone && (
+          {isSupported && isDone && (
             <div className="pt-2">
               <SelfPlaybackAudioBar targetWord={phrase.phrase} userAudioUrl={userAudioUrl} />
               {transcript && (
@@ -249,8 +258,7 @@ export function ConnectedSpeechPhraseCard({
               )}
             </div>
           )}
-        </div>
-      )}
+      </div>
     </div>
   );
 }

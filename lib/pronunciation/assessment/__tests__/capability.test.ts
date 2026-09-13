@@ -184,8 +184,10 @@ describe('buildCapabilitySnapshot', () => {
     })
   })
 
-  it('marks Brave-like browsers as partial even when SpeechRecognition exists', async () => {
-    vi.stubGlobal('window', { SpeechRecognition: function () {} })
+  // Brave has no usable native recognizer, but with a microphone available the
+  // Gemini adapter scores the attempt, so the diagnostic stays fully usable.
+  it('keeps Brave-like browsers usable when a microphone is available', async () => {
+    vi.stubGlobal('window', { SpeechRecognition: function () {}, isSecureContext: true })
     vi.stubGlobal('navigator', {
       userAgent:
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
@@ -197,9 +199,26 @@ describe('buildCapabilitySnapshot', () => {
 
     const snapshot = await buildCapabilitySnapshot()
 
-    expect(snapshot.sttAvailable).toBe(false)
-    expect(snapshot.browserSupport).toBe('partial')
-    expect(canEvaluateProduction(snapshot)).toBe(false)
+    expect(snapshot.sttAvailable).toBe(true)
+    expect(snapshot.browserSupport).toBe('full')
+    expect(canEvaluateProduction(snapshot)).toBe(true)
+  })
+
+  // Firefox exposes no SpeechRecognition at all, yet still scores via Gemini.
+  it('keeps a browser with no native recognizer usable when a microphone is available', async () => {
+    vi.stubGlobal('window', { isSecureContext: true })
+    vi.stubGlobal('navigator', {
+      userAgent:
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0',
+      onLine: true,
+      permissions: { query: vi.fn().mockResolvedValue({ state: 'granted' }) },
+      mediaDevices: { getUserMedia: vi.fn() },
+    })
+
+    const snapshot = await buildCapabilitySnapshot()
+
+    expect(snapshot.sttAvailable).toBe(true)
+    expect(canEvaluateProduction(snapshot)).toBe(true)
   })
 
   it('produces a snapshot for permission-denied path', async () => {
@@ -224,13 +243,33 @@ describe('buildCapabilitySnapshot', () => {
     expect(canEvaluateProduction(snapshot)).toBe(false)
   })
 
-  it('produces a snapshot for unsupported-browser path', async () => {
-    vi.stubGlobal('window', {})
+  // No native recognizer but a reachable microphone is the Firefox/Safari
+  // case: the Gemini adapter records and transcribes, so scoring is available.
+  it('stays usable with no SpeechRecognition as long as a microphone is reachable', async () => {
+    vi.stubGlobal('window', { isSecureContext: true })
     vi.stubGlobal(
       'navigator',
       chromeNavigator({
         onLine: true,
         mediaDevices: { getUserMedia: vi.fn() },
+      }),
+    )
+
+    const snapshot = await buildCapabilitySnapshot()
+
+    expect(CapabilitySnapshotSchema.safeParse(snapshot).success).toBe(true)
+    expect(snapshot.sttAvailable).toBe(true)
+    expect(canEvaluateProduction(snapshot)).toBe(true)
+  })
+
+  // Genuinely unsupported: neither a recognizer nor microphone capture.
+  it('produces a snapshot for unsupported path when nothing can capture audio', async () => {
+    vi.stubGlobal('window', {})
+    vi.stubGlobal(
+      'navigator',
+      chromeNavigator({
+        onLine: true,
+        mediaDevices: undefined,
       }),
     )
 

@@ -45,3 +45,9 @@
 | Plan 112 - Task 10 | `LineResult` composition | Completed |
 | Plan 112 - Task 11 | Wire `LearnerLine` & delete `SyllableRemediation` | Completed |
 | Plan 112 - Task 12 | Final verification pass | Completed |
+| Plan 113 - Task 1 | Crear hook `useDailySessionRunner.ts` con helpers de sessionStorage y tests unitarios | Completed |
+| Plan 113 - Task 2 | Migrar `DailyChecklist.tsx` a `useDailySessionRunner` y actualizar tests de DailyChecklist | Completed |
+| Plan 113 - Task 3 | Añadir soporte `onBackHome` a `SessionRecapCard.tsx` para permitir reinicio a idle sin recarga de ruta | Completed |
+| Plan 113 - Task 4 | Cablear `useDailySessionRunner` y takeover full-bleed en `HomeLayout.tsx`, `HomeCommandGrid.tsx` y `HomeDailyCard.tsx` | Completed |
+| Plan 113 - Task 5 | Actualizar tests de Home (`HomeDailyCard`, `HomeCommandGrid`) asegurando eliminación de `router.push('/daily?step=')` | Completed |
+| Plan 113 - Task 6 | Verificación final con `pnpm type-check`, `pnpm lint` y suite de tests relacionados | Completed |

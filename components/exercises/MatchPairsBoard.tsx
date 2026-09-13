@@ -1,7 +1,14 @@
+// Planned structure:
+// <MatchPairsBoard>
+//   <MatchPairsMobileBoard />
+//   <MatchPairsDesktopView />
+// </MatchPairsBoard>
+
 import type { RefObject } from 'react'
 import { cn } from '@/lib/cn'
 import type { MatchPairsExercise as MatchPairsExerciseType } from '@/lib/exercises/types'
 import type { MatchConnection, MatchResult } from './match-pairs-types'
+import { MatchPairsMobileBoard } from './MatchPairsMobileBoard'
 import {
   ColorDot,
   dotColorForLeft,
@@ -54,8 +61,27 @@ export function MatchPairsBoard({
       ref={boardRef}
       role="group"
       aria-label="Emparejar términos y definiciones"
-      className="relative grid w-full grid-cols-2 gap-3 sm:gap-6"
+      className="w-full"
     >
+      {/* Mobile view (< sm / < 640px) */}
+      <MatchPairsMobileBoard
+        pairs={pairs}
+        rightItems={rightItems}
+        selection={{
+          selectedLeft,
+          armedRight,
+          matches,
+          results,
+          submitted,
+        }}
+        pairColor={pairColor}
+        onLeftClick={onLeftClick}
+        onRightClick={onRightClick}
+      />
+
+      {/* Desktop view (>= sm / >= 640px) */}
+      <div className="relative hidden w-full sm:grid sm:grid-cols-2 sm:gap-6">
+
       <svg aria-hidden className="pointer-events-none absolute inset-0 block h-full w-full">
         {connections.map((connection) => {
           const midX = (connection.from.x + connection.to.x) / 2
@@ -143,5 +169,6 @@ export function MatchPairsBoard({
         })}
       </div>
     </div>
+  </div>
   )
 }

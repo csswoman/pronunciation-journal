@@ -190,9 +190,10 @@ export function buildReviewHubCounts(
   soundsDue: unknown[],
   dueTopics: unknown[] = [],
   weakTopics: unknown[] = [],
+  dueLessons: unknown[] = [],
 ) {
   const reviewable =
-    dueWords.length + weakWords.length + soundsDue.length + failedSentences.filter((f) => f.drillable).length + dueTopics.length
+    dueWords.length + weakWords.length + soundsDue.length + failedSentences.filter((f) => f.drillable).length + dueTopics.length + dueLessons.length
 
   return {
     failedSentences: failedSentences.length,
@@ -201,8 +202,9 @@ export function buildReviewHubCounts(
     soundsDue: soundsDue.length,
     dueTopics: dueTopics.length,
     weakTopics: weakTopics.length,
+    dueLessons: dueLessons.length,
     reviewable,
-    total: failedSentences.length + weakWords.length + dueWords.length + soundsDue.length + dueTopics.length + weakTopics.length,
+    total: failedSentences.length + weakWords.length + dueWords.length + soundsDue.length + dueTopics.length + weakTopics.length + dueLessons.length,
   }
 }
 

@@ -10,6 +10,7 @@ export type ActivitySource =
   | 'lexicon'
   | 'courses'
   | 'ai_coach'
+  | 'immersion'
 
 export type SkillTag =
   | 'speaking'
@@ -28,7 +29,17 @@ export const ACTIVITY_SOURCE_LABELS: Record<ActivitySource, string> = {
   lexicon: 'Dictionary',
   courses: 'Ruta',
   ai_coach: 'AI Coach',
+  immersion: 'Inmersión',
 }
+
+export type ImmersionMediaType = 'video' | 'series' | 'podcast' | 'reading'
+
+export const IMMERSION_MEDIA_SKILLS: Record<ImmersionMediaType, readonly SkillTag[]> = {
+  video: ['listening', 'vocabulary'],
+  series: ['listening', 'vocabulary'],
+  podcast: ['listening'],
+  reading: ['reading', 'vocabulary'],
+} as const
 
 export function practiceContextToSource(context: PracticeContext): ActivitySource {
   switch (context) {

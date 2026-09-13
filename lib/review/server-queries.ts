@@ -117,10 +117,64 @@ async function getWeakTopicsForReview(userId: string, limit = 6): Promise<TopicS
   return (data ?? []) as TopicSrsRow[]
 }
 
+async function getDueLessonsForReview(
+  userId: string,
+  limit = 4,
+): Promise<import('./types').LessonReviewItem[]> {
+  const supabase = await createSupabaseServerClient()
+  const items: import('./types').LessonReviewItem[] = []
+
+  try {
+    // 1. Lecciones de inmersión vistas
+    const { data: immersionData } = await supabase
+      .from('immersion_lesson_progress')
+      .select('lesson_id, watched_at, quiz_score, updated_at')
+      .eq('user_id', userId)
+      .eq('watched', true)
+      .order('updated_at', { ascending: true })
+      .limit(limit)
+
+    if (immersionData && immersionData.length > 0) {
+      const lessonIds = immersionData.map((d) => d.lesson_id)
+      const { data: lessons } = await supabase
+        .from('immersion_lessons')
+        .select('id, slug, title, teacher, level, summary')
+        .in('id', lessonIds)
+
+      const lessonMap = new Map((lessons ?? []).map((l) => [l.id, l]))
+
+      for (const p of immersionData) {
+        const l = lessonMap.get(p.lesson_id)
+        if (l) {
+          const lastStudiedAt = p.updated_at || p.watched_at || new Date().toISOString()
+          const daysSinceStudy = Math.max(
+            0,
+            Math.floor((Date.now() - new Date(lastStudiedAt).getTime()) / (1000 * 60 * 60 * 24)),
+          )
+          items.push({
+            id: `immersion:${l.id}`,
+            title: l.title,
+            type: 'immersion',
+            typeLabel: `Inmersión · ${l.level} (Teacher ${l.teacher})`,
+            url: `/practice/immersion/${l.slug}`,
+            lastStudiedAt,
+            daysSinceStudy,
+            summary: l.summary,
+          })
+        }
+      }
+    }
+  } catch (err) {
+    console.error('[review] getDueLessonsForReview failed', err)
+  }
+
+  return items.slice(0, limit)
+}
+
 /** Server: full hub summary for `/practice/review`. */
 export async function getReviewHubSummary(userId: string): Promise<ReviewHubSummary> {
   const supabase = await createSupabaseServerClient()
-  const [failedSentences, weakWords, dueWords, soundsDue, dueTopics, weakTopics, srsHistory] =
+  const [failedSentences, weakWords, dueWords, soundsDue, dueTopics, weakTopics, dueLessons, srsHistory] =
     await Promise.all([
       loadFailedSentenceItemsServer(userId, 5),
       getWeakWordsForReviewServer(userId, 6),
@@ -128,10 +182,11 @@ export async function getReviewHubSummary(userId: string): Promise<ReviewHubSumm
       getSoundsDueForHome(userId),
       getDueTopicsForReview(userId, 6),
       getWeakTopicsForReview(userId, 6),
+      getDueLessonsForReview(userId, 4),
       getSrsHistory(supabase, userId),
     ])
 
-  const counts = buildReviewHubCounts(failedSentences, weakWords, dueWords, soundsDue, dueTopics, weakTopics)
+  const counts = buildReviewHubCounts(failedSentences, weakWords, dueWords, soundsDue, dueTopics, weakTopics, dueLessons)
   const canStartReview = computeCanStartReview({ failedSentences, weakWords, dueWords, soundsDue, dueTopics })
 
   return {
@@ -141,6 +196,7 @@ export async function getReviewHubSummary(userId: string): Promise<ReviewHubSumm
     soundsDue,
     dueTopics,
     weakTopics,
+    dueLessons,
     counts,
     nothingDue: counts.total === 0,
     canStartReview,

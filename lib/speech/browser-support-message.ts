@@ -1,65 +1,64 @@
 /**
- * Shared copy when the browser blocks Web Speech's remote recognition
- * (Brave, Opera, Edge, Arc, Firefox, …). The API often exists on `window`, so
- * feature detection passes, but attempts fail with a `network` error.
+ * Shared copy for microphone / voice-scoring degradation.
  *
- * Honest product line: Google Chrome has the speech backend key. Other
- * Chromium browsers report "Chrome/" in the UA but usually cannot score
- * pronunciation via Web Speech.
+ * What is actually true: pronunciation scoring does NOT require Google Chrome.
+ * Browsers without a reliable native recognizer — Firefox, Safari, Brave, Edge,
+ * Arc, and every phone — are routed to the Gemini adapter, which records the
+ * audio locally and transcribes it server side. See `detectSpeechAdapterKind`.
+ *
+ * So scoring becomes unavailable for reasons that are NOT the browser brand:
+ * an insecure origin (http:// on a LAN address), a blocked or missing
+ * microphone, or being offline. Copy here must name those causes. Telling a
+ * Firefox or Safari learner to install Chrome is false, and it does not fix a
+ * blocked microphone either.
+ *
  * Do not inline these strings in components — import from here.
  */
 
-/** Named list reused in Spanish tips (keep short enough for UI). */
-export const NON_CHROME_BROWSERS_ES = "Brave, Opera, Edge, Arc o Firefox"
-
-/** Quiet tip for login / first entry (always-safe Spanish). */
-export const CHROME_MIC_TIP_ES =
-  `Para practicar con micrófono y puntuación de pronunciación, la mejor experiencia es Google Chrome. En ${NON_CHROME_BROWSERS_ES} — y navegadores similares — el reconocimiento de voz suele estar bloqueado.`
-
 /** Spanish, inline error line (e.g. under a mic button). */
 export const BROWSER_BLOCKS_STT_ES =
-  `El reconocimiento de voz para puntuar pronunciación funciona de forma fiable en Google Chrome. En ${NON_CHROME_BROWSERS_ES} suele fallar aunque el micrófono esté permitido.`
+  "No podemos usar el micrófono en este momento. Revisa que la app esté abierta con https://, que el micrófono tenga permiso y que tengas conexión a internet."
 
-/** Spanish, network-failure message including the "if you're on Chrome" hint. */
+/** Spanish, network-failure message. Scoring needs the network, not a brand. */
 export const STT_NETWORK_FAILURE_ES =
-  `No se pudo usar el reconocimiento de voz. Suele fallar fuera de Google Chrome (p. ej. ${NON_CHROME_BROWSERS_ES}). Si ya estás en Chrome, revisa tu conexión a internet.`
+  "No se pudo completar el reconocimiento de voz. La transcripción necesita conexión a internet: revísala y vuelve a intentarlo."
 
-/** Spanish, dismissible in-app banner when the current browser is unreliable. */
-export const CHROME_MIC_BANNER_TITLE_ES = "Mejor con Google Chrome"
+/** Spanish, notice when the microphone itself is unreachable. */
+export const MIC_UNAVAILABLE_TITLE_ES = "Micrófono no disponible"
 
-export const CHROME_MIC_BANNER_BODY_ES =
-  `Puedes explorar la app aquí. Para ejercicios con micrófono y puntuación, ábrela en Google Chrome. En ${NON_CHROME_BROWSERS_ES} el reconocimiento de voz del navegador suele estar bloqueado.`
+export const MIC_UNAVAILABLE_BODY_ES =
+  "Puedes usar el resto de la app con normalidad. Para los ejercicios con voz necesitamos un micrófono: ábrela con https://, permite el micrófono en el navegador y comprueba que el dispositivo tenga uno disponible."
 
 /** English, shadowing-fallback message for scored exercises. */
-export const BROWSER_BLOCKS_SCORING_EN =
-  "This browser (like Brave, Opera, Edge, or Firefox) blocks voice scoring, so we can't rate your pronunciation. You can listen and repeat here, but for scored pronunciation practice, open the app in Google Chrome."
+export const SCORING_UNAVAILABLE_EN =
+  "We can't reach your microphone, so this attempt can't be scored. Listen to the model and repeat it out loud — this attempt won't count for or against you."
 
-export const BROWSER_BLOCKS_SCORING_ES =
-  `Este navegador (como ${NON_CHROME_BROWSERS_ES}) bloquea la puntuación por voz. Puedes escuchar y repetir aquí; para recibir una puntuación, abre la app en Google Chrome.`
+export const SCORING_UNAVAILABLE_ES =
+  "No podemos acceder a tu micrófono, así que este intento no se puede puntuar. Escucha el modelo y repite la palabra en voz alta; este intento no contará ni a favor ni en contra."
 
 /** English, shadowing-fallback message tuned for shadow-phrase exercises. */
-export const BROWSER_BLOCKS_SCORING_SHADOW_EN =
-  "This browser (like Brave, Opera, Edge, or Firefox) blocks voice scoring. Listen and repeat to shadow the phrase, but for scored pronunciation practice, open the app in Google Chrome."
+export const SCORING_UNAVAILABLE_SHADOW_EN =
+  "We can't reach your microphone, so this attempt can't be scored. Listen and repeat to shadow the phrase — this attempt won't count for or against you."
 
-export const BROWSER_BLOCKS_SCORING_SHADOW_ES =
-  `Este navegador (como ${NON_CHROME_BROWSERS_ES}) bloquea la puntuación por voz. Escucha e imita la frase aquí; para recibir una puntuación, abre la app en Google Chrome.`
+export const SCORING_UNAVAILABLE_SHADOW_ES =
+  "No podemos acceder a tu micrófono, así que este intento no se puede puntuar. Escucha e imita la frase en voz alta; este intento no contará ni a favor ni en contra."
 
 /** localStorage key — ephemeral UI pref, not learning data. */
-export const CHROME_MIC_TIP_DISMISSED_KEY = "speech:chrome-mic-tip-dismissed"
+export const MIC_TIP_DISMISSED_KEY = "speech:mic-unavailable-tip-dismissed"
 
-export function readChromeMicTipDismissed(): boolean {
+export function readMicTipDismissed(): boolean {
   if (typeof window === "undefined") return false
   try {
-    return window.localStorage.getItem(CHROME_MIC_TIP_DISMISSED_KEY) === "1"
+    return window.localStorage.getItem(MIC_TIP_DISMISSED_KEY) === "1"
   } catch {
     return false
   }
 }
 
-export function dismissChromeMicTip(): void {
+export function dismissMicTip(): void {
   if (typeof window === "undefined") return
   try {
-    window.localStorage.setItem(CHROME_MIC_TIP_DISMISSED_KEY, "1")
+    window.localStorage.setItem(MIC_TIP_DISMISSED_KEY, "1")
   } catch {
     /* quota / private mode */
   }

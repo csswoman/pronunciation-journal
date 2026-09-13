@@ -7,6 +7,8 @@ import { CapabilityPreflight } from '../CapabilityPreflight'
 
 vi.mock('@/lib/speech/adapters/webSpeechAdapter', () => ({
   isWebSpeechReliable: () => true,
+  canScoreSpeech: () => true,
+  isMobileBrowser: () => false,
 }))
 
 afterEach(() => {
@@ -214,8 +216,14 @@ describe('CapabilityPreflight', () => {
     ).not.toBeInTheDocument()
   })
 
-  it('unsupported browser: still navigable via perception/self-report continue path', async () => {
-    stubGlobals({ hasSpeechRecognition: false, onLine: true })
+  // Truly unsupported means no audio capture at all: a browser lacking only
+  // the native recognizer still scores through Gemini via the microphone.
+  it('no capture at all: still navigable via perception/self-report continue path', async () => {
+    stubGlobals({
+      hasSpeechRecognition: false,
+      onLine: true,
+      microphoneCaptureUnavailable: true,
+    })
     const onContinue = vi.fn()
 
     render(<CapabilityPreflight onContinue={onContinue} />)

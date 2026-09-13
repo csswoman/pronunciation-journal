@@ -139,6 +139,10 @@ export function MatchPairsExercise({ exercise, onResult }: Props) {
   const recomputeConnections = useCallback(() => {
     const board = boardRef.current
     if (!board) return
+    if (typeof window !== 'undefined' && window.innerWidth < 640) {
+      setConnections((prev) => (prev.length > 0 ? [] : prev))
+      return
+    }
     const boardRect = board.getBoundingClientRect()
     const next: MatchConnection[] = []
     for (const [leftId, rightId] of Object.entries(matches)) {

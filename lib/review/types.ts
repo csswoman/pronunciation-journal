@@ -26,6 +26,17 @@ export interface TopicSrsRow {
   last_reviewed_at: string | null
 }
 
+export interface LessonReviewItem {
+  id: string
+  title: string
+  type: 'immersion' | 'course'
+  typeLabel: string
+  url: string
+  lastStudiedAt: string
+  daysSinceStudy: number
+  summary?: string
+}
+
 export interface ReviewHubCounts {
   failedSentences: number
   weakWords: number
@@ -33,6 +44,7 @@ export interface ReviewHubCounts {
   soundsDue: number
   dueTopics: number
   weakTopics: number
+  dueLessons: number
   /** Items that can start a review session (excludes display-only failures). */
   reviewable: number
   total: number
@@ -45,6 +57,7 @@ export interface ReviewHubSummary {
   soundsDue: SoundDueHome[]
   dueTopics: TopicSrsRow[]
   weakTopics: TopicSrsRow[]
+  dueLessons: LessonReviewItem[]
   counts: ReviewHubCounts
   /** No sections with items to show. */
   nothingDue: boolean

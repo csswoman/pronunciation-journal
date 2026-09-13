@@ -12,7 +12,10 @@ import { scorePronunciation, getFeedbackMessage, calculateXP } from '@/lib/pronu
 import type { ScoringResult } from '@/lib/types'
 import PronunciationFeedback from '@/components/lesson/PronunciationFeedback'
 import Button from '@/components/ui/Button'
+import { ListenButton } from '@/components/ui/ListenButton'
 import { Mic } from '@/components/icons'
+import { speak } from '@/lib/phoneme-practice/tts'
+import { SCORING_UNAVAILABLE_SHADOW_ES } from '@/lib/speech/browser-support-message'
 import { cn } from '@/lib/cn'
 
 interface Props {
@@ -77,10 +80,27 @@ export function ReaderSentenceRecorder({ sentenceText, onRecorded }: Omit<Props,
     start()
   }
 
+  // Sin micrófono no hay transcripción, pero escuchar el modelo y repetirlo
+  // sigue siendo la práctica de shadowing: se conserva en vez de cortar.
   if (!isSupported) {
     return (
-      <div className="rounded-xl border border-border-default bg-surface-raised p-3 text-caption text-fg-muted">
-        Tu navegador no soporta reconocimiento de voz para shadowing oral.
+      <div className="flex flex-col gap-3 rounded-card border border-border-default bg-surface-raised p-4 shadow-xs">
+        <div className="flex items-center gap-2">
+          <span className="flex size-7 items-center justify-center rounded-full bg-primary-soft text-primary">
+            <Mic className="size-3.5" />
+          </span>
+          <span className="text-body-sm font-semibold text-fg">Práctica oral de la frase</span>
+          <span className="text-caption text-fg-muted font-mono">Shadowing</span>
+        </div>
+        <p className="m-0 text-caption text-fg-muted">
+          {SCORING_UNAVAILABLE_SHADOW_ES}
+        </p>
+        <div className="flex justify-start">
+          <ListenButton
+            onPlay={() => speak(sentenceText)}
+            label="Escuchar el modelo"
+          />
+        </div>
       </div>
     )
   }

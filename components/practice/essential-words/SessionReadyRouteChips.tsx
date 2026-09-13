@@ -1,7 +1,8 @@
 'use client'
 
-import { ChevronDown } from '@/components/icons'
+import { useMemo } from 'react'
 import { groupRoutesByLevel } from '@/lib/essential-words/routes'
+import { SelectMenu, type SelectMenuGroup } from '@/components/ui/SelectMenu'
 
 interface Props {
   activeRouteId: string | null
@@ -10,37 +11,42 @@ interface Props {
 }
 
 export function SessionReadyRouteChips({ activeRouteId, onRouteChange, disabled = false }: Props) {
-  const groups = groupRoutesByLevel()
+  const routeGroups = useMemo<SelectMenuGroup<string>[]>(() => {
+    const rawGroups = groupRoutesByLevel()
+    return [
+      {
+        label: 'Recomendado',
+        options: [
+          {
+            value: '',
+            label: 'Por frecuencia',
+            description: 'Aprende en el orden natural del Core 1000',
+          },
+        ],
+      },
+      ...rawGroups.map((g) => ({
+        label: `Nivel ${g.level}`,
+        options: g.routes.map((r) => ({
+          value: r.id,
+          label: r.label,
+          description: r.description,
+          badge: g.level,
+        })),
+      })),
+    ]
+  }, [])
 
   return (
-    <div className="group relative w-full" aria-label="Ruta de vocabulario">
-      <label htmlFor="session-ready-route" className="sr-only">
-        Ruta
-      </label>
-      <select
+    <div className="w-full">
+      <SelectMenu
         id="session-ready-route"
         value={activeRouteId ?? ''}
+        onChange={(val) => onRouteChange(val || null)}
+        groups={routeGroups}
         disabled={disabled}
-        onChange={(event) => onRouteChange(event.target.value || null)}
-        className="min-h-9 sm:min-h-10 w-full appearance-none rounded-md border border-border-default bg-surface-sunken py-1.5 sm:py-2 pl-3 pr-9 text-caption sm:text-label font-semibold text-fg transition-[color,background-color,border-color,box-shadow] duration-150 ease-out-quart hover:border-border-strong hover:bg-surface-raised focus:border-primary focus:bg-surface-raised focus:shadow-sm focus-ring disabled:cursor-not-allowed disabled:opacity-60"
-      >
-        <option value="">Por frecuencia</option>
-        {groups.map((group) => (
-          <optgroup key={group.level} label={`Nivel ${group.level}`}>
-            {group.routes.map((route) => (
-              <option key={route.id} value={route.id}>
-                {route.label}
-              </option>
-            ))}
-          </optgroup>
-        ))}
-      </select>
-      <span
-        className="pointer-events-none absolute inset-y-0 right-0 flex w-10 items-center justify-center text-fg-muted transition-colors duration-150 ease-out-quart group-hover:text-fg group-focus-within:text-primary"
-        aria-hidden
-      >
-        <ChevronDown size={16} />
-      </span>
+        aria-label="Ruta"
+        placeholder="Por frecuencia"
+      />
     </div>
   )
 }

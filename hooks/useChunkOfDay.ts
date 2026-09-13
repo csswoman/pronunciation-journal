@@ -11,8 +11,23 @@ function todayKey(): string {
 }
 
 export function useChunkOfDay() {
-  const [chunk, setChunk] = useState<ChunkItem | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [chunk, setChunk] = useState<ChunkItem | null>(() => {
+    try {
+      if (typeof window !== "undefined") {
+        const stored = sessionStorage.getItem(SESSION_CHUNK_KEY);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (parsed && parsed.date === todayKey() && parsed.chunk) {
+            return parsed.chunk;
+          }
+        }
+      }
+    } catch {
+      // Ignore cache read failures
+    }
+    return getChunkOfDay(todayKey());
+  });
+  const [loading] = useState<boolean>(false);
   const [isShuffled, setIsShuffled] = useState<boolean>(false);
 
   useEffect(() => {
@@ -23,18 +38,11 @@ export function useChunkOfDay() {
         if (parsed && parsed.date === todayKey() && parsed.chunk) {
           setChunk(parsed.chunk);
           setIsShuffled(Boolean(parsed.isShuffled));
-          setLoading(false);
-          return;
         }
       }
     } catch {
       // Ignore cache read failures
     }
-
-    const initial = getChunkOfDay(todayKey());
-    setChunk(initial);
-    setIsShuffled(false);
-    setLoading(false);
   }, []);
 
   const shuffle = useCallback(() => {

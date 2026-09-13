@@ -45,7 +45,21 @@ vi.mock('@/lib/review/client-queries', () => ({
 }))
 
 vi.mock('../DailyStepSession', () => ({
-  default: () => <div>Step session</div>,
+  default: ({
+    step,
+    onComplete,
+    onExit,
+  }: {
+    step: DailyStep
+    onComplete: () => void
+    onExit: () => void
+  }) => (
+    <div>
+      <div>Step session: {step.title}</div>
+      <button type="button" onClick={onComplete}>Complete step</button>
+      <button type="button" onClick={onExit}>Exit step</button>
+    </div>
+  ),
 }))
 
 vi.mock('../SessionRecapCard', () => ({
@@ -123,7 +137,7 @@ describe('DailyChecklist (checklist surface)', () => {
   it('shows the session hub by default — no auto-start into a step session', async () => {
     render(<DailyChecklist conceptLesson={lesson} />)
     expect(screen.queryByText('Step session')).not.toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'Sesión diaria' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Tu día completo' })).toBeInTheDocument()
     expect(await screen.findByText('Lesson: Formas débiles')).toBeInTheDocument()
     expect(screen.getByText('Study tip')).toBeInTheDocument()
   })
@@ -138,20 +152,58 @@ describe('DailyChecklist (checklist surface)', () => {
 
   it('auto-starts the step named by initialStepId (e.g. from a notification link)', async () => {
     render(<DailyChecklist conceptLesson={null} initialStepId="s3" />)
-    expect(await screen.findByText('Step session')).toBeInTheDocument()
+    expect(await screen.findByText(/Step session: Práctica en contexto/i)).toBeInTheDocument()
+  })
+
+  it('completes a step and advances to the next pending step in place without router navigation', async () => {
+    mockState.steps = [
+      makeStep({ id: 's1', title: 'Paso 1' }),
+      makeStep({ id: 's2', title: 'Paso 2' }),
+    ]
+    render(<DailyChecklist conceptLesson={null} initialStepId="s1" />)
+    expect(await screen.findByText('Step session: Paso 1')).toBeInTheDocument()
+
+    const completeBtn = screen.getByRole('button', { name: 'Complete step' })
+    completeBtn.click()
+
+    expect(await screen.findByText('Step session: Paso 2')).toBeInTheDocument()
+    expect(mockState.markDone).toHaveBeenCalledWith('s1')
+  })
+
+  it('completes the last step and transitions to the done recap view', async () => {
+    mockState.steps = [makeStep({ id: 's1', title: 'Paso Único' })]
+    render(<DailyChecklist conceptLesson={null} initialStepId="s1" />)
+    expect(await screen.findByText('Step session: Paso Único')).toBeInTheDocument()
+
+    const completeBtn = screen.getByRole('button', { name: 'Complete step' })
+    completeBtn.click()
+
+    expect(await screen.findByText('Recap')).toBeInTheDocument()
+    expect(mockState.markDone).toHaveBeenCalledWith('s1')
+  })
+
+  it('exiting a step returns to the hub view', async () => {
+    render(<DailyChecklist conceptLesson={null} initialStepId="s1" />)
+    expect(await screen.findByText('Step session: Palabras nuevas')).toBeInTheDocument()
+
+    const exitBtn = screen.getByRole('button', { name: 'Exit step' })
+    exitBtn.click()
+
+    expect(await screen.findByRole('heading', { name: 'Tu día completo' })).toBeInTheDocument()
+    expect(screen.queryByText(/Step session:/i)).not.toBeInTheDocument()
   })
 
   it('shows the hub when the entry step cannot auto-start (concept/study_deck)', () => {
     mockState.steps = [makeStep({ id: 's1', kind: 'concept', title: 'Teoría' })]
     render(<DailyChecklist conceptLesson={null} />)
-    expect(screen.queryByText('Step session')).not.toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'Sesión diaria' })).toBeInTheDocument()
+    expect(screen.queryByText(/Step session/i)).not.toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Tu día completo' })).toBeInTheDocument()
   })
 
   it('shows the empty lesson state when there is no lesson today', () => {
     mockState.steps = []
     render(<DailyChecklist conceptLesson={null} />)
-    expect(screen.queryByText('Step session')).not.toBeInTheDocument()
+    expect(screen.queryByText(/Step session/i)).not.toBeInTheDocument()
     expect(screen.getByText('No lesson')).toBeInTheDocument()
   })
 

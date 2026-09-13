@@ -3,7 +3,7 @@ import type {
   WrittenProductionExercise,
 } from '@/lib/exercises/types'
 import type { WordBankEntry } from '@/lib/word-bank/types'
-import { normalizeCEFR } from '@/lib/exercises/cefr'
+import { normalizeCEFR, type CEFRLevel } from '@/lib/exercises/cefr'
 import {
   assessWordBankEntry,
   type EligibilityReason,
@@ -85,6 +85,7 @@ export function generateSpokenProductionFromWordBank(
   entries: WordBankEntry[],
   count: number,
   preferredConstraintIds: readonly string[] = [],
+  level?: CEFRLevel,
 ): GenerationResult<SpokenProductionExercise> {
   // Always empty: eligibility is pre-filtered into `usable` above and this
   // mode has no pool-dependent branch in assessWordBankEntry, so nothing
@@ -105,7 +106,7 @@ export function generateSpokenProductionFromWordBank(
 
   // Seed from the full eligible pool so a session is stable but different day to day.
   const seed = usable.map((e) => e.id).join('|')
-  const constraints = selectConstraints(seed, count, preferredConstraintIds)
+  const constraints = selectConstraints(seed, count, preferredConstraintIds, level)
 
   // The pool feeding this generator is capped upstream (WORD_REVIEW_WORD_COUNT),
   // so reaching the session volume target requires repeating words — each

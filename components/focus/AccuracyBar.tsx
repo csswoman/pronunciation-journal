@@ -19,29 +19,29 @@ const MID = 80
 /**
  * Barra horizontal de precisión real por tema.
  *
- * Muestra siempre el número de intentos: "40%" sobre 3 intentos y sobre 60 no
- * significan lo mismo, y ocultarlo haría que el usuario confíe de más en la barra.
+ * Muestra siempre el número de intentos para que el porcentaje sea auditable.
  */
 export function AccuracyBar({ label, value, sampleCount, className }: AccuracyBarProps) {
   const pct = Math.min(100, Math.max(0, Math.round(value)))
-  const color = pct < WEAK ? 'var(--warning)' : pct < MID ? 'var(--primary)' : 'var(--success)'
+  const textColor = pct < WEAK ? 'text-warning' : pct < MID ? 'text-primary' : 'text-success'
+  const barBg = pct < WEAK ? 'bg-warning' : pct < MID ? 'bg-primary' : 'bg-success'
 
   return (
     <div className={cn('flex flex-col gap-1', className)}>
       <div className="flex items-baseline justify-between gap-2">
         <span className="text-body-sm text-fg">{label}</span>
-        <span className="text-tiny tabular-nums font-semibold shrink-0" style={{ color }}>
+        <span className={cn('text-tiny tabular-nums font-semibold shrink-0', textColor)}>
           {pct}%
         </span>
       </div>
       <div
-        className="h-1.5 overflow-hidden rounded-full border border-[var(--line-divider)] bg-surface-sunken"
+        className="h-1.5 overflow-hidden rounded-full border border-border-subtle bg-surface-sunken"
         role="img"
         aria-label={`${label}: ${pct}% de precisión${sampleCount ? ` en ${sampleCount} intentos` : ''}`}
       >
         <div
-          className="h-full rounded-full transition-transform"
-          style={{ width: `${pct}%`, background: color }}
+          className={cn('h-full rounded-full transition-transform', barBg)}
+          style={{ width: `${pct}%` }}
         />
       </div>
       {typeof sampleCount === 'number' && (
@@ -50,3 +50,4 @@ export function AccuracyBar({ label, value, sampleCount, className }: AccuracyBa
     </div>
   )
 }
+

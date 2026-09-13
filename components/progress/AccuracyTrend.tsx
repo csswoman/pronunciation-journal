@@ -37,10 +37,10 @@ export function AccuracyTrend({ stats }: Props) {
       </div>
 
       <div className="mt-1 flex flex-col items-center">
-        <div className="relative w-[180px]">
+        <div className="relative flex w-[180px] flex-col items-center">
           <svg
-            width="100%"
-            height="auto"
+            width="180"
+            height="100"
             viewBox="0 0 180 100"
             className="block"
             role="img"
@@ -64,13 +64,13 @@ export function AccuracyTrend({ stats }: Props) {
               />
             ) : null}
           </svg>
-          <div className="-mt-[26px] text-center text-h2 leading-none text-fg">
+          <div className="absolute bottom-1 left-0 right-0 text-center text-h2 leading-none text-fg">
             {hasData ? `${stats.accuracy7}%` : 'S/D'}
           </div>
         </div>
 
         {quality ? (
-          <p className={`mt-0.5 text-body-sm font-semibold ${quality.className}`}>
+          <p className={`mt-2 text-body-sm font-semibold ${quality.className}`}>
             {quality.text}
           </p>
         ) : null}

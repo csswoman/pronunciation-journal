@@ -13,18 +13,35 @@
 import { useState } from 'react';
 import { Clapperboard, Check, Timer } from '@/components/icons';
 import Button from '@/components/ui/Button';
+import { useAuthOptional } from '@/components/auth/AuthProvider';
+import { logExternalImmersion } from '@/lib/immersion/external-log';
+import type { ImmersionMediaType } from '@/lib/progress/activity-types';
 
 interface ImmersionLogCardProps {
-  onLogImmersion?: (data: { type: string; minutes: number; notes: string }) => void;
+  onLogImmersion?: (data: { type: ImmersionMediaType; minutes: number; notes: string }) => void;
 }
 
 export function ImmersionLogCard({ onLogImmersion }: ImmersionLogCardProps) {
+  const auth = useAuthOptional();
+  const userId = auth?.user?.id ?? null;
   const [minutes, setMinutes] = useState(30);
-  const [mediaType, setMediaType] = useState<'video' | 'podcast' | 'reading' | 'series'>('video');
+  const [mediaType, setMediaType] = useState<ImmersionMediaType>('video');
   const [notes, setNotes] = useState('');
   const [logged, setLogged] = useState(false);
 
-  function handleSave() {
+  async function handleSave() {
+    if (userId) {
+      try {
+        await logExternalImmersion(userId, {
+          type: mediaType,
+          minutes,
+          notes: notes.trim() || undefined,
+        });
+      } catch (err) {
+        console.error('[ImmersionLogCard] Error logging immersion:', err);
+      }
+    }
+
     onLogImmersion?.({
       type: mediaType,
       minutes,
@@ -38,7 +55,7 @@ export function ImmersionLogCard({ onLogImmersion }: ImmersionLogCardProps) {
   }
 
   return (
-    <div className="flex flex-col gap-3 rounded-card-interactive border border-border-default bg-surface-raised p-4 shadow-sm">
+    <div className="flex flex-col gap-3 rounded-xl border border-border-default bg-surface-raised p-4 shadow-sm">
       <div className="flex items-center justify-between gap-2 border-b border-border-default/60 pb-2.5">
         <div className="flex items-center gap-2">
           <Clapperboard className="size-4 text-primary" />

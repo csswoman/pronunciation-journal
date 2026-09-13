@@ -4,6 +4,7 @@
 // <SessionReadyLeeches> warning + chips + CTA </SessionReadyLeeches>
 
 import { AlertCircle } from '@/components/icons'
+import { PillButton } from '@/components/ui/PillButton'
 import { displayEnglishWord } from '@/lib/essential-words/word-display'
 import type { LeechWord } from '@/lib/essential-words/ready-leeches'
 import { SessionSurface } from './session-chrome'
@@ -34,14 +35,16 @@ export function SessionReadyLeeches({ leeches, onReview, disabled = false }: Pro
           </span>
         ))}
       </div>
-      <button
+      <PillButton
         type="button"
+        variant="outline"
+        size="sm"
         onClick={() => onReview(leeches.map((l) => l.wordId))}
         disabled={disabled}
-        className="inline-flex min-h-10 w-full items-center rounded-md px-1 text-left text-caption font-semibold text-info transition-colors duration-150 ease-out-quart hover:underline focus-ring disabled:cursor-not-allowed disabled:opacity-60"
+        className="w-full"
       >
         Repasar las {leeches.length} difíciles →
-      </button>
+      </PillButton>
     </SessionSurface>
   )
 }

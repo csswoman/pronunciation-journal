@@ -103,4 +103,26 @@ describe('SpokenProductionExercise', () => {
     expect(screen.getByRole('button', { name: 'Grabar mi voz' })).toBeInTheDocument()
     expect(screen.getByText(/No se detectó voz/i)).toBeInTheDocument()
   })
+
+  it('shows transcription progress and locks the mic while the audio is in flight', () => {
+    speechInputMocks.useSpeechInput.mockReturnValue({
+      state: 'processing',
+      result: null,
+      error: null,
+      isSupported: true,
+      start: vi.fn(),
+      stop: vi.fn(),
+      reset: vi.fn(),
+    })
+
+    render(<SpokenProductionExercise exercise={exercise} onResult={vi.fn()} onSkip={vi.fn()} />)
+
+    // Antes caía a "Toca para hablar", indistinguible del estado inicial.
+    expect(screen.queryByText('Toca para hablar')).not.toBeInTheDocument()
+    expect(screen.getByText(/Escuchando lo que dijiste/i)).toBeInTheDocument()
+
+    const mic = screen.getByRole('button', { name: 'Procesando tu respuesta' })
+    expect(mic).toBeDisabled()
+    expect(screen.getByRole('button', { name: 'Omitir este ejercicio' })).toBeDisabled()
+  })
 })

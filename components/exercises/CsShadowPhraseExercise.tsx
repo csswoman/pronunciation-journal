@@ -18,7 +18,7 @@ import Button from '@/components/ui/Button'
 import { ListenButton } from '@/components/ui/ListenButton'
 import PronunciationFeedback from '@/components/lesson/PronunciationFeedback'
 import { useSpeechRecognition } from '@/hooks/useSpeechRecognition'
-import { BROWSER_BLOCKS_SCORING_SHADOW_ES } from '@/lib/speech/browser-support-message'
+import { SCORING_UNAVAILABLE_SHADOW_ES } from '@/lib/speech/browser-support-message'
 import { scorePronunciation, getFeedbackMessage, calculateXP } from '@/lib/pronunciation/scoring'
 import { speak } from '@/lib/phoneme-practice/tts'
 import { cn } from '@/lib/cn'
@@ -147,10 +147,10 @@ export function CsShadowPhraseExercise({ exercise, onResult }: Props) {
         <div className="flex flex-col items-center gap-4">
           <p className="m-0 max-w-xs text-center text-caption text-fg-muted">
             {!isSupported
-              ? 'Tu navegador no admite puntuación por voz. Escucha el modelo y repítelo en voz alta; este intento no recibirá puntuación.'
+              ? SCORING_UNAVAILABLE_SHADOW_ES
               : isNetworkShadowing
-                ? BROWSER_BLOCKS_SCORING_SHADOW_ES
-                : 'La puntuación por voz no está disponible ahora. Escucha el modelo y repítelo en voz alta; este intento no recibirá puntuación.'}
+                ? 'No se pudo completar la transcripción; necesita conexión a internet. Escucha e imita la frase en voz alta; este intento no recibirá puntuación.'
+                : 'La puntuación por voz no está disponible ahora. Escucha e imita la frase en voz alta; este intento no recibirá puntuación.'}
           </p>
           <PracticeActionBar>
             <PracticeContinueButton onClick={handleShadowingDone}>Continuar sin puntuación</PracticeContinueButton>

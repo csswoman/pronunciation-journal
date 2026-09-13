@@ -65,3 +65,47 @@ export async function fetchImmersionLessonBySlugServer(slug: string): Promise<Im
   if (error) throw error
   return data ? toLesson(data as unknown as ImmersionLessonRow) : null
 }
+
+interface ProgressRow {
+  lesson_id: string
+  watched: boolean
+  watched_at: string | null
+  quiz_score: number | null
+  updated_at: string
+}
+
+export async function fetchUserImmersionProgressServer(
+  userId: string,
+): Promise<import('./types').ImmersionProgressMap> {
+  const supabase = await createSupabaseServerClient()
+  const { data, error } = await supabase
+    .from('immersion_lesson_progress')
+    .select('lesson_id, watched, watched_at, quiz_score, updated_at')
+    .eq('user_id', userId)
+
+  if (error || !data) return {}
+
+  const rows = data as unknown as ProgressRow[]
+  const map: import('./types').ImmersionProgressMap = {}
+
+  for (const r of rows) {
+    let status: import('./types').ImmersionLessonStatus = 'not_started'
+    if (r.quiz_score != null) {
+      status = r.quiz_score >= 70 ? 'completed' : 'in_progress'
+    } else if (r.watched) {
+      status = 'in_progress'
+    }
+
+    map[r.lesson_id] = {
+      lessonId: r.lesson_id,
+      watched: r.watched,
+      status,
+      watchedAt: r.watched_at ?? undefined,
+      quizScore: r.quiz_score ?? undefined,
+      completedAt: status === 'completed' ? (r.updated_at ?? r.watched_at ?? undefined) : undefined,
+    }
+  }
+
+  return map
+}
+
